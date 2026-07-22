@@ -52,7 +52,7 @@ export default function ChatClient() {
     {
       role: 'assistant',
       content:
-        'היי! 👋 אני עוזר הטיולים של טיול+. שאלו אותי על מסלולים, אוכל כשר או מידע פרקטי ליעדים שלנו - והתשובות יגיעו עם מפה.',
+        'היי! אני עוזר הטיולים של טיול+. שאלו אותי על מסלולים, אוכל כשר או מידע פרקטי ליעדים שלנו - והתשובות יגיעו עם מפה.',
     },
   ]);
   const [input, setInput] = useState('');
@@ -100,20 +100,18 @@ export default function ChatClient() {
 
   return (
     <div className="mx-auto flex h-[calc(100vh-180px)] max-w-3xl flex-col">
-      <h1 className="display text-3xl text-night">
-        צ׳אט <span className="marker">הטיולים</span> 💬
-      </h1>
-      <p className="mt-1.5 text-sm font-medium text-night/60">
+      <h1 className="display text-2xl text-night">צ׳אט הטיולים</h1>
+      <p className="mt-1.5 text-sm text-night/60">
         עברית מלאה, תשובות מעוגנות בדאטה אמיתי, ומפה מתחת לכל תשובה רלוונטית.
       </p>
 
-      <div className="mt-4 flex-1 space-y-4 overflow-y-auto rounded-3xl bg-shell p-5 ring-1 ring-night/10">
+      <div className="mt-4 flex-1 space-y-4 overflow-y-auto rounded-2xl bg-shell p-5 ring-1 ring-night/10">
         {messages.map((msg, i) => (
           <div key={i} className={msg.role === 'user' ? 'flex justify-start' : ''}>
             <div
-              className={`max-w-[85%] rounded-3xl px-5 py-3.5 text-sm leading-relaxed ${
+              className={`max-w-[85%] rounded-2xl px-5 py-3.5 text-sm leading-relaxed ${
                 msg.role === 'user'
-                  ? 'rounded-tr-lg bg-night font-medium text-cream'
+                  ? 'rounded-tr-md bg-night font-medium text-cream'
                   : 'w-full max-w-full bg-cream text-night'
               }`}
             >
@@ -125,8 +123,8 @@ export default function ChatClient() {
           </div>
         ))}
         {loading && (
-          <div className="w-fit animate-pulse rounded-3xl bg-cream px-5 py-3.5 text-sm font-bold text-night/40">
-            חושב… 🧭
+          <div className="w-fit animate-pulse rounded-2xl bg-cream px-5 py-3.5 text-sm font-medium text-night/40">
+            חושב…
           </div>
         )}
         <div ref={bottomRef} />
@@ -137,7 +135,7 @@ export default function ChatClient() {
           <button
             key={s}
             onClick={() => send(s)}
-            className="rounded-full bg-shell px-4 py-2 text-xs font-bold text-night/70 ring-1 ring-night/15 transition hover:bg-zest hover:text-night hover:ring-zest"
+            className="rounded-full bg-shell px-4 py-2 text-xs font-medium text-night/70 ring-1 ring-night/10 transition hover:bg-night/5 hover:ring-night/25"
           >
             {s}
           </button>
@@ -155,12 +153,12 @@ export default function ChatClient() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="למשל: תבנה לי מסלול ל-3 ימים ברומא עם אוכל כשר"
-          className="flex-1 rounded-2xl bg-shell px-5 py-3.5 text-sm font-medium text-night outline-none ring-1 ring-night/15 transition focus:ring-2 focus:ring-sunset"
+          className="flex-1 rounded-xl bg-shell px-5 py-3.5 text-sm text-night outline-none ring-1 ring-night/10 transition focus:ring-2 focus:ring-sunset"
         />
         <button
           type="submit"
           disabled={loading || !input.trim()}
-          className="rounded-2xl bg-sunset px-6 py-3.5 font-black text-cream transition hover:bg-sunset-deep disabled:opacity-40"
+          className="rounded-xl bg-sunset px-6 py-3.5 font-bold text-cream transition hover:bg-sunset-deep disabled:opacity-40"
         >
           שליחה
         </button>

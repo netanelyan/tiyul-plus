@@ -50,8 +50,10 @@ npm run lint
   footer (web component in `public/blackz-signature.js` - must appear on
   every page).
 - Design system: Tailwind 4 `@theme` tokens in `src/app/globals.css`
-  (night/sunset/zest/cream palette, bold & playful). Reuse these tokens; do
-  not invent new palettes.
+  (night/sunset/zest/cream palette, calm & credible: cream background, night
+  text, sunset as the single accent for primary buttons/active states, zest
+  only as a rare small highlight). Reuse these tokens; do not invent new
+  palettes.
 
 ## Hard rules
 

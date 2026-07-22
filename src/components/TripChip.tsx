@@ -10,10 +10,10 @@ export default function TripChip() {
   return (
     <Link
       href="/planner"
-      className="sticker rounded-full bg-sunset px-3 py-1.5 text-xs font-black text-cream transition hover:bg-sunset-deep"
+      className="rounded-full bg-sunset px-3.5 py-1.5 text-xs font-bold text-cream transition hover:bg-sunset-deep"
       title={currentTrip.name}
     >
-      🧳 {currentTrip.name} · {stops} עצירות
+      {currentTrip.name} · {stops} עצירות
     </Link>
   );
 }

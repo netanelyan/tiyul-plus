@@ -20,7 +20,7 @@ export default function AddToTripButton({
 
   if (inTrip || added !== null) {
     return (
-      <span className="rounded-full bg-night px-3 py-1.5 text-xs font-black text-zest">
+      <span className="rounded-full bg-night/10 px-3 py-1.5 text-xs font-semibold text-night/70">
         ✓ בטיול שלי{added !== null ? ` · יום ${added + 1}` : ''}
       </span>
     );
@@ -33,7 +33,7 @@ export default function AddToTripButton({
         setAdded(dayIndex);
         setTimeout(() => setAdded(null), 2500);
       }}
-      className="rounded-full bg-sunset px-3 py-1.5 text-xs font-black text-cream transition hover:bg-sunset-deep"
+      className="rounded-full bg-sunset px-3 py-1.5 text-xs font-bold text-cream transition hover:bg-sunset-deep"
     >
       + הוספה לטיול
     </button>

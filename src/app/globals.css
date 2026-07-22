@@ -1,19 +1,19 @@
 @import 'tailwindcss';
 @import 'leaflet/dist/leaflet.css';
 
-/* ===== טיול+ design system: bold & playful ===== */
+/* ===== טיול+ design system: calm, credible, warm ===== */
 @theme {
-  --color-night: #241b4d; /* deep plum base */
+  --color-night: #241b4d; /* deep plum - text + footer */
   --color-night-soft: #3b2f74;
-  --color-sunset: #ff5941; /* vivid coral primary */
+  --color-sunset: #ff5941; /* coral - THE accent: primary buttons + active states */
   --color-sunset-deep: #e03e27;
-  --color-zest: #ffc531; /* electric yellow accent */
+  --color-zest: #ffc531; /* yellow - rare small highlights only */
   --color-cream: #fdf6ec; /* warm page background */
   --color-shell: #fffdf8; /* card background */
 }
 
 :root {
-  --shadow-pop: 0 10px 30px -10px rgba(36, 27, 77, 0.25);
+  --shadow-pop: 0 6px 20px -10px rgba(36, 27, 77, 0.18);
 }
 
 body {
@@ -22,27 +22,25 @@ body {
   font-family: 'Heebo', 'Rubik', 'Segoe UI', 'Arial Hebrew', system-ui, sans-serif;
 }
 
-/* Display headlines with attitude */
+/* Display headlines: precise, not shouty */
 .display {
-  font-weight: 900;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
 }
 
-/* Highlighted word inside a headline */
+/* Highlighted word inside a headline - hero only */
 .marker {
-  background: linear-gradient(180deg, transparent 55%, var(--color-zest) 55%);
+  background: linear-gradient(180deg, transparent 62%, var(--color-zest) 62%);
   padding-inline: 0.1em;
   border-radius: 0.15em;
 }
 
-/* Sticker badge (slightly tilted) */
-.sticker {
+/* Small inline badge */
+.badge {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  transform: rotate(-2deg);
-  box-shadow: var(--shadow-pop);
 }
 
 /* Photo card helper: gradient always paints first = built-in fallback */
@@ -56,7 +54,7 @@ body {
 @keyframes rise-in {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
@@ -65,22 +63,22 @@ body {
 }
 
 .rise-in {
-  animation: rise-in 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  animation: rise-in 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 
 .rise-in-late {
-  animation: rise-in 0.6s 0.15s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  animation: rise-in 0.5s 0.12s cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 
-/* Card hover: lift + tiny tilt */
+/* Card hover: subtle lift, no rotation */
 .card-pop {
   transition:
-    transform 0.25s cubic-bezier(0.2, 0.7, 0.3, 1),
-    box-shadow 0.25s ease;
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .card-pop:hover {
-  transform: translateY(-6px) rotate(0.6deg);
+  transform: translateY(-2px);
   box-shadow: var(--shadow-pop);
 }
 
@@ -112,12 +110,12 @@ body {
 .leaflet-container {
   direction: ltr;
   font-family: inherit;
-  border-radius: 1.5rem;
+  border-radius: 1rem;
   z-index: 0;
 }
 
 .leaflet-popup-content-wrapper {
-  border-radius: 1rem;
+  border-radius: 0.75rem;
   box-shadow: var(--shadow-pop);
 }
 
@@ -150,9 +148,9 @@ body {
   top: -7px;
   right: -7px;
   background: #241b4d;
-  color: #ffc531;
+  color: #fffdf8;
   font-size: 11px;
-  font-weight: 900;
+  font-weight: 700;
   width: 19px;
   height: 19px;
   border-radius: 9999px;

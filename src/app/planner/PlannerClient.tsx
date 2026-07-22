@@ -22,7 +22,7 @@ export default function PlannerClient({
 
   if (!trip.hydrated) {
     return (
-      <div className="animate-pulse rounded-3xl bg-shell p-10 text-center font-bold text-night/40 ring-1 ring-night/10">
+      <div className="animate-pulse rounded-2xl bg-shell p-10 text-center font-semibold text-night/40 ring-1 ring-night/10">
         טוען את הטיולים שלך…
       </div>
     );
@@ -87,34 +87,32 @@ function Onboarding({
 
   return (
     <div>
-      <h1 className="display text-4xl text-night">
-        בונים <span className="marker">טיול חדש</span> 🧳
-      </h1>
-      <p className="mt-2 font-medium text-night/60">
+      <h1 className="display text-3xl text-night">בונים טיול חדש</h1>
+      <p className="mt-2 text-night/60">
         אשף חכם שמרכיב מסלול לפי הסגנון שלכם - או התחלה ממסלול מוכן. הכול ניתן לעריכה אחר כך.
       </p>
       {onCancel && (
-        <button onClick={onCancel} className="mt-2 text-sm font-bold text-sunset-deep hover:underline">
+        <button onClick={onCancel} className="mt-2 text-sm font-semibold text-sunset-deep transition hover:underline">
           → חזרה לטיול הנוכחי
         </button>
       )}
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         {/* ---- האשף ---- */}
-        <div className="rounded-3xl bg-night p-6">
-          <h2 className="display text-2xl text-zest">✨ האשף החכם</h2>
+        <div className="rounded-2xl bg-shell p-6 ring-1 ring-night/10">
+          <h2 className="text-lg font-bold text-night">האשף החכם</h2>
 
           <div className="mt-4">
-            <div className="text-sm font-black text-cream/70">לאן? (אפשר כמה ערים)</div>
+            <div className="text-sm font-semibold text-night/60">לאן? (אפשר כמה ערים)</div>
             <div className="mt-2 flex flex-wrap gap-2">
               {destinations.map((d) => (
                 <button
                   key={d.slug}
                   onClick={() => toggleCity(d.slug)}
-                  className={`rounded-full px-3 py-1.5 text-sm font-black transition ${
+                  className={`rounded-full px-3 py-1.5 text-sm font-semibold transition ${
                     prefs.citySlugs.includes(d.slug)
-                      ? 'bg-zest text-night'
-                      : 'bg-cream/10 text-cream/80 hover:bg-cream/20'
+                      ? 'bg-sunset text-cream'
+                      : 'bg-night/5 text-night/70 hover:bg-night/10'
                   }`}
                 >
                   {d.flag} {d.name}
@@ -122,15 +120,15 @@ function Onboarding({
               ))}
             </div>
             {prefs.citySlugs.length > 1 && (
-              <div className="mt-2 text-xs font-bold text-cream/60">
-                🧳 טיול רב-עירוני: {prefs.citySlugs.length} מדינות/ערים, הימים יתחלקו ביניהן
+              <div className="mt-2 text-xs font-medium text-night/50">
+                טיול רב-עירוני: {prefs.citySlugs.length} מדינות/ערים, הימים יתחלקו ביניהן
               </div>
             )}
           </div>
 
           <div className="mt-4 grid grid-cols-2 gap-4">
             <label className="block">
-              <div className="text-sm font-black text-cream/70">כמה ימים?</div>
+              <div className="text-sm font-semibold text-night/60">כמה ימים?</div>
               <input
                 type="number"
                 min={1}
@@ -139,15 +137,15 @@ function Onboarding({
                 onChange={(e) =>
                   setPrefs((p) => ({ ...p, totalDays: Math.max(1, Number(e.target.value) || 1) }))
                 }
-                className="mt-2 w-full rounded-xl bg-cream/10 px-4 py-2.5 font-black text-cream outline-none ring-1 ring-cream/20 focus:ring-zest"
+                className="mt-2 w-full rounded-xl bg-night/5 px-4 py-2.5 font-semibold text-night outline-none ring-1 ring-night/10 transition focus:ring-2 focus:ring-sunset"
               />
             </label>
             <div>
-              <div className="text-sm font-black text-cream/70">קצב</div>
+              <div className="text-sm font-semibold text-night/60">קצב</div>
               <Seg
                 options={[
-                  { v: 'relaxed', l: '🌴 רגוע' },
-                  { v: 'packed', l: '⚡ דחוס' },
+                  { v: 'relaxed', l: 'רגוע' },
+                  { v: 'packed', l: 'דחוס' },
                 ]}
                 value={prefs.pace}
                 onChange={(v) => setPrefs((p) => ({ ...p, pace: v as WizardPrefs['pace'] }))}
@@ -156,12 +154,12 @@ function Onboarding({
           </div>
 
           <div className="mt-4">
-            <div className="text-sm font-black text-cream/70">סוג הטיול</div>
+            <div className="text-sm font-semibold text-night/60">סוג הטיול</div>
             <Seg
               options={[
-                { v: 'city', l: '🏙️ עירוני' },
-                { v: 'nature', l: '🌿 טבע' },
-                { v: 'combined', l: '🎯 משולב' },
+                { v: 'city', l: 'עירוני' },
+                { v: 'nature', l: 'טבע' },
+                { v: 'combined', l: 'משולב' },
               ]}
               value={prefs.tripType}
               onChange={(v) => setPrefs((p) => ({ ...p, tripType: v as WizardPrefs['tripType'] }))}
@@ -169,26 +167,26 @@ function Onboarding({
           </div>
 
           <div className="mt-4">
-            <div className="text-sm font-black text-cream/70">שופינג</div>
+            <div className="text-sm font-semibold text-night/60">שופינג</div>
             <Seg
               options={[
-                { v: 'more', l: '🛍️ יותר' },
-                { v: 'normal', l: '🙂 רגיל' },
-                { v: 'less', l: '🚫 פחות' },
+                { v: 'more', l: 'יותר' },
+                { v: 'normal', l: 'רגיל' },
+                { v: 'less', l: 'פחות' },
               ]}
               value={prefs.shopping}
               onChange={(v) => setPrefs((p) => ({ ...p, shopping: v as WizardPrefs['shopping'] }))}
             />
           </div>
 
-          <label className="mt-4 flex cursor-pointer items-center gap-2 text-sm font-black text-cream">
+          <label className="mt-4 flex cursor-pointer items-center gap-2 text-sm font-semibold text-night">
             <input
               type="checkbox"
               checked={prefs.kosherOnly}
               onChange={(e) => setPrefs((p) => ({ ...p, kosherOnly: e.target.checked }))}
-              className="h-4 w-4 accent-[#ffc531]"
+              className="h-4 w-4 accent-[#ff5941]"
             />
-            ✡️ לשבץ ארוחה כשרה בכל יום (איפה שיש)
+            לשבץ ארוחה כשרה בכל יום (איפה שיש)
           </label>
 
           <button
@@ -201,16 +199,16 @@ function Onboarding({
               trip.createTripFrom(generateTrip(prefs, destinations, `טיול ל${cityNames}`));
               onDone();
             }}
-            className="mt-5 w-full rounded-2xl bg-sunset px-5 py-3.5 text-lg font-black text-cream transition hover:bg-sunset-deep disabled:opacity-40"
+            className="mt-5 w-full rounded-xl bg-sunset px-5 py-3 font-bold text-cream transition hover:bg-sunset-deep disabled:opacity-40"
           >
-            🪄 תבנה לי טיול!
+            תבנה לי טיול
           </button>
         </div>
 
         {/* ---- תבניות ---- */}
         <div>
-          <h2 className="display text-2xl text-night">🗺️ או ממסלול מוכן</h2>
-          <p className="mt-1 text-sm font-medium text-night/60">
+          <h2 className="text-lg font-bold text-night">או ממסלול מוכן</h2>
+          <p className="mt-1 text-sm text-night/60">
             המסלולים שהרכבנו לכל יעד - לוחצים ומקבלים טיול מוכן לעריכה.
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -221,13 +219,13 @@ function Onboarding({
                   trip.createTripFrom(tripFromTemplate(d));
                   onDone();
                 }}
-                className={`card-pop rounded-3xl bg-shell p-4 text-start ring-1 transition ${
+                className={`card-pop rounded-2xl bg-shell p-4 text-start ring-1 transition ${
                   d.slug === initialSlug ? 'ring-2 ring-sunset' : 'ring-night/10'
                 }`}
               >
                 <div className="text-2xl">{d.flag}</div>
-                <div className="mt-1 font-black text-night">{d.name}</div>
-                <div className="text-xs font-bold text-night/50">
+                <div className="mt-1 font-bold text-night">{d.name}</div>
+                <div className="text-xs font-medium text-night/50">
                   מסלול מוכן · {d.itinerary.length} ימים
                 </div>
               </button>
@@ -238,9 +236,9 @@ function Onboarding({
               trip.createTrip('הטיול שלי');
               onDone();
             }}
-            className="mt-4 w-full rounded-2xl bg-shell px-5 py-3 font-black text-night/70 ring-1 ring-night/15 transition hover:ring-night/40"
+            className="mt-4 w-full rounded-xl bg-shell px-5 py-3 font-semibold text-night/70 ring-1 ring-night/10 transition hover:ring-night/25"
           >
-            📝 או טיול ריק - אבנה לבד
+            או טיול ריק - אבנה לבד
           </button>
         </div>
       </div>
@@ -263,8 +261,8 @@ function Seg({
         <button
           key={o.v}
           onClick={() => onChange(o.v)}
-          className={`flex-1 rounded-xl px-2 py-2 text-sm font-black transition ${
-            value === o.v ? 'bg-zest text-night' : 'bg-cream/10 text-cream/70 hover:bg-cream/20'
+          className={`flex-1 rounded-xl px-2 py-2 text-sm font-semibold transition ${
+            value === o.v ? 'bg-sunset text-cream' : 'bg-night/5 text-night/60 hover:bg-night/10'
           }`}
         >
           {o.l}
@@ -350,9 +348,9 @@ function Workspace({
           <input
             value={t.name}
             onChange={(e) => trip.renameTrip(t.id, e.target.value)}
-            className="display w-64 rounded-xl bg-transparent text-3xl text-night outline-none ring-sunset/50 transition focus:ring-2"
+            className="display w-64 rounded-xl bg-transparent text-2xl text-night outline-none ring-sunset/50 transition focus:ring-2"
           />
-          <span className="sticker rounded-full bg-zest px-3 py-1 text-xs font-black text-night">
+          <span className="badge rounded-full bg-night/5 px-3 py-1 text-xs font-semibold text-night/60">
             {totalStops} עצירות · {t.days.length} ימים
           </span>
         </div>
@@ -364,7 +362,7 @@ function Workspace({
                 trip.setCurrentId(e.target.value);
                 setSelectedDayId(null);
               }}
-              className="rounded-xl bg-shell px-3 py-2 font-bold text-night ring-1 ring-night/15"
+              className="rounded-xl bg-shell px-3 py-2 font-semibold text-night ring-1 ring-night/10"
             >
               {trip.trips.map((x) => (
                 <option key={x.id} value={x.id}>
@@ -374,9 +372,9 @@ function Workspace({
             </select>
           )}
           <Btn onClick={onNewTrip}>+ טיול חדש</Btn>
-          <Btn onClick={() => trip.duplicateTrip(t.id)}>⧉ שכפול</Btn>
-          <Btn onClick={copySummary}>{copied ? '✓ הועתק!' : '📋 העתקת סיכום'}</Btn>
-          <Btn onClick={() => window.print()}>🖨️ הדפסה / PDF</Btn>
+          <Btn onClick={() => trip.duplicateTrip(t.id)}>שכפול</Btn>
+          <Btn onClick={copySummary}>{copied ? '✓ הועתק' : 'העתקת סיכום'}</Btn>
+          <Btn onClick={() => window.print()}>הדפסה / PDF</Btn>
           <Btn
             danger
             onClick={() => {
@@ -386,13 +384,13 @@ function Workspace({
               }
             }}
           >
-            🗑️
+            מחיקה
           </Btn>
         </div>
       </div>
 
       {/* Day tabs with travel legs */}
-      <div className="mt-5 flex flex-wrap items-center gap-2 print:hidden">
+      <div className="mt-6 flex flex-wrap items-center gap-2 print:hidden">
         {t.days.map((d, i) => {
           const dst = destOf(d.citySlug);
           const prev = i > 0 ? t.days[i - 1] : null;
@@ -400,16 +398,16 @@ function Workspace({
           return (
             <span key={d.id} className="flex items-center gap-2">
               {cityChanged && (
-                <span className="rounded-full bg-night/5 px-2.5 py-1 text-xs font-bold text-night/50">
+                <span className="rounded-full bg-night/5 px-2.5 py-1 text-xs font-medium text-night/50">
                   {travelLeg(prev!.citySlug, d.citySlug).emoji}
                 </span>
               )}
               <button
                 onClick={() => setSelectedDayId(d.id)}
-                className={`rounded-full px-4 py-2 text-sm font-black transition ${
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
                   day?.id === d.id
-                    ? 'bg-sunset text-cream shadow-md'
-                    : 'bg-shell text-night/60 ring-1 ring-night/15 hover:ring-night/40'
+                    ? 'bg-sunset text-cream'
+                    : 'bg-shell text-night/60 ring-1 ring-night/10 hover:ring-night/25'
                 }`}
               >
                 {dst?.flag} יום {i + 1}
@@ -426,7 +424,7 @@ function Workspace({
               setAddCity('');
             }
           }}
-          className="rounded-full bg-night px-3 py-2 text-sm font-black text-zest"
+          className="rounded-full bg-shell px-3 py-2 text-sm font-semibold text-night/70 ring-1 ring-night/10"
         >
           <option value="">+ יום…</option>
           {t.citySlugs.map((c) => (
@@ -445,7 +443,7 @@ function Workspace({
       </div>
 
       {day && dayDest ? (
-        <div className="mt-5 grid gap-5 lg:grid-cols-5 print:hidden">
+        <div className="mt-6 grid gap-5 lg:grid-cols-5 print:hidden">
           {/* Day panel */}
           <div className="space-y-3 lg:col-span-2">
             {/* Travel leg banner */}
@@ -455,7 +453,7 @@ function Workspace({
               if (prev && prev.citySlug !== day.citySlug) {
                 const leg = travelLeg(prev.citySlug, day.citySlug);
                 return (
-                  <div className="rounded-2xl bg-zest px-4 py-3 text-sm font-black text-night">
+                  <div className="rounded-xl bg-night/5 px-4 py-3 text-sm font-semibold text-night/80">
                     {leg.emoji} {destOf(prev.citySlug)?.name} ← {dayDest.name} · {leg.label}
                   </div>
                 );
@@ -463,9 +461,9 @@ function Workspace({
               return null;
             })()}
 
-            <div className="rounded-3xl bg-night p-5">
+            <div className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
               <div className="flex items-center justify-between gap-2">
-                <h2 className="display text-lg text-cream">
+                <h2 className="text-lg font-bold text-night">
                   {dayDest.flag} יום {t.days.findIndex((d) => d.id === day.id) + 1} · {dayDest.name}
                 </h2>
                 {t.days.length > 1 && (
@@ -474,27 +472,27 @@ function Workspace({
                       trip.removeDay(day.id);
                       setSelectedDayId(null);
                     }}
-                    className="rounded-full bg-cream/10 px-2.5 py-1 text-xs font-bold text-cream/70 hover:bg-cream/20"
+                    className="rounded-full bg-night/5 px-2.5 py-1 text-xs font-semibold text-night/60 transition hover:bg-night/10"
                   >
-                    🗑️ מחיקת יום
+                    מחיקת יום
                   </button>
                 )}
               </div>
               <textarea
                 value={day.notes ?? ''}
                 onChange={(e) => trip.setDayNotes(day.id, e.target.value)}
-                placeholder="💡 הערות ליום הזה…"
+                placeholder="הערות ליום הזה…"
                 rows={2}
-                className="mt-3 w-full resize-none rounded-2xl bg-cream/10 px-4 py-2.5 text-sm text-cream outline-none ring-1 ring-cream/10 placeholder:text-cream/40 focus:ring-zest"
+                className="mt-3 w-full resize-none rounded-xl bg-night/5 px-4 py-2.5 text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset"
               />
               {dayPlaces.length > 1 && (
                 <a
                   href={googleDirectionsUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-3 block rounded-2xl bg-sunset px-4 py-3 text-center text-sm font-black text-cream transition hover:bg-sunset-deep"
+                  className="mt-3 block rounded-xl bg-sunset px-4 py-3 text-center text-sm font-bold text-cream transition hover:bg-sunset-deep"
                 >
-                  🧭 פתיחת ניווט היום ב-Google Maps
+                  פתיחת ניווט היום ב-Google Maps
                 </a>
               )}
             </div>
@@ -506,11 +504,11 @@ function Workspace({
                 return (
                   <li
                     key={place.id}
-                    className="flex gap-3 rounded-3xl bg-shell p-4 ring-1 ring-night/10"
+                    className="flex gap-3 rounded-2xl bg-shell p-4 ring-1 ring-night/10"
                   >
                     <div className="flex flex-col items-center gap-1">
                       <div
-                        className="flex h-8 w-8 items-center justify-center rounded-xl text-sm font-black text-white"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold text-white"
                         style={{ backgroundColor: meta.color }}
                       >
                         {i + 1}
@@ -518,7 +516,7 @@ function Workspace({
                       <button
                         onClick={() => trip.movePlace(day.id, i, -1)}
                         disabled={i === 0}
-                        className="text-night/40 hover:text-night disabled:opacity-20"
+                        className="text-night/40 transition hover:text-night disabled:opacity-20"
                         aria-label="הזז למעלה"
                       >
                         ▲
@@ -526,7 +524,7 @@ function Workspace({
                       <button
                         onClick={() => trip.movePlace(day.id, i, 1)}
                         disabled={i === dayPlaces.length - 1}
-                        className="text-night/40 hover:text-night disabled:opacity-20"
+                        className="text-night/40 transition hover:text-night disabled:opacity-20"
                         aria-label="הזז למטה"
                       >
                         ▼
@@ -534,10 +532,14 @@ function Workspace({
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-start justify-between gap-2">
-                        <div className="font-black text-night">
+                        <div className="font-bold text-night">
                           {place.name}
-                          <span className="ms-2 text-xs font-bold text-night/40">
-                            {meta.emoji} {meta.label}
+                          <span className="badge ms-2 text-xs font-medium text-night/40">
+                            <span
+                              className="h-2 w-2 rounded-full"
+                              style={{ backgroundColor: meta.color }}
+                            />
+                            {meta.label}
                           </span>
                         </div>
                         <button
@@ -557,7 +559,7 @@ function Workspace({
                           onChange={(e) => {
                             if (e.target.value) trip.movePlaceToDay(day.id, place.id, e.target.value);
                           }}
-                          className="mt-1.5 rounded-lg bg-night/5 px-2 py-1 text-xs font-bold text-night/50"
+                          className="mt-1.5 rounded-lg bg-night/5 px-2 py-1 text-xs font-medium text-night/50"
                         >
                           <option value="">העבר ליום…</option>
                           {t.days
@@ -583,12 +585,12 @@ function Workspace({
                   const p = availableToAdd.find((x) => x.id === e.target.value);
                   if (p) trip.addPlace(day.citySlug, p.id);
                 }}
-                className="w-full rounded-2xl bg-shell px-4 py-3 font-black text-night/70 ring-1 ring-night/15"
+                className="w-full rounded-xl bg-shell px-4 py-3 font-semibold text-night/70 ring-1 ring-night/10"
               >
                 <option value="">+ הוספת עצירה מהקטלוג של {dayDest.name}…</option>
                 {availableToAdd.map((p) => (
                   <option key={p.id} value={p.id}>
-                    {categoryMeta[p.category].emoji} {p.name}
+                    {categoryMeta[p.category].label} · {p.name}
                   </option>
                 ))}
               </select>
@@ -596,7 +598,7 @@ function Workspace({
           </div>
 
           {/* Map */}
-          <div className="h-[420px] overflow-hidden rounded-3xl shadow-sm ring-1 ring-night/10 lg:sticky lg:top-20 lg:col-span-3 lg:h-[640px]">
+          <div className="h-[420px] overflow-hidden rounded-2xl ring-1 ring-night/10 lg:sticky lg:top-20 lg:col-span-3 lg:h-[640px]">
             <PlacesMap
               center={dayDest.center}
               zoom={dayDest.zoom}
@@ -607,14 +609,14 @@ function Workspace({
           </div>
         </div>
       ) : (
-        <div className="mt-6 rounded-3xl bg-shell p-8 text-center font-bold text-night/50 ring-1 ring-night/10 print:hidden">
-          הטיול ריק - הוסיפו יום למעלה, או הוסיפו מקומות מעמודי היעדים 🗺️
+        <div className="mt-6 rounded-2xl bg-shell p-8 text-center font-medium text-night/50 ring-1 ring-night/10 print:hidden">
+          הטיול עוד ריק - מוסיפים יום למעלה ומתחילים לחלום
         </div>
       )}
 
       {/* ---- Print-only summary ---- */}
       <div className="hidden print:block">
-        <h1 className="text-2xl font-black">🧳 {t.name} - טיול+</h1>
+        <h1 className="text-2xl font-bold">🧳 {t.name} - טיול+</h1>
         {t.days.map((d, i) => {
           const dst = destOf(d.citySlug);
           const prev = i > 0 ? t.days[i - 1] : null;
@@ -627,7 +629,7 @@ function Workspace({
                   {travelLeg(prev.citySlug, d.citySlug).label}
                 </p>
               )}
-              <h2 className="mt-2 text-lg font-black">
+              <h2 className="mt-2 text-lg font-bold">
                 📅 יום {i + 1} - {dst?.name}
               </h2>
               {d.notes && <p className="text-sm">💡 {d.notes}</p>}
@@ -665,10 +667,10 @@ function Btn({
   return (
     <button
       onClick={onClick}
-      className={`rounded-xl px-3.5 py-2 font-black transition ${
+      className={`rounded-xl px-3.5 py-2 font-semibold transition ${
         danger
-          ? 'bg-shell text-sunset-deep ring-1 ring-night/15 hover:bg-sunset hover:text-cream'
-          : 'bg-shell text-night/70 ring-1 ring-night/15 hover:ring-night/40'
+          ? 'bg-shell text-sunset-deep ring-1 ring-night/10 hover:bg-sunset hover:text-cream'
+          : 'bg-shell text-night/70 ring-1 ring-night/10 hover:ring-night/25'
       }`}
     >
       {children}

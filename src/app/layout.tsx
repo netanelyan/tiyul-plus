@@ -26,16 +26,16 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&family=Yellowtail&family=Space+Grotesk:wght@500;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Yellowtail&family=Space+Grotesk:wght@500;700&display=swap"
           rel="stylesheet"
         />
       </head>
       <body className="min-h-screen antialiased">
         <TripProvider>
-        <header className="sticky top-0 z-50 border-b-2 border-night/10 bg-cream/85 backdrop-blur print:hidden">
+        <header className="sticky top-0 z-50 border-b border-night/10 bg-cream/85 backdrop-blur print:hidden">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-            <Link href="/" className="flex items-center gap-2 text-2xl font-black text-night">
-              <span className="sticker rounded-xl bg-zest px-2 py-0.5 text-xl">🧭</span>
+            <Link href="/" className="flex items-center gap-2 text-xl font-bold text-night">
+              <span className="badge rounded-lg bg-zest/90 px-1.5 py-0.5 text-lg">🧭</span>
               <span>
                 טיול<span className="text-sunset">+</span>
               </span>
@@ -45,7 +45,7 @@ export default function RootLayout({
                 <Link
                   key={l.href}
                   href={l.href}
-                  className="rounded-full px-3.5 py-1.5 text-sm font-bold text-night/70 transition hover:bg-night hover:text-zest"
+                  className="rounded-full px-3.5 py-1.5 text-sm font-medium text-night/70 transition hover:bg-night/5 hover:text-night"
                 >
                   {l.label}
                 </Link>
@@ -56,8 +56,8 @@ export default function RootLayout({
         </header>
         <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
         </TripProvider>
-        <footer className="mt-12 bg-night py-8 text-center print:hidden">
-          <div className="text-lg font-black text-cream">
+        <footer className="mt-16 bg-night py-10 text-center print:hidden">
+          <div className="text-lg font-bold text-cream">
             טיול<span className="text-sunset">+</span>
           </div>
           <p className="mt-2 text-xs text-cream/50">
