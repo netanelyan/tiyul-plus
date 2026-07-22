@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 import { destinations } from '@/data/destinations';
 import { countries, getCountryBySlug } from '@/data/countries';
 import { isKosher } from '@/lib/categories';
@@ -8,10 +7,13 @@ import { isKosher } from '@/lib/categories';
  *
  * שני מצבים:
  * 1. בלי מפתח API - עונה חכם מבוסס-חוקים מעל הדאטה האוצר (עובד מיד).
- * 2. עם ANTHROPIC_API_KEY ב-.env.local - עונה עם Claude, מוזן בדאטה
- *    של היעדים כ-grounding כדי שהתשובות יהיו מעוגנות במקומות אמיתיים.
+ * 2. עם ANTHROPIC_API_KEY ב-.env.local - עונה עם Claude בסטרימינג, מוזן
+ *    בדאטה של היעדים כ-grounding כדי שהתשובות יהיו מעוגנות במקומות אמיתיים.
  *
- * בשני המצבים התשובה כוללת placeIds כדי שהלקוח יציג מפה מתחת להודעה.
+ * התשובה היא תמיד text/event-stream של אירועי JSON:
+ *   {type:'text', text}                        - מקטע טקסט (במנוע החוקים: הכול במקטע אחד)
+ *   {type:'meta', destinationSlug?, placeIds?} - בסוף הטקסט, כדי שהלקוח יציג מפה
+ *   {type:'done'}                              - סיום
  */
 
 interface ChatMessage {
@@ -129,7 +131,25 @@ BOUNDARIES
 DATA (destinations, places, itineraries, practical info):
 `;
 
-async function claudeReply(messages: ChatMessage[]): Promise<ChatReply> {
+type StreamEvent =
+  | { type: 'text'; text: string }
+  | { type: 'meta'; destinationSlug?: string; placeIds?: string[] }
+  | { type: 'done' };
+
+type Send = (event: StreamEvent) => void;
+
+interface AnthropicSSE {
+  type: string;
+  delta?: { type: string; text?: string };
+  message?: { usage?: unknown };
+}
+
+/**
+ * סטרימינג מ-Claude: מקטעי הטקסט נשלחים ללקוח ברגע שהם מגיעים, ובסוף
+ * נגזר destinationSlug מהטקסט המלא (כמו במצב הלא-סטרימי הקודם).
+ * זורק שגיאה רק אם עוד לא נשלח שום טקסט - כדי שאפשר יהיה ליפול למנוע החוקים.
+ */
+async function streamClaude(messages: ChatMessage[], send: Send): Promise<void> {
   const grounding = {
     countries: countries.map((c) => ({
       slug: c.slug,
@@ -165,29 +185,97 @@ async function claudeReply(messages: ChatMessage[]): Promise<ChatReply> {
     body: JSON.stringify({
       model: process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-5',
       max_tokens: 1024,
-      system: SYSTEM_PROMPT + JSON.stringify(grounding),
+      stream: true,
+      // ה-grounding הוא הבלוק האחרון עם cache_control: כל הפרומפט (הוראות +
+      // דאטה, ~15k טוקנים) נכנס ל-prompt cache והודעות חוזרות קוראות ממנו.
+      system: [
+        { type: 'text', text: SYSTEM_PROMPT },
+        {
+          type: 'text',
+          text: JSON.stringify(grounding),
+          cache_control: { type: 'ephemeral' },
+        },
+      ],
       messages,
     }),
   });
 
-  if (!res.ok) {
-    // נפילה חיננית למנוע החוקים
-    return ruleBasedReply(messages[messages.length - 1]?.content ?? '');
+  if (!res.ok || !res.body) throw new Error(`anthropic ${res.status}`);
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let full = '';
+
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() ?? '';
+      for (const line of lines) {
+        if (!line.startsWith('data:')) continue;
+        let event: AnthropicSSE;
+        try {
+          event = JSON.parse(line.slice(5)) as AnthropicSSE;
+        } catch {
+          continue;
+        }
+        if (event.type === 'content_block_delta' && event.delta?.type === 'text_delta' && event.delta.text) {
+          full += event.delta.text;
+          send({ type: 'text', text: event.delta.text });
+        } else if (event.type === 'message_start' && process.env.NODE_ENV === 'development') {
+          // אימות prompt cache בפיתוח: cache_read_input_tokens > 0 = פגיעה במטמון
+          console.log('[chat] usage:', JSON.stringify(event.message?.usage));
+        }
+      }
+    }
+  } catch (err) {
+    if (!full) throw err; // כלום עוד לא נשלח - נופלים למנוע החוקים
+    // באמצע תשובה: מסיימים עם מה שיש
   }
 
-  const data = (await res.json()) as { content: { type: string; text?: string }[] };
-  const text = data.content.find((c) => c.type === 'text')?.text ?? '';
-  const dest = findDestination(text);
-  return { reply: text, destinationSlug: dest?.slug };
+  if (!full) throw new Error('empty response');
+  const dest = findDestination(full);
+  send({ type: 'meta', destinationSlug: dest?.slug });
+}
+
+function sendRuleBased(lastUserText: string, send: Send) {
+  const r = ruleBasedReply(lastUserText);
+  send({ type: 'text', text: r.reply });
+  send({ type: 'meta', destinationSlug: r.destinationSlug, placeIds: r.placeIds });
 }
 
 export async function POST(request: Request) {
   const { messages } = (await request.json()) as { messages: ChatMessage[] };
   const last = messages[messages.length - 1]?.content ?? '';
+  const encoder = new TextEncoder();
 
-  const result = process.env.ANTHROPIC_API_KEY
-    ? await claudeReply(messages)
-    : ruleBasedReply(last);
+  const stream = new ReadableStream<Uint8Array>({
+    async start(controller) {
+      const send: Send = (event) =>
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
 
-  return NextResponse.json(result);
+      if (process.env.ANTHROPIC_API_KEY) {
+        try {
+          await streamClaude(messages, send);
+        } catch {
+          // נפילה חיננית למנוע החוקים (streamClaude זורק רק לפני הטקסט הראשון)
+          sendRuleBased(last, send);
+        }
+      } else {
+        sendRuleBased(last, send);
+      }
+      send({ type: 'done' });
+      controller.close();
+    },
+  });
+
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream; charset=utf-8',
+      'Cache-Control': 'no-cache, no-transform',
+    },
+  });
 }

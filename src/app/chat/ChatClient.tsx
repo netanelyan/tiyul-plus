@@ -70,6 +70,11 @@ export default function ChatClient() {
     setMessages(next);
     setInput('');
     setLoading(true);
+    // "חושב…" מוצג רק עד המקטע הראשון; משם ההודעה נבנית טוקן-אחרי-טוקן
+    let appended = false;
+    const patchLast = (patch: (msg: Msg) => Msg) =>
+      setMessages((m) => [...m.slice(0, -1), patch(m[m.length - 1])]);
+
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
@@ -78,21 +83,56 @@ export default function ChatClient() {
           messages: next.map(({ role, content }) => ({ role, content })),
         }),
       });
-      const data = await res.json();
-      setMessages((m) => [
-        ...m,
-        {
-          role: 'assistant',
-          content: data.reply,
-          destinationSlug: data.destinationSlug,
-          placeIds: data.placeIds,
-        },
-      ]);
+      if (!res.ok || !res.body) throw new Error('bad response');
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() ?? '';
+        for (const line of lines) {
+          if (!line.startsWith('data:')) continue;
+          let event: {
+            type: string;
+            text?: string;
+            destinationSlug?: string;
+            placeIds?: string[];
+          };
+          try {
+            event = JSON.parse(line.slice(5));
+          } catch {
+            continue;
+          }
+          if (event.type === 'text' && event.text) {
+            const chunk = event.text;
+            if (!appended) {
+              appended = true;
+              setLoading(false);
+              setMessages((m) => [...m, { role: 'assistant', content: chunk }]);
+            } else {
+              patchLast((msg) => ({ ...msg, content: msg.content + chunk }));
+            }
+          } else if (event.type === 'meta' && appended) {
+            patchLast((msg) => ({
+              ...msg,
+              destinationSlug: event.destinationSlug,
+              placeIds: event.placeIds,
+            }));
+          }
+        }
+      }
+      if (!appended) throw new Error('empty stream');
     } catch {
-      setMessages((m) => [
-        ...m,
-        { role: 'assistant', content: 'אופס, משהו השתבש. נסו שוב.' },
-      ]);
+      if (!appended) {
+        setMessages((m) => [
+          ...m,
+          { role: 'assistant', content: 'אופס, משהו השתבש. נסו שוב.' },
+        ]);
+      }
     } finally {
       setLoading(false);
     }
