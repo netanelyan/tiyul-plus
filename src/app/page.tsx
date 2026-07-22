@@ -1,65 +1,152 @@
-import Image from "next/image";
+import Link from 'next/link';
+import { getProvider } from '@/lib/providers';
 
-export default function Home() {
+const HERO_PHOTO =
+  'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=2000&q=70';
+
+export default async function Home() {
+  const provider = getProvider();
+  const dests = await provider.getDestinations();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div>
+      {/* Hero */}
+      <section
+        className="photo-bg relative overflow-hidden rounded-[2.5rem] px-6 py-16 sm:px-12 sm:py-20"
+        style={{
+          backgroundImage: `linear-gradient(200deg, rgba(36,27,77,0.55) 0%, rgba(36,27,77,0.85) 70%), url(${HERO_PHOTO})`,
+        }}
+      >
+        <div className="rise-in max-w-2xl">
+          <span className="sticker rounded-full bg-zest px-3 py-1 text-sm font-black text-night">
+            🇮🇱 נבנה בשביל מטיילים ישראלים
+          </span>
+          <h1 className="display mt-5 text-4xl text-cream sm:text-6xl">
+            תכנון טיולים
+            <br />
+            שמדבר <span className="marker text-night">עברית.</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="mt-5 max-w-xl text-lg leading-relaxed text-cream/90">
+            מסלולים יום-אחרי-יום עם מפה אינטראקטיבית, שכבת אוכל כשר, טיסות ישירות
+            מנתב"ג וכל המידע הפרקטי - בלי לתרגם בראש מאנגלית.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        <div className="rise-in-late mt-8 flex flex-wrap gap-3">
+          <Link
+            href="/planner"
+            className="rounded-2xl bg-sunset px-6 py-3 text-lg font-black text-cream shadow-lg transition hover:bg-sunset-deep"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            למתכנן המסלולים ←
+          </Link>
+          <Link
+            href="/chat"
+            className="rounded-2xl border-2 border-cream/40 px-6 py-3 text-lg font-black text-cream transition hover:bg-cream/10"
           >
-            Documentation
-          </a>
+            לצ׳אט הטיולים 💬
+          </Link>
         </div>
-      </main>
+      </section>
+
+      {/* Destinations */}
+      <section className="mt-14">
+        <div className="flex items-end justify-between">
+          <div>
+            <h2 className="display text-3xl text-night">
+              לאן <span className="marker">טסים?</span>
+            </h2>
+            <p className="mt-2 text-night/60">
+              {dests.length} יעדים עם מסלול מוכן, מפה ושכבת כשרות. עוד בדרך.
+            </p>
+          </div>
+        </div>
+        <div className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {dests.map((d, i) => (
+            <Link
+              key={d.slug}
+              href={`/destinations/${d.slug}`}
+              className="card-pop group overflow-hidden rounded-3xl bg-shell shadow-sm ring-1 ring-night/10"
+            >
+              <div
+                className="photo-bg relative h-44"
+                style={
+                  d.photo
+                    ? {
+                        backgroundImage: `linear-gradient(180deg, rgba(36,27,77,0) 40%, rgba(36,27,77,0.65) 100%), url(${d.photo})`,
+                      }
+                    : undefined
+                }
+              >
+                <span
+                  className={`sticker absolute top-4 rounded-full bg-cream px-3 py-1 text-2xl ${
+                    i % 2 === 0 ? 'end-4' : 'end-4 rotate-2'
+                  }`}
+                >
+                  {d.flag}
+                </span>
+                <div className="absolute bottom-3 start-4">
+                  <h3 className="display text-2xl text-cream drop-shadow">{d.name}</h3>
+                  <div className="text-xs font-medium text-cream/80">{d.nameLocal}</div>
+                </div>
+              </div>
+              <div className="p-5">
+                <p className="text-sm font-medium leading-relaxed text-night/75">{d.tagline}</p>
+                <div className="mt-4 flex flex-wrap gap-2 text-xs font-black">
+                  <span className="rounded-full bg-night px-3 py-1.5 text-zest">
+                    🗓️ {d.days} ימים
+                  </span>
+                  {d.kosherCount > 0 && (
+                    <span className="rounded-full bg-sunset/10 px-3 py-1.5 text-sunset-deep">
+                      ✡️ {d.kosherCount} נקודות כשרות
+                    </span>
+                  )}
+                  <span className="rounded-full bg-night/5 px-3 py-1.5 text-night/60">
+                    {d.country}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Value props */}
+      <section className="mt-16 grid gap-5 sm:grid-cols-3">
+        {[
+          {
+            emoji: '🗺️',
+            title: 'מסלול + מפה ביחד',
+            text: 'כל יום במסלול מוצג על מפה אינטראקטיבית עם סדר עצירות - לא עוד רשימה בלי הקשר.',
+            bg: 'bg-night',
+            titleColor: 'text-zest',
+            textColor: 'text-cream/80',
+          },
+          {
+            emoji: '✡️',
+            title: 'שכבת כשרות',
+            text: 'מסעדות כשרות, סופרים כשרים והערות השגחה - מסומנים על המפה בכל יעד.',
+            bg: 'bg-sunset',
+            titleColor: 'text-cream',
+            textColor: 'text-cream/90',
+          },
+          {
+            emoji: '🇮🇱',
+            title: 'מידע פרקטי לישראלים',
+            text: 'טיסות ישירות מנתב"ג, ויזות, eSIM, תשלומים - מה שבאמת צריך לדעת לפני שטסים.',
+            bg: 'bg-zest',
+            titleColor: 'text-night',
+            textColor: 'text-night/75',
+          },
+        ].map((f, i) => (
+          <div
+            key={f.title}
+            className={`card-pop rounded-3xl p-6 ${f.bg} ${i === 1 ? 'sm:-rotate-1' : i === 2 ? 'sm:rotate-1' : ''}`}
+          >
+            <div className="text-3xl">{f.emoji}</div>
+            <h3 className={`display mt-3 text-xl ${f.titleColor}`}>{f.title}</h3>
+            <p className={`mt-2 text-sm font-medium leading-relaxed ${f.textColor}`}>{f.text}</p>
+          </div>
+        ))}
+      </section>
     </div>
   );
 }

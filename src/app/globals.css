@@ -1,26 +1,163 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+@import 'leaflet/dist/leaflet.css';
+
+/* ===== טיול+ design system: bold & playful ===== */
+@theme {
+  --color-night: #241b4d; /* deep plum base */
+  --color-night-soft: #3b2f74;
+  --color-sunset: #ff5941; /* vivid coral primary */
+  --color-sunset-deep: #e03e27;
+  --color-zest: #ffc531; /* electric yellow accent */
+  --color-cream: #fdf6ec; /* warm page background */
+  --color-shell: #fffdf8; /* card background */
+}
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --shadow-pop: 0 10px 30px -10px rgba(36, 27, 77, 0.25);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-night);
+  font-family: 'Heebo', 'Rubik', 'Segoe UI', 'Arial Hebrew', system-ui, sans-serif;
+}
+
+/* Display headlines with attitude */
+.display {
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+/* Highlighted word inside a headline */
+.marker {
+  background: linear-gradient(180deg, transparent 55%, var(--color-zest) 55%);
+  padding-inline: 0.1em;
+  border-radius: 0.15em;
+}
+
+/* Sticker badge (slightly tilted) */
+.sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transform: rotate(-2deg);
+  box-shadow: var(--shadow-pop);
+}
+
+/* Photo card helper: gradient always paints first = built-in fallback */
+.photo-bg {
+  background-size: cover;
+  background-position: center;
+  background-color: var(--color-night-soft);
+}
+
+/* Hero entrance */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rise-in {
+  animation: rise-in 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+.rise-in-late {
+  animation: rise-in 0.6s 0.15s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+/* Card hover: lift + tiny tilt */
+.card-pop {
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.7, 0.3, 1),
+    box-shadow 0.25s ease;
+}
+
+.card-pop:hover {
+  transform: translateY(-6px) rotate(0.6deg);
+  box-shadow: var(--shadow-pop);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise-in,
+  .rise-in-late {
+    animation: none;
+  }
+  .card-pop,
+  .card-pop:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* ===== הדפסה: סיכום טיול נקי ===== */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+  main {
+    max-width: none;
+    padding: 0;
+  }
+}
+
+/* ===== Leaflet + RTL ===== */
+.leaflet-container {
+  direction: ltr;
+  font-family: inherit;
+  border-radius: 1.5rem;
+  z-index: 0;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 1rem;
+  box-shadow: var(--shadow-pop);
+}
+
+.leaflet-popup-content {
+  direction: rtl;
+  text-align: right;
+  margin: 10px 14px;
+}
+
+.pin-marker {
+  background: transparent;
+  border: none;
+}
+
+.pin-marker .pin {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50% 50% 50% 4px;
+  box-shadow: 0 3px 10px rgba(36, 27, 77, 0.4);
+  border: 2.5px solid #fffdf8;
+  font-size: 16px;
+}
+
+.pin-marker .pin-number {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  background: #241b4d;
+  color: #ffc531;
+  font-size: 11px;
+  font-weight: 900;
+  width: 19px;
+  height: 19px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fffdf8;
 }

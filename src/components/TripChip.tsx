@@ -1,0 +1,19 @@
+'use client';
+
+import Link from 'next/link';
+import { useTrip } from '@/lib/trip/TripContext';
+
+export default function TripChip() {
+  const { currentTrip, hydrated } = useTrip();
+  if (!hydrated || !currentTrip) return null;
+  const stops = currentTrip.days.reduce((n, d) => n + d.placeIds.length, 0);
+  return (
+    <Link
+      href="/planner"
+      className="sticker rounded-full bg-sunset px-3 py-1.5 text-xs font-black text-cream transition hover:bg-sunset-deep"
+      title={currentTrip.name}
+    >
+      🧳 {currentTrip.name} · {stops} עצירות
+    </Link>
+  );
+}

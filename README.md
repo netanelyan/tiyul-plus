@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# טיול+ (Tiyul+) 🧭
 
-## Getting Started
+**Trip planning that speaks Hebrew.** A travel-planning web app built for Israeli
+travelers: full RTL Hebrew UI, day-by-day itineraries on an interactive map, a
+kosher food layer, and the practical info Israelis actually need (direct flights
+from TLV, visas, eSIM, payments).
 
-First, run the development server:
+Part of **BlackZ**.
+
+## Features
+
+- 🗺️ **8 destinations** with curated Hebrew content: Vienna, Bratislava, Prague, Budapest, Rome, Athens, Barcelona, Berlin
+- 🧳 **Trip builder** - create trips, add places from any page, reorder days and stops, multi-city trips with travel legs
+- 🪄 **Smart wizard** - pick cities, days, pace, trip type (city/nature/combined), shopping level and kosher preference; get a generated, editable itinerary
+- ✡️ **Kosher layer** - kosher restaurants and markets with supervision notes, marked on every map
+- 💬 **Hebrew travel chat** - grounded in the site's data, with a map under every answer (plugs into Claude via `ANTHROPIC_API_KEY`)
+- 🧭 **Google Maps handoff** - open any day as a ready navigation route
+
+## Run
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. Works with zero API keys.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Architecture notes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Next.js 16 (App Router) + Tailwind 4 + react-leaflet** (OpenStreetMap tiles, no key)
+- The app talks only to a `PlacesProvider` interface (`src/lib/types.ts`).
+  Swap data sources via `.env`: `NEXT_PUBLIC_PLACES_PROVIDER=sample | google | tripadvisor`
+  (adapters for Google Places API (New) and TripAdvisor Content API are included)
+- Curated content lives in `src/data/destinations.ts` - adding a destination there
+  lights it up across the whole site
+- Trips persist in the browser behind a small storage module (`src/lib/trip/storage.ts`),
+  designed to be replaced by a real backend without touching components
+- See `.env.example` for all configuration
 
-## Learn More
+## Disclaimer
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Sample data is hand-curated for demonstration. Kashrut, opening hours and prices
+change - always verify with the venues before traveling.

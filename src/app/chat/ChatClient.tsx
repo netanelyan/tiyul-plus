@@ -1,0 +1,170 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import type { Place } from '@/lib/types';
+import { destinations } from '@/data/destinations';
+import PlacesMap from '@/components/PlacesMap';
+
+interface Msg {
+  role: 'user' | 'assistant';
+  content: string;
+  destinationSlug?: string;
+  placeIds?: string[];
+}
+
+const suggestions = [
+  'תבנה לי מסלול לרומא',
+  'איפה אוכלים כשר בבודפשט?',
+  'מה צריך לדעת לפני טיסה לאתונה?',
+];
+
+/** מרנדר **מודגש** בסיסי בלי ספריות */
+function renderText(text: string) {
+  return text.split('\n').map((line, i) => (
+    <p key={i} className="min-h-[0.5em]">
+      {line.split(/(\*\*[^*]+\*\*)/g).map((part, j) =>
+        part.startsWith('**') && part.endsWith('**') ? (
+          <strong key={j}>{part.slice(2, -2)}</strong>
+        ) : (
+          <span key={j}>{part}</span>
+        ),
+      )}
+    </p>
+  ));
+}
+
+function MessageMap({ slug, placeIds }: { slug: string; placeIds: string[] }) {
+  const dest = destinations.find((d) => d.slug === slug);
+  if (!dest) return null;
+  const places = placeIds
+    .map((id) => dest.places.find((p) => p.id === id))
+    .filter((p): p is Place => Boolean(p));
+  if (places.length === 0) return null;
+  return (
+    <div className="mt-3 h-64 overflow-hidden rounded-2xl ring-1 ring-night/10">
+      <PlacesMap center={dest.center} zoom={dest.zoom} places={places} />
+    </div>
+  );
+}
+
+export default function ChatClient() {
+  const [messages, setMessages] = useState<Msg[]>([
+    {
+      role: 'assistant',
+      content:
+        'היי! 👋 אני עוזר הטיולים של טיול+. שאלו אותי על מסלולים, אוכל כשר או מידע פרקטי ליעדים שלנו - והתשובות יגיעו עם מפה.',
+    },
+  ]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, loading]);
+
+  async function send(text: string) {
+    const trimmed = text.trim();
+    if (!trimmed || loading) return;
+    const next: Msg[] = [...messages, { role: 'user', content: trimmed }];
+    setMessages(next);
+    setInput('');
+    setLoading(true);
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: next.map(({ role, content }) => ({ role, content })),
+        }),
+      });
+      const data = await res.json();
+      setMessages((m) => [
+        ...m,
+        {
+          role: 'assistant',
+          content: data.reply,
+          destinationSlug: data.destinationSlug,
+          placeIds: data.placeIds,
+        },
+      ]);
+    } catch {
+      setMessages((m) => [
+        ...m,
+        { role: 'assistant', content: 'אופס, משהו השתבש. נסו שוב.' },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="mx-auto flex h-[calc(100vh-180px)] max-w-3xl flex-col">
+      <h1 className="display text-3xl text-night">
+        צ׳אט <span className="marker">הטיולים</span> 💬
+      </h1>
+      <p className="mt-1.5 text-sm font-medium text-night/60">
+        עברית מלאה, תשובות מעוגנות בדאטה אמיתי, ומפה מתחת לכל תשובה רלוונטית.
+      </p>
+
+      <div className="mt-4 flex-1 space-y-4 overflow-y-auto rounded-3xl bg-shell p-5 ring-1 ring-night/10">
+        {messages.map((msg, i) => (
+          <div key={i} className={msg.role === 'user' ? 'flex justify-start' : ''}>
+            <div
+              className={`max-w-[85%] rounded-3xl px-5 py-3.5 text-sm leading-relaxed ${
+                msg.role === 'user'
+                  ? 'rounded-tr-lg bg-night font-medium text-cream'
+                  : 'w-full max-w-full bg-cream text-night'
+              }`}
+            >
+              {renderText(msg.content)}
+              {msg.destinationSlug && msg.placeIds && msg.placeIds.length > 0 && (
+                <MessageMap slug={msg.destinationSlug} placeIds={msg.placeIds} />
+              )}
+            </div>
+          </div>
+        ))}
+        {loading && (
+          <div className="w-fit animate-pulse rounded-3xl bg-cream px-5 py-3.5 text-sm font-bold text-night/40">
+            חושב… 🧭
+          </div>
+        )}
+        <div ref={bottomRef} />
+      </div>
+
+      <div className="mt-3 flex flex-wrap gap-2">
+        {suggestions.map((s) => (
+          <button
+            key={s}
+            onClick={() => send(s)}
+            className="rounded-full bg-shell px-4 py-2 text-xs font-bold text-night/70 ring-1 ring-night/15 transition hover:bg-zest hover:text-night hover:ring-zest"
+          >
+            {s}
+          </button>
+        ))}
+      </div>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          send(input);
+        }}
+        className="mt-3 flex gap-2"
+      >
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="למשל: תבנה לי מסלול ל-3 ימים ברומא עם אוכל כשר"
+          className="flex-1 rounded-2xl bg-shell px-5 py-3.5 text-sm font-medium text-night outline-none ring-1 ring-night/15 transition focus:ring-2 focus:ring-sunset"
+        />
+        <button
+          type="submit"
+          disabled={loading || !input.trim()}
+          className="rounded-2xl bg-sunset px-6 py-3.5 font-black text-cream transition hover:bg-sunset-deep disabled:opacity-40"
+        >
+          שליחה
+        </button>
+      </form>
+    </div>
+  );
+}
