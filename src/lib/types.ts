@@ -33,21 +33,39 @@ export interface DayPlan {
   notes?: string; // Hebrew tips for the day
 }
 
-export interface PracticalInfo {
-  flights: string; // direct flights from TLV, typical duration
+// Country-level facts: identical for every city in the country, so they live
+// on the Country and cities reference them via countrySlug.
+export interface CountryPractical {
   visa: string;
   currency: string;
   sim: string;
   payments: string;
+}
+
+export interface Country {
+  slug: string;
+  name: string; // Hebrew
+  nameLocal: string; // Local / English name
+  flag: string; // emoji
+  tagline: string; // Hebrew one-liner
+  summary: string; // Hebrew paragraph
+  photo?: string; // hero photo URL (Unsplash); UI falls back to gradient
+  practical: CountryPractical;
+}
+
+// City-level facts: specific to the city (its airport, its transit, its
+// kosher scene). Country facts (visa, currency…) come from the Country.
+export interface CityPractical {
+  flights: string; // direct flights from TLV to this city's airport
   gettingAround: string;
-  kosherOverview: string; // state of kosher food in the destination
+  kosherOverview: string; // state of kosher food in the city
 }
 
 export interface Destination {
   slug: string;
   name: string; // Hebrew
   nameLocal: string;
-  country: string; // Hebrew
+  countrySlug: string; // references Country.slug
   flag: string; // emoji
   center: { lat: number; lng: number };
   zoom: number;
@@ -57,14 +75,15 @@ export interface Destination {
   photo?: string; // hero photo URL (Unsplash); UI falls back to gradient
   places: Place[];
   itinerary: DayPlan[];
-  practical: PracticalInfo;
+  practical: CityPractical;
 }
 
 export interface DestinationSummary {
   slug: string;
   name: string;
   nameLocal: string;
-  country: string;
+  countrySlug: string;
+  country: string; // Hebrew country name, resolved from countrySlug
   flag: string;
   tagline: string;
   days: number;
@@ -79,6 +98,9 @@ export interface DestinationSummary {
 
 export interface PlacesProvider {
   readonly providerName: string;
+  /** Countries are curated content - external providers delegate to sample. */
+  getCountries(): Promise<Country[]>;
+  getCountry(slug: string): Promise<Country | null>;
   getDestinations(): Promise<DestinationSummary[]>;
   getDestination(slug: string): Promise<Destination | null>;
   /** Free-text search within a destination (Hebrew or local language). */

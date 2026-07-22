@@ -28,11 +28,23 @@ npm run lint
 
 ## Architecture map
 
-- `src/data/destinations.ts` - curated content, 8 cities (Hebrew). Adding a
-  destination here lights it up across the whole site. This data is the
-  product's moat; quality > quantity.
-- `src/lib/types.ts` - domain types + `PlacesProvider` interface. The app
-  talks ONLY to this interface.
+- `src/data/countries.ts` - the country layer (Hebrew). Users browse by
+  country ("טסים לאיטליה"), plan by city. Each `Country` carries the
+  country-level practical facts (visa, currency, sim, payments) shared by
+  all its cities.
+- `src/data/destinations.ts` - curated content, 8 cities (Hebrew), each
+  referencing its country via `countrySlug`. City `practical` holds only
+  city-level facts: flights (to that city's airport), gettingAround,
+  kosherOverview. Adding a destination here lights it up across the whole
+  site. This data is the product's moat; quality > quantity.
+- `src/lib/types.ts` - domain types + `PlacesProvider` interface (includes
+  `getCountries()`/`getCountry(slug)`; google/tripadvisor delegate these to
+  sample - countries are curated content). The app talks ONLY to this
+  interface.
+- Routes: homepage lists countries → `/countries/[slug]` (country hero,
+  practical cards, city cards) → `/destinations/[slug]` (city page with
+  breadcrumb יעדים / מדינה / עיר; its practical section merges city fields
+  with the country's visa/currency/sim/payments so nothing is lost).
 - `src/lib/providers/` - `sample` (default, keyless), `google` (Places API
   New), `tripadvisor` (Content API). Selected via
   `NEXT_PUBLIC_PLACES_PROVIDER`. External APIs ENRICH curated data, never
@@ -54,6 +66,20 @@ npm run lint
   text, sunset as the single accent for primary buttons/active states, zest
   only as a rare small highlight). Reuse these tokens; do not invent new
   palettes.
+
+## Adding a new country (single data edit, no UI work)
+
+1. `src/data/countries.ts` - add a `Country`: slug, Hebrew name, nameLocal,
+   flag, tagline, summary, photo (verified Unsplash URL), and `practical`
+   (visa, currency, sim, payments) written for Israelis.
+2. `src/data/destinations.ts` - add one `Destination` per city with
+   `countrySlug` pointing at the new country, places (with kosher notes
+   where relevant), a day-by-day itinerary, and city-level `practical`
+   (flights from TLV, gettingAround, kosherOverview).
+3. Done. Homepage, `/countries/[slug]`, the city page, the wizard's grouped
+   city picker, and the chat grounding all pick it up automatically.
+   Optional: add inter-city legs in `src/lib/trip/travel.ts` if the new
+   cities pair with existing ones.
 
 ## Hard rules
 

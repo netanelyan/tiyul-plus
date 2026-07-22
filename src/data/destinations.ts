@@ -4,13 +4,15 @@ import type { Destination } from '@/lib/types';
 // משתנות - תמיד לוודא מול המקום לפני ההגעה.
 // כשמחברים ספק חיצוני (Google Places / TripAdvisor), הנתונים כאן משמשים
 // כבסיס והספק מעשיר אותם בדירוגים, תמונות ושעות אמת.
+// מידע ברמת מדינה (ויזה, מטבע, סים, תשלומים) גר ב-countries.ts;
+// כאן נשאר רק מה שעירוני באמת: טיסות לשדה של העיר, תחבורה, כשרות.
 
 export const destinations: Destination[] = [
   {
     slug: 'vienna',
     name: 'וינה',
     nameLocal: 'Vienna / Wien',
-    country: 'אוסטריה',
+    countrySlug: 'austria',
     flag: '🇦🇹',
     center: { lat: 48.2082, lng: 16.3719 },
     zoom: 12,
@@ -209,10 +211,6 @@ export const destinations: Destination[] = [
     practical: {
       flights:
         'טיסות ישירות מנתב"ג (אל על, אוסטריאן, ווִיז אייר ועוד) - כ-3.5 שעות. לרוב יש טיסות כל יום.',
-      visa: 'ישראלים לא צריכים ויזה לשנגן (עד 90 יום). לוודא דרכון בתוקף 6 חודשים.',
-      currency: 'אירו (€). ',
-      sim: 'הכי נוח eSIM מראש (Airalo וכדומה) או כרטיס מקומי של Hot Telekom / Magenta בשדה.',
-      payments: 'כרטיסי אשראי מתקבלים כמעט בכל מקום; מזומן עדיין נפוץ בדוכנים ובשווקים.',
       gettingAround:
         'תחבורה ציבורית מעולה (U-Bahn, חשמליות). כרטיס 24/48/72 שעות משתלם. מרכז העיר מהלך.',
       kosherOverview:
@@ -223,7 +221,7 @@ export const destinations: Destination[] = [
     slug: 'bratislava',
     name: 'ברטיסלבה',
     nameLocal: 'Bratislava',
-    country: 'סלובקיה',
+    countrySlug: 'slovakia',
     flag: '🇸🇰',
     center: { lat: 48.1439, lng: 17.1097 },
     zoom: 13,
@@ -356,10 +354,6 @@ export const destinations: Destination[] = [
     practical: {
       flights:
         'הכי נוח לטוס לווינה (טיסות ישירות מנתב"ג) - משדה התעופה של וינה עד ברטיסלבה כשעה בשאטל/רכב. יש גם טיסות לואו-קוסט ישירות לברטיסלבה בחלק מהעונות.',
-      visa: 'שנגן - ללא ויזה לישראלים עד 90 יום.',
-      currency: 'אירו (€). זולה משמעותית מווינה.',
-      sim: 'אותו eSIM אירופי מווינה עובד גם כאן - אין נדידה בין מדינות האיחוד.',
-      payments: 'כרטיסים מתקבלים בכל מקום כמעט.',
       gettingAround: 'הכול מהלך במרכז. לדווין - אוטובוס 29. וינה-ברטיסלבה: אוטובוס FlixBus/RegioJet או רכבת, כשעה.',
       kosherOverview:
         'אין מסעדות כשרות מסחריות - בית חב"ד מארח בתיאום מראש, והעיר במרחק 45 דקות מהמערך הכשר המלא של וינה. מומלץ להצטייד בסופר הכשר בווינה.',
@@ -369,7 +363,7 @@ export const destinations: Destination[] = [
     slug: 'prague',
     name: 'פראג',
     nameLocal: 'Prague / Praha',
-    country: 'צ׳כיה',
+    countrySlug: 'czechia',
     flag: '🇨🇿',
     center: { lat: 50.0875, lng: 14.4213 },
     zoom: 13,
@@ -509,10 +503,6 @@ export const destinations: Destination[] = [
     ],
     practical: {
       flights: 'טיסות ישירות מנתב"ג (אל על, סמארטווינגס ועוד) - כ-4 שעות.',
-      visa: 'שנגן - ללא ויזה לישראלים עד 90 יום.',
-      currency: 'קרונה צ׳כית (CZK), לא אירו! להימנע מהמרות בדוכני רחוב - רק כרטיס או בנק.',
-      sim: 'eSIM אירופי או כרטיס Vodafone/O2 מקומי.',
-      payments: 'כרטיסים מתקבלים כמעט בכל מקום. אם מציעים לחייב באירו במסוף - תמיד לבחור קרונות.',
       gettingAround: 'מרכז העיר כולו מהלך. חשמליות ומטרו מצוינים לכל השאר.',
       kosherOverview:
         'שתי מסעדות כשרות ברובע היהודי ומניינים קבועים באלטנוישול ובבית הכנסת הספרדי. ארוחות שבת דורשות הרשמה מראש. יש גם חנויות עם מוצרים כשרים בסיסיים.',
@@ -522,7 +512,7 @@ export const destinations: Destination[] = [
     slug: 'budapest',
     name: 'בודפשט',
     nameLocal: 'Budapest',
-    country: 'הונגריה',
+    countrySlug: 'hungary',
     flag: '🇭🇺',
     center: { lat: 47.4979, lng: 19.0402 },
     zoom: 13,
@@ -675,10 +665,6 @@ export const destinations: Destination[] = [
     ],
     practical: {
       flights: 'טיסות ישירות מנתב"ג (אל על, ווִיז אייר) - כ-3 שעות.',
-      visa: 'שנגן - ללא ויזה לישראלים עד 90 יום.',
-      currency: 'פורינט הונגרי (HUF), לא אירו. המחירים נוחים משמעותית ממערב אירופה.',
-      sim: 'eSIM אירופי או כרטיס מקומי של Yettel/Vodafone.',
-      payments: 'כרטיסים מתקבלים כמעט בכל מקום; במסוף לבחור תמיד חיוב בפורינט, לא באירו.',
       gettingAround: 'מטרו היסטורי (הקו הראשון ביבשת!), חשמליות ומעבורות דנובה. הכול עם אותו כרטיס.',
       kosherOverview:
         'הרובע היהודי סביב רחוב קזינצי הוא מהתוססים באירופה: מסעדות כשרות, בתי כנסת פעילים (דוהאני, קזינצי האורתודוקסי), חנות כשרה ובתי חב"ד. קל להסתדר כשר כל השבוע.',
@@ -688,7 +674,7 @@ export const destinations: Destination[] = [
     slug: 'rome',
     name: 'רומא',
     nameLocal: 'Rome / Roma',
-    country: 'איטליה',
+    countrySlug: 'italy',
     flag: '🇮🇹',
     center: { lat: 41.8967, lng: 12.4822 },
     zoom: 13,
@@ -841,10 +827,6 @@ export const destinations: Destination[] = [
     ],
     practical: {
       flights: 'טיסות ישירות מנתב"ג לפיומיצ׳ינו (אל על, ITA, ווִיז אייר) - כ-3.5 שעות.',
-      visa: 'שנגן - ללא ויזה לישראלים עד 90 יום.',
-      currency: 'אירו (€).',
-      sim: 'eSIM אירופי או כרטיס TIM/Vodafone מקומי.',
-      payments: 'כרטיסים מתקבלים ברוב המקומות; מזומן קטן שימושי לג׳לטו ואספרסו בדוכנים.',
       gettingAround:
         'המרכז ההיסטורי מהלך ברובו. מטרו מוגבל אבל שימושי לוותיקן ולקולוסיאום. מרכבת דה טרמיני יש חיבור מהיר לשדה.',
       kosherOverview:
@@ -855,7 +837,7 @@ export const destinations: Destination[] = [
     slug: 'athens',
     name: 'אתונה',
     nameLocal: 'Athens',
-    country: 'יוון',
+    countrySlug: 'greece',
     flag: '🇬🇷',
     center: { lat: 37.9755, lng: 23.7348 },
     zoom: 13,
@@ -989,10 +971,6 @@ export const destinations: Destination[] = [
     practical: {
       flights:
         'המון טיסות ישירות מנתב"ג (אל על, ארקיע, ישראייר, Aegean, בלו בירד) - כשעתיים בלבד. לרוב היעד הזול ביותר לטוס אליו מהארץ.',
-      visa: 'שנגן - ללא ויזה לישראלים עד 90 יום.',
-      currency: 'אירו (€).',
-      sim: 'eSIM או כרטיס Cosmote/Vodafone. יש גם קליטה ישראלית טובה בחבילות חו"ל.',
-      payments: 'כרטיסים כמעט בכל מקום; טברנות קטנות לפעמים מעדיפות מזומן.',
       gettingAround:
         'מרכז העיר מהלך. מטרו נוח וזול, כולל קו ישיר מהשדה. מוניות זולות יחסית (Uber מזמין מוניות).',
       kosherOverview:
@@ -1003,7 +981,7 @@ export const destinations: Destination[] = [
     slug: 'barcelona',
     name: 'ברצלונה',
     nameLocal: 'Barcelona',
-    country: 'ספרד',
+    countrySlug: 'spain',
     flag: '🇪🇸',
     center: { lat: 41.3874, lng: 2.1686 },
     zoom: 13,
@@ -1155,11 +1133,8 @@ export const destinations: Destination[] = [
     ],
     practical: {
       flights: 'טיסות ישירות מנתב"ג (אל על, ווִאלינג, ישראייר) - כ-4.5 שעות.',
-      visa: 'שנגן - ללא ויזה לישראלים עד 90 יום.',
-      currency: 'אירו (€).',
-      sim: 'eSIM אירופי או Vodafone/Orange מקומי.',
-      payments: 'כרטיסים בכל מקום. להיזהר מכייסים במטרו ובלה רמבלה - תיק קדימה.',
-      gettingAround: 'מטרו מצוין ומקיף. כרטיס T-Casual (10 נסיעות) משתלם. מרכז העיר נעים להליכה.',
+      gettingAround:
+        'מטרו מצוין ומקיף. כרטיס T-Casual (10 נסיעות) משתלם. מרכז העיר נעים להליכה. להיזהר מכייסים במטרו ובלה רמבלה - תיק קדימה.',
       kosherOverview:
         'קהילה יהודית ותיקה עם מסעדת מכבי הכשרה, חב"ד פעיל וההיסטוריה של אל קול - הרובע היהודי מימי הביניים. פחות שפע מרומא או בודפשט, אבל מסתדרים; רבים משלבים בישול עצמי עם מוצרים כשרים מהסופר.',
     },
@@ -1168,7 +1143,7 @@ export const destinations: Destination[] = [
     slug: 'berlin',
     name: 'ברלין',
     nameLocal: 'Berlin',
-    country: 'גרמניה',
+    countrySlug: 'germany',
     flag: '🇩🇪',
     center: { lat: 52.52, lng: 13.405 },
     zoom: 12,
@@ -1320,11 +1295,6 @@ export const destinations: Destination[] = [
     ],
     practical: {
       flights: 'טיסות ישירות מנתב"ג ל-BER (אל על, ריינאייר, איזיג׳ט) - כ-4.5 שעות.',
-      visa: 'שנגן - ללא ויזה לישראלים עד 90 יום.',
-      currency: 'אירו (€).',
-      sim: 'eSIM אירופי או כרטיס Telekom/O2. חשוב: בגרמניה רישום SIM מקומי דורש דרכון.',
-      payments:
-        'הפתעה לישראלים: בברלין עדיין יש מקומות שמקבלים רק מזומן (Bar zahlen) - להחזיק תמיד כמה עשרות אירו.',
       gettingAround:
         'U-Bahn, S-Bahn, חשמליות ואופניים - רשת מעולה. כרטיס יומי/שבועי משתלם. העיר ענקית, לתכנן לפי אזורים.',
       kosherOverview:

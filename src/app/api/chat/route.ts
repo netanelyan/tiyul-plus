@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { destinations } from '@/data/destinations';
+import { countries, getCountryBySlug } from '@/data/countries';
 import { isKosher } from '@/lib/categories';
 
 /**
@@ -25,9 +26,12 @@ interface ChatReply {
 }
 
 function findDestination(text: string) {
-  return destinations.find(
-    (d) => text.includes(d.name) || text.toLowerCase().includes(d.slug),
-  );
+  const lower = text.toLowerCase();
+  const direct = destinations.find((d) => text.includes(d.name) || lower.includes(d.slug));
+  if (direct) return direct;
+  // "צריך ויזה לאיטליה?" - שאלה ברמת מדינה מובילה לעיר שלה
+  const country = countries.find((c) => text.includes(c.name) || lower.includes(c.slug));
+  return country ? destinations.find((d) => d.countrySlug === country.slug) : undefined;
 }
 
 function ruleBasedReply(text: string): ChatReply {
@@ -38,9 +42,9 @@ function ruleBasedReply(text: string): ChatReply {
   const wantsItinerary = /מסלול|ימים|יום|תכנון|תוכנית|לתכנן/.test(text);
 
   if (!dest) {
+    const countryNames = countries.map((c) => `${c.flag} ${c.name}`).join(' · ');
     return {
-      reply:
-        'היי! אני עוזר הטיולים של טיול+ 🧭\n\nכרגע יש לי מסלולים מלאים לוינה, ברטיסלבה ופראג. אפשר לשאול אותי למשל:\n• "תבנה לי מסלול ל-4 ימים בוינה"\n• "איפה אוכלים כשר בפראג?"\n• "מה צריך לדעת לפני טיסה לברטיסלבה?"',
+      reply: `היי! אני עוזר הטיולים של טיול+ 🧭\n\nכרגע יש לי מסלולים מלאים ב:\n${countryNames}\n\nאפשר לשאול אותי למשל:\n• "תבנה לי מסלול ל-4 ימים בוינה"\n• "איפה אוכלים כשר ברומא?"\n• "צריך ויזה לאיטליה?"`,
     };
   }
 
@@ -70,8 +74,9 @@ function ruleBasedReply(text: string): ChatReply {
 
   if (wantsPractical) {
     const p = dest.practical;
+    const c = getCountryBySlug(dest.countrySlug)?.practical;
     return {
-      reply: `🇮🇱 מידע פרקטי ל${dest.name}:\n\n✈️ **טיסות:** ${p.flights}\n🛂 **ויזה:** ${p.visa}\n💶 **מטבע:** ${p.currency}\n📱 **סים:** ${p.sim}\n💳 **תשלומים:** ${p.payments}\n🚇 **תחבורה:** ${p.gettingAround}`,
+      reply: `🇮🇱 מידע פרקטי ל${dest.name}:\n\n✈️ **טיסות:** ${p.flights}\n🛂 **ויזה:** ${c?.visa ?? ''}\n💶 **מטבע:** ${c?.currency ?? ''}\n📱 **סים:** ${c?.sim ?? ''}\n💳 **תשלומים:** ${c?.payments ?? ''}\n🚇 **תחבורה:** ${p.gettingAround}`,
       destinationSlug: dest.slug,
     };
   }
@@ -125,21 +130,30 @@ DATA (destinations, places, itineraries, practical info):
 `;
 
 async function claudeReply(messages: ChatMessage[]): Promise<ChatReply> {
-  const grounding = destinations.map((d) => ({
-    slug: d.slug,
-    name: d.name,
-    summary: d.summary,
-    practical: d.practical,
-    itinerary: d.itinerary,
-    places: d.places.map((p) => ({
-      id: p.id,
-      name: p.name,
-      nameLocal: p.nameLocal,
-      category: p.category,
-      description: p.description,
-      kosherNote: p.kosherNote,
+  const grounding = {
+    countries: countries.map((c) => ({
+      slug: c.slug,
+      name: c.name,
+      summary: c.summary,
+      practical: c.practical, // ויזה, מטבע, סים, תשלומים - ברמת מדינה
     })),
-  }));
+    cities: destinations.map((d) => ({
+      slug: d.slug,
+      name: d.name,
+      countrySlug: d.countrySlug,
+      summary: d.summary,
+      practical: d.practical, // טיסות, תחבורה, כשרות - ברמת עיר
+      itinerary: d.itinerary,
+      places: d.places.map((p) => ({
+        id: p.id,
+        name: p.name,
+        nameLocal: p.nameLocal,
+        category: p.category,
+        description: p.description,
+        kosherNote: p.kosherNote,
+      })),
+    })),
+  };
 
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',

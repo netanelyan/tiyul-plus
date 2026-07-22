@@ -13,7 +13,10 @@ export default async function DestinationPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const dest = await getProvider().getDestination(slug);
+  const provider = getProvider();
+  const dest = await provider.getDestination(slug);
   if (!dest) notFound();
-  return <DestinationClient dest={dest} />;
+  const country = await provider.getCountry(dest.countrySlug);
+  if (!country) notFound();
+  return <DestinationClient dest={dest} country={country} />;
 }

@@ -12,8 +12,11 @@ export default async function PlannerPage({
   const { dest } = await searchParams;
   const provider = getProvider();
   // בספק sample זה מגיע מהרפו; בספקים חיצוניים המסלול האוצר מועשר בנתוני אמת.
-  const full = await Promise.all(destinations.map((d) => provider.getDestination(d.slug)));
+  const [countries, full] = await Promise.all([
+    provider.getCountries(),
+    Promise.all(destinations.map((d) => provider.getDestination(d.slug))),
+  ]);
   const all = full.filter((d) => d !== null);
   const initial = all.find((d) => d.slug === dest)?.slug ?? all[0]?.slug ?? '';
-  return <PlannerClient destinations={all} initialSlug={initial} />;
+  return <PlannerClient countries={countries} destinations={all} initialSlug={initial} />;
 }

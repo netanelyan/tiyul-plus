@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import type { Destination, Place } from '@/lib/types';
+import type { Country, Destination, Place } from '@/lib/types';
 import type { WizardPrefs } from '@/lib/trip/types';
 import { categoryMeta } from '@/lib/categories';
 import { useTrip } from '@/lib/trip/TripContext';
@@ -10,9 +10,11 @@ import { travelLeg } from '@/lib/trip/travel';
 import PlacesMap from '@/components/PlacesMap';
 
 export default function PlannerClient({
+  countries,
   destinations,
   initialSlug,
 }: {
+  countries: Country[];
   destinations: Destination[];
   initialSlug: string;
 }) {
@@ -31,6 +33,7 @@ export default function PlannerClient({
   if (!trip.currentTrip || showWizard) {
     return (
       <Onboarding
+        countries={countries}
         destinations={destinations}
         initialSlug={initialSlug}
         onDone={() => {
@@ -55,11 +58,13 @@ export default function PlannerClient({
 /* ================= Onboarding: אשף + תבניות ================= */
 
 function Onboarding({
+  countries,
   destinations,
   initialSlug,
   onDone,
   onCancel,
 }: {
+  countries: Country[];
   destinations: Destination[];
   initialSlug: string;
   onDone: () => void;
@@ -104,24 +109,36 @@ function Onboarding({
 
           <div className="mt-4">
             <div className="text-sm font-semibold text-night/60">לאן? (אפשר כמה ערים)</div>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {destinations.map((d) => (
-                <button
-                  key={d.slug}
-                  onClick={() => toggleCity(d.slug)}
-                  className={`rounded-full px-3 py-1.5 text-sm font-semibold transition ${
-                    prefs.citySlugs.includes(d.slug)
-                      ? 'bg-sunset text-cream'
-                      : 'bg-night/5 text-night/70 hover:bg-night/10'
-                  }`}
-                >
-                  {d.flag} {d.name}
-                </button>
-              ))}
+            <div className="mt-2 space-y-3">
+              {countries
+                .map((c) => ({ country: c, cities: destinations.filter((d) => d.countrySlug === c.slug) }))
+                .filter(({ cities }) => cities.length > 0)
+                .map(({ country, cities }) => (
+                  <div key={country.slug}>
+                    <div className="text-xs font-bold text-night/50">
+                      {country.flag} {country.name}
+                    </div>
+                    <div className="mt-1.5 flex flex-wrap gap-2">
+                      {cities.map((d) => (
+                        <button
+                          key={d.slug}
+                          onClick={() => toggleCity(d.slug)}
+                          className={`rounded-full px-3 py-1.5 text-sm font-semibold transition ${
+                            prefs.citySlugs.includes(d.slug)
+                              ? 'bg-sunset text-cream'
+                              : 'bg-night/5 text-night/70 hover:bg-night/10'
+                          }`}
+                        >
+                          {d.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
             </div>
             {prefs.citySlugs.length > 1 && (
               <div className="mt-2 text-xs font-medium text-night/50">
-                טיול רב-עירוני: {prefs.citySlugs.length} מדינות/ערים, הימים יתחלקו ביניהן
+                טיול רב-עירוני: {prefs.citySlugs.length} ערים, הימים יתחלקו ביניהן
               </div>
             )}
           </div>
@@ -192,11 +209,17 @@ function Onboarding({
           <button
             disabled={!canGenerate}
             onClick={() => {
-              const cityNames = prefs.citySlugs
-                .map((s) => destinations.find((d) => d.slug === s)?.name)
-                .filter(Boolean)
-                .join(' + ');
-              trip.createTripFrom(generateTrip(prefs, destinations, `טיול ל${cityNames}`));
+              // כמה ערים במדינה אחת? המודל המנטלי הוא "טסים לאיטליה".
+              const chosen = destinations.filter((d) => prefs.citySlugs.includes(d.slug));
+              const countrySlugs = [...new Set(chosen.map((d) => d.countrySlug))];
+              const singleCountry =
+                chosen.length > 1 && countrySlugs.length === 1
+                  ? countries.find((c) => c.slug === countrySlugs[0])
+                  : undefined;
+              const tripName = singleCountry
+                ? `טיול ל${singleCountry.name}`
+                : `טיול ל${chosen.map((d) => d.name).join(' + ')}`;
+              trip.createTripFrom(generateTrip(prefs, destinations, tripName));
               onDone();
             }}
             className="mt-5 w-full rounded-xl bg-sunset px-5 py-3 font-bold text-cream transition hover:bg-sunset-deep disabled:opacity-40"

@@ -6,7 +6,11 @@ const HERO_PHOTO =
 
 export default async function Home() {
   const provider = getProvider();
-  const dests = await provider.getDestinations();
+  const [countries, dests] = await Promise.all([
+    provider.getCountries(),
+    provider.getDestinations(),
+  ]);
+  const citiesOf = (slug: string) => dests.filter((d) => d.countrySlug === slug);
 
   return (
     <div>
@@ -47,59 +51,64 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Destinations */}
+      {/* Countries */}
       <section className="mt-16">
         <div className="flex items-end justify-between">
           <div>
             <h2 className="display text-2xl text-night">לאן טסים?</h2>
             <p className="mt-2 text-night/60">
-              {dests.length} יעדים עם מסלול מוכן, מפה ושכבת כשרות. עוד בדרך.
+              {countries.length} מדינות, {dests.length} ערים עם מסלול מוכן, מפה ושכבת כשרות. עוד בדרך.
             </p>
           </div>
         </div>
         <div className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {dests.map((d) => (
-            <Link
-              key={d.slug}
-              href={`/destinations/${d.slug}`}
-              className="card-pop group overflow-hidden rounded-2xl bg-shell ring-1 ring-night/10"
-            >
-              <div
-                className="photo-bg relative h-44"
-                style={
-                  d.photo
-                    ? {
-                        backgroundImage: `linear-gradient(180deg, rgba(15,14,26,0) 40%, rgba(15,14,26,0.7) 100%), url(${d.photo})`,
-                      }
-                    : undefined
-                }
+          {countries.map((c) => {
+            const cities = citiesOf(c.slug);
+            const totalDays = cities.reduce((n, d) => n + d.days, 0);
+            const totalKosher = cities.reduce((n, d) => n + d.kosherCount, 0);
+            return (
+              <Link
+                key={c.slug}
+                href={`/countries/${c.slug}`}
+                className="card-pop group overflow-hidden rounded-2xl bg-shell ring-1 ring-night/10"
               >
-                <span className="badge absolute end-4 top-4 rounded-full bg-cream/95 px-2.5 py-0.5 text-xl">
-                  {d.flag}
-                </span>
-                <div className="absolute bottom-3 start-4">
-                  <h3 className="display text-2xl text-cream drop-shadow">{d.name}</h3>
-                  <div className="text-xs font-medium text-cream/80">{d.nameLocal}</div>
-                </div>
-              </div>
-              <div className="p-5">
-                <p className="text-sm leading-relaxed text-night/75">{d.tagline}</p>
-                <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
-                  <span className="rounded-full bg-night/5 px-3 py-1.5 text-night/70">
-                    {d.days} ימים
+                <div
+                  className="photo-bg relative h-44"
+                  style={
+                    c.photo
+                      ? {
+                          backgroundImage: `linear-gradient(180deg, rgba(15,14,26,0) 40%, rgba(15,14,26,0.7) 100%), url(${c.photo})`,
+                        }
+                      : undefined
+                  }
+                >
+                  <span className="badge absolute end-4 top-4 rounded-full bg-cream/95 px-2.5 py-0.5 text-xl">
+                    {c.flag}
                   </span>
-                  {d.kosherCount > 0 && (
-                    <span className="rounded-full bg-[#00a896]/10 px-3 py-1.5 text-[#007f76]">
-                      {d.kosherCount} נקודות כשרות
+                  <div className="absolute bottom-3 start-4">
+                    <h3 className="display text-2xl text-cream drop-shadow">{c.name}</h3>
+                    <div className="text-xs font-medium text-cream/80">{c.nameLocal}</div>
+                  </div>
+                </div>
+                <div className="p-5">
+                  <p className="text-sm leading-relaxed text-night/75">{c.tagline}</p>
+                  <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
+                    <span className="rounded-full bg-night/5 px-3 py-1.5 text-night/70">
+                      {cities.length === 1 ? `עיר אחת: ${cities[0].name}` : `${cities.length} ערים`}
                     </span>
-                  )}
-                  <span className="rounded-full bg-night/5 px-3 py-1.5 text-night/60">
-                    {d.country}
-                  </span>
+                    <span className="rounded-full bg-night/5 px-3 py-1.5 text-night/60">
+                      {totalDays} ימי מסלול מוכן
+                    </span>
+                    {totalKosher > 0 && (
+                      <span className="rounded-full bg-[#00a896]/10 px-3 py-1.5 text-[#007f76]">
+                        {totalKosher} נקודות כשרות
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </section>
 

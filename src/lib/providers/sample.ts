@@ -1,5 +1,6 @@
-import type { Destination, DestinationSummary, Place, PlacesProvider } from '@/lib/types';
+import type { Country, Destination, DestinationSummary, Place, PlacesProvider } from '@/lib/types';
 import { destinations, getDestinationBySlug } from '@/data/destinations';
+import { countries, getCountryBySlug } from '@/data/countries';
 
 /**
  * ספק ברירת המחדל: נתונים שנאספו ידנית וגרים ברפו.
@@ -8,12 +9,21 @@ import { destinations, getDestinationBySlug } from '@/data/destinations';
 export const sampleProvider: PlacesProvider = {
   providerName: 'sample',
 
+  async getCountries(): Promise<Country[]> {
+    return countries;
+  },
+
+  async getCountry(slug: string): Promise<Country | null> {
+    return getCountryBySlug(slug) ?? null;
+  },
+
   async getDestinations(): Promise<DestinationSummary[]> {
     return destinations.map((d) => ({
       slug: d.slug,
       name: d.name,
       nameLocal: d.nameLocal,
-      country: d.country,
+      countrySlug: d.countrySlug,
+      country: getCountryBySlug(d.countrySlug)?.name ?? '',
       flag: d.flag,
       tagline: d.tagline,
       days: d.itinerary.length,

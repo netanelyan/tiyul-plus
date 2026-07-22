@@ -1,4 +1,4 @@
-import type { Destination, DestinationSummary, Place, PlacesProvider } from '@/lib/types';
+import type { Country, Destination, DestinationSummary, Place, PlacesProvider } from '@/lib/types';
 import { sampleProvider } from './sample';
 
 /**
@@ -56,6 +56,15 @@ async function taSearch(query: string, latLong?: string): Promise<Place[]> {
 
 export const tripadvisorProvider: PlacesProvider = {
   providerName: 'tripadvisor',
+
+  // מדינות ויעדים הם תוכן אוצר - תמיד מהדאטה המקומי.
+  getCountries(): Promise<Country[]> {
+    return sampleProvider.getCountries();
+  },
+
+  getCountry(slug: string): Promise<Country | null> {
+    return sampleProvider.getCountry(slug);
+  },
 
   getDestinations(): Promise<DestinationSummary[]> {
     return sampleProvider.getDestinations();

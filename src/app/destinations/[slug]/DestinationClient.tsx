@@ -2,14 +2,20 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import type { Destination, PlaceCategory } from '@/lib/types';
+import type { Country, Destination, PlaceCategory } from '@/lib/types';
 import { categoryMeta, isKosher } from '@/lib/categories';
 import PlacesMap from '@/components/PlacesMap';
 import AddToTripButton from '@/components/AddToTripButton';
 
 type Filter = 'all' | 'kosher' | PlaceCategory;
 
-export default function DestinationClient({ dest }: { dest: Destination }) {
+export default function DestinationClient({
+  dest,
+  country,
+}: {
+  dest: Destination;
+  country: Country;
+}) {
   const [filter, setFilter] = useState<Filter>('all');
   const [highlightId, setHighlightId] = useState<string | null>(null);
 
@@ -24,12 +30,13 @@ export default function DestinationClient({ dest }: { dest: Destination }) {
     return dest.places.filter((p) => p.category === filter);
   }, [dest.places, filter]);
 
+  // עירוני מהיעד, מדינתי מהמדינה - למשתמש זה כרטיס אחד רציף.
   const practicalItems: { title: string; text: string }[] = [
     { title: 'טיסות מנתב"ג', text: dest.practical.flights },
-    { title: 'ויזה', text: dest.practical.visa },
-    { title: 'מטבע', text: dest.practical.currency },
-    { title: 'סים וגלישה', text: dest.practical.sim },
-    { title: 'תשלומים', text: dest.practical.payments },
+    { title: 'ויזה', text: country.practical.visa },
+    { title: 'מטבע', text: country.practical.currency },
+    { title: 'סים וגלישה', text: country.practical.sim },
+    { title: 'תשלומים', text: country.practical.payments },
     { title: 'תחבורה', text: dest.practical.gettingAround },
   ];
 
@@ -47,7 +54,11 @@ export default function DestinationClient({ dest }: { dest: Destination }) {
         }
       >
         <div className="text-sm font-medium text-cream/70">
-          <Link href="/" className="transition hover:text-cream">יעדים</Link> / {dest.country}
+          <Link href="/" className="transition hover:text-cream">יעדים</Link> /{' '}
+          <Link href={`/countries/${country.slug}`} className="transition hover:text-cream">
+            {country.name}
+          </Link>{' '}
+          / {dest.name}
         </div>
         <div className="mt-3 flex flex-wrap items-end justify-between gap-5">
           <div className="max-w-2xl">
