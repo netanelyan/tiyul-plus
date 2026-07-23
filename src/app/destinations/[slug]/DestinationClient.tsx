@@ -116,28 +116,65 @@ export default function DestinationClient({
                 onMouseLeave={() => setHighlightId(null)}
                 className="card-pop rounded-2xl bg-shell p-5 ring-1 ring-night/10"
               >
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <div className="font-bold text-night">{place.name}</div>
-                    <div className="text-xs font-medium text-night/40">{place.nameLocal}</div>
-                  </div>
-                  <span className="badge shrink-0 rounded-full bg-night/5 px-2.5 py-1 text-xs font-semibold text-night/60">
-                    <span
-                      className="h-2 w-2 rounded-full"
-                      style={{ backgroundColor: meta.color }}
+                <div className="flex gap-3">
+                  {place.photo && (
+                    <div
+                      className="photo-bg h-20 w-20 shrink-0 rounded-xl ring-1 ring-night/10"
+                      style={{ backgroundImage: `url(${place.photo})` }}
+                      role="img"
+                      aria-label={place.name}
                     />
-                    {meta.label}
-                  </span>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <div className="font-bold text-night">
+                          {place.mustSee && (
+                            <span className="me-1 text-sm text-zest" title="חובה לראות">
+                              ★
+                            </span>
+                          )}
+                          {place.name}
+                        </div>
+                        <div className="text-xs font-medium text-night/40">{place.nameLocal}</div>
+                      </div>
+                      <span className="badge shrink-0 rounded-full bg-night/5 px-2.5 py-1 text-xs font-semibold text-night/60">
+                        <span
+                          className="h-2 w-2 rounded-full"
+                          style={{ backgroundColor: meta.color }}
+                        />
+                        {meta.label}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-sm leading-relaxed text-night/70">{place.description}</p>
+                  </div>
                 </div>
-                <p className="mt-2 text-sm leading-relaxed text-night/70">{place.description}</p>
                 {place.kosherNote && (
                   <p className="mt-2 rounded-lg bg-[#00a896]/10 px-3 py-2 text-xs font-semibold text-[#007f76]">
                     ✡️ {place.kosherNote}
                   </p>
                 )}
+                {place.kosherVerification && (
+                  <p
+                    className={`mt-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold ${
+                      place.kosherVerification.lastChecked === 'pending-review'
+                        ? 'bg-zest/15 text-night/70'
+                        : 'bg-[#00a896]/10 text-[#007f76]'
+                    }`}
+                  >
+                    {place.kosherVerification.lastChecked === 'pending-review'
+                      ? `לאמת לפני נסיעה · ${place.kosherVerification.supervision}`
+                      : `נבדק ${place.kosherVerification.lastChecked} · ${place.kosherVerification.supervision}`}
+                  </p>
+                )}
                 <div className="mt-3 flex flex-wrap items-center gap-3 text-xs font-semibold text-night/50">
                   <AddToTripButton citySlug={dest.slug} placeId={place.id} />
                   {place.rating && <span>⭐ {place.rating.toFixed(1)}</span>}
+                  {place.priceLevel !== undefined && (
+                    <span title="רמת מחיר">
+                      {place.priceLevel === 0 ? 'חינם' : '₪'.repeat(place.priceLevel)}
+                    </span>
+                  )}
                   {place.durationMin && (
                     <span>כ-{Math.round(place.durationMin / 30) / 2} שעות</span>
                   )}

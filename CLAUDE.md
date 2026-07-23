@@ -95,11 +95,17 @@ npm run lint
   country ("טסים לאיטליה"), plan by city. Each `Country` carries the
   country-level practical facts (visa, currency, sim, payments) shared by
   all its cities.
-- `src/data/destinations.ts` - curated content, 8 cities (Hebrew), each
-  referencing its country via `countrySlug`. City `practical` holds only
-  city-level facts: flights (to that city's airport), gettingAround,
-  kosherOverview. Adding a destination here lights it up across the whole
-  site. This data is the product's moat; quality > quantity.
+- `src/data/destinations.ts` - curated content, 8 cities × 20 places
+  (160 total, Hebrew), each referencing its country via `countrySlug`.
+  Places carry `photo` (verified URLs - run `node
+  scripts/verify-photos.mjs` after any photo change; Wikimedia thumbs
+  accept ONLY the allowed widths 250/330/500/960px), `priceLevel`
+  (0=חינם..3), `tags` (fixed set: families/nightlife/romantic/history/
+  art/foodie/outdoors), `mustSee`, and kosher entries a
+  `kosherVerification` object rendered as an honest trust badge
+  ("לאמת לפני נסיעה" while lastChecked="pending-review"). City
+  `practical` holds only city-level facts: flights, gettingAround,
+  kosherOverview. This data is the product's moat; quality > quantity.
 - `src/lib/types.ts` - domain types + `PlacesProvider` interface (includes
   `getCountries()`/`getCountry(slug)`; google/tripadvisor delegate these to
   sample - countries are curated content). The app talks ONLY to this
@@ -188,11 +194,16 @@ npm run lint
   Phase 2: agent quality is now capped by content depth (8-12 places per
   city) - and the wizard does not yet read `Trip.preferences`, only the
   agent honors them.
-- **Phase 2 - Content Engine**: deepen all 8 cities to 20+ places each:
-  per-place photos (verified URLs + gradient fallback), price levels,
-  audience tags (families/nightlife/romantic), must-see flags; kosher entries
-  get a verification object (source, lastChecked, supervision) shown as an
-  honest trust badge.
+- **Phase 2 - Content Engine** ✅ DONE: all 8 cities at 20 places (160
+  total) - photos verified end-to-end (`scripts/verify-photos.mjs` must
+  pass before content commits), priceLevel, audience tags, mustSee, and
+  kosherVerification trust badges (honest "לאמת לפני נסיעה" pending
+  state; no new kosher venues invented). `generateTrip()` and
+  `/api/generate-trip` now score by `Trip.preferences` (party+interests
+  → tag boosts, budget → priceLevel penalties, mustSee boost); both AI
+  groundings carry tags/priceLevel/mustSee with truncated descriptions.
+  Note for Phase 3: search/collections can lean on tags+mustSee; kosher
+  entries still need real verification dates to replace pending-review.
 - **Phase 3 - Agent-First UX** (homepage part DONE): homepage now leads
   with the conversation (`AgentWorkspace` landing → split chat + canvas;
   catalog moved to `/countries`). Still open: site-wide search (Hebrew +

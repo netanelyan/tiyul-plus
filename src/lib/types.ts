@@ -12,6 +12,24 @@ export type PlaceCategory =
   | 'kosher-food'
   | 'kosher-market';
 
+// תגיות קהל - סט סגור, משמש גם לסינון וגם להתאמת העדפות בציון האשף
+export type PlaceTag =
+  | 'families'
+  | 'nightlife'
+  | 'romantic'
+  | 'history'
+  | 'art'
+  | 'foodie'
+  | 'outdoors';
+
+// אימות כשרות - תג אמון כן: source="curated" + lastChecked="pending-review"
+// מוצג בממשק כ"לאמת לפני נסיעה" עד שמישהו באמת בדק מול המקום.
+export interface KosherVerification {
+  source: string; // מי קבע (curated / community / official)
+  lastChecked: string; // ISO date או "pending-review"
+  supervision: string; // גוף ההשגחה, עברית
+}
+
 export interface Place {
   id: string;
   name: string; // Hebrew name
@@ -23,7 +41,12 @@ export interface Place {
   rating?: number; // 0-5, from provider (sample data = editorial estimate)
   durationMin?: number; // typical visit length
   kosherNote?: string; // hechsher / kashrut details, Hebrew
+  kosherVerification?: KosherVerification; // תג האמון של רשומות כשרות
   externalUrl?: string; // deep link to Google Maps / TripAdvisor page
+  photo?: string; // verified URL (Wikimedia/Unsplash); UI falls back to gradient
+  priceLevel?: 0 | 1 | 2 | 3; // 0=חינם, 3=יקר
+  tags?: PlaceTag[];
+  mustSee?: boolean;
 }
 
 export interface DayPlan {

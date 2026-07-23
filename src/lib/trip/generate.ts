@@ -1,11 +1,13 @@
-import type { Destination, Place, PlaceCategory } from '@/lib/types';
-import type { Trip, TripDay, WizardPrefs } from './types';
+import type { Destination, Place, PlaceCategory, PlaceTag } from '@/lib/types';
+import type { Trip, TripDay, TripPreferences, WizardPrefs } from './types';
 import { newId } from './types';
 
 /**
  * האשף החכם: לוגיקת דירוג ואריזת ימים - צד לקוח בלבד, בלי AI ובלי עלות.
  * ציון לכל מקום לפי סוג הטיול והעדפות, ואז אריזה גיאוגרפית לימים
  * לפי תקציב זמן. הפלט הוא Trip רגיל שאפשר לערוך.
+ * מ-Phase 2: הציון קורא גם את Trip.preferences - תגיות שתואמות תחומי עניין
+ * והרכב נוסעים מקבלות דחיפה, ותקציב נמוך מעניש מקומות יקרים (priceLevel).
  */
 
 type Weights = Partial<Record<PlaceCategory, number>>;
@@ -16,13 +18,56 @@ const TYPE_WEIGHTS: Record<WizardPrefs['tripType'], Weights> = {
   combined: { attraction: 2.2, museum: 2, nature: 2.2, viewpoint: 2.2, cafe: 1.3, shopping: 1.3 },
 };
 
-function score(place: Place, prefs: WizardPrefs): number {
+// תחומי עניין בעברית חופשית → תגיות מהסט הסגור
+const INTEREST_TAGS: [RegExp, PlaceTag][] = [
+  [/טבע|פארק|ירוק|הליכות/, 'outdoors'],
+  [/היסטוריה|עתיק|מורשת/, 'history'],
+  [/אמנות|מוזיאונ|גלריה/, 'art'],
+  [/אוכל|קולינר|שוק|גלידה/, 'foodie'],
+  [/רומנטי/, 'romantic'],
+  [/ילדים|משפחה/, 'families'],
+  [/לילה|בילוי|מסיבות|ברים/, 'nightlife'],
+];
+
+/** גוזר תגיות יעד מהעדפות הטיול (הרכב נוסעים + תחומי עניין) */
+export function targetTagsFromPreferences(preferences?: TripPreferences): Set<PlaceTag> {
+  const target = new Set<PlaceTag>();
+  if (!preferences) return target;
+  if (preferences.party === 'family') target.add('families');
+  if (preferences.party === 'couple') target.add('romantic');
+  for (const interest of preferences.interests ?? []) {
+    for (const [re, tag] of INTEREST_TAGS) {
+      if (re.test(interest)) target.add(tag);
+    }
+  }
+  return target;
+}
+
+function score(
+  place: Place,
+  prefs: WizardPrefs,
+  targetTags: Set<PlaceTag>,
+  budget?: TripPreferences['budget'],
+): number {
   if (place.category.startsWith('kosher')) return 0; // אוכל כשר משובץ בנפרד
   let w = TYPE_WEIGHTS[prefs.tripType][place.category] ?? 1;
   if (place.category === 'shopping') {
     if (prefs.shopping === 'more') w = 4;
     if (prefs.shopping === 'less') return 0;
   }
+  // התאמת תגיות להעדפות - כל תגית תואמת מוסיפה דחיפה
+  if (targetTags.size > 0 && place.tags) {
+    const matches = place.tags.filter((t) => targetTags.has(t)).length;
+    w *= 1 + 0.35 * matches;
+  }
+  // תקציב מול רמת מחיר
+  if (budget === 'low') {
+    if (place.priceLevel === 3) w *= 0.45;
+    else if (place.priceLevel !== undefined && place.priceLevel <= 1) w *= 1.15;
+  } else if (budget === 'medium' && place.priceLevel === 3) {
+    w *= 0.75;
+  }
+  if (place.mustSee) w *= 1.25;
   return w * (place.rating ?? 3.5);
 }
 
@@ -49,10 +94,12 @@ export function generateTrip(
   prefs: WizardPrefs,
   destinations: Destination[],
   name: string,
+  preferences?: TripPreferences,
 ): Trip {
-  const budget = prefs.pace === 'relaxed' ? 300 : 480; // דקות ליום
+  const timeBudget = prefs.pace === 'relaxed' ? 300 : 480; // דקות ליום
   const days: TripDay[] = [];
   const alloc = allocateDays(prefs.totalDays, prefs.citySlugs);
+  const targetTags = targetTagsFromPreferences(preferences);
 
   for (const slug of prefs.citySlugs) {
     const dest = destinations.find((d) => d.slug === slug);
@@ -60,7 +107,7 @@ export function generateTrip(
     const dayCount = alloc.get(slug) ?? 1;
 
     const scored = dest.places
-      .map((p) => ({ place: p, s: score(p, prefs) }))
+      .map((p) => ({ place: p, s: score(p, prefs, targetTags, preferences?.budget) }))
       .filter((x) => x.s > 0)
       .sort((a, b) => b.s - a.s);
     const kosherSpots = prefs.kosherOnly
@@ -82,9 +129,9 @@ export function generateTrip(
 
         // ממשיכים גיאוגרפית: הקרוב הבא עם ציון טוב, עד גמר תקציב הזמן
         let cursor = seed.place;
-        while (minutes < budget) {
+        while (minutes < timeBudget) {
           const candidates = scored.filter(
-            (x) => !used.has(x.place.id) && minutes + (x.place.durationMin ?? 60) <= budget,
+            (x) => !used.has(x.place.id) && minutes + (x.place.durationMin ?? 60) <= timeBudget,
           );
           if (candidates.length === 0) break;
           candidates.sort(
@@ -119,6 +166,7 @@ export function generateTrip(
     citySlugs: [...prefs.citySlugs],
     days,
     createdAt: Date.now(),
+    ...(preferences && Object.keys(preferences).length > 0 ? { preferences } : {}),
   };
 }
 

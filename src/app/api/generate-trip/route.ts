@@ -2,7 +2,7 @@ import { destinations } from '@/data/destinations';
 import { countries } from '@/data/countries';
 import { generateTrip } from '@/lib/trip/generate';
 import { newId } from '@/lib/trip/types';
-import type { Trip, TripDay, WizardPrefs } from '@/lib/trip/types';
+import type { Trip, TripDay, TripPreferences, WizardPrefs } from '@/lib/trip/types';
 
 /**
  * בניית טיול מהעדפות-כפתורים + טקסט חופשי אופציונלי.
@@ -81,6 +81,9 @@ function buildGrounding(): string {
         name: p.name,
         category: p.category,
         durationMin: p.durationMin,
+        ...(p.tags?.length ? { tags: p.tags } : {}),
+        ...(p.priceLevel !== undefined ? { priceLevel: p.priceLevel } : {}),
+        ...(p.mustSee ? { mustSee: true } : {}),
       })),
       itinerary: d.itinerary.map((day) => ({ title: day.title, placeIds: day.placeIds })),
     })),
@@ -292,6 +295,14 @@ export async function POST(request: Request) {
   }
 
   const name = tripName ?? defaultTripName(prefs.citySlugs);
+  // ההעדפות נשמרות על הטיול - הסוכן והמתכנן ימשיכו לכבד אותן
+  const tripPreferences: TripPreferences = {
+    pace: prefs.pace,
+    shopping: prefs.shopping,
+    ...(party ? { party } : {}),
+    ...(prefs.kosherOnly ? { kosher: true } : {}),
+    ...(interests.length > 0 ? { interests } : {}),
+  };
   const trip: Trip =
     days.length > 0
       ? {
@@ -300,8 +311,9 @@ export async function POST(request: Request) {
           citySlugs: [...new Set(days.map((d) => d.citySlug))],
           days,
           createdAt: Date.now(),
+          preferences: tripPreferences,
         }
-      : generateTrip(prefs, destinations, name);
+      : generateTrip(prefs, destinations, name, tripPreferences);
 
   return Response.json({ trip, understood: buildUnderstood(prefs, party, interests) });
 }

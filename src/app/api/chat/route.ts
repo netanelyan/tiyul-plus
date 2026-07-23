@@ -178,8 +178,12 @@ function buildGrounding(): string {
         name: p.name,
         nameLocal: p.nameLocal,
         category: p.category,
-        description: p.description,
+        // תיאור קצר בלבד - עם ~160 מקומות ה-grounding חייב להישאר רזה
+        description: p.description.length > 90 ? `${p.description.slice(0, 90)}…` : p.description,
         kosherNote: p.kosherNote,
+        ...(p.tags?.length ? { tags: p.tags } : {}),
+        ...(p.priceLevel !== undefined ? { priceLevel: p.priceLevel } : {}),
+        ...(p.mustSee ? { mustSee: true } : {}),
       })),
     })),
   });

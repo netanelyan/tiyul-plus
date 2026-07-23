@@ -25,6 +25,11 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'vie-schonbrunn',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Wien_-_Schloss_Sch%C3%B6nbrunn.JPG/500px-Wien_-_Schloss_Sch%C3%B6nbrunn.JPG',
+        tags: ['families', 'history', 'romantic'],
+        priceLevel: 2,
+        mustSee: true,
         name: 'ארמון שנברון',
         nameLocal: 'Schönbrunn Palace',
         category: 'attraction',
@@ -38,6 +43,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vie-stephansdom',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Wien_-_Stephansdom_%281%29.JPG/500px-Wien_-_Stephansdom_%281%29.JPG',
+        tags: ['history'],
+        priceLevel: 1,
+        mustSee: true,
         name: 'קתדרלת סנט סטפן',
         nameLocal: "St. Stephen's Cathedral",
         category: 'attraction',
@@ -51,6 +61,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vie-hofburg',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Wien_-_Neue_Hofburg.JPG/500px-Wien_-_Neue_Hofburg.JPG',
+        tags: ['history', 'art'],
+        priceLevel: 2,
         name: 'ארמון הופבורג',
         nameLocal: 'Hofburg Palace',
         category: 'attraction',
@@ -64,6 +78,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vie-belvedere',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Palacio_Belvedere%2C_Viena%2C_Austria%2C_2020-02-01%2C_DD_93-95_HDR.jpg/500px-Palacio_Belvedere%2C_Viena%2C_Austria%2C_2020-02-01%2C_DD_93-95_HDR.jpg',
+        tags: ['art', 'romantic'],
+        priceLevel: 2,
+        mustSee: true,
         name: 'ארמון בלוודר',
         nameLocal: 'Belvedere Palace',
         category: 'museum',
@@ -77,6 +96,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vie-prater',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Prater_vom_Riesenrad.jpg/500px-Prater_vom_Riesenrad.jpg',
+        tags: ['families', 'nightlife'],
+        priceLevel: 1,
         name: 'פארק הפראטר',
         nameLocal: 'Prater',
         category: 'attraction',
@@ -90,6 +113,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vie-kahlenberg',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/D%C3%B6bling_%28Wien%29_-_Kahlenberg_%282%29.JPG/500px-D%C3%B6bling_%28Wien%29_-_Kahlenberg_%282%29.JPG',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
         name: 'קלנברג ויער וינה',
         nameLocal: 'Kahlenberg',
         category: 'viewpoint',
@@ -103,6 +130,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vie-naschmarkt',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Wien_-_Naschmarkt.JPG/500px-Wien_-_Naschmarkt.JPG',
+        tags: ['foodie'],
+        priceLevel: 0,
         name: 'שוק נאשמרקט',
         nameLocal: 'Naschmarkt',
         category: 'attraction',
@@ -116,6 +147,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vie-cafe-central',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Palais_Ferstel.jpg/500px-Palais_Ferstel.jpg',
+        tags: ['foodie', 'romantic', 'history'],
+        priceLevel: 2,
         name: 'קפה צנטרל',
         nameLocal: 'Café Central',
         category: 'cafe',
@@ -129,6 +164,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vie-mariahilfer',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Wien_07_Mariahilfer_Stra%C3%9Fe_Shopping_f.jpg/500px-Wien_07_Mariahilfer_Stra%C3%9Fe_Shopping_f.jpg',
+        tags: ['families'],
+        priceLevel: 2,
         name: 'רחוב מריאהילפר',
         nameLocal: 'Mariahilfer Straße',
         category: 'shopping',
@@ -142,6 +181,9 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vie-alef-alef',
+        tags: ['foodie'],
+        priceLevel: 2,
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'הקהילה היהודית של וינה (IKG)' },
         name: 'אלף אלף (מסעדה כשרה)',
         nameLocal: 'Alef Alef',
         category: 'kosher-food',
@@ -156,6 +198,9 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vie-bahur-tov',
+        tags: ['foodie'],
+        priceLevel: 2,
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'השגחה מקומית - לוודא מול המקום' },
         name: 'בחור טוב (גריל כשר)',
         nameLocal: 'Bahur Tov',
         category: 'kosher-food',
@@ -170,6 +215,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vie-koscherland',
+        priceLevel: 1,
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'חנות - מוצרים ארוזים עם הכשרים' },
         name: 'קושרלנד (סופר כשר)',
         nameLocal: 'Koscherland',
         category: 'kosher-market',
@@ -180,6 +227,141 @@ export const destinations: Destination[] = [
         kosherNote: 'סגור בשבת. לקנות בערב שישי מוקדם.',
         durationMin: 30,
         externalUrl: 'https://maps.google.com/?q=Koscherland+Vienna',
+      },
+      {
+        id: 'vie-kunsthistorisches',
+        name: 'מוזיאון תולדות האמנות',
+        nameLocal: 'Kunsthistorisches Museum',
+        category: 'museum',
+        lat: 48.2038,
+        lng: 16.3617,
+        description:
+          'מוזיאון האמנות הקיסרי מול הופבורג - ברויגל, ורמר ורפאל באחד הבניינים המפוארים של הרינג.',
+        rating: 4.7,
+        durationMin: 150,
+        tags: ['art', 'history'],
+        priceLevel: 2,
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=Kunsthistorisches+Museum',
+      },
+      {
+        id: 'vie-albertina',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Wien_-_Albertina.JPG/500px-Wien_-_Albertina.JPG',
+        name: 'מוזיאון אלברטינה',
+        nameLocal: 'Albertina',
+        category: 'museum',
+        lat: 48.2043,
+        lng: 16.3684,
+        description:
+          'אוסף גרפיקה ואמנות מודרנית בארמון שבקצה הופבורג - דירר, מונה ופיקאסו, עם מרפסת נוף לאופרה.',
+        rating: 4.6,
+        durationMin: 120,
+        tags: ['art'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=Albertina+Vienna',
+      },
+      {
+        id: 'vie-rathaus',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Wien_Rathaus_hochaufl%C3%B6send.jpg/500px-Wien_Rathaus_hochaufl%C3%B6send.jpg',
+        name: 'בית העירייה וכיכר הרטהאוס',
+        nameLocal: 'Rathausplatz',
+        category: 'attraction',
+        lat: 48.2108,
+        lng: 16.3572,
+        description:
+          'בית העירייה הניאו-גותי והכיכר שלפניו - זירת האירועים של וינה: שוקי חג המולד בחורף וקולנוע פתוח בקיץ.',
+        rating: 4.5,
+        durationMin: 45,
+        tags: ['families', 'history'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Rathausplatz+Vienna',
+      },
+      {
+        id: 'vie-opera',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Wiener_Staatsoper_Front.jpg/500px-Wiener_Staatsoper_Front.jpg',
+        name: 'האופרה הממלכתית',
+        nameLocal: 'Vienna State Opera',
+        category: 'attraction',
+        lat: 48.2029,
+        lng: 16.369,
+        description:
+          'מבתי האופרה המפורסמים בעולם. גם בלי כרטיס להצגה - הבניין מרשים ויש סיורים מודרכים ביום.',
+        rating: 4.6,
+        durationMin: 60,
+        tags: ['art', 'romantic'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=Vienna+State+Opera',
+      },
+      {
+        id: 'vie-donauinsel',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Wien_-_Donauinsel_mit_den_Donaubr%C3%BCcken.JPG/500px-Wien_-_Donauinsel_mit_den_Donaubr%C3%BCcken.JPG',
+        name: 'אי הדנובה',
+        nameLocal: 'Donauinsel',
+        category: 'nature',
+        lat: 48.228,
+        lng: 16.411,
+        description:
+          'האי הארוך שבלב הדנובה - קילומטרים של מסלולי אופניים, דשא ופינות רחצה. הבריחה הירוקה של הווינאים.',
+        rating: 4.4,
+        durationMin: 150,
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Donauinsel',
+      },
+      {
+        id: 'vie-stadtpark',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Stadtpark_station.JPG/500px-Stadtpark_station.JPG',
+        name: 'שטאדטפארק ופסל שטראוס',
+        nameLocal: 'Stadtpark',
+        category: 'nature',
+        lat: 48.2049,
+        lng: 16.3803,
+        description:
+          'הפארק העירוני עם פסל הזהב של יוהאן שטראוס - הפוגה ירוקה קלאסית במרחק הליכה מהרינג.',
+        rating: 4.4,
+        durationMin: 45,
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Stadtpark+Vienna',
+      },
+      {
+        id: 'vie-hundertwasser',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Wien_-_Hundertwasserhaus_%2803%29.JPG/500px-Wien_-_Hundertwasserhaus_%2803%29.JPG',
+        name: 'בית הונדרטוואסר',
+        nameLocal: 'Hundertwasserhaus',
+        category: 'attraction',
+        lat: 48.2073,
+        lng: 16.3942,
+        description:
+          'בית הדירות הצבעוני והמעוקל של האמן הונדרטוואסר - אחת הפינות המצולמות בעיר. צופים מבחוץ.',
+        rating: 4.4,
+        durationMin: 30,
+        tags: ['art'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Hundertwasserhaus',
+      },
+      {
+        id: 'vie-graben',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Wien_-_Graben_%282%29.JPG/500px-Wien_-_Graben_%282%29.JPG',
+        name: 'גראבן וקולמרקט',
+        nameLocal: 'Graben & Kohlmarkt',
+        category: 'shopping',
+        lat: 48.2089,
+        lng: 16.3693,
+        description:
+          'מדרחוב היוקרה של המרכז עם עמוד המגפה הבארוקי - ממשיכים לקולמרקט ולחנויות הוותיקות של וינה.',
+        rating: 4.5,
+        durationMin: 60,
+        tags: ['romantic'],
+        priceLevel: 3,
+        externalUrl: 'https://maps.google.com/?q=Graben+Vienna',
       },
     ],
     itinerary: [
@@ -234,6 +416,11 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'bts-castle',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Bratislava_-_Burg_%28b%29.JPG/500px-Bratislava_-_Burg_%28b%29.JPG',
+        tags: ['history', 'families'],
+        priceLevel: 1,
+        mustSee: true,
         name: 'טירת ברטיסלבה',
         nameLocal: 'Bratislava Castle',
         category: 'attraction',
@@ -247,6 +434,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bts-oldtown',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Slovakia-03123_-_Inside_of_St._Michael%27s_Gate_%2832286853995%29.jpg/500px-Slovakia-03123_-_Inside_of_St._Michael%27s_Gate_%2832286853995%29.jpg',
+        tags: ['history', 'families'],
+        priceLevel: 0,
+        mustSee: true,
         name: 'העיר העתיקה ושער מיכאל',
         nameLocal: "Old Town & Michael's Gate",
         category: 'attraction',
@@ -260,6 +452,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bts-ufo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Most_SNP%2C_Bratislava_%28by_Pudelek%29.JPG/500px-Most_SNP%2C_Bratislava_%28by_Pudelek%29.JPG',
+        tags: ['romantic'],
+        priceLevel: 2,
         name: 'מגדל UFO',
         nameLocal: 'UFO Observation Deck',
         category: 'viewpoint',
@@ -273,6 +469,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bts-blue-church',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Blue_Church%2C_Bratislava_02.jpg/500px-Blue_Church%2C_Bratislava_02.jpg',
+        tags: ['art'],
+        priceLevel: 0,
         name: 'הכנסייה הכחולה',
         nameLocal: 'Blue Church (St. Elizabeth)',
         category: 'attraction',
@@ -286,6 +486,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bts-devin',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Devin02.jpg/500px-Devin02.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
         name: 'טירת דווין',
         nameLocal: 'Devín Castle',
         category: 'nature',
@@ -299,6 +503,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bts-eurovea',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Slovakia_bratislava_ruzinov_nivy.jpg/500px-Slovakia_bratislava_ruzinov_nivy.jpg',
+        tags: ['families'],
+        priceLevel: 2,
         name: 'קניון יורוביאה',
         nameLocal: 'Eurovea Galleria',
         category: 'shopping',
@@ -312,6 +520,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bts-chatam-sofer',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Mauz%C3%B3leum_Chatama_S%C3%B3fera_4.jpg/500px-Mauz%C3%B3leum_Chatama_S%C3%B3fera_4.jpg',
+        tags: ['history'],
+        priceLevel: 1,
         name: 'אתר הזיכרון של החת"ם סופר',
         nameLocal: 'Chatam Sofer Memorial',
         category: 'attraction',
@@ -325,6 +537,9 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bts-chabad',
+        tags: ['foodie'],
+        priceLevel: 1,
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'חב"ד - ארוחות בתיאום מראש' },
         name: 'בית חב"ד ברטיסלבה',
         nameLocal: 'Chabad Bratislava',
         category: 'kosher-food',
@@ -335,6 +550,200 @@ export const destinations: Destination[] = [
         kosherNote: 'ארוחות בתיאום מראש בלבד. לחלופין - וינה במרחק 45 דקות.',
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=Chabad+Bratislava',
+      },
+      {
+        id: 'bts-primates',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Palacio_primacial%2C_Bratislava%2C_Eslovaquia%2C_2020-02-01%2C_DD_30.jpg/500px-Palacio_primacial%2C_Bratislava%2C_Eslovaquia%2C_2020-02-01%2C_DD_30.jpg',
+        name: 'ארמון הפרימאס',
+        nameLocal: "Primate's Palace",
+        category: 'attraction',
+        lat: 48.144,
+        lng: 17.109,
+        description:
+          'הארמון הוורוד הניאו-קלאסי שבו נחתם שלום פרסבורג אחרי קרב אוסטרליץ. בפנים - אולם המראות ואוסף שטיחי קיר.',
+        rating: 4.5,
+        durationMin: 45,
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Primates+Palace+Bratislava',
+      },
+      {
+        id: 'bts-main-square',
+        name: 'הכיכר הראשית',
+        nameLocal: 'Hlavné námestie',
+        category: 'attraction',
+        lat: 48.1437,
+        lng: 17.1085,
+        description:
+          'לב העיר העתיקה: בית העירייה הישן, בתים צבעוניים, מזרקת רולנד ודוכנים עונתיים.',
+        rating: 4.5,
+        durationMin: 45,
+        tags: ['history', 'families'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Hlavne+namestie+Bratislava',
+      },
+      {
+        id: 'bts-cathedral',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Catedral_de_San_Mart%C3%ADn%2C_Bratislava%2C_Eslovaquia%2C_2020-02-01%2C_DD_48.jpg/500px-Catedral_de_San_Mart%C3%ADn%2C_Bratislava%2C_Eslovaquia%2C_2020-02-01%2C_DD_48.jpg',
+        name: 'קתדרלת מרטין הקדוש',
+        nameLocal: "St Martin's Cathedral",
+        category: 'attraction',
+        lat: 48.1417,
+        lng: 17.1048,
+        description:
+          'קתדרלת ההכתרה הגותית - כאן הוכתרו מלכי הונגריה, וביניהם מריה תרזה, לאורך כמעט 300 שנה.',
+        rating: 4.4,
+        durationMin: 45,
+        tags: ['history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=St+Martins+Cathedral+Bratislava',
+      },
+      {
+        id: 'bts-slavin',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Monumento_a_Slav%C3%ADn%2C_Bratislava%2C_Eslovaquia%2C_2020-02-01%2C_DD_13.jpg/500px-Monumento_a_Slav%C3%ADn%2C_Bratislava%2C_Eslovaquia%2C_2020-02-01%2C_DD_13.jpg',
+        name: 'אנדרטת סלאבין',
+        nameLocal: 'Slavín',
+        category: 'viewpoint',
+        lat: 48.1533,
+        lng: 17.0997,
+        description:
+          'אנדרטת הזיכרון הסובייטית על גבעה שקטה מעל העיר - נוף פתוח ושכונת שגרירויות ווילות מסביב.',
+        rating: 4.4,
+        durationMin: 60,
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Slavin+Bratislava',
+      },
+      {
+        id: 'bts-kamzik',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Bratislava_-_Fernsehturm_%28a%29.JPG/500px-Bratislava_-_Fernsehturm_%28a%29.JPG',
+        name: 'מגדל קמז׳יק',
+        nameLocal: 'Kamzík TV Tower',
+        category: 'viewpoint',
+        lat: 48.1817,
+        lng: 17.0951,
+        description:
+          'מגדל שידור על גבעה מיוערת מעל העיר - תצפית, מסעדה מסתובבת ומסלולי הליכה ביער מסביב.',
+        rating: 4.3,
+        durationMin: 120,
+        tags: ['outdoors'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Kamzik+Tower',
+      },
+      {
+        id: 'bts-hviezdoslav',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Hviezdoslavovo_n%C3%A1mestie_%2810267450433%29.jpg/500px-Hviezdoslavovo_n%C3%A1mestie_%2810267450433%29.jpg',
+        name: 'כיכר הביילזדוסלב והטיילת',
+        nameLocal: 'Hviezdoslavovo námestie',
+        category: 'attraction',
+        lat: 48.1408,
+        lng: 17.1074,
+        description:
+          'השדרה האלגנטית בין התיאטרון הלאומי לדנובה - עצים, מזרקות ובתי קפה. נעימה במיוחד בערב.',
+        rating: 4.5,
+        durationMin: 45,
+        tags: ['romantic'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Hviezdoslavovo+namestie',
+      },
+      {
+        id: 'bts-old-market',
+        name: 'אולם השוק הישן',
+        nameLocal: 'Stará tržnica',
+        category: 'attraction',
+        lat: 48.1445,
+        lng: 17.1122,
+        description:
+          'אולם השוק ההיסטורי מ-1910 - בשבתות מתקיים בו שוק אוכל ותוצרת מקומית, ובשאר השבוע אירועים.',
+        rating: 4.2,
+        durationMin: 60,
+        tags: ['foodie'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Stara+trznica+Bratislava',
+      },
+      {
+        id: 'bts-synagogue',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Orthodox_Synagogue%2C_Heydukova_street%2C_Bratislava.jpg/500px-Orthodox_Synagogue%2C_Heydukova_street%2C_Bratislava.jpg',
+        name: 'בית הכנסת ברחוב היידוקובה',
+        nameLocal: 'Heydukova Street Synagogue',
+        category: 'attraction',
+        lat: 48.1466,
+        lng: 17.1112,
+        description:
+          'בית הכנסת היחיד שנותר בעיר (1926, בסגנון קוביסטי נדיר) - פעיל עד היום, עם תערוכה קטנה על הקהילה.',
+        rating: 4.4,
+        durationMin: 45,
+        tags: ['history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Heydukova+Synagogue',
+      },
+      {
+        id: 'bts-jewish-museum',
+        name: 'המוזיאון לתרבות יהודית',
+        nameLocal: 'Museum of Jewish Culture',
+        category: 'museum',
+        lat: 48.1414,
+        lng: 17.103,
+        description:
+          'מוזיאון בבית היסטורי ברחוב הגטו לשעבר, מתחת לטירה - סיפורה של יהדות סלובקיה לאורך הדורות.',
+        rating: 4.3,
+        durationMin: 60,
+        tags: ['history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Museum+of+Jewish+Culture+Bratislava',
+      },
+      {
+        id: 'bts-janka-krala',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Sad_Janka_Krala%2C_Bratislava%2C_Slovakia.JPG/500px-Sad_Janka_Krala%2C_Bratislava%2C_Slovakia.JPG',
+        name: 'פארק יאנקו קראל',
+        nameLocal: 'Sad Janka Kráľa',
+        category: 'nature',
+        lat: 48.1348,
+        lng: 17.1074,
+        description:
+          'מהפארקים הציבוריים הוותיקים באירופה, על הגדה הדרומית של הדנובה - מול מגדל ה-UFO וליד קניון אאופרק.',
+        rating: 4.3,
+        durationMin: 60,
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Sad+Janka+Krala',
+      },
+      {
+        id: 'bts-nedbalka',
+        name: 'גלריית נדבלקה',
+        nameLocal: 'Nedbalka Gallery',
+        category: 'museum',
+        lat: 48.145,
+        lng: 17.1105,
+        description:
+          'גלריה לאמנות סלובקית מודרנית בבניין עם אטריום לבן מפתיע - מכנים אותה "הגוגנהיים הקטן של ברטיסלבה".',
+        rating: 4.5,
+        durationMin: 60,
+        tags: ['art'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Nedbalka+Gallery',
+      },
+      {
+        id: 'bts-zelezna',
+        name: 'ז׳לזנה סטודניצ׳קה (יער העיר)',
+        nameLocal: 'Železná studnička',
+        category: 'nature',
+        lat: 48.183,
+        lng: 17.093,
+        description:
+          'עמק מיוער עם אגמים, שבילי הליכה ופינות פיקניק - הריאה הירוקה של ברטיסלבה, רבע שעה מהמרכז.',
+        rating: 4.5,
+        durationMin: 150,
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Zelezna+studnicka',
       },
     ],
     itinerary: [
@@ -376,6 +785,11 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'prg-charles',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Prague_07-2016_view_from_Lesser_Town_Tower_of_Charles_Bridge_img3.jpg/500px-Prague_07-2016_view_from_Lesser_Town_Tower_of_Charles_Bridge_img3.jpg',
+        tags: ['history', 'romantic'],
+        priceLevel: 0,
+        mustSee: true,
         name: 'גשר קרל',
         nameLocal: 'Charles Bridge',
         category: 'attraction',
@@ -389,6 +803,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'prg-castle',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Karl%C5%AFv_most_Praha%2C_Star%C3%A9_M%C4%9Bsto_20170810_007.jpg/500px-Karl%C5%AFv_most_Praha%2C_Star%C3%A9_M%C4%9Bsto_20170810_007.jpg',
+        tags: ['history'],
+        priceLevel: 2,
+        mustSee: true,
         name: 'מצודת פראג',
         nameLocal: 'Prague Castle',
         category: 'attraction',
@@ -402,6 +821,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'prg-oldtown',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Prague_07-2016_View_from_Old_Town_Hall_Tower_img3.jpg/500px-Prague_07-2016_View_from_Old_Town_Hall_Tower_img3.jpg',
+        tags: ['history', 'families'],
+        priceLevel: 0,
+        mustSee: true,
         name: 'כיכר העיר העתיקה והשעון האסטרונומי',
         nameLocal: 'Old Town Square',
         category: 'attraction',
@@ -415,6 +839,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'prg-josefov',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Jewish_tawnhall_%28Prague%29.jpg/500px-Jewish_tawnhall_%28Prague%29.jpg',
+        tags: ['history'],
+        priceLevel: 2,
+        mustSee: true,
         name: 'הרובע היהודי (יוזפוב)',
         nameLocal: 'Josefov - Jewish Quarter',
         category: 'museum',
@@ -428,6 +857,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'prg-petrin',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Petrin_Praha.jpg/500px-Petrin_Praha.jpg',
+        tags: ['outdoors', 'families', 'romantic'],
+        priceLevel: 1,
         name: 'גבעת פטרשין',
         nameLocal: 'Petřín Hill',
         category: 'nature',
@@ -441,6 +874,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'prg-palladium',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Kas%C3%A1rna_Ji%C5%99%C3%ADho_z_Pod%C4%9Bbradm_%28Nov%C3%A9_M%C4%9Bsto%29%2C_Praha_1%2C_n%C3%A1m._Republiky%2C_Na_Po%C5%99%C3%AD%C4%8D%C3%AD_1%2C_Nov%C3%A9_M%C4%9Bsto.JPG/500px-Kas%C3%A1rna_Ji%C5%99%C3%ADho_z_Pod%C4%9Bbradm_%28Nov%C3%A9_M%C4%9Bsto%29%2C_Praha_1%2C_n%C3%A1m._Republiky%2C_Na_Po%C5%99%C3%AD%C4%8D%C3%AD_1%2C_Nov%C3%A9_M%C4%9Bsto.JPG',
+        tags: ['families'],
+        priceLevel: 2,
         name: 'קניון פלאדיום ורחוב פאריז׳סקה',
         nameLocal: 'Palladium & Pařížská Street',
         category: 'shopping',
@@ -454,6 +891,9 @@ export const destinations: Destination[] = [
       },
       {
         id: 'prg-king-solomon',
+        tags: ['foodie'],
+        priceLevel: 2,
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'גלאט, בהשגחת רבנות פראג' },
         name: 'קינג סולומון (מסעדה כשרה)',
         nameLocal: 'King Solomon',
         category: 'kosher-food',
@@ -468,6 +908,9 @@ export const destinations: Destination[] = [
       },
       {
         id: 'prg-dinitz',
+        tags: ['foodie'],
+        priceLevel: 2,
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'רבנות פראג' },
         name: 'דיניץ (מסעדה כשרה)',
         nameLocal: 'Dinitz',
         category: 'kosher-food',
@@ -479,6 +922,206 @@ export const destinations: Destination[] = [
         kosherNote: 'בשרי, בהשגחת הרבנות של פראג.',
         durationMin: 75,
         externalUrl: 'https://maps.google.com/?q=Dinitz+Prague',
+      },
+      {
+        id: 'prg-wenceslas',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Prague_Praha_2014_Holmstad_Vaclavplassen_i_nybyen_Nove_Mesto_flott.jpg/500px-Prague_Praha_2014_Holmstad_Vaclavplassen_i_nybyen_Nove_Mesto_flott.jpg',
+        name: 'כיכר ואצלב',
+        nameLocal: 'Wenceslas Square',
+        category: 'attraction',
+        lat: 50.081,
+        lng: 14.4278,
+        description:
+          'הכיכר-שדרה שבה התרחשו הרגעים הגדולים של צ׳כיה המודרנית, מ-1918 ועד מהפכת הקטיפה. שוקקת ומלאת חנויות.',
+        rating: 4.5,
+        durationMin: 60,
+        tags: ['history'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Wenceslas+Square',
+      },
+      {
+        id: 'prg-mala-strana',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/19.7.16_Prague_Castle_12_%2828395711206%29.jpg/500px-19.7.16_Prague_Castle_12_%2828395711206%29.jpg',
+        name: 'מאלה סטראנה',
+        nameLocal: 'Malá Strana',
+        category: 'attraction',
+        lat: 50.088,
+        lng: 14.4037,
+        description:
+          'הרובע הבארוקי שמתחת למצודה - סמטאות מרוצפות, חצרות נסתרות וכנסיית ניקולס הקדוש. יורדים אליו מגשר קרל.',
+        rating: 4.7,
+        durationMin: 120,
+        tags: ['romantic', 'history'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Mala+Strana',
+      },
+      {
+        id: 'prg-vysehrad',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Parn%C3%ADk_Vy%C5%A1ehrad_pod_Vy%C5%A1ehradem.jpg/500px-Parn%C3%ADk_Vy%C5%A1ehrad_pod_Vy%C5%A1ehradem.jpg',
+        name: 'מצודת וישהראד',
+        nameLocal: 'Vyšehrad',
+        category: 'attraction',
+        lat: 50.0645,
+        lng: 14.418,
+        description:
+          'המצודה השנייה של פראג, על צוק מעל הוולטבה - בזיליקה, בית הקברות הלאומי ונוף רגוע הרחק מההמונים.',
+        rating: 4.6,
+        durationMin: 120,
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Vysehrad',
+      },
+      {
+        id: 'prg-letna',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Praha%2C_Letn%C3%A1%2C_sad.jpg/500px-Praha%2C_Letn%C3%A1%2C_sad.jpg',
+        name: 'פארק לטנה',
+        nameLocal: 'Letná Park',
+        category: 'nature',
+        lat: 50.0955,
+        lng: 14.415,
+        description:
+          'פארק על מצוק מעל הנהר עם התצפית הקלאסית על גשרי הוולטבה - ובקיץ גן בירה גדול מתחת לעצים.',
+        rating: 4.6,
+        durationMin: 90,
+        tags: ['outdoors', 'nightlife'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Letna+Park',
+      },
+      {
+        id: 'prg-dancing-house',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Tanzendes_Haus_2023.jpg/500px-Tanzendes_Haus_2023.jpg',
+        name: 'הבית הרוקד',
+        nameLocal: 'Dancing House',
+        category: 'attraction',
+        lat: 50.0755,
+        lng: 14.4141,
+        description:
+          'בניין "ג׳ינג׳ר ופרד" של פרנק גרי - האייקון המודרני של פראג על גדת הנהר. עוצרים לצילום מבחוץ.',
+        rating: 4.4,
+        durationMin: 20,
+        tags: ['art'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Dancing+House',
+      },
+      {
+        id: 'prg-national-museum',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Museo_Nacional%2C_Praga%2C_Rep%C3%BAblica_Checa%2C_2022-07-02%2C_DD_265-267_HDR.jpg/500px-Museo_Nacional%2C_Praga%2C_Rep%C3%BAblica_Checa%2C_2022-07-02%2C_DD_265-267_HDR.jpg',
+        name: 'המוזיאון הלאומי',
+        nameLocal: 'National Museum',
+        category: 'museum',
+        lat: 50.0789,
+        lng: 14.4304,
+        description:
+          'הבניין הניאו-רנסנסי המשופץ בראש כיכר ואצלב - אוספי היסטוריה וטבע מתחת לכיפה מפוארת.',
+        rating: 4.5,
+        durationMin: 120,
+        tags: ['history', 'families'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=National+Museum+Prague',
+      },
+      {
+        id: 'prg-kampa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Kampa5.jpg/500px-Kampa5.jpg',
+        name: 'אי קמפה',
+        nameLocal: 'Kampa Island',
+        category: 'nature',
+        lat: 50.0843,
+        lng: 14.4083,
+        description:
+          'האי השקט שמתחת לגשר קרל - "ונציה של פראג" עם תעלת השדים, פארק על המים ומוזיאון לאמנות מודרנית.',
+        rating: 4.6,
+        durationMin: 60,
+        tags: ['romantic', 'outdoors', 'art'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Kampa+Island',
+      },
+      {
+        id: 'prg-strahov',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Praha%2C_Hradcany_-_Strahovsky_klaster_%28pohled_z_ulice_Uvoz%29.jpg/500px-Praha%2C_Hradcany_-_Strahovsky_klaster_%28pohled_z_ulice_Uvoz%29.jpg',
+        name: 'מנזר סטרהוב והספרייה',
+        nameLocal: 'Strahov Monastery',
+        category: 'attraction',
+        lat: 50.0862,
+        lng: 14.3896,
+        description:
+          'מנזר על הגבעה מעל מאלה סטראנה עם שני אולמות ספרייה בארוקיים מהיפים בעולם - ובדרך תצפית יפה על העיר.',
+        rating: 4.6,
+        durationMin: 90,
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Strahov+Monastery',
+      },
+      {
+        id: 'prg-havelske',
+        name: 'שוק האבל',
+        nameLocal: 'Havelské tržiště',
+        category: 'shopping',
+        lat: 50.0846,
+        lng: 14.4229,
+        description:
+          'שוק הרחוב הפתוח היחיד ששרד במרכז ההיסטורי (נזכר כבר ב-1232) - פירות, מזכרות ועבודות עץ.',
+        rating: 4.2,
+        durationMin: 30,
+        tags: ['foodie'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Havelske+trziste',
+      },
+      {
+        id: 'prg-zizkov',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Prague_NZ7_0367_%2844311730795%29.jpg/500px-Prague_NZ7_0367_%2844311730795%29.jpg',
+        name: 'מגדל הטלוויזיה ז׳יז׳קוב',
+        nameLocal: 'Žižkov Television Tower',
+        category: 'viewpoint',
+        lat: 50.081,
+        lng: 14.451,
+        description:
+          'המגדל עם פסלי התינוקות הזוחלים של דויד צ׳רני - התצפית הגבוהה בעיר, בלב שכונת ז׳יז׳קוב האותנטית.',
+        rating: 4.3,
+        durationMin: 75,
+        tags: ['art'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=Zizkov+Tower',
+      },
+      {
+        id: 'prg-jerusalem-synagogue',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Prag_Jerusalemer-Synagoge_Feb-2014_IMG_2162.JPG/500px-Prag_Jerusalemer-Synagoge_Feb-2014_IMG_2162.JPG',
+        name: 'בית הכנסת הירושלמי',
+        nameLocal: 'Jerusalem Synagogue',
+        category: 'attraction',
+        lat: 50.0843,
+        lng: 14.4341,
+        description:
+          'בית הכנסת הצבעוני והגדול בפראג (1906) - שילוב מסחרר של אר-נובו וסגנון מורי. פעיל, ומציג תערוכות.',
+        rating: 4.6,
+        durationMin: 45,
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Jerusalem+Synagogue+Prague',
+      },
+      {
+        id: 'prg-cafe-louvre',
+        name: 'קפה לובר',
+        nameLocal: 'Café Louvre',
+        category: 'cafe',
+        lat: 50.0817,
+        lng: 14.4189,
+        description:
+          'בית קפה פראגאי מ-1902 שבו ישבו קפקא ואיינשטיין - ארוחת בוקר, עוגות ואולם ביליארד. לא כשר.',
+        rating: 4.4,
+        durationMin: 60,
+        tags: ['history', 'foodie'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=Cafe+Louvre+Prague',
       },
     ],
     itinerary: [
@@ -525,6 +1168,11 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'bud-parliament',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Hungarian_Parliament_Building_from_across_the_Danube%2C_2025-01-11.jpg/500px-Hungarian_Parliament_Building_from_across_the_Danube%2C_2025-01-11.jpg',
+        tags: ['history'],
+        priceLevel: 2,
+        mustSee: true,
         name: 'בניין הפרלמנט',
         nameLocal: 'Hungarian Parliament',
         category: 'attraction',
@@ -538,6 +1186,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-bastion',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Hal%C3%A1szb%C3%A1stya_2017.jpg/500px-Hal%C3%A1szb%C3%A1stya_2017.jpg',
+        tags: ['romantic', 'history'],
+        priceLevel: 1,
+        mustSee: true,
         name: 'מצודת הדייגים',
         nameLocal: "Fisherman's Bastion",
         category: 'viewpoint',
@@ -551,6 +1204,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-castle',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Budav%C3%A1ri_Palota%2C_ABCDEF_%C3%A9p%C3%BClet.jpg/500px-Budav%C3%A1ri_Palota%2C_ABCDEF_%C3%A9p%C3%BClet.jpg',
+        tags: ['history'],
+        priceLevel: 1,
         name: 'טירת בודה',
         nameLocal: 'Buda Castle',
         category: 'attraction',
@@ -564,6 +1221,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-szechenyi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Budapest_Sz%C3%A9chenyi_Baths_R02.jpg/500px-Budapest_Sz%C3%A9chenyi_Baths_R02.jpg',
+        tags: ['families', 'romantic'],
+        priceLevel: 2,
+        mustSee: true,
         name: 'מרחצאות סצ׳ני',
         nameLocal: 'Széchenyi Thermal Bath',
         category: 'attraction',
@@ -577,6 +1239,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-dohany',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Synagogue-Budapest.jpg/500px-Synagogue-Budapest.jpg',
+        tags: ['history'],
+        priceLevel: 2,
+        mustSee: true,
         name: 'בית הכנסת הגדול (דוהאני)',
         nameLocal: 'Dohány Street Synagogue',
         category: 'museum',
@@ -590,6 +1257,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-shoes',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Shoes_Danube_Promenade_IMGP1297.jpg/500px-Shoes_Danube_Promenade_IMGP1297.jpg',
+        tags: ['history'],
+        priceLevel: 0,
         name: 'הנעליים על גדת הדנובה',
         nameLocal: 'Shoes on the Danube Bank',
         category: 'attraction',
@@ -603,6 +1274,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-vaci',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Vaci_utca_street_sign-Budapest.jpg/500px-Vaci_utca_street_sign-Budapest.jpg',
+        tags: ['foodie'],
+        priceLevel: 1,
         name: 'רחוב ואצי ושוק המרכזי',
         nameLocal: 'Váci utca & Great Market Hall',
         category: 'shopping',
@@ -616,6 +1291,9 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-carmel',
+        tags: ['foodie'],
+        priceLevel: 2,
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'השגחה מקומית - לוודא מול המקום' },
         name: 'כרמל (מסעדה כשרה)',
         nameLocal: 'Carmel Restaurant',
         category: 'kosher-food',
@@ -630,6 +1308,9 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-hanna',
+        tags: ['foodie'],
+        priceLevel: 1,
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'גלאט, הקהילה האורתודוקסית' },
         name: 'חנה (מסעדה כשרה)',
         nameLocal: 'Hanna Restaurant',
         category: 'kosher-food',
@@ -641,6 +1322,191 @@ export const destinations: Destination[] = [
         kosherNote: 'גלאט כשר. ארוחות שבת בהרשמה מראש.',
         durationMin: 75,
         externalUrl: 'https://maps.google.com/?q=Hanna+Kosher+Budapest',
+      },
+      {
+        id: 'bud-basilica',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Budapest_Szent_Istvan_Bazilika_R01.jpg/500px-Budapest_Szent_Istvan_Bazilika_R01.jpg',
+        name: 'בזיליקת סנט אישטוואן',
+        nameLocal: "St. Stephen's Basilica",
+        category: 'attraction',
+        lat: 47.5008,
+        lng: 19.054,
+        description:
+          'הכנסייה הגדולה של פשט עם כיפה שנראית מכל העיר - עולים אליה לתצפית 360 מעלות על בודפשט.',
+        rating: 4.7,
+        durationMin: 75,
+        tags: ['history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=St+Stephens+Basilica+Budapest',
+      },
+      {
+        id: 'bud-heroes',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/HUN-2015-Budapest-Heroes%E2%80%99_Square.jpg/500px-HUN-2015-Budapest-Heroes%E2%80%99_Square.jpg',
+        name: 'כיכר הגיבורים',
+        nameLocal: "Heroes' Square",
+        category: 'attraction',
+        lat: 47.515,
+        lng: 19.0779,
+        description:
+          'הכיכר המונומנטלית בקצה שדרת אנדראשי - פסלי שבעת השבטים המייסדים, ומוזיאוני אמנות משני צדדיה.',
+        rating: 4.6,
+        durationMin: 45,
+        tags: ['history'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Heroes+Square+Budapest',
+      },
+      {
+        id: 'bud-citypark',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Vajdahunyad_v%C3%A1ra_Budapest_September_2013.jpg/500px-Vajdahunyad_v%C3%A1ra_Budapest_September_2013.jpg',
+        name: 'פארק העיר וטירת ואידהוניאד',
+        nameLocal: 'City Park & Vajdahunyad Castle',
+        category: 'nature',
+        lat: 47.5146,
+        lng: 19.0829,
+        description:
+          'טירה אקלקטית אגדתית בלב פארק העיר - אגם שיט בקיץ שהופך להחלקה על קרח בחורף, ליד מרחצאות סצ׳ני.',
+        rating: 4.5,
+        durationMin: 90,
+        tags: ['families', 'romantic'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Vajdahunyad+Castle',
+      },
+      {
+        id: 'bud-gellert-hill',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Gell%C3%A9rtHillSkyline.jpg/500px-Gell%C3%A9rtHillSkyline.jpg',
+        name: 'גבעת גלרט והציטדלה',
+        nameLocal: 'Gellért Hill',
+        category: 'viewpoint',
+        lat: 47.4869,
+        lng: 19.0466,
+        description:
+          'הגבעה עם פסל החירות מעל הדנובה - הטיפוס הקלאסי לפנורמה של כל הגשרים ושתי גדות העיר.',
+        rating: 4.6,
+        durationMin: 90,
+        tags: ['outdoors'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Gellert+Hill',
+      },
+      {
+        id: 'bud-andrassy',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Andr%C3%A1ssi%C3%BAtl%C3%A9gifot%C3%B3.jpg/500px-Andr%C3%A1ssi%C3%BAtl%C3%A9gifot%C3%B3.jpg',
+        name: 'שדרת אנדראשי',
+        nameLocal: 'Andrássy Avenue',
+        category: 'attraction',
+        lat: 47.5064,
+        lng: 19.0651,
+        description:
+          'השדרה המפוארת של בודפשט (אתר מורשת עולמית) - מבניין האופרה עד כיכר הגיבורים, בתי קפה ובוטיקים.',
+        rating: 4.5,
+        durationMin: 90,
+        tags: ['romantic', 'history'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Andrassy+Avenue',
+      },
+      {
+        id: 'bud-margaret',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Budapest_Donauinsel_2.jpg/500px-Budapest_Donauinsel_2.jpg',
+        name: 'אי מרגרט',
+        nameLocal: 'Margaret Island',
+        category: 'nature',
+        lat: 47.5262,
+        lng: 19.047,
+        description:
+          'האי הירוק באמצע הדנובה - מזרקה מוזיקלית, גני ורדים ומסלול ריצה מסביב. שוכרים רכב-פדלים משפחתי.',
+        rating: 4.6,
+        durationMin: 120,
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Margaret+Island',
+      },
+      {
+        id: 'bud-gellert-baths',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Budapest%2C_Gell%C3%A9rt_f%C3%BCrd%C5%91.jpg/500px-Budapest%2C_Gell%C3%A9rt_f%C3%BCrd%C5%91.jpg',
+        name: 'מרחצאות גלרט',
+        nameLocal: 'Gellért Baths',
+        category: 'attraction',
+        lat: 47.4838,
+        lng: 19.0518,
+        description:
+          'המרחצאות בסגנון אר-נובו שבמלון גלרט המפורסם - אריחים מצוירים, בריכה מקורה מפוארת ואווירה של פעם.',
+        rating: 4.5,
+        durationMin: 150,
+        tags: ['romantic'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=Gellert+Baths',
+      },
+      {
+        id: 'bud-kazinczy',
+        name: 'בית הכנסת ברחוב קזינצי',
+        nameLocal: 'Kazinczy Street Synagogue',
+        category: 'attraction',
+        lat: 47.4966,
+        lng: 19.0621,
+        description:
+          'בית הכנסת האורתודוקסי בסגנון אר-נובו בלב רחוב קזינצי - מרכז הקהילה השומרת, צמוד למסעדות הכשרות.',
+        rating: 4.5,
+        durationMin: 45,
+        tags: ['history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Kazinczy+Synagogue',
+      },
+      {
+        id: 'bud-newyork-cafe',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/en/thumb/5/58/Anantara_New_York_Palace_Budapest_Hotel.png/500px-Anantara_New_York_Palace_Budapest_Hotel.png',
+        name: 'ניו יורק קפה',
+        nameLocal: 'New York Café',
+        category: 'cafe',
+        lat: 47.4984,
+        lng: 19.0699,
+        description:
+          'בית הקפה שמתהדר בתואר "היפה בעולם" - אולם ניאו-בארוקי מוזהב. תור ארוך ומחירים בהתאם; שווה הצצה. לא כשר.',
+        rating: 4.4,
+        durationMin: 60,
+        tags: ['romantic', 'foodie'],
+        priceLevel: 3,
+        externalUrl: 'https://maps.google.com/?q=New+York+Cafe+Budapest',
+      },
+      {
+        id: 'bud-liberty-bridge',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Szabads%C3%A1g_h%C3%ADd_Budapest_September_2013.JPG/500px-Szabads%C3%A1g_h%C3%ADd_Budapest_September_2013.JPG',
+        name: 'גשר החירות',
+        nameLocal: 'Liberty Bridge',
+        category: 'attraction',
+        lat: 47.486,
+        lng: 19.055,
+        description:
+          'הגשר הירוק בסגנון אר-נובו בין השוק המרכזי לגבעת גלרט - מהיפים על הדנובה.',
+        rating: 4.5,
+        durationMin: 30,
+        tags: ['romantic'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Liberty+Bridge+Budapest',
+      },
+      {
+        id: 'bud-gerbeaud',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Cafe_Gerbeaud_01.JPG/500px-Cafe_Gerbeaud_01.JPG',
+        name: 'קפה ג׳רבו',
+        nameLocal: 'Café Gerbeaud',
+        category: 'cafe',
+        lat: 47.4966,
+        lng: 19.0505,
+        description:
+          'הקונדיטוריה ההיסטורית של כיכר ורשמרטי (מ-1858) - עוגות דובוש וזיכרונות מימי המונרכיה. לא כשר.',
+        rating: 4.4,
+        durationMin: 45,
+        tags: ['foodie', 'history'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=Cafe+Gerbeaud',
       },
     ],
     itinerary: [
@@ -687,6 +1553,11 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'rom-colosseum',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Colosseo_2020.jpg/500px-Colosseo_2020.jpg',
+        tags: ['history'],
+        priceLevel: 2,
+        mustSee: true,
         name: 'הקולוסיאום',
         nameLocal: 'Colosseum',
         category: 'attraction',
@@ -700,6 +1571,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rom-forum',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Foro_Romano_Musei_Capitolini_Roma.jpg/500px-Foro_Romano_Musei_Capitolini_Roma.jpg',
+        tags: ['history'],
+        priceLevel: 2,
         name: 'הפורום הרומאי',
         nameLocal: 'Roman Forum',
         category: 'attraction',
@@ -713,6 +1588,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rom-trevi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Trevi_Fountain_-_Roma.jpg/500px-Trevi_Fountain_-_Roma.jpg',
+        tags: ['romantic'],
+        priceLevel: 0,
+        mustSee: true,
         name: 'מזרקת טרווי',
         nameLocal: 'Trevi Fountain',
         category: 'attraction',
@@ -726,6 +1606,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rom-pantheon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Pantheon_%28Rome%29_-_Right_side_and_front.jpg/500px-Pantheon_%28Rome%29_-_Right_side_and_front.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        mustSee: true,
         name: 'הפנתאון',
         nameLocal: 'Pantheon',
         category: 'attraction',
@@ -739,6 +1624,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rom-vatican',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Musei_vaticani_Coat_of_Arms.svg/500px-Musei_vaticani_Coat_of_Arms.svg.png',
+        tags: ['art', 'history'],
+        priceLevel: 2,
+        mustSee: true,
         name: 'מוזיאוני הוותיקן והקפלה הסיסטינית',
         nameLocal: 'Vatican Museums',
         category: 'museum',
@@ -752,6 +1642,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rom-ghetto',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Great_Synagogue_of_Rome.jpg/500px-Great_Synagogue_of_Rome.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        mustSee: true,
         name: 'הגטו היהודי ובית הכנסת הגדול',
         nameLocal: 'Jewish Ghetto & Great Synagogue',
         category: 'museum',
@@ -765,6 +1660,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rom-corso',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Via_del_Corso_%2852501354470%29.jpg/500px-Via_del_Corso_%2852501354470%29.jpg',
+        tags: ['families'],
+        priceLevel: 2,
         name: 'ויה דל קורסו',
         nameLocal: 'Via del Corso',
         category: 'shopping',
@@ -778,6 +1677,9 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rom-baghetto',
+        tags: ['foodie'],
+        priceLevel: 2,
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'רבנות רומא' },
         name: 'בא-גטו (מסעדה כשרה)',
         nameLocal: "Ba'Ghetto",
         category: 'kosher-food',
@@ -792,6 +1694,9 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rom-yotvata',
+        tags: ['foodie'],
+        priceLevel: 2,
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'רבנות רומא' },
         name: 'יטבתה (מסעדה כשרה חלבית)',
         nameLocal: 'Yotvata',
         category: 'kosher-food',
@@ -803,6 +1708,191 @@ export const destinations: Destination[] = [
         kosherNote: 'חלבי, בהשגחת רבנות רומא.',
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=Yotvata+Rome',
+      },
+      {
+        id: 'rom-spanish-steps',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Piazza_di_Spagna_%28Rome%29_0004.jpg/500px-Piazza_di_Spagna_%28Rome%29_0004.jpg',
+        name: 'המדרגות הספרדיות',
+        nameLocal: 'Spanish Steps',
+        category: 'attraction',
+        lat: 41.906,
+        lng: 12.4828,
+        description:
+          'גרם המדרגות המפורסם מפיאצה די ספניה אל כנסיית טריניטה דיי מונטי - נקודת המפגש הקלאסית של רומא.',
+        rating: 4.6,
+        durationMin: 30,
+        tags: ['romantic'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Spanish+Steps',
+      },
+      {
+        id: 'rom-navona',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Piazza_Navona_%28Rome%29_at_night.jpg/500px-Piazza_Navona_%28Rome%29_at_night.jpg',
+        name: 'פיאצה נבונה',
+        nameLocal: 'Piazza Navona',
+        category: 'attraction',
+        lat: 41.8992,
+        lng: 12.4731,
+        description:
+          'הכיכר הבארוקית היפה ברומא - מזרקת ארבעת הנהרות של ברניני במרכז, ציירי רחוב ובתי קפה מסביב.',
+        rating: 4.7,
+        durationMin: 45,
+        tags: ['romantic', 'art'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Piazza+Navona',
+      },
+      {
+        id: 'rom-campo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Campo_dei_Fiori.jpg/500px-Campo_dei_Fiori.jpg',
+        name: 'קמפו דה פיורי',
+        nameLocal: "Campo de' Fiori",
+        category: 'attraction',
+        lat: 41.8956,
+        lng: 12.4722,
+        description:
+          'שוק בוקר צבעוני בכיכר שבערב הופכת למוקד בילוי - פירות, פסטה ופרחים תחת פסל ג׳ורדנו ברונו.',
+        rating: 4.3,
+        durationMin: 45,
+        tags: ['foodie', 'nightlife'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Campo+de+Fiori',
+      },
+      {
+        id: 'rom-borghese',
+        name: 'גלריה בורגזה',
+        nameLocal: 'Galleria Borghese',
+        category: 'museum',
+        lat: 41.9142,
+        lng: 12.4923,
+        description:
+          'פסלי ברניני וציורי קרוואג׳ו בווילה מוקפת גנים ענקיים - מהמוזיאונים המרוכזים והמהנים ברומא. כניסה בהזמנת מועד מראש.',
+        rating: 4.8,
+        durationMin: 150,
+        tags: ['art', 'romantic'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=Galleria+Borghese',
+      },
+      {
+        id: 'rom-castel',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Castel_Sant%27Angelo_at_Night.jpg/500px-Castel_Sant%27Angelo_at_Night.jpg',
+        name: 'קסטל סנט אנג׳לו',
+        nameLocal: "Castel Sant'Angelo",
+        category: 'attraction',
+        lat: 41.9031,
+        lng: 12.4663,
+        description:
+          'המאוזוליאום של אדריאנוס שהפך למבצר האפיפיורים - מעבר סודי מהוותיקן ותצפית גגות יפה מהפסגה.',
+        rating: 4.6,
+        durationMin: 90,
+        tags: ['history'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=Castel+Sant+Angelo',
+      },
+      {
+        id: 'rom-trastevere',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Santa_Maria_in_Trastevere_fountain.jpg/500px-Santa_Maria_in_Trastevere_fountain.jpg',
+        name: 'טראסטוורה',
+        nameLocal: 'Trastevere',
+        category: 'attraction',
+        lat: 41.8896,
+        lng: 12.4695,
+        description:
+          'השכונה הכי אהובה של רומא בערב - סמטאות מטפסות קיסוס, טרטוריות ובזיליקת סנטה מריה עם פסיפסי הזהב.',
+        rating: 4.7,
+        durationMin: 120,
+        tags: ['nightlife', 'romantic', 'foodie'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Trastevere',
+      },
+      {
+        id: 'rom-gianicolo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Janiculum.jpg/500px-Janiculum.jpg',
+        name: 'גבעת ג׳ניקולו',
+        nameLocal: 'Janiculum Hill',
+        category: 'viewpoint',
+        lat: 41.8919,
+        lng: 12.461,
+        description:
+          'הגבעה מעל טראסטוורה עם התצפית הרחבה ביותר על גגות רומא - ותותח שנורה בכל צהריים במסורת בת 150 שנה.',
+        rating: 4.6,
+        durationMin: 60,
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Janiculum+Terrace',
+      },
+      {
+        id: 'rom-peter-square',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/St_Peter%27s_Square%2C_Vatican_City_-_April_2007.jpg/500px-St_Peter%27s_Square%2C_Vatican_City_-_April_2007.jpg',
+        name: 'כיכר פטרוס הקדוש',
+        nameLocal: "St. Peter's Square",
+        category: 'attraction',
+        lat: 41.9022,
+        lng: 12.4568,
+        description:
+          'הכיכר האליפטית של ברניני מול הבזיליקה הגדולה בעולם - קולונדות, אובליסק ולב הוותיקן. הכניסה לבזיליקה חינם (תור ביטחוני).',
+        rating: 4.7,
+        durationMin: 90,
+        tags: ['history'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=St+Peters+Square',
+      },
+      {
+        id: 'rom-mouth',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Et%C3%A0_imperiale%2C_chiusino_a_forma_di_mascherone_di_divinit%C3%A0_fluviale%2C_detta_bocca_della_verit%C3%A0%2C_collocata_qui_nel_1632.jpg/500px-Et%C3%A0_imperiale%2C_chiusino_a_forma_di_mascherone_di_divinit%C3%A0_fluviale%2C_detta_bocca_della_verit%C3%A0%2C_collocata_qui_nel_1632.jpg',
+        name: 'פה האמת',
+        nameLocal: 'Bocca della Verità',
+        category: 'attraction',
+        lat: 41.8884,
+        lng: 12.4816,
+        description:
+          'דיסקת השיש העתיקה שהפכה ל"גלאי שקרים" אגדי בכנסיית סנטה מריה אין קוסמדין - מכניסים יד ומצטלמים.',
+        rating: 4.4,
+        durationMin: 30,
+        tags: ['families'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Bocca+della+Verita',
+      },
+      {
+        id: 'rom-popolo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/PIAZZA_DEL_POPOLO_VISTA_AEREA.jpg/500px-PIAZZA_DEL_POPOLO_VISTA_AEREA.jpg',
+        name: 'פיאצה דל פופולו והפינצ׳ו',
+        nameLocal: 'Piazza del Popolo & Pincio',
+        category: 'attraction',
+        lat: 41.9106,
+        lng: 12.4763,
+        description:
+          'הכיכר הגדולה בשער הצפוני של רומא העתיקה - אובליסק מצרי, כנסיות תאומות, ומעליה טרסת הפינצ׳ו עם נוף השקיעה.',
+        rating: 4.6,
+        durationMin: 45,
+        tags: ['romantic'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Piazza+del+Popolo',
+      },
+      {
+        id: 'rom-appia',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Paesaggio_dell%27Appia_antica.jpg/500px-Paesaggio_dell%27Appia_antica.jpg',
+        name: 'הדרך האפּיה העתיקה',
+        nameLocal: 'Appian Way (Via Appia Antica)',
+        category: 'nature',
+        lat: 41.8558,
+        lng: 12.5169,
+        description:
+          'הדרך הרומית העתיקה - אבני ריצוף בנות יותר מאלפיים שנה, קטקומבות ונוף כפרי ירוק בתוך העיר. נעימה במיוחד באופניים.',
+        rating: 4.6,
+        durationMin: 180,
+        tags: ['outdoors', 'history'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Via+Appia+Antica',
       },
     ],
     itinerary: [
@@ -850,6 +1940,11 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'ath-acropolis',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/1029_Acropolis_of_Athens_in_Greece_at_night_Photo_by_Giles_Laurent.jpg/500px-1029_Acropolis_of_Athens_in_Greece_at_night_Photo_by_Giles_Laurent.jpg',
+        tags: ['history'],
+        priceLevel: 2,
+        mustSee: true,
         name: 'האקרופוליס והפרתנון',
         nameLocal: 'Acropolis',
         category: 'attraction',
@@ -863,6 +1958,9 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ath-acropolis-museum',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        mustSee: true,
         name: 'מוזיאון האקרופוליס',
         nameLocal: 'Acropolis Museum',
         category: 'museum',
@@ -876,6 +1974,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ath-plaka',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Carrer_del_barri_de_Plaka%2C_Atenes.JPG/500px-Carrer_del_barri_de_Plaka%2C_Atenes.JPG',
+        tags: ['romantic', 'families'],
+        priceLevel: 0,
         name: 'שכונת פלאקה',
         nameLocal: 'Plaka',
         category: 'attraction',
@@ -889,6 +1991,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ath-monastiraki',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Monastiraki_Square_on_June_6%2C_2020.jpg/500px-Monastiraki_Square_on_June_6%2C_2020.jpg',
+        tags: ['foodie', 'nightlife'],
+        priceLevel: 0,
         name: 'כיכר מונסטיראקי והשוק',
         nameLocal: 'Monastiraki Flea Market',
         category: 'attraction',
@@ -902,6 +2008,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ath-lycabettus',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/%CE%9B%CF%85%CE%BA%CE%B1%CE%B2%CE%B7%CF%84%CF%84%CF%8C%CF%82_-_Mount_Lycabettus.jpg/500px-%CE%9B%CF%85%CE%BA%CE%B1%CE%B2%CE%B7%CF%84%CF%84%CF%8C%CF%82_-_Mount_Lycabettus.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
         name: 'הר ליקבטוס',
         nameLocal: 'Mount Lycabettus',
         category: 'viewpoint',
@@ -915,6 +2025,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ath-ermou',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Ermou-street.jpg/500px-Ermou-street.jpg',
+        tags: ['families'],
+        priceLevel: 2,
         name: 'רחוב ארמו',
         nameLocal: 'Ermou Street',
         category: 'shopping',
@@ -928,6 +2042,9 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ath-gostijo',
+        tags: ['foodie'],
+        priceLevel: 2,
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'הרבנות של אתונה' },
         name: 'גוסטיז׳ו (מסעדה כשרה)',
         nameLocal: 'Gostijo',
         category: 'kosher-food',
@@ -942,6 +2059,9 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ath-chabad',
+        tags: ['foodie'],
+        priceLevel: 1,
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'חב"ד - ארוחות שבת בהרשמה' },
         name: 'בית חב"ד אתונה',
         nameLocal: 'Chabad of Athens',
         category: 'kosher-food',
@@ -952,6 +2072,211 @@ export const destinations: Destination[] = [
         kosherNote: 'ארוחות שבת בהרשמה מראש דרך האתר שלהם.',
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=Chabad+Athens',
+      },
+      {
+        id: 'ath-agora',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Agora_-_Ath%C3%A8nes_%28GRA1%29_-_2022-03-26_-_97.jpg/500px-Agora_-_Ath%C3%A8nes_%28GRA1%29_-_2022-03-26_-_97.jpg',
+        name: 'האגורה העתיקה',
+        nameLocal: 'Ancient Agora',
+        category: 'attraction',
+        lat: 37.9747,
+        lng: 23.7217,
+        description:
+          'השוק העתיק שבו התהלך סוקרטס - מקדש הפייסטוס השמור להפליא והסטואה המשוחזרת של אטלוס.',
+        rating: 4.6,
+        durationMin: 90,
+        tags: ['history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Ancient+Agora+Athens',
+      },
+      {
+        id: 'ath-temple-zeus',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/L%27Olympieion_%28Ath%C3%A8nes%29_%2830776483926%29.jpg/500px-L%27Olympieion_%28Ath%C3%A8nes%29_%2830776483926%29.jpg',
+        name: 'מקדש זאוס האולימפי',
+        nameLocal: 'Temple of Olympian Zeus',
+        category: 'attraction',
+        lat: 37.9693,
+        lng: 23.7331,
+        description:
+          'שרידי המקדש העצום לזאוס - עמודים קורינתיים ענקיים ליד שער אדריאנוס, בין פלאקה לאצטדיון.',
+        rating: 4.4,
+        durationMin: 45,
+        tags: ['history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Temple+of+Olympian+Zeus',
+      },
+      {
+        id: 'ath-panathenaic',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Panathenaic_Stadium_-_panoramio_%281%29.jpg/500px-Panathenaic_Stadium_-_panoramio_%281%29.jpg',
+        name: 'האצטדיון הפנאתנאי',
+        nameLocal: 'Panathenaic Stadium',
+        category: 'attraction',
+        lat: 37.9683,
+        lng: 23.741,
+        description:
+          'האצטדיון של האולימפיאדה המודרנית הראשונה (1896), בנוי כולו שיש - אפשר לרוץ הקפה על המסלול.',
+        rating: 4.5,
+        durationMin: 60,
+        tags: ['history', 'families'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Panathenaic+Stadium',
+      },
+      {
+        id: 'ath-syntagma',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/%CE%A0%CE%BB%CE%B1%CF%84%CE%B5%CE%AF%CE%B1_%CE%A3%CF%85%CE%BD%CF%84%CE%AC%CE%B3%CE%BC%CE%B1%CF%84%CE%BF%CF%82_6386.jpg/500px-%CE%A0%CE%BB%CE%B1%CF%84%CE%B5%CE%AF%CE%B1_%CE%A3%CF%85%CE%BD%CF%84%CE%AC%CE%B3%CE%BC%CE%B1%CF%84%CE%BF%CF%82_6386.jpg',
+        name: 'כיכר סינטגמה וחילופי המשמר',
+        nameLocal: 'Syntagma Square',
+        category: 'attraction',
+        lat: 37.9755,
+        lng: 23.7348,
+        description:
+          'כיכר הפרלמנט עם חילופי המשמר של האֶבזונים בכל שעה עגולה - המופע החינמי הקבוע של אתונה.',
+        rating: 4.4,
+        durationMin: 30,
+        tags: ['families'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Syntagma+Square',
+      },
+      {
+        id: 'ath-national-garden',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/%CE%95%CE%B8%CE%BD%CE%B9%CE%BA%CF%8C%CF%82_%CE%9A%CE%AE%CF%80%CE%BF%CF%82.jpg/500px-%CE%95%CE%B8%CE%BD%CE%B9%CE%BA%CF%8C%CF%82_%CE%9A%CE%AE%CF%80%CE%BF%CF%82.jpg',
+        name: 'הגן הלאומי',
+        nameLocal: 'National Garden',
+        category: 'nature',
+        lat: 37.9726,
+        lng: 23.7375,
+        description:
+          'גן צל ירוק מאחורי הפרלמנט - בריכות צבים, שדרות דקלים ומפלט אמיתי מהחום של אתונה.',
+        rating: 4.3,
+        durationMin: 60,
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=National+Garden+Athens',
+      },
+      {
+        id: 'ath-benaki',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Benaki_Museum_Athens.JPG/500px-Benaki_Museum_Athens.JPG',
+        name: 'מוזיאון בנאקי',
+        nameLocal: 'Benaki Museum',
+        category: 'museum',
+        lat: 37.9764,
+        lng: 23.7415,
+        description:
+          'אוסף פרטי מרהיב של אמנות יוונית מהפרהיסטוריה עד המאה ה-20, בווילה ניאו-קלאסית ליד הגן הלאומי.',
+        rating: 4.6,
+        durationMin: 90,
+        tags: ['art', 'history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Benaki+Museum',
+      },
+      {
+        id: 'ath-archaeological',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Arch%C3%A4ologisches_Nationalmuseum_Athen.jpg/500px-Arch%C3%A4ologisches_Nationalmuseum_Athen.jpg',
+        name: 'המוזיאון הארכיאולוגי הלאומי',
+        nameLocal: 'National Archaeological Museum',
+        category: 'museum',
+        lat: 37.989,
+        lng: 23.7327,
+        description:
+          'מהמוזיאונים הארכיאולוגיים החשובים בעולם - מסכת אגממנון, מנגנון האנטיקיתרה והברונזות הגדולות.',
+        rating: 4.7,
+        durationMin: 120,
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=National+Archaeological+Museum+Athens',
+      },
+      {
+        id: 'ath-anafiotika',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Anafiotika.JPG/500px-Anafiotika.JPG',
+        name: 'אנפיוטיקה',
+        nameLocal: 'Anafiotika',
+        category: 'attraction',
+        lat: 37.9718,
+        lng: 23.7288,
+        description:
+          'כפר קיקלאדי לבן שנבנה על צלע האקרופוליס - סמטאות ברוחב אדם, בוגנוויליות ותחושת אי באמצע העיר.',
+        rating: 4.6,
+        durationMin: 45,
+        tags: ['romantic'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Anafiotika',
+      },
+      {
+        id: 'ath-philopappos',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Philopappos_monument.jpg/500px-Philopappos_monument.jpg',
+        name: 'גבעת פילופאפוס',
+        nameLocal: 'Philopappos Hill',
+        category: 'viewpoint',
+        lat: 37.9679,
+        lng: 23.721,
+        description:
+          'גבעת המוזות מול האקרופוליס - נקודת הצילום הקלאסית של הפרתנון, שבילי אורנים והאנדרטה העתיקה בפסגה.',
+        rating: 4.6,
+        durationMin: 75,
+        tags: ['outdoors'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Philopappos+Hill',
+      },
+      {
+        id: 'ath-psiri',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Psyrri_square_Athens.jpg/500px-Psyrri_square_Athens.jpg',
+        name: 'שכונת פסירי',
+        nameLocal: 'Psiri',
+        category: 'attraction',
+        lat: 37.9789,
+        lng: 23.7247,
+        description:
+          'שכונת הבילוי עם אמנות רחוב, טברנות ומוזיקה חיה - בערב זה המקום; גם מסעדת גוסטיז׳ו הכשרה שוכנת כאן.',
+        rating: 4.4,
+        durationMin: 90,
+        tags: ['nightlife', 'foodie'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Psiri+Athens',
+      },
+      {
+        id: 'ath-kolonaki',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Kolonaki%2C_Main_Avenue.jpg/500px-Kolonaki%2C_Main_Avenue.jpg',
+        name: 'קולונאקי',
+        nameLocal: 'Kolonaki',
+        category: 'shopping',
+        lat: 37.9772,
+        lng: 23.7442,
+        description:
+          'השכונה האלגנטית למרגלות ליקבטוס - בוטיקים, גלריות ובתי קפה של אתונאים מקומיים.',
+        rating: 4.3,
+        durationMin: 90,
+        tags: ['foodie'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=Kolonaki',
+      },
+      {
+        id: 'ath-jewish-museum',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/The_Jewish_Museum_of_Greece.jpg/500px-The_Jewish_Museum_of_Greece.jpg',
+        name: 'המוזיאון היהודי של יוון',
+        nameLocal: 'Jewish Museum of Greece',
+        category: 'museum',
+        lat: 37.9723,
+        lng: 23.7318,
+        description:
+          'סיפור הקהילות הרומניוטיות והספרדיות של יוון - יותר מאלפיים שנות היסטוריה ועד השואה, ליד סינטגמה.',
+        rating: 4.5,
+        durationMin: 60,
+        tags: ['history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Jewish+Museum+of+Greece',
       },
     ],
     itinerary: [
@@ -994,6 +2319,11 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'bcn-sagrada',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/SF_maig_2_cropped.jpg/500px-SF_maig_2_cropped.jpg',
+        tags: ['art', 'history'],
+        priceLevel: 3,
+        mustSee: true,
         name: 'סגרדה פמיליה',
         nameLocal: 'Sagrada Família',
         category: 'attraction',
@@ -1007,6 +2337,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bcn-guell',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Parc_guell_-_panoramio.jpg/500px-Parc_guell_-_panoramio.jpg',
+        tags: ['art', 'outdoors', 'families'],
+        priceLevel: 2,
+        mustSee: true,
         name: 'פארק גואל',
         nameLocal: 'Park Güell',
         category: 'nature',
@@ -1020,6 +2355,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bcn-gothic',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Barcelona_-_Carrer_del_Bisbe.jpg/500px-Barcelona_-_Carrer_del_Bisbe.jpg',
+        tags: ['history', 'romantic'],
+        priceLevel: 0,
+        mustSee: true,
         name: 'הרובע הגותי',
         nameLocal: 'Gothic Quarter (Barri Gòtic)',
         category: 'attraction',
@@ -1033,6 +2373,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bcn-boqueria',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Barcelona_-_Mercat_de_Sant_Josep_%28la_Boqueria%29_-_Entrance.jpg/500px-Barcelona_-_Mercat_de_Sant_Josep_%28la_Boqueria%29_-_Entrance.jpg',
+        tags: ['foodie'],
+        priceLevel: 0,
         name: 'שוק הבוקריה ולה רמבלה',
         nameLocal: 'La Boqueria Market',
         category: 'attraction',
@@ -1046,6 +2390,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bcn-barceloneta',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Barcelona_Barceloneta.svg/500px-Barcelona_Barceloneta.svg.png',
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
         name: 'חוף ברצלונטה',
         nameLocal: 'Barceloneta Beach',
         category: 'nature',
@@ -1059,6 +2407,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bcn-batllo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Casa_Batllo_Overview_Barcelona_Spain_cut.jpg/500px-Casa_Batllo_Overview_Barcelona_Spain_cut.jpg',
+        tags: ['art'],
+        priceLevel: 3,
         name: 'קאסה באטיו',
         nameLocal: 'Casa Batlló',
         category: 'attraction',
@@ -1072,6 +2424,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bcn-gracia',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Via_Barcelona_Casa_Mil%C3%A0.JPG/500px-Via_Barcelona_Casa_Mil%C3%A0.JPG',
+        tags: ['romantic'],
+        priceLevel: 3,
         name: 'פאסג׳ דה גרסיה',
         nameLocal: 'Passeig de Gràcia',
         category: 'shopping',
@@ -1085,6 +2441,9 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bcn-maccabi',
+        tags: ['foodie'],
+        priceLevel: 2,
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'הקהילה היהודית של ברצלונה (CIB)' },
         name: 'מכבי (מסעדה כשרה)',
         nameLocal: 'Maccabi Kosher Restaurant',
         category: 'kosher-food',
@@ -1099,6 +2458,9 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bcn-chabad',
+        tags: ['foodie'],
+        priceLevel: 1,
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'חב"ד - ארוחות שבת בהרשמה' },
         name: 'בית חב"ד ברצלונה',
         nameLocal: 'Chabad Barcelona',
         category: 'kosher-food',
@@ -1109,6 +2471,194 @@ export const destinations: Destination[] = [
         kosherNote: 'ארוחות שבת בהרשמה מראש.',
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=Chabad+Barcelona',
+      },
+      {
+        id: 'bcn-casa-mila',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Casa_Mil%C3%A0%2C_general_view.jpg/500px-Casa_Mil%C3%A0%2C_general_view.jpg',
+        name: 'קאסה מילה (לה פדררה)',
+        nameLocal: 'Casa Milà',
+        category: 'attraction',
+        lat: 41.3954,
+        lng: 2.1619,
+        description:
+          'בניין המגורים הגלי של גאודי עם גג הארובות הסוריאליסטי - "המחצבה" שהפכה לאתר מורשת עולמית.',
+        rating: 4.6,
+        durationMin: 90,
+        tags: ['art'],
+        priceLevel: 3,
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=Casa+Mila',
+      },
+      {
+        id: 'bcn-cathedral',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Barcelona_Cathedral_Saint_Eulalia.jpg/500px-Barcelona_Cathedral_Saint_Eulalia.jpg',
+        name: 'קתדרלת ברצלונה',
+        nameLocal: 'Barcelona Cathedral',
+        category: 'attraction',
+        lat: 41.3839,
+        lng: 2.1762,
+        description:
+          'הקתדרלה הגותית של הרובע העתיק עם חצר האווזים המפורסמת - לא להתבלבל עם הסגרדה של גאודי.',
+        rating: 4.5,
+        durationMin: 60,
+        tags: ['history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Barcelona+Cathedral',
+      },
+      {
+        id: 'bcn-montjuic',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Fale_-_Spain_-_Barcelona_-_8.jpg/500px-Fale_-_Spain_-_Barcelona_-_8.jpg',
+        name: 'הר מונז׳ואיק',
+        nameLocal: 'Montjuïc',
+        category: 'nature',
+        lat: 41.3641,
+        lng: 2.1655,
+        description:
+          'ההר של ברצלונה: מבצר עם נוף לנמל, גנים, האצטדיון האולימפי - ובערבים מסוימים מופע המזרקה הקסומה (לבדוק מראש).',
+        rating: 4.6,
+        durationMin: 180,
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Montjuic',
+      },
+      {
+        id: 'bcn-born',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Santa_Maria_del_Mar%2C_Barcelona_05.jpg/500px-Santa_Maria_del_Mar%2C_Barcelona_05.jpg',
+        name: 'רובע אל בורן',
+        nameLocal: 'El Born & Santa Maria del Mar',
+        category: 'attraction',
+        lat: 41.3838,
+        lng: 2.182,
+        description:
+          'בזיליקת סנטה מריה דל מאר הגותית, סמטאות בוהמייניות ובארים של טאפאס - הרובע הכי תוסס אחרי רדת החשכה.',
+        rating: 4.6,
+        durationMin: 90,
+        tags: ['nightlife', 'romantic', 'history'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=El+Born+Barcelona',
+      },
+      {
+        id: 'bcn-picasso',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Museu_Picasso_Barcelona.jpg/500px-Museu_Picasso_Barcelona.jpg',
+        name: 'מוזיאון פיקאסו',
+        nameLocal: 'Museu Picasso',
+        category: 'museum',
+        lat: 41.3852,
+        lng: 2.1809,
+        description:
+          'חמישה ארמונות גותיים ברובע אל בורן עם האוסף המרכזי של פיקאסו הצעיר - כולל סדרת לאס מנינאס המלאה.',
+        rating: 4.5,
+        durationMin: 90,
+        tags: ['art'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=Museu+Picasso',
+      },
+      {
+        id: 'bcn-ciutadella',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Ciutadella_Park_fountain.jpg/500px-Ciutadella_Park_fountain.jpg',
+        name: 'פארק סיוטדיה',
+        nameLocal: 'Parc de la Ciutadella',
+        category: 'nature',
+        lat: 41.3881,
+        lng: 2.1874,
+        description:
+          'הפארק המרכזי של העיר - מזרקה מונומנטלית שגאודי הצעיר השתתף בעיצובה, סירות משוטים והפרלמנט הקטלאני.',
+        rating: 4.5,
+        durationMin: 90,
+        tags: ['families', 'outdoors'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Parc+de+la+Ciutadella',
+      },
+      {
+        id: 'bcn-camp-nou',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Camp_Nou_aerial.jpg/500px-Camp_Nou_aerial.jpg',
+        name: 'קאמפ נואו',
+        nameLocal: 'Camp Nou (Spotify Camp Nou)',
+        category: 'attraction',
+        lat: 41.3809,
+        lng: 2.1228,
+        description:
+          'האצטדיון האגדי של ברצלונה - סיור ומוזיאון לחובבי כדורגל. בתקופת השיפוץ הגדול לבדוק מראש מה פתוח.',
+        rating: 4.5,
+        durationMin: 120,
+        tags: ['families'],
+        priceLevel: 3,
+        externalUrl: 'https://maps.google.com/?q=Camp+Nou',
+      },
+      {
+        id: 'bcn-tibidabo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Temple_del_Sagrat_Cor_vist_des_de_la_Talaia_del_Tibidabo.JPG/500px-Temple_del_Sagrat_Cor_vist_des_de_la_Talaia_del_Tibidabo.JPG',
+        name: 'טיבידאבו',
+        nameLocal: 'Tibidabo',
+        category: 'viewpoint',
+        lat: 41.4225,
+        lng: 2.1187,
+        description:
+          'ההר הגבוה מעל העיר - כנסייה נוצצת, לונה פארק היסטורי ונוף עד הים. עולים בפוניקולר ההיסטורי.',
+        rating: 4.5,
+        durationMin: 180,
+        tags: ['families', 'outdoors'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=Tibidabo',
+      },
+      {
+        id: 'bcn-bunkers',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Tur%C3%B3_Rovira.jpg/500px-Tur%C3%B3_Rovira.jpg',
+        name: 'בונקרס דל כרמל',
+        nameLocal: 'Bunkers del Carmel',
+        category: 'viewpoint',
+        lat: 41.4194,
+        lng: 2.1615,
+        description:
+          'עמדות נ"מ ממלחמת האזרחים שהפכו לתצפית ה-360 האהובה על המקומיים - שקיעה עם כל ברצלונה מתחת.',
+        rating: 4.6,
+        durationMin: 90,
+        tags: ['outdoors', 'nightlife'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Bunkers+del+Carmel',
+      },
+      {
+        id: 'bcn-sant-pau',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Hospital_Sant_Pau%2C_main_facade.jpg/500px-Hospital_Sant_Pau%2C_main_facade.jpg',
+        name: 'מתחם סנט פאו המודרניסטי',
+        nameLocal: 'Recinte Modernista de Sant Pau',
+        category: 'attraction',
+        lat: 41.4114,
+        lng: 2.1743,
+        description:
+          'מתחם בית החולים המודרניסטי של דומנק אי מונטנר (אתר מורשת עולמית) - ביתני פסיפס בגן, 5 דקות מהסגרדה.',
+        rating: 4.6,
+        durationMin: 90,
+        tags: ['art', 'history'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=Recinte+Modernista+Sant+Pau',
+      },
+      {
+        id: 'bcn-mnac',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Museu_nacional_d%27art_de_catalunya_2.jpg/500px-Museu_nacional_d%27art_de_catalunya_2.jpg',
+        name: 'מוזיאון האמנות הלאומי (MNAC)',
+        nameLocal: "Museu Nacional d'Art de Catalunya",
+        category: 'museum',
+        lat: 41.3684,
+        lng: 2.1536,
+        description:
+          'הארמון הלאומי על מונז׳ואיק עם אוסף ציורי הקיר הרומנסקיים החשוב בעולם - והמדרגות שלפניו הן תצפית בפני עצמה.',
+        rating: 4.6,
+        durationMin: 120,
+        tags: ['art'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=MNAC+Barcelona',
       },
     ],
     itinerary: [
@@ -1156,6 +2706,11 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'ber-brandenburg',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Brandenburger_Tor_abends.jpg/500px-Brandenburger_Tor_abends.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        mustSee: true,
         name: 'שער ברנדנבורג',
         nameLocal: 'Brandenburg Gate',
         category: 'attraction',
@@ -1169,6 +2724,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ber-reichstag',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Berlin_reichstag_west_panorama_2.jpg/500px-Berlin_reichstag_west_panorama_2.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        mustSee: true,
         name: 'הרייכסטאג וכיפת הזכוכית',
         nameLocal: 'Reichstag Building',
         category: 'attraction',
@@ -1182,6 +2742,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ber-memorial',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Memorial_to_the_Murdered_Jews_of_Europeabove.jpg/500px-Memorial_to_the_Murdered_Jews_of_Europeabove.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        mustSee: true,
         name: 'אנדרטת השואה',
         nameLocal: 'Memorial to the Murdered Jews of Europe',
         category: 'attraction',
@@ -1195,6 +2760,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ber-museum-island',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Berlin_Museumsinsel_Fernsehturm.jpg/500px-Berlin_Museumsinsel_Fernsehturm.jpg',
+        tags: ['art', 'history'],
+        priceLevel: 2,
+        mustSee: true,
         name: 'אי המוזיאונים',
         nameLocal: 'Museum Island',
         category: 'museum',
@@ -1208,6 +2778,11 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ber-eastside',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Segment_with_Graffiti_of_the_Berlin_Wall_%283_of_4%29_%28cropped%29.jpg/500px-Segment_with_Graffiti_of_the_Berlin_Wall_%283_of_4%29_%28cropped%29.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 0,
+        mustSee: true,
         name: 'איסט סייד גאלרי',
         nameLocal: 'East Side Gallery',
         category: 'attraction',
@@ -1221,6 +2796,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ber-jewish-museum',
+        tags: ['history'],
+        priceLevel: 1,
         name: 'המוזיאון היהודי',
         nameLocal: 'Jewish Museum Berlin',
         category: 'museum',
@@ -1234,6 +2811,10 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ber-kudamm',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Berlin_-_K%C3%BCrfurstendamm_Gehsteig.jpg/500px-Berlin_-_K%C3%BCrfurstendamm_Gehsteig.jpg',
+        tags: ['families'],
+        priceLevel: 3,
         name: 'קורפירסטנדאם (קודאם)',
         nameLocal: "Kurfürstendamm & KaDeWe",
         category: 'shopping',
@@ -1247,6 +2828,9 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ber-bleibergs',
+        tags: ['foodie'],
+        priceLevel: 2,
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'השגחה מקומית - חלבי' },
         name: 'בלייברגס (קפה כשר חלבי)',
         nameLocal: "Bleibergs Café",
         category: 'kosher-food',
@@ -1261,6 +2845,9 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ber-chabad',
+        tags: ['foodie'],
+        priceLevel: 1,
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'חב"ד - ארוחות שבת בהרשמה' },
         name: 'בית חב"ד ברלין',
         nameLocal: 'Chabad Berlin',
         category: 'kosher-food',
@@ -1271,6 +2858,191 @@ export const destinations: Destination[] = [
         kosherNote: 'ארוחות שבת בהרשמה. בחנות מבחר מוצרים כשרים טוב.',
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=Chabad+Berlin',
+      },
+      {
+        id: 'ber-checkpoint',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Berlin_-_Checkpoint_Charlie_1963.jpg/500px-Berlin_-_Checkpoint_Charlie_1963.jpg',
+        name: 'צ׳קפוינט צ׳רלי',
+        nameLocal: 'Checkpoint Charlie',
+        category: 'attraction',
+        lat: 52.5075,
+        lng: 13.3904,
+        description:
+          'מעבר הגבול המפורסם של המלחמה הקרה - שחזור הביתן, ולוחות מידע על סיפורי הבריחות מסביב.',
+        rating: 4.3,
+        durationMin: 45,
+        tags: ['history'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Checkpoint+Charlie',
+      },
+      {
+        id: 'ber-tv-tower',
+        name: 'מגדל הטלוויזיה',
+        nameLocal: 'Fernsehturm (Alexanderplatz)',
+        category: 'viewpoint',
+        lat: 52.5208,
+        lng: 13.4094,
+        description:
+          'סמל מזרח ברלין באלכסנדרפלאץ - תצפית מהכדור על כל העיר. כרטיסים מראש מקצרים את התור.',
+        rating: 4.5,
+        durationMin: 90,
+        tags: ['families'],
+        priceLevel: 3,
+        externalUrl: 'https://maps.google.com/?q=Fernsehturm+Berlin',
+      },
+      {
+        id: 'ber-tiergarten',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Berlin_Tiergarten_Siegess%C3%A4ule_Luftansicht.jpg/500px-Berlin_Tiergarten_Siegess%C3%A4ule_Luftansicht.jpg',
+        name: 'טירגארטן ועמוד הניצחון',
+        nameLocal: 'Tiergarten & Siegessäule',
+        category: 'nature',
+        lat: 52.5145,
+        lng: 13.3501,
+        description:
+          'הפארק המרכזי הענק של ברלין עם עמוד הניצחון המוזהב במרכזו - שכירת אופניים היא הדרך לחצות אותו.',
+        rating: 4.5,
+        durationMin: 120,
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Tiergarten+Berlin',
+      },
+      {
+        id: 'ber-gendarmenmarkt',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Gendarmenmarkt_Panorama.jpg/500px-Gendarmenmarkt_Panorama.jpg',
+        name: 'ז׳נדרמנמרקט',
+        nameLocal: 'Gendarmenmarkt',
+        category: 'attraction',
+        lat: 52.5138,
+        lng: 13.3927,
+        description:
+          'הכיכר האלגנטית של ברלין: שתי כנסיות תאומות ובית הקונצרטים ביניהן. בדצמבר - שוק חג מולד מפורסם.',
+        rating: 4.6,
+        durationMin: 45,
+        tags: ['romantic', 'history'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Gendarmenmarkt',
+      },
+      {
+        id: 'ber-hackesche',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Hackesche_h%C3%B6fe_berlin.jpg/500px-Hackesche_h%C3%B6fe_berlin.jpg',
+        name: 'האקשה הפה',
+        nameLocal: 'Hackesche Höfe',
+        category: 'attraction',
+        lat: 52.5246,
+        lng: 13.4023,
+        description:
+          'שמונה חצרות אר-נובו משתלבות במיטה - בוטיקים, גלריות וקולנוע; ובסמטה הצמודה חצר האוס שוורצנברג המכוסה גרפיטי.',
+        rating: 4.5,
+        durationMin: 75,
+        tags: ['art', 'nightlife'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Hackesche+Hofe',
+      },
+      {
+        id: 'ber-neue-synagoge',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Neue_Synagoge%2C_Berlin-Mitte%2C_160328%2C_ako.jpg/500px-Neue_Synagoge%2C_Berlin-Mitte%2C_160328%2C_ako.jpg',
+        name: 'בית הכנסת החדש',
+        nameLocal: 'Neue Synagoge',
+        category: 'attraction',
+        lat: 52.5249,
+        lng: 13.3944,
+        description:
+          'בית הכנסת עם כיפת הזהב המנצנצת ברחוב אורנינבורגר - שוחזר אחרי המלחמה כמרכז תיעוד של יהדות ברלין.',
+        rating: 4.5,
+        durationMin: 60,
+        tags: ['history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Neue+Synagoge+Berlin',
+      },
+      {
+        id: 'ber-topography',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Topographie_des_Terrors_Neubau.jpg/500px-Topographie_des_Terrors_Neubau.jpg',
+        name: 'טופוגרפיה של הטרור',
+        nameLocal: 'Topography of Terror',
+        category: 'museum',
+        lat: 52.5065,
+        lng: 13.3836,
+        description:
+          'מרכז התיעוד בשטח מטה הגסטפו וה-SS לשעבר - תיעוד מקיף ומטלטל של מנגנון הטרור הנאצי. הכניסה חינם.',
+        rating: 4.6,
+        durationMin: 120,
+        tags: ['history'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Topography+of+Terror',
+      },
+      {
+        id: 'ber-charlottenburg',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Charlottenburg_Hohenzollern_2.jpg/500px-Charlottenburg_Hohenzollern_2.jpg',
+        name: 'ארמון שרלוטנבורג',
+        nameLocal: 'Charlottenburg Palace',
+        category: 'attraction',
+        lat: 52.5208,
+        lng: 13.2957,
+        description:
+          'ארמון הבארוק הגדול של ברלין עם גנים צרפתיים על נהר השפרה - פרוסיה המלכותית במיטבה, לא רחוק מהמרכז היהודי.',
+        rating: 4.5,
+        durationMin: 150,
+        tags: ['history', 'romantic'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=Charlottenburg+Palace',
+      },
+      {
+        id: 'ber-mauerpark',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Mauerpark_1979.jpg/500px-Mauerpark_1979.jpg',
+        name: 'מאוארפארק',
+        nameLocal: 'Mauerpark',
+        category: 'nature',
+        lat: 52.5439,
+        lng: 13.4022,
+        description:
+          'הפארק על תוואי החומה שבימי ראשון הופך למוסד ברלינאי: שוק פשפשים ענק וקריוקי המוני באמפיתיאטרון.',
+        rating: 4.5,
+        durationMin: 120,
+        tags: ['nightlife', 'families', 'outdoors'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Mauerpark',
+      },
+      {
+        id: 'ber-tempelhof',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Tempelhofer_Feld_May_2021.jpg/500px-Tempelhofer_Feld_May_2021.jpg',
+        name: 'שדה טמפלהוף',
+        nameLocal: 'Tempelhofer Feld',
+        category: 'nature',
+        lat: 52.4736,
+        lng: 13.4018,
+        description:
+          'שדה התעופה ההיסטורי שהפך לפארק עירוני עצום - רוכבים ומחליקים על המסלולים שבהם נחתה הרכבת האווירית.',
+        rating: 4.6,
+        durationMin: 120,
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Tempelhofer+Feld',
+      },
+      {
+        id: 'ber-potsdamer',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Berlin_-_Potsdamer_Platz_-_2016.jpg/500px-Berlin_-_Potsdamer_Platz_-_2016.jpg',
+        name: 'פוטסדאמר פלאץ',
+        nameLocal: 'Potsdamer Platz',
+        category: 'attraction',
+        lat: 52.5096,
+        lng: 13.3759,
+        description:
+          'הכיכר שהייתה שממת החומה והפכה למרכז זכוכית מודרני - סוני סנטר, ושרידי חומה משולבים במדרכה.',
+        rating: 4.2,
+        durationMin: 45,
+        tags: ['history'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Potsdamer+Platz',
       },
     ],
     itinerary: [

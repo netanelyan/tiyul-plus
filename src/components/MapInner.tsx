@@ -82,18 +82,41 @@ export default function MapInner({
           icon={makeIcon(place, i, numbered, highlightId === place.id)}
         >
           <Popup>
-            <div style={{ minWidth: 180 }}>
+            <div style={{ minWidth: 180, maxWidth: 220 }}>
+              {place.photo && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={place.photo}
+                  alt={place.name}
+                  style={{
+                    width: '100%',
+                    height: 90,
+                    objectFit: 'cover',
+                    borderRadius: 8,
+                    marginBottom: 6,
+                  }}
+                />
+              )}
               <div style={{ fontWeight: 700, fontSize: 14 }}>
+                {place.mustSee ? <span style={{ color: '#ffc531' }}>★ </span> : null}
                 {numbered ? `${i + 1}. ` : ''}
                 {place.name}
               </div>
               <div style={{ color: '#6b6394', fontSize: 12 }}>{place.nameLocal}</div>
-              {place.rating && (
-                <div style={{ fontSize: 12, marginTop: 4 }}>⭐ {place.rating.toFixed(1)}</div>
-              )}
+              <div style={{ fontSize: 12, marginTop: 4, display: 'flex', gap: 8 }}>
+                {place.rating && <span>⭐ {place.rating.toFixed(1)}</span>}
+                {place.priceLevel !== undefined && (
+                  <span>{place.priceLevel === 0 ? 'חינם' : '₪'.repeat(place.priceLevel)}</span>
+                )}
+              </div>
               {place.kosherNote && (
                 <div style={{ fontSize: 12, marginTop: 4, color: '#0d9488' }}>
                   ✡️ {place.kosherNote}
+                </div>
+              )}
+              {place.kosherVerification?.lastChecked === 'pending-review' && (
+                <div style={{ fontSize: 11, marginTop: 3, color: '#8a7a2f' }}>
+                  לאמת לפני נסיעה · {place.kosherVerification.supervision}
                 </div>
               )}
               {place.externalUrl && (
