@@ -15,6 +15,7 @@ import { loadTrips, saveTrips } from './storage';
 interface TripApi {
   trips: Trip[];
   currentTrip: Trip | null;
+  currentId: string | null;
   hydrated: boolean;
   setCurrentId: (id: string | null) => void;
   createTrip: (name: string, citySlug?: string) => Trip;
@@ -267,6 +268,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       value={{
         trips,
         currentTrip,
+        currentId,
         hydrated,
         setCurrentId,
         createTrip,

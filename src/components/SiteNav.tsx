@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useTrip } from '@/lib/trip/TripContext';
+import { tripLabel } from '@/lib/trip/label';
 import TripChip from '@/components/TripChip';
 
 const NAV_LINKS = [
@@ -11,30 +13,51 @@ const NAV_LINKS = [
   { href: '/chat', label: 'צ׳אט טיולים' },
 ];
 
+// מ-md+: כמה טאבי טיול מוצגים ישירות בשורה לפני שהשאר מתקפלים ל"עוד"
+const INLINE_TRIP_TABS = 2;
+
 /**
- * ניווט האתר: מ-md ומעלה קישורים בשורה + TripChip; מתחת ל-md המבורגר
- * שפותח תפריט נפתח (כולל הטיול הנוכחי אם קיים). נסגר בלחיצה על קישור
- * ובהקשה מחוץ לתפריט. בלי ספריית תפריטים - state + טוקנים בלבד.
+ * ניווט האתר: מ-md ומעלה קישורים בשורה + TripChip + טאבי הטיולים
+ * הפתוחים (עד INLINE_TRIP_TABS ישירות, השאר מתקפל ל"עוד" נפתח); מתחת
+ * ל-md המבורגר שפותח תפריט נפתח (כולל רשימת כל הטיולים ואת הקישורים).
+ * נסגר בלחיצה על קישור/טאב ובהקשה מחוץ לתפריט. בלי ספריית תפריטים -
+ * state + טוקנים בלבד.
  */
 export default function SiteNav() {
   const [open, setOpen] = useState(false);
-  const { currentTrip, hydrated } = useTrip();
+  const [tripsMenuOpen, setTripsMenuOpen] = useState(false);
+  const { trips, currentTrip, currentId, hydrated, setCurrentId } = useTrip();
   const rootRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    if (!open) return;
+    if (!open && !tripsMenuOpen) return;
     const onOutside = (e: MouseEvent) => {
-      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+      if (!rootRef.current?.contains(e.target as Node)) {
+        setOpen(false);
+        setTripsMenuOpen(false);
+      }
     };
     document.addEventListener('click', onOutside);
     return () => document.removeEventListener('click', onOutside);
-  }, [open]);
+  }, [open, tripsMenuOpen]);
 
   const stops = currentTrip?.days.reduce((n, d) => n + d.placeIds.length, 0) ?? 0;
 
+  /** פותח טיול קיים כטאב פעיל: אם כבר ב-/chat זה קורה מיידית, אחרת מנווטים עם ?trip= */
+  const openTrip = (id: string) => {
+    setCurrentId(id);
+    router.push(`/chat?trip=${id}`);
+    setOpen(false);
+    setTripsMenuOpen(false);
+  };
+
+  const inlineTrips = hydrated ? trips.slice(0, INLINE_TRIP_TABS) : [];
+  const overflowTrips = hydrated ? trips.slice(INLINE_TRIP_TABS) : [];
+
   return (
     <div ref={rootRef} className="relative">
-      {/* md+: קישורים בשורה */}
+      {/* md+: קישורים בשורה + טאבי הטיולים הפתוחים */}
       <nav className="hidden items-center gap-2 md:flex">
         {NAV_LINKS.map((l) => (
           <Link
@@ -45,6 +68,48 @@ export default function SiteNav() {
             {l.label}
           </Link>
         ))}
+        {inlineTrips.map((t) => (
+          <button
+            key={t.id}
+            onClick={() => openTrip(t.id)}
+            title={t.name}
+            className={`max-w-24 truncate rounded-full px-3 py-1.5 text-xs font-bold transition ${
+              t.id === currentId
+                ? 'bg-sunset text-cream'
+                : 'bg-night/5 text-night/60 hover:bg-night/10 hover:text-night'
+            }`}
+          >
+            {tripLabel(t)}
+          </button>
+        ))}
+        {overflowTrips.length > 0 && (
+          <div className="relative">
+            <button
+              onClick={() => setTripsMenuOpen((v) => !v)}
+              aria-expanded={tripsMenuOpen}
+              className="rounded-full bg-night/5 px-3 py-1.5 text-xs font-bold text-night/60 transition hover:bg-night/10 hover:text-night"
+            >
+              עוד ({overflowTrips.length})
+            </button>
+            {tripsMenuOpen && (
+              <div className="absolute end-0 top-full z-50 mt-2 w-48 rounded-2xl bg-shell p-2 shadow-[var(--shadow-pop)] ring-1 ring-night/10">
+                {overflowTrips.map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => openTrip(t.id)}
+                    className={`block w-full truncate rounded-xl px-3.5 py-2 text-start text-sm font-semibold transition ${
+                      t.id === currentId
+                        ? 'bg-sunset/10 text-sunset-deep'
+                        : 'text-night/80 hover:bg-night/5'
+                    }`}
+                  >
+                    {tripLabel(t)}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
         <TripChip />
       </nav>
 
@@ -100,6 +165,26 @@ export default function SiteNav() {
             >
               {currentTrip.name} · {stops} עצירות
             </Link>
+          )}
+          {hydrated && trips.length > 0 && (
+            <>
+              <div className="mt-2 border-t border-night/10 px-4 pb-1 pt-2 text-xs font-bold text-night/40">
+                הטיולים שלי
+              </div>
+              {trips.map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => openTrip(t.id)}
+                  className={`block w-full truncate rounded-xl px-4 py-2.5 text-start font-medium transition ${
+                    t.id === currentId
+                      ? 'bg-sunset/10 text-sunset-deep'
+                      : 'text-night/80 hover:bg-night/5'
+                  }`}
+                >
+                  {tripLabel(t)}
+                </button>
+              ))}
+            </>
           )}
         </div>
       )}

@@ -368,13 +368,50 @@ async function runAgent(
   // משמעת פלט: תשובת טקסט רגילה מוגבלת ל-1024; איטרציות עם כלים (זיהוי
   // כוונת עריכה, או המשך לולאה אחרי tool_results) מקבלות 2048 בשביל JSON.
   const lastUser = messages[messages.length - 1]?.content ?? '';
-  const editIntent = /תבנה|בנה לי|תבני|תוסיף|תוסיפי|תוריד|תורידי|תחליף|תזיז|תמלא|תעדכן|תסדר|צור טיול|תקצר|תאריך/.test(lastUser);
+  const hasVerbIntent =
+    /תבנה|בנה לי|תבני|תכינו|תכין|תכנן|תכנון|תוסיף|תוסיפי|תוריד|תורידי|תחליף|תזיז|תמלא|תעדכן|תסדר|צור טיול|תקצר|תאריך/.test(
+      lastUser,
+    );
+  // בקשה כמו "טיול של 8 ימים בברטיסלבה ווינה" לא כוללת אף פועל מהרשימה
+  // למעלה אבל היא בבירור בקשת בנייה - מספר ימים + יעד מוכר מהדאטה.
+  const mentionsDaysAndDest = /\d+\s*ימים?/.test(lastUser) && Boolean(findDestination(lastUser));
+  const editIntent = hasVerbIntent || mentionsDaysAndDest;
+
+  // האם קריאת כלי כלשהי בפועל שינתה את הטיול בסיבוב הזה - נבדל מ-touched
+  // (ששיקוף מהצד גם רמז כשרות שדורש להחזיר את הטיול ללקוח, גם בלי כלי).
+  let toolBuiltSomething = false;
+  let forcedBuildRetry = false;
 
   for (let iter = 0; iter < 16; iter++) {
     const maxTokens = editIntent || iter > 0 ? 2048 : 1024;
     const turn = await runClaudeTurn(apiMessages, working, send, full.length > 0, maxTokens, iter, kosherHint);
     full += turn.text;
-    if (turn.stopReason !== 'tool_use') break;
+
+    if (turn.stopReason !== 'tool_use') {
+      // הדפוס הזה קורה בפועל: המודל מתאר מסלול יום-אחר-יום בטקסט (בפורמט
+      // **יום N** שהפרומפט מלמד לתשובות המלצה) אבל שוכח לקרוא בפועל לכלי
+      // שבונה את הטיול - הצ׳אט "מבטיח" תוכנית, אבל הפאנל/המפה נשארים ריקים
+      // כי אף tool_use לא בוצע. במקום לנחש מה תואר ולהמציא טיול מהטקסט,
+      // דוחפים תזכורת חד-פעמית שמכריחה את המודל לבצע את הקריאה בעצמו על
+      // הדאטה האמיתית - ואז ממשיכים את אותה לולאת ה-tool_use הרגילה.
+      const describedInsteadOfBuilding =
+        editIntent &&
+        !toolBuiltSomething &&
+        !quickReplies &&
+        !forcedBuildRetry &&
+        /\*\*יום\s*\d+/.test(turn.text);
+      if (describedInsteadOfBuilding) {
+        forcedBuildRetry = true;
+        apiMessages.push({ role: 'assistant', content: turn.text });
+        apiMessages.push({
+          role: 'user',
+          content:
+            'תזכורת מערכת: תיארת עכשיו תוכנית מסלול בטקסט בלבד, בלי לקרוא לאף כלי (create_trip_full / set_day_places / add_place וכו׳) - הטיול בפועל לא נוצר/התעדכן. בצע עכשיו קריאת כלי אחת או יותר שמבצעת בדיוק את מה שתיארת, על סמך הדאטה האמיתית - בלי להסביר שוב במילים.',
+        });
+        continue;
+      }
+      break;
+    }
 
     const assistantContent: ApiContentBlock[] = [];
     const results: ApiContentBlock[] = [];
@@ -394,7 +431,10 @@ async function runAgent(
       const out = parseOk
         ? executeAgentTool(working, block.name, input)
         : { trip: working, ok: false, message: 'קלט הכלי לא היה JSON תקין - נסה שוב.', action: undefined, quickReplies: undefined };
-      if (out.ok && out.trip !== working) touched = true; // suggest_quick_replies לא נוגע בטיול
+      if (out.ok && out.trip !== working) {
+        touched = true; // suggest_quick_replies לא נוגע בטיול
+        toolBuiltSomething = true;
+      }
       working = out.trip;
       if (out.ok && out.action) actions.push(out.action);
       if (out.ok && out.quickReplies) quickReplies = out.quickReplies;

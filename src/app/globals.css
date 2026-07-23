@@ -82,6 +82,24 @@ body {
   box-shadow: var(--shadow-pop);
 }
 
+/* מחוון חושב/טוען: שלוש נקודות קופצות - ThinkingIndicator.tsx */
+@keyframes thinking-bounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  40% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.thinking-dot {
+  animation: thinking-bounce 1s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rise-in,
   .rise-in-late {
@@ -91,6 +109,10 @@ body {
   .card-pop:hover {
     transition: none;
     transform: none;
+  }
+  .thinking-dot {
+    animation: none;
+    opacity: 0.6;
   }
 }
 

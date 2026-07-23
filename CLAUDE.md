@@ -605,3 +605,103 @@ faded by the night band, search bar/pills fully legible on top. The
 `cdp-shot.mjs` recipe now also supports a `CDP_EVAL` env var for
 one-off metric checks (e.g. scrollWidth/clientWidth) alongside the
 screenshot in a single CDP session.
+
+### 2026-07-24 (b) - Agent build-loop safety net, live "thinking" indicator, multi-trip nav tabs, landmark-first homepage panel
+
+Four independent tasks in one session (details per task below). All
+verified with `npm run build`, live CDP tests against the real Claude
+loop, and `scripts/verify-photos.mjs` (139/139 OK - no photo URLs
+changed, only reused).
+
+**1. Trip panel staying empty despite the chat "confirming" a full
+itinerary** - diagnosed, not a band-aid. The tool-use pipeline (system
+prompt → `agent.ts` tools → strict validator → SSE `{type:'trip'}` →
+`AgentWorkspace`'s `trip.upsertTrip` → `TripCanvas`) is correctly wired
+end-to-end - confirmed live (direct `/api/chat` POSTs built real,
+validated multi-city trips). The actual bug: occasionally the model
+narrates a day-by-day plan in prose (the `**יום N**` format the system
+prompt teaches for non-edit answers) without ever calling
+`create_trip_full`/`set_day_places` - so `touched` stays false, no
+`trip` event ships, and the canvas is honestly empty because nothing
+was ever built. Fixed in `src/app/api/chat/route.ts` `runAgent()`: when
+edit/build intent is detected, no tool actually mutated the trip
+(`toolBuiltSomething`, tracked separately from `touched` so a
+kosher-hint-only merge can't mask this), no `quickReplies` were
+offered instead, and the reply matches the day-formatted-itinerary
+pattern - push ONE corrective system-nudge message and let the
+existing tool_use loop mechanics run again (no hand-authored trip data
+from parsed prose - the model still builds it for real, off the
+grounded data). Also broadened `editIntent` (now `hasVerbIntent ||
+mentionsDaysAndDest`) so phrasings like "טיול של 8 ימים בברטיסלבה
+ווינה" with no imperative verb still count. Verified: an informational
+question with no day count/tool intent correctly does NOT trigger the
+retry.
+
+**2. `ThinkingIndicator` component** - replaces every static "loading"
+label site-wide: the chat "חושב…" bubble (`AgentWorkspace.tsx`), the
+planner's "טוען את הטיולים שלך…" hydration state, and the Leaflet
+"טוען מפה…" skeleton (`PlacesMap.tsx`). Three `bg-current` dots with a
+new `thinking-bounce` keyframe in `globals.css`, folded into the
+existing `prefers-reduced-motion` block (falls back to a static
+`opacity: 0.6`, no motion). `AI_STATUSES` rotating-text + spinner on
+the planner's generate button was left alone - it already animates,
+wasn't in scope.
+
+**3. Multi-trip nav tabs** - the trip store already supported multiple
+trips (`TripState { trips: Trip[]; currentId }`, `TripContext`
+already had `upsertTrip`/`duplicateTrip`/`deleteTrip`); the gap was UI
+only. Added: `src/lib/trip/label.ts` (`tripLabel()` - city name(s) from
+`citySlugs`, e.g. "וינה" or "ברטיסלבה + וינה"), `src/lib/trip/chatStorage.ts`
+(per-trip-id chat history in localStorage, `tiyul-plus:chat:<id>`),
+`currentId` exposed on `TripApi`. `SiteNav.tsx`: md+ shows up to 2
+trip pills inline + an "עוד (N)" overflow dropdown for the rest; the
+mobile hamburger always lists all trips under "הטיולים שלי". Clicking
+a tab calls `setCurrentId` directly (same-page switch, handled
+reactively) AND navigates `/chat?trip=<id>` (cross-page entry, handled
+by a one-time post-hydration effect in `AgentWorkspace` - mirrors the
+existing `?q=`/`?kosher=1` pattern). `AgentWorkspace` now persists/
+restores chat history per trip id, distinguishing "a trip the agent
+just built THIS conversation" (`selfUpsertRef` - keep local messages,
+don't reload) from "an external tab switch" (`lastSyncedIdRef` +
+`suppressSaveRef` - load that trip's stored chat, don't re-save stale
+messages over it on the same tick). Added a "+ טיול חדש" button in the
+workspace header (clears local chat + `currentId`, no explicit "start
+new trip" affordance existed before - needed for the feature to be
+usable at all, since one active trip was always sent to `/api/chat`
+otherwise). Verified fully live via CDP: built a Vienna trip, clicked
+"+ טיול חדש", built a Rome trip, both appeared as correctly-labeled
+tabs ("וינה"/"רומא") on desktop AND in the mobile hamburger, and
+clicking back to the Vienna tab restored its exact chat transcript,
+map pins and itinerary with no reload.
+
+**4. Homepage "יעדים פופולריים" → "פלאים שמחכים לכם"** - each of the 8
+destination cards now leads with one real, already-`mustSee`-flagged,
+already-photo-verified landmark instead of the city name (no new data
+invented - see `HERO_LANDMARK` map in `src/app/page.tsx`: Vienna→St.
+Stephen's Cathedral, Bratislava→the castle, Prague→Charles Bridge,
+Budapest→Parliament, Rome→Colosseum, Athens→Acropolis,
+Barcelona→Sagrada Família, Berlin→Brandenburg Gate). City+country+day-
+count demoted to the secondary line under the landmark name. Section
+title/subtitle rewritten to reference the landmarks directly. Same 8
+destinations, same click-through, same dark panel/tokens/RTL, same
+"כל הקטלוג" link - only the card content and framing copy changed.
+
+**Broken/deferred:** none of the four. The multi-trip feature's
+`selfUpsertRef`/`lastSyncedIdRef` dance is the one genuinely delicate
+piece of new code in this session - re-read the comments in
+`AgentWorkspace.tsx` carefully before touching the trip-switch
+effects, the ordering (ref mutations are synchronous, state updates
+aren't) is load-bearing. `HERO_LANDMARK` is a hand-picked map, not
+derived automatically - if a new city is added per the "adding a new
+country" recipe, also add its landmark entry or the card silently
+falls back to the city photo/name (graceful, not broken, but not
+landmark-first).
+
+**Next session should know:** the build-loop fix reduces but doesn't
+mathematically eliminate the narrate-without-building failure mode
+(it's a single bounded retry, by design, to avoid loops) - if it recurs
+after a second corrective nudge would also fail, that's expected and
+matches "if it can't be done honestly, say so" rather than force
+inventing a trip. Photo verification (139/139) confirms no existing
+destination photo regressed - the landmark redesign reused photos
+already shipped, no `verify-photos.mjs` risk was introduced.

@@ -9,6 +9,9 @@ import { destinations } from '@/data/destinations';
 import { useTrip } from '@/lib/trip/TripContext';
 import PlacesMap from '@/components/PlacesMap';
 import HeroPrompt from '@/components/HeroPrompt';
+import ThinkingIndicator from '@/components/ThinkingIndicator';
+import { loadChat, saveChat, type StoredChatMessage } from '@/lib/trip/chatStorage';
+import { tripLabel } from '@/lib/trip/label';
 
 /**
  * חוויית הסוכן - הכוכב של האתר (Phase 3: homepage leads with the conversation).
@@ -21,14 +24,8 @@ import HeroPrompt from '@/components/HeroPrompt';
  *    יעד והעדפות. הקנבס ניזון מאירועי {trip} של לולאת הסוכן ב-/api/chat.
  */
 
-interface Msg {
-  role: 'user' | 'assistant';
-  content: string;
-  destinationSlug?: string;
-  placeIds?: string[];
-  actions?: string[];
-  quickReplies?: string[]; // תשובות מהירות לשאלה לא-רגישה (צ׳יפים לחיצים)
-}
+// זהה במבנה ל-StoredChatMessage - השיחה נשמרת/נטענת per-trip דרך chatStorage
+type Msg = StoredChatMessage;
 
 const destOf = (slug: string) => destinations.find((d) => d.slug === slug);
 
@@ -382,6 +379,17 @@ export default function AgentWorkspace() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const qHandled = useRef(false);
 
+  // מעקב טאב פעיל לצורך שמירה/טעינה של השיחה per-trip (SiteNav):
+  // initializedRef - עיגון חד-פעמי אחרי הידרציה, לפני שמתחילים להגיב לשינויים.
+  // lastSyncedIdRef - הטיול שהשיחה המקומית מסונכרנת אליו כרגע.
+  // selfUpsertRef - הסימון "השינוי הבא ב-currentId מקורו בטיול שהשיחה הזו
+  //   עצמה יצרה/עדכנה עכשיו" - כדי לא לדרוס את ה-messages המקומיים בטעינה.
+  // suppressSaveRef - מדלג על שמירה אחרי טעינה, כדי לא לשמור מחדש טקסט ישן.
+  const initializedRef = useRef(false);
+  const lastSyncedIdRef = useRef<string | null>(null);
+  const selfUpsertRef = useRef<string | null>(null);
+  const suppressSaveRef = useRef(false);
+
   // הגעה מדף הבית: /chat?q=...&kosher=1 - שולחים את הטקסט פעם אחת (עם
   // העדפת הכשרות אם הודלקה) ומנקים את הכתובת.
   // window.location במקום useSearchParams כדי לא לחייב Suspense ב-prerender.
@@ -400,6 +408,54 @@ export default function AgentWorkspace() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // סנכרון טאב הטיול הפעיל (SiteNav) עם השיחה המקומית - פעם ראשונה אחרי
+  // ההידרציה: אם הכתובת כוללת ?trip=<id> (טאב שנלחץ מעמוד אחר), עוברים
+  // אליו וטוענים את השיחה השמורה שלו; אחרת רק מעגנים את המצב הקיים בלי
+  // לגעת בו (ביקור ישיר ב-/chat נשאר במסך הנחיתה, כמו היום). בכל שינוי
+  // הבא של הטיול הפעיל - טאב אחר שנלחץ באותו עמוד, או טיול חדש שנוצר
+  // בשיחה הזו עצמה (selfUpsertRef) - מגיבים בהתאם.
+  useEffect(() => {
+    if (!trip.hydrated) return;
+    const id = trip.currentId;
+    if (!initializedRef.current) {
+      initializedRef.current = true;
+      const params = new URLSearchParams(window.location.search);
+      const wantedId = params.get('trip');
+      if (wantedId) {
+        router.replace('/chat');
+        if (wantedId !== id) trip.setCurrentId(wantedId);
+        lastSyncedIdRef.current = wantedId;
+        setMessages(loadChat(wantedId));
+        setStarted(true);
+        return;
+      }
+      lastSyncedIdRef.current = id;
+      return;
+    }
+    if (id === lastSyncedIdRef.current) return;
+    if (selfUpsertRef.current && selfUpsertRef.current === id) {
+      selfUpsertRef.current = null;
+      lastSyncedIdRef.current = id;
+      return;
+    }
+    suppressSaveRef.current = true;
+    lastSyncedIdRef.current = id;
+    setMessages(id ? loadChat(id) : []);
+    setStarted(Boolean(id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trip.currentId, trip.hydrated]);
+
+  // שמירת השיחה per-trip - מדלגת פעם אחת מיד אחרי טעינה (כדי לא לשמור
+  // מעל את עצמה עם המצב הישן), כדי שהמעבר בין טאבים לא "יאבד" תוכן.
+  useEffect(() => {
+    if (suppressSaveRef.current) {
+      suppressSaveRef.current = false;
+      return;
+    }
+    const id = lastSyncedIdRef.current;
+    if (id) saveChat(id, messages);
+  }, [messages]);
 
   useEffect(() => {
     if (started) bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -472,6 +528,9 @@ export default function AgentWorkspace() {
               placeIds: event.placeIds,
             }));
           } else if (event.type === 'trip' && event.trip) {
+            // הטיול נוצר/עודכן מתוך השיחה הזו - כשה-currentId ישתנה בעקבות
+            // זה, לא טוענים מחדש מהאחסון (זה ידרוס את ה-messages העדכניים).
+            selfUpsertRef.current = event.trip.id;
             trip.upsertTrip(event.trip);
             // ההעדפה נטמעה בטיול - הרמז כבר לא נחוץ (וטוגל בקנבס גובר מעכשיו)
             if (event.trip.preferences?.kosher) setKosherHint(false);
@@ -496,6 +555,14 @@ export default function AgentWorkspace() {
     } finally {
       setLoading(false);
     }
+  }
+
+  /** מתחילים שיחה חדשה בלי לנטוש את הטיול הפעיל - הוא נשאר כטאב ב-SiteNav */
+  function startNewTrip() {
+    lastSyncedIdRef.current = null;
+    trip.setCurrentId(null);
+    setMessages([]);
+    setInput('');
   }
 
   /* ---- מצב נחיתה: קלט אחד גדול במרכז ---- */
@@ -525,6 +592,17 @@ export default function AgentWorkspace() {
   /* ---- מצב עבודה: מסך מפוצל - שיחה + קנבס ---- */
   return (
     <div className="rise-in mx-auto max-w-6xl">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div className="min-w-0 truncate text-xs font-semibold text-night/40">
+          {trip.currentTrip ? tripLabel(trip.currentTrip) : 'שיחה חדשה'}
+        </div>
+        <button
+          onClick={startNewTrip}
+          className="shrink-0 rounded-full bg-night/5 px-3.5 py-1.5 text-xs font-bold text-night/60 transition hover:bg-night/10 hover:text-night"
+        >
+          + טיול חדש
+        </button>
+      </div>
       <div className="flex flex-col gap-6 lg:flex-row">
         {/* השיחה (RTL: צד ימין) */}
         <div className="flex h-[calc(100vh-180px)] min-w-0 flex-1 flex-col">
@@ -578,8 +656,8 @@ export default function AgentWorkspace() {
               </div>
             ))}
             {loading && (
-              <div className="w-fit animate-pulse rounded-2xl bg-cream px-5 py-3.5 text-sm font-medium text-night/40">
-                חושב…
+              <div className="w-fit rounded-2xl bg-cream px-5 py-3.5 text-sm font-medium text-night/40">
+                <ThinkingIndicator label="חושב" />
               </div>
             )}
             <div ref={bottomRef} />

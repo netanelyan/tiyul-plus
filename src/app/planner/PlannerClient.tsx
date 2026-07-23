@@ -8,6 +8,7 @@ import { useTrip } from '@/lib/trip/TripContext';
 import { tripFromTemplate } from '@/lib/trip/generate';
 import { travelLeg } from '@/lib/trip/travel';
 import PlacesMap from '@/components/PlacesMap';
+import ThinkingIndicator from '@/components/ThinkingIndicator';
 
 export default function PlannerClient({
   countries,
@@ -25,8 +26,8 @@ export default function PlannerClient({
 
   if (!trip.hydrated) {
     return (
-      <div className="animate-pulse rounded-2xl bg-shell p-10 text-center font-semibold text-night/40 ring-1 ring-night/10">
-        טוען את הטיולים שלך…
+      <div className="rounded-2xl bg-shell p-10 text-center font-semibold text-night/40 ring-1 ring-night/10">
+        <ThinkingIndicator label="טוען את הטיולים שלך" className="justify-center" />
       </div>
     );
   }
