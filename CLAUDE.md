@@ -190,6 +190,11 @@ npm run lint
 7. Every work session ends with: `npm run build` passing, visual check of
    changed pages (RTL + design consistency), commit + push with a clear
    message.
+8. Every work session ALSO ends by appending a dated entry to
+   "## Session log" (bottom of this file) with: (a) what was built/
+   changed and in which files, (b) product decisions made and why,
+   (c) anything left broken or deferred, (d) what the next session
+   should know. No exceptions - docs-only sessions included.
 
 ## Roadmap (execute one phase per session, in order)
 
@@ -242,3 +247,66 @@ mapped itinerary within five. The agent honors any preference combination
 using only real data. A trip built in chat and a trip built in the planner
 are the same object - one trip, two interfaces. Every recommendation can
 eventually carry a booking action that feels like help, not advertising.
+
+## Session log
+
+### 2026-07-23 - Homepage hero usability + warmth; session-log rule added
+
+**Built/changed:**
+- `src/components/HeroPrompt.tsx` (new) - the shared hero input+chips
+  block used by both the homepage (`HomeHero`) and the `/chat` landing
+  (`AgentWorkspace`). Owns the input state; submit callback per host
+  (homepage → `router.push('/chat?q=...')`, chat → `send()`).
+- Input usability: visible placeholder ("ספרו לי על החופשה שאתם
+  מדמיינים… למשל: שבוע באיטליה עם ילדים", `placeholder:text-night/45`),
+  1px `border-night/15` + subtle inset shadow so the field reads as
+  typeable against the cream page, soft coral focus ring
+  (`focus:ring-4 ring-sunset/15`). CTA is never disabled-gray: full
+  sunset when there's text, `bg-sunset/60` (still coral) when empty -
+  the old `disabled:opacity-40` was what read as "broken pale pink".
+- `src/components/PromptChips.tsx` - chips redesigned as single-line
+  suggestion pills (`rounded-full`, `whitespace-nowrap`, flex-wrap
+  centered) with a small inline SVG icon per category (heart /
+  sliders / help-circle, lucide-style paths, no dependency) and a warm
+  hover (`hover:bg-sunset/5 hover:ring-sunset/30`, icon turns
+  sunset-deep). Skeleton is now pill-shaped with varied widths.
+- `src/lib/promptChips.ts` - shortened two capability texts that
+  wrapped at desktop width ("שבוע בשתי מדינות, טבע ושופינג",
+  "4 ימים, היסטוריה ואוכל כשר").
+- `src/components/HomeHero.tsx` - warm radial gradient wash behind the
+  hero (sunset→zest token rgba at 5-9% opacity), vertical spacing
+  tightened (content-height hero, `py-12/16`, no more viewport-height
+  min-h dead space).
+- `src/app/page.tsx` - now async: fetches countries and renders a
+  "postcard strip" of 4 real destination photos (h-16 rounded, 4th
+  hidden on mobile) between the hero and the portal cards, linking to
+  `/countries`. Portal section pulled up (`mt-10`).
+- CLAUDE.md - hard rule 8 (this session log) added.
+
+**Product decisions:**
+- One shared `HeroPrompt` instead of duplicated input markup - the two
+  surfaces had already drifted (placeholder/focus styles differed).
+- CTA stays colored when empty rather than disabled-gray: an empty
+  input is the DEFAULT state of the homepage; it must not look broken.
+- Warmth via one gradient wash + one small photo strip (real, verified
+  destination photos) - deliberately not a hero poster, to keep the
+  matured/calm language and text crispness.
+- Chips as nowrap pills: single-line height cannot be guaranteed in a
+  fixed grid with Hebrew texts of varying length, so the layout is
+  content-sized pills in a centered flex-wrap; over-long pool texts
+  were shortened instead of truncated mid-word.
+
+**Broken/deferred:** nothing known broken. Deferred: the /chat landing
+kept its old vertical-centering (no gradient/postcards there - homepage
+only per the task); kosher `lastChecked` dates are still all
+"pending-review"; Phase 3 leftovers (search, collections, filters)
+unchanged.
+
+**Next session should know:** visual checks must use the CDP script
+recipe (headless Edge `--window-size` clamps at ~500px CSS; see the
+project memory note) - plain `--screenshot` flags lie about mobile.
+`pickChips()` is client-only (random - SSR renders the skeleton). The
+chip pool is category-balanced (2×3) and hides out-of-season chips;
+if you add chips keep the pool ≥3 per category so selection never runs
+short. Session log entries for work before 2026-07-23 live in git
+history (`git log --oneline`).

@@ -22,8 +22,8 @@ export const CHIP_POOL: PromptChip[] = [
   // הדגמות יכולת
   { text: '5 ימים, בלי מוזיאונים, עם שני ילדים', category: 'capability' },
   { text: 'משהו רגוע עם הרבה אוכל טוב', category: 'capability' },
-  { text: 'שבוע בשתי מדינות, אוהבים טבע ושופינג', category: 'capability' },
-  { text: '4 ימים בעיר אחת, חובבי היסטוריה, אוכל כשר', category: 'capability' },
+  { text: 'שבוע בשתי מדינות, טבע ושופינג', category: 'capability' },
+  { text: '4 ימים, היסטוריה ואוכל כשר', category: 'capability' },
   { text: 'טיול אוכל ושווקים, תקציב בינוני', category: 'capability' },
   // שאלות
   { text: 'לאן הכי שווה לטוס בדצמבר?', category: 'question', months: [10, 11, 12] },

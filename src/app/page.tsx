@@ -1,19 +1,47 @@
 import Link from 'next/link';
+import { getProvider } from '@/lib/providers';
 import HomeHero from '@/components/HomeHero';
 import MyTripCard from '@/components/MyTripCard';
 
 /**
  * דף הבית - פורטל נחיתה קליל (בלי Leaflet, בלי מצב שיחה):
- * ההירו שולח ל-/chat?q=... והשיחה חיה שם בלבד. מתחתיו כרטיסי פורטל
- * שקטים לאזורי האתר, וכרטיס "הטיול שלי" כשיש טיול פעיל.
+ * ההירו שולח ל-/chat?q=... והשיחה חיה שם בלבד. מתחתיו רצועת גלויות
+ * (תמונות יעדים אמיתיות, מקושרת לקטלוג) שנותנת לדף ריח של טיול,
+ * וכרטיסי פורטל שקטים. הפריסה הדוקה - בלי ים של שטח מת.
  */
-export default function Home() {
+export default async function Home() {
+  const provider = getProvider();
+  const countries = await provider.getCountries();
+  const postcardStrip = countries.filter((c) => c.photo).slice(0, 4);
+
   return (
     <div>
       <HomeHero />
 
+      {/* רצועת גלויות - נגיעת "טיול" עדינה, לחיצה מובילה לקטלוג */}
+      {postcardStrip.length > 0 && (
+        <Link
+          href="/countries"
+          aria-label="קטלוג היעדים"
+          className="mx-auto mt-1 flex max-w-3xl items-center justify-center gap-3 px-4 opacity-85 transition hover:opacity-100"
+        >
+          {postcardStrip.map((c, i) => (
+            <div
+              key={c.slug}
+              className={`photo-bg h-16 min-w-0 flex-1 rounded-xl ring-1 ring-night/10 ${
+                i === 3 ? 'hidden sm:block' : ''
+              }`}
+              style={{ backgroundImage: `url(${c.photo})` }}
+              title={c.name}
+              role="img"
+              aria-label={c.name}
+            />
+          ))}
+        </Link>
+      )}
+
       {/* פורטל: הדרכים הידניות פנימה */}
-      <section className="mx-auto max-w-4xl pb-12">
+      <section className="mx-auto mt-10 max-w-4xl pb-14">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Link
             href="/planner"

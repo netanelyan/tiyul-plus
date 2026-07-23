@@ -8,7 +8,7 @@ import type { Trip, TripPreferences } from '@/lib/trip/types';
 import { destinations } from '@/data/destinations';
 import { useTrip } from '@/lib/trip/TripContext';
 import PlacesMap from '@/components/PlacesMap';
-import PromptChips from '@/components/PromptChips';
+import HeroPrompt from '@/components/HeroPrompt';
 
 /**
  * חוויית הסוכן - הכוכב של האתר (Phase 3: homepage leads with the conversation).
@@ -378,7 +378,6 @@ export default function AgentWorkspace() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const landingInputRef = useRef<HTMLInputElement>(null);
   const qHandled = useRef(false);
 
   // הגעה מדף הבית: /chat?q=... - שולחים את הטקסט פעם אחת ומנקים את הכתובת.
@@ -497,39 +496,8 @@ export default function AgentWorkspace() {
           מספרים לי מה מדמיינים - ואני בונה טיול אמיתי, יום-אחרי-יום, על מפה. בעברית.
         </p>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            send(input);
-          }}
-          className="rise-in-late mt-9 w-full max-w-2xl"
-        >
-          <div className="relative">
-            <input
-              ref={landingInputRef}
-              autoFocus
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="ספרו לי על החופשה שאתם מדמיינים…"
-              className="w-full rounded-2xl bg-shell py-5 pe-28 ps-6 text-lg text-night shadow-[var(--shadow-pop)] outline-none ring-1 ring-night/10 transition placeholder:text-night/35 focus:ring-2 focus:ring-sunset"
-            />
-            <button
-              type="submit"
-              disabled={!input.trim()}
-              className="absolute end-3 top-1/2 -translate-y-1/2 rounded-xl bg-sunset px-6 py-2.5 font-bold text-cream transition hover:bg-sunset-deep disabled:opacity-40"
-            >
-              לתכנן
-            </button>
-          </div>
-        </form>
-
-        {/* צ׳יפים - ממלאים את הקלט לעריכה, לא שולחים */}
-        <PromptChips
-          onPick={(text) => {
-            setInput(text);
-            landingInputRef.current?.focus();
-          }}
-        />
+        {/* קלט + צ׳יפים משותפים - צ׳יפ ממלא לעריכה, שליחה מתחילה את השיחה */}
+        <HeroPrompt onSubmit={(text) => send(text)} />
 
         <Link
           href="/countries"
