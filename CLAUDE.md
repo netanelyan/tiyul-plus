@@ -18,6 +18,41 @@ chosen. Kosher/Shabbat are preferences, NOT the product identity.
 This is a real business (affiliate revenue planned, premium later). Decisions
 favor user trust and repeat usage over tech impressiveness.
 
+## Site walkthrough (as built)
+
+- **`/` and `/chat` - the agent, the star.** Both render
+  `src/components/AgentWorkspace.tsx`. Landing state: one massive centered
+  input + prompt-suggestion chips, deliberately minimal (no cards, no
+  secondary data). The first message transitions to a split workspace:
+  streaming conversation beside a live "canvas" - destination photo header,
+  day selector, Leaflet map of the selected day with numbered route, daily
+  schedule blocks, preference chips and a planner link. On mobile the canvas
+  collapses to a sticky summary bar. The canvas re-renders from every
+  `{trip}` event the agent streams; action chips ("✓ הוספתי את...") show
+  under the reply.
+- **`/planner` - manual controls for the same trip.** The new-trip screen is
+  a hybrid: prominent city cards plus button-only controls (days stepper,
+  מי נוסע, pace, style, shopping, kosher toggle) form hard constraints; an
+  optional free-text field refines them via `/api/generate-trip`. The
+  workspace view has day tabs with inter-city travel legs, stop reordering,
+  per-day notes, a Google Maps navigation link per day, copy/print/PDF, and
+  ready-made templates.
+- **`/countries` → `/countries/[slug]` → `/destinations/[slug]` - the
+  curated catalog** (linked from the nav and a quiet landing link). Country
+  cards → country page (visa/currency/sim/payments + city cards) → city page
+  (places on a map, day-by-day itinerary, kosher layer, city+country
+  practical info merged).
+- **One trip, two interfaces.** Chat and planner mutate the same `Trip`
+  object (localStorage behind `TripContext`); a trip built in conversation
+  opens in the planner and vice versa. `Trip.preferences` (party, pace,
+  budget, kosher, shabbatAware, shopping, interests) is collected
+  conversationally by the agent.
+- **Two AI endpoints, both keyless-safe.** `/api/chat` runs the tool-use
+  agent loop (keyless: rule-based Hebrew responder). `/api/generate-trip`
+  is the planner's one-shot constrained builder (keyless: local
+  `generateTrip()` scoring). Both ground Claude in the curated data and
+  validate every placeId server-side - the AI can never invent places.
+
 ## Commands
 
 ```bash
@@ -53,18 +88,26 @@ npm run lint
   New), `tripadvisor` (Content API). Selected via
   `NEXT_PUBLIC_PLACES_PROVIDER`. External APIs ENRICH curated data, never
   replace it.
-- `src/lib/trip/` - the Trip domain: types, localStorage-backed `storage.ts`
-  (designed to be swapped for a backend without touching components),
-  `TripContext.tsx` (React context + all mutations), `generate.ts` (wizard
-  scoring + geographic day-packing), `travel.ts` (static inter-city legs).
+- `src/lib/trip/` - the Trip domain: types (incl. `TripPreferences`),
+  localStorage-backed `storage.ts` (designed to be swapped for a backend
+  without touching components), `TripContext.tsx` (React context + all
+  mutations incl. `upsertTrip` for agent updates), `generate.ts` (wizard
+  scoring + geographic day-packing), `travel.ts` (static inter-city legs),
+  `agent.ts` (the agent's tool definitions + strictly-validated executor +
+  trip serialization for the model).
 - `src/app/api/chat/route.ts` - chat backend. With `ANTHROPIC_API_KEY` it
   runs a server-side tool-use loop over the user's trip: the client sends
   its current trip, tools in `src/lib/trip/agent.ts` mutate an in-memory
   copy with strict validation, and the stream returns text + the updated
   trip + Hebrew action chips. Falls back to a rule-based Hebrew responder
   without a key.
-- `src/components/` - `PlacesMap`/`MapInner` (Leaflet, client-only),
-  `AddToTripButton`, `TripChip`.
+- `src/app/api/generate-trip/route.ts` - the planner's one-shot builder.
+  POST { prefs, party, notes? }: button prefs are hard constraints
+  (validated server-side); with notes + a key Claude only refines within
+  them (structured outputs, cached grounding); otherwise `generateTrip()`.
+- `src/components/` - `AgentWorkspace` (landing → split chat + canvas, used
+  by `/` and `/chat`), `PlacesMap`/`MapInner` (Leaflet, client-only),
+  `AddToTripButton`, `TripChip` (truncated, hidden on phones).
 - `src/app/layout.tsx` - RTL shell, fonts, TripProvider, BlackZ trademark
   footer (web component in `public/blackz-signature.js` - must appear on
   every page).
@@ -83,10 +126,12 @@ npm run lint
    `countrySlug` pointing at the new country, places (with kosher notes
    where relevant), a day-by-day itinerary, and city-level `practical`
    (flights from TLV, gettingAround, kosherOverview).
-3. Done. Homepage, `/countries/[slug]`, the city page, the wizard's grouped
-   city picker, and the chat grounding all pick it up automatically.
-   Optional: add inter-city legs in `src/lib/trip/travel.ts` if the new
-   cities pair with existing ones.
+3. Done. The `/countries` catalog, the country page, the city page, the
+   planner's city cards, and the grounding of both AI endpoints all pick it
+   up automatically. Optional: add inter-city legs in
+   `src/lib/trip/travel.ts` if the new cities pair with existing ones, and
+   consider refreshing the hand-picked prompt chips in `AgentWorkspace`
+   if the new destination is a flagship.
 
 ## Hard rules
 
