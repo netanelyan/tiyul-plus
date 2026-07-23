@@ -47,23 +47,26 @@ export default function PromptChips({ onPick }: { onPick: (text: string) => void
   };
 
   return (
-    <div ref={rootRef} onKeyDown={onRootKeyDown} className="relative mt-4 w-full max-w-2xl">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        aria-haspopup="listbox"
-        className="badge mx-auto flex rounded-full bg-shell px-5 py-2.5 font-semibold text-night/70 ring-1 ring-night/10 transition hover:bg-sunset/5 hover:text-night hover:ring-sunset/30"
-      >
-        <span aria-hidden>💡</span>
-        רעיונות לטיול
-        <span
-          aria-hidden
-          className={`text-xs text-night/40 transition-transform ${open ? 'rotate-180' : ''}`}
+    <div ref={rootRef} onKeyDown={onRootKeyDown} className="relative mx-auto mt-4 w-full max-w-2xl">
+      {/* badge הוא inline-flex ולכן mx-auto לא ממרכז אותו - עוטפים ב-flex */}
+      <div className="flex justify-center">
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-haspopup="listbox"
+          className="badge rounded-full bg-shell px-5 py-2.5 font-semibold text-night/70 ring-1 ring-night/10 transition hover:bg-sunset/5 hover:text-night hover:ring-sunset/30"
         >
-          ▾
-        </span>
-      </button>
+          <span aria-hidden>💡</span>
+          רעיונות לטיול
+          <span
+            aria-hidden
+            className={`text-xs text-night/40 transition-transform ${open ? 'rotate-180' : ''}`}
+          >
+            ▾
+          </span>
+        </button>
+      </div>
 
       {open && chips && (
         <div

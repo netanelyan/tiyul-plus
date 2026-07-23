@@ -487,3 +487,35 @@ pinned army row present), arrow-key focus nav, fill + auto-close,
 aria-expanded toggling, no horizontal overflow; hero fade confirmed
 at 390 + 1280. The dropdown panel z-30 floats over the destinations
 band - if a future section needs a higher z, coordinate.
+
+### 2026-07-23 (g) - Dropdown centering + the edge-tab bug finally closed
+
+**Built/changed:**
+- `src/components/PromptChips.tsx` - the trigger is now truly centered:
+  `badge` is inline-flex so `mx-auto` never centered it; it is wrapped
+  in a `flex justify-center` row and the root carries `mx-auto`. The
+  open panel already spans `inset-x-0` of the max-w-2xl root, i.e.
+  exactly the input width - verified centered and flush (<6px delta)
+  at 390 and 1280.
+
+**THE CULPRIT of the recurring edge tab, definitively:** a full grep of
+`src/` + `public/` found ZERO `position:fixed` elements and zero ‹/›
+chevron glyphs in product code. The dark rounded panel with the
+chevron docked to the viewport edge is the **Next.js 16 dev-tools
+indicator (`nextjs-portal`)** - its collapsed state is exactly that
+tab. `devIndicators: false` was committed two sessions ago but the
+long-running dev server predated the config change, so it kept
+showing (config is not hot-reloaded) - which is why the bug "survived"
+two fixes. This session the stale dev server on :3000 was killed and
+relaunched; verified post-restart: `nextjs-portal` mounts but renders
+0 visible elements, and a shadow-DOM-inclusive audit at 390/1280 finds
+nothing off any viewport edge. Production builds never had it.
+
+**Broken/deferred:** the dev server on :3000 now runs as a background
+process of this session (the user's original terminal command was
+terminated to apply the config) - if it stops, `npm run dev` brings it
+back, and the indicator stays gone.
+
+**Next session should know:** if a floating UI element ever appears in
+dev again, check `nextjs-portal` FIRST before auditing product code -
+and remember config changes require a dev-server restart.
