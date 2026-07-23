@@ -1,7 +1,7 @@
-import ChatClient from './ChatClient';
+import AgentWorkspace from '@/components/AgentWorkspace';
 
 export const metadata = { title: 'צ׳אט טיולים | טיול+' };
 
 export default function ChatPage() {
-  return <ChatClient />;
+  return <AgentWorkspace />;
 }

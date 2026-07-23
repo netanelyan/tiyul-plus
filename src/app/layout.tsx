@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 const navLinks = [
-  { href: '/', label: 'יעדים' },
+  { href: '/countries', label: 'יעדים' },
   { href: '/planner', label: 'מתכנן מסלולים' },
   { href: '/chat', label: 'צ׳אט טיולים' },
 ];

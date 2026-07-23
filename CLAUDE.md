@@ -41,10 +41,14 @@ npm run lint
   `getCountries()`/`getCountry(slug)`; google/tripadvisor delegate these to
   sample - countries are curated content). The app talks ONLY to this
   interface.
-- Routes: homepage lists countries → `/countries/[slug]` (country hero,
-  practical cards, city cards) → `/destinations/[slug]` (city page with
-  breadcrumb יעדים / מדינה / עיר; its practical section merges city fields
-  with the country's visa/currency/sim/payments so nothing is lost).
+- Routes: homepage is the AI-first landing (`AgentWorkspace`: one big
+  centered input + prompt chips → smooth transition to a split
+  conversation + live trip canvas; `/chat` renders the same component).
+  Country browsing lives at `/countries` (catalog index, linked from the
+  nav) → `/countries/[slug]` (country hero, practical cards, city cards)
+  → `/destinations/[slug]` (city page with breadcrumb יעדים / מדינה /
+  עיר; its practical section merges city fields with the country's
+  visa/currency/sim/payments so nothing is lost).
 - `src/lib/providers/` - `sample` (default, keyless), `google` (Places API
   New), `tripadvisor` (Content API). Selected via
   `NEXT_PUBLIC_PLACES_PROVIDER`. External APIs ENRICH curated data, never
@@ -111,9 +115,11 @@ npm run lint
   audience tags (families/nightlife/romantic), must-see flags; kosher entries
   get a verification object (source, lastChecked, supervision) shown as an
   honest trust badge.
-- **Phase 3 - Agent-First UX**: homepage leads with the conversation;
-  site-wide search (Hebrew + local names), top-10 collections, audience
-  filters; mobile-first polish pass.
+- **Phase 3 - Agent-First UX** (homepage part DONE): homepage now leads
+  with the conversation (`AgentWorkspace` landing → split chat + canvas;
+  catalog moved to `/countries`). Still open: site-wide search (Hebrew +
+  local names), top-10 collections, audience filters, mobile-first
+  polish pass.
 - **Phase 4 - Shareable Trip**: trip URLs that open read-only for anyone
   (viral loop), WhatsApp share cards, print/PDF polish, then lightweight
   accounts for cross-device sync.
