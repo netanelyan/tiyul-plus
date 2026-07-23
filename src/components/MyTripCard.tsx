@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useTrip } from '@/lib/trip/TripContext';
 
-/** כרטיס "הטיול שלי" בפורטל של דף הבית - מוצג רק כשיש טיול פעיל. */
+/** פס "הטיול שלי" - מודגש, מוצג רק כשיש טיול פעיל, מעל שורת הכניסות. */
 export default function MyTripCard() {
   const { currentTrip: t, hydrated } = useTrip();
   if (!hydrated || !t) return null;
@@ -11,13 +11,18 @@ export default function MyTripCard() {
   return (
     <Link
       href="/planner"
-      className="card-pop rounded-2xl bg-shell p-5 ring-1 ring-night/10"
+      className="mx-auto mb-4 flex w-full max-w-2xl items-center gap-3 rounded-2xl bg-sunset/10 px-5 py-3 ring-1 ring-sunset/25 transition hover:bg-sunset/15"
     >
-      <div className="badge h-10 w-10 justify-center rounded-xl bg-sunset/10 text-xl">🧳</div>
-      <h3 className="mt-3 font-bold text-night">הטיול שלי</h3>
-      <p className="mt-1 truncate text-sm leading-relaxed text-night/60">
-        {t.name} · {t.days.length} ימים · {stops} עצירות
-      </p>
+      <span className="text-xl" aria-hidden>
+        🧳
+      </span>
+      <span className="min-w-0 flex-1 truncate font-bold text-night">
+        {t.name}
+        <span className="ms-2 font-medium text-night/55">
+          {t.days.length} ימים · {stops} עצירות
+        </span>
+      </span>
+      <span className="shrink-0 text-sm font-bold text-sunset-deep">פתיחה במתכנן ←</span>
     </Link>
   );
 }

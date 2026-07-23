@@ -422,3 +422,34 @@ footer - acceptable; revisit if more homepage sections arrive.
 md+ nav now (mobile gets the dropdown row instead). The chip visible
 count is 4 - `pickChips()` still returns 6 and the component slices;
 pinned-into-first-4 logic lives in pickChips.
+
+### 2026-07-23 (e) - Homepage redesign: destination grid as the emotional core
+
+**Built/changed:**
+- `src/app/page.tsx` - the decorative 4-photo strip and the two big
+  portal cards are gone. New structure: hero → chips → "יעדים
+  פופולריים" (a rounded night-colored band with all 8 cities as photo
+  cards - verified city photos as backgrounds, night bottom-gradient,
+  Hebrew city + country + "מסלול מוכן ל-X ימים", hover scale, link to
+  /destinations/[slug]; 2 cols mobile, 4 desktop; "כל הקטלוג ←" in
+  zest) → slim centered secondary row: MyTripCard as a highlighted
+  sunset bar + two small pills (מתכנן/קטלוג).
+- `src/components/MyTripCard.tsx` - redesigned from a portal card to a
+  full-width highlighted bar (sunset/10 + ring, truncating name,
+  "פתיחה במתכנן ←").
+- `src/components/HomeHero.tsx` - hero vertical padding tightened so
+  the night band starts near the fold.
+
+**Product decisions:** the destination photos ARE the color of the
+page - the night band is the single section accent (tokens only) and
+makes the photos pop while echoing the footer. Functional entries are
+demoted to pills because the destination cards now serve discovery.
+
+**Broken/deferred:** nothing broken. Bratislava's card shows the
+travel-flatlay photo (that's its verified photo in countries data) -
+consider shooting a real Bratislava skyline URL in a content pass.
+
+**Next session should know:** the grid uses provider.getDestinations()
+(DestinationSummary: name/country/days/photo) - a new city in the data
+appears on the homepage automatically. Card day-count copy is
+"מסלול מוכן ל-X ימים"; keep it in sync if itinerary lengths change.

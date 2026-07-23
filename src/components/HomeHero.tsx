@@ -17,7 +17,7 @@ export default function HomeHero() {
   const router = useRouter();
 
   return (
-    <div className="relative flex flex-col items-center px-2 py-12 sm:py-16">
+    <div className="relative flex flex-col items-center px-2 pb-8 pt-10 sm:pb-10 sm:pt-14">
       {/* תמונת אווירה מאחורי הכותרת, נמסכת לקרם כדי שהטקסט יישאר חד */}
       <div aria-hidden className="pointer-events-none absolute inset-x-0 -top-8 -z-10 h-[300px] overflow-hidden sm:h-[360px]">
         <div
