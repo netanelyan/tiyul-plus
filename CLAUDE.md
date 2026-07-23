@@ -32,13 +32,16 @@ favor user trust and repeat usage over tech impressiveness.
   keep the landing state: one massive centered input + prompt chips.
   **Chip system:** a categorized pool in `src/lib/promptChips.ts`
   (situation / capability / question, one emoji per chip, optional
-  seasonal `months`, optional `fill` when the pill text is shorter than
-  the fill text) - the shared `PromptChips` component picks 6
-  client-side after mount (pinned chips always included - currently
+  seasonal `months`, optional `fill` when the row text is shorter than
+  the fill text). The shared `PromptChips` component renders one
+  "💡 רעיונות לטיול" trigger under the input that opens a custom
+  RTL dropdown (rows = emoji + text; closes on select/outside/Escape;
+  arrow-key navigable; no library). Selection is picked client-side
+  after mount (pinned chips always included - currently
   "🎖️ הטיול הגדול אחרי צבא" - rest category-balanced, in-season first,
-  out-of-season hidden, shuffled; SSR renders a stable-height
-  skeleton). Clicking FILLS the input and focuses it for editing -
-  never auto-sends. Categories are invisible to the user. The first message transitions to a split workspace:
+  out-of-season hidden, shuffled). Choosing a row FILLS the input and
+  focuses it for editing - never auto-sends. Categories are invisible
+  to the user. The first message transitions to a split workspace:
   streaming conversation beside a live "canvas" - destination photo header,
   day selector, Leaflet map of the selected day with numbered route, daily
   schedule blocks and a planner link; empty days get an explicit empty
@@ -453,3 +456,34 @@ consider shooting a real Bratislava skyline URL in a content pass.
 (DestinationSummary: name/country/days/photo) - a new city in the data
 appears on the homepage automatically. Card day-count copy is
 "מסלול מוכן ל-X ימים"; keep it in sync if itinerary lengths change.
+
+### 2026-07-23 (f) - Hero image blend fix + chips become a dropdown
+
+**Built/changed:**
+- `src/components/HomeHero.tsx` - the hero photo no longer ends in a
+  hard horizontal cut: the backdrop wrapper carries a CSS
+  mask-image/-webkit-mask-image linear-gradient (opaque→transparent
+  over the lower ~45%) so the image dissolves into the cream; height
+  is now `clamp(260px,45vh,400px)`. `.photo-bg` already guarantees
+  cover+center, so the image crops (no stretch) at 390px; opacity
+  stays 0.22 so the night heading is crisp.
+- `src/components/PromptChips.tsx` - rewritten as a custom dropdown:
+  one deterministic "💡 רעיונות לטיול ▾" trigger (SSR-safe, no more
+  skeleton needed), panel with emoji+text rows (full container width,
+  max-h + scroll, comfortable py-3 taps), closes on select / outside
+  click / Escape, aria-expanded + role=listbox, ArrowUp/ArrowDown move
+  focus between rows. Selection fills the input (chip.fill ?? text)
+  and closes - fill-not-send unchanged. Pool logic untouched.
+- CLAUDE.md walkthrough chip-system paragraph updated.
+
+**Product decisions:** trigger is centered and deterministic so SSR
+renders it directly (the random pick still runs after mount, inside
+the panel). Kept 6 rows (pool logic unchanged; spec allows ~8).
+
+**Broken/deferred:** nothing broken.
+
+**Next session should know:** verified via CDP at 390 - open (6 rows,
+pinned army row present), arrow-key focus nav, fill + auto-close,
+aria-expanded toggling, no horizontal overflow; hero fade confirmed
+at 390 + 1280. The dropdown panel z-30 floats over the destinations
+band - if a future section needs a higher z, coordinate.

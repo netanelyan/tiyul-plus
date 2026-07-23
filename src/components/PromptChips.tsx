@@ -1,62 +1,97 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { pickChips, type PromptChip } from '@/lib/promptChips';
 
 /**
- * צ׳יפים של הצעות פתיחה - גלולות בשורה אחת, "רעיונות לגנוב" ולא כפתורי
- * טופס: אימוג׳י חם אחד מוביל כל גלולה, hover בקורל. נבחרים בצד הלקוח
- * אחרי mount (הבחירה אקראית - ב-SSR שלד יציב באותו גובה). לחיצה ממלאת
- * את הקלט לעריכה (chip.fill כשהטקסט המוצג קצר מטקסט המילוי), לא שולחת.
+ * הצעות הפתיחה כ-dropdown אחד במקום גלולות עטופות: כפתור "💡 רעיונות
+ * לטיול" פותח פאנל עם שורות (אימוג׳י + טקסט). בחירה ממלאת את הקלט
+ * (chip.fill כשקיים) וסוגרת - לא שולחת. מקלדת: חצים בין שורות, Escape
+ * סוגר; נסגר גם בלחיצה בחוץ. בלי ספריית תפריטים - טוקנים בלבד.
+ * הטריגר דטרמיניסטי (בטוח ל-SSR); הבחירה האקראית רצה אחרי mount.
  */
-
-const SKELETON_WIDTHS = [150, 190, 130, 170];
-
 export default function PromptChips({ onPick }: { onPick: (text: string) => void }) {
   const [chips, setChips] = useState<PromptChip[] | null>(null);
-  const [expanded, setExpanded] = useState(false);
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const rowRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
     setChips(pickChips());
   }, []);
 
-  const visible = chips === null ? null : expanded ? chips : chips.slice(0, 4);
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('click', onDoc);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('click', onDoc);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  const onRootKeyDown = (e: React.KeyboardEvent) => {
+    if (!open || !chips?.length) return;
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    e.preventDefault();
+    const current = rowRefs.current.findIndex((el) => el === document.activeElement);
+    const dir = e.key === 'ArrowDown' ? 1 : -1;
+    const next = (current + dir + chips.length) % chips.length;
+    rowRefs.current[next]?.focus();
+  };
 
   return (
-    <div className="mt-6 flex w-full max-w-2xl flex-wrap justify-center gap-2">
-      {visible === null ? (
-        SKELETON_WIDTHS.map((w, i) => (
-          <div
-            key={i}
-            aria-hidden
-            className="h-[38px] animate-pulse rounded-full bg-night/[0.04]"
-            style={{ width: w }}
-          />
-        ))
-      ) : (
-        <>
-          {visible.map((chip) => (
+    <div ref={rootRef} onKeyDown={onRootKeyDown} className="relative mt-4 w-full max-w-2xl">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        className="badge mx-auto flex rounded-full bg-shell px-5 py-2.5 font-semibold text-night/70 ring-1 ring-night/10 transition hover:bg-sunset/5 hover:text-night hover:ring-sunset/30"
+      >
+        <span aria-hidden>💡</span>
+        רעיונות לטיול
+        <span
+          aria-hidden
+          className={`text-xs text-night/40 transition-transform ${open ? 'rotate-180' : ''}`}
+        >
+          ▾
+        </span>
+      </button>
+
+      {open && chips && (
+        <div
+          role="listbox"
+          aria-label="רעיונות לטיול"
+          className="rise-in absolute inset-x-0 top-full z-30 mt-2 max-h-80 overflow-y-auto rounded-2xl bg-shell p-2 shadow-[var(--shadow-pop)] ring-1 ring-night/10"
+        >
+          {chips.map((chip, i) => (
             <button
               key={chip.text}
-              onClick={() => onPick(chip.fill ?? chip.text)}
-              className="group badge rise-in max-w-full whitespace-nowrap rounded-full bg-shell px-4 py-2 text-sm font-semibold text-night/70 ring-1 ring-night/10 transition hover:bg-sunset/5 hover:text-night hover:ring-sunset/30"
+              ref={(el) => {
+                rowRefs.current[i] = el;
+              }}
+              role="option"
+              aria-selected={false}
+              onClick={() => {
+                onPick(chip.fill ?? chip.text);
+                setOpen(false);
+              }}
+              className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-start font-medium text-night/80 outline-none transition hover:bg-sunset/5 hover:text-night focus:bg-sunset/5"
             >
-              <span className="shrink-0 text-base leading-none" aria-hidden>
+              <span className="shrink-0 text-lg leading-none" aria-hidden>
                 {chip.emoji}
               </span>
-              <span className="truncate">{chip.text}</span>
+              <span className="min-w-0 truncate">{chip.text}</span>
             </button>
           ))}
-          {chips !== null && chips.length > 4 && (
-            <button
-              onClick={() => setExpanded((v) => !v)}
-              aria-expanded={expanded}
-              className="rise-in whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold text-night/45 transition hover:text-sunset-deep"
-            >
-              {expanded ? 'פחות רעיונות' : 'עוד רעיונות +'}
-            </button>
-          )}
-        </>
+        </div>
       )}
     </div>
   );
