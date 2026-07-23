@@ -348,3 +348,32 @@ every draw, click fills the long text, all pills single-line at 390px
 cheap-first covered-countries routing. If you add pinned chips, the
 per-category quota logic counts them - keep total pinned ≤ 2 or the
 draw loses balance.
+
+### 2026-07-23 (c) - Mobile hero fixes from a real iPhone report
+
+**Built/changed:**
+- `src/components/HeroPrompt.tsx` - responsive input layout: below
+  `sm` the field is full-width with a full-width לתכנן button stacked
+  under it (`mt-2 w-full`, `sm:absolute sm:end-3...` restores the
+  inline button-in-field at sm+); mobile also drops to `text-base` and
+  swaps to a shorter placeholder ("ספרו לי על החופשה שאתם מדמיינים…",
+  set post-mount via matchMedia - the long "למשל" example only fits at
+  sm+).
+- `next.config.ts` - `devIndicators: false`.
+
+**Product decisions / findings:** the "floating chevron tab bleeding
+off the LEFT edge" from the iPhone screenshot is NOT product UI - a
+CDP audit at 390px found zero positioned elements outside the
+viewport and no horizontal scroll (scrollW=390/360 exactly). It is the
+Next.js dev-tools indicator (`nextjs-portal`), visible because the
+phone was browsing the LAN dev server. Disabled via `devIndicators:
+false` so phone-testing against dev is clean; production never had it.
+
+**Broken/deferred:** the running dev server must be RESTARTED to pick
+up the devIndicators config change (config isn't hot-reloaded) - until
+then the indicator still shows on the phone.
+
+**Next session should know:** nav wrapping at 360px is fine (labels
+wrap to two lines inside the header, no overflow). The placeholder is
+now stateful - if you change the copy, update both the long (desktop)
+and short (mobile) variants in HeroPrompt.
