@@ -6,9 +6,9 @@ import { useRouter } from 'next/navigation';
 import type { Place } from '@/lib/types';
 import type { Trip, TripPreferences } from '@/lib/trip/types';
 import { destinations } from '@/data/destinations';
-import { PROMPT_CHIPS } from '@/lib/promptChips';
 import { useTrip } from '@/lib/trip/TripContext';
 import PlacesMap from '@/components/PlacesMap';
+import PromptChips from '@/components/PromptChips';
 
 /**
  * חוויית הסוכן - הכוכב של האתר (Phase 3: homepage leads with the conversation).
@@ -378,6 +378,7 @@ export default function AgentWorkspace() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const landingInputRef = useRef<HTMLInputElement>(null);
   const qHandled = useRef(false);
 
   // הגעה מדף הבית: /chat?q=... - שולחים את הטקסט פעם אחת ומנקים את הכתובת.
@@ -505,6 +506,7 @@ export default function AgentWorkspace() {
         >
           <div className="relative">
             <input
+              ref={landingInputRef}
               autoFocus
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -521,22 +523,13 @@ export default function AgentWorkspace() {
           </div>
         </form>
 
-        {/* צ׳יפים של הצעות - גריד רספונסיבי */}
-        <div className="rise-in-late mt-6 grid w-full max-w-2xl grid-cols-1 gap-2.5 sm:grid-cols-3">
-          {PROMPT_CHIPS.map((chip) => (
-            <button
-              key={chip.label}
-              onClick={() => {
-                setInput(chip.prompt);
-                send(chip.prompt);
-              }}
-              className="card-pop rounded-xl bg-shell px-4 py-3 text-start text-sm font-semibold text-night/75 ring-1 ring-night/10 transition hover:text-night hover:ring-night/25"
-            >
-              <span className="me-1.5">{chip.icon}</span>
-              {chip.label}
-            </button>
-          ))}
-        </div>
+        {/* צ׳יפים - ממלאים את הקלט לעריכה, לא שולחים */}
+        <PromptChips
+          onPick={(text) => {
+            setInput(text);
+            landingInputRef.current?.focus();
+          }}
+        />
 
         <Link
           href="/countries"

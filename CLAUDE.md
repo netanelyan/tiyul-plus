@@ -29,9 +29,14 @@ favor user trust and repeat usage over tech impressiveness.
 - **`/chat` - the agent, the star.** Renders
   `src/components/AgentWorkspace.tsx`. On mount it auto-sends a `?q=`
   param once (then cleans the URL with `router.replace`); direct visits
-  keep the landing state: one massive centered input + prompt chips
-  (shared list in `src/lib/promptChips.ts`). The first message
-  transitions to a split workspace:
+  keep the landing state: one massive centered input + prompt chips.
+  **Chip system:** a categorized pool in `src/lib/promptChips.ts`
+  (situation / capability / question, optional seasonal `months`) -
+  the shared `PromptChips` component picks 6 client-side after mount
+  (2 per category, in-season first, out-of-season hidden, shuffled;
+  SSR renders a stable-height skeleton). Clicking FILLS the input and
+  focuses it for editing - never auto-sends. Categories are invisible
+  to the user. The first message transitions to a split workspace:
   streaming conversation beside a live "canvas" - destination photo header,
   day selector, Leaflet map of the selected day with numbered route, daily
   schedule blocks and a planner link; empty days get an explicit empty

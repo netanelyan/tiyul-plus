@@ -1,15 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { PROMPT_CHIPS } from '@/lib/promptChips';
+import PromptChips from '@/components/PromptChips';
 
 /**
- * ההירו של דף הבית - פורטל, לא סביבת עבודה: שליחה (או לחיצה על צ׳יפ)
- * מנווטת ל-/chat עם הטקסט ב-query. השיחה עצמה חיה רק שם.
+ * ההירו של דף הבית - פורטל, לא סביבת עבודה: שליחה מנווטת ל-/chat עם
+ * הטקסט ב-query. השיחה עצמה חיה רק שם. לחיצה על צ׳יפ ממלאת את הקלט
+ * ומתמקדת בו - המשתמש עורך ואז שולח בעצמו.
  */
 export default function HomeHero() {
   const [input, setInput] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   const go = (text: string) => {
@@ -36,6 +38,7 @@ export default function HomeHero() {
       >
         <div className="relative">
           <input
+            ref={inputRef}
             autoFocus
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -52,19 +55,12 @@ export default function HomeHero() {
         </div>
       </form>
 
-      {/* צ׳יפים של הצעות - גריד רספונסיבי */}
-      <div className="rise-in-late mt-6 grid w-full max-w-2xl grid-cols-1 gap-2.5 sm:grid-cols-3">
-        {PROMPT_CHIPS.map((chip) => (
-          <button
-            key={chip.label}
-            onClick={() => go(chip.prompt)}
-            className="card-pop rounded-xl bg-shell px-4 py-3 text-start text-sm font-semibold text-night/75 ring-1 ring-night/10 transition hover:text-night hover:ring-night/25"
-          >
-            <span className="me-1.5">{chip.icon}</span>
-            {chip.label}
-          </button>
-        ))}
-      </div>
+      <PromptChips
+        onPick={(text) => {
+          setInput(text);
+          inputRef.current?.focus();
+        }}
+      />
     </div>
   );
 }
