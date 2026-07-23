@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" fill="none">
+  <defs>
+    <pattern id="dotgrid" width="46" height="46" patternUnits="userSpaceOnUse">
+      <circle cx="23" cy="23" r="1.7" fill="#241b4d" />
+    </pattern>
+  </defs>
+
+  <!-- טקסטורת מפה: רשת נקודות עדינה על פני כל השטח -->
+  <rect x="0" y="0" width="1600" height="700" fill="url(#dotgrid)" opacity="0.55" />
+
+  <!-- נתיבי טיסה: קשתות מקווקוות בין "ערים", בסגנון קווי מסלול על מפה -->
+  <path d="M 60,470 Q 430,90 830,260" stroke="#241b4d" stroke-width="2.5" stroke-dasharray="2 10" stroke-linecap="round" />
+  <path d="M 300,610 Q 760,300 1300,430" stroke="#ff5941" stroke-width="2.5" stroke-dasharray="2 10" stroke-linecap="round" />
+  <path d="M 980,90 Q 900,340 1500,540" stroke="#241b4d" stroke-width="2.5" stroke-dasharray="2 10" stroke-linecap="round" />
+  <path d="M 120,180 Q 480,360 720,120" stroke="#241b4d" stroke-width="2.5" stroke-dasharray="2 10" stroke-linecap="round" />
+
+  <!-- נקודות יעד בקצות המסלולים -->
+  <circle cx="60" cy="470" r="6" fill="#241b4d" />
+  <circle cx="830" cy="260" r="6" fill="#241b4d" />
+  <circle cx="300" cy="610" r="6" fill="#ff5941" />
+  <circle cx="1300" cy="430" r="6" fill="#ff5941" />
+  <circle cx="980" cy="90" r="6" fill="#241b4d" />
+  <circle cx="1500" cy="540" r="6" fill="#241b4d" />
+  <circle cx="120" cy="180" r="6" fill="#241b4d" />
+  <circle cx="720" cy="120" r="6" fill="#241b4d" />
+
+  <!-- מטוסון קטן על שני מהמסלולים -->
+  <g transform="translate(430,175) rotate(-32)">
+    <path d="M0 -8 L6 6 L0 3 L-6 6 Z" fill="#241b4d" />
+  </g>
+  <g transform="translate(760,300) rotate(28)">
+    <path d="M0 -8 L6 6 L0 3 L-6 6 Z" fill="#ff5941" />
+  </g>
+  <g transform="translate(900,340) rotate(115)">
+    <path d="M0 -8 L6 6 L0 3 L-6 6 Z" fill="#241b4d" />
+  </g>
+</svg>

@@ -561,3 +561,47 @@ asking AND returned trip has preferences.kosher=true; toggle state
 persists across loads; hero photo fully removed (no
 photo-1488646953014 references). clear-storage.js in the scratchpad
 clears only the trips key - the kosher key persists between CDP runs.
+
+### 2026-07-24 - Full-bleed hero texture: flight-trail pattern, fades before the night band
+
+**Built/changed:**
+- `public/patterns/flight-trails.svg` (new) - a hand-authored, locally
+  hosted decorative SVG: a faint dot-grid "map texture" plus a few
+  dashed flight-path arcs with destination dots and tiny plane glyphs,
+  colored with the night/sunset tokens directly in the SVG (no new
+  dependency, no external image host - avoids the sandboxed-environment
+  image-blocking gotcha entirely since it's a same-origin static file).
+- `src/components/HomeHero.tsx` - new full-bleed background layer
+  (`-z-20`, behind the existing radial wash) sized `h-[460px]
+  sm:h-[560px]`, breaking out of `main`'s `max-w-6xl` container with the
+  margin technique (`ml-[calc(50%-50vw)] mr-[calc(50%-50vw)]` +
+  `w-screen overflow-hidden`, paired with `absolute top-0` and no
+  left/right - deliberately NOT `left-1/2 + -translate-x-1/2`, which
+  overflows when nested inside a centered, padded parent). Base
+  `opacity-[0.12]` (texture, not photo) plus a straight top-to-bottom
+  `mask-image: linear-gradient(to bottom, black 0%, transparent 100%)`
+  (+ `-webkit-` twin) so it dissolves to nothing before the dark
+  "יעדים פופולריים" band - no hard edge.
+
+**Product decisions:** built the pattern as a local SVG instead of
+sourcing a stock photo - keeps it low-opacity texture rather than
+competing imagery, keeps the palette exactly on-token, and sidesteps
+any external-host reliability concern for decorative chrome. Combined
+"low base opacity" + "gradient mask fade" as two separate mechanisms
+(opacity = how visible the texture ever gets, mask = where it
+disappears) rather than baking the fade into the SVG itself, so either
+can be retuned independently later.
+
+**Broken/deferred:** nothing broken. The background layer's height is
+approximate (460/560px) rather than measured against actual hero
+height per breakpoint - safe because the mask reaches full transparency
+well before the layer's own bottom edge, so any overlap into the night
+band is already invisible.
+
+**Next session should know:** verified via CDP - no horizontal overflow
+at 390px or 1280px (`document.documentElement.scrollWidth ===
+clientWidth` at both), texture visible but subtle near the top, fully
+faded by the night band, search bar/pills fully legible on top. The
+`cdp-shot.mjs` recipe now also supports a `CDP_EVAL` env var for
+one-off metric checks (e.g. scrollWidth/clientWidth) alongside the
+screenshot in a single CDP session.

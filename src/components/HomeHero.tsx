@@ -13,6 +13,21 @@ export default function HomeHero() {
 
   return (
     <div className="relative flex flex-col items-center px-2 pb-8 pt-10 sm:pb-10 sm:pt-14">
+      {/* טקסטורת רקע full-bleed: נתיבי טיסה עדינים, דוהה לשקיפות מלאה לפני
+          פס "יעדים פופולריים" - טכניקת ה-margin ל-breakout (לא left-1/2 +
+          translate, שגורם לגלילה אופקית כשמקונן בתוך main הממורכז) */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute top-0 -z-20 ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] h-[460px] w-screen overflow-hidden opacity-[0.12] sm:h-[560px]"
+        style={{
+          backgroundImage: 'url(/patterns/flight-trails.svg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'top center',
+          backgroundRepeat: 'no-repeat',
+          maskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
+        }}
+      />
       {/* שטיפה חמה עדינה - צבעי הטוקנים sunset/zest בשקיפות נמוכה */}
       <div
         aria-hidden
