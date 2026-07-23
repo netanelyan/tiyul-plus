@@ -5,7 +5,7 @@ import type { Country, Destination, Place } from '@/lib/types';
 import type { Trip, WizardPrefs } from '@/lib/trip/types';
 import { categoryMeta } from '@/lib/categories';
 import { useTrip } from '@/lib/trip/TripContext';
-import { generateTrip, tripFromTemplate } from '@/lib/trip/generate';
+import { tripFromTemplate } from '@/lib/trip/generate';
 import { travelLeg } from '@/lib/trip/travel';
 import PlacesMap from '@/components/PlacesMap';
 
@@ -59,15 +59,11 @@ export default function PlannerClient({
   );
 }
 
-/* ================= Onboarding: טיול מטקסט חופשי + אשף + תבניות ================= */
+/* ================= Onboarding: כפתורים כממשק ראשי + טקסט לדיוק ================= */
 
 const AI_STATUSES = ['קורא את הבקשה…', 'בוחר מקומות אמיתיים…', 'מסדר את הימים על המפה…'];
 
-const AI_EXAMPLES = [
-  'זוג + שני ילדים, 5 ימים בוינה באוגוסט, אוהבים טבע וגלידה, בלי יותר מדי הליכה',
-  'שבוע ברומא ובאתונה, אוהבים היסטוריה ואוכל, חשוב לנו כשר',
-  '4 ימים בברלין, קצב דחוס, מוזיאונים ושופינג',
-];
+type Party = 'couple' | 'family' | 'friends' | 'solo';
 
 function Onboarding({
   countries,
@@ -83,11 +79,19 @@ function Onboarding({
   onCancel?: () => void;
 }) {
   const trip = useTrip();
+  const [prefs, setPrefs] = useState<WizardPrefs>({
+    citySlugs: initialSlug ? [initialSlug] : [],
+    totalDays: 4,
+    pace: 'relaxed',
+    tripType: 'combined',
+    shopping: 'normal',
+    kosherOnly: false,
+  });
+  const [party, setParty] = useState<Party | null>(null);
   const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [statusIdx, setStatusIdx] = useState(0);
-  const [showManual, setShowManual] = useState(false);
 
   // סטטוס מתחלף בזמן היצירה - שהכפתור לא ירגיש קפוא
   useEffect(() => {
@@ -97,15 +101,25 @@ function Onboarding({
     return () => clearInterval(t);
   }, [loading]);
 
-  async function generateFromNotes() {
-    if (!notes.trim() || loading) return;
+  const toggleCity = (slug: string) =>
+    setPrefs((p) => ({
+      ...p,
+      citySlugs: p.citySlugs.includes(slug)
+        ? p.citySlugs.filter((s) => s !== slug)
+        : [...p.citySlugs, slug],
+    }));
+
+  const canGenerate = prefs.citySlugs.length > 0 && !loading;
+
+  async function generate() {
+    if (!canGenerate) return;
     setLoading(true);
     setError(null);
     try {
       const res = await fetch('/api/generate-trip', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ notes }),
+        body: JSON.stringify({ prefs, party, notes: notes.trim() }),
       });
       const data = (await res.json()) as { trip?: Trip; understood?: string; error?: string };
       if (!data.trip) {
@@ -129,25 +143,170 @@ function Onboarding({
         </button>
       )}
 
-      {/* ---- 1. ההירו: טקסט חופשי ---- */}
-      <section className="rise-in rounded-3xl bg-shell p-6 ring-1 ring-night/10 sm:p-10">
-        <h1 className="display text-3xl text-night sm:text-4xl">ספרו לי על הטיול שלכם</h1>
-        <p className="mt-2 max-w-2xl leading-relaxed text-night/60">
-          כותבים בעברית חופשית מה מדמיינים - ומקבלים מסלול אמיתי, מהמקומות שאנחנו מכירים.
-          הכול ניתן לעריכה אחר כך.
+      <section className="rise-in rounded-3xl bg-shell p-6 ring-1 ring-night/10 sm:p-8">
+        <h1 className="display text-3xl text-night">בונים טיול חדש</h1>
+        <p className="mt-1.5 max-w-2xl leading-relaxed text-night/60">
+          בוחרים לאן ומה חשוב - ואם רוצים, מוסיפים כמה מילים לדיוק. הכול ניתן לעריכה אחר כך.
         </p>
 
-        <textarea
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          onKeyDown={(e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') generateFromNotes();
-          }}
-          rows={4}
-          disabled={loading}
-          placeholder="זוג + שני ילדים, 5 ימים באוגוסט, אוהבים טבע וגלידה, בלי יותר מדי הליכה, תקציב בינוני"
-          className="mt-5 w-full resize-none rounded-2xl bg-night/5 px-5 py-4 text-base leading-relaxed text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/35 focus:bg-shell focus:ring-2 focus:ring-sunset disabled:opacity-60"
-        />
+        {/* ---- 1. לאן? ---- */}
+        <div className="mt-6">
+          <div className="text-sm font-bold text-night">
+            לאן? <span className="font-medium text-night/50">(אפשר כמה ערים)</span>
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
+            {countries
+              .map((c) => ({ country: c, cities: destinations.filter((d) => d.countrySlug === c.slug) }))
+              .filter(({ cities }) => cities.length > 0)
+              .flatMap(({ country, cities }) =>
+                cities.map((d) => {
+                  const selected = prefs.citySlugs.includes(d.slug);
+                  return (
+                    <button
+                      key={d.slug}
+                      onClick={() => toggleCity(d.slug)}
+                      aria-pressed={selected}
+                      className={`rounded-2xl p-3.5 text-start transition ${
+                        selected
+                          ? 'bg-sunset/10 ring-2 ring-sunset'
+                          : 'bg-night/[0.03] ring-1 ring-night/10 hover:ring-night/30'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between">
+                        <span className="text-2xl leading-none">{d.flag}</span>
+                        {selected && (
+                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-sunset text-xs font-bold text-cream">
+                            ✓
+                          </span>
+                        )}
+                      </div>
+                      <div className="mt-2 font-bold text-night">{d.name}</div>
+                      <div className="text-xs font-medium text-night/50">{country.name}</div>
+                    </button>
+                  );
+                }),
+              )}
+          </div>
+          {prefs.citySlugs.length > 1 && (
+            <div className="mt-2 text-xs font-medium text-night/50">
+              טיול רב-עירוני: {prefs.citySlugs.length} ערים, הימים יתחלקו ביניהן
+            </div>
+          )}
+        </div>
+
+        {/* ---- 2. הגדרות הליבה - הכול כפתורים ---- */}
+        <div className="mt-7 grid gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div>
+            <div className="text-sm font-semibold text-night/60">כמה ימים?</div>
+            <div className="mt-2 flex items-center gap-2">
+              <button
+                onClick={() => setPrefs((p) => ({ ...p, totalDays: Math.max(1, p.totalDays - 1) }))}
+                disabled={prefs.totalDays <= 1}
+                aria-label="פחות ימים"
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-night/5 text-lg font-bold text-night/70 transition hover:bg-night/10 disabled:opacity-30"
+              >
+                −
+              </button>
+              <div className="w-12 text-center text-lg font-bold text-night" aria-live="polite">
+                {prefs.totalDays}
+              </div>
+              <button
+                onClick={() => setPrefs((p) => ({ ...p, totalDays: Math.min(21, p.totalDays + 1) }))}
+                disabled={prefs.totalDays >= 21}
+                aria-label="עוד ימים"
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-night/5 text-lg font-bold text-night/70 transition hover:bg-night/10 disabled:opacity-30"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <div className="text-sm font-semibold text-night/60">מי נוסע?</div>
+            <Seg
+              options={[
+                { v: 'couple', l: 'זוג' },
+                { v: 'family', l: 'משפחה' },
+                { v: 'friends', l: 'חברים' },
+                { v: 'solo', l: 'סולו' },
+              ]}
+              value={party ?? ''}
+              onChange={(v) => setParty((cur) => (cur === v ? null : (v as Party)))}
+            />
+          </div>
+
+          <div>
+            <div className="text-sm font-semibold text-night/60">קצב</div>
+            <Seg
+              options={[
+                { v: 'relaxed', l: 'רגוע' },
+                { v: 'packed', l: 'דחוס' },
+              ]}
+              value={prefs.pace}
+              onChange={(v) => setPrefs((p) => ({ ...p, pace: v as WizardPrefs['pace'] }))}
+            />
+          </div>
+
+          <div>
+            <div className="text-sm font-semibold text-night/60">סגנון</div>
+            <Seg
+              options={[
+                { v: 'city', l: 'עירוני' },
+                { v: 'nature', l: 'טבע' },
+                { v: 'combined', l: 'משולב' },
+              ]}
+              value={prefs.tripType}
+              onChange={(v) => setPrefs((p) => ({ ...p, tripType: v as WizardPrefs['tripType'] }))}
+            />
+          </div>
+
+          <div>
+            <div className="text-sm font-semibold text-night/60">שופינג</div>
+            <Seg
+              options={[
+                { v: 'more', l: 'יותר' },
+                { v: 'normal', l: 'רגיל' },
+                { v: 'less', l: 'פחות' },
+              ]}
+              value={prefs.shopping}
+              onChange={(v) => setPrefs((p) => ({ ...p, shopping: v as WizardPrefs['shopping'] }))}
+            />
+          </div>
+
+          <div>
+            <div className="text-sm font-semibold text-night/60">כשר</div>
+            <button
+              onClick={() => setPrefs((p) => ({ ...p, kosherOnly: !p.kosherOnly }))}
+              aria-pressed={prefs.kosherOnly}
+              className={`mt-2 w-full rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                prefs.kosherOnly
+                  ? 'bg-sunset text-cream'
+                  : 'bg-night/5 text-night/60 hover:bg-night/10'
+              }`}
+            >
+              {prefs.kosherOnly ? '✓ ' : ''}ארוחה כשרה בכל יום
+            </button>
+          </div>
+        </div>
+
+        {/* ---- 3. טקסט חופשי - אופציונלי ---- */}
+        <div className="mt-7">
+          <label htmlFor="refine-notes" className="text-sm font-semibold text-night/70">
+            רוצים לדייק? ספרו לנו עוד <span className="font-medium text-night/40">(לא חובה)</span>
+          </label>
+          <textarea
+            id="refine-notes"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            onKeyDown={(e) => {
+              if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') generate();
+            }}
+            rows={2}
+            disabled={loading}
+            placeholder="למשל: בלי מוזיאונים, הילדים בני 4 ו-7, אוהבים גלידה"
+            className="mt-2 w-full resize-none rounded-xl bg-night/5 px-4 py-3 text-sm leading-relaxed text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/35 focus:bg-shell focus:ring-2 focus:ring-sunset disabled:opacity-60"
+          />
+        </div>
 
         {error && (
           <p className="mt-3 rounded-xl bg-sunset/10 px-4 py-2.5 text-sm font-semibold text-sunset-deep">
@@ -155,45 +314,27 @@ function Onboarding({
           </p>
         )}
 
-        <button
-          onClick={generateFromNotes}
-          disabled={!notes.trim() || loading}
-          className="mt-4 w-full rounded-xl bg-sunset px-6 py-3.5 text-lg font-bold text-cream transition hover:bg-sunset-deep disabled:opacity-40 sm:w-auto sm:min-w-72"
-        >
-          {loading ? (
-            <span className="flex items-center justify-center gap-2.5">
-              <span className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-cream/40 border-t-cream" />
-              <span className="text-base font-semibold">{AI_STATUSES[statusIdx]}</span>
-            </span>
-          ) : (
-            'תבנו לי את הטיול'
+        {/* ---- 4. ה-CTA היחיד ---- */}
+        <div className="mt-5 flex flex-wrap items-center gap-3">
+          <button
+            onClick={generate}
+            disabled={!canGenerate}
+            className="w-full rounded-xl bg-sunset px-6 py-3.5 text-lg font-bold text-cream transition hover:bg-sunset-deep disabled:opacity-40 sm:w-auto sm:min-w-72"
+          >
+            {loading ? (
+              <span className="flex items-center justify-center gap-2.5">
+                <span className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-cream/40 border-t-cream" />
+                <span className="text-base font-semibold">{AI_STATUSES[statusIdx]}</span>
+              </span>
+            ) : (
+              'תבנו לי את הטיול'
+            )}
+          </button>
+          {prefs.citySlugs.length === 0 && (
+            <span className="text-xs font-semibold text-night/40">בחרו לפחות עיר אחת</span>
           )}
-        </button>
-
-        <div className="mt-5 flex flex-wrap items-center gap-2">
-          <span className="text-xs font-semibold text-night/40">לדוגמה:</span>
-          {AI_EXAMPLES.map((ex) => (
-            <button
-              key={ex}
-              onClick={() => setNotes(ex)}
-              disabled={loading}
-              className="rounded-full bg-night/5 px-3 py-1.5 text-xs font-medium text-night/60 transition hover:bg-night/10 hover:text-night disabled:opacity-50"
-            >
-              {ex.length > 44 ? `${ex.slice(0, 44)}…` : ex}
-            </button>
-          ))}
         </div>
       </section>
-
-      {/* ---- 2. משני, מכווץ: האשף הידני ---- */}
-      <ManualWizard
-        countries={countries}
-        destinations={destinations}
-        initialSlug={initialSlug}
-        open={showManual}
-        onToggle={() => setShowManual((v) => !v)}
-        onDone={onDone}
-      />
 
       {/* ---- 3. שלישוני: תבניות מוכנות ---- */}
       <section className="mt-8">
@@ -229,196 +370,6 @@ function Onboarding({
         </div>
       </section>
     </div>
-  );
-}
-
-/* האשף הידני הקיים - מכווץ כברירת מחדל, שתי עמודות בדסקטופ */
-function ManualWizard({
-  countries,
-  destinations,
-  initialSlug,
-  open,
-  onToggle,
-  onDone,
-}: {
-  countries: Country[];
-  destinations: Destination[];
-  initialSlug: string;
-  open: boolean;
-  onToggle: () => void;
-  onDone: (ack?: string | null) => void;
-}) {
-  const trip = useTrip();
-  const [prefs, setPrefs] = useState<WizardPrefs>({
-    citySlugs: initialSlug ? [initialSlug] : [],
-    totalDays: 4,
-    pace: 'relaxed',
-    tripType: 'combined',
-    shopping: 'normal',
-    kosherOnly: false,
-  });
-
-  const toggleCity = (slug: string) =>
-    setPrefs((p) => ({
-      ...p,
-      citySlugs: p.citySlugs.includes(slug)
-        ? p.citySlugs.filter((s) => s !== slug)
-        : [...p.citySlugs, slug],
-    }));
-
-  const canGenerate = prefs.citySlugs.length > 0 && prefs.totalDays >= 1;
-
-  return (
-    <section className="mt-6 rounded-2xl bg-shell ring-1 ring-night/10">
-      <button
-        onClick={onToggle}
-        aria-expanded={open}
-        className="flex w-full items-center justify-between gap-3 px-6 py-4 text-start"
-      >
-        <span>
-          <span className="font-bold text-night">או בחרו בעצמכם</span>
-          <span className="ms-3 hidden text-sm text-night/50 sm:inline">
-            ערים, ימים, קצב וסגנון - שליטה מלאה
-          </span>
-        </span>
-        <span
-          className={`text-sm text-night/40 transition-transform ${open ? 'rotate-180' : ''}`}
-          aria-hidden
-        >
-          ▾
-        </span>
-      </button>
-
-      {open && (
-        <div className="border-t border-night/10 px-6 pb-6 pt-5">
-          <div className="grid gap-x-10 gap-y-5 md:grid-cols-2">
-            {/* עמודה 1: ערים */}
-            <div>
-              <div className="text-sm font-semibold text-night/60">לאן? (אפשר כמה ערים)</div>
-              <div className="mt-2 space-y-3">
-                {countries
-                  .map((c) => ({ country: c, cities: destinations.filter((d) => d.countrySlug === c.slug) }))
-                  .filter(({ cities }) => cities.length > 0)
-                  .map(({ country, cities }) => (
-                    <div key={country.slug}>
-                      <div className="text-xs font-bold text-night/50">
-                        {country.flag} {country.name}
-                      </div>
-                      <div className="mt-1.5 flex flex-wrap gap-2">
-                        {cities.map((d) => (
-                          <button
-                            key={d.slug}
-                            onClick={() => toggleCity(d.slug)}
-                            className={`rounded-full px-3 py-1.5 text-sm font-semibold transition ${
-                              prefs.citySlugs.includes(d.slug)
-                                ? 'bg-sunset text-cream'
-                                : 'bg-night/5 text-night/70 hover:bg-night/10'
-                            }`}
-                          >
-                            {d.name}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-              </div>
-              {prefs.citySlugs.length > 1 && (
-                <div className="mt-2 text-xs font-medium text-night/50">
-                  טיול רב-עירוני: {prefs.citySlugs.length} ערים, הימים יתחלקו ביניהן
-                </div>
-              )}
-            </div>
-
-            {/* עמודה 2: העדפות */}
-            <div>
-              <div className="grid grid-cols-2 gap-4">
-                <label className="block">
-                  <div className="text-sm font-semibold text-night/60">כמה ימים?</div>
-                  <input
-                    type="number"
-                    min={1}
-                    max={21}
-                    value={prefs.totalDays}
-                    onChange={(e) =>
-                      setPrefs((p) => ({ ...p, totalDays: Math.max(1, Number(e.target.value) || 1) }))
-                    }
-                    className="mt-2 w-full rounded-xl bg-night/5 px-4 py-2.5 font-semibold text-night outline-none ring-1 ring-night/10 transition focus:ring-2 focus:ring-sunset"
-                  />
-                </label>
-                <div>
-                  <div className="text-sm font-semibold text-night/60">קצב</div>
-                  <Seg
-                    options={[
-                      { v: 'relaxed', l: 'רגוע' },
-                      { v: 'packed', l: 'דחוס' },
-                    ]}
-                    value={prefs.pace}
-                    onChange={(v) => setPrefs((p) => ({ ...p, pace: v as WizardPrefs['pace'] }))}
-                  />
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <div className="text-sm font-semibold text-night/60">סוג הטיול</div>
-                <Seg
-                  options={[
-                    { v: 'city', l: 'עירוני' },
-                    { v: 'nature', l: 'טבע' },
-                    { v: 'combined', l: 'משולב' },
-                  ]}
-                  value={prefs.tripType}
-                  onChange={(v) => setPrefs((p) => ({ ...p, tripType: v as WizardPrefs['tripType'] }))}
-                />
-              </div>
-
-              <div className="mt-4">
-                <div className="text-sm font-semibold text-night/60">שופינג</div>
-                <Seg
-                  options={[
-                    { v: 'more', l: 'יותר' },
-                    { v: 'normal', l: 'רגיל' },
-                    { v: 'less', l: 'פחות' },
-                  ]}
-                  value={prefs.shopping}
-                  onChange={(v) => setPrefs((p) => ({ ...p, shopping: v as WizardPrefs['shopping'] }))}
-                />
-              </div>
-
-              <label className="mt-4 flex cursor-pointer items-center gap-2 text-sm font-semibold text-night">
-                <input
-                  type="checkbox"
-                  checked={prefs.kosherOnly}
-                  onChange={(e) => setPrefs((p) => ({ ...p, kosherOnly: e.target.checked }))}
-                  className="h-4 w-4 accent-[#ff5941]"
-                />
-                לשבץ ארוחה כשרה בכל יום (איפה שיש)
-              </label>
-
-              <button
-                disabled={!canGenerate}
-                onClick={() => {
-                  // כמה ערים במדינה אחת? המודל המנטלי הוא "טסים לאיטליה".
-                  const chosen = destinations.filter((d) => prefs.citySlugs.includes(d.slug));
-                  const countrySlugs = [...new Set(chosen.map((d) => d.countrySlug))];
-                  const singleCountry =
-                    chosen.length > 1 && countrySlugs.length === 1
-                      ? countries.find((c) => c.slug === countrySlugs[0])
-                      : undefined;
-                  const tripName = singleCountry
-                    ? `טיול ל${singleCountry.name}`
-                    : `טיול ל${chosen.map((d) => d.name).join(' + ')}`;
-                  trip.createTripFrom(generateTrip(prefs, destinations, tripName));
-                  onDone();
-                }}
-                className="mt-5 w-full rounded-xl bg-sunset px-5 py-3 font-bold text-cream transition hover:bg-sunset-deep disabled:opacity-40"
-              >
-                תבנה לי טיול
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </section>
   );
 }
 

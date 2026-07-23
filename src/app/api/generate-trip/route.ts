@@ -5,20 +5,20 @@ import { newId } from '@/lib/trip/types';
 import type { Trip, TripDay, WizardPrefs } from '@/lib/trip/types';
 
 /**
- * בניית טיול מטקסט חופשי ("ספרו לי על הטיול שלכם").
+ * בניית טיול מהעדפות-כפתורים + טקסט חופשי אופציונלי.
  *
- * POST { notes: string } → { trip, understood } או { error }.
+ * POST { prefs, party?, notes? } → { trip, understood } או { error }.
  *
- * שני מצבים:
- * 1. עם ANTHROPIC_API_KEY - Claude מקבל את דאטת היעדים כ-grounding ומחזיר
- *    JSON קשיח (structured outputs). ולידציה בצד השרת היא חובה: מזהי מקומות
- *    שלא קיימים בדאטה נזרקים; אם ה-dayPlans שורדים - בונים מהם את הטיול,
- *    אחרת נופלים ל-generateTrip עם ההעדפות שחולצו.
- * 2. בלי מפתח - חילוץ מילות מפתח (ערים, ימים, כשר/טבע/שופינג/ילדים) ואז
- *    generateTrip, כך שהתיבה עובדת גם ללא מפתח.
+ * ההעדפות מהכפתורים הן אילוצים קשיחים - עוברות ולידציה בשרת ולעולם לא
+ * משתנות ע"י ה-AI. הטקסט החופשי (אם יש, ויש ANTHROPIC_API_KEY) משמש רק
+ * לעידון: אילו מקומות, סדר, הערות ליום, שם הטיול. מזהי מקומות שלא קיימים
+ * בדאטה נזרקים; אם ה-dayPlans לא שורדים ולידציה מלאה - נופלים ל-generateTrip.
+ * בלי טקסט או בלי מפתח: generateTrip ישירות, כך שהכול עובד גם keyless.
  */
 
 export const maxDuration = 60;
+
+type Party = 'couple' | 'family' | 'friends' | 'solo';
 
 interface AiDayPlan {
   citySlug: string;
@@ -26,41 +26,19 @@ interface AiDayPlan {
   notes: string;
 }
 
-interface AiTripPlan {
-  citySlugs: string[];
-  totalDays: number;
-  pace: WizardPrefs['pace'];
-  tripType: WizardPrefs['tripType'];
-  shopping: WizardPrefs['shopping'];
-  kosherOnly: boolean;
-  interests: string[];
+interface AiRefinement {
   tripName: string;
+  interests: string[];
   dayPlans: AiDayPlan[];
 }
 
-const TRIP_PLAN_SCHEMA = {
+const REFINE_SCHEMA = {
   type: 'object',
   additionalProperties: false,
-  required: [
-    'citySlugs',
-    'totalDays',
-    'pace',
-    'tripType',
-    'shopping',
-    'kosherOnly',
-    'interests',
-    'tripName',
-    'dayPlans',
-  ],
+  required: ['tripName', 'interests', 'dayPlans'],
   properties: {
-    citySlugs: { type: 'array', items: { type: 'string' } },
-    totalDays: { type: 'integer' },
-    pace: { type: 'string', enum: ['relaxed', 'packed'] },
-    tripType: { type: 'string', enum: ['city', 'nature', 'combined'] },
-    shopping: { type: 'string', enum: ['more', 'normal', 'less'] },
-    kosherOnly: { type: 'boolean' },
-    interests: { type: 'array', items: { type: 'string' } },
     tripName: { type: 'string' },
+    interests: { type: 'array', items: { type: 'string' } },
     dayPlans: {
       type: 'array',
       items: {
@@ -77,16 +55,17 @@ const TRIP_PLAN_SCHEMA = {
   },
 };
 
-const SYSTEM_PROMPT = `You are the trip-builder of tiyul+ (טיול+), a Hebrew travel-planning site for Israeli travelers. You receive a free-text Hebrew description of a desired trip and return a structured trip plan as JSON.
+const SYSTEM_PROMPT = `You are the trip-builder of tiyul+ (טיול+), a Hebrew travel-planning site for Israeli travelers. The user configured their trip with buttons - those choices arrive as CONSTRAINTS and are final. They also wrote optional free text. Your job is refinement only: pick the places, order the days, write day notes and a trip name - all WITHIN the constraints.
 
 RULES
-- citySlugs may ONLY be slugs that exist in the DATA below. If the request names destinations not covered by the data, return an empty citySlugs array and an empty dayPlans array.
-- totalDays: 1-21. Infer from the text ("שבוע" = 7, "שבועיים" = 14, "סופ״ש" = 3); default to 4 when unstated.
-- dayPlans: one entry per day, in visit order. placeIds may ONLY be ids that exist in that city's places in the DATA - never invent ids. Order each day's stops in a sensible geographic flow. Respect the pace: relaxed ≈ 3-4 stops/day, packed ≈ 5-6. When kosherOnly is true, include one kosher-food place per day where the city has one. If you cannot build confident dayPlans, return an empty dayPlans array - the server will generate days from your extracted preferences instead.
-- notes: one short, helpful Hebrew tip per day; empty string when you have none. Never state hours, prices, or kashrut facts that are not in the DATA.
+- The CONSTRAINTS are hard: never change the cities, number of days, pace, trip type, shopping level or kosher setting. The free text only refines choices within them.
+- dayPlans: exactly totalDays entries, in visit order. Every day's citySlug must be one of the constraint citySlugs; keep each city's days consecutive, cities in the given order, days split as evenly as possible between cities.
+- placeIds may ONLY be ids that exist for that day's city in the DATA below - never invent ids, and never repeat a place across the trip. Order each day's stops in a sensible geographic flow. Pace: relaxed ≈ 3-4 stops/day, packed ≈ 5-6. When kosherOnly is true, include one kosher-food place per day where the city has one. Shopping 'less' → avoid shopping-category places; 'more' → include more of them.
+- Honor the free text when choosing places: exclusions ("בלי מוזיאונים"), children's ages, likes and dislikes. Work relevant tips into the day notes. Never state hours, prices, or kashrut facts that are not in the DATA.
+- notes: one short, helpful Hebrew tip per day; empty string when you have none.
 - tripName: a short Hebrew name, e.g. "טיול משפחתי לוינה".
-- interests: up to 4 short Hebrew phrases taken from the request (e.g. "עם ילדים", "אוהבים גלידה"). Empty array if none.
-- Preferences are options, never assumptions: set kosherOnly, shopping and pace only from what the user stated or clearly implied ("עם ילדים קטנים" implies relaxed pace).
+- interests: up to 4 short Hebrew phrases summarizing what you took from the free text (e.g. "בלי מוזיאונים", "ילדים בני 4 ו-7"). Empty array when the text added nothing.
+- If you cannot build confident dayPlans, return an empty dayPlans array - the server will generate the days from the constraints instead.
 
 DATA (cities, their places and ready-made itineraries):
 `;
@@ -108,7 +87,27 @@ function buildGrounding(): string {
   );
 }
 
-async function planWithClaude(notes: string): Promise<AiTripPlan | null> {
+const PARTY_PROMPT: Record<Party, string> = {
+  couple: 'a couple',
+  family: 'a family with kids',
+  friends: 'a group of friends',
+  solo: 'a solo traveler',
+};
+
+async function refineWithClaude(
+  notes: string,
+  prefs: WizardPrefs,
+  party: Party | null,
+): Promise<AiRefinement | null> {
+  const constraints = {
+    citySlugs: prefs.citySlugs,
+    totalDays: prefs.totalDays,
+    pace: prefs.pace,
+    tripType: prefs.tripType,
+    shopping: prefs.shopping,
+    kosherOnly: prefs.kosherOnly,
+    party: party ? PARTY_PROMPT[party] : 'unspecified',
+  };
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -120,19 +119,24 @@ async function planWithClaude(notes: string): Promise<AiTripPlan | null> {
       signal: AbortSignal.timeout(50_000),
       body: JSON.stringify({
         model: process.env.ANTHROPIC_MODEL ?? 'claude-opus-4-8',
-        max_tokens: 4000,
+        max_tokens: 3000,
         thinking: { type: 'adaptive' },
         output_config: {
           effort: 'medium',
-          format: { type: 'json_schema', schema: TRIP_PLAN_SCHEMA },
+          format: { type: 'json_schema', schema: REFINE_SCHEMA },
         },
-        // כמו בצ׳אט: ה-grounding הוא הבלוק האחרון עם cache_control, כך שכל
-        // הפרומפט הקבוע נכנס ל-prompt cache ובקשות חוזרות קוראות ממנו.
+        // כמו בצ׳אט: ה-grounding הוא הבלוק האחרון עם cache_control - הפרומפט
+        // הקבוע נכנס ל-prompt cache, והאילוצים המשתנים יושבים בהודעת המשתמש.
         system: [
           { type: 'text', text: SYSTEM_PROMPT },
           { type: 'text', text: buildGrounding(), cache_control: { type: 'ephemeral' } },
         ],
-        messages: [{ role: 'user', content: notes }],
+        messages: [
+          {
+            role: 'user',
+            content: `CONSTRAINTS (fixed by the user's buttons):\n${JSON.stringify(constraints)}\n\nFREE TEXT from the user:\n${notes}`,
+          },
+        ],
       }),
     });
     if (!res.ok) return null;
@@ -143,79 +147,52 @@ async function planWithClaude(notes: string): Promise<AiTripPlan | null> {
     if (data.stop_reason === 'refusal') return null;
     const text = data.content?.find((b) => b.type === 'text')?.text;
     if (!text) return null;
-    return JSON.parse(text) as AiTripPlan;
+    return JSON.parse(text) as AiRefinement;
   } catch {
-    return null; // כל כשל → נפילה חיננית לחילוץ מילות מפתח
+    return null; // כל כשל → נפילה חיננית ל-generateTrip
   }
 }
 
-/* ---------- מצב ללא מפתח: חילוץ מילות מפתח ---------- */
-
-function extractKeywords(notes: string): { prefs: WizardPrefs; interests: string[] } {
-  const lower = notes.toLowerCase();
-  const citySlugs: string[] = [];
-  for (const d of destinations) {
-    if (notes.includes(d.name) || lower.includes(d.slug)) citySlugs.push(d.slug);
-  }
-  for (const c of countries) {
-    if (notes.includes(c.name) || lower.includes(c.slug)) {
-      for (const d of destinations) {
-        if (d.countrySlug === c.slug && !citySlugs.includes(d.slug)) citySlugs.push(d.slug);
-      }
-    }
-  }
-
-  let totalDays = 4;
-  const daysMatch = notes.match(/(\d+)\s*(?:ימים|לילות)/);
-  if (daysMatch) totalDays = Number(daysMatch[1]);
-  else if (/שבועיים/.test(notes)) totalDays = 14;
-  else if (/שבוע/.test(notes)) totalDays = 7;
-  else if (/סופ[״"']?ש/.test(notes)) totalDays = 3;
-  totalDays = Math.min(21, Math.max(1, totalDays));
-
-  const hasKids = /ילד|משפח/.test(notes);
-  const wantsNature = /טבע|פארק|הרים|ירוק|הליכות בטבע/.test(notes);
-  const wantsCity = /מוזיאונ|היסטוריה|אדריכלות|עירוני|אמנות/.test(notes);
-  const lessShopping = /בלי שופינג|בלי קניות|לא שופינג/.test(notes);
-  const moreShopping = !lessShopping && /שופינג|קניות|קניונ/.test(notes);
-
-  const prefs: WizardPrefs = {
-    citySlugs,
-    totalDays,
-    pace: /דחוס|אינטנסיבי|לחוץ/.test(notes) ? 'packed' : 'relaxed',
-    tripType: wantsNature && wantsCity ? 'combined' : wantsNature ? 'nature' : wantsCity ? 'city' : 'combined',
-    shopping: moreShopping ? 'more' : lessShopping ? 'less' : 'normal',
-    kosherOnly: /כשר|כשרות/.test(notes),
-  };
-
-  const interests: string[] = [];
-  if (hasKids) interests.push('משפחה עם ילדים');
-  return { prefs, interests };
-}
-
-/* ---------- ולידציה ובניית הטיול ---------- */
+/* ---------- ולידציה ---------- */
 
 const PACES = new Set(['relaxed', 'packed']);
 const TYPES = new Set(['city', 'nature', 'combined']);
 const SHOPPING = new Set(['more', 'normal', 'less']);
+const PARTIES = new Set<Party>(['couple', 'family', 'friends', 'solo']);
 
-function sanitizePlan(plan: AiTripPlan): {
-  prefs: WizardPrefs;
-  tripName: string | null;
-  interests: string[];
-  days: TripDay[];
-} {
-  const knownSlugs = new Set(destinations.map((d) => d.slug));
+/** העדפות הכפתורים מהלקוח - האילוצים הקשיחים. null כשאין אף עיר תקפה. */
+function sanitizeClientPrefs(raw: unknown): WizardPrefs | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const r = raw as Record<string, unknown>;
+  const known = new Set(destinations.map((d) => d.slug));
   const citySlugs = [...new Set(
-    (Array.isArray(plan.citySlugs) ? plan.citySlugs : []).filter((s) => knownSlugs.has(s)),
+    (Array.isArray(r.citySlugs) ? r.citySlugs : []).filter(
+      (s): s is string => typeof s === 'string' && known.has(s),
+    ),
   )];
+  if (citySlugs.length === 0) return null;
+  return {
+    citySlugs,
+    totalDays: Math.min(21, Math.max(1, Math.round(Number(r.totalDays)) || 4)),
+    pace: PACES.has(r.pace as string) ? (r.pace as WizardPrefs['pace']) : 'relaxed',
+    tripType: TYPES.has(r.tripType as string) ? (r.tripType as WizardPrefs['tripType']) : 'combined',
+    shopping: SHOPPING.has(r.shopping as string) ? (r.shopping as WizardPrefs['shopping']) : 'normal',
+    kosherOnly: r.kosherOnly === true,
+  };
+}
 
-  // ולידציית dayPlans - חובה: מזהה מקום שלא קיים בעיר שלו נזרק,
-  // יום שנשאר בלי מקומות נזרק, ומקום לא משתבץ פעמיים בטיול.
+/**
+ * ולידציית ה-dayPlans מה-AI מול האילוצים - חובה: עיר שלא נבחרה, מזהה מקום
+ * שלא קיים בעיר שלו, או מקום שחוזר - נזרקים. משתמשים בתוצאה רק אם נשארו
+ * בדיוק totalDays ימים; אחרת generateTrip.
+ */
+function validateDayPlans(dayPlans: AiDayPlan[], prefs: WizardPrefs): TripDay[] {
+  const allowedCities = new Set(prefs.citySlugs);
   const usedPlaceIds = new Set<string>();
   const days: TripDay[] = [];
-  for (const dp of Array.isArray(plan.dayPlans) ? plan.dayPlans : []) {
-    const dest = destinations.find((d) => d.slug === dp?.citySlug);
+  for (const dp of Array.isArray(dayPlans) ? dayPlans : []) {
+    if (!allowedCities.has(dp?.citySlug)) continue;
+    const dest = destinations.find((d) => d.slug === dp.citySlug);
     if (!dest) continue;
     const placeIds = (Array.isArray(dp.placeIds) ? dp.placeIds : []).filter(
       (id) => dest.places.some((p) => p.id === id) && !usedPlaceIds.has(id),
@@ -229,29 +206,7 @@ function sanitizePlan(plan: AiTripPlan): {
       notes: typeof dp.notes === 'string' && dp.notes.trim() ? dp.notes.trim().slice(0, 200) : undefined,
     });
   }
-
-  const daysCitySlugs = [...new Set(days.map((d) => d.citySlug))];
-  const prefs: WizardPrefs = {
-    citySlugs: citySlugs.length > 0 ? citySlugs : daysCitySlugs,
-    totalDays: Math.min(21, Math.max(1, Math.round(Number(plan.totalDays)) || 4)),
-    pace: PACES.has(plan.pace) ? plan.pace : 'relaxed',
-    tripType: TYPES.has(plan.tripType) ? plan.tripType : 'combined',
-    shopping: SHOPPING.has(plan.shopping) ? plan.shopping : 'normal',
-    kosherOnly: plan.kosherOnly === true,
-  };
-
-  return {
-    prefs,
-    tripName:
-      typeof plan.tripName === 'string' && plan.tripName.trim()
-        ? plan.tripName.trim().slice(0, 60)
-        : null,
-    interests: (Array.isArray(plan.interests) ? plan.interests : [])
-      .filter((i): i is string => typeof i === 'string' && i.trim().length > 0)
-      .map((i) => i.trim().slice(0, 40))
-      .slice(0, 4),
-    days,
-  };
+  return days.length === prefs.totalDays ? days : [];
 }
 
 function defaultTripName(citySlugs: string[]): string {
@@ -266,48 +221,65 @@ function defaultTripName(citySlugs: string[]): string {
     : `טיול ל${chosen.map((d) => d.name).join(' + ')}`;
 }
 
-function buildUnderstood(prefs: WizardPrefs, interests: string[]): string {
+const PARTY_ACK: Record<Party, string> = {
+  couple: 'לזוג',
+  family: 'למשפחה',
+  friends: 'לחברים',
+  solo: 'סולו',
+};
+
+function buildUnderstood(prefs: WizardPrefs, party: Party | null, interests: string[]): string {
   const cityNames = prefs.citySlugs
     .map((slug) => destinations.find((d) => d.slug === slug)?.name)
     .filter(Boolean);
-  const parts: string[] = [`${prefs.totalDays} ימים ב${cityNames.join(' + ')}`];
-  parts.push(...interests);
+  let head = `${prefs.totalDays} ימים ב${cityNames.join(' + ')}`;
+  if (party) head += ` ${PARTY_ACK[party]}`;
+  const parts: string[] = [head];
   if (prefs.tripType === 'nature') parts.push('דגש טבע');
   if (prefs.tripType === 'city') parts.push('דגש עירוני');
   if (prefs.pace === 'packed') parts.push('קצב דחוס');
   if (prefs.shopping === 'more') parts.push('הרבה שופינג');
   if (prefs.shopping === 'less') parts.push('בלי שופינג');
   if (prefs.kosherOnly) parts.push('אוכל כשר');
-  return `הבנתי: ${parts.join(', ')} - אפשר לשנות הכול`;
+  parts.push(...interests);
+  return `${parts.join(', ')} - הבנתי`;
 }
 
 export async function POST(request: Request) {
-  let notes = '';
+  let body: Record<string, unknown> = {};
   try {
-    const body = (await request.json()) as { notes?: unknown };
-    if (typeof body.notes === 'string') notes = body.notes.trim();
+    body = (await request.json()) as Record<string, unknown>;
   } catch {
-    /* גוף לא תקין → notes ריק */
-  }
-  if (!notes) {
-    return Response.json({ error: 'ספרו לי קצת על הטיול - ואבנה אותו' }, { status: 400 });
+    /* גוף לא תקין → prefs חסרות */
   }
 
-  const plan = process.env.ANTHROPIC_API_KEY ? await planWithClaude(notes.slice(0, 2000)) : null;
-  const { prefs, tripName, interests, days } = plan
-    ? sanitizePlan(plan)
-    : { ...extractKeywords(notes), tripName: null, days: [] as TripDay[] };
+  const prefs = sanitizeClientPrefs(body.prefs);
+  if (!prefs) {
+    return Response.json({ error: 'בחרו לפחות עיר אחת - ואבנה את הטיול' }, { status: 400 });
+  }
+  const party: Party | null = PARTIES.has(body.party as Party) ? (body.party as Party) : null;
+  const notes = typeof body.notes === 'string' ? body.notes.trim().slice(0, 2000) : '';
 
-  if (prefs.citySlugs.length === 0) {
-    const cityNames = destinations.map((d) => `${d.flag} ${d.name}`).join(' · ');
-    return Response.json({
-      error: `לא זיהיתי יעד שיש לנו עליו דאטה אמיתית. היעדים שלנו כרגע: ${cityNames}. נסו לציין אחד מהם.`,
-    });
+  let tripName: string | null = null;
+  let interests: string[] = [];
+  let days: TripDay[] = [];
+
+  if (notes && process.env.ANTHROPIC_API_KEY) {
+    const refinement = await refineWithClaude(notes, prefs, party);
+    if (refinement) {
+      days = validateDayPlans(refinement.dayPlans, prefs);
+      tripName =
+        typeof refinement.tripName === 'string' && refinement.tripName.trim()
+          ? refinement.tripName.trim().slice(0, 60)
+          : null;
+      interests = (Array.isArray(refinement.interests) ? refinement.interests : [])
+        .filter((i): i is string => typeof i === 'string' && i.trim().length > 0)
+        .map((i) => i.trim().slice(0, 40))
+        .slice(0, 4);
+    }
   }
 
   const name = tripName ?? defaultTripName(prefs.citySlugs);
-
-  // dayPlans ששרדו ולידציה → בונים מהם ישירות; אחרת האשף הקיים
   const trip: Trip =
     days.length > 0
       ? {
@@ -319,8 +291,5 @@ export async function POST(request: Request) {
         }
       : generateTrip(prefs, destinations, name);
 
-  const understoodPrefs: WizardPrefs =
-    days.length > 0 ? { ...prefs, totalDays: days.length, citySlugs: trip.citySlugs } : prefs;
-
-  return Response.json({ trip, understood: buildUnderstood(understoodPrefs, interests) });
+  return Response.json({ trip, understood: buildUnderstood(prefs, party, interests) });
 }
