@@ -377,3 +377,48 @@ then the indicator still shows on the phone.
 wrap to two lines inside the header, no overflow). The placeholder is
 now stateful - if you change the copy, update both the long (desktop)
 and short (mobile) variants in HeroPrompt.
+
+### 2026-07-23 (d) - Homepage polish round 2: hamburger nav, hero photo, footer fix
+
+**Built/changed:**
+- `src/components/SiteNav.tsx` (new) - client nav: md+ keeps inline
+  links + TripChip; below md a hamburger (SVG, aria-expanded, closes on
+  link click / outside tap) opens a dropdown with the three links plus
+  the current trip when one exists. `layout.tsx` uses it; navLinks
+  moved into the component.
+- `src/app/layout.tsx` - footer bug fix: body is now
+  `flex min-h-screen flex-col` with `main flex-1 w-full` - on tall
+  desktop screens the footer previously ended mid-viewport with a
+  cream band below it (content shorter than 100vh); now it's always
+  flush with the bottom (verified bandBelowFooter=0 at a 1500px-tall
+  viewport).
+- `src/components/HomeHero.tsx` - the radial wash was replaced with a
+  real hero visual: the travel flat-lay photo (the site's original
+  verified Unsplash hero) behind the heading at 22% opacity, masked
+  with a cream gradient so the night text stays crisp. Visible above
+  the fold at 390px.
+- `src/components/PromptChips.tsx` + `promptChips.ts` - 4 chips by
+  default with a subtle "עוד רעיונות +" / "פחות רעיונות" text toggle
+  revealing all 6; `pickChips()` swaps pinned chips into the first 4
+  so הטיול הגדול stays visible by default.
+
+**Product decisions:** hamburger under md (not sm) because three Hebrew
+labels + chip genuinely need the room; the dropdown lists the trip as
+a full-width row instead of squeezing the chip. Hero warmth via ONE
+masked photo (not new imagery) - reuses the already-verified original
+hero photo.
+
+**Findings:** the "chevron off the right edge" on the reviewer's phone
+is still the Next dev-tools indicator - a deep 390px audit INCLUDING
+shadow roots found zero product elements beyond the viewport edge.
+`devIndicators: false` is already in next.config.ts; it takes effect
+once the long-running dev server is restarted.
+
+**Broken/deferred:** nothing broken. On very tall screens the homepage
+has generous cream space between the portal cards and the pinned
+footer - acceptable; revisit if more homepage sections arrive.
+
+**Next session should know:** TripChip renders only inside SiteNav's
+md+ nav now (mobile gets the dropdown row instead). The chip visible
+count is 4 - `pickChips()` still returns 6 and the component slices;
+pinned-into-first-4 logic lives in pickChips.

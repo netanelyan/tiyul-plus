@@ -71,5 +71,13 @@ export function pickChips(date = new Date()): PromptChip[] {
     const evergreen = shuffle(pool.filter((c) => !c.months));
     picked.push(...[...inSeason, ...evergreen].slice(0, quota));
   }
-  return shuffle(picked);
+  const result = shuffle(picked);
+  // הרכיב מציג 4 כברירת מחדל - מוודאים שהמוצמדים בתוך הארבעה הגלויים
+  for (let i = 4; i < result.length; i++) {
+    if (result[i].pinned) {
+      const j = Math.floor(Math.random() * 4);
+      [result[i], result[j]] = [result[j], result[i]];
+    }
+  }
+  return result;
 }

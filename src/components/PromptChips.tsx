@@ -10,27 +10,32 @@ import { pickChips, type PromptChip } from '@/lib/promptChips';
  * את הקלט לעריכה (chip.fill כשהטקסט המוצג קצר מטקסט המילוי), לא שולחת.
  */
 
-const SKELETON_WIDTHS = [150, 190, 130, 170, 145, 185];
+const SKELETON_WIDTHS = [150, 190, 130, 170];
 
 export default function PromptChips({ onPick }: { onPick: (text: string) => void }) {
   const [chips, setChips] = useState<PromptChip[] | null>(null);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     setChips(pickChips());
   }, []);
 
+  const visible = chips === null ? null : expanded ? chips : chips.slice(0, 4);
+
   return (
     <div className="mt-6 flex w-full max-w-2xl flex-wrap justify-center gap-2">
-      {chips === null
-        ? SKELETON_WIDTHS.map((w, i) => (
-            <div
-              key={i}
-              aria-hidden
-              className="h-[38px] animate-pulse rounded-full bg-night/[0.04]"
-              style={{ width: w }}
-            />
-          ))
-        : chips.map((chip) => (
+      {visible === null ? (
+        SKELETON_WIDTHS.map((w, i) => (
+          <div
+            key={i}
+            aria-hidden
+            className="h-[38px] animate-pulse rounded-full bg-night/[0.04]"
+            style={{ width: w }}
+          />
+        ))
+      ) : (
+        <>
+          {visible.map((chip) => (
             <button
               key={chip.text}
               onClick={() => onPick(chip.fill ?? chip.text)}
@@ -42,6 +47,17 @@ export default function PromptChips({ onPick }: { onPick: (text: string) => void
               <span className="truncate">{chip.text}</span>
             </button>
           ))}
+          {chips !== null && chips.length > 4 && (
+            <button
+              onClick={() => setExpanded((v) => !v)}
+              aria-expanded={expanded}
+              className="rise-in whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold text-night/45 transition hover:text-sunset-deep"
+            >
+              {expanded ? 'פחות רעיונות' : 'עוד רעיונות +'}
+            </button>
+          )}
+        </>
+      )}
     </div>
   );
 }

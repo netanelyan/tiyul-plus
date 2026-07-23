@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Script from 'next/script';
 import { TripProvider } from '@/lib/trip/TripContext';
-import TripChip from '@/components/TripChip';
+import SiteNav from '@/components/SiteNav';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -10,12 +10,6 @@ export const metadata: Metadata = {
   description:
     'מסלולים בעברית עם מפה אינטראקטיבית, שכבת אוכל כשר ומידע פרקטי לישראלים: טיסות מנתב"ג, ויזות, סים ותשלומים.',
 };
-
-const navLinks = [
-  { href: '/countries', label: 'יעדים' },
-  { href: '/planner', label: 'מתכנן מסלולים' },
-  { href: '/chat', label: 'צ׳אט טיולים' },
-];
 
 export default function RootLayout({
   children,
@@ -30,7 +24,8 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen antialiased">
+      {/* flex column: main נמתח והפוטר תמיד צמוד לתחתית - בלי פס ריק מתחתיו */}
+      <body className="flex min-h-screen flex-col antialiased">
         <TripProvider>
         <header className="sticky top-0 z-50 border-b border-night/10 bg-cream/85 backdrop-blur print:hidden">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
@@ -40,21 +35,10 @@ export default function RootLayout({
                 טיול<span className="text-sunset">+</span>
               </span>
             </Link>
-            <nav className="flex items-center gap-1 sm:gap-2">
-              {navLinks.map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  className="rounded-full px-3.5 py-1.5 text-sm font-medium text-night/70 transition hover:bg-night/5 hover:text-night"
-                >
-                  {l.label}
-                </Link>
-              ))}
-              <TripChip />
-            </nav>
+            <SiteNav />
           </div>
         </header>
-        <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
+        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>
         </TripProvider>
         <footer className="mt-16 bg-night py-10 text-center print:hidden">
           <div className="text-lg font-bold text-cream">
