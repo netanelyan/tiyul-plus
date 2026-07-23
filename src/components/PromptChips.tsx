@@ -10,7 +10,13 @@ import { pickChips, type PromptChip } from '@/lib/promptChips';
  * סוגר; נסגר גם בלחיצה בחוץ. בלי ספריית תפריטים - טוקנים בלבד.
  * הטריגר דטרמיניסטי (בטוח ל-SSR); הבחירה האקראית רצה אחרי mount.
  */
-export default function PromptChips({ onPick }: { onPick: (text: string) => void }) {
+export default function PromptChips({
+  onPick,
+  trailing,
+}: {
+  onPick: (text: string) => void;
+  trailing?: React.ReactNode;
+}) {
   const [chips, setChips] = useState<PromptChip[] | null>(null);
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -48,8 +54,9 @@ export default function PromptChips({ onPick }: { onPick: (text: string) => void
 
   return (
     <div ref={rootRef} onKeyDown={onRootKeyDown} className="relative mx-auto mt-4 w-full max-w-2xl">
-      {/* badge הוא inline-flex ולכן mx-auto לא ממרכז אותו - עוטפים ב-flex */}
-      <div className="flex justify-center">
+      {/* badge הוא inline-flex ולכן mx-auto לא ממרכז אותו - עוטפים ב-flex.
+          trailing (טוגל הכשרות) יושב באותה שורה ממורכזת. */}
+      <div className="flex flex-wrap items-center justify-center gap-2">
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
@@ -66,6 +73,7 @@ export default function PromptChips({ onPick }: { onPick: (text: string) => void
             ▾
           </span>
         </button>
+        {trailing}
       </div>
 
       {open && chips && (

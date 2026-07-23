@@ -377,18 +377,26 @@ export default function AgentWorkspace() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  // טוגל הכשרות מה-UI: עובר לשרת בשקט עד שהוא נטמע ב-Trip.preferences
+  const [kosherHint, setKosherHint] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const qHandled = useRef(false);
 
-  // הגעה מדף הבית: /chat?q=... - שולחים את הטקסט פעם אחת ומנקים את הכתובת.
+  // הגעה מדף הבית: /chat?q=...&kosher=1 - שולחים את הטקסט פעם אחת (עם
+  // העדפת הכשרות אם הודלקה) ומנקים את הכתובת.
   // window.location במקום useSearchParams כדי לא לחייב Suspense ב-prerender.
   useEffect(() => {
     if (qHandled.current) return;
     qHandled.current = true;
-    const q = new URLSearchParams(window.location.search).get('q');
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    const kosher = params.get('kosher') === '1';
+    if (kosher) setKosherHint(true);
     if (q && q.trim()) {
       router.replace('/chat');
-      send(q);
+      send(q, kosher);
+    } else if (kosher) {
+      router.replace('/chat');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -397,9 +405,11 @@ export default function AgentWorkspace() {
     if (started) bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, [messages, loading, started]);
 
-  async function send(text: string) {
+  async function send(text: string, kosherArg?: boolean) {
     const trimmed = text.trim();
     if (!trimmed || loading) return;
+    const kosher = kosherArg ?? kosherHint;
+    if (kosherArg) setKosherHint(true);
     setStarted(true); // המעבר: מהנחיתה הממורכזת למסך המפוצל
     const next: Msg[] = [...messages, { role: 'user', content: trimmed }];
     setMessages(next);
@@ -416,6 +426,7 @@ export default function AgentWorkspace() {
         body: JSON.stringify({
           messages: next.map(({ role, content }) => ({ role, content })),
           trip: trip.currentTrip,
+          kosher: kosher || undefined, // רמז ה-UI - השרת מטמיע אותו בטיול
         }),
       });
       if (!res.ok || !res.body) throw new Error('bad response');
@@ -462,6 +473,8 @@ export default function AgentWorkspace() {
             }));
           } else if (event.type === 'trip' && event.trip) {
             trip.upsertTrip(event.trip);
+            // ההעדפה נטמעה בטיול - הרמז כבר לא נחוץ (וטוגל בקנבס גובר מעכשיו)
+            if (event.trip.preferences?.kosher) setKosherHint(false);
             if (appended && event.actions && event.actions.length > 0) {
               const actions = event.actions;
               patchLast((msg) => ({ ...msg, actions }));
@@ -497,7 +510,7 @@ export default function AgentWorkspace() {
         </p>
 
         {/* קלט + צ׳יפים משותפים - צ׳יפ ממלא לעריכה, שליחה מתחילה את השיחה */}
-        <HeroPrompt onSubmit={(text) => send(text)} />
+        <HeroPrompt onSubmit={(text, kosher) => send(text, kosher)} />
 
         <Link
           href="/countries"

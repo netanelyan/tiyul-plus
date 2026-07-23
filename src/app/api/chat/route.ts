@@ -241,8 +241,14 @@ async function runClaudeTurn(
   needSeparator: boolean,
   maxTokens: number,
   iter: number,
+  kosherHint: boolean,
 ): Promise<{ blocks: AccBlock[]; stopReason: string; text: string }> {
   const model = process.env.ANTHROPIC_MODEL_AGENT ?? 'claude-sonnet-4-5';
+  // טוגל כשרות מה-UI לפני שקיים טיול: מוסרים לסוכן בשקט דרך בלוק המצב
+  const kosherNote =
+    kosherHint && !trip
+      ? '\n\nUI PREFERENCE TOGGLE: the user switched ON "אוכל כשר" in the interface before any trip exists. Treat kosher=true from your first plan (include a kosher-food place per day where the city has one, with the usual verify-before-visiting reminder), and call set_preferences {kosher: true} immediately after creating a trip. Never ask about it.'
+      : '';
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -262,7 +268,7 @@ async function runClaudeTurn(
       system: [
         { type: 'text', text: SYSTEM_PROMPT },
         { type: 'text', text: buildGrounding(), cache_control: { type: 'ephemeral' } },
-        { type: 'text', text: `CURRENT TRIP (the user's active trip right now):\n${serializeTripForModel(trip)}` },
+        { type: 'text', text: `CURRENT TRIP (the user's active trip right now):\n${serializeTripForModel(trip)}${kosherNote}` },
       ],
       messages: apiMessages,
     }),
@@ -339,13 +345,25 @@ async function runClaudeTurn(
 }
 
 /** לולאת הסוכן: קריאות מודל ↔ ביצוע כלים על עותק הטיול, עד תשובת טקסט */
-async function runAgent(messages: ChatMessage[], clientTrip: Trip | null, send: Send): Promise<void> {
+async function runAgent(
+  messages: ChatMessage[],
+  clientTrip: Trip | null,
+  send: Send,
+  kosherHint: boolean,
+): Promise<void> {
   let working = clientTrip;
   const actions: string[] = [];
   let touched = false;
   let full = '';
   let quickReplies: string[] | null = null;
   const apiMessages: ApiMessage[] = messages.map((m) => ({ role: m.role, content: m.content }));
+
+  // טוגל הכשרות מה-UI: כשיש טיול - מטמיעים ישירות ב-preferences (העדפות
+  // רגישות הן כפתורים; הסוכן קורא אותן בשקט ולעולם לא שואל)
+  if (kosherHint && working && working.preferences?.kosher !== true) {
+    working = { ...working, preferences: { ...working.preferences, kosher: true } };
+    touched = true; // כדי שהטיול המעודכן יחזור ללקוח ויישמר
+  }
 
   // משמעת פלט: תשובת טקסט רגילה מוגבלת ל-1024; איטרציות עם כלים (זיהוי
   // כוונת עריכה, או המשך לולאה אחרי tool_results) מקבלות 2048 בשביל JSON.
@@ -354,7 +372,7 @@ async function runAgent(messages: ChatMessage[], clientTrip: Trip | null, send: 
 
   for (let iter = 0; iter < 16; iter++) {
     const maxTokens = editIntent || iter > 0 ? 2048 : 1024;
-    const turn = await runClaudeTurn(apiMessages, working, send, full.length > 0, maxTokens, iter);
+    const turn = await runClaudeTurn(apiMessages, working, send, full.length > 0, maxTokens, iter, kosherHint);
     full += turn.text;
     if (turn.stopReason !== 'tool_use') break;
 
@@ -413,6 +431,13 @@ async function runAgent(messages: ChatMessage[], clientTrip: Trip | null, send: 
     full += note;
   }
 
+  // רשת ביטחון דטרמיניסטית: אם הטוגל דלוק והסוכן לא קרא ל-set_preferences,
+  // מטמיעים את הכשרות בטיול בכל מקרה - ההעדפה חייבת להישמר על האובייקט.
+  if (kosherHint && working && working.preferences?.kosher !== true) {
+    working = { ...working, preferences: { ...working.preferences, kosher: true } };
+    touched = true;
+  }
+
   const dest = findDestination(full);
   send({ type: 'meta', destinationSlug: dest?.slug });
   if (touched && working) send({ type: 'trip', trip: working, actions });
@@ -426,9 +451,10 @@ function sendRuleBased(lastUserText: string, send: Send) {
 }
 
 export async function POST(request: Request) {
-  const body = (await request.json()) as { messages: ChatMessage[]; trip?: unknown };
+  const body = (await request.json()) as { messages: ChatMessage[]; trip?: unknown; kosher?: unknown };
   const messages = Array.isArray(body.messages) ? body.messages : [];
   const clientTrip = sanitizeClientTrip(body.trip);
+  const kosherHint = body.kosher === true;
   const last = messages[messages.length - 1]?.content ?? '';
   const encoder = new TextEncoder();
 
@@ -442,7 +468,7 @@ export async function POST(request: Request) {
 
       if (process.env.ANTHROPIC_API_KEY) {
         try {
-          await runAgent(messages, clientTrip, send);
+          await runAgent(messages, clientTrip, send, kosherHint);
         } catch {
           // נפילה חיננית למנוע החוקים - רק אם עוד לא הוזרם טקסט
           if (!emitted) sendRuleBased(last, send);

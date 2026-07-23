@@ -3,14 +3,21 @@
 import { useEffect, useRef, useState } from 'react';
 import PromptChips from '@/components/PromptChips';
 
+const KOSHER_KEY = 'tiyul-plus:kosher-pref';
+
 /**
- * קלט ההירו המשותף (דף הבית + נחיתת הצ׳אט): שדה גדול שמזמין הקלדה -
- * מסגרת עדינה וצל פנימי שמבדילים אותו מהרקע, placeholder מזמין וגלוי,
- * וכפתור שתמיד צבעוני: קורל מלא כשיש טקסט, קורל מעומעם (לעולם לא
- * אפור-מנוטרל) כשהשדה ריק. צ׳יפ ממלא את השדה וממקד - לא שולח.
+ * קלט ההירו המשותף (דף הבית + נחיתת הצ׳אט): שדה גדול, כפתור שתמיד
+ * צבעוני, dropdown רעיונות - ולידו טוגל שקט "🍽️ אוכל כשר". העדפות
+ * רגישות הן כפתורים, לא שאלות: הטוגל עובר עם השליחה והסוכן קורא אותו
+ * בשקט. מצב הטוגל נשמר ב-localStorage (ברירת מחדל: כבוי).
  */
-export default function HeroPrompt({ onSubmit }: { onSubmit: (text: string) => void }) {
+export default function HeroPrompt({
+  onSubmit,
+}: {
+  onSubmit: (text: string, kosher: boolean) => void;
+}) {
   const [text, setText] = useState('');
+  const [kosher, setKosher] = useState(false);
   // placeholder מקוצר במובייל - הארוך עם הדוגמה נחתך ב-390px
   const [placeholder, setPlaceholder] = useState(
     'ספרו לי על החופשה שאתם מדמיינים… למשל: שבוע באיטליה עם ילדים',
@@ -22,14 +29,31 @@ export default function HeroPrompt({ onSubmit }: { onSubmit: (text: string) => v
     if (window.matchMedia('(max-width: 639px)').matches) {
       setPlaceholder('ספרו לי על החופשה שאתם מדמיינים…');
     }
+    try {
+      setKosher(window.localStorage.getItem(KOSHER_KEY) === '1');
+    } catch {
+      /* אחסון חסום - נשארים בברירת המחדל */
+    }
   }, []);
+
+  const toggleKosher = () => {
+    setKosher((v) => {
+      const next = !v;
+      try {
+        window.localStorage.setItem(KOSHER_KEY, next ? '1' : '0');
+      } catch {
+        /* אחסון חסום */
+      }
+      return next;
+    });
+  };
 
   return (
     <>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (hasText) onSubmit(text.trim());
+          if (hasText) onSubmit(text.trim(), kosher);
         }}
         className="rise-in-late mt-8 w-full max-w-2xl"
       >
@@ -60,6 +84,22 @@ export default function HeroPrompt({ onSubmit }: { onSubmit: (text: string) => v
           setText(picked);
           inputRef.current?.focus();
         }}
+        trailing={
+          <button
+            type="button"
+            onClick={toggleKosher}
+            aria-pressed={kosher}
+            title="ההעדפה עוברת לסוכן בשקט - הוא לא ישאל על זה בשיחה"
+            className={`badge rounded-full px-4 py-2.5 text-sm font-semibold ring-1 transition ${
+              kosher
+                ? 'bg-sunset text-cream ring-sunset'
+                : 'bg-shell text-night/60 ring-night/10 hover:text-night hover:ring-sunset/30'
+            }`}
+          >
+            <span aria-hidden>🍽️</span>
+            אוכל כשר
+          </button>
+        }
       />
     </>
   );

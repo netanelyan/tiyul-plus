@@ -519,3 +519,45 @@ back, and the indicator stays gone.
 **Next session should know:** if a floating UI element ever appears in
 dev again, check `nextjs-portal` FIRST before auditing product code -
 and remember config changes require a dev-server restart.
+
+### 2026-07-23 (h) - Clean typographic hero + kosher toggle that rides into the trip
+
+**Built/changed:**
+- `src/components/HomeHero.tsx` - the stock flatlay hero photo is gone;
+  back to a calm cream hero with only the soft sunset→zest radial wash
+  (tokens). The destinations night-band below is the page's visual
+  anchor. Submit now appends `&kosher=1` when the toggle is on.
+- `src/components/HeroPrompt.tsx` - new quiet "🍽️ אוכל כשר" toggle
+  pill (aria-pressed, sunset when on) sitting in the same centered row
+  as the רעיונות dropdown trigger via a new `trailing` slot on
+  `PromptChips`. State persists in localStorage
+  (`tiyul-plus:kosher-pref`), default OFF. onSubmit signature is now
+  `(text, kosher)`.
+- `src/components/AgentWorkspace.tsx` - reads `?kosher=1` on mount and
+  keeps a `kosherHint` that rides in the /api/chat body until the
+  returned trip carries `preferences.kosher` (then the canvas toggle is
+  the source of truth). The /chat landing HeroPrompt passes its toggle
+  the same way.
+- `src/app/api/chat/route.ts` - accepts `kosher` in the body: with an
+  existing trip it merges `preferences.kosher=true` into the working
+  copy BEFORE the loop (so the model reads it in CURRENT TRIP); with no
+  trip it appends a silent UI-TOGGLE note to the state block; and a
+  deterministic post-loop safety net stamps the preference onto the
+  returned trip even when the model forgets set_preferences (observed
+  once in testing - restaurants scheduled but flag missing).
+
+**Product decisions:** kosher stays a button, never a question -
+consistent with the canvas toggles; the homepage pill is the earliest
+possible point to say it once and never be asked. Deterministic server
+stamping beats trusting the model to call set_preferences.
+
+**Broken/deferred:** Shabbat/other sensitive prefs not yet on the
+homepage (kosher only, per scope). The localStorage key only feeds the
+toggle's visual state; the ride-along is per-submit.
+
+**Next session should know:** verified end-to-end - toggle ON + build
+request from null trip → reply schedules kosher restaurants without
+asking AND returned trip has preferences.kosher=true; toggle state
+persists across loads; hero photo fully removed (no
+photo-1488646953014 references). clear-storage.js in the scratchpad
+clears only the trips key - the kosher key persists between CDP runs.
