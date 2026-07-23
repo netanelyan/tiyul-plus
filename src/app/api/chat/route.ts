@@ -122,7 +122,7 @@ const SYSTEM_PROMPT = `You are "טיולי" - the AI travel agent of tiyul+ (ט�
 
 LANGUAGE & VOICE
 - Always answer in natural, warm Israeli Hebrew (unless the user writes in another language). Direct and friendly, like a savvy friend who plans trips for a living. Professional, not childish; at most one emoji per answer, often none.
-- Keep answers tight. Short questions get short answers. Full itineraries get structure.
+- Keep answers tight. Short questions get short answers. Full itineraries get structure. Hard discipline: a single reply stays well under ~250 Hebrew words - the UI shows the trip live, so never dump long lists that the panel already renders.
 
 GROUNDING - THE MOST IMPORTANT RULE
 - You may only recommend specific places, restaurants and attractions that exist in the DATA provided below. Never invent places, opening hours, prices, or kashrut status.
@@ -194,12 +194,20 @@ type StreamEvent =
 
 type Send = (event: StreamEvent) => void;
 
+interface AnthropicUsage {
+  input_tokens?: number;
+  cache_read_input_tokens?: number;
+  cache_creation_input_tokens?: number;
+  output_tokens?: number;
+}
+
 interface AnthropicSSE {
   type: string;
   index?: number;
   content_block?: { type: string; id?: string; name?: string };
   delta?: { type: string; text?: string; partial_json?: string; stop_reason?: string };
-  message?: { usage?: unknown };
+  usage?: AnthropicUsage; // על message_delta - output_tokens סופי
+  message?: { usage?: AnthropicUsage };
 }
 
 type AccBlock =
@@ -226,7 +234,10 @@ async function runClaudeTurn(
   trip: Trip | null,
   send: Send,
   needSeparator: boolean,
+  maxTokens: number,
+  iter: number,
 ): Promise<{ blocks: AccBlock[]; stopReason: string; text: string }> {
+  const model = process.env.ANTHROPIC_MODEL_AGENT ?? 'claude-sonnet-4-5';
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -236,8 +247,8 @@ async function runClaudeTurn(
     },
     signal: AbortSignal.timeout(50_000),
     body: JSON.stringify({
-      model: process.env.ANTHROPIC_MODEL ?? 'claude-opus-4-8',
-      max_tokens: 2048,
+      model,
+      max_tokens: maxTokens,
       stream: true,
       tools: AGENT_TOOLS,
       // סדר הרינדור: tools (סטטי) → system. ה-grounding הוא הבלוק עם
@@ -261,6 +272,7 @@ async function runClaudeTurn(
   let stopReason = 'end_turn';
   let text = '';
   let sepPending = needSeparator;
+  const usage: AnthropicUsage = {};
 
   for (;;) {
     const { done, value } = await reader.read();
@@ -301,13 +313,20 @@ async function runClaudeTurn(
         } else if (event.delta.type === 'input_json_delta' && event.delta.partial_json) {
           if (block?.type === 'tool_use') block.json += event.delta.partial_json;
         }
-      } else if (event.type === 'message_delta' && event.delta?.stop_reason) {
-        stopReason = event.delta.stop_reason;
-      } else if (event.type === 'message_start' && process.env.NODE_ENV === 'development') {
-        // אימות prompt cache בפיתוח: cache_read_input_tokens > 0 = פגיעה במטמון
-        console.log('[chat] usage:', JSON.stringify(event.message?.usage));
+      } else if (event.type === 'message_delta') {
+        if (event.delta?.stop_reason) stopReason = event.delta.stop_reason;
+        if (event.usage?.output_tokens !== undefined) usage.output_tokens = event.usage.output_tokens;
+      } else if (event.type === 'message_start' && event.message?.usage) {
+        Object.assign(usage, event.message.usage);
       }
     }
+  }
+
+  // ניטור עלויות בפיתוח: cached > 0 מאיטרציה 2 ומטור 2 = ה-prompt cache עובד
+  if (process.env.NODE_ENV === 'development') {
+    console.log(
+      `[chat] ${model} iter=${iter} max=${maxTokens} in=${usage.input_tokens ?? 0} cached=${usage.cache_read_input_tokens ?? 0} cacheWrite=${usage.cache_creation_input_tokens ?? 0} out=${usage.output_tokens ?? 0}`,
+    );
   }
 
   const blocks = [...byIndex.entries()].sort(([a], [b]) => a - b).map(([, blk]) => blk);
@@ -323,8 +342,14 @@ async function runAgent(messages: ChatMessage[], clientTrip: Trip | null, send: 
   let quickReplies: string[] | null = null;
   const apiMessages: ApiMessage[] = messages.map((m) => ({ role: m.role, content: m.content }));
 
+  // משמעת פלט: תשובת טקסט רגילה מוגבלת ל-1024; איטרציות עם כלים (זיהוי
+  // כוונת עריכה, או המשך לולאה אחרי tool_results) מקבלות 2048 בשביל JSON.
+  const lastUser = messages[messages.length - 1]?.content ?? '';
+  const editIntent = /תבנה|בנה לי|תבני|תוסיף|תוסיפי|תוריד|תורידי|תחליף|תזיז|תמלא|תעדכן|תסדר|צור טיול|תקצר|תאריך/.test(lastUser);
+
   for (let iter = 0; iter < 16; iter++) {
-    const turn = await runClaudeTurn(apiMessages, working, send, full.length > 0);
+    const maxTokens = editIntent || iter > 0 ? 2048 : 1024;
+    const turn = await runClaudeTurn(apiMessages, working, send, full.length > 0, maxTokens, iter);
     full += turn.text;
     if (turn.stopReason !== 'tool_use') break;
 

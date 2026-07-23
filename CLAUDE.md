@@ -66,6 +66,20 @@ favor user trust and repeat usage over tech impressiveness.
   is the planner's one-shot constrained builder (keyless: local
   `generateTrip()` scoring). Both ground Claude in the curated data and
   validate every placeId server-side - the AI can never invent places.
+- **Cost model.** Model routing by task: `ANTHROPIC_MODEL_AGENT`
+  (default claude-sonnet-4-5) drives the chat loop,
+  `ANTHROPIC_MODEL_FAST` (default claude-haiku-4-5) drives
+  generate-trip - the FAST request sends no thinking/effort params
+  (haiku-4-5 rejects them). The grounding block carries `cache_control`
+  in both routes; the chat loop reuses the ~20k-token prefix across
+  iterations and turns (verified: iter=1 reads the full prefix from
+  cache). Output discipline: chat replies cap at 1024 tokens unless
+  edit-intent/tool iterations (2048). Dev console logs one usage line
+  per model call. **Haiku as the agent** (tested once on the five
+  scenarios): builds correct one-turn trips, stores preferences and
+  declines unknown places - but skips destructive-change confirmations
+  and drifts off-data in follow-up suggestions. Keep Sonnet for the
+  agent; Haiku is fine for generate-trip.
 
 ## Commands
 

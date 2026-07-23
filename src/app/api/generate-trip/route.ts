@@ -118,11 +118,11 @@ async function refineWithClaude(
       },
       signal: AbortSignal.timeout(50_000),
       body: JSON.stringify({
-        model: process.env.ANTHROPIC_MODEL ?? 'claude-opus-4-8',
+        // משימה חד-פעמית מובנית → המודל המהיר/זול (ניתוב מודלים לפי משימה)
+        model: process.env.ANTHROPIC_MODEL_FAST ?? 'claude-haiku-4-5',
         max_tokens: 3000,
-        thinking: { type: 'adaptive' },
+        // בלי thinking/effort - haiku-4-5 לא תומך בהם; structured outputs מספיק
         output_config: {
-          effort: 'medium',
           format: { type: 'json_schema', schema: REFINE_SCHEMA },
         },
         // כמו בצ׳אט: ה-grounding הוא הבלוק האחרון עם cache_control - הפרומפט
@@ -143,7 +143,19 @@ async function refineWithClaude(
     const data = (await res.json()) as {
       stop_reason?: string;
       content?: { type: string; text?: string }[];
+      usage?: {
+        input_tokens?: number;
+        cache_read_input_tokens?: number;
+        cache_creation_input_tokens?: number;
+        output_tokens?: number;
+      };
     };
+    if (process.env.NODE_ENV === 'development') {
+      const u = data.usage ?? {};
+      console.log(
+        `[generate-trip] in=${u.input_tokens ?? 0} cached=${u.cache_read_input_tokens ?? 0} cacheWrite=${u.cache_creation_input_tokens ?? 0} out=${u.output_tokens ?? 0}`,
+      );
+    }
     if (data.stop_reason === 'refusal') return null;
     const text = data.content?.find((b) => b.type === 'text')?.text;
     if (!text) return null;
