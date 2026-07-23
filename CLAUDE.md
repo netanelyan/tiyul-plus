@@ -31,12 +31,14 @@ favor user trust and repeat usage over tech impressiveness.
   param once (then cleans the URL with `router.replace`); direct visits
   keep the landing state: one massive centered input + prompt chips.
   **Chip system:** a categorized pool in `src/lib/promptChips.ts`
-  (situation / capability / question, optional seasonal `months`) -
-  the shared `PromptChips` component picks 6 client-side after mount
-  (2 per category, in-season first, out-of-season hidden, shuffled;
-  SSR renders a stable-height skeleton). Clicking FILLS the input and
-  focuses it for editing - never auto-sends. Categories are invisible
-  to the user. The first message transitions to a split workspace:
+  (situation / capability / question, one emoji per chip, optional
+  seasonal `months`, optional `fill` when the pill text is shorter than
+  the fill text) - the shared `PromptChips` component picks 6
+  client-side after mount (pinned chips always included - currently
+  "🎖️ הטיול הגדול אחרי צבא" - rest category-balanced, in-season first,
+  out-of-season hidden, shuffled; SSR renders a stable-height
+  skeleton). Clicking FILLS the input and focuses it for editing -
+  never auto-sends. Categories are invisible to the user. The first message transitions to a split workspace:
   streaming conversation beside a live "canvas" - destination photo header,
   day selector, Leaflet map of the selected day with numbered route, daily
   schedule blocks and a planner link; empty days get an explicit empty
@@ -310,3 +312,39 @@ chip pool is category-balanced (2×3) and hides out-of-season chips;
 if you add chips keep the pool ≥3 per category so selection never runs
 short. Session log entries for work before 2026-07-23 live in git
 history (`git log --oneline`).
+
+### 2026-07-23 (b) - Chips: emoji, pinned "הטיול הגדול", post-army agent note
+
+**Built/changed:**
+- `src/lib/promptChips.ts` - `PromptChip` gained `emoji` (required,
+  rendered as the pill's leading element), `pinned` (always included in
+  the 6) and `fill` (input text when longer than the pill label). New
+  pinned situation chip: 🎖️ "הטיול הגדול אחרי צבא" whose fill is a
+  catalog-friendly prompt ("סיימתי צבא... כמה שבועות באירופה, תקציב
+  קטן, כמה מדינות"). `pickChips()` now: pinned first, then fills each
+  category to a quota of 2 counting pinned, in-season priority and
+  shuffle unchanged.
+- `src/components/PromptChips.tsx` - category SVG icons replaced by
+  the chip's emoji; `onPick` sends `chip.fill ?? chip.text`.
+- `src/app/api/chat/route.ts` - system prompt HOW-YOU-WORK note: on
+  הטיול הגדול/אחרי צבא, embrace it, build a long multi-country budget
+  route from covered countries (cheap first: בודפשט/ברטיסלבה/אתונה,
+  פראג/ברלין budget-friendly), prefer create_trip_full, and be honest
+  that דרום אמריקה/המזרח aren't covered - offer the European version
+  proudly.
+
+**Product decisions:** the army chip is pinned because it's a flagship
+Israeli life-moment the catalog can genuinely serve; its pill label is
+short but the fill is deliberately verbose so the agent gets budget +
+duration + multi-country in one shot. Emoji replaced the SVG category
+icons - warmer, and category remains invisible.
+
+**Broken/deferred:** nothing broken. Emoji render as monochrome
+letter-codes in headless-Edge screenshots (artifact only).
+
+**Next session should know:** verified live - army chip present in
+every draw, click fills the long text, all pills single-line at 390px
+(incl. the wide 👨‍👩‍👧‍👦 chip), agent responds to the army prompt with
+cheap-first covered-countries routing. If you add pinned chips, the
+per-category quota logic counts them - keep total pinned ≤ 2 or the
+draw loses balance.
