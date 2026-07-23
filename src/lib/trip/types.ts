@@ -9,12 +9,25 @@ export interface TripDay {
   notes?: string;
 }
 
+// העדפות המטייל - נאספות בשיחה עם הסוכן, נשמרות על הטיול,
+// ומכבדות אותן גם ההמלצות של הסוכן וגם האשף. אף העדפה לא מונחת מראש.
+export interface TripPreferences {
+  party?: 'couple' | 'family' | 'friends' | 'solo';
+  pace?: 'relaxed' | 'packed';
+  budget?: 'low' | 'medium' | 'high';
+  kosher?: boolean;
+  shabbatAware?: boolean;
+  shopping?: 'more' | 'normal' | 'less';
+  interests?: string[];
+}
+
 export interface Trip {
   id: string;
   name: string;
   citySlugs: string[]; // סדר הערים בטיול
   days: TripDay[];
   createdAt: number;
+  preferences?: TripPreferences;
 }
 
 // העדפות האשף החכם

@@ -53,9 +53,12 @@ npm run lint
   (designed to be swapped for a backend without touching components),
   `TripContext.tsx` (React context + all mutations), `generate.ts` (wizard
   scoring + geographic day-packing), `travel.ts` (static inter-city legs).
-- `src/app/api/chat/route.ts` - chat backend. Uses Claude when
-  `ANTHROPIC_API_KEY` is set (grounded in destinations data via system
-  prompt), falls back to a rule-based Hebrew responder without a key.
+- `src/app/api/chat/route.ts` - chat backend. With `ANTHROPIC_API_KEY` it
+  runs a server-side tool-use loop over the user's trip: the client sends
+  its current trip, tools in `src/lib/trip/agent.ts` mutate an in-memory
+  copy with strict validation, and the stream returns text + the updated
+  trip + Hebrew action chips. Falls back to a rule-based Hebrew responder
+  without a key.
 - `src/components/` - `PlacesMap`/`MapInner` (Leaflet, client-only),
   `AddToTripButton`, `TripChip`.
 - `src/app/layout.tsx` - RTL shell, fonts, TripProvider, BlackZ trademark
@@ -97,13 +100,12 @@ npm run lint
 
 ## Roadmap (execute one phase per session, in order)
 
-- **Phase 1 - Agent Core**: make the chat a real agent. Claude tool-use over
-  the trip store: create trip, add/remove/reorder stops and days, set
-  preferences; UI reflects changes live (trip visible alongside the
-  conversation). A preferences object (dates, party, budget, pace, kosher,
-  Shabbat-aware, shopping, interests) collected conversationally, stored on
-  the trip, honored by agent AND wizard. Rule-based responder stays as
-  keyless dev fallback.
+- **Phase 1 - Agent Core** ✅ DONE: chat runs a server-side tool loop
+  (create/edit trip + `Trip.preferences` set conversationally; live trip
+  panel beside the chat; keyless rule-based fallback intact). Note for
+  Phase 2: agent quality is now capped by content depth (8-12 places per
+  city) - and the wizard does not yet read `Trip.preferences`, only the
+  agent honors them.
 - **Phase 2 - Content Engine**: deepen all 8 cities to 20+ places each:
   per-place photos (verified URLs + gradient fallback), price levels,
   audience tags (families/nightlife/romantic), must-see flags; kosher entries

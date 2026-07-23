@@ -19,6 +19,7 @@ interface TripApi {
   setCurrentId: (id: string | null) => void;
   createTrip: (name: string, citySlug?: string) => Trip;
   createTripFrom: (trip: Trip) => void; // מוסיף טיול מוכן (אשף/תבנית)
+  upsertTrip: (trip: Trip) => void; // מחליף לפי id או מוסיף - עדכונים מהסוכן
   duplicateTrip: (id: string) => void;
   deleteTrip: (id: string) => void;
   renameTrip: (id: string, name: string) => void;
@@ -86,6 +87,15 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
 
   const createTripFrom = useCallback((trip: Trip) => {
     setTrips((prev) => [...prev, trip]);
+    setCurrentId(trip.id);
+  }, []);
+
+  const upsertTrip = useCallback((trip: Trip) => {
+    setTrips((prev) =>
+      prev.some((t) => t.id === trip.id)
+        ? prev.map((t) => (t.id === trip.id ? trip : t))
+        : [...prev, trip],
+    );
     setCurrentId(trip.id);
   }, []);
 
@@ -261,6 +271,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         setCurrentId,
         createTrip,
         createTripFrom,
+        upsertTrip,
         duplicateTrip,
         deleteTrip,
         renameTrip,
