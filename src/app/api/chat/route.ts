@@ -133,14 +133,18 @@ TRIP EDITING - YOU ARE AN AGENT WITH TOOLS
 - You have tools that edit the user's actual trip. Its live state is in CURRENT TRIP (after the DATA). When the user's intent is an action - "תבנה לי", "תוסיף", "תוריד", "תחליף", "תזיז" - DO it with tools; don't just describe what could be done.
 - Day numbers and stop positions are 1-based, exactly as shown in CURRENT TRIP. After remove_day the numbering shifts - read the tool results carefully.
 - placeIds must come from the DATA. If the user names a place that is not in the DATA, say honestly that it's not in your curated data and offer the closest real alternatives - NEVER invent an id.
-- Building a full trip: create_trip → add_day per day → add_place for each stop in a sensible geographic order (relaxed pace ≈ 3-4 stops/day, packed ≈ 5-6). Honor stored preferences (e.g. kosher → include a kosher-food place each day where the city has one).
-- Missing key details for a build (destination, number of days)? Ask at most 1-2 short questions first. Small edits need no questions.
-- Destructive changes - remove_day, or create_trip when a trip already exists - require confirmation: describe what will be lost and ask; call the tool only after the user confirms in their next message.
+- Building a NEW trip: use create_trip_full - ONE call with the name and every day's places, in geographic order (relaxed pace ≈ 3-4 stops/day, packed ≈ 5-6). Honor stored preferences (e.g. kosher → include a kosher-food place each day where the city has one).
+- NEVER leave a day empty at the end of your turn. If you used create_trip/add_day, fill every day with set_day_places before finishing. The granular tools (add_place, remove_place, move_place) are for small edits only.
+- Inventory is limited: each city has only 8-12 curated places, and a place may appear ONCE in the whole trip. For long stays in one city plan fewer stops per day (2-3) or lighter days with a good note - if places genuinely run out, say so honestly. Plan the distribution BEFORE calling create_trip_full so the call passes validation the first time.
+- NEVER end your turn announcing a build or a fix you have not executed ("אני בונה עכשיו", "אני מתקן") - make the corrected tool call in the same turn, then summarize.
+- If the destination(s) and trip length are known - BUILD IMMEDIATELY with sensible defaults (relaxed pace, even day split between cities, no assumed preferences) and note briefly that everything is adjustable. Do NOT ask clarifying questions first in that case. Ask 1-2 short questions only when the destination or the number of days is genuinely missing; small edits need no questions. When a question has a small closed set of answers (מספר ימים, יעד, מי נוסע) also call suggest_quick_replies with 2-4 short Hebrew options.
+- NEVER ask about kashrut, Shabbat, or any religious observance. These preferences arrive silently from UI toggles (or the user volunteering them) and appear in CURRENT TRIP preferences - read them fresh every turn and apply them without commenting on the change. If kosher is not set, do not raise the topic: when recommending food, simply present good options (kosher places may be included among them, labeled) without asking what the user keeps.
+- Destructive changes - remove_day, or create_trip/create_trip_full when a trip already exists - require confirmation: describe what will be lost and ask; call the tool only after the user confirms in their next message.
 - When the user states a lasting preference (כשרות, שבת, תקציב, קצב, מי נוסע, תחומי עניין) call set_preferences, and let it shape every recommendation from then on. Preferences are options, never assumptions - store only what was actually said.
 - After making changes, wrap up with one or two natural Hebrew sentences summarizing what you did. The trip panel in the UI updates live, so don't dump the full itinerary as text.
 
 HOW YOU WORK
-- Understand before planning: if the request lacks key details, ask at most 1-2 short questions (dates/season, who's traveling, pace, interests). Never interrogate with a checklist.
+- Understand before planning: if the request lacks key details, ask at most 1-2 short questions (dates/season, who's traveling, pace, interests - never kashrut/religion). Never interrogate with a checklist.
 - Preferences are options, never assumptions: kosher food, Shabbat-friendly pacing, budget level, kids, shopping - apply each only when the user asks or confirms. When kosher matters, use the kosher places in the data and ALWAYS add a short reminder to verify kashrut and hours with the venue before visiting.
 - Recommendation answers (no edit intent): format itineraries as a bold day title line (**יום 1 - ...**), then the stops separated by " ← ", then one practical tip line. Use ** for bold and plain newlines only - no markdown headers, tables or links.
 - Israeli practicalities: when relevant, weave in the data's info on direct flights from TLV, visas, eSIM and payments.
@@ -185,6 +189,7 @@ type StreamEvent =
   | { type: 'text'; text: string }
   | { type: 'meta'; destinationSlug?: string; placeIds?: string[] }
   | { type: 'trip'; trip: Trip; actions: string[] }
+  | { type: 'quickReplies'; replies: string[] }
   | { type: 'done' };
 
 type Send = (event: StreamEvent) => void;
@@ -315,9 +320,10 @@ async function runAgent(messages: ChatMessage[], clientTrip: Trip | null, send: 
   const actions: string[] = [];
   let touched = false;
   let full = '';
+  let quickReplies: string[] | null = null;
   const apiMessages: ApiMessage[] = messages.map((m) => ({ role: m.role, content: m.content }));
 
-  for (let iter = 0; iter < 8; iter++) {
+  for (let iter = 0; iter < 16; iter++) {
     const turn = await runClaudeTurn(apiMessages, working, send, full.length > 0);
     full += turn.text;
     if (turn.stopReason !== 'tool_use') break;
@@ -339,12 +345,11 @@ async function runAgent(messages: ChatMessage[], clientTrip: Trip | null, send: 
       assistantContent.push({ type: 'tool_use', id: block.id, name: block.name, input });
       const out = parseOk
         ? executeAgentTool(working, block.name, input)
-        : { trip: working, ok: false, message: 'קלט הכלי לא היה JSON תקין - נסה שוב.', action: undefined };
+        : { trip: working, ok: false, message: 'קלט הכלי לא היה JSON תקין - נסה שוב.', action: undefined, quickReplies: undefined };
+      if (out.ok && out.trip !== working) touched = true; // suggest_quick_replies לא נוגע בטיול
       working = out.trip;
-      if (out.ok) {
-        touched = true;
-        if (out.action) actions.push(out.action);
-      }
+      if (out.ok && out.action) actions.push(out.action);
+      if (out.ok && out.quickReplies) quickReplies = out.quickReplies;
       results.push({
         type: 'tool_result',
         tool_use_id: block.id,
@@ -365,9 +370,23 @@ async function runAgent(messages: ChatMessage[], clientTrip: Trip | null, send: 
     full = fallback;
   }
 
+  // רשת ביטחון: הלולאה הסתיימה עם ימים ריקים בלבד - אומרים זאת ביושר,
+  // בלי למלא אוטומטית מאחורי הגב.
+  if (
+    touched &&
+    working &&
+    working.days.length > 0 &&
+    working.days.every((d) => d.placeIds.length === 0)
+  ) {
+    const note = '\n\nשימו לב: הימים נוצרו אבל עדיין בלי מקומות. כתבו "תמלא את הימים" ואשבץ מקומות אמיתיים מהמאגר.';
+    send({ type: 'text', text: note });
+    full += note;
+  }
+
   const dest = findDestination(full);
   send({ type: 'meta', destinationSlug: dest?.slug });
   if (touched && working) send({ type: 'trip', trip: working, actions });
+  if (quickReplies) send({ type: 'quickReplies', replies: quickReplies });
 }
 
 function sendRuleBased(lastUserText: string, send: Send) {

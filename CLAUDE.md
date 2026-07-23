@@ -26,10 +26,16 @@ favor user trust and repeat usage over tech impressiveness.
   secondary data). The first message transitions to a split workspace:
   streaming conversation beside a live "canvas" - destination photo header,
   day selector, Leaflet map of the selected day with numbered route, daily
-  schedule blocks, preference chips and a planner link. On mobile the canvas
-  collapses to a sticky summary bar. The canvas re-renders from every
-  `{trip}` event the agent streams; action chips ("✓ הוספתי את...") show
-  under the reply.
+  schedule blocks and a planner link; empty days get an explicit empty
+  state. On mobile the canvas collapses to a sticky summary bar. The canvas
+  re-renders from every `{trip}` event the agent streams; action chips
+  ("✓ הוספתי את...") show under the reply. **Preferences UI:** the canvas
+  chips (כשר, קצב, מי נוסע, שופינג) are interactive toggles that write
+  `Trip.preferences` directly - sensitive preferences (kashrut, Shabbat)
+  are buttons BY DESIGN, the agent never asks about them in conversation
+  and silently reads the current values each turn. Non-sensitive
+  clarifying questions may carry tappable quick-reply chips
+  (`suggest_quick_replies`).
 - **`/planner` - manual controls for the same trip.** The new-trip screen is
   a hybrid: prominent city cards plus button-only controls (days stepper,
   מי נוסע, pace, style, shopping, kosher toggle) form hard constraints; an
@@ -93,8 +99,12 @@ npm run lint
   without touching components), `TripContext.tsx` (React context + all
   mutations incl. `upsertTrip` for agent updates), `generate.ts` (wizard
   scoring + geographic day-packing), `travel.ts` (static inter-city legs),
-  `agent.ts` (the agent's tool definitions + strictly-validated executor +
-  trip serialization for the model).
+  `agent.ts` (the agent's tools + strictly-validated executor + trip
+  serialization for the model; batch tools `create_trip_full` /
+  `set_day_places` are preferred for building so a trip never ends a turn
+  with empty days, granular add/remove/move for small edits,
+  `suggest_quick_replies` attaches tappable answers to non-sensitive
+  questions; the chat loop runs up to 16 tool iterations).
 - `src/app/api/chat/route.ts` - chat backend. With `ANTHROPIC_API_KEY` it
   runs a server-side tool-use loop over the user's trip: the client sends
   its current trip, tools in `src/lib/trip/agent.ts` mutate an in-memory

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import type { Place } from '@/lib/types';
-import type { Trip } from '@/lib/trip/types';
+import type { Trip, TripPreferences } from '@/lib/trip/types';
 import { destinations } from '@/data/destinations';
 import { useTrip } from '@/lib/trip/TripContext';
 import PlacesMap from '@/components/PlacesMap';
@@ -25,6 +25,7 @@ interface Msg {
   destinationSlug?: string;
   placeIds?: string[];
   actions?: string[];
+  quickReplies?: string[]; // תשובות מהירות לשאלה לא-רגישה (צ׳יפים לחיצים)
 }
 
 const PROMPT_CHIPS = [
@@ -91,6 +92,9 @@ function TripCanvas() {
     );
   }
 
+  const setPrefs = (patch: Partial<TripPreferences>) =>
+    trip.upsertTrip({ ...t, preferences: { ...t.preferences, ...patch } });
+
   const day = t.days[safeIdx];
   const dayDest = day ? destOf(day.citySlug) : undefined;
   const dayPlaces: Place[] =
@@ -143,9 +147,11 @@ function TripCanvas() {
           </div>
         )}
 
-        {/* מפה אינטראקטיבית של היום הנבחר */}
-        {dayDest && (
-          <div className="mt-3 h-52 overflow-hidden rounded-xl ring-1 ring-night/10">
+        {/* מפה אינטראקטיבית של היום הנבחר - הדומיננטית בקנבס.
+            fitBounds קורה ב-MapInner עם כל החלפת יום; יום ריק מקבל מצב ריק
+            ברור במקום מפה עירומה. */}
+        {dayDest && dayPlaces.length > 0 && (
+          <div className="mt-3 h-[420px] overflow-hidden rounded-xl ring-1 ring-night/10">
             <PlacesMap
               center={dayDest.center}
               zoom={dayDest.zoom}
@@ -153,6 +159,11 @@ function TripCanvas() {
               numbered
               showRoute
             />
+          </div>
+        )}
+        {day && dayPlaces.length === 0 && (
+          <div className="mt-3 flex h-40 items-center justify-center rounded-xl border-2 border-dashed border-night/15 px-6 text-center text-sm font-medium leading-relaxed text-night/50">
+            היום הזה עדיין ריק - בקשו ממני להוסיף מקומות
           </div>
         )}
 
@@ -195,26 +206,91 @@ function TripCanvas() {
           )}
         </ol>
 
-        {/* העדפות - דאטה הקשרי, נחשף רק כאן */}
-        {t.preferences && Object.keys(t.preferences).length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {t.preferences.kosher && <PrefChip label="כשר" />}
-            {t.preferences.shabbatAware && <PrefChip label="שומרי שבת" />}
-            {t.preferences.party && (
-              <PrefChip
-                label={{ couple: 'זוג', family: 'משפחה', friends: 'חברים', solo: 'סולו' }[t.preferences.party]}
-              />
-            )}
-            {t.preferences.pace && (
-              <PrefChip label={t.preferences.pace === 'packed' ? 'קצב דחוס' : 'קצב רגוע'} />
-            )}
-            {t.preferences.budget && (
+        {/* העדפות - טוגלים אינטראקטיביים. העדפות רגישות (כשרות) הן כפתורים,
+            לעולם לא שאלות בשיחה: לחיצה מעדכנת את Trip.preferences ישירות,
+            והסוכן קורא אותן מחדש בכל תור - בלי הודעה גלויה. */}
+        <div className="mt-3">
+          <div className="text-xs font-bold text-night/40">
+            העדפות · לחיצה משנה, הסוכן מתעדכן בשקט
+          </div>
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
+            <ToggleChip
+              active={t.preferences?.kosher === true}
+              label="כשר"
+              onClick={() =>
+                setPrefs({ kosher: t.preferences?.kosher === true ? undefined : true })
+              }
+            />
+            <ToggleChip
+              active={Boolean(t.preferences?.pace)}
+              label={
+                t.preferences?.pace === 'packed'
+                  ? 'קצב: דחוס'
+                  : t.preferences?.pace === 'relaxed'
+                    ? 'קצב: רגוע'
+                    : 'קצב'
+              }
+              onClick={() =>
+                setPrefs({
+                  pace:
+                    t.preferences?.pace === undefined
+                      ? 'relaxed'
+                      : t.preferences.pace === 'relaxed'
+                        ? 'packed'
+                        : undefined,
+                })
+              }
+            />
+            <ToggleChip
+              active={Boolean(t.preferences?.party)}
+              label={
+                t.preferences?.party
+                  ? { couple: 'זוג', family: 'משפחה', friends: 'חברים', solo: 'סולו' }[t.preferences.party]
+                  : 'מי נוסע'
+              }
+              onClick={() =>
+                setPrefs({
+                  party:
+                    t.preferences?.party === undefined
+                      ? 'couple'
+                      : t.preferences.party === 'couple'
+                        ? 'family'
+                        : t.preferences.party === 'family'
+                          ? 'friends'
+                          : t.preferences.party === 'friends'
+                            ? 'solo'
+                            : undefined,
+                })
+              }
+            />
+            <ToggleChip
+              active={Boolean(t.preferences?.shopping)}
+              label={
+                t.preferences?.shopping
+                  ? { more: 'שופינג: יותר', normal: 'שופינג: רגיל', less: 'שופינג: פחות' }[t.preferences.shopping]
+                  : 'שופינג'
+              }
+              onClick={() =>
+                setPrefs({
+                  shopping:
+                    t.preferences?.shopping === undefined
+                      ? 'more'
+                      : t.preferences.shopping === 'more'
+                        ? 'normal'
+                        : t.preferences.shopping === 'normal'
+                          ? 'less'
+                          : undefined,
+                })
+              }
+            />
+            {t.preferences?.shabbatAware && <PrefChip label="שומרי שבת" />}
+            {t.preferences?.budget && (
               <PrefChip
                 label={{ low: 'תקציב נמוך', medium: 'תקציב בינוני', high: 'תקציב גבוה' }[t.preferences.budget]}
               />
             )}
           </div>
-        )}
+        </div>
 
         <Link
           href="/planner"
@@ -232,6 +308,28 @@ function PrefChip({ label }: { label: string }) {
     <span className="rounded-full bg-night/5 px-2.5 py-1 text-xs font-semibold text-night/60">
       {label}
     </span>
+  );
+}
+
+function ToggleChip({
+  active,
+  label,
+  onClick,
+}: {
+  active: boolean;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      aria-pressed={active}
+      className={`rounded-full px-2.5 py-1 text-xs font-semibold transition ${
+        active ? 'bg-sunset text-cream' : 'bg-night/5 text-night/50 hover:bg-night/10'
+      }`}
+    >
+      {label}
+    </button>
   );
 }
 
@@ -332,6 +430,7 @@ export default function AgentWorkspace() {
             placeIds?: string[];
             trip?: Trip;
             actions?: string[];
+            replies?: string[];
           };
           try {
             event = JSON.parse(line.slice(5));
@@ -359,6 +458,9 @@ export default function AgentWorkspace() {
               const actions = event.actions;
               patchLast((msg) => ({ ...msg, actions }));
             }
+          } else if (event.type === 'quickReplies' && appended && event.replies?.length) {
+            const quickReplies = event.replies;
+            patchLast((msg) => ({ ...msg, quickReplies }));
           }
         }
       }
@@ -472,6 +574,24 @@ export default function AgentWorkspace() {
                   {msg.destinationSlug && msg.placeIds && msg.placeIds.length > 0 && (
                     <MessageMap slug={msg.destinationSlug} placeIds={msg.placeIds} />
                   )}
+                  {/* תשובות מהירות - רק בהודעה האחרונה, לשאלות לא-רגישות */}
+                  {msg.role === 'assistant' &&
+                    i === messages.length - 1 &&
+                    !loading &&
+                    msg.quickReplies &&
+                    msg.quickReplies.length > 0 && (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {msg.quickReplies.map((r) => (
+                          <button
+                            key={r}
+                            onClick={() => send(r)}
+                            className="rounded-full bg-shell px-4 py-2 text-sm font-semibold text-night/75 ring-1 ring-sunset/40 transition hover:bg-sunset/10 hover:text-night"
+                          >
+                            {r}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                 </div>
               </div>
             ))}

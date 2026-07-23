@@ -14,6 +14,7 @@ export interface AgentToolResult {
   ok: boolean;
   message: string; // תוכן ה-tool_result שהמודל רואה
   action?: string; // שורת "מה בוצע" בעברית למשתמש
+  quickReplies?: string[]; // תשובות מהירות להצגה כצ׳יפים (suggest_quick_replies)
 }
 
 const dayNumberSchema = {
@@ -40,9 +41,71 @@ export const AGENT_TOOLS = [
     },
   },
   {
+    name: 'create_trip_full',
+    description:
+      "Create a complete NEW trip in ONE call: name + every day with its places. PREFER THIS over create_trip when building a new trip - it is atomic and cheap. Each dayPlans entry becomes one day, in visit order. placeIds must exist in the DATA for that day's city, and a place may appear only once in the whole trip. The call fails as a whole if anything is invalid - fix and retry.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: 'Short Hebrew trip name' },
+        dayPlans: {
+          type: 'array',
+          description: 'One entry per day, in visit order',
+          items: {
+            type: 'object',
+            properties: {
+              citySlug: { type: 'string', description: 'City slug from the DATA' },
+              placeIds: {
+                type: 'array',
+                items: { type: 'string' },
+                description: "Ordered stops - ids from the DATA for that day's city",
+              },
+              notes: { type: 'string', description: 'Optional short Hebrew tip for the day' },
+            },
+            required: ['citySlug', 'placeIds'],
+          },
+        },
+      },
+      required: ['name', 'dayPlans'],
+    },
+  },
+  {
+    name: 'set_day_places',
+    description:
+      "Replace ALL stops of one day in a single call - use it to fill an empty day or reorder wholesale. placeIds must exist in the DATA for that day's city and must not already be used in another day. An empty array clears the day.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        dayNumber: dayNumberSchema,
+        placeIds: {
+          type: 'array',
+          items: { type: 'string' },
+          description: "Ordered stops - ids from the DATA for that day's city",
+        },
+      },
+      required: ['dayNumber', 'placeIds'],
+    },
+  },
+  {
+    name: 'suggest_quick_replies',
+    description:
+      'Attach 2-4 short Hebrew tappable answer options to a NON-sensitive clarifying question you are asking in this same reply (pace, number of days, destination, who is traveling). They render as chips under your message. NEVER use this for kashrut, Shabbat or any religious or private matter.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        replies: {
+          type: 'array',
+          items: { type: 'string' },
+          description: '2-4 short Hebrew options, each a complete answer',
+        },
+      },
+      required: ['replies'],
+    },
+  },
+  {
     name: 'add_day',
     description:
-      'Append a new empty day in the given city to the end of the active trip. Returns the new day number.',
+      'Append a new empty day in the given city to the end of the active trip. Returns the new day number. For NEW trips prefer create_trip_full; never leave an added day empty - fill it with set_day_places in the same turn.',
     input_schema: {
       type: 'object',
       properties: {
@@ -198,6 +261,106 @@ export function executeAgentTool(
         ok: true,
         message: `נוצר טיול חדש "${tripName}" (0 ימים). הוסף ימים עם add_day.`,
         action: `יצרתי טיול חדש: "${tripName}"`,
+      };
+    }
+
+    case 'create_trip_full': {
+      const tripName = typeof input.name === 'string' ? input.name.trim().slice(0, 60) : '';
+      if (!tripName) return fail(trip, 'name חסר או ריק.');
+      const plans = Array.isArray(input.dayPlans) ? input.dayPlans : [];
+      if (plans.length === 0) return fail(trip, 'dayPlans ריק - חובה לפחות יום אחד עם מקומות.');
+      if (plans.length > 21) return fail(trip, 'עד 21 ימים לטיול.');
+      const used = new Set<string>();
+      const days: TripDay[] = [];
+      const errors: string[] = [];
+      plans.forEach((raw, i) => {
+        const dp = (raw ?? {}) as Record<string, unknown>;
+        const dest = destOf(String(dp.citySlug ?? ''));
+        if (!dest) {
+          errors.push(`יום ${i + 1}: citySlug לא מוכר "${dp.citySlug}". החוקיים: ${validSlugs()}.`);
+          return;
+        }
+        const ids = [...new Set((Array.isArray(dp.placeIds) ? dp.placeIds : []).map(String))];
+        const bad = ids.filter((id) => !dest.places.some((p) => p.id === id));
+        if (bad.length > 0) {
+          errors.push(`יום ${i + 1}: מזהים שלא קיימים ב${dest.name}: [${bad.join(', ')}].`);
+          return;
+        }
+        const dup = ids.filter((id) => used.has(id));
+        if (dup.length > 0) {
+          errors.push(`יום ${i + 1}: מקומות שכבר שובצו ביום קודם: [${dup.join(', ')}].`);
+          return;
+        }
+        ids.forEach((id) => used.add(id));
+        days.push({
+          id: newId(),
+          citySlug: dest.slug,
+          placeIds: ids,
+          notes:
+            typeof dp.notes === 'string' && dp.notes.trim() ? dp.notes.trim().slice(0, 200) : undefined,
+        });
+      });
+      if (errors.length > 0) {
+        return fail(trip, `הקריאה נדחתה בשלמותה - תקן את השגיאות ונסה שוב:\n${errors.join('\n')}`);
+      }
+      const next: Trip = {
+        id: newId(),
+        name: tripName,
+        citySlugs: [...new Set(days.map((d) => d.citySlug))],
+        days,
+        createdAt: Date.now(),
+      };
+      const totalStops = days.reduce((n, d) => n + d.placeIds.length, 0);
+      return {
+        trip: next,
+        ok: true,
+        message: `נוצר "${tripName}": ${days.length} ימים, ${totalStops} עצירות.`,
+        action: `יצרתי טיול חדש: "${tripName}" (${days.length} ימים, ${totalStops} עצירות)`,
+      };
+    }
+
+    case 'set_day_places': {
+      if (!needTrip(trip)) return fail(trip, 'אין טיול פעיל. צור אחד קודם עם create_trip_full.');
+      const day = dayAt(trip, input.dayNumber);
+      if (!day) return fail(trip, `dayNumber מחוץ לטווח. בטיול יש ${trip.days.length} ימים.`);
+      const dest = destOf(day.citySlug);
+      if (!dest) return fail(trip, `העיר של היום (${day.citySlug}) לא נמצאה בדאטה.`);
+      const ids = [...new Set((Array.isArray(input.placeIds) ? input.placeIds : []).map(String))];
+      const bad = ids.filter((id) => !dest.places.some((p) => p.id === id));
+      if (bad.length > 0) {
+        const valid = dest.places.map((p) => p.id).join(', ');
+        return fail(trip, `מזהים שלא קיימים ב${dest.name}: [${bad.join(', ')}]. החוקיים: ${valid}.`);
+      }
+      const usedElsewhere = ids.filter((id) =>
+        trip.days.some((d) => d.id !== day.id && d.placeIds.includes(id)),
+      );
+      if (usedElsewhere.length > 0) {
+        return fail(trip, `מקומות שכבר משובצים ביום אחר: [${usedElsewhere.join(', ')}].`);
+      }
+      const n = Number(input.dayNumber);
+      const next: Trip = {
+        ...trip,
+        days: trip.days.map((d) => (d.id === day.id ? { ...d, placeIds: ids } : d)),
+      };
+      return {
+        trip: next,
+        ok: true,
+        message: `יום ${n} עודכן: ${ids.length} עצירות${ids.length ? ` (${ids.join(' ← ')})` : ''}.`,
+        action: `עדכנתי את העצירות של יום ${n} (${ids.length} מקומות)`,
+      };
+    }
+
+    case 'suggest_quick_replies': {
+      const replies = (Array.isArray(input.replies) ? input.replies : [])
+        .filter((r): r is string => typeof r === 'string' && r.trim().length > 0)
+        .map((r) => r.trim().slice(0, 30))
+        .slice(0, 4);
+      if (replies.length < 2) return fail(trip, 'צריך 2-4 תשובות קצרות.');
+      return {
+        trip,
+        ok: true,
+        message: 'האפשרויות יוצגו למשתמש כצ׳יפים מתחת להודעה.',
+        quickReplies: replies,
       };
     }
 
