@@ -2,9 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import type { Place } from '@/lib/types';
 import type { Trip, TripPreferences } from '@/lib/trip/types';
 import { destinations } from '@/data/destinations';
+import { PROMPT_CHIPS } from '@/lib/promptChips';
 import { useTrip } from '@/lib/trip/TripContext';
 import PlacesMap from '@/components/PlacesMap';
 
@@ -27,15 +29,6 @@ interface Msg {
   actions?: string[];
   quickReplies?: string[]; // תשובות מהירות לשאלה לא-רגישה (צ׳יפים לחיצים)
 }
-
-const PROMPT_CHIPS = [
-  { icon: '✈️', label: 'מסלול 3 ימים ברומא', prompt: 'תבנה לי מסלול של 3 ימים ברומא' },
-  { icon: '👨‍👩‍👧', label: 'שבוע משפחתי בוינה', prompt: 'תבנה לי טיול של שבוע בוינה למשפחה עם ילדים' },
-  { icon: '🎒', label: 'סופ״ש ספונטני בברלין', prompt: 'תבנה לי סופ״ש ספונטני של 3 ימים בברלין' },
-  { icon: '✡️', label: 'טיול כשר בפראג', prompt: 'תבנה לי טיול של 4 ימים בפראג עם אוכל כשר בכל יום' },
-  { icon: '🏛️', label: 'אתונה ורומא בשבוע', prompt: 'תבנה לי שבוע שמשלב את אתונה ורומא' },
-  { icon: '🛍️', label: 'שופינג בבודפשט', prompt: 'תבנה לי 4 ימים בבודפשט עם דגש על שופינג' },
-];
 
 const destOf = (slug: string) => destinations.find((d) => d.slug === slug);
 
@@ -379,11 +372,26 @@ function CanvasBarMobile() {
 
 export default function AgentWorkspace() {
   const trip = useTrip();
+  const router = useRouter();
   const [started, setStarted] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const qHandled = useRef(false);
+
+  // הגעה מדף הבית: /chat?q=... - שולחים את הטקסט פעם אחת ומנקים את הכתובת.
+  // window.location במקום useSearchParams כדי לא לחייב Suspense ב-prerender.
+  useEffect(() => {
+    if (qHandled.current) return;
+    qHandled.current = true;
+    const q = new URLSearchParams(window.location.search).get('q');
+    if (q && q.trim()) {
+      router.replace('/chat');
+      send(q);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (started) bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });

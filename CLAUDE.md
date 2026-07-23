@@ -20,10 +20,18 @@ favor user trust and repeat usage over tech impressiveness.
 
 ## Site walkthrough (as built)
 
-- **`/` and `/chat` - the agent, the star.** Both render
-  `src/components/AgentWorkspace.tsx`. Landing state: one massive centered
-  input + prompt-suggestion chips, deliberately minimal (no cards, no
-  secondary data). The first message transitions to a split workspace:
+- **`/` - a light landing portal.** Server component + two small client
+  islands: `HomeHero` (the big centered input + prompt chips - submitting
+  NAVIGATES to `/chat?q=...`, no conversation state or Leaflet on the
+  homepage) and `MyTripCard` (shown only when a trip exists). Below the
+  hero: quiet portal cards to מתכנן המסלולים, קטלוג היעדים and the
+  current trip.
+- **`/chat` - the agent, the star.** Renders
+  `src/components/AgentWorkspace.tsx`. On mount it auto-sends a `?q=`
+  param once (then cleans the URL with `router.replace`); direct visits
+  keep the landing state: one massive centered input + prompt chips
+  (shared list in `src/lib/promptChips.ts`). The first message
+  transitions to a split workspace:
   streaming conversation beside a live "canvas" - destination photo header,
   day selector, Leaflet map of the selected day with numbered route, daily
   schedule blocks and a planner link; empty days get an explicit empty
@@ -82,10 +90,11 @@ npm run lint
   `getCountries()`/`getCountry(slug)`; google/tripadvisor delegate these to
   sample - countries are curated content). The app talks ONLY to this
   interface.
-- Routes: homepage is the AI-first landing (`AgentWorkspace`: one big
-  centered input + prompt chips → smooth transition to a split
-  conversation + live trip canvas; `/chat` renders the same component).
-  Country browsing lives at `/countries` (catalog index, linked from the
+- Routes: homepage is a light landing portal (`HomeHero` input + chips →
+  navigates to `/chat?q=...`; portal cards + `MyTripCard`); `/chat` is
+  the conversation (`AgentWorkspace`: landing → split conversation +
+  live trip canvas, auto-sends `?q=` once). Country browsing lives at
+  `/countries` (catalog index, linked from the
   nav) → `/countries/[slug]` (country hero, practical cards, city cards)
   → `/destinations/[slug]` (city page with breadcrumb יעדים / מדינה /
   עיר; its practical section merges city fields with the country's
