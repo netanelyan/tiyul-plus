@@ -5473,6 +5473,204 @@ export const destinations: Destination[] = [
         'אין במונטנגרו תשתית כשרות מסודרת - אין מסעדות כשרות או בית חב"ד תיירותי פעיל. מומלץ להצטייד מראש במוצרים ארוזים עם הכשר או להתארגן ללינה עם מטבח ולבשל עצמאית. פירות, ירקות ודגים טריים זמינים בשווקים.',
     },
   },
+  {
+    slug: 'petra',
+    name: 'פטרה וואדי ראם',
+    nameLocal: 'Petra / البتراء',
+    countrySlug: 'jordan',
+    flag: '🇯🇴',
+    center: { lat: 30.0, lng: 35.3 },
+    zoom: 8,
+    tagline: 'עיר חצובה בסלע, מדבר אדום וים אדום - פלאי דרום ירדן',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Wadi_rum_desert.jpg/500px-Wadi_rum_desert.jpg',
+    iconicLandmark: {
+      name: 'הח׳זנה - "האוצר"',
+      nameLocal: 'Al-Khazneh (The Treasury)',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Al_Khazneh_Petra_edit_2.jpg/500px-Al_Khazneh_Petra_edit_2.jpg',
+      blurb:
+        'החזית העצומה החצובה בסלע הוורוד בקצה הסיק - הפנים המזוהות ביותר של פטרה ומאתרי המורשת המפורסמים בעולם.',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'פלא עולמי אמיתי במרחק שעות מאילת - פטרה וּוואדי ראם הם חוויית טבע והיסטוריה נדירה. חסרונות: מעבר יבשתי והסדרי ויזה (Jordan Pass), חום קיצוני בקיץ, ואין תשתית כשרות.',
+    },
+    summary:
+      'דרום ירדן מציע לישראלים פלא במרחק נגיעה מאילת: פטרה, העיר הנבטית החצובה בסלע ורוד, עם הח׳זנה, המנזר וקילומטרים של מקדשים; מדבר ואדי ראם עם צוקי חול אדומים ושמי כוכבים; ואקבה על הים האדום. הכניסה במעבר ערבה, ומומלץ Jordan Pass מראש. אין בדרום ירדן תשתית כשרות מסודרת.',
+    bestSeason: 'מרץ-מאי וספטמבר-נובמבר (נעים) - קיץ חם קיצוני במדבר, חורף קר בלילות',
+    places: [
+      {
+        id: 'pet-treasury',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/The_Treasury%2C_Petra%2C_Jordan1.jpg/500px-The_Treasury%2C_Petra%2C_Jordan1.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'הח׳זנה - "האוצר" והסיק',
+        nameLocal: 'Al-Khazneh (The Treasury) & the Siq',
+        category: 'attraction',
+        lat: 30.3225,
+        lng: 35.4516,
+        description:
+          'נכנסים לפטרה דרך הסיק - קניון סלע צר וגבוה באורך כ-1.2 ק"מ - שנפתח אל הח׳זנה, החזית המפורסמת החצובה בסלע. הרגע האיקוני של כל ביקור בפטרה. הכניסה כלולה ב-Jordan Pass.',
+        rating: 4.9,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Al-Khazneh+Petra',
+      },
+      {
+        id: 'pet-monastery',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Ad_Deir_%28The_Monastery%29%2C_El_Deir%2C_Petra%2C_Jordan.jpg/500px-Ad_Deir_%28The_Monastery%29%2C_El_Deir%2C_Petra%2C_Jordan.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'המנזר (א-דיר)',
+        nameLocal: 'The Monastery (Ad Deir)',
+        category: 'nature',
+        lat: 30.3382,
+        lng: 35.431,
+        description:
+          'המבנה החצוב הגדול ביותר בפטרה, בקצה טיפוס של כ-800 מדרגות בהרים. פחות צפוף מהח׳זנה, עם נוף פראי ותצפית בקצה. שווה כל מדרגה - להתחיל מוקדם ולקחת מים.',
+        rating: 4.8,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Ad+Deir+Monastery+Petra',
+      },
+      {
+        id: 'pet-highplace',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Petra_View_from_High_Place_of_Sacrifice_1935.jpg/500px-Petra_View_from_High_Place_of_Sacrifice_1935.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 0,
+        name: 'במת ההקרבה העליונה',
+        nameLocal: 'High Place of Sacrifice',
+        category: 'viewpoint',
+        lat: 30.3215,
+        lng: 35.447,
+        description:
+          'מסלול טיפוס מדרגות אל במת פולחן נבטית על ראש הר, עם תצפית מרהיבה על עמק פטרה כולו. מסלול חלופי ושקט יותר לחזרה, בין קברים חצובים.',
+        rating: 4.6,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=High+Place+of+Sacrifice+Petra',
+      },
+      {
+        id: 'pet-bynight',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Petra_Al-Kaznah_by_Night.jpg/500px-Petra_Al-Kaznah_by_Night.jpg',
+        tags: ['romantic', 'history'],
+        priceLevel: 2,
+        name: 'פטרה בלילה',
+        nameLocal: 'Petra by Night',
+        category: 'attraction',
+        lat: 30.3226,
+        lng: 35.4517,
+        description:
+          'בערבים נבחרים מוארים הסיק והח׳זנה באלפי נרות, עם מוזיקה בדואית. חוויה שקטה וקסומה, נפרדת מכרטיס היום. לבדוק ימי הפעלה מראש.',
+        rating: 4.4,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Petra+by+Night',
+      },
+      {
+        id: 'pet-littlepetra',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Facade_Siq_al-Barid_Jordan1501.jpg/500px-Facade_Siq_al-Barid_Jordan1501.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'פטרה הקטנה (סיק אל-בארד)',
+        nameLocal: 'Little Petra (Siq al-Barid)',
+        category: 'attraction',
+        lat: 30.3675,
+        lng: 35.4456,
+        description:
+          'אתר נבטי קטן וחינמי צפונית לפטרה, עם קניון צר ומבנים חצובים - שקט ומהיר יותר לביקור. משתלב יפה עם פטרה הראשית.',
+        rating: 4.4,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=Little+Petra+Siq+al-Barid',
+      },
+      {
+        id: 'pet-wadirum',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Wadi_rum_desert.jpg/500px-Wadi_rum_desert.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'מדבר ואדי ראם',
+        nameLocal: 'Wadi Rum',
+        category: 'nature',
+        lat: 29.5931,
+        lng: 35.42,
+        description:
+          'מדבר של צוקי חול אדומים, קשתות סלע ומישורים אינסופיים - "עמק הירח" ששימש רקע לסרטים רבים. סיורי ג׳יפ בדואיים, טיפוס וגמלים, ולינה באוהל מדברי מתחת לשמי כוכבים.',
+        rating: 4.8,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Wadi+Rum',
+      },
+      {
+        id: 'pet-aqaba',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/South_Beach%2C_Aqaba%2C_Jordan.jpg/500px-South_Beach%2C_Aqaba%2C_Jordan.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'אקבה - הים האדום',
+        nameLocal: 'Aqaba (Red Sea)',
+        category: 'nature',
+        lat: 29.5319,
+        lng: 35.0056,
+        description:
+          'עיר הנמל של ירדן על הים האדום, ממש מול אילת - חופים, שוניות אלמוגים לצלילה ושנורקלינג, ואווירה נינוחה. נקודת מעבר נוחה מהגבול ומהמדבר.',
+        rating: 4.3,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Aqaba+Jordan',
+      },
+      {
+        id: 'pet-wadimusa',
+        tags: ['foodie'],
+        priceLevel: 1,
+        name: 'ואדי מוסא (עיירת פטרה)',
+        nameLocal: 'Wadi Musa',
+        category: 'attraction',
+        lat: 30.32,
+        lng: 35.4783,
+        description:
+          'העיירה שלמרגלות פטרה, בסיס הלינה והאוכל לרוב המבקרים - מלונות, מסעדות מקומיות ותצפיות על ההרים. נוח ללון כאן לפני יום מוקדם בפטרה.',
+        rating: 4.1,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Wadi+Musa+Jordan',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'פטרה - הסיק, האוצר והמנזר',
+        placeIds: ['pet-treasury', 'pet-highplace', 'pet-monastery'],
+        notes:
+          'יום פטרה מלא: להיכנס מוקדם דרך הסיק אל הח׳זנה, לטפס לבמת ההקרבה לתצפית, ולסיים בטיפוס למנזר (800 מדרגות - מים והתחלה מוקדמת חובה). Jordan Pass כולל את הכניסה.',
+      },
+      {
+        day: 2,
+        title: 'פטרה הקטנה ומדבר ואדי ראם',
+        placeIds: ['pet-littlepetra', 'pet-wadirum'],
+        notes:
+          'בוקר קצר בפטרה הקטנה, ואז דרומה לוואדי ראם: סיור ג׳יפ בדואי בין צוקי החול האדומים, ולינה באוהל מדברי מתחת לכוכבים - החלק הבלתי נשכח של הטיול.',
+      },
+      {
+        day: 3,
+        title: 'אקבה והים האדום',
+        placeIds: ['pet-aqaba', 'pet-wadimusa'],
+        notes:
+          'רגיעה באקבה על הים האדום - חוף, שנורקלינג או צלילה - בדרך חזרה אל מעבר ערבה. מי שמעדיף עוד פטרה יכול להחליף בבוקר נוסף באתר.',
+      },
+    ],
+    practical: {
+      flights:
+        'לא טסים - נכנסים במעבר יבשתי: מעבר ערבה (יצחק רבין) באילת-אקבה פתוח כל יום כ-08:00-20:00. מומלץ לרכוש מראש Jordan Pass (כולל ויזה בתנאי 3 לילות + כניסה לפטרה). מאילת אפשר גם טיולים מאורגנים ליום/יומיים.',
+      gettingAround:
+        'אין תחבורה ציבורית נוחה בין האתרים - הדרך הנוחה היא נהג פרטי, מונית מסוכמת מראש, רכב שכור בירדן, או טיול מאורגן מאילת. מהגבול לפטרה כשעתיים; פטרה לוואדי ראם כשעה-וחצי.',
+      kosherOverview:
+        'אין בדרום ירדן תשתית כשרות מסודרת - אין מסעדות כשרות או בית חב"ד. מטיילים שומרי כשרות נוהגים להצטייד מראש מאילת (הסמוכה למעבר) במזון ארוז עם הכשר. פירות, ירקות, טחינה וחומוס טריים זמינים מקומית.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
