@@ -1421,3 +1421,24 @@ the overnight run.
   close-up of one pan - replaced with the panorama; the Vinicunca lead
   image download was broken, replaced with a verified alternative).
   build clean, verify-photos 339/339 OK.
+
+### 2026-07-25 (g) - Overnight expansion: New Zealand (Queenstown + South Island)
+
+- **New Zealand** (new country, first Oceania destination) - visa waiver
+  but NZeTA + IVL required in advance (verified on immigration.govt.nz
+  terms: ~17-23 NZD + 35 NZD, valid 2 years, 90 days per visit), NZD,
+  strict biosecurity noted.
+- **Queenstown & the South Island** - 13 places, rating 4.8. Landmark:
+  Milford Sound. All-nature: Fiordland NP, Doubtful Sound, Routeburn
+  Track (Great Walk), Lake Wakatipu, Wanaka, Mount Aspiring NP, Aoraki /
+  Mount Cook, Lakes Pukaki and Tekapo (dark-sky reserve), Franz Josef
+  Glacier. 6-day itinerary.
+- Flights: no nonstop from TLV (the longest trip for Israelis) - two
+  connections, ~28-32h, then a domestic hop to ZQN.
+- **Kosher:** Chabad Queenstown serves South Island travellers with
+  Shabbat meals and food by advance order; no verified street address was
+  found, so the pin is the town centre and the entry says so explicitly.
+  pending-review.
+- Coordinates from the Wikipedia API (German Wikipedia for lakes Pukaki
+  and Tekapo, which lack coordinates in the English articles); photos are
+  article lead images. build clean, verify-photos 352/352 OK.

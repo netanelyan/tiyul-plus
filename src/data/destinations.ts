@@ -8342,6 +8342,318 @@ export const destinations: Destination[] = [
         'לקוסקו יש בית חב"ד גדול ופעיל - עם מסעדה בשרית ומסעדה חלבית במטבחים נפרדים, מניינים וארוחות שבת - וזו כתובת הכשרות המרכזית באזור, פופולרית מאוד בקרב מטיילים ישראלים. מחוץ לקוסקו (העמק הקדוש, אגואס קליינטס, פונו) אין כשרות מסודרת: כדאי לצאת מצוידים, והאוכל הצמחוני בפרו נגיש ומגוון.',
     },
   },
+  {
+    slug: 'queenstown',
+    name: 'קווינסטאון והאי הדרומי',
+    nameLocal: 'Queenstown & the South Island',
+    countrySlug: 'new-zealand',
+    flag: '🇳🇿',
+    center: { lat: -44.5, lng: 168.8 },
+    zoom: 7,
+    tagline: 'פיורדים, קרחונים ואגמים - בירת הטבע והאדרנלין',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Milford_Sound_%28New_Zealand%29.JPG/500px-Milford_Sound_%28New_Zealand%29.JPG',
+    iconicLandmark: {
+      name: 'מילפורד סאונד',
+      nameLocal: 'Milford Sound / Piopiotahi',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Milford_Sound_%28New_Zealand%29.JPG/500px-Milford_Sound_%28New_Zealand%29.JPG',
+      blurb:
+        'פיורד באורך כ-15 ק"מ בלב פארק פיורדלנד, שקירותיו מתנשאים ישירות מהמים לגובה של מאות מטרים - ובראשם פסגת מיטר פיק וכמה מהמפלים הגבוהים בניו זילנד.',
+    },
+    editorialRating: {
+      score: 4.8,
+      verdict:
+        'אחד מאזורי הטבע היפים בעולם, עם תשתית מטיילים מצוינת ובטיחות גבוהה, ובקווינסטאון אפילו בית חב"ד לישראלים. חסרונות: הטיסה הארוכה ביותר מישראל (שתי החלפות, כ-30 שעות), עלויות גבוהות, ומזג אוויר שמשתנה בלי הודעה - במיוחד בפיורדלנד הגשום.',
+    },
+    summary:
+      'קווינסטאון יושבת על גדת אגם ואקטיפו בין רכסי הרים, והיא נקודת המוצא לטבע של האי הדרומי: פיורד מילפורד סאונד ודאוטפול סאונד, מסלולי ההליכה של פיורדלנד ומאונט אספיירינג, אגמי הטורקיז פוקאקי וטקאפו למרגלות הר קוק, וקרחון פרנץ יוזף בחוף המערבי. זו גם בירת ספורט האתגרי של ניו זילנד - וגם עיר קטנה ונוחה עם בית חב"ד פעיל.',
+    bestSeason:
+      'דצמבר-פברואר (קיץ דרומי - ימים ארוכים, כל המסלולים פתוחים) · מרץ-אפריל שקט ויפה · יוני-אוגוסט חורף וסקי, חלק ממסלולי ההליכה סגורים או דורשים ציוד אלפיני',
+    places: [
+      {
+        id: 'nzl-milford',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Milford_Sound_%28New_Zealand%29.JPG/500px-Milford_Sound_%28New_Zealand%29.JPG',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'מילפורד סאונד',
+        nameLocal: 'Milford Sound / Piopiotahi',
+        category: 'nature',
+        lat: -44.648,
+        lng: 167.9056,
+        description:
+          'הפיורד המפורסם של ניו זילנד: קירות סלע אנכיים, מפלים שיורדים היישר לים, כלבי ים ולעתים דולפינים. השיט אורך כשעתיים, והדרך אליו מטה אנאו היא אחת הנסיעות היפות במדינה.',
+        rating: 4.8,
+        durationMin: 600,
+        externalUrl: 'https://maps.google.com/?q=Milford+Sound',
+      },
+      {
+        id: 'nzl-fiordland',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Hollyford_River_NZ_11.jpg/500px-Hollyford_River_NZ_11.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'פארק פיורדלנד',
+        nameLocal: 'Fiordland National Park',
+        category: 'nature',
+        lat: -45.4167,
+        lng: 167.7167,
+        description:
+          'הפארק הלאומי הגדול בניו זילנד, אתר מורשת עולמית: יערות גשם ממוזגים, פיורדים, אגמים ומסלולי הליכה מפורסמים. אחד האזורים הגשומים בעולם - להתארגן לגשם בכל עונה.',
+        rating: 4.8,
+        durationMin: 720,
+        externalUrl: 'https://maps.google.com/?q=Fiordland+National+Park',
+      },
+      {
+        id: 'nzl-doubtful',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Doubtful_Sound_Clear.jpg/500px-Doubtful_Sound_Clear.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 3,
+        name: 'דאוטפול סאונד',
+        nameLocal: 'Doubtful Sound / Patea',
+        category: 'nature',
+        lat: -45.3167,
+        lng: 166.9833,
+        description:
+          'הפיורד השני בגודלו, גדול ושקט בהרבה ממילפורד - מגיעים אליו בשילוב של שיט על אגם מנפורי ונסיעה בכביש הרים. פחות מבקרים, יותר תחושה של סוף העולם.',
+        rating: 4.7,
+        durationMin: 600,
+        externalUrl: 'https://maps.google.com/?q=Doubtful+Sound',
+      },
+      {
+        id: 'nzl-routeburn',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Tarn_at_Key_Summit%2C_a_side_track_on_the_Routeburn_Track.jpg/500px-Tarn_at_Key_Summit%2C_a_side_track_on_the_Routeburn_Track.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'מסלול רוטבורן',
+        nameLocal: 'Routeburn Track',
+        category: 'nature',
+        lat: -44.727,
+        lng: 168.1703,
+        description:
+          'אחד מ"ההליכות הגדולות" של ניו זילנד: כ-33 ק"מ בין פיורדלנד למאונט אספיירינג, אגמים אלפיניים ורכסים. אפשר גם ללכת רק את קטע קי סאמיט כטיול יום מהצד של טה אנאו.',
+        rating: 4.8,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Routeburn+Track',
+      },
+      {
+        id: 'nzl-queenstown',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Queenstown_1_%288168013172%29.jpg/500px-Queenstown_1_%288168013172%29.jpg',
+        tags: ['outdoors', 'foodie'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'קווינסטאון',
+        nameLocal: 'Queenstown',
+        category: 'attraction',
+        lat: -45.0311,
+        lng: 168.6625,
+        description:
+          'עיירת נופש על גדת אגם ואקטיפו, מוקפת רכס "הרימוטקבלס" - בסיס נוח לכל טיולי האזור, וגם בירת ספורט האתגר של המדינה (בנג׳י, פאראגליידינג, סקי בחורף).',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Queenstown+New+Zealand',
+      },
+      {
+        id: 'nzl-wakatipu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/LakeWakatipuNov172024_02.jpg/500px-LakeWakatipuNov172024_02.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        name: 'אגם ואקטיפו',
+        nameLocal: 'Lake Wakatipu',
+        category: 'nature',
+        lat: -45.05,
+        lng: 168.5,
+        description:
+          'אגם קרחוני בצורת ברק באורך כ-80 ק"מ, שמימיו צלולים וקרים. סביבו שבילי הליכה ואופניים, ובקצהו הצפוני הכפר גלנורקי עם אחד הנופים המצולמים במדינה.',
+        rating: 4.7,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Lake+Wakatipu',
+      },
+      {
+        id: 'nzl-wanaka',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/LakeWanakaNov262024_01.jpg/500px-LakeWanakaNov262024_01.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'ואנאקה',
+        nameLocal: 'Wānaka',
+        category: 'nature',
+        lat: -44.7,
+        lng: 169.15,
+        description:
+          'עיירת אגם רגועה מקווינסטאון, כשעה נסיעה משם: טיילת, העץ הבודד שצומח במים, ומסלול הטיפוס הפופולרי רוי׳ס פיק עם נוף פנורמי על האגם וההרים.',
+        rating: 4.7,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Wanaka',
+      },
+      {
+        id: 'nzl-aspiring',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Matukituki_valley.jpg/500px-Matukituki_valley.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'פארק מאונט אספיירינג',
+        nameLocal: 'Mount Aspiring National Park',
+        category: 'nature',
+        lat: -44.3833,
+        lng: 168.7333,
+        description:
+          'פארק אלפיני של עמקים קרחוניים, נהרות טורקיז ופסגות - חלק מאתר המורשת העולמית טה ואהיפונאמו. מעמק מטוקיטוקי יוצאים מסלולי יום יפים כמו רוב רוי גלייסייר.',
+        rating: 4.7,
+        durationMin: 420,
+        externalUrl: 'https://maps.google.com/?q=Mount+Aspiring+National+Park',
+      },
+      {
+        id: 'nzl-cook',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Mt_Cook_LC0247.jpg/500px-Mt_Cook_LC0247.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'אאורקי - הר קוק',
+        nameLocal: 'Aoraki / Mount Cook',
+        category: 'nature',
+        lat: -43.595,
+        lng: 170.1419,
+        description:
+          'הפסגה הגבוהה בניו זילנד (3,724 מ׳) ובמרכז פארק לאומי של קרחונים ואגמי קרח. מסלול הוקי ואלי הקל (כ-3 שעות הלוך-חזור) מגיע אל אגם עם קרחונים צפים - מהטיולים היפים במדינה.',
+        rating: 4.8,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Aoraki+Mount+Cook',
+      },
+      {
+        id: 'nzl-pukaki',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/LakePukakiNov232024_01.jpg/500px-LakePukakiNov232024_01.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        name: 'אגם פוקאקי',
+        nameLocal: 'Lake Pukaki',
+        category: 'nature',
+        lat: -44.1167,
+        lng: 170.1667,
+        description:
+          'אגם קרחוני בצבע תכלת-חלבי בלתי נתפס, שנוצר מקמח סלעים של הקרחונים - ומעליו נשקף הר קוק. נקודות התצפית לאורך הכביש הן עצירה חובה בדרך צפונה.',
+        rating: 4.8,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Lake+Pukaki',
+      },
+      {
+        id: 'nzl-tekapo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/LakeTekapoNov242024_05.jpg/500px-LakeTekapoNov242024_05.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'אגם טקאפו',
+        nameLocal: 'Lake Tekapo',
+        category: 'nature',
+        lat: -43.8833,
+        lng: 170.5167,
+        description:
+          'אגם טורקיז עם כנסיית הרועה הטוב הקטנה על שפתו, ובקיץ שדות לופין סגולים. האזור הוא שמורת שמיים כהים - אחד המקומות הטובים בעולם לצפייה בכוכבים.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Lake+Tekapo',
+      },
+      {
+        id: 'nzl-franzjosef',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Franz_josef_Glacier_LC0250.jpg/500px-Franz_josef_Glacier_LC0250.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'קרחון פרנץ יוזף',
+        nameLocal: 'Franz Josef Glacier / Kā Roimata o Hine Hukatere',
+        category: 'nature',
+        lat: -43.4669,
+        lng: 170.1917,
+        description:
+          'קרחון שיורד מהאלפים הדרומיים כמעט עד ליער הגשם בחוף המערבי. מהעמק אפשר להגיע לתצפית ברגל; הליכה על הקרח עצמו נעשית רק בטיסת מסוק עם מדריכים.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Franz+Josef+Glacier',
+      },
+      {
+        id: 'nzl-chabad',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'בית חב"ד קווינסטאון',
+        nameLocal: 'Chabad Queenstown',
+        category: 'kosher-food',
+        lat: -45.0311,
+        lng: 168.6625,
+        description:
+          'בית חב"ד שפועל בקווינסטאון עבור המטיילים באי הדרומי: ארוחות שבת, מניינים ואוכל כשר בתיאום מראש. לא אותרה כתובת רשמית מאומתת - הסימון הוא במרכז העיר, וכדאי לתאם ישירות מולם.',
+        kosherNote: 'ארוחות ואוכל כשר בהזמנה מראש בלבד; לוודא מיקום, שעות והשגחה ישירות מול בית חב"ד.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד קווינסטאון, ניו זילנד',
+        },
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Chabad+Queenstown',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'קווינסטאון והאגם',
+        placeIds: ['nzl-queenstown', 'nzl-wakatipu', 'nzl-chabad'],
+        notes:
+          'יום התאוששות מהטיסה הארוכה: טיילת קווינסטאון, רכבל לתצפית בוב׳ס פיק ונסיעה קצרה לגלנורקי. ארוחת ערב כשרה בתיאום מראש.',
+      },
+      {
+        day: 2,
+        title: 'מילפורד סאונד',
+        placeIds: ['nzl-milford', 'nzl-fiordland'],
+        notes:
+          'יום ארוך: יוצאים מוקדם דרך טה אנאו, שיט בפיורד וחזרה. אפשר גם ללון בטה אנאו כדי לקצר את הנסיעה.',
+      },
+      {
+        day: 3,
+        title: 'הליכה בפיורדלנד',
+        placeIds: ['nzl-routeburn', 'nzl-doubtful'],
+        notes:
+          'בוחרים: הליכת יום בקטע קי סאמיט של מסלול רוטבורן, או יום שלם בדאוטפול סאונד השקט. שניהם דורשים הזמנה מראש בעונה.',
+      },
+      {
+        day: 4,
+        title: 'ואנאקה ומאונט אספיירינג',
+        placeIds: ['nzl-wanaka', 'nzl-aspiring'],
+        notes:
+          'נסיעה נופית לוואנאקה, טיפוס לרוי׳ס פיק למי שכשיר, ואחר הצהריים עמק מטוקיטוקי בפארק מאונט אספיירינג.',
+      },
+      {
+        day: 5,
+        title: 'אגמי הטורקיז והר קוק',
+        placeIds: ['nzl-pukaki', 'nzl-cook', 'nzl-tekapo'],
+        notes:
+          'נוסעים צפונה לאורך אגם פוקאקי אל פארק אאורקי - מסלול הוקי ואלי אל אגם הקרחונים - וסיום באגם טקאפו לצפייה בכוכבים.',
+      },
+      {
+        day: 6,
+        title: 'החוף המערבי והקרחון',
+        placeIds: ['nzl-franzjosef'],
+        notes:
+          'הרחבה לחוף המערבי: יער גשם, חופים פראיים וקרחון פרנץ יוזף. הנסיעה ארוכה - עדיף לשלב עם לינה באזור.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין ולא הייתה טיסה ישירה מנתב"ג לניו זילנד - זו הטיסה הארוכה ביותר לישראלים: בדרך כלל שתי החלפות (למשל דרך דובאי/דוחא/בנגקוק/סינגפור ואז אוקלנד או סידני), כ-28-32 שעות סה"כ. מאוקלנד יש טיסה פנימית של כשעתיים לקווינסטאון (ZQN), ויש גם קווים ישירים מסידני ומלבורן.',
+      gettingAround:
+        'רכב שכור או קמפרוואן הם הדרך המעשית היחידה לטייל באי הדרומי - המרחקים גדולים והתחבורה הציבורית דלילה. נוסעים בצד שמאל, הכבישים צרים ומפותלים, ולתדלוק ולקניות כדאי לעצור בערים - יש קטעים ארוכים בלי כלום.',
+      kosherOverview:
+        'בקווינסטאון פועל בית חב"ד שמשרת את המטיילים באי הדרומי - ארוחות שבת ואוכל כשר בהזמנה מראש; בערים הגדולות (אוקלנד, וולינגטון, כרייסטצ׳רץ׳) יש קהילות ואפשרויות כשרות נוספות. מחוץ לזה אין באי הדרומי כשרות מסודרת - כדאי להצטייד בסופרמרקטים גדולים, שבהם יש מוצרים ארוזים עם סימון כשרות בינלאומי, ולוודא הכול מראש.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
