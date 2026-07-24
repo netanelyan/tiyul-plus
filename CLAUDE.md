@@ -1356,3 +1356,25 @@ the overnight run.
 - Every coordinate from the Wikipedia API; every photo is the article
   lead image (Commons 500px thumb), hero/landmark images eyeballed.
   build clean, verify-photos 302/302 OK.
+
+### 2026-07-25 (d) - Overnight expansion: Japan (Tokyo + Mount Fuji)
+
+- **Japan** (new country, first East-Asian destination) - visa-free 90
+  days for Israelis, JPY, cash-friendly, IC cards (Suica/Pasmo).
+- **Tokyo & Mount Fuji** - 16 places, rating 4.8. Landmark: Mount Fuji.
+  Nature/day trips: Lake Kawaguchi, Chureito Pagoda viewpoint, Hakone,
+  Lake Ashi, Owakudani volcanic valley, Kegon Falls (Nikko). City:
+  Sensoji, Shibuya Crossing, Meiji Shrine, Skytree, Ueno Park, Shinjuku
+  Gyoen, Kamakura + the Great Buddha. 5-day itinerary.
+- Flights verified: El Al is the only nonstop TLV-NRT, ~3 weekly on a
+  787-9, ~11.5h, route resumed April 2026.
+- **Kosher REAL but small:** Chabad House Tokyo in Takanawa with Chana s
+  Place (the city first kosher restaurant) + Kosher Delica delivery under
+  rabbinical supervision - both by advance order; pending-review like every
+  kosher entry. Overview warns that regular Japanese food uses dashi/mirin
+  and must never be assumed kosher.
+- Coordinates: English Wikipedia API, and Japanese Wikipedia for the five
+  articles without coordinates (Owakudani, Kegon Falls, Lake Ashi, Shibuya,
+  Arakurayama Sengen Park); the Chabad pin is the Takanawa
+  neighbourhood centroid via Nominatim, with the exact street address in
+  the description. build clean, verify-photos 318/318 OK.

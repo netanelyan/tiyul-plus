@@ -7446,6 +7446,364 @@ export const destinations: Destination[] = [
         'אין באינטרלאקן ובעמק היונגפראו כתובת כשרה מאומתת - לא מסעדה ולא חנות. תשתית הכשרות בשווייץ מרוכזת בערים הגדולות (ציריך, ז׳נבה, בזל), וכמה מלונות בהרים מציעים שירות כשר עונתי בלבד. מי שמקפיד - להצטייד מראש בציריך ולוודא ישירות מול המלון/המסעדה לפני הנסיעה.',
     },
   },
+  {
+    slug: 'tokyo',
+    name: 'טוקיו והר פוג׳י',
+    nameLocal: 'Tokyo & Mount Fuji',
+    countrySlug: 'japan',
+    flag: '🇯🇵',
+    center: { lat: 35.55, lng: 139.3 },
+    zoom: 8,
+    tagline: 'עיר ענקית ומדויקת - ומסביבה הר געש, אגמים ומעיינות חמים',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg/500px-View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg',
+    iconicLandmark: {
+      name: 'הר פוג׳י',
+      nameLocal: 'Mount Fuji / 富士山',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg/500px-View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg',
+      blurb:
+        'הר הגעש הגבוה ביפן (3,776 מ׳) וסמלה המוכר ביותר - אתר מורשת עולמית של אונסק"ו, שנראה בימים בהירים גם מטוקיו.',
+    },
+    editorialRating: {
+      score: 4.8,
+      verdict:
+        'אחת הערים המרתקות בעולם, ובטווח שעתיים ממנה הר געש, אגמים, מפלים ומעיינות חמים - עם תחבורה ציבורית מושלמת ובטיחות יוצאת דופן. חסרונות: טיסה של כ-11.5 שעות בתדירות נמוכה, יעד יקר, מחסום שפה, ופוג׳י מתחבא בעננים בחלק גדול מהשנה.',
+    },
+    summary:
+      'טוקיו היא עיר-מדינה שלמה: מקדש סנסו-ג׳י בן המאה השביעית באסקוסה, צומת שיבויה הענק, יער המקדש של מייג׳י וגנים מטופחים בלב הבטון. במרחק שעה-שעתיים מתחילה יפן אחרת - הר פוג׳י ואגמיו, עמק הגופרית של האקונה, מפל קגון שבניקו והבודהה הגדול של קמאקורה. בטוקיו יש גם בית חב"ד ומסעדה כשרה, מה שהופך אותה לנקודת פתיחה נוחה לשומרי כשרות ביפן.',
+    bestSeason:
+      'סוף מרץ-אפריל (פריחת הדובדבן) ואוקטובר-נובמבר (שלכת) - הנוחים ביותר · הקיץ חם ולח מאוד · טיפוס על פוג׳י אפשרי רק בעונה הרשמית, כיולי-תחילת ספטמבר',
+    places: [
+      {
+        id: 'jpn-fuji',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg/500px-View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הר פוג׳י',
+        nameLocal: 'Mount Fuji / 富士山',
+        category: 'nature',
+        lat: 35.3608,
+        lng: 138.7275,
+        description:
+          'הר הגעש הסימטרי שהוא סמלה של יפן, 3,776 מ׳ ואתר מורשת עולמית. רובם המכריע של המבקרים צופים בו מהאגמים או מהאקונה; הטיפוס עצמו אפשרי רק בעונה הקצרה של הקיץ ודורש הכנה.',
+        rating: 4.8,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Mount+Fuji',
+      },
+      {
+        id: 'jpn-kawaguchi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/KawaguchiKo.jpg/500px-KawaguchiKo.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'אגם קוואגוצ׳י',
+        nameLocal: 'Lake Kawaguchi / 河口湖',
+        category: 'nature',
+        lat: 35.515,
+        lng: 138.7567,
+        description:
+          'הנגיש שבחמשת אגמי פוג׳י, ומהגדה הצפונית שלו נשקף ההר בשלמותו ומשתקף במים. סביבו טיילת, מוזיאונים קטנים, רכבל לתצפית ואונקים (מעיינות חמים) עם נוף.',
+        rating: 4.7,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Lake+Kawaguchi',
+      },
+      {
+        id: 'jpn-chureito',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Chuurei-tou_Fujiyoshida_17025277650_c59733d6ba_o.jpg/500px-Chuurei-tou_Fujiyoshida_17025277650_c59733d6ba_o.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'פגודת צ׳ורייטו',
+        nameLocal: 'Chureito Pagoda, Arakurayama Sengen Park',
+        category: 'viewpoint',
+        lat: 35.5012,
+        lng: 138.8014,
+        description:
+          'הפגודה האדומה בת חמש הקומות שמעל העיר פוג׳ייושידה, ומאחוריה הר פוג׳י - התמונה המזוהה ביותר עם יפן. מגיעים בטיפוס של כ-400 מדרגות; יפה במיוחד בפריחת הדובדבן ובשלכת.',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Chureito+Pagoda',
+      },
+      {
+        id: 'jpn-hakone',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/View_of_Mount_Fuji_from_Lake_Ashi.jpg/500px-View_of_Mount_Fuji_from_Lake_Ashi.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'האקונה',
+        nameLocal: 'Hakone / 箱根',
+        category: 'nature',
+        lat: 35.1894,
+        lng: 139.0247,
+        description:
+          'אזור הררי געשי דרומית-מערבית לטוקיו, מפורסם במעיינות החמים (אונסן) ובמסלול המעגלי שמשלב רכבת הרים, פוניקולר, רכבל ואונייה על האגם. יעד קלאסי ליום-יומיים מטוקיו.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Hakone',
+      },
+      {
+        id: 'jpn-ashi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/260505_Moto-Hakone_Hakone_Japan01s3.jpg/500px-260505_Moto-Hakone_Hakone_Japan01s3.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'אגם אשי',
+        nameLocal: 'Lake Ashi / 芦ノ湖',
+        category: 'nature',
+        lat: 35.2097,
+        lng: 139.0044,
+        description:
+          'אגם געשי בלב האקונה, ובימים בהירים נשקף מעליו הר פוג׳י. שער הטורי האדום של מקדש האקונה עומד במים ממש בקצה האגם - אחת התמונות המפורסמות באזור.',
+        rating: 4.6,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Lake+Ashi',
+      },
+      {
+        id: 'jpn-owakudani',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Owakudani_-_Hakone_%2827369344357%29.jpg/500px-Owakudani_-_Hakone_%2827369344357%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'עמק אווקודאני',
+        nameLocal: 'Ōwakudani / 大涌谷',
+        category: 'nature',
+        lat: 35.2419,
+        lng: 139.0208,
+        description:
+          'עמק געשי פעיל שנוצר בהתפרצות לפני כ-3,000 שנה: אדים גופריתיים, בורות רותחים ונוף מאדים - מגיעים ברכבל מעליו. לפעמים נסגר בגלל פעילות גזים; לבדוק את מצב האתר לפני שמגיעים.',
+        rating: 4.4,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Owakudani',
+      },
+      {
+        id: 'jpn-kegon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Lake_chuzenji_and_kegon_waterfall.jpg/500px-Lake_chuzenji_and_kegon_waterfall.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'מפל קגון (ניקו)',
+        nameLocal: 'Kegon Falls / 華厳滝',
+        category: 'nature',
+        lat: 36.7379,
+        lng: 139.502,
+        description:
+          'מפל בגובה כ-97 מ׳ שיוצא מאגם צ׳וזנג׳י בהרי ניקו, ומעלית מובילה למרפסת תצפית בתחתיתו. משתלב עם מקדשי ניקו (אתר מורשת עולמית) ליום מלא צפונית לטוקיו.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Kegon+Falls',
+      },
+      {
+        id: 'jpn-sensoji',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Sensoji_2023.jpg/500px-Sensoji_2023.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'מקדש סנסו-ג׳י (אסקוסה)',
+        nameLocal: 'Sensō-ji, Asakusa',
+        category: 'attraction',
+        lat: 35.7147,
+        lng: 139.7968,
+        description:
+          'המקדש הבודהיסטי העתיק בטוקיו, ואליו מובילה סמטת נקאמיסה עמוסה בדוכני מזכרות ומאכלי רחוב. השער האדום קמינרימון עם הפנס הענק הוא אחד הצילומים המזוהים עם העיר.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Sensoji+Temple',
+      },
+      {
+        id: 'jpn-shibuya',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Shibuya_Crossing%2C_Aerial.jpg/500px-Shibuya_Crossing%2C_Aerial.jpg',
+        tags: ['nightlife', 'families'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'צומת שיבויה',
+        nameLocal: 'Shibuya Crossing',
+        category: 'attraction',
+        lat: 35.6586,
+        lng: 139.7011,
+        description:
+          'מעבר החצייה האלכסוני שמול תחנת שיבויה, שבו חוצים אלפי אנשים בכל מחזור רמזור - סמל של טוקיו המודרנית. סביבו רחובות קניות, וממרפסות התצפית בבניינים הסמוכים רואים את הכוריאוגרפיה מלמעלה.',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Shibuya+Crossing',
+      },
+      {
+        id: 'jpn-meiji',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Meiji_Jingu_2023-3.jpg/500px-Meiji_Jingu_2023-3.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        name: 'מקדש מייג׳י',
+        nameLocal: 'Meiji Shrine / 明治神宮',
+        category: 'attraction',
+        lat: 35.6761,
+        lng: 139.6992,
+        description:
+          'מקדש שינטו גדול בלב יער נטוע של יותר ממאה אלף עצים, ממש ליד הרחובות הסואנים של הראג׳וקו ושיבויה. שער הטורי העצום בכניסה והשקט שבפנים הם ניגוד מוחלט לעיר שבחוץ.',
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Meiji+Shrine',
+      },
+      {
+        id: 'jpn-skytree',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Tokyo_Skytree_2014_%E2%85%A2.jpg/500px-Tokyo_Skytree_2014_%E2%85%A2.jpg',
+        tags: ['families'],
+        priceLevel: 2,
+        name: 'טוקיו סקייטרי',
+        nameLocal: 'Tokyo Skytree / 東京スカイツリー',
+        category: 'viewpoint',
+        lat: 35.7101,
+        lng: 139.8107,
+        description:
+          'מגדל השידור הגבוה ביפן (634 מ׳) ובו שתי קומות תצפית - בימים בהירים רואים ממנו את הר פוג׳י. בבסיסו קניון גדול ואקווריום, ומסביב שכונת סומידה השקטה יחסית.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Tokyo+Skytree',
+      },
+      {
+        id: 'jpn-ueno',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Ueno_park.jpg/500px-Ueno_park.jpg',
+        tags: ['families', 'art'],
+        priceLevel: 0,
+        name: 'פארק אואנו',
+        nameLocal: 'Ueno Park / 上野公園',
+        category: 'nature',
+        lat: 35.7122,
+        lng: 139.7711,
+        description:
+          'הפארק העירוני הגדול של מזרח טוקיו, ובו בריכת שיבאבה, מקדשים, גן חיות וכמה מהמוזיאונים החשובים ביפן. בעונת הסאקורה זה אחד ממוקדי הפריחה המפורסמים בעיר.',
+        rating: 4.5,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Ueno+Park',
+      },
+      {
+        id: 'jpn-gyoen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Shinjuku_Gyoen_National_Garden_-_sakura_3.JPG/500px-Shinjuku_Gyoen_National_Garden_-_sakura_3.JPG',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'גן שינג׳וקו גיואן',
+        nameLocal: 'Shinjuku Gyo-en',
+        category: 'nature',
+        lat: 35.685,
+        lng: 139.71,
+        description:
+          'גן לאומי ענק בלב שינג׳וקו, שמשלב גן יפני מסורתי, גן אנגלי, גן צרפתי וחממה טרופית. אחד המקומות היפים בעיר לפריחת הדובדבן ולשלכת, ושקט להפתיע.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Shinjuku+Gyoen',
+      },
+      {
+        id: 'jpn-kamakura',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/TsurugaokaHachiman-M8867.jpg/500px-TsurugaokaHachiman-M8867.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'קמאקורה',
+        nameLocal: 'Kamakura / 鎌倉',
+        category: 'attraction',
+        lat: 35.3197,
+        lng: 139.5525,
+        description:
+          'עיר חוף היסטורית כשעה מטוקיו, שהייתה בירת יפן במאות ה-12-14. מקדשים בין גבעות מיוערות, מקדש צורוגאוקה האצ׳ימנגו במרכז, ושבילי הליכה קצרים בין האתרים אל החוף.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Kamakura',
+      },
+      {
+        id: 'jpn-daibutsu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/230128_Kamakura_Daibutsu_Japan04s3.jpg/500px-230128_Kamakura_Daibutsu_Japan04s3.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הבודהה הגדול של קמאקורה',
+        nameLocal: 'Kōtoku-in, Great Buddha',
+        category: 'attraction',
+        lat: 35.3168,
+        lng: 139.5357,
+        description:
+          'פסל ברונזה בגובה כ-11.4 מ׳ מהמאה ה-13, שיושב תחת כיפת השמיים מאז שגלי צונאמי הרסו את האולם שהקיף אותו. אחד הסמלים המוכרים של יפן, ואפשר גם להיכנס אל תוך הפסל.',
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Kotoku-in+Great+Buddha',
+      },
+      {
+        id: 'jpn-chabad',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'בית חב"ד טוקיו ומסעדת Chana׳s Place',
+        nameLocal: "Chabad House Tokyo & Chana's Place, Takanawa",
+        category: 'kosher-food',
+        lat: 35.635,
+        lng: 139.7357,
+        description:
+          'בית חב"ד של טוקיו בשכונת טקאנאווה (1-5-23 Takanawa, Minato-ku), ובו Chana׳s Place - המסעדה הכשרה הראשונה בעיר, עם תפריט ישראלי-יהודי. עובדים בעיקר בהזמנה מראש ובשעות מוגדרות.',
+        kosherNote: 'בהשגחת בית חב"ד טוקיו. חובה לתאם מראש - שעות הפתיחה מוגבלות.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד טוקיו (הרב מנדי סודקביץ)',
+        },
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Chabad+House+Tokyo+Takanawa',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'טוקיו הישנה - אסקוסה וסומידה',
+        placeIds: ['jpn-sensoji', 'jpn-skytree', 'jpn-ueno'],
+        notes:
+          'יום ראשון רגוע אחרי הטיסה הארוכה: מקדש סנסו-ג׳י וסמטת נקאמיסה, מגדל סקייטרי מעבר לנהר, וסיום בפארק אואנו.',
+      },
+      {
+        day: 2,
+        title: 'טוקיו המודרנית',
+        placeIds: ['jpn-meiji', 'jpn-shibuya', 'jpn-gyoen', 'jpn-chabad'],
+        notes:
+          'יער המקדש של מייג׳י, ומשם ברגל לצומת שיבויה ולרחובות הקניות. אחר הצהריים גן שינג׳וקו גיואן, וארוחת ערב כשרה בטקאנאווה (בהזמנה מראש).',
+      },
+      {
+        day: 3,
+        title: 'הר פוג׳י והאגמים',
+        placeIds: ['jpn-fuji', 'jpn-kawaguchi', 'jpn-chureito'],
+        notes:
+          'יוצאים מוקדם לאזור האגמים: תצפיות על פוג׳י מגדות קוואגוצ׳י ומפגודת צ׳ורייטו. לבדוק תחזית - ההר מתחבא בעננים לעתים קרובות.',
+      },
+      {
+        day: 4,
+        title: 'האקונה - געש ומעיינות חמים',
+        placeIds: ['jpn-hakone', 'jpn-owakudani', 'jpn-ashi'],
+        notes:
+          'המסלול המעגלי של האקונה: רכבת הרים ורכבל אל עמק אווקודאני הגופריתי, ואונייה על אגם אשי אל שער הטורי שבמים.',
+      },
+      {
+        day: 5,
+        title: 'קמאקורה או ניקו',
+        placeIds: ['jpn-kamakura', 'jpn-daibutsu', 'jpn-kegon'],
+        notes:
+          'בוחרים כיוון: דרומה לקמאקורה (מקדשים, הבודהה הגדול וחוף) או צפונה לניקו (מקדשי המורשת ומפל קגון). שניהם טיולי יום ברכבת מטוקיו.',
+      },
+    ],
+    practical: {
+      flights:
+        'אל על היא היחידה שמפעילה טיסה ישירה מנתב"ג לטוקיו (נריטה, NRT) - כשלוש טיסות בשבוע ב-787-9, כ-11.5 שעות; הקו חודש באפריל 2026. לחלופין טסים עם החלפה דרך אירופה, איסטנבול או המפרץ.',
+      gettingAround:
+        'בטוקיו: מטרו ורכבות JR מכסים הכול - כדאי כרטיס IC נטען (Suica/Pasmo) מיד עם הנחיתה. לפוג׳י ולהאקונה יש רכבות ואוטובוסים ישירים וכרטיסי אזור (למשל Hakone Free Pass). Japan Rail Pass משתלם רק אם מתכננים גם נסיעות רכבת מהירה למרחקים ארוכים.',
+      kosherOverview:
+        'בטוקיו יש תשתית כשרות אמיתית אך קטנה: בית חב"ד בטקאנאווה עם המסעדה הכשרה Chana׳s Place, ושירות משלוחי אוכל כשר (Kosher Delica) שפועל בהשגחה רבנית ומגיע גם לערים אחרות ביפן - בשניהם עובדים בהזמנה מראש. מחוץ לטוקיו אין כמעט כלום, וחשוב לדעת שהמטבח היפני מבוסס על מרק דאשי (דגים), מירין ורוטב סויה - אין להניח כשרות בשום מסעדה רגילה.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
