@@ -10196,6 +10196,284 @@ export const destinations: Destination[] = [
         'לא אותרה בסלובניה מסעדה או חנות כשרה מאומתת. יש בליובליאנה קהילה יהודית קטנה, אך אין תשתית כשרות תיירותית; הכשרות הקרובה היא בטריאסטה שבאיטליה או בווינה. הדרך המעשית: להצטייד מראש, ולהסתמך על מוצרים ארוזים עם סימון כשרות אירופי בסופרמרקטים הגדולים.',
     },
   },
+  {
+    slug: 'plitvice',
+    name: 'פליטביצה והחוף הדלמטי',
+    nameLocal: 'Plitvice Lakes & the Dalmatian Coast',
+    countrySlug: 'croatia',
+    flag: '🇭🇷',
+    center: { lat: 44.2, lng: 15.8 },
+    zoom: 8,
+    tagline: 'אגמי מפלים טורקיז - ובשעתיים מהם הים האדריאטי',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/View_in_Plitvice_Lakes_National_Park.jpg/500px-View_in_Plitvice_Lakes_National_Park.jpg',
+    iconicLandmark: {
+      name: 'אגמי פליטביצה',
+      nameLocal: 'Plitvice Lakes',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/View_in_Plitvice_Lakes_National_Park.jpg/500px-View_in_Plitvice_Lakes_National_Park.jpg',
+      blurb:
+        'שרשרת של 16 אגמים בצבע טורקיז שיורדים זה לתוך זה במאות מפלים, מחוברים בשבילי עץ - הפארק הלאומי הוותיק בדרום-מזרח אירופה ואתר מורשת עולמית.',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'שילוב נדיר של פארקי מים ברמה עולמית וחוף אדריאטי יפהפה במרחק קצר, ובזאגרב יש בית חב"ד שמספק אוכל כשר בהזמנה מראש. חסרונות: טיסה ישירה רק לזאגרב ובתדירות נמוכה, פליטביצה עמוסה מאוד בקיץ (כרטיס לשעה מוגדרת), ורכב כמעט הכרחי.',
+    },
+    summary:
+      'פליטביצה היא הפנינה של פנים קרואטיה: 16 אגמים בצבע טורקיז שנשפכים זה לזה במאות מפלים, עם רשת שבילי עץ צמודים למים. דרומה משם מחכה פארק קרקה עם מפלי סקרדינסקי בוק, קניון פאקלניצה למטפסים, והחוף הדלמטי - זאדאר עם עוגב הים, ספליט עם ארמון דיוקלטיאנוס ודוברובניק המוקפת חומה. את הטיול פותחים בדרך כלל בזאגרב.',
+    bestSeason:
+      'מאי-יוני וספטמבר-אוקטובר (מזג אוויר נעים, פחות עומס, מפלים חזקים) · יולי-אוגוסט חם ועמוס מאוד · באביב המפלים בשיא הזרימה, בחורף חלק מהשבילים סגורים',
+    places: [
+      {
+        id: 'hrv-plitvice',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/View_in_Plitvice_Lakes_National_Park.jpg/500px-View_in_Plitvice_Lakes_National_Park.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'הפארק הלאומי אגמי פליטביצה',
+        nameLocal: 'Plitvice Lakes National Park',
+        category: 'nature',
+        lat: 44.8806,
+        lng: 15.6161,
+        description:
+          'שרשרת של 16 אגמים מדורגים שמחוברים במאות מפלים, ובהם שבילי עץ ממש מעל המים, מעבורת חשמלית ורכבת פנימית. אסורה רחצה; הכרטיסים בשעת כניסה מוגדרת ונחטפים בעונה.',
+        rating: 4.8,
+        durationMin: 420,
+        externalUrl: 'https://maps.google.com/?q=Plitvice+Lakes+National+Park',
+      },
+      {
+        id: 'hrv-krka',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Krkawatervallen.jpg/500px-Krkawatervallen.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'הפארק הלאומי קרקה',
+        nameLocal: 'Krka National Park',
+        category: 'nature',
+        lat: 43.8019,
+        lng: 15.9728,
+        description:
+          'פארק מפלים על נהר קרקה, ובמרכזו מפלי סקרדינסקי בוק הרחבים עם שביל עץ מעגלי. קרוב לחוף ולכן נוח לשילוב עם ימי ים - הרחצה במפלים עצמם אסורה כיום.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Krka+National+Park',
+      },
+      {
+        id: 'hrv-rastoke',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Rastoke_1510.JPG/500px-Rastoke_1510.JPG',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'ראסטוקה',
+        nameLocal: 'Rastoke',
+        category: 'nature',
+        lat: 45.1213,
+        lng: 15.5876,
+        description:
+          'כפר קטן במפגש נהרות סלוניצה וקורנה, שבו בתי עץ בנויים ממש מעל מפלים קטנים וטחנות מים היסטוריות - "פליטביצה בזעיר אנפין", כחצי שעה מהפארק.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Rastoke',
+      },
+      {
+        id: 'hrv-paklenica',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Canyon_of_Paklenica.jpg/500px-Canyon_of_Paklenica.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'קניון פאקלניצה',
+        nameLocal: 'Paklenica National Park',
+        category: 'nature',
+        lat: 44.3667,
+        lng: 15.4333,
+        description:
+          'שני קניונים תלולים ברכס וולביט שיורדים כמעט עד הים - אתר טיפוס סלעים מוביל באירופה, ולצדו מסלולי הליכה נוחים בין קירות של מאות מטרים.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Paklenica+National+Park',
+      },
+      {
+        id: 'hrv-kornati',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Kornati.jpg/500px-Kornati.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'איי קורנאטי',
+        nameLocal: 'Kornati Islands',
+        category: 'nature',
+        lat: 43.7833,
+        lng: 15.3333,
+        description:
+          'ארכיפלג של יותר ממאה איים ואיונים חשופים וקרסטיים, רובם ללא יישוב - נוף ים ייחודי שרואים בעיקר משיט יומי מזאדאר, מורטר או שיבניק.',
+        rating: 4.5,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Kornati+National+Park',
+      },
+      {
+        id: 'hrv-zadar',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Roman_Forum_in_Zadar%2C_Croatia_%2848607823862%29.jpg/500px-Roman_Forum_in_Zadar%2C_Croatia_%2848607823862%29.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'זאדאר',
+        nameLocal: 'Zadar',
+        category: 'attraction',
+        lat: 44.1142,
+        lng: 15.2275,
+        description:
+          'עיר חוף עם פורום רומי, כנסיית דונאט העגולה, ושתי יצירות מודרניות על הטיילת: עוגב הים שמנגן מגלי הים, ו"ברכת השמש" הסולארית. בסיס נוח לצפון דלמטיה.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Zadar',
+      },
+      {
+        id: 'hrv-split',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Split_080620-133710-IMG_0968x.jpg/500px-Split_080620-133710-IMG_0968x.jpg',
+        tags: ['history', 'nightlife'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'ספליט',
+        nameLocal: 'Split',
+        category: 'attraction',
+        lat: 43.51,
+        lng: 16.44,
+        description:
+          'העיר השנייה בגודלה בקרואטיה, שנבנתה בתוך ארמון דיוקלטיאנוס מהמאה הרביעית - סמטאות עתיקות שהן עדיין עיר חיה, טיילת ריווה ונמל שממנו יוצאות מעבורות לאיים.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Split+Croatia',
+      },
+      {
+        id: 'hrv-diocletian',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Croatia-01239_-_The_Peristil_%289551533404%29.jpg/500px-Croatia-01239_-_The_Peristil_%289551533404%29.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'ארמון דיוקלטיאנוס',
+        nameLocal: "Diocletian's Palace",
+        category: 'attraction',
+        lat: 43.5083,
+        lng: 16.44,
+        description:
+          'ארמון-מצודה שבנה הקיסר דיוקלטיאנוס בשנת 305 לספירה, ואתר מורשת עולמית - כיכר הפריסטיל, המרתפים והקתדרלה שהייתה המאוזוליאום שלו. הלב ההיסטורי של ספליט.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Diocletian+Palace+Split',
+      },
+      {
+        id: 'hrv-dubrovnik',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/The_walls_of_the_fortress_and_View_of_the_old_city._panorama.jpg/500px-The_walls_of_the_fortress_and_View_of_the_old_city._panorama.jpg',
+        tags: ['history', 'romantic'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'דוברובניק',
+        nameLocal: 'Dubrovnik',
+        category: 'attraction',
+        lat: 42.6403,
+        lng: 18.1083,
+        description:
+          'העיר העתיקה המוקפת חומות ים מהמאה ה-16, אתר מורשת עולמית - הליכה על החומה מקיפה את כל העיר, ורכבל עולה להר סרג׳ לתצפית. יקרה ועמוסה, במיוחד בימי עגינת אוניות.',
+        rating: 4.7,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Dubrovnik',
+      },
+      {
+        id: 'hrv-zagreb',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Zagreb_%2829255640143%29.jpg/500px-Zagreb_%2829255640143%29.jpg',
+        tags: ['foodie', 'art'],
+        priceLevel: 1,
+        name: 'זאגרב',
+        nameLocal: 'Zagreb',
+        category: 'attraction',
+        lat: 45.8131,
+        lng: 15.9775,
+        description:
+          'הבירה, ונקודת הכניסה לרוב הישראלים: העיר העליונה עם גגות הרעפים והפוניקולר, שוק דולאץ, מוזיאונים וסצנת בתי קפה חזקה. גם הכתובת של הקהילה היהודית ובית חב"ד.',
+        rating: 4.4,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Zagreb',
+      },
+      {
+        id: 'hrv-chabad',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'בית חב"ד זאגרב',
+        nameLocal: 'Chabad of Croatia, Zagreb',
+        category: 'kosher-food',
+        lat: 45.8131,
+        lng: 15.9775,
+        description:
+          'בית חב"ד של קרואטיה בזאגרב (רחוב רוקובה 4): ארוחות שבת, מוצרי בשר וחלב כשרים וקייטרינג שנשלח גם לערים אחרות במדינה - הכול בהזמנה מראש. הסימון הוא במרכז העיר.',
+        kosherNote: 'אין בקרואטיה מסעדה כשרה רגילה - ההזמנה מול בית חב"ד, ורצוי כשבוע מראש.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד קרואטיה, זאגרב',
+        },
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Chabad+of+Croatia+Zagreb',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'זאגרב',
+        placeIds: ['hrv-zagreb', 'hrv-chabad'],
+        notes:
+          'נחיתה בזאגרב, סיור בעיר העליונה ובשוק דולאץ. מי שמקפיד על כשרות - לתאם מראש עם בית חב"ד לאוכל להמשך הדרך.',
+      },
+      {
+        day: 2,
+        title: 'פליטביצה',
+        placeIds: ['hrv-plitvice', 'hrv-rastoke'],
+        notes:
+          'יוצאים מוקדם לפארק (כרטיס לשעה מוגדרת מראש), הליכה על שבילי העץ בין האגמים, ובדרך חזרה עצירה בכפר ראסטוקה.',
+      },
+      {
+        day: 3,
+        title: 'הרכס והים - פאקלניצה וזאדאר',
+        placeIds: ['hrv-paklenica', 'hrv-zadar'],
+        notes:
+          'בוקר בקניון פאקלניצה, ואחר הצהריים זאדאר - הפורום, עוגב הים ושקיעה על הטיילת.',
+      },
+      {
+        day: 4,
+        title: 'קרקה והאיים',
+        placeIds: ['hrv-krka', 'hrv-kornati'],
+        notes:
+          'מפלי קרקה בבוקר, ולמי שיש יום נוסף - שיט אל איי קורנאטי הקרסטיים.',
+      },
+      {
+        day: 5,
+        title: 'ספליט',
+        placeIds: ['hrv-split', 'hrv-diocletian'],
+        notes:
+          'יום בעיר העתיקה שבתוך ארמון דיוקלטיאנוס, טיילת ריווה, ואפשר מעבורת קצרה לאי סמוך.',
+      },
+      {
+        day: 6,
+        title: 'דוברובניק',
+        placeIds: ['hrv-dubrovnik'],
+        notes:
+          'הרחבה דרומה (כ-3 שעות נסיעה מספליט): הליכה על החומות בשעות הבוקר המוקדמות, ורכבל להר סרג׳ לשקיעה.',
+      },
+    ],
+    practical: {
+      flights:
+        'אל על מפעילה קו ישיר מנתב"ג לזאגרב (ZAG) - כטיסה שבועית, כשלוש וחצי שעות, וחלק מהטיסות מבוצעות בפועל בידי ישראייר; קרואטיה איירליינס מוסיפה קו עונתי. לספליט ולדוברובניק אין קו ישיר קבוע - טסים לזאגרב ונוסעים/טסים פנימית, או עם החלפה באירופה.',
+      gettingAround:
+        'רכב שכור נוח ביותר לשילוב פארקים וחוף; יש גם כביש מהיר מצוין (בתשלום) בין זאגרב, זאדאר וספליט ואוטובוסים בין-עירוניים תכופים. לאיים - מעבורות מזאדאר, שיבניק וספליט. בעונה כדאי להזמין חניה וכרטיסי פארק מראש.',
+      kosherOverview:
+        'אין בקרואטיה מסעדה כשרה פתוחה לקהל. בית חב"ד בזאגרב מספק ארוחות שבת, מוצרים כשרים וקייטרינג שנשלח גם לערי החוף - הכול בהזמנה מראש (מומלץ כשבוע). הקהילה היהודית המקומית מפרסמת גם מדריך מוצרים כשרים לסופרמרקטים, שימושי למי שמטייל בפארקים ובאיים.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {

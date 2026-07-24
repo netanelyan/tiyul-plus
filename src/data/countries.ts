@@ -440,6 +440,24 @@ export const countries: Country[] = [
         'כרטיסי אשראי מקובלים כמעט בכל מקום; מזומן שימושי בחניונים קטנים, בדוכנים ובכפרים. שימו לב: לנסיעה בכבישים המהירים חובה מדבקה אלקטרונית (e-vinjeta) - לוודא שהיא כלולה ברכב השכור.',
     },
   },
+  {
+    slug: 'croatia',
+    name: 'קרואטיה',
+    nameLocal: 'Croatia / Hrvatska',
+    flag: '🇭🇷',
+    tagline: 'אגמי מפלים, איים אדריאטיים וערים ונציאניות',
+    summary:
+      'קרואטיה משלבת שני עולמות: פנים הארץ עם אגמי פליטביצה ומפלי קרקה - מהיפים באירופה - וחוף אדריאטי ארוך עם אלף איים, ערים עתיקות כמו ספליט ודוברובניק ומים צלולים. המרחקים סבירים, התשתית טובה, ובזאגרב יש בית חב"ד שמספק אוכל כשר בתיאום מראש.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/View_in_Plitvice_Lakes_National_Park.jpg/960px-View_in_Plitvice_Lakes_National_Park.jpg',
+    practical: {
+      visa: 'קרואטיה באיחוד האירופי ובמרחב שנגן (מאז 2023) - ישראלים פטורים מוויזה עד 90 יום.',
+      currency: 'אירו (€) - קרואטיה עברה מהקונה לאירו ב-2023.',
+      sim: 'eSIM אירופי עובד היטב, או כרטיס מקומי (A1 / Hrvatski Telekom / Telemach).',
+      payments:
+        'כרטיסי אשראי מקובלים ברוב המקומות; באיים, בשווקים ובמעבורות קטנות כדאי מזומן. בעונת הקיץ המחירים בחוף עולים משמעותית.',
+    },
+  },
 ];
 
 export function getCountryBySlug(slug: string): Country | undefined {

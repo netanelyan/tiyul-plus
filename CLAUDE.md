@@ -1549,3 +1549,20 @@ the overnight run.
   than guessed: the English article has no coordinates and the Slovenian
   article lead image was the wrong subject. build clean, verify-photos
   all OK.
+
+### 2026-07-25 (n) - Overnight expansion: Croatia (Plitvice + Dalmatian coast)
+
+- **Croatia** (new country) - EU/Schengen visa-free, euro since 2023.
+- **Plitvice Lakes & the Dalmatian Coast** - 11 places, rating 4.7.
+  Landmark: Plitvice Lakes. Nature: Krka waterfalls, Rastoke, Paklenica
+  canyon, Kornati islands; cities: Zadar, Split + Diocletian Palace,
+  Dubrovnik, Zagreb. 6-day itinerary.
+- Flights: El Al nonstop TLV-Zagreb (about weekly, ~3.5h, some operated
+  by Israir), Croatia Airlines seasonal; no regular nonstop to Split or
+  Dubrovnik - said explicitly.
+- **Kosher:** verified that Croatia has NO public kosher restaurant;
+  Chabad of Croatia in Zagreb (Rokova 4) supplies Shabbat meals, kosher
+  meat/dairy and catering shipped to other cities by advance order
+  (~a week). pending-review.
+- All coordinates and photos from the Wikipedia API. build clean,
+  verify-photos all OK.
