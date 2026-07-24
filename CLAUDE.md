@@ -1464,3 +1464,18 @@ the overnight run.
   Arches, whose English articles carry no coordinates); the kosher pin is
   the street location from Nominatim. build clean, verify-photos
   365/365 OK.
+
+### 2026-07-25 (i) - Overnight expansion: High Tatras (Slovakia 2nd city)
+
+- **High Tatras** - 10 places, rating 4.5, Slovakia second destination
+  (first non-Bratislava). Landmark: Strbske Pleso. All-nature: Popradske
+  Pleso, Lomnicky Stit cable car, Hrebienok + the Cold Stream waterfalls,
+  Slovak Paradise NP ladder trails, Demanovska Cave of Liberty, the Tatra
+  ridge itself + Spis Castle and Poprad as the base. 5-day itinerary.
+- Access stated honestly: no flight to the region - Bratislava or Vienna
+  (~4h drive), or Krakow (~2.5h); Poprad has only a small regional airport.
+- **Kosher: none in the region**, and said so - nearest is Bratislava
+  Chabad or Krakow, hours away.
+- All coordinates and photos from the Wikipedia API; Spis Castle has no
+  lead image, so its photo came from the Commons API and was eyeballed.
+  build clean, verify-photos 375/375 OK.

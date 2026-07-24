@@ -8974,6 +8974,255 @@ export const destinations: Destination[] = [
         'הכשרות באזור מרוכזת בלאס וגאס: מרכול כשר ומסעדות כשרות בצד המערבי של העיר, בפיקוח ועד הכשרות המקומי (חב"ד דרום נבאדה). בפארקים הלאומיים ובעיירות שסביבם אין שום כשרות - הדרך המעשית היא להצטייד בווגאס לכל הטיול, ובסופרמרקטים הגדולים בדרך יש מוצרים ארוזים עם סימוני כשרות אמריקאיים מוכרים.',
     },
   },
+  {
+    slug: 'high-tatras',
+    name: 'הרי הטטרה הגבוהים',
+    nameLocal: 'High Tatras / Vysoké Tatry',
+    countrySlug: 'slovakia',
+    flag: '🇸🇰',
+    center: { lat: 49.1, lng: 20.2 },
+    zoom: 9,
+    tagline: 'האלפים הקטנים של סלובקיה - אגמים קרחוניים ופסגות סלע',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Tatry_Panorama01xxx.jpg/500px-Tatry_Panorama01xxx.jpg',
+    iconicLandmark: {
+      name: 'שטרבסקה פלסו',
+      nameLocal: 'Štrbské Pleso',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Strbske_pleso_from_Krivan.jpg/500px-Strbske_pleso_from_Krivan.jpg',
+      blurb:
+        'אגם קרחוני בגובה כ-1,346 מ׳ בלב הרי הטטרה, ומסביבו טיילת נוחה ומסלולי הליכה - התמונה המזוהה ביותר עם ההרים הגבוהים של סלובקיה.',
+    },
+    editorialRating: {
+      score: 4.5,
+      verdict:
+        'הרים אלפיניים אמיתיים במחירים של מזרח אירופה - אגמים קרחוניים, רכבלים ומסלולים מסומנים היטב, ומרחק נסיעה מברטיסלבה או מקרקוב. חסרונות: אין טיסה ישירה לאזור, אין תשתית כשרות, ומזג האוויר בהרים משתנה מהר.',
+    },
+    summary:
+      'הרי הטטרה הגבוהים הם רכס ההרים הצפוני של סלובקיה, על הגבול עם פולין - פסגות סלע חדות מעל 2,600 מ׳, אגמים קרחוניים (פלסא), מפלים ומסלולים מסומנים לכל רמה. בבסיס יושבות עיירות הנופש שטרבסקה פלסו, סטארי סמוקובץ וטטרנסקה לומניצה, ומהן עולים ברכבלים ובפוניקולרים אל הרכסים. באזור גם גן העדן הסלובקי עם נקיקיו, מערות סטלקטיטים וטירת ספיש הענקית.',
+    bestSeason:
+      'יוני-ספטמבר (מסלולים פתוחים, אגמים נגישים) · דצמבר-מרץ עונת סקי · באביב ובסתיו חלק מהשבילים הגבוהים סגורים - במאי-יוני יש סגירה עונתית של שבילי גובה',
+    places: [
+      {
+        id: 'tat-strbske',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Strbske_pleso_from_Krivan.jpg/500px-Strbske_pleso_from_Krivan.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'אגם שטרבסקה פלסו',
+        nameLocal: 'Štrbské Pleso',
+        category: 'nature',
+        lat: 49.1167,
+        lng: 20.0667,
+        description:
+          'אגם קרחוני בגובה כ-1,346 מ׳ עם טיילת מעגלית קלה סביבו, סירות בקיץ ומגלשות קפיצות סקי בקרבת מקום. נקודת מוצא נוחה למסלולים אל העמקים הגבוהים.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Strbske+Pleso',
+      },
+      {
+        id: 'tat-popradske',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Mengusovsk%C3%A1_dolina%2C_Vysok%C3%A9_Tatry_%2837%29.JPG/500px-Mengusovsk%C3%A1_dolina%2C_Vysok%C3%A9_Tatry_%2837%29.JPG',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'אגם פופרדסקה פלסו',
+        nameLocal: 'Popradské pleso',
+        category: 'nature',
+        lat: 49.1531,
+        lng: 20.0803,
+        description:
+          'אגם הררי בעמק מנגוסובסקה, בקצה מסלול הליכה נעים של כשעה מהשלוחה של שטרבסקה פלסו. לידו בקתת הרים, ומעליו מתנשאות פסגות הטטרה.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Popradske+pleso',
+      },
+      {
+        id: 'tat-lomnicky',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Lomnicky_stit2.JPG/500px-Lomnicky_stit2.JPG',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'פסגת לומניצקי שטיט',
+        nameLocal: 'Lomnický štít',
+        category: 'viewpoint',
+        lat: 49.1958,
+        lng: 20.2128,
+        description:
+          'אחת הפסגות הגבוהות בטטרה (2,634 מ׳), ואליה מגיעים ברכבל תלול מטטרנסקה לומניצה דרך אגם סקלנטה פלסו. למעלה מרפסת תצפית קטנה - הכרטיסים במכסה ובשעות מוגדרות.',
+        rating: 4.7,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Lomnicky+stit',
+      },
+      {
+        id: 'tat-hrebienok',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Hrebienok_18.JPG/500px-Hrebienok_18.JPG',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'הרביינוק והמפלים',
+        nameLocal: 'Hrebienok',
+        category: 'nature',
+        lat: 49.1583,
+        lng: 20.2247,
+        description:
+          'רמה בגובה כ-1,285 מ׳ שאליה עולה פוניקולר קצר מסטארי סמוקובץ, ומשם שביל קל אל מפלי הנחל הקר (Studenovodské vodopády). נקודת פתיחה פופולרית למשפחות.',
+        rating: 4.5,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Hrebienok',
+      },
+      {
+        id: 'tat-tatranska',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Tatranska_Lomnica_station.jpg/500px-Tatranska_Lomnica_station.jpg',
+        tags: ['families'],
+        priceLevel: 1,
+        name: 'טטרנסקה לומניצה',
+        nameLocal: 'Tatranská Lomnica',
+        category: 'attraction',
+        lat: 49.1667,
+        lng: 20.2833,
+        description:
+          'עיירת נופש למרגלות הרכבל ללומניצקי שטיט, עם מלונות, מסעדות ומוזיאון הטטרה. בסיס נוח ללינה ולנסיעות יומיות בהרים ברכבת החשמלית הקטנה.',
+        rating: 4.3,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Tatranska+Lomnica',
+      },
+      {
+        id: 'tat-raj',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Slovensky_raj-Stratenska_pila.jpg/500px-Slovensky_raj-Stratenska_pila.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'גן העדן הסלובקי',
+        nameLocal: 'Slovak Paradise National Park (Slovenský raj)',
+        category: 'nature',
+        lat: 48.9083,
+        lng: 20.4,
+        description:
+          'פארק לאומי של נקיקים, מפלים ומסלולי סולמות וגשרי ברזל שמטפסים בתוך הנחלים - חוויה של הליכה רטובה ומרגשת. חלק מהמסלולים חד-כיווניים; ציוד ונעליים מתאימות חובה.',
+        rating: 4.7,
+        durationMin: 420,
+        externalUrl: 'https://maps.google.com/?q=Slovensky+raj',
+      },
+      {
+        id: 'tat-demanovska',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Demenovska_jaskyna_slobody-smaragdove_jazierko.jpg/500px-Demenovska_jaskyna_slobody-smaragdove_jazierko.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'מערת החירות בדמנובסקה',
+        nameLocal: 'Demänovská Cave of Liberty',
+        category: 'nature',
+        lat: 48.9986,
+        lng: 19.5819,
+        description:
+          'מערת נטיפים גדולה בעמק דמנובסקה שבהרי טטרה הנמוכים, עם אולמות, בריכות אמרלד ומסלול מבוקר של כשעה. קר בפנים כל השנה - להביא שכבה חמה.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Demanovska+Cave+of+Liberty',
+      },
+      {
+        id: 'tat-spis',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Spissky_hrad_west.jpg/500px-Spissky_hrad_west.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'טירת ספיש',
+        nameLocal: 'Spiš Castle (Spišský hrad)',
+        category: 'attraction',
+        lat: 49.0006,
+        lng: 20.7683,
+        description:
+          'אחד ממתחמי הטירות הגדולים באירופה, על גבעת גיר מעל המישור - אתר מורשת עולמית מהמאה ה-12. חורבות מרשימות ותצפית רחבה; כשעה נסיעה מהטטרה.',
+        rating: 4.6,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Spis+Castle',
+      },
+      {
+        id: 'tat-poprad',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Poprad_centrum_01.JPG/500px-Poprad_centrum_01.JPG',
+        tags: ['families'],
+        priceLevel: 1,
+        name: 'פופרד',
+        nameLocal: 'Poprad',
+        category: 'attraction',
+        lat: 49.0594,
+        lng: 20.2975,
+        description:
+          'העיר הראשית למרגלות הטטרה, ובה שדה התעופה האזורי, תחנת רכבת מרכזית וקומפלקס מים תרמיים גדול - נקודת כניסה ויציאה נוחה לאזור ההרים.',
+        rating: 4.2,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Poprad',
+      },
+      {
+        id: 'tat-tatry',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Tatry_Panorama01xxx.jpg/500px-Tatry_Panorama01xxx.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'רכס הטטרה הגבוהה',
+        nameLocal: 'High Tatras (Vysoké Tatry)',
+        category: 'nature',
+        lat: 49.1667,
+        lng: 20.1333,
+        description:
+          'רכס ההרים הגבוה בקרפטים, בין סלובקיה לפולין, עם עשרות פסגות מעל 2,500 מ׳ ורשת שבילים מסומנת. השבילים הגבוהים דורשים כושר, ובחלקם נדרש מדריך הרים מוסמך.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=High+Tatras',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'הגעה ואגם שטרבסקה פלסו',
+        placeIds: ['tat-poprad', 'tat-strbske'],
+        notes:
+          'מגיעים לאזור פופרד, ועולים לשטרבסקה פלסו לסיבוב קל סביב האגם והתאקלמות לגובה ולמזג האוויר ההררי.',
+      },
+      {
+        day: 2,
+        title: 'עמקים ואגמים',
+        placeIds: ['tat-popradske', 'tat-tatry'],
+        notes:
+          'הליכה אל אגם פופרדסקה פלסו ובחזרה, ולמי שכשיר - המשך אל אחד העמקים הגבוהים. לבדוק תחזית בבוקר.',
+      },
+      {
+        day: 3,
+        title: 'רכבלים ומפלים',
+        placeIds: ['tat-lomnicky', 'tat-hrebienok', 'tat-tatranska'],
+        notes:
+          'רכבל אל פסגת לומניצקי שטיט (כרטיס מראש), ואחר הצהריים פוניקולר להרביינוק ושביל המפלים הקל.',
+      },
+      {
+        day: 4,
+        title: 'גן העדן הסלובקי',
+        placeIds: ['tat-raj'],
+        notes:
+          'יום שלם בנקיקים: מסלולי סולמות וגשרים לאורך הנחלים. נעליים טובות, ביגוד שיכול להירטב ותכנון מסלול חד-כיווני מראש.',
+      },
+      {
+        day: 5,
+        title: 'מערות וטירה',
+        placeIds: ['tat-demanovska', 'tat-spis'],
+        notes:
+          'בוקר במערת החירות שבטטרה הנמוכה, ואחר הצהריים טירת ספיש - סיום היסטורי לפני היציאה.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה מנתב"ג לאזור הטטרה. המסלול המעשי: טיסה ישירה לברטיסלבה או לווינה ומשם כ-4 שעות נסיעה/רכבת, או טיסה לקרקוב שבפולין (כשעתיים וחצי נסיעה) ולעתים לקושיצה עם החלפה. לפופרד יש שדה תעופה אזורי קטן (TAT) עם קווים אירופיים מעטים.',
+      gettingAround:
+        'בין עיירות הנופש שבמורדות הטטרה נוסעת רכבת חשמלית קטנה (TEŽ) בתדירות טובה, ויש אוטובוסים ורכבלים לאתרים. לגן העדן הסלובקי, למערות ולטירת ספיש - רכב שכור נוח בהרבה. חלק מהשבילים הגבוהים סגורים עונתית, וכניסה למסלולים מסוימים דורשת מדריך.',
+      kosherOverview:
+        'אין באזור הטטרה כשרות מסודרת - לא מסעדה ולא חנות. הכשרות הקרובה היא בברטיסלבה (בית חב"ד) או בקרקוב, שתיהן במרחק נסיעה של שעות. מי שמקפיד - להצטייד מראש; בסופרמרקטים הגדולים יש מוצרים ארוזים עם סימון כשרות אירופי, ולוודא לפי הסימון עצמו.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
