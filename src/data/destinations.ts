@@ -4508,6 +4508,264 @@ export const destinations: Destination[] = [
         'בית חב"ד פוקט בפאטונג הוא כתובת הכשרות המרכזית באי: מסעדה בשרית כשרה (בשר מיובא), תפילות יומיות וארוחות שבת לאלפי ישראלים בשנה. זו למעשה נקודת הכשרות המאומתת היחידה באי - לא להסתמך על מסעדות תאילנדיות רגילות. מומלץ לתאם ארוחות שבת מראש.',
     },
   },
+  {
+    slug: 'baku',
+    name: 'באקו',
+    nameLocal: 'Baku / Bakı',
+    countrySlug: 'azerbaijan',
+    flag: '🇦🇿',
+    center: { lat: 40.375, lng: 49.84 },
+    zoom: 11,
+    tagline: 'מגדלי להבה, עיר עתיקה על הים הכספי ופלאי אש טבעיים',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Baku_Boulevard_pier.jpg/500px-Baku_Boulevard_pier.jpg',
+    iconicLandmark: {
+      name: 'מגדלי הלהבה',
+      nameLocal: 'Flame Towers',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Flame_Towers.jpg/500px-Flame_Towers.jpg',
+      blurb:
+        'שלושה גורדי שחקים בצורת להבות אש, השולטים על קו הרקיע של באקו - בלילה הם הופכים למסך תאורה ענק, סמל "ארץ האש" המודרנית.',
+    },
+    editorialRating: {
+      score: 4.4,
+      verdict:
+        'טיסה ישירה קצרה, שילוב מרתק של עיר עתיקה, אדריכלות עתידנית ופלאי טבע געשיים - ומורשת יהודית ייחודית. חסרונות: אתרי הטבע (גובוסטן, יאנאר דאג) מפוזרים ודורשים נהג, ואין תשתית כשרות רחבה מעבר לבית חב"ד.',
+    },
+    summary:
+      'באקו, בירת אזרבייג׳ן על חוף הים הכספי, מפגישה עיר עתיקה מוקפת חומה עם גורדי שחקים נוצצים וטיילת ים ארוכה. מסביבה מחכים פלאי "ארץ האש" - הר בוער שאינו כבה, מקדש אש עתיק ושדה ציורי סלע והרי בוץ בגובוסטן. צפונה יותר שוכן הכפר האדום, אחד היישובים היהודיים השלמים האחרונים בעולם.',
+    bestSeason: 'אפריל-יוני וספטמבר-אוקטובר (נעים) - קיץ חם ולח מהכספי, חורף קר ורוחני ("באקו" = עיר הרוחות)',
+    places: [
+      {
+        id: 'gyd-flame',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Flame_Towers.jpg/500px-Flame_Towers.jpg',
+        tags: ['romantic'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'מגדלי הלהבה',
+        nameLocal: 'Flame Towers',
+        category: 'viewpoint',
+        lat: 40.3594,
+        lng: 49.8267,
+        description:
+          'שלושת גורדי השחקים המזוהים עם באקו, בצורת להבות. יפים במיוחד בלילה כשמסכי ה-LED מציגים אש נעה ודגלים. התצפית הטובה עליהם היא מפארק הרמה (שדרת השהידים) הסמוך.',
+        rating: 4.6,
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=Flame+Towers+Baku',
+      },
+      {
+        id: 'gyd-maiden',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Baku_Maiden_Tower.jpg/500px-Baku_Maiden_Tower.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'מגדל הבתולה והעיר העתיקה',
+        nameLocal: 'Maiden Tower & Old City',
+        category: 'attraction',
+        lat: 40.3661,
+        lng: 49.8372,
+        description:
+          'מגדל אבן מסתורי מימי הביניים בלב איצ׳רישהר, העיר העתיקה המוקפת חומה (אתר מורשת עולמית). סמטאות אבן, שווקים קטנים ותצפית מגג המגדל על העיר והים.',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Maiden+Tower+Baku',
+      },
+      {
+        id: 'gyd-shirvanshahs',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Shirvanshahs_palace%28old-city%29_baku_azerbaijan.jpg/500px-Shirvanshahs_palace%28old-city%29_baku_azerbaijan.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'ארמון השירוואנשאהים',
+        nameLocal: 'Palace of the Shirvanshahs',
+        category: 'attraction',
+        lat: 40.3661,
+        lng: 49.8334,
+        description:
+          'מכלול ארמון מלכותי מהמאה ה-15 בלב העיר העתיקה - חצרות, מסגד, מאוזוליאום ובית מרחץ. הפאר האדריכלי של שושלת השירוואנשאהים.',
+        rating: 4.5,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=Palace+of+the+Shirvanshahs+Baku',
+      },
+      {
+        id: 'gyd-heydar',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Heydar_Aliyev_International_Conference_Center_Baku_Azerbaijan.jpg/500px-Heydar_Aliyev_International_Conference_Center_Baku_Azerbaijan.jpg',
+        tags: ['art'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'מרכז היידר אלייב',
+        nameLocal: 'Heydar Aliyev Center',
+        category: 'museum',
+        lat: 40.3953,
+        lng: 49.8669,
+        description:
+          'מבנה תרבות זורם וחסר קווים ישרים בתכנון האדריכלית זהא חדיד - מהאייקונים של האדריכלות המודרנית בעולם. תערוכות בפנים, וכר דשא עם פסלים בחוץ.',
+        rating: 4.7,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Heydar+Aliyev+Center+Baku',
+      },
+      {
+        id: 'gyd-boulevard',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Baku_Boulevard_pier.jpg/500px-Baku_Boulevard_pier.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 0,
+        name: 'טיילת באקו',
+        nameLocal: 'Baku Boulevard',
+        category: 'nature',
+        lat: 40.36,
+        lng: 49.845,
+        description:
+          'טיילת ים ארוכה לאורך הכספי - שדרות, מזרקות, גלגל ענק וספינות שיט. הלב הפנוי של העיר, נעים במיוחד לטיול ערב מול המים.',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Baku+Boulevard',
+      },
+      {
+        id: 'gyd-fountain',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Fountains_Square%2C_Baku_01.jpg/500px-Fountains_Square%2C_Baku_01.jpg',
+        tags: ['foodie'],
+        priceLevel: 1,
+        name: 'כיכר המזרקות',
+        nameLocal: 'Fountain Square',
+        category: 'shopping',
+        lat: 40.3707,
+        lng: 49.8375,
+        description:
+          'הכיכר המרכזית והחיה של באקו החדשה, מוקפת מבנים מהמאה ה-19, בתי קפה, מסעדות וחנויות. נקודת מפגש ובילוי, במרחק הליכה מהעיר העתיקה.',
+        rating: 4.3,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Fountain+Square+Baku',
+      },
+      {
+        id: 'gyd-yanardag',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Yanar_Dag_in_September_2019_%283%29.jpg/500px-Yanar_Dag_in_September_2019_%283%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'יאנאר דאג - ההר הבוער',
+        nameLocal: 'Yanar Dag',
+        category: 'nature',
+        lat: 40.5018,
+        lng: 49.8913,
+        description:
+          'מדרון גבעה שבו אש טבעית בוערת ברציפות מזה מאות שנים, ניזונה מגז טבעי שמחלחל מהאדמה. הסמל של "ארץ האש" - מרשים במיוחד אחרי רדת החשכה. כ-30 דקות מהעיר.',
+        rating: 4.3,
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=Yanar+Dag',
+      },
+      {
+        id: 'gyd-gobustan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Rock_art_in_Gobustan.jpg/500px-Rock_art_in_Gobustan.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'גובוסטן - ציורי סלע והרי בוץ',
+        nameLocal: 'Gobustan Rock Art & Mud Volcanoes',
+        category: 'nature',
+        lat: 40.1118,
+        lng: 49.3783,
+        description:
+          'שמורת אתר מורשת עולמית עם אלפי ציורי סלע בני עד 40,000 שנה, ולצידה שדה של הרי בוץ געשיים שמבעבעים בוץ קר - נוף כמעט אחר-עולמי. כשעה מדרום לבאקו.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Gobustan+National+Park',
+      },
+      {
+        id: 'gyd-ateshgah',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Ateshgah_Zoroastrian_Fire_Temple_%28Baku%29.jpg/500px-Ateshgah_Zoroastrian_Fire_Temple_%28Baku%29.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'מקדש האש אטשגה',
+        nameLocal: 'Ateshgah Fire Temple',
+        category: 'attraction',
+        lat: 40.4154,
+        lng: 50.0086,
+        description:
+          'מקדש אש זורואסטרי/הינדי מרובע עם להבה מרכזית, ששימש עולי רגל ומבקרים במשך מאות שנים. עדות נוספת לקשר העמוק של אזרבייג׳ן לאש. כ-30 דקות מהעיר.',
+        rating: 4.3,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Ateshgah+Fire+Temple+Baku',
+      },
+      {
+        id: 'gyd-redvillage',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Krasnaya_sloboda_i_galleryfull.jpg/500px-Krasnaya_sloboda_i_galleryfull.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'הכפר האדום (קרסניה סלובודה)',
+        nameLocal: 'Red Village (Qırmızı Qəsəbə)',
+        category: 'attraction',
+        lat: 41.3736,
+        lng: 48.5106,
+        description:
+          'אחד היישובים היהודיים השלמים האחרונים בעולם מחוץ לישראל - קהילת "יהודי ההרים" עם בתי כנסת פעילים ומרכז מבקרים על ההיסטוריה היהודית. ליד העיר קובה, כ-2.5 שעות צפונית לבאקו.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Qirmizi+Qesebe+Red+Village',
+      },
+      {
+        id: 'gyd-chabad',
+        tags: ['foodie'],
+        priceLevel: 1,
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד באקו (הרב שניאור סגל)',
+        },
+        name: 'בית חב"ד באקו (כשרות)',
+        nameLocal: 'Chabad of Baku',
+        category: 'kosher-food',
+        lat: 40.3758,
+        lng: 49.8394,
+        description:
+          'בית חב"ד וקהילה יהודית ברובע נסימי (רחוב דילארה אלייבה), עם בית כנסת וקייטרינג כשר - למעשה שירות הכשרות המאומת היחיד בבאקו. הכתובת לארוחות ולמידע לישראלים בעיר.',
+        rating: 4.4,
+        kosherNote:
+          'קייטרינג ואוכל כשר דרך בית חב"ד באקו. אין תשתית מסעדות כשרות רחבה בעיר - יש לתאם ארוחות (כולל שבת) מול בית חב"ד מראש.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Chabad+of+Baku',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'העיר העתיקה ומגדלי הלהבה',
+        placeIds: ['gyd-maiden', 'gyd-shirvanshahs', 'gyd-fountain', 'gyd-boulevard', 'gyd-flame'],
+        notes:
+          'יום רגלי: מגדל הבתולה וארמון השירוואנשאהים בעיר העתיקה, יציאה לכיכר המזרקות ולטיילת הים, ולסיום תצפית על מגדלי הלהבה מפארק הרמה - מרשימים במיוחד כשנדלקים בלילה.',
+      },
+      {
+        day: 2,
+        title: 'ארץ האש - אש, בוץ וסלע',
+        placeIds: ['gyd-gobustan', 'gyd-ateshgah', 'gyd-yanardag'],
+        notes:
+          'יום טבע עם נהג/טיול מאורגן: דרומה לגובוסטן (ציורי סלע והרי בוץ), ואז מזרחה למקדש האש אטשגה ולהר הבוער יאנאר דאג - הכי מרשים לקראת החשכה. האתרים מפוזרים, ורכב הכרחי.',
+      },
+      {
+        day: 3,
+        title: 'אדריכלות ומורשת יהודית',
+        placeIds: ['gyd-heydar', 'gyd-redvillage', 'gyd-chabad'],
+        notes:
+          'בוקר במרכז היידר אלייב (זהא חדיד). מי שרוצה יום שלם של מורשת יהודית - נסיעה צפונה לכפר האדום ליד קובה (כ-2.5 שעות). לארוחה כשרה מתאמים מראש עם בית חב"ד.',
+      },
+    ],
+    practical: {
+      flights:
+        'טיסות ישירות תכופות מנתב"ג לבאקו (אזרביג׳אן איירליינס AZAL, ארקיע, ישראייר) - כ-18 טיסות בשבוע, טיסה של כ-3 שעות.',
+      gettingAround:
+        'בעיר: מטרו זול, אפליקציית Bolt למוניות ורגל בעיר העתיקה. אתרי הטבע (גובוסטן, יאנאר דאג, אטשגה) והכפר האדום מפוזרים ורחוקים - הדרך הנוחה היא טיול מאורגן או נהג פרטי ליום.',
+      kosherOverview:
+        'בית חב"ד באקו (ברובע נסימי, בראשות הרב שניאור סגל) הוא שירות הכשרות המאומת בעיר - בית כנסת וקייטרינג כשר. אין בבאקו תשתית מסעדות כשרות רחבה, ולכן יש לתאם ארוחות מול בית חב"ד מראש. בכפר האדום שבצפון יש קהילה יהודית פעילה ומרכז מבקרים.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
