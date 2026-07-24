@@ -1104,3 +1104,36 @@ also candidates: Petra/Wadi Rum with a land-crossing note, Marrakech
 pending flight-status re-check, Sri Lanka). Keep the "verify or leave a
 TODO, never guess" rule. The three homepage service cards + a11y statement
 placeholders are the only things waiting on Netanel.
+
+### 2026-07-24 (i) - Destinations expansion cont.: Almaty + Montenegro (nature-forward)
+
+Continued the autonomous expansion (one verified city per commit).
+
+- **Almaty, Kazakhstan** (new `kazakhstan` country, visa-free 30 days) -
+  10 places, rating 4.4. Landmark: Zenkov wooden cathedral. Heavy nature:
+  Charyn Canyon, Big Almaty Lake, Shymbulak + Medeu (Tian Shan), First
+  President Park. Kosher: Chabad Lubavitch Almaty (synagogue + kosher
+  store) only. Air Astana direct ~2/wk (low frequency - noted in rating).
+- **Montenegro** (new `montenegro` country, visa-free 90 days, uses euro) -
+  modeled as one **Kotor-hub** destination (assumption: Budva + northern
+  nature as day-trips, not separate city pages - matches how Tbilisi/Almaty
+  handle far day-trips). 10 places, rating 4.6. Landmark: Bay of Kotor.
+  Per Netanel's mid-run steer ("nature/hiking/mountains/lakes outside
+  cities"): Kotor walls hike, Lovćen NP, Lake Biograd (Biogradska Gora
+  virgin forest, near Kolašin), Durmitor Black Lake, Tara Canyon - plus
+  Kotor/Budva/Perast/Sveti Stefan on the coast. **Kosher: none** - Montenegro
+  has no kosher infrastructure; not forced (kosher filter shows 0), stated
+  honestly. Direct Tivat flight is **summer-only** (El Al/Israir).
+
+Both: build clean, verify-photos.mjs all OK, hero/nature photos eyeballed.
+
+**Destinations now in the catalog (13):** vienna, bratislava, prague,
+budapest, rome, athens, barcelona, berlin, bangkok, abu-dhabi, tbilisi,
+phuket, baku, almaty, kotor. (Countries: austria, slovakia, czechia,
+hungary, italy, greece, spain, germany, thailand, uae, georgia, azerbaijan,
+kazakhstan, montenegro.)
+
+**Stopped here at Netanel's request** ("stop when you finish with
+montenegro"). Candidates not yet built if resuming: Petra/Wadi Rum (Jordan,
+land-crossing note), Marrakech (re-verify Morocco flight status first),
+Sri Lanka, a second Georgian city (Batumi).
