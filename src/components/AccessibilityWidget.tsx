@@ -83,10 +83,10 @@ export default function AccessibilityWidget() {
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label="הגדרות נגישות"
-        className="fixed bottom-4 start-4 z-[60] flex h-14 w-14 items-center justify-center rounded-full bg-night text-cream shadow-[0_6px_20px_-6px_rgba(36,27,77,0.5)] ring-2 ring-cream transition hover:bg-night-soft focus:outline-none focus-visible:ring-4 focus-visible:ring-sunset"
+        className="fixed bottom-4 start-4 z-[60] flex h-11 w-11 items-center justify-center rounded-full bg-night text-cream shadow-[0_6px_20px_-6px_rgba(36,27,77,0.5)] ring-2 ring-cream transition hover:bg-night-soft focus:outline-none focus-visible:ring-4 focus-visible:ring-sunset sm:h-12 sm:w-12"
       >
         {/* אייקון נגישות אוניברסלי (person-in-circle) */}
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden className="sm:h-[26px] sm:w-[26px]">
           <circle cx="12" cy="4" r="2" />
           <path d="M12 7c-2.5 0-6 .8-6 2.2 0 .9 3 1.3 4.5 1.5l-1.2 6.6a1 1 0 0 0 1.97.36L12 14.5l.75 3.66a1 1 0 0 0 1.97-.36L13.5 10.7c1.5-.2 4.5-.6 4.5-1.5C18 7.8 14.5 7 12 7z" />
         </svg>

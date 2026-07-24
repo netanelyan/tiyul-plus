@@ -20,12 +20,18 @@
    (כותרות, כפתורים, טקסט) גדלות/קטנות יחד. ברירת מחדל 1 = "רגיל". */
 html {
   font-size: calc(100% * var(--a11y-font-scale, 1));
+  /* מגן נגד גלילה אופקית ברמת ה-viewport (ראו הערה על body) */
+  overflow-x: clip;
 }
 
 body {
   background: var(--color-cream);
   color: var(--color-night);
   font-family: 'Heebo', 'Rubik', 'Segoe UI', 'Arial Hebrew', system-ui, sans-serif;
+  /* מגן קבוע נגד גלילה אופקית: אלמנטים full-bleed שמשתמשים ב-100vw
+     חורגים ברוחב פס-הגלילה כשיש גלילה אנכית. `clip` (ולא `hidden`)
+     חותך את החריגה בלי ליצור scroll-container - ה-sticky של ההדר נשמר. */
+  overflow-x: clip;
 }
 
 /* ===== מצבי נגישות (ווידג'ט הנגישות) - נדלקים ע"י class על <html> ===== */
