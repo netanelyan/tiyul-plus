@@ -84,6 +84,16 @@ export interface CityPractical {
   kosherOverview: string; // state of kosher food in the city
 }
 
+// הפלא האיקוני של העיר - להצגה בכרטיס ההיכרות הראשון (עמוד הבית).
+// חייב להצביע על מקום אמיתי ומאומת; אם אין כזה עדיין, משאירים TODO
+// ולא ממציאים מקום שנראה אמיתי (כלל הברזל של הפרויקט).
+export interface IconicLandmark {
+  name: string; // Hebrew
+  nameLocal: string;
+  photo: string; // verified URL, אותו מקור/פורמט כמו Place.photo
+  blurb: string; // Hebrew, משפט-שניים עובדתיים, בלי שעות/מחיר/כשרות
+}
+
 export interface Destination {
   slug: string;
   name: string; // Hebrew
@@ -96,9 +106,19 @@ export interface Destination {
   summary: string; // Hebrew paragraph
   bestSeason: string;
   photo?: string; // hero photo URL (Unsplash); UI falls back to gradient
+  iconicLandmark?: IconicLandmark;
+  editorialRating?: EditorialRating;
   places: Place[];
   itinerary: DayPlan[];
   practical: CityPractical;
+}
+
+// דירוג עריכתי של צוות טיול+ - במפורש לא ממוצע ביקורות משתמשים אמיתי.
+// מוצג עם ניסוח שקוף ("המלצת הצוות") ובלי אייקון כוכב, כדי שלא יתבלבל
+// עם Place.rating (שם: הערכה עריכתית לכל מקום, כאן: ציון+נימוק ברמת העיר).
+export interface EditorialRating {
+  score: number; // 1-5
+  verdict: string; // Hebrew, משפט אחד - למה
 }
 
 export interface DestinationSummary {
@@ -112,6 +132,7 @@ export interface DestinationSummary {
   days: number;
   kosherCount: number;
   photo?: string;
+  editorialRating?: EditorialRating;
 }
 
 // ---------- Provider abstraction ----------

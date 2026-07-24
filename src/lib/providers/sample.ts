@@ -29,6 +29,7 @@ export const sampleProvider: PlacesProvider = {
       days: d.itinerary.length,
       kosherCount: d.places.filter((p) => p.category.startsWith('kosher')).length,
       photo: d.photo,
+      editorialRating: d.editorialRating,
     }));
   },
 

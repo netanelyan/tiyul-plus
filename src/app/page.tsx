@@ -3,6 +3,7 @@ import { getProvider } from '@/lib/providers';
 import { destinations } from '@/data/destinations';
 import HomeHero from '@/components/HomeHero';
 import MyTripCard from '@/components/MyTripCard';
+import DestinationHighlights from '@/components/DestinationHighlights';
 
 /**
  * דף הבית - פורטל נחיתה עם צבע אמיתי: הירו → צ׳יפים → רשת פלאים חיה
@@ -11,23 +12,21 @@ import MyTripCard from '@/components/MyTripCard';
  * ריקים ובלי שטחי קרם מתים.
  */
 
-// כרטיס הפתיחה של כל עיר מוביל בפלא איקוני אחד (תמונה+שם) במקום שם
-// העיר - מ-mustSee אמיתי בדאטה (destinations.ts), לא מומצא. שם/מדינה
-// יורדים לשורה משנית. נבחר ידנית פעם אחת: הכי מזוהה חזותית לכל עיר.
-const HERO_LANDMARK: Record<string, string> = {
-  vienna: 'vie-stephansdom',
-  bratislava: 'bts-castle',
-  prague: 'prg-charles',
-  budapest: 'bud-parliament',
-  rome: 'rom-colosseum',
-  athens: 'ath-acropolis',
-  barcelona: 'bcn-sagrada',
-  berlin: 'ber-brandenburg',
-};
-
 export default async function Home() {
   const provider = getProvider();
   const dests = await provider.getDestinations();
+  const cards = dests.map((d) => {
+    const dest = destinations.find((x) => x.slug === d.slug);
+    const landmark = dest?.iconicLandmark;
+    return {
+      slug: d.slug,
+      heroName: landmark?.name ?? d.name,
+      heroPhoto: landmark?.photo ?? d.photo,
+      name: d.name,
+      country: d.country,
+      days: d.days,
+    };
+  });
 
   return (
     <div>
@@ -39,7 +38,7 @@ export default async function Home() {
           <div>
             <h2 className="display text-2xl text-cream sm:text-3xl">פלאים שמחכים לכם</h2>
             <p className="mt-1.5 text-sm text-cream/60">
-              מהקולוסיאום ועד שער ברנדנבורג - לכל פלא יש מסלול מוכן, מפה ושכבת כשרות. לוחצים ונכנסים.
+              לכל פלא יש מסלול מוכן, מפה ושכבת כשרות. לוחצים ונכנסים.
             </p>
           </div>
           <Link
@@ -50,40 +49,7 @@ export default async function Home() {
           </Link>
         </div>
 
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-          {dests.map((d) => {
-            const dest = destinations.find((x) => x.slug === d.slug);
-            const landmark = dest?.places.find((p) => p.id === HERO_LANDMARK[d.slug]);
-            const heroPhoto = landmark?.photo ?? d.photo;
-            const heroName = landmark?.name ?? d.name;
-            return (
-              <Link
-                key={d.slug}
-                href={`/destinations/${d.slug}`}
-                className="card-pop group relative block h-44 overflow-hidden rounded-2xl ring-1 ring-cream/10 sm:h-56"
-              >
-                {heroPhoto ? (
-                  <div
-                    className="photo-bg absolute inset-0 transition-transform duration-500 group-hover:scale-105"
-                    style={{ backgroundImage: `url(${heroPhoto})` }}
-                  />
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-night/60 to-night" />
-                )}
-                {/* גרדיאנט night תחתון ללגיביליות הטקסט */}
-                <div className="absolute inset-0 bg-gradient-to-t from-night/85 via-night/15 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-4">
-                  <div className="display text-lg leading-tight text-cream drop-shadow sm:text-xl">
-                    {heroName}
-                  </div>
-                  <div className="mt-1 truncate text-xs font-medium text-cream/80">
-                    {d.name} · {d.country} · {d.days} ימים
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+        <DestinationHighlights cards={cards} />
       </section>
 
       {/* כניסות משניות - רזות וממורכזות, לא כרטיסים גדולים */}

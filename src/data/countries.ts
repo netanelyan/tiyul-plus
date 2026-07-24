@@ -143,6 +143,25 @@ export const countries: Country[] = [
         'הפתעה לישראלים: בגרמניה עדיין יש מקומות שמקבלים רק מזומן (Bar zahlen) - להחזיק תמיד כמה עשרות אירו.',
     },
   },
+  {
+    slug: 'thailand',
+    name: 'תאילנד',
+    nameLocal: 'Thailand / ประเทศไทย',
+    flag: '🇹🇭',
+    tagline: 'מקדשים, אוכל רחוב ברמה עולמית - והיעד הראשון של טיול+ מחוץ לאירופה',
+    summary:
+      'תאילנד היא הכניסה הטבעית לישראלים לדרום-מזרח אסיה: טיסה ישירה יציבה מנתב"ג, פטור מוויזה, מחירים נוחים משמעותית מאירופה - ובבנגקוק, קהילה יהודית קטנה אך פעילה סביב בית חב"ד שמזוהה מזה עשורים עם דור התרמילאים הישראלי.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/A_roof_of_a_building_at_the_Grand_Palace%2C_Bangkok%2C_sunrise%2C_2017.jpg/500px-A_roof_of_a_building_at_the_Grand_Palace%2C_Bangkok%2C_sunrise%2C_2017.jpg',
+    practical: {
+      visa:
+        'ישראלים פטורים מוויזה לשהות של עד 60 יום (ניתן להאריך פעם אחת ב-30 יום נוספים, בתשלום, מול הרשות המקומית). מ-2025 נדרשת גם הרשמה מקוונת ל-Thailand Digital Arrival Card (TDAC) עד 72 שעות לפני הנחיתה. לוודא דרכון בתוקף 6 חודשים.',
+      currency: 'בהט תאילנדי (THB) - לא ניתן להמיר שקלים מראש בישראל; עדיף כספומט בשדה או בעיר.',
+      sim: 'eSIM מראש (Airalo וכדומה) עובד מצוין, או כרטיס מקומי של AIS/dtac/True בשדה - זול ומהיר להוצאה.',
+      payments:
+        'כרטיסי אשראי מתקבלים בקניונים ובבתי מלון; בשווקים, ברחוב ובטוקטוק בדרך כלל רק מזומן בהט.',
+    },
+  },
 ];
 
 export function getCountryBySlug(slug: string): Country | undefined {

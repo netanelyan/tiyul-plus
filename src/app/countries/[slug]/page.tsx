@@ -111,6 +111,14 @@ export default async function CountryPage({
                       {d.kosherCount} נקודות כשרות
                     </span>
                   )}
+                  {d.editorialRating && (
+                    <span
+                      className="rounded-full bg-sunset/10 px-3 py-1.5 text-sunset-deep"
+                      title="דירוג עריכתי של צוות טיול+ - לא ממוצע של ביקורות משתמשים"
+                    >
+                      המלצת הצוות: {d.editorialRating.score.toFixed(1)}/5
+                    </span>
+                  )}
                 </div>
               </div>
             </Link>

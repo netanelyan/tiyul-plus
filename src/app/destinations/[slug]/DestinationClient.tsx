@@ -71,6 +71,17 @@ export default function DestinationClient({
             <div className="mt-3 text-sm font-medium text-cream/80">
               עונה מומלצת: {dest.bestSeason}
             </div>
+            {dest.editorialRating && (
+              <div className="mt-3 inline-flex flex-col gap-0.5 rounded-xl bg-cream/10 px-3 py-2 ring-1 ring-cream/20">
+                <div className="text-sm font-bold text-cream">
+                  המלצת הצוות: {dest.editorialRating.score.toFixed(1)}/5
+                </div>
+                <div className="text-xs text-cream/70">{dest.editorialRating.verdict}</div>
+                <div className="text-[11px] text-cream/45">
+                  דירוג עריכתי של צוות טיול+ - לא ממוצע של ביקורות משתמשים
+                </div>
+              </div>
+            )}
           </div>
           <Link
             href={`/planner?dest=${dest.slug}`}

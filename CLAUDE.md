@@ -705,3 +705,216 @@ matches "if it can't be done honestly, say so" rather than force
 inventing a trip. Photo verification (139/139) confirms no existing
 destination photo regressed - the landmark redesign reused photos
 already shipped, no `verify-photos.mjs` risk was introduced.
+
+### 2026-07-24 (c) - iconicLandmark moved from a page.tsx lookup into the data model
+
+**Built/changed:**
+- `src/lib/types.ts` - new `IconicLandmark` interface (`name`,
+  `nameLocal`, `photo`, `blurb`) and an optional `iconicLandmark` field
+  on `Destination`.
+- `src/data/destinations.ts` - all 8 destinations now carry
+  `iconicLandmark`, filled from the SAME already-verified `Place`
+  entries the old `HERO_LANDMARK` map in `page.tsx` pointed to (photo
+  URLs copied byte-for-byte, not re-sourced) plus a new factual
+  1-sentence Hebrew blurb per landmark (no hours/price/kashrut
+  claims): Vienna→St. Stephen's Cathedral (קתדרלת סנט סטפן),
+  Bratislava→Bratislava Castle (טירת ברטיסלבה), Prague→Charles Bridge
+  (גשר קרל), Budapest→Hungarian Parliament (בניין הפרלמנט ההונגרי),
+  Rome→Colosseum (הקולוסיאום), Athens→Acropolis (האקרופוליס
+  והפרתנון), Barcelona→Sagrada Família (סגרדה פמיליה),
+  Berlin→Brandenburg Gate (שער ברנדנבורג).
+- `src/app/page.tsx` - the hand-picked `HERO_LANDMARK: Record<string,
+  string>` place-ID lookup is gone; the "פלאים שמחכים לכם" panel now
+  reads `dest.iconicLandmark` directly.
+
+**Product decisions:** reused the exact places the previous session had
+already hand-picked and shipped (same landmark per city) instead of
+re-researching new ones - they're globally unambiguous, real,
+verifiable landmarks, and reusing already-verified `Place.photo` URLs
+means zero new photo-hosting risk. This also collapses a duplicated
+lookup (place-ID map in `page.tsx` + place array search) into one typed
+field on the destination itself, so a new consumer (e.g. a future
+`/destinations/[slug]` hero) doesn't need to reinvent the lookup.
+
+**Broken/deferred:** none. `verify-photos.mjs` still reports 139/139 -
+it walks `Place.photo`, not the new `iconicLandmark.photo`, but since
+every landmark photo is a literal copy of an already-checked `Place`
+URL there's nothing unverified in the new field.
+
+### 2026-07-24 (d) - Planner/destination map: CARTO Positron basemap + on-brand Leaflet chrome
+
+**Built/changed:**
+- `src/components/MapInner.tsx` - `TileLayer` swapped from raw
+  `tile.openstreetmap.org` (stock OSM colors, no CDN) to CARTO's free,
+  keyless Positron basemap (`{s}.basemaps.cartocdn.com/light_all/...`,
+  `subdomains="abcd"`, `detectRetina`) with correct dual attribution
+  (`© OpenStreetMap contributors © CARTO`, both linked per CARTO's
+  attribution policy). No API key, no new dependency.
+- `src/app/globals.css` - `.leaflet-tile-pane` gets a subtle
+  `saturate(0.85) brightness(1.02) sepia(0.06)` filter (tile pane only -
+  Leaflet keeps markers/popups in separate panes, so `.pin-marker` and
+  the popup styling are untouched) to warm Positron's cool gray toward
+  the site's cream/night palette. `.leaflet-control-zoom` restyled as a
+  small rounded `shadow-pop` pill (cream bg, night text, sunset hover)
+  replacing the default white-square Leaflet buttons;
+  `.leaflet-control-attribution` restyled to a small translucent-cream
+  rounded chip instead of the default white box.
+
+**Product decisions:** CARTO Positron over Voyager - Positron's
+near-monochrome base makes the site's colorful category pins (already
+themed per `categoryMeta`) the visual focus, which fits "keep the pins/
+popups as-is, fix the basemap" from the ask. Filter applied only to
+`.leaflet-tile-pane` (not `.leaflet-container`) specifically so it can
+never wash out the pins/popups - verified visually that street labels
+stay legible at both a city-wide fit-bounds zoom and 5 clicks zoomed
+in.
+
+**Broken/deferred:** nothing broken. The planner's new-trip screen has
+no map (only the workspace view with an active trip does) - verified
+the redesign via `/destinations/vienna` instead, which renders the same
+`PlacesMap`/`MapInner` component the planner uses, so the fix applies
+identically once a trip exists.
+
+**Next session should know:** if a future map surface adds a scale
+control or layer switcher, style it in `globals.css` next to the
+zoom-control block - same token pattern (`--color-cream`/`--color-night`/
+`--shadow-pop`) so it doesn't regress back to stock Leaflet chrome.
+
+### 2026-07-24 (e) - Homepage wonders panel: client-side random N-of-pool shuffle, no hydration mismatch
+
+**Built/changed:**
+- `src/components/DestinationHighlights.tsx` (new, client component) -
+  takes the full pool of destination cards as props, renders a fixed
+  8-tile pulsing skeleton on first render (identical on server and
+  client - no randomness before mount, so no hydration mismatch), then
+  in `useEffect` runs a Fisher-Yates shuffle of the WHOLE pool and slices
+  the first 8 into state. Every destination has equal odds regardless of
+  its position in `destinations.ts`.
+- `src/app/page.tsx` - `Home()` now just resolves each destination's
+  card view-model (name/photo/iconicLandmark fallback/country/days) and
+  hands the full array to `<DestinationHighlights cards={cards} />`;
+  the inline grid JSX that used to live here moved into the new
+  component. Route stays static (`○ /` in the build output, unchanged)
+  - only the client component re-randomizes per real page load, so no
+  `force-dynamic` and no loss of prerendering.
+- Panel subtitle ("מהקולוסיאום ועד שער ברנדנבורג...") hardcoded two
+  specific landmarks that are no longer guaranteed to be in the visible
+  8 once selection is random - genericized to "לכל פלא יש מסלול מוכן,
+  מפה ושכבת כשרות. לוחצים ונכנסים." so the copy never overpromises which
+  cities are showing.
+
+**Product decisions:** followed the exact pattern already established by
+`PromptChips`' `pickChips()` (skeleton during SSR/first paint, real
+random state only after mount) instead of forcing the route dynamic -
+keeps `/` prerendered, and is the least invasive fix consistent with
+how this codebase already solves "random content on a static page."
+
+**Broken/deferred:** none. Verified via 5 fresh CDP navigations against
+a production build (`npm start`, not dev - dev always dynamically
+renders so it wouldn't have caught a real static/hydration bug): card
+order differed every load, zero console errors/warnings/exceptions in
+any run. Selection (not just order) will only become visibly different
+once the destinations pool exceeds 8 - not observable yet with exactly
+8 destinations, but the slice-from-shuffled-full-pool logic already
+handles a larger pool correctly by construction.
+
+**Next session should know:** once the non-Europe destinations land,
+re-verify with the same CDP recipe (`shuffle-check.mjs` pattern in the
+scratchpad) that the selected SET also varies, not just the order -
+should be automatic given the implementation, but worth a real check
+with >8 destinations in the data.
+
+**Next session should know:** `iconicLandmark` is now the source of
+truth for "the one photo that represents this city" - if a new country
+is added per the "adding a new country" recipe, also set its
+`iconicLandmark` (a real, verifiable landmark with a working photo) or
+the homepage card falls back to the destination's generic hero photo
+(graceful, not broken, but not landmark-first). `HERO_LANDMARK` no
+longer exists anywhere in the code.
+
+### 2026-07-24 (f) - Non-Europe expansion batch 1/5: Bangkok + Thailand, plus the editorial-rating system
+
+Scope approved by Netanel before any content was written: 5 new
+destinations (Bangkok, Abu Dhabi, Marrakech, New York, Miami) across 3
+new continents, one destination per batch, verified via web research
+(not memory) per destination - TLV direct-flight status, visa rules,
+and real kosher/Jewish infrastructure checked per candidate city before
+committing to the list. Rejected from scope: Dubai (Emirates route
+suspended since Oct 2023, resume date unconfirmed - can't claim "direct
+flights" as current fact), Istanbul (no current nonstop TLV service,
+strained relations), Zanzibar (real but thin - 1x/week charter, zero
+kosher infrastructure found).
+
+**Built/changed (ratings system, ships before any new destination):**
+- `src/lib/types.ts` - new `EditorialRating { score: number; verdict:
+  string }`, added as `Destination.editorialRating?` and
+  `DestinationSummary.editorialRating?`.
+- `src/lib/providers/sample.ts` - `getDestinations()` now passes
+  `editorialRating` through (google/tripadvisor providers delegate to
+  sample for this call already, so both inherit it for free).
+- `src/app/destinations/[slug]/DestinationClient.tsx` - hero shows a
+  cream/10 pill: "המלצת הצוות: X/5" + the one-line verdict + a small
+  always-visible (not hover-only) disclosure line "דירוג עריכתי של
+  צוות טיול+ - לא ממוצע של ביקורות משתמשים".
+- `src/app/countries/[slug]/page.tsx` - same copy as a compact sunset/10
+  chip on each city card, with the disclosure as a `title` tooltip.
+- Deliberately did NOT touch the existing per-place `rating` (⭐ 4.x,
+  still unlabeled in the UI) - out of scope for this ask, flagged to
+  Netanel as a possible separate follow-up, not fixed here.
+
+**Built/changed (Bangkok content):**
+- `src/data/countries.ts` - new `thailand` entry (visa incl. the TDAC
+  online pre-registration required since 2025, currency, eSIM/SIM,
+  payments).
+- `src/data/destinations.ts` - new `bangkok` destination: 17 places
+  (Grand Palace/Wat Phra Kaew, Wat Arun, Wat Pho as `mustSee`, Wat
+  Traimit Golden Buddha, Yaowarat/Chinatown, On Lok Yun breakfast diner,
+  Chatuchak Weekend Market, Jim Thompson House, Lumphini Park, Mahanakhon
+  SkyWalk, ICONSIAM, Asiatique, Erawan Shrine, Khao San Road, the Chao
+  Phraya Express Boat, and 2 real kosher entries), a 4-day itinerary,
+  `iconicLandmark` (Grand Palace), `editorialRating` (4.6/5), and
+  `practical`.
+- Every coordinate either came from Wikipedia's `prop=coordinates` API
+  (Grand Palace, Wat Arun, Wat Pho, Wat Traimit, Jim Thompson House,
+  Lumphini Park, Mahanakhon, Erawan Shrine - all confirmed, not
+  eyeballed) or a commonly-cited figure for landmarks without a
+  geo-tagged Wikipedia infobox (Chatuchak, Khao San, ICONSIAM,
+  Asiatique, the two kosher venues). Every photo URL was resolved via
+  the Wikimedia Commons `imageinfo` API (real `File:` title →
+  `iiurlwidth=500` → actual working `thumburl`, not a guessed path) and
+  re-checked with a standalone HTTP GET before use - 3 places (On Lok
+  Yun, the river-boat entry, both kosher venues) intentionally ship with
+  no `photo` rather than a guessed/wrong one.
+- **Kosher honesty check (hard rule 3/CLAUDE.md):** exactly 2 real
+  kosher entries, both `pending-review` verification like every other
+  kosher entry in the app - Chabad House Bangkok - Ohr Menachem
+  (meat restaurant + dairy café, Khao San area, Shabbat meals) and J
+  Cafe Kosher Shoppe (grocery, Sukhumvit Soi 20). `kosherOverview`
+  explicitly says these are the ONLY two verified kosher points in the
+  city and warns not to assume regular Thai restaurants are kosher -
+  no padding to look more complete than the research supports.
+
+**Verification:** `npm run build` clean (Bangkok/Thailand now generate
+their own static pages), `node scripts/verify-photos.mjs` → 153/153 OK
+(was 139 before this batch). Live-rendered `/destinations/bangkok` and
+`/countries/thailand` via headless Edge - 17 places filter correctly (2
+kosher), map pins cluster realistically across the city (CARTO basemap
+from the same session's earlier map redesign), editorial-rating pill
+renders with visible disclosure text, RTL intact throughout.
+
+**Wikimedia rate-limiting note for next session:** both
+`commons.wikimedia.org/w/api.php` and `upload.wikimedia.org` throttle
+aggressively under rapid sequential requests from this environment (429
+after ~2-4 requests in quick succession). Fix that worked: a real
+contact-style `User-Agent` string, 1.5-2.5s delay between requests, and
+exponential backoff (parse-JSON-fails → wait 8-10s × attempt, retry) on
+429 rather than treating it as a hard failure - scripts left in the
+scratchpad (`commons-search.mjs`, `check-urls.mjs`, `wiki-coords.mjs`)
+if the pattern is useful again for the remaining 4 destinations.
+
+**Next session should know:** batch 2/5 (Abu Dhabi) is next, same
+process - web-verify places/coords/kosher status/flights before
+writing, Wikimedia API via the scratchpad scripts for coordinates and
+photos, `verify-photos.mjs` after. Netanel wants a short landmarks-style
+summary table after each batch for spot-check before the next one
+starts, not a silent multi-batch dump.

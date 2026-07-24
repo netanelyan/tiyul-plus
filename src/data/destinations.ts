@@ -19,6 +19,14 @@ export const destinations: Destination[] = [
     tagline: 'ארמונות, קפה וינאי וקהילה יהודית תוססת',
     photo:
       'https://images.unsplash.com/photo-1516550893923-42d28e5677af?auto=format&fit=crop&w=1600&q=70',
+    iconicLandmark: {
+      name: 'קתדרלת סנט סטפן',
+      nameLocal: "St. Stephen's Cathedral",
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Wien_-_Stephansdom_%281%29.JPG/500px-Wien_-_Stephansdom_%281%29.JPG',
+      blurb:
+        'הלב הגותי של וינה - גג האריחים הצבעוני והצריח הגבוה נראים מכל רחבי העיר.',
+    },
     summary:
       'וינה היא יעד מושלם לישראלים: טיסה ישירה וקצרה, עיר מהלכת, שפע תרבות - וקהילה יהודית פעילה ברובע השני עם מסעדות כשרות וסופרמרקט כשר. משלבים ארמונות קיסריים עם בתי קפה, ובסוף היום עולים לכרם על גבעות יער וינה.',
     bestSeason: 'אפריל-יוני, ספטמבר-אוקטובר (דצמבר לשווקי חג המולד)',
@@ -410,6 +418,14 @@ export const destinations: Destination[] = [
     tagline: 'עיר בירה קומפקטית, 45 דקות מווינה',
     photo:
       'https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?auto=format&fit=crop&w=1600&q=70',
+    iconicLandmark: {
+      name: 'טירת ברטיסלבה',
+      nameLocal: 'Bratislava Castle',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Bratislava_-_Burg_%28b%29.JPG/500px-Bratislava_-_Burg_%28b%29.JPG',
+      blurb:
+        'הטירה הלבנה על הגבעה, סמל העיר, עם תצפית על הדנובה ועל שלוש מדינות בו-זמנית.',
+    },
     summary:
       'ברטיסלבה מצטרפת מושלם לטיול וינה - עיר עתיקה קטנה וצבעונית על הדנובה, טירה על גבעה, ומחירים נוחים משמעותית מאוסטריה. לישראלים היא גם עיר עם היסטוריה יהודית עמוקה (החת"ם סופר פעל כאן). מספיקים לה יום-יומיים.',
     bestSeason: 'מאי-ספטמבר',
@@ -779,6 +795,14 @@ export const destinations: Destination[] = [
     tagline: 'עיר הזהב: גשרים, טירות והרובע היהודי המפורסם בעולם',
     photo:
       'https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=1600&q=70',
+    iconicLandmark: {
+      name: 'גשר קרל',
+      nameLocal: 'Charles Bridge',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Prague_07-2016_view_from_Lesser_Town_Tower_of_Charles_Bridge_img3.jpg/500px-Prague_07-2016_view_from_Lesser_Town_Tower_of_Charles_Bridge_img3.jpg',
+      blurb:
+        'גשר גותי מהמאה ה-14 החוצה את הוולטבה, מעוטר בשלושים פסלי קדושים.',
+    },
     summary:
       'היעד האהוב על ישראלים במרכז אירופה, ובצדק: עיר יפה להפליא שכולה מהלכת, הרובע היהודי העתיק עם בית הכנסת אלטנוישול ובית הקברות הישן, מסעדות כשרות במרחק הליכה - ומחירי בירה שוברי שוויון (למי ששותה).',
     bestSeason: 'אפריל-יוני, ספטמבר-אוקטובר',
@@ -1162,6 +1186,14 @@ export const destinations: Destination[] = [
     tagline: 'פנינת הדנובה: מרחצאות, פרלמנט והרובע היהודי הגדול באירופה',
     photo:
       'https://images.unsplash.com/photo-1549877452-9c387954fbc2?auto=format&fit=crop&w=1600&q=70',
+    iconicLandmark: {
+      name: 'בניין הפרלמנט ההונגרי',
+      nameLocal: 'Hungarian Parliament',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Hungarian_Parliament_Building_from_across_the_Danube%2C_2025-01-11.jpg/500px-Hungarian_Parliament_Building_from_across_the_Danube%2C_2025-01-11.jpg',
+      blurb:
+        'אחד מבנייני הפרלמנט המרשימים בעולם, פרוש על גדת הדנובה ומואר בעוצמה בלילה.',
+    },
     summary:
       'בודפשט היא ההפתעה הגדולה של מרכז אירופה: עיר מפוארת וזולה יחסית, עם מרחצאות תרמיים, נוף דנובה עוצר נשימה - והרובע היהודי התוסס באירופה, עם בית הכנסת הגדול ביבשת, מסעדות כשרות ושכונה שלמה של היסטוריה יהודית חיה.',
     bestSeason: 'אפריל-יוני, ספטמבר-אוקטובר',
@@ -1547,6 +1579,14 @@ export const destinations: Destination[] = [
     tagline: 'העיר הנצחית: קולוסיאום, פסטה - והגטו היהודי הכי טעים באירופה',
     photo:
       'https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1600&q=70',
+    iconicLandmark: {
+      name: 'הקולוסיאום',
+      nameLocal: 'Colosseum',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Colosseo_2020.jpg/500px-Colosseo_2020.jpg',
+      blurb:
+        'האמפיתיאטרון הגדול ביותר שנבנה אי פעם ברומא העתיקה, וסמלה המוכר בעולם של איטליה.',
+    },
     summary:
       'רומא היא מוזיאון פתוח של 2,500 שנה - ובשביל ישראלים יש בה בונוס ענק: הגטו היהודי, הקהילה היהודית הרציפה העתיקה באירופה, עם ריכוז מסעדות כשרות שאין כמוהו ביבשת. קרוב לכל אתר מרכזי יש ארוחה כשרה מצוינת.',
     bestSeason: 'מרץ-מאי, ספטמבר-נובמבר (הקיץ חם ועמוס)',
@@ -1934,6 +1974,14 @@ export const destinations: Destination[] = [
     tagline: 'שעתיים טיסה, 2,500 שנות היסטוריה - והים באמצע',
     photo:
       'https://images.unsplash.com/photo-1555993539-1732b0258235?auto=format&fit=crop&w=1600&q=70',
+    iconicLandmark: {
+      name: 'האקרופוליס והפרתנון',
+      nameLocal: 'Acropolis',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/1029_Acropolis_of_Athens_in_Greece_at_night_Photo_by_Giles_Laurent.jpg/500px-1029_Acropolis_of_Athens_in_Greece_at_night_Photo_by_Giles_Laurent.jpg',
+      blurb:
+        'הגבעה הקדושה של אתונה העתיקה, עם מקדש הפרתנון בראשה - סמל הציוויליזציה המערבית.',
+    },
     summary:
       'היעד הקרוב והקליל: שעתיים טיסה מנתב"ג, אווירה ים-תיכונית מוכרת, מחירים נוחים והאקרופוליס מעל הכול. מושלם לסופ"ש ארוך - משלבים עתיקות בבוקר, שווקים בצהריים וטברנות בערב, ויש גם קהילת חב"ד פעילה עם אוכל כשר.',
     bestSeason: 'מרץ-יוני, ספטמבר-נובמבר (יולי-אוגוסט חם מאוד)',
@@ -2313,6 +2361,14 @@ export const destinations: Destination[] = [
     tagline: 'גאודי, חוף ים וטאפאס - העיר שכולה יצירת אמנות',
     photo:
       'https://images.unsplash.com/photo-1583422409516-2895a77efded?auto=format&fit=crop&w=1600&q=70',
+    iconicLandmark: {
+      name: 'סגרדה פמיליה',
+      nameLocal: 'Sagrada Família',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/SF_maig_2_cropped.jpg/500px-SF_maig_2_cropped.jpg',
+      blurb:
+        'יצירת המופת הלא-גמורה של אנטוני גאודי, בבנייה מתמשכת מאז 1882.',
+    },
     summary:
       'ברצלונה מחברת את מה שאף עיר אחרת לא מצליחה: אדריכלות הזויה של גאודי, רובע גותי מימי הביניים, חוף ים אמיתי בתוך העיר ואנרגיה ים-תיכונית. לישראלים היא גם נוחה במיוחד - טיסות ישירות רבות וקהילה יהודית עם פתרונות כשרות.',
     bestSeason: 'מאי-יוני, ספטמבר-אוקטובר',
@@ -2700,6 +2756,14 @@ export const destinations: Destination[] = [
     tagline: 'עיר של היסטוריה כבדה ואנרגיה צעירה - וקהילה ישראלית ענקית',
     photo:
       'https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=1600&q=70',
+    iconicLandmark: {
+      name: 'שער ברנדנבורג',
+      nameLocal: 'Brandenburg Gate',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Brandenburger_Tor_abends.jpg/500px-Brandenburger_Tor_abends.jpg',
+      blurb:
+        'השער הניאו-קלאסי מהמאה ה-18, סמלה של ברלין ושל איחוד גרמניה.',
+    },
     summary:
       'ברלין היא עיר שכל ישראלי חווה אחרת: היסטוריה יהודית שאי אפשר ולא צריך לברוח ממנה, לצד סצנה צעירה, זולה ויצירתית עם עשרות אלפי ישראלים שחיים בה. גלריות, פארקים, שווקים - והכול רחב, ירוק ונגיש.',
     bestSeason: 'מאי-ספטמבר',
@@ -3071,6 +3135,369 @@ export const destinations: Destination[] = [
         'U-Bahn, S-Bahn, חשמליות ואופניים - רשת מעולה. כרטיס יומי/שבועי משתלם. העיר ענקית, לתכנן לפי אזורים.',
       kosherOverview:
         'הקהילה היהודית מתרכזת בשרלוטנבורג: בלייברגס החלבי, חנות כשרה ליד חב"ד, ומסעדות נוספות משתנות - לבדוק עדכני. בזכות הקהילה הישראלית הגדולה יש גם המון אוכל ישראלי (לא בהכרח כשר) בכל העיר.',
+    },
+  },
+  {
+    slug: 'bangkok',
+    name: 'בנגקוק',
+    nameLocal: 'Bangkok / กรุงเทพมหานคร',
+    countrySlug: 'thailand',
+    flag: '🇹🇭',
+    center: { lat: 13.7563, lng: 100.5018 },
+    zoom: 12,
+    tagline: 'מקדשי זהב, אוכל רחוב עולמי וחב"ד בלב אזור התרמילאים',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Chao_Phraya_River_Skyline_-_panoramio.jpg/500px-Chao_Phraya_River_Skyline_-_panoramio.jpg',
+    iconicLandmark: {
+      name: 'הארמון המלכותי ווואט פרה קאו',
+      nameLocal: 'Grand Palace & Wat Phra Kaew',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/A_roof_of_a_building_at_the_Grand_Palace%2C_Bangkok%2C_sunrise%2C_2017.jpg/500px-A_roof_of_a_building_at_the_Grand_Palace%2C_Bangkok%2C_sunrise%2C_2017.jpg',
+      blurb:
+        'המתחם המלכותי לשעבר עם גגות הזהב הרב-שכבתיים - האתר המזוהה ביותר עם תאילנד, ומהמבוקרים בעולם.',
+    },
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'טיסה ישירה יציבה, אוכל רחוב ברמה עולמית ותשתית כשרות אמיתית סביב חב"ד - אבל החום והלחות דורשים קצב איטי יותר מאירופה.',
+    },
+    summary:
+      'בנגקוק היא היעד הראשון של טיול+ מחוץ לאירופה: עיר ענקית ותוססת עם מקדשים מוזהבים לצד גורדי שחקים, שוק הסופ"ש הגדול בעולם, ואוכל רחוב שנחשב מהטובים בעולם. לישראלים היא גם עיר עם היסטוריה ארוכה - בית חב"ד באזור חאו סאן מזוהה מזה עשורים עם דור התרמילאים אחרי הצבא.',
+    bestSeason: 'נובמבר-פברואר (עונה יבשה וקרירה יחסית) - מרץ-מאי חם ולח מאוד, יוני-אוקטובר עונת המונסון',
+    places: [
+      {
+        id: 'bkk-grandpalace',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/A_roof_of_a_building_at_the_Grand_Palace%2C_Bangkok%2C_sunrise%2C_2017.jpg/500px-A_roof_of_a_building_at_the_Grand_Palace%2C_Bangkok%2C_sunrise%2C_2017.jpg',
+        tags: ['history', 'families'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'הארמון המלכותי ווואט פרה קאו',
+        nameLocal: 'Grand Palace & Wat Phra Kaew',
+        category: 'attraction',
+        lat: 13.7501,
+        lng: 100.492,
+        description:
+          'המתחם המלכותי לשעבר, ובתוכו וואט פרה קאו - המקדש השומר על פסל בודהה האמרלד המקודש ביותר בתאילנד. האתר המבוקר ביותר בממלכה; להגיע עם כתפיים וברכיים מכוסות.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Grand+Palace+Bangkok',
+      },
+      {
+        id: 'bkk-watarun',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Templo_Wat_Arun%2C_Bangkok%2C_Tailandia%2C_2013-08-22%2C_DD_30.jpg/500px-Templo_Wat_Arun%2C_Bangkok%2C_Tailandia%2C_2013-08-22%2C_DD_30.jpg',
+        tags: ['history', 'romantic'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'וואט ארון - מקדש השחר',
+        nameLocal: 'Wat Arun',
+        category: 'attraction',
+        lat: 13.7436,
+        lng: 100.4889,
+        description:
+          'מקדש על גדת הנהר המערבית, מגדל פרנג מעוטר בקרמיקה וקונכיות. יפה במיוחד בשקיעה, ומהצד השני של הנהר בלילה כשהוא מואר.',
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Wat+Arun+Bangkok',
+      },
+      {
+        id: 'bkk-watpho',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Wat_Pho%2C_Bangkok%2C_Tailandia%2C_2013-08-22%2C_DD_02.jpg/500px-Wat_Pho%2C_Bangkok%2C_Tailandia%2C_2013-08-22%2C_DD_02.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'וואט פו - מקדש הבודהה השוכב',
+        nameLocal: 'Wat Pho',
+        category: 'attraction',
+        lat: 13.7464,
+        lng: 100.4936,
+        description:
+          'המקדש העתיק והגדול ביותר בבנגקוק, עם פסל בודהה שוכב מוזהב באורך 46 מטר. גם ביתו המסורתי של בית הספר לעיסוי תאילנדי.',
+        rating: 4.7,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Wat+Pho+Bangkok',
+      },
+      {
+        id: 'bkk-wattraimit',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/2016_Bangkok%2C_Dystrykt_Samphanthawong%2C_Wat_Traimit_Witthayaram_%2817%29.jpg/500px-2016_Bangkok%2C_Dystrykt_Samphanthawong%2C_Wat_Traimit_Witthayaram_%2817%29.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'וואט טריימיט - הבודהה מזהב',
+        nameLocal: 'Wat Traimit (Golden Buddha)',
+        category: 'attraction',
+        lat: 13.7381,
+        lng: 100.5136,
+        description:
+          'פסל בודהה מזהב מוצק במשקל 5.5 טונות, שהתגלה במקרה מתחת לציפוי טיח ב-1955. עומד בכניסה לרובע הסיני.',
+        rating: 4.5,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Wat+Traimit+Bangkok',
+      },
+      {
+        id: 'bkk-yaowarat',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Yaowarat_Road_Bangkok.jpg/500px-Yaowarat_Road_Bangkok.jpg',
+        tags: ['foodie', 'nightlife'],
+        priceLevel: 0,
+        name: 'יאווארט - הרובע הסיני',
+        nameLocal: 'Yaowarat Road (Chinatown)',
+        category: 'attraction',
+        lat: 13.7398,
+        lng: 100.5083,
+        description:
+          'הרחוב הראשי של הרובע הסיני של בנגקוק - שלטי ניאון, דוכני אוכל רחוב ברמה עולמית וחנויות זהב. הכי תוסס בשעות הערב.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Yaowarat+Road+Bangkok',
+      },
+      {
+        id: 'bkk-onlokyun',
+        tags: ['foodie'],
+        priceLevel: 0,
+        name: 'און לוק יון - מסעדת בוקר ותיקה',
+        nameLocal: 'On Lok Yun',
+        category: 'cafe',
+        lat: 13.7511,
+        lng: 100.4978,
+        description:
+          'מסעדת בוקר תאילנדית-סינית כמעט בת 80 שנה ליד העיר העתיקה - טוסט חמאה, ביצים ותה חלב תאילנדי. לא כשרה, אבל מוסד בנגקוקי אמיתי. סגורה בימי ראשון.',
+        rating: 4.3,
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=On+Lok+Yun+Bangkok',
+      },
+      {
+        id: 'bkk-chatuchak',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Chatuchak_Weekend_Market%2C_Bangkok%2C_Thailand_%284570440063%29.jpg/500px-Chatuchak_Weekend_Market%2C_Bangkok%2C_Thailand_%284570440063%29.jpg',
+        tags: ['families', 'foodie'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'שוק צ׳טוצ׳ק',
+        nameLocal: 'Chatuchak Weekend Market',
+        category: 'shopping',
+        lat: 13.8008,
+        lng: 100.5514,
+        description:
+          'שוק הסופ"ש הגדול בעולם - יותר מ-15,000 דוכנים של בגדים, אמנות, צמחים ואוכל. פתוח שבת-ראשון בלבד; אם הביקור באמצע השבוע, מחליפים אותו ביום קניות אחר.',
+        rating: 4.5,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Chatuchak+Weekend+Market',
+      },
+      {
+        id: 'bkk-jimthompson',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Jim_Thompson_House_spirit_house.JPG/500px-Jim_Thompson_House_spirit_house.JPG',
+        tags: ['art', 'history'],
+        priceLevel: 2,
+        name: 'בית ג׳ים תומפסון',
+        nameLocal: 'Jim Thompson House',
+        category: 'museum',
+        lat: 13.7492,
+        lng: 100.5283,
+        description:
+          'בית עץ תאילנדי מסורתי של היזם האמריקאי שהחיה את תעשיית המשי המקומית ונעלם ללא עקבות ב-1967. אוסף אמנות ועתיקות אסייתיות בתוך גינה טרופית.',
+        rating: 4.5,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=Jim+Thompson+House',
+      },
+      {
+        id: 'bkk-lumphini',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Parque_Lumphini%2C_Bangkok%2C_Tailandia%2C_2013-08-22%2C_DD_01.jpg/500px-Parque_Lumphini%2C_Bangkok%2C_Tailandia%2C_2013-08-22%2C_DD_01.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 0,
+        name: 'פארק לומפיני',
+        nameLocal: 'Lumphini Park',
+        category: 'nature',
+        lat: 13.7306,
+        lng: 100.5417,
+        description:
+          'הריאה הירוקה של בנגקוק במרכז העיר - אגם עם סירות דוושה, ולטאות ניטור ענקיות שמסתובבות חופשי, ובוקרים עם המוני מתרגלי טאי צ׳י.',
+        rating: 4.4,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=Lumphini+Park+Bangkok',
+      },
+      {
+        id: 'bkk-mahanakhon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Bangkok_-_King_Power_Mahanakhon_%E0%B8%84%E0%B8%B4%E0%B8%87_%E0%B9%80%E0%B8%9E%E0%B8%B2%E0%B9%80%E0%B8%A7%E0%B8%AD%E0%B8%A3%E0%B9%8C_%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_2021_May.jpg/500px-Bangkok_-_King_Power_Mahanakhon_%E0%B8%84%E0%B8%B4%E0%B8%87_%E0%B9%80%E0%B8%9E%E0%B8%B2%E0%B9%80%E0%B8%A7%E0%B8%AD%E0%B8%A3%E0%B9%8C_%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_2021_May.jpg',
+        tags: ['romantic'],
+        priceLevel: 3,
+        name: 'מהאנקהון סקייווק',
+        nameLocal: 'King Power Mahanakhon SkyWalk',
+        category: 'viewpoint',
+        lat: 13.7236,
+        lng: 100.5283,
+        description:
+          'מגדל התצפית הגבוה בתאילנד (314 מטר) עם רצפת זכוכית שקופה. הפנורמה על העיר, הנהר וגורדי השחקים משם עוצרת נשימה - במיוחד לקראת השקיעה.',
+        rating: 4.5,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=King+Power+Mahanakhon',
+      },
+      {
+        id: 'bkk-iconsiam',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Iconsiam_Skyscrapers.jpg/500px-Iconsiam_Skyscrapers.jpg',
+        tags: ['families', 'foodie'],
+        priceLevel: 2,
+        name: 'אייקונסיאם',
+        nameLocal: 'ICONSIAM',
+        category: 'shopping',
+        lat: 13.7267,
+        lng: 100.5105,
+        description:
+          'קניון ענק על גדת הנהר עם שוק צף מקורה בפנים ומותגי יוקרה. מגיעים בסירת חינם קצרה מתחנת הרכבת הקלה.',
+        rating: 4.5,
+        durationMin: 105,
+        externalUrl: 'https://maps.google.com/?q=ICONSIAM+Bangkok',
+      },
+      {
+        id: 'bkk-asiatique',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/The_Sirimahannop_at_Asiatique_during_sunset%2C_Bangkok_2.jpg/500px-The_Sirimahannop_at_Asiatique_during_sunset%2C_Bangkok_2.jpg',
+        tags: ['families', 'nightlife', 'foodie'],
+        priceLevel: 1,
+        name: 'אסיאטיק - שוק הלילה על הנהר',
+        nameLocal: 'Asiatique The Riverfront',
+        category: 'attraction',
+        lat: 13.7043,
+        lng: 100.5058,
+        description:
+          'מחסני נמל ישנים שהפכו לשוק לילה על הנהר - חנויות, מסעדות וגלגל ענק. מגיעים בסירת חינם; נעים במיוחד לביקור בערב.',
+        rating: 4.4,
+        durationMin: 105,
+        externalUrl: 'https://maps.google.com/?q=Asiatique+The+Riverfront',
+      },
+      {
+        id: 'bkk-erawan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Erawan_Shrine_Bangkok_2021_May.jpg/500px-Erawan_Shrine_Bangkok_2021_May.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'מקדש אראוואן',
+        nameLocal: 'Erawan Shrine',
+        category: 'attraction',
+        lat: 13.7444,
+        lng: 100.5404,
+        description:
+          'מקדש הינדי קטן לאל ברהמה, בלב צומת קניות סואן. אתר פולחן פעיל שמושך תיירים ומקומיים לאורך כל היום.',
+        rating: 4.4,
+        durationMin: 20,
+        externalUrl: 'https://maps.google.com/?q=Erawan+Shrine+Bangkok',
+      },
+      {
+        id: 'bkk-khaosan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/2016_Bangkok%2C_Dystrykt_Phra_Nakhon%2C_Ulica_Khaosan_%2808%29.jpg/500px-2016_Bangkok%2C_Dystrykt_Phra_Nakhon%2C_Ulica_Khaosan_%2808%29.jpg',
+        tags: ['nightlife', 'foodie'],
+        priceLevel: 1,
+        name: 'חאו סאן רוד',
+        nameLocal: 'Khao San Road',
+        category: 'attraction',
+        lat: 13.759,
+        lng: 100.4977,
+        description:
+          'רחוב התרמילאים המפורסם בעולם - שווקי רחוב, ברים ואווירה שמזוהה עמוק עם גל התרמילאים הישראלי. בית חב"ד נמצא כאן, במרחק הליכה.',
+        rating: 4.2,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Khao+San+Road',
+      },
+      {
+        id: 'bkk-riverboat',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'סירות האקספרס של נהר צ׳או פראיה',
+        nameLocal: 'Chao Phraya Express Boat',
+        category: 'attraction',
+        lat: 13.744,
+        lng: 100.493,
+        description:
+          'קווי הסירות הציבוריות לאורך הנהר - הדרך הזולה והכיפית ביותר לראות את העיר העתיקה מהמים, ולעבור בין רוב האתרים המרכזיים.',
+        rating: 4.4,
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=Chao+Phraya+Express+Boat',
+      },
+      {
+        id: 'bkk-chabad',
+        tags: ['foodie'],
+        priceLevel: 1,
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד בנגקוק (אור מנחם)',
+        },
+        name: 'בית חב"ד אור מנחם (מסעדה כשרה)',
+        nameLocal: 'Chabad House Bangkok - Ohr Menachem',
+        category: 'kosher-food',
+        lat: 13.7592,
+        lng: 100.4966,
+        description:
+          'בית חב"ד ותיק וגדול באזור חאו סאן, עם מסעדה בשרית וקפה חלבי הפתוחים לאורך השבוע - כתובת מפגש מרכזית לתרמילאים הישראלים בבנגקוק.',
+        rating: 4.4,
+        kosherNote:
+          'בשרי + חלבי (חללים נפרדים). ארוחות שבת בהרשמה מראש - מומלץ ליצור קשר עם בית חב"ד לפני ההגעה.',
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=Chabad+House+Bangkok',
+      },
+      {
+        id: 'bkk-jcafe',
+        priceLevel: 1,
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'חנות - מוצרים ארוזים עם הכשרים',
+        },
+        name: 'J Cafe - מכולת כשרה',
+        nameLocal: 'J Cafe Kosher Shoppe',
+        category: 'kosher-market',
+        lat: 13.7398,
+        lng: 100.5622,
+        description:
+          'חנות מכולת כשרה וקפה בסוכומווית 20, עם ייבוא מוצרים מישראל - שימושי למי שמתארגן לבשל בעצמו או מחפש נשנוש כשר מוכר.',
+        kosherNote: 'מוצרים ארוזים עם הכשרים. השילוט ברחוב לא בולט - לחפש לפי הכתובת המדויקת מראש.',
+        durationMin: 30,
+        externalUrl: 'https://maps.google.com/?q=J+Cafe+Kosher+Shoppe+Bangkok',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'רטנקוסין - העיר העתיקה',
+        placeIds: ['bkk-grandpalace', 'bkk-watpho', 'bkk-riverboat', 'bkk-watarun'],
+        notes:
+          'מתחילים מוקדם, לפני החום והקהל, בארמון המלכותי. חוצים ברגל לוואט פו, ואז בסירה לוואט ארון בצד השני של הנהר. כתפיים וברכיים מכוסות בכל המקדשים.',
+      },
+      {
+        day: 2,
+        title: 'הרובע הסיני ושוק הענק',
+        placeIds: ['bkk-onlokyun', 'bkk-wattraimit', 'bkk-yaowarat', 'bkk-chatuchak'],
+        notes:
+          'בוקר על טוסט וביצים באון לוק יון, אחר כך הבודהה מזהב ויאווארט. צ׳טוצ׳ק פתוח שבת-ראשון בלבד - באמצע השבוע מחליפים ביום קניות באייקונסיאם.',
+      },
+      {
+        day: 3,
+        title: 'בנגקוק המודרנית',
+        placeIds: ['bkk-jimthompson', 'bkk-erawan', 'bkk-mahanakhon', 'bkk-iconsiam'],
+        notes: 'יום ממוזג יותר: בית ג׳ים תומפסון בבוקר, ואז מקדש אראוואן, ותצפית ממהאנקהון לקראת השקיעה.',
+      },
+      {
+        day: 4,
+        title: 'חב"ד, פארק ולילה על הנהר',
+        placeIds: ['bkk-lumphini', 'bkk-chabad', 'bkk-khaosan', 'bkk-asiatique'],
+        notes:
+          'בוקר רגוע בלומפיני. בשישי - ארוחת שבת בבית חב"ד (בתיאום מראש). בערב, חאו סאן או שוק הלילה באסיאטיק, לפי מצב הרוח.',
+      },
+    ],
+    practical: {
+      flights:
+        'אל על מטיסה ישירה מנתב"ג לבנגקוק כ-5 פעמים בשבוע (טיסה ארוכת טווח של כ-11 שעות) - לא יומי, אבל תדיר ויציב לאורך השנה.',
+      gettingAround:
+        'רכבת קלה BTS ומטרו MRT ממוזגים ונוחים, סירות Chao Phraya Express לאורך הנהר, מוניות מונה או אפליקציית Grab, וטוקטוק לחוויה - לסכם מחיר מראש לפני העלייה.',
+      kosherOverview:
+        'לא תשתית כמו באירופה, אבל אמיתית ופעילה: בית חב"ד אור מנחם באזור חאו סאן (מסעדה בשרית + קפה חלבי, כולל ארוחות שבת), וחנות/קפה כשר J Cafe בסוכומווית 20. מעבר לשני המקומות האלה אין עוד אתרים עם הכשר מאומת בעיר - לא להסתמך על מסעדות תאילנדיות רגילות.',
     },
   },
 ];
