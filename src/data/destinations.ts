@@ -5250,6 +5250,229 @@ export const destinations: Destination[] = [
         'אין במונטנגרו תשתית כשרות מסודרת - אין מסעדות כשרות או בית חב"ד תיירותי פעיל, והקהילה היהודית הקטנה מרוכזת בפודגוריצה. מומלץ להצטייד מראש במוצרים ארוזים עם הכשר, או להתארגן ללינה עם מטבח ולבשל עצמאית. פירות, ירקות ודגים טריים זמינים בשווקים המקומיים.',
     },
   },
+  {
+    slug: 'budva',
+    name: 'בודווה',
+    nameLocal: 'Budva / Budva',
+    countrySlug: 'montenegro',
+    flag: '🇲🇪',
+    center: { lat: 42.31, lng: 18.9 },
+    zoom: 11,
+    tagline: 'בירת החוף של מונטנגרו - עיר עתיקה, חופים ואגם סקאדאר',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Citadela_of_Budva_old_town.jpg/500px-Citadela_of_Budva_old_town.jpg',
+    iconicLandmark: {
+      name: 'העיר העתיקה של בודווה',
+      nameLocal: 'Budva Old Town',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Old_Town_Scene_-_Budva_-_Montenegro_-_01.jpg/500px-Old_Town_Scene_-_Budva_-_Montenegro_-_01.jpg',
+      blurb:
+        'עיר עתיקה מוקפת חומה על צוק אל הים האדריאטי, עם סמטאות ונציאניות, מצודה וכנסיות - הלב ההיסטורי של חוף מונטנגרו.',
+    },
+    editorialRating: {
+      score: 4.4,
+      verdict:
+        'בירת החוף: עיר עתיקה יפהפייה, שרשרת חופים ובסיס מצוין לטבע (אגם סקאדאר, לובצ׳ן). חסרונות: עמוסה ורועשת בשיא הקיץ, והטיסה הישירה לטיבט עונתית בלבד.',
+    },
+    summary:
+      'בודווה היא בירת החוף התוססת של מונטנגרו: עיר עתיקה מוקפת חומה על צוק, שרשרת חופים וחיי לילה - ובסיס נוח לטבע שמסביב. במרחק דקות: האי סווטי ניקולה, כפר-המלון סווטי סטפן, הרי לובצ׳ן, והפנינה השקטה - אגם סקאדאר, הגדול בבלקן, עם תצפית הפיתול המפורסמת בפאבלובה סטראנה. אין במדינה תשתית כשרות.',
+    bestSeason: 'מאי-אוקטובר (עונת החוף; הטיסה הישירה לטיבט בקיץ) - יולי-אוגוסט הכי עמוס ותוסס',
+    places: [
+      {
+        id: 'bud-oldtown',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Old_Town_Scene_-_Budva_-_Montenegro_-_01.jpg/500px-Old_Town_Scene_-_Budva_-_Montenegro_-_01.jpg',
+        tags: ['history', 'nightlife'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'העיר העתיקה של בודווה',
+        nameLocal: 'Budva Old Town',
+        category: 'attraction',
+        lat: 42.2781,
+        lng: 18.8386,
+        description:
+          'עיר עתיקה מוקפת חומה על צוק אל הים - סמטאות אבן ונציאניות, כנסיות וכיכרות, ומסביב מרכז הבילוי והחיים של החוף המונטנגרי. יפה במיוחד בשעות הערב.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Budva+Old+Town',
+      },
+      {
+        id: 'bud-citadela',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Citadela_of_Budva_old_town.jpg/500px-Citadela_of_Budva_old_town.jpg',
+        tags: ['history', 'romantic'],
+        priceLevel: 1,
+        name: 'מצודת בודווה (ציטדלה)',
+        nameLocal: 'Budva Citadela',
+        category: 'viewpoint',
+        lat: 42.2775,
+        lng: 18.838,
+        description:
+          'המצודה בקצה העיר העתיקה, עם חומות, ספרייה עתיקה ותצפית פתוחה על הים, על האי סווטי ניקולה ועל גגות הרעפים של בודווה. הכי יפה לקראת השקיעה.',
+        rating: 4.4,
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=Citadela+Budva',
+      },
+      {
+        id: 'bud-mogren',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Mogren_Beach_Budva_1b.png/500px-Mogren_Beach_Budva_1b.png',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'חוף מוגרן',
+        nameLocal: 'Mogren Beach',
+        category: 'nature',
+        lat: 42.277,
+        lng: 18.8321,
+        description:
+          'חוף חצץ יפה מתחת לצוקים, במרחק הליכה קצרה מהעיר העתיקה לאורך שביל חוף מרהיב. מים צלולים ואווירה נעימה - מהחופים האהובים בבודווה.',
+        rating: 4.4,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Mogren+Beach+Budva',
+      },
+      {
+        id: 'bud-svnikola',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Sveti_Nikola_Island_near_Budva_2600x1300.jpg/500px-Sveti_Nikola_Island_near_Budva_2600x1300.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'האי סווטי ניקולה',
+        nameLocal: 'Sveti Nikola Island',
+        category: 'nature',
+        lat: 42.2659,
+        lng: 18.8522,
+        description:
+          'האי הגדול מול בודווה, המכונה "האי של הצבאים", עם חופים שקטים ושבילי הליכה. מגיעים בסירת טקסי קצרה מהחוף - בריחה נעימה מהעיר.',
+        rating: 4.3,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Sveti+Nikola+Island+Budva',
+      },
+      {
+        id: 'bud-becici',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Montenegro_Becici_beach.jpg/500px-Montenegro_Becici_beach.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 1,
+        name: 'חוף בצ׳יצ׳י',
+        nameLocal: 'Bečići Beach',
+        category: 'nature',
+        lat: 42.2831,
+        lng: 18.8775,
+        description:
+          'חוף חול-חצץ ארוך ורחב מדרום לבודווה, שזכה בעבר בפרס לחוף היפה באירופה. רגוע ומשפחתי יותר, עם מלונות וטיילת לאורכו.',
+        rating: 4.3,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Becici+Beach',
+      },
+      {
+        id: 'bud-slovenska',
+        tags: ['families', 'nightlife'],
+        priceLevel: 0,
+        name: 'חוף סלובנסקה',
+        nameLocal: 'Slovenska Plaža',
+        category: 'nature',
+        lat: 42.2835,
+        lng: 18.8475,
+        description:
+          'החוף המרכזי והארוך של בודווה, צמוד לעיר ולטיילת - ספורט ימי, בארים ומסעדות. הכי נוח ותוסס, אם כי לא הכי שקט.',
+        rating: 4.1,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Slovenska+Plaza+Budva',
+      },
+      {
+        id: 'bud-svetistefan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Sveti_Stefan_%2805%29.jpg/500px-Sveti_Stefan_%2805%29.jpg',
+        tags: ['romantic'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'סווטי סטפן',
+        nameLocal: 'Sveti Stefan',
+        category: 'viewpoint',
+        lat: 42.2558,
+        lng: 18.8911,
+        description:
+          'אי-כפר דייגים מהמאה ה-15 שהפך למלון יוקרה, מחובר לחוף ברצועת חול - הגלויה המזוהה ביותר עם מונטנגרו. האי סגור למבקרים, אבל התצפית מהכביש שמעליו חובה. דקות דרומית לבודווה.',
+        rating: 4.5,
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=Sveti+Stefan+Montenegro',
+      },
+      {
+        id: 'bud-skadar',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Pavlova_Strana%2C_Rijeka_Crnojevi%C4%87a%2C_Cetinje.jpg/500px-Pavlova_Strana%2C_Rijeka_Crnojevi%C4%87a%2C_Cetinje.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'אגם סקאדאר ותצפית פאבלובה סטראנה',
+        nameLocal: 'Lake Skadar & Pavlova Strana',
+        category: 'nature',
+        lat: 42.3564,
+        lng: 19.0227,
+        description:
+          'האגם הגדול בבלקן ושמורת ציפורים (פליקנים!), עם פיתול נהר מרהיב בתצפית פאבלובה סטראנה שליד ריקה צרנוֹיֶביצ׳ה. שיט שקט בין חבצלות מים יוצא מווירפזאר. כשעה מבודווה.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Pavlova+Strana+Skadar+Lake',
+      },
+      {
+        id: 'bud-lovcen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Jezerski_Vrh%2C_Njegos_mausoleum_-_1.jpg/500px-Jezerski_Vrh%2C_Njegos_mausoleum_-_1.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
+        name: 'הפארק הלאומי לובצ׳ן',
+        nameLocal: 'Lovćen National Park',
+        category: 'nature',
+        lat: 42.4001,
+        lng: 18.8375,
+        description:
+          'פארק לאומי הררי מעל החוף, ובראש פסגת ג׳זרסקי המאוזוליאום של המשורר-שליט נייגוש - 461 מדרגות לתצפית מעגלית עוצרת נשימה על חצי מונטנגרו. כשעה מבודווה.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Lovcen+National+Park',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'העיר העתיקה והחופים',
+        placeIds: ['bud-oldtown', 'bud-citadela', 'bud-mogren', 'bud-slovenska'],
+        notes:
+          'בוקר בעיר העתיקה ובמצודה (תצפית על הים), טיול על שביל החוף אל חוף מוגרן, ואחר צהריים רגוע על חוף סלובנסקה הצמוד. בערב - הסמטאות והבילוי בעיר העתיקה.',
+      },
+      {
+        day: 2,
+        title: 'חופי הדרום ואי הצבאים',
+        placeIds: ['bud-svetistefan', 'bud-becici', 'bud-svnikola'],
+        notes:
+          'תצפית על סווטי סטפן, חוף רגוע בבצ׳יצ׳י, וסירת טקסי אל האי סווטי ניקולה לשחייה ולשקט - יום ים קלאסי סביב בודווה.',
+      },
+      {
+        day: 3,
+        title: 'אגם סקאדאר',
+        placeIds: ['bud-skadar'],
+        notes:
+          'טיול יום אל הפארק הלאומי אגם סקאדאר: תצפית הפיתול בפאבלובה סטראנה, ושיט שקט מווירפזאר בין ציפורים וחבצלות מים. ניגוד מרענן לחוף.',
+      },
+      {
+        day: 4,
+        title: 'ההר - לובצ׳ן',
+        placeIds: ['bud-lovcen'],
+        notes:
+          'יום הרים: הדרך המפותלת אל הפארק הלאומי לובצ׳ן ולמאוזוליאום נייגוש, עם התצפית המעגלית המפורסמת על חצי מונטנגרו. שווה לשלב עם ירידה לצד קוטור.',
+      },
+    ],
+    practical: {
+      flights:
+        'הטיסה הישירה הקרובה היא לטיבט (Tivat), כ-20 דקות נסיעה מבודווה - אך עונתית בלבד (אל על/ישראייר בקיץ, כ-יולי-ספטמבר). מחוץ לעונה טסים דרך יעד ביניים אירופי.',
+      gettingAround:
+        'רכב שכור נוח ביותר לטבע שמסביב (סקאדאר, לובצ׳ן); לאורך החוף יש גם אוטובוסים תכופים (בודווה-קוטור-סווטי סטפן). בעיר עצמה הכול במרחק הליכה.',
+      kosherOverview:
+        'אין במונטנגרו תשתית כשרות מסודרת - אין מסעדות כשרות או בית חב"ד תיירותי פעיל. מומלץ להצטייד מראש במוצרים ארוזים עם הכשר או להתארגן ללינה עם מטבח ולבשל עצמאית. פירות, ירקות ודגים טריים זמינים בשווקים.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
