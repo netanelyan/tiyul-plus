@@ -58,8 +58,9 @@ export default function RootLayout({
               טיול<span className="text-sunset">+</span>
             </span>
           </div>
-          <p className="mt-2 text-xs text-cream/50">
-            נתוני דוגמה להדגמה בלבד - לוודא כשרות, שעות ומחירים מול המקומות עצמם
+          <p className="mx-auto mt-2 max-w-xl px-4 text-xs leading-relaxed text-cream/50">
+            טיול+ הוא סוכן AI שבונה מסלולים אוטומטית. תמיד כדאי לאמת שעות פתיחה,
+            מחירים, זמינות וכשרות מול המקומות עצמם לפני הנסיעה.
           </p>
           <Link
             href="/accessibility"
