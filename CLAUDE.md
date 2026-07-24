@@ -1167,3 +1167,19 @@ NONE-and-said-so where it doesn't (Montenegro, Jordan).
 
 **Next candidates if resuming:** Marrakech (re-verify Morocco flights),
 Batumi (2nd Georgia), Sri Lanka, Zanzibar (thin - probably skip).
+
+### 2026-07-24 (k) - Batumi added; Marrakech skipped (unverifiable flights)
+
+- **Batumi, Georgia** (2nd Georgian city) - 7 places, rating 4.3. Landmark:
+  Batumi Boulevard. Nature: Mtirala rainforest NP, Makhuntseti waterfall,
+  clifftop Botanical Garden; + Piazza old town, Gonio fortress. Kosher
+  REAL: Mendi's (Chabad Batumi meat restaurant). Flights confirmed (Arkia
+  ~9/wk, El Al ~8/wk, ~2h20).
+- **Marrakech SKIPPED (not built):** Royal Air Maroc suspended TLV flights
+  through Feb 2025 and there's no confirmed 2026 resumption - a direct-
+  flight claim can't be verified, so per the no-fabrication rule it was not
+  added. Revisit if/when TLV-RAK service is confirmed operating.
+
+**Catalog now 19 destinations / 16 countries.** Next candidates if
+resuming: Sri Lanka (verify charters), a 2nd Thai island, Zanzibar (thin),
+or re-check Marrakech.
