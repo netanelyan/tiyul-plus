@@ -5006,6 +5006,250 @@ export const destinations: Destination[] = [
         'בית חב"ד אלמטי (שדרת ראיימבק, בראשות הרב אלחנן כהן) הוא מרכז הכשרות בעיר: בית כנסת מרכזי, חנות כשרה וחדר אוכל. אין באלמטי תשתית מסעדות כשרות רחבה - מומלץ לתאם ארוחות (כולל שבת) מול בית חב"ד מראש.',
     },
   },
+  {
+    slug: 'kotor',
+    name: 'קוטור ומפרץ בוקה',
+    nameLocal: 'Kotor / Kotor',
+    countrySlug: 'montenegro',
+    flag: '🇲🇪',
+    center: { lat: 42.55, lng: 18.9 },
+    zoom: 9,
+    tagline: 'מפרץ דמוי פיורד, ערים עתיקות והרים פראיים עם אגמים וקניונים',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Kotor%2C_Montenegro.jpg/500px-Kotor%2C_Montenegro.jpg',
+    iconicLandmark: {
+      name: 'מפרץ קוטור והעיר העתיקה',
+      nameLocal: 'Bay of Kotor & Old Town',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Kotor%2C_Montenegro.jpg/500px-Kotor%2C_Montenegro.jpg',
+      blurb:
+        'עיר עתיקה מוקפת חומה בקצה מפרץ בוקה הדרמטי, בין צוקי הרים תלולים שנראים כמו פיורד - אתר מורשת עולמית ואחד הנופים היפים בים התיכון.',
+    },
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'מפרץ מרהיב, ערים עתיקות וטבע הרים נגיש - הכול במרחקים קצרים ועם פטור מוויזה. חסרונות: הטיסה הישירה עונתית (קיץ בלבד לטיבט), ואין במדינה תשתית כשרות.',
+    },
+    summary:
+      'קוטור ומפרץ בוקה הם הלב של מונטנגרו: עיר עתיקה מוקפת חומה למרגלות הרים תלולים, ערי חוף כמו בודווה וסווטי סטפן במרחק דקות, ומעליהן העולם ההררי הפראי - הפארק הלאומי לובצ׳ן, אגם ביוגרד ביער הבתולה שליד קולאשין, והאגם השחור וקניון טארה בדורמיטור. (בסיס נוח לטיול הוא קוטור או בודווה; אתרי הצפון הם טיולי יום ארוכים.)',
+    bestSeason: 'מאי-אוקטובר (חוף והרים נגישים; הטיסה הישירה לטיבט בקיץ) - חורף שקט וקר בהרים',
+    places: [
+      {
+        id: 'kot-oldtown',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Kotor%2C_Montenegro.jpg/500px-Kotor%2C_Montenegro.jpg',
+        tags: ['history', 'romantic'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'העיר העתיקה של קוטור',
+        nameLocal: 'Kotor Old Town',
+        category: 'attraction',
+        lat: 42.4243,
+        lng: 18.7712,
+        description:
+          'מבוך סמטאות אבן, כיכרות וכנסיות מימי הביניים בעיר מוקפת חומה על שפת המפרץ - אתר מורשת עולמית. חתולים בכל פינה, בתי קפה נעימים ואווירה ונציאנית.',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Kotor+Old+Town',
+      },
+      {
+        id: 'kot-walls',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/San_Giovanni_Fortress%2C_Montenegro.jpg/500px-San_Giovanni_Fortress%2C_Montenegro.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'חומות קוטור ומצודת סן ג׳ובאני',
+        nameLocal: 'Kotor Walls & San Giovanni Fortress',
+        category: 'viewpoint',
+        lat: 42.4256,
+        lng: 18.7742,
+        description:
+          'טיפוס של כ-1,350 מדרגות לאורך חומות העיר עד מצודת סן ג׳ובאני - התצפית הקלאסית על המפרץ מלמעלה. מאמץ מתגמל; מומלץ בבוקר או לפנות ערב, עם מים ונעליים טובות.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Kotor+Fortress+San+Giovanni',
+      },
+      {
+        id: 'kot-perast',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Widok_na_Perast_od_strony_morza_05.JPG/500px-Widok_na_Perast_od_strony_morza_05.JPG',
+        tags: ['history', 'romantic'],
+        priceLevel: 0,
+        name: 'פראסט',
+        nameLocal: 'Perast',
+        category: 'attraction',
+        lat: 42.4869,
+        lng: 18.6992,
+        description:
+          'עיירה בארוקית קטנה ומקסימה על שפת המפרץ, עם ארמונות אבן וכנסיות ובלי תנועת רכב. נקודת היציאה בסירה לאיים הקטנים שממול.',
+        rating: 4.6,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=Perast+Montenegro',
+      },
+      {
+        id: 'kot-ourlady',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Our_Lady_of_the_Rocks_Montenegro.jpg/500px-Our_Lady_of_the_Rocks_Montenegro.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'כנסיית גבירתנו של הסלעים',
+        nameLocal: 'Our Lady of the Rocks',
+        category: 'attraction',
+        lat: 42.4867,
+        lng: 18.6889,
+        description:
+          'כנסייה על אי מלאכותי שנבנה במשך מאות שנים מאבנים שהטילו דייגים לים. מגיעים בסירה קצרה מפראסט; בפנים מוזיאון קטן ולוח קיר עשוי חוטי כסף.',
+        rating: 4.5,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Our+Lady+of+the+Rocks+Perast',
+      },
+      {
+        id: 'kot-lovcen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Jezerski_Vrh%2C_Njegos_mausoleum_-_1.jpg/500px-Jezerski_Vrh%2C_Njegos_mausoleum_-_1.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הפארק הלאומי לובצ׳ן ומאוזוליאום נייגוש',
+        nameLocal: 'Lovćen NP & Njegoš Mausoleum',
+        category: 'nature',
+        lat: 42.4001,
+        lng: 18.8375,
+        description:
+          'פארק לאומי הררי מעל קוטור, ובראש פסגת ג׳זרסקי המאוזוליאום של המשורר-שליט נייגוש. מטפסים 461 מדרגות לתצפית מעגלית עוצרת נשימה על חצי מונטנגרו. הדרך המפותלת מקוטור היא חוויה בפני עצמה.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Njegos+Mausoleum+Lovcen',
+      },
+      {
+        id: 'kot-budva',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Old_Town_Scene_-_Budva_-_Montenegro_-_01.jpg/500px-Old_Town_Scene_-_Budva_-_Montenegro_-_01.jpg',
+        tags: ['history', 'nightlife'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'העיר העתיקה של בודווה',
+        nameLocal: 'Budva Old Town',
+        category: 'attraction',
+        lat: 42.2781,
+        lng: 18.8386,
+        description:
+          'עיר עתיקה מוקפת חומה על צוק אל הים, ולצידה החופים ומרכז הבילוי התוסס ביותר של החוף המונטנגרי. שילוב של סמטאות ונציאניות, חופים וחיי לילה.',
+        rating: 4.4,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Budva+Old+Town',
+      },
+      {
+        id: 'kot-svetistefan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Sveti_Stefan_%2805%29.jpg/500px-Sveti_Stefan_%2805%29.jpg',
+        tags: ['romantic'],
+        priceLevel: 0,
+        name: 'סווטי סטפן',
+        nameLocal: 'Sveti Stefan',
+        category: 'viewpoint',
+        lat: 42.2558,
+        lng: 18.8911,
+        description:
+          'אי-כפר דייגים מהמאה ה-15 שהפך למלון יוקרה, מחובר לחוף ברצועת חול - הגלויה המזוהה ביותר עם מונטנגרו. האי עצמו סגור למבקרים, אבל התצפית מהכביש שמעליו חובה.',
+        rating: 4.5,
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=Sveti+Stefan+Montenegro',
+      },
+      {
+        id: 'kot-biograd',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Biogradsko_Jezero.jpg/500px-Biogradsko_Jezero.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'אגם ביוגרד (ביוגרדסקה גורה)',
+        nameLocal: 'Lake Biograd (Biogradska Gora)',
+        category: 'nature',
+        lat: 42.897,
+        lng: 19.6027,
+        description:
+          'אגם קרחוני צלול בלב אחד מיערות הבתולה האחרונים באירופה, בפארק הלאומי ביוגרדסקה גורה שליד קולאשין. שביל הליכה נעים מקיף את האגם - טבע שקט ובראשיתי, כשעתיים מהחוף.',
+        rating: 4.6,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Biogradsko+Jezero',
+      },
+      {
+        id: 'kot-blacklake',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Crno_jezero_-_1.jpg/500px-Crno_jezero_-_1.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'האגם השחור (דורמיטור)',
+        nameLocal: 'Black Lake (Durmitor)',
+        category: 'nature',
+        lat: 43.1433,
+        lng: 19.0875,
+        description:
+          'אגם הררי כהה ומרהיב למרגלות פסגות הפארק הלאומי דורמיטור, ליד העיירה ז׳בליאק. שביל מעגלי קל (כ-3.5 ק"מ) בין יער אורנים ומים - לב הטבע האלפיני של מונטנגרו.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Black+Lake+Durmitor',
+      },
+      {
+        id: 'kot-tara',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/%C4%90ur%C4%91evi%C4%87a_Tara.jpg/500px-%C4%90ur%C4%91evi%C4%87a_Tara.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'גשר וקניון טארה',
+        nameLocal: 'Tara Canyon & Đurđevića Bridge',
+        category: 'nature',
+        lat: 43.1495,
+        lng: 19.2941,
+        description:
+          'קניון נהר הטארה הוא העמוק באירופה (עד כ-1,300 מטר), ומעליו נמתח גשר הקשתות ההיסטורי מ-1940. אזור לרפטינג, זיפליין ותצפיות - חלק מיום דורמיטור בצפון.',
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Djurdjevica+Tara+Bridge',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'מפרץ בוקה - קוטור ופראסט',
+        placeIds: ['kot-oldtown', 'kot-walls', 'kot-perast', 'kot-ourlady'],
+        notes:
+          'בוקר בעיר העתיקה של קוטור וטיפוס על החומות למצודת סן ג׳ובאני (מים ונעליים טובות!). אחר הצהריים נסיעה יפהפייה לאורך המפרץ לפראסט, ומשם בסירה לכנסיית גבירתנו של הסלעים.',
+      },
+      {
+        day: 2,
+        title: 'החוף - בודווה, סווטי סטפן ולובצ׳ן',
+        placeIds: ['kot-budva', 'kot-svetistefan', 'kot-lovcen'],
+        notes:
+          'העיר העתיקה של בודווה והחופים בבוקר, תצפית על סווטי סטפן, ולסיום עלייה בדרך המפותלת אל הפארק הלאומי לובצ׳ן ולמאוזוליאום נייגוש - תצפית על חצי מונטנגרו.',
+      },
+      {
+        day: 3,
+        title: 'צפון פראי - דורמיטור וטארה',
+        placeIds: ['kot-blacklake', 'kot-tara'],
+        notes:
+          'יום ארוך צפונה (כ-2.5-3 שעות): הקפת האגם השחור בדורמיטור, וגשר וקניון טארה בדרך. מי שיכול - שווה לינה בז׳בליאק/קולאשין כדי לפצל את הצפון ליומיים.',
+      },
+      {
+        day: 4,
+        title: 'יער הבתולה - אגם ביוגרד',
+        placeIds: ['kot-biograd'],
+        notes:
+          'טיול רגוע בפארק הלאומי ביוגרדסקה גורה שליד קולאשין: שביל מקיף את אגם ביוגרד בלב יער בתולה קדום. שילוב מושלם בדרך חזרה מהצפון אל החוף.',
+      },
+    ],
+    practical: {
+      flights:
+        'אל על וישראייר מפעילות טיסה ישירה מנתב"ג לטיבט (Tivat) - אך עונתית בלבד, בחודשי הקיץ (כ-יולי-ספטמבר), טיסה של כ-3 שעות. מחוץ לעונה טסים דרך יעד ביניים אירופי.',
+      gettingAround:
+        'הדרך הנוחה היא רכב שכור: המרחקים קצרים אך הכבישים ההרריים מפותלים, ואתרי הטבע בצפון (דורמיטור, ביוגרדסקה גורה) כמעט בלתי נגישים בתחבורה ציבורית. בין ערי החוף יש גם אוטובוסים.',
+      kosherOverview:
+        'אין במונטנגרו תשתית כשרות מסודרת - אין מסעדות כשרות או בית חב"ד תיירותי פעיל, והקהילה היהודית הקטנה מרוכזת בפודגוריצה. מומלץ להצטייד מראש במוצרים ארוזים עם הכשר, או להתארגן ללינה עם מטבח ולבשל עצמאית. פירות, ירקות ודגים טריים זמינים בשווקים המקומיים.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
