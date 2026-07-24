@@ -6320,6 +6320,219 @@ export const destinations: Destination[] = [
         'אין בכרתים תשתית כשרות מסודרת - אין מסעדות כשרות או בית חב"ד תיירותי פעיל (בחאניה יש בית הכנסת ההיסטורי עץ חיים, כאתר מורשת - לא אוכל כשר). מומלץ להצטייד מראש במזון ארוז עם הכשר; ירקות, פירות, זיתים וגבינות טריים זמינים בשפע בשווקים.',
     },
   },
+  {
+    slug: 'munich',
+    name: 'מינכן והרי בוואריה',
+    nameLocal: 'Munich / München',
+    countrySlug: 'germany',
+    flag: '🇩🇪',
+    center: { lat: 47.95, lng: 11.6 },
+    zoom: 8,
+    tagline: 'עיר בווארית קלאסית - וטירות, נקיקים ואגמי אלפים מסביב',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/3_of_10_-_Lake_Konigssee_Bavaria%2C_GERMANY.jpg/500px-3_of_10_-_Lake_Konigssee_Bavaria%2C_GERMANY.jpg',
+    iconicLandmark: {
+      name: 'טירת נוישוונשטיין',
+      nameLocal: 'Neuschwanstein Castle',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Neuschwanstein_Castle_from_Marienbr%C3%BCcke%2C_2011_May.jpg/500px-Neuschwanstein_Castle_from_Marienbr%C3%BCcke%2C_2011_May.jpg',
+      blurb:
+        'טירת אגדה על ראש גבעה מיוערת מול האלפים הבוואריים, שבנה המלך לודוויג השני והשראה ל"טירת הנסיכה" של דיסני - הסמל המזוהה ביותר עם בוואריה.',
+    },
+    editorialRating: {
+      score: 4.5,
+      verdict:
+        'טיסה ישירה, עיר בווארית מקסימה ושער לאלפים - טירות, נקיקים ואגמים ברמה עולמית, ותשתית כשרות אמיתית. חסרונות: אתרי הטבע הם טיולי יום של 1-2 שעות שדורשים רכב, והאזור יקר.',
+    },
+    summary:
+      'מינכן היא בירת בוואריה - עיר מלכותית עם כיכרות, גנים וגני בירה - ובעיקר שער מושלם לאלפים הבוואריים: טירת נוישוונשטיין האגדית, פסגת צוגשפיצה ואגם אייבזה, נקיק פרטנאך ואגם קניגסזה דמוי הפיורד. מינכן היא גם הקהילה היהודית השנייה בגודלה בגרמניה, עם מסעדה כשרה גלאט ובית חב"ד.',
+    bestSeason: 'מאי-ספטמבר (אגמים ונקיקים נגישים; אוקטובר - אוקטוברפסט) - חורף מושלג ומצוין לסקי אלפיני',
+    places: [
+      {
+        id: 'muc-marienplatz',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Overview_Marienplatz_Rathaus_Munich.jpg/500px-Overview_Marienplatz_Rathaus_Munich.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'מריאנפלאץ והעיר העתיקה',
+        nameLocal: 'Marienplatz & Old Town',
+        category: 'attraction',
+        lat: 48.1373,
+        lng: 11.5755,
+        description:
+          'הכיכר המרכזית של מינכן, ובה בניין העירייה החדש הניאו-גותי עם הגלוקנשפיל (מופע פעמונים ובובות בצהריים). נקודת מוצא לסמטאות, לשוק ויקטואלין ולגני הבירה.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Marienplatz+Munich',
+      },
+      {
+        id: 'muc-engarten',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Chinese_Tower_-_English_Garden.jpg/500px-Chinese_Tower_-_English_Garden.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        name: 'הגן האנגלי',
+        nameLocal: 'Englischer Garten',
+        category: 'nature',
+        lat: 48.1528,
+        lng: 11.5919,
+        description:
+          'אחד הפארקים העירוניים הגדולים בעולם (גדול מסנטרל פארק), עם אחו, נחלים, מגדל סיני וגן בירה - ובכניסה גולשי גלים על גל נייח בנחל האייסבאך. הריאה הירוקה של מינכן.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Englischer+Garten+Munich',
+      },
+      {
+        id: 'muc-nymphenburg',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Nymphenburg_Palace%2C_Munich%2C_Germany.jpg/500px-Nymphenburg_Palace%2C_Munich%2C_Germany.jpg',
+        tags: ['history', 'romantic'],
+        priceLevel: 1,
+        name: 'ארמון נימפנבורג',
+        nameLocal: 'Nymphenburg Palace',
+        category: 'attraction',
+        lat: 48.1581,
+        lng: 11.5036,
+        description:
+          'ארמון הקיץ הבארוקי של שליטי בוואריה, עם חזית מרשימה, אולמות מפוארים וגנים עצומים עם תעלות וביתני נופש. נעים לשילוב עם טיול רגלי בגנים.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Nymphenburg+Palace',
+      },
+      {
+        id: 'muc-neuschwanstein',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Neuschwanstein_Castle_from_Marienbr%C3%BCcke%2C_2011_May.jpg/500px-Neuschwanstein_Castle_from_Marienbr%C3%BCcke%2C_2011_May.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'טירת נוישוונשטיין',
+        nameLocal: 'Neuschwanstein Castle',
+        category: 'attraction',
+        lat: 47.5575,
+        lng: 10.7494,
+        description:
+          'טירת האגדה של המלך לודוויג השני על צוק מיוער מול האלפים - התצפית מגשר מרי (Marienbrücke) היא הזווית המפורסמת. כרטיסים מראש; כ-1.5 שעות ממינכן.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Neuschwanstein+Castle',
+      },
+      {
+        id: 'muc-zugspitze',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Lake_Eibsee_and_Zugspitze.jpg/500px-Lake_Eibsee_and_Zugspitze.jpg',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'צוגשפיצה ואגם אייבזה',
+        nameLocal: 'Zugspitze & Eibsee',
+        category: 'nature',
+        lat: 47.4578,
+        lng: 10.9731,
+        description:
+          'הפסגה הגבוהה בגרמניה (2,962 מ׳), ואליה עולים ברכבל או ברכבת שיניים - נוף אלפיני של 360 מעלות ושלג גם בקיץ. למרגלותיה אגם אייבזה הטורקיז, ששביל מקיף אותו.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Zugspitze+Eibsee',
+      },
+      {
+        id: 'muc-partnach',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/20230608_Partnachklamm_08.jpg/500px-20230608_Partnachklamm_08.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'נקיק פרטנאך',
+        nameLocal: 'Partnach Gorge',
+        category: 'nature',
+        lat: 47.4692,
+        lng: 11.1186,
+        description:
+          'נקיק סלע דרמטי ליד גרמיש, שבו שביל חצוב עובר צמוד לנהר הגועש בין קירות גבוהים ומפלים. הליכה קצרה ומרשימה, משתלבת עם יום צוגשפיצה/נוישוונשטיין.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Partnachklamm',
+      },
+      {
+        id: 'muc-konigssee',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/3_of_10_-_Lake_Konigssee_Bavaria%2C_GERMANY.jpg/500px-3_of_10_-_Lake_Konigssee_Bavaria%2C_GERMANY.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'אגם קניגסזה',
+        nameLocal: 'Königssee',
+        category: 'nature',
+        lat: 47.5551,
+        lng: 12.9766,
+        description:
+          'אגם צלול ועמוק דמוי פיורד בין צוקים תלולים, בפארק הלאומי ברכטסגאדן - שיט בסירות חשמליות שקטות אל כנסיית סנט ברתולומיאו האדומה. מהאגמים היפים באירופה. כ-2 שעות ממינכן.',
+        rating: 4.8,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Konigssee',
+      },
+      {
+        id: 'muc-einstein',
+        tags: ['foodie'],
+        priceLevel: 2,
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'הקהילה היהודית של מינכן (גלאט כשר)',
+        },
+        name: 'מסעדת איינשטיין (כשרה)',
+        nameLocal: 'Restaurant Einstein',
+        category: 'kosher-food',
+        lat: 48.1345,
+        lng: 11.572,
+        description:
+          'מסעדה גלאט-כשרה במרכז הקהילתי היהודי בכיכר סנט יעקב, במרחק הליכה ממריאנפלאץ - המסעדה הכשרה המרכזית של מינכן. יש מעבר ביטחוני בכניסה; מומלץ להזמין מקום מראש.',
+        rating: 4.5,
+        kosherNote:
+          'גלאט כשר בהשגחת הקהילה היהודית של מינכן. כניסה דרך שער ביטחוני; שעות משתנות ומומלץ להזמין מראש. בעיר יש גם בית חב"ד ומספר נקודות כשרות נוספות.',
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=Restaurant+Einstein+Munich',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'מינכן - העיר',
+        placeIds: ['muc-marienplatz', 'muc-engarten', 'muc-nymphenburg', 'muc-einstein'],
+        notes:
+          'יום עירוני: מריאנפלאץ והגלוקנשפיל, שוק ויקטואלין, הגן האנגלי (גולשי הגל!) וארמון נימפנבורג. ארוחה כשרה במסעדת איינשטיין במרכז הקהילתי.',
+      },
+      {
+        day: 2,
+        title: 'טירת נוישוונשטיין ונקיק פרטנאך',
+        placeIds: ['muc-neuschwanstein', 'muc-partnach'],
+        notes:
+          'בוקר בטירת נוישוונשטיין (כרטיסים מראש, תצפית מגשר מרי), ובדרך חזרה דרך גרמיש - נקיק פרטנאך הדרמטי. יום אלפיני קלאסי, רכב מומלץ.',
+      },
+      {
+        day: 3,
+        title: 'צוגשפיצה ואגם אייבזה',
+        placeIds: ['muc-zugspitze'],
+        notes:
+          'עולים ברכבת השיניים/רכבל אל פסגת צוגשפיצה, הגבוהה בגרמניה - נוף אלפים ושלג גם בקיץ - ולמטה הקפת אגם אייבזה הטורקיז. בגדים חמים גם בקיץ.',
+      },
+      {
+        day: 4,
+        title: 'אגם קניגסזה - ברכטסגאדן',
+        placeIds: ['muc-konigssee'],
+        notes:
+          'טיול יום דרום-מזרחה אל אגם קניגסזה: שיט שקט בין הצוקים אל כנסיית סנט ברתולומיאו, ומסלולי הליכה סביב. אפשר לשלב עם ברכטסגאדן והסביבה.',
+      },
+    ],
+    practical: {
+      flights:
+        'טיסות ישירות מנתב"ג למינכן (MUC) כל השנה (אל על, לופטהנזה ואחרים), טיסה של כ-3.5 שעות - שדה תעופה גדול ומחובר, שער נוח לכל דרום גרמניה.',
+      gettingAround:
+        'בעיר: מטרו (U-Bahn) ורכבת קלה (S-Bahn) מצוינות. לאלפים (נוישוונשטיין, צוגשפיצה, קניגסזה) - רכב שכור נוח בהרבה, אם כי חלק מהאתרים נגישים גם ברכבת + אוטובוס או בטיול מאורגן.',
+      kosherOverview:
+        'למינכן, הקהילה היהודית השנייה בגודלה בגרמניה, תשתית כשרות אמיתית: מסעדת איינשטיין הגלאט-כשרה במרכז הקהילתי, בית חב"ד, וכמה נקודות כשרות נוספות. מומלץ להזמין מקום מראש ולוודא שעות (יש מעבר ביטחוני בכניסה למרכז הקהילתי).',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
