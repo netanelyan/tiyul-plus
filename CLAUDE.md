@@ -41,34 +41,46 @@ favor user trust and repeat usage over tech impressiveness.
   "🎖️ הטיול הגדול אחרי צבא" - rest category-balanced, in-season first,
   out-of-season hidden, shuffled). Choosing a row FILLS the input and
   focuses it for editing - never auto-sends. Categories are invisible
-  to the user. The first message transitions to a split workspace:
-  streaming conversation beside a live "canvas" - destination photo header,
-  day selector, Leaflet map of the selected day with numbered route, daily
-  schedule blocks and a planner link; empty days get an explicit empty
-  state. On mobile the canvas collapses to a sticky summary bar. The canvas
-  re-renders from every `{trip}` event the agent streams; action chips
-  ("✓ הוספתי את...") show under the reply. **Preferences UI:** the canvas
+  to the user. The first message transitions to the **unified trip
+  view** (`TripWorkspace`) - see below.
+- **The unified trip view (`src/components/TripWorkspace.tsx`).** ONE
+  screen for a trip: itinerary + map + the agent conversation together,
+  no tab switching. Rendered by BOTH `/chat` and `/planner` on the same
+  `Trip` object (chat edits mutate the trip in place - never a copy).
+  Layout: xl = three columns (itinerary right / map middle / chat left);
+  lg = itinerary + map side by side with the chat as a full-width panel
+  under them; mobile (~390px) = day tabs (h-scroll) → map → day card →
+  stops → collapsible "כל הימים", with the chat in a **fixed bottom bar
+  that opens a drawer** (the bar sits beside the a11y button, never over
+  it). Also: day tabs with inter-city travel legs, stop reordering,
+  move-to-day, per-day notes, Google Maps navigation per day,
+  copy/print/PDF, duplicate/delete. Each day carries a one-line
+  description generated from its REAL stops (`src/lib/trip/
+  dayDescription.ts`) - shown under the day heading, in the all-days
+  overview, in the copied summary and in print; empty days get a
+  neutral placeholder, never an invented theme. **Preferences UI:** the
   chips (כשר, קצב, מי נוסע, שופינג) are interactive toggles that write
   `Trip.preferences` directly - sensitive preferences (kashrut, Shabbat)
   are buttons BY DESIGN, the agent never asks about them in conversation
   and silently reads the current values each turn. Non-sensitive
   clarifying questions may carry tappable quick-reply chips
-  (`suggest_quick_replies`).
-- **`/planner` - manual controls for the same trip.** The new-trip screen is
-  a hybrid: prominent city cards plus button-only controls (days stepper,
-  מי נוסע, pace, style, shopping, kosher toggle) form hard constraints; an
-  optional free-text field refines them via `/api/generate-trip`. The
-  workspace view has day tabs with inter-city travel legs, stop reordering,
-  per-day notes, a Google Maps navigation link per day, copy/print/PDF, and
-  ready-made templates.
+  (`suggest_quick_replies`). Action chips ("✓ הוספתי את...") show under
+  the reply; the plan re-renders from every `{trip}` event streamed.
+- **`/planner` - the button-driven way into the same trip.** The
+  new-trip screen is a hybrid: prominent city cards plus button-only
+  controls (days stepper, מי נוסע, pace, style, shopping, kosher toggle)
+  form hard constraints; an optional free-text field refines them via
+  `/api/generate-trip`; ready-made templates below. Once a trip exists
+  it renders the exact same `TripWorkspace` as `/chat`.
 - **`/countries` → `/countries/[slug]` → `/destinations/[slug]` - the
   curated catalog** (linked from the nav and a quiet landing link). Country
   cards → country page (visa/currency/sim/payments + city cards) → city page
   (places on a map, day-by-day itinerary, kosher layer, city+country
   practical info merged).
-- **One trip, two interfaces.** Chat and planner mutate the same `Trip`
-  object (localStorage behind `TripContext`); a trip built in conversation
-  opens in the planner and vice versa. `Trip.preferences` (party, pace,
+- **One trip, one view, two entry points.** `/chat` (agent landing) and
+  `/planner` (button builder) both open the same `TripWorkspace` on the
+  same `Trip` object (localStorage behind `TripContext`); the nav has a
+  single "תכנון טיול" tab (the old separate "צ׳אט טיולים" tab is gone). `Trip.preferences` (party, pace,
   budget, kosher, shabbatAware, shopping, interests) is collected
   conversationally by the agent.
 - **Two AI endpoints, both keyless-safe.** `/api/chat` runs the tool-use
@@ -154,9 +166,18 @@ npm run lint
   POST { prefs, party, notes? }: button prefs are hard constraints
   (validated server-side); with notes + a key Claude only refines within
   them (structured outputs, cached grounding); otherwise `generateTrip()`.
-- `src/components/` - `AgentWorkspace` (landing → split chat + canvas, used
-  by `/` and `/chat`), `PlacesMap`/`MapInner` (Leaflet, client-only),
-  `AddToTripButton`, `TripChip` (truncated, hidden on phones).
+- `src/components/` - `TripWorkspace` (THE unified trip view: itinerary +
+  map + chat, used by `/chat` and `/planner`), `ChatPanel` (presentational
+  chat UI - rendered twice, desktop column + mobile drawer, sharing one
+  state), `AgentWorkspace` (landing hero → `TripWorkspace`, handles
+  `?q=`/`?kosher=1`/`?trip=`), `PlacesMap`/`MapInner` (Leaflet,
+  client-only), `AddToTripButton`, `TripChip`.
+- `src/lib/trip/useTripChat.ts` - the conversation state hook (streaming
+  `/api/chat`, per-trip history in `chatStorage`, `upsertTrip` on every
+  `{trip}` event). One instance per trip view feeds both chat surfaces.
+- `src/lib/trip/dayDescription.ts` - honest one-line day summaries derived
+  ONLY from the day's real stops (top categories + mustSee/first stop +
+  stop count); empty days return an explicit neutral string.
 - `src/app/layout.tsx` - RTL shell, fonts, TripProvider, BlackZ trademark
   footer (web component in `public/blackz-signature.js` - must appear on
   every page).
@@ -1234,3 +1255,82 @@ enriching the 8 European cities with nature day-trips, plus the deferred
 product items (affiliate wiring, a11y statement placeholders + gaps,
 link-extraction decision) and content follow-ups (real kosher verification
 dates). Marrakech still skipped (flights unverifiable).
+
+### 2026-07-25 (b) - Unified trip view (itinerary + map + chat on one screen) + honest day descriptions
+
+**Built/changed:**
+- `src/components/TripWorkspace.tsx` (new) - THE unified trip view.
+  Merges what used to be two separate screens (the `/chat` split
+  conversation+read-only canvas, and the `/planner` itinerary+map
+  workspace) into one. Same `Trip` object, mutated in place - a chat
+  edit and a manual edit write through the same `TripContext`.
+  Layout: xl → 3 columns (itinerary / map / chat), lg → itinerary+map
+  with chat as a full-width panel below, mobile → stacked (day tabs →
+  map → day card → stops → collapsible "כל הימים") with the chat in a
+  fixed bottom bar that opens an 82vh drawer.
+- `src/lib/trip/useTripChat.ts` (new) - the whole conversation state
+  extracted out of `AgentWorkspace`: streaming, per-trip history
+  (`chatStorage`), the `selfUpsertRef`/`lastSyncedIdRef` tab-switch
+  dance, kosher hint. One hook instance per view; `ChatPanel` renders
+  it twice (desktop column + mobile drawer) so both surfaces are the
+  same conversation.
+- `src/components/ChatPanel.tsx` (new) - presentational chat (messages,
+  action chips, quick replies, per-message map, starter suggestions).
+- `src/lib/trip/dayDescription.ts` (new) - one-line day summary built
+  ONLY from the day's actual stops: top 1-2 categories ("אתרים
+  ותצפיות"), then the mustSee stop (or the first stop) + how many more
+  ("טירת ברטיסלבה ועוד 2 עצירות"). Empty day → "עדיין אין עצירות ביום
+  הזה". No invented themes/events - hard rule 2. Rendered under the day
+  heading, in the all-days overview, in the copied summary and in print.
+- `src/components/AgentWorkspace.tsx` - now just the landing hero +
+  `TripWorkspace`; URL params (`?q=`, `?kosher=1`, `?trip=`) handled
+  here and passed down (`?trip=` applied only after TripProvider
+  hydration). An existing current trip goes straight to the unified
+  view - no landing screen on top of a real trip.
+- `src/app/planner/PlannerClient.tsx` - keeps the button-driven
+  onboarding + the AI-understood banner; its ~400-line `Workspace` was
+  deleted and replaced by `<TripWorkspace destinations={…} />` (still
+  passes the provider's destinations, so the `PlacesProvider`
+  abstraction is intact).
+- `src/components/SiteNav.tsx` - nav is now יעדים · תכנון טיול · כשרות;
+  the separate "צ׳אט טיולים" tab is gone. `TripChip`/`MyTripCard` point
+  at `/chat` ("פתיחת הטיול"); the mobile current-trip row opens the
+  trip like the other tabs.
+
+**Product decisions:**
+- Both `/chat` and `/planner` render the SAME component instead of
+  redirecting one to the other: `/chat` must keep streaming the first
+  reply without a navigation, and `/planner` keeps a genuinely
+  different empty state (buttons, not a prompt). One view, two doors.
+- Mobile chat = bottom bar + drawer (not an inline panel): at 390px the
+  plan must stay the page, and a sticky input is the only way to keep
+  "edit by talking" one tap away. The bar is inset (`start-20`) so it
+  never collides with the accessibility button.
+- Day descriptions are derived, not generated by the model - the data
+  already knows the categories and names, and derivation can't
+  hallucinate.
+
+**Gotcha found + fixed (worth remembering):** `.rise-in` uses
+`animation … both`, so its final `transform: translateY(0)` sticks
+around forever - which makes the element a containing block and breaks
+`position: fixed` for ANY descendant. The mobile chat bar rendered
+mid-document until it was moved outside the `.rise-in` wrapper.
+
+**Verification:** `npm run build` clean; a dependency-free CDP harness
+(Node 24 global WebSocket → headless Edge, scripts in the session
+scratchpad) ran 17 end-to-end checks against a PRODUCTION build at 1440
+and 390: plan+map+chat visible together, live edit through the chat
+(mocked SSE `{trip}` event) growing the plan to 4 days with only ONE
+trip in storage (no copy), day descriptions correct incl. the empty-day
+placeholder, kosher toggle reflecting `Trip.preferences`, drawer
+open/close, zero horizontal overflow at both widths, and `/planner`
+rendering the identical view. NOTE: the dev server (`next dev`,
+Turbopack) does NOT hydrate in this headless Edge - React loads but no
+fibers attach; test against `next build && next start` instead.
+
+**Broken/deferred:** nothing known broken. `npm run lint` still reports
+the repo's pre-existing `react-hooks/set-state-in-effect` errors
+(TripContext, HeroPrompt, PromptChips, AccessibilityWidget…); the two
+new ones in `useTripChat`/`AgentWorkspace` are the same pattern as the
+code they replaced. Deferred: the chat panel has no unread/updated
+badge on mobile after the drawer closes.

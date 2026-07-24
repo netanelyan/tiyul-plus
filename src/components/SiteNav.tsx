@@ -7,10 +7,11 @@ import { useTrip } from '@/lib/trip/TripContext';
 import { tripLabel } from '@/lib/trip/label';
 import TripChip from '@/components/TripChip';
 
+// כניסה אחת לטיול: /chat הוא גם השיחה וגם התוכנית (תצוגה מאוחדת) -
+// אין יותר טאב צ׳אט נפרד מול טאב מתכנן.
 const NAV_LINKS = [
   { href: '/countries', label: 'יעדים' },
-  { href: '/planner', label: 'מתכנן מסלולים' },
-  { href: '/chat', label: 'צ׳אט טיולים' },
+  { href: '/chat', label: 'תכנון טיול' },
   { href: '/kosher', label: 'כשרות' },
 ];
 
@@ -159,13 +160,12 @@ export default function SiteNav() {
             </Link>
           ))}
           {hydrated && currentTrip && (
-            <Link
-              href="/planner"
-              onClick={() => setOpen(false)}
-              className="mt-1 block truncate rounded-xl bg-sunset/10 px-4 py-2.5 font-bold text-sunset-deep transition hover:bg-sunset/15"
+            <button
+              onClick={() => openTrip(currentTrip.id)}
+              className="mt-1 block w-full truncate rounded-xl bg-sunset/10 px-4 py-2.5 text-start font-bold text-sunset-deep transition hover:bg-sunset/15"
             >
               {currentTrip.name} · {stops} עצירות
-            </Link>
+            </button>
           )}
           {hydrated && trips.length > 0 && (
             <>

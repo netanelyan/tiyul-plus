@@ -10,7 +10,7 @@ export default function MyTripCard() {
   const stops = t.days.reduce((n, d) => n + d.placeIds.length, 0);
   return (
     <Link
-      href="/planner"
+      href="/chat"
       className="mx-auto mb-4 flex w-full max-w-2xl items-center gap-3 rounded-2xl bg-sunset/10 px-5 py-3 ring-1 ring-sunset/25 transition hover:bg-sunset/15"
     >
       <span className="text-xl" aria-hidden>
@@ -22,7 +22,7 @@ export default function MyTripCard() {
           {t.days.length} ימים · {stops} עצירות
         </span>
       </span>
-      <span className="shrink-0 text-sm font-bold text-sunset-deep">פתיחה במתכנן ←</span>
+      <span className="shrink-0 text-sm font-bold text-sunset-deep">פתיחת הטיול ←</span>
     </Link>
   );
 }
