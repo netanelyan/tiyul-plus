@@ -1442,3 +1442,25 @@ the overnight run.
 - Coordinates from the Wikipedia API (German Wikipedia for lakes Pukaki
   and Tekapo, which lack coordinates in the English articles); photos are
   article lead images. build clean, verify-photos 352/352 OK.
+
+### 2026-07-25 (h) - Overnight expansion: USA (Grand Canyon + the Southwest)
+
+- **USA** (new country, first North-American destination) - ESTA under
+  the Visa Waiver Program (Israel joined in 2023; ~21 USD, valid 2 years,
+  90 days), USD, tipping and pre-tax pricing noted for Israelis.
+- **Grand Canyon & the American Southwest** - 13 places, rating 4.8.
+  Landmark: the Grand Canyon. All-nature road trip: Zion, Bryce Canyon,
+  Arches, Canyonlands, Antelope Canyon, Horseshoe Bend, Lake Powell,
+  Monument Valley, Sedona, Death Valley, with Las Vegas as the base.
+  7-day itinerary following the real driving loop.
+- Flights: nonstop TLV to New York / Miami / Boston / Los Angeles; no
+  nonstop to Las Vegas - one US connection, ~17-20h.
+- **Kosher REAL in Las Vegas:** kosher market on S Rainbow Blvd (with the
+  city kosher restaurants clustered in the same western area) under the
+  local Vaad (Chabad of Southern Nevada); pending-review. Overview is
+  explicit that the parks themselves have nothing and that stocking up in
+  Vegas is the practical answer.
+- Coordinates from the Wikipedia API (German Wikipedia for Zion and
+  Arches, whose English articles carry no coordinates); the kosher pin is
+  the street location from Nominatim. build clean, verify-photos
+  365/365 OK.

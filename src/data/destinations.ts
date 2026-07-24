@@ -8654,6 +8654,326 @@ export const destinations: Destination[] = [
         'בקווינסטאון פועל בית חב"ד שמשרת את המטיילים באי הדרומי - ארוחות שבת ואוכל כשר בהזמנה מראש; בערים הגדולות (אוקלנד, וולינגטון, כרייסטצ׳רץ׳) יש קהילות ואפשרויות כשרות נוספות. מחוץ לזה אין באי הדרומי כשרות מסודרת - כדאי להצטייד בסופרמרקטים גדולים, שבהם יש מוצרים ארוזים עם סימון כשרות בינלאומי, ולוודא הכול מראש.',
     },
   },
+  {
+    slug: 'grand-canyon',
+    name: 'הגרנד קניון ופארקי הדרום-מערב',
+    nameLocal: 'Grand Canyon & the American Southwest',
+    countrySlug: 'usa',
+    flag: '🇺🇸',
+    center: { lat: 36.8, lng: -112.0 },
+    zoom: 6,
+    tagline: 'קניונים אדומים, קשתות אבן ומדבר - הרוד טריפ הקלאסי',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Dawn_on_the_S_rim_of_the_Grand_Canyon_%288645178272%29.jpg/500px-Dawn_on_the_S_rim_of_the_Grand_Canyon_%288645178272%29.jpg',
+    iconicLandmark: {
+      name: 'הגרנד קניון',
+      nameLocal: 'Grand Canyon',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Dawn_on_the_S_rim_of_the_Grand_Canyon_%288645178272%29.jpg/500px-Dawn_on_the_S_rim_of_the_Grand_Canyon_%288645178272%29.jpg',
+      blurb:
+        'קניון באורך כ-446 ק"מ ובעומק של יותר מקילומטר, שחצב נהר הקולורדו בסלעים בני מיליוני שנים - אתר מורשת עולמית ואחד הנופים המזוהים ביותר עם אמריקה.',
+    },
+    editorialRating: {
+      score: 4.8,
+      verdict:
+        'ריכוז נדיר של פארקים לאומיים ברמה עולמית במרחק נסיעה סביר זה מזה, עם תשתית מצוינת - ובלאס וגאס יש תשתית כשרות אמיתית לפני ואחרי. חסרונות: חובה רכב שכור ומרחקים ארוכים, הקיץ לוהט (מעל 40 מעלות), וכניסות פופולריות דורשות הזמנת מקום מראש.',
+    },
+    summary:
+      'הדרום-מערב האמריקאי הוא הרוד טריפ הקלאסי של חובבי טבע: הגרנד קניון, זאיון עם נחל הנרוז, מגדלי האבן של ברייס קניון, הקשתות של ארצ׳ס וקניונלנדס, וקניון האנטלופה והורסשו בנד ליד אגם פאוול. הבסיס הנוח הוא לאס וגאס - ממנה יוצאים ואליה חוזרים, וגם בה מרוכזת הכשרות באזור.',
+    bestSeason:
+      'אפריל-מאי ואוקטובר-נובמבר (מזג אוויר נוח לטיולים) · בקיץ חום קיצוני בקניונים הנמוכים ובמדבר · בחורף שלג בברייס ובשפה הצפונית של הגרנד קניון (חלקה נסגר)',
+    places: [
+      {
+        id: 'usa-grandcanyon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Dawn_on_the_S_rim_of_the_Grand_Canyon_%288645178272%29.jpg/500px-Dawn_on_the_S_rim_of_the_Grand_Canyon_%288645178272%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הפארק הלאומי גרנד קניון',
+        nameLocal: 'Grand Canyon National Park',
+        category: 'nature',
+        lat: 36.0553,
+        lng: -112.1218,
+        description:
+          'הקניון הגדול של נהר הקולורדו - יותר מקילומטר עומק ורוחב של עשרות קילומטרים. רוב המבקרים מגיעים לשפה הדרומית (פתוחה כל השנה) עם תצפיות, שאטלים ומסלולים כמו בּרייט אנג׳ל שיורדים לתוך הקניון.',
+        rating: 4.9,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Grand+Canyon+National+Park',
+      },
+      {
+        id: 'usa-zion',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Zion_angels_landing_view.jpg/500px-Zion_angels_landing_view.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הפארק הלאומי זאיון',
+        nameLocal: 'Zion National Park',
+        category: 'nature',
+        lat: 37.3,
+        lng: -113.05,
+        description:
+          'קניון אבן חול אדומה עם קירות אנכיים גבוהים, ובו שני מסלולים מפורסמים: הנרוז - הליכה בתוך הנחל בין קירות צרים, ואנג׳לס לנדינג התלול (דורש אישור בהגרלה). בעונה נכנסים לקניון רק בשאטל.',
+        rating: 4.8,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Zion+National+Park',
+      },
+      {
+        id: 'usa-bryce',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Inspiration_Point_Bryce_Canyon_November_2018_panorama.jpg/500px-Inspiration_Point_Bryce_Canyon_November_2018_panorama.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'ברייס קניון',
+        nameLocal: 'Bryce Canyon National Park',
+        category: 'nature',
+        lat: 37.64,
+        lng: -112.17,
+        description:
+          'אמפיתיאטרון טבעי מלא ב"הודוז" - מגדלי אבן כתומים שנוצרו מבליה של קרח ומים. תצפיות סנרייז וסאנסט פוינט לאורך השפה, ומסלול נאבאחו לופ שיורד ביניהם. גבוה וקריר יחסית (מעל 2,400 מ׳).',
+        rating: 4.8,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Bryce+Canyon+National+Park',
+      },
+      {
+        id: 'usa-arches',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Delicate_arch_sunset.jpg/500px-Delicate_arch_sunset.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הפארק הלאומי ארצ׳ס',
+        nameLocal: 'Arches National Park',
+        category: 'nature',
+        lat: 38.6172,
+        lng: -109.621,
+        description:
+          'יותר מאלפיים קשתות אבן טבעיות, ובראשן דליקט ארץ׳ - הקשת שמופיעה על לוחיות הרישוי של יוטה. בעונת השיא נדרשת הזמנת כניסה מראש לשעה מוגדרת.',
+        rating: 4.8,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Arches+National+Park',
+      },
+      {
+        id: 'usa-canyonlands',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Green_River_Overlook_Ekker_Butte.jpg/500px-Green_River_Overlook_Ekker_Butte.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'קניונלנדס',
+        nameLocal: 'Canyonlands National Park',
+        category: 'nature',
+        lat: 38.1669,
+        lng: -109.7597,
+        description:
+          'פארק ענק שחצו אותו נהרות הקולורדו והגרין לשלושה אזורים. החלק הנגיש הוא "איילנד אין דה סקיי" - רמה עם תצפיות פנורמיות אל קניונים ומצוקים עד האופק.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Canyonlands+National+Park',
+      },
+      {
+        id: 'usa-antelope',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/USA_Antelope-Canyon.jpg/500px-USA_Antelope-Canyon.jpg',
+        tags: ['outdoors', 'art'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'קניון האנטלופה',
+        nameLocal: 'Antelope Canyon',
+        category: 'nature',
+        lat: 36.862,
+        lng: -111.3743,
+        description:
+          'קניון חריצים צר בסלע אבן חול, שבו קרני האור יוצרות פסים כתומים-סגולים. נמצא בשטח אומת הנאבאחו - הכניסה רק עם סיור מודרך מוסמך ובהזמנה מראש.',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Antelope+Canyon',
+      },
+      {
+        id: 'usa-horseshoe',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Grand_Canyon_Horseshoe_Bend.jpg/500px-Grand_Canyon_Horseshoe_Bend.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'הורסשו בנד',
+        nameLocal: 'Horseshoe Bend',
+        category: 'viewpoint',
+        lat: 36.8794,
+        lng: -111.5139,
+        description:
+          'פיתול פרסה של נהר הקולורדו בעומק של כ-300 מטר מתחת לתצפית, ליד העיירה פייג׳. הליכה קצרה מהחניון; אין מעקה בחלק מהשפה - זהירות עם ילדים.',
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Horseshoe+Bend+Page+Arizona',
+      },
+      {
+        id: 'usa-powell',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Lake_Powell_by_Sentinel-2.jpg/500px-Lake_Powell_by_Sentinel-2.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        name: 'אגם פאוול',
+        nameLocal: 'Lake Powell',
+        category: 'nature',
+        lat: 36.9361,
+        lng: -111.4842,
+        description:
+          'מאגר ענק על נהר הקולורדו שמסתעף למאות קניונים מוצפים בין צוקי אבן חול. אפשר לשוט, לשכור סירה או לבקר בקניון אנטלופה התחתון שבקצהו. מפלס המים משתנה מאוד משנה לשנה.',
+        rating: 4.5,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Lake+Powell',
+      },
+      {
+        id: 'usa-monument',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Monument_Valley%2C_Utah%2C_USA_%2823611451292%29.jpg/500px-Monument_Valley%2C_Utah%2C_USA_%2823611451292%29.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 2,
+        name: 'מונומנט ואלי',
+        nameLocal: 'Monument Valley',
+        category: 'nature',
+        lat: 36.9833,
+        lng: -110.1,
+        description:
+          'עמק בשטח אומת הנאבאחו שממנו מתנשאים מגדלי אבן חול אדומים - הנוף שהפך לסמל המערב האמריקאי בעשרות סרטים. יש כביש עפר נופי, וסיורים בהדרכת מקומיים לאזורים הסגורים.',
+        rating: 4.7,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Monument+Valley',
+      },
+      {
+        id: 'usa-sedona',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Cathedral_Rock_-_Sedona_AZ-1.jpg/500px-Cathedral_Rock_-_Sedona_AZ-1.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 2,
+        name: 'סדונה',
+        nameLocal: 'Sedona, Arizona',
+        category: 'nature',
+        lat: 34.8697,
+        lng: -111.7611,
+        description:
+          'עיירה מוקפת צוקי אבן חול אדומים, ומסביבה עשרות מסלולי הליכה ואופניים - קתדרל רוק, דוויל׳ס ברידג׳ ועוד. פופולרית גם בזכות סצנת הספא והאמנות.',
+        rating: 4.6,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Sedona+Arizona',
+      },
+      {
+        id: 'usa-deathvalley',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Mesquite_Sand_Dunes_in_Death_Valley.jpg/500px-Mesquite_Sand_Dunes_in_Death_Valley.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'עמק המוות',
+        nameLocal: 'Death Valley National Park',
+        category: 'nature',
+        lat: 36.45,
+        lng: -116.85,
+        description:
+          'הפארק הלאומי הגדול ביבשת: מלחות באדווטר - הנקודה הנמוכה בצפון אמריקה - דיונות חול, מכתשים צבעוניים ותצפית זבריסקי פוינט. בקיץ מהמקומות החמים בעולם; מבקרים בחורף ובאביב.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Death+Valley+National+Park',
+      },
+      {
+        id: 'usa-lasvegas',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Las_Vegas_from_above_%2840064746644%29.jpg/500px-Las_Vegas_from_above_%2840064746644%29.jpg',
+        tags: ['nightlife', 'families'],
+        priceLevel: 2,
+        name: 'לאס וגאס',
+        nameLocal: 'Las Vegas',
+        category: 'attraction',
+        lat: 36.1672,
+        lng: -115.1486,
+        description:
+          'עיר המלונות והמופעים בלב מדבר מוהאבי, ובעיקר - שדה התעופה והבסיס הנוח ביותר לרוד טריפ בפארקים. גם מי שלא בא בשביל הקזינו ימצא כאן מופעים, קניות ואוכל.',
+        rating: 4.4,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Las+Vegas',
+      },
+      {
+        id: 'usa-kosher-market',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'סופר כשר בלאס וגאס',
+        nameLocal: 'One Stop Kosher Market, S Rainbow Blvd',
+        category: 'kosher-market',
+        lat: 36.1503,
+        lng: -115.2431,
+        description:
+          'חנות מזון כשרה בשדרות ריינבואו במערב לאס וגאס (3655 S Rainbow Blvd) - נקודת ההצטיידות ההגיונית לפני יציאה לפארקים, שבהם אין שום כשרות. באותו אזור מרוכזות גם המסעדות הכשרות של העיר.',
+        kosherNote: 'תחת ועד הכשרות של לאס וגאס (חב"ד דרום נבאדה). לוודא שעות פתיחה והשגחה עדכנית לפני הנסיעה.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'ועד הכשרות של לאס וגאס - חב"ד דרום נבאדה',
+        },
+        rating: 4.4,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=One+Stop+Kosher+Market+Las+Vegas',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'לאס וגאס - נחיתה והצטיידות',
+        placeIds: ['usa-lasvegas', 'usa-kosher-market'],
+        notes:
+          'לוקחים רכב, ישנים בווגאס ומצטיידים לדרך - כולל קניות במרכול הכשר במערב העיר. בפארקים עצמם אין כשרות ולעתים גם אין חנויות.',
+      },
+      {
+        day: 2,
+        title: 'זאיון',
+        placeIds: ['usa-zion'],
+        notes:
+          'כשעתיים וחצי מווגאס. שאטל לתוך הקניון, מסלול קל לאמרלד פולס ולמי שכשיר - הנרוז בתוך המים (לבדוק מזג אוויר, סכנת שיטפונות).',
+      },
+      {
+        day: 3,
+        title: 'ברייס קניון',
+        placeIds: ['usa-bryce'],
+        notes:
+          'שעתיים מזאיון. זריחה בסנרייז פוינט, ירידה במסלול נאבאחו לופ בין ההודוז. הפארק גבוה - קר בבוקר גם בקיץ.',
+      },
+      {
+        day: 4,
+        title: 'פייג׳ - אנטלופה, הורסשו ואגם פאוול',
+        placeIds: ['usa-antelope', 'usa-horseshoe', 'usa-powell'],
+        notes:
+          'סיור מודרך בקניון האנטלופה (חובה להזמין מראש), תצפית הורסשו בנד, ואחר הצהריים על אגם פאוול.',
+      },
+      {
+        day: 5,
+        title: 'מונומנט ואלי',
+        placeIds: ['usa-monument'],
+        notes:
+          'נסיעה מזרחה אל עמק המונומנטים - כביש העפר הנופי או סיור עם מדריך נאבאחו, ושקיעה מול המגדלים.',
+      },
+      {
+        day: 6,
+        title: 'מואב - ארצ׳ס וקניונלנדס',
+        placeIds: ['usa-arches', 'usa-canyonlands'],
+        notes:
+          'יום שלם באזור מואב: דליקט ארץ׳ ו"ווינדוז" בארצ׳ס (כניסה מתוזמנת בעונה), ותצפיות איילנד אין דה סקיי בקניונלנדס.',
+      },
+      {
+        day: 7,
+        title: 'הגרנד קניון ובחזרה',
+        placeIds: ['usa-grandcanyon', 'usa-sedona', 'usa-deathvalley'],
+        notes:
+          'השפה הדרומית של הגרנד קניון, ובדרך חזרה לווגאס אפשר לשלב את סדונה או להאריך לעמק המוות (בעונה הקרירה בלבד).',
+      },
+    ],
+    practical: {
+      flights:
+        'יש טיסות ישירות מנתב"ג לניו יורק, מיאמי, בוסטון ולוס אנג׳לס (אל על ואחרות); ללאס וגאס (LAS) אין קו ישיר - טסים עם החלפה אחת בארה"ב, סה"כ כ-17-20 שעות. אפשרות נוספת: לנחות בלוס אנג׳לס ולנסוע ארבע שעות ברכב.',
+      gettingAround:
+        'רכב שכור הוא חובה מוחלטת - אין תחבורה ציבורית בין הפארקים, והמרחקים גדולים (שעתיים-חמש בין אתר לאתר). כדאי כרטיס שנתי לפארקים (America the Beautiful) אם מבקרים בשלושה ומעלה, להוריד מפות אופליין ולהצטייד במים.',
+      kosherOverview:
+        'הכשרות באזור מרוכזת בלאס וגאס: מרכול כשר ומסעדות כשרות בצד המערבי של העיר, בפיקוח ועד הכשרות המקומי (חב"ד דרום נבאדה). בפארקים הלאומיים ובעיירות שסביבם אין שום כשרות - הדרך המעשית היא להצטייד בווגאס לכל הטיול, ובסופרמרקטים הגדולים בדרך יש מוצרים ארוזים עם סימוני כשרות אמריקאיים מוכרים.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
