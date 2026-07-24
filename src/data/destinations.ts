@@ -6738,6 +6738,213 @@ export const destinations: Destination[] = [
         'אין בדולומיטים תשתית כשרות - אין מסעדות כשרות או בית חב"ד באזור ההררי. הקהילות והכשרות הקרובות הן בערי השער (ונציה, מילאנו). מומלץ להצטייד מראש במזון ארוז עם הכשר, או לבחור לינה עם מטבח; גבינות, פירות וירקות טריים זמינים בשפע בשווקים.',
     },
   },
+  {
+    slug: 'salzburg',
+    name: 'זלצבורג ואזור האגמים',
+    nameLocal: 'Salzburg / Salzburg',
+    countrySlug: 'austria',
+    flag: '🇦🇹',
+    center: { lat: 47.6, lng: 13.15 },
+    zoom: 8,
+    tagline: 'עיר מוצרט, כפרי אגמים ומפלים אלפיניים - זלצקמרגוט',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Old_Town_Salzburg_across_the_Salzach_river.jpg/500px-Old_Town_Salzburg_across_the_Salzach_river.jpg',
+    iconicLandmark: {
+      name: 'הלשטאט',
+      nameLocal: 'Hallstatt',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Panoramic_view_of_Hallstatt_village_and_shoreline_from_lake.jpg/500px-Panoramic_view_of_Hallstatt_village_and_shoreline_from_lake.jpg',
+      blurb:
+        'כפר אגם ציורי דחוס בין הר לאגם, עם בתי עץ ומגדל כנסייה משתקפים במים - מהמקומות המצולמים באוסטריה ואתר מורשת עולמית.',
+    },
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'צירוף מנצח: עיר בארוקית מקסימה (מוצרט, "צלילי המוזיקה") ואזור אגמים והרים ברמה עולמית. חסרונות: אין טיסה ישירה לזלצבורג (טסים לווינה/מינכן ונוסעים), עונתי, ואין כשרות מסודרת באזור.',
+    },
+    summary:
+      'זלצבורג היא פנינה בארוקית - עיר הולדתו של מוצרט, עם עיר עתיקה מוקפת הרים ומבצר על צוק. סביבה משתרע הזלצקמרגוט, אזור האגמים והרים של אוסטריה: כפר האגם הלשטאט, אגמי וולפגנג וגוזאו, ומפלי קרימל האדירים. מגיעים בטיסה לווינה/מינכן ובנסיעה; אין באזור תשתית כשרות (בווינה יש מלאה).',
+    bestSeason: 'מאי-ספטמבר (אגמים והרים בשיא) - דצמבר לשווקי חג המולד; חלק ממסלולי ההרים סגורים בחורף',
+    places: [
+      {
+        id: 'szg-oldtown',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Old_Town_Salzburg_across_the_Salzach_river.jpg/500px-Old_Town_Salzburg_across_the_Salzach_river.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'העיר העתיקה של זלצבורג',
+        nameLocal: 'Salzburg Old Town',
+        category: 'attraction',
+        lat: 47.8,
+        lng: 13.0422,
+        description:
+          'עיר עתיקה בארוקית ואתר מורשת עולמית - רחוב גטריידה גאסה עם שלטי הברזל, בית הולדתו של מוצרט, כיכרות וקתדרלה. הכול מוקף הרים ומעליו מבצר הוהנזלצבורג.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Salzburg+Old+Town',
+      },
+      {
+        id: 'szg-fortress',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Salzburg_-_Festung_Hohensalzburg.JPG/500px-Salzburg_-_Festung_Hohensalzburg.JPG',
+        tags: ['history'],
+        priceLevel: 2,
+        name: 'מבצר הוהנזלצבורג',
+        nameLocal: 'Hohensalzburg Fortress',
+        category: 'viewpoint',
+        lat: 47.795,
+        lng: 13.0472,
+        description:
+          'אחד המבצרים הגדולים והמשומרים באירופה, על הגבעה מעל העיר - עולים ברכבל, מסיירים באולמות ונהנים מהתצפית הטובה ביותר על זלצבורג וההרים.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Hohensalzburg+Fortress',
+      },
+      {
+        id: 'szg-mirabell',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Mirabell_Palace_1.jpg/500px-Mirabell_Palace_1.jpg',
+        tags: ['romantic', 'families'],
+        priceLevel: 0,
+        name: 'ארמון וגני מירבל',
+        nameLocal: 'Mirabell Palace & Gardens',
+        category: 'attraction',
+        lat: 47.8056,
+        lng: 13.0419,
+        description:
+          'ארמון וגנים בארוקיים מטופחים עם מזרקות, פסלים ופרחים - ומקום צילום מ"צלילי המוזיקה". כניסה חינם לגנים, נוף יפה אל המבצר.',
+        rating: 4.5,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Mirabell+Gardens+Salzburg',
+      },
+      {
+        id: 'szg-hallstatt',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Panoramic_view_of_Hallstatt_village_and_shoreline_from_lake.jpg/500px-Panoramic_view_of_Hallstatt_village_and_shoreline_from_lake.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הלשטאט',
+        nameLocal: 'Hallstatt',
+        category: 'nature',
+        lat: 47.562,
+        lng: 13.649,
+        description:
+          'כפר אגם אגדי בין הר תלול לאגם, עם בתי עץ צרים, מגדל כנסייה ומכרה מלח עתיק בהר עם תצפית ("Skywalk"). מגיעים מוקדם - מהמקומות העמוסים באוסטריה. כשעה מזלצבורג.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Hallstatt',
+      },
+      {
+        id: 'szg-wolfgangsee',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Wolfgangsee-Landscape.jpg/500px-Wolfgangsee-Landscape.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'אגם וולפגנג',
+        nameLocal: 'Wolfgangsee',
+        category: 'nature',
+        lat: 47.7369,
+        lng: 13.4528,
+        description:
+          'אגם צלול ונעים בלב הזלצקמרגוט, עם הכפרים סנט וולפגנג וסנט גילגן, שיט בסירות ורכבת שיניים אל פסגת שאפברג לתצפית על אגמים. אידילי וקל למשפחות.',
+        rating: 4.5,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Wolfgangsee',
+      },
+      {
+        id: 'szg-gosausee',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Gosausee_Dachstein_July_2012.jpg/500px-Gosausee_Dachstein_July_2012.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'אגם גוזאו',
+        nameLocal: 'Gosausee',
+        category: 'nature',
+        lat: 47.5332,
+        lng: 13.4968,
+        description:
+          'אגם הררי שקט שמשקף את קרחון הדכשטיין המושלג - שביל קל ומהמם מקיף אותו (כ-1.5 שעות). פחות מתויר מהלשטאט הסמוך, ולא פחות יפה.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Gosausee',
+      },
+      {
+        id: 'szg-krimml',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Krimml_Waterfalls%2C_2014_%2802%29.JPG/500px-Krimml_Waterfalls%2C_2014_%2802%29.JPG',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'מפלי קרימל',
+        nameLocal: 'Krimml Waterfalls',
+        category: 'nature',
+        lat: 47.1981,
+        lng: 12.1714,
+        description:
+          'המפלים הגבוהים באוסטריה (כ-380 מ׳ בשלושה מפלים), בפארק הלאומי הוהה טאוארן - שביל עולה בין תצפיות אל בסיס המפל, בין רסיסי מים וקשתות. כשעה-וחצי מזלצבורג.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Krimml+Waterfalls',
+      },
+      {
+        id: 'szg-zell',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Schmittenh%C3%B6he%2C_Zell_am_See.JPG/500px-Schmittenh%C3%B6he%2C_Zell_am_See.JPG',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'צל אם זה',
+        nameLocal: 'Zell am See',
+        category: 'nature',
+        lat: 47.3167,
+        lng: 12.8,
+        description:
+          'עיירת נופש על אגם צל, מוקפת פסגות - טיילת אגם, שיט, ורכבל אל פסגת שמיטנהוהה לתצפית אלפינית. בסיס נוח לאזור הוהה טאוארן ולמפלי קרימל.',
+        rating: 4.4,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Zell+am+See',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'זלצבורג - העיר',
+        placeIds: ['szg-oldtown', 'szg-fortress', 'szg-mirabell'],
+        notes:
+          'יום בעיר: העיר העתיקה ורחוב גטריידה גאסה, בית מוצרט, עלייה ברכבל למבצר הוהנזלצבורג לתצפית, וגני מירבל. הכול במרחק הליכה.',
+      },
+      {
+        day: 2,
+        title: 'זלצקמרגוט - הלשטאט וגוזאו',
+        placeIds: ['szg-hallstatt', 'szg-gosausee'],
+        notes:
+          'בוקר מוקדם בהלשטאט (לפני הקהל), ואחר צהריים הקפת אגם גוזאו השקט מול הדכשטיין - יום אגמים קלאסי בלב אזור האגמים.',
+      },
+      {
+        day: 3,
+        title: 'אגם וולפגנג ושאפברג',
+        placeIds: ['szg-wolfgangsee'],
+        notes:
+          'יום רגוע סביב אגם וולפגנג: הכפרים סנט וולפגנג וסנט גילגן, שיט על האגם, ורכבת שיניים אל פסגת שאפברג לתצפית על שרשרת האגמים.',
+      },
+      {
+        day: 4,
+        title: 'הוהה טאוארן - מפלי קרימל וצל אם זה',
+        placeIds: ['szg-krimml', 'szg-zell'],
+        notes:
+          'שביל מפלי קרימל האדירים בפארק הלאומי, ומנוחה על אגם צל אם זה עם רכבל לתצפית. יום הרים ומים בדרום המחוז.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין קו ישיר יציב מנתב"ג לזלצבורג. הנוח ביותר: לטוס לווינה (VIE) או למינכן (MUC) - שתיהן עם טיסות ישירות - ולהמשיך ברכב/רכבת (כ-1.5-2 שעות ממינכן, כ-3 שעות מווינה).',
+      gettingAround:
+        'בזלצבורג העיר הכול מהלך; לזלצקמרגוט ולהרים (הלשטאט, וולפגנג, קרימל) - רכב שכור נוח בהרבה, אם כי יש גם רכבות ואוטובוסים אזוריים אל חלק מהאגמים.',
+      kosherOverview:
+        'אין בזלצבורג ובאזור האגמים תשתית כשרות מסודרת - אין מסעדה כשרה או בית חב"ד תיירותי פעיל. הכשרות המלאה הקרובה היא בווינה. מומלץ להצטייד מראש במזון ארוז עם הכשר או לבחור לינה עם מטבח; גבינות, פירות וירקות טריים זמינים בשפע.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
