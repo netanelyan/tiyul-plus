@@ -16,10 +16,86 @@
   --shadow-pop: 0 6px 20px -10px rgba(36, 27, 77, 0.18);
 }
 
+/* גודל טקסט הנגישות: משנה את font-size של השורש, וכל היחידות ב-rem
+   (כותרות, כפתורים, טקסט) גדלות/קטנות יחד. ברירת מחדל 1 = "רגיל". */
+html {
+  font-size: calc(100% * var(--a11y-font-scale, 1));
+}
+
 body {
   background: var(--color-cream);
   color: var(--color-night);
   font-family: 'Heebo', 'Rubik', 'Segoe UI', 'Arial Hebrew', system-ui, sans-serif;
+}
+
+/* ===== מצבי נגישות (ווידג'ט הנגישות) - נדלקים ע"י class על <html> ===== */
+
+/* ניגודיות גבוהה: דורסים את טוקני הצבע של Tailwind v4 (שהם משתני CSS
+   על השורש), כך שכל utility שמשתמש בהם עובר לשחור-על-לבן וכפתור
+   בגוון נגיש. */
+html.a11y-contrast {
+  --color-night: #000000;
+  --color-night-soft: #1a1a1a;
+  --color-cream: #ffffff;
+  --color-shell: #ffffff;
+  --color-sunset: #b3200c;
+  --color-sunset-deep: #8a1000;
+  --color-zest: #7a5800;
+}
+html.a11y-contrast body {
+  background: #ffffff;
+}
+
+/* גווני אפור */
+html.a11y-grayscale body {
+  filter: grayscale(1);
+}
+
+/* קו תחתון לקישורים */
+html.a11y-underline-links a {
+  text-decoration: underline !important;
+  text-underline-offset: 2px;
+}
+
+/* הדגשת קישורים */
+html.a11y-highlight-links a {
+  outline: 2px solid var(--color-sunset);
+  outline-offset: 2px;
+  background-color: rgba(255, 197, 49, 0.28);
+  border-radius: 2px;
+}
+
+/* ריווח שורות ואותיות מוגדל */
+html.a11y-spacing p,
+html.a11y-spacing li,
+html.a11y-spacing a,
+html.a11y-spacing span,
+html.a11y-spacing h1,
+html.a11y-spacing h2,
+html.a11y-spacing h3,
+html.a11y-spacing button {
+  line-height: 1.9 !important;
+  letter-spacing: 0.04em !important;
+  word-spacing: 0.12em !important;
+}
+
+/* סמן עכבר מוגדל */
+html.a11y-cursor,
+html.a11y-cursor * {
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24'%3E%3Cpath d='M5 2l14 11-6 1 4 7-3 1-4-7-5 4z' fill='%23241b4d' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E")
+      4 2,
+    auto !important;
+}
+
+/* עצירת אנימציות - משלים את prefers-reduced-motion ומכבד ידנית */
+html.a11y-no-motion *,
+html.a11y-no-motion *::before,
+html.a11y-no-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
 }
 
 /* Display headlines: precise, not shouty */
