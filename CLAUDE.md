@@ -1019,3 +1019,88 @@ buttons only in headless Edge - NOT a custom component).
 Miami). Same process. The Wikimedia photo-subject caveat above is the
 single most important lesson from this batch - budget time to visually
 check every landmark hero image, not just its HTTP status.
+
+### 2026-07-24 (h) - Autonomous run: quick-services, a11y, /start, overflow fix, logo; + destinations Tbilisi/Phuket/Baku
+
+Long autonomous session. All UI work committed+pushed per task; then an
+open-ended destinations expansion (one verified city per commit).
+
+**UI / product tasks (each its own commit):**
+- **Map pins redesigned** (`categories.ts`, `MapInner.tsx`, `globals.css`):
+  classic teardrop instead of the "achievement badge" - softer shadow,
+  thin ring, route numbers INSIDE the pin, colors deepened/desaturated.
+- **Brand → "סוכן הנסיעות החכם"** (`layout.tsx` meta + header tagline,
+  `HomeHero.tsx` kicker/subhead) - copy only, agent-not-directory framing.
+- **Standalone kosher search** `/kosher` (`app/kosher/*`, nav tab in
+  `SiteNav`): city search (name/local/alias) over the curated data, map +
+  trust badges, honest empty state for uncovered cities.
+- **Kosher pill icon** 🍽️→check-in-circle (`HeroPrompt.tsx`).
+- **Homepage quick-access services grid** (`lib/services.ts` +
+  `QuickServices.tsx`): 4 cards (flights/stay/tickets/car), 2×2 on mobile /
+  4-across desktop. NO affiliate exists in the codebase - config-driven
+  (`affiliateUrl` null → `publicUrl`), so a real partner link drops in
+  later without touching the component. flights/stay/tickets link to the
+  provider's public site (Skyscanner/Booking/GetYourGuide, rel nofollow
+  sponsored); car rental is an honest "בקרוב". **TODO(Netanel): real
+  affiliate IDs/links for all four.**
+- **Accessibility widget + statement** (`AccessibilityWidget.tsx`,
+  `lib/a11y.ts`, `app/accessibility/page.tsx`, boot script in `layout`):
+  floating 44/48px button → panel with text-size, high-contrast (overrides
+  the Tailwind v4 tokens), grayscale, underline/highlight links, spacing,
+  big cursor, stop-animations, reset. Persists in localStorage, applies
+  pre-paint. **TODO(Netanel): fill the [למילוי] placeholders in the
+  statement (coordinator name, contact, tested date) - not invented.**
+- **/start three-way entry** (`app/start/*`): free-text chat / structured
+  quiz / paste-link. Quiz → Hebrew prompt → existing `/chat?q=` (feeds
+  Trip.preferences, no new shape). **Link extraction NOT built** - Phase-1
+  verdict: only YouTube is realistically extractable and it needs a paid
+  API / dependency decision; Instagram/TikTok/Facebook block external-URL
+  content reads per ToS. The link tab detects the platform and says so
+  honestly (no fake extractor).
+- **Plane logo + favicon** (`Logo.tsx`, `public/logo.svg`, `app/icon.svg`):
+  replaced the compass emoji; cream-reversed variant in the footer.
+- **Footer disclaimer** reframed from "sample data" to "AI-planned, verify
+  before travel."
+- **Live bug fixes:** killed site-wide horizontal overflow (the HomeHero
+  `w-screen` flight-trails layer overran by the scrollbar width; added
+  `overflow-x: clip` on html+body - clip, not hidden, so the sticky header
+  survives; verified scrollWidth===clientWidth at 390/768/1280). Shrank the
+  oversized a11y button to 44/48px.
+
+**Accessibility audit (flagged, not all fixed):** default muted text
+(`text-night/40-45` on cream) and white-on-sunset small text fall below
+WCAG AA 4.5:1 (the high-contrast mode mitigates on demand); Leaflet markers
+aren't keyboard-reachable; no global visible focus ring (only the a11y
+button). Alt text, heading structure, and ARIA are otherwise reasonable.
+
+**Destinations added (one commit each, full depth, all verified):**
+- **Tbilisi, Georgia** (new `georgia` country) - 16 places, rating 4.6.
+  Landmark: Narikala Fortress. Nature: Gergeti Trinity Church on Mt Kazbek,
+  Turtle Lake, Botanical Garden gorge, Jvari Monastery. Kosher: real &
+  strong (Mendi's/Chabad pinned; King David/Shalom Aleichem/La Casa/Hummus
+  Jerusalem named in overview). Visa-free ≤1yr; El Al/Georgian/Israir/Arkia
+  ~24/wk.
+- **Phuket, Thailand** (reuses `thailand`) - 12 places, rating 4.5.
+  Landmark: Big Buddha. Nature: Phi Phi/Maya Bay, James Bond Island (Phang
+  Nga), Promthep Cape, Karon Viewpoint, beaches. Kosher: Chabad House
+  Phuket (kosher meat restaurant) - the island's one verified address.
+  El Al direct ~4/wk.
+- **Baku, Azerbaijan** (new `azerbaijan` country) - 11 places, rating 4.4.
+  Landmark: Flame Towers. Nature/"land of fire": Yanar Dag (perpetual
+  fire), Gobustan (rock art + mud volcanoes), Ateshgah fire temple, Caspian
+  boulevard. Heritage: the Red Village (Qırmızı Qəsəbə), a rare all-Jewish
+  town. Kosher: Chabad of Baku (catering) only - stated honestly. Israelis
+  need an e-visa/ASAN (NOT visa-free); AZAL/Arkia/Israir ~18/wk.
+
+`verify-photos.mjs` after each: 183 → 192 → 202, all OK. Photo-subject
+lesson from batch 2 applied throughout - hero/landmark/nature/heritage
+images were eyeballed, and several first-pick photos were swapped when they
+turned out to be the wrong subject (a dark night Gergeti, a
+view-from-monument Chronicle, a wrong far-south Yanar Dag coord from
+Nominatim).
+
+**Next session:** more verified destinations (Almaty was next in the queue;
+also candidates: Petra/Wadi Rum with a land-crossing note, Marrakech
+pending flight-status re-check, Sri Lanka). Keep the "verify or leave a
+TODO, never guess" rule. The three homepage service cards + a11y statement
+placeholders are the only things waiting on Netanel.
