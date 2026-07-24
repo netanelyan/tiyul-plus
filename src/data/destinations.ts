@@ -3500,6 +3500,376 @@ export const destinations: Destination[] = [
         'לא תשתית כמו באירופה, אבל אמיתית ופעילה: בית חב"ד אור מנחם באזור חאו סאן (מסעדה בשרית + קפה חלבי, כולל ארוחות שבת), וחנות/קפה כשר J Cafe בסוכומווית 20. מעבר לשני המקומות האלה אין עוד אתרים עם הכשר מאומת בעיר - לא להסתמך על מסעדות תאילנדיות רגילות.',
     },
   },
+  {
+    slug: 'abu-dhabi',
+    name: 'אבו דאבי',
+    nameLocal: 'Abu Dhabi / أبوظبي',
+    countrySlug: 'uae',
+    flag: '🇦🇪',
+    center: { lat: 24.47, lng: 54.42 },
+    zoom: 11,
+    tagline: 'מסגד שיש מרהיב, אי מוזיאונים ופארקי שעשועים - היעד הערבי הראשון של טיול+',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Abu_Dhabi_Skyline_fron_Corniche_Rd.JPG/500px-Abu_Dhabi_Skyline_fron_Corniche_Rd.JPG',
+    iconicLandmark: {
+      name: 'מסגד שיח׳ זאיד הגדול',
+      nameLocal: 'Sheikh Zayed Grand Mosque',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Sheikh_Zayed_Mosque_Silhouette.jpg/500px-Sheikh_Zayed_Mosque_Silhouette.jpg',
+      blurb:
+        'אחד המסגדים הגדולים בעולם - שיש לבן טהור, כיפות עגולות וחצר עמודים ענקית שהפכו אותו לסמל המזוהה ביותר עם אבו דאבי.',
+    },
+    editorialRating: {
+      score: 4.5,
+      verdict:
+        'טיסה ישירה ותכופה, פטור מוויזה מלא ותשתית כשרות אמיתית שצומחת - אבל החום הקיצוני בקיץ (מעל 45 מעלות) והמחירים הגבוהים דורשים תכנון עונתי וגם תקציב.',
+    },
+    summary:
+      'אבו דאבי היא היעד הערבי הראשון של טיול+: מאז חידוש הטיסות הישירות של אתיחאד בין נתב"ג לבירת האמירויות והרחבתן לשגרה יומית, זו קפיצה קצרה יחסית אל שילוב נדיר של מסגדי שיש ענקיים, אי מוזיאונים בעיצוב עולמי ופארקי שעשועים - לצד תשתית כשרות אמיתית שצמחה מאז הסכמי אברהם, כולל בית הכנסת הראשון שנבנה במיוחד במדינה.',
+    bestSeason: 'נובמבר-מרץ (חורף נעים ויבש) - יוני-ספטמבר חם ולח מאוד, פחות מומלץ לטיול חוץ',
+    places: [
+      {
+        id: 'auh-zayedmosque',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Sheikh_Zayed_Mosque_Silhouette.jpg/500px-Sheikh_Zayed_Mosque_Silhouette.jpg',
+        tags: ['history', 'families'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'מסגד שיח׳ זאיד הגדול',
+        nameLocal: 'Sheikh Zayed Grand Mosque',
+        category: 'attraction',
+        lat: 24.412,
+        lng: 54.474,
+        description:
+          'אחד המסגדים הגדולים בעולם - שיש לבן טהור, 82 כיפות, השטיח הידני-קשור הגדול בעולם ונברשות ענק מוזהבות. כניסה חינם; דרוש לבוש צנוע (לנשים מספקים עבאיה בכניסה).',
+        rating: 4.8,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Sheikh+Zayed+Grand+Mosque+Abu+Dhabi',
+      },
+      {
+        id: 'auh-kosherplace',
+        priceLevel: 2,
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'Emirates Agency for Kosher Certification (הרב לוי דוכמן)',
+        },
+        name: 'דה כשר פלייס (מסעדת גריל ישראלית)',
+        nameLocal: 'The Kosher Place',
+        category: 'kosher-food',
+        lat: 24.4118,
+        lng: 54.485,
+        description:
+          'מסעדת גריל בסגנון ישראלי בכפר הוונציאני שבמלון הריץ קרלטון גרנד קנאל - נתחי בשר על האש ומטעמים מזרח-תיכוניים. בהשגחת הרב לוי דוכמן, הרב הקבוע הראשון של איחוד האמירויות.',
+        rating: 4.4,
+        kosherNote:
+          'פתוחה ראשון-חמישי (צהריים וערב), שישי צהריים בלבד, סגורה בשבת (קבוצות עם הרשמה מראש). מומלץ להזמין מקום מראש ולוודא כניסה דרך הכניסה האחורית של המלון.',
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=The+Kosher+Place+Ritz+Carlton+Abu+Dhabi',
+      },
+      {
+        id: 'auh-qasralwatan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/UAE_Presidential_Palace_entrance_01.jpg/500px-UAE_Presidential_Palace_entrance_01.jpg',
+        tags: ['history'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'קצר אל-וואטן - ארמון האומה',
+        nameLocal: 'Qasr Al Watan',
+        category: 'attraction',
+        lat: 24.46225,
+        lng: 54.30551,
+        description:
+          'הארמון הנשיאותי הפתוח לציבור - אדריכלות ערבית-איסלאמית מפוארת, "בית הידע" עם כתבי יד עתיקים, וגן ענק. בערב מוקרן על החזית מופע אור "ארמון בתנועה".',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Qasr+Al+Watan+Abu+Dhabi',
+      },
+      {
+        id: 'auh-founders',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/The_Founders_Memorial.jpg/500px-The_Founders_Memorial.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'אנדרטת המייסד',
+        nameLocal: "The Founder's Memorial",
+        category: 'attraction',
+        lat: 24.4631,
+        lng: 54.3224,
+        description:
+          'מרכז מבקרים ואנדרטה לזכר השיח׳ זאיד בן סולטאן אל נהיאן, מייסד איחוד האמירויות - במרכזו פסל "הקונסטלציה" הענק, המרכיב את דיוקנו מאלפי חלקי מתכת בתאורה לילית.',
+        rating: 4.5,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=The+Founders+Memorial+Abu+Dhabi',
+      },
+      {
+        id: 'auh-emiratespalace',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Emirates_palace_from_top_view.jpg/500px-Emirates_palace_from_top_view.jpg',
+        tags: ['romantic'],
+        priceLevel: 3,
+        name: 'ארמון האמירויות (מנדרין אוריינטל)',
+        nameLocal: 'Emirates Palace',
+        category: 'viewpoint',
+        lat: 24.4624,
+        lng: 54.3175,
+        description:
+          'מלון-ארמון עם כיפות זהב, מפורסם בזכות כספומט המנפיק מטילי זהב ותה של אחר הצהריים מוזהב ממש. אפשר גם סתם לצלם גמלים בכניסה ולטייל בלובי המרשים.',
+        rating: 4.6,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=Emirates+Palace+Abu+Dhabi',
+      },
+      {
+        id: 'auh-louvre',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Louvre_Abu_Dhabi_01.jpg/500px-Louvre_Abu_Dhabi_01.jpg',
+        tags: ['art'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'הלובר אבו דאבי',
+        nameLocal: 'Louvre Abu Dhabi',
+        category: 'museum',
+        lat: 24.533,
+        lng: 54.40001,
+        description:
+          'כיפת ענק מנוקבת שמטילה "גשם של אור" על המוזיאון שמתחתיה - אמנות מכל תרבויות העולם תחת קורת גג אחת, בפרויקט משותף עם הלובר הפריזאי.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Louvre+Abu+Dhabi',
+      },
+      {
+        id: 'auh-abrahamichouse',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Moses_Ben_Maimon_Synagogue_interior_-_june_28_2025.jpg/500px-Moses_Ben_Maimon_Synagogue_interior_-_june_28_2025.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'בית המשפחה האברהמית',
+        nameLocal: 'Abrahamic Family House',
+        category: 'attraction',
+        lat: 24.530933,
+        lng: 54.406101,
+        description:
+          'מתחם ובו מסגד, כנסייה ובית הכנסת "משה בן מימון" - בית הכנסת הראשון שנבנה במיוחד באיחוד האמירויות, עם מקווה ובית מדרש, פונה מערבה לכיוון ירושלים. כניסה ותפילות בתיאום מראש.',
+        rating: 4.6,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Abrahamic+Family+House+Abu+Dhabi',
+      },
+      {
+        id: 'auh-saadiyatbeach',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Saadiyat_Island_Beach_Club.jpg/500px-Saadiyat_Island_Beach_Club.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 1,
+        name: 'חוף סעדיאת הציבורי',
+        nameLocal: 'Saadiyat Public Beach',
+        category: 'nature',
+        lat: 24.5453,
+        lng: 54.436,
+        description:
+          'חוף חול לבן ומים טורקיז על אי סעדיאת - אחד מאתרי הקינון של צבי ים ירוקים בעולם. משתלב היטב עם ביקור בלובר או בבית המשפחה האברהמית באותו אזור.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Saadiyat+Public+Beach+Abu+Dhabi',
+      },
+      {
+        id: 'auh-jubail',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Jubail_Mangrove_Park_Abu_Dhabi.jpg/500px-Jubail_Mangrove_Park_Abu_Dhabi.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'פארק מנגרובים ג׳ובייל',
+        nameLocal: 'Jubail Mangrove Park',
+        category: 'nature',
+        lat: 24.54536,
+        lng: 54.48559,
+        description:
+          'שביל עץ מעל ביצות המנגרובים הטבעיות של אבו דאבי, עם אפשרות לשוט בקיאק בין השורשים. שקט, ירוק ושונה לגמרי מהעיר - טוב לשילוב עם יום באי סעדיאת.',
+        rating: 4.4,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Jubail+Mangrove+Park+Abu+Dhabi',
+      },
+      {
+        id: 'auh-ferrariworld',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Ferrari_world-abu_dhabi-2011.JPG/500px-Ferrari_world-abu_dhabi-2011.JPG',
+        tags: ['families'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'פרארי וורלד',
+        nameLocal: 'Ferrari World Abu Dhabi',
+        category: 'attraction',
+        lat: 24.4838,
+        lng: 54.607,
+        description:
+          'פארק שעשועים מקורה בנושא פרארי על אי יאס - כולל את "פורמולה רוסה", הרכבת ההרים המהירה בעולם (מעל 240 קמ"ש). מתחת לגג האדום הענק שנראה מרחוק.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Ferrari+World+Abu+Dhabi',
+      },
+      {
+        id: 'auh-warnerbros',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Warner_Bros._World_Abu_Dhabi_03.jpg/500px-Warner_Bros._World_Abu_Dhabi_03.jpg',
+        tags: ['families'],
+        priceLevel: 3,
+        name: 'וורנר ברדרס וורלד',
+        nameLocal: 'Warner Bros. World Abu Dhabi',
+        category: 'attraction',
+        lat: 24.49089,
+        lng: 54.59936,
+        description:
+          'פארק שעשועים מקורה עם דמויות DC ולוני טונס - אטרקציות לכל הגילאים, טוב במיוחד לימי חום קיצוני כי הכול ממוזג.',
+        rating: 4.5,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Warner+Bros+World+Abu+Dhabi',
+      },
+      {
+        id: 'auh-yaswaterworld',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Yas_Waterworld_Abu_Dhabi_2.jpg/500px-Yas_Waterworld_Abu_Dhabi_2.jpg',
+        tags: ['families'],
+        priceLevel: 3,
+        name: 'יאס ווטרוורלד',
+        nameLocal: 'Yas Waterworld',
+        category: 'attraction',
+        lat: 24.48806,
+        lng: 54.59972,
+        description:
+          'פארק מים גדול על אי יאס עם יותר מ-40 מתקנים ומגלשות - כולל את "לואה לופ", מגלשת המים החופשית התלולה ביותר באזור.',
+        rating: 4.5,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Yas+Waterworld+Abu+Dhabi',
+      },
+      {
+        id: 'auh-qasralhosn',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Qasr_al-Hosn_%281%29.jpg/500px-Qasr_al-Hosn_%281%29.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'קצר אל-חוסן',
+        nameLocal: 'Qasr Al Hosn',
+        category: 'museum',
+        lat: 24.482389,
+        lng: 54.3548194,
+        description:
+          'הבניין האבן הישן ביותר באבו דאבי - מצודה ומגדל שמירה מהמאה ה-18 שהיו מושב השלטון של משפחת אל נהיאן, לצד "בית האומנים" עם תערוכות מלאכת יד מקומית.',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Qasr+Al+Hosn+Abu+Dhabi',
+      },
+      {
+        id: 'auh-corniche',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Abu_Dhabi_Corniche_Beach.jpg/500px-Abu_Dhabi_Corniche_Beach.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 0,
+        name: 'הקורניש',
+        nameLocal: 'Abu Dhabi Corniche',
+        category: 'nature',
+        lat: 24.483308,
+        lng: 54.344958,
+        description:
+          'טיילת חוף לאורך כ-8 ק"מ עם שבילי אופניים והליכה, פארקים ומגדלי קו הרקיע ברקע - הטבעת האמיתית לרוץ, לרכוב או פשוט לשבת מול הים בשקיעה.',
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Abu+Dhabi+Corniche',
+      },
+      {
+        id: 'auh-iraniansouk',
+        tags: ['foodie'],
+        priceLevel: 1,
+        name: 'השוק האיראני',
+        nameLocal: 'Iranian Souk (Mina Zayed)',
+        category: 'shopping',
+        lat: 24.5173,
+        lng: 54.3736,
+        description:
+          'שוק מסורתי בנמל זאיד עם דוכני צמחים, שטיחים פרסיים וכלי חרס - לצד שוק הדגים החדש והגדול הסמוך, אחד ממוקדי המסחר הוותיקים של העיר.',
+        rating: 4.3,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=Iranian+Souk+Abu+Dhabi',
+      },
+      {
+        id: 'auh-galleria',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/The_Galleria_Al_Maryah_Island%2C.jpg/500px-The_Galleria_Al_Maryah_Island%2C.jpg',
+        priceLevel: 3,
+        name: 'הגלריה - אי אל מריה',
+        nameLocal: 'The Galleria Al Maryah Island',
+        category: 'shopping',
+        lat: 24.501934,
+        lng: 54.389877,
+        description:
+          'קניון היוקרה המרכזי של אבו דאבי, עם מותגים בינלאומיים ומסעדות על חזית המים - נסיעה קצרה ממרכז העיר.',
+        rating: 4.4,
+        durationMin: 105,
+        externalUrl: 'https://maps.google.com/?q=The+Galleria+Al+Maryah+Island',
+      },
+      {
+        id: 'auh-sababa',
+        priceLevel: 1,
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'Emirates Agency for Kosher Certification (הרב לוי דוכמן)',
+        },
+        name: 'סבבה (דוכן כשר בפודקורט)',
+        nameLocal: 'Sababa',
+        category: 'kosher-food',
+        lat: 24.4345,
+        lng: 54.4127,
+        description:
+          'דוכן כשר חלבי/פרווה בפודקורט של קניון מושריף - פלאפל, חצילים, שקשוקה ולביבות תפוחי אדמה בגרסה כשרה. אופציה קלה ומהירה יותר מארוחה מסודרת.',
+        kosherNote: 'תפריט חלבי/פרווה בהשגחת הרב לוי דוכמן. שעות לפי שעות הקניון - לבדוק מראש בסופי שבוע.',
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=Sababa+Mushrif+Mall+Abu+Dhabi',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'מסגד השיש, הארמון והמייסד',
+        placeIds: [
+          'auh-zayedmosque',
+          'auh-kosherplace',
+          'auh-qasralwatan',
+          'auh-founders',
+          'auh-emiratespalace',
+        ],
+        notes:
+          'מתחילים מוקדם במסגד השיח׳ זאיד (לפני החום והקהל, לבוש צנוע חובה) - בקרבתו אפשר לעצור לארוחת צהריים בדה כשר פלייס. אחר הצהריים לקצר אל-וואטן ואנדרטת המייסד, ומסיימים בשקיעה בארמון האמירויות.',
+      },
+      {
+        day: 2,
+        title: 'אי סעדיאת - אמנות ואמונה',
+        placeIds: ['auh-louvre', 'auh-abrahamichouse', 'auh-saadiyatbeach', 'auh-jubail'],
+        notes:
+          'כל האתרים באזור אחד, סעדיאת וג׳ובייל - הלובר בבוקר (ממוזג, טוב לשעות החמות), בית המשפחה האברהמית אחר כך (לתאם ביקור מראש), ולסיים בחוף או בקיאק בין המנגרובים.',
+      },
+      {
+        day: 3,
+        title: 'אי יאס - אדרנלין',
+        placeIds: ['auh-ferrariworld', 'auh-warnerbros', 'auh-yaswaterworld'],
+        notes:
+          'שלושת הפארקים על אי יאס - כל אחד שווה יום שלם, ורוב המבקרים בוחרים אחד או שניים ולא את כולם. פרארי וורלד לחובבי מהירות, וורנר ברדרס למשפחות עם ילדים קטנים, יאס ווטרוורלד לימים החמים ביותר.',
+      },
+      {
+        day: 4,
+        title: 'העיר העתיקה, השווקים והקורניש',
+        placeIds: ['auh-qasralhosn', 'auh-corniche', 'auh-iraniansouk', 'auh-galleria', 'auh-sababa'],
+        notes:
+          'קצר אל-חוסן בבוקר, טיול בקורניש, ואז השוק האיראני בנמל זאיד לחוויה מסורתית יותר. סבבה בקניון מושריף טוב לארוחת צהריים כשרה קלה בדרך לקניות בגלריה.',
+      },
+    ],
+    practical: {
+      flights:
+        'אתיחאד איירווייז מפעילה עד 6 טיסות ישירות ביום בין נתב"ג לשדה התעופה זאיד של אבו דאבי (מאז חידוש הקו באפריל 2026) - הקו העמוס ביותר ברשת אתיחאד; טיסה של כ-3.5 שעות.',
+      gettingAround:
+        'מוניות ואפליקציות Careem/Uber זמינות וזולות יחסית; רכב שכור נוח למי שרוצה לכסות גם את אי יאס ואי סעדיאת באותו יום. תחבורה ציבורית קיימת אך פחות נוחה לתייר.',
+      kosherOverview:
+        'תשתית כשרות אמיתית וגדלה, בהשגחת הרב לוי דוכמן, הרב הקבוע הראשון של איחוד האמירויות: דה כשר פלייס (מסעדת גריל) בכפר הוונציאני שבמלון הריץ קרלטון, וסבבה (חלבי/פרווה) בפודקורט של קניון מושריף. הקהילה היהודית באבו דאבי קטנה (כ-600 איש) אך פעילה - בית הכנסת "משה בן מימון" בבית המשפחה האברהמית הוא הראשון שנבנה במיוחד במדינה. מעבר לשני המקומות האלה אין עוד מסעדות עם הכשר מאומת בעיר.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
