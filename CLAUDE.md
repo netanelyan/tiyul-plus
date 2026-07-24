@@ -1183,3 +1183,27 @@ Batumi (2nd Georgia), Sri Lanka, Zanzibar (thin - probably skip).
 **Catalog now 19 destinations / 16 countries.** Next candidates if
 resuming: Sri Lanka (verify charters), a 2nd Thai island, Zanzibar (thin),
 or re-check Marrakech.
+
+### 2026-07-24 (l) - Second-city / nature program: Crete + Munich
+
+Kicked off mapping countries beyond their one big city, nature-forward
+(hiking/lakes/nature), per Netanel. Audit at start: 13/16 countries had
+only ONE city.
+
+- **Crete, Greece** (2nd Greek city) - 9 places, rating 4.6. Landmark:
+  Balos Lagoon. Nature: Samaria Gorge (16km hike), Balos, Elafonissi,
+  Lake Kournas, Preveli palm beach + Chania/Rethymno/Knossos/Spinalonga.
+  No kosher (Etz Hayyim synagogue = heritage only). Direct HER ~29/wk.
+- **Munich + Bavarian Alps, Germany** (2nd German city) - 8 places, rating
+  4.5. Landmark: Neuschwanstein. Nature: Zugspitze+Eibsee, Königssee,
+  Partnach Gorge + Marienplatz/English Garden/Nymphenburg. Kosher REAL
+  (Restaurant Einstein Glatt + Chabad). Year-round direct MUC.
+
+Catalog now **21 destinations / 16 countries.** Countries with 2 cities:
+thailand, georgia (3 incl. batumi... georgia=tbilisi+batumi=2), montenegro,
+greece, germany. Still ONE city each: austria, slovakia, czechia, hungary,
+italy, spain, uae, azerbaijan, kazakhstan, jordan, cyprus.
+
+**Next nature-forward second cities to add:** Italy→Dolomites/Lake Como,
+Austria→Salzburg+Hallstatt lakes, Spain→Mallorca (Serra de Tramuntana),
+Czechia→Bohemian Switzerland/Český Krumlov, Hungary→Lake Balaton.
