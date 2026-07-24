@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { href: '/countries', label: 'יעדים' },
   { href: '/planner', label: 'מתכנן מסלולים' },
   { href: '/chat', label: 'צ׳אט טיולים' },
+  { href: '/kosher', label: 'כשרות' },
 ];
 
 // מ-md+: כמה טאבי טיול מוצגים ישירות בשורה לפני שהשאר מתקפלים ל"עוד"

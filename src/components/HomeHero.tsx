@@ -34,11 +34,15 @@ export default function HomeHero() {
         className="pointer-events-none absolute inset-x-0 -top-10 -z-10 mx-auto h-[340px] w-full max-w-4xl rounded-full bg-[radial-gradient(55%_55%_at_50%_35%,rgba(255,89,65,0.08),rgba(255,197,49,0.05)_55%,transparent_78%)]"
       />
 
-      <h1 className="display rise-in text-center text-4xl text-night sm:text-6xl">
+      <span className="badge rise-in rounded-full bg-sunset/10 px-3.5 py-1 text-xs font-bold text-sunset-deep">
+        🧭 סוכן הנסיעות החכם שלכם
+      </span>
+      <h1 className="display rise-in mt-3 text-center text-4xl text-night sm:text-6xl">
         לאן טסים הפעם?
       </h1>
       <p className="rise-in mt-4 max-w-xl text-center leading-relaxed text-night/60">
-        מספרים לי מה מדמיינים - ואני בונה טיול אמיתי, יום-אחרי-יום, על מפה. בעברית.
+        לא עוד מדריך לגלול בו - מספרים לי מה מדמיינים, ואני בונה לכם טיול אמיתי,
+        יום-אחרי-יום, על מפה. בעברית.
       </p>
 
       <HeroPrompt

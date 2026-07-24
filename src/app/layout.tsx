@@ -6,9 +6,9 @@ import SiteNav from '@/components/SiteNav';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'טיול+ | תכנון טיולים חכם לישראלים',
+  title: 'טיול+ | סוכן הנסיעות החכם לישראלים',
   description:
-    'מסלולים בעברית עם מפה אינטראקטיבית, שכבת אוכל כשר ומידע פרקטי לישראלים: טיסות מנתב"ג, ויזות, סים ותשלומים.',
+    'לא עוד מדריך לגלול בו - סוכן AI שבונה לכם טיול אמיתי: מספרים לו לאן ועם מי, והוא מתכנן מסלול יום-אחרי-יום על מפה אינטראקטיבית, בעברית - כולל שכבת אוכל כשר וכל מה שצריך לדעת מנתב"ג: ויזות, סים ותשלומים.',
 };
 
 export default function RootLayout({
@@ -33,6 +33,9 @@ export default function RootLayout({
               <span className="badge rounded-lg bg-zest/90 px-1.5 py-0.5 text-lg">🧭</span>
               <span>
                 טיול<span className="text-sunset">+</span>
+              </span>
+              <span className="hidden self-center text-xs font-medium text-night/40 sm:inline">
+                · סוכן הנסיעות החכם
               </span>
             </Link>
             <SiteNav />
