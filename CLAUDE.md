@@ -1207,3 +1207,30 @@ italy, spain, uae, azerbaijan, kazakhstan, jordan, cyprus.
 **Next nature-forward second cities to add:** Italy→Dolomites/Lake Como,
 Austria→Salzburg+Hallstatt lakes, Spain→Mallorca (Serra de Tramuntana),
 Czechia→Bohemian Switzerland/Český Krumlov, Hungary→Lake Balaton.
+
+### 2026-07-25 - Second-city nature program cont.: Dolomites, Salzburg, Mallorca; TODO.md added
+
+Continued mapping countries beyond one city (nature-forward). Added:
+- **Dolomites, Italy** (2nd) - Lago di Braies, Tre Cime, Sorapis, Alpe di
+  Siusi, Val di Funes, Carezza + Bolzano. No kosher (Venice/Milan have it).
+- **Salzburg + Salzkammergut, Austria** (2nd) - Hallstatt, Wolfgangsee,
+  Gosausee, Krimml Waterfalls, Zell am See + Salzburg city. No kosher
+  (Vienna has it). No direct flight (via VIE/MUC + drive).
+- **Mallorca, Spain** (2nd) - Serra de Tramuntana, Sa Calobra, Cap de
+  Formentor, Coves del Drac + Palma/Valldemossa/Sóller. No kosher. Direct
+  flight seasonal (Jul-Oct).
+
+All: build clean, verify-photos all OK, hero/nature photos eyeballed.
+
+**Catalog now 25 destinations / 16 countries.** Countries with 2+ cities:
+thailand, georgia, montenegro, greece, germany, italy, austria, spain.
+Still ONE city: slovakia, czechia, hungary, uae, azerbaijan, kazakhstan,
+jordan, cyprus.
+
+**Remaining work moved to TODO.md** (new file at repo root): next
+second-cities (Czechia→Bohemian Switzerland, Hungary→Balaton, Slovakia→High
+Tatras, UAE→Hatta, Azerbaijan→Sheki, Cyprus→Paphos, Jordan→Dead Sea/Amman),
+enriching the 8 European cities with nature day-trips, plus the deferred
+product items (affiliate wiring, a11y statement placeholders + gaps,
+link-extraction decision) and content follow-ups (real kosher verification
+dates). Marrakech still skipped (flights unverifiable).
