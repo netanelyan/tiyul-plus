@@ -13,8 +13,12 @@ const KOSHER_KEY = 'tiyul-plus:kosher-pref';
  */
 export default function HeroPrompt({
   onSubmit,
+  extraChips,
 }: {
   onSubmit: (text: string, kosher: boolean) => void;
+  // גלולות נוספות באותה שורה (למשל "שאלון מהיר" בדף הבית בלבד) - נכנסות
+  // ל-trailing של PromptChips כדי שכולן יישבו כאחיות אחידות.
+  extraChips?: React.ReactNode;
 }) {
   const [text, setText] = useState('');
   const [kosher, setKosher] = useState(false);
@@ -85,6 +89,7 @@ export default function HeroPrompt({
           inputRef.current?.focus();
         }}
         trailing={
+          <>
           <button
             type="button"
             onClick={toggleKosher}
@@ -93,7 +98,7 @@ export default function HeroPrompt({
             className={`badge rounded-full px-4 py-2.5 text-sm font-semibold ring-1 transition ${
               kosher
                 ? 'bg-sunset text-cream ring-sunset'
-                : 'bg-shell text-night/60 ring-night/10 hover:text-night hover:ring-sunset/30'
+                : 'bg-shell text-night/70 ring-night/10 hover:bg-sunset/5 hover:text-night hover:ring-sunset/30'
             }`}
           >
             <svg
@@ -112,6 +117,8 @@ export default function HeroPrompt({
             </svg>
             אוכל כשר
           </button>
+          {extraChips}
+          </>
         }
       />
     </>

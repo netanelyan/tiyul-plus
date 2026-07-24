@@ -62,7 +62,7 @@ export default function PromptChips({
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-haspopup="listbox"
-          className="badge rounded-full bg-shell px-5 py-2.5 font-semibold text-night/70 ring-1 ring-night/10 transition hover:bg-sunset/5 hover:text-night hover:ring-sunset/30"
+          className="badge rounded-full bg-shell px-4 py-2.5 text-sm font-semibold text-night/70 ring-1 ring-night/10 transition hover:bg-sunset/5 hover:text-night hover:ring-sunset/30"
         >
           <span aria-hidden>💡</span>
           רעיונות לטיול

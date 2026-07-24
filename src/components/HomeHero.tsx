@@ -50,27 +50,19 @@ export default function HomeHero() {
         onSubmit={(text, kosher) =>
           router.push(`/chat?q=${encodeURIComponent(text)}${kosher ? '&kosher=1' : ''}`)
         }
+        // גלולה אחות באותה שורה: שאלון מודרך (דף הבית בלבד - נחיתת /chat
+        // נשארת מינימליסטית לפי CLAUDE.md). ההסבר עולה בטולטיפ, לא בטקסט.
+        extraChips={
+          <Link
+            href="/start"
+            title="מעדיפים לא לכתוב? עונים על כמה שאלות והטיול נבנה לבד"
+            className="badge rounded-full bg-shell px-4 py-2.5 text-sm font-semibold text-night/70 ring-1 ring-night/10 transition hover:bg-sunset/5 hover:text-night hover:ring-sunset/30"
+          >
+            <span aria-hidden>📋</span>
+            שאלון מהיר
+          </Link>
+        }
       />
-
-      {/* דרך שנייה שוות-ערך להתחיל: שאלון מודרך במקום טקסט חופשי.
-          כאן ב-HomeHero בלבד - נחיתת /chat נשארת מינימליסטית לפי CLAUDE.md. */}
-      <div className="rise-in-late mt-6 flex w-full max-w-2xl flex-col items-center gap-2">
-        <div className="flex items-center gap-3 text-xs font-bold text-night/35">
-          <span className="h-px w-10 bg-night/15" />
-          או
-          <span className="h-px w-10 bg-night/15" />
-        </div>
-        <Link
-          href="/start"
-          className="badge rounded-full bg-night px-5 py-3 text-sm font-bold text-cream shadow-[var(--shadow-pop)] transition hover:bg-night-soft"
-        >
-          <span aria-hidden>📋</span>
-          שאלון מהיר - בונים טיול בכמה קליקים
-        </Link>
-        <span className="text-center text-xs text-night/45">
-          מעדיפים לא לכתוב? עונים על כמה שאלות, והטיול נבנה לבד
-        </span>
-      </div>
     </div>
   );
 }
