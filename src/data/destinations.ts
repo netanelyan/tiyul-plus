@@ -7804,6 +7804,249 @@ export const destinations: Destination[] = [
         'בטוקיו יש תשתית כשרות אמיתית אך קטנה: בית חב"ד בטקאנאווה עם המסעדה הכשרה Chana׳s Place, ושירות משלוחי אוכל כשר (Kosher Delica) שפועל בהשגחה רבנית ומגיע גם לערים אחרות ביפן - בשניהם עובדים בהזמנה מראש. מחוץ לטוקיו אין כמעט כלום, וחשוב לדעת שהמטבח היפני מבוסס על מרק דאשי (דגים), מירין ורוטב סויה - אין להניח כשרות בשום מסעדה רגילה.',
     },
   },
+  {
+    slug: 'serengeti',
+    name: 'סרנגטי וקילימנג׳רו',
+    nameLocal: 'Northern Tanzania Safari Circuit',
+    countrySlug: 'tanzania',
+    flag: '🇹🇿',
+    center: { lat: -3.0, lng: 35.8 },
+    zoom: 7,
+    tagline: 'מישורי הספארי הגדולים, מכתש ענק והפסגה של אפריקה',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Serengeti-Landscape-2012.JPG/500px-Serengeti-Landscape-2012.JPG',
+    iconicLandmark: {
+      name: 'הר קילימנג׳רו',
+      nameLocal: 'Mount Kilimanjaro',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Kilimanjaro_from_Amboseli.jpg/500px-Kilimanjaro_from_Amboseli.jpg',
+      blurb:
+        'ההר הגבוה באפריקה (5,895 מ׳) והר הגעש הבודד הגבוה בעולם - פסגת שלג שמתנשאת מעל הסוואנה, ואפשר לטפס אליה בלי ציוד טיפוס טכני.',
+    },
+    editorialRating: {
+      score: 4.8,
+      verdict:
+        'הספארי הקלאסי של אפריקה: סרנגטי, נגורונגורו והנדידה הגדולה - חוויה שאין לה תחליף, ובארושה יש בית חב"ד עם אוכל כשר. חסרונות: אין טיסה ישירה מישראל (החלפה באדיס אבבה), יעד יקר בגלל אגרות הפארקים והלודג׳ים, ורוב הטיולים דורשים ג׳יפ עם נהג-מדריך.',
+    },
+    summary:
+      'צפון טנזניה הוא מסלול הספארי המפורסם בעולם: מישורי סרנגטי שבהם עוברת הנדידה הגדולה של מאות אלפי גנואים וזברות, מכתש נגורונגורו שבתוכו מערכת אקולוגית שלמה, ואגם מניארה וטרנגירה עם עדרי הפילים. מעל הכול מתנשאת פסגת קילימנג׳רו המושלגת. עיר הבסיס היא ארושה, שממנה יוצאים כל הספארים - ושבה גם בית חב"ד עם מטבח כשר.',
+    bestSeason:
+      'יוני-אוקטובר (העונה היבשה - הצפייה בחיות הטובה ביותר; הנדידה בצפון סרנגטי כיולי-ספטמבר) · ינואר-פברואר עונת ההמלטות בדרום סרנגטי · אפריל-מאי גשמים כבדים וחלק מהדרכים קשות',
+    places: [
+      {
+        id: 'tza-serengeti',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Serengeti-Landscape-2012.JPG/500px-Serengeti-Landscape-2012.JPG',
+        tags: ['outdoors', 'families'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'הפארק הלאומי סרנגטי',
+        nameLocal: 'Serengeti National Park',
+        category: 'nature',
+        lat: -2.4,
+        lng: 34.6,
+        description:
+          'מישורי עשב אינסופיים בשטח של כ-15 אלף קמ"ר, אתר מורשת עולמית, ובהם מתרחשת הנדידה הגדולה - מעבר עונתי של מאות אלפי גנואים וזברות. כאן נמצאים גם האריות, הנמרים והצ׳יטות שהפכו את המקום למותג.',
+        rating: 4.9,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Serengeti+National+Park',
+      },
+      {
+        id: 'tza-ngorongoro',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Ngorongoro-1001-2.jpg/500px-Ngorongoro-1001-2.jpg',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'מכתש נגורונגורו',
+        nameLocal: 'Ngorongoro Crater',
+        category: 'nature',
+        lat: -3.21,
+        lng: 35.46,
+        description:
+          'קלדרה של הר געש שקרס, בקוטר של כ-20 ק"מ ובעומק כ-600 מ׳, ובתוכה מערכת אקולוגית סגורה עם עשרות אלפי בעלי חיים - כולל אוכלוסיית קרנפים שחורים. יורדים אל רצפת המכתש ברכב שטח.',
+        rating: 4.9,
+        durationMin: 600,
+        externalUrl: 'https://maps.google.com/?q=Ngorongoro+Crater',
+      },
+      {
+        id: 'tza-kilimanjaro',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Kilimanjaro_from_Amboseli.jpg/500px-Kilimanjaro_from_Amboseli.jpg',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'הר קילימנג׳רו',
+        nameLocal: 'Mount Kilimanjaro',
+        category: 'nature',
+        lat: -3.0667,
+        lng: 37.3592,
+        description:
+          'הפסגה הגבוהה באפריקה, 5,895 מ׳, ובה כיפת קרח שמצטמצמת משנה לשנה. הטיפוס אורך 5-9 ימים במסלולים כמו מצ׳אמה או לימושו, אינו דורש ציוד טכני - אבל דורש כושר, התאקלמות וליווי מדריכים וסבלים מורשים.',
+        rating: 4.8,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Mount+Kilimanjaro',
+      },
+      {
+        id: 'tza-tarangire',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Tarangine_%2862%29.jpg/500px-Tarangine_%2862%29.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        name: 'הפארק הלאומי טרנגירה',
+        nameLocal: 'Tarangire National Park',
+        category: 'nature',
+        lat: -3.8333,
+        lng: 36.0,
+        description:
+          'פארק של עצי באובב ענקיים ונהר שאליו מתנקזות החיות בעונה היבשה - מהמקומות הטובים בטנזניה לצפייה בעדרי פילים גדולים. שקט ופחות עמוס מסרנגטי.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Tarangire+National+Park',
+      },
+      {
+        id: 'tza-manyara',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Lake_Manyara_Wildlife.jpg/500px-Lake_Manyara_Wildlife.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'אגם מניארה',
+        nameLocal: 'Lake Manyara National Park',
+        category: 'nature',
+        lat: -3.5,
+        lng: 36.0,
+        description:
+          'פארק צר בין מצוק השבר האפריקאי לאגם מלוח, עם יער עד, להקות בבונים, היפופוטמים ולהקות פלמינגו על המים. עצירה נוחה בדרך מארושה אל נגורונגורו.',
+        rating: 4.5,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Lake+Manyara+National+Park',
+      },
+      {
+        id: 'tza-arushanp',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Meru_Ashcone.jpg/500px-Meru_Ashcone.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'הפארק הלאומי ארושה והר מרו',
+        nameLocal: 'Arusha National Park & Mount Meru',
+        category: 'nature',
+        lat: -3.2668,
+        lng: 36.8349,
+        description:
+          'פארק קטן וירוק ממש ליד העיר, ובו הר מרו (4,562 מ׳), אגמי מומלה, מפלים ולוע געשי. אחד המקומות הבודדים בטנזניה שבהם מותר ספארי רגלי בליווי ריינג׳ר - טוב גם כהתאקלמות לפני קילימנג׳רו.',
+        rating: 4.5,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Arusha+National+Park',
+      },
+      {
+        id: 'tza-olduvai',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Oldupai-3.jpg/500px-Oldupai-3.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'נקיק אולדובאי',
+        nameLocal: 'Olduvai (Oldupai) Gorge',
+        category: 'museum',
+        lat: -2.9936,
+        lng: 35.3512,
+        description:
+          'נקיק בשולי נגורונגורו שנחשב לאחד האתרים החשובים בעולם לחקר האדם הקדמון: כאן חשפו בני משפחת ליקי מאובנים וכלי אבן בני מיליוני שנים. יש מרכז מבקרים קטן עם תצוגה והסבר.',
+        rating: 4.3,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Olduvai+Gorge',
+      },
+      {
+        id: 'tza-arusha',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Arusha_City_view.jpg/500px-Arusha_City_view.jpg',
+        tags: ['foodie'],
+        priceLevel: 1,
+        name: 'ארושה - עיר הבסיס',
+        nameLocal: 'Arusha',
+        category: 'attraction',
+        lat: -3.3667,
+        lng: 36.6833,
+        description:
+          'העיר שממנה יוצא כל ספארי בצפון טנזניה, למרגלות הר מרו: סוכנויות טיולים, שווקים, בתי קפה ומרכז תרבות. נקודת ההצטיידות והמנוחה לפני ואחרי הימים בפארקים.',
+        rating: 4.2,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Arusha+Tanzania',
+      },
+      {
+        id: 'tza-chabad',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'בית חב"ד ארושה',
+        nameLocal: 'Chabad House Arusha',
+        category: 'kosher-food',
+        lat: -3.3667,
+        lng: 36.6833,
+        description:
+          'בית חב"ד של ארושה (רחוב Mawandammo 9) עם מטבח כשר שמגיש ארוחות ישראליות-יהודיות, וגם מרכז לתיירים ישראלים באזור. הארוחות בהזמנה מראש - לפחות יממה לפני. הסימון על המפה הוא באזור העיר, לא כתובת מדויקת.',
+        kosherNote: 'בהשגחת בית חב"ד ארושה. חובה להזמין מראש (כ-24 שעות); לוודא זמינות ישירות מולם.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד ארושה, טנזניה',
+        },
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Chabad+House+Arusha',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'נחיתה בארושה והתאקלמות',
+        placeIds: ['tza-arusha', 'tza-arushanp', 'tza-chabad'],
+        notes:
+          'מגיעים לארושה, מסדרים ציוד וסוכנות ספארי, ויוצאים לחצי יום בפארק ארושה - ספארי רגלי ואגמי מומלה. ארוחת ערב כשרה בבית חב"ד (בהזמנה מראש).',
+      },
+      {
+        day: 2,
+        title: 'טרנגירה - ארץ הפילים והבאובבים',
+        placeIds: ['tza-tarangire'],
+        notes:
+          'יום ספארי מלא בטרנגירה: עדרי פילים ליד הנהר, עצי באובב עתיקים ופחות עומס מבקרים מהפארקים המפורסמים.',
+      },
+      {
+        day: 3,
+        title: 'אגם מניארה ונקיק אולדובאי',
+        placeIds: ['tza-manyara', 'tza-olduvai'],
+        notes:
+          'בוקר במניארה - יער עד, בבונים ופלמינגו על האגם. אחר הצהריים עלייה לרמת נגורונגורו עם עצירה בנקיק אולדובאי.',
+      },
+      {
+        day: 4,
+        title: 'מכתש נגורונגורו',
+        placeIds: ['tza-ngorongoro'],
+        notes:
+          'יורדים לרצפת המכתש עם אור ראשון - הצפיפות הגבוהה ביותר של חיות בר בטנזניה, כולל סיכוי לקרנף שחור. לצאת מוקדם, המכתש מתחמם ומתמלא בצהריים.',
+      },
+      {
+        day: 5,
+        title: 'סרנגטי והנדידה הגדולה',
+        placeIds: ['tza-serengeti'],
+        notes:
+          'יום או יומיים בסרנגטי - מיקום המחנה תלוי בעונה ובמיקום הנדידה. שווה לשלב יציאה מוקדמת ואחר צהריים מאוחר, שעות הפעילות של הטורפים.',
+      },
+      {
+        day: 6,
+        title: 'קילימנג׳רו - תצפית או טיפוס',
+        placeIds: ['tza-kilimanjaro'],
+        notes:
+          'למי שרק צופה: יום באזור מושי עם נוף להר. למי שמטפס: זו נקודת הפתיחה למסלול של 5-9 ימים, שמתוכננים בנפרד מהספארי ודורשים חברה מורשית.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה מנתב"ג. החיבור הנוח הוא עם אתיופיאן איירליינס דרך אדיס אבבה לקילימנג׳רו (JRO) - כ-4 טיסות בשבוע וכ-10 שעות סה"כ כולל החלפה; יש גם קווים דרך המפרץ ואירופה, ומסלולים לזנזיבר (ZNZ).',
+      gettingAround:
+        'ספארי בצפון טנזניה נעשה כמעט תמיד בג׳יפ 4x4 עם נהג-מדריך של סוכנות מקומית - זו גם הדרך היחידה להיכנס לרוב הפארקים. המרחקים גדולים והדרכים חלקן עפר; יש גם טיסות פנים קטנות בין המסלולים לחיסכון בזמן.',
+      kosherOverview:
+        'בארושה, עיר הבסיס של הספארי, פועל בית חב"ד עם מטבח כשר שמגיש ארוחות בהזמנה מראש - זו כתובת הכשרות היחידה שאותרה באזור. בפארקים ובלודג׳ים אין כשרות, אבל חלק מסוכנויות הספארי מציעות מסלולים עם אוכל כשר מוזמן מראש - חובה לתאם ולוודא את ההשגחה ישירות מולם לפני שסוגרים.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {

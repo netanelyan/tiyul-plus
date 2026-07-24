@@ -1378,3 +1378,24 @@ the overnight run.
   Arakurayama Sengen Park); the Chabad pin is the Takanawa
   neighbourhood centroid via Nominatim, with the exact street address in
   the description. build clean, verify-photos 318/318 OK.
+
+### 2026-07-25 (e) - Overnight expansion: Tanzania (Serengeti, Ngorongoro, Kilimanjaro)
+
+- **Tanzania** (new country, first African destination in the catalog) -
+  e-Visa/visa-on-arrival, 50 USD, 90 days, passport valid 6 months;
+  TZS + USD for park fees; local SIM; cash-first economy.
+- **Serengeti & Kilimanjaro** (northern safari circuit) - 9 places,
+  rating 4.8. Landmark: Mount Kilimanjaro. Nature: Serengeti, Ngorongoro
+  Crater, Tarangire, Lake Manyara, Arusha NP + Mount Meru, Olduvai Gorge.
+  6-day itinerary built around a real safari flow (Arusha base first).
+- Flights verified: no nonstop from TLV; Ethiopian via Addis to JRO,
+  ~4 weekly, ~10h total.
+- **Kosher REAL:** Chabad House Arusha (Mawandammo 9) with a kosher
+  kitchen, meals by ~24h advance order - the only kosher address found in
+  the region; pending-review. Overview is explicit that lodges and parks
+  have nothing, and that safari operators offering kosher meals must be
+  verified directly.
+- Coordinates from the Wikipedia API (Kilimanjaro summit via German
+  Wikipedia); the Chabad pin is the Arusha city location with the street
+  address in the description and an explicit note that it is approximate.
+  Photos are article lead images. build clean, verify-photos 327/327 OK.
