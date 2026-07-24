@@ -6095,6 +6095,231 @@ export const destinations: Destination[] = [
         'בית חב"ד באטומי מפעיל את מסעדת מנדי׳ס הכשרה (בשרי) בעיר העתיקה, ומארח ארוחות שבת. זו תשתית הכשרות המאומתת בעיר - מומלץ לוודא שעות וארוחות שבת מול בית חב"ד מראש, במיוחד מחוץ לעונת הקיץ.',
     },
   },
+  {
+    slug: 'crete',
+    name: 'כרתים',
+    nameLocal: 'Crete / Κρήτη',
+    countrySlug: 'greece',
+    flag: '🇬🇷',
+    center: { lat: 35.33, lng: 24.8 },
+    zoom: 8,
+    tagline: 'נקיקי הליכה, לגונות טורקיז ואגם - האי הגדול של יוון',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Chania_-_Venetian_harbor_2.jpg/500px-Chania_-_Venetian_harbor_2.jpg',
+    iconicLandmark: {
+      name: 'לגונת באלוס',
+      nameLocal: 'Balos Lagoon',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Balos_Lagoon_on_Crete.jpg/500px-Balos_Lagoon_on_Crete.jpg',
+      blurb:
+        'לגונה רדודה במים טורקיז-לבנים בין הרים וחוף חול, בקצה הצפון-מערבי של כרתים - מהנופים המצולמים ביותר ביוון.',
+    },
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'טיסה ישירה קצרה, ושילוב נדיר של נקיקי הליכה, לגונות טורקיז, חופים ומורשת מינואית - אי שלם של טבע. חסרונות: הטבע הגדול (סמריה, באלוס) דורש מאמץ, שיט ורכב, וחם ועמוס באוגוסט. אין כשרות מסודרת.',
+    },
+    summary:
+      'כרתים היא האי הגדול של יוון ויעד טבע מהמובילים בים התיכון: נקיק סמריה למטיילים, לגונת באלוס וחוף אלפוניסי הוורוד, אגם קורנאס המתוק, ונופי הרים וכפרים - לצד ערי נמל ונציאניות מקסימות והארמון המינואי קנוסוס. טיסה ישירה של פחות משעתיים, אך אין באי תשתית כשרות מסודרת.',
+    bestSeason: 'מאי-יוני וספטמבר-אוקטובר (נעים; סמריה פתוח) - יולי-אוגוסט חם ועמוס, החורף סוגר חלק ממסלולי הטבע',
+    places: [
+      {
+        id: 'her-chania',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Chania_-_Venetian_harbor_2.jpg/500px-Chania_-_Venetian_harbor_2.jpg',
+        tags: ['history', 'romantic', 'foodie'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'העיר העתיקה של חאניה',
+        nameLocal: 'Chania Old Town',
+        category: 'attraction',
+        lat: 35.5167,
+        lng: 24.0167,
+        description:
+          'עיר הנמל היפה בכרתים - נמל ונציאני עם מגדלור, סמטאות אבן, מסעדות דגים ואווירה. הבסיס הנוח למערב האי ולטיולי הטבע שסביבו.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Chania+Old+Town+Crete',
+      },
+      {
+        id: 'her-samaria',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Samaria_Gorge%2C_Crete_%28150854%29_%289450552265%29.jpg/500px-Samaria_Gorge%2C_Crete_%28150854%29_%289450552265%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'נקיק סמריה',
+        nameLocal: 'Samaria Gorge',
+        category: 'nature',
+        lat: 35.2711,
+        lng: 23.9614,
+        description:
+          'אחד מנקיקי ההליכה המפורסמים באירופה - מסלול יורד של כ-16 ק"מ בין קירות סלע ענקיים ("השערים") עד לחוף הים בדרום. יום שלם, נעליים טובות והרבה מים; פתוח בעונה החמה.',
+        rating: 4.8,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Samaria+Gorge',
+      },
+      {
+        id: 'her-balos',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Balos_Lagoon_on_Crete.jpg/500px-Balos_Lagoon_on_Crete.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'לגונת באלוס',
+        nameLocal: 'Balos Lagoon',
+        category: 'nature',
+        lat: 35.5883,
+        lng: 23.5878,
+        description:
+          'לגונה רדודה במים טורקיז-לבנים בקצה הצפון-מערבי של האי, בין הרים לחוף. מגיעים בשיט מקיסמוס או בדרך עפר ובהליכה. מהחופים היפים בעולם.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Balos+Lagoon+Crete',
+      },
+      {
+        id: 'her-elafonisi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Elafonisi_pink_sand_beach_-_panoramio.jpg/500px-Elafonisi_pink_sand_beach_-_panoramio.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        name: 'חוף אלפוניסי',
+        nameLocal: 'Elafonisi Beach',
+        category: 'nature',
+        lat: 35.27,
+        lng: 23.532,
+        description:
+          'חוף שמור בקצה הדרום-מערבי, מפורסם בחול הוורדרד ובמים רדודים וצלולים - מושלם למשפחות. עמוס בשיא הקיץ; שווה להקדים.',
+        rating: 4.5,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Elafonisi+Beach+Crete',
+      },
+      {
+        id: 'her-kournas',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Lake_Kournas%2C_Chania_Greece.jpg/500px-Lake_Kournas%2C_Chania_Greece.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'אגם קורנאס',
+        nameLocal: 'Lake Kournas',
+        category: 'nature',
+        lat: 35.3308,
+        lng: 24.2756,
+        description:
+          'אגם המים המתוקים היחיד בכרתים, מוקף הרים - מים צלולים בגוונים משתנים, סירות דוושה וצבים. עצירה רגועה בין רתימנו לחאניה.',
+        rating: 4.3,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Lake+Kournas',
+      },
+      {
+        id: 'her-rethymno',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Kreta_%28GR%29%2C_Rethymno%2C_Alter_Hafen_--_2023_--_8339.jpg/500px-Kreta_%28GR%29%2C_Rethymno%2C_Alter_Hafen_--_2023_--_8339.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'העיר העתיקה של רתימנו',
+        nameLocal: 'Rethymno Old Town',
+        category: 'attraction',
+        lat: 35.3684,
+        lng: 24.4744,
+        description:
+          'עיר ונציאנית-עות׳מאנית מקסימה עם נמל קטן, מבצר (פורטצה) וסמטאות ציוריות - שקטה ואותנטית יותר מחאניה. במרכז החוף הצפוני.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Rethymno+Old+Town',
+      },
+      {
+        id: 'her-preveli',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Preveli_Palm_Beach_01.JPG/500px-Preveli_Palm_Beach_01.JPG',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'חוף פרוולי ויער הדקלים',
+        nameLocal: 'Preveli Palm Beach',
+        category: 'nature',
+        lat: 35.1525,
+        lng: 24.4738,
+        description:
+          'חוף בקצה נחל שבו נשפך יער דקלים אל הים בדרום האי - אפשר לשוט/לשוח במעלה הנחל בין הדקלים. יורדים אליו בשביל תלול; פראי ומתגמל.',
+        rating: 4.5,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Preveli+Beach+Crete',
+      },
+      {
+        id: 'her-knossos',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Knossos_R03.jpg/500px-Knossos_R03.jpg',
+        tags: ['history'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'ארמון קנוסוס',
+        nameLocal: 'Knossos',
+        category: 'attraction',
+        lat: 35.2981,
+        lng: 25.1631,
+        description:
+          'הארמון המינואי הגדול ביותר, בן כ-4,000 שנה, ליד הרקליון - מבוך אולמות משוחזרים, פרסקאות ומיתוס המינוטאור. משלימים עם המוזיאון הארכיאולוגי בהרקליון.',
+        rating: 4.4,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Knossos+Palace',
+      },
+      {
+        id: 'her-spinalonga',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Spinalonga_Island%2C_Crete_1.jpg/500px-Spinalonga_Island%2C_Crete_1.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'האי ספינלונגה',
+        nameLocal: 'Spinalonga',
+        category: 'attraction',
+        lat: 35.2975,
+        lng: 25.7381,
+        description:
+          'אי-מבצר ונציאני במפרץ אלונדה שבמזרח האי, ששימש בעבר מושבת מצורעים - סיור מרתק ומעט קודר, בשיט קצר מפלאקה. משתלב עם מזרח כרתים.',
+        rating: 4.4,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Spinalonga+Crete',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'המערב - חאניה ולגונת באלוס',
+        placeIds: ['her-chania', 'her-balos'],
+        notes:
+          'בוקר בעיר העתיקה של חאניה ובנמל הוונציאני, ושיט/נסיעה אל לגונת באלוס הטורקיז - יום מערב קלאסי. אפשר להחליף את באלוס באלפוניסי לפי מזג הים.',
+      },
+      {
+        day: 2,
+        title: 'נקיק סמריה',
+        placeIds: ['her-samaria'],
+        notes:
+          'יום שלם בנקיק סמריה: ירידה של כ-16 ק"מ בין קירות הסלע עד לחוף הדרומי, וחזרה בסירה ואוטובוס. נעליים טובות, כובע והרבה מים; מתאים למי שכשיר להליכה ארוכה.',
+      },
+      {
+        day: 3,
+        title: 'המרכז - רתימנו, אגם וחוף דקלים',
+        placeIds: ['her-rethymno', 'her-kournas', 'her-preveli'],
+        notes:
+          'העיר העתיקה של רתימנו, עצירה רגועה באגם קורנאס, ובדרום חוף הדקלים של פרוולי. יום מגוון של עיר, אגם וחוף פראי.',
+      },
+      {
+        day: 4,
+        title: 'המרכז-מזרח - קנוסוס והרקליון',
+        placeIds: ['her-knossos', 'her-spinalonga'],
+        notes:
+          'הארמון המינואי קנוסוס והמוזיאון הארכיאולוגי בהרקליון. מי שממשיך מזרחה יכול להוסיף שיט אל האי-מבצר ספינלונגה במפרץ אלונדה.',
+      },
+    ],
+    practical: {
+      flights:
+        'טיסות ישירות תכופות מנתב"ג להרקליון (HER) - כ-29 בשבוע בעונה (אל על, ישראייר, ארקיע, Aegean, בלו-ברד ועוד), טיסה של כ-1:45 שעות. יש גם קו ישיר לחאניה (CHQ) בתדירות נמוכה יותר.',
+      gettingAround:
+        'האי גדול והאתרים מפוזרים - רכב שכור כמעט הכרחי (סמריה, באלוס, אלפוניסי, פרוולי). יש אוטובוסים בין הערים הראשיות; ללגונות ולנקיקים - שיט או טיול מאורגן.',
+      kosherOverview:
+        'אין בכרתים תשתית כשרות מסודרת - אין מסעדות כשרות או בית חב"ד תיירותי פעיל (בחאניה יש בית הכנסת ההיסטורי עץ חיים, כאתר מורשת - לא אוכל כשר). מומלץ להצטייד מראש במזון ארוז עם הכשר; ירקות, פירות, זיתים וגבינות טריים זמינים בשפע בשווקים.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
