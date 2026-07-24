@@ -1399,3 +1399,25 @@ the overnight run.
   Wikipedia); the Chabad pin is the Arusha city location with the street
   address in the description and an explicit note that it is approximate.
   Photos are article lead images. build clean, verify-photos 327/327 OK.
+
+### 2026-07-25 (f) - Overnight expansion: Peru (Cusco + Machu Picchu)
+
+- **Peru** (new country, first South-American destination) - visa-free
+  for Israelis up to 183 days, PEN, local SIM, cash outside the cities.
+- **Cusco & Machu Picchu** - 12 places, rating 4.8. Landmark: Machu
+  Picchu. Nature/altitude hikes: Laguna Humantay, Vinicunca (Rainbow
+  Mountain), the Sacred Valley, Maras salt ponds, Lake Titicaca. Inca
+  sites: Sacsayhuaman, Ollantaytambo, Pisac, Moray. 6-day itinerary that
+  starts with two acclimatisation days (Cusco is ~3,400 m).
+- Flights: no nonstop from TLV - one or two connections (Madrid /
+  Frankfurt / Amsterdam / New York / Panama) to Lima, then ~1.5h to CUZ.
+- **Kosher REAL and strong:** Chabad House Cusco (Calle Vitoque 631) runs
+  separate meat and dairy restaurants - a major hub for Israeli
+  travellers; pending-review, pin at city centre with the address in the
+  description. Outside Cusco: nothing, stated plainly.
+- Coordinates from the Wikipedia API (Spanish Wikipedia for Moray) and
+  Nominatim for the Maras salt ponds and Humantay lake; their photos came
+  from the Commons API and were eyeballed (the first Maras hit was a
+  close-up of one pan - replaced with the panorama; the Vinicunca lead
+  image download was broken, replaced with a verified alternative).
+  build clean, verify-photos 339/339 OK.

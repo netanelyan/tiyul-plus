@@ -8047,6 +8047,301 @@ export const destinations: Destination[] = [
         'בארושה, עיר הבסיס של הספארי, פועל בית חב"ד עם מטבח כשר שמגיש ארוחות בהזמנה מראש - זו כתובת הכשרות היחידה שאותרה באזור. בפארקים ובלודג׳ים אין כשרות, אבל חלק מסוכנויות הספארי מציעות מסלולים עם אוכל כשר מוזמן מראש - חובה לתאם ולוודא את ההשגחה ישירות מולם לפני שסוגרים.',
     },
   },
+  {
+    slug: 'cusco',
+    name: 'קוסקו ומאצ׳ו פיצ׳ו',
+    nameLocal: 'Cusco & Machu Picchu',
+    countrySlug: 'peru',
+    flag: '🇵🇪',
+    center: { lat: -13.4, lng: -72.1 },
+    zoom: 9,
+    tagline: 'בירת האינקה, העמק הקדוש ואגמים בגובה 4,000 מטר',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Machu_Picchu%2C_2023_%28012%29.jpg/500px-Machu_Picchu%2C_2023_%28012%29.jpg',
+    iconicLandmark: {
+      name: 'מאצ׳ו פיצ׳ו',
+      nameLocal: 'Machu Picchu',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Machu_Picchu%2C_2023_%28012%29.jpg/500px-Machu_Picchu%2C_2023_%28012%29.jpg',
+      blurb:
+        'עיר האינקה מהמאה ה-15 שנבנתה על רכס בגובה כ-2,430 מ׳ מעל עמק אורובמבה - אתר מורשת עולמית והסמל המוכר ביותר של דרום אמריקה.',
+    },
+    editorialRating: {
+      score: 4.8,
+      verdict:
+        'שילוב נדיר של ארכיאולוגיה ברמה עולמית וטבע אנדים - ובקוסקו יש בית חב"ד עם מטבח בשרי וחלבי, נוח במיוחד לישראלים. חסרונות: אין טיסה ישירה (יממה של טיסות והחלפות), הגובה בקוסקו כ-3,400 מ׳ דורש יומיים התאקלמות, וכרטיסי מאצ׳ו פיצ׳ו במכסה יומית שנגמרת מראש.',
+    },
+    summary:
+      'קוסקו הייתה בירת אימפריית האינקה, והיום היא נקודת המוצא לכל מה שמסביב: מאצ׳ו פיצ׳ו, העמק הקדוש עם אולנטייטמבו ופיסק, מדרגות החקלאות של מוראי ובריכות המלח של מאראס - וטיולי הליכה אל אגם הומנטאי הקרחוני ואל ההר בצבעי הקשת, ויניקונקה. זו גם אחת התחנות המרכזיות של הישראלים בדרום אמריקה, ובית חב"ד המקומי מפעיל מסעדות כשרות.',
+    bestSeason:
+      'מאי-ספטמבר (העונה היבשה - הטובה ביותר להליכות ולמאצ׳ו פיצ׳ו) · נובמבר-מרץ עונת הגשמים, ושביל האינקה סגור לגמרי בפברואר',
+    places: [
+      {
+        id: 'per-machupicchu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Machu_Picchu%2C_2023_%28012%29.jpg/500px-Machu_Picchu%2C_2023_%28012%29.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'מאצ׳ו פיצ׳ו',
+        nameLocal: 'Machu Picchu',
+        category: 'attraction',
+        lat: -13.1633,
+        lng: -72.5456,
+        description:
+          'עיר האינקה שנבנתה במאה ה-15 על רכס בין פסגות, ננטשה ונשארה כמעט שלמה - אתר מורשת עולמית. מגיעים ברכבת לאגואס קליינטס ובאוטובוס במעלה ההר; הכניסה במסלולים ובשעות מוגדרות ובמכסה יומית, וכרטיסים נחטפים שבועות מראש.',
+        rating: 4.9,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Machu+Picchu',
+      },
+      {
+        id: 'per-vinicunca',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Vinicunca%2C_Rainbow_Mountain.jpg/500px-Vinicunca%2C_Rainbow_Mountain.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'ויניקונקה - הר הקשת',
+        nameLocal: 'Vinicunca (Rainbow Mountain)',
+        category: 'nature',
+        lat: -13.8702,
+        lng: -71.303,
+        description:
+          'רכס בגובה כ-5,000 מ׳ שפסי המינרלים בו יוצרים פסים בצבעי אדום, צהוב, ירוק וסגול. מגיעים בנסיעה ארוכה מקוסקו ובהליכה קצרה אך תובענית בגלל הגובה - חובה להתאקלם קודם.',
+        rating: 4.5,
+        durationMin: 600,
+        externalUrl: 'https://maps.google.com/?q=Vinicunca+Rainbow+Mountain',
+      },
+      {
+        id: 'per-humantay',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Humantay_Lake.jpg/500px-Humantay_Lake.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'אגם הומנטאי',
+        nameLocal: 'Laguna Humantay',
+        category: 'nature',
+        lat: -13.3795,
+        lng: -72.5847,
+        description:
+          'אגם קרחוני בצבע טורקיז עז למרגלות פסגת סלקנטאי המושלגת, בגובה כ-4,200 מ׳. מגיעים מכפר מולפאטה ובהליכה תלולה של כשעה וחצי - יפה במיוחד בשעות הבוקר.',
+        rating: 4.7,
+        durationMin: 540,
+        externalUrl: 'https://maps.google.com/?q=Humantay+Lake',
+      },
+      {
+        id: 'per-cusco',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Vista_Calle_Suecia.jpg/500px-Vista_Calle_Suecia.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'קוסקו - העיר העתיקה',
+        nameLocal: 'Cusco Historic Centre',
+        category: 'attraction',
+        lat: -13.5169,
+        lng: -71.9786,
+        description:
+          'בירת האינקה לשעבר, בגובה כ-3,400 מ׳: כיכר פלאזה דה ארמס, קירות אבן אינקאיים שעליהם נבנו כנסיות קולוניאליות, ורובע סן בלאס עם סמטאות ובתי מלאכה. שני הימים הראשונים כאן הם גם ימי ההתאקלמות לגובה.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Cusco+Peru',
+      },
+      {
+        id: 'per-sacsayhuaman',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Sacsayhuam%C3%A1n%2C_Cusco%2C_Per%C3%BA%2C_2015-07-31%2C_DD_27.JPG/500px-Sacsayhuam%C3%A1n%2C_Cusco%2C_Per%C3%BA%2C_2015-07-31%2C_DD_27.JPG',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'סקסייוואמן',
+        nameLocal: 'Sacsayhuamán',
+        category: 'attraction',
+        lat: -13.5078,
+        lng: -71.9822,
+        description:
+          'מצודת אינקה על הגבעה שמעל קוסקו, ובה חומות מאבני ענק מסותתות בדיוק מדהים - חלקן שוקלות עשרות טונות. אפשר להגיע בהליכה מהעיר, ומהמצודה נשקף נוף על הגגות האדומים.',
+        rating: 4.6,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Sacsayhuaman',
+      },
+      {
+        id: 'per-sacredvalley',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Urubamba_-_Valle_Sagrado_3.JPG/500px-Urubamba_-_Valle_Sagrado_3.JPG',
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
+        name: 'העמק הקדוש',
+        nameLocal: 'Sacred Valley of the Incas',
+        category: 'nature',
+        lat: -13.3333,
+        lng: -72.0833,
+        description:
+          'עמק נהר אורובמבה בין קוסקו למאצ׳ו פיצ׳ו - נמוך וחמים יותר מקוסקו, ולכן גם נוח יותר להתאקלמות. לאורכו כפרים, מדרגות חקלאות אינקאיות ושווקים מקומיים.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Sacred+Valley+Peru',
+      },
+      {
+        id: 'per-ollantaytambo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Ollantaytambo_-_Heiliges_Tal.jpg/500px-Ollantaytambo_-_Heiliges_Tal.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'אולנטייטמבו',
+        nameLocal: 'Ollantaytambo',
+        category: 'attraction',
+        lat: -13.2581,
+        lng: -72.2633,
+        description:
+          'כפר אינקאי חי שבו עדיין גרים בבתים על יסודות מקוריים, ומעליו מתחם מקדשים ומדרגות שנחשב לאחד ממבצרי האינקה המרשימים. מכאן יוצאות הרכבות למאצ׳ו פיצ׳ו.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Ollantaytambo',
+      },
+      {
+        id: 'per-pisac',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Pisac_-_panoramio_%282%29.jpg/500px-Pisac_-_panoramio_%282%29.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'פיסק - שוק ומדרגות',
+        nameLocal: 'Písac',
+        category: 'attraction',
+        lat: -13.4242,
+        lng: -71.8578,
+        description:
+          'כפר בכניסה לעמק הקדוש, מפורסם בשוק הצבעוני שלו ובמתחם האינקה שעל הרכס מעליו - מדרגות חקלאות ענקיות שנראות כמו מניפה בצלע ההר.',
+        rating: 4.5,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Pisac',
+      },
+      {
+        id: 'per-moray',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Moray_-_Qechuyoq.JPG/500px-Moray_-_Qechuyoq.JPG',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'מוראי - המדרגות המעגליות',
+        nameLocal: 'Moray',
+        category: 'attraction',
+        lat: -13.3293,
+        lng: -72.1964,
+        description:
+          'מתחם מדרגות חקלאיות מעגליות שנחפרו זו בתוך זו, ובכל טבעת טמפרטורה מעט שונה - ההשערה המקובלת היא שזה היה מעין מעבדה חקלאית של האינקה.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Moray+Peru',
+      },
+      {
+        id: 'per-maras',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Salineras_de_Maras%2C_Maras%2C_Per%C3%BA%2C_2015-07-30%2C_DD_03-07_PAN.JPG/500px-Salineras_de_Maras%2C_Maras%2C_Per%C3%BA%2C_2015-07-30%2C_DD_03-07_PAN.JPG',
+        tags: ['outdoors', 'foodie'],
+        priceLevel: 1,
+        name: 'בריכות המלח של מאראס',
+        nameLocal: 'Salineras de Maras',
+        category: 'nature',
+        lat: -13.3001,
+        lng: -72.1562,
+        description:
+          'אלפי בריכות מלח לבנות מדורגות במורד גיא, שממולאות ממעיין מלוח ומופעלות בידי משפחות מקומיות עוד מימי האינקה. נוף גיאומטרי לבן-ורוד יוצא דופן.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Salineras+de+Maras',
+      },
+      {
+        id: 'per-titicaca',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Lake_Titicaca_ESA22522896.jpeg/500px-Lake_Titicaca_ESA22522896.jpeg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 2,
+        name: 'אגם טיטיקקה',
+        nameLocal: 'Lake Titicaca',
+        category: 'nature',
+        lat: -15.825,
+        lng: -69.325,
+        description:
+          'האגם הגדול בדרום אמריקה ואחד הגבוהים בעולם (כ-3,810 מ׳), על הגבול עם בוליביה. מהעיר פונו יוצאים אל האיים הצפים של האורוס ואל האיים טקילה ואמנטני. הרחבה של יום-יומיים מקוסקו.',
+        rating: 4.5,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Lake+Titicaca+Puno',
+      },
+      {
+        id: 'per-chabad',
+        tags: ['foodie'],
+        priceLevel: 1,
+        name: 'בית חב"ד קוסקו',
+        nameLocal: 'Chabad House Cusco',
+        category: 'kosher-food',
+        lat: -13.5169,
+        lng: -71.9786,
+        description:
+          'בית חב"ד של קוסקו (Calle Vitoque 631), אחד המרכזים הגדולים לישראלים בדרום אמריקה: מסעדה בשרית ומסעדה חלבית עם מטבחים נפרדים, מניינים וארוחות שבת. הסימון על המפה הוא במרכז העיר ולא כתובת מדויקת.',
+        kosherNote: 'בהשגחת בית חב"ד קוסקו; שעות בשרי/חלבי נפרדות. לוודא זמינות ושעות מולם.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד קוסקו, פרו',
+        },
+        rating: 4.7,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Chabad+Cusco',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'קוסקו - התאקלמות לגובה',
+        placeIds: ['per-cusco', 'per-chabad'],
+        notes:
+          'יום ראשון קליל בכוונה: הליכה בפלאזה דה ארמס וברובע סן בלאס, הרבה מים ומנוחה. קוסקו בגובה 3,400 מ׳ - לא לתכנן מאמץ ביום הראשון.',
+      },
+      {
+        day: 2,
+        title: 'סקסייוואמן והעמק הקדוש',
+        placeIds: ['per-sacsayhuaman', 'per-pisac', 'per-sacredvalley'],
+        notes:
+          'עולים למצודת סקסייוואמן, ומשם יורדים אל העמק הקדוש - שוק פיסק ומתחם המדרגות שמעליו. העמק נמוך מקוסקו וקל יותר לנשימה.',
+      },
+      {
+        day: 3,
+        title: 'מוראי, מאראס ואולנטייטמבו',
+        placeIds: ['per-moray', 'per-maras', 'per-ollantaytambo'],
+        notes:
+          'מדרגות מוראי המעגליות ובריכות המלח של מאראס, ולינה באולנטייטמבו - משם יוצאת הרכבת המוקדמת למאצ׳ו פיצ׳ו.',
+      },
+      {
+        day: 4,
+        title: 'מאצ׳ו פיצ׳ו',
+        placeIds: ['per-machupicchu'],
+        notes:
+          'רכבת מוקדמת לאגואס קליינטס ואוטובוס במעלה ההר. הכרטיס הוא למסלול ולשעה מוגדרים - לקנות שבועות מראש, ולוודא איזה מסלול נבחר.',
+      },
+      {
+        day: 5,
+        title: 'אגם הומנטאי או הר הקשת',
+        placeIds: ['per-humantay', 'per-vinicunca'],
+        notes:
+          'יום הליכה בגובה - בוחרים אחד: אגם הומנטאי הקרחוני, או ויניקונקה בצבעי הקשת. שניהם יוצאים לפנות בוקר ודורשים התאקלמות מוקדמת.',
+      },
+      {
+        day: 6,
+        title: 'הרחבה: אגם טיטיקקה',
+        placeIds: ['per-titicaca'],
+        notes:
+          'למי שיש עוד יומיים: נסיעה לפונו (אוטובוס תיירים או רכבת) וסיור באיים הצפים של האורוס ובכפרי האגם.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה מנתב"ג לפרו. טסים עם החלפה אחת או שתיים - בדרך כלל דרך מדריד, פרנקפורט, אמסטרדם, ניו יורק או פנמה סיטי אל לימה (LIM), ומשם טיסה פנימית של כשעה וחצי לקוסקו (CUZ). סך הדרך: כ-20-26 שעות.',
+      gettingAround:
+        'בקוסקו הכול בהליכה או במונית זולה. לעמק הקדוש - קולקטיבו (מיניבוס), טיול מאורגן או נהג פרטי ליום. למאצ׳ו פיצ׳ו יש רק רכבת (PeruRail / IncaRail) מאולנטייטמבו או מקוסקו, ואז אוטובוס תלול. לטיולי ההליכה בגובה יוצאים עם סוכנות מקומית לפנות בוקר.',
+      kosherOverview:
+        'לקוסקו יש בית חב"ד גדול ופעיל - עם מסעדה בשרית ומסעדה חלבית במטבחים נפרדים, מניינים וארוחות שבת - וזו כתובת הכשרות המרכזית באזור, פופולרית מאוד בקרב מטיילים ישראלים. מחוץ לקוסקו (העמק הקדוש, אגואס קליינטס, פונו) אין כשרות מסודרת: כדאי לצאת מצוידים, והאוכל הצמחוני בפרו נגיש ומגוון.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
