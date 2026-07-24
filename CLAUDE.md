@@ -1507,3 +1507,25 @@ the overnight run.
 - **Kosher: none at the lake** - nearest is Budapest, stated plainly.
 - All coordinates and photos from the Wikipedia API. build clean,
   verify-photos all OK (392).
+
+### 2026-07-25 (l) - Overnight expansion: Iceland (Reykjavik + South Coast)
+
+- **Iceland** (new country) - Schengen visa-free, ISK, near-cashless
+  (PIN needed at automated fuel pumps), eSIM caveat (European bundles
+  often exclude Iceland).
+- **Reykjavik & the South Coast** - 12 places, rating 4.7. Landmark:
+  Jokulsarlon glacier lagoon. Nature: Golden Circle (Thingvellir, Geysir,
+  Gullfoss), Seljalandsfoss and Skogafoss, Reynisfjara black beach (with
+  the sneaker-wave warning), Vatnajokull, Blue Lagoon, Kirkjufell.
+  5-day itinerary.
+- Flights stated honestly: Icelandair has run a SEASONAL nonstop TLV-KEF
+  (~3 weekly, ~7h) since 2023 but it varies year to year - travellers are
+  told to verify it is operating for their dates, with easy one-stop
+  European connections as the fallback.
+- **Kosher - a real 2026 change:** the Beit Shvidler Jewish Center of
+  Iceland opened in downtown Reykjavik on 7 July 2026 (Chabad) with a
+  synagogue, kosher shop and community kitchen - the only kosher point in
+  the country; pending-review, pin at city centre. Overview also notes
+  ritual slaughter is banned locally so meat is imported.
+- Coordinates from the Wikipedia API (German Wikipedia for Kirkjufell);
+  photos are article lead images. build clean, verify-photos all OK.

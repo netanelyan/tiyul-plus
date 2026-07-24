@@ -9656,6 +9656,295 @@ export const destinations: Destination[] = [
         'אין באזור בלטון תשתית כשרות. הכשרות הקרובה היא בבודפשט - שבה יש מסעדות כשרות, מאפיות וקהילה גדולה - כשעה וחצי נסיעה. הדרך המעשית: להצטייד בבודפשט לפני היציאה לאגם.',
     },
   },
+  {
+    slug: 'reykjavik',
+    name: 'ריקיאוויק והחוף הדרומי',
+    nameLocal: 'Reykjavík & the South Coast',
+    countrySlug: 'iceland',
+    flag: '🇮🇸',
+    center: { lat: 64.0, lng: -19.5 },
+    zoom: 6,
+    tagline: 'גייזרים, מפלים ולגונת קרחונים - במרחק נסיעה אחת',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/J%C3%B6kuls%C3%A1rl%C3%B3n_lagoon_in_southeastern_Iceland.jpg/500px-J%C3%B6kuls%C3%A1rl%C3%B3n_lagoon_in_southeastern_Iceland.jpg',
+    iconicLandmark: {
+      name: 'לגונת הקרחונים יוקולסארלון',
+      nameLocal: 'Jökulsárlón Glacier Lagoon',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/J%C3%B6kuls%C3%A1rl%C3%B3n_lagoon_in_southeastern_Iceland.jpg/500px-J%C3%B6kuls%C3%A1rl%C3%B3n_lagoon_in_southeastern_Iceland.jpg',
+      blurb:
+        'לגונה שנוצרה מנסיגת קרחון ברייד׳מרקורייקול, ובה קרחונים כחולים שצפים אל הים - ומולה החוף השחור שעליו נשטפים גושי הקרח (חוף היהלומים).',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'ריכוז אדיר של נופי טבע נדירים לאורך כביש אחד, ומאז 2026 יש בריקיאוויק גם מרכז יהודי עם חנות כשרה ומטבח קהילתי. חסרונות: יעד יקר מאוד, מזג אוויר תזזיתי שיכול לבטל תוכניות, ובחורף שעות אור מעטות מאוד.',
+    },
+    summary:
+      'רוב הטיולים באיסלנד מתחילים בריקיאוויק, ומשם יוצאים למעגל הזהב - פארק תינגוודליר שבין הלוחות הטקטוניים, שדה הגייזרים והמפל גולפוס - וממשיכים לאורך החוף הדרומי אל מפלי סליילנדספוס וסקוגאפוס, החוף השחור ריניספיארה, וקרחון ואטנאייקול עם לגונת יוקולסארלון. בריקיאוויק עצמה נפתח ביולי 2026 מרכז יהודי עם חנות כשרה ומטבח קהילתי.',
+    bestSeason:
+      'יוני-אוגוסט (אור כמעט מסביב לשעון, כל הדרכים פתוחות) · ספטמבר-מרץ עונת הזוהר הצפוני אבל ימים קצרים ותנאי כביש קשים · הרמות הפנימיות פתוחות רק בקיץ',
+    places: [
+      {
+        id: 'isl-jokulsarlon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/J%C3%B6kuls%C3%A1rl%C3%B3n_lagoon_in_southeastern_Iceland.jpg/500px-J%C3%B6kuls%C3%A1rl%C3%B3n_lagoon_in_southeastern_Iceland.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'לגונת הקרחונים יוקולסארלון',
+        nameLocal: 'Jökulsárlón',
+        category: 'nature',
+        lat: 64.0703,
+        lng: -16.2117,
+        description:
+          'לגונה עמוקה שנוצרה מנסיגת קרחון, ובה גושי קרח כחלחלים שצפים אל הים; ממול חוף היהלומים, שעליו נשטפים גושי קרח על החול השחור. אפשר גם שיט בין הקרחונים בעונה.',
+        rating: 4.9,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Jokulsarlon',
+      },
+      {
+        id: 'isl-gullfoss',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Gullfoss_from_the_Air_%28cropped%29.jpg/500px-Gullfoss_from_the_Air_%28cropped%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'מפל גולפוס',
+        nameLocal: 'Gullfoss',
+        category: 'nature',
+        lat: 64.3261,
+        lng: -20.1211,
+        description:
+          'מפל כפול עוצמתי שנופל בשתי מדרגות אל תוך נקיק צר - אחד המפלים המפורסמים באיסלנד, וחלק ממסלול מעגל הזהב. תצפיות מלמעלה ומקרוב, ולעתים קשת בענן מהרסס.',
+        rating: 4.8,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Gullfoss',
+      },
+      {
+        id: 'isl-geysir',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Erupting_geysir.jpg/500px-Erupting_geysir.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'שדה הגייזרים גייסיר',
+        nameLocal: 'Geysir & Strokkur',
+        category: 'nature',
+        lat: 64.3137,
+        lng: -20.2995,
+        description:
+          'אזור גיאותרמי שממנו הגיעה המילה "גייזר". הגייזר הגדול כמעט אינו פעיל היום, אבל שכנו סטרוקור מתפרץ כל כמה דקות לגובה של עשרות מטרים. שבילים מסומנים - האדמה סביב רותחת.',
+        rating: 4.7,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Geysir+Iceland',
+      },
+      {
+        id: 'isl-thingvellir',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/%C3%9Eingvellir_from_the_information_centre.JPG/500px-%C3%9Eingvellir_from_the_information_centre.JPG',
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'פארק תינגוודליר',
+        nameLocal: 'Þingvellir National Park',
+        category: 'nature',
+        lat: 64.2538,
+        lng: -21.0373,
+        description:
+          'פארק לאומי ואתר מורשת עולמית בשבר שבין הלוח האירופי לאמריקאי - אפשר ללכת בתוך הבקע. כאן גם התכנס האלת׳ינג, מהפרלמנטים העתיקים בעולם, מ-930 לספירה.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Thingvellir',
+      },
+      {
+        id: 'isl-seljalandsfoss',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Idyllic_landscape_with_a_waterfall_%28Unsplash%29.jpg/500px-Idyllic_landscape_with_a_waterfall_%28Unsplash%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'מפל סליילנדספוס',
+        nameLocal: 'Seljalandsfoss',
+        category: 'nature',
+        lat: 63.6158,
+        lng: -19.9928,
+        description:
+          'מפל בגובה כ-60 מ׳ שאפשר לעקוף אותו בשביל שעובר מאחורי מסך המים - חוויה רטובה ומיוחדת. שכנו הנסתר גליופרארפוס מוסתר בתוך חריץ סלע סמוך.',
+        rating: 4.7,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Seljalandsfoss',
+      },
+      {
+        id: 'isl-skogafoss',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/2008-05-24_35_Sk%C3%B3gafoss.jpg/500px-2008-05-24_35_Sk%C3%B3gafoss.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'מפל סקוגאפוס',
+        nameLocal: 'Skógafoss',
+        category: 'nature',
+        lat: 63.5321,
+        lng: -19.5111,
+        description:
+          'מפל רחב ועוצמתי בגובה כ-60 מ׳ שאפשר לגשת אליו עד למרחק נגיעה, ומדרגות בצדו עולות לתצפית מלמעלה - ומשם ממשיך שביל ההליכה פימוורדוהאולס לאורך הנחל.',
+        rating: 4.8,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Skogafoss',
+      },
+      {
+        id: 'isl-reynisfjara',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Reynisfjara_Beach_Looking_West_Towards_Dyrh%C3%B3laey.jpg/500px-Reynisfjara_Beach_Looking_West_Towards_Dyrh%C3%B3laey.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'החוף השחור ריניספיארה',
+        nameLocal: 'Reynisfjara Black Sand Beach',
+        category: 'nature',
+        lat: 63.4035,
+        lng: -19.0474,
+        description:
+          'חוף חול בזלת שחור ליד הכפר ויק, עם עמודי בזלת משושים, מערה ומצוקי ים. אזהרה חשובה: יש כאן "גלי צחוק" (sneaker waves) פתאומיים - אסור להתקרב לקו המים.',
+        rating: 4.7,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Reynisfjara',
+      },
+      {
+        id: 'isl-vatnajokull',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Vatnaj%C3%B6kull.jpeg/500px-Vatnaj%C3%B6kull.jpeg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'קרחון ואטנאייקול',
+        nameLocal: 'Vatnajökull',
+        category: 'nature',
+        lat: 64.4,
+        lng: -16.8,
+        description:
+          'הקרחון הגדול באירופה מבחינת נפח, ומעליו פארק לאומי ואתר מורשת עולמית. מהאזור יוצאים טיולי קרחון מודרכים וביקורים במערות קרח כחולות בעונה החורפית.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Vatnajokull+National+Park',
+      },
+      {
+        id: 'isl-bluelagoon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/en/thumb/0/00/Blue_Lagoon_Main_Building.JPG/500px-Blue_Lagoon_Main_Building.JPG',
+        tags: ['romantic', 'families'],
+        priceLevel: 3,
+        name: 'הלגונה הכחולה',
+        nameLocal: 'Blue Lagoon',
+        category: 'nature',
+        lat: 63.88,
+        lng: -22.4481,
+        description:
+          'בריכה גיאותרמית חלבית-תכולה בשדה לבה ליד שדה התעופה קפלאוויק, שמימיה מגיעים מתחנת כוח גיאותרמית סמוכה. כרטיסים בשעות מוגדרות ובהזמנה מראש; האזור מושפע לעתים מפעילות געשית - לבדוק סטטוס פתיחה.',
+        rating: 4.4,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Blue+Lagoon+Iceland',
+      },
+      {
+        id: 'isl-kirkjufell',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Kirkjufell_in_Iceland.jpg/500px-Kirkjufell_in_Iceland.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        name: 'הר קירקיופל',
+        nameLocal: 'Kirkjufell',
+        category: 'viewpoint',
+        lat: 64.9397,
+        lng: -23.3014,
+        description:
+          'הר בצורת חרוט מחודד על חצי האי סניפלסנס, ולידו מפל קטן - אחד ההרים המצולמים באיסלנד. כשעתיים וחצי מריקיאוויק, ומשתלב עם סיבוב בחצי האי.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Kirkjufell',
+      },
+      {
+        id: 'isl-reykjavik',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Reykjav%C3%ADk%2C_view_from_Hallgr%C3%ADmskirkja_%282%29.jpg/500px-Reykjav%C3%ADk%2C_view_from_Hallgr%C3%ADmskirkja_%282%29.jpg',
+        tags: ['foodie', 'art'],
+        priceLevel: 2,
+        name: 'ריקיאוויק',
+        nameLocal: 'Reykjavík',
+        category: 'attraction',
+        lat: 64.1458,
+        lng: -21.9425,
+        description:
+          'הבירה הצפונית בעולם: כנסיית האלגרימסקירקיה עם מגדל התצפית, אולם הקונצרטים הארפה על המים, רחוב לויגאווגור הצבעוני ובריכות גיאותרמיות עירוניות. בסיס הפתיחה והסיום לכל טיול.',
+        rating: 4.5,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Reykjavik',
+      },
+      {
+        id: 'isl-chabad',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'המרכז היהודי של איסלנד (חב"ד)',
+        nameLocal: 'Beit Shvidler Jewish Center of Iceland',
+        category: 'kosher-market',
+        lat: 64.1458,
+        lng: -21.9425,
+        description:
+          'המרכז היהודי של איסלנד נפתח בריקיאוויק ביולי 2026, ובו בית כנסת, חנות כשרה ומטבח קהילתי - נקודת ההצטיידות הכשרה היחידה במדינה. הסימון הוא במרכז העיר; לוודא כתובת ושעות מולם.',
+        kosherNote: 'בהפעלת חב"ד איסלנד. ארוחות שבת וקייטרינג בתיאום מראש; לבדוק מלאי ושעות פתיחה לפני שמגיעים.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'חב"ד איסלנד, ריקיאוויק',
+        },
+        rating: 4.6,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Chabad+of+Iceland+Reykjavik',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'ריקיאוויק והלגונה הכחולה',
+        placeIds: ['isl-reykjavik', 'isl-bluelagoon', 'isl-chabad'],
+        notes:
+          'נוחתים בקפלאוויק, ומתחילים בלגונה הכחולה שבדרך לעיר (הזמנה מראש). אחר הצהריים ריקיאוויק, והצטיידות בחנות הכשרה למי שמקפיד.',
+      },
+      {
+        day: 2,
+        title: 'מעגל הזהב',
+        placeIds: ['isl-thingvellir', 'isl-geysir', 'isl-gullfoss'],
+        notes:
+          'המסלול הקלאסי: בקע תינגוודליר, שדה הגייזרים ומפל גולפוס - הכול בטווח נסיעה קצר מהעיר.',
+      },
+      {
+        day: 3,
+        title: 'החוף הדרומי והמפלים',
+        placeIds: ['isl-seljalandsfoss', 'isl-skogafoss', 'isl-reynisfjara'],
+        notes:
+          'נוסעים מזרחה: מפל שאפשר לעבור מאחוריו, מפל שאפשר לטפס מעליו, וסיום בחוף השחור ליד ויק - זהירות מהגלים.',
+      },
+      {
+        day: 4,
+        title: 'הקרחון והלגונה',
+        placeIds: ['isl-vatnajokull', 'isl-jokulsarlon'],
+        notes:
+          'ממשיכים מזרחה אל ואטנאייקול - טיול קרחון מודרך או מערת קרח בעונה - ולגונת יוקולסארלון וחוף היהלומים.',
+      },
+      {
+        day: 5,
+        title: 'חצי האי סניפלסנס',
+        placeIds: ['isl-kirkjufell'],
+        notes:
+          'הרחבה צפונית-מערבית: הר קירקיופל, כפרי דייגים, מצוקים ושדות לבה - "איסלנד בזעיר אנפין".',
+      },
+    ],
+    practical: {
+      flights:
+        'איסלנדאייר הפעילה קו ישיר עונתי מנתב"ג לקפלאוויק (KEF) - כשלוש טיסות בשבוע בעונת הקיץ, כ-7 שעות. הקו עונתי ומשתנה משנה לשנה, ולכן חובה לבדוק אם הוא פעיל בתאריכים שלכם; לחלופין טסים עם החלפה אחת דרך אירופה (למשל לונדון, אמסטרדם, קופנהגן) בקלות ובתדירות גבוהה.',
+      gettingAround:
+        'רכב שכור הוא הדרך המעשית - טבעת הכביש (Route 1) עוברת ליד רוב האתרים. בחורף חובה רכב מתאים ובדיקת תנאי דרך יומית באתר הרשמי; הרמות הפנימיות (F-roads) דורשות 4x4 ופתוחות רק בקיץ. יש גם טיולים מאורגנים יומיים מריקיאוויק לכל האתרים בדף הזה.',
+      kosherOverview:
+        'מיולי 2026 יש בריקיאוויק מרכז יהודי של חב"ד עם בית כנסת, חנות כשרה ומטבח קהילתי - שינוי משמעותי לעומת השנים הקודמות, שבהן לא הייתה באיסלנד שום נקודה כשרה. מחוץ לעיר אין כלום, אבל איסלנד מייבאת כמעט את כל המזון, ולכן בסופרמרקטים אפשר למצוא מוצרים ארוזים עם סימוני כשרות אירופיים ואמריקאיים. שחיטה כשרה אסורה במדינה - הבשר במרכז מיובא.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
