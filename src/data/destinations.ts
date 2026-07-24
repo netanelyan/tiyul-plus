@@ -6945,6 +6945,196 @@ export const destinations: Destination[] = [
         'אין בזלצבורג ובאזור האגמים תשתית כשרות מסודרת - אין מסעדה כשרה או בית חב"ד תיירותי פעיל. הכשרות המלאה הקרובה היא בווינה. מומלץ להצטייד מראש במזון ארוז עם הכשר או לבחור לינה עם מטבח; גבינות, פירות וירקות טריים זמינים בשפע.',
     },
   },
+  {
+    slug: 'mallorca',
+    name: 'מיורקה',
+    nameLocal: 'Mallorca / Mallorca',
+    countrySlug: 'spain',
+    flag: '🇪🇸',
+    center: { lat: 39.65, lng: 2.95 },
+    zoom: 9,
+    tagline: 'הרי טרמונטנה, מפרצי טורקיז וכפרי אבן - אי הים התיכון',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mallorca_Cala_de_Sa_Calobra_asv2023-04_img4.jpg/500px-Mallorca_Cala_de_Sa_Calobra_asv2023-04_img4.jpg',
+    iconicLandmark: {
+      name: 'קתדרלת פלמה (לה סאו)',
+      nameLocal: 'Palma Cathedral (La Seu)',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Palma_Cathedral_%28La_Seu%29_from_Parc_de_la_Mar.jpg/500px-Palma_Cathedral_%28La_Seu%29_from_Parc_de_la_Mar.jpg',
+      blurb:
+        'קתדרלה גותית עצומה על שפת הים בפלמה, עם חלון ורד ענק ונגיעות של גאודי - הסמל של מיורקה, משתקפת באגם שמולה.',
+    },
+    editorialRating: {
+      score: 4.4,
+      verdict:
+        'טיסה ישירה בקיץ, ושילוב של הרי טרמונטנה למטיילים, מפרצים טורקיז וכפרי אבן מקסימים. חסרונות: הקו הישיר עונתי בלבד (יולי-אוקטובר), עמוס מאוד בשיא הקיץ, ואין באי תשתית כשרות.',
+    },
+    summary:
+      'מיורקה, הגדול באיי הבלארים, הוא הרבה יותר מחופים: רכס הרי טרמונטנה (אתר מורשת עולמית) עם מסלולי הליכה וכפרי אבן, מפרצים חצובים במים טורקיז כמו סה קלוברה, צוקי כף פורמנטור ומערות תת-קרקעיות עם אגם. פלמה הבירה מציעה קתדרלה גותית ועיר עתיקה. טיסה ישירה בקיץ; אין באי תשתית כשרות מסודרת.',
+    bestSeason: 'מאי-יוני וספטמבר-אוקטובר (נעים, פחות עמוס; הקו הישיר בקיץ) - יולי-אוגוסט חם ומלא',
+    places: [
+      {
+        id: 'pmi-palma',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Palma_Cathedral_%28La_Seu%29_from_Parc_de_la_Mar.jpg/500px-Palma_Cathedral_%28La_Seu%29_from_Parc_de_la_Mar.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'פלמה - הקתדרלה והעיר העתיקה',
+        nameLocal: 'Palma & La Seu Cathedral',
+        category: 'attraction',
+        lat: 39.5674,
+        lng: 2.6481,
+        description:
+          'בירת האי - קתדרלה גותית מרהיבה על שפת הים (עם התערבות של גאודי), סמטאות אבן, פטיו פנימיים ושוק. נעים לטיול רגלי ולארוחת ערב בעיר העתיקה.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Palma+Cathedral+La+Seu',
+      },
+      {
+        id: 'pmi-tramuntana',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Serra_de_Tramuntana%2C_Mallorca.jpg/500px-Serra_de_Tramuntana%2C_Mallorca.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'הרי טרמונטנה',
+        nameLocal: 'Serra de Tramuntana',
+        category: 'nature',
+        lat: 39.7308,
+        lng: 2.6947,
+        description:
+          'רכס ההרים לאורך החוף הצפון-מערבי, אתר מורשת עולמית - מסלולי הליכה בין מדרגות אבן, מטעי זיתים וכפרים, ותצפיות ים מרהיבות. לב הטבע של מיורקה.',
+        rating: 4.7,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Serra+de+Tramuntana',
+      },
+      {
+        id: 'pmi-sacalobra',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mallorca_Cala_de_Sa_Calobra_asv2023-04_img4.jpg/500px-Mallorca_Cala_de_Sa_Calobra_asv2023-04_img4.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'סה קלוברה וטורנט דה פארייס',
+        nameLocal: 'Sa Calobra & Torrent de Pareis',
+        category: 'nature',
+        lat: 39.8436,
+        lng: 2.7925,
+        description:
+          'מפרץ חלוקים במים טורקיז בין צוקי הרים, בקצה נחל הקניון טורנט דה פארייס. מגיעים בכביש הררי מפותל מפורסם או בשיט מפורט דה סולר - מהמקומות הדרמטיים באי.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Sa+Calobra',
+      },
+      {
+        id: 'pmi-formentor',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Cap_Formentor_2015_%28Zuschnitt%29.jpg/500px-Cap_Formentor_2015_%28Zuschnitt%29.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        name: 'כף פורמנטור',
+        nameLocal: 'Cap de Formentor',
+        category: 'viewpoint',
+        lat: 39.9472,
+        lng: 3.1808,
+        description:
+          'הקצה הצפוני של האי - צוקים תלולים הצוללים לים, מגדלור בקצה ותצפיות עוצרות נשימה לאורך כביש מפותל. מרהיב במיוחד בזריחה ובשקיעה.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Cap+de+Formentor',
+      },
+      {
+        id: 'pmi-valldemossa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Valldemossa_view.jpg/500px-Valldemossa_view.jpg',
+        tags: ['history', 'romantic'],
+        priceLevel: 1,
+        name: 'ואלדמוסה',
+        nameLocal: 'Valldemossa',
+        category: 'attraction',
+        lat: 39.7117,
+        lng: 2.6226,
+        description:
+          'כפר אבן ציורי בהרי טרמונטנה, שבו שהו שופן וז׳ורז׳ סאנד - סמטאות פרחים, מנזר וקפה עם מאפה קוקה מקומי. אחד הכפרים היפים באי.',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Valldemossa',
+      },
+      {
+        id: 'pmi-soller',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Mallorca_Soller_Tram_%2724%27_1605_04_%2853177082159%29.jpg/500px-Mallorca_Soller_Tram_%2724%27_1605_04_%2853177082159%29.jpg',
+        tags: ['families', 'history'],
+        priceLevel: 1,
+        name: 'סולר והחשמלית',
+        nameLocal: 'Sóller',
+        category: 'attraction',
+        lat: 39.7676,
+        lng: 2.714,
+        description:
+          'עיירה בעמק הדרים בהרי טרמונטנה, מחוברת לפלמה ברכבת עץ עתיקה דרך ההרים, ולנמל בחשמלית וינטג׳. כיכר יפה, מיצי תפוזים טריים ואווירה נינוחה.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Soller+Mallorca',
+      },
+      {
+        id: 'pmi-drac',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Boat_on_Martel_Lake_Coves_del_Drac_Mallorca.jpg/500px-Boat_on_Martel_Lake_Coves_del_Drac_Mallorca.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 2,
+        name: 'מערות הדרקון (קובס דל דרק)',
+        nameLocal: 'Coves del Drac',
+        category: 'nature',
+        lat: 39.5368,
+        lng: 3.3301,
+        description:
+          'מערכת מערות מרשימה בפורטו כריסטו שבמזרח, ובתוכה אחד האגמים התת-קרקעיים הגדולים בעולם - עם מופע מוזיקה חיה על סירות. קריר ומרהיב, טוב למשפחות.',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Coves+del+Drac',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'פלמה - הבירה',
+        placeIds: ['pmi-palma'],
+        notes:
+          'יום בפלמה: קתדרלת לה סאו על הים, העיר העתיקה, המצודה והשוק. נעים לסיים בארוחה ובטיילת. בסיס נוח להמשך הטיול באי.',
+      },
+      {
+        day: 2,
+        title: 'טרמונטנה - כפרים והרים',
+        placeIds: ['pmi-valldemossa', 'pmi-soller', 'pmi-tramuntana'],
+        notes:
+          'יום בהרי טרמונטנה: הכפר ואלדמוסה, סולר עם החשמלית והרכבת העתיקה, ומסלול הליכה קצר עם תצפית ים. נופים וכפרי אבן לאורך כל הדרך.',
+      },
+      {
+        day: 3,
+        title: 'הצפון - סה קלוברה וכף פורמנטור',
+        placeIds: ['pmi-sacalobra', 'pmi-formentor'],
+        notes:
+          'מפרץ סה קלוברה הטורקיז (כביש מפותל או שיט), וצוקי כף פורמנטור בקצה הצפוני עם המגדלור. יום נופי מים וסלע מרהיב.',
+      },
+      {
+        day: 4,
+        title: 'המזרח - מערות הדרקון',
+        placeIds: ['pmi-drac'],
+        notes:
+          'טיול במערות הדרקון עם האגם התת-קרקעי ומופע המוזיקה, ומפרצים וחופים באזור המזרחי בהמשך היום. סיום רגוע לפני החזרה.',
+      },
+    ],
+    practical: {
+      flights:
+        'ישראייר מפעילה טיסה ישירה מנתב"ג לפלמה (PMI) - אך עונתית בלבד (כ-יולי-אוקטובר), טיסה של כ-4.5 שעות. מחוץ לעונה טסים דרך ברצלונה/מדריד עם קו פנימי קצר.',
+      gettingAround:
+        'רכב שכור נוח ביותר לטבע (טרמונטנה, פורמנטור, סה קלוברה, מערות). יש גם רכבת עתיקה לסולר, חשמלית ואוטובוסים בין הערים הראשיות; לפלמה עצמה אין צורך ברכב.',
+      kosherOverview:
+        'אין במיורקה תשתית כשרות מסודרת - אין מסעדה כשרה או בית חב"ד תיירותי פעיל (בפלמה יש מורשת יהודית עתיקה - הרובע היהודי "אל קאל" והצֶ׳אֶטֶס - אך לא אוכל כשר). הכשרות הקרובה היא בברצלונה/מדריד. מומלץ להצטייד מראש; פירות, ירקות ודגים טריים זמינים בשפע.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
