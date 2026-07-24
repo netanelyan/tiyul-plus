@@ -4232,6 +4232,282 @@ export const destinations: Destination[] = [
         'טביליסי היא מהיעדים הכשרים הנוחים באזור: מסעדת מנדי׳ס של בית חב"ד (בשרי מהדרין) ומטבח חלבי לארוחות בוקר, ולצידן כמה מסעדות כשרות נוספות ברובע היהודי בעיר העתיקה (בהן קינג דיוויד, שלום עליכם, לה קאסה וחומוס ירושלים). ארבעה בתי כנסת פעילים, כולל בית הכנסת הגדול. מומלץ לאמת שעות והשגחה מול בית חב"ד לפני ההגעה.',
     },
   },
+  {
+    slug: 'phuket',
+    name: 'פוקט',
+    nameLocal: 'Phuket / ภูเก็ต',
+    countrySlug: 'thailand',
+    flag: '🇹🇭',
+    center: { lat: 7.88, lng: 98.34 },
+    zoom: 11,
+    tagline: 'חופי חלום, איים מוקפי צוקים ובית חב"ד גדול - האי הגדול של תאילנד',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Sunset_at_Karon_Beach%2C_Phuket%2C_Thailand.JPG/500px-Sunset_at_Karon_Beach%2C_Phuket%2C_Thailand.JPG',
+    iconicLandmark: {
+      name: 'הבודהה הגדול',
+      nameLocal: 'The Big Buddha',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/The_Big_Buddha%2C_Phuket.jpg/500px-The_Big_Buddha%2C_Phuket.jpg',
+      blurb:
+        'פסל בודהה משיש לבן בגובה 45 מטר על ראש גבעה במרכז האי - נראה מרחוק, ומציע תצפית מעגלית על חופי הדרום ועל הים.',
+    },
+    editorialRating: {
+      score: 4.5,
+      verdict:
+        'טיסה ישירה, חופים וטיולי איים ברמה עולמית, ובית חב"ד גדול עם מסעדה כשרה - יעד ים מצוין למשפחות ולזוגות. החיסרון: פאטונג רועשת ומסחרית, ועונת המונסון (מאי-אוקטובר) מגבילה שיט לאיים.',
+    },
+    summary:
+      'פוקט היא האי הגדול של תאילנד ואחד מיעדי הים האהובים על ישראלים: חופי חול לבן, שקיעות מכף פרומתפ, וטיולי סירה אל איים מוקפי צוקי גיר כמו פי פי ומפרץ פאנג נגה. יש בה גם בית חב"ד גדול עם מסעדה כשרה בפאטונג, מה שהופך אותה לנוחה במיוחד למטיילים שומרי כשרות.',
+    bestSeason: 'נובמבר-אפריל (עונה יבשה, ים רגוע - הזמן לטיולי איים) - מאי-אוקטובר מונסון וגשם',
+    places: [
+      {
+        id: 'hkt-bigbuddha',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/The_Big_Buddha%2C_Phuket.jpg/500px-The_Big_Buddha%2C_Phuket.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'הבודהה הגדול',
+        nameLocal: 'The Big Buddha',
+        category: 'attraction',
+        lat: 7.8275,
+        lng: 98.3124,
+        description:
+          'פסל בודהה משיש לבן בגובה 45 מטר על גבעת נאקרד, נראה מרוב חלקי האי. הכניסה חינם (תרומה); תצפית פנורמית על חופי קארון וקטה. לבוש צנוע נדרש.',
+        rating: 4.6,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=Big+Buddha+Phuket',
+      },
+      {
+        id: 'hkt-promthep',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Beautiful_Sunset_on_Promthep_Cape%2C_Phuket_island%2C_Thailand.jpg/500px-Beautiful_Sunset_on_Promthep_Cape%2C_Phuket_island%2C_Thailand.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'כף פרומתפ',
+        nameLocal: 'Promthep Cape',
+        category: 'viewpoint',
+        lat: 7.7601,
+        lng: 98.309,
+        description:
+          'הקצה הדרומי של פוקט - נקודת השקיעה המפורסמת של האי. מגיעים לפני השקיעה, מוצאים מקום על הצוק, וצופים בשמש שוקעת אל הים מול איים קטנים.',
+        rating: 4.6,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Promthep+Cape+Phuket',
+      },
+      {
+        id: 'hkt-phiphi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Maya_Bay%2C_Koh_Phi_Phi%2C_Krabi%2C_Thailand.jpg/500px-Maya_Bay%2C_Koh_Phi_Phi%2C_Krabi%2C_Thailand.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'איי פי פי ומאיה ביי',
+        nameLocal: 'Phi Phi Islands & Maya Bay',
+        category: 'nature',
+        lat: 7.7333,
+        lng: 98.7667,
+        description:
+          'איי גיר דרמטיים עם מים טורקיז, שנודעו בזכות מפרץ מאיה ("החוף" עם דיקפריו). מגיעים בטיול סירה יומי מפוקט; שנורקלינג בין דגים צבעוניים. עונתיות תלוית מונסון.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Maya+Bay+Phi+Phi',
+      },
+      {
+        id: 'hkt-jamesbond',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Khao_Phing_Kan_and_Koh_Tapu_%28James_Bond_Island%29.jpg/500px-Khao_Phing_Kan_and_Koh_Tapu_%28James_Bond_Island%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'אי ג׳יימס בונד (מפרץ פאנג נגה)',
+        nameLocal: 'James Bond Island (Phang Nga Bay)',
+        category: 'nature',
+        lat: 8.2747,
+        lng: 98.5004,
+        description:
+          'מגדל הסלע המפורסם מסרט 007, במפרץ פאנג נגה המנומר בצוקי גיר עצומים העולים מהמים. טיולי סירה וקאנו בין המערות והמנגרובים - יום מלא מפוקט.',
+        rating: 4.5,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=James+Bond+Island+Phang+Nga',
+      },
+      {
+        id: 'hkt-karon-viewpoint',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Three_beaches.jpg/500px-Three_beaches.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        name: 'נקודת התצפית קארון (שלושת החופים)',
+        nameLocal: 'Karon Viewpoint',
+        category: 'viewpoint',
+        lat: 7.7973,
+        lng: 98.3022,
+        description:
+          'תצפית קלאסית על שלושת החופים (קטה נוי, קטה וקארון) המשתרעים זה אחר זה לאורך החוף. עצירה קצרה ומתגמלת בדרך דרומה אל כף פרומתפ.',
+        rating: 4.4,
+        durationMin: 30,
+        externalUrl: 'https://maps.google.com/?q=Karon+Viewpoint+Phuket',
+      },
+      {
+        id: 'hkt-patong',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Patong_Beach_in_Phuket.jpg/500px-Patong_Beach_in_Phuket.jpg',
+        tags: ['families', 'nightlife'],
+        priceLevel: 1,
+        name: 'חוף פאטונג',
+        nameLocal: 'Patong Beach',
+        category: 'nature',
+        lat: 7.8931,
+        lng: 98.2966,
+        description:
+          'החוף המרכזי והשוקק של פוקט - ספורט ימי, שמשיות וכיסאות נוח, וסמוך אליו מרכז החיים והבילוי של האי. תוסס ומסחרי, לא הכי שקט.',
+        rating: 4.2,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Patong+Beach+Phuket',
+      },
+      {
+        id: 'hkt-karon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Sunset_at_Karon_Beach%2C_Phuket%2C_Thailand.JPG/500px-Sunset_at_Karon_Beach%2C_Phuket%2C_Thailand.JPG',
+        tags: ['families', 'romantic'],
+        priceLevel: 0,
+        name: 'חוף קארון',
+        nameLocal: 'Karon Beach',
+        category: 'nature',
+        lat: 7.844,
+        lng: 98.2934,
+        description:
+          'חוף חול לבן ארוך ורחב, רגוע יותר מפאטונג ואהוב על משפחות. "חול שר" שחורק תחת הרגליים, ושקיעות יפות אל הים.',
+        rating: 4.4,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Karon+Beach+Phuket',
+      },
+      {
+        id: 'hkt-kata',
+        tags: ['families', 'outdoors'],
+        priceLevel: 0,
+        name: 'חוף קטה',
+        nameLocal: 'Kata Beach',
+        category: 'nature',
+        lat: 7.8163,
+        lng: 98.3001,
+        description:
+          'חוף מוגן ונעים עם מים צלולים, פופולרי לשחייה ולגלישה למתחילים (בעונה). אווירה רגועה יותר, עם מסעדות וברים קטנים לאורך הטיילת.',
+        rating: 4.4,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Kata+Beach+Phuket',
+      },
+      {
+        id: 'hkt-chalong',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Phuket_Thailand_Wat-Chalong-01.jpg/500px-Phuket_Thailand_Wat-Chalong-01.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'וואט צ׳אלונג',
+        nameLocal: 'Wat Chalong',
+        category: 'attraction',
+        lat: 7.8467,
+        lng: 98.3367,
+        description:
+          'המקדש הבודהיסטי החשוב והמפואר ביותר בפוקט, עם פגודה מוזהבת בת מספר קומות ותצוגת שריד קדוש. לבוש צנוע נדרש.',
+        rating: 4.5,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Wat+Chalong+Phuket',
+      },
+      {
+        id: 'hkt-oldtown',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Thalang_Road%2C_Old_Phuket_Town.jpg/500px-Thalang_Road%2C_Old_Phuket_Town.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'העיר העתיקה של פוקט',
+        nameLocal: 'Old Phuket Town',
+        category: 'attraction',
+        lat: 7.8846,
+        lng: 98.3921,
+        description:
+          'רחובות סינו-פורטוגזיים צבעוניים (רחוב ת׳לאנג) עם בתי קפה, גלריות ואוכל רחוב. בימי ראשון בערב נפתח שוק ההליכה (Lard Yai) - הצד התרבותי של האי, הרחק מהחופים.',
+        rating: 4.4,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Old+Phuket+Town',
+      },
+      {
+        id: 'hkt-bangla',
+        tags: ['nightlife'],
+        priceLevel: 1,
+        name: 'כביש בנגלה (פאטונג)',
+        nameLocal: 'Bangla Road',
+        category: 'attraction',
+        lat: 7.8936,
+        lng: 98.2966,
+        description:
+          'רחוב הבילוי המרכזי של פוקט בפאטונג - ברים, מוזיקה ואורות ניאון, נסגר לתנועה בלילה. תוסס וקולני; לא לכל אחד, אבל חלק בלתי נפרד מהאי.',
+        rating: 4.0,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Bangla+Road+Patong',
+      },
+      {
+        id: 'hkt-chabad',
+        tags: ['foodie'],
+        priceLevel: 1,
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד פוקט',
+        },
+        name: 'בית חב"ד פוקט (מסעדה כשרה)',
+        nameLocal: 'Chabad House Phuket',
+        category: 'kosher-food',
+        lat: 7.9019,
+        lng: 98.3005,
+        description:
+          'בית חב"ד גדול בפאטונג (מול הדואר) עם מסעדה כשרה - מהמבורגרים ועד אוכל תאילנדי ומזרח-תיכוני, בשר מיובא. תפילות יומיות, ארוחות שבת וחגים לאלפי ישראלים בשנה.',
+        rating: 4.5,
+        kosherNote:
+          'מסעדה בשרית כשרה בהשגחת בית חב"ד פוקט. ארוחות שבת בהרשמה מראש - מומלץ ליצור קשר עם בית חב"ד לפני ההגעה ולוודא שעות.',
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=Chabad+House+Phuket+Patong',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'הדרום - בודהה, מקדש ושקיעה',
+        placeIds: ['hkt-bigbuddha', 'hkt-chalong', 'hkt-karon-viewpoint', 'hkt-kata', 'hkt-promthep'],
+        notes:
+          'יום דרום: הבודהה הגדול ווואט צ׳אלונג בבוקר, אחר צהריים על חוף קטה, ולסיום שקיעה מכף פרומתפ (להגיע מוקדם לתפוס מקום). נקודת התצפית קארון בדרך.',
+      },
+      {
+        day: 2,
+        title: 'פאטונג - חוף, כשר ובילוי',
+        placeIds: ['hkt-karon', 'hkt-patong', 'hkt-chabad', 'hkt-bangla'],
+        notes:
+          'בוקר רגוע על חוף קארון, צהריים בפאטונג, וארוחה כשרה בבית חב"ד. בערב - כביש בנגלה למי שרוצה את צד הבילוי הרועש של האי.',
+      },
+      {
+        day: 3,
+        title: 'איי פי פי - יום ים',
+        placeIds: ['hkt-phiphi'],
+        notes:
+          'טיול סירה יומי לאיי פי פי ומאיה ביי - שנורקלינג, חופים מוקפי צוקים ומים טורקיז. לצאת מוקדם; תלוי מזג ים ועונה (לא בשיא המונסון).',
+      },
+      {
+        day: 4,
+        title: 'מפרץ פאנג נגה והעיר העתיקה',
+        placeIds: ['hkt-jamesbond', 'hkt-oldtown'],
+        notes:
+          'יום שני של איים - מפרץ פאנג נגה ואי ג׳יימס בונד בקאנו ובסירה בין צוקי הגיר. בערב, סיבוב בעיר העתיקה של פוקט (בראשון - שוק ההליכה).',
+      },
+    ],
+    practical: {
+      flights:
+        'אל על מפעילה טיסה ישירה מנתב"ג לפוקט כ-4 פעמים בשבוע (טיסה ארוכת טווח של כ-11 שעות) - קו ישיר יציב, נוח למי שרוצה לדלג על עצירת ביניים בבנגקוק.',
+      gettingAround:
+        'האי גדול והתחבורה הציבורית דלה: מוניות ואפליקציית Grab (זמינות משתנה), טוקטוק מקומי (יקר - לסכם מחיר מראש), או השכרת רכב/קטנוע. לאיים - טיולי סירה מאורגנים מהמרינות.',
+      kosherOverview:
+        'בית חב"ד פוקט בפאטונג הוא כתובת הכשרות המרכזית באי: מסעדה בשרית כשרה (בשר מיובא), תפילות יומיות וארוחות שבת לאלפי ישראלים בשנה. זו למעשה נקודת הכשרות המאומתת היחידה באי - לא להסתמך על מסעדות תאילנדיות רגילות. מומלץ לתאם ארוחות שבת מראש.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
