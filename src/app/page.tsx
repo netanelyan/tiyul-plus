@@ -4,6 +4,7 @@ import { destinations } from '@/data/destinations';
 import HomeHero from '@/components/HomeHero';
 import MyTripCard from '@/components/MyTripCard';
 import DestinationHighlights from '@/components/DestinationHighlights';
+import QuickServices from '@/components/QuickServices';
 
 /**
  * דף הבית - פורטל נחיתה עם צבע אמיתי: הירו → צ׳יפים → רשת פלאים חיה
@@ -51,6 +52,9 @@ export default async function Home() {
 
         <DestinationHighlights cards={cards} />
       </section>
+
+      {/* גישה מהירה: שירותי נסיעה (טיסות/לינה/אטרקציות/רכב) */}
+      <QuickServices />
 
       {/* כניסות משניות - רזות וממורכזות, לא כרטיסים גדולים */}
       <section className="mx-auto max-w-3xl py-10">
