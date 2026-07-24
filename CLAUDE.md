@@ -1529,3 +1529,23 @@ the overnight run.
   ritual slaughter is banned locally so meat is imported.
 - Coordinates from the Wikipedia API (German Wikipedia for Kirkjufell);
   photos are article lead images. build clean, verify-photos all OK.
+
+### 2026-07-25 (m) - Overnight expansion: Slovenia (Lake Bled + Julian Alps)
+
+- **Slovenia** (new country) - Schengen visa-free, euro, e-vinjeta
+  motorway sticker flagged for rental cars.
+- **Lake Bled & the Julian Alps** - 10 places, rating 4.6. Landmark: Lake
+  Bled and its island. Nature: Vintgar Gorge, Lake Bohinj, Triglav NP,
+  the turquoise Soca valley, Kranjska Gora + Vrsic pass, Postojna Cave,
+  Predjama Castle, plus Ljubljana and Piran. 5-day itinerary.
+- Flights: Israir runs a SEASONAL nonstop TLV-LJU (about July-October);
+  outside that window - connections, or land in Trieste/Venice and drive
+  ~2h. Stated as seasonal, not as a year-round route.
+- **Kosher: no verified address in Slovenia** - small Jewish community in
+  Ljubljana, nearest kosher infrastructure Trieste or Vienna. Nothing
+  invented.
+- Coordinates and photos from the Wikipedia API (Slovenian Wikipedia for
+  Triglav). Savica waterfall and the Tolmin gorges were DROPPED rather
+  than guessed: the English article has no coordinates and the Slovenian
+  article lead image was the wrong subject. build clean, verify-photos
+  all OK.

@@ -9945,6 +9945,257 @@ export const destinations: Destination[] = [
         'מיולי 2026 יש בריקיאוויק מרכז יהודי של חב"ד עם בית כנסת, חנות כשרה ומטבח קהילתי - שינוי משמעותי לעומת השנים הקודמות, שבהן לא הייתה באיסלנד שום נקודה כשרה. מחוץ לעיר אין כלום, אבל איסלנד מייבאת כמעט את כל המזון, ולכן בסופרמרקטים אפשר למצוא מוצרים ארוזים עם סימוני כשרות אירופיים ואמריקאיים. שחיטה כשרה אסורה במדינה - הבשר במרכז מיובא.',
     },
   },
+  {
+    slug: 'bled',
+    name: 'אגם בלד והאלפים היוליאניים',
+    nameLocal: 'Lake Bled & the Julian Alps',
+    countrySlug: 'slovenia',
+    flag: '🇸🇮',
+    center: { lat: 46.2, lng: 14.0 },
+    zoom: 9,
+    tagline: 'אגם עם אי, נהר טורקיז ומערות ענק - הכול בשעה נסיעה',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Lake_Bled_from_the_Mountain.jpg/500px-Lake_Bled_from_the_Mountain.jpg',
+    iconicLandmark: {
+      name: 'אגם בלד והאי שבמרכזו',
+      nameLocal: 'Lake Bled & Bled Island',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Lake_Bled_from_the_Mountain.jpg/500px-Lake_Bled_from_the_Mountain.jpg',
+      blurb:
+        'אגם קרחוני שבמרכזו האי היחיד בסלובניה, ועליו כנסיית עלייה לרגל עם מגדל פעמון - ומעליו טירה על צוק בן יותר מאלף שנה.',
+    },
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'טבע אלפיני מרוכז ונגיש: אגמים, נקיקים, נהר טורקיז ומערות - הכול בטווח שעה-שעתיים, במחירים סבירים יותר משווייץ או אוסטריה. חסרונות: הטיסה הישירה עונתית בלבד, בלד עמוסה מאוד בקיץ, ואין במדינה תשתית כשרות מאומתת.',
+    },
+    summary:
+      'צפון-מערב סלובניה הוא ריכוז יוצא דופן של טבע: אגם בלד עם האי והטירה, אגם בוהיני הגדול והשקט בלב הפארק הלאומי טריגלב, נקיק וינטגר עם שבילי העץ מעל המים, ועמק נהר סוצ׳ה בצבע טורקיז בלתי נתפס. דרומה משם מערות פוסטויינה וטירת פרדיאמה שבתוך צוק, ובמרחק שעה - ליובליאנה הקטנה והנעימה, ועוד שעה - העיירה הוונציאנית פיראן על הים.',
+    bestSeason:
+      'מאי-ספטמבר (מסלולים, שיט ורפטינג בסוצ׳ה בשיא) · יולי-אוגוסט עמוס במיוחד בבלד · בחורף אזור סקי, וחלק ממעברי ההרים (ורשיץ׳) נסגרים',
+    places: [
+      {
+        id: 'svn-bled',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Lake_Bled_from_the_Mountain.jpg/500px-Lake_Bled_from_the_Mountain.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'אגם בלד',
+        nameLocal: 'Lake Bled',
+        category: 'nature',
+        lat: 46.3644,
+        lng: 14.0947,
+        description:
+          'אגם קרחוני עם אי במרכזו ועליו כנסייה, ומעליו טירת בלד על צוק. מקיפים אותו בשביל של כ-6 ק"מ, מגיעים לאי בסירת פלטנה מסורתית, ואפשר לשחות בקיץ.',
+        rating: 4.8,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Lake+Bled',
+      },
+      {
+        id: 'svn-vintgar',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Slovenia_-_Waterfall_Sum_-_Vintgar_Klamm_%2843686688490%29.jpg/500px-Slovenia_-_Waterfall_Sum_-_Vintgar_Klamm_%2843686688490%29.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'נקיק וינטגר',
+        nameLocal: 'Vintgar Gorge',
+        category: 'nature',
+        lat: 46.39,
+        lng: 14.083,
+        description:
+          'נקיק באורך כ-1.6 ק"מ שחצב נהר רדובנה, ובו שבילי עץ ומעברים צמודים לקיר מעל מים ירוקים-טורקיז, עד למפל שום. הכניסה בהזמנה מראש בעונה ובכיוון אחד.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Vintgar+Gorge',
+      },
+      {
+        id: 'svn-bohinj',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Aerial_image_of_Lake_Bohinj_%28view_from_the_south%29.jpg/500px-Aerial_image_of_Lake_Bohinj_%28view_from_the_south%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'אגם בוהיני',
+        nameLocal: 'Lake Bohinj',
+        category: 'nature',
+        lat: 46.2823,
+        lng: 13.8582,
+        description:
+          'האגם הטבעי הגדול בסלובניה, בלב הפארק הלאומי טריגלב - גדול, שקט ופראי יותר מבלד. אפשר לשחות, לשוט בקיאק ולצאת ממנו למסלולי הליכה ולרכבל וגלנץ׳ עם נוף על העמק.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Lake+Bohinj',
+      },
+      {
+        id: 'svn-triglav',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Triglav_-_winter.jpg/500px-Triglav_-_winter.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'הפארק הלאומי טריגלב',
+        nameLocal: 'Triglav National Park',
+        category: 'nature',
+        lat: 46.3783,
+        lng: 13.8367,
+        description:
+          'הפארק הלאומי היחיד בסלובניה, סביב פסגת טריגלב (2,864 מ׳) שמופיעה גם על הדגל. עמקים קרחוניים, אגמים אלפיניים ובקתות הרים; העלייה לפסגה עצמה דורשת ציוד ומיומנות פרטה.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Triglav+National+Park',
+      },
+      {
+        id: 'svn-soca',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Soca_4.jpg/500px-Soca_4.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'עמק נהר סוצ׳ה',
+        nameLocal: 'Soča Valley',
+        category: 'nature',
+        lat: 45.9944,
+        lng: 13.6414,
+        description:
+          'נהר בצבע טורקיז-אמרלד חד שזורם בין הרי האלפים היוליאניים, ולאורכו נקיקים, גשרים תלויים ושביל הליכה ארוך. בירת ספורט המים של סלובניה - רפטינג, קיאק וקניוניג בקיץ.',
+        rating: 4.8,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Soca+Valley',
+      },
+      {
+        id: 'svn-kranjska',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Kranjska_Gora-2736048.jpg/500px-Kranjska_Gora-2736048.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'קרנייסקה גורה',
+        nameLocal: 'Kranjska Gora',
+        category: 'attraction',
+        lat: 46.4854,
+        lng: 13.7871,
+        description:
+          'עיירת הרים בקצה הצפוני-מערבי, בסיס לסקי בחורף ולאופניים ולהליכות בקיץ - וממנה עולה מעבר ורשיץ׳ המפותל עם 50 סיבובים אל עמק סוצ׳ה.',
+        rating: 4.4,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Kranjska+Gora',
+      },
+      {
+        id: 'svn-postojna',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Postojna_%2822206343750%29.jpg/500px-Postojna_%2822206343750%29.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'מערות פוסטויינה',
+        nameLocal: 'Postojna Cave',
+        category: 'nature',
+        lat: 45.7827,
+        lng: 14.2037,
+        description:
+          'אחת ממערות הקרסט המפורסמות באירופה: יותר מ-20 ק"מ מנהרות, שבחלקן נוסעים ברכבת תת-קרקעית קטנה, ואולמות נטיפים ענקיים. כאן חי גם ה"דרקון התינוק" - הפרוטאוס, דו-חי מערות עיוור.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Postojna+Cave',
+      },
+      {
+        id: 'svn-predjama',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/H%C3%B6hlenburg_Predjama_in_Slovenien.jpg/500px-H%C3%B6hlenburg_Predjama_in_Slovenien.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'טירת פרדיאמה',
+        nameLocal: 'Predjama Castle',
+        category: 'attraction',
+        lat: 45.8153,
+        lng: 14.1267,
+        description:
+          'טירה מהמאה ה-13 שבנויה בתוך פתח מערה בקיר סלע אנכי - מהמראות המוזרים והמרשימים באירופה. מתחתיה מערכת מערות שאפשר לבקר בה בעונה.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Predjama+Castle',
+      },
+      {
+        id: 'svn-ljubljana',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Ljubljana_Old_Town%2C_Slovenia_%28Old_Camera%29_%2833286165680%29.jpg/500px-Ljubljana_Old_Town%2C_Slovenia_%28Old_Camera%29_%2833286165680%29.jpg',
+        tags: ['foodie', 'art'],
+        priceLevel: 1,
+        name: 'ליובליאנה',
+        nameLocal: 'Ljubljana',
+        category: 'attraction',
+        lat: 46.0514,
+        lng: 14.5061,
+        description:
+          'בירה קטנה ונינוחה סביב נהר הליובליאניצה: גשרים מפורסמים, שוק מרכזי, מרכז עיר סגור לרכב וטירה על הגבעה עם רכבל. נוחה מאוד להליכה, ובסיס טוב לימים הראשונים.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Ljubljana',
+      },
+      {
+        id: 'svn-piran',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Piran%2C_Slovenia%2C_Viewpoint.jpg/500px-Piran%2C_Slovenia%2C_Viewpoint.jpg',
+        tags: ['romantic', 'foodie'],
+        priceLevel: 1,
+        name: 'פיראן',
+        nameLocal: 'Piran',
+        category: 'attraction',
+        lat: 45.5283,
+        lng: 13.5683,
+        description:
+          'עיירה ונציאנית קטנה על לשון יבשה באדריאטי, עם כיכר טרטיני, סמטאות אבן וחומות עם תצפית על המפרץ. רצועת החוף של סלובניה קצרה - וזו הפנינה שבה.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Piran',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'ליובליאנה',
+        placeIds: ['svn-ljubljana'],
+        notes:
+          'נחיתה והתמקמות בבירה: הגשרים, השוק המרכזי, טירת ליובליאנה ברכבל וערב על הנהר. אפשר גם לישון כאן ולצאת לנסיעות יומיות.',
+      },
+      {
+        day: 2,
+        title: 'בלד והנקיק',
+        placeIds: ['svn-bled', 'svn-vintgar'],
+        notes:
+          'בוקר בנקיק וינטגר (כניסה מוזמנת מראש), אחר הצהריים הקפת אגם בלד, סירה לאי ותצפית מהטירה או ממאלה אוסויניצה.',
+      },
+      {
+        day: 3,
+        title: 'בוהיני והפארק',
+        placeIds: ['svn-bohinj', 'svn-triglav'],
+        notes:
+          'יום שקט יותר: אגם בוהיני, רכבל וגלנץ׳ לתצפית, ומסלולי הליכה בפארק הלאומי לפי הכושר והתחזית.',
+      },
+      {
+        day: 4,
+        title: 'מעבר ורשיץ׳ ועמק סוצ׳ה',
+        placeIds: ['svn-kranjska', 'svn-soca'],
+        notes:
+          'נסיעה נופית דרך קרנייסקה גורה ומעבר ורשיץ׳ (סגור בחורף) אל עמק סוצ׳ה - הליכה לאורך הנהר ולמי שרוצה, רפטינג.',
+      },
+      {
+        day: 5,
+        title: 'מערות, טירה וים',
+        placeIds: ['svn-postojna', 'svn-predjama', 'svn-piran'],
+        notes:
+          'דרומה: מערות פוסטויינה וטירת פרדיאמה שבצוק, וסיום בפיראן על הים לפני החזרה.',
+      },
+    ],
+    practical: {
+      flights:
+        'ישראייר מפעילה קו ישיר עונתי מנתב"ג לליובליאנה (LJU) - בערך יולי עד אוקטובר, טיסה של כשלוש שעות. מחוץ לעונה טסים עם החלפה (וינה, זאגרב, מינכן, ונציה) או נוחתים בטריאסטה/ונציה ונוסעים כשעתיים ברכב.',
+      gettingAround:
+        'רכב שכור הוא הדרך הנוחה - המרחקים קצרים והכבישים מצוינים (שימו לב לחובת ה-vinjeta). יש גם אוטובוסים ורכבות סבירים בין ליובליאנה, בלד ובוהיני, ובקיץ אוטובוסים לפארק. חניה בבלד ובנקיקים מוגבלת - להגיע מוקדם.',
+      kosherOverview:
+        'לא אותרה בסלובניה מסעדה או חנות כשרה מאומתת. יש בליובליאנה קהילה יהודית קטנה, אך אין תשתית כשרות תיירותית; הכשרות הקרובה היא בטריאסטה שבאיטליה או בווינה. הדרך המעשית: להצטייד מראש, ולהסתמך על מוצרים ארוזים עם סימון כשרות אירופי בסופרמרקטים הגדולים.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {

@@ -422,6 +422,24 @@ export const countries: Country[] = [
         'איסלנד כמעט ללא מזומן - משלמים בכרטיס בכל מקום, כולל בתחנות דלק ובשירותים ציבוריים. חשוב: בתחנות דלק אוטומטיות נדרש לעתים קוד PIN לכרטיס.',
     },
   },
+  {
+    slug: 'slovenia',
+    name: 'סלובניה',
+    nameLocal: 'Slovenia / Slovenija',
+    flag: '🇸🇮',
+    tagline: 'אלפים, אגמים ומערות - מדינה קטנה שאפשר לחצות ביום',
+    summary:
+      'סלובניה דוחסת לשטח קטן כמעט הכול: פסגות האלפים היוליאניים ואגם בלד, נהר סוצ׳ה בצבע טורקיז, מערות ענק, בירה קטנה ומקסימה וגם רצועת חוף על הים האדריאטי. המרחקים קצרים - שעה-שעתיים בין הרים לים - וזה הופך אותה ליעד נוח במיוחד לטיול טבע קצר.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Lake_Bled_from_the_Mountain.jpg/960px-Lake_Bled_from_the_Mountain.jpg',
+    practical: {
+      visa: 'סלובניה באיחוד האירופי ובמרחב שנגן - ישראלים פטורים מוויזה עד 90 יום.',
+      currency: 'אירו (€).',
+      sim: 'eSIM אירופי עובד היטב, או כרטיס מקומי (Telekom Slovenije / A1 / Telemach).',
+      payments:
+        'כרטיסי אשראי מקובלים כמעט בכל מקום; מזומן שימושי בחניונים קטנים, בדוכנים ובכפרים. שימו לב: לנסיעה בכבישים המהירים חובה מדבקה אלקטרונית (e-vinjeta) - לוודא שהיא כלולה ברכב השכור.',
+    },
+  },
 ];
 
 export function getCountryBySlug(slug: string): Country | undefined {
