@@ -5900,6 +5900,201 @@ export const destinations: Destination[] = [
         'לקפריסין תשתית כשרות אמיתית בזכות בית חב"ד קפריסין: קפיטריה כשרה "שמיים" בלרנקה עם משלוחי ארוחות למלון, ובית חב"ד נוסף באיה נאפה עם חנות כשרה וארוחות שבת (בעיקר בעונת הקיץ, כשמגיעים אלפי ישראלים). מומלץ לוודא שעות וארוחות שבת מול בית חב"ד מראש.',
     },
   },
+  {
+    slug: 'batumi',
+    name: 'באטומי',
+    nameLocal: 'Batumi / ბათუმი',
+    countrySlug: 'georgia',
+    flag: '🇬🇪',
+    center: { lat: 41.64, lng: 41.68 },
+    zoom: 10,
+    tagline: 'הים השחור, יער גשם ומפלים - ריביירת גאורגיה עם כשרות',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/View_of_Batumi%2C_Georgia.jpg/500px-View_of_Batumi%2C_Georgia.jpg',
+    iconicLandmark: {
+      name: 'טיילת באטומי',
+      nameLocal: 'Batumi Boulevard',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Batumi_Boulevard_Alley.jpg/500px-Batumi_Boulevard_Alley.jpg',
+      blurb:
+        'טיילת ים ארוכה ומוצלת לאורך חוף הים השחור, עם שדרות דקלים, מזרקות ופסלים - הלב הפועם של ריביירת גאורגיה.',
+    },
+    editorialRating: {
+      score: 4.3,
+      verdict:
+        'טיסה ישירה קצרה, חוף ים שחור לצד יער גשם ומפלים סובטרופיים, ותשתית כשרות אמיתית - חבילה מלאה לקיץ. חסרונות: החוף חלוקי (לא חולי), והעונה מרוכזת בקיץ; הפנים לח וגשום.',
+    },
+    summary:
+      'באטומי היא "ריביירת גאורגיה" על חוף הים השחור: עיר נופש תוססת עם טיילת דקלים, אדריכלות אקלקטית וחיי לילה - ומאחוריה עולם סובטרופי ירוק של יער גשם, מפלים וגן בוטני על צוק מעל הים. יש בה גם בית חב"ד ומסעדה כשרה, מה שהופך אותה לנוחה לישראלים שומרי כשרות. טיסה ישירה של כשעתיים וחצי.',
+    bestSeason: 'יוני-ספטמבר (עונת החוף) - אביב וסתיו ירוקים ונעימים לטבע; חורף מתון וגשום',
+    places: [
+      {
+        id: 'bus-boulevard',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Batumi_Boulevard_Alley.jpg/500px-Batumi_Boulevard_Alley.jpg',
+        tags: ['families', 'outdoors', 'romantic'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'טיילת באטומי',
+        nameLocal: 'Batumi Boulevard',
+        category: 'nature',
+        lat: 41.6536,
+        lng: 41.6345,
+        description:
+          'טיילת ים ארוכה לאורך חוף הים השחור - שדרות דקלים, מזרקות, אופניים והחוף לצידה. כאן גם פסל "עלי ונינו" הנע ומגדל האלפבית. הכי יפה לטיול ערב ולשקיעה.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Batumi+Boulevard',
+      },
+      {
+        id: 'bus-piazza',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Batumi._Piazza_Square.jpg/500px-Batumi._Piazza_Square.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'כיכר פיאצה והעיר העתיקה',
+        nameLocal: 'Piazza Square & Old Town',
+        category: 'attraction',
+        lat: 41.6516,
+        lng: 41.6377,
+        description:
+          'כיכר בסגנון איטלקי עם פסיפסים, מסעדות ובתי קפה, בלב העיר העתיקה של באטומי - סמטאות, מרפסות ואדריכלות אקלקטית. תוססת בערב.',
+        rating: 4.3,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Piazza+Square+Batumi',
+      },
+      {
+        id: 'bus-botanical',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Batumi_Botanical_Garden_%2825%29.jpg/500px-Batumi_Botanical_Garden_%2825%29.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הגן הבוטני של באטומי',
+        nameLocal: 'Batumi Botanical Garden',
+        category: 'nature',
+        lat: 41.6927,
+        lng: 41.7198,
+        description:
+          'גן בוטני ענק ומהיפים באזור, פרוש על מדרונות צוק מעל הים השחור - צמחייה סובטרופית מכל העולם, שבילים ותצפיות ים מרהיבות. כ-20 דקות צפונית לעיר.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Batumi+Botanical+Garden',
+      },
+      {
+        id: 'bus-mtirala',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Mtirala_National_Park%2C_Adjara%2C_Georgia.jpg/500px-Mtirala_National_Park%2C_Adjara%2C_Georgia.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הפארק הלאומי מטיראלה',
+        nameLocal: 'Mtirala National Park',
+        category: 'nature',
+        lat: 41.6975,
+        lng: 41.8895,
+        description:
+          'יער הגשם הסובטרופי הרטוב ביותר בגאורגיה - מסלולי הליכה ירוקים, גשר תלוי, אגם ומפל שאפשר לשחות בו. עולם אחר לגמרי, כשעה מהחוף.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Mtirala+National+Park',
+      },
+      {
+        id: 'bus-makhuntseti',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Makhuntseti_falls%2C_Adjara%2C_Georgia.jpg/500px-Makhuntseti_falls%2C_Adjara%2C_Georgia.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'מפל מאחונצטי וגשר המלכה תמר',
+        nameLocal: 'Makhuntseti Waterfall & Queen Tamar Bridge',
+        category: 'nature',
+        lat: 41.5749,
+        lng: 41.8583,
+        description:
+          'מפל גבוה ורב-עוצמה בכפרי אדג׳ריה, ולידו גשר אבן קשתי מימי המלכה תמר (המאה ה-12). משתלב עם טעימות יין ודבש מקומיים בדרך. כשעה מבאטומי.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Makhuntseti+Waterfall',
+      },
+      {
+        id: 'bus-gonio',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Gonio-Apsaros_Fortress_Museum%2C_Adjara%2C_Georgia_%283%29.jpg/500px-Gonio-Apsaros_Fortress_Museum%2C_Adjara%2C_Georgia_%283%29.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'מבצר גוניו-אפסארוס',
+        nameLocal: 'Gonio-Apsaros Fortress',
+        category: 'attraction',
+        lat: 41.5733,
+        lng: 41.5738,
+        description:
+          'מבצר רומי-ביזנטי עתיק ליד החוף, דרומית לבאטומי סמוך לגבול טורקיה - חומות מרשימות, אתר חפירות ומוזיאון. משתלב עם חוף שקט יותר באזור.',
+        rating: 4.2,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=Gonio+Fortress',
+      },
+      {
+        id: 'bus-mendis',
+        tags: ['foodie'],
+        priceLevel: 2,
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד באטומי',
+        },
+        name: 'מנדי׳ס - מסעדת חב"ד הכשרה',
+        nameLocal: "Mendi's (Chabad Kosher Restaurant)",
+        category: 'kosher-food',
+        lat: 41.6495,
+        lng: 41.6415,
+        description:
+          'מסעדה בשרית כשרה של בית חב"ד באטומי בלב העיר העתיקה, עם אוכל גאורגי מסורתי ומטבח בינלאומי. כתובת הכשרות המרכזית בעיר, לצד ארוחות שבת בבית חב"ד.',
+        rating: 4.4,
+        kosherNote:
+          'בשרי, בהשגחת בית חב"ד באטומי. ארוחות שבת בתיאום מראש - כדאי לוודא שעות מול בית חב"ד, במיוחד מחוץ לעונת הקיץ.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Mendis+Kosher+Batumi',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'העיר והטיילת',
+        placeIds: ['bus-piazza', 'bus-boulevard', 'bus-mendis'],
+        notes:
+          'בוקר בעיר העתיקה ובכיכר פיאצה, אחר צהריים על טיילת הים (עלי ונינו, מגדל האלפבית, שקיעה), וארוחה כשרה במנדי׳ס של בית חב"ד.',
+      },
+      {
+        day: 2,
+        title: 'הגן הבוטני והחוף',
+        placeIds: ['bus-botanical'],
+        notes:
+          'יום ירוק בגן הבוטני הענק על הצוק מעל הים - שבילים, צמחייה סובטרופית ותצפיות. אפשר להשלים בחוף ובטיילת לקראת הערב.',
+      },
+      {
+        day: 3,
+        title: 'יער הגשם מטיראלה',
+        placeIds: ['bus-mtirala'],
+        notes:
+          'טיול יום בפארק הלאומי מטיראלה - יער גשם, גשר תלוי, ומפל שאפשר לשחות בו. נעליים טובות ובגד ים; רכב או טיול מאורגן מהעיר.',
+      },
+      {
+        day: 4,
+        title: 'כפרי אדג׳ריה - מפל ומבצר',
+        placeIds: ['bus-makhuntseti', 'bus-gonio'],
+        notes:
+          'יום בכפרי אדג׳ריה: מפל מאחונצטי וגשר המלכה תמר עם טעימות יין ודבש, ובחזרה מבצר גוניו העתיק סמוך לחוף.',
+      },
+    ],
+    practical: {
+      flights:
+        'טיסות ישירות תכופות מנתב"ג לבאטומי (ארקיע, אל על, ג׳ורג׳יאן איירווייז ואחרים) - טיסה של כ-2.5 שעות, בעיקר בעונת הקיץ. חלופה: לטוס לטביליסי ולהמשיך פנימית/ברכבת.',
+      gettingAround:
+        'העיר עצמה מהלכת (הטיילת, פיאצה, החוף); לאתרי הטבע (מטיראלה, מאחונצטי, הגן הבוטני, גוניו) - רכב שכור, טקסי מסוכם או טיול מאורגן. אין תחבורה ציבורית נוחה אליהם.',
+      kosherOverview:
+        'בית חב"ד באטומי מפעיל את מסעדת מנדי׳ס הכשרה (בשרי) בעיר העתיקה, ומארח ארוחות שבת. זו תשתית הכשרות המאומתת בעיר - מומלץ לוודא שעות וארוחות שבת מול בית חב"ד מראש, במיוחד מחוץ לעונת הקיץ.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
