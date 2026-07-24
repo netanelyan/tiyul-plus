@@ -6533,6 +6533,211 @@ export const destinations: Destination[] = [
         'למינכן, הקהילה היהודית השנייה בגודלה בגרמניה, תשתית כשרות אמיתית: מסעדת איינשטיין הגלאט-כשרה במרכז הקהילתי, בית חב"ד, וכמה נקודות כשרות נוספות. מומלץ להזמין מקום מראש ולוודא שעות (יש מעבר ביטחוני בכניסה למרכז הקהילתי).',
     },
   },
+  {
+    slug: 'dolomites',
+    name: 'הדולומיטים',
+    nameLocal: 'Dolomites / Dolomiti',
+    countrySlug: 'italy',
+    flag: '🇮🇹',
+    center: { lat: 46.55, lng: 11.9 },
+    zoom: 9,
+    tagline: 'אגמי אלפים טורקיז, פסגות סלע ומסלולי הליכה - צפון איטליה',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Lago_di_Braies_South_Tyrol_3.jpg/500px-Lago_di_Braies_South_Tyrol_3.jpg',
+    iconicLandmark: {
+      name: 'שלוש הפסגות (טרה צ׳ימה)',
+      nameLocal: 'Tre Cime di Lavaredo',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Drei_Zinnen_Tre_Cime_di_Lavaredo_Dolomites.jpg/500px-Drei_Zinnen_Tre_Cime_di_Lavaredo_Dolomites.jpg',
+      blurb:
+        'שלושה צריחי סלע מונומנטליים שהם הסמל של הדולומיטים - מסלול ההיקף סביבם הוא מהטיולים המפורסמים באלפים.',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'טבע אלפיני ברמה עולמית - אגמי טורקיז, פסגות סלע דרמטיות ומסלולי הליכה אינסופיים, במרחק נסיעה מוונציה. חסרונות: אין שדה תעופה מקומי (2-3 שעות נסיעה), רכב הכרחי, עונתי מאוד, ואין כשרות בהרים.',
+    },
+    summary:
+      'הדולומיטים הם רכס האלפים הדרומי בצפון איטליה, אתר מורשת עולמית - עולם של פסגות סלע ורודות, אחו ירוק ואגמים בצבע טורקיז בלתי נתפס. יעד חלומי למטיילים ולחובבי נוף: אגם בראייס, שלוש הפסגות, אלפה די סיוזי ועמק פונס. מגיעים בטיסה לוונציה/ורונה ובנסיעה; אין באזור ההררי תשתית כשרות.',
+    bestSeason: 'יוני-ספטמבר (הליכות ואגמים בשיא) - דצמבר-מרץ עונת סקי; אביב וסתיו חלק מהמסלולים והרכבלים סגורים',
+    places: [
+      {
+        id: 'dol-braies',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Lago_di_Braies_South_Tyrol_3.jpg/500px-Lago_di_Braies_South_Tyrol_3.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'אגם בראייס',
+        nameLocal: 'Lago di Braies (Pragser Wildsee)',
+        category: 'nature',
+        lat: 46.6947,
+        lng: 12.0844,
+        description:
+          'אגם קרחוני ירוק-אמרלד מוקף צוקי דולומיט ויער, עם סירות עץ להשכרה ושביל קל שמקיף אותו (כ-3.5 ק"מ). מהנופים המצולמים באיטליה - להגיע מוקדם, מתמלא בקהל.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Lago+di+Braies',
+      },
+      {
+        id: 'dol-trecime',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Drei_Zinnen_Tre_Cime_di_Lavaredo_Dolomites.jpg/500px-Drei_Zinnen_Tre_Cime_di_Lavaredo_Dolomites.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'שלוש הפסגות (טרה צ׳ימה)',
+        nameLocal: 'Tre Cime di Lavaredo',
+        category: 'nature',
+        lat: 46.6167,
+        lng: 12.3,
+        description:
+          'שלושת צריחי הסלע המזוהים ביותר עם הדולומיטים. מסלול ההיקף (כ-10 ק"מ) הוא מהטיולים היפים באלפים, עם בקתות הרים בדרך. מגיעים בכביש אגרה עד רפוג׳ו אאורונצו.',
+        rating: 4.8,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Tre+Cime+di+Lavaredo',
+      },
+      {
+        id: 'dol-sorapis',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Sorapis_061.jpg/500px-Sorapis_061.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'אגם סוראפיס',
+        nameLocal: 'Lago di Sorapis',
+        category: 'nature',
+        lat: 46.5206,
+        lng: 12.2235,
+        description:
+          'אגם הררי בצבע חלבי-טורקיז מסחרר, בקצה מסלול הליכה מאתגר (כ-3 שעות הלוך) ליד קורטינה. הפרס בסוף השביל מהיפים בדולומיטים - למטיילים כשירים בלבד.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Lago+di+Sorapis',
+      },
+      {
+        id: 'dol-seiseralm',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Seiser_Alm_01.jpg/500px-Seiser_Alm_01.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'אלפה די סיוזי',
+        nameLocal: 'Alpe di Siusi (Seiser Alm)',
+        category: 'nature',
+        lat: 46.5369,
+        lng: 11.6667,
+        description:
+          'האחו האלפיני הגבוה הגדול באירופה - מרחבי דשא מתגלגלים על רקע פסגות הסלה והשלרן. שבילי הליכה קלים ורכבלים; נגיש ומתאים גם למשפחות. מעל ורדיה/סיוזי.',
+        rating: 4.7,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Alpe+di+Siusi',
+      },
+      {
+        id: 'dol-funes',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Santa_Maddalena_Chapel_and_Dolomites.jpg/500px-Santa_Maddalena_Chapel_and_Dolomites.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        name: 'עמק פונס וכנסיית סנטה מדלנה',
+        nameLocal: 'Val di Funes & Santa Maddalena',
+        category: 'nature',
+        lat: 46.6415,
+        lng: 11.7001,
+        description:
+          'עמק ירוק פסטורלי עם כנסייה קטנה על גבעה, על רקע צריחי הסלע של רכס האודלה - אחת התמונות המושלמות של הדולומיטים. שבילי הליכה נעימים סביב הכפרים.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Santa+Maddalena+Val+di+Funes',
+      },
+      {
+        id: 'dol-carezza',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Lago_di_Carezza_e_Latemar.jpg/500px-Lago_di_Carezza_e_Latemar.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'אגם קרצה',
+        nameLocal: 'Lago di Carezza',
+        category: 'nature',
+        lat: 46.4093,
+        lng: 11.5759,
+        description:
+          'אגם קטן ומהופנט שצבעיו משתנים בין ירוק לכחול-סגול, על רקע רכס הלטמאר - "אגם הקשת בענן" של האגדה המקומית. עצירה קצרה ומתגמלת בדרום הדולומיטים.',
+        rating: 4.5,
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=Lago+di+Carezza',
+      },
+      {
+        id: 'dol-cortina',
+        tags: ['outdoors', 'foodie'],
+        priceLevel: 3,
+        name: 'קורטינה ד׳אמפצו',
+        nameLocal: "Cortina d'Ampezzo",
+        category: 'attraction',
+        lat: 46.5403,
+        lng: 12.1361,
+        description:
+          'עיירת הנופש היוקרתית של הדולומיטים ("פנינת הדולומיטים"), מוקפת פסגות - בסיס נוח לטיולים, עם רחוב ראשי, בתי קפה ורכבלים. אירחה אולימפיאדות חורף.',
+        rating: 4.4,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Cortina+d%27Ampezzo',
+      },
+      {
+        id: 'dol-bolzano',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Piazza_Municipio_Bolzano.jpg/500px-Piazza_Municipio_Bolzano.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'בולצאנו ומוזיאון אצי',
+        nameLocal: 'Bolzano & Ötzi Museum',
+        category: 'attraction',
+        lat: 46.5,
+        lng: 11.35,
+        description:
+          'בירת דרום טירול, מפגש של תרבות איטלקית ואוסטרית - כיכרות, שוק ומרפסות. במוזיאון הארכיאולוגי שוכן "אצי", איש הקרח בן 5,300 השנה שנמצא בהרים. שער דרומי לדולומיטים.',
+        rating: 4.4,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Bolzano+Otzi+Museum',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'הצפון - בראייס ושלוש הפסגות',
+        placeIds: ['dol-braies', 'dol-trecime'],
+        notes:
+          'בוקר מוקדם באגם בראייס (לפני הקהל), ואחר צהריים מסלול ההיקף סביב שלוש הפסגות - שני האייקונים של הדולומיטים ביום אחד. נעליים טובות ובגדים לשכבות.',
+      },
+      {
+        day: 2,
+        title: 'ואל גרדנה - אחו ופסגות',
+        placeIds: ['dol-seiseralm', 'dol-funes'],
+        notes:
+          'האחו האלפיני אלפה די סיוזי (רכבל למעלה, הליכות קלות), ובהמשך עמק פונס וכנסיית סנטה מדלנה על רקע רכס האודלה - יום נופים רך ומתגמל.',
+      },
+      {
+        day: 3,
+        title: 'אמפצו - אגם סוראפיס',
+        placeIds: ['dol-sorapis', 'dol-cortina'],
+        notes:
+          'מסלול ההליכה אל אגם סוראפיס הטורקיז (מאתגר, כ-6 שעות הלוך-חזור), וארוחה/מנוחה בקורטינה ד׳אמפצו. למי שמעדיף קל יותר - מסלולים סביב קורטינה.',
+      },
+      {
+        day: 4,
+        title: 'הדרום - אגם קרצה ובולצאנו',
+        placeIds: ['dol-carezza', 'dol-bolzano'],
+        notes:
+          'עצירה באגם קרצה הצבעוני, וסיום בבולצאנו - העיר, השוק ומוזיאון אצי (איש הקרח). נוח לשלב בדרך חזרה דרומה אל ורונה/ונציה.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין שדה תעופה בדולומיטים עצמם. טסים ישירות מנתב"ג לוונציה (VCE) או לוורונה/מילאנו, וממשיכים ברכב כ-2-2.5 שעות אל לב ההרים. רכב שכור הוא כמעט תנאי לטיול באזור.',
+      gettingAround:
+        'רכב שכור הכרחי - האתרים מפוזרים על פני עמקים והכבישים ההרריים מפותלים ויפים. בעונה יש גם רכבלים ואוטובוסי הרים (חלקם עם כרטיס אזורי), אך הגמישות עם רכב עדיפה בהרבה.',
+      kosherOverview:
+        'אין בדולומיטים תשתית כשרות - אין מסעדות כשרות או בית חב"ד באזור ההררי. הקהילות והכשרות הקרובות הן בערי השער (ונציה, מילאנו). מומלץ להצטייד מראש במזון ארוז עם הכשר, או לבחור לינה עם מטבח; גבינות, פירות וירקות טריים זמינים בשפע בשווקים.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
