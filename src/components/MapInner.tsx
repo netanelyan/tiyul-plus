@@ -20,15 +20,18 @@ export interface MapProps {
 
 function makeIcon(place: Place, index: number, numbered: boolean, highlighted: boolean) {
   const meta = categoryMeta[place.category];
-  const scale = highlighted ? 'scale(1.25)' : 'scale(1)';
+  const scale = highlighted ? 'scale(1.15)' : 'scale(1)';
+  const content = numbered
+    ? `<span class="pin-index">${index + 1}</span>`
+    : `<span>${meta.emoji}</span>`;
   return L.divIcon({
     className: 'pin-marker',
-    iconSize: [34, 34],
-    iconAnchor: [17, 30],
-    popupAnchor: [0, -28],
-    html: `<div class="pin" style="background:${meta.color};transform:${scale}">
-             <span>${meta.emoji}</span>
-             ${numbered ? `<span class="pin-number">${index + 1}</span>` : ''}
+    iconSize: [28, 36],
+    iconAnchor: [14, 34],
+    popupAnchor: [0, -30],
+    html: `<div class="pin" style="transform:${scale}">
+             <div class="pin-drop" style="background:${meta.color}"></div>
+             <div class="pin-content">${content}</div>
            </div>`,
   });
 }
