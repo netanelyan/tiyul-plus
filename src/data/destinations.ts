@@ -7135,6 +7135,317 @@ export const destinations: Destination[] = [
         'אין במיורקה תשתית כשרות מסודרת - אין מסעדה כשרה או בית חב"ד תיירותי פעיל (בפלמה יש מורשת יהודית עתיקה - הרובע היהודי "אל קאל" והצֶ׳אֶטֶס - אך לא אוכל כשר). הכשרות הקרובה היא בברצלונה/מדריד. מומלץ להצטייד מראש; פירות, ירקות ודגים טריים זמינים בשפע.',
     },
   },
+  {
+    slug: 'interlaken',
+    name: 'אינטרלאקן ועמק היונגפראו',
+    nameLocal: 'Interlaken & Jungfrau Region',
+    countrySlug: 'switzerland',
+    flag: '🇨🇭',
+    center: { lat: 46.63, lng: 7.93 },
+    zoom: 10,
+    tagline: 'בין שני אגמים: מפלים, קרחונים ורכבת אל גג אירופה',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/1_lauterbrunnen_valley_wengen_2022.jpg/500px-1_lauterbrunnen_valley_wengen_2022.jpg',
+    iconicLandmark: {
+      name: 'יונגפראויוך - גג אירופה',
+      nameLocal: 'Jungfraujoch',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Sphinx_et_Jungfrau_-_img_06980.jpg/500px-Sphinx_et_Jungfrau_-_img_06980.jpg',
+      blurb:
+        'האוכף שבין פסגות המונק והיונגפראו בגובה 3,454 מ׳, ובו תחנת הרכבת הגבוהה באירופה ומצפה הספינקס - מעליו משתרע קרחון אלטש, הקרחון הארוך באלפים.',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'טבע אלפיני מהמדרגה הראשונה עם נגישות יוצאת דופן: רכבות ורכבלים מגיעים כמעט לכל תצפית, גם בלי רכב. חסרונות: זה אחד היעדים היקרים בעולם, אין באזור כתובת כשרה מאומתת, ומזג האוויר יכול למחוק תצפית שכבר שילמתם עליה.',
+    },
+    summary:
+      'אינטרלאקן יושבת בין אגם תון לאגם בריינץ, והיא שער הכניסה לעמק היונגפראו - אחד מאזורי ההרים המרהיבים באלפים. מכאן יוצאים אל עמק לאוטרברונן ושבעים מפליו, אל תצפיות שילטהורן והרדר קולם, אל אגם באכאלפזה שמשקף את פסגות השלג, ואל יונגפראויוך - תחנת הרכבת הגבוהה באירופה. הכול מחובר ברכבות ורכבלים, כך שאפשר לטייל כאן ברצינות גם בלי רכב.',
+    bestSeason:
+      'יוני-ספטמבר (שבילים ורכבלים פתוחים, אגמים בשיא) · דצמבר-מרץ עונת סקי · באפריל-מאי ובנובמבר חלק מהמתקנים סגורים לתחזוקה',
+    places: [
+      {
+        id: 'int-jungfraujoch',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Sphinx_et_Jungfrau_-_img_06980.jpg/500px-Sphinx_et_Jungfrau_-_img_06980.jpg',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'יונגפראויוך - גג אירופה',
+        nameLocal: 'Jungfraujoch',
+        category: 'nature',
+        lat: 46.5472,
+        lng: 7.9806,
+        description:
+          'האוכף בין המונק ליונגפראו בגובה 3,454 מ׳, ואליו מטפסת רכבת שיניים דרך מנהרה בתוך ההר. למעלה: מצפה הספינקס, ארמון קרח, מישור שלג ונוף אל קרחון אלטש. הכרטיס יקר במיוחד - שווה לבדוק תחזית לפני שקונים.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Jungfraujoch',
+      },
+      {
+        id: 'int-lauterbrunnen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/1_lauterbrunnen_valley_wengen_2022.jpg/500px-1_lauterbrunnen_valley_wengen_2022.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'עמק לאוטרברונן',
+        nameLocal: 'Lauterbrunnen Valley',
+        category: 'nature',
+        lat: 46.595,
+        lng: 7.9075,
+        description:
+          'עמק קרחוני צר בין קירות סלע אנכיים, שממנו יורדים עשרות מפלים (המספר המקובל: 72). שביל העמק שטוח ונוח להליכה או לרכיבה על אופניים, והכפר עצמו הוא בסיס מצוין לעמק כולו.',
+        rating: 4.8,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Lauterbrunnen',
+      },
+      {
+        id: 'int-staubbach',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Lauterbrunnen_Staubbach.jpg/500px-Lauterbrunnen_Staubbach.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'מפל שטאובבאך',
+        nameLocal: 'Staubbach Falls',
+        category: 'nature',
+        lat: 46.5897,
+        lng: 7.9055,
+        description:
+          'מפל צניחה חופשית של כמעט 300 מטר שנופל מקיר הסלע ממש מעל כפר לאוטרברונן - אחד המפלים הגבוהים באירופה. שביל קצר ותלול מוביל למנהרה קטנה מאחורי המפל (סגורה בחורף).',
+        rating: 4.5,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Staubbach+Falls',
+      },
+      {
+        id: 'int-trummelbach',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Trummelbach.JPG/500px-Trummelbach.JPG',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'מפלי טרימלבאך',
+        nameLocal: 'Trümmelbach Falls',
+        category: 'nature',
+        lat: 46.5691,
+        lng: 7.915,
+        description:
+          'עשרה מפלים קרחוניים שחצבו את דרכם בתוך ההר עצמו - מבקרים בהם דרך מעלית שנחצבה בסלע ומערכת מדרגות וגשרונים. רועש, קר ורטוב, וחוויה מרשימה במיוחד לילדים. פתוח בעונה החמה.',
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Tr%C3%BCmmelbach+Falls',
+      },
+      {
+        id: 'int-schilthorn',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Schilthorn_with_Bernese_Alps%2C_2012_August.jpg/500px-Schilthorn_with_Bernese_Alps%2C_2012_August.jpg',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'שילטהורן (פיץ גלוריה)',
+        nameLocal: 'Schilthorn / Piz Gloria',
+        category: 'viewpoint',
+        lat: 46.5572,
+        lng: 7.8353,
+        description:
+          'פסגה בגובה 2,970 מ׳ עם מסעדה מסתובבת ותצפית 360 מעלות אל האייגר, המונק והיונגפראו. הוסרטה כאן סצנה מסרטי ג׳יימס בונד. עולים ברכבל דרך הכפר מירן חסר המכוניות.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Schilthorn',
+      },
+      {
+        id: 'int-bachalpsee',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Bachalpsee_reflection.jpg/500px-Bachalpsee_reflection.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'אגם באכאלפזה',
+        nameLocal: 'Bachalpsee',
+        category: 'nature',
+        lat: 46.6694,
+        lng: 8.0233,
+        description:
+          'אגם הררי בגובה כ-2,265 מ׳ שמשקף את פסגות השלג של רכס האלפים הברניים - מהנופים המצולמים בשווייץ. מגיעים ברכבל מגרינדלוואלד אל פירסט, ומשם הליכה קלה של כשעה בשביל רחב.',
+        rating: 4.8,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Bachalpsee',
+      },
+      {
+        id: 'int-grindelwald',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Grindelwald_View_02.jpg/500px-Grindelwald_View_02.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'גרינדלוואלד',
+        nameLocal: 'Grindelwald',
+        category: 'attraction',
+        lat: 46.6167,
+        lng: 8.0333,
+        description:
+          'כפר הרים קלאסי למרגלות קיר הצפון של האייגר, ובסיס הנוחות ביותר לטיולי העמק: רכבל לפירסט, רכבת ליונגפראויוך ושפע מסלולי הליכה שיוצאים מהכפר עצמו.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Grindelwald',
+      },
+      {
+        id: 'int-harder',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Harder_Kulm.JPG/500px-Harder_Kulm.JPG',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 2,
+        name: 'הרדר קולם',
+        nameLocal: 'Harder Kulm',
+        category: 'viewpoint',
+        lat: 46.6973,
+        lng: 7.8517,
+        description:
+          'תצפית הבית של אינטרלאקן, בגובה כ-1,320 מ׳: רכבת פוניקולר תלולה מהעיר, ולמעלה מרפסת תצפית שמרחפת אל שני האגמים ואל שלוש הפסגות המפורסמות. יפה במיוחד לקראת שקיעה.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Harder+Kulm',
+      },
+      {
+        id: 'int-brienz',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Aerial_image_of_Lake_Brienz_%28view_from_the_southwest%29.jpg/500px-Aerial_image_of_Lake_Brienz_%28view_from_the_southwest%29.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'אגם בריינץ',
+        nameLocal: 'Lake Brienz',
+        category: 'nature',
+        lat: 46.7167,
+        lng: 7.9667,
+        description:
+          'האגם המזרחי של אינטרלאקן, בצבע טורקיז-חלבי בזכות מי הקרחונים. אוניות נוסעים חוצות אותו בין הכפרים, ובגדה הצפונית שוכן הכפר בריינץ עם בתי העץ המסורתיים.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Lake+Brienz',
+      },
+      {
+        id: 'int-thunersee',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Aerial_image_of_Lake_Thun_%28view_from_the_east%29.jpg/500px-Aerial_image_of_Lake_Thun_%28view_from_the_east%29.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'אגם תון',
+        nameLocal: 'Lake Thun',
+        category: 'nature',
+        lat: 46.6833,
+        lng: 7.7167,
+        description:
+          'האגם המערבי של אינטרלאקן, גדול ורגוע יותר, ולחופיו טירות ומזחים. שיט האוניות בין אינטרלאקן לעיר תון הוא אחת הדרכים היפות והנינוחות לראות את האזור.',
+        rating: 4.6,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Lake+Thun',
+      },
+      {
+        id: 'int-hoheweg',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Goldswil-Viadukt_Panorama_mit_Interlaken_im_Hintergrund_2.jpg/500px-Goldswil-Viadukt_Panorama_mit_Interlaken_im_Hintergrund_2.jpg',
+        tags: ['families'],
+        priceLevel: 1,
+        name: 'מרכז אינטרלאקן וההווג',
+        nameLocal: 'Interlaken & Höheweg',
+        category: 'attraction',
+        lat: 46.6833,
+        lng: 7.85,
+        description:
+          'הרחוב הראשי של אינטרלאקן, ולצדו מדשאות ההיהמאטה שמהן ממריאים הצנחנים והפרפלנים מול נוף היונגפראו. מכאן יוצאות שתי תחנות הרכבת של העיר לכל כיווני העמק.',
+        rating: 4.3,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=H%C3%B6heweg+Interlaken',
+      },
+      {
+        id: 'int-murren',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/1_M%C3%BCrren_2022.jpg/500px-1_M%C3%BCrren_2022.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 2,
+        name: 'מירן - כפר ללא מכוניות',
+        nameLocal: 'Mürren',
+        category: 'attraction',
+        lat: 46.5594,
+        lng: 7.8922,
+        description:
+          'כפר קטן בגובה כ-1,640 מ׳ על מדף מעל עמק לאוטרברונן, ואליו מגיעים רק ברכבל וברכבת - בלי מכוניות. נקודת מוצא לרכבל שילטהורן ולשבילי תצפית מול האייגר, המונק והיונגפראו.',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=M%C3%BCrren',
+      },
+      {
+        id: 'int-aare',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Aareschlucht_166_7.jpg/500px-Aareschlucht_166_7.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'נקיק האארה',
+        nameLocal: 'Aare Gorge (Aareschlucht)',
+        category: 'nature',
+        lat: 46.7178,
+        lng: 8.2136,
+        description:
+          'נקיק צר ועמוק שחצב נהר האארה בסלע הגיר ליד מיירינגן, ובו מסלול הליכה על גשרונים ומנהרות לאורך כקילומטר וחצי - קריר, דרמטי ומתאים גם למשפחות.',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Aareschlucht',
+      },
+      {
+        id: 'int-reichenbach',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Schattenhalb_Reichenbachfall_7-05-2024_10-56-28.jpg/500px-Schattenhalb_Reichenbachfall_7-05-2024_10-56-28.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
+        name: 'מפלי רייכנבאך',
+        nameLocal: 'Reichenbach Falls',
+        category: 'nature',
+        lat: 46.7136,
+        lng: 8.1831,
+        description:
+          'מפלי מדרגות מרשימים מעל מיירינגן, שאליהם עולים ברכבל היסטורי. המקום מפורסם גם כזירת הקרב הסופי בין שרלוק הולמס לפרופסור מוריארטי בסיפורו של קונן דויל.',
+        rating: 4.4,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Reichenbach+Falls',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'האגמים ותצפית הבית',
+        placeIds: ['int-hoheweg', 'int-harder', 'int-brienz'],
+        notes:
+          'יום נחיתה רגוע: הליכה בהווג, פוניקולר להרדר קולם לתצפית על שני האגמים, ולקראת הערב שיט או טיול לאורך אגם בריינץ.',
+      },
+      {
+        day: 2,
+        title: 'עמק לאוטרברונן והמפלים',
+        placeIds: ['int-lauterbrunnen', 'int-staubbach', 'int-trummelbach', 'int-murren'],
+        notes:
+          'יום המפלים: שביל העמק בין קירות הסלע, שטאובבאך שנופל מעל הכפר, מפלי טרימלבאך שבתוך ההר - ועלייה במסלול לכפר מירן חסר המכוניות.',
+      },
+      {
+        day: 3,
+        title: 'גג אירופה',
+        placeIds: ['int-jungfraujoch', 'int-grindelwald'],
+        notes:
+          'יום שלם ליונגפראויוך - לצאת מוקדם ולבדוק תחזית לפני שקונים כרטיס. בחזרה עצירה בגרינדלוואלד למרגלות קיר האייגר.',
+      },
+      {
+        day: 4,
+        title: 'אגם באכאלפזה או שילטהורן',
+        placeIds: ['int-bachalpsee', 'int-schilthorn', 'int-aare'],
+        notes:
+          'בוחרים תצפית אחת: הליכה קלה לאגם באכאלפזה מפירסט, או רכבל לשילטהורן. מי שנשאר עם זמן - נקיק האארה במיירינגן בדרך חזרה.',
+      },
+    ],
+    practical: {
+      flights:
+        'טיסות ישירות מנתב"ג לציריך (ZRH): אל על, ו-SWISS שחידשה את הקו ב-1 ביולי 2026 - כ-12-13 טיסות בשבוע בין שתי החברות, כ-4 שעות. מציריך רכבת ישירה/עם החלפה אחת לאינטרלאקן (כשעתיים), ואפשר גם דרך ז׳נבה או באזל.',
+      gettingAround:
+        'אין צורך ברכב: רכבות, רכבלים ואוניות מגיעים כמעט לכל נקודה, בתדירות גבוהה ובדייקנות. שווה לבדוק מראש כרטיס נסיעות מתאים (Swiss Travel Pass או כרטיסי אזור היונגפראו) - התחבורה כאן יקרה, וכרטיס מתאים חוסך הרבה. חלק מהרכבלים סגורים בעונות המעבר לתחזוקה.',
+      kosherOverview:
+        'אין באינטרלאקן ובעמק היונגפראו כתובת כשרה מאומתת - לא מסעדה ולא חנות. תשתית הכשרות בשווייץ מרוכזת בערים הגדולות (ציריך, ז׳נבה, בזל), וכמה מלונות בהרים מציעים שירות כשר עונתי בלבד. מי שמקפיד - להצטייד מראש בציריך ולוודא ישירות מול המלון/המסעדה לפני הנסיעה.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {

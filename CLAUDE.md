@@ -1334,3 +1334,25 @@ the repo's pre-existing `react-hooks/set-state-in-effect` errors
 new ones in `useTripChat`/`AgentWorkspace` are the same pattern as the
 code they replaced. Deferred: the chat panel has no unread/updated
 badge on mobile after the drawer closes.
+
+### 2026-07-25 (c) - Overnight expansion: Switzerland (Interlaken + Jungfrau region)
+
+Branch `data/overnight-expansion` (off the merged main). First entry of
+the overnight run.
+
+- **Switzerland** (new country) - Schengen visa-free 90 days, CHF (not
+  euro), eSIM caveat (Switzerland is outside the EU roaming zone),
+  card-friendly but expensive.
+- **Interlaken & Jungfrau region** (new destination) - 14 places, rating
+  4.7. Landmark: Jungfraujoch (Top of Europe). Nature-heavy: Lauterbrunnen
+  valley, Staubbach + Truemmelbach falls, Schilthorn, Bachalpsee,
+  Grindelwald, Harder Kulm, Lakes Brienz + Thun, Muerren, Aare Gorge,
+  Reichenbach Falls. 4-day itinerary.
+- Flights verified: SWISS resumed nonstop ZRH-TLV on 1 July 2026; with
+  El Al ~12-13 weekly, ~4h, then ~2h by train to Interlaken.
+- **Kosher: none in the region, stated plainly** - Swiss kosher
+  infrastructure is in Zurich/Geneva/Basel, mountain hotels offer only
+  seasonal kosher service. No venue invented.
+- Every coordinate from the Wikipedia API; every photo is the article
+  lead image (Commons 500px thumb), hero/landmark images eyeballed.
+  build clean, verify-photos 302/302 OK.
