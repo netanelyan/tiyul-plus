@@ -9223,6 +9223,213 @@ export const destinations: Destination[] = [
         'אין באזור הטטרה כשרות מסודרת - לא מסעדה ולא חנות. הכשרות הקרובה היא בברטיסלבה (בית חב"ד) או בקרקוב, שתיהן במרחק נסיעה של שעות. מי שמקפיד - להצטייד מראש; בסופרמרקטים הגדולים יש מוצרים ארוזים עם סימון כשרות אירופי, ולוודא לפי הסימון עצמו.',
     },
   },
+  {
+    slug: 'bohemian-switzerland',
+    name: 'שווייץ הבוהמית',
+    nameLocal: 'Bohemian Switzerland / České Švýcarsko',
+    countrySlug: 'czechia',
+    flag: '🇨🇿',
+    center: { lat: 50.85, lng: 14.22 },
+    zoom: 11,
+    tagline: 'שערי סלע, נקיקים ויערות - שעה וחצי מפראג',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Pravcicka_brana_001.jpg/500px-Pravcicka_brana_001.jpg',
+    iconicLandmark: {
+      name: 'שער פראבצ׳יצה',
+      nameLocal: 'Pravčická brána',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Prav%C4%8Dick%C3%A1_br%C3%A1na_%28Prebischtor%29_-_by_Pudelek.jpg/500px-Prav%C4%8Dick%C3%A1_br%C3%A1na_%28Prebischtor%29_-_by_Pudelek.jpg',
+      blurb:
+        'שער הסלע הטבעי הגדול באירופה - קשת אבן חול ברוחב של כ-26 מטר שמתנשאת מעל היערות, וסמלו של הפארק הלאומי שווייץ הבוהמית.',
+    },
+    editorialRating: {
+      score: 4.5,
+      verdict:
+        'טבע דרמטי במרחק שעה וחצי מפראג, עם שבילים מסומנים היטב ותחבורה ציבורית שמגיעה לשם - שילוב מצוין עם עיר. חסרונות: האזור נפגע קשה בשריפת הענק של 2022 וחלק מהשבילים עדיין משתנים, אין כשרות באזור, וביקורי סוף שבוע צפופים מאוד.',
+    },
+    summary:
+      'שווייץ הבוהמית היא פארק לאומי בצפון צ׳כיה, על גבול גרמניה: מגדלי אבן חול, יערות אורנים ונקיקים שנחל קמניצה חצב בהם - ובמרכזה שער פראבצ׳יצה, קשת הסלע הטבעית הגדולה באירופה. מגיעים מפראג בשעה וחצי, ואפשר לשלב עם הצד הגרמני של הרכס (שווייץ הסקסונית) ועם העיר דצ׳ין שעל נהר האלבה.',
+    bestSeason:
+      'מאי-אוקטובר (שבילים ושיט בנקיקים פעילים; השיט לרוב אינו פועל בחורף) · ספטמבר-אוקטובר יפים במיוחד בצבעי הסתיו · אחרי גשמים חלק מהשבילים חלקלקים',
+    places: [
+      {
+        id: 'cbs-pravcicka',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Prav%C4%8Dick%C3%A1_br%C3%A1na_%28Prebischtor%29_-_by_Pudelek.jpg/500px-Prav%C4%8Dick%C3%A1_br%C3%A1na_%28Prebischtor%29_-_by_Pudelek.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'שער פראבצ׳יצה',
+        nameLocal: 'Pravčická brána',
+        category: 'nature',
+        lat: 50.8838,
+        lng: 14.2815,
+        description:
+          'קשת האבן הטבעית הגדולה באירופה, ברוחב כ-26 מ׳ ובגובה כ-16 מ׳. עולים אליה בשביל יער של כשעה מהז׳נסקו; לצדה מבנה היסטורי עם מרפסת תצפית. אסור לטפס על הקשת עצמה.',
+        rating: 4.7,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Pravcicka+brana',
+      },
+      {
+        id: 'cbs-park',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Pravcicka_brana_001.jpg/500px-Pravcicka_brana_001.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'הפארק הלאומי שווייץ הבוהמית',
+        nameLocal: 'České Švýcarsko National Park',
+        category: 'nature',
+        lat: 50.8333,
+        lng: 14.25,
+        description:
+          'פארק לאומי של מגדלי אבן חול, יערות ונקיקים לאורך הגבול עם גרמניה, עם רשת שבילים מסומנת לכל הרמות. בקיץ 2022 נשרפו כאן שטחים גדולים - חלק מהמסלולים שוקמו ונפתחו מחדש, וכדאי לבדוק מצב עדכני לפני היציאה.',
+        rating: 4.6,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Ceske+Svycarsko+National+Park',
+      },
+      {
+        id: 'cbs-kamenice',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/H%C5%99ensko_2007-5.jpg/500px-H%C5%99ensko_2007-5.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'נקיקי נחל קמניצה',
+        nameLocal: 'Kamenice Gorges (Edmundova soutěska)',
+        category: 'nature',
+        lat: 50.8742,
+        lng: 14.2361,
+        description:
+          'נקיקים צרים ועמוקים שחצב נחל קמניצה בסלע, ובהם קטע שעוברים בסירה שטוחה עם שייט מקומי בין קירות אנכיים. חלק מהשביל חצוב במדפי ברזל מעל המים.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Edmundova+souteska',
+      },
+      {
+        id: 'cbs-hrensko',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/H%C5%99ensko%2C_okres_D%C4%9B%C4%8D%C3%ADn.jpg/500px-H%C5%99ensko%2C_okres_D%C4%9B%C4%8D%C3%ADn.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'הז׳נסקו',
+        nameLocal: 'Hřensko',
+        category: 'attraction',
+        lat: 50.8744,
+        lng: 14.2425,
+        description:
+          'הכפר הנמוך ביותר בצ׳כיה, במפגש נחל קמניצה עם האלבה ובדיוק על הגבול הגרמני - נקודת המוצא לשער פראבצ׳יצה ולנקיקים, עם חניונים, מסעדות ותחנת אוטובוס.',
+        rating: 4.2,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Hrensko',
+      },
+      {
+        id: 'cbs-jetrichovice',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Jet%C5%99ichovice.jpg/500px-Jet%C5%99ichovice.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'ייטז׳יחוביצה והתצפיות',
+        nameLocal: 'Jetřichovice',
+        category: 'viewpoint',
+        lat: 50.8525,
+        lng: 14.3939,
+        description:
+          'כפר קטן שממנו יוצא מסלול מעגלי אל שלוש תצפיות סלע מפורסמות (מריה, וילהלמינה ורודולף) - מדרגות וסולמות קצרים בין מגדלי אבן חול, ונוף אל הרכס כולו.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Jetrichovice',
+      },
+      {
+        id: 'cbs-tisa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Tisk%C3%A9_st%C4%9Bny%2C_v%C3%BDhled_na_Tisou%2C_2020.jpg/500px-Tisk%C3%A9_st%C4%9Bny%2C_v%C3%BDhled_na_Tisou%2C_2020.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'סלעי טיסא',
+        nameLocal: 'Tiské stěny (Tisá Rocks)',
+        category: 'nature',
+        lat: 50.7844,
+        lng: 14.0314,
+        description:
+          'מבוך טבעי של קירות ומגדלי אבן חול עם שבילים צרים בין הסלעים - קל, כיפי במיוחד לילדים, וצולם בסרטי "נרניה". פחות מוכר לתיירים מהפארק עצמו.',
+        rating: 4.6,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Tiske+steny',
+      },
+      {
+        id: 'cbs-decin',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/D%C4%9B%C4%8D%C3%ADn_%28Tetschen%29%2C_Czech_Republic.jpg/500px-D%C4%9B%C4%8D%C3%ADn_%28Tetschen%29%2C_Czech_Republic.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'דצ׳ין',
+        nameLocal: 'Děčín',
+        category: 'attraction',
+        lat: 50.7736,
+        lng: 14.1961,
+        description:
+          'עיר על נהר האלבה בשער האזור, ובה ארמון על סלע עם "גן הוורדים" ותצפית, ורכבות ישירות מפראג. בסיס נוח למי שמעדיף ללון בעיר ולא בכפר.',
+        rating: 4.2,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Decin',
+      },
+      {
+        id: 'cbs-bastei',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Rathen_und_Elbsandsteingebirge_asv2022-08_img04.jpg/500px-Rathen_und_Elbsandsteingebirge_asv2022-08_img04.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'באסטיי (הצד הגרמני)',
+        nameLocal: 'Bastei, Saxon Switzerland',
+        category: 'viewpoint',
+        lat: 50.9622,
+        lng: 14.0714,
+        description:
+          'תצפית מפורסמת מעל נהר האלבה בצד הגרמני של רכס האבן החול, ובה גשר אבן מהמאה ה-19 בין מגדלי סלע. כחצי שעה נסיעה מהז׳נסקו - חוצים גבול בתוך מרחב שנגן.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Bastei+Bridge',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'שער הסלע והנקיקים',
+        placeIds: ['cbs-hrensko', 'cbs-pravcicka', 'cbs-kamenice'],
+        notes:
+          'מגיעים להז׳נסקו, עולים לשער פראבצ׳יצה ויורדים לנקיקי קמניצה כולל קטע השיט. יום הליכה מלא - נעליים טובות ומים.',
+      },
+      {
+        day: 2,
+        title: 'תצפיות הסלע של ייטז׳יחוביצה',
+        placeIds: ['cbs-jetrichovice', 'cbs-park'],
+        notes:
+          'מסלול מעגלי בין תצפיות מריה, וילהלמינה ורודולף, ואחר הצהריים שביל נוסף בפארק לפי מצב השבילים המעודכן.',
+      },
+      {
+        day: 3,
+        title: 'טיסא ודצ׳ין',
+        placeIds: ['cbs-tisa', 'cbs-decin'],
+        notes:
+          'בוקר במבוך הסלעים של טיסא (קל ומתאים למשפחות), ואחר הצהריים ארמון דצ׳ין וגן הוורדים לפני החזרה לפראג.',
+      },
+      {
+        day: 4,
+        title: 'הרחבה: הצד הגרמני',
+        placeIds: ['cbs-bastei'],
+        notes:
+          'קפיצה של חצי שעה מעבר לגבול אל תצפית באסטיי וגשר הסלע - אפשר לשלב עם שיט על האלבה או עם עיירת רתן.',
+      },
+    ],
+    practical: {
+      flights:
+        'טסים לפראג (PRG) - יש טיסות ישירות מנתב"ג - ומשם שעה וחצי-שעתיים צפונה. אפשר גם לנחות בדרזדן שבגרמניה (כשעה מהאזור) בטיסה עם החלפה.',
+      gettingAround:
+        'רכב שכור נוח ביותר, אבל אפשר גם בלי: רכבת מפראג לדצ׳ין ומשם אוטובוס להז׳נסקו ולכפרי הפארק, בתדירות סבירה בעונה. בתוך הפארק נעים ברגל ובאוטובוסי מעבר; בשבתות ובחגים החניונים מתמלאים מוקדם.',
+      kosherOverview:
+        'אין באזור שווייץ הבוהמית שום תשתית כשרות. הכשרות הקרובה היא בפראג - שבה יש מסעדות כשרות, בית חב"ד וקהילה יהודית ותיקה - כשעה וחצי נסיעה. הדרך המעשית: להצטייד בפראג ליום או ליומיים בטבע.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {

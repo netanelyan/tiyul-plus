@@ -1479,3 +1479,18 @@ the overnight run.
 - All coordinates and photos from the Wikipedia API; Spis Castle has no
   lead image, so its photo came from the Commons API and was eyeballed.
   build clean, verify-photos 375/375 OK.
+
+### 2026-07-25 (j) - Overnight expansion: Bohemian Switzerland (Czechia 2nd city)
+
+- **Bohemian Switzerland** - 8 places, rating 4.5, Czechia second
+  destination. Landmark: Pravcicka brana (Europe largest natural rock
+  arch). Nature: the national park, the Kamenice gorges with the boat
+  section, Hrensko, the Jetrichovice rock viewpoints, Tisa rock maze,
+  Decin, plus Bastei across the German border. 4-day itinerary.
+- Honest caveat carried into the rating and the park entry: the 2022
+  wildfire closed and changed trails - visitors are told to check current
+  trail status.
+- **Kosher: none in the region** - nearest is Prague (~1.5h), stated
+  plainly.
+- All coordinates and photos from the Wikipedia API. build clean,
+  verify-photos 383/383 OK.
