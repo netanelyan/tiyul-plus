@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import HeroPrompt from '@/components/HeroPrompt';
 
@@ -50,6 +51,26 @@ export default function HomeHero() {
           router.push(`/chat?q=${encodeURIComponent(text)}${kosher ? '&kosher=1' : ''}`)
         }
       />
+
+      {/* דרך שנייה שוות-ערך להתחיל: שאלון מודרך במקום טקסט חופשי.
+          כאן ב-HomeHero בלבד - נחיתת /chat נשארת מינימליסטית לפי CLAUDE.md. */}
+      <div className="rise-in-late mt-6 flex w-full max-w-2xl flex-col items-center gap-2">
+        <div className="flex items-center gap-3 text-xs font-bold text-night/35">
+          <span className="h-px w-10 bg-night/15" />
+          או
+          <span className="h-px w-10 bg-night/15" />
+        </div>
+        <Link
+          href="/start"
+          className="badge rounded-full bg-night px-5 py-3 text-sm font-bold text-cream shadow-[var(--shadow-pop)] transition hover:bg-night-soft"
+        >
+          <span aria-hidden>📋</span>
+          שאלון מהיר - בונים טיול בכמה קליקים
+        </Link>
+        <span className="text-center text-xs text-night/45">
+          מעדיפים לא לכתוב? עונים על כמה שאלות, והטיול נבנה לבד
+        </span>
+      </div>
     </div>
   );
 }

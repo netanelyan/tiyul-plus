@@ -61,12 +61,6 @@ export default async function Home() {
         <MyTripCard />
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Link
-            href="/start"
-            className="badge rounded-full bg-shell px-5 py-2.5 font-semibold text-night/75 ring-1 ring-night/10 transition hover:text-night hover:ring-night/25"
-          >
-            📋 שאלון מהיר
-          </Link>
-          <Link
             href="/planner"
             className="badge rounded-full bg-shell px-5 py-2.5 font-semibold text-night/75 ring-1 ring-night/10 transition hover:text-night hover:ring-night/25"
           >
