@@ -5671,6 +5671,235 @@ export const destinations: Destination[] = [
         'אין בדרום ירדן תשתית כשרות מסודרת - אין מסעדות כשרות או בית חב"ד. מטיילים שומרי כשרות נוהגים להצטייד מראש מאילת (הסמוכה למעבר) במזון ארוז עם הכשר. פירות, ירקות, טחינה וחומוס טריים זמינים מקומית.',
     },
   },
+  {
+    slug: 'larnaca',
+    name: 'לרנקה',
+    nameLocal: 'Larnaca / Λάρνακα',
+    countrySlug: 'cyprus',
+    flag: '🇨🇾',
+    center: { lat: 34.83, lng: 33.3 },
+    zoom: 9,
+    tagline: 'שער האי הקרוב - חופים, סלע אפרודיטה, הרי טרודוס וכשרות',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Sea_caves_Cape_Greco_2.jpg/500px-Sea_caves_Cape_Greco_2.jpg',
+    iconicLandmark: {
+      name: 'סלע אפרודיטה',
+      nameLocal: "Aphrodite's Rock",
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Petra_tou_romiou_1.jpg/500px-Petra_tou_romiou_1.jpg',
+      blurb:
+        'סלע בודד בים על החוף הדרומי, שלפי המיתולוגיה היוונית ממנו נולדה האלה אפרודיטה - הסמל המזוהה ביותר עם קפריסין, מרהיב בשקיעה.',
+    },
+    editorialRating: {
+      score: 4.3,
+      verdict:
+        'הכי קרוב, הכי הרבה טיסות, ותשתית כשרות אמיתית - אי שלם של חופים, הרים ונופים במרחק שעה. חסרונות: חם ועמוס בשיא הקיץ, והאתרים היפים מפוזרים על פני האי (רכב כמעט הכרחי).',
+    },
+    summary:
+      'לרנקה היא שער הכניסה לקפריסין, האי הקרוב ביותר לישראל: טיילת דקלים וחוף בעיר, אגם מלח עם פלמינגו בחורף, וממנה יוצאים לכל האי הקטן - כף גרקו וחופי איה נאפה במזרח, הרי טרודוס הירוקים במרכז, וסלע אפרודיטה וקוריון העתיקה במערב. יש בה קהילת חב"ד גדולה עם קפיטריה כשרה ומשלוחים.',
+    bestSeason: 'אפריל-יוני וספטמבר-אוקטובר (נעים ופחות עמוס) - יולי-אוגוסט חם ומלא, חורף מתון ונעים לטרודוס',
+    places: [
+      {
+        id: 'lca-finikoudes',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Larnaca_01-2017_img27_Finikoudes.jpg/500px-Larnaca_01-2017_img27_Finikoudes.jpg',
+        tags: ['families', 'foodie'],
+        priceLevel: 1,
+        name: 'טיילת פיניקודס ולרנקה',
+        nameLocal: 'Finikoudes Promenade',
+        category: 'attraction',
+        lat: 34.9107,
+        lng: 33.6353,
+        description:
+          'טיילת הדקלים של לרנקה לאורך החוף - מסעדות, בתי קפה וחוף עירוני, ולידה כנסיית סנט לזרוס ההיסטורית. לב העיר, נעים לטיול ערב.',
+        rating: 4.3,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Finikoudes+Larnaca',
+      },
+      {
+        id: 'lca-saltlake',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Larnaca_Salt_Lake%2C_Cyprus%2C_view_to_Hala_Sultan_Tekke.jpg/500px-Larnaca_Salt_Lake%2C_Cyprus%2C_view_to_Hala_Sultan_Tekke.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        name: 'אגם המלח ומסגד חלה סולטן',
+        nameLocal: 'Larnaca Salt Lake & Hala Sultan Tekke',
+        category: 'nature',
+        lat: 34.885,
+        lng: 33.61,
+        description:
+          'אגם מלח רדוד ליד שדה התעופה, שבחורף ובאביב מתמלא במאות פלמינגו ורודים; על גדתו מסגד היסטורי מוקף דקלים. שביל הליכה נעים - נוף אחר לגמרי מהחוף. (בקיץ האגם יבש.)',
+        rating: 4.3,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=Larnaca+Salt+Lake',
+      },
+      {
+        id: 'lca-capegreco',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Sea_caves_Cape_Greco_2.jpg/500px-Sea_caves_Cape_Greco_2.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'כף גרקו',
+        nameLocal: 'Cape Greco',
+        category: 'nature',
+        lat: 35.0,
+        lng: 34.0167,
+        description:
+          'ראש הצוק בקצה המזרחי של האי, עם מערות ים חצובות, מים טורקיז וגשר סלע טבעי. מסלולי הליכה ואופניים על הצוקים, וקפיצות לים למי שאמיץ. בין איה נאפה לפרוטרס.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Cape+Greco',
+      },
+      {
+        id: 'lca-nissi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Nissi_Beach%2C_Ayia_Napa_-_panoramio.jpg/500px-Nissi_Beach%2C_Ayia_Napa_-_panoramio.jpg',
+        tags: ['families', 'nightlife'],
+        priceLevel: 1,
+        name: 'חוף ניסי (איה נאפה)',
+        nameLocal: 'Nissi Beach',
+        category: 'nature',
+        lat: 34.988,
+        lng: 33.969,
+        description:
+          'חוף החול הלבן המפורסם של איה נאפה, עם מים רדודים וטורקיז ואיון קטן שאפשר להגיע אליו ברגל במים. תוסס ומשפחתי ביום, מרכז הבילוי של האי בערב.',
+        rating: 4.3,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Nissi+Beach+Ayia+Napa',
+      },
+      {
+        id: 'lca-troodos',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Eastern_side_of_Troodos_Mountains%2C_Cyprus_01.jpg/500px-Eastern_side_of_Troodos_Mountains%2C_Cyprus_01.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'הרי טרודוס',
+        nameLocal: 'Troodos Mountains',
+        category: 'nature',
+        lat: 34.9167,
+        lng: 32.8333,
+        description:
+          'רכס ההרים הירוק במרכז האי, עם פסגת האולימפוס (כ-1,950 מ׳), יערות אורנים, מפלים, כפרי אבן וכנסיות מצוירות (אתרי מורשת עולמית). קריר ונעים גם בקיץ - ניגוד מרענן לחוף.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Troodos+Mountains+Cyprus',
+      },
+      {
+        id: 'lca-kykkos',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Kykkos_Monastery_Courtyard_2.JPG/500px-Kykkos_Monastery_Courtyard_2.JPG',
+        tags: ['history', 'art'],
+        priceLevel: 0,
+        name: 'מנזר קיקוס',
+        nameLocal: 'Kykkos Monastery',
+        category: 'attraction',
+        lat: 34.9839,
+        lng: 32.7412,
+        description:
+          'המנזר העשיר והמפואר ביותר בקפריסין, עמוק בהרי טרודוס - חצרות מוזהבות, פסיפסים נוצצים ומוזיאון. משתלב יפה עם יום בהרים.',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Kykkos+Monastery',
+      },
+      {
+        id: 'lca-aphrodite',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Petra_tou_romiou_1.jpg/500px-Petra_tou_romiou_1.jpg',
+        tags: ['romantic', 'outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'סלע אפרודיטה',
+        nameLocal: "Aphrodite's Rock (Petra tou Romiou)",
+        category: 'viewpoint',
+        lat: 34.6635,
+        lng: 32.627,
+        description:
+          'סלע בודד בים על החוף בין לימסול לפאפוס, מקום הולדתה של האלה אפרודיטה לפי המיתולוגיה. מרהיב בשקיעה; יש חוף חלוקים לטבילה. הסמל של קפריסין.',
+        rating: 4.4,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Aphrodite+Rock+Petra+tou+Romiou',
+      },
+      {
+        id: 'lca-kourion',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Ancient_Roman_theatre_Kourion_Cyprus.jpg/500px-Ancient_Roman_theatre_Kourion_Cyprus.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'קוריון העתיקה',
+        nameLocal: 'Kourion',
+        category: 'attraction',
+        lat: 34.6642,
+        lng: 32.8877,
+        description:
+          'אתר עתיקות יווני-רומי מרשים על צוק מעל הים, ובמרכזו תיאטרון עתיק משוחזר עם נוף לים, פסיפסים ובית מרחץ. משתלב עם סלע אפרודיטה באזור המערבי.',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Kourion+Cyprus',
+      },
+      {
+        id: 'lca-chabad',
+        tags: ['foodie'],
+        priceLevel: 1,
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד קפריסין',
+        },
+        name: 'בית חב"ד לרנקה - קפיטריה "שמיים"',
+        nameLocal: 'Chabad Larnaca (Shemayim)',
+        category: 'kosher-food',
+        lat: 34.9124,
+        lng: 33.6328,
+        description:
+          'בית חב"ד לרנקה עם קפיטריה כשרה "שמיים" - כריכים, סלטים, מאפים ופיצות - ומשלוחי ארוחות כשרות חמות למלון. תשתית הכשרות המרכזית בעיר; באיה נאפה יש בית חב"ד נוסף עם חנות וארוחות שבת בקיץ.',
+        rating: 4.4,
+        kosherNote:
+          'קפיטריה כשרה ומשלוחים דרך בית חב"ד. שעות משתנות לפי עונה - כדאי לוודא מול בית חב"ד מראש, במיוחד לארוחות שבת.',
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=Chabad+Larnaca',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'לרנקה - עיר, אגם וכשרות',
+        placeIds: ['lca-finikoudes', 'lca-saltlake', 'lca-chabad'],
+        notes:
+          'יום רגוע בלרנקה: טיילת פיניקודס וכנסיית סנט לזרוס, סיבוב באגם המלח (פלמינגו בחורף-אביב), וארוחה כשרה בקפיטריית "שמיים" של בית חב"ד.',
+      },
+      {
+        day: 2,
+        title: 'המזרח - כף גרקו וחופי איה נאפה',
+        placeIds: ['lca-capegreco', 'lca-nissi'],
+        notes:
+          'בוקר בכף גרקו - מערות ים, גשר סלע ומסלולי צוקים - ואחר צהריים על חוף ניסי באיה נאפה. שילוב מושלם של טבע וחוף.',
+      },
+      {
+        day: 3,
+        title: 'הרי טרודוס',
+        placeIds: ['lca-troodos', 'lca-kykkos'],
+        notes:
+          'יום בהרים הקרירים: מסלולי יער ומפלים בטרודוס, כנסיות מצוירות וכפרי אבן, וביקור במנזר קיקוס המפואר. רכב מומלץ - הכבישים מפותלים.',
+      },
+      {
+        day: 4,
+        title: 'המערב - אפרודיטה וקוריון',
+        placeIds: ['lca-aphrodite', 'lca-kourion'],
+        notes:
+          'נסיעה מערבה אל סלע אפרודיטה על החוף, ואל קוריון העתיקה - תיאטרון רומי על צוק מעל הים. אפשר להאריך ליום שלם עם פאפוס.',
+      },
+    ],
+    practical: {
+      flights:
+        'הקו הנוסע ביותר מנתב"ג: עשרות טיסות ישירות ביום ללרנקה (אל על, ישראייר, ארקיע, Wizz, בלו-ברד ועוד), טיסה של פחות משעה. אפשר גם לפאפוס במערב האי.',
+      gettingAround:
+        'רכב שכור כמעט הכרחי כדי להגיע לטרודוס, לכף גרקו ולמערב האי - אין תחבורה ציבורית נוחה ביניהם. בתוך לרנקה ואיה נאפה יש אוטובוסים וטקסי.',
+      kosherOverview:
+        'לקפריסין תשתית כשרות אמיתית בזכות בית חב"ד קפריסין: קפיטריה כשרה "שמיים" בלרנקה עם משלוחי ארוחות למלון, ובית חב"ד נוסף באיה נאפה עם חנות כשרה וארוחות שבת (בעיקר בעונת הקיץ, כשמגיעים אלפי ישראלים). מומלץ לוודא שעות וארוחות שבת מול בית חב"ד מראש.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
