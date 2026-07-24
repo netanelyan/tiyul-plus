@@ -918,3 +918,104 @@ writing, Wikimedia API via the scratchpad scripts for coordinates and
 photos, `verify-photos.mjs` after. Netanel wants a short landmarks-style
 summary table after each batch for spot-check before the next one
 starts, not a silent multi-batch dump.
+
+### 2026-07-24 (g) - Map pins redesign; brand→"סוכן הנסיעות החכם"; standalone kosher search; Abu Dhabi (batch 2/5)
+
+Four independent tasks this session; all verified with `npm run build`,
+CDP screenshots, and (for content) `verify-photos.mjs`.
+
+**1. Map pins - from "gamey" badge to a professional teardrop.**
+`src/lib/categories.ts` colors deepened/desaturated (still 8
+distinguishable hues, less toy-bright). `src/components/MapInner.tsx`
+`makeIcon()` now builds a classic teardrop: a rotated rounded-square
+`.pin-drop` + a centered `.pin-content`; route-stop numbers render
+INSIDE the pin (replacing the emoji) rather than as a detached corner
+medallion. `src/app/globals.css` `.pin-marker` rewritten - soft
+`drop-shadow` not a heavy box-shadow, thin 1.5px cream ring, 28×36
+iconSize/anchor. Verified on dense Bangkok (17) + seeded Vienna planner.
+
+**2. Brand repositioning to "סוכן הנסיעות החכם" (copy only).**
+`layout.tsx` meta title/description reframed from "תכנון טיולים חכם"
+(reads like a directory) to an agent that builds the trip; a small
+"· סוכן הנסיעות החכם" tagline sits next to the logo (hidden < sm).
+`HomeHero.tsx` gains a sunset kicker badge "🧭 סוכן הנסיעות החכם שלכם"
+and the subhead now opens "לא עוד מדריך לגלול בו". No chat/planner
+logic touched.
+
+**3. Standalone kosher search - new `/kosher` + nav tab.**
+`src/app/kosher/page.tsx` (server: pulls kosher places per city from
+the same curated `destinations.ts` via the provider) + `KosherSearch.tsx`
+(client: city search over name/nameLocal/slug + a small hard-coded
+Hebrew ALIASES map for common misspellings; results list reuses the
+existing trust-badge pattern; `PlacesMap` of just the kosher pins).
+Cities outside the catalog get an explicit honest empty state
+("עדיין אין לנו מידע כשרות מאומת ל...") - never a fake-empty result.
+`SiteNav.tsx` NAV_LINKS gains `{ /kosher, כשרות }`. Verified live:
+"וינה" → real venues + map; "דובאי" → honest empty state.
+
+**Bonus (same session, small):** the homepage "אוכל כשר" toggle pill
+swapped its 🍽️ plate emoji for an inline check-in-circle SVG so it
+reads as "kosher, verified" not generic food (`HeroPrompt.tsx`).
+
+**4. Content: Abu Dhabi (UAE) - batch 2/5 of the non-Europe expansion.**
+- `src/data/countries.ts` - new `uae` country (mutual visa-waiver up to
+  90 days, dirham, eSIM/Etisalat, cards+cash; note: extension-sticker or
+  laissez-passer passports are NOT admissible - real UAE entry rule).
+- `src/data/destinations.ts` - new `abu-dhabi`: 17 places, 4-day
+  itinerary, iconicLandmark (Sheikh Zayed Grand Mosque), editorialRating
+  4.5/5 with an honest heat/cost caveat, `practical` (Etihad's resumed
+  daily TLV-AUH service, kosherOverview). 2 real kosher venues - The
+  Kosher Place (Ritz-Carlton Venetian Village) and Sababa (Mushrif Mall
+  food court), both under Rabbi Levi Duchman's Emirates Agency for
+  Kosher Certification, both `pending-review` like every kosher entry;
+  kosherOverview states these are the ONLY certified spots in the city.
+- **Photo-verification caveat worth remembering:** the Wikimedia
+  Commons `list=search` top hit is NOT reliably the landmark's exterior.
+  Three first-pick photos were wrong-subject INTERIOR shots that only
+  surfaced on eyeballing the actual bytes: the "mosque" was a recycling
+  bin in the visitor centre, "Emirates Palace" was a hotel chocolate
+  counter, "Qasr Al Watan" was a dark media-wall lobby. All three were
+  replaced with verified exteriors (mosque silhouette, aerial palace,
+  presidential-palace dome). LESSON: for a landmark hero photo, actually
+  download and LOOK at the image, don't trust the search title.
+  `verify-photos.mjs` only checks HTTP 200, not that the subject is right.
+- Coordinates: Wikipedia coordinates API where available, else
+  Nominatim (`nominatim.mjs` added to scratchpad) or a cited figure.
+- `verify-photos.mjs` → 168/168 OK (was 153 before this batch).
+
+**Abu Dhabi spot-check table (for Netanel before batch 3):**
+| # | Place | Category | mustSee | Photo |
+|---|-------|----------|---------|-------|
+| 1 | מסגד שיח׳ זאיד הגדול | attraction | ✓ | ✓ silhouette |
+| 2 | The Kosher Place | kosher-food | | (no photo) |
+| 3 | קצר אל-וואטן | attraction | ✓ | ✓ dome |
+| 4 | אנדרטת המייסד | attraction | | ✓ |
+| 5 | ארמון האמירויות | viewpoint | | ✓ aerial |
+| 6 | הלובר אבו דאבי | museum | ✓ | ✓ |
+| 7 | בית המשפחה האברהמית | attraction | | ✓ synagogue interior |
+| 8 | חוף סעדיאת | nature | | ✓ |
+| 9 | פארק מנגרובים ג׳ובייל | nature | | ✓ |
+| 10 | פרארי וורלד | attraction | ✓ | ✓ |
+| 11 | וורנר ברדרס וורלד | attraction | | ✓ |
+| 12 | יאס ווטרוורלד | attraction | | ✓ |
+| 13 | קצר אל-חוסן | museum | | ✓ |
+| 14 | הקורניש | nature | | ✓ |
+| 15 | השוק האיראני | shopping | | (no photo) |
+| 16 | הגלריה - אל מריה | shopping | | ✓ |
+| 17 | סבבה (כשר) | kosher-food | | (no photo) |
+
+Rating 4.5/5. iconicLandmark: Sheikh Zayed Grand Mosque.
+
+**Deferred / not built this session (user asked, still open):** a
+homepage quick-access services grid (flights/stay/tickets/car), an
+accessibility widget + audit + statement page, a paste-a-Reel/TikTok
+link-extraction feature (Phase-1 feasibility assessment owed first),
+and removing the destination-list scroll "chevron sidebar" (which is
+actually the native RTL scrollbar of the `overflow-y-auto` places list
+in `DestinationClient.tsx` line ~120, rendered with classic arrow
+buttons only in headless Edge - NOT a custom component).
+
+**Next session should know:** batch 3/5 is Marrakech (then New York,
+Miami). Same process. The Wikimedia photo-subject caveat above is the
+single most important lesson from this batch - budget time to visually
+check every landmark hero image, not just its HTTP status.
