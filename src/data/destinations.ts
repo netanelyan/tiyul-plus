@@ -3870,6 +3870,368 @@ export const destinations: Destination[] = [
         'תשתית כשרות אמיתית וגדלה, בהשגחת הרב לוי דוכמן, הרב הקבוע הראשון של איחוד האמירויות: דה כשר פלייס (מסעדת גריל) בכפר הוונציאני שבמלון הריץ קרלטון, וסבבה (חלבי/פרווה) בפודקורט של קניון מושריף. הקהילה היהודית באבו דאבי קטנה (כ-600 איש) אך פעילה - בית הכנסת "משה בן מימון" בבית המשפחה האברהמית הוא הראשון שנבנה במיוחד במדינה. מעבר לשני המקומות האלה אין עוד מסעדות עם הכשר מאומת בעיר.',
     },
   },
+  {
+    slug: 'tbilisi',
+    name: 'טביליסי',
+    nameLocal: 'Tbilisi / თბილისი',
+    countrySlug: 'georgia',
+    flag: '🇬🇪',
+    center: { lat: 41.6938, lng: 44.8015 },
+    zoom: 12,
+    tagline: 'עיר עתיקה, מרחצאות גופרית והרי הקווקז מעבר לפינה',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Tbilisi_Peace_Bridge_and_Rike_Park.jpg/500px-Tbilisi_Peace_Bridge_and_Rike_Park.jpg',
+    iconicLandmark: {
+      name: 'מבצר נריקלה',
+      nameLocal: 'Narikala Fortress',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Narikala_fortress%2C_Tbilisi%2C_Georgia.jpg/500px-Narikala_fortress%2C_Tbilisi%2C_Georgia.jpg',
+      blurb:
+        'מבצר בן יותר מ-1,500 שנה השולט מהגבעה על העיר העתיקה - מגיעים אליו ברכבל, והתצפית מהחומות על גגות טביליסי והנהר היא מהיפות בעיר.',
+    },
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'טיסה ישירה קצרה וזולה, שילוב מנצח של עיר עתיקה, נוף הרים ואוכל ויין - ותשתית כשרות אמיתית. החיסרון: הכביש לקזבגי ארוך ומפותל, וקיץ בעיר יכול להיות חם.',
+    },
+    summary:
+      'טביליסי היא שער הכניסה לגאורגיה ואחד היעדים האהובים על ישראלים: עיר עתיקה של סמטאות מרוצפות ומרפסות עץ, מרחצאות גופרית, וגשר זכוכית מודרני מעל הנהר - והכול במרחק פחות משלוש שעות טיסה. מסביב מחכים נופי הקווקז הדרמטיים (קזבגי) והעיר העתיקה מצחתה, ובלב העיר קהילה יהודית ותיקה עם בית חב"ד ומסעדות כשרות.',
+    bestSeason: 'מאי-יוני וספטמבר-אוקטובר (מזג אוויר נעים) - יולי-אוגוסט חמים בעיר, החורף קר ומושלג בהרים',
+    places: [
+      {
+        id: 'tbs-narikala',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Narikala_fortress%2C_Tbilisi%2C_Georgia.jpg/500px-Narikala_fortress%2C_Tbilisi%2C_Georgia.jpg',
+        tags: ['history', 'romantic'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'מבצר נריקלה',
+        nameLocal: 'Narikala Fortress',
+        category: 'attraction',
+        lat: 41.68778,
+        lng: 44.80861,
+        description:
+          'המבצר ההיסטורי השולט על העיר העתיקה. עולים ברכבל מפארק ריקה, מטיילים על החומות, ונהנים מהתצפית הטובה בעיר - במיוחד לקראת השקיעה. הכניסה חינם.',
+        rating: 4.7,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Narikala+Fortress+Tbilisi',
+      },
+      {
+        id: 'tbs-abanotubani',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/2014_Tbilisi%2C_%C5%81a%C5%BAnie_siarkowe_w_Abanotubani_%2801%29.jpg/500px-2014_Tbilisi%2C_%C5%81a%C5%BAnie_siarkowe_w_Abanotubani_%2801%29.jpg',
+        tags: ['history', 'romantic'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'מרחצאות הגופרית (אבנוטובאני)',
+        nameLocal: 'Abanotubani Sulfur Baths',
+        category: 'attraction',
+        lat: 41.68778,
+        lng: 44.81111,
+        description:
+          'רובע המרחצאות ההיסטורי עם כיפות הלבנים האופייניות, מעל מעיינות גופרית חמים. אפשר לשכור חדר מרחץ פרטי - החוויה שהפכה את טביליסי למה שהיא ("העיר החמה").',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Abanotubani+Tbilisi',
+      },
+      {
+        id: 'tbs-sameba',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Sameba_Cathedral%2C_Courtyard%2C_Sunset%2C_Dusk%2C_Tbilisi%2C_Georgia.jpg/500px-Sameba_Cathedral%2C_Courtyard%2C_Sunset%2C_Dusk%2C_Tbilisi%2C_Georgia.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'קתדרלת השילוש הקדוש (סמבה)',
+        nameLocal: 'Holy Trinity Cathedral (Sameba)',
+        category: 'attraction',
+        lat: 41.6975,
+        lng: 44.81667,
+        description:
+          'הקתדרלה הגדולה בגאורגיה ואחת הגדולות בעולם הנוצרי-אורתודוקסי, מוזהבת ומרשימה, שנבנתה בשנות ה-2000 ושולטת על קו הרקיע של טביליסי. לבוש צנוע נדרש בכניסה.',
+        rating: 4.7,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Holy+Trinity+Cathedral+Tbilisi',
+      },
+      {
+        id: 'tbs-peace-bridge',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Tbilisi_Peace_Bridge_and_Rike_Park.jpg/500px-Tbilisi_Peace_Bridge_and_Rike_Park.jpg',
+        tags: ['romantic', 'families'],
+        priceLevel: 0,
+        name: 'גשר השלום',
+        nameLocal: 'Bridge of Peace',
+        category: 'attraction',
+        lat: 41.693,
+        lng: 44.8083,
+        description:
+          'גשר הולכי רגל מודרני מזכוכית ופלדה מעל נהר המטקווארי, המחבר את העיר העתיקה עם פארק ריקה. מואר יפה בלילה ומהווה ניגוד מרהיב לסמטאות הישנות.',
+        rating: 4.4,
+        durationMin: 30,
+        externalUrl: 'https://maps.google.com/?q=Bridge+of+Peace+Tbilisi',
+      },
+      {
+        id: 'tbs-metekhi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Metekhi_church_of_Tbilisi.jpg/500px-Metekhi_church_of_Tbilisi.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'כנסיית מטחי',
+        nameLocal: 'Metekhi Church',
+        category: 'attraction',
+        lat: 41.69,
+        lng: 44.81111,
+        description:
+          'כנסייה מהמאה ה-13 על צוק מעל הנהר, לצד פסל הרוכב של המלך ואחטנג גורגסלי, מייסד טביליסי. תצפית יפה אל מול נריקלה והעיר העתיקה.',
+        rating: 4.4,
+        durationMin: 30,
+        externalUrl: 'https://maps.google.com/?q=Metekhi+Church+Tbilisi',
+      },
+      {
+        id: 'tbs-rustaveli',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Shota_Rustaveli_Avenue%2C_Tbilisi.jpg/500px-Shota_Rustaveli_Avenue%2C_Tbilisi.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        name: 'שדרת רוסטוולי',
+        nameLocal: 'Rustaveli Avenue',
+        category: 'attraction',
+        lat: 41.7007,
+        lng: 44.7953,
+        description:
+          'השדרה הראשית של טביליסי - מבנים מרשימים מהמאה ה-19, האופרה, המוזיאון הלאומי, תיאטראות, בתי קפה וחנויות. הלב התרבותי של העיר החדשה.',
+        rating: 4.4,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=Rustaveli+Avenue+Tbilisi',
+      },
+      {
+        id: 'tbs-freedom-square',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Freedom_Square%2C_Tbilisi_%2850497944841%29.jpg/500px-Freedom_Square%2C_Tbilisi_%2850497944841%29.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'כיכר החירות',
+        nameLocal: 'Freedom Square',
+        category: 'attraction',
+        lat: 41.6938,
+        lng: 44.8014,
+        description:
+          'הכיכר המרכזית של טביליסי, ובמרכזה עמוד הזהב של פסל גאורגי הקדוש. נקודת מפגש ותחילת דרך נוחה לסיור רגלי אל העיר העתיקה ולשדרת רוסטוולי.',
+        rating: 4.3,
+        durationMin: 20,
+        externalUrl: 'https://maps.google.com/?q=Freedom+Square+Tbilisi',
+      },
+      {
+        id: 'tbs-mtatsminda',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Tbilisi_Ferris_Wheel_2022-07-30.jpg/500px-Tbilisi_Ferris_Wheel_2022-07-30.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 1,
+        name: 'פארק מטאצמינדה',
+        nameLocal: 'Mtatsminda Park',
+        category: 'viewpoint',
+        lat: 41.6933,
+        lng: 44.7802,
+        description:
+          'פארק שעשועים על ההר הגבוה מעל העיר, עם גלגל ענק ותצפית פנורמית. עולים אליו ברכבל (פוניקולר) הוותיק - מושלם לשקיעה ולערב עם ילדים.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Mtatsminda+Park+Tbilisi',
+      },
+      {
+        id: 'tbs-turtle-lake',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Turtle_Lake_in_Tbilisi%2C_Georgia.jpg/500px-Turtle_Lake_in_Tbilisi%2C_Georgia.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        name: 'אגם הצבים',
+        nameLocal: 'Turtle Lake',
+        category: 'nature',
+        lat: 41.7004,
+        lng: 44.7545,
+        description:
+          'אגם קטן ורגוע מוקף יער על גבעות ואקה, אהוב על המקומיים לטיול, ריצה וקפה על המים. אפשר להגיע ברכבל ולשלב עם המוזיאון האתנוגרפי הפתוח הסמוך.',
+        rating: 4.3,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=Turtle+Lake+Tbilisi',
+      },
+      {
+        id: 'tbs-botanical',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/National_Botanical_Garden_of_Georgia_%28HDR_Photo%2C_Lg_G31%29_%D8%A8%D8%A7%D8%BA_%D8%A8%D9%88%D8%AA%D8%A7%D9%86%DB%8C%DA%A9%D8%A7%D9%84%D8%8C_%D8%B4%D9%87%D8%B1_%D8%AA%D9%81%D9%84%DB%8C%D8%B3.jpg/500px-National_Botanical_Garden_of_Georgia_%28HDR_Photo%2C_Lg_G31%29_%D8%A8%D8%A7%D8%BA_%D8%A8%D9%88%D8%AA%D8%A7%D9%86%DB%8C%DA%A9%D8%A7%D9%84%D8%8C_%D8%B4%D9%87%D8%B1_%D8%AA%D9%81%D9%84%DB%8C%D8%B3.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'הגן הבוטני הלאומי',
+        nameLocal: 'National Botanical Garden',
+        category: 'nature',
+        lat: 41.6851,
+        lng: 44.8027,
+        description:
+          'גן ענק בגיא שמאחורי מבצר נריקלה, עם שבילים, מפל וגשר תלוי. בריחה ירוקה ושקטה במרחק דקות הליכה מהעיר העתיקה.',
+        rating: 4.4,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=National+Botanical+Garden+Tbilisi',
+      },
+      {
+        id: 'tbs-chronicle',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Chronicle_of_Georgia_-_Fragment.jpg/500px-Chronicle_of_Georgia_-_Fragment.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 0,
+        name: 'הכרוניקה של גאורגיה',
+        nameLocal: 'The Chronicle of Georgia',
+        category: 'viewpoint',
+        lat: 41.7707,
+        lng: 44.8104,
+        description:
+          'אנדרטה מונומנטלית של עמודי ענק (כ-30 מטר) עם תבליטים של מלכי ואירועי גאורגיה, מעל "ים טביליסי". מרשימה, פחות מתויירת, עם תצפית רחבה על העיר.',
+        rating: 4.5,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Chronicle+of+Georgia+Tbilisi',
+      },
+      {
+        id: 'tbs-jvari',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Georgia_Jvari_monastery_IMG_9345_2070.jpg/500px-Georgia_Jvari_monastery_IMG_9345_2070.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'מנזר ג׳ווארי (מצחתה)',
+        nameLocal: 'Jvari Monastery',
+        category: 'attraction',
+        lat: 41.8383,
+        lng: 44.7335,
+        description:
+          'מנזר מהמאה ה-6, אתר מורשת עולמית של אונסק"ו, על ראש גבעה השולט על מפגש שני הנהרות ועל העיר העתיקה מצחתה. אחת התצפיות היפות בגאורגיה. כ-30 דקות מטביליסי.',
+        rating: 4.7,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Jvari+Monastery+Mtskheta',
+      },
+      {
+        id: 'tbs-svetitskhoveli',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/2017_-_Svetitskhoveli_Cathedral_-_01.jpg/500px-2017_-_Svetitskhoveli_Cathedral_-_01.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'קתדרלת סווטיצחוולי (מצחתה)',
+        nameLocal: 'Svetitskhoveli Cathedral',
+        category: 'attraction',
+        lat: 41.8419,
+        lng: 44.7211,
+        description:
+          'הקתדרלה מהמאה ה-11 בלב העיר העתיקה מצחתה, בירתה הרוחנית של גאורגיה - אתר מורשת עולמית ומקום עלייה לרגל. משתלבת מצוין עם מנזר ג׳ווארי שממול.',
+        rating: 4.6,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Svetitskhoveli+Cathedral+Mtskheta',
+      },
+      {
+        id: 'tbs-gergeti',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Gergeti_Trinity_Church._Kazbegi%2C_Georgia_%2836130111370%29.jpg/500px-Gergeti_Trinity_Church._Kazbegi%2C_Georgia_%2836130111370%29.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'כנסיית גרגטי וקזבגי',
+        nameLocal: 'Gergeti Trinity Church (Kazbegi)',
+        category: 'nature',
+        lat: 42.6625,
+        lng: 44.6203,
+        description:
+          'כנסייה בודדת מהמאה ה-14 על גבעה בגובה 2,170 מטר, על רקע הר קזבק המושלג (5,047 מ׳) - אחד הנופים המזוהים ביותר עם גאורגיה. טיול יום מלא מטביליסי (כ-3 שעות דרך מעבר ההרים).',
+        rating: 4.8,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Gergeti+Trinity+Church',
+      },
+      {
+        id: 'tbs-synagogue',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Great_Synagogue_%28Tbilisi%29.jpg/500px-Great_Synagogue_%28Tbilisi%29.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'בית הכנסת הגדול',
+        nameLocal: 'Great Synagogue of Tbilisi',
+        category: 'attraction',
+        lat: 41.69,
+        lng: 44.8073,
+        description:
+          'בית הכנסת הגדול (הספרדי) בעיר העתיקה, נבנה בתחילת המאה ה-20 בידי יהודים מהעיר אחלציחה. עדות לקהילה יהודית עתיקת יומין בגאורגיה, במרחק הליכה ממסעדות הכשרות של הרובע.',
+        rating: 4.5,
+        durationMin: 30,
+        externalUrl: 'https://maps.google.com/?q=Great+Synagogue+Tbilisi',
+      },
+      {
+        id: 'tbs-mendis',
+        tags: ['foodie'],
+        priceLevel: 2,
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד טביליסי (מהדרין)',
+        },
+        name: 'מנדי׳ס - מסעדת חב"ד הכשרה',
+        nameLocal: "Mendi's (Chabad Kosher Restaurant)",
+        category: 'kosher-food',
+        lat: 41.6931,
+        lng: 44.8049,
+        description:
+          'מסעדת בשרים כשרה למהדרין של בית חב"ד טביליסי בעיר העתיקה, עם מטבח יהודי-גאורגי מסורתי. לצידה מטבח חלבי לארוחות בוקר בבית חב"ד. כתובת מפגש מרכזית לישראלים בעיר.',
+        rating: 4.5,
+        kosherNote:
+          'בשרי, בהשגחת בית חב"ד טביליסי (מהדרין). פתוחה בדרך כלל מהצהריים ועד חצות - מומלץ לוודא שעות וארוחות שבת מול בית חב"ד מראש.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Chabad+Tbilisi',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'העיר העתיקה והמרחצאות',
+        placeIds: [
+          'tbs-narikala',
+          'tbs-abanotubani',
+          'tbs-metekhi',
+          'tbs-peace-bridge',
+          'tbs-synagogue',
+        ],
+        notes:
+          'יום רגלי בלב טביליסי: עולים ברכבל לנריקלה לתצפית, יורדים לרובע המרחצאות (שווה חדר מרחץ גופרית פרטי), ועוברים דרך מטחי וגשר השלום. בית הכנסת הגדול ומסעדות הכשרות במרחק הליכה.',
+      },
+      {
+        day: 2,
+        title: 'העיר החדשה וההר',
+        placeIds: [
+          'tbs-freedom-square',
+          'tbs-rustaveli',
+          'tbs-sameba',
+          'tbs-mendis',
+          'tbs-mtatsminda',
+        ],
+        notes:
+          'מכיכר החירות לאורך שדרת רוסטוולי, קפיצה לקתדרלת סמבה, ארוחת צהריים כשרה במנדי׳ס, ולסיום עלייה בפוניקולר לפארק מטאצמינדה לשקיעה מעל העיר.',
+      },
+      {
+        day: 3,
+        title: 'מצחתה - הבירה הרוחנית',
+        placeIds: ['tbs-jvari', 'tbs-svetitskhoveli', 'tbs-chronicle', 'tbs-turtle-lake', 'tbs-botanical'],
+        notes:
+          'טיול יום קצר (30 דקות) לעיר העתיקה מצחתה: מנזר ג׳ווארי לתצפית ומפגש הנהרות, וקתדרלת סווטיצחוולי. בדרך חזרה אפשר לעצור בכרוניקה של גאורגיה, ולסיים ברוגע באגם הצבים או בגן הבוטני.',
+      },
+      {
+        day: 4,
+        title: 'קזבגי - הרי הקווקז',
+        placeIds: ['tbs-gergeti'],
+        notes:
+          'טיול יום מלא צפונה דרך מעבר ההרים (Georgian Military Road) אל קזבגי: כנסיית גרגטי על רקע הר קזבק המושלג - הנוף שכולם מגיעים בשבילו. הדרך ארוכה ומפותלת (כ-3 שעות לכל כיוון); מומלץ טיול מאורגן או נהג פרטי.',
+      },
+    ],
+    practical: {
+      flights:
+        'מגוון רחב של טיסות ישירות מנתב"ג לטביליסי (אל על, ג׳ורג׳יאן איירווייז, ישראייר, ארקיע) - כ-24 טיסות בשבוע, טיסה קצרה של כ-2.5 שעות. מהיעדים הנוחים ביותר לישראלים מבחינת זמינות ומחיר.',
+      gettingAround:
+        'בעיר: מטרו זול, מרשרוטקות (מיניבוסים) ובעיקר אפליקציית Bolt למוניות - זולה ונוחה מאוד. לטיולי יום (מצחתה, קזבגי) - טיול מאורגן, נהג פרטי או רכב שכור.',
+      kosherOverview:
+        'טביליסי היא מהיעדים הכשרים הנוחים באזור: מסעדת מנדי׳ס של בית חב"ד (בשרי מהדרין) ומטבח חלבי לארוחות בוקר, ולצידן כמה מסעדות כשרות נוספות ברובע היהודי בעיר העתיקה (בהן קינג דיוויד, שלום עליכם, לה קאסה וחומוס ירושלים). ארבעה בתי כנסת פעילים, כולל בית הכנסת הגדול. מומלץ לאמת שעות והשגחה מול בית חב"ד לפני ההגעה.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
