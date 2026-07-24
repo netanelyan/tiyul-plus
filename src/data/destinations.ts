@@ -9430,6 +9430,232 @@ export const destinations: Destination[] = [
         'אין באזור שווייץ הבוהמית שום תשתית כשרות. הכשרות הקרובה היא בפראג - שבה יש מסעדות כשרות, בית חב"ד וקהילה יהודית ותיקה - כשעה וחצי נסיעה. הדרך המעשית: להצטייד בפראג ליום או ליומיים בטבע.',
     },
   },
+  {
+    slug: 'balaton',
+    name: 'אגם בלטון',
+    nameLocal: 'Lake Balaton',
+    countrySlug: 'hungary',
+    flag: '🇭🇺',
+    center: { lat: 46.85, lng: 17.6 },
+    zoom: 10,
+    tagline: 'הים של הונגריה - חופים, גבעות געש ומעיינות חמים',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Balaton_Hungary_Landscape.jpg/500px-Balaton_Hungary_Landscape.jpg',
+    iconicLandmark: {
+      name: 'חצי האי טיהאני',
+      nameLocal: 'Tihany Peninsula',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Ap%C3%A1ts%C3%A1gi_templom_%2810483._sz%C3%A1m%C3%BA_m%C5%B1eml%C3%A9k%29_10.jpg/500px-Ap%C3%A1ts%C3%A1gi_templom_%2810483._sz%C3%A1m%C3%BA_m%C5%B1eml%C3%A9k%29_10.jpg',
+      blurb:
+        'לשון יבשה שחודרת אל תוך האגם, ועליה מנזר בנדיקטיני מהמאה ה-11 עם שני מגדליו - התצפית המזוהה ביותר עם בלטון.',
+    },
+    editorialRating: {
+      score: 4.3,
+      verdict:
+        'חופשת אגם נינוחה שעה וחצי מבודפשט: חופים רדודים ונוחים לילדים, גבעות געש עם יקבים ואגם תרמי ייחודי. חסרונות: אין כאן נוף הרים דרמטי, בשיא הקיץ עמוס ויקר, ומחוץ לעונה חלק מהעסקים פשוט סגורים.',
+    },
+    summary:
+      'אגם בלטון הוא האגם הגדול במרכז אירופה, ובהונגריה קוראים לו פשוט "הים". הגדה הצפונית היא הצד היפה: חצי האי טיהאני עם המנזר, גבעות הבזלת של בדצ׳וני והיקבים שעליהן, העיירה בלטונפירד עם הטיילת, והאגם התרמי של הביז - האגם הביולוגי החם הגדול בעולם. הגדה הדרומית רדודה וחולית, ולכן פופולרית עם משפחות.',
+    bestSeason:
+      'יוני-אוגוסט (רחצה, שיט ופסטיבלים - וגם השיא של הצפיפות) · מאי וספטמבר נעימים ושקטים · בחורף רוב עסקי החוף סגורים, אבל הביז התרמי פעיל כל השנה',
+    places: [
+      {
+        id: 'blt-balaton',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Balaton_Hungary_Landscape.jpg/500px-Balaton_Hungary_Landscape.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'אגם בלטון',
+        nameLocal: 'Lake Balaton',
+        category: 'nature',
+        lat: 46.85,
+        lng: 17.72,
+        description:
+          'האגם הגדול במרכז אירופה - כ-77 ק"מ אורך ומים רדודים שמתחממים מהר בקיץ. סביבו טיילות, חופים מוסדרים, שביל אופניים היקפי ארוך וקווי מעבורות בין הגדות.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Lake+Balaton',
+      },
+      {
+        id: 'blt-tihany',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Ap%C3%A1ts%C3%A1gi_templom_%2810483._sz%C3%A1m%C3%BA_m%C5%B1eml%C3%A9k%29_10.jpg/500px-Ap%C3%A1ts%C3%A1gi_templom_%2810483._sz%C3%A1m%C3%BA_m%C5%B1eml%C3%A9k%29_10.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'טיהאני והמנזר',
+        nameLocal: 'Tihany Abbey & Peninsula',
+        category: 'attraction',
+        lat: 46.9089,
+        lng: 17.8792,
+        description:
+          'חצי אי געשי שנכנס אל תוך האגם, ועליו כפר עם בתי לבנים לבנים, שדות לבנדר ומנזר בנדיקטיני מ-1055. מהמנזר נשקפת התצפית המפורסמת על בלטון, ומסביב שבילי הליכה אל האגם הפנימי.',
+        rating: 4.7,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Tihany+Abbey',
+      },
+      {
+        id: 'blt-badacsony',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Badacsony_mountain_from_Balatonm%C3%A1riaf%C3%BCrd%C5%91%2C_Hungary.jpg/500px-Badacsony_mountain_from_Balatonm%C3%A1riaf%C3%BCrd%C5%91%2C_Hungary.jpg',
+        tags: ['outdoors', 'foodie'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הר בדצ׳וני',
+        nameLocal: 'Badacsony',
+        category: 'nature',
+        lat: 46.8035,
+        lng: 17.4958,
+        description:
+          'גבעת בזלת שטוחת-פסגה מעל הגדה הצפונית, שריד של הר געש - ובמדרונותיה כרמים ויקבים. שבילים קצרים עולים אל עמודי הבזלת ואל תצפיות מעל האגם.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Badacsony',
+      },
+      {
+        id: 'blt-heviz',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/H%C3%A9v%C3%ADz.jpg/500px-H%C3%A9v%C3%ADz.jpg',
+        tags: ['families', 'romantic'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'האגם התרמי של הביז',
+        nameLocal: 'Lake Hévíz',
+        category: 'nature',
+        lat: 46.7923,
+        lng: 17.185,
+        description:
+          'האגם התרמי הביולוגי הגדול בעולם: מעיין חם ממלא אותו ומחליף את כל המים בכמה ימים, כך שאפשר לשחות בו גם בחורף. מסביבו בית מרחץ עתיק ופארק.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Lake+Heviz',
+      },
+      {
+        id: 'blt-balatonfured',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Balatonfured19.jpg/500px-Balatonfured19.jpg',
+        tags: ['families', 'foodie'],
+        priceLevel: 1,
+        name: 'בלטונפירד',
+        nameLocal: 'Balatonfüred',
+        category: 'attraction',
+        lat: 46.95,
+        lng: 17.8833,
+        description:
+          'עיירת הנופש הוותיקה של הגדה הצפונית: טיילת עצי צפצפה לאורך המים, מרינה, מעיינות מים מינרליים ובתי קפה. בסיס נוח ללינה ולנסיעות יומיות סביב האגם.',
+        rating: 4.4,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Balatonfured',
+      },
+      {
+        id: 'blt-szigliget',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/V%C3%A1rrom_%2810376._sz%C3%A1m%C3%BA_m%C5%B1eml%C3%A9k%29.jpg/500px-V%C3%A1rrom_%2810376._sz%C3%A1m%C3%BA_m%C5%B1eml%C3%A9k%29.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'מצודת סיגליגט',
+        nameLocal: 'Szigliget Castle',
+        category: 'attraction',
+        lat: 46.7961,
+        lng: 17.4383,
+        description:
+          'חורבות מצודה מהמאה ה-13 על גבעה מעל הכפר, ומהן תצפית פנורמית על האגם ועל גבעות הבזלת. עלייה קצרה ותלולה מהחניה למטה.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Szigliget+Castle',
+      },
+      {
+        id: 'blt-tapolca',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Tapolca_%282%29.jpg/500px-Tapolca_%282%29.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 1,
+        name: 'מערת האגם בטפולצה',
+        nameLocal: 'Tapolca Lake Cave',
+        category: 'nature',
+        lat: 46.8828,
+        lng: 17.4081,
+        description:
+          'מערת נטיפים תת-קרקעית שבתוכה אגם, ושטים בה בסירות משוטים קטנות במעברים צרים - חוויה קצרה ומיוחדת, אטרקציה מצוינת ליום גשום.',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Tapolca+Lake+Cave',
+      },
+      {
+        id: 'blt-keszthely',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Keszthely_-_Festetics_Castle.jpg/500px-Keszthely_-_Festetics_Castle.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        name: 'קסטהיי וארמון פשטטיץ׳',
+        nameLocal: 'Keszthely & Festetics Palace',
+        category: 'museum',
+        lat: 46.7706,
+        lng: 17.2417,
+        description:
+          'העיר הוותיקה בקצה המערבי של האגם, ובה ארמון בארוקי גדול עם ספרייה היסטורית, גנים ואגפי תצוגה. משתלב היטב עם ביקור בהביז הסמוכה.',
+        rating: 4.5,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Festetics+Palace+Keszthely',
+      },
+      {
+        id: 'blt-uplands',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Badacsonytomaj_l%C3%A1tk%C3%A9p.jpg/500px-Badacsonytomaj_l%C3%A1tk%C3%A9p.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'פארק רמות בלטון',
+        nameLocal: 'Balaton Uplands National Park',
+        category: 'nature',
+        lat: 46.9758,
+        lng: 17.9294,
+        description:
+          'פארק לאומי שמשתרע מצפון לאגם: גבעות געש, מכתשי גייזרים מאובנים, ביצות וכפרים כפריים - עם שבילי הליכה ואופניים ופחות תיירים מהחוף.',
+        rating: 4.4,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Balaton+Uplands+National+Park',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'הגדה הצפונית - בלטונפירד',
+        placeIds: ['blt-balatonfured', 'blt-balaton'],
+        notes:
+          'מגיעים מבודפשט (כשעה וחצי), מתמקמים בבלטונפירד ומבלים אחר צהריים על הטיילת ובחוף. ערב נינוח במרינה.',
+      },
+      {
+        day: 2,
+        title: 'טיהאני',
+        placeIds: ['blt-tihany', 'blt-uplands'],
+        notes:
+          'יום בחצי האי: המנזר והתצפית, שדות הלבנדר והאגם הפנימי, ואחר הצהריים שביל בפארק הרמות.',
+      },
+      {
+        day: 3,
+        title: 'הרי הבזלת והמצודה',
+        placeIds: ['blt-badacsony', 'blt-szigliget', 'blt-tapolca'],
+        notes:
+          'עלייה לתצפיות בדצ׳וני בין הכרמים, חורבות מצודת סיגליגט, וסיום בשיט בסירה במערת האגם של טפולצה.',
+      },
+      {
+        day: 4,
+        title: 'המערב - הביז וקסטהיי',
+        placeIds: ['blt-heviz', 'blt-keszthely'],
+        notes:
+          'בוקר רחצה באגם התרמי של הביז (גם בחורף), ואחר הצהריים ארמון פשטטיץ׳ בקסטהיי לפני החזרה.',
+      },
+    ],
+    practical: {
+      flights:
+        'טסים לבודפשט (BUD) בטיסה ישירה מנתב"ג של כשלוש שעות, ומשם כשעה וחצי ברכב או ברכבת ישירה לעיירות הגדה הצפונית (בלטונפירד, סיופוק). אין שדה תעופה בינלאומי פעיל בקנה מידה משמעותי באזור האגם עצמו.',
+      gettingAround:
+        'רכבת מבודפשט מגיעה לרוב עיירות החוף, ובין הגדות יש מעבורות (טיהאני-סנטאנטלפולד למשל). רכב שכור נוח למי שרוצה יקבים, מצודות ואת פארק הרמות; בקיץ יש גם שביל אופניים היקפי מצוין סביב האגם.',
+      kosherOverview:
+        'אין באזור בלטון תשתית כשרות. הכשרות הקרובה היא בבודפשט - שבה יש מסעדות כשרות, מאפיות וקהילה גדולה - כשעה וחצי נסיעה. הדרך המעשית: להצטייד בבודפשט לפני היציאה לאגם.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {

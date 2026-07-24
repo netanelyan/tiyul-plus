@@ -1494,3 +1494,16 @@ the overnight run.
   plainly.
 - All coordinates and photos from the Wikipedia API. build clean,
   verify-photos 383/383 OK.
+
+### 2026-07-25 (k) - Overnight expansion: Lake Balaton (Hungary 2nd city)
+
+- **Lake Balaton** - 9 places, rating 4.3, Hungary second destination.
+  Landmark: the Tihany peninsula and its 11th-century abbey. Nature/water:
+  the lake itself, Badacsony basalt hill and its vineyards, Lake Heviz
+  (the world largest biologically active thermal lake), Szigliget castle
+  hill, Tapolca cave lake (rowing boats underground), Balaton Uplands NP,
+  plus Balatonfured and Keszthely/Festetics Palace. 4-day itinerary.
+- Access: direct TLV-Budapest, then ~1.5h by car or direct train.
+- **Kosher: none at the lake** - nearest is Budapest, stated plainly.
+- All coordinates and photos from the Wikipedia API. build clean,
+  verify-photos all OK (392).
