@@ -1137,3 +1137,33 @@ kazakhstan, montenegro.)
 montenegro"). Candidates not yet built if resuming: Petra/Wadi Rum (Jordan,
 land-crossing note), Marrakech (re-verify Morocco flight status first),
 Sri Lanka, a second Georgian city (Batumi).
+
+### 2026-07-24 (j) - Destinations cont.: Budva, Jordan (Petra), Cyprus (Larnaca)
+
+Continued expansion (one verified city per commit). Also promoted the
+"שאלון מהיר" questionnaire: it now runs a real 5-step guided flow that
+builds a trip via generateTrip() and drops into the planner (QuizWizard),
+and its hero entry was consolidated into one uniform pill row.
+
+- **Budva, Montenegro** (2nd Montenegro city) - 9 places, rating 4.4.
+  Landmark: Budva Old Town. Nature: Lake Skadar + Pavlova Strana bend,
+  Lovćen, Mogren/Bečići beaches, Sveti Nikola island. No kosher (honest).
+- **Petra & Wadi Rum, Jordan** (new `jordan` country) - 8 places, rating
+  4.7. Landmark: the Treasury (Al-Khazneh). Wonders: Treasury+Siq, the
+  Monastery, High Place viewpoint, Wadi Rum desert, Aqaba, Little Petra.
+  Modeled as a LAND crossing (Wadi Araba/Eilat + Jordan Pass), not a
+  flight. **No kosher** in southern Jordan - stated plainly.
+- **Cyprus (Larnaca hub)** (new `cyprus` country, visa-free 90d) - 9
+  places, rating 4.3. Landmark: Aphrodite's Rock. Nature: Cape Greco sea
+  caves, Troodos Mountains, Salt Lake flamingos, Nissi Beach + Kourion/
+  Kykkos. Kosher REAL: Chabad Larnaca "Shemayim" café + delivery, Chabad
+  Ayia Napa (summer). Most-served TLV route, dozens daily <1h.
+
+All: build clean, verify-photos.mjs all OK, hero/nature photos eyeballed.
+
+**Catalog now 18 destinations / 16 countries.** Kosher-honesty maintained:
+real where it exists (Cyprus, Georgia, Thailand, UAE, Baku, Almaty),
+NONE-and-said-so where it doesn't (Montenegro, Jordan).
+
+**Next candidates if resuming:** Marrakech (re-verify Morocco flights),
+Batumi (2nd Georgia), Sri Lanka, Zanzibar (thin - probably skip).
