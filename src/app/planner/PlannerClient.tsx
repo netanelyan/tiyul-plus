@@ -1,15 +1,18 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import type { Country, Destination, Place } from '@/lib/types';
+import { useEffect, useState } from 'react';
+import type { Country, Destination } from '@/lib/types';
 import type { Trip, WizardPrefs } from '@/lib/trip/types';
-import { categoryMeta } from '@/lib/categories';
 import { useTrip } from '@/lib/trip/TripContext';
 import { tripFromTemplate } from '@/lib/trip/generate';
-import { travelLeg } from '@/lib/trip/travel';
-import PlacesMap from '@/components/PlacesMap';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
+import TripWorkspace from '@/components/TripWorkspace';
 
+/**
+ * המתכנן: מסך בניית טיול חדש (כפתורים כממשק ראשי) - וברגע שיש טיול,
+ * אותה תצוגה מאוחדת בדיוק של /chat (TripWorkspace): מסלול + מפה + שיחה
+ * עם הסוכן במסך אחד, על אותו Trip object.
+ */
 export default function PlannerClient({
   countries,
   destinations,
@@ -20,7 +23,6 @@ export default function PlannerClient({
   initialSlug: string;
 }) {
   const trip = useTrip();
-  const [selectedDayId, setSelectedDayId] = useState<string | null>(null);
   const [showWizard, setShowWizard] = useState(false);
   const [aiAck, setAiAck] = useState<string | null>(null);
 
@@ -41,7 +43,6 @@ export default function PlannerClient({
         onDone={(ack) => {
           setAiAck(ack ?? null);
           setShowWizard(false);
-          setSelectedDayId(null);
         }}
         onCancel={trip.currentTrip ? () => setShowWizard(false) : undefined}
       />
@@ -49,14 +50,22 @@ export default function PlannerClient({
   }
 
   return (
-    <Workspace
-      destinations={destinations}
-      selectedDayId={selectedDayId}
-      setSelectedDayId={setSelectedDayId}
-      onNewTrip={() => setShowWizard(true)}
-      ack={aiAck}
-      onDismissAck={() => setAiAck(null)}
-    />
+    <>
+      {/* מה ה-AI הבין מהבקשה - שורה אחת, ניתנת לסגירה */}
+      {aiAck && (
+        <div className="rise-in mb-4 flex items-start justify-between gap-3 rounded-xl bg-sunset/10 px-4 py-3 ring-1 ring-sunset/25 print:hidden">
+          <p className="text-sm font-semibold leading-relaxed text-night">{aiAck}</p>
+          <button
+            onClick={() => setAiAck(null)}
+            aria-label="סגירה"
+            className="shrink-0 text-night/40 transition hover:text-night"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+      <TripWorkspace destinations={destinations} onNewTrip={() => setShowWizard(true)} />
+    </>
   );
 }
 
@@ -397,429 +406,5 @@ function Seg({
         </button>
       ))}
     </div>
-  );
-}
-
-/* ================= Workspace: סביבת העבודה של הטיול ================= */
-
-function Workspace({
-  destinations,
-  selectedDayId,
-  setSelectedDayId,
-  onNewTrip,
-  ack,
-  onDismissAck,
-}: {
-  destinations: Destination[];
-  selectedDayId: string | null;
-  setSelectedDayId: (id: string | null) => void;
-  onNewTrip: () => void;
-  ack: string | null;
-  onDismissAck: () => void;
-}) {
-  const trip = useTrip();
-  const t = trip.currentTrip!;
-  const [copied, setCopied] = useState(false);
-  const [addCity, setAddCity] = useState('');
-
-  const destOf = (slug: string) => destinations.find((d) => d.slug === slug);
-  const placeOf = (slug: string, id: string): Place | undefined =>
-    destOf(slug)?.places.find((p) => p.id === id);
-
-  const day =
-    t.days.find((d) => d.id === selectedDayId) ?? t.days[0] ?? null;
-  const dayDest = day ? destOf(day.citySlug) : null;
-
-  const dayPlaces: Place[] = useMemo(() => {
-    if (!day) return [];
-    return day.placeIds
-      .map((id) => placeOf(day.citySlug, id))
-      .filter((p): p is Place => Boolean(p));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [day, t]);
-
-  const availableToAdd: Place[] = useMemo(() => {
-    if (!day || !dayDest) return [];
-    const usedInTrip = new Set(t.days.flatMap((d) => d.placeIds));
-    return dayDest.places.filter((p) => !usedInTrip.has(p.id));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [day, dayDest, t]);
-
-  const totalStops = t.days.reduce((n, d) => n + d.placeIds.length, 0);
-  const googleDirectionsUrl =
-    'https://www.google.com/maps/dir/' +
-    dayPlaces.map((p) => `${p.lat},${p.lng}`).join('/');
-
-  function copySummary() {
-    const lines: string[] = [`🧳 ${t.name} | טיול+`, ''];
-    t.days.forEach((d, i) => {
-      const dst = destOf(d.citySlug);
-      if (i > 0 && t.days[i - 1].citySlug !== d.citySlug) {
-        const leg = travelLeg(t.days[i - 1].citySlug, d.citySlug);
-        lines.push(`${leg.emoji} מעבר: ${destOf(t.days[i - 1].citySlug)?.name} ← ${dst?.name} (${leg.label})`, '');
-      }
-      lines.push(`📅 יום ${i + 1} - ${dst?.flag} ${dst?.name}:`);
-      d.placeIds.forEach((pid, j) => {
-        const p = placeOf(d.citySlug, pid);
-        if (p) lines.push(`  ${j + 1}. ${p.name} (${p.nameLocal})`);
-      });
-      if (d.notes) lines.push(`  💡 ${d.notes}`);
-      lines.push('');
-    });
-    navigator.clipboard.writeText(lines.join('\n')).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  }
-
-  return (
-    <div>
-      {/* מה ה-AI הבין מהבקשה - שורה אחת, ניתנת לסגירה */}
-      {ack && (
-        <div className="rise-in mb-4 flex items-start justify-between gap-3 rounded-xl bg-sunset/10 px-4 py-3 ring-1 ring-sunset/25 print:hidden">
-          <p className="text-sm font-semibold leading-relaxed text-night">{ack}</p>
-          <button
-            onClick={onDismissAck}
-            aria-label="סגירה"
-            className="shrink-0 text-night/40 transition hover:text-night"
-          >
-            ✕
-          </button>
-        </div>
-      )}
-
-      {/* Top bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 print:hidden">
-        <div className="flex items-center gap-3">
-          <input
-            value={t.name}
-            onChange={(e) => trip.renameTrip(t.id, e.target.value)}
-            className="display w-64 rounded-xl bg-transparent text-2xl text-night outline-none ring-sunset/50 transition focus:ring-2"
-          />
-          <span className="badge rounded-full bg-night/5 px-3 py-1 text-xs font-semibold text-night/60">
-            {totalStops} עצירות · {t.days.length} ימים
-          </span>
-        </div>
-        <div className="flex flex-wrap gap-2 text-sm">
-          {trip.trips.length > 1 && (
-            <select
-              value={t.id}
-              onChange={(e) => {
-                trip.setCurrentId(e.target.value);
-                setSelectedDayId(null);
-              }}
-              className="rounded-xl bg-shell px-3 py-2 font-semibold text-night ring-1 ring-night/10"
-            >
-              {trip.trips.map((x) => (
-                <option key={x.id} value={x.id}>
-                  {x.name}
-                </option>
-              ))}
-            </select>
-          )}
-          <Btn onClick={onNewTrip}>+ טיול חדש</Btn>
-          <Btn onClick={() => trip.duplicateTrip(t.id)}>שכפול</Btn>
-          <Btn onClick={copySummary}>{copied ? '✓ הועתק' : 'העתקת סיכום'}</Btn>
-          <Btn onClick={() => window.print()}>הדפסה / PDF</Btn>
-          <Btn
-            danger
-            onClick={() => {
-              if (confirm('למחוק את הטיול הזה?')) {
-                trip.deleteTrip(t.id);
-                setSelectedDayId(null);
-              }
-            }}
-          >
-            מחיקה
-          </Btn>
-        </div>
-      </div>
-
-      {/* Day tabs with travel legs */}
-      <div className="mt-6 flex flex-wrap items-center gap-2 print:hidden">
-        {t.days.map((d, i) => {
-          const dst = destOf(d.citySlug);
-          const prev = i > 0 ? t.days[i - 1] : null;
-          const cityChanged = prev && prev.citySlug !== d.citySlug;
-          return (
-            <span key={d.id} className="flex items-center gap-2">
-              {cityChanged && (
-                <span className="rounded-full bg-night/5 px-2.5 py-1 text-xs font-medium text-night/50">
-                  {travelLeg(prev!.citySlug, d.citySlug).emoji}
-                </span>
-              )}
-              <button
-                onClick={() => setSelectedDayId(d.id)}
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                  day?.id === d.id
-                    ? 'bg-sunset text-cream'
-                    : 'bg-shell text-night/60 ring-1 ring-night/10 hover:ring-night/25'
-                }`}
-              >
-                {dst?.flag} יום {i + 1}
-              </button>
-            </span>
-          );
-        })}
-        {/* Add day */}
-        <select
-          value={addCity}
-          onChange={(e) => {
-            if (e.target.value) {
-              trip.addDay(e.target.value);
-              setAddCity('');
-            }
-          }}
-          className="rounded-full bg-shell px-3 py-2 text-sm font-semibold text-night/70 ring-1 ring-night/10"
-        >
-          <option value="">+ יום…</option>
-          {t.citySlugs.map((c) => (
-            <option key={c} value={c}>
-              עוד יום ב{destOf(c)?.name}
-            </option>
-          ))}
-          {destinations
-            .filter((d) => !t.citySlugs.includes(d.slug))
-            .map((d) => (
-              <option key={d.slug} value={d.slug}>
-                עיר חדשה: {d.flag} {d.name}
-              </option>
-            ))}
-        </select>
-      </div>
-
-      {day && dayDest ? (
-        <div className="mt-6 grid gap-5 lg:grid-cols-5 print:hidden">
-          {/* Day panel */}
-          <div className="space-y-3 lg:col-span-2">
-            {/* Travel leg banner */}
-            {(() => {
-              const i = t.days.findIndex((d) => d.id === day.id);
-              const prev = i > 0 ? t.days[i - 1] : null;
-              if (prev && prev.citySlug !== day.citySlug) {
-                const leg = travelLeg(prev.citySlug, day.citySlug);
-                return (
-                  <div className="rounded-xl bg-night/5 px-4 py-3 text-sm font-semibold text-night/80">
-                    {leg.emoji} {destOf(prev.citySlug)?.name} ← {dayDest.name} · {leg.label}
-                  </div>
-                );
-              }
-              return null;
-            })()}
-
-            <div className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
-              <div className="flex items-center justify-between gap-2">
-                <h2 className="text-lg font-bold text-night">
-                  {dayDest.flag} יום {t.days.findIndex((d) => d.id === day.id) + 1} · {dayDest.name}
-                </h2>
-                {t.days.length > 1 && (
-                  <button
-                    onClick={() => {
-                      trip.removeDay(day.id);
-                      setSelectedDayId(null);
-                    }}
-                    className="rounded-full bg-night/5 px-2.5 py-1 text-xs font-semibold text-night/60 transition hover:bg-night/10"
-                  >
-                    מחיקת יום
-                  </button>
-                )}
-              </div>
-              <textarea
-                value={day.notes ?? ''}
-                onChange={(e) => trip.setDayNotes(day.id, e.target.value)}
-                placeholder="הערות ליום הזה…"
-                rows={2}
-                className="mt-3 w-full resize-none rounded-xl bg-night/5 px-4 py-2.5 text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset"
-              />
-              {dayPlaces.length > 1 && (
-                <a
-                  href={googleDirectionsUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-3 block rounded-xl bg-sunset px-4 py-3 text-center text-sm font-bold text-cream transition hover:bg-sunset-deep"
-                >
-                  פתיחת ניווט היום ב-Google Maps
-                </a>
-              )}
-            </div>
-
-            {/* Stops */}
-            <ol className="space-y-2">
-              {dayPlaces.map((place, i) => {
-                const meta = categoryMeta[place.category];
-                return (
-                  <li
-                    key={place.id}
-                    className="flex gap-3 rounded-2xl bg-shell p-4 ring-1 ring-night/10"
-                  >
-                    <div className="flex flex-col items-center gap-1">
-                      <div
-                        className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold text-white"
-                        style={{ backgroundColor: meta.color }}
-                      >
-                        {i + 1}
-                      </div>
-                      <button
-                        onClick={() => trip.movePlace(day.id, i, -1)}
-                        disabled={i === 0}
-                        className="text-night/40 transition hover:text-night disabled:opacity-20"
-                        aria-label="הזז למעלה"
-                      >
-                        ▲
-                      </button>
-                      <button
-                        onClick={() => trip.movePlace(day.id, i, 1)}
-                        disabled={i === dayPlaces.length - 1}
-                        className="text-night/40 transition hover:text-night disabled:opacity-20"
-                        aria-label="הזז למטה"
-                      >
-                        ▼
-                      </button>
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="font-bold text-night">
-                          {place.name}
-                          <span className="badge ms-2 text-xs font-medium text-night/40">
-                            <span
-                              className="h-2 w-2 rounded-full"
-                              style={{ backgroundColor: meta.color }}
-                            />
-                            {meta.label}
-                          </span>
-                        </div>
-                        <button
-                          onClick={() => trip.removePlace(day.id, place.id)}
-                          className="text-night/30 transition hover:text-sunset-deep"
-                          aria-label="הסרה"
-                        >
-                          ✕
-                        </button>
-                      </div>
-                      <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-night/60">
-                        {place.description}
-                      </p>
-                      {t.days.filter((d) => d.citySlug === day.citySlug).length > 1 && (
-                        <select
-                          value=""
-                          onChange={(e) => {
-                            if (e.target.value) trip.movePlaceToDay(day.id, place.id, e.target.value);
-                          }}
-                          className="mt-1.5 rounded-lg bg-night/5 px-2 py-1 text-xs font-medium text-night/50"
-                        >
-                          <option value="">העבר ליום…</option>
-                          {t.days
-                            .filter((d) => d.id !== day.id && d.citySlug === day.citySlug)
-                            .map((d) => (
-                              <option key={d.id} value={d.id}>
-                                יום {t.days.findIndex((x) => x.id === d.id) + 1}
-                              </option>
-                            ))}
-                        </select>
-                      )}
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
-
-            {/* Add stop */}
-            {availableToAdd.length > 0 && (
-              <select
-                value=""
-                onChange={(e) => {
-                  const p = availableToAdd.find((x) => x.id === e.target.value);
-                  if (p) trip.addPlace(day.citySlug, p.id);
-                }}
-                className="w-full rounded-xl bg-shell px-4 py-3 font-semibold text-night/70 ring-1 ring-night/10"
-              >
-                <option value="">+ הוספת עצירה מהקטלוג של {dayDest.name}…</option>
-                {availableToAdd.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {categoryMeta[p.category].label} · {p.name}
-                  </option>
-                ))}
-              </select>
-            )}
-          </div>
-
-          {/* Map */}
-          <div className="h-[420px] overflow-hidden rounded-2xl ring-1 ring-night/10 lg:sticky lg:top-20 lg:col-span-3 lg:h-[640px]">
-            <PlacesMap
-              center={dayDest.center}
-              zoom={dayDest.zoom}
-              places={dayPlaces}
-              numbered
-              showRoute
-            />
-          </div>
-        </div>
-      ) : (
-        <div className="mt-6 rounded-2xl bg-shell p-8 text-center font-medium text-night/50 ring-1 ring-night/10 print:hidden">
-          הטיול עוד ריק - מוסיפים יום למעלה ומתחילים לחלום
-        </div>
-      )}
-
-      {/* ---- Print-only summary ---- */}
-      <div className="hidden print:block">
-        <h1 className="text-2xl font-bold">🧳 {t.name} - טיול+</h1>
-        {t.days.map((d, i) => {
-          const dst = destOf(d.citySlug);
-          const prev = i > 0 ? t.days[i - 1] : null;
-          return (
-            <div key={d.id} className="mt-4">
-              {prev && prev.citySlug !== d.citySlug && (
-                <p className="font-bold">
-                  {travelLeg(prev.citySlug, d.citySlug).emoji} מעבר:{' '}
-                  {destOf(prev.citySlug)?.name} ← {dst?.name} ·{' '}
-                  {travelLeg(prev.citySlug, d.citySlug).label}
-                </p>
-              )}
-              <h2 className="mt-2 text-lg font-bold">
-                📅 יום {i + 1} - {dst?.name}
-              </h2>
-              {d.notes && <p className="text-sm">💡 {d.notes}</p>}
-              <ol className="mt-1 list-decimal ps-6 text-sm">
-                {d.placeIds.map((pid) => {
-                  const p = placeOf(d.citySlug, pid);
-                  return p ? (
-                    <li key={pid}>
-                      <strong>{p.name}</strong> ({p.nameLocal})
-                      {p.kosherNote ? ` · ✡️ ${p.kosherNote}` : ''}
-                    </li>
-                  ) : null;
-                })}
-              </ol>
-            </div>
-          );
-        })}
-        <p className="mt-6 text-xs">
-          הופק ע"י טיול+ · לוודא כשרות, שעות ומחירים מול המקומות עצמם
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function Btn({
-  children,
-  onClick,
-  danger = false,
-}: {
-  children: React.ReactNode;
-  onClick: () => void;
-  danger?: boolean;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`rounded-xl px-3.5 py-2 font-semibold transition ${
-        danger
-          ? 'bg-shell text-sunset-deep ring-1 ring-night/10 hover:bg-sunset hover:text-cream'
-          : 'bg-shell text-night/70 ring-1 ring-night/10 hover:ring-night/25'
-      }`}
-    >
-      {children}
-    </button>
   );
 }
