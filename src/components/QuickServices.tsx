@@ -19,26 +19,31 @@ export default function QuickServices() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* 2×2 במובייל, 4 בשורה בדסקטופ */}
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {quickServices.map((s) => {
           const href = s.affiliateUrl ?? s.publicUrl;
           const comingSoon = href === null;
           return (
             <div
               key={s.key}
-              className="card-pop flex flex-col rounded-2xl bg-shell p-5 ring-1 ring-night/10"
+              className="card-pop flex flex-col rounded-2xl bg-shell p-4 ring-1 ring-night/10 sm:p-5"
             >
               <span
                 aria-hidden
-                className="badge h-11 w-11 items-center justify-center rounded-xl bg-zest/20 text-2xl"
+                className="badge h-10 w-10 items-center justify-center rounded-xl bg-zest/20 text-xl sm:h-11 sm:w-11 sm:text-2xl"
               >
                 {s.emoji}
               </span>
-              <h3 className="mt-3 font-bold text-night">{s.title}</h3>
-              <p className="mt-1 flex-1 text-sm leading-relaxed text-night/60">{s.description}</p>
+              <h3 className="mt-2.5 text-sm font-bold leading-snug text-night sm:mt-3 sm:text-base">
+                {s.title}
+              </h3>
+              <p className="mt-1 flex-1 text-xs leading-relaxed text-night/60 sm:text-sm">
+                {s.description}
+              </p>
 
               {comingSoon ? (
-                <span className="mt-4 inline-flex items-center justify-center rounded-xl bg-night/5 px-4 py-2.5 text-sm font-bold text-night/45">
+                <span className="mt-3 inline-flex items-center justify-center rounded-xl bg-night/5 px-3 py-2.5 text-sm font-bold text-night/45 sm:mt-4 sm:px-4">
                   {s.cta}
                 </span>
               ) : (
@@ -46,16 +51,14 @@ export default function QuickServices() {
                   href={href}
                   target="_blank"
                   rel="noreferrer nofollow sponsored"
-                  className="mt-4 inline-flex items-center justify-center rounded-xl bg-sunset px-4 py-2.5 text-sm font-bold text-cream transition hover:bg-sunset-deep"
+                  className="mt-3 inline-flex items-center justify-center rounded-xl bg-sunset px-3 py-2.5 text-sm font-bold text-cream transition hover:bg-sunset-deep sm:mt-4 sm:px-4"
                 >
                   {s.cta} ↗
                 </a>
               )}
 
-              {s.provider && (
-                <span className="mt-2 text-[11px] font-medium text-night/35">
-                  {comingSoon ? '' : `דרך ${s.provider}`}
-                </span>
+              {s.provider && !comingSoon && (
+                <span className="mt-2 text-[11px] font-medium text-night/35">דרך {s.provider}</span>
               )}
             </div>
           );
