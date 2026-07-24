@@ -8,7 +8,7 @@ const KOSHER_KEY = 'tiyul-plus:kosher-pref';
 /**
  * קלט ההירו המשותף (דף הבית + נחיתת הצ׳אט): שדה גדול, כפתור שתמיד
  * צבעוני, dropdown רעיונות - ולידו טוגל שקט "🍽️ אוכל כשר". העדפות
- * רגישות הן כפתורים, לא שאלות: הטוגל עובר עם השליחה והסוכן קורא אותו
+ * רגישות הן כפתורים, לא שאלות (אייקון וי-מאומת, לא צלחת): הטוגל עובר עם השליחה והסוכן קורא אותו
  * בשקט. מצב הטוגל נשמר ב-localStorage (ברירת מחדל: כבוי).
  */
 export default function HeroPrompt({
@@ -96,7 +96,20 @@ export default function HeroPrompt({
                 : 'bg-shell text-night/60 ring-night/10 hover:text-night hover:ring-sunset/30'
             }`}
           >
-            <span aria-hidden>🍽️</span>
+            <svg
+              aria-hidden
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="9" strokeWidth="2" />
+              <path d="m8.5 12 2.5 2.5 4.5-5" />
+            </svg>
             אוכל כשר
           </button>
         }
