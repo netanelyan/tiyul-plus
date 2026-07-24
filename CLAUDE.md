@@ -1566,3 +1566,23 @@ the overnight run.
   (~a week). pending-review.
 - All coordinates and photos from the Wikipedia API. build clean,
   verify-photos all OK.
+
+### 2026-07-25 (o) - Overnight expansion: Nepal (Kathmandu + Himalayas)
+
+- **Nepal** (new country) - visa on arrival / e-Visa with 2026 fees
+  (30/50/125 USD for 15/30/90 days, cash), NPR, cash-first, local SIM.
+- **Kathmandu & the Himalayas** - 13 places, rating 4.7. Landmark: Mount
+  Everest. Nature/trekking: Sagarmatha NP (Everest region), the Annapurna
+  massif, Poon Hill, Pokhara + Phewa Lake, Chitwan NP. Heritage: Durbar
+  Square, Boudhanath, Swayambhunath, Bhaktapur, Nagarkot sunrise ridge.
+  6-day itinerary that treats treks as multi-day add-ons, not day trips.
+- Flights: no nonstop TLV-KTM; one connection (Gulf hubs / India / Sri
+  Lanka), ~13h+; domestic flights weather-dependent, buffer day advised.
+- **Kosher REAL and strong:** Chabad House Kathmandu in Thamel
+  (Pushpalal Path) with meat and dairy kosher restaurants and the famous
+  Seder; pending-review. Pokhara Chabad presence is described as seasonal
+  and to be verified - not asserted. Nothing on the treks, said plainly.
+- Coordinates and photos from the Wikipedia API. Annapurna Base Camp and
+  Everest Base Camp had no coordinates - used the massif/mountain
+  articles instead of guessing camp coordinates. build clean,
+  verify-photos all OK.

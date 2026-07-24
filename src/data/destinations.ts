@@ -10474,6 +10474,321 @@ export const destinations: Destination[] = [
         'אין בקרואטיה מסעדה כשרה פתוחה לקהל. בית חב"ד בזאגרב מספק ארוחות שבת, מוצרים כשרים וקייטרינג שנשלח גם לערי החוף - הכול בהזמנה מראש (מומלץ כשבוע). הקהילה היהודית המקומית מפרסמת גם מדריך מוצרים כשרים לסופרמרקטים, שימושי למי שמטייל בפארקים ובאיים.',
     },
   },
+  {
+    slug: 'kathmandu',
+    name: 'קטמנדו וההימלאיה',
+    nameLocal: 'Kathmandu & the Himalayas',
+    countrySlug: 'nepal',
+    flag: '🇳🇵',
+    center: { lat: 28.2, lng: 85.0 },
+    zoom: 7,
+    tagline: 'מקדשים, פסגות של 8,000 מטר ומסלולי טרק אגדיים',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Mt._Everest_from_Gokyo_Ri_November_5%2C_2012.jpg/500px-Mt._Everest_from_Gokyo_Ri_November_5%2C_2012.jpg',
+    iconicLandmark: {
+      name: 'הר האוורסט',
+      nameLocal: 'Mount Everest / Sagarmatha',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Mt._Everest_from_Gokyo_Ri_November_5%2C_2012.jpg/500px-Mt._Everest_from_Gokyo_Ri_November_5%2C_2012.jpg',
+      blurb:
+        'הפסגה הגבוהה בעולם (8,849 מ׳) על הגבול בין נפאל לטיבט - ורוב המטיילים פוגשים אותה מהשבילים של אזור הקומבו או מטיסת תצפית.',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'הרים ברמה שאין דומה לה, מסלולי טרק לכל רמה ותשתית מטיילים זולה - ובקטמנדו בית חב"ד עם מסעדה כשרה, נדיר באסיה. חסרונות: אין טיסה ישירה (כ-13 שעות עם החלפה), קטמנדו רועשת ומזוהמת, וטרקים גבוהים דורשים התאקלמות, ביטוח מתאים והרבה תכנון.',
+    },
+    summary:
+      'נפאל מציעה שני עולמות: עמק קטמנדו עם כיכרות הדורבר, הסטופות הענקיות בודהנאת וסוואיאמבונאת והעיר העתיקה בהקטפור - וההימלאיה עצמה, עם רכס האנאפורנה מעל פוקהרה, אזור האוורסט בפארק סגרמאתא ושבילי טרק מפורסמים כמו פון היל. בשפלה הדרומית שוכן פארק צ׳יטוואן עם הקרנפים והפילים. בקטמנדו יש גם בית חב"ד עם מסעדה כשרה בשרית וחלבית.',
+    bestSeason:
+      'אוקטובר-נובמבר (הכי צלול ויציב לטרקים) ומרץ-אפריל (פריחת הרודודנדרון) · יוני-ספטמבר עונת מונסון - שבילים בוציים ונופים מעוננים · בחורף קר מאוד בגבהים',
+    places: [
+      {
+        id: 'npl-everest',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Mt._Everest_from_Gokyo_Ri_November_5%2C_2012.jpg/500px-Mt._Everest_from_Gokyo_Ri_November_5%2C_2012.jpg',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'הר האוורסט',
+        nameLocal: 'Mount Everest',
+        category: 'nature',
+        lat: 27.9883,
+        lng: 86.9253,
+        description:
+          'הפסגה הגבוהה בעולם, 8,849 מ׳. המטיילים הרגילים לא מטפסים אלא הולכים אל מחנה הבסיס (כ-12 יום הלוך-חזור מלוקלה) או טסים בטיסת תצפית של שעה מקטמנדו.',
+        rating: 4.8,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Mount+Everest',
+      },
+      {
+        id: 'npl-sagarmatha',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Valley%2C_Tengboche%2C_Mountains_of_Nepal.jpg/500px-Valley%2C_Tengboche%2C_Mountains_of_Nepal.jpg',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        name: 'פארק סגרמאתא (אזור האוורסט)',
+        nameLocal: 'Sagarmatha National Park',
+        category: 'nature',
+        lat: 27.9333,
+        lng: 86.7333,
+        description:
+          'אתר מורשת עולמית שמקיף את האוורסט, ובו כפרי השרפה, מנזרים כמו טנגבוצ׳ה וקרחונים. הכניסה בטיסה קטנה ללוקלה ואז ימי הליכה - כל השאר נעשה ברגל ובעזרת סבלים ופרדות.',
+        rating: 4.8,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Sagarmatha+National+Park',
+      },
+      {
+        id: 'npl-annapurna',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/South_Face_of_Annapurna_I_%28Main%29.jpg/500px-South_Face_of_Annapurna_I_%28Main%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'רכס אנאפורנה',
+        nameLocal: 'Annapurna Massif',
+        category: 'nature',
+        lat: 28.5961,
+        lng: 83.8203,
+        description:
+          'רכס הימלאיה מעל פוקהרה שכולל פסגה מעל 8,000 מ׳ ועוד שכנות מושלגות. סביבו רשת הטרקים הפופולרית בנפאל - ממסלולים של ימים ספורים ועד הקפת הרכס בכשבועיים.',
+        rating: 4.8,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Annapurna+Massif',
+      },
+      {
+        id: 'npl-poonhill',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Poon_hill_sunrise.jpg/500px-Poon_hill_sunrise.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'פון היל',
+        nameLocal: 'Poon Hill',
+        category: 'viewpoint',
+        lat: 28.4,
+        lng: 83.6895,
+        description:
+          'תצפית זריחה בגובה כ-3,210 מ׳ מול רכסי אנאפורנה ודאולאגירי, בקצה טרק קצר ופופולרי של 3-4 ימים מפוקהרה - המסלול הקלאסי למי שרוצה טעימה מההימלאיה.',
+        rating: 4.7,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Poon+Hill',
+      },
+      {
+        id: 'npl-pokhara',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Pokhara_Valley.jpg/500px-Pokhara_Valley.jpg',
+        tags: ['outdoors', 'foodie'],
+        priceLevel: 1,
+        name: 'פוקהרה',
+        nameLocal: 'Pokhara',
+        category: 'attraction',
+        lat: 28.2083,
+        lng: 83.9889,
+        description:
+          'עיר האגם למרגלות האנאפורנה, ובירת הטרקים והפראגליידינג של נפאל. רגועה בהרבה מקטמנדו: בתי קפה על שפת האגם, סוכנויות טרקים ותצפיות זריחה על ההרים.',
+        rating: 4.6,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Pokhara',
+      },
+      {
+        id: 'npl-phewa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Phewa_lake%2C_Pokhara.jpg/500px-Phewa_lake%2C_Pokhara.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'אגם פאווה',
+        nameLocal: 'Phewa Lake',
+        category: 'nature',
+        lat: 28.2142,
+        lng: 83.9472,
+        description:
+          'האגם של פוקהרה, ובו מקדש טאל בארהי על אי קטן. שוכרים סירת משוטים, ומהגדה המערבית עולים לפגודת השלום העולמית עם נוף על ההרים ועל האגם.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Phewa+Lake',
+      },
+      {
+        id: 'npl-chitwan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Chitwan_swamp.jpg/500px-Chitwan_swamp.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        name: 'הפארק הלאומי צ׳יטוואן',
+        nameLocal: 'Chitwan National Park',
+        category: 'nature',
+        lat: 27.5,
+        lng: 84.3333,
+        description:
+          'ג׳ונגל ואזורי ביצה בשפלה הדרומית, אתר מורשת עולמית - כאן חיים קרנף חד-קרן, פילים, תנינים ולפעמים נמר בנגלי. יוצאים לספארי בג׳יפ, בקאנו או ברגל עם ריינג׳ר.',
+        rating: 4.6,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Chitwan+National+Park',
+      },
+      {
+        id: 'npl-kathmandu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Kathmandu-Durbar_Square-06-Mahavishnu-Kuh-Vishnu-Pratapamalla-Jagannath-2007-gje.jpg/500px-Kathmandu-Durbar_Square-06-Mahavishnu-Kuh-Vishnu-Pratapamalla-Jagannath-2007-gje.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'קטמנדו וכיכר הדורבר',
+        nameLocal: 'Kathmandu Durbar Square',
+        category: 'attraction',
+        lat: 27.71,
+        lng: 85.32,
+        description:
+          'הבירה הצפופה והצבעונית, ובלִבּה כיכר הדורבר עם ארמונות ומקדשי עץ מגולפים - אתר מורשת עולמית שחלקו שוקם אחרי רעידת האדמה של 2015. לידה שכונת תאמל של המטיילים.',
+        rating: 4.4,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Kathmandu+Durbar+Square',
+      },
+      {
+        id: 'npl-boudha',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Boudhanath_stupa_%2C_Kathmandu%2C_Nepal.jpg/500px-Boudhanath_stupa_%2C_Kathmandu%2C_Nepal.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'סטופת בודהנאת',
+        nameLocal: 'Boudhanath Stupa',
+        category: 'attraction',
+        lat: 27.7214,
+        lng: 85.3619,
+        description:
+          'אחת הסטופות הגדולות בעולם, מרכז החיים הטיבטיים בקטמנדו - עיני הבודהה על הכיפה, מאמינים שמקיפים אותה בשעות הערב וגלגלי תפילה סביב. אתר מורשת עולמית.',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Boudhanath+Stupa',
+      },
+      {
+        id: 'npl-swayambhu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Swayambhunath_2018.jpg/500px-Swayambhunath_2018.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        name: 'סוואיאמבונאת (מקדש הקופים)',
+        nameLocal: 'Swayambhunath',
+        category: 'attraction',
+        lat: 27.715,
+        lng: 85.29,
+        description:
+          'סטופה עתיקה על גבעה מערבית לעיר, שאליה עולים בכ-365 מדרגות בין קופים - ומלמעלה נוף על כל עמק קטמנדו. אחד המקומות הטובים בעיר לשקיעה.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Swayambhunath',
+      },
+      {
+        id: 'npl-bhaktapur',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Nyatpola_%26_Bhairav_Temple.jpg/500px-Nyatpola_%26_Bhairav_Temple.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        name: 'בהקטפור',
+        nameLocal: 'Bhaktapur',
+        category: 'attraction',
+        lat: 27.6722,
+        lng: 85.4278,
+        description:
+          'העיר העתיקה השמורה ביותר בעמק: כיכרות אבן, מקדש נייטפולה בן חמש הקומות, סדנאות קדרות ורחובות ללא מכוניות. שעה מקטמנדו, ומרגישה כמו מאה שנה אחורה.',
+        rating: 4.7,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Bhaktapur',
+      },
+      {
+        id: 'npl-nagarkot',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/2015-03-18_Nagarkot_Hotel_Galaxy_DSCF2094.jpg/500px-2015-03-18_Nagarkot_Hotel_Galaxy_DSCF2094.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'נגרקוט',
+        nameLocal: 'Nagarkot',
+        category: 'viewpoint',
+        lat: 27.7236,
+        lng: 85.5247,
+        description:
+          'כפר על רכס במזרח עמק קטמנדו, בגובה כ-2,100 מ׳ - הנקודה הקלאסית לזריחה מול רכסי ההימלאיה בלי לצאת לטרק. שעה וחצי מהעיר, ולנים שם לילה.',
+        rating: 4.4,
+        durationMin: 720,
+        externalUrl: 'https://maps.google.com/?q=Nagarkot',
+      },
+      {
+        id: 'npl-chabad',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Thamel_at_night_-_Kathmandu%2C_Nepal_-_panoramio_%281%29.jpg/500px-Thamel_at_night_-_Kathmandu%2C_Nepal_-_panoramio_%281%29.jpg',
+        tags: ['foodie'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'בית חב"ד קטמנדו',
+        nameLocal: 'Chabad House Kathmandu, Thamel',
+        category: 'kosher-food',
+        lat: 27.7152,
+        lng: 85.3102,
+        description:
+          'בית חב"ד בשכונת תאמל (Pushpalal Path) עם מסעדה כשרה - בשרי וחלבי - שמגישה אוכל ישראלי ומקומי, ארוחות שבת וליל הסדר המפורסם שמושך אלפי מטיילים. אחת הכתובות המוכרות לישראלים באסיה.',
+        kosherNote: 'בהשגחת בית חב"ד נפאל. שעות ותפריט משתנים לפי העונה - לוודא מולם, במיוחד סביב החגים.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד נפאל, קטמנדו',
+        },
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Chabad+House+Kathmandu',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'קטמנדו - התאקלמות',
+        placeIds: ['npl-kathmandu', 'npl-chabad'],
+        notes:
+          'נחיתה, מנוחה מהטיסה הארוכה וסיבוב בכיכר הדורבר ובתאמל. ארוחת ערב כשרה בבית חב"ד, וסידור אישורי טרק (TIMS/היתרי פארק) לפי המסלול.',
+      },
+      {
+        day: 2,
+        title: 'הסטופות והעיר העתיקה',
+        placeIds: ['npl-boudha', 'npl-swayambhu', 'npl-bhaktapur'],
+        notes:
+          'בוקר בבודהנאת, צהריים בסוואיאמבונאת עם נוף לעמק, ואחר הצהריים בהקטפור השמורה.',
+      },
+      {
+        day: 3,
+        title: 'זריחה בנגרקוט',
+        placeIds: ['npl-nagarkot'],
+        notes:
+          'עולים לרכס נגרקוט, לנים שם ורואים זריחה מול ההימלאיה - תצפית הרים בלי טרק.',
+      },
+      {
+        day: 4,
+        title: 'פוקהרה והאגם',
+        placeIds: ['npl-pokhara', 'npl-phewa'],
+        notes:
+          'טיסה קצרה או נסיעה ארוכה לפוקהרה, שיט באגם פאווה ופגודת השלום. כאן גם סוגרים את פרטי הטרק.',
+      },
+      {
+        day: 5,
+        title: 'טרק פון היל',
+        placeIds: ['npl-poonhill', 'npl-annapurna'],
+        notes:
+          'טרק של 3-4 ימים מפוקהרה: כפרים, מדרגות אינסופיות וזריחה מפון היל מול האנאפורנה. עם מדריך וסבל, ובקצב שמתאים לגובה.',
+      },
+      {
+        day: 6,
+        title: 'צ׳יטוואן או אזור האוורסט',
+        placeIds: ['npl-chitwan', 'npl-sagarmatha', 'npl-everest'],
+        notes:
+          'בוחרים סיום: ספארי ג׳ונגל בצ׳יטוואן בשפלה, או טיסת תצפית לאוורסט - ולמי שיש שבועיים, טרק מחנה הבסיס מלוקלה.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה מנתב"ג לקטמנדו (KTM). טסים עם החלפה אחת - בעיקר דרך המפרץ (אבו דאבי, דובאי, שארג׳ה) או דרך הודו וסרי לנקה - סה"כ כ-13 שעות ומעלה. הטיסות הפנימיות בנפאל (לוקלה, פוקהרה) קטנות ותלויות מזג אוויר, וכדאי להשאיר יום מרווח.',
+      gettingAround:
+        'בקטמנדו ובפוקהרה - טוק-טוק, מוניות ואפליקציית Pathao/InDrive. בין הערים: אוטובוסי תיירים (7-8 שעות לפוקהרה) או טיסה פנימית של 25 דקות. הטרקים עצמם נעשים ברגל, ורוב המטיילים לוקחים מדריך וסבל מקומיים - בחלק מהמסלולים זו גם דרישה רשמית.',
+      kosherOverview:
+        'בקטמנדו יש בית חב"ד ותיק בשכונת תאמל עם מסעדה כשרה בשרית וחלבית, ארוחות שבת וליל הסדר הגדול באסיה - כתובת מוכרת ומרכזית לישראלים. בפוקהרה פועלת נוכחות חב"ד עונתית ומשתנה, ולכן כדאי לבדוק מולם לפני שמסתמכים עליה. במסלולי הטרק ובכפרים אין כשרות - נוהגים להצטייד מראש ולהסתמך על אוכל צמחוני ופשוט (דאל באט).',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
