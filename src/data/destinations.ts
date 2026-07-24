@@ -4766,6 +4766,246 @@ export const destinations: Destination[] = [
         'בית חב"ד באקו (ברובע נסימי, בראשות הרב שניאור סגל) הוא שירות הכשרות המאומת בעיר - בית כנסת וקייטרינג כשר. אין בבאקו תשתית מסעדות כשרות רחבה, ולכן יש לתאם ארוחות מול בית חב"ד מראש. בכפר האדום שבצפון יש קהילה יהודית פעילה ומרכז מבקרים.',
     },
   },
+  {
+    slug: 'almaty',
+    name: 'אלמטי',
+    nameLocal: 'Almaty / Алматы',
+    countrySlug: 'kazakhstan',
+    flag: '🇰🇿',
+    center: { lat: 43.24, lng: 76.94 },
+    zoom: 11,
+    tagline: 'עיר למרגלות הרים מושלגים - שער לקניון צ׳ארין ולאגמי טיאן שאן',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Big_Almaty_Lake_on_29_Aug_2019.jpg/500px-Big_Almaty_Lake_on_29_Aug_2019.jpg',
+    iconicLandmark: {
+      name: 'קתדרלת זנקוב',
+      nameLocal: 'Ascension (Zenkov) Cathedral',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Zenkov_Cathedral%2C_Almaty.jpg/500px-Zenkov_Cathedral%2C_Almaty.jpg',
+      blurb:
+        'קתדרלה אורתודוקסית צבעונית מעץ מ-1907, מהמבנים הגבוהים בעולם הבנויים כולם מעץ בלי מסמרים - ושרדה רעידת אדמה גדולה. סמל העיר בלב פארק פנפילוב.',
+    },
+    editorialRating: {
+      score: 4.4,
+      verdict:
+        'טבע הרים ברמה עולמית ממש מעל העיר, פטור מוויזה וקהילת חב"ד - יעד מתגלה ומתגמל. חסרונות: הטיסה הישירה בתדירות נמוכה (כפעמיים בשבוע), ואתרי הטבע הטובים דורשים נהג ויום שלם.',
+    },
+    summary:
+      'אלמטי, העיר הגדולה של קזחסטן, יושבת למרגלות הרי טיאן שאן המושלגים - ומשלבת עיר ירוקה ונעימה עם גישה מהירה לטבע פראי: קניון צ׳ארין האדום, האגם הגדול הטורקיז, ואתרי הסקי מדאו ושימבולק שמעל העיר. יש בה קהילת חב"ד ותיקה עם בית כנסת מרכזי וחנות כשרה.',
+    bestSeason: 'מאי-ספטמבר (טבע ואגמים נגישים) - החורף קר ומושלג ומצוין לסקי במדאו/שימבולק',
+    places: [
+      {
+        id: 'ala-charyn',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Charyn_Canyon_%283991842679%29.jpg/500px-Charyn_Canyon_%283991842679%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'קניון צ׳ארין (עמק הטירות)',
+        nameLocal: 'Charyn Canyon',
+        category: 'nature',
+        lat: 43.3581,
+        lng: 79.0925,
+        description:
+          'קניון אדום דרמטי שנחצב בידי הנהר, המכונה "עמק הטירות" בזכות עמודי הסלע. לעיתים מושווה לגרנד קניון בגרסה מיניאטורית. טיול יום מלא (כ-200 ק"מ) ממזרח לאלמטי.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Charyn+Canyon',
+      },
+      {
+        id: 'ala-lake',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Big_Almaty_Lake_on_29_Aug_2019.jpg/500px-Big_Almaty_Lake_on_29_Aug_2019.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'האגם הגדול של אלמטי',
+        nameLocal: 'Big Almaty Lake',
+        category: 'nature',
+        lat: 43.0506,
+        lng: 76.985,
+        description:
+          'אגם הרים טורקיז בגובה כ-2,500 מטר, מוקף פסגות מושלגות, כ-25 ק"מ מהעיר. הצבע משתנה עם העונה והאור - אחד הנופים המזוהים ביותר עם אלמטי. (בדקו הגבלות גישה עונתיות.)',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Big+Almaty+Lake',
+      },
+      {
+        id: 'ala-shymbulak',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Shymbulak%2C_Almaty_%28P1180205-Pano%29.jpg/500px-Shymbulak%2C_Almaty_%28P1180205-Pano%29.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'שימבולק',
+        nameLocal: 'Shymbulak',
+        category: 'nature',
+        lat: 43.1281,
+        lng: 77.0808,
+        description:
+          'אתר הסקי הגבוה מעל אלמטי, נגיש ברכבל מרשים מעל מדאו. בחורף - סקי; בקיץ - טיולים רגליים ותצפיות אלפיניות על רכס טיאן שאן. נגיש ליום מהעיר.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Shymbulak+Almaty',
+      },
+      {
+        id: 'ala-medeu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Medeu_Skating_Rink_in_Almaty_Kazakhstan.jpg/500px-Medeu_Skating_Rink_in_Almaty_Kazakhstan.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'מדאו',
+        nameLocal: 'Medeu',
+        category: 'attraction',
+        lat: 43.1575,
+        lng: 77.0586,
+        description:
+          'זירת ההחלקה על הקרח הגבוהה בעולם (כ-1,700 מטר), בעמק הררי ממש מעל העיר. נקודת מוצא לרכבל לשימבולק, ולעלייה במדרגות הסכר לתצפית.',
+        rating: 4.4,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Medeu+Almaty',
+      },
+      {
+        id: 'ala-koktobe',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/View_of_Kok-Tobe_amusement_part_and_Almaty_T.V_Tower..JPG/500px-View_of_Kok-Tobe_amusement_part_and_Almaty_T.V_Tower..JPG',
+        tags: ['families', 'romantic'],
+        priceLevel: 1,
+        name: 'קוק-טובה',
+        nameLocal: 'Kok-Tobe',
+        category: 'viewpoint',
+        lat: 43.2331,
+        lng: 76.9755,
+        description:
+          'גבעה מעל אלמטי עם רכבל, פארק שעשועים קטן, מגדל טלוויזיה והתצפית הטובה על העיר וההרים מסביב. נעים במיוחד בשקיעה ובלילה.',
+        rating: 4.4,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Kok-Tobe+Almaty',
+      },
+      {
+        id: 'ala-zenkov',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Zenkov_Cathedral%2C_Almaty.jpg/500px-Zenkov_Cathedral%2C_Almaty.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'קתדרלת זנקוב',
+        nameLocal: 'Ascension (Zenkov) Cathedral',
+        category: 'attraction',
+        lat: 43.2588,
+        lng: 76.9532,
+        description:
+          'קתדרלה אורתודוקסית צבעונית מעץ מ-1907, מהמבנים הגבוהים בעולם הבנויים כולם מעץ - ושרדה את רעידת האדמה הגדולה של 1911. פנינה בלב פארק פנפילוב.',
+        rating: 4.6,
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=Ascension+Cathedral+Almaty',
+      },
+      {
+        id: 'ala-panfilov',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/The_memorial_park_of_Panfilov_28_guardsmen_-_panoramio.jpg/500px-The_memorial_park_of_Panfilov_28_guardsmen_-_panoramio.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        name: 'פארק 28 הגווארדים של פנפילוב',
+        nameLocal: 'Panfilov Park',
+        category: 'attraction',
+        lat: 43.2605,
+        lng: 76.9543,
+        description:
+          'פארק עירוני ירוק וקריר סביב קתדרלת זנקוב, ובו אנדרטת מלחמה מרשימה ולהבה נצחית. מקום מפגש נעים לטיול רגלי במרכז העיר.',
+        rating: 4.4,
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=Panfilov+Park+Almaty',
+      },
+      {
+        id: 'ala-republic',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Republic_Square_-_sculptures_at_the_Independence_Monument_Almaty.jpg/500px-Republic_Square_-_sculptures_at_the_Independence_Monument_Almaty.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'כיכר הרפובליקה ואנדרטת העצמאות',
+        nameLocal: 'Republic Square',
+        category: 'attraction',
+        lat: 43.2389,
+        lng: 76.9455,
+        description:
+          'הכיכר המרכזית הרחבה של אלמטי, ובמרכזה עמוד אנדרטת העצמאות עם דמות "האדם המוזהב" בראשו - סמל לאומי קזחי. נקודה טובה להבנת העיר המודרנית.',
+        rating: 4.2,
+        durationMin: 30,
+        externalUrl: 'https://maps.google.com/?q=Republic+Square+Almaty',
+      },
+      {
+        id: 'ala-firstpres',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Park_of_the_Foundation_of_the_First_President_of_Almaty.jpg/500px-Park_of_the_Foundation_of_the_First_President_of_Almaty.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 0,
+        name: 'פארק הנשיא הראשון',
+        nameLocal: 'First President Park',
+        category: 'nature',
+        lat: 43.1864,
+        lng: 76.8868,
+        description:
+          'פארק גדול ומטופח בדרום העיר, עם שדרות, מזרקות, גן יפני ותצפית ישרה על רכס ההרים. מקום אהוב על משפחות מקומיות לטיול אחר צהריים.',
+        rating: 4.4,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=First+President+Park+Almaty',
+      },
+      {
+        id: 'ala-chabad',
+        tags: ['foodie'],
+        priceLevel: 1,
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד אלמטי (הרב אלחנן כהן)',
+        },
+        name: 'בית חב"ד אלמטי (בית כנסת מרכזי וחנות כשרה)',
+        nameLocal: 'Chabad Lubavitch Almaty',
+        category: 'kosher-food',
+        lat: 43.2599,
+        lng: 76.8889,
+        description:
+          'המתחם המרכזי של הקהילה היהודית באלמטי (שדרת ראיימבק) - בית הכנסת המרכזי, חנות כשרה, חדר אוכל ומקווה. כתובת הכשרות והמידע לישראלים בעיר.',
+        rating: 4.4,
+        kosherNote:
+          'חנות כשרה ואוכל דרך בית חב"ד (החנות פתוחה א׳-ו׳, בשישי עד לפני שבת). אין תשתית מסעדות כשרות רחבה בעיר - מומלץ לתאם ארוחות מראש מול בית חב"ד.',
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=Chabad+Almaty',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'העיר - קתדרלה, פארקים ותצפית',
+        placeIds: ['ala-zenkov', 'ala-panfilov', 'ala-republic', 'ala-firstpres', 'ala-koktobe'],
+        notes:
+          'יום עירוני: קתדרלת זנקוב ופארק פנפילוב, כיכר הרפובליקה ופארק הנשיא הראשון עם נוף ההרים, ולסיום עלייה ברכבל לקוק-טובה לשקיעה מעל העיר.',
+      },
+      {
+        day: 2,
+        title: 'ההרים שמעל העיר',
+        placeIds: ['ala-medeu', 'ala-shymbulak', 'ala-lake'],
+        notes:
+          'יום הרים: מדאו (זירת הקרח) ורכבל לשימבולק לתצפיות אלפיניות, ואחר הצהריים האגם הגדול של אלמטי (לבדוק הגבלות גישה עונתיות). הכול במרחק שעה מהעיר.',
+      },
+      {
+        day: 3,
+        title: 'קניון צ׳ארין',
+        placeIds: ['ala-charyn', 'ala-chabad'],
+        notes:
+          'טיול יום מלא מזרחה לקניון צ׳ארין (כ-200 ק"מ, נהג או טיול מאורגן) - הליכה בעמק הטירות בין עמודי הסלע האדומים. לתאם ארוחות כשרות מראש עם בית חב"ד.',
+      },
+    ],
+    practical: {
+      flights:
+        'אייר אסטנה מפעילה טיסה ישירה מנתב"ג לאלמטי כפעמיים בשבוע (טיסה של כ-6 שעות) - קו ישיר יציב, אם כי בתדירות נמוכה יותר מיעדים קרובים.',
+      gettingAround:
+        'בעיר: מטרו, אוטובוסים ואפליקציית Yandex Go למוניות (זולה). אתרי הטבע (צ׳ארין, האגם הגדול) והרי הסקי דורשים נהג פרטי או טיול מאורגן - אין תחבורה ציבורית נוחה אליהם.',
+      kosherOverview:
+        'בית חב"ד אלמטי (שדרת ראיימבק, בראשות הרב אלחנן כהן) הוא מרכז הכשרות בעיר: בית כנסת מרכזי, חנות כשרה וחדר אוכל. אין באלמטי תשתית מסעדות כשרות רחבה - מומלץ לתאם ארוחות (כולל שבת) מול בית חב"ד מראש.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {

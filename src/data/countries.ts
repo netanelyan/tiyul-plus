@@ -219,6 +219,25 @@ export const countries: Country[] = [
         'כרטיסי אשראי מתקבלים בבאקו ובבתי מלון; מחוץ לעיר, בשווקים ובאתרים מרוחקים כדאי מזומן במאנات.',
     },
   },
+  {
+    slug: 'kazakhstan',
+    name: 'קזחסטן',
+    nameLocal: 'Kazakhstan / Қазақстан',
+    flag: '🇰🇿',
+    tagline: 'הרי טיאן שאן, קניונים ואגמים - שער מרכז אסיה לישראלים',
+    summary:
+      'קזחסטן היא יעד טבע יוצא דופן שרק מתחיל להתגלות לישראלים: טיסה ישירה, פטור מוויזה, ואלמטי - העיר הגדולה למרגלות הרי טיאן שאן המושלגים, שער לקניון צ׳ארין, אגמי הרים ואתרי סקי. יש בה גם קהילת חב"ד ותיקה עם בית כנסת מרכזי וחנות כשרה.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Big_Almaty_Lake_on_29_Aug_2019.jpg/500px-Big_Almaty_Lake_on_29_Aug_2019.jpg',
+    practical: {
+      visa:
+        'ישראלים פטורים מוויזה לקזחסטן לשהות של עד 30 יום. נדרש דרכון בתוקף 6 חודשים וכרטיס טיסה יוצא.',
+      currency: 'טנגה קזחי (KZT).',
+      sim: 'eSIM מראש, או כרטיס מקומי של Beeline / Kcell / Tele2 בשדה.',
+      payments:
+        'כרטיסי אשראי מתקבלים באלמטי כמעט בכל מקום (כולל אפליקציית Kaspi המקומית); באתרי טבע מרוחקים כדאי מזומן בטנגה.',
+    },
+  },
 ];
 
 export function getCountryBySlug(slug: string): Country | undefined {
