@@ -60,7 +60,7 @@ Hungary→Lake Balaton, Slovakia→High Tatras.
       Laza) — from Baku.
 - [ ] **Kazakhstan → Kolsai & Kaindy Lakes / Charyn** — a 2nd Almaty-area
       nature entry (Charyn is already IN Almaty; Kolsai/Kaindy are further).
-- [ ] **Jordan → Dead Sea + Wadi Mujib + Amman/Jerash** (2nd Jordan entry,
+- [x] **Jordan → Dead Sea + Wadi Mujib + Amman/Jerash** (2nd Jordan entry,
       north; land crossing note like Petra).
 - [x] **Cyprus → Paphos + Akamas/Avakas Gorge** (2nd Cyprus entry; direct
       PFO flights) — nature: Avakas Gorge, Blue Lagoon, Baths of Aphrodite.
@@ -82,7 +82,9 @@ places `kra-rynek`, `kra-mariacki`, `kra-wawel`, `kra-kazimierz`,
 destination `amsterdam`; places `ams-anne-frank`,
 `ams-portuguese-synagogue`, `ams-rembrandt-house`, `ams-begijnhof`,
 `ams-vondelpark`, `ams-zaanse-schans`, `ams-volendam`, `ams-keukenhof`,
-`ams-kinderdijk`.
+`ams-kinderdijk`; destination `amman-north`; places `amn-jerash`,
+`amn-citadel`, `amn-roman-theatre`, `amn-madaba`, `amn-nebo`, `amn-mujib`,
+`amn-umm-qais`, `amn-ajloun`, `amn-maghtas`.
 
 **Blocked on coordinates - France / Paris.** France is the biggest
 remaining country gap, but dbpedia's `/data/*.json` for very famous

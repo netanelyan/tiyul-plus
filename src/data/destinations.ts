@@ -14027,6 +14027,197 @@ export const destinations: Destination[] = [
         'לאמסטרדם יש קהילה יהודית ותיקה ופעילה, ובאזור בויטנפלדרט בדרום העיר מרוכזת רוב התשתית הקהילתית. עם זאת אנחנו לא מאמתנו מסעדות או השגחות ספציפיות, והמצב משתנה. בפועל: לתאם מראש מול הקהילה או חב"ד אמסטרדם לגבי ארוחות ושבת, ולהתבסס על מוצרים ארוזים עם הכשר ברשתות הגדולות. לא להסתמך על מידע מהרשת בלי אימות טלפוני לפני הנסיעה.',
     },
   },
+  {
+    slug: 'amman-north',
+    name: 'עמאן וצפון ירדן',
+    nameLocal: 'Amman & Northern Jordan',
+    countrySlug: 'jordan',
+    flag: '🇯🇴',
+    center: { lat: 31.95, lng: 35.9 },
+    zoom: 8,
+    tagline: 'גרש הרומית, הר נבו וקניוני ים המלח - צד שני של ירדן',
+    editorialRating: {
+      score: 4.3,
+      verdict:
+        'צפון ירדן מציע צפיפות אתרים גבוהה ומגוונת: עיר רומית משומרת בצורה יוצאת דופן, מפות פסיפס ביזנטיות, תצפיות שרואות את ארץ ישראל ממש, וקניון מים אמיתי. החסרונות: עמאן עצמה עיר אפורה ועמוסה בלי הרבה קסם, המעבר היבשתי והבירוקרטיה גוזלים חצי יום לכל כיוון, המרחקים בין האתרים גדולים ודורשים נהג, ואין תשתית כשרות.',
+    },
+    summary:
+      'רוב הישראלים שנוסעים לירדן רואים רק את הדרום - פטרה וואדי ראם. הצפון הוא סיפור אחר לגמרי: גרש, מהערים הרומיות המשומרות בעולם; מדבא עם מפת הפסיפס העתיקה של ארץ ישראל; הר נבו, שממנו לפי המסורת ראה משה את הארץ; וקניון ואדי מוג׳יב היורד אל ים המלח מהצד המזרחי. הכניסה הנוחה במעבר גשר אלנבי או במעבר שייח חסין בצפון.',
+    bestSeason:
+      'מרץ-מאי וספטמבר-נובמבר. הקיץ חם מאוד בבקעת ים המלח; בחורף עמאן קרה וגשומה ולפעמים יורד שלג. שביל המים בואדי מוג׳יב פתוח בעונה מוגדרת בלבד - לבדוק מראש.',
+    places: [
+      {
+        id: 'amn-jerash',
+        name: 'גרש',
+        nameLocal: 'Jerash / جرش',
+        category: 'attraction',
+        lat: 32.2806,
+        lng: 35.8972,
+        description:
+          'אחת הערים הרומיות המשומרות בעולם מחוץ לאיטליה: שער אדריינוס, רחבה אליפטית מוקפת עמודים, רחוב עמודים באורך קילומטר ושני תאטרונים. השטח ענק וכמעט בלי צל - להגיע בבוקר ולקחת מים וכובע.',
+        rating: 4.7,
+        durationMin: 180,
+        tags: ['history'],
+        priceLevel: 1,
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=Jerash+Jordan',
+      },
+      {
+        id: 'amn-citadel',
+        name: 'מצדת עמאן',
+        nameLocal: 'Amman Citadel / جبل القلعة',
+        category: 'attraction',
+        lat: 31.9547,
+        lng: 35.9343,
+        description:
+          'גבעה בלב עמאן שעליה שכבות של רומא, ביזנטיון ואומייה זו על גבי זו: מקדש הרקולס, ארמון אומיידי ומוזיאון קטן. הערך הגדול הוא התצפית על כל העיר הבנויה על גבעות.',
+        rating: 4.4,
+        durationMin: 90,
+        tags: ['history'],
+        priceLevel: 1,
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=Amman+Citadel',
+      },
+      {
+        id: 'amn-roman-theatre',
+        name: 'התאטרון הרומי בעמאן',
+        nameLocal: 'Roman Theatre, Amman',
+        category: 'attraction',
+        lat: 31.9517,
+        lng: 35.9393,
+        description:
+          'תאטרון רומי חצוב במדרון הגבעה מול המצדה, משמש עד היום לאירועים. המדרגות תלולות וגבוהות מאוד והעלייה לשורה העליונה דורשת זהירות. צמוד לעיר התחתית ולשוק.',
+        rating: 4.3,
+        durationMin: 60,
+        tags: ['history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Roman+Theatre+Amman',
+      },
+      {
+        id: 'amn-madaba',
+        name: 'מדבא ומפת הפסיפס',
+        nameLocal: 'Madaba / مأدبا',
+        category: 'attraction',
+        lat: 31.7167,
+        lng: 35.8,
+        description:
+          'עיירה עם רוב נוצרי גדול, ובמרכזה כנסיית גאורגיוס עם מפת פסיפס ביזנטית מהמאה ה-6 של ארץ ישראל וירושלים - המפה הקדומה ביותר הידועה של האזור. המפה עצמה חלקית וקטנה ממה שמצפים; הביקור קצר.',
+        rating: 4.4,
+        durationMin: 75,
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Madaba+Mosaic+Map',
+      },
+      {
+        id: 'amn-nebo',
+        name: 'הר נבו',
+        nameLocal: 'Mount Nebo / جبل نيبو',
+        category: 'viewpoint',
+        lat: 31.7667,
+        lng: 35.725,
+        description:
+          'הרכס שממנו לפי המסורת צפה משה אל הארץ. בימים בהירים רואים מכאן את ים המלח, יריחו ואפילו את גבעות ירושלים; בימי אובך וחום הראות נסגרת לגמרי. במקום כנסייה מודרנית העוטפת פסיפסים ביזנטיים מרשימים.',
+        rating: 4.4,
+        durationMin: 60,
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=Mount+Nebo+Jordan',
+      },
+      {
+        id: 'amn-mujib',
+        name: 'שמורת ואדי מוג׳יב',
+        nameLocal: 'Wadi Mujib',
+        category: 'nature',
+        lat: 31.4658,
+        lng: 35.5733,
+        description:
+          'קניון עמוק שנשפך אל ים המלח מהצד הירדני. שביל הסיק המפורסם הוא הליכה בתוך המים נגד הזרם עם חבלים - רטוב לגמרי ותובעני פיזית. פתוח בעונה מוגבלת בלבד ונסגר בהתראה קצרה בגשם - לבדוק לפני שמתכננים יום סביבו.',
+        rating: 4.6,
+        durationMin: 240,
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=Wadi+Mujib+Siq+Trail',
+      },
+      {
+        id: 'amn-umm-qais',
+        name: 'אום קיס (גדרה)',
+        nameLocal: 'Umm Qais / Gadara',
+        category: 'viewpoint',
+        lat: 32.6542,
+        lng: 35.6875,
+        description:
+          'חורבות העיר הרומית גדרה בפינה הצפונית ביותר של ירדן, עם תאטרון באבן בזלת שחורה. מהתצפית רואים את הכנרת ואת רמת הגולן - חוויה מוזרה למטייל ישראלי. רחוק מעמאן ומתאים לשילוב עם עגלון.',
+        rating: 4.3,
+        durationMin: 120,
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Umm+Qais+Jordan',
+      },
+      {
+        id: 'amn-ajloun',
+        name: 'מבצר עגלון',
+        nameLocal: 'Ajloun Castle / قلعة عجلون',
+        category: 'attraction',
+        lat: 32.3252,
+        lng: 35.7273,
+        description:
+          'מבצר איובי מהמאה ה-12 על פסגת גבעה, שנבנה מול הצלבנים ושולט על גבעות ירוקות ויערות אלון. קטן וקל לסיור, והתצפית מהגג רחבה. משתלב טבעי עם גרש באותו יום.',
+        rating: 4.3,
+        durationMin: 90,
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Ajloun+Castle',
+      },
+      {
+        id: 'amn-maghtas',
+        name: 'אל-מוע׳טס (מקום הטבילה)',
+        nameLocal: 'Al-Maghtas / Bethany Beyond the Jordan',
+        category: 'attraction',
+        lat: 31.8372,
+        lng: 35.5503,
+        description:
+          'אתר מורשת עולמית על גדת הירדן, שהמסורת הנוצרית מזהה כמקום הטבילה של ישו. הכניסה בסיור מודרך בלבד ובשעות קבועות, והאזור הוא אזור גבול רגיש - להקפיד על ההנחיות ולא לצלם כוחות ביטחון.',
+        rating: 4.2,
+        durationMin: 120,
+        tags: ['history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Al-Maghtas+Baptism+Site+Jordan',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'עמאן',
+        placeIds: ['amn-citadel', 'amn-roman-theatre'],
+        notes:
+          'יום קצר בעיר: המצדה לתצפית והתאטרון מתחתיו, שניהם במרחק הליכה זה מזה אבל המדרון תלול.',
+      },
+      {
+        day: 2,
+        title: 'הצפון: גרש, עגלון ואום קיס',
+        placeIds: ['amn-jerash', 'amn-ajloun', 'amn-umm-qais'],
+        notes:
+          'יום ארוך צפונה עם נהג או רכב שכור. גרש בבוקר לפני החום ולפני קבוצות הסיורים. מי שאין לו יום שלם שיוותר על אום קיס.',
+      },
+      {
+        day: 3,
+        title: 'הר נבו, מדבא והירידה לים המלח',
+        placeIds: ['amn-nebo', 'amn-madaba', 'amn-maghtas', 'amn-mujib'],
+        notes:
+          'יורדים דרומה-מערבה לאורך דרך המלך: הר נבו ומדבא בבוקר, ואחר הצהריים לבקעה. ואדי מוג׳יב דורש חצי יום בפני עצמו ופתוח בעונה בלבד - מי שמעוניין בו שיפצל אותו ליום נפרד.',
+      },
+    ],
+    practical: {
+      flights:
+        'אפשר להגיע במעבר יבשתי - גשר אלנבי (קרוב לירושלים) או מעבר שייח חסין בצפון, שניהם קרובים במיוחד לעמאן. שעות הפעילה, הנהלים ומצב המעברים משתנים - לבדוק באתר רשות השדות ובאזהרות מטה לבטחון לאומי לפני כל נסיעה. שימו לב: Jordan Pass אינו מכסה את אגרת הויזה למי שנכנס דרך גשר אלנבי - לקרוא את התנאים לפני שרוכשים.',
+      gettingAround:
+        'אין תחבורה ציבורית סבירה בין האתרים. הפתרון המקובל הוא נהג פרטי ליום במחיר מסוכם מראש, או רכב שכור - הכבישים הראשיים טובים אבל הנהיגה בעמאן אגרסיבית והעיר בנויה על גבעות תלולות. מעמאן לגרש כ-45 דקות, למדבא כ-40 דקות, לואדי מוג׳יב כשעתיים.',
+      kosherOverview:
+        'אין בירדן תשתית כשרות מסודרת - לא מסעדות כשרות ולא השגחה מקומית. שומרי כשרות נוהגים להצטייד מישראל במזון ארוז עם הכשר. פירות, ירקות, חומוס וטחינה טריים זמינים בכל מקום.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
