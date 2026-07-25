@@ -82,6 +82,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 /** תרגום שגיאות GoTrue הנפוצות לעברית אנושית */
 function friendly(message: string): string {
   const m = message.toLowerCase();
+  // עוזר לאבחון: השגיאה המקורית נשמרת בקונסול (לא מוצגת למשתמש)
+  console.error('[auth]', message);
+  if (m.includes('error sending') || m.includes('smtp'))
+    return 'שליחת המייל נכשלה - כנראה בעיה בהגדרות שליחת המיילים (SMTP). בדקו את הגדרות השולח.';
   if (m.includes('rate limit') || m.includes('too many')) return 'יותר מדי ניסיונות - נסו שוב בעוד כמה דקות';
   if (m.includes('invalid') && m.includes('otp')) return 'הקוד שגוי או שפג תוקפו - בדקו את המייל האחרון';
   if (m.includes('expired')) return 'הקוד פג תוקף - שלחו קוד חדש';
