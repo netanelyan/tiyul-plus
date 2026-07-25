@@ -532,6 +532,26 @@ html.a11y-no-motion *::after {
   border: none;
 }
 
+/* עמודת תמונה+סיכה - הטרנספורם של ההדגשה יושב כאן */
+.pin-marker .pin-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  transform-origin: bottom center;
+}
+
+/* תמונת המקום שמעל הסיכה בזום עירוני */
+.pin-marker .pin-photo {
+  width: 44px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid var(--color-cream);
+  background: var(--color-cream);
+  box-shadow: 0 2px 6px rgba(36, 27, 77, 0.35);
+}
+
 .pin-marker .pin {
   position: relative;
   width: 28px;
