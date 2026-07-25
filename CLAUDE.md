@@ -1755,3 +1755,34 @@ Branch `data/cleanup-1` (off main), acting on the flagged TODO items.
    grouping, metadata, itineraries and practical blocks are new.
    **Catalog: 45 destinations / 31 countries / 539 places.** Audit
    geographic warnings cleared. build clean; verify-photos all OK.
+
+### 2026-07-25 (y) - /kosher redesigned as a directory (branch feat/kosher-directory)
+
+The page used to be a heading, a paragraph and a lone search box in a lot
+of empty space - nothing to look at before searching.
+
+- **Default (pre-search) state is now a populated directory:** a card per
+  city that genuinely has kosher entries in the data (27 today), sorted by
+  how many it has. Each card = destination photo with a night gradient,
+  the flag, city name, country, a teal count badge and an honest breakdown
+  read from the categories ("2 מסעדות · חנות אחת"). Clicking a card opens
+  that city's kosher list + PlacesMap, with a "חזרה לכל הערים" link back.
+- **Live filtering:** typing filters the same grid (name / local name /
+  slug / country / alias), so search and browse are one surface. A search
+  with no match keeps the honest empty state, and if the city IS in the
+  catalog but has no kosher data, it says so and links to that destination.
+- **Real stats, no padding:** three chips computed from the data - 37
+  kosher places, 27 cities, and the verification chip which currently
+  reads "אף רשומה עדיין לא אומתה על ידינו" (it will switch to a
+  verified/pending split the moment any entry gets a real check date). The
+  section header also notes that 18 further destinations have no kosher
+  data, which is stated on their own pages.
+- Trust rules unchanged: every entry still renders through KosherBadge,
+  so pending-review shows the amber "לא מאומת - לוודא מול המקום" and
+  nothing is presented as verified.
+- Layout tightened: intro trimmed to two lines, stats + search moved up;
+  the first row of cards starts ~370px down on desktop and ~460px on
+  mobile (was an empty screen).
+- Verified live on a production build: 13/13 CDP checks at 1400px and
+  390px (27 cards, live filter incl. country match, honest empty state,
+  city view with map, two-up mobile grid, zero horizontal overflow).
