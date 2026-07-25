@@ -160,18 +160,70 @@ BOUNDARIES
 DATA (destinations, places, itineraries, practical info):
 `;
 
-function buildGrounding(): string {
+/**
+ * ה-grounding בנוי בשתי שכבות, כי הקטלוג גדל ל-47 ערים ו-500+ מקומות:
+ *
+ * 1. INDEX - קבוע וזהה בכל קריאה, ולכן נושא את cache_control: כל עיר עם
+ *    כל המקומות שלה ברמת id/שם/קטגוריה/תגיות. זה מה שהמודל חייב כדי
+ *    לבנות ולתקף מסלול, ולעולם לא להמציא מזהה.
+ * 2. DETAIL - רק לערים הרלוונטיות לתור הנוכחי (הערים שבטיול + ערים
+ *    שהוזכרו בשיחה): תיאורי מקומות, מסלול אוצר, מידע פרקטי ומידע
+ *    המדינה. הבלוק הזה קטן ומשתנה, ולכן יושב אחרי נקודת השבירה של
+ *    המטמון.
+ *
+ * לפני הפיצול נשלחו ~118k טוקנים בכל קריאה - ובבניית טיול יש 5 קריאות
+ * רצופות, כך שזה היה גורם הזמן הדומיננטי.
+ */
+function buildGroundingIndex(): string {
   return JSON.stringify({
-    countries: countries.map((c) => ({
-      slug: c.slug,
-      name: c.name,
-      summary: c.summary,
-      practical: c.practical, // ויזה, מטבע, סים, תשלומים - ברמת מדינה
-    })),
+    note: 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block.',
     cities: destinations.map((d) => ({
       slug: d.slug,
       name: d.name,
       countrySlug: d.countrySlug,
+      places: d.places.map((p) => ({
+        id: p.id,
+        name: p.name,
+        category: p.category,
+        ...(p.tags?.length ? { tags: p.tags } : {}),
+        ...(p.priceLevel !== undefined ? { priceLevel: p.priceLevel } : {}),
+        ...(p.mustSee ? { mustSee: true } : {}),
+        ...(p.durationMin ? { durationMin: p.durationMin } : {}),
+      })),
+    })),
+    countries: countries.map((c) => ({ slug: c.slug, name: c.name })),
+  });
+}
+
+/** ערים שהשיחה נוגעת בהן: הטיול הפעיל + אזכור בשם עיר/מדינה/שם מקומי */
+function relevantCitySlugs(messages: ChatMessage[], trip: Trip | null): string[] {
+  const slugs = new Set<string>(trip?.citySlugs ?? []);
+  const text = messages
+    .slice(-6)
+    .map((m) => m.content)
+    .join(' ')
+    .toLowerCase();
+  for (const d of destinations) {
+    const country = countries.find((c) => c.slug === d.countrySlug);
+    const needles = [d.name, d.nameLocal, d.slug, country?.name].filter(Boolean) as string[];
+    if (needles.some((n) => text.includes(n.toLowerCase()))) slugs.add(d.slug);
+  }
+  // בלי שום רמז - נותנים פירוט על מדגם קטן כדי שהתשובה הראשונה לא תהיה עקרה
+  if (slugs.size === 0) return destinations.slice(0, 6).map((d) => d.slug);
+  return [...slugs];
+}
+
+function buildGroundingDetail(citySlugs: string[]): string {
+  const cities = destinations.filter((d) => citySlugs.includes(d.slug));
+  const countrySlugs = new Set(cities.map((d) => d.countrySlug));
+  return JSON.stringify({
+    note: 'DETAIL for the cities this conversation touches. Other cities: use the INDEX above, and say plainly if you need specifics we did not load.',
+    countries: countries
+      .filter((c) => countrySlugs.has(c.slug))
+      .map((c) => ({ slug: c.slug, name: c.name, summary: c.summary, practical: c.practical })),
+    cities: cities.map((d) => ({
+      slug: d.slug,
+      name: d.name,
       summary: d.summary,
       practical: d.practical, // טיסות, תחבורה, כשרות - ברמת עיר
       itinerary: d.itinerary,
@@ -180,19 +232,48 @@ function buildGrounding(): string {
         name: p.name,
         nameLocal: p.nameLocal,
         category: p.category,
-        // תיאור קצר בלבד - עם ~160 מקומות ה-grounding חייב להישאר רזה
         description: p.description.length > 90 ? `${p.description.slice(0, 90)}…` : p.description,
         kosherNote: p.kosherNote,
-        ...(p.tags?.length ? { tags: p.tags } : {}),
-        ...(p.priceLevel !== undefined ? { priceLevel: p.priceLevel } : {}),
-        ...(p.mustSee ? { mustSee: true } : {}),
       })),
     })),
   });
 }
 
+/** טקסט התקדמות אמיתי לפי הכלי שרץ עכשיו - לא הודעות דמה מתחלפות */
+function toolStatusText(name: string, input: Record<string, unknown>): string {
+  const day = typeof input.dayNumber === 'number' ? ` ${input.dayNumber}` : '';
+  switch (name) {
+    case 'create_trip_full': {
+      const plans = Array.isArray(input.dayPlans) ? input.dayPlans.length : 0;
+      return plans ? `בונה מסלול של ${plans} ימים…` : 'בונה את המסלול…';
+    }
+    case 'create_trip':
+      return 'פותח טיול חדש…';
+    case 'add_day':
+      return 'מוסיף יום…';
+    case 'set_day_places':
+      return `מסדר את העצירות ביום${day}…`;
+    case 'add_place':
+      return `מוסיף עצירה ליום${day}…`;
+    case 'remove_place':
+      return `מסיר עצירה מיום${day}…`;
+    case 'move_place':
+      return 'מזיז עצירה…';
+    case 'remove_day':
+      return 'מוחק יום…';
+    case 'rename_trip':
+      return 'מעדכן את שם הטיול…';
+    case 'set_preferences':
+      return 'שומר את ההעדפות…';
+    default:
+      return 'עובד על זה…';
+  }
+}
+
 type StreamEvent =
   | { type: 'text'; text: string }
+  // התקדמות אמיתית מלולאת הכלים - כדי שהמתנה ארוכה לא תיראה תקועה
+  | { type: 'status'; text: string }
   | { type: 'meta'; destinationSlug?: string; placeIds?: string[] }
   | { type: 'trip'; trip: Trip; actions: string[] }
   | { type: 'quickReplies'; replies: string[] }
@@ -243,6 +324,7 @@ async function runClaudeTurn(
   maxTokens: number,
   iter: number,
   kosherHint: boolean,
+  groundingDetail: string,
 ): Promise<{ blocks: AccBlock[]; stopReason: string; text: string }> {
   const model = process.env.ANTHROPIC_MODEL_AGENT ?? 'claude-sonnet-4-5';
   // טוגל כשרות מה-UI לפני שקיים טיול: מוסרים לסוכן בשקט דרך בלוק המצב
@@ -268,7 +350,10 @@ async function runClaudeTurn(
       // המשתנה יושב אחרי נקודת השבירה ולא פוגע בקריאות מהמטמון.
       system: [
         { type: 'text', text: SYSTEM_PROMPT },
-        { type: 'text', text: buildGrounding(), cache_control: { type: 'ephemeral' } },
+        // האינדקס קבוע -> נשאר במטמון בין תורים ובין משתמשים
+        { type: 'text', text: buildGroundingIndex(), cache_control: { type: 'ephemeral' } },
+        // הפירוט משתנה לפי השיחה -> אחרי נקודת השבירה, בלי cache_control
+        { type: 'text', text: groundingDetail },
         { type: 'text', text: `CURRENT TRIP (the user's active trip right now):\n${serializeTripForModel(trip)}${kosherNote}` },
       ],
       messages: apiMessages,
@@ -280,6 +365,7 @@ async function runClaudeTurn(
   const reader = res.body.getReader();
   const decoder = new TextDecoder();
   const byIndex = new Map<number, AccBlock>();
+  let announcedTool = false;
   let buffer = '';
   let stopReason = 'end_turn';
   let text = '';
@@ -302,12 +388,21 @@ async function runClaudeTurn(
       }
       if (event.type === 'content_block_start' && event.index !== undefined && event.content_block) {
         if (event.content_block.type === 'tool_use') {
+          const name = event.content_block.name ?? '';
           byIndex.set(event.index, {
             type: 'tool_use',
             id: event.content_block.id ?? '',
-            name: event.content_block.name ?? '',
+            name,
             json: '',
           });
+          // שם הכלי ידוע כבר כאן, לפני שה-JSON של הקלט מוזרם (החלק הארוך) -
+          // אז אפשר לומר למשתמש מה עומד לקרות במקום להשאיר "חושב" 10 שניות.
+          // רק לכלי הראשון בתור: המודל פותח את כל בלוקי הכלים ברצף, וכיווץ
+          // כולם לכאן היה מקדים סטטוסים לפני שהפעולה שלפניהם בכלל רצה.
+          if (name && !announcedTool) {
+            announcedTool = true;
+            send({ type: 'status', text: toolStatusText(name, {}) });
+          }
         } else if (event.content_block.type === 'text') {
           byIndex.set(event.index, { type: 'text', text: '' });
         }
@@ -382,10 +477,22 @@ async function runAgent(
   // (ששיקוף מהצד גם רמז כשרות שדורש להחזיר את הטיול ללקוח, גם בלי כלי).
   let toolBuiltSomething = false;
   let forcedBuildRetry = false;
+  // פירוט רק לערים שהשיחה נוגעת בהן (ראו buildGroundingDetail)
+  const groundingDetail = buildGroundingDetail(relevantCitySlugs(messages, clientTrip));
 
   for (let iter = 0; iter < 16; iter++) {
     const maxTokens = editIntent || iter > 0 ? 2048 : 1024;
-    const turn = await runClaudeTurn(apiMessages, working, send, full.length > 0, maxTokens, iter, kosherHint);
+    if (iter === 0) send({ type: 'status', text: 'קורא את הבקשה…' });
+    const turn = await runClaudeTurn(
+      apiMessages,
+      working,
+      send,
+      full.length > 0,
+      maxTokens,
+      iter,
+      kosherHint,
+      groundingDetail,
+    );
     full += turn.text;
 
     if (turn.stopReason !== 'tool_use') {
@@ -429,6 +536,7 @@ async function runAgent(
         parseOk = false;
       }
       assistantContent.push({ type: 'tool_use', id: block.id, name: block.name, input });
+      send({ type: 'status', text: toolStatusText(block.name, input) });
       const out = parseOk
         ? executeAgentTool(working, block.name, input)
         : { trip: working, ok: false, message: 'קלט הכלי לא היה JSON תקין - נסה שוב.', action: undefined, quickReplies: undefined };
@@ -437,6 +545,11 @@ async function runAgent(
         toolBuiltSomething = true;
       }
       working = out.trip;
+      // משדרים את הטיול מיד אחרי כל כלי שמשנה אותו, ולא רק בסוף התור:
+      // הקנבס מתמלא תוך כדי הבנייה במקום להישאר ריק עשרות שניות.
+      if (out.ok && toolBuiltSomething && working) {
+        send({ type: 'trip', trip: working, actions: [...actions] });
+      }
       if (out.ok && out.action) actions.push(out.action);
       if (out.ok && out.quickReplies) quickReplies = out.quickReplies;
       results.push({

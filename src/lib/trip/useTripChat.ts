@@ -22,6 +22,8 @@ export interface TripChat {
   input: string;
   setInput: (v: string) => void;
   loading: boolean;
+  /** מה הסוכן עושה ממש עכשיו (מגיע כאירוע status מהשרת) */
+  status: string | null;
   /** מונה עדכוני טיול שהגיעו מהסוכן - כדי לסמן "התוכנית עודכנה" ב-UI */
   tripUpdates: number;
   send: (text: string, kosher?: boolean) => void;
@@ -39,6 +41,7 @@ export function useTripChat(options?: {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
   const [tripUpdates, setTripUpdates] = useState(0);
   // טוגל הכשרות מה-UI: עובר לשרת בשקט עד שהוא נטמע ב-Trip.preferences
   const [kosherHint, setKosherHint] = useState(Boolean(options?.initialKosher));
@@ -71,6 +74,7 @@ export function useTripChat(options?: {
     setMessages(next);
     setInput('');
     setLoading(true);
+    setStatus(null);
     let appended = false;
     const patchLast = (patch: (msg: ChatMessage) => ChatMessage) =>
       setMessages((m) => [...m.slice(0, -1), patch(m[m.length - 1])]);
@@ -112,7 +116,9 @@ export function useTripChat(options?: {
           } catch {
             continue;
           }
-          if (event.type === 'text' && event.text) {
+          if (event.type === 'status' && event.text) {
+            setStatus(event.text);
+          } else if (event.type === 'text' && event.text) {
             const chunk = event.text;
             if (!appended) {
               appended = true;
@@ -155,6 +161,7 @@ export function useTripChat(options?: {
       }
     } finally {
       setLoading(false);
+      setStatus(null);
     }
   }, [kosherHint, loading]);
 
@@ -210,5 +217,5 @@ export function useTripChat(options?: {
     setInput('');
   }, []);
 
-  return { messages, input, setInput, loading, tripUpdates, send, reset };
+  return { messages, input, setInput, loading, status, tripUpdates, send, reset };
 }
