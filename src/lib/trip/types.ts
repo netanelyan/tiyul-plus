@@ -39,6 +39,8 @@ export interface Trip {
   citySlugs: string[]; // סדר הערים בטיול
   days: TripDay[];
   createdAt: number;
+  /** חותמת שינוי אחרון - נכתבת ע"י שכבת הסנכרון לחשבון (מיזוג לפי המאוחר) */
+  updatedAt?: number;
   preferences?: TripPreferences;
 }
 

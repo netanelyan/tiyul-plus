@@ -2534,3 +2534,47 @@ mobile menu row opening the same overlay; and zero horizontal overflow at
 word-boundary-aware matcher would be sharper, but it would also stop
 finding "אקרופוליס" inside "האקרופוליס והפרתנון", so plain substring +
 the escape hatch is the honest trade for Hebrew.
+### 2026-07-25 (ll) - User accounts: email-OTP login + cross-device trip sync
+
+Phase 4's accounts item, on the Supabase project Netanel created
+(TiyulPlus / srnaxnracdw...). New dependency @supabase/supabase-js
+(the official client - session persistence + token refresh; approved
+via the Supabase decision).
+
+- **Auth**: `lib/auth/client.ts` (browser singleton off
+  NEXT_PUBLIC_SUPABASE_URL/_ANON_KEY - both unset ⇒ feature silently
+  off, no login UI, site unchanged), `lib/auth/AuthContext.tsx`
+  (email OTP: sendCode/verifyCode/signOut, GoTrue errors translated to
+  Hebrew). No passwords, no OAuth yet (Google needs a Google Cloud
+  setup - follow-up if wanted).
+- **UI**: `AccountButton.tsx` in SiteNav (both breakpoints) -
+  "התחברות" opens an email→6-digit-code modal; logged in shows an
+  initial-letter avatar with a small menu (email, sync note, logout).
+- **Sync**: `lib/trip/sync.ts` + invisible `AccountSync.tsx` in
+  layout (inside Auth+Trip providers, zero changes to other
+  components). Model: localStorage stays the offline-first working
+  copy; on login - pull + merge (latest-wins by the new
+  Trip.updatedAt, stamped in TripContext's mutation points) and local
+  trips push up automatically (= first-login migration); on every
+  local change - debounced (1.5s) upsert; local deletions delete
+  remote rows. The client never sends user_id on reads - RLS derives
+  identity from the JWT.
+- **DB**: `supabase-accounts.sql` - user_trips (user_id+id PK, data
+  jsonb) with per-user RLS on all four verbs. NETANEL MUST RUN THIS
+  in the SQL Editor + verify Email provider is on in Authentication,
+  and add NEXT_PUBLIC_SUPABASE_URL/_ANON_KEY to .env.local and Vercel
+  (same values as the server pair; documented in .env.example).
+
+**Verified** against a full local GoTrue+PostgREST mock (Supabase is
+network-blocked from this sandbox; mock enforces per-uid isolation
+like RLS and accepts OTP 123456): device1 local trip + login →
+migrated up; clean device2 same account → trip pulled and rendered;
+device2 rename → device3 login sees the new name; a different account
+sees 0 trips; deletion synced; logout restores the login button.
+build + tsc clean. Live smoke test on the real project still owed
+(login → trip appears in Table Editor → second browser sees it).
+
+**Next session should know:** chatStorage (conversations) and the
+explored store are still local-only by design - candidates for the
+same sync pattern later. Supabase free tier pauses after ~a week idle
+- wake it in the dashboard if logins suddenly fail pre-launch.

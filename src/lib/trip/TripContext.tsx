@@ -64,8 +64,11 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
 
   const currentTrip = trips.find((t) => t.id === currentId) ?? null;
 
+  // כל מוטציה מקבלת חותמת updatedAt - שכבת הסנכרון לחשבון ממזגת לפי
+  // "המאוחר מנצח" בין מכשירים. גם עדכונים שמגיעים מהשרת נחתמים מחדש
+  // (הד חוזר יחיד ולא מזיק - התוכן זהה והמיזוג מתכנס).
   const update = useCallback((id: string, fn: (t: Trip) => Trip) => {
-    setTrips((prev) => prev.map((t) => (t.id === id ? fn(t) : t)));
+    setTrips((prev) => prev.map((t) => (t.id === id ? { ...fn(t), updatedAt: Date.now() } : t)));
   }, []);
 
   const createTrip = useCallback(
@@ -78,6 +81,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
           ? [{ id: newId(), citySlug, placeIds: [] }]
           : [],
         createdAt: Date.now(),
+        updatedAt: Date.now(),
       };
       setTrips((prev) => [...prev, trip]);
       setCurrentId(trip.id);
@@ -87,17 +91,19 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   );
 
   const createTripFrom = useCallback((trip: Trip) => {
-    setTrips((prev) => [...prev, trip]);
-    setCurrentId(trip.id);
+    const stamped = { ...trip, updatedAt: Date.now() };
+    setTrips((prev) => [...prev, stamped]);
+    setCurrentId(stamped.id);
   }, []);
 
   const upsertTrip = useCallback((trip: Trip) => {
+    const stamped = { ...trip, updatedAt: Date.now() };
     setTrips((prev) =>
-      prev.some((t) => t.id === trip.id)
-        ? prev.map((t) => (t.id === trip.id ? trip : t))
-        : [...prev, trip],
+      prev.some((t) => t.id === stamped.id)
+        ? prev.map((t) => (t.id === stamped.id ? stamped : t))
+        : [...prev, stamped],
     );
-    setCurrentId(trip.id);
+    setCurrentId(stamped.id);
   }, []);
 
   const duplicateTrip = useCallback((id: string) => {
@@ -111,6 +117,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         days: src.days.map((d) => ({ ...d, id: newId(), placeIds: [...d.placeIds] })),
         citySlugs: [...src.citySlugs],
         createdAt: Date.now(),
+        updatedAt: Date.now(),
       };
       setCurrentId(copy.id);
       return [...prev, copy];

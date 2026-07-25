@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Script from 'next/script';
 import { TripProvider } from '@/lib/trip/TripContext';
+import { AuthProvider } from '@/lib/auth/AuthContext';
+import AccountSync from '@/components/AccountSync';
 import SiteNav from '@/components/SiteNav';
 import AccessibilityWidget from '@/components/AccessibilityWidget';
 import Logo from '@/components/Logo';
@@ -33,7 +35,9 @@ export default function RootLayout({
       </head>
       {/* flex column: main נמתח והפוטר תמיד צמוד לתחתית - בלי פס ריק מתחתיו */}
       <body className="flex min-h-screen flex-col antialiased">
+        <AuthProvider>
         <TripProvider>
+        <AccountSync />
         <header className="sticky top-0 z-50 border-b border-night/10 bg-cream/85 backdrop-blur print:hidden">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
             <Link href="/" className="flex items-center gap-2 text-xl font-bold text-night">
@@ -50,6 +54,7 @@ export default function RootLayout({
         </header>
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>
         </TripProvider>
+        </AuthProvider>
         <AccessibilityWidget />
         <footer className="mt-16 bg-night py-10 text-center print:hidden">
           <div className="flex items-center justify-center gap-2 text-lg font-bold text-cream">

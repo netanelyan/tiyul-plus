@@ -7,6 +7,7 @@ import { useTrip } from '@/lib/trip/TripContext';
 import { tripLabel } from '@/lib/trip/label';
 import TripChip from '@/components/TripChip';
 import SiteSearch from '@/components/SiteSearch';
+import AccountButton from '@/components/AccountButton';
 
 // כניסה אחת לטיול: /chat הוא גם השיחה וגם התוכנית (תצוגה מאוחדת) -
 // אין יותר טאב צ׳אט נפרד מול טאב מתכנן.
@@ -115,9 +116,11 @@ export default function SiteNav() {
           </div>
         )}
         <TripChip />
+        <AccountButton />
       </nav>
 
       {/* מתחת ל-md: המבורגר */}
+      <span className="flex items-center gap-2 md:hidden"><AccountButton /></span>
       <button
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
