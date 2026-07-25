@@ -12,6 +12,7 @@ import { dayDescription, dayPlaces } from '@/lib/trip/dayDescription';
 import PlacesMap from '@/components/PlacesMap';
 import ChatPanel from '@/components/ChatPanel';
 import Flag from '@/components/Flag';
+import Logo from '@/components/Logo';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 
 /**
@@ -560,44 +561,75 @@ export default function TripWorkspace({
         </section>
       )}
 
-      {/* ---------- סיכום להדפסה ---------- */}
+      {/* ---------- ייצוא להדפסה/PDF: שער ממותג + ימים + פוטר ---------- */}
       {t && (
         <div className="hidden print:block">
-          <h1 className="text-2xl font-bold">🧳 {t.name} - טיול+</h1>
+          {/* עמוד שער */}
+          <div className="print-cover">
+            <Logo className="print-logo" />
+            <h1>{t.name}</h1>
+            <p className="print-meta">
+              {t.days.length} ימים · {totalStops} עצירות · הופק{' '}
+              {new Date().toLocaleDateString('he-IL')}
+            </p>
+            <div className="print-cities">
+              {Array.from(new Set(t.days.map((d) => d.citySlug))).map((slug) => {
+                const dst = destOf(slug);
+                return dst ? (
+                  <span key={slug} className="print-city-chip">
+                    {dst.name}
+                  </span>
+                ) : null;
+              })}
+            </div>
+          </div>
+
+          {/* הימים */}
           {t.days.map((d, i) => {
             const dst = destOf(d.citySlug);
             const prev = i > 0 ? t.days[i - 1] : null;
             return (
-              <div key={d.id} className="mt-4">
+              <div key={d.id}>
                 {prev && prev.citySlug !== d.citySlug && (
-                  <p className="font-bold">
+                  <p className="print-leg">
                     {travelLeg(prev.citySlug, d.citySlug).emoji} מעבר:{' '}
                     {destOf(prev.citySlug)?.name} ← {dst?.name} ·{' '}
                     {travelLeg(prev.citySlug, d.citySlug).label}
                   </p>
                 )}
-                <h2 className="mt-2 text-lg font-bold">
-                  📅 יום {i + 1} - {dst?.name}
-                </h2>
-                <p className="text-sm">{dayDescription(d, dst)}</p>
-                {d.notes && <p className="text-sm">💡 {d.notes}</p>}
-                <ol className="mt-1 list-decimal ps-6 text-sm">
-                  {d.placeIds.map((pid) => {
-                    const p = placeOf(d.citySlug, pid);
-                    return p ? (
-                      <li key={pid}>
-                        <strong>{p.name}</strong> ({p.nameLocal})
-                        {p.kosherNote ? ` · ✡️ ${p.kosherNote}` : ''}
-                      </li>
-                    ) : null;
-                  })}
-                </ol>
+                <div className="print-day">
+                  <h2>
+                    יום {i + 1} · {dst?.name}
+                  </h2>
+                  <p className="print-day-desc">{dayDescription(d, dst)}</p>
+                  {d.notes && <p className="print-day-desc">💡 {d.notes}</p>}
+                  <ol className="list-decimal ps-6">
+                    {d.placeIds.map((pid) => {
+                      const p = placeOf(d.citySlug, pid);
+                      return p ? (
+                        <li key={pid}>
+                          <strong>{p.name}</strong> ({p.nameLocal})
+                          {p.kosherNote ? ` · ✡️ ${p.kosherNote}` : ''}
+                        </li>
+                      ) : null;
+                    })}
+                  </ol>
+                </div>
               </div>
             );
           })}
-          <p className="mt-6 text-xs">
-            הופק ע&quot;י טיול+ · לוודא כשרות, שעות ומחירים מול המקומות עצמם
-          </p>
+
+          {/* פוטר: דיסקליימר + חתימת BlackZ */}
+          <div className="print-footer">
+            <p className="print-disclaimer">
+              הטיול תוכנן בעזרת AI · לוודא כשרות, שעות ומחירים מול המקומות עצמם לפני הנסיעה
+              <br />
+              הופק ע&quot;י טיול+
+            </p>
+            <div className="print-signature">
+              <blackz-signature></blackz-signature>
+            </div>
+          </div>
         </div>
       )}
     </div>

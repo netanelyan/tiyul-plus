@@ -208,8 +208,13 @@ html.a11y-no-motion *::after {
   }
 }
 
-/* ===== הדפסה: סיכום טיול נקי ===== */
+/* ===== הדפסה: ייצוא טיול פרימיום (שער ממותג + ימים + פוטר) ===== */
 @media print {
+  @page {
+    size: A4;
+    margin: 16mm 14mm;
+  }
+
   body {
     background: #fff;
     color: #000;
@@ -217,6 +222,123 @@ html.a11y-no-motion *::after {
   main {
     max-width: none;
     padding: 0;
+  }
+
+  /* גרדיאנטים/רקעים עדינים בשער ובמפרידי המעברים - בלי זה חלק
+     מהדפדפנים משמיטים צבעי רקע/גבול בהדפסה כברירת מחדל */
+  .print-cover,
+  .print-leg,
+  .print-day h2 {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* עמוד שער: לוגו + שם הטיול + מטא-דאטה + ערים, לבד בעמוד הראשון */
+  .print-cover {
+    display: flex;
+    min-height: 240mm;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    break-after: page;
+    page-break-after: always;
+  }
+  .print-cover .print-logo {
+    width: 52px;
+    height: 52px;
+    margin-bottom: 20px;
+  }
+  .print-cover h1 {
+    font-size: 30px;
+    font-weight: 900;
+    color: #241b4d;
+    letter-spacing: -0.01em;
+  }
+  .print-cover .print-meta {
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(36, 27, 77, 0.6);
+  }
+  .print-cover .print-cities {
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    max-width: 140mm;
+  }
+  .print-cover .print-city-chip {
+    border: 1px solid rgba(36, 27, 77, 0.25);
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #241b4d;
+  }
+
+  /* מפריד מעבר בין ערים - קופסה עדינה בין שני ימים */
+  .print-leg {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin: 16px 0;
+    padding: 8px 14px;
+    border: 1px solid rgba(36, 27, 77, 0.18);
+    border-radius: 10px;
+    background: rgba(255, 89, 65, 0.05);
+    font-size: 12px;
+    font-weight: 700;
+    color: #241b4d;
+  }
+
+  /* כל יום - יחידה שלא מתפצלת בין עמודים כשאפשר */
+  .print-day {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(36, 27, 77, 0.12);
+  }
+  .print-day:last-of-type {
+    border-bottom: none;
+  }
+  .print-day h2 {
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 800;
+    color: #241b4d;
+    border-inline-start: 3px solid #ff5941;
+    padding-inline-start: 8px;
+    margin: 0;
+  }
+  .print-day .print-day-desc {
+    margin-top: 3px;
+    font-size: 12px;
+    color: rgba(36, 27, 77, 0.65);
+  }
+  .print-day ol {
+    margin-top: 8px;
+  }
+  .print-day li {
+    margin-bottom: 2px;
+    font-size: 12.5px;
+  }
+
+  /* פוטר ההדפסה - תחתית המסמך: דיסקליימר + חתימת BlackZ */
+  .print-footer {
+    margin-top: 26px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(36, 27, 77, 0.15);
+    text-align: center;
+  }
+  .print-footer .print-disclaimer {
+    font-size: 10.5px;
+    color: rgba(36, 27, 77, 0.55);
+  }
+  .print-footer .print-signature {
+    margin-top: 8px;
+    transform: scale(0.85);
   }
 }
 
