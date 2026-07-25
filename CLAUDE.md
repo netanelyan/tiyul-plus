@@ -217,6 +217,13 @@ npm run lint
 5. API keys only in `.env.local` / Vercel env vars (see `.env.example`).
    Never in the repo.
 6. No new heavy dependencies without explicit approval from Netanel.
+7a. **Merging a batch of branches:** merge them one at a time and run
+   only `npx tsc --noEmit` after each (cheap early warning). Run the
+   expensive checks - `npm run build` and `node scripts/verify-photos.mjs` -
+   ONCE for the whole batch, right before pushing main. Never per-branch.
+   Do NOT put the session-log entry inside a feature branch: it conflicts
+   on every single merge. Append it as a separate commit on main after the
+   merge lands.
 7. Every work session ends with: `npm run build` passing, visual check of
    changed pages (RTL + design consistency), commit + push with a clear
    message.
