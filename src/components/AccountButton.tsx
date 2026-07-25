@@ -58,8 +58,22 @@ export default function AccountButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded-xl bg-night/5 px-3.5 py-2 text-sm font-semibold text-night/70 ring-1 ring-night/10 transition hover:bg-night/10"
+        className="flex items-center gap-1.5 rounded-xl bg-night/5 px-3.5 py-2 text-sm font-semibold text-night/70 ring-1 ring-night/10 transition hover:bg-night/10"
       >
+        {/* אייקון משתמש - שהכפתור ייקרא מיד כ"חשבון" */}
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="h-4 w-4 shrink-0"
+          aria-hidden
+        >
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 21c0-3.9 3.6-7 8-7s8 3.1 8 7" />
+        </svg>
         התחברות
       </button>
       {open && <LoginModal onClose={() => setOpen(false)} />}
