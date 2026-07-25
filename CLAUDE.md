@@ -2159,3 +2159,43 @@ then links are long but fully functional. **Accounts decision made:**
 Supabase is also the chosen auth provider - when accounts are built,
 shared_trips gains user_id (comment in the SQL) and /t/ codes can hang
 off the user's saved trips.
+
+### 2026-07-25 (jj) - Continuous expansion run (branch data/expansion-3): stopped immediately on the scale guardrail
+
+Prompt asked for continuous catalog expansion "until told to stop," with an
+explicit pre-flight instruction to check the three scale guardrails every
+~10 destinations and stop cold if any tripped - measured them BEFORE writing
+any content, as a sanity check. One is already tripped, with zero new
+destinations added this session:
+
+- Static pages: 93 (limit ~250) - fine.
+- Largest client JS chunk: ~572 KB (limit ~1.5 MB) - fine.
+- **Chat grounding is already over budget.** `buildGrounding()` in
+  `src/app/api/chat/route.ts` serializes all 47 destinations / 562 places
+  (truncated descriptions, tags, priceLevel, mustSee, full itineraries and
+  practical blocks) to 258,544 JSON chars. Two independent char-count
+  heuristics (÷4, ÷3.2 - no real tokenizer available offline) put that at
+  roughly 65,000-80,000 tokens, i.e. 30-60% past the ~50k-token guideline
+  in the brief - and this is the ORIGINAL pre-session catalog, before this
+  run added anything.
+
+Per the brief's own stop condition, did not add any destinations this
+session. Wrote the measurement up in TODO.md (new "BLOCKED" section at the
+top) with the three architectural options that would unblock further
+growth (per-destination retrieval instead of whole-catalog grounding,
+region-split data files, or moving the catalog behind a DB/PlacesProvider
+fetch) - none attempted here, all are refactors out of scope for an
+additive data-only branch. `data/expansion-3` therefore carries only the
+TODO.md note and this log entry, no data changes.
+
+**Next session should know:** the grounding-size problem almost certainly
+predates this run by several batches - it likely crossed 50k tokens
+somewhere in the 2026-07-25 overnight expansion (24→47 destinations in one
+night) without anyone measuring it, since no earlier session log entry
+records a grounding-size check. Whoever picks up content work next should
+NOT add destinations until the grounding fix lands; whoever picks up the
+grounding fix should re-measure with the real Anthropic tokenizer/actual
+API usage logs (the dev console already logs one usage line per model
+call - a single live `/api/chat` request would give an exact
+`input_tokens` number more trustworthy than this session's char-count
+estimate).
