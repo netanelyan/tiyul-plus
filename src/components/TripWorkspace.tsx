@@ -10,6 +10,7 @@ import { useTrip } from '@/lib/trip/TripContext';
 import { travelLeg } from '@/lib/trip/travel';
 import { useTripChat } from '@/lib/trip/useTripChat';
 import { dayDescription, dayPlaces } from '@/lib/trip/dayDescription';
+import { encodeTripShare } from '@/lib/trip/share';
 import PlacesMap from '@/components/PlacesMap';
 import ChatPanel from '@/components/ChatPanel';
 import Flag from '@/components/Flag';
@@ -50,6 +51,7 @@ export default function TripWorkspace({
   const [allDaysOpen, setAllDaysOpen] = useState(false);
   const [actionsOpen, setActionsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const t = trip.currentTrip;
   const destOf = (slug: string) => destinations.find((d) => d.slug === slug);
@@ -83,27 +85,36 @@ export default function TripWorkspace({
     trip.upsertTrip({ ...t, preferences: { ...t.preferences, ...patch } });
   };
 
-  function buildSummary(): string {
+  const shareUrl = () => (t ? `${window.location.origin}/t/${encodeTripShare(t)}` : '');
+
+  /**
+   * סיכום טקסטואלי של הטיול. whatsapp=true משתמש בהדגשות *כוכביות*
+   * (הפורמט של וואטסאפ), משמיט שמות לועזיים לקריאות, ומסיים בקישור
+   * השיתוף - הצפייה המלאה ממילא נמצאת שם.
+   */
+  function buildSummary(whatsapp = false): string {
     if (!t) return '';
-    const lines: string[] = [`🧳 ${t.name} | טיול+`, ''];
+    const B = (s: string) => (whatsapp ? `*${s}*` : s);
+    const stops = t.days.reduce((n, d) => n + d.placeIds.length, 0);
+    const lines: string[] = [B(`🧳 ${t.name}`), `${t.days.length} ימים · ${stops} עצירות · טיול+`, ''];
     t.days.forEach((d, i) => {
       const dst = destOf(d.citySlug);
       if (i > 0 && t.days[i - 1].citySlug !== d.citySlug) {
         const leg = travelLeg(t.days[i - 1].citySlug, d.citySlug);
-        lines.push(
-          `${leg.emoji} מעבר: ${destOf(t.days[i - 1].citySlug)?.name} ← ${dst?.name} (${leg.label})`,
-          '',
-        );
+        lines.push(`${leg.emoji} ${destOf(t.days[i - 1].citySlug)?.name} ← ${dst?.name} · ${leg.label}`, '');
       }
-      lines.push(`📅 יום ${i + 1} - ${dst?.name}:`);
-      lines.push(`   ${dayDescription(d, dst)}`);
+      lines.push(B(`📅 יום ${i + 1} · ${dst?.name}`));
       d.placeIds.forEach((pid, j) => {
         const p = placeOf(d.citySlug, pid);
-        if (p) lines.push(`  ${j + 1}. ${p.name} (${p.nameLocal})`);
+        if (p)
+          lines.push(
+            `${j + 1}. ${p.name}${p.mustSee ? ' ★' : ''}${whatsapp ? '' : ` (${p.nameLocal})`}`,
+          );
       });
-      if (d.notes) lines.push(`  💡 ${d.notes}`);
+      if (d.notes) lines.push(`💡 ${d.notes}`);
       lines.push('');
     });
+    lines.push('🔗 המסלול המלא עם מפה:', shareUrl());
     return lines.join('\n');
   }
 
@@ -115,9 +126,17 @@ export default function TripWorkspace({
     });
   }
 
+  function copyShareLink() {
+    if (!t) return;
+    navigator.clipboard.writeText(shareUrl()).then(() => {
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2000);
+    });
+  }
+
   function shareWhatsApp() {
     if (!t) return;
-    window.open(`https://wa.me/?text=${encodeURIComponent(buildSummary())}`, '_blank', 'noopener');
+    window.open(`https://wa.me/?text=${encodeURIComponent(buildSummary(true))}`, '_blank', 'noopener');
   }
 
   /* ---------- כפתורי הפעולות (משותפים לשורה בדסקטופ ולתפריט במובייל) ---------- */
@@ -128,6 +147,9 @@ export default function TripWorkspace({
       </Btn>
       <Btn onClick={copySummary} icon={copied ? ICONS.check : ICONS.copy}>
         {copied ? 'הועתק' : 'העתקת סיכום'}
+      </Btn>
+      <Btn onClick={copyShareLink} icon={linkCopied ? ICONS.check : ICONS.link}>
+        {linkCopied ? 'הקישור הועתק' : 'קישור לשיתוף'}
       </Btn>
       <Btn onClick={shareWhatsApp} icon={ICONS.whatsapp} iconClassName="text-[#1da851]">
         שיתוף בוואטסאפ
@@ -731,6 +753,12 @@ const ICONS = {
     </>,
   ),
   check: iconSvg(<path d="M20 6 9 17l-5-5" />),
+  link: iconSvg(
+    <>
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+    </>,
+  ),
   whatsapp: iconSvg(
     <>
       <path d="M21 11.5a8.5 8.5 0 0 1-12.63 7.45L3 20l1.05-5.37A8.5 8.5 0 1 1 21 11.5Z" />

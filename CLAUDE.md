@@ -2079,3 +2079,46 @@ renders in both places. build + tsc clean.
   strengthened for clarity. No new dependency - icons are hand-inlined
   paths like PromptChips did.
 - The copied state now shows a check icon instead of the "✓" char.
+
+### 2026-07-25 (hh) - Shareable trip URLs (/t/<code>) + WhatsApp format v2
+
+Phase 4's viral-loop item, without a backend:
+
+- `src/lib/trip/share.ts` - the trip encodes into the URL itself:
+  `[1, name, [[citySlug, [placeIds], notes?], ...]]` → JSON → UTF-8
+  base64url. Only IDs travel (the curated data is already in the app),
+  so links stay short (~270 chars for a 2-city trip). `decodeTripShare`
+  validates everything against the curated data - unknown cities are
+  dropped, unknown placeIds filtered, name/notes length-capped: a
+  tampered link can never render invented places (hard rule 2 applies
+  to links too). Payload is versioned (v1) so future account-backed
+  short codes can share the same route.
+- `src/app/t/[code]/page.tsx` - server component, decodes + validates
+  server-side, `generateMetadata` gives each shared trip a real
+  title/description (WhatsApp/OG previews). Invalid code → orderly
+  Hebrew error page, no crash.
+- `SharedTripView.tsx` (client) - read-only view: header card with
+  trip name/flags/counts, one map with all stops, day cards with
+  numbered stops + mustSee stars + notes, travel-leg pills, and TWO
+  "שמירה אצלי" CTAs (top + bottom night band) that import a fresh-id
+  copy via `TripContext.createTripFrom` and route to /chat. The
+  sender's original is never affected.
+- `TripWorkspace.tsx` - new "קישור לשיתוף" button (link icon, copied
+  state); WhatsApp text rebuilt: *bold* title/day headers (WhatsApp
+  markup), day+stop count line, ★ on mustSee, localName dropped for
+  readability, and the share link at the end. The clipboard summary
+  keeps localNames and also ends with the link now.
+
+E2E-verified against a production build (playwright, two isolated
+browser contexts): built a Rome+Vienna trip → copied the link (270
+chars) → opened it in a clean context (page title = trip name, both
+days render) → "שמירה אצלי" imported exactly one copy into the clean
+context's storage and routed to /chat → /t/broken-code-123 shows the
+orderly error. WhatsApp URL decodes to the new format and ends with
+the link. build + tsc clean.
+
+**Next session should know:** when accounts land (Phase 4 tail), keep
+/t/<code> as the share surface - server codes just become another
+branch in `decodeTripShare` (v2). The share payload deliberately
+excludes preferences (kosher etc.) - a shared link shows the plan, not
+the sender's personal preferences.
