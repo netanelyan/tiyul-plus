@@ -11043,6 +11043,287 @@ export const destinations: Destination[] = [
         'בהאנוי פועל בית חב"ד עם מסעדה כשרה (בשר, עוף וצמחוני), ארוחות שבת בהרשמה ומשלוחים בעיר; בהו צ׳י מין יש בית חב"ד נוסף עם מסעדה כשרה. ההשגחה היא של רב הקהילה בווייטנאם (Kosher Vietnam). מחוץ לשתי הערים - בהא לונג, סאפה, נין בין והא ג׳יאנג - אין כשרות, ולכן נוהגים להצטייד מראש; אוכל צמחוני זמין בכל מקום, אבל רוטב דגים נוכח כמעט בכל מנה מקומית.',
     },
   },
+  {
+    slug: 'lofoten',
+    name: 'לופוטן והפיורדים',
+    nameLocal: 'Lofoten & the Norwegian Fjords',
+    countrySlug: 'norway',
+    flag: '🇳🇴',
+    center: { lat: 63.5, lng: 10.0 },
+    zoom: 5,
+    tagline: 'צוקים מעל המים, כפרי דייגים אדומים וזוהר צפוני',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Moskenes_Reinebringen_lub_2025-07-21_img09_Aussicht.jpg/500px-Moskenes_Reinebringen_lub_2025-07-21_img09_Aussicht.jpg',
+    iconicLandmark: {
+      name: 'איי לופוטן',
+      nameLocal: 'Lofoten Islands',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Moskenes_Reinebringen_lub_2025-07-21_img09_Aussicht.jpg/500px-Moskenes_Reinebringen_lub_2025-07-21_img09_Aussicht.jpg',
+      blurb:
+        'שרשרת איים מעל החוג הארקטי שבה פסגות סלע חדות צונחות היישר אל מים טורקיז, ובין המפרצים כפרי דייגים עם בקתות עץ אדומות.',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'נוף פיורדים וצוקים שקשה להאמין שהוא אמיתי, עם תשתית מצוינת ובטיחות גבוהה - ומעל החוג הארקטי גם זוהר צפוני ושמש חצות. חסרונות: אין טיסה ישירה מישראל, זה אחד היעדים היקרים באירופה, המרחקים גדולים מאוד ומזג האוויר משתנה בלי הודעה.',
+    },
+    summary:
+      'נורווגיה מחולקת לשני חלקים שכדאי להכיר: הפיורדים שבמערב - גיירנגר ונרויפיורד שהם אתרי מורשת עולמית, וצוקי פרייקסטולן וטרולטונגה שמעליהם - ואיי לופוטן שבצפון, מעל החוג הארקטי, עם כפרי דייגים, חופים לבנים ופסגות שצונחות לים. ברגן היא שער הכניסה למערב, וטרומסו היא בירת הזוהר הצפוני.',
+    bestSeason:
+      'יוני-אוגוסט (שמש חצות בצפון, כל הדרכים והמסלולים פתוחים) · ספטמבר-מרץ עונת זוהר צפוני בטרומסו ובלופוטן · טרולטונגה ופרייקסטולן נגישים בבטחה בעיקר ביוני-ספטמבר',
+    places: [
+      {
+        id: 'nor-lofoten',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Moskenes_Reinebringen_lub_2025-07-21_img09_Aussicht.jpg/500px-Moskenes_Reinebringen_lub_2025-07-21_img09_Aussicht.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'איי לופוטן',
+        nameLocal: 'Lofoten Islands',
+        category: 'nature',
+        lat: 68.3333,
+        lng: 14.6667,
+        description:
+          'ארכיפלג מעל החוג הארקטי, ובו פסגות סלע שיורדות לים, חופי חול לבן ומים בצבע טורקיז. נוסעים בין האיים בכביש E10 עם גשרים ומנהרות; בקיץ שמש חצות, בחורף זוהר צפוני.',
+        rating: 4.9,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Lofoten',
+      },
+      {
+        id: 'nor-reine',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Reine_at_Reinefjorden%2C_2010_September.jpg/500px-Reine_at_Reinefjorden%2C_2010_September.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'ריינה',
+        nameLocal: 'Reine',
+        category: 'attraction',
+        lat: 67.9325,
+        lng: 13.0888,
+        description:
+          'כפר דייגים על מפרץ מוקף פסגות, עם בקתות רורבו אדומות מעל המים - התמונה המזוהה ביותר עם לופוטן. מעליו מסלול המדרגות התלול לריינברינגן עם התצפית המפורסמת.',
+        rating: 4.8,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Reine+Lofoten',
+      },
+      {
+        id: 'nor-geiranger',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Geirangerfjord_.jpg/500px-Geirangerfjord_.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'גיירנגר-פיורד',
+        nameLocal: 'Geirangerfjord',
+        category: 'nature',
+        lat: 62.121,
+        lng: 7.129,
+        description:
+          'פיורד צר באתר מורשת עולמית, ובו מפלי "שבע האחיות" שיורדים מהקירות וחוות נטושות על מדפי סלע. שיט קצר מגיירנגר, ותצפיות דרמטיות מדלסניבה ומכביש הנשרים.',
+        rating: 4.8,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Geirangerfjord',
+      },
+      {
+        id: 'nor-naeroy',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Naer%C3%B8yfjorden.jpg/500px-Naer%C3%B8yfjorden.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'נרוי-פיורד',
+        nameLocal: 'Nærøyfjord',
+        category: 'nature',
+        lat: 60.9436,
+        lng: 6.9314,
+        description:
+          'אחד הפיורדים הצרים בעולם (במקומות מסוימים כ-250 מ׳ רוחב), זרוע של הסוגנה-פיורד ואתר מורשת עולמית. השיט גודוואנגן-פלאם הוא הקטע היפה, ומשתלב עם רכבת פלאם.',
+        rating: 4.8,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Naeroyfjord',
+      },
+      {
+        id: 'nor-preikestolen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Lyse_Fjord_et_Preikestolen.jpg/500px-Lyse_Fjord_et_Preikestolen.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'פרייקסטולן (סלע הדוכן)',
+        nameLocal: 'Preikestolen (Pulpit Rock)',
+        category: 'viewpoint',
+        lat: 58.9867,
+        lng: 6.1875,
+        description:
+          'מדף סלע שטוח שתלוי כ-600 מ׳ מעל הלייספיורד - אחד המסלולים המפורסמים בנורווגיה. ההליכה כ-8 ק"מ הלוך-חזור, 3-4 שעות, ואין מעקה בקצה.',
+        rating: 4.8,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Preikestolen',
+      },
+      {
+        id: 'nor-trolltunga',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Trolltunga_2017.jpg/500px-Trolltunga_2017.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'טרולטונגה (לשון הטרול)',
+        nameLocal: 'Trolltunga',
+        category: 'viewpoint',
+        lat: 60.133,
+        lng: 6.754,
+        description:
+          'לשון סלע שמזדקרת מעל אגם רינגדאלס-ואטן בגובה של כ-700 מ׳. המסלול קשה ותובעני - כ-20-28 ק"מ ליום שלם - ופתוח בבטחה בעיקר בקיץ ובתחילת הסתיו, לעתים בליווי מדריך.',
+        rating: 4.7,
+        durationMin: 720,
+        externalUrl: 'https://maps.google.com/?q=Trolltunga',
+      },
+      {
+        id: 'nor-jotunheimen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Utsiktgald1.jpg/500px-Utsiktgald1.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'יוטונהיימן',
+        nameLocal: 'Jotunheimen National Park',
+        category: 'nature',
+        lat: 61.605,
+        lng: 8.4775,
+        description:
+          'פארק ההרים הגבוה בנורווגיה - "בית הענקים" - ובו הפסגות הגבוהות במדינה, קרחונים ואגמים. כאן עובר גם רכס בסגן, מהמסלולים המפורסמים באירופה.',
+        rating: 4.7,
+        durationMin: 600,
+        externalUrl: 'https://maps.google.com/?q=Jotunheimen',
+      },
+      {
+        id: 'nor-bergen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Bergen_panorama_at_night_-_panoramio_%281%29.jpg/500px-Bergen_panorama_at_night_-_panoramio_%281%29.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 2,
+        name: 'ברגן',
+        nameLocal: 'Bergen',
+        category: 'attraction',
+        lat: 60.3894,
+        lng: 5.33,
+        description:
+          'שער הפיורדים: רציף בריגן ההנזאתי עם בתי העץ הצבעוניים (אתר מורשת עולמית), שוק דגים, ורכבל פלויבנן לתצפית מעל העיר. גשומה מאוד - זה חלק מהאופי.',
+        rating: 4.6,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Bergen+Norway',
+      },
+      {
+        id: 'nor-tromso',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Troms%C3%B8_sentrum_%285835702754%29.jpg/500px-Troms%C3%B8_sentrum_%285835702754%29.jpg',
+        tags: ['outdoors', 'nightlife'],
+        priceLevel: 2,
+        name: 'טרומסו',
+        nameLocal: 'Tromsø',
+        category: 'attraction',
+        lat: 69.6517,
+        lng: 18.9556,
+        description:
+          'העיר הגדולה מעל החוג הארקטי, ובירת הזוהר הצפוני: קתדרלת הארקטי, רכבל פיילהיים, וטיולי ציד זוהר, כלבי מזחלות ולווייתנים בעונה.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Tromso',
+      },
+      {
+        id: 'nor-lyngen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Lyngen.jpg/500px-Lyngen.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'אלפי לינגן',
+        nameLocal: 'Lyngen Alps',
+        category: 'nature',
+        lat: 69.7903,
+        lng: 20.1695,
+        description:
+          'רכס אלפיני חד מזרחית לטרומסו, עם פסגות שצונחות לפיורד וקרחונים קטנים - אזור מוביל לסקי טורינג באביב ולמסלולי הליכה בקיץ.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Lyngen+Alps',
+      },
+      {
+        id: 'nor-oslo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Nationaltheatret_evening.jpg/500px-Nationaltheatret_evening.jpg',
+        tags: ['art', 'families'],
+        priceLevel: 2,
+        name: 'אוסלו',
+        nameLocal: 'Oslo',
+        category: 'attraction',
+        lat: 59.9133,
+        lng: 10.7389,
+        description:
+          'הבירה, ובה בית האופרה שאפשר לטפס על גגו, מוזיאון מונק, פארק הפסלים ויגלנד ומוזיאוני הוויקינגים והספינות. נקודת מעבר טבעית בדרך לפיורדים ולצפון.',
+        rating: 4.4,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Oslo',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'אוסלו',
+        placeIds: ['nor-oslo'],
+        notes:
+          'נחיתה בבירה (עם החלפה מאירופה): בית האופרה, פארק ויגלנד ומוזיאון. ערב מוקדם - יוצאים מחר מערבה.',
+      },
+      {
+        day: 2,
+        title: 'ברגן והפיורד הצר',
+        placeIds: ['nor-bergen', 'nor-naeroy'],
+        notes:
+          'רכבת נופית או טיסה קצרה לברגן, סיור בבריגן, ומשם שיט בנרוי-פיורד בשילוב רכבת פלאם.',
+      },
+      {
+        day: 3,
+        title: 'גיירנגר',
+        placeIds: ['nor-geiranger'],
+        notes:
+          'יום פיורדים קלאסי: שיט בגיירנגר מול מפלי שבע האחיות, ותצפיות דלסניבה וכביש הנשרים.',
+      },
+      {
+        day: 4,
+        title: 'צוקים - פרייקסטולן או טרולטונגה',
+        placeIds: ['nor-preikestolen', 'nor-trolltunga'],
+        notes:
+          'בוחרים מסלול לפי כושר: פרייקסטולן (3-4 שעות) או טרולטונגה (יום שלם ותובעני). לבדוק תנאי מזג אוויר ושעות אור.',
+      },
+      {
+        day: 5,
+        title: 'יוטונהיימן',
+        placeIds: ['nor-jotunheimen'],
+        notes:
+          'יום הרים בפארק הגבוה במדינה - רכס בסגן או מסלול קצר יותר, בהתאם לתחזית.',
+      },
+      {
+        day: 6,
+        title: 'לופוטן',
+        placeIds: ['nor-lofoten', 'nor-reine'],
+        notes:
+          'טיסה פנימית צפונה (בודו/סווולוואר) ומעבורת/כביש E10 בין האיים: ריינה, חופים לבנים ומסלול ריינברינגן.',
+      },
+      {
+        day: 7,
+        title: 'טרומסו והארקטי',
+        placeIds: ['nor-tromso', 'nor-lyngen'],
+        notes:
+          'סיום בצפון: טרומסו, ובעונה - ציד זוהר צפוני או יום באלפי לינגן.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה מנתב"ג לנורווגיה. טסים עם החלפה אחת (וינה, איסטנבול, אמסטרדם, לונדון או בודפשט) לאוסלו (OSL), ולעתים ישירות לברגן. בתוך נורווגיה יש טיסות פנים תכופות וזולות יחסית לצפון (בודו, סווולוואר, טרומסו) - כמעט חובה בגלל המרחקים.',
+      gettingAround:
+        'רכב שכור לפיורדים ולופוטן, בשילוב מעבורות (נסיעה על מעבורת היא חלק מהכביש בנורווגיה). לצפון עדיף לטוס ולשכור רכב שם. רכבות נופיות מצוינות - אוסלו-ברגן ורכבת פלאם. בחורף נדרשים צמיגי חורף ובדיקת תנאי דרך.',
+      kosherOverview:
+        'אין באזור הפיורדים ובלופוטן שום נקודת כשרות. קהילה יהודית ובית כנסת יש באוסלו ובטרונדהיים, ובאוסלו אפשר לתאם מראש אוכל כשר דרך הקהילה - אך אין מסעדה כשרה פתוחה לקהל. הדרך המעשית: להצטייד באוסלו או מהבית, ולהסתמך על דגים, מוצרי חלב וירקות עם סימוני כשרות מוכרים בסופרמרקטים.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {

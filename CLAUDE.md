@@ -1608,3 +1608,22 @@ the overnight run.
   complex had no coordinates in the API - Hoi An was dropped (wrong
   region for this hub) and Trang An is covered through the Ninh Binh
   province entry rather than guessed. build clean, verify-photos all OK.
+
+### 2026-07-25 (q) - Overnight expansion: Norway (Lofoten + fjords)
+
+- **Norway** (new country) - Schengen visa-free, NOK, near-cashless,
+  eSIM caveat (Norway often excluded from European bundles).
+- **Lofoten & the Norwegian Fjords** - 11 places, rating 4.7. Landmark:
+  the Lofoten islands. Nature: Reine, Geirangerfjord, Naeroyfjord,
+  Preikestolen, Trolltunga, Jotunheimen, Lyngen Alps; cities Bergen,
+  Tromso, Oslo. 7-day itinerary spanning west fjords and the Arctic.
+- Flights: verified there is NO nonstop TLV-Oslo - one European
+  connection, then domestic flights north (distances make them close to
+  mandatory).
+- **Kosher: nothing in the fjords or Lofoten** - communities exist in
+  Oslo and Trondheim and food can be arranged in advance through the Oslo
+  community, but no public kosher restaurant. Stated plainly.
+- Coordinates and photos from the Wikipedia API (German Wikipedia for
+  Trolltunga, Nominatim for Reine). The Atlantic Ocean Road was dropped -
+  its only lead image is an SVG map, not a photo. build clean,
+  verify-photos all OK.
