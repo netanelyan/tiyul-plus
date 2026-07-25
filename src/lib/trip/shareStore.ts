@@ -27,11 +27,15 @@ function randomCode(len = 8): string {
 }
 
 function headers(): Record<string, string> {
-  return {
+  const h: Record<string, string> = {
     apikey: key!,
-    Authorization: `Bearer ${key}`,
     'Content-Type': 'application/json',
   };
+  // רק מפתחות anon בפורמט הישן הם JWT ונשלחים גם כ-Bearer; מפתחות
+  // sb_publishable_ החדשים עוברים ב-apikey בלבד (Bearer עם ערך שאינו
+  // JWT נדחה ע"י PostgREST).
+  if (key!.startsWith('eyJ')) h.Authorization = `Bearer ${key}`;
+  return h;
 }
 
 export const shareStoreEnabled = () => Boolean(url && key);

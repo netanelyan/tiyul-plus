@@ -129,7 +129,9 @@ export default function TripWorkspace({
     // פותחים חלון סינכרונית (שורד חוסמי פופאפ) ומנווטים כשהקישור מוכן
     const win = window.open('', '_blank');
     void getShareUrl().then((url) => {
-      const text = `שיתפתי איתך את הטיול "${t.name}" שבניתי בטיול+ ✈️\n${url}`;
+      // 🧳 ולא ✈️: המטוס הוא תו Unicode ישן (U+2708+VS16) שחלק מהפלטפורמות
+      // מציגות כ-� - המזוודה היא קודפוינט מודרני יחיד שמרונדר בכל מקום
+      const text = `שיתפתי איתך את הטיול "${t.name}" שבניתי בטיול+ 🧳\n${url}`;
       const wa = `https://wa.me/?text=${encodeURIComponent(text)}`;
       if (win) win.location.href = wa;
       else window.open(wa, '_blank', 'noopener');
