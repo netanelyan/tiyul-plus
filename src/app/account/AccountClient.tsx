@@ -455,7 +455,29 @@ function SettingsCard({ onDeletedAll }: { onDeletedAll: () => void }) {
     <section className="rounded-3xl bg-shell p-5 ring-1 ring-night/10 sm:p-6">
       <h2 className="display text-xl text-night">הגדרות</h2>
 
+      {/* תוכנית המנוי - לקריאה בלבד; משתנה רק דרך Stripe */}
       <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-cream px-4 py-3 ring-1 ring-night/10">
+        <div>
+          <p className="text-sm font-bold text-night">התוכנית שלי</p>
+          <p className="text-xs text-night/50">
+            {profile.plan === 'premium'
+              ? 'טיול+ פרימיום - מכסות מוגדלות פי 10'
+              : 'תוכנית חינם - מספיקה לטיול מלא ועשרות עריכות ביום'}
+          </p>
+        </div>
+        {profile.plan === 'premium' ? (
+          <span className="shrink-0 rounded-full bg-zest px-3 py-1 text-xs font-black text-night">★ פרימיום</span>
+        ) : (
+          <a
+            href="/premium"
+            className="shrink-0 rounded-full bg-sunset px-3.5 py-1.5 text-xs font-bold text-cream transition hover:bg-sunset-deep"
+          >
+            שדרוג
+          </a>
+        )}
+      </div>
+
+      <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl bg-cream px-4 py-3 ring-1 ring-night/10">
         <div>
           <p className="text-sm font-bold text-night">פרופיל ציבורי</p>
           <p className="text-xs text-night/50">

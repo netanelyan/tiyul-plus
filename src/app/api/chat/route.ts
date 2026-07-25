@@ -11,6 +11,9 @@ import type { Trip } from '@/lib/trip/types';
 import type { Destination } from '@/lib/types';
 import { exploreDestination, type ExploreScope } from '@/lib/explore/resolver';
 import { exploredToDestination, sanitizeExploredDestinations } from '@/lib/explore/adapter';
+import { checkLimit, aiUnitsUsedToday, recordAiUnits } from '@/lib/server/limits';
+import { resolveCaller } from '@/lib/server/identity';
+import { PLAN_LIMITS, aiUnits } from '@/lib/plans';
 
 /**
  * צ׳אט הטיולים - סוכן אמיתי מעל הטיול של המשתמש.
@@ -359,7 +362,7 @@ async function runClaudeTurn(
   iter: number,
   kosherHint: boolean,
   groundingDetail: string,
-): Promise<{ blocks: AccBlock[]; stopReason: string; text: string }> {
+): Promise<{ blocks: AccBlock[]; stopReason: string; text: string; usage: AnthropicUsage }> {
   const model = process.env.ANTHROPIC_MODEL_AGENT ?? 'claude-sonnet-4-5';
   // טוגל כשרות מה-UI לפני שקיים טיול: מוסרים לסוכן בשקט דרך בלוק המצב
   const kosherNote =
@@ -471,7 +474,7 @@ async function runClaudeTurn(
   }
 
   const blocks = [...byIndex.entries()].sort(([a], [b]) => a - b).map(([, blk]) => blk);
-  return { blocks, stopReason, text };
+  return { blocks, stopReason, text, usage };
 }
 
 /** לולאת הסוכן: קריאות מודל ↔ ביצוע כלים על עותק הטיול, עד תשובת טקסט */
@@ -481,6 +484,7 @@ async function runAgent(
   send: Send,
   kosherHint: boolean,
   explored: Destination[],
+  meter: { units: number },
 ): Promise<void> {
   let working = clientTrip;
   const actions: string[] = [];
@@ -529,6 +533,7 @@ async function runAgent(
       kosherHint,
       baseDetail + buildExploredGrounding(explored),
     );
+    meter.units += aiUnits(turn.usage);
     full += turn.text;
 
     if (turn.stopReason !== 'tool_use') {
@@ -700,7 +705,49 @@ function sendRuleBased(lastUserText: string, send: Send) {
   send({ type: 'meta', destinationSlug: r.destinationSlug, placeIds: r.placeIds });
 }
 
+/** תשובת סטרים של הודעה אחת - להודעות מכסה (חוויית צ׳אט, לא שגיאת HTTP) */
+function singleMessageStream(text: string): Response {
+  const encoder = new TextEncoder();
+  const stream = new ReadableStream<Uint8Array>({
+    start(controller) {
+      controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'text', text })}\n\n`));
+      controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'done' })}\n\n`));
+      controller.close();
+    },
+  });
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream; charset=utf-8',
+      'Cache-Control': 'no-cache, no-transform',
+    },
+  });
+}
+
+const QUOTA_MESSAGE =
+  'הגעתם למכסת השימוש היומית בסוכן החכם של התוכנית החינמית 🙏\n\n' +
+  'המכסה מתאפסת פעם ביום. בינתיים אפשר להמשיך לערוך את הטיול ידנית במתכנן - להוסיף ימים, להזיז עצירות ולפתוח ניווט.\n\n' +
+  'רוצים להמשיך לתכנן עם הסוכן בלי לחכות? טיול+ פרימיום מגדיל את המכסה פי 10 - כל הפרטים בעמוד "פרימיום" (tiyulplus.com/premium).';
+
 export async function POST(request: Request) {
+  // זיהוי הקורא (משתמש מחובר או IP) - לפני קריאת הגוף, כדי שגוף עצום
+  // לא יעקוף את המכסות. ואז שערי המכסה, מהזול ליקר.
+  const caller = await resolveCaller(request);
+  const limits = PLAN_LIMITS[caller.plan];
+
+  const burst = checkLimit('chat-burst', caller.id, limits.chatBurstPerMin, 60_000);
+  if (!burst.ok) {
+    return new Response(JSON.stringify({ error: 'rate-limited' }), {
+      status: 429,
+      headers: { 'Content-Type': 'application/json', 'Retry-After': String(burst.retryAfterSec) },
+    });
+  }
+  const daily = checkLimit('chat-day', caller.id, limits.chatPerDay, 24 * 60 * 60 * 1000);
+  if (!daily.ok) return singleMessageStream(QUOTA_MESSAGE);
+  if (process.env.ANTHROPIC_API_KEY) {
+    const used = await aiUnitsUsedToday(caller.id);
+    if (used >= limits.aiUnitsPerDay) return singleMessageStream(QUOTA_MESSAGE);
+  }
+
   const body = (await request.json()) as { messages: ChatMessage[]; trip?: unknown; kosher?: unknown; explored?: unknown };
   const messages = Array.isArray(body.messages) ? body.messages : [];
   const clientTrip = sanitizeClientTrip(body.trip);
@@ -719,11 +766,15 @@ export async function POST(request: Request) {
       };
 
       if (process.env.ANTHROPIC_API_KEY) {
+        const meter = { units: 0 };
         try {
-          await runAgent(messages, clientTrip, send, kosherHint, explored);
+          await runAgent(messages, clientTrip, send, kosherHint, explored, meter);
         } catch {
           // נפילה חיננית למנוע החוקים - רק אם עוד לא הוזרם טקסט
           if (!emitted) sendRuleBased(last, send);
+        } finally {
+          // הרישום קורה גם כשהתור נכשל באמצע - הטוקנים כבר נצרכו
+          recordAiUnits(caller.id, meter.units);
         }
       } else {
         sendRuleBased(last, send);

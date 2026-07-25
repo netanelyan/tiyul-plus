@@ -10,6 +10,7 @@ import Flag from '@/components/Flag';
 import TripWorkspace from '@/components/TripWorkspace';
 import CityCombobox from '@/components/CityCombobox';
 import { buildCityOptions } from '@/lib/citySearch';
+import { authHeader } from '@/lib/auth/client';
 
 /**
  * המתכנן: מסך בניית טיול חדש (כפתורים כממשק ראשי) - וברגע שיש טיול,
@@ -140,7 +141,7 @@ function Onboarding({
     try {
       const res = await fetch('/api/generate-trip', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await authHeader()) },
         body: JSON.stringify({ prefs, party, notes: notes.trim() }),
       });
       const data = (await res.json()) as { trip?: Trip; understood?: string; error?: string };

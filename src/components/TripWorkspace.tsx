@@ -19,6 +19,7 @@ import ChatPanel from '@/components/ChatPanel';
 import Flag from '@/components/Flag';
 import Logo from '@/components/Logo';
 import AddDayPicker from '@/components/AddDayPicker';
+import ImportMapModal from '@/components/ImportMapModal';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 
 /**
@@ -53,6 +54,7 @@ export default function TripWorkspace({
   /** 'day' = המפה של היום הנבחר · 'trip' = כל העצירות של כל הימים יחד */
   const [mapMode, setMapMode] = useState<'day' | 'trip'>('day');
   const [chatOpen, setChatOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const [allDaysOpen, setAllDaysOpen] = useState(false);
   const [actionsOpen, setActionsOpen] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
@@ -230,6 +232,7 @@ export default function TripWorkspace({
         </div>
         <div className="flex flex-wrap items-center gap-2 text-sm">
           <Btn onClick={onNewTrip}>+ טיול חדש</Btn>
+          <Btn onClick={() => setImportOpen(true)}>📍 ייבוא מפה</Btn>
           <div className="hidden flex-wrap gap-2 sm:flex">{actionButtons}</div>
           {t && (
             <button
@@ -822,6 +825,18 @@ export default function TripWorkspace({
           </div>
         </div>
       )}
+
+      {/* ייבוא מפה מ-Google My Maps → נשמר כיעד explored + טיול חדש */}
+      <ImportMapModal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        onImported={(dest, newTrip) => {
+          chat.addExplored(dest);
+          trip.createTripFrom(newTrip);
+          setSelectedDayId(null);
+          setMapMode('day');
+        }}
+      />
 
     </>
   );

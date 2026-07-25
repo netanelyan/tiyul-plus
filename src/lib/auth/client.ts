@@ -18,3 +18,20 @@ export function getSupabase(): SupabaseClient | null {
   client = url && key ? createClient(url, key) : null;
   return client;
 }
+
+/**
+ * כותרת Authorization לבקשות ה-API של האתר (צ׳אט, בניית טיול, ייבוא):
+ * משתמש מחובר מקבל מכסות לפי החשבון והתוכנית שלו במקום לפי IP.
+ * לא מחוברים / חשבונות כבויים - אובייקט ריק, והשרת נופל לזיהוי IP.
+ */
+export async function authHeader(): Promise<Record<string, string>> {
+  const sb = getSupabase();
+  if (!sb) return {};
+  try {
+    const { data } = await sb.auth.getSession();
+    const token = data.session?.access_token;
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  } catch {
+    return {};
+  }
+}

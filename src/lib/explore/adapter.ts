@@ -81,7 +81,10 @@ function sanitizePlace(raw: unknown): Place | null {
   };
 }
 
-/** עד 6 יעדים, עד 15 מקומות ליעד; כל מה שלא עובר אימות נזרק בשקט */
+/**
+ * עד 6 יעדים, עד 40 מקומות ליעד (חקירה מחזירה עד 12; ייבוא ממפת
+ * My Maps עד 40); כל מה שלא עובר אימות נזרק בשקט.
+ */
 export function sanitizeExploredDestinations(raw: unknown): Destination[] {
   if (!Array.isArray(raw)) return [];
   const out: Destination[] = [];
@@ -95,7 +98,7 @@ export function sanitizeExploredDestinations(raw: unknown): Destination[] {
     const lng = num(center.lng);
     if (!slug || !name || lat === null || lng === null) continue;
     const places = (Array.isArray(d.places) ? d.places : [])
-      .slice(0, 15)
+      .slice(0, 40)
       .map(sanitizePlace)
       .filter((p): p is Place => p !== null);
     if (places.length === 0) continue;

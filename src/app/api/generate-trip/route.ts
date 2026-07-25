@@ -4,6 +4,9 @@ import { countries } from '@/data/countries';
 import { generateTrip } from '@/lib/trip/generate';
 import { newId } from '@/lib/trip/types';
 import type { Trip, TripDay, TripPreferences, WizardPrefs } from '@/lib/trip/types';
+import { checkLimit, aiUnitsUsedToday, recordAiUnits } from '@/lib/server/limits';
+import { resolveCaller } from '@/lib/server/identity';
+import { PLAN_LIMITS, aiUnits } from '@/lib/plans';
 
 /**
  * בניית טיול מהעדפות-כפתורים + טקסט חופשי אופציונלי.
@@ -108,6 +111,7 @@ async function refineWithClaude(
   notes: string,
   prefs: WizardPrefs,
   party: Party | null,
+  meter: { units: number },
 ): Promise<AiRefinement | null> {
   const constraints = {
     citySlugs: prefs.citySlugs,
@@ -160,6 +164,7 @@ async function refineWithClaude(
         output_tokens?: number;
       };
     };
+    meter.units += aiUnits(data.usage ?? {});
     if (process.env.NODE_ENV === 'development') {
       const u = data.usage ?? {};
       console.log(
@@ -273,6 +278,21 @@ function buildUnderstood(prefs: WizardPrefs, party: Party | null, interests: str
 }
 
 export async function POST(request: Request) {
+  // מכסות: פרץ → 429; מכסה יומית → הבנייה ממשיכה לעבוד אבל בלי עידון
+  // ה-AI (generateTrip המקומי חינם ולא ניתן להצפה יקרה).
+  const caller = await resolveCaller(request);
+  const limits = PLAN_LIMITS[caller.plan];
+  const burst = checkLimit('generate-burst', caller.id, 5, 60_000);
+  if (!burst.ok) {
+    return Response.json(
+      { error: 'יותר מדי בקשות ברצף - נסו שוב בעוד רגע' },
+      { status: 429, headers: { 'Retry-After': String(burst.retryAfterSec) } },
+    );
+  }
+  const daily = checkLimit('generate-day', caller.id, limits.generatePerDay, 24 * 60 * 60 * 1000);
+  const unitsUsed = process.env.ANTHROPIC_API_KEY ? await aiUnitsUsedToday(caller.id) : 0;
+  const aiAllowed = daily.ok && unitsUsed < limits.aiUnitsPerDay;
+
   let body: Record<string, unknown> = {};
   try {
     body = (await request.json()) as Record<string, unknown>;
@@ -291,8 +311,10 @@ export async function POST(request: Request) {
   let interests: string[] = [];
   let days: TripDay[] = [];
 
-  if (notes && process.env.ANTHROPIC_API_KEY) {
-    const refinement = await refineWithClaude(notes, prefs, party);
+  if (notes && process.env.ANTHROPIC_API_KEY && aiAllowed) {
+    const meter = { units: 0 };
+    const refinement = await refineWithClaude(notes, prefs, party, meter);
+    recordAiUnits(caller.id, meter.units);
     if (refinement) {
       days = validateDayPlans(refinement.dayPlans, prefs);
       tripName =

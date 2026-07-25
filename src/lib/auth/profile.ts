@@ -16,6 +16,11 @@ export interface UserProfile {
   prefs: { kosher?: boolean };
   /** גילוי בחיפוש המטיילים - כבוי כברירת מחדל (פרטיות תחילה) */
   isPublic: boolean;
+  /**
+   * תוכנית המנוי - לקריאה בלבד בצד הלקוח: העמודה נכתבת אך ורק ע"י
+   * ה-webhook של Stripe דרך ה-service role (ראו supabase-premium.sql).
+   */
+  plan: 'free' | 'premium';
 }
 
 export const EMPTY_PROFILE: UserProfile = {
@@ -25,6 +30,7 @@ export const EMPTY_PROFILE: UserProfile = {
   visited: [],
   prefs: {},
   isPublic: false,
+  plan: 'free',
 };
 
 /** מה שנחשף על מטייל ציבורי - לעולם לא מייל/טלפון/טיולים */
@@ -42,14 +48,23 @@ interface Row {
   visited: unknown;
   prefs: unknown;
   is_public?: boolean;
+  plan?: string;
 }
 
 export async function fetchProfile(supabase: SupabaseClient): Promise<UserProfile | null> {
-  const { data, error } = await supabase
+  // עמודת plan מגיעה מ-supabase-premium.sql; אם ה-SQL עוד לא רץ הבחירה
+  // איתה נכשלת - נופלים לבחירה בלי העמודה כדי שפרופילים לא יישברו.
+  let { data, error } = await supabase
     .from('profiles')
-    .select('display_name,phone,avatar,visited,prefs,is_public')
+    .select('display_name,phone,avatar,visited,prefs,is_public,plan')
     .maybeSingle();
-  if (error) return null;
+  if (error) {
+    ({ data, error } = await supabase
+      .from('profiles')
+      .select('display_name,phone,avatar,visited,prefs,is_public')
+      .maybeSingle());
+    if (error) return null;
+  }
   if (!data) return { ...EMPTY_PROFILE }; // עוד אין שורה - פרופיל ריק
   const r = data as Row;
   return {
@@ -59,6 +74,7 @@ export async function fetchProfile(supabase: SupabaseClient): Promise<UserProfil
     visited: Array.isArray(r.visited) ? (r.visited as string[]).filter((c) => typeof c === 'string') : [],
     prefs: r.prefs && typeof r.prefs === 'object' ? (r.prefs as UserProfile['prefs']) : {},
     isPublic: r.is_public === true,
+    plan: r.plan === 'premium' ? 'premium' : 'free',
   };
 }
 

@@ -6,6 +6,7 @@ import type { Destination } from '@/lib/types';
 import { useTrip } from './TripContext';
 import { loadChat, saveChat, type StoredChatMessage } from './chatStorage';
 import { loadExplored, saveExplored } from '@/lib/explore/storage';
+import { authHeader } from '@/lib/auth/client';
 
 /**
  * מצב השיחה עם הסוכן - הוצא מ-AgentWorkspace כדי שהתצוגה המאוחדת
@@ -30,6 +31,8 @@ export interface TripChat {
   tripUpdates: number;
   /** יעדים שנחקרו אוטומטית (AI Explorer) - לרינדור ערים שאינן בקטלוג */
   explored: Destination[];
+  /** הוספת יעד explored מבחוץ (ייבוא מפה מ-My Maps) - נשמר ומרונדר מיד */
+  addExplored: (dest: Destination) => void;
   send: (text: string, kosher?: boolean) => void;
   /** ניקוי השיחה המקומית (התחלת טיול חדש) */
   reset: () => void;
@@ -93,7 +96,8 @@ export function useTripChat(options?: {
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        // מחוברים מקבלים מכסות לפי חשבון/תוכנית במקום לפי IP
+        headers: { 'Content-Type': 'application/json', ...(await authHeader()) },
         body: JSON.stringify({
           messages: next.map(({ role, content }) => ({ role, content })),
           trip: tripRef.current.currentTrip,
@@ -234,5 +238,9 @@ export function useTripChat(options?: {
     setInput('');
   }, []);
 
-  return { messages, input, setInput, loading, status, tripUpdates, explored, send, reset };
+  const addExplored = useCallback((dest: Destination) => {
+    setExplored(saveExplored(dest));
+  }, []);
+
+  return { messages, input, setInput, loading, status, tripUpdates, explored, addExplored, send, reset };
 }

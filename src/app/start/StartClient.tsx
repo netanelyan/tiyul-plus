@@ -3,6 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { CityOption } from '@/lib/citySearch';
+import { useTrip } from '@/lib/trip/TripContext';
+import { buildTripFromImport, looksLikeMyMaps } from '@/lib/trip/importedTrip';
+import { saveExplored } from '@/lib/explore/storage';
+import { authHeader } from '@/lib/auth/client';
+import type { Destination } from '@/lib/types';
 import QuizWizard from './QuizWizard';
 
 /**
@@ -10,28 +15,56 @@ import QuizWizard from './QuizWizard';
  * 1. שיחה חופשית - טקסט חופשי → /chat?q=
  * 2. שאלון מובנה - שאלון מודרך רב-שלבי (QuizWizard) שאוסף העדפות לפי
  *    המודל הקיים ומייצר טיול אמיתי עם generateTrip, ואז נוחת במתכנן.
- * 3. קישור מרשת חברתית - עדיין לא נתמך (הערת כנות): חילוץ אמיתי דורש
- *    החלטת מקור-נתונים (YouTube בלבד ריאלי, בתשלום/תלות), ואינסטגרם/
- *    טיקטוק לא ניתנים בלי הפרת תנאי שימוש. לא בונים כפתור מזויף.
+ * 3. קישור - Google My Maps נתמך באמת (ייבוא KML → טיול); רילים
+ *    וסרטונים עדיין לא (הערת כנות): חילוץ אמיתי דורש החלטת מקור-נתונים
+ *    (YouTube בלבד ריאלי, בתשלום/תלות), ואינסטגרם/טיקטוק לא ניתנים בלי
+ *    הפרת תנאי שימוש. לא בונים כפתור מזויף.
  */
 
 type Tab = 'chat' | 'quiz' | 'link';
 
 export default function StartClient({ cities }: { cities: CityOption[] }) {
   const router = useRouter();
+  const trip = useTrip();
   const [tab, setTab] = useState<Tab>('quiz');
 
   const [freeText, setFreeText] = useState('');
   const [link, setLink] = useState('');
   const [linkMsg, setLinkMsg] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
 
   const submitFree = () => {
     if (freeText.trim()) router.push(`/chat?q=${encodeURIComponent(freeText.trim())}`);
   };
 
-  const submitLink = () => {
+  const submitLink = async () => {
     const url = link.trim();
-    if (!url) return;
+    if (!url || importing) return;
+    // Google My Maps - נתמך באמת: ייבוא הנקודות לטיול חדש
+    if (looksLikeMyMaps(url)) {
+      setImporting(true);
+      setLinkMsg('מושכים את המפה מ-Google My Maps…');
+      try {
+        const res = await fetch('/api/import-map', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...(await authHeader()) },
+          body: JSON.stringify({ url }),
+        });
+        const data = (await res.json()) as { destination?: Destination; error?: string };
+        if (data.destination) {
+          saveExplored(data.destination);
+          trip.createTripFrom(buildTripFromImport(data.destination));
+          router.push('/chat');
+          return;
+        }
+        setLinkMsg(data.error ?? 'משהו השתבש בייבוא - נסו שוב.');
+      } catch {
+        setLinkMsg('משהו השתבש בחיבור - נסו שוב.');
+      } finally {
+        setImporting(false);
+      }
+      return;
+    }
     const isYouTube = /youtube\.com|youtu\.be/i.test(url);
     const isIG = /instagram\.com/i.test(url);
     const isTikTok = /tiktok\.com/i.test(url);
@@ -45,7 +78,7 @@ export default function StartClient({ cities }: { cities: CityOption[] }) {
         'הפלטפורמה הזו (אינסטגרם/טיקטוק/פייסבוק) חוסמת קריאת תוכן מקישור חיצוני בתנאי השימוש, ולכן לא נתמכת. אפשר להעתיק את הכיתוב/רשימת המקומות ולהדביק אותם בשיחה החופשית.',
       );
     } else {
-      setLinkMsg('לא זיהינו פלטפורמה נתמכת. אפשר לתאר מה ראיתם בשיחה החופשית.');
+      setLinkMsg('לא זיהינו פלטפורמה נתמכת. אפשר לתאר מה ראיתם בשיחה החופשית - או להדביק קישור למפה מ-Google My Maps וניבא אותה לטיול.');
     }
   };
 
@@ -60,7 +93,7 @@ export default function StartClient({ cities }: { cities: CityOption[] }) {
           💬 שיחה חופשית
         </TabButton>
         <TabButton active={tab === 'link'} onClick={() => setTab('link')}>
-          🔗 קישור מרשת חברתית
+          🔗 ייבוא מקישור
         </TabButton>
       </div>
 
@@ -91,9 +124,10 @@ export default function StartClient({ cities }: { cities: CityOption[] }) {
 
       {tab === 'link' && (
         <div className="mt-5 rounded-2xl bg-shell p-5 ring-1 ring-night/10 sm:p-7">
-          <h2 className="text-lg font-bold text-night">ראיתם ריל או סרטון עם מקומות?</h2>
+          <h2 className="text-lg font-bold text-night">יש לכם מפה או קישור עם מקומות?</h2>
           <p className="mt-1 text-sm text-night/55">
-            הדביקו קישור. נזהה את הפלטפורמה ונגיד לכם בכנות מה אפשר לעשות איתה.
+            📍 מפה מ-<b>Google My Maps</b> מיובאת לטיול אמיתי - כל הנקודות שסימנתם,
+            עם ימים ומפה. קישורים אחרים? נגיד בכנות מה אפשר.
           </p>
           <div className="mt-4 flex flex-col gap-2 sm:flex-row">
             <input
@@ -102,15 +136,15 @@ export default function StartClient({ cities }: { cities: CityOption[] }) {
                 setLink(e.target.value);
                 setLinkMsg(null);
               }}
-              placeholder="הדביקו כאן קישור מיוטיוב / אינסטגרם / טיקטוק"
+              placeholder="קישור למפה מ-My Maps, או קישור מיוטיוב / אינסטגרם"
               className="flex-1 rounded-xl border border-night/15 bg-cream px-4 py-3 text-night outline-none transition placeholder:text-night/40 focus:border-sunset/40 focus:ring-4 focus:ring-sunset/15"
             />
             <button
-              onClick={submitLink}
-              disabled={!link.trim()}
+              onClick={() => void submitLink()}
+              disabled={!link.trim() || importing}
               className="rounded-xl bg-night px-6 py-3 font-bold text-cream transition hover:bg-night-soft disabled:opacity-50"
             >
-              בדיקה
+              {importing ? 'מושך…' : 'ייבוא / בדיקה'}
             </button>
           </div>
           {linkMsg && (
@@ -119,9 +153,11 @@ export default function StartClient({ cities }: { cities: CityOption[] }) {
             </p>
           )}
           <p className="mt-4 text-xs leading-relaxed text-night/45">
-            שקיפות: חילוץ מקומות אוטומטי מסרטונים עדיין לא פעיל. יוטיוב היא הפלטפורמה
-            היחידה שבה זה ריאלי טכנית, ותופעל בהמשך; אינסטגרם, טיקטוק ופייסבוק חוסמות
-            קריאת תוכן מקישור חיצוני בתנאי השימוש שלהן.
+            ייבוא My Maps דורש שהמפה תהיה משותפת כ&quot;כל מי שיש לו הקישור יכול
+            להציג&quot;. שקיפות לגבי סרטונים: חילוץ מקומות אוטומטי מהם עדיין לא פעיל -
+            יוטיוב ריאלי טכנית ויופעל בהמשך; אינסטגרם, טיקטוק ופייסבוק חוסמות קריאת
+            תוכן חיצונית בתנאי השימוש שלהן. TripAdvisor לא מציע ייצוא ציבורי של מפות
+            שמורות ולכן לא נתמך.
           </p>
         </div>
       )}

@@ -133,3 +133,19 @@ Devín/Small Carpathians). Lower priority than net-new destinations.
 - [ ] `budva` reuses three places that also appear in `kotor` (Lovćen, Sveti
       Stefan, Budva old town coordinates) — same real sites in two hubs.
       Fine today; worth deduping if a "seen this already" view is built.
+
+## להפעלת המכסות המלאות והפרימיום (נוסף 2026-07-25, סשן המכסות)
+- [ ] להריץ את `supabase-premium.sql` ב-SQL Editor (עמודת plan מוקשחת +
+      טבלת usage_daily). בלי זה: המכסות עובדות בזיכרון בלבד והפרימיום
+      לא נשמר.
+- [ ] להוסיף `SUPABASE_SERVICE_ROLE_KEY` ל-.env.local ול-Vercel (סוד
+      שרת בלבד! Settings → API → service_role).
+- [ ] Stripe: ליצור מוצר "טיול+ פרימיום" עם Price חודשי, ולמלא
+      `STRIPE_SECRET_KEY`, `STRIPE_PRICE_ID`, `STRIPE_WEBHOOK_SECRET`
+      (endpoint: /api/billing/webhook; אירועים: checkout.session.completed,
+      customer.subscription.deleted, customer.subscription.updated).
+- [ ] **לאשר את המחיר**: העמוד מציג 19.90 ₪/חודש (PREMIUM_PRICE_ILS
+      ב-src/lib/plans.ts) - זו הצעה של הסשן, לא החלטה. לוודא התאמה בין
+      המספר בקוד ל-Price שנוצר ב-Stripe.
+- [ ] לבדוק חי ייבוא מפה אמיתית מ-My Maps (הסנדבוקס חסום לגוגל - נבדק
+      מול מוק KML מלא בלבד).
