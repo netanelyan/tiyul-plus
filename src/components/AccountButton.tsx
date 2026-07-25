@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import Link from 'next/link';
 import { useAuth } from '@/lib/auth/AuthContext';
 import Logo from '@/components/Logo';
 
@@ -32,10 +33,15 @@ export default function AccountButton() {
         <button
           onClick={() => setMenuOpen((v) => !v)}
           aria-expanded={menuOpen}
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-sunset text-sm font-black text-cream shadow-sm ring-2 ring-sunset/25 transition hover:bg-sunset-deep"
+          className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-sunset text-sm font-black text-cream shadow-sm ring-2 ring-sunset/25 transition hover:bg-sunset-deep"
           title={email}
         >
-          {(email[0] ?? 'א').toUpperCase()}
+          {auth.profile?.avatar ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={auth.profile.avatar} alt="" className="h-full w-full object-cover" />
+          ) : (
+            ((auth.profile?.displayName || email)[0] ?? 'א').toUpperCase()
+          )}
         </button>
         {menuOpen && (
           <>
@@ -62,12 +68,19 @@ export default function AccountButton() {
                   </p>
                 </div>
               </div>
+              <Link
+                href="/account"
+                onClick={() => setMenuOpen(false)}
+                className="mt-2 block w-full rounded-xl bg-sunset px-3 py-2 text-start text-sm font-bold text-cream transition hover:bg-sunset-deep"
+              >
+                האזור האישי ←
+              </Link>
               <button
                 onClick={() => {
                   void auth.signOut();
                   setMenuOpen(false);
                 }}
-                className="mt-2 w-full rounded-xl bg-night/5 px-3 py-2 text-start text-sm font-semibold text-night/70 transition hover:bg-night/10"
+                className="mt-1.5 w-full rounded-xl bg-night/5 px-3 py-2 text-start text-sm font-semibold text-night/70 transition hover:bg-night/10"
               >
                 התנתקות
               </button>

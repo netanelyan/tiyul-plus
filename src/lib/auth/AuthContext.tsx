@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { getSupabase } from './client';
+import { EMPTY_PROFILE, fetchProfile, upsertProfile, type UserProfile } from './profile';
 
 /**
  * הקשר החשבון: התחברות בקוד חד-פעמי למייל (OTP) - בלי סיסמאות.
@@ -14,6 +15,10 @@ interface AuthApi {
   user: User | null;
   /** null עד שבדיקת הסשן הראשונית הסתיימה */
   ready: boolean;
+  /** פרופיל המשתמש (נטען אחרי התחברות); null כשלא מחוברים/עוד נטען */
+  profile: UserProfile | null;
+  /** עדכון פרופיל: אופטימי בזיכרון + upsert לשרת */
+  saveProfile: (patch: Partial<UserProfile>) => Promise<boolean>;
   sendCode: (email: string) => Promise<{ ok: boolean; error?: string }>;
   verifyCode: (email: string, code: string) => Promise<{ ok: boolean; error?: string }>;
   signOut: () => Promise<void>;
@@ -31,6 +36,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const supabase = getSupabase();
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+
+  // טעינת הפרופיל אחרי התחברות; איפוס בהתנתקות
+  useEffect(() => {
+    if (!supabase || !user) {
+      setProfile(null);
+      return;
+    }
+    let cancelled = false;
+    fetchProfile(supabase).then((p) => {
+      if (!cancelled) setProfile(p ?? { ...EMPTY_PROFILE });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [supabase, user]);
+
+  const saveProfile = useCallback(
+    async (patch: Partial<UserProfile>) => {
+      if (!supabase || !user) return false;
+      let next: UserProfile | null = null;
+      setProfile((prev) => {
+        next = { ...(prev ?? EMPTY_PROFILE), ...patch };
+        return next;
+      });
+      // next מאוכלס סינכרונית ע"י ה-setter למעלה
+      return upsertProfile(supabase, next ?? { ...EMPTY_PROFILE, ...patch });
+    },
+    [supabase, user],
+  );
 
   useEffect(() => {
     if (!supabase) {
@@ -73,7 +108,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [supabase]);
 
   return (
-    <Ctx.Provider value={{ enabled: Boolean(supabase), user, ready, sendCode, verifyCode, signOut }}>
+    <Ctx.Provider
+      value={{ enabled: Boolean(supabase), user, ready, profile, saveProfile, sendCode, verifyCode, signOut }}
+    >
       {children}
     </Ctx.Provider>
   );

@@ -2578,3 +2578,39 @@ build + tsc clean. Live smoke test on the real project still owed
 explored store are still local-only by design - candidates for the
 same sync pattern later. Supabase free tier pauses after ~a week idle
 - wake it in the dashboard if logins suddenly fail pre-launch.
+
+### 2026-07-25 (mm) - User hub: /account - פרופיל, דרכון מדינות, טיולים, הגדרות
+
+The logged-in home. New route /account (linked from the avatar menu -
+"האזור האישי"), everything auto-saves.
+
+- **DB**: supabase-profiles.sql (NETANEL MUST RUN) - profiles table
+  (display_name, phone, avatar as a client-side-compressed 192px JPEG
+  data-URL ~20KB so no Storage bucket is needed yet, visited jsonb of
+  ISO2 codes, prefs jsonb) with own-row RLS.
+- **lib/auth/profile.ts** - fetch/upsert + imageToAvatar (canvas
+  square-crop+resize). **AuthContext** now loads the profile after
+  login and exposes profile/saveProfile (optimistic).
+- **/account (AccountClient)** - four cards:
+  · Profile: night banner, avatar upload with hover-camera overlay,
+    display name + phone (debounced autosave, "נשמר ✓" flash).
+  · דרכון המדינות - the fun one: ~85-country Hebrew list
+    (data/worldCountries.ts, ISO2+continent), searchable toggle chips
+    with flags, big X/195 counter, traveler levels (7 tiers from
+    "עוד לא יצאנו לדרך" to "אגדת נסיעות") with a gradient progress
+    bar to the next tier, per-continent breakdown, "בקטלוג" badge on
+    covered countries + CTA back to /countries.
+  · Trips: synced list (opens via setCurrentId → /chat), empty state.
+  · Settings: account-default kosher toggle (also mirrors into the
+    homepage toggle's localStorage key), sign out, delete-all-trips
+    (cascades to remote via the existing AccountSync deletion sync).
+- **Nav**: avatar button shows the real profile picture when set;
+  menu gained the hub link.
+- codeToFlagEmoji/flagToCode helpers bridge ISO2 ↔ the emoji-based
+  Flag component in both directions.
+
+E2E vs the extended mock (profiles endpoints added, maybeSingle
+handled): logged-out gate, autosave indicator, avatar upload renders
+in card+nav, 4 countries toggled → counter/level/continents correct,
+FULL cross-device sync (second context sees name/phone/4 visited),
+menu link present. build + tsc clean.
