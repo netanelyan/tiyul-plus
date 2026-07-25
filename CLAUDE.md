@@ -2232,3 +2232,85 @@ writing its summary - it streams, so it isn't dead time. `relevantCitySlugs`
 matches by substring on Hebrew names; a request that references a city only
 obliquely gets the 6-city fallback detail (still correct, just less
 flavorful prose). The booking/affiliate layer is still not started.
+
+### 2026-07-25 - Booking/affiliate layer: the agent raises it, the app links it
+
+Branch `feat/booking-layer`. The split is the whole point: the model
+decides WHAT to bring up and records the answer; it never produces a URL,
+price or availability claim. Every link is composed deterministically from
+one config.
+
+**Built/changed:**
+- `src/lib/booking.ts` (new) - the single source of truth for providers
+  and links. Six kinds: flights / stay / activities / esim / insurance /
+  car. Each carries Hebrew copy, the agent's one-line question, an
+  `affiliate` slot (`{ template, idKey }`, all null today) and a
+  `publicUrl`. `buildBookingUrl(kind, query)` prefers a real affiliate
+  link when its ID exists, otherwise the provider's public site, and
+  returns null when no provider is chosen (the card renders "בקרוב").
+  Affiliate IDs are read as STATIC `process.env.NEXT_PUBLIC_AFFILIATE_*`
+  properties so Next can inline them client-side - a dynamic `env[key]`
+  lookup silently returns undefined in the browser.
+- `src/lib/services.ts` - no longer its own config; the homepage services
+  grid is now derived from `bookingProviders`, so one ID change updates
+  both surfaces. `QuickServices.tsx` untouched.
+- `src/lib/trip/types.ts` - `BookingKind`, `BookingStatus`
+  ('have' | 'need' | 'not_needed') and `TripPreferences.booking`
+  (a partial record). A missing key means "never asked" - distinct from
+  "not needed".
+- `src/lib/trip/agent.ts` - new `set_booking_status` tool. Validates
+  every field against the enum, merges instead of replacing, ignores
+  unknown keys entirely (a URL passed as an extra field cannot land on
+  the trip), and its tool result reminds the model that the buttons are
+  rendered by the app and it must not write links.
+- `src/app/api/chat/route.ts` - a BOOKING section in the system prompt:
+  raise it only AFTER a real itinerary exists and the user seems happy,
+  one topic per turn, one short line, with `suggest_quick_replies`;
+  choose the topic from the trip (activities when the plan has must-see
+  attractions, car when days leave the city); record the answer with
+  `set_booking_status` IN THE SAME TURN; never re-ask a topic that
+  already has a value; drop the subject if the user is uninterested.
+  BOUNDARIES was updated - the agent may mention the buttons exist but
+  never writes a link, price or availability itself.
+- `src/components/BookingPanel.tsx` (new) - "מה עוד חסר לטיול", a
+  collapsible section under the itinerary in `TripWorkspace` with a
+  card per kind: status chip, three manual toggles writing the same
+  `Trip.preferences.booking` field the agent writes, and the outbound
+  button (or "בקרוב"). `rel` carries `sponsored` ONLY when the link is
+  genuinely an affiliate one. A quiet disclosure line states we don't
+  book, charge or hold card details.
+
+**Provider status - what is a placeholder and what needs a real ID:**
+| kind | provider | link today | needs |
+|---|---|---|---|
+| flights | Skyscanner | public homepage (no deep link - would need IATA codes we don't store) | affiliate ID + route URL format |
+| stay | Booking.com | real public search `?ss=<city>` | affiliate ID (aid/label) |
+| activities | GetYourGuide | real public search `?q=<city>` | partner ID |
+| esim | Airalo | public homepage (country slugs not in our data) | affiliate ID |
+| insurance | none chosen | "בקרוב" | pick a provider first |
+| car | none chosen | "בקרוב" | pick a provider first |
+
+No tracking parameter is invented anywhere; a test asserts that.
+
+**Verification:** 18/18 logic checks against the real modules (link
+building, URL-encoding, empty-query fallback to the site root, enum
+validation, merge-not-replace, unknown fields dropped, no-trip failure,
+`set_preferences` leaving booking intact); 24/24 CDP checks at 1400px and
+390px (six cards, four real outbound links, nofollow+noopener and no fake
+`sponsored`, "בקרוב" for the two providerless kinds, agent-set status
+rendering, manual toggle writing storage, open-count badge, no horizontal
+overflow); and live agent runs with a real key - turn 1 builds without
+pitching anything, no URL ever appears in a reply, and 3/3 phrasings of a
+user answer are recorded in the same turn.
+
+**One fix worth remembering:** the first live run had the model reply
+"רשמתי..." without calling the tool - the answer was silently lost. The
+prompt now states that saying it without the call is a hard error, and
+that a partly-vague sentence should still record the explicit part
+("הכל סגור חוץ מהכרטיסים" → activities=need only). That took 3/3 runs
+from 2/3.
+
+**Broken/deferred:** the search query uses the first city's Latin name
+(`nameLocal` split on "/"); a multi-city trip searches only the first
+city. Insurance and car are deliberately dead cards until Netanel picks
+providers.

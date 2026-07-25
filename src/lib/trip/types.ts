@@ -19,7 +19,19 @@ export interface TripPreferences {
   shabbatAware?: boolean;
   shopping?: 'more' | 'normal' | 'less';
   interests?: string[];
+  /**
+   * מה כבר סגור בטיול ומה עוד חסר (טיסות, לינה, כרטיסים...).
+   * נשמר רק ממה שהמשתמש אמר בפועל - הסוכן לא מנחש. הקישורים עצמם
+   * מגיעים מ-`src/lib/booking.ts`, אף פעם לא מהמודל.
+   */
+  booking?: Partial<Record<BookingKind, BookingStatus>>;
 }
+
+/** סוגי ההזמנות שהאתר יודע לדבר עליהם (הקונפיג עצמו ב-`src/lib/booking.ts`) */
+export type BookingKind = 'flights' | 'stay' | 'activities' | 'esim' | 'insurance' | 'car';
+
+/** 'have' = כבר סגור · 'need' = עוד צריך · 'not_needed' = לא רלוונטי לטיול הזה */
+export type BookingStatus = 'have' | 'need' | 'not_needed';
 
 export interface Trip {
   id: string;

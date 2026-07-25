@@ -12,6 +12,7 @@ import { useTripChat } from '@/lib/trip/useTripChat';
 import { dayDescription, dayPlaces } from '@/lib/trip/dayDescription';
 import { encodeTripShare } from '@/lib/trip/share';
 import PlacesMap from '@/components/PlacesMap';
+import BookingPanel from '@/components/BookingPanel';
 import ChatPanel from '@/components/ChatPanel';
 import Flag from '@/components/Flag';
 import Logo from '@/components/Logo';
@@ -521,6 +522,11 @@ export default function TripWorkspace({
           className="hidden h-[24rem] lg:col-span-2 lg:col-start-1 lg:row-start-2 lg:flex xl:sticky xl:top-20 xl:col-span-1 xl:col-start-3 xl:row-start-1 xl:h-[34rem] xl:self-start"
         />
       </div>
+
+      {/* ---------- שכבת ההזמנות: מה עוד חסר לטיול ---------- */}
+      {t && t.days.length > 0 && (
+        <BookingPanel trip={t} destinations={destinations} onSetPreferences={setPrefs} />
+      )}
 
       {/* ---------- סקירת כל הימים (עם תיאור לכל יום) ---------- */}
       {t && t.days.length > 0 && (

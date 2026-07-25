@@ -1,0 +1,146 @@
+'use client';
+
+import { useMemo, useState } from 'react';
+import {
+  BOOKING_STATUS_LABELS,
+  bookingIsAffiliate,
+  bookingProviders,
+  buildBookingUrl,
+} from '@/lib/booking';
+import type { BookingKind, BookingStatus, Trip, TripPreferences } from '@/lib/trip/types';
+import type { Destination } from '@/lib/types';
+
+/**
+ * "מה עוד חסר לטיול" - שכבת ההזמנות בתוך תצוגת הטיול.
+ *
+ * הפאנל הוא הצד ה*דטרמיניסטי* של הפיצ׳ר: הסטטוסים מגיעים מ-
+ * `Trip.preferences.booking` (הסוכן שומר אותם, או שהמשתמש לוחץ כאן),
+ * והקישורים מורכבים תמיד ב-`src/lib/booking.ts`. שום כתובת לא מגיעה
+ * מהמודל, ולכן אי אפשר להמציא קישור, מחיר או זמינות.
+ */
+
+const STATUS_ORDER: BookingStatus[] = ['have', 'need', 'not_needed'];
+
+export default function BookingPanel({
+  trip,
+  destinations,
+  onSetPreferences,
+}: {
+  trip: Trip;
+  destinations: Destination[];
+  onSetPreferences: (patch: Partial<TripPreferences>) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const booking = trip.preferences?.booking ?? {};
+
+  // יעד החיפוש אצל הספק: השם הלטיני של העיר הראשונה בטיול, מהדאטה שלנו.
+  // nameLocal נכתב לעיתים כ-"Vienna / Wien" - שולחים רק את החלק הראשון,
+  // כי מחרוזת עם לוכסן מחזירה תוצאות ריקות אצל הספקים.
+  const query = useMemo(() => {
+    const first = trip.citySlugs[0];
+    const dest = destinations.find((d) => d.slug === first);
+    const raw = dest?.nameLocal ?? dest?.name ?? '';
+    return raw.split('/')[0].trim();
+  }, [trip.citySlugs, destinations]);
+
+  const setStatus = (kind: BookingKind, status: BookingStatus) => {
+    const next = { ...booking };
+    // לחיצה חוזרת על אותו סטטוס מבטלת אותו (חזרה ל"עוד לא נשאל")
+    if (next[kind] === status) delete next[kind];
+    else next[kind] = status;
+    onSetPreferences({ booking: next });
+  };
+
+  const openCount = bookingProviders.filter((p) => booking[p.kind] === 'need').length;
+
+  return (
+    <section className="mt-5 print:hidden">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center gap-2 rounded-2xl bg-shell px-4 py-3 text-start text-sm font-bold text-night ring-1 ring-night/10 transition hover:ring-night/20"
+      >
+        <span aria-hidden>🧳</span>
+        מה עוד חסר לטיול
+        {openCount > 0 && (
+          <span className="rounded-full bg-sunset/15 px-2 py-0.5 text-xs font-bold text-sunset-deep">
+            {openCount} פתוחים
+          </span>
+        )}
+        <span className={`ms-auto text-xs transition-transform ${open ? 'rotate-180' : ''}`}>▾</span>
+      </button>
+
+      <div className={open ? 'mt-2 block' : 'hidden'}>
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
+          {bookingProviders.map((p) => {
+            const status = booking[p.kind];
+            const url = buildBookingUrl(p.kind, query);
+            const affiliate = bookingIsAffiliate(p.kind);
+            const muted = status === 'not_needed' || status === 'have';
+            return (
+              <article
+                key={p.kind}
+                className={`rounded-2xl bg-shell p-3 ring-1 ring-night/10 transition ${
+                  muted ? 'opacity-70' : ''
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <span aria-hidden className="text-lg">
+                    {p.emoji}
+                  </span>
+                  <h3 className="text-sm font-bold text-night">{p.title}</h3>
+                  {status && (
+                    <span className="ms-auto rounded-full bg-night/[0.06] px-2 py-0.5 text-[11px] font-semibold text-night/60">
+                      {BOOKING_STATUS_LABELS[status]}
+                    </span>
+                  )}
+                </div>
+                <p className="mt-1 text-xs font-medium leading-relaxed text-night/55">{p.blurb}</p>
+
+                {/* סימון ידני - אותו שדה בדיוק שהסוכן כותב אליו */}
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {STATUS_ORDER.map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => setStatus(p.kind, s)}
+                      aria-pressed={status === s}
+                      className={`rounded-full px-2.5 py-1 text-[11px] font-semibold transition ${
+                        status === s
+                          ? 'bg-sunset text-cream'
+                          : 'bg-night/[0.05] text-night/60 hover:bg-night/10'
+                      }`}
+                    >
+                      {BOOKING_STATUS_LABELS[s]}
+                    </button>
+                  ))}
+                </div>
+
+                {url ? (
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel={`noopener noreferrer nofollow${affiliate ? ' sponsored' : ''}`}
+                    className="mt-2 flex items-center justify-center rounded-xl bg-night px-3 py-2 text-xs font-bold text-cream transition hover:bg-night/85"
+                  >
+                    {p.cta}
+                    {p.provider ? ` · ${p.provider}` : ''}
+                  </a>
+                ) : (
+                  <p className="mt-2 rounded-xl bg-night/[0.04] px-3 py-2 text-center text-xs font-semibold text-night/45">
+                    בקרוב
+                  </p>
+                )}
+              </article>
+            );
+          })}
+        </div>
+
+        {/* גילוי נאות - נכון להיום אין שום קישור שותפים בקוד */}
+        <p className="mt-2 px-1 text-[11px] font-medium leading-relaxed text-night/45">
+          הקישורים מפנים לאתרי הספקים עצמם. אנחנו לא מזמינים, לא גובים תשלום ולא מחזיקים פרטי
+          אשראי - המחיר, הזמינות ותנאי הביטול נקבעים אצל הספק.
+        </p>
+      </div>
+    </section>
+  );
+}
