@@ -1586,3 +1586,25 @@ the overnight run.
   Everest Base Camp had no coordinates - used the massif/mountain
   articles instead of guessing camp coordinates. build clean,
   verify-photos all OK.
+
+### 2026-07-25 (p) - Overnight expansion: Vietnam (Hanoi + Ha Long Bay)
+
+- **Vietnam** (new country) - e-Visa up to 90 days (25/50 USD single/
+  multiple), VND, cash-first outside cities, Grab for transport.
+- **Hanoi & Ha Long Bay** - 10 places, rating 4.6. Landmark: Ha Long Bay.
+  Nature: Cat Ba island, Ninh Binh (Tam Coc/Trang An), Sa Pa rice
+  terraces, Fansipan, the Ha Giang loop, Phong Nha caves; city: Hanoi and
+  Hoan Kiem lake. 5-day itinerary.
+- Flights - a real 2026 change, verified: Arkia opened a nonstop
+  TLV-Hanoi on 5 Jan 2026 (1-3 weekly) and El Al announced a nonstop from
+  24 Oct 2026 (3 weekly, 787). Entry notes that new routes shift and
+  should be reconfirmed.
+- **Kosher REAL:** Chabad of Hanoi (To Ngoc Van area) with a kosher
+  restaurant, Shabbat meals and delivery, under Kosher Vietnam
+  supervision; Chabad HCMC also has a kosher restaurant. Nothing outside
+  the two cities, and the fish-sauce caveat is spelled out.
+  pending-review.
+- Coordinates and photos from the Wikipedia API. Hoi An and the Trang An
+  complex had no coordinates in the API - Hoi An was dropped (wrong
+  region for this hub) and Trang An is covered through the Ninh Binh
+  province entry rather than guessed. build clean, verify-photos all OK.

@@ -10789,6 +10789,260 @@ export const destinations: Destination[] = [
         'בקטמנדו יש בית חב"ד ותיק בשכונת תאמל עם מסעדה כשרה בשרית וחלבית, ארוחות שבת וליל הסדר הגדול באסיה - כתובת מוכרת ומרכזית לישראלים. בפוקהרה פועלת נוכחות חב"ד עונתית ומשתנה, ולכן כדאי לבדוק מולם לפני שמסתמכים עליה. במסלולי הטרק ובכפרים אין כשרות - נוהגים להצטייד מראש ולהסתמך על אוכל צמחוני ופשוט (דאל באט).',
     },
   },
+  {
+    slug: 'halong',
+    name: 'האנוי ומפרץ הא לונג',
+    nameLocal: 'Hanoi & Hạ Long Bay',
+    countrySlug: 'vietnam',
+    flag: '🇻🇳',
+    center: { lat: 21.3, lng: 105.6 },
+    zoom: 7,
+    tagline: 'צוקי גיר במים ירוקים, שדות אורז מדורגים ואוכל רחוב',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Ha_Long_Bay_in_2019.jpg/500px-Ha_Long_Bay_in_2019.jpg',
+    iconicLandmark: {
+      name: 'מפרץ הא לונג',
+      nameLocal: 'Hạ Long Bay',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Ha_Long_Bay_in_2019.jpg/500px-Ha_Long_Bay_in_2019.jpg',
+      blurb:
+        'מפרץ באתר מורשת עולמית שבו כ-1,600 איי גיר וצוקים מזדקרים מהמים הירוקים - הנוף המזוהה ביותר עם וייטנאם.',
+    },
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'נוף קארסט יוצא דופן, שדות אורז והרים בצפון, מחירים נמוכים - ומ-2026 גם טיסה ישירה מנתב"ג להאנוי, עם מסעדות כשרות של חב"ד בשתי הערים הגדולות. חסרונות: הא לונג עמוס מאוד ואיכות השיט משתנה מאוד בין המפעילים, האקלים לח, ובצפון יש עונת גשמים ממושכת.',
+    },
+    summary:
+      'צפון וייטנאם מרכז את הנופים המפורסמים של המדינה: מפרץ הא לונג ואי קאט בא עם אלפי צוקי הגיר, "הא לונג היבשתית" בנין בין עם השיט בין ההרים ושדות האורז, ההרים ושדות המדרגות של סאפה ופסגת פאנסיפן, ומסלול האופנועים של הא ג׳יאנג בהרי הגבול. הבסיס הוא האנוי - עיר עתיקה, צפופה וטעימה - שבה גם בית חב"ד עם מסעדה כשרה.',
+    bestSeason:
+      'אוקטובר-אפריל בצפון (יבש וקריר יחסית; ספטמבר-אוקטובר שדות האורז זהובים בסאפה) · מאי-אוגוסט חם, לח וגשום · בחורף בסאפה יכול לרדת מתחת ל-10 מעלות',
+    places: [
+      {
+        id: 'vnm-halong',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Ha_Long_Bay_in_2019.jpg/500px-Ha_Long_Bay_in_2019.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'מפרץ הא לונג',
+        nameLocal: 'Hạ Long Bay',
+        category: 'nature',
+        lat: 20.9,
+        lng: 107.2,
+        description:
+          'כ-1,600 איי גיר וצוקים במים ירוקים, אתר מורשת עולמית. מבקרים בשיט של יום או בשיט לינה, עם קיאקים, מערות ומפרצים - איכות החוויה תלויה מאוד בחברה ובמסלול שבוחרים.',
+        rating: 4.7,
+        durationMin: 720,
+        externalUrl: 'https://maps.google.com/?q=Ha+Long+Bay',
+      },
+      {
+        id: 'vnm-catba',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Cat_Ba_town.JPG/500px-Cat_Ba_town.JPG',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'אי קאט בא',
+        nameLocal: 'Cát Bà Island',
+        category: 'nature',
+        lat: 20.8,
+        lng: 106.9997,
+        description:
+          'האי הגדול באזור הא לונג, ובו פארק לאומי, מסלולי הליכה, חופים קטנים ומפרץ לאן הא השקט יותר - חלופה פחות עמוסה לשיט הקלאסי, עם אפשרות לקיאקים ולטיפוס.',
+        rating: 4.5,
+        durationMin: 720,
+        externalUrl: 'https://maps.google.com/?q=Cat+Ba+Island',
+      },
+      {
+        id: 'vnm-ninhbinh',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Tam_Coc_by_Tuan_Mai_%22007%22_%288888350545%29.jpg/500px-Tam_Coc_by_Tuan_Mai_%22007%22_%288888350545%29.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'נין בין - "הא לונג היבשתית"',
+        nameLocal: 'Ninh Bình (Tam Cốc & Tràng An)',
+        category: 'nature',
+        lat: 20.25,
+        lng: 105.8333,
+        description:
+          'אזור של צוקי גיר שמתנשאים מתוך שדות אורז ונהרות. שטים בסירת משוטים בין המצוקים ודרך מערות בתאם קוק ובטראנג אן, ומטפסים לתצפית מוא קייב. כשעתיים מהאנוי.',
+        rating: 4.7,
+        durationMin: 600,
+        externalUrl: 'https://maps.google.com/?q=Ninh+Binh',
+      },
+      {
+        id: 'vnm-sapa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Thacbac3.jpg/500px-Thacbac3.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'סאפה ושדות האורז',
+        nameLocal: 'Sa Pa',
+        category: 'nature',
+        lat: 22.3406,
+        lng: 103.8308,
+        description:
+          'עיירת הרים בצפון-מערב, ומסביבה מדרגות אורז בעמק מואונג הואה וכפרים של קבוצות אתניות (המונג, דאו). מסלולי הליכה של יום או יומיים בין הכפרים, עם לינה בבתי מקומיים.',
+        rating: 4.6,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Sa+Pa+Vietnam',
+      },
+      {
+        id: 'vnm-fansipan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Fansipan_Summit.jpg/500px-Fansipan_Summit.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'פסגת פאנסיפן',
+        nameLocal: 'Fansipan',
+        category: 'viewpoint',
+        lat: 22.3033,
+        lng: 103.775,
+        description:
+          'הפסגה הגבוהה בהודו-סין (3,143 מ׳), מעל סאפה. אפשר לעלות ברכבל ארוך במיוחד ואז ברכבת שיניים קצרה, או ללכת טרק של יום-יומיים; למעלה מקדשים ופסל בודהה גדול.',
+        rating: 4.4,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Fansipan',
+      },
+      {
+        id: 'vnm-hagiang',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/H%C3%A0_Giang_City.jpg/500px-H%C3%A0_Giang_City.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'הא ג׳יאנג',
+        nameLocal: 'Hà Giang',
+        category: 'nature',
+        lat: 22.8333,
+        lng: 104.9833,
+        description:
+          'הפרובינציה הצפונית ביותר, על גבול סין - מסלול טבעתי מפורסם בין רכסי גיר, מעברי הרים וכפרים מסורתיים. עושים אותו באופנוע עם נהג מקומי (easy rider) או ברכב פרטי, 3-4 ימים.',
+        rating: 4.7,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Ha+Giang',
+      },
+      {
+        id: 'vnm-phongnha',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Phongnhakebang6.jpg/500px-Phongnhakebang6.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'פונג ניה-קה באנג',
+        nameLocal: 'Phong Nha–Kẻ Bàng National Park',
+        category: 'nature',
+        lat: 17.5372,
+        lng: 106.1514,
+        description:
+          'פארק מערות ענק במרכז המדינה, אתר מורשת עולמית, ובו כמה מהמערות הגדולות בעולם (סון דונג בהן). מבקרים במערות פונג ניה ופרדייז בשיט ובהליכה. מגיעים בטיסה לדונג הוי או ברכבת לילה מהאנוי.',
+        rating: 4.7,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Phong+Nha+Ke+Bang',
+      },
+      {
+        id: 'vnm-hanoi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Hanoi_skyline_with_Ba_Vi_Mountain.jpg/500px-Hanoi_skyline_with_Ba_Vi_Mountain.jpg',
+        tags: ['foodie', 'history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'האנוי',
+        nameLocal: 'Hanoi',
+        category: 'attraction',
+        lat: 21.0,
+        lng: 105.85,
+        description:
+          'הבירה: רובע 36 הרחובות הצפוף, מקדשים, שרידי התקופה הקולוניאלית ואוכל רחוב שנחשב מהטובים באסיה. גם נקודת המוצא לכל הצפון - רכבות לילה ואוטובוסים לכל הכיוונים.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Hanoi',
+      },
+      {
+        id: 'vnm-hoankiem',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Thap_Rua.jpg/500px-Thap_Rua.jpg',
+        tags: ['families'],
+        priceLevel: 0,
+        name: 'אגם הואן קיים',
+        nameLocal: 'Hoàn Kiếm Lake',
+        category: 'nature',
+        lat: 21.0289,
+        lng: 105.8525,
+        description:
+          'הלב הירוק של האנוי: אגם עירוני עם מגדל הצב במרכזו וגשר אדום למקדש נגוק סון. בסופי שבוע הרחובות סביבו נסגרים לתנועה והופכים למרחב הולכי רגל.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Hoan+Kiem+Lake',
+      },
+      {
+        id: 'vnm-chabad',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'בית חב"ד האנוי',
+        nameLocal: 'Chabad of Hanoi',
+        category: 'kosher-food',
+        lat: 21.0,
+        lng: 105.85,
+        description:
+          'בית חב"ד בהאנוי (אזור To Ngoc Van) עם מסעדה כשרה - בשר, עוף וצמחוני - ארוחות שבת בהרשמה מראש ומשלוחים בעיר. פועל בימים ראשון-חמישי ובשישי סגור; לוודא שעות מולם. הסימון הוא באזור העיר.',
+        kosherNote: 'בהשגחת Kosher Vietnam (רב הקהילה בווייטנאם). לתאם ארוחות שבת ומשלוחים מראש.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'Kosher Vietnam - בית חב"ד וייטנאם',
+        },
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Chabad+of+Hanoi',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'האנוי',
+        placeIds: ['vnm-hanoi', 'vnm-hoankiem', 'vnm-chabad'],
+        notes:
+          'יום התאקלמות: רובע 36 הרחובות, אגם הואן קיים ואוכל רחוב. למי שמקפיד - ארוחה כשרה בבית חב"ד (בימים א-ה).',
+      },
+      {
+        day: 2,
+        title: 'מפרץ הא לונג',
+        placeIds: ['vnm-halong', 'vnm-catba'],
+        notes:
+          'שיט במפרץ - יום או לינה על סירה. שווה לבדוק מסלול שכולל את מפרץ לאן הא ואת קאט בא, שם פחות עמוס.',
+      },
+      {
+        day: 3,
+        title: 'נין בין',
+        placeIds: ['vnm-ninhbinh'],
+        notes:
+          'סירת משוטים בין צוקי הגיר בטראנג אן או תאם קוק, אופניים בין שדות האורז וטיפוס לתצפית מוא קייב.',
+      },
+      {
+        day: 4,
+        title: 'סאפה והרי הצפון',
+        placeIds: ['vnm-sapa', 'vnm-fansipan'],
+        notes:
+          'רכבת לילה או אוטובוס לסאפה, הליכה בין כפרי המדרגות, ולמי שרוצה - רכבל לפסגת פאנסיפן.',
+      },
+      {
+        day: 5,
+        title: 'הרחבה: הא ג׳יאנג או פונג ניה',
+        placeIds: ['vnm-hagiang', 'vnm-phongnha'],
+        notes:
+          'לבעלי זמן: מסלול הטבעת של הא ג׳יאנג בצפון (3-4 ימים), או טיסה דרומה למערות פונג ניה.',
+      },
+    ],
+    practical: {
+      flights:
+        'מ-2026 יש טיסות ישירות מנתב"ג להאנוי (HAN): ארקיע פתחה את הקו בינואר 2026 (כ-1-3 טיסות בשבוע), ואל על הודיעה על קו ישיר שמתחיל ב-24 באוקטובר 2026 בשלוש טיסות שבועיות ב-787. לוחות הזמנים בקווים חדשים משתנים - כדאי לוודא לפני ההזמנה; לחלופין טסים עם החלפה בבנגקוק, איסטנבול או המפרץ.',
+      gettingAround:
+        'בהאנוי: Grab (מוניות ואופנועים) זול ונוח. בין אזורים: רכבות לילה (האנוי-סאפה/לאו קאי, האנוי-דונג הוי), אוטובוסי שינה וטיסות פנים קצרות. בהרים נהוג לשכור נהג מקומי; נהיגה עצמאית על אופנוע דורשת רישיון מתאים וביטוח - לא לזלזל בזה.',
+      kosherOverview:
+        'בהאנוי פועל בית חב"ד עם מסעדה כשרה (בשר, עוף וצמחוני), ארוחות שבת בהרשמה ומשלוחים בעיר; בהו צ׳י מין יש בית חב"ד נוסף עם מסעדה כשרה. ההשגחה היא של רב הקהילה בווייטנאם (Kosher Vietnam). מחוץ לשתי הערים - בהא לונג, סאפה, נין בין והא ג׳יאנג - אין כשרות, ולכן נוהגים להצטייד מראש; אוכל צמחוני זמין בכל מקום, אבל רוטב דגים נוכח כמעט בכל מנה מקומית.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
