@@ -65,9 +65,18 @@ Hungary→Lake Balaton, Slovakia→High Tatras.
 - [ ] **Cyprus → Paphos + Akamas/Avakas Gorge** (2nd Cyprus entry; direct
       PFO flights) — nature: Avakas Gorge, Blue Lagoon, Baths of Aphrodite.
 
+**Photos pending (added without `photo`, UI falls back to the gradient):**
+the sandbox has no egress to Wikimedia, so no image URL could be HTTP-verified
+and none was invented. Re-run `scripts/verify-photos.mjs` from a normal network
+and fill photos for: country `portugal`; destination `lisbon`; places
+`lis-jeronimos`, `lis-belem-tower`, `lis-sao-jorge`, `lis-alfama`, `lis-se`,
+`lis-comercio`, `lis-santa-justa`, `lis-oceanario`, `lis-pena`, `lis-mouros`,
+`lis-cabo-roca`, `vie-melk`, `vie-durnstein`, `prg-karlstejn`,
+`prg-kutna-hora`, `prg-sedlec`.
+
 **Also worth doing:** enrich the original 8 European CITY entries with a
-nature day-trip place or two each (e.g. Vienna→Wachau/Vienna Woods,
-Prague→Karlštejn/Bohemian Paradise, Rome→Tivoli/Castelli, Athens→Sounion/
+nature day-trip place or two each (Vienna→Wachau DONE: Melk + Dürnstein;
+Prague→Karlštejn + Kutná Hora + Sedlec DONE; Rome→Tivoli/Castelli, Athens→Sounion/
 Delphi, Barcelona→Montserrat/Costa Brava, Budapest→Danube Bend, Bratislava→
 Devín/Small Carpathians). Lower priority than net-new destinations.
 
