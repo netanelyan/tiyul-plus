@@ -14,6 +14,8 @@ export interface UserProfile {
   avatar: string | null;
   visited: string[]; // קודי ISO2
   prefs: { kosher?: boolean };
+  /** גילוי בחיפוש המטיילים - כבוי כברירת מחדל (פרטיות תחילה) */
+  isPublic: boolean;
 }
 
 export const EMPTY_PROFILE: UserProfile = {
@@ -22,7 +24,16 @@ export const EMPTY_PROFILE: UserProfile = {
   avatar: null,
   visited: [],
   prefs: {},
+  isPublic: false,
 };
+
+/** מה שנחשף על מטייל ציבורי - לעולם לא מייל/טלפון/טיולים */
+export interface PublicProfile {
+  userId: string;
+  displayName: string;
+  avatar: string | null;
+  visited: string[];
+}
 
 interface Row {
   display_name: string | null;
@@ -30,12 +41,13 @@ interface Row {
   avatar: string | null;
   visited: unknown;
   prefs: unknown;
+  is_public?: boolean;
 }
 
 export async function fetchProfile(supabase: SupabaseClient): Promise<UserProfile | null> {
   const { data, error } = await supabase
     .from('profiles')
-    .select('display_name,phone,avatar,visited,prefs')
+    .select('display_name,phone,avatar,visited,prefs,is_public')
     .maybeSingle();
   if (error) return null;
   if (!data) return { ...EMPTY_PROFILE }; // עוד אין שורה - פרופיל ריק
@@ -46,6 +58,7 @@ export async function fetchProfile(supabase: SupabaseClient): Promise<UserProfil
     avatar: r.avatar ?? null,
     visited: Array.isArray(r.visited) ? (r.visited as string[]).filter((c) => typeof c === 'string') : [],
     prefs: r.prefs && typeof r.prefs === 'object' ? (r.prefs as UserProfile['prefs']) : {},
+    isPublic: r.is_public === true,
   };
 }
 
@@ -64,6 +77,7 @@ export async function upsertProfile(
       avatar: profile.avatar && profile.avatar.length < 150_000 ? profile.avatar : profile.avatar === null ? null : undefined,
       visited: profile.visited.slice(0, 250),
       prefs: profile.prefs,
+      is_public: profile.isPublic,
       updated_at: new Date().toISOString(),
     },
     { onConflict: 'user_id' },
@@ -99,4 +113,50 @@ export function imageToAvatar(file: File): Promise<string | null> {
     };
     img.src = url;
   });
+}
+
+/* ---------- קהילת המטיילים (public_profiles view) ---------- */
+
+interface PublicRow {
+  user_id: string;
+  display_name: string | null;
+  avatar: string | null;
+  visited: unknown;
+}
+
+const toPublic = (r: PublicRow): PublicProfile => ({
+  userId: r.user_id,
+  displayName: r.display_name ?? '',
+  avatar: r.avatar ?? null,
+  visited: Array.isArray(r.visited) ? (r.visited as string[]).filter((c) => typeof c === 'string') : [],
+});
+
+/** חיפוש מטיילים ציבוריים לפי שם (ilike) */
+export async function searchPublicProfiles(
+  supabase: SupabaseClient,
+  query: string,
+): Promise<PublicProfile[]> {
+  const q = query.trim().replace(/[%_]/g, '');
+  if (q.length < 2) return [];
+  const { data, error } = await supabase
+    .from('public_profiles')
+    .select('user_id,display_name,avatar,visited')
+    .ilike('display_name', `%${q}%`)
+    .limit(20);
+  if (error || !data) return [];
+  return (data as PublicRow[]).map(toPublic);
+}
+
+/** פרופיל ציבורי בודד לפי מזהה - null אם פרטי/לא קיים */
+export async function fetchPublicProfile(
+  supabase: SupabaseClient,
+  userId: string,
+): Promise<PublicProfile | null> {
+  const { data, error } = await supabase
+    .from('public_profiles')
+    .select('user_id,display_name,avatar,visited')
+    .eq('user_id', userId)
+    .maybeSingle();
+  if (error || !data) return null;
+  return toPublic(data as PublicRow);
 }

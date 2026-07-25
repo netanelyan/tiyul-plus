@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { getSupabase } from './client';
 import { EMPTY_PROFILE, fetchProfile, upsertProfile, type UserProfile } from './profile';
@@ -37,6 +37,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  // המצב העדכני באופן סינכרוני - saveProfile חייב לחשב את המיזוג מיד,
+  // בלי להסתמך על עדכון ה-state (שאינו מובטח להיות סינכרוני): שני
+  // saveProfile רצופים היו עלולים לדרוס שדות עם פרופיל ריק.
+  const profileRef = useRef<UserProfile | null>(null);
+  profileRef.current = profile;
 
   // טעינת הפרופיל אחרי התחברות; איפוס בהתנתקות
   useEffect(() => {
@@ -56,13 +61,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const saveProfile = useCallback(
     async (patch: Partial<UserProfile>) => {
       if (!supabase || !user) return false;
-      let next: UserProfile | null = null;
-      setProfile((prev) => {
-        next = { ...(prev ?? EMPTY_PROFILE), ...patch };
-        return next;
-      });
-      // next מאוכלס סינכרונית ע"י ה-setter למעלה
-      return upsertProfile(supabase, next ?? { ...EMPTY_PROFILE, ...patch });
+      const next: UserProfile = { ...(profileRef.current ?? EMPTY_PROFILE), ...patch };
+      profileRef.current = next; // שרשור saveProfile-ים באותו טיק נשאר עקבי
+      setProfile(next);
+      return upsertProfile(supabase, next);
     },
     [supabase, user],
   );

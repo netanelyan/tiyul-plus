@@ -4,7 +4,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth/AuthContext';
-import { imageToAvatar } from '@/lib/auth/profile';
+import { getSupabase } from '@/lib/auth/client';
+import { imageToAvatar, searchPublicProfiles, type PublicProfile } from '@/lib/auth/profile';
 import { useTrip } from '@/lib/trip/TripContext';
 import { tripLabel } from '@/lib/trip/label';
 import {
@@ -70,6 +71,7 @@ export default function AccountClient() {
         </div>
         <div className="space-y-6">
           <PassportCard />
+          <CommunityCard />
           <TripsCard
             onOpen={(id) => {
               trip.setCurrentId(id);
@@ -455,23 +457,32 @@ function SettingsCard({ onDeletedAll }: { onDeletedAll: () => void }) {
 
       <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-cream px-4 py-3 ring-1 ring-night/10">
         <div>
+          <p className="text-sm font-bold text-night">פרופיל ציבורי</p>
+          <p className="text-xs text-night/50">
+            מטיילים יוכלו למצוא אותך בחיפוש ולראות שם, תמונה ודרכון - לא מייל, טלפון או
+            טיולים
+          </p>
+          {profile.isPublic && !profile.displayName.trim() && (
+            <p className="mt-1 text-xs font-semibold text-sunset-deep">
+              כדי להופיע בחיפוש צריך למלא שם תצוגה למעלה
+            </p>
+          )}
+        </div>
+        <Toggle
+          on={profile.isPublic}
+          onChange={() => void auth.saveProfile({ isPublic: !profile.isPublic })}
+        />
+      </div>
+
+      <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl bg-cream px-4 py-3 ring-1 ring-night/10">
+        <div>
           <p className="text-sm font-bold text-night">כשרות כברירת מחדל</p>
           <p className="text-xs text-night/50">טיולים חדשים ייבנו עם אוכל כשר, בלי לשאול</p>
         </div>
-        <button
-          role="switch"
-          aria-checked={kosherDefault}
-          onClick={() => void auth.saveProfile({ prefs: { ...profile.prefs, kosher: !kosherDefault } })}
-          className={`relative h-7 w-12 shrink-0 rounded-full transition ${
-            kosherDefault ? 'bg-sunset' : 'bg-night/15'
-          }`}
-        >
-          <span
-            className={`absolute top-1 h-5 w-5 rounded-full bg-shell shadow transition-all ${
-              kosherDefault ? 'start-6' : 'start-1'
-            }`}
-          />
-        </button>
+        <Toggle
+          on={kosherDefault}
+          onChange={() => void auth.saveProfile({ prefs: { ...profile.prefs, kosher: !kosherDefault } })}
+        />
       </div>
 
       <button
@@ -487,6 +498,110 @@ function SettingsCard({ onDeletedAll }: { onDeletedAll: () => void }) {
       >
         מחיקת כל הטיולים שלי
       </button>
+    </section>
+  );
+}
+
+function Toggle({ on, onChange }: { on: boolean; onChange: () => void }) {
+  return (
+    <button
+      role="switch"
+      aria-checked={on}
+      onClick={onChange}
+      className={`relative h-7 w-12 shrink-0 rounded-full transition ${on ? 'bg-sunset' : 'bg-night/15'}`}
+    >
+      <span
+        className={`absolute top-1 h-5 w-5 rounded-full bg-shell shadow transition-all ${
+          on ? 'start-6' : 'start-1'
+        }`}
+      />
+    </button>
+  );
+}
+
+/* ======================== קהילת המטיילים ======================== */
+
+function CommunityCard() {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<PublicProfile[] | null>(null);
+  const [busy, setBusy] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // חיפוש חי עם debounce - שאילתה מול public_profiles (ציבוריים בלבד)
+  useEffect(() => {
+    const q = query.trim();
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (q.length < 2) {
+      setResults(null);
+      setBusy(false);
+      return;
+    }
+    setBusy(true);
+    debounceRef.current = setTimeout(async () => {
+      const supabase = getSupabase();
+      const found = supabase ? await searchPublicProfiles(supabase, q) : [];
+      setResults(found);
+      setBusy(false);
+    }, 450);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [query]);
+
+  return (
+    <section className="rounded-3xl bg-shell p-5 ring-1 ring-night/10 sm:p-6">
+      <h2 className="display text-xl text-night">קהילת המטיילים</h2>
+      <p className="mt-0.5 text-sm text-night/55">
+        מחפשים חברים לפי שם - ורואים איפה הם כבר היו ומה משותף לכם
+      </p>
+      <input
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="חיפוש מטייל לפי שם…"
+        aria-label="חיפוש מטייל"
+        className="mt-4 w-full rounded-xl border border-night/15 bg-cream px-4 py-2.5 text-sm text-night outline-none transition placeholder:text-night/35 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
+      />
+      {busy && (
+        <div className="mt-3">
+          <ThinkingIndicator label="מחפש" />
+        </div>
+      )}
+      {!busy && results !== null && results.length === 0 && (
+        <p className="mt-3 rounded-xl bg-night/[0.04] px-4 py-2.5 text-sm text-night/55">
+          לא נמצאו מטיילים בשם הזה. מופיעים כאן רק מי שהדליקו &quot;פרופיל ציבורי&quot;
+          בהגדרות.
+        </p>
+      )}
+      {!busy && results !== null && results.length > 0 && (
+        <div className="mt-3 space-y-2">
+          {results.map((r) => {
+            const level = travelerLevel(r.visited.length).current;
+            return (
+              <Link
+                key={r.userId}
+                href={`/u/${r.userId}`}
+                className="card-pop flex w-full items-center gap-3 rounded-2xl bg-cream px-4 py-2.5 ring-1 ring-night/10"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-sunset text-base font-black text-cream">
+                  {r.avatar ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={r.avatar} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    (r.displayName[0] ?? 'א').toUpperCase()
+                  )}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-bold text-night">{r.displayName}</span>
+                  <span className="block text-xs font-medium text-night/50">
+                    {level.emoji} {level.title} · {r.visited.length} מדינות
+                  </span>
+                </span>
+                <span className="shrink-0 text-sm font-bold text-sunset-deep">לפרופיל ←</span>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }

@@ -2614,3 +2614,29 @@ handled): logged-out gate, autosave indicator, avatar upload renders
 in card+nav, 4 countries toggled → counter/level/continents correct,
 FULL cross-device sync (second context sees name/phone/4 visited),
 menu link present. build + tsc clean.
+
+### 2026-07-25 (nn) - קהילת מטיילים: חיפוש משתמשים, פרטיות תחילה
+
+- **DB**: supabase-community.sql (NETANEL MUST RUN) - עמודת is_public
+  (ברירת מחדל false) + view בשם public_profiles בהרשאות בעלים שחושף
+  אך ורק user_id/display_name/avatar/visited של מי שבחר להיות ציבורי
+  ויש לו שם תצוגה. מייל, טלפון וטיולים לא נחשפים לעולם.
+- **profile.ts**: isPublic על הפרופיל; searchPublicProfiles (ilike על
+  השם, עד 20) ו-fetchPublicProfile מול ה-view.
+- **/account**: כרטיס "קהילת המטיילים" - חיפוש חי (debounce) עם
+  תוצאות: תמונה, שם, דרגת מטייל ומספר מדינות, קישור לפרופיל; טוגל
+  "פרופיל ציבורי" בהגדרות עם הסבר מה נחשף + התראה כשאין שם תצוגה
+  (ה-view מסתיר חסרי-שם). ה-switch חולץ לקומפוננטת Toggle משותפת.
+- **/u/[id]**: עמוד מטייל ציבורי - באנר לילה, תמונה, שם, דרגה,
+  פירוק יבשות, "🤝 ביקרתם שניכם ב-X מדינות" (חיתוך מול הדרכון שלי
+  כשמחוברים), דרכון מלא עם הדגשת המשותפות, ומצב כן לפרופיל פרטי/לא
+  קיים. תוקן קליפינג של השם אל תוך הבאנר (השם ירד מתחת לאווטאר).
+- **באג אמיתי שנתפס בבדיקות**: saveProfile חישב את המיזוג בתוך
+  ה-state updater של React (לא מובטח סינכרוני) - שני saveProfile
+  רצופים (סימון מדינות ואז טוגל) דרסו שדות עם פרופיל ריק. תוקן עם
+  profileRef שמתעדכן סינכרונית. זה היה פוגע גם בשמירות מהירות בהאב.
+
+E2E מול המוק (view + ilike): דנה ציבורית עם 3 מדינות נמצאת בחיפוש של
+יוסי (דרגה+מונה בתוצאה), עמוד הפרופיל שלה מציג דרכון + "ביקרתם שניכם"
+(יוון המשותפת), משתמש פרטי לא מופיע בחיפוש ועמוד הפרופיל שלו חסום.
+build + tsc נקיים.
