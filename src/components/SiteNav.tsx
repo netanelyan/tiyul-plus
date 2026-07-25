@@ -119,13 +119,14 @@ export default function SiteNav() {
         <AccountButton />
       </nav>
 
-      {/* מתחת ל-md: המבורגר */}
-      <span className="flex items-center gap-2 md:hidden"><AccountButton /></span>
+      {/* מתחת ל-md: כפתור החשבון וההמבורגר יושבים באותה שורה, צמודים */}
+      <div className="flex items-center gap-1.5 md:hidden">
+      <AccountButton />
       <button
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-label="תפריט"
-        className="flex h-10 w-10 items-center justify-center rounded-xl text-night/70 transition hover:bg-night/5 md:hidden"
+        className="flex h-10 w-10 items-center justify-center rounded-xl text-night/70 transition hover:bg-night/5"
       >
         <svg
           width="20"
@@ -151,6 +152,7 @@ export default function SiteNav() {
           )}
         </svg>
       </button>
+      </div>
 
       {open && (
         <div className="absolute end-0 top-full z-50 mt-2 w-60 rounded-2xl bg-shell p-2 shadow-[var(--shadow-pop)] ring-1 ring-night/10 md:hidden">

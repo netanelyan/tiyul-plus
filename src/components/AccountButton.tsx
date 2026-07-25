@@ -5,23 +5,17 @@ import { useAuth } from '@/lib/auth/AuthContext';
 import Logo from '@/components/Logo';
 
 /**
- * כפתור החשבון בניווט: התחברות בקוד למייל (בלי סיסמה), ותפריט קטן
- * למחובר. כשהחשבונות לא מוגדרים בסביבה - לא מרונדר כלום.
+ * חשבון המשתמש בניווט + מודל ההתחברות.
  *
- * חוויית הקוד: שדה ספרות גדול, שליחה אוטומטית כשהקוד מלא, ספירה
- * לאחור לשליחה חוזרת, ותזכורת לבדוק ספאם. אם המשתמש לוחץ על הקישור
- * שבמייל במקום להזין קוד - supabase-js קולט את הסשן מה-URL וההתחברות
- * מסתיימת מעצמה (בתנאי ש-Site URL מוגדר נכון בפרויקט).
+ * עקרונות המודל: בלי סיסמאות (קוד למייל), שישה תאי ספרות עם הדבקה
+ * ושליחה אוטומטית, מצב הצלחה מונפש, זכירת המייל האחרון, ספירה לאחור
+ * לשליחה חוזרת, Escape סוגר. אם המשתמש לוחץ על הקישור שבמייל במקום
+ * להזין קוד - supabase-js קולט את הסשן מה-URL והמודל נסגר מעצמו.
  */
 export default function AccountButton() {
   const auth = useAuth();
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
-  // ההתחברות הושלמה (גם דרך קישור מהמייל) - סוגרים את המודל אם פתוח
-  useEffect(() => {
-    if (auth.user) setOpen(false);
-  }, [auth.user]);
 
   if (!auth.enabled || !auth.ready) return null;
 
@@ -100,11 +94,16 @@ export default function AccountButton() {
   );
 }
 
+/* ================================ המודל ================================ */
+
 const RESEND_SECONDS = 30;
+const LAST_EMAIL_KEY = 'tiyul-plus:last-email';
+
+type Step = 'email' | 'code' | 'success';
 
 function LoginModal({ onClose }: { onClose: () => void }) {
   const auth = useAuth();
-  const [step, setStep] = useState<'email' | 'code'>('email');
+  const [step, setStep] = useState<Step>('email');
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
@@ -112,7 +111,35 @@ function LoginModal({ onClose }: { onClose: () => void }) {
   const [resendIn, setResendIn] = useState(0);
   const submittingRef = useRef(false);
 
-  // ספירה לאחור לשליחה חוזרת
+  // מייל אחרון שזכור מהתחברות קודמת
+  useEffect(() => {
+    try {
+      const last = localStorage.getItem(LAST_EMAIL_KEY);
+      if (last) setEmail(last);
+    } catch {
+      /* אין אחסון - מתחילים ריק */
+    }
+  }, []);
+
+  // Escape סוגר (לא באמצע אימות ולא במסך ההצלחה)
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && step !== 'success') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose, step]);
+
+  // התחברות שהושלמה מבחוץ (קישור מהמייל) - מדלגים ישר להצלחה
+  useEffect(() => {
+    if (auth.user && step !== 'success') {
+      setStep('success');
+      const t = setTimeout(onClose, 1400);
+      return () => clearTimeout(t);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth.user]);
+
   useEffect(() => {
     if (resendIn <= 0) return;
     const t = setTimeout(() => setResendIn((s) => s - 1), 1000);
@@ -128,6 +155,11 @@ function LoginModal({ onClose }: { onClose: () => void }) {
     const res = await auth.sendCode(email.trim());
     setBusy(false);
     if (res.ok) {
+      try {
+        localStorage.setItem(LAST_EMAIL_KEY, email.trim());
+      } catch {
+        /* לא קריטי */
+      }
       setStep('code');
       setCode('');
       setResendIn(RESEND_SECONDS);
@@ -136,15 +168,17 @@ function LoginModal({ onClose }: { onClose: () => void }) {
 
   async function submitCode(value?: string) {
     const token = (value ?? code).trim();
-    if (token.length !== 6 || busy || submittingRef.current) return;
+    if (token.length !== 6 || submittingRef.current) return;
     submittingRef.current = true;
     setBusy(true);
     setError(null);
     const res = await auth.verifyCode(email.trim(), token);
     setBusy(false);
     submittingRef.current = false;
-    if (res.ok) onClose();
-    else {
+    if (res.ok) {
+      setStep('success');
+      setTimeout(onClose, 1400);
+    } else {
       setError(res.error ?? 'משהו השתבש');
       setCode('');
     }
@@ -152,32 +186,58 @@ function LoginModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
-      <button aria-label="סגירה" onClick={onClose} className="absolute inset-0 bg-night/50 backdrop-blur-[2px]" />
-      <div className="rise-in relative w-full max-w-sm overflow-hidden rounded-3xl bg-shell shadow-2xl ring-1 ring-night/10">
-        {/* פס מותג עליון */}
-        <div className="h-1.5 w-full bg-gradient-to-l from-sunset via-sunset to-zest" aria-hidden />
-        <div className="p-6 sm:p-7">
-          <div className="flex items-center gap-2">
-            <Logo className="h-7 w-7" />
-            <span className="text-lg font-bold text-night">
-              טיול<span className="text-sunset">+</span>
+      <button
+        aria-label="סגירה"
+        onClick={step === 'success' ? undefined : onClose}
+        className="absolute inset-0 bg-night/55 backdrop-blur-[3px]"
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="התחברות לטיול+"
+        className="rise-in relative w-full max-w-sm overflow-hidden rounded-3xl bg-shell shadow-2xl ring-1 ring-night/10"
+      >
+        {/* כותרת ממותגת: רקע לילה עם זריחה עדינה + הלוגו */}
+        <div className="relative bg-night px-6 pb-5 pt-6">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(120% 90% at 85% 110%, rgba(255,89,65,0.35) 0%, rgba(255,197,49,0.12) 45%, transparent 70%)',
+            }}
+          />
+          <div className="relative flex items-center gap-2.5">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cream/10 ring-1 ring-cream/15">
+              <Logo reversed className="h-6 w-6" />
             </span>
-            <button
-              onClick={onClose}
-              aria-label="סגירה"
-              className="ms-auto flex h-8 w-8 items-center justify-center rounded-full text-night/40 transition hover:bg-night/5 hover:text-night"
-            >
-              ✕
-            </button>
-          </div>
-
-          {step === 'email' ? (
-            <>
-              <h2 className="display mt-5 text-2xl text-night">מתחברים בקליק</h2>
-              <p className="mt-1.5 text-sm leading-relaxed text-night/60">
-                בלי סיסמאות. מזינים מייל, מקבלים קוד בן 6 ספרות - והטיולים שלכם
-                נשמרים ועוברים איתכם לכל מכשיר.
+            <div>
+              <p className="text-lg font-black leading-tight text-cream">
+                טיול<span className="text-sunset">+</span>
               </p>
+              <p className="text-[11px] font-medium text-cream/60">סוכן הנסיעות החכם</p>
+            </div>
+            {step !== 'success' && (
+              <button
+                onClick={onClose}
+                aria-label="סגירה"
+                className="ms-auto flex h-8 w-8 items-center justify-center rounded-full text-cream/50 transition hover:bg-cream/10 hover:text-cream"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="p-6 sm:p-7">
+          {step === 'email' && (
+            <div key="email" className="rise-in">
+              <h2 className="display text-2xl text-night">הטיולים שלך, בכל מכשיר</h2>
+              <div className="mt-4 space-y-2.5">
+                <Benefit icon="cloud" text="כל טיול נשמר בחשבון - לא הולך לאיבוד" />
+                <Benefit icon="sync" text="מתחילים בטלפון, ממשיכים במחשב" />
+                <Benefit icon="lock" text="בלי סיסמאות - קוד חד-פעמי למייל" />
+              </div>
               <label htmlFor="login-email" className="mt-5 block text-xs font-bold text-night/50">
                 כתובת המייל
               </label>
@@ -196,44 +256,41 @@ function LoginModal({ onClose }: { onClose: () => void }) {
               <button
                 onClick={sendCode}
                 disabled={busy || !emailValid}
-                className="mt-4 w-full rounded-xl bg-sunset px-4 py-3 font-bold text-cream shadow-sm transition hover:bg-sunset-deep disabled:opacity-40"
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-sunset px-4 py-3 font-bold text-cream shadow-sm transition hover:bg-sunset-deep disabled:opacity-40"
               >
-                {busy ? 'שולח…' : 'שליחת קוד התחברות'}
+                {busy && <Spinner />}
+                {busy ? 'שולח קוד…' : 'המשך עם המייל'}
               </button>
-            </>
-          ) : (
-            <>
-              <h2 className="display mt-5 text-2xl text-night">הקוד בדרך אליך</h2>
+            </div>
+          )}
+
+          {step === 'code' && (
+            <div key="code" className="rise-in">
+              <h2 className="display text-2xl text-night">הקוד בדרך אליך</h2>
               <p className="mt-1.5 text-sm leading-relaxed text-night/60">
-                שלחנו קוד בן 6 ספרות אל{' '}
+                נשלח קוד בן 6 ספרות אל{' '}
                 <span className="font-semibold text-night" dir="ltr">
                   {email.trim()}
                 </span>
-                . לא רואים? שווה להציץ בספאם.
               </p>
-              <input
-                inputMode="numeric"
-                autoComplete="one-time-code"
+              <OtpBoxes
                 value={code}
-                onChange={(e) => {
-                  const v = e.target.value.replace(/\D/g, '').slice(0, 6);
+                disabled={busy}
+                onChange={(v) => {
                   setCode(v);
-                  if (v.length === 6) void submitCode(v); // שליחה אוטומטית
+                  setError(null);
+                  if (v.length === 6) void submitCode(v);
                 }}
-                placeholder="● ● ● ● ● ●"
-                aria-label="קוד אימות בן 6 ספרות"
-                dir="ltr"
-                autoFocus
-                className="mt-5 w-full rounded-xl border border-night/15 bg-cream px-4 py-3.5 text-center text-2xl font-black tracking-[0.45em] text-night outline-none transition placeholder:text-sm placeholder:font-normal placeholder:tracking-widest placeholder:text-night/25 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
               />
               <button
                 onClick={() => submitCode()}
                 disabled={busy || code.length !== 6}
-                className="mt-4 w-full rounded-xl bg-sunset px-4 py-3 font-bold text-cream shadow-sm transition hover:bg-sunset-deep disabled:opacity-40"
+                className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-sunset px-4 py-3 font-bold text-cream shadow-sm transition hover:bg-sunset-deep disabled:opacity-40"
               >
+                {busy && <Spinner />}
                 {busy ? 'מאמת…' : 'התחברות'}
               </button>
-              <div className="mt-3 flex items-center justify-between text-xs font-semibold">
+              <div className="mt-3.5 flex items-center justify-between text-xs font-semibold">
                 <button
                   onClick={() => {
                     setStep('email');
@@ -245,27 +302,169 @@ function LoginModal({ onClose }: { onClose: () => void }) {
                   → החלפת מייל
                 </button>
                 {resendIn > 0 ? (
-                  <span className="text-night/40">שליחה חוזרת בעוד {resendIn} שניות</span>
+                  <span className="text-night/40" aria-live="polite">
+                    אפשר לשלוח שוב בעוד {resendIn} שנ׳
+                  </span>
                 ) : (
-                  <button onClick={sendCode} disabled={busy} className="text-sunset-deep transition hover:underline">
+                  <button
+                    onClick={sendCode}
+                    disabled={busy}
+                    className="text-sunset-deep transition hover:underline"
+                  >
                     שליחת קוד חדש
                   </button>
                 )}
               </div>
-            </>
+              <p className="mt-3 rounded-lg bg-night/[0.04] px-3 py-2 text-[11px] leading-relaxed text-night/50">
+                לא רואים את המייל? בדקו את תיקיית הספאם, או לחצו על הקישור שבמייל -
+                גם הוא מחבר אתכם.
+              </p>
+            </div>
+          )}
+
+          {step === 'success' && (
+            <div key="success" className="rise-in flex flex-col items-center py-6 text-center">
+              <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#00a896]/15">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#007f76"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-8 w-8"
+                  aria-hidden
+                >
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+              </span>
+              <h2 className="display mt-4 text-2xl text-night">מחוברים!</h2>
+              <p className="mt-1 text-sm text-night/60">
+                הטיולים שלך נשמרים ומסתנכרנים מעכשיו בכל מכשיר.
+              </p>
+            </div>
           )}
 
           {error && (
-            <p className="mt-4 rounded-xl bg-sunset/10 px-3 py-2.5 text-sm font-semibold text-sunset-deep">
+            <p className="mt-4 rounded-xl bg-sunset/10 px-3 py-2.5 text-sm font-semibold text-sunset-deep" role="alert">
               {error}
             </p>
           )}
-          <p className="mt-5 border-t border-night/10 pt-3 text-center text-[11px] leading-relaxed text-night/40">
-            ההתחברות יוצרת חשבון אם עוד אין לך אחד · אנחנו שומרים רק את המייל ואת
-            הטיולים שלך
-          </p>
+
+          {step === 'email' && (
+            <p className="mt-5 border-t border-night/10 pt-3 text-center text-[11px] leading-relaxed text-night/40">
+              ההתחברות יוצרת חשבון אם עוד אין לך אחד · נשמרים רק המייל והטיולים שלך
+            </p>
+          )}
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ---------- שישה תאי קוד: input נסתר אחד מעל תאים מעוצבים ---------- */
+
+function OtpBoxes({
+  value,
+  onChange,
+  disabled,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  disabled?: boolean;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [focused, setFocused] = useState(false);
+
+  return (
+    <div
+      dir="ltr"
+      className="relative mt-5 cursor-text"
+      onClick={() => inputRef.current?.focus()}
+    >
+      {/* ה-input האמיתי - בלתי נראה, סופג הקלדה, הדבקה ו-autofill של קוד */}
+      <input
+        ref={inputRef}
+        value={value}
+        onChange={(e) => onChange(e.target.value.replace(/\D/g, '').slice(0, 6))}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        inputMode="numeric"
+        autoComplete="one-time-code"
+        aria-label="קוד אימות בן 6 ספרות"
+        autoFocus
+        disabled={disabled}
+        className="absolute inset-0 z-10 h-full w-full opacity-0"
+      />
+      <div className="flex justify-between gap-2">
+        {Array.from({ length: 6 }).map((_, i) => {
+          const filled = i < value.length;
+          const active = focused && i === Math.min(value.length, 5);
+          return (
+            <div
+              key={i}
+              aria-hidden
+              className={`flex h-14 flex-1 items-center justify-center rounded-xl border-2 bg-cream text-2xl font-black text-night transition ${
+                active
+                  ? 'border-sunset ring-4 ring-sunset/15'
+                  : filled
+                    ? 'border-night/25'
+                    : 'border-night/10'
+              }`}
+            >
+              {value[i] ?? ''}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function Spinner() {
+  return (
+    <span
+      aria-hidden
+      className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-cream/40 border-t-cream"
+    />
+  );
+}
+
+function Benefit({ icon, text }: { icon: 'cloud' | 'sync' | 'lock'; text: string }) {
+  const paths = {
+    cloud: <path d="M17.5 19a4.5 4.5 0 0 0 .42-8.98 6 6 0 0 0-11.7 1.62A4 4 0 0 0 7 19h10.5Z" />,
+    sync: (
+      <>
+        <path d="M21 12a9 9 0 0 1-15.4 6.4L3 16" />
+        <path d="M3 12a9 9 0 0 1 15.4-6.4L21 8" />
+        <path d="M3 21v-5h5" />
+        <path d="M21 3v5h-5" />
+      </>
+    ),
+    lock: (
+      <>
+        <rect x="4" y="11" width="16" height="10" rx="2" />
+        <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+      </>
+    ),
+  };
+  return (
+    <div className="flex items-center gap-2.5">
+      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-sunset/10">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#e03e27"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="h-4 w-4"
+          aria-hidden
+        >
+          {paths[icon]}
+        </svg>
+      </span>
+      <span className="text-sm font-medium text-night/75">{text}</span>
     </div>
   );
 }
