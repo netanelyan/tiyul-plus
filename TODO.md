@@ -72,12 +72,26 @@ and fill photos for: country `portugal`; destination `lisbon`; places
 `lis-jeronimos`, `lis-belem-tower`, `lis-sao-jorge`, `lis-alfama`, `lis-se`,
 `lis-comercio`, `lis-santa-justa`, `lis-oceanario`, `lis-pena`, `lis-mouros`,
 `lis-cabo-roca`, `vie-melk`, `vie-durnstein`, `prg-karlstejn`,
-`prg-kutna-hora`, `prg-sedlec`.
+`prg-kutna-hora`, `prg-sedlec`; country `poland`; destination `krakow`;
+places `kra-rynek`, `kra-mariacki`, `kra-wawel`, `kra-kazimierz`,
+`kra-schindler`, `kra-auschwitz`, `kra-wieliczka`, `kra-kosciuszko`,
+`kra-ojcow`, `kra-zakopane`, `rom-villa-deste`, `rom-villa-adriana`,
+`ath-sounion`, `bcn-montserrat`.
+
+**Blocked on coordinates - France / Paris.** France is the biggest
+remaining country gap, but dbpedia's `/data/*.json` for very famous
+articles (Eiffel Tower, Louvre, Notre-Dame) is too large and the
+coordinates get truncated out of the fetched page; the dbpedia SPARQL
+endpoint returns 403 through the proxy, wikidata and commons are
+cache-only, nominatim is robots-disallowed, and fr.dbpedia has no
+coordinates either. Build Paris when a working coordinate source exists
+(e.g. a run from a normal network). Do NOT estimate the coordinates.
 
 **Also worth doing:** enrich the original 8 European CITY entries with a
 nature day-trip place or two each (Vienna→Wachau DONE: Melk + Dürnstein;
-Prague→Karlštejn + Kutná Hora + Sedlec DONE; Rome→Tivoli/Castelli, Athens→Sounion/
-Delphi, Barcelona→Montserrat/Costa Brava, Budapest→Danube Bend, Bratislava→
+Prague→Karlštejn + Kutná Hora + Sedlec DONE; Rome→Tivoli DONE (Villa d'Este
++ Villa Adriana); Athens→Sounion DONE; Barcelona→Montserrat DONE; Athens→Delphi,
+Barcelona→Costa Brava still open, Budapest→Danube Bend, Bratislava→
 Devín/Small Carpathians). Lower priority than net-new destinations.
 
 ## Skipped / blocked (need a decision or a data source)

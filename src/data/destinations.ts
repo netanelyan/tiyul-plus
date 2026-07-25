@@ -2034,6 +2034,36 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=Via+Appia+Antica',
       },
+      {
+        id: 'rom-villa-deste',
+        name: 'וילה ד׳אסטה (טיבולי)',
+        nameLocal: "Villa d'Este",
+        category: 'attraction',
+        lat: 41.9625,
+        lng: 12.7961,
+        description:
+          'ארמון רנסאנס בטיבולי עם גן מדרגות של מאות מזרקות שכולן פועלות בכוח הכבידה בלבד, בלי משאבה אחת. אתר מורשת עולמית, כשעה מזרחית לרומא ברכבת או באוטובוס. הגן תלול - נעליים נוחות.',
+        rating: 4.7,
+        durationMin: 150,
+        tags: ['history', 'art', 'romantic'],
+        priceLevel: 2,
+        externalUrl: "https://maps.google.com/?q=Villa+d'Este+Tivoli",
+      },
+      {
+        id: 'rom-villa-adriana',
+        name: 'וילה אדריאנה (טיבולי)',
+        nameLocal: 'Villa Adriana',
+        category: 'attraction',
+        lat: 41.946,
+        lng: 12.7725,
+        description:
+          'ארמון הקיץ של הקיסר אדריאנוס - עיר שלמה של בריכות, אולמות ותיאטראות פרושה על שטח ענק בין עצי זית. שקטה בהרבה מאתרי רומא, ומשתלבת ליום אחד עם וילה ד׳אסטה. כמעט בלי צל - לא בשעות החום.',
+        rating: 4.6,
+        durationMin: 180,
+        tags: ['history', 'outdoors'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=Villa+Adriana+Tivoli',
+      },
     ],
     itinerary: [
       {
@@ -2431,6 +2461,21 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=Jewish+Museum+of+Greece',
       },
+      {
+        id: 'ath-sounion',
+        name: 'מקדש פוסידון בסוניון',
+        nameLocal: 'Naos Poseidona, Sounio',
+        category: 'viewpoint',
+        lat: 37.6502,
+        lng: 24.0245,
+        description:
+          'מקדש דורי מהמאה החמישית לפנה"ס על צוק בקצה הדרומי של אטיקה, מוקף ים משלושה כיוונים. כשעה וחצי דרומית לאתונה לאורך "הריביירה האתונאית". היעד הקלאסי לשקיעה - להגיע כשעה לפני, ולקחת שכבה מפני הרוח.',
+        rating: 4.7,
+        durationMin: 120,
+        tags: ['history', 'romantic', 'outdoors'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Temple+of+Poseidon+Sounion',
+      },
     ],
     itinerary: [
       {
@@ -2825,6 +2870,21 @@ export const destinations: Destination[] = [
         tags: ['art'],
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=MNAC+Barcelona',
+      },
+      {
+        id: 'bcn-montserrat',
+        name: 'מונסראט',
+        nameLocal: 'Montserrat',
+        category: 'nature',
+        lat: 41.5932,
+        lng: 1.8371,
+        description:
+          'רכס סלע משונן שנראה כמו משור, ובתוכו מנזר בנדיקטיני עם המדונה השחורה - סמל קטלוני מובהק. מגיעים ברכבת ואז ברכבל או ברכבת שיניים, וממשיכים בשבילי הליכה מסומנים אל פסגות התצפית. יום שלם, כשעה וחצי מברצלונה.',
+        rating: 4.7,
+        durationMin: 360,
+        tags: ['outdoors', 'history', 'families'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=Montserrat+Monastery',
       },
     ],
     itinerary: [
@@ -13374,7 +13434,228 @@ export const destinations: Destination[] = [
       kosherOverview:
         'הקהילה היהודית בליסבון קיימת ופעילה (בית הכנסת שערי תקווה, ובית חב"ד מקומי), אבל תשתית הכשרות בעיר מצומצמת מאוד ומשתנה - אין כאן שוק מסעדות כשר כמו בווינה או בפראג. הדרך המעשית: לתאם מראש מול בית חב"ד/הקהילה לגבי ארוחות ואספקה, ולהתבסס על מוצרים ארוזים עם הכשר מהסופרמרקטים הגדולים. לא לסמוך על מידע מרשת בלי אימות טלפוני לפני הנסיעה.',
     },
-  },];
+  },
+  {
+    slug: 'krakow',
+    name: 'קרקוב',
+    nameLocal: 'Kraków',
+    countrySlug: 'poland',
+    flag: '🇵🇱',
+    center: { lat: 50.0617, lng: 19.9372 },
+    zoom: 12,
+    tagline: 'העיר העתיקה ששרדה, קז׳ימייז׳ היהודית, והשער להרי הטטרה',
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'קרקוב היא הערך הטוב ביותר באירופה היום: מרכז עיר מימי הביניים שלא נהרס במלחמה, רובע יהודי שלם שחזר לחיים, מכרה מלח ופארק לאומי במרחק נסיעה קצרה, והכול במחירים של מזרח אירופה. החסרונות: הכיכר המרכזית עמוסה ומסחרית מאוד בעונה, ויום אושוויץ הוא יום קשה רגשית שדורש תכנון נפרד ולא משתלב עם שאר הטיול. מזג האוויר בחורף קר וקודר.',
+    },
+    summary:
+      'קרקוב הייתה בירת פולין ההיסטורית, והמרכז שלה שרד את המאה העשרים כמעט שלם - כיכר שוק ענקית, חומות, וגבעת ואוול עם הארמון והקתדרלה. דרומית לה יושב קז׳ימייז׳, הרובע היהודי, שהיום הוא גם אתר מורשת וגם הרובע הכי חי בעיר בערבים. מסביב: מכרה המלח בוויליצ׳קה, אתר הזיכרון באושוויץ-בירקנאו, פארק לאומי אויצוב, והרי הטטרה בזקופנה.',
+    bestSeason: 'מאי-יוני וספטמבר-אוקטובר (יולי-אוגוסט עמוס; חורף קר מאוד אך זול ויפה)',
+    places: [
+      {
+        id: 'kra-rynek',
+        name: 'כיכר השוק הראשית',
+        nameLocal: 'Rynek Główny',
+        category: 'attraction',
+        lat: 50.0617,
+        lng: 19.9372,
+        description:
+          'אחת הכיכרות הגדולות באירופה מימי הביניים, ובמרכזה אולם הבדים (סוקייניצה) עם דוכני הענבר והמזכרות. מוקפת בתי קפה, ומתחתיה מוזיאון תת-קרקעי שמציג את שכבות העיר. מסחרי ועמוס - יפה במיוחד מוקדם בבוקר.',
+        rating: 4.7,
+        durationMin: 90,
+        tags: ['history', 'foodie'],
+        priceLevel: 0,
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=Rynek+G%C5%82%C3%B3wny+Krak%C3%B3w',
+      },
+      {
+        id: 'kra-mariacki',
+        name: 'כנסיית מריה הקדושה',
+        nameLocal: 'Bazylika Mariacka',
+        category: 'attraction',
+        lat: 50.0617,
+        lng: 19.9392,
+        description:
+          'הכנסייה הגותית של הכיכר, עם מזבח עץ מגולף מהמאה ה-15 ושני מגדלים לא סימטריים. כל שעה עגולה נשמעת חצוצרה מהמגדל שנקטעת באמצע - מסורת עירונית ותיקה. הכניסה למבקרים נפרדת מהכניסה למתפללים.',
+        rating: 4.6,
+        durationMin: 45,
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Bazylika+Mariacka+Krak%C3%B3w',
+      },
+      {
+        id: 'kra-wawel',
+        name: 'טירת ואוול והקתדרלה',
+        nameLocal: 'Wawel',
+        category: 'attraction',
+        lat: 50.0539,
+        lng: 19.9347,
+        description:
+          'גבעת המלוכה מעל נהר הוויסלה: הארמון המלכותי, הקתדרלה שבה הוכתרו מלכי פולין, והחצרות שמשקיפות על העיר. הכניסה לחצר חופשית; לאולמות ולקתדרלה כרטיסים נפרדים ובמכסה יומית, אז עדיף להזמין מראש.',
+        rating: 4.7,
+        durationMin: 150,
+        tags: ['history', 'art'],
+        priceLevel: 2,
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=Wawel+Castle',
+      },
+      {
+        id: 'kra-kazimierz',
+        name: 'קז׳ימייז׳ - הרובע היהודי',
+        nameLocal: 'Kazimierz',
+        category: 'attraction',
+        lat: 50.0517,
+        lng: 19.9447,
+        description:
+          'הרובע היהודי ההיסטורי של קרקוב, עם בתי כנסת ובתי עלמין ששרדו, ורחובות שהיום מלאים בבתי קפה ובדוכנים. שילוב לא פשוט של אתר זיכרון ורובע בילויים - כדאי לבקר גם ביום, כשהאתרים פתוחים, וגם בערב.',
+        rating: 4.6,
+        durationMin: 180,
+        tags: ['history', 'nightlife', 'foodie'],
+        priceLevel: 1,
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=Kazimierz+Krak%C3%B3w',
+      },
+      {
+        id: 'kra-schindler',
+        name: 'מפעל שינדלר',
+        nameLocal: 'Fabryka Schindlera',
+        category: 'museum',
+        lat: 50.0474,
+        lng: 19.9618,
+        description:
+          'המפעל של אוסקר שינדלר, היום מוזיאון על קרקוב תחת הכיבוש הנאצי ועל גטו פודגוז׳ה. תצוגה עמוסה ומרשימה, לרוב עם כרטיסים אזלים - להזמין מראש. לא מתאים לילדים קטנים.',
+        rating: 4.5,
+        durationMin: 120,
+        tags: ['history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Schindler+Factory+Museum+Krakow',
+      },
+      {
+        id: 'kra-auschwitz',
+        name: 'אתר הזיכרון אושוויץ-בירקנאו',
+        nameLocal: 'Auschwitz-Birkenau',
+        category: 'museum',
+        lat: 50.0389,
+        lng: 19.175,
+        description:
+          'מחנה ההשמדה ומוזיאון הזיכרון באושוויינצ׳ים, כשעה וחצי מקרקוב. הכניסה חופשית אך מחייבת הזמנת כרטיס מראש, ובשעות מסוימות רק עם מדריך. יום שלם וקשה רגשית - לא לתכנן עליו שום דבר אחר, ולא להביא ילדים מתחת לגיל 14 (המלצת האתר עצמו).',
+        rating: 4.8,
+        durationMin: 240,
+        tags: ['history'],
+        priceLevel: 0,
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=Auschwitz-Birkenau+Memorial',
+      },
+      {
+        id: 'kra-wieliczka',
+        name: 'מכרה המלח ויליצ׳קה',
+        nameLocal: 'Kopalnia soli Wieliczka',
+        category: 'attraction',
+        lat: 49.9792,
+        lng: 20.0639,
+        description:
+          'מכרה מלח פעיל מימי הביניים, אתר מורשת עולמית: מסדרונות, אגמים תת-קרקעיים וקפלה שלמה מגולפת במלח. הסיור הוא כשלוש שעות עם מאות מדרגות ירידה, וטמפרטורה קבועה של כ-14 מעלות - לקחת שכבה.',
+        rating: 4.6,
+        durationMin: 210,
+        tags: ['history', 'families'],
+        priceLevel: 2,
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=Wieliczka+Salt+Mine',
+      },
+      {
+        id: 'kra-kosciuszko',
+        name: 'תל קושצ׳ושקו',
+        nameLocal: 'Kopiec Kościuszki',
+        category: 'viewpoint',
+        lat: 50.0528,
+        lng: 19.8895,
+        description:
+          'תל עפר מלאכותי מהמאה ה-19 לזכר המנהיג תדאוש קושצ׳ושקו, עם מבצר אוסטרי מסביבו ותצפית מעגלית על קרקוב ועל הוויסלה. אפשר להגיע באוטובוס או ברגל דרך יער וולסקי.',
+        rating: 4.4,
+        durationMin: 90,
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Kopiec+Ko%C5%9Bciuszki',
+      },
+      {
+        id: 'kra-ojcow',
+        name: 'פארק לאומי אויצוב',
+        nameLocal: 'Ojcowski Park Narodowy',
+        category: 'nature',
+        lat: 50.2067,
+        lng: 19.8292,
+        description:
+          'הפארק הלאומי הקטן בפולין, כחצי שעה צפונית לקרקוב: עמק סלעי גיר עם מערות, טירות ועמוד הסלע "אלת הרקולס". שבילים קצרים ונוחים למשפחות, ואפשר לשלב עם טירת פייסקובה סקאלה.',
+        rating: 4.5,
+        durationMin: 240,
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Ojcowski+Park+Narodowy',
+      },
+      {
+        id: 'kra-zakopane',
+        name: 'זקופנה והרי הטטרה',
+        nameLocal: 'Zakopane',
+        category: 'nature',
+        lat: 49.3,
+        lng: 19.95,
+        description:
+          'בירת ההרים של פולין, כשעתיים דרומית לקרקוב: רכבל למורסקייה אוקו ולגובנטובקה, שבילי הליכה בטטרה, ובחורף אתר סקי. העיירה עצמה תיירותית מאוד - הערך האמיתי הוא בשבילים שמסביבה. עדיף לינה של לילה ולא טיול יום.',
+        rating: 4.4,
+        durationMin: 480,
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Zakopane',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'העיר העתיקה וואוול',
+        placeIds: ['kra-rynek', 'kra-mariacki', 'kra-wawel'],
+        notes:
+          'מתחילים בכיכר מוקדם, לפני שהיא מתמלאת, ממשיכים לכנסיית מריה, ואחר הצהריים עולים לגבעת ואוול. הכול במרחק הליכה - קרקוב היא עיר קומפקטית להפליא.',
+      },
+      {
+        day: 2,
+        title: 'קרקוב היהודית',
+        placeIds: ['kra-kazimierz', 'kra-schindler'],
+        notes:
+          'בוקר בקז׳ימייז׳ כשבתי הכנסת ובתי העלמין פתוחים, ואחר הצהריים חוצים את הנהר למפעל שינדלר ולגטו פודגוז׳ה. כרטיסים למפעל להזמין מראש - הם נגמרים.',
+      },
+      {
+        day: 3,
+        title: 'אושוויץ-בירקנאו',
+        placeIds: ['kra-auschwitz'],
+        notes:
+          'יום שלם ונפרד. הזמנת כרטיס באתר הרשמי חובה גם כשהכניסה חופשית. יוצאים מוקדם, חוזרים אחר הצהריים, ולא מתכננים שום אטרקציה אחרת לאותו יום.',
+      },
+      {
+        day: 4,
+        title: 'מכרה המלח ואויצוב',
+        placeIds: ['kra-wieliczka', 'kra-ojcow'],
+        notes:
+          'בוקר בוויליצ׳קה (סיור מודרך של כשלוש שעות, מאות מדרגות), ואחר הצהריים אוויר פתוח באויצוב. עם ילדים - אפשר להחליף את אויצוב בתל קושצ׳ושקו, שהוא קרוב וקצר יותר.',
+      },
+      {
+        day: 5,
+        title: 'הרי הטטרה',
+        placeIds: ['kra-zakopane'],
+        notes:
+          'יום מלא בזקופנה ובטטרה. הנסיעה היא כשעתיים לכל כיוון, ולכן לינה של לילה אחת בזקופנה עדיפה בהרבה על טיול יום - במיוחד אם רוצים להגיע למורסקייה אוקו.',
+      },
+    ],
+    practical: {
+      flights:
+        'יש קו ישיר מנתב"ג לקרקוב (KRK) - ויז אייר מפעילה אותו, כשלוש שעות וחצי טיסה. חברות נוספות ותדירויות משתנות לפי עונה, אז לבדוק בזמן ההזמנה. משדה התעופה לעיר: רכבת ישירה למרכז בכ-20 דקות.',
+      gettingAround:
+        'המרכז ההיסטורי כולו הליכה, וקז׳ימייז׳ במרחק 15 דקות ברגל מהכיכר. לשאר: חשמליות ואוטובוסים זולים ותכופים, ותשלום בכרטיס אשראי ללא מגע ישירות במכונה. לאושוויץ ולזקופנה - אוטובוסים או סיור מאורגן; לוויליצ׳קה גם רכבת פרברית.',
+      kosherOverview:
+        'בקרקוב יש קהילה יהודית פעילה בקז׳ימייז׳, עם בתי כנסת מתפקדים, בית חב"ד ומרכז קהילתי (JCC), ולכן זו אחת הערים בפולין שבהן אפשר לסדר אוכל כשר - אבל התשתית קטנה, השעות מוגבלות והמצב משתנה. הדרך המעשית: לתאם מראש מול חב"ד או הקהילה לגבי ארוחות, שבת ואספקה, ולהשלים במוצרים ארוזים עם הכשר מהסופרמרקטים. לא להסתמך על מידע מהרשת בלי אימות טלפוני לפני הנסיעה.',
+    },
+  },
+];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
   return destinations.find((d) => d.slug === slug);
