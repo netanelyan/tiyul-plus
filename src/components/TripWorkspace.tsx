@@ -375,7 +375,7 @@ export default function TripWorkspace({
       )}
 
       {/* ---------- המסך המאוחד: מסלול · מפה · שיחה ---------- */}
-      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,20rem)_minmax(0,1fr)_minmax(0,22rem)] print:hidden">
+      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,16rem)_minmax(0,1fr)_minmax(0,19rem)] xl:grid-cols-[minmax(0,20rem)_minmax(0,1fr)_minmax(0,22rem)] print:hidden">
         {/* מפה - ראשונה במובייל, עמודה אמצעית מ-lg */}
         <div className="order-first lg:order-none lg:col-start-2 lg:row-start-1">
           <div className="lg:sticky lg:top-20">
@@ -623,10 +623,11 @@ export default function TripWorkspace({
           )}
         </div>
 
-        {/* שיחה: עמודה שלישית מ-xl, פאנל רוחב-מלא ב-lg. במובייל - מגירה למטה. */}
+        {/* שיחה: עמודה שלישית לצד המפה מ-lg ומעלה - הסוכן תמיד בצד, לא
+            מתחת למפה, גם בלפטופים קטנים. במובייל - מגירה למטה. */}
         <ChatPanel
           chat={chat}
-          className="hidden h-[24rem] lg:col-span-2 lg:col-start-1 lg:row-start-2 lg:flex xl:sticky xl:top-20 xl:col-span-1 xl:col-start-3 xl:row-start-1 xl:h-[34rem] xl:self-start"
+          className="hidden lg:sticky lg:top-20 lg:col-start-3 lg:row-start-1 lg:flex lg:h-[34rem] lg:self-start"
         />
       </div>
 

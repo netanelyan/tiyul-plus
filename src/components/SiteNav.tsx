@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTrip } from '@/lib/trip/TripContext';
 import { tripLabel } from '@/lib/trip/label';
-import TripChip from '@/components/TripChip';
 import SiteSearch from '@/components/SiteSearch';
 import AccountButton from '@/components/AccountButton';
 
@@ -21,7 +20,7 @@ const NAV_LINKS = [
 const INLINE_TRIP_TABS = 2;
 
 /**
- * ניווט האתר: מ-md ומעלה קישורים בשורה + TripChip + טאבי הטיולים
+ * ניווט האתר: מ-md ומעלה קישורים בשורה + טאבי הטיולים
  * הפתוחים (עד INLINE_TRIP_TABS ישירות, השאר מתקפל ל"עוד" נפתח); מתחת
  * ל-md המבורגר שפותח תפריט נפתח (כולל רשימת כל הטיולים ואת הקישורים).
  * נסגר בלחיצה על קישור/טאב ובהקשה מחוץ לתפריט. בלי ספריית תפריטים -
@@ -30,7 +29,7 @@ const INLINE_TRIP_TABS = 2;
 export default function SiteNav() {
   const [open, setOpen] = useState(false);
   const [tripsMenuOpen, setTripsMenuOpen] = useState(false);
-  const { trips, currentTrip, currentId, hydrated, setCurrentId } = useTrip();
+  const { trips, currentId, hydrated, setCurrentId } = useTrip();
   const rootRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -45,8 +44,6 @@ export default function SiteNav() {
     document.addEventListener('click', onOutside);
     return () => document.removeEventListener('click', onOutside);
   }, [open, tripsMenuOpen]);
-
-  const stops = currentTrip?.days.reduce((n, d) => n + d.placeIds.length, 0) ?? 0;
 
   /** פותח טיול קיים כטאב פעיל: אם כבר ב-/chat זה קורה מיידית, אחרת מנווטים עם ?trip= */
   const openTrip = (id: string) => {
@@ -115,7 +112,6 @@ export default function SiteNav() {
             )}
           </div>
         )}
-        <TripChip />
         <AccountButton />
       </nav>
 
@@ -167,14 +163,6 @@ export default function SiteNav() {
               {l.label}
             </Link>
           ))}
-          {hydrated && currentTrip && (
-            <button
-              onClick={() => openTrip(currentTrip.id)}
-              className="mt-1 block w-full truncate rounded-xl bg-sunset/10 px-4 py-2.5 text-start font-bold text-sunset-deep transition hover:bg-sunset/15"
-            >
-              {currentTrip.name} · {stops} עצירות
-            </button>
-          )}
           {hydrated && trips.length > 0 && (
             <>
               <div className="mt-2 border-t border-night/10 px-4 pb-1 pt-2 text-xs font-bold text-night/40">
