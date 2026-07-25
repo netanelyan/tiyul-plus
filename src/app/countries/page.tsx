@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getProvider } from '@/lib/providers';
 import Flag from '@/components/Flag';
+import SiteSearch from '@/components/SiteSearch';
 
 export const metadata = { title: 'יעדים | טיול+' };
 
@@ -23,6 +24,11 @@ export default async function CountriesPage() {
           </p>
         </div>
       </div>
+      {/* החיפוש הוא הפעולה הראשית בקטלוג - כאן הוא שדה, לא אייקון */}
+      <div className="mt-5 max-w-xl">
+        <SiteSearch variant="field" />
+      </div>
+
       <div className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {countries.map((c) => {
           const cities = citiesOf(c.slug);

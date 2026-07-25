@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import type { Country, Destination, PlaceCategory } from '@/lib/types';
 import { categoryMeta, isKosher } from '@/lib/categories';
@@ -19,7 +19,33 @@ export default function DestinationClient({
   country: Country;
 }) {
   const [filter, setFilter] = useState<Filter>('all');
+  const [query, setQuery] = useState('');
   const [highlightId, setHighlightId] = useState<string | null>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const [focusPlaceId, setFocusPlaceId] = useState<string | null>(null);
+
+  // ?place=<id> מגיע מהחיפוש הכלל-אתרי. נקרא מ-window ולא מ-useSearchParams
+  // בכוונה: useSearchParams מוציא את הדף מ-prerender סטטי (או מחייב עטיפת
+  // Suspense), והדף הזה חייב להישאר סטטי.
+  useEffect(() => {
+    setFocusPlaceId(new URLSearchParams(window.location.search).get('place'));
+  }, []);
+
+  // גוללים אל המקום שנבחר בחיפוש ומדגישים אותו
+  useEffect(() => {
+    if (!focusPlaceId) return;
+    if (!dest.places.some((p) => p.id === focusPlaceId)) return;
+    setFilter('all');
+    setQuery('');
+    setHighlightId(focusPlaceId);
+    // ממתינים לרינדור הרשימה לפני הגלילה
+    const t = setTimeout(() => {
+      listRef.current
+        ?.querySelector(`[data-place-id="${CSS.escape(focusPlaceId)}"]`)
+        ?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }, 150);
+    return () => clearTimeout(t);
+  }, [focusPlaceId, dest.places]);
 
   const usedCategories = useMemo(
     () => [...new Set(dest.places.map((p) => p.category))],
@@ -27,10 +53,19 @@ export default function DestinationClient({
   );
 
   const visiblePlaces = useMemo(() => {
-    if (filter === 'all') return dest.places;
-    if (filter === 'kosher') return dest.places.filter((p) => isKosher(p.category));
-    return dest.places.filter((p) => p.category === filter);
-  }, [dest.places, filter]);
+    const byFilter =
+      filter === 'all'
+        ? dest.places
+        : filter === 'kosher'
+          ? dest.places.filter((p) => isKosher(p.category))
+          : dest.places.filter((p) => p.category === filter);
+    const q = query.trim().toLowerCase();
+    if (!q) return byFilter;
+    // חיפוש חופשי בתוך העיר: שם בעברית, שם מקומי או התיאור
+    return byFilter.filter((p) =>
+      [p.name, p.nameLocal, p.description].some((f) => f?.toLowerCase().includes(q)),
+    );
+  }, [dest.places, filter, query]);
 
   // עירוני מהיעד, מדינתי מהמדינה - למשתמש זה כרטיס אחד רציף.
   const practicalItems: { title: string; text: string }[] = [
@@ -94,8 +129,35 @@ export default function DestinationClient({
         </div>
       </div>
 
+      {/* חיפוש בתוך העיר - לצד סינון הקטגוריות */}
+      <div className="mt-8 max-w-sm">
+        <label className="relative block">
+          <span className="sr-only">חיפוש מקום ב{dest.name}</span>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 start-3 my-auto text-night/35"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <line x1="16.5" y1="16.5" x2="21" y2="21" />
+          </svg>
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={`חיפוש מקום ב${dest.name}…`}
+            className="w-full rounded-2xl border border-night/15 bg-shell py-2.5 pe-4 ps-10 text-sm text-night shadow-inner outline-none transition placeholder:text-night/40 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
+          />
+        </label>
+      </div>
+
       {/* Filters */}
-      <div className="mt-8 flex flex-wrap gap-2">
+      <div className="mt-3 flex flex-wrap gap-2">
         <FilterChip active={filter === 'all'} onClick={() => setFilter('all')}>
           הכול ({dest.places.length})
         </FilterChip>
@@ -119,15 +181,23 @@ export default function DestinationClient({
             highlightId={highlightId}
           />
         </div>
-        <div className="max-h-[560px] space-y-3 overflow-y-auto pe-1 lg:col-span-2">
+        <div ref={listRef} className="max-h-[560px] space-y-3 overflow-y-auto pe-1 lg:col-span-2">
+          {visiblePlaces.length === 0 && (
+            <p className="rounded-2xl bg-shell p-5 text-sm font-medium text-night/50 ring-1 ring-night/10">
+              אין מקום בשם הזה ב{dest.name}. אפשר לנקות את החיפוש, או לשאול את הסוכן.
+            </p>
+          )}
           {visiblePlaces.map((place) => {
             const meta = categoryMeta[place.category];
             return (
               <div
                 key={place.id}
+                data-place-id={place.id}
                 onMouseEnter={() => setHighlightId(place.id)}
                 onMouseLeave={() => setHighlightId(null)}
-                className="card-pop rounded-2xl bg-shell p-5 ring-1 ring-night/10"
+                className={`card-pop rounded-2xl bg-shell p-5 ring-1 transition ${
+                  place.id === focusPlaceId ? 'ring-2 ring-sunset' : 'ring-night/10'
+                }`}
               >
                 <div className="flex gap-3">
                   {place.photo && (

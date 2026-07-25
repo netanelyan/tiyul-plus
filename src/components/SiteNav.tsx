@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useTrip } from '@/lib/trip/TripContext';
 import { tripLabel } from '@/lib/trip/label';
 import TripChip from '@/components/TripChip';
+import SiteSearch from '@/components/SiteSearch';
 
 // כניסה אחת לטיול: /chat הוא גם השיחה וגם התוכנית (תצוגה מאוחדת) -
 // אין יותר טאב צ׳אט נפרד מול טאב מתכנן.
@@ -61,6 +62,7 @@ export default function SiteNav() {
     <div ref={rootRef} className="relative">
       {/* md+: קישורים בשורה + טאבי הטיולים הפתוחים */}
       <nav className="hidden items-center gap-2 md:flex">
+        <SiteSearch />
         {NAV_LINKS.map((l) => (
           <Link
             key={l.href}
@@ -149,6 +151,7 @@ export default function SiteNav() {
 
       {open && (
         <div className="absolute end-0 top-full z-50 mt-2 w-60 rounded-2xl bg-shell p-2 shadow-[var(--shadow-pop)] ring-1 ring-night/10 md:hidden">
+          <SiteSearch variant="menu-row" onNavigate={() => setOpen(false)} />
           {NAV_LINKS.map((l) => (
             <Link
               key={l.href}

@@ -2470,3 +2470,67 @@ cache, and the two CDP suites re-run against the MERGED main: booking
 panel 24/24 at 1400px and 390px, unified trip view 17/17.
 
 **State of main:** no unmerged branches remain.
+
+### 2026-07-25 - Site-wide search: one overlay, entry points everywhere it belongs
+
+The Phase-3 leftover ("site-wide search, Hebrew + local names"). ONE
+implementation, several triggers - not a different search per page.
+
+**Built/changed:**
+- `src/lib/siteSearch.ts` (new) - a flat index over the whole catalog:
+  every country, every city and every PLACE (562 of them), each with a
+  Hebrew title, a context subtitle, a flag and an href. Matches on Hebrew
+  name, local/Latin name, slug and country, reusing `normalizeQuery` from
+  `citySearch.ts` so quoting quirks behave the same everywhere. Ranking is
+  deliberately plain and predictable: title-prefix > word-start >
+  contains, then countries → cities → places.
+- `src/components/SiteSearch.tsx` (new) - the overlay plus three trigger
+  shapes: `icon` (nav), `field` (the catalog, where search is the primary
+  action) and `menu-row` (mobile hamburger). Ctrl/Cmd+K opens, Escape and
+  backdrop-click close, arrows move, Enter picks. Results are grouped by
+  kind with Hebrew headings.
+- **The catalog is loaded by dynamic `import()` on first open.** This is
+  load-bearing: `siteSearch.ts` pulls all of `destinations.ts`, and a
+  nav-level static import would have put the entire catalog into every
+  page's bundle. For the same reason the component does NOT statically
+  import anything by value from `siteSearch` - only types (erased) - and
+  keeps its own copy of the group labels; `searchSite` arrives through the
+  dynamic module. Largest chunk stayed 560 KB.
+- `src/components/SiteNav.tsx` - icon trigger in the md+ row, search row
+  at the top of the mobile menu (closes the menu on navigate). Present on
+  every page since the nav is in the layout.
+- `src/app/countries/page.tsx` - a full-width field trigger under the
+  catalog heading.
+- `src/app/destinations/[slug]/DestinationClient.tsx` - a free-text filter
+  over that city's own places (name / local name / description), sitting
+  above the existing category chips and composing with them; the map
+  follows the filter because it already renders `visiblePlaces`. Also
+  `?place=<id>` support: the page scrolls to that place and ring-highlights
+  it, which is what a place result from the global search links to.
+  The param is read from `window.location.search` in an effect, NOT via
+  `useSearchParams` - the latter opts the route out of static prerender
+  (the build failed on `/destinations/bangkok` before this change).
+
+**A real finding from testing, fixed:** searching "דובאי" is not empty -
+it substring-matches "נקיק אולדובאי" (Olduvai Gorge, Tanzania), so the
+user got one irrelevant hit and no way forward. Every result list now ends
+with a persistent "לא מצאתם? לשאול את הסוכן על X ←" row (and a true
+no-match still shows the honest "אין X בקטלוג שלנו"). Both routes hand off
+to `/chat?q=`, where the agent can auto-explore and say honestly what it
+does and doesn't know.
+
+**Verification:** 26/26 CDP checks against a production build - the nav
+button on /, /countries, /kosher, /destinations/*, /chat; the catalog
+field; Hebrew, Latin, country and PLACE queries all resolving correctly
+("אקרופוליס" → האקרופוליס והפרתנון · אתונה); the weak-match and true-empty
+escape hatches; clicking a place landing on
+`/destinations/athens?place=ath-acropolis` with the card highlighted;
+the in-city filter cutting Vienna 20 → 4 with the map pins following;
+mobile menu row opening the same overlay; and zero horizontal overflow at
+1400px and 390px. build clean (93 pages), tsc clean, verify-photos
+526/526 cached.
+
+**Deferred:** matching is substring-based (hence the Olduvai case) - a
+word-boundary-aware matcher would be sharper, but it would also stop
+finding "אקרופוליס" inside "האקרופוליס והפרתנון", so plain substring +
+the escape hatch is the honest trade for Hebrew.
