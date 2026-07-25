@@ -1627,3 +1627,24 @@ the overnight run.
   Trolltunga, Nominatim for Reine). The Atlantic Ocean Road was dropped -
   its only lead image is an SVG map, not a photo. build clean,
   verify-photos all OK.
+
+### 2026-07-25 (r) - Overnight expansion: South Africa (Cape Town + Kruger)
+
+- **South Africa** (new country, 2nd African destination) - visa-free 90
+  days for Israelis (passport valid 6 months + onward ticket verified),
+  ZAR, RICA SIM registration, and an explicit personal-safety note.
+- **Cape Town & Kruger** - 12 places, rating 4.7. Landmark: Table
+  Mountain. Nature: Cape of Good Hope, Boulders Beach penguins, Chapman
+  Peak drive, Kirstenbosch, Tsitsikamma/Garden Route, Kruger NP, Blyde
+  River Canyon; plus Robben Island, Stellenbosch and the Sea Point kosher
+  area. 6-day itinerary.
+- Flights: no current regular nonstop from TLV - one connection (Addis,
+  Dubai, Istanbul, Doha, Nairobi), ~14-17h, with a note that direct-route
+  status has changed in recent years.
+- **Kosher - the strongest in the catalog so far:** Sea Point in Cape
+  Town has restaurants, bakeries and shops under the Cape Beth Din, and
+  Johannesburg has more; nothing in Kruger or on the Garden Route.
+  pending-review, pin at neighbourhood level (stated in the entry).
+- Coordinates from the Wikipedia API, plus German Wikipedia (Tsitsikamma)
+  and Nominatim (Blyde River Canyon) where the English articles had none.
+  build clean, verify-photos all OK.

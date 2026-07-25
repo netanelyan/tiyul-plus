@@ -11324,6 +11324,302 @@ export const destinations: Destination[] = [
         'אין באזור הפיורדים ובלופוטן שום נקודת כשרות. קהילה יהודית ובית כנסת יש באוסלו ובטרונדהיים, ובאוסלו אפשר לתאם מראש אוכל כשר דרך הקהילה - אך אין מסעדה כשרה פתוחה לקהל. הדרך המעשית: להצטייד באוסלו או מהבית, ולהסתמך על דגים, מוצרי חלב וירקות עם סימוני כשרות מוכרים בסופרמרקטים.',
     },
   },
+  {
+    slug: 'cape-town',
+    name: 'קייפטאון וקרוגר',
+    nameLocal: 'Cape Town & Kruger',
+    countrySlug: 'south-africa',
+    flag: '🇿🇦',
+    center: { lat: -30.0, lng: 24.0 },
+    zoom: 5,
+    tagline: 'הר שולחן, פינגווינים על החוף וספארי של החמישייה הגדולה',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Table_Mountain_DanieVDM.jpg/500px-Table_Mountain_DanieVDM.jpg',
+    iconicLandmark: {
+      name: 'הר השולחן',
+      nameLocal: 'Table Mountain',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Table_Mountain_DanieVDM.jpg/500px-Table_Mountain_DanieVDM.jpg',
+      blurb:
+        'הר שטוח-פסגה שמתנשא מעל קייפטאון לגובה של כ-1,085 מ׳, עם רכבל מסתובב ועשרות מסלולי הליכה - הסמל של העיר ואחד ההרים המזוהים בעולם.',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'שילוב יוצא דופן של עיר, חופים, יין וספארי - ועם תשתית כשרות אמיתית בקייפטאון וביוהנסבורג, מהמפותחות בעולם מחוץ לישראל. חסרונות: אין כיום קו ישיר קבוע מישראל, המרחקים בין קייפטאון לקרוגר גדולים (טיסה פנימית), וצריך תשומת לב מתמדת לביטחון אישי.',
+    },
+    summary:
+      'קייפטאון יושבת בין הר השולחן לאוקיינוס: רכבל לפסגה, כביש הצוקים של צ׳פמנס פיק, מושבת הפינגווינים בבולדרס ביץ׳, כף התקווה הטובה, הגן הבוטני קירסטנבוש ואי רובן. שעה משם - יקבי סטלנבוש, וממזרח מתחיל כביש הגן עם יערות ציציקאמה. בצפון-מזרח המדינה שוכן הפארק הלאומי קרוגר עם החמישייה הגדולה וקניון נהר הבלייד. בשכונת סי פוינט שבקייפטאון יש ריכוז מסעדות וחנויות כשרות.',
+    bestSeason:
+      'נובמבר-מרץ קיץ בקייפטאון (חופים ויין; חם ויבש) · מאי-ספטמבר העונה הטובה לספארי בקרוגר (יבש, החיות מתקבצות למים) · בקייפטאון החורף גשום ורוחות חזקות',
+    places: [
+      {
+        id: 'zaf-table',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Table_Mountain_DanieVDM.jpg/500px-Table_Mountain_DanieVDM.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'הר השולחן',
+        nameLocal: 'Table Mountain',
+        category: 'nature',
+        lat: -33.9622,
+        lng: 18.4099,
+        description:
+          'ההר השטוח שמעל קייפטאון: עולים ברכבל מסתובב או במסלול פלטקליף גורג׳ התלול, ולמעלה שבילים ותצפיות על העיר, על החופים ועל האוקיינוס. נסגר ברוח חזקה - לבדוק לפני שנוסעים.',
+        rating: 4.8,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Table+Mountain',
+      },
+      {
+        id: 'zaf-capepoint',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Playa_Dias%2C_Cape_Point%2C_Sud%C3%A1frica%2C_2018-07-23%2C_DD_103.jpg/500px-Playa_Dias%2C_Cape_Point%2C_Sud%C3%A1frica%2C_2018-07-23%2C_DD_103.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'כף התקווה הטובה',
+        nameLocal: 'Cape of Good Hope & Cape Point',
+        category: 'nature',
+        lat: -34.3581,
+        lng: 18.4756,
+        description:
+          'הקצה הדרומי-מערבי של אפריקה, בתוך שמורת חצי האי: מצוקים מעל האוקיינוס, מגדלור ישן שאליו עולה פוניקולר, שבילי חוף ובעלי חיים כמו יענים ובבונים (לא להאכיל).',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Cape+Point',
+      },
+      {
+        id: 'zaf-boulders',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Boulders_Beach_Suedafrika.jpg/500px-Boulders_Beach_Suedafrika.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'חוף בולדרס והפינגווינים',
+        nameLocal: 'Boulders Beach',
+        category: 'nature',
+        lat: -34.197,
+        lng: 18.451,
+        description:
+          'מושבה של פינגווינים אפריקאיים שחיה בין סלעי גרניט ליד סיימונס טאון - צופים בהם ממסלולי עץ ממש מקרוב. אחת האטרקציות האהובות על משפחות באזור.',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Boulders+Beach',
+      },
+      {
+        id: 'zaf-chapmans',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Chapmans_Peak_Drive_2.jpg/500px-Chapmans_Peak_Drive_2.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'כביש צ׳פמנס פיק',
+        nameLocal: "Chapman's Peak Drive",
+        category: 'viewpoint',
+        lat: -34.0872,
+        lng: 18.3606,
+        description:
+          'כביש חצוב בקיר צוק מעל האוקיינוס בין הוט ביי לנורדהוק, עם תצפיות ומפרצים - אחת הנסיעות הנופיות היפות בעולם. כביש אגרה, ולעתים נסגר בגלל מפולות או מזג אוויר.',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Chapmans+Peak+Drive',
+      },
+      {
+        id: 'zaf-kirstenbosch',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Kirstenbosch_National_Botanical_Garden_2024_7th_batch_09.jpg/500px-Kirstenbosch_National_Botanical_Garden_2024_7th_batch_09.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 1,
+        name: 'הגן הבוטני קירסטנבוש',
+        nameLocal: 'Kirstenbosch Botanical Garden',
+        category: 'nature',
+        lat: -33.9875,
+        lng: 18.4325,
+        description:
+          'גן בוטני על מדרונות הר השולחן, מהיפים בעולם, המוקדש לצמחיית הפינבוש המקומית - עם שביל חופה מוגבה בין העצים ומופעי קיץ על הדשא.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Kirstenbosch',
+      },
+      {
+        id: 'zaf-robben',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Robben_Island_-_Cape_Town%2C_South_Africa_%283883849594%29.jpg/500px-Robben_Island_-_Cape_Town%2C_South_Africa_%283883849594%29.jpg',
+        tags: ['history'],
+        priceLevel: 2,
+        name: 'אי רובן',
+        nameLocal: 'Robben Island',
+        category: 'museum',
+        lat: -33.805,
+        lng: 18.37,
+        description:
+          'האי שבו נכלא נלסון מנדלה 18 שנה, היום אתר מורשת עולמית ומוזיאון. מגיעים במעבורת מהוואטרפרונט, והסיור נערך בהדרכת אסירים לשעבר. להזמין מראש.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Robben+Island',
+      },
+      {
+        id: 'zaf-capetown',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Camps_bay_%2853460319478%29_%28cropped%29.jpg/500px-Camps_bay_%2853460319478%29_%28cropped%29.jpg',
+        tags: ['foodie', 'families'],
+        priceLevel: 2,
+        name: 'קייפטאון',
+        nameLocal: 'Cape Town',
+        category: 'attraction',
+        lat: -33.9253,
+        lng: 18.4239,
+        description:
+          'העיר עצמה: הוואטרפרונט, שכונת בו-קאאפ הצבעונית, חופי קמפס ביי וקליפטון, שוק אולד ביסקיט מיל וסצנת אוכל חזקה - הכול בין ההר לאוקיינוס.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Cape+Town',
+      },
+      {
+        id: 'zaf-seapoint',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'סי פוינט - המרכז הכשר',
+        nameLocal: 'Sea Point kosher area, Cape Town',
+        category: 'kosher-food',
+        lat: -33.9153,
+        lng: 18.3925,
+        description:
+          'שכונת החוף סי פוינט היא מרכז החיים היהודיים של קייפטאון: מסעדות, מאפיות וחנויות כשרות, בתי כנסת ובתי חב"ד - הכול בטווח הליכה. הסימון הוא ברמת השכונה ולא כתובת בודדת.',
+        kosherNote:
+          'הכשרות בקייפטאון בפיקוח בית הדין המקומי (Cape Beth Din). לוודא ברשימות העדכניות אילו עסקים תחת השגחה, ומה שעות הפתיחה בשישי-שבת.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית הדין של קייפטאון (Cape Beth Din)',
+        },
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Sea+Point+Cape+Town',
+      },
+      {
+        id: 'zaf-stellenbosch',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Stellenbosch_aerial_photo_from_north-west_2024-01.jpg/500px-Stellenbosch_aerial_photo_from_north-west_2024-01.jpg',
+        tags: ['foodie', 'romantic'],
+        priceLevel: 2,
+        name: 'סטלנבוש והיקבים',
+        nameLocal: 'Stellenbosch Winelands',
+        category: 'attraction',
+        lat: -33.9367,
+        lng: 18.8614,
+        description:
+          'עיירה הולנדית-קייפית עם רחובות עצים ואדריכלות לבנה, מוקפת עמקי כרמים והרים - אזור היין המפורסם של דרום אפריקה, כשעה מקייפטאון.',
+        rating: 4.6,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Stellenbosch',
+      },
+      {
+        id: 'zaf-tsitsikamma',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Tsitsikamma_Park.JPG/500px-Tsitsikamma_Park.JPG',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'ציציקאמה וכביש הגן',
+        nameLocal: 'Tsitsikamma & the Garden Route',
+        category: 'nature',
+        lat: -34.0217,
+        lng: 23.8956,
+        description:
+          'החלק הימי של פארק כביש הגן: יער עד, מצוקים, גשרים תלויים מעל שפך נהר הסטורמס ומסלולי הליכה לאורך החוף. נקודת שיא בנסיעה המזרחה מקייפטאון.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Tsitsikamma+National+Park',
+      },
+      {
+        id: 'zaf-kruger',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Kruger_Zebra.JPG/500px-Kruger_Zebra.JPG',
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'הפארק הלאומי קרוגר',
+        nameLocal: 'Kruger National Park',
+        category: 'nature',
+        lat: -24.0,
+        lng: 31.5,
+        description:
+          'אחד משמורות הטבע הגדולות באפריקה, בשטח של כ-20 אלף קמ"ר, ובו החמישייה הגדולה. ייחודו: אפשר לנהוג בו ברכב פרטי בכבישים סלולים ולישון במחנות מגודרים - ספארי עצמאי ולא רק מאורגן.',
+        rating: 4.8,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Kruger+National+Park',
+      },
+      {
+        id: 'zaf-blyde',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/20131119_162543b.jpg/500px-20131119_162543b.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'קניון נהר הבלייד',
+        nameLocal: 'Blyde River Canyon',
+        category: 'nature',
+        lat: -24.6789,
+        lng: 30.8843,
+        description:
+          'אחד הקניונים הגדולים בעולם, ירוק כמעט לכל אורכו, בדרך לקרוגר: תצפית "שלושת הרונדוואלים", בורות הענק של בורקס לאק וחלון האלוהים.',
+        rating: 4.7,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Blyde+River+Canyon',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'קייפטאון - העיר וההר',
+        placeIds: ['zaf-capetown', 'zaf-table', 'zaf-seapoint'],
+        notes:
+          'רכבל להר השולחן בבוקר (לפני שהרוח מתחזקת), אחר הצהריים הוואטרפרונט ובו-קאאפ, וארוחה כשרה בסי פוינט.',
+      },
+      {
+        day: 2,
+        title: 'חצי האי - פינגווינים וכף התקווה',
+        placeIds: ['zaf-chapmans', 'zaf-boulders', 'zaf-capepoint'],
+        notes:
+          'יום נסיעה נופי: כביש צ׳פמנס פיק, מושבת הפינגווינים בבולדרס, וכף התקווה הטובה בקצה חצי האי.',
+      },
+      {
+        day: 3,
+        title: 'גנים, אי ויקבים',
+        placeIds: ['zaf-kirstenbosch', 'zaf-robben', 'zaf-stellenbosch'],
+        notes:
+          'בוקר בקירסטנבוש או במעבורת לאי רובן (להזמין מראש), ואחר הצהריים בעמק היין של סטלנבוש.',
+      },
+      {
+        day: 4,
+        title: 'כביש הגן',
+        placeIds: ['zaf-tsitsikamma'],
+        notes:
+          'נוסעים מזרחה לאורך כביש הגן: מפרצים, יערות ומסלולי חוף בציציקאמה. אפשר להאריך ליומיים-שלושה.',
+      },
+      {
+        day: 5,
+        title: 'קרוגר - ספארי',
+        placeIds: ['zaf-kruger'],
+        notes:
+          'טיסה פנימית לצפון-מזרח (יוהנסבורג ואז נלספרויט/סקוקוזה) ויום-יומיים בפארק - יציאות מוקדמות ומאוחרות, שאז החיות פעילות.',
+      },
+      {
+        day: 6,
+        title: 'קניון הבלייד',
+        placeIds: ['zaf-blyde'],
+        notes:
+          'בדרך חזרה מקרוגר: תצפיות שלושת הרונדוואלים, חלון האלוהים ובורות בורקס לאק.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין כיום קו ישיר קבוע מנתב"ג לדרום אפריקה - טסים עם החלפה אחת (אדיס אבבה, דובאי, איסטנבול, דוחא או נאירובי) ליוהנסבורג (JNB) או לקייפטאון (CPT), סה"כ כ-14-17 שעות. סטטוס הקווים הישירים השתנה בשנים האחרונות - כדאי לבדוק עדכני מול חברות התעופה.',
+      gettingAround:
+        'רכב שכור הוא הדרך המקובלת בקייפטאון ובכביש הגן (נוסעים בצד שמאל). בין קייפטאון לקרוגר טסים פנימית - זה מרחק של אלפי קילומטרים. בקרוגר אפשר לנהוג עצמאית בכבישים הסלולים או לצאת לספארי מאורגן; לא לנסוע בלילה בכבישים לא מוכרים.',
+      kosherOverview:
+        'דרום אפריקה היא אחד המקומות הנוחים בעולם למטייל שומר כשרות: בקייפטאון (בעיקר סי פוינט) וביוהנסבורג יש מסעדות, מאפיות וסופרמרקטים כשרים, בפיקוח בתי הדין המקומיים, וגם מוצרים כשרים רבים ברשתות הרגילות. בקרוגר ובכביש הגן אין כשרות - להצטייד מראש בעיר ולוודא רשימות עסקים מעודכנות לפני הנסיעה.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
