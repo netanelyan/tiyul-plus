@@ -54,12 +54,14 @@ Hungary→Lake Balaton, Slovakia→High Tatras.
       Hévíz thermal lake, Szigliget, Tapolca cave lake, Balaton Uplands NP.
 - [x] **Slovakia → High Tatras** — DONE (overnight run): Štrbské Pleso,
       Popradské pleso, Lomnický štít, Slovenský raj, Demänovská cave.
-- [ ] **UAE → Hatta / Jebel Jais / Liwa desert** (mountains, wadis, dunes) —
+- [x] **UAE → Hatta / Jebel Jais / Liwa desert** (mountains, wadis, dunes) —
       day-trips from the existing Abu Dhabi entry, or a Dubai/RAK hub.
 - [x] **Azerbaijan → Sheki / Qabala / Caucasus** (mountains, waterfalls,
       Laza) — from Baku.
 - [ ] **Kazakhstan → Kolsai & Kaindy Lakes / Charyn** — a 2nd Almaty-area
       nature entry (Charyn is already IN Almaty; Kolsai/Kaindy are further).
+      BLOCKED on coordinates: `Kolsai_Lakes` and `Kaindy_Lake` on dbpedia
+      return an empty JSON object. Needs another source. Do NOT estimate.
 - [x] **Jordan → Dead Sea + Wadi Mujib + Amman/Jerash** (2nd Jordan entry,
       north; land crossing note like Petra).
 - [x] **Cyprus → Paphos + Akamas/Avakas Gorge** (2nd Cyprus entry; direct
@@ -86,7 +88,8 @@ destination `amsterdam`; places `ams-anne-frank`,
 `amn-citadel`, `amn-roman-theatre`, `amn-madaba`, `amn-nebo`, `amn-mujib`,
 `amn-umm-qais`, `amn-ajloun`, `amn-maghtas`; destination `sheki-caucasus`;
 places `she-palace`, `she-old-town`, `she-qabala`, `she-qirmizi`,
-`she-khinalug`, `she-shamakhi`.
+`she-khinalug`, `she-shamakhi`; destination `uae-mountains`; places
+`uae-hatta`, `uae-jebel-jais`, `uae-liwa`, `uae-jebel-hafeet`, `uae-jahili`.
 
 **Blocked on coordinates - France / Paris.** France is the biggest
 remaining country gap, but dbpedia's `/data/*.json` for very famous
