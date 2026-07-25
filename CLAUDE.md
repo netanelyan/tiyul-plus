@@ -1685,3 +1685,32 @@ the overnight run.
 - Coordinates and photos from the Wikipedia API. Chimgan (no coordinates)
   was folded into the Charvak entry, and Ichan Kala into the Khiva entry,
   instead of guessing. build clean, verify-photos all OK.
+
+### 2026-07-25 (u) - Consolidation onto main + pre-live data audit
+
+- Merged `data/overnight-expansion` into `main` (no-ff). ZERO conflicts:
+  the branch was cut from the current main and is additive only
+  (CLAUDE.md, countries.ts, destinations.ts; 5,635 insertions, 0
+  deletions). No review branch existed - the polish+data merge had
+  already landed on main the night before.
+- **Catalog on main: 42 destinations / 31 countries / 530 places**
+  (was 24/16). Build: 86 static pages, clean. verify-photos: 496/496 OK.
+  `tsc --noEmit`: clean.
+- **New pre-live audit script** (kept in the session scratchpad, worth
+  re-creating when needed): loads the two data files via Node 24 TS
+  type-stripping and checks duplicate slugs/place ids, missing or
+  out-of-range coordinates, itinerary placeIds that do not exist,
+  photo host + allowed thumb widths, kosher category without a
+  verification badge, empty required fields, and TODO/placeholder text.
+  Result: 0 real problems (the single hit was a false positive - the
+  Wikimedia filename `Tatry_Panorama01xxx.jpg` contains "xxx").
+- **Spot-check of 12 new places against the Wikipedia API:** 11 matched
+  the article coordinates to 0.0 km (Boudhanath resolved under a
+  redirect title and was not re-compared); all 12 photos returned
+  HTTP 200. Three new photos were re-eyeballed (Tashkent, Ngorongoro,
+  Serengeti) - correct subjects.
+- TODO.md updated: the three second-city items completed overnight are
+  ticked, and four review items are recorded - the 37 pending-review
+  kosher entries, the 8 original European cities without an
+  editorialRating, the two country-scale hubs (lofoten, cape-town), and
+  the kotor/budva shared places.

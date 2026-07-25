@@ -16,14 +16,16 @@ Goal: map each country beyond its one big city, nature-forward
 **Done so far (this program):** Greece→Crete, Germany→Munich+Bavarian Alps,
 Italy→Dolomites, Austria→Salzburg+Salzkammergut, Spain→Mallorca. (Plus
 earlier 2nd cities: Thailand→Phuket, Georgia→Batumi, Montenegro→Budva.)
+**Added in the 2026-07-25 overnight run:** Czechia→Bohemian Switzerland,
+Hungary→Lake Balaton, Slovakia→High Tatras.
 
 **Still ONE city — next candidates (nature-forward):**
-- [ ] **Czechia → Bohemian Switzerland NP** (Pravčická brána arch, hiking) or
-      **Český Krumlov** (from Prague; direct PRG flights).
-- [ ] **Hungary → Lake Balaton** (Tihany peninsula, Balaton-felvidék NP;
-      ~1.5h from Budapest).
-- [ ] **Slovakia → High Tatras** (Štrbské Pleso, Tatra lakes, hiking) — from
-      Bratislava/Vienna/Poprad.
+- [x] **Czechia → Bohemian Switzerland NP** — DONE (overnight run): Pravčická
+      brána, Kamenice gorges, Jetřichovice viewpoints, Tisá, + Bastei.
+- [x] **Hungary → Lake Balaton** — DONE (overnight run): Tihany, Badacsony,
+      Hévíz thermal lake, Szigliget, Tapolca cave lake, Balaton Uplands NP.
+- [x] **Slovakia → High Tatras** — DONE (overnight run): Štrbské Pleso,
+      Popradské pleso, Lomnický štít, Slovenský raj, Demänovská cave.
 - [ ] **UAE → Hatta / Jebel Jais / Liwa desert** (mountains, wadis, dunes) —
       day-trips from the existing Abu Dhabi entry, or a Dubai/RAK hub.
 - [ ] **Azerbaijan → Sheki / Qabala / Caucasus** (mountains, waterfalls,
@@ -74,5 +76,21 @@ Devín/Small Carpathians). Lower priority than net-new destinations.
 ## Content follow-ups
 
 - [ ] Kosher `lastChecked` is `pending-review` on every kosher entry across
-      the catalog — replace with real verification dates when someone
-      actually confirms status with the venues.
+      the catalog — **37 entries as of 2026-07-25** (the overnight run added
+      11 of them: Tokyo, Arusha, Cusco, Queenstown, Las Vegas, Reykjavík,
+      Zagreb, Kathmandu, Hanoi, Cape Town/Sea Point, plus Munich earlier).
+      Replace with real verification dates when someone actually confirms
+      status with the venues.
+- [ ] The 8 original European city entries (Vienna, Bratislava, Prague,
+      Budapest, Rome, Athens, Barcelona, Berlin) still have **no
+      `editorialRating`** — the rating system was added later and only new
+      destinations carry it. Their country/city pages therefore show no
+      "המלצת הצוות" pill.
+- [ ] Wide-span destinations to keep an eye on: `lofoten` (Tromsø/Lyngen are
+      ~800 km from the destination centre) and `cape-town` (Kruger/Blyde are
+      ~1,000 km away). Deliberate — both are country-scale hubs and the
+      entries say a domestic flight is needed — but if a future UI shows a
+      single all-days map, these will look odd.
+- [ ] `budva` reuses three places that also appear in `kotor` (Lovćen, Sveti
+      Stefan, Budva old town coordinates) — same real sites in two hubs.
+      Fine today; worth deduping if a "seen this already" view is built.
