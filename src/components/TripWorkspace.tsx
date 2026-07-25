@@ -11,6 +11,7 @@ import { useTripChat } from '@/lib/trip/useTripChat';
 import { dayDescription, dayPlaces } from '@/lib/trip/dayDescription';
 import PlacesMap from '@/components/PlacesMap';
 import ChatPanel from '@/components/ChatPanel';
+import Flag from '@/components/Flag';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 
 /**
@@ -92,7 +93,7 @@ export default function TripWorkspace({
           '',
         );
       }
-      lines.push(`📅 יום ${i + 1} - ${dst?.flag} ${dst?.name}:`);
+      lines.push(`📅 יום ${i + 1} - ${dst?.name}:`);
       lines.push(`   ${dayDescription(d, dst)}`);
       d.placeIds.forEach((pid, j) => {
         const p = placeOf(d.citySlug, pid);
@@ -281,7 +282,8 @@ export default function TripWorkspace({
                       : 'bg-shell text-night/60 ring-1 ring-night/10 hover:ring-night/25'
                   }`}
                 >
-                  {dst?.flag} יום {i + 1}
+                  <Flag flag={dst?.flag} label={dst?.name} size="sm" className="me-1.5" />
+                  יום {i + 1}
                 </button>
               </span>
             );
@@ -307,7 +309,7 @@ export default function TripWorkspace({
               .filter((d) => !t.citySlugs.includes(d.slug))
               .map((d) => (
                 <option key={d.slug} value={d.slug}>
-                  עיר חדשה: {d.flag} {d.name}
+                  עיר חדשה: {d.name}
                 </option>
               ))}
           </select>
@@ -358,7 +360,8 @@ export default function TripWorkspace({
               <div className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
                 <div className="flex items-start justify-between gap-2">
                   <h2 className="text-lg font-bold text-night">
-                    {dayDest.flag} יום {dayIndex + 1} · {dayDest.name}
+                    <Flag flag={dayDest.flag} label={dayDest.name} size="md" className="me-2" />
+                    יום {dayIndex + 1} · {dayDest.name}
                   </h2>
                   {t.days.length > 1 && (
                     <button
@@ -535,8 +538,9 @@ export default function TripWorkspace({
                     >
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-bold text-night">יום {i + 1}</span>
-                        <span className="truncate text-sm text-night/50">
-                          {dst?.flag} {dst?.name}
+                        <span className="badge truncate text-sm text-night/50">
+                          <Flag flag={dst?.flag} label={dst?.name} size="sm" />
+                          {dst?.name}
                         </span>
                         <span className="ms-auto shrink-0 text-xs font-medium text-night/40">
                           {d.placeIds.length} עצירות

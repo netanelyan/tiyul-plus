@@ -6,6 +6,7 @@ import type { Trip, WizardPrefs } from '@/lib/trip/types';
 import { useTrip } from '@/lib/trip/TripContext';
 import { tripFromTemplate } from '@/lib/trip/generate';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
+import Flag from '@/components/Flag';
 import TripWorkspace from '@/components/TripWorkspace';
 
 /**
@@ -183,7 +184,7 @@ function Onboarding({
                       }`}
                     >
                       <div className="flex items-start justify-between">
-                        <span className="text-2xl leading-none">{d.flag}</span>
+                        <Flag flag={d.flag} label={d.name} size="lg" />
                         {selected && (
                           <span className="flex h-5 w-5 items-center justify-center rounded-full bg-sunset text-xs font-bold text-cream">
                             ✓
@@ -362,7 +363,7 @@ function Onboarding({
                 d.slug === initialSlug ? 'ring-2 ring-sunset' : 'ring-night/10'
               }`}
             >
-              <div className="text-xl">{d.flag}</div>
+              <div><Flag flag={d.flag} label={d.name} size="lg" /></div>
               <div className="mt-1 truncate font-bold text-night">{d.name}</div>
               <div className="text-xs font-medium text-night/50">{d.itinerary.length} ימים</div>
             </button>

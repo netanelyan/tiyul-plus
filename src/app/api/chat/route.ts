@@ -57,7 +57,8 @@ function ruleBasedReply(text: string): ChatReply {
   const wantsItinerary = /מסלול|ימים|יום|תכנון|תוכנית|לתכנן/.test(text);
 
   if (!dest) {
-    const countryNames = countries.map((c) => `${c.flag} ${c.name}`).join(' · ');
+    // טקסט בלבד: אימוג׳י דגל מוצג בווינדוס כקוד דו-אותי, ולכן רק השם
+    const countryNames = countries.map((c) => c.name).join(' · ');
     return {
       reply: `היי! אני עוזר הטיולים של טיול+ 🧭\n\nכרגע יש לי מסלולים מלאים ב:\n${countryNames}\n\nאפשר לשאול אותי למשל:\n• "תבנה לי מסלול ל-4 ימים בוינה"\n• "איפה אוכלים כשר ברומא?"\n• "צריך ויזה לאיטליה?"`,
     };
@@ -91,7 +92,7 @@ function ruleBasedReply(text: string): ChatReply {
     const p = dest.practical;
     const c = getCountryBySlug(dest.countrySlug)?.practical;
     return {
-      reply: `🇮🇱 מידע פרקטי ל${dest.name}:\n\n✈️ **טיסות:** ${p.flights}\n🛂 **ויזה:** ${c?.visa ?? ''}\n💶 **מטבע:** ${c?.currency ?? ''}\n📱 **סים:** ${c?.sim ?? ''}\n💳 **תשלומים:** ${c?.payments ?? ''}\n🚇 **תחבורה:** ${p.gettingAround}`,
+      reply: `מידע פרקטי ל${dest.name}:\n\n✈️ **טיסות:** ${p.flights}\n🛂 **ויזה:** ${c?.visa ?? ''}\n💶 **מטבע:** ${c?.currency ?? ''}\n📱 **סים:** ${c?.sim ?? ''}\n💳 **תשלומים:** ${c?.payments ?? ''}\n🚇 **תחבורה:** ${p.gettingAround}`,
       destinationSlug: dest.slug,
     };
   }
@@ -112,7 +113,7 @@ function ruleBasedReply(text: string): ChatReply {
   }
 
   return {
-    reply: `${dest.flag} ${dest.name} - ${dest.tagline}.\n\n${dest.summary}\n\nאפשר לשאול אותי על המסלול המלא, על אוכל כשר, או על מידע פרקטי (טיסות, ויזה, סים).`,
+    reply: `${dest.name} - ${dest.tagline}.\n\n${dest.summary}\n\nאפשר לשאול אותי על המסלול המלא, על אוכל כשר, או על מידע פרקטי (טיסות, ויזה, סים).`,
     destinationSlug: dest.slug,
     placeIds: dest.places.map((p) => p.id),
   };
