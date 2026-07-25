@@ -120,6 +120,13 @@ function LoginModal({ onClose }: { onClose: () => void }) {
   const [error, setError] = useState<string | null>(null);
   const [resendIn, setResendIn] = useState(0);
   const submittingRef = useRef(false);
+  const emailInputRef = useRef<HTMLInputElement>(null);
+
+  // פוקוס אוטומטי רק במכשירים עם מקלדת פיזית: בטלפון autoFocus מקפיץ
+  // את המקלדת מיד ומסתיר את המודל לפני שרואים אותו בכלל.
+  useEffect(() => {
+    if (window.matchMedia('(pointer: fine)').matches) emailInputRef.current?.focus();
+  }, []);
 
   // מייל אחרון שזכור מהתחברות קודמת
   useEffect(() => {
@@ -261,7 +268,7 @@ function LoginModal({ onClose }: { onClose: () => void }) {
                 onKeyDown={(e) => e.key === 'Enter' && sendCode()}
                 placeholder="you@example.com"
                 dir="ltr"
-                autoFocus
+                ref={emailInputRef}
                 autoComplete="email"
                 className="mt-1.5 w-full rounded-xl border border-night/15 bg-cream px-4 py-3 text-night outline-none transition placeholder:text-night/30 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
               />
