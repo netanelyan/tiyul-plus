@@ -2778,3 +2778,65 @@ Two fixes from Netanel's laptop screenshot:
 
 Note: the walkthrough sections above still mention TripChip in a few
 places - historical descriptions, the component no longer exists.
+
+### 2026-07-25 (ss) - מכסות ותקציבי AI, מנוי פרימיום, ייבוא Google My Maps
+
+סשן ארוך אוטונומי לפי בקשת נתנאל: "rate limiting לכל מה שאפשר לנצל
+לרעה, הגבלת טוקנים, מנוי פרימיום, וכפתור ייבוא מפה מ-My Maps".
+
+**1. מכסות (בלי תלות חדשה).** `lib/server/limits.ts` - חלונות קבועים
+בזיכרון (checkLimit) + תקציב "יחידות AI" יומי (קלט לא-מקאש + כתיבות
+מטמון + פלט×4; קריאות מהמטמון חינם). עם SUPABASE_SERVICE_ROLE_KEY
+התקציב נשמר גם ב-usage_daily (RPC אטומי bump_usage) - עמיד ל-cold
+start ולריבוי instances; בלעדיו הזיכרון המקומי עדיין עוצר הצפות.
+`lib/server/identity.ts` - זיהוי קורא: טוקן Supabase מאומת מול GoTrue
++ תוכנית משורת הפרופיל (מטמון 5 דק׳), אנונימי לפי IP.
+`lib/plans.ts` - קונפיג התוכניות המשותף לאכיפה ול-UI (free: 40 צ׳אט/
+יום, פרץ 6/דקה, 300k יחידות; premium פי 10).
+
+**2. חיווט לכל endpoint שאפשר לנצל:** /api/chat (פרץ→429; מכסה יומית/
+תקציב→הודעת סטרים מנומסת בעברית עם הפניה ל-/premium; רישום usage מכל
+קריאת מודל, גם כשהתור נופל באמצע), /api/generate-trip (מעל המכסה יורד
+ל-generateTrip המקומי החינמי במקום עידון AI - הפיצ׳ר לא נשבר),
+/api/share (הלקוח נופל בשקט לקישור הארוך), /api/import-map,
+/api/billing/checkout. useTripChat/PlannerClient שולחים את טוקן
+ה-Supabase (authHeader ב-lib/auth/client) - מחוברים נמדדים לפי חשבון.
+
+**3. פרימיום.** supabase-premium.sql: עמודת plan עם הרשאות ברמת
+עמודה - authenticated לא יכול לכתוב plan/stripe_customer_id (רק
+ה-service role, כלומר ה-webhook); usage_daily חסומה לגמרי ל-anon/
+authenticated. Stripe בלי SDK: checkout session ב-REST form-encoded;
+webhook עם אימות חתימה ידני (HMAC-SHA256 על t.body, סבילות 5 דק׳,
+timingSafeEqual) - completed→premium, ביטול/לא-פעיל→free לפי חיפוש
+customer id. עמוד /premium (השוואה שנגזרת מהקונפיג האמיתי, לא מועתקת)
++ צ׳יפ תוכנית ושדרוג ב-/account. fetchProfile קורא plan עם נפילה
+לבחירה בלי העמודה אם ה-SQL עוד לא רץ - פרופילים לא נשברים בינתיים.
+
+**4. ייבוא Google My Maps.** lib/import/mymaps.ts: חילוץ mid בלבד
+מהקלט (לא מושכים כתובות משתמש - SSRF; קישור מקוצר נפתח עם
+redirect:manual וקוראים רק את Location), משיכת ה-KML הציבורי, פרסר
+Placemarks עמיד ל-CDATA/HTML (נקודות בלבד - קווים/פוליגונים מדולגים),
+המרה ליעד בסגנון explored ששורד את sanitizeExploredDestinations
+(התקרה הועלתה 15→40 מקומות). שני פתחים: כפתור "📍 ייבוא מפה" + מודל
+בסדנת הטיול, וטאב הקישור ב-/start (נקרא עכשיו "ייבוא מקישור") שמייבא
+באמת - מפה→טיול של עד 4 עצירות ליום לפי סדר המפה. TripAdvisor נאמר
+בכנות כלא-נתמך (אין לו ייצוא ציבורי). יוטיוב/אינסטגרם נשארו בהודעות
+הכנות הקיימות.
+
+**אימות:** 30/30 יחידה (מגביל, יחידות, חתימת Stripe כולל replay,
+פרסר KML, round-trip דרך הסניטייזר); 17/17 E2E מול מוקים (429 בכל
+ארבעת ה-endpoints מבודד לפי IP, ה-webhook כותב plan=premium + מוריד
+plan=free דרך חיפוש customer); 19/19 בדפדפן (ייבוא מלא מ-/start →
+טיול 2 ימים עם סיכות, שרידות ריענון, המודל בסדנה, עמוד הפרימיום
+בדסקטופ ומובייל). tsc + build נקיים.
+
+**מה מחכה לנתנאל (גם ב-TODO.md):** להריץ supabase-premium.sql; להוסיף
+SUPABASE_SERVICE_ROLE_KEY; להקים מוצר+Price ב-Stripe ולמלא את שלושת
+מפתחות ה-STRIPE_*; **לאשר את המחיר 19.90 ₪/חודש** (הצעת הסשן,
+PREMIUM_PRICE_ILS ב-lib/plans.ts - חייב לתאום ל-Price ב-Stripe);
+בדיקה חיה של ייבוא מפה אמיתית (גוגל חסום מהסנדבוקס - נבדק מול מוק).
+
+**ידע לסשן הבא:** מגביל הפרץ הוא בזיכרון per-instance - על Vercel זה
+מספיק נגד הצפות אמיתיות אבל לא ספירה גלובלית מדויקת; אם יידרש דיוק
+מלא, usage_daily כבר קיימת כתשתית. הודעת המכסה בצ׳אט היא סטרים רגיל
+(לא 429) בכוונה - חוויית שיחה, והלקוח לא צריך טיפול חדש.
