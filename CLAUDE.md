@@ -1714,3 +1714,22 @@ the overnight run.
   kosher entries, the 8 original European cities without an
   editorialRating, the two country-scale hubs (lofoten, cape-town), and
   the kotor/budva shared places.
+
+### 2026-07-25 (v) - Expansion-2: Kyoto & Kansai (Japan 2nd city)
+
+Branch `data/expansion-2`, cut from the consolidated main.
+
+- **Kyoto & Kansai** - 11 places, rating 4.7. Landmark: Fushimi Inari.
+  Nature: Arashiyama bamboo grove, Lake Biwa, Amanohashidate sand spit,
+  Nachi Falls + Kumano Kodo pilgrimage trails. Heritage: Kiyomizu-dera,
+  Kinkaku-ji, Ginkaku-ji, Todai-ji + Nara Park deer. 5-day itinerary.
+- Flights stated honestly: no nonstop to Kansai - either El Al to Tokyo
+  and a 2h15 shinkansen, or one connection into Osaka.
+- **Kosher REAL:** Chabad of Kyoto in Okazaki (Sakyo-ku) - synagogue and
+  kosher kitchen, meals by advance order only (~3 days, cooked to order);
+  pending-review, pin at neighbourhood level. Dashi/mirin warning kept.
+- Coordinates and photos from the Wikipedia API; Mount Kurama and the
+  Nara Park article have no coordinates - Kurama was dropped and Nara
+  Park folded into the Todai-ji entry rather than guessed. Chabad pin
+  geocoded from its published address via Nominatim.
+  build clean, verify-photos all OK.

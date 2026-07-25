@@ -12146,6 +12146,278 @@ export const destinations: Destination[] = [
         'אוזבקיסטן היא ארץ המורשת של יהודי בוכרה - בבוכרה עדיין עומד הרובע היהודי עם בית כנסת פעיל, ובטשקנט יש קהילה יהודית ובתי כנסת. עם זאת, לא אותרה מסעדה כשרה קבועה ופתוחה לקהל: הדרך המעשית היא לתאם מראש מול הקהילה בטשקנט או מול קבוצות מאורגנות, ולהצטייד. במסעדות המקומיות הבשר אינו כשר, ואפשר להסתמך על ירקות, פירות ולחם.',
     },
   },
+  {
+    slug: 'kyoto',
+    name: 'קיוטו וקנסאי',
+    nameLocal: 'Kyoto & Kansai',
+    countrySlug: 'japan',
+    flag: '🇯🇵',
+    center: { lat: 34.9, lng: 135.7 },
+    zoom: 8,
+    tagline: 'שערי טורי אינסופיים, יער במבוק ומקדשים בין הרים',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Torii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine%2C_Kyoto%2C_Japan.jpg/500px-Torii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine%2C_Kyoto%2C_Japan.jpg',
+    iconicLandmark: {
+      name: 'פושימי אינארי',
+      nameLocal: 'Fushimi Inari-taisha',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Torii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine%2C_Kyoto%2C_Japan.jpg/500px-Torii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine%2C_Kyoto%2C_Japan.jpg',
+      blurb:
+        'מקדש שינטו שממנו מטפסת דרך הרים ובה אלפי שערי טורי כתומים שנתרמו לאורך מאות שנים - הצילום המזוהה ביותר עם קיוטו.',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'יפן המסורתית במרוכז - מקדשים, גנים ויערות במרחק הליכה או רכבת קצרה, ובעיר גם בית חב"ד עם מטבח כשר (בהזמנה מראש). חסרונות: אין טיסה ישירה לקנסאי (מגיעים דרך טוקיו או עם החלפה), האתרים המרכזיים עמוסים מאוד, והקיץ חם ולח.',
+    },
+    summary:
+      'קיוטו הייתה בירת יפן יותר מאלף שנה, ובה יותר מאלף מקדשים ובתי תפילה - פושימי אינארי עם שערי הטורי, קיומיזו-דרה על עמודי העץ, הביתן הזהב קינקאקו-ג׳י ויער הבמבוק של אראשייאמה. סביבה נפרשת קנסאי: אייל הצבי של נארה ומקדש טודאי-ג׳י, אגם ביווה הגדול ביפן, לשון החול אמאנוהאשידאטה, ובדרום מפל נאצ׳י ושבילי העלייה לרגל של קומאנו קודו. בעיר פועל בית חב"ד עם מטבח כשר.',
+    bestSeason:
+      'סוף מרץ-אפריל (סאקורה) ונובמבר (שלכת אדומה) - היפים והעמוסים ביותר · מאי ואוקטובר נעימים ושקטים יותר · יולי-אוגוסט חם ולח מאוד',
+    places: [
+      {
+        id: 'kyo-fushimi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Torii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine%2C_Kyoto%2C_Japan.jpg/500px-Torii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine%2C_Kyoto%2C_Japan.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'פושימי אינארי',
+        nameLocal: 'Fushimi Inari-taisha',
+        category: 'attraction',
+        lat: 34.9672,
+        lng: 135.7728,
+        description:
+          'מקדש השועלים של קיוטו, וממנו מטפס שביל הררי עם אלפי שערי טורי כתומים עד לפסגת הר אינארי (כשעתיים הלוך-חזור). ככל שעולים - פחות אנשים; הכי שקט לפנות בוקר.',
+        rating: 4.8,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Fushimi+Inari+Taisha',
+      },
+      {
+        id: 'kyo-kiyomizu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Kiyomizu.jpg/500px-Kiyomizu.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'קיומיזו-דרה',
+        nameLocal: 'Kiyomizu-dera',
+        category: 'attraction',
+        lat: 34.995,
+        lng: 135.785,
+        description:
+          'מקדש בודהיסטי מהמאה השמינית שמרפסתו העצומה נשענת על עמודי עץ במדרון ההר, אתר מורשת עולמית. מתחתיו מעיין המים שממנו שמו, ומסביב סמטאות היגאשייאמה העתיקות.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Kiyomizu-dera',
+      },
+      {
+        id: 'kyo-arashiyama',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Arashiyama%2C_Part_II_-_Arashiyama7534.jpg/500px-Arashiyama%2C_Part_II_-_Arashiyama7534.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'אראשייאמה ויער הבמבוק',
+        nameLocal: 'Arashiyama',
+        category: 'nature',
+        lat: 35.0151,
+        lng: 135.6707,
+        description:
+          'רובע הרים במערב קיוטו: חורשת הבמבוק הענקית, גשר טוגטסוקיו על נהר הוזו, מקדש טנריו-ג׳י והפארק של הקופים על הגבעה. הכי יפה מוקדם בבוקר, לפני הקהל.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Arashiyama+Kyoto',
+      },
+      {
+        id: 'kyo-kinkakuji',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Golden_Pavilion_Kinkaku-ji_water_mirror_2024.jpg/500px-Golden_Pavilion_Kinkaku-ji_water_mirror_2024.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הביתן הזהב (קינקאקו-ג׳י)',
+        nameLocal: 'Kinkaku-ji',
+        category: 'attraction',
+        lat: 35.0395,
+        lng: 135.7285,
+        description:
+          'ביתן מצופה עלי זהב שמשתקף באגם שלפניו - אחד המבנים המצולמים ביפן, אתר מורשת עולמית. הסיור הוא מסלול קצר וחד-כיווני סביב האגם והגן.',
+        rating: 4.7,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Kinkaku-ji',
+      },
+      {
+        id: 'kyo-ginkakuji',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Ginkakuji_Kyoto03-r.jpg/500px-Ginkakuji_Kyoto03-r.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'הביתן הכסף (גינקאקו-ג׳י)',
+        nameLocal: 'Ginkaku-ji',
+        category: 'attraction',
+        lat: 35.0267,
+        lng: 135.7983,
+        description:
+          'מקדש זן עם גן טחב, גן חול מגורף ומסלול עלייה קצר לתצפית על העיר. ממנו מתחיל "שביל הפילוסוף" - טיילת תעלה מוצלת שהיא אחת ההליכות הנעימות בקיוטו.',
+        rating: 4.6,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Ginkaku-ji',
+      },
+      {
+        id: 'kyo-kyoto',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Kyoto%2C_Japan_%2849667780482%29.jpg/500px-Kyoto%2C_Japan_%2849667780482%29.jpg',
+        tags: ['foodie', 'history'],
+        priceLevel: 2,
+        name: 'קיוטו - העיר',
+        nameLocal: 'Kyoto',
+        category: 'attraction',
+        lat: 35.0116,
+        lng: 135.7681,
+        description:
+          'בירת יפן ההיסטורית: שוק נישיקי, רובע הגיישות גיון, ארמון הקיסר וטירת ניג׳ו, ורחובות עץ מסורתיים. מרכז נוח ללינה - הרכבות מגיעות מכאן לכל קנסאי.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Kyoto',
+      },
+      {
+        id: 'kyo-todaiji',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/T%C5%8Ddai-ji_Kon-d%C5%8D.jpg/500px-T%C5%8Ddai-ji_Kon-d%C5%8D.jpg',
+        tags: ['history', 'families'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'טודאי-ג׳י ופארק נארה',
+        nameLocal: 'Tōdai-ji & Nara Park',
+        category: 'attraction',
+        lat: 34.6892,
+        lng: 135.8397,
+        description:
+          'מקדש מהמאה השמינית שבו פסל בודהה ברונזה ענק, באחד ממבני העץ הגדולים בעולם. סביבו פארק נארה, שבו מסתובבים חופשי מאות אילי צבי מבויתים למחצה. כשעה מקיוטו.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Todai-ji+Nara',
+      },
+      {
+        id: 'kyo-biwa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Lake_biwa.jpg/500px-Lake_biwa.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'אגם ביווה',
+        nameLocal: 'Lake Biwa',
+        category: 'nature',
+        lat: 35.255,
+        lng: 136.08,
+        description:
+          'האגם הגדול והעתיק ביפן, ממש ממזרח לקיוטו - חופים, שביל אופניים היקפי, שער טורי צף במקדש שירהיגה ותצפית ההר ביווקו וואלי ברכבל.',
+        rating: 4.4,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Lake+Biwa',
+      },
+      {
+        id: 'kyo-amanohashidate',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Amanohashidate_aerial_view_2026.jpg/500px-Amanohashidate_aerial_view_2026.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'אמאנוהאשידאטה',
+        nameLocal: 'Amanohashidate',
+        category: 'nature',
+        lat: 35.5694,
+        lng: 135.1915,
+        description:
+          'לשון חול באורך כ-3.6 ק"מ מכוסה כ-8,000 עצי אורן, שחוצה מפרץ בים היפני - נחשבת לאחד משלושת הנופים היפים ביפן. מתבוננים בה מהתצפיות שמשני עברי המפרץ.',
+        rating: 4.5,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Amanohashidate',
+      },
+      {
+        id: 'kyo-nachi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Kumano_Kodo_World_heritage_Nachi-no-taki_%E7%86%8A%E9%87%8E%E5%8F%A4%E9%81%93_%E9%82%A3%E6%99%BA%E5%A4%A7%E6%BB%9D10.JPG/500px-Kumano_Kodo_World_heritage_Nachi-no-taki_%E7%86%8A%E9%87%8E%E5%8F%A4%E9%81%93_%E9%82%A3%E6%99%BA%E5%A4%A7%E6%BB%9D10.JPG',
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
+        name: 'מפל נאצ׳י וקומאנו קודו',
+        nameLocal: 'Nachi Falls & Kumano Kodo',
+        category: 'nature',
+        lat: 33.672,
+        lng: 135.891,
+        description:
+          'המפל החד-מדרגתי הגבוה ביפן (133 מ׳), ולצדו פגודה אדומה ומקדש - חלק משבילי העלייה לרגל קומאנו קודו, אתר מורשת עולמית. בחצי האי קיא, כ-4 שעות מקיוטו.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Nachi+Falls',
+      },
+      {
+        id: 'kyo-chabad',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'בית חב"ד קיוטו',
+        nameLocal: 'Chabad of Kyoto, Okazaki',
+        category: 'kosher-food',
+        lat: 35.0167,
+        lng: 135.787,
+        description:
+          'בית חב"ד של קיוטו בשכונת אוקאזאקי (Okazaki Tennocho, Sakyo-ku), עם בית כנסת קטן ומטבח כשר - ארוחות ואירוח שבת בהזמנה מראש (מומלץ כשלושה ימים, האוכל מוכן לפי הזמנה). הסימון הוא ברמת השכונה.',
+        kosherNote: 'בהפעלת חב"ד קיוטו (תחת חב"ד יפן). חובה להזמין מראש - אין מסעדה פתוחה לקהל מזדמן.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'חב"ד קיוטו / חב"ד יפן',
+        },
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Chabad+of+Kyoto',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'מזרח קיוטו',
+        placeIds: ['kyo-kiyomizu', 'kyo-ginkakuji', 'kyo-kyoto'],
+        notes:
+          'בוקר בקיומיזו-דרה ובסמטאות היגאשייאמה, אחר הצהריים גינקאקו-ג׳י ושביל הפילוסוף, וערב בגיון ובשוק נישיקי.',
+      },
+      {
+        day: 2,
+        title: 'שערי הטורי',
+        placeIds: ['kyo-fushimi', 'kyo-chabad'],
+        notes:
+          'לצאת מוקדם לפושימי אינארי ולעלות בשביל ההר עד למעלה. ארוחה כשרה בבית חב"ד - להזמין כמה ימים מראש.',
+      },
+      {
+        day: 3,
+        title: 'אראשייאמה והביתן הזהב',
+        placeIds: ['kyo-arashiyama', 'kyo-kinkakuji'],
+        notes:
+          'חורשת הבמבוק בשעת בוקר מוקדמת, טנריו-ג׳י והנהר, ואחר הצהריים קינקאקו-ג׳י המוזהב.',
+      },
+      {
+        day: 4,
+        title: 'נארה',
+        placeIds: ['kyo-todaiji'],
+        notes:
+          'רכבת של כשעה לנארה: הבודהה הגדול בטודאי-ג׳י, אילי הצבי בפארק ומקדש קסוגה טאישה עם הפנסים.',
+      },
+      {
+        day: 5,
+        title: 'טבע בקנסאי',
+        placeIds: ['kyo-biwa', 'kyo-amanohashidate', 'kyo-nachi'],
+        notes:
+          'בוחרים כיוון טבע: אגם ביווה הקרוב, לשון החול אמאנוהאשידאטה בצפון, או יום ארוך דרומה למפל נאצ׳י ולשבילי קומאנו קודו.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה מנתב"ג לקנסאי (אוסקה, KIX). שתי דרכים מעשיות: טיסה ישירה של אל על לטוקיו (נריטה) ומשם שינקנסן של כשעתיים ורבע לקיוטו, או טיסה עם החלפה (איסטנבול, המפרץ, אירופה) ישירות לאוסקה.',
+      gettingAround:
+        'בקיוטו: אוטובוסים עירוניים, שתי שורות מטרו ורכבות פרטיות - כרטיס IC נטען (ICOCA/Suica) פותר הכול, ואופניים נוחים מאוד בעיר השטוחה. לנארה, לאגם ביווה ולאוסקה - רכבות תכופות; לאמאנוהאשידאטה ולקומאנו קודו כדאי רכב שכור או רכבת אזורית איטית.',
+      kosherOverview:
+        'בקיוטו פועל בית חב"ד עם מטבח כשר - ארוחות ואירוח שבת בהזמנה מראש בלבד (האוכל מוכן לפי הזמנה, כדאי כשלושה ימים לפני). זו הכתובת הכשרה היחידה בעיר; בטוקיו יש מסעדה כשרה ושירות משלוחים ארצי. במסעדות רגילות אין להניח כשרות - מרק דאשי (דגים), מירין ורוטב סויה נמצאים כמעט בכל מנה.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
