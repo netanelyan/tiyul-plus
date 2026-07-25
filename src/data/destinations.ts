@@ -7135,6 +7135,5017 @@ export const destinations: Destination[] = [
         'אין במיורקה תשתית כשרות מסודרת - אין מסעדה כשרה או בית חב"ד תיירותי פעיל (בפלמה יש מורשת יהודית עתיקה - הרובע היהודי "אל קאל" והצֶ׳אֶטֶס - אך לא אוכל כשר). הכשרות הקרובה היא בברצלונה/מדריד. מומלץ להצטייד מראש; פירות, ירקות ודגים טריים זמינים בשפע.',
     },
   },
+  {
+    slug: 'interlaken',
+    name: 'אינטרלאקן ועמק היונגפראו',
+    nameLocal: 'Interlaken & Jungfrau Region',
+    countrySlug: 'switzerland',
+    flag: '🇨🇭',
+    center: { lat: 46.63, lng: 7.93 },
+    zoom: 10,
+    tagline: 'בין שני אגמים: מפלים, קרחונים ורכבת אל גג אירופה',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/1_lauterbrunnen_valley_wengen_2022.jpg/500px-1_lauterbrunnen_valley_wengen_2022.jpg',
+    iconicLandmark: {
+      name: 'יונגפראויוך - גג אירופה',
+      nameLocal: 'Jungfraujoch',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Sphinx_et_Jungfrau_-_img_06980.jpg/500px-Sphinx_et_Jungfrau_-_img_06980.jpg',
+      blurb:
+        'האוכף שבין פסגות המונק והיונגפראו בגובה 3,454 מ׳, ובו תחנת הרכבת הגבוהה באירופה ומצפה הספינקס - מעליו משתרע קרחון אלטש, הקרחון הארוך באלפים.',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'טבע אלפיני מהמדרגה הראשונה עם נגישות יוצאת דופן: רכבות ורכבלים מגיעים כמעט לכל תצפית, גם בלי רכב. חסרונות: זה אחד היעדים היקרים בעולם, אין באזור כתובת כשרה מאומתת, ומזג האוויר יכול למחוק תצפית שכבר שילמתם עליה.',
+    },
+    summary:
+      'אינטרלאקן יושבת בין אגם תון לאגם בריינץ, והיא שער הכניסה לעמק היונגפראו - אחד מאזורי ההרים המרהיבים באלפים. מכאן יוצאים אל עמק לאוטרברונן ושבעים מפליו, אל תצפיות שילטהורן והרדר קולם, אל אגם באכאלפזה שמשקף את פסגות השלג, ואל יונגפראויוך - תחנת הרכבת הגבוהה באירופה. הכול מחובר ברכבות ורכבלים, כך שאפשר לטייל כאן ברצינות גם בלי רכב.',
+    bestSeason:
+      'יוני-ספטמבר (שבילים ורכבלים פתוחים, אגמים בשיא) · דצמבר-מרץ עונת סקי · באפריל-מאי ובנובמבר חלק מהמתקנים סגורים לתחזוקה',
+    places: [
+      {
+        id: 'int-jungfraujoch',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Sphinx_et_Jungfrau_-_img_06980.jpg/500px-Sphinx_et_Jungfrau_-_img_06980.jpg',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'יונגפראויוך - גג אירופה',
+        nameLocal: 'Jungfraujoch',
+        category: 'nature',
+        lat: 46.5472,
+        lng: 7.9806,
+        description:
+          'האוכף בין המונק ליונגפראו בגובה 3,454 מ׳, ואליו מטפסת רכבת שיניים דרך מנהרה בתוך ההר. למעלה: מצפה הספינקס, ארמון קרח, מישור שלג ונוף אל קרחון אלטש. הכרטיס יקר במיוחד - שווה לבדוק תחזית לפני שקונים.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Jungfraujoch',
+      },
+      {
+        id: 'int-lauterbrunnen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/1_lauterbrunnen_valley_wengen_2022.jpg/500px-1_lauterbrunnen_valley_wengen_2022.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'עמק לאוטרברונן',
+        nameLocal: 'Lauterbrunnen Valley',
+        category: 'nature',
+        lat: 46.595,
+        lng: 7.9075,
+        description:
+          'עמק קרחוני צר בין קירות סלע אנכיים, שממנו יורדים עשרות מפלים (המספר המקובל: 72). שביל העמק שטוח ונוח להליכה או לרכיבה על אופניים, והכפר עצמו הוא בסיס מצוין לעמק כולו.',
+        rating: 4.8,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Lauterbrunnen',
+      },
+      {
+        id: 'int-staubbach',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Lauterbrunnen_Staubbach.jpg/500px-Lauterbrunnen_Staubbach.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'מפל שטאובבאך',
+        nameLocal: 'Staubbach Falls',
+        category: 'nature',
+        lat: 46.5897,
+        lng: 7.9055,
+        description:
+          'מפל צניחה חופשית של כמעט 300 מטר שנופל מקיר הסלע ממש מעל כפר לאוטרברונן - אחד המפלים הגבוהים באירופה. שביל קצר ותלול מוביל למנהרה קטנה מאחורי המפל (סגורה בחורף).',
+        rating: 4.5,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Staubbach+Falls',
+      },
+      {
+        id: 'int-trummelbach',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Trummelbach.JPG/500px-Trummelbach.JPG',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'מפלי טרימלבאך',
+        nameLocal: 'Trümmelbach Falls',
+        category: 'nature',
+        lat: 46.5691,
+        lng: 7.915,
+        description:
+          'עשרה מפלים קרחוניים שחצבו את דרכם בתוך ההר עצמו - מבקרים בהם דרך מעלית שנחצבה בסלע ומערכת מדרגות וגשרונים. רועש, קר ורטוב, וחוויה מרשימה במיוחד לילדים. פתוח בעונה החמה.',
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Tr%C3%BCmmelbach+Falls',
+      },
+      {
+        id: 'int-schilthorn',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Schilthorn_with_Bernese_Alps%2C_2012_August.jpg/500px-Schilthorn_with_Bernese_Alps%2C_2012_August.jpg',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'שילטהורן (פיץ גלוריה)',
+        nameLocal: 'Schilthorn / Piz Gloria',
+        category: 'viewpoint',
+        lat: 46.5572,
+        lng: 7.8353,
+        description:
+          'פסגה בגובה 2,970 מ׳ עם מסעדה מסתובבת ותצפית 360 מעלות אל האייגר, המונק והיונגפראו. הוסרטה כאן סצנה מסרטי ג׳יימס בונד. עולים ברכבל דרך הכפר מירן חסר המכוניות.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Schilthorn',
+      },
+      {
+        id: 'int-bachalpsee',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Bachalpsee_reflection.jpg/500px-Bachalpsee_reflection.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'אגם באכאלפזה',
+        nameLocal: 'Bachalpsee',
+        category: 'nature',
+        lat: 46.6694,
+        lng: 8.0233,
+        description:
+          'אגם הררי בגובה כ-2,265 מ׳ שמשקף את פסגות השלג של רכס האלפים הברניים - מהנופים המצולמים בשווייץ. מגיעים ברכבל מגרינדלוואלד אל פירסט, ומשם הליכה קלה של כשעה בשביל רחב.',
+        rating: 4.8,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Bachalpsee',
+      },
+      {
+        id: 'int-grindelwald',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Grindelwald_View_02.jpg/500px-Grindelwald_View_02.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'גרינדלוואלד',
+        nameLocal: 'Grindelwald',
+        category: 'attraction',
+        lat: 46.6167,
+        lng: 8.0333,
+        description:
+          'כפר הרים קלאסי למרגלות קיר הצפון של האייגר, ובסיס הנוחות ביותר לטיולי העמק: רכבל לפירסט, רכבת ליונגפראויוך ושפע מסלולי הליכה שיוצאים מהכפר עצמו.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Grindelwald',
+      },
+      {
+        id: 'int-harder',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Harder_Kulm.JPG/500px-Harder_Kulm.JPG',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 2,
+        name: 'הרדר קולם',
+        nameLocal: 'Harder Kulm',
+        category: 'viewpoint',
+        lat: 46.6973,
+        lng: 7.8517,
+        description:
+          'תצפית הבית של אינטרלאקן, בגובה כ-1,320 מ׳: רכבת פוניקולר תלולה מהעיר, ולמעלה מרפסת תצפית שמרחפת אל שני האגמים ואל שלוש הפסגות המפורסמות. יפה במיוחד לקראת שקיעה.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Harder+Kulm',
+      },
+      {
+        id: 'int-brienz',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Aerial_image_of_Lake_Brienz_%28view_from_the_southwest%29.jpg/500px-Aerial_image_of_Lake_Brienz_%28view_from_the_southwest%29.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'אגם בריינץ',
+        nameLocal: 'Lake Brienz',
+        category: 'nature',
+        lat: 46.7167,
+        lng: 7.9667,
+        description:
+          'האגם המזרחי של אינטרלאקן, בצבע טורקיז-חלבי בזכות מי הקרחונים. אוניות נוסעים חוצות אותו בין הכפרים, ובגדה הצפונית שוכן הכפר בריינץ עם בתי העץ המסורתיים.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Lake+Brienz',
+      },
+      {
+        id: 'int-thunersee',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Aerial_image_of_Lake_Thun_%28view_from_the_east%29.jpg/500px-Aerial_image_of_Lake_Thun_%28view_from_the_east%29.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'אגם תון',
+        nameLocal: 'Lake Thun',
+        category: 'nature',
+        lat: 46.6833,
+        lng: 7.7167,
+        description:
+          'האגם המערבי של אינטרלאקן, גדול ורגוע יותר, ולחופיו טירות ומזחים. שיט האוניות בין אינטרלאקן לעיר תון הוא אחת הדרכים היפות והנינוחות לראות את האזור.',
+        rating: 4.6,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Lake+Thun',
+      },
+      {
+        id: 'int-hoheweg',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Goldswil-Viadukt_Panorama_mit_Interlaken_im_Hintergrund_2.jpg/500px-Goldswil-Viadukt_Panorama_mit_Interlaken_im_Hintergrund_2.jpg',
+        tags: ['families'],
+        priceLevel: 1,
+        name: 'מרכז אינטרלאקן וההווג',
+        nameLocal: 'Interlaken & Höheweg',
+        category: 'attraction',
+        lat: 46.6833,
+        lng: 7.85,
+        description:
+          'הרחוב הראשי של אינטרלאקן, ולצדו מדשאות ההיהמאטה שמהן ממריאים הצנחנים והפרפלנים מול נוף היונגפראו. מכאן יוצאות שתי תחנות הרכבת של העיר לכל כיווני העמק.',
+        rating: 4.3,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=H%C3%B6heweg+Interlaken',
+      },
+      {
+        id: 'int-murren',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/1_M%C3%BCrren_2022.jpg/500px-1_M%C3%BCrren_2022.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 2,
+        name: 'מירן - כפר ללא מכוניות',
+        nameLocal: 'Mürren',
+        category: 'attraction',
+        lat: 46.5594,
+        lng: 7.8922,
+        description:
+          'כפר קטן בגובה כ-1,640 מ׳ על מדף מעל עמק לאוטרברונן, ואליו מגיעים רק ברכבל וברכבת - בלי מכוניות. נקודת מוצא לרכבל שילטהורן ולשבילי תצפית מול האייגר, המונק והיונגפראו.',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=M%C3%BCrren',
+      },
+      {
+        id: 'int-aare',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Aareschlucht_166_7.jpg/500px-Aareschlucht_166_7.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'נקיק האארה',
+        nameLocal: 'Aare Gorge (Aareschlucht)',
+        category: 'nature',
+        lat: 46.7178,
+        lng: 8.2136,
+        description:
+          'נקיק צר ועמוק שחצב נהר האארה בסלע הגיר ליד מיירינגן, ובו מסלול הליכה על גשרונים ומנהרות לאורך כקילומטר וחצי - קריר, דרמטי ומתאים גם למשפחות.',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Aareschlucht',
+      },
+      {
+        id: 'int-reichenbach',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Schattenhalb_Reichenbachfall_7-05-2024_10-56-28.jpg/500px-Schattenhalb_Reichenbachfall_7-05-2024_10-56-28.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
+        name: 'מפלי רייכנבאך',
+        nameLocal: 'Reichenbach Falls',
+        category: 'nature',
+        lat: 46.7136,
+        lng: 8.1831,
+        description:
+          'מפלי מדרגות מרשימים מעל מיירינגן, שאליהם עולים ברכבל היסטורי. המקום מפורסם גם כזירת הקרב הסופי בין שרלוק הולמס לפרופסור מוריארטי בסיפורו של קונן דויל.',
+        rating: 4.4,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Reichenbach+Falls',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'האגמים ותצפית הבית',
+        placeIds: ['int-hoheweg', 'int-harder', 'int-brienz'],
+        notes:
+          'יום נחיתה רגוע: הליכה בהווג, פוניקולר להרדר קולם לתצפית על שני האגמים, ולקראת הערב שיט או טיול לאורך אגם בריינץ.',
+      },
+      {
+        day: 2,
+        title: 'עמק לאוטרברונן והמפלים',
+        placeIds: ['int-lauterbrunnen', 'int-staubbach', 'int-trummelbach', 'int-murren'],
+        notes:
+          'יום המפלים: שביל העמק בין קירות הסלע, שטאובבאך שנופל מעל הכפר, מפלי טרימלבאך שבתוך ההר - ועלייה במסלול לכפר מירן חסר המכוניות.',
+      },
+      {
+        day: 3,
+        title: 'גג אירופה',
+        placeIds: ['int-jungfraujoch', 'int-grindelwald'],
+        notes:
+          'יום שלם ליונגפראויוך - לצאת מוקדם ולבדוק תחזית לפני שקונים כרטיס. בחזרה עצירה בגרינדלוואלד למרגלות קיר האייגר.',
+      },
+      {
+        day: 4,
+        title: 'אגם באכאלפזה או שילטהורן',
+        placeIds: ['int-bachalpsee', 'int-schilthorn', 'int-aare'],
+        notes:
+          'בוחרים תצפית אחת: הליכה קלה לאגם באכאלפזה מפירסט, או רכבל לשילטהורן. מי שנשאר עם זמן - נקיק האארה במיירינגן בדרך חזרה.',
+      },
+    ],
+    practical: {
+      flights:
+        'טיסות ישירות מנתב"ג לציריך (ZRH): אל על, ו-SWISS שחידשה את הקו ב-1 ביולי 2026 - כ-12-13 טיסות בשבוע בין שתי החברות, כ-4 שעות. מציריך רכבת ישירה/עם החלפה אחת לאינטרלאקן (כשעתיים), ואפשר גם דרך ז׳נבה או באזל.',
+      gettingAround:
+        'אין צורך ברכב: רכבות, רכבלים ואוניות מגיעים כמעט לכל נקודה, בתדירות גבוהה ובדייקנות. שווה לבדוק מראש כרטיס נסיעות מתאים (Swiss Travel Pass או כרטיסי אזור היונגפראו) - התחבורה כאן יקרה, וכרטיס מתאים חוסך הרבה. חלק מהרכבלים סגורים בעונות המעבר לתחזוקה.',
+      kosherOverview:
+        'אין באינטרלאקן ובעמק היונגפראו כתובת כשרה מאומתת - לא מסעדה ולא חנות. תשתית הכשרות בשווייץ מרוכזת בערים הגדולות (ציריך, ז׳נבה, בזל), וכמה מלונות בהרים מציעים שירות כשר עונתי בלבד. מי שמקפיד - להצטייד מראש בציריך ולוודא ישירות מול המלון/המסעדה לפני הנסיעה.',
+    },
+  },
+  {
+    slug: 'tokyo',
+    name: 'טוקיו והר פוג׳י',
+    nameLocal: 'Tokyo & Mount Fuji',
+    countrySlug: 'japan',
+    flag: '🇯🇵',
+    center: { lat: 35.55, lng: 139.3 },
+    zoom: 8,
+    tagline: 'עיר ענקית ומדויקת - ומסביבה הר געש, אגמים ומעיינות חמים',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg/500px-View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg',
+    iconicLandmark: {
+      name: 'הר פוג׳י',
+      nameLocal: 'Mount Fuji / 富士山',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg/500px-View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg',
+      blurb:
+        'הר הגעש הגבוה ביפן (3,776 מ׳) וסמלה המוכר ביותר - אתר מורשת עולמית של אונסק"ו, שנראה בימים בהירים גם מטוקיו.',
+    },
+    editorialRating: {
+      score: 4.8,
+      verdict:
+        'אחת הערים המרתקות בעולם, ובטווח שעתיים ממנה הר געש, אגמים, מפלים ומעיינות חמים - עם תחבורה ציבורית מושלמת ובטיחות יוצאת דופן. חסרונות: טיסה של כ-11.5 שעות בתדירות נמוכה, יעד יקר, מחסום שפה, ופוג׳י מתחבא בעננים בחלק גדול מהשנה.',
+    },
+    summary:
+      'טוקיו היא עיר-מדינה שלמה: מקדש סנסו-ג׳י בן המאה השביעית באסקוסה, צומת שיבויה הענק, יער המקדש של מייג׳י וגנים מטופחים בלב הבטון. במרחק שעה-שעתיים מתחילה יפן אחרת - הר פוג׳י ואגמיו, עמק הגופרית של האקונה, מפל קגון שבניקו והבודהה הגדול של קמאקורה. בטוקיו יש גם בית חב"ד ומסעדה כשרה, מה שהופך אותה לנקודת פתיחה נוחה לשומרי כשרות ביפן.',
+    bestSeason:
+      'סוף מרץ-אפריל (פריחת הדובדבן) ואוקטובר-נובמבר (שלכת) - הנוחים ביותר · הקיץ חם ולח מאוד · טיפוס על פוג׳י אפשרי רק בעונה הרשמית, כיולי-תחילת ספטמבר',
+    places: [
+      {
+        id: 'jpn-fuji',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg/500px-View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הר פוג׳י',
+        nameLocal: 'Mount Fuji / 富士山',
+        category: 'nature',
+        lat: 35.3608,
+        lng: 138.7275,
+        description:
+          'הר הגעש הסימטרי שהוא סמלה של יפן, 3,776 מ׳ ואתר מורשת עולמית. רובם המכריע של המבקרים צופים בו מהאגמים או מהאקונה; הטיפוס עצמו אפשרי רק בעונה הקצרה של הקיץ ודורש הכנה.',
+        rating: 4.8,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Mount+Fuji',
+      },
+      {
+        id: 'jpn-kawaguchi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/KawaguchiKo.jpg/500px-KawaguchiKo.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'אגם קוואגוצ׳י',
+        nameLocal: 'Lake Kawaguchi / 河口湖',
+        category: 'nature',
+        lat: 35.515,
+        lng: 138.7567,
+        description:
+          'הנגיש שבחמשת אגמי פוג׳י, ומהגדה הצפונית שלו נשקף ההר בשלמותו ומשתקף במים. סביבו טיילת, מוזיאונים קטנים, רכבל לתצפית ואונקים (מעיינות חמים) עם נוף.',
+        rating: 4.7,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Lake+Kawaguchi',
+      },
+      {
+        id: 'jpn-chureito',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Chuurei-tou_Fujiyoshida_17025277650_c59733d6ba_o.jpg/500px-Chuurei-tou_Fujiyoshida_17025277650_c59733d6ba_o.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'פגודת צ׳ורייטו',
+        nameLocal: 'Chureito Pagoda, Arakurayama Sengen Park',
+        category: 'viewpoint',
+        lat: 35.5012,
+        lng: 138.8014,
+        description:
+          'הפגודה האדומה בת חמש הקומות שמעל העיר פוג׳ייושידה, ומאחוריה הר פוג׳י - התמונה המזוהה ביותר עם יפן. מגיעים בטיפוס של כ-400 מדרגות; יפה במיוחד בפריחת הדובדבן ובשלכת.',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Chureito+Pagoda',
+      },
+      {
+        id: 'jpn-hakone',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/View_of_Mount_Fuji_from_Lake_Ashi.jpg/500px-View_of_Mount_Fuji_from_Lake_Ashi.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'האקונה',
+        nameLocal: 'Hakone / 箱根',
+        category: 'nature',
+        lat: 35.1894,
+        lng: 139.0247,
+        description:
+          'אזור הררי געשי דרומית-מערבית לטוקיו, מפורסם במעיינות החמים (אונסן) ובמסלול המעגלי שמשלב רכבת הרים, פוניקולר, רכבל ואונייה על האגם. יעד קלאסי ליום-יומיים מטוקיו.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Hakone',
+      },
+      {
+        id: 'jpn-ashi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/260505_Moto-Hakone_Hakone_Japan01s3.jpg/500px-260505_Moto-Hakone_Hakone_Japan01s3.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'אגם אשי',
+        nameLocal: 'Lake Ashi / 芦ノ湖',
+        category: 'nature',
+        lat: 35.2097,
+        lng: 139.0044,
+        description:
+          'אגם געשי בלב האקונה, ובימים בהירים נשקף מעליו הר פוג׳י. שער הטורי האדום של מקדש האקונה עומד במים ממש בקצה האגם - אחת התמונות המפורסמות באזור.',
+        rating: 4.6,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Lake+Ashi',
+      },
+      {
+        id: 'jpn-owakudani',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Owakudani_-_Hakone_%2827369344357%29.jpg/500px-Owakudani_-_Hakone_%2827369344357%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'עמק אווקודאני',
+        nameLocal: 'Ōwakudani / 大涌谷',
+        category: 'nature',
+        lat: 35.2419,
+        lng: 139.0208,
+        description:
+          'עמק געשי פעיל שנוצר בהתפרצות לפני כ-3,000 שנה: אדים גופריתיים, בורות רותחים ונוף מאדים - מגיעים ברכבל מעליו. לפעמים נסגר בגלל פעילות גזים; לבדוק את מצב האתר לפני שמגיעים.',
+        rating: 4.4,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Owakudani',
+      },
+      {
+        id: 'jpn-kegon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Lake_chuzenji_and_kegon_waterfall.jpg/500px-Lake_chuzenji_and_kegon_waterfall.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'מפל קגון (ניקו)',
+        nameLocal: 'Kegon Falls / 華厳滝',
+        category: 'nature',
+        lat: 36.7379,
+        lng: 139.502,
+        description:
+          'מפל בגובה כ-97 מ׳ שיוצא מאגם צ׳וזנג׳י בהרי ניקו, ומעלית מובילה למרפסת תצפית בתחתיתו. משתלב עם מקדשי ניקו (אתר מורשת עולמית) ליום מלא צפונית לטוקיו.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Kegon+Falls',
+      },
+      {
+        id: 'jpn-sensoji',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Sensoji_2023.jpg/500px-Sensoji_2023.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'מקדש סנסו-ג׳י (אסקוסה)',
+        nameLocal: 'Sensō-ji, Asakusa',
+        category: 'attraction',
+        lat: 35.7147,
+        lng: 139.7968,
+        description:
+          'המקדש הבודהיסטי העתיק בטוקיו, ואליו מובילה סמטת נקאמיסה עמוסה בדוכני מזכרות ומאכלי רחוב. השער האדום קמינרימון עם הפנס הענק הוא אחד הצילומים המזוהים עם העיר.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Sensoji+Temple',
+      },
+      {
+        id: 'jpn-shibuya',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Shibuya_Crossing%2C_Aerial.jpg/500px-Shibuya_Crossing%2C_Aerial.jpg',
+        tags: ['nightlife', 'families'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'צומת שיבויה',
+        nameLocal: 'Shibuya Crossing',
+        category: 'attraction',
+        lat: 35.6586,
+        lng: 139.7011,
+        description:
+          'מעבר החצייה האלכסוני שמול תחנת שיבויה, שבו חוצים אלפי אנשים בכל מחזור רמזור - סמל של טוקיו המודרנית. סביבו רחובות קניות, וממרפסות התצפית בבניינים הסמוכים רואים את הכוריאוגרפיה מלמעלה.',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Shibuya+Crossing',
+      },
+      {
+        id: 'jpn-meiji',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Meiji_Jingu_2023-3.jpg/500px-Meiji_Jingu_2023-3.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        name: 'מקדש מייג׳י',
+        nameLocal: 'Meiji Shrine / 明治神宮',
+        category: 'attraction',
+        lat: 35.6761,
+        lng: 139.6992,
+        description:
+          'מקדש שינטו גדול בלב יער נטוע של יותר ממאה אלף עצים, ממש ליד הרחובות הסואנים של הראג׳וקו ושיבויה. שער הטורי העצום בכניסה והשקט שבפנים הם ניגוד מוחלט לעיר שבחוץ.',
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Meiji+Shrine',
+      },
+      {
+        id: 'jpn-skytree',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Tokyo_Skytree_2014_%E2%85%A2.jpg/500px-Tokyo_Skytree_2014_%E2%85%A2.jpg',
+        tags: ['families'],
+        priceLevel: 2,
+        name: 'טוקיו סקייטרי',
+        nameLocal: 'Tokyo Skytree / 東京スカイツリー',
+        category: 'viewpoint',
+        lat: 35.7101,
+        lng: 139.8107,
+        description:
+          'מגדל השידור הגבוה ביפן (634 מ׳) ובו שתי קומות תצפית - בימים בהירים רואים ממנו את הר פוג׳י. בבסיסו קניון גדול ואקווריום, ומסביב שכונת סומידה השקטה יחסית.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Tokyo+Skytree',
+      },
+      {
+        id: 'jpn-ueno',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Ueno_park.jpg/500px-Ueno_park.jpg',
+        tags: ['families', 'art'],
+        priceLevel: 0,
+        name: 'פארק אואנו',
+        nameLocal: 'Ueno Park / 上野公園',
+        category: 'nature',
+        lat: 35.7122,
+        lng: 139.7711,
+        description:
+          'הפארק העירוני הגדול של מזרח טוקיו, ובו בריכת שיבאבה, מקדשים, גן חיות וכמה מהמוזיאונים החשובים ביפן. בעונת הסאקורה זה אחד ממוקדי הפריחה המפורסמים בעיר.',
+        rating: 4.5,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Ueno+Park',
+      },
+      {
+        id: 'jpn-gyoen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Shinjuku_Gyoen_National_Garden_-_sakura_3.JPG/500px-Shinjuku_Gyoen_National_Garden_-_sakura_3.JPG',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'גן שינג׳וקו גיואן',
+        nameLocal: 'Shinjuku Gyo-en',
+        category: 'nature',
+        lat: 35.685,
+        lng: 139.71,
+        description:
+          'גן לאומי ענק בלב שינג׳וקו, שמשלב גן יפני מסורתי, גן אנגלי, גן צרפתי וחממה טרופית. אחד המקומות היפים בעיר לפריחת הדובדבן ולשלכת, ושקט להפתיע.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Shinjuku+Gyoen',
+      },
+      {
+        id: 'jpn-kamakura',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/TsurugaokaHachiman-M8867.jpg/500px-TsurugaokaHachiman-M8867.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'קמאקורה',
+        nameLocal: 'Kamakura / 鎌倉',
+        category: 'attraction',
+        lat: 35.3197,
+        lng: 139.5525,
+        description:
+          'עיר חוף היסטורית כשעה מטוקיו, שהייתה בירת יפן במאות ה-12-14. מקדשים בין גבעות מיוערות, מקדש צורוגאוקה האצ׳ימנגו במרכז, ושבילי הליכה קצרים בין האתרים אל החוף.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Kamakura',
+      },
+      {
+        id: 'jpn-daibutsu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/230128_Kamakura_Daibutsu_Japan04s3.jpg/500px-230128_Kamakura_Daibutsu_Japan04s3.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הבודהה הגדול של קמאקורה',
+        nameLocal: 'Kōtoku-in, Great Buddha',
+        category: 'attraction',
+        lat: 35.3168,
+        lng: 139.5357,
+        description:
+          'פסל ברונזה בגובה כ-11.4 מ׳ מהמאה ה-13, שיושב תחת כיפת השמיים מאז שגלי צונאמי הרסו את האולם שהקיף אותו. אחד הסמלים המוכרים של יפן, ואפשר גם להיכנס אל תוך הפסל.',
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Kotoku-in+Great+Buddha',
+      },
+      {
+        id: 'jpn-chabad',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'בית חב"ד טוקיו ומסעדת Chana׳s Place',
+        nameLocal: "Chabad House Tokyo & Chana's Place, Takanawa",
+        category: 'kosher-food',
+        lat: 35.635,
+        lng: 139.7357,
+        description:
+          'בית חב"ד של טוקיו בשכונת טקאנאווה (1-5-23 Takanawa, Minato-ku), ובו Chana׳s Place - המסעדה הכשרה הראשונה בעיר, עם תפריט ישראלי-יהודי. עובדים בעיקר בהזמנה מראש ובשעות מוגדרות.',
+        kosherNote: 'בהשגחת בית חב"ד טוקיו. חובה לתאם מראש - שעות הפתיחה מוגבלות.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד טוקיו (הרב מנדי סודקביץ)',
+        },
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Chabad+House+Tokyo+Takanawa',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'טוקיו הישנה - אסקוסה וסומידה',
+        placeIds: ['jpn-sensoji', 'jpn-skytree', 'jpn-ueno'],
+        notes:
+          'יום ראשון רגוע אחרי הטיסה הארוכה: מקדש סנסו-ג׳י וסמטת נקאמיסה, מגדל סקייטרי מעבר לנהר, וסיום בפארק אואנו.',
+      },
+      {
+        day: 2,
+        title: 'טוקיו המודרנית',
+        placeIds: ['jpn-meiji', 'jpn-shibuya', 'jpn-gyoen', 'jpn-chabad'],
+        notes:
+          'יער המקדש של מייג׳י, ומשם ברגל לצומת שיבויה ולרחובות הקניות. אחר הצהריים גן שינג׳וקו גיואן, וארוחת ערב כשרה בטקאנאווה (בהזמנה מראש).',
+      },
+      {
+        day: 3,
+        title: 'הר פוג׳י והאגמים',
+        placeIds: ['jpn-fuji', 'jpn-kawaguchi', 'jpn-chureito'],
+        notes:
+          'יוצאים מוקדם לאזור האגמים: תצפיות על פוג׳י מגדות קוואגוצ׳י ומפגודת צ׳ורייטו. לבדוק תחזית - ההר מתחבא בעננים לעתים קרובות.',
+      },
+      {
+        day: 4,
+        title: 'האקונה - געש ומעיינות חמים',
+        placeIds: ['jpn-hakone', 'jpn-owakudani', 'jpn-ashi'],
+        notes:
+          'המסלול המעגלי של האקונה: רכבת הרים ורכבל אל עמק אווקודאני הגופריתי, ואונייה על אגם אשי אל שער הטורי שבמים.',
+      },
+      {
+        day: 5,
+        title: 'קמאקורה או ניקו',
+        placeIds: ['jpn-kamakura', 'jpn-daibutsu', 'jpn-kegon'],
+        notes:
+          'בוחרים כיוון: דרומה לקמאקורה (מקדשים, הבודהה הגדול וחוף) או צפונה לניקו (מקדשי המורשת ומפל קגון). שניהם טיולי יום ברכבת מטוקיו.',
+      },
+    ],
+    practical: {
+      flights:
+        'אל על היא היחידה שמפעילה טיסה ישירה מנתב"ג לטוקיו (נריטה, NRT) - כשלוש טיסות בשבוע ב-787-9, כ-11.5 שעות; הקו חודש באפריל 2026. לחלופין טסים עם החלפה דרך אירופה, איסטנבול או המפרץ.',
+      gettingAround:
+        'בטוקיו: מטרו ורכבות JR מכסים הכול - כדאי כרטיס IC נטען (Suica/Pasmo) מיד עם הנחיתה. לפוג׳י ולהאקונה יש רכבות ואוטובוסים ישירים וכרטיסי אזור (למשל Hakone Free Pass). Japan Rail Pass משתלם רק אם מתכננים גם נסיעות רכבת מהירה למרחקים ארוכים.',
+      kosherOverview:
+        'בטוקיו יש תשתית כשרות אמיתית אך קטנה: בית חב"ד בטקאנאווה עם המסעדה הכשרה Chana׳s Place, ושירות משלוחי אוכל כשר (Kosher Delica) שפועל בהשגחה רבנית ומגיע גם לערים אחרות ביפן - בשניהם עובדים בהזמנה מראש. מחוץ לטוקיו אין כמעט כלום, וחשוב לדעת שהמטבח היפני מבוסס על מרק דאשי (דגים), מירין ורוטב סויה - אין להניח כשרות בשום מסעדה רגילה.',
+    },
+  },
+  {
+    slug: 'serengeti',
+    name: 'סרנגטי וקילימנג׳רו',
+    nameLocal: 'Northern Tanzania Safari Circuit',
+    countrySlug: 'tanzania',
+    flag: '🇹🇿',
+    center: { lat: -3.0, lng: 35.8 },
+    zoom: 7,
+    tagline: 'מישורי הספארי הגדולים, מכתש ענק והפסגה של אפריקה',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Serengeti-Landscape-2012.JPG/500px-Serengeti-Landscape-2012.JPG',
+    iconicLandmark: {
+      name: 'הר קילימנג׳רו',
+      nameLocal: 'Mount Kilimanjaro',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Kilimanjaro_from_Amboseli.jpg/500px-Kilimanjaro_from_Amboseli.jpg',
+      blurb:
+        'ההר הגבוה באפריקה (5,895 מ׳) והר הגעש הבודד הגבוה בעולם - פסגת שלג שמתנשאת מעל הסוואנה, ואפשר לטפס אליה בלי ציוד טיפוס טכני.',
+    },
+    editorialRating: {
+      score: 4.8,
+      verdict:
+        'הספארי הקלאסי של אפריקה: סרנגטי, נגורונגורו והנדידה הגדולה - חוויה שאין לה תחליף, ובארושה יש בית חב"ד עם אוכל כשר. חסרונות: אין טיסה ישירה מישראל (החלפה באדיס אבבה), יעד יקר בגלל אגרות הפארקים והלודג׳ים, ורוב הטיולים דורשים ג׳יפ עם נהג-מדריך.',
+    },
+    summary:
+      'צפון טנזניה הוא מסלול הספארי המפורסם בעולם: מישורי סרנגטי שבהם עוברת הנדידה הגדולה של מאות אלפי גנואים וזברות, מכתש נגורונגורו שבתוכו מערכת אקולוגית שלמה, ואגם מניארה וטרנגירה עם עדרי הפילים. מעל הכול מתנשאת פסגת קילימנג׳רו המושלגת. עיר הבסיס היא ארושה, שממנה יוצאים כל הספארים - ושבה גם בית חב"ד עם מטבח כשר.',
+    bestSeason:
+      'יוני-אוקטובר (העונה היבשה - הצפייה בחיות הטובה ביותר; הנדידה בצפון סרנגטי כיולי-ספטמבר) · ינואר-פברואר עונת ההמלטות בדרום סרנגטי · אפריל-מאי גשמים כבדים וחלק מהדרכים קשות',
+    places: [
+      {
+        id: 'tza-serengeti',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Serengeti-Landscape-2012.JPG/500px-Serengeti-Landscape-2012.JPG',
+        tags: ['outdoors', 'families'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'הפארק הלאומי סרנגטי',
+        nameLocal: 'Serengeti National Park',
+        category: 'nature',
+        lat: -2.4,
+        lng: 34.6,
+        description:
+          'מישורי עשב אינסופיים בשטח של כ-15 אלף קמ"ר, אתר מורשת עולמית, ובהם מתרחשת הנדידה הגדולה - מעבר עונתי של מאות אלפי גנואים וזברות. כאן נמצאים גם האריות, הנמרים והצ׳יטות שהפכו את המקום למותג.',
+        rating: 4.9,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Serengeti+National+Park',
+      },
+      {
+        id: 'tza-ngorongoro',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Ngorongoro-1001-2.jpg/500px-Ngorongoro-1001-2.jpg',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'מכתש נגורונגורו',
+        nameLocal: 'Ngorongoro Crater',
+        category: 'nature',
+        lat: -3.21,
+        lng: 35.46,
+        description:
+          'קלדרה של הר געש שקרס, בקוטר של כ-20 ק"מ ובעומק כ-600 מ׳, ובתוכה מערכת אקולוגית סגורה עם עשרות אלפי בעלי חיים - כולל אוכלוסיית קרנפים שחורים. יורדים אל רצפת המכתש ברכב שטח.',
+        rating: 4.9,
+        durationMin: 600,
+        externalUrl: 'https://maps.google.com/?q=Ngorongoro+Crater',
+      },
+      {
+        id: 'tza-kilimanjaro',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Kilimanjaro_from_Amboseli.jpg/500px-Kilimanjaro_from_Amboseli.jpg',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'הר קילימנג׳רו',
+        nameLocal: 'Mount Kilimanjaro',
+        category: 'nature',
+        lat: -3.0667,
+        lng: 37.3592,
+        description:
+          'הפסגה הגבוהה באפריקה, 5,895 מ׳, ובה כיפת קרח שמצטמצמת משנה לשנה. הטיפוס אורך 5-9 ימים במסלולים כמו מצ׳אמה או לימושו, אינו דורש ציוד טכני - אבל דורש כושר, התאקלמות וליווי מדריכים וסבלים מורשים.',
+        rating: 4.8,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Mount+Kilimanjaro',
+      },
+      {
+        id: 'tza-tarangire',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Tarangine_%2862%29.jpg/500px-Tarangine_%2862%29.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        name: 'הפארק הלאומי טרנגירה',
+        nameLocal: 'Tarangire National Park',
+        category: 'nature',
+        lat: -3.8333,
+        lng: 36.0,
+        description:
+          'פארק של עצי באובב ענקיים ונהר שאליו מתנקזות החיות בעונה היבשה - מהמקומות הטובים בטנזניה לצפייה בעדרי פילים גדולים. שקט ופחות עמוס מסרנגטי.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Tarangire+National+Park',
+      },
+      {
+        id: 'tza-manyara',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Lake_Manyara_Wildlife.jpg/500px-Lake_Manyara_Wildlife.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'אגם מניארה',
+        nameLocal: 'Lake Manyara National Park',
+        category: 'nature',
+        lat: -3.5,
+        lng: 36.0,
+        description:
+          'פארק צר בין מצוק השבר האפריקאי לאגם מלוח, עם יער עד, להקות בבונים, היפופוטמים ולהקות פלמינגו על המים. עצירה נוחה בדרך מארושה אל נגורונגורו.',
+        rating: 4.5,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Lake+Manyara+National+Park',
+      },
+      {
+        id: 'tza-arushanp',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Meru_Ashcone.jpg/500px-Meru_Ashcone.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'הפארק הלאומי ארושה והר מרו',
+        nameLocal: 'Arusha National Park & Mount Meru',
+        category: 'nature',
+        lat: -3.2668,
+        lng: 36.8349,
+        description:
+          'פארק קטן וירוק ממש ליד העיר, ובו הר מרו (4,562 מ׳), אגמי מומלה, מפלים ולוע געשי. אחד המקומות הבודדים בטנזניה שבהם מותר ספארי רגלי בליווי ריינג׳ר - טוב גם כהתאקלמות לפני קילימנג׳רו.',
+        rating: 4.5,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Arusha+National+Park',
+      },
+      {
+        id: 'tza-olduvai',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Oldupai-3.jpg/500px-Oldupai-3.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'נקיק אולדובאי',
+        nameLocal: 'Olduvai (Oldupai) Gorge',
+        category: 'museum',
+        lat: -2.9936,
+        lng: 35.3512,
+        description:
+          'נקיק בשולי נגורונגורו שנחשב לאחד האתרים החשובים בעולם לחקר האדם הקדמון: כאן חשפו בני משפחת ליקי מאובנים וכלי אבן בני מיליוני שנים. יש מרכז מבקרים קטן עם תצוגה והסבר.',
+        rating: 4.3,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Olduvai+Gorge',
+      },
+      {
+        id: 'tza-arusha',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Arusha_City_view.jpg/500px-Arusha_City_view.jpg',
+        tags: ['foodie'],
+        priceLevel: 1,
+        name: 'ארושה - עיר הבסיס',
+        nameLocal: 'Arusha',
+        category: 'attraction',
+        lat: -3.3667,
+        lng: 36.6833,
+        description:
+          'העיר שממנה יוצא כל ספארי בצפון טנזניה, למרגלות הר מרו: סוכנויות טיולים, שווקים, בתי קפה ומרכז תרבות. נקודת ההצטיידות והמנוחה לפני ואחרי הימים בפארקים.',
+        rating: 4.2,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Arusha+Tanzania',
+      },
+      {
+        id: 'tza-chabad',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'בית חב"ד ארושה',
+        nameLocal: 'Chabad House Arusha',
+        category: 'kosher-food',
+        lat: -3.3667,
+        lng: 36.6833,
+        description:
+          'בית חב"ד של ארושה (רחוב Mawandammo 9) עם מטבח כשר שמגיש ארוחות ישראליות-יהודיות, וגם מרכז לתיירים ישראלים באזור. הארוחות בהזמנה מראש - לפחות יממה לפני. הסימון על המפה הוא באזור העיר, לא כתובת מדויקת.',
+        kosherNote: 'בהשגחת בית חב"ד ארושה. חובה להזמין מראש (כ-24 שעות); לוודא זמינות ישירות מולם.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד ארושה, טנזניה',
+        },
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Chabad+House+Arusha',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'נחיתה בארושה והתאקלמות',
+        placeIds: ['tza-arusha', 'tza-arushanp', 'tza-chabad'],
+        notes:
+          'מגיעים לארושה, מסדרים ציוד וסוכנות ספארי, ויוצאים לחצי יום בפארק ארושה - ספארי רגלי ואגמי מומלה. ארוחת ערב כשרה בבית חב"ד (בהזמנה מראש).',
+      },
+      {
+        day: 2,
+        title: 'טרנגירה - ארץ הפילים והבאובבים',
+        placeIds: ['tza-tarangire'],
+        notes:
+          'יום ספארי מלא בטרנגירה: עדרי פילים ליד הנהר, עצי באובב עתיקים ופחות עומס מבקרים מהפארקים המפורסמים.',
+      },
+      {
+        day: 3,
+        title: 'אגם מניארה ונקיק אולדובאי',
+        placeIds: ['tza-manyara', 'tza-olduvai'],
+        notes:
+          'בוקר במניארה - יער עד, בבונים ופלמינגו על האגם. אחר הצהריים עלייה לרמת נגורונגורו עם עצירה בנקיק אולדובאי.',
+      },
+      {
+        day: 4,
+        title: 'מכתש נגורונגורו',
+        placeIds: ['tza-ngorongoro'],
+        notes:
+          'יורדים לרצפת המכתש עם אור ראשון - הצפיפות הגבוהה ביותר של חיות בר בטנזניה, כולל סיכוי לקרנף שחור. לצאת מוקדם, המכתש מתחמם ומתמלא בצהריים.',
+      },
+      {
+        day: 5,
+        title: 'סרנגטי והנדידה הגדולה',
+        placeIds: ['tza-serengeti'],
+        notes:
+          'יום או יומיים בסרנגטי - מיקום המחנה תלוי בעונה ובמיקום הנדידה. שווה לשלב יציאה מוקדמת ואחר צהריים מאוחר, שעות הפעילות של הטורפים.',
+      },
+      {
+        day: 6,
+        title: 'קילימנג׳רו - תצפית או טיפוס',
+        placeIds: ['tza-kilimanjaro'],
+        notes:
+          'למי שרק צופה: יום באזור מושי עם נוף להר. למי שמטפס: זו נקודת הפתיחה למסלול של 5-9 ימים, שמתוכננים בנפרד מהספארי ודורשים חברה מורשית.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה מנתב"ג. החיבור הנוח הוא עם אתיופיאן איירליינס דרך אדיס אבבה לקילימנג׳רו (JRO) - כ-4 טיסות בשבוע וכ-10 שעות סה"כ כולל החלפה; יש גם קווים דרך המפרץ ואירופה, ומסלולים לזנזיבר (ZNZ).',
+      gettingAround:
+        'ספארי בצפון טנזניה נעשה כמעט תמיד בג׳יפ 4x4 עם נהג-מדריך של סוכנות מקומית - זו גם הדרך היחידה להיכנס לרוב הפארקים. המרחקים גדולים והדרכים חלקן עפר; יש גם טיסות פנים קטנות בין המסלולים לחיסכון בזמן.',
+      kosherOverview:
+        'בארושה, עיר הבסיס של הספארי, פועל בית חב"ד עם מטבח כשר שמגיש ארוחות בהזמנה מראש - זו כתובת הכשרות היחידה שאותרה באזור. בפארקים ובלודג׳ים אין כשרות, אבל חלק מסוכנויות הספארי מציעות מסלולים עם אוכל כשר מוזמן מראש - חובה לתאם ולוודא את ההשגחה ישירות מולם לפני שסוגרים.',
+    },
+  },
+  {
+    slug: 'cusco',
+    name: 'קוסקו ומאצ׳ו פיצ׳ו',
+    nameLocal: 'Cusco & Machu Picchu',
+    countrySlug: 'peru',
+    flag: '🇵🇪',
+    center: { lat: -13.4, lng: -72.1 },
+    zoom: 9,
+    tagline: 'בירת האינקה, העמק הקדוש ואגמים בגובה 4,000 מטר',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Machu_Picchu%2C_2023_%28012%29.jpg/500px-Machu_Picchu%2C_2023_%28012%29.jpg',
+    iconicLandmark: {
+      name: 'מאצ׳ו פיצ׳ו',
+      nameLocal: 'Machu Picchu',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Machu_Picchu%2C_2023_%28012%29.jpg/500px-Machu_Picchu%2C_2023_%28012%29.jpg',
+      blurb:
+        'עיר האינקה מהמאה ה-15 שנבנתה על רכס בגובה כ-2,430 מ׳ מעל עמק אורובמבה - אתר מורשת עולמית והסמל המוכר ביותר של דרום אמריקה.',
+    },
+    editorialRating: {
+      score: 4.8,
+      verdict:
+        'שילוב נדיר של ארכיאולוגיה ברמה עולמית וטבע אנדים - ובקוסקו יש בית חב"ד עם מטבח בשרי וחלבי, נוח במיוחד לישראלים. חסרונות: אין טיסה ישירה (יממה של טיסות והחלפות), הגובה בקוסקו כ-3,400 מ׳ דורש יומיים התאקלמות, וכרטיסי מאצ׳ו פיצ׳ו במכסה יומית שנגמרת מראש.',
+    },
+    summary:
+      'קוסקו הייתה בירת אימפריית האינקה, והיום היא נקודת המוצא לכל מה שמסביב: מאצ׳ו פיצ׳ו, העמק הקדוש עם אולנטייטמבו ופיסק, מדרגות החקלאות של מוראי ובריכות המלח של מאראס - וטיולי הליכה אל אגם הומנטאי הקרחוני ואל ההר בצבעי הקשת, ויניקונקה. זו גם אחת התחנות המרכזיות של הישראלים בדרום אמריקה, ובית חב"ד המקומי מפעיל מסעדות כשרות.',
+    bestSeason:
+      'מאי-ספטמבר (העונה היבשה - הטובה ביותר להליכות ולמאצ׳ו פיצ׳ו) · נובמבר-מרץ עונת הגשמים, ושביל האינקה סגור לגמרי בפברואר',
+    places: [
+      {
+        id: 'per-machupicchu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Machu_Picchu%2C_2023_%28012%29.jpg/500px-Machu_Picchu%2C_2023_%28012%29.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'מאצ׳ו פיצ׳ו',
+        nameLocal: 'Machu Picchu',
+        category: 'attraction',
+        lat: -13.1633,
+        lng: -72.5456,
+        description:
+          'עיר האינקה שנבנתה במאה ה-15 על רכס בין פסגות, ננטשה ונשארה כמעט שלמה - אתר מורשת עולמית. מגיעים ברכבת לאגואס קליינטס ובאוטובוס במעלה ההר; הכניסה במסלולים ובשעות מוגדרות ובמכסה יומית, וכרטיסים נחטפים שבועות מראש.',
+        rating: 4.9,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Machu+Picchu',
+      },
+      {
+        id: 'per-vinicunca',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Vinicunca%2C_Rainbow_Mountain.jpg/500px-Vinicunca%2C_Rainbow_Mountain.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'ויניקונקה - הר הקשת',
+        nameLocal: 'Vinicunca (Rainbow Mountain)',
+        category: 'nature',
+        lat: -13.8702,
+        lng: -71.303,
+        description:
+          'רכס בגובה כ-5,000 מ׳ שפסי המינרלים בו יוצרים פסים בצבעי אדום, צהוב, ירוק וסגול. מגיעים בנסיעה ארוכה מקוסקו ובהליכה קצרה אך תובענית בגלל הגובה - חובה להתאקלם קודם.',
+        rating: 4.5,
+        durationMin: 600,
+        externalUrl: 'https://maps.google.com/?q=Vinicunca+Rainbow+Mountain',
+      },
+      {
+        id: 'per-humantay',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Humantay_Lake.jpg/500px-Humantay_Lake.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'אגם הומנטאי',
+        nameLocal: 'Laguna Humantay',
+        category: 'nature',
+        lat: -13.3795,
+        lng: -72.5847,
+        description:
+          'אגם קרחוני בצבע טורקיז עז למרגלות פסגת סלקנטאי המושלגת, בגובה כ-4,200 מ׳. מגיעים מכפר מולפאטה ובהליכה תלולה של כשעה וחצי - יפה במיוחד בשעות הבוקר.',
+        rating: 4.7,
+        durationMin: 540,
+        externalUrl: 'https://maps.google.com/?q=Humantay+Lake',
+      },
+      {
+        id: 'per-cusco',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Vista_Calle_Suecia.jpg/500px-Vista_Calle_Suecia.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'קוסקו - העיר העתיקה',
+        nameLocal: 'Cusco Historic Centre',
+        category: 'attraction',
+        lat: -13.5169,
+        lng: -71.9786,
+        description:
+          'בירת האינקה לשעבר, בגובה כ-3,400 מ׳: כיכר פלאזה דה ארמס, קירות אבן אינקאיים שעליהם נבנו כנסיות קולוניאליות, ורובע סן בלאס עם סמטאות ובתי מלאכה. שני הימים הראשונים כאן הם גם ימי ההתאקלמות לגובה.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Cusco+Peru',
+      },
+      {
+        id: 'per-sacsayhuaman',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Sacsayhuam%C3%A1n%2C_Cusco%2C_Per%C3%BA%2C_2015-07-31%2C_DD_27.JPG/500px-Sacsayhuam%C3%A1n%2C_Cusco%2C_Per%C3%BA%2C_2015-07-31%2C_DD_27.JPG',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'סקסייוואמן',
+        nameLocal: 'Sacsayhuamán',
+        category: 'attraction',
+        lat: -13.5078,
+        lng: -71.9822,
+        description:
+          'מצודת אינקה על הגבעה שמעל קוסקו, ובה חומות מאבני ענק מסותתות בדיוק מדהים - חלקן שוקלות עשרות טונות. אפשר להגיע בהליכה מהעיר, ומהמצודה נשקף נוף על הגגות האדומים.',
+        rating: 4.6,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Sacsayhuaman',
+      },
+      {
+        id: 'per-sacredvalley',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Urubamba_-_Valle_Sagrado_3.JPG/500px-Urubamba_-_Valle_Sagrado_3.JPG',
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
+        name: 'העמק הקדוש',
+        nameLocal: 'Sacred Valley of the Incas',
+        category: 'nature',
+        lat: -13.3333,
+        lng: -72.0833,
+        description:
+          'עמק נהר אורובמבה בין קוסקו למאצ׳ו פיצ׳ו - נמוך וחמים יותר מקוסקו, ולכן גם נוח יותר להתאקלמות. לאורכו כפרים, מדרגות חקלאות אינקאיות ושווקים מקומיים.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Sacred+Valley+Peru',
+      },
+      {
+        id: 'per-ollantaytambo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Ollantaytambo_-_Heiliges_Tal.jpg/500px-Ollantaytambo_-_Heiliges_Tal.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'אולנטייטמבו',
+        nameLocal: 'Ollantaytambo',
+        category: 'attraction',
+        lat: -13.2581,
+        lng: -72.2633,
+        description:
+          'כפר אינקאי חי שבו עדיין גרים בבתים על יסודות מקוריים, ומעליו מתחם מקדשים ומדרגות שנחשב לאחד ממבצרי האינקה המרשימים. מכאן יוצאות הרכבות למאצ׳ו פיצ׳ו.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Ollantaytambo',
+      },
+      {
+        id: 'per-pisac',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Pisac_-_panoramio_%282%29.jpg/500px-Pisac_-_panoramio_%282%29.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'פיסק - שוק ומדרגות',
+        nameLocal: 'Písac',
+        category: 'attraction',
+        lat: -13.4242,
+        lng: -71.8578,
+        description:
+          'כפר בכניסה לעמק הקדוש, מפורסם בשוק הצבעוני שלו ובמתחם האינקה שעל הרכס מעליו - מדרגות חקלאות ענקיות שנראות כמו מניפה בצלע ההר.',
+        rating: 4.5,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Pisac',
+      },
+      {
+        id: 'per-moray',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Moray_-_Qechuyoq.JPG/500px-Moray_-_Qechuyoq.JPG',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'מוראי - המדרגות המעגליות',
+        nameLocal: 'Moray',
+        category: 'attraction',
+        lat: -13.3293,
+        lng: -72.1964,
+        description:
+          'מתחם מדרגות חקלאיות מעגליות שנחפרו זו בתוך זו, ובכל טבעת טמפרטורה מעט שונה - ההשערה המקובלת היא שזה היה מעין מעבדה חקלאית של האינקה.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Moray+Peru',
+      },
+      {
+        id: 'per-maras',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Salineras_de_Maras%2C_Maras%2C_Per%C3%BA%2C_2015-07-30%2C_DD_03-07_PAN.JPG/500px-Salineras_de_Maras%2C_Maras%2C_Per%C3%BA%2C_2015-07-30%2C_DD_03-07_PAN.JPG',
+        tags: ['outdoors', 'foodie'],
+        priceLevel: 1,
+        name: 'בריכות המלח של מאראס',
+        nameLocal: 'Salineras de Maras',
+        category: 'nature',
+        lat: -13.3001,
+        lng: -72.1562,
+        description:
+          'אלפי בריכות מלח לבנות מדורגות במורד גיא, שממולאות ממעיין מלוח ומופעלות בידי משפחות מקומיות עוד מימי האינקה. נוף גיאומטרי לבן-ורוד יוצא דופן.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Salineras+de+Maras',
+      },
+      {
+        id: 'per-titicaca',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Lake_Titicaca_ESA22522896.jpeg/500px-Lake_Titicaca_ESA22522896.jpeg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 2,
+        name: 'אגם טיטיקקה',
+        nameLocal: 'Lake Titicaca',
+        category: 'nature',
+        lat: -15.825,
+        lng: -69.325,
+        description:
+          'האגם הגדול בדרום אמריקה ואחד הגבוהים בעולם (כ-3,810 מ׳), על הגבול עם בוליביה. מהעיר פונו יוצאים אל האיים הצפים של האורוס ואל האיים טקילה ואמנטני. הרחבה של יום-יומיים מקוסקו.',
+        rating: 4.5,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Lake+Titicaca+Puno',
+      },
+      {
+        id: 'per-chabad',
+        tags: ['foodie'],
+        priceLevel: 1,
+        name: 'בית חב"ד קוסקו',
+        nameLocal: 'Chabad House Cusco',
+        category: 'kosher-food',
+        lat: -13.5169,
+        lng: -71.9786,
+        description:
+          'בית חב"ד של קוסקו (Calle Vitoque 631), אחד המרכזים הגדולים לישראלים בדרום אמריקה: מסעדה בשרית ומסעדה חלבית עם מטבחים נפרדים, מניינים וארוחות שבת. הסימון על המפה הוא במרכז העיר ולא כתובת מדויקת.',
+        kosherNote: 'בהשגחת בית חב"ד קוסקו; שעות בשרי/חלבי נפרדות. לוודא זמינות ושעות מולם.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד קוסקו, פרו',
+        },
+        rating: 4.7,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Chabad+Cusco',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'קוסקו - התאקלמות לגובה',
+        placeIds: ['per-cusco', 'per-chabad'],
+        notes:
+          'יום ראשון קליל בכוונה: הליכה בפלאזה דה ארמס וברובע סן בלאס, הרבה מים ומנוחה. קוסקו בגובה 3,400 מ׳ - לא לתכנן מאמץ ביום הראשון.',
+      },
+      {
+        day: 2,
+        title: 'סקסייוואמן והעמק הקדוש',
+        placeIds: ['per-sacsayhuaman', 'per-pisac', 'per-sacredvalley'],
+        notes:
+          'עולים למצודת סקסייוואמן, ומשם יורדים אל העמק הקדוש - שוק פיסק ומתחם המדרגות שמעליו. העמק נמוך מקוסקו וקל יותר לנשימה.',
+      },
+      {
+        day: 3,
+        title: 'מוראי, מאראס ואולנטייטמבו',
+        placeIds: ['per-moray', 'per-maras', 'per-ollantaytambo'],
+        notes:
+          'מדרגות מוראי המעגליות ובריכות המלח של מאראס, ולינה באולנטייטמבו - משם יוצאת הרכבת המוקדמת למאצ׳ו פיצ׳ו.',
+      },
+      {
+        day: 4,
+        title: 'מאצ׳ו פיצ׳ו',
+        placeIds: ['per-machupicchu'],
+        notes:
+          'רכבת מוקדמת לאגואס קליינטס ואוטובוס במעלה ההר. הכרטיס הוא למסלול ולשעה מוגדרים - לקנות שבועות מראש, ולוודא איזה מסלול נבחר.',
+      },
+      {
+        day: 5,
+        title: 'אגם הומנטאי או הר הקשת',
+        placeIds: ['per-humantay', 'per-vinicunca'],
+        notes:
+          'יום הליכה בגובה - בוחרים אחד: אגם הומנטאי הקרחוני, או ויניקונקה בצבעי הקשת. שניהם יוצאים לפנות בוקר ודורשים התאקלמות מוקדמת.',
+      },
+      {
+        day: 6,
+        title: 'הרחבה: אגם טיטיקקה',
+        placeIds: ['per-titicaca'],
+        notes:
+          'למי שיש עוד יומיים: נסיעה לפונו (אוטובוס תיירים או רכבת) וסיור באיים הצפים של האורוס ובכפרי האגם.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה מנתב"ג לפרו. טסים עם החלפה אחת או שתיים - בדרך כלל דרך מדריד, פרנקפורט, אמסטרדם, ניו יורק או פנמה סיטי אל לימה (LIM), ומשם טיסה פנימית של כשעה וחצי לקוסקו (CUZ). סך הדרך: כ-20-26 שעות.',
+      gettingAround:
+        'בקוסקו הכול בהליכה או במונית זולה. לעמק הקדוש - קולקטיבו (מיניבוס), טיול מאורגן או נהג פרטי ליום. למאצ׳ו פיצ׳ו יש רק רכבת (PeruRail / IncaRail) מאולנטייטמבו או מקוסקו, ואז אוטובוס תלול. לטיולי ההליכה בגובה יוצאים עם סוכנות מקומית לפנות בוקר.',
+      kosherOverview:
+        'לקוסקו יש בית חב"ד גדול ופעיל - עם מסעדה בשרית ומסעדה חלבית במטבחים נפרדים, מניינים וארוחות שבת - וזו כתובת הכשרות המרכזית באזור, פופולרית מאוד בקרב מטיילים ישראלים. מחוץ לקוסקו (העמק הקדוש, אגואס קליינטס, פונו) אין כשרות מסודרת: כדאי לצאת מצוידים, והאוכל הצמחוני בפרו נגיש ומגוון.',
+    },
+  },
+  {
+    slug: 'queenstown',
+    name: 'קווינסטאון והאי הדרומי',
+    nameLocal: 'Queenstown & the South Island',
+    countrySlug: 'new-zealand',
+    flag: '🇳🇿',
+    center: { lat: -44.5, lng: 168.8 },
+    zoom: 7,
+    tagline: 'פיורדים, קרחונים ואגמים - בירת הטבע והאדרנלין',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Milford_Sound_%28New_Zealand%29.JPG/500px-Milford_Sound_%28New_Zealand%29.JPG',
+    iconicLandmark: {
+      name: 'מילפורד סאונד',
+      nameLocal: 'Milford Sound / Piopiotahi',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Milford_Sound_%28New_Zealand%29.JPG/500px-Milford_Sound_%28New_Zealand%29.JPG',
+      blurb:
+        'פיורד באורך כ-15 ק"מ בלב פארק פיורדלנד, שקירותיו מתנשאים ישירות מהמים לגובה של מאות מטרים - ובראשם פסגת מיטר פיק וכמה מהמפלים הגבוהים בניו זילנד.',
+    },
+    editorialRating: {
+      score: 4.8,
+      verdict:
+        'אחד מאזורי הטבע היפים בעולם, עם תשתית מטיילים מצוינת ובטיחות גבוהה, ובקווינסטאון אפילו בית חב"ד לישראלים. חסרונות: הטיסה הארוכה ביותר מישראל (שתי החלפות, כ-30 שעות), עלויות גבוהות, ומזג אוויר שמשתנה בלי הודעה - במיוחד בפיורדלנד הגשום.',
+    },
+    summary:
+      'קווינסטאון יושבת על גדת אגם ואקטיפו בין רכסי הרים, והיא נקודת המוצא לטבע של האי הדרומי: פיורד מילפורד סאונד ודאוטפול סאונד, מסלולי ההליכה של פיורדלנד ומאונט אספיירינג, אגמי הטורקיז פוקאקי וטקאפו למרגלות הר קוק, וקרחון פרנץ יוזף בחוף המערבי. זו גם בירת ספורט האתגרי של ניו זילנד - וגם עיר קטנה ונוחה עם בית חב"ד פעיל.',
+    bestSeason:
+      'דצמבר-פברואר (קיץ דרומי - ימים ארוכים, כל המסלולים פתוחים) · מרץ-אפריל שקט ויפה · יוני-אוגוסט חורף וסקי, חלק ממסלולי ההליכה סגורים או דורשים ציוד אלפיני',
+    places: [
+      {
+        id: 'nzl-milford',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Milford_Sound_%28New_Zealand%29.JPG/500px-Milford_Sound_%28New_Zealand%29.JPG',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'מילפורד סאונד',
+        nameLocal: 'Milford Sound / Piopiotahi',
+        category: 'nature',
+        lat: -44.648,
+        lng: 167.9056,
+        description:
+          'הפיורד המפורסם של ניו זילנד: קירות סלע אנכיים, מפלים שיורדים היישר לים, כלבי ים ולעתים דולפינים. השיט אורך כשעתיים, והדרך אליו מטה אנאו היא אחת הנסיעות היפות במדינה.',
+        rating: 4.8,
+        durationMin: 600,
+        externalUrl: 'https://maps.google.com/?q=Milford+Sound',
+      },
+      {
+        id: 'nzl-fiordland',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Hollyford_River_NZ_11.jpg/500px-Hollyford_River_NZ_11.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'פארק פיורדלנד',
+        nameLocal: 'Fiordland National Park',
+        category: 'nature',
+        lat: -45.4167,
+        lng: 167.7167,
+        description:
+          'הפארק הלאומי הגדול בניו זילנד, אתר מורשת עולמית: יערות גשם ממוזגים, פיורדים, אגמים ומסלולי הליכה מפורסמים. אחד האזורים הגשומים בעולם - להתארגן לגשם בכל עונה.',
+        rating: 4.8,
+        durationMin: 720,
+        externalUrl: 'https://maps.google.com/?q=Fiordland+National+Park',
+      },
+      {
+        id: 'nzl-doubtful',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Doubtful_Sound_Clear.jpg/500px-Doubtful_Sound_Clear.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 3,
+        name: 'דאוטפול סאונד',
+        nameLocal: 'Doubtful Sound / Patea',
+        category: 'nature',
+        lat: -45.3167,
+        lng: 166.9833,
+        description:
+          'הפיורד השני בגודלו, גדול ושקט בהרבה ממילפורד - מגיעים אליו בשילוב של שיט על אגם מנפורי ונסיעה בכביש הרים. פחות מבקרים, יותר תחושה של סוף העולם.',
+        rating: 4.7,
+        durationMin: 600,
+        externalUrl: 'https://maps.google.com/?q=Doubtful+Sound',
+      },
+      {
+        id: 'nzl-routeburn',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Tarn_at_Key_Summit%2C_a_side_track_on_the_Routeburn_Track.jpg/500px-Tarn_at_Key_Summit%2C_a_side_track_on_the_Routeburn_Track.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'מסלול רוטבורן',
+        nameLocal: 'Routeburn Track',
+        category: 'nature',
+        lat: -44.727,
+        lng: 168.1703,
+        description:
+          'אחד מ"ההליכות הגדולות" של ניו זילנד: כ-33 ק"מ בין פיורדלנד למאונט אספיירינג, אגמים אלפיניים ורכסים. אפשר גם ללכת רק את קטע קי סאמיט כטיול יום מהצד של טה אנאו.',
+        rating: 4.8,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Routeburn+Track',
+      },
+      {
+        id: 'nzl-queenstown',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Queenstown_1_%288168013172%29.jpg/500px-Queenstown_1_%288168013172%29.jpg',
+        tags: ['outdoors', 'foodie'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'קווינסטאון',
+        nameLocal: 'Queenstown',
+        category: 'attraction',
+        lat: -45.0311,
+        lng: 168.6625,
+        description:
+          'עיירת נופש על גדת אגם ואקטיפו, מוקפת רכס "הרימוטקבלס" - בסיס נוח לכל טיולי האזור, וגם בירת ספורט האתגר של המדינה (בנג׳י, פאראגליידינג, סקי בחורף).',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Queenstown+New+Zealand',
+      },
+      {
+        id: 'nzl-wakatipu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/LakeWakatipuNov172024_02.jpg/500px-LakeWakatipuNov172024_02.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        name: 'אגם ואקטיפו',
+        nameLocal: 'Lake Wakatipu',
+        category: 'nature',
+        lat: -45.05,
+        lng: 168.5,
+        description:
+          'אגם קרחוני בצורת ברק באורך כ-80 ק"מ, שמימיו צלולים וקרים. סביבו שבילי הליכה ואופניים, ובקצהו הצפוני הכפר גלנורקי עם אחד הנופים המצולמים במדינה.',
+        rating: 4.7,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Lake+Wakatipu',
+      },
+      {
+        id: 'nzl-wanaka',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/LakeWanakaNov262024_01.jpg/500px-LakeWanakaNov262024_01.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'ואנאקה',
+        nameLocal: 'Wānaka',
+        category: 'nature',
+        lat: -44.7,
+        lng: 169.15,
+        description:
+          'עיירת אגם רגועה מקווינסטאון, כשעה נסיעה משם: טיילת, העץ הבודד שצומח במים, ומסלול הטיפוס הפופולרי רוי׳ס פיק עם נוף פנורמי על האגם וההרים.',
+        rating: 4.7,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Wanaka',
+      },
+      {
+        id: 'nzl-aspiring',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Matukituki_valley.jpg/500px-Matukituki_valley.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'פארק מאונט אספיירינג',
+        nameLocal: 'Mount Aspiring National Park',
+        category: 'nature',
+        lat: -44.3833,
+        lng: 168.7333,
+        description:
+          'פארק אלפיני של עמקים קרחוניים, נהרות טורקיז ופסגות - חלק מאתר המורשת העולמית טה ואהיפונאמו. מעמק מטוקיטוקי יוצאים מסלולי יום יפים כמו רוב רוי גלייסייר.',
+        rating: 4.7,
+        durationMin: 420,
+        externalUrl: 'https://maps.google.com/?q=Mount+Aspiring+National+Park',
+      },
+      {
+        id: 'nzl-cook',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Mt_Cook_LC0247.jpg/500px-Mt_Cook_LC0247.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'אאורקי - הר קוק',
+        nameLocal: 'Aoraki / Mount Cook',
+        category: 'nature',
+        lat: -43.595,
+        lng: 170.1419,
+        description:
+          'הפסגה הגבוהה בניו זילנד (3,724 מ׳) ובמרכז פארק לאומי של קרחונים ואגמי קרח. מסלול הוקי ואלי הקל (כ-3 שעות הלוך-חזור) מגיע אל אגם עם קרחונים צפים - מהטיולים היפים במדינה.',
+        rating: 4.8,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Aoraki+Mount+Cook',
+      },
+      {
+        id: 'nzl-pukaki',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/LakePukakiNov232024_01.jpg/500px-LakePukakiNov232024_01.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        name: 'אגם פוקאקי',
+        nameLocal: 'Lake Pukaki',
+        category: 'nature',
+        lat: -44.1167,
+        lng: 170.1667,
+        description:
+          'אגם קרחוני בצבע תכלת-חלבי בלתי נתפס, שנוצר מקמח סלעים של הקרחונים - ומעליו נשקף הר קוק. נקודות התצפית לאורך הכביש הן עצירה חובה בדרך צפונה.',
+        rating: 4.8,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Lake+Pukaki',
+      },
+      {
+        id: 'nzl-tekapo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/LakeTekapoNov242024_05.jpg/500px-LakeTekapoNov242024_05.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'אגם טקאפו',
+        nameLocal: 'Lake Tekapo',
+        category: 'nature',
+        lat: -43.8833,
+        lng: 170.5167,
+        description:
+          'אגם טורקיז עם כנסיית הרועה הטוב הקטנה על שפתו, ובקיץ שדות לופין סגולים. האזור הוא שמורת שמיים כהים - אחד המקומות הטובים בעולם לצפייה בכוכבים.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Lake+Tekapo',
+      },
+      {
+        id: 'nzl-franzjosef',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Franz_josef_Glacier_LC0250.jpg/500px-Franz_josef_Glacier_LC0250.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'קרחון פרנץ יוזף',
+        nameLocal: 'Franz Josef Glacier / Kā Roimata o Hine Hukatere',
+        category: 'nature',
+        lat: -43.4669,
+        lng: 170.1917,
+        description:
+          'קרחון שיורד מהאלפים הדרומיים כמעט עד ליער הגשם בחוף המערבי. מהעמק אפשר להגיע לתצפית ברגל; הליכה על הקרח עצמו נעשית רק בטיסת מסוק עם מדריכים.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Franz+Josef+Glacier',
+      },
+      {
+        id: 'nzl-chabad',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'בית חב"ד קווינסטאון',
+        nameLocal: 'Chabad Queenstown',
+        category: 'kosher-food',
+        lat: -45.0311,
+        lng: 168.6625,
+        description:
+          'בית חב"ד שפועל בקווינסטאון עבור המטיילים באי הדרומי: ארוחות שבת, מניינים ואוכל כשר בתיאום מראש. לא אותרה כתובת רשמית מאומתת - הסימון הוא במרכז העיר, וכדאי לתאם ישירות מולם.',
+        kosherNote: 'ארוחות ואוכל כשר בהזמנה מראש בלבד; לוודא מיקום, שעות והשגחה ישירות מול בית חב"ד.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד קווינסטאון, ניו זילנד',
+        },
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Chabad+Queenstown',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'קווינסטאון והאגם',
+        placeIds: ['nzl-queenstown', 'nzl-wakatipu', 'nzl-chabad'],
+        notes:
+          'יום התאוששות מהטיסה הארוכה: טיילת קווינסטאון, רכבל לתצפית בוב׳ס פיק ונסיעה קצרה לגלנורקי. ארוחת ערב כשרה בתיאום מראש.',
+      },
+      {
+        day: 2,
+        title: 'מילפורד סאונד',
+        placeIds: ['nzl-milford', 'nzl-fiordland'],
+        notes:
+          'יום ארוך: יוצאים מוקדם דרך טה אנאו, שיט בפיורד וחזרה. אפשר גם ללון בטה אנאו כדי לקצר את הנסיעה.',
+      },
+      {
+        day: 3,
+        title: 'הליכה בפיורדלנד',
+        placeIds: ['nzl-routeburn', 'nzl-doubtful'],
+        notes:
+          'בוחרים: הליכת יום בקטע קי סאמיט של מסלול רוטבורן, או יום שלם בדאוטפול סאונד השקט. שניהם דורשים הזמנה מראש בעונה.',
+      },
+      {
+        day: 4,
+        title: 'ואנאקה ומאונט אספיירינג',
+        placeIds: ['nzl-wanaka', 'nzl-aspiring'],
+        notes:
+          'נסיעה נופית לוואנאקה, טיפוס לרוי׳ס פיק למי שכשיר, ואחר הצהריים עמק מטוקיטוקי בפארק מאונט אספיירינג.',
+      },
+      {
+        day: 5,
+        title: 'אגמי הטורקיז והר קוק',
+        placeIds: ['nzl-pukaki', 'nzl-cook', 'nzl-tekapo'],
+        notes:
+          'נוסעים צפונה לאורך אגם פוקאקי אל פארק אאורקי - מסלול הוקי ואלי אל אגם הקרחונים - וסיום באגם טקאפו לצפייה בכוכבים.',
+      },
+      {
+        day: 6,
+        title: 'החוף המערבי והקרחון',
+        placeIds: ['nzl-franzjosef'],
+        notes:
+          'הרחבה לחוף המערבי: יער גשם, חופים פראיים וקרחון פרנץ יוזף. הנסיעה ארוכה - עדיף לשלב עם לינה באזור.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין ולא הייתה טיסה ישירה מנתב"ג לניו זילנד - זו הטיסה הארוכה ביותר לישראלים: בדרך כלל שתי החלפות (למשל דרך דובאי/דוחא/בנגקוק/סינגפור ואז אוקלנד או סידני), כ-28-32 שעות סה"כ. מאוקלנד יש טיסה פנימית של כשעתיים לקווינסטאון (ZQN), ויש גם קווים ישירים מסידני ומלבורן.',
+      gettingAround:
+        'רכב שכור או קמפרוואן הם הדרך המעשית היחידה לטייל באי הדרומי - המרחקים גדולים והתחבורה הציבורית דלילה. נוסעים בצד שמאל, הכבישים צרים ומפותלים, ולתדלוק ולקניות כדאי לעצור בערים - יש קטעים ארוכים בלי כלום.',
+      kosherOverview:
+        'בקווינסטאון פועל בית חב"ד שמשרת את המטיילים באי הדרומי - ארוחות שבת ואוכל כשר בהזמנה מראש; בערים הגדולות (אוקלנד, וולינגטון, כרייסטצ׳רץ׳) יש קהילות ואפשרויות כשרות נוספות. מחוץ לזה אין באי הדרומי כשרות מסודרת - כדאי להצטייד בסופרמרקטים גדולים, שבהם יש מוצרים ארוזים עם סימון כשרות בינלאומי, ולוודא הכול מראש.',
+    },
+  },
+  {
+    slug: 'grand-canyon',
+    name: 'הגרנד קניון ופארקי הדרום-מערב',
+    nameLocal: 'Grand Canyon & the American Southwest',
+    countrySlug: 'usa',
+    flag: '🇺🇸',
+    center: { lat: 36.8, lng: -112.0 },
+    zoom: 6,
+    tagline: 'קניונים אדומים, קשתות אבן ומדבר - הרוד טריפ הקלאסי',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Dawn_on_the_S_rim_of_the_Grand_Canyon_%288645178272%29.jpg/500px-Dawn_on_the_S_rim_of_the_Grand_Canyon_%288645178272%29.jpg',
+    iconicLandmark: {
+      name: 'הגרנד קניון',
+      nameLocal: 'Grand Canyon',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Dawn_on_the_S_rim_of_the_Grand_Canyon_%288645178272%29.jpg/500px-Dawn_on_the_S_rim_of_the_Grand_Canyon_%288645178272%29.jpg',
+      blurb:
+        'קניון באורך כ-446 ק"מ ובעומק של יותר מקילומטר, שחצב נהר הקולורדו בסלעים בני מיליוני שנים - אתר מורשת עולמית ואחד הנופים המזוהים ביותר עם אמריקה.',
+    },
+    editorialRating: {
+      score: 4.8,
+      verdict:
+        'ריכוז נדיר של פארקים לאומיים ברמה עולמית במרחק נסיעה סביר זה מזה, עם תשתית מצוינת - ובלאס וגאס יש תשתית כשרות אמיתית לפני ואחרי. חסרונות: חובה רכב שכור ומרחקים ארוכים, הקיץ לוהט (מעל 40 מעלות), וכניסות פופולריות דורשות הזמנת מקום מראש.',
+    },
+    summary:
+      'הדרום-מערב האמריקאי הוא הרוד טריפ הקלאסי של חובבי טבע: הגרנד קניון, זאיון עם נחל הנרוז, מגדלי האבן של ברייס קניון, הקשתות של ארצ׳ס וקניונלנדס, וקניון האנטלופה והורסשו בנד ליד אגם פאוול. הבסיס הנוח הוא לאס וגאס - ממנה יוצאים ואליה חוזרים, וגם בה מרוכזת הכשרות באזור.',
+    bestSeason:
+      'אפריל-מאי ואוקטובר-נובמבר (מזג אוויר נוח לטיולים) · בקיץ חום קיצוני בקניונים הנמוכים ובמדבר · בחורף שלג בברייס ובשפה הצפונית של הגרנד קניון (חלקה נסגר)',
+    places: [
+      {
+        id: 'usa-grandcanyon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Dawn_on_the_S_rim_of_the_Grand_Canyon_%288645178272%29.jpg/500px-Dawn_on_the_S_rim_of_the_Grand_Canyon_%288645178272%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הפארק הלאומי גרנד קניון',
+        nameLocal: 'Grand Canyon National Park',
+        category: 'nature',
+        lat: 36.0553,
+        lng: -112.1218,
+        description:
+          'הקניון הגדול של נהר הקולורדו - יותר מקילומטר עומק ורוחב של עשרות קילומטרים. רוב המבקרים מגיעים לשפה הדרומית (פתוחה כל השנה) עם תצפיות, שאטלים ומסלולים כמו בּרייט אנג׳ל שיורדים לתוך הקניון.',
+        rating: 4.9,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Grand+Canyon+National+Park',
+      },
+      {
+        id: 'usa-zion',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Zion_angels_landing_view.jpg/500px-Zion_angels_landing_view.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הפארק הלאומי זאיון',
+        nameLocal: 'Zion National Park',
+        category: 'nature',
+        lat: 37.3,
+        lng: -113.05,
+        description:
+          'קניון אבן חול אדומה עם קירות אנכיים גבוהים, ובו שני מסלולים מפורסמים: הנרוז - הליכה בתוך הנחל בין קירות צרים, ואנג׳לס לנדינג התלול (דורש אישור בהגרלה). בעונה נכנסים לקניון רק בשאטל.',
+        rating: 4.8,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Zion+National+Park',
+      },
+      {
+        id: 'usa-bryce',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Inspiration_Point_Bryce_Canyon_November_2018_panorama.jpg/500px-Inspiration_Point_Bryce_Canyon_November_2018_panorama.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'ברייס קניון',
+        nameLocal: 'Bryce Canyon National Park',
+        category: 'nature',
+        lat: 37.64,
+        lng: -112.17,
+        description:
+          'אמפיתיאטרון טבעי מלא ב"הודוז" - מגדלי אבן כתומים שנוצרו מבליה של קרח ומים. תצפיות סנרייז וסאנסט פוינט לאורך השפה, ומסלול נאבאחו לופ שיורד ביניהם. גבוה וקריר יחסית (מעל 2,400 מ׳).',
+        rating: 4.8,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Bryce+Canyon+National+Park',
+      },
+      {
+        id: 'usa-arches',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Delicate_arch_sunset.jpg/500px-Delicate_arch_sunset.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הפארק הלאומי ארצ׳ס',
+        nameLocal: 'Arches National Park',
+        category: 'nature',
+        lat: 38.6172,
+        lng: -109.621,
+        description:
+          'יותר מאלפיים קשתות אבן טבעיות, ובראשן דליקט ארץ׳ - הקשת שמופיעה על לוחיות הרישוי של יוטה. בעונת השיא נדרשת הזמנת כניסה מראש לשעה מוגדרת.',
+        rating: 4.8,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Arches+National+Park',
+      },
+      {
+        id: 'usa-canyonlands',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Green_River_Overlook_Ekker_Butte.jpg/500px-Green_River_Overlook_Ekker_Butte.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'קניונלנדס',
+        nameLocal: 'Canyonlands National Park',
+        category: 'nature',
+        lat: 38.1669,
+        lng: -109.7597,
+        description:
+          'פארק ענק שחצו אותו נהרות הקולורדו והגרין לשלושה אזורים. החלק הנגיש הוא "איילנד אין דה סקיי" - רמה עם תצפיות פנורמיות אל קניונים ומצוקים עד האופק.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Canyonlands+National+Park',
+      },
+      {
+        id: 'usa-antelope',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/USA_Antelope-Canyon.jpg/500px-USA_Antelope-Canyon.jpg',
+        tags: ['outdoors', 'art'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'קניון האנטלופה',
+        nameLocal: 'Antelope Canyon',
+        category: 'nature',
+        lat: 36.862,
+        lng: -111.3743,
+        description:
+          'קניון חריצים צר בסלע אבן חול, שבו קרני האור יוצרות פסים כתומים-סגולים. נמצא בשטח אומת הנאבאחו - הכניסה רק עם סיור מודרך מוסמך ובהזמנה מראש.',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Antelope+Canyon',
+      },
+      {
+        id: 'usa-horseshoe',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Grand_Canyon_Horseshoe_Bend.jpg/500px-Grand_Canyon_Horseshoe_Bend.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'הורסשו בנד',
+        nameLocal: 'Horseshoe Bend',
+        category: 'viewpoint',
+        lat: 36.8794,
+        lng: -111.5139,
+        description:
+          'פיתול פרסה של נהר הקולורדו בעומק של כ-300 מטר מתחת לתצפית, ליד העיירה פייג׳. הליכה קצרה מהחניון; אין מעקה בחלק מהשפה - זהירות עם ילדים.',
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Horseshoe+Bend+Page+Arizona',
+      },
+      {
+        id: 'usa-powell',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Lake_Powell_by_Sentinel-2.jpg/500px-Lake_Powell_by_Sentinel-2.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        name: 'אגם פאוול',
+        nameLocal: 'Lake Powell',
+        category: 'nature',
+        lat: 36.9361,
+        lng: -111.4842,
+        description:
+          'מאגר ענק על נהר הקולורדו שמסתעף למאות קניונים מוצפים בין צוקי אבן חול. אפשר לשוט, לשכור סירה או לבקר בקניון אנטלופה התחתון שבקצהו. מפלס המים משתנה מאוד משנה לשנה.',
+        rating: 4.5,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Lake+Powell',
+      },
+      {
+        id: 'usa-monument',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Monument_Valley%2C_Utah%2C_USA_%2823611451292%29.jpg/500px-Monument_Valley%2C_Utah%2C_USA_%2823611451292%29.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 2,
+        name: 'מונומנט ואלי',
+        nameLocal: 'Monument Valley',
+        category: 'nature',
+        lat: 36.9833,
+        lng: -110.1,
+        description:
+          'עמק בשטח אומת הנאבאחו שממנו מתנשאים מגדלי אבן חול אדומים - הנוף שהפך לסמל המערב האמריקאי בעשרות סרטים. יש כביש עפר נופי, וסיורים בהדרכת מקומיים לאזורים הסגורים.',
+        rating: 4.7,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Monument+Valley',
+      },
+      {
+        id: 'usa-sedona',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Cathedral_Rock_-_Sedona_AZ-1.jpg/500px-Cathedral_Rock_-_Sedona_AZ-1.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 2,
+        name: 'סדונה',
+        nameLocal: 'Sedona, Arizona',
+        category: 'nature',
+        lat: 34.8697,
+        lng: -111.7611,
+        description:
+          'עיירה מוקפת צוקי אבן חול אדומים, ומסביבה עשרות מסלולי הליכה ואופניים - קתדרל רוק, דוויל׳ס ברידג׳ ועוד. פופולרית גם בזכות סצנת הספא והאמנות.',
+        rating: 4.6,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Sedona+Arizona',
+      },
+      {
+        id: 'usa-deathvalley',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Mesquite_Sand_Dunes_in_Death_Valley.jpg/500px-Mesquite_Sand_Dunes_in_Death_Valley.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'עמק המוות',
+        nameLocal: 'Death Valley National Park',
+        category: 'nature',
+        lat: 36.45,
+        lng: -116.85,
+        description:
+          'הפארק הלאומי הגדול ביבשת: מלחות באדווטר - הנקודה הנמוכה בצפון אמריקה - דיונות חול, מכתשים צבעוניים ותצפית זבריסקי פוינט. בקיץ מהמקומות החמים בעולם; מבקרים בחורף ובאביב.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Death+Valley+National+Park',
+      },
+      {
+        id: 'usa-lasvegas',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Las_Vegas_from_above_%2840064746644%29.jpg/500px-Las_Vegas_from_above_%2840064746644%29.jpg',
+        tags: ['nightlife', 'families'],
+        priceLevel: 2,
+        name: 'לאס וגאס',
+        nameLocal: 'Las Vegas',
+        category: 'attraction',
+        lat: 36.1672,
+        lng: -115.1486,
+        description:
+          'עיר המלונות והמופעים בלב מדבר מוהאבי, ובעיקר - שדה התעופה והבסיס הנוח ביותר לרוד טריפ בפארקים. גם מי שלא בא בשביל הקזינו ימצא כאן מופעים, קניות ואוכל.',
+        rating: 4.4,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Las+Vegas',
+      },
+      {
+        id: 'usa-kosher-market',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'סופר כשר בלאס וגאס',
+        nameLocal: 'One Stop Kosher Market, S Rainbow Blvd',
+        category: 'kosher-market',
+        lat: 36.1503,
+        lng: -115.2431,
+        description:
+          'חנות מזון כשרה בשדרות ריינבואו במערב לאס וגאס (3655 S Rainbow Blvd) - נקודת ההצטיידות ההגיונית לפני יציאה לפארקים, שבהם אין שום כשרות. באותו אזור מרוכזות גם המסעדות הכשרות של העיר.',
+        kosherNote: 'תחת ועד הכשרות של לאס וגאס (חב"ד דרום נבאדה). לוודא שעות פתיחה והשגחה עדכנית לפני הנסיעה.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'ועד הכשרות של לאס וגאס - חב"ד דרום נבאדה',
+        },
+        rating: 4.4,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=One+Stop+Kosher+Market+Las+Vegas',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'לאס וגאס - נחיתה והצטיידות',
+        placeIds: ['usa-lasvegas', 'usa-kosher-market'],
+        notes:
+          'לוקחים רכב, ישנים בווגאס ומצטיידים לדרך - כולל קניות במרכול הכשר במערב העיר. בפארקים עצמם אין כשרות ולעתים גם אין חנויות.',
+      },
+      {
+        day: 2,
+        title: 'זאיון',
+        placeIds: ['usa-zion'],
+        notes:
+          'כשעתיים וחצי מווגאס. שאטל לתוך הקניון, מסלול קל לאמרלד פולס ולמי שכשיר - הנרוז בתוך המים (לבדוק מזג אוויר, סכנת שיטפונות).',
+      },
+      {
+        day: 3,
+        title: 'ברייס קניון',
+        placeIds: ['usa-bryce'],
+        notes:
+          'שעתיים מזאיון. זריחה בסנרייז פוינט, ירידה במסלול נאבאחו לופ בין ההודוז. הפארק גבוה - קר בבוקר גם בקיץ.',
+      },
+      {
+        day: 4,
+        title: 'פייג׳ - אנטלופה, הורסשו ואגם פאוול',
+        placeIds: ['usa-antelope', 'usa-horseshoe', 'usa-powell'],
+        notes:
+          'סיור מודרך בקניון האנטלופה (חובה להזמין מראש), תצפית הורסשו בנד, ואחר הצהריים על אגם פאוול.',
+      },
+      {
+        day: 5,
+        title: 'מונומנט ואלי',
+        placeIds: ['usa-monument'],
+        notes:
+          'נסיעה מזרחה אל עמק המונומנטים - כביש העפר הנופי או סיור עם מדריך נאבאחו, ושקיעה מול המגדלים.',
+      },
+      {
+        day: 6,
+        title: 'מואב - ארצ׳ס וקניונלנדס',
+        placeIds: ['usa-arches', 'usa-canyonlands'],
+        notes:
+          'יום שלם באזור מואב: דליקט ארץ׳ ו"ווינדוז" בארצ׳ס (כניסה מתוזמנת בעונה), ותצפיות איילנד אין דה סקיי בקניונלנדס.',
+      },
+      {
+        day: 7,
+        title: 'הגרנד קניון ובחזרה',
+        placeIds: ['usa-grandcanyon', 'usa-sedona', 'usa-deathvalley'],
+        notes:
+          'השפה הדרומית של הגרנד קניון, ובדרך חזרה לווגאס אפשר לשלב את סדונה או להאריך לעמק המוות (בעונה הקרירה בלבד).',
+      },
+    ],
+    practical: {
+      flights:
+        'יש טיסות ישירות מנתב"ג לניו יורק, מיאמי, בוסטון ולוס אנג׳לס (אל על ואחרות); ללאס וגאס (LAS) אין קו ישיר - טסים עם החלפה אחת בארה"ב, סה"כ כ-17-20 שעות. אפשרות נוספת: לנחות בלוס אנג׳לס ולנסוע ארבע שעות ברכב.',
+      gettingAround:
+        'רכב שכור הוא חובה מוחלטת - אין תחבורה ציבורית בין הפארקים, והמרחקים גדולים (שעתיים-חמש בין אתר לאתר). כדאי כרטיס שנתי לפארקים (America the Beautiful) אם מבקרים בשלושה ומעלה, להוריד מפות אופליין ולהצטייד במים.',
+      kosherOverview:
+        'הכשרות באזור מרוכזת בלאס וגאס: מרכול כשר ומסעדות כשרות בצד המערבי של העיר, בפיקוח ועד הכשרות המקומי (חב"ד דרום נבאדה). בפארקים הלאומיים ובעיירות שסביבם אין שום כשרות - הדרך המעשית היא להצטייד בווגאס לכל הטיול, ובסופרמרקטים הגדולים בדרך יש מוצרים ארוזים עם סימוני כשרות אמריקאיים מוכרים.',
+    },
+  },
+  {
+    slug: 'high-tatras',
+    name: 'הרי הטטרה הגבוהים',
+    nameLocal: 'High Tatras / Vysoké Tatry',
+    countrySlug: 'slovakia',
+    flag: '🇸🇰',
+    center: { lat: 49.1, lng: 20.2 },
+    zoom: 9,
+    tagline: 'האלפים הקטנים של סלובקיה - אגמים קרחוניים ופסגות סלע',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Tatry_Panorama01xxx.jpg/500px-Tatry_Panorama01xxx.jpg',
+    iconicLandmark: {
+      name: 'שטרבסקה פלסו',
+      nameLocal: 'Štrbské Pleso',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Strbske_pleso_from_Krivan.jpg/500px-Strbske_pleso_from_Krivan.jpg',
+      blurb:
+        'אגם קרחוני בגובה כ-1,346 מ׳ בלב הרי הטטרה, ומסביבו טיילת נוחה ומסלולי הליכה - התמונה המזוהה ביותר עם ההרים הגבוהים של סלובקיה.',
+    },
+    editorialRating: {
+      score: 4.5,
+      verdict:
+        'הרים אלפיניים אמיתיים במחירים של מזרח אירופה - אגמים קרחוניים, רכבלים ומסלולים מסומנים היטב, ומרחק נסיעה מברטיסלבה או מקרקוב. חסרונות: אין טיסה ישירה לאזור, אין תשתית כשרות, ומזג האוויר בהרים משתנה מהר.',
+    },
+    summary:
+      'הרי הטטרה הגבוהים הם רכס ההרים הצפוני של סלובקיה, על הגבול עם פולין - פסגות סלע חדות מעל 2,600 מ׳, אגמים קרחוניים (פלסא), מפלים ומסלולים מסומנים לכל רמה. בבסיס יושבות עיירות הנופש שטרבסקה פלסו, סטארי סמוקובץ וטטרנסקה לומניצה, ומהן עולים ברכבלים ובפוניקולרים אל הרכסים. באזור גם גן העדן הסלובקי עם נקיקיו, מערות סטלקטיטים וטירת ספיש הענקית.',
+    bestSeason:
+      'יוני-ספטמבר (מסלולים פתוחים, אגמים נגישים) · דצמבר-מרץ עונת סקי · באביב ובסתיו חלק מהשבילים הגבוהים סגורים - במאי-יוני יש סגירה עונתית של שבילי גובה',
+    places: [
+      {
+        id: 'tat-strbske',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Strbske_pleso_from_Krivan.jpg/500px-Strbske_pleso_from_Krivan.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'אגם שטרבסקה פלסו',
+        nameLocal: 'Štrbské Pleso',
+        category: 'nature',
+        lat: 49.1167,
+        lng: 20.0667,
+        description:
+          'אגם קרחוני בגובה כ-1,346 מ׳ עם טיילת מעגלית קלה סביבו, סירות בקיץ ומגלשות קפיצות סקי בקרבת מקום. נקודת מוצא נוחה למסלולים אל העמקים הגבוהים.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Strbske+Pleso',
+      },
+      {
+        id: 'tat-popradske',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Mengusovsk%C3%A1_dolina%2C_Vysok%C3%A9_Tatry_%2837%29.JPG/500px-Mengusovsk%C3%A1_dolina%2C_Vysok%C3%A9_Tatry_%2837%29.JPG',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'אגם פופרדסקה פלסו',
+        nameLocal: 'Popradské pleso',
+        category: 'nature',
+        lat: 49.1531,
+        lng: 20.0803,
+        description:
+          'אגם הררי בעמק מנגוסובסקה, בקצה מסלול הליכה נעים של כשעה מהשלוחה של שטרבסקה פלסו. לידו בקתת הרים, ומעליו מתנשאות פסגות הטטרה.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Popradske+pleso',
+      },
+      {
+        id: 'tat-lomnicky',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Lomnicky_stit2.JPG/500px-Lomnicky_stit2.JPG',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'פסגת לומניצקי שטיט',
+        nameLocal: 'Lomnický štít',
+        category: 'viewpoint',
+        lat: 49.1958,
+        lng: 20.2128,
+        description:
+          'אחת הפסגות הגבוהות בטטרה (2,634 מ׳), ואליה מגיעים ברכבל תלול מטטרנסקה לומניצה דרך אגם סקלנטה פלסו. למעלה מרפסת תצפית קטנה - הכרטיסים במכסה ובשעות מוגדרות.',
+        rating: 4.7,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Lomnicky+stit',
+      },
+      {
+        id: 'tat-hrebienok',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Hrebienok_18.JPG/500px-Hrebienok_18.JPG',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'הרביינוק והמפלים',
+        nameLocal: 'Hrebienok',
+        category: 'nature',
+        lat: 49.1583,
+        lng: 20.2247,
+        description:
+          'רמה בגובה כ-1,285 מ׳ שאליה עולה פוניקולר קצר מסטארי סמוקובץ, ומשם שביל קל אל מפלי הנחל הקר (Studenovodské vodopády). נקודת פתיחה פופולרית למשפחות.',
+        rating: 4.5,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Hrebienok',
+      },
+      {
+        id: 'tat-tatranska',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Tatranska_Lomnica_station.jpg/500px-Tatranska_Lomnica_station.jpg',
+        tags: ['families'],
+        priceLevel: 1,
+        name: 'טטרנסקה לומניצה',
+        nameLocal: 'Tatranská Lomnica',
+        category: 'attraction',
+        lat: 49.1667,
+        lng: 20.2833,
+        description:
+          'עיירת נופש למרגלות הרכבל ללומניצקי שטיט, עם מלונות, מסעדות ומוזיאון הטטרה. בסיס נוח ללינה ולנסיעות יומיות בהרים ברכבת החשמלית הקטנה.',
+        rating: 4.3,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Tatranska+Lomnica',
+      },
+      {
+        id: 'tat-raj',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Slovensky_raj-Stratenska_pila.jpg/500px-Slovensky_raj-Stratenska_pila.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'גן העדן הסלובקי',
+        nameLocal: 'Slovak Paradise National Park (Slovenský raj)',
+        category: 'nature',
+        lat: 48.9083,
+        lng: 20.4,
+        description:
+          'פארק לאומי של נקיקים, מפלים ומסלולי סולמות וגשרי ברזל שמטפסים בתוך הנחלים - חוויה של הליכה רטובה ומרגשת. חלק מהמסלולים חד-כיווניים; ציוד ונעליים מתאימות חובה.',
+        rating: 4.7,
+        durationMin: 420,
+        externalUrl: 'https://maps.google.com/?q=Slovensky+raj',
+      },
+      {
+        id: 'tat-demanovska',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Demenovska_jaskyna_slobody-smaragdove_jazierko.jpg/500px-Demenovska_jaskyna_slobody-smaragdove_jazierko.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'מערת החירות בדמנובסקה',
+        nameLocal: 'Demänovská Cave of Liberty',
+        category: 'nature',
+        lat: 48.9986,
+        lng: 19.5819,
+        description:
+          'מערת נטיפים גדולה בעמק דמנובסקה שבהרי טטרה הנמוכים, עם אולמות, בריכות אמרלד ומסלול מבוקר של כשעה. קר בפנים כל השנה - להביא שכבה חמה.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Demanovska+Cave+of+Liberty',
+      },
+      {
+        id: 'tat-spis',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Spissky_hrad_west.jpg/500px-Spissky_hrad_west.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'טירת ספיש',
+        nameLocal: 'Spiš Castle (Spišský hrad)',
+        category: 'attraction',
+        lat: 49.0006,
+        lng: 20.7683,
+        description:
+          'אחד ממתחמי הטירות הגדולים באירופה, על גבעת גיר מעל המישור - אתר מורשת עולמית מהמאה ה-12. חורבות מרשימות ותצפית רחבה; כשעה נסיעה מהטטרה.',
+        rating: 4.6,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Spis+Castle',
+      },
+      {
+        id: 'tat-poprad',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Poprad_centrum_01.JPG/500px-Poprad_centrum_01.JPG',
+        tags: ['families'],
+        priceLevel: 1,
+        name: 'פופרד',
+        nameLocal: 'Poprad',
+        category: 'attraction',
+        lat: 49.0594,
+        lng: 20.2975,
+        description:
+          'העיר הראשית למרגלות הטטרה, ובה שדה התעופה האזורי, תחנת רכבת מרכזית וקומפלקס מים תרמיים גדול - נקודת כניסה ויציאה נוחה לאזור ההרים.',
+        rating: 4.2,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Poprad',
+      },
+      {
+        id: 'tat-tatry',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Tatry_Panorama01xxx.jpg/500px-Tatry_Panorama01xxx.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'רכס הטטרה הגבוהה',
+        nameLocal: 'High Tatras (Vysoké Tatry)',
+        category: 'nature',
+        lat: 49.1667,
+        lng: 20.1333,
+        description:
+          'רכס ההרים הגבוה בקרפטים, בין סלובקיה לפולין, עם עשרות פסגות מעל 2,500 מ׳ ורשת שבילים מסומנת. השבילים הגבוהים דורשים כושר, ובחלקם נדרש מדריך הרים מוסמך.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=High+Tatras',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'הגעה ואגם שטרבסקה פלסו',
+        placeIds: ['tat-poprad', 'tat-strbske'],
+        notes:
+          'מגיעים לאזור פופרד, ועולים לשטרבסקה פלסו לסיבוב קל סביב האגם והתאקלמות לגובה ולמזג האוויר ההררי.',
+      },
+      {
+        day: 2,
+        title: 'עמקים ואגמים',
+        placeIds: ['tat-popradske', 'tat-tatry'],
+        notes:
+          'הליכה אל אגם פופרדסקה פלסו ובחזרה, ולמי שכשיר - המשך אל אחד העמקים הגבוהים. לבדוק תחזית בבוקר.',
+      },
+      {
+        day: 3,
+        title: 'רכבלים ומפלים',
+        placeIds: ['tat-lomnicky', 'tat-hrebienok', 'tat-tatranska'],
+        notes:
+          'רכבל אל פסגת לומניצקי שטיט (כרטיס מראש), ואחר הצהריים פוניקולר להרביינוק ושביל המפלים הקל.',
+      },
+      {
+        day: 4,
+        title: 'גן העדן הסלובקי',
+        placeIds: ['tat-raj'],
+        notes:
+          'יום שלם בנקיקים: מסלולי סולמות וגשרים לאורך הנחלים. נעליים טובות, ביגוד שיכול להירטב ותכנון מסלול חד-כיווני מראש.',
+      },
+      {
+        day: 5,
+        title: 'מערות וטירה',
+        placeIds: ['tat-demanovska', 'tat-spis'],
+        notes:
+          'בוקר במערת החירות שבטטרה הנמוכה, ואחר הצהריים טירת ספיש - סיום היסטורי לפני היציאה.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה מנתב"ג לאזור הטטרה. המסלול המעשי: טיסה ישירה לברטיסלבה או לווינה ומשם כ-4 שעות נסיעה/רכבת, או טיסה לקרקוב שבפולין (כשעתיים וחצי נסיעה) ולעתים לקושיצה עם החלפה. לפופרד יש שדה תעופה אזורי קטן (TAT) עם קווים אירופיים מעטים.',
+      gettingAround:
+        'בין עיירות הנופש שבמורדות הטטרה נוסעת רכבת חשמלית קטנה (TEŽ) בתדירות טובה, ויש אוטובוסים ורכבלים לאתרים. לגן העדן הסלובקי, למערות ולטירת ספיש - רכב שכור נוח בהרבה. חלק מהשבילים הגבוהים סגורים עונתית, וכניסה למסלולים מסוימים דורשת מדריך.',
+      kosherOverview:
+        'אין באזור הטטרה כשרות מסודרת - לא מסעדה ולא חנות. הכשרות הקרובה היא בברטיסלבה (בית חב"ד) או בקרקוב, שתיהן במרחק נסיעה של שעות. מי שמקפיד - להצטייד מראש; בסופרמרקטים הגדולים יש מוצרים ארוזים עם סימון כשרות אירופי, ולוודא לפי הסימון עצמו.',
+    },
+  },
+  {
+    slug: 'bohemian-switzerland',
+    name: 'שווייץ הבוהמית',
+    nameLocal: 'Bohemian Switzerland / České Švýcarsko',
+    countrySlug: 'czechia',
+    flag: '🇨🇿',
+    center: { lat: 50.85, lng: 14.22 },
+    zoom: 11,
+    tagline: 'שערי סלע, נקיקים ויערות - שעה וחצי מפראג',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Pravcicka_brana_001.jpg/500px-Pravcicka_brana_001.jpg',
+    iconicLandmark: {
+      name: 'שער פראבצ׳יצה',
+      nameLocal: 'Pravčická brána',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Prav%C4%8Dick%C3%A1_br%C3%A1na_%28Prebischtor%29_-_by_Pudelek.jpg/500px-Prav%C4%8Dick%C3%A1_br%C3%A1na_%28Prebischtor%29_-_by_Pudelek.jpg',
+      blurb:
+        'שער הסלע הטבעי הגדול באירופה - קשת אבן חול ברוחב של כ-26 מטר שמתנשאת מעל היערות, וסמלו של הפארק הלאומי שווייץ הבוהמית.',
+    },
+    editorialRating: {
+      score: 4.5,
+      verdict:
+        'טבע דרמטי במרחק שעה וחצי מפראג, עם שבילים מסומנים היטב ותחבורה ציבורית שמגיעה לשם - שילוב מצוין עם עיר. חסרונות: האזור נפגע קשה בשריפת הענק של 2022 וחלק מהשבילים עדיין משתנים, אין כשרות באזור, וביקורי סוף שבוע צפופים מאוד.',
+    },
+    summary:
+      'שווייץ הבוהמית היא פארק לאומי בצפון צ׳כיה, על גבול גרמניה: מגדלי אבן חול, יערות אורנים ונקיקים שנחל קמניצה חצב בהם - ובמרכזה שער פראבצ׳יצה, קשת הסלע הטבעית הגדולה באירופה. מגיעים מפראג בשעה וחצי, ואפשר לשלב עם הצד הגרמני של הרכס (שווייץ הסקסונית) ועם העיר דצ׳ין שעל נהר האלבה.',
+    bestSeason:
+      'מאי-אוקטובר (שבילים ושיט בנקיקים פעילים; השיט לרוב אינו פועל בחורף) · ספטמבר-אוקטובר יפים במיוחד בצבעי הסתיו · אחרי גשמים חלק מהשבילים חלקלקים',
+    places: [
+      {
+        id: 'cbs-pravcicka',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Prav%C4%8Dick%C3%A1_br%C3%A1na_%28Prebischtor%29_-_by_Pudelek.jpg/500px-Prav%C4%8Dick%C3%A1_br%C3%A1na_%28Prebischtor%29_-_by_Pudelek.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'שער פראבצ׳יצה',
+        nameLocal: 'Pravčická brána',
+        category: 'nature',
+        lat: 50.8838,
+        lng: 14.2815,
+        description:
+          'קשת האבן הטבעית הגדולה באירופה, ברוחב כ-26 מ׳ ובגובה כ-16 מ׳. עולים אליה בשביל יער של כשעה מהז׳נסקו; לצדה מבנה היסטורי עם מרפסת תצפית. אסור לטפס על הקשת עצמה.',
+        rating: 4.7,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Pravcicka+brana',
+      },
+      {
+        id: 'cbs-park',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Pravcicka_brana_001.jpg/500px-Pravcicka_brana_001.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'הפארק הלאומי שווייץ הבוהמית',
+        nameLocal: 'České Švýcarsko National Park',
+        category: 'nature',
+        lat: 50.8333,
+        lng: 14.25,
+        description:
+          'פארק לאומי של מגדלי אבן חול, יערות ונקיקים לאורך הגבול עם גרמניה, עם רשת שבילים מסומנת לכל הרמות. בקיץ 2022 נשרפו כאן שטחים גדולים - חלק מהמסלולים שוקמו ונפתחו מחדש, וכדאי לבדוק מצב עדכני לפני היציאה.',
+        rating: 4.6,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Ceske+Svycarsko+National+Park',
+      },
+      {
+        id: 'cbs-kamenice',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/H%C5%99ensko_2007-5.jpg/500px-H%C5%99ensko_2007-5.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'נקיקי נחל קמניצה',
+        nameLocal: 'Kamenice Gorges (Edmundova soutěska)',
+        category: 'nature',
+        lat: 50.8742,
+        lng: 14.2361,
+        description:
+          'נקיקים צרים ועמוקים שחצב נחל קמניצה בסלע, ובהם קטע שעוברים בסירה שטוחה עם שייט מקומי בין קירות אנכיים. חלק מהשביל חצוב במדפי ברזל מעל המים.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Edmundova+souteska',
+      },
+      {
+        id: 'cbs-hrensko',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/H%C5%99ensko%2C_okres_D%C4%9B%C4%8D%C3%ADn.jpg/500px-H%C5%99ensko%2C_okres_D%C4%9B%C4%8D%C3%ADn.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'הז׳נסקו',
+        nameLocal: 'Hřensko',
+        category: 'attraction',
+        lat: 50.8744,
+        lng: 14.2425,
+        description:
+          'הכפר הנמוך ביותר בצ׳כיה, במפגש נחל קמניצה עם האלבה ובדיוק על הגבול הגרמני - נקודת המוצא לשער פראבצ׳יצה ולנקיקים, עם חניונים, מסעדות ותחנת אוטובוס.',
+        rating: 4.2,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Hrensko',
+      },
+      {
+        id: 'cbs-jetrichovice',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Jet%C5%99ichovice.jpg/500px-Jet%C5%99ichovice.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'ייטז׳יחוביצה והתצפיות',
+        nameLocal: 'Jetřichovice',
+        category: 'viewpoint',
+        lat: 50.8525,
+        lng: 14.3939,
+        description:
+          'כפר קטן שממנו יוצא מסלול מעגלי אל שלוש תצפיות סלע מפורסמות (מריה, וילהלמינה ורודולף) - מדרגות וסולמות קצרים בין מגדלי אבן חול, ונוף אל הרכס כולו.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Jetrichovice',
+      },
+      {
+        id: 'cbs-tisa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Tisk%C3%A9_st%C4%9Bny%2C_v%C3%BDhled_na_Tisou%2C_2020.jpg/500px-Tisk%C3%A9_st%C4%9Bny%2C_v%C3%BDhled_na_Tisou%2C_2020.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'סלעי טיסא',
+        nameLocal: 'Tiské stěny (Tisá Rocks)',
+        category: 'nature',
+        lat: 50.7844,
+        lng: 14.0314,
+        description:
+          'מבוך טבעי של קירות ומגדלי אבן חול עם שבילים צרים בין הסלעים - קל, כיפי במיוחד לילדים, וצולם בסרטי "נרניה". פחות מוכר לתיירים מהפארק עצמו.',
+        rating: 4.6,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Tiske+steny',
+      },
+      {
+        id: 'cbs-decin',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/D%C4%9B%C4%8D%C3%ADn_%28Tetschen%29%2C_Czech_Republic.jpg/500px-D%C4%9B%C4%8D%C3%ADn_%28Tetschen%29%2C_Czech_Republic.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'דצ׳ין',
+        nameLocal: 'Děčín',
+        category: 'attraction',
+        lat: 50.7736,
+        lng: 14.1961,
+        description:
+          'עיר על נהר האלבה בשער האזור, ובה ארמון על סלע עם "גן הוורדים" ותצפית, ורכבות ישירות מפראג. בסיס נוח למי שמעדיף ללון בעיר ולא בכפר.',
+        rating: 4.2,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Decin',
+      },
+      {
+        id: 'cbs-bastei',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Rathen_und_Elbsandsteingebirge_asv2022-08_img04.jpg/500px-Rathen_und_Elbsandsteingebirge_asv2022-08_img04.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'באסטיי (הצד הגרמני)',
+        nameLocal: 'Bastei, Saxon Switzerland',
+        category: 'viewpoint',
+        lat: 50.9622,
+        lng: 14.0714,
+        description:
+          'תצפית מפורסמת מעל נהר האלבה בצד הגרמני של רכס האבן החול, ובה גשר אבן מהמאה ה-19 בין מגדלי סלע. כחצי שעה נסיעה מהז׳נסקו - חוצים גבול בתוך מרחב שנגן.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Bastei+Bridge',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'שער הסלע והנקיקים',
+        placeIds: ['cbs-hrensko', 'cbs-pravcicka', 'cbs-kamenice'],
+        notes:
+          'מגיעים להז׳נסקו, עולים לשער פראבצ׳יצה ויורדים לנקיקי קמניצה כולל קטע השיט. יום הליכה מלא - נעליים טובות ומים.',
+      },
+      {
+        day: 2,
+        title: 'תצפיות הסלע של ייטז׳יחוביצה',
+        placeIds: ['cbs-jetrichovice', 'cbs-park'],
+        notes:
+          'מסלול מעגלי בין תצפיות מריה, וילהלמינה ורודולף, ואחר הצהריים שביל נוסף בפארק לפי מצב השבילים המעודכן.',
+      },
+      {
+        day: 3,
+        title: 'טיסא ודצ׳ין',
+        placeIds: ['cbs-tisa', 'cbs-decin'],
+        notes:
+          'בוקר במבוך הסלעים של טיסא (קל ומתאים למשפחות), ואחר הצהריים ארמון דצ׳ין וגן הוורדים לפני החזרה לפראג.',
+      },
+      {
+        day: 4,
+        title: 'הרחבה: הצד הגרמני',
+        placeIds: ['cbs-bastei'],
+        notes:
+          'קפיצה של חצי שעה מעבר לגבול אל תצפית באסטיי וגשר הסלע - אפשר לשלב עם שיט על האלבה או עם עיירת רתן.',
+      },
+    ],
+    practical: {
+      flights:
+        'טסים לפראג (PRG) - יש טיסות ישירות מנתב"ג - ומשם שעה וחצי-שעתיים צפונה. אפשר גם לנחות בדרזדן שבגרמניה (כשעה מהאזור) בטיסה עם החלפה.',
+      gettingAround:
+        'רכב שכור נוח ביותר, אבל אפשר גם בלי: רכבת מפראג לדצ׳ין ומשם אוטובוס להז׳נסקו ולכפרי הפארק, בתדירות סבירה בעונה. בתוך הפארק נעים ברגל ובאוטובוסי מעבר; בשבתות ובחגים החניונים מתמלאים מוקדם.',
+      kosherOverview:
+        'אין באזור שווייץ הבוהמית שום תשתית כשרות. הכשרות הקרובה היא בפראג - שבה יש מסעדות כשרות, בית חב"ד וקהילה יהודית ותיקה - כשעה וחצי נסיעה. הדרך המעשית: להצטייד בפראג ליום או ליומיים בטבע.',
+    },
+  },
+  {
+    slug: 'balaton',
+    name: 'אגם בלטון',
+    nameLocal: 'Lake Balaton',
+    countrySlug: 'hungary',
+    flag: '🇭🇺',
+    center: { lat: 46.85, lng: 17.6 },
+    zoom: 10,
+    tagline: 'הים של הונגריה - חופים, גבעות געש ומעיינות חמים',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Balaton_Hungary_Landscape.jpg/500px-Balaton_Hungary_Landscape.jpg',
+    iconicLandmark: {
+      name: 'חצי האי טיהאני',
+      nameLocal: 'Tihany Peninsula',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Ap%C3%A1ts%C3%A1gi_templom_%2810483._sz%C3%A1m%C3%BA_m%C5%B1eml%C3%A9k%29_10.jpg/500px-Ap%C3%A1ts%C3%A1gi_templom_%2810483._sz%C3%A1m%C3%BA_m%C5%B1eml%C3%A9k%29_10.jpg',
+      blurb:
+        'לשון יבשה שחודרת אל תוך האגם, ועליה מנזר בנדיקטיני מהמאה ה-11 עם שני מגדליו - התצפית המזוהה ביותר עם בלטון.',
+    },
+    editorialRating: {
+      score: 4.3,
+      verdict:
+        'חופשת אגם נינוחה שעה וחצי מבודפשט: חופים רדודים ונוחים לילדים, גבעות געש עם יקבים ואגם תרמי ייחודי. חסרונות: אין כאן נוף הרים דרמטי, בשיא הקיץ עמוס ויקר, ומחוץ לעונה חלק מהעסקים פשוט סגורים.',
+    },
+    summary:
+      'אגם בלטון הוא האגם הגדול במרכז אירופה, ובהונגריה קוראים לו פשוט "הים". הגדה הצפונית היא הצד היפה: חצי האי טיהאני עם המנזר, גבעות הבזלת של בדצ׳וני והיקבים שעליהן, העיירה בלטונפירד עם הטיילת, והאגם התרמי של הביז - האגם הביולוגי החם הגדול בעולם. הגדה הדרומית רדודה וחולית, ולכן פופולרית עם משפחות.',
+    bestSeason:
+      'יוני-אוגוסט (רחצה, שיט ופסטיבלים - וגם השיא של הצפיפות) · מאי וספטמבר נעימים ושקטים · בחורף רוב עסקי החוף סגורים, אבל הביז התרמי פעיל כל השנה',
+    places: [
+      {
+        id: 'blt-balaton',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Balaton_Hungary_Landscape.jpg/500px-Balaton_Hungary_Landscape.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'אגם בלטון',
+        nameLocal: 'Lake Balaton',
+        category: 'nature',
+        lat: 46.85,
+        lng: 17.72,
+        description:
+          'האגם הגדול במרכז אירופה - כ-77 ק"מ אורך ומים רדודים שמתחממים מהר בקיץ. סביבו טיילות, חופים מוסדרים, שביל אופניים היקפי ארוך וקווי מעבורות בין הגדות.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Lake+Balaton',
+      },
+      {
+        id: 'blt-tihany',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Ap%C3%A1ts%C3%A1gi_templom_%2810483._sz%C3%A1m%C3%BA_m%C5%B1eml%C3%A9k%29_10.jpg/500px-Ap%C3%A1ts%C3%A1gi_templom_%2810483._sz%C3%A1m%C3%BA_m%C5%B1eml%C3%A9k%29_10.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'טיהאני והמנזר',
+        nameLocal: 'Tihany Abbey & Peninsula',
+        category: 'attraction',
+        lat: 46.9089,
+        lng: 17.8792,
+        description:
+          'חצי אי געשי שנכנס אל תוך האגם, ועליו כפר עם בתי לבנים לבנים, שדות לבנדר ומנזר בנדיקטיני מ-1055. מהמנזר נשקפת התצפית המפורסמת על בלטון, ומסביב שבילי הליכה אל האגם הפנימי.',
+        rating: 4.7,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Tihany+Abbey',
+      },
+      {
+        id: 'blt-badacsony',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Badacsony_mountain_from_Balatonm%C3%A1riaf%C3%BCrd%C5%91%2C_Hungary.jpg/500px-Badacsony_mountain_from_Balatonm%C3%A1riaf%C3%BCrd%C5%91%2C_Hungary.jpg',
+        tags: ['outdoors', 'foodie'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הר בדצ׳וני',
+        nameLocal: 'Badacsony',
+        category: 'nature',
+        lat: 46.8035,
+        lng: 17.4958,
+        description:
+          'גבעת בזלת שטוחת-פסגה מעל הגדה הצפונית, שריד של הר געש - ובמדרונותיה כרמים ויקבים. שבילים קצרים עולים אל עמודי הבזלת ואל תצפיות מעל האגם.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Badacsony',
+      },
+      {
+        id: 'blt-heviz',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/H%C3%A9v%C3%ADz.jpg/500px-H%C3%A9v%C3%ADz.jpg',
+        tags: ['families', 'romantic'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'האגם התרמי של הביז',
+        nameLocal: 'Lake Hévíz',
+        category: 'nature',
+        lat: 46.7923,
+        lng: 17.185,
+        description:
+          'האגם התרמי הביולוגי הגדול בעולם: מעיין חם ממלא אותו ומחליף את כל המים בכמה ימים, כך שאפשר לשחות בו גם בחורף. מסביבו בית מרחץ עתיק ופארק.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Lake+Heviz',
+      },
+      {
+        id: 'blt-balatonfured',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Balatonfured19.jpg/500px-Balatonfured19.jpg',
+        tags: ['families', 'foodie'],
+        priceLevel: 1,
+        name: 'בלטונפירד',
+        nameLocal: 'Balatonfüred',
+        category: 'attraction',
+        lat: 46.95,
+        lng: 17.8833,
+        description:
+          'עיירת הנופש הוותיקה של הגדה הצפונית: טיילת עצי צפצפה לאורך המים, מרינה, מעיינות מים מינרליים ובתי קפה. בסיס נוח ללינה ולנסיעות יומיות סביב האגם.',
+        rating: 4.4,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Balatonfured',
+      },
+      {
+        id: 'blt-szigliget',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/V%C3%A1rrom_%2810376._sz%C3%A1m%C3%BA_m%C5%B1eml%C3%A9k%29.jpg/500px-V%C3%A1rrom_%2810376._sz%C3%A1m%C3%BA_m%C5%B1eml%C3%A9k%29.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'מצודת סיגליגט',
+        nameLocal: 'Szigliget Castle',
+        category: 'attraction',
+        lat: 46.7961,
+        lng: 17.4383,
+        description:
+          'חורבות מצודה מהמאה ה-13 על גבעה מעל הכפר, ומהן תצפית פנורמית על האגם ועל גבעות הבזלת. עלייה קצרה ותלולה מהחניה למטה.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Szigliget+Castle',
+      },
+      {
+        id: 'blt-tapolca',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Tapolca_%282%29.jpg/500px-Tapolca_%282%29.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 1,
+        name: 'מערת האגם בטפולצה',
+        nameLocal: 'Tapolca Lake Cave',
+        category: 'nature',
+        lat: 46.8828,
+        lng: 17.4081,
+        description:
+          'מערת נטיפים תת-קרקעית שבתוכה אגם, ושטים בה בסירות משוטים קטנות במעברים צרים - חוויה קצרה ומיוחדת, אטרקציה מצוינת ליום גשום.',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Tapolca+Lake+Cave',
+      },
+      {
+        id: 'blt-keszthely',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Keszthely_-_Festetics_Castle.jpg/500px-Keszthely_-_Festetics_Castle.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        name: 'קסטהיי וארמון פשטטיץ׳',
+        nameLocal: 'Keszthely & Festetics Palace',
+        category: 'museum',
+        lat: 46.7706,
+        lng: 17.2417,
+        description:
+          'העיר הוותיקה בקצה המערבי של האגם, ובה ארמון בארוקי גדול עם ספרייה היסטורית, גנים ואגפי תצוגה. משתלב היטב עם ביקור בהביז הסמוכה.',
+        rating: 4.5,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Festetics+Palace+Keszthely',
+      },
+      {
+        id: 'blt-uplands',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Badacsonytomaj_l%C3%A1tk%C3%A9p.jpg/500px-Badacsonytomaj_l%C3%A1tk%C3%A9p.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'פארק רמות בלטון',
+        nameLocal: 'Balaton Uplands National Park',
+        category: 'nature',
+        lat: 46.9758,
+        lng: 17.9294,
+        description:
+          'פארק לאומי שמשתרע מצפון לאגם: גבעות געש, מכתשי גייזרים מאובנים, ביצות וכפרים כפריים - עם שבילי הליכה ואופניים ופחות תיירים מהחוף.',
+        rating: 4.4,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Balaton+Uplands+National+Park',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'הגדה הצפונית - בלטונפירד',
+        placeIds: ['blt-balatonfured', 'blt-balaton'],
+        notes:
+          'מגיעים מבודפשט (כשעה וחצי), מתמקמים בבלטונפירד ומבלים אחר צהריים על הטיילת ובחוף. ערב נינוח במרינה.',
+      },
+      {
+        day: 2,
+        title: 'טיהאני',
+        placeIds: ['blt-tihany', 'blt-uplands'],
+        notes:
+          'יום בחצי האי: המנזר והתצפית, שדות הלבנדר והאגם הפנימי, ואחר הצהריים שביל בפארק הרמות.',
+      },
+      {
+        day: 3,
+        title: 'הרי הבזלת והמצודה',
+        placeIds: ['blt-badacsony', 'blt-szigliget', 'blt-tapolca'],
+        notes:
+          'עלייה לתצפיות בדצ׳וני בין הכרמים, חורבות מצודת סיגליגט, וסיום בשיט בסירה במערת האגם של טפולצה.',
+      },
+      {
+        day: 4,
+        title: 'המערב - הביז וקסטהיי',
+        placeIds: ['blt-heviz', 'blt-keszthely'],
+        notes:
+          'בוקר רחצה באגם התרמי של הביז (גם בחורף), ואחר הצהריים ארמון פשטטיץ׳ בקסטהיי לפני החזרה.',
+      },
+    ],
+    practical: {
+      flights:
+        'טסים לבודפשט (BUD) בטיסה ישירה מנתב"ג של כשלוש שעות, ומשם כשעה וחצי ברכב או ברכבת ישירה לעיירות הגדה הצפונית (בלטונפירד, סיופוק). אין שדה תעופה בינלאומי פעיל בקנה מידה משמעותי באזור האגם עצמו.',
+      gettingAround:
+        'רכבת מבודפשט מגיעה לרוב עיירות החוף, ובין הגדות יש מעבורות (טיהאני-סנטאנטלפולד למשל). רכב שכור נוח למי שרוצה יקבים, מצודות ואת פארק הרמות; בקיץ יש גם שביל אופניים היקפי מצוין סביב האגם.',
+      kosherOverview:
+        'אין באזור בלטון תשתית כשרות. הכשרות הקרובה היא בבודפשט - שבה יש מסעדות כשרות, מאפיות וקהילה גדולה - כשעה וחצי נסיעה. הדרך המעשית: להצטייד בבודפשט לפני היציאה לאגם.',
+    },
+  },
+  {
+    slug: 'reykjavik',
+    name: 'ריקיאוויק והחוף הדרומי',
+    nameLocal: 'Reykjavík & the South Coast',
+    countrySlug: 'iceland',
+    flag: '🇮🇸',
+    center: { lat: 64.0, lng: -19.5 },
+    zoom: 6,
+    tagline: 'גייזרים, מפלים ולגונת קרחונים - במרחק נסיעה אחת',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/J%C3%B6kuls%C3%A1rl%C3%B3n_lagoon_in_southeastern_Iceland.jpg/500px-J%C3%B6kuls%C3%A1rl%C3%B3n_lagoon_in_southeastern_Iceland.jpg',
+    iconicLandmark: {
+      name: 'לגונת הקרחונים יוקולסארלון',
+      nameLocal: 'Jökulsárlón Glacier Lagoon',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/J%C3%B6kuls%C3%A1rl%C3%B3n_lagoon_in_southeastern_Iceland.jpg/500px-J%C3%B6kuls%C3%A1rl%C3%B3n_lagoon_in_southeastern_Iceland.jpg',
+      blurb:
+        'לגונה שנוצרה מנסיגת קרחון ברייד׳מרקורייקול, ובה קרחונים כחולים שצפים אל הים - ומולה החוף השחור שעליו נשטפים גושי הקרח (חוף היהלומים).',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'ריכוז אדיר של נופי טבע נדירים לאורך כביש אחד, ומאז 2026 יש בריקיאוויק גם מרכז יהודי עם חנות כשרה ומטבח קהילתי. חסרונות: יעד יקר מאוד, מזג אוויר תזזיתי שיכול לבטל תוכניות, ובחורף שעות אור מעטות מאוד.',
+    },
+    summary:
+      'רוב הטיולים באיסלנד מתחילים בריקיאוויק, ומשם יוצאים למעגל הזהב - פארק תינגוודליר שבין הלוחות הטקטוניים, שדה הגייזרים והמפל גולפוס - וממשיכים לאורך החוף הדרומי אל מפלי סליילנדספוס וסקוגאפוס, החוף השחור ריניספיארה, וקרחון ואטנאייקול עם לגונת יוקולסארלון. בריקיאוויק עצמה נפתח ביולי 2026 מרכז יהודי עם חנות כשרה ומטבח קהילתי.',
+    bestSeason:
+      'יוני-אוגוסט (אור כמעט מסביב לשעון, כל הדרכים פתוחות) · ספטמבר-מרץ עונת הזוהר הצפוני אבל ימים קצרים ותנאי כביש קשים · הרמות הפנימיות פתוחות רק בקיץ',
+    places: [
+      {
+        id: 'isl-jokulsarlon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/J%C3%B6kuls%C3%A1rl%C3%B3n_lagoon_in_southeastern_Iceland.jpg/500px-J%C3%B6kuls%C3%A1rl%C3%B3n_lagoon_in_southeastern_Iceland.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'לגונת הקרחונים יוקולסארלון',
+        nameLocal: 'Jökulsárlón',
+        category: 'nature',
+        lat: 64.0703,
+        lng: -16.2117,
+        description:
+          'לגונה עמוקה שנוצרה מנסיגת קרחון, ובה גושי קרח כחלחלים שצפים אל הים; ממול חוף היהלומים, שעליו נשטפים גושי קרח על החול השחור. אפשר גם שיט בין הקרחונים בעונה.',
+        rating: 4.9,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Jokulsarlon',
+      },
+      {
+        id: 'isl-gullfoss',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Gullfoss_from_the_Air_%28cropped%29.jpg/500px-Gullfoss_from_the_Air_%28cropped%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'מפל גולפוס',
+        nameLocal: 'Gullfoss',
+        category: 'nature',
+        lat: 64.3261,
+        lng: -20.1211,
+        description:
+          'מפל כפול עוצמתי שנופל בשתי מדרגות אל תוך נקיק צר - אחד המפלים המפורסמים באיסלנד, וחלק ממסלול מעגל הזהב. תצפיות מלמעלה ומקרוב, ולעתים קשת בענן מהרסס.',
+        rating: 4.8,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Gullfoss',
+      },
+      {
+        id: 'isl-geysir',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Erupting_geysir.jpg/500px-Erupting_geysir.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'שדה הגייזרים גייסיר',
+        nameLocal: 'Geysir & Strokkur',
+        category: 'nature',
+        lat: 64.3137,
+        lng: -20.2995,
+        description:
+          'אזור גיאותרמי שממנו הגיעה המילה "גייזר". הגייזר הגדול כמעט אינו פעיל היום, אבל שכנו סטרוקור מתפרץ כל כמה דקות לגובה של עשרות מטרים. שבילים מסומנים - האדמה סביב רותחת.',
+        rating: 4.7,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Geysir+Iceland',
+      },
+      {
+        id: 'isl-thingvellir',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/%C3%9Eingvellir_from_the_information_centre.JPG/500px-%C3%9Eingvellir_from_the_information_centre.JPG',
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'פארק תינגוודליר',
+        nameLocal: 'Þingvellir National Park',
+        category: 'nature',
+        lat: 64.2538,
+        lng: -21.0373,
+        description:
+          'פארק לאומי ואתר מורשת עולמית בשבר שבין הלוח האירופי לאמריקאי - אפשר ללכת בתוך הבקע. כאן גם התכנס האלת׳ינג, מהפרלמנטים העתיקים בעולם, מ-930 לספירה.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Thingvellir',
+      },
+      {
+        id: 'isl-seljalandsfoss',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Idyllic_landscape_with_a_waterfall_%28Unsplash%29.jpg/500px-Idyllic_landscape_with_a_waterfall_%28Unsplash%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'מפל סליילנדספוס',
+        nameLocal: 'Seljalandsfoss',
+        category: 'nature',
+        lat: 63.6158,
+        lng: -19.9928,
+        description:
+          'מפל בגובה כ-60 מ׳ שאפשר לעקוף אותו בשביל שעובר מאחורי מסך המים - חוויה רטובה ומיוחדת. שכנו הנסתר גליופרארפוס מוסתר בתוך חריץ סלע סמוך.',
+        rating: 4.7,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Seljalandsfoss',
+      },
+      {
+        id: 'isl-skogafoss',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/2008-05-24_35_Sk%C3%B3gafoss.jpg/500px-2008-05-24_35_Sk%C3%B3gafoss.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'מפל סקוגאפוס',
+        nameLocal: 'Skógafoss',
+        category: 'nature',
+        lat: 63.5321,
+        lng: -19.5111,
+        description:
+          'מפל רחב ועוצמתי בגובה כ-60 מ׳ שאפשר לגשת אליו עד למרחק נגיעה, ומדרגות בצדו עולות לתצפית מלמעלה - ומשם ממשיך שביל ההליכה פימוורדוהאולס לאורך הנחל.',
+        rating: 4.8,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Skogafoss',
+      },
+      {
+        id: 'isl-reynisfjara',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Reynisfjara_Beach_Looking_West_Towards_Dyrh%C3%B3laey.jpg/500px-Reynisfjara_Beach_Looking_West_Towards_Dyrh%C3%B3laey.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'החוף השחור ריניספיארה',
+        nameLocal: 'Reynisfjara Black Sand Beach',
+        category: 'nature',
+        lat: 63.4035,
+        lng: -19.0474,
+        description:
+          'חוף חול בזלת שחור ליד הכפר ויק, עם עמודי בזלת משושים, מערה ומצוקי ים. אזהרה חשובה: יש כאן "גלי צחוק" (sneaker waves) פתאומיים - אסור להתקרב לקו המים.',
+        rating: 4.7,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Reynisfjara',
+      },
+      {
+        id: 'isl-vatnajokull',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Vatnaj%C3%B6kull.jpeg/500px-Vatnaj%C3%B6kull.jpeg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'קרחון ואטנאייקול',
+        nameLocal: 'Vatnajökull',
+        category: 'nature',
+        lat: 64.4,
+        lng: -16.8,
+        description:
+          'הקרחון הגדול באירופה מבחינת נפח, ומעליו פארק לאומי ואתר מורשת עולמית. מהאזור יוצאים טיולי קרחון מודרכים וביקורים במערות קרח כחולות בעונה החורפית.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Vatnajokull+National+Park',
+      },
+      {
+        id: 'isl-bluelagoon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/en/thumb/0/00/Blue_Lagoon_Main_Building.JPG/500px-Blue_Lagoon_Main_Building.JPG',
+        tags: ['romantic', 'families'],
+        priceLevel: 3,
+        name: 'הלגונה הכחולה',
+        nameLocal: 'Blue Lagoon',
+        category: 'nature',
+        lat: 63.88,
+        lng: -22.4481,
+        description:
+          'בריכה גיאותרמית חלבית-תכולה בשדה לבה ליד שדה התעופה קפלאוויק, שמימיה מגיעים מתחנת כוח גיאותרמית סמוכה. כרטיסים בשעות מוגדרות ובהזמנה מראש; האזור מושפע לעתים מפעילות געשית - לבדוק סטטוס פתיחה.',
+        rating: 4.4,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Blue+Lagoon+Iceland',
+      },
+      {
+        id: 'isl-kirkjufell',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Kirkjufell_in_Iceland.jpg/500px-Kirkjufell_in_Iceland.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        name: 'הר קירקיופל',
+        nameLocal: 'Kirkjufell',
+        category: 'viewpoint',
+        lat: 64.9397,
+        lng: -23.3014,
+        description:
+          'הר בצורת חרוט מחודד על חצי האי סניפלסנס, ולידו מפל קטן - אחד ההרים המצולמים באיסלנד. כשעתיים וחצי מריקיאוויק, ומשתלב עם סיבוב בחצי האי.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Kirkjufell',
+      },
+      {
+        id: 'isl-reykjavik',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Reykjav%C3%ADk%2C_view_from_Hallgr%C3%ADmskirkja_%282%29.jpg/500px-Reykjav%C3%ADk%2C_view_from_Hallgr%C3%ADmskirkja_%282%29.jpg',
+        tags: ['foodie', 'art'],
+        priceLevel: 2,
+        name: 'ריקיאוויק',
+        nameLocal: 'Reykjavík',
+        category: 'attraction',
+        lat: 64.1458,
+        lng: -21.9425,
+        description:
+          'הבירה הצפונית בעולם: כנסיית האלגרימסקירקיה עם מגדל התצפית, אולם הקונצרטים הארפה על המים, רחוב לויגאווגור הצבעוני ובריכות גיאותרמיות עירוניות. בסיס הפתיחה והסיום לכל טיול.',
+        rating: 4.5,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Reykjavik',
+      },
+      {
+        id: 'isl-chabad',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'המרכז היהודי של איסלנד (חב"ד)',
+        nameLocal: 'Beit Shvidler Jewish Center of Iceland',
+        category: 'kosher-market',
+        lat: 64.1458,
+        lng: -21.9425,
+        description:
+          'המרכז היהודי של איסלנד נפתח בריקיאוויק ביולי 2026, ובו בית כנסת, חנות כשרה ומטבח קהילתי - נקודת ההצטיידות הכשרה היחידה במדינה. הסימון הוא במרכז העיר; לוודא כתובת ושעות מולם.',
+        kosherNote: 'בהפעלת חב"ד איסלנד. ארוחות שבת וקייטרינג בתיאום מראש; לבדוק מלאי ושעות פתיחה לפני שמגיעים.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'חב"ד איסלנד, ריקיאוויק',
+        },
+        rating: 4.6,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=Chabad+of+Iceland+Reykjavik',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'ריקיאוויק והלגונה הכחולה',
+        placeIds: ['isl-reykjavik', 'isl-bluelagoon', 'isl-chabad'],
+        notes:
+          'נוחתים בקפלאוויק, ומתחילים בלגונה הכחולה שבדרך לעיר (הזמנה מראש). אחר הצהריים ריקיאוויק, והצטיידות בחנות הכשרה למי שמקפיד.',
+      },
+      {
+        day: 2,
+        title: 'מעגל הזהב',
+        placeIds: ['isl-thingvellir', 'isl-geysir', 'isl-gullfoss'],
+        notes:
+          'המסלול הקלאסי: בקע תינגוודליר, שדה הגייזרים ומפל גולפוס - הכול בטווח נסיעה קצר מהעיר.',
+      },
+      {
+        day: 3,
+        title: 'החוף הדרומי והמפלים',
+        placeIds: ['isl-seljalandsfoss', 'isl-skogafoss', 'isl-reynisfjara'],
+        notes:
+          'נוסעים מזרחה: מפל שאפשר לעבור מאחוריו, מפל שאפשר לטפס מעליו, וסיום בחוף השחור ליד ויק - זהירות מהגלים.',
+      },
+      {
+        day: 4,
+        title: 'הקרחון והלגונה',
+        placeIds: ['isl-vatnajokull', 'isl-jokulsarlon'],
+        notes:
+          'ממשיכים מזרחה אל ואטנאייקול - טיול קרחון מודרך או מערת קרח בעונה - ולגונת יוקולסארלון וחוף היהלומים.',
+      },
+      {
+        day: 5,
+        title: 'חצי האי סניפלסנס',
+        placeIds: ['isl-kirkjufell'],
+        notes:
+          'הרחבה צפונית-מערבית: הר קירקיופל, כפרי דייגים, מצוקים ושדות לבה - "איסלנד בזעיר אנפין".',
+      },
+    ],
+    practical: {
+      flights:
+        'איסלנדאייר הפעילה קו ישיר עונתי מנתב"ג לקפלאוויק (KEF) - כשלוש טיסות בשבוע בעונת הקיץ, כ-7 שעות. הקו עונתי ומשתנה משנה לשנה, ולכן חובה לבדוק אם הוא פעיל בתאריכים שלכם; לחלופין טסים עם החלפה אחת דרך אירופה (למשל לונדון, אמסטרדם, קופנהגן) בקלות ובתדירות גבוהה.',
+      gettingAround:
+        'רכב שכור הוא הדרך המעשית - טבעת הכביש (Route 1) עוברת ליד רוב האתרים. בחורף חובה רכב מתאים ובדיקת תנאי דרך יומית באתר הרשמי; הרמות הפנימיות (F-roads) דורשות 4x4 ופתוחות רק בקיץ. יש גם טיולים מאורגנים יומיים מריקיאוויק לכל האתרים בדף הזה.',
+      kosherOverview:
+        'מיולי 2026 יש בריקיאוויק מרכז יהודי של חב"ד עם בית כנסת, חנות כשרה ומטבח קהילתי - שינוי משמעותי לעומת השנים הקודמות, שבהן לא הייתה באיסלנד שום נקודה כשרה. מחוץ לעיר אין כלום, אבל איסלנד מייבאת כמעט את כל המזון, ולכן בסופרמרקטים אפשר למצוא מוצרים ארוזים עם סימוני כשרות אירופיים ואמריקאיים. שחיטה כשרה אסורה במדינה - הבשר במרכז מיובא.',
+    },
+  },
+  {
+    slug: 'bled',
+    name: 'אגם בלד והאלפים היוליאניים',
+    nameLocal: 'Lake Bled & the Julian Alps',
+    countrySlug: 'slovenia',
+    flag: '🇸🇮',
+    center: { lat: 46.2, lng: 14.0 },
+    zoom: 9,
+    tagline: 'אגם עם אי, נהר טורקיז ומערות ענק - הכול בשעה נסיעה',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Lake_Bled_from_the_Mountain.jpg/500px-Lake_Bled_from_the_Mountain.jpg',
+    iconicLandmark: {
+      name: 'אגם בלד והאי שבמרכזו',
+      nameLocal: 'Lake Bled & Bled Island',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Lake_Bled_from_the_Mountain.jpg/500px-Lake_Bled_from_the_Mountain.jpg',
+      blurb:
+        'אגם קרחוני שבמרכזו האי היחיד בסלובניה, ועליו כנסיית עלייה לרגל עם מגדל פעמון - ומעליו טירה על צוק בן יותר מאלף שנה.',
+    },
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'טבע אלפיני מרוכז ונגיש: אגמים, נקיקים, נהר טורקיז ומערות - הכול בטווח שעה-שעתיים, במחירים סבירים יותר משווייץ או אוסטריה. חסרונות: הטיסה הישירה עונתית בלבד, בלד עמוסה מאוד בקיץ, ואין במדינה תשתית כשרות מאומתת.',
+    },
+    summary:
+      'צפון-מערב סלובניה הוא ריכוז יוצא דופן של טבע: אגם בלד עם האי והטירה, אגם בוהיני הגדול והשקט בלב הפארק הלאומי טריגלב, נקיק וינטגר עם שבילי העץ מעל המים, ועמק נהר סוצ׳ה בצבע טורקיז בלתי נתפס. דרומה משם מערות פוסטויינה וטירת פרדיאמה שבתוך צוק, ובמרחק שעה - ליובליאנה הקטנה והנעימה, ועוד שעה - העיירה הוונציאנית פיראן על הים.',
+    bestSeason:
+      'מאי-ספטמבר (מסלולים, שיט ורפטינג בסוצ׳ה בשיא) · יולי-אוגוסט עמוס במיוחד בבלד · בחורף אזור סקי, וחלק ממעברי ההרים (ורשיץ׳) נסגרים',
+    places: [
+      {
+        id: 'svn-bled',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Lake_Bled_from_the_Mountain.jpg/500px-Lake_Bled_from_the_Mountain.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'אגם בלד',
+        nameLocal: 'Lake Bled',
+        category: 'nature',
+        lat: 46.3644,
+        lng: 14.0947,
+        description:
+          'אגם קרחוני עם אי במרכזו ועליו כנסייה, ומעליו טירת בלד על צוק. מקיפים אותו בשביל של כ-6 ק"מ, מגיעים לאי בסירת פלטנה מסורתית, ואפשר לשחות בקיץ.',
+        rating: 4.8,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Lake+Bled',
+      },
+      {
+        id: 'svn-vintgar',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Slovenia_-_Waterfall_Sum_-_Vintgar_Klamm_%2843686688490%29.jpg/500px-Slovenia_-_Waterfall_Sum_-_Vintgar_Klamm_%2843686688490%29.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'נקיק וינטגר',
+        nameLocal: 'Vintgar Gorge',
+        category: 'nature',
+        lat: 46.39,
+        lng: 14.083,
+        description:
+          'נקיק באורך כ-1.6 ק"מ שחצב נהר רדובנה, ובו שבילי עץ ומעברים צמודים לקיר מעל מים ירוקים-טורקיז, עד למפל שום. הכניסה בהזמנה מראש בעונה ובכיוון אחד.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Vintgar+Gorge',
+      },
+      {
+        id: 'svn-bohinj',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Aerial_image_of_Lake_Bohinj_%28view_from_the_south%29.jpg/500px-Aerial_image_of_Lake_Bohinj_%28view_from_the_south%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'אגם בוהיני',
+        nameLocal: 'Lake Bohinj',
+        category: 'nature',
+        lat: 46.2823,
+        lng: 13.8582,
+        description:
+          'האגם הטבעי הגדול בסלובניה, בלב הפארק הלאומי טריגלב - גדול, שקט ופראי יותר מבלד. אפשר לשחות, לשוט בקיאק ולצאת ממנו למסלולי הליכה ולרכבל וגלנץ׳ עם נוף על העמק.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Lake+Bohinj',
+      },
+      {
+        id: 'svn-triglav',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Triglav_-_winter.jpg/500px-Triglav_-_winter.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'הפארק הלאומי טריגלב',
+        nameLocal: 'Triglav National Park',
+        category: 'nature',
+        lat: 46.3783,
+        lng: 13.8367,
+        description:
+          'הפארק הלאומי היחיד בסלובניה, סביב פסגת טריגלב (2,864 מ׳) שמופיעה גם על הדגל. עמקים קרחוניים, אגמים אלפיניים ובקתות הרים; העלייה לפסגה עצמה דורשת ציוד ומיומנות פרטה.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Triglav+National+Park',
+      },
+      {
+        id: 'svn-soca',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Soca_4.jpg/500px-Soca_4.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'עמק נהר סוצ׳ה',
+        nameLocal: 'Soča Valley',
+        category: 'nature',
+        lat: 45.9944,
+        lng: 13.6414,
+        description:
+          'נהר בצבע טורקיז-אמרלד חד שזורם בין הרי האלפים היוליאניים, ולאורכו נקיקים, גשרים תלויים ושביל הליכה ארוך. בירת ספורט המים של סלובניה - רפטינג, קיאק וקניוניג בקיץ.',
+        rating: 4.8,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Soca+Valley',
+      },
+      {
+        id: 'svn-kranjska',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Kranjska_Gora-2736048.jpg/500px-Kranjska_Gora-2736048.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'קרנייסקה גורה',
+        nameLocal: 'Kranjska Gora',
+        category: 'attraction',
+        lat: 46.4854,
+        lng: 13.7871,
+        description:
+          'עיירת הרים בקצה הצפוני-מערבי, בסיס לסקי בחורף ולאופניים ולהליכות בקיץ - וממנה עולה מעבר ורשיץ׳ המפותל עם 50 סיבובים אל עמק סוצ׳ה.',
+        rating: 4.4,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Kranjska+Gora',
+      },
+      {
+        id: 'svn-postojna',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Postojna_%2822206343750%29.jpg/500px-Postojna_%2822206343750%29.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'מערות פוסטויינה',
+        nameLocal: 'Postojna Cave',
+        category: 'nature',
+        lat: 45.7827,
+        lng: 14.2037,
+        description:
+          'אחת ממערות הקרסט המפורסמות באירופה: יותר מ-20 ק"מ מנהרות, שבחלקן נוסעים ברכבת תת-קרקעית קטנה, ואולמות נטיפים ענקיים. כאן חי גם ה"דרקון התינוק" - הפרוטאוס, דו-חי מערות עיוור.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Postojna+Cave',
+      },
+      {
+        id: 'svn-predjama',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/H%C3%B6hlenburg_Predjama_in_Slovenien.jpg/500px-H%C3%B6hlenburg_Predjama_in_Slovenien.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'טירת פרדיאמה',
+        nameLocal: 'Predjama Castle',
+        category: 'attraction',
+        lat: 45.8153,
+        lng: 14.1267,
+        description:
+          'טירה מהמאה ה-13 שבנויה בתוך פתח מערה בקיר סלע אנכי - מהמראות המוזרים והמרשימים באירופה. מתחתיה מערכת מערות שאפשר לבקר בה בעונה.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Predjama+Castle',
+      },
+      {
+        id: 'svn-ljubljana',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Ljubljana_Old_Town%2C_Slovenia_%28Old_Camera%29_%2833286165680%29.jpg/500px-Ljubljana_Old_Town%2C_Slovenia_%28Old_Camera%29_%2833286165680%29.jpg',
+        tags: ['foodie', 'art'],
+        priceLevel: 1,
+        name: 'ליובליאנה',
+        nameLocal: 'Ljubljana',
+        category: 'attraction',
+        lat: 46.0514,
+        lng: 14.5061,
+        description:
+          'בירה קטנה ונינוחה סביב נהר הליובליאניצה: גשרים מפורסמים, שוק מרכזי, מרכז עיר סגור לרכב וטירה על הגבעה עם רכבל. נוחה מאוד להליכה, ובסיס טוב לימים הראשונים.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Ljubljana',
+      },
+      {
+        id: 'svn-piran',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Piran%2C_Slovenia%2C_Viewpoint.jpg/500px-Piran%2C_Slovenia%2C_Viewpoint.jpg',
+        tags: ['romantic', 'foodie'],
+        priceLevel: 1,
+        name: 'פיראן',
+        nameLocal: 'Piran',
+        category: 'attraction',
+        lat: 45.5283,
+        lng: 13.5683,
+        description:
+          'עיירה ונציאנית קטנה על לשון יבשה באדריאטי, עם כיכר טרטיני, סמטאות אבן וחומות עם תצפית על המפרץ. רצועת החוף של סלובניה קצרה - וזו הפנינה שבה.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Piran',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'ליובליאנה',
+        placeIds: ['svn-ljubljana'],
+        notes:
+          'נחיתה והתמקמות בבירה: הגשרים, השוק המרכזי, טירת ליובליאנה ברכבל וערב על הנהר. אפשר גם לישון כאן ולצאת לנסיעות יומיות.',
+      },
+      {
+        day: 2,
+        title: 'בלד והנקיק',
+        placeIds: ['svn-bled', 'svn-vintgar'],
+        notes:
+          'בוקר בנקיק וינטגר (כניסה מוזמנת מראש), אחר הצהריים הקפת אגם בלד, סירה לאי ותצפית מהטירה או ממאלה אוסויניצה.',
+      },
+      {
+        day: 3,
+        title: 'בוהיני והפארק',
+        placeIds: ['svn-bohinj', 'svn-triglav'],
+        notes:
+          'יום שקט יותר: אגם בוהיני, רכבל וגלנץ׳ לתצפית, ומסלולי הליכה בפארק הלאומי לפי הכושר והתחזית.',
+      },
+      {
+        day: 4,
+        title: 'מעבר ורשיץ׳ ועמק סוצ׳ה',
+        placeIds: ['svn-kranjska', 'svn-soca'],
+        notes:
+          'נסיעה נופית דרך קרנייסקה גורה ומעבר ורשיץ׳ (סגור בחורף) אל עמק סוצ׳ה - הליכה לאורך הנהר ולמי שרוצה, רפטינג.',
+      },
+      {
+        day: 5,
+        title: 'מערות, טירה וים',
+        placeIds: ['svn-postojna', 'svn-predjama', 'svn-piran'],
+        notes:
+          'דרומה: מערות פוסטויינה וטירת פרדיאמה שבצוק, וסיום בפיראן על הים לפני החזרה.',
+      },
+    ],
+    practical: {
+      flights:
+        'ישראייר מפעילה קו ישיר עונתי מנתב"ג לליובליאנה (LJU) - בערך יולי עד אוקטובר, טיסה של כשלוש שעות. מחוץ לעונה טסים עם החלפה (וינה, זאגרב, מינכן, ונציה) או נוחתים בטריאסטה/ונציה ונוסעים כשעתיים ברכב.',
+      gettingAround:
+        'רכב שכור הוא הדרך הנוחה - המרחקים קצרים והכבישים מצוינים (שימו לב לחובת ה-vinjeta). יש גם אוטובוסים ורכבות סבירים בין ליובליאנה, בלד ובוהיני, ובקיץ אוטובוסים לפארק. חניה בבלד ובנקיקים מוגבלת - להגיע מוקדם.',
+      kosherOverview:
+        'לא אותרה בסלובניה מסעדה או חנות כשרה מאומתת. יש בליובליאנה קהילה יהודית קטנה, אך אין תשתית כשרות תיירותית; הכשרות הקרובה היא בטריאסטה שבאיטליה או בווינה. הדרך המעשית: להצטייד מראש, ולהסתמך על מוצרים ארוזים עם סימון כשרות אירופי בסופרמרקטים הגדולים.',
+    },
+  },
+  {
+    slug: 'plitvice',
+    name: 'פליטביצה והחוף הדלמטי',
+    nameLocal: 'Plitvice Lakes & the Dalmatian Coast',
+    countrySlug: 'croatia',
+    flag: '🇭🇷',
+    center: { lat: 44.2, lng: 15.8 },
+    zoom: 8,
+    tagline: 'אגמי מפלים טורקיז - ובשעתיים מהם הים האדריאטי',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/View_in_Plitvice_Lakes_National_Park.jpg/500px-View_in_Plitvice_Lakes_National_Park.jpg',
+    iconicLandmark: {
+      name: 'אגמי פליטביצה',
+      nameLocal: 'Plitvice Lakes',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/View_in_Plitvice_Lakes_National_Park.jpg/500px-View_in_Plitvice_Lakes_National_Park.jpg',
+      blurb:
+        'שרשרת של 16 אגמים בצבע טורקיז שיורדים זה לתוך זה במאות מפלים, מחוברים בשבילי עץ - הפארק הלאומי הוותיק בדרום-מזרח אירופה ואתר מורשת עולמית.',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'שילוב נדיר של פארקי מים ברמה עולמית וחוף אדריאטי יפהפה במרחק קצר, ובזאגרב יש בית חב"ד שמספק אוכל כשר בהזמנה מראש. חסרונות: טיסה ישירה רק לזאגרב ובתדירות נמוכה, פליטביצה עמוסה מאוד בקיץ (כרטיס לשעה מוגדרת), ורכב כמעט הכרחי.',
+    },
+    summary:
+      'פליטביצה היא הפנינה של פנים קרואטיה: 16 אגמים בצבע טורקיז שנשפכים זה לזה במאות מפלים, עם רשת שבילי עץ צמודים למים. דרומה משם מחכה פארק קרקה עם מפלי סקרדינסקי בוק, קניון פאקלניצה למטפסים, והחוף הדלמטי - זאדאר עם עוגב הים, ספליט עם ארמון דיוקלטיאנוס ודוברובניק המוקפת חומה. את הטיול פותחים בדרך כלל בזאגרב.',
+    bestSeason:
+      'מאי-יוני וספטמבר-אוקטובר (מזג אוויר נעים, פחות עומס, מפלים חזקים) · יולי-אוגוסט חם ועמוס מאוד · באביב המפלים בשיא הזרימה, בחורף חלק מהשבילים סגורים',
+    places: [
+      {
+        id: 'hrv-plitvice',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/View_in_Plitvice_Lakes_National_Park.jpg/500px-View_in_Plitvice_Lakes_National_Park.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'הפארק הלאומי אגמי פליטביצה',
+        nameLocal: 'Plitvice Lakes National Park',
+        category: 'nature',
+        lat: 44.8806,
+        lng: 15.6161,
+        description:
+          'שרשרת של 16 אגמים מדורגים שמחוברים במאות מפלים, ובהם שבילי עץ ממש מעל המים, מעבורת חשמלית ורכבת פנימית. אסורה רחצה; הכרטיסים בשעת כניסה מוגדרת ונחטפים בעונה.',
+        rating: 4.8,
+        durationMin: 420,
+        externalUrl: 'https://maps.google.com/?q=Plitvice+Lakes+National+Park',
+      },
+      {
+        id: 'hrv-krka',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Krkawatervallen.jpg/500px-Krkawatervallen.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'הפארק הלאומי קרקה',
+        nameLocal: 'Krka National Park',
+        category: 'nature',
+        lat: 43.8019,
+        lng: 15.9728,
+        description:
+          'פארק מפלים על נהר קרקה, ובמרכזו מפלי סקרדינסקי בוק הרחבים עם שביל עץ מעגלי. קרוב לחוף ולכן נוח לשילוב עם ימי ים - הרחצה במפלים עצמם אסורה כיום.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Krka+National+Park',
+      },
+      {
+        id: 'hrv-rastoke',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Rastoke_1510.JPG/500px-Rastoke_1510.JPG',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'ראסטוקה',
+        nameLocal: 'Rastoke',
+        category: 'nature',
+        lat: 45.1213,
+        lng: 15.5876,
+        description:
+          'כפר קטן במפגש נהרות סלוניצה וקורנה, שבו בתי עץ בנויים ממש מעל מפלים קטנים וטחנות מים היסטוריות - "פליטביצה בזעיר אנפין", כחצי שעה מהפארק.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Rastoke',
+      },
+      {
+        id: 'hrv-paklenica',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Canyon_of_Paklenica.jpg/500px-Canyon_of_Paklenica.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'קניון פאקלניצה',
+        nameLocal: 'Paklenica National Park',
+        category: 'nature',
+        lat: 44.3667,
+        lng: 15.4333,
+        description:
+          'שני קניונים תלולים ברכס וולביט שיורדים כמעט עד הים - אתר טיפוס סלעים מוביל באירופה, ולצדו מסלולי הליכה נוחים בין קירות של מאות מטרים.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Paklenica+National+Park',
+      },
+      {
+        id: 'hrv-kornati',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Kornati.jpg/500px-Kornati.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'איי קורנאטי',
+        nameLocal: 'Kornati Islands',
+        category: 'nature',
+        lat: 43.7833,
+        lng: 15.3333,
+        description:
+          'ארכיפלג של יותר ממאה איים ואיונים חשופים וקרסטיים, רובם ללא יישוב - נוף ים ייחודי שרואים בעיקר משיט יומי מזאדאר, מורטר או שיבניק.',
+        rating: 4.5,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Kornati+National+Park',
+      },
+      {
+        id: 'hrv-zadar',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Roman_Forum_in_Zadar%2C_Croatia_%2848607823862%29.jpg/500px-Roman_Forum_in_Zadar%2C_Croatia_%2848607823862%29.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'זאדאר',
+        nameLocal: 'Zadar',
+        category: 'attraction',
+        lat: 44.1142,
+        lng: 15.2275,
+        description:
+          'עיר חוף עם פורום רומי, כנסיית דונאט העגולה, ושתי יצירות מודרניות על הטיילת: עוגב הים שמנגן מגלי הים, ו"ברכת השמש" הסולארית. בסיס נוח לצפון דלמטיה.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Zadar',
+      },
+      {
+        id: 'hrv-split',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Split_080620-133710-IMG_0968x.jpg/500px-Split_080620-133710-IMG_0968x.jpg',
+        tags: ['history', 'nightlife'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'ספליט',
+        nameLocal: 'Split',
+        category: 'attraction',
+        lat: 43.51,
+        lng: 16.44,
+        description:
+          'העיר השנייה בגודלה בקרואטיה, שנבנתה בתוך ארמון דיוקלטיאנוס מהמאה הרביעית - סמטאות עתיקות שהן עדיין עיר חיה, טיילת ריווה ונמל שממנו יוצאות מעבורות לאיים.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Split+Croatia',
+      },
+      {
+        id: 'hrv-diocletian',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Croatia-01239_-_The_Peristil_%289551533404%29.jpg/500px-Croatia-01239_-_The_Peristil_%289551533404%29.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'ארמון דיוקלטיאנוס',
+        nameLocal: "Diocletian's Palace",
+        category: 'attraction',
+        lat: 43.5083,
+        lng: 16.44,
+        description:
+          'ארמון-מצודה שבנה הקיסר דיוקלטיאנוס בשנת 305 לספירה, ואתר מורשת עולמית - כיכר הפריסטיל, המרתפים והקתדרלה שהייתה המאוזוליאום שלו. הלב ההיסטורי של ספליט.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Diocletian+Palace+Split',
+      },
+      {
+        id: 'hrv-dubrovnik',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/The_walls_of_the_fortress_and_View_of_the_old_city._panorama.jpg/500px-The_walls_of_the_fortress_and_View_of_the_old_city._panorama.jpg',
+        tags: ['history', 'romantic'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'דוברובניק',
+        nameLocal: 'Dubrovnik',
+        category: 'attraction',
+        lat: 42.6403,
+        lng: 18.1083,
+        description:
+          'העיר העתיקה המוקפת חומות ים מהמאה ה-16, אתר מורשת עולמית - הליכה על החומה מקיפה את כל העיר, ורכבל עולה להר סרג׳ לתצפית. יקרה ועמוסה, במיוחד בימי עגינת אוניות.',
+        rating: 4.7,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Dubrovnik',
+      },
+      {
+        id: 'hrv-zagreb',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Zagreb_%2829255640143%29.jpg/500px-Zagreb_%2829255640143%29.jpg',
+        tags: ['foodie', 'art'],
+        priceLevel: 1,
+        name: 'זאגרב',
+        nameLocal: 'Zagreb',
+        category: 'attraction',
+        lat: 45.8131,
+        lng: 15.9775,
+        description:
+          'הבירה, ונקודת הכניסה לרוב הישראלים: העיר העליונה עם גגות הרעפים והפוניקולר, שוק דולאץ, מוזיאונים וסצנת בתי קפה חזקה. גם הכתובת של הקהילה היהודית ובית חב"ד.',
+        rating: 4.4,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Zagreb',
+      },
+      {
+        id: 'hrv-chabad',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'בית חב"ד זאגרב',
+        nameLocal: 'Chabad of Croatia, Zagreb',
+        category: 'kosher-food',
+        lat: 45.8131,
+        lng: 15.9775,
+        description:
+          'בית חב"ד של קרואטיה בזאגרב (רחוב רוקובה 4): ארוחות שבת, מוצרי בשר וחלב כשרים וקייטרינג שנשלח גם לערים אחרות במדינה - הכול בהזמנה מראש. הסימון הוא במרכז העיר.',
+        kosherNote: 'אין בקרואטיה מסעדה כשרה רגילה - ההזמנה מול בית חב"ד, ורצוי כשבוע מראש.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד קרואטיה, זאגרב',
+        },
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Chabad+of+Croatia+Zagreb',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'זאגרב',
+        placeIds: ['hrv-zagreb', 'hrv-chabad'],
+        notes:
+          'נחיתה בזאגרב, סיור בעיר העליונה ובשוק דולאץ. מי שמקפיד על כשרות - לתאם מראש עם בית חב"ד לאוכל להמשך הדרך.',
+      },
+      {
+        day: 2,
+        title: 'פליטביצה',
+        placeIds: ['hrv-plitvice', 'hrv-rastoke'],
+        notes:
+          'יוצאים מוקדם לפארק (כרטיס לשעה מוגדרת מראש), הליכה על שבילי העץ בין האגמים, ובדרך חזרה עצירה בכפר ראסטוקה.',
+      },
+      {
+        day: 3,
+        title: 'הרכס והים - פאקלניצה וזאדאר',
+        placeIds: ['hrv-paklenica', 'hrv-zadar'],
+        notes:
+          'בוקר בקניון פאקלניצה, ואחר הצהריים זאדאר - הפורום, עוגב הים ושקיעה על הטיילת.',
+      },
+      {
+        day: 4,
+        title: 'קרקה והאיים',
+        placeIds: ['hrv-krka', 'hrv-kornati'],
+        notes:
+          'מפלי קרקה בבוקר, ולמי שיש יום נוסף - שיט אל איי קורנאטי הקרסטיים.',
+      },
+      {
+        day: 5,
+        title: 'ספליט',
+        placeIds: ['hrv-split', 'hrv-diocletian'],
+        notes:
+          'יום בעיר העתיקה שבתוך ארמון דיוקלטיאנוס, טיילת ריווה, ואפשר מעבורת קצרה לאי סמוך.',
+      },
+      {
+        day: 6,
+        title: 'דוברובניק',
+        placeIds: ['hrv-dubrovnik'],
+        notes:
+          'הרחבה דרומה (כ-3 שעות נסיעה מספליט): הליכה על החומות בשעות הבוקר המוקדמות, ורכבל להר סרג׳ לשקיעה.',
+      },
+    ],
+    practical: {
+      flights:
+        'אל על מפעילה קו ישיר מנתב"ג לזאגרב (ZAG) - כטיסה שבועית, כשלוש וחצי שעות, וחלק מהטיסות מבוצעות בפועל בידי ישראייר; קרואטיה איירליינס מוסיפה קו עונתי. לספליט ולדוברובניק אין קו ישיר קבוע - טסים לזאגרב ונוסעים/טסים פנימית, או עם החלפה באירופה.',
+      gettingAround:
+        'רכב שכור נוח ביותר לשילוב פארקים וחוף; יש גם כביש מהיר מצוין (בתשלום) בין זאגרב, זאדאר וספליט ואוטובוסים בין-עירוניים תכופים. לאיים - מעבורות מזאדאר, שיבניק וספליט. בעונה כדאי להזמין חניה וכרטיסי פארק מראש.',
+      kosherOverview:
+        'אין בקרואטיה מסעדה כשרה פתוחה לקהל. בית חב"ד בזאגרב מספק ארוחות שבת, מוצרים כשרים וקייטרינג שנשלח גם לערי החוף - הכול בהזמנה מראש (מומלץ כשבוע). הקהילה היהודית המקומית מפרסמת גם מדריך מוצרים כשרים לסופרמרקטים, שימושי למי שמטייל בפארקים ובאיים.',
+    },
+  },
+  {
+    slug: 'kathmandu',
+    name: 'קטמנדו וההימלאיה',
+    nameLocal: 'Kathmandu & the Himalayas',
+    countrySlug: 'nepal',
+    flag: '🇳🇵',
+    center: { lat: 28.2, lng: 85.0 },
+    zoom: 7,
+    tagline: 'מקדשים, פסגות של 8,000 מטר ומסלולי טרק אגדיים',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Mt._Everest_from_Gokyo_Ri_November_5%2C_2012.jpg/500px-Mt._Everest_from_Gokyo_Ri_November_5%2C_2012.jpg',
+    iconicLandmark: {
+      name: 'הר האוורסט',
+      nameLocal: 'Mount Everest / Sagarmatha',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Mt._Everest_from_Gokyo_Ri_November_5%2C_2012.jpg/500px-Mt._Everest_from_Gokyo_Ri_November_5%2C_2012.jpg',
+      blurb:
+        'הפסגה הגבוהה בעולם (8,849 מ׳) על הגבול בין נפאל לטיבט - ורוב המטיילים פוגשים אותה מהשבילים של אזור הקומבו או מטיסת תצפית.',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'הרים ברמה שאין דומה לה, מסלולי טרק לכל רמה ותשתית מטיילים זולה - ובקטמנדו בית חב"ד עם מסעדה כשרה, נדיר באסיה. חסרונות: אין טיסה ישירה (כ-13 שעות עם החלפה), קטמנדו רועשת ומזוהמת, וטרקים גבוהים דורשים התאקלמות, ביטוח מתאים והרבה תכנון.',
+    },
+    summary:
+      'נפאל מציעה שני עולמות: עמק קטמנדו עם כיכרות הדורבר, הסטופות הענקיות בודהנאת וסוואיאמבונאת והעיר העתיקה בהקטפור - וההימלאיה עצמה, עם רכס האנאפורנה מעל פוקהרה, אזור האוורסט בפארק סגרמאתא ושבילי טרק מפורסמים כמו פון היל. בשפלה הדרומית שוכן פארק צ׳יטוואן עם הקרנפים והפילים. בקטמנדו יש גם בית חב"ד עם מסעדה כשרה בשרית וחלבית.',
+    bestSeason:
+      'אוקטובר-נובמבר (הכי צלול ויציב לטרקים) ומרץ-אפריל (פריחת הרודודנדרון) · יוני-ספטמבר עונת מונסון - שבילים בוציים ונופים מעוננים · בחורף קר מאוד בגבהים',
+    places: [
+      {
+        id: 'npl-everest',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Mt._Everest_from_Gokyo_Ri_November_5%2C_2012.jpg/500px-Mt._Everest_from_Gokyo_Ri_November_5%2C_2012.jpg',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        mustSee: true,
+        name: 'הר האוורסט',
+        nameLocal: 'Mount Everest',
+        category: 'nature',
+        lat: 27.9883,
+        lng: 86.9253,
+        description:
+          'הפסגה הגבוהה בעולם, 8,849 מ׳. המטיילים הרגילים לא מטפסים אלא הולכים אל מחנה הבסיס (כ-12 יום הלוך-חזור מלוקלה) או טסים בטיסת תצפית של שעה מקטמנדו.',
+        rating: 4.8,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Mount+Everest',
+      },
+      {
+        id: 'npl-sagarmatha',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Valley%2C_Tengboche%2C_Mountains_of_Nepal.jpg/500px-Valley%2C_Tengboche%2C_Mountains_of_Nepal.jpg',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        name: 'פארק סגרמאתא (אזור האוורסט)',
+        nameLocal: 'Sagarmatha National Park',
+        category: 'nature',
+        lat: 27.9333,
+        lng: 86.7333,
+        description:
+          'אתר מורשת עולמית שמקיף את האוורסט, ובו כפרי השרפה, מנזרים כמו טנגבוצ׳ה וקרחונים. הכניסה בטיסה קטנה ללוקלה ואז ימי הליכה - כל השאר נעשה ברגל ובעזרת סבלים ופרדות.',
+        rating: 4.8,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Sagarmatha+National+Park',
+      },
+      {
+        id: 'npl-annapurna',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/South_Face_of_Annapurna_I_%28Main%29.jpg/500px-South_Face_of_Annapurna_I_%28Main%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'רכס אנאפורנה',
+        nameLocal: 'Annapurna Massif',
+        category: 'nature',
+        lat: 28.5961,
+        lng: 83.8203,
+        description:
+          'רכס הימלאיה מעל פוקהרה שכולל פסגה מעל 8,000 מ׳ ועוד שכנות מושלגות. סביבו רשת הטרקים הפופולרית בנפאל - ממסלולים של ימים ספורים ועד הקפת הרכס בכשבועיים.',
+        rating: 4.8,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Annapurna+Massif',
+      },
+      {
+        id: 'npl-poonhill',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Poon_hill_sunrise.jpg/500px-Poon_hill_sunrise.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'פון היל',
+        nameLocal: 'Poon Hill',
+        category: 'viewpoint',
+        lat: 28.4,
+        lng: 83.6895,
+        description:
+          'תצפית זריחה בגובה כ-3,210 מ׳ מול רכסי אנאפורנה ודאולאגירי, בקצה טרק קצר ופופולרי של 3-4 ימים מפוקהרה - המסלול הקלאסי למי שרוצה טעימה מההימלאיה.',
+        rating: 4.7,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Poon+Hill',
+      },
+      {
+        id: 'npl-pokhara',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Pokhara_Valley.jpg/500px-Pokhara_Valley.jpg',
+        tags: ['outdoors', 'foodie'],
+        priceLevel: 1,
+        name: 'פוקהרה',
+        nameLocal: 'Pokhara',
+        category: 'attraction',
+        lat: 28.2083,
+        lng: 83.9889,
+        description:
+          'עיר האגם למרגלות האנאפורנה, ובירת הטרקים והפראגליידינג של נפאל. רגועה בהרבה מקטמנדו: בתי קפה על שפת האגם, סוכנויות טרקים ותצפיות זריחה על ההרים.',
+        rating: 4.6,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Pokhara',
+      },
+      {
+        id: 'npl-phewa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Phewa_lake%2C_Pokhara.jpg/500px-Phewa_lake%2C_Pokhara.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'אגם פאווה',
+        nameLocal: 'Phewa Lake',
+        category: 'nature',
+        lat: 28.2142,
+        lng: 83.9472,
+        description:
+          'האגם של פוקהרה, ובו מקדש טאל בארהי על אי קטן. שוכרים סירת משוטים, ומהגדה המערבית עולים לפגודת השלום העולמית עם נוף על ההרים ועל האגם.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Phewa+Lake',
+      },
+      {
+        id: 'npl-chitwan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Chitwan_swamp.jpg/500px-Chitwan_swamp.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        name: 'הפארק הלאומי צ׳יטוואן',
+        nameLocal: 'Chitwan National Park',
+        category: 'nature',
+        lat: 27.5,
+        lng: 84.3333,
+        description:
+          'ג׳ונגל ואזורי ביצה בשפלה הדרומית, אתר מורשת עולמית - כאן חיים קרנף חד-קרן, פילים, תנינים ולפעמים נמר בנגלי. יוצאים לספארי בג׳יפ, בקאנו או ברגל עם ריינג׳ר.',
+        rating: 4.6,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Chitwan+National+Park',
+      },
+      {
+        id: 'npl-kathmandu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Kathmandu-Durbar_Square-06-Mahavishnu-Kuh-Vishnu-Pratapamalla-Jagannath-2007-gje.jpg/500px-Kathmandu-Durbar_Square-06-Mahavishnu-Kuh-Vishnu-Pratapamalla-Jagannath-2007-gje.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'קטמנדו וכיכר הדורבר',
+        nameLocal: 'Kathmandu Durbar Square',
+        category: 'attraction',
+        lat: 27.71,
+        lng: 85.32,
+        description:
+          'הבירה הצפופה והצבעונית, ובלִבּה כיכר הדורבר עם ארמונות ומקדשי עץ מגולפים - אתר מורשת עולמית שחלקו שוקם אחרי רעידת האדמה של 2015. לידה שכונת תאמל של המטיילים.',
+        rating: 4.4,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Kathmandu+Durbar+Square',
+      },
+      {
+        id: 'npl-boudha',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Boudhanath_stupa_%2C_Kathmandu%2C_Nepal.jpg/500px-Boudhanath_stupa_%2C_Kathmandu%2C_Nepal.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'סטופת בודהנאת',
+        nameLocal: 'Boudhanath Stupa',
+        category: 'attraction',
+        lat: 27.7214,
+        lng: 85.3619,
+        description:
+          'אחת הסטופות הגדולות בעולם, מרכז החיים הטיבטיים בקטמנדו - עיני הבודהה על הכיפה, מאמינים שמקיפים אותה בשעות הערב וגלגלי תפילה סביב. אתר מורשת עולמית.',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Boudhanath+Stupa',
+      },
+      {
+        id: 'npl-swayambhu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Swayambhunath_2018.jpg/500px-Swayambhunath_2018.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        name: 'סוואיאמבונאת (מקדש הקופים)',
+        nameLocal: 'Swayambhunath',
+        category: 'attraction',
+        lat: 27.715,
+        lng: 85.29,
+        description:
+          'סטופה עתיקה על גבעה מערבית לעיר, שאליה עולים בכ-365 מדרגות בין קופים - ומלמעלה נוף על כל עמק קטמנדו. אחד המקומות הטובים בעיר לשקיעה.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Swayambhunath',
+      },
+      {
+        id: 'npl-bhaktapur',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Nyatpola_%26_Bhairav_Temple.jpg/500px-Nyatpola_%26_Bhairav_Temple.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        name: 'בהקטפור',
+        nameLocal: 'Bhaktapur',
+        category: 'attraction',
+        lat: 27.6722,
+        lng: 85.4278,
+        description:
+          'העיר העתיקה השמורה ביותר בעמק: כיכרות אבן, מקדש נייטפולה בן חמש הקומות, סדנאות קדרות ורחובות ללא מכוניות. שעה מקטמנדו, ומרגישה כמו מאה שנה אחורה.',
+        rating: 4.7,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Bhaktapur',
+      },
+      {
+        id: 'npl-nagarkot',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/2015-03-18_Nagarkot_Hotel_Galaxy_DSCF2094.jpg/500px-2015-03-18_Nagarkot_Hotel_Galaxy_DSCF2094.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'נגרקוט',
+        nameLocal: 'Nagarkot',
+        category: 'viewpoint',
+        lat: 27.7236,
+        lng: 85.5247,
+        description:
+          'כפר על רכס במזרח עמק קטמנדו, בגובה כ-2,100 מ׳ - הנקודה הקלאסית לזריחה מול רכסי ההימלאיה בלי לצאת לטרק. שעה וחצי מהעיר, ולנים שם לילה.',
+        rating: 4.4,
+        durationMin: 720,
+        externalUrl: 'https://maps.google.com/?q=Nagarkot',
+      },
+      {
+        id: 'npl-chabad',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Thamel_at_night_-_Kathmandu%2C_Nepal_-_panoramio_%281%29.jpg/500px-Thamel_at_night_-_Kathmandu%2C_Nepal_-_panoramio_%281%29.jpg',
+        tags: ['foodie'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'בית חב"ד קטמנדו',
+        nameLocal: 'Chabad House Kathmandu, Thamel',
+        category: 'kosher-food',
+        lat: 27.7152,
+        lng: 85.3102,
+        description:
+          'בית חב"ד בשכונת תאמל (Pushpalal Path) עם מסעדה כשרה - בשרי וחלבי - שמגישה אוכל ישראלי ומקומי, ארוחות שבת וליל הסדר המפורסם שמושך אלפי מטיילים. אחת הכתובות המוכרות לישראלים באסיה.',
+        kosherNote: 'בהשגחת בית חב"ד נפאל. שעות ותפריט משתנים לפי העונה - לוודא מולם, במיוחד סביב החגים.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית חב"ד נפאל, קטמנדו',
+        },
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Chabad+House+Kathmandu',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'קטמנדו - התאקלמות',
+        placeIds: ['npl-kathmandu', 'npl-chabad'],
+        notes:
+          'נחיתה, מנוחה מהטיסה הארוכה וסיבוב בכיכר הדורבר ובתאמל. ארוחת ערב כשרה בבית חב"ד, וסידור אישורי טרק (TIMS/היתרי פארק) לפי המסלול.',
+      },
+      {
+        day: 2,
+        title: 'הסטופות והעיר העתיקה',
+        placeIds: ['npl-boudha', 'npl-swayambhu', 'npl-bhaktapur'],
+        notes:
+          'בוקר בבודהנאת, צהריים בסוואיאמבונאת עם נוף לעמק, ואחר הצהריים בהקטפור השמורה.',
+      },
+      {
+        day: 3,
+        title: 'זריחה בנגרקוט',
+        placeIds: ['npl-nagarkot'],
+        notes:
+          'עולים לרכס נגרקוט, לנים שם ורואים זריחה מול ההימלאיה - תצפית הרים בלי טרק.',
+      },
+      {
+        day: 4,
+        title: 'פוקהרה והאגם',
+        placeIds: ['npl-pokhara', 'npl-phewa'],
+        notes:
+          'טיסה קצרה או נסיעה ארוכה לפוקהרה, שיט באגם פאווה ופגודת השלום. כאן גם סוגרים את פרטי הטרק.',
+      },
+      {
+        day: 5,
+        title: 'טרק פון היל',
+        placeIds: ['npl-poonhill', 'npl-annapurna'],
+        notes:
+          'טרק של 3-4 ימים מפוקהרה: כפרים, מדרגות אינסופיות וזריחה מפון היל מול האנאפורנה. עם מדריך וסבל, ובקצב שמתאים לגובה.',
+      },
+      {
+        day: 6,
+        title: 'צ׳יטוואן או אזור האוורסט',
+        placeIds: ['npl-chitwan', 'npl-sagarmatha', 'npl-everest'],
+        notes:
+          'בוחרים סיום: ספארי ג׳ונגל בצ׳יטוואן בשפלה, או טיסת תצפית לאוורסט - ולמי שיש שבועיים, טרק מחנה הבסיס מלוקלה.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה מנתב"ג לקטמנדו (KTM). טסים עם החלפה אחת - בעיקר דרך המפרץ (אבו דאבי, דובאי, שארג׳ה) או דרך הודו וסרי לנקה - סה"כ כ-13 שעות ומעלה. הטיסות הפנימיות בנפאל (לוקלה, פוקהרה) קטנות ותלויות מזג אוויר, וכדאי להשאיר יום מרווח.',
+      gettingAround:
+        'בקטמנדו ובפוקהרה - טוק-טוק, מוניות ואפליקציית Pathao/InDrive. בין הערים: אוטובוסי תיירים (7-8 שעות לפוקהרה) או טיסה פנימית של 25 דקות. הטרקים עצמם נעשים ברגל, ורוב המטיילים לוקחים מדריך וסבל מקומיים - בחלק מהמסלולים זו גם דרישה רשמית.',
+      kosherOverview:
+        'בקטמנדו יש בית חב"ד ותיק בשכונת תאמל עם מסעדה כשרה בשרית וחלבית, ארוחות שבת וליל הסדר הגדול באסיה - כתובת מוכרת ומרכזית לישראלים. בפוקהרה פועלת נוכחות חב"ד עונתית ומשתנה, ולכן כדאי לבדוק מולם לפני שמסתמכים עליה. במסלולי הטרק ובכפרים אין כשרות - נוהגים להצטייד מראש ולהסתמך על אוכל צמחוני ופשוט (דאל באט).',
+    },
+  },
+  {
+    slug: 'halong',
+    name: 'האנוי ומפרץ הא לונג',
+    nameLocal: 'Hanoi & Hạ Long Bay',
+    countrySlug: 'vietnam',
+    flag: '🇻🇳',
+    center: { lat: 21.3, lng: 105.6 },
+    zoom: 7,
+    tagline: 'צוקי גיר במים ירוקים, שדות אורז מדורגים ואוכל רחוב',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Ha_Long_Bay_in_2019.jpg/500px-Ha_Long_Bay_in_2019.jpg',
+    iconicLandmark: {
+      name: 'מפרץ הא לונג',
+      nameLocal: 'Hạ Long Bay',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Ha_Long_Bay_in_2019.jpg/500px-Ha_Long_Bay_in_2019.jpg',
+      blurb:
+        'מפרץ באתר מורשת עולמית שבו כ-1,600 איי גיר וצוקים מזדקרים מהמים הירוקים - הנוף המזוהה ביותר עם וייטנאם.',
+    },
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'נוף קארסט יוצא דופן, שדות אורז והרים בצפון, מחירים נמוכים - ומ-2026 גם טיסה ישירה מנתב"ג להאנוי, עם מסעדות כשרות של חב"ד בשתי הערים הגדולות. חסרונות: הא לונג עמוס מאוד ואיכות השיט משתנה מאוד בין המפעילים, האקלים לח, ובצפון יש עונת גשמים ממושכת.',
+    },
+    summary:
+      'צפון וייטנאם מרכז את הנופים המפורסמים של המדינה: מפרץ הא לונג ואי קאט בא עם אלפי צוקי הגיר, "הא לונג היבשתית" בנין בין עם השיט בין ההרים ושדות האורז, ההרים ושדות המדרגות של סאפה ופסגת פאנסיפן, ומסלול האופנועים של הא ג׳יאנג בהרי הגבול. הבסיס הוא האנוי - עיר עתיקה, צפופה וטעימה - שבה גם בית חב"ד עם מסעדה כשרה.',
+    bestSeason:
+      'אוקטובר-אפריל בצפון (יבש וקריר יחסית; ספטמבר-אוקטובר שדות האורז זהובים בסאפה) · מאי-אוגוסט חם, לח וגשום · בחורף בסאפה יכול לרדת מתחת ל-10 מעלות',
+    places: [
+      {
+        id: 'vnm-halong',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Ha_Long_Bay_in_2019.jpg/500px-Ha_Long_Bay_in_2019.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'מפרץ הא לונג',
+        nameLocal: 'Hạ Long Bay',
+        category: 'nature',
+        lat: 20.9,
+        lng: 107.2,
+        description:
+          'כ-1,600 איי גיר וצוקים במים ירוקים, אתר מורשת עולמית. מבקרים בשיט של יום או בשיט לינה, עם קיאקים, מערות ומפרצים - איכות החוויה תלויה מאוד בחברה ובמסלול שבוחרים.',
+        rating: 4.7,
+        durationMin: 720,
+        externalUrl: 'https://maps.google.com/?q=Ha+Long+Bay',
+      },
+      {
+        id: 'vnm-catba',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Cat_Ba_town.JPG/500px-Cat_Ba_town.JPG',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'אי קאט בא',
+        nameLocal: 'Cát Bà Island',
+        category: 'nature',
+        lat: 20.8,
+        lng: 106.9997,
+        description:
+          'האי הגדול באזור הא לונג, ובו פארק לאומי, מסלולי הליכה, חופים קטנים ומפרץ לאן הא השקט יותר - חלופה פחות עמוסה לשיט הקלאסי, עם אפשרות לקיאקים ולטיפוס.',
+        rating: 4.5,
+        durationMin: 720,
+        externalUrl: 'https://maps.google.com/?q=Cat+Ba+Island',
+      },
+      {
+        id: 'vnm-ninhbinh',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Tam_Coc_by_Tuan_Mai_%22007%22_%288888350545%29.jpg/500px-Tam_Coc_by_Tuan_Mai_%22007%22_%288888350545%29.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'נין בין - "הא לונג היבשתית"',
+        nameLocal: 'Ninh Bình (Tam Cốc & Tràng An)',
+        category: 'nature',
+        lat: 20.25,
+        lng: 105.8333,
+        description:
+          'אזור של צוקי גיר שמתנשאים מתוך שדות אורז ונהרות. שטים בסירת משוטים בין המצוקים ודרך מערות בתאם קוק ובטראנג אן, ומטפסים לתצפית מוא קייב. כשעתיים מהאנוי.',
+        rating: 4.7,
+        durationMin: 600,
+        externalUrl: 'https://maps.google.com/?q=Ninh+Binh',
+      },
+      {
+        id: 'vnm-sapa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Thacbac3.jpg/500px-Thacbac3.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'סאפה ושדות האורז',
+        nameLocal: 'Sa Pa',
+        category: 'nature',
+        lat: 22.3406,
+        lng: 103.8308,
+        description:
+          'עיירת הרים בצפון-מערב, ומסביבה מדרגות אורז בעמק מואונג הואה וכפרים של קבוצות אתניות (המונג, דאו). מסלולי הליכה של יום או יומיים בין הכפרים, עם לינה בבתי מקומיים.',
+        rating: 4.6,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Sa+Pa+Vietnam',
+      },
+      {
+        id: 'vnm-fansipan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Fansipan_Summit.jpg/500px-Fansipan_Summit.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'פסגת פאנסיפן',
+        nameLocal: 'Fansipan',
+        category: 'viewpoint',
+        lat: 22.3033,
+        lng: 103.775,
+        description:
+          'הפסגה הגבוהה בהודו-סין (3,143 מ׳), מעל סאפה. אפשר לעלות ברכבל ארוך במיוחד ואז ברכבת שיניים קצרה, או ללכת טרק של יום-יומיים; למעלה מקדשים ופסל בודהה גדול.',
+        rating: 4.4,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Fansipan',
+      },
+      {
+        id: 'vnm-hagiang',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/H%C3%A0_Giang_City.jpg/500px-H%C3%A0_Giang_City.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'הא ג׳יאנג',
+        nameLocal: 'Hà Giang',
+        category: 'nature',
+        lat: 22.8333,
+        lng: 104.9833,
+        description:
+          'הפרובינציה הצפונית ביותר, על גבול סין - מסלול טבעתי מפורסם בין רכסי גיר, מעברי הרים וכפרים מסורתיים. עושים אותו באופנוע עם נהג מקומי (easy rider) או ברכב פרטי, 3-4 ימים.',
+        rating: 4.7,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Ha+Giang',
+      },
+      {
+        id: 'vnm-phongnha',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Phongnhakebang6.jpg/500px-Phongnhakebang6.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'פונג ניה-קה באנג',
+        nameLocal: 'Phong Nha–Kẻ Bàng National Park',
+        category: 'nature',
+        lat: 17.5372,
+        lng: 106.1514,
+        description:
+          'פארק מערות ענק במרכז המדינה, אתר מורשת עולמית, ובו כמה מהמערות הגדולות בעולם (סון דונג בהן). מבקרים במערות פונג ניה ופרדייז בשיט ובהליכה. מגיעים בטיסה לדונג הוי או ברכבת לילה מהאנוי.',
+        rating: 4.7,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Phong+Nha+Ke+Bang',
+      },
+      {
+        id: 'vnm-hanoi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Hanoi_skyline_with_Ba_Vi_Mountain.jpg/500px-Hanoi_skyline_with_Ba_Vi_Mountain.jpg',
+        tags: ['foodie', 'history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'האנוי',
+        nameLocal: 'Hanoi',
+        category: 'attraction',
+        lat: 21.0,
+        lng: 105.85,
+        description:
+          'הבירה: רובע 36 הרחובות הצפוף, מקדשים, שרידי התקופה הקולוניאלית ואוכל רחוב שנחשב מהטובים באסיה. גם נקודת המוצא לכל הצפון - רכבות לילה ואוטובוסים לכל הכיוונים.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Hanoi',
+      },
+      {
+        id: 'vnm-hoankiem',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Thap_Rua.jpg/500px-Thap_Rua.jpg',
+        tags: ['families'],
+        priceLevel: 0,
+        name: 'אגם הואן קיים',
+        nameLocal: 'Hoàn Kiếm Lake',
+        category: 'nature',
+        lat: 21.0289,
+        lng: 105.8525,
+        description:
+          'הלב הירוק של האנוי: אגם עירוני עם מגדל הצב במרכזו וגשר אדום למקדש נגוק סון. בסופי שבוע הרחובות סביבו נסגרים לתנועה והופכים למרחב הולכי רגל.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Hoan+Kiem+Lake',
+      },
+      {
+        id: 'vnm-chabad',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'בית חב"ד האנוי',
+        nameLocal: 'Chabad of Hanoi',
+        category: 'kosher-food',
+        lat: 21.0,
+        lng: 105.85,
+        description:
+          'בית חב"ד בהאנוי (אזור To Ngoc Van) עם מסעדה כשרה - בשר, עוף וצמחוני - ארוחות שבת בהרשמה מראש ומשלוחים בעיר. פועל בימים ראשון-חמישי ובשישי סגור; לוודא שעות מולם. הסימון הוא באזור העיר.',
+        kosherNote: 'בהשגחת Kosher Vietnam (רב הקהילה בווייטנאם). לתאם ארוחות שבת ומשלוחים מראש.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'Kosher Vietnam - בית חב"ד וייטנאם',
+        },
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Chabad+of+Hanoi',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'האנוי',
+        placeIds: ['vnm-hanoi', 'vnm-hoankiem', 'vnm-chabad'],
+        notes:
+          'יום התאקלמות: רובע 36 הרחובות, אגם הואן קיים ואוכל רחוב. למי שמקפיד - ארוחה כשרה בבית חב"ד (בימים א-ה).',
+      },
+      {
+        day: 2,
+        title: 'מפרץ הא לונג',
+        placeIds: ['vnm-halong', 'vnm-catba'],
+        notes:
+          'שיט במפרץ - יום או לינה על סירה. שווה לבדוק מסלול שכולל את מפרץ לאן הא ואת קאט בא, שם פחות עמוס.',
+      },
+      {
+        day: 3,
+        title: 'נין בין',
+        placeIds: ['vnm-ninhbinh'],
+        notes:
+          'סירת משוטים בין צוקי הגיר בטראנג אן או תאם קוק, אופניים בין שדות האורז וטיפוס לתצפית מוא קייב.',
+      },
+      {
+        day: 4,
+        title: 'סאפה והרי הצפון',
+        placeIds: ['vnm-sapa', 'vnm-fansipan'],
+        notes:
+          'רכבת לילה או אוטובוס לסאפה, הליכה בין כפרי המדרגות, ולמי שרוצה - רכבל לפסגת פאנסיפן.',
+      },
+      {
+        day: 5,
+        title: 'הרחבה: הא ג׳יאנג או פונג ניה',
+        placeIds: ['vnm-hagiang', 'vnm-phongnha'],
+        notes:
+          'לבעלי זמן: מסלול הטבעת של הא ג׳יאנג בצפון (3-4 ימים), או טיסה דרומה למערות פונג ניה.',
+      },
+    ],
+    practical: {
+      flights:
+        'מ-2026 יש טיסות ישירות מנתב"ג להאנוי (HAN): ארקיע פתחה את הקו בינואר 2026 (כ-1-3 טיסות בשבוע), ואל על הודיעה על קו ישיר שמתחיל ב-24 באוקטובר 2026 בשלוש טיסות שבועיות ב-787. לוחות הזמנים בקווים חדשים משתנים - כדאי לוודא לפני ההזמנה; לחלופין טסים עם החלפה בבנגקוק, איסטנבול או המפרץ.',
+      gettingAround:
+        'בהאנוי: Grab (מוניות ואופנועים) זול ונוח. בין אזורים: רכבות לילה (האנוי-סאפה/לאו קאי, האנוי-דונג הוי), אוטובוסי שינה וטיסות פנים קצרות. בהרים נהוג לשכור נהג מקומי; נהיגה עצמאית על אופנוע דורשת רישיון מתאים וביטוח - לא לזלזל בזה.',
+      kosherOverview:
+        'בהאנוי פועל בית חב"ד עם מסעדה כשרה (בשר, עוף וצמחוני), ארוחות שבת בהרשמה ומשלוחים בעיר; בהו צ׳י מין יש בית חב"ד נוסף עם מסעדה כשרה. ההשגחה היא של רב הקהילה בווייטנאם (Kosher Vietnam). מחוץ לשתי הערים - בהא לונג, סאפה, נין בין והא ג׳יאנג - אין כשרות, ולכן נוהגים להצטייד מראש; אוכל צמחוני זמין בכל מקום, אבל רוטב דגים נוכח כמעט בכל מנה מקומית.',
+    },
+  },
+  {
+    slug: 'lofoten',
+    name: 'לופוטן והפיורדים',
+    nameLocal: 'Lofoten & the Norwegian Fjords',
+    countrySlug: 'norway',
+    flag: '🇳🇴',
+    center: { lat: 63.5, lng: 10.0 },
+    zoom: 5,
+    tagline: 'צוקים מעל המים, כפרי דייגים אדומים וזוהר צפוני',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Moskenes_Reinebringen_lub_2025-07-21_img09_Aussicht.jpg/500px-Moskenes_Reinebringen_lub_2025-07-21_img09_Aussicht.jpg',
+    iconicLandmark: {
+      name: 'איי לופוטן',
+      nameLocal: 'Lofoten Islands',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Moskenes_Reinebringen_lub_2025-07-21_img09_Aussicht.jpg/500px-Moskenes_Reinebringen_lub_2025-07-21_img09_Aussicht.jpg',
+      blurb:
+        'שרשרת איים מעל החוג הארקטי שבה פסגות סלע חדות צונחות היישר אל מים טורקיז, ובין המפרצים כפרי דייגים עם בקתות עץ אדומות.',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'נוף פיורדים וצוקים שקשה להאמין שהוא אמיתי, עם תשתית מצוינת ובטיחות גבוהה - ומעל החוג הארקטי גם זוהר צפוני ושמש חצות. חסרונות: אין טיסה ישירה מישראל, זה אחד היעדים היקרים באירופה, המרחקים גדולים מאוד ומזג האוויר משתנה בלי הודעה.',
+    },
+    summary:
+      'נורווגיה מחולקת לשני חלקים שכדאי להכיר: הפיורדים שבמערב - גיירנגר ונרויפיורד שהם אתרי מורשת עולמית, וצוקי פרייקסטולן וטרולטונגה שמעליהם - ואיי לופוטן שבצפון, מעל החוג הארקטי, עם כפרי דייגים, חופים לבנים ופסגות שצונחות לים. ברגן היא שער הכניסה למערב, וטרומסו היא בירת הזוהר הצפוני.',
+    bestSeason:
+      'יוני-אוגוסט (שמש חצות בצפון, כל הדרכים והמסלולים פתוחים) · ספטמבר-מרץ עונת זוהר צפוני בטרומסו ובלופוטן · טרולטונגה ופרייקסטולן נגישים בבטחה בעיקר ביוני-ספטמבר',
+    places: [
+      {
+        id: 'nor-lofoten',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Moskenes_Reinebringen_lub_2025-07-21_img09_Aussicht.jpg/500px-Moskenes_Reinebringen_lub_2025-07-21_img09_Aussicht.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'איי לופוטן',
+        nameLocal: 'Lofoten Islands',
+        category: 'nature',
+        lat: 68.3333,
+        lng: 14.6667,
+        description:
+          'ארכיפלג מעל החוג הארקטי, ובו פסגות סלע שיורדות לים, חופי חול לבן ומים בצבע טורקיז. נוסעים בין האיים בכביש E10 עם גשרים ומנהרות; בקיץ שמש חצות, בחורף זוהר צפוני.',
+        rating: 4.9,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Lofoten',
+      },
+      {
+        id: 'nor-reine',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Reine_at_Reinefjorden%2C_2010_September.jpg/500px-Reine_at_Reinefjorden%2C_2010_September.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'ריינה',
+        nameLocal: 'Reine',
+        category: 'attraction',
+        lat: 67.9325,
+        lng: 13.0888,
+        description:
+          'כפר דייגים על מפרץ מוקף פסגות, עם בקתות רורבו אדומות מעל המים - התמונה המזוהה ביותר עם לופוטן. מעליו מסלול המדרגות התלול לריינברינגן עם התצפית המפורסמת.',
+        rating: 4.8,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Reine+Lofoten',
+      },
+      {
+        id: 'nor-geiranger',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Geirangerfjord_.jpg/500px-Geirangerfjord_.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'גיירנגר-פיורד',
+        nameLocal: 'Geirangerfjord',
+        category: 'nature',
+        lat: 62.121,
+        lng: 7.129,
+        description:
+          'פיורד צר באתר מורשת עולמית, ובו מפלי "שבע האחיות" שיורדים מהקירות וחוות נטושות על מדפי סלע. שיט קצר מגיירנגר, ותצפיות דרמטיות מדלסניבה ומכביש הנשרים.',
+        rating: 4.8,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Geirangerfjord',
+      },
+      {
+        id: 'nor-naeroy',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Naer%C3%B8yfjorden.jpg/500px-Naer%C3%B8yfjorden.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'נרוי-פיורד',
+        nameLocal: 'Nærøyfjord',
+        category: 'nature',
+        lat: 60.9436,
+        lng: 6.9314,
+        description:
+          'אחד הפיורדים הצרים בעולם (במקומות מסוימים כ-250 מ׳ רוחב), זרוע של הסוגנה-פיורד ואתר מורשת עולמית. השיט גודוואנגן-פלאם הוא הקטע היפה, ומשתלב עם רכבת פלאם.',
+        rating: 4.8,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Naeroyfjord',
+      },
+      {
+        id: 'nor-preikestolen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Lyse_Fjord_et_Preikestolen.jpg/500px-Lyse_Fjord_et_Preikestolen.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'פרייקסטולן (סלע הדוכן)',
+        nameLocal: 'Preikestolen (Pulpit Rock)',
+        category: 'viewpoint',
+        lat: 58.9867,
+        lng: 6.1875,
+        description:
+          'מדף סלע שטוח שתלוי כ-600 מ׳ מעל הלייספיורד - אחד המסלולים המפורסמים בנורווגיה. ההליכה כ-8 ק"מ הלוך-חזור, 3-4 שעות, ואין מעקה בקצה.',
+        rating: 4.8,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Preikestolen',
+      },
+      {
+        id: 'nor-trolltunga',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Trolltunga_2017.jpg/500px-Trolltunga_2017.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'טרולטונגה (לשון הטרול)',
+        nameLocal: 'Trolltunga',
+        category: 'viewpoint',
+        lat: 60.133,
+        lng: 6.754,
+        description:
+          'לשון סלע שמזדקרת מעל אגם רינגדאלס-ואטן בגובה של כ-700 מ׳. המסלול קשה ותובעני - כ-20-28 ק"מ ליום שלם - ופתוח בבטחה בעיקר בקיץ ובתחילת הסתיו, לעתים בליווי מדריך.',
+        rating: 4.7,
+        durationMin: 720,
+        externalUrl: 'https://maps.google.com/?q=Trolltunga',
+      },
+      {
+        id: 'nor-jotunheimen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Utsiktgald1.jpg/500px-Utsiktgald1.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'יוטונהיימן',
+        nameLocal: 'Jotunheimen National Park',
+        category: 'nature',
+        lat: 61.605,
+        lng: 8.4775,
+        description:
+          'פארק ההרים הגבוה בנורווגיה - "בית הענקים" - ובו הפסגות הגבוהות במדינה, קרחונים ואגמים. כאן עובר גם רכס בסגן, מהמסלולים המפורסמים באירופה.',
+        rating: 4.7,
+        durationMin: 600,
+        externalUrl: 'https://maps.google.com/?q=Jotunheimen',
+      },
+      {
+        id: 'nor-bergen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Bergen_panorama_at_night_-_panoramio_%281%29.jpg/500px-Bergen_panorama_at_night_-_panoramio_%281%29.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 2,
+        name: 'ברגן',
+        nameLocal: 'Bergen',
+        category: 'attraction',
+        lat: 60.3894,
+        lng: 5.33,
+        description:
+          'שער הפיורדים: רציף בריגן ההנזאתי עם בתי העץ הצבעוניים (אתר מורשת עולמית), שוק דגים, ורכבל פלויבנן לתצפית מעל העיר. גשומה מאוד - זה חלק מהאופי.',
+        rating: 4.6,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Bergen+Norway',
+      },
+      {
+        id: 'nor-tromso',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Troms%C3%B8_sentrum_%285835702754%29.jpg/500px-Troms%C3%B8_sentrum_%285835702754%29.jpg',
+        tags: ['outdoors', 'nightlife'],
+        priceLevel: 2,
+        name: 'טרומסו',
+        nameLocal: 'Tromsø',
+        category: 'attraction',
+        lat: 69.6517,
+        lng: 18.9556,
+        description:
+          'העיר הגדולה מעל החוג הארקטי, ובירת הזוהר הצפוני: קתדרלת הארקטי, רכבל פיילהיים, וטיולי ציד זוהר, כלבי מזחלות ולווייתנים בעונה.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Tromso',
+      },
+      {
+        id: 'nor-lyngen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Lyngen.jpg/500px-Lyngen.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'אלפי לינגן',
+        nameLocal: 'Lyngen Alps',
+        category: 'nature',
+        lat: 69.7903,
+        lng: 20.1695,
+        description:
+          'רכס אלפיני חד מזרחית לטרומסו, עם פסגות שצונחות לפיורד וקרחונים קטנים - אזור מוביל לסקי טורינג באביב ולמסלולי הליכה בקיץ.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Lyngen+Alps',
+      },
+      {
+        id: 'nor-oslo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Nationaltheatret_evening.jpg/500px-Nationaltheatret_evening.jpg',
+        tags: ['art', 'families'],
+        priceLevel: 2,
+        name: 'אוסלו',
+        nameLocal: 'Oslo',
+        category: 'attraction',
+        lat: 59.9133,
+        lng: 10.7389,
+        description:
+          'הבירה, ובה בית האופרה שאפשר לטפס על גגו, מוזיאון מונק, פארק הפסלים ויגלנד ומוזיאוני הוויקינגים והספינות. נקודת מעבר טבעית בדרך לפיורדים ולצפון.',
+        rating: 4.4,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Oslo',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'אוסלו',
+        placeIds: ['nor-oslo'],
+        notes:
+          'נחיתה בבירה (עם החלפה מאירופה): בית האופרה, פארק ויגלנד ומוזיאון. ערב מוקדם - יוצאים מחר מערבה.',
+      },
+      {
+        day: 2,
+        title: 'ברגן והפיורד הצר',
+        placeIds: ['nor-bergen', 'nor-naeroy'],
+        notes:
+          'רכבת נופית או טיסה קצרה לברגן, סיור בבריגן, ומשם שיט בנרוי-פיורד בשילוב רכבת פלאם.',
+      },
+      {
+        day: 3,
+        title: 'גיירנגר',
+        placeIds: ['nor-geiranger'],
+        notes:
+          'יום פיורדים קלאסי: שיט בגיירנגר מול מפלי שבע האחיות, ותצפיות דלסניבה וכביש הנשרים.',
+      },
+      {
+        day: 4,
+        title: 'צוקים - פרייקסטולן או טרולטונגה',
+        placeIds: ['nor-preikestolen', 'nor-trolltunga'],
+        notes:
+          'בוחרים מסלול לפי כושר: פרייקסטולן (3-4 שעות) או טרולטונגה (יום שלם ותובעני). לבדוק תנאי מזג אוויר ושעות אור.',
+      },
+      {
+        day: 5,
+        title: 'יוטונהיימן',
+        placeIds: ['nor-jotunheimen'],
+        notes:
+          'יום הרים בפארק הגבוה במדינה - רכס בסגן או מסלול קצר יותר, בהתאם לתחזית.',
+      },
+      {
+        day: 6,
+        title: 'לופוטן',
+        placeIds: ['nor-lofoten', 'nor-reine'],
+        notes:
+          'טיסה פנימית צפונה (בודו/סווולוואר) ומעבורת/כביש E10 בין האיים: ריינה, חופים לבנים ומסלול ריינברינגן.',
+      },
+      {
+        day: 7,
+        title: 'טרומסו והארקטי',
+        placeIds: ['nor-tromso', 'nor-lyngen'],
+        notes:
+          'סיום בצפון: טרומסו, ובעונה - ציד זוהר צפוני או יום באלפי לינגן.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה מנתב"ג לנורווגיה. טסים עם החלפה אחת (וינה, איסטנבול, אמסטרדם, לונדון או בודפשט) לאוסלו (OSL), ולעתים ישירות לברגן. בתוך נורווגיה יש טיסות פנים תכופות וזולות יחסית לצפון (בודו, סווולוואר, טרומסו) - כמעט חובה בגלל המרחקים.',
+      gettingAround:
+        'רכב שכור לפיורדים ולופוטן, בשילוב מעבורות (נסיעה על מעבורת היא חלק מהכביש בנורווגיה). לצפון עדיף לטוס ולשכור רכב שם. רכבות נופיות מצוינות - אוסלו-ברגן ורכבת פלאם. בחורף נדרשים צמיגי חורף ובדיקת תנאי דרך.',
+      kosherOverview:
+        'אין באזור הפיורדים ובלופוטן שום נקודת כשרות. קהילה יהודית ובית כנסת יש באוסלו ובטרונדהיים, ובאוסלו אפשר לתאם מראש אוכל כשר דרך הקהילה - אך אין מסעדה כשרה פתוחה לקהל. הדרך המעשית: להצטייד באוסלו או מהבית, ולהסתמך על דגים, מוצרי חלב וירקות עם סימוני כשרות מוכרים בסופרמרקטים.',
+    },
+  },
+  {
+    slug: 'cape-town',
+    name: 'קייפטאון וקרוגר',
+    nameLocal: 'Cape Town & Kruger',
+    countrySlug: 'south-africa',
+    flag: '🇿🇦',
+    center: { lat: -30.0, lng: 24.0 },
+    zoom: 5,
+    tagline: 'הר שולחן, פינגווינים על החוף וספארי של החמישייה הגדולה',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Table_Mountain_DanieVDM.jpg/500px-Table_Mountain_DanieVDM.jpg',
+    iconicLandmark: {
+      name: 'הר השולחן',
+      nameLocal: 'Table Mountain',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Table_Mountain_DanieVDM.jpg/500px-Table_Mountain_DanieVDM.jpg',
+      blurb:
+        'הר שטוח-פסגה שמתנשא מעל קייפטאון לגובה של כ-1,085 מ׳, עם רכבל מסתובב ועשרות מסלולי הליכה - הסמל של העיר ואחד ההרים המזוהים בעולם.',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'שילוב יוצא דופן של עיר, חופים, יין וספארי - ועם תשתית כשרות אמיתית בקייפטאון וביוהנסבורג, מהמפותחות בעולם מחוץ לישראל. חסרונות: אין כיום קו ישיר קבוע מישראל, המרחקים בין קייפטאון לקרוגר גדולים (טיסה פנימית), וצריך תשומת לב מתמדת לביטחון אישי.',
+    },
+    summary:
+      'קייפטאון יושבת בין הר השולחן לאוקיינוס: רכבל לפסגה, כביש הצוקים של צ׳פמנס פיק, מושבת הפינגווינים בבולדרס ביץ׳, כף התקווה הטובה, הגן הבוטני קירסטנבוש ואי רובן. שעה משם - יקבי סטלנבוש, וממזרח מתחיל כביש הגן עם יערות ציציקאמה. בצפון-מזרח המדינה שוכן הפארק הלאומי קרוגר עם החמישייה הגדולה וקניון נהר הבלייד. בשכונת סי פוינט שבקייפטאון יש ריכוז מסעדות וחנויות כשרות.',
+    bestSeason:
+      'נובמבר-מרץ קיץ בקייפטאון (חופים ויין; חם ויבש) · מאי-ספטמבר העונה הטובה לספארי בקרוגר (יבש, החיות מתקבצות למים) · בקייפטאון החורף גשום ורוחות חזקות',
+    places: [
+      {
+        id: 'zaf-table',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Table_Mountain_DanieVDM.jpg/500px-Table_Mountain_DanieVDM.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'הר השולחן',
+        nameLocal: 'Table Mountain',
+        category: 'nature',
+        lat: -33.9622,
+        lng: 18.4099,
+        description:
+          'ההר השטוח שמעל קייפטאון: עולים ברכבל מסתובב או במסלול פלטקליף גורג׳ התלול, ולמעלה שבילים ותצפיות על העיר, על החופים ועל האוקיינוס. נסגר ברוח חזקה - לבדוק לפני שנוסעים.',
+        rating: 4.8,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Table+Mountain',
+      },
+      {
+        id: 'zaf-capepoint',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Playa_Dias%2C_Cape_Point%2C_Sud%C3%A1frica%2C_2018-07-23%2C_DD_103.jpg/500px-Playa_Dias%2C_Cape_Point%2C_Sud%C3%A1frica%2C_2018-07-23%2C_DD_103.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'כף התקווה הטובה',
+        nameLocal: 'Cape of Good Hope & Cape Point',
+        category: 'nature',
+        lat: -34.3581,
+        lng: 18.4756,
+        description:
+          'הקצה הדרומי-מערבי של אפריקה, בתוך שמורת חצי האי: מצוקים מעל האוקיינוס, מגדלור ישן שאליו עולה פוניקולר, שבילי חוף ובעלי חיים כמו יענים ובבונים (לא להאכיל).',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Cape+Point',
+      },
+      {
+        id: 'zaf-boulders',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Boulders_Beach_Suedafrika.jpg/500px-Boulders_Beach_Suedafrika.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'חוף בולדרס והפינגווינים',
+        nameLocal: 'Boulders Beach',
+        category: 'nature',
+        lat: -34.197,
+        lng: 18.451,
+        description:
+          'מושבה של פינגווינים אפריקאיים שחיה בין סלעי גרניט ליד סיימונס טאון - צופים בהם ממסלולי עץ ממש מקרוב. אחת האטרקציות האהובות על משפחות באזור.',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Boulders+Beach',
+      },
+      {
+        id: 'zaf-chapmans',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Chapmans_Peak_Drive_2.jpg/500px-Chapmans_Peak_Drive_2.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'כביש צ׳פמנס פיק',
+        nameLocal: "Chapman's Peak Drive",
+        category: 'viewpoint',
+        lat: -34.0872,
+        lng: 18.3606,
+        description:
+          'כביש חצוב בקיר צוק מעל האוקיינוס בין הוט ביי לנורדהוק, עם תצפיות ומפרצים - אחת הנסיעות הנופיות היפות בעולם. כביש אגרה, ולעתים נסגר בגלל מפולות או מזג אוויר.',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Chapmans+Peak+Drive',
+      },
+      {
+        id: 'zaf-kirstenbosch',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Kirstenbosch_National_Botanical_Garden_2024_7th_batch_09.jpg/500px-Kirstenbosch_National_Botanical_Garden_2024_7th_batch_09.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 1,
+        name: 'הגן הבוטני קירסטנבוש',
+        nameLocal: 'Kirstenbosch Botanical Garden',
+        category: 'nature',
+        lat: -33.9875,
+        lng: 18.4325,
+        description:
+          'גן בוטני על מדרונות הר השולחן, מהיפים בעולם, המוקדש לצמחיית הפינבוש המקומית - עם שביל חופה מוגבה בין העצים ומופעי קיץ על הדשא.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Kirstenbosch',
+      },
+      {
+        id: 'zaf-robben',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Robben_Island_-_Cape_Town%2C_South_Africa_%283883849594%29.jpg/500px-Robben_Island_-_Cape_Town%2C_South_Africa_%283883849594%29.jpg',
+        tags: ['history'],
+        priceLevel: 2,
+        name: 'אי רובן',
+        nameLocal: 'Robben Island',
+        category: 'museum',
+        lat: -33.805,
+        lng: 18.37,
+        description:
+          'האי שבו נכלא נלסון מנדלה 18 שנה, היום אתר מורשת עולמית ומוזיאון. מגיעים במעבורת מהוואטרפרונט, והסיור נערך בהדרכת אסירים לשעבר. להזמין מראש.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Robben+Island',
+      },
+      {
+        id: 'zaf-capetown',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Camps_bay_%2853460319478%29_%28cropped%29.jpg/500px-Camps_bay_%2853460319478%29_%28cropped%29.jpg',
+        tags: ['foodie', 'families'],
+        priceLevel: 2,
+        name: 'קייפטאון',
+        nameLocal: 'Cape Town',
+        category: 'attraction',
+        lat: -33.9253,
+        lng: 18.4239,
+        description:
+          'העיר עצמה: הוואטרפרונט, שכונת בו-קאאפ הצבעונית, חופי קמפס ביי וקליפטון, שוק אולד ביסקיט מיל וסצנת אוכל חזקה - הכול בין ההר לאוקיינוס.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Cape+Town',
+      },
+      {
+        id: 'zaf-seapoint',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'סי פוינט - המרכז הכשר',
+        nameLocal: 'Sea Point kosher area, Cape Town',
+        category: 'kosher-food',
+        lat: -33.9153,
+        lng: 18.3925,
+        description:
+          'שכונת החוף סי פוינט היא מרכז החיים היהודיים של קייפטאון: מסעדות, מאפיות וחנויות כשרות, בתי כנסת ובתי חב"ד - הכול בטווח הליכה. הסימון הוא ברמת השכונה ולא כתובת בודדת.',
+        kosherNote:
+          'הכשרות בקייפטאון בפיקוח בית הדין המקומי (Cape Beth Din). לוודא ברשימות העדכניות אילו עסקים תחת השגחה, ומה שעות הפתיחה בשישי-שבת.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'בית הדין של קייפטאון (Cape Beth Din)',
+        },
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Sea+Point+Cape+Town',
+      },
+      {
+        id: 'zaf-stellenbosch',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Stellenbosch_aerial_photo_from_north-west_2024-01.jpg/500px-Stellenbosch_aerial_photo_from_north-west_2024-01.jpg',
+        tags: ['foodie', 'romantic'],
+        priceLevel: 2,
+        name: 'סטלנבוש והיקבים',
+        nameLocal: 'Stellenbosch Winelands',
+        category: 'attraction',
+        lat: -33.9367,
+        lng: 18.8614,
+        description:
+          'עיירה הולנדית-קייפית עם רחובות עצים ואדריכלות לבנה, מוקפת עמקי כרמים והרים - אזור היין המפורסם של דרום אפריקה, כשעה מקייפטאון.',
+        rating: 4.6,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Stellenbosch',
+      },
+      {
+        id: 'zaf-tsitsikamma',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Tsitsikamma_Park.JPG/500px-Tsitsikamma_Park.JPG',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'ציציקאמה וכביש הגן',
+        nameLocal: 'Tsitsikamma & the Garden Route',
+        category: 'nature',
+        lat: -34.0217,
+        lng: 23.8956,
+        description:
+          'החלק הימי של פארק כביש הגן: יער עד, מצוקים, גשרים תלויים מעל שפך נהר הסטורמס ומסלולי הליכה לאורך החוף. נקודת שיא בנסיעה המזרחה מקייפטאון.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Tsitsikamma+National+Park',
+      },
+      {
+        id: 'zaf-kruger',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Kruger_Zebra.JPG/500px-Kruger_Zebra.JPG',
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'הפארק הלאומי קרוגר',
+        nameLocal: 'Kruger National Park',
+        category: 'nature',
+        lat: -24.0,
+        lng: 31.5,
+        description:
+          'אחד משמורות הטבע הגדולות באפריקה, בשטח של כ-20 אלף קמ"ר, ובו החמישייה הגדולה. ייחודו: אפשר לנהוג בו ברכב פרטי בכבישים סלולים ולישון במחנות מגודרים - ספארי עצמאי ולא רק מאורגן.',
+        rating: 4.8,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Kruger+National+Park',
+      },
+      {
+        id: 'zaf-blyde',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/20131119_162543b.jpg/500px-20131119_162543b.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'קניון נהר הבלייד',
+        nameLocal: 'Blyde River Canyon',
+        category: 'nature',
+        lat: -24.6789,
+        lng: 30.8843,
+        description:
+          'אחד הקניונים הגדולים בעולם, ירוק כמעט לכל אורכו, בדרך לקרוגר: תצפית "שלושת הרונדוואלים", בורות הענק של בורקס לאק וחלון האלוהים.',
+        rating: 4.7,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Blyde+River+Canyon',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'קייפטאון - העיר וההר',
+        placeIds: ['zaf-capetown', 'zaf-table', 'zaf-seapoint'],
+        notes:
+          'רכבל להר השולחן בבוקר (לפני שהרוח מתחזקת), אחר הצהריים הוואטרפרונט ובו-קאאפ, וארוחה כשרה בסי פוינט.',
+      },
+      {
+        day: 2,
+        title: 'חצי האי - פינגווינים וכף התקווה',
+        placeIds: ['zaf-chapmans', 'zaf-boulders', 'zaf-capepoint'],
+        notes:
+          'יום נסיעה נופי: כביש צ׳פמנס פיק, מושבת הפינגווינים בבולדרס, וכף התקווה הטובה בקצה חצי האי.',
+      },
+      {
+        day: 3,
+        title: 'גנים, אי ויקבים',
+        placeIds: ['zaf-kirstenbosch', 'zaf-robben', 'zaf-stellenbosch'],
+        notes:
+          'בוקר בקירסטנבוש או במעבורת לאי רובן (להזמין מראש), ואחר הצהריים בעמק היין של סטלנבוש.',
+      },
+      {
+        day: 4,
+        title: 'כביש הגן',
+        placeIds: ['zaf-tsitsikamma'],
+        notes:
+          'נוסעים מזרחה לאורך כביש הגן: מפרצים, יערות ומסלולי חוף בציציקאמה. אפשר להאריך ליומיים-שלושה.',
+      },
+      {
+        day: 5,
+        title: 'קרוגר - ספארי',
+        placeIds: ['zaf-kruger'],
+        notes:
+          'טיסה פנימית לצפון-מזרח (יוהנסבורג ואז נלספרויט/סקוקוזה) ויום-יומיים בפארק - יציאות מוקדמות ומאוחרות, שאז החיות פעילות.',
+      },
+      {
+        day: 6,
+        title: 'קניון הבלייד',
+        placeIds: ['zaf-blyde'],
+        notes:
+          'בדרך חזרה מקרוגר: תצפיות שלושת הרונדוואלים, חלון האלוהים ובורות בורקס לאק.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין כיום קו ישיר קבוע מנתב"ג לדרום אפריקה - טסים עם החלפה אחת (אדיס אבבה, דובאי, איסטנבול, דוחא או נאירובי) ליוהנסבורג (JNB) או לקייפטאון (CPT), סה"כ כ-14-17 שעות. סטטוס הקווים הישירים השתנה בשנים האחרונות - כדאי לבדוק עדכני מול חברות התעופה.',
+      gettingAround:
+        'רכב שכור הוא הדרך המקובלת בקייפטאון ובכביש הגן (נוסעים בצד שמאל). בין קייפטאון לקרוגר טסים פנימית - זה מרחק של אלפי קילומטרים. בקרוגר אפשר לנהוג עצמאית בכבישים הסלולים או לצאת לספארי מאורגן; לא לנסוע בלילה בכבישים לא מוכרים.',
+      kosherOverview:
+        'דרום אפריקה היא אחד המקומות הנוחים בעולם למטייל שומר כשרות: בקייפטאון (בעיקר סי פוינט) וביוהנסבורג יש מסעדות, מאפיות וסופרמרקטים כשרים, בפיקוח בתי הדין המקומיים, וגם מוצרים כשרים רבים ברשתות הרגילות. בקרוגר ובכביש הגן אין כשרות - להצטייד מראש בעיר ולוודא רשימות עסקים מעודכנות לפני הנסיעה.',
+    },
+  },
+  {
+    slug: 'yerevan',
+    name: 'ירוואן והרי ארמניה',
+    nameLocal: 'Yerevan & the Armenian Highlands',
+    countrySlug: 'armenia',
+    flag: '🇦🇲',
+    center: { lat: 40.1, lng: 45.0 },
+    zoom: 8,
+    tagline: 'מנזרי סלע, אגם הררי ויערות - שעתיים וחצי מהבית',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Mount_Ararat_and_the_Yerevan_skyline_%28June_2018%29.jpg/500px-Mount_Ararat_and_the_Yerevan_skyline_%28June_2018%29.jpg',
+    iconicLandmark: {
+      name: 'מנזר חור וירפ',
+      nameLocal: 'Khor Virap',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Monasterio_Khor_Virap%2C_Armenia%2C_2016-10-01%2C_DD_25.jpg/500px-Monasterio_Khor_Virap%2C_Armenia%2C_2016-10-01%2C_DD_25.jpg',
+      blurb:
+        'מנזר על גבעה בעמק ארארט, ממש על גבול טורקיה - ומאחוריו נשקפת פסגת אררט המושלגת, התמונה המזוהה ביותר עם ארמניה.',
+    },
+    editorialRating: {
+      score: 4.4,
+      verdict:
+        'יעד קרוב וזול עם מנזרים דרמטיים, אגם הרים ויערות - ומחירים שמאפשרים טיול נוח בתקציב קטן. חסרונות: הטיסות הישירות בתדירות נמוכה ומשתנות, אין כשרות מאומתת, וכדי להגיע לאתרים צריך רכב או נהג - התחבורה הציבורית דלילה.',
+    },
+    summary:
+      'ארמניה קטנה ומרוכזת: מירוואן יוצאים לכל הכיוונים ובשעה-שעתיים מגיעים לנופים אחרים לגמרי - מקדש גרני הרומי מעל קניון, מנזר גגהארד החצוב בסלע, מנזר חור וירפ מול אררט, אגם סוואן ההררי ומנזר סוואנאוואנק על צוק, יערות דיליז׳אן, ובדרום מנזר טאטב שאליו מגיעים ברכבל "כנפי טאטב" הארוך בעולם.',
+    bestSeason:
+      'מאי-יוני וספטמבר-אוקטובר (מזג אוויר נעים, ירוק או צבעי סתיו) · יולי-אוגוסט חם מאוד בעמקים אבל נעים בהרים · בחורף שלג וכבישי הרים חלקם קשים',
+    places: [
+      {
+        id: 'arm-khorvirap',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Monasterio_Khor_Virap%2C_Armenia%2C_2016-10-01%2C_DD_25.jpg/500px-Monasterio_Khor_Virap%2C_Armenia%2C_2016-10-01%2C_DD_25.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'מנזר חור וירפ',
+        nameLocal: 'Khor Virap',
+        category: 'attraction',
+        lat: 39.8783,
+        lng: 44.5761,
+        description:
+          'מנזר על גבעה בעמק ארארט, מהאתרים המקודשים בארמניה - כאן לפי המסורת נכלא גרגוריוס המאיר בבור. מאחוריו נשקפת פסגת אררט; הכי צלול בבוקר.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Khor+Virap',
+      },
+      {
+        id: 'arm-geghard',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Monasterio_de_Geghard%2C_Armenia%2C_2016-10-02%2C_DD_63.jpg/500px-Monasterio_de_Geghard%2C_Armenia%2C_2016-10-02%2C_DD_63.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'מנזר גגהארד',
+        nameLocal: 'Geghard Monastery',
+        category: 'attraction',
+        lat: 40.1404,
+        lng: 44.8185,
+        description:
+          'מנזר מהמאה ה-13 שחלקיו חצובים ישירות בתוך קיר הסלע, אתר מורשת עולמית בקניון נהר אזאט. האקוסטיקה באולמות החצובים יוצאת דופן - לעתים שרים שם מקהלות.',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Geghard+Monastery',
+      },
+      {
+        id: 'arm-garni',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Garni_temple_2021_drone.jpg/500px-Garni_temple_2021_drone.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'מקדש גרני',
+        nameLocal: 'Garni Temple',
+        category: 'attraction',
+        lat: 40.1124,
+        lng: 44.7303,
+        description:
+          'המקדש ההלניסטי היחיד ששרד בקווקז, מהמאה הראשונה לספירה, על צוק מעל הקניון. למטה בקניון - "הסימפוניה של האבנים", קיר עמודי בזלת משושים.',
+        rating: 4.6,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Garni+Temple',
+      },
+      {
+        id: 'arm-sevan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Lake_Sevan_2022-08-14_Sentinel-2_L2A.jpg/500px-Lake_Sevan_2022-08-14_Sentinel-2_L2A.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'אגם סוואן',
+        nameLocal: 'Lake Sevan',
+        category: 'nature',
+        lat: 40.3167,
+        lng: 45.35,
+        description:
+          'אחד האגמים ההרריים הגדולים בעולם, בגובה כ-1,900 מ׳ - מים כחולים עמוקים, חופים וכפרי דייגים. קריר ונעים גם באוגוסט, וכשעה נסיעה מירוואן.',
+        rating: 4.5,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Lake+Sevan',
+      },
+      {
+        id: 'arm-sevanavank',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/%D5%8D%D6%87%D5%A1%D5%B6%D5%AB_%D5%BE%D5%A1%D5%B6%D5%A1%D5%AF%D5%A1%D5%B6_%D5%B0%D5%A1%D5%B4%D5%A1%D5%AC%D5%AB%D6%80_%D5%84%D4%B2_29.jpg/500px-%D5%8D%D6%87%D5%A1%D5%B6%D5%AB_%D5%BE%D5%A1%D5%B6%D5%A1%D5%AF%D5%A1%D5%B6_%D5%B0%D5%A1%D5%B4%D5%A1%D5%AC%D5%AB%D6%80_%D5%84%D4%B2_29.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        name: 'מנזר סוואנאוואנק',
+        nameLocal: 'Sevanavank',
+        category: 'attraction',
+        lat: 40.5639,
+        lng: 45.0108,
+        description:
+          'שתי כנסיות אבן מהמאה התשיעית על גבעה שחודרת לאגם סוואן - עולים במדרגות ומקבלים תצפית על כל האגם וההרים סביבו.',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Sevanavank',
+      },
+      {
+        id: 'arm-dilijan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/%22Dilijan%22_national_park.jpg/500px-%22Dilijan%22_national_park.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'הפארק הלאומי דיליז׳אן',
+        nameLocal: 'Dilijan National Park',
+        category: 'nature',
+        lat: 40.6564,
+        lng: 45.0214,
+        description:
+          'יערות עבותים, אגמים קטנים ומנזרים נסתרים - מכנים אותו "שווייץ הקטנה של ארמניה". מסלולי הליכה נוחים בין הכפרים ואל אגם פרז ומנזרי האגהרצין וגושבאנק.',
+        rating: 4.6,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Dilijan+National+Park',
+      },
+      {
+        id: 'arm-tatev',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/-2025.05_%D0%A2%D0%B0%D1%82%D0%B5%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D0%BE%D0%BD%D0%B0%D1%81%D1%82%D1%8B%D1%80%D1%8C_1.jpg/500px--2025.05_%D0%A2%D0%B0%D1%82%D0%B5%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D0%BE%D0%BD%D0%B0%D1%81%D1%82%D1%8B%D1%80%D1%8C_1.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'מנזר טאטב ורכבל "כנפי טאטב"',
+        nameLocal: 'Tatev Monastery & Wings of Tatev',
+        category: 'attraction',
+        lat: 39.3794,
+        lng: 46.25,
+        description:
+          'מנזר מהמאה התשיעית על צוק מעל קניון נהר ורוטן, ואליו מגיעים ברכבל "כנפי טאטב" - הרכבל הדו-כיווני הארוך בעולם, כ-5.7 ק"מ מעל הקניון. כ-4 שעות נסיעה מירוואן.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Tatev+Monastery',
+      },
+      {
+        id: 'arm-noravank',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Noravank.JPG/500px-Noravank.JPG',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'מנזר נורוואנק',
+        nameLocal: 'Noravank',
+        category: 'attraction',
+        lat: 39.6841,
+        lng: 45.2329,
+        description:
+          'מנזר מהמאה ה-13 בקצה קניון של צוקי אבן חול אדומים - הצבע של הסלעים בשעת שקיעה הוא הסיבה העיקרית לבוא. בדרך לטאטב או ליריחו של יין ארני.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Noravank',
+      },
+      {
+        id: 'arm-aragats',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Mount_Aragats_2020-05-11.jpg/500px-Mount_Aragats_2020-05-11.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'הר ארגאץ',
+        nameLocal: 'Mount Aragats',
+        category: 'nature',
+        lat: 40.5333,
+        lng: 44.2,
+        description:
+          'ההר הגבוה בארמניה (4,090 מ׳), הר געש כבוי עם ארבע פסגות סביב לוע. אפשר להגיע ברכב עד אגם קארי בגובה 3,200 מ׳ ומשם לטפס לפסגה הדרומית בקיץ.',
+        rating: 4.5,
+        durationMin: 420,
+        externalUrl: 'https://maps.google.com/?q=Mount+Aragats',
+      },
+      {
+        id: 'arm-jermuk',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Jermuk_new_mix_2013.jpg/500px-Jermuk_new_mix_2013.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'ג׳רמוק והמפל',
+        nameLocal: 'Jermuk',
+        category: 'nature',
+        lat: 39.8417,
+        lng: 45.6722,
+        description:
+          'עיירת מרפא הררית המפורסמת במים המינרליים שלה, ובה מפל בגובה כ-70 מ׳, יערות ומסלולי הליכה - עצירה נעימה בדרך דרומה לטאטב.',
+        rating: 4.3,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Jermuk',
+      },
+      {
+        id: 'arm-yerevan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Mount_Ararat_and_the_Yerevan_skyline_%28June_2018%29.jpg/500px-Mount_Ararat_and_the_Yerevan_skyline_%28June_2018%29.jpg',
+        tags: ['foodie', 'art'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'ירוואן',
+        nameLocal: 'Yerevan',
+        category: 'attraction',
+        lat: 40.1778,
+        lng: 44.5128,
+        description:
+          'בירה ורודה (מאבן הטוף המקומית) עם כיכר הרפובליקה ומזרקות, מדרגות הקסקאד ומרכז האמנות, שוק ורניסאז׳ ומסעדות מצוינות. בסיס נוח לכל הנסיעות היומיות.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Yerevan',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'ירוואן',
+        placeIds: ['arm-yerevan'],
+        notes:
+          'התמקמות בבירה: כיכר הרפובליקה, הקסקאד, שוק ורניסאז׳ וערב במסעדה מקומית. הכול בהליכה או במונית זולה.',
+      },
+      {
+        day: 2,
+        title: 'גרני, גגהארד וחור וירפ',
+        placeIds: ['arm-garni', 'arm-geghard', 'arm-khorvirap'],
+        notes:
+          'הקלאסיקה של האזור: מקדש גרני והסימפוניה של האבנים, מנזר גגהארד החצוב, ולקראת ערב חור וירפ מול אררט.',
+      },
+      {
+        day: 3,
+        title: 'אגם סוואן ודיליז׳אן',
+        placeIds: ['arm-sevan', 'arm-sevanavank', 'arm-dilijan'],
+        notes:
+          'צפונה לאגם ההררי ולמנזר שעל הצוק, ואחר הצהריים יערות דיליז׳אן - מסלול הליכה קצר בין המנזרים.',
+      },
+      {
+        day: 4,
+        title: 'דרומה - נורוואנק וטאטב',
+        placeIds: ['arm-noravank', 'arm-jermuk', 'arm-tatev'],
+        notes:
+          'יום נסיעה ארוך דרומה: קניון נורוואנק, עצירה בג׳רמוק, ורכבל כנפי טאטב אל המנזר שעל הצוק. אפשר ללון בגוריס.',
+      },
+      {
+        day: 5,
+        title: 'הר ארגאץ',
+        placeIds: ['arm-aragats'],
+        notes:
+          'נוסעים אל אגם קארי בגובה 3,200 מ׳; מי שכשיר ממשיך לפסגה הדרומית (בקיץ בלבד, ומזג האוויר משתנה מהר).',
+      },
+    ],
+    practical: {
+      flights:
+        'FlyOne Armenia מפעילה קו ישיר בין נתב"ג לירוואן (EVN) - כ-1-3 טיסות בשבוע לפי כיוון ועונה, כשעתיים וחצי. התדירות משתנה, ולכן כדאי לבדוק לוחות זמנים עדכניים; יש גם חיבורים עם החלפה דרך טביליסי, איסטנבול ודובאי.',
+      gettingAround:
+        'בירוואן - מוניות זולות ואפליקציות (GG / Yandex). לאתרים מחוץ לעיר: נהג פרטי ליום, טיול מאורגן או רכב שכור. התחבורה הציבורית בין הכפרים דלילה ואיטית, והכבישים ההרריים בדרום ארוכים.',
+      kosherOverview:
+        'לא אותרה בארמניה מסעדה או חנות כשרה מאומתת. יש בירוואן קהילה יהודית קטנה ובית כנסת, אבל לא תשתית כשרות תיירותית - הכשרות הקרובה היא בטביליסי שבגאורגיה (כשעה טיסה או נסיעה ארוכה). הדרך המעשית: להצטייד מראש, ולהסתמך על ירקות, פירות ומוצרים ארוזים עם סימון מוכר.',
+    },
+  },
+  {
+    slug: 'samarkand',
+    name: 'סמרקנד ובוכרה',
+    nameLocal: 'Samarkand & Bukhara',
+    countrySlug: 'uzbekistan',
+    flag: '🇺🇿',
+    center: { lat: 40.3, lng: 65.5 },
+    zoom: 6,
+    tagline: 'ערי דרך המשי, כיפות טורקיז ומורשת יהודית בוכרית',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/500px-RegistanSquare_Samarkand.jpg',
+    iconicLandmark: {
+      name: 'כיכר הרגיסטן',
+      nameLocal: 'Registan Square, Samarkand',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/500px-RegistanSquare_Samarkand.jpg',
+      blurb:
+        'שלוש מדרסות מהמאות ה-15 עד ה-17 שעומדות זו מול זו סביב כיכר אחת, מכוסות פסיפסי אריחים בכחול ובטורקיז - הלב של סמרקנד ואחד המראות המזוהים עם דרך המשי.',
+    },
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'אדריכלות איסלאמית ברמה עולמית במחירים נמוכים, טיסה ישירה של פחות מחמש שעות, ורכבת מהירה נוחה בין הערים - ולישראלים גם מורשת בוכרית חיה. חסרונות: הקיץ לוהט מאוד, האתרים משוחזרים במידה שמרגישה לפעמים "חדשה מדי", ותשתית הכשרות מוגבלת מאוד.',
+    },
+    summary:
+      'שלוש ערי דרך המשי - סמרקנד, בוכרה וחיווה - הן הלב של הטיול באוזבקיסטן: כיכר הרגיסטן, מתחם הקברים שאה-אי-זינדה ומאוזוליאום גור-אמיר בסמרקנד; מגדל ומסגד קליאן והרובע היהודי בבוכרה; והעיר המוקפת חומה איצ׳אן קאלה בחיווה. סביב טשקנט אפשר להוסיף טבע - הרי צ׳ימגן ואגם צ׳ארוואק - ובצפון הרחוק את שרידי ים אראל, אחת הטרגדיות הסביבתיות הגדולות של המאה ה-20.',
+    bestSeason:
+      'אפריל-מאי וספטמבר-אוקטובר (מזג אוויר מושלם) · יולי-אוגוסט חם מאוד (מעל 40 מעלות) · בחורף קר, אבל האתרים ריקים ויפים בשלג',
+    places: [
+      {
+        id: 'uzb-registan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/500px-RegistanSquare_Samarkand.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'כיכר הרגיסטן',
+        nameLocal: 'Registan Square',
+        category: 'attraction',
+        lat: 39.6547,
+        lng: 66.9756,
+        description:
+          'שלוש מדרסות מונומנטליות סביב כיכר אחת, מכוסות אריחי פסיפס כחולים - אולוגבק, שיר-דור וטילה-קורי. הכי יפה בשעת בוקר מוקדמת או בתאורת ערב.',
+        rating: 4.8,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Registan+Samarkand',
+      },
+      {
+        id: 'uzb-shahizinda',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Shah-i-Zinda%2C_Samarkand_%28Shohi-Zinda_majmuasi%2C_Samarqand%2C_%D0%A8%D0%B0%D1%85%D0%B8_%D0%97%D0%B8%D0%BD%D0%B4%D0%B0%29.jpg/500px-Shah-i-Zinda%2C_Samarkand_%28Shohi-Zinda_majmuasi%2C_Samarqand%2C_%D0%A8%D0%B0%D1%85%D0%B8_%D0%97%D0%B8%D0%BD%D0%B4%D0%B0%29.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'שאה-אי-זינדה',
+        nameLocal: 'Shah-i-Zinda',
+        category: 'attraction',
+        lat: 39.6631,
+        lng: 66.9878,
+        description:
+          'סמטה של מאוזוליאומים מהמאות ה-11 עד ה-19, מכוסים כולם באריחי קרמיקה בגוונים של תכלת - אחד המקומות היפים בעיר, ולא במקרה מכונה "רחוב הקברים החי".',
+        rating: 4.8,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Shah-i-Zinda',
+      },
+      {
+        id: 'uzb-guremir',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/ShrineofAmirTimur.jpg/500px-ShrineofAmirTimur.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'מאוזוליאום גור-אמיר',
+        nameLocal: 'Gur-e-Amir',
+        category: 'attraction',
+        lat: 39.6483,
+        lng: 66.9689,
+        description:
+          'קברו של טימור (טמרלן) ובני משפחתו, מתחת לכיפה מצולעת בצבע טורקיז - מבנה מהמאה ה-15 שהשפיע על אדריכלות הטאג׳ מאהל בהודו.',
+        rating: 4.7,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Gur-e-Amir',
+      },
+      {
+        id: 'uzb-samarkand',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/500px-RegistanSquare_Samarkand.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'סמרקנד',
+        nameLocal: 'Samarkand',
+        category: 'attraction',
+        lat: 39.6506,
+        lng: 66.9653,
+        description:
+          'אחת הערים העתיקות באסיה המרכזית ואתר מורשת עולמית - מלבד המונומנטים יש בה שוק סיאב הססגוני, מאפיות הלחם המסורתי, ובית עלמין יהודי היסטורי.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Samarkand',
+      },
+      {
+        id: 'uzb-bukhara',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Kalon-Ensemble_Buchara.jpg/500px-Kalon-Ensemble_Buchara.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'בוכרה',
+        nameLocal: 'Bukhara',
+        category: 'attraction',
+        lat: 39.7667,
+        lng: 64.4231,
+        description:
+          'עיר דרך המשי השמורה ביותר, אתר מורשת עולמית: מדרסות, שווקים מקורים, בריכת לאבי-האוז והמצודה הארק. כאן גם הרובע היהודי ההיסטורי של יהודי בוכרה, עם בית כנסת פעיל.',
+        rating: 4.8,
+        durationMin: 600,
+        externalUrl: 'https://maps.google.com/?q=Bukhara',
+      },
+      {
+        id: 'uzb-poikalyan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Poi_Kalon.jpg/500px-Poi_Kalon.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'מתחם פוי-קליאן',
+        nameLocal: 'Po-i-Kalyan',
+        category: 'attraction',
+        lat: 39.7758,
+        lng: 64.4142,
+        description:
+          'לב בוכרה: מגדל קליאן מהמאה ה-12 בגובה 47 מ׳, מסגד קליאן הענק והמדרסה שמולו - מתחם שנשאר עומד גם אחרי הכיבוש המונגולי.',
+        rating: 4.8,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Po-i-Kalyan',
+      },
+      {
+        id: 'uzb-khiva',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/View_from_the_city_walls%2C_Khiva_%284934484894%29.jpg/500px-View_from_the_city_walls%2C_Khiva_%284934484894%29.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'חיווה (איצ׳אן קאלה)',
+        nameLocal: 'Khiva / Ichan Kala',
+        category: 'attraction',
+        lat: 41.3814,
+        lng: 60.3611,
+        description:
+          'עיר מוקפת חומת חימר, שכולה מוזיאון פתוח - מינרטים, ארמונות ומדרסות בתוך שטח קטן שאפשר להקיף ברגל. אתר המורשת העולמית הראשון של אוזבקיסטן.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Khiva',
+      },
+      {
+        id: 'uzb-charvak',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Lac_Tcharvak.jpg/500px-Lac_Tcharvak.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'אגם צ׳ארוואק והרי צ׳ימגן',
+        nameLocal: 'Lake Charvak & Chimgan Mountains',
+        category: 'nature',
+        lat: 41.64,
+        lng: 70.03,
+        description:
+          'מאגר מים תכול בהרי טיין שאן, כשעה וחצי מטשקנט, ומעליו הרי צ׳ימגן - אזור הנופש הטבעי של הבירה: רכבל, מסלולי הליכה בקיץ וסקי בחורף.',
+        rating: 4.4,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Charvak+Reservoir',
+      },
+      {
+        id: 'uzb-tashkent',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/en/thumb/f/f6/Nest_One_Tashkent.jpg/500px-Nest_One_Tashkent.jpg',
+        tags: ['foodie', 'art'],
+        priceLevel: 1,
+        name: 'טשקנט',
+        nameLocal: 'Tashkent',
+        category: 'attraction',
+        lat: 41.3111,
+        lng: 69.2797,
+        description:
+          'הבירה ושדה התעופה הבינלאומי: שוק צ׳ורסו הענק תחת כיפה כחולה, תחנות מטרו מעוטרות שהן אטרקציה בפני עצמן, שדרות רחבות וקהילה יהודית פעילה.',
+        rating: 4.3,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Tashkent',
+      },
+      {
+        id: 'uzb-aral',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/AralSea1989_2014.jpg/500px-AralSea1989_2014.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 2,
+        name: 'ים אראל ובית הקברות לספינות',
+        nameLocal: 'Aral Sea & Moynaq ship cemetery',
+        category: 'nature',
+        lat: 45.0,
+        lng: 60.0,
+        description:
+          'מה שנשאר מהאגם שהיה מהגדולים בעולם ונסוג עשרות קילומטרים - במוינאק עומדות ספינות דייג חלודות על חול המדבר. יעד מרוחק שדורש נסיעת ג׳יפ ארוכה מנוקוס ולינה בשטח.',
+        rating: 4.3,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Moynaq+ship+cemetery',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'טשקנט',
+        placeIds: ['uzb-tashkent'],
+        notes:
+          'נחיתה בבירה: שוק צ׳ורסו, סיבוב בתחנות המטרו המעוטרות והתאקלמות. בערב רכבת מהירה או טיסה פנימית דרומה.',
+      },
+      {
+        day: 2,
+        title: 'סמרקנד',
+        placeIds: ['uzb-registan', 'uzb-shahizinda', 'uzb-guremir', 'uzb-samarkand'],
+        notes:
+          'יום מלא בעיר: רגיסטן בבוקר, שאה-אי-זינדה, גור-אמיר, ולקראת ערב שוק סיאב וחזרה לרגיסטן בתאורה.',
+      },
+      {
+        day: 3,
+        title: 'בוכרה',
+        placeIds: ['uzb-bukhara', 'uzb-poikalyan'],
+        notes:
+          'רכבת לבוכרה, והליכה איטית במרכז ההיסטורי: פוי-קליאן, השווקים המקורים, לאבי-האוז והרובע היהודי.',
+      },
+      {
+        day: 4,
+        title: 'חיווה',
+        placeIds: ['uzb-khiva'],
+        notes:
+          'נסיעה או רכבת לילה מערבה: יום בתוך החומות של איצ׳אן קאלה - מינרטים, ארמונות ותצפית מהחומה בשקיעה.',
+      },
+      {
+        day: 5,
+        title: 'טבע ליד הבירה',
+        placeIds: ['uzb-charvak'],
+        notes:
+          'חזרה לטשקנט ויום באגם צ׳ארוואק ובהרי צ׳ימגן - רכבל, מסלול קצר ורחצה בקיץ.',
+      },
+      {
+        day: 6,
+        title: 'הרחבה: ים אראל',
+        placeIds: ['uzb-aral'],
+        notes:
+          'למי שיש 2-3 ימים נוספים: טיסה לנוקוס ומשם מסע ג׳יפים למוינאק ולשרידי ים אראל, עם לינת מדבר.',
+      },
+    ],
+    practical: {
+      flights:
+        'יש טיסות ישירות מנתב"ג לטשקנט (TAS) - אוזבקיסטן איירווייז מפעילה כ-7 טיסות בשבוע, ולצדה גם Centrum Air, FlyOne Asia ו-Qanot Sharq; זמן טיסה כ-4 שעות ו-50 דקות.',
+      gettingAround:
+        'רכבת מהירה (Afrosiyob) מחברת את טשקנט-סמרקנד-בוכרה בנוחות ובמהירות - כדאי להזמין מקומות מראש. לחיווה: רכבת לילה או טיסה פנימית לאורגנץ׳. בערים מוניות זולות (Yandex Go). למוינאק ולים אראל - רק בטיול ג׳יפים מאורגן.',
+      kosherOverview:
+        'אוזבקיסטן היא ארץ המורשת של יהודי בוכרה - בבוכרה עדיין עומד הרובע היהודי עם בית כנסת פעיל, ובטשקנט יש קהילה יהודית ובתי כנסת. עם זאת, לא אותרה מסעדה כשרה קבועה ופתוחה לקהל: הדרך המעשית היא לתאם מראש מול הקהילה בטשקנט או מול קבוצות מאורגנות, ולהצטייד. במסעדות המקומיות הבשר אינו כשר, ואפשר להסתמך על ירקות, פירות ולחם.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {

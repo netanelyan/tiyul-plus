@@ -1334,3 +1334,354 @@ the repo's pre-existing `react-hooks/set-state-in-effect` errors
 new ones in `useTripChat`/`AgentWorkspace` are the same pattern as the
 code they replaced. Deferred: the chat panel has no unread/updated
 badge on mobile after the drawer closes.
+
+### 2026-07-25 (c) - Overnight expansion: Switzerland (Interlaken + Jungfrau region)
+
+Branch `data/overnight-expansion` (off the merged main). First entry of
+the overnight run.
+
+- **Switzerland** (new country) - Schengen visa-free 90 days, CHF (not
+  euro), eSIM caveat (Switzerland is outside the EU roaming zone),
+  card-friendly but expensive.
+- **Interlaken & Jungfrau region** (new destination) - 14 places, rating
+  4.7. Landmark: Jungfraujoch (Top of Europe). Nature-heavy: Lauterbrunnen
+  valley, Staubbach + Truemmelbach falls, Schilthorn, Bachalpsee,
+  Grindelwald, Harder Kulm, Lakes Brienz + Thun, Muerren, Aare Gorge,
+  Reichenbach Falls. 4-day itinerary.
+- Flights verified: SWISS resumed nonstop ZRH-TLV on 1 July 2026; with
+  El Al ~12-13 weekly, ~4h, then ~2h by train to Interlaken.
+- **Kosher: none in the region, stated plainly** - Swiss kosher
+  infrastructure is in Zurich/Geneva/Basel, mountain hotels offer only
+  seasonal kosher service. No venue invented.
+- Every coordinate from the Wikipedia API; every photo is the article
+  lead image (Commons 500px thumb), hero/landmark images eyeballed.
+  build clean, verify-photos 302/302 OK.
+
+### 2026-07-25 (d) - Overnight expansion: Japan (Tokyo + Mount Fuji)
+
+- **Japan** (new country, first East-Asian destination) - visa-free 90
+  days for Israelis, JPY, cash-friendly, IC cards (Suica/Pasmo).
+- **Tokyo & Mount Fuji** - 16 places, rating 4.8. Landmark: Mount Fuji.
+  Nature/day trips: Lake Kawaguchi, Chureito Pagoda viewpoint, Hakone,
+  Lake Ashi, Owakudani volcanic valley, Kegon Falls (Nikko). City:
+  Sensoji, Shibuya Crossing, Meiji Shrine, Skytree, Ueno Park, Shinjuku
+  Gyoen, Kamakura + the Great Buddha. 5-day itinerary.
+- Flights verified: El Al is the only nonstop TLV-NRT, ~3 weekly on a
+  787-9, ~11.5h, route resumed April 2026.
+- **Kosher REAL but small:** Chabad House Tokyo in Takanawa with Chana s
+  Place (the city first kosher restaurant) + Kosher Delica delivery under
+  rabbinical supervision - both by advance order; pending-review like every
+  kosher entry. Overview warns that regular Japanese food uses dashi/mirin
+  and must never be assumed kosher.
+- Coordinates: English Wikipedia API, and Japanese Wikipedia for the five
+  articles without coordinates (Owakudani, Kegon Falls, Lake Ashi, Shibuya,
+  Arakurayama Sengen Park); the Chabad pin is the Takanawa
+  neighbourhood centroid via Nominatim, with the exact street address in
+  the description. build clean, verify-photos 318/318 OK.
+
+### 2026-07-25 (e) - Overnight expansion: Tanzania (Serengeti, Ngorongoro, Kilimanjaro)
+
+- **Tanzania** (new country, first African destination in the catalog) -
+  e-Visa/visa-on-arrival, 50 USD, 90 days, passport valid 6 months;
+  TZS + USD for park fees; local SIM; cash-first economy.
+- **Serengeti & Kilimanjaro** (northern safari circuit) - 9 places,
+  rating 4.8. Landmark: Mount Kilimanjaro. Nature: Serengeti, Ngorongoro
+  Crater, Tarangire, Lake Manyara, Arusha NP + Mount Meru, Olduvai Gorge.
+  6-day itinerary built around a real safari flow (Arusha base first).
+- Flights verified: no nonstop from TLV; Ethiopian via Addis to JRO,
+  ~4 weekly, ~10h total.
+- **Kosher REAL:** Chabad House Arusha (Mawandammo 9) with a kosher
+  kitchen, meals by ~24h advance order - the only kosher address found in
+  the region; pending-review. Overview is explicit that lodges and parks
+  have nothing, and that safari operators offering kosher meals must be
+  verified directly.
+- Coordinates from the Wikipedia API (Kilimanjaro summit via German
+  Wikipedia); the Chabad pin is the Arusha city location with the street
+  address in the description and an explicit note that it is approximate.
+  Photos are article lead images. build clean, verify-photos 327/327 OK.
+
+### 2026-07-25 (f) - Overnight expansion: Peru (Cusco + Machu Picchu)
+
+- **Peru** (new country, first South-American destination) - visa-free
+  for Israelis up to 183 days, PEN, local SIM, cash outside the cities.
+- **Cusco & Machu Picchu** - 12 places, rating 4.8. Landmark: Machu
+  Picchu. Nature/altitude hikes: Laguna Humantay, Vinicunca (Rainbow
+  Mountain), the Sacred Valley, Maras salt ponds, Lake Titicaca. Inca
+  sites: Sacsayhuaman, Ollantaytambo, Pisac, Moray. 6-day itinerary that
+  starts with two acclimatisation days (Cusco is ~3,400 m).
+- Flights: no nonstop from TLV - one or two connections (Madrid /
+  Frankfurt / Amsterdam / New York / Panama) to Lima, then ~1.5h to CUZ.
+- **Kosher REAL and strong:** Chabad House Cusco (Calle Vitoque 631) runs
+  separate meat and dairy restaurants - a major hub for Israeli
+  travellers; pending-review, pin at city centre with the address in the
+  description. Outside Cusco: nothing, stated plainly.
+- Coordinates from the Wikipedia API (Spanish Wikipedia for Moray) and
+  Nominatim for the Maras salt ponds and Humantay lake; their photos came
+  from the Commons API and were eyeballed (the first Maras hit was a
+  close-up of one pan - replaced with the panorama; the Vinicunca lead
+  image download was broken, replaced with a verified alternative).
+  build clean, verify-photos 339/339 OK.
+
+### 2026-07-25 (g) - Overnight expansion: New Zealand (Queenstown + South Island)
+
+- **New Zealand** (new country, first Oceania destination) - visa waiver
+  but NZeTA + IVL required in advance (verified on immigration.govt.nz
+  terms: ~17-23 NZD + 35 NZD, valid 2 years, 90 days per visit), NZD,
+  strict biosecurity noted.
+- **Queenstown & the South Island** - 13 places, rating 4.8. Landmark:
+  Milford Sound. All-nature: Fiordland NP, Doubtful Sound, Routeburn
+  Track (Great Walk), Lake Wakatipu, Wanaka, Mount Aspiring NP, Aoraki /
+  Mount Cook, Lakes Pukaki and Tekapo (dark-sky reserve), Franz Josef
+  Glacier. 6-day itinerary.
+- Flights: no nonstop from TLV (the longest trip for Israelis) - two
+  connections, ~28-32h, then a domestic hop to ZQN.
+- **Kosher:** Chabad Queenstown serves South Island travellers with
+  Shabbat meals and food by advance order; no verified street address was
+  found, so the pin is the town centre and the entry says so explicitly.
+  pending-review.
+- Coordinates from the Wikipedia API (German Wikipedia for lakes Pukaki
+  and Tekapo, which lack coordinates in the English articles); photos are
+  article lead images. build clean, verify-photos 352/352 OK.
+
+### 2026-07-25 (h) - Overnight expansion: USA (Grand Canyon + the Southwest)
+
+- **USA** (new country, first North-American destination) - ESTA under
+  the Visa Waiver Program (Israel joined in 2023; ~21 USD, valid 2 years,
+  90 days), USD, tipping and pre-tax pricing noted for Israelis.
+- **Grand Canyon & the American Southwest** - 13 places, rating 4.8.
+  Landmark: the Grand Canyon. All-nature road trip: Zion, Bryce Canyon,
+  Arches, Canyonlands, Antelope Canyon, Horseshoe Bend, Lake Powell,
+  Monument Valley, Sedona, Death Valley, with Las Vegas as the base.
+  7-day itinerary following the real driving loop.
+- Flights: nonstop TLV to New York / Miami / Boston / Los Angeles; no
+  nonstop to Las Vegas - one US connection, ~17-20h.
+- **Kosher REAL in Las Vegas:** kosher market on S Rainbow Blvd (with the
+  city kosher restaurants clustered in the same western area) under the
+  local Vaad (Chabad of Southern Nevada); pending-review. Overview is
+  explicit that the parks themselves have nothing and that stocking up in
+  Vegas is the practical answer.
+- Coordinates from the Wikipedia API (German Wikipedia for Zion and
+  Arches, whose English articles carry no coordinates); the kosher pin is
+  the street location from Nominatim. build clean, verify-photos
+  365/365 OK.
+
+### 2026-07-25 (i) - Overnight expansion: High Tatras (Slovakia 2nd city)
+
+- **High Tatras** - 10 places, rating 4.5, Slovakia second destination
+  (first non-Bratislava). Landmark: Strbske Pleso. All-nature: Popradske
+  Pleso, Lomnicky Stit cable car, Hrebienok + the Cold Stream waterfalls,
+  Slovak Paradise NP ladder trails, Demanovska Cave of Liberty, the Tatra
+  ridge itself + Spis Castle and Poprad as the base. 5-day itinerary.
+- Access stated honestly: no flight to the region - Bratislava or Vienna
+  (~4h drive), or Krakow (~2.5h); Poprad has only a small regional airport.
+- **Kosher: none in the region**, and said so - nearest is Bratislava
+  Chabad or Krakow, hours away.
+- All coordinates and photos from the Wikipedia API; Spis Castle has no
+  lead image, so its photo came from the Commons API and was eyeballed.
+  build clean, verify-photos 375/375 OK.
+
+### 2026-07-25 (j) - Overnight expansion: Bohemian Switzerland (Czechia 2nd city)
+
+- **Bohemian Switzerland** - 8 places, rating 4.5, Czechia second
+  destination. Landmark: Pravcicka brana (Europe largest natural rock
+  arch). Nature: the national park, the Kamenice gorges with the boat
+  section, Hrensko, the Jetrichovice rock viewpoints, Tisa rock maze,
+  Decin, plus Bastei across the German border. 4-day itinerary.
+- Honest caveat carried into the rating and the park entry: the 2022
+  wildfire closed and changed trails - visitors are told to check current
+  trail status.
+- **Kosher: none in the region** - nearest is Prague (~1.5h), stated
+  plainly.
+- All coordinates and photos from the Wikipedia API. build clean,
+  verify-photos 383/383 OK.
+
+### 2026-07-25 (k) - Overnight expansion: Lake Balaton (Hungary 2nd city)
+
+- **Lake Balaton** - 9 places, rating 4.3, Hungary second destination.
+  Landmark: the Tihany peninsula and its 11th-century abbey. Nature/water:
+  the lake itself, Badacsony basalt hill and its vineyards, Lake Heviz
+  (the world largest biologically active thermal lake), Szigliget castle
+  hill, Tapolca cave lake (rowing boats underground), Balaton Uplands NP,
+  plus Balatonfured and Keszthely/Festetics Palace. 4-day itinerary.
+- Access: direct TLV-Budapest, then ~1.5h by car or direct train.
+- **Kosher: none at the lake** - nearest is Budapest, stated plainly.
+- All coordinates and photos from the Wikipedia API. build clean,
+  verify-photos all OK (392).
+
+### 2026-07-25 (l) - Overnight expansion: Iceland (Reykjavik + South Coast)
+
+- **Iceland** (new country) - Schengen visa-free, ISK, near-cashless
+  (PIN needed at automated fuel pumps), eSIM caveat (European bundles
+  often exclude Iceland).
+- **Reykjavik & the South Coast** - 12 places, rating 4.7. Landmark:
+  Jokulsarlon glacier lagoon. Nature: Golden Circle (Thingvellir, Geysir,
+  Gullfoss), Seljalandsfoss and Skogafoss, Reynisfjara black beach (with
+  the sneaker-wave warning), Vatnajokull, Blue Lagoon, Kirkjufell.
+  5-day itinerary.
+- Flights stated honestly: Icelandair has run a SEASONAL nonstop TLV-KEF
+  (~3 weekly, ~7h) since 2023 but it varies year to year - travellers are
+  told to verify it is operating for their dates, with easy one-stop
+  European connections as the fallback.
+- **Kosher - a real 2026 change:** the Beit Shvidler Jewish Center of
+  Iceland opened in downtown Reykjavik on 7 July 2026 (Chabad) with a
+  synagogue, kosher shop and community kitchen - the only kosher point in
+  the country; pending-review, pin at city centre. Overview also notes
+  ritual slaughter is banned locally so meat is imported.
+- Coordinates from the Wikipedia API (German Wikipedia for Kirkjufell);
+  photos are article lead images. build clean, verify-photos all OK.
+
+### 2026-07-25 (m) - Overnight expansion: Slovenia (Lake Bled + Julian Alps)
+
+- **Slovenia** (new country) - Schengen visa-free, euro, e-vinjeta
+  motorway sticker flagged for rental cars.
+- **Lake Bled & the Julian Alps** - 10 places, rating 4.6. Landmark: Lake
+  Bled and its island. Nature: Vintgar Gorge, Lake Bohinj, Triglav NP,
+  the turquoise Soca valley, Kranjska Gora + Vrsic pass, Postojna Cave,
+  Predjama Castle, plus Ljubljana and Piran. 5-day itinerary.
+- Flights: Israir runs a SEASONAL nonstop TLV-LJU (about July-October);
+  outside that window - connections, or land in Trieste/Venice and drive
+  ~2h. Stated as seasonal, not as a year-round route.
+- **Kosher: no verified address in Slovenia** - small Jewish community in
+  Ljubljana, nearest kosher infrastructure Trieste or Vienna. Nothing
+  invented.
+- Coordinates and photos from the Wikipedia API (Slovenian Wikipedia for
+  Triglav). Savica waterfall and the Tolmin gorges were DROPPED rather
+  than guessed: the English article has no coordinates and the Slovenian
+  article lead image was the wrong subject. build clean, verify-photos
+  all OK.
+
+### 2026-07-25 (n) - Overnight expansion: Croatia (Plitvice + Dalmatian coast)
+
+- **Croatia** (new country) - EU/Schengen visa-free, euro since 2023.
+- **Plitvice Lakes & the Dalmatian Coast** - 11 places, rating 4.7.
+  Landmark: Plitvice Lakes. Nature: Krka waterfalls, Rastoke, Paklenica
+  canyon, Kornati islands; cities: Zadar, Split + Diocletian Palace,
+  Dubrovnik, Zagreb. 6-day itinerary.
+- Flights: El Al nonstop TLV-Zagreb (about weekly, ~3.5h, some operated
+  by Israir), Croatia Airlines seasonal; no regular nonstop to Split or
+  Dubrovnik - said explicitly.
+- **Kosher:** verified that Croatia has NO public kosher restaurant;
+  Chabad of Croatia in Zagreb (Rokova 4) supplies Shabbat meals, kosher
+  meat/dairy and catering shipped to other cities by advance order
+  (~a week). pending-review.
+- All coordinates and photos from the Wikipedia API. build clean,
+  verify-photos all OK.
+
+### 2026-07-25 (o) - Overnight expansion: Nepal (Kathmandu + Himalayas)
+
+- **Nepal** (new country) - visa on arrival / e-Visa with 2026 fees
+  (30/50/125 USD for 15/30/90 days, cash), NPR, cash-first, local SIM.
+- **Kathmandu & the Himalayas** - 13 places, rating 4.7. Landmark: Mount
+  Everest. Nature/trekking: Sagarmatha NP (Everest region), the Annapurna
+  massif, Poon Hill, Pokhara + Phewa Lake, Chitwan NP. Heritage: Durbar
+  Square, Boudhanath, Swayambhunath, Bhaktapur, Nagarkot sunrise ridge.
+  6-day itinerary that treats treks as multi-day add-ons, not day trips.
+- Flights: no nonstop TLV-KTM; one connection (Gulf hubs / India / Sri
+  Lanka), ~13h+; domestic flights weather-dependent, buffer day advised.
+- **Kosher REAL and strong:** Chabad House Kathmandu in Thamel
+  (Pushpalal Path) with meat and dairy kosher restaurants and the famous
+  Seder; pending-review. Pokhara Chabad presence is described as seasonal
+  and to be verified - not asserted. Nothing on the treks, said plainly.
+- Coordinates and photos from the Wikipedia API. Annapurna Base Camp and
+  Everest Base Camp had no coordinates - used the massif/mountain
+  articles instead of guessing camp coordinates. build clean,
+  verify-photos all OK.
+
+### 2026-07-25 (p) - Overnight expansion: Vietnam (Hanoi + Ha Long Bay)
+
+- **Vietnam** (new country) - e-Visa up to 90 days (25/50 USD single/
+  multiple), VND, cash-first outside cities, Grab for transport.
+- **Hanoi & Ha Long Bay** - 10 places, rating 4.6. Landmark: Ha Long Bay.
+  Nature: Cat Ba island, Ninh Binh (Tam Coc/Trang An), Sa Pa rice
+  terraces, Fansipan, the Ha Giang loop, Phong Nha caves; city: Hanoi and
+  Hoan Kiem lake. 5-day itinerary.
+- Flights - a real 2026 change, verified: Arkia opened a nonstop
+  TLV-Hanoi on 5 Jan 2026 (1-3 weekly) and El Al announced a nonstop from
+  24 Oct 2026 (3 weekly, 787). Entry notes that new routes shift and
+  should be reconfirmed.
+- **Kosher REAL:** Chabad of Hanoi (To Ngoc Van area) with a kosher
+  restaurant, Shabbat meals and delivery, under Kosher Vietnam
+  supervision; Chabad HCMC also has a kosher restaurant. Nothing outside
+  the two cities, and the fish-sauce caveat is spelled out.
+  pending-review.
+- Coordinates and photos from the Wikipedia API. Hoi An and the Trang An
+  complex had no coordinates in the API - Hoi An was dropped (wrong
+  region for this hub) and Trang An is covered through the Ninh Binh
+  province entry rather than guessed. build clean, verify-photos all OK.
+
+### 2026-07-25 (q) - Overnight expansion: Norway (Lofoten + fjords)
+
+- **Norway** (new country) - Schengen visa-free, NOK, near-cashless,
+  eSIM caveat (Norway often excluded from European bundles).
+- **Lofoten & the Norwegian Fjords** - 11 places, rating 4.7. Landmark:
+  the Lofoten islands. Nature: Reine, Geirangerfjord, Naeroyfjord,
+  Preikestolen, Trolltunga, Jotunheimen, Lyngen Alps; cities Bergen,
+  Tromso, Oslo. 7-day itinerary spanning west fjords and the Arctic.
+- Flights: verified there is NO nonstop TLV-Oslo - one European
+  connection, then domestic flights north (distances make them close to
+  mandatory).
+- **Kosher: nothing in the fjords or Lofoten** - communities exist in
+  Oslo and Trondheim and food can be arranged in advance through the Oslo
+  community, but no public kosher restaurant. Stated plainly.
+- Coordinates and photos from the Wikipedia API (German Wikipedia for
+  Trolltunga, Nominatim for Reine). The Atlantic Ocean Road was dropped -
+  its only lead image is an SVG map, not a photo. build clean,
+  verify-photos all OK.
+
+### 2026-07-25 (r) - Overnight expansion: South Africa (Cape Town + Kruger)
+
+- **South Africa** (new country, 2nd African destination) - visa-free 90
+  days for Israelis (passport valid 6 months + onward ticket verified),
+  ZAR, RICA SIM registration, and an explicit personal-safety note.
+- **Cape Town & Kruger** - 12 places, rating 4.7. Landmark: Table
+  Mountain. Nature: Cape of Good Hope, Boulders Beach penguins, Chapman
+  Peak drive, Kirstenbosch, Tsitsikamma/Garden Route, Kruger NP, Blyde
+  River Canyon; plus Robben Island, Stellenbosch and the Sea Point kosher
+  area. 6-day itinerary.
+- Flights: no current regular nonstop from TLV - one connection (Addis,
+  Dubai, Istanbul, Doha, Nairobi), ~14-17h, with a note that direct-route
+  status has changed in recent years.
+- **Kosher - the strongest in the catalog so far:** Sea Point in Cape
+  Town has restaurants, bakeries and shops under the Cape Beth Din, and
+  Johannesburg has more; nothing in Kruger or on the Garden Route.
+  pending-review, pin at neighbourhood level (stated in the entry).
+- Coordinates from the Wikipedia API, plus German Wikipedia (Tsitsikamma)
+  and Nominatim (Blyde River Canyon) where the English articles had none.
+  build clean, verify-photos all OK.
+
+### 2026-07-25 (s) - Overnight expansion: Armenia (Yerevan + highlands)
+
+- **Armenia** (new country) - visa-free for Israelis (allowed stay
+  length phrased as "check current rules" rather than asserting a
+  number), AMD, cash outside Yerevan.
+- **Yerevan & the Armenian Highlands** - 11 places, rating 4.4.
+  Landmark: Khor Virap with Ararat behind it. Nature: Lake Sevan,
+  Dilijan NP, Mount Aragats, Jermuk waterfall; heritage: Geghard,
+  Garni, Sevanavank, Noravank, Tatev + the world longest reversible
+  cableway. 5-day itinerary.
+- Flights: FlyOne Armenia nonstop TLV-EVN, ~1-3 weekly depending on
+  direction and season, ~2.5h - frequency described as variable.
+- **Kosher: no verified address in Armenia** - small community and a
+  synagogue in Yerevan, nearest infrastructure Tbilisi. Nothing invented.
+- Coordinates and photos from the Wikipedia API (German Wikipedia for
+  Khor Virap). Wings of Tatev has no coordinates of its own - folded into
+  the Tatev entry instead of guessing. build clean, verify-photos all OK.
+
+### 2026-07-25 (t) - Overnight expansion: Uzbekistan (Samarkand + Bukhara)
+
+- **Uzbekistan** (new country) - visa-free short tourist stay for
+  Israelis (phrased as "verify current terms"), UZS, cash-heavy.
+- **Samarkand & Bukhara** - 10 places, rating 4.6. Landmark: Registan
+  Square. Silk Road heritage: Shah-i-Zinda, Gur-e-Amir, Po-i-Kalyan,
+  Khiva/Ichan Kala; nature: Lake Charvak + Chimgan mountains, and the
+  Aral Sea / Moynaq ship cemetery as a remote multi-day extension.
+  6-day itinerary built around the Afrosiyob fast train.
+- Flights verified: nonstop TLV-Tashkent, Uzbekistan Airways ~7 weekly
+  plus Centrum Air, FlyOne Asia and Qanot Sharq, ~4h50.
+- **Kosher:** Bukharian Jewish heritage is real - the Jewish quarter and
+  an active synagogue in Bukhara, community and synagogues in Tashkent -
+  but NO permanent public kosher restaurant was found, and the entry says
+  exactly that rather than implying kosher dining exists.
+- Coordinates and photos from the Wikipedia API. Chimgan (no coordinates)
+  was folded into the Charvak entry, and Ichan Kala into the Khiva entry,
+  instead of guessing. build clean, verify-photos all OK.
