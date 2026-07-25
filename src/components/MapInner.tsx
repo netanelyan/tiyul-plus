@@ -119,28 +119,11 @@ export default function MapInner({
                   ✡️ {place.kosherNote}
                 </div>
               )}
-              {place.kosherVerification &&
-                (place.kosherVerification.lastChecked === 'pending-review' ? (
-                  // לא אומת - תג אזהרה מובחן, לעולם לא תג האמון הירוק
-                  <div
-                    style={{
-                      fontSize: 11,
-                      marginTop: 4,
-                      padding: '3px 6px',
-                      borderRadius: 6,
-                      background: 'rgba(255,197,49,0.28)',
-                      border: '1px solid #ffc531',
-                      color: '#241b4d',
-                      fontWeight: 700,
-                    }}
-                  >
-                    ⚠️ לא מאומת - לוודא מול המקום
-                  </div>
-                ) : (
-                  <div style={{ fontSize: 11, marginTop: 4, color: '#007f76', fontWeight: 700 }}>
-                    ✓ כשרות מאומתת · נבדק {place.kosherVerification.lastChecked}
-                  </div>
-                ))}
+              {place.kosherVerification && (
+                <div style={{ fontSize: 11, marginTop: 4, color: '#6b6394', fontWeight: 600 }}>
+                  השגחה: {place.kosherVerification.supervision} · לוודא מול המקום
+                </div>
+              )}
               {place.externalUrl && (
                 <a
                   href={place.externalUrl}

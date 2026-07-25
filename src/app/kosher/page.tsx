@@ -13,7 +13,7 @@ import KosherSearch, { type KosherCity } from './KosherSearch';
 export const metadata = {
   title: 'כשרות | טיול+',
   description:
-    'ספריית הכשרות של טיול+: כל הערים בקטלוג שיש בהן מסעדות, חנויות ובתי חב"ד - עם סימון ברור מה כבר אומת ומה עדיין לא.',
+    'ספריית הכשרות של טיול+: כל הערים בקטלוג שיש בהן מסעדות, חנויות ובתי חב"ד - עם מפה ופרטים. המידע נאסף ממקורות ציבוריים - לוודא מול המקום.',
 };
 
 export default async function KosherPage() {
@@ -45,7 +45,7 @@ export default async function KosherPage() {
       <h1 className="display text-3xl text-night sm:text-4xl">כשרות בעולם</h1>
       <p className="mt-2 max-w-2xl leading-relaxed text-night/60">
         כל מקום כשר שיש לנו בקטלוג, לפי עיר: מסעדות, חנויות ובתי חב&quot;ד - עם מפה, פרטים
-        ואמירה כנה ליד כל רשומה אם היא כבר אומתה מול המקום או לא.
+        ופרטי ההשגחה כפי שנמסרו. המידע נאסף ממקורות ציבוריים - חשוב לוודא מול המקום לפני הביקור.
       </p>
       <KosherSearch cities={cities} />
     </div>

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import type { Place } from '@/lib/types';
 import PlacesMap from '@/components/PlacesMap';
 import Flag from '@/components/Flag';
-import KosherBadge, { isKosherVerified } from '@/components/KosherBadge';
+import KosherBadge from '@/components/KosherBadge';
 
 export interface KosherCity {
   slug: string;
@@ -68,7 +68,6 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
     return {
       places: all.length,
       cities: covered.length,
-      verified: all.filter((p) => isKosherVerified(p.kosherVerification)).length,
       citiesWithout: cities.length - covered.length,
     };
   }, [cities, covered]);
@@ -97,11 +96,8 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
         <span className="badge rounded-full bg-night/5 px-3.5 py-1.5 text-sm font-bold text-night/70">
           🌍 {stats.cities} ערים בקטלוג
         </span>
-        <span className="badge rounded-full bg-zest/25 px-3.5 py-1.5 text-sm font-bold text-night ring-1 ring-zest">
-          ⚠️{' '}
-          {stats.verified === 0
-            ? 'אף רשומה עדיין לא אומתה על ידינו'
-            : `${stats.verified} מאומתות · ${stats.places - stats.verified} ממתינות לבדיקה`}
+        <span className="badge rounded-full bg-night/5 px-3.5 py-1.5 text-sm font-medium text-night/60">
+          המידע נאסף ממקורות ציבוריים · לוודא מול המקום
         </span>
       </div>
 
@@ -149,26 +145,11 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
           </div>
           <p className="mt-2 max-w-2xl leading-relaxed text-night/70">{selected.kosherOverview}</p>
 
-          {/* שקיפות: כמה מהרשומות עדיין לא נבדקו מול המקום, וזה נאמר מראש */}
-          {(() => {
-            const unverified = selected.kosherPlaces.filter(
-              (p) => !isKosherVerified(p.kosherVerification),
-            ).length;
-            if (unverified === 0) return null;
-            return (
-              <p className="mt-4 rounded-xl bg-zest/20 px-4 py-3 text-sm font-semibold leading-relaxed text-night ring-1 ring-zest">
-                ⚠️{' '}
-                {unverified === selected.kosherPlaces.length
-                  ? 'כל'
-                  : `${unverified} מתוך ${selected.kosherPlaces.length}`}{' '}
-                {unverified === selected.kosherPlaces.length ? 'הרשומות כאן' : 'הרשומות'} עדיין לא אומתו
-                על ידינו מול המקום. הן מבוססות על מידע שנאסף מהקהילות ומבתי חב"ד -{' '}
-                <span className="font-bold">
-                  חובה לוודא כשרות, השגחה ושעות פתיחה ישירות מול המקום לפני שמסתמכים עליהן.
-                </span>
-              </p>
-            );
-          })()}
+          {/* דיסקליימר כללי - מדיניות אחת לכל הרשומות */}
+          <p className="mt-4 max-w-2xl rounded-xl bg-night/5 px-4 py-2.5 text-sm leading-relaxed text-night/60">
+            המידע נאסף ממקורות ציבוריים (בתי חב&quot;ד וגופי ההשגחה) - לוודא כשרות, השגחה
+            ושעות פתיחה מול המקום לפני שמסתמכים עליו.
+          </p>
 
           <div className="mt-5 grid gap-5 lg:grid-cols-5">
             <div className="h-[300px] overflow-hidden rounded-2xl ring-1 ring-night/10 sm:h-[360px] lg:col-span-2 lg:h-auto">
@@ -212,7 +193,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
             </h2>
             {!query.trim() && stats.citiesWithout > 0 && (
               <span className="text-xs font-medium text-night/40">
-                · ב-{stats.citiesWithout} יעדים נוספים בקטלוג אין כשרות מאומתת, וזה נאמר בדף היעד
+                · ב-{stats.citiesWithout} יעדים נוספים בקטלוג אין מידע כשרות, וזה נאמר בדף היעד
               </span>
             )}
           </div>
@@ -259,7 +240,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
             /* מצב ריק כן: או שהעיר בקטלוג בלי כשרות, או שאינה בקטלוג בכלל */
             <div className="mt-4 max-w-xl rounded-2xl bg-zest/15 px-5 py-5 ring-1 ring-zest/40">
               <p className="font-bold text-night">
-                עדיין אין לנו מידע כשרות מאומת ל&quot;{query.trim()}&quot;
+                עדיין אין לנו מידע כשרות ל&quot;{query.trim()}&quot;
               </p>
               <p className="mt-1.5 text-sm leading-relaxed text-night/70">
                 {uncoveredMatch ? (

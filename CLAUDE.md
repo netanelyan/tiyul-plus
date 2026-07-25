@@ -125,11 +125,12 @@ npm run lint
   (0=חינם..3), `tags` (fixed set: families/nightlife/romantic/history/
   art/foodie/outdoors), `mustSee`, and kosher entries a
   `kosherVerification` object rendered ONLY through
-  `src/components/KosherBadge.tsx`: while lastChecked="pending-review" it
-  shows a distinct amber warning - "לא מאומת - לוודא מול המקום" plus the
-  claimed supervision as reported - and never the green verified badge;
-  a real check date turns it verified. The /kosher page also states
-  up-front how many of the listed entries are still unverified. City
+  `src/components/KosherBadge.tsx`. Policy per Netanel (2026-07-25):
+  NO per-entry verified/pending system in the UI - the badge shows the
+  supervision as reported ("השגחה: ...") plus a quiet "לוודא מול המקום"
+  tail, and /kosher carries one general disclaimer that the data is
+  AI-collected from public sources. `lastChecked` stays in the data but
+  is not rendered. Never invent supervision that wasn't reported. City
   `practical` holds only city-level facts: flights, gettingAround,
   kosherOverview. This data is the product's moat; quality > quantity.
 - `src/lib/types.ts` - domain types + `PlacesProvider` interface (includes
@@ -2041,3 +2042,25 @@ cards in the planner and as a 47-option native `<select>` in the trip view.
   state), add-day 18/20 - the two "failures" were the fixture having a
   single day per city, so the move-day select legitimately was not
   rendered; re-checked with a 2-day trip and it renders untouched.
+
+### 2026-07-25 (ff) - Kosher policy change: no per-entry verification, one disclaimer
+
+Per Netanel's decision ("if the AI adds it, I trust it - just leave a
+disclaimer"), the verified/pending-review system was removed from the UI:
+
+- `KosherBadge.tsx` - single neutral badge: "השגחה: {supervision} ·
+  לוודא מול המקום". No amber warning tier, no green verified tier.
+- `MapInner.tsx` popup - same single line replaces the two-tier block.
+- `KosherSearch.tsx` - the "אף רשומה עדיין לא אומתה" stats chip is now a
+  neutral "המידע נאסף ממקורות ציבוריים · לוודא מול המקום" chip; the
+  per-city amber count block is a single quiet disclaimer box; empty
+  states say "אין מידע כשרות" instead of "אין כשרות מאומתת".
+- `/kosher/page.tsx` intro + meta description rewritten accordingly.
+- `types.ts` comment updated: `lastChecked` stays in the data (all 37
+  entries untouched) but is not rendered anywhere.
+- Architecture-map paragraph in this file updated to the new policy.
+
+Data unchanged; only presentation. Hard rule 2 still holds: supervision
+is shown only as reported, nothing invented. Verified live at /kosher
+(directory + Vienna city view): no warning badges remain, disclaimer
+renders in both places. build + tsc clean.
