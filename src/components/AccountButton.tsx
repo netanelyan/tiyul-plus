@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth/AuthContext';
 import Logo from '@/components/Logo';
+import { travelerLevel } from '@/data/worldCountries';
 
 /**
  * חשבון המשתמש בניווט + מודל ההתחברות.
@@ -54,36 +55,102 @@ export default function AccountButton() {
                 />,
                 document.body,
               )}
-            <div className="absolute end-0 top-11 z-50 w-64 rounded-2xl bg-shell p-3 shadow-lg ring-1 ring-night/10">
-              <div className="flex items-center gap-2.5 px-2 py-1">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sunset/15 text-sm font-black text-sunset-deep">
-                  {(email[0] ?? 'א').toUpperCase()}
-                </span>
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-bold text-night" dir="ltr">
-                    {email}
-                  </p>
-                  <p className="text-[11px] font-medium text-[#007f76]">
-                    ✓ הטיולים מסתנכרנים בין המכשירים
-                  </p>
+            <div className="rise-in absolute end-0 top-11 z-50 w-72 overflow-hidden rounded-2xl bg-shell shadow-xl ring-1 ring-night/10">
+              {/* כותרת לילה - אותה שפה עיצובית כמו מודל ההתחברות */}
+              <div className="relative bg-night px-4 py-3.5">
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background:
+                      'radial-gradient(130% 130% at 12% 130%, rgba(255,89,65,0.4) 0%, rgba(255,197,49,0.14) 45%, transparent 70%)',
+                  }}
+                />
+                <div className="relative flex items-center gap-3">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-sunset text-lg font-black text-cream ring-2 ring-cream/20">
+                    {auth.profile?.avatar ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={auth.profile.avatar} alt="" className="h-full w-full object-cover" />
+                    ) : (
+                      ((auth.profile?.displayName || email)[0] ?? 'א').toUpperCase()
+                    )}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-bold text-cream">
+                      {auth.profile?.displayName?.trim() || 'המטייל של טיול+'}
+                    </p>
+                    <p className="truncate text-[11px] font-medium text-cream/60" dir="ltr">
+                      {email}
+                    </p>
+                  </div>
                 </div>
               </div>
-              <Link
-                href="/account"
-                onClick={() => setMenuOpen(false)}
-                className="mt-2 block w-full rounded-xl bg-sunset px-3 py-2 text-start text-sm font-bold text-cream transition hover:bg-sunset-deep"
-              >
-                האזור האישי ←
-              </Link>
-              <button
-                onClick={() => {
-                  void auth.signOut();
-                  setMenuOpen(false);
-                }}
-                className="mt-1.5 w-full rounded-xl bg-night/5 px-3 py-2 text-start text-sm font-semibold text-night/70 transition hover:bg-night/10"
-              >
-                התנתקות
-              </button>
+
+              <div className="p-2">
+                {/* שורת הדרכון - סטטוס כיפי שמושך אל האזור האישי */}
+                <Link
+                  href="/account"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2 rounded-xl bg-cream px-3 py-2 ring-1 ring-night/10 transition hover:ring-night/25"
+                >
+                  <span aria-hidden>{travelerLevel(auth.profile?.visited.length ?? 0).current.emoji}</span>
+                  <span className="min-w-0 flex-1 truncate text-xs font-bold text-night">
+                    {travelerLevel(auth.profile?.visited.length ?? 0).current.title}
+                  </span>
+                  <span className="shrink-0 text-[11px] font-semibold text-night/50">
+                    {(auth.profile?.visited.length ?? 0) > 0
+                      ? `${auth.profile!.visited.length} מדינות בדרכון`
+                      : 'לחתום בדרכון ←'}
+                  </span>
+                </Link>
+
+                <Link
+                  href="/account"
+                  onClick={() => setMenuOpen(false)}
+                  className="mt-1.5 flex w-full items-center gap-2 rounded-xl bg-sunset px-3 py-2.5 text-start text-sm font-bold text-cream transition hover:bg-sunset-deep"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-4 w-4 shrink-0"
+                    aria-hidden
+                  >
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 21c0-3.9 3.6-7 8-7s8 3.1 8 7" />
+                  </svg>
+                  האזור האישי
+                </Link>
+                <button
+                  onClick={() => {
+                    void auth.signOut();
+                    setMenuOpen(false);
+                  }}
+                  className="mt-1.5 flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-start text-sm font-semibold text-night/60 transition hover:bg-night/5"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-4 w-4 shrink-0"
+                    aria-hidden
+                  >
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <path d="m16 17 5-5-5-5" />
+                    <path d="M21 12H9" />
+                  </svg>
+                  התנתקות
+                </button>
+                <p className="mt-1 px-3 pb-1 text-center text-[10px] font-medium text-[#007f76]">
+                  ✓ הטיולים והפרופיל מסתנכרנים בין המכשירים
+                </p>
+              </div>
             </div>
           </>
         )}
