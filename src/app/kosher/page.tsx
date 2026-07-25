@@ -9,7 +9,7 @@ import KosherSearch, { type KosherCity } from './KosherSearch';
  */
 export const metadata = {
   title: 'כשרות | טיול+',
-  description: 'חיפוש אוכל ומקומות כשרים לפי עיר - מתוך הקטלוג המאומת של טיול+.',
+  description: 'חיפוש אוכל ומקומות כשרים לפי עיר - מתוך הקטלוג של טיול+, עם סימון ברור מה כבר אומת ומה עדיין לא.',
 };
 
 export default async function KosherPage() {
@@ -34,8 +34,9 @@ export default async function KosherPage() {
     <div>
       <h1 className="display text-3xl text-night sm:text-4xl">כשרות בעולם</h1>
       <p className="mt-3 max-w-xl leading-relaxed text-night/60">
-        מחפשים עיר, ורואים בדיוק מה יש בה: מסעדות וחנויות כשרות מאומתות מהקטלוג של
-        טיול+, עם תג אמון כן על כל רשומה.
+        מחפשים עיר, ורואים בדיוק מה יש בה: מסעדות, חנויות ובתי חב"ד מהקטלוג של
+        טיול+ - וליד כל רשומה נאמר בכנות אם היא כבר אומתה מול המקום או לא. רוב
+        הרשומות שלנו עדיין מסומנות כלא מאומתות, וצריך לוודא אותן לפני שמסתמכים.
       </p>
       <KosherSearch cities={cities} />
     </div>

@@ -124,8 +124,12 @@ npm run lint
   accept ONLY the allowed widths 250/330/500/960px), `priceLevel`
   (0=חינם..3), `tags` (fixed set: families/nightlife/romantic/history/
   art/foodie/outdoors), `mustSee`, and kosher entries a
-  `kosherVerification` object rendered as an honest trust badge
-  ("לאמת לפני נסיעה" while lastChecked="pending-review"). City
+  `kosherVerification` object rendered ONLY through
+  `src/components/KosherBadge.tsx`: while lastChecked="pending-review" it
+  shows a distinct amber warning - "לא מאומת - לוודא מול המקום" plus the
+  claimed supervision as reported - and never the green verified badge;
+  a real check date turns it verified. The /kosher page also states
+  up-front how many of the listed entries are still unverified. City
   `practical` holds only city-level facts: flights, gettingAround,
   kosherOverview. This data is the product's moat; quality > quantity.
 - `src/lib/types.ts` - domain types + `PlacesProvider` interface (includes

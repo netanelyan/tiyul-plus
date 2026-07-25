@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import type { Place } from '@/lib/types';
 import PlacesMap from '@/components/PlacesMap';
+import KosherBadge, { isKosherVerified } from '@/components/KosherBadge';
 
 export interface KosherCity {
   slug: string;
@@ -126,6 +127,22 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
               עדיין אין לנו מידע כשרות מאומת לעיר הזו.
             </p>
           ) : (
+            <>
+            {/* שקיפות: כמה מהרשומות עדיין לא נבדקו מול המקום, וזה נאמר מראש */}
+            {(() => {
+              const unverified = selected.kosherPlaces.filter(
+                (p) => !isKosherVerified(p.kosherVerification),
+              ).length;
+              if (unverified === 0) return null;
+              return (
+                <p className="mt-4 rounded-xl bg-zest/20 px-4 py-3 text-sm font-semibold leading-relaxed text-night ring-1 ring-zest">
+                  ⚠️ {unverified === selected.kosherPlaces.length ? 'כל' : `${unverified} מתוך ${selected.kosherPlaces.length}`}{' '}
+                  {unverified === selected.kosherPlaces.length ? 'הרשומות כאן' : 'הרשומות'} עדיין לא אומתו על ידינו מול
+                  המקום. הן מבוססות על מידע שנאסף מהקהילות ומבתי חב"ד -{' '}
+                  <span className="font-bold">חובה לוודא כשרות, השגחה ושעות פתיחה ישירות מול המקום לפני שמסתמכים עליהן.</span>
+                </p>
+              );
+            })()}
             <div className="mt-6 grid gap-5 lg:grid-cols-5">
               <div className="h-[360px] overflow-hidden rounded-2xl ring-1 ring-night/10 lg:col-span-2 lg:h-auto">
                 <PlacesMap center={selected.center} zoom={selected.zoom} places={selected.kosherPlaces} />
@@ -141,19 +158,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
                         ✡️ {place.kosherNote}
                       </p>
                     )}
-                    {place.kosherVerification && (
-                      <p
-                        className={`mt-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold ${
-                          place.kosherVerification.lastChecked === 'pending-review'
-                            ? 'bg-zest/15 text-night/70'
-                            : 'bg-[#00a896]/10 text-[#007f76]'
-                        }`}
-                      >
-                        {place.kosherVerification.lastChecked === 'pending-review'
-                          ? `לאמת לפני נסיעה · ${place.kosherVerification.supervision}`
-                          : `נבדק ${place.kosherVerification.lastChecked} · ${place.kosherVerification.supervision}`}
-                      </p>
-                    )}
+                    <KosherBadge verification={place.kosherVerification} className="mt-1.5" />
                     {place.externalUrl && (
                       <a
                         href={place.externalUrl}
@@ -168,6 +173,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
                 ))}
               </div>
             </div>
+            </>
           )}
         </div>
       )}
