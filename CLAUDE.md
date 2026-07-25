@@ -288,6 +288,47 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-25 - Netherlands + Amsterdam (overnight catalog expansion)
+
+**Built/changed:**
+- `src/data/countries.ts` - new country `netherlands` (35 countries total).
+  The `payments` note carries a real gotcha: many Dutch businesses take only
+  local debit/Maestro, not Visa/Mastercard credit.
+- `src/data/destinations.ts` - new destination `amsterdam` (51 destinations,
+  609 places), 9 places, all coordinates literally read from dbpedia
+  `/data/*.json` and none estimated: Anne Frank House, Portuguese Synagogue,
+  Rembrandt House, Begijnhof, Vondelpark, Zaanse Schans, Volendam,
+  Keukenhof, Kinderdijk. 4-day itinerary; day 4 says explicitly that
+  Keukenhof and Kinderdijk are opposite directions and are a choose-one.
+- `TODO.md` - ticked Cyprus/Paphos (it shipped at `9cd6578` but the box was
+  never ticked), and added the Paphos + Amsterdam slugs to photos-pending.
+
+**Decisions:**
+- Dropped for lack of coordinates in the fetched data, per hard rule 2:
+  Rijksmuseum, Van Gogh Museum, Dam Square, Haarlem. For Rijksmuseum and
+  Van Gogh the WebFetch summarizer volunteered coordinates from its own
+  training knowledge; those were refused. Nothing was estimated.
+- The Amsterdam `center` is the mean of the verified inner-city cluster,
+  used only as a map viewport, because `Amsterdam.json` itself has no
+  `geo:lat`/`geo:long`.
+- `kosherOverview` names no venue and no supervision: it points the reader
+  at the community/Chabad and at packaged hechshered goods, and says to
+  confirm by phone before travelling.
+- No `photo` and no `iconicLandmark` on anything - the sandbox still has no
+  egress to Wikimedia, so no image URL can be HTTP-verified.
+
+**State:** `npx tsc --noEmit` clean, `/tmp/sanity.mjs` problems=0,
+`npm run build` passing. Grounding index 85,588 chars ~21-27k tokens,
+comfortably under the ~50k guideline (stop threshold ~190,000 chars).
+
+**Next session:** the open TODO queue is UAE->Hatta/Jebel Jais, Azerbaijan->
+Sheki/Qabala, Kazakhstan->Kolsai & Kaindy, Jordan->Dead Sea/Jerash,
+Athens->Delphi, Barcelona->Costa Brava, Budapest->Danube Bend,
+Bratislava->Devin. Net-new country gaps: Turkey, Ireland, Romania,
+Bulgaria, the Nordics. France/Paris stays blocked on coordinates - do not
+estimate. Expect constant WebFetch 429s: batch <=4 lookups and sleep 60-90s
+between batches rather than treating them as failures.
+
 ### 2026-07-23 - Homepage hero usability + warmth; session-log rule added
 
 **Built/changed:**
