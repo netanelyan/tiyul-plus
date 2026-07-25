@@ -86,11 +86,12 @@ Devín/Small Carpathians). Lower priority than net-new destinations.
       `editorialRating`** — the rating system was added later and only new
       destinations carry it. Their country/city pages therefore show no
       "המלצת הצוות" pill.
-- [ ] Wide-span destinations to keep an eye on: `lofoten` (Tromsø/Lyngen are
-      ~800 km from the destination centre) and `cape-town` (Kruger/Blyde are
-      ~1,000 km away). Deliberate — both are country-scale hubs and the
-      entries say a domestic flight is needed — but if a future UI shows a
-      single all-days map, these will look odd.
+- [x] Wide-span destinations — FIXED (2026-07-25): `lofoten` and
+      `cape-town` were split into compact hubs. Norway: `lofoten` (Arctic
+      north) + `bergen-fjords` (west fjords). South Africa: `cape-town`
+      (city + peninsula + winelands), `kruger` (safari + Panorama Route)
+      and a new `garden-route` entry. Every place is now within ~700 km of
+      its destination centre (audit warning cleared).
 - [ ] `budva` reuses three places that also appear in `kotor` (Lovćen, Sveti
       Stefan, Budva old town coordinates) — same real sites in two hubs.
       Fine today; worth deduping if a "seen this already" view is built.
