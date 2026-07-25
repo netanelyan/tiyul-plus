@@ -2232,3 +2232,46 @@ writing its summary - it streams, so it isn't dead time. `relevantCitySlugs`
 matches by substring on Hebrew names; a request that references a city only
 obliquely gets the 6-city fallback detail (still correct, just less
 flavorful prose). The booking/affiliate layer is still not started.
+
+### 2026-07-25 (jj) - AI Explorer phase 1: on-demand destinations from real sources
+
+The answer to "the catalog can't map the whole world": when a user asks
+about a city outside the curated data, we now build an ephemeral
+destination from REAL public sources at runtime instead of shrugging.
+New files only - deliberately NO touches to api/chat/agent.ts/
+TripWorkspace, which the parallel session is rewriting (streaming/
+booking); agent wiring is the explicit next phase after that merge.
+
+- `src/lib/explore/resolver.ts` (server-only by convention) -
+  city query → Wikipedia search (Hebrew first, English fallback) →
+  city coordinates → geosearch (10km, 50 candidates) → one batch call
+  for extracts/thumbnails/urls → up to 12 places. Filters:
+  disambiguation pages out, extracts under 40 chars out, ranked by
+  has-image + article length (transparent proxies, not invented
+  ratings). Category via keyword heuristic (guessCategory). Every
+  field traces to the article: description=extract, photo=lead thumb,
+  coords=article coords. Test override: EXPLORE_WIKI_HE/_EN env vars.
+- `/api/explore?q=` - in-memory cache 12h for hits, 5min for nulls (a
+  transient wiki failure must not poison a city for half a day).
+- `/explore` page + ExploreClient - search → honest "נחקר אוטומטית ·
+  לא נבדק על ידי הצוות" badge, city summary + wiki source link, map
+  (PlacesMap - explored places are regular Place objects with xp-
+  prefixed ids), photo cards with category labels and wiki links.
+  A city that IS in the catalog short-circuits to its curated page
+  (curated always wins). Honest empty state when resolution fails.
+  Explored destinations persist client-side (lib/explore/storage.ts,
+  20 most recent) ready for trip integration.
+- Nav gained a "חקירה" tab.
+
+Verified E2E against a mock MediaWiki server (Wikipedia is BLOCKED
+from this sandbox - one live check on a real network is still owed):
+full explore flow renders 6/8 mock POIs (both junk filters proven),
+localStorage persistence, curated-city redirect card, honest
+not-found. build + tsc clean.
+
+**Next session should know:** phase 2 = agent integration (an
+explore_destination tool + destOf() fallback to the explored store in
+the trip domain + share-link v2 for explored trips) - do it AFTER the
+streaming/booking merge lands, it touches the same files. Also run one
+live smoke test of /api/explore on a machine with Wikipedia access
+(the E2E only proves the pipeline against the mock's response shapes).
