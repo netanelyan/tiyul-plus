@@ -2757,3 +2757,24 @@ which looks exactly like the feature failing; generate a real PNG):
 6/6 checks - day mode 3/3 photo pins at city zoom, photos removed after
 zooming below 13, trip mode clean at country zoom, group pins gain
 photos zoomed in, mobile 390px fine, no overflow.
+
+### 2026-07-25 (rr) - Chat beside the map at lg; TripChip removed (nav duplication)
+
+Two fixes from Netanel's laptop screenshot:
+
+- **The agent panel is now a side column from lg (1024px) up**, not a
+  full-width panel under the map. The grid gained a third column at lg
+  with narrower side columns than xl (16rem itinerary / flexible map /
+  19rem chat; xl keeps 20/1fr/22), and ChatPanel is sticky at lg too.
+  Mobile (<lg) keeps the bottom bar + drawer. Verified 1024/1280/1440:
+  three columns, no overflow.
+- **One nav button per trip.** The nav rendered BOTH the trip tabs
+  (tripLabel = city names) AND the old TripChip (trip.name + stop
+  count) - a single trip showed as two different-looking buttons.
+  TripChip is deleted (was only used in SiteNav); the mobile hamburger
+  had the same duplication (a current-trip row above the "הטיולים
+  שלי" list) - also removed. The trips list/tabs are now the single
+  way trips appear in the nav, on both breakpoints.
+
+Note: the walkthrough sections above still mention TripChip in a few
+places - historical descriptions, the component no longer exists.
