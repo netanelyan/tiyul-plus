@@ -91,7 +91,9 @@ places `she-palace`, `she-old-town`, `she-qabala`, `she-qirmizi`,
 `she-khinalug`, `she-shamakhi`; destination `uae-mountains`; places
 `uae-hatta`, `uae-jebel-jais`, `uae-liwa`, `uae-jebel-hafeet`, `uae-jahili`;
 places `bcn-tossa`, `bcn-cadaques`, `bud-szentendre`, `bud-visegrad`,
-`bts-devin`.
+`bts-devin`; country `romania`; destination `transylvania`; places
+`trn-bran`, `trn-peles`, `trn-sighisoara`, `trn-corvin`,
+`trn-transfagarasan`, `trn-balea`.
 
 **Blocked on coordinates - France / Paris.** France is the biggest
 remaining country gap, but dbpedia's `/data/*.json` for very famous
