@@ -224,45 +224,69 @@ html.a11y-no-motion *::after {
     padding: 0;
   }
 
-  /* גרדיאנטים/רקעים עדינים בשער ובמפרידי המעברים - בלי זה חלק
-     מהדפדפנים משמיטים צבעי רקע/גבול בהדפסה כברירת מחדל */
+  /* רקעים/צבעים חייבים print-color-adjust, אחרת הדפדפן משמיט אותם */
   .print-cover,
   .print-leg,
-  .print-day h2 {
+  .print-day,
+  .print-footer {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
 
-  /* עמוד שער: לוגו + שם הטיול + מטא-דאטה + ערים, לבד בעמוד הראשון */
+  /* עמוד שער: פס קורל עליון, לוגו+מותג, שם ענק, ערים - לבד בעמוד 1 */
   .print-cover {
     display: flex;
-    min-height: 240mm;
+    min-height: 250mm;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     text-align: center;
     break-after: page;
     page-break-after: always;
   }
+  .print-cover-rule {
+    width: 100%;
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #ff5941 0%, #ff5941 70%, #ffc531 70%);
+  }
+  .print-cover-center {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
   .print-cover .print-logo {
-    width: 52px;
-    height: 52px;
-    margin-bottom: 20px;
+    width: 72px;
+    height: 72px;
+  }
+  .print-brand {
+    margin-top: 10px;
+    font-size: 17px;
+    font-weight: 900;
+    color: #241b4d;
+    letter-spacing: 0.02em;
+  }
+  .print-brand span {
+    color: #ff5941;
   }
   .print-cover h1 {
-    font-size: 30px;
+    margin-top: 26px;
+    max-width: 150mm;
+    font-size: 40px;
     font-weight: 900;
+    line-height: 1.15;
     color: #241b4d;
     letter-spacing: -0.01em;
   }
   .print-cover .print-meta {
-    margin-top: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    color: rgba(36, 27, 77, 0.6);
+    margin-top: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #ff5941;
   }
   .print-cover .print-cities {
-    margin-top: 30px;
+    margin-top: 34px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -270,64 +294,154 @@ html.a11y-no-motion *::after {
     max-width: 140mm;
   }
   .print-cover .print-city-chip {
-    border: 1px solid rgba(36, 27, 77, 0.25);
     border-radius: 999px;
-    padding: 4px 14px;
-    font-size: 12px;
+    background: #241b4d;
+    padding: 6px 18px;
+    font-size: 13px;
     font-weight: 700;
-    color: #241b4d;
+    color: #fdf6ec;
+  }
+  .print-cover-foot {
+    padding-bottom: 6mm;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(36, 27, 77, 0.45);
   }
 
-  /* מפריד מעבר בין ערים - קופסה עדינה בין שני ימים */
+  /* מפריד מעבר בין ערים - קו טיסה מקווקו */
   .print-leg {
     break-inside: avoid;
     page-break-inside: avoid;
-    margin: 16px 0;
-    padding: 8px 14px;
-    border: 1px solid rgba(36, 27, 77, 0.18);
-    border-radius: 10px;
-    background: rgba(255, 89, 65, 0.05);
+    margin: 14px 0;
+    padding: 9px 16px;
+    border: 1.5px dashed rgba(255, 89, 65, 0.55);
+    border-radius: 999px;
     font-size: 12px;
     font-weight: 700;
     color: #241b4d;
+    text-align: center;
   }
 
-  /* כל יום - יחידה שלא מתפצלת בין עמודים כשאפשר */
+  /* יום = כרטיס עדין שלא נשבר באמצע עמוד */
   .print-day {
     break-inside: avoid;
     page-break-inside: avoid;
-    margin-bottom: 16px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid rgba(36, 27, 77, 0.12);
+    margin-bottom: 14px;
+    border: 1px solid rgba(36, 27, 77, 0.14);
+    border-radius: 14px;
+    padding: 14px 16px 12px;
   }
-  .print-day:last-of-type {
-    border-bottom: none;
+  .print-day-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(36, 27, 77, 0.1);
+    padding-bottom: 10px;
+  }
+  .print-day-num {
+    display: flex;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #ff5941;
+    font-size: 16px;
+    font-weight: 900;
+    color: #fdf6ec;
   }
   .print-day h2 {
-    display: inline-block;
+    margin: 0;
     font-size: 16px;
     font-weight: 800;
     color: #241b4d;
-    border-inline-start: 3px solid #ff5941;
-    padding-inline-start: 8px;
-    margin: 0;
   }
-  .print-day .print-day-desc {
-    margin-top: 3px;
-    font-size: 12px;
-    color: rgba(36, 27, 77, 0.65);
+  .print-day-desc {
+    margin-top: 1px;
+    font-size: 11.5px;
+    color: rgba(36, 27, 77, 0.6);
   }
-  .print-day ol {
+  .print-day-notes {
     margin-top: 8px;
-  }
-  .print-day li {
-    margin-bottom: 2px;
-    font-size: 12.5px;
+    border-radius: 8px;
+    background: rgba(255, 197, 49, 0.14);
+    padding: 6px 10px;
+    font-size: 11.5px;
+    color: #241b4d;
   }
 
-  /* פוטר ההדפסה - תחתית המסמך: דיסקליימר + חתימת BlackZ */
+  /* עצירות היום */
+  .print-stops {
+    margin-top: 4px;
+    list-style: none;
+    padding: 0;
+  }
+  .print-stop {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 7px 0;
+    border-bottom: 1px dotted rgba(36, 27, 77, 0.12);
+  }
+  .print-stop:last-child {
+    border-bottom: none;
+  }
+  .print-stop-num {
+    display: flex;
+    width: 19px;
+    height: 19px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: rgba(36, 27, 77, 0.08);
+    font-size: 10.5px;
+    font-weight: 800;
+    color: #241b4d;
+  }
+  .print-stop-name {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: #241b4d;
+  }
+  .print-stop-star {
+    margin-inline-start: 5px;
+    color: #e0a400;
+    font-size: 12px;
+  }
+  .print-stop-local {
+    /* margin משני הצדדים: הכיוון הפנימי של ה-span הוא ltr, אז
+       margin-inline-start לבדו נופל בצד הלא-נכון ביחס לשם העברי */
+    margin-inline: 7px;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(36, 27, 77, 0.5);
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+  .print-stop-cat {
+    margin: 1px 0 0;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: rgba(36, 27, 77, 0.45);
+  }
+  .print-stop-kosher {
+    margin: 2px 0 0;
+    display: inline-block;
+    border-radius: 6px;
+    background: rgba(255, 197, 49, 0.16);
+    padding: 2px 8px;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #241b4d;
+  }
+
+  /* פוטר: דיסקליימר + חתימה */
   .print-footer {
-    margin-top: 26px;
+    margin-top: 24px;
     padding-top: 14px;
     border-top: 1px solid rgba(36, 27, 77, 0.15);
     text-align: center;
