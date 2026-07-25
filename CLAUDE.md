@@ -1882,3 +1882,23 @@ off-brand for an agent-first product.
 - Verified live at 1400px and 390px: no catalog select remains (the day
   view still has its legitimate "הוספת יום" and "העברה ליום אחר"
   selects), the hint renders, zero horizontal overflow. build clean.
+### 2026-07-25 (bb) - Basemap: CARTO Positron -> Voyager
+
+Positron was so pale it dissolved into the cream page and read as an
+empty canvas.
+
+- `MapInner.tsx`: tile URL swapped to
+  `{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png` -
+  still free, still keyless, same `subdomains="abcd"` + `detectRetina`,
+  and the same dual OSM/CARTO attribution (unchanged).
+- `globals.css`: the tile-pane filter was tuned in the opposite direction
+  from before. Positron needed toning down
+  (`saturate(0.85) brightness(1.02) sepia(0.06)`); Voyager needs a light
+  lift to sit on cream: `saturate(1.04) contrast(1.06) brightness(0.99)
+  sepia(0.05)`. Still applied ONLY to `.leaflet-tile-pane`, so pins,
+  route lines and popups are untouched.
+- Result (verified at city zoom, +4 zoom levels in, and at 390px): the
+  Danube reads blue, parks green, motorways amber and street labels stay
+  crisp - while the category pins remain the strongest thing on screen.
+- Everything else (custom teardrop pins, restyled zoom control,
+  attribution chip) unchanged.
