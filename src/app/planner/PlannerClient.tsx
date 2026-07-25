@@ -8,6 +8,7 @@ import { tripFromTemplate } from '@/lib/trip/generate';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 import Flag from '@/components/Flag';
 import TripWorkspace from '@/components/TripWorkspace';
+import CityCombobox from './CityCombobox';
 
 /**
  * המתכנן: מסך בניית טיול חדש (כפתורים כממשק ראשי) - וברגע שיש טיול,
@@ -165,38 +166,13 @@ function Onboarding({
           <div className="text-sm font-bold text-night">
             לאן? <span className="font-medium text-night/50">(אפשר כמה ערים)</span>
           </div>
-          <div className="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
-            {countries
-              .map((c) => ({ country: c, cities: destinations.filter((d) => d.countrySlug === c.slug) }))
-              .filter(({ cities }) => cities.length > 0)
-              .flatMap(({ country, cities }) =>
-                cities.map((d) => {
-                  const selected = prefs.citySlugs.includes(d.slug);
-                  return (
-                    <button
-                      key={d.slug}
-                      onClick={() => toggleCity(d.slug)}
-                      aria-pressed={selected}
-                      className={`rounded-2xl p-3.5 text-start transition ${
-                        selected
-                          ? 'bg-sunset/10 ring-2 ring-sunset'
-                          : 'bg-night/[0.03] ring-1 ring-night/10 hover:ring-night/30'
-                      }`}
-                    >
-                      <div className="flex items-start justify-between">
-                        <Flag flag={d.flag} label={d.name} size="lg" />
-                        {selected && (
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-sunset text-xs font-bold text-cream">
-                            ✓
-                          </span>
-                        )}
-                      </div>
-                      <div className="mt-2 font-bold text-night">{d.name}</div>
-                      <div className="text-xs font-medium text-night/50">{country.name}</div>
-                    </button>
-                  );
-                }),
-              )}
+          <div className="mt-3">
+            <CityCombobox
+              destinations={destinations}
+              countries={countries}
+              citySlugs={prefs.citySlugs}
+              onToggle={toggleCity}
+            />
           </div>
           {prefs.citySlugs.length > 1 && (
             <div className="mt-2 text-xs font-medium text-night/50">

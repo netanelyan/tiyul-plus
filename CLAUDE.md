@@ -1957,3 +1957,36 @@ not a font-fallback problem - CSS cannot fix it.
   or horizontal overflow. The one "failure" was the probe counting
   below-the-fold `loading="lazy"` images as broken; stepped scrolling on
   mobile confirms all 33 load (33/33, 0 broken).
+
+### 2026-07-25 (ee) - Searchable city pickers replace two long native lists
+
+Branch `feat/searchable-city-pickers` (stacked on `fix/flag-images`, so the
+new rows use the Flag component rather than reintroducing flag emoji).
+
+The catalog outgrew both pickers - 47 destinations rendered as a wall of
+cards in the planner and as a 47-option native `<select>` in the trip view.
+
+- **New `src/lib/citySearch.ts`** - one shared search used by both:
+  builds options from destinations + countries and matches on Hebrew name,
+  local name, slug, country name and the alias list (same approach the
+  kosher search already used).
+- **`src/app/planner/CityCombobox.tsx`** - the "לאן?" grid is now a single
+  search input with a dropdown (flag + city + country). Selected cities
+  sit above it as removable chips; multi-select is unchanged, and
+  `toggleCity`/`prefs.citySlugs` are untouched. Keyboard: arrows move,
+  Enter picks, Escape closes, Backspace on an empty field removes the last
+  chip. Already-selected cities sink to the bottom of the list instead of
+  disappearing.
+- **`src/components/AddDayPicker.tsx`** - the "+ יום…" `<select>` in
+  `TripWorkspace` is now a small trigger that opens a searchable list, with
+  the trip's own cities grouped first ("כבר בטיול" -> "עוד יום ב-") and the
+  rest of the catalog under "עיר חדשה". `trip.addDay(slug)` wiring
+  unchanged.
+- **Deliberately left alone:** the "העברה ליום אחר" `<select>` in the same
+  file - it is a short list scoped to the current city's days (and only
+  renders when that city has 2+ days), so a native select is right there.
+- Verified on a production build at 1400px and 390px: planner 16/16
+  (filter by country name, chips add/remove, multi-city hint, honest empty
+  state), add-day 18/20 - the two "failures" were the fixture having a
+  single day per city, so the move-day select legitimately was not
+  rendered; re-checked with a 2-day trip and it renders untouched.

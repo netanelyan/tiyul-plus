@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import type { Destination, Place } from '@/lib/types';
 import type { TripPreferences } from '@/lib/trip/types';
 import { destinations as curatedDestinations } from '@/data/destinations';
+import { countries } from '@/data/countries';
 import { categoryMeta } from '@/lib/categories';
 import { useTrip } from '@/lib/trip/TripContext';
 import { travelLeg } from '@/lib/trip/travel';
@@ -12,6 +13,7 @@ import { dayDescription, dayPlaces } from '@/lib/trip/dayDescription';
 import PlacesMap from '@/components/PlacesMap';
 import ChatPanel from '@/components/ChatPanel';
 import Flag from '@/components/Flag';
+import AddDayPicker from '@/components/AddDayPicker';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 
 /**
@@ -47,7 +49,6 @@ export default function TripWorkspace({
   const [allDaysOpen, setAllDaysOpen] = useState(false);
   const [actionsOpen, setActionsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [addCity, setAddCity] = useState('');
 
   const t = trip.currentTrip;
   const destOf = (slug: string) => destinations.find((d) => d.slug === slug);
@@ -288,31 +289,12 @@ export default function TripWorkspace({
               </span>
             );
           })}
-          <select
-            value={addCity}
-            aria-label="הוספת יום"
-            onChange={(e) => {
-              if (e.target.value) {
-                trip.addDay(e.target.value);
-                setAddCity('');
-              }
-            }}
-            className="shrink-0 rounded-full bg-shell px-3 py-2 text-sm font-semibold text-night/70 ring-1 ring-night/10"
-          >
-            <option value="">+ יום…</option>
-            {t.citySlugs.map((c) => (
-              <option key={c} value={c}>
-                עוד יום ב{destOf(c)?.name}
-              </option>
-            ))}
-            {destinations
-              .filter((d) => !t.citySlugs.includes(d.slug))
-              .map((d) => (
-                <option key={d.slug} value={d.slug}>
-                  עיר חדשה: {d.name}
-                </option>
-              ))}
-          </select>
+          <AddDayPicker
+            destinations={destinations}
+            countries={countries}
+            tripCitySlugs={t.citySlugs}
+            onAddDay={(slug) => trip.addDay(slug)}
+          />
         </div>
       )}
 
