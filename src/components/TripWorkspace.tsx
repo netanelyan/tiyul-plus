@@ -566,28 +566,39 @@ export default function TripWorkspace({
         <div className="hidden print:block">
           {/* עמוד שער */}
           <div className="print-cover">
-            <Logo className="print-logo" />
-            <h1>{t.name}</h1>
-            <p className="print-meta">
-              {t.days.length} ימים · {totalStops} עצירות · הופק{' '}
-              {new Date().toLocaleDateString('he-IL')}
-            </p>
-            <div className="print-cities">
-              {Array.from(new Set(t.days.map((d) => d.citySlug))).map((slug) => {
-                const dst = destOf(slug);
-                return dst ? (
-                  <span key={slug} className="print-city-chip">
-                    {dst.name}
-                  </span>
-                ) : null;
-              })}
+            <div className="print-cover-rule" aria-hidden />
+            <div className="print-cover-center">
+              <Logo className="print-logo" />
+              <p className="print-brand">
+                טיול<span>+</span>
+              </p>
+              <h1>{t.name}</h1>
+              <p className="print-meta">
+                {t.days.length} ימים · {totalStops} עצירות
+              </p>
+              <div className="print-cities">
+                {Array.from(new Set(t.days.map((d) => d.citySlug))).map((slug) => {
+                  const dst = destOf(slug);
+                  return dst ? (
+                    <span key={slug} className="print-city-chip">
+                      {dst.name}
+                    </span>
+                  ) : null;
+                })}
+              </div>
             </div>
+            <p className="print-cover-foot">
+              סוכן הנסיעות החכם · הופק {new Date().toLocaleDateString('he-IL')}
+            </p>
           </div>
 
           {/* הימים */}
           {t.days.map((d, i) => {
             const dst = destOf(d.citySlug);
             const prev = i > 0 ? t.days[i - 1] : null;
+            const dayStops = d.placeIds
+              .map((pid) => placeOf(d.citySlug, pid))
+              .filter((p): p is Place => Boolean(p));
             return (
               <div key={d.id}>
                 {prev && prev.citySlug !== d.citySlug && (
@@ -597,24 +608,43 @@ export default function TripWorkspace({
                     {travelLeg(prev.citySlug, d.citySlug).label}
                   </p>
                 )}
-                <div className="print-day">
-                  <h2>
-                    יום {i + 1} · {dst?.name}
-                  </h2>
-                  <p className="print-day-desc">{dayDescription(d, dst)}</p>
-                  {d.notes && <p className="print-day-desc">💡 {d.notes}</p>}
-                  <ol className="list-decimal ps-6">
-                    {d.placeIds.map((pid) => {
-                      const p = placeOf(d.citySlug, pid);
-                      return p ? (
-                        <li key={pid}>
-                          <strong>{p.name}</strong> ({p.nameLocal})
-                          {p.kosherNote ? ` · ✡️ ${p.kosherNote}` : ''}
-                        </li>
-                      ) : null;
-                    })}
+                <section className="print-day">
+                  <header className="print-day-head">
+                    <span className="print-day-num">{i + 1}</span>
+                    <div>
+                      <h2>
+                        יום {i + 1} · {dst?.name}
+                      </h2>
+                      <p className="print-day-desc">{dayDescription(d, dst)}</p>
+                    </div>
+                  </header>
+                  {d.notes && <p className="print-day-notes">💡 {d.notes}</p>}
+                  <ol className="print-stops">
+                    {dayStops.map((p, j) => (
+                      <li key={p.id} className="print-stop">
+                        <span className="print-stop-num">{j + 1}</span>
+                        <div className="print-stop-body">
+                          <p className="print-stop-name">
+                            {p.name}
+                            {p.mustSee && (
+                              <span className="print-stop-star" title="חובה לראות">
+                                ★
+                              </span>
+                            )}
+                            <span className="print-stop-local">{p.nameLocal}</span>
+                          </p>
+                          <p className="print-stop-cat">{categoryMeta[p.category].label}</p>
+                          {p.kosherNote && (
+                            <p className="print-stop-kosher">✡️ {p.kosherNote}</p>
+                          )}
+                        </div>
+                      </li>
+                    ))}
                   </ol>
-                </div>
+                  {dayStops.length === 0 && (
+                    <p className="print-day-notes">אין עדיין עצירות ביום הזה</p>
+                  )}
+                </section>
               </div>
             );
           })}
