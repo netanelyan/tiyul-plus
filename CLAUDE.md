@@ -2003,8 +2003,9 @@ day in a real export.
 **Next session should know:** the print-only `<blackz-signature>`
 instance is a second mount of the same custom element already loaded
 sitewide via `public/blackz-signature.js` in `layout.tsx` - no new
-script tag was needed. If the roadmap's remaining items (streaming/
-thinking-state, booking/affiliate layer) touch `/api/chat`, note this
-sandbox now has a real `ANTHROPIC_API_KEY` available (set in
-`.env.local`, not committed) - previous sessions' "keyless" caveats no
-longer apply here.
+script tag was needed. This sandbox does NOT have `ANTHROPIC_API_KEY`
+set - the roadmap's remaining items (streaming/thinking-state, booking/
+affiliate layer) both touch `/api/chat` and can only be verified
+against the keyless rule-based fallback here; live-model behavior
+needs a real key, either added to this session's `.env.local` or
+checked against the deployed site.
