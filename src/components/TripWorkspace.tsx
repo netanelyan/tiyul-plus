@@ -63,12 +63,6 @@ export default function TripWorkspace({
     [day, dayDest, t],
   );
 
-  const availableToAdd: Place[] = useMemo(() => {
-    if (!t || !day || !dayDest) return [];
-    const usedInTrip = new Set(t.days.flatMap((d) => d.placeIds));
-    return dayDest.places.filter((p) => !usedInTrip.has(p.id));
-  }, [day, dayDest, t]);
-
   if (!trip.hydrated) {
     return (
       <div className="rounded-2xl bg-shell p-10 text-center font-semibold text-night/40 ring-1 ring-night/10">
@@ -480,24 +474,13 @@ export default function TripWorkspace({
                 })}
               </ol>
 
-              {availableToAdd.length > 0 && (
-                <select
-                  value=""
-                  aria-label="הוספת עצירה"
-                  onChange={(e) => {
-                    const p = availableToAdd.find((x) => x.id === e.target.value);
-                    if (p) trip.addPlace(day.citySlug, p.id);
-                  }}
-                  className="w-full rounded-xl bg-shell px-4 py-3 font-semibold text-night/70 ring-1 ring-night/10"
-                >
-                  <option value="">+ הוספת עצירה מהקטלוג של {dayDest.name}…</option>
-                  {availableToAdd.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {categoryMeta[p.category].label} · {p.name}
-                    </option>
-                  ))}
-                </select>
-              )}
+              {/* הוספת עצירה נעשית בשיחה עם הסוכן (או מדף היעד) - לא ברשימת
+                  קטלוג גולמית. זו רק תזכורת קצרה, לא פקד. */}
+              <p className="rounded-xl bg-night/[0.03] px-4 py-3 text-sm leading-relaxed text-night/55">
+                רוצים להוסיף עצירה? פשוט בקשו מהסוכן - למשל
+                <span className="font-semibold text-night/75"> &quot;תוסיף לי את השוק הישן ליום {dayIndex + 1}&quot;</span> -
+                או הוסיפו מדף היעד של {dayDest.name}.
+              </p>
             </>
           ) : (
             <div className="rounded-2xl border-2 border-dashed border-night/15 p-6 text-center">

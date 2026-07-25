@@ -1714,3 +1714,26 @@ the overnight run.
   kosher entries, the 8 original European cities without an
   editorialRating, the two country-scale hubs (lofoten, cape-town), and
   the kotor/budva shared places.
+
+### 2026-07-25 (aa) - Removed the raw catalog dropdown from the day view
+
+The "+ הוספת עצירה מהקטלוג" `<select>` in `TripWorkspace` dumped every
+unused place of the city into a native dropdown (with the placeholder
+option repeated at top and bottom on some platforms) - cramped and
+off-brand for an agent-first product.
+
+- **Removed** the select and its `availableToAdd` memo. In its place a
+  single quiet line: "רוצים להוסיף עצירה? פשוט בקשו מהסוכן - למשל
+  'תוסיף לי את השוק הישן ליום 1' - או הוסיפו מדף היעד".
+- **No gap left, so no replacement control was added.** Two non-dropdown
+  paths already exist: the agent (`add_place` tool, verified working -
+  it adds a catalog place to a specific day and is NOT affected by the
+  kosher gating since it is an explicit named request), and the
+  "+ הוספה לטיול" button on every destination page (`AddToTripButton`,
+  which calls the same `trip.addPlace`).
+- The underlying logic is untouched: `TripContext.addPlace`, the agent
+  tool and `AddToTripButton` all still work; only this one UI control is
+  gone.
+- Verified live at 1400px and 390px: no catalog select remains (the day
+  view still has its legitimate "הוספת יום" and "העברה ליום אחר"
+  selects), the hint renders, zero horizontal overflow. build clean.
