@@ -552,12 +552,13 @@ function CommunityCard() {
     <section className="rounded-3xl bg-shell p-5 ring-1 ring-night/10 sm:p-6">
       <h2 className="display text-xl text-night">קהילת המטיילים</h2>
       <p className="mt-0.5 text-sm text-night/55">
-        מחפשים חברים לפי שם - ורואים איפה הם כבר היו ומה משותף לכם
+        מחפשים חברים לפי שם או כתובת מייל מדויקת - ורואים איפה הם כבר היו ומה
+        משותף לכם
       </p>
       <input
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="חיפוש מטייל לפי שם…"
+        placeholder="שם או מייל מדויק…"
         aria-label="חיפוש מטייל"
         className="mt-4 w-full rounded-xl border border-night/15 bg-cream px-4 py-2.5 text-sm text-night outline-none transition placeholder:text-night/35 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
       />
@@ -568,8 +569,8 @@ function CommunityCard() {
       )}
       {!busy && results !== null && results.length === 0 && (
         <p className="mt-3 rounded-xl bg-night/[0.04] px-4 py-2.5 text-sm text-night/55">
-          לא נמצאו מטיילים בשם הזה. מופיעים כאן רק מי שהדליקו &quot;פרופיל ציבורי&quot;
-          בהגדרות.
+          לא נמצא מטייל כזה. מופיעים כאן רק מי שהדליקו &quot;פרופיל ציבורי&quot;
+          בהגדרות; חיפוש מייל דורש כתובת מלאה ומדויקת.
         </p>
       )}
       {!busy && results !== null && results.length > 0 && (

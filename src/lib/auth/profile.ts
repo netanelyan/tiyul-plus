@@ -131,12 +131,22 @@ const toPublic = (r: PublicRow): PublicProfile => ({
   visited: Array.isArray(r.visited) ? (r.visited as string[]).filter((c) => typeof c === 'string') : [],
 });
 
-/** חיפוש מטיילים ציבוריים לפי שם (ilike) */
+/**
+ * חיפוש מטיילים ציבוריים: לפי שם (ilike חלקי), או - כשהקלט נראה כמו
+ * כתובת מייל - התאמת מייל מדויקת דרך RPC (המייל לא נחשף לעולם; חיפוש
+ * חלקי על מיילים חסום מעצם העיצוב).
+ */
 export async function searchPublicProfiles(
   supabase: SupabaseClient,
   query: string,
 ): Promise<PublicProfile[]> {
-  const q = query.trim().replace(/[%_]/g, '');
+  const raw = query.trim();
+  if (/^\S+@\S+\.\S+$/.test(raw)) {
+    const { data, error } = await supabase.rpc('find_traveler_by_email', { p_email: raw });
+    if (error || !data) return [];
+    return (data as PublicRow[]).map(toPublic);
+  }
+  const q = raw.replace(/[%_]/g, '');
   if (q.length < 2) return [];
   const { data, error } = await supabase
     .from('public_profiles')
