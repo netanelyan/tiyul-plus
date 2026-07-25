@@ -17,6 +17,11 @@ export const destinations: Destination[] = [
     center: { lat: 48.2082, lng: 16.3719 },
     zoom: 12,
     tagline: 'ארמונות, קפה וינאי וקהילה יהודית תוססת',
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'קלאסיקה אירופית שקל מאוד להגיע אליה - טיסות ישירות יומיומיות של כ-3.5 שעות, עיר מסודרת ונוחה להליכה, ותשתית כשרות אמיתית ברובע השני (מסעדות וסופר). חסרונות: יקרה יחסית לשכנותיה במזרח אירופה, והאווירה שמרנית ורגועה - מי שמחפש חיי לילה סוערים ימצא יותר בברלין או בבודפשט.',
+    },
     photo:
       'https://images.unsplash.com/photo-1516550893923-42d28e5677af?auto=format&fit=crop&w=1600&q=70',
     iconicLandmark: {
@@ -416,6 +421,11 @@ export const destinations: Destination[] = [
     center: { lat: 48.1439, lng: 17.1097 },
     zoom: 13,
     tagline: 'עיר בירה קומפקטית, 45 דקות מווינה',
+    editorialRating: {
+      score: 4,
+      verdict:
+        'עיר בירה קומפקטית וזולה שאפשר לכסות ביומיים, ונוחה במיוחד כתוספת לווינה (כשעה נסיעה). חסרונות: אין כמעט טיסות ישירות קבועות מנתב"ג, המרכז ההיסטורי קטן ומתמצה מהר, והכשרות מסתכמת בבית חב"ד בתיאום מראש.',
+    },
     photo:
       'https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?auto=format&fit=crop&w=1600&q=70',
     iconicLandmark: {
@@ -793,6 +803,11 @@ export const destinations: Destination[] = [
     center: { lat: 50.0875, lng: 14.4213 },
     zoom: 13,
     tagline: 'עיר הזהב: גשרים, טירות והרובע היהודי המפורסם בעולם',
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'אחת הערים היפות באירופה, עם מרכז היסטורי שלם ורובע יהודי שהוא אתר מהחשובים בעולם - טיסה ישירה של כ-4 שעות ומחירים סבירים. חסרונות: העיר העתיקה עמוסה מאוד כמעט כל השנה, ומחירי המרכז והאטרקציות התייקרו משמעותית בשנים האחרונות.',
+    },
     photo:
       'https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=1600&q=70',
     iconicLandmark: {
@@ -1184,6 +1199,11 @@ export const destinations: Destination[] = [
     center: { lat: 47.4979, lng: 19.0402 },
     zoom: 13,
     tagline: 'פנינת הדנובה: מרחצאות, פרלמנט והרובע היהודי הגדול באירופה',
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'ערך תמורת כסף מהטובים באירופה: טיסה ישירה של כ-3 שעות, מחירים נמוכים, מרחצאות תרמיים והרובע היהודי הגדול באירופה עם כמה כתובות כשרות. חסרונות: התחבורה והשירות לא תמיד ידידותיים לתייר, וחלק מהעיר עדיין מוזנח - הפער בין פשט לבודה מורגש.',
+    },
     photo:
       'https://images.unsplash.com/photo-1549877452-9c387954fbc2?auto=format&fit=crop&w=1600&q=70',
     iconicLandmark: {
@@ -1577,6 +1597,11 @@ export const destinations: Destination[] = [
     center: { lat: 41.8967, lng: 12.4822 },
     zoom: 13,
     tagline: 'העיר הנצחית: קולוסיאום, פסטה - והגטו היהודי הכי טעים באירופה',
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'עיר-מוזיאון פתוחה עם קולוסיאום, ותיקן וגטו יהודי שהוא גם מרכז אוכל כשר - וטיסה ישירה של כ-3.5 שעות. חסרונות: הקיץ לוהט וצפוף מאוד, התורים לאתרים ארוכים בלי הזמנה מראש, והעיר תובענית פיזית (מרחקים והליכה על אבן).',
+    },
     photo:
       'https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1600&q=70',
     iconicLandmark: {
@@ -1972,6 +1997,11 @@ export const destinations: Destination[] = [
     center: { lat: 37.9755, lng: 23.7348 },
     zoom: 13,
     tagline: 'שעתיים טיסה, 2,500 שנות היסטוריה - והים באמצע',
+    editorialRating: {
+      score: 4.3,
+      verdict:
+        'היעד הקרוב והזול ביותר לרוב הישראלים - כשעתיים טיסה, המון טיסות ביום, אקרופוליס והיסטוריה בכל פינה, וגם ים בטווח נסיעה קצר. חסרונות: העיר עצמה אפורה וחמה בקיץ, יומיים בדרך כלל מספיקים לה, והכשרות מוגבלת למסעדה אחת ולבית חב"ד.',
+    },
     photo:
       'https://images.unsplash.com/photo-1555993539-1732b0258235?auto=format&fit=crop&w=1600&q=70',
     iconicLandmark: {
@@ -2359,6 +2389,11 @@ export const destinations: Destination[] = [
     center: { lat: 41.3874, lng: 2.1686 },
     zoom: 13,
     tagline: 'גאודי, חוף ים וטאפאס - העיר שכולה יצירת אמנות',
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'שילוב נדיר של אדריכלות גאודי, חוף ים ואוכל - עיר שקל לטייל בה ברגל וטיסה ישירה של כ-4.5 שעות. חסרונות: מהיעדים העמוסים באירופה (וסגרדה פמיליה ופארק גואל דורשים הזמנה מראש), כיסי גנבים בעיר העתיקה, והכשרות מצומצמת - מסעדה ובית חב"ד.',
+    },
     photo:
       'https://images.unsplash.com/photo-1583422409516-2895a77efded?auto=format&fit=crop&w=1600&q=70',
     iconicLandmark: {
@@ -2754,6 +2789,11 @@ export const destinations: Destination[] = [
     center: { lat: 52.52, lng: 13.405 },
     zoom: 12,
     tagline: 'עיר של היסטוריה כבדה ואנרגיה צעירה - וקהילה ישראלית ענקית',
+    editorialRating: {
+      score: 4.5,
+      verdict:
+        'עיר ענקית עם היסטוריה כבדה, מוזיאונים ברמה עולמית, מחירים נוחים לבירה מערבית וקהילה ישראלית גדולה שמורגשת בכל מקום. חסרונות: המרחקים בין האתרים גדולים ותלויים בתחבורה ציבורית, מזג האוויר אפור רוב השנה, והכשרות מסתכמת בקפה חלבי ובבית חב"ד.',
+    },
     photo:
       'https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=1600&q=70',
     iconicLandmark: {
