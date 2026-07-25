@@ -1822,3 +1822,41 @@ Branch `data/expansion-2`, cut from the consolidated main.
 - Coordinates and photos from the Wikipedia API (German Wikipedia for
   Lake Louise). Entry flags the Moraine Lake shuttle-only access.
   build clean, verify-photos all OK.
+### 2026-07-25 (z) - Fix: kosher is opt-in only (branch fix/kosher-opt-in-only)
+
+Kosher places were reaching itineraries without the user ever choosing
+kosher, which contradicts the project rule ("none assumed, all respected
+when chosen"). Audit of every injection path and what changed:
+
+- **`tripFromTemplate()` - the actual bug.** The planner's ready-made
+  templates copy a destination's curated itinerary verbatim, and **27 of
+  42 curated itineraries contain a kosher stop**. Now takes
+  `{ kosher }` and filters kosher places out unless opted in; when opted
+  in it also stamps `preferences.kosher = true` on the trip. The planner
+  passes its kosher toggle.
+- **`generateTrip()` (local wizard)** - already correct (score 0 +
+  `kosherOnly` gate); left as is, covered by tests.
+- **`/api/generate-trip` (AI refine)** - the prompt only *asked* for
+  kosher when kosherOnly was true but nothing stopped the model adding it
+  anyway. Now the prompt forbids it explicitly AND `validateDayPlans`
+  strips kosher-category ids server-side when kosherOnly is false.
+- **`/api/chat` (agent)** - the system prompt literally allowed "kosher
+  places may be included among them" when the preference was unset; that
+  line now forbids putting kosher places in the plan unless the user asks
+  or the preference is set. Enforcement is deterministic in
+  `agent.ts`: `filterKosherUnlessOptedIn()` strips kosher ids from
+  `create_trip_full` and `set_day_places` unless
+  `trip.preferences.kosher === true`, and tells the model why so it does
+  not retry.
+- **Deliberate exception:** the granular `add_place` is NOT filtered -
+  there the user named a specific place ("תוסיף את בית חב"ד ליום 2"),
+  which is itself an explicit request. Same for the /kosher page and the
+  per-destination kosher filter (explicit user actions, untouched).
+- Kosher data itself is unchanged - this is purely about injection.
+
+Tested with a type-stripping harness against the real data: 26/26 checks
+- templates (tbilisi/bangkok/vienna/cusco) carry zero kosher stops by
+default and the exact original set once opted in, non-kosher stops
+untouched; wizard both ways; agent bulk tools stripped/kept correctly;
+`add_place` still works; `set_preferences {kosher:true}` then planning
+honors it. build clean.

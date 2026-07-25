@@ -1,4 +1,5 @@
 import { destinations } from '@/data/destinations';
+import { isKosher } from '@/lib/categories';
 import { newId } from './types';
 import type { Trip, TripDay, TripPreferences } from './types';
 
@@ -235,6 +236,33 @@ const PREF_LABELS: Record<keyof TripPreferences, string> = {
   interests: 'תחומי עניין',
 };
 
+/**
+ * כשרות היא opt-in בלבד (hard rule: "none assumed, all respected when
+ * chosen"). בכלים שמשבצים מסלול שלם - create_trip_full ו-set_day_places -
+ * מקומות כשרים נזרקים אלא אם ההעדפה כבר נשמרה על הטיול (טוגל ה-UI,
+ * השאלון, או אמירה מפורשת של המשתמש שהסוכן שמר ב-set_preferences).
+ * add_place הגרנולרי לא מסונן: שם המשתמש ביקש מקום מסוים בשמו.
+ */
+function filterKosherUnlessOptedIn(
+  ids: string[],
+  destSlug: string,
+  trip: Trip | null,
+): { ids: string[]; dropped: string[] } {
+  if (trip?.preferences?.kosher === true) return { ids, dropped: [] };
+  const dest = destOf(destSlug);
+  if (!dest) return { ids, dropped: [] };
+  const dropped: string[] = [];
+  const kept = ids.filter((id) => {
+    const place = dest.places.find((p) => p.id === id);
+    if (place && isKosher(place.category)) {
+      dropped.push(id);
+      return false;
+    }
+    return true;
+  });
+  return { ids: kept, dropped };
+}
+
 export function executeAgentTool(
   trip: Trip | null,
   name: string,
@@ -273,6 +301,7 @@ export function executeAgentTool(
       const used = new Set<string>();
       const days: TripDay[] = [];
       const errors: string[] = [];
+      const droppedKosher: string[] = [];
       plans.forEach((raw, i) => {
         const dp = (raw ?? {}) as Record<string, unknown>;
         const dest = destOf(String(dp.citySlug ?? ''));
@@ -280,7 +309,11 @@ export function executeAgentTool(
           errors.push(`יום ${i + 1}: citySlug לא מוכר "${dp.citySlug}". החוקיים: ${validSlugs()}.`);
           return;
         }
-        const ids = [...new Set((Array.isArray(dp.placeIds) ? dp.placeIds : []).map(String))];
+        const requested = [...new Set((Array.isArray(dp.placeIds) ? dp.placeIds : []).map(String))];
+        // כשרות רק בבחירה מפורשת - אחרת מסננים כאן, לפני כל שאר הבדיקות
+        const gated = filterKosherUnlessOptedIn(requested, dest.slug, trip);
+        droppedKosher.push(...gated.dropped);
+        const ids = gated.ids;
         const bad = ids.filter((id) => !dest.places.some((p) => p.id === id));
         if (bad.length > 0) {
           errors.push(`יום ${i + 1}: מזהים שלא קיימים ב${dest.name}: [${bad.join(', ')}].`);
@@ -311,10 +344,14 @@ export function executeAgentTool(
         createdAt: Date.now(),
       };
       const totalStops = days.reduce((n, d) => n + d.placeIds.length, 0);
+      const kosherNote =
+        droppedKosher.length > 0
+          ? ` הערה: לא שובצו מקומות כשרים (${droppedKosher.join(', ')}) - העדפת כשרות לא נבחרה. אל תנסה לשבץ אותם שוב, ואל תשאל על כך; אם המשתמש יאמר במפורש שהוא שומר כשרות, קרא ל-set_preferences ואז שבץ.`
+          : '';
       return {
         trip: next,
         ok: true,
-        message: `נוצר "${tripName}": ${days.length} ימים, ${totalStops} עצירות.`,
+        message: `נוצר "${tripName}": ${days.length} ימים, ${totalStops} עצירות.${kosherNote}`,
         action: `יצרתי טיול חדש: "${tripName}" (${days.length} ימים, ${totalStops} עצירות)`,
       };
     }
@@ -325,7 +362,10 @@ export function executeAgentTool(
       if (!day) return fail(trip, `dayNumber מחוץ לטווח. בטיול יש ${trip.days.length} ימים.`);
       const dest = destOf(day.citySlug);
       if (!dest) return fail(trip, `העיר של היום (${day.citySlug}) לא נמצאה בדאטה.`);
-      const ids = [...new Set((Array.isArray(input.placeIds) ? input.placeIds : []).map(String))];
+      const requestedIds = [...new Set((Array.isArray(input.placeIds) ? input.placeIds : []).map(String))];
+      // כשרות רק בבחירה מפורשת (ראו filterKosherUnlessOptedIn)
+      const gatedDay = filterKosherUnlessOptedIn(requestedIds, dest.slug, trip);
+      const ids = gatedDay.ids;
       const bad = ids.filter((id) => !dest.places.some((p) => p.id === id));
       if (bad.length > 0) {
         const valid = dest.places.map((p) => p.id).join(', ');

@@ -1,4 +1,5 @@
 import { destinations } from '@/data/destinations';
+import { isKosher } from '@/lib/categories';
 import { countries } from '@/data/countries';
 import { generateTrip } from '@/lib/trip/generate';
 import { newId } from '@/lib/trip/types';
@@ -60,7 +61,7 @@ const SYSTEM_PROMPT = `You are the trip-builder of tiyul+ (טיול+), a Hebrew 
 RULES
 - The CONSTRAINTS are hard: never change the cities, number of days, pace, trip type, shopping level or kosher setting. The free text only refines choices within them.
 - dayPlans: exactly totalDays entries, in visit order. Every day's citySlug must be one of the constraint citySlugs; keep each city's days consecutive, cities in the given order, days split as evenly as possible between cities.
-- placeIds may ONLY be ids that exist for that day's city in the DATA below - never invent ids, and never repeat a place across the trip. Order each day's stops in a sensible geographic flow. Pace: relaxed ≈ 3-4 stops/day, packed ≈ 5-6. When kosherOnly is true, include one kosher-food place per day where the city has one. Shopping 'less' → avoid shopping-category places; 'more' → include more of them.
+- placeIds may ONLY be ids that exist for that day's city in the DATA below - never invent ids, and never repeat a place across the trip. Order each day's stops in a sensible geographic flow. Pace: relaxed ≈ 3-4 stops/day, packed ≈ 5-6. When kosherOnly is true, include one kosher-food place per day where the city has one. When kosherOnly is FALSE, do NOT include any kosher-food or kosher-market place at all - kosher is an opt-in preference, never an assumption (any that slip through are stripped server-side). Shopping 'less' → avoid shopping-category places; 'more' → include more of them.
 - Honor the free text when choosing places: exclusions ("בלי מוזיאונים"), children's ages, likes and dislikes. Work relevant tips into the day notes. Never state hours, prices, or kashrut facts that are not in the DATA.
 - notes: one short, helpful Hebrew tip per day; empty string when you have none.
 - tripName: a short Hebrew name, e.g. "טיול משפחתי לוינה".
@@ -209,9 +210,14 @@ function validateDayPlans(dayPlans: AiDayPlan[], prefs: WizardPrefs): TripDay[] 
     if (!allowedCities.has(dp?.citySlug)) continue;
     const dest = destinations.find((d) => d.slug === dp.citySlug);
     if (!dest) continue;
-    const placeIds = (Array.isArray(dp.placeIds) ? dp.placeIds : []).filter(
-      (id) => dest.places.some((p) => p.id === id) && !usedPlaceIds.has(id),
-    );
+    // כשרות היא opt-in בלבד: אם המשתמש לא ביקש, מקומות כשרים נזרקים כאן
+    // בצד השרת - גם אם המודל בכל זאת שיבץ אותם.
+    const placeIds = (Array.isArray(dp.placeIds) ? dp.placeIds : []).filter((id) => {
+      const place = dest.places.find((p) => p.id === id);
+      if (!place || usedPlaceIds.has(id)) return false;
+      if (!prefs.kosherOnly && isKosher(place.category)) return false;
+      return true;
+    });
     if (placeIds.length === 0) continue;
     placeIds.forEach((id) => usedPlaceIds.add(id));
     days.push({
