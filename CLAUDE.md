@@ -2651,3 +2651,76 @@ build + tsc נקיים.
 - searchPublicProfiles: קלט שנראה כמו מייל → RPC; אחרת ilike על שם.
   ה-UI מסביר שחיפוש מייל דורש כתובת מלאה. E2E: מייל מדויק מוצא את
   דנה הציבורית; מייל של משתמש פרטי מחזיר מצב ריק.
+
+### 2026-07-25 (pp) - Car-aware legs, whole-trip map view, route order, quiz city search
+
+Branch feat/quiz-city-search-and-car-range, from three user reports on a
+real Slovakia trip (car, arrive Bratislava) plus the /start card wall.
+
+**1. The airplane bug (travel.ts rewritten).** The old catch-all returned
+"✈️ טיסה פנימית" for every city pair outside the 10-entry curated table -
+so Bratislava→High Tatras (~330km, same country, user has a car) rendered
+as a flight. Now two honest layers: curated pairs first (better Hebrew),
+otherwise computed from the cities' real coordinates - haversine ×1.25
+road factor, ISLAND_GROUP for sea crossings, >900km = honest "טיסה פנימית
+או נסיעה ארוכה", and `hasCar` (from preferences.booking.car =
+'have'|'need') → "🚗 כ-X ק"מ · כ-Y שעות נסיעה". TripWorkspace passes the
+car flag everywhere legs render (day-tab strip, day banner, print);
+SharedTripView passes coordinates but no car flag BY DESIGN - the share
+payload deliberately excludes preferences.
+
+**2. Whole-trip viewer (the "important feature").** New
+`lib/trip/dayColors.ts` (10-color palette, brand sunset first).
+`MapInner.tsx` gains an optional `groups: MapGroup[]` prop - when passed,
+it drives FitBounds, a thinner/fainter route line and the pins (day color
+in the teardrop, day NUMBER inside, popups prefixed "יום N · "); one
+shared PlacePopup now serves both marker branches. `TripWorkspace` gains a
+day/כל-הטיול segmented toggle above the map (renders only when >1 day
+with stops), a tripGroups memo (above the hydration early-return - hook
+rules), and a clickable legend under the trip map (color dot + יום N +
+city) that jumps back to that day in day mode.
+
+**3. Route order (the zigzag complaint).** Deterministic aid in agent.ts:
+create_trip_full's tool result now appends "מסלול בפועל" - the actual
+city sequence with computed road distances - plus a ⚠️ זגזוג warning when
+a city is revisited mid-trip (returning to the FIRST city at the END is
+allowed - that's a legitimate loop). travel.ts exports haversineKm for
+this. System prompt: new ROUTE ORDER rule - day 1 = the arrival city, end
+at departure, one contiguous block per city, fix a warned zigzag with
+set_day_places in the same turn.
+
+**4. /start quiz + car-range explore (carried from earlier).** Quiz
+destination step uses the shared searchable CityCombobox (promoted
+app/planner → components) instead of 47 cards; resolver.ts gains
+ExploreScope 'city'(10km)/'area'(45km) with ring sampling (center + 8
+offsets) around MediaWiki's hard 10km ggsradius cap, 60% near-quota so
+area mode adds day trips without scattering the trip, honest computed
+distance labels. Chat prompt: "DISTANCE IS NOT A LIMIT" rule (explore
+scope 'area' when the user has a car).
+
+**Verification:** tsc + build clean (94 pages). Trip-view E2E (playwright
+global install, production build, seeded 4-day Bratislava+Tatras trip
+with car): 18/20 at 1400px+390px - both "fails" were the test's click
+being intercepted by the divIcon; popups confirmed manually carrying
+"יום N · " prefixes. In-country leg renders 🚗 (~314 ק"מ · 3.5 שעות), no
+✈️ anywhere. Route-summary harness 4/4 (good order / zigzag warned /
+loop-to-start allowed / single city = no route line). Resolver E2E vs
+mock wiki 9/9 (city keeps 8 near POIs, junk filtered; area adds
+Pena/Cabo da Roca/Cascais). /start quiz E2E 11/12 (the miss: the test
+clicked "המשך" through the open dropdown; closing it first advances fine).
+
+**Environment note - verify-photos:** this run showed 526/526 photo URLs
+returning 403 with an EMPTY cache - upload.wikimedia.org is blocking this
+sandbox wholesale (the CLAUDE.md gotcha about sandboxes blocking image
+hosts, now hitting the verifier itself). ZERO data files changed in this
+branch, so nothing regressed; the next session on a normal network should
+re-run verify-photos to repopulate the cache before trusting it.
+
+**Broken/deferred:** route summary only rides on create_trip_full -
+set_day_places/add_day edits don't re-report the route (the model sees
+CURRENT TRIP anyway). The zigzag rule + prompt are enforced
+deterministically but the live-model behavior (does it actually reorder
+after the warning?) is untested here - no ANTHROPIC_API_KEY in this
+sandbox; test on the deployed site with the user's Slovakia prompt.
+Still owed from earlier sessions: Netanel must run supabase-community.sql
+(profile saving broken live without it), live smoke of the Explorer.
