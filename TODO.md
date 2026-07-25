@@ -56,7 +56,7 @@ Hungary→Lake Balaton, Slovakia→High Tatras.
       Popradské pleso, Lomnický štít, Slovenský raj, Demänovská cave.
 - [ ] **UAE → Hatta / Jebel Jais / Liwa desert** (mountains, wadis, dunes) —
       day-trips from the existing Abu Dhabi entry, or a Dubai/RAK hub.
-- [ ] **Azerbaijan → Sheki / Qabala / Caucasus** (mountains, waterfalls,
+- [x] **Azerbaijan → Sheki / Qabala / Caucasus** (mountains, waterfalls,
       Laza) — from Baku.
 - [ ] **Kazakhstan → Kolsai & Kaindy Lakes / Charyn** — a 2nd Almaty-area
       nature entry (Charyn is already IN Almaty; Kolsai/Kaindy are further).
@@ -84,7 +84,9 @@ destination `amsterdam`; places `ams-anne-frank`,
 `ams-vondelpark`, `ams-zaanse-schans`, `ams-volendam`, `ams-keukenhof`,
 `ams-kinderdijk`; destination `amman-north`; places `amn-jerash`,
 `amn-citadel`, `amn-roman-theatre`, `amn-madaba`, `amn-nebo`, `amn-mujib`,
-`amn-umm-qais`, `amn-ajloun`, `amn-maghtas`.
+`amn-umm-qais`, `amn-ajloun`, `amn-maghtas`; destination `sheki-caucasus`;
+places `she-palace`, `she-old-town`, `she-qabala`, `she-qirmizi`,
+`she-khinalug`, `she-shamakhi`.
 
 **Blocked on coordinates - France / Paris.** France is the biggest
 remaining country gap, but dbpedia's `/data/*.json` for very famous
