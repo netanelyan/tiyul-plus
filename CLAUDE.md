@@ -1648,3 +1648,21 @@ the overnight run.
 - Coordinates from the Wikipedia API, plus German Wikipedia (Tsitsikamma)
   and Nominatim (Blyde River Canyon) where the English articles had none.
   build clean, verify-photos all OK.
+
+### 2026-07-25 (s) - Overnight expansion: Armenia (Yerevan + highlands)
+
+- **Armenia** (new country) - visa-free for Israelis (allowed stay
+  length phrased as "check current rules" rather than asserting a
+  number), AMD, cash outside Yerevan.
+- **Yerevan & the Armenian Highlands** - 11 places, rating 4.4.
+  Landmark: Khor Virap with Ararat behind it. Nature: Lake Sevan,
+  Dilijan NP, Mount Aragats, Jermuk waterfall; heritage: Geghard,
+  Garni, Sevanavank, Noravank, Tatev + the world longest reversible
+  cableway. 5-day itinerary.
+- Flights: FlyOne Armenia nonstop TLV-EVN, ~1-3 weekly depending on
+  direction and season, ~2.5h - frequency described as variable.
+- **Kosher: no verified address in Armenia** - small community and a
+  synagogue in Yerevan, nearest infrastructure Tbilisi. Nothing invented.
+- Coordinates and photos from the Wikipedia API (German Wikipedia for
+  Khor Virap). Wings of Tatev has no coordinates of its own - folded into
+  the Tatev entry instead of guessing. build clean, verify-photos all OK.

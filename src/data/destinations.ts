@@ -11620,6 +11620,275 @@ export const destinations: Destination[] = [
         'דרום אפריקה היא אחד המקומות הנוחים בעולם למטייל שומר כשרות: בקייפטאון (בעיקר סי פוינט) וביוהנסבורג יש מסעדות, מאפיות וסופרמרקטים כשרים, בפיקוח בתי הדין המקומיים, וגם מוצרים כשרים רבים ברשתות הרגילות. בקרוגר ובכביש הגן אין כשרות - להצטייד מראש בעיר ולוודא רשימות עסקים מעודכנות לפני הנסיעה.',
     },
   },
+  {
+    slug: 'yerevan',
+    name: 'ירוואן והרי ארמניה',
+    nameLocal: 'Yerevan & the Armenian Highlands',
+    countrySlug: 'armenia',
+    flag: '🇦🇲',
+    center: { lat: 40.1, lng: 45.0 },
+    zoom: 8,
+    tagline: 'מנזרי סלע, אגם הררי ויערות - שעתיים וחצי מהבית',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Mount_Ararat_and_the_Yerevan_skyline_%28June_2018%29.jpg/500px-Mount_Ararat_and_the_Yerevan_skyline_%28June_2018%29.jpg',
+    iconicLandmark: {
+      name: 'מנזר חור וירפ',
+      nameLocal: 'Khor Virap',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Monasterio_Khor_Virap%2C_Armenia%2C_2016-10-01%2C_DD_25.jpg/500px-Monasterio_Khor_Virap%2C_Armenia%2C_2016-10-01%2C_DD_25.jpg',
+      blurb:
+        'מנזר על גבעה בעמק ארארט, ממש על גבול טורקיה - ומאחוריו נשקפת פסגת אררט המושלגת, התמונה המזוהה ביותר עם ארמניה.',
+    },
+    editorialRating: {
+      score: 4.4,
+      verdict:
+        'יעד קרוב וזול עם מנזרים דרמטיים, אגם הרים ויערות - ומחירים שמאפשרים טיול נוח בתקציב קטן. חסרונות: הטיסות הישירות בתדירות נמוכה ומשתנות, אין כשרות מאומתת, וכדי להגיע לאתרים צריך רכב או נהג - התחבורה הציבורית דלילה.',
+    },
+    summary:
+      'ארמניה קטנה ומרוכזת: מירוואן יוצאים לכל הכיוונים ובשעה-שעתיים מגיעים לנופים אחרים לגמרי - מקדש גרני הרומי מעל קניון, מנזר גגהארד החצוב בסלע, מנזר חור וירפ מול אררט, אגם סוואן ההררי ומנזר סוואנאוואנק על צוק, יערות דיליז׳אן, ובדרום מנזר טאטב שאליו מגיעים ברכבל "כנפי טאטב" הארוך בעולם.',
+    bestSeason:
+      'מאי-יוני וספטמבר-אוקטובר (מזג אוויר נעים, ירוק או צבעי סתיו) · יולי-אוגוסט חם מאוד בעמקים אבל נעים בהרים · בחורף שלג וכבישי הרים חלקם קשים',
+    places: [
+      {
+        id: 'arm-khorvirap',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Monasterio_Khor_Virap%2C_Armenia%2C_2016-10-01%2C_DD_25.jpg/500px-Monasterio_Khor_Virap%2C_Armenia%2C_2016-10-01%2C_DD_25.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'מנזר חור וירפ',
+        nameLocal: 'Khor Virap',
+        category: 'attraction',
+        lat: 39.8783,
+        lng: 44.5761,
+        description:
+          'מנזר על גבעה בעמק ארארט, מהאתרים המקודשים בארמניה - כאן לפי המסורת נכלא גרגוריוס המאיר בבור. מאחוריו נשקפת פסגת אררט; הכי צלול בבוקר.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Khor+Virap',
+      },
+      {
+        id: 'arm-geghard',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Monasterio_de_Geghard%2C_Armenia%2C_2016-10-02%2C_DD_63.jpg/500px-Monasterio_de_Geghard%2C_Armenia%2C_2016-10-02%2C_DD_63.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'מנזר גגהארד',
+        nameLocal: 'Geghard Monastery',
+        category: 'attraction',
+        lat: 40.1404,
+        lng: 44.8185,
+        description:
+          'מנזר מהמאה ה-13 שחלקיו חצובים ישירות בתוך קיר הסלע, אתר מורשת עולמית בקניון נהר אזאט. האקוסטיקה באולמות החצובים יוצאת דופן - לעתים שרים שם מקהלות.',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Geghard+Monastery',
+      },
+      {
+        id: 'arm-garni',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Garni_temple_2021_drone.jpg/500px-Garni_temple_2021_drone.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'מקדש גרני',
+        nameLocal: 'Garni Temple',
+        category: 'attraction',
+        lat: 40.1124,
+        lng: 44.7303,
+        description:
+          'המקדש ההלניסטי היחיד ששרד בקווקז, מהמאה הראשונה לספירה, על צוק מעל הקניון. למטה בקניון - "הסימפוניה של האבנים", קיר עמודי בזלת משושים.',
+        rating: 4.6,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Garni+Temple',
+      },
+      {
+        id: 'arm-sevan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Lake_Sevan_2022-08-14_Sentinel-2_L2A.jpg/500px-Lake_Sevan_2022-08-14_Sentinel-2_L2A.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'אגם סוואן',
+        nameLocal: 'Lake Sevan',
+        category: 'nature',
+        lat: 40.3167,
+        lng: 45.35,
+        description:
+          'אחד האגמים ההרריים הגדולים בעולם, בגובה כ-1,900 מ׳ - מים כחולים עמוקים, חופים וכפרי דייגים. קריר ונעים גם באוגוסט, וכשעה נסיעה מירוואן.',
+        rating: 4.5,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Lake+Sevan',
+      },
+      {
+        id: 'arm-sevanavank',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/%D5%8D%D6%87%D5%A1%D5%B6%D5%AB_%D5%BE%D5%A1%D5%B6%D5%A1%D5%AF%D5%A1%D5%B6_%D5%B0%D5%A1%D5%B4%D5%A1%D5%AC%D5%AB%D6%80_%D5%84%D4%B2_29.jpg/500px-%D5%8D%D6%87%D5%A1%D5%B6%D5%AB_%D5%BE%D5%A1%D5%B6%D5%A1%D5%AF%D5%A1%D5%B6_%D5%B0%D5%A1%D5%B4%D5%A1%D5%AC%D5%AB%D6%80_%D5%84%D4%B2_29.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        name: 'מנזר סוואנאוואנק',
+        nameLocal: 'Sevanavank',
+        category: 'attraction',
+        lat: 40.5639,
+        lng: 45.0108,
+        description:
+          'שתי כנסיות אבן מהמאה התשיעית על גבעה שחודרת לאגם סוואן - עולים במדרגות ומקבלים תצפית על כל האגם וההרים סביבו.',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Sevanavank',
+      },
+      {
+        id: 'arm-dilijan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/%22Dilijan%22_national_park.jpg/500px-%22Dilijan%22_national_park.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'הפארק הלאומי דיליז׳אן',
+        nameLocal: 'Dilijan National Park',
+        category: 'nature',
+        lat: 40.6564,
+        lng: 45.0214,
+        description:
+          'יערות עבותים, אגמים קטנים ומנזרים נסתרים - מכנים אותו "שווייץ הקטנה של ארמניה". מסלולי הליכה נוחים בין הכפרים ואל אגם פרז ומנזרי האגהרצין וגושבאנק.',
+        rating: 4.6,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Dilijan+National+Park',
+      },
+      {
+        id: 'arm-tatev',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/-2025.05_%D0%A2%D0%B0%D1%82%D0%B5%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D0%BE%D0%BD%D0%B0%D1%81%D1%82%D1%8B%D1%80%D1%8C_1.jpg/500px--2025.05_%D0%A2%D0%B0%D1%82%D0%B5%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BC%D0%BE%D0%BD%D0%B0%D1%81%D1%82%D1%8B%D1%80%D1%8C_1.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'מנזר טאטב ורכבל "כנפי טאטב"',
+        nameLocal: 'Tatev Monastery & Wings of Tatev',
+        category: 'attraction',
+        lat: 39.3794,
+        lng: 46.25,
+        description:
+          'מנזר מהמאה התשיעית על צוק מעל קניון נהר ורוטן, ואליו מגיעים ברכבל "כנפי טאטב" - הרכבל הדו-כיווני הארוך בעולם, כ-5.7 ק"מ מעל הקניון. כ-4 שעות נסיעה מירוואן.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Tatev+Monastery',
+      },
+      {
+        id: 'arm-noravank',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Noravank.JPG/500px-Noravank.JPG',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'מנזר נורוואנק',
+        nameLocal: 'Noravank',
+        category: 'attraction',
+        lat: 39.6841,
+        lng: 45.2329,
+        description:
+          'מנזר מהמאה ה-13 בקצה קניון של צוקי אבן חול אדומים - הצבע של הסלעים בשעת שקיעה הוא הסיבה העיקרית לבוא. בדרך לטאטב או ליריחו של יין ארני.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Noravank',
+      },
+      {
+        id: 'arm-aragats',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Mount_Aragats_2020-05-11.jpg/500px-Mount_Aragats_2020-05-11.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'הר ארגאץ',
+        nameLocal: 'Mount Aragats',
+        category: 'nature',
+        lat: 40.5333,
+        lng: 44.2,
+        description:
+          'ההר הגבוה בארמניה (4,090 מ׳), הר געש כבוי עם ארבע פסגות סביב לוע. אפשר להגיע ברכב עד אגם קארי בגובה 3,200 מ׳ ומשם לטפס לפסגה הדרומית בקיץ.',
+        rating: 4.5,
+        durationMin: 420,
+        externalUrl: 'https://maps.google.com/?q=Mount+Aragats',
+      },
+      {
+        id: 'arm-jermuk',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Jermuk_new_mix_2013.jpg/500px-Jermuk_new_mix_2013.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'ג׳רמוק והמפל',
+        nameLocal: 'Jermuk',
+        category: 'nature',
+        lat: 39.8417,
+        lng: 45.6722,
+        description:
+          'עיירת מרפא הררית המפורסמת במים המינרליים שלה, ובה מפל בגובה כ-70 מ׳, יערות ומסלולי הליכה - עצירה נעימה בדרך דרומה לטאטב.',
+        rating: 4.3,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Jermuk',
+      },
+      {
+        id: 'arm-yerevan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Mount_Ararat_and_the_Yerevan_skyline_%28June_2018%29.jpg/500px-Mount_Ararat_and_the_Yerevan_skyline_%28June_2018%29.jpg',
+        tags: ['foodie', 'art'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'ירוואן',
+        nameLocal: 'Yerevan',
+        category: 'attraction',
+        lat: 40.1778,
+        lng: 44.5128,
+        description:
+          'בירה ורודה (מאבן הטוף המקומית) עם כיכר הרפובליקה ומזרקות, מדרגות הקסקאד ומרכז האמנות, שוק ורניסאז׳ ומסעדות מצוינות. בסיס נוח לכל הנסיעות היומיות.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Yerevan',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'ירוואן',
+        placeIds: ['arm-yerevan'],
+        notes:
+          'התמקמות בבירה: כיכר הרפובליקה, הקסקאד, שוק ורניסאז׳ וערב במסעדה מקומית. הכול בהליכה או במונית זולה.',
+      },
+      {
+        day: 2,
+        title: 'גרני, גגהארד וחור וירפ',
+        placeIds: ['arm-garni', 'arm-geghard', 'arm-khorvirap'],
+        notes:
+          'הקלאסיקה של האזור: מקדש גרני והסימפוניה של האבנים, מנזר גגהארד החצוב, ולקראת ערב חור וירפ מול אררט.',
+      },
+      {
+        day: 3,
+        title: 'אגם סוואן ודיליז׳אן',
+        placeIds: ['arm-sevan', 'arm-sevanavank', 'arm-dilijan'],
+        notes:
+          'צפונה לאגם ההררי ולמנזר שעל הצוק, ואחר הצהריים יערות דיליז׳אן - מסלול הליכה קצר בין המנזרים.',
+      },
+      {
+        day: 4,
+        title: 'דרומה - נורוואנק וטאטב',
+        placeIds: ['arm-noravank', 'arm-jermuk', 'arm-tatev'],
+        notes:
+          'יום נסיעה ארוך דרומה: קניון נורוואנק, עצירה בג׳רמוק, ורכבל כנפי טאטב אל המנזר שעל הצוק. אפשר ללון בגוריס.',
+      },
+      {
+        day: 5,
+        title: 'הר ארגאץ',
+        placeIds: ['arm-aragats'],
+        notes:
+          'נוסעים אל אגם קארי בגובה 3,200 מ׳; מי שכשיר ממשיך לפסגה הדרומית (בקיץ בלבד, ומזג האוויר משתנה מהר).',
+      },
+    ],
+    practical: {
+      flights:
+        'FlyOne Armenia מפעילה קו ישיר בין נתב"ג לירוואן (EVN) - כ-1-3 טיסות בשבוע לפי כיוון ועונה, כשעתיים וחצי. התדירות משתנה, ולכן כדאי לבדוק לוחות זמנים עדכניים; יש גם חיבורים עם החלפה דרך טביליסי, איסטנבול ודובאי.',
+      gettingAround:
+        'בירוואן - מוניות זולות ואפליקציות (GG / Yandex). לאתרים מחוץ לעיר: נהג פרטי ליום, טיול מאורגן או רכב שכור. התחבורה הציבורית בין הכפרים דלילה ואיטית, והכבישים ההרריים בדרום ארוכים.',
+      kosherOverview:
+        'לא אותרה בארמניה מסעדה או חנות כשרה מאומתת. יש בירוואן קהילה יהודית קטנה ובית כנסת, אבל לא תשתית כשרות תיירותית - הכשרות הקרובה היא בטביליסי שבגאורגיה (כשעה טיסה או נסיעה ארוכה). הדרך המעשית: להצטייד מראש, ולהסתמך על ירקות, פירות ומוצרים ארוזים עם סימון מוכר.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
