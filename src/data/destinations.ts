@@ -12524,7 +12524,562 @@ export const destinations: Destination[] = [
         'אין לאורך כביש הגן שום תשתית כשרות - לא מסעדה ולא חנות. הכשרות הקרובה היא בקייפטאון (שכונת סי פוינט, בפיקוח בית הדין המקומי), ולכן הדרך המעשית היא להצטייד שם לכל המסלול. בסופרמרקטים הגדולים לאורך הדרך יש מוצרים ארוזים עם סימוני כשרות מוכרים.',
     },
   },
-];
+  {
+    slug: 'kyoto',
+    name: 'קיוטו וקנסאי',
+    nameLocal: 'Kyoto & Kansai',
+    countrySlug: 'japan',
+    flag: '🇯🇵',
+    center: { lat: 34.9, lng: 135.7 },
+    zoom: 8,
+    tagline: 'שערי טורי אינסופיים, יער במבוק ומקדשים בין הרים',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Torii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine%2C_Kyoto%2C_Japan.jpg/500px-Torii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine%2C_Kyoto%2C_Japan.jpg',
+    iconicLandmark: {
+      name: 'פושימי אינארי',
+      nameLocal: 'Fushimi Inari-taisha',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Torii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine%2C_Kyoto%2C_Japan.jpg/500px-Torii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine%2C_Kyoto%2C_Japan.jpg',
+      blurb:
+        'מקדש שינטו שממנו מטפסת דרך הרים ובה אלפי שערי טורי כתומים שנתרמו לאורך מאות שנים - הצילום המזוהה ביותר עם קיוטו.',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'יפן המסורתית במרוכז - מקדשים, גנים ויערות במרחק הליכה או רכבת קצרה, ובעיר גם בית חב"ד עם מטבח כשר (בהזמנה מראש). חסרונות: אין טיסה ישירה לקנסאי (מגיעים דרך טוקיו או עם החלפה), האתרים המרכזיים עמוסים מאוד, והקיץ חם ולח.',
+    },
+    summary:
+      'קיוטו הייתה בירת יפן יותר מאלף שנה, ובה יותר מאלף מקדשים ובתי תפילה - פושימי אינארי עם שערי הטורי, קיומיזו-דרה על עמודי העץ, הביתן הזהב קינקאקו-ג׳י ויער הבמבוק של אראשייאמה. סביבה נפרשת קנסאי: אייל הצבי של נארה ומקדש טודאי-ג׳י, אגם ביווה הגדול ביפן, לשון החול אמאנוהאשידאטה, ובדרום מפל נאצ׳י ושבילי העלייה לרגל של קומאנו קודו. בעיר פועל בית חב"ד עם מטבח כשר.',
+    bestSeason:
+      'סוף מרץ-אפריל (סאקורה) ונובמבר (שלכת אדומה) - היפים והעמוסים ביותר · מאי ואוקטובר נעימים ושקטים יותר · יולי-אוגוסט חם ולח מאוד',
+    places: [
+      {
+        id: 'kyo-fushimi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Torii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine%2C_Kyoto%2C_Japan.jpg/500px-Torii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine%2C_Kyoto%2C_Japan.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'פושימי אינארי',
+        nameLocal: 'Fushimi Inari-taisha',
+        category: 'attraction',
+        lat: 34.9672,
+        lng: 135.7728,
+        description:
+          'מקדש השועלים של קיוטו, וממנו מטפס שביל הררי עם אלפי שערי טורי כתומים עד לפסגת הר אינארי (כשעתיים הלוך-חזור). ככל שעולים - פחות אנשים; הכי שקט לפנות בוקר.',
+        rating: 4.8,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Fushimi+Inari+Taisha',
+      },
+      {
+        id: 'kyo-kiyomizu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Kiyomizu.jpg/500px-Kiyomizu.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'קיומיזו-דרה',
+        nameLocal: 'Kiyomizu-dera',
+        category: 'attraction',
+        lat: 34.995,
+        lng: 135.785,
+        description:
+          'מקדש בודהיסטי מהמאה השמינית שמרפסתו העצומה נשענת על עמודי עץ במדרון ההר, אתר מורשת עולמית. מתחתיו מעיין המים שממנו שמו, ומסביב סמטאות היגאשייאמה העתיקות.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Kiyomizu-dera',
+      },
+      {
+        id: 'kyo-arashiyama',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Arashiyama%2C_Part_II_-_Arashiyama7534.jpg/500px-Arashiyama%2C_Part_II_-_Arashiyama7534.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'אראשייאמה ויער הבמבוק',
+        nameLocal: 'Arashiyama',
+        category: 'nature',
+        lat: 35.0151,
+        lng: 135.6707,
+        description:
+          'רובע הרים במערב קיוטו: חורשת הבמבוק הענקית, גשר טוגטסוקיו על נהר הוזו, מקדש טנריו-ג׳י והפארק של הקופים על הגבעה. הכי יפה מוקדם בבוקר, לפני הקהל.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Arashiyama+Kyoto',
+      },
+      {
+        id: 'kyo-kinkakuji',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Golden_Pavilion_Kinkaku-ji_water_mirror_2024.jpg/500px-Golden_Pavilion_Kinkaku-ji_water_mirror_2024.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'הביתן הזהב (קינקאקו-ג׳י)',
+        nameLocal: 'Kinkaku-ji',
+        category: 'attraction',
+        lat: 35.0395,
+        lng: 135.7285,
+        description:
+          'ביתן מצופה עלי זהב שמשתקף באגם שלפניו - אחד המבנים המצולמים ביפן, אתר מורשת עולמית. הסיור הוא מסלול קצר וחד-כיווני סביב האגם והגן.',
+        rating: 4.7,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Kinkaku-ji',
+      },
+      {
+        id: 'kyo-ginkakuji',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Ginkakuji_Kyoto03-r.jpg/500px-Ginkakuji_Kyoto03-r.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'הביתן הכסף (גינקאקו-ג׳י)',
+        nameLocal: 'Ginkaku-ji',
+        category: 'attraction',
+        lat: 35.0267,
+        lng: 135.7983,
+        description:
+          'מקדש זן עם גן טחב, גן חול מגורף ומסלול עלייה קצר לתצפית על העיר. ממנו מתחיל "שביל הפילוסוף" - טיילת תעלה מוצלת שהיא אחת ההליכות הנעימות בקיוטו.',
+        rating: 4.6,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Ginkaku-ji',
+      },
+      {
+        id: 'kyo-kyoto',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Kyoto%2C_Japan_%2849667780482%29.jpg/500px-Kyoto%2C_Japan_%2849667780482%29.jpg',
+        tags: ['foodie', 'history'],
+        priceLevel: 2,
+        name: 'קיוטו - העיר',
+        nameLocal: 'Kyoto',
+        category: 'attraction',
+        lat: 35.0116,
+        lng: 135.7681,
+        description:
+          'בירת יפן ההיסטורית: שוק נישיקי, רובע הגיישות גיון, ארמון הקיסר וטירת ניג׳ו, ורחובות עץ מסורתיים. מרכז נוח ללינה - הרכבות מגיעות מכאן לכל קנסאי.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Kyoto',
+      },
+      {
+        id: 'kyo-todaiji',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/T%C5%8Ddai-ji_Kon-d%C5%8D.jpg/500px-T%C5%8Ddai-ji_Kon-d%C5%8D.jpg',
+        tags: ['history', 'families'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'טודאי-ג׳י ופארק נארה',
+        nameLocal: 'Tōdai-ji & Nara Park',
+        category: 'attraction',
+        lat: 34.6892,
+        lng: 135.8397,
+        description:
+          'מקדש מהמאה השמינית שבו פסל בודהה ברונזה ענק, באחד ממבני העץ הגדולים בעולם. סביבו פארק נארה, שבו מסתובבים חופשי מאות אילי צבי מבויתים למחצה. כשעה מקיוטו.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Todai-ji+Nara',
+      },
+      {
+        id: 'kyo-biwa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Lake_biwa.jpg/500px-Lake_biwa.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'אגם ביווה',
+        nameLocal: 'Lake Biwa',
+        category: 'nature',
+        lat: 35.255,
+        lng: 136.08,
+        description:
+          'האגם הגדול והעתיק ביפן, ממש ממזרח לקיוטו - חופים, שביל אופניים היקפי, שער טורי צף במקדש שירהיגה ותצפית ההר ביווקו וואלי ברכבל.',
+        rating: 4.4,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Lake+Biwa',
+      },
+      {
+        id: 'kyo-amanohashidate',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Amanohashidate_aerial_view_2026.jpg/500px-Amanohashidate_aerial_view_2026.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'אמאנוהאשידאטה',
+        nameLocal: 'Amanohashidate',
+        category: 'nature',
+        lat: 35.5694,
+        lng: 135.1915,
+        description:
+          'לשון חול באורך כ-3.6 ק"מ מכוסה כ-8,000 עצי אורן, שחוצה מפרץ בים היפני - נחשבת לאחד משלושת הנופים היפים ביפן. מתבוננים בה מהתצפיות שמשני עברי המפרץ.',
+        rating: 4.5,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Amanohashidate',
+      },
+      {
+        id: 'kyo-nachi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Kumano_Kodo_World_heritage_Nachi-no-taki_%E7%86%8A%E9%87%8E%E5%8F%A4%E9%81%93_%E9%82%A3%E6%99%BA%E5%A4%A7%E6%BB%9D10.JPG/500px-Kumano_Kodo_World_heritage_Nachi-no-taki_%E7%86%8A%E9%87%8E%E5%8F%A4%E9%81%93_%E9%82%A3%E6%99%BA%E5%A4%A7%E6%BB%9D10.JPG',
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
+        name: 'מפל נאצ׳י וקומאנו קודו',
+        nameLocal: 'Nachi Falls & Kumano Kodo',
+        category: 'nature',
+        lat: 33.672,
+        lng: 135.891,
+        description:
+          'המפל החד-מדרגתי הגבוה ביפן (133 מ׳), ולצדו פגודה אדומה ומקדש - חלק משבילי העלייה לרגל קומאנו קודו, אתר מורשת עולמית. בחצי האי קיא, כ-4 שעות מקיוטו.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Nachi+Falls',
+      },
+      {
+        id: 'kyo-chabad',
+        tags: ['foodie'],
+        priceLevel: 2,
+        name: 'בית חב"ד קיוטו',
+        nameLocal: 'Chabad of Kyoto, Okazaki',
+        category: 'kosher-food',
+        lat: 35.0167,
+        lng: 135.787,
+        description:
+          'בית חב"ד של קיוטו בשכונת אוקאזאקי (Okazaki Tennocho, Sakyo-ku), עם בית כנסת קטן ומטבח כשר - ארוחות ואירוח שבת בהזמנה מראש (מומלץ כשלושה ימים, האוכל מוכן לפי הזמנה). הסימון הוא ברמת השכונה.',
+        kosherNote: 'בהפעלת חב"ד קיוטו (תחת חב"ד יפן). חובה להזמין מראש - אין מסעדה פתוחה לקהל מזדמן.',
+        kosherVerification: {
+          source: 'curated',
+          lastChecked: 'pending-review',
+          supervision: 'חב"ד קיוטו / חב"ד יפן',
+        },
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Chabad+of+Kyoto',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'מזרח קיוטו',
+        placeIds: ['kyo-kiyomizu', 'kyo-ginkakuji', 'kyo-kyoto'],
+        notes:
+          'בוקר בקיומיזו-דרה ובסמטאות היגאשייאמה, אחר הצהריים גינקאקו-ג׳י ושביל הפילוסוף, וערב בגיון ובשוק נישיקי.',
+      },
+      {
+        day: 2,
+        title: 'שערי הטורי',
+        placeIds: ['kyo-fushimi', 'kyo-chabad'],
+        notes:
+          'לצאת מוקדם לפושימי אינארי ולעלות בשביל ההר עד למעלה. ארוחה כשרה בבית חב"ד - להזמין כמה ימים מראש.',
+      },
+      {
+        day: 3,
+        title: 'אראשייאמה והביתן הזהב',
+        placeIds: ['kyo-arashiyama', 'kyo-kinkakuji'],
+        notes:
+          'חורשת הבמבוק בשעת בוקר מוקדמת, טנריו-ג׳י והנהר, ואחר הצהריים קינקאקו-ג׳י המוזהב.',
+      },
+      {
+        day: 4,
+        title: 'נארה',
+        placeIds: ['kyo-todaiji'],
+        notes:
+          'רכבת של כשעה לנארה: הבודהה הגדול בטודאי-ג׳י, אילי הצבי בפארק ומקדש קסוגה טאישה עם הפנסים.',
+      },
+      {
+        day: 5,
+        title: 'טבע בקנסאי',
+        placeIds: ['kyo-biwa', 'kyo-amanohashidate', 'kyo-nachi'],
+        notes:
+          'בוחרים כיוון טבע: אגם ביווה הקרוב, לשון החול אמאנוהאשידאטה בצפון, או יום ארוך דרומה למפל נאצ׳י ולשבילי קומאנו קודו.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה מנתב"ג לקנסאי (אוסקה, KIX). שתי דרכים מעשיות: טיסה ישירה של אל על לטוקיו (נריטה) ומשם שינקנסן של כשעתיים ורבע לקיוטו, או טיסה עם החלפה (איסטנבול, המפרץ, אירופה) ישירות לאוסקה.',
+      gettingAround:
+        'בקיוטו: אוטובוסים עירוניים, שתי שורות מטרו ורכבות פרטיות - כרטיס IC נטען (ICOCA/Suica) פותר הכול, ואופניים נוחים מאוד בעיר השטוחה. לנארה, לאגם ביווה ולאוסקה - רכבות תכופות; לאמאנוהאשידאטה ולקומאנו קודו כדאי רכב שכור או רכבת אזורית איטית.',
+      kosherOverview:
+        'בקיוטו פועל בית חב"ד עם מטבח כשר - ארוחות ואירוח שבת בהזמנה מראש בלבד (האוכל מוכן לפי הזמנה, כדאי כשלושה ימים לפני). זו הכתובת הכשרה היחידה בעיר; בטוקיו יש מסעדה כשרה ושירות משלוחים ארצי. במסעדות רגילות אין להניח כשרות - מרק דאשי (דגים), מירין ורוטב סויה נמצאים כמעט בכל מנה.',
+    },
+  },
+  {
+    slug: 'banff',
+    name: 'הרי הרוקי הקנדיים',
+    nameLocal: 'Banff & the Canadian Rockies',
+    countrySlug: 'canada',
+    flag: '🇨🇦',
+    center: { lat: 51.8, lng: -116.6 },
+    zoom: 7,
+    tagline: 'אגמי טורקיז, קרחונים וכביש נופי בין שני פארקים',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Moraine_Lake_17092005.jpg/500px-Moraine_Lake_17092005.jpg',
+    iconicLandmark: {
+      name: 'אגם מוריין',
+      nameLocal: 'Moraine Lake',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Moraine_Lake_17092005.jpg/500px-Moraine_Lake_17092005.jpg',
+      blurb:
+        'אגם קרחוני בעמק עשר הפסגות, שצבעו טורקיז עז בגלל קמח סלעים שנשטף מהקרחונים - אחד הנופים המצולמים בקנדה.',
+    },
+    editorialRating: {
+      score: 4.8,
+      verdict:
+        'ריכוז יוצא דופן של אגמי קרחונים, פסגות ומסלולי הליכה לצד כביש נופי אחד - נגיש, מסומן היטב ובטוח. חסרונות: אין טיסה ישירה לקלגרי (נחיתה בטורונטו וטיסה פנימית), העונה קצרה (רוב האתרים נגישים ביוני-ספטמבר), הכניסה לאגם מוריין מוגבלת לשאטלים בהזמנה מראש, ואין כשרות באזור.',
+    },
+    summary:
+      'הרוקי הקנדיים הם הפארקים באנף ויאספר שמחוברים בכביש שדות הקרח - אחד הכבישים הנופיים היפים בעולם. כאן אגם לואיז ואגם מוריין בצבע טורקיז, אגם פייטו בצורת ראש זאב, קרחון אתבסקה שאפשר לדרוך עליו, מפלי נקיק ג׳ונסטון, ובפארק יוהו הסמוך אגם אמרלד ומפלי טאקאקאו. עיר השער היא קלגרי, וממנה כשעה וחצי נסיעה לבאנף.',
+    bestSeason:
+      'יוני-ספטמבר (כל הכבישים והמסלולים פתוחים; אגם מוריין נגיש בערך יוני-אוקטובר) · יולי-אוגוסט בשיא העומס · בחורף סקי ואגמים קפואים, אבל חלק מהדרכים והשאטלים סגורים',
+    places: [
+      {
+        id: 'can-moraine',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Moraine_Lake_17092005.jpg/500px-Moraine_Lake_17092005.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'אגם מוריין',
+        nameLocal: 'Moraine Lake',
+        category: 'nature',
+        lat: 51.3225,
+        lng: -116.1856,
+        description:
+          'אגם קרחוני בעמק עשר הפסגות, בצבע טורקיז שנוצר מקמח סלעים. הכביש הפרטי סגור לרכבים פרטיים - מגיעים בשאטל או במונית שיתופית בהזמנה מראש; משם מסלולים לאגמי הרים ולרכס.',
+        rating: 4.9,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Moraine+Lake',
+      },
+      {
+        id: 'can-louise',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Lake_Louise_AB_entrance.jpg/500px-Lake_Louise_AB_entrance.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'אגם לואיז',
+        nameLocal: 'Lake Louise',
+        category: 'nature',
+        lat: 51.4253,
+        lng: -116.1806,
+        description:
+          'אגם ירוק-טורקיז מול קרחון ויקטוריה, עם מלון היסטורי על שפתו וקאנו להשכרה. מכאן יוצאים מסלולים קלאסיים - בית התה של אגם אגנס ובית התה של ששת הקרחונים.',
+        rating: 4.8,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Lake+Louise+Alberta',
+      },
+      {
+        id: 'can-banff',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Panorama_of_Peyto_Lake%2C_Banff_National_Park%2C_Alberta%2C_Canada.jpg/500px-Panorama_of_Peyto_Lake%2C_Banff_National_Park%2C_Alberta%2C_Canada.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'הפארק הלאומי באנף',
+        nameLocal: 'Banff National Park',
+        category: 'nature',
+        lat: 51.5,
+        lng: -116.0,
+        description:
+          'הפארק הלאומי הראשון של קנדה ואתר מורשת עולמית: פסגות, אגמים, מעיינות חמים ובעלי חיים - דובים, אילים וכבשי הרים. עיירת באנף שבתוכו היא הבסיס הנוח ללינה ולשירותים.',
+        rating: 4.8,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Banff+National+Park',
+      },
+      {
+        id: 'can-peyto',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Panorama_of_Peyto_Lake%2C_Banff_National_Park%2C_Alberta%2C_Canada.jpg/500px-Panorama_of_Peyto_Lake%2C_Banff_National_Park%2C_Alberta%2C_Canada.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'אגם פייטו',
+        nameLocal: 'Peyto Lake',
+        category: 'viewpoint',
+        lat: 51.7269,
+        lng: -116.5219,
+        description:
+          'אגם קרחוני בצורת ראש זאב, בצבע תכלת-חלבי, שנשקף מתצפית בוו סאמיט על כביש שדות הקרח. הליכה קצרה ומרוצפת מהחניון - אחת התצפיות הקלות והמרשימות באזור.',
+        rating: 4.8,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Peyto+Lake',
+      },
+      {
+        id: 'can-icefields',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Icefields_Parkway_from_an_elevated_viewpoint%2C_Jasper_National_Park%2C_Alberta%2C_Canada.jpg/500px-Icefields_Parkway_from_an_elevated_viewpoint%2C_Jasper_National_Park%2C_Alberta%2C_Canada.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'כביש שדות הקרח',
+        nameLocal: 'Icefields Parkway',
+        category: 'nature',
+        lat: 52.1986,
+        lng: -117.2436,
+        description:
+          'כביש נופי באורך כ-230 ק"מ בין אגם לואיז ליאספר, לאורך רכס יבשת המים - עשרות תצפיות, מפלים, אגמים וקרחונים בדרך. לתדלק לפני היציאה; אין תחנות באמצע.',
+        rating: 4.9,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Icefields+Parkway',
+      },
+      {
+        id: 'can-athabasca',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Athabasca_Glacier_from_the_valley_floor%2C_Jasper_National_Park%2C_Alberta%2C_Canada.jpg/500px-Athabasca_Glacier_from_the_valley_floor%2C_Jasper_National_Park%2C_Alberta%2C_Canada.jpg',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        name: 'קרחון אתבסקה',
+        nameLocal: 'Athabasca Glacier',
+        category: 'nature',
+        lat: 52.1986,
+        lng: -117.2436,
+        description:
+          'לשון קרחון שיורדת משדה הקרח קולומביה ממש עד לצד הכביש, ונסוגה עשרות מטרים בכל עשור. עולים עליה ברכב שרשראות מיוחד או בסיור מודרך - לא להיכנס לבד, יש סדקים.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Athabasca+Glacier',
+      },
+      {
+        id: 'can-jasper',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/MaligneLakeBaldHills.JPG/500px-MaligneLakeBaldHills.JPG',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'הפארק הלאומי יאספר',
+        nameLocal: 'Jasper National Park',
+        category: 'nature',
+        lat: 52.8,
+        lng: -117.9,
+        description:
+          'הפארק הגדול ברוקי הקנדיים, פראי ושקט יותר מבאנף: קניון מאלין, אגמים, מעיינות חמים ורכבל לפסגת ויסלרס. גם שמורת שמיים כהים - טובה במיוחד לצפייה בכוכבים.',
+        rating: 4.7,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Jasper+National+Park',
+      },
+      {
+        id: 'can-maligne',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/MaligneLakeBaldHills.JPG/500px-MaligneLakeBaldHills.JPG',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 2,
+        name: 'אגם מאלין',
+        nameLocal: 'Maligne Lake',
+        category: 'nature',
+        lat: 52.6644,
+        lng: -117.5336,
+        description:
+          'האגם הגדול ברוקי הקנדיים, ובמרכזו האי ספיריט איילנד שאליו מגיעים רק בשיט מאורגן. סביבו מסלולי הליכה כמו באלד הילס עם תצפית על כל האגם.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Maligne+Lake',
+      },
+      {
+        id: 'can-johnston',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/JohnstonCanyonUpperFalls.jpg/500px-JohnstonCanyonUpperFalls.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'נקיק ג׳ונסטון',
+        nameLocal: 'Johnston Canyon',
+        category: 'nature',
+        lat: 51.2417,
+        lng: -115.8544,
+        description:
+          'נקיק צר עם שבילי מתכת שצמודים לקיר מעל הנחל, ובקצהו מפלים תחתונים ועליונים - מסלול קל ומהפופולריים בבאנף. בחורף המפלים קופאים ומטפסים עליהם בקרמפונים.',
+        rating: 4.6,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Johnston+Canyon',
+      },
+      {
+        id: 'can-yoho',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Takakkaw_Falls_-_panoramio_%281%29.jpg/500px-Takakkaw_Falls_-_panoramio_%281%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'הפארק הלאומי יוהו',
+        nameLocal: 'Yoho National Park',
+        category: 'nature',
+        lat: 51.3953,
+        lng: -116.4867,
+        description:
+          'פארק שכן בקולומביה הבריטית: מפלי טאקאקאו הגבוהים, גשר טבעי מעל נהר קיקינג הורס ומסלולי אגמים - כולם במרחק נסיעה קצר מאגם לואיז.',
+        rating: 4.7,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Yoho+National+Park',
+      },
+      {
+        id: 'can-emerald',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Emerald_lake.jpg/500px-Emerald_lake.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'אגם אמרלד',
+        nameLocal: 'Emerald Lake',
+        category: 'nature',
+        lat: 51.444,
+        lng: -116.531,
+        description:
+          'אגם ירוק-אמרלד בפארק יוהו, עם שביל מעגלי קל של כ-5 ק"מ, קאנו להשכרה ולודג׳ עץ על שפתו. שקט יותר מהאגמים המפורסמים בבאנף.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Emerald+Lake+Yoho',
+      },
+      {
+        id: 'can-calgary',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Downtown_Calgary_2020-4.jpg/500px-Downtown_Calgary_2020-4.jpg',
+        tags: ['families', 'foodie'],
+        priceLevel: 2,
+        name: 'קלגרי',
+        nameLocal: 'Calgary',
+        category: 'attraction',
+        lat: 51.0475,
+        lng: -114.0625,
+        description:
+          'עיר השער לרוקי: שדה תעופה בינלאומי, השכרות רכב, מגדל קלגרי והפארק האולימפי. ביולי מתקיים בה הסטמפיד - פסטיבל רודיאו ענק שממלא את העיר.',
+        rating: 4.3,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Calgary',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'קלגרי ובאנף',
+        placeIds: ['can-calgary', 'can-banff'],
+        notes:
+          'נוחתים בקלגרי, לוקחים רכב ונוסעים כשעה וחצי לבאנף. אחר צהריים קל בעיירה ובסביבתה - מעיינות חמים או רכבל הגופרית.',
+      },
+      {
+        day: 2,
+        title: 'אגמי הטורקיז',
+        placeIds: ['can-louise', 'can-moraine'],
+        notes:
+          'יום האגמים: אגם לואיז ומסלול בית התה של אגם אגנס, ואחר הצהריים מוריין (חובה להזמין שאטל מראש - אין כניסה ברכב פרטי).',
+      },
+      {
+        day: 3,
+        title: 'יוהו והנקיק',
+        placeIds: ['can-yoho', 'can-emerald', 'can-johnston'],
+        notes:
+          'חוצים לקולומביה הבריטית: מפלי טאקאקאו ואגם אמרלד, ובדרך חזרה מסלול המפלים בנקיק ג׳ונסטון.',
+      },
+      {
+        day: 4,
+        title: 'כביש שדות הקרח',
+        placeIds: ['can-peyto', 'can-icefields', 'can-athabasca'],
+        notes:
+          'נסיעה צפונה בכביש הנופי עם עצירות בתצפית פייטו, אגמים ומפלים, וטיול על קרחון אתבסקה. לתדלק ולהצטייד לפני היציאה.',
+      },
+      {
+        day: 5,
+        title: 'יאספר',
+        placeIds: ['can-jasper', 'can-maligne'],
+        notes:
+          'קניון מאלין ואגם מאלין עם השיט לספיריט איילנד, ולסיום שמיים כהים בלילה. משם חוזרים דרומה או ממשיכים לאדמונטון.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה מנתב"ג לקלגרי (YYC). הקו הישיר היחיד לקנדה הוא של אייר קנדה לטורונטו (YYZ) - נכון ליולי 2026 טיסה שבועית, כ-10.5 שעות - ומשם טיסה פנימית של כ-4 שעות לקלגרי. אפשרות נוספת: החלפה באירופה או בארה"ב ישירות לקלגרי.',
+      gettingAround:
+        'רכב שכור הוא חובה - הפארקים גדולים והתחבורה הציבורית מוגבלת. נדרש כרטיס כניסה לפארקים (Parks Canada Discovery Pass או יומי), ולאגם מוריין ולאגם לואיז יש בעונה מערכת שאטלים בהזמנה מראש. בחורף נדרשים צמיגי חורף ובדיקת תנאי דרך.',
+      kosherOverview:
+        'אין באזור הרוקי (באנף, לואיז, יאספר) שום תשתית כשרות. בקלגרי יש קהילה יהודית ובתי כנסת, ובטורונטו - שבה נוחתים - יש תשתית כשרות ענפה מאוד: מסעדות, מאפיות וסופרמרקטים בפיקוח COR. הדרך המעשית: להצטייד בטורונטו או בקלגרי לפני העלייה להרים.',
+    },
+  },];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
   return destinations.find((d) => d.slug === slug);

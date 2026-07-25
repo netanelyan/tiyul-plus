@@ -1786,3 +1786,39 @@ of empty space - nothing to look at before searching.
 - Verified live on a production build: 13/13 CDP checks at 1400px and
   390px (27 cards, live filter incl. country match, honest empty state,
   city view with map, two-up mobile grid, zero horizontal overflow).
+### 2026-07-25 (v) - Expansion-2: Kyoto & Kansai (Japan 2nd city)
+
+Branch `data/expansion-2`, cut from the consolidated main.
+
+- **Kyoto & Kansai** - 11 places, rating 4.7. Landmark: Fushimi Inari.
+  Nature: Arashiyama bamboo grove, Lake Biwa, Amanohashidate sand spit,
+  Nachi Falls + Kumano Kodo pilgrimage trails. Heritage: Kiyomizu-dera,
+  Kinkaku-ji, Ginkaku-ji, Todai-ji + Nara Park deer. 5-day itinerary.
+- Flights stated honestly: no nonstop to Kansai - either El Al to Tokyo
+  and a 2h15 shinkansen, or one connection into Osaka.
+- **Kosher REAL:** Chabad of Kyoto in Okazaki (Sakyo-ku) - synagogue and
+  kosher kitchen, meals by advance order only (~3 days, cooked to order);
+  pending-review, pin at neighbourhood level. Dashi/mirin warning kept.
+- Coordinates and photos from the Wikipedia API; Mount Kurama and the
+  Nara Park article have no coordinates - Kurama was dropped and Nara
+  Park folded into the Todai-ji entry rather than guessed. Chabad pin
+  geocoded from its published address via Nominatim.
+  build clean, verify-photos all OK.
+
+### 2026-07-25 (w) - Expansion-2: Canada (Banff + the Canadian Rockies)
+
+- **Canada** (new country) - visa-exempt but eTA required before boarding
+  (valid up to 5 years, stay up to 6 months), CAD, pre-tax pricing and
+  tipping noted.
+- **Banff & the Canadian Rockies** - 12 places, rating 4.8. Landmark:
+  Moraine Lake. All-nature: Lake Louise, Peyto Lake, the Icefields
+  Parkway, Athabasca Glacier, Jasper NP, Maligne Lake, Johnston Canyon,
+  Yoho NP, Emerald Lake, with Calgary as the gateway. 5-day itinerary.
+- Flights verified precisely: no nonstop to Calgary; the only nonstop
+  Israel-Canada route is Air Canada TLV-Toronto (weekly as of July 2026,
+  ~10.5h), then ~4h domestic to Calgary.
+- **Kosher: none in the Rockies** - stated plainly, with Toronto (COR)
+  and Calgary named as the places to stock up.
+- Coordinates and photos from the Wikipedia API (German Wikipedia for
+  Lake Louise). Entry flags the Moraine Lake shuttle-only access.
+  build clean, verify-photos all OK.
