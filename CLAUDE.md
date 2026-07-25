@@ -1733,3 +1733,21 @@ Branch `data/expansion-2`, cut from the consolidated main.
   Park folded into the Todai-ji entry rather than guessed. Chabad pin
   geocoded from its published address via Nominatim.
   build clean, verify-photos all OK.
+
+### 2026-07-25 (w) - Expansion-2: Canada (Banff + the Canadian Rockies)
+
+- **Canada** (new country) - visa-exempt but eTA required before boarding
+  (valid up to 5 years, stay up to 6 months), CAD, pre-tax pricing and
+  tipping noted.
+- **Banff & the Canadian Rockies** - 12 places, rating 4.8. Landmark:
+  Moraine Lake. All-nature: Lake Louise, Peyto Lake, the Icefields
+  Parkway, Athabasca Glacier, Jasper NP, Maligne Lake, Johnston Canyon,
+  Yoho NP, Emerald Lake, with Calgary as the gateway. 5-day itinerary.
+- Flights verified precisely: no nonstop to Calgary; the only nonstop
+  Israel-Canada route is Air Canada TLV-Toronto (weekly as of July 2026,
+  ~10.5h), then ~4h domestic to Calgary.
+- **Kosher: none in the Rockies** - stated plainly, with Toronto (COR)
+  and Calgary named as the places to stock up.
+- Coordinates and photos from the Wikipedia API (German Wikipedia for
+  Lake Louise). Entry flags the Moraine Lake shuttle-only access.
+  build clean, verify-photos all OK.
