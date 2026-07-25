@@ -2446,3 +2446,27 @@ from 2/3.
 (`nameLocal` split on "/"); a multi-city trip searches only the first
 city. Insurance and car are deliberately dead cards until Netanel picks
 providers.
+
+### 2026-07-25 - Consolidation: booking layer + expansion-3 docs merged to main
+
+Two branches merged (one at a time, `tsc` after each; one build + one
+photo verification for the whole batch, per hard rule 7a):
+- `data/expansion-3` - docs only (the chat-grounding size guardrail note
+  in CLAUDE.md + TODO.md). Session-log conflict, union-resolved.
+- `feat/booking-layer` - the booking/affiliate layer.
+
+**Two real code conflicts, both pure additions from two parallel
+sessions, both union-resolved (nothing dropped):**
+- `src/lib/trip/agent.ts` import line - the AI-Explorer session added
+  `Destination`, this one added `BookingKind`/`BookingStatus`. Kept both.
+- `src/app/api/chat/route.ts` `toolStatusText()` - one session added the
+  `explore_destination` case, the other `set_booking_status`. Kept both.
+
+Verified after merging: `AGENT_TOOLS` carries BOTH new tools, the system
+prompt carries BOTH new sections (the explore rule at GROUNDING and the
+BOOKING section), `npm run build` clean (93 static pages - the AI Explorer
+route added one), `tsc --noEmit` clean, `verify-photos` 526/526 from
+cache, and the two CDP suites re-run against the MERGED main: booking
+panel 24/24 at 1400px and 390px, unified trip view 17/17.
+
+**State of main:** no unmerged branches remain.
