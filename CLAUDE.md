@@ -2064,3 +2064,77 @@ Data unchanged; only presentation. Hard rule 2 still holds: supervision
 is shown only as reported, nothing invented. Verified live at /kosher
 (directory + Vienna city view): no warning badges remain, disclaimer
 renders in both places. build + tsc clean.
+
+### 2026-07-25 - Latency: two-tier grounding, real progress events, wizard scoped
+
+Branch `perf/trip-build-progress`. Measured with a real API key against a
+production build (`npx next start`), not dev.
+
+**The diagnosis (measured, not guessed):** a full trip build sent the SAME
+~145k-token grounding block on EVERY iteration of the tool loop - 5
+sequential Sonnet calls, `cached=144863` each, outputs of only 191-537
+tokens. The block carried every city's descriptions (22.8k tokens),
+itineraries (18.8k), city practical info (13.5k), place ids/names (11.3k),
+country block (9.7k) and summaries (6k) - for all 47 destinations, on a
+question about one city. The planner's `/api/generate-trip` did the same:
+it shipped all 47 cities although `prefs.citySlugs` is a hard constraint
+the server itself enforces.
+
+**Built/changed:**
+- `src/app/api/chat/route.ts` - `buildGrounding()` split in two.
+  `buildGroundingIndex()` is the static catalog (every city + place
+  id/name/category/tags/priceLevel/mustSee/durationMin + country names)
+  and is the ONLY block carrying `cache_control` - identical across all
+  users and turns, so it stays a cache hit. `buildGroundingDetail(slugs)`
+  adds summaries/practical/itineraries/descriptions only for cities the
+  conversation actually touches, picked by `relevantCitySlugs()` (the
+  trip's own cities + city/country names mentioned in the last 6
+  messages; falls back to a 6-city sample when nothing matches). Computed
+  once per request, not per iteration.
+- `src/app/api/generate-trip/route.ts` - `buildGrounding(citySlugs)` now
+  sends only the chosen cities; `cache_control` moved onto the (constant)
+  system prompt, since the data block is now per-request.
+- Progress is now REAL, not a rotating fake: new `{type:'status'}` SSE
+  event. One is sent immediately on request (`קורא את הבקשה…`), one when
+  the model's first tool block starts streaming (name known before the
+  long input JSON - `בונה את המסלול…`), and one per tool actually
+  executed with its real arguments (`בונה מסלול של 4 ימים…`,
+  `מסדר את העצירות ביום 2…`). `toolStatusText()` maps tool → Hebrew.
+- The trip is streamed after EVERY mutating tool, not only at end of
+  turn - the canvas fills mid-build instead of staying empty.
+- `src/lib/trip/useTripChat.ts` exposes `status`; `ChatPanel.tsx` feeds it
+  to `ThinkingIndicator` (`label={status ?? 'חושב'}`).
+- `src/app/planner/PlannerClient.tsx` - `AI_STATUSES` no longer loops
+  (`% length`, every 1.5s, forever); it advances monotonically every 2.5s
+  and stops on the last stage, so it can't claim progress that didn't
+  happen.
+
+**Measured before → after (production build, same prompt):**
+| | before | after |
+|---|---|---|
+| agent: TTFB | 3.2s | **0.1s** (status) |
+| agent: first trip on canvas | 37.6s | **10.2s** |
+| agent: total | 37.6s | **22.2s** |
+| agent: cached prefix / call | 144,863 | **34,005** |
+| agent: model calls | 5 | 2 |
+| wizard (free text, haiku) | 13.3s / ~45k in | **8.8s / 3,293 in** |
+
+**Quality checks (not just speed):** country-only prompt ("5 ימים ביפן")
+still builds tokyo+kyoto, 5 days / 12 stops; a follow-up edit on that trip
+still works (5→6 days with a nature stop); an uncovered city (דובאי) is
+still declined honestly with real alternatives. This is safe because the
+index keeps EVERY place id/name in context - the model can still name and
+add any place in the catalog; the detail block only enriches prose for
+cities in play, and the server-side validator is unchanged.
+
+**Verification:** `npm run build` clean (92 static pages), `npx tsc
+--noEmit` clean, `verify-photos.mjs` 526/526 (all cached, no data
+touched), the unified-trip-view CDP suite 17/17, and a new CDP run
+confirming the live status text appears in the chat and day tabs + map
+pins appear at t≈10s while the reply is still streaming.
+
+**Broken/deferred:** the remaining ~12s after the trip exists is the model
+writing its summary - it streams, so it isn't dead time. `relevantCitySlugs`
+matches by substring on Hebrew names; a request that references a city only
+obliquely gets the 6-city fallback detail (still correct, just less
+flavorful prose). The booking/affiliate layer is still not started.

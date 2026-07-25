@@ -71,9 +71,15 @@ RULES
 DATA (cities, their places and ready-made itineraries):
 `;
 
-function buildGrounding(): string {
+/**
+ * רק הערים שהמשתמש בחר בכפתורים. הבחירה היא אילוץ קשיח שנאכף גם
+ * בוולידציה בשרת, ולכן שליחת כל 47 הערים היא בזבוז נטו: היא ניפחה את
+ * הקלט לעשרות אלפי טוקנים והאטה את הבקשה בלי להוסיף שום יכולת.
+ */
+function buildGrounding(citySlugs: string[]): string {
+  const chosen = destinations.filter((d) => citySlugs.includes(d.slug));
   return JSON.stringify(
-    destinations.map((d) => ({
+    (chosen.length > 0 ? chosen : destinations).map((d) => ({
       slug: d.slug,
       name: d.name,
       country: countries.find((c) => c.slug === d.countrySlug)?.name,
@@ -132,8 +138,8 @@ async function refineWithClaude(
         // כמו בצ׳אט: ה-grounding הוא הבלוק האחרון עם cache_control - הפרומפט
         // הקבוע נכנס ל-prompt cache, והאילוצים המשתנים יושבים בהודעת המשתמש.
         system: [
-          { type: 'text', text: SYSTEM_PROMPT },
-          { type: 'text', text: buildGrounding(), cache_control: { type: 'ephemeral' } },
+          { type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } },
+          { type: 'text', text: buildGrounding(prefs.citySlugs) },
         ],
         messages: [
           {

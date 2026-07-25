@@ -59,7 +59,7 @@ export default function ChatPanel({
   onClose?: () => void;
 }) {
   const bottomRef = useRef<HTMLDivElement>(null);
-  const { messages, loading, input, setInput, send } = chat;
+  const { messages, loading, status, input, setInput, send } = chat;
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -157,7 +157,7 @@ export default function ChatPanel({
         ))}
         {loading && (
           <div className="w-fit rounded-2xl bg-cream px-4 py-3 text-sm font-medium text-night/40">
-            <ThinkingIndicator label="חושב" />
+            <ThinkingIndicator label={status ?? 'חושב'} />
           </div>
         )}
         <div ref={bottomRef} />

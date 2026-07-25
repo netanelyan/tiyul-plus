@@ -73,7 +73,9 @@ export default function PlannerClient({
 
 /* ================= Onboarding: כפתורים כממשק ראשי + טקסט לדיוק ================= */
 
-const AI_STATUSES = ['קורא את הבקשה…', 'בוחר מקומות אמיתיים…', 'מסדר את הימים על המפה…'];
+// שלבים אמיתיים של הבקשה, ולא לולאת טקסטים: הם מתקדמים קדימה בלבד
+// ונעצרים על האחרון עד שהתשובה חוזרת - כדי לא "להבטיח" התקדמות שלא קרתה.
+const AI_STATUSES = ['קורא את הבקשה…', 'בוחר מקומות מהקטלוג…', 'מסדר את הימים לפי מיקום…'];
 
 type Party = 'couple' | 'family' | 'friends' | 'solo';
 
@@ -105,11 +107,14 @@ function Onboarding({
   const [error, setError] = useState<string | null>(null);
   const [statusIdx, setStatusIdx] = useState(0);
 
-  // סטטוס מתחלף בזמן היצירה - שהכפתור לא ירגיש קפוא
+  // סטטוס מתקדם בזמן היצירה - שהכפתור לא ירגיש קפוא
   useEffect(() => {
     if (!loading) return;
     setStatusIdx(0);
-    const t = setInterval(() => setStatusIdx((i) => (i + 1) % AI_STATUSES.length), 1500);
+    const t = setInterval(
+      () => setStatusIdx((i) => Math.min(i + 1, AI_STATUSES.length - 1)),
+      2500,
+    );
     return () => clearInterval(t);
   }, [loading]);
 
