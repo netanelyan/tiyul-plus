@@ -89,7 +89,9 @@ destination `amsterdam`; places `ams-anne-frank`,
 `amn-umm-qais`, `amn-ajloun`, `amn-maghtas`; destination `sheki-caucasus`;
 places `she-palace`, `she-old-town`, `she-qabala`, `she-qirmizi`,
 `she-khinalug`, `she-shamakhi`; destination `uae-mountains`; places
-`uae-hatta`, `uae-jebel-jais`, `uae-liwa`, `uae-jebel-hafeet`, `uae-jahili`.
+`uae-hatta`, `uae-jebel-jais`, `uae-liwa`, `uae-jebel-hafeet`, `uae-jahili`;
+places `bcn-tossa`, `bcn-cadaques`, `bud-szentendre`, `bud-visegrad`,
+`bts-devin`.
 
 **Blocked on coordinates - France / Paris.** France is the biggest
 remaining country gap, but dbpedia's `/data/*.json` for very famous
@@ -103,9 +105,10 @@ coordinates either. Build Paris when a working coordinate source exists
 **Also worth doing:** enrich the original 8 European CITY entries with a
 nature day-trip place or two each (Vienna→Wachau DONE: Melk + Dürnstein;
 Prague→Karlštejn + Kutná Hora + Sedlec DONE; Rome→Tivoli DONE (Villa d'Este
-+ Villa Adriana); Athens→Sounion DONE; Barcelona→Montserrat DONE; Athens→Delphi,
-Barcelona→Costa Brava still open, Budapest→Danube Bend, Bratislava→
-Devín/Small Carpathians). Lower priority than net-new destinations.
++ Villa Adriana); Athens→Sounion DONE; Barcelona→Montserrat DONE;
+Barcelona→Costa Brava DONE (Tossa de Mar + Cadaqués); Budapest→Danube Bend
+DONE (Szentendre + Visegrád); Bratislava→Devín DONE. Athens→Delphi is
+BLOCKED: `Delphi` on dbpedia has no geo:lat/geo:long. Do NOT estimate). Lower priority than net-new destinations.
 
 ## Skipped / blocked (need a decision or a data source)
 
