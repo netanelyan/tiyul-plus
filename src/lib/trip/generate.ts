@@ -1,4 +1,5 @@
 import type { Destination, Place, PlaceCategory, PlaceTag } from '@/lib/types';
+import { isKosher } from '@/lib/categories';
 import type { Trip, TripDay, TripPreferences, WizardPrefs } from './types';
 import { newId } from './types';
 
@@ -170,8 +171,20 @@ export function generateTrip(
   };
 }
 
-/** יצירת טיול מתבנית מסלול מוכן של יעד */
-export function tripFromTemplate(dest: Destination): Trip {
+/**
+ * יצירת טיול מתבנית מסלול מוכן של יעד.
+ *
+ * כשרות היא העדפה, לא הנחה (hard rule): המסלולים האוצרים בדאטה כוללים
+ * לעתים עצירה כשרה, ולכן היא מסוננת החוצה אלא אם המשתמש בחר בכשרות
+ * במפורש. הדאטה עצמה לא משתנה - רק מה שנכנס לטיול.
+ */
+export function tripFromTemplate(dest: Destination, opts?: { kosher?: boolean }): Trip {
+  const kosher = opts?.kosher === true;
+  const allowed = (id: string) => {
+    if (kosher) return true;
+    const place = dest.places.find((p) => p.id === id);
+    return !place || !isKosher(place.category);
+  };
   return {
     id: newId(),
     name: `טיול ל${dest.name}`,
@@ -179,9 +192,10 @@ export function tripFromTemplate(dest: Destination): Trip {
     days: dest.itinerary.map((d) => ({
       id: newId(),
       citySlug: dest.slug,
-      placeIds: [...d.placeIds],
+      placeIds: d.placeIds.filter(allowed),
       notes: d.notes,
     })),
     createdAt: Date.now(),
+    ...(kosher ? { preferences: { kosher: true } } : {}),
   };
 }

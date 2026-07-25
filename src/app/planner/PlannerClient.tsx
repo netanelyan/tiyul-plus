@@ -354,7 +354,8 @@ function Onboarding({
             <button
               key={d.slug}
               onClick={() => {
-                trip.createTripFrom(tripFromTemplate(d));
+                // הכשרות מגיעה מהטוגל שנבחר למעלה - בלי בחירה אין מקומות כשרים
+                trip.createTripFrom(tripFromTemplate(d, { kosher: prefs.kosherOnly }));
                 onDone();
               }}
               className={`card-pop w-36 shrink-0 rounded-2xl bg-shell p-4 text-start ring-1 transition ${
