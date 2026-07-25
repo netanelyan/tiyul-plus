@@ -6,6 +6,8 @@ import { destinations } from '@/data/destinations';
 import { useTrip } from '@/lib/trip/TripContext';
 import { generateTrip } from '@/lib/trip/generate';
 import type { TripPreferences, WizardPrefs } from '@/lib/trip/types';
+import type { CityOption } from '@/lib/citySearch';
+import CityCombobox from '@/components/CityCombobox';
 
 /**
  * שאלון מובנה מודרך: כמה צעדים פשוטים שאוספים את בסיס הטיול לפי מודל
@@ -14,7 +16,7 @@ import type { TripPreferences, WizardPrefs } from '@/lib/trip/types';
  * בתצוגת המתכנן. כשר/שבת הן העדפות שוות ואופציונליות, לא מודגשות.
  */
 
-type City = { slug: string; name: string; country: string };
+type City = CityOption;
 type Party = 'couple' | 'family' | 'friends' | 'solo';
 
 const PARTY = [
@@ -171,27 +173,11 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
       <div className="min-h-[15rem]">
         {step === 0 && (
           <Field label="לאן טסים? (אפשר לבחור כמה ערים)">
-            <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
-              {cities.map((c) => {
-                const active = citySlugs.includes(c.slug);
-                return (
-                  <button
-                    key={c.slug}
-                    type="button"
-                    onClick={() => toggleCity(c.slug)}
-                    aria-pressed={active}
-                    className={`rounded-2xl p-3 text-start transition ${
-                      active
-                        ? 'bg-sunset/10 ring-2 ring-sunset'
-                        : 'bg-night/[0.03] ring-1 ring-night/10 hover:ring-night/30'
-                    }`}
-                  >
-                    <div className="font-bold text-night">{c.name}</div>
-                    <div className="text-xs font-medium text-night/50">{c.country}</div>
-                  </button>
-                );
-              })}
-            </div>
+            <CityCombobox options={cities} citySlugs={citySlugs} onToggle={toggleCity} autoFocus />
+            <p className="mt-2 text-xs leading-relaxed text-night/45">
+              מקלידים שם עיר או מדינה - או פותחים את השדה ובוחרים מתוך {cities.length} הערים
+              בקטלוג. אפשר לבחור כמה, והימים יתחלקו ביניהן.
+            </p>
           </Field>
         )}
 

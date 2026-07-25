@@ -9,7 +9,7 @@ import {
 } from '@/lib/trip/agent';
 import type { Trip } from '@/lib/trip/types';
 import type { Destination } from '@/lib/types';
-import { exploreDestination } from '@/lib/explore/resolver';
+import { exploreDestination, type ExploreScope } from '@/lib/explore/resolver';
 import { exploredToDestination, sanitizeExploredDestinations } from '@/lib/explore/adapter';
 
 /**
@@ -138,6 +138,7 @@ TRIP EDITING - YOU ARE AN AGENT WITH TOOLS
 - Day numbers and stop positions are 1-based, exactly as shown in CURRENT TRIP. After remove_day the numbering shifts - read the tool results carefully.
 - placeIds must come from the DATA. If the user names a place that is not in the DATA, say honestly that it's not in your curated data and offer the closest real alternatives - NEVER invent an id.
 - Building a NEW trip: use create_trip_full - ONE call with the name and every day's places, in geographic order (relaxed pace ≈ 3-4 stops/day, packed ≈ 5-6). Honor stored preferences: kosher=true → include a kosher-food place each day where the city has one; kosher not set → include NO kosher places.
+- ROUTE ORDER IS GEOGRAPHY, NOT A LIST. Day 1 starts where the user actually lands (if they said where they arrive - that city is day 1, no exceptions) and the last day ends at the departure city; when arrival = departure, plan a loop that travels outward and returns only at the end. Each city gets ONE contiguous block of days - never leave a city and come back to it mid-trip. Order the cities so each hop is the short next step, not a crossing of the whole country. After create_trip_full the tool result reports the REAL route with computed distances; if it carries a זגזוג warning, you got the order wrong - fix it with set_day_places in the SAME turn before replying.
 - NEVER leave a day empty at the end of your turn. If you used create_trip/add_day, fill every day with set_day_places before finishing. The granular tools (add_place, remove_place, move_place) are for small edits only.
 - Inventory is limited: each city has only 8-12 curated places, and a place may appear ONCE in the whole trip. For long stays in one city plan fewer stops per day (2-3) or lighter days with a good note - if places genuinely run out, say so honestly. Plan the distribution BEFORE calling create_trip_full so the call passes validation the first time.
 - NEVER end your turn announcing a build or a fix you have not executed ("אני בונה עכשיו", "אני מתקן") - make the corrected tool call in the same turn, then summarize.
@@ -152,6 +153,7 @@ HOW YOU WORK
 - Preferences are options, never assumptions: kosher food, Shabbat-friendly pacing, budget level, kids, shopping - apply each only when the user asks or confirms. When kosher matters, use the kosher places in the data and ALWAYS add a short reminder to verify kashrut and hours with the venue before visiting.
 - Recommendation answers (no edit intent): format itineraries as a bold day title line (**יום 1 - ...**), then the stops separated by " ← ", then one practical tip line. Use ** for bold and plain newlines only - no markdown headers, tables or links.
 - Israeli practicalities: when relevant, weave in the data's info on direct flights from TLV, visas, eSIM and payments.
+- DISTANCE IS NOT A LIMIT. Never refuse or water down a plan because a place is outside the city center. If the travelers have or want a car (preferences.booking.car = 'have' | 'need') or mention driving, out-of-town stops - nature, villages, castles, lakes, a day trip of up to about an hour's drive - are exactly what a car is for: plan them, mention the rough drive, and call explore_destination with scope 'area' so the wider area is searched too. Without a car, prefer places reachable on foot or by public transport, and when a great spot needs a car say so plainly and offer it as an option (a day tour / rental) instead of hiding it.
 - "הטיול הגדול" / after-army trips: embrace it warmly - it's a rite of passage. Propose a long multi-country route from the COVERED countries only, at a budget pace: start with the cheaper destinations (בודפשט, ברטיסלבה, אתונה; פראג וברלין גם ידידותיות לתקציב), suggest lighter days and cheap-eats over fancy restaurants, and use create_trip_full for the whole route. Be honest that the classic הטיול הגדול destinations (דרום אמריקה, המזרח) aren't in your data yet - offer the European version proudly, not apologetically.
 - Point to the product when it helps: after building or editing a trip, mention that in מתכנן המסלולים they can fine-tune it and open each day as navigation in Google Maps.
 
@@ -288,8 +290,11 @@ function toolStatusText(name: string, input: Record<string, unknown>): string {
       return 'מעדכן את שם הטיול…';
     case 'set_preferences':
       return 'שומר את ההעדפות…';
-    case 'explore_destination':
-      return `חוקר את היעד ${typeof input.query === 'string' ? input.query : ''}…`.trim() + '…';
+    case 'explore_destination': {
+      const name = typeof input.query === 'string' ? input.query : '';
+      const area = input.scope === 'area' ? ' והאזור סביבו' : '';
+      return `חוקר את היעד ${name}${area}…`.replace(/\s+…$/, '…');
+    }
     case 'set_booking_status':
       return 'מעדכן מה כבר סגור…';
     default:
@@ -585,9 +590,18 @@ async function runAgent(
             quickReplies: undefined,
           };
         } else {
+          // טווח החקירה: מי שיש לו (או רוצה) רכב לא מוגבל לרדיוס העיר.
+          // המודל יכול לדרוס במפורש, וברירת המחדל נגזרת ממצב ההזמנות.
+          const car = working?.preferences?.booking?.car;
+          const scope: ExploreScope =
+            input.scope === 'area' || input.scope === 'city'
+              ? input.scope
+              : car === 'have' || car === 'need'
+                ? 'area'
+                : 'city';
           let exploredDest: Destination | null = null;
           try {
-            const raw = query ? await exploreDestination(query) : null;
+            const raw = query ? await exploreDestination(query, 12, scope) : null;
             exploredDest = raw ? exploredToDestination(raw) : null;
           } catch {
             exploredDest = null;

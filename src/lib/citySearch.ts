@@ -1,4 +1,4 @@
-import type { Country, Destination } from '@/lib/types';
+import type { Country, Destination, DestinationSummary } from '@/lib/types';
 
 /**
  * חיפוש ערים משותף לכל בוררי הערים באתר (אשף התכנון, הוספת יום לטיול).
@@ -26,21 +26,32 @@ const ALIASES: Record<string, string[]> = {
 
 export const normalizeQuery = (s: string) => s.trim().toLowerCase().replace(/['׳״]/g, '');
 
+type CitySource = Pick<Destination, 'slug' | 'name' | 'nameLocal' | 'flag'>;
+
+function toOption(d: CitySource, country: string): CityOption {
+  return {
+    slug: d.slug,
+    name: d.name,
+    nameLocal: d.nameLocal,
+    flag: d.flag,
+    country,
+    haystack: [d.name, d.nameLocal, d.slug, country, ...(ALIASES[d.slug] ?? [])]
+      .map(normalizeQuery)
+      .join(' | '),
+  };
+}
+
 export function buildCityOptions(destinations: Destination[], countries: Country[]): CityOption[] {
   const countryName = new Map(countries.map((c) => [c.slug, c.name]));
-  return destinations.map((d) => {
-    const country = countryName.get(d.countrySlug) ?? '';
-    return {
-      slug: d.slug,
-      name: d.name,
-      nameLocal: d.nameLocal,
-      flag: d.flag,
-      country,
-      haystack: [d.name, d.nameLocal, d.slug, country, ...(ALIASES[d.slug] ?? [])]
-        .map(normalizeQuery)
-        .join(' | '),
-    };
-  });
+  return destinations.map((d) => toOption(d, countryName.get(d.countrySlug) ?? ''));
+}
+
+/**
+ * אותן אפשרויות מתוך DestinationSummary - הצורה שדפי שרת מקבלים
+ * מה-provider (שם המדינה כבר פתור בתוכה, בלי צורך ברשימת המדינות).
+ */
+export function buildCityOptionsFromSummaries(summaries: DestinationSummary[]): CityOption[] {
+  return summaries.map((d) => toOption(d, d.country));
 }
 
 export function filterCities(options: CityOption[], query: string): CityOption[] {

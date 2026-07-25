@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { Country, Destination } from '@/lib/types';
 import Flag from '@/components/Flag';
-import { buildCityOptions, filterCities } from '@/lib/citySearch';
+import { filterCities, type CityOption } from '@/lib/citySearch';
 
 /**
  * בחירת ערים לטיול: שדה חיפוש אחד עם רשימה נפתחת, במקום רשת של עשרות
@@ -12,18 +11,20 @@ import { buildCityOptions, filterCities } from '@/lib/citySearch';
  *
  * הרכיב הוא תצוגה בלבד: הוא לא מחזיק state של הטיול, אלא מקבל את
  * citySlugs ומדווח על שינוי דרך onToggle - בדיוק אותה לוגיקה שהייתה ברשת.
+ * משותף לאשף התכנון (/planner) ולשאלון המובנה (/start).
  */
 
 export default function CityCombobox({
-  destinations,
-  countries,
+  options,
   citySlugs,
   onToggle,
+  autoFocus = false,
 }: {
-  destinations: Destination[];
-  countries: Country[];
+  options: CityOption[];
   citySlugs: string[];
   onToggle: (slug: string) => void;
+  /** מיקוד אוטומטי - רק במסכים עם עכבר, שלא תקפוץ מקלדת במובייל */
+  autoFocus?: boolean;
 }) {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
@@ -31,10 +32,9 @@ export default function CityCombobox({
   const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const options = useMemo(
-    () => buildCityOptions(destinations, countries),
-    [destinations, countries],
-  );
+  useEffect(() => {
+    if (autoFocus && window.matchMedia('(pointer: fine)').matches) inputRef.current?.focus();
+  }, [autoFocus]);
 
   const selected = useMemo(
     () => citySlugs.map((s) => options.find((o) => o.slug === s)).filter(Boolean) as typeof options,

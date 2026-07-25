@@ -1,5 +1,6 @@
 import { destinations } from '@/data/destinations';
 import { isKosher } from '@/lib/categories';
+import { haversineKm } from './travel';
 import { newId } from './types';
 import type { BookingKind, BookingStatus, Trip, TripDay, TripPreferences } from './types';
 import type { Destination } from '@/lib/types';
@@ -98,6 +99,12 @@ export const AGENT_TOOLS = [
         query: {
           type: 'string',
           description: 'The destination/city name exactly as the user said it (Hebrew or English)',
+        },
+        scope: {
+          type: 'string',
+          enum: ['city', 'area'],
+          description:
+            "'city' = the city itself (~10km). 'area' = the city PLUS everything within driving range (~45km) - use it whenever the travelers have or want a rental car, or ask about day trips, nature, villages or sites outside the city. Never assume a car: if the trip's booking.car is 'have' or 'need', or the user mentioned driving, prefer 'area'. Defaults to the trip's car status.",
         },
       },
       required: ['query'],
@@ -315,6 +322,51 @@ function filterKosherUnlessOptedIn(
   return { ids: kept, dropped };
 }
 
+/**
+ * סיכום מסלול דטרמיניסטי שחוזר למודל אחרי בנייה: רצף הערים בסדר הימים
+ * עם מרחק אמיתי (haversine) בין כל שתי ערים עוקבות, ואזהרה מפורשת אם
+ * המסלול מזגזג - עיר שחוזרים אליה אחרי שכבר עזבו אותה (חוץ מחזרה לעיר
+ * ההגעה ביום/ימים האחרונים, שזה מבנה לגיטימי של לולאה). המודל לא מחשב
+ * מרחקים טוב - אנחנו כן, אז אנחנו אומרים לו מה הוא בנה באמת.
+ */
+function routeSummary(days: TripDay[]): string {
+  // רצף ערים ללא כפילויות עוקבות
+  const seq: string[] = [];
+  for (const d of days) {
+    if (seq[seq.length - 1] !== d.citySlug) seq.push(d.citySlug);
+  }
+  if (seq.length <= 1) return '';
+
+  const hops = seq.slice(0, -1).map((slug, i) => {
+    const a = destOf(slug)?.center;
+    const b = destOf(seq[i + 1])?.center;
+    const name = (s: string) => destOf(s)?.name ?? s;
+    const km = a && b ? ` (~${Math.round(haversineKm(a, b) * 1.25)} ק"מ בכביש)` : '';
+    return `${name(slug)} ← ${name(seq[i + 1])}${km}`;
+  });
+
+  // זגזוג: עיר שמופיעה שוב אחרי שעיר אחרת נכנסה בינתיים.
+  // חריג לגיטימי: הרצף מסתיים בעיר שבה התחיל (לולאה חזרה לעיר ההגעה).
+  const revisited = new Set<string>();
+  const seen = new Set<string>();
+  seq.forEach((slug, i) => {
+    if (seen.has(slug) && seq[i - 1] !== slug) {
+      const isLoopClose = i === seq.length - 1 && slug === seq[0];
+      if (!isLoopClose) revisited.add(slug);
+    }
+    seen.add(slug);
+  });
+
+  const warn =
+    revisited.size > 0
+      ? `\n⚠️ אזהרת מסלול: הסדר הנוכחי חוזר ל-${[...revisited]
+          .map((s) => destOf(s)?.name ?? s)
+          .join(', ')} אחרי שכבר עזבתם - זה זגזוג שמבזבז שעות נסיעה. סדר מחדש עם set_day_places כך שכל עיר מרוכזת בבלוק ימים אחד, מתחילים בעיר ההגעה ומסיימים בעיר היציאה (או לולאה שחוזרת אליה רק בסוף).`
+      : '';
+
+  return `\nמסלול בפועל: ${hops.join(' · ')}.${warn}`;
+}
+
 export function executeAgentTool(
   trip: Trip | null,
   name: string,
@@ -405,7 +457,7 @@ export function executeAgentTool(
       return {
         trip: next,
         ok: true,
-        message: `נוצר "${tripName}": ${days.length} ימים, ${totalStops} עצירות.${kosherNote}`,
+        message: `נוצר "${tripName}": ${days.length} ימים, ${totalStops} עצירות.${kosherNote}${routeSummary(days)}`,
         action: `יצרתי טיול חדש: "${tripName}" (${days.length} ימים, ${totalStops} עצירות)`,
       };
     }
