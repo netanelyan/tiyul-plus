@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import type { Destination, Place } from '@/lib/types';
 import type { TripPreferences } from '@/lib/trip/types';
 import { destinations as curatedDestinations } from '@/data/destinations';
@@ -50,7 +50,6 @@ export default function TripWorkspace({
   const [chatOpen, setChatOpen] = useState(false);
   const [allDaysOpen, setAllDaysOpen] = useState(false);
   const [actionsOpen, setActionsOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
 
   const t = trip.currentTrip;
@@ -85,50 +84,37 @@ export default function TripWorkspace({
     trip.upsertTrip({ ...t, preferences: { ...t.preferences, ...patch } });
   };
 
-  const shareUrl = () => (t ? `${window.location.origin}/t/${encodeTripShare(t)}` : '');
-
   /**
-   * סיכום טקסטואלי של הטיול. whatsapp=true משתמש בהדגשות *כוכביות*
-   * (הפורמט של וואטסאפ), משמיט שמות לועזיים לקריאות, ומסיים בקישור
-   * השיתוף - הצפייה המלאה ממילא נמצאת שם.
+   * קישור השיתוף: מנסים קוד קצר דרך /api/share (Supabase); בלי backend
+   * מוגדר - נופלים בשקט לקישור ה-inline הארוך (v1), שעובד תמיד.
+   * התוצאה נשמרת ב-ref לפי תוכן הטיול כדי לא לייצר קוד חדש בכל קליק.
    */
-  function buildSummary(whatsapp = false): string {
+  const shareUrlCache = useRef<{ sig: string; url: string } | null>(null);
+
+  async function getShareUrl(): Promise<string> {
     if (!t) return '';
-    const B = (s: string) => (whatsapp ? `*${s}*` : s);
-    const stops = t.days.reduce((n, d) => n + d.placeIds.length, 0);
-    const lines: string[] = [B(`🧳 ${t.name}`), `${t.days.length} ימים · ${stops} עצירות · טיול+`, ''];
-    t.days.forEach((d, i) => {
-      const dst = destOf(d.citySlug);
-      if (i > 0 && t.days[i - 1].citySlug !== d.citySlug) {
-        const leg = travelLeg(t.days[i - 1].citySlug, d.citySlug);
-        lines.push(`${leg.emoji} ${destOf(t.days[i - 1].citySlug)?.name} ← ${dst?.name} · ${leg.label}`, '');
-      }
-      lines.push(B(`📅 יום ${i + 1} · ${dst?.name}`));
-      d.placeIds.forEach((pid, j) => {
-        const p = placeOf(d.citySlug, pid);
-        if (p)
-          lines.push(
-            `${j + 1}. ${p.name}${p.mustSee ? ' ★' : ''}${whatsapp ? '' : ` (${p.nameLocal})`}`,
-          );
+    const sig = JSON.stringify([t.name, t.days.map((d) => [d.citySlug, d.placeIds, d.notes ?? ''])]);
+    if (shareUrlCache.current?.sig === sig) return shareUrlCache.current.url;
+    let url = `${window.location.origin}/t/${encodeTripShare(t)}`;
+    try {
+      const res = await fetch('/api/share', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ trip: t }),
       });
-      if (d.notes) lines.push(`💡 ${d.notes}`);
-      lines.push('');
-    });
-    lines.push('🔗 המסלול המלא עם מפה:', shareUrl());
-    return lines.join('\n');
+      const data = (await res.json()) as { code?: string | null };
+      if (data.code) url = `${window.location.origin}/t/${data.code}`;
+    } catch {
+      /* נשארים עם הקישור הארוך */
+    }
+    shareUrlCache.current = { sig, url };
+    return url;
   }
 
-  function copySummary() {
+  async function copyShareLink() {
     if (!t) return;
-    navigator.clipboard.writeText(buildSummary()).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  }
-
-  function copyShareLink() {
-    if (!t) return;
-    navigator.clipboard.writeText(shareUrl()).then(() => {
+    const url = await getShareUrl();
+    navigator.clipboard.writeText(url).then(() => {
       setLinkCopied(true);
       setTimeout(() => setLinkCopied(false), 2000);
     });
@@ -136,7 +122,14 @@ export default function TripWorkspace({
 
   function shareWhatsApp() {
     if (!t) return;
-    window.open(`https://wa.me/?text=${encodeURIComponent(buildSummary(true))}`, '_blank', 'noopener');
+    // פותחים חלון סינכרונית (שורד חוסמי פופאפ) ומנווטים כשהקישור מוכן
+    const win = window.open('', '_blank');
+    void getShareUrl().then((url) => {
+      const text = `שיתפתי איתך את הטיול "${t.name}" שבניתי בטיול+ ✈️\n${url}`;
+      const wa = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      if (win) win.location.href = wa;
+      else window.open(wa, '_blank', 'noopener');
+    });
   }
 
   /* ---------- כפתורי הפעולות (משותפים לשורה בדסקטופ ולתפריט במובייל) ---------- */
@@ -144,9 +137,6 @@ export default function TripWorkspace({
     <>
       <Btn onClick={() => trip.duplicateTrip(t.id)} icon={ICONS.duplicate}>
         שכפול
-      </Btn>
-      <Btn onClick={copySummary} icon={copied ? ICONS.check : ICONS.copy}>
-        {copied ? 'הועתק' : 'העתקת סיכום'}
       </Btn>
       <Btn onClick={copyShareLink} icon={linkCopied ? ICONS.check : ICONS.link}>
         {linkCopied ? 'הקישור הועתק' : 'קישור לשיתוף'}
@@ -744,12 +734,6 @@ const ICONS = {
     <>
       <rect x="9" y="9" width="13" height="13" rx="2" />
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-    </>,
-  ),
-  copy: iconSvg(
-    <>
-      <rect x="8" y="2" width="8" height="4" rx="1" />
-      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
     </>,
   ),
   check: iconSvg(<path d="M20 6 9 17l-5-5" />),

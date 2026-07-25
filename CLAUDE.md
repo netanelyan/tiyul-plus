@@ -2122,3 +2122,40 @@ the link. build + tsc clean.
 branch in `decodeTripShare` (v2). The share payload deliberately
 excludes preferences (kosher etc.) - a shared link shows the plan, not
 the sender's personal preferences.
+
+### 2026-07-25 (ii) - Short share links (Supabase) + minimal WhatsApp message
+
+- **Short codes.** `src/lib/trip/shareStore.ts` (server-only by
+  convention - do NOT import from client components) talks to Supabase
+  via plain REST fetch (no new dependency, per hard rule 6). Table
+  `shared_trips` (code PK → the v1 base64url payload) - setup SQL in
+  `supabase-setup.sql` at the repo root, env keys documented in
+  `.env.example` (SUPABASE_URL + SUPABASE_ANON_KEY). `/api/share` POST
+  encodes the trip, round-trip-validates it (decode must succeed) and
+  stores it under an 8-char code (no-ambiguity alphabet, 409-retry).
+- **/t/[code] resolves both kinds:** 6-12 alphanumeric → store lookup
+  (react cache() dedupes metadata+page); anything longer → the v1
+  inline decode. Old long links keep working forever; storing the SAME
+  encoded payload keeps decodeTripShare the single validation point.
+- **Graceful degradation:** without the env keys the API returns
+  {code:null} and the client silently falls back to the long inline
+  link - verified both modes E2E (mock Supabase REST server on :9999:
+  short /t/Gua5eKq9 stored+resolved+rendered cold; env removed: long
+  link generated and still renders).
+- **WhatsApp message is now just an invitation** (per Netanel):
+  `שיתפתי איתך את הטיול "X" שבניתי בטיול+ ✈️` + the link - no itinerary
+  text. The window opens synchronously and navigates when the short
+  link resolves (survives popup blockers).
+- **העתקת סיכום removed** (per Netanel) along with buildSummary()/the
+  copied state/the clipboard icon - the share link replaces the text
+  dump. Action row: שכפול · קישור לשיתוף · וואטסאפ · הדפסה/PDF · מחיקה.
+- Share-URL results are cached per trip content (useRef signature), so
+  copy-link + WhatsApp on the same trip reuse one stored code.
+
+**For Netanel to activate short links:** create a free project at
+supabase.com → SQL Editor → run supabase-setup.sql → Settings/API →
+copy URL + anon key into .env.local (dev) and Vercel env (prod). Until
+then links are long but fully functional. **Accounts decision made:**
+Supabase is also the chosen auth provider - when accounts are built,
+shared_trips gains user_id (comment in the SQL) and /t/ codes can hang
+off the user's saved trips.
