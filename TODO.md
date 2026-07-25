@@ -62,7 +62,7 @@ Hungary→Lake Balaton, Slovakia→High Tatras.
       nature entry (Charyn is already IN Almaty; Kolsai/Kaindy are further).
 - [ ] **Jordan → Dead Sea + Wadi Mujib + Amman/Jerash** (2nd Jordan entry,
       north; land crossing note like Petra).
-- [ ] **Cyprus → Paphos + Akamas/Avakas Gorge** (2nd Cyprus entry; direct
+- [x] **Cyprus → Paphos + Akamas/Avakas Gorge** (2nd Cyprus entry; direct
       PFO flights) — nature: Avakas Gorge, Blue Lagoon, Baths of Aphrodite.
 
 **Photos pending (added without `photo`, UI falls back to the gradient):**
@@ -76,7 +76,13 @@ and fill photos for: country `portugal`; destination `lisbon`; places
 places `kra-rynek`, `kra-mariacki`, `kra-wawel`, `kra-kazimierz`,
 `kra-schindler`, `kra-auschwitz`, `kra-wieliczka`, `kra-kosciuszko`,
 `kra-ojcow`, `kra-zakopane`, `rom-villa-deste`, `rom-villa-adriana`,
-`ath-sounion`, `bcn-montserrat`.
+`ath-sounion`, `bcn-montserrat`; destination `paphos` and places
+`paf-archaeological`, `paf-tombs`, `paf-castle`, `paf-romiou`, `paf-akamas`,
+`paf-coral-bay`, `paf-troodos`, `paf-kykkos`; country `netherlands`;
+destination `amsterdam`; places `ams-anne-frank`,
+`ams-portuguese-synagogue`, `ams-rembrandt-house`, `ams-begijnhof`,
+`ams-vondelpark`, `ams-zaanse-schans`, `ams-volendam`, `ams-keukenhof`,
+`ams-kinderdijk`.
 
 **Blocked on coordinates - France / Paris.** France is the biggest
 remaining country gap, but dbpedia's `/data/*.json` for very famous

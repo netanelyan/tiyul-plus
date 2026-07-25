@@ -13829,6 +13829,204 @@ export const destinations: Destination[] = [
         'הקהילה היהודית בקפריסין מרוכזת בעיקר בלרנקה, ובפאפוס התשתית דלה מאוד ומשתנה מעונה לעונה. בפועל: לתאם מראש מול חב"ד קפריסין לגבי ארוחות ושבת, ולהתבסס על מוצרים ארוזים עם הכשר מרשתות הסופרמרקטים הגדולות - בחלק מהן יש מדף מוצרים מישראל. לא להסתמך על מידע מהרשת בלי אימות טלפוני לפני הנסיעה.',
     },
   },
+  {
+    slug: 'amsterdam',
+    name: 'אמסטרדם',
+    nameLocal: 'Amsterdam',
+    countrySlug: 'netherlands',
+    flag: '🇳🇱',
+    center: { lat: 52.3679, lng: 4.8898 },
+    zoom: 12,
+    tagline: 'תעלות, אופניים ומורשת יהודית עמוקה - וטחנות רוח בשעת נסיעה',
+    editorialRating: {
+      score: 4.5,
+      verdict:
+        'עיר קומפקטית שעוברים אותה ברגל או באופניים, עם צפיפות מוזיאונים גבוהה ומורשת יהודית מהמשמעותיות באירופה. החסרונות: מרכז העיר עמוס עד כדי אי-נוחות בעונה, המלונות מהיקרים באירופה ביחס לגודל החדר, כרטיסים לאתרים המרכזיים נגמרים שבועות מראש, והמזג אפור וגשום חלק גדול מהשנה.',
+    },
+    summary:
+      'אמסטרדם בנויה סביב טבעות התעלות מהמאה ה-17, והיא קטנה במידות אירופיות - אפשר לחצות את המרכז ברגל בכשעה. מעבר למוזיאונים ולתעלות, זו אחת הערים החשובות בתולדות יהדות אירופה, מהקהילה הספרדית-פורטוגזית של המאה ה-17 ועד השואה. מסביב לעיר, בטווח שעה נסיעה, נמצאות הולנד של הקלישאות: טחנות רוח, שדות פרחים וכפרי דייגים.',
+    bestSeason:
+      'אפריל-מאי (עונת הפריחה) וספטמבר-אוקטובר. הקיץ נעים אבל עמוס מאוד; החורף קר, אפל וגשום.',
+    places: [
+      {
+        id: 'ams-anne-frank',
+        name: 'בית אנה פראנק',
+        nameLocal: 'Anne Frank House',
+        category: 'attraction',
+        lat: 52.3753,
+        lng: 4.8843,
+        description:
+          'המחסה הסודי שבו התחבאה משפחת פראנק שנתיים, מאחורי ארון ספרים במבנה משרדים על גדת התעלה. הביקור שקט וקשה. כרטיסים נמכרים אונליין בלבד ונגמרים שבועות מראש - להזמין ברגע שסוגרים טיסות. המדרגות תלולות וצרות מאוד.',
+        rating: 4.7,
+        durationMin: 90,
+        tags: ['history'],
+        priceLevel: 1,
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=Anne+Frank+House+Amsterdam',
+      },
+      {
+        id: 'ams-portuguese-synagogue',
+        name: 'בית הכנסת הפורטוגזי',
+        nameLocal: 'Portugese Synagoge',
+        category: 'attraction',
+        lat: 52.3675,
+        lng: 4.9054,
+        description:
+          'בית כנסת מהמאה ה-17 של הקהילה הספרדית-פורטוגזית, שנשאר בלי חשמל עד היום ומואר בנרות במאות נברשות. אחד מבתי הכנסת המרשימים בעולם, וחלק ממתחם המוזיאון היהודי. שעות הפתיחה משתנות בשבת ובחגים - לבדוק מראש.',
+        rating: 4.6,
+        durationMin: 75,
+        tags: ['history'],
+        priceLevel: 1,
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=Portuguese+Synagogue+Amsterdam',
+      },
+      {
+        id: 'ams-rembrandt-house',
+        name: 'בית רמברנדט',
+        nameLocal: 'Museum Het Rembrandthuis',
+        category: 'attraction',
+        lat: 52.3694,
+        lng: 4.9013,
+        description:
+          'הבית שבו חי ועבד רמברנדט עשרות שנים, בשחזור מלא - הסדנה, מטבח הצבעים ואוסף התצריבים. מוזיאון קטן וממוקד, אלטרנטיבה טובה למוזיאונים הגדולים והעמוסים. נמצא בלב הרובע היהודי הישן.',
+        rating: 4.4,
+        durationMin: 90,
+        tags: ['art', 'history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Rembrandt+House+Museum+Amsterdam',
+      },
+      {
+        id: 'ams-begijnhof',
+        name: 'בגיינהוף',
+        nameLocal: 'Begijnhof',
+        category: 'attraction',
+        lat: 52.3694,
+        lng: 4.8901,
+        description:
+          'חצר פנימית שקטה מהמאה ה-14 בלב העיר העתיקה, מוקפת בתים נמוכים ודשא, עם אחד מבתי העץ העתיקים בהולנד. הכניסה חופשית והמעבר קל לפספוס. אנשים גרים כאן בפועל - השקט נאכף ומבוקש.',
+        rating: 4.4,
+        durationMin: 30,
+        tags: ['history'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Begijnhof+Amsterdam',
+      },
+      {
+        id: 'ams-vondelpark',
+        name: 'וונדלפארק',
+        nameLocal: 'Vondelpark',
+        category: 'nature',
+        lat: 52.358,
+        lng: 4.868,
+        description:
+          'הפארק המרכזי של העיר, כקילומטר וחצי של אגמים, גשרים ומדשאות, צמוד לאזור המוזיאונים. המקום הכי טוב בעיר לנשום אוויר אחרי יום מוזיאונים, וחופשי לגמרי. בקיץ צפוף מאוד בסופש.',
+        rating: 4.5,
+        durationMin: 90,
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=Vondelpark+Amsterdam',
+      },
+      {
+        id: 'ams-zaanse-schans',
+        name: 'זאנסה סכאנס',
+        nameLocal: 'Zaanse Schans',
+        category: 'attraction',
+        lat: 52.4739,
+        lng: 4.8164,
+        description:
+          'כפר טחנות רוח פועלות על גדת נהר הזאן, כ-20 דקות ברכבת מאמסטרדם ועוד הליכה קצרה. הכניסה לשטח חופשית, הכניסה לטחנות עצמן בתשלום. מאוד תיירותי ועמוס בשעות הצהריים - להגיע מוקדם בבוקר.',
+        rating: 4.4,
+        durationMin: 180,
+        tags: ['families', 'outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=Zaanse+Schans',
+      },
+      {
+        id: 'ams-volendam',
+        name: 'וולנדאם',
+        nameLocal: 'Volendam',
+        category: 'attraction',
+        lat: 52.4994,
+        lng: 5.0675,
+        description:
+          'כפר דייגים על גדת המרכרמר, עם טיילת נמל, בתי עץ צבעוניים ומסעדות דגים. כשעה באוטובוס ממרכז אמסטרדם. נופל בבירור לצד התיירותי של הסקאלה, אבל נוח לשלב עם מעבורת קצרה למארקן.',
+        rating: 4.1,
+        durationMin: 150,
+        tags: ['families', 'foodie'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Volendam+Netherlands',
+      },
+      {
+        id: 'ams-keukenhof',
+        name: 'גני קויקנהוף',
+        nameLocal: 'Keukenhof',
+        category: 'nature',
+        lat: 52.2713,
+        lng: 4.5464,
+        description:
+          'גן הפרחים הגדול בעולם, כ-40 דקות דרומית לעיר. פתוח לתקופה קצרה בלבד בכל אביב וסגור שאר השנה - לבדוק תאריכים ולהזמין כרטיסים מראש לפני שמתכננים סביבו. בשיא העונה העומס והפקקים משמעותיים.',
+        rating: 4.6,
+        durationMin: 240,
+        tags: ['outdoors', 'families', 'romantic'],
+        priceLevel: 2,
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=Keukenhof+Lisse',
+      },
+      {
+        id: 'ams-kinderdijk',
+        name: 'טחנות הרוח של קינדרדייק',
+        nameLocal: 'Kinderdijk',
+        category: 'nature',
+        lat: 51.8861,
+        lng: 4.631,
+        description:
+          'אתר מורשת עולמית עם 19 טחנות רוח מהמאה ה-18 בשורה אחת על תעלות ניקוז - הנוף ההולנדי הקלאסי בגרסה האותנטית שלו. שימו לב: זה לא טיול קצר - כ-70 ק"מ מאמסטרדם, קרוב יותר לרוטרדאם, ומתאים למי שמשלב אותו עם יום בדרום המדינה.',
+        rating: 4.6,
+        durationMin: 180,
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=Kinderdijk',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'מרכז העיר והתעלות',
+        placeIds: ['ams-anne-frank', 'ams-begijnhof', 'ams-vondelpark'],
+        notes:
+          'בית אנה פראנק בשעה שהזמנתם מראש (חובה), ומשם ברגל דרומה דרך טבעות התעלות. סיום רגוע בוונדלפארק.',
+      },
+      {
+        day: 2,
+        title: 'הרובע היהודי',
+        placeIds: ['ams-portuguese-synagogue', 'ams-rembrandt-house'],
+        notes:
+          'יום מזרחית למרכז: בית הכנסת הפורטוגזי ומתחם המוזיאון היהודי, ואחר הצהריים בית רמברנדט שנמצא באותו רובע. שניהם סגורים או בשעות מצומצמות בשבת ובחגים.',
+      },
+      {
+        day: 3,
+        title: 'טחנות רוח וכפרי דייגים',
+        placeIds: ['ams-zaanse-schans', 'ams-volendam'],
+        notes:
+          'יום מחוץ לעיר בתחבורה ציבורית: רכבת בוקר לזאנסה סכאנס לפני ההמונים, ואוטובוס אחר הצהריים לוולנדאם.',
+      },
+      {
+        day: 4,
+        title: 'פרחים או דרום המדינה',
+        placeIds: ['ams-keukenhof', 'ams-kinderdijk'],
+        notes:
+          'שני האתרים האלה הם בכיוונים שונים ובדרך כלל לא משלבים אותם באותו יום: קויקנהוף בעונת הפריחה בלבד, וקינדרדייק כיום מלא דרומה (עדיף ברכב שכור). לבחור לפי העונה.',
+      },
+    ],
+    practical: {
+      flights:
+        'יש טיסות ישירות תכופות מנתב"ג לשדה סכיפול (AMS) - כארבע וחצי שעות. המפעילות והתדירות משתנות לפי עונה - לבדוק בזמן ההזמנה. מהשדה למרכז העיר יש רכבת ישירה של כ-15 דקות, הדרך הזולה והמהירה ביותר.',
+      gettingAround:
+        'בתוך העיר הכל בהליכה, בחשמלית או באופניים. אזהרה להולכי רגל: שבילי האופניים הם כביש לכל דבר והרוכבים מהירים ולא עוצרים. לימי הטיול מחוץ לעיר הרכבות של NS מצוינות ומדויקות; רכב שכור נדרש בעיקר לקינדרדייק. חניה במרכז אמסטרדם יקרה מאוד - עדיף P+R בפרוורים.',
+      kosherOverview:
+        'לאמסטרדם יש קהילה יהודית ותיקה ופעילה, ובאזור בויטנפלדרט בדרום העיר מרוכזת רוב התשתית הקהילתית. עם זאת אנחנו לא מאמתנו מסעדות או השגחות ספציפיות, והמצב משתנה. בפועל: לתאם מראש מול הקהילה או חב"ד אמסטרדם לגבי ארוחות ושבת, ולהתבסס על מוצרים ארוזים עם הכשר ברשתות הגדולות. לא להסתמך על מידע מהרשת בלי אימות טלפוני לפני הנסיעה.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
