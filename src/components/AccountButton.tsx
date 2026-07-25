@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useAuth } from '@/lib/auth/AuthContext';
 import Logo from '@/components/Logo';
 
@@ -11,6 +12,11 @@ import Logo from '@/components/Logo';
  * ושליחה אוטומטית, מצב הצלחה מונפש, זכירת המייל האחרון, ספירה לאחור
  * לשליחה חוזרת, Escape סוגר. אם המשתמש לוחץ על הקישור שבמייל במקום
  * להזין קוד - supabase-js קולט את הסשן מה-URL והמודל נסגר מעצמו.
+ *
+ * המודל מרונדר ב-portal אל ה-body: הוא יושב בתוך ההדר, ולהדר יש
+ * backdrop-blur שיוצר containing block ל-position:fixed (אותה מלכודת
+ * כמו rise-in+transform שמתועדת ב-TripWorkspace) - בלי portal ה"מסך
+ * המלא" נכלא בתוך פס הניווט.
  */
 export default function AccountButton() {
   const auth = useAuth();
@@ -33,11 +39,15 @@ export default function AccountButton() {
         </button>
         {menuOpen && (
           <>
-            <button
-              aria-label="סגירה"
-              onClick={() => setMenuOpen(false)}
-              className="fixed inset-0 z-40 cursor-default"
-            />
+            {typeof document !== 'undefined' &&
+              createPortal(
+                <button
+                  aria-label="סגירה"
+                  onClick={() => setMenuOpen(false)}
+                  className="fixed inset-0 z-40 cursor-default"
+                />,
+                document.body,
+              )}
             <div className="absolute end-0 top-11 z-50 w-64 rounded-2xl bg-shell p-3 shadow-lg ring-1 ring-night/10">
               <div className="flex items-center gap-2.5 px-2 py-1">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sunset/15 text-sm font-black text-sunset-deep">
@@ -184,13 +194,15 @@ function LoginModal({ onClose }: { onClose: () => void }) {
     }
   }
 
-  return (
-    <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
+  if (typeof document === 'undefined') return null;
+  return createPortal(
+    <div className="fixed inset-0 z-[80] overflow-y-auto">
       <button
         aria-label="סגירה"
         onClick={step === 'success' ? undefined : onClose}
-        className="absolute inset-0 bg-night/55 backdrop-blur-[3px]"
+        className="fixed inset-0 bg-night/55 backdrop-blur-[3px]"
       />
+      <div className="flex min-h-full items-center justify-center p-4 sm:py-10">
       <div
         role="dialog"
         aria-modal="true"
@@ -358,7 +370,9 @@ function LoginModal({ onClose }: { onClose: () => void }) {
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </div>,
+    document.body,
   );
 }
 
