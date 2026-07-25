@@ -1957,3 +1957,54 @@ not a font-fallback problem - CSS cannot fix it.
   or horizontal overflow. The one "failure" was the probe counting
   below-the-fold `loading="lazy"` images as broken; stepped scrolling on
   mobile confirms all 33 load (33/33, 0 broken).
+
+### 2026-07-25 (ee) - Premium print/PDF export: cover, per-day sections, footer
+
+The print output was a single flat block (title + days run together, no
+page-break control). Rebuilt as a real export in `TripWorkspace.tsx`'s
+existing `hidden print:block` section:
+
+- **Cover page** - the plane `Logo`, trip name, a meta line (day count,
+  stop count, generation date - all real, nothing invented), and the
+  trip's cities as chips. `break-after: page` puts it alone on page 1.
+- **Per-day sections** (`.print-day`) - `break-inside: avoid` so a day's
+  content doesn't split awkwardly across a page boundary; a coral
+  `border-inline-start` accent on the heading matches the on-screen
+  design language.
+- **Travel-leg dividers** (`.print-leg`) - a bordered box between two
+  days when the city changes, same info as the on-screen version (emoji,
+  cities, transit label).
+- **Footer** - the AI-planning disclaimer plus a print-only
+  `<blackz-signature>` (the real footer is `print:hidden` since it's a
+  dark band that wouldn't print well, so this is its print-specific
+  counterpart, scaled down).
+- `globals.css` - `@page { size: A4; margin: 16mm 14mm; }` and
+  `print-color-adjust: exact` (+ `-webkit-` twin) so the accent
+  borders/backgrounds survive export instead of being stripped by
+  default print rendering.
+
+**Verification:** headless Chromium (`playwright`, used standalone for
+this check only - not added as a project dependency) against a
+production build (`next start`), trip seeded directly via
+`tiyul-plus:trips:v1` in localStorage, `page.pdf()` exported and read
+back with `pypdf`: page 1 is the cover alone, page 2 has all three
+seeded days plus the Vienna→Bratislava travel-leg divider and the
+footer/signature at the end. `npm run build` and `tsc --noEmit` clean.
+
+**Broken/deferred:** nothing broken. Only tested with empty-day
+placeholder text (no real place data seeded) - the structural
+page-break/section behavior is verified, but a very long real
+itinerary (many stops in one day) hasn't been checked for whether a
+single day's content can itself overflow a page (break-inside: avoid
+can't prevent that, only browsers vary in how they handle an
+over-length avoided block). Revisit if a user reports an oddly-split
+day in a real export.
+
+**Next session should know:** the print-only `<blackz-signature>`
+instance is a second mount of the same custom element already loaded
+sitewide via `public/blackz-signature.js` in `layout.tsx` - no new
+script tag was needed. If the roadmap's remaining items (streaming/
+thinking-state, booking/affiliate layer) touch `/api/chat`, note this
+sandbox now has a real `ANTHROPIC_API_KEY` available (set in
+`.env.local`, not committed) - previous sessions' "keyless" caveats no
+longer apply here.
