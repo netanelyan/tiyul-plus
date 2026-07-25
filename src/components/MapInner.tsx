@@ -6,6 +6,18 @@ import L from 'leaflet';
 import type { Place } from '@/lib/types';
 import { categoryMeta } from '@/lib/categories';
 
+/**
+ * קבוצת עצירות של יום אחד בתצוגת "כל הטיול" - כל יום בצבע משלו,
+ * והתג (מספר היום) מוצג בתוך הסיכה במקום האימוג'י של הקטגוריה.
+ */
+export interface MapGroup {
+  /** מה שמוצג בתוך הסיכה - בדרך כלל מספר היום */
+  badge: string;
+  /** צבע הסיכה של היום (מ-dayColors) */
+  color: string;
+  places: Place[];
+}
+
 export interface MapProps {
   center: { lat: number; lng: number };
   zoom: number;
@@ -16,6 +28,11 @@ export interface MapProps {
   showRoute?: boolean;
   highlightId?: string | null;
   className?: string;
+  /**
+   * תצוגת כל הטיול: כשמועבר, הוא זה שקובע את הסיכות ואת הקו -
+   * העצירות של כל הימים יחד, כל יום בצבע ובתג שלו. `places` מתעלמים.
+   */
+  groups?: MapGroup[];
 }
 
 function makeIcon(place: Place, index: number, numbered: boolean, highlighted: boolean) {
@@ -36,6 +53,21 @@ function makeIcon(place: Place, index: number, numbered: boolean, highlighted: b
   });
 }
 
+/** סיכה בתצוגת כל הטיול: צבע היום + מספר היום בפנים */
+function makeGroupIcon(badge: string, color: string, highlighted: boolean) {
+  const scale = highlighted ? 'scale(1.15)' : 'scale(1)';
+  return L.divIcon({
+    className: 'pin-marker',
+    iconSize: [28, 36],
+    iconAnchor: [14, 34],
+    popupAnchor: [0, -30],
+    html: `<div class="pin" style="transform:${scale}">
+             <div class="pin-drop" style="background:${color}"></div>
+             <div class="pin-content"><span class="pin-index">${badge}</span></div>
+           </div>`,
+  });
+}
+
 /** מרכז את המפה מחדש כשהמקומות משתנים (החלפת יום/יעד) */
 function FitBounds({ places }: { places: Place[] }) {
   const map = useMap();
@@ -51,6 +83,58 @@ function FitBounds({ places }: { places: Place[] }) {
   return null;
 }
 
+/** תוכן החלונית של עצירה - זהה בתצוגת יום ובתצוגת כל הטיול */
+function PlacePopup({ place, prefix = '' }: { place: Place; prefix?: string }) {
+  return (
+    <div style={{ minWidth: 180, maxWidth: 220 }}>
+      {place.photo && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={place.photo}
+          alt={place.name}
+          style={{
+            width: '100%',
+            height: 90,
+            objectFit: 'cover',
+            borderRadius: 8,
+            marginBottom: 6,
+          }}
+        />
+      )}
+      <div style={{ fontWeight: 700, fontSize: 14 }}>
+        {place.mustSee ? <span style={{ color: '#ffc531' }}>★ </span> : null}
+        {prefix}
+        {place.name}
+      </div>
+      <div style={{ color: '#6b6394', fontSize: 12 }}>{place.nameLocal}</div>
+      <div style={{ fontSize: 12, marginTop: 4, display: 'flex', gap: 8 }}>
+        {place.rating && <span>⭐ {place.rating.toFixed(1)}</span>}
+        {place.priceLevel !== undefined && (
+          <span>{place.priceLevel === 0 ? 'חינם' : '₪'.repeat(place.priceLevel)}</span>
+        )}
+      </div>
+      {place.kosherNote && (
+        <div style={{ fontSize: 12, marginTop: 4, color: '#0d9488' }}>✡️ {place.kosherNote}</div>
+      )}
+      {place.kosherVerification && (
+        <div style={{ fontSize: 11, marginTop: 4, color: '#6b6394', fontWeight: 600 }}>
+          השגחה: {place.kosherVerification.supervision} · לוודא מול המקום
+        </div>
+      )}
+      {place.externalUrl && (
+        <a
+          href={place.externalUrl}
+          target="_blank"
+          rel="noreferrer"
+          style={{ fontSize: 12, color: '#e03e27', fontWeight: 700 }}
+        >
+          פתיחה ב-Google Maps ↗
+        </a>
+      )}
+    </div>
+  );
+}
+
 export default function MapInner({
   center,
   zoom,
@@ -59,7 +143,13 @@ export default function MapInner({
   showRoute = false,
   highlightId = null,
   className = '',
+  groups,
 }: MapProps) {
+  // בתצוגת כל הטיול הקבוצות הן מקור האמת: הן קובעות את הגבולות,
+  // את קו המסלול (לפי סדר הימים) ואת הסיכות.
+  const grouped = groups && groups.length > 0;
+  const flat = grouped ? groups.flatMap((g) => g.places) : places;
+
   return (
     <MapContainer
       center={[center.lat, center.lng]}
@@ -73,71 +163,44 @@ export default function MapInner({
         subdomains="abcd"
         detectRetina
       />
-      <FitBounds places={places} />
-      {showRoute && places.length > 1 && (
+      <FitBounds places={flat} />
+      {(showRoute || grouped) && flat.length > 1 && (
         <Polyline
-          positions={places.map((p) => [p.lat, p.lng] as [number, number])}
-          pathOptions={{ color: '#0f172a', weight: 3, dashArray: '8 8', opacity: 0.6 }}
+          positions={flat.map((p) => [p.lat, p.lng] as [number, number])}
+          pathOptions={{
+            color: '#0f172a',
+            weight: grouped ? 2 : 3,
+            dashArray: '8 8',
+            opacity: grouped ? 0.35 : 0.6,
+          }}
         />
       )}
-      {places.map((place, i) => (
-        <Marker
-          key={place.id}
-          position={[place.lat, place.lng]}
-          icon={makeIcon(place, i, numbered, highlightId === place.id)}
-        >
-          <Popup>
-            <div style={{ minWidth: 180, maxWidth: 220 }}>
-              {place.photo && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={place.photo}
-                  alt={place.name}
-                  style={{
-                    width: '100%',
-                    height: 90,
-                    objectFit: 'cover',
-                    borderRadius: 8,
-                    marginBottom: 6,
-                  }}
-                />
-              )}
-              <div style={{ fontWeight: 700, fontSize: 14 }}>
-                {place.mustSee ? <span style={{ color: '#ffc531' }}>★ </span> : null}
-                {numbered ? `${i + 1}. ` : ''}
-                {place.name}
-              </div>
-              <div style={{ color: '#6b6394', fontSize: 12 }}>{place.nameLocal}</div>
-              <div style={{ fontSize: 12, marginTop: 4, display: 'flex', gap: 8 }}>
-                {place.rating && <span>⭐ {place.rating.toFixed(1)}</span>}
-                {place.priceLevel !== undefined && (
-                  <span>{place.priceLevel === 0 ? 'חינם' : '₪'.repeat(place.priceLevel)}</span>
-                )}
-              </div>
-              {place.kosherNote && (
-                <div style={{ fontSize: 12, marginTop: 4, color: '#0d9488' }}>
-                  ✡️ {place.kosherNote}
-                </div>
-              )}
-              {place.kosherVerification && (
-                <div style={{ fontSize: 11, marginTop: 4, color: '#6b6394', fontWeight: 600 }}>
-                  השגחה: {place.kosherVerification.supervision} · לוודא מול המקום
-                </div>
-              )}
-              {place.externalUrl && (
-                <a
-                  href={place.externalUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ fontSize: 12, color: '#e03e27', fontWeight: 700 }}
-                >
-                  פתיחה ב-Google Maps ↗
-                </a>
-              )}
-            </div>
-          </Popup>
-        </Marker>
-      ))}
+      {grouped &&
+        groups.map((g) =>
+          g.places.map((place) => (
+            <Marker
+              key={`${g.badge}-${place.id}`}
+              position={[place.lat, place.lng]}
+              icon={makeGroupIcon(g.badge, g.color, highlightId === place.id)}
+            >
+              <Popup>
+                <PlacePopup place={place} prefix={`יום ${g.badge} · `} />
+              </Popup>
+            </Marker>
+          )),
+        )}
+      {!grouped &&
+        places.map((place, i) => (
+          <Marker
+            key={place.id}
+            position={[place.lat, place.lng]}
+            icon={makeIcon(place, i, numbered, highlightId === place.id)}
+          >
+            <Popup>
+              <PlacePopup place={place} prefix={numbered ? `${i + 1}. ` : ''} />
+            </Popup>
+          </Marker>
+        ))}
     </MapContainer>
   );
 }

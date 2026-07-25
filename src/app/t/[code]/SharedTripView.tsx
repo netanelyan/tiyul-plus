@@ -89,12 +89,21 @@ export default function SharedTripView({ shared }: { shared: SharedTrip }) {
           const dst = destOf(d.citySlug);
           const prev = i > 0 ? shared.days[i - 1] : null;
           const dayObj = { id: String(i), citySlug: d.citySlug, placeIds: d.placeIds, notes: d.notes };
+          // המעבר מחושב מהקואורדינטות האמיתיות. אין כאן דגל רכב:
+          // מטען השיתוף לא כולל preferences במכוון, אז hasCar נשאר false.
+          const leg =
+            prev && prev.citySlug !== d.citySlug
+              ? travelLeg(prev.citySlug, d.citySlug, {
+                  from: destOf(prev.citySlug),
+                  to: destOf(d.citySlug),
+                })
+              : null;
           return (
             <div key={i}>
-              {prev && prev.citySlug !== d.citySlug && (
+              {prev && leg && (
                 <p className="mb-4 rounded-full border-[1.5px] border-dashed border-sunset/55 px-4 py-2 text-center text-sm font-bold text-night">
-                  {travelLeg(prev.citySlug, d.citySlug).emoji} מעבר: {destOf(prev.citySlug)?.name} ←{' '}
-                  {dst?.name} · {travelLeg(prev.citySlug, d.citySlug).label}
+                  {leg.emoji} מעבר: {destOf(prev.citySlug)?.name} ←{' '}
+                  {dst?.name} · {leg.label}
                 </p>
               )}
               <section className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">

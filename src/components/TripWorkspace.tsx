@@ -10,8 +10,10 @@ import { useTrip } from '@/lib/trip/TripContext';
 import { travelLeg } from '@/lib/trip/travel';
 import { useTripChat } from '@/lib/trip/useTripChat';
 import { dayDescription, dayPlaces } from '@/lib/trip/dayDescription';
+import { dayColor } from '@/lib/trip/dayColors';
 import { encodeTripShare } from '@/lib/trip/share';
 import PlacesMap from '@/components/PlacesMap';
+import type { MapGroup } from '@/components/MapInner';
 import BookingPanel from '@/components/BookingPanel';
 import ChatPanel from '@/components/ChatPanel';
 import Flag from '@/components/Flag';
@@ -48,6 +50,8 @@ export default function TripWorkspace({
   const trip = useTrip();
   const chat = useTripChat({ initialQuery, initialKosher });
   const [selectedDayId, setSelectedDayId] = useState<string | null>(null);
+  /** 'day' = המפה של היום הנבחר · 'trip' = כל העצירות של כל הימים יחד */
+  const [mapMode, setMapMode] = useState<'day' | 'trip'>('day');
   const [chatOpen, setChatOpen] = useState(false);
   const [allDaysOpen, setAllDaysOpen] = useState(false);
   const [actionsOpen, setActionsOpen] = useState(false);
@@ -61,6 +65,17 @@ export default function TripWorkspace({
   const placeOf = (slug: string, id: string): Place | undefined =>
     destOf(slug)?.places.find((p) => p.id === id);
 
+  // מעבר בין ערים: מחושב מהקואורדינטות האמיתיות, ומודע לרכב - כדי
+  // שלא נכריז "טיסה" על נסיעה של שעתיים באותה מדינה.
+  const carStatus = t?.preferences?.booking?.car;
+  const hasCar = carStatus === 'have' || carStatus === 'need';
+  const legOf = (fromSlug: string, toSlug: string) =>
+    travelLeg(fromSlug, toSlug, {
+      from: destOf(fromSlug),
+      to: destOf(toSlug),
+      hasCar,
+    });
+
   const day = t ? (t.days.find((d) => d.id === selectedDayId) ?? t.days[0] ?? null) : null;
   const dayDest = day ? destOf(day.citySlug) : null;
   const dayIndex = t && day ? t.days.findIndex((d) => d.id === day.id) : -1;
@@ -69,6 +84,20 @@ export default function TripWorkspace({
     () => (day ? dayPlaces(day, dayDest) : []),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [day, dayDest, t],
+  );
+
+  // תצוגת כל הטיול: כל יום כקבוצה - צבע משלו ומספר היום בסיכה.
+  const tripGroups: MapGroup[] = useMemo(
+    () =>
+      (t?.days ?? [])
+        .map((d, i) => ({
+          badge: String(i + 1),
+          color: dayColor(i),
+          places: dayPlaces(d, destOf(d.citySlug)),
+        }))
+        .filter((g) => g.places.length > 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [t, destinations, chat.explored],
   );
 
   if (!trip.hydrated) {
@@ -316,10 +345,10 @@ export default function TripWorkspace({
               <span key={d.id} className="flex shrink-0 items-center gap-2">
                 {cityChanged && (
                   <span
-                    title={travelLeg(prev!.citySlug, d.citySlug).label}
+                    title={legOf(prev!.citySlug, d.citySlug).label}
                     className="rounded-full bg-night/5 px-2.5 py-1 text-xs font-medium text-night/50"
                   >
-                    {travelLeg(prev!.citySlug, d.citySlug).emoji}
+                    {legOf(prev!.citySlug, d.citySlug).emoji}
                   </span>
                 )}
                 <button
@@ -349,23 +378,88 @@ export default function TripWorkspace({
       <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,20rem)_minmax(0,1fr)_minmax(0,22rem)] print:hidden">
         {/* מפה - ראשונה במובייל, עמודה אמצעית מ-lg */}
         <div className="order-first lg:order-none lg:col-start-2 lg:row-start-1">
-          {dayDest && places.length > 0 ? (
-            <div className="h-64 overflow-hidden rounded-2xl ring-1 ring-night/10 sm:h-80 lg:sticky lg:top-20 lg:h-[34rem]">
-              <PlacesMap
-                center={dayDest.center}
-                zoom={dayDest.zoom}
-                places={places}
-                numbered
-                showRoute
-              />
-            </div>
-          ) : (
-            <div className="flex h-40 items-center justify-center rounded-2xl border-2 border-dashed border-night/15 px-6 text-center text-sm font-medium leading-relaxed text-night/50 lg:h-[34rem]">
-              {t
-                ? 'אין עדיין עצירות ביום הזה - אפשר להוסיף מהרשימה או לבקש מהסוכן'
-                : 'כאן תופיע המפה של הטיול ברגע שהסוכן יבנה אותו'}
-            </div>
-          )}
+          <div className="lg:sticky lg:top-20">
+            {/* מתג יום נבחר / כל הטיול */}
+            {t && t.days.length > 1 && tripGroups.length > 0 && (
+              <div className="mb-2 flex justify-center print:hidden">
+                <div className="inline-flex rounded-full bg-shell p-1 ring-1 ring-night/10">
+                  <button
+                    onClick={() => setMapMode('day')}
+                    aria-pressed={mapMode === 'day'}
+                    className={`rounded-full px-4 py-1.5 text-xs font-bold transition ${
+                      mapMode === 'day' ? 'bg-sunset text-cream' : 'text-night/60 hover:text-night'
+                    }`}
+                  >
+                    יום {dayIndex + 1}
+                  </button>
+                  <button
+                    onClick={() => setMapMode('trip')}
+                    aria-pressed={mapMode === 'trip'}
+                    className={`rounded-full px-4 py-1.5 text-xs font-bold transition ${
+                      mapMode === 'trip' ? 'bg-sunset text-cream' : 'text-night/60 hover:text-night'
+                    }`}
+                  >
+                    🗺️ כל הטיול
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {mapMode === 'trip' && tripGroups.length > 0 ? (
+              <>
+                <div className="h-64 overflow-hidden rounded-2xl ring-1 ring-night/10 sm:h-80 lg:h-[30rem]">
+                  <PlacesMap
+                    center={{
+                      lat: tripGroups[0].places[0].lat,
+                      lng: tripGroups[0].places[0].lng,
+                    }}
+                    zoom={12}
+                    places={[]}
+                    groups={tripGroups}
+                  />
+                </div>
+                {/* מקרא הימים - לחיצה קופצת ליום */}
+                <div className="mt-2 flex flex-wrap justify-center gap-1.5 print:hidden">
+                  {t!.days.map((d, i) => {
+                    const g = tripGroups.find((gr) => gr.badge === String(i + 1));
+                    if (!g) return null;
+                    return (
+                      <button
+                        key={d.id}
+                        onClick={() => {
+                          setSelectedDayId(d.id);
+                          setMapMode('day');
+                        }}
+                        className="flex items-center gap-1.5 rounded-full bg-shell px-2.5 py-1 text-xs font-semibold text-night/70 ring-1 ring-night/10 transition hover:ring-night/25"
+                      >
+                        <span
+                          className="h-2.5 w-2.5 shrink-0 rounded-full"
+                          style={{ background: g.color }}
+                        />
+                        יום {i + 1} · {destOf(d.citySlug)?.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </>
+            ) : dayDest && places.length > 0 ? (
+              <div className="h-64 overflow-hidden rounded-2xl ring-1 ring-night/10 sm:h-80 lg:h-[34rem]">
+                <PlacesMap
+                  center={dayDest.center}
+                  zoom={dayDest.zoom}
+                  places={places}
+                  numbered
+                  showRoute
+                />
+              </div>
+            ) : (
+              <div className="flex h-40 items-center justify-center rounded-2xl border-2 border-dashed border-night/15 px-6 text-center text-sm font-medium leading-relaxed text-night/50 lg:h-[34rem]">
+                {t
+                  ? 'אין עדיין עצירות ביום הזה - אפשר להוסיף מהרשימה או לבקש מהסוכן'
+                  : 'כאן תופיע המפה של הטיול ברגע שהסוכן יבנה אותו'}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* מסלול היום */}
@@ -376,7 +470,7 @@ export default function TripWorkspace({
               {(() => {
                 const prev = dayIndex > 0 ? t.days[dayIndex - 1] : null;
                 if (prev && prev.citySlug !== day.citySlug) {
-                  const leg = travelLeg(prev.citySlug, day.citySlug);
+                  const leg = legOf(prev.citySlug, day.citySlug);
                   return (
                     <div className="rounded-xl bg-night/5 px-4 py-3 text-sm font-semibold text-night/80">
                       {leg.emoji} {destOf(prev.citySlug)?.name} ← {dayDest.name} · {leg.label}
@@ -636,9 +730,9 @@ export default function TripWorkspace({
               <div key={d.id}>
                 {prev && prev.citySlug !== d.citySlug && (
                   <p className="print-leg">
-                    {travelLeg(prev.citySlug, d.citySlug).emoji} מעבר:{' '}
+                    {legOf(prev.citySlug, d.citySlug).emoji} מעבר:{' '}
                     {destOf(prev.citySlug)?.name} ← {dst?.name} ·{' '}
-                    {travelLeg(prev.citySlug, d.citySlug).label}
+                    {legOf(prev.citySlug, d.citySlug).label}
                   </p>
                 )}
                 <section className="print-day">

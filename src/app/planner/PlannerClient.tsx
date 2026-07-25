@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Country, Destination } from '@/lib/types';
 import type { Trip, WizardPrefs } from '@/lib/trip/types';
 import { useTrip } from '@/lib/trip/TripContext';
@@ -8,7 +8,8 @@ import { tripFromTemplate } from '@/lib/trip/generate';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 import Flag from '@/components/Flag';
 import TripWorkspace from '@/components/TripWorkspace';
-import CityCombobox from './CityCombobox';
+import CityCombobox from '@/components/CityCombobox';
+import { buildCityOptions } from '@/lib/citySearch';
 
 /**
  * המתכנן: מסך בניית טיול חדש (כפתורים כממשק ראשי) - וברגע שיש טיול,
@@ -93,6 +94,10 @@ function Onboarding({
   onCancel?: () => void;
 }) {
   const trip = useTrip();
+  const cityOptions = useMemo(
+    () => buildCityOptions(destinations, countries),
+    [destinations, countries],
+  );
   const [prefs, setPrefs] = useState<WizardPrefs>({
     citySlugs: initialSlug ? [initialSlug] : [],
     totalDays: 4,
@@ -173,8 +178,7 @@ function Onboarding({
           </div>
           <div className="mt-3">
             <CityCombobox
-              destinations={destinations}
-              countries={countries}
+              options={cityOptions}
               citySlugs={prefs.citySlugs}
               onToggle={toggleCity}
             />

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import type { CityOption } from '@/lib/citySearch';
 import QuizWizard from './QuizWizard';
 
 /**
@@ -14,10 +15,9 @@ import QuizWizard from './QuizWizard';
  *    טיקטוק לא ניתנים בלי הפרת תנאי שימוש. לא בונים כפתור מזויף.
  */
 
-type City = { slug: string; name: string; country: string };
 type Tab = 'chat' | 'quiz' | 'link';
 
-export default function StartClient({ cities }: { cities: City[] }) {
+export default function StartClient({ cities }: { cities: CityOption[] }) {
   const router = useRouter();
   const [tab, setTab] = useState<Tab>('quiz');
 
