@@ -2724,3 +2724,36 @@ after the warning?) is untested here - no ANTHROPIC_API_KEY in this
 sandbox; test on the deployed site with the user's Slovakia prompt.
 Still owed from earlier sessions: Netanel must run supabase-community.sql
 (profile saving broken live without it), live smoke of the Explorer.
+
+### 2026-07-25 (qq) - Photo pins at city zoom (+ trip-map zoom-snap bug fixed)
+
+Per Netanel's zoomed-in screenshot request: "when zoomed in, small
+pictures can be showed above the pins".
+
+- `MapInner.tsx`: PHOTO_PIN_ZOOM = 13. A ZoomTracker component
+  (useMapEvents zoomend) keeps the current zoom in state; at 13+ every
+  pin renders the place's photo (44x40, rounded, cream ring) above the
+  teardrop - in day mode AND on whole-trip group pins. Below 13 the
+  pins stay clean (country view would turn into photo soup). A photo
+  that fails to load removes itself via inline onerror, leaving the
+  plain pin - no broken-image icons.
+- `globals.css`: .pin-stack flex column (the highlight scale transform
+  moved here from .pin) + .pin-photo.
+- **Real pre-existing bug caught by the E2E and fixed:** in grouped
+  (whole-trip) mode `flat` was built with `groups.flatMap()` on every
+  render, so ANY re-render re-triggered FitBounds and snapped the map
+  back to the fitted view - zooming into the whole-trip map was
+  literally impossible (each zoomend re-rendered and instantly
+  un-zoomed). `flat` is now useMemo'd. Day mode never hit it because
+  `places` was already a stable memo from TripWorkspace.
+- Debug trick worth keeping: read the real Leaflet zoom in headless
+  tests from the tile URL (`voyager/{z}/` in .leaflet-tile-pane img
+  src) - no map handle needed.
+
+Verified on a production build with a playwright route serving a valid
+generated PNG for upload.wikimedia.org (blocked wholesale from this
+sandbox - and NOTE: a malformed mock PNG makes onerror remove the pins,
+which looks exactly like the feature failing; generate a real PNG):
+6/6 checks - day mode 3/3 photo pins at city zoom, photos removed after
+zooming below 13, trip mode clean at country zoom, group pins gain
+photos zoomed in, mobile 390px fine, no overflow.
