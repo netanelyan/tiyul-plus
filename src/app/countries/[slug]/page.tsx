@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getProvider } from '@/lib/providers';
+import Flag from '@/components/Flag';
 import { countries } from '@/data/countries';
 
 export function generateStaticParams() {
@@ -49,7 +50,7 @@ export default async function CountryPage({
         </div>
         <div className="mt-3 max-w-2xl">
           <h1 className="display text-3xl text-cream sm:text-4xl">
-            <span className="me-2 align-middle text-3xl">{country.flag}</span>
+            <Flag flag={country.flag} label={country.name} size="lg" className="me-2 align-middle" />
             {country.name}
             <span className="ms-3 text-lg font-medium text-cream/60">{country.nameLocal}</span>
           </h1>

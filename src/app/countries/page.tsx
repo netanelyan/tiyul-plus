@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getProvider } from '@/lib/providers';
+import Flag from '@/components/Flag';
 
 export const metadata = { title: 'יעדים | טיול+' };
 
@@ -44,7 +45,7 @@ export default async function CountriesPage() {
                 }
               >
                 <span className="badge absolute end-4 top-4 rounded-full bg-cream/95 px-2.5 py-0.5 text-xl">
-                  {c.flag}
+                  <Flag flag={c.flag} label={c.name} size="md" />
                 </span>
                 <div className="absolute bottom-3 start-4">
                   <h3 className="display text-2xl text-cream drop-shadow">{c.name}</h3>
@@ -86,14 +87,19 @@ export default async function CountriesPage() {
             text: 'מסעדות כשרות, סופרים כשרים והערות השגחה - מסומנים על המפה בכל יעד.',
           },
           {
-            emoji: '🇮🇱',
+            // דגל ישראל כתמונה ולא כאימוג׳י - ראו ההסבר ב-Flag.tsx
+            flagCode: 'il',
             title: 'מידע פרקטי לישראלים',
             text: 'טיסות ישירות מנתב"ג, ויזות, eSIM, תשלומים - מה שבאמת צריך לדעת לפני שטסים.',
           },
         ].map((f) => (
           <div key={f.title} className="card-pop rounded-2xl bg-shell p-6 ring-1 ring-night/10">
             <div className="badge h-10 w-10 justify-center rounded-xl bg-night/5 text-xl">
-              {f.emoji}
+              {'flagCode' in f && f.flagCode ? (
+                <Flag code={f.flagCode} label="ישראל" size="md" />
+              ) : (
+                f.emoji
+              )}
             </div>
             <h3 className="mt-4 text-lg font-bold text-night">{f.title}</h3>
             <p className="mt-2 text-sm leading-relaxed text-night/70">{f.text}</p>

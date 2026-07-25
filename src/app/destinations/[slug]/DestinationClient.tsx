@@ -6,6 +6,7 @@ import type { Country, Destination, PlaceCategory } from '@/lib/types';
 import { categoryMeta, isKosher } from '@/lib/categories';
 import PlacesMap from '@/components/PlacesMap';
 import AddToTripButton from '@/components/AddToTripButton';
+import Flag from '@/components/Flag';
 import KosherBadge from '@/components/KosherBadge';
 
 type Filter = 'all' | 'kosher' | PlaceCategory;
@@ -64,7 +65,7 @@ export default function DestinationClient({
         <div className="mt-3 flex flex-wrap items-end justify-between gap-5">
           <div className="max-w-2xl">
             <h1 className="display text-3xl text-cream sm:text-4xl">
-              <span className="me-2 align-middle text-3xl">{dest.flag}</span>
+              <Flag flag={dest.flag} label={dest.name} size="lg" className="me-2 align-middle" />
               {dest.name}
               <span className="ms-3 text-lg font-medium text-cream/60">{dest.nameLocal}</span>
             </h1>

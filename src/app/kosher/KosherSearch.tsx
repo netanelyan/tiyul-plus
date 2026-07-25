@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import type { Place } from '@/lib/types';
 import PlacesMap from '@/components/PlacesMap';
+import Flag from '@/components/Flag';
 import KosherBadge, { isKosherVerified } from '@/components/KosherBadge';
 
 export interface KosherCity {
@@ -135,7 +136,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
           </button>
           <div className="mt-3 flex flex-wrap items-baseline gap-2">
             <h2 className="display text-2xl text-night">
-              <span className="me-2">{selected.flag}</span>
+              <Flag flag={selected.flag} label={selected.name} size="lg" className="me-2" />
               {selected.name}
             </h2>
             <span className="text-sm text-night/40">{selected.nameLocal}</span>
@@ -237,7 +238,12 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
                     <span className="absolute end-2 top-2 rounded-full bg-[#00a896] px-2 py-0.5 text-[11px] font-bold text-white shadow">
                       {city.kosherPlaces.length}
                     </span>
-                    <span className="absolute bottom-1.5 start-2 text-lg drop-shadow">{city.flag}</span>
+                    <Flag
+                      flag={city.flag}
+                      label={city.name}
+                      size="md"
+                      className="absolute bottom-1.5 start-2 shadow-[0_0_0_1px_rgba(255,255,255,0.7)]"
+                    />
                   </div>
                   <div className="p-3">
                     <div className="truncate font-bold text-night">{city.name}</div>

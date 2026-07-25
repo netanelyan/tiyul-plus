@@ -1922,3 +1922,38 @@ The pill said "שאלון מהיר", which did not tell people what it replaces.
 - Function unchanged - still links to `/start`.
 - Verified at 1400px and 390px: single line (169x40), inside the
   viewport, row wraps cleanly to a second line on mobile, no overflow.
+
+### 2026-07-25 (dd) - Flags render as images, not Unicode (branch fix/flag-images)
+
+Flag emoji are pairs of regional-indicator codepoints; Windows deliberately
+does not draw national flags (Segoe UI Emoji has no glyphs for them), so
+users saw literal "CZ" / "SK" / "AT". This is an OS composition refusal,
+not a font-fallback problem - CSS cannot fix it.
+
+- **New `src/components/Flag.tsx`** - renders `<img>` from flagcdn.com
+  (keyless, no rate concerns at this scale), with 1x/2x srcSet, three
+  sizes matched to the old emoji footprint (sm 16x12, md 20x15, lg 28x21),
+  `alt="דגל <name>"` for accessibility, `loading="lazy"`, and a rounded
+  1px hairline so a white flag (Japan) still reads as an object.
+- **No data migration.** `countryCodeFromFlag()` decodes the existing
+  emoji ('🇦🇹' -> 'at') at render time, so the 32 country and 47
+  destination entries keep their `flag` field untouched. A non-national
+  flag (no valid pair) falls back to rendering the original character.
+- **Replaced every UI render site:** countries index cards, country page
+  hero, destination hero, kosher directory (city cards + selected city),
+  planner city cards + template cards, trip workspace (day tabs, day
+  heading, all-days list). Also the hardcoded 🇮🇱 badge on /countries.
+- **Text-only surfaces cannot carry an image**, so the flag character was
+  dropped there instead of leaving a "CZ": the keyless chat replies
+  (country list, destination intro, practical info), the clipboard trip
+  summary and the `<option>` labels in the add-day select. Names are
+  unchanged - no information lost.
+- Non-flag emoji (✈️ 🛍️ ✡️ etc. in travel.ts/categories.ts) are untouched -
+  those render fine and were a separate, already-shipped fix.
+- Verified on a production build: 34/35 automated checks across
+  /countries, a country page, a destination, /kosher, /planner and the
+  trip view at 1400px and 390px - flag images present, alt text correct,
+  zero raw regional-indicator characters in visible text, no layout shift
+  or horizontal overflow. The one "failure" was the probe counting
+  below-the-fold `loading="lazy"` images as broken; stepped scrolling on
+  mobile confirms all 33 load (33/33, 0 broken).
