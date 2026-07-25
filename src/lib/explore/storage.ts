@@ -1,31 +1,34 @@
-import type { ExploredDestination } from './resolver';
+import type { Destination } from '@/lib/types';
+import { isExploredSlug } from './adapter';
 
 /**
- * צד לקוח: יעדים שנחקרו נשמרים מקומית (כמו הטיולים), כדי שהשלב הבא -
- * שילוב יעד ארעי בטיול ובסוכן - יעבוד על אותו מבנה. כשיגיעו חשבונות,
+ * צד לקוח: יעדים שנחקרו (בצורת Destination מלאה, כפי שהשרת שידר אותם
+ * באירוע {type:'explored'}) נשמרים מקומית וגם נשלחים חזרה לשרת בכל תור
+ * שיחה, כדי שהסוכן ימשיך לתקף מולם טיולים שנבנו בהם. כשיגיעו חשבונות,
  * הקובץ הזה מוחלף בגיבוי שרת בדיוק כמו trip/storage.ts.
  */
 
-const KEY = 'tiyul-plus:explored:v1';
-const MAX = 20; // לא צוברים עולם שלם ב-localStorage
+const KEY = 'tiyul-plus:explored:v2';
+const MAX = 6; // גם תקרת השרת (sanitizeExploredDestinations)
 
-export function loadExplored(): ExploredDestination[] {
+export function loadExplored(): Destination[] {
   if (typeof window === 'undefined') return [];
   try {
     const raw = window.localStorage.getItem(KEY);
-    const arr = raw ? (JSON.parse(raw) as ExploredDestination[]) : [];
-    return Array.isArray(arr) ? arr : [];
+    const arr = raw ? (JSON.parse(raw) as Destination[]) : [];
+    return Array.isArray(arr) ? arr.filter((d) => d && isExploredSlug(String(d.slug))) : [];
   } catch {
     return [];
   }
 }
 
-export function saveExplored(dest: ExploredDestination): void {
-  if (typeof window === 'undefined') return;
+export function saveExplored(dest: Destination): Destination[] {
+  if (typeof window === 'undefined') return [];
+  const next = [dest, ...loadExplored().filter((d) => d.slug !== dest.slug)].slice(0, MAX);
   try {
-    const rest = loadExplored().filter((d) => d.slug !== dest.slug);
-    window.localStorage.setItem(KEY, JSON.stringify([dest, ...rest].slice(0, MAX)));
+    window.localStorage.setItem(KEY, JSON.stringify(next));
   } catch {
-    /* אחסון מלא - מוותרים בשקט */
+    /* אחסון מלא - נשארים עם מה שבזיכרון */
   }
+  return next;
 }

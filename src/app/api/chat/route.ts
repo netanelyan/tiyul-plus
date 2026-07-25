@@ -8,6 +8,9 @@ import {
   serializeTripForModel,
 } from '@/lib/trip/agent';
 import type { Trip } from '@/lib/trip/types';
+import type { Destination } from '@/lib/types';
+import { exploreDestination } from '@/lib/explore/resolver';
+import { exploredToDestination, sanitizeExploredDestinations } from '@/lib/explore/adapter';
 
 /**
  * צ׳אט הטיולים - סוכן אמיתי מעל הטיול של המשתמש.
@@ -127,7 +130,7 @@ LANGUAGE & VOICE
 
 GROUNDING - THE MOST IMPORTANT RULE
 - You may only recommend specific places, restaurants and attractions that exist in the DATA provided below. Never invent places, opening hours, prices, or kashrut status.
-- If asked about a destination not in the data: say honestly that it's not covered yet, name the destinations that are, and offer to help with one of them.
+- If asked about a destination not in the data: call explore_destination ONCE with its name. On success you get an ephemeral auto-explored city (slug starts with "explored-") with real places from public sources - you may build/edit trips with it like any other city, but ALWAYS say clearly it was auto-explored and unverified ("נחקר אוטומטית - חשוב לוודא את הפרטים"), and never claim flight/visa/kosher facts for it. If exploration fails, say honestly it's not covered, name close destinations that are, and offer them.
 - General travel knowledge (weather, culture, packing tips) is fine; specific venue facts must come from the data.
 
 TRIP EDITING - YOU ARE AN AGENT WITH TOOLS
@@ -213,6 +216,19 @@ function relevantCitySlugs(messages: ChatMessage[], trip: Trip | null): string[]
   return [...slugs];
 }
 
+/** בלוק grounding נפרד ליעדים שנחקרו - מסומן חד-משמעית כלא-מאומת */
+function buildExploredGrounding(explored: Destination[]): string {
+  if (explored.length === 0) return '';
+  return `\n\nAUTO-EXPLORED (unverified, from public sources - label as such to the user):\n${JSON.stringify(
+    explored.map((d) => ({
+      slug: d.slug,
+      name: d.name,
+      summary: d.summary.slice(0, 200),
+      places: d.places.map((p) => ({ id: p.id, name: p.name, category: p.category })),
+    })),
+  )}`;
+}
+
 function buildGroundingDetail(citySlugs: string[]): string {
   const cities = destinations.filter((d) => citySlugs.includes(d.slug));
   const countrySlugs = new Set(cities.map((d) => d.countrySlug));
@@ -265,6 +281,8 @@ function toolStatusText(name: string, input: Record<string, unknown>): string {
       return 'מעדכן את שם הטיול…';
     case 'set_preferences':
       return 'שומר את ההעדפות…';
+    case 'explore_destination':
+      return `חוקר את היעד ${typeof input.query === 'string' ? input.query : ''}…`.trim() + '…';
     default:
       return 'עובד על זה…';
   }
@@ -277,6 +295,8 @@ type StreamEvent =
   | { type: 'meta'; destinationSlug?: string; placeIds?: string[] }
   | { type: 'trip'; trip: Trip; actions: string[] }
   | { type: 'quickReplies'; replies: string[] }
+  // יעד שנחקר אוטומטית בתור הזה - הלקוח שומר אותו ומרנדר איתו את הקנבס
+  | { type: 'explored'; destination: Destination }
   | { type: 'done' };
 
 type Send = (event: StreamEvent) => void;
@@ -446,6 +466,7 @@ async function runAgent(
   clientTrip: Trip | null,
   send: Send,
   kosherHint: boolean,
+  explored: Destination[],
 ): Promise<void> {
   let working = clientTrip;
   const actions: string[] = [];
@@ -477,8 +498,9 @@ async function runAgent(
   // (ששיקוף מהצד גם רמז כשרות שדורש להחזיר את הטיול ללקוח, גם בלי כלי).
   let toolBuiltSomething = false;
   let forcedBuildRetry = false;
-  // פירוט רק לערים שהשיחה נוגעת בהן (ראו buildGroundingDetail)
-  const groundingDetail = buildGroundingDetail(relevantCitySlugs(messages, clientTrip));
+  // פירוט רק לערים שהשיחה נוגעת בהן (ראו buildGroundingDetail); היעדים
+  // שנחקרו מצורפים בכל איטרציה מחדש - חקירה באיטרציה N זמינה ב-N+1
+  const baseDetail = buildGroundingDetail(relevantCitySlugs(messages, clientTrip));
 
   for (let iter = 0; iter < 16; iter++) {
     const maxTokens = editIntent || iter > 0 ? 2048 : 1024;
@@ -491,7 +513,7 @@ async function runAgent(
       maxTokens,
       iter,
       kosherHint,
-      groundingDetail,
+      baseDetail + buildExploredGrounding(explored),
     );
     full += turn.text;
 
@@ -537,9 +559,60 @@ async function runAgent(
       }
       assistantContent.push({ type: 'tool_use', id: block.id, name: block.name, input });
       send({ type: 'status', text: toolStatusText(block.name, input) });
-      const out = parseOk
-        ? executeAgentTool(working, block.name, input)
-        : { trip: working, ok: false, message: 'קלט הכלי לא היה JSON תקין - נסה שוב.', action: undefined, quickReplies: undefined };
+      let out: ReturnType<typeof executeAgentTool>;
+      if (!parseOk) {
+        out = { trip: working, ok: false, message: 'קלט הכלי לא היה JSON תקין - נסה שוב.', action: undefined, quickReplies: undefined };
+      } else if (block.name === 'explore_destination') {
+        // הכלי היחיד שהוא אסינכרוני - רץ כאן ולא ב-executeAgentTool.
+        // curated תמיד גובר: אם השאילתה היא בעצם עיר מהקטלוג, מחזירים אותה.
+        const query = typeof input.query === 'string' ? input.query.trim() : '';
+        const curated = findDestination(query);
+        if (curated) {
+          out = {
+            trip: working,
+            ok: true,
+            message: `"${query}" כבר קיים בקטלוג האוצר כ-${curated.slug} - השתמש בו ישירות מה-DATA, אין צורך בחקירה.`,
+            action: undefined,
+            quickReplies: undefined,
+          };
+        } else {
+          let exploredDest: Destination | null = null;
+          try {
+            const raw = query ? await exploreDestination(query) : null;
+            exploredDest = raw ? exploredToDestination(raw) : null;
+          } catch {
+            exploredDest = null;
+          }
+          if (exploredDest) {
+            // אותו slug שכבר נחקר - מחליפים, לא מכפילים
+            const idx = explored.findIndex((d) => d.slug === exploredDest!.slug);
+            if (idx >= 0) explored[idx] = exploredDest;
+            else explored.push(exploredDest);
+            send({ type: 'explored', destination: exploredDest });
+            out = {
+              trip: working,
+              ok: true,
+              message: `נחקר בהצלחה: ${JSON.stringify({
+                slug: exploredDest.slug,
+                name: exploredDest.name,
+                places: exploredDest.places.map((pl) => ({ id: pl.id, name: pl.name, category: pl.category })),
+              })}\nהיעד זמין עכשיו לכלי הטיול כמו כל עיר. זכור לומר למשתמש שהיעד נחקר אוטומטית ולא נבדק.`,
+              action: `חקרתי את היעד ${exploredDest.name} (${exploredDest.places.length} אתרים ממקורות ציבוריים)`,
+              quickReplies: undefined,
+            };
+          } else {
+            out = {
+              trip: working,
+              ok: false,
+              message: `החקירה של "${query}" נכשלה - לא נמצאו מספיק נתונים ממקורות ציבוריים. אמור למשתמש בכנות שהיעד לא מכוסה והצע יעדים קיימים.`,
+              action: undefined,
+              quickReplies: undefined,
+            };
+          }
+        }
+      } else {
+        out = executeAgentTool(working, block.name, input, explored);
+      }
       if (out.ok && out.trip !== working) {
         touched = true; // suggest_quick_replies לא נוגע בטיול
         toolBuiltSomething = true;
@@ -605,10 +678,12 @@ function sendRuleBased(lastUserText: string, send: Send) {
 }
 
 export async function POST(request: Request) {
-  const body = (await request.json()) as { messages: ChatMessage[]; trip?: unknown; kosher?: unknown };
+  const body = (await request.json()) as { messages: ChatMessage[]; trip?: unknown; kosher?: unknown; explored?: unknown };
   const messages = Array.isArray(body.messages) ? body.messages : [];
   const clientTrip = sanitizeClientTrip(body.trip);
   const kosherHint = body.kosher === true;
+  // יעדים שנחקרו בתורים קודמים - הלקוח מחזיר אותם, השרת לא סומך על הצורה
+  const explored = sanitizeExploredDestinations(body.explored);
   const last = messages[messages.length - 1]?.content ?? '';
   const encoder = new TextEncoder();
 
@@ -622,7 +697,7 @@ export async function POST(request: Request) {
 
       if (process.env.ANTHROPIC_API_KEY) {
         try {
-          await runAgent(messages, clientTrip, send, kosherHint);
+          await runAgent(messages, clientTrip, send, kosherHint, explored);
         } catch {
           // נפילה חיננית למנוע החוקים - רק אם עוד לא הוזרם טקסט
           if (!emitted) sendRuleBased(last, send);

@@ -53,7 +53,10 @@ export default function TripWorkspace({
   const [linkCopied, setLinkCopied] = useState(false);
 
   const t = trip.currentTrip;
-  const destOf = (slug: string) => destinations.find((d) => d.slug === slug);
+  // curated קודם; יעדים שנחקרו אוטומטית (AI Explorer) כ-fallback, כדי
+  // שטיול שנבנה ביעד נחקר יתרנדר כרגיל בקנבס/מפה/הדפסה.
+  const destOf = (slug: string) =>
+    destinations.find((d) => d.slug === slug) ?? chat.explored.find((d) => d.slug === slug);
   const placeOf = (slug: string, id: string): Place | undefined =>
     destOf(slug)?.places.find((p) => p.id === id);
 
@@ -132,18 +135,26 @@ export default function TripWorkspace({
     });
   }
 
+  // קישורי שיתוף מאומתים מול הקטלוג האוצר בלבד - טיול עם יעד שנחקר
+  // אוטומטית עדיין לא ניתן לשיתוף (שלב הבא: payload v2 עם המקומות עצמם)
+  const hasExploredCity = Boolean(t?.days.some((d) => d.citySlug.startsWith('explored-')));
+
   /* ---------- כפתורי הפעולות (משותפים לשורה בדסקטופ ולתפריט במובייל) ---------- */
   const actionButtons = t ? (
     <>
       <Btn onClick={() => trip.duplicateTrip(t.id)} icon={ICONS.duplicate}>
         שכפול
       </Btn>
-      <Btn onClick={copyShareLink} icon={linkCopied ? ICONS.check : ICONS.link}>
-        {linkCopied ? 'הקישור הועתק' : 'קישור לשיתוף'}
-      </Btn>
-      <Btn onClick={shareWhatsApp} icon={ICONS.whatsapp} iconClassName="text-[#1da851]">
-        שיתוף בוואטסאפ
-      </Btn>
+      {!hasExploredCity && (
+        <Btn onClick={copyShareLink} icon={linkCopied ? ICONS.check : ICONS.link}>
+          {linkCopied ? 'הקישור הועתק' : 'קישור לשיתוף'}
+        </Btn>
+      )}
+      {!hasExploredCity && (
+        <Btn onClick={shareWhatsApp} icon={ICONS.whatsapp} iconClassName="text-[#1da851]">
+          שיתוף בוואטסאפ
+        </Btn>
+      )}
       <Btn onClick={() => window.print()} icon={ICONS.printer}>
         הדפסה / PDF
       </Btn>

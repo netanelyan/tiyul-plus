@@ -2,8 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Trip } from './types';
+import type { Destination } from '@/lib/types';
 import { useTrip } from './TripContext';
 import { loadChat, saveChat, type StoredChatMessage } from './chatStorage';
+import { loadExplored, saveExplored } from '@/lib/explore/storage';
 
 /**
  * מצב השיחה עם הסוכן - הוצא מ-AgentWorkspace כדי שהתצוגה המאוחדת
@@ -26,6 +28,8 @@ export interface TripChat {
   status: string | null;
   /** מונה עדכוני טיול שהגיעו מהסוכן - כדי לסמן "התוכנית עודכנה" ב-UI */
   tripUpdates: number;
+  /** יעדים שנחקרו אוטומטית (AI Explorer) - לרינדור ערים שאינן בקטלוג */
+  explored: Destination[];
   send: (text: string, kosher?: boolean) => void;
   /** ניקוי השיחה המקומית (התחלת טיול חדש) */
   reset: () => void;
@@ -43,6 +47,13 @@ export function useTripChat(options?: {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [tripUpdates, setTripUpdates] = useState(0);
+  // יעדים שנחקרו - נטענים אחרי mount (localStorage לא קיים ב-SSR)
+  const [explored, setExplored] = useState<Destination[]>([]);
+  useEffect(() => {
+    setExplored(loadExplored());
+  }, []);
+  const exploredRef = useRef(explored);
+  exploredRef.current = explored;
   // טוגל הכשרות מה-UI: עובר לשרת בשקט עד שהוא נטמע ב-Trip.preferences
   const [kosherHint, setKosherHint] = useState(Boolean(options?.initialKosher));
 
@@ -87,6 +98,8 @@ export function useTripChat(options?: {
           messages: next.map(({ role, content }) => ({ role, content })),
           trip: tripRef.current.currentTrip,
           kosher: kosher || undefined, // רמז ה-UI - השרת מטמיע אותו בטיול
+          // יעדים שנחקרו בעבר - כדי שהסוכן יתקף מולם טיולים קיימים
+          explored: exploredRef.current.length > 0 ? exploredRef.current : undefined,
         }),
       });
       if (!res.ok || !res.body) throw new Error('bad response');
@@ -110,6 +123,7 @@ export function useTripChat(options?: {
             trip?: Trip;
             actions?: string[];
             replies?: string[];
+            destination?: Destination;
           };
           try {
             event = JSON.parse(line.slice(5));
@@ -145,6 +159,9 @@ export function useTripChat(options?: {
               const actions = event.actions;
               patchLast((msg) => ({ ...msg, actions }));
             }
+          } else if (event.type === 'explored' && event.destination) {
+            // יעד חדש נחקר - נשמר מקומית וזמין מיד לרינדור הקנבס
+            setExplored(saveExplored(event.destination));
           } else if (event.type === 'quickReplies' && appended && event.replies?.length) {
             const quickReplies = event.replies;
             patchLast((msg) => ({ ...msg, quickReplies }));
@@ -217,5 +234,5 @@ export function useTripChat(options?: {
     setInput('');
   }, []);
 
-  return { messages, input, setInput, loading, status, tripUpdates, send, reset };
+  return { messages, input, setInput, loading, status, tripUpdates, explored, send, reset };
 }

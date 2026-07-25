@@ -2,6 +2,7 @@ import { destinations } from '@/data/destinations';
 import { isKosher } from '@/lib/categories';
 import { newId } from './types';
 import type { Trip, TripDay, TripPreferences } from './types';
+import type { Destination } from '@/lib/types';
 
 /**
  * כלי הסוכן: הגדרות ה-tools של Anthropic + מבצע צד-שרת עם ולידציה קשיחה.
@@ -85,6 +86,21 @@ export const AGENT_TOOLS = [
         },
       },
       required: ['dayNumber', 'placeIds'],
+    },
+  },
+  {
+    name: 'explore_destination',
+    description:
+      "The user asks about a destination that is NOT in the DATA (no matching city slug). Call this ONCE with the destination name to auto-explore it from public sources (Wikipedia). On success you get an ephemeral city (slug starts with 'explored-') with real places you may then use in the trip tools like any other city. The results are UNVERIFIED - always tell the user this destination was auto-explored and details must be double-checked. If exploration fails, say honestly the destination is not covered. Never call this for cities that ARE in the DATA.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        query: {
+          type: 'string',
+          description: 'The destination/city name exactly as the user said it (Hebrew or English)',
+        },
+      },
+      required: ['query'],
     },
   },
   {
@@ -206,11 +222,21 @@ export const AGENT_TOOLS = [
 
 /* ---------- ביצוע ---------- */
 
-const destOf = (slug: string) => destinations.find((d) => d.slug === slug);
+/**
+ * יעדים שנחקרו אוטומטית (AI Explorer) - נקבעים פר-קריאה ע"י route.ts.
+ * executeAgentTool סינכרוני, אז אין מרוץ: ההשמה בתחילת כל קריאה תקפה
+ * לכל אורך הביצוע. curated תמיד קודם - explored לא יכול להאפיל על עיר
+ * אמיתית מהקטלוג.
+ */
+let sessionExplored: Destination[] = [];
+
+const destOf = (slug: string) =>
+  destinations.find((d) => d.slug === slug) ?? sessionExplored.find((d) => d.slug === slug);
 const placeName = (citySlug: string, placeId: string) =>
   destOf(citySlug)?.places.find((p) => p.id === placeId)?.name ?? placeId;
 
-const validSlugs = () => destinations.map((d) => d.slug).join(', ');
+const validSlugs = () =>
+  [...destinations.map((d) => d.slug), ...sessionExplored.map((d) => d.slug)].join(', ');
 
 function fail(trip: Trip | null, message: string): AgentToolResult {
   return { trip, ok: false, message };
@@ -267,7 +293,9 @@ export function executeAgentTool(
   trip: Trip | null,
   name: string,
   input: Record<string, unknown>,
+  exploredDestinations: Destination[] = [],
 ): AgentToolResult {
+  sessionExplored = exploredDestinations;
   switch (name) {
     case 'create_trip': {
       const tripName = typeof input.name === 'string' ? input.name.trim().slice(0, 60) : '';

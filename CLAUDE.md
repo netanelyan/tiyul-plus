@@ -2275,3 +2275,53 @@ the trip domain + share-link v2 for explored trips) - do it AFTER the
 streaming/booking merge lands, it touches the same files. Also run one
 live smoke test of /api/explore on a machine with Wikipedia access
 (the E2E only proves the pipeline against the mock's response shapes).
+
+### 2026-07-25 (kk) - AI Explorer phase 2: wired into the agent (the /explore page is gone)
+
+Per Netanel: no standalone page - exploration happens inside the chat
+when a user asks for a destination that is not in the DATA.
+
+- **Removed**: /explore page, ExploreClient, /api/explore, the "חקירה"
+  nav tab. Kept: resolver.ts (unchanged), storage.ts (rewritten - now
+  stores adapted Destination objects, key tiyul-plus:explored:v2, cap 6).
+- **New `lib/explore/adapter.ts`**: exploredToDestination() fills a full
+  Destination (countrySlug 'explored', flag 🧭, honest practical texts)
+  so every trip surface works with no special cases;
+  sanitizeExploredDestinations() validates the client-echoed list
+  server-side (slug ^explored-, place ids ^xp-\d+$, finite coords,
+  length caps, max 6×15) - the server never trusts client shapes.
+- **agent.ts**: new `explore_destination` tool (model calls it when the
+  user asks about an uncovered destination); executeAgentTool takes an
+  optional exploredDestinations param - destOf()/validSlugs() fall back
+  to it (curated always wins; the function is synchronous so the
+  module-level registry is race-free).
+- **route.ts**: the tool is intercepted in the agent loop (it is the
+  only async tool - wiki fetch): curated-name queries short-circuit
+  ("already in DATA"); success pushes the adapted Destination into the
+  request's explored list, streams {type:'explored'}, and returns the
+  id list to the model so it can build immediately; failure returns an
+  honest is_error. Explored grounding rides as a separate
+  clearly-labeled block appended to groundingDetail each iteration
+  (exploration in iter N is groundable in N+1). System prompt's
+  "not covered" rule now routes through the tool, with a hard
+  requirement to present results as auto-explored/unverified and never
+  claim flight/visa/kosher facts for them.
+- **useTripChat**: sends the stored explored list with every request
+  (so the agent validates old explored trips), handles {explored}
+  events (saveExplored + state), exposes chat.explored.
+- **TripWorkspace**: destOf() falls back to chat.explored - canvas,
+  map, print, day descriptions all render explored trips. Share/
+  WhatsApp buttons are hidden for trips containing an explored city
+  (share links validate against curated only; v2 payload embedding the
+  places is the follow-up if wanted).
+
+**Verified** (no ANTHROPIC_API_KEY in this sandbox - the model side of
+the loop is the untested link): 12/12 node harness checks (adapter,
+sanitizer junk/caps, create_trip_full & add_day on an explored city
+with real validation, curated precedence, unknown-without-extras) and
+a client E2E with a mocked SSE stream (explored+trip events → canvas
+renders the Lisbon trip, stops + pins + derived day description, share
+hidden, print kept, localStorage v2 saved, full render survives
+reload). Wikipedia is also blocked here - the resolver still needs one
+live smoke test, now doable only through a real chat conversation on a
+keyed deployment ("טיול לפורטו" should trigger חוקר את היעד…).
