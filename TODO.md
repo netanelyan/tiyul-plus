@@ -76,21 +76,24 @@ Devín/Small Carpathians). Lower priority than net-new destinations.
 ## Content follow-ups
 
 - [ ] Kosher `lastChecked` is `pending-review` on every kosher entry across
-      the catalog — **37 entries as of 2026-07-25** (the overnight run added
+      the catalog — **37 entries as of 2026-07-25**. The UI now marks every
+      one of them explicitly as "לא מאומת - לוודא מול המקום" (see
+      `src/components/KosherBadge.tsx`), so nothing looks verified while it
+      isn't — what's still open is doing the real verification. (the overnight run added
       11 of them: Tokyo, Arusha, Cusco, Queenstown, Las Vegas, Reykjavík,
       Zagreb, Kathmandu, Hanoi, Cape Town/Sea Point, plus Munich earlier).
       Replace with real verification dates when someone actually confirms
       status with the venues.
-- [ ] The 8 original European city entries (Vienna, Bratislava, Prague,
-      Budapest, Rome, Athens, Barcelona, Berlin) still have **no
-      `editorialRating`** — the rating system was added later and only new
-      destinations carry it. Their country/city pages therefore show no
-      "המלצת הצוות" pill.
-- [ ] Wide-span destinations to keep an eye on: `lofoten` (Tromsø/Lyngen are
-      ~800 km from the destination centre) and `cape-town` (Kruger/Blyde are
-      ~1,000 km away). Deliberate — both are country-scale hubs and the
-      entries say a domestic flight is needed — but if a future UI shows a
-      single all-days map, these will look odd.
+- [x] The 8 original European city entries — FIXED (2026-07-25): all of
+      Vienna, Bratislava, Prague, Budapest, Rome, Athens, Barcelona and
+      Berlin now carry an `editorialRating` with an honest drawback in the
+      verdict. Every destination in the catalog is rated.
+- [x] Wide-span destinations — FIXED (2026-07-25): `lofoten` and
+      `cape-town` were split into compact hubs. Norway: `lofoten` (Arctic
+      north) + `bergen-fjords` (west fjords). South Africa: `cape-town`
+      (city + peninsula + winelands), `kruger` (safari + Panorama Route)
+      and a new `garden-route` entry. Every place is now within ~700 km of
+      its destination centre (audit warning cleared).
 - [ ] `budva` reuses three places that also appear in `kotor` (Lovćen, Sveti
       Stefan, Budva old town coordinates) — same real sites in two hubs.
       Fine today; worth deduping if a "seen this already" view is built.

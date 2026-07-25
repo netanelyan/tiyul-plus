@@ -124,8 +124,12 @@ npm run lint
   accept ONLY the allowed widths 250/330/500/960px), `priceLevel`
   (0=חינם..3), `tags` (fixed set: families/nightlife/romantic/history/
   art/foodie/outdoors), `mustSee`, and kosher entries a
-  `kosherVerification` object rendered as an honest trust badge
-  ("לאמת לפני נסיעה" while lastChecked="pending-review"). City
+  `kosherVerification` object rendered ONLY through
+  `src/components/KosherBadge.tsx`: while lastChecked="pending-review" it
+  shows a distinct amber warning - "לא מאומת - לוודא מול המקום" plus the
+  claimed supervision as reported - and never the green verified badge;
+  a real check date turns it verified. The /kosher page also states
+  up-front how many of the listed entries are still unverified. City
   `practical` holds only city-level facts: flights, gettingAround,
   kosherOverview. This data is the product's moat; quality > quantity.
 - `src/lib/types.ts` - domain types + `PlacesProvider` interface (includes
@@ -1714,3 +1718,40 @@ the overnight run.
   kosher entries, the 8 original European cities without an
   editorialRating, the two country-scale hubs (lofoten, cape-town), and
   the kotor/budva shared places.
+
+### 2026-07-25 (x) - Cleanup-1: kosher honesty, editorial ratings, compact hubs
+
+Branch `data/cleanup-1` (off main), acting on the flagged TODO items.
+
+1. **Kosher pending-review (37 entries) - kept, but never look verified.**
+   New `src/components/KosherBadge.tsx` is the only renderer of kosher
+   status: pending-review shows an amber warning badge with a ring -
+   "not verified - check with the venue" in Hebrew - plus the supervision
+   as *reported* and an explicit "tiyul+ has not checked this yet"; a real
+   check date shows the green verified badge. Wired into the destination
+   page, /kosher and the Leaflet popup (three previously-separate inline
+   implementations). /kosher also states up front how many entries are
+   unverified, and its intro no longer calls the catalog verified.
+2. **Editorial ratings for the 8 original European cities** - Vienna 4.6,
+   Bratislava 4.0, Prague 4.7, Budapest 4.6, Rome 4.7, Athens 4.3,
+   Barcelona 4.6, Berlin 4.5. Verdicts are grounded in each entry's own
+   facts (direct flights, how many kosher entries it really has, itinerary
+   length) and each states a real drawback. All destinations now rated.
+3. **Photoless places (57)** - no change, as intended. Verified live that
+   a card without a photo renders normally (no broken image, no empty
+   frame) on /destinations/serengeti.
+4. **Over-spread destinations split into compact hubs:**
+   - Norway: `lofoten` now = Lofoten + Reine + Tromso + Lyngen (Arctic
+     north). New `bergen-fjords` = Bergen, Naeroyfjord, Geiranger,
+     Preikestolen, Trolltunga, Jotunheimen, Oslo.
+   - South Africa: `cape-town` now = city + peninsula + winelands +
+     Sea Point. New `kruger` = Kruger NP + Blyde River Canyon. New
+     `garden-route` = Tsitsikamma (moved out of cape-town rather than
+     dropped) + 9 newly verified places: Knysna, Plettenberg Bay,
+     Robberg, Wilderness NP, Cango Caves, Oudtshoorn, Bloukrans Bridge,
+     Addo Elephant NP, Mossel Bay.
+   The split script regenerates the TS from the already-verified place
+   objects, so coordinates and photo URLs are byte-identical; only
+   grouping, metadata, itineraries and practical blocks are new.
+   **Catalog: 45 destinations / 31 countries / 539 places.** Audit
+   geographic warnings cleared. build clean; verify-photos all OK.

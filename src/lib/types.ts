@@ -22,8 +22,10 @@ export type PlaceTag =
   | 'foodie'
   | 'outdoors';
 
-// אימות כשרות - תג אמון כן: source="curated" + lastChecked="pending-review"
-// מוצג בממשק כ"לאמת לפני נסיעה" עד שמישהו באמת בדק מול המקום.
+// אימות כשרות - תג אמון כן. כל עוד lastChecked="pending-review" הרשומה
+// מוצגת בכל מקום כ"לא מאומת - לוודא מול המקום" בתג אזהרה מובחן, ולעולם
+// לא כתג הכשרות המאומתת. רק תאריך בדיקה אמיתי הופך אותה למאומתת.
+// המקום היחיד שמרנדר את הסטטוס: src/components/KosherBadge.tsx.
 export interface KosherVerification {
   source: string; // מי קבע (curated / community / official)
   lastChecked: string; // ISO date או "pending-review"

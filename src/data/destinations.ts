@@ -17,6 +17,11 @@ export const destinations: Destination[] = [
     center: { lat: 48.2082, lng: 16.3719 },
     zoom: 12,
     tagline: 'ארמונות, קפה וינאי וקהילה יהודית תוססת',
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'קלאסיקה אירופית שקל מאוד להגיע אליה - טיסות ישירות יומיומיות של כ-3.5 שעות, עיר מסודרת ונוחה להליכה, ותשתית כשרות אמיתית ברובע השני (מסעדות וסופר). חסרונות: יקרה יחסית לשכנותיה במזרח אירופה, והאווירה שמרנית ורגועה - מי שמחפש חיי לילה סוערים ימצא יותר בברלין או בבודפשט.',
+    },
     photo:
       'https://images.unsplash.com/photo-1516550893923-42d28e5677af?auto=format&fit=crop&w=1600&q=70',
     iconicLandmark: {
@@ -416,6 +421,11 @@ export const destinations: Destination[] = [
     center: { lat: 48.1439, lng: 17.1097 },
     zoom: 13,
     tagline: 'עיר בירה קומפקטית, 45 דקות מווינה',
+    editorialRating: {
+      score: 4,
+      verdict:
+        'עיר בירה קומפקטית וזולה שאפשר לכסות ביומיים, ונוחה במיוחד כתוספת לווינה (כשעה נסיעה). חסרונות: אין כמעט טיסות ישירות קבועות מנתב"ג, המרכז ההיסטורי קטן ומתמצה מהר, והכשרות מסתכמת בבית חב"ד בתיאום מראש.',
+    },
     photo:
       'https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?auto=format&fit=crop&w=1600&q=70',
     iconicLandmark: {
@@ -793,6 +803,11 @@ export const destinations: Destination[] = [
     center: { lat: 50.0875, lng: 14.4213 },
     zoom: 13,
     tagline: 'עיר הזהב: גשרים, טירות והרובע היהודי המפורסם בעולם',
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'אחת הערים היפות באירופה, עם מרכז היסטורי שלם ורובע יהודי שהוא אתר מהחשובים בעולם - טיסה ישירה של כ-4 שעות ומחירים סבירים. חסרונות: העיר העתיקה עמוסה מאוד כמעט כל השנה, ומחירי המרכז והאטרקציות התייקרו משמעותית בשנים האחרונות.',
+    },
     photo:
       'https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=1600&q=70',
     iconicLandmark: {
@@ -1184,6 +1199,11 @@ export const destinations: Destination[] = [
     center: { lat: 47.4979, lng: 19.0402 },
     zoom: 13,
     tagline: 'פנינת הדנובה: מרחצאות, פרלמנט והרובע היהודי הגדול באירופה',
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'ערך תמורת כסף מהטובים באירופה: טיסה ישירה של כ-3 שעות, מחירים נמוכים, מרחצאות תרמיים והרובע היהודי הגדול באירופה עם כמה כתובות כשרות. חסרונות: התחבורה והשירות לא תמיד ידידותיים לתייר, וחלק מהעיר עדיין מוזנח - הפער בין פשט לבודה מורגש.',
+    },
     photo:
       'https://images.unsplash.com/photo-1549877452-9c387954fbc2?auto=format&fit=crop&w=1600&q=70',
     iconicLandmark: {
@@ -1577,6 +1597,11 @@ export const destinations: Destination[] = [
     center: { lat: 41.8967, lng: 12.4822 },
     zoom: 13,
     tagline: 'העיר הנצחית: קולוסיאום, פסטה - והגטו היהודי הכי טעים באירופה',
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'עיר-מוזיאון פתוחה עם קולוסיאום, ותיקן וגטו יהודי שהוא גם מרכז אוכל כשר - וטיסה ישירה של כ-3.5 שעות. חסרונות: הקיץ לוהט וצפוף מאוד, התורים לאתרים ארוכים בלי הזמנה מראש, והעיר תובענית פיזית (מרחקים והליכה על אבן).',
+    },
     photo:
       'https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1600&q=70',
     iconicLandmark: {
@@ -1972,6 +1997,11 @@ export const destinations: Destination[] = [
     center: { lat: 37.9755, lng: 23.7348 },
     zoom: 13,
     tagline: 'שעתיים טיסה, 2,500 שנות היסטוריה - והים באמצע',
+    editorialRating: {
+      score: 4.3,
+      verdict:
+        'היעד הקרוב והזול ביותר לרוב הישראלים - כשעתיים טיסה, המון טיסות ביום, אקרופוליס והיסטוריה בכל פינה, וגם ים בטווח נסיעה קצר. חסרונות: העיר עצמה אפורה וחמה בקיץ, יומיים בדרך כלל מספיקים לה, והכשרות מוגבלת למסעדה אחת ולבית חב"ד.',
+    },
     photo:
       'https://images.unsplash.com/photo-1555993539-1732b0258235?auto=format&fit=crop&w=1600&q=70',
     iconicLandmark: {
@@ -2359,6 +2389,11 @@ export const destinations: Destination[] = [
     center: { lat: 41.3874, lng: 2.1686 },
     zoom: 13,
     tagline: 'גאודי, חוף ים וטאפאס - העיר שכולה יצירת אמנות',
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'שילוב נדיר של אדריכלות גאודי, חוף ים ואוכל - עיר שקל לטייל בה ברגל וטיסה ישירה של כ-4.5 שעות. חסרונות: מהיעדים העמוסים באירופה (וסגרדה פמיליה ופארק גואל דורשים הזמנה מראש), כיסי גנבים בעיר העתיקה, והכשרות מצומצמת - מסעדה ובית חב"ד.',
+    },
     photo:
       'https://images.unsplash.com/photo-1583422409516-2895a77efded?auto=format&fit=crop&w=1600&q=70',
     iconicLandmark: {
@@ -2754,6 +2789,11 @@ export const destinations: Destination[] = [
     center: { lat: 52.52, lng: 13.405 },
     zoom: 12,
     tagline: 'עיר של היסטוריה כבדה ואנרגיה צעירה - וקהילה ישראלית ענקית',
+    editorialRating: {
+      score: 4.5,
+      verdict:
+        'עיר ענקית עם היסטוריה כבדה, מוזיאונים ברמה עולמית, מחירים נוחים לבירה מערבית וקהילה ישראלית גדולה שמורגשת בכל מקום. חסרונות: המרחקים בין האתרים גדולים ותלויים בתחבורה ציבורית, מזג האוויר אפור רוב השנה, והכשרות מסתכמת בקפה חלבי ובבית חב"ד.',
+    },
     photo:
       'https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=1600&q=70',
     iconicLandmark: {
@@ -11045,13 +11085,13 @@ export const destinations: Destination[] = [
   },
   {
     slug: 'lofoten',
-    name: 'לופוטן והפיורדים',
-    nameLocal: 'Lofoten & the Norwegian Fjords',
+    name: 'לופוטן והצפון הארקטי',
+    nameLocal: 'Lofoten & Arctic Norway',
     countrySlug: 'norway',
     flag: '🇳🇴',
-    center: { lat: 63.5, lng: 10.0 },
-    zoom: 5,
-    tagline: 'צוקים מעל המים, כפרי דייגים אדומים וזוהר צפוני',
+    center: { lat: 68.9, lng: 16.5 },
+    zoom: 6,
+    tagline: 'מעל החוג הארקטי: פסגות שצונחות לים וזוהר צפוני',
     photo:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Moskenes_Reinebringen_lub_2025-07-21_img09_Aussicht.jpg/500px-Moskenes_Reinebringen_lub_2025-07-21_img09_Aussicht.jpg',
     iconicLandmark: {
@@ -11065,12 +11105,11 @@ export const destinations: Destination[] = [
     editorialRating: {
       score: 4.7,
       verdict:
-        'נוף פיורדים וצוקים שקשה להאמין שהוא אמיתי, עם תשתית מצוינת ובטיחות גבוהה - ומעל החוג הארקטי גם זוהר צפוני ושמש חצות. חסרונות: אין טיסה ישירה מישראל, זה אחד היעדים היקרים באירופה, המרחקים גדולים מאוד ומזג האוויר משתנה בלי הודעה.',
+        'נוף ארקטי שקשה להאמין שהוא אמיתי, ובעונה גם שמש חצות או זוהר צפוני - עם תשתית מטיילים מצוינת. חסרונות: אין טיסה ישירה מישראל וצריך גם טיסה פנימית צפונה, זה אחד היעדים היקרים באירופה, מזג האוויר מתחלף כל שעה ואין באזור שום כשרות.',
     },
     summary:
-      'נורווגיה מחולקת לשני חלקים שכדאי להכיר: הפיורדים שבמערב - גיירנגר ונרויפיורד שהם אתרי מורשת עולמית, וצוקי פרייקסטולן וטרולטונגה שמעליהם - ואיי לופוטן שבצפון, מעל החוג הארקטי, עם כפרי דייגים, חופים לבנים ופסגות שצונחות לים. ברגן היא שער הכניסה למערב, וטרומסו היא בירת הזוהר הצפוני.',
-    bestSeason:
-      'יוני-אוגוסט (שמש חצות בצפון, כל הדרכים והמסלולים פתוחים) · ספטמבר-מרץ עונת זוהר צפוני בטרומסו ובלופוטן · טרולטונגה ופרייקסטולן נגישים בבטחה בעיקר ביוני-ספטמבר',
+      'הצפון הארקטי של נורווגיה הוא עולם בפני עצמו: איי לופוטן עם פסגות שצונחות לים, חופי חול לבן ומים טורקיז, כפר הדייגים ריינה עם בקתות הרורבו האדומות, ומזרחה - טרומסו, בירת הזוהר הצפוני, ואלפי לינגן החדים שמעל הפיורד. בקיץ השמש לא שוקעת, ובחורף זה אחד המקומות הטובים בעולם לראות זוהר צפוני.',
+    bestSeason: 'יוני-אוגוסט (שמש חצות, כל השבילים פתוחים) · ספטמבר-מרץ עונת הזוהר הצפוני (ימים קצרים מאוד וכבישים חורפיים) · אפריל-מאי סקי טורינג באלפי לינגן',
     places: [
       {
         id: 'nor-lofoten',
@@ -11108,6 +11147,108 @@ export const destinations: Destination[] = [
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=Reine+Lofoten',
       },
+      {
+        id: 'nor-tromso',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Troms%C3%B8_sentrum_%285835702754%29.jpg/500px-Troms%C3%B8_sentrum_%285835702754%29.jpg',
+        tags: ['outdoors', 'nightlife'],
+        priceLevel: 2,
+        name: 'טרומסו',
+        nameLocal: 'Tromsø',
+        category: 'attraction',
+        lat: 69.6517,
+        lng: 18.9556,
+        description:
+          'העיר הגדולה מעל החוג הארקטי, ובירת הזוהר הצפוני: קתדרלת הארקטי, רכבל פיילהיים, וטיולי ציד זוהר, כלבי מזחלות ולווייתנים בעונה.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Tromso',
+      },
+      {
+        id: 'nor-lyngen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Lyngen.jpg/500px-Lyngen.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'אלפי לינגן',
+        nameLocal: 'Lyngen Alps',
+        category: 'nature',
+        lat: 69.7903,
+        lng: 20.1695,
+        description:
+          'רכס אלפיני חד מזרחית לטרומסו, עם פסגות שצונחות לפיורד וקרחונים קטנים - אזור מוביל לסקי טורינג באביב ולמסלולי הליכה בקיץ.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Lyngen+Alps',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'לופוטן - הכניסה לאיים',
+        placeIds: ['nor-lofoten'],
+        notes:
+          'טסים לבודו או לסווולוואר ונכנסים לאיים בכביש E10 או במעבורת. יום ראשון של נסיעה נופית בין המפרצים והכפרים.',
+      },
+      {
+        day: 2,
+        title: 'ריינה והמפרצים',
+        placeIds: ['nor-reine', 'nor-lofoten'],
+        notes:
+          'בוקר בריינה - בקתות רורבו אדומות מול הפסגות - ולמי שכשיר, מסלול המדרגות התלול לריינברינגן. אחר הצהריים חופים לבנים כמו קוואלוויקה או האוקלנד.',
+      },
+      {
+        day: 3,
+        title: 'טרומסו',
+        placeIds: ['nor-tromso'],
+        notes:
+          'מעבר צפונה-מזרחה (טיסה קצרה או נסיעה ארוכה): קתדרלת הארקטי, רכבל פיילהיים, ובעונה - יציאת ציד זוהר צפוני בלילה.',
+      },
+      {
+        day: 4,
+        title: 'אלפי לינגן',
+        placeIds: ['nor-lyngen'],
+        notes:
+          'יום הרים מזרחית לטרומסו: פסגות שצונחות לפיורד, מסלולי הליכה בקיץ או סקי טורינג באביב. מזג האוויר משתנה מהר - לבדוק תחזית בבוקר.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה מנתב"ג לנורווגיה. טסים עם החלפה אחת לאוסלו (OSL), ומשם טיסה פנימית של כשעה וחצי-שעתיים לבודו, סווולוואר או טרומסו - זו הדרך המעשית היחידה להגיע לצפון בזמן סביר.',
+      gettingAround:
+        'באיים: רכב שכור על כביש E10 עם גשרים ומנהרות, ומעבורות בין חלק מהקטעים (הנסיעה על המעבורת היא חלק מהכביש). בטרומסו יש אוטובוסים ומוניות, אבל לאלפי לינגן צריך רכב. בחורף חובה צמיגי חורף ובדיקת תנאי דרך יומית.',
+      kosherOverview:
+        'אין בלופוטן, בטרומסו ובאזור הארקטי שום נקודת כשרות. הקהילות היהודיות בנורווגיה נמצאות באוסלו ובטרונדהיים, ובאוסלו אפשר לתאם אוכל מראש דרך הקהילה - אין מסעדה כשרה פתוחה לקהל. הדרך המעשית: להצטייד מהבית או באוסלו, ולהסתמך על דגים, מוצרי חלב וירקות עם סימוני כשרות מוכרים בסופרמרקטים.',
+    },
+  },
+  {
+    slug: 'bergen-fjords',
+    name: 'ברגן והפיורדים',
+    nameLocal: 'Bergen & the Norwegian Fjords',
+    countrySlug: 'norway',
+    flag: '🇳🇴',
+    center: { lat: 60.9, lng: 7.5 },
+    zoom: 7,
+    tagline: 'פיורדים צרים, מפלים וצוקים מעל המים',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Geirangerfjord_.jpg/500px-Geirangerfjord_.jpg',
+    iconicLandmark: {
+      name: 'גיירנגר-פיורד',
+      nameLocal: 'Geirangerfjord',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Geirangerfjord_.jpg/500px-Geirangerfjord_.jpg',
+      blurb:
+        'פיורד צר באתר מורשת עולמית, שקירותיו מתנשאים מאות מטרים מעל המים ומהם יורדים מפלי "שבע האחיות".',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'לב הפיורדים הנורווגיים במרחק נסיעה סביר זה מזה: שיט בין קירות סלע, מסלולי צוק מפורסמים ורכבות נופיות - הכול מאורגן ובטוח. חסרונות: אין טיסה ישירה מישראל, זה יעד יקר מאוד (אוכל, דלק ומעבורות), הגשם תכוף במיוחד בברגן, ואין באזור תשתית כשרות.',
+    },
+    summary:
+      'מערב נורווגיה הוא ארץ הפיורדים: נרוי-פיורד הצר ואתר המורשת גיירנגר עם מפלי שבע האחיות, מדף הסלע פרייקסטולן שתלוי 600 מ\' מעל הלייספיורד ולשון הסלע טרולטונגה, ופארק ההרים יוטונהיימן עם הפסגות הגבוהות במדינה. ברגן, עם רציף בריגן ההנזאתי, היא שער הכניסה, ואוסלו נמצאת במרחק רכבת נופית.',
+    bestSeason: 'יוני-ספטמבר (המסלולים והרכבלים פתוחים; פרייקסטולן וטרולטונגה נגישים בבטחה בעיקר בחלון הזה) · מאי ואוקטובר שקטים אך גשומים · בחורף חלק ממעברי ההרים סגורים',
+    places: [
       {
         id: 'nor-geiranger',
         photo:
@@ -11213,40 +11354,6 @@ export const destinations: Destination[] = [
         externalUrl: 'https://maps.google.com/?q=Bergen+Norway',
       },
       {
-        id: 'nor-tromso',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Troms%C3%B8_sentrum_%285835702754%29.jpg/500px-Troms%C3%B8_sentrum_%285835702754%29.jpg',
-        tags: ['outdoors', 'nightlife'],
-        priceLevel: 2,
-        name: 'טרומסו',
-        nameLocal: 'Tromsø',
-        category: 'attraction',
-        lat: 69.6517,
-        lng: 18.9556,
-        description:
-          'העיר הגדולה מעל החוג הארקטי, ובירת הזוהר הצפוני: קתדרלת הארקטי, רכבל פיילהיים, וטיולי ציד זוהר, כלבי מזחלות ולווייתנים בעונה.',
-        rating: 4.6,
-        durationMin: 480,
-        externalUrl: 'https://maps.google.com/?q=Tromso',
-      },
-      {
-        id: 'nor-lyngen',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Lyngen.jpg/500px-Lyngen.jpg',
-        tags: ['outdoors'],
-        priceLevel: 2,
-        name: 'אלפי לינגן',
-        nameLocal: 'Lyngen Alps',
-        category: 'nature',
-        lat: 69.7903,
-        lng: 20.1695,
-        description:
-          'רכס אלפיני חד מזרחית לטרומסו, עם פסגות שצונחות לפיורד וקרחונים קטנים - אזור מוביל לסקי טורינג באביב ולמסלולי הליכה בקיץ.',
-        rating: 4.6,
-        durationMin: 480,
-        externalUrl: 'https://maps.google.com/?q=Lyngen+Alps',
-      },
-      {
         id: 'nor-oslo',
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Nationaltheatret_evening.jpg/500px-Nationaltheatret_evening.jpg',
@@ -11270,69 +11377,55 @@ export const destinations: Destination[] = [
         title: 'אוסלו',
         placeIds: ['nor-oslo'],
         notes:
-          'נחיתה בבירה (עם החלפה מאירופה): בית האופרה, פארק ויגלנד ומוזיאון. ערב מוקדם - יוצאים מחר מערבה.',
+          'נחיתה בבירה (עם החלפה מאירופה): בית האופרה שאפשר לטפס על גגו, פארק ויגלנד ומוזיאון הוויקינגים.',
       },
       {
         day: 2,
-        title: 'ברגן והפיורד הצר',
+        title: 'רכבת נופית וברגן',
         placeIds: ['nor-bergen', 'nor-naeroy'],
         notes:
-          'רכבת נופית או טיסה קצרה לברגן, סיור בבריגן, ומשם שיט בנרוי-פיורד בשילוב רכבת פלאם.',
+          'רכבת אוסלו-ברגן או טיסה קצרה, סיור ברציף בריגן ובשוק הדגים, ומשם שיט בנרוי-פיורד בשילוב רכבת פלאם.',
       },
       {
         day: 3,
         title: 'גיירנגר',
         placeIds: ['nor-geiranger'],
         notes:
-          'יום פיורדים קלאסי: שיט בגיירנגר מול מפלי שבע האחיות, ותצפיות דלסניבה וכביש הנשרים.',
+          'שיט בגיירנגר-פיורד מול מפלי שבע האחיות, ותצפיות דלסניבה וכביש הנשרים מלמעלה.',
       },
       {
         day: 4,
         title: 'צוקים - פרייקסטולן או טרולטונגה',
         placeIds: ['nor-preikestolen', 'nor-trolltunga'],
         notes:
-          'בוחרים מסלול לפי כושר: פרייקסטולן (3-4 שעות) או טרולטונגה (יום שלם ותובעני). לבדוק תנאי מזג אוויר ושעות אור.',
+          'בוחרים לפי כושר ומזג אוויר: פרייקסטולן (כ-8 ק"מ, 3-4 שעות) או טרולטונגה (יום שלם ותובעני). לצאת מוקדם ולבדוק תחזית.',
       },
       {
         day: 5,
         title: 'יוטונהיימן',
         placeIds: ['nor-jotunheimen'],
         notes:
-          'יום הרים בפארק הגבוה במדינה - רכס בסגן או מסלול קצר יותר, בהתאם לתחזית.',
-      },
-      {
-        day: 6,
-        title: 'לופוטן',
-        placeIds: ['nor-lofoten', 'nor-reine'],
-        notes:
-          'טיסה פנימית צפונה (בודו/סווולוואר) ומעבורת/כביש E10 בין האיים: ריינה, חופים לבנים ומסלול ריינברינגן.',
-      },
-      {
-        day: 7,
-        title: 'טרומסו והארקטי',
-        placeIds: ['nor-tromso', 'nor-lyngen'],
-        notes:
-          'סיום בצפון: טרומסו, ובעונה - ציד זוהר צפוני או יום באלפי לינגן.',
+          'יום הרים בפארק הגבוה בנורווגיה - רכס בסגן או מסלול קצר יותר, בהתאם לתנאים.',
       },
     ],
     practical: {
       flights:
-        'אין טיסה ישירה מנתב"ג לנורווגיה. טסים עם החלפה אחת (וינה, איסטנבול, אמסטרדם, לונדון או בודפשט) לאוסלו (OSL), ולעתים ישירות לברגן. בתוך נורווגיה יש טיסות פנים תכופות וזולות יחסית לצפון (בודו, סווולוואר, טרומסו) - כמעט חובה בגלל המרחקים.',
+        'אין טיסה ישירה מנתב"ג לנורווגיה. טסים עם החלפה אחת (וינה, איסטנבול, אמסטרדם, לונדון או בודפשט) לאוסלו (OSL), ולעתים ישירות לברגן (BGO). בין אוסלו לברגן יש רכבת נופית של כ-7 שעות או טיסה פנימית קצרה.',
       gettingAround:
-        'רכב שכור לפיורדים ולופוטן, בשילוב מעבורות (נסיעה על מעבורת היא חלק מהכביש בנורווגיה). לצפון עדיף לטוס ולשכור רכב שם. רכבות נופיות מצוינות - אוסלו-ברגן ורכבת פלאם. בחורף נדרשים צמיגי חורף ובדיקת תנאי דרך.',
+        'רכב שכור לפיורדים, בשילוב מעבורות שהן חלק מהכביש. רכבות נופיות מצוינות (אוסלו-ברגן ורכבת פלאם), ובקיץ יש גם שיט וקווי אוטובוס בין נקודות המוצא של המסלולים. מומלץ לבדוק מראש חניה ושעות מעבורת.',
       kosherOverview:
-        'אין באזור הפיורדים ובלופוטן שום נקודת כשרות. קהילה יהודית ובית כנסת יש באוסלו ובטרונדהיים, ובאוסלו אפשר לתאם מראש אוכל כשר דרך הקהילה - אך אין מסעדה כשרה פתוחה לקהל. הדרך המעשית: להצטייד באוסלו או מהבית, ולהסתמך על דגים, מוצרי חלב וירקות עם סימוני כשרות מוכרים בסופרמרקטים.',
+        'אין באזור הפיורדים שום נקודת כשרות. קהילה יהודית ובית כנסת יש באוסלו ובטרונדהיים, ובאוסלו אפשר לתאם מראש אוכל כשר דרך הקהילה - אך אין מסעדה כשרה פתוחה לקהל. הדרך המעשית: להצטייד באוסלו או מהבית, ולהסתמך על מוצרים ארוזים עם סימון כשרות מוכר.',
     },
   },
   {
     slug: 'cape-town',
-    name: 'קייפטאון וקרוגר',
-    nameLocal: 'Cape Town & Kruger',
+    name: 'קייפטאון וחצי האי',
+    nameLocal: 'Cape Town & the Cape Peninsula',
     countrySlug: 'south-africa',
     flag: '🇿🇦',
-    center: { lat: -30.0, lng: 24.0 },
-    zoom: 5,
-    tagline: 'הר שולחן, פינגווינים על החוף וספארי של החמישייה הגדולה',
+    center: { lat: -34, lng: 18.5 },
+    zoom: 10,
+    tagline: 'הר שולחן, פינגווינים על החוף ויקבים בשעה נסיעה',
     photo:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Table_Mountain_DanieVDM.jpg/500px-Table_Mountain_DanieVDM.jpg',
     iconicLandmark: {
@@ -11341,17 +11434,16 @@ export const destinations: Destination[] = [
       photo:
         'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Table_Mountain_DanieVDM.jpg/500px-Table_Mountain_DanieVDM.jpg',
       blurb:
-        'הר שטוח-פסגה שמתנשא מעל קייפטאון לגובה של כ-1,085 מ׳, עם רכבל מסתובב ועשרות מסלולי הליכה - הסמל של העיר ואחד ההרים המזוהים בעולם.',
+        'הר שטוח-פסגה שמתנשא מעל קייפטאון לגובה של כ-1,085 מ\', עם רכבל מסתובב ועשרות מסלולי הליכה - הסמל של העיר.',
     },
     editorialRating: {
       score: 4.7,
       verdict:
-        'שילוב יוצא דופן של עיר, חופים, יין וספארי - ועם תשתית כשרות אמיתית בקייפטאון וביוהנסבורג, מהמפותחות בעולם מחוץ לישראל. חסרונות: אין כיום קו ישיר קבוע מישראל, המרחקים בין קייפטאון לקרוגר גדולים (טיסה פנימית), וצריך תשומת לב מתמדת לביטחון אישי.',
+        'עיר, הר, חופים ויקבים בטווח של שעה נסיעה - וגם תשתית כשרות אמיתית בסי פוינט, מהמפותחות בעולם מחוץ לישראל. חסרונות: אין כיום קו ישיר קבוע מישראל, הר השולחן נסגר ברוח חזקה, וצריך תשומת לב מתמדת לביטחון אישי ולנהיגה בלילה.',
     },
     summary:
-      'קייפטאון יושבת בין הר השולחן לאוקיינוס: רכבל לפסגה, כביש הצוקים של צ׳פמנס פיק, מושבת הפינגווינים בבולדרס ביץ׳, כף התקווה הטובה, הגן הבוטני קירסטנבוש ואי רובן. שעה משם - יקבי סטלנבוש, וממזרח מתחיל כביש הגן עם יערות ציציקאמה. בצפון-מזרח המדינה שוכן הפארק הלאומי קרוגר עם החמישייה הגדולה וקניון נהר הבלייד. בשכונת סי פוינט שבקייפטאון יש ריכוז מסעדות וחנויות כשרות.',
-    bestSeason:
-      'נובמבר-מרץ קיץ בקייפטאון (חופים ויין; חם ויבש) · מאי-ספטמבר העונה הטובה לספארי בקרוגר (יבש, החיות מתקבצות למים) · בקייפטאון החורף גשום ורוחות חזקות',
+      'קייפטאון יושבת בין הר השולחן לאוקיינוס, וכל מה שמסביבה נמצא בטווח נסיעה קצר: רכבל לפסגה, כביש הצוקים של צ\'פמנס פיק, מושבת הפינגווינים בבולדרס ביץ\', כף התקווה הטובה בקצה חצי האי, הגן הבוטני קירסטנבוש ואי רובן מול הנמל. שעה מזרחה נמצאים יקבי סטלנבוש, ובשכונת סי פוינט מרוכזות המסעדות והחנויות הכשרות.',
+    bestSeason: 'נובמבר-מרץ (קיץ דרומי - חופים, יין וימים ארוכים) · אפריל-מאי וספטמבר-אוקטובר נעימים ופחות עמוסים · יוני-אוגוסט חורף גשום ורוחות חזקות',
     places: [
       {
         id: 'zaf-table',
@@ -11414,7 +11506,7 @@ export const destinations: Destination[] = [
         tags: ['outdoors', 'romantic'],
         priceLevel: 1,
         name: 'כביש צ׳פמנס פיק',
-        nameLocal: "Chapman's Peak Drive",
+        nameLocal: 'Chapman\'s Peak Drive',
         category: 'viewpoint',
         lat: -34.0872,
         lng: 18.3606,
@@ -11486,8 +11578,7 @@ export const destinations: Destination[] = [
         lng: 18.3925,
         description:
           'שכונת החוף סי פוינט היא מרכז החיים היהודיים של קייפטאון: מסעדות, מאפיות וחנויות כשרות, בתי כנסת ובתי חב"ד - הכול בטווח הליכה. הסימון הוא ברמת השכונה ולא כתובת בודדת.',
-        kosherNote:
-          'הכשרות בקייפטאון בפיקוח בית הדין המקומי (Cape Beth Din). לוודא ברשימות העדכניות אילו עסקים תחת השגחה, ומה שעות הפתיחה בשישי-שבת.',
+        kosherNote: 'הכשרות בקייפטאון בפיקוח בית הדין המקומי (Cape Beth Din). לוודא ברשימות העדכניות אילו עסקים תחת השגחה, ומה שעות הפתיחה בשישי-שבת.',
         kosherVerification: {
           source: 'curated',
           lastChecked: 'pending-review',
@@ -11514,23 +11605,74 @@ export const destinations: Destination[] = [
         durationMin: 360,
         externalUrl: 'https://maps.google.com/?q=Stellenbosch',
       },
+    ],
+    itinerary: [
       {
-        id: 'zaf-tsitsikamma',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Tsitsikamma_Park.JPG/500px-Tsitsikamma_Park.JPG',
-        tags: ['outdoors'],
-        priceLevel: 1,
-        name: 'ציציקאמה וכביש הגן',
-        nameLocal: 'Tsitsikamma & the Garden Route',
-        category: 'nature',
-        lat: -34.0217,
-        lng: 23.8956,
-        description:
-          'החלק הימי של פארק כביש הגן: יער עד, מצוקים, גשרים תלויים מעל שפך נהר הסטורמס ומסלולי הליכה לאורך החוף. נקודת שיא בנסיעה המזרחה מקייפטאון.',
-        rating: 4.7,
-        durationMin: 480,
-        externalUrl: 'https://maps.google.com/?q=Tsitsikamma+National+Park',
+        day: 1,
+        title: 'העיר וההר',
+        placeIds: ['zaf-capetown', 'zaf-table', 'zaf-seapoint'],
+        notes:
+          'רכבל להר השולחן בבוקר (לפני שהרוח מתחזקת), אחר הצהריים הוואטרפרונט ובו-קאאפ, וארוחה כשרה בסי פוינט.',
       },
+      {
+        day: 2,
+        title: 'חצי האי',
+        placeIds: ['zaf-chapmans', 'zaf-boulders', 'zaf-capepoint'],
+        notes:
+          'יום נסיעה נופי: כביש צ\'פמנס פיק, מושבת הפינגווינים בבולדרס, וכף התקווה הטובה בקצה השמורה.',
+      },
+      {
+        day: 3,
+        title: 'גנים ואי רובן',
+        placeIds: ['zaf-kirstenbosch', 'zaf-robben'],
+        notes:
+          'בוקר בגן הבוטני קירסטנבוש עם שביל החופה, ואחר הצהריים מעבורת לאי רובן (להזמין מראש - התלוי במזג אוויר).',
+      },
+      {
+        day: 4,
+        title: 'עמק היין',
+        placeIds: ['zaf-stellenbosch'],
+        notes:
+          'יום ביקבי סטלנבוש ובעיירה ההולנדית-קייפית - כשעה נסיעה מהעיר. לתכנן נהג, לא לשתות ולנהוג.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין כיום קו ישיר קבוע מנתב"ג לדרום אפריקה - טסים עם החלפה אחת (אדיס אבבה, דובאי, איסטנבול, דוחא או נאירובי) לקייפטאון (CPT) או ליוהנסבורג ומשם טיסה פנימית של כשעתיים. סטטוס הקווים הישירים השתנה בשנים האחרונות - כדאי לבדוק עדכני.',
+      gettingAround:
+        'רכב שכור נוח ביותר לחצי האי וליקבים (נוסעים בצד שמאל), ויש גם אוטובוס תיירים ומוניות אפליקציה בעיר. לא לנסוע בלילה בכבישים לא מוכרים, ולא להשאיר דברי ערך ברכב.',
+      kosherOverview:
+        'קייפטאון היא אחד המקומות הנוחים בעולם למטייל שומר כשרות: בשכונת סי פוינט מרוכזות מסעדות, מאפיות וחנויות כשרות בפיקוח בית הדין המקומי, ובסופרמרקטים הרגילים יש מוצרים כשרים רבים. מחוץ לעיר (חצי האי, היקבים) אין כשרות - כדאי להצטייד לפני היציאה, ולוודא רשימות עסקים מעודכנות.',
+    },
+  },
+  {
+    slug: 'kruger',
+    name: 'קרוגר וקניון הבלייד',
+    nameLocal: 'Kruger & the Panorama Route',
+    countrySlug: 'south-africa',
+    flag: '🇿🇦',
+    center: { lat: -24.3, lng: 31.2 },
+    zoom: 7,
+    tagline: 'ספארי של החמישייה הגדולה - וקניון ירוק בדרך',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Kruger_Zebra.JPG/500px-Kruger_Zebra.JPG',
+    iconicLandmark: {
+      name: 'הפארק הלאומי קרוגר',
+      nameLocal: 'Kruger National Park',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Kruger_Zebra.JPG/500px-Kruger_Zebra.JPG',
+      blurb:
+        'אחת משמורות הטבע הגדולות באפריקה, כ-20 אלף קמ"ר של סוואנה שבהם חיה החמישייה הגדולה - ואפשר לנהוג בה ברכב פרטי.',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'אחד הספארים הנגישים בעולם: כבישים סלולים, מחנות מגודרים ואפשרות לנהוג לבד בין החיות - ובדרך קניון ירוק ותצפיות מרהיבות. חסרונות: מגיעים רק בטיסה פנימית (אלף ק"מ מקייפטאון), אין באזור שום כשרות, ובקיץ הדרומי חם, גשום ומלא יתושים - נדרשת התייעצות על מלריה.',
+    },
+    summary:
+      'צפון-מזרח דרום אפריקה הוא אזור הספארי הקלאסי של המדינה: הפארק הלאומי קרוגר, שבו אפשר לנהוג עצמאית בין פילים, אריות וקרנפים וללון במחנות מגודרים, ובדרך אליו "מסלול הפנורמה" עם קניון נהר הבלייד הירוק, תצפית שלושת הרונדוואלים וחלון האלוהים. מגיעים בטיסה פנימית ליוהנסבורג ומשם לנלספרויט/סקוקוזה.',
+    bestSeason: 'מאי-ספטמבר (החורף הדרומי - יבש, הצמחייה דלילה והחיות מתקבצות לשלוליות; גם פחות יתושים) · אוקטובר-אפריל ירוק, חם וגשום, והצפייה קשה יותר',
+    places: [
       {
         id: 'zaf-kruger',
         photo:
@@ -11541,7 +11683,7 @@ export const destinations: Destination[] = [
         name: 'הפארק הלאומי קרוגר',
         nameLocal: 'Kruger National Park',
         category: 'nature',
-        lat: -24.0,
+        lat: -24,
         lng: 31.5,
         description:
           'אחד משמורות הטבע הגדולות באפריקה, בשטח של כ-20 אלף קמ"ר, ובו החמישייה הגדולה. ייחודו: אפשר לנהוג בו ברכב פרטי בכבישים סלולים ולישון במחנות מגודרים - ספארי עצמאי ולא רק מאורגן.',
@@ -11570,54 +11712,33 @@ export const destinations: Destination[] = [
     itinerary: [
       {
         day: 1,
-        title: 'קייפטאון - העיר וההר',
-        placeIds: ['zaf-capetown', 'zaf-table', 'zaf-seapoint'],
+        title: 'מסלול הפנורמה',
+        placeIds: ['zaf-blyde'],
         notes:
-          'רכבל להר השולחן בבוקר (לפני שהרוח מתחזקת), אחר הצהריים הוואטרפרונט ובו-קאאפ, וארוחה כשרה בסי פוינט.',
+          'נוחתים בנלספרויט (או נוסעים מיוהנסבורג) ועולים למסלול הפנורמה: שלושת הרונדוואלים, בורות בורקס לאק וחלון האלוהים.',
       },
       {
         day: 2,
-        title: 'חצי האי - פינגווינים וכף התקווה',
-        placeIds: ['zaf-chapmans', 'zaf-boulders', 'zaf-capepoint'],
+        title: 'קרוגר - יום ספארי',
+        placeIds: ['zaf-kruger'],
         notes:
-          'יום נסיעה נופי: כביש צ׳פמנס פיק, מושבת הפינגווינים בבולדרס, וכף התקווה הטובה בקצה חצי האי.',
+          'נכנסים לפארק עם פתיחת השערים: יציאה מוקדמת ואחר צהריים מאוחר הן שעות הפעילות של החיות. לנהוג לאט, לא לצאת מהרכב.',
       },
       {
         day: 3,
-        title: 'גנים, אי ויקבים',
-        placeIds: ['zaf-kirstenbosch', 'zaf-robben', 'zaf-stellenbosch'],
-        notes:
-          'בוקר בקירסטנבוש או במעבורת לאי רובן (להזמין מראש), ואחר הצהריים בעמק היין של סטלנבוש.',
-      },
-      {
-        day: 4,
-        title: 'כביש הגן',
-        placeIds: ['zaf-tsitsikamma'],
-        notes:
-          'נוסעים מזרחה לאורך כביש הגן: מפרצים, יערות ומסלולי חוף בציציקאמה. אפשר להאריך ליומיים-שלושה.',
-      },
-      {
-        day: 5,
-        title: 'קרוגר - ספארי',
+        title: 'קרוגר - עומק הפארק',
         placeIds: ['zaf-kruger'],
         notes:
-          'טיסה פנימית לצפון-מזרח (יוהנסבורג ואז נלספרויט/סקוקוזה) ויום-יומיים בפארק - יציאות מוקדמות ומאוחרות, שאז החיות פעילות.',
-      },
-      {
-        day: 6,
-        title: 'קניון הבלייד',
-        placeIds: ['zaf-blyde'],
-        notes:
-          'בדרך חזרה מקרוגר: תצפיות שלושת הרונדוואלים, חלון האלוהים ובורות בורקס לאק.',
+          'יום שני בפארק, מומלץ באזור אחר (סאטרה/לואר סאבי) או ביציאת ספארי מודרכת בפתיחת שער או אחרי חשכה, שמותרת רק עם ריינג\'ר.',
       },
     ],
     practical: {
       flights:
-        'אין כיום קו ישיר קבוע מנתב"ג לדרום אפריקה - טסים עם החלפה אחת (אדיס אבבה, דובאי, איסטנבול, דוחא או נאירובי) ליוהנסבורג (JNB) או לקייפטאון (CPT), סה"כ כ-14-17 שעות. סטטוס הקווים הישירים השתנה בשנים האחרונות - כדאי לבדוק עדכני מול חברות התעופה.',
+        'אין קו ישיר מישראל. הדרך המקובלת: טיסה עם החלפה ליוהנסבורג (JNB), ומשם טיסה פנימית של כשעה לנלספרויט (MQP) או לשדות הפנימיים של הפארק (סקוקוזה), או נסיעה של כ-5 שעות ברכב.',
       gettingAround:
-        'רכב שכור הוא הדרך המקובלת בקייפטאון ובכביש הגן (נוסעים בצד שמאל). בין קייפטאון לקרוגר טסים פנימית - זה מרחק של אלפי קילומטרים. בקרוגר אפשר לנהוג עצמאית בכבישים הסלולים או לצאת לספארי מאורגן; לא לנסוע בלילה בכבישים לא מוכרים.',
+        'בתוך קרוגר נוסעים ברכב פרטי בכבישים הסלולים (מהירות מוגבלת, אסור לצאת מהרכב), או בספארי מודרך של הפארק/לודג\'. למסלול הפנורמה נדרש רכב. לא לנסוע בלילה מחוץ למחנות - השערים נסגרים בשעה קבועה.',
       kosherOverview:
-        'דרום אפריקה היא אחד המקומות הנוחים בעולם למטייל שומר כשרות: בקייפטאון (בעיקר סי פוינט) וביוהנסבורג יש מסעדות, מאפיות וסופרמרקטים כשרים, בפיקוח בתי הדין המקומיים, וגם מוצרים כשרים רבים ברשתות הרגילות. בקרוגר ובכביש הגן אין כשרות - להצטייד מראש בעיר ולוודא רשימות עסקים מעודכנות לפני הנסיעה.',
+        'אין בקרוגר, בנלספרויט ובמסלול הפנורמה שום תשתית כשרות. הכשרות הקרובה היא ביוהנסבורג, שבה יש קהילה גדולה עם מסעדות, מאפיות וסופרמרקטים כשרים - שם מצטיידים לפני שעולים לפארק. חלק מהלודג\'ים יערכו ארוחות לפי בקשה, אך ללא השגחה - לוודא מולם.',
     },
   },
   {
@@ -12144,6 +12265,263 @@ export const destinations: Destination[] = [
         'רכבת מהירה (Afrosiyob) מחברת את טשקנט-סמרקנד-בוכרה בנוחות ובמהירות - כדאי להזמין מקומות מראש. לחיווה: רכבת לילה או טיסה פנימית לאורגנץ׳. בערים מוניות זולות (Yandex Go). למוינאק ולים אראל - רק בטיול ג׳יפים מאורגן.',
       kosherOverview:
         'אוזבקיסטן היא ארץ המורשת של יהודי בוכרה - בבוכרה עדיין עומד הרובע היהודי עם בית כנסת פעיל, ובטשקנט יש קהילה יהודית ובתי כנסת. עם זאת, לא אותרה מסעדה כשרה קבועה ופתוחה לקהל: הדרך המעשית היא לתאם מראש מול הקהילה בטשקנט או מול קבוצות מאורגנות, ולהצטייד. במסעדות המקומיות הבשר אינו כשר, ואפשר להסתמך על ירקות, פירות ולחם.',
+    },
+  },
+  {
+    slug: 'garden-route',
+    name: 'כביש הגן',
+    nameLocal: 'The Garden Route',
+    countrySlug: 'south-africa',
+    flag: '🇿🇦',
+    center: { lat: -33.9, lng: 23.2 },
+    zoom: 8,
+    tagline: 'יער עד, מפרצים ולגונות - הרוד טריפ של דרום אפריקה',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Tsitsikamma_Park.JPG/500px-Tsitsikamma_Park.JPG',
+    iconicLandmark: {
+      name: 'ציציקאמה',
+      nameLocal: 'Tsitsikamma, Garden Route National Park',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Tsitsikamma_Park.JPG/500px-Tsitsikamma_Park.JPG',
+      blurb:
+        'החלק הימי של פארק כביש הגן: יער עד שיורד אל מצוקים שחורים, וגשרים תלויים מעל שפך נהר הסטורמס.',
+    },
+    editorialRating: {
+      score: 4.5,
+      verdict:
+        'רצועת חוף אחת שמרכזת יער גשם, לגונות, מצוקים, מערות ענק ופארק פילים - כולם על כביש אחד ובמרחקי נסיעה קצרים, ובמחירים נוחים. חסרונות: מגיעים רק אחרי טיסה פנימית או נסיעה של 4-5 שעות מקייפטאון, אין באזור שום כשרות, והים כאן קר וגלי - לא חופשת חוף קלאסית.',
+    },
+    summary:
+      'כביש הגן הוא רצועת החוף שבין מוסל ביי לפורט אליזבת, ובה מרוכזים כמה מנופי הטבע היפים בדרום אפריקה: יער העד והגשרים התלויים של ציציקאמה, הלגונה של קניסנה, חצי האי רוברג ומפרץ פלטנברג, אגמי הוילדרנס, ובפנים הארץ מערות קנגו הענקיות ואוסטרוחוורן. בקצה המזרחי שוכן פארק הפילים אדו - ספארי בלי מלריה.',
+    bestSeason:
+      'אוקטובר-אפריל (הקיץ הדרומי - החם והנעים ביותר לחופים וליערות) · יוני-ספטמבר קריר וגשום יותר אך זו העונה לצפייה בלווייתנים לאורך החוף · אדו נעים כל השנה',
+    places: [
+      {
+        id: 'zaf-tsitsikamma',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Tsitsikamma_Park.JPG/500px-Tsitsikamma_Park.JPG',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'ציציקאמה',
+        nameLocal: 'Tsitsikamma, Garden Route National Park',
+        category: 'nature',
+        lat: -34.0217,
+        lng: 23.8956,
+        description:
+          'החלק הימי של פארק כביש הגן: יער עד, מצוקים, גשרים תלויים מעל שפך נהר הסטורמס ומסלולי הליכה לאורך החוף - כאן גם מתחיל מסלול האוטר טרייל המפורסם.',
+        rating: 4.7,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Tsitsikamma+National+Park',
+      },
+      {
+        id: 'zaf-knysna',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Knysna_waterfront.jpg/500px-Knysna_waterfront.jpg',
+        tags: ['foodie', 'outdoors'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'קניסנה והלגונה',
+        nameLocal: 'Knysna',
+        category: 'attraction',
+        lat: -34.0356,
+        lng: 23.0489,
+        description:
+          'עיירת הלגונה של כביש הגן: מפרץ שנפתח לים בין שני ראשי סלע ("ראשי קניסנה"), טיילת מים, שיט בלגונה ויערות סביב. מרכז נוח ללינה באמצע המסלול.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=Knysna',
+      },
+      {
+        id: 'zaf-plettenberg',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Plettenbergbaai_beach.jpg/500px-Plettenbergbaai_beach.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 2,
+        name: 'מפרץ פלטנברג',
+        nameLocal: 'Plettenberg Bay',
+        category: 'nature',
+        lat: -34.05,
+        lng: 23.3667,
+        description:
+          'חופים ארוכים ומפרץ שבו נצפים דולפינים ולווייתנים בעונה, עם עיירת נופש קטנה מעליהם. נקודת בסיס פופולרית לימים האחרונים של המסלול.',
+        rating: 4.6,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Plettenberg+Bay',
+      },
+      {
+        id: 'zaf-robberg',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Robberg_Nature_Reserve%2C_Plettenberg_Bay_-_53147416220.jpg/500px-Robberg_Nature_Reserve%2C_Plettenberg_Bay_-_53147416220.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'שמורת רוברג',
+        nameLocal: 'Robberg Nature Reserve',
+        category: 'nature',
+        lat: -34.1046,
+        lng: 23.4022,
+        description:
+          'חצי אי סלעי שנכנס לאוקיינוס ליד פלטנברג, עם מסלול מעגלי מעל מצוקים, מושבת כלבי ים גדולה למטה ותצפיות על הים. שלושה אורכי מסלול - מ-2 ועד 9 ק"מ.',
+        rating: 4.7,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Robberg+Nature+Reserve',
+      },
+      {
+        id: 'zaf-wilderness',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/RSA-WildernessNP1.jpg/500px-RSA-WildernessNP1.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'וילדרנס',
+        nameLocal: 'Wilderness National Park',
+        category: 'nature',
+        lat: -34.0,
+        lng: 23.25,
+        description:
+          'מערכת של אגמים, נהרות וביצות בין הים להרים, עם מסלולי הליכה קצרים אל מפלים, קאנו על הנהר ותצפית "מפת האלוהים" מעל האזור.',
+        rating: 4.5,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Wilderness+National+Park',
+      },
+      {
+        id: 'zaf-cango',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Cango_Caves-001.JPG/500px-Cango_Caves-001.JPG',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'מערות קנגו',
+        nameLocal: 'Cango Caves',
+        category: 'nature',
+        lat: -33.3928,
+        lng: 22.2147,
+        description:
+          'מערכת מערות נטיפים גדולה בהרי סוורטברג, עם אולמות עצומים ותאורה. יש סיור רגיל וסיור הרפתקה במעברים צרים - בוחרים לפי נוחות; כשעה וחצי מקניסנה.',
+        rating: 4.5,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Cango+Caves',
+      },
+      {
+        id: 'zaf-oudtshoorn',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/View_of_Oudtshoorn%2C_South_Africa.jpg/500px-View_of_Oudtshoorn%2C_South_Africa.jpg',
+        tags: ['families', 'history'],
+        priceLevel: 1,
+        name: 'אוסטרוחוורן',
+        nameLocal: 'Oudtshoorn',
+        category: 'attraction',
+        lat: -33.5833,
+        lng: 22.2,
+        description:
+          'בירת חוות היענים של דרום אפריקה, בעמק הקארו הצחיח שמעבר להרים - ארמונות "נוצות" מתקופת הפריחה, חוות יענים ומערות קנגו בקרבת מקום.',
+        rating: 4.3,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=Oudtshoorn',
+      },
+      {
+        id: 'zaf-bloukrans',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Bloukrans_Bridge-001.jpg/500px-Bloukrans_Bridge-001.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'גשר בלוקראנס',
+        nameLocal: 'Bloukrans Bridge',
+        category: 'viewpoint',
+        lat: -33.9673,
+        lng: 23.6452,
+        description:
+          'גשר קשת בטון מעל נקיק עמוק בגבול המחוזות, ומתחתיו אחת מקפיצות הבנג׳י הגבוהות בעולם (216 מ׳). גם מי שלא קופץ יכול לצפות מהתצפית שלצדו.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Bloukrans+Bridge',
+      },
+      {
+        id: 'zaf-addo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Elephant_Addo.jpg/500px-Elephant_Addo.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'פארק הפילים אדו',
+        nameLocal: 'Addo Elephant National Park',
+        category: 'nature',
+        lat: -33.4461,
+        lng: 25.7458,
+        description:
+          'הפארק השלישי בגודלו בדרום אפריקה, בקצה המזרחי של המסלול - מאות פילים, תאואים, קרנפים ולפעמים אריות. אזור נטול מלריה, ולכן נוח למשפחות עם ילדים.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Addo+Elephant+National+Park',
+      },
+      {
+        id: 'zaf-mosselbay',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Mossel_Bay_%2815412141375%29.jpg/500px-Mossel_Bay_%2815412141375%29.jpg',
+        tags: ['families', 'history'],
+        priceLevel: 1,
+        name: 'מוסל ביי',
+        nameLocal: 'Mossel Bay',
+        category: 'attraction',
+        lat: -34.1833,
+        lng: 22.1333,
+        description:
+          'העיירה שפותחת את כביש הגן מצד מערב: מפרץ מוגן, חופים רגועים ומוזיאון דיאש עם העתק הספינה של הימאי הפורטוגלי שנחת כאן ב-1488.',
+        rating: 4.2,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Mossel+Bay',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'מערב הכביש - מוסל ביי ווילדרנס',
+        placeIds: ['zaf-mosselbay', 'zaf-wilderness'],
+        notes:
+          'יוצאים מקייפטאון (כ-4 שעות) או נוחתים בג׳ורג׳: מפרץ מוסל ביי, ואחר הצהריים אגמי וילדרנס ומסלול קצר למפל.',
+      },
+      {
+        day: 2,
+        title: 'קניסנה והלגונה',
+        placeIds: ['zaf-knysna'],
+        notes:
+          'יום בקניסנה: שיט או נסיעה לראשי קניסנה, טיילת המים, ויער נודס באזור. מקום טוב ללון בו יומיים.',
+      },
+      {
+        day: 3,
+        title: 'פנים הארץ - מערות ויענים',
+        placeIds: ['zaf-cango', 'zaf-oudtshoorn'],
+        notes:
+          'חוצים את ההרים לעמק הקארו: מערות קנגו בבוקר (סיור בהזמנה) וחוות היענים של אוסטרוחוורן אחר הצהריים.',
+      },
+      {
+        day: 4,
+        title: 'פלטנברג ורוברג',
+        placeIds: ['zaf-plettenberg', 'zaf-robberg'],
+        notes:
+          'בוקר במסלול חצי האי רוברג מעל מושבת כלבי הים, ואחר הצהריים חופי מפרץ פלטנברג. בעונה - צפייה בלווייתנים.',
+      },
+      {
+        day: 5,
+        title: 'ציציקאמה והגשר',
+        placeIds: ['zaf-tsitsikamma', 'zaf-bloukrans'],
+        notes:
+          'הגשרים התלויים מעל שפך הסטורמס ומסלולי החוף ביער העד, ובדרך גשר בלוקראנס עם קפיצת הבנג׳י.',
+      },
+      {
+        day: 6,
+        title: 'אדו - ספארי בלי מלריה',
+        placeIds: ['zaf-addo'],
+        notes:
+          'סיום מזרחה בפארק הפילים אדו - יום ספארי עצמאי ברכב או סיור מודרך, וטיסה חזרה מפורט אליזבת.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין קו ישיר מישראל. מגיעים בטיסה עם החלפה לקייפטאון או ליוהנסבורג, ומשם: נסיעה של כ-4-5 שעות מקייפטאון, או טיסה פנימית לג׳ורג׳ (GRJ) בתחילת המסלול ולפורט אליזבת (PLZ) בסופו - שילוב נוח למי שלא רוצה לחזור על אותה דרך.',
+      gettingAround:
+        'רכב שכור הוא חובה - הכביש הראשי N2 עובר לאורך כל המסלול והמרחקים בין העצירות קצרים (30-90 דקות). נוסעים בצד שמאל; לא לנסוע בלילה בכבישים לא מוכרים, ולתדלק לפני קטעים ריקים.',
+      kosherOverview:
+        'אין לאורך כביש הגן שום תשתית כשרות - לא מסעדה ולא חנות. הכשרות הקרובה היא בקייפטאון (שכונת סי פוינט, בפיקוח בית הדין המקומי), ולכן הדרך המעשית היא להצטייד שם לכל המסלול. בסופרמרקטים הגדולים לאורך הדרך יש מוצרים ארוזים עם סימוני כשרות מוכרים.',
     },
   },
 ];

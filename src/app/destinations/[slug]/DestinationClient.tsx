@@ -6,6 +6,7 @@ import type { Country, Destination, PlaceCategory } from '@/lib/types';
 import { categoryMeta, isKosher } from '@/lib/categories';
 import PlacesMap from '@/components/PlacesMap';
 import AddToTripButton from '@/components/AddToTripButton';
+import KosherBadge from '@/components/KosherBadge';
 
 type Filter = 'all' | 'kosher' | PlaceCategory;
 
@@ -165,19 +166,7 @@ export default function DestinationClient({
                     ✡️ {place.kosherNote}
                   </p>
                 )}
-                {place.kosherVerification && (
-                  <p
-                    className={`mt-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold ${
-                      place.kosherVerification.lastChecked === 'pending-review'
-                        ? 'bg-zest/15 text-night/70'
-                        : 'bg-[#00a896]/10 text-[#007f76]'
-                    }`}
-                  >
-                    {place.kosherVerification.lastChecked === 'pending-review'
-                      ? `לאמת לפני נסיעה · ${place.kosherVerification.supervision}`
-                      : `נבדק ${place.kosherVerification.lastChecked} · ${place.kosherVerification.supervision}`}
-                  </p>
-                )}
+                <KosherBadge verification={place.kosherVerification} className="mt-1.5" />
                 <div className="mt-3 flex flex-wrap items-center gap-3 text-xs font-semibold text-night/50">
                   <AddToTripButton citySlug={dest.slug} placeId={place.id} />
                   {place.rating && <span>⭐ {place.rating.toFixed(1)}</span>}
