@@ -2064,3 +2064,18 @@ Data unchanged; only presentation. Hard rule 2 still holds: supervision
 is shown only as reported, nothing invented. Verified live at /kosher
 (directory + Vienna city view): no warning badges remain, disclaimer
 renders in both places. build + tsc clean.
+
+### 2026-07-25 (gg) - WhatsApp trip share + clearer action buttons
+
+- `TripWorkspace.tsx`: the copy-summary text builder was extracted to
+  `buildSummary()` and a new "שיתוף בוואטסאפ" action opens
+  `https://wa.me/?text=<encoded summary>` (same text the clipboard
+  copy produces), placed next to הדפסה / PDF. Verified the generated
+  URL decodes back to the full Hebrew summary (headless check stubs
+  window.open - wa.me itself is blocked in the sandbox, expected).
+- Action buttons got lucide-style inline SVG icons (duplicate /
+  clipboard / WhatsApp bubble in brand green / printer / trash) via an
+  `icon` prop on `Btn`, text darkened night/70 → night and ring
+  strengthened for clarity. No new dependency - icons are hand-inlined
+  paths like PromptChips did.
+- The copied state now shows a check icon instead of the "✓" char.

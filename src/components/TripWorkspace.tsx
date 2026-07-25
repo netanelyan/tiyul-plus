@@ -83,8 +83,8 @@ export default function TripWorkspace({
     trip.upsertTrip({ ...t, preferences: { ...t.preferences, ...patch } });
   };
 
-  function copySummary() {
-    if (!t) return;
+  function buildSummary(): string {
+    if (!t) return '';
     const lines: string[] = [`🧳 ${t.name} | טיול+`, ''];
     t.days.forEach((d, i) => {
       const dst = destOf(d.citySlug);
@@ -104,20 +104,40 @@ export default function TripWorkspace({
       if (d.notes) lines.push(`  💡 ${d.notes}`);
       lines.push('');
     });
-    navigator.clipboard.writeText(lines.join('\n')).then(() => {
+    return lines.join('\n');
+  }
+
+  function copySummary() {
+    if (!t) return;
+    navigator.clipboard.writeText(buildSummary()).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
   }
 
+  function shareWhatsApp() {
+    if (!t) return;
+    window.open(`https://wa.me/?text=${encodeURIComponent(buildSummary())}`, '_blank', 'noopener');
+  }
+
   /* ---------- כפתורי הפעולות (משותפים לשורה בדסקטופ ולתפריט במובייל) ---------- */
   const actionButtons = t ? (
     <>
-      <Btn onClick={() => trip.duplicateTrip(t.id)}>שכפול</Btn>
-      <Btn onClick={copySummary}>{copied ? '✓ הועתק' : 'העתקת סיכום'}</Btn>
-      <Btn onClick={() => window.print()}>הדפסה / PDF</Btn>
+      <Btn onClick={() => trip.duplicateTrip(t.id)} icon={ICONS.duplicate}>
+        שכפול
+      </Btn>
+      <Btn onClick={copySummary} icon={copied ? ICONS.check : ICONS.copy}>
+        {copied ? 'הועתק' : 'העתקת סיכום'}
+      </Btn>
+      <Btn onClick={shareWhatsApp} icon={ICONS.whatsapp} iconClassName="text-[#1da851]">
+        שיתוף בוואטסאפ
+      </Btn>
+      <Btn onClick={() => window.print()} icon={ICONS.printer}>
+        הדפסה / PDF
+      </Btn>
       <Btn
         danger
+        icon={ICONS.trash}
         onClick={() => {
           if (confirm('למחוק את הטיול הזה?')) {
             trip.deleteTrip(t.id);
@@ -681,24 +701,81 @@ export default function TripWorkspace({
   );
 }
 
+/* אייקוני הפעולות - קווי, ירושת currentColor, בסגנון lucide. אין תלות. */
+const iconSvg = (paths: React.ReactNode) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="h-4 w-4 shrink-0"
+    aria-hidden
+  >
+    {paths}
+  </svg>
+);
+
+const ICONS = {
+  duplicate: iconSvg(
+    <>
+      <rect x="9" y="9" width="13" height="13" rx="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </>,
+  ),
+  copy: iconSvg(
+    <>
+      <rect x="8" y="2" width="8" height="4" rx="1" />
+      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+    </>,
+  ),
+  check: iconSvg(<path d="M20 6 9 17l-5-5" />),
+  whatsapp: iconSvg(
+    <>
+      <path d="M21 11.5a8.5 8.5 0 0 1-12.63 7.45L3 20l1.05-5.37A8.5 8.5 0 1 1 21 11.5Z" />
+      <path d="M9 10c.5 2.5 2.5 4.5 5 5l1.5-1.5" />
+    </>,
+  ),
+  printer: iconSvg(
+    <>
+      <path d="M6 9V3h12v6" />
+      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+      <rect x="6" y="14" width="12" height="7" rx="1" />
+    </>,
+  ),
+  trash: iconSvg(
+    <>
+      <path d="M3 6h18" />
+      <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+    </>,
+  ),
+};
+
 function Btn({
   children,
   onClick,
   danger = false,
+  icon,
+  iconClassName = '',
 }: {
   children: React.ReactNode;
   onClick: () => void;
   danger?: boolean;
+  icon?: React.ReactNode;
+  iconClassName?: string;
 }) {
   return (
     <button
       onClick={onClick}
-      className={`rounded-xl px-3.5 py-2 text-sm font-semibold transition ${
+      className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-semibold transition ${
         danger
           ? 'bg-shell text-sunset-deep ring-1 ring-night/10 hover:bg-sunset hover:text-cream'
-          : 'bg-shell text-night/70 ring-1 ring-night/10 hover:ring-night/25'
+          : 'bg-shell text-night ring-1 ring-night/15 hover:bg-night/5 hover:ring-night/30'
       }`}
     >
+      {icon && <span className={`opacity-80 ${iconClassName}`}>{icon}</span>}
       {children}
     </button>
   );
