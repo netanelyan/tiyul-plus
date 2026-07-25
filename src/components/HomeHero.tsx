@@ -55,11 +55,11 @@ export default function HomeHero() {
         extraChips={
           <Link
             href="/start"
-            title="מעדיפים לא לכתוב? עונים על כמה שאלות והטיול נבנה לבד"
-            className="badge rounded-full bg-shell px-4 py-2.5 text-sm font-semibold text-night/70 ring-1 ring-night/10 transition hover:bg-sunset/5 hover:text-night hover:ring-sunset/30"
+            title="מילוי שאלון במקום התכתבות עם ה-AI - עונים על כמה שאלות והטיול נבנה לבד"
+            className="badge whitespace-nowrap rounded-full bg-shell px-4 py-2.5 text-sm font-semibold text-night/70 ring-1 ring-night/10 transition hover:bg-sunset/5 hover:text-night hover:ring-sunset/30"
           >
             <span aria-hidden>📋</span>
-            שאלון מהיר
+            שאלון במקום צ׳אט
           </Link>
         }
       />

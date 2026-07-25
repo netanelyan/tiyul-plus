@@ -1714,3 +1714,17 @@ the overnight run.
   kosher entries, the 8 original European cities without an
   editorialRating, the two country-scale hubs (lofoten, cape-town), and
   the kotor/budva shared places.
+
+### 2026-07-25 (cc) - Hero pill relabelled: "שאלון במקום צ׳אט"
+
+The pill said "שאלון מהיר", which did not tell people what it replaces.
+
+- Label -> **"📋 שאלון במקום צ׳אט"** (the fuller "מילוי שאלון במקום
+  התכתבות" was too wide for the pill row at 390px, so it lives in the
+  `title` tooltip: "מילוי שאלון במקום התכתבות עם ה-AI - עונים על כמה
+  שאלות והטיול נבנה לבד"), matching how the kosher pill explains itself.
+- Added `whitespace-nowrap` so the pill can never split across two lines
+  and the row stays tidy.
+- Function unchanged - still links to `/start`.
+- Verified at 1400px and 390px: single line (169x40), inside the
+  viewport, row wraps cleanly to a second line on mobile, no overflow.
