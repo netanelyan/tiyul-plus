@@ -1666,3 +1666,22 @@ the overnight run.
 - Coordinates and photos from the Wikipedia API (German Wikipedia for
   Khor Virap). Wings of Tatev has no coordinates of its own - folded into
   the Tatev entry instead of guessing. build clean, verify-photos all OK.
+
+### 2026-07-25 (t) - Overnight expansion: Uzbekistan (Samarkand + Bukhara)
+
+- **Uzbekistan** (new country) - visa-free short tourist stay for
+  Israelis (phrased as "verify current terms"), UZS, cash-heavy.
+- **Samarkand & Bukhara** - 10 places, rating 4.6. Landmark: Registan
+  Square. Silk Road heritage: Shah-i-Zinda, Gur-e-Amir, Po-i-Kalyan,
+  Khiva/Ichan Kala; nature: Lake Charvak + Chimgan mountains, and the
+  Aral Sea / Moynaq ship cemetery as a remote multi-day extension.
+  6-day itinerary built around the Afrosiyob fast train.
+- Flights verified: nonstop TLV-Tashkent, Uzbekistan Airways ~7 weekly
+  plus Centrum Air, FlyOne Asia and Qanot Sharq, ~4h50.
+- **Kosher:** Bukharian Jewish heritage is real - the Jewish quarter and
+  an active synagogue in Bukhara, community and synagogues in Tashkent -
+  but NO permanent public kosher restaurant was found, and the entry says
+  exactly that rather than implying kosher dining exists.
+- Coordinates and photos from the Wikipedia API. Chimgan (no coordinates)
+  was folded into the Charvak entry, and Ichan Kala into the Khiva entry,
+  instead of guessing. build clean, verify-photos all OK.

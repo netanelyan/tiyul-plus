@@ -11889,6 +11889,263 @@ export const destinations: Destination[] = [
         'לא אותרה בארמניה מסעדה או חנות כשרה מאומתת. יש בירוואן קהילה יהודית קטנה ובית כנסת, אבל לא תשתית כשרות תיירותית - הכשרות הקרובה היא בטביליסי שבגאורגיה (כשעה טיסה או נסיעה ארוכה). הדרך המעשית: להצטייד מראש, ולהסתמך על ירקות, פירות ומוצרים ארוזים עם סימון מוכר.',
     },
   },
+  {
+    slug: 'samarkand',
+    name: 'סמרקנד ובוכרה',
+    nameLocal: 'Samarkand & Bukhara',
+    countrySlug: 'uzbekistan',
+    flag: '🇺🇿',
+    center: { lat: 40.3, lng: 65.5 },
+    zoom: 6,
+    tagline: 'ערי דרך המשי, כיפות טורקיז ומורשת יהודית בוכרית',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/500px-RegistanSquare_Samarkand.jpg',
+    iconicLandmark: {
+      name: 'כיכר הרגיסטן',
+      nameLocal: 'Registan Square, Samarkand',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/500px-RegistanSquare_Samarkand.jpg',
+      blurb:
+        'שלוש מדרסות מהמאות ה-15 עד ה-17 שעומדות זו מול זו סביב כיכר אחת, מכוסות פסיפסי אריחים בכחול ובטורקיז - הלב של סמרקנד ואחד המראות המזוהים עם דרך המשי.',
+    },
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'אדריכלות איסלאמית ברמה עולמית במחירים נמוכים, טיסה ישירה של פחות מחמש שעות, ורכבת מהירה נוחה בין הערים - ולישראלים גם מורשת בוכרית חיה. חסרונות: הקיץ לוהט מאוד, האתרים משוחזרים במידה שמרגישה לפעמים "חדשה מדי", ותשתית הכשרות מוגבלת מאוד.',
+    },
+    summary:
+      'שלוש ערי דרך המשי - סמרקנד, בוכרה וחיווה - הן הלב של הטיול באוזבקיסטן: כיכר הרגיסטן, מתחם הקברים שאה-אי-זינדה ומאוזוליאום גור-אמיר בסמרקנד; מגדל ומסגד קליאן והרובע היהודי בבוכרה; והעיר המוקפת חומה איצ׳אן קאלה בחיווה. סביב טשקנט אפשר להוסיף טבע - הרי צ׳ימגן ואגם צ׳ארוואק - ובצפון הרחוק את שרידי ים אראל, אחת הטרגדיות הסביבתיות הגדולות של המאה ה-20.',
+    bestSeason:
+      'אפריל-מאי וספטמבר-אוקטובר (מזג אוויר מושלם) · יולי-אוגוסט חם מאוד (מעל 40 מעלות) · בחורף קר, אבל האתרים ריקים ויפים בשלג',
+    places: [
+      {
+        id: 'uzb-registan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/500px-RegistanSquare_Samarkand.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'כיכר הרגיסטן',
+        nameLocal: 'Registan Square',
+        category: 'attraction',
+        lat: 39.6547,
+        lng: 66.9756,
+        description:
+          'שלוש מדרסות מונומנטליות סביב כיכר אחת, מכוסות אריחי פסיפס כחולים - אולוגבק, שיר-דור וטילה-קורי. הכי יפה בשעת בוקר מוקדמת או בתאורת ערב.',
+        rating: 4.8,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=Registan+Samarkand',
+      },
+      {
+        id: 'uzb-shahizinda',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Shah-i-Zinda%2C_Samarkand_%28Shohi-Zinda_majmuasi%2C_Samarqand%2C_%D0%A8%D0%B0%D1%85%D0%B8_%D0%97%D0%B8%D0%BD%D0%B4%D0%B0%29.jpg/500px-Shah-i-Zinda%2C_Samarkand_%28Shohi-Zinda_majmuasi%2C_Samarqand%2C_%D0%A8%D0%B0%D1%85%D0%B8_%D0%97%D0%B8%D0%BD%D0%B4%D0%B0%29.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'שאה-אי-זינדה',
+        nameLocal: 'Shah-i-Zinda',
+        category: 'attraction',
+        lat: 39.6631,
+        lng: 66.9878,
+        description:
+          'סמטה של מאוזוליאומים מהמאות ה-11 עד ה-19, מכוסים כולם באריחי קרמיקה בגוונים של תכלת - אחד המקומות היפים בעיר, ולא במקרה מכונה "רחוב הקברים החי".',
+        rating: 4.8,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=Shah-i-Zinda',
+      },
+      {
+        id: 'uzb-guremir',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/ShrineofAmirTimur.jpg/500px-ShrineofAmirTimur.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'מאוזוליאום גור-אמיר',
+        nameLocal: 'Gur-e-Amir',
+        category: 'attraction',
+        lat: 39.6483,
+        lng: 66.9689,
+        description:
+          'קברו של טימור (טמרלן) ובני משפחתו, מתחת לכיפה מצולעת בצבע טורקיז - מבנה מהמאה ה-15 שהשפיע על אדריכלות הטאג׳ מאהל בהודו.',
+        rating: 4.7,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=Gur-e-Amir',
+      },
+      {
+        id: 'uzb-samarkand',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/500px-RegistanSquare_Samarkand.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'סמרקנד',
+        nameLocal: 'Samarkand',
+        category: 'attraction',
+        lat: 39.6506,
+        lng: 66.9653,
+        description:
+          'אחת הערים העתיקות באסיה המרכזית ואתר מורשת עולמית - מלבד המונומנטים יש בה שוק סיאב הססגוני, מאפיות הלחם המסורתי, ובית עלמין יהודי היסטורי.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Samarkand',
+      },
+      {
+        id: 'uzb-bukhara',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Kalon-Ensemble_Buchara.jpg/500px-Kalon-Ensemble_Buchara.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'בוכרה',
+        nameLocal: 'Bukhara',
+        category: 'attraction',
+        lat: 39.7667,
+        lng: 64.4231,
+        description:
+          'עיר דרך המשי השמורה ביותר, אתר מורשת עולמית: מדרסות, שווקים מקורים, בריכת לאבי-האוז והמצודה הארק. כאן גם הרובע היהודי ההיסטורי של יהודי בוכרה, עם בית כנסת פעיל.',
+        rating: 4.8,
+        durationMin: 600,
+        externalUrl: 'https://maps.google.com/?q=Bukhara',
+      },
+      {
+        id: 'uzb-poikalyan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Poi_Kalon.jpg/500px-Poi_Kalon.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'מתחם פוי-קליאן',
+        nameLocal: 'Po-i-Kalyan',
+        category: 'attraction',
+        lat: 39.7758,
+        lng: 64.4142,
+        description:
+          'לב בוכרה: מגדל קליאן מהמאה ה-12 בגובה 47 מ׳, מסגד קליאן הענק והמדרסה שמולו - מתחם שנשאר עומד גם אחרי הכיבוש המונגולי.',
+        rating: 4.8,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=Po-i-Kalyan',
+      },
+      {
+        id: 'uzb-khiva',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/View_from_the_city_walls%2C_Khiva_%284934484894%29.jpg/500px-View_from_the_city_walls%2C_Khiva_%284934484894%29.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'חיווה (איצ׳אן קאלה)',
+        nameLocal: 'Khiva / Ichan Kala',
+        category: 'attraction',
+        lat: 41.3814,
+        lng: 60.3611,
+        description:
+          'עיר מוקפת חומת חימר, שכולה מוזיאון פתוח - מינרטים, ארמונות ומדרסות בתוך שטח קטן שאפשר להקיף ברגל. אתר המורשת העולמית הראשון של אוזבקיסטן.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=Khiva',
+      },
+      {
+        id: 'uzb-charvak',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Lac_Tcharvak.jpg/500px-Lac_Tcharvak.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'אגם צ׳ארוואק והרי צ׳ימגן',
+        nameLocal: 'Lake Charvak & Chimgan Mountains',
+        category: 'nature',
+        lat: 41.64,
+        lng: 70.03,
+        description:
+          'מאגר מים תכול בהרי טיין שאן, כשעה וחצי מטשקנט, ומעליו הרי צ׳ימגן - אזור הנופש הטבעי של הבירה: רכבל, מסלולי הליכה בקיץ וסקי בחורף.',
+        rating: 4.4,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Charvak+Reservoir',
+      },
+      {
+        id: 'uzb-tashkent',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/en/thumb/f/f6/Nest_One_Tashkent.jpg/500px-Nest_One_Tashkent.jpg',
+        tags: ['foodie', 'art'],
+        priceLevel: 1,
+        name: 'טשקנט',
+        nameLocal: 'Tashkent',
+        category: 'attraction',
+        lat: 41.3111,
+        lng: 69.2797,
+        description:
+          'הבירה ושדה התעופה הבינלאומי: שוק צ׳ורסו הענק תחת כיפה כחולה, תחנות מטרו מעוטרות שהן אטרקציה בפני עצמן, שדרות רחבות וקהילה יהודית פעילה.',
+        rating: 4.3,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=Tashkent',
+      },
+      {
+        id: 'uzb-aral',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/AralSea1989_2014.jpg/500px-AralSea1989_2014.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 2,
+        name: 'ים אראל ובית הקברות לספינות',
+        nameLocal: 'Aral Sea & Moynaq ship cemetery',
+        category: 'nature',
+        lat: 45.0,
+        lng: 60.0,
+        description:
+          'מה שנשאר מהאגם שהיה מהגדולים בעולם ונסוג עשרות קילומטרים - במוינאק עומדות ספינות דייג חלודות על חול המדבר. יעד מרוחק שדורש נסיעת ג׳יפ ארוכה מנוקוס ולינה בשטח.',
+        rating: 4.3,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=Moynaq+ship+cemetery',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'טשקנט',
+        placeIds: ['uzb-tashkent'],
+        notes:
+          'נחיתה בבירה: שוק צ׳ורסו, סיבוב בתחנות המטרו המעוטרות והתאקלמות. בערב רכבת מהירה או טיסה פנימית דרומה.',
+      },
+      {
+        day: 2,
+        title: 'סמרקנד',
+        placeIds: ['uzb-registan', 'uzb-shahizinda', 'uzb-guremir', 'uzb-samarkand'],
+        notes:
+          'יום מלא בעיר: רגיסטן בבוקר, שאה-אי-זינדה, גור-אמיר, ולקראת ערב שוק סיאב וחזרה לרגיסטן בתאורה.',
+      },
+      {
+        day: 3,
+        title: 'בוכרה',
+        placeIds: ['uzb-bukhara', 'uzb-poikalyan'],
+        notes:
+          'רכבת לבוכרה, והליכה איטית במרכז ההיסטורי: פוי-קליאן, השווקים המקורים, לאבי-האוז והרובע היהודי.',
+      },
+      {
+        day: 4,
+        title: 'חיווה',
+        placeIds: ['uzb-khiva'],
+        notes:
+          'נסיעה או רכבת לילה מערבה: יום בתוך החומות של איצ׳אן קאלה - מינרטים, ארמונות ותצפית מהחומה בשקיעה.',
+      },
+      {
+        day: 5,
+        title: 'טבע ליד הבירה',
+        placeIds: ['uzb-charvak'],
+        notes:
+          'חזרה לטשקנט ויום באגם צ׳ארוואק ובהרי צ׳ימגן - רכבל, מסלול קצר ורחצה בקיץ.',
+      },
+      {
+        day: 6,
+        title: 'הרחבה: ים אראל',
+        placeIds: ['uzb-aral'],
+        notes:
+          'למי שיש 2-3 ימים נוספים: טיסה לנוקוס ומשם מסע ג׳יפים למוינאק ולשרידי ים אראל, עם לינת מדבר.',
+      },
+    ],
+    practical: {
+      flights:
+        'יש טיסות ישירות מנתב"ג לטשקנט (TAS) - אוזבקיסטן איירווייז מפעילה כ-7 טיסות בשבוע, ולצדה גם Centrum Air, FlyOne Asia ו-Qanot Sharq; זמן טיסה כ-4 שעות ו-50 דקות.',
+      gettingAround:
+        'רכבת מהירה (Afrosiyob) מחברת את טשקנט-סמרקנד-בוכרה בנוחות ובמהירות - כדאי להזמין מקומות מראש. לחיווה: רכבת לילה או טיסה פנימית לאורגנץ׳. בערים מוניות זולות (Yandex Go). למוינאק ולים אראל - רק בטיול ג׳יפים מאורגן.',
+      kosherOverview:
+        'אוזבקיסטן היא ארץ המורשת של יהודי בוכרה - בבוכרה עדיין עומד הרובע היהודי עם בית כנסת פעיל, ובטשקנט יש קהילה יהודית ובתי כנסת. עם זאת, לא אותרה מסעדה כשרה קבועה ופתוחה לקהל: הדרך המעשית היא לתאם מראש מול הקהילה בטשקנט או מול קבוצות מאורגנות, ולהצטייד. במסעדות המקומיות הבשר אינו כשר, ואפשר להסתמך על ירקות, פירות ולחם.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
