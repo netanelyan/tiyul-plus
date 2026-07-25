@@ -27,7 +27,17 @@ html {
 body {
   background: var(--color-cream);
   color: var(--color-night);
-  font-family: 'Heebo', 'Rubik', 'Segoe UI', 'Arial Hebrew', system-ui, sans-serif;
+  font-family:
+    'Heebo',
+    'Rubik',
+    'Segoe UI',
+    'Arial Hebrew',
+    system-ui,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    'Noto Color Emoji',
+    sans-serif;
   /* מגן קבוע נגד גלילה אופקית: אלמנטים full-bleed שמשתמשים ב-100vw
      חורגים ברוחב פס-הגלילה כשיש גלילה אנכית. `clip` (ולא `hidden`)
      חותך את החריגה בלי ליצור scroll-container - ה-sticky של ההדר נשמר. */
