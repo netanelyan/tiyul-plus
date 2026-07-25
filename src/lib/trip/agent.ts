@@ -1,7 +1,7 @@
 import { destinations } from '@/data/destinations';
 import { isKosher } from '@/lib/categories';
 import { newId } from './types';
-import type { Trip, TripDay, TripPreferences } from './types';
+import type { BookingKind, BookingStatus, Trip, TripDay, TripPreferences } from './types';
 import type { Destination } from '@/lib/types';
 
 /**
@@ -218,6 +218,22 @@ export const AGENT_TOOLS = [
       },
     },
   },
+  {
+    name: 'set_booking_status',
+    description:
+      "Record what the traveler has ALREADY arranged and what they still need, per booking type. Set a field ONLY when the user actually said so - never assume, never guess from the itinerary. 'have' = already booked, 'need' = still needs it, 'not_needed' = irrelevant for this trip. You must NEVER output a booking URL, price, availability or provider name in your reply: the app attaches the real link itself from its own affiliate config. Your job is only to notice what is missing and record the answer.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        flights: { type: 'string', enum: ['have', 'need', 'not_needed'] },
+        stay: { type: 'string', enum: ['have', 'need', 'not_needed'] },
+        activities: { type: 'string', enum: ['have', 'need', 'not_needed'] },
+        esim: { type: 'string', enum: ['have', 'need', 'not_needed'] },
+        insurance: { type: 'string', enum: ['have', 'need', 'not_needed'] },
+        car: { type: 'string', enum: ['have', 'need', 'not_needed'] },
+      },
+    },
+  },
 ];
 
 /* ---------- ביצוע ---------- */
@@ -252,6 +268,15 @@ function dayAt(trip: Trip, dayNumber: unknown): TripDay | null {
   return trip.days[n - 1];
 }
 
+const BOOKING_KIND_LABELS: Record<BookingKind, string> = {
+  flights: 'טיסות',
+  stay: 'לינה',
+  activities: 'כרטיסים ופעילויות',
+  esim: 'eSIM',
+  insurance: 'ביטוח',
+  car: 'רכב',
+};
+
 const PREF_LABELS: Record<keyof TripPreferences, string> = {
   party: 'הרכב הנוסעים',
   pace: 'קצב',
@@ -260,6 +285,7 @@ const PREF_LABELS: Record<keyof TripPreferences, string> = {
   shabbatAware: 'שמירת שבת',
   shopping: 'שופינג',
   interests: 'תחומי עניין',
+  booking: 'מה כבר סגור',
 };
 
 /**
@@ -616,6 +642,32 @@ export function executeAgentTool(
         ok: true,
         message: `ההעדפות עודכנו: ${JSON.stringify(prefs)}.`,
         action: `עדכנתי העדפות: ${labels}`,
+      };
+    }
+
+    case 'set_booking_status': {
+      if (!needTrip(trip)) {
+        return fail(trip, 'אין טיול פעיל - מצב ההזמנות נשמר על טיול.');
+      }
+      const kinds: BookingKind[] = ['flights', 'stay', 'activities', 'esim', 'insurance', 'car'];
+      const allowed: BookingStatus[] = ['have', 'need', 'not_needed'];
+      const booking = { ...(trip.preferences?.booking ?? {}) };
+      const changed: BookingKind[] = [];
+      for (const kind of kinds) {
+        const v = input[kind];
+        if (typeof v === 'string' && (allowed as string[]).includes(v)) {
+          booking[kind] = v as BookingStatus;
+          changed.push(kind);
+        }
+      }
+      if (changed.length === 0) return fail(trip, 'לא זוהה אף סוג הזמנה תקין בקלט.');
+      const labels = changed.map((k) => BOOKING_KIND_LABELS[k]).join(', ');
+      return {
+        trip: { ...trip, preferences: { ...trip.preferences, booking } },
+        ok: true,
+        // מזכירים למודל שהקישור אינו שלו - הוא כבר מוצג בממשק
+        message: `מצב ההזמנות עודכן: ${JSON.stringify(booking)}. כפתורי ההזמנה מוצגים בממשק אוטומטית - אל תכתוב קישורים, מחירים או זמינות.`,
+        action: `סימנתי: ${labels}`,
       };
     }
 

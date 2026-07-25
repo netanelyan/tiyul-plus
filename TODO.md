@@ -89,6 +89,14 @@ Devín/Small Carpathians). Lower priority than net-new destinations.
 
 ## Product / features (from earlier scoping — need Netanel's input)
 
+- [ ] **Affiliate IDs (the booking layer is built and waiting on these):** the
+  config is `src/lib/booking.ts` - one source of truth for the homepage
+  services grid AND the "מה עוד חסר לטיול" panel inside a trip. To wire a
+  real partner: fill `affiliate: { template, idKey }` for that provider and
+  put the ID in `NEXT_PUBLIC_AFFILIATE_*` (see `.env.example`). Nothing else
+  changes. Current state: Skyscanner / Booking.com / GetYourGuide / Airalo
+  link to their PUBLIC sites with no tracking params; insurance and car
+  rental have no provider chosen at all and render as "בקרוב".
 - [ ] **Affiliate wiring:** the homepage services grid
       (`src/lib/services.ts`) has NO real affiliate links — all
       `affiliateUrl: null`, falling back to public provider sites (car =
