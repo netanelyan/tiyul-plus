@@ -113,7 +113,9 @@ country `bulgaria`; destination `rila-pirin`; places `rlp-rila`,
 country `estonia`; destination `tallinn`; places `tln-toompea`, `tln-nevsky`,
 `tln-st-olaf`, `tln-kadriorg`, `tln-kumu`, `tln-lahemaa`; country `latvia`;
 destination `riga`; places `rga-blackheads`, `rga-st-peters`, `rga-cathedral`,
-`rga-freedom-monument`, `rga-sigulda`, `rga-turaida`, `rga-gauja`.
+`rga-freedom-monument`, `rga-sigulda`, `rga-turaida`, `rga-gauja`; country
+`albania`; destination `south-albania`; places `alb-butrint`, `alb-ksamil`,
+`alb-saranda`, `alb-porto-palermo`, `alb-llogara`, `alb-berat`.
 
 **Blocked on coordinates - France / Paris.** France is the biggest
 remaining country gap, but dbpedia's `/data/*.json` for very famous
