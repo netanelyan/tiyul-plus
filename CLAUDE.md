@@ -288,6 +288,45 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-26 - Overnight catalog expansion, part two: the Balkans and the long-haul gaps
+
+Continuation of the same unattended run, same standing instruction. Seven
+further data commits, each shipped only after a standalone `npx tsc --noEmit`,
+`/tmp/sanity.mjs` problems=0 and a passing `npm run build`.
+
+New countries and destinations, in order: Bosnia and Herzegovina with
+`mostar-sarajevo` (5 places), Serbia with `vojvodina` (7), Mexico with
+`yucatan` (7), South Korea with `gyeongju-busan` (7), Australia with
+`tasmania` (7), Indonesia with `java` (7), Malaysia with `penang-perak` (6).
+That closes every net-new country gap that was listed as outstanding at the
+top of the run. State at the end: 53 countries, 72 destinations, 751 places,
+grounding index 104,895 chars (~26-33k tokens), still far under the ~190,000
+char stop threshold.
+
+Coordinate discipline held. Every place was verified through
+`https://dbpedia.org/data/<Article>.json` with the hardened prompt, and
+anything that came back NOT PRESENT was dropped rather than estimated:
+Novi Sad, Subotica, Krusedol Monastery, George Town Penang, Ipoh. Five HTTP
+429s were absorbed with an 85-100s pause and a single retry, which is normal
+pacing on this proxy and not a failure. Zero fabricated coordinates.
+
+Two things worth remembering for next time. First, the regional-hub strategy
+keeps paying: the famous-city articles (Novi Sad, George Town, Ipoh) are the
+ones that come back without coordinates, while the surrounding sites almost
+always have them, so building the destination around the region rather than
+the capital routes around the problem entirely. Second, two Python gotchas
+recurred: a `\\u{...}` emoji escape inside a non-raw triple-quoted string
+raises `unicodeescape` inconsistently, so write flags as literal emoji
+characters; and `DayPlan` has a `notes` field, not `summary`, which cost one
+tsc round-trip on the Serbia batch.
+
+Editorially, three destinations carry entry warnings that are more prominent
+than usual and should not be softened: Indonesia and Malaysia both state
+plainly that there are no diplomatic relations with Israel and that entry
+must be verified before any booking, and Australia states that an advance
+entry authorisation is mandatory. None of them names a specific visa rule,
+per the no-fabrication rule.
+
 ### 2026-07-26 - Overnight catalog expansion: Jordan through the Baltics
 
 One long unattended run under the standing instruction "add new countries,
