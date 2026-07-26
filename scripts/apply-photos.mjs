@@ -68,6 +68,7 @@ if (skipped.length) {
   for (const s of skipped.slice(0, 40)) console.log(`  ${s}`);
   if (skipped.length > 40) console.log(`  ...and ${skipped.length - 40} more`);
 }
-if (!dryRun && applied.length) {
-  console.log(`\nNow run: npx prettier --write ${DESTINATIONS_FILE}`);
-}
+// בכוונה אין כאן הרצת prettier: אין בריפו קובץ הגדרות, וברירת המחדל של
+// prettier היא מרכאות כפולות - הרצה עליו מחליפה 22 אלף שורות של גרשיים
+// בודדים ומייצרת diff ענק שאין לו שום קשר לתמונות. הפורמט שנכתב כאן כבר
+// זהה לפורמט הקיים בקובץ.

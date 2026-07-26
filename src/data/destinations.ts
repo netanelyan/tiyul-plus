@@ -378,6 +378,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vie-melk',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Stift_Melk%2C_Westansicht.jpg/500px-Stift_Melk%2C_Westansicht.jpg',
         name: 'מנזר מלק',
         nameLocal: 'Stift Melk',
         category: 'attraction',
@@ -393,6 +395,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vie-durnstein',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/D%C3%BCrnstein_-_Luftaufnahme.jpg/500px-D%C3%BCrnstein_-_Luftaufnahme.jpg',
         name: 'דירנשטיין וכרמי הוואכאו',
         nameLocal: 'Dürnstein',
         category: 'nature',
@@ -626,6 +630,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bts-main-square',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Hlavn%C3%A9_n%C3%A1mestie-The_napoleonic_soldier%2C_Old_Town_Hall_and_Roland_Fountain-Bratislava.jpg/500px-Hlavn%C3%A9_n%C3%A1mestie-The_napoleonic_soldier%2C_Old_Town_Hall_and_Roland_Fountain-Bratislava.jpg',
         name: 'הכיכר הראשית',
         nameLocal: 'Hlavné námestie',
         category: 'attraction',
@@ -741,6 +747,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bts-jewish-museum',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/%C5%BDigraiova_k%C3%BAria_1.jpg/500px-%C5%BDigraiova_k%C3%BAria_1.jpg',
         name: 'המוזיאון לתרבות יהודית',
         nameLocal: 'Museum of Jewish Culture',
         category: 'museum',
@@ -1194,6 +1202,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'prg-karlstejn',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Burg_Karlstein_-_Karl%C5%A1tejn_-_panoramio.jpg/500px-Burg_Karlstein_-_Karl%C5%A1tejn_-_panoramio.jpg',
         name: 'טירת קרלשטיין',
         nameLocal: 'Hrad Karlštejn',
         category: 'attraction',
@@ -1209,6 +1219,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'prg-kutna-hora',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Kutn%C3%A1_Hora_%28003%29.jpg/500px-Kutn%C3%A1_Hora_%28003%29.jpg',
         name: 'קוטנה הורה',
         nameLocal: 'Kutná Hora',
         category: 'attraction',
@@ -1224,6 +1236,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'prg-sedlec',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Kostnice_Sedlec.jpg/500px-Kostnice_Sedlec.jpg',
         name: 'בית העצמות בסדלץ',
         nameLocal: 'Kostnice Sedlec',
         category: 'attraction',
@@ -1571,6 +1585,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-kazinczy',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Kazinczy_utcai_zsinagoga_02.jpg/500px-Kazinczy_utcai_zsinagoga_02.jpg',
         name: 'בית הכנסת ברחוב קזינצי',
         nameLocal: 'Kazinczy Street Synagogue',
         category: 'attraction',
@@ -1637,6 +1653,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-szentendre',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Szentendre_montage1.jpg/500px-Szentendre_montage1.jpg',
         name: 'סנטנדרה',
         nameLocal: 'Szentendre',
         category: 'attraction',
@@ -1652,6 +1670,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-visegrad',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Fellegv%C3%A1r_%287612._sz%C3%A1m%C3%BA_m%C5%B1eml%C3%A9k%29_6.jpg/500px-Fellegv%C3%A1r_%287612._sz%C3%A1m%C3%BA_m%C5%B1eml%C3%A9k%29_6.jpg',
         name: 'וישגרד',
         nameLocal: 'Visegrád',
         category: 'viewpoint',
@@ -2066,6 +2086,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rom-villa-deste',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Villa_Deste_park_Rometta_2011_2.jpg/500px-Villa_Deste_park_Rometta_2011_2.jpg',
         name: 'וילה ד׳אסטה (טיבולי)',
         nameLocal: "Villa d'Este",
         category: 'attraction',
@@ -2081,6 +2103,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rom-villa-adriana',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Villa_Hadriana_%28Villa_Adriana_Tivoli%29_1000_03.jpg/500px-Villa_Hadriana_%28Villa_Adriana_Tivoli%29_1000_03.jpg',
         name: 'וילה אדריאנה (טיבולי)',
         nameLocal: 'Villa Adriana',
         category: 'attraction',
@@ -2493,6 +2517,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ath-sounion',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Greece_Cape_Sounion_BW_2017-10-09_10-12-43.jpg/500px-Greece_Cape_Sounion_BW_2017-10-09_10-12-43.jpg',
         name: 'מקדש פוסידון בסוניון',
         nameLocal: 'Naos Poseidona, Sounio',
         category: 'viewpoint',
@@ -2903,6 +2929,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bcn-montserrat',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Montserrat_des_de_Manresa.jpg/500px-Montserrat_des_de_Manresa.jpg',
         name: 'מונסראט',
         nameLocal: 'Montserrat',
         category: 'nature',
@@ -2918,6 +2946,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bcn-tossa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Tossa_de_Mar_Torre%C3%B3n_JMM.jpg/500px-Tossa_de_Mar_Torre%C3%B3n_JMM.jpg',
         name: 'טוסה דה מאר',
         nameLocal: 'Tossa de Mar',
         category: 'nature',
@@ -2933,6 +2963,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bcn-cadaques',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Cadaques_Pueblo_Marinero.jpg/500px-Cadaques_Pueblo_Marinero.jpg',
         name: 'קדאקס',
         nameLocal: 'Cadaqués',
         category: 'viewpoint',
@@ -3177,6 +3209,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ber-tv-tower',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Berlin_-_Berliner_Fernsehturm1.jpg/500px-Berlin_-_Berliner_Fernsehturm1.jpg',
         name: 'מגדל הטלוויזיה',
         nameLocal: 'Fernsehturm (Alexanderplatz)',
         category: 'viewpoint',
@@ -5860,6 +5894,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'pet-wadimusa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Wadi_Musa%2C_Jordan.jpg/500px-Wadi_Musa%2C_Jordan.jpg',
         tags: ['foodie'],
         priceLevel: 1,
         name: 'ואדי מוסא (עיירת פטרה)',
@@ -6903,6 +6939,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'dol-cortina',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Faloria_Cortina_d%27Ampezzo_10.jpg/500px-Faloria_Cortina_d%27Ampezzo_10.jpg',
         tags: ['outdoors', 'foodie'],
         priceLevel: 3,
         name: 'קורטינה ד׳אמפצו',
@@ -13295,6 +13333,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'lis-jeronimos',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/The_Jer%C3%B3nimos_Monastery_or_Hieronymites_Monastery.png/500px-The_Jer%C3%B3nimos_Monastery_or_Hieronymites_Monastery.png',
         tags: ['history', 'art'],
         priceLevel: 2,
         mustSee: true,
@@ -13311,6 +13351,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lis-belem-tower',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Torre_Bel%25C3%25A9m_April_2009-4a.jpg/500px-Torre_Bel%25C3%25A9m_April_2009-4a.jpg',
         tags: ['history'],
         priceLevel: 2,
         mustSee: true,
@@ -13327,6 +13369,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lis-sao-jorge',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/LisbonCastle.jpg/500px-LisbonCastle.jpg',
         tags: ['history', 'families'],
         priceLevel: 2,
         mustSee: true,
@@ -13343,6 +13387,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lis-alfama',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Lisbon_alfalma.jpg/500px-Lisbon_alfalma.jpg',
         tags: ['history', 'foodie', 'romantic'],
         priceLevel: 0,
         name: 'רובע אלפמה',
@@ -13358,6 +13404,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lis-se',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Lisboa_May_2013-1.jpg/500px-Lisboa_May_2013-1.jpg',
         tags: ['history'],
         priceLevel: 1,
         name: 'קתדרלת ליסבון',
@@ -13373,6 +13421,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lis-comercio',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Lisbon_main_square_%2836622604910%29.jpg/500px-Lisbon_main_square_%2836622604910%29.jpg',
         tags: ['history'],
         priceLevel: 0,
         name: 'כיכר המסחר',
@@ -13388,6 +13438,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lis-santa-justa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Elevador_de_Santa_Justa_from_Rua_de_Santa_Justa.jpg/500px-Elevador_de_Santa_Justa_from_Rua_de_Santa_Justa.jpg',
         tags: ['history'],
         priceLevel: 1,
         name: 'מעלית סנטה ז׳וסטה',
@@ -13403,6 +13455,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lis-oceanario',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Lisboa_June_2014-8a.jpg/500px-Lisboa_June_2014-8a.jpg',
         tags: ['families'],
         priceLevel: 2,
         name: 'האוקיאנריום של ליסבון',
@@ -13418,6 +13472,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lis-pena',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Sintra_Portugal_Pal%C3%A1cio_da_Pena-01.jpg/500px-Sintra_Portugal_Pal%C3%A1cio_da_Pena-01.jpg',
         tags: ['history', 'families', 'romantic'],
         priceLevel: 2,
         mustSee: true,
@@ -13434,6 +13490,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lis-mouros',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Castelo_dos_Mouros%2C_Sintra%2C_Portugal%2C_2019-05-25%2C_DD_112-121_PAN.jpg/500px-Castelo_dos_Mouros%2C_Sintra%2C_Portugal%2C_2019-05-25%2C_DD_112-121_PAN.jpg',
         tags: ['history', 'outdoors'],
         priceLevel: 1,
         name: 'טירת המורים (סינטרה)',
@@ -13449,6 +13507,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lis-cabo-roca',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cabo_da_Roca_on_sunset.jpg/500px-Cabo_da_Roca_on_sunset.jpg',
         tags: ['outdoors', 'romantic'],
         priceLevel: 0,
         name: 'כף רוקה',
@@ -13515,6 +13575,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'kra-rynek',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Sukiennice_and_Main_Market_Square_Krakow_Poland.jpg/500px-Sukiennice_and_Main_Market_Square_Krakow_Poland.jpg',
         name: 'כיכר השוק הראשית',
         nameLocal: 'Rynek Główny',
         category: 'attraction',
@@ -13531,6 +13593,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kra-mariacki',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Church_of_Our_Lady_Assumed_into_Heaven%2C_5_Mariacki_square%2C_Old_Town%2C_Krakow%2C_Poland.jpg/500px-Church_of_Our_Lady_Assumed_into_Heaven%2C_5_Mariacki_square%2C_Old_Town%2C_Krakow%2C_Poland.jpg',
         name: 'כנסיית מריה הקדושה',
         nameLocal: 'Bazylika Mariacka',
         category: 'attraction',
@@ -13546,6 +13610,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kra-wawel',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Wawel_%284%29.jpg/500px-Wawel_%284%29.jpg',
         name: 'טירת ואוול והקתדרלה',
         nameLocal: 'Wawel',
         category: 'attraction',
@@ -13562,6 +13628,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kra-kazimierz',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Wolnica_Square_and_former_city_hall_of_Kazimierz%2C_view_from_E%2C_Kazimierz%2C_Krak%C3%B3w%2C_Poland.jpg/500px-Wolnica_Square_and_former_city_hall_of_Kazimierz%2C_view_from_E%2C_Kazimierz%2C_Krak%C3%B3w%2C_Poland.jpg',
         name: 'קז׳ימייז׳ - הרובע היהודי',
         nameLocal: 'Kazimierz',
         category: 'attraction',
@@ -13578,6 +13646,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kra-schindler',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Schindler%27s_factory%2C_Krak%C3%B3w%2C_2011.jpg/500px-Schindler%27s_factory%2C_Krak%C3%B3w%2C_2011.jpg',
         name: 'מפעל שינדלר',
         nameLocal: 'Fabryka Schindlera',
         category: 'museum',
@@ -13609,6 +13679,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kra-wieliczka',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/%CE%91%CE%BB%CE%B1%CF%84%CF%89%CF%81%CF%85%CF%87%CE%B5%CE%AF%CE%B1_%CE%92%CE%B9%CE%B5%CE%BB%CE%AF%CF%84%CF%83%CE%BA%CE%B1_5021.jpg/500px-%CE%91%CE%BB%CE%B1%CF%84%CF%89%CF%81%CF%85%CF%87%CE%B5%CE%AF%CE%B1_%CE%92%CE%B9%CE%B5%CE%BB%CE%AF%CF%84%CF%83%CE%BA%CE%B1_5021.jpg',
         name: 'מכרה המלח ויליצ׳קה',
         nameLocal: 'Kopalnia soli Wieliczka',
         category: 'attraction',
@@ -13625,6 +13697,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kra-kosciuszko',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Krakow_2006_195.jpg/500px-Krakow_2006_195.jpg',
         name: 'תל קושצ׳ושקו',
         nameLocal: 'Kopiec Kościuszki',
         category: 'viewpoint',
@@ -13640,6 +13714,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kra-ojcow',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Bia%C5%82%C4%85_R%C4%99ka_Ojcowski_PN.jpg/500px-Bia%C5%82%C4%85_R%C4%99ka_Ojcowski_PN.jpg',
         name: 'פארק לאומי אויצוב',
         nameLocal: 'Ojcowski Park Narodowy',
         category: 'nature',
@@ -13735,6 +13811,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'paf-archaeological',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Paphos_panorama_-_Cyprus_-_3_May_2015.jpg/500px-Paphos_panorama_-_Cyprus_-_3_May_2015.jpg',
         name: 'הפארק הארכיאולוגי של פאפוס',
         nameLocal: 'Paphos Archaeological Park',
         category: 'attraction',
@@ -13751,6 +13829,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'paf-tombs',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Tombs_of_the_Kings_%28Paphos%29.jpg/500px-Tombs_of_the_Kings_%28Paphos%29.jpg',
         name: 'קברי המלכים',
         nameLocal: 'Tombs of the Kings',
         category: 'attraction',
@@ -13767,6 +13847,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'paf-castle',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Fort_pafos.jpg/500px-Fort_pafos.jpg',
         name: 'מצודת פאפוס והנמל',
         nameLocal: 'Paphos Castle',
         category: 'attraction',
@@ -13782,6 +13864,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'paf-romiou',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Roca_de_Afrodita%2C_Chipre%2C_2021-12-10%2C_DD_65.jpg/500px-Roca_de_Afrodita%2C_Chipre%2C_2021-12-10%2C_DD_65.jpg',
         name: 'סלע אפרודיטה',
         nameLocal: 'Petra tou Romiou',
         category: 'viewpoint',
@@ -13797,6 +13881,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'paf-akamas',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/View_from_Moutti_Tis_Sotiras%2C_Akamas_Paninsula%2C_Cyprus.jpg/500px-View_from_Moutti_Tis_Sotiras%2C_Akamas_Paninsula%2C_Cyprus.jpg',
         name: 'חצי האי אקמס',
         nameLocal: 'Akamas Peninsula',
         category: 'nature',
@@ -13828,6 +13914,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'paf-troodos',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Chionistra_winter_1.jpg/500px-Chionistra_winter_1.jpg',
         name: 'הרי טרודוס',
         nameLocal: 'Troodos',
         category: 'nature',
@@ -13843,6 +13931,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'paf-kykkos',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Kykkos_monastry_from_the_air.jpg/500px-Kykkos_monastry_from_the_air.jpg',
         name: 'מנזר קיקוס',
         nameLocal: 'Kykkos Monastery',
         category: 'attraction',
@@ -13926,6 +14016,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ams-portuguese-synagogue',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.jpg/500px-Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.jpg',
         name: 'בית הכנסת הפורטוגזי',
         nameLocal: 'Portugese Synagoge',
         category: 'attraction',
@@ -13942,6 +14034,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ams-rembrandt-house',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Rembrandshuis.jpg/500px-Rembrandshuis.jpg',
         name: 'בית רמברנדט',
         nameLocal: 'Museum Het Rembrandthuis',
         category: 'attraction',
@@ -13957,6 +14051,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ams-begijnhof',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/BegijnhofAmsterdamPanorama.jpg/500px-BegijnhofAmsterdamPanorama.jpg',
         name: 'בגיינהוף',
         nameLocal: 'Begijnhof',
         category: 'attraction',
@@ -13972,6 +14068,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ams-vondelpark',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Amsterdam%2C_Vondelpark%2C_at_the_pond-2.jpg/500px-Amsterdam%2C_Vondelpark%2C_at_the_pond-2.jpg',
         name: 'וונדלפארק',
         nameLocal: 'Vondelpark',
         category: 'nature',
@@ -13987,6 +14085,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ams-zaanse-schans',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Zaanstad_Zaanse_Schans_22.jpg/500px-Zaanstad_Zaanse_Schans_22.jpg',
         name: 'זאנסה סכאנס',
         nameLocal: 'Zaanse Schans',
         category: 'attraction',
@@ -14003,6 +14103,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ams-volendam',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Volendam_harbour_-_panoramio.jpg/500px-Volendam_harbour_-_panoramio.jpg',
         name: 'וולנדאם',
         nameLocal: 'Volendam',
         category: 'attraction',
@@ -14034,6 +14136,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ams-kinderdijk',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/KinderdijkMolens02.jpg/500px-KinderdijkMolens02.jpg',
         name: 'טחנות הרוח של קינדרדייק',
         nameLocal: 'Kinderdijk',
         category: 'nature',
@@ -14108,6 +14212,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'amn-jerash',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Oval_Plaza_%28Forum_Romanum%2C_Gerasa_-_Jerash%2C_Jordan%29_-_%D8%B3%D8%A7%D8%AD%D8%A9_%D8%A7%D9%84%D9%86%D8%AF%D9%88%D8%A9%2C_%D8%AC%D8%B1%D8%B4.jpg/500px-Oval_Plaza_%28Forum_Romanum%2C_Gerasa_-_Jerash%2C_Jordan%29_-_%D8%B3%D8%A7%D8%AD%D8%A9_%D8%A7%D9%84%D9%86%D8%AF%D9%88%D8%A9%2C_%D8%AC%D8%B1%D8%B4.jpg',
         name: 'גרש',
         nameLocal: 'Jerash / جرش',
         category: 'attraction',
@@ -14124,6 +14230,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'amn-citadel',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Amman_Citadel.jpg/500px-Amman_Citadel.jpg',
         name: 'מצדת עמאן',
         nameLocal: 'Amman Citadel / جبل القلعة',
         category: 'attraction',
@@ -14140,6 +14248,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'amn-roman-theatre',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Roman_theater_of_Amman_01.jpg/500px-Roman_theater_of_Amman_01.jpg',
         name: 'התאטרון הרומי בעמאן',
         nameLocal: 'Roman Theatre, Amman',
         category: 'attraction',
@@ -14155,6 +14265,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'amn-madaba',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/MADABA_2.png/500px-MADABA_2.png',
         name: 'מדבא ומפת הפסיפס',
         nameLocal: 'Madaba / مأدبا',
         category: 'attraction',
@@ -14170,6 +14282,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'amn-nebo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Mount_Nebo_BW_6.jpg/500px-Mount_Nebo_BW_6.jpg',
         name: 'הר נבו',
         nameLocal: 'Mount Nebo / جبل نيبو',
         category: 'viewpoint',
@@ -14186,6 +14300,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'amn-mujib',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/WadiMujib-Canyon.jpg/500px-WadiMujib-Canyon.jpg',
         name: 'שמורת ואדי מוג׳יב',
         nameLocal: 'Wadi Mujib',
         category: 'nature',
@@ -14202,6 +14318,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'amn-umm-qais',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Modern_Umm_Qais%2C_Jordan.jpg/500px-Modern_Umm_Qais%2C_Jordan.jpg',
         name: 'אום קיס (גדרה)',
         nameLocal: 'Umm Qais / Gadara',
         category: 'viewpoint',
@@ -14217,6 +14335,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'amn-ajloun',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Ajloun_Castle.jpg/500px-Ajloun_Castle.jpg',
         name: 'מבצר עגלון',
         nameLocal: 'Ajloun Castle / قلعة عجلون',
         category: 'attraction',
@@ -14232,6 +14352,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'amn-maghtas',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Bethany_%285%29.jpg/500px-Bethany_%285%29.jpg',
         name: 'אל-מוע׳טס (מקום הטבילה)',
         nameLocal: 'Al-Maghtas / Bethany Beyond the Jordan',
         category: 'attraction',
@@ -14299,6 +14421,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'she-palace',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/%C5%9E%C9%99ki_xan_saray%C4%B1.jpg/500px-%C5%9E%C9%99ki_xan_saray%C4%B1.jpg',
         name: 'ארמון חאני שקי',
         nameLocal: 'Palace of Shaki Khans',
         category: 'attraction',
@@ -14315,6 +14439,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'she-old-town',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Shaki_montage2.jpg/500px-Shaki_montage2.jpg',
         name: 'שקי - העיר העתיקה',
         nameLocal: 'Shaki / Şəki',
         category: 'attraction',
@@ -14331,6 +14457,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'she-qabala',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Montage_of_Qabala_2019.jpg/500px-Montage_of_Qabala_2019.jpg',
         name: 'קבלה',
         nameLocal: 'Qabala / Qəbələ',
         category: 'nature',
@@ -14346,6 +14474,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'she-qirmizi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Red_village_and_Guba_in_Azerbaijan.jpg/500px-Red_village_and_Guba_in_Azerbaijan.jpg',
         name: 'איירמיזי קסבה - הכפר האדום',
         nameLocal: 'Qırmızı Qəsəbə / Red Village',
         category: 'attraction',
@@ -14362,6 +14492,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'she-khinalug',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Az%C9%99rbaycan%2C_X%C4%B1nal%C4%B1q._Azerbaijan%2C_Khinalug.jpg/500px-Az%C9%99rbaycan%2C_X%C4%B1nal%C4%B1q._Azerbaijan%2C_Khinalug.jpg',
         name: 'חינאלוג',
         nameLocal: 'Xınalıq / Khinalug',
         category: 'viewpoint',
@@ -14445,6 +14577,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'uae-hatta',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Hatta_Sign.jpg/500px-Hatta_Sign.jpg',
         name: 'חטא',
         nameLocal: 'Hatta',
         category: 'nature',
@@ -14461,6 +14595,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'uae-jebel-jais',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/View_from_Jebel_Jais_-_panoramio.jpg/500px-View_from_Jebel_Jais_-_panoramio.jpg',
         name: 'ג׳בל ג׳יס',
         nameLocal: 'Jebel Jais',
         category: 'viewpoint',
@@ -14477,6 +14613,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'uae-liwa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Canal_-_panoramio_%2817%29.jpg/500px-Canal_-_panoramio_%2817%29.jpg',
         name: 'נאות ליווא',
         nameLocal: 'Liwa Oasis',
         category: 'nature',
@@ -14493,6 +14631,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'uae-jebel-hafeet',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Jebel_Hafeet_-_Aerial_View.jpg/500px-Jebel_Hafeet_-_Aerial_View.jpg',
         name: 'ג׳בל חפית',
         nameLocal: 'Jebel Hafeet',
         category: 'viewpoint',
@@ -14508,6 +14648,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'uae-jahili',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Entrance_Up_Close.jpg/500px-Entrance_Up_Close.jpg',
         name: 'מבצר אל ג׳אהילי',
         nameLocal: 'Al Jahili Fort',
         category: 'attraction',
@@ -14575,6 +14717,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'trn-bran',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Castelul_Bran2.jpg/500px-Castelul_Bran2.jpg',
         name: 'טירת בראן',
         nameLocal: 'Castelul Bran',
         category: 'attraction',
@@ -14590,6 +14734,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'trn-peles',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/01_Chateau_Peles.jpg/500px-01_Chateau_Peles.jpg',
         name: 'טירת פלש',
         nameLocal: 'Castelul Peleș',
         category: 'attraction',
@@ -14622,6 +14768,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'trn-corvin',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Hunedoara_castle.jpg/500px-Hunedoara_castle.jpg',
         name: 'טירת קורווין',
         nameLocal: 'Castelul Corvinilor',
         category: 'attraction',
@@ -14637,6 +14785,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'trn-transfagarasan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/RO_B_Transfagarasan_view_towards_the_north_from_Balea_Lake_2.jpg/500px-RO_B_Transfagarasan_view_towards_the_north_from_Balea_Lake_2.jpg',
         name: 'כביש הטרנספגרשן',
         nameLocal: 'Transfăgărășan',
         category: 'viewpoint',
@@ -14653,6 +14803,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'trn-balea',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Bileato.jpg/500px-Bileato.jpg',
         name: 'אגם בליאה',
         nameLocal: 'Lacul Bâlea',
         category: 'nature',
@@ -14719,6 +14871,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'cpd-goreme',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/G%C3%B6reme_town_and_valley_2015.jpg/500px-G%C3%B6reme_town_and_valley_2015.jpg',
         name: 'גורמה',
         nameLocal: 'Göreme',
         category: 'attraction',
@@ -14735,6 +14889,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'cpd-uchisar',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/%C3%9C%C3%A7hisar%2C_Cappadocia_01.jpg/500px-%C3%9C%C3%A7hisar%2C_Cappadocia_01.jpg',
         name: 'אוצ׳יסאר',
         nameLocal: 'Uçhisar',
         category: 'viewpoint',
@@ -14751,6 +14907,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'cpd-urgup',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/General_view_of_%C3%9Crg%C3%BCp.jpg/500px-General_view_of_%C3%9Crg%C3%BCp.jpg',
         name: 'אורגופ',
         nameLocal: 'Ürgüp',
         category: 'attraction',
@@ -14766,6 +14924,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'cpd-derinkuyu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Derinkuyu_Underground_City_9843_Nevit_Enhancer.jpg/500px-Derinkuyu_Underground_City_9843_Nevit_Enhancer.jpg',
         name: 'העיר התת-קרקעית דרינקויו',
         nameLocal: 'Derinkuyu Underground City',
         category: 'attraction',
@@ -14782,6 +14942,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'cpd-avanos',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Cappadoce-Avanos.jpg/500px-Cappadoce-Avanos.jpg',
         name: 'אוואנוס',
         nameLocal: 'Avanos',
         category: 'attraction',
@@ -14797,6 +14959,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'cpd-nevsehir',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Nevsehirpanorama.jpg/500px-Nevsehirpanorama.jpg',
         name: 'נבשהיר',
         nameLocal: 'Nevşehir',
         category: 'attraction',
@@ -14863,6 +15027,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'irw-moher',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Cliffs-Of-Moher-OBriens-From-South.jpg/500px-Cliffs-Of-Moher-OBriens-From-South.jpg',
         name: 'מצוקי מוהר',
         nameLocal: 'Cliffs of Moher',
         category: 'viewpoint',
@@ -14879,6 +15045,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'irw-galway',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Galway_cathedral.jpg/500px-Galway_cathedral.jpg',
         name: 'גאלוויי',
         nameLocal: 'Galway',
         category: 'attraction',
@@ -14895,6 +15063,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'irw-kylemore',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Connemara_-_Kylemore_Abbey_-_panoramio_%281%29.jpg/500px-Connemara_-_Kylemore_Abbey_-_panoramio_%281%29.jpg',
         name: 'מנזר קיילמור',
         nameLocal: 'Kylemore Abbey',
         category: 'attraction',
@@ -14910,6 +15080,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'irw-connemara',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Connemara12Bens.jpg/500px-Connemara12Bens.jpg',
         name: 'הפארק הלאומי קונמארה',
         nameLocal: 'Connemara National Park',
         category: 'nature',
@@ -14926,6 +15098,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'irw-dun-aonghasa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Dun_Aonghasa_%28cropped%29.jpg/500px-Dun_Aonghasa_%28cropped%29.jpg',
         name: 'דון אנגוסה, איי אראן',
         nameLocal: 'Dún Aonghasa, Aran Islands',
         category: 'attraction',
@@ -14941,6 +15115,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'irw-poulnabrone',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Paulnabrone.jpg/500px-Paulnabrone.jpg',
         name: 'הדולמן פולנברון',
         nameLocal: 'Poulnabrone Dolmen',
         category: 'attraction',
@@ -15014,6 +15190,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'rlp-rila',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Rila_Monastery%2C_August_2013.jpg/500px-Rila_Monastery%2C_August_2013.jpg',
         name: 'מנזר רילה',
         nameLocal: 'Rila Monastery',
         category: 'attraction',
@@ -15030,6 +15208,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rlp-seven-lakes',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Vr-ezeren-pan-sm.jpg/500px-Vr-ezeren-pan-sm.jpg',
         name: 'שבעת אגמי רילה',
         nameLocal: 'Seven Rila Lakes',
         category: 'nature',
@@ -15062,6 +15242,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rlp-melnik',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Meleniko.jpg/500px-Meleniko.jpg',
         name: 'מלניק',
         nameLocal: 'Melnik',
         category: 'attraction',
@@ -15077,6 +15259,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rlp-sandanski',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Bulgaria-Sandanski-03.jpg/500px-Bulgaria-Sandanski-03.jpg',
         name: 'סנדנסקי',
         nameLocal: 'Sandanski',
         category: 'attraction',
@@ -15143,6 +15327,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'sth-gamla-stan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Gamla_stan_September_2014_01.jpg/500px-Gamla_stan_September_2014_01.jpg',
         name: 'גמלה סטאן, העיר העתיקה',
         nameLocal: 'Gamla stan',
         category: 'attraction',
@@ -15159,6 +15345,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'sth-vasa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Stockholm_Vasa_Museum_and_Nordic_Museum_09.jpg/500px-Stockholm_Vasa_Museum_and_Nordic_Museum_09.jpg',
         name: 'מוזיאון ווסה',
         nameLocal: 'Vasa Museum',
         category: 'museum',
@@ -15191,6 +15379,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'sth-djurgarden',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Djurgarden.jpg/500px-Djurgarden.jpg',
         name: 'יורגורדן',
         nameLocal: 'Djurgården',
         category: 'nature',
@@ -15206,6 +15396,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'sth-city-hall',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Stockholms_Stadshuset_City_Hall_Stockholm_2016_01.jpg/500px-Stockholms_Stadshuset_City_Hall_Stockholm_2016_01.jpg',
         name: 'בית העירייה',
         nameLocal: 'Stadshuset',
         category: 'attraction',
@@ -15221,6 +15413,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'sth-palace',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/The_Royal_Palace_%2815891592359%29.jpg/500px-The_Royal_Palace_%2815891592359%29.jpg',
         name: 'הארמון המלכותי',
         nameLocal: 'Kungliga slottet',
         category: 'attraction',
@@ -15251,6 +15445,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'sth-drottningholm',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Drottningholmpalace.jpg/500px-Drottningholmpalace.jpg',
         name: 'ארמון דרוטנינגהולם',
         nameLocal: 'Drottningholm Palace',
         category: 'attraction',
@@ -15317,6 +15513,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'nzl-frederiksborg',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Frederiksborg_Castle_and_boat_crop.jpg/500px-Frederiksborg_Castle_and_boat_crop.jpg',
         name: 'טירת פרדריקסבורג',
         nameLocal: 'Frederiksborg Slot',
         category: 'attraction',
@@ -15364,6 +15562,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nzl-viking-ships',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Museo_delle_navi_vichinghe_di_Roskilde.jpg/500px-Museo_delle_navi_vichinghe_di_Roskilde.jpg',
         name: 'מוזיאון ספינות הוויקינגים',
         nameLocal: 'Vikingeskibsmuseet',
         category: 'museum',
@@ -15379,6 +15579,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nzl-fredensborg',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Fredensborg_Slot_124.jpg/500px-Fredensborg_Slot_124.jpg',
         name: 'ארמון פרדנסבורג',
         nameLocal: 'Fredensborg Slot',
         category: 'attraction',
@@ -15394,6 +15596,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nzl-frilandsmuseet',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Frilandsmuseet%2C_2014-03-15%2C_skr%25C3%25A5t_fra_h%25C3%25B8jre.jpg/500px-Frilandsmuseet%2C_2014-03-15%2C_skr%25C3%25A5t_fra_h%25C3%25B8jre.jpg',
         name: 'פרילנדסמוזאה - מוזיאון הכפר הפתוח',
         nameLocal: 'Frilandsmuseet',
         category: 'museum',
@@ -15409,6 +15613,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nzl-bakken',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Bakken_entry.jpg/500px-Bakken_entry.jpg',
         name: 'באקן - פארק השעשועים הוותיק בעולם',
         nameLocal: 'Dyrehavsbakken',
         category: 'attraction',
@@ -15475,6 +15681,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'fla-rovaniemi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Rovaniemi_Montage.jpg/500px-Rovaniemi_Montage.jpg',
         name: 'רובניימי',
         nameLocal: 'Rovaniemi',
         category: 'attraction',
@@ -15491,6 +15699,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'fla-pyha-luosto',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Isokuru.jpg/500px-Isokuru.jpg',
         name: 'הפארק הלאומי פיהא-לואוסטו',
         nameLocal: 'Pyha-Luosto National Park',
         category: 'nature',
@@ -15506,6 +15716,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'fla-levi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Levi_-_panoramio.jpg/500px-Levi_-_panoramio.jpg',
         name: 'לוי',
         nameLocal: 'Levi',
         category: 'attraction',
@@ -15521,6 +15733,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'fla-saariselka',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Kaunisp%C3%A4%C3%A4.jpg/500px-Kaunisp%C3%A4%C3%A4.jpg',
         name: 'סארישלקה',
         nameLocal: 'Saariselka',
         category: 'attraction',
@@ -15536,6 +15750,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'fla-ukk',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Paratiisikuru_waterfall.jpg/500px-Paratiisikuru_waterfall.jpg',
         name: 'הפארק הלאומי אורהו קקונן',
         nameLocal: 'Urho Kekkonen National Park',
         category: 'nature',
@@ -15551,6 +15767,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'fla-inari',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Inari-sreetscene_20200203141555.jpg/500px-Inari-sreetscene_20200203141555.jpg',
         name: 'אינארי',
         nameLocal: 'Inari',
         category: 'attraction',
@@ -15567,6 +15785,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'fla-ranua',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Church_of_Ranua.jpg/500px-Church_of_Ranua.jpg',
         name: 'ראנואה',
         nameLocal: 'Ranua',
         category: 'attraction',
@@ -15582,6 +15802,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'fla-kemi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Montage_of_Kemi_03.jpg/500px-Montage_of_Kemi_03.jpg',
         name: 'קמי',
         nameLocal: 'Kemi',
         category: 'attraction',
@@ -15662,6 +15884,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'vln-cathedral',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Vilnius_Cathedral_20.jpg/500px-Vilnius_Cathedral_20.jpg',
         name: 'קתדרלת וילנה והכיכר',
         nameLocal: 'Vilniaus arkikatedra',
         category: 'attraction',
@@ -15678,6 +15902,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vln-gediminas',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Gedimino_pilis_by_Augustas_Didzgalvis.jpg/500px-Gedimino_pilis_by_Augustas_Didzgalvis.jpg',
         name: 'מגדל גדימינאס',
         nameLocal: 'Gedimino pilies bokstas',
         category: 'viewpoint',
@@ -15693,6 +15919,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vln-st-anne',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/St._Anne%27s_Church_Exterior_3%2C_Vilnius%2C_Lithuania_-_Diliff.jpg/500px-St._Anne%27s_Church_Exterior_3%2C_Vilnius%2C_Lithuania_-_Diliff.jpg',
         name: 'כנסיית סנטה אנה',
         nameLocal: 'Sv. Onos baznycia',
         category: 'attraction',
@@ -15708,6 +15936,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vln-gate-of-dawn',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Au%C5%A1ros_Vart%C5%B3_02%28js%29_Vilnius.jpg/500px-Au%C5%A1ros_Vart%C5%B3_02%28js%29_Vilnius.jpg',
         name: 'שער השחר',
         nameLocal: 'Ausros vartai',
         category: 'attraction',
@@ -15723,6 +15953,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vln-uzupis',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Uzupis_2020_by_Augustas_Didzgalvis.jpg/500px-Uzupis_2020_by_Augustas_Didzgalvis.jpg',
         name: 'אוז׳ופיס',
         nameLocal: 'Uzupis',
         category: 'attraction',
@@ -15738,6 +15970,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vln-paneriai',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Ponary_massacre_July_1941.jpg/500px-Ponary_massacre_July_1941.jpg',
         name: 'פונאר - אתר ההנצחה',
         nameLocal: 'Paneriai / Ponary',
         category: 'attraction',
@@ -15754,6 +15988,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vln-trakai',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Trakai_castle_2016.jpg/500px-Trakai_castle_2016.jpg',
         name: 'טירת טראקאי',
         nameLocal: 'Traku salos pilis',
         category: 'attraction',
@@ -15821,6 +16057,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'tln-toompea',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Tallinn_Toompea_Upper_Old_Town_2013.jpg/500px-Tallinn_Toompea_Upper_Old_Town_2013.jpg',
         name: 'טירת טומפאה והגבעה',
         nameLocal: 'Toompea loss',
         category: 'attraction',
@@ -15837,6 +16075,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tln-nevsky',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Catedral_de_Alejandro_Nevsky%2C_Tallin%2C_Estonia%2C_2012-08-11%2C_DD_46.jpg/500px-Catedral_de_Alejandro_Nevsky%2C_Tallin%2C_Estonia%2C_2012-08-11%2C_DD_46.jpg',
         name: 'קתדרלת אלכסנדר נבסקי',
         nameLocal: 'Aleksander Nevski katedraal',
         category: 'attraction',
@@ -15852,6 +16092,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tln-st-olaf',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/St_Olaf%27s_church%2C_Tallinn%2C_July_2008.jpg/500px-St_Olaf%27s_church%2C_Tallinn%2C_July_2008.jpg',
         name: 'כנסיית אולאף הקדוש',
         nameLocal: 'Oleviste kirik',
         category: 'viewpoint',
@@ -15867,6 +16109,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tln-kadriorg',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Tallinn_asv2022-04_img55_Kadriorg_Palace.jpg/500px-Tallinn_asv2022-04_img55_Kadriorg_Palace.jpg',
         name: 'ארמון קדריורג והפארק',
         nameLocal: 'Kadrioru loss',
         category: 'attraction',
@@ -15882,6 +16126,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tln-kumu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Le_KUMU%2C_mus%C3%A9e_dart_estonien_%28Tallinn%29_%287643040944%29.jpg/500px-Le_KUMU%2C_mus%C3%A9e_dart_estonien_%28Tallinn%29_%287643040944%29.jpg',
         name: 'מוזיאון האמנות קומו',
         nameLocal: 'Kumu kunstimuuseum',
         category: 'museum',
@@ -15897,6 +16143,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tln-lahemaa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Viru_Bog%2C_Parque_Nacional_Lahemaa%2C_Estonia%2C_2012-08-12%2C_DD_26.jpg/500px-Viru_Bog%2C_Parque_Nacional_Lahemaa%2C_Estonia%2C_2012-08-12%2C_DD_26.jpg',
         name: 'הפארק הלאומי להאמאה',
         nameLocal: 'Lahemaa rahvuspark',
         category: 'nature',
@@ -15963,6 +16211,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'rga-blackheads',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/House_of_Blackheads_at_Dusk_3%2C_Riga%2C_Latvia_-_Diliff.jpg/500px-House_of_Blackheads_at_Dusk_3%2C_Riga%2C_Latvia_-_Diliff.jpg',
         name: 'בית ראשי השחורים',
         nameLocal: 'Melngalvju nams',
         category: 'attraction',
@@ -15979,6 +16229,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rga-st-peters',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/St._Peter%27s_Church_facade%2C_Riga%2C_Latvia_-_Diliff.jpg/500px-St._Peter%27s_Church_facade%2C_Riga%2C_Latvia_-_Diliff.jpg',
         name: 'כנסיית פטרוס הקדוש',
         nameLocal: 'Sv. Petera baznica',
         category: 'viewpoint',
@@ -15994,6 +16246,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rga-cathedral',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Riga_Petrikirche_Blick_vom_Turm_zum_Dom_3.jpg/500px-Riga_Petrikirche_Blick_vom_Turm_zum_Dom_3.jpg',
         name: 'קתדרלת ריגה',
         nameLocal: 'Rigas Doms',
         category: 'attraction',
@@ -16009,6 +16263,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rga-freedom-monument',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/0873_LVA_Riga_freedom_monument_SE.jpg/500px-0873_LVA_Riga_freedom_monument_SE.jpg',
         name: 'אנדרטת החירות',
         nameLocal: 'Brivibas piemineklis',
         category: 'attraction',
@@ -16040,6 +16296,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rga-turaida',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Turaida_Castle.jpg/500px-Turaida_Castle.jpg',
         name: 'טירת טוראידה',
         nameLocal: 'Turaidas pils',
         category: 'attraction',
@@ -16055,6 +16313,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rga-gauja',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Ergeljuklintis424aug037qg.jpg/500px-Ergeljuklintis424aug037qg.jpg',
         name: 'הפארק הלאומי גאויה',
         nameLocal: 'Gaujas nacionalais parks',
         category: 'nature',
@@ -16121,6 +16381,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'alb-butrint',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Amphitheatre_of_Butrint_2009.jpg/500px-Amphitheatre_of_Butrint_2009.jpg',
         name: 'בוטרינט',
         nameLocal: 'Butrint',
         category: 'attraction',
@@ -16137,6 +16399,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'alb-ksamil',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Ksamill-1.jpg/500px-Ksamill-1.jpg',
         name: 'קסמיל',
         nameLocal: 'Ksamil',
         category: 'nature',
@@ -16168,6 +16432,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'alb-porto-palermo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Kalaja_e_Porto_Palermos_nga_droni_3_-_Shqip%C3%ABri.jpg/500px-Kalaja_e_Porto_Palermos_nga_droni_3_-_Shqip%C3%ABri.jpg',
         name: 'מצודת פורטו פאלרמו',
         nameLocal: 'Kalaja e Porto Palermos',
         category: 'attraction',
@@ -16281,6 +16547,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bih-blagaj',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Blagaj_Ceilings.jpg/500px-Blagaj_Ceilings.jpg',
         name: 'בלגאי',
         nameLocal: 'Blagaj',
         category: 'attraction',
@@ -16297,6 +16565,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bih-kravica',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Waterfalls_Kravica_5%2C_Bosnia_and_Herzegovina.jpg/500px-Waterfalls_Kravica_5%2C_Bosnia_and_Herzegovina.jpg',
         name: 'מפלי קרביצה',
         nameLocal: 'Vodopad Kravica',
         category: 'nature',
@@ -16312,6 +16582,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bih-bascarsija',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Fontaine_Sebilj.jpg/500px-Fontaine_Sebilj.jpg',
         name: 'באשצ׳רשייה - הבזאר של סרייבו',
         nameLocal: 'Bascarsija',
         category: 'attraction',
@@ -16328,6 +16600,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bih-tunnel',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Sarajevo_tunnel.jpg/500px-Sarajevo_tunnel.jpg',
         name: 'מנהרת סרייבו - מוזיאון',
         nameLocal: 'Tunel spasa',
         category: 'museum',
@@ -16402,6 +16676,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'rs-petrovaradin',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1adi_v%C3%A1r%2C_Peterwardein%29.jpg/500px-Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1adi_v%C3%A1r%2C_Peterwardein%29.jpg',
         name: '\u05de\u05d1\u05e6\u05e8 \u05e4\u05d8\u05e8\u05d5\u05d5\u05e8\u05d3\u05d9\u05df',
         nameLocal: 'Petrovaradin Fortress',
         category: 'attraction',
@@ -16418,6 +16694,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rs-synagogue',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/%D0%A1%D0%B8%D0%BD%D0%B0%D0%B3%D0%BE%D0%B3%D0%B0_%D1%83_%D0%9D%D0%BE%D0%B2%D0%BE%D0%BC_%D0%A1%D0%B0%D0%B4%D1%83_3.jpg/500px-%D0%A1%D0%B8%D0%BD%D0%B0%D0%B3%D0%BE%D0%B3%D0%B0_%D1%83_%D0%9D%D0%BE%D0%B2%D0%BE%D0%BC_%D0%A1%D0%B0%D0%B4%D1%83_3.jpg',
         name: '\u05d1\u05d9\u05ea \u05d4\u05db\u05e0\u05e1\u05ea \u05e9\u05dc \u05e0\u05d5\u05d1\u05d9 \u05e1\u05d0\u05d3',
         nameLocal: 'Novi Sad Synagogue',
         category: 'attraction',
@@ -16449,6 +16727,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rs-fruska-gora',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Odmaraliste_Zmajevac_na_FG.jpg/500px-Odmaraliste_Zmajevac_na_FG.jpg',
         name: '\u05e4\u05e8\u05d5\u05e9\u05e7\u05d4 \u05d2\u05d5\u05e8\u05d4',
         nameLocal: 'Fru\u0161ka Gora',
         category: 'nature',
@@ -16464,6 +16744,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rs-palic',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Pali%C4%87%2C_Serbia_-_panoramio_%282%29.jpg/500px-Pali%C4%87%2C_Serbia_-_panoramio_%282%29.jpg',
         name: '\u05d0\u05d2\u05dd \u05e4\u05d0\u05dc\u05d9\u05e5',
         nameLocal: 'Pali\u0107',
         category: 'nature',
@@ -16568,6 +16850,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'mx-merida',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Collage_Merida_Yucatan.jpg/500px-Collage_Merida_Yucatan.jpg',
         name: 'מרידה',
         nameLocal: 'Mérida',
         category: 'attraction',
@@ -16584,6 +16868,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'mx-uxmal',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Uxmal_Pyramid_of_the_Magician.jpg/500px-Uxmal_Pyramid_of_the_Magician.jpg',
         name: 'אושמל',
         nameLocal: 'Uxmal',
         category: 'attraction',
@@ -16600,6 +16886,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'mx-chichen-itza',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Chichen_Itza_3.jpg/500px-Chichen_Itza_3.jpg',
         name: 'צ׳יצ׳ן איצה',
         nameLocal: 'Chichén Itzá',
         category: 'attraction',
@@ -16631,6 +16919,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'mx-izamal',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Izamal_collage.jpg/500px-Izamal_collage.jpg',
         name: 'איסמל',
         nameLocal: 'Izamal',
         category: 'attraction',
@@ -16646,6 +16936,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'mx-rio-lagartos',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Riolagartos3.jpg/500px-Riolagartos3.jpg',
         name: 'ריו לגרטוס',
         nameLocal: 'Río Lagartos',
         category: 'nature',
@@ -16661,6 +16953,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'mx-celestun',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/CelestunLighthouses.jpg/500px-CelestunLighthouses.jpg',
         name: 'סלסטון',
         nameLocal: 'Celestún',
         category: 'nature',
@@ -16742,6 +17036,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'kr-gyeongju',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Gyeongju_montage.png/500px-Gyeongju_montage.png',
         name: 'גיונגג׳ו',
         nameLocal: 'Gyeongju',
         category: 'attraction',
@@ -16758,6 +17054,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kr-bulguksa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Lotus_Flower_Bridge_and_Seven_Treasure_Bridge_at_Bulguksa_in_Gyeongju%2C_Korea.jpg/500px-Lotus_Flower_Bridge_and_Seven_Treasure_Bridge_at_Bulguksa_in_Gyeongju%2C_Korea.jpg',
         name: 'מקדש בולגוקסה',
         nameLocal: 'Bulguksa',
         category: 'attraction',
@@ -16774,6 +17072,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kr-seokguram',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Front_view_of_Seokguram_from_front_chamber.jpg/500px-Front_view_of_Seokguram_from_front_chamber.jpg',
         name: 'מערת סוקגוראם',
         nameLocal: 'Seokguram',
         category: 'attraction',
@@ -16789,6 +17089,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kr-hahoe',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Hahoe_Folk_Village_02.jpg/500px-Hahoe_Folk_Village_02.jpg',
         name: 'כפר האהוה',
         nameLocal: 'Hahoe Folk Village',
         category: 'attraction',
@@ -16804,6 +17106,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kr-yonggungsa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/%ED%95%B4%EB%8F%99%EC%9A%A9%EA%B6%81%EC%82%AC_%EC%82%AC%EC%B0%B0_%EC%A0%84%EA%B2%BD.jpg/500px-%ED%95%B4%EB%8F%99%EC%9A%A9%EA%B6%81%EC%82%AC_%EC%82%AC%EC%B0%B0_%EC%A0%84%EA%B2%BD.jpg',
         name: 'מקדש הדונג יונגגונגסה',
         nameLocal: 'Haedong Yonggungsa',
         category: 'attraction',
@@ -16819,6 +17123,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kr-gamcheon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Gamcheon_Houses%2C_2024.jpg/500px-Gamcheon_Houses%2C_2024.jpg',
         name: 'כפר התרבות גמצ׳ון',
         nameLocal: 'Gamcheon Culture Village',
         category: 'viewpoint',
@@ -16915,6 +17221,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'au-mona',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/James_Turrell%27s_Amarna_at_Mona_2015.jpg/500px-James_Turrell%27s_Amarna_at_Mona_2015.jpg',
         name: 'מוזיאון MONA',
         nameLocal: 'Museum of Old and New Art',
         category: 'museum',
@@ -16931,6 +17239,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'au-kunanyi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Mount_Wellington.jpg/500px-Mount_Wellington.jpg',
         name: 'הר וולינגטון',
         nameLocal: 'kunanyi / Mount Wellington',
         category: 'viewpoint',
@@ -16947,6 +17257,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'au-port-arthur',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/PortArthurPenitentiary.jpg/500px-PortArthurPenitentiary.jpg',
         name: 'פורט ארתור',
         nameLocal: 'Port Arthur',
         category: 'attraction',
@@ -16978,6 +17290,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'au-freycinet',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Wineglass_Bay%2C_Freycinet_Peninsula%2C_Tasmania%2C_Australia_%2819333396893%29.jpg/500px-Wineglass_Bay%2C_Freycinet_Peninsula%2C_Tasmania%2C_Australia_%2819333396893%29.jpg',
         name: 'פארק פרייסינה',
         nameLocal: 'Freycinet National Park',
         category: 'nature',
@@ -16994,6 +17308,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'au-bay-of-fires',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Bay_of_Fires-15.jpg/500px-Bay_of_Fires-15.jpg',
         name: 'מפרץ האש',
         nameLocal: 'Bay of Fires',
         category: 'nature',
@@ -17009,6 +17325,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'au-cradle-mountain',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Cradle_Mountain_Behind_Dove_Lake.jpg/500px-Cradle_Mountain_Behind_Dove_Lake.jpg',
         name: 'הר קרייל',
         nameLocal: 'Cradle Mountain',
         category: 'nature',
@@ -17105,6 +17423,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'id-borobudur',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Borobudur-Nothwest-view.jpg/500px-Borobudur-Nothwest-view.jpg',
         name: 'בורובודור',
         nameLocal: 'Borobudur',
         category: 'attraction',
@@ -17121,6 +17441,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'id-prambanan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Prambanan_Temple_Yogyakarta_Indonesia.jpg/500px-Prambanan_Temple_Yogyakarta_Indonesia.jpg',
         name: 'פרמבנן',
         nameLocal: 'Prambanan',
         category: 'attraction',
@@ -17137,6 +17459,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'id-kraton',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Jogja_-_Kraton_Yogyakarta_-_Donopratono_gate_%282025%29_-_img_02.jpg/500px-Jogja_-_Kraton_Yogyakarta_-_Donopratono_gate_%282025%29_-_img_02.jpg',
         name: 'ארמון הסולטן ביוגיאקרטה',
         nameLocal: 'Kraton Ngayogyakarta Hadiningrat',
         category: 'attraction',
@@ -17152,6 +17476,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'id-merapi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Pendidikan_Karakter_Dan_Nasionalisme.jpg/500px-Pendidikan_Karakter_Dan_Nasionalisme.jpg',
         name: 'הר מראפי',
         nameLocal: 'Mount Merapi',
         category: 'nature',
@@ -17167,6 +17493,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'id-parangtritis',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Parangtritis_Beach_2011_4.jpg/500px-Parangtritis_Beach_2011_4.jpg',
         name: 'חוף פארנגטריטיס',
         nameLocal: 'Parangtritis',
         category: 'nature',
@@ -17182,6 +17510,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'id-bromo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Bromo-Semeru-Batok-Widodaren.jpg/500px-Bromo-Semeru-Batok-Widodaren.jpg',
         name: 'הר ברומו',
         nameLocal: 'Mount Bromo',
         category: 'viewpoint',
@@ -17198,6 +17528,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'id-ijen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Sulfur_mining_in_Kawah_Ijen_-_Indonesia_-_20110608.jpg/500px-Sulfur_mining_in_Kawah_Ijen_-_Indonesia_-_20110608.jpg',
         name: 'קלדרת איג׳ן',
         nameLocal: 'Ijen',
         category: 'nature',
@@ -17286,6 +17618,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'my-fort-cornwallis',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Fort_Cornwallis%2C_Penang_2023_01.jpg/500px-Fort_Cornwallis%2C_Penang_2023_01.jpg',
         name: 'מצודת קורנווליס',
         nameLocal: 'Fort Cornwallis',
         category: 'attraction',
@@ -17301,6 +17635,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'my-kek-lok-si',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Kek_Lok_Si_at_dusk.jpg/500px-Kek_Lok_Si_at_dusk.jpg',
         name: 'מקדש קק לוק סי',
         nameLocal: 'Kek Lok Si',
         category: 'attraction',
@@ -17317,6 +17653,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'my-penang-hill',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Penang_Hil%2C_George_Town%2C_Penang_2023.jpg/500px-Penang_Hil%2C_George_Town%2C_Penang_2023.jpg',
         name: 'גבעת פנאנג',
         nameLocal: 'Penang Hill',
         category: 'viewpoint',
@@ -17332,6 +17670,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'my-taiping',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/TaipingKotaRoad.jpg/500px-TaipingKotaRoad.jpg',
         name: 'טאיפינג',
         nameLocal: 'Taiping',
         category: 'attraction',
@@ -17347,6 +17687,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'my-kellies-castle',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Kellie%27s_castle_%28main_entrance%29.jpg/500px-Kellie%27s_castle_%28main_entrance%29.jpg',
         name: 'טירת קלי',
         nameLocal: "Kellie's Castle",
         category: 'attraction',
@@ -17362,6 +17704,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'my-cameron-highlands',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Tea_fields_%28Will_Ellis%29.jpg/500px-Tea_fields_%28Will_Ellis%29.jpg',
         name: 'רמות קמרון',
         nameLocal: 'Cameron Highlands',
         category: 'nature',
@@ -17484,6 +17828,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'pt-mateus-palace',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/MateusPalace1.jpg/500px-MateusPalace1.jpg',
         name: 'ארמון מאטאוש',
         nameLocal: 'Casa de Mateus',
         category: 'attraction',
@@ -17596,6 +17942,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'pl-solidarity-centre',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/European_Solidarity_Centre_2015_003.jpg/500px-European_Solidarity_Centre_2015_003.jpg',
         name: 'מרכז סולידריות האירופי',
         nameLocal: 'Europejskie Centrum Solidarności',
         category: 'museum',
@@ -17612,6 +17960,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'pl-westerplatte',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/00565_Westerplatte_Monument_von_SE.jpg/500px-00565_Westerplatte_Monument_von_SE.jpg',
         name: 'ווסטרפלטה',
         nameLocal: 'Westerplatte',
         category: 'attraction',
@@ -17627,6 +17977,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'pl-oliwa-cathedral',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Archcathedral_Basilica_in_Oliwa.jpg/500px-Archcathedral_Basilica_in_Oliwa.jpg',
         name: 'קתדרלת אוליווה',
         nameLocal: 'Katedra w Oliwie',
         category: 'attraction',
@@ -17642,6 +17994,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'pl-malbork',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Zesp%C3%B3%C5%82_Zamku_Krzy%C5%BCackiego_MALBORK_01.jpg/500px-Zesp%C3%B3%C5%82_Zamku_Krzy%C5%BCackiego_MALBORK_01.jpg',
         name: 'מצודת מלבורק',
         nameLocal: 'Zamek w Malborku',
         category: 'attraction',
@@ -17658,6 +18012,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'pl-stutthof',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Barracks_at_Stutthof_after_liberation.jpg/500px-Barracks_at_Stutthof_after_liberation.jpg',
         name: 'מחנה שטוטהוף',
         nameLocal: 'Muzeum Stutthof',
         category: 'museum',
@@ -17673,6 +18029,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'pl-hel',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Hel_Neptune_%26_museum_2022.jpg/500px-Hel_Neptune_%26_museum_2022.jpg',
         name: 'הל',
         nameLocal: 'Hel',
         category: 'nature',
@@ -17688,6 +18046,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'pl-frombork',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Frombork_z_Anity_5.jpg/500px-Frombork_z_Anity_5.jpg',
         name: 'פרומבורק',
         nameLocal: 'Frombork',
         category: 'attraction',
@@ -17762,6 +18122,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'pe-misti',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Volcano_Misti%2C_Peru.jpg/500px-Volcano_Misti%2C_Peru.jpg',
         name: 'הר הגעש מיסטי',
         nameLocal: 'Volcán Misti',
         category: 'nature',
@@ -17777,6 +18139,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'pe-salinas-reserve',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Arequipa_Salinas_and_Aguada_Blanca_National_Reserve.jpg/500px-Arequipa_Salinas_and_Aguada_Blanca_National_Reserve.jpg',
         name: 'שמורת סלינאס ואגואדה בלנקה',
         nameLocal: 'Reserva Salinas y Aguada Blanca',
         category: 'nature',
@@ -17792,6 +18156,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'pe-chivay',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Chivay%2C_2023_%28cropped%29.jpg/500px-Chivay%2C_2023_%28cropped%29.jpg',
         name: 'צ׳יביי',
         nameLocal: 'Chivay',
         category: 'attraction',
@@ -17807,6 +18173,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'pe-colca-canyon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Colca_Canyon_Puno.jpg/500px-Colca_Canyon_Puno.jpg',
         name: 'קניון קולקה',
         nameLocal: 'Cañón del Colca',
         category: 'nature',
@@ -17823,6 +18191,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'pe-sillustani',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Sillustani%2C_Per%C3%BA%2C_2015-08-01%2C_DD_87.jpg/500px-Sillustani%2C_Per%C3%BA%2C_2015-08-01%2C_DD_87.jpg',
         name: 'סיוסטני',
         nameLocal: 'Sillustani',
         category: 'attraction',
@@ -17839,6 +18209,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'pe-puno',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Vista_de_Puno_y_el_Titicaca%2C_Per%C3%BA%2C_2015-08-01%2C_DD_63.jpg/500px-Vista_de_Puno_y_el_Titicaca%2C_Per%C3%BA%2C_2015-08-01%2C_DD_63.jpg',
         name: 'פונו',
         nameLocal: 'Puno',
         category: 'attraction',
@@ -17913,6 +18285,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'vn-hoi-an',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Hoi_An_%28I%29.jpg/500px-Hoi_An_%28I%29.jpg',
         name: 'הוי אן',
         nameLocal: 'Hội An',
         category: 'attraction',
@@ -17929,6 +18303,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vn-my-son',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/2024_-_M%E1%BB%B9_S%C6%A1n_Group_B%2C_C_and_D_-_img_23.jpg/500px-2024_-_M%E1%BB%B9_S%C6%A1n_Group_B%2C_C_and_D_-_img_23.jpg',
         name: 'מי סון',
         nameLocal: 'Mỹ Sơn',
         category: 'attraction',
@@ -17945,6 +18321,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vn-hai-van',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Hai_Van_Pass%2C_Vietnam.jpg/500px-Hai_Van_Pass%2C_Vietnam.jpg',
         name: 'מעבר האי ואן',
         nameLocal: 'Đèo Hải Vân',
         category: 'viewpoint',
@@ -17960,6 +18338,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vn-lang-co',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Langco_in_Vietnam.jpg/500px-Langco_in_Vietnam.jpg',
         name: 'לאנג קו',
         nameLocal: 'Lăng Cô',
         category: 'nature',
@@ -17975,6 +18355,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vn-thien-mu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/ThienMuPagoda.jpg/500px-ThienMuPagoda.jpg',
         name: 'מקדש ת׳יין מו',
         nameLocal: 'Chùa Thiên Mụ',
         category: 'attraction',
@@ -17990,6 +18372,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vn-ba-na-hills',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Linh_Ung_Pagoda.jpg/500px-Linh_Ung_Pagoda.jpg',
         name: 'גבעות בא נא',
         nameLocal: 'Bà Nà Hills',
         category: 'attraction',
@@ -18057,6 +18441,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'tr-fethiye',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Fethiye_Town_in_Daylight_%28cropped%29.jpg/500px-Fethiye_Town_in_Daylight_%28cropped%29.jpg',
         name: 'פתייה',
         nameLocal: 'Fethiye',
         category: 'attraction',
@@ -18072,6 +18458,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tr-oludeniz',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Paragliding_view_oludeniz_-_panoramio_%282%29.jpg/500px-Paragliding_view_oludeniz_-_panoramio_%282%29.jpg',
         name: 'אולודניז',
         nameLocal: 'Ölüdeniz',
         category: 'nature',
@@ -18088,6 +18476,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tr-xanthos',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Mosaic_of_Xanthos.jpg/500px-Mosaic_of_Xanthos.jpg',
         name: 'קסנתוס',
         nameLocal: 'Xanthos',
         category: 'attraction',
@@ -18103,6 +18493,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tr-patara',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Patara_Ruins_%287023429755%29.jpg/500px-Patara_Ruins_%287023429755%29.jpg',
         name: 'פטרה הליקית',
         nameLocal: 'Patara',
         category: 'attraction',
@@ -18119,6 +18511,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tr-kas',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Kas_overview.jpg/500px-Kas_overview.jpg',
         name: 'קאש',
         nameLocal: 'Kaş',
         category: 'attraction',
@@ -18134,6 +18528,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tr-kekova',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Kekova_island_and_Kalekoey_village.jpg/500px-Kekova_island_and_Kalekoey_village.jpg',
         name: 'קקובה',
         nameLocal: 'Kekova',
         category: 'nature',
@@ -18150,6 +18546,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tr-myra',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Myra_theatre.jpg/500px-Myra_theatre.jpg',
         name: 'מירה',
         nameLocal: 'Myra',
         category: 'attraction',
@@ -18224,6 +18622,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'ca-cabot-trail',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/CabotTrailSign.png/500px-CabotTrailSign.png',
         name: 'מסלול קאבוט',
         nameLocal: 'Cabot Trail',
         category: 'viewpoint',
@@ -18240,6 +18640,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ca-cape-breton-park',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Montagne_au_Cap-Breton.jpg/500px-Montagne_au_Cap-Breton.jpg',
         name: 'פארק הרי קייפ ברטון',
         nameLocal: 'Cape Breton Highlands National Park',
         category: 'nature',
@@ -18271,6 +18673,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ca-grand-pre',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Grand_Pr%C3%A9.jpg/500px-Grand_Pr%C3%A9.jpg',
         name: 'גראן פרה',
         nameLocal: 'Grand-Pré',
         category: 'attraction',
@@ -18286,6 +18690,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ca-annapolis-royal',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Lighthouse_DSC02664_-_Annapolis_Royal_Lighthouse_%287986972342%29.jpg/500px-Lighthouse_DSC02664_-_Annapolis_Royal_Lighthouse_%287986972342%29.jpg',
         name: 'אנפוליס רויאל',
         nameLocal: 'Annapolis Royal',
         category: 'attraction',
@@ -18301,6 +18707,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ca-kejimkujik',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Little_River_in_Fall.jpg/500px-Little_River_in_Fall.jpg',
         name: 'פארק קג׳ימקוג׳יק',
         nameLocal: 'Kejimkujik National Park',
         category: 'nature',
@@ -18375,6 +18783,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'us-acadia',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Bass_Harbor_Lighthouse_b.jpg/500px-Bass_Harbor_Lighthouse_b.jpg',
         name: 'פארק אקדיה',
         nameLocal: 'Acadia National Park',
         category: 'nature',
@@ -18391,6 +18801,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'us-franconia-notch',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Franconia_Notch.jpg/500px-Franconia_Notch.jpg',
         name: 'מעבר פרנקוניה',
         nameLocal: 'Franconia Notch',
         category: 'nature',
@@ -18422,6 +18834,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'us-mount-mansfield',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Mount_mansfield_20040926.jpg/500px-Mount_mansfield_20040926.jpg',
         name: 'הר מנספילד',
         nameLocal: 'Mount Mansfield',
         category: 'viewpoint',
@@ -18437,6 +18851,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'us-green-mountains',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/South_from_Mount_Mansfield.jpg/500px-South_from_Mount_Mansfield.jpg',
         name: 'ההרים הירוקים',
         nameLocal: 'Green Mountains',
         category: 'nature',
@@ -18533,6 +18949,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'is-godafoss',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/1_Go%C3%B0afoss_aerial_pano_2017.jpg/500px-1_Go%C3%B0afoss_aerial_pano_2017.jpg',
         name: 'גודהאפוס',
         nameLocal: 'Goðafoss',
         category: 'nature',
@@ -18549,6 +18967,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'is-myvatn',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/M%C3%BDvatn-pjt.jpg/500px-M%C3%BDvatn-pjt.jpg',
         name: 'אגם מיוואטן',
         nameLocal: 'Mývatn',
         category: 'nature',
@@ -18565,6 +18985,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'is-dimmuborgir',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Dimmuborgir-st%C3%ADgur.jpg/500px-Dimmuborgir-st%C3%ADgur.jpg',
         name: 'דימובורגיר',
         nameLocal: 'Dimmuborgir',
         category: 'nature',
@@ -18580,6 +19002,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'is-dettifoss',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Dettifoss_TimBekaert.jpg/500px-Dettifoss_TimBekaert.jpg',
         name: 'דטיפוס',
         nameLocal: 'Dettifoss',
         category: 'nature',
@@ -18596,6 +19020,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'is-asbyrgi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Asbyrgi-Eyjan-June2022.jpg/500px-Asbyrgi-Eyjan-June2022.jpg',
         name: 'אוסבירגי',
         nameLocal: 'Ásbyrgi',
         category: 'nature',
@@ -18611,6 +19037,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'is-husavik',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/1_h%C3%BAsav%C3%ADk_aerial_panorama_2017.jpg/500px-1_h%C3%BAsav%C3%ADk_aerial_panorama_2017.jpg',
         name: 'הוסאוויק',
         nameLocal: 'Húsavík',
         category: 'attraction',
@@ -18626,6 +19054,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'is-seydisfjordur',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Sey%C3%B0isfj%C3%B6r%C3%B0ur_Sept_2019_2.jpg/500px-Sey%C3%B0isfj%C3%B6r%C3%B0ur_Sept_2019_2.jpg',
         name: 'סיידיספיורדור',
         nameLocal: 'Seyðisfjörður',
         category: 'attraction',
@@ -18700,6 +19130,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'ro-voronet',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Voronet_Intrare.jpg/500px-Voronet_Intrare.jpg',
         name: 'מנזר וורונץ',
         nameLocal: 'Mănăstirea Voroneț',
         category: 'attraction',
@@ -18716,6 +19148,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ro-sucevita',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Biserica_si_curtea_manastirii_Sucevita.jpg/500px-Biserica_si_curtea_manastirii_Sucevita.jpg',
         name: 'מנזר סוצ׳ביצה',
         nameLocal: 'Mănăstirea Sucevița',
         category: 'attraction',
@@ -18732,6 +19166,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ro-moldovita',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Manastirea_Moldovita%2C_vedere_laterala.jpg/500px-Manastirea_Moldovita%2C_vedere_laterala.jpg',
         name: 'מנזר מולדוביצה',
         nameLocal: 'Mănăstirea Moldovița',
         category: 'attraction',
@@ -18747,6 +19183,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ro-humor',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Rares.jpg/500px-Rares.jpg',
         name: 'מנזר הומור',
         nameLocal: 'Mănăstirea Humorului',
         category: 'attraction',
@@ -18762,6 +19200,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ro-barsana',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Overview_of_B%C3%A2rsana_monastery%2C_B%C3%A2rsana%2C_2017.jpg/500px-Overview_of_B%C3%A2rsana_monastery%2C_B%C3%A2rsana%2C_2017.jpg',
         name: 'בורסנה',
         nameLocal: 'Bârsana',
         category: 'attraction',
@@ -18777,6 +19217,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ro-merry-cemetery',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cimitirul_Vesel%2C_S%C4%83p%C3%A2n%C8%9Ba%2C_Maramure%C8%99_-_%282023%29_-_IMG_18.jpg/500px-Cimitirul_Vesel%2C_S%C4%83p%C3%A2n%C8%9Ba%2C_Maramure%C8%99_-_%282023%29_-_IMG_18.jpg',
         name: 'בית העלמין העליז',
         nameLocal: 'Cimitirul Vesel',
         category: 'attraction',
@@ -18880,6 +19322,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nl-binnenhof',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Den_Haag_Binnenhof_02.jpg/500px-Den_Haag_Binnenhof_02.jpg',
         name: 'הבינֶנהוף',
         nameLocal: 'Binnenhof',
         category: 'attraction',
@@ -18894,6 +19338,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nl-madurodam',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Madurodam_main_entrance.jpg/500px-Madurodam_main_entrance.jpg',
         name: 'מדורודאם',
         nameLocal: 'Madurodam',
         category: 'attraction',
@@ -18908,6 +19354,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nl-nieuwe-kerk-delft',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Delft%2C_de_Nieuwe_Kerk_foto1_RM11872_foto4_2016-03-13_12.38.jpg/500px-Delft%2C_de_Nieuwe_Kerk_foto1_RM11872_foto4_2016-03-13_12.38.jpg',
         name: 'הכנסייה החדשה בדלפט',
         nameLocal: 'Nieuwe Kerk',
         category: 'attraction',
@@ -18923,6 +19371,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nl-gouda',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Banner_wikivoyage_2.jpg/500px-Banner_wikivoyage_2.jpg',
         name: 'חאודה',
         nameLocal: 'Gouda',
         category: 'attraction',
@@ -18937,6 +19387,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nl-euromast',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Rotterdam_euromast.jpg/500px-Rotterdam_euromast.jpg',
         name: 'אאורומאסט',
         nameLocal: 'Euromast',
         category: 'viewpoint',
@@ -18951,6 +19403,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nl-cube-houses',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/GraphyArchy_-_Wikipedia_00096.jpg/500px-GraphyArchy_-_Wikipedia_00096.jpg',
         name: 'בתי הקוביות',
         nameLocal: 'Kubuswoningen',
         category: 'attraction',
@@ -19014,6 +19468,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'ch-zermatt',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Pfarrkirche_St_Mauritius_Zermatt_20110605.jpg/500px-Pfarrkirche_St_Mauritius_Zermatt_20110605.jpg',
         name: 'זרמאט',
         nameLocal: 'Zermatt',
         category: 'attraction',
@@ -19029,6 +19485,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ch-gornergrat',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Gornergrat.jpg/500px-Gornergrat.jpg',
         name: 'גורנרגראט',
         nameLocal: 'Gornergrat',
         category: 'viewpoint',
@@ -19044,6 +19502,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ch-saas-fee',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Saas-Fee_Ort%2C_Januar_2009.jpg/500px-Saas-Fee_Ort%2C_Januar_2009.jpg',
         name: 'סאס-פה',
         nameLocal: 'Saas-Fee',
         category: 'attraction',
@@ -19058,6 +19518,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ch-aletsch',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Switzerland%2C_Bettmeralp_%2819505442736%29.jpg/500px-Switzerland%2C_Bettmeralp_%2819505442736%29.jpg',
         name: 'קרחון אלץ',
         nameLocal: 'Aletschgletscher',
         category: 'nature',
@@ -19073,6 +19535,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ch-leukerbad',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Leukerbad2.jpg/500px-Leukerbad2.jpg',
         name: 'לויקרבאד',
         nameLocal: 'Leukerbad',
         category: 'attraction',
@@ -19087,6 +19551,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ch-zinal',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Zinal_depuis_Le_Belv%C3%A9d%C3%A8re.jpg/500px-Zinal_depuis_Le_Belv%C3%A9d%C3%A8re.jpg',
         name: 'זינאל',
         nameLocal: 'Zinal',
         category: 'nature',
@@ -19101,6 +19567,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ch-crans-montana',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Crans-Montana.jpg/500px-Crans-Montana.jpg',
         name: 'קראן-מונטנה',
         nameLocal: 'Crans-Montana',
         category: 'viewpoint',
@@ -19176,6 +19644,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'se-abisko',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Abisko_overview.jpg/500px-Abisko_overview.jpg',
         name: 'אביסקו',
         nameLocal: 'Abisko',
         category: 'nature',
@@ -19191,6 +19661,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'se-kiruna',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Kiruna_montage.png/500px-Kiruna_montage.png',
         name: 'קירונה',
         nameLocal: 'Kiruna',
         category: 'attraction',
@@ -19205,6 +19677,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'se-jukkasjarvi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Jukkasj%C3%A4rvi%2C_Sweden.jpg/500px-Jukkasj%C3%A4rvi%2C_Sweden.jpg',
         name: 'יוקסיארווי',
         nameLocal: 'Jukkasjärvi',
         category: 'attraction',
@@ -19220,6 +19694,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'se-kebnekaise',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Kebnekaise_viewed_from_Tarfala_valley_-_narrower_crop.jpg/500px-Kebnekaise_viewed_from_Tarfala_valley_-_narrower_crop.jpg',
         name: 'קבנקאיסה',
         nameLocal: 'Kebnekaise',
         category: 'nature',
@@ -19234,6 +19710,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'se-sarek',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Pierikpakte_in_Sarek.jpg/500px-Pierikpakte_in_Sarek.jpg',
         name: 'הפארק הלאומי סארק',
         nameLocal: 'Sarek nationalpark',
         category: 'nature',
@@ -19248,6 +19726,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'se-jokkmokk',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Jokkmokks_kyrka.jpg/500px-Jokkmokks_kyrka.jpg',
         name: 'יוקמוק',
         nameLocal: 'Jokkmokk',
         category: 'attraction',
@@ -19262,6 +19742,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'se-gammelstad',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Gammelstad.jpg/500px-Gammelstad.jpg',
         name: 'עיירת הכנסייה גאמלסטאד',
         nameLocal: 'Gammelstads kyrkstad',
         category: 'attraction',
@@ -19337,6 +19819,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'hr-rovinj',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Rovinj%2C_Croatia.jpg/500px-Rovinj%2C_Croatia.jpg',
         name: 'רוביניי',
         nameLocal: 'Rovinj',
         category: 'attraction',
@@ -19352,6 +19836,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'hr-pula-arena',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Croatia_Pula_Amphitheatre_2014-10-11_11-04-27.jpg/500px-Croatia_Pula_Amphitheatre_2014-10-11_11-04-27.jpg',
         name: 'האמפיתיאטרון של פולה',
         nameLocal: 'Pulska Arena',
         category: 'attraction',
@@ -19367,6 +19853,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'hr-euphrasian',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Croatia_Porec_Euphrasius_Basilika_BW_2014-10-08_11-02-20.jpg/500px-Croatia_Porec_Euphrasius_Basilika_BW_2014-10-08_11-02-20.jpg',
         name: 'הבזיליקה האאופרסיאנית',
         nameLocal: 'Eufrazijeva bazilika',
         category: 'attraction',
@@ -19381,6 +19869,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'hr-motovun',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Aerial_view_to_Motovun.jpg/500px-Aerial_view_to_Motovun.jpg',
         name: 'מוטובון',
         nameLocal: 'Motovun',
         category: 'viewpoint',
@@ -19396,6 +19886,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'hr-groznjan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Gro%C5%BEenjan_aerial_view.jpg/500px-Gro%C5%BEenjan_aerial_view.jpg',
         name: 'גרוז׳ניאן',
         nameLocal: 'Grožnjan',
         category: 'attraction',
@@ -19410,6 +19902,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'hr-brijuni',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Brijuni_20170415.jpg/500px-Brijuni_20170415.jpg',
         name: 'איי בריוני',
         nameLocal: 'Brijuni',
         category: 'nature',
@@ -19424,6 +19918,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'hr-opatija',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Opatija_Statue.jpg/500px-Opatija_Statue.jpg',
         name: 'אופטיה',
         nameLocal: 'Opatija',
         category: 'attraction',
@@ -19493,6 +19989,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'ie-newgrange',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Irelands_history.jpg/500px-Irelands_history.jpg',
         name: 'ניוגריינג׳',
         nameLocal: 'Newgrange',
         category: 'attraction',
@@ -19508,6 +20006,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ie-glendalough',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/St._Kevin%27s_Kitchen%2C_Glendalough%2C_Co._Wicklow_%282023%29.jpg/500px-St._Kevin%27s_Kitchen%2C_Glendalough%2C_Co._Wicklow_%282023%29.jpg',
         name: 'גלנדלוך',
         nameLocal: 'Glendalough',
         category: 'nature',
@@ -19523,6 +20023,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ie-powerscourt',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Powerscourt_Fountain.jpg/500px-Powerscourt_Fountain.jpg',
         name: 'אחוזת פאוארסקורט',
         nameLocal: 'Powerscourt Estate',
         category: 'attraction',
@@ -19537,6 +20039,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ie-kilkenny-castle',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Kilkenny-castle.jpg/500px-Kilkenny-castle.jpg',
         name: 'טירת קילקני',
         nameLocal: 'Kilkenny Castle',
         category: 'attraction',
@@ -19551,6 +20055,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ie-hook-lighthouse',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Lighthouse_HookHead_CtyWexford_IRE.jpg/500px-Lighthouse_HookHead_CtyWexford_IRE.jpg',
         name: 'מגדלור הוק',
         nameLocal: 'Hook Lighthouse',
         category: 'viewpoint',
@@ -19580,6 +20086,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ie-blarney-castle',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Blarney_Castle_Ireland.jpg/500px-Blarney_Castle_Ireland.jpg',
         name: 'טירת בלארני',
         nameLocal: 'Blarney Castle',
         category: 'attraction',
@@ -19649,6 +20157,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'dk-aros',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Aros.Arhus.1.jpg/500px-Aros.Arhus.1.jpg',
         name: 'מוזיאון ארוס',
         nameLocal: 'ARoS Aarhus Kunstmuseum',
         category: 'museum',
@@ -19678,6 +20188,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'dk-jelling',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Runesten_i_Jelling.jpg/500px-Runesten_i_Jelling.jpg',
         name: 'אבני ילינג',
         nameLocal: 'Jellingstenene',
         category: 'attraction',
@@ -19706,6 +20218,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'dk-ribe',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/RibeVue.jpg/500px-RibeVue.jpg',
         name: 'ריבה',
         nameLocal: 'Ribe',
         category: 'attraction',
@@ -19720,6 +20234,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'dk-rabjerg-mile',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Raabjerg-Mile_Soe%28Matthias_Schalk%29.jpg/500px-Raabjerg-Mile_Soe%28Matthias_Schalk%29.jpg',
         name: 'ראבייר מילה',
         nameLocal: 'Råbjerg Mile',
         category: 'nature',
@@ -19734,6 +20250,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'dk-grenen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Skagen_aka_the_skaw_northmost_point_of_denmark_6th_may_2006.jpg/500px-Skagen_aka_the_skaw_northmost_point_of_denmark_6th_may_2006.jpg',
         name: 'גרנן',
         nameLocal: 'Grenen',
         category: 'viewpoint',
@@ -19804,6 +20322,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'nz-whakarewarewa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/WhakarewarewaAerial.jpg/500px-WhakarewarewaAerial.jpg',
         name: 'וואקארווארווה',
         nameLocal: 'Whakarewarewa',
         category: 'attraction',
@@ -19819,6 +20339,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nz-huka-falls',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Huka_Falls.jpg/500px-Huka_Falls.jpg',
         name: 'מפלי הוקה',
         nameLocal: 'Huka Falls',
         category: 'nature',
@@ -19833,6 +20355,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nz-tongariro',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Tongariro_Mahuia_River_n.jpg/500px-Tongariro_Mahuia_River_n.jpg',
         name: 'הפארק הלאומי טונגרירו',
         nameLocal: 'Tongariro National Park',
         category: 'nature',
@@ -19848,6 +20372,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nz-hobbiton',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Waterhouse_Lake_Front.jpg/500px-Waterhouse_Lake_Front.jpg',
         name: 'סט הצילומים הובטון',
         nameLocal: 'Hobbiton Movie Set',
         category: 'attraction',
@@ -19862,6 +20388,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nz-taranaki',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Mt_Taranaki.jpg/500px-Mt_Taranaki.jpg',
         name: 'הר טאראנקי',
         nameLocal: 'Mount Taranaki',
         category: 'nature',
@@ -19876,6 +20404,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nz-waitangi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Te_whare_runanga.jpg/500px-Te_whare_runanga.jpg',
         name: 'וואיטנגי',
         nameLocal: 'Waitangi',
         category: 'attraction',
@@ -19951,6 +20481,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'si-skocjan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/SkocjanskeJame_2013jpg.jpg/500px-SkocjanskeJame_2013jpg.jpg',
         name: 'מערות שקוצ׳יאן',
         nameLocal: 'Škocjanske jame',
         category: 'nature',
@@ -19966,6 +20498,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'si-cerknica',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/SlikaCerkniskoJezeroPolno.jpg/500px-SlikaCerkniskoJezeroPolno.jpg',
         name: 'אגם צרקניצה',
         nameLocal: 'Cerkniško jezero',
         category: 'nature',
@@ -19980,6 +20514,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'si-sneznik-castle',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Grad_Sneznik01.jpg/500px-Grad_Sneznik01.jpg',
         name: 'טירת סנז׳ניק',
         nameLocal: 'Grad Snežnik',
         category: 'attraction',
@@ -19994,6 +20530,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'si-idrija',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Idrija-view-2025-Luka-Peternel.jpg/500px-Idrija-view-2025-Luka-Peternel.jpg',
         name: 'אידריה',
         nameLocal: 'Idrija',
         category: 'attraction',
@@ -20009,6 +20547,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'si-velika-planina',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Velika_planina_%288965484358%29.jpg/500px-Velika_planina_%288965484358%29.jpg',
         name: 'ולִיקה פלאנינה',
         nameLocal: 'Velika planina',
         category: 'viewpoint',
@@ -20023,6 +20563,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'si-logarska',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/LogarskaDolina.jpg/500px-LogarskaDolina.jpg',
         name: 'עמק לוגרסקה',
         nameLocal: 'Logarska dolina',
         category: 'nature',
@@ -20038,6 +20580,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'si-ptujska-gora',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/PtujskaGora1.jpg/500px-PtujskaGora1.jpg',
         name: 'פטויסקה גורה',
         nameLocal: 'Ptujska Gora',
         category: 'attraction',
@@ -20113,6 +20657,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'fi-savonlinna',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Savonlinna_satama_20090711.jpg/500px-Savonlinna_satama_20090711.jpg',
         name: 'Savonlinna',
         nameLocal: 'סאוונלינה',
         category: 'attraction',
@@ -20127,6 +20673,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'fi-olavinlinna',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Olavinlinna_Savonlinna_Finland.jpg/500px-Olavinlinna_Savonlinna_Finland.jpg',
         name: 'Olavinlinna Castle',
         nameLocal: 'מבצר אולאווילינה',
         category: 'attraction',
@@ -20142,6 +20690,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'fi-punkaharju',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Punkaharju_road.jpg/500px-Punkaharju_road.jpg',
         name: 'Punkaharju Ridge',
         nameLocal: 'רכס פונקהאריו',
         category: 'nature',
@@ -20157,6 +20707,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'fi-linnansaari',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Linnansaari1.jpg/500px-Linnansaari1.jpg',
         name: 'Linnansaari National Park',
         nameLocal: 'פארק לאומי לינאנסארי',
         category: 'nature',
@@ -20171,6 +20723,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'fi-koli',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Koli_hill_view.jpg/500px-Koli_hill_view.jpg',
         name: 'Koli National Park',
         nameLocal: 'פארק לאומי קולי',
         category: 'viewpoint',
@@ -20186,6 +20740,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'fi-repovesi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Repoveden_Kansallispuisto_Kesayonauringossa.jpg/500px-Repoveden_Kansallispuisto_Kesayonauringossa.jpg',
         name: 'Repovesi National Park',
         nameLocal: 'פארק לאומי רפווסי',
         category: 'nature',
@@ -20200,6 +20756,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'fi-verla',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Verla.jpg/500px-Verla.jpg',
         name: 'Verla Mill',
         nameLocal: 'מפעל הנייר ורלה',
         category: 'museum',
@@ -20275,6 +20833,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'ee-kuressaare',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Kuressaare_Castle.jpg/500px-Kuressaare_Castle.jpg',
         name: 'Kuressaare Castle',
         nameLocal: 'מבצר קורסארה',
         category: 'attraction',
@@ -20290,6 +20850,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ee-kaali',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Kaali-crater-saaremaa-estonia-aug-2007.jpg/500px-Kaali-crater-saaremaa-estonia-aug-2007.jpg',
         name: 'Kaali Crater',
         nameLocal: 'מכתש קאאלי',
         category: 'nature',
@@ -20304,6 +20866,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ee-panga',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Pangapank3.jpg/500px-Pangapank3.jpg',
         name: 'Panga Cliff',
         nameLocal: 'צוק פאנגה',
         category: 'viewpoint',
@@ -20318,6 +20882,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ee-vilsandi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/SoegininaPank062911.jpg/500px-SoegininaPank062911.jpg',
         name: 'Vilsandi National Park',
         nameLocal: 'פארק לאומי וילסאנדי',
         category: 'nature',
@@ -20332,6 +20898,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ee-haapsalu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Haapsalu_-_view_from_Castle.jpg/500px-Haapsalu_-_view_from_Castle.jpg',
         name: 'Haapsalu',
         nameLocal: 'האפסאלו',
         category: 'attraction',
@@ -20360,6 +20928,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ee-soomaa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Raudna_j%C3%B5gi-masterplaan-2008.jpg/500px-Raudna_j%C3%B5gi-masterplaan-2008.jpg',
         name: 'Soomaa National Park',
         nameLocal: 'פארק לאומי סומאה',
         category: 'nature',
@@ -20435,6 +21005,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'lv-rundale',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Rundale_Palace_%286483271573%29.jpg/500px-Rundale_Palace_%286483271573%29.jpg',
         name: 'Rundāle Palace',
         nameLocal: 'ארמון רונדאלה',
         category: 'attraction',
@@ -20450,6 +21022,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lv-bauska',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Bauskas_pils_foto_Sandris_Kuzmickis.jpg/500px-Bauskas_pils_foto_Sandris_Kuzmickis.jpg',
         name: 'Bauska Castle',
         nameLocal: 'מצודת באוסקה',
         category: 'attraction',
@@ -20479,6 +21053,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lv-ventspils',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Ventspils_viduslaiku_pils_2.jpg/500px-Ventspils_viduslaiku_pils_2.jpg',
         name: 'Ventspils',
         nameLocal: 'ונטספילס',
         category: 'attraction',
@@ -20493,6 +21069,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lv-kolka',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Kolkas_rags.jpg/500px-Kolkas_rags.jpg',
         name: 'Cape Kolka',
         nameLocal: 'כף קולקה',
         category: 'viewpoint',
@@ -20507,6 +21085,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lv-slitere',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Latvia%2C_Sl%C3%AEtere_National_Park.jpg/500px-Latvia%2C_Sl%C3%AEtere_National_Park.jpg',
         name: 'Slītere National Park',
         nameLocal: 'פארק לאומי סליטרה',
         category: 'nature',
@@ -20590,6 +21170,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'lt-curonian-spit',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Mirties_sl%C4%97nis_nuo_Parnid%C5%BEio_kopos.jpg/500px-Mirties_sl%C4%97nis_nuo_Parnid%C5%BEio_kopos.jpg',
         name: 'Curonian Spit',
         nameLocal: 'הלשון הקורונית',
         category: 'nature',
@@ -20605,6 +21187,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lt-nida',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Nida_from_bird%27s-eye_view.jpg/500px-Nida_from_bird%27s-eye_view.jpg',
         name: 'Nida',
         nameLocal: 'נידה',
         category: 'attraction',
@@ -20620,6 +21204,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lt-hill-of-crosses',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Kry%C5%BEi%C5%B3_kalnas_%28G%C3%B3ra_Krzy%C5%BCy%29.jpg/500px-Kry%C5%BEi%C5%B3_kalnas_%28G%C3%B3ra_Krzy%C5%BCy%29.jpg',
         name: 'Hill of Crosses',
         nameLocal: 'גבעת הצלבים',
         category: 'attraction',
@@ -20648,6 +21234,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lt-zemaitija',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Lithuania_Plateliai_lake.jpg/500px-Lithuania_Plateliai_lake.jpg',
         name: 'Žemaitija National Park',
         nameLocal: 'פארק לאומי ז׳מייטיה',
         category: 'nature',
@@ -20676,6 +21264,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lt-rambynas',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/View-from-Rambynas_Hill.jpg/500px-View-from-Rambynas_Hill.jpg',
         name: 'Rambynas',
         nameLocal: 'רמבינאס',
         category: 'viewpoint',
@@ -20751,6 +21341,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'bg-belogradchik',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/%D0%9E%D0%B1%D0%BB_%D0%92%D0%B8%D0%B4%D0%B8%D0%BD_-_%D0%91%D0%B5%D0%BB%D0%BE%D0%B3%D1%80%D0%B0%D0%B4%D1%87%D0%B8%D0%BA_-_%D0%91%D0%B5%D0%BB%D0%BE%D0%B3%D1%80%D0%B0%D0%B4%D1%87%D0%B8%D1%88%D0%BA%D0%B8_%D1%81%D0%BA%D0%B0%D0%BB%D0%B8_-_%2812%29.jpg/500px-%D0%9E%D0%B1%D0%BB_%D0%92%D0%B8%D0%B4%D0%B8%D0%BD_-_%D0%91%D0%B5%D0%BB%D0%BE%D0%B3%D1%80%D0%B0%D0%B4%D1%87%D0%B8%D0%BA_-_%D0%91%D0%B5%D0%BB%D0%BE%D0%B3%D1%80%D0%B0%D0%B4%D1%87%D0%B8%D1%88%D0%BA%D0%B8_%D1%81%D0%BA%D0%B0%D0%BB%D0%B8_-_%2812%29.jpg',
         name: 'Belogradchik Rocks',
         nameLocal: 'סלעי בלוגראדצ׳יק',
         category: 'nature',
@@ -20766,6 +21358,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bg-madara',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/JE%25C5%25BADZIEC_Z_MADARY.jpg/500px-JE%25C5%25BADZIEC_Z_MADARY.jpg',
         name: 'Madara Rider',
         nameLocal: 'הרוכב ממדארה',
         category: 'attraction',
@@ -20780,6 +21374,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bg-ivanovo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Ivanovski_skalni_tsarkvi_20110714-61.jpg/500px-Ivanovski_skalni_tsarkvi_20110714-61.jpg',
         name: 'Rock-hewn Churches of Ivanovo',
         nameLocal: 'כנסיות הסלע של איבאנובו',
         category: 'attraction',
@@ -20795,6 +21391,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bg-devetashka',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Devetaki_cave.jpg/500px-Devetaki_cave.jpg',
         name: 'Devetashka Cave',
         nameLocal: 'מערת דבטשקה',
         category: 'nature',
@@ -20809,6 +21407,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bg-tryavna',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Tryavna-imagesfrombulgaria.jpg/500px-Tryavna-imagesfrombulgaria.jpg',
         name: 'Tryavna',
         nameLocal: 'טריאבנה',
         category: 'attraction',
@@ -20823,6 +21423,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bg-shipka',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/View_from_Shipka.jpg/500px-View_from_Shipka.jpg',
         name: 'Shipka Pass',
         nameLocal: 'מעבר שיפקה',
         category: 'viewpoint',
@@ -20837,6 +21439,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bg-buzludzha',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Sunset_and_Buzludza.jpg/500px-Sunset_and_Buzludza.jpg',
         name: 'Buzludzha Monument',
         nameLocal: 'אנדרטת בוזלודז׳ה',
         category: 'attraction',
@@ -20912,6 +21516,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'am-haghpat',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Haghpat_aerial_2023.3.jpg/500px-Haghpat_aerial_2023.3.jpg',
         name: 'Haghpat Monastery',
         nameLocal: 'מנזר הגפטאט',
         category: 'attraction',
@@ -20927,6 +21533,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'am-sanahin',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Sanahin-external-view.jpg/500px-Sanahin-external-view.jpg',
         name: 'Sanahin Monastery',
         nameLocal: 'מנזר סנהין',
         category: 'attraction',
@@ -20942,6 +21550,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'am-akhtala',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Akhtala_monastery_110.jpg/500px-Akhtala_monastery_110.jpg',
         name: 'Akhtala Monastery',
         nameLocal: 'מנזר אחטלה',
         category: 'attraction',
@@ -20956,6 +21566,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'am-odzun',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Odzun-church-south.jpg/500px-Odzun-church-south.jpg',
         name: 'Odzun Church',
         nameLocal: 'כנסיית אודזון',
         category: 'attraction',
@@ -20970,6 +21582,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'am-kobayr',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Kobayr_0012.jpg/500px-Kobayr_0012.jpg',
         name: 'Kobayr Monastery',
         nameLocal: 'מנזר קובאיר',
         category: 'attraction',
@@ -20984,6 +21598,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'am-haghartsin',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Haghartsin_monastery_2015.jpg/500px-Haghartsin_monastery_2015.jpg',
         name: 'Haghartsin Monastery',
         nameLocal: 'מנזר הגרצין',
         category: 'attraction',
@@ -20999,6 +21615,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'am-goshavank',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Goshavank_general_view.jpg/500px-Goshavank_general_view.jpg',
         name: 'Goshavank',
         nameLocal: 'גושוואנק',
         category: 'attraction',
@@ -21083,6 +21701,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'mx-monte-alban',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Monte_Alban_West_Side_Platform.jpg/500px-Monte_Alban_West_Side_Platform.jpg',
         name: 'Monte Albán',
         nameLocal: 'מונטה אלבן',
         category: 'attraction',
@@ -21098,6 +21718,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'mx-mitla',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/12-05oaxaca076.jpg/500px-12-05oaxaca076.jpg',
         name: 'Mitla',
         nameLocal: 'מיטלה',
         category: 'attraction',
@@ -21112,6 +21734,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'mx-hierve-el-agua',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/HierveElAguaMexico1.jpg/500px-HierveElAguaMexico1.jpg',
         name: 'Hierve el Agua',
         nameLocal: 'אירבה אל אגואה',
         category: 'nature',
@@ -21127,6 +21751,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'mx-tule',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/ArbordeTuleOaxaca_MX.jpg/500px-ArbordeTuleOaxaca_MX.jpg',
         name: 'Árbol del Tule',
         nameLocal: 'עץ הטולה',
         category: 'nature',
@@ -21141,6 +21767,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'mx-yagul',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Zona_Arqueol%C3%B3gica_de_Yagul.jpg/500px-Zona_Arqueol%C3%B3gica_de_Yagul.jpg',
         name: 'Yagul',
         nameLocal: 'יאגול',
         category: 'attraction',
@@ -21155,6 +21783,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'mx-puerto-escondido',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Mexico_167.jpg/500px-Mexico_167.jpg',
         name: 'Puerto Escondido',
         nameLocal: 'פוארטו אסקונדידו',
         category: 'attraction',
@@ -21224,6 +21854,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'uz-kokand',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Khudayar_Khan_Palace%2C_Kokand_01.jpg/500px-Khudayar_Khan_Palace%2C_Kokand_01.jpg',
         name: 'Kokand',
         nameLocal: 'קוקנד',
         category: 'attraction',
@@ -21239,6 +21871,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'uz-margilan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Khonakhan_Mosque%2C_Margilan_%28496142%29.jpg/500px-Khonakhan_Mosque%2C_Margilan_%28496142%29.jpg',
         name: 'Margilan',
         nameLocal: 'מרגילן',
         category: 'attraction',
@@ -21254,6 +21888,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'uz-fergana',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ferghana0234-Urinboev.jpg/500px-Ferghana0234-Urinboev.jpg',
         name: 'Fergana',
         nameLocal: 'פרגנה',
         category: 'attraction',
@@ -21282,6 +21918,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'uz-andijan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Devonaboy_Jome_Mosque_in_Andijan.jpg/500px-Devonaboy_Jome_Mosque_in_Andijan.jpg',
         name: 'Andijan',
         nameLocal: 'אנדיז׳אן',
         category: 'attraction',
@@ -21381,6 +22019,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'np-lumbini',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/BRP_Lumbini_Mayadevi_temple.jpg/500px-BRP_Lumbini_Mayadevi_temple.jpg',
         name: 'Lumbini',
         nameLocal: 'לומביני',
         category: 'attraction',
@@ -21397,6 +22037,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'np-tilaurakot',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Suddhodana_Palace-east_gate.jpg/500px-Suddhodana_Palace-east_gate.jpg',
         name: 'Tilaurakot',
         nameLocal: 'טילאוראקוט',
         category: 'attraction',
@@ -21412,6 +22054,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'np-bardiya',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Bardiya_02.jpg/500px-Bardiya_02.jpg',
         name: 'Bardiya National Park',
         nameLocal: 'הפארק הלאומי ברדייה',
         category: 'nature',
@@ -21428,6 +22072,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'np-nepalgunj',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Bageshwori_Temple_Nepalgunj%2C_Banke.jpg/500px-Bageshwori_Temple_Nepalgunj%2C_Banke.jpg',
         name: 'Nepalgunj',
         nameLocal: 'נפאלגונג׳',
         category: 'attraction',
@@ -21443,6 +22089,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'np-tansen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Evening_View_of_Tansen.jpg/500px-Evening_View_of_Tansen.jpg',
         name: 'Tansen',
         nameLocal: 'טנסן',
         category: 'viewpoint',
@@ -21458,6 +22106,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'np-janakpur',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Janki_Mandir.jpg/500px-Janki_Mandir.jpg',
         name: 'Janakpur',
         nameLocal: 'ג׳נקפור',
         category: 'attraction',
@@ -21473,6 +22123,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'np-koshi-tappu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Floodplain_of_Koshi_River.jpg/500px-Floodplain_of_Koshi_River.jpg',
         name: 'Koshi Tappu Wildlife Reserve',
         nameLocal: 'שמורת קושי טאפו',
         category: 'nature',
@@ -21554,6 +22206,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'tz-stone-town',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Zanzibar_sultan_palace.jpg/500px-Zanzibar_sultan_palace.jpg',
         name: 'Stone Town',
         nameLocal: 'סטון טאון',
         category: 'attraction',
@@ -21570,6 +22224,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tz-changuu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Restaurant_in_Chunguu_Island%2C_Mjini_DC.jpg/500px-Restaurant_in_Chunguu_Island%2C_Mjini_DC.jpg',
         name: 'Changuu Island',
         nameLocal: 'האי צ׳אנגו',
         category: 'nature',
@@ -21585,6 +22241,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tz-jozani',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Zanzibar_Red_Colobus_at_Jozani_Chwaka_Bay_National_Park%2C_Kusini_DC%2C_South_Zanzibar%2C_Tanzania.jpg/500px-Zanzibar_Red_Colobus_at_Jozani_Chwaka_Bay_National_Park%2C_Kusini_DC%2C_South_Zanzibar%2C_Tanzania.jpg',
         name: 'Jozani Chwaka Bay National Park',
         nameLocal: 'הפארק הלאומי יוזאני',
         category: 'nature',
@@ -21600,6 +22258,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tz-nungwi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Original_4b713299-08fb-4d32-9299-6844e8a97a78_IMG_20211201_154556.jpg/500px-Original_4b713299-08fb-4d32-9299-6844e8a97a78_IMG_20211201_154556.jpg',
         name: 'Nungwi',
         nameLocal: 'נונגווי',
         category: 'nature',
@@ -21616,6 +22276,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tz-pemba',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Vumawimbi_Beach%2C_Pemba_Island.jpg/500px-Vumawimbi_Beach%2C_Pemba_Island.jpg',
         name: 'Pemba Island',
         nameLocal: 'האי פמבה',
         category: 'nature',
@@ -21631,6 +22293,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tz-bagamoyo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Old_Arab_Tea_House_-_Bagamoyo_-_Tanzania_-_01.jpg/500px-Old_Arab_Tea_House_-_Bagamoyo_-_Tanzania_-_01.jpg',
         name: 'Bagamoyo',
         nameLocal: 'בגמויו',
         category: 'attraction',
@@ -21646,6 +22310,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tz-kilwa-kisiwani',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Great_Mosque_Kilwa_Interior.jpg/500px-Great_Mosque_Kilwa_Interior.jpg',
         name: 'Kilwa Kisiwani',
         nameLocal: 'קילווה קיסיוואני',
         category: 'attraction',
@@ -21727,6 +22393,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'my-kinabalu-park',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Mount_kinabalu_01.png/500px-Mount_kinabalu_01.png',
         name: 'Kinabalu Park',
         nameLocal: 'הפארק הלאומי קינבלו',
         category: 'nature',
@@ -21743,6 +22411,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'my-sepilok',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Sandakan_Sabah_Sepilok-Orangutan-Rehabilitation-Centre-01a.jpg/500px-Sandakan_Sabah_Sepilok-Orangutan-Rehabilitation-Centre-01a.jpg',
         name: 'Sepilok Orangutan Rehabilitation Centre',
         nameLocal: 'מרכז השיקום לאורנגאוטנים בספילוק',
         category: 'nature',
@@ -21759,6 +22429,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'my-kinabatangan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Kinabatangan_River_%2814154417142%29.jpg/500px-Kinabatangan_River_%2814154417142%29.jpg',
         name: 'Kinabatangan River',
         nameLocal: 'נהר קינבטנגן',
         category: 'nature',
@@ -21775,6 +22447,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'my-sipadan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Pulau_Sipadan.jpg/500px-Pulau_Sipadan.jpg',
         name: 'Sipadan',
         nameLocal: 'סיפאדן',
         category: 'nature',
@@ -21791,6 +22465,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'my-mulu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Mulu.jpg/500px-Mulu.jpg',
         name: 'Gunung Mulu National Park',
         nameLocal: 'הפארק הלאומי גונונג מולו',
         category: 'nature',
@@ -21807,6 +22483,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'my-bako',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Bako_NP.jpg/500px-Bako_NP.jpg',
         name: 'Bako National Park',
         nameLocal: 'הפארק הלאומי באקו',
         category: 'nature',
@@ -21888,6 +22566,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'id-tanah-lot',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/TanahLot_2014.jpg/500px-TanahLot_2014.jpg',
         name: 'Tanah Lot',
         nameLocal: 'טאנה לוט',
         category: 'attraction',
@@ -21904,6 +22584,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'id-uluwatu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Pura_Luhur_Uluwatu_2017-08-17_%2834%29.jpg/500px-Pura_Luhur_Uluwatu_2017-08-17_%2834%29.jpg',
         name: 'Uluwatu Temple',
         nameLocal: 'מקדש אולוואטו',
         category: 'attraction',
@@ -21920,6 +22602,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'id-goa-gajah',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Bali_-_Goa_Gajah_%282022%29_-_img_20.jpg/500px-Bali_-_Goa_Gajah_%282022%29_-_img_20.jpg',
         name: 'Goa Gajah',
         nameLocal: 'גואה גאג׳ה',
         category: 'attraction',
@@ -21935,6 +22619,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'id-batur',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Mount_batur_and_lake.jpg/500px-Mount_batur_and_lake.jpg',
         name: 'Mount Batur',
         nameLocal: 'הר הגעש באטור',
         category: 'viewpoint',
@@ -21950,6 +22636,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'id-besakih',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Besakih_Bali_Indonesia_Pura-Besakih-02.jpg/500px-Besakih_Bali_Indonesia_Pura-Besakih-02.jpg',
         name: 'Besakih Temple',
         nameLocal: 'מקדש בסאקי',
         category: 'attraction',
@@ -21965,6 +22653,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'id-rinjani',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/KAGAGAHAN_RIJANI.jpg/500px-KAGAGAHAN_RIJANI.jpg',
         name: 'Mount Rinjani',
         nameLocal: 'הר הגעש רינג׳אני',
         category: 'nature',
@@ -21980,6 +22670,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'id-komodo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Komodo_dragon_at_Komodo_National_Park.jpg/500px-Komodo_dragon_at_Komodo_National_Park.jpg',
         name: 'Komodo National Park',
         nameLocal: 'הפארק הלאומי קומודו',
         category: 'nature',
@@ -22056,6 +22748,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'rs-mokra-gora',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/JZ-83-173_mokragora2.jpg/500px-JZ-83-173_mokragora2.jpg',
         name: 'Mokra Gora',
         nameLocal: 'מוקרה גורה',
         category: 'attraction',
@@ -22072,6 +22766,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rs-zlatibor',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Pejzaz_ribnickog_jezera.jpg/500px-Pejzaz_ribnickog_jezera.jpg',
         name: 'Zlatibor',
         nameLocal: 'זלאטיבור',
         category: 'nature',
@@ -22087,6 +22783,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rs-sirogojno',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Staro_Selo_-_Sirogojno5.jpg/500px-Staro_Selo_-_Sirogojno5.jpg',
         name: 'Sirogojno',
         nameLocal: 'סירוגוינו',
         category: 'museum',
@@ -22102,6 +22800,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rs-uvac',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Uvac_River_and_Eagle.jpg/500px-Uvac_River_and_Eagle.jpg',
         name: 'Uvac',
         nameLocal: 'שמורת אובאץ',
         category: 'viewpoint',
@@ -22118,6 +22818,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rs-studenica',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Manastir_Studenica_10.jpg/500px-Manastir_Studenica_10.jpg',
         name: 'Studenica Monastery',
         nameLocal: 'מנזר סטודניצה',
         category: 'attraction',
@@ -22134,6 +22836,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rs-sopocani',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/%D0%A1%D0%BE%D0%BF%D0%BE%D1%9B%D0%B0%D0%BD%D0%B8%2C_%D0%BF%D0%BE%D0%BD%D0%BE%D1%81_%D0%9D%D0%B5%D0%BC%D0%B0%D1%9A%D0%B8%D1%9B%D0%B0.jpg/500px-%D0%A1%D0%BE%D0%BF%D0%BE%D1%9B%D0%B0%D0%BD%D0%B8%2C_%D0%BF%D0%BE%D0%BD%D0%BE%D1%81_%D0%9D%D0%B5%D0%BC%D0%B0%D1%9A%D0%B8%D1%9B%D0%B0.jpg',
         name: 'Sopocani Monastery',
         nameLocal: 'מנזר סופוצ׳אני',
         category: 'attraction',
@@ -22203,6 +22907,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'ba-una-park',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Waterfall_on_Una_river_in_Martin_Brod.jpg/500px-Waterfall_on_Una_river_in_Martin_Brod.jpg',
         name: 'Una National Park',
         nameLocal: 'הפארק הלאומי אונה',
         category: 'nature',
@@ -22249,6 +22955,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ba-kozara',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/NP002_-_14.jpg/500px-NP002_-_14.jpg',
         name: 'Kozara National Park',
         nameLocal: 'הפארק הלאומי קוזארה',
         category: 'nature',
@@ -22279,6 +22987,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ba-travnik',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Travnik_%28collage_image%29.jpg/500px-Travnik_%28collage_image%29.jpg',
         name: 'Travnik',
         nameLocal: 'טרווניק',
         category: 'attraction',
@@ -22349,6 +23059,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'al-rozafa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Rozafa_Castle_in_July_2013_%285%29.jpg/500px-Rozafa_Castle_in_July_2013_%285%29.jpg',
         name: 'Rozafa Castle',
         nameLocal: 'מצודת רוזאפה',
         category: 'attraction',
@@ -22365,6 +23077,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'al-lake-skadar',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Skadarsko_Jezero.jpg/500px-Skadarsko_Jezero.jpg',
         name: 'Lake Skadar',
         nameLocal: 'אגם שקודר',
         category: 'nature',
@@ -22380,6 +23094,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'al-valbone',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Maja_e_Thate_mountain_Valbone_Albania.jpg/500px-Maja_e_Thate_mountain_Valbone_Albania.jpg',
         name: 'Valbone',
         nameLocal: 'ואלבונה',
         category: 'nature',
@@ -22471,6 +23187,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'kr-changdeokgung',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Changdeokgung_Palace_Oct_2014_002.jpg/500px-Changdeokgung_Palace_Oct_2014_002.jpg',
         name: 'Changdeokgung',
         nameLocal: 'ארמון צ׳אנגדוקגונג',
         category: 'attraction',
@@ -22487,6 +23205,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kr-jongmyo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Jeongjeon%2C_Jongmyo_%28Autumn%2C_2012%29.jpg/500px-Jeongjeon%2C_Jongmyo_%28Autumn%2C_2012%29.jpg',
         name: 'Jongmyo Shrine',
         nameLocal: 'מקדש ג׳ונגמיו',
         category: 'attraction',
@@ -22502,6 +23222,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kr-bukchon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Bukchon_Hanok_Village_01.jpg/500px-Bukchon_Hanok_Village_01.jpg',
         name: 'Bukchon Hanok Village',
         nameLocal: 'כפר ההאנוק בוקצ׳ון',
         category: 'attraction',
@@ -22532,6 +23254,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kr-bukhansan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Bukhansan_%28%EB%B6%81%ED%95%9C%EC%82%B0%29.jpg/500px-Bukhansan_%28%EB%B6%81%ED%95%9C%EC%82%B0%29.jpg',
         name: 'Bukhansan',
         nameLocal: 'הרי בוקהאנסאן',
         category: 'nature',
@@ -22563,6 +23287,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kr-hwaseong',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Hwaseong_Fortress%2C_Suwon%2C_Gyeonggi-do%2C_Republic_of_Korea_%282%29.jpg/500px-Hwaseong_Fortress%2C_Suwon%2C_Gyeonggi-do%2C_Republic_of_Korea_%282%29.jpg',
         name: 'Hwaseong Fortress',
         nameLocal: 'מצודת הוואסונג',
         category: 'attraction',
@@ -22638,6 +23364,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'au-uluru',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/ULURU.jpg/500px-ULURU.jpg',
         name: 'אולורו',
         nameLocal: 'Uluru',
         category: 'nature',
@@ -22654,6 +23382,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'au-kata-tjuta',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Aerial_Kata_Tjuta_olgas4799.jpg/500px-Aerial_Kata_Tjuta_olgas4799.jpg',
         name: 'קאטה ג׳וטה',
         nameLocal: 'Kata Tjuta',
         category: 'nature',
@@ -22670,6 +23400,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'au-kings-canyon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Kings_Canyon_NT_view.jpg/500px-Kings_Canyon_NT_view.jpg',
         name: 'קניון קינגס',
         nameLocal: 'Kings Canyon',
         category: 'nature',
@@ -22685,6 +23417,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'au-alice-springs',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Alice_Springs%2C_2015_%2801%29.jpg/500px-Alice_Springs%2C_2015_%2801%29.jpg',
         name: 'אליס ספרינגס',
         nameLocal: 'Alice Springs',
         category: 'attraction',
@@ -22700,6 +23434,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'au-simpsons-gap',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Simpsons_Gap.jpg/500px-Simpsons_Gap.jpg',
         name: 'סימפסונס גאפ',
         nameLocal: 'Simpsons Gap',
         category: 'nature',
@@ -22715,6 +23451,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'au-standley-chasm',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Standley_Chasm.jpg/500px-Standley_Chasm.jpg',
         name: 'סטנדלי צ׳זם',
         nameLocal: 'Standley Chasm',
         category: 'nature',
@@ -22730,6 +23468,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'au-devils-marbles',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Devils_Marbles.jpg/500px-Devils_Marbles.jpg',
         name: 'קרלו קרלו - גולות השטן',
         nameLocal: 'Karlu Karlu / Devils Marbles',
         category: 'nature',
@@ -22805,6 +23545,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'kz-yasawi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Turkestan.jpg/500px-Turkestan.jpg',
         name: 'המאוזוליאום של חוג׳ה אחמד יאסאווי',
         nameLocal: 'Mausoleum of Khoja Ahmed Yasawi',
         category: 'attraction',
@@ -22821,6 +23563,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kz-otrar',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/%D0%93%D0%BE%D1%80%D0%BE%D0%B4%D0%B8%D1%89%D0%B5_%D0%9E%D1%82%D1%8B%D1%80%D1%80%D0%B0%D1%80_%D1%81_%D0%B2%D0%BE%D0%B7%D0%B4%D1%83%D1%85%D0%B0.jpg/500px-%D0%93%D0%BE%D1%80%D0%BE%D0%B4%D0%B8%D1%89%D0%B5_%D0%9E%D1%82%D1%8B%D1%80%D1%80%D0%B0%D1%80_%D1%81_%D0%B2%D0%BE%D0%B7%D0%B4%D1%83%D1%85%D0%B0.jpg',
         name: 'חורבות אוטראר',
         nameLocal: 'Otrar',
         category: 'attraction',
@@ -22836,6 +23580,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kz-arystan-bab',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Aristanbab.jpg/500px-Aristanbab.jpg',
         name: 'המאוזוליאום של אריסטן באב',
         nameLocal: 'Arystan Bab Mausoleum',
         category: 'attraction',
@@ -22851,6 +23597,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kz-taraz',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Dostyk_Square_%284983211403%29.jpg/500px-Dostyk_Square_%284983211403%29.jpg',
         name: 'טראז',
         nameLocal: 'Taraz',
         category: 'attraction',
@@ -22866,6 +23614,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kz-aisha-bibi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Aisha_bibi.png/500px-Aisha_bibi.png',
         name: 'איישה ביבי',
         nameLocal: 'Aisha Bibi',
         category: 'attraction',
@@ -22881,6 +23631,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kz-aksu-zhabagly',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Aksu_Jabagly_2.jpg/500px-Aksu_Jabagly_2.jpg',
         name: 'שמורת אקסו-ז׳באגלי',
         nameLocal: 'Aksu-Zhabagly Nature Reserve',
         category: 'nature',
@@ -22950,6 +23702,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'it-valle-templi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Concordiatempel_Tempio_della_Temple_of_Concordia_de_la_Concorde_Tal_der_Tempel_Valle_dei_Templi_Agrigento_Sizilien_Foto_Wolfgang_Pehlemann_DSC07490.jpg/500px-Concordiatempel_Tempio_della_Temple_of_Concordia_de_la_Concorde_Tal_der_Tempel_Valle_dei_Templi_Agrigento_Sizilien_Foto_Wolfgang_Pehlemann_DSC07490.jpg',
         name: 'עמק המקדשים, אגריג׳נטו',
         nameLocal: 'Valle dei Templi',
         category: 'attraction',
@@ -22966,6 +23720,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'it-villa-casale',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Villa_romana_di_Piazza_Armerina_-_Sicilia_-_tigre.jpg/500px-Villa_romana_di_Piazza_Armerina_-_Sicilia_-_tigre.jpg',
         name: 'וילה רומנה דל קזאלה',
         nameLocal: 'Villa Romana del Casale',
         category: 'attraction',
@@ -22982,6 +23738,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'it-ortygia',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Ortigia_dall%27alto.jpg/500px-Ortigia_dall%27alto.jpg',
         name: 'אורטיג׳ה, סירקוזה',
         nameLocal: 'Ortigia',
         category: 'attraction',
@@ -22998,6 +23756,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'it-noto',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/La_cattedrale_di_Noto_restaurata.jpg/500px-La_cattedrale_di_Noto_restaurata.jpg',
         name: 'נוטו',
         nameLocal: 'Noto',
         category: 'attraction',
@@ -23013,6 +23773,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'it-taormina',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Aerial_image_of_the_coast_of_Taormina_%28view_from_the_southeast%29.jpg/500px-Aerial_image_of_the_coast_of_Taormina_%28view_from_the_southeast%29.jpg',
         name: 'טאורמינה',
         nameLocal: 'Taormina',
         category: 'attraction',
@@ -23028,6 +23790,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'it-monreale',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/%2522Die_Kathedrale_zeigt_in_besonders_eindrucksvoller_Weise_den_normannisch-arabisch-byzantinischen_Baustil%2522_02.jpg/500px-%2522Die_Kathedrale_zeigt_in_besonders_eindrucksvoller_Weise_den_normannisch-arabisch-byzantinischen_Baustil%2522_02.jpg',
         name: 'קתדרלת מונרֵאלֶה',
         nameLocal: 'Duomo di Monreale',
         category: 'attraction',
@@ -23044,6 +23808,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'it-cefalu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Cefalu-bjs2007-01.jpg/500px-Cefalu-bjs2007-01.jpg',
         name: 'צ׳פאלו',
         nameLocal: 'Cefalù',
         category: 'attraction',
@@ -23131,6 +23897,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'es-alhambra',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Granada-Alhambra12.jpg/500px-Granada-Alhambra12.jpg',
         name: 'אלהמברה',
         nameLocal: 'La Alhambra',
         category: 'attraction',
@@ -23147,6 +23915,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'es-mezquita',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Mezquita_de_C%C3%B3rdoba_desde_el_aire_%28C%C3%B3rdoba%2C_Espa%C3%B1a%29.jpg/500px-Mezquita_de_C%C3%B3rdoba_desde_el_aire_%28C%C3%B3rdoba%2C_Espa%C3%B1a%29.jpg',
         name: 'המסגד-קתדרלה של קורדובה',
         nameLocal: 'Mezquita-Catedral de Córdoba',
         category: 'attraction',
@@ -23163,6 +23933,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'es-alcazar-seville',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Sevilla-2-2_%2848040287512%29.jpg/500px-Sevilla-2-2_%2848040287512%29.jpg',
         name: 'האלקאסר של סביליה',
         nameLocal: 'Real Alcázar de Sevilla',
         category: 'attraction',
@@ -23179,6 +23951,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'es-ronda',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Panorama_of_Ronda.jpg/500px-Panorama_of_Ronda.jpg',
         name: 'רונדה',
         nameLocal: 'Ronda',
         category: 'attraction',
@@ -23194,6 +23968,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'es-setenil',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Setenil_de_las_Bodegas_-_Wallpaper.jpg/500px-Setenil_de_las_Bodegas_-_Wallpaper.jpg',
         name: 'סטניל דה לאס בודגאס',
         nameLocal: 'Setenil de las Bodegas',
         category: 'attraction',
@@ -23209,6 +23985,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'es-caminito',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Caminito_del_Rey_3.jpg/500px-Caminito_del_Rey_3.jpg',
         name: 'קמיניטו דל ריי',
         nameLocal: 'Caminito del Rey',
         category: 'nature',
@@ -23224,6 +24002,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'es-cabo-de-gata',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Arrecife_de_las_Sirenas.jpg/500px-Arrecife_de_las_Sirenas.jpg',
         name: 'קאבו דה גאטה',
         nameLocal: 'Parque Natural Cabo de Gata-Níjar',
         category: 'nature',
@@ -23305,6 +24085,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'gr-meteora',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Meteora%27s_monastery_2.jpg/500px-Meteora%27s_monastery_2.jpg',
         name: 'מטאורה',
         nameLocal: 'Μετέωρα',
         category: 'attraction',
@@ -23321,6 +24103,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'gr-vikos',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Vikos_Gorge_from_Beloe.jpg/500px-Vikos_Gorge_from_Beloe.jpg',
         name: 'קניון ויקוס',
         nameLocal: 'Χαράδρα του Βίκου',
         category: 'nature',
@@ -23337,6 +24121,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'gr-papingo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Papigko%2CZagorochoria.jpg/500px-Papigko%2CZagorochoria.jpg',
         name: 'פפינגו',
         nameLocal: 'Πάπιγκο',
         category: 'attraction',
@@ -23352,6 +24138,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'gr-ioannina',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Ioannina_Montage_L.png/500px-Ioannina_Montage_L.png',
         name: 'יואנינה',
         nameLocal: 'Ιωάννινα',
         category: 'attraction',
@@ -23367,6 +24155,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'gr-dodona',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Dodona-Greece-April-2008-107.jpg/500px-Dodona-Greece-April-2008-107.jpg',
         name: 'דודונה',
         nameLocal: 'Δωδώνη',
         category: 'attraction',
@@ -23382,6 +24172,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'gr-metsovo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Metsovo_overview_bgiu.jpg/500px-Metsovo_overview_bgiu.jpg',
         name: 'מצובו',
         nameLocal: 'Μέτσοβο',
         category: 'attraction',
@@ -23478,6 +24270,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'de-burg-eltz',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Le_ch%C3%A2teau_d%27Eltz_%28Burg_Eltz%29_en_allemagne_%28cropped%29.jpg/500px-Le_ch%C3%A2teau_d%27Eltz_%28Burg_Eltz%29_en_allemagne_%28cropped%29.jpg',
         name: 'טירת אלץ',
         nameLocal: 'Burg Eltz',
         category: 'attraction',
@@ -23494,6 +24288,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'de-porta-nigra',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Porta_Nigra_morgens_%28100MP%29.jpg/500px-Porta_Nigra_morgens_%28100MP%29.jpg',
         name: 'פורטה ניגרה, טרייר',
         nameLocal: 'Porta Nigra',
         category: 'attraction',
@@ -23510,6 +24306,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'de-cochem',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Cochem_and_Reichsburg.jpg/500px-Cochem_and_Reichsburg.jpg',
         name: 'קוכם',
         nameLocal: 'Cochem',
         category: 'attraction',
@@ -23525,6 +24323,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'de-bacharach',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Bacharach_from_the_Postenturm.jpg/500px-Bacharach_from_the_Postenturm.jpg',
         name: 'באכאראך',
         nameLocal: 'Bacharach',
         category: 'attraction',
@@ -23540,6 +24340,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'de-marksburg',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Marksburg-Braubach.jpg/500px-Marksburg-Braubach.jpg',
         name: 'טירת מרקסבורג',
         nameLocal: 'Marksburg',
         category: 'attraction',
@@ -23555,6 +24357,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'de-lorelei',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Loreley%2C_Rhine%2C_Castle_Katz.jpg/500px-Loreley%2C_Rhine%2C_Castle_Katz.jpg',
         name: 'סלע הלורליי',
         nameLocal: 'Loreley',
         category: 'viewpoint',
@@ -23570,6 +24374,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'de-worms',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Worms_01.jpg/500px-Worms_01.jpg',
         name: 'וורמס',
         nameLocal: 'Worms',
         category: 'attraction',
@@ -23646,6 +24452,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'jp-matsumoto-castle',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Matsumoto_Castle_Keep_Tower.jpg/500px-Matsumoto_Castle_Keep_Tower.jpg',
         name: 'טירת מאצומוטו',
         nameLocal: '松本城',
         category: 'attraction',
@@ -23662,6 +24470,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'jp-takayama',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Sushi%2C_Hida_Beef.jpg/500px-Sushi%2C_Hida_Beef.jpg',
         name: 'טקיאמה',
         nameLocal: '高山',
         category: 'attraction',
@@ -23678,6 +24488,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'jp-kenrokuen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Stone_lantern_Kenrokuen.jpg/500px-Stone_lantern_Kenrokuen.jpg',
         name: 'גן קנרוקואן, קנזאווה',
         nameLocal: '兼六園',
         category: 'attraction',
@@ -23694,6 +24506,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'jp-kamikochi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Kamikouchi.jpg/500px-Kamikouchi.jpg',
         name: 'קמיקוצ׳י',
         nameLocal: '上高地',
         category: 'nature',
@@ -23710,6 +24524,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'jp-jigokudani',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Jigokudani_Hotspring_Gorakuen.jpg/500px-Jigokudani_Hotspring_Gorakuen.jpg',
         name: 'פארק הקופים ג׳יגוקודאני',
         nameLocal: '地獄谷野猿公苑',
         category: 'nature',
@@ -23725,6 +24541,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'jp-zenkoji',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/160501_Zenkoji_Nagano_Japan06s3.jpg/500px-160501_Zenkoji_Nagano_Japan06s3.jpg',
         name: 'זנקוג׳י, נגאנו',
         nameLocal: '善光寺',
         category: 'attraction',
@@ -23740,6 +24558,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'jp-tsumago',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/1_tsumago_juku_2024.jpg/500px-1_tsumago_juku_2024.jpg',
         name: 'צומאגו-ג׳וקו',
         nameLocal: '妻籠宿',
         category: 'attraction',
@@ -23828,6 +24648,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'th-wat-rong-khun',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Wat_Rong_Khun_-_Chiang_Rai.jpg/500px-Wat_Rong_Khun_-_Chiang_Rai.jpg',
         name: 'ואט רונג חון (המקדש הלבן)',
         nameLocal: 'Wat Rong Khun',
         category: 'attraction',
@@ -23844,6 +24666,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'th-doi-inthanon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Naphamethinidon%2C_Naphaphonphumisiri_near_summit_of_Doi_Inthanon.jpg/500px-Naphamethinidon%2C_Naphaphonphumisiri_near_summit_of_Doi_Inthanon.jpg',
         name: 'דוי אינתאנון',
         nameLocal: 'Doi Inthanon',
         category: 'nature',
@@ -23860,6 +24684,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'th-doi-suthep',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Wat_Phra_That_Doi_Suthep_-_Chiang_Mai.jpg/500px-Wat_Phra_That_Doi_Suthep_-_Chiang_Mai.jpg',
         name: 'ואט פרה תאת דוי סותפ',
         nameLocal: 'Wat Phra That Doi Suthep',
         category: 'attraction',
@@ -23876,6 +24702,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'th-sukhothai',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Wat_srichum_03.jpg/500px-Wat_srichum_03.jpg',
         name: 'הפארק ההיסטורי סוכותאי',
         nameLocal: 'Sukhothai Historical Park',
         category: 'attraction',
@@ -23892,6 +24720,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'th-pai',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/View_of_Pai_3.jpg/500px-View_of_Pai_3.jpg',
         name: 'פאי',
         nameLocal: 'Pai',
         category: 'attraction',
@@ -23907,6 +24737,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'th-wat-chedi-luang',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/%E0%B9%80%E0%B8%88%E0%B8%94%E0%B8%B5%E0%B8%A2%E0%B9%8C%E0%B8%AB%E0%B8%A5%E0%B8%A7%E0%B8%87.jpg/500px-%E0%B9%80%E0%B8%88%E0%B8%94%E0%B8%B5%E0%B8%A2%E0%B9%8C%E0%B8%AB%E0%B8%A5%E0%B8%A7%E0%B8%87.jpg',
         name: 'ואט צ׳די לואנג',
         nameLocal: 'Wat Chedi Luang',
         category: 'attraction',
@@ -23988,6 +24820,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'sax-bastei',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Rathen_und_Elbsandsteingebirge_asv2022-08_img04.jpg/500px-Rathen_und_Elbsandsteingebirge_asv2022-08_img04.jpg',
         name: 'הבאסטיי וגשר הסלע',
         nameLocal: 'Bastei',
         category: 'viewpoint',
@@ -24004,6 +24838,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'sax-konigstein',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Aerial_photo_of_Festung_K%C3%B6nigstein%2C_October_2008.jpg/500px-Aerial_photo_of_Festung_K%C3%B6nigstein%2C_October_2008.jpg',
         name: 'מצודת קניגשטיין',
         nameLocal: 'Festung Königstein',
         category: 'attraction',
@@ -24020,6 +24856,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'sax-lilienstein',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Lilienstein_herbstabend.jpeg/500px-Lilienstein_herbstabend.jpeg',
         name: 'הליליינשטיין',
         nameLocal: 'Lilienstein',
         category: 'nature',
@@ -24035,6 +24873,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'sax-schrammsteine',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Schrammsteine2.jpg/500px-Schrammsteine2.jpg',
         name: 'רכס השראמשטיינה',
         nameLocal: 'Schrammsteine',
         category: 'nature',
@@ -24051,6 +24891,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'sax-bad-schandau',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Bad_schandau.jpg/500px-Bad_schandau.jpg',
         name: 'באד שנדאו',
         nameLocal: 'Bad Schandau',
         category: 'attraction',
@@ -24066,6 +24908,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'sax-rathen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/SaxonBastei1.jpg/500px-SaxonBastei1.jpg',
         name: 'קורורט ראטן',
         nameLocal: 'Kurort Rathen',
         category: 'attraction',
@@ -24081,6 +24925,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'sax-pirna',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Human_rights_memorial_Castle-Fortress_Sonnenstein_117956973.jpg/500px-Human_rights_memorial_Castle-Fortress_Sonnenstein_117956973.jpg',
         name: 'פירנה',
         nameLocal: 'Pirna',
         category: 'attraction',
@@ -24148,6 +24994,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'at-hallstatt',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Hallstatt_-_Zentrum_.jpg/500px-Hallstatt_-_Zentrum_.jpg',
         name: 'האלשטאט',
         nameLocal: 'Hallstatt',
         category: 'attraction',
@@ -24180,6 +25028,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'at-bad-ischl',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Bad_Ischl_and_Traun_River.jpg/500px-Bad_Ischl_and_Traun_River.jpg',
         name: 'באד אישל',
         nameLocal: 'Bad Ischl',
         category: 'attraction',
@@ -24195,6 +25045,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'at-st-wolfgang',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/St._Wolfgang_im_Salzkammergut_-_Ortsansicht.jpg/500px-St._Wolfgang_im_Salzkammergut_-_Ortsansicht.jpg',
         name: 'זנקט וולפגנג',
         nameLocal: 'St. Wolfgang im Salzkammergut',
         category: 'attraction',
@@ -24210,6 +25062,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'at-attersee',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Aerial_image_of_the_Attersee_%28view_from_the_southwest%29.jpg/500px-Aerial_image_of_the_Attersee_%28view_from_the_southwest%29.jpg',
         name: 'אגם אטרזה',
         nameLocal: 'Attersee',
         category: 'nature',
@@ -24225,6 +25079,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'at-traunsee',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Aerial_image_of_the_Traunsee_%28view_from_the_south%29.jpg/500px-Aerial_image_of_the_Traunsee_%28view_from_the_south%29.jpg',
         name: 'אגם טראונזה',
         nameLocal: 'Traunsee',
         category: 'nature',
@@ -24240,6 +25096,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'at-gmunden',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Gmunden_-_Ortsansicht.jpg/500px-Gmunden_-_Ortsansicht.jpg',
         name: 'גמונדן',
         nameLocal: 'Gmunden',
         category: 'attraction',
@@ -24307,6 +25165,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'hr-diocletian',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Croatia-01239_-_The_Peristil_%289551533404%29.jpg/500px-Croatia-01239_-_The_Peristil_%289551533404%29.jpg',
         name: 'ארמון דיוקלטיאנוס, ספליט',
         nameLocal: 'Diocletian\u2019s Palace',
         category: 'attraction',
@@ -24323,6 +25183,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'hr-krka',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Krkawatervallen.jpg/500px-Krkawatervallen.jpg',
         name: 'הפארק הלאומי קרקה',
         nameLocal: 'Krka National Park',
         category: 'nature',
@@ -24339,6 +25201,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'hr-kornati',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Kornati.jpg/500px-Kornati.jpg',
         name: 'איי קורנאטי',
         nameLocal: 'Kornati',
         category: 'nature',
@@ -24354,6 +25218,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'hr-hvar',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/View_of_Hvar_02.jpg/500px-View_of_Hvar_02.jpg',
         name: 'האי הוואר',
         nameLocal: 'Hvar',
         category: 'attraction',
@@ -24370,6 +25236,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'hr-korcula',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/More%C5%A1ka_in_Kor%C4%8Dula.jpg/500px-More%C5%A1ka_in_Kor%C4%8Dula.jpg',
         name: 'קורצ׳ולה',
         nameLocal: 'Korčula',
         category: 'attraction',
@@ -24385,6 +25253,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'hr-salona',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Episcopal_Center_%28Salona%29_03.jpg/500px-Episcopal_Center_%28Salona%29_03.jpg',
         name: 'סלונה העתיקה',
         nameLocal: 'Salona',
         category: 'attraction',
@@ -24459,6 +25329,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'lk-sigiriya',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Sigiriya_%28141688197%29.jpeg/500px-Sigiriya_%28141688197%29.jpeg',
         name: 'סלע סיגיריה',
         nameLocal: 'Sigiriya',
         category: 'attraction',
@@ -24475,6 +25347,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lk-dambulla',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Dambulla-buddhastupa.jpg/500px-Dambulla-buddhastupa.jpg',
         name: 'מקדשי המערה בדמבולה',
         nameLocal: 'Dambulla Cave Temple',
         category: 'attraction',
@@ -24491,6 +25365,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lk-polonnaruwa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Polonnaruwa.jpg/500px-Polonnaruwa.jpg',
         name: 'פולונרואה',
         nameLocal: 'Polonnaruwa',
         category: 'attraction',
@@ -24507,6 +25383,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lk-anuradhapura',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/SL_Anuradhapura_asv2020-01_img11_Ruwanwelisaya_Stupa.jpg/500px-SL_Anuradhapura_asv2020-01_img11_Ruwanwelisaya_Stupa.jpg',
         name: 'אנוראדהפורה',
         nameLocal: 'Anuradhapura',
         category: 'attraction',
@@ -24522,6 +25400,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lk-minneriya',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Birds_at_the_Minneriya-Giritale_National_Park.jpg/500px-Birds_at_the_Minneriya-Giritale_National_Park.jpg',
         name: 'הפארק הלאומי מינריה',
         nameLocal: 'Minneriya National Park',
         category: 'nature',
@@ -24589,6 +25469,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'lk-ella',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Ella_railway_station.jpg/500px-Ella_railway_station.jpg',
         name: 'אלה',
         nameLocal: 'Ella',
         category: 'attraction',
@@ -24620,6 +25502,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lk-horton-plains',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Srilankamountainforest.jpg/500px-Srilankamountainforest.jpg',
         name: 'הפארק הלאומי הורטון פליינס',
         nameLocal: 'Horton Plains National Park',
         category: 'nature',
@@ -24636,6 +25520,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lk-udawalawe',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Udawalawe_National_Park_%28Udawalawa_Reservoir%29.jpg/500px-Udawalawe_National_Park_%28Udawalawa_Reservoir%29.jpg',
         name: 'הפארק הלאומי אודוואלווה',
         nameLocal: 'Udawalawe National Park',
         category: 'nature',
@@ -24651,6 +25537,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lk-yala',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Yala_Beach.jpg/500px-Yala_Beach.jpg',
         name: 'הפארק הלאומי יאלה',
         nameLocal: 'Yala National Park',
         category: 'nature',
@@ -24666,6 +25554,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lk-galle',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Galle_Fort.jpg/500px-Galle_Fort.jpg',
         name: 'המצודה של גאלה',
         nameLocal: 'Galle Fort',
         category: 'attraction',
@@ -24682,6 +25572,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lk-mirissa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Mirissa-Plage_%283%29.jpg/500px-Mirissa-Plage_%283%29.jpg',
         name: 'מיריסה',
         nameLocal: 'Mirissa',
         category: 'nature',
@@ -24763,6 +25655,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'kh-bayon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.jpg/500px-Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.jpg',
         name: 'מקדש באיון',
         nameLocal: 'Bayon',
         category: 'attraction',
@@ -24779,6 +25673,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kh-ta-prohm',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Ta_Prohm_%28III%29.jpg/500px-Ta_Prohm_%28III%29.jpg',
         name: 'טה פרוהם',
         nameLocal: 'Ta Prohm',
         category: 'attraction',
@@ -24795,6 +25691,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kh-banteay-srei',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Banteay_Srei_full2.jpg/500px-Banteay_Srei_full2.jpg',
         name: 'בנטיאי סריי',
         nameLocal: 'Banteay Srei',
         category: 'attraction',
@@ -24810,6 +25708,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kh-beng-mealea',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/bengmealea.jpg/500px-bengmealea.jpg',
         name: 'בנג מיאליאה',
         nameLocal: 'Beng Mealea',
         category: 'attraction',
@@ -24907,6 +25807,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'kh-tuol-sleng',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Tuol_Sleng.jpg/500px-Tuol_Sleng.jpg',
         name: 'מוזיאון רצח העם טואל סלנג',
         nameLocal: 'Tuol Sleng Genocide Museum',
         category: 'museum',
@@ -24923,6 +25825,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kh-choeung-ek',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Buddhist_Stupa_at_Choeung_Ek_killing_fields%2C_Cambodia.jpg/500px-Buddhist_Stupa_at_Choeung_Ek_killing_fields%2C_Cambodia.jpg',
         name: 'שדות ההרג צ׳ואונג אק',
         nameLocal: 'Choeung Ek',
         category: 'museum',
@@ -24939,6 +25843,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kh-wat-phnom',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Wat_Phnom_Doun_Penh.jpg/500px-Wat_Phnom_Doun_Penh.jpg',
         name: 'ואט פנום',
         nameLocal: 'Wat Phnom',
         category: 'attraction',
@@ -24954,6 +25860,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kh-battambang',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Aerial_view_of_Battambang_city.jpg/500px-Aerial_view_of_Battambang_city.jpg',
         name: 'בטמבנג',
         nameLocal: 'Battambang',
         category: 'attraction',
@@ -24969,6 +25877,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kh-koh-rong',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Sok_San_Bungalows_koh_Rong_island_Cambodia.jpg/500px-Sok_San_Bungalows_koh_Rong_island_Cambodia.jpg',
         name: 'קו רונג',
         nameLocal: 'Koh Rong',
         category: 'nature',
@@ -25033,6 +25943,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'la-wat-xieng-thong',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Temple_Wat_Xieng_Thong_-_Luang_Prabang_-_Laos.jpg/500px-Temple_Wat_Xieng_Thong_-_Luang_Prabang_-_Laos.jpg',
         name: 'ואט שיאנג טונג',
         nameLocal: 'Wat Xieng Thong',
         category: 'attraction',
@@ -25048,6 +25960,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'la-kuang-si',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/The_river_of_Kuang_si_waterfalls.jpg/500px-The_river_of_Kuang_si_waterfalls.jpg',
         name: 'מפלי קוואנג סי',
         nameLocal: 'Kuang Si Falls',
         category: 'nature',
@@ -25063,6 +25977,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'la-pak-ou',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Pak-Ou-Caves-2017.jpg/500px-Pak-Ou-Caves-2017.jpg',
         name: 'מערות פאק או',
         nameLocal: 'Pak Ou Caves',
         category: 'attraction',
@@ -25077,6 +25993,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'la-nong-khiaw',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Nong_Khiaw_pano%284%29.jpg/500px-Nong_Khiaw_pano%284%29.jpg',
         name: 'נונג קיאו',
         nameLocal: 'Nong Khiaw',
         category: 'viewpoint',
@@ -25091,6 +26009,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'la-vang-vieng',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/VientianeProvince_VangVieng9_tango7174.jpg/500px-VientianeProvince_VangVieng9_tango7174.jpg',
         name: 'ואנג ויאנג',
         nameLocal: 'Vang Vieng',
         category: 'nature',
@@ -25105,6 +26025,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'la-pha-that-luang',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Pha_That_Luang%2C_July_2023.jpg/500px-Pha_That_Luang%2C_July_2023.jpg',
         name: 'פא טאט לואנג',
         nameLocal: 'Pha That Luang',
         category: 'attraction',
@@ -25119,6 +26041,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'la-buddha-park',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Buddha_Park.jpg/500px-Buddha_Park.jpg',
         name: 'פארק הבודהות',
         nameLocal: 'Buddha Park (Xieng Khuan)',
         category: 'attraction',
@@ -25194,6 +26118,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'ma-tichka',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Tizi_n%27Tichka.jpg/500px-Tizi_n%27Tichka.jpg',
         name: 'מעבר טיזי נטישקה',
         nameLocal: 'Tizi n\u2019Tichka',
         category: 'viewpoint',
@@ -25223,6 +26149,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ma-ouarzazate',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Kasbah_Taourirt_in_Ouarzazate_2011.jpg/500px-Kasbah_Taourirt_in_Ouarzazate_2011.jpg',
         name: 'ורזאזאת',
         nameLocal: 'Ouarzazate',
         category: 'attraction',
@@ -25237,6 +26165,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ma-skoura',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Morocco%2C_Souss-Massa-Draa_Region%2C_Ouarzazate_Province%2C_Skoura_%289%29.jpg/500px-Morocco%2C_Souss-Massa-Draa_Region%2C_Ouarzazate_Province%2C_Skoura_%289%29.jpg',
         name: 'נאת הדקלים סקורה',
         nameLocal: 'Skoura Oasis',
         category: 'nature',
@@ -25265,6 +26195,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ma-todgha',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Todra_Gorge_Morning_2011.jpg/500px-Todra_Gorge_Morning_2011.jpg',
         name: 'קניון טודרה',
         nameLocal: 'Todgha Gorge',
         category: 'nature',
@@ -25280,6 +26212,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ma-erg-chebbi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Merzouga_Dunes_2011.jpg/500px-Merzouga_Dunes_2011.jpg',
         name: 'דיונות ערג שבי',
         nameLocal: 'Erg Chebbi',
         category: 'nature',
@@ -25350,6 +26284,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'kg-burana',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Burana_Tower%2C_Kyrgyzstan.jpg/500px-Burana_Tower%2C_Kyrgyzstan.jpg',
         name: 'מגדל בורנה',
         nameLocal: 'Burana Tower',
         category: 'attraction',
@@ -25378,6 +26314,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kg-issyk-kul',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Issykkul_plyag.jpg/500px-Issykkul_plyag.jpg',
         name: 'אגם איסיק קול',
         nameLocal: 'Issyk-Kul',
         category: 'nature',
@@ -25408,6 +26346,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kg-naryn',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Naryn_overlook.jpg/500px-Naryn_overlook.jpg',
         name: 'נארין',
         nameLocal: 'Naryn',
         category: 'attraction',
@@ -25422,6 +26362,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kg-tash-rabat',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Tash_Rabat_in_mountains.jpg/500px-Tash_Rabat_in_mountains.jpg',
         name: 'טאש רבאט',
         nameLocal: 'Tash Rabat',
         category: 'attraction',
@@ -25437,6 +26379,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kg-arslanbob',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Arslanbob_market_from_west.jpg/500px-Arslanbob_market_from_west.jpg',
         name: 'ארסלנבוב',
         nameLocal: 'Arslanbob',
         category: 'nature',
@@ -25512,6 +26456,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'ar-el-calafate',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/El_Calafate_%2825825005237%29.jpg/500px-El_Calafate_%2825825005237%29.jpg',
         name: 'אל קלפטה',
         nameLocal: 'El Calafate',
         category: 'attraction',
@@ -25526,6 +26472,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ar-perito-moreno',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Perito_Moreno_Glacier_2023.jpg/500px-Perito_Moreno_Glacier_2023.jpg',
         name: 'קרחון פריטו מורנו',
         nameLocal: 'Perito Moreno Glacier',
         category: 'nature',
@@ -25555,6 +26503,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ar-el-chalten',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/El_Chalt%25C3%25A9n.jpg/500px-El_Chalt%25C3%25A9n.jpg',
         name: 'אל צ׳לטן',
         nameLocal: 'El Chalt\u00e9n',
         category: 'nature',
@@ -25660,6 +26610,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'cr-arenal',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Arenal_volcano_%2870785p%29_%28cropped%29.jpg/500px-Arenal_volcano_%2870785p%29_%28cropped%29.jpg',
         name: 'הר הגעש ארנל',
         nameLocal: 'Arenal Volcano',
         category: 'nature',
@@ -25675,6 +26627,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'cr-la-fortuna',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Costa_rica_arenal_fortuna_2001_12.jpg/500px-Costa_rica_arenal_fortuna_2001_12.jpg',
         name: 'לה פורטונה',
         nameLocal: 'La Fortuna',
         category: 'attraction',
@@ -25689,6 +26643,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'cr-monteverde',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Monteverdeskyline01.jpg/500px-Monteverdeskyline01.jpg',
         name: 'מונטה ורדה',
         nameLocal: 'Monteverde',
         category: 'nature',
@@ -25704,6 +26660,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'cr-rincon-vieja',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Guanacaste_National_Park.jpg/500px-Guanacaste_National_Park.jpg',
         name: 'רינקון דה לה ויאחה',
         nameLocal: 'Rinc\u00f3n de la Vieja',
         category: 'nature',
@@ -25718,6 +26676,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'cr-manuel-antonio',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Manuel_antonio_06_april_2005.jpeg/500px-Manuel_antonio_06_april_2005.jpeg',
         name: 'פארק מנואל אנטוניו',
         nameLocal: 'Manuel Antonio National Park',
         category: 'nature',
@@ -25733,6 +26693,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'cr-tortuguero',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Tortuguero_Nationalpark.jpg/500px-Tortuguero_Nationalpark.jpg',
         name: 'טורטוגרו',
         nameLocal: 'Tortuguero National Park',
         category: 'nature',
@@ -25747,6 +26709,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'cr-corcovado',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Sirena_Station_at_Corcovado_National_Park_Costa_Rica.jpg/500px-Sirena_Station_at_Corcovado_National_Park_Costa_Rica.jpg',
         name: 'קורקובדו',
         nameLocal: 'Corcovado National Park',
         category: 'nature',
@@ -25822,6 +26786,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'tw-beitou',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/%E5%8C%97%E6%8A%95%E6%A9%9F%E5%BB%A0DSC_4995.jpg/500px-%E5%8C%97%E6%8A%95%E6%A9%9F%E5%BB%A0DSC_4995.jpg',
         name: 'בייטו',
         nameLocal: 'Beitou',
         category: 'attraction',
@@ -25836,6 +26802,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tw-jiufen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Jiufen_Amei_Tea_House_08.23.jpg/500px-Jiufen_Amei_Tea_House_08.23.jpg',
         name: 'ג׳ופן',
         nameLocal: 'Jiufen',
         category: 'attraction',
@@ -25851,6 +26819,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tw-taroko',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Jiuqudong_2003-01.jpg/500px-Jiuqudong_2003-01.jpg',
         name: 'קניון טארוקו',
         nameLocal: 'Taroko Gorge',
         category: 'nature',
@@ -25866,6 +26836,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tw-hualien',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/%E8%8A%B1%E8%93%AE%E8%BB%8A%E7%AB%99%E9%81%A0%E6%99%AF.jpg/500px-%E8%8A%B1%E8%93%AE%E8%BB%8A%E7%AB%99%E9%81%A0%E6%99%AF.jpg',
         name: 'חואליין',
         nameLocal: 'Hualien',
         category: 'attraction',
@@ -25880,6 +26852,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tw-sun-moon-lake',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Sun_Moon_Lake_Sentinel-2B_MSI_2024-04-04.jpg/500px-Sun_Moon_Lake_Sentinel-2B_MSI_2024-04-04.jpg',
         name: 'אגם השמש והירח',
         nameLocal: 'Sun Moon Lake',
         category: 'nature',
@@ -25894,6 +26868,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tw-kenting',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Maobitou_Cape_01.jpg/500px-Maobitou_Cape_01.jpg',
         name: 'פארק קנטינג',
         nameLocal: 'Kenting National Park',
         category: 'nature',
@@ -25975,6 +26951,8 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'cl-san-pedro',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/San_Pedro_de_Atacama_oasis.jpg/500px-San_Pedro_de_Atacama_oasis.jpg',
         name: 'סן פדרו דה אטקמה',
         nameLocal: 'San Pedro de Atacama',
         category: 'attraction',
@@ -25990,6 +26968,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'cl-el-tatio',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/G%C3%A9iseres_del_Tatio%2C_Atacama%2C_Chile%2C_2016-02-01%2C_DD_01-02_HDR.jpg/500px-G%C3%A9iseres_del_Tatio%2C_Atacama%2C_Chile%2C_2016-02-01%2C_DD_01-02_HDR.jpg',
         name: 'גייזרים אל טאטיו',
         nameLocal: 'El Tatio',
         category: 'nature',
@@ -26005,6 +26985,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'cl-salar-atacama',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Salar_de_Atacama.jpg/500px-Salar_de_Atacama.jpg',
         name: 'סלאר דה אטקמה',
         nameLocal: 'Salar de Atacama',
         category: 'nature',
@@ -26019,6 +27001,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'cl-valle-luna',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Valle_della_Luna_01.jpg/500px-Valle_della_Luna_01.jpg',
         name: 'עמק הירח',
         nameLocal: 'Valle de la Luna',
         category: 'viewpoint',
@@ -26034,6 +27018,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'cl-licancabur',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Licancabur_volcan_du_Chili.jpg/500px-Licancabur_volcan_du_Chili.jpg',
         name: 'הר הגעש ליקנקבור',
         nameLocal: 'Licancabur',
         category: 'viewpoint',
