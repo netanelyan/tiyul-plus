@@ -109,7 +109,9 @@ country `bulgaria`; destination `rila-pirin`; places `rlp-rila`,
 `finnish-lapland`; places `fla-rovaniemi`, `fla-pyha-luosto`, `fla-levi`,
 `fla-saariselka`, `fla-ukk`, `fla-inari`, `fla-ranua`, `fla-kemi`; country
 `lithuania`; destination `vilnius`; places `vln-cathedral`, `vln-gediminas`,
-`vln-st-anne`, `vln-gate-of-dawn`, `vln-uzupis`, `vln-paneriai`, `vln-trakai`.
+`vln-st-anne`, `vln-gate-of-dawn`, `vln-uzupis`, `vln-paneriai`, `vln-trakai`;
+country `estonia`; destination `tallinn`; places `tln-toompea`, `tln-nevsky`,
+`tln-st-olaf`, `tln-kadriorg`, `tln-kumu`, `tln-lahemaa`.
 
 **Blocked on coordinates - France / Paris.** France is the biggest
 remaining country gap, but dbpedia's `/data/*.json` for very famous
