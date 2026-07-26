@@ -115,7 +115,7 @@ country `estonia`; destination `tallinn`; places `tln-toompea`, `tln-nevsky`,
 destination `riga`; places `rga-blackheads`, `rga-st-peters`, `rga-cathedral`,
 `rga-freedom-monument`, `rga-sigulda`, `rga-turaida`, `rga-gauja`; country
 `albania`; destination `south-albania`; places `alb-butrint`, `alb-ksamil`,
-`alb-saranda`, `alb-porto-palermo`, `alb-llogara`, `alb-berat`. Country `bosnia`; destination `mostar-sarajevo`; places `bih-mostar`, `bih-blagaj`, `bih-kravica`, `bih-bascarsija`, `bih-tunnel`. Country `serbia`; destination `vojvodina`; places `rs-petrovaradin`, `rs-synagogue`, `rs-karlovci`, `rs-fruska-gora`, `rs-palic`, `rs-sombor`, `rs-vrsac`. Country `mexico`; destination `yucatan`; places `mx-merida`, `mx-uxmal`, `mx-chichen-itza`, `mx-valladolid`, `mx-izamal`, `mx-rio-lagartos`, `mx-celestun`.
+`alb-saranda`, `alb-porto-palermo`, `alb-llogara`, `alb-berat`. Country `bosnia`; destination `mostar-sarajevo`; places `bih-mostar`, `bih-blagaj`, `bih-kravica`, `bih-bascarsija`, `bih-tunnel`. Country `serbia`; destination `vojvodina`; places `rs-petrovaradin`, `rs-synagogue`, `rs-karlovci`, `rs-fruska-gora`, `rs-palic`, `rs-sombor`, `rs-vrsac`. Country `mexico`; destination `yucatan`; places `mx-merida`, `mx-uxmal`, `mx-chichen-itza`, `mx-valladolid`, `mx-izamal`, `mx-rio-lagartos`, `mx-celestun`. Country `south-korea`; destination `gyeongju-busan`; places `kr-gyeongju`, `kr-bulguksa`, `kr-seokguram`, `kr-hahoe`, `kr-yonggungsa`, `kr-gamcheon`, `kr-jagalchi`.
 
 **Blocked on coordinates - France / Paris.** France is the biggest
 remaining country gap, but dbpedia's `/data/*.json` for very famous
