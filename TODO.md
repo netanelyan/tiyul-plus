@@ -97,7 +97,9 @@ places `bcn-tossa`, `bcn-cadaques`, `bud-szentendre`, `bud-visegrad`,
 `cappadocia`; places `cpd-goreme`, `cpd-uchisar`, `cpd-urgup`,
 `cpd-derinkuyu`, `cpd-avanos`, `cpd-nevsehir`; country `ireland`;
 destination `west-ireland`; places `irw-moher`, `irw-galway`,
-`irw-kylemore`, `irw-connemara`, `irw-dun-aonghasa`, `irw-poulnabrone`.
+`irw-kylemore`, `irw-connemara`, `irw-dun-aonghasa`, `irw-poulnabrone`;
+country `bulgaria`; destination `rila-pirin`; places `rlp-rila`,
+`rlp-seven-lakes`, `rlp-bansko`, `rlp-melnik`, `rlp-sandanski`.
 
 **Blocked on coordinates - France / Paris.** France is the biggest
 remaining country gap, but dbpedia's `/data/*.json` for very famous
