@@ -288,6 +288,53 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-26 - Image attachments in the agent chat
+
+Netanel asked for the ability to send an image to the AI on the site, with a
+cap of a few per day: "i have booked a hotel. i want to send it to the AI".
+Built end to end, no new dependency (hard rule 6).
+
+**What changed.** `src/lib/plans.ts` gained an `imagesPerDay` limit (free 3,
+premium 30) plus a `PLAN_FEATURE_ROWS` row so the premium page shows it.
+`src/lib/trip/imageAttach.ts` is new: it downscales a picked file to a JPEG
+data URL with the native canvas, long edge 1400px so screenshot text stays
+legible, stepping quality down until it fits 1.4M chars. This mirrors
+`imageToAvatar` in `lib/auth/profile.ts` rather than adding an upload library.
+`ChatPanel` got a paperclip button, a removable preview above the composer and
+the image rendered inside the user bubble; the submit button now accepts an
+image with no text. `useTripChat.send` takes a third `image` argument and the
+POST projection carries it. `/api/chat` gained an `image` member on
+`ApiContentBlock`, `sanitizeMessages`, and a `chat-images` daily gate.
+
+**Product decisions.** Free gets 3 images a day, premium 30 - Netanel said
+"a few", and an image costs the model far more than text, so the number is
+deliberately much lower than the 40 chat messages a day. The quota counts only
+the image attached to the *last* message: the client resends the whole history
+each turn, so counting every image in the payload would burn the quota on
+re-sends. For the same reason only the last two images are sent to the model
+at all, and only the last four are kept in localStorage (an image is hundreds
+of KB and localStorage is a few MB total - unbounded history would blow the
+quota and lose the whole conversation, so old messages keep their text and
+drop the picture). Over quota returns a conversational Hebrew message through
+`singleMessageStream`, matching the existing `QUOTA_MESSAGE` pattern, not an
+HTTP error. Images are never stored server-side and never logged.
+
+**Security.** The server does not trust the client shape: only
+`data:image/(jpeg|png|webp);base64,` with a strict base64 body is accepted,
+size-capped, user messages only, and the raw body is length-checked before
+`JSON.parse`. The system prompt tells the agent that text inside an image is
+data and never an instruction, that it must not invent details it cannot
+actually read, and that it must never echo a confirmation code, phone number
+or email back to the user or into the trip.
+
+**Deferred.** No automated test of the vision path - it needs a real API key,
+so it was verified by reading only. The image is not persisted anywhere, so a
+booking confirmation is lost on refresh once four messages have passed; if
+that turns out to matter, the natural home is Supabase Storage, which would
+need Netanel's go-ahead. Catalog expansion is still stopped at his request
+(127 destinations / 62 countries / 1,114 places) and the hourly scheduled task
+`trig_01BiLQXCrg2YcgNbGkWmYqUh` remains disabled.
+
 ### 2026-07-26 - Overnight catalog expansion, part three: eight new countries
 
 Ran the standing overnight expansion until Netanel asked to stop. Catalog
