@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Place } from '@/lib/types';
 import { destinations } from '@/data/destinations';
 import type { TripChat } from '@/lib/trip/useTripChat';
+import { fileToChatImage, IMAGE_ACCEPT } from '@/lib/trip/imageAttach';
 import PlacesMap from '@/components/PlacesMap';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 
@@ -59,7 +60,33 @@ export default function ChatPanel({
   onClose?: () => void;
 }) {
   const bottomRef = useRef<HTMLDivElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
   const { messages, loading, status, input, setInput, send } = chat;
+  // תמונה שמחכה לשליחה (data URL מוקטן) + שגיאת בחירה קצרה
+  const [pending, setPending] = useState<string | null>(null);
+  const [imgError, setImgError] = useState<string | null>(null);
+  const [reading, setReading] = useState(false);
+
+  const pickImage = async (file: File | undefined) => {
+    if (!file) return;
+    setImgError(null);
+    setReading(true);
+    const data = await fileToChatImage(file);
+    setReading(false);
+    if (!data) {
+      setImgError('לא הצלחנו לקרוא את התמונה. נסו צילום מסך או JPG/PNG קטן יותר.');
+      return;
+    }
+    setPending(data);
+  };
+
+  const submit = () => {
+    if (reading) return;
+    const image = pending ?? undefined;
+    setPending(null);
+    setImgError(null);
+    send(input, undefined, image);
+  };
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -118,6 +145,14 @@ export default function ChatPanel({
                   : 'w-full max-w-full bg-cream text-night'
               }`}
             >
+              {msg.image && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={msg.image}
+                  alt="תמונה שצורפה לשיחה"
+                  className={`max-h-56 w-auto rounded-xl object-contain ${msg.content ? 'mb-2' : ''}`}
+                />
+              )}
               {renderText(msg.content)}
               {msg.actions && msg.actions.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-1.5">
@@ -166,25 +201,67 @@ export default function ChatPanel({
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          send(input);
+          submit();
         }}
-        className="flex shrink-0 gap-2 border-t border-night/10 bg-shell p-3"
+        className="shrink-0 border-t border-night/10 bg-shell p-3"
       >
-        <input
-          value={input}
-          autoFocus={autoFocus}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="תוסיף יום, תחליף מקום, מה כשר באזור…"
-          aria-label="בקשה לסוכן"
-          className="min-w-0 flex-1 rounded-xl bg-cream px-4 py-3 text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset"
-        />
-        <button
-          type="submit"
-          disabled={loading || !input.trim()}
-          className="shrink-0 rounded-xl bg-sunset px-4 py-3 text-sm font-bold text-cream transition hover:bg-sunset-deep disabled:opacity-40"
-        >
-          שליחה
-        </button>
+        {/* תצוגה מקדימה של התמונה שמחכה לשליחה - עם אפשרות להסיר */}
+        {pending && (
+          <div className="mb-2 flex items-center gap-2 rounded-xl bg-cream p-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={pending} alt="תצוגה מקדימה" className="h-14 w-14 rounded-lg object-cover" />
+            <span className="flex-1 truncate text-xs font-semibold text-night/60">
+              התמונה תישלח עם ההודעה
+            </span>
+            <button
+              type="button"
+              onClick={() => setPending(null)}
+              aria-label="הסרת התמונה"
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-night/5 text-night/50 transition hover:bg-night/10 hover:text-night"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+        {imgError && <p className="mb-2 text-xs font-semibold text-sunset-deep">{imgError}</p>}
+
+        <div className="flex gap-2">
+          <input
+            ref={fileRef}
+            type="file"
+            accept={IMAGE_ACCEPT}
+            className="hidden"
+            onChange={(e) => {
+              void pickImage(e.target.files?.[0]);
+              e.target.value = ''; // כדי שבחירה חוזרת באותו קובץ תעבוד
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={loading || reading}
+            aria-label="צירוף תמונה (אישור הזמנה, כרטיס)"
+            title="צירוף תמונה - אישור הזמנה, כרטיס טיסה, צילום מסך"
+            className="shrink-0 rounded-xl bg-cream px-3 py-3 text-base text-night/60 ring-1 ring-night/10 transition hover:bg-sunset/10 hover:text-night disabled:opacity-40"
+          >
+            {reading ? '…' : '📎'}
+          </button>
+          <input
+            value={input}
+            autoFocus={autoFocus}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="תוסיף יום, תחליף מקום, מה כשר באזור…"
+            aria-label="בקשה לסוכן"
+            className="min-w-0 flex-1 rounded-xl bg-cream px-4 py-3 text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset"
+          />
+          <button
+            type="submit"
+            disabled={loading || reading || (!input.trim() && !pending)}
+            className="shrink-0 rounded-xl bg-sunset px-4 py-3 text-sm font-bold text-cream transition hover:bg-sunset-deep disabled:opacity-40"
+          >
+            שליחה
+          </button>
+        </div>
       </form>
     </section>
   );

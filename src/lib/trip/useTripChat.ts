@@ -33,7 +33,8 @@ export interface TripChat {
   explored: Destination[];
   /** הוספת יעד explored מבחוץ (ייבוא מפה מ-My Maps) - נשמר ומרונדר מיד */
   addExplored: (dest: Destination) => void;
-  send: (text: string, kosher?: boolean) => void;
+  /** שליחה. image הוא data URL מוקטן (imageAttach.ts) - אופציונלי */
+  send: (text: string, kosher?: boolean, image?: string) => void;
   /** ניקוי השיחה המקומית (התחלת טיול חדש) */
   reset: () => void;
 }
@@ -78,13 +79,17 @@ export function useTripChat(options?: {
   const messagesRef = useRef(messages);
   messagesRef.current = messages;
 
-  const send = useCallback(async (text: string, kosherArg?: boolean) => {
+  const send = useCallback(async (text: string, kosherArg?: boolean, image?: string) => {
     const trimmed = text.trim();
-    if (!trimmed || loading) return;
+    // תמונה לבדה היא בקשה לגיטימית ("הנה אישור ההזמנה") - אז מותר בלי טקסט
+    if ((!trimmed && !image) || loading) return;
     const kosher = kosherArg ?? kosherHint;
     if (kosherArg) setKosherHint(true);
 
-    const next: ChatMessage[] = [...messagesRef.current, { role: 'user', content: trimmed }];
+    const next: ChatMessage[] = [
+      ...messagesRef.current,
+      { role: 'user', content: trimmed, ...(image ? { image } : {}) },
+    ];
     setMessages(next);
     setInput('');
     setLoading(true);
@@ -99,7 +104,14 @@ export function useTripChat(options?: {
         // מחוברים מקבלים מכסות לפי חשבון/תוכנית במקום לפי IP
         headers: { 'Content-Type': 'application/json', ...(await authHeader()) },
         body: JSON.stringify({
-          messages: next.map(({ role, content }) => ({ role, content })),
+          // תמונות נשלחות רק בשתי ההודעות האחרונות: הן יקרות למודל
+          // ובכל תור נשלחת ההיסטוריה כולה, אז בלי הגבלה כל תמונה הייתה
+          // משולמת שוב ושוב. השרת אוכף את אותו כלל בעצמו.
+          messages: next.map(({ role, content, image }, i) => ({
+            role,
+            content,
+            ...(image && i >= next.length - 2 ? { image } : {}),
+          })),
           trip: tripRef.current.currentTrip,
           kosher: kosher || undefined, // רמז ה-UI - השרת מטמיע אותו בטיול
           // יעדים שנחקרו בעבר - כדי שהסוכן יתקף מולם טיולים קיימים

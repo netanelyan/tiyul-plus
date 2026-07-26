@@ -23,6 +23,11 @@ export interface PlanLimits {
   sharesPerDay: number;
   /** ייבוא מפות (Google My Maps) ביום */
   importsPerDay: number;
+  /**
+   * תמונות שאפשר לצרף לשיחה ביום (צילום אישור הזמנה, כרטיס טיסה).
+   * תמונה עולה למודל הרבה יותר מטקסט, ולכן המכסה נמוכה בכוונה.
+   */
+  imagesPerDay: number;
 }
 
 export const PLAN_LIMITS: Record<Plan, PlanLimits> = {
@@ -33,6 +38,7 @@ export const PLAN_LIMITS: Record<Plan, PlanLimits> = {
     generatePerDay: 15,
     sharesPerDay: 10,
     importsPerDay: 5,
+    imagesPerDay: 3,
   },
   premium: {
     chatPerDay: 400,
@@ -41,6 +47,7 @@ export const PLAN_LIMITS: Record<Plan, PlanLimits> = {
     generatePerDay: 100,
     sharesPerDay: 100,
     importsPerDay: 50,
+    imagesPerDay: 30,
   },
 };
 
@@ -79,6 +86,11 @@ export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string }
     label: 'בניות מסלול מהירות (שאלון/מתכנן)',
     free: String(PLAN_LIMITS.free.generatePerDay),
     premium: String(PLAN_LIMITS.premium.generatePerDay),
+  },
+  {
+    label: 'צירוף תמונות לשיחה ביום (אישור הזמנה, כרטיס)',
+    free: String(PLAN_LIMITS.free.imagesPerDay),
+    premium: String(PLAN_LIMITS.premium.imagesPerDay),
   },
   {
     label: 'ייבוא מפות מ-Google My Maps ביום',
