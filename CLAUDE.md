@@ -117,8 +117,9 @@ npm run lint
   country ("טסים לאיטליה"), plan by city. Each `Country` carries the
   country-level practical facts (visa, currency, sim, payments) shared by
   all its cities.
-- `src/data/destinations.ts` - curated content, 8 cities × 20 places
-  (160 total, Hebrew), each referencing its country via `countrySlug`.
+- `src/data/destinations.ts` - curated content: 127 destinations across
+  62 countries, ~1,100 places (Hebrew), each referencing its country via
+  `countrySlug`. Re-count with a grep before quoting these numbers.
   Places carry `photo` (verified URLs - run `node
   scripts/verify-photos.mjs` after any photo change; Wikimedia thumbs
   accept ONLY the allowed widths 250/330/500/960px), `priceLevel`
@@ -160,7 +161,15 @@ npm run lint
   `set_day_places` are preferred for building so a trip never ends a turn
   with empty days, granular add/remove/move for small edits,
   `suggest_quick_replies` attaches tappable answers to non-sensitive
-  questions; the chat loop runs up to 16 tool iterations).
+  questions; `add_pin` / `remove_pin` manage the traveler's own places;
+  the chat loop runs up to 16 tool iterations).
+- `src/lib/server/geocode.ts` - server-only OpenStreetMap lookup for
+  `add_pin` (Nominatim first, Photon as fallback, both overridable via
+  `GEOCODE_NOMINATIM` / `GEOCODE_PHOTON` so the path is unit-testable).
+  Serial 1-req/sec throttle honoring Nominatim's policy, 500-entry
+  in-memory cache, 8s timeout, and it NEVER throws: a miss returns
+  `null`. Zero new dependencies. **Untested live** - sandbox egress is
+  blocked, so first real verification happens in production.
 - `src/app/api/chat/route.ts` - chat backend. With `ANTHROPIC_API_KEY` it
   runs a server-side tool-use loop over the user's trip: the client sends
   its current trip, tools in `src/lib/trip/agent.ts` mutate an in-memory
@@ -176,7 +185,9 @@ npm run lint
   chat UI - rendered twice, desktop column + mobile drawer, sharing one
   state), `AgentWorkspace` (landing hero → `TripWorkspace`, handles
   `?q=`/`?kosher=1`/`?trip=`), `PlacesMap`/`MapInner` (Leaflet,
-  client-only), `AddToTripButton`, `TripChip`.
+  client-only), `BookingPanel` ("מה עוד חסר לטיול", per-city provider
+  search), `PinsPanel` (the traveler's own pins: fix an unverified
+  location, remove), `AddToTripButton`, `TripChip`.
 - `src/lib/trip/useTripChat.ts` - the conversation state hook (streaming
   `/api/chat`, per-trip history in `chatStorage`, `upsertTrip` on every
   `{trip}` event). One instance per trip view feeds both chat surfaces.
@@ -287,6 +298,50 @@ are the same object - one trip, two interfaces. Every recommendation can
 eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
+
+### 2026-07-26 (b) - סיכות המטייל על המפה, עם איתור מיקום בשרת
+
+Netanel asked for pins: "add an option to add pins like hotels (the AI
+should automatically ask about those, and give affiliates if no
+reservations yet). the broad idea is that when people tell the AI about
+the hotel, it will be added to the map."
+
+**שלוש החלטות מוצר שנסגרו איתו מראש:** המיקום מגיע מחיפוש בשרת מול
+OpenStreetMap (חינם, בלי מפתח); סוגי הסיכות הם לינה, הזמנה (מסעדה או
+פעילות) וסיכה חופשית - **שדות תעופה, תחנות ואיסוף רכב נשארו בחוץ
+במכוון**; והסוכן שואל על לינה עיר אחת בכל תור, רק אחרי שיש מסלול
+אמיתי, בדיוק כמו כללי ההזמנות הקיימים.
+
+**הכנות היא הקו המרכזי של הפיצ׳ר.** `geocodePlace` מחזיר `null` במקום
+לזרוק; כישלון איתור אינו כישלון של הכלי - הסיכה נשמרת ומסומנת
+"מיקום לא אומת"; `sanitizePins` זורק קואורדינטות פגומות במקום להצמיד
+אותן לטווח; `MapInner` מצייר רק סיכות עם מיקום; ו-`PinsPanel` מציג את
+התג, את הייחוס ל-OpenStreetMap ואת הדרך להניח ידנית. **ניחוש של מרכז
+העיר נפסל במפורש: מיקום שגוי גרוע ממיקום חסר.**
+
+**ההחלטה הארכיטקטונית שנושאת את זה:** `executeAgentTool` סינכרוני,
+ולכן האיתור נעשה ב-`route.ts` (הכלי האסינכרוני השני, אחרי
+`explore_destination`) והתוצאה עוברת ל-executor **כפרמטר חמישי נפרד,
+לא בתוך `input`**. כך אין מסלול שבו המודל מזריק קואורדינטות משלו - זה
+מבני, לא סינון.
+
+**מניעת שאלה כפולה בשתי דרכים:** `serializeTripForModel` חושף עכשיו
+`pins` עם דגל `locatedOnMap`, ו-`add_pin` עם `kind='stay'` כותב גם
+`booking.stay='have'` כך שכללי ההזמנות הקיימים מפסיקים להעלות לינה
+לטיול הזה.
+
+**בונוס שהיה חלק מהבקשה המקורית ("affiliates if no reservations
+yet"):** `BookingPanel` חיפש עד היום לפי העיר הראשונה בלבד, מה שהחזיר
+מלונות בעיר הלא נכונה בטיול רב-ערים. עכשיו יש בורר ערים והחיפוש הוא
+לפי העיר שנבחרה.
+
+**אפס תלויות חדשות** (חוק קשיח 6). tsc נקי, build עובר, lint נשאר על
+אותן 29 בעיות קיימות מראש.
+
+**מה לא נבדק:** לסביבת הפיתוח כאן אין יציאה לרשת - nominatim, photon,
+wikipedia ו-wikimedia כולם מחזירים HTTP 000. הגיאוקודר נכתב עם
+`GEOCODE_NOMINATIM` / `GEOCODE_PHOTON` כדי שאפשר יהיה לבדוק אותו מול
+stub, אבל **אימות אמיתי יקרה רק בפרודקשן**. אין לו כרגע טסט אוטומטי.
 
 ### 2026-07-26 - Image attachments in the agent chat
 
