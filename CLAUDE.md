@@ -299,6 +299,82 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-26 (d) - 493 photos filled, and 16 destinations that were rendering in English
+
+**Photos: 610 missing to 117.** The tooling from entry (c) was pointed at
+dbpedia instead of the blocked Wikimedia APIs, and that turned out to be the
+whole unlock. `https://dbpedia.org/data/<Article>.json` IS reachable from the
+sandbox (the Commons and Wikipedia APIs are not, and dbpedia's SPARQL endpoint
+is 403 through the proxy - only the per-article JSON works). Each article's
+`dbo:thumbnail` is the Wikipedia lead image, which is a far better guarantee of
+the right subject than a Commons text search.
+
+**The piece that made it possible without network access to the images:**
+`scripts/lib/commons-url.mjs` builds the `upload.wikimedia.org` thumb URL from
+the filename alone. The Commons path is `md5(filename_with_underscores)`, first
+hex char / first two hex chars. This was validated against the 611 URLs already
+in the data, all of which had been verified online in earlier sessions: **609
+reproduced byte for byte.** The two misses were SVGs, which need an extra
+`.png` suffix and are excluded anyway (an SVG in this data is almost always a
+logo, flag or map). Note `encodeURIComponent` alone is not enough - MediaWiki
+also percent-encodes `! ' ( ) *`.
+
+**Subject correctness was enforced geographically, not by search rank.** Every
+candidate article's own `geo:lat`/`geo:long` was compared against the
+coordinates already in `destinations.ts`; 12 km accepts, 60 km rejects. Across
+the 493 applied photos the **median distance was 0.0 km and the maximum 0.9
+km**, which is about as strong a signal as this method can give. That is the
+direct fix for the Abu Dhabi batch-2 lesson (top Commons hit was a recycling
+bin, a chocolate counter and a lobby wall).
+
+**Throughput:** six parallel subagents, one per shard of destinations, each
+resolving titles and calling WebFetch, writing TSV to `/tmp/outN.tsv`. 455 of
+the 571 they attempted resolved. They were told explicitly never to reconstruct
+a filename from memory - only to report what WebFetch returned - because a
+fabricated filename produces a dead URL that no geo-check can catch.
+
+**The 117 still missing are the honest floor** for this approach: they are
+almost entirely restaurants, cafes, Chabad houses, kosher shops and named
+beaches, none of which have a Wikipedia article. Filling those needs a
+different source, or nothing.
+
+**Do NOT run prettier on `src/data/destinations.ts`.** There is no prettier
+config in the repo and the default is double quotes, so a single run rewrote
+13,470 lines of single-quoted strings. `apply-photos.mjs` already emits the
+exact existing format (`photo:` on its own line, URL indented beneath), so no
+formatting pass is needed; the misleading hint has been removed from the
+script.
+
+**Second fix, from a screenshot Netanel sent: a card reading "Zanzibar and the
+Swahili Coast" in English.** 16 destinations added in the 2026-07-26 overnight
+expansions had `name` and `nameLocal` **swapped** - the Latin name sat in
+`name`, which is what every card, day tab, map popup and chat reply renders,
+and the Hebrew sat in `nameLocal`, whose entire purpose is to be the Latin
+string you hand a taxi driver or paste into Google Maps. 122 entries across
+finnish-lakeland, west-estonia-islands, kurzeme-zemgale, western-lithuania,
+northern-bulgaria, lori-tavush, oaxaca, fergana-valley, lumbini-terai,
+zanzibar-swahili-coast, malaysian-borneo, bali-lesser-sunda, western-serbia,
+bosanska-krajina, northern-albania and seoul-dmz.
+
+Fixed by **swapping the two fields, not by retranslating** - the original
+author's Hebrew wording was already there and correct, it was just in the wrong
+field. An initial attempt overwrote `name` with fresh translations and left
+`nameLocal` in Hebrew, which would have silently broken the maps/taxi use case;
+that was reverted. Also decoded vojvodina's 30 `\uXXXX` string escapes to
+literal Hebrew, and retitled one Tasmanian day from `MONA` to `מוזיאון מונה`.
+
+**Audit worth re-running after any bulk content import:** flag any `name`,
+`tagline`, `title` or `verdict` with no Hebrew characters, and any `nameLocal`
+with no Latin characters. Both directions matter - this bug was only visible
+from the second check.
+
+**State:** 127 destinations / 62 countries / 1,114 places, 997 with photos.
+`tsc` clean, `npm run build` clean (208 static pages). Grounding index measured
+with the real data at **158,905 chars (~44k tokens)** against the ~190,000
+stop threshold, so roughly **25 destinations of headroom** remain. Measure with
+`node --experimental-strip-types` importing the data directly - a regex
+reconstruction under-counts by ~45%.
+
 ### 2026-07-26 (c) - Photo tooling split in two, and a handoff for a parallel features session
 
 Netanel asked to fill the missing place photos and then resume catalog
