@@ -43,3 +43,4 @@ next-env.d.ts
 
 # מטמון אימות תמונות (scripts/verify-photos.mjs)
 .cache/
+photo-report.json
