@@ -105,7 +105,9 @@ country `bulgaria`; destination `rila-pirin`; places `rlp-rila`,
 `sth-fotografiska`, `sth-drottningholm`; country `denmark`; destination
 `north-zealand`; places `nzl-frederiksborg`, `nzl-louisiana`,
 `nzl-roskilde-cathedral`, `nzl-viking-ships`, `nzl-fredensborg`,
-`nzl-frilandsmuseet`, `nzl-bakken`.
+`nzl-frilandsmuseet`, `nzl-bakken`; country `finland`; destination
+`finnish-lapland`; places `fla-rovaniemi`, `fla-pyha-luosto`, `fla-levi`,
+`fla-saariselka`, `fla-ukk`, `fla-inari`, `fla-ranua`, `fla-kemi`.
 
 **Blocked on coordinates - France / Paris.** France is the biggest
 remaining country gap, but dbpedia's `/data/*.json` for very famous
