@@ -288,6 +288,62 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-26 - Overnight catalog expansion: Jordan through the Baltics
+
+One long unattended run under the standing instruction "add new countries,
+and new places in existing countries; don't stop when encountering an error,
+just go on to the next destination". Fourteen data commits, each one shipped
+only after `npx tsc --noEmit` clean, `/tmp/sanity.mjs` problems=0 and
+`npm run build` passing.
+
+**Built/changed:**
+- New destinations inside countries that already existed: `amman-north`
+  (Jordan, 9 places), `shaki-caucasus` (Azerbaijan second destination,
+  6 places), the UAE mountains-and-desert destination (5 places), and
+  day-trip places bolted onto Barcelona (Costa Brava), Budapest (Danube
+  Bend) and Bratislava (Devin).
+- Ten net-new countries, each with one destination: `romania` /
+  `transylvania` (6 places), `turkey` / `cappadocia` (6), `ireland` /
+  `west-ireland` (6), `bulgaria` / `rila-pirin` (5), `sweden` / `stockholm`
+  (8), `denmark` / `north-zealand` (7), `finland` / `finnish-lapland` (8),
+  `lithuania` / `vilnius` (7), `estonia` / `tallinn` (6), `latvia` / `riga`
+  (7).
+- `TODO.md` - every new slug appended to the photos-pending bullet.
+
+**Decisions:**
+- Every single coordinate was literally read out of dbpedia
+  `/data/<Article>.json`. Nothing was estimated. Sixteen candidate places
+  were dropped outright because the fetched data had no `geo:lat`/`geo:long`:
+  Kaymakli, Ihlara Valley, Zelve, Mustafapasa, the Burren, Sky Road, Plovdiv,
+  Pirin NP, Blagoevgrad, the Stob Pyramids, Kronborg, the Karen Blixen
+  Museum, the Choral Synagogue of Vilnius, Rundale Palace, Jurmala, and
+  Tallinn Town Hall / Seaplane Harbour (persistent 429).
+- Regional hubs beat famous capitals as destination choices, because the
+  very-famous-city dbpedia articles truncate before their coordinates.
+  Cappadocia over Istanbul, the west of Ireland over Dublin, Rila-Pirin over
+  Sofia, North Zealand over Copenhagen. This turned four blocked countries
+  into shipped ones.
+- Vilnius includes `vln-paneriai` and gives it its own itinerary day, with
+  an explicit note not to schedule anything after it. The Jewish-heritage
+  layer in Lithuania is the reason many Israelis go, and it should not be
+  buried between a castle and a cafe.
+- Every `editorialRating.verdict` names real drawbacks, and every
+  `kosherOverview` names no unverified venue - it points at the community or
+  Chabad in the nearest major city and says to confirm by phone.
+- No `photo` and no `iconicLandmark` anywhere: the sandbox still has no
+  egress to Wikimedia, so no image URL can be HTTP-verified.
+
+**State:** 45 countries, 64 destinations, 699 places. Grounding index
+~98,000 chars, roughly 25-31k tokens, still well under the ~190,000-char
+stop threshold.
+
+**Next session:** remaining net-new country gaps are Albania, Serbia,
+Bosnia, Mexico, Australia, South Korea, Indonesia and Malaysia.
+France/Paris, Athens->Delphi and Kazakhstan->Kolsai & Kaindy all stay
+blocked on coordinates - do not estimate. Expect constant WebFetch 429s:
+batch 2-3 lookups, sleep 85-100s, and retry once rather than treating a 429
+as a failure.
+
 ### 2026-07-25 - Netherlands + Amsterdam (overnight catalog expansion)
 
 **Built/changed:**
