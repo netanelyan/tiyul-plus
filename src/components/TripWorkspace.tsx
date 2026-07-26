@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState } from 'react';
 import type { Destination, Place } from '@/lib/types';
-import type { TripPreferences } from '@/lib/trip/types';
+import type { TripPin, TripPreferences } from '@/lib/trip/types';
 import { destinations as curatedDestinations } from '@/data/destinations';
 import { countries } from '@/data/countries';
 import { categoryMeta } from '@/lib/categories';
@@ -13,8 +13,9 @@ import { dayDescription, dayPlaces } from '@/lib/trip/dayDescription';
 import { dayColor } from '@/lib/trip/dayColors';
 import { encodeTripShare } from '@/lib/trip/share';
 import PlacesMap from '@/components/PlacesMap';
-import type { MapGroup } from '@/components/MapInner';
+import type { MapGroup, MapPin } from '@/components/MapInner';
 import BookingPanel from '@/components/BookingPanel';
+import PinsPanel from '@/components/PinsPanel';
 import ChatPanel from '@/components/ChatPanel';
 import Flag from '@/components/Flag';
 import Logo from '@/components/Logo';
@@ -58,6 +59,8 @@ export default function TripWorkspace({
   const [allDaysOpen, setAllDaysOpen] = useState(false);
   const [actionsOpen, setActionsOpen] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
+  /** סיכה שהמטייל בחר להניח ידנית: הלחיצה הבאה על המפה תקבע את מיקומה */
+  const [placingPinId, setPlacingPinId] = useState<string | null>(null);
 
   const t = trip.currentTrip;
   // curated קודם; יעדים שנחקרו אוטומטית (AI Explorer) כ-fallback, כדי
@@ -102,6 +105,40 @@ export default function TripWorkspace({
     [t, destinations, chat.explored],
   );
 
+  /**
+   * הסיכות של המטייל על המפה. רק כאלה שיש להן מיקום ממשי - סיכה
+   * בלי קואורדינטות לא מצוירת בשום מקום, כי מיקום מנוחש גרוע
+   * ממיקום חסר. הזיהוי נשאר יציב (useMemo) כדי שהמפה לא תקפוץ
+   * בכל render, בדיוק כמו flat ב-MapInner.
+   */
+  const allPins: MapPin[] = useMemo(
+    () =>
+      (t?.pins ?? [])
+        .filter((p): p is TripPin & { lat: number; lng: number } =>
+          typeof p.lat === 'number' && typeof p.lng === 'number',
+        )
+        .map((p) => ({
+          id: p.id,
+          kind: p.kind,
+          name: p.name,
+          lat: p.lat,
+          lng: p.lng,
+          address: p.address,
+          note: p.note,
+        })),
+    [t?.pins],
+  );
+
+  /** במפת היום מציגים רק את הסיכות של אותה עיר, ואת אלה בלי עיר. */
+  const dayPins: MapPin[] = useMemo(() => {
+    const citySlug = day?.citySlug;
+    const byId = new Map((t?.pins ?? []).map((p) => [p.id, p]));
+    return allPins.filter((p) => {
+      const src = byId.get(p.id);
+      return !src?.citySlug || src.citySlug === citySlug;
+    });
+  }, [allPins, day?.citySlug, t?.pins]);
+
   if (!trip.hydrated) {
     return (
       <div className="rounded-2xl bg-shell p-10 text-center font-semibold text-night/40 ring-1 ring-night/10">
@@ -117,6 +154,27 @@ export default function TripWorkspace({
   const setPrefs = (patch: Partial<TripPreferences>) => {
     if (!t) return;
     trip.upsertTrip({ ...t, preferences: { ...t.preferences, ...patch } });
+  };
+
+  /**
+   * המטייל הניח את הסיכה בעצמו - בלחיצה על המפה או בגרירה שלה.
+   * זה המקור הכי אמין שיש, ולכן source נהיה 'manual' ומצב ההנחה נסגר.
+   */
+  const movePin = (id: string, lat: number, lng: number) => {
+    if (!t) return;
+    trip.upsertTrip({
+      ...t,
+      pins: (t.pins ?? []).map((p) =>
+        p.id === id ? { ...p, lat, lng, source: 'manual' as const } : p,
+      ),
+    });
+    setPlacingPinId(null);
+  };
+
+  const removePin = (id: string) => {
+    if (!t) return;
+    trip.upsertTrip({ ...t, pins: (t.pins ?? []).filter((p) => p.id !== id) });
+    if (placingPinId === id) setPlacingPinId(null);
   };
 
   /**
@@ -419,6 +477,9 @@ export default function TripWorkspace({
                     zoom={12}
                     places={[]}
                     groups={tripGroups}
+                    pins={allPins}
+                    onPinMove={movePin}
+                    placingPinId={placingPinId}
                   />
                 </div>
                 {/* מקרא הימים - לחיצה קופצת ליום */}
@@ -453,6 +514,9 @@ export default function TripWorkspace({
                   places={places}
                   numbered
                   showRoute
+                  pins={dayPins}
+                  onPinMove={movePin}
+                  placingPinId={placingPinId}
                 />
               </div>
             ) : (
@@ -637,6 +701,17 @@ export default function TripWorkspace({
       {/* ---------- שכבת ההזמנות: מה עוד חסר לטיול ---------- */}
       {t && t.days.length > 0 && (
         <BookingPanel trip={t} destinations={destinations} onSetPreferences={setPrefs} />
+      )}
+
+      {/* ---------- הסיכות של המטייל: מה הוא כבר סגר בעצמו ---------- */}
+      {t && (
+        <PinsPanel
+          trip={t}
+          destinations={destinations}
+          placingPinId={placingPinId}
+          onStartPlacing={setPlacingPinId}
+          onRemovePin={removePin}
+        />
       )}
 
       {/* ---------- סקירת כל הימים (עם תיאור לכל יום) ---------- */}

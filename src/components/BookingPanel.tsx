@@ -33,15 +33,32 @@ export default function BookingPanel({
   const [open, setOpen] = useState(false);
   const booking = trip.preferences?.booking ?? {};
 
-  // יעד החיפוש אצל הספק: השם הלטיני של העיר הראשונה בטיול, מהדאטה שלנו.
-  // nameLocal נכתב לעיתים כ-"Vienna / Wien" - שולחים רק את החלק הראשון,
-  // כי מחרוזת עם לוכסן מחזירה תוצאות ריקות אצל הספקים.
-  const query = useMemo(() => {
-    const first = trip.citySlugs[0];
-    const dest = destinations.find((d) => d.slug === first);
-    const raw = dest?.nameLocal ?? dest?.name ?? '';
-    return raw.split('/')[0].trim();
-  }, [trip.citySlugs, destinations]);
+  /**
+   * ערי הטיול, לפי הסדר. בטיול רב-ערים חיפוש לפי העיר הראשונה בלבד
+   * מחזיר מלונות במקום הלא נכון, ולכן המטייל בוחר כאן לאיזו עיר לחפש.
+   * השם הלטיני מגיע מהדאטה שלנו; nameLocal נכתב לעיתים כ-
+   * "Vienna / Wien" - שולחים רק את החלק הראשון, כי מחרוזת עם לוכסן
+   * מחזירה תוצאות ריקות אצל הספקים.
+   */
+  const cities = useMemo(
+    () =>
+      trip.citySlugs
+        .map((slug) => {
+          const dest = destinations.find((d) => d.slug === slug);
+          if (!dest) return null;
+          return {
+            slug,
+            label: dest.name,
+            query: (dest.nameLocal ?? dest.name).split('/')[0].trim(),
+          };
+        })
+        .filter((c): c is { slug: string; label: string; query: string } => Boolean(c)),
+    [trip.citySlugs, destinations],
+  );
+
+  const [citySlug, setCitySlug] = useState<string | null>(null);
+  const active = cities.find((c) => c.slug === citySlug) ?? cities[0];
+  const query = active?.query ?? '';
 
   const setStatus = (kind: BookingKind, status: BookingStatus) => {
     const next = { ...booking };
@@ -71,6 +88,26 @@ export default function BookingPanel({
       </button>
 
       <div className={open ? 'mt-2 block' : 'hidden'}>
+        {cities.length > 1 && (
+          <div className="mb-2 flex flex-wrap items-center gap-1.5 px-1">
+            <span className="text-xs font-semibold text-night/50">חיפוש עבור</span>
+            {cities.map((c) => (
+              <button
+                key={c.slug}
+                onClick={() => setCitySlug(c.slug)}
+                aria-pressed={c.slug === active?.slug}
+                className={`rounded-full px-2.5 py-1 text-xs font-bold transition ${
+                  c.slug === active?.slug
+                    ? 'bg-night text-cream'
+                    : 'bg-night/[0.05] text-night/60 hover:bg-night/10'
+                }`}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
           {bookingProviders.map((p) => {
             const status = booking[p.kind];

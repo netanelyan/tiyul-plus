@@ -2,7 +2,15 @@ import { destinations } from '@/data/destinations';
 import { isKosher } from '@/lib/categories';
 import { haversineKm } from './travel';
 import { newId } from './types';
-import type { BookingKind, BookingStatus, Trip, TripDay, TripPreferences } from './types';
+import type {
+  BookingKind,
+  BookingStatus,
+  Trip,
+  TripDay,
+  TripPin,
+  TripPinKind,
+  TripPreferences,
+} from './types';
 import type { Destination } from '@/lib/types';
 
 /**
@@ -241,6 +249,34 @@ export const AGENT_TOOLS = [
       },
     },
   },
+  {
+    name: 'add_pin',
+    description:
+      "Save a place the TRAVELER told you about - the hotel they booked, a restaurant they reserved, or any point they want on the map - so it appears on the trip map. Use it the moment the user names such a place (\"we booked Hotel Devin in Bratislava\"). kind='stay' for hotels and apartments, 'reservation' for booked restaurants/activities, 'other' for anything else. Pass name EXACTLY as the user said it, plus the city so the lookup is unambiguous. You must NEVER pass or invent coordinates: the server looks the place up on OpenStreetMap itself. If the lookup fails the pin is still saved and marked unverified, and the traveler can place it on the map by hand - tell them that plainly instead of guessing where it is.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        kind: { type: 'string', enum: ['stay', 'reservation', 'other'] },
+        name: { type: 'string', description: 'The place name as the user said it' },
+        citySlug: {
+          type: 'string',
+          description: 'City slug from the DATA that this pin belongs to, when known',
+        },
+        note: { type: 'string', description: 'Short Hebrew note the user gave (check-in time etc.)' },
+      },
+      required: ['kind', 'name'],
+    },
+  },
+  {
+    name: 'remove_pin',
+    description:
+      'Remove a pin the traveler previously saved (they cancelled the booking, or it was wrong). Match by the pin name shown in CURRENT TRIP.',
+    input_schema: {
+      type: 'object',
+      properties: { name: { type: 'string', description: 'Name of the pin to remove' } },
+      required: ['name'],
+    },
+  },
 ];
 
 /* ---------- ביצוע ---------- */
@@ -283,6 +319,18 @@ const BOOKING_KIND_LABELS: Record<BookingKind, string> = {
   insurance: 'ביטוח',
   car: 'רכב',
 };
+
+export const PIN_KINDS: TripPinKind[] = ['stay', 'reservation', 'other'];
+const PIN_KIND_SET = new Set<string>(PIN_KINDS);
+
+const PIN_KIND_LABELS: Record<TripPinKind, string> = {
+  stay: 'לינה',
+  reservation: 'הזמנה',
+  other: 'סיכה',
+};
+
+/** תקרה שפויה - סיכות נשמרות עם הטיול ב-localStorage ובחשבון */
+const MAX_PINS = 40;
 
 const PREF_LABELS: Record<keyof TripPreferences, string> = {
   party: 'הרכב הנוסעים',
@@ -367,11 +415,22 @@ function routeSummary(days: TripDay[]): string {
   return `\nמסלול בפועל: ${hops.join(' · ')}.${warn}`;
 }
 
+/**
+ * מיקום שכבר אותר בשרת עבור add_pin. מגיע כפרמטר נפרד ולא בתוך input
+ * במכוון: כך אין שום מסלול שבו המודל יכול להזריק קואורדינטות משלו.
+ */
+export interface ResolvedPinLocation {
+  lat: number;
+  lng: number;
+  address: string;
+}
+
 export function executeAgentTool(
   trip: Trip | null,
   name: string,
   input: Record<string, unknown>,
   exploredDestinations: Destination[] = [],
+  resolved: ResolvedPinLocation | null = null,
 ): AgentToolResult {
   sessionExplored = exploredDestinations;
   switch (name) {
@@ -723,6 +782,79 @@ export function executeAgentTool(
       };
     }
 
+    case 'add_pin': {
+      if (!needTrip(trip)) {
+        return fail(trip, 'אין טיול פעיל - סיכה נשמרת על טיול קיים.');
+      }
+      const pinName = typeof input.name === 'string' ? input.name.trim().slice(0, 80) : '';
+      if (!pinName) return fail(trip, 'name חסר או ריק.');
+      const kindRaw = typeof input.kind === 'string' ? input.kind : '';
+      if (!PIN_KIND_SET.has(kindRaw)) {
+        return fail(trip, `kind חייב להיות אחד מ: ${PIN_KINDS.join(', ')}.`);
+      }
+      const kind = kindRaw as TripPinKind;
+      // עיר לא מוכרת לא מפילה את הסיכה - היא פשוט נשמרת בלי שיוך לעיר
+      const citySlug =
+        typeof input.citySlug === 'string' && destOf(input.citySlug) ? input.citySlug : undefined;
+
+      const pins = [...(trip.pins ?? [])];
+      // אותו שם באותה עיר = עדכון, לא כפילות
+      const sameName = (p: TripPin) =>
+        p.name.trim().toLowerCase() === pinName.toLowerCase() && p.citySlug === citySlug;
+      const pin: TripPin = {
+        id: pins.find(sameName)?.id ?? newId(),
+        kind,
+        name: pinName,
+        citySlug,
+        note: typeof input.note === 'string' ? input.note.trim().slice(0, 200) : undefined,
+        ...(resolved
+          ? { lat: resolved.lat, lng: resolved.lng, address: resolved.address, source: 'geocoded' as const }
+          : {}),
+        createdAt: Date.now(),
+      };
+      const existing = pins.findIndex(sameName);
+      if (existing >= 0) pins[existing] = pin;
+      else pins.push(pin);
+      if (pins.length > MAX_PINS) {
+        return fail(trip, `יש כבר ${MAX_PINS} סיכות בטיול - הסר אחת עם remove_pin לפני שמוסיפים.`);
+      }
+
+      // לינה שנשמרה משנה גם את מצב ההזמנות: אין טעם להציע חיפוש מלון
+      // לעיר שכבר יש בה מלון. שאר הסוגים לא נוגעים בזה.
+      const preferences =
+        kind === 'stay'
+          ? { ...trip.preferences, booking: { ...(trip.preferences?.booking ?? {}), stay: 'have' as BookingStatus } }
+          : trip.preferences;
+
+      const label = PIN_KIND_LABELS[kind];
+      return {
+        trip: { ...trip, pins, preferences },
+        ok: true,
+        message: resolved
+          ? `הסיכה נשמרה ומוקמה על המפה: ${pinName} (${resolved.address}). אל תכתוב קואורדינטות בתשובה - המפה כבר מציגה אותה.`
+          : `הסיכה נשמרה אבל לא הצלחנו לאתר את המיקום המדויק. אמור למטייל שהיא מסומנת "מיקום לא אומת" ושהוא יכול לגרור אותה למקום הנכון על המפה. אל תנחש היכן היא נמצאת.`,
+        action: resolved ? `הוספתי למפה: ${label} · ${pinName}` : `שמרתי ${label}: ${pinName} (מיקום לא אומת)`,
+      };
+    }
+
+    case 'remove_pin': {
+      if (!needTrip(trip)) return fail(trip, 'אין טיול פעיל.');
+      const target = typeof input.name === 'string' ? input.name.trim().toLowerCase() : '';
+      if (!target) return fail(trip, 'name חסר או ריק.');
+      const pins = trip.pins ?? [];
+      const match = pins.find((p) => p.name.trim().toLowerCase() === target);
+      if (!match) {
+        const names = pins.map((p) => p.name).join(', ') || 'אין סיכות בטיול';
+        return fail(trip, `לא נמצאה סיכה בשם "${input.name}". הסיכות הקיימות: ${names}.`);
+      }
+      return {
+        trip: { ...trip, pins: pins.filter((p) => p.id !== match.id) },
+        ok: true,
+        message: `הסיכה "${match.name}" הוסרה.`,
+        action: `הסרתי סיכה: ${match.name}`,
+      };
+    }
+
     default:
       return fail(trip, `כלי לא מוכר: ${name}.`);
   }
@@ -734,6 +866,16 @@ export function serializeTripForModel(trip: Trip | null): string {
   return JSON.stringify({
     name: trip.name,
     preferences: trip.preferences ?? {},
+    // הסיכות שהמטייל כבר מסר - כדי שהסוכן לא ישאל שוב על עיר שכבר יש
+    // בה לינה, ולא יציע חיפוש למקום ששמור. locatedOnMap=false פירושו
+    // שהמיקום לא אומת והמטייל צריך להניח אותה בעצמו.
+    pins: (trip.pins ?? []).map((p) => ({
+      kind: p.kind,
+      name: p.name,
+      citySlug: p.citySlug,
+      locatedOnMap: typeof p.lat === 'number' && typeof p.lng === 'number',
+      note: p.note,
+    })),
     days: trip.days.map((d, i) => ({
       day: i + 1,
       citySlug: d.citySlug,
@@ -742,6 +884,39 @@ export function serializeTripForModel(trip: Trip | null): string {
       notes: d.notes,
     })),
   });
+}
+
+/**
+ * סיכות שחוזרות מהלקוח. קואורדינטה נשמרת רק אם היא מספר תקין בטווח -
+ * ערך משובש נזרק והסיכה נשארת "לא מאומתת" במקום להיות מצוירת בים.
+ */
+function sanitizePins(raw: unknown): TripPin[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+  const pins: TripPin[] = [];
+  for (const p of raw.slice(0, MAX_PINS)) {
+    if (!p || typeof p !== 'object') continue;
+    const pp = p as Record<string, unknown>;
+    const name = typeof pp.name === 'string' ? pp.name.trim().slice(0, 80) : '';
+    if (!name) continue;
+    if (typeof pp.kind !== 'string' || !PIN_KIND_SET.has(pp.kind)) continue;
+    const lat = typeof pp.lat === 'number' && Number.isFinite(pp.lat) ? pp.lat : undefined;
+    const lng = typeof pp.lng === 'number' && Number.isFinite(pp.lng) ? pp.lng : undefined;
+    const located =
+      lat !== undefined && lng !== undefined && Math.abs(lat) <= 90 && Math.abs(lng) <= 180;
+    pins.push({
+      id: typeof pp.id === 'string' ? pp.id : newId(),
+      kind: pp.kind as TripPinKind,
+      name,
+      citySlug:
+        typeof pp.citySlug === 'string' && destOf(pp.citySlug) ? pp.citySlug : undefined,
+      address: typeof pp.address === 'string' ? pp.address.slice(0, 200) : undefined,
+      ...(located ? { lat, lng } : {}),
+      source: pp.source === 'manual' || pp.source === 'geocoded' ? pp.source : undefined,
+      note: typeof pp.note === 'string' ? pp.note.slice(0, 200) : undefined,
+      createdAt: typeof pp.createdAt === 'number' ? pp.createdAt : undefined,
+    });
+  }
+  return pins.length > 0 ? pins : undefined;
 }
 
 /** ולידציה קלה של הטיול שהגיע מהלקוח - מבנה בלבד, בלי להמציא תוכן */
@@ -771,6 +946,7 @@ export function sanitizeClientTrip(raw: unknown): Trip | null {
       : [...new Set(days.map((d) => d.citySlug))],
     days,
     createdAt: typeof t.createdAt === 'number' ? t.createdAt : Date.now(),
+    pins: sanitizePins(t.pins),
     preferences:
       t.preferences && typeof t.preferences === 'object'
         ? (t.preferences as Trip['preferences'])

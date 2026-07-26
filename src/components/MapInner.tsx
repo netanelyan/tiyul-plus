@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import type { Place } from '@/lib/types';
+import type { TripPinKind } from '@/lib/trip/types';
 import { categoryMeta } from '@/lib/categories';
 
 /**
@@ -31,10 +32,40 @@ export interface MapGroup {
   places: Place[];
 }
 
+/**
+ * סיכה של המטייל עצמו (מלון שהזמין, מסעדה ששמר בה שולחן) - לא עצירה
+ * מהקטלוג ולא חלק מהמסלול, ולכן לא נכנסת לקו המסלול ולא ממוספרת.
+ * מוצגות רק סיכות שיש להן מיקום: סיכה לא מאומתת מטופלת בממשק שמסביב.
+ */
+export interface MapPin {
+  id: string;
+  kind: TripPinKind;
+  name: string;
+  lat: number;
+  lng: number;
+  address?: string;
+  note?: string;
+}
+
+const PIN_STYLE: Record<TripPinKind, { emoji: string; color: string }> = {
+  stay: { emoji: '🏨', color: '#241b4d' },
+  reservation: { emoji: '🍽️', color: '#ff5941' },
+  other: { emoji: '📍', color: '#0d9488' },
+};
+
 export interface MapProps {
   center: { lat: number; lng: number };
   zoom: number;
   places: Place[];
+  /** סיכות המטייל שכבר יש להן מיקום */
+  pins?: MapPin[];
+  /** גרירת סיכה למקום הנכון - המטייל מתקן איתור שגוי או מניח ידנית */
+  onPinMove?: (id: string, lat: number, lng: number) => void;
+  /**
+   * מזהה הסיכה שממתינה להנחה ידנית. כשהוא מוגדר, לחיצה על המפה
+   * קובעת את מיקומה - זה המסלול של סיכה שהאיתור האוטומטי לא מצא.
+   */
+  placingPinId?: string | null;
   /** מספור עצירות (למסלול יומי) - אינדקס לפי הסדר במערך */
   numbered?: boolean;
   /** ציור קו בין העצירות לפי הסדר */
@@ -100,6 +131,42 @@ function makeGroupIcon(
   });
 }
 
+/**
+ * סיכת מטייל: טבעת מקווקוות סביב הטיפה כדי שתיראה שונה מעצירות
+ * המסלול - זו נקודה שהמטייל הביא, לא המלצה שלנו.
+ */
+function makePinIcon(kind: TripPinKind) {
+  const { emoji, color } = PIN_STYLE[kind];
+  return L.divIcon({
+    className: 'pin-marker',
+    iconSize: [28, 36],
+    iconAnchor: [14, 34],
+    popupAnchor: [0, -30],
+    html: `<div class="pin-stack">
+             <div class="pin">
+               <div class="pin-drop" style="background:${color};box-shadow:0 0 0 2px #fffdf8,0 0 0 4px ${color}55"></div>
+               <div class="pin-content"><span>${emoji}</span></div>
+             </div>
+           </div>`,
+  });
+}
+
+/** מצב הנחה ידנית: הלחיצה הבאה על המפה קובעת את מיקום הסיכה */
+function PlacementCatcher({ onPick }: { onPick: (lat: number, lng: number) => void }) {
+  const map = useMapEvents({
+    click: (e) => onPick(e.latlng.lat, e.latlng.lng),
+  });
+  useEffect(() => {
+    const el = map.getContainer();
+    const prev = el.style.cursor;
+    el.style.cursor = 'crosshair';
+    return () => {
+      el.style.cursor = prev;
+    };
+  }, [map]);
+  return null;
+}
+
 /** עוקב אחרי רמת הזום כדי להוסיף/להסיר את תמונות הסיכות */
 function ZoomTracker({ onZoom }: { onZoom: (z: number) => void }) {
   const map = useMapEvents({
@@ -111,8 +178,8 @@ function ZoomTracker({ onZoom }: { onZoom: (z: number) => void }) {
   return null;
 }
 
-/** מרכז את המפה מחדש כשהמקומות משתנים (החלפת יום/יעד) */
-function FitBounds({ places }: { places: Place[] }) {
+/** מרכז את המפה מחדש כשהנקודות משתנות (החלפת יום/יעד, סיכה חדשה) */
+function FitBounds({ places }: { places: { lat: number; lng: number }[] }) {
   const map = useMap();
   useEffect(() => {
     if (places.length === 0) return;
@@ -187,6 +254,9 @@ export default function MapInner({
   highlightId = null,
   className = '',
   groups,
+  pins,
+  onPinMove,
+  placingPinId = null,
 }: MapProps) {
   // בתצוגת כל הטיול הקבוצות הן מקור האמת: הן קובעות את הגבולות,
   // את קו המסלול (לפי סדר הימים) ואת הסיכות.
@@ -202,6 +272,13 @@ export default function MapInner({
   const [zoomLevel, setZoomLevel] = useState(zoom);
   const withPhotos = zoomLevel >= PHOTO_PIN_ZOOM;
 
+  // הגבולות כוללים גם את סיכות המטייל: מלון בפרברים הוא חלק מהטיול
+  // שלו גם אם הוא לא עצירה במסלול. אותו memo, מאותה סיבה בדיוק.
+  const bounds = useMemo(
+    () => [...flat, ...(pins ?? []).map((p) => ({ lat: p.lat, lng: p.lng }))],
+    [flat, pins],
+  );
+
   return (
     <MapContainer
       center={[center.lat, center.lng]}
@@ -215,8 +292,11 @@ export default function MapInner({
         subdomains="abcd"
         detectRetina
       />
-      <FitBounds places={flat} />
+      <FitBounds places={bounds} />
       <ZoomTracker onZoom={setZoomLevel} />
+      {placingPinId && onPinMove && (
+        <PlacementCatcher onPick={(lat, lng) => onPinMove(placingPinId, lat, lng)} />
+      )}
       {(showRoute || grouped) && flat.length > 1 && (
         <Polyline
           positions={flat.map((p) => [p.lat, p.lng] as [number, number])}
@@ -259,6 +339,42 @@ export default function MapInner({
             </Popup>
           </Marker>
         ))}
+      {/* סיכות המטייל - תמיד מעל, גרירה מתקנת מיקום שגוי */}
+      {(pins ?? []).map((pin) => (
+        <Marker
+          key={pin.id}
+          position={[pin.lat, pin.lng]}
+          icon={makePinIcon(pin.kind)}
+          draggable={Boolean(onPinMove)}
+          eventHandlers={
+            onPinMove
+              ? {
+                  dragend: (e) => {
+                    const { lat, lng } = (e.target as L.Marker).getLatLng();
+                    onPinMove(pin.id, lat, lng);
+                  },
+                }
+              : undefined
+          }
+        >
+          <Popup>
+            <div style={{ minWidth: 160, maxWidth: 220 }}>
+              <div style={{ fontWeight: 700, fontSize: 14 }}>
+                {PIN_STYLE[pin.kind].emoji} {pin.name}
+              </div>
+              {pin.address && (
+                <div style={{ color: '#6b6394', fontSize: 12, marginTop: 2 }}>{pin.address}</div>
+              )}
+              {pin.note && <div style={{ fontSize: 12, marginTop: 4 }}>{pin.note}</div>}
+              {onPinMove && (
+                <div style={{ fontSize: 11, marginTop: 6, color: '#6b6394', fontWeight: 600 }}>
+                  אפשר לגרור את הסיכה למקום המדויק
+                </div>
+              )}
+            </div>
+          </Popup>
+        </Marker>
+      ))}
     </MapContainer>
   );
 }

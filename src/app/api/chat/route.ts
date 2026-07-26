@@ -6,7 +6,9 @@ import {
   executeAgentTool,
   sanitizeClientTrip,
   serializeTripForModel,
+  type ResolvedPinLocation,
 } from '@/lib/trip/agent';
+import { geocodePlace } from '@/lib/server/geocode';
 import type { Trip } from '@/lib/trip/types';
 import type { Destination } from '@/lib/types';
 import { exploreDestination, type ExploreScope } from '@/lib/explore/resolver';
@@ -208,6 +210,13 @@ BOOKING - YOU RAISE IT, THE APP LINKS IT
 - Ask about at most ONE topic per turn, in one short sentence at the end of your reply, and attach suggest_quick_replies with the natural answers (למשל "יש לנו טיסות" / "עוד לא"). Pick the topic that fits the trip: flights and stay first; activities when the plan has must-see attractions that need advance tickets; car when the days include out-of-town nature stops; esim/insurance only if the user brings up connectivity or safety.
 - The moment the user answers - even in passing, even mid-sentence about something else ("טיסות כבר יש לנו", "עוד לא סגרנו מלון") - call set_booking_status IN THAT SAME TURN, before writing your reply. Saying "רשמתי" without having called the tool is a hard error: nothing was recorded. If part of the sentence is vague ("הכל סגור חוץ מהכרטיסים"), still record the part that IS explicit (activities=need) and simply leave the vague part unset - partial is fine, guessing is not. Never ask again about a topic that already has a value - read preferences.booking fresh each turn. If the user shows no interest, drop the subject entirely; this is help, not sales.
 
+PINS - THE TRAVELER'S OWN PLACES ON THE MAP
+- CURRENT TRIP has a "pins" array: places the TRAVELER told you about - the hotel they booked, a restaurant they reserved, any point they want to see on the map. They are not DATA places and never become itinerary stops.
+- Whenever the user names such a place - in chat or in an attached booking confirmation - call add_pin in that same turn, with the name exactly as they said it and the citySlug it belongs to. A hotel is kind='stay', a booked restaurant or activity is 'reservation', anything else is 'other'. add_pin on a stay also records stay='have', so don't call set_booking_status for it separately.
+- You NEVER supply coordinates and NEVER state where a pin is. The server looks the place up on OpenStreetMap by itself. If the tool comes back saying the location was not verified, tell the user plainly that the pin is saved but not located and that they can drag it to the right spot on the map. Guessing "it's near the center" is a hard error.
+- ASKING ABOUT THE STAY: once a real itinerary exists, go city by city, in trip order, and ask about the accommodation for ONE city per turn - one short sentence at the end of your reply, with suggest_quick_replies. Never ask about a city that already has a stay pin (check "pins" for kind='stay' with that citySlug), and never ask before an itinerary exists. If they haven't booked yet, say the search button for that city appears under the plan - do not write a link.
+- If the user says a booking was cancelled or wrong, call remove_pin.
+
 IMAGES THE USER ATTACHES
 - The user can attach a photo or screenshot: a hotel/flight booking confirmation, a ticket, a menu, a sign, a map, a place they saw. Read it and use what it actually says - dates, city, hotel name, address, check-in/check-out times, number of nights, confirmation code.
 - Read ONLY what is legible in the image. Never guess a date, a price or an address that you cannot actually read, and never fill gaps from imagination - say plainly which detail is unclear and ask.
@@ -350,6 +359,12 @@ function toolStatusText(name: string, input: Record<string, unknown>): string {
     }
     case 'set_booking_status':
       return 'מעדכן מה כבר סגור…';
+    case 'add_pin': {
+      const pin = typeof input.name === 'string' ? input.name : '';
+      return pin ? `מאתר את ${pin} על המפה…` : 'מאתר את המקום על המפה…';
+    }
+    case 'remove_pin':
+      return 'מסיר סיכה מהמפה…';
     default:
       return 'עובד על זה…';
   }
@@ -703,6 +718,26 @@ async function runAgent(
             };
           }
         }
+      } else if (block.name === 'add_pin') {
+        // הכלי האסינכרוני השני: איתור המיקום נעשה כאן, מול OpenStreetMap,
+        // ועובר ל-executeAgentTool כפרמטר נפרד. המודל מספק שם בלבד -
+        // אין שום מסלול שבו הוא מזריק קואורדינטות משלו. כישלון איתור
+        // אינו כישלון של הכלי: הסיכה נשמרת ומסומנת "לא אומת".
+        const pinName = typeof input.name === 'string' ? input.name.trim() : '';
+        // slug מדויק, לא ההתאמה הרכה של findDestination: כאן זה מזהה
+        // ולא טקסט חופשי. ההקשר נבנה בשמות הלטיניים, שהם מה שהמפות מכירות.
+        const city = destinations.find((d) => d.slug === input.citySlug);
+        const country = city ? countries.find((c) => c.slug === city.countrySlug) : undefined;
+        const context = city
+          ? [city.nameLocal || city.name, country?.nameLocal].filter(Boolean).join(', ')
+          : undefined;
+        let located: ResolvedPinLocation | null = null;
+        try {
+          located = pinName ? await geocodePlace(pinName, context) : null;
+        } catch {
+          located = null;
+        }
+        out = executeAgentTool(working, block.name, input, explored, located);
       } else {
         out = executeAgentTool(working, block.name, input, explored);
       }

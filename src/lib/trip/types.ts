@@ -33,6 +33,44 @@ export type BookingKind = 'flights' | 'stay' | 'activities' | 'esim' | 'insuranc
 /** 'have' = כבר סגור · 'need' = עוד צריך · 'not_needed' = לא רלוונטי לטיול הזה */
 export type BookingStatus = 'have' | 'need' | 'not_needed';
 
+/**
+ * סוג הסיכה. שלושת אלה נבחרו במפורש: לינה, הזמנה (מסעדה/פעילות),
+ * וסיכה חופשית. אין סוג לשדות תעופה/תחנות - זו החלטת מוצר, לא השמטה.
+ */
+export type TripPinKind = 'stay' | 'reservation' | 'other';
+
+/**
+ * מקור הקואורדינטות. 'geocoded' = נמצא בשרת מול OpenStreetMap,
+ * 'manual' = המטייל גרר את הסיכה על המפה בעצמו. אין ערך שלישי:
+ * **המודל לעולם לא מספק קואורדינטות**. אם החיפוש נכשל או היה
+ * דו-משמעי, הסיכה נשמרת בלי lat/lng ומסומנת "מיקום לא אומת" -
+ * לא מנחשים את מרכז העיר.
+ */
+export type TripPinSource = 'geocoded' | 'manual';
+
+/**
+ * סיכה שהמטייל הוסיף לטיול: המלון שהוא הזמין, מסעדה ששמר בה שולחן,
+ * או כל נקודה שהוא רוצה לראות על המפה. נוצרת בעיקר דרך השיחה עם
+ * הסוכן ("הזמנתי את Hotel Devin בברטיסלבה"), ומצוירת על אותה מפה
+ * של הטיול לצד עצירות הקטלוג.
+ */
+export interface TripPin {
+  id: string;
+  kind: TripPinKind;
+  /** מה שהמטייל אמר - שם המלון/המסעדה/המקום */
+  name: string;
+  /** לאיזו עיר בטיול הסיכה שייכת (slug מ-citySlugs), אם ידוע */
+  citySlug?: string;
+  /** הכתובת כפי שהוחזרה מהחיפוש, לתצוגה בלבד */
+  address?: string;
+  lat?: number;
+  lng?: number;
+  source?: TripPinSource;
+  /** הערה חופשית של המטייל (מספר אישור, שעת צ׳ק-אין) */
+  note?: string;
+  createdAt?: number;
+}
+
 export interface Trip {
   id: string;
   name: string;
@@ -42,6 +80,15 @@ export interface Trip {
   /** חותמת שינוי אחרון - נכתבת ע"י שכבת הסנכרון לחשבון (מיזוג לפי המאוחר) */
   updatedAt?: number;
   preferences?: TripPreferences;
+  /** סיכות שהמטייל הוסיף (לינה, הזמנות, נקודות חופשיות) */
+  pins?: TripPin[];
+}
+
+/** האם כבר יש לינה שמורה לעיר הזו - כדי שהסוכן לא ישאל פעמיים */
+export function hasStayPin(trip: Trip | null, citySlug: string): boolean {
+  return Boolean(
+    trip?.pins?.some((p) => p.kind === 'stay' && p.citySlug === citySlug),
+  );
 }
 
 // העדפות האשף החכם
