@@ -288,6 +288,59 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-26 - Overnight catalog expansion, part three: eight new countries
+
+Ran the standing overnight expansion until Netanel asked to stop. Catalog
+went from 120 destinations / 55 countries / 1,068 places to **127 / 62 /
+1,114**, with `problems=0` on the sanity script and a passing build after
+every single batch.
+
+New countries and destinations, in order shipped:
+Cambodia (two destinations, 11 places, `35b0a13`), Laos
+`luang-prabang-mekong` (`b23ca46`), Morocco `atlas-sahara` (`249e66d`),
+Kyrgyzstan `tian-shan-issyk-kul` (`04b3984`), Argentina `patagonia-south`
+(`19e71f7`), Costa Rica `costa-rica-classic` (`f0de094`), Taiwan
+`taiwan-island-loop` (`d81733f`), Chile `atacama` (`bb010f5`).
+
+Every coordinate came from dbpedia `geo:lat` / `geo:long` via the hardened
+lookup prompt. **Sixteen candidate places returned NOT PRESENT and were
+dropped rather than estimated**, including Luang Prabang itself, Plain of
+Jars, Song Kol, Ala Archa, Monte Fitz Roy, Cerro Torre, Bariloche, Beagle
+Channel, Alishan, Tainan and Taipei 101. Zero fabricated coordinates.
+Roughly a dozen HTTP 429s were absorbed with 100-110s backoff rather than
+treated as failures, per the standing "do not stop on errors" instruction.
+
+Decisions worth carrying forward:
+- **Regional-hub strategy confirmed again.** dbpedia truncates or omits
+  coordinates on very famous articles, so prefer the secondary region over
+  the headline landmark. Two consecutive failures on a theme means pivot the
+  whole destination.
+- **Chile split deliberately.** Torres del Paine (-51, -73) and San Pedro de
+  Atacama (-22.9, -68.2) are ~3,100 km apart, far past the 700 km FAR
+  threshold, so they cannot share a destination. Only Atacama was built;
+  a separate Chilean Patagonia destination is still open.
+- **`npx tsc --noEmit` silently printed help text** instead of typechecking
+  when run without an explicit `cd` into the repo. Always prefix with
+  `cd /home/claude/repo-tiyul &&`. Note that the sanity script and
+  `npm run build` can both pass while tsc fails, so read tsc separately.
+- **Grounding-index guardrail:** measured 157,269 chars at 125 destinations
+  against a ~190,000 ceiling, at roughly 900-1,000 chars per destination.
+  About 30 destinations of headroom remain. Re-run `/tmp/measure.mjs` every
+  few batches before adding more.
+
+Deferred / still open:
+- All 8 new countries and their places are on the TODO.md "Photos pending"
+  list. The sandbox has zero egress to Wikimedia, so no image URL can be
+  HTTP-verified; every entry was written with no `photo` field and no
+  `iconicLandmark`.
+- Blocked, do not estimate: France/Paris, Athens to Delphi, Kazakhstan's
+  Kolsai and Kaindy lakes.
+- The hourly "tiyul+ catalog expansion" scheduled task was disabled at
+  Netanel's request when he asked to pause the database work.
+- Cosmetic only: the `vojvodina` destination's Hebrew strings are stored as
+  `\u05d5`-style escapes rather than raw Hebrew. Renders correctly, but is
+  inconsistent with every other entry.
+
 ### 2026-07-26 - Overnight catalog expansion, part two: the Balkans and the long-haul gaps
 
 Continuation of the same unattended run, same standing instruction. Seven
