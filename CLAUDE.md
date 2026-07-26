@@ -299,6 +299,72 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-26 (c) - Photo tooling split in two, and a handoff for a parallel features session
+
+Netanel asked to fill the missing place photos and then resume catalog
+expansion, and separately asked for a handoff so a second chat could work on
+features while this one owns the data.
+
+**The blocker, measured rather than assumed.** The cloud sandbox's egress
+proxy answers `403` to the CONNECT for every Wikimedia host, and WebFetch
+reports `commons.wikimedia.org` as cache-only. The same is true of
+OpenStreetMap, Unsplash, Pexels and Google. `WebSearch` and ordinary
+`WebFetch` still work, so research is possible but **no image URL can be
+verified from here**. Hard rule 2 forbids writing one anyway, so the work was
+restructured instead of downgraded.
+
+**Built: `scripts/fetch-photos.mjs` + `scripts/apply-photos.mjs` +
+`scripts/lib/parse-places.mjs`.** The split is the point. `fetch-photos`
+requires a network, runs on Netanel's machine, and writes only
+`photo-report.json` - it never edits data. `apply-photos` requires no network,
+runs wherever the repo lives, and is the only thing that writes
+`destinations.ts`. `parse-places` is a shared indentation-based parser (no
+tsc, no path aliases, no executing the data file).
+
+**How subject correctness is enforced.** Not by search rank - that is exactly
+what produced the wrong-subject photos in the Abu Dhabi batch. For each place
+the script asks the English Wikipedia for up to 8 candidates, takes each
+article's *lead* image, and compares the article's own coordinates against the
+coordinates already in `destinations.ts`. Within 12 km is `ok`; 12-60 km is
+`review` and is never applied without `--include-review`; beyond that it is
+rejected with the distance recorded in the report. Filenames matching
+flag/map/logo/coat-of-arms are dropped regardless of distance, and every
+surviving URL must return HTTP 200 with an `image/*` content type. Places with
+no coordinates in any candidate are accepted only on an exact title match, and
+only as `review`.
+
+**Real numbers, and a parser bug worth remembering.** A first crude audit said
+1,114 places / 584 missing. The proper parser says **1,114 places, 504 with a
+photo, 610 missing, across 110 destinations**. The first parser under-counted
+because 23 places store `nameLocal` in double quotes - prettier switches quote
+style when the string contains an apostrophe (`"St. Stephen's Cathedral"`) -
+and the regex only matched single quotes. Any future script that greps this
+data file must handle both quote styles.
+
+**Also written: `HANDOFF-FEATURES.md`** (repo root) for the parallel session.
+It fixes the file-ownership split - that session owns components, routes and
+`src/lib/**`; this one owns `src/data/*` and the photo scripts - because a
+610-photo diff in `destinations.ts` would conflict irrecoverably against
+feature work. It also documents the rebase discipline for two sessions on one
+`main`, and specifically that the `## Session log` is the one shared file that
+will conflict, with "keep both entries" as the standing resolution.
+
+**Correction to a stale handoff.** The summary this session was started from
+described the pins feature as ~92% done with uncommitted work in the cloud
+container. It had in fact shipped as `dfc7b36` + `a1b92c0`; the summary was
+written mid-task. Nothing was rebuilt. `BookingPanel`'s per-city query, listed
+there as deferred, had also already landed.
+
+**Deferred / next session should know:** no photos have been applied yet - the
+report has not been generated. The `--limit 20` trial is the right first step
+before the full 610. This container has **no GitHub write credentials** by
+default (anonymous fetch works; the git wrapper rewrites even an explicit
+`git@github.com:` URL back to HTTPS, so SSH is not a workaround) - a token has
+to be supplied per session, and a token pasted into chat should be rotated
+afterwards. Catalog expansion is deliberately paused behind the photo work at
+Netanel's instruction; the grounding index was last measured at ~157k of a
+~190k character ceiling, leaving roughly 30 destinations of headroom.
+
 ### 2026-07-26 (b) - סיכות המטייל על המפה, עם איתור מיקום בשרת
 
 Netanel asked for pins: "add an option to add pins like hotels (the AI
