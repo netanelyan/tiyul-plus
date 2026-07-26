@@ -99,7 +99,10 @@ places `bcn-tossa`, `bcn-cadaques`, `bud-szentendre`, `bud-visegrad`,
 destination `west-ireland`; places `irw-moher`, `irw-galway`,
 `irw-kylemore`, `irw-connemara`, `irw-dun-aonghasa`, `irw-poulnabrone`;
 country `bulgaria`; destination `rila-pirin`; places `rlp-rila`,
-`rlp-seven-lakes`, `rlp-bansko`, `rlp-melnik`, `rlp-sandanski`.
+`rlp-seven-lakes`, `rlp-bansko`, `rlp-melnik`, `rlp-sandanski`; country
+`sweden`; destination `stockholm`; places `sth-gamla-stan`, `sth-vasa`,
+`sth-skansen`, `sth-djurgarden`, `sth-city-hall`, `sth-palace`,
+`sth-fotografiska`, `sth-drottningholm`.
 
 **Blocked on coordinates - France / Paris.** France is the biggest
 remaining country gap, but dbpedia's `/data/*.json` for very famous
