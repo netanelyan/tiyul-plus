@@ -299,6 +299,76 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-27 (b) - The real crash: a blank user message, and a 400 no retry could survive
+
+Netanel sent three more screenshots from production, timestamped 49 minutes
+after this morning's deploy, so they are running the fixed code. Two findings.
+
+**The turn failure was NOT the overload path fixed earlier today.** He tapped
+the quick-reply chip "כרגע רק המלון הזה, תבנה את התכניות לפיו" and got
+"משהו השתבש" - then tapped again and got the identical failure. Failing twice
+identically means deterministic, which rules out 429/529 and rules out the
+retry being the answer.
+
+**Root cause, reproduced against the live API rather than inferred.** He
+attached the booking screenshot with **no accompanying text**, so that message
+was stored with `content: ''`. The client sends an image only on the last two
+messages (images are expensive and the entire history is resent every turn),
+so two turns later the message went out with no image and no text. Anthropic
+rejects the whole request:
+
+    400 invalid_request_error
+    "messages.2: user messages must have non-empty content"
+
+400 is correctly classified non-transient, so the retry could never help and
+every tap failed the same way. **This is also what killed the original
+"amnesia" turn in the first screenshots** - `4f24672` fixed the *message* that
+failure produced, and this morning's work fixed a *different* failure path
+that was also real. Neither touched this.
+
+Three behaviours were measured against the real API instead of assumed:
+- blank or whitespace-only **user** content → 400
+- blank **assistant** content → 200, accepted
+- **consecutive same-role** messages → 200, no alternation requirement
+
+The third is what makes the fix small: a message carrying neither text nor
+image is dropped outright, and the remaining sequence is still legal.
+
+**Dropped, deliberately, rather than back-filled with "צירפתי תמונה".** Once
+the image is no longer being sent, telling the model there is an attachment
+invites it to discuss a document it cannot see - which is exactly how invented
+booking details get produced. The agent's own reply from that turn stays in
+history, so whatever it genuinely read off the confirmation survives **in its
+own words**, with no pretence of re-reading it.
+
+`sanitizeMessages` moved to `src/lib/server/chatMessages.ts` (a route handler
+cannot export helpers, and this needed tests) with 11 tests, including the
+exact production message array as a regression. An empty history after
+sanitizing now returns a Hebrew message instead of a guaranteed 400.
+
+**A divergence found while writing the tests, worth knowing.** The client
+strips images **positionally** (the last two messages, `useTripChat`), while
+the server keeps the last two messages **that have images**. The server rule
+is the more permissive of the two, and the client strips first, so nothing is
+broken - but a fixture written against the server rule does not reproduce what
+production actually sends. The test comment records this.
+
+**Verified:** `tsc` clean, `npm run build` clean, 34/34 tests, lint unchanged
+at the pre-existing 29 problems / 25 errors with no hits in the touched files.
+The failing conversation was replayed end to end through `/api/chat` against
+the real model with Netanel's key: before the fix that exact message array is a
+guaranteed 400, after it the turn completes and answers sensibly.
+
+**Still not fixed, second finding.** The same screenshots show
+"המלון נמצא ממש על גדת הדנובה, במרחק הליכה מהעיר העתיקה" - an uncaveated
+location claim plus a walking-distance claim, in a conversation where no pin
+existed yet so there were no real distances to quote. The caveat rule and the
+air-distance numbers both hold when a located pin exists (verified live four
+times this morning); neither engages before `add_pin` has run. Closing that
+means having the agent decline to characterise a hotel it has not yet pinned,
+or pinning earlier. Left for a decision rather than a fifth prompt round.
+
+
 ### 2026-07-27 (המשך) - כל היעדים מקבלים תמונת נושא, ומסלולים שהיו חסרים
 
 הבאג של התמונות החסרות היה קיים בשתי רמות. הרמה התחתונה (תמונות ממוזערות של
