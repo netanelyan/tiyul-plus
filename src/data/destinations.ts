@@ -29445,6 +29445,325 @@ export const destinations: Destination[] = [
     },
   },
   {
+    slug: 'buenos-aires',
+    name: 'בואנוס איירס',
+    nameLocal: 'Buenos Aires',
+    countrySlug: 'argentina',
+    flag: '🇦🇷',
+    center: { lat: -34.6037, lng: -58.3816 },
+    zoom: 12,
+    tagline: 'טנגו, בשר ואירופה בדרום אמריקה',
+    summary:
+      'בואנוס איירס היא נקודת הכניסה הקלאסית לארגנטינה, ולרבים מהישראלים היא התחנה הראשונה בטיול הגדול לדרום אמריקה. עיר גדולה עם שדרות רחבות, ארכיטקטורה אירופית, סצנת אוכל חזקה, וקהילה יהודית שהיא הגדולה באמריקה הלטינית ומספקת תשתית כשרות אמיתית.',
+    bestSeason: 'ספטמבר עד נובמבר ומרץ עד מאי (אביב וסתיו בחצי הכדור הדרומי). דצמבר-פברואר חמים ולחים, ויוני-אוגוסט קרירים וגשומים אך שקטים וזולים יותר.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/La_Recoleta_Cemetery_%2841054043562%29.jpg/500px-La_Recoleta_Cemetery_%2841054043562%29.jpg',
+    iconicLandmark: {
+      name: 'תיאטרון קולון',
+      nameLocal: 'Teatro Colón',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Fachada_del_Teatro_Col%C3%B3n_en_Buenos_Aires%2C_Argentina.jpg/500px-Fachada_del_Teatro_Col%C3%B3n_en_Buenos_Aires%2C_Argentina.jpg',
+      blurb:
+        'בית האופרה של בואנוס איירס מ-1908, שנחשב לאחד האולמות עם האקוסטיקה הטובה בעולם.',
+    },
+    editorialRating: {
+      score: 4.4,
+      verdict:
+        'ערך גבוה במיוחד ליחידת מטבע: אוכל, תרבות והופעות במחירים נמוכים בהרבה מאירופה, ותשתית כשרות אמיתית. חסרונות: הטיסה ארוכה מאוד ועם החלפה, המצב הכלכלי גורם לתנודות מחירים חדות, וכדאי להיזהר בשכונות מסוימות. עיר לשבוע, או תחנה ראשונה לפני פטגוניה.',
+    },
+    places: [
+      {
+        id: 'ba-plaza-mayo',
+        name: 'פלאסה דה מאיו',
+        nameLocal: 'Plaza de Mayo',
+        category: 'attraction',
+        lat: -34.60833,
+        lng: -58.37194,
+        description:
+          'הכיכר ההיסטורית של בואנוס איירס ומוקד החיים הפוליטיים בארגנטינה. אמהות פלאסה דה מאיו צועדות בה בכל יום חמישי מאז 1977.',
+        durationMin: 45,
+        priceLevel: 0,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=-34.60833,-58.37194',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Vista_a%C3%A9rea_de_Plaza_de_Mayo_03.jpg/500px-Vista_a%C3%A9rea_de_Plaza_de_Mayo_03.jpg',
+      },
+      {
+        id: 'ba-casa-rosada',
+        name: 'קאסה רוסאדה',
+        nameLocal: 'Casa Rosada',
+        category: 'attraction',
+        lat: -34.60806,
+        lng: -58.37028,
+        description:
+          'ארמון הנשיאות הוורוד, ומהמרפסת שלו נאמה אווה פרון. יש סיורים מודרכים בסופי שבוע, בהרשמה מראש וללא תשלום.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=-34.60806,-58.37028',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Casa_Rosada_exterior_from_Plaza_de_Mayo.JPG/500px-Casa_Rosada_exterior_from_Plaza_de_Mayo.JPG',
+      },
+      {
+        id: 'ba-teatro-colon',
+        name: 'תיאטרון קולון',
+        nameLocal: 'Teatro Colón',
+        category: 'attraction',
+        lat: -34.60108,
+        lng: -58.38308,
+        description:
+          'אחד מבתי האופרה עם האקוסטיקה הטובה בעולם, נפתח ב-1908. סיורים מודרכים ביום, וכרטיסים להופעות במחירים סבירים מאוד.',
+        durationMin: 90,
+        priceLevel: 2,
+        tags: ['art', 'history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=-34.60108,-58.38308',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Fachada_del_Teatro_Col%C3%B3n_en_Buenos_Aires%2C_Argentina.jpg/500px-Fachada_del_Teatro_Col%C3%B3n_en_Buenos_Aires%2C_Argentina.jpg',
+      },
+      {
+        id: 'ba-obelisco',
+        name: 'האובליסק',
+        nameLocal: 'Obelisco',
+        category: 'attraction',
+        lat: -34.60361,
+        lng: -58.38167,
+        description:
+          'הסמל של העיר, בצומת השדרה הרחבה בעולם (9 de Julio). מוקד החגיגות אחרי ניצחונות נבחרת ארגנטינה.',
+        durationMin: 20,
+        priceLevel: 0,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=-34.60361,-58.38167',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Buenos_Aires_(20234294752).jpg/500px-Buenos_Aires_(20234294752).jpg',
+      },
+      {
+        id: 'ba-recoleta',
+        name: 'בית העלמין רקולטה',
+        nameLocal: 'La Recoleta Cemetery',
+        category: 'attraction',
+        lat: -34.58806,
+        lng: -58.39306,
+        description:
+          'עיר מאוזוליאומים שלמה בלב שכונה יוקרתית, ובה קברה של אווה פרון. הכניסה בתשלום והמבוך עצמו מרשים.',
+        durationMin: 90,
+        priceLevel: 1,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=-34.58806,-58.39306',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/La_Recoleta_Cemetery_(41054043562).jpg/500px-La_Recoleta_Cemetery_(41054043562).jpg',
+      },
+      {
+        id: 'ba-la-boca',
+        name: 'לה בוקה',
+        nameLocal: 'La Boca',
+        category: 'attraction',
+        lat: -34.63556,
+        lng: -58.36472,
+        description:
+          'שכונת נמל של מהגרים איטלקים, מוכרת בבתי הפח הצבעוניים ובקבוצת בוקה ג׳וניורס. מומלץ להישאר באזור התיירותי ולא להתרחק, במיוחד אחרי החשכה.',
+        durationMin: 90,
+        priceLevel: 0,
+        tags: ['history', 'art'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=-34.63556,-58.36472',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/LaBoca_ST_98.jpg/500px-LaBoca_ST_98.jpg',
+      },
+      {
+        id: 'ba-caminito',
+        name: 'קמיניטו',
+        nameLocal: 'Caminito',
+        category: 'attraction',
+        lat: -34.6393,
+        lng: -58.3628,
+        description:
+          'הסמטה המצוירת בלה בוקה, שהפכה למוזיאון רחוב פתוח עם רקדני טנגו ודוכני אמנות.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['art', 'families'],
+        externalUrl: 'https://maps.google.com/?q=-34.6393,-58.3628',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Caminito_-_Entrada.jpg/500px-Caminito_-_Entrada.jpg',
+      },
+      {
+        id: 'ba-malba',
+        name: 'מאלבה - מוזיאון האמנות הלטינו-אמריקאית',
+        nameLocal: 'MALBA',
+        category: 'museum',
+        lat: -34.57697,
+        lng: -58.40339,
+        description:
+          'אוסף האמנות הלטינו-אמריקאית של המאה העשרים, ובו פרידה קאלו, דייגו ריברה ובוטרו. מבנה מודרני בפלרמו.',
+        durationMin: 120,
+        priceLevel: 2,
+        tags: ['art'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=-34.57697,-58.40339',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Buenos_Aires_-_Palermo_-_Malba.jpg/500px-Buenos_Aires_-_Palermo_-_Malba.jpg',
+      },
+      {
+        id: 'ba-bellas-artes',
+        name: 'מוזיאון האמנויות היפות',
+        nameLocal: 'Museo Nacional de Bellas Artes',
+        category: 'museum',
+        lat: -34.58399,
+        lng: -58.39297,
+        description:
+          'המוזיאון הלאומי לאמנות, עם אוסף אירופי (ואן גוך, רודן, דגה) לצד אמנות ארגנטינאית. הכניסה חופשית.',
+        durationMin: 120,
+        priceLevel: 0,
+        tags: ['art'],
+        externalUrl: 'https://maps.google.com/?q=-34.58399,-58.39297',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Fachada_del_Museo_Nacional_de_Bellas_Artes_(Argentina).jpg/500px-Fachada_del_Museo_Nacional_de_Bellas_Artes_(Argentina).jpg',
+      },
+      {
+        id: 'ba-ateneo',
+        name: 'אל אתנאו גראנד ספלנדיד',
+        nameLocal: 'El Ateneo Grand Splendid',
+        category: 'shopping',
+        lat: -34.59611,
+        lng: -58.39417,
+        description:
+          'חנות ספרים בתוך תיאטרון מ-1919, עם יציעים ותקרה מצוירת. נחשבת לאחת מחנויות הספרים היפות בעולם, ויש בה בית קפה על הבמה.',
+        durationMin: 60,
+        priceLevel: 1,
+        tags: ['art', 'foodie'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=-34.59611,-58.39417',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Yenny_Ateneo_Grand_Splendid.jpg/500px-Yenny_Ateneo_Grand_Splendid.jpg',
+      },
+      {
+        id: 'ba-rosedal',
+        name: 'פארק שלושה בפברואר וגן הוורדים',
+        nameLocal: 'Parque Tres de Febrero (Rosedal)',
+        category: 'nature',
+        lat: -34.57333,
+        lng: -58.41472,
+        description:
+          'הריאה הירוקה של פלרמו: אגם, גן ורדים גדול ושבילי ריצה ואופניים. חופשי לכניסה.',
+        durationMin: 120,
+        priceLevel: 0,
+        tags: ['outdoors', 'families', 'romantic'],
+        externalUrl: 'https://maps.google.com/?q=-34.57333,-58.41472',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Lago_del_rosedal_palermo_chico.jpg/500px-Lago_del_rosedal_palermo_chico.jpg',
+      },
+      {
+        id: 'ba-templo-libertad',
+        name: 'טמפלו ליברטד ובית הכנסת המרכזי',
+        nameLocal: 'Templo Libertad',
+        category: 'attraction',
+        lat: -34.59947,
+        lng: -58.38369,
+        description:
+          'בית הכנסת המרכזי של בואנוס איירס מ-1897, ולצידו המוזיאון היהודי של ארגנטינה. הקהילה היהודית בארגנטינה היא הגדולה באמריקה הלטינית.',
+        durationMin: 75,
+        priceLevel: 1,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=-34.59947,-58.38369',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Sinagoga_israelita.JPG/500px-Sinagoga_israelita.JPG',
+      },
+      {
+        id: 'ba-tigre',
+        name: 'טיגרה ודלתת הפאראנה',
+        nameLocal: 'Tigre & Paraná Delta',
+        category: 'nature',
+        lat: -34.42278,
+        lng: -58.58083,
+        description:
+          'עיירה על שפת דלתת הפאראנה, כשעה ברכבת מהעיר. שיט בין תעלות ואיים, שוק אומנויות ובתי עץ על כלונסאות.',
+        durationMin: 300,
+        priceLevel: 1,
+        tags: ['outdoors', 'families'],
+        externalUrl: 'https://maps.google.com/?q=-34.42278,-58.58083',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Estaci%C3%B3n_Tigre_-_panoramio.jpg/500px-Estaci%C3%B3n_Tigre_-_panoramio.jpg',
+      },
+      {
+        id: 'ba-san-telmo',
+        name: 'סן טלמו',
+        nameLocal: 'San Telmo',
+        category: 'attraction',
+        lat: -34.62056,
+        lng: -58.37167,
+        description:
+          'השכונה העתיקה של העיר, עם רחובות מרוצפים ובתי קולוניאליים. בימי ראשון נפרש בה שוק עתיקות גדול לאורך רחוב דפנסה, עם טנגו ברחוב.',
+        durationMin: 150,
+        priceLevel: 0,
+        tags: ['history', 'foodie', 'nightlife'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=-34.62056,-58.37167',
+      },
+      {
+        id: 'ba-puerto-madero',
+        name: 'פוארטו מאדרו',
+        nameLocal: 'Puerto Madero',
+        category: 'attraction',
+        lat: -34.61194,
+        lng: -58.36472,
+        description:
+          'הנמל הישן שהפך לרובע מודרני של מגדלים ומסעדות על המים, עם גשר האישה של קלטראווה ושמורת טבע עירונית בקצהו.',
+        durationMin: 120,
+        priceLevel: 2,
+        tags: ['nightlife', 'romantic'],
+        externalUrl: 'https://maps.google.com/?q=-34.61194,-58.36472',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'המרכז ההיסטורי',
+        placeIds: ['ba-plaza-mayo', 'ba-casa-rosada', 'ba-obelisco', 'ba-teatro-colon'],
+        notes:
+          'הסיורים בקאסה רוסאדה הם בסופי שבוע ובהרשמה מראש. לתיאטרון קולון יש סיורים יומיים.',
+      },
+      {
+        day: 2,
+        title: 'רקולטה ופלרמו',
+        placeIds: ['ba-recoleta', 'ba-bellas-artes', 'ba-malba', 'ba-rosedal'],
+        notes:
+          'בית העלמין והמוזיאונים במרחק הליכה זה מזה, ומשם אוטובוס לפארק.',
+      },
+      {
+        day: 3,
+        title: 'לה בוקה וסן טלמו',
+        placeIds: ['ba-la-boca', 'ba-caminito', 'ba-san-telmo'],
+        notes:
+          'לה בוקה ביום בלבד ובאזור התיירותי. שוק סן טלמו הגדול הוא בימי ראשון.',
+      },
+      {
+        day: 4,
+        title: 'הרובע היהודי, ספרים ופוארטו מאדרו',
+        placeIds: ['ba-templo-libertad', 'ba-ateneo', 'ba-puerto-madero'],
+        notes:
+          'טמפלו ליברטד והמוזיאון היהודי דורשים תיאום ומסמך מזהה בכניסה.',
+      },
+      {
+        day: 5,
+        title: 'טיגרה ודלתת הפאראנה',
+        placeIds: ['ba-tigre'],
+        notes:
+          'רכבת מתחנת רטירו כשעה, או הרכבת התיירותית Tren de la Costa. יום שלם.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה מנתב״ג לבואנוס איירס (EZE). הקווים המקובלים הם דרך אירופה (מדריד, רומא, פרנקפורט) או דרך איסטנבול וסאו פאולו, ובסך הכול כ-18 עד 22 שעות. הפרש השעות מישראל הוא חמש עד שש שעות אחורה.',
+      gettingAround:
+        'הסובטה (רכבת תחתית) זולה ומהירה, ומשלמים בכרטיס SUBE שנרכש בקיוסקים. אוטובוסים (colectivos) מכסים הכול ופועלים כל הלילה, גם הם ב-SUBE. מוניות ואפליקציות זמינות וזולות יחסית. העיר גדולה, ולא כדאי לתכנן הכול ברגל.',
+      kosherOverview:
+        'בואנוס איירס היא מרכז הכשרות הגדול באמריקה הלטינית: קהילה יהודית של כ-180 אלף איש, ובעיקר בשכונות אונסה (Once) ואגם (Villa Crespo) יש מסעדות, מאפיות, קצביות וסופרים כשרים. פועלים בעיר בתי חב״ד ובתי כנסת רבים, וההשגחה המקובלת היא של הרבנות המקומית. שימו לב שאתרים יהודיים דורשים לרוב תיאום מראש והצגת דרכון בכניסה, מסיבות ביטחוניות. לוודא מול המקום. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
+    },
+  },
+  {
     slug: 'patagonia-south',
     name: 'פטגוניה הדרומית',
     nameLocal: 'Southern Patagonia',
