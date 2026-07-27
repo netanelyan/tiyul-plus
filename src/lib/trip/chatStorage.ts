@@ -37,6 +37,24 @@ export function loadChat(tripId: string): StoredChatMessage[] {
   }
 }
 
+/**
+ * מוחק את השיחה של טיול אחד, ומשאיר את הטיול עצמו.
+ *
+ * נוצר מדיווח של מטייל: הודעת "השיחה ארוכה מדי" הציעה לרענן את הדף, והוא
+ * ענה "כשאני מרענן, הצ׳אט נשאר". הוא צדק - `loadChat` משחזר מ-localStorage
+ * בכל טעינה, ו-`reset()` ב-useTripChat ניקה רק את ה-state בזיכרון (וגם
+ * אף אחד לא קרא לו). כלומר לא הייתה שום דרך לנקות שיחה, והעצה שנתנו
+ * במקרה של חריגה מחלון ההקשר פשוט לא עבדה.
+ */
+export function clearChat(tripId: string): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.removeItem(PREFIX + tripId);
+  } catch {
+    // אחסון חסום - השיחה בזיכרון כבר נוקתה בכל מקרה
+  }
+}
+
 export function saveChat(tripId: string, messages: StoredChatMessage[]): void {
   if (typeof window === 'undefined') return;
   const cutoff = messages.length - KEEP_IMAGES_IN_LAST;

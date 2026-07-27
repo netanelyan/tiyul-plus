@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Trip } from './types';
 import type { Destination } from '@/lib/types';
 import { useTrip } from './TripContext';
-import { loadChat, saveChat, type StoredChatMessage } from './chatStorage';
+import { clearChat, loadChat, saveChat, type StoredChatMessage } from './chatStorage';
 import { loadExplored, saveExplored } from '@/lib/explore/storage';
 import { authHeader } from '@/lib/auth/client';
 
@@ -73,6 +73,8 @@ export interface TripChat {
   send: (text: string, kosher?: boolean, image?: string) => void;
   /** ניקוי השיחה המקומית (התחלת טיול חדש) */
   reset: () => void;
+  /** ניקוי השיחה של הטיול הנוכחי (כולל האחסון) - הטיול נשאר */
+  clearConversation: () => void;
 }
 
 export function useTripChat(options?: {
@@ -292,9 +294,25 @@ export function useTripChat(options?: {
     setInput('');
   }, []);
 
+  /**
+   * ניקוי השיחה של הטיול הנוכחי, בלי לגעת בטיול.
+   *
+   * `reset` לבדו ניקה רק את ה-state, כך שרענון היה משחזר את הכול
+   * מ-localStorage - וזה מה שמטייל דיווח עליו. כאן מוחקים גם את האחסון,
+   * ו-suppressSaveRef מונע מהאפקט שמסנכרן היסטוריה לכתוב מיד את המצב
+   * הישן חזרה על אותו tick.
+   */
+  const clearConversation = useCallback(() => {
+    const id = tripRef.current.currentId;
+    if (id) clearChat(id);
+    suppressSaveRef.current = true;
+    setMessages([]);
+    setInput('');
+  }, []);
+
   const addExplored = useCallback((dest: Destination) => {
     setExplored(saveExplored(dest));
   }, []);
 
-  return { messages, input, setInput, loading, status, tripUpdates, explored, addExplored, send, reset };
+  return { messages, input, setInput, loading, status, tripUpdates, explored, addExplored, send, reset, clearConversation };
 }

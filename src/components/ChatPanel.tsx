@@ -61,7 +61,7 @@ export default function ChatPanel({
 }) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-  const { messages, loading, status, input, setInput, send } = chat;
+  const { messages, loading, status, input, setInput, send, clearConversation } = chat;
   // תמונה שמחכה לשליחה (data URL מוקטן) + שגיאת בחירה קצרה
   const [pending, setPending] = useState<string | null>(null);
   const [imgError, setImgError] = useState<string | null>(null);
@@ -105,15 +105,41 @@ export default function ChatPanel({
         <span className="truncate text-xs font-medium text-night/45">
           כותבים בקשה - התוכנית מתעדכנת
         </span>
+        <div className="ms-auto flex shrink-0 items-center gap-1">
+        {/*
+          ניקוי השיחה, בלי לגעת בטיול. נוסף אחרי שמטייל קיבל את ההודעה
+          "השיחה ארוכה מדי" עם עצה לרענן את הדף - ורענון לא ניקה כלום, כי
+          ההיסטוריה נטענת מ-localStorage בכל טעינה. עד כאן לא היה שום
+          כפתור שמנקה שיחה: "טיול חדש" פותח טיול אחר ומאבד את התוכנית,
+          וזה מחיר לא סביר רק כדי להשתחרר משיחה תקועה.
+        */}
+        {messages.length > 0 && (
+          <button
+            onClick={() => {
+              if (window.confirm('לנקות את השיחה? הטיול עצמו יישאר בדיוק כמו שהוא.')) {
+                clearConversation();
+              }
+            }}
+            aria-label="ניקוי השיחה"
+            title="ניקוי השיחה - הטיול נשאר"
+            className="flex h-8 shrink-0 items-center gap-1 rounded-full bg-night/5 px-2.5 text-xs font-semibold text-night/55 transition hover:bg-night/10 hover:text-night"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5" aria-hidden>
+              <path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            ניקוי
+          </button>
+        )}
         {onClose && (
           <button
             onClick={onClose}
             aria-label="סגירת השיחה"
-            className="ms-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-night/5 text-night/50 transition hover:bg-night/10 hover:text-night"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-night/5 text-night/50 transition hover:bg-night/10 hover:text-night"
           >
             ✕
           </button>
         )}
+        </div>
       </header>
 
       <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-4">
