@@ -25,7 +25,7 @@
 // הסקריפט לעולם לא ממציא תמונה חלופית: הוא מתקן את **שם הקובץ הקיים** בלבד.
 // אם אף וריאנט לא נמצא ב-Commons, הכתובת נשארת כמו שהיא ומדווחת כ-UNRESOLVED,
 // כדי שאדם יחליט. השמטה עדיפה על ניחוש.
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 
 const DRY = process.argv.includes('--dry');
@@ -33,6 +33,16 @@ const FILES = ['src/data/destinations.ts', 'src/data/countries.ts'];
 const MANIFEST = 'scripts/photo-verified.json';
 const API = 'https://commons.wikimedia.org/w/api.php';
 const ALLOWED_WIDTHS = [960, 500, 330, 250];
+
+// מדיניות Wikimedia דורשת User-Agent שמזהה את הכלי ונותן דרך ליצור קשר.
+// UA גנרי הוא סיבה מוכרת ל-429/403, וקיבלנו 429 בהרצה הראשונה.
+const HEADERS = {
+  'User-Agent': 'tiyul-plus-photo-repair/1.1 (https://github.com/netanelyan/tiyul-plus)',
+  'Content-Type': 'application/x-www-form-urlencoded',
+  'Accept-Encoding': 'gzip',
+};
+const BACKOFF_MS = [2_000, 5_000, 12_000, 30_000, 60_000];
+const PACE_MS = 1_000; // בין אצוות. איטי בכוונה - עדיף לרוץ דקה יותר מאשר להיחסם.
 
 /**
  * הנתיב ב-Commons הוא פונקציה טהורה של שם הקובץ: md5 של השם הלא-מקודד.
@@ -88,10 +98,21 @@ function variants(name) {
  * חוזר, וכישלון אמיתי **זורק** במקום להיבלע.
  */
 async function lookup(titles) {
-  const found = new Map();
+  // מטמון על הדיסק, כי Commons מגביל קצב (429) ובלי זה כל חסימה מאבדת את כל
+  // ההתקדמות ומכריחה להתחיל מאפס - מה שרק מגדיל את העומס ומזמין עוד 429.
+  // הרצה חוזרת ממשיכה מאיפה שנעצרה.
+  const CACHE = '.cache/commons-lookup.json';
+  mkdirSync('.cache', { recursive: true });
+  const cache = existsSync(CACHE) ? JSON.parse(readFileSync(CACHE, 'utf8')) : {};
+  const found = new Map(Object.entries(cache).filter(([, v]) => v > 0));
+  const asked = new Set(Object.keys(cache));
+  const todo = titles.filter((t) => !asked.has(t));
+  if (todo.length < titles.length)
+    console.log(`resuming: ${titles.length - todo.length} titles already looked up, ${todo.length} to go`);
+
   const BATCH = 40;
-  for (let i = 0; i < titles.length; i += BATCH) {
-    const batch = titles.slice(i, i + BATCH);
+  for (let i = 0; i < todo.length; i += BATCH) {
+    const batch = todo.slice(i, i + BATCH);
     const body = new URLSearchParams({
       action: 'query',
       format: 'json',
@@ -101,34 +122,50 @@ async function lookup(titles) {
       titles: batch.map((t) => `File:${t}`).join('|'),
     });
     let j = null;
-    for (let attempt = 0; attempt < 3 && !j; attempt++) {
+    for (let attempt = 0; attempt < 6 && !j; attempt++) {
       try {
-        const res = await fetch(API, {
-          method: 'POST',
-          headers: {
-            'User-Agent': 'tiyul-plus-photo-repair/1.0',
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body,
-        });
+        const res = await fetch(API, { method: 'POST', headers: HEADERS, body });
+        if (res.status === 429 || res.status >= 500) {
+          // Retry-After הוא מה ש-Wikimedia מבקש שנכבד. בלעדיו - השהיה מעריכית.
+          const ra = Number(res.headers.get('retry-after'));
+          const waitMs = Number.isFinite(ra) && ra > 0 ? ra * 1000 : BACKOFF_MS[attempt] ?? 60_000;
+          if (attempt < 5) {
+            console.log(`  HTTP ${res.status} on batch ${Math.floor(i / BATCH) + 1}, waiting ${Math.round(waitMs / 1000)}s...`);
+            await new Promise((r) => setTimeout(r, waitMs));
+            continue;
+          }
+        }
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         j = await res.json();
       } catch (e) {
-        if (attempt === 2)
+        if (attempt === 5) {
+          writeFileSync(CACHE, JSON.stringify(cache));
           throw new Error(
-            `Commons lookup failed for batch ${i / BATCH} after 3 attempts: ${e.message}. ` +
-              `Refusing to continue - a silently skipped batch is what made the previous run ` +
+            `Commons lookup failed for batch ${Math.floor(i / BATCH) + 1} after 6 attempts: ${e.message}.\n` +
+              `Progress WAS saved to ${CACHE} - just run the script again and it resumes.\n` +
+              `Refusing to continue silently: a skipped batch is what made an earlier run ` +
               `report 88 false "not found" results.`,
           );
-        await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
+        }
+        await new Promise((r) => setTimeout(r, BACKOFF_MS[attempt] ?? 60_000));
       }
     }
     // formatversion=2 מחזיר pages כמערך, וכותרות עם רווחים במקום קו תחתון
+    const hit = new Set();
     for (const p of j?.query?.pages ?? [])
-      if (p.imageinfo?.[0])
-        found.set(p.title.replace(/^File:/, '').replace(/ /g, '_'), p.imageinfo[0].width);
-    await new Promise((r) => setTimeout(r, 200));
+      if (p.imageinfo?.[0]) {
+        const key = p.title.replace(/^File:/, '').replace(/ /g, '_');
+        found.set(key, p.imageinfo[0].width);
+        hit.add(key);
+        cache[key] = p.imageinfo[0].width;
+      }
+    // רושמים גם את מה שנשאל ולא נמצא, אחרת כל הרצה חוזרת שואלת שוב את אותם שמות
+    for (const t of batch) if (!hit.has(t)) cache[t] = 0;
+    writeFileSync(CACHE, JSON.stringify(cache));
+    process.stdout.write(`\r  looked up ${Math.min(i + BATCH, todo.length)}/${todo.length}`);
+    await new Promise((r) => setTimeout(r, PACE_MS));
   }
+  if (todo.length) console.log('');
   return found;
 }
 
@@ -192,7 +229,7 @@ if (unresolved.length) {
         `${API}?action=query&format=json&origin=*&generator=search&gsrsearch=${encodeURIComponent(
           `filetype:bitmap ${term}`,
         )}&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=size`,
-        { headers: { 'User-Agent': 'tiyul-plus-photo-repair/1.0' } },
+        { headers: { 'User-Agent': HEADERS['User-Agent'] } },
       );
       const j = await r.json();
       sug = Object.values(j?.query?.pages ?? {})
@@ -203,7 +240,7 @@ if (unresolved.length) {
     }
     console.log(`  ${n}`);
     for (const s of sug) console.log(`      ? ${s}`);
-    await new Promise((r) => setTimeout(r, 200));
+    await new Promise((r) => setTimeout(r, PACE_MS));
   }
 }
 if (!DRY) {
