@@ -29627,6 +29627,236 @@ export const destinations: Destination[] = [
         'ללונדון תשתית כשרות רחבה, אבל היא לא במרכז התיירותי אלא בצפון העיר. גולדרס גרין, הנדון וסטנמור מרכזות מסעדות, מאפיות וסופרמרקטים כשרים, ומשם מגיעים למרכז בכרבע עד חצי שעה ברכבת התחתית. רוב ההשגחות הן של KLBD, בית הדין של לונדון, ותעודה תלויה בחזית העסק. שווה לתכנן מראש: במרכז לונדון עצמו כמעט אין אפשרויות כשרות, ולכן מי שמבלה יום שלם באזור המוזיאונים לוקח איתו אוכל. סופי שבוע דורשים הזמנה מראש כי הכל נסגר בשעות המוקדמות של יום שישי.',
     },
   },
+  {
+    slug: 'singapore',
+    name: 'סינגפור',
+    nameLocal: 'Singapore',
+    countrySlug: 'singapore',
+    flag: '🇸🇬',
+    center: { lat: 1.29, lng: 103.85 },
+    zoom: 12,
+    tagline: 'שלושה ימים שמספיקים, ובדיוק בגלל זה היא עובדת',
+    summary:
+      'סינגפור היא אחד המקומות הבודדים שבהם התכנון העירוני הוא בעצמו אטרקציה. בתוך חצי שעה נסיעה עוברים מגן בוטני שהוא אתר מורשת עולמית, לשוק הודי, למגדלי מרינה ביי, לאי נופש. אין כאן העיר העתיקה הגדולה שמחפשים באירופה, ויש כאן משהו אחר: מדינה שמנסה להראות איך עיר טרופית אמורה לעבוד. שלושה עד ארבעה ימים מספיקים, וזה בדיוק מה שהופך אותה לעצירת ביניים מושלמת.',
+    bestSeason:
+      'סינגפור נמצאת קילומטרים ספורים מקו המשווה, ולכן החום והלחות זהים כל השנה ואין באמת עונה גרועה. פברואר עד אפריל הם החודשים היבשים יחסית. גשם טרופי קצר וחזק יורד כמעט כל יום אחר הצהריים, ולכן מתכננים מוזיאון או קניון לשעות האלה.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Supertree_Grove%2C_Gardens_by_the_Bay%2C_Singapore_-_20120712-02.jpg/960px-Supertree_Grove%2C_Gardens_by_the_Bay%2C_Singapore_-_20120712-02.jpg',
+    iconicLandmark: {
+      name: 'חורשת עצי העל',
+      nameLocal: 'Supertree Grove',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Supertree_Grove%2C_Gardens_by_the_Bay%2C_Singapore_-_20120712-02.jpg/500px-Supertree_Grove%2C_Gardens_by_the_Bay%2C_Singapore_-_20120712-02.jpg',
+      blurb:
+        'שנים עשר מגדלים מלאכותיים בגובה 25 עד 50 מטר, מכוסים בצמחייה מטפסת ומשמשים גם לאיסוף מי גשם ולאוורור החממות. מופע האור הערב מתקיים פעמיים בערב והצפייה בו חינם.',
+    },
+    editorialRating: {
+      score: 4.4,
+      verdict:
+        'נקייה, יעילה ומגוונת יותר משנדמה, אבל יקרה מאוד ביחס לאזור ומתאימה לשלושה ימים ולא לשבוע.',
+    },
+    places: [
+      {
+        id: 'sg-gardens',
+        name: 'גני המפרץ',
+        nameLocal: 'Gardens by the Bay',
+        category: 'nature',
+        lat: 1.284722,
+        lng: 103.864998,
+        description:
+          'פארק בן יותר ממאה הקטרים על קרקע שהוחזרה מהים, ובו חורשת עצי העל וכן שתי חממות ענק - כיפת הפרחים והיער המעונן, עם מפל פנימי בגובה 35 מטר. הפארק עצמו והמופע הערב חינם, החממות בתשלום ושוות אותו בעיקר בשעות החום.',
+        rating: 4.7,
+        durationMin: 210,
+        externalUrl: 'https://maps.google.com/?q=1.284722,103.864998',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Supertree_Grove%2C_Gardens_by_the_Bay%2C_Singapore_-_20120712-02.jpg/500px-Supertree_Grove%2C_Gardens_by_the_Bay%2C_Singapore_-_20120712-02.jpg',
+        priceLevel: 2,
+        tags: ['families', 'outdoors', 'romantic'],
+        mustSee: true,
+      },
+      {
+        id: 'sg-mbs',
+        name: 'מרינה ביי סנדס',
+        nameLocal: 'Marina Bay Sands',
+        category: 'viewpoint',
+        lat: 1.284114,
+        lng: 103.859756,
+        description:
+          'שלושה מגדלים שנושאים סיפון בצורת ספינה בגובה 200 מטר. בריכת האינסוף שמורה לאורחי המלון בלבד, אבל מרפסת התצפית פתוחה לכולם בתשלום. התצפית משקיפה על כל קו הרקיע ועל הנמל, וזו נקודת השקיעה המבוקשת בעיר.',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=1.284114,103.859756',
+        priceLevel: 3,
+        tags: ['romantic', 'families'],
+        mustSee: true,
+      },
+      {
+        id: 'sg-merlion',
+        name: 'המרליון',
+        nameLocal: 'Merlion Park',
+        category: 'attraction',
+        lat: 1.28694,
+        lng: 103.855,
+        description:
+          'פסל בגובה שמונה מטרים של יצור עם ראש אריה וגוף דג, סמל העיר, יורק מים אל המפרץ. הכיכר סביבו קטנה וצפופה מאוד, אבל היא נקודת המבט הטובה ביותר על מרינה ביי סנדס ממול. חינם ופתוח תמיד.',
+        rating: 4.1,
+        durationMin: 30,
+        externalUrl: 'https://maps.google.com/?q=1.28694,103.855',
+        priceLevel: 0,
+        tags: ['families'],
+      },
+      {
+        id: 'sg-chinatown',
+        name: 'צ׳יינה טאון',
+        nameLocal: 'Chinatown',
+        category: 'attraction',
+        lat: 1.28241,
+        lng: 103.844,
+        description:
+          'הרובע הסיני ההיסטורי, עם בתי חנות משופצים בצבעי פסטל, מקדשים בודהיסטיים והינדים באותו רחוב, ושוק לילה. כאן גם אחד ממרכזי דוכני האוכל הידועים בעיר, שבו אפשר לאכול היטב בכמה דולרים.',
+        rating: 4.4,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=1.28241,103.844',
+        priceLevel: 1,
+        tags: ['foodie', 'history', 'families'],
+        mustSee: true,
+      },
+      {
+        id: 'sg-little-india',
+        name: 'ליטל אינדיה',
+        nameLocal: 'Little India',
+        category: 'attraction',
+        lat: 1.307238,
+        lng: 103.849758,
+        description:
+          'הרובע ההודי, הצבעוני והרועש מכל השאר, סביב רחוב סרנגון. מקדשים, חנויות בדים, ריחות תבלינים ובניין קניות ענק ומבולגן. הכי חי בערב ובסופי שבוע. הנקודה כאן היא תחנת הרכבת התחתית שבלב הרובע, נקודת ההתחלה ההגיונית.',
+        rating: 4.4,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=1.307238,103.849758',
+        priceLevel: 1,
+        tags: ['foodie', 'history'],
+      },
+      {
+        id: 'sg-botanic',
+        name: 'הגנים הבוטניים',
+        nameLocal: 'Singapore Botanic Gardens',
+        category: 'nature',
+        lat: 1.310278,
+        lng: 103.816389,
+        description:
+          'גן בוטני מ-1859 ואתר מורשת עולמית של אונסק"ו, היחיד מסוגו בעולם הטרופי. הכניסה לגן חינם, ורק גן הסחלבים הלאומי שבתוכו בתשלום, והוא שווה אותו. הבוקר המוקדם הוא השעה היחידה שבה אפשר להסתובב בנוחות.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=1.310278,103.816389',
+        priceLevel: 0,
+        tags: ['outdoors', 'families', 'romantic'],
+        mustSee: true,
+      },
+      {
+        id: 'sg-sentosa',
+        name: 'האי סנטוסה',
+        nameLocal: 'Sentosa Island',
+        category: 'nature',
+        lat: 1.24972,
+        lng: 103.8296,
+        description:
+          'אי נופש דרומית לעיר, מחובר ביבשה, ברכבל וברכבת קלה. בתוכו חופים מלאכותיים, פארק שעשועים גדול, אקווריום ומסלולי הליכה ביער. מרכז הבידור המשפחתי של סינגפור, וגם היקר שבהם - כל אטרקציה בכרטיס נפרד.',
+        rating: 4.3,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=1.24972,103.8296',
+        priceLevel: 3,
+        tags: ['families', 'outdoors'],
+      },
+      {
+        id: 'sg-raffles',
+        name: 'מלון ראפלס',
+        nameLocal: 'Raffles Hotel',
+        category: 'attraction',
+        lat: 1.2948,
+        lng: 103.8546,
+        description:
+          'מלון קולוניאלי מ-1887 שהוא אתר מורשת לאומי, לבן וסימטרי עם חצר דקלים. גם מי שלא מתארח יכול להיכנס לחצר ולקומת החנויות. כאן הומצא קוקטייל הסינגפור סלינג, והבר שמגיש אותו עדיין פעיל ויקר בהתאם.',
+        rating: 4.4,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=1.2948,103.8546',
+        priceLevel: 1,
+        tags: ['history', 'romantic'],
+      },
+      {
+        id: 'sg-clarke-quay',
+        name: 'קלארק קי',
+        nameLocal: 'Clarke Quay',
+        category: 'attraction',
+        lat: 1.288537,
+        lng: 103.846496,
+        description:
+          'רציף מחסנים היסטורי על נהר סינגפור שהוסב למסעדות וברים, ומרכז חיי הלילה של העיר. ההליכה לאורך הנהר מכאן אל המפרץ יפה במיוחד אחרי רדת החשכה, ואפשר גם לעשות אותה בסירת בומבוט.',
+        rating: 4.2,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=1.288537,103.846496',
+        priceLevel: 2,
+        tags: ['nightlife', 'foodie'],
+      },
+      {
+        id: 'sg-synagogue',
+        name: 'בית הכנסת מגן אבות',
+        nameLocal: 'Maghain Aboth Synagogue',
+        category: 'kosher-food',
+        lat: 1.29825,
+        lng: 103.8507,
+        description:
+          'בית הכנסת הוותיק בדרום מזרח אסיה, נבנה ב-1878 בידי הקהילה הבגדאדית והוא אתר מורשת לאומי. מתחם הקהילה היהודית של סינגפור נמצא סביבו ברחוב ווטרלו, וכולל את הפתרונות הכשרים המרכזיים בעיר.',
+        rating: 4.6,
+        durationMin: 60,
+        kosherNote:
+          'הקהילה היהודית של סינגפור מפעילה מסעדה כשרה ומכולת במתחם ברחוב ווטרלו, ובנוסף פועל בעיר בית חב"ד. ההשגחה היא של רב הקהילה. הכניסה לבית הכנסת דורשת תיאום מראש והצגת דרכון מטעמי ביטחון, ולכן פונים לפני שמגיעים.',
+        externalUrl: 'https://maps.google.com/?q=1.29825,103.8507',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Maghain_Aboth_Synagogue.jpg/500px-Maghain_Aboth_Synagogue.jpg',
+        priceLevel: 2,
+        tags: ['history', 'foodie'],
+        mustSee: true,
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'מרינה ביי',
+        placeIds: ['sg-merlion', 'sg-mbs', 'sg-gardens'],
+        notes:
+          'מתחילים אחר הצהריים כי כל הציר הזה הכי טוב לקראת ערב. מהמרליון הולכים סביב המפרץ למרינה ביי סנדס, ומסיימים בגני המפרץ למופע האור בעצי העל.',
+      },
+      {
+        day: 2,
+        title: 'הרבעים - סיני, הודי ויהודי',
+        placeIds: ['sg-chinatown', 'sg-synagogue', 'sg-little-india', 'sg-clarke-quay'],
+        notes:
+          'יום הליכה בין רבעים, וכולם מחוברים ברכבת התחתית בכמה דקות. את הביקור בבית הכנסת מתאמים ימים מראש. מסיימים בערב על הנהר בקלארק קי.',
+      },
+      {
+        day: 3,
+        title: 'גנים בוטניים וראפלס',
+        placeIds: ['sg-botanic', 'sg-raffles'],
+        notes:
+          'הגנים הבוטניים בשעה שאחרי הזריחה, לפני שהחום נעשה בלתי אפשרי. אחר הצהריים מתקרר בקומות המקורות של ראפלס וסביבתו.',
+      },
+      {
+        day: 4,
+        title: 'סנטוסה',
+        placeIds: ['sg-sentosa'],
+        notes:
+          'יום שלם באי, ורק אם נוסעים עם ילדים או שיש זמן פנוי. מגיעים ברכבל מהר פאבר בשביל הנוף, וחוזרים ברכבת הקלה. כל אטרקציה באי היא כרטיס בפני עצמו, ולכן בוחרים שתיים מראש.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה קבועה מתל אביב לצ׳אנגי (SIN), ורוב המסלולים עוברים דרך איסטנבול, דובאי, אתונה או בנגקוק, בכ-13 עד 17 שעות כולל עצירה. צ׳אנגי עצמו נחשב לאחד משדות התעופה הטובים בעולם ויש בו גינות, מפל מקורה וברכות שינה, כך שעצירת ביניים ארוכה בו נסבלת בהרבה מהרגיל. מהשדה למרכז ברכבת התחתית בכחצי שעה.',
+      gettingAround:
+        'הרכבת התחתית (MRT) מגיעה כמעט לכל מה שתייר צריך, נקייה, ממוזגת וזולה. משלמים בהצמדת כרטיס אשראי או טלפון ישירות בשער, בלי לרכוש כרטיס מקומי. אכילה ושתייה ברכבת אסורות ונאכפות בקנס, וזה כולל מים. ההליכה בחוץ קשה בגלל הלחות, ולכן משתמשים במעברים התת קרקעיים והמקורים שמחברים בין תחנות וקניונים.',
+      kosherOverview:
+        'לסינגפור קהילה יהודית קטנה ומאורגנת שמרוכזת ברחוב ווטרלו סביב בית הכנסת מגן אבות. שם נמצאים המסעדה הכשרה והמכולת של הקהילה, ובנוסף פועל בעיר בית חב"ד עם ארוחות ואירוח שבת. מחוץ למתחם הזה אין כמעט אפשרויות כשרות, וגם מרכזי הדוכנים העירוניים המצוינים אינם רלוונטיים לשומרי כשרות. המחירים במסעדה הכשרה גבוהים, כמו כל דבר בסינגפור, ולכן מי ששוהה כמה ימים משלים עם פירות, ירקות ומוצרים ארוזים עם הכשר מהסופרמרקטים הגדולים.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
