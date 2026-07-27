@@ -299,6 +299,94 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-27 (d) - Catalog: France, UK, Singapore, Malta, Belgium and a 77-photo sweep
+
+Database-track session, run in parallel with the feature chat. Five new
+destinations landed with their country entries where missing: **פריז**
+(France), **לונדון** (UK), **סינגפור**, **מלטה** and **בריסל ופלנדריה**
+(Belgium), plus Kolsai and Delphi as additions to existing destinations.
+The catalog now stands at **137 destinations, 70 countries, 1,216 places,
+0 errors, 20 warnings**. Grounding index is ~174,000 chars against the
+~190,000 ceiling, so roughly 11 destinations of headroom remain. Budget
+about 1.4k chars per new destination.
+
+**The single most reusable finding of the session:**
+`https://dbpedia.org/page/<Article>` - the **HTML** endpoint - returns
+`dbo:thumbnail` and `foaf:depiction` on large articles where
+`https://dbpedia.org/data/<Article>.json` silently truncates and drops them
+entirely. This had blocked Eiffel Tower, Louvre, Versailles, Westminster
+Abbey, British Museum, St Paul's, Camden Market and Hyde Park across
+several sessions. When even the HTML page looks empty, reformulate the ask
+as "search the whole page for strings containing Special:FilePath, list
+every distinct filename" - that rescued St Paul's with 40 filenames after
+a direct thumbnail request returned nothing.
+
+Source order of preference is now: (1) `dbpedia.org/data/X.json` for small
+and medium articles, one call gives thumbnail, depictions and coordinates;
+(2) `dbpedia.org/page/X` for large articles, no reliable coordinates;
+(3) `geonames.org/search.html` for coordinates only. Throttle to 2-3
+concurrent calls - 502s and read timeouts cluster above that.
+
+**New dbpedia traps, all confirmed by example:**
+
+- **Wrong city, same name.** `Palace_of_the_Inquisition` returns the
+  *Mexico City* palace; `Cartagena_Cathedral` returns the *Spanish*
+  Cartagena's. This is the dangerous one, because it returns
+  confident-looking data. Always read the depiction filenames and check
+  they match the intended city.
+- **Corporate logo instead of a photograph.** British Museum returns
+  `British_Museum_logo.svg`; Marina Bay Sands returns
+  `MBS_Primary_Logo_Lockup_800px_72dpi_Black.png`. Take a `foaf:depiction`
+  exterior shot instead.
+- **Coat of arms instead of a photograph.** Most small European towns do
+  this: Peso da Régua, Lamego, Bansko, Sigulda, Krujë, Sombor. Skip the
+  thumbnail entirely for towns and go straight to the depictions.
+- **Montage or composite.** `Marsaxlokk` returns `Marsaxlokk_montage.png`;
+  `Cartagena,_Colombia` returns only `Montaje_Cartagena,_Colombia.jpg`.
+  Rejected both.
+- **Ambiguous image.** Montmartre's thumbnail is a generic Paris rooftop
+  view. Deferred rather than accepted.
+
+**GeoNames trap reconfirmed:** when GeoNames has no record it silently
+falls back to a Wikipedia result for a *different* place. It returned
+Kortrijk for "Markt Brugge". Always check the returned name matches.
+
+**Photo sweep.** The photoless count went from **161 to 78 of 1,216**.
+Filled across Paris, London, Singapore, Douro (all 6), south Albania,
+Vojvodina, Patagonia, Bosanska Krajina, Fergana, Amsterdam, Krakow, Banff,
+Stockholm, Mexico, Latvia, Lithuania, Denmark, Korea, Greece, Austria,
+Sri Lanka, Canada, New England, Romania, Tasmania, Brazil, Kyrgyzstan,
+Estonia, Cyprus, Azerbaijan, Vienna, Rome, Chile and Morocco. Roughly 60
+of the remaining 78 are Chabad houses and kosher restaurants that have no
+freely-licensed photograph anywhere and will stay blank permanently.
+The genuinely stuck ones are Buckingham Palace, Tower of London, Montmartre,
+Champs-Élysées, Centre Pompidou, Rue des Rosiers, Golders Green, Merlion,
+Raffles, Singapore Botanic Gardens, and seven of the ten Cartagena places.
+
+**Two deliberate omissions, both documented in their commit messages.**
+Malta's Blue Lagoon has no sourceable coordinate anywhere, so it was folded
+into the Comino island entry rather than pinned at a guessed point.
+Antwerp's diamond district likewise has none, so the kosher entry is
+anchored on the verified Antwerpen-Centraal coordinate and the description
+says so outright. The project's worst outcome is a plausible-looking wrong
+value, so omission beats approximation every time.
+
+**Kosher honesty, both directions.** Malta's overview states plainly that
+there is no kosher restaurant on the island and Chabad by prior arrangement
+is the only cooked option. Belgium's says the opposite: Antwerp is the most
+serious kosher infrastructure in western Europe after London, with the
+explicit caveat that Bruges and Ghent have essentially nothing and visitors
+should shop in Antwerp first.
+
+**Tooling added under /tmp, worth recreating if lost:** `photoless.mjs`
+(census of places with no photo - note it needs an *absolute* import path,
+a relative one resolves against /tmp and fails), `mkphotos.mjs` (place id
+to Commons filename map to thumb URLs, with the `%27` apostrophe fix baked
+in) and `applyphotos.py` (splices `photo:` after each place's
+`externalUrl:` line). Do not inline `node -e` inside a bash heredoc when
+the JS contains quotes - shell quote nesting breaks it, write a `.mjs`
+file instead.
+
 ### 2026-07-27 (c) - "The AI is very broken. Rethink it." It was boxed in, not malfunctioning
 
 Netanel sent a screenshot where the agent, asked to build days 1-2 around his
