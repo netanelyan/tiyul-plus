@@ -16685,6 +16685,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'nightlife'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=Sarande+Albania',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Panoramic_view_of_Saranda_from_L%C3%ABkur%C3%ABsi_Castle.jpg/500px-Panoramic_view_of_Saranda_from_L%C3%ABkur%C3%ABsi_Castle.jpg',
       },
       {
         id: 'alb-porto-palermo',
@@ -16718,6 +16720,8 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=Llogara+Pass+Albania',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/From_the_beach_to_Maja_%C3%87ika.jpg/500px-From_the_beach_to_Maja_%C3%87ika.jpg',
       },
       {
         id: 'alb-berat',
@@ -16733,6 +16737,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'foodie'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=Berat+Albania',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Panorama_of_Berat%2C_Albania_2016.jpg/500px-Panorama_of_Berat%2C_Albania_2016.jpg',
       },
     ],
     itinerary: [
@@ -17000,6 +17006,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=45.2028,19.9336',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Eglises_de_Sremski_Karlovci.jpg/500px-Eglises_de_Sremski_Karlovci.jpg',
       },
       {
         id: 'rs-fruska-gora',
@@ -17049,6 +17057,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'foodie'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=45.7833,19.1167',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Sombor-Main-Street-20160404.jpg/500px-Sombor-Main-Street-20160404.jpg',
       },
       {
         id: 'rs-vrsac',
@@ -17064,6 +17074,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors', 'history'],
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=45.1206,21.2969',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Vr%C5%A1ac%2C_hill_with_Orthodox_and_Catholic_churches.jpg/500px-Vr%C5%A1ac%2C_hill_with_Orthodox_and_Catholic_churches.jpg',
       },
     ],
     itinerary: [
@@ -18129,6 +18141,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'outdoors'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=41.16528,-7.77639',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Peso_da_R%C3%A9gua-20140913.jpg/500px-Peso_da_R%C3%A9gua-20140913.jpg',
       },
       {
         id: 'pt-lamego',
@@ -18145,6 +18159,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=41.10083,-7.81',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Lamego_remedios.jpg/500px-Lamego_remedios.jpg',
       },
       {
         id: 'pt-foz-coa',
@@ -18161,6 +18177,8 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=41.08,-7.14',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Vila_Nova_de_Foz_C%C3%B4a_(13469416314).jpg/500px-Vila_Nova_de_Foz_C%C3%B4a_(13469416314).jpg',
       },
       {
         id: 'pt-mateus-palace',
@@ -18193,6 +18211,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'foodie'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=41.27028,-8.08083',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Amarante%2C_trecho_do_rio_T%C3%A2mega.jpg/500px-Amarante%2C_trecho_do_rio_T%C3%A2mega.jpg',
       },
       {
         id: 'pt-mesao-frio',
@@ -18208,6 +18228,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=41.15722,-7.89306',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Mes%C3%A3o_Frio_-_Portugal_(8482453517)_(cropped).jpg/500px-Mes%C3%A3o_Frio_-_Portugal_(8482453517)_(cropped).jpg',
       },
       {
         id: 'pt-alijo',
@@ -18223,6 +18245,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors', 'foodie'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=41.27611,-7.475',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Castedo_alijo.jpg/500px-Castedo_alijo.jpg',
       },
     ],
     itinerary: [
@@ -22521,6 +22545,8 @@ export const destinations: Destination[] = [
         tags: ['history'],
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=41.0011100769043,71.6683349609375',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Mulla_Qirg%27iz_madrasasi_04.jpg/500px-Mulla_Qirg%27iz_madrasasi_04.jpg',
       },
       {
         id: 'uz-chust',
@@ -23588,6 +23614,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors', 'foodie'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=44.88333511352539,16.14999961853027',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Bosanska_Krupa_(2015).jpg/500px-Bosanska_Krupa_(2015).jpg',
       },
       {
         id: 'ba-kozara',
@@ -23620,6 +23648,8 @@ export const destinations: Destination[] = [
         tags: ['history'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=44.9808349609375,16.71333312988281',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Glavna_ulica_Main_street.jpg/500px-Glavna_ulica_Main_street.jpg',
       },
       {
         id: 'ba-travnik',
@@ -27346,6 +27376,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=-50.000000,-73.249443',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Glaciar_Perito_Moreno22_-_Argentina.jpg/500px-Glaciar_Perito_Moreno22_-_Argentina.jpg',
       },
       {
         id: 'ar-el-chalten',
@@ -27378,6 +27410,8 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=-54.801945,-68.303055',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/2019-11-18_Ushuaia_Panorama.jpg/500px-2019-11-18_Ushuaia_Panorama.jpg',
       },
       {
         id: 'ar-tierra-del-fuego',
@@ -27392,6 +27426,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors', 'families'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=-54.833332,-68.500000',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Beagle_Channel_seen_from_Tierra_del_Fuego_National_Park.jpg/500px-Beagle_Channel_seen_from_Tierra_del_Fuego_National_Park.jpg',
       },
     ],
     itinerary: [
