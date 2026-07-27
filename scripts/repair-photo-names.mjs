@@ -74,18 +74,59 @@ function variants(name) {
 }
 
 /** imageinfo מחזיר גם קיום וגם רוחב מקור - שניהם נחוצים לבחירת רוחב חוקי. */
+/**
+ * חיפוש קיום + רוחב מקור מול Commons.
+ *
+ * **POST ולא GET, וזה לא קוסמטי.** הגרסה הראשונה דחסה 45 שמות קבצים למחרוזת
+ * שאילתה של GET. חלק מהשמות כאן ארוכים מ-100 תווים, כך שה-URL עבר את המגבלה
+ * והבקשה נכשלה - ו-`if (!res.ok) continue` בלע את הכישלון בשקט. התוצאה:
+ * 88 קבצים דווחו "לא נמצאו" כשהם קיימים, והחלוקה נקבעה לפי מזל של אצווה ולא
+ * לפי השם. חיפוש הגיבוי מצא בדיוק את אותם קבצים עם סיומת .JPG.
+ *
+ * זאת בדיוק אותה שגיאה שהסשן הזה רודף אחריה כל הזמן: **היעדר ראיה נקרא
+ * כראיה להיעדר.** לכן עכשיו: POST (אין מגבלת אורך), אצווה קטנה יותר, ניסיון
+ * חוזר, וכישלון אמיתי **זורק** במקום להיבלע.
+ */
 async function lookup(titles) {
   const found = new Map();
-  for (let i = 0; i < titles.length; i += 45) {
-    const batch = titles.slice(i, i + 45);
-    const url = `${API}?action=query&format=json&origin=*&prop=imageinfo&iiprop=size&titles=${encodeURIComponent(
-      batch.map((t) => `File:${t}`).join('|'),
-    )}`;
-    const res = await fetch(url, { headers: { 'User-Agent': 'tiyul-plus-photo-repair/1.0' } });
-    if (!res.ok) continue;
-    const j = await res.json();
-    for (const p of Object.values(j?.query?.pages ?? {}))
-      if (p.imageinfo) found.set(p.title.replace(/^File:/, '').replace(/ /g, '_'), p.imageinfo[0].width);
+  const BATCH = 40;
+  for (let i = 0; i < titles.length; i += BATCH) {
+    const batch = titles.slice(i, i + BATCH);
+    const body = new URLSearchParams({
+      action: 'query',
+      format: 'json',
+      formatversion: '2',
+      prop: 'imageinfo',
+      iiprop: 'size',
+      titles: batch.map((t) => `File:${t}`).join('|'),
+    });
+    let j = null;
+    for (let attempt = 0; attempt < 3 && !j; attempt++) {
+      try {
+        const res = await fetch(API, {
+          method: 'POST',
+          headers: {
+            'User-Agent': 'tiyul-plus-photo-repair/1.0',
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body,
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        j = await res.json();
+      } catch (e) {
+        if (attempt === 2)
+          throw new Error(
+            `Commons lookup failed for batch ${i / BATCH} after 3 attempts: ${e.message}. ` +
+              `Refusing to continue - a silently skipped batch is what made the previous run ` +
+              `report 88 false "not found" results.`,
+          );
+        await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
+      }
+    }
+    // formatversion=2 מחזיר pages כמערך, וכותרות עם רווחים במקום קו תחתון
+    for (const p of j?.query?.pages ?? [])
+      if (p.imageinfo?.[0])
+        found.set(p.title.replace(/^File:/, '').replace(/ /g, '_'), p.imageinfo[0].width);
     await new Promise((r) => setTimeout(r, 200));
   }
   return found;
