@@ -299,6 +299,66 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-27 (i) - WhatsApp showed Vercel's logo: no og:image, and the starter favicon
+
+Netanel shared `www.tiyulplus.com` in WhatsApp and got a **black circle with a
+white triangle** beside the correct tiyul+ title and description. Two causes, and
+the second is the embarrassing one.
+
+1. **There was no `og:image` anywhere on the site** - no `openGraph` block in the
+   root metadata, no `metadataBase`, nothing. With no image declared the scraper
+   falls back to the site icon.
+2. **`src/app/favicon.ico` was still the create-next-app default** - the
+   Next/Vercel triangle, 25,931 bytes of it, shipped since day one. `icon.svg`
+   (the paper plane) was added in an earlier session and the `.ico` was never
+   replaced. **Browsers prefer the SVG**, which is exactly why nobody ever saw
+   this on the site itself - it could only surface through a share.
+
+**What shipped.** `public/og.png`, 1200x630, built from the real `Logo.tsx` paths
+and the `globals.css` tokens in Heebo, so it is the brand rather than an
+approximation: night background, the paper-plane mark, the coral rule,
+"סוכן הנסיעות החכם לישראלים" in zest, the tagline, `tiyulplus.com`. A new
+`favicon.ico` from the same mark (cream plane on a night rounded square,
+16/32/48/64/128/256). Root metadata gained `metadataBase` (absolute - relative
+URLs do not work in scrapers), full `openGraph` and `twitter`
+`summary_large_image`. The five unused create-next-app SVGs are gone,
+`vercel.svg` among them.
+
+**The composition is centred on purpose, and this is the reusable bit.**
+WhatsApp crops the *small* preview to a **square**. A left- or right-weighted
+layout loses the logo completely in that crop - which is how the original design
+(brand in the top-right corner) would have failed even after adding an image. I
+simulated the centre-square crop and checked the mark and the name both survive
+it. `og:image:width/height` are declared so WhatsApp prefers the large card.
+
+**`/t/[code]` sets `openGraph` explicitly rather than inheriting.** Next merges
+metadata **per field**, so a child's `title`/`description` do NOT flow into the
+parent's `openGraph` - the shared-trip card would have carried the generic site
+title. That URL is the one people actually send, so it is the one that most needs
+the trip name on it.
+
+**Zero new dependencies** (hard rule 6): Heebo came from
+`npm pack @fontsource/heebo` into `/tmp`, and the render used the preinstalled
+Chromium with a playwright install kept entirely outside the repo. `package.json`
+is untouched. Two rendering gotchas worth keeping: `body{overflow:hidden}` does
+**not** clip an absolutely-positioned glow in an RTL document (the `html` element
+scrolls instead, and the whole layout shifts) - wrap it in a sized
+`overflow:hidden` div and screenshot that element; and `chrome --headless
+--screenshot --window-size` did not honour the size, while a playwright
+`viewport` did.
+
+**Verified by reading the SERVED html from a production build**, not the source:
+homepage carries all ten og/twitter tags with absolute image URLs, `/t/<code>`
+carries the trip name in `og:title` with `og:type=article`, `/og.png` returns 200
+`image/png`, `/favicon.ico` returns 200 `image/x-icon`. `tsc` + build clean.
+
+**Netanel should know:** WhatsApp caches link previews per URL for a long time,
+so links already sent may keep the old card; a fresh URL shows the new one.
+Deferred: per-destination OG images (a city page could render its own hero) -
+worth it only if destination links get shared, and it needs the
+`ImageResponse`/Hebrew-font question answered first.
+
+
 ### 2026-07-27 (h) - Short answers: position in the prompt beat wording, twice
 
 Netanel: *"Make the AI have not so long responses when can. for example: no need
