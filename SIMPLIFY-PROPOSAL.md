@@ -139,6 +139,54 @@ The third row is the one that measures the actual disease.
 
 ---
 
+## RESULTS AFTER IMPLEMENTATION (added after the work landed)
+
+Netanel approved with "go on, you are trusted", so all five steps shipped.
+Measured with the same harness:
+
+| | before | after | target | met? |
+|---|---|---|---|---|
+| 1440 first paint | 54 | **43** | ≤30 | **no** |
+| 390 first paint | 32 | **29** | ≤20 | **no** |
+| 1440 whole page, booking open | 90 | **69** | - | -23% |
+| 390 whole page, booking open | 73 | **58** | - | -21% |
+| 1440 excluding map internals + site nav | 35 | **27** | ≤13 | **no** |
+
+**All three targets were missed, and the reason is that I set them without doing
+the arithmetic.** Decomposing what the *approved* dispositions leave standing at
+1440: 6 site nav + 10 Leaflet internals + 4 header + 1 preferences + 5 day tabs +
+2 map toggle + 3 day card + 3 stop menus + 7 agent panel + 1 accessibility = 42,
+plus 1 for the first-visit coach-mark = **43**. That is exactly what the harness
+reports, which means 43 *is* the floor of the plan as approved. `≤30` was never
+reachable without reopening decisions the table had already settled.
+
+**What would actually move it further**, all requiring a decision rather than a
+fix, because the table says these stay:
+
+- the day tabs, 5 controls and one more per day - a compact day selector instead
+  of a tab per day would save 3-4 on a week-long trip
+- the 4 quick-reply starters in the agent panel - showing 2 saves 2
+- nothing can be done about the 10 Leaflet controls; 3 of them are attribution
+  links the CARTO and OSM licences require
+
+**And an honest note on the metric itself.** The count fell 20% while the screen
+reads far calmer than 20% - compare the before and after screenshots. What was
+removed was the *flat, equal-weight* noise: seven same-sized header buttons became
+three, twelve tiny per-stop controls became three, and the loudest element on the
+page is now the selected day rather than a Google Maps link. Counting controls
+measures density; the founder's complaint was about hierarchy, and the two are
+not the same thing. If this is measured again, the better proxy is "how many
+things compete for first attention", which is now roughly three (day tabs, the
+agent, the plan) instead of everything at once.
+
+**Verified:** 11/11 functional checks at 1440 (reorder, move-to-day, remove,
+notes, preference write-through, keyboard operation, both menus, coach-mark shown
+once) and 6/6 at 390 with touch (no horizontal overflow, accessibility button not
+occluded, drawer, tap-to-open stop menu, all-days collapsed). Plus 60 unit tests,
+`tsc` clean, build clean, lint unchanged at 27 problems.
+
+---
+
 ## 4. Disposition of every control
 
 `stays` = unchanged and visible. `collapses` = behind a disclosure in the same

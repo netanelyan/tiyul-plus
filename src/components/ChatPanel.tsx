@@ -53,11 +53,20 @@ export default function ChatPanel({
   className = '',
   autoFocus = false,
   onClose,
+  coach = false,
+  onDismissCoach,
 }: {
   chat: TripChat;
   className?: string;
   autoFocus?: boolean;
   onClose?: () => void;
+  /**
+   * רמז חד-פעמי מעל שורת הכתיבה. ה-state יושב ב-TripWorkspace ולא כאן,
+   * כי הרכיב הזה מרונדר פעמיים (עמודה בדסקטופ + מגירה במובייל) - מקור
+   * אמת אחד מבטיח שסגירה בצד אחד סוגרת גם בשני.
+   */
+  coach?: boolean;
+  onDismissCoach?: () => void;
 }) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -98,13 +107,15 @@ export default function ChatPanel({
       className={`min-h-0 flex-col overflow-hidden rounded-2xl bg-shell ring-1 ring-night/10 ${className}`}
       aria-label="שיחה עם הסוכן"
     >
-      <header className="flex shrink-0 items-center gap-2 border-b border-night/10 px-4 py-2.5">
-        <span className="badge text-sm font-bold text-night">
-          <span aria-hidden>🧭</span> הסוכן
+      {/*
+        הכותרת הייתה 12px אפור ליד "הסוכן" - הרכיב שעושה את כל העבודה
+        במוצר היה גם הצר וגם השקט מכל השלושה. עכשיו כותרת אמיתית.
+      */}
+      <header className="flex shrink-0 items-center gap-2 border-b border-night/10 px-4 py-3">
+        <span className="badge text-base font-bold text-night">
+          <span aria-hidden>🧭</span> הסוכן שלכם
         </span>
-        <span className="truncate text-xs font-medium text-night/45">
-          כותבים בקשה - התוכנית מתעדכנת
-        </span>
+        <span className="truncate text-xs font-medium text-night/45">כותבים - והתוכנית משתנה</span>
         <div className="ms-auto flex shrink-0 items-center gap-1">
         {/*
           ניקוי השיחה, בלי לגעת בטיול. נוסף אחרי שמטייל קיבל את ההודעה
@@ -142,7 +153,16 @@ export default function ChatPanel({
         </div>
       </header>
 
-      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-4">
+      {/*
+        `justify-center` רק כשאין הודעות: הפאנל התרחב כדי לקדם את הסוכן,
+        ובלי זה ההרחבה ייצרה שטח לבן ריק גדול מעל הקומפוזר - הבעיה
+        שהתחלנו ממנה, בכיוון ההפוך. ברגע שיש שיחה חוזרים לזרימה מלמעלה.
+      */}
+      <div
+        className={`flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-4 ${
+          messages.length === 0 && !loading ? 'justify-center' : ''
+        }`}
+      >
         {messages.length === 0 && !loading && (
           <div className="rounded-2xl bg-cream p-4">
             <p className="text-sm font-semibold leading-relaxed text-night/70">
@@ -231,6 +251,29 @@ export default function ChatPanel({
         }}
         className="shrink-0 border-t border-night/10 bg-shell p-3"
       >
+        {/*
+          כל מה שנשאר מרעיון "מדריך": שורה אחת שאומרת איפה עושים את הדבר
+          המרכזי. מסך הדרכה נדחה כי הוא לא מפחית אף פקד - ראו
+          SIMPLIFY-PROPOSAL.md. נעלם בלחיצה ולא חוזר.
+        */}
+        {coach && (
+          <div className="mb-2 flex items-start gap-2 rounded-xl bg-sunset/10 px-3 py-2 ring-1 ring-sunset/25">
+            <span aria-hidden className="text-sm">
+              👋
+            </span>
+            <p className="flex-1 text-xs font-semibold leading-relaxed text-night/75">
+              כל שינוי בטיול נעשה כאן - פשוט תכתבו מה לשנות, למשל &quot;תוסיף יום בפראג&quot;.
+            </p>
+            <button
+              type="button"
+              onClick={onDismissCoach}
+              aria-label="הבנתי, לסגור את ההסבר"
+              className="shrink-0 rounded-full px-1.5 text-night/40 transition hover:text-night"
+            >
+              ✕
+            </button>
+          </div>
+        )}
         {/* תצוגה מקדימה של התמונה שמחכה לשליחה - עם אפשרות להסיר */}
         {pending && (
           <div className="mb-2 flex items-center gap-2 rounded-xl bg-cream p-2">

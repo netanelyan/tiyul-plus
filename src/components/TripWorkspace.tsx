@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Destination, Place } from '@/lib/types';
 import type { TripPin, TripPreferences } from '@/lib/trip/types';
 import { destinations as curatedDestinations } from '@/data/destinations';
@@ -57,7 +57,40 @@ export default function TripWorkspace({
   const [chatOpen, setChatOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const [allDaysOpen, setAllDaysOpen] = useState(false);
-  const [actionsOpen, setActionsOpen] = useState(false);
+  const [prefsOpen, setPrefsOpen] = useState(false);
+  /** מזהה היום שעבורו נפתח שדה ההערות (יום בלי הערה מציג כפתור בלבד) */
+  const [noteOpenFor, setNoteOpenFor] = useState<string | null>(null);
+  /**
+   * רמז חד-פעמי שמצביע על שורת הכתיבה לסוכן.
+   *
+   * זה כל מה שנשאר מרעיון ה"מדריך": הצעה למסך הדרכה נדחתה כי היא לא
+   * מפחיתה אף פקד ואף מוסיפה, ומלמדת אנשים לסבול מסך עמוס במקום לפרוק
+   * אותו. שורה אחת שמסבירה איפה עושים את הדבר המרכזי כן שווה את המקום.
+   *
+   * מאותחל ל-false ונקרא מ-localStorage רק אחרי ה-mount, כדי שהשרת
+   * והלקוח יסכימו בצביעה הראשונה (אותה מלכודת hydration שנפתרה כך
+   * ב-PromptChips). מוצג פעם אחת לדפדפן ולא חוזר.
+   */
+  const [coach, setCoach] = useState(false);
+  useEffect(() => {
+    try {
+      // localStorage לא קיים בשרת, ולכן הקריאה חייבת לקרות אחרי ה-mount:
+      // אתחול ישיר ממנו היה יוצר אי-התאמת hydration. אותו דפוס בדיוק כמו
+      // PromptChips ו-AccessibilityWidget בפרויקט הזה.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      if (!window.localStorage.getItem(COACH_KEY)) setCoach(true);
+    } catch {
+      /* אחסון חסום - פשוט לא מציגים */
+    }
+  }, []);
+  const dismissCoach = () => {
+    setCoach(false);
+    try {
+      window.localStorage.setItem(COACH_KEY, '1');
+    } catch {
+      /* אחסון חסום - הרמז נעלם לסשן הזה ודי */
+    }
+  };
   const [linkCopied, setLinkCopied] = useState(false);
   /** סיכה שהמטייל בחר להניח ידנית: הלחיצה הבאה על המפה תקבע את מיקומה */
   const [placingPinId, setPlacingPinId] = useState<string | null>(null);
@@ -231,39 +264,30 @@ export default function TripWorkspace({
   // אוטומטית עדיין לא ניתן לשיתוף (שלב הבא: payload v2 עם המקומות עצמם)
   const hasExploredCity = Boolean(t?.days.some((d) => d.citySlug.startsWith('explored-')));
 
-  /* ---------- כפתורי הפעולות (משותפים לשורה בדסקטופ ולתפריט במובייל) ---------- */
-  const actionButtons = t ? (
-    <>
-      <Btn onClick={() => trip.duplicateTrip(t.id)} icon={ICONS.duplicate}>
-        שכפול
-      </Btn>
-      {!hasExploredCity && (
-        <Btn onClick={copyShareLink} icon={linkCopied ? ICONS.check : ICONS.link}>
-          {linkCopied ? 'הקישור הועתק' : 'קישור לשיתוף'}
-        </Btn>
-      )}
-      {!hasExploredCity && (
-        <Btn onClick={shareWhatsApp} icon={ICONS.whatsapp} iconClassName="text-[#1da851]">
-          שיתוף בוואטסאפ
-        </Btn>
-      )}
-      <Btn onClick={() => window.print()} icon={ICONS.printer}>
-        הדפסה / PDF
-      </Btn>
-      <Btn
-        danger
-        icon={ICONS.trash}
-        onClick={() => {
-          if (confirm('למחוק את הטיול הזה?')) {
-            trip.deleteTrip(t.id);
-            setSelectedDayId(null);
-          }
-        }}
-      >
-        מחיקה
-      </Btn>
-    </>
-  ) : null;
+  /**
+   * העדפות שהוגדרו בפועל, כטקסט - כדי שהקיפול לא יסתיר מידע. הצ׳יפים
+   * עצמם נפתחים בלחיצה; מה שכבר נבחר נשאר קריא גם כשהם מקופלים.
+   */
+  const prefSummary = t
+    ? [
+        t.preferences?.kosher === true ? 'כשר' : null,
+        t.preferences?.pace === 'packed' ? 'דחוס' : t.preferences?.pace === 'relaxed' ? 'רגוע' : null,
+        t.preferences?.party
+          ? { couple: 'זוג', family: 'משפחה', friends: 'חברים', solo: 'סולו' }[t.preferences.party]
+          : null,
+        t.preferences?.shopping
+          ? { more: 'שופינג: יותר', normal: 'שופינג: רגיל', less: 'שופינג: פחות' }[
+              t.preferences.shopping
+            ]
+          : null,
+        t.preferences?.shabbatAware ? 'שומרי שבת' : null,
+        t.preferences?.budget
+          ? { low: 'תקציב נמוך', medium: 'תקציב בינוני', high: 'תקציב גבוה' }[t.preferences.budget]
+          : null,
+      ]
+        .filter(Boolean)
+        .join(' · ')
+    : '';
 
   return (
     // הסרגל הדביק והמגירה חייבים לשבת מחוץ ל-.rise-in: אנימציה עם
@@ -288,29 +312,82 @@ export default function TripWorkspace({
             {t ? `${totalStops} עצירות · ${t.days.length} ימים` : 'הסוכן בונה…'}
           </span>
         </div>
+        {/*
+          שלושה פקדים במקום שבעה. הכל נשאר בהישג יד - שיתוף בתפריט אחד,
+          השאר בתפריט "עוד", והמחיקה בתחתיתו ומופרדת בקו: פעולה הרסנית
+          לא אמורה לשבת במסך הראשון באותו משקל חזותי כמו שיתוף.
+        */}
         <div className="flex flex-wrap items-center gap-2 text-sm">
           <Btn onClick={onNewTrip}>+ טיול חדש</Btn>
-          <Btn onClick={() => setImportOpen(true)}>📍 ייבוא מפה</Btn>
-          <div className="hidden flex-wrap gap-2 sm:flex">{actionButtons}</div>
+          {!t && <Btn onClick={() => setImportOpen(true)}>📍 ייבוא מפה</Btn>}
+          {t && !hasExploredCity && (
+            <Menu
+              ariaLabel="שיתוף הטיול"
+              label="שיתוף"
+              icon={ICONS.link}
+              items={[
+                {
+                  label: linkCopied ? 'הקישור הועתק ✓' : 'העתקת קישור',
+                  onClick: copyShareLink,
+                  icon: linkCopied ? ICONS.check : ICONS.link,
+                },
+                { label: 'שליחה בוואטסאפ', onClick: shareWhatsApp, icon: ICONS.whatsapp },
+              ]}
+            />
+          )}
           {t && (
-            <button
-              onClick={() => setActionsOpen((v) => !v)}
-              aria-expanded={actionsOpen}
-              className="rounded-xl bg-shell px-3.5 py-2 font-semibold text-night/70 ring-1 ring-night/10 sm:hidden"
-            >
-              פעולות ▾
-            </button>
+            <Menu
+              ariaLabel="עוד פעולות"
+              label="⋯"
+              items={[
+                {
+                  label: 'שכפול הטיול',
+                  onClick: () => trip.duplicateTrip(t.id),
+                  icon: ICONS.duplicate,
+                },
+                { label: '📍 ייבוא מפה מ-Google', onClick: () => setImportOpen(true) },
+                { label: 'הדפסה / PDF', onClick: () => window.print(), icon: ICONS.printer },
+                {
+                  label: 'מחיקת הטיול',
+                  danger: true,
+                  separated: true,
+                  icon: ICONS.trash,
+                  onClick: () => {
+                    if (confirm('למחוק את הטיול הזה?')) {
+                      trip.deleteTrip(t.id);
+                      setSelectedDayId(null);
+                    }
+                  },
+                },
+              ]}
+            />
           )}
         </div>
       </div>
-      {actionsOpen && t && (
-        <div className="mt-2 flex flex-wrap gap-2 text-sm sm:hidden print:hidden">{actionButtons}</div>
-      )}
 
       {/* ---------- העדפות: כפתורים, אף פעם לא שאלות בשיחה ---------- */}
       {t && (
         <div className="mt-3 flex flex-wrap items-center gap-1.5 print:hidden">
-          <span className="text-xs font-bold text-night/40">העדפות ·</span>
+          {/*
+            מקופל כברירת מחדל, אבל **הערכים שנבחרו נשארים גלויים כטקסט**
+            בתוך הכפתור עצמו - העדפות נקבעות פעם אחת ונקראות שוב לעיתים
+            רחוקות, ולכן ארבעה צ׳יפים פתוחים תמיד הם רעש; להסתיר מה שכבר
+            נבחר היה כבר שגיאה אחרת.
+          */}
+          <button
+            onClick={() => setPrefsOpen((v) => !v)}
+            aria-expanded={prefsOpen}
+            className="rounded-full bg-night/5 px-2.5 py-1 text-xs font-semibold text-night/55 transition hover:bg-night/10 hover:text-night"
+          >
+            העדפות{prefSummary ? `: ${prefSummary}` : ''}{' '}
+            <span aria-hidden className={`inline-block transition-transform ${prefsOpen ? 'rotate-180' : ''}`}>
+              ▾
+            </span>
+          </button>
+        </div>
+      )}
+      {t && prefsOpen && (
+        <div className="mt-1.5 flex flex-wrap items-center gap-1.5 print:hidden">
           <ToggleChip
             active={t.preferences?.kosher === true}
             label="כשר"
@@ -436,7 +513,11 @@ export default function TripWorkspace({
       )}
 
       {/* ---------- המסך המאוחד: מסלול · מפה · שיחה ---------- */}
-      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,16rem)_minmax(0,1fr)_minmax(0,19rem)] xl:grid-cols-[minmax(0,20rem)_minmax(0,1fr)_minmax(0,22rem)] print:hidden">
+      {/*
+        הסוכן הוא המוצר, והוא היה העמודה הצרה והשקטה ביותר (22rem מול 20
+        למסלול). הוא מקבל עכשיו את העמודה הרחבה מהשתיים שלצדי המפה.
+      */}
+      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)_minmax(0,21rem)] xl:grid-cols-[minmax(0,18rem)_minmax(0,1fr)_minmax(0,25rem)] print:hidden">
         {/* מפה - ראשונה במובייל, עמודה אמצעית מ-lg */}
         <div className="order-first lg:order-none lg:col-start-2 lg:row-start-1">
           <div className="lg:sticky lg:top-20">
@@ -554,36 +635,64 @@ export default function TripWorkspace({
                     יום {dayIndex + 1} · {dayDest.name}
                   </h2>
                   {t.days.length > 1 && (
-                    <button
-                      onClick={() => {
-                        trip.removeDay(day.id);
-                        setSelectedDayId(null);
-                      }}
-                      className="shrink-0 rounded-full bg-night/5 px-2.5 py-1 text-xs font-semibold text-night/60 transition hover:bg-night/10"
-                    >
-                      מחיקת יום
-                    </button>
+                    <Menu
+                      compact
+                      ariaLabel={`פעולות ליום ${dayIndex + 1}`}
+                      label="⋯"
+                      items={[
+                        {
+                          label: 'מחיקת היום',
+                          danger: true,
+                          icon: ICONS.trash,
+                          onClick: () => {
+                            trip.removeDay(day.id);
+                            setSelectedDayId(null);
+                          },
+                        },
+                      ]}
+                    />
                   )}
                 </div>
                 {/* תיאור היום - נגזר מהעצירות האמיתיות שבו בלבד */}
                 <p className="mt-1 text-sm font-medium leading-relaxed text-night/55">
                   {dayDescription(day, dayDest)}
                 </p>
-                <textarea
-                  value={day.notes ?? ''}
-                  onChange={(e) => trip.setDayNotes(day.id, e.target.value)}
-                  placeholder="הערות ליום הזה…"
-                  rows={2}
-                  className="mt-3 w-full resize-none rounded-xl bg-night/5 px-4 py-2.5 text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset"
-                />
+                {/*
+                  שדה הערות ריק קורא כמו טופס שלא מולא. הוא נפתח בלחיצה -
+                  **ותמיד פתוח כשיש בו תוכן**, אחרת מטייל שכתב הערה יחשוב
+                  שהיא נמחקה. `noteOpen` מאותחל לפי day.id כדי שהפתיחה לא
+                  תיגרר מיום אחד לאחר.
+                */}
+                {day.notes || noteOpenFor === day.id ? (
+                  <textarea
+                    value={day.notes ?? ''}
+                    onChange={(e) => trip.setDayNotes(day.id, e.target.value)}
+                    placeholder="הערות ליום הזה…"
+                    rows={2}
+                    autoFocus={noteOpenFor === day.id && !day.notes}
+                    className="mt-3 w-full resize-none rounded-xl bg-night/5 px-4 py-2.5 text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset"
+                  />
+                ) : (
+                  <button
+                    onClick={() => setNoteOpenFor(day.id)}
+                    className="mt-2 text-xs font-semibold text-night/45 transition hover:text-night"
+                  >
+                    + הערה ליום
+                  </button>
+                )}
                 {places.length > 1 && (
                   <a
                     href={googleDirectionsUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-3 block rounded-xl bg-sunset px-4 py-3 text-center text-sm font-bold text-cream transition hover:bg-sunset-deep"
+                    /*
+                      היה הכפתור הקורל המלא - ולכן הדבר הבולט ביותר במסך.
+                      זו פעולה של יום הנסיעה עצמו, לא של מי שמתכנן מהספה,
+                      אז הוא נשאר במקומו ומפסיק להיות הגורם החזק ביותר.
+                    */
+                    className="mt-3 flex items-center justify-center gap-2 rounded-xl bg-night/5 px-4 py-2.5 text-center text-sm font-bold text-night/75 ring-1 ring-night/10 transition hover:bg-night/10 hover:text-night"
                   >
-                    פתיחת ניווט היום ב-Google Maps
+                    <span aria-hidden>🧭</span> ניווט היום ב-Google Maps
                   </a>
                 )}
               </div>
@@ -594,29 +703,11 @@ export default function TripWorkspace({
                   const meta = categoryMeta[place.category];
                   return (
                     <li key={place.id} className="flex gap-3 rounded-2xl bg-shell p-4 ring-1 ring-night/10">
-                      <div className="flex flex-col items-center gap-1">
-                        <div
-                          className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold text-white"
-                          style={{ backgroundColor: meta.color }}
-                        >
-                          {i + 1}
-                        </div>
-                        <button
-                          onClick={() => trip.movePlace(day.id, i, -1)}
-                          disabled={i === 0}
-                          className="text-night/40 transition hover:text-night disabled:opacity-20"
-                          aria-label="הזז למעלה"
-                        >
-                          ▲
-                        </button>
-                        <button
-                          onClick={() => trip.movePlace(day.id, i, 1)}
-                          disabled={i === places.length - 1}
-                          className="text-night/40 transition hover:text-night disabled:opacity-20"
-                          aria-label="הזז למטה"
-                        >
-                          ▼
-                        </button>
+                      <div
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-white"
+                        style={{ backgroundColor: meta.color }}
+                      >
+                        {i + 1}
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-start justify-between gap-2">
@@ -630,37 +721,47 @@ export default function TripWorkspace({
                               {meta.label}
                             </span>
                           </div>
-                          <button
-                            onClick={() => trip.removePlace(day.id, place.id)}
-                            className="text-night/30 transition hover:text-sunset-deep"
-                            aria-label="הסרה"
-                          >
-                            ✕
-                          </button>
+                          {/*
+                            ארבעה פקדים לכל עצירה (הסרה, למעלה, למטה, העברה
+                            ליום) היו גלויים תמיד - בטיול של ארבע עצירות זה
+                            16 פקדים זעירים שמתחרים בשמות המקומות, שהם התוכן
+                            שבאו לקרוא. עכשיו כפתור אחד. הפעולות שאינן
+                            רלוונטיות (למעלה בעצירה הראשונה) לא מוצגות בכלל
+                            במקום להיות מוצגות ומושבתות.
+                          */}
+                          <Menu
+                            compact
+                            ariaLabel={`פעולות ל${place.name}`}
+                            label="⋯"
+                            items={[
+                              {
+                                label: 'הזזה למעלה',
+                                onClick: () => trip.movePlace(day.id, i, -1),
+                                disabled: i === 0,
+                              },
+                              {
+                                label: 'הזזה למטה',
+                                onClick: () => trip.movePlace(day.id, i, 1),
+                                disabled: i === places.length - 1,
+                              },
+                              ...t.days
+                                .filter((d) => d.id !== day.id && d.citySlug === day.citySlug)
+                                .map((d) => ({
+                                  label: `העברה ליום ${t.days.findIndex((x) => x.id === d.id) + 1}`,
+                                  onClick: () => trip.movePlaceToDay(day.id, place.id, d.id),
+                                })),
+                              {
+                                label: 'הסרה מהיום',
+                                danger: true,
+                                separated: true,
+                                onClick: () => trip.removePlace(day.id, place.id),
+                              },
+                            ]}
+                          />
                         </div>
                         <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-night/60">
                           {place.description}
                         </p>
-                        {t.days.filter((d) => d.citySlug === day.citySlug).length > 1 && (
-                          <select
-                            value=""
-                            aria-label="העברה ליום אחר"
-                            onChange={(e) => {
-                              if (e.target.value)
-                                trip.movePlaceToDay(day.id, place.id, e.target.value);
-                            }}
-                            className="mt-1.5 rounded-lg bg-night/5 px-2 py-1 text-xs font-medium text-night/50"
-                          >
-                            <option value="">העבר ליום…</option>
-                            {t.days
-                              .filter((d) => d.id !== day.id && d.citySlug === day.citySlug)
-                              .map((d) => (
-                                <option key={d.id} value={d.id}>
-                                  יום {t.days.findIndex((x) => x.id === d.id) + 1}
-                                </option>
-                              ))}
-                          </select>
-                        )}
                       </div>
                     </li>
                   );
@@ -694,7 +795,9 @@ export default function TripWorkspace({
             מתחת למפה, גם בלפטופים קטנים. במובייל - מגירה למטה. */}
         <ChatPanel
           chat={chat}
-          className="hidden lg:sticky lg:top-20 lg:col-start-3 lg:row-start-1 lg:flex lg:h-[34rem] lg:self-start"
+          coach={coach}
+          onDismissCoach={dismissCoach}
+          className="hidden lg:sticky lg:top-20 lg:col-start-3 lg:row-start-1 lg:flex lg:h-[36rem] lg:self-start"
         />
       </div>
 
@@ -720,15 +823,19 @@ export default function TripWorkspace({
           <button
             onClick={() => setAllDaysOpen((v) => !v)}
             aria-expanded={allDaysOpen}
-            className="flex w-full items-center gap-2 rounded-xl bg-night/[0.03] px-4 py-2.5 text-start text-sm font-bold text-night/70 transition hover:bg-night/[0.06] lg:hidden"
+            /*
+              היה פתוח תמיד מ-lg ומעלה. הוא חוזר על טאבי הימים ועל כרטיס
+              היום שכבר מוצגים למעלה, ולכן במסך הראשון הוא נטו רעש -
+              מקופל עכשיו בכל רוחב, במרחק לחיצה אחת.
+            */
+            className="flex w-full items-center gap-2 rounded-xl bg-night/[0.03] px-4 py-2.5 text-start text-sm font-bold text-night/70 transition hover:bg-night/[0.06]"
           >
             כל הימים ({t.days.length})
             <span className={`ms-auto text-xs transition-transform ${allDaysOpen ? 'rotate-180' : ''}`}>
               ▾
             </span>
           </button>
-          <div className={`${allDaysOpen ? 'mt-2 block' : 'hidden'} lg:mt-0 lg:block`}>
-            <h2 className="mb-2 hidden text-sm font-bold text-night/40 lg:block">כל הימים</h2>
+          <div className={allDaysOpen ? 'mt-2 block' : 'hidden'}>
             <ol className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
               {t.days.map((d, i) => {
                 const dst = destOf(d.citySlug);
@@ -894,6 +1001,8 @@ export default function TripWorkspace({
             <ChatPanel
               chat={chat}
               autoFocus
+              coach={coach}
+              onDismissCoach={dismissCoach}
               onClose={() => setChatOpen(false)}
               className="flex h-full ring-0"
             />
@@ -994,6 +1103,111 @@ function Btn({
       {icon && <span className={`opacity-80 ${iconClassName}`}>{icon}</span>}
       {children}
     </button>
+  );
+}
+
+/** רמז הפתיחה מוצג פעם אחת לדפדפן */
+const COACH_KEY = 'tiyul-plus:coach:agent';
+
+/**
+ * תפריט קטן: כפתור אחד שפותח רשימת פעולות.
+ *
+ * נבנה כדי לצמצם את מסך הטיול. המדידה שהובילה לזה: 54 פקדים לחיצים
+ * במסך הראשון ב-1440 ו-32 ב-390, בלי שום דירוג ביניהם - וזה מה שגרם
+ * למייסד לתאר את המסך כ"הטיסת מטוס". התפריט מחזיק את הפעולות שמטייל
+ * בפעם הראשונה לא צריך, בלי להסיר אותן.
+ *
+ * כפתור אמיתי ולא hover: ריחוף לא קיים במגע, וגלישה במקלדת חייבת להגיע
+ * לכל פעולה. בלי תלות חדשה - אותה גישה כמו הדרופדאון ב-PromptChips.
+ */
+function Menu({
+  label,
+  ariaLabel,
+  icon,
+  items,
+  compact = false,
+}: {
+  label: string;
+  ariaLabel: string;
+  icon?: React.ReactNode;
+  compact?: boolean;
+  items: {
+    label: string;
+    onClick: () => void;
+    icon?: React.ReactNode;
+    danger?: boolean;
+    disabled?: boolean;
+    /** קו מפריד מעליו - לפעולות הרסניות */
+    separated?: boolean;
+  }[];
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  const usable = items.filter((it) => !it.disabled);
+  if (usable.length === 0) return null;
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        aria-label={ariaLabel}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        title={ariaLabel}
+        className={
+          compact
+            ? 'flex h-7 w-7 items-center justify-center rounded-full text-night/35 transition hover:bg-night/5 hover:text-night'
+            : 'inline-flex items-center gap-1.5 rounded-xl bg-shell px-3.5 py-2 text-sm font-semibold text-night ring-1 ring-night/15 transition hover:bg-night/5 hover:ring-night/30'
+        }
+      >
+        {icon && <span className="opacity-80">{icon}</span>}
+        {label}
+      </button>
+      {open && (
+        <div
+          role="menu"
+          className="absolute end-0 z-30 mt-1 min-w-[12rem] overflow-hidden rounded-xl bg-shell py-1 shadow-pop ring-1 ring-night/15"
+        >
+          {usable.map((it, i) => (
+            <div key={it.label}>
+              {it.separated && i > 0 && <div className="my-1 border-t border-night/10" />}
+              <button
+                role="menuitem"
+                onClick={() => {
+                  setOpen(false);
+                  it.onClick();
+                }}
+                className={`flex w-full items-center gap-2 px-3.5 py-2 text-start text-sm font-semibold transition ${
+                  it.danger
+                    ? 'text-sunset-deep hover:bg-sunset/10'
+                    : 'text-night/80 hover:bg-night/5 hover:text-night'
+                }`}
+              >
+                {it.icon && <span className="opacity-70">{it.icon}</span>}
+                {it.label}
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
