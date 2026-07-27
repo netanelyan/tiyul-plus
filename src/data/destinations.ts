@@ -30456,6 +30456,253 @@ export const destinations: Destination[] = [
         'אנטוורפן היא הסיבה שבלגיה עולה מעל רוב יעדי אירופה מבחינת כשרות. ברובע היהודי שדרומית לתחנה המרכזית יש עשרות עסקים כשרים בטווח הליכה - מאפיות, קצביות, מסעדות ומכולות עם מבחר מלא - ואפשר לנהל שם שבוע שלם בלי בעיה. בבריסל יש מספר עסקים כשרים בשכונות אנדרלכט ואיקסל וכן בית חב״ד, אבל התמונה מצומצמת בהרבה. בברוז׳ ובגנט אין כמעט כלום, ולכן מי שמבלה שם יום שלם עושה קניות באנטוורפן ולוקח איתו.',
     },
   },
+  {
+    slug: 'sinai',
+    name: 'סיני',
+    nameLocal: 'Sinai Peninsula',
+    countrySlug: 'egypt',
+    flag: '🇪🇬',
+    center: { lat: 28.6, lng: 34.4 },
+    zoom: 8,
+    tagline: 'שוניות, הרי גרניט ומנזר בן אלף וחמש מאות שנה',
+    summary:
+      'רצועת החוף שבין טאבה לשארם א־שייח׳ היא אחד ממקומות הצלילה והשנרקול הטובים בעולם, ובמרחק שעתיים ממנה פנימה יושבים הרי סיני הגבוהים ומנזר סנטה קתרינה. אפשר לעשות את הכל בשבוע: כמה ימי חוף עצלים בדהב או בנוויבע, יום שמורה בראס מוחמד, ועלייה ללילה אחד להר סיני כדי לראות זריחה מהפסגה. חשוב לקרוא את אזהרות המסע העדכניות לפני שקובעים.',
+    bestSeason:
+      'אוקטובר עד מאי הם העונה. מרץ, אפריל, אוקטובר ונובמבר הם המושלמים - מים חמים ואוויר נוח. יולי ואוגוסט חמים בצורה קשה ביבשה, אם כי החוף עדיין נסבל בזכות הרוח. בחורף המים נשארים סביב 22 מעלות ואפשר לצלול, אבל בהרים סביב סנטה קתרינה הלילות יורדים מתחת לאפס ולפעמים יורד שלג.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Dahab_panorama.jpg/960px-Dahab_panorama.jpg',
+    iconicLandmark: {
+      name: 'מנזר סנטה קתרינה',
+      nameLocal: "Saint Catherine's Monastery",
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Skt_Katharina_Klosteret.jpg/500px-Skt_Katharina_Klosteret.jpg',
+      blurb:
+        'מנזר אורתודוקסי מבוצר מהמאה השישית למרגלות הר סיני, אחד המנזרים הפעילים הוותיקים בעולם. בתוכו אוסף אייקונים וכתבי יד שני רק לוותיקן, וגם השיח הסנה שהמסורת מזהה עם הסנה הבוער.',
+    },
+    editorialRating: {
+      score: 4.5,
+      verdict:
+        'שוניות ברמה עולמית במחיר ובמרחק שאין להם מקבילה, ונוף מדברי שונה לגמרי מכל דבר באירופה. מוריד ניקוד: אפס תשתית כשרות, ומצב ביטחוני שמחייב בדיקה עדכנית לפני כל נסיעה.',
+    },
+    places: [
+      {
+        id: 'eg-ras-muhammad',
+        name: 'שמורת ראס מוחמד',
+        nameLocal: 'Ras Muhammad National Park',
+        category: 'nature',
+        lat: 27.7475,
+        lng: 34.24078,
+        description:
+          'קצה חצי האי, במקום שבו מפרץ אילת ומפרץ סואץ נפגשים, ושמורת הטבע הראשונה של מצרים. השוניות כאן צונחות מהחוף ישר למאות מטרים והדגים מרוכזים בצפיפות חריגה, ולכן זה אתר הצלילה המפורסם באזור. גם שנרקול מהחוף מספיק כדי לראות הכל. יש גם יער מנגרובים ובריכת מלח.',
+        rating: 4.8,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=27.7475,34.24078',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Coral_reef_in_Ras_Muhammad_nature_park.jpg/500px-Coral_reef_in_Ras_Muhammad_nature_park.jpg',
+        priceLevel: 1,
+        tags: ['outdoors', 'families'],
+        mustSee: true,
+      },
+      {
+        id: 'eg-sharm',
+        name: 'שארם א־שייח׳',
+        nameLocal: 'Sharm El Sheikh',
+        category: 'attraction',
+        lat: 27.915,
+        lng: 34.3275,
+        description:
+          'עיר הנופש הגדולה של סיני, שנבנתה כמעט כולה סביב תיירות. יש בה שדה תעופה בינלאומי, מלונות כפר גדולים עם הכל כלול, ומרינה. זו הבחירה למי שרוצה נוחות ובריכה ולא אווירת מחנה חוף. משם יוצאים כל טיולי הצלילה והשיט לראס מוחמד ולאי טיראן.',
+        rating: 4.1,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=27.915,34.3275',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/SharmView.jpg/500px-SharmView.jpg',
+        priceLevel: 2,
+        tags: ['families', 'outdoors'],
+      },
+      {
+        id: 'eg-naama-bay',
+        name: 'מפרץ נעמה',
+        nameLocal: 'Naama Bay',
+        category: 'attraction',
+        lat: 27.910528,
+        lng: 34.33242,
+        description:
+          'לב הבילוי של שארם - טיילת חוף עם מסעדות, ברים, חנויות וכמה מהמלונות הוותיקים בעיר. המפרץ עצמו מוגן ורדוד ולכן טוב לילדים, אם כי השונית שלו סבלה משנים של עומס והצלילה היפה נמצאת בנקודות אחרות. בערב זה המקום ההומה ביותר באזור.',
+        rating: 3.9,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=27.910528,34.33242',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Naama_Bay_R01.jpg/500px-Naama_Bay_R01.jpg',
+        priceLevel: 2,
+        tags: ['nightlife', 'families', 'foodie'],
+      },
+      {
+        id: 'eg-dahab',
+        name: 'דהב',
+        nameLocal: 'Dahab',
+        category: 'attraction',
+        lat: 28.493055,
+        lng: 34.504722,
+        description:
+          'כפר בדואי לשעבר שהפך לבירת התרמילאים והצוללנים של סיני, ועדיין שומר על קצב אחר לגמרי משארם. לאורך חוף המסבט יושבות עשרות מסעדות עם כריות על הרצפה, וממש מולן שונית שנכנסים אליה מהמדרכה. זה גם מוקד עולמי לגלישת רוח ולקייט בזכות הלגונה הרדודה בדרום הכפר.',
+        rating: 4.6,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=28.493055,34.504722',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Dahab_shoreline.jpg/500px-Dahab_shoreline.jpg',
+        priceLevel: 1,
+        tags: ['outdoors', 'foodie', 'romantic'],
+        mustSee: true,
+      },
+      {
+        id: 'eg-blue-hole',
+        name: 'החור הכחול',
+        nameLocal: 'Blue Hole',
+        category: 'nature',
+        lat: 28.57222,
+        lng: 34.537376,
+        description:
+          'בור צלילה טבעי בעומק כמאה מטר, כעשרה קילומטרים צפונית לדהב, מוקף בשונית שיוצרת טבעת. לשנרקול מהשפה זה אחד המקומות היפים בסיני, והכניסה למים היא מהסלע ישירות. שימו לב שהוא נחשב לאתר צלילה מסוכן במיוחד בגלל המנהרה שבעומק, ורק צוללנים מוסמכים לצלילה טכנית נכנסים אליה. שנרקול על פני השטח בטוח לחלוטין.',
+        rating: 4.7,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=28.57222,34.537376',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Dahab_Blue_Hole_Arc_2009.jpg/500px-Dahab_Blue_Hole_Arc_2009.jpg',
+        priceLevel: 1,
+        tags: ['outdoors'],
+        mustSee: true,
+      },
+      {
+        id: 'eg-st-catherine',
+        name: 'מנזר סנטה קתרינה',
+        nameLocal: "Saint Catherine's Monastery",
+        category: 'attraction',
+        lat: 28.555555,
+        lng: 33.976112,
+        description:
+          'מנזר מבוצר שנבנה בהוראת יוסטיניאנוס במאה השישית ולא הפסיק לפעול מאז, מה שהופך אותו לאחד המנזרים הפעילים הוותיקים בעולם. בספרייה שלו האוסף השני בגודלו בעולם של כתבי יד עתיקים, ובכנסייה אייקונים ביזנטיים ששרדו את תקופת האיקונוקלזם. בחצר גדל השיח שהמסורת מזהה עם הסנה הבוער. פתוח לקהל בבקרים בלבד ולא בימי ראשון ושישי.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=28.555555,33.976112',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Skt_Katharina_Klosteret.jpg/500px-Skt_Katharina_Klosteret.jpg',
+        priceLevel: 0,
+        tags: ['history'],
+        mustSee: true,
+      },
+      {
+        id: 'eg-mount-sinai',
+        name: 'הר סיני',
+        nameLocal: 'Mount Sinai / Jabal Musa',
+        category: 'viewpoint',
+        lat: 28.539417,
+        lng: 33.975418,
+        description:
+          'פסגה בגובה 2,285 מטר מעל מנזר סנטה קתרינה, שהמסורת היהודית והנוצרית מזהות עם הר מתן תורה. העלייה לוקחת שעתיים עד שלוש, ורוב המטפסים יוצאים בשתיים או שלוש לפנות בוקר כדי להיות בפסגה בזריחה. שני מסלולים: שביל הגמלים המתון, ו-3,750 מדרגות התשובה התלולות. קר מאוד בפסגה גם בקיץ, וצריך שכבה חמה ופנס.',
+        rating: 4.8,
+        durationMin: 420,
+        externalUrl: 'https://maps.google.com/?q=28.539417,33.975418',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/MtSinaiJune2006.jpg/500px-MtSinaiJune2006.jpg',
+        priceLevel: 1,
+        tags: ['outdoors', 'history'],
+        mustSee: true,
+      },
+      {
+        id: 'eg-colored-canyon',
+        name: 'הקניון הצבעוני',
+        nameLocal: 'Coloured Canyon',
+        category: 'nature',
+        lat: 29.1461,
+        lng: 34.5949,
+        description:
+          'קניון צר באורך כ-800 מטר וקירות שמגיעים לארבעים מטר, שבו שכבות אבן החול צבועות בגוונים של אדום, צהוב וסגול. ההליכה בו קלה ורובה במישור, ולכן היא מתאימה גם לילדים. מגיעים אליו רק ברכב שטח עם מדריך מקומי, בדרך כלל בטיול יום שיוצא מנוויבע או מדהב.',
+        rating: 4.5,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=29.1461,34.5949',
+        priceLevel: 2,
+        tags: ['outdoors', 'families'],
+      },
+      {
+        id: 'eg-nuweiba',
+        name: 'נוויבע',
+        nameLocal: 'Nuweiba',
+        category: 'attraction',
+        lat: 29.034,
+        lng: 34.6591,
+        description:
+          'עיירת חוף שקטה באמצע הדרך בין טאבה לדהב, והכי קרובה למי שנכנס ברגל דרך מעבר טאבה. לאורך החוף מצפון לה יושבים מחנות בדואיים פשוטים - צריפים על החול, בלי מיזוג ולפעמים בלי חשמל בלילה - וזו החוויה שאנשים חוזרים אליה. מנוויבע יוצאים גם טיולי הג׳יפים לקניון הצבעוני ולוואדיות.',
+        rating: 4.3,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=29.034,34.6591',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Nuweiba%2C_Beach%2C_Red_Sea%2C_Sinai%2C_Egypt.jpg/500px-Nuweiba%2C_Beach%2C_Red_Sea%2C_Sinai%2C_Egypt.jpg',
+        priceLevel: 1,
+        tags: ['outdoors', 'romantic'],
+      },
+      {
+        id: 'eg-taba',
+        name: 'טאבה ומעבר הגבול',
+        nameLocal: 'Taba Border Crossing',
+        category: 'attraction',
+        lat: 29.49199,
+        lng: 34.89572,
+        description:
+          'המעבר היבשתי היחיד מישראל לסיני, כעשר דקות נסיעה מאילת, וזו נקודת ההתחלה של כמעט כל נסיעה לכאן. המעבר פתוח 24 שעות ברוב ימות השנה אבל שעות הפעילות משתנות בחגים, וכדאי לוודא מראש. בצד המצרי מונפק היתר סיני של 14 יום במקום. סמוך למעבר יש כמה מלונות חוף ומצודה צלבנית באי פרעה מדרום.',
+        rating: 3.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=29.49199,34.89572',
+        priceLevel: 1,
+        tags: ['outdoors'],
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'כניסה בטאבה ונסיעה לדהב',
+        placeIds: ['eg-taba', 'eg-nuweiba'],
+        notes:
+          'עוברים בטאבה מוקדם בבוקר, כי התור מתארך לקראת הצהריים. משם מונית או שאטל דרומה. נוויבע היא עצירת ביניים טובה לצהריים על החוף, ועוד שעה וחצי מגיעים לדהב. מגיעים עם מזומן ועם אוכל, כי אין תשתית כשרות בשום מקום בסיני.',
+      },
+      {
+        day: 2,
+        title: 'דהב והחור הכחול',
+        placeIds: ['eg-dahab', 'eg-blue-hole'],
+        notes:
+          'בוקר של שנרקול מהמסבט ממש מול המסעדות, ואחר הצהריים נסיעה קצרה צפונה לחור הכחול. גם מי שלא צולל יראה משם את רוב מה שיש. חוזרים לדהב לארוחת ערב על הכריות.',
+      },
+      {
+        day: 3,
+        title: 'הקניון הצבעוני',
+        placeIds: ['eg-colored-canyon'],
+        notes:
+          'טיול ג׳יפים של חצי יום שיוצא מדהב או מנוויבע ומחייב מדריך מקומי. יוצאים מוקדם כדי לא להיות בקניון בשעות החום. אחר הצהריים חופשי על החוף.',
+      },
+      {
+        day: 4,
+        title: 'סנטה קתרינה והר סיני',
+        placeIds: ['eg-mount-sinai', 'eg-st-catherine'],
+        notes:
+          'יוצאים מדהב אחרי חצות, מטפסים להר לזריחה, ויורדים בדיוק כשהמנזר נפתח למבקרים בשבע וחצי. שכבה חמה ופנס ראש הם חובה גם בקיץ. חוזרים לדהב סביב הצהריים לישון. לא מגיעים בימי ראשון ושישי, שבהם המנזר סגור.',
+      },
+      {
+        day: 5,
+        title: 'שארם וראס מוחמד',
+        placeIds: ['eg-ras-muhammad', 'eg-sharm', 'eg-naama-bay'],
+        notes:
+          'שעה וחצי דרומה מדהב. יום שלם בשמורת ראס מוחמד, בשיט או מהחוף, ולינה בשארם. בערב טיילת מפרץ נעמה. מי שטס משארם חזרה יסיים כאן, ומי שנכנס בטאבה יחזור צפונה למחרת.',
+      },
+    ],
+    practical: {
+      flights:
+        'רוב הישראלים נכנסים ביבשה דרך מעבר טאבה, כעשר דקות מאילת, וזו הדרך הזולה והפשוטה. יש גם טיסות לשארם א־שייח׳ (SSH) מיעדים באירופה, אבל לא טיסה ישירה מתל אביב. שימו לב שהיתר סיני שמונפק בטאבה תקף רק לאזור מזרח סיני ולא לשאר מצרים, וכניסה לקהיר מחייבת אשרה מלאה מראש.',
+      gettingAround:
+        'אין תחבורה ציבורית שאפשר לסמוך עליה. הדרך המקובלת היא מונית או שאטל שמזמינים מראש דרך המלון או המחנה, וכן טיולים מאורגנים לכל דבר שיוצא מהכביש הראשי. מטאבה לנוויבע כשעה, לדהב כשעתיים וחצי, לשארם כארבע שעות. אין להיכנס לדרכי עפר בלי מדריך מקומי, ובכביש הראשי יש מחסומים שבהם בודקים דרכונים.',
+      kosherOverview:
+        'אין בסיני שום תשתית כשרות - אין מסעדה כשרה, אין מכולת כשרה ואין בית חב״ד. מי ששומר כשרות מביא איתו את כל האוכל מישראל, וזה פשוט יחסית כשנכנסים ביבשה בטאבה. בכמה מהמחנות בדהב ובנוויבע אפשר לבקש מטבחון או מקרר. פירות, ירקות, ביצים ודגים מהשוק המקומי הם הפתרון המקובל למי שמסתדר עם מטבח בסיסי.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
