@@ -16998,12 +16998,12 @@ export const destinations: Destination[] = [
           'אזור נפלא למי שמחפש אירופה בלי תורים ובמחירים נמוכים, אבל צריך לדעת מה הוא לא. הנוף שטוח לחלוטין ואין בו דרמה, המרחקים בין העיירות גדולים והתחבורה הציבורית איטית, כך שבלי רכב שכור הטיול הזה מתסכל. בקיץ המישור לוהט וחסר צל, ובחורף הערפל יכול לעמוד ימים.',
     },
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1adi_v%C3%A1r%2C_Peterwardein%29.jpg/960px-Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1adi_v%C3%A1r%2C_Peterwardein%29.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1radi_v%C3%A1r%2C_Peterwardein%29.JPG/960px-Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1radi_v%C3%A1r%2C_Peterwardein%29.JPG',
     iconicLandmark: {
       name: 'מבצר פטרוורדין',
       nameLocal: 'Petrovaradin Fortress',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1adi_v%C3%A1r%2C_Peterwardein%29.jpg/500px-Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1adi_v%C3%A1r%2C_Peterwardein%29.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1radi_v%C3%A1r%2C_Peterwardein%29.JPG/500px-Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1radi_v%C3%A1r%2C_Peterwardein%29.JPG',
       blurb:
         'מבצר ברוק עצום שיושב על צוק מעל הדנובה, מול מרכז נובי סאד.',
     },
@@ -17015,7 +17015,7 @@ export const destinations: Destination[] = [
       {
         id: 'rs-petrovaradin',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1adi_v%C3%A1r%2C_Peterwardein%29.jpg/500px-Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1adi_v%C3%A1r%2C_Peterwardein%29.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1radi_v%C3%A1r%2C_Peterwardein%29.JPG/500px-Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1radi_v%C3%A1r%2C_Peterwardein%29.JPG',
         name: 'מבצר פטרוורדין',
         nameLocal: 'Petrovaradin Fortress',
         category: 'attraction',
@@ -30767,12 +30767,12 @@ export const destinations: Destination[] = [
     bestSeason:
       'אוקטובר עד אפריל בלבד. בחודשים האלה מסקאט נעה סביב 25 עד 30 מעלות והמדבר נעים בבוקר ובערב. מיוני עד ספטמבר הטמפרטורות עוברות 45 מעלות עם לחות גבוהה בחוף, וטיולים ביבשה הופכים למסוכנים. ינואר ופברואר הם השיא, ובהרים סביב ג׳בל שאמס הלילות אז קרים ממש.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Sultan_Qaboos_Grand_Mosque_RB.jpg/960px-Sultan_Qaboos_Grand_Mosque_RB.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Nizwa_Fort_(8729892924).jpg/960px-Nizwa_Fort_(8729892924).jpg',
     iconicLandmark: {
       name: 'מסגד הסולטאן קאבוס הגדול',
       nameLocal: 'Sultan Qaboos Grand Mosque',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Grand_Mosque_Muscat_(19)_(40275047024).jpg/500px-Grand_Mosque_Muscat_(19)_(40275047024).jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Muscat%2C_moschea_del_sultano_qaboos%2C_esterno_01.jpg/500px-Muscat%2C_moschea_del_sultano_qaboos%2C_esterno_01.jpg',
       blurb:
         'המסגד הראשי של עומאן, שנחנך ב-2001 ומחזיק שטיח פרסי ארוג ביד במשקל 21 טון ונברשת קריסטל בגובה 14 מטר. הוא אחד המסגדים הבודדים בעומאן שפתוחים למבקרים שאינם מוסלמים, בבקרים בלבד.',
     },
@@ -30795,7 +30795,7 @@ export const destinations: Destination[] = [
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=23.583889,58.389168',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Sultan_Qaboos_Grand_Mosque_(19).jpg/500px-Sultan_Qaboos_Grand_Mosque_(19).jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Muscat%2C_moschea_del_sultano_qaboos%2C_esterno_01.jpg/500px-Muscat%2C_moschea_del_sultano_qaboos%2C_esterno_01.jpg',
         priceLevel: 0,
         tags: ['history', 'art'],
         mustSee: true,

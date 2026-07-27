@@ -462,6 +462,91 @@ the symptom. Final confirmation is Netanel's own iPhone.
 mobile widths**, i.e. `text-base sm:text-sm` rather than `text-sm`, or iOS will
 zoom the page the moment it is focused. There is no lint rule for this; the
 harness in this entry is the way to catch it.
+### 2026-07-27 (s) - The photos are actually fixed: 151 dead down to 18, every one probed
+
+**Netanel reconnected the Chrome extension after a full restart, and it held.** That
+gave the whole repair in one sitting. Numbers, all from real HTTP probes and not from
+a passing validator: **151 dead URLs before, 18 after.** On the live `/countries`
+page, country cards went from **74/83 loading to 83/83**.
+
+**Root cause, confirmed at scale: file-extension case.** Commons filenames are
+case-sensitive in the extension and an earlier pass lowercased `.JPG` to `.jpg`.
+103 of 133 broken filenames came back from a filename-variant fix alone - mostly
+extension case, plus double-encoded names (`Torre_Bel%C3%A9m`) and one lowercased
+first letter (`bengmealea`, which Commons always capitalises).
+
+**9 more came back from a spelling-only rule that is deliberately strict.** A search
+result is accepted **only** when its normalised form - diacritics stripped, case
+folded, every non-alphanumeric removed - is EXACTLY equal to the original. That
+recovers `Krakow`/`Kraków`, `Slîtere`/`Slītere`, `Üçhisar`/`Uçhisar`,
+`Białą`/`Biała`, `Liepāja`/`Liepaja`, ASCII `'` versus okina `ʻ` in
+`Mulla_Qirgʻiz`, the curly apostrophe in `Schindler’s`, and a comma in the
+`Musée_d'Orsay` title. Unit-tested on 12 cases, 12 correct: it accepts all eight
+spelling variants and rejects `Turkestan.jpg` → a Yasawi mausoleum photo,
+`Pompidou_center` → `Pompidou Center Paris`, and `Philippnes` → `Philippines`, which
+is a genuine typo rather than a spelling variant. **Every one of these is a RENAME of
+the same photograph. Nothing was swapped for a different image.**
+
+**THREE tooling bugs of mine surfaced, all the same species as the original bug.**
+Worth reading together, because the pattern is the point:
+
+1. **GET query length.** The lookup packed 40+ long filenames into a GET query string,
+   blew past URL limits, and `if (!res.ok) continue` swallowed the failure. Whole
+   batches vanished, so the first dry run reported 45 repairable and **88 false "not
+   found"** - split by batch position, not by filename. The tell was that the fallback
+   *search* then found the exact `.JPG` twin for names the lookup had just denied. Now
+   POST, and a failed batch **throws**.
+2. **Rate limiting.** Commons answered 429. Two causes: a generic User-Agent (Wikimedia
+   policy wants the tool identified with a contact URL) and pacing that ignored
+   `Retry-After`. Now paced, backed off, and **resumable** - results cache per batch
+   including negatives, so a throttle costs one batch instead of the whole run. The old
+   behaviour discarded all progress and forced a restart, which generated more load and
+   invited the next 429.
+3. **The REDIRECT trap.** After applying 112 fixes I re-probed everything and found 25
+   dead: 24 expected, plus **one of my own repairs**. `Kykkos_monastry_from_the_air.JPG`
+   is a Commons *redirect* to `Kykkos_monastery_from_the_air.jpg` (different spelling
+   AND extension case). `prop=imageinfo` returns full data for a redirect - exists,
+   4416x3312, image/jpeg - so every existence check passed, but **thumbnails only exist
+   under the canonical title**, so the constructed URL 404s at every width. The lookup
+   now sends `redirects=1` and `iiurlwidth` and takes the API's canonical `thumburl`
+   instead of deriving one.
+
+**A near-miss worth keeping.** Probing the 8 Unsplash country photos from a
+`commons.wikimedia.org` page reported all 8 dead. They are alive at 1600px - Commons'
+CSP blocks third-party images. **The origin you probe from is part of the
+measurement.** Re-probed from the tiyulplus.com origin, all 8 pass.
+
+**Serbia and Oman, the last two visible country cards.** Serbia was a pure typo:
+`Péterváadi` should be `Péterváradi`, plus `.JPG`. Same photograph, verified at 960px.
+Oman's file exists under no spelling, so it needed a genuine replacement - and the
+first candidate, `Sultan_Qaboos_Grand_Mosque_(28).jpg`, was **rejected on its Commons
+category**: "Incidental views of Sultan Qaboos Grand Mosque" means the mosque is
+incidental, not the subject. Took `Muscat,_moschea_del_sultano_qaboos,_esterno_01.jpg`
+from the mosque's own category instead ("esterno" = exterior), verified at 960px. The
+Muscat destination hero was then given Nizwa Fort so the page does not show the same
+mosque image three times.
+
+**18 dead URLs across 15 filenames remain, deliberately.** Truncated words
+(`Обл_Видин` should be `Област_Видин`), a swallowed apostrophe
+(`musée_dart`), typos (`Philippnes`), and files that exist under no spelling at all -
+the Louvre, the Pompidou, the Acropolis Museum, Rio Lagartos, Mexico_167,
+Groženjan, Kamikouchi, Turkestan. Each needs a human to choose a real photograph, and
+the search output shows exactly why: `Turkestan.jpg` was offered a 1900s portrait of
+an irrigation official. **A blank card beats a photo of the wrong place.**
+
+**Tooling now in the repo:** `scripts/repair-photo-names.mjs` (variant + strict
+spelling repair, resumable, rate-limit aware, redirect-resolving) and
+`scripts/photo-verified.json`, the committed probe manifest that lets the offline
+validator tell probed from merely well-formed. The validator prints a `DEAD n` line
+naming the extension-case cause. **Flip its manifest-failed check from WARN to ERROR
+once those 18 reach zero** - it is WARN only so the backlog does not block unrelated
+commits.
+
+**Still open for the next session.** The 18 above; the place-photo backlog; and the
+index ceiling, which Netanel raised to **260,000 chars** (measured: index is 188,780
+chars, 90% ASCII, roughly 61k-67k tokens; the old ~190,000 appears nowhere in the code
+and was convention, not an API limit). Photo work costs zero index budget.
+
 ### 2026-07-27 (r) - Browser access arrived, and it demolished my own diagnosis from (q)
 
 **Netanel connected the Chrome extension, which gave this session its first real HTTP
