@@ -29056,6 +29056,8 @@ export const destinations: Destination[] = [
         rating: 4.7,
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=48.858323,2.294517',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Tour_Eiffel_Wikimedia_Commons_(cropped).jpg/500px-Tour_Eiffel_Wikimedia_Commons_(cropped).jpg',
         priceLevel: 2,
         tags: ['families', 'romantic', 'history'],
         mustSee: true,
@@ -29072,6 +29074,8 @@ export const destinations: Destination[] = [
         rating: 4.8,
         durationMin: 210,
         externalUrl: 'https://maps.google.com/?q=48.861015,2.335874',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Louvre_Museum_(27128035747).jpg/500px-Louvre_Museum_(27128035747).jpg',
         priceLevel: 2,
         tags: ['art', 'history'],
         mustSee: true,
@@ -29088,6 +29092,8 @@ export const destinations: Destination[] = [
         rating: 4.7,
         durationMin: 75,
         externalUrl: 'https://maps.google.com/?q=48.852955,2.350066',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Notre-Dame_de_Paris%2C_4_October_2017.jpg/500px-Notre-Dame_de_Paris%2C_4_October_2017.jpg',
         priceLevel: 0,
         tags: ['history', 'art'],
         mustSee: true,
@@ -29253,6 +29259,8 @@ export const destinations: Destination[] = [
         rating: 4.6,
         durationMin: 300,
         externalUrl: 'https://maps.google.com/?q=48.804941,2.121305',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Versailles-Chateau-Jardins02.jpg/500px-Versailles-Chateau-Jardins02.jpg',
         priceLevel: 2,
         tags: ['history', 'families', 'outdoors'],
         mustSee: true,
@@ -29414,6 +29422,8 @@ export const destinations: Destination[] = [
         rating: 4.8,
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=51.519452,-0.127083',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/British_Museum_from_NE_2_(cropped).jpg/500px-British_Museum_from_NE_2_(cropped).jpg',
         priceLevel: 0,
         tags: ['history', 'art', 'families'],
         mustSee: true,
@@ -29430,6 +29440,8 @@ export const destinations: Destination[] = [
         rating: 4.6,
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=51.499373,-0.128462',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/November_2019_in_London_-_44.jpg/500px-November_2019_in_London_-_44.jpg',
         priceLevel: 2,
         tags: ['history'],
         mustSee: true,
@@ -29495,6 +29507,8 @@ export const destinations: Destination[] = [
         rating: 4.5,
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=51.513857,-0.098298',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/St_Paul%27s_Cathedral%2C_London%2C_England_-_Jan_2010_edit.jpg/500px-St_Paul%27s_Cathedral%2C_London%2C_England_-_Jan_2010_edit.jpg',
         priceLevel: 2,
         tags: ['history'],
       },
@@ -29528,6 +29542,8 @@ export const destinations: Destination[] = [
         rating: 4.3,
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=51.539759,-0.143305',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Camden_markets_entrance.jpg/500px-Camden_markets_entrance.jpg',
         priceLevel: 1,
         tags: ['foodie', 'nightlife', 'families'],
       },
@@ -29543,6 +29559,8 @@ export const destinations: Destination[] = [
         rating: 4.6,
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=51.50735,-0.16571',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Hyde_Park_London_from_the_air.jpg/500px-Hyde_Park_London_from_the_air.jpg',
         priceLevel: 0,
         tags: ['outdoors', 'families', 'romantic'],
       },
@@ -29686,6 +29704,8 @@ export const destinations: Destination[] = [
         rating: 4.5,
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=1.284114,103.859756',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Marina_Bay_Sands_Hotel%2C_Singapore_-_20170721_(cropped).jpg/500px-Marina_Bay_Sands_Hotel%2C_Singapore_-_20170721_(cropped).jpg',
         priceLevel: 3,
         tags: ['romantic', 'families'],
         mustSee: true,
@@ -29717,6 +29737,8 @@ export const destinations: Destination[] = [
         rating: 4.4,
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=1.28241,103.844',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Aerial_perspective_of_Singapore%27s_Chinatown.jpg/500px-Aerial_perspective_of_Singapore%27s_Chinatown.jpg',
         priceLevel: 1,
         tags: ['foodie', 'history', 'families'],
         mustSee: true,
