@@ -12436,7 +12436,7 @@ export const destinations: Destination[] = [
         durationMin: 480,
         externalUrl: 'https://maps.google.com/?q=Samarkand',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/500px-RegistanSquare_Samarkand.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Shah-i-Zinda_01.jpg/500px-Shah-i-Zinda_01.jpg',
       },
       {
         id: 'uzb-bukhara',
