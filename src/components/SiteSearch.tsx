@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Flag from '@/components/Flag';
-import type { SearchKind, SearchResult } from '@/lib/siteSearch';
+import type { SearchHits, SearchKind, SearchResult } from '@/lib/siteSearch';
 
 // כותרות הקבוצות מוגדרות כאן ולא מיובאות מ-`siteSearch`: כל ייבוא ערך
 // (לא-type) מהמודול ההוא היה גורר את כל הקטלוג לתוך ה-bundle הראשי
@@ -51,7 +51,9 @@ export default function SiteSearch({
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
-  const [search, setSearch] = useState<((q: string) => SearchResult[]) | null>(null);
+  const [search, setSearch] = useState<((q: string) => SearchHits) | null>(null);
+  /** יעדים להתחלה - נטענים יחד עם הקטלוג, כדי שהמצב הריק לא יהיה ריק */
+  const [popular, setPopular] = useState<SearchResult[]>([]);
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -62,8 +64,10 @@ export default function SiteSearch({
     let alive = true;
     import('@/lib/siteSearch').then((m) => {
       const index = m.buildSearchIndex();
+      if (!alive) return;
       // עוטפים בפונקציה נוספת כי setState מפרש פונקציה כעדכון-לפי-קודם
-      if (alive) setSearch(() => (q: string) => m.searchSite(index, q));
+      setSearch(() => (q: string) => m.searchSiteHits(index, q));
+      setPopular(m.popularDestinations(index));
     });
     return () => {
       alive = false;
@@ -90,7 +94,12 @@ export default function SiteSearch({
     return () => document.removeEventListener('keydown', onKey);
   }, []);
 
-  const results = useMemo(() => (search ? search(query) : []), [search, query]);
+  const hits = useMemo(() => (search ? search(query) : { results: [], omitted: 0 }), [search, query]);
+  /**
+   * מה שמנווטים בו במקלדת. כשהשדה ריק אלה יעדי ההתחלה, ולכן חץ למטה
+   * ו-Enter עובדים מיד עם הפתיחה - בלי להקליד כלום.
+   */
+  const results = query.trim().length < 2 ? popular : hits.results;
 
   useEffect(() => setActive(0), [query]);
 
@@ -189,10 +198,25 @@ export default function SiteSearch({
 
             <div id="site-search-results" role="listbox" className="max-h-[60vh] overflow-y-auto p-2">
               {query.trim().length < 2 ? (
-                <p className="px-3 py-4 text-sm font-medium text-night/45">
-                  מחפשים לפי שם בעברית, שם מקומי או מדינה - למשל &quot;קרואטיה&quot;,
-                  &quot;אקרופוליס&quot; או &quot;Kyoto&quot;.
-                </p>
+                /*
+                  המצב הריק היה פסקת הסבר ושום דבר ללחוץ עליו - שכבת חיפוש
+                  שנפתחת ומראה תיעוד. עכשיו היא נפתחת עם יעדים אמיתיים,
+                  לפי הדירוג העריכתי שקיים בדאטה, וחצי המקלדת עובדים מיד.
+                */
+                popular.length > 0 ? (
+                  <>
+                    <div className="px-3 pb-1 pt-2 text-xs font-bold text-night/40">
+                      {/* שם מדויק ולא "פופולרי": אין לנו מדידת פופולריות,
+                          יש דירוג עריכתי בדאטה. */}
+                      היעדים המדורגים ביותר
+                    </div>
+                    {popular.map((r, i) => (
+                      <Row key={r.key} r={r} activeRow={i === active} onPick={() => go(r)} />
+                    ))}
+                  </>
+                ) : (
+                  <p className="px-3 py-4 text-sm font-medium text-night/45">טוען את הקטלוג…</p>
+                )
               ) : !search ? (
                 <p className="px-3 py-4 text-sm font-medium text-night/45">טוען את הקטלוג…</p>
               ) : results.length === 0 ? (
@@ -219,24 +243,22 @@ export default function SiteSearch({
                           {KIND_LABELS[r.kind]}
                         </div>
                       )}
-                      <button
-                        role="option"
-                        aria-selected={i === active}
-                        onMouseEnter={() => setActive(i)}
-                        onClick={() => go(r)}
-                        className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-start transition ${
-                          i === active ? 'bg-sunset/10' : 'hover:bg-night/[0.04]'
-                        }`}
-                      >
-                        <Flag flag={r.flag} label={r.title} size="md" />
-                        <span className="truncate font-semibold text-night">{r.title}</span>
-                        <span className="truncate text-xs font-medium text-night/45">
-                          {r.subtitle}
-                        </span>
-                      </button>
+                      <Row
+                        r={r}
+                        activeRow={i === active}
+                        onHover={() => setActive(i)}
+                        onPick={() => go(r)}
+                      />
                     </div>
                   );
                 })}
+                {/* התקרה לכל סוג יכולה להשמיט תוצאות. אומרים את זה במקום
+                    להציג רשימה חתוכה בשקט. */}
+                {hits.omitted > 0 && (
+                  <p className="px-3 pt-2 text-xs font-medium text-night/40">
+                    ועוד {hits.omitted} התאמות - כדאי לחדד את החיפוש.
+                  </p>
+                )}
                 {/* יש תוצאות, אבל לא בהכרח מה שחיפשו: החיפוש הוא הכלה
                     בתת-מחרוזת, ולכן "דובאי" מוצא גם "נקיק אולדובאי".
                     שורת מילוט קבועה שומרת על כנות - מה שאין בקטלוג, הסוכן
@@ -249,10 +271,51 @@ export default function SiteSearch({
                 </button>
                 </>
               )}
+              {/* רמז מקלדת: קיים כאן גם כדי שהפאנל לא ייראה חתוך בתחתית */}
+              <p className="mt-1 hidden items-center gap-2 border-t border-night/10 px-3 pt-2 text-[11px] font-medium text-night/35 sm:flex">
+                <kbd className="rounded bg-night/5 px-1.5 py-0.5 font-sans">↑</kbd>
+                <kbd className="rounded bg-night/5 px-1.5 py-0.5 font-sans">↓</kbd>
+                לבחירה
+                <kbd className="rounded bg-night/5 px-1.5 py-0.5 font-sans">Enter</kbd>
+                לפתיחה
+                <span className="ms-auto">חיפוש לפי שם בעברית, שם מקומי או מדינה</span>
+              </p>
             </div>
           </div>
         </div>
       )}
     </>
+  );
+}
+
+/**
+ * שורת תוצאה. חולצה לרכיב משלה כי אותה שורה בדיוק משמשת גם את יעדי
+ * ההתחלה וגם את תוצאות החיפוש - שני העתקים היו נפרדים בהתנהגות המקלדת.
+ */
+function Row({
+  r,
+  activeRow,
+  onHover,
+  onPick,
+}: {
+  r: SearchResult;
+  activeRow: boolean;
+  onHover?: () => void;
+  onPick: () => void;
+}) {
+  return (
+    <button
+      role="option"
+      aria-selected={activeRow}
+      onMouseEnter={onHover}
+      onClick={onPick}
+      className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-start transition ${
+        activeRow ? 'bg-sunset/10' : 'hover:bg-night/[0.04]'
+      }`}
+    >
+      <Flag flag={r.flag} label={r.title} size="md" />
+      <span className="truncate font-semibold text-night">{r.title}</span>
+      <span className="truncate text-xs font-medium text-night/45">{r.subtitle}</span>
+    </button>
   );
 }

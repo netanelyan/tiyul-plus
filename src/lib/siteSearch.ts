@@ -96,13 +96,79 @@ function score(r: SearchResult, q: string): number {
   return 4;
 }
 
-export function searchSite(index: SearchResult[], query: string, limit = 24): SearchResult[] {
+/**
+ * תקרה **לכל סוג בנפרד**, ולא תקרה אחת של 24 לכולם.
+ *
+ * למה: חיפוש "וינה" החזיר עיר אחת ואחריה 23 מקומות בווינה - כל בית קפה,
+ * כל שוק וכל מסעדה כשרה. מי שמקליד שם של עיר מחפש את העיר, ואולי כמה
+ * נקודות בולטות; קיר של עשרים שורות הוא לא תוצאה עשירה, הוא חיפוש שקשה
+ * לקרוא. הפרדת התקרות שומרת על המדינה והעיר תמיד גלויות, גם כשלעיר יש
+ * עשרים מקומות שתואמים.
+ */
+const KIND_CAPS: Record<SearchKind, number> = { country: 4, city: 8, place: 6 };
+
+export interface SearchHits {
+  results: SearchResult[];
+  /** כמה הושמטו מעל התקרה, לפי סוג - כדי שה-UI יוכל להגיד זאת בכנות */
+  omitted: number;
+}
+
+export function searchSiteHits(index: SearchResult[], query: string): SearchHits {
   const q = normalizeQuery(query);
-  if (q.length < 2) return [];
-  return index
+  if (q.length < 2) return { results: [], omitted: 0 };
+  const ranked = index
     .filter((r) => r.haystack.includes(q))
     .map((r) => ({ r, s: score(r, q) }))
     .sort((a, b) => a.s - b.s || KIND_WEIGHT[a.r.kind] - KIND_WEIGHT[b.r.kind])
-    .slice(0, limit)
     .map((x) => x.r);
+
+  const taken: Record<SearchKind, number> = { country: 0, city: 0, place: 0 };
+  const results: SearchResult[] = [];
+  let omitted = 0;
+  for (const r of ranked) {
+    if (taken[r.kind] < KIND_CAPS[r.kind]) {
+      taken[r.kind] += 1;
+      results.push(r);
+    } else {
+      omitted += 1;
+    }
+  }
+  return { results, omitted };
+}
+
+/** נשמר לתאימות; מחזיר רק את השורות */
+export function searchSite(index: SearchResult[], query: string): SearchResult[] {
+  return searchSiteHits(index, query).results;
+}
+
+/**
+ * מה מציגים כשהשדה עוד ריק.
+ *
+ * המצב הריק הקודם היה פסקת הסבר ("מחפשים לפי שם בעברית...") ושום דבר
+ * ללחוץ עליו - שכבת חיפוש שנפתחת ומראה תיעוד. כאן יש התחלה אמיתית:
+ * היעדים עם הדירוג העריכתי הגבוה ביותר, שזה נתון קיים בדאטה ולא בחירה
+ * שהומצאה כאן. יעד בלי דירוג פשוט לא מופיע.
+ */
+export function popularDestinations(index: SearchResult[], count = 6): SearchResult[] {
+  const byKey = new Map(
+    destinations
+      .filter((d) => typeof d.editorialRating?.score === 'number')
+      .map((d) => [`city:${d.slug}`, { score: d.editorialRating!.score, country: d.countrySlug }]),
+  );
+  const ranked = index
+    .filter((r) => byKey.has(r.key))
+    .sort((a, b) => byKey.get(b.key)!.score - byKey.get(a.key)!.score);
+
+  // יעד אחד לכל מדינה. בלי זה שורות הפתיחה מתמלאות בשתי יבשות עם דירוג
+  // גבוה, והרשימה נראית כמו מדף אחד של הקטלוג ולא כמו הרוחב שלו.
+  const seen = new Set<string>();
+  const out: SearchResult[] = [];
+  for (const r of ranked) {
+    const country = byKey.get(r.key)!.country;
+    if (seen.has(country)) continue;
+    seen.add(country);
+    out.push(r);
+    if (out.length >= count) break;
+  }
+  return out;
 }
