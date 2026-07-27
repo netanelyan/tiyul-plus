@@ -1832,8 +1832,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rom-vatican',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Musei_vaticani_Coat_of_Arms.svg/500px-Musei_vaticani_Coat_of_Arms.svg.png',
+        // No photo: the previous value was Musei_vaticani_Coat_of_Arms.svg, an
+        // emblem and not a photograph of the museums. Omission beats a wrong image.
         tags: ['art', 'history'],
         priceLevel: 2,
         mustSee: true,
@@ -2726,8 +2726,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bcn-barceloneta',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Barcelona_Barceloneta.svg/500px-Barcelona_Barceloneta.svg.png',
+        // No photo: the previous value was Barcelona_Barceloneta.svg, a district
+        // location map and not a photograph of the beach.
         tags: ['outdoors', 'families'],
         priceLevel: 0,
         name: 'חוף ברצלונטה',

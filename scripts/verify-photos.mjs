@@ -11,7 +11,12 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { dirname } from 'node:path';
 
 const FILES = ['src/data/destinations.ts', 'src/data/countries.ts'];
-const CACHE_FILE = '.cache/verified-photos.json';
+// המניפסט מקומיט לריפו בכוונה. עד עכשיו הוא חי ב-.cache/ שמחוץ ל-git, ולכן
+// הוולידטור האופליני לא יכול היה לדעת אילו כתובות באמת נבדקו מול הרשת. סביבת
+// הכתיבה חסומה לרשת, כך שמי שמוסיף תמונה כאן לא יכול לאמת אותה בעצמו - הדרך
+// היחידה שכתובת שלא נבדקה לא תגיע לפרודקשן היא שהוולידטור ידרוש רשומה במניפסט.
+const CACHE_FILE = 'scripts/photo-verified.json';
+const LEGACY_CACHE_FILE = '.cache/verified-photos.json';
 const FORCE = process.argv.includes('--force') || process.env.VERIFY_PHOTOS_FORCE === '1';
 // תוקף המטמון: אחרי 30 יום בודקים כתובת מחדש גם אם אומתה בעבר
 const MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
@@ -28,14 +33,26 @@ for (const file of FILES) {
 }
 
 /** { [url]: timestamp } - נשמר רק למה שהחזיר 200 */
-function loadCache() {
-  if (FORCE || !existsSync(CACHE_FILE)) return {};
+function readJson(path) {
+  if (!existsSync(path)) return {};
   try {
-    const parsed = JSON.parse(readFileSync(CACHE_FILE, 'utf8'));
+    const parsed = JSON.parse(readFileSync(path, 'utf8'));
     return parsed && typeof parsed === 'object' ? parsed : {};
   } catch {
     return {};
   }
+}
+
+function loadCache() {
+  if (FORCE) return {};
+  // ok:true נשמר עם חתימת זמן; הפורמט הישן היה מספר חשוף. שני הפורמטים נקראים.
+  const merged = { ...readJson(LEGACY_CACHE_FILE), ...readJson(CACHE_FILE) };
+  const out = {};
+  for (const [url, v] of Object.entries(merged)) {
+    if (typeof v === 'number') out[url] = v;
+    else if (v && typeof v === 'object' && v.ok && typeof v.ts === 'number') out[url] = v.ts;
+  }
+  return out;
 }
 
 const cache = loadCache();
@@ -97,10 +114,14 @@ for (let i = 0; i < entries.length; i += CONCURRENCY) {
 if (entries.length) console.log('');
 
 // שומרים רק כתובות שעדיין בדאטה - כך שהמטמון לא תופח עם URLs שנמחקו
+// כישלון נרשם במניפסט במפורש, ולא רק מודפס. אחרת ריצה הבאה בסביבה בלי רשת
+// לא יכולה לדעת שהכתובת הזאת כבר נבדקה ונפלה.
+const failedUrls = new Set(failed.map((f) => f.match(/(https:\/\/\S+)/)?.[1]).filter(Boolean));
 const nextCache = {};
 for (const url of urls.keys()) {
-  if (verifiedNow.has(url)) nextCache[url] = now;
-  else if (isFresh(url)) nextCache[url] = cache[url];
+  if (verifiedNow.has(url)) nextCache[url] = { ok: true, ts: now };
+  else if (failedUrls.has(url)) nextCache[url] = { ok: false, ts: now };
+  else if (isFresh(url)) nextCache[url] = { ok: true, ts: cache[url] };
 }
 try {
   mkdirSync(dirname(CACHE_FILE), { recursive: true });

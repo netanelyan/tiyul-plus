@@ -61,7 +61,7 @@ export default function DestinationHighlights({ cards }: { cards: HighlightCard[
           {d.heroPhoto ? (
             <div
               className="photo-bg absolute inset-0 transition-transform duration-500 group-hover:scale-105"
-              style={{ backgroundImage: `url(${d.heroPhoto})` }}
+              style={{ backgroundImage: `url("${d.heroPhoto}")` }}
             />
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-night/60 to-night" />

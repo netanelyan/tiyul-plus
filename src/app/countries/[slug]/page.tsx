@@ -40,7 +40,7 @@ export default async function CountryPage({
         style={
           country.photo
             ? {
-                backgroundImage: `linear-gradient(200deg, rgba(18,16,32,0.4) 0%, rgba(18,16,32,0.8) 85%), url(${country.photo})`,
+                backgroundImage: `linear-gradient(200deg, rgba(18,16,32,0.4) 0%, rgba(18,16,32,0.8) 85%), url("${country.photo}")`,
               }
             : undefined
         }
@@ -91,7 +91,7 @@ export default async function CountryPage({
                 style={
                   d.photo
                     ? {
-                        backgroundImage: `linear-gradient(180deg, rgba(15,14,26,0) 40%, rgba(15,14,26,0.7) 100%), url(${d.photo})`,
+                        backgroundImage: `linear-gradient(180deg, rgba(15,14,26,0) 40%, rgba(15,14,26,0.7) 100%), url("${d.photo}")`,
                       }
                     : undefined
                 }

@@ -211,7 +211,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
                     style={
                       city.photo
                         ? {
-                            backgroundImage: `linear-gradient(180deg, rgba(15,14,26,0.1) 0%, rgba(15,14,26,0.72) 100%), url(${city.photo})`,
+                            backgroundImage: `linear-gradient(180deg, rgba(15,14,26,0.1) 0%, rgba(15,14,26,0.72) 100%), url("${city.photo}")`,
                           }
                         : undefined
                     }

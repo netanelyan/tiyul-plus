@@ -462,6 +462,189 @@ the symptom. Final confirmation is Netanel's own iPhone.
 mobile widths**, i.e. `text-base sm:text-sm` rather than `text-sm`, or iOS will
 zoom the page the moment it is focused. There is no lint rule for this; the
 harness in this entry is the way to catch it.
+### 2026-07-27 (r) - Browser access arrived, and it demolished my own diagnosis from (q)
+
+**Netanel connected the Chrome extension, which gave this session its first real HTTP
+path to `upload.wikimedia.org`. The first four probes killed entry (q)'s conclusion.**
+Romania's 960px URL **loads fine** (960x643). Amsterdam's fails at **960 AND 500**. So
+the width swap was never the cause, and (n)'s "safe fix" of rewriting 170 URLs down to
+500px was both unnecessary and useless. It has been reverted. Read (q) with this entry
+next to it.
+
+**What is actually wrong, measured across the whole catalog.** I probed all 1,396
+Wikimedia URLs from the browser with `new Image()`: **151 are dead.** Then I probed every
+one of those 151 at 960/500/330/250: **zero were rescuable at any width.** The dead rate
+was 131/1264 at 500px versus 20/132 at 960px, so width barely correlates. These are dead
+FILES, not sizing errors. Confirmed independently on 19 of them via the Commons
+`imageinfo` API, which reports them `missing`.
+
+**THE ROOT CAUSE: file-extension case.** Commons filenames are case-sensitive in the
+extension, and an earlier pass lowercased `.JPG` to `.jpg`. Of a 16-URL sample, **14 were
+recovered by restoring the original case alone** - same photo, same subject, correct
+again. `Sukiennice_and_Main_Market_Square_Krakow_Poland.JPG`,
+`Cliffs-Of-Moher-OBriens-From-South.JPG`, `London-Eye-2009.JPG`, `TanahLot_2014.JPG`,
+`Bayon,_Angkor_Thom,_Camboya,_2013-08-17,_DD_37.JPG` and so on all exist. **So the 151
+are REPAIRABLE, not deletions.** Do not delete them.
+
+**Why every offline check was blind to this.** A wrong filename still hashes consistently
+with its own md5 path prefix, because the prefix is derived from the same wrong string. My
+sweep of all 1,620 URLs found 0 prefix mismatches and I read that as reassuring; it proved
+nothing about existence. Only an HTTP probe can see this class. That is now written into
+`validate-catalog.mjs` next to the rule.
+
+**A second cause, confirmed live in production.** Oman's country card had its CSS
+declaration **dropped by the parser**: `background-image` was built as unquoted
+`url(${...})`, and Oman's filename contains a literal `)`. Six such interpolations
+existed. They are now `url("${...}")` - DOUBLE quotes deliberately, because Commons
+filenames legitimately contain apostrophes (Musée d'Orsay, Schindler's factory,
+ANSE SOURCE D'ARGENT) and `encodeURIComponent` does not escape them, while a literal `"`
+can never survive URL encoding.
+
+**A near-miss worth recording.** Probing the 8 Unsplash country photos from a
+`commons.wikimedia.org` page reported all 8 dead. They are alive - Commons' CSP blocks
+third-party images. Re-probing from the tiyulplus.com origin showed all 8 at 1600px. **The
+origin you probe from is part of the measurement.** I nearly recorded 8 false failures.
+
+**Two real narrow sources did turn up**, so (q)'s mechanism is real even though it was the
+wrong cause: `MUTRAHCORNICHE2.jpg` is 604px and `Wat_Phnom_Doun_Penh.jpg` is 720px, so
+their 960px thumbs genuinely 404. The 960-needs-proof rule stays.
+
+**Shipped in this entry.** `scripts/photo-verified.json` is committed with real probe
+results for all 1,402 URLs, so the offline validator can finally tell probed from
+merely-well-formed. The validator gained a shared `checkPhoto()`, first-ever coverage of
+`Country.photo` and duplicate country slugs, an SVG-in-photo-field error (the Vatican
+Museums were wearing a coat of arms and Barceloneta a district location map - both
+removed), the CSS-quote error, and a `DEAD 151` summary line that states the extension-case
+root cause so the next session cannot miss it. The manifest-failed check is WARN and not
+ERROR **only** because 151 pre-existing URLs would otherwise block every unrelated commit;
+it should become an ERROR the moment the backlog hits zero.
+
+**Deliberately NOT shipped.** I had the repair half-built - 9 verified country photos, 17
+verified destination heroes, 174 dead fields removed - and reverted all of it. Removing the
+dead URLs turned out to strip `photo` from 17 `iconicLandmark` objects where the type
+requires it, and repairing those properly needs the browser, which froze partway through
+(repeated CDP timeouts and tab reloads after the 1,396-image sweep). Shipping a half-repair
+that deletes recoverable data was the worse option. The catalog is therefore unchanged
+except for the two SVGs; production is no worse than before, and the manifest now records
+exactly what to fix.
+
+**Index ceiling raised to 260,000 chars on Netanel's decision.** The old ~190,000 figure
+appears **nowhere in the code** - it is a convention propagated through these session logs.
+Measured now: the index is 188,780 chars, 90% ASCII / 10% Hebrew, so roughly 61k-67k tokens
+(the "~45k" in an earlier entry understates it). Worst-case request is index + a 6-city
+detail block (~38,836 chars) + the 50,000-char history budget + system/tools, which leaves
+real slack under the 200k window. At 260,000 the headroom is ~71,000 chars, about 495
+places at the measured 143.8 chars/place. **This is a guardrail, not an API limit.**
+
+**What the next session must do, in this order.** (1) Repair the 151 by extension case:
+for each, try `.JPG/.jpeg/.JPEG/.png/.PNG`, and **recompute the md5 path prefix from the
+corrected filename** - the prefix changes with the extension. (2) Re-probe and rewrite the
+manifest. (3) Flip the manifest-failed check from WARN to ERROR. (4) Only then fill the
+62-place backlog. Nothing here is pushed - see below.
+
+**NOT PUSHED - still needs Netanel.** No GitHub write access from this session:
+git-over-HTTPS has no credentials and the API proxy answers "GitHub access to this
+repository is not enabled for this session. Use add_repo" while exposing no such tool.
+Delivered as `tiyul-photofix.patch` in the device repo folder; apply with `git am`.
+
+### 2026-07-27 (q) - The 960px swap was the bug; and a green offline validator is not proof
+
+> **SUPERSEDED BY ENTRY (r) ABOVE.** The diagnosis in this entry is WRONG. A browser probe
+> showed Romania's 960px URL loads fine and Amsterdam's fails at every width, so the width
+> swap was not the cause; the real cause is file-extension case (`.JPG` lowercased to
+> `.jpg`). The 170-URL rewrite to 500px described below has been reverted. The entry is
+> kept because its reasoning about proof-versus-shape is still right, and because it is the
+> record of my getting it wrong the same way (k) did.
+
+
+**The reported bug.** Netherlands and Romania still rendered as flat purple cards on
+`/countries` after entry (k) claimed the country-photo gap was closed. Entry (k) has
+been corrected in place - it recorded an unverified change as a fix.
+
+**Cause, and it was the width swap.** Entry (k) generated 48 country photos by taking
+each country's first destination's verified `iconicLandmark.photo` and string-replacing
+`/500px-` with `/960px-`. That is not a safe transformation: Wikimedia only serves a
+thumbnail NARROWER than the source file, so the derived URL 404s for every source image
+under 960px wide. `/countries` applies the photo as a raw CSS `background-image` in an
+inline style with no `onError` handler, so a dead URL fails silently to the gradient -
+a 404 and a working URL are visually indistinguishable from the code's point of view.
+The blast radius was three populations, not one: 48 country photos, three hand-written
+960px URLs (Ecuador, Mauritius, Seychelles), and ~84 destination hero photos from the
+`### 2026-07-27 (המשך)` run. **All 170 are back at 500px**, the width they were actually
+verified at. A narrower thumbnail always exists where a wider one may not.
+
+**I could not HTTP-probe it, and I am not claiming I did.** This sandbox cannot reach
+`upload.wikimedia.org`: the egress proxy answers `CONNECT` with 403, WebFetch reports the
+domain cache-only, every server-side image proxy I tried is robots-blocked, and no Chrome
+extension was connected. The fix is safe because it *returns* every URL to a width that
+already passed `verify-photos.mjs`, not because the 960px URLs were confirmed dead. Do
+not upgrade that to "verified" in a later entry.
+
+**What I could check offline, and it paid off twice.** I recomputed the md5 path prefix
+from the filename for all 1,620 Wikimedia URLs in `src/data`: **0 mismatches**, which
+retired the encoding/hash hypothesis entirely. The same sweep found two real defects that
+had shipped and were live:
+
+- **Six unquoted `url(${...})` interpolations** (`countries/page.tsx`,
+  `countries/[slug]/page.tsx` x2, `destinations/[slug]/DestinationClient.tsx`,
+  `kosher/KosherSearch.tsx`, `DestinationHighlights.tsx`). A literal `)` in a Commons
+  filename terminates the CSS value and invalidates the whole `background-image`
+  declaration - the identical purple-card symptom, from a different cause. It affected
+  Oman, Muscat and Paro. Now `url('...')`. This touches route files the parallel
+  features session owns; it is a quoting change with no behaviour change, flagged here
+  because the ownership split says so.
+- **Two `.svg` files sitting in `photo` fields.** `rom-vatican` wore
+  `Musei_vaticani_Coat_of_Arms.svg` and `bcn-barceloneta` wore
+  `Barcelona_Barceloneta.svg`, a district location map. An emblem and a map, not
+  photographs - trap #1 and #4 from the handoff, shipped. Both removed rather than
+  replaced by a guess.
+
+**The verification hole, and why it stayed open.** `verify-photos.mjs` already covered
+`Country.photo`; the problem was that it needs network and its results lived in
+gitignored `.cache/verified-photos.json`. So the only check that can run while authoring
+- the offline validator - had no way to distinguish a URL that had been probed from one
+that was merely well formed, and `validate-catalog.mjs` did not look at `Country.photo`
+at all. Green therefore meant nothing, and was read as everything. Changes:
+
+- The manifest moves to **committed `scripts/photo-verified.json`**, and now records
+  failures (`ok:false`) explicitly instead of only printing them.
+- `validate-catalog.mjs` gains a shared `checkPhoto()` used by all four photo fields,
+  and **finally checks the country layer** (plus duplicate country slugs).
+- **960px now requires recorded HTTP proof** and errors without it. Shape checks alone
+  can never re-admit this bug.
+- New errors: `.svg` in a photo field; a quote character in a photo rendered inside
+  CSS `url('...')`.
+- When the manifest is absent the validator says so **loudly**: "NONE of the 1,285 photo
+  URLs has HTTP evidence in this repo; a passing run means well FORMED, not that they
+  load." Absence of proof must never again read as proof.
+
+Validator after the change: **150 destinations / 83 countries / 1,313 places, 0 errors,
+21 warnings** - identical warning count to before, so no regressions. `npx tsc --noEmit`
+and `npm run build` both pass.
+
+**NOT PUSHED - needs Netanel.** This session has no GitHub write access: git-over-HTTPS
+has no credentials, and the API proxy answers "GitHub access to this repository is not
+enabled for this session. Use add_repo" while exposing no such tool. The commit exists
+locally only. It was delivered as `tiyul-photofix.patch` (written into the device repo
+folder); apply with `git am tiyul-photofix.patch`. **Nothing from this session is on main
+or in production yet.** The previous session's PAT-in-chat route is what unblocks this.
+
+**Photo backlog: 62 gaps, deliberately untouched** (60 plus the two SVGs I removed).
+I stopped rather than fill them. dbpedia was in another degraded window - `/data/*.json`
+returned `{ }` or truncated for Tower of London, Café Louvre, Getsemaní, Mina Zayed, and
+`/page/*` gave 502s and read timeouts; `Kolsai_Lakes` and `Stará_tržnica` 404 as article
+titles and need correct ones found. More to the point: with `upload.wikimedia.org`
+unreachable I cannot verify a single new URL, so filling the backlog tonight would have
+added another 62 unprobed URLs of exactly the kind that caused this bug. Omission beats
+approximation. Next session, if the network is open, run `verify-photos.mjs --force`
+first and commit the manifest - that turns the backlog into verifiable work.
+
+**What the next session should know.** (a) Apply or re-create the patch; nothing shipped.
+(b) The catalog now has *zero* 960px URLs by design; do not reintroduce them without a
+probe. (c) `samarkand/uzb-aral` is no longer the round 45,60 placeholder - it reads
+43.76833,59.021389, so that open item is closed. (d) Rejected and staying rejected:
+Slovenska Plaža, Chust, md-cricova, ph-nacpan, ec-otavalo, the 1901 Puerta del Reloj
+archival photo.
 
 ### 2026-07-27 (m) - The deployment freeze was mine: an ignoreCommand that skipped everything
 
@@ -607,13 +790,25 @@ Malaysia, Indonesia, Morocco, Laos and Cambodia as flat purple blocks.
 report had missed this entirely because it measured destinations and places
 only. Lesson: a coverage report must cover every entity that renders an image.
 
+> **CORRECTION (2026-07-27, entries (q) and (r) below): the fix described in this
+> section did not work and this entry was wrong to record it as done.** Netanel reported
+> Netherlands and Romania still rendering as flat purple cards afterwards. The
+> `/500px-` → `/960px-` swap described below is not a safe transformation:
+> Wikimedia only serves a thumbnail NARROWER than the source file, so the swap
+> 404s for every source image under 960px wide, and `/countries` applies the photo
+> as a raw CSS background with no `onError`, so a dead URL fails silently to the
+> gradient. NOTE: entry (r) later disproved the width theory by HTTP probe - the real
+> cause is file-extension case, `.JPG` lowercased to `.jpg`. Nothing
+> in this entry was ever HTTP-verified - the sandbox cannot reach
+> `upload.wikimedia.org`, and a green offline validator was mistaken for proof.
+
 **The fix was free.** Two things make country photos cheap: the grounding index
 does NOT serialize photo URLs (verified with `/tmp/measure.mjs` - index chars
 were identical before and after), and `scripts/validate-catalog.mjs` does not
 check `Country.photo` at all. So each of the 48 got its first destination's
 already-verified `iconicLandmark.photo` with `/500px-` swapped to `/960px-`.
 All 80 countries now have a photo. Field order: `photo` goes after `summary`,
-before `practical`.
+before `practical`. (The width swap was the defect - see the correction above.)
 
 **Four countries added:** Ecuador (`quito-cotopaxi-andes`), Mauritius
 (`mauritius-island`), Seychelles (`seychelles-mahe-praslin-ladigue`), on top of

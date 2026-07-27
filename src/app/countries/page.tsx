@@ -45,7 +45,7 @@ export default async function CountriesPage() {
                 style={
                   c.photo
                     ? {
-                        backgroundImage: `linear-gradient(180deg, rgba(15,14,26,0) 40%, rgba(15,14,26,0.7) 100%), url(${c.photo})`,
+                        backgroundImage: `linear-gradient(180deg, rgba(15,14,26,0) 40%, rgba(15,14,26,0.7) 100%), url("${c.photo}")`,
                       }
                     : undefined
                 }

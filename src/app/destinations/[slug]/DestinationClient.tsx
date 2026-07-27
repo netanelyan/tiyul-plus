@@ -86,7 +86,7 @@ export default function DestinationClient({
         style={
           dest.photo
             ? {
-                backgroundImage: `linear-gradient(200deg, rgba(18,16,32,0.4) 0%, rgba(18,16,32,0.8) 85%), url(${dest.photo})`,
+                backgroundImage: `linear-gradient(200deg, rgba(18,16,32,0.4) 0%, rgba(18,16,32,0.8) 85%), url("${dest.photo}")`,
               }
             : undefined
         }
