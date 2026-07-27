@@ -22601,6 +22601,8 @@ export const destinations: Destination[] = [
         tags: ['history'],
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=40.52472305297852,72.06999969482422',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Quva_(Al-Farg%CB%BBoniy_maydoni).jpg/500px-Quva_(Al-Farg%CB%BBoniy_maydoni).jpg',
       },
       {
         id: 'uz-andijan',
@@ -30665,6 +30667,8 @@ export const destinations: Destination[] = [
         rating: 4.5,
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=29.1461,34.5949',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Coloured_canyon_sinai.jpg/500px-Coloured_canyon_sinai.jpg',
         priceLevel: 2,
         tags: ['outdoors', 'families'],
       },
