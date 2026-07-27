@@ -17,12 +17,18 @@ export const adminDbEnabled = () => Boolean(url() && serviceKey());
 
 function headers(extra: Record<string, string> = {}): Record<string, string> {
   const k = serviceKey()!;
-  return {
+  const h: Record<string, string> = {
     apikey: k,
-    Authorization: `Bearer ${k}`,
     'Content-Type': 'application/json',
     ...extra,
   };
+  // רק מפתחות בפורמט הישן הם JWT ונשלחים גם כ-Bearer. מפתחות
+  // `sb_secret_...` החדשים של Supabase אינם JWT, ו-PostgREST דוחה Bearer
+  // עם ערך שאינו JWT - כלומר שליחה עיוורת של שניהם הייתה מפילה את אזור
+  // הניהול דווקא בפרויקטים חדשים. אותה הבחנה קיימת כבר ב-trip/shareStore.ts
+  // עבור מפתח ה-anon; היא הוחמצה כאן.
+  if (k.startsWith('eyJ')) h.Authorization = `Bearer ${k}`;
+  return h;
 }
 
 /** GET על טבלה/view. `query` הוא query string של PostgREST בלי ה-? */
