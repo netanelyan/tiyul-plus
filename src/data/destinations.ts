@@ -1632,6 +1632,8 @@ export const destinations: Destination[] = [
         tags: ['romantic', 'foodie'],
         priceLevel: 3,
         externalUrl: 'https://maps.google.com/?q=New+York+Cafe+Budapest',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/New-york-kavehaz-budapest-2.jpg/500px-New-york-kavehaz-budapest-2.jpg',
       },
       {
         id: 'bud-liberty-bridge',
@@ -29089,6 +29091,8 @@ export const destinations: Destination[] = [
         tags: ['families', 'outdoors'],
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=10.399154,-75.560994',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Bocagrande%2C_Cartagena_02.jpg/500px-Bocagrande%2C_Cartagena_02.jpg',
       },
       {
         id: 'co-baru',
