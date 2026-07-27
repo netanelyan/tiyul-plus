@@ -399,7 +399,7 @@ export const destinations: Destination[] = [
       {
         id: 'vie-durnstein',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/D%C3%BCrnstein_-_Luftaufnahme.jpg/500px-D%C3%BCrnstein_-_Luftaufnahme.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/D%C3%BCrnstein_-_Luftaufnahme.JPG/500px-D%C3%BCrnstein_-_Luftaufnahme.JPG',
         name: 'דירנשטיין וכרמי הוואכאו',
         nameLocal: 'Dürnstein',
         category: 'nature',
@@ -634,7 +634,7 @@ export const destinations: Destination[] = [
       {
         id: 'bts-main-square',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Hlavn%C3%A9_n%C3%A1mestie-The_napoleonic_soldier%2C_Old_Town_Hall_and_Roland_Fountain-Bratislava.jpg/500px-Hlavn%C3%A9_n%C3%A1mestie-The_napoleonic_soldier%2C_Old_Town_Hall_and_Roland_Fountain-Bratislava.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Hlavn%C3%A9_n%C3%A1mestie-The_napoleonic_soldier%2C_Old_Town_Hall_and_Roland_Fountain-Bratislava.JPG/500px-Hlavn%C3%A9_n%C3%A1mestie-The_napoleonic_soldier%2C_Old_Town_Hall_and_Roland_Fountain-Bratislava.JPG',
         name: 'הכיכר הראשית',
         nameLocal: 'Hlavné námestie',
         category: 'attraction',
@@ -1255,7 +1255,7 @@ export const destinations: Destination[] = [
       {
         id: 'prg-sedlec',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Kostnice_Sedlec.jpg/500px-Kostnice_Sedlec.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Kostnice_Sedlec.JPG/500px-Kostnice_Sedlec.JPG',
         name: 'בית העצמות בסדלץ',
         nameLocal: 'Kostnice Sedlec',
         category: 'attraction',
@@ -2999,7 +2999,7 @@ export const destinations: Destination[] = [
       {
         id: 'bcn-montserrat',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Montserrat_des_de_Manresa.jpg/500px-Montserrat_des_de_Manresa.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Montserrat_des_de_Manresa.JPG/500px-Montserrat_des_de_Manresa.JPG',
         name: 'מונסראט',
         nameLocal: 'Montserrat',
         category: 'nature',
@@ -3016,7 +3016,7 @@ export const destinations: Destination[] = [
       {
         id: 'bcn-tossa',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Tossa_de_Mar_Torre%C3%B3n_JMM.jpg/500px-Tossa_de_Mar_Torre%C3%B3n_JMM.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Tossa_de_Mar_Torre%C3%B3n_JMM.JPG/500px-Tossa_de_Mar_Torre%C3%B3n_JMM.JPG',
         name: 'טוסה דה מאר',
         nameLocal: 'Tossa de Mar',
         category: 'nature',
@@ -3033,7 +3033,7 @@ export const destinations: Destination[] = [
       {
         id: 'bcn-cadaques',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Cadaques_Pueblo_Marinero.jpg/500px-Cadaques_Pueblo_Marinero.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Cadaques_Pueblo_Marinero.JPG/500px-Cadaques_Pueblo_Marinero.JPG',
         name: 'קדאקס',
         nameLocal: 'Cadaqués',
         category: 'viewpoint',
@@ -12531,7 +12531,7 @@ export const destinations: Destination[] = [
         durationMin: 360,
         externalUrl: 'https://maps.google.com/?q=Tashkent',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Nest_One_Tashkent.jpg/500px-Nest_One_Tashkent.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/NEST_ONE%2C_Tashkent.jpg/500px-NEST_ONE%2C_Tashkent.jpg',
       },
       {
         id: 'uzb-aral',
@@ -13466,7 +13466,7 @@ export const destinations: Destination[] = [
       {
         id: 'lis-belem-tower',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Torre_Bel%25C3%25A9m_April_2009-4a.jpg/500px-Torre_Bel%25C3%25A9m_April_2009-4a.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Torre_Bel%C3%A9m_April_2009-4a.jpg/500px-Torre_Bel%C3%A9m_April_2009-4a.jpg',
         tags: ['history'],
         priceLevel: 2,
         mustSee: true,
@@ -13684,12 +13684,12 @@ export const destinations: Destination[] = [
         'קרקוב היא הערך הטוב ביותר באירופה היום: מרכז עיר מימי הביניים שלא נהרס במלחמה, רובע יהודי שלם שחזר לחיים, מכרה מלח ופארק לאומי במרחק נסיעה קצרה, והכול במחירים של מזרח אירופה. החסרונות: הכיכר המרכזית עמוסה ומסחרית מאוד בעונה, ויום אושוויץ הוא יום קשה רגשית שדורש תכנון נפרד ולא משתלב עם שאר הטיול. מזג האוויר בחורף קר וקודר.',
     },
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Sukiennice_and_Main_Market_Square_Krakow_Poland.jpg/960px-Sukiennice_and_Main_Market_Square_Krakow_Poland.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Sukiennice_and_Main_Market_Square_Krakow_Poland.JPG/960px-Sukiennice_and_Main_Market_Square_Krakow_Poland.JPG',
     iconicLandmark: {
       name: 'כיכר השוק הראשית',
       nameLocal: 'Rynek Główny',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Sukiennice_and_Main_Market_Square_Krakow_Poland.jpg/500px-Sukiennice_and_Main_Market_Square_Krakow_Poland.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Sukiennice_and_Main_Market_Square_Krakow_Poland.JPG/500px-Sukiennice_and_Main_Market_Square_Krakow_Poland.JPG',
       blurb:
         'אחת הכיכרות הגדולות באירופה מימי הביניים, ובמרכזה אולם הבדים (סוקייניצה) עם דוכני הענבר והמזכרות.',
     },
@@ -13700,7 +13700,7 @@ export const destinations: Destination[] = [
       {
         id: 'kra-rynek',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Sukiennice_and_Main_Market_Square_Krakow_Poland.jpg/500px-Sukiennice_and_Main_Market_Square_Krakow_Poland.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Sukiennice_and_Main_Market_Square_Krakow_Poland.JPG/500px-Sukiennice_and_Main_Market_Square_Krakow_Poland.JPG',
         name: 'כיכר השוק הראשית',
         nameLocal: 'Rynek Główny',
         category: 'attraction',
@@ -13718,7 +13718,7 @@ export const destinations: Destination[] = [
       {
         id: 'kra-mariacki',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Church_of_Our_Lady_Assumed_into_Heaven%2C_5_Mariacki_square%2C_Old_Town%2C_Krakow%2C_Poland.jpg/500px-Church_of_Our_Lady_Assumed_into_Heaven%2C_5_Mariacki_square%2C_Old_Town%2C_Krakow%2C_Poland.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Church_of_Our_Lady_Assumed_into_Heaven%2C_5_Mariacki_square%2C_Old_Town%2C_Krak%C3%B3w%2C_Poland.jpg/500px-Church_of_Our_Lady_Assumed_into_Heaven%2C_5_Mariacki_square%2C_Old_Town%2C_Krak%C3%B3w%2C_Poland.jpg',
         name: 'כנסיית מריה הקדושה',
         nameLocal: 'Bazylika Mariacka',
         category: 'attraction',
@@ -13771,7 +13771,7 @@ export const destinations: Destination[] = [
       {
         id: 'kra-schindler',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Schindler%27s_factory%2C_Krak%C3%B3w%2C_2011.jpg/500px-Schindler%27s_factory%2C_Krak%C3%B3w%2C_2011.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Schindler%E2%80%99s_factory%2C_Krak%C3%B3w%2C_2011.jpg/500px-Schindler%E2%80%99s_factory%2C_Krak%C3%B3w%2C_2011.jpg',
         name: 'מפעל שינדלר',
         nameLocal: 'Fabryka Schindlera',
         category: 'museum',
@@ -13841,7 +13841,7 @@ export const destinations: Destination[] = [
       {
         id: 'kra-ojcow',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Bia%C5%82%C4%85_R%C4%99ka_Ojcowski_PN.jpg/500px-Bia%C5%82%C4%85_R%C4%99ka_Ojcowski_PN.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Bia%C5%82a_R%C4%99ka_Ojcowski_PN.jpg/500px-Bia%C5%82a_R%C4%99ka_Ojcowski_PN.jpg',
         name: 'פארק לאומי אויצוב',
         nameLocal: 'Ojcowski Park Narodowy',
         category: 'nature',
@@ -14055,7 +14055,7 @@ export const destinations: Destination[] = [
       {
         id: 'paf-troodos',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Chionistra_winter_1.jpg/500px-Chionistra_winter_1.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Chionistra_winter_1.JPG/500px-Chionistra_winter_1.JPG',
         name: 'הרי טרודוס',
         nameLocal: 'Troodos',
         category: 'nature',
@@ -14072,7 +14072,7 @@ export const destinations: Destination[] = [
       {
         id: 'paf-kykkos',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Kykkos_monastry_from_the_air.jpg/500px-Kykkos_monastry_from_the_air.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Kykkos_monastry_from_the_air.JPG/500px-Kykkos_monastry_from_the_air.JPG',
         name: 'מנזר קיקוס',
         nameLocal: 'Kykkos Monastery',
         category: 'attraction',
@@ -14134,12 +14134,12 @@ export const destinations: Destination[] = [
         'עיר קומפקטית שעוברים אותה ברגל או באופניים, עם צפיפות מוזיאונים גבוהה ומורשת יהודית מהמשמעותיות באירופה. החסרונות: מרכז העיר עמוס עד כדי אי-נוחות בעונה, המלונות מהיקרים באירופה ביחס לגודל החדר, כרטיסים לאתרים המרכזיים נגמרים שבועות מראש, והמזג אפור וגשום חלק גדול מהשנה.',
     },
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.jpg/960px-Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.JPG/960px-Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.JPG',
     iconicLandmark: {
       name: 'בית הכנסת הפורטוגזי',
       nameLocal: 'Portugese Synagoge',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.jpg/500px-Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.JPG/500px-Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.JPG',
       blurb:
         'בית כנסת מהמאה ה-17 של הקהילה הספרדית-פורטוגזית, שנשאר בלי חשמל עד היום ומואר בנרות במאות נברשות.',
     },
@@ -14169,7 +14169,7 @@ export const destinations: Destination[] = [
       {
         id: 'ams-portuguese-synagogue',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.jpg/500px-Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.JPG/500px-Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.JPG',
         name: 'בית הכנסת הפורטוגזי',
         nameLocal: 'Portugese Synagoge',
         category: 'attraction',
@@ -14447,7 +14447,7 @@ export const destinations: Destination[] = [
       {
         id: 'amn-nebo',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Mount_Nebo_BW_6.jpg/500px-Mount_Nebo_BW_6.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Mount_Nebo_BW_6.JPG/500px-Mount_Nebo_BW_6.JPG',
         name: 'הר נבו',
         nameLocal: 'Mount Nebo / جبل نيبو',
         category: 'viewpoint',
@@ -14517,7 +14517,7 @@ export const destinations: Destination[] = [
       {
         id: 'amn-maghtas',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Bethany_%285%29.jpg/500px-Bethany_%285%29.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Bethany_%285%29.JPG/500px-Bethany_%285%29.JPG',
         name: 'אל-מוע׳טס (מקום הטבילה)',
         nameLocal: 'Al-Maghtas / Bethany Beyond the Jordan',
         category: 'attraction',
@@ -15064,12 +15064,12 @@ export const destinations: Destination[] = [
         'קפדוקיה היא אחד הנופים הכי חריגים שאפשר להגיע אליהם בטיסה קצרה: עמודי סלע רכים שנחצבו לכנסיות, לבתים ולערים שלמות מתחת לאדמה. החוויה של זריחה מול מאות כדורים פורחים היא אמיתית ולא רק שיווק. החסרונות: העונה עמוסה מאוד והאזור הפך מסחרי מאוד, טיסות הכדורים מבוטלות לעיתים קרובות בגלל רוח (ואז כולם דוחים ליום הבא ונוצר לחץ), ובחורף קר מאוד. בלי רכב או סיורים מאורגנים קשה לכסות את האזור.',
     },
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/G%C3%B6reme_town_and_valley_2015.jpg/960px-G%C3%B6reme_town_and_valley_2015.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/G%C3%B6reme_town_and_valley_2015.JPG/960px-G%C3%B6reme_town_and_valley_2015.JPG',
     iconicLandmark: {
       name: 'גורמה',
       nameLocal: 'Göreme',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/G%C3%B6reme_town_and_valley_2015.jpg/500px-G%C3%B6reme_town_and_valley_2015.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/G%C3%B6reme_town_and_valley_2015.JPG/500px-G%C3%B6reme_town_and_valley_2015.JPG',
       blurb:
         'הכפר שהוא מרכז הכובד התיירותי של קפדוקיה: מלונות מערה, מסעדות, ונקודת ההמראה של רוב הכדורים הפורחים.',
     },
@@ -15080,7 +15080,7 @@ export const destinations: Destination[] = [
       {
         id: 'cpd-goreme',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/G%C3%B6reme_town_and_valley_2015.jpg/500px-G%C3%B6reme_town_and_valley_2015.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/G%C3%B6reme_town_and_valley_2015.JPG/500px-G%C3%B6reme_town_and_valley_2015.JPG',
         name: 'גורמה',
         nameLocal: 'Göreme',
         category: 'attraction',
@@ -15098,7 +15098,7 @@ export const destinations: Destination[] = [
       {
         id: 'cpd-uchisar',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/%C3%9C%C3%A7hisar%2C_Cappadocia_01.jpg/500px-%C3%9C%C3%A7hisar%2C_Cappadocia_01.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/U%C3%A7hisar%2C_Cappadocia_01.jpg/500px-U%C3%A7hisar%2C_Cappadocia_01.jpg',
         name: 'אוצ׳יסאר',
         nameLocal: 'Uçhisar',
         category: 'viewpoint',
@@ -15230,12 +15230,12 @@ export const destinations: Destination[] = [
         'זה החלק של אירלנד שאנשים מדמיינים כשהם חושבים על אירלנד: מצוקים אנכיים מעל האוקיינוס, ביצות כבול ואגמים בקונמארה, ואיים שבהם עדיין מדברים אירית. גאלוויי היא אחת מערי הפאבים והמוזיקה הטובות באירופה. החסרונות: מזג האוויר לא צפוי גם באמצע הקיץ ויכול למחוק תצפית שלמה, מצוקי מוהר עמוסים מאוד בשעות הצהריים, והכבישים במערב צרים מאוד עם גדרות אבן משני הצדדים - נהיגה כאן דורשת ריכוז, ובצד שמאל.',
     },
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Cliffs-Of-Moher-OBriens-From-South.jpg/960px-Cliffs-Of-Moher-OBriens-From-South.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Cliffs-Of-Moher-OBriens-From-South.JPG/960px-Cliffs-Of-Moher-OBriens-From-South.JPG',
     iconicLandmark: {
       name: 'מצוקי מוהר',
       nameLocal: 'Cliffs of Moher',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Cliffs-Of-Moher-OBriens-From-South.jpg/500px-Cliffs-Of-Moher-OBriens-From-South.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Cliffs-Of-Moher-OBriens-From-South.JPG/500px-Cliffs-Of-Moher-OBriens-From-South.JPG',
       blurb:
         'קיר מצוקים באורך כ-14 קילומטר שמתנשא מאות מטרים מעל האוקיינוס האטלנטי - האתר הטבעי המבוקר ביותר באירלנד.',
     },
@@ -15246,7 +15246,7 @@ export const destinations: Destination[] = [
       {
         id: 'irw-moher',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Cliffs-Of-Moher-OBriens-From-South.jpg/500px-Cliffs-Of-Moher-OBriens-From-South.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Cliffs-Of-Moher-OBriens-From-South.JPG/500px-Cliffs-Of-Moher-OBriens-From-South.JPG',
         name: 'מצוקי מוהר',
         nameLocal: 'Cliffs of Moher',
         category: 'viewpoint',
@@ -15317,7 +15317,7 @@ export const destinations: Destination[] = [
       {
         id: 'irw-dun-aonghasa',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Dun_Aonghasa_%28cropped%29.jpg/500px-Dun_Aonghasa_%28cropped%29.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Dun_Aonghasa_%28cropped%29.JPG/500px-Dun_Aonghasa_%28cropped%29.JPG',
         name: 'דון אנגוסה, איי אראן',
         nameLocal: 'Dún Aonghasa, Aran Islands',
         category: 'attraction',
@@ -15617,7 +15617,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=Skansen+Stockholm',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Seglora_church_050701.jpg/500px-Seglora_church_050701.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Seglora_church_050701.JPG/500px-Seglora_church_050701.JPG',
       },
       {
         id: 'sth-djurgarden',
@@ -15821,7 +15821,7 @@ export const destinations: Destination[] = [
       {
         id: 'nzl-viking-ships',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Museo_delle_navi_vichinghe_di_Roskilde.jpg/500px-Museo_delle_navi_vichinghe_di_Roskilde.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Museo_delle_navi_vichinghe_di_Roskilde.JPG/500px-Museo_delle_navi_vichinghe_di_Roskilde.JPG',
         name: 'מוזיאון ספינות הוויקינגים',
         nameLocal: 'Vikingeskibsmuseet',
         category: 'museum',
@@ -15838,7 +15838,7 @@ export const destinations: Destination[] = [
       {
         id: 'nzl-fredensborg',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Fredensborg_Slot_124.jpg/500px-Fredensborg_Slot_124.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Fredensborg_Slot_124.JPG/500px-Fredensborg_Slot_124.JPG',
         name: 'ארמון פרדנסבורג',
         nameLocal: 'Fredensborg Slot',
         category: 'attraction',
@@ -15855,7 +15855,7 @@ export const destinations: Destination[] = [
       {
         id: 'nzl-frilandsmuseet',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Frilandsmuseet%2C_2014-03-15%2C_skr%25C3%25A5t_fra_h%25C3%25B8jre.jpg/500px-Frilandsmuseet%2C_2014-03-15%2C_skr%25C3%25A5t_fra_h%25C3%25B8jre.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Frilandsmuseet%2C_2014-03-15%2C_skr%C3%A5t_fra_h%C3%B8jre.jpg/500px-Frilandsmuseet%2C_2014-03-15%2C_skr%C3%A5t_fra_h%C3%B8jre.jpg',
         name: 'פרילנדסמוזאה - מוזיאון הכפר הפתוח',
         nameLocal: 'Frilandsmuseet',
         category: 'museum',
@@ -15968,7 +15968,7 @@ export const destinations: Destination[] = [
       {
         id: 'fla-pyha-luosto',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Isokuru.jpg/500px-Isokuru.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Isokuru.JPG/500px-Isokuru.JPG',
         name: 'הפארק הלאומי פיהא-לואוסטו',
         nameLocal: 'Pyha-Luosto National Park',
         category: 'nature',
@@ -16019,7 +16019,7 @@ export const destinations: Destination[] = [
       {
         id: 'fla-ukk',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Paratiisikuru_waterfall.jpg/500px-Paratiisikuru_waterfall.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Paratiisikuru_waterfall.JPG/500px-Paratiisikuru_waterfall.JPG',
         name: 'הפארק הלאומי אורהו קקונן',
         nameLocal: 'Urho Kekkonen National Park',
         category: 'nature',
@@ -16364,7 +16364,7 @@ export const destinations: Destination[] = [
       {
         id: 'tln-nevsky',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Catedral_de_Alejandro_Nevsky%2C_Tallin%2C_Estonia%2C_2012-08-11%2C_DD_46.jpg/500px-Catedral_de_Alejandro_Nevsky%2C_Tallin%2C_Estonia%2C_2012-08-11%2C_DD_46.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Catedral_de_Alejandro_Nevsky%2C_Tallin%2C_Estonia%2C_2012-08-11%2C_DD_46.JPG/500px-Catedral_de_Alejandro_Nevsky%2C_Tallin%2C_Estonia%2C_2012-08-11%2C_DD_46.JPG',
         name: 'קתדרלת אלכסנדר נבסקי',
         nameLocal: 'Aleksander Nevski katedraal',
         category: 'attraction',
@@ -16432,7 +16432,7 @@ export const destinations: Destination[] = [
       {
         id: 'tln-lahemaa',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Viru_Bog%2C_Parque_Nacional_Lahemaa%2C_Estonia%2C_2012-08-12%2C_DD_26.jpg/500px-Viru_Bog%2C_Parque_Nacional_Lahemaa%2C_Estonia%2C_2012-08-12%2C_DD_26.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Viru_Bog%2C_Parque_Nacional_Lahemaa%2C_Estonia%2C_2012-08-12%2C_DD_26.JPG/500px-Viru_Bog%2C_Parque_Nacional_Lahemaa%2C_Estonia%2C_2012-08-12%2C_DD_26.JPG',
         name: 'הפארק הלאומי להאמאה',
         nameLocal: 'Lahemaa rahvuspark',
         category: 'nature',
@@ -16545,7 +16545,7 @@ export const destinations: Destination[] = [
       {
         id: 'rga-cathedral',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Riga_Petrikirche_Blick_vom_Turm_zum_Dom_3.jpg/500px-Riga_Petrikirche_Blick_vom_Turm_zum_Dom_3.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Riga_Petrikirche_Blick_vom_Turm_zum_Dom_3.JPG/500px-Riga_Petrikirche_Blick_vom_Turm_zum_Dom_3.JPG',
         name: 'קתדרלת ריגה',
         nameLocal: 'Rigas Doms',
         category: 'attraction',
@@ -16597,7 +16597,7 @@ export const destinations: Destination[] = [
       {
         id: 'rga-turaida',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Turaida_Castle.jpg/500px-Turaida_Castle.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Turaida_Castle.JPG/500px-Turaida_Castle.JPG',
         name: 'טירת טוראידה',
         nameLocal: 'Turaidas pils',
         category: 'attraction',
@@ -16871,7 +16871,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=Mostar+Old+Bridge',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Bosnia%2C_Mostar%2C_old_bridge_2.jpg/500px-Bosnia%2C_Mostar%2C_old_bridge_2.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Bosnia%2C_Mostar%2C_old_bridge_2.JPG/500px-Bosnia%2C_Mostar%2C_old_bridge_2.JPG',
       },
       {
         id: 'bih-blagaj',
@@ -17033,7 +17033,7 @@ export const destinations: Destination[] = [
       {
         id: 'rs-synagogue',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/%D0%A1%D0%B8%D0%BD%D0%B0%D0%B3%D0%BE%D0%B3%D0%B0_%D1%83_%D0%9D%D0%BE%D0%B2%D0%BE%D0%BC_%D0%A1%D0%B0%D0%B4%D1%83_3.jpg/500px-%D0%A1%D0%B8%D0%BD%D0%B0%D0%B3%D0%BE%D0%B3%D0%B0_%D1%83_%D0%9D%D0%BE%D0%B2%D0%BE%D0%BC_%D0%A1%D0%B0%D0%B4%D1%83_3.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/%D0%A1%D0%B8%D0%BD%D0%B0%D0%B3%D0%BE%D0%B3%D0%B0_%D1%83_%D0%9D%D0%BE%D0%B2%D0%BE%D0%BC_%D0%A1%D0%B0%D0%B4%D1%83_3.JPG/500px-%D0%A1%D0%B8%D0%BD%D0%B0%D0%B3%D0%BE%D0%B3%D0%B0_%D1%83_%D0%9D%D0%BE%D0%B2%D0%BE%D0%BC_%D0%A1%D0%B0%D0%B4%D1%83_3.JPG',
         name: 'בית הכנסת של נובי סאד',
         nameLocal: 'Novi Sad Synagogue',
         category: 'attraction',
@@ -17884,7 +17884,7 @@ export const destinations: Destination[] = [
       {
         id: 'id-parangtritis',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Parangtritis_Beach_2011_4.jpg/500px-Parangtritis_Beach_2011_4.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Parangtritis_Beach_2011_4.JPG/500px-Parangtritis_Beach_2011_4.JPG',
         name: 'חוף פארנגטריטיס',
         nameLocal: 'Parangtritis',
         category: 'nature',
@@ -18634,7 +18634,7 @@ export const destinations: Destination[] = [
       {
         id: 'pe-sillustani',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Sillustani%2C_Per%C3%BA%2C_2015-08-01%2C_DD_87.jpg/500px-Sillustani%2C_Per%C3%BA%2C_2015-08-01%2C_DD_87.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Sillustani%2C_Per%C3%BA%2C_2015-08-01%2C_DD_87.JPG/500px-Sillustani%2C_Per%C3%BA%2C_2015-08-01%2C_DD_87.JPG',
         name: 'סיוסטני',
         nameLocal: 'Sillustani',
         category: 'attraction',
@@ -18652,7 +18652,7 @@ export const destinations: Destination[] = [
       {
         id: 'pe-puno',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Vista_de_Puno_y_el_Titicaca%2C_Per%C3%BA%2C_2015-08-01%2C_DD_63.jpg/500px-Vista_de_Puno_y_el_Titicaca%2C_Per%C3%BA%2C_2015-08-01%2C_DD_63.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Vista_de_Puno_y_el_Titicaca%2C_Per%C3%BA%2C_2015-08-01%2C_DD_63.JPG/500px-Vista_de_Puno_y_el_Titicaca%2C_Per%C3%BA%2C_2015-08-01%2C_DD_63.JPG',
         name: 'פונו',
         nameLocal: 'Puno',
         category: 'attraction',
@@ -18974,7 +18974,7 @@ export const destinations: Destination[] = [
       {
         id: 'tr-kas',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Kas_overview.jpg/500px-Kas_overview.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Kas_overview.JPG/500px-Kas_overview.JPG',
         name: 'קאש',
         nameLocal: 'Kaş',
         category: 'attraction',
@@ -19148,7 +19148,7 @@ export const destinations: Destination[] = [
       {
         id: 'ca-grand-pre',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Grand_Pr%C3%A9.jpg/500px-Grand_Pr%C3%A9.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Grand_Pr%C3%A9.JPG/500px-Grand_Pr%C3%A9.JPG',
         name: 'גראן פרה',
         nameLocal: 'Grand-Pré',
         category: 'attraction',
@@ -19431,12 +19431,12 @@ export const destinations: Destination[] = [
         'הצפון שקט הרבה יותר מהחוף הדרומי, אבל המחיר הוא נגישות. חלק מהדרכים לאתרים המרכזיים הן דרכי חצץ שנסגרות בחורף לגמרי, ולעתים גם בסתיו מוקדם, ורכב פרטי רגיל לא תמיד מספיק. מזג האוויר משתנה תוך דקות ורוח חזקה כאן היא הכלל ולא היוצא מן הכלל. באזור מיוואטן יש נחילי זבובונים בקיץ שיכולים להיות בלתי נסבלים ממש, וריח הגופרית באזורים הגעשיים חזק. בחורף שעות האור מעטות מאוד וזה מגביל כמעט כל תכנון. וכמו בכל איסלנד, המחירים גבוהים מאוד ואין כמעט אלטרנטיבה זולה.',
     },
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Dettifoss_TimBekaert.jpg/960px-Dettifoss_TimBekaert.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Dettifoss_TimBekaert.JPG/960px-Dettifoss_TimBekaert.JPG',
     iconicLandmark: {
       name: 'דטיפוס',
       nameLocal: 'Dettifoss',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Dettifoss_TimBekaert.jpg/500px-Dettifoss_TimBekaert.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Dettifoss_TimBekaert.JPG/500px-Dettifoss_TimBekaert.JPG',
       blurb:
         'אחד המפלים העוצמתיים באירופה מבחינת נפח המים, עם רסס שמרטיב מרחוק.',
     },
@@ -19501,7 +19501,7 @@ export const destinations: Destination[] = [
       {
         id: 'is-dettifoss',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Dettifoss_TimBekaert.jpg/500px-Dettifoss_TimBekaert.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Dettifoss_TimBekaert.JPG/500px-Dettifoss_TimBekaert.JPG',
         name: 'דטיפוס',
         nameLocal: 'Dettifoss',
         category: 'nature',
@@ -19622,12 +19622,12 @@ export const destinations: Destination[] = [
         'זה אזור יפה במיוחד אבל תובעני לוגיסטית. הכבישים בין הכפרים איטיים, לעתים במצב ירוד, ומאה קילומטרים כאן יכולים לקחת שלוש שעות. אין תחבורה ציבורית שימושית ורכב שכור הוא חובה. המנזרים והכנסיות אתרים דתיים פעילים, יש דרישות לבוש, ובחלקם הצילום אסור או כרוך בתשלום נפרד. בחורף השלג חוסם דרכים משניות והביקור נעשה קשה. גם הרומנטיזציה של הכפר המסורתי דורשת סיוג: חלק ניכר מהאזור עני, וההתרשמות מ׳כפר שנשמר בזמן׳ מסתירה מציאות כלכלית לא פשוטה.',
     },
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Voronet_Intrare.jpg/960px-Voronet_Intrare.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Voronet_Intrare.JPG/960px-Voronet_Intrare.JPG',
     iconicLandmark: {
       name: 'מנזר וורונץ',
       nameLocal: 'Mănăstirea Voroneț',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Voronet_Intrare.jpg/500px-Voronet_Intrare.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Voronet_Intrare.JPG/500px-Voronet_Intrare.JPG',
       blurb:
         'המפורסם שבמנזרים המצוירים, ידוע בגוון הכחול העז של ציורי הקיר החיצוניים שלו.',
     },
@@ -19639,7 +19639,7 @@ export const destinations: Destination[] = [
       {
         id: 'ro-voronet',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Voronet_Intrare.jpg/500px-Voronet_Intrare.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Voronet_Intrare.JPG/500px-Voronet_Intrare.JPG',
         name: 'מנזר וורונץ',
         nameLocal: 'Mănăstirea Voroneț',
         category: 'attraction',
@@ -20172,12 +20172,12 @@ export const destinations: Destination[] = [
       verdict: 'זו אחת החוויות היוצאות דופן באירופה, אבל היא לא מתאימה לכל אחד ולא בכל עונה. בחורף הטמפרטורות יורדות הרבה מתחת לאפס, יש רק כמה שעות אור עמום ביום, וציוד חורף רציני הוא חובה ולא המלצה. הזוהר הצפוני אף פעם לא מובטח, וגם בעונה הטובה אפשר לבלות שבוע שלם מתחת לעננים ולא לראות כלום, אז אסור לבנות עליו את כל הטיול. המחירים בשוודיה גבוהים והלינה בצפון גבוהה עוד יותר. המרחקים עצומים והתחבורה הציבורית דלילה, כך שבלי רכב או בלי סיורים מאורגנים קשה לזוז. בקיץ יש שמש 24 שעות שמפריעה לשינה, ויתושים בכמויות שקשה להאמין. וקירונה עצמה היא עיירת מכרות תעשייתית שעוברת העתקה פיזית, לא כפר יפהפה.',
     },
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Abisko_overview.jpg/960px-Abisko_overview.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Abisko_overview.JPG/960px-Abisko_overview.JPG',
     iconicLandmark: {
       name: 'אביסקו',
       nameLocal: 'Abisko',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Abisko_overview.jpg/500px-Abisko_overview.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Abisko_overview.JPG/500px-Abisko_overview.JPG',
       blurb:
         'הכפר והפארק הלאומי שנחשבים לאחד המקומות הטובים בעולם לצפייה בזוהר הצפוני, בזכות אזור יבש יחסית עם פחות עננות.',
     },
@@ -20187,7 +20187,7 @@ export const destinations: Destination[] = [
       {
         id: 'se-abisko',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Abisko_overview.jpg/500px-Abisko_overview.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Abisko_overview.JPG/500px-Abisko_overview.JPG',
         name: 'אביסקו',
         nameLocal: 'Abisko',
         category: 'nature',
@@ -20269,7 +20269,7 @@ export const destinations: Destination[] = [
       {
         id: 'se-jokkmokk',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Jokkmokks_kyrka.jpg/500px-Jokkmokks_kyrka.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Jokkmokks_kyrka.JPG/500px-Jokkmokks_kyrka.JPG',
         name: 'יוקמוק',
         nameLocal: 'Jokkmokk',
         category: 'attraction',
@@ -20586,7 +20586,7 @@ export const destinations: Destination[] = [
       {
         id: 'ie-powerscourt',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Powerscourt_Fountain.jpg/500px-Powerscourt_Fountain.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Powerscourt_Fountain.JPG/500px-Powerscourt_Fountain.JPG',
         name: 'אחוזת פאוארסקורט',
         nameLocal: 'Powerscourt Estate',
         category: 'attraction',
@@ -20792,7 +20792,7 @@ export const destinations: Destination[] = [
         priceLevel: 3,
         externalUrl: 'https://maps.google.com/?q=55.73555374145508,9.126111030578613',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Legoland_Billund_Denmark_2012.jpg/500px-Legoland_Billund_Denmark_2012.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Legoland_Billund_Denmark_2012.JPG/500px-Legoland_Billund_Denmark_2012.JPG',
       },
       {
         id: 'dk-ribe',
@@ -21162,7 +21162,7 @@ export const destinations: Destination[] = [
       {
         id: 'si-logarska',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/LogarskaDolina.jpg/500px-LogarskaDolina.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/LogarskaDolina.JPG/500px-LogarskaDolina.JPG',
         name: 'עמק לוגרסקה',
         nameLocal: 'Logarska dolina',
         category: 'nature',
@@ -21365,7 +21365,7 @@ export const destinations: Destination[] = [
       {
         id: 'fi-verla',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Verla.jpg/500px-Verla.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Verla.JPG/500px-Verla.JPG',
         name: 'מפעל הנייר ורלה',
         nameLocal: 'Verla Mill',
         category: 'museum',
@@ -21718,7 +21718,7 @@ export const destinations: Destination[] = [
       {
         id: 'lv-slitere',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Latvia%2C_Sl%C3%AEtere_National_Park.jpg/500px-Latvia%2C_Sl%C3%AEtere_National_Park.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Latvia%2C_Sl%C4%ABtere_National_Park.jpg/500px-Latvia%2C_Sl%C4%ABtere_National_Park.jpg',
         name: 'פארק לאומי סליטרה',
         nameLocal: 'Slītere National Park',
         category: 'nature',
@@ -21745,7 +21745,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=56.51166534423828,21.01388931274414',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Liep%C4%81ja_Karosta_church_(3788686258).jpg/500px-Liep%C4%81ja_Karosta_church_(3788686258).jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Liepaja_Karosta_church_(3788686258).jpg/500px-Liepaja_Karosta_church_(3788686258).jpg',
       },
     ],
     itinerary: [
@@ -21800,12 +21800,12 @@ export const destinations: Destination[] = [
       verdict: 'הלשון הקורונית היא באמת מיוחדת, אבל צריך לדעת שרוב הזמן רואים ממנה יער אורנים משני צדי כביש אחד, והדיונות הפתוחות הן קטע קצר יחסית שחלקו סגור לשימור. בקיץ הכניסה לנרינגה כרוכה באגרה, התור למעבורת מקלייפדה ארוך ומקומות הלינה מלאים חודשים מראש ובמחירים גבוהים. מחוץ ליולי ואוגוסט הכל שקט מאוד וחלק מהעסקים סגורים. גבעת הצלבים מרשימה רגשית אך הביקור בה קצר, כשלושים דקות, והיא נמצאת בנסיעה של שעתיים מהחוף. הים הבלטי קר גם באוגוסט. ובאזור כולו כמעט אין אתרים היסטוריים גדולים - זה טיול טבע ונופש, לא טיול תרבות.',
     },
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Mirties_sl%C4%97nis_nuo_Parnid%C5%BEio_kopos.jpg/960px-Mirties_sl%C4%97nis_nuo_Parnid%C5%BEio_kopos.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Mirties_sl%C4%97nis_nuo_Parnid%C5%BEio_kopos.JPG/960px-Mirties_sl%C4%97nis_nuo_Parnid%C5%BEio_kopos.JPG',
     iconicLandmark: {
       name: 'הלשון הקורונית',
       nameLocal: 'Curonian Spit',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Mirties_sl%C4%97nis_nuo_Parnid%C5%BEio_kopos.jpg/500px-Mirties_sl%C4%97nis_nuo_Parnid%C5%BEio_kopos.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Mirties_sl%C4%97nis_nuo_Parnid%C5%BEio_kopos.JPG/500px-Mirties_sl%C4%97nis_nuo_Parnid%C5%BEio_kopos.JPG',
       blurb:
         'רצועת חול צרה באורך כתשעים ושמונה קילומטרים שמפרידה בין הים הבלטי ללגונה הקורונית, אתר מורשת עולם של אונסקו.',
     },
@@ -21815,7 +21815,7 @@ export const destinations: Destination[] = [
       {
         id: 'lt-curonian-spit',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Mirties_sl%C4%97nis_nuo_Parnid%C5%BEio_kopos.jpg/500px-Mirties_sl%C4%97nis_nuo_Parnid%C5%BEio_kopos.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Mirties_sl%C4%97nis_nuo_Parnid%C5%BEio_kopos.JPG/500px-Mirties_sl%C4%97nis_nuo_Parnid%C5%BEio_kopos.JPG',
         name: 'הלשון הקורונית',
         nameLocal: 'Curonian Spit',
         category: 'nature',
@@ -21849,7 +21849,7 @@ export const destinations: Destination[] = [
       {
         id: 'lt-hill-of-crosses',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Kry%C5%BEi%C5%B3_kalnas_%28G%C3%B3ra_Krzy%C5%BCy%29.jpg/500px-Kry%C5%BEi%C5%B3_kalnas_%28G%C3%B3ra_Krzy%C5%BCy%29.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Kry%C5%BEi%C5%B3_kalnas_%28G%C3%B3ra_Krzy%C5%BCy%29.JPG/500px-Kry%C5%BEi%C5%B3_kalnas_%28G%C3%B3ra_Krzy%C5%BCy%29.JPG',
         name: 'גבעת הצלבים',
         nameLocal: 'Hill of Crosses',
         category: 'attraction',
@@ -22031,7 +22031,7 @@ export const destinations: Destination[] = [
       {
         id: 'bg-ivanovo',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Ivanovski_skalni_tsarkvi_20110714-61.jpg/500px-Ivanovski_skalni_tsarkvi_20110714-61.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Ivanovski_skalni_tsarkvi_20110714-61.JPG/500px-Ivanovski_skalni_tsarkvi_20110714-61.JPG',
         name: 'כנסיות הסלע של איבאנובו',
         nameLocal: 'Rock-hewn Churches of Ivanovo',
         category: 'attraction',
@@ -22064,7 +22064,7 @@ export const destinations: Destination[] = [
       {
         id: 'bg-tryavna',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Tryavna-imagesfrombulgaria.jpg/500px-Tryavna-imagesfrombulgaria.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Tryavna-imagesfrombulgaria.JPG/500px-Tryavna-imagesfrombulgaria.JPG',
         name: 'טריאבנה',
         nameLocal: 'Tryavna',
         category: 'attraction',
@@ -22080,7 +22080,7 @@ export const destinations: Destination[] = [
       {
         id: 'bg-shipka',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/View_from_Shipka.jpg/500px-View_from_Shipka.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/View_from_Shipka.JPG/500px-View_from_Shipka.JPG',
         name: 'מעבר שיפקה',
         nameLocal: 'Shipka Pass',
         category: 'viewpoint',
@@ -22217,7 +22217,7 @@ export const destinations: Destination[] = [
       {
         id: 'am-akhtala',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Akhtala_monastery_110.jpg/500px-Akhtala_monastery_110.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Akhtala_monastery_110.JPG/500px-Akhtala_monastery_110.JPG',
         name: 'מנזר אחטלה',
         nameLocal: 'Akhtala Monastery',
         category: 'attraction',
@@ -22543,7 +22543,7 @@ export const destinations: Destination[] = [
       {
         id: 'uz-kokand',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Khudayar_Khan_Palace%2C_Kokand_01.jpg/500px-Khudayar_Khan_Palace%2C_Kokand_01.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Khudayar_Khan_Palace%2C_Kokand_01.JPG/500px-Khudayar_Khan_Palace%2C_Kokand_01.JPG',
         name: 'קוקנד',
         nameLocal: 'Kokand',
         category: 'attraction',
@@ -22636,7 +22636,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=41.0011100769043,71.6683349609375',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Mulla_Qirg%27iz_madrasasi_04.jpg/500px-Mulla_Qirg%27iz_madrasasi_04.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Mulla_Qirg%CA%BBiz_madrasasi_04.jpg/500px-Mulla_Qirg%CA%BBiz_madrasasi_04.jpg',
       },
       {
         id: 'uz-chust',
@@ -22740,7 +22740,7 @@ export const destinations: Destination[] = [
       {
         id: 'np-tilaurakot',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Suddhodana_Palace-east_gate.jpg/500px-Suddhodana_Palace-east_gate.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Suddhodana_Palace-east_gate.JPG/500px-Suddhodana_Palace-east_gate.JPG',
         name: 'טילאוראקוט',
         nameLocal: 'Tilaurakot',
         category: 'attraction',
@@ -22809,7 +22809,7 @@ export const destinations: Destination[] = [
       {
         id: 'np-janakpur',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Janki_Mandir.jpg/500px-Janki_Mandir.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Janki_Mandir.JPG/500px-Janki_Mandir.JPG',
         name: 'ג׳נקפור',
         nameLocal: 'Janakpur',
         category: 'attraction',
@@ -23188,7 +23188,7 @@ export const destinations: Destination[] = [
       {
         id: 'my-mulu',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Mulu.jpg/500px-Mulu.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Mulu.JPG/500px-Mulu.JPG',
         name: 'הפארק הלאומי גונונג מולו',
         nameLocal: 'Gunung Mulu National Park',
         category: 'nature',
@@ -23299,7 +23299,7 @@ export const destinations: Destination[] = [
       {
         id: 'id-tanah-lot',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/TanahLot_2014.jpg/500px-TanahLot_2014.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/TanahLot_2014.JPG/500px-TanahLot_2014.JPG',
         name: 'טאנה לוט',
         nameLocal: 'Tanah Lot',
         category: 'attraction',
@@ -23526,7 +23526,7 @@ export const destinations: Destination[] = [
       {
         id: 'rs-sirogojno',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Staro_Selo_-_Sirogojno5.jpg/500px-Staro_Selo_-_Sirogojno5.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Staro_Selo_-_Sirogojno5.JPG/500px-Staro_Selo_-_Sirogojno5.JPG',
         name: 'סירוגוינו',
         nameLocal: 'Sirogojno',
         category: 'museum',
@@ -23690,7 +23690,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=44.90399932861328,15.9370002746582',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Utvrda_Ostrozac01.jpg/500px-Utvrda_Ostrozac01.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Utvrda_Ostrozac01.JPG/500px-Utvrda_Ostrozac01.JPG',
       },
       {
         id: 'ba-bosanska-krupa',
@@ -23828,7 +23828,7 @@ export const destinations: Destination[] = [
       {
         id: 'al-rozafa',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Rozafa_Castle_in_July_2013_%285%29.jpg/500px-Rozafa_Castle_in_July_2013_%285%29.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Rozafa_Castle_in_July_2013_%285%29.JPG/500px-Rozafa_Castle_in_July_2013_%285%29.JPG',
         name: 'מצודת רוזאפה',
         nameLocal: 'Rozafa Castle',
         category: 'attraction',
@@ -23952,12 +23952,12 @@ export const destinations: Destination[] = [
         'סיאול היא עיר יוצאת דופן, אבל היא גם מתישה. זו מטרופולין של קרוב לעשרה מיליון תושבים שנבנתה כמעט כולה מחדש אחרי 1953, ולכן רוב מה שרואים הוא גושי מגורים ומגדלים אפורים, עם איי היסטוריה מפוזרים ביניהם. המרחקים בתוך העיר גדולים ואפילו עם רכבת תחתית מצוינת יום סיור אחד מכסה שני אזורים לכל היותר. הקיץ חם ולח בצורה קשה ומלווה במונסון, והחורף קר ויבש עם רוחות עזות, כך שהחלונות הנוחים באמת קצרים. חלק מהארמונות שוחזרו במאה ה-20 והם למעשה בנייה חדשה, מה שמאכזב מבקרים שמצפים למבנים בני מאות שנים. הסיור באזור המפורז הוא חוויה חזקה אבל מאוד מבוימת ומתוסרטת: הכל בקבוצה מאורגנת, עם לוח זמנים נוקשה, בדיקות דרכון, קוד לבוש והגבלות צילום, והביקור באזור הביטחון המשותף מבוטל לעיתים קרובות בהתראה קצרה מסיבות מדיניות. ולבסוף, מחסום השפה ממשי מחוץ למרכזים התיירותיים. מנגד, זו אחת הערים היעילות, הבטוחות והמעניינות קולינרית בעולם, והשילוב של מסורת קונפוציאנית עם תרבות פופ עולמית קיים כאן ולא בשום מקום אחר.',
     },
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Changdeokgung_Palace_Oct_2014_002.jpg/960px-Changdeokgung_Palace_Oct_2014_002.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Changdeokgung_Palace_Oct_2014_002.JPG/960px-Changdeokgung_Palace_Oct_2014_002.JPG',
     iconicLandmark: {
       name: 'ארמון צ׳אנגדוקגונג',
       nameLocal: 'Changdeokgung',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Changdeokgung_Palace_Oct_2014_002.jpg/500px-Changdeokgung_Palace_Oct_2014_002.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Changdeokgung_Palace_Oct_2014_002.JPG/500px-Changdeokgung_Palace_Oct_2014_002.JPG',
       blurb:
         'אתר מורשת עולמית של אונסק״ו ולדעת רבים הארמון היפה מבין חמשת ארמונות ג׳וסון בסיאול, בין היתר משום שנבנה בהתאמה לטופוגרפיה במקום בקווים סימטריים.',
     },
@@ -23968,7 +23968,7 @@ export const destinations: Destination[] = [
       {
         id: 'kr-changdeokgung',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Changdeokgung_Palace_Oct_2014_002.jpg/500px-Changdeokgung_Palace_Oct_2014_002.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Changdeokgung_Palace_Oct_2014_002.JPG/500px-Changdeokgung_Palace_Oct_2014_002.JPG',
         name: 'ארמון צ׳אנגדוקגונג',
         nameLocal: 'Changdeokgung',
         category: 'attraction',
@@ -24212,7 +24212,7 @@ export const destinations: Destination[] = [
       {
         id: 'au-alice-springs',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Alice_Springs%2C_2015_%2801%29.jpg/500px-Alice_Springs%2C_2015_%2801%29.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Alice_Springs%2C_2015_%2801%29.JPG/500px-Alice_Springs%2C_2015_%2801%29.JPG',
         name: 'אליס ספרינגס',
         nameLocal: 'Alice Springs',
         category: 'attraction',
@@ -24334,12 +24334,12 @@ export const destinations: Destination[] = [
         'זה חלק קזחסטן שרוב הישראלים לא מגיעים אליו, ויש לכך סיבות. הנוף בין האתרים הוא ערבה שטוחה וחומה כמעט לאורך כל הדרך, והמרחקים ארוכים: מטורקסטן לטראז זה כשש שעות נסיעה. חלק גדול מהאתרים ההיסטוריים הם תלי חורבות שדורשים דמיון ומדריך כדי להבין מה רואים - אוטראר, למשל, היא בעיקר גבעות עפר. מנגד עומדת ״טורקסטן החדשה״: ליד המאוזוליאום העתיק נבנה בשנים האחרונות קומפלקס תיירותי חדש לגמרי עם מלונות ופארק שעשועים, שנראה מלאכותי לחלוטין ומרגיז חלק מהמבקרים. הקיץ בדרום חם ויבש מאוד, מעל 40 מעלות ביולי-אוגוסט. אנגלית כמעט לא מדוברת מחוץ למלונות, והתחבורה הציבורית בין האתרים כמעט לא קיימת. מי שמוכן לכל זה מקבל אתר UNESCO ממדרגה ראשונה בלי המונים.',
     },
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Turkestan.jpg/960px-Turkestan.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Turkestan.png/960px-Turkestan.png',
     iconicLandmark: {
       name: 'המאוזוליאום של חוג׳ה אחמד יאסאווי',
       nameLocal: 'Mausoleum of Khoja Ahmed Yasawi',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Turkestan.jpg/500px-Turkestan.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Turkestan.png/500px-Turkestan.png',
       blurb:
         'המבנה ההיסטורי החשוב ביותר בקזחסטן ואתר מורשת עולמית של אונסק״ו.',
     },
@@ -24350,7 +24350,7 @@ export const destinations: Destination[] = [
       {
         id: 'kz-yasawi',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Turkestan.jpg/500px-Turkestan.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Turkestan.png/500px-Turkestan.png',
         name: 'המאוזוליאום של חוג׳ה אחמד יאסאווי',
         nameLocal: 'Mausoleum of Khoja Ahmed Yasawi',
         category: 'attraction',
@@ -24436,7 +24436,7 @@ export const destinations: Destination[] = [
       {
         id: 'kz-aksu-zhabagly',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Aksu_Jabagly_2.jpg/500px-Aksu_Jabagly_2.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Aksu_Jabagly_2.JPG/500px-Aksu_Jabagly_2.JPG',
         name: 'שמורת אקסו-ז׳באגלי',
         nameLocal: 'Aksu-Zhabagly Nature Reserve',
         category: 'nature',
@@ -24535,7 +24535,7 @@ export const destinations: Destination[] = [
       {
         id: 'it-villa-casale',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Villa_romana_di_Piazza_Armerina_-_Sicilia_-_tigre.jpg/500px-Villa_romana_di_Piazza_Armerina_-_Sicilia_-_tigre.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Villa_romana_di_Piazza_Armerina_-_Sicilia_-_tigre.JPG/500px-Villa_romana_di_Piazza_Armerina_-_Sicilia_-_tigre.JPG',
         name: 'וילה רומנה דל קזאלה',
         nameLocal: 'Villa Romana del Casale',
         category: 'attraction',
@@ -24571,7 +24571,7 @@ export const destinations: Destination[] = [
       {
         id: 'it-noto',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/La_cattedrale_di_Noto_restaurata.jpg/500px-La_cattedrale_di_Noto_restaurata.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/La_cattedrale_di_Noto_restaurata.JPG/500px-La_cattedrale_di_Noto_restaurata.JPG',
         name: 'נוטו',
         nameLocal: 'Noto',
         category: 'attraction',
@@ -24605,7 +24605,7 @@ export const destinations: Destination[] = [
       {
         id: 'it-monreale',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/%2522Die_Kathedrale_zeigt_in_besonders_eindrucksvoller_Weise_den_normannisch-arabisch-byzantinischen_Baustil%2522_02.jpg/500px-%2522Die_Kathedrale_zeigt_in_besonders_eindrucksvoller_Weise_den_normannisch-arabisch-byzantinischen_Baustil%2522_02.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/%22Die_Kathedrale_zeigt_in_besonders_eindrucksvoller_Weise_den_normannisch-arabisch-byzantinischen_Baustil%22_02.jpg/500px-%22Die_Kathedrale_zeigt_in_besonders_eindrucksvoller_Weise_den_normannisch-arabisch-byzantinischen_Baustil%22_02.jpg',
         name: 'קתדרלת מונרֵאלֶה',
         nameLocal: 'Duomo di Monreale',
         category: 'attraction',
@@ -24990,7 +24990,7 @@ export const destinations: Destination[] = [
       {
         id: 'gr-dodona',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Dodona-Greece-April-2008-107.jpg/500px-Dodona-Greece-April-2008-107.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Dodona-Greece-April-2008-107.JPG/500px-Dodona-Greece-April-2008-107.JPG',
         name: 'דודונה',
         nameLocal: 'Δωδώνη',
         category: 'attraction',
@@ -25293,12 +25293,12 @@ export const destinations: Destination[] = [
         'זה החלק של יפן שדורש הכי הרבה תכנון תחבורה. רשת הרכבות המהירות לא נכנסת לרוב האזור, והמעבר בין נגאנו, טקיאמה וקנזאווה מחייב שילוב של שינקנסן, רכבות מקומיות איטיות ואוטובוסים בין-עירוניים שיוצאים כמה פעמים ביום בלבד ומתמלאים - חייבים להזמין מקום מראש. קמיקוצ׳י סגור לרכבים פרטיים לגמרי, נגיש רק בשאטל, וסגור לחלוטין מאמצע נובמבר עד אמצע אפריל. פארק הקופים דורש הליכה של כ-30 דקות בשביל יער, שבחורף מושלג וחלקלק, והקופים אינם תמיד במים החמים. העיירות ההיסטוריות זעירות: הרחוב העתיק של טקיאמה הוא בפועל שלושה רחובות, ובאמצע היום הוא צפוף. החורף באזור מביא שלג כבד שסוגר כבישים, והקיץ לח וחם בעמקים. מנגד, זו יפן הכפרית והיפה, עם הרבה פחות זרים מקיוטו.',
     },
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Kamikouchi.jpg/960px-Kamikouchi.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Kamikouchi.JPG/500px-Kamikouchi.JPG',
     iconicLandmark: {
       name: 'קמיקוצ׳י',
       nameLocal: '上高地',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Kamikouchi.jpg/500px-Kamikouchi.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Kamikouchi.JPG/500px-Kamikouchi.JPG',
       blurb:
         'עמק הרים בגובה כ-1,500 מטר בלב הפארק הלאומי צ׳ובו-סנגאקו, עם נהר אזוסה צלול, גשר קאפה והפסגות המושלגות של הוטאקה מעליו.',
     },
@@ -25363,7 +25363,7 @@ export const destinations: Destination[] = [
       {
         id: 'jp-kamikochi',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Kamikouchi.jpg/500px-Kamikouchi.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Kamikouchi.JPG/500px-Kamikouchi.JPG',
         name: 'קמיקוצ׳י',
         nameLocal: '上高地',
         category: 'nature',
@@ -25381,7 +25381,7 @@ export const destinations: Destination[] = [
       {
         id: 'jp-jigokudani',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Jigokudani_Hotspring_Gorakuen.jpg/500px-Jigokudani_Hotspring_Gorakuen.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Jigokudani_Hotspring_Gorakuen.JPG/500px-Jigokudani_Hotspring_Gorakuen.JPG',
         name: 'פארק הקופים ג׳יגוקודאני',
         nameLocal: '地獄谷野猿公苑',
         category: 'nature',
@@ -25785,7 +25785,7 @@ export const destinations: Destination[] = [
       {
         id: 'sax-rathen',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/SaxonBastei1.jpg/500px-SaxonBastei1.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/SaxonBastei1.JPG/500px-SaxonBastei1.JPG',
         name: 'קורורט ראטן',
         nameLocal: 'Kurort Rathen',
         category: 'attraction',
@@ -25864,12 +25864,12 @@ export const destinations: Destination[] = [
         'האזור עצמו מדהים, אבל האלשטאט הפכה למקרה מבחן של תיירות יתר. כפר של כ-700 תושבים מקבל קרוב למיליון מבקרים בשנה, רובם בשעתיים שבין 10:00 ל-12:00, ובקיץ המדרכה הצרה לאורך האגם עמוסה עד כדי אי-נעימות. העירייה הציבה שלטים המבקשים שקט ואף חסמה נקודות צילום. אם באים, באים ללון או להגיע לפני 8:00. מעבר לזה: התחבורה הציבורית בין האגמים איטית ומשלבת רכבת, אוטובוס ומעבורת, ובלי רכב היום נאכל בהמתנות. מזג האוויר לח ומעונן הרבה יותר מרוב אוסטריה, ויכול לרדת גשם שלושה ימים ברצף גם באוגוסט. המחירים גבוהים גם לפי מדד אוסטרי, וברוב הכפרים המסעדות סוגרות בין הארוחות ומקיימות יום מנוחה שבועי.',
     },
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Hallstatt_-_Zentrum_.jpg/960px-Hallstatt_-_Zentrum_.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Hallstatt_-_Zentrum_.JPG/960px-Hallstatt_-_Zentrum_.JPG',
     iconicLandmark: {
       name: 'האלשטאט',
       nameLocal: 'Hallstatt',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Hallstatt_-_Zentrum_.jpg/500px-Hallstatt_-_Zentrum_.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Hallstatt_-_Zentrum_.JPG/500px-Hallstatt_-_Zentrum_.JPG',
       blurb:
         'הכפר המצולם ביותר באוסטריה, דחוס בין מצוק לאגם, עם מכרה המלח העתיק בעולם מעליו ובית עצמות היסטורי בכנסייה.',
     },
@@ -25881,7 +25881,7 @@ export const destinations: Destination[] = [
       {
         id: 'at-hallstatt',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Hallstatt_-_Zentrum_.jpg/500px-Hallstatt_-_Zentrum_.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Hallstatt_-_Zentrum_.JPG/500px-Hallstatt_-_Zentrum_.JPG',
         name: 'האלשטאט',
         nameLocal: 'Hallstatt',
         category: 'attraction',
@@ -25934,7 +25934,7 @@ export const destinations: Destination[] = [
       {
         id: 'at-st-wolfgang',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/St._Wolfgang_im_Salzkammergut_-_Ortsansicht.jpg/500px-St._Wolfgang_im_Salzkammergut_-_Ortsansicht.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/St._Wolfgang_im_Salzkammergut_-_Ortsansicht.JPG/500px-St._Wolfgang_im_Salzkammergut_-_Ortsansicht.JPG',
         name: 'זנקט וולפגנג',
         nameLocal: 'St. Wolfgang im Salzkammergut',
         category: 'attraction',
@@ -25985,7 +25985,7 @@ export const destinations: Destination[] = [
       {
         id: 'at-gmunden',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Gmunden_-_Ortsansicht.jpg/500px-Gmunden_-_Ortsansicht.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Gmunden_-_Ortsansicht.JPG/500px-Gmunden_-_Ortsansicht.JPG',
         name: 'גמונדן',
         nameLocal: 'Gmunden',
         category: 'attraction',
@@ -26569,12 +26569,12 @@ export const destinations: Destination[] = [
         'אחד האתרים הגדולים בעולם, ובכל זאת יש כמה דברים שחייבים לדעת. החום הוא הגורם המכריע: 33-36 מעלות עם לחות גבוהה, ואין כמעט צל בין המקדשים. סיור של יותר משלוש שעות אחר הצהריים הוא טעות. הזריחה מול אנגקור ואט הפכה למופע המוני עם אלפי אנשים ומקלות סלפי, ומי שמצפה לרגע שקט יתאכזב - עדיף להתחיל דווקא בבאיון. הכרטיס נמכר רק במרכז הכרטיסים הרשמי, לא באתר, וכרטיס יומי לא מספיק כדי לראות משהו מעבר לשלושת המרכזיים. הטוק-טוק הוא התחבורה, ומחירו נסגר מראש. לבוש צנוע נאכף ממש בכניסה לאנגקור ואט. ובסיאם ריפ עצמה, פאב סטריט רועשת מאוד ומחירי המסעדות שם כפולים ממה שנמצא שני רחובות משם.',
     },
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.jpg/960px-Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.JPG/960px-Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.JPG',
     iconicLandmark: {
       name: 'מקדש באיון',
       nameLocal: 'Bayon',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.jpg/500px-Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.JPG/500px-Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.JPG',
       blurb:
         'מקדש ההר במרכז אנגקור תום, ובו עשרות מגדלי אבן שכל צד שלהם מגולף כפנים אנושיות מחייכות.',
     },
@@ -26586,7 +26586,7 @@ export const destinations: Destination[] = [
       {
         id: 'kh-bayon',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.jpg/500px-Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.JPG/500px-Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.JPG',
         name: 'מקדש באיון',
         nameLocal: 'Bayon',
         category: 'attraction',
@@ -26639,7 +26639,7 @@ export const destinations: Destination[] = [
       {
         id: 'kh-beng-mealea',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/bengmealea.jpg/500px-bengmealea.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Bengmealea.jpg/500px-Bengmealea.jpg',
         name: 'בנג מיאליאה',
         nameLocal: 'Beng Mealea',
         category: 'attraction',
@@ -26668,7 +26668,7 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=12.883333,104.066666',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Dwellings_on_Tonl%C3%A9_Sap.jpg/500px-Dwellings_on_Tonl%C3%A9_Sap.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Dwellings_on_Tonl%C3%A9_Sap.JPG/500px-Dwellings_on_Tonl%C3%A9_Sap.JPG',
       },
       {
         id: 'kh-siem-reap',
@@ -26770,7 +26770,7 @@ export const destinations: Destination[] = [
       {
         id: 'kh-choeung-ek',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Buddhist_Stupa_at_Choeung_Ek_killing_fields%2C_Cambodia.jpg/500px-Buddhist_Stupa_at_Choeung_Ek_killing_fields%2C_Cambodia.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Buddhist_Stupa_at_Choeung_Ek_killing_fields%2C_Cambodia.JPG/500px-Buddhist_Stupa_at_Choeung_Ek_killing_fields%2C_Cambodia.JPG',
         name: 'שדות ההרג צ׳ואונג אק',
         nameLocal: 'Choeung Ek',
         category: 'museum',
@@ -27132,7 +27132,7 @@ export const destinations: Destination[] = [
       {
         id: 'ma-skoura',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Morocco%2C_Souss-Massa-Draa_Region%2C_Ouarzazate_Province%2C_Skoura_%289%29.jpg/500px-Morocco%2C_Souss-Massa-Draa_Region%2C_Ouarzazate_Province%2C_Skoura_%289%29.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Morocco%2C_Souss-Massa-Draa_Region%2C_Ouarzazate_Province%2C_Skoura_%289%29.JPG/500px-Morocco%2C_Souss-Massa-Draa_Region%2C_Ouarzazate_Province%2C_Skoura_%289%29.JPG',
         name: 'נאת הדקלים סקורה',
         nameLocal: 'Skoura Oasis',
         category: 'nature',
@@ -27493,12 +27493,12 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=-50.000000,-73.249443',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Glaciar_Perito_Moreno22_-_Argentina.jpg/500px-Glaciar_Perito_Moreno22_-_Argentina.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Glaciar_Perito_Moreno22_-_Argentina.JPG/500px-Glaciar_Perito_Moreno22_-_Argentina.JPG',
       },
       {
         id: 'ar-el-chalten',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/El_Chalt%25C3%25A9n.jpg/500px-El_Chalt%25C3%25A9n.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/El_Chalt%C3%A9n.JPG/500px-El_Chalt%C3%A9n.JPG',
         name: 'אל צ׳לטן',
         nameLocal: 'El Chalt\u00e9n',
         category: 'nature',
@@ -27965,12 +27965,12 @@ export const destinations: Destination[] = [
       verdict: 'אטקמה הוא אחד הנופים המרשימים ביבשת, אבל הוא גם תובעני פיזית ויקר בצורה בולטת. סן פדרו דה אטקמה יושבת בגובה של כ-2,400 מטר, והאתרים המפורסמים נמצאים גבוה בהרבה: אל טאטיו מעל 4,200 מטר. הסיור לגייזרים יוצא בסביבות ארבע לפנות בוקר בטמפרטורות של מתחת לאפס, וההגעה מגובה נמוך ישירות לגובה הזה גורמת לכאבי ראש, בחילה וקוצר נשימה אצל חלק לא קטן מהמטיילים, ולכן צריך לפחות יומיים של הסתגלות לפני. היובש קיצוני, הקרינה חזקה מאוד גם ביום מעונן, וההפרש בין החום ביום לקור בלילה עצום. סן פדרו עצמה היא כפר קטן שהפך כמעט כולו לתיירות: רחוב ראשי אחד מלא סוכנויות שמוכרות בדיוק את אותם סיורים באותם מחירים, והאותנטיות מוגבלת. הסיורים המאורגנים דחוסים ומהירים, ובעונה הגבוהה מגיעים עשרות אוטובוסים לאותה נקודת תצפית באותה שעה. שכירת רכב נותנת חופש אמיתי אבל חלק מהדרכים הן חצץ, אין קליטה, ותחנות הדלק רחוקות מאוד זו מזו. שווה לדעת גם שהמדבר פורח רק בשנים מסוימות ולא בכל אביב, ושחלק מהאגמים סגורים לרחצה לסירוגין מסיבות סביבתיות.',
     },
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/G%C3%A9iseres_del_Tatio%2C_Atacama%2C_Chile%2C_2016-02-01%2C_DD_01-02_HDR.jpg/960px-G%C3%A9iseres_del_Tatio%2C_Atacama%2C_Chile%2C_2016-02-01%2C_DD_01-02_HDR.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/G%C3%A9iseres_del_Tatio%2C_Atacama%2C_Chile%2C_2016-02-01%2C_DD_01-02_HDR.JPG/960px-G%C3%A9iseres_del_Tatio%2C_Atacama%2C_Chile%2C_2016-02-01%2C_DD_01-02_HDR.JPG',
     iconicLandmark: {
       name: 'גייזרים אל טאטיו',
       nameLocal: 'El Tatio',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/G%C3%A9iseres_del_Tatio%2C_Atacama%2C_Chile%2C_2016-02-01%2C_DD_01-02_HDR.jpg/500px-G%C3%A9iseres_del_Tatio%2C_Atacama%2C_Chile%2C_2016-02-01%2C_DD_01-02_HDR.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/G%C3%A9iseres_del_Tatio%2C_Atacama%2C_Chile%2C_2016-02-01%2C_DD_01-02_HDR.JPG/500px-G%C3%A9iseres_del_Tatio%2C_Atacama%2C_Chile%2C_2016-02-01%2C_DD_01-02_HDR.JPG',
       blurb:
         'שדה הגייזרים הגבוה בעולם, מעל 4,200 מטר.',
     },
@@ -27997,7 +27997,7 @@ export const destinations: Destination[] = [
       {
         id: 'cl-el-tatio',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/G%C3%A9iseres_del_Tatio%2C_Atacama%2C_Chile%2C_2016-02-01%2C_DD_01-02_HDR.jpg/500px-G%C3%A9iseres_del_Tatio%2C_Atacama%2C_Chile%2C_2016-02-01%2C_DD_01-02_HDR.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/G%C3%A9iseres_del_Tatio%2C_Atacama%2C_Chile%2C_2016-02-01%2C_DD_01-02_HDR.JPG/500px-G%C3%A9iseres_del_Tatio%2C_Atacama%2C_Chile%2C_2016-02-01%2C_DD_01-02_HDR.JPG',
         name: 'גייזרים אל טאטיו',
         nameLocal: 'El Tatio',
         category: 'nature',
@@ -28074,7 +28074,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=-22.466667,-68.933334',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Paisaje_cerca_de_Calama%2C_Chile%2C_2016-02-01%2C_DD_78-82_PAN.jpg/500px-Paisaje_cerca_de_Calama%2C_Chile%2C_2016-02-01%2C_DD_78-82_PAN.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Paisaje_cerca_de_Calama%2C_Chile%2C_2016-02-01%2C_DD_78-82_PAN.JPG/500px-Paisaje_cerca_de_Calama%2C_Chile%2C_2016-02-01%2C_DD_78-82_PAN.JPG',
       },
     ],
     itinerary: [
@@ -28468,7 +28468,7 @@ export const destinations: Destination[] = [
       {
         id: 'ma-majorelle',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Le_jardin_des_majorelle_40.jpg/500px-Le_jardin_des_majorelle_40.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Le_jardin_des_majorelle_40.JPG/500px-Le_jardin_des_majorelle_40.JPG',
         name: 'גן מז׳ורל',
         nameLocal: 'Jardin Majorelle',
         category: 'nature',
@@ -28593,7 +28593,7 @@ export const destinations: Destination[] = [
       {
         id: 'in-kullu',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Beas_Valley_-_Palchan_-_Kullu_2014-05-10_2275.jpg/500px-Beas_Valley_-_Palchan_-_Kullu_2014-05-10_2275.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Beas_Valley_-_Palchan_-_Kullu_2014-05-10_2275.JPG/500px-Beas_Valley_-_Palchan_-_Kullu_2014-05-10_2275.JPG',
         name: 'קולו ועמק הביאס',
         nameLocal: 'Kullu',
         category: 'nature',
@@ -28872,7 +28872,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=-22.967501,-43.223888',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Imperial_palm_trees.jpg/500px-Imperial_palm_trees.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Imperial_palm_trees.JPG/500px-Imperial_palm_trees.JPG',
       },
       {
         id: 'br-pedra-gavea',
@@ -28893,7 +28893,7 @@ export const destinations: Destination[] = [
       {
         id: 'br-mar',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Pra%C3%A7a_Mau%C3%A1_11_2015_Rio_708.jpg/500px-Pra%C3%A7a_Mau%C3%A1_11_2015_Rio_708.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Pra%C3%A7a_Mau%C3%A1_11_2015_Rio_708.JPG/500px-Pra%C3%A7a_Mau%C3%A1_11_2015_Rio_708.JPG',
         name: 'מוזיאון האמנות של ריו',
         nameLocal: 'Museu de Arte do Rio',
         category: 'museum',
@@ -29361,7 +29361,7 @@ export const destinations: Destination[] = [
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=48.859929,2.326119',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Pont_Royal_and_Mus%C3%A9e_d%27Orsay_Paris_10_July_2020.jpg/500px-Pont_Royal_and_Mus%C3%A9e_d%27Orsay_Paris_10_July_2020.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Pont_Royal_and_Mus%C3%A9e_d%27Orsay%2C_Paris_10_July_2020.jpg/500px-Pont_Royal_and_Mus%C3%A9e_d%27Orsay%2C_Paris_10_July_2020.jpg',
         priceLevel: 2,
         tags: ['art'],
         mustSee: true,
@@ -29396,7 +29396,7 @@ export const destinations: Destination[] = [
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=48.846926,2.337159',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/LuxembourgMontparnasse.jpg/500px-LuxembourgMontparnasse.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/LuxembourgMontparnasse.JPG/500px-LuxembourgMontparnasse.JPG',
         priceLevel: 0,
         tags: ['families', 'outdoors', 'romantic'],
       },
@@ -29595,7 +29595,7 @@ export const destinations: Destination[] = [
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=51.519452,-0.127083',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/British_Museum_from_NE_2_(cropped).jpg/500px-British_Museum_from_NE_2_(cropped).jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/British_Museum_from_NE_2_(cropped).JPG/500px-British_Museum_from_NE_2_(cropped).JPG',
         priceLevel: 0,
         tags: ['history', 'art', 'families'],
         mustSee: true,
@@ -29648,7 +29648,7 @@ export const destinations: Destination[] = [
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=51.503267,-0.119605',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/London-Eye-2009.jpg/500px-London-Eye-2009.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/London-Eye-2009.JPG/500px-London-Eye-2009.JPG',
         priceLevel: 2,
         tags: ['families', 'romantic'],
       },
@@ -29717,7 +29717,7 @@ export const destinations: Destination[] = [
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=51.539759,-0.143305',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Camden_markets_entrance.jpg/500px-Camden_markets_entrance.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Camden_markets_entrance.JPG/500px-Camden_markets_entrance.JPG',
         priceLevel: 1,
         tags: ['foodie', 'nightlife', 'families'],
       },
@@ -30389,7 +30389,7 @@ export const destinations: Destination[] = [
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=50.678333,4.404722',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/0_Braine-l%27Alleud_051012_(1).jpg/500px-0_Braine-l%27Alleud_051012_(1).jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/0_Braine-l%27Alleud_051012_(1).JPG/500px-0_Braine-l%27Alleud_051012_(1).JPG',
         priceLevel: 2,
         tags: ['history', 'outdoors', 'families'],
       },
@@ -30546,7 +30546,7 @@ export const destinations: Destination[] = [
         durationMin: 300,
         externalUrl: 'https://maps.google.com/?q=27.7475,34.24078',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Coral_reef_in_Ras_Muhammad_nature_park.jpg/500px-Coral_reef_in_Ras_Muhammad_nature_park.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Coral_reef_in_Ras_Muhammad_nature_park.JPG/500px-Coral_reef_in_Ras_Muhammad_nature_park.JPG',
         priceLevel: 1,
         tags: ['outdoors', 'families'],
         mustSee: true,
@@ -30652,7 +30652,7 @@ export const destinations: Destination[] = [
         durationMin: 420,
         externalUrl: 'https://maps.google.com/?q=28.539417,33.975418',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/MtSinaiJune2006.jpg/500px-MtSinaiJune2006.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/MtSinaiJune2006.JPG/500px-MtSinaiJune2006.JPG',
         priceLevel: 1,
         tags: ['outdoors', 'history'],
         mustSee: true,
@@ -30670,7 +30670,7 @@ export const destinations: Destination[] = [
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=29.1461,34.5949',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Coloured_canyon_sinai.jpg/500px-Coloured_canyon_sinai.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Coloured_canyon_sinai.JPG/500px-Coloured_canyon_sinai.JPG',
         priceLevel: 2,
         tags: ['outdoors', 'families'],
       },
@@ -31099,7 +31099,7 @@ export const destinations: Destination[] = [
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=41.998611,21.433611',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Holocaust_Memorial_center_for_the_jews_of_Macedonia%2C_Skopje.jpg/500px-Holocaust_Memorial_center_for_the_jews_of_Macedonia%2C_Skopje.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Holocaust_Memorial_center_for_the_jews_of_Macedonia%2C_Skopje.JPG/500px-Holocaust_Memorial_center_for_the_jews_of_Macedonia%2C_Skopje.JPG',
         priceLevel: 1,
         tags: ['history'],
         mustSee: true,
@@ -31304,7 +31304,7 @@ export const destinations: Destination[] = [
         durationMin: 480,
         externalUrl: 'https://maps.google.com/?q=48.150204,107.576004',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Gorkhi-Terelj_National_Park_57.jpg/500px-Gorkhi-Terelj_National_Park_57.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Gorkhi-Terelj_National_Park_57.JPG/500px-Gorkhi-Terelj_National_Park_57.JPG',
         priceLevel: 2,
         tags: ['outdoors', 'families', 'romantic'],
         mustSee: true,
@@ -31856,7 +31856,7 @@ export const destinations: Destination[] = [
     bestSeason:
       'זה יעד עם שתי עונות שונות לגמרי, וצריך לבחור. דצמבר עד אפריל היא העונה הלחה, שבה נוצר אפקט המראה המפורסם - אבל חלקים מהמלחה נסגרים לתנועה ואי אינקאוואסי לפעמים לא נגישה. מאי עד נובמבר היא העונה היבשה: משושי המלח הקלאסיים, גישה מלאה לכל המסלול, שמש מלאה, ולילות שיורדים הרבה מתחת לאפס. יוני ויולי הם הקרים ביותר.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Salar_de_Uyuni%2C_Bolivia%2C_2016-02-04%2C_DD_10-12_HDR.jpg/960px-Salar_de_Uyuni%2C_Bolivia%2C_2016-02-04%2C_DD_10-12_HDR.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Salar_de_Uyuni%2C_Bolivia%2C_2016-02-04%2C_DD_10-12_HDR.JPG/960px-Salar_de_Uyuni%2C_Bolivia%2C_2016-02-04%2C_DD_10-12_HDR.JPG',
     iconicLandmark: {
       name: 'מראת המלח',
       nameLocal: 'Salar de Uyuni mirror effect',
@@ -31902,7 +31902,7 @@ export const destinations: Destination[] = [
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=-20.2428,-67.6253',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Isla_del_Pescado%2C_Salar_de_Uyuni%2C_Bolivia%2C_2016-02-04%2C_DD_38.jpg/500px-Isla_del_Pescado%2C_Salar_de_Uyuni%2C_Bolivia%2C_2016-02-04%2C_DD_38.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Isla_del_Pescado%2C_Salar_de_Uyuni%2C_Bolivia%2C_2016-02-04%2C_DD_38.JPG/500px-Isla_del_Pescado%2C_Salar_de_Uyuni%2C_Bolivia%2C_2016-02-04%2C_DD_38.JPG',
         priceLevel: 1,
         tags: ['outdoors'],
         mustSee: true,
@@ -31937,7 +31937,7 @@ export const destinations: Destination[] = [
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=-22.19861,-67.781113',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Laguna_Colorada%2C_Bolivia%2C_2016-02-02%2C_DD_66-70_PAN.jpg/500px-Laguna_Colorada%2C_Bolivia%2C_2016-02-02%2C_DD_66-70_PAN.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Laguna_Colorada%2C_Bolivia%2C_2016-02-02%2C_DD_66-70_PAN.JPG/500px-Laguna_Colorada%2C_Bolivia%2C_2016-02-02%2C_DD_66-70_PAN.JPG',
         priceLevel: 1,
         tags: ['outdoors'],
         mustSee: true,
@@ -31955,7 +31955,7 @@ export const destinations: Destination[] = [
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=-22.42639,-67.75972',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/G%C3%A9iseres_Sol_de_Ma%C3%B1ana%2C_Bolivia%2C_2016-02-02%2C_DD_50-54_PAN.jpg/500px-G%C3%A9iseres_Sol_de_Ma%C3%B1ana%2C_Bolivia%2C_2016-02-02%2C_DD_50-54_PAN.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/G%C3%A9iseres_Sol_de_Ma%C3%B1ana%2C_Bolivia%2C_2016-02-02%2C_DD_50-54_PAN.JPG/500px-G%C3%A9iseres_Sol_de_Ma%C3%B1ana%2C_Bolivia%2C_2016-02-02%2C_DD_50-54_PAN.JPG',
         priceLevel: 1,
         tags: ['outdoors'],
       },
@@ -31972,7 +31972,7 @@ export const destinations: Destination[] = [
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=-22.793888,-67.812225',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Laguna_Verde%2C_Bolivia%2C_2016-02-02%2C_DD_75-78_PAN.jpg/500px-Laguna_Verde%2C_Bolivia%2C_2016-02-02%2C_DD_75-78_PAN.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Laguna_Verde%2C_Bolivia%2C_2016-02-02%2C_DD_75-78_PAN.JPG/500px-Laguna_Verde%2C_Bolivia%2C_2016-02-02%2C_DD_75-78_PAN.JPG',
         priceLevel: 1,
         tags: ['outdoors'],
       },
@@ -32068,7 +32068,7 @@ export const destinations: Destination[] = [
         durationMin: 300,
         externalUrl: 'https://maps.google.com/?q=14.5575,-90.73333',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Plaza_central%2C_Antigua_Guatemala.jpg/500px-Plaza_central%2C_Antigua_Guatemala.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Plaza_central%2C_Antigua_Guatemala.JPG/500px-Plaza_central%2C_Antigua_Guatemala.JPG',
         priceLevel: 2,
         tags: ['history'],
         mustSee: true,
@@ -32378,7 +32378,7 @@ export const destinations: Destination[] = [
         durationMin: 480,
         externalUrl: 'https://maps.google.com/?q=10.166667,118.916664',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Underground_River_in_Puerto_Princesa%2C_Palawan_02.jpg/500px-Underground_River_in_Puerto_Princesa%2C_Palawan_02.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Underground_River_in_Puerto_Princesa%2C_Palawan_02.JPG/500px-Underground_River_in_Puerto_Princesa%2C_Palawan_02.JPG',
         priceLevel: 2,
         tags: ['outdoors'],
       },
@@ -32507,7 +32507,7 @@ export const destinations: Destination[] = [
         durationMin: 1440,
         externalUrl: 'https://maps.google.com/?q=9.55,-78.966667',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Isla_Perro_en_la_Comarca_Guna_Yala.jpg/500px-Isla_Perro_en_la_Comarca_Guna_Yala.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Isla_Perro_en_la_Comarca_Guna_Yala.JPG/500px-Isla_Perro_en_la_Comarca_Guna_Yala.JPG',
         priceLevel: 2,
         tags: ['outdoors'],
         mustSee: true,
@@ -32687,7 +32687,7 @@ export const destinations: Destination[] = [
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=-0.002222,-78.455833',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Mitad_del_Mundo%2C_Quito%2C_Ecuador%2C_2015-07-22%2C_DD_12.jpg/500px-Mitad_del_Mundo%2C_Quito%2C_Ecuador%2C_2015-07-22%2C_DD_12.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Mitad_del_Mundo%2C_Quito%2C_Ecuador%2C_2015-07-22%2C_DD_12.JPG/500px-Mitad_del_Mundo%2C_Quito%2C_Ecuador%2C_2015-07-22%2C_DD_12.JPG',
         priceLevel: 1,
         tags: ['families'],
       },
@@ -32900,7 +32900,7 @@ export const destinations: Destination[] = [
         durationMin: 300,
         externalUrl: 'https://maps.google.com/?q=-20.164444,57.504166',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Port_Louis_Skyline.jpg/500px-Port_Louis_Skyline.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Port_Louis_Skyline.JPG/500px-Port_Louis_Skyline.JPG',
         priceLevel: 1,
         tags: ['history', 'foodie'],
       },
@@ -33080,7 +33080,7 @@ export const destinations: Destination[] = [
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=-4.293611,55.701668',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Anse_Lazio-rama_2015.jpg/500px-Anse_Lazio-rama_2015.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Anse_Lazio-rama_2015.JPG/500px-Anse_Lazio-rama_2015.JPG',
         priceLevel: 1,
         tags: ['romantic', 'outdoors'],
         mustSee: true,
