@@ -117,8 +117,8 @@ npm run lint
   country ("טסים לאיטליה"), plan by city. Each `Country` carries the
   country-level practical facts (visa, currency, sim, payments) shared by
   all its cities.
-- `src/data/destinations.ts` - curated content: 127 destinations across
-  62 countries, ~1,100 places (Hebrew), each referencing its country via
+- `src/data/destinations.ts` - curated content: 150 destinations across
+  83 countries, ~1,313 places (Hebrew), each referencing its country via
   `countrySlug`. Re-count with a grep before quoting these numbers.
   Places carry `photo` (verified URLs - run `node
   scripts/verify-photos.mjs` after any photo change; Wikimedia thumbs
@@ -298,6 +298,52 @@ are the same object - one trip, two interfaces. Every recommendation can
 eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
+
+### 2026-07-27 (k) - Country cards had no photos; +4 countries; Maldives rejected
+
+**The bug Netanel spotted.** A screenshot of `/countries` showed Sri Lanka,
+Malaysia, Indonesia, Morocco, Laos and Cambodia as flat purple blocks.
+`src/app/countries/page.tsx` reads `c.photo` and falls back to a gradient, and
+`Country.photo` is optional - **48 of 80 countries had none**. My own coverage
+report had missed this entirely because it measured destinations and places
+only. Lesson: a coverage report must cover every entity that renders an image.
+
+**The fix was free.** Two things make country photos cheap: the grounding index
+does NOT serialize photo URLs (verified with `/tmp/measure.mjs` - index chars
+were identical before and after), and `scripts/validate-catalog.mjs` does not
+check `Country.photo` at all. So each of the 48 got its first destination's
+already-verified `iconicLandmark.photo` with `/500px-` swapped to `/960px-`.
+All 80 countries now have a photo. Field order: `photo` goes after `summary`,
+before `practical`.
+
+**Four countries added:** Ecuador (`quito-cotopaxi-andes`), Mauritius
+(`mauritius-island`), Seychelles (`seychelles-mahe-praslin-ladigue`), on top of
+Guatemala, the Philippines and Panama earlier in the day. Catalog is now
+**150 destinations / 83 countries / 1,313 places, 0 errors, 21 warnings**.
+
+**Maldives was researched and REJECTED.** I had the photos and coordinates ready
+when the visa research came back: the Maldives has banned Israeli passport
+holders since 15 April 2025 (Third Amendment to the Immigration Act). It must
+not be added to a site for Israeli travelers. This is the strongest argument yet
+for the research-first rule - the Philippines turned out to give Israelis 59
+days rather than the usual 30, Guatemala's 90 days turned out to be a shared
+CA-4 allowance, and the Maldives turned out to be closed entirely. None of that
+was recallable.
+
+**BUDGET IS ESSENTIALLY GONE.** The grounding index is at **188,628 chars**
+against a ~190,000 ceiling - roughly **1,370 chars, about one destination**, of
+headroom. Do not add another country without first deciding what comes out, or
+raising the ceiling. Photo work, by contrast, is free: fill the backlog freely.
+
+**Photo backlog: 60 place gaps.** Most are Chabad/kosher entries that will never
+have a Commons photo. Still-tractable: Cartagena's five colonial landmarks (the
+dbpedia articles are traps - `Cartagena_Cathedral` returns the SPANISH
+Cartagena at 37.6/-0.98, and `Palace_of_the_Inquisition` returns MEXICO CITY),
+Tower of London (dead after four attempts), Kata Beach, On Lok Yun, the Iranian
+Souk at Mina Zayed, the Antwerp Jewish quarter, Kolsai Lakes, Nemunas Delta,
+Bratislava's three, Prague's two. dbpedia went from healthy to 502s and read
+timeouts over the course of the session - retry later rather than concluding a
+name is dead.
 
 ### 2026-07-27 (j) - The red X on GitHub is a SUPERSEDED deployment, not a failure
 
