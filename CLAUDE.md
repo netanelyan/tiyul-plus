@@ -299,6 +299,60 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-27 (d) - The blank-message fix traded one 400 for another. Mine.
+
+Netanel's Vercel log named it in one line:
+
+    [chat] agent turn failed AnthropicHttpError: anthropic 400 { status: 400 }
+
+400 on the first call, no text streamed - and `isTransient` correctly declined
+to retry, so that part worked as designed.
+
+**The cause was entry (b), earlier the same day.** That fix DROPS messages
+carrying neither text nor image. His conversation opens with the booking
+screenshot as its own message with no text; once the image ages past the last
+two messages the client stops sending it, the message arrives blank, and the fix
+deleted it - leaving the history **opening on an assistant message**. Anthropic
+requires the first message to be a user turn.
+
+**How it slipped through is the part worth recording.** Before choosing that
+fix I probed the live API for three constraints and confirmed all three: blank
+user content (400), blank assistant content (200), consecutive same-role
+messages (200). That third result is what made "just drop it" safe. I never
+probed **"first message is assistant"**, and wrote no test for it. The single
+adjacent constraint I did not check is the one that broke production, ~23
+minutes after deploy.
+
+**The fix** drops leading assistant messages so the array always opens on a
+user turn. Removal rather than a placeholder, for the same reason as before: an
+assistant message at index 0 has no user turn it is answering, so it carries no
+usable context. This also closes a path that predates all of today's work -
+`raw.slice(-40)` can open the window on an assistant message in any conversation
+longer than 40 messages, images irrelevant.
+
+**Second fix, earned by the round trip it cost.** `AnthropicHttpError` carried
+only the status, so `anthropic 400` said nothing about which field was rejected
+and diagnosing it needed a full exchange with Netanel. The response body is now
+captured and included, truncated to 400 chars - Anthropic returns field paths
+("messages.2: ...") rather than user content, so this is safe to log.
+
+**48 tests**, five of them new and all on the constraint I skipped, including
+the 40-message-window case. One existing test needed updating: its fixture was a
+lone assistant message, which is now correctly dropped - the new behaviour was
+hiding what that test actually checks, so it got a user turn in front.
+
+**Verified:** `tsc` clean, `npm run build` clean, 48/48, lint unchanged at 27
+problems with no hits in the touched files. Not verified live - the device bridge
+is still down so the key could not be re-staged, and this fix is deterministic
+enough that the tests are the real proof.
+
+**The lesson, stated plainly because it cost Netanel three deploys.** Probing
+three constraints and skipping the fourth is not "verified against the API" - it
+is a guess with evidence attached. When a fix changes the SHAPE of a payload,
+enumerate every shape rule the API has and test the ones the change can reach,
+not the ones that happen to come to mind.
+
+
 ### 2026-07-27 (d) - Catalog: France, UK, Singapore, Malta, Belgium and a 77-photo sweep
 
 Database-track session, run in parallel with the feature chat. Five new
