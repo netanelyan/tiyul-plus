@@ -299,6 +299,73 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-27 (f) - The other half of the overflow, and a message that gave advice that could not work
+
+Netanel, five minutes after the history-budget deploy: **"when i refresh, the
+chat stays."** Two findings, both mine.
+
+**1. The overflow was only half fixed.** His screenshot (12:26 Israel time)
+postdates the history-budget push (12:21) and shows my own
+`CONTEXT_TOO_LONG_MESSAGE`, so the fix was live and still insufficient. The
+history was one half; `relevantCitySlugs()` was the other, and it had **no cap
+at all**. It adds every destination whose Hebrew name, local name, slug **or
+country name** appears in the last 6 messages - and the agent's own replies name
+plenty of cities, so the set snowballs on its own output.
+
+Measured against the real catalog rather than estimated:
+`buildGroundingDetail` is **~6,500 chars per city at 45% Hebrew ≈ 3,800 tokens
+per city**. 10 cities = 65,526 chars, 20 = 111,311, all 139 = 633,609 chars
+≈ **370k tokens in one block**. Worse, it grows with the **catalog**, which the
+data sessions expand hourly - so this was a bug that gets worse while nobody
+touches the code.
+
+Capped at `MAX_DETAIL_CITIES = 6`, **trip cities first** so the cities actually
+being planned never lose their detail to a city merely mentioned in passing.
+Worst-case prompt is now roughly 133k tokens (index ~50k + detail ~23k + history
+~50k + trip ~10k) against the 200k limit.
+
+**Do not shrink the catalog over either of these entries.** The grounding
+**index** is 179,196 chars but only **9% Hebrew** - slugs, ids and JSON keys are
+ASCII - so it really is ~45-50k tokens, exactly what the data sessions have been
+measuring against. The index was never the problem; the per-city detail block
+was.
+
+**2. My error message told him to do the one thing that cannot work.** The
+context-length message said to refresh the page and start a new conversation.
+`loadChat()` restores the conversation from localStorage on **every** load, so a
+refresh restores the too-long history verbatim and the next turn fails
+identically. `reset()` in `useTripChat` cleared only the in-memory state - and
+**nothing called it**, so it was dead code. There was no way, anywhere in the
+product, to clear a conversation.
+
+Fixed with the smallest honest thing: `clearChat(tripId)` in `chatStorage.ts`
+(removes the key, keeps the trip), `clearConversation()` in `useTripChat` which
+clears storage **and** memory with `suppressSaveRef` set so the save effect
+cannot immediately write the old messages back, and a **"ניקוי" button** in the
+`ChatPanel` header behind a `window.confirm`. The error message now points at
+that button instead of at a refresh. Both header actions moved into one
+`ms-auto` flex group, which also fixed their alignment.
+
+**The lesson, and it is not the same one as the other four entries.** Every
+earlier failure today was a wrong diagnosis. This one was a **correct diagnosis
+with unverified remediation advice**: I wrote a user-facing instruction without
+checking that following it changes anything. An error message is a feature - if
+it tells the traveller what to do, that path has to exist and has to work.
+
+**Verified:** `tsc` clean, 53/53 tests, `npm run build` clean, lint unchanged at
+27 problems with no hits in the touched files.
+
+**Deferred / next session should know.** Netanel's own long thread is still over
+the limit in his browser's stored history - the cap does not retroactively shrink
+what is already saved, so **"ניקוי" is how he clears it**. Still open from
+earlier entries: share links drop hotel pins (`share.ts` has no `pins`); the
+agent still characterises a hotel without a caveat *before* `add_pin` has run;
+soft walkability phrasing ("ממש ליד") persists on top of the true numbers; a
+`geocode.ts` unit test is still owed; and `supabase-accounts.sql` may still be
+unrun, which affects cross-device pin persistence. Never live-verified: whether
+the model actually reaches for `set_day_city` instead of offering a rebuild.
+
+
 ### 2026-07-27 (e) - The actual cause, at last: the history blew the context window
 
 The body-logging shipped an hour earlier paid for itself immediately. Netanel's
