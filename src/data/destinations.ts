@@ -28969,6 +28969,330 @@ export const destinations: Destination[] = [
         'אין מסעדה כשרה קבועה בקרטחנה ואין סופר כשר. הקהילה היהודית המאורגנת של קולומביה נמצאת בבוגוטה, ובקרטחנה הפעילות היא בעיקר סביב בית חב"ד המקומי שמארח בתיאום מראש בלבד. מי שמקפיד צריך להגיע עם מלאי, לקחת דירה עם מטבח, ולתאם ארוחות שבת לפני הנסיעה - לא להסתמך על אלתור במקום.',
     },
   },
+  {
+    slug: 'paris',
+    name: 'פריז',
+    nameLocal: 'Paris',
+    countrySlug: 'france',
+    flag: '🇫🇷',
+    center: { lat: 48.8566, lng: 2.3522 },
+    zoom: 12,
+    tagline: 'העיר שכולם חושבים שהם מכירים, עד שמגיעים',
+    summary:
+      'פריז דחוסה בצורה שקשה להבין מרחוק: רוב מה שבאתם לראות נמצא בתוך עשרים ריבועי קילומטר, והמטרו מקצר כל מרחק שנשאר. זה בדיוק מה שהופך אותה לעיר שקל לבזבז בה זמן - מי שמנסה לעשות הכל ביום בסיס אחד עומד בתורים במקום ללכת ברחובות, וההליכה ברחובות היא בעצם העיקר. פריז גם המקום היחיד באירופה שבו נוסע ישראלי שומר כשרות לא צריך להתפשר, בזכות קהילה יהודית גדולה ותשתית מסעדות אמיתית.',
+    bestSeason:
+      'אפריל עד יוני וספטמבר עד אוקטובר. אוגוסט הוא חודש החופשה של הצרפתים, חלק מהמסעדות והחנויות הקטנות סגורות והעיר מלאה בתיירים. החורף קר וגשום אבל שקט וזול בהרבה, והמוזיאונים בשיאם.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Arc_de_Triomphe%2C_Paris_21_October_2010.jpg/960px-Arc_de_Triomphe%2C_Paris_21_October_2010.jpg',
+    iconicLandmark: {
+      name: 'שער הניצחון',
+      nameLocal: 'Arc de Triomphe',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Arc_de_Triomphe%2C_Paris_21_October_2010.jpg/500px-Arc_de_Triomphe%2C_Paris_21_October_2010.jpg',
+      blurb:
+        'קשת בגובה 50 מטר במרכז כיכר שממנה מתפצלים שנים עשר שדרות. מתחתיה קבר החייל האלמוני, ומעליה תצפית שרואה את כל הציר מהלובר ועד לה דפאנס.',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'יעד שקשה להיכשל בו, בתנאי שמזמינים כרטיסים מראש ומוותרים מראש על שליש מהרשימה.',
+    },
+    places: [
+      {
+        id: 'par-eiffel',
+        name: 'מגדל אייפל',
+        nameLocal: 'Tour Eiffel',
+        category: 'attraction',
+        lat: 48.858323,
+        lng: 2.294517,
+        description:
+          'מגדל ברזל בגובה 330 מטר שנבנה לתערוכה העולמית של 1889 והיה אמור להיות זמני. שתי קומות תצפית ופסגה, והכניסה בתור נפרד לכל אחת. התור למעלית ארוך גם עם כרטיס מראש, והמדרגות לקומה השנייה זולות ומהירות יותר.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=48.858323,2.294517',
+        priceLevel: 2,
+        tags: ['families', 'romantic', 'history'],
+        mustSee: true,
+      },
+      {
+        id: 'par-louvre',
+        name: 'מוזיאון הלובר',
+        nameLocal: 'Musée du Louvre',
+        category: 'museum',
+        lat: 48.861015,
+        lng: 2.335874,
+        description:
+          'המוזיאון המבוקר בעולם, בארמון מלכותי לשעבר. אי אפשר לראות אותו בביקור אחד ולא כדאי לנסות - בוחרים שניים או שלושה אגפים מראש. הכניסה מהפירמידה היא העמוסה ביותר, ויש כניסות משניות דרך קניון קארוזל ודרך שער הסינגה.',
+        rating: 4.8,
+        durationMin: 210,
+        externalUrl: 'https://maps.google.com/?q=48.861015,2.335874',
+        priceLevel: 2,
+        tags: ['art', 'history'],
+        mustSee: true,
+      },
+      {
+        id: 'par-notre-dame',
+        name: 'נוטרדאם',
+        nameLocal: 'Cathédrale Notre-Dame de Paris',
+        category: 'attraction',
+        lat: 48.852955,
+        lng: 2.350066,
+        description:
+          'הקתדרלה הגותית על אי הסיטה, לב פריז ההיסטורי ונקודת האפס שממנה נמדדים כל המרחקים בצרפת. נפגעה קשות בשריפה של 2019 ושוחזרה. הכיכר שלפניה והגדות מסביב שוות ביקור גם בלי להיכנס.',
+        rating: 4.7,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=48.852955,2.350066',
+        priceLevel: 0,
+        tags: ['history', 'art'],
+        mustSee: true,
+      },
+      {
+        id: 'par-sainte-chapelle',
+        name: 'סנט שאפל',
+        nameLocal: 'Sainte-Chapelle',
+        category: 'attraction',
+        lat: 48.855278,
+        lng: 2.345,
+        description:
+          'קפלה מהמאה ה-13 שכל קירותיה כמעט הם ויטראז׳. מבחוץ היא נבלעת בין בנייני בית המשפט ולכן רבים מפספסים אותה, ומבפנים היא אחד המרחבים המרשימים באירופה. הכי חזק ביום שמש, כשהאור עובר דרך הזכוכית.',
+        rating: 4.7,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=48.855278,2.345',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Sainte_Chapelle_-_Upper_level_1.jpg/500px-Sainte_Chapelle_-_Upper_level_1.jpg',
+        priceLevel: 1,
+        tags: ['art', 'history'],
+        mustSee: true,
+      },
+      {
+        id: 'par-sacre-coeur',
+        name: 'סקרה קר',
+        nameLocal: 'Basilique du Sacré-Cœur',
+        category: 'attraction',
+        lat: 48.886653,
+        lng: 2.342952,
+        description:
+          'בזיליקה לבנה על הנקודה הגבוהה בפריז. הכניסה חינם, והמדרגות שלפניה הן מרפסת התצפית הכי מפורסמת בעיר. יש רכבל קצר למי שלא רוצה לטפס, והוא נכלל בכרטיס מטרו רגיל.',
+        rating: 4.6,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=48.886653,2.342952',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Le_sacre_coeur.jpg/500px-Le_sacre_coeur.jpg',
+        priceLevel: 0,
+        tags: ['history', 'romantic'],
+        mustSee: true,
+      },
+      {
+        id: 'par-montmartre',
+        name: 'מונמארטר',
+        nameLocal: 'Montmartre',
+        category: 'attraction',
+        lat: 48.8925,
+        lng: 2.3444,
+        description:
+          'הרובע שמסביב לסקרה קר, שהיה כפר נפרד עד המאה ה-19 ואחר כך שכונת הציירים של פריז. הרחובות המשופעים מאחורי הכיכר המרכזית שקטים בהרבה מהחזית התיירותית, ושם נמצא רוב הקסם.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=48.8925,2.3444',
+        priceLevel: 0,
+        tags: ['art', 'romantic', 'nightlife'],
+      },
+      {
+        id: 'par-arc',
+        name: 'שער הניצחון',
+        nameLocal: 'Arc de Triomphe',
+        category: 'attraction',
+        lat: 48.873861,
+        lng: 2.29507,
+        description:
+          'קשת בגובה 50 מטר שהוזמנה בידי נפוליאון, במרכז כיכר שממנה מתפצלים שנים עשר שדרות. אסור לחצות את הכיכר ברגל, יש מעבר תת קרקעי מהשדרה. התצפית מלמעלה היא מהטובות בעיר ופחות עמוסה מזו של אייפל.',
+        rating: 4.6,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=48.873861,2.29507',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Arc_de_Triomphe%2C_Paris_21_October_2010.jpg/500px-Arc_de_Triomphe%2C_Paris_21_October_2010.jpg',
+        priceLevel: 1,
+        tags: ['history'],
+        mustSee: true,
+      },
+      {
+        id: 'par-champs',
+        name: 'השאנז אליזה',
+        nameLocal: 'Avenue des Champs-Élysées',
+        category: 'shopping',
+        lat: 48.869853,
+        lng: 2.307215,
+        description:
+          'שדרה באורך כשני קילומטרים בין כיכר קונקורד לשער הניצחון. היום היא בעיקר רשתות בינלאומיות ומחירי תיירים, אבל ההליכה עצמה והרחובות המסועפים ממנה עדיין שווים ערב.',
+        rating: 4.2,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=48.869853,2.307215',
+        priceLevel: 3,
+        tags: ['families', 'nightlife'],
+      },
+      {
+        id: 'par-orsay',
+        name: 'מוזיאון אורסיי',
+        nameLocal: "Musée d'Orsay",
+        category: 'museum',
+        lat: 48.859929,
+        lng: 2.326119,
+        description:
+          'תחנת רכבת מ-1900 שהוסבה למוזיאון האימפרסיוניזם הגדול בעולם. מונה, רנואר, דגה, ואן גוך. קטן מהלובר ולכן אפשר לראות אותו באמת בביקור אחד, ורבים מעדיפים אותו על פניו.',
+        rating: 4.8,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=48.859929,2.326119',
+        priceLevel: 2,
+        tags: ['art'],
+        mustSee: true,
+      },
+      {
+        id: 'par-pompidou',
+        name: 'מרכז פומפידו',
+        nameLocal: 'Centre Georges Pompidou',
+        category: 'museum',
+        lat: 48.8606,
+        lng: 2.352372,
+        description:
+          'הבניין שהפך את הצנרת והמעליות לחזית, ובתוכו אוסף האמנות המודרנית הגדול באירופה. הכיכר שלפניו היא מקום מפגש ורחוב מופעים. המבנה מתוכנן לשיפוץ ארוך, ולכן בודקים מה פתוח לפני שמגיעים.',
+        rating: 4.4,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=48.8606,2.352372',
+        priceLevel: 2,
+        tags: ['art'],
+      },
+      {
+        id: 'par-luxembourg',
+        name: 'גני לוקסמבורג',
+        nameLocal: 'Jardin du Luxembourg',
+        category: 'nature',
+        lat: 48.846926,
+        lng: 2.337159,
+        description:
+          'הגן שהפריזאים באמת יושבים בו. כיסאות מתכת ירוקים שאפשר לגרור לאן שרוצים, בריכה שילדים משיטים בה סירות מפרש, מגרשי טניס ומסלול ריצה בהיקף. הכניסה חינם והשערים נסגרים עם רדת החשכה.',
+        rating: 4.7,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=48.846926,2.337159',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/LuxembourgMontparnasse.jpg/500px-LuxembourgMontparnasse.jpg',
+        priceLevel: 0,
+        tags: ['families', 'outdoors', 'romantic'],
+      },
+      {
+        id: 'par-pere-lachaise',
+        name: 'בית הקברות פר לשז',
+        nameLocal: 'Cimetière du Père-Lachaise',
+        category: 'attraction',
+        lat: 48.860649,
+        lng: 2.394848,
+        description:
+          'בית הקברות הגדול בפריז ואחד המבוקרים בעולם, עם שבילי אבן מוצלים ומצבות מפוסלות. כאן קבורים שופן, אדית פיאף, אוסקר ויילד וג׳ים מוריסון. לוקחים מפה בשער, קל מאוד ללכת לאיבוד.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=48.860649,2.394848',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Pere_Lachaise_Chemin_Errazu.jpg/500px-Pere_Lachaise_Chemin_Errazu.jpg',
+        priceLevel: 0,
+        tags: ['history', 'outdoors'],
+      },
+      {
+        id: 'par-versailles',
+        name: 'ארמון ורסאי',
+        nameLocal: 'Château de Versailles',
+        category: 'attraction',
+        lat: 48.804941,
+        lng: 2.121305,
+        description:
+          'ארמון המלוכה הצרפתית מחוץ לפריז, עם אולם המראות והגנים העצומים שמאחוריו. מגיעים ברכבת RER C בכשעה. הגנים לבדם דורשים חצי יום, ובימי מזרקות יש הפעלה מתוזמנת עם כרטיס נפרד.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=48.804941,2.121305',
+        priceLevel: 2,
+        tags: ['history', 'families', 'outdoors'],
+        mustSee: true,
+      },
+      {
+        id: 'par-rosiers',
+        name: 'רחוב הרוזייה, הרובע היהודי',
+        nameLocal: 'Rue des Rosiers, Le Marais',
+        category: 'kosher-food',
+        lat: 48.857122,
+        lng: 2.3595,
+        description:
+          'רחוב הליבה של הרובע היהודי ההיסטורי במארה, ועד היום ריכוז של מאפיות, חנויות מזון ודוכני פלאפל כשרים לצד חנויות אופנה. הרחוב פעיל בימי ראשון ושקט בשבת, וזה בדיוק הפוך מרוב פריז.',
+        rating: 4.5,
+        durationMin: 90,
+        kosherNote:
+          'ברחוב ובסמטאות סביבו פועלים כמה בתי עסק כשרים תחת השגחות שונות, בעיקר של הרבנות של פריז ושל בית דין מקומי. ההשגחה משתנה מעסק לעסק ולעיתים מתחלפת, ולכן מוודאים את התעודה בכניסה ולא מסתמכים על שם המקום.',
+        externalUrl: 'https://maps.google.com/?q=48.857122,2.3595',
+        priceLevel: 1,
+        tags: ['foodie', 'history', 'families'],
+        mustSee: true,
+      },
+      {
+        id: 'par-shoah',
+        name: 'מוזיאון השואה',
+        nameLocal: 'Mémorial de la Shoah',
+        category: 'museum',
+        lat: 48.854847,
+        lng: 2.356196,
+        description:
+          'מרכז התיעוד וההנצחה של השואה בצרפת, בלב המארה. בחצר קיר השמות שעליו חקוקים שמות היהודים שגורשו מצרפת. הכניסה חינם, ויש בידוק ביטחוני בכניסה שדורש דרכון.',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=48.854847,2.356196',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/M%C3%A9m._de_la_Shoah_(Paris).jpg/500px-M%C3%A9m._de_la_Shoah_(Paris).jpg',
+        priceLevel: 0,
+        tags: ['history'],
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'אי הסיטה והמארה',
+        placeIds: ['par-notre-dame', 'par-sainte-chapelle', 'par-shoah', 'par-rosiers'],
+        notes:
+          'מתחילים באי הסיטה כי הוא מתמלא מאוחר יותר, וחוצים ברגל למארה. סנט שאפל דורשת הזמנה מראש כמעט תמיד. שימו לב שהמארה שקט בשבת ופעיל דווקא בראשון.',
+      },
+      {
+        day: 2,
+        title: 'הלובר וגדת הסן',
+        placeIds: ['par-louvre', 'par-orsay'],
+        notes:
+          'שני מוזיאונים ביום אחד זה הרבה. אם צריך לוותר, אורסיי קטן יותר ומסתיים בהרגשה טובה. שניהם סגורים ביום קבוע בשבוע, בודקים לפני.',
+      },
+      {
+        day: 3,
+        title: 'אייפל, שער הניצחון והשדרות',
+        placeIds: ['par-eiffel', 'par-arc', 'par-champs'],
+        notes:
+          'עולים לאייפל בבוקר כשהתור קצר, ומסיימים בשער הניצחון לקראת שקיעה. אין לחצות את הכיכר ברגל, יש מעבר תת קרקעי מהשדרה.',
+      },
+      {
+        day: 4,
+        title: 'מונמארטר, פומפידו וגנים',
+        placeIds: ['par-sacre-coeur', 'par-montmartre', 'par-pompidou', 'par-luxembourg'],
+        notes:
+          'מונמארטר בבוקר לפני ההמון, ואחר כך יורדים למרכז. גני לוקסמבורג הם סיום טוב ליום ארוך, והשערים נסגרים עם החשכה.',
+      },
+      {
+        day: 5,
+        title: 'ורסאי, ואם נשאר זמן פר לשז',
+        placeIds: ['par-versailles', 'par-pere-lachaise'],
+        notes:
+          'ורסאי לוקח יום כמעט שלם עם הנסיעה ברכבת RER C. סגור בימי שני. מי שחוזר מוקדם יכול לסיים בפר לשז, שנמצא בכיוון ההפוך אבל שקט מאוד בשעות אחר הצהריים.',
+      },
+    ],
+    practical: {
+      flights:
+        'יש טיסות ישירות רבות מתל אביב לשארל דה גול (CDG), בכ-4 שעות ו-45 דקות, וגם חלק מהטיסות נוחתות באורלי (ORY). מ-CDG מגיעים למרכז ברכבת RER B בכ-35 דקות, וזו הדרך הזולה והמהירה ביותר בשעות היום. מונית ממודדת במחיר קבוע מראש לפי צד הנהר, וזה המחיר החוקי גם בפקק.',
+      gettingAround:
+        'המטרו הוא כמעט התשובה היחידה שצריך. הכרטיס הנייר בוטל לטובת כרטיס נטען וארנק דיגיטלי בטלפון, וכדאי לטעון מספר נסיעות או כרטיס יומי. הרבה תחנות ותיקות הן ללא מעלית ועם מדרגות רבות, מה שמקשה עם מזוודה או עגלה. המרחקים במרכז קצרים והליכה היא לרוב מהירה יותר משתי תחנות.',
+      kosherOverview:
+        'פריז היא אחת הערים הכי נוחות בעולם לשומרי כשרות מחוץ לישראל, בזכות קהילה יהודית גדולה. יש עשרות בתי עסק כשרים, בעיקר במארה סביב רחוב הרוזייה, ברובע ה-19 סביב שדרות סקרטן, וברובע ה-17. הסופרמרקטים הכשרים מחזיקים מגוון רחב, ואפשר להסתדר גם בלי להביא אוכל מהארץ. חשוב לדעת שההשגחות שונות זו מזו ומתחלפות מדי פעם, ושרוב המקומות סגורים בשבת ופתוחים בראשון, כך שתכנון ארוחות סוף השבוע נעשה מראש בימי חמישי ושישי.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
