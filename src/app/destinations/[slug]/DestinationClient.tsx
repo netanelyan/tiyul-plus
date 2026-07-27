@@ -6,6 +6,7 @@ import type { Country, Destination, PlaceCategory } from '@/lib/types';
 import { categoryMeta, isKosher } from '@/lib/categories';
 import PlacesMap from '@/components/PlacesMap';
 import AddToTripButton from '@/components/AddToTripButton';
+import PlaceThumb from '@/components/PlaceThumb';
 import Flag from '@/components/Flag';
 import KosherBadge from '@/components/KosherBadge';
 
@@ -200,14 +201,7 @@ export default function DestinationClient({
                 }`}
               >
                 <div className="flex gap-3">
-                  {place.photo && (
-                    <div
-                      className="photo-bg h-20 w-20 shrink-0 rounded-xl ring-1 ring-night/10"
-                      style={{ backgroundImage: `url(${place.photo})` }}
-                      role="img"
-                      aria-label={place.name}
-                    />
-                  )}
+                  <PlaceThumb place={place} className="h-20 w-20 shrink-0" />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-2">
                       <div>

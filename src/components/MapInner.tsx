@@ -6,6 +6,7 @@ import L from 'leaflet';
 import type { Place } from '@/lib/types';
 import type { TripPinKind } from '@/lib/trip/types';
 import { categoryMeta } from '@/lib/categories';
+import PlaceThumb from '@/components/PlaceThumb';
 
 /**
  * מרמת הזום הזו ומעלה מציגים תמונה קטנה מעל הסיכה - בזום עירוני יש
@@ -197,20 +198,7 @@ function FitBounds({ places }: { places: { lat: number; lng: number }[] }) {
 function PlacePopup({ place, prefix = '' }: { place: Place; prefix?: string }) {
   return (
     <div style={{ minWidth: 180, maxWidth: 220 }}>
-      {place.photo && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={place.photo}
-          alt={place.name}
-          style={{
-            width: '100%',
-            height: 90,
-            objectFit: 'cover',
-            borderRadius: 8,
-            marginBottom: 6,
-          }}
-        />
-      )}
+      <PlaceThumb place={place} className="mb-1.5 h-[90px] w-full" rounded="rounded-lg" />
       <div style={{ fontWeight: 700, fontSize: 14 }}>
         {place.mustSee ? <span style={{ color: '#ffc531' }}>★ </span> : null}
         {prefix}
