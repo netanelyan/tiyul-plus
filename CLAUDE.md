@@ -299,6 +299,49 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-27 (p) - "The search bar is not good" - it was dead when empty and flooded when used
+
+**Empty state was a paragraph of documentation.** Opening the overlay showed one
+sentence explaining *how* to search and nothing to click - 137px of dead panel.
+It now opens with six real destinations, so the arrow keys and Enter work before
+you type anything.
+
+The six are the top editorially-rated destinations, **one per country**: without
+that rule the list filled with two high-rated continents and read like one shelf
+of the catalogue rather than its breadth. Heading is
+**"היעדים המדורגים ביותר", not "פופולריים"** - there is an editorial rating in the
+data, popularity is not measured, and calling it popular would invent a number.
+
+**Typing a city buried the city.** `searchSite` had a flat `limit = 24`, so "וינה"
+returned the city plus 23 places inside it - every café and market. Now capped
+**per kind** (4 countries / 8 cities / 6 places): 24 rows → 8, city first. What
+the cap drops is said out loud ("ועוד 16 התאמות") because a silently truncated
+list reads as a complete one.
+
+Row markup was duplicated between the two states, so keyboard behaviour could
+drift; it is one `Row` component now. A keyboard hint at the bottom doubles as the
+thing that stops the panel looking cut off. `searchSite()` kept as a wrapper over
+the new `searchSiteHits()` so no other caller changed.
+
+Measured: panel 137px → 391px at 1440 (357px at 390), rows for "וינה" 24 → 8,
+still exactly centred at both widths. **One thing I checked and it was fine:** the
+panel looked off-centre in the founder's screenshot; `centerDelta` is 0 at both
+widths - the screenshot was cropped. Worth measuring before "fixing" a layout.
+
+**Also, from him running the roles SQL:** `supabase-admin.sql` now creates the
+premium columns itself when they are missing. He ran it before
+`supabase-premium.sql` and got `column p.plan does not exist` - the role seeded
+correctly, but a premium grant would have failed with nowhere to write. **A
+"prerequisite" note in a file header did not prevent the mistake, so the file
+stopped depending on run order.** The general lesson: if a script needs another
+script to have run, either check it or do the work yourself; a comment is not a
+dependency. Confirmed after his re-run: `natikyan153@gmail.com` → `role = owner`.
+
+Also worth recording: the diagnostic query I first handed him assumed `p.plan`
+existed and therefore errored on his database. When asking someone to inspect a
+schema you are not sure of, query `information_schema` first - a broken
+diagnostic wastes their round trip, not yours.
+
 ### 2026-07-27 (o) - תפקידים: owner/admin, הענקות פרימיום, קודי הטבה ומפסק חירום
 
 בקשת נתנאל: *"add an admin and owner role, give natikyan153@gmail.com the owner
