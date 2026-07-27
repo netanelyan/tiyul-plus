@@ -4742,6 +4742,8 @@ export const destinations: Destination[] = [
         rating: 4.4,
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=Kata+Beach+Phuket',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Kata_beach_morning_2.jpg/500px-Kata_beach_morning_2.jpg',
       },
       {
         id: 'hkt-chalong',
