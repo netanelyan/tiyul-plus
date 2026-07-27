@@ -7833,6 +7833,576 @@ export const destinations: Destination[] = [
     },
   },
   {
+    slug: 'venice',
+    name: 'ונציה',
+    nameLocal: 'Venice / Venezia',
+    countrySlug: 'italy',
+    flag: '🇮🇹',
+    center: { lat: 45.4371, lng: 12.3326 },
+    zoom: 13,
+    tagline: 'עיר על המים, בלי מכונית אחת',
+    summary:
+      'ונציה בנויה על יותר ממאה איים בלגונה, וכולה הולכי רגל וסירות. אפשר לראות את העיקר ביומיים, אבל היופי שלה הוא דווקא בסמטאות הריקות שמחוץ לציר סן מרקו-ריאלטו. חשוב לדעת: העיר גובה דמי כניסה ליום מבקרים בתאריכים מסוימים בעונה, וכדאי לבדוק לפני הנסיעה.',
+    bestSeason: 'אפריל עד יוני וספטמבר עד אוקטובר. הקיץ חם ועמוס מאוד, ובחורף יש "אקווה אלטה", גאות שמציפה חלקים מהעיר.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Rialto_2025_4.jpg/500px-Rialto_2025_4.jpg',
+    iconicLandmark: {
+      name: 'בזיליקת סן מרקו',
+      nameLocal: "St Mark's Basilica",
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Venezia_Basilica_di_San_Marco_Fassade_2.jpg/500px-Venezia_Basilica_di_San_Marco_Fassade_2.jpg',
+      blurb:
+        'כנסייה ביזנטית מהמאה ה-11 בכיכר סן מרקו, ובה פסיפסי זהב על פני אלפי מטרים רבועים.',
+    },
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'אין עיר דומה לה, וזה מצדיק את הצפיפות ואת המחירים. טיסה ישירה קצרה מתל אביב, והעיר קומפקטית ונטולת רכב. חסרונות: יקרה מאוד, עמוסה בלתי נסבל בעונה סביב סן מרקו, ותשתית הכשרות מצומצמת אף שיש גטו היסטורי. יומיים-שלושה מספיקים.',
+    },
+    places: [
+      {
+        id: 'ven-san-marco',
+        name: 'כיכר סן מרקו',
+        nameLocal: 'Piazza San Marco',
+        category: 'attraction',
+        lat: 45.43389,
+        lng: 12.33806,
+        description:
+          'הכיכר המרכזית של ונציה, היחידה בעיר שנקראת piazza. מוקפת בבזיליקה, בארמון הדוג׳ה ובבתי הקפה ההיסטוריים. מוצפת מדי פעם בגאות גבוהה.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['history', 'romantic'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=45.43389,12.33806',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Piazza_San_Marco_(Venice)_at_night-msu-2021-6449-.jpg/500px-Piazza_San_Marco_(Venice)_at_night-msu-2021-6449-.jpg',
+      },
+      {
+        id: 'ven-basilica',
+        name: 'בזיליקת סן מרקו',
+        nameLocal: "St Mark's Basilica",
+        category: 'attraction',
+        lat: 45.43444,
+        lng: 12.33972,
+        description:
+          'כנסייה ביזנטית מהמאה ה-11 עם פסיפסי זהב על פני אלפי מטרים רבועים. הכניסה הבסיסית קצרה, והזמנה מראש חוסכת תור ארוך.',
+        durationMin: 60,
+        priceLevel: 1,
+        tags: ['history', 'art'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=45.43444,12.33972',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Venezia_Basilica_di_San_Marco_Fassade_2.jpg/500px-Venezia_Basilica_di_San_Marco_Fassade_2.jpg',
+      },
+      {
+        id: 'ven-doge',
+        name: 'ארמון הדוג׳ה',
+        nameLocal: "Doge's Palace",
+        category: 'museum',
+        lat: 45.4337,
+        lng: 12.3405,
+        description:
+          'מושב שליטי הרפובליקה הוונציאנית ובית המשפט והכלא שלה. הביקור כולל את גשר האנחות מבפנים ואת אולמות המדינה.',
+        durationMin: 120,
+        priceLevel: 2,
+        tags: ['history', 'art'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=45.4337,12.3405',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/(Venice)_Doge%27s_Palace_and_campanile_of_St._Mark%27s_Basilica_facing_the_sea.jpg/500px-(Venice)_Doge%27s_Palace_and_campanile_of_St._Mark%27s_Basilica_facing_the_sea.jpg',
+      },
+      {
+        id: 'ven-campanile',
+        name: 'הקמפנילה של סן מרקו',
+        nameLocal: "St Mark's Campanile",
+        category: 'viewpoint',
+        lat: 45.434,
+        lng: 12.339,
+        description:
+          'מגדל הפעמונים בכיכר, עם מעלית עד למעלה. הנוף על גגות הרעפים ועל הלגונה, וזה אחד המקומות המעטים בוונציה שרואים ממנו את העיר כולה.',
+        durationMin: 45,
+        priceLevel: 2,
+        tags: ['romantic'],
+        externalUrl: 'https://maps.google.com/?q=45.434,12.339',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Campanile_of_St._Mark%27s_Basilica_-_remote_view.jpg/500px-Campanile_of_St._Mark%27s_Basilica_-_remote_view.jpg',
+      },
+      {
+        id: 'ven-rialto',
+        name: 'גשר ריאלטו',
+        nameLocal: 'Rialto Bridge',
+        category: 'attraction',
+        lat: 45.438,
+        lng: 12.336,
+        description:
+          'הגשר העתיק ביותר על התעלה הגדולה, מ-1591, ועליו שורת חנויות. שוק ריאלטו הסמוך פעיל בבקרים ומוכר דגים וירקות.',
+        durationMin: 45,
+        priceLevel: 0,
+        tags: ['history', 'foodie'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=45.438,12.336',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Rialto_2025_4.jpg/500px-Rialto_2025_4.jpg',
+      },
+      {
+        id: 'ven-salute',
+        name: 'סנטה מריה דלה סלוטה',
+        nameLocal: 'Santa Maria della Salute',
+        category: 'attraction',
+        lat: 45.43083,
+        lng: 12.33444,
+        description:
+          'כנסיית הכיפה שבפתח התעלה הגדולה, שנבנתה כהודיה על סיום מגפת הדבר במאה ה-17. נקודת הצילום הקלאסית של ונציה.',
+        durationMin: 45,
+        priceLevel: 0,
+        tags: ['history', 'romantic'],
+        externalUrl: 'https://maps.google.com/?q=45.43083,12.33444',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Santa_Maria_della_Salute_from_Hotel_Monaco.jpg/500px-Santa_Maria_della_Salute_from_Hotel_Monaco.jpg',
+      },
+      {
+        id: 'ven-ghetto',
+        name: 'הגטו היהודי',
+        nameLocal: 'Venetian Ghetto',
+        category: 'attraction',
+        lat: 45.44528,
+        lng: 12.32639,
+        description:
+          'הגטו הראשון בעולם, שהוקם ב-1516 והמילה עצמה נולדה כאן. חמישה בתי כנסת היסטוריים, מוזיאון יהודי וכיכר שקטה בקנאריג׳ו.',
+        durationMin: 120,
+        priceLevel: 1,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=45.44528,12.32639',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Ghetto_(Venice)_Panorama.jpg/500px-Ghetto_(Venice)_Panorama.jpg',
+      },
+      {
+        id: 'ven-accademia',
+        name: 'גלריות האקדמיה',
+        nameLocal: "Gallerie dell'Accademia",
+        category: 'museum',
+        lat: 45.43139,
+        lng: 12.32806,
+        description:
+          'אוסף הציור הוונציאני הגדול: טיציאן, טינטורטו, ורונזה ובליני. פחות עמוס מהאתרים בסן מרקו.',
+        durationMin: 120,
+        priceLevel: 2,
+        tags: ['art', 'history'],
+        externalUrl: 'https://maps.google.com/?q=45.43139,12.32806',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Accademia_(Venice).jpg/500px-Accademia_(Venice).jpg',
+      },
+      {
+        id: 'ven-guggenheim',
+        name: 'אוסף פגי גוגנהיים',
+        nameLocal: 'Peggy Guggenheim Collection',
+        category: 'museum',
+        lat: 45.43056,
+        lng: 12.33111,
+        description:
+          'אמנות מודרנית בארמון לא גמור על התעלה הגדולה, שהיה ביתה של האספנית. פיקאסו, פולוק, מגריט וגן פסלים.',
+        durationMin: 90,
+        priceLevel: 2,
+        tags: ['art'],
+        externalUrl: 'https://maps.google.com/?q=45.43056,12.33111',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/PI5DAE~2_-_CopyPeggy_Guggenheim_Museum.JPG/500px-PI5DAE~2_-_CopyPeggy_Guggenheim_Museum.JPG',
+      },
+      {
+        id: 'ven-fenice',
+        name: 'תיאטרון לה פניצ׳ה',
+        nameLocal: 'Teatro La Fenice',
+        category: 'attraction',
+        lat: 45.4337,
+        lng: 12.3339,
+        description:
+          'בית האופרה של ונציה, שנשרף ונבנה מחדש שלוש פעמים (ומכאן השם, עוף החול). אפשר להיכנס לסיור עם אודיו גם ללא הצגה.',
+        durationMin: 60,
+        priceLevel: 2,
+        tags: ['art', 'romantic'],
+        externalUrl: 'https://maps.google.com/?q=45.4337,12.3339',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Gran_Teatro_La_Fenice%2C_Venice_(30906998336).jpg/500px-Gran_Teatro_La_Fenice%2C_Venice_(30906998336).jpg',
+      },
+      {
+        id: 'ven-murano',
+        name: 'מוראנו',
+        nameLocal: 'Murano',
+        category: 'attraction',
+        lat: 45.4575,
+        lng: 12.35361,
+        description:
+          'האי שאליו הועברו בתי מלאכת הזכוכית ב-1291, מחשש לשריפות בוונציה. הדגמות נפיחת זכוכית ומוזיאון הזכוכית.',
+        durationMin: 180,
+        priceLevel: 1,
+        tags: ['families', 'art'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=45.4575,12.35361',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Murano_sunset.JPG/500px-Murano_sunset.JPG',
+      },
+      {
+        id: 'ven-burano',
+        name: 'בוראנו',
+        nameLocal: 'Burano',
+        category: 'attraction',
+        lat: 45.486,
+        lng: 12.417,
+        description:
+          'אי הדייגים עם הבתים בצבעים עזים ומסורת התחרה. כארבעים דקות בוואפורטו ממוראנו, והאי הכי מצולם בלגונה.',
+        durationMin: 180,
+        priceLevel: 1,
+        tags: ['families', 'romantic'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=45.486,12.417',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Burano_Venice_17.jpg/500px-Burano_Venice_17.jpg',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'סן מרקו: הבזיליקה, הארמון והקמפנילה',
+        placeIds: ['ven-san-marco', 'ven-basilica', 'ven-doge', 'ven-campanile'],
+        notes:
+          'להזמין כרטיסים מראש לבזיליקה ולארמון הדוג׳ה. הכיכר שקטה מאוד מוקדם בבוקר.',
+      },
+      {
+        day: 2,
+        title: 'ריאלטו, הגטו והתעלה הגדולה',
+        placeIds: ['ven-rialto', 'ven-ghetto', 'ven-fenice'],
+        notes:
+          'שוק ריאלטו פעיל בבוקר בלבד. מהגטו בקנאריג׳ו חוזרים ברגל או בוואפורטו לאורך התעלה.',
+      },
+      {
+        day: 3,
+        title: 'דורסודורו: אמנות וכנסיות',
+        placeIds: ['ven-accademia', 'ven-guggenheim', 'ven-salute'],
+        notes:
+          'שלושתם ברצף הליכה אחד על הגדה הדרומית, ורגועים בהרבה מסן מרקו.',
+      },
+      {
+        day: 4,
+        title: 'הלגונה: מוראנו ובוראנו',
+        placeIds: ['ven-murano', 'ven-burano'],
+        notes:
+          'יום שלם. הוואפורטו יוצא מפונדמנטה נובה; כרטיס יומי משתלם.',
+      },
+    ],
+    practical: {
+      flights:
+        'טיסות ישירות מנתב״ג לוונציה (VCE), כשלוש שעות וחצי. מנמל התעופה מגיעים לעיר באוטובוס, במונית או בסירת אלילגונה. יש גם נמל תעופה משני, טרוויזו (TSF), שמשמש חברות לואו-קוסט.',
+      gettingAround:
+        'בעיר עצמה הכול ברגל או בוואפורטו (אוטובוס המים). אין מכוניות כלל. כרטיס יומי או רב-יומי לוואפורטו משתלם אם יוצאים ללגונה. הגונדולה היא אטרקציה ולא תחבורה, והמחיר קבוע ומפורסם מראש.',
+      kosherOverview:
+        'בוונציה יש קהילה יהודית ותיקה סביב הגטו בקנאריג׳ו, ופועלים בה בית חב״ד ומסעדה כשרה, לצד מאפייה ומוצרים כשרים בחנויות באזור. ההיצע קטן ומרוכז בגטו, ולכן כדאי לתאם מראש, במיוחד לשבת. לוודא מול המקום לפני ההגעה. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
+    },
+  },
+  {
+    slug: 'florence',
+    name: 'פירנצה',
+    nameLocal: 'Florence / Firenze',
+    countrySlug: 'italy',
+    flag: '🇮🇹',
+    center: { lat: 43.7696, lng: 11.2558 },
+    zoom: 14,
+    tagline: 'הרנסאנס במרחק הליכה',
+    summary:
+      'פירנצה היא עיר קטנה שאפשר לחצות ברגל בחצי שעה, ובתוכה צפיפות יצירות אמנות שאין דומה לה. הדואומו, האופיצי והדוד של מיכלאנג׳לו נמצאים כולם באותו רדיוס. היא גם נקודת מוצא נוחה לטוסקנה, וסיינה או פיזה הן נסיעת רכבת קצרה.',
+    bestSeason: 'אפריל עד יוני וספטמבר עד אוקטובר. יולי-אוגוסט חמים מאוד ועמוסים, ובחורף העיר שקטה ונעימה אך גשומה.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Cattedrale_di_Santa_Maria_del_Fiore_%E2%80%93_Il_Duomo_di_Firenze.jpg/500px-Cattedrale_di_Santa_Maria_del_Fiore_%E2%80%93_Il_Duomo_di_Firenze.jpg',
+    iconicLandmark: {
+      name: 'פונטה וקיו',
+      nameLocal: 'Ponte Vecchio',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Ponte_Vecchio_from_Ponte_alle_Grazie.jpg/500px-Ponte_Vecchio_from_Ponte_alle_Grazie.jpg',
+      blurb:
+        'הגשר המקורה מ-1345 שעליו חנויות הצורפים, הגשר היחיד בפירנצה ששרד את מלחמת העולם השנייה.',
+    },
+    editorialRating: {
+      score: 4.7,
+      verdict:
+        'ריכוז האמנות הגבוה ביותר לכל קילומטר בעולם, ועיר שאפשר לכסות ברגל בלי תחבורה ציבורית כמעט. חסרונות: התורים לאופיצי ולדואומו דורשים תכנון מראש, המרכז עמוס מאוד בעונה, והכשרות מסתמכת בעיקר על בית חב״ד. שלושה-ארבעה ימים הם מידה טובה.',
+    },
+    places: [
+      {
+        id: 'flo-duomo',
+        name: 'הדואומו של פירנצה',
+        nameLocal: 'Florence Cathedral (Duomo)',
+        category: 'attraction',
+        lat: 43.77306,
+        lng: 11.25694,
+        description:
+          'קתדרלת סנטה מריה דל פיורה עם כיפת ברונלסקי, שנותרה הכיפה הבנויה מלבנים הגדולה בעולם. העלייה לכיפה היא 463 מדרגות ובהזמנה מראש בלבד.',
+        durationMin: 120,
+        priceLevel: 2,
+        tags: ['history', 'art'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=43.77306,11.25694',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Cattedrale_di_Santa_Maria_del_Fiore_%E2%80%93_Il_Duomo_di_Firenze.jpg/500px-Cattedrale_di_Santa_Maria_del_Fiore_%E2%80%93_Il_Duomo_di_Firenze.jpg',
+      },
+      {
+        id: 'flo-uffizi',
+        name: 'גלריית אופיצי',
+        nameLocal: 'Uffizi Gallery',
+        category: 'museum',
+        lat: 43.7683,
+        lng: 11.2553,
+        description:
+          'אחד ממוזיאוני האמנות החשובים בעולם, ובו "לידת ונוס" של בוטיצ׳לי ויצירות של לאונרדו, מיכלאנג׳לו וקאראווג׳ו. חובה להזמין כרטיס לשעה.',
+        durationMin: 180,
+        priceLevel: 3,
+        tags: ['art', 'history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=43.7683,11.2553',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Florence%2C_Italy_-_panoramio_(125).jpg/500px-Florence%2C_Italy_-_panoramio_(125).jpg',
+      },
+      {
+        id: 'flo-david',
+        name: 'הדוד בגלריה דל אקדמיה',
+        nameLocal: "Galleria dell'Accademia (David)",
+        category: 'museum',
+        lat: 43.7769,
+        lng: 11.2589,
+        description:
+          'הבית של פסל דוד של מיכלאנג׳לו מ-1504. המוזיאון קטן והביקור קצר יחסית, אבל הפסל עצמו מצדיק את התור.',
+        durationMin: 75,
+        priceLevel: 2,
+        tags: ['art'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=43.7769,11.2589',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/David_at_the_Galleria_dell%27Accademia_(61351).jpg/500px-David_at_the_Galleria_dell%27Accademia_(61351).jpg',
+      },
+      {
+        id: 'flo-ponte-vecchio',
+        name: 'פונטה וקיו',
+        nameLocal: 'Ponte Vecchio',
+        category: 'attraction',
+        lat: 43.76799,
+        lng: 11.25316,
+        description:
+          'הגשר המקורה מ-1345 ועליו חנויות הצורפים, הגשר היחיד בפירנצה ששרד את מלחמת העולם השנייה. מעליו עובר מסדרון ואזארי.',
+        durationMin: 30,
+        priceLevel: 0,
+        tags: ['history', 'romantic'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=43.76799,11.25316',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Ponte_Vecchio_from_Ponte_alle_Grazie.jpg/500px-Ponte_Vecchio_from_Ponte_alle_Grazie.jpg',
+      },
+      {
+        id: 'flo-signoria',
+        name: 'פיאצה דלה סיניוריה',
+        nameLocal: 'Piazza della Signoria',
+        category: 'attraction',
+        lat: 43.76972,
+        lng: 11.25556,
+        description:
+          'כיכר הכיכרות של פירנצה, ובה לוג׳יה דיי לנצי שהיא למעשה גלריית פסלים תחת כיפת השמיים, בכניסה חופשית.',
+        durationMin: 45,
+        priceLevel: 0,
+        tags: ['history', 'art'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=43.76972,11.25556',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Piazza_Signoria_-_Firenze.jpg/500px-Piazza_Signoria_-_Firenze.jpg',
+      },
+      {
+        id: 'flo-palazzo-vecchio',
+        name: 'פאלאצו וקיו',
+        nameLocal: 'Palazzo Vecchio',
+        category: 'museum',
+        lat: 43.7694,
+        lng: 11.2561,
+        description:
+          'ארמון העירייה מהמאה ה-13 עם אולם החמש מאות המפואר. אפשר לעלות גם למגדל ארנולפו ולראות את העיר מלמעלה.',
+        durationMin: 120,
+        priceLevel: 2,
+        tags: ['history', 'art'],
+        externalUrl: 'https://maps.google.com/?q=43.7694,11.2561',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Piazza_della_signoria%2C_palazzo_vecchio%2C_veduta_01.jpg/500px-Piazza_della_signoria%2C_palazzo_vecchio%2C_veduta_01.jpg',
+      },
+      {
+        id: 'flo-santa-croce',
+        name: 'בזיליקת סנטה קרוצ׳ה',
+        nameLocal: 'Basilica of Santa Croce',
+        category: 'attraction',
+        lat: 43.76842,
+        lng: 11.26272,
+        description:
+          'כנסייה פרנציסקנית שבה קברי מיכלאנג׳לו, גליליאו ומקיאוולי. מכונה לעיתים הפנתיאון של תהילת איטליה.',
+        durationMin: 75,
+        priceLevel: 1,
+        tags: ['history', 'art'],
+        externalUrl: 'https://maps.google.com/?q=43.76842,11.26272',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Basilica_di_Santa_Croce_(12437).jpg/500px-Basilica_di_Santa_Croce_(12437).jpg',
+      },
+      {
+        id: 'flo-pitti',
+        name: 'ארמון פיטי',
+        nameLocal: 'Palazzo Pitti',
+        category: 'museum',
+        lat: 43.7652,
+        lng: 11.2501,
+        description:
+          'ארמון המדיצ׳י שמעבר לנהר, ובו כמה מוזיאונים: גלריה פלטינה, דירות המלוכה ומוזיאון האופנה.',
+        durationMin: 150,
+        priceLevel: 2,
+        tags: ['art', 'history'],
+        externalUrl: 'https://maps.google.com/?q=43.7652,11.2501',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Palazzo_Pitti_nel_tardo_pomeriggio.jpg/500px-Palazzo_Pitti_nel_tardo_pomeriggio.jpg',
+      },
+      {
+        id: 'flo-boboli',
+        name: 'גני בובולי',
+        nameLocal: 'Boboli Gardens',
+        category: 'nature',
+        lat: 43.7625,
+        lng: 11.24833,
+        description:
+          'הגן האיטלקי שמאחורי ארמון פיטי, עם שדרות ברושים, מזרקות ומערת בואונטלנטי. שטח גדול ומדרונות, נעליים נוחות.',
+        durationMin: 120,
+        priceLevel: 1,
+        tags: ['outdoors', 'romantic'],
+        externalUrl: 'https://maps.google.com/?q=43.7625,11.24833',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Jard%C3%ADn_de_B%C3%B3boli%2C_Florencia%2C_Italia%2C_2022-09-19%2C_DD_26.jpg/500px-Jard%C3%ADn_de_B%C3%B3boli%2C_Florencia%2C_Italia%2C_2022-09-19%2C_DD_26.jpg',
+      },
+      {
+        id: 'flo-michelangelo',
+        name: 'פיאצאלה מיכלאנג׳לו',
+        nameLocal: 'Piazzale Michelangelo',
+        category: 'viewpoint',
+        lat: 43.76278,
+        lng: 11.26506,
+        description:
+          'המרפסת שממנה מצולמת פירנצה הקלאסית, מעבר לנהר. העלייה ברגל כרבע שעה, או באוטובוס. הכי יפה בשקיעה.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['romantic', 'outdoors'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=43.76278,11.26506',
+      },
+      {
+        id: 'flo-san-lorenzo',
+        name: 'בזיליקת סן לורנצו',
+        nameLocal: 'Basilica of San Lorenzo',
+        category: 'attraction',
+        lat: 43.77492,
+        lng: 11.25386,
+        description:
+          'כנסיית המדיצ׳י, עם הספרייה הלאורנציאנית וקפלות המדיצ׳י שעיצב מיכלאנג׳לו. סביבה שוק הרחוב של סן לורנצו.',
+        durationMin: 75,
+        priceLevel: 1,
+        tags: ['history', 'art'],
+        externalUrl: 'https://maps.google.com/?q=43.77492,11.25386',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Firenze_Basilica_di_San_Lorenzo_Esterno_Lato_Nord_1.jpg/500px-Firenze_Basilica_di_San_Lorenzo_Esterno_Lato_Nord_1.jpg',
+      },
+      {
+        id: 'flo-bargello',
+        name: 'מוזיאון הברג׳לו',
+        nameLocal: 'Bargello National Museum',
+        category: 'museum',
+        lat: 43.77037,
+        lng: 11.25835,
+        description:
+          'אוסף הפיסול של הרנסאנס: דונטלו, מיכלאנג׳לו וצ׳ליני, בבניין שהיה בית סוהר. שקט בהרבה מהאופיצי.',
+        durationMin: 90,
+        priceLevel: 1,
+        tags: ['art', 'history'],
+        externalUrl: 'https://maps.google.com/?q=43.77037,11.25835',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Florence%2C_Bargello%2C_Sala_di_Donatello_(detail).jpg/500px-Florence%2C_Bargello%2C_Sala_di_Donatello_(detail).jpg',
+      },
+      {
+        id: 'flo-synagogue',
+        name: 'בית הכנסת הגדול',
+        nameLocal: 'Great Synagogue of Florence',
+        category: 'attraction',
+        lat: 43.77278,
+        lng: 11.26639,
+        description:
+          'בית כנסת מהמאה ה-19 בסגנון מורי עם כיפה ירוקה, ולצידו מוזיאון יהודי. פועל עד היום.',
+        durationMin: 60,
+        priceLevel: 1,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=43.77278,11.26639',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Synagogue_Florence_Italy.JPG/500px-Synagogue_Florence_Italy.JPG',
+      },
+      {
+        id: 'flo-fiesole',
+        name: 'פייזולה',
+        nameLocal: 'Fiesole',
+        category: 'viewpoint',
+        lat: 43.80722,
+        lng: 11.29194,
+        description:
+          'עיירה אטרוסקית על גבעה מעל פירנצה, כעשרים דקות באוטובוס. תיאטרון רומי, שקט וכפרי, ונוף על כל העמק.',
+        durationMin: 180,
+        priceLevel: 0,
+        tags: ['outdoors', 'history'],
+        externalUrl: 'https://maps.google.com/?q=43.80722,11.29194',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/FiesoleDec102023_15.jpg/500px-FiesoleDec102023_15.jpg',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'הדואומו והמרכז',
+        placeIds: ['flo-duomo', 'flo-signoria', 'flo-palazzo-vecchio', 'flo-ponte-vecchio'],
+        notes:
+          'הכול במרחק הליכה קצר. העלייה לכיפת ברונלסקי דורשת הזמנה לשעה מדויקת.',
+      },
+      {
+        day: 2,
+        title: 'אמנות: אופיצי והדוד',
+        placeIds: ['flo-uffizi', 'flo-david', 'flo-bargello'],
+        notes:
+          'האופיצי בבוקר עם הפתיחה, והאקדמיה אחר הצהריים. שניהם בהזמנה מראש.',
+      },
+      {
+        day: 3,
+        title: 'מעבר לנהר: פיטי, בובולי ומיכלאנג׳לו',
+        placeIds: ['flo-pitti', 'flo-boboli', 'flo-michelangelo'],
+        notes:
+          'לסיים בפיאצאלה מיכלאנג׳לו לקראת השקיעה. העלייה ברגל תלולה אך קצרה.',
+      },
+      {
+        day: 4,
+        title: 'כנסיות, שווקים והרובע היהודי',
+        placeIds: ['flo-san-lorenzo', 'flo-santa-croce', 'flo-synagogue'],
+        notes:
+          'שוק סן לורנצו והשוק המרכזי המקורה נמצאים ליד הבזיליקה.',
+      },
+      {
+        day: 5,
+        title: 'טוסקנה מעל העיר: פייזולה',
+        placeIds: ['flo-fiesole'],
+        notes:
+          'אוטובוס 7 מכיכר סן מרקו, כעשרים דקות. חצי יום נעים במיוחד לקראת הערב.',
+      },
+    ],
+    practical: {
+      flights:
+        'טיסות ישירות מנתב״ג לפירנצה (FLR) מופעלות בעונה, כארבע שעות. לחלופין טסים לפיזה (PSA), בולוניה (BLQ) או רומא ומגיעים ברכבת מהירה - מרומא כשעה וחצי, מבולוניה כ-40 דקות.',
+      gettingAround:
+        'מרכז העיר קטן וכולו הליכה; רוב האתרים באזור מוגבל תנועה. הרכבת המהירה מתחנת סנטה מריה נובלה מחברת לרומא, בולוניה, פיזה וסיינה. אין צורך ברכב אלא אם יוצאים לכפרי טוסקנה.',
+      kosherOverview:
+        'בפירנצה קהילה יהודית ותיקה סביב בית הכנסת הגדול, ופועלים בה בית חב״ד ומסעדה כשרה, לצד מוצרים כשרים בחנויות בודדות. ההיצע מצומצם יחסית לרומא, וכדאי לתאם מראש ובמיוחד לשבת. לוודא מול המקום. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
+    },
+  },
+  {
     slug: 'dolomites',
     name: 'הדולומיטים',
     nameLocal: 'Dolomites / Dolomiti',
