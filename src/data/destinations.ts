@@ -31399,6 +31399,204 @@ export const destinations: Destination[] = [
         'אין במונגוליה מסעדה כשרה ואין חנות כשרה. יש בית חב״ד באולן באטור שמשרת קהילה קטנה ומטיילים, וכדאי ליצור איתו קשר מראש לגבי שבת וארוחות. מחוץ לעיר הבעיה חריפה: המטבח המונגולי בנוי כמעט כולו על כבש ובקר, ובמחנות גר מגישים מה שיש. מי ששומר כשרות יוצא לערבה עם שימורים, טונה, קרקרים ומוצרים סגורים מהסופרמרקטים הגדולים באולן באטור.',
     },
   },
+  {
+    slug: 'paro-thimphu-punakha',
+    name: 'פארו, טהימפו ופונאכה',
+    nameLocal: 'Paro, Thimphu & Punakha',
+    countrySlug: 'bhutan',
+    flag: '🇧🇹',
+    center: { lat: 27.5, lng: 89.72 },
+    zoom: 9,
+    tagline: 'קן הנמר, מבצרי דזונג ומעברי הרים עם מאה ושמונה סטופות',
+    summary:
+      'זהו המסלול המערבי של בהוטן, שבו עוברים כמעט כל המבקרים. פארו מחזיקה את שדה התעופה היחיד ואת מנזר קן הנמר שנצמד לצוק בגובה שלוש מאות מטר. שעה משם טהימפו, הבירה היחידה בעולם בלי רמזור, עם דזונג הממשלה ופסל בודהה ענק על הגבעה. מזרחה עוברים את מעבר דוצ׳ולה אל פונאכה החמימה, שבה יושב הדזונג היפה במדינה בין שני נהרות. מי שמאריך ממשיך לעמק פובג׳יקה.',
+    bestSeason:
+      'מרץ עד מאי ואוקטובר עד נובמבר. באביב עמקי הרודודנדרון פורחים ובסתיו השמיים הכי צלולים ורואים את פסגות ההימלאיה. יולי ואוגוסט הם עונת המונסון - גשם, עננות ומפולות שסוגרות כבישים. בחורף פארו וטהימפו קרות אבל יבשות ופונאכה נעימה, וזו עונה זולה ושקטה. פסטיבלי הצֶצ׳ו הגדולים נופלים באביב ובסתיו וכדאי לתזמן אליהם.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Paro_Taktsang%2C_Bhutan_(edited).jpg/960px-Paro_Taktsang%2C_Bhutan_(edited).jpg',
+    iconicLandmark: {
+      name: 'מנזר קן הנמר',
+      nameLocal: 'Paro Taktsang',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Taktshang2.jpg/500px-Taktshang2.jpg',
+      blurb:
+        'מנזר שנבנה ב-1692 על מדף צוק בגובה 900 מטר מעל עמק פארו, במקום שבו לפי המסורת נחת גורו רינפוצ׳ה על גבה של נמרה. הטיפוס אליו לוקח כשעתיים וחצי ברגל או על גב פרדה עד חצי הדרך.',
+    },
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'אחד המקומות הבודדים שעדיין מרגישים שמורים באמת - נוף הימלאיי, מסורת חיה ולא מיוצרת, וכמעט בלי המוני מטיילים. מוריד ניקוד: ההיטב היומי הופך אפילו טיול קצר ליקר מאוד, ואי אפשר לטייל כאן עצמאית.',
+    },
+    places: [
+      {
+        id: 'bt-taktsang',
+        name: 'מנזר קן הנמר',
+        nameLocal: "Paro Taktsang (Tiger's Nest)",
+        category: 'attraction',
+        lat: 27.491911,
+        lng: 89.363487,
+        description:
+          'הטיפוס מתחיל בחניון בגובה 2,600 מטר ומסתיים במנזר בגובה 3,120, ולוקח כשעתיים וחצי בעלייה. יש בית קפה באמצע הדרך עם הנוף הראשון אל המנזר, ומשם מדרגות שיורדות ועולות מול מפל. אסור להיכנס עם מצלמות וטלפונים ומפקידים אותם בכניסה. יוצאים בשבע בבוקר, לפני החום ולפני הקבוצות.',
+        rating: 4.9,
+        durationMin: 330,
+        externalUrl: 'https://maps.google.com/?q=27.491911,89.363487',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/First_glimpse_of_Taktshang.jpg/500px-First_glimpse_of_Taktshang.jpg',
+        priceLevel: 1,
+        tags: ['outdoors', 'history'],
+        mustSee: true,
+      },
+      {
+        id: 'bt-rinpung',
+        name: 'דזונג רינפונג בפארו',
+        nameLocal: 'Rinpung Dzong',
+        category: 'attraction',
+        lat: 27.426666,
+        lng: 89.423302,
+        description:
+          'מבצר-מנזר מהמאה ה-17 שמשמש עד היום גם כמנהל המחוז וגם כמנזר פעיל, ומשקיף על עמק פארו כולו. אליו מגיעים דרך גשר עץ מקורה מעל הנהר, וזו הכניסה הצילומית. במרץ או באפריל נערך כאן פסטיבל הצֶצ׳ו של פארו עם ריקודי מסכות בחצר הפנימית.',
+        rating: 4.4,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=27.426666,89.423302',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Rinpung_Dzong%2C_Bhutan_01.jpg/500px-Rinpung_Dzong%2C_Bhutan_01.jpg',
+        priceLevel: 1,
+        tags: ['history', 'art'],
+      },
+      {
+        id: 'bt-tashichho',
+        name: 'דזונג טאשיצ׳ו בטהימפו',
+        nameLocal: 'Tashichho Dzong',
+        category: 'attraction',
+        lat: 27.489721,
+        lng: 89.635002,
+        description:
+          'מושב הממשלה, לשכת המלך והמנזר המרכזי, הכל בתוך מבנה לבן אחד עם גגות זהב על גדת נהר הווָנג צ׳ו. פתוח למבקרים רק אחרי סיום יום העבודה בימות החול, ובסופי שבוע לאורך היום. בערב מאירים אותו, וזה הצילום המוכר של טהימפו.',
+        rating: 4.3,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=27.489721,89.635002',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Tashichho_Dzong%2C_Bhutan_09.jpg/500px-Tashichho_Dzong%2C_Bhutan_09.jpg',
+        priceLevel: 1,
+        tags: ['history', 'art'],
+      },
+      {
+        id: 'bt-buddha',
+        name: 'בודהה דורדנמה',
+        nameLocal: 'Buddha Dordenma',
+        category: 'viewpoint',
+        lat: 27.443501,
+        lng: 89.645401,
+        description:
+          'פסל בודהה מוזהב בגובה 51 מטר שיושב על גבעה מעל טהימפו, ובתוך גופו מאוחסנים למעלה ממאה אלף פסלוני בודהה קטנים. אפשר להיכנס לאולם שמתחתיו. הנוף מהרחבה משתרע על העמק כולו ועל העיר, וזו נקודת השקיעה הטובה בטהימפו.',
+        rating: 4.4,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=27.443501,89.645401',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Buddha_Dordenma.jpg/500px-Buddha_Dordenma.jpg',
+        priceLevel: 0,
+        tags: ['history', 'families'],
+      },
+      {
+        id: 'bt-dochula',
+        name: 'מעבר דוצ׳ולה',
+        nameLocal: 'Dochula Pass',
+        category: 'viewpoint',
+        lat: 27.49,
+        lng: 89.750275,
+        description:
+          'מעבר הרים בגובה 3,100 מטר על הכביש מטהימפו לפונאכה, ובו 108 סטופות שנבנו ב-2004 לזכר חיילים שנפלו. בבוקר צלול רואים מכאן את רכס ההימלאיה המזרחי כולו, כולל גַנְגְקַר פוּנְסוּם - ההר הגבוה בעולם שמעולם לא טופס, כי טיפוס על פסגות מעל שישה אלפים אסור בבהוטן.',
+        rating: 4.5,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=27.49,89.750275',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Druk_Wangyal_Chortens%2C_Bhutan_01.jpg/500px-Druk_Wangyal_Chortens%2C_Bhutan_01.jpg',
+        priceLevel: 0,
+        tags: ['outdoors', 'history'],
+        mustSee: true,
+      },
+      {
+        id: 'bt-punakha',
+        name: 'דזונג פונאכה',
+        nameLocal: 'Punakha Dzong',
+        category: 'attraction',
+        lat: 27.581944,
+        lng: 89.863052,
+        description:
+          'הדזונג היפה בבהוטן, שנבנה ב-1637 במפגש שני הנהרות פו צ׳ו ומו צ׳ו, ושימש כבירת הממלכה עד 1955. גשר תלוי מוביל אליו, ובחצרות הפנימיות עומדים עצי ג׳קרנדה שפורחים סגול באפריל. פונאכה נמוכה בהרבה מטהימפו והאקלים בה חמים - זה מורגש מיד.',
+        rating: 4.7,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=27.581944,89.863052',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Punakha_Dzong%2C_Bhutan_02.jpg/500px-Punakha_Dzong%2C_Bhutan_02.jpg',
+        priceLevel: 1,
+        tags: ['history', 'art', 'romantic'],
+        mustSee: true,
+      },
+      {
+        id: 'bt-gangteng',
+        name: 'מנזר גנגטה ועמק פובג׳יקה',
+        nameLocal: 'Gangteng Monastery & Phobjikha Valley',
+        category: 'nature',
+        lat: 27.5,
+        lng: 90.166664,
+        description:
+          'עמק קרחוני רחב בגובה שלושת אלפים מטר, ומעליו מנזר מהמאה ה-17 של אסכולת הנינגמה. מנובמבר עד פברואר חונים כאן עגורים שחורי צוואר שנודדים מטיבט, והעמק הוא שמורה שבה כבלי החשמל הוטמנו באדמה כדי לא לסכן אותם. מסלול הליכה קל של שעתיים חוצה את קרקעית העמק.',
+        rating: 4.4,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=27.5,90.166664',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Gangteng_monastery_2019-08-23_b.jpg/500px-Gangteng_monastery_2019-08-23_b.jpg',
+        priceLevel: 1,
+        tags: ['outdoors', 'history'],
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'פארו',
+        placeIds: ['bt-rinpung'],
+        notes:
+          'הנחיתה בפארו היא חלק מהחוויה - המסלול עובר בין רכסים ורק טייסים מוסמכים במיוחד מורשים לבצע אותה. יום ראשון רגוע להסתגלות לגובה, עם הדזונג, גשר העץ המקורה והעיר הקטנה. לישון בפארו.',
+      },
+      {
+        day: 2,
+        title: 'קן הנמר',
+        placeIds: ['bt-taktsang'],
+        notes:
+          'יוצאים בשבע בבוקר. עלייה של כשעתיים וחצי, ירידה של שעה וחצי, ובאמצע בית קפה עם הנוף הראשון. מפקידים טלפונים ומצלמות בכניסה למנזר. אחר הצהריים חופשי, ורבים עושים אמבט אבנים חמות בהמשך היום.',
+      },
+      {
+        day: 3,
+        title: 'טהימפו',
+        placeIds: ['bt-buddha', 'bt-tashichho'],
+        notes:
+          'שעה נסיעה מפארו. בוקר בפסל הבודהה ובשוק המרכזי, ואת הדזונג משאירים לאחרי חמש כשהוא נפתח למבקרים. אין רמזור בעיר, ובצומת המרכזי עומד שוטר תנועה שמכוון בידיים - זה אמיתי ולא אטרקציה.',
+      },
+      {
+        day: 4,
+        title: 'דוצ׳ולה ופונאכה',
+        placeIds: ['bt-dochula', 'bt-punakha'],
+        notes:
+          'יוצאים מוקדם, כי הנוף מהמעבר נפתח רק בבוקר לפני שהעננים עולים. אחרי הסטופות יורדים כשעה וחצי לפונאכה, שחמימה בהרבה. את הדזונג רואים אחר הצהריים כשהאור נופל עליו מהצד.',
+      },
+      {
+        day: 5,
+        title: 'עמק פובג׳יקה',
+        placeIds: ['bt-gangteng'],
+        notes:
+          'כשלוש שעות מפונאכה על כביש הררי. מנזר גנגטה בבוקר ומסלול קרקעית העמק אחר הצהריים. בחורף מגיעים לכאן בשביל העגורים. לינה בעמק, ולמחרת נסיעה ארוכה חזרה לפארו.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסות ישירות מתל אביב. דרוק אייר ובהוטן איירליינס הן היחידות שנוחתות בפארו (PBH), והחיבורים הנפוצים הם דרך דלהי, קטמנדו, בנגקוק או סינגפור. מספר הטיסות ביום קטן מאוד וכדאי להזמין חודשים מראש, במיוחד בעונת הפסטיבלים. שריינו לילה במקום החיבור, כי איחור בטיסה המקשרת יכול לעלות ביום שלם.',
+      gettingAround:
+        'כל הטיולים כוללים נהג ורכב, וזו לא בחירה אלא הדרך שבה המדינה מתנהלת. הכבישים בין פארו, טהימפו ופונאכה טובים אך מתפתלים מאוד, וזמן הנסיעה כפול ממה שהמרחק מרמז. מי שסובל ממחלת דרכים צריך להצטייד. אין רכבות בבהוטן, ותחבורה ציבורית קיימת אבל לא מעשית לתיירים.',
+      kosherOverview:
+        'אין בבהוטן מסעדה כשרה, חנות כשרה או בית חב״ד. המטבח המקומי בנוי על אורז אדום, ירקות וגבינה - המנה הלאומית אמה דאטשי היא פלפלים חריפים ברוטב גבינה - ולכן דווקא כאן קל יחסית להסתדר צמחוני. שומרי כשרות מגיעים עם מוצרים סגורים מהבית או מקטמנדו ומבקשים מהסוכנות לתאם מראש הכנת אוכל צמחוני בכלים נפרדים.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
