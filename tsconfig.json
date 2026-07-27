@@ -6,6 +6,10 @@
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
+    // קבצי ה-*.test.ts רצים דרך type-stripping של Node (`npm test`), וזה
+    // דורש סיומת .ts מפורשת ביבוא. בטוח כאן כי noEmit דלוק - שום .ts
+    // כזה לא מגיע לפלט, וה-bundler של Next לא רואה את קבצי הטסטים בכלל.
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
