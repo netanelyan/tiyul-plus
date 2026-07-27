@@ -299,6 +299,16 @@ GeoNames). Lower priority than net-new destinations.
       Stefan, Budva old town coordinates) — same real sites in two hubs.
       Fine today; worth deduping if a "seen this already" view is built.
 
+## דאטה: חודשים מומלצים לכל יעד (נוסף 2026-07-27)
+- [ ] להוסיף `bestMonths?: number[]` (מספרי חודשים 1-12) ל-`Destination`
+      ולמלא אותו ליעדים. **הפילטר לפי עונה בדפדפן היעדים כבר בנוי
+      ומחכה לשדה הזה** - הוא פשוט לא מוצג כל עוד אין ולו יעד אחד עם
+      השדה, ויידלק לבד ברגע שיהיה. יש טסט
+      (`destinationFacets.test.ts`) שמוודא שהיום אין דאטה כזו; כשהוא
+      ייפול זה הסימן להסיר את ההסתרה ולעדכן אותו.
+- [ ] אפשר להתחיל מהיעדים שבהם העונה קריטית באמת: לפלנד, איסלנד,
+      פטגוניה, ניו זילנד, ספארי בטנזניה, האלפים.
+
 ## להפעלת אזור הניהול (נוסף 2026-07-27)
 - [ ] להריץ את `supabase-admin.sql` ב-SQL Editor. הוא מוסיף role/plan_until/
       plan_source, יומן ביקורת, קודי הטבה, דגלי מערכת - **וזורע את

@@ -322,6 +322,71 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-27 (q) - Destination browser: what the data supports, and what it does not
+
+Netanel sent a competitor's page - continent tabs with counts, character chips -
+and said "this is a good feature". It is, and `/countries` was the wrong shape
+for it: a **country** card cannot tell you it is romantic or good with kids. The
+grid is now the 150 **destinations**, with countries a click away from every card
+and from a slug row at the bottom.
+
+**He asked for four filters. Two are backed by data and two are not, and they are
+not treated the same:**
+
+| filter | backing | what shipped |
+|---|---|---|
+| יבשת | `WORLD_COUNTRIES` (built for the passport feature) joined on the flag emoji - **81 of 83** catalog countries matched | real tabs with live counts |
+| אופי | the `tags` already on every place | real chips |
+| מחיר | `priceLevel` of places, present in 149/150 | shipped **named for what it measures** - "מחירי אטרקציות", with a line saying it excludes flights and lodging |
+| עונה | **nothing. no months, no climate, no field** | mechanism only: reads an optional `bestMonths`, renders only when some destination has it, so today it is absent |
+
+Calling Switzerland "cheap" because its mountains are free is precisely the
+confident-looking wrong value hard rule 2 exists to prevent. Naming the filter
+after the thing it actually measures cost one line of copy and keeps it honest.
+
+**The season filter is the pattern worth reusing:** build the mechanism, read an
+optional field, render only when the data exists, and add a test asserting the
+current emptiness - so the test failing is the *signal to unhide the feature*
+rather than a regression. Oman and Bhutan likewise sit in a two-line override
+here instead of a fix in `src/data/*`, which the parallel session owns; if that
+file gains them, the override quietly becomes redundant.
+
+**The character threshold took three attempts and the first two were measurably
+bad**, which is the part I would have got wrong by eye:
+
+- *"at least 2 places with the tag"* → **139 of 150** destinations were "nature".
+  A chip returning 93% of the catalogue is decoration.
+- *fixed 25% share* → nature 128, history 113 (still too broad) and **nightlife
+  zero**, because the catalogue barely tags nightlife. A chip that always returns
+  an empty screen is worse than no chip.
+- **self-normalising**: among destinations that carry a tag at all, the top 40% by
+  share qualify. Every chip now returns 14-59 of 150, nightlife included, and the
+  rule holds as the catalogue grows. A chip under 5 destinations is not rendered.
+
+**Continent counts are computed with the other filters applied**, so a number on a
+tab means "this many if you click" - never a click into emptiness.
+
+**Also removed the site-search field from this page.** It sat directly above the
+browser's own filter box: two search inputs stacked, the same duplication removed
+from the nav earlier today. Site search stays on the nav icon and Ctrl+K.
+
+**Verified live:** 150 cards, אסיה narrows to 40, adding חיי לילה to 5, clearing
+restores 150, zero horizontal overflow at 1440 and 390. 11 new tests run against
+the real catalogue rather than a fixture - every destination has a continent, the
+tab counts equal reality, every shown chip filters without returning all-or-none,
+and multiple chips are AND.
+
+**Shipped in the same commit:** `/api/admin/me` now answers **503
+not_configured** to a signed-in user instead of a blanket 404 when
+`SUPABASE_SERVICE_ROLE_KEY` is missing, and `/admin` renders the four steps to fix
+it. Netanel was `owner` in the database and still saw "הדף לא נמצא" - **the third
+time today a correct-but-switched-off state was indistinguishable from a bug.**
+The page can just say which one it is; that is cheaper than another round trip.
+
+**Deferred, and it is now the single highest-value data task:** add
+`bestMonths?: number[]` to destinations. The filter, the UI and the test are all
+waiting for it.
+
 ### 2026-07-27 (p) - "The search bar is not good" - it was dead when empty and flooded when used
 
 **Empty state was a paragraph of documentation.** Opening the overlay showed one
