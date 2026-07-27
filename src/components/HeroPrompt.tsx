@@ -33,6 +33,21 @@ export default function HeroPrompt({
     if (window.matchMedia('(max-width: 639px)').matches) {
       setPlaceholder('ספרו לי על החופשה שאתם מדמיינים…');
     }
+    /*
+      פוקוס אוטומטי רק במכשירים עם מקלדת פיזית.
+
+      דיווח של נטנאל: "when opening the website on mobile, the textboxes are
+      being opened automatically". השדה נשא `autoFocus` יבש, ולכן בכל כניסה
+      לדף הבית או לנחיתת /chat מהטלפון המקלדת נפתחה מיד - היא מכסה כמחצית
+      המסך, דוחפת את הכותרת והצ׳יפים מחוץ לתצוגה, ומכריחה את המטייל לסגור
+      אותה כדי לראות בכלל לאן הוא הגיע. במקום להזמין להקליד, זה מסתיר את
+      ההסבר מה להקליד.
+
+      אותו תיקון בדיוק כמו ב-AccountButton (מודל ההתחברות) וב-CityCombobox -
+      שם זה כבר נפתר, וההירו פשוט לא עודכן. בדסקטופ הפוקוס נשאר, כי שם הוא
+      חוסך קליק ולא עולה כלום.
+    */
+    if (window.matchMedia('(pointer: fine)').matches) inputRef.current?.focus();
     try {
       setKosher(window.localStorage.getItem(KOSHER_KEY) === '1');
     } catch {
@@ -65,7 +80,6 @@ export default function HeroPrompt({
         <div className="relative">
           <input
             ref={inputRef}
-            autoFocus
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder={placeholder}

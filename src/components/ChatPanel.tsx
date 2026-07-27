@@ -321,7 +321,7 @@ export default function ChatPanel({
             onChange={(e) => setInput(e.target.value)}
             placeholder="תוסיף יום, תחליף מקום, מה כשר באזור…"
             aria-label="בקשה לסוכן"
-            className="min-w-0 flex-1 rounded-xl bg-cream px-4 py-3 text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset"
+            className="min-w-0 flex-1 rounded-xl bg-cream px-4 py-3 text-base sm:text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset"
           />
           <button
             type="submit"

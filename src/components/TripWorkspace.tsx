@@ -670,7 +670,7 @@ export default function TripWorkspace({
                     placeholder="הערות ליום הזה…"
                     rows={2}
                     autoFocus={noteOpenFor === day.id && !day.notes}
-                    className="mt-3 w-full resize-none rounded-xl bg-night/5 px-4 py-2.5 text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset"
+                    className="mt-3 w-full resize-none rounded-xl bg-night/5 px-4 py-2.5 text-base sm:text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset"
                   />
                 ) : (
                   <button

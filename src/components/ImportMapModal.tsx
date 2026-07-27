@@ -96,7 +96,7 @@ export default function ImportMapModal({
           onKeyDown={(e) => e.key === 'Enter' && void doImport()}
           placeholder="https://www.google.com/maps/d/…"
           dir="ltr"
-          className="mt-4 w-full rounded-2xl border border-night/15 bg-cream px-4 py-3 text-sm text-night shadow-inner outline-none placeholder:text-night/35 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
+          className="mt-4 w-full rounded-2xl border border-night/15 bg-cream px-4 py-3 text-base sm:text-sm text-night shadow-inner outline-none placeholder:text-night/35 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
         />
 
         {error && (

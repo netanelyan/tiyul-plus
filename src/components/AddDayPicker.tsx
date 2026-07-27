@@ -103,7 +103,7 @@ export default function AddDayPicker({
             onChange={(e) => setQuery(e.target.value)}
             placeholder="חיפוש עיר או מדינה…"
             aria-label="חיפוש עיר להוספת יום"
-            className="w-full rounded-xl bg-cream px-3 py-2.5 text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset"
+            className="w-full rounded-xl bg-cream px-3 py-2.5 text-base sm:text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset"
           />
 
           <div className="mt-1.5 max-h-64 overflow-y-auto">

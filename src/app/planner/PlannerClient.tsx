@@ -301,7 +301,7 @@ function Onboarding({
             rows={2}
             disabled={loading}
             placeholder="למשל: בלי מוזיאונים, הילדים בני 4 ו-7, אוהבים גלידה"
-            className="mt-2 w-full resize-none rounded-xl bg-night/5 px-4 py-3 text-sm leading-relaxed text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/35 focus:bg-shell focus:ring-2 focus:ring-sunset disabled:opacity-60"
+            className="mt-2 w-full resize-none rounded-xl bg-night/5 px-4 py-3 text-base sm:text-sm leading-relaxed text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/35 focus:bg-shell focus:ring-2 focus:ring-sunset disabled:opacity-60"
           />
         </div>
 
