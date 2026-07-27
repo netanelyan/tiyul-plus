@@ -299,6 +299,87 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-27 (h) - Short answers: position in the prompt beat wording, twice
+
+Netanel: *"Make the AI have not so long responses when can. for example: no need
+to name all countries."*
+
+**The literal example was a deterministic bug, not the model.** The keyless reply
+greeted with `countries.map(c => c.name).join(' · ')` - **all** of them. Fine at
+eight countries; **713 characters at 74**, and it grew with every data commit.
+Replaced with `coverageLine()` in `lib/server/catalogSummary.ts` - real count plus
+up to five examples, 81 chars. There is a test asserting the **length does not
+grow with the catalog**, because that is precisely the regression nobody notices
+while reviewing a data diff. This was also the text in his morning screenshots.
+
+**Then the part worth carrying forward.** I wrote four brevity rules into
+LANGUAGE & VOICE, measured live against the real model, and they did **almost
+nothing**:
+
+| | before | after prompt rules | after the real fix |
+|---|---|---|---|
+| "what do you cover?" | 116 words | 88 words, still a continent-by-continent list of ~35 cities | **32 words** |
+| "build me 4 days in Vienna" | 174 words + full day recap | - | **26 words** |
+| "do I need a visa for Italy?" | 81 words | - | **20 words** |
+
+**Why the build reply was long: a rule conflict, not weak wording.** One rule
+taught the `**יום N**` itinerary format for recommendation answers, and nothing
+said it stopped applying after a tool call - so the model formatted an *edit*
+reply as a full itinerary and re-wrote the plan the panel was already rendering.
+The format is now explicitly conditional (no tool ran → allowed; tool ran →
+forbidden), and the brevity clause rides on **`PROSE_DISCIPLINE`**, i.e. inside
+the tool result - the last thing the model reads before writing. 174 → 26 words.
+
+**Why the catalog list survived two explicit bans: position.** Both bans sat near
+the top of a ~75-line system prompt. `OUTPUT_DISCIPLINE` is now a separate block
+sent **last** in the `system` array, after CURRENT TRIP. Same principle as
+`PROSE_DISCIPLINE`, applied to ordering. 116 → 32 words, no region breakdown.
+
+**The generalisation, since this is now three-for-three this week
+(`pinDistances`, `PROSE_DISCIPLINE`, `OUTPUT_DISCIPLINE`): when the model ignores
+a rule, do not rewrite the rule harder - move it closer to the moment of
+generation, or replace it with a computed fact.** Emphasis is the weakest lever
+available.
+
+**Two bugs found ONLY because this was tested live, both fixed in the same
+commit:**
+- The model **invented its own coverage** - "50 יעדים ב-40 מדינות" when the real
+  numbers are 141 and 74. It cannot count a long list and there was no reason to
+  make it try: `buildGroundingIndex()` now carries a `coverage` object and the
+  prompt says quote it, never estimate. Exactly the same shape as the invented
+  walking distances - give it the number instead of banning the guess.
+- **"רק להתייעץ, בלי לשמור כלום" still created a trip.** The BUILD IMMEDIATELY
+  rule had no exception for an explicit refusal. An explicit "don't" now outranks
+  it; re-verified that the request produces no `trip` event.
+
+**Checked that it did not become uselessly terse.** A genuine "recommend an
+itinerary, don't save it" still returns the full `**יום N**` layout and calls no
+tool; an edit reports what changed in one sentence; an uncovered city is still
+declined honestly with real alternatives.
+
+**Verified:** four live scenarios against real Sonnet with Netanel's key (staged
+from his `.env.local` via the device bridge and deleted afterwards, including the
+Turbopack dev cache that had absorbed it), `tsc` clean, 60/60 tests,
+`npm run build` clean, lint unchanged at 27 problems with no hits in touched
+files.
+
+**Two pre-existing problems the live runs exposed and I did NOT fix, deliberately
+- both need a decision, not a fifth prompt round.** (1) Soft walkability phrasing
+is still there in new forms ("המרכז כולו מהלך ברגל", "הכול מהלך") - the ban list
+names "במרחק הליכה"/"ברגל"/"צמוד" and the model simply reaches for a synonym.
+Three prompt rounds have failed at this; per the rule above it needs a computed
+substitute or a server-side rewrite, not more wording. (2) In a **prose**
+recommendation with kosher unset, the model volunteered kosher restaurants in
+Rome. The deterministic filter (`filterKosherUnlessOptedIn`) only guards the
+tools, so prose is unprotected - and "kosher is opt-in, never assumed" is a
+product principle, so this is worth a real fix.
+
+**Also still open from earlier entries:** share links drop hotel pins
+(`share.ts` has no `pins`); the agent characterises a hotel without a caveat
+before `add_pin` runs; a `geocode.ts` unit test is owed; `supabase-accounts.sql`
+may be unrun. Never live-verified: whether the model reaches for `set_day_city`
+rather than offering a rebuild.
+
 ### 2026-07-27 (g) - Catalog: North Macedonia, Mongolia, Bhutan, an 18-photo sweep, and a validator lesson
 
 Data track only. Feature files untouched. Catalog went from 139 destinations /
