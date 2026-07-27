@@ -1,5 +1,6 @@
 'use client';
 
+import { effectivePlan, isRole, type Role } from '@/lib/plans';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 /**
@@ -21,6 +22,15 @@ export interface UserProfile {
    * ה-webhook של Stripe דרך ה-service role (ראו supabase-premium.sql).
    */
   plan: 'free' | 'premium';
+  /**
+   * התפקיד. נכתב אך ורק ע"י ה-service role (ראו supabase-admin.sql), אז
+   * מבחינת הלקוח זו עמודה לקריאה בלבד - וגם אם מישהו יערוך אותה בזיכרון
+   * הדפדפן זה לא יקנה לו כלום: כל נתיב ניהול קורא את התפקיד מהדאטהבייס
+   * מחדש. הערך כאן משמש רק להחלטה אם להציג קישור לאזור הניהול.
+   */
+  role: Role;
+  /** מתי הפרימיום פג. null = ללא הגבלה (מנוי פעיל או הענקה לתמיד). */
+  planUntil: string | null;
 }
 
 export const EMPTY_PROFILE: UserProfile = {
@@ -31,6 +41,8 @@ export const EMPTY_PROFILE: UserProfile = {
   prefs: {},
   isPublic: false,
   plan: 'free',
+  role: 'user',
+  planUntil: null,
 };
 
 /** מה שנחשף על מטייל ציבורי - לעולם לא מייל/טלפון/טיולים */
@@ -49,15 +61,28 @@ interface Row {
   prefs: unknown;
   is_public?: boolean;
   plan?: string;
+  role?: string;
+  plan_until?: string | null;
 }
 
 export async function fetchProfile(supabase: SupabaseClient): Promise<UserProfile | null> {
   // עמודת plan מגיעה מ-supabase-premium.sql; אם ה-SQL עוד לא רץ הבחירה
   // איתה נכשלת - נופלים לבחירה בלי העמודה כדי שפרופילים לא יישברו.
+  //
+  // שלוש מדרגות נסיגה, כי כל בלוק SQL מוסיף עמודות ולא כולם רצו: קודם
+  // עם role/plan_until (supabase-admin.sql), אחר כך עם plan בלבד
+  // (supabase-premium.sql), ולבסוף העמודות הבסיסיות. בלי זה, פרופיל
+  // נשבר לגמרי רק כי בלוק SQL אחד עוד לא הורץ.
   let { data, error } = await supabase
     .from('profiles')
-    .select('display_name,phone,avatar,visited,prefs,is_public,plan')
+    .select('display_name,phone,avatar,visited,prefs,is_public,plan,role,plan_until')
     .maybeSingle();
+  if (error) {
+    ({ data, error } = await supabase
+      .from('profiles')
+      .select('display_name,phone,avatar,visited,prefs,is_public,plan')
+      .maybeSingle());
+  }
   if (error) {
     ({ data, error } = await supabase
       .from('profiles')
@@ -74,7 +99,11 @@ export async function fetchProfile(supabase: SupabaseClient): Promise<UserProfil
     visited: Array.isArray(r.visited) ? (r.visited as string[]).filter((c) => typeof c === 'string') : [],
     prefs: r.prefs && typeof r.prefs === 'object' ? (r.prefs as UserProfile['prefs']) : {},
     isPublic: r.is_public === true,
-    plan: r.plan === 'premium' ? 'premium' : 'free',
+    // effectivePlan ולא השוואה ישירה: הענקה שפגה חוזרת ל-free גם ב-UI,
+    // כדי שהמסך לא יבטיח פרימיום שהשרת כבר לא מכבד.
+    plan: effectivePlan(r),
+    role: isRole(r.role) ? r.role : 'user',
+    planUntil: r.plan_until ?? null,
   };
 }
 

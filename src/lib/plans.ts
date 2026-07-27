@@ -10,6 +10,45 @@
 
 export type Plan = 'free' | 'premium';
 
+/**
+ * תפקידים. 'user' הוא ברירת המחדל ואין לו שום הרשאה מיוחדת.
+ *
+ * ההיררכיה היא סידורית בכוונה (`ROLE_RANK`), כך שבדיקת הרשאה היא השוואה
+ * אחת ולא רשימת if-ים שמישהו ישכח לעדכן כשיתווסף תפקיד.
+ */
+export type Role = 'user' | 'admin' | 'owner';
+
+export const ROLE_RANK: Record<Role, number> = { user: 0, admin: 1, owner: 2 };
+
+export const isRole = (v: unknown): v is Role =>
+  v === 'user' || v === 'admin' || v === 'owner';
+
+/** האם ל-role יש לפחות את ההרשאות של need */
+export const roleAtLeast = (role: Role, need: Role) => ROLE_RANK[role] >= ROLE_RANK[need];
+
+/**
+ * התוכנית **בפועל**, אחרי פקיעה.
+ *
+ * למה זו פונקציה ולא קריאה של העמודה: פרימיום יכול להגיע משני מקורות -
+ * מנוי Stripe (בלי תאריך סיום; ה-webhook מוריד אותו כשהוא מתבטל) או
+ * מהענקה של אדמין, שיכולה להיות מוגבלת בזמן. בלי הבדיקה הזאת הענקה
+ * ל-30 יום הופכת בשקט לפרימיום לנצח - וזה בדיוק סוג הבאג שלא מתגלה,
+ * כי הוא נראה כמו נדיבות.
+ *
+ * **נקודת אמת אחת**: כל מי שמחליט אם מישהו פרימיום חייב לעבור כאן -
+ * גם השרת (identity.ts, אכיפת מכסות) וגם ה-UI.
+ */
+export function effectivePlan(
+  row: { plan?: string | null; plan_until?: string | null } | null | undefined,
+  now: number = Date.now(),
+): Plan {
+  if (!row || row.plan !== 'premium') return 'free';
+  if (!row.plan_until) return 'premium';
+  const until = Date.parse(row.plan_until);
+  if (Number.isNaN(until)) return 'premium'; // תאריך פגום לא שולל מנוי שכבר שולם
+  return until > now ? 'premium' : 'free';
+}
+
 export interface PlanLimits {
   /** בקשות צ׳אט ביום (גם במצב ללא מפתח - מגן על השרת עצמו) */
   chatPerDay: number;

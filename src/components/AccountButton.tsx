@@ -124,6 +124,22 @@ export default function AccountButton() {
                   </svg>
                   האזור האישי
                 </Link>
+                {/*
+                  קישור לניהול רק לאדמין/בעלים. זו נוחות ולא אבטחה: התפקיד
+                  כאן נקרא מהפרופיל בדפדפן, ולכן מי שיערוך אותו ידנית יראה
+                  קישור - ויקבל "לא נמצא", כי כל נתיב /api/admin קורא את
+                  התפקיד מהדאטהבייס מחדש בכל בקשה.
+                */}
+                {auth.profile && auth.profile.role !== 'user' && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setMenuOpen(false)}
+                    className="mt-1.5 flex w-full items-center gap-2 rounded-xl bg-night px-3 py-2.5 text-start text-sm font-bold text-cream transition hover:bg-night-soft"
+                  >
+                    <span aria-hidden>{auth.profile.role === 'owner' ? '👑' : '🛠️'}</span>
+                    אזור הניהול
+                  </Link>
+                )}
                 <button
                   onClick={() => {
                     void auth.signOut();

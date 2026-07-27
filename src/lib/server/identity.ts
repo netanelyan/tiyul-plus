@@ -1,4 +1,4 @@
-import type { Plan } from '@/lib/plans';
+import { effectivePlan, type Plan } from '@/lib/plans';
 
 /**
  * שרת בלבד - זיהוי הקורא לצורך מכסות ותוכנית.
@@ -73,18 +73,41 @@ async function fetchPlan(userId: string, token: string): Promise<Plan> {
   try {
     const key = anonKey()!;
     const res = await fetch(
-      `${supaUrl()}/rest/v1/profiles?user_id=eq.${encodeURIComponent(userId)}&select=plan`,
+      `${supaUrl()}/rest/v1/profiles?user_id=eq.${encodeURIComponent(userId)}&select=plan,plan_until`,
       {
         headers: { apikey: key, Authorization: `Bearer ${token}` },
         signal: AbortSignal.timeout(4000),
       },
     );
     if (res.ok) {
-      const rows = (await res.json()) as { plan?: string }[];
-      if (rows[0]?.plan === 'premium') plan = 'premium';
+      // effectivePlan ולא `plan === 'premium'`: הענקה של אדמין או קוד
+      // הטבה נושאת plan_until, ובלי הבדיקה הזאת הענקה ל-30 יום הייתה
+      // ממשיכה להעניק מכסת פרימיום לנצח. נקודת אמת אחת - ראו lib/plans.ts.
+      const rows = (await res.json()) as { plan?: string; plan_until?: string | null }[];
+      plan = effectivePlan(rows[0] ?? null);
     }
   } catch {
     /* אין קריאת תוכנית - free הוא ברירת המחדל הבטוחה */
+  }
+  if (plan === 'free') {
+    // ה-SQL של supabase-admin.sql אולי עוד לא רץ, ואז הבחירה עם
+    // plan_until נכשלת כולה. ניסיון שני בלי העמודה, בדיוק כמו
+    // ה-fallback ב-lib/auth/profile.ts, כדי שפרימיום קיים לא ייעלם.
+    try {
+      const res = await fetch(
+        `${supaUrl()}/rest/v1/profiles?user_id=eq.${encodeURIComponent(userId)}&select=plan`,
+        {
+          headers: { apikey: anonKey()!, Authorization: `Bearer ${token}` },
+          signal: AbortSignal.timeout(4000),
+        },
+      );
+      if (res.ok) {
+        const rows = (await res.json()) as { plan?: string }[];
+        if (rows[0]?.plan === 'premium') plan = 'premium';
+      }
+    } catch {
+      /* נשארים ב-free */
+    }
   }
   put(planCache, userId, plan);
   return plan;

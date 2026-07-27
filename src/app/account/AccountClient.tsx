@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth/AuthContext';
+import { authHeader } from '@/lib/auth/client';
 import { getSupabase } from '@/lib/auth/client';
 import { imageToAvatar, searchPublicProfiles, type PublicProfile } from '@/lib/auth/profile';
 import { useTrip } from '@/lib/trip/TripContext';
@@ -455,7 +456,9 @@ function SettingsCard({ onDeletedAll }: { onDeletedAll: () => void }) {
     <section className="rounded-3xl bg-shell p-5 ring-1 ring-night/10 sm:p-6">
       <h2 className="display text-xl text-night">הגדרות</h2>
 
-      {/* תוכנית המנוי - לקריאה בלבד; משתנה רק דרך Stripe */}
+      <PromoRedeem />
+
+      {/* תוכנית המנוי - לקריאה בלבד; משתנה דרך Stripe, הענקה או קוד הטבה */}
       <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-cream px-4 py-3 ring-1 ring-night/10">
         <div>
           <p className="text-sm font-bold text-night">התוכנית שלי</p>
@@ -644,5 +647,83 @@ function CameraIcon() {
       <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z" />
       <circle cx="12" cy="13" r="3" />
     </svg>
+  );
+}
+
+/* ============================ קוד הטבה ============================ */
+/**
+ * פדיון קוד. מוצג לכולם - גם למי שכבר פרימיום, כי קוד מאריך תוקף קיים
+ * ולא דורס אותו. ההודעות מכוונות להיות מדויקות: "כבר פדיתם את הקוד הזה"
+ * הוא מצב שונה מ"הקוד לא תקף", והמטייל צריך לדעת מה מהם.
+ */
+function PromoRedeem() {
+  const auth = useAuth();
+  const [code, setCode] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  const redeem = async () => {
+    setBusy(true);
+    setMsg(null);
+    try {
+      const headers = await authHeader();
+      const res = await fetch('/api/promo/redeem', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...headers },
+        body: JSON.stringify({ code }),
+      });
+      const data = (await res.json()) as { ok?: boolean; days?: number; error?: string };
+      if (data.ok) {
+        setMsg({ ok: true, text: `הקוד נפדה - ${data.days} ימי פרימיום נוספו לחשבון.` });
+        setCode('');
+        await auth.reloadProfile();
+      } else {
+        setMsg({
+          ok: false,
+          text:
+            data.error === 'already_redeemed'
+              ? 'כבר פדיתם את הקוד הזה.'
+              : data.error === 'not_signed_in'
+                ? 'צריך להתחבר כדי לפדות קוד.'
+                : data.error === 'unavailable'
+                  ? 'הפדיון לא זמין כרגע. כדאי לנסות שוב בהמשך.'
+                  : 'הקוד לא תקף, פג או נגמרו הפדיונות שלו.',
+        });
+      }
+    } catch {
+      setMsg({ ok: false, text: 'הפדיון נכשל. כדאי לנסות שוב.' });
+    }
+    setBusy(false);
+  };
+
+  return (
+    <div className="mt-4 rounded-2xl bg-cream px-4 py-3 ring-1 ring-night/10">
+      <p className="text-sm font-bold text-night">🎁 יש לי קוד הטבה</p>
+      <div className="mt-2 flex flex-wrap gap-2">
+        <input
+          value={code}
+          onChange={(e) => setCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 24))}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && code.length >= 3) void redeem();
+          }}
+          dir="ltr"
+          placeholder="ARMY30"
+          aria-label="קוד הטבה"
+          className="min-w-0 flex-1 rounded-xl bg-shell px-3 py-2 text-base sm:text-sm font-bold text-night ring-1 ring-night/10 focus:ring-2 focus:ring-sunset"
+        />
+        <button
+          onClick={() => void redeem()}
+          disabled={busy || code.length < 3}
+          className="rounded-xl bg-night px-4 py-2 text-sm font-bold text-cream transition hover:bg-night-soft disabled:opacity-50"
+        >
+          פדיון
+        </button>
+      </div>
+      {msg && (
+        <p className={`mt-2 text-xs font-semibold ${msg.ok ? 'text-night/70' : 'text-sunset-deep'}`}>
+          {msg.text}
+        </p>
+      )}
+    </div>
   );
 }

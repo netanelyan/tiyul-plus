@@ -10,6 +10,7 @@ import {
 } from '@/lib/trip/agent';
 import { geocodePlace } from '@/lib/server/geocode';
 import { isTransient } from '@/lib/server/transient';
+import { agentEnabled } from '@/lib/server/flags';
 import { coverageLine } from '@/lib/server/catalogSummary';
 import {
   IMAGE_DATA_URL,
@@ -1009,7 +1010,10 @@ export async function POST(request: Request) {
         controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
       };
 
-      if (process.env.ANTHROPIC_API_KEY) {
+      // מפסק החירום: כשהדגל agent_enabled כבוי, נופלים לתשובות מבוססות
+      // הכללים בדיוק כמו במצב ללא מפתח - האתר עובד, ההוצאה על המודל
+      // נעצרת מיד ובלי דיפלוי. ראו lib/server/flags.ts ו-/admin.
+      if (process.env.ANTHROPIC_API_KEY && (await agentEnabled())) {
         const meter = { units: 0 };
         try {
           await runAgent(messages, clientTrip, send, kosherHint, explored, meter);

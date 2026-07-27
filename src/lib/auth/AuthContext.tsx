@@ -19,6 +19,12 @@ interface AuthApi {
   profile: UserProfile | null;
   /** עדכון פרופיל: אופטימי בזיכרון + upsert לשרת */
   saveProfile: (patch: Partial<UserProfile>) => Promise<boolean>;
+  /**
+   * קריאה מחדש של הפרופיל מהשרת. נדרש כשמשהו **מחוץ** ללקוח שינה אותו -
+   * פדיון קוד הטבה, הענקת פרימיום או שינוי תפקיד נכתבים ע"י ה-service
+   * role, ולכן הפרופיל שבזיכרון לא יודע עליהם כלום.
+   */
+  reloadProfile: () => Promise<void>;
   sendCode: (email: string) => Promise<{ ok: boolean; error?: string }>;
   verifyCode: (email: string, code: string) => Promise<{ ok: boolean; error?: string }>;
   signOut: () => Promise<void>;
@@ -42,6 +48,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // saveProfile רצופים היו עלולים לדרוס שדות עם פרופיל ריק.
   const profileRef = useRef<UserProfile | null>(null);
   profileRef.current = profile;
+
+  const reloadProfile = useCallback(async () => {
+    if (!supabase || !user) return;
+    const p = await fetchProfile(supabase);
+    if (p) setProfile(p);
+  }, [supabase, user]);
 
   // טעינת הפרופיל אחרי התחברות; איפוס בהתנתקות
   useEffect(() => {
@@ -111,7 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <Ctx.Provider
-      value={{ enabled: Boolean(supabase), user, ready, profile, saveProfile, sendCode, verifyCode, signOut }}
+      value={{ enabled: Boolean(supabase), user, ready, profile, saveProfile, reloadProfile, sendCode, verifyCode, signOut }}
     >
       {children}
     </Ctx.Provider>

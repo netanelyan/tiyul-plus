@@ -245,6 +245,18 @@ GeoNames). Lower priority than net-new destinations.
       Stefan, Budva old town coordinates) — same real sites in two hubs.
       Fine today; worth deduping if a "seen this already" view is built.
 
+## להפעלת אזור הניהול (נוסף 2026-07-27)
+- [ ] להריץ את `supabase-admin.sql` ב-SQL Editor. הוא מוסיף role/plan_until/
+      plan_source, יומן ביקורת, קודי הטבה, דגלי מערכת - **וזורע את
+      natikyan153@gmail.com כ-owner**. אם עוד לא התחברת לאתר אף פעם עם
+      המייל הזה, הקובץ יגיד זאת בהודעה וצריך להריץ אותו שוב אחרי
+      ההתחברות הראשונה (הוא אידמפוטנטי).
+- [ ] להוסיף `SUPABASE_SERVICE_ROLE_KEY` ל-.env.local ול-Vercel. **בלי
+      המפתח הזה אזור הניהול כבוי לגמרי** - וזה מצב מכוון ובטוח: הנתיבים
+      מחזירים 404 והאתר עובד כרגיל.
+- [ ] בדיקה חיה: להתחבר, לפתוח את "אזור הניהול" מתפריט החשבון, לחפש את
+      המייל של עצמך ולראות פרימיום/תפקיד.
+
 ## להפעלת המכסות המלאות והפרימיום (נוסף 2026-07-25, סשן המכסות)
 - [ ] להריץ את `supabase-premium.sql` ב-SQL Editor (עמודת plan מוקשחת +
       טבלת usage_daily). בלי זה: המכסות עובדות בזיכרון בלבד והפרימיום
