@@ -536,11 +536,22 @@ detail block (~38,836 chars) + the 50,000-char history budget + system/tools, wh
 real slack under the 200k window. At 260,000 the headroom is ~71,000 chars, about 495
 places at the measured 143.8 chars/place. **This is a guardrail, not an API limit.**
 
-**What the next session must do, in this order.** (1) Repair the 151 by extension case:
-for each, try `.JPG/.jpeg/.JPEG/.png/.PNG`, and **recompute the md5 path prefix from the
-corrected filename** - the prefix changes with the extension. (2) Re-probe and rewrite the
-manifest. (3) Flip the manifest-failed check from WARN to ERROR. (4) Only then fill the
-62-place backlog. Nothing here is pushed - see below.
+**`scripts/repair-photo-names.mjs` now automates the repair.** It reads the `ok:false`
+entries from the manifest, generates candidate filenames for every corruption class seen
+(extension case, double-encoding, first-letter case), verifies each against the Commons
+`imageinfo` API, and rewrites the data with the corrected filename, a **recomputed md5 path
+prefix** (the prefix changes with the filename, so this is not optional) and the widest
+allowed thumb that does not exceed the real source width. Its md5 logic is verified offline:
+it reproduces 1,106 of 1,263 known-alive URLs byte-for-byte, and the other 157 differ only
+in `(` versus `%28` style, which the script now preserves from the original. It never
+invents a replacement photo - unresolved names are left untouched and printed with Commons
+search *suggestions* for a human, because omission beats a guess. It needs network, so run
+it where `upload.wikimedia.org` is reachable:
+`node scripts/repair-photo-names.mjs --dry` first.
+
+**What the next session must do, in this order.** (1) Run the repair script. (2)
+`node scripts/verify-photos.mjs --force` and commit the manifest. (3) Flip the
+manifest-failed check from WARN to ERROR. (4) Only then fill the place-photo backlog.
 
 **NOT PUSHED - still needs Netanel.** No GitHub write access from this session:
 git-over-HTTPS has no credentials and the API proxy answers "GitHub access to this
