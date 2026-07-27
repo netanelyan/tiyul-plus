@@ -15694,6 +15694,222 @@ export const destinations: Destination[] = [
     },
   },
   {
+    slug: 'warsaw',
+    name: 'ורשה',
+    nameLocal: 'Warsaw / Warszawa',
+    countrySlug: 'poland',
+    flag: '🇵🇱',
+    center: { lat: 52.2374, lng: 21.0106 },
+    zoom: 12,
+    tagline: 'עיר ששוחזרה מאפס, ומוזיאון שמספר אלף שנה',
+    summary:
+      'ורשה נהרסה כמעט לחלוטין במלחמת העולם השנייה, והעיר העתיקה שרואים היום היא שחזור מדוקדק לפי ציורים ותצלומים - שחזור שהוא עצמו אתר מורשת עולמית. לישראלים ורשה היא קודם כול מוזיאון פולין, שמספר אלף שנות יהדות פולין ולא רק את סופה, והיא גם נקודת מוצא נוחה לטרבלינקה ולמסעות שורשים.',
+    bestSeason: 'מאי עד ספטמבר. החורף קר מאוד וחשוך מוקדם, אך המחירים נמוכים והמוזיאונים ריקים.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Royal_Castle_in_Warsaw%2C_Poland%2C_2022%2C_03.jpg/500px-Royal_Castle_in_Warsaw%2C_Poland%2C_2022%2C_03.jpg',
+    iconicLandmark: {
+      name: 'מוזיאון פולין',
+      nameLocal: 'POLIN Museum',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Muzeum_Historii_%C5%BByd%C3%B3w_Polskich.png/500px-Muzeum_Historii_%C5%BByd%C3%B3w_Polskich.png',
+      blurb:
+        'מוזיאון תולדות יהודי פולין, שנבנה על אדמת גטו ורשה לשעבר ומציג אלף שנות קהילה.',
+    },
+    editorialRating: {
+      score: 4.1,
+      verdict:
+        'מוזיאון פולין לבדו מצדיק את הנסיעה, והעיר זולה ונוחה. חשוב לדעת שוורשה שונה לגמרי מקרקוב: פחות ציורית, יותר מודרנית ופחות מרוכזת. חסרונות: המרחקים גדולים והעיר פזורה, והכשרות מצומצמת אף שיש קהילה פעילה. שילוב טבעי עם קרקוב.',
+    },
+    places: [
+      {
+        id: 'war-old-town',
+        name: 'העיר העתיקה',
+        nameLocal: 'Old Town (Stare Miasto)',
+        category: 'attraction',
+        lat: 52.2497,
+        lng: 21.0122,
+        description:
+          'העיר העתיקה נהרסה כמעט כליל במלחמת העולם השנייה ונבנתה מחדש לפי ציורים ותצלומים. השחזור עצמו הוא אתר מורשת עולמית.',
+        durationMin: 120,
+        priceLevel: 0,
+        tags: ['history', 'romantic'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=52.2497,21.0122',
+      },
+      {
+        id: 'war-royal-castle',
+        name: 'הטירה המלכותית',
+        nameLocal: 'Royal Castle',
+        category: 'museum',
+        lat: 52.2478,
+        lng: 21.0142,
+        description:
+          'מושב מלכי פולין, שנהרס לחלוטין ב-1944 ושוחזר בשנות השבעים. בפנים אולמות מלכותיים ושני ציורי רמברנדט.',
+        durationMin: 120,
+        priceLevel: 2,
+        tags: ['history', 'art'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=52.2478,21.0142',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Royal_Castle_in_Warsaw%2C_Poland%2C_2022%2C_03.jpg/500px-Royal_Castle_in_Warsaw%2C_Poland%2C_2022%2C_03.jpg',
+      },
+      {
+        id: 'war-barbican',
+        name: 'הברביקן',
+        nameLocal: 'Warsaw Barbican',
+        category: 'attraction',
+        lat: 52.25056,
+        lng: 21.01,
+        description:
+          'שריד הביצורים מהמאה ה-16 בין העיר העתיקה לחדשה, גם הוא שוחזר אחרי המלחמה.',
+        durationMin: 20,
+        priceLevel: 0,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=52.25056,21.01',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Barbakan_w_Warszawie_-_03.jpg/500px-Barbakan_w_Warszawie_-_03.jpg',
+      },
+      {
+        id: 'war-polin',
+        name: 'מוזיאון פולין',
+        nameLocal: 'POLIN Museum of the History of Polish Jews',
+        category: 'museum',
+        lat: 52.24944,
+        lng: 20.99306,
+        description:
+          'מוזיאון אלף שנות היהדות בפולין, על אדמת הגטו לשעבר. נחשב לאחד המוזיאונים ההיסטוריים הטובים באירופה, ומספר את החיים ולא רק את החורבן.',
+        durationMin: 180,
+        priceLevel: 2,
+        tags: ['history', 'art'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=52.24944,20.99306',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Muzeum_Historii_%C5%BByd%C3%B3w_Polskich.png/500px-Muzeum_Historii_%C5%BByd%C3%B3w_Polskich.png',
+      },
+      {
+        id: 'war-uprising-museum',
+        name: 'מוזיאון מרד ורשה',
+        nameLocal: 'Warsaw Rising Museum',
+        category: 'museum',
+        lat: 52.23222,
+        lng: 20.98083,
+        description:
+          'מוזיאון המרד הפולני של 1944, עם תצוגה חווייתית וצפופה. שימו לב שזה מרד ורשה ולא מרד גטו ורשה, שני אירועים שונים.',
+        durationMin: 150,
+        priceLevel: 1,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=52.23222,20.98083',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Muzeum_Powstania_Warszawskiego_2023.jpg/500px-Muzeum_Powstania_Warszawskiego_2023.jpg',
+      },
+      {
+        id: 'war-palace-culture',
+        name: 'ארמון התרבות והמדע',
+        nameLocal: 'Palace of Culture and Science',
+        category: 'viewpoint',
+        lat: 52.23167,
+        lng: 21.00639,
+        description:
+          'המבנה הגבוה בפולין, מתנה של סטלין מ-1955 ועד היום שנוי במחלוקת. מרפסת תצפית בקומה השלושים.',
+        durationMin: 75,
+        priceLevel: 1,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=52.23167,21.00639',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Pa%C5%82ac_Kultury_i_Nauki_2019.jpg/500px-Pa%C5%82ac_Kultury_i_Nauki_2019.jpg',
+      },
+      {
+        id: 'war-lazienki',
+        name: 'פארק לאז׳נקי',
+        nameLocal: 'Łazienki Park',
+        category: 'nature',
+        lat: 52.21278,
+        lng: 21.03278,
+        description:
+          'הפארק הגדול והיפה בעיר, עם ארמון על המים, טווסים ואנדרטת שופן. בקיץ מתקיימים לרגליה קונצרטי שופן חופשיים בימי ראשון.',
+        durationMin: 150,
+        priceLevel: 0,
+        tags: ['outdoors', 'romantic', 'families'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=52.21278,21.03278',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/4_Warszawa-Lazienki_Krolewskie_107.jpg/500px-4_Warszawa-Lazienki_Krolewskie_107.jpg',
+      },
+      {
+        id: 'war-wilanow',
+        name: 'ארמון וילאנוב',
+        nameLocal: 'Wilanów Palace',
+        category: 'museum',
+        lat: 52.16528,
+        lng: 21.09028,
+        description:
+          'ארמון בארוק מהמאה ה-17 שלא נהרס במלחמה, עם גנים גדולים. כשלושים דקות מהמרכז באוטובוס.',
+        durationMin: 150,
+        priceLevel: 1,
+        tags: ['history', 'romantic'],
+        externalUrl: 'https://maps.google.com/?q=52.16528,21.09028',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Garden_facade_of_the_Wilan%C3%B3w_Palace%2C_2019%2C_02.jpg/500px-Garden_facade_of_the_Wilan%C3%B3w_Palace%2C_2019%2C_02.jpg',
+      },
+      {
+        id: 'war-copernicus',
+        name: 'מרכז המדע קופרניקוס',
+        nameLocal: 'Copernicus Science Centre',
+        category: 'museum',
+        lat: 52.24194,
+        lng: 21.02833,
+        description:
+          'מרכז מדע אינטראקטיבי גדול על גדת הוויסלה, מהטובים באירופה למשפחות. כדאי להזמין כרטיס מראש.',
+        durationMin: 180,
+        priceLevel: 2,
+        tags: ['families'],
+        externalUrl: 'https://maps.google.com/?q=52.24194,21.02833',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Warszawa_Centrum_Nauki_Kopernik_(dron).jpg/500px-Warszawa_Centrum_Nauki_Kopernik_(dron).jpg',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'העיר העתיקה והטירה',
+        placeIds: ['war-old-town', 'war-royal-castle', 'war-barbican'],
+        notes:
+          'העיר העתיקה קטנה ואפשר לכסות אותה בבוקר. שימו לב שכל מה שנראה עתיק נבנה מחדש אחרי 1945.',
+      },
+      {
+        day: 2,
+        title: 'מוזיאון פולין וההיסטוריה היהודית',
+        placeIds: ['war-polin'],
+        notes:
+          'להקדיש לו לפחות שלוש שעות. כדאי להזמין כרטיס מראש ולשקול מדריך אודיו.',
+      },
+      {
+        day: 3,
+        title: 'מרד ורשה וארמון התרבות',
+        placeIds: ['war-uprising-museum', 'war-palace-culture'],
+        notes:
+          'שני אתרים שמספרים את המאה העשרים של העיר משני צדדים שונים.',
+      },
+      {
+        day: 4,
+        title: 'פארקים וארמונות',
+        placeIds: ['war-lazienki', 'war-wilanow', 'war-copernicus'],
+        notes:
+          'בקיץ יש קונצרטי שופן חופשיים בלאז׳נקי בימי ראשון. וילאנוב דורש נסיעה קצרה דרומה.',
+      },
+    ],
+    practical: {
+      flights:
+        'טיסות ישירות מנתב״ג לוורשה (WAW), כשלוש שעות וחצי. מפעילות בין השאר אל על, לוט, ויזאייר וריינאייר (חלקן לשדה מודלין). משדה התעופה שופן למרכז יש רכבת ואוטובוס, כרבע שעה.',
+      gettingAround:
+        'המטרו, הטראמים והאוטובוסים מכוסים בכרטיס אחד וזולים. העיר פזורה ולא הכול במרחק הליכה, אז כדאי כרטיס יומי. מוניות ואפליקציות זמינות וזולות.',
+      kosherOverview:
+        'בוורשה קהילה יהודית פעילה, בית כנסת נוז׳יק ההיסטורי ובית חב״ד, ופועלת בעיר מסעדה כשרה. ההיצע קטן וכדאי לתאם מראש ובעיקר לשבת. במסעות שורשים ובאתרים מחוץ לעיר אין תשתית כשרות כלל וצריך להצטייד. לוודא מול המקום. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
+    },
+  },
+  {
     slug: 'krakow',
     name: 'קרקוב',
     nameLocal: 'Kraków',
@@ -16907,6 +17123,251 @@ export const destinations: Destination[] = [
     },
   },
   {
+    slug: 'bucharest',
+    name: 'בוקרשט',
+    nameLocal: 'Bucharest / București',
+    countrySlug: 'romania',
+    flag: '🇷🇴',
+    center: { lat: 44.4396, lng: 26.0963 },
+    zoom: 13,
+    tagline: 'פריז של המזרח, ומה שצ׳אושסקו עשה לה',
+    summary:
+      'בוקרשט היא עיר של ניגודים חדים: שדרות ובנייני בל אפוק שהקנו לה את הכינוי "פריז הקטנה", לצד מגה-מבנים של התקופה הקומוניסטית ורובע עתיק שהפך למרכז חיי לילה. לישראלים רבים יש כאן גם שורשים משפחתיים, והקהילה היהודית ההיסטורית נוכחת במקדש הכוראלי ובמוזיאון שלצידו.',
+    bestSeason: 'אפריל עד יוני וספטמבר עד אוקטובר. הקיץ חם מאוד והחורף קר, אך המחירים נמוכים כל השנה.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Ateneo_Rumano%2C_Bucarest%2C_Ruman%C3%ADa%2C_2016-05-29%2C_DD_73.jpg/500px-Ateneo_Rumano%2C_Bucarest%2C_Ruman%C3%ADa%2C_2016-05-29%2C_DD_73.jpg',
+    iconicLandmark: {
+      name: 'האתנאום הרומני',
+      nameLocal: 'Romanian Athenaeum',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Ateneo_Rumano%2C_Bucarest%2C_Ruman%C3%ADa%2C_2016-05-29%2C_DD_73.jpg/500px-Ateneo_Rumano%2C_Bucarest%2C_Ruman%C3%ADa%2C_2016-05-29%2C_DD_73.jpg',
+      blurb:
+        'אולם הקונצרטים מ-1888 עם הכיפה והפרסקו ההיקפי, ביתה של התזמורת הפילהרמונית הרומנית.',
+    },
+    editorialRating: {
+      score: 3.9,
+      verdict:
+        'זולה מאוד, טיסה קצרה, ונקודת מוצא נוחה לטרנסילבניה ברכבת או ברכב. המורשת היהודית והאוכל הם נקודות חוזק. חסרונות: העיר עצמה לא יפה במיוחד ברובה, התנועה כבדה, והמדרכות והמעברים לא תמיד נוחים. יומיים מספיקים לפני שממשיכים צפונה.',
+    },
+    places: [
+      {
+        id: 'buc-parliament',
+        name: 'ארמון הפרלמנט',
+        nameLocal: 'Palace of the Parliament',
+        category: 'attraction',
+        lat: 44.4275,
+        lng: 26.0875,
+        description:
+          'הבניין הכבד בעולם והשני בגודלו אחרי הפנטגון, שהקים צ׳אושסקו במחיר הריסת רבע מהעיר העתיקה. סיורים מודרכים בהזמנה מראש ועם דרכון.',
+        durationMin: 120,
+        priceLevel: 1,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=44.4275,26.0875',
+      },
+      {
+        id: 'buc-atheneum',
+        name: 'האתנאום הרומני',
+        nameLocal: 'Romanian Athenaeum',
+        category: 'attraction',
+        lat: 44.4413,
+        lng: 26.0973,
+        description:
+          'אולם הקונצרטים מ-1888 עם הכיפה והפרסקו ההיקפי, ביתה של הפילהרמונית. אפשר להיכנס לסיור קצר גם ללא הופעה.',
+        durationMin: 60,
+        priceLevel: 1,
+        tags: ['art', 'history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=44.4413,26.0973',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Ateneo_Rumano%2C_Bucarest%2C_Ruman%C3%ADa%2C_2016-05-29%2C_DD_73.jpg/500px-Ateneo_Rumano%2C_Bucarest%2C_Ruman%C3%ADa%2C_2016-05-29%2C_DD_73.jpg',
+      },
+      {
+        id: 'buc-lipscani',
+        name: 'ליפסקאני - העיר העתיקה',
+        nameLocal: 'Lipscani (Old Town)',
+        category: 'attraction',
+        lat: 44.43183,
+        lng: 26.10165,
+        description:
+          'רובע הסמטאות ההיסטורי, היום מרכז חיי הלילה והמסעדות של בוקרשט. שוקק בערב וכמעט ריק בבוקר.',
+        durationMin: 120,
+        priceLevel: 1,
+        tags: ['nightlife', 'foodie', 'history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=44.43183,26.10165',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Strada_Lipscani_18-20_Bucure%C8%99ti_(2023)_-_img_04.jpg/500px-Strada_Lipscani_18-20_Bucure%C8%99ti_(2023)_-_img_04.jpg',
+      },
+      {
+        id: 'buc-stavropoleos',
+        name: 'מנזר סטברופולאוס',
+        nameLocal: 'Stavropoleos Monastery',
+        category: 'attraction',
+        lat: 44.43182,
+        lng: 26.09879,
+        description:
+          'כנסייה קטנה מ-1724 בסגנון ברנקובאן, עם חצר פנימית שקטה בלב רובע הבילויים. ניגוד מוחלט לרחוב שבחוץ.',
+        durationMin: 30,
+        priceLevel: 0,
+        tags: ['history', 'art'],
+        externalUrl: 'https://maps.google.com/?q=44.43182,26.09879',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/4%2C_Strada_Stavropoleos%2C_Bucharest_(Romania).jpg/500px-4%2C_Strada_Stavropoleos%2C_Bucharest_(Romania).jpg',
+      },
+      {
+        id: 'buc-curtea-veche',
+        name: 'החצר הישנה',
+        nameLocal: 'Curtea Veche',
+        category: 'attraction',
+        lat: 44.43015,
+        lng: 26.10096,
+        description:
+          'שרידי ארמון הנסיכים מהמאה ה-15, ובהם השלב שקשור לוולאד צפש (דרקולה ההיסטורי) ששלט מכאן.',
+        durationMin: 45,
+        priceLevel: 1,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=44.43015,26.10096',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Curtea_Veche_1.jpg/500px-Curtea_Veche_1.jpg',
+      },
+      {
+        id: 'buc-art-museum',
+        name: 'מוזיאון האמנות הלאומי',
+        nameLocal: 'National Museum of Art of Romania',
+        category: 'museum',
+        lat: 44.44016,
+        lng: 26.09553,
+        description:
+          'בארמון המלוכה לשעבר, עם אוסף אמנות רומנית מימי הביניים ואוסף אירופי. משקיף על כיכר המהפכה.',
+        durationMin: 120,
+        priceLevel: 1,
+        tags: ['art', 'history'],
+        externalUrl: 'https://maps.google.com/?q=44.44016,26.09553',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/The_Royal_Palace_(AP4K1357_1PS)_(29291577856).jpg/500px-The_Royal_Palace_(AP4K1357_1PS)_(29291577856).jpg',
+      },
+      {
+        id: 'buc-choral-temple',
+        name: 'המקדש הכוראלי',
+        nameLocal: 'Choral Temple',
+        category: 'attraction',
+        lat: 44.43106,
+        lng: 26.1067,
+        description:
+          'בית הכנסת המרכזי של בוקרשט מ-1857, בהשראת בית הכנסת הגדול בווינה. לצידו המוזיאון לתולדות יהודי רומניה.',
+        durationMin: 60,
+        priceLevel: 1,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=44.43106,26.1067',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Bucharest_-_%D7%91%D7%99%D7%AA_%D7%94%D7%9B%D7%A0%D7%A1%D7%AA_%D7%94%D7%9B%D7%95%D7%A8%D7%90%D7%9C%D7%99_%D7%A9%D7%9C_%D7%91%D7%95%D7%A7%D7%A8%D7%A9%D7%98_(28257630823).jpg/500px-Bucharest_-_%D7%91%D7%99%D7%AA_%D7%94%D7%9B%D7%A0%D7%A1%D7%AA_%D7%94%D7%9B%D7%95%D7%A8%D7%90%D7%9C%D7%99_%D7%A9%D7%9C_%D7%91%D7%95%D7%A7%D7%A8%D7%A9%D7%98_(28257630823).jpg',
+      },
+      {
+        id: 'buc-village-museum',
+        name: 'מוזיאון הכפר',
+        nameLocal: 'Dimitrie Gusti National Village Museum',
+        category: 'museum',
+        lat: 44.47336,
+        lng: 26.07656,
+        description:
+          'מוזיאון פתוח על שפת האגם, ובו כ-300 בתים, טחנות וכנסיות עץ אמיתיים שהועברו מכל רחבי רומניה.',
+        durationMin: 150,
+        priceLevel: 1,
+        tags: ['families', 'history', 'outdoors'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=44.47336,26.07656',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/(2023)_Biserica_de_lemn_din_Dragomire%C8%99ti%2C_Maramure%C8%99%2C_1722_-_img_18.jpg/500px-(2023)_Biserica_de_lemn_din_Dragomire%C8%99ti%2C_Maramure%C8%99%2C_1722_-_img_18.jpg',
+      },
+      {
+        id: 'buc-herastrau',
+        name: 'פארק המלך מיכאל הראשון',
+        nameLocal: 'King Michael I Park (Herăstrău)',
+        category: 'nature',
+        lat: 44.47139,
+        lng: 26.08167,
+        description:
+          'הפארק הגדול בעיר, סביב אגם הראסטראו. סירות, אופניים ומסעדות על המים, וצמוד למוזיאון הכפר.',
+        durationMin: 120,
+        priceLevel: 0,
+        tags: ['outdoors', 'families', 'romantic'],
+        externalUrl: 'https://maps.google.com/?q=44.47139,26.08167',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Parcul_Herastrau_park_lake_Bucharest_Bucuresti_Romania_2.JPG/500px-Parcul_Herastrau_park_lake_Bucharest_Bucuresti_Romania_2.JPG',
+      },
+      {
+        id: 'buc-cismigiu',
+        name: 'גני צ׳ישמיג׳ו',
+        nameLocal: 'Cișmigiu Gardens',
+        category: 'nature',
+        lat: 44.43611,
+        lng: 26.08917,
+        description:
+          'הגן הציבורי הוותיק בבוקרשט, מ-1847, בלב המרכז. אגם עם סירות בקיץ והחלקה על הקרח בחורף.',
+        durationMin: 75,
+        priceLevel: 0,
+        tags: ['outdoors', 'romantic'],
+        externalUrl: 'https://maps.google.com/?q=44.43611,26.08917',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Ci%C5%9Fmigiu_Gardens_(2438863237).jpg/500px-Ci%C5%9Fmigiu_Gardens_(2438863237).jpg',
+      },
+      {
+        id: 'buc-arcul',
+        name: 'שער הניצחון',
+        nameLocal: 'Arcul de Triumf',
+        category: 'attraction',
+        lat: 44.46722,
+        lng: 26.07807,
+        description:
+          'שער הניצחון של בוקרשט בגרסתו מ-1936, לזכר חיילי מלחמת העולם הראשונה. יש מרפסת תצפית שנפתחת בתאריכים מסוימים.',
+        durationMin: 30,
+        priceLevel: 0,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=44.46722,26.07807',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'המרכז ההיסטורי והמורשת היהודית',
+        placeIds: ['buc-lipscani', 'buc-stavropoleos', 'buc-curtea-veche', 'buc-choral-temple'],
+        notes:
+          'המקדש הכוראלי והמוזיאון היהודי דורשים תיאום מראש ודרכון בכניסה.',
+      },
+      {
+        day: 2,
+        title: 'הכיכר המלכותית והאתנאום',
+        placeIds: ['buc-atheneum', 'buc-art-museum', 'buc-cismigiu'],
+        notes:
+          'הכול במרחק הליכה. באתנאום יש סיורים קצרים גם בלי הופעה.',
+      },
+      {
+        day: 3,
+        title: 'ארמון הפרלמנט',
+        placeIds: ['buc-parliament'],
+        notes:
+          'סיור בהזמנה מראש ועם דרכון. הבניין ענק והסיור מכסה חלק קטן ממנו בלבד.',
+      },
+      {
+        day: 4,
+        title: 'הצפון: מוזיאון הכפר, הפארק ושער הניצחון',
+        placeIds: ['buc-village-museum', 'buc-herastrau', 'buc-arcul'],
+        notes:
+          'שלושתם צמודים זה לזה בצפון העיר, ואפשר לשלב אותם ביום אחד רגוע.',
+      },
+    ],
+    practical: {
+      flights:
+        'טיסות ישירות מנתב״ג לבוקרשט (OTP), כשלוש שעות. מפעילות בין השאר אל על, טארום, ויזאייר וריינאייר. משדה התעופה למרכז יש רכבת ואוטובוס.',
+      gettingAround:
+        'המטרו יעיל וזול ומכסה את הצירים המרכזיים; יש גם טראמים ואוטובוסים. המרכז ההיסטורי הוא הליכה. מוניות ואפליקציית Bolt זולות מאוד, ולרוב זו הדרך הפשוטה ביותר לנוע בעיר.',
+      kosherOverview:
+        'בבוקרשט קהילה יהודית ותיקה, ופועלים בה מסעדה כשרה בניהול הקהילה, בית חב״ד ובתי כנסת פעילים. ההיצע קטן ומרוכז, וכדאי לתאם מראש ובמיוחד לשבת. אתרים יהודיים דורשים לרוב תיאום והצגת דרכון בכניסה. לוודא מול המקום. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
+    },
+  },
+  {
     slug: 'transylvania',
     name: 'טרנסילבניה',
     nameLocal: 'Transylvania / Transilvania',
@@ -17410,6 +17871,247 @@ export const destinations: Destination[] = [
         'רכב שכור הוא כמעט חובה מחוץ לגאלוויי: קונמארה, הבורן והכפרים לא מכוסים בתחבורה ציבורית סבירה. נוסעים בצד שמאל, והכבישים המשניים צרים מאוד עם גדרות אבן צמודות - לשקול ביטוח מורחב. יש קווי אוטובוס ישירים מדבלין ומגאלוויי למצוקי מוהר למי שלא נוהג, ולאיי אראן מגיעים במעבורת מרוסאוויל או בטיסה קטנה מקונמארה.',
       kosherOverview:
         'הקהילה היהודית באירלנד קטנה ומרוכזת בדבלין, ובמערב האי אין תשתית כשרות. בפועל: להצטייד בדבלין או להביא מהארץ, ולהתבסס על מוצרים ארוזים עם הכשר מרשתות הסופרמרקטים הגדולות שיש בהן סימון ברור, על דגים טריים שמבשלים לבד ועל ירקות ופירות. מי שצריך ארוחות מסודרות או סידור לשבת - לתאם מראש ובטלפון מול הקהילה בדבלין, ולא להסתמך על מידע מהרשת.',
+    },
+  },
+  {
+    slug: 'sofia',
+    name: 'סופיה',
+    nameLocal: 'Sofia / София',
+    countrySlug: 'bulgaria',
+    flag: '🇧🇬',
+    center: { lat: 42.6977, lng: 23.3219 },
+    zoom: 13,
+    tagline: 'בירה זולה עם הר בגבול העיר',
+    summary:
+      'סופיה היא אחת הבירות הזולות באירופה, וטיסה של פחות משלוש שעות מתל אביב. המרכז קומפקטי ומרוכז סביב "משולש הסובלנות" - קתדרלה, בית כנסת ומסגד במרחק דקות זה מזה - ומעליה הר ויטושה, שאליו מגיעים באוטובוס עירוני רגיל.',
+    bestSeason: 'מאי עד אוקטובר לעיר ולהרים, ודצמבר עד מרץ לסקי בוויטושה ובבנסקו. יולי-אוגוסט חמים אך נסבלים בזכות הגובה.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Catedral_de_Alejandro_Nevski_--_2019_--_Sof%C3%ADa%2C_Bulgaria.jpg/500px-Catedral_de_Alejandro_Nevski_--_2019_--_Sof%C3%ADa%2C_Bulgaria.jpg',
+    iconicLandmark: {
+      name: 'קתדרלת אלכסנדר נבסקי',
+      nameLocal: 'Alexander Nevsky Cathedral',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Catedral_de_Alejandro_Nevski_--_2019_--_Sof%C3%ADa%2C_Bulgaria.jpg/500px-Catedral_de_Alejandro_Nevski_--_2019_--_Sof%C3%ADa%2C_Bulgaria.jpg',
+      blurb:
+        'קתדרלה ניאו-ביזנטית עם כיפות זהב, מהגדולות בבלקן, שנבנתה לזכר הנופלים במלחמת השחרור הבולגרית.',
+    },
+    editorialRating: {
+      score: 4.0,
+      verdict:
+        'תמורה יוצאת דופן למחיר: טיסה קצרה, מחירים נמוכים, ומרכז שאפשר לכסות ברגל ביומיים. הר ויטושה בגבול העיר הוא נכס אמיתי. חסרונות: העיר עצמה לא מרהיבה כמו פראג או בודפשט, ותשתית הכשרות מסתכמת בבית חב״ד ובבית הכנסת.',
+    },
+    places: [
+      {
+        id: 'sof-nevski',
+        name: 'קתדרלת אלכסנדר נבסקי',
+        nameLocal: 'Alexander Nevsky Cathedral',
+        category: 'attraction',
+        lat: 42.69583,
+        lng: 23.33296,
+        description:
+          'הקתדרלה הניאו-ביזנטית עם כיפות הזהב, שנבנתה לזכר החיילים הרוסים שנפלו במלחמת השחרור הבולגרית. אחת הגדולות בבלקן.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=42.69583,23.33296',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Catedral_de_Alejandro_Nevski_--_2019_--_Sof%C3%ADa%2C_Bulgaria.jpg/500px-Catedral_de_Alejandro_Nevski_--_2019_--_Sof%C3%ADa%2C_Bulgaria.jpg',
+      },
+      {
+        id: 'sof-synagogue',
+        name: 'בית הכנסת של סופיה',
+        nameLocal: 'Sofia Synagogue',
+        category: 'attraction',
+        lat: 42.7,
+        lng: 23.32111,
+        description:
+          'בית הכנסת הספרדי הגדול באירופה ואחד הגדולים בעולם, מ-1909. יהדות בולגריה ניצלה כמעט כולה בשואה, וזה חלק מהסיפור שמסופר במקום.',
+        durationMin: 60,
+        priceLevel: 1,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=42.7,23.32111',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Sofia_Synagogue_11c.jpg/500px-Sofia_Synagogue_11c.jpg',
+      },
+      {
+        id: 'sof-rotunda',
+        name: 'רוטונדת סנט ג׳ורג׳',
+        nameLocal: 'Rotunda of St George',
+        category: 'attraction',
+        lat: 42.69694,
+        lng: 23.32278,
+        description:
+          'המבנה העתיק ביותר בסופיה, מהמאה הרביעית, בתוך חצר פנימית של בנייני ממשלה. פרסקאות מימי הביניים מתחת לכיפה.',
+        durationMin: 30,
+        priceLevel: 0,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=42.69694,23.32278',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/StGeorgeRotundaSofia.JPG/500px-StGeorgeRotundaSofia.JPG',
+      },
+      {
+        id: 'sof-hagia-sofia',
+        name: 'כנסיית סנטה סופיה',
+        nameLocal: 'Saint Sophia Church',
+        category: 'attraction',
+        lat: 42.69651,
+        lng: 23.33142,
+        description:
+          'הכנסייה שהעניקה לעיר את שמה, מהמאה השישית. מתחתיה נקרופוליס רומי שאפשר לרדת אליו.',
+        durationMin: 45,
+        priceLevel: 1,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=42.69651,23.33142',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Basilica_of_Hagia_Sofia%2C_Bulgaria.jpg/500px-Basilica_of_Hagia_Sofia%2C_Bulgaria.jpg',
+      },
+      {
+        id: 'sof-banya-bashi',
+        name: 'מסגד באניה באשי',
+        nameLocal: 'Banya Bashi Mosque',
+        category: 'attraction',
+        lat: 42.69944,
+        lng: 23.3225,
+        description:
+          'מסגד עות׳מאני מ-1576, שעדיין פעיל. עומד במרחק דקות הליכה מבית הכנסת, מהקתדרלה ומכנסייה קתולית, ולכן האזור מכונה "משולש הסובלנות".',
+        durationMin: 30,
+        priceLevel: 0,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=42.69944,23.3225',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Banya_Bashi_Mosque_Sofia.jpg/500px-Banya_Bashi_Mosque_Sofia.jpg',
+      },
+      {
+        id: 'sof-market-hall',
+        name: 'ההול המרכזי',
+        nameLocal: 'Central Sofia Market Hall',
+        category: 'shopping',
+        lat: 42.7,
+        lng: 23.32167,
+        description:
+          'שוק מקורה מ-1911 שחודש, עם דוכני אוכל, גבינות ומאפים בקומה אחת ומרתף ארכיאולוגי מתחת.',
+        durationMin: 60,
+        priceLevel: 1,
+        tags: ['foodie', 'families'],
+        externalUrl: 'https://maps.google.com/?q=42.7,23.32167',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CentralMarketHall-Sofia-C.jpg/500px-CentralMarketHall-Sofia-C.jpg',
+      },
+      {
+        id: 'sof-vitosha-blvd',
+        name: 'שדרות ויטושה',
+        nameLocal: 'Vitosha Boulevard',
+        category: 'shopping',
+        lat: 42.6925,
+        lng: 23.31972,
+        description:
+          'הרחוב הראשי להולכי רגל, עם בתי קפה ומסעדות ונוף ישיר להר ויטושה בקצהו.',
+        durationMin: 60,
+        priceLevel: 1,
+        tags: ['foodie', 'nightlife'],
+        externalUrl: 'https://maps.google.com/?q=42.6925,23.31972',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Vitosha_boulevard%2C_Sofia.jpg/500px-Vitosha_boulevard%2C_Sofia.jpg',
+      },
+      {
+        id: 'sof-ivan-vazov',
+        name: 'התיאטרון הלאומי איוואן ואזוב',
+        nameLocal: 'Ivan Vazov National Theatre',
+        category: 'attraction',
+        lat: 42.69417,
+        lng: 23.32639,
+        description:
+          'התיאטרון הלאומי מ-1907 והגן שלפניו, שהוא אחד ממקומות הישיבה האהובים על תושבי העיר.',
+        durationMin: 45,
+        priceLevel: 1,
+        tags: ['art'],
+        externalUrl: 'https://maps.google.com/?q=42.69417,23.32639',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/IvanVazov_National_Theatre_7.jpg/500px-IvanVazov_National_Theatre_7.jpg',
+      },
+      {
+        id: 'sof-ndk',
+        name: 'ארמון התרבות הלאומי',
+        nameLocal: 'National Palace of Culture (NDK)',
+        category: 'attraction',
+        lat: 42.68472,
+        lng: 23.31889,
+        description:
+          'מרכז הכנסים הגדול בדרום-מזרח אירופה, מ-1981, ולפניו פארק ומזרקות. דוגמה מובהקת לארכיטקטורה של התקופה הסוציאליסטית.',
+        durationMin: 45,
+        priceLevel: 0,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=42.68472,23.31889',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/National_Palace_of_Culture_(23997858848).jpg/500px-National_Palace_of_Culture_(23997858848).jpg',
+      },
+      {
+        id: 'sof-boyana',
+        name: 'כנסיית בויאנה',
+        nameLocal: 'Boyana Church',
+        category: 'attraction',
+        lat: 42.64467,
+        lng: 23.26617,
+        description:
+          'אתר מורשת עולמית של אונסק״ו למרגלות ויטושה, עם פרסקאות מ-1259 שנחשבות למבשרות הרנסאנס. הכניסה מוגבלת לקבוצות קטנות ולזמן קצר.',
+        durationMin: 45,
+        priceLevel: 1,
+        tags: ['history', 'art'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=42.64467,23.26617',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Boyana_Church_2_TB.JPG/500px-Boyana_Church_2_TB.JPG',
+      },
+      {
+        id: 'sof-vitosha',
+        name: 'הר ויטושה',
+        nameLocal: 'Vitosha',
+        category: 'nature',
+        lat: 42.56361,
+        lng: 23.28139,
+        description:
+          'הר בגובה 2,290 מטר בגבול העיר, ובו שבילי הליכה בקיץ ואתר סקי בחורף. מגיעים באוטובוס עירוני, וזה נדיר לבירה אירופית.',
+        durationMin: 300,
+        priceLevel: 0,
+        tags: ['outdoors', 'families'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=42.56361,23.28139',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Vitosha3.jpg/500px-Vitosha3.jpg',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'משולש הסובלנות ומרכז העיר',
+        placeIds: ['sof-nevski', 'sof-hagia-sofia', 'sof-rotunda', 'sof-banya-bashi', 'sof-synagogue'],
+        notes:
+          'הכול במרחק הליכה של רבע שעה. הרוטונדה מוסתרת בחצר פנימית בין בנייני ממשלה.',
+      },
+      {
+        day: 2,
+        title: 'שווקים, שדרות ותרבות',
+        placeIds: ['sof-market-hall', 'sof-vitosha-blvd', 'sof-ivan-vazov', 'sof-ndk'],
+        notes:
+          'יום עירוני קליל, הכול על ציר אחד מהשוק ועד ארמון התרבות.',
+      },
+      {
+        day: 3,
+        title: 'בויאנה וויטושה',
+        placeIds: ['sof-boyana', 'sof-vitosha'],
+        notes:
+          'לכנסיית בויאנה מגיעים באוטובוס 64 או 107, וממנה ממשיכים במעלה ההר. הכניסה לכנסייה מוגבלת לרבע שעה בקבוצות קטנות.',
+      },
+    ],
+    practical: {
+      flights:
+        'טיסות ישירות מנתב״ג לסופיה (SOF), כשעתיים וחצי עד שלוש. מפעילות בין השאר אל על, ויזאייר ובולגריה אייר. משדה התעופה למרכז יש קו מטרו ישיר, כעשרים דקות.',
+      gettingAround:
+        'המטרו מגיע משדה התעופה למרכז ולרוב האזורים ונוח מאוד. יש גם טראמים ואוטובוסים, וכרטיס אחד תקף לכולם. המרכז ההיסטורי כולו הליכה. לוויטושה יוצאים אוטובוסים עירוניים מקצה קו המטרו.',
+      kosherOverview:
+        'בסופיה קהילה יהודית קטנה סביב בית הכנסת המרכזי, ופועל בעיר בית חב״ד שמספק ארוחות שבת בתיאום מראש. אין מסעדות כשרות קבועות, וההיצע בחנויות מוגבל. מי שמקפיד צריך להיערך מראש ולתאם מול חב״ד סופיה. לוודא מול המקום. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
     },
   },
   {
