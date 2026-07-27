@@ -299,6 +299,98 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-27 (l) - "It looks like flying an airplane": measured the cockpit, then uncrowded it
+
+Netanel, as the founder looking at his own trip screen: *"i fear this looks like
+flying an airplane for some people, i am the founder and it looks sometime
+scary."* He asked whether the answer was a tutorial or simplification. Neither was
+answerable yet, because nobody had counted what is on the screen.
+
+**The audit.** Production build, real Chromium, two seeded trips, an element
+counted only if genuinely visible and larger than 4x4px:
+
+| | 1440 | 390 |
+|---|---|---|
+| interactive elements at first paint | **54** | **32** |
+| whole page, booking panel open | 90 | 73 |
+
+**Two things we both assumed that were wrong.** The booking panel defaults to
+collapsed (`BookingPanel.tsx:33`) - his screenshot of six cards was taken after
+opening it, so that section was already correct. And mobile was already better
+than desktop, because the action row collapses under 640px and the all-days grid
+under 1024px. **This was specifically a desktop problem.**
+
+**The diagnosis was hierarchy, not quantity.** Three contributors: eleven controls
+sat above the plan and a first-timer needed none of them (`מחיקה` rendered at the
+same weight as `שיתוף`); every stop carried four permanently-visible controls, so
+four stops meant sixteen; and the agent - the product itself - was the narrowest,
+quietest column while the loudest element on the page was a Google Maps link.
+
+**A tutorial was rejected as the primary cure** and the reasoning is worth
+keeping: a walkthrough reduces the control count by zero and *adds* controls. It
+teaches people to tolerate a crowded screen instead of uncrowding it. One
+coach-mark above the agent composer survived, once per browser.
+
+**Shipped:** a `Menu` primitive (real button, not hover - hover does not exist on
+touch and keyboard must reach every action; closes on outside click and Escape;
+no new dependency); header 7 buttons to 3 with delete demoted to the bottom of a
+menu behind a separator; preferences collapsed to one chip that **still shows the
+set values as text**; per-stop controls 4 to 1, with irrelevant actions *absent*
+rather than disabled; notes behind a trigger that auto-opens when a note exists;
+the navigation button de-emphasised; the agent column widened and given a real
+heading, its empty state centred because widening alone created a white void; the
+all-days grid collapsed at every width.
+
+**Results, and I missed my own targets.**
+
+| | before | after | target | met |
+|---|---|---|---|---|
+| 1440 first paint | 54 | 43 | ≤30 | no |
+| 390 first paint | 32 | 29 | ≤20 | no |
+| 1440 excl. map + nav | 35 | 27 | ≤13 | no |
+
+**Why: I set those numbers without doing the arithmetic.** What the approved
+dispositions leave standing at 1440 is 6 nav + 10 Leaflet + 4 header + 1
+preferences + 5 day tabs + 2 map toggle + 3 day card + 3 stop menus + 7 agent + 1
+a11y = 42, plus the first-visit coach = **43, exactly what the harness reports.**
+43 is the floor of the plan as approved. Going lower needs a *decision*: a compact
+day selector instead of one tab per day, and 2 starters instead of 4. The ten
+Leaflet controls cannot go - three are licence-required attribution links.
+
+**The metric under-measures the fix, which is the more useful lesson.** The count
+fell 20% while the screen reads far calmer, because what was removed was the
+*flat, equal-weight* noise. Counting controls measures density; the complaint was
+about hierarchy. A better proxy next time: how many things compete for first
+attention - now about three (day tabs, the agent, the plan) instead of everything.
+
+**A removal I talked myself out of.** Removal was permitted, so I went looking and
+drafted `שופינג` for deletion on the theory nothing reads it. Then checked:
+`set_preferences` validates it (`agent.ts:958`), it rides to the model inside
+`preferences` every turn, and it drives scoring in `generate.ts:55-57`. It
+collapses instead. "Low-value control" is an easy thing to assert and a
+five-minute grep to check.
+
+**Verified by driving the real UI**, not by reading markup: 11/11 at 1440
+(reorder, move-to-day, remove, notes and preference write-through, Escape, no dead
+disabled items, keyboard opens a stop menu, both header menus carry every
+relocated action, coach shown exactly once across a reload) and 6/6 at 390 with
+touch (no horizontal overflow, accessibility button not occluded, drawer, coach in
+the drawer too, tap opens a stop menu, all-days collapsed). 60 unit tests, tsc
+clean, build clean, lint unchanged at 27.
+
+**A harness trap that cost a wrong measurement.** The first re-measure reported 13
+controls and a 3,243px page - the trip had not rendered at all. Cause: the old
+`next start` was still bound to the port, serving HTML that referenced chunks the
+rebuild had deleted, so every JS request 500ed and the page fell back to the
+landing hero. **Kill the previous server before measuring a rebuild**, and treat
+an implausibly good number as a broken harness rather than a win.
+
+**Left for a decision, not deferred silently:** the day-tab and starter reductions
+above; and the empty state (a first-time visitor with no trip sees the landing
+hero, not this screen) - if the fear is about first *impressions* rather than
+first *itineraries*, that is separate work this pass did not touch.
+The full audit, the per-control disposition table and the layout sketches are in
+`SIMPLIFY-PROPOSAL.md` at the repo root.
 ### 2026-07-27 (k) - Country cards had no photos; +4 countries; Maldives rejected
 
 **The bug Netanel spotted.** A screenshot of `/countries` showed Sri Lanka,
