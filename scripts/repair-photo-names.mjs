@@ -83,6 +83,18 @@ function variants(name) {
   return [...new Set(out)].filter((v) => v !== name);
 }
 
+/**
+ * מלכודת REDIRECT, נתפסה בייצור ב-2026-07-27 ועלתה תיקון אחד מתוך 112:
+ * `Kykkos_monastry_from_the_air.JPG` הוא **הפניה** ב-Commons אל
+ * `Kykkos_monastery_from_the_air.jpg` (שים לב: גם איות וגם אותיות הסיומת).
+ * ה-API מחזיר imageinfo מלא עבור ההפניה - קיים, 4416x3312, image/jpeg - אבל
+ * **תמונות ממוזערות קיימות רק תחת השם הקנוני**, ולכן כתובת ה-thumb שבנינו
+ * מהשם המופנה החזירה 404 בכל רוחב.
+ *
+ * המסקנה: `prop=imageinfo` לבדו לא מוכיח שה-thumb יעבוד. לכן מבקשים
+ * `iiurlwidth` ולוקחים את `thumburl` **כמו שהוא** - הוא תמיד קנוני - ומוסיפים
+ * `redirects=1` כדי שהכותרות ייפתרו. בניית md5 עצמאית נשארת רק כגיבוי.
+ */
 /** imageinfo מחזיר גם קיום וגם רוחב מקור - שניהם נחוצים לבחירת רוחב חוקי. */
 /**
  * חיפוש קיום + רוחב מקור מול Commons.
@@ -118,8 +130,12 @@ async function lookup(titles) {
       format: 'json',
       formatversion: '2',
       prop: 'imageinfo',
-      iiprop: 'size',
+      iiprop: 'size|url',
       titles: batch.map((t) => `File:${t}`).join('|'),
+      // redirects=1 פותר הפניות, ו-iiurlwidth מחזיר thumburl קנוני שאפשר
+      // להשתמש בו כמו שהוא במקום לבנות md5 בעצמנו. ראה מלכודת REDIRECT למעלה.
+      redirects: '1',
+      iiurlwidth: '500',
     });
     let j = null;
     for (let attempt = 0; attempt < 6 && !j; attempt++) {

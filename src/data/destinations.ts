@@ -14072,7 +14072,7 @@ export const destinations: Destination[] = [
       {
         id: 'paf-kykkos',
         photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Kykkos_monastry_from_the_air.JPG/500px-Kykkos_monastry_from_the_air.JPG',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Kykkos_monastery_from_the_air.jpg/500px-Kykkos_monastery_from_the_air.jpg',
         name: 'מנזר קיקוס',
         nameLocal: 'Kykkos Monastery',
         category: 'attraction',
