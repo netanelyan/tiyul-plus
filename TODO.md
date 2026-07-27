@@ -8,6 +8,25 @@ kosher only where it genuinely exists (else say so honestly); `npm run build`
 + `node scripts/verify-photos.mjs` must pass; commit + push per city; update
 the CLAUDE.md session log.
 
+## Sourcing coordinates from this sandbox
+
+**READ THIS BEFORE DECLARING A PLACE BLOCKED: `https://www.geonames.org/search.html?q=<name>&country=<ISO2>`
+is reachable through WebFetch and returns real decimal coordinates.** Found
+2026-07-27 after dbpedia spent hours returning 502s and read timeouts. It is
+now the second working source alongside `https://dbpedia.org/data/<Article>.json`,
+and it is strictly better in two ways: it does not truncate, so the large
+articles that block Paris and London are not a problem, and it covers places
+with no Wikipedia article at all. It does NOT carry photos, so dbpedia is
+still the source for those. Sources confirmed blocked, do not retry them:
+`www.wikidata.org/w/api.php` and `query.wikidata.org/sparql` (both
+"cache-only"), nominatim, photon, and the Wikipedia REST API. bash has no
+outbound network in this sandbox at all.
+
+**Not a TODO, recorded so it stops being re-raised:** an audit flagged 134
+places with descriptions under 100 characters. They were reviewed on
+2026-07-27 and they are dense and correct, not stubs. Padding them adds noise
+and invites invented detail. Leave them alone.
+
 ## ✅ RESOLVED: the chat-grounding scale guardrail (was BLOCKED)
 
 **2026-07-25, `data/expansion-3`** measured the whole catalog serializing
@@ -62,30 +81,21 @@ Hungary→Lake Balaton, Slovakia→High Tatras.
       nature entry (Charyn is already IN Almaty; Kolsai/Kaindy are further).
       BLOCKED on coordinates: `Kolsai_Lakes` and `Kaindy_Lake` on dbpedia
       return an empty JSON object. Needs another source. Do NOT estimate.
-- [ ] **`samarkand` → `uzb-aral` has a placeholder coordinate.** The place is
-      the Moynaq ship cemetery but it carries `lat: 45, lng: 60`, which is the
-      rounded centroid of the Aral Sea and sits roughly 140km from Moynaq.
-      `scripts/validate-catalog.mjs` reports it as the one hard ERROR in the
-      catalog. Fix by fetching `Mo'ynoq` from dbpedia (it 502'd / timed out on
-      every attempt during the 2026-07-27 run) and replacing both the lat/lng
-      and the itinerary day-6 note. Do NOT estimate the coordinate, and do not
-      "fix" it by nudging the numbers - either a real published value or the
-      place comes out and day 6 goes with it.
+- [x] **`samarkand` → `uzb-aral` placeholder coordinate - FIXED 2026-07-27.**
+      It carried `lat: 45, lng: 60`, the rounded centroid of the Aral Sea,
+      about 140km from Moynaq. dbpedia never answered for any spelling. Fixed
+      from GeoNames (see the new source note below): Muynak is 43.76833,
+      59.021389. The catalog validator now reports zero errors.
 - [ ] **London / United Kingdom is blocked for the same reason as Paris.**
       Re-tested 2026-07-27: `Tower_of_London`, `British_Museum` and
       `Buckingham_Palace` all return no geo:lat/geo:long because the article
       is large enough that the fetcher truncates before the geo block.
       `Tower_Bridge` returns a thumbnail but no coordinates. Build London from
       a normal network, not from this sandbox.
-- [ ] **Coordinate sourcing itself is the bottleneck, and every known source is
-      now either blocked or down.** Confirmed 2026-07-27, late run: dbpedia
-      returns 502 or a read timeout on every request including `/sparql`;
-      `www.wikidata.org/w/api.php` and `query.wikidata.org/sparql` are both
-      "cache-only and cannot be fetched" through WebFetch; nominatim, photon
-      and the Wikipedia REST API were already blocked. bash has no egress. The
-      first thing a session with real network should do is drain the blocked
-      list above in one pass - Paris, London, Moynaq, Kolsai/Kaindy, Delphi -
-      because none of them are hard, they are only unreachable from here.
+- [ ] **Re-try the whole blocked list against GeoNames.** Paris, London,
+      Kolsai/Kaindy (GeoNames has "Kolsai" at 42.96446, 77.582245 - spot
+      checked, not yet built), Delphi. None of these are hard; they were only
+      unreachable from the one source that was being used.
 - [ ] **Countries with no destination at all** (candidates, in rough order of
       how much an Israeli traveller would want them): Colombia, Egypt, Oman,
       Singapore, Malta, Mongolia, Bhutan, North Macedonia, Ukraine, Moldova,
@@ -102,10 +112,6 @@ Hungary→Lake Balaton, Slovakia→High Tatras.
       say so; some of it is just unresearched. Worth a pass that separates the
       two rather than treating every blank the same.
 
-**Not a TODO, recorded so it stops being re-raised:** an audit flagged 134
-places with descriptions under 100 characters. They were reviewed on
-2026-07-27 and they are dense and correct, not stubs. Padding them adds noise
-and invites invented detail. Leave them alone.
 - [x] **Jordan → Dead Sea + Wadi Mujib + Amman/Jerash** (2nd Jordan entry,
       north; land crossing note like Petra).
 - [x] **Cyprus → Paphos + Akamas/Avakas Gorge** (2nd Cyprus entry; direct

@@ -12472,8 +12472,8 @@ export const destinations: Destination[] = [
         name: 'ים אראל ובית הקברות לספינות',
         nameLocal: 'Aral Sea & Moynaq ship cemetery',
         category: 'nature',
-        lat: 45.0,
-        lng: 60.0,
+        lat: 43.76833,
+        lng: 59.021389,
         description:
           'מה שנשאר מהאגם שהיה מהגדולים בעולם ונסוג עשרות קילומטרים - במוינאק עומדות ספינות דייג חלודות על חול המדבר. יעד מרוחק שדורש נסיעת ג׳יפ ארוכה מנוקוס ולינה בשטח.',
         rating: 4.3,
