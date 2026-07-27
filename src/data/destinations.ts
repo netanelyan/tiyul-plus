@@ -257,6 +257,8 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=Kunsthistorisches+Museum',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Maria-Theresien-Platz_Kunsthistorisches_Museum_Wien_2010.jpg/500px-Maria-Theresien-Platz_Kunsthistorisches_Museum_Wien_2010.jpg',
       },
       {
         id: 'vie-albertina',
@@ -1978,6 +1980,8 @@ export const destinations: Destination[] = [
         tags: ['art', 'romantic'],
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=Galleria+Borghese',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Galerie_Borgh%C3%A8se_-_Rome_(IT62)_-_2021-08-30_-_3.jpg/500px-Galerie_Borgh%C3%A8se_-_Rome_(IT62)_-_2021-08-30_-_3.jpg',
       },
       {
         id: 'rom-castel',
@@ -24038,6 +24042,8 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=37.95583343505859,126.6766662597656',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/InsideTheJointSecurityArea1.jpg/500px-InsideTheJointSecurityArea1.jpg',
       },
       {
         id: 'kr-hwaseong',
@@ -27128,6 +27134,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=31.002500,-6.526667',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/DadesGorge.jpg/500px-DadesGorge.jpg',
       },
       {
         id: 'ma-todgha',
@@ -28041,6 +28049,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=-22.466667,-68.933334',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Paisaje_cerca_de_Calama%2C_Chile%2C_2016-02-01%2C_DD_78-82_PAN.jpg/500px-Paisaje_cerca_de_Calama%2C_Chile%2C_2016-02-01%2C_DD_78-82_PAN.jpg',
       },
     ],
     itinerary: [
@@ -29096,6 +29106,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors', 'families'],
         priceLevel: 3,
         externalUrl: 'https://maps.google.com/?q=10.1666667,-75.7666667',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Karibiska_havet_i_Colombia.jpg/500px-Karibiska_havet_i_Colombia.jpg',
       },
     ],
     itinerary: [
