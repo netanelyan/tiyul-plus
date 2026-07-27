@@ -28743,6 +28743,232 @@ export const destinations: Destination[] = [
       kosherOverview: 'לריו קהילה יהודית ותיקה ופעילה, בעיקר באזור קופקבנה ולבלון, ויש בעיר בתי כנסת פעילים ומרכז חב״ד. אספקת מזון כשר קיימת אך מצומצמת בהרבה מזו של סאו פאולו, שהיא מרכז החיים היהודיים בברזיל, וחלק ממה שזמין מגיע משם. בפועל כדאי לפנות לבית חב״ד המקומי או למזכירות הקהילה לפני הנסיעה ולתאם ארוחות שבת ורכישת מוצרים, ולא להסתמך על מציאה מקומית ברגע האחרון. בסופרמרקטים הגדולים אפשר למצוא מוצרים ארוזים עם הכשר, אבל צריך לחפש. אנחנו לא מפרסמים כאן שם של מסעדה או חנות מסוימת, כי המצב משתנה תכופות והאחריות על אימות ההשגחה היא של המטייל מול הגורם המקומי.',
     },
   },
+  {
+    slug: 'cartagena',
+    name: 'קרטחנה',
+    nameLocal: 'Cartagena de Indias',
+    countrySlug: 'colombia',
+    flag: '🇨🇴',
+    center: { lat: 10.42, lng: -75.55 },
+    zoom: 13,
+    tagline: 'עיר חומות קולוניאלית על הקאריביים, וחופים במרחק שיט',
+    editorialRating: {
+      score: 4.3,
+      verdict:
+        'העיר העתיקה של קרטחנה היא אחת הערים הקולוניאליות השמורות ביותר ביבשת, והחומות מול הים בשקיעה מצדיקות את הטיסה הארוכה. שלושה סייגים אמיתיים: חם ולח כל השנה ברמה שמקצרת ימי סיור, המחירים בעיר העתיקה גבוהים משמעותית משאר קולומביה, והלחץ המסחרי ברחוב (מוכרים, מדריכים, נהגים) עמיד ומתיש. אין תשתית כשרות קבועה.',
+    },
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/62_-_Carthag%C3%A8ne_-_D%C3%A9cembre_2008.jpg/960px-62_-_Carthag%C3%A8ne_-_D%C3%A9cembre_2008.jpg',
+    iconicLandmark: {
+      name: 'מצודת סן פליפה דה בראחס',
+      nameLocal: 'Castillo San Felipe de Barajas',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/62_-_Carthag%C3%A8ne_-_D%C3%A9cembre_2008.jpg/500px-62_-_Carthag%C3%A8ne_-_D%C3%A9cembre_2008.jpg',
+      blurb:
+        'המצודה הגדולה שבנו הספרדים באמריקה, על גבעה מעל העיר, עם מערכת מנהרות תת-קרקעית שנועדה להגנה מפני מצור.',
+    },
+    summary:
+      'קרטחנה היא עיר נמל קריבית שהספרדים ביצרו בחומות אבן כדי להגן על הזהב שיצא ממנה לאירופה, והמרכז ההיסטורי בתוך החומות שמור עד היום: רחובות צרים, בתים בצבעי עז עם מרפסות עץ ובוגנוויליה, וכיכרות עם כנסיות בארוק. מסביב לגרעין הזה יש שכונת גטסמני התוססת, טור מגדלים מודרני בבוקגרנדה מול הים, ואיים קריביים במרחק שיט של שעה. זה יעד שמשלב היסטוריה, ים וחום כבד באותו יום.',
+    bestSeason: 'דצמבר-אפריל (העונה היבשה). ספטמבר-נובמבר הכי גשום.',
+    places: [
+      {
+        id: 'co-san-felipe',
+        name: 'מצודת סן פליפה דה בראחס',
+        nameLocal: 'Castillo San Felipe de Barajas',
+        category: 'attraction',
+        lat: 10.4225,
+        lng: -75.5392,
+        description:
+          'המבצר הגדול שבנו הספרדים באמריקה, על גבעת סן לסארו מעל העיר. בנייתו החלה במאה ה-17 והורחבה שוב ושוב, ובתוכו מערכת מנהרות תת-קרקעית שנועדה להעביר כוחות ולהדוף מצור. התצפית מהחומה העליונה מכסה את כל המפרץ ואת קו המגדלים של בוקגרנדה.',
+        rating: 4.5,
+        durationMin: 120,
+        mustSee: true,
+        tags: ['history', 'families'],
+        priceLevel: 1,
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/62_-_Carthag%C3%A8ne_-_D%C3%A9cembre_2008.jpg/500px-62_-_Carthag%C3%A8ne_-_D%C3%A9cembre_2008.jpg',
+        externalUrl: 'https://maps.google.com/?q=10.4225,-75.5392',
+      },
+      {
+        id: 'co-torre-reloj',
+        name: 'מגדל השעון ושער העיר',
+        nameLocal: 'Torre del Reloj',
+        category: 'attraction',
+        lat: 10.422669,
+        lng: -75.548861,
+        description:
+          'השער הראשי שדרכו נכנסים אל תוך החומות, עם מגדל שעון צהוב שהפך לסמל של קרטחנה. הכיכר שלפניו היא נקודת המפגש המרכזית של העיר העתיקה, ומשם מתחילים כמעט כל הסיורים הרגליים.',
+        rating: 4.4,
+        durationMin: 30,
+        mustSee: true,
+        tags: ['history'],
+        priceLevel: 0,
+        externalUrl: 'https://maps.google.com/?q=10.422669,-75.548861',
+      },
+      {
+        id: 'co-plaza-santo-domingo',
+        name: 'כיכר סנטו דומינגו',
+        nameLocal: 'Plaza Santo Domingo',
+        category: 'attraction',
+        lat: 10.424592,
+        lng: -75.552489,
+        description:
+          'הכיכר החיה ביותר בעיר העתיקה, מול הכנסייה הישנה בעיר, עם פסל אישה שמנה של בוטרו במרכזה ובתי קפה שמוציאים שולחנות החוצה בערב. גם הכיכר היקרה ביותר לשבת בה, ובכוונה - זו התצוגה המרכזית של קרטחנה.',
+        rating: 4.3,
+        durationMin: 60,
+        tags: ['romantic', 'nightlife'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=10.424592,-75.552489',
+      },
+      {
+        id: 'co-catedral',
+        name: 'קתדרלת סנטה קטלינה',
+        nameLocal: 'Catedral de Santa Catalina de Alejandría',
+        category: 'attraction',
+        lat: 10.42368,
+        lng: -75.55098,
+        description:
+          'הקתדרלה של קרטחנה, עם מגדל בצבע חול וכיפה מפוספסת שנראים מכל גג בעיר העתיקה. הבנייה נמשכה עשרות שנים אחרי שהמבנה המקורי נפגע בהתקפה על העיר במאה ה-16.',
+        rating: 4.2,
+        durationMin: 40,
+        tags: ['history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=10.42368,-75.55098',
+      },
+      {
+        id: 'co-inquisicion',
+        name: 'ארמון האינקוויזיציה',
+        nameLocal: 'Palacio de la Inquisición',
+        category: 'museum',
+        lat: 10.42332,
+        lng: -75.55157,
+        description:
+          'הבניין הקולוניאלי שבו פעל בית הדין של האינקוויזיציה בקרטחנה, היום מוזיאון היסטורי. חלק מהתצוגה עוסק במכשירי העינויים ובנוהלי הדין, וחלק בהיסטוריה העירונית הרחבה. תצוגה קשה למי שרגיש, ולא כל השילוט מתורגם.',
+        rating: 4.0,
+        durationMin: 75,
+        tags: ['history'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=10.42332,-75.55157',
+      },
+      {
+        id: 'co-getsemani',
+        name: 'שכונת גטסמני',
+        nameLocal: 'Getsemaní',
+        category: 'attraction',
+        lat: 10.4166667,
+        lng: -75.55,
+        description:
+          'השכונה שמחוץ לחומה הפנימית שהייתה שכונת עובדים ונעשתה הלב הצעיר של העיר: ציורי קיר לאורך הסמטאות, מטריות וכיסאות תלויים מעל הרחוב, וכיכר טריניטי שמתמלאת בערב במוזיקה, דוכני אוכל ותושבים. הפער בין המחירים כאן לבין העיר העתיקה מורגש.',
+        rating: 4.5,
+        durationMin: 150,
+        mustSee: true,
+        tags: ['art', 'nightlife', 'foodie'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=10.4166667,-75.55',
+      },
+      {
+        id: 'co-popa',
+        name: 'מנזר לה פופה',
+        nameLocal: 'Convento de la Popa',
+        category: 'viewpoint',
+        lat: 10.41932,
+        lng: -75.52572,
+        description:
+          'מנזר מהמאה ה-17 על הגבעה הגבוהה בעיר, עם חצר פנימית שקטה ותצפית של 360 מעלות על העיר העתיקה, המפרץ והשכונות שמאחוריו. עולים ברכב או במונית ולא ברגל, גם בגלל השיפוע וגם כי הדרך עוברת בשכונות שלא כדאי להסתובב בהן להולכי רגל.',
+        rating: 4.3,
+        durationMin: 60,
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        externalUrl: 'https://maps.google.com/?q=10.41932,-75.52572',
+      },
+      {
+        id: 'co-bocagrande',
+        name: 'בוקגרנדה',
+        nameLocal: 'Bocagrande',
+        category: 'nature',
+        lat: 10.399154,
+        lng: -75.560994,
+        description:
+          'הרצועה המודרנית של קרטחנה: טור מגדלי מגורים ומלונות לאורך חוף ארוך, עם טיילת, מסעדות ובתי קפה. החול כאן אפרפר והים לא צלול כמו באיים, אבל זה החוף היחיד שאפשר להגיע אליו ברגל מהעיר.',
+        rating: 3.8,
+        durationMin: 120,
+        tags: ['families', 'outdoors'],
+        priceLevel: 2,
+        externalUrl: 'https://maps.google.com/?q=10.399154,-75.560994',
+      },
+      {
+        id: 'co-baru',
+        name: 'איסלה ברו ופלאיה בלנקה',
+        nameLocal: 'Isla Barú / Playa Blanca',
+        category: 'nature',
+        lat: 10.213889,
+        lng: -75.611389,
+        description:
+          'האי שמדרום לקרטחנה, ובו פלאיה בלנקה - רצועת חול לבן ומים תכולים שהיא החוף המפורסם באזור. מגיעים בשיט או בכביש דרך התעלה. בשעות הצהריים החוף עמוס בטיולי יום ובמוכרים, ולכן מי שמגיע מוקדם או נשאר ללינה רואה מקום אחר לגמרי.',
+        rating: 4.2,
+        durationMin: 480,
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Playa_Blanca%2C_Bar%C3%BA.jpg/500px-Playa_Blanca%2C_Bar%C3%BA.jpg',
+        externalUrl: 'https://maps.google.com/?q=10.213889,-75.611389',
+      },
+      {
+        id: 'co-rosario',
+        name: 'איי רוסאריו',
+        nameLocal: 'Islas del Rosario',
+        category: 'nature',
+        lat: 10.1666667,
+        lng: -75.7666667,
+        description:
+          'ארכיפלג של עשרות איים ושוניות אלמוגים כשעה בשיט מקרטחנה, בתוך שטח פארק לאומי ימי. המים שם צלולים בהרבה מחופי העיר, וזה המקום לשנורקלינג באזור. את השיט מזמינים דרך מפעיל מסודר, לא בהצעות שמקבלים ברחוב.',
+        rating: 4.4,
+        durationMin: 480,
+        mustSee: true,
+        tags: ['outdoors', 'families'],
+        priceLevel: 3,
+        externalUrl: 'https://maps.google.com/?q=10.1666667,-75.7666667',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'בתוך החומות',
+        placeIds: ['co-torre-reloj', 'co-catedral', 'co-plaza-santo-domingo', 'co-inquisicion'],
+        notes:
+          'יוצאים מוקדם או אחרי ארבע - בין 11 ל-15 החום והלחות הופכים הליכה ארוכה ללא נעימה. מסיימים בהליכה על החומה עצמה לכיוון הים בשקיעה.',
+      },
+      {
+        day: 2,
+        title: 'המצודה, לה פופה וגטסמני',
+        placeIds: ['co-san-felipe', 'co-popa', 'co-getsemani'],
+        notes:
+          'המצודה על הבוקר בזמן שעוד יש צל, לה פופה במונית מתואמת שממתינה, וערב בגטסמני. להביא כובע ומים, אין כמעט צל בשני האתרים הראשונים.',
+      },
+      {
+        day: 3,
+        title: 'איים ושנורקלינג',
+        placeIds: ['co-rosario', 'co-baru'],
+        notes:
+          'יום שלם בשיט. מזמינים דרך מפעיל עם רישיון ולא מהצעות ברחוב או בחוף, ובודקים שהמחיר כולל את דמי הכניסה לפארק הימי ואת המסים בנמל.',
+      },
+      {
+        day: 4,
+        title: 'חוף ויום רגוע',
+        placeIds: ['co-bocagrande'],
+        notes:
+          'יום ללא לוח זמנים: בוקר על החוף בבוקגרנדה, אחר צהריים חזרה לעיר העתיקה לקניות ולבתי קפה. טוב גם כיום חלופי אם יום השיט בוטל בגלל ים גבוה.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסות ישירות מישראל לקולומביה. המסלולים המקובלים הם דרך מדריד, פריז, איסטנבול או מיאמי, עם חיבור פנימי או ישיר לקרטחנה (CTG). זמן דלת לדלת ריאלי הוא 20-26 שעות, ולרוב עדיף לתכנן לילה בעיר הביניים מאשר חיבור קצר.',
+      gettingAround:
+        'העיר העתיקה וגטסמני מהלכות לחלוטין. לכל השאר (המצודה, לה פופה, בוקגרנדה, הנמל) לוקחים מונית או Uber/inDrive - נסיעות קצרות וזולות. מוניות רחוב לא מפעילות מונה, לכן סוגרים מחיר לפני שנכנסים, או פשוט מזמינים באפליקציה.',
+      kosherOverview:
+        'אין מסעדה כשרה קבועה בקרטחנה ואין סופר כשר. הקהילה היהודית המאורגנת של קולומביה נמצאת בבוגוטה, ובקרטחנה הפעילות היא בעיקר סביב בית חב"ד המקומי שמארח בתיאום מראש בלבד. מי שמקפיד צריך להגיע עם מלאי, לקחת דירה עם מטבח, ולתאם ארוחות שבת לפני הנסיעה - לא להסתמך על אלתור במקום.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
