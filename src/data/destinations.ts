@@ -10203,6 +10203,8 @@ export const destinations: Destination[] = [
         rating: 4.4,
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=Blue+Lagoon+Iceland',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/BlueLagoon_Noface.jpg/500px-BlueLagoon_Noface.jpg',
       },
       {
         id: 'isl-kirkjufell',
@@ -29280,6 +29282,8 @@ export const destinations: Destination[] = [
         rating: 4.5,
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=48.8925,2.3444',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Butte_Montmartre_1.jpg/500px-Butte_Montmartre_1.jpg',
         priceLevel: 0,
         tags: ['art', 'romantic', 'nightlife'],
       },
@@ -29313,6 +29317,8 @@ export const destinations: Destination[] = [
         rating: 4.2,
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=48.869853,2.307215',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Avenue_des_Champs-%C3%89lys%C3%A9es_(Paris)_20171223.jpg/500px-Avenue_des_Champs-%C3%89lys%C3%A9es_(Paris)_20171223.jpg',
         priceLevel: 3,
         tags: ['families', 'nightlife'],
       },
@@ -29346,6 +29352,8 @@ export const destinations: Destination[] = [
         rating: 4.4,
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=48.8606,2.352372',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Pompidou_center.jpg/500px-Pompidou_center.jpg',
         priceLevel: 2,
         tags: ['art'],
       },
@@ -29415,6 +29423,8 @@ export const destinations: Destination[] = [
         kosherNote:
           'ברחוב ובסמטאות סביבו פועלים כמה בתי עסק כשרים תחת השגחות שונות, בעיקר של הרבנות של פריז ושל בית דין מקומי. ההשגחה משתנה מעסק לעסק ולעיתים מתחלפת, ולכן מוודאים את התעודה בכניסה ולא מסתמכים על שם המקום.',
         externalUrl: 'https://maps.google.com/?q=48.857122,2.3595',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Rue_Rosiers_-_Paris_IV_(FR75)_-_2021-05-25_-_1.jpg/500px-Rue_Rosiers_-_Paris_IV_(FR75)_-_2021-05-25_-_1.jpg',
         priceLevel: 1,
         tags: ['foodie', 'history', 'families'],
         mustSee: true,
@@ -29594,6 +29604,8 @@ export const destinations: Destination[] = [
         rating: 4.3,
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=51.500942,-0.142887',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Buckingham_Palace_from_side%2C_London%2C_UK_-_Diliff.jpg/500px-Buckingham_Palace_from_side%2C_London%2C_UK_-_Diliff.jpg',
         priceLevel: 2,
         tags: ['history', 'families'],
       },
@@ -29732,6 +29744,8 @@ export const destinations: Destination[] = [
         kosherNote:
           'רוב העסקים הכשרים באזור נמצאים תחת השגחת KLBD, בית הדין של הרבנות הראשית של לונדון, וחלק תחת השגחות נוספות. ההשגחה מוצגת בתעודה בחזית העסק ומתחלפת לעיתים, ולכן מוודאים במקום. הכל סגור בשבת ונסגר מוקדם בערבי שבת.',
         externalUrl: 'https://maps.google.com/?q=51.57631,-0.20033',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Golders_Green_Synagogoue_2016.jpg/500px-Golders_Green_Synagogoue_2016.jpg',
         priceLevel: 2,
         tags: ['foodie', 'families'],
         mustSee: true,
@@ -29860,6 +29874,8 @@ export const destinations: Destination[] = [
         rating: 4.1,
         durationMin: 30,
         externalUrl: 'https://maps.google.com/?q=1.28694,103.855',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/The_Merlion.Singapore._(9680124365).jpg/500px-The_Merlion.Singapore._(9680124365).jpg',
         priceLevel: 0,
         tags: ['families'],
       },
@@ -29910,6 +29926,8 @@ export const destinations: Destination[] = [
         rating: 4.7,
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=1.310278,103.816389',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Symphony_Lake%2C_Singapore_Botanic_Gardens_-_20041025.jpg/500px-Symphony_Lake%2C_Singapore_Botanic_Gardens_-_20041025.jpg',
         priceLevel: 0,
         tags: ['outdoors', 'families', 'romantic'],
         mustSee: true,
@@ -29943,6 +29961,8 @@ export const destinations: Destination[] = [
         rating: 4.4,
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=1.2948,103.8546',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Raffles_Hotel%2C_frontage.jpg/500px-Raffles_Hotel%2C_frontage.jpg',
         priceLevel: 1,
         tags: ['history', 'romantic'],
       },
@@ -30064,6 +30084,8 @@ export const destinations: Destination[] = [
         rating: 4.8,
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=35.89777,14.5125',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/St_John%27s_Co-Cathedral%2C_Valletta_001.jpg/500px-St_John%27s_Co-Cathedral%2C_Valletta_001.jpg',
         priceLevel: 2,
         tags: ['history', 'art'],
         mustSee: true,
