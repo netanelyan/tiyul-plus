@@ -322,6 +322,41 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-27 (r) - "The cards are being cut": a real clip below 640px, and three fake readings
+
+Netanel reported cut cards on the new destination browser. **Above 640px nothing
+was wrong** - which is why his own screenshot looked fine to me at first glance.
+Below it the continent strip was `overflow-x-auto`, so it scrolled and **sliced
+cards mid-word**: "אפריקה והמזרח התיכון" showed as half a card against the
+viewport edge. A scroll affordance that cuts a word reads as breakage, not as a
+hint.
+
+**Fix:** the strip wraps at every width; each tab is `flex-1` with a 6.25rem
+minimum, so tabs share the row and drop to the next instead of being cut, and a
+long name wraps inside its own card. 3x2 grid at 390, one row at 1440. Verified
+at 360/390/480/600/900/1440: zero overflow, zero clipped elements.
+
+**The part worth writing down is the measuring, not the fix.** Three separate
+readings today were harness artifacts that each looked exactly like a product bug:
+
+1. A stale `next start` still bound to the port after a rebuild, serving HTML
+   that referenced deleted chunks - every JS request 500'd and the page fell back
+   to the landing hero. Reported as "13 controls".
+2. A browser context where the **stylesheet never loaded**. The unstyled page
+   reported **195px of horizontal overflow** and named four country pills as
+   clipped. Completely fictional.
+3. A measurement taken before layout settled, at a width where the same check ran
+   clean three times in a row a minute later.
+
+The check script now **launches a fresh browser per width and refuses to report
+a number until `document.styleSheets.length > 0` and the body has its cream
+background**. That guard is four lines and would have saved three cycles today.
+
+**The rule, stated plainly:** when a measurement is surprising, suspect the
+fixture before the code. Every time today that a number looked dramatic - 13
+controls, 195px of overflow, deployments frozen - the fixture was wrong at least
+as often as the product was.
+
 ### 2026-07-27 (q) - Destination browser: what the data supports, and what it does not
 
 Netanel sent a competitor's page - continent tabs with counts, character chips -
