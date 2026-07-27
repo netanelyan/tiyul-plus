@@ -17240,6 +17240,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'foodie'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=20.6894,-88.2017',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Monastery_of_San_Bernardino_de_Siena%2C_Valladolid%2C_Mexico.jpg/500px-Monastery_of_San_Bernardino_de_Siena%2C_Valladolid%2C_Mexico.jpg',
       },
       {
         id: 'mx-izamal',
@@ -17486,6 +17488,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=35.0967,129.03',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Jagalchi_Market_20200523_019.jpg/500px-Jagalchi_Market_20200523_019.jpg',
       },
     ],
     itinerary: [
@@ -20715,6 +20719,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'families'],
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=56.15900039672852,10.19099998474121',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Brostr%C3%A6de%2C_Den_Gamle_By_2006.jpg/500px-Brostr%C3%A6de%2C_Den_Gamle_By_2006.jpg',
       },
       {
         id: 'dk-jelling',
@@ -20745,6 +20751,8 @@ export const destinations: Destination[] = [
         tags: ['families'],
         priceLevel: 3,
         externalUrl: 'https://maps.google.com/?q=55.73555374145508,9.126111030578613',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Legoland_Billund_Denmark_2012.jpg/500px-Legoland_Billund_Denmark_2012.jpg',
       },
       {
         id: 'dk-ribe',
@@ -21630,6 +21638,8 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=56.96666717529297,21.96666717529297',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Kuldiga_bridge.jpg/500px-Kuldiga_bridge.jpg',
       },
       {
         id: 'lv-ventspils',
@@ -21692,6 +21702,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'outdoors'],
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=56.51166534423828,21.01388931274414',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Liep%C4%81ja_Karosta_church_(3788686258).jpg/500px-Liep%C4%81ja_Karosta_church_(3788686258).jpg',
       },
     ],
     itinerary: [
@@ -21821,6 +21833,8 @@ export const destinations: Destination[] = [
         tags: ['families', 'nightlife'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=55.91666793823242,21.0666675567627',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Palangos_tiltas%2C_2022.jpg/500px-Palangos_tiltas%2C_2022.jpg',
       },
       {
         id: 'lt-zemaitija',
@@ -22318,6 +22332,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=17.06055641174316,-96.72528076171875',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Colonial_Oaxaca.jpg/500px-Colonial_Oaxaca.jpg',
       },
       {
         id: 'mx-monte-alban',
@@ -23969,6 +23985,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=37.56999969482422,126.9990005493164',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Gwangjang_Market%2C_Seoul_01.jpg/500px-Gwangjang_Market%2C_Seoul_01.jpg',
       },
       {
         id: 'kr-bukhansan',
