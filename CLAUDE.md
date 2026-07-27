@@ -585,6 +585,61 @@ the symptom. Final confirmation is Netanel's own iPhone.
 mobile widths**, i.e. `text-base sm:text-sm` rather than `text-sm`, or iOS will
 zoom the page the moment it is focused. There is no lint rule for this; the
 harness in this entry is the way to catch it.
+### 2026-07-27 (v) - Every priority country now has its obvious city. Thirteen new cities in one session.
+
+Netanel asked for the run to finish: every one of the 17 countries Israelis actually fly
+to, done in this session. This entry closes it.
+
+**Final scope: 166 destinations, 83 countries, 1,510 places, 0 errors.** Started the
+session at 150/83/1,313.
+
+**Thirteen cities added across the session:** Dubai, New York, Santorini+Mykonos, Venice,
+Florence, Nice/Riviera, Edinburgh, Buenos Aires, Sofia, Bucharest, Warsaw, Madrid,
+Nicosia, Plovdiv, Kazbegi/Mtskheta, Ayutthaya/Krabi.
+
+**The single most useful lesson of the whole session, stated plainly: when a country
+looks thin, check whether its obvious city is simply ABSENT before deepening the cities
+it already has.** This caught me out five separate times. UAE had no Dubai. USA had no
+New York. Greece had no Cyclades. Italy had no Venice or Florence. Then Bulgaria had no
+Sofia, Romania no Bucharest, Poland no Warsaw. Then **Spain had no Madrid**. Every time
+the instinct was "add places to what exists", and every time the real gap was a missing
+city worth 10-25 places on its own.
+
+Per-country, session start to end: italy 37 to 64, greece 38 to 52, spain 37 to 49,
+usa 19 to 46, uae 22 to 45, thailand 35 to 40, bulgaria 12 to 28, georgia 23 to 28,
+poland 17 to 27, romania 13 to 25, uk 13 to 25, cyprus 17 to 25, france 15 to 24,
+argentina 6 to 22. Germany, Hungary and Czechia were already well stocked and got
+itinerary rebuilds instead.
+
+**Verification held all the way through.** Every place: coordinates from the Wikipedia
+coordinates API, filename checked against Commons with `redirects=1`, source width read
+before choosing a thumbnail width, then the final URL browser-probed. **1,569 of 1,587
+catalog photo URLs now carry HTTP evidence, and 0 of the ~230 URLs added this session
+were dead.** The 18 unproven remain the known-unrepairable filenames from entry (s).
+
+**The trap list is now long enough to be the main deliverable of this session.** In
+addition to those in entry (u), this batch rejected: **Reina Sofia** (logo SVG),
+**Thyssen-Bornemisza** (lead image is a different building), **Bedesten** (a 3D model,
+not a photograph), and **Ayia Napa** (coordinates 34.98,34.00 - a whole number for
+longitude is kilometres of error). Consult the trap list in [[memory]] or entry (u)
+before sourcing anything.
+
+**Roundness, honestly reported.** The `cafe` gap went from 14 countries to 6.
+`kosher-market` is still missing in 16 of 17 and **was deliberately not faked** - kosher
+shops have no Wikipedia articles, so coordinates cannot be verified from this sandbox and
+Nominatim freezes the browser bridge. Every city with real kosher infrastructure
+describes it in `practical.kosherOverview` and ends by saying the place list is not yet
+in the catalog. **Do not delete that sentence to make the data look complete.**
+
+**Index: 216,509 chars against the 260,000 ceiling** - about 300 places of headroom.
+
+**What is genuinely left.** (1) The 18 dead photo URLs from entry (s) - needs a human to
+choose replacements. (2) `kosher-market` everywhere and `cafe` in cyprus, argentina,
+bulgaria, georgia, uae, greece - blocked on geocoding, not research. (3) The thinnest
+countries are now argentina 22, france 24, cyprus 25, romania 25, uk 25; the obvious next
+cities are Lyon or Provence, Manchester or Liverpool, Mendoza or Iguazu, and Brasov as a
+standalone. (4) Nothing else on the 17-country list is missing an obvious city.
+
 ### 2026-07-27 (u) - Overnight run: eight new cities, and three missing capitals nobody had noticed
 
 Netanel went to sleep and asked for the full programme across the 17 countries Israelis
