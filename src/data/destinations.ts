@@ -31202,6 +31202,189 @@ export const destinations: Destination[] = [
     },
   },
   {
+    slug: 'nice-riviera',
+    name: 'ניס והריביירה',
+    nameLocal: 'Nice & the French Riviera',
+    countrySlug: 'france',
+    flag: '🇫🇷',
+    center: { lat: 43.7, lng: 7.27 },
+    zoom: 12,
+    tagline: 'ים תיכון, אמנות וכפרים על צוקים',
+    summary:
+      'ניס היא הדרך הקלה להגיע לריביירה הצרפתית: טיסה קצרה, טיילת ארוכה מול הים, עיר עתיקה איטלקית באופייה ושני מוזיאונים גדולים. משם רכבת החוף מגיעה תוך דקות לוויל פראנש, לאז׳, למונקו ולאנטיב, כך שאפשר לבסס בעיר אחת ולראות את כל האזור.',
+    bestSeason: 'מאי עד יוני וספטמבר עד אוקטובר. יולי-אוגוסט חמים, יקרים ועמוסים מאוד, והחורף מתון אך חלק מהעסקים בכפרים סגורים.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Place-Mass%C3%A9na_01.jpg/500px-Place-Mass%C3%A9na_01.jpg',
+    iconicLandmark: {
+      name: 'אז׳',
+      nameLocal: 'Èze',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/%C3%88ze_Alpes_Maritimes_France_%28261171069%29.jpeg/500px-%C3%88ze_Alpes_Maritimes_France_%28261171069%29.jpeg',
+      blurb:
+        'כפר מבוצר מימי הביניים על צוק בגובה כ-400 מטר מעל הים, בין ניס למונקו.',
+    },
+    editorialRating: {
+      score: 4.2,
+      verdict:
+        'בסיס נוח במיוחד: טיסה ישירה קצרה, ומשם רכבת חוף שמגיעה לכל האזור בלי רכב. מוזיאון שאגאל הוא סיבה בפני עצמה. חסרונות: יקרה בעונה, החוף בניס עצמה הוא חלוקים ולא חול, ואין כמעט תשתית כשרות מחוץ לבית חב״ד המקומי.',
+    },
+    places: [
+      {
+        id: 'nce-massena',
+        name: 'כיכר מאסנה',
+        nameLocal: 'Place Masséna',
+        category: 'attraction',
+        lat: 43.6973,
+        lng: 7.2701,
+        description:
+          'הכיכר המרכזית של ניס, ברצפת שחמט אדומה-לבנה ועם פסלי האדם היושב המוארים בלילה. ממנה יוצאים הטראם והטיילת.',
+        durationMin: 45,
+        priceLevel: 0,
+        tags: ['families'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=43.6973,7.2701',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Place-Mass%C3%A9na_01.jpg/500px-Place-Mass%C3%A9na_01.jpg',
+      },
+      {
+        id: 'nce-cathedral',
+        name: 'קתדרלת סנט רפרט',
+        nameLocal: 'Nice Cathedral',
+        category: 'attraction',
+        lat: 43.69722,
+        lng: 7.27583,
+        description:
+          'הקתדרלה הבארוקית בלב העיר העתיקה, עם כיפה מרוצפת אריחים צבעוניים.',
+        durationMin: 30,
+        priceLevel: 0,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=43.69722,7.27583',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Cathedrale_Sainte-Reparate_Nice.jpg/500px-Cathedrale_Sainte-Reparate_Nice.jpg',
+      },
+      {
+        id: 'nce-chagall',
+        name: 'מוזיאון מארק שאגאל',
+        nameLocal: 'Musée Marc Chagall',
+        category: 'museum',
+        lat: 43.70917,
+        lng: 7.26954,
+        description:
+          'מוזיאון שהוקם בחיי האמן ומציג את מחזור "המסר המקראי", שבעה-עשר ציורים גדולים על ספר בראשית ושמות. אחד המוזיאונים היהודיים המשמעותיים באירופה.',
+        durationMin: 90,
+        priceLevel: 1,
+        tags: ['art', 'history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=43.70917,7.26954',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Mus%C3%A9e_Marc_Chagall.jpg/500px-Mus%C3%A9e_Marc_Chagall.jpg',
+      },
+      {
+        id: 'nce-matisse',
+        name: 'מוזיאון מאטיס',
+        nameLocal: 'Musée Matisse',
+        category: 'museum',
+        lat: 43.71944,
+        lng: 7.27611,
+        description:
+          'וילה גנואזית בשכונת סימייה שמעל העיר, ובה אוסף גדול של מאטיס שחי בניס שנים רבות. סביבה גני זיתים ושרידים רומיים.',
+        durationMin: 90,
+        priceLevel: 1,
+        tags: ['art'],
+        externalUrl: 'https://maps.google.com/?q=43.71944,7.27611',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Mus%C3%A9e_Matisse_Nice.JPG/500px-Mus%C3%A9e_Matisse_Nice.JPG',
+      },
+      {
+        id: 'nce-eze',
+        name: 'אז׳',
+        nameLocal: 'Èze',
+        category: 'viewpoint',
+        lat: 43.7286,
+        lng: 7.3617,
+        description:
+          'כפר מבוצר על צוק בגובה כ-400 מטר מעל הים, בין ניס למונקו. סמטאות אבן וגן קקטוסים בפסגה עם נוף לריביירה.',
+        durationMin: 180,
+        priceLevel: 1,
+        tags: ['romantic', 'outdoors'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=43.7286,7.3617',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/%C3%88ze_Alpes_Maritimes_France_(261171069).jpeg/500px-%C3%88ze_Alpes_Maritimes_France_(261171069).jpeg',
+      },
+      {
+        id: 'nce-villefranche',
+        name: 'ויל פראנש סור מר',
+        nameLocal: 'Villefranche-sur-Mer',
+        category: 'nature',
+        lat: 43.705,
+        lng: 7.3125,
+        description:
+          'מפרץ עמוק וכפר דייגים צבעוני, כעשר דקות ברכבת מניס. אחד המפרצים העמוקים בים התיכון ולכן עוגנות בו ספינות גדולות.',
+        durationMin: 150,
+        priceLevel: 0,
+        tags: ['romantic', 'outdoors'],
+        externalUrl: 'https://maps.google.com/?q=43.705,7.3125',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Villefranche-s-Mer-VueSurLeVillage-20071102.jpg/500px-Villefranche-s-Mer-VueSurLeVillage-20071102.jpg',
+      },
+      {
+        id: 'nce-antibes',
+        name: 'אנטיב',
+        nameLocal: 'Antibes',
+        category: 'attraction',
+        lat: 43.5808,
+        lng: 7.1239,
+        description:
+          'עיר מבוצרת עם שוק פרובנסאלי מקורה ומוזיאון פיקאסו בטירת גרימאלדי, שבה שהה וצייר. כרבע שעה ברכבת מניס.',
+        durationMin: 180,
+        priceLevel: 0,
+        tags: ['history', 'art', 'foodie'],
+        externalUrl: 'https://maps.google.com/?q=43.5808,7.1239',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Antibesbordmer.JPG/500px-Antibesbordmer.JPG',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'ניס: העיר העתיקה, מאסנה והטיילת',
+        placeIds: ['nce-massena', 'nce-cathedral'],
+        notes:
+          'העיר העתיקה קטנה וכולה הליכה. שוק הפרחים בקור סאליה פעיל בבקרים, ובימי שני הוא שוק עתיקות.',
+      },
+      {
+        day: 2,
+        title: 'שאגאל ומאטיס',
+        placeIds: ['nce-chagall', 'nce-matisse'],
+        notes:
+          'שני המוזיאונים בשכונת סימייה שמעל המרכז, ואוטובוס אחד מחבר ביניהם.',
+      },
+      {
+        day: 3,
+        title: 'אז׳ וויל פראנש',
+        placeIds: ['nce-eze', 'nce-villefranche'],
+        notes:
+          'רכבת החוף עוצרת בוויל פראנש; לאז׳ הכפר עולים באוטובוס 82 או במונית מהתחנה למטה.',
+      },
+      {
+        day: 4,
+        title: 'אנטיב',
+        placeIds: ['nce-antibes'],
+        notes:
+          'כרבע שעה ברכבת. השוק המקורה בבוקר, ומוזיאון פיקאסו בטירה אחר כך.',
+      },
+    ],
+    practical: {
+      flights:
+        'טיסות ישירות מנתב״ג לניס (NCE), כארבע שעות וחצי. משדה התעופה לעיר בטראם קו 2, כרבע שעה.',
+      gettingAround:
+        'הטראם והאוטובוסים בניס זולים ונוחים, וכרטיס יומי משתלם. רכבת החוף (TER) לאורך הריביירה היא הדרך הטובה ביותר להגיע למונקו, לוויל פראנש ולאנטיב, ואינה דורשת רכב. חניה בעיר יקרה ומוגבלת.',
+      kosherOverview:
+        'בניס קהילה יהודית גדולה ופועלים בה בית חב״ד ובתי כנסת, וכן מספר עסקים כשרים באזור המרכז. ההיצע קטן משמעותית מפריז ומשתנה, ולכן כדאי לתאם מראש ובעיקר לשבת. במונקו ובכפרים שסביב אין כמעט תשתית כשרות. לוודא מול המקום. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
+    },
+  },
+  {
     slug: 'paris',
     name: 'פריז',
     nameLocal: 'Paris',
@@ -31541,6 +31724,255 @@ export const destinations: Destination[] = [
         'המטרו הוא כמעט התשובה היחידה שצריך. הכרטיס הנייר בוטל לטובת כרטיס נטען וארנק דיגיטלי בטלפון, וכדאי לטעון מספר נסיעות או כרטיס יומי. הרבה תחנות ותיקות הן ללא מעלית ועם מדרגות רבות, מה שמקשה עם מזוודה או עגלה. המרחקים במרכז קצרים והליכה היא לרוב מהירה יותר משתי תחנות.',
       kosherOverview:
         'פריז היא אחת הערים הכי נוחות בעולם לשומרי כשרות מחוץ לישראל, בזכות קהילה יהודית גדולה. יש עשרות בתי עסק כשרים, בעיקר במארה סביב רחוב הרוזייה, ברובע ה-19 סביב שדרות סקרטן, וברובע ה-17. הסופרמרקטים הכשרים מחזיקים מגוון רחב, ואפשר להסתדר גם בלי להביא אוכל מהארץ. חשוב לדעת שההשגחות שונות זו מזו ומתחלפות מדי פעם, ושרוב המקומות סגורים בשבת ופתוחים בראשון, כך שתכנון ארוחות סוף השבוע נעשה מראש בימי חמישי ושישי.',
+    },
+  },
+  {
+    slug: 'edinburgh',
+    name: 'אדינבורו',
+    nameLocal: 'Edinburgh',
+    countrySlug: 'united-kingdom',
+    flag: '🇬🇧',
+    center: { lat: 55.9509, lng: -3.1907 },
+    zoom: 13,
+    tagline: 'טירה על צוק געשי, ועיר שאפשר לחצות ברגל',
+    summary:
+      'אדינבורו קומפקטית ודרמטית: עיר עתיקה של סמטאות אבן שמטפסת אל טירה על צוק געשי, ולצידה עיר חדשה ג׳ורג׳יאנית מסודרת. בתוך גבולות העיר יש הר שאפשר לטפס עליו בשעה. באוגוסט מתקיים פסטיבל הפרינג׳, הפסטיבל האמנותי הגדול בעולם, והעיר מתמלאת לגמרי.',
+    bestSeason: 'מאי עד ספטמבר. אוגוסט הוא חודש הפסטיבלים, מלא חיים אבל יקר ועמוס במיוחד; החורף קר, אפל ומוקדם, אך חג המולד והוגמנאי מרשימים.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/City_of_Edinburgh_-_Edinburgh_Castle_-_20140421004403.jpg/500px-City_of_Edinburgh_-_Edinburgh_Castle_-_20140421004403.jpg',
+    iconicLandmark: {
+      name: 'גבעת קלטון',
+      nameLocal: 'Calton Hill',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Edinburgh_Calton_Hill.jpg/500px-Edinburgh_Calton_Hill.jpg',
+      blurb:
+        'גבעה נמוכה מעל העיר החדשה, ועליה אנדרטאות ניאו-קלאסיות ובהן פרתנון שמעולם לא הושלם.',
+    },
+    editorialRating: {
+      score: 4.4,
+      verdict:
+        'אחת הערים היפות באירופה להליכה, וקטנה מספיק לשלושה ימים. הרבה מוזיאונים מצוינים בכניסה חופשית. חסרונות: מזג האוויר בלתי צפוי כל השנה, אוגוסט יקר וצפוף בגלל הפסטיבלים, ואין טיסה ישירה קבועה מתל אביב לרוב.',
+    },
+    places: [
+      {
+        id: 'edi-castle',
+        name: 'טירת אדינבורו',
+        nameLocal: 'Edinburgh Castle',
+        category: 'attraction',
+        lat: 55.94861,
+        lng: -3.20083,
+        description:
+          'מצודה על צוק געשי שחולש על העיר, ובה תכשיטי הכתר הסקוטיים ואבן ההכתרה. תותח נורה משם בכל יום בשעה אחת בצהריים, למעט ימי ראשון.',
+        durationMin: 150,
+        priceLevel: 2,
+        tags: ['history', 'families'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=55.94861,-3.20083',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/City_of_Edinburgh_-_Edinburgh_Castle_-_20140421004403.jpg/500px-City_of_Edinburgh_-_Edinburgh_Castle_-_20140421004403.jpg',
+      },
+      {
+        id: 'edi-royal-mile',
+        name: 'הרויאל מייל',
+        nameLocal: 'Royal Mile',
+        category: 'attraction',
+        lat: 55.95056,
+        lng: -3.18556,
+        description:
+          'הרחוב שמחבר את הטירה לארמון הולירוד, ולאורכו סמטאות צרות (closes) שיורדות ממנו לשני הצדדים. לב העיר העתיקה.',
+        durationMin: 120,
+        priceLevel: 0,
+        tags: ['history', 'foodie'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=55.95056,-3.18556',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/High_Street%2C_Edinburgh.JPG/500px-High_Street%2C_Edinburgh.JPG',
+      },
+      {
+        id: 'edi-arthurs-seat',
+        name: 'ארתורס סיט',
+        nameLocal: "Arthur's Seat",
+        category: 'nature',
+        lat: 55.94417,
+        lng: -3.16194,
+        description:
+          'פסגת הר געש כבוי בגובה 251 מטר בתוך גבולות העיר. העלייה כשעה, והנוף מלמעלה על אדינבורו ועל הים.',
+        durationMin: 150,
+        priceLevel: 0,
+        tags: ['outdoors'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=55.94417,-3.16194',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Arthur%27s_Seat%2C_Edinburgh.JPG/500px-Arthur%27s_Seat%2C_Edinburgh.JPG',
+      },
+      {
+        id: 'edi-calton',
+        name: 'גבעת קלטון',
+        nameLocal: 'Calton Hill',
+        category: 'viewpoint',
+        lat: 55.95528,
+        lng: -3.18222,
+        description:
+          'גבעה נמוכה עם אנדרטאות ניאו-קלאסיות, ובהן "בושת סקוטלנד" - פרתנון שמעולם לא הושלם. עלייה קצרה, ונוף הפוסטרים של העיר.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['romantic', 'outdoors'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=55.95528,-3.18222',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Edinburgh_Calton_Hill.jpg/500px-Edinburgh_Calton_Hill.jpg',
+      },
+      {
+        id: 'edi-museum-scotland',
+        name: 'המוזיאון הלאומי של סקוטלנד',
+        nameLocal: 'National Museum of Scotland',
+        category: 'museum',
+        lat: 55.94722,
+        lng: -3.19028,
+        description:
+          'מוזיאון גדול ומצוין למשפחות, מהיסטוריה סקוטית ועד טכנולוגיה וטבע. הכניסה חופשית, ומהגג יש מרפסת תצפית.',
+        durationMin: 150,
+        priceLevel: 0,
+        tags: ['families', 'history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=55.94722,-3.19028',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Museum_of_Scotland.jpg/500px-Museum_of_Scotland.jpg',
+      },
+      {
+        id: 'edi-national-gallery',
+        name: 'הגלריה הלאומית',
+        nameLocal: 'Scottish National Gallery',
+        category: 'museum',
+        lat: 55.95083,
+        lng: -3.19556,
+        description:
+          'אוסף אמנות אירופית מהרנסאנס ועד המאה ה-19, בלב פרינסס סטריט. כניסה חופשית לאוסף הקבוע.',
+        durationMin: 90,
+        priceLevel: 0,
+        tags: ['art'],
+        externalUrl: 'https://maps.google.com/?q=55.95083,-3.19556',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Scottish_National_Gallery_-_aerial_-_2025-04-19_01.jpg/500px-Scottish_National_Gallery_-_aerial_-_2025-04-19_01.jpg',
+      },
+      {
+        id: 'edi-scott',
+        name: 'אנדרטת סקוט',
+        nameLocal: 'Scott Monument',
+        category: 'viewpoint',
+        lat: 55.95242,
+        lng: -3.19328,
+        description:
+          'מגדל גותי בגובה 61 מטר לזכר הסופר וולטר סקוט, המונומנט הגדול בעולם לסופר. 287 מדרגות צרות עד למעלה.',
+        durationMin: 45,
+        priceLevel: 1,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=55.95242,-3.19328',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Scott_monument_(4792908988).jpg/500px-Scott_monument_(4792908988).jpg',
+      },
+      {
+        id: 'edi-grassmarket',
+        name: 'גראסמרקט',
+        nameLocal: 'Grassmarket',
+        category: 'attraction',
+        lat: 55.9475,
+        lng: -3.19611,
+        description:
+          'כיכר היסטורית מתחת לצוק הטירה, שהייתה שוק ומקום תליות ציבוריות. היום פאבים, מסעדות וחנויות יד שנייה.',
+        durationMin: 90,
+        priceLevel: 1,
+        tags: ['nightlife', 'foodie', 'history'],
+        externalUrl: 'https://maps.google.com/?q=55.9475,-3.19611',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Grassmarket_Edinburgh_in_the_fog.JPG/500px-Grassmarket_Edinburgh_in_the_fog.JPG',
+      },
+      {
+        id: 'edi-dean-village',
+        name: 'דין וילג׳',
+        nameLocal: 'Dean Village',
+        category: 'attraction',
+        lat: 55.952,
+        lng: -3.218,
+        description:
+          'כפר טחנות קמח לשעבר על נהר הלית׳, כמה דקות הליכה מהעיר החדשה ונראה כאילו אינו שייך לעיר בכלל.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['romantic', 'outdoors'],
+        externalUrl: 'https://maps.google.com/?q=55.952,-3.218',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Dean_Village%2C_Edinburgh_(37952869852).jpg/500px-Dean_Village%2C_Edinburgh_(37952869852).jpg',
+      },
+      {
+        id: 'edi-botanic',
+        name: 'הגן הבוטני המלכותי',
+        nameLocal: 'Royal Botanic Garden',
+        category: 'nature',
+        lat: 55.965,
+        lng: -3.21,
+        description:
+          'גן בוטני מ-1670, מהוותיקים בעולם, עם חממות ויקטוריאניות ואוסף רודודנדרונים גדול. הכניסה לגן חופשית.',
+        durationMin: 120,
+        priceLevel: 0,
+        tags: ['outdoors', 'families'],
+        externalUrl: 'https://maps.google.com/?q=55.965,-3.21',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Palm_House%2C_Royal_Botanic_Garden_Edinburgh.JPG/500px-Palm_House%2C_Royal_Botanic_Garden_Edinburgh.JPG',
+      },
+      {
+        id: 'edi-camera-obscura',
+        name: 'קמרה אובסקורה',
+        nameLocal: 'Camera Obscura & World of Illusions',
+        category: 'attraction',
+        lat: 55.949,
+        lng: -3.1956,
+        description:
+          'מגדל תצפית מ-1853 עם חדר קמרה אובסקורה שמקרין את העיר בזמן אמת, ומעליו חמש קומות אשליות אופטיות. מצוין עם ילדים.',
+        durationMin: 120,
+        priceLevel: 2,
+        tags: ['families'],
+        externalUrl: 'https://maps.google.com/?q=55.949,-3.1956',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Outlook_Tower%2C_Castlehill%2C_Edinburgh.JPG/500px-Outlook_Tower%2C_Castlehill%2C_Edinburgh.JPG',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'העיר העתיקה: הטירה והרויאל מייל',
+        placeIds: ['edi-castle', 'edi-royal-mile', 'edi-camera-obscura', 'edi-grassmarket'],
+        notes:
+          'להגיע לטירה עם הפתיחה. משם יורדים ברגל לאורך הרויאל מייל, ובסופו גראסמרקט לארוחה.',
+      },
+      {
+        day: 2,
+        title: 'מוזיאונים והעיר החדשה',
+        placeIds: ['edi-museum-scotland', 'edi-national-gallery', 'edi-scott'],
+        notes:
+          'שני המוזיאונים בכניסה חופשית. יום טוב במיוחד למזג אוויר גשום.',
+      },
+      {
+        day: 3,
+        title: 'ארתורס סיט וקלטון',
+        placeIds: ['edi-arthurs-seat', 'edi-calton'],
+        notes:
+          'לעלות לארתורס סיט בבוקר, ולסיים בקלטון לקראת השקיעה. נעליים אמיתיות, השביל בוצי אחרי גשם.',
+      },
+      {
+        day: 4,
+        title: 'דין וילג׳ והגן הבוטני',
+        placeIds: ['edi-dean-village', 'edi-botanic'],
+        notes:
+          'שניהם צפונית למרכז ומחוברים בשביל הליכה לאורך נהר הלית׳.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה קבועה מנתב״ג לאדינבורו (EDI) לאורך כל השנה, ולעיתים מופיעים קווי עונה. הדרך המקובלת היא דרך לונדון או עיר אירופית אחרת, ומשם טיסה פנימית של כשעה וחצי או רכבת מלונדון (כארבע שעות וחצי).',
+      gettingAround:
+        'מרכז העיר כולו הליכה, אם כי גבעי ותלול. רשת האוטובוסים (Lothian) מכסה את השאר ומשלמים בכרטיס אשראי בעלייה; יש גם קו טראם משדה התעופה למרכז. אין צורך ברכב.',
+      kosherOverview:
+        'הקהילה היהודית באדינבורו קטנה. יש בית כנסת אחד ובית חב״ד, אבל אין מסעדות כשרות קבועות בעיר. מי שמקפיד נוהג להצטייד בגלזגו, שבה קהילה גדולה יותר וחנויות כשרות, או להביא מזון. לוודא מול חב״ד סקוטלנד לפני הנסיעה. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
     },
   },
   {
