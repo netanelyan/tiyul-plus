@@ -10,6 +10,14 @@ import {
 } from '@/lib/trip/agent';
 import { geocodePlace } from '@/lib/server/geocode';
 import { isTransient } from '@/lib/server/transient';
+import {
+  IMAGE_DATA_URL,
+  sanitizeMessages,
+  type ChatMessage,
+} from '@/lib/server/chatMessages';
+
+/** תקרת גוף הבקשה - לפני JSON.parse, כדי שגוף ענק לא יפיל את הפונקציה */
+const MAX_BODY_CHARS = 6_000_000;
 import type { Trip } from '@/lib/trip/types';
 import type { Destination } from '@/lib/types';
 import { exploreDestination, type ExploreScope } from '@/lib/explore/resolver';
@@ -37,52 +45,6 @@ import { PLAN_LIMITS, aiUnits } from '@/lib/plans';
  */
 
 export const maxDuration = 60;
-
-interface ChatMessage {
-  role: 'user' | 'assistant';
-  content: string;
-  /** תמונה שהמשתמש צירף (data URL מוקטן) - ראו lib/trip/imageAttach.ts */
-  image?: string;
-}
-
-/* ---------- תמונות שמצורפות לשיחה ---------- */
-
-/** רק פורמטים שהמודל תומך בהם, ורק base64 - לא URL חיצוני */
-const IMAGE_DATA_URL = /^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/]+={0,2})$/;
-/** אותה תקרה כמו בצד הלקוח - השרת לא סומך על הלקוח */
-const MAX_IMAGE_CHARS = 1_400_000;
-/** כמה תמונות מותר בבקשה אחת (ההיסטוריה נשלחת שוב בכל תור) */
-const MAX_IMAGES_PER_REQUEST = 2;
-/** תקרת גוף הבקשה - לפני JSON.parse, כדי שגוף ענק לא יפיל את הפונקציה */
-const MAX_BODY_CHARS = 6_000_000;
-
-/**
- * ניקוי ההודעות מהלקוח: תפקיד וטקסט בלבד, ותמונה רק אם היא data URL
- * תקין בגודל סביר, רק בהודעת משתמש, ורק בשתי ההודעות האחרונות שיש בהן
- * תמונה. אותה משמעת כמו sanitizeClientTrip - הצורה מהלקוח אף פעם לא
- * נכנסת כמו שהיא.
- */
-function sanitizeMessages(raw: unknown): ChatMessage[] {
-  if (!Array.isArray(raw)) return [];
-  const msgs: ChatMessage[] = [];
-  for (const item of raw.slice(-40)) {
-    if (!item || typeof item !== 'object') continue;
-    const m = item as { role?: unknown; content?: unknown; image?: unknown };
-    const role = m.role === 'assistant' ? 'assistant' : 'user';
-    const content = typeof m.content === 'string' ? m.content.slice(0, 8000) : '';
-    const image = typeof m.image === 'string' ? m.image : '';
-    const okImage =
-      role === 'user' && image.length > 0 && image.length <= MAX_IMAGE_CHARS && IMAGE_DATA_URL.test(image);
-    msgs.push(okImage ? { role, content, image } : { role, content });
-  }
-  let kept = 0;
-  for (let i = msgs.length - 1; i >= 0; i--) {
-    if (!msgs[i].image) continue;
-    if (kept < MAX_IMAGES_PER_REQUEST) kept += 1;
-    else msgs[i] = { role: msgs[i].role, content: msgs[i].content };
-  }
-  return msgs;
-}
 
 interface ChatReply {
   reply: string;
@@ -871,6 +833,9 @@ const IMAGE_QUOTA_MESSAGE =
   'קריאת תמונה יקרה הרבה יותר מקריאת טקסט, ולכן המכסה נמוכה. המכסה מתאפסת פעם ביום, ובינתיים אפשר פשוט לכתוב לי את הפרטים - שם המלון, התאריכים והעיר - ואטפל בזה בדיוק אותו דבר.\n\n' +
   'בטיול+ פרימיום המכסה גדולה בהרבה - כל הפרטים בעמוד "פרימיום" (tiyulplus.com/premium).';
 
+const EMPTY_REQUEST_MESSAGE =
+  'לא קיבלתי טקסט ולא תמונה שאני יכול לקרוא 🙏 כתבו לי מה תרצו שאעשה, או צרפו תמונה קטנה יותר.';
+
 const IMAGE_TOO_BIG_MESSAGE =
   'התמונה כבדה מדי בשבילי 😅 נסו צילום מסך או תמונה קטנה יותר, או פשוט כתבו לי את הפרטים.';
 
@@ -907,6 +872,10 @@ export async function POST(request: Request) {
     });
   }
   const messages = sanitizeMessages(body.messages);
+  // אחרי הניקוי אפשר להישאר בלי כלום (הודעה ריקה, או תמונה שנפסלה על
+  // גודל/פורמט). שליחת מערך ריק ל-API היא 400 מובטחת, אז עוצרים כאן
+  // ואומרים את זה בעברית במקום להפיל את התור.
+  if (messages.length === 0) return singleMessageStream(EMPTY_REQUEST_MESSAGE);
 
   // מכסת התמונות: נספרת רק על התמונה שצורפה עכשיו (ההודעה האחרונה),
   // כדי ששליחה חוזרת של ההיסטוריה לא תבזבז את המכסה.
