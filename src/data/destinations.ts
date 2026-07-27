@@ -2753,6 +2753,252 @@ export const destinations: Destination[] = [
     },
   },
   {
+    slug: 'madrid',
+    name: 'מדריד',
+    nameLocal: 'Madrid',
+    countrySlug: 'spain',
+    flag: '🇪🇸',
+    center: { lat: 40.4168, lng: -3.7038 },
+    zoom: 13,
+    tagline: 'משולש הזהב של המוזיאונים, ועיר שמתעוררת בלילה',
+    summary:
+      'מדריד היא הבירה שנשארה מחוץ לקטלוג עד עכשיו, אף שהיא נקודת הכניסה הנפוצה ביותר לספרד. שלושת מוזיאוני האמנות שלה נמצאים במרחק הליכה זה מזה, הכיכרות ההיסטוריות צפופות ומלאות חיים, והעיר אוכלת ויוצאת מאוחר בהרבה משאר אירופה.',
+    bestSeason: 'אפריל עד יוני וספטמבר עד נובמבר. יולי-אוגוסט חמים מאוד ויבשים והעיר מתרוקנת, החורף קר אך שמשי.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Madrid_Plaza_Mayor_%2848733706273%29.jpg/500px-Madrid_Plaza_Mayor_%2848733706273%29.jpg',
+    iconicLandmark: {
+      name: 'מקדש דבוד',
+      nameLocal: 'Temple of Debod',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Templo_de_Debod_in_Madrid.jpg/500px-Templo_de_Debod_in_Madrid.jpg',
+      blurb:
+        'מקדש מצרי מהמאה השנייה לפנה״ס שניתן לספרד במתנה כשנבנה סכר אסואן, ונבנה מחדש בפארק מעל העיר.',
+    },
+    editorialRating: {
+      score: 4.3,
+      verdict:
+        'ריכוז מוזיאונים ברמה עולמית במרחק הליכה, אוכל מצוין ומחירים נוחים יחסית לבירות מערב אירופה, וטיסה ישירה קצרה. חסרונות: אין ים, הקיץ קשה, והעיר פחות ציורית מברצלונה. משתלבת היטב עם טולדו או סגוביה ליום נוסף.',
+    },
+    places: [
+      {
+        id: 'mad-prado',
+        name: 'מוזיאון פראדו',
+        nameLocal: 'Museo del Prado',
+        category: 'museum',
+        lat: 40.4139,
+        lng: -3.6922,
+        description:
+          'אחד ממוזיאוני האמנות הגדולים בעולם: ולסקס, גויה, אל גרקו ובוש. הכניסה חופשית בשעתיים האחרונות של כל יום, ואז יש תור.',
+        durationMin: 180,
+        priceLevel: 2,
+        tags: ['art', 'history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.4139,-3.6922',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Museo_del_Prado_2016_(25185969599).jpg/500px-Museo_del_Prado_2016_(25185969599).jpg',
+      },
+      {
+        id: 'mad-reina-sofia',
+        name: 'מוזיאון ריינה סופיה',
+        nameLocal: 'Museo Reina Sofía',
+        category: 'museum',
+        lat: 40.4086,
+        lng: -3.694,
+        description:
+          'מוזיאון האמנות המודרנית של ספרד, ובו "גרניקה" של פיקאסו לצד דאלי ומירו. הכניסה חופשית בשעות הערב המאוחרות.',
+        durationMin: 150,
+        priceLevel: 2,
+        tags: ['art'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.4086,-3.694',
+      },
+      {
+        id: 'mad-thyssen',
+        name: 'מוזיאון תיסן-בורנמיסה',
+        nameLocal: 'Museo Thyssen-Bornemisza',
+        category: 'museum',
+        lat: 40.41604,
+        lng: -3.69493,
+        description:
+          'המשלים של "משולש הזהב": אוסף פרטי שנרכש על ידי המדינה, ומכסה שמונה מאות שנות אמנות מהפרימיטיבים ועד הפופ ארט.',
+        durationMin: 120,
+        priceLevel: 2,
+        tags: ['art'],
+        externalUrl: 'https://maps.google.com/?q=40.41604,-3.69493',
+      },
+      {
+        id: 'mad-royal-palace',
+        name: 'הארמון המלכותי',
+        nameLocal: 'Royal Palace of Madrid',
+        category: 'attraction',
+        lat: 40.41806,
+        lng: -3.71417,
+        description:
+          'הארמון המלכותי הגדול באירופה במונחי שטח רצפה, עם למעלה מ-3,000 חדרים. משמש לטקסים רשמיים בלבד, והמלך אינו גר בו.',
+        durationMin: 120,
+        priceLevel: 2,
+        tags: ['history', 'art'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.41806,-3.71417',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Palacio_Real_de_Madrid_Julio_2016_(cropped).jpg/500px-Palacio_Real_de_Madrid_Julio_2016_(cropped).jpg',
+      },
+      {
+        id: 'mad-almudena',
+        name: 'קתדרלת אלמודנה',
+        nameLocal: 'Almudena Cathedral',
+        category: 'attraction',
+        lat: 40.41559,
+        lng: -3.71456,
+        description:
+          'הקתדרלה של מדריד, שהושלמה רק ב-1993 ולכן משלבת סגנונות מודרניים. צמודה לארמון, ויש עלייה לכיפה עם נוף.',
+        durationMin: 45,
+        priceLevel: 1,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=40.41559,-3.71456',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Almudena_2022_-_overview.jpg/500px-Almudena_2022_-_overview.jpg',
+      },
+      {
+        id: 'mad-plaza-mayor',
+        name: 'פלאסה מאיור',
+        nameLocal: 'Plaza Mayor',
+        category: 'attraction',
+        lat: 40.41536,
+        lng: -3.70739,
+        description:
+          'הכיכר המרובעת הסגורה מהמאה ה-17, מוקפת מרפסות אחידות ותשעה שערים. הייתה זירת שווקים, קרבות שוורים ומשפטי אינקוויזיציה.',
+        durationMin: 45,
+        priceLevel: 0,
+        tags: ['history', 'foodie'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.41536,-3.70739',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Madrid_Plaza_Mayor_(48733706273).jpg/500px-Madrid_Plaza_Mayor_(48733706273).jpg',
+      },
+      {
+        id: 'mad-sol',
+        name: 'פוארטה דל סול',
+        nameLocal: 'Puerta del Sol',
+        category: 'attraction',
+        lat: 40.41694,
+        lng: -3.70361,
+        description:
+          'הכיכר המרכזית של מדריד ונקודת האפס של כבישי ספרד. שם נמצא פסל הדוב ועץ השסק, סמל העיר, וכאן חוגגים את ראש השנה.',
+        durationMin: 30,
+        priceLevel: 0,
+        tags: ['families'],
+        externalUrl: 'https://maps.google.com/?q=40.41694,-3.70361',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Puerta_del_Sol_(Madrid)_10.jpg/500px-Puerta_del_Sol_(Madrid)_10.jpg',
+      },
+      {
+        id: 'mad-retiro',
+        name: 'פארק רטירו',
+        nameLocal: 'Buen Retiro Park',
+        category: 'nature',
+        lat: 40.415,
+        lng: -3.68389,
+        description:
+          'הגן המלכותי לשעבר, היום הפארק המרכזי של העיר. אגם עם סירות משוטים, ארמון הזכוכית ואתר מורשת עולמית יחד עם שדרת פראדו.',
+        durationMin: 120,
+        priceLevel: 0,
+        tags: ['outdoors', 'romantic', 'families'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.415,-3.68389',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/MADRID_051116_MXALX_041.jpg/500px-MADRID_051116_MXALX_041.jpg',
+      },
+      {
+        id: 'mad-debod',
+        name: 'מקדש דבוד',
+        nameLocal: 'Temple of Debod',
+        category: 'viewpoint',
+        lat: 40.42405,
+        lng: -3.71778,
+        description:
+          'מקדש מצרי אמיתי מהמאה השנייה לפנה״ס, שניתן לספרד במתנה כשנבנה סכר אסואן. אחת מנקודות השקיעה האהובות בעיר.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['history', 'romantic'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.42405,-3.71778',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Templo_de_Debod_in_Madrid.jpg/500px-Templo_de_Debod_in_Madrid.jpg',
+      },
+      {
+        id: 'mad-san-miguel',
+        name: 'שוק סן מיגל',
+        nameLocal: 'Mercado de San Miguel',
+        category: 'cafe',
+        lat: 40.41528,
+        lng: -3.70889,
+        description:
+          'שוק ברזל ויציקה מ-1916 שהפך לשוק טאפאס מקורה, ליד פלאסה מאיור. תיירותי ויקר יחסית, אבל נוח לטעימות.',
+        durationMin: 75,
+        priceLevel: 2,
+        tags: ['foodie', 'nightlife'],
+        externalUrl: 'https://maps.google.com/?q=40.41528,-3.70889',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Mercado_de_San_Miguel_2025.jpg/500px-Mercado_de_San_Miguel_2025.jpg',
+      },
+      {
+        id: 'mad-bernabeu',
+        name: 'אצטדיון סנטיאגו ברנבאו',
+        nameLocal: 'Santiago Bernabéu Stadium',
+        category: 'attraction',
+        lat: 40.45306,
+        lng: -3.68835,
+        description:
+          'ביתה של ריאל מדריד, אחרי שיפוץ ענק שהפך אותו לאצטדיון עם גג נפתח. יש סיור מוזיאון גם בימים ללא משחק.',
+        durationMin: 120,
+        priceLevel: 2,
+        tags: ['families'],
+        externalUrl: 'https://maps.google.com/?q=40.45306,-3.68835',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/M-estadio-santiago-bernabeu-diciembre-2024-c.jpg/500px-M-estadio-santiago-bernabeu-diciembre-2024-c.jpg',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'משולש הזהב: פראדו, ריינה סופיה ותיסן',
+        placeIds: ['mad-prado', 'mad-thyssen', 'mad-reina-sofia'],
+        notes:
+          'שלושתם על ציר אחד. לכל אחד יש שעות כניסה חופשית בערב, וזה גם הזמן העמוס ביותר.',
+      },
+      {
+        day: 2,
+        title: 'מדריד המלכותית והכיכרות',
+        placeIds: ['mad-royal-palace', 'mad-almudena', 'mad-plaza-mayor', 'mad-sol', 'mad-san-miguel'],
+        notes:
+          'להתחיל בארמון עם הפתיחה. משם הכול הליכה עד פוארטה דל סול.',
+      },
+      {
+        day: 3,
+        title: 'פארקים ושקיעה',
+        placeIds: ['mad-retiro', 'mad-debod'],
+        notes:
+          'רטירו בשעות אחר הצהריים, ומקדש דבוד לשקיעה. שניהם חופשיים לכניסה.',
+      },
+      {
+        day: 4,
+        title: 'כדורגל',
+        placeIds: ['mad-bernabeu'],
+        notes:
+          'סיור באצטדיון גם בימים ללא משחק, בהזמנה מראש.',
+      },
+    ],
+    practical: {
+      flights:
+        'טיסות ישירות מנתב״ג למדריד (MAD), כחמש שעות. מפעילות בין השאר אל על ואיבריה. משדה התעופה למרכז יש מטרו ישיר וקו אוטובוס אקספרס.',
+      gettingAround:
+        'המטרו של מדריד הוא מהטובים והזולים באירופה ומכסה הכול, כולל שדה התעופה. מרכז העיר נוח להליכה. כרטיס רב-נסיעות משתלם.',
+      kosherOverview:
+        'במדריד קהילה יהודית עם בית כנסת מרכזי ובית חב״ד, ופועלות בעיר מסעדה כשרה וחנות כשרה. ההיצע קטן משמעותית מברצלונה ומשתנה, וכדאי לתאם מראש ובעיקר לשבת. לוודא מול המקום. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
+    },
+  },
+  {
     slug: 'barcelona',
     name: 'ברצלונה',
     nameLocal: 'Barcelona',
@@ -3675,6 +3921,151 @@ export const destinations: Destination[] = [
         'U-Bahn, S-Bahn, חשמליות ואופניים - רשת מעולה. כרטיס יומי/שבועי משתלם. העיר ענקית, לתכנן לפי אזורים.',
       kosherOverview:
         'הקהילה היהודית מתרכזת בשרלוטנבורג: בלייברגס החלבי, חנות כשרה ליד חב"ד, ומסעדות נוספות משתנות - לבדוק עדכני. בזכות הקהילה הישראלית הגדולה יש גם המון אוכל ישראלי (לא בהכרח כשר) בכל העיר.',
+    },
+  },
+  {
+    slug: 'ayutthaya-krabi',
+    name: 'איוטהאיה וקראבי',
+    nameLocal: 'Ayutthaya & Krabi',
+    countrySlug: 'thailand',
+    flag: '🇹🇭',
+    center: { lat: 11.2, lng: 99.7 },
+    zoom: 6,
+    tagline: 'הבירה ההרוסה של סיאם, וצוקי הגיר של הדרום',
+    summary:
+      'שתי התוספות המתבקשות למי שכבר מכיר את בנגקוק ואת פוקט: איוטהאיה, בירת סיאם עד 1767 ואתר מורשת עולמית של מקדשים הרוסים, נמצאת כשעה וחצי צפונית לבנגקוק ומתאימה ליום אחד; וקראבי בדרום, עם צוקי הגיר וחופים שמגיעים אליהם רק בסירה.',
+    bestSeason: 'נובמבר עד מרץ בשני האזורים. אפריל-מאי חמים מאוד, ובין מאי לאוקטובר יורדים גשמי המונסון והים בדרום גלי יותר.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Wat_Chaiwatthanaram_by_drone.jpg/500px-Wat_Chaiwatthanaram_by_drone.jpg',
+    iconicLandmark: {
+      name: 'ואט מהאתאט',
+      nameLocal: 'Wat Mahathat',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/2025-02-03_Wat_Maha_That_%28Ayutthaya%29_%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%98%E0%B8%B2%E0%B8%95%E0%B8%B8_%E0%B8%AD%E0%B8%A2%E0%B8%B8%E0%B8%98%E0%B8%A2%E0%B8%B2_-_img_15.jpg/500px-2025-02-03_Wat_Maha_That_%28Ayutthaya%29_%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%98%E0%B8%B2%E0%B8%95%E0%B8%B8_%E0%B8%AD%E0%B8%A2%E0%B8%B8%E0%B8%98%E0%B8%A2%E0%B8%B2_-_img_15.jpg',
+      blurb:
+        'מקדש מהמאה ה-14 באיוטהאיה, ובו ראש בודהה עטוף בשורשי עץ תאנה.',
+    },
+    editorialRating: {
+      score: 4.2,
+      verdict:
+        'איוטהאיה היא טיול יום קל ומשמעותי מבנגקוק, וקראבי נותנת נופי חופים דרמטיים יותר מפוקט ובפחות המולה. חסרונות: שני האזורים רחוקים זה מזה ודורשים טיסה פנימית ביניהם, ובאיוטהאיה החום בשטח פתוח קשה בצהריים.',
+    },
+    places: [
+      {
+        id: 'ayu-wat-mahathat',
+        name: 'ואט מהאתאט',
+        nameLocal: 'Wat Mahathat',
+        category: 'attraction',
+        lat: 14.3569,
+        lng: 100.5675,
+        description:
+          'מקדש מהמאה ה-14 ובו ראש בודהה עטוף בשורשי עץ תאנה, אחת התמונות המזוהות ביותר עם תאילנד.',
+        durationMin: 90,
+        priceLevel: 1,
+        tags: ['history', 'art'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=14.3569,100.5675',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/2025-02-03_Wat_Maha_That_(Ayutthaya)_%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%98%E0%B8%B2%E0%B8%95%E0%B8%B8_%E0%B8%AD%E0%B8%A2%E0%B8%B8%E0%B8%98%E0%B8%A2%E0%B8%B2_-_img_15.jpg/500px-2025-02-03_Wat_Maha_That_(Ayutthaya)_%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%98%E0%B8%B2%E0%B8%95%E0%B8%B8_%E0%B8%AD%E0%B8%A2%E0%B8%B8%E0%B8%98%E0%B8%A2%E0%B8%B2_-_img_15.jpg',
+      },
+      {
+        id: 'ayu-si-sanphet',
+        name: 'ואט פרה סי סנפט',
+        nameLocal: 'Wat Phra Si Sanphet',
+        category: 'attraction',
+        lat: 14.3558,
+        lng: 100.5583,
+        description:
+          'המקדש המלכותי של ארמון איוטהאיה, ובו שלוש הצ׳די המזוהות עם העיר. היה המקדש החשוב בממלכה.',
+        durationMin: 75,
+        priceLevel: 1,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=14.3558,100.5583',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Three_Chedi(s)_of_Wat_Phra_Si_Sanphet.jpg/500px-Three_Chedi(s)_of_Wat_Phra_Si_Sanphet.jpg',
+      },
+      {
+        id: 'ayu-chaiwatthanaram',
+        name: 'ואט צ׳אייוואטנאראם',
+        nameLocal: 'Wat Chaiwatthanaram',
+        category: 'attraction',
+        lat: 14.34306,
+        lng: 100.54167,
+        description:
+          'מקדש מ-1630 על גדת הנהר, בהשראת אנגקור. הכי יפה בשעת השקיעה ומואר בערב.',
+        durationMin: 75,
+        priceLevel: 1,
+        tags: ['history', 'romantic'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=14.34306,100.54167',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Wat_Chaiwatthanaram_by_drone.jpg/500px-Wat_Chaiwatthanaram_by_drone.jpg',
+      },
+      {
+        id: 'ayu-bang-pa-in',
+        name: 'ארמון בנג פה-אין',
+        nameLocal: 'Bang Pa-In Royal Palace',
+        category: 'attraction',
+        lat: 14.2325,
+        lng: 100.57917,
+        description:
+          'ארמון הקיץ המלכותי, תערובת של סגנון תאילנדי, סיני ואירופי בתוך גנים ואגמים. בדרך בין בנגקוק לאיוטהאיה.',
+        durationMin: 120,
+        priceLevel: 1,
+        tags: ['history', 'families'],
+        externalUrl: 'https://maps.google.com/?q=14.2325,100.57917',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Bang_Pa-in_-_Ishavaraya_Divya_Asna_Hall_%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%99%E0%B8%B1%E0%B9%88%E0%B8%87%E0%B9%84%E0%B8%AD%E0%B8%A8%E0%B8%A7%E0%B8%A3%E0%B8%A3%E0%B8%A2%E0%B9%8C%E0%B8%97%E0%B8%B4%E0%B8%9E%E0%B8%A2%E0%B8%AD%E0%B8%B2%E0%B8%AA%E0%B8%99%E0%B9%8C_(2025)_-_img_02.jpg/500px-Bang_Pa-in_-_Ishavaraya_Divya_Asna_Hall_%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%99%E0%B8%B1%E0%B9%88%E0%B8%87%E0%B9%84%E0%B8%AD%E0%B8%A8%E0%B8%A7%E0%B8%A3%E0%B8%A3%E0%B8%A2%E0%B9%8C%E0%B8%97%E0%B8%B4%E0%B8%9E%E0%B8%A2%E0%B8%AD%E0%B8%B2%E0%B8%AA%E0%B8%99%E0%B9%8C_(2025)_-_img_02.jpg',
+      },
+      {
+        id: 'ayu-railay',
+        name: 'חוף ריילאי',
+        nameLocal: 'Railay Beach',
+        category: 'nature',
+        lat: 8.01056,
+        lng: 98.83944,
+        description:
+          'חצי אי בקראבי שמנותק מהיבשה בצוקי גיר ולכן מגיעים אליו רק בסירת זנב ארוך. חופים, טיפוס סלעים ומערות.',
+        durationMin: 300,
+        priceLevel: 1,
+        tags: ['outdoors', 'romantic', 'families'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=8.01056,98.83944',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Railay_Beach_5.jpg/500px-Railay_Beach_5.jpg',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'איוטהאיה: המקדשים המרכזיים',
+        placeIds: ['ayu-wat-mahathat', 'ayu-si-sanphet', 'ayu-chaiwatthanaram'],
+        notes:
+          'להתחיל מוקדם בגלל החום. צ׳אייוואטנאראם לשקיעה. אפשר להשכיר אופניים בין המקדשים.',
+      },
+      {
+        day: 2,
+        title: 'בנג פה-אין בדרך חזרה',
+        placeIds: ['ayu-bang-pa-in'],
+        notes:
+          'הארמון נמצא בין איוטהאיה לבנגקוק ומשתלב בדרך חזרה.',
+      },
+      {
+        day: 3,
+        title: 'קראבי: ריילאי',
+        placeIds: ['ayu-railay'],
+        notes:
+          'לריילאי מגיעים רק בסירת זנב ארוך מאו נאנג או מקראבי טאון. שווה לינה ולא רק יום.',
+      },
+    ],
+    practical: {
+      flights:
+        'מגיעים דרך בנגקוק (BKK), שאליה יש טיסות ישירות מנתב״ג של כתשע שעות. איוטהאיה כשעה וחצי ברכבת או ברכב מבנגקוק. לקראבי (KBV) יש טיסה פנימית מבנגקוק של כשעה וחצי.',
+      gettingAround:
+        'באיוטהאיה נוסעים בין המקדשים באופניים, בטוק טוק או ברכב עם נהג; הפארק גדול מכדי ללכת ברגל. בקראבי צריך סירות זנב ארוך לחופים, ורכב או סונגטאו ביבשה.',
+      kosherOverview:
+        'אין תשתית כשרות באיוטהאיה ובקראבי. בבנגקוק ובפוקט יש בתי חב״ד ומסעדות כשרות, וזו נקודת ההצטיידות. לוודא מול חב״ד תאילנד מראש. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
     },
   },
   {
@@ -6709,6 +7100,136 @@ export const destinations: Destination[] = [
     },
   },
   {
+    slug: 'nicosia',
+    name: 'ניקוסיה',
+    nameLocal: 'Nicosia / Λευκωσία',
+    countrySlug: 'cyprus',
+    flag: '🇨🇾',
+    center: { lat: 35.1739, lng: 33.3642 },
+    zoom: 14,
+    tagline: 'הבירה המחולקת האחרונה באירופה',
+    summary:
+      'ניקוסיה היא הבירה של קפריסין וגם הבירה המחולקת האחרונה באירופה: קו ירוק חוצה את מרכזה, ומרחוב הקניות הראשי אפשר לעבור ברגל אל הצד הצפוני. העיר העתיקה מוקפת חומת ונציה מהמאה ה-16, ובתוכה מוזיאון ארכיאולוגי מהחשובים באזור. פחות תיירותית מלרנקה ומפאפוס, ולכן גם אותנטית יותר.',
+    bestSeason: 'מרץ עד מאי ואוקטובר עד נובמבר. ניקוסיה יושבת בעומק היבשה בלי רוח ים, והקיץ בה חם משמעותית מערי החוף.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Nicosia_Buyuk_Han_02.jpg/500px-Nicosia_Buyuk_Han_02.jpg',
+    iconicLandmark: {
+      name: 'בויוק האן',
+      nameLocal: 'Büyük Han',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Nicosia_Buyuk_Han_02.jpg/500px-Nicosia_Buyuk_Han_02.jpg',
+      blurb:
+        'פונדק שיירות עות׳מאני מ-1572 עם חצר פנימית ובאר, מהמבנים היפים בעיר העתיקה.',
+    },
+    editorialRating: {
+      score: 3.8,
+      verdict:
+        'תוספת מעניינת ליומיים בקפריסין, וקרובה לכל מקום באי. המעבר בין שני צידי העיר הוא חוויה שאין דומה לה באירופה. חסרונות: קטנה, אין ים, והקיץ חם מאוד. יום אחד מספיק.',
+    },
+    places: [
+      {
+        id: 'nic-ledra',
+        name: 'רחוב לדרה ומעבר הגבול',
+        nameLocal: 'Ledra Street',
+        category: 'attraction',
+        lat: 35.17444,
+        lng: 33.36139,
+        description:
+          'רחוב הקניות הראשי של ניקוסיה, ובקצהו מעבר רגלי אל הצד הצפוני של האי. ניקוסיה היא הבירה המחולקת האחרונה באירופה, והמעבר דורש דרכון.',
+        durationMin: 90,
+        priceLevel: 0,
+        tags: ['history', 'foodie'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=35.17444,33.36139',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Socratous_Street_old_Nicosia_view_towards_Ledra_Street_Republic_of_Cyprus.jpg/500px-Socratous_Street_old_Nicosia_view_towards_Ledra_Street_Republic_of_Cyprus.jpg',
+      },
+      {
+        id: 'nic-cyprus-museum',
+        name: 'המוזיאון הארכיאולוגי של קפריסין',
+        nameLocal: 'Cyprus Museum',
+        category: 'museum',
+        lat: 35.17167,
+        lng: 33.35528,
+        description:
+          'המוזיאון הארכיאולוגי הראשי של האי, עם ממצאים מהתקופה הניאוליתית ועד הרומית, ובהם מאות פסלוני החימר מאייה אירני.',
+        durationMin: 120,
+        priceLevel: 1,
+        tags: ['history', 'art'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=35.17167,33.35528',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Nicosia_01-2017_img28_Cyprus_Museum.jpg/500px-Nicosia_01-2017_img28_Cyprus_Museum.jpg',
+      },
+      {
+        id: 'nic-selimiye',
+        name: 'מסגד סלימייה',
+        nameLocal: 'Selimiye Mosque',
+        category: 'attraction',
+        lat: 35.1765,
+        lng: 33.3645,
+        description:
+          'קתדרלה גותית צרפתית מהמאה ה-13 שהוסבה למסגד ב-1570, בצד הצפוני של העיר. שילוב נדיר של קשתות גותיות עם צריחים.',
+        durationMin: 45,
+        priceLevel: 0,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=35.1765,33.3645',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Nicosia_01-2017_img20_View_from_Shacolas_Tower.jpg/500px-Nicosia_01-2017_img20_View_from_Shacolas_Tower.jpg',
+      },
+      {
+        id: 'nic-buyuk-han',
+        name: 'בויוק האן',
+        nameLocal: 'Büyük Han',
+        category: 'attraction',
+        lat: 35.1763,
+        lng: 33.3625,
+        description:
+          'פונדק שיירות עות׳מאני מ-1572 עם חצר פנימית ובאר, מהמבנים היפים בעיר. היום גלריות, סדנאות ובית קפה בחצר.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['history', 'art', 'foodie'],
+        externalUrl: 'https://maps.google.com/?q=35.1763,33.3625',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Nicosia_Buyuk_Han_02.jpg/500px-Nicosia_Buyuk_Han_02.jpg',
+      },
+      {
+        id: 'nic-famagusta-gate',
+        name: 'שער פמגוסטה',
+        nameLocal: 'Famagusta Gate',
+        category: 'attraction',
+        lat: 35.1743,
+        lng: 33.3712,
+        description:
+          'אחד משלושת שערי חומת ונציה מהמאה ה-16 שהקיפה את ניקוסיה. משמש היום מרכז תרבות ואירועים.',
+        durationMin: 30,
+        priceLevel: 0,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=35.1743,33.3712',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Nicosia_01-2017_img08_Famagusta_Gate.jpg/500px-Nicosia_01-2017_img08_Famagusta_Gate.jpg',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'העיר העתיקה ושני הצדדים',
+        placeIds: ['nic-cyprus-museum', 'nic-ledra', 'nic-buyuk-han', 'nic-selimiye', 'nic-famagusta-gate'],
+        notes:
+          'למעבר בין הצדדים צריך דרכון. אין ויזה ואין תשלום, אבל יש בדיקה בשני הכיוונים.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין שדה תעופה בניקוסיה. מגיעים דרך לרנקה (LCA) או פאפוס (PFO), שאליהן יש טיסות ישירות מנתב״ג של כשעה וחצי בלבד. מלרנקה לניקוסיה כארבעים דקות ברכב או באוטובוס.',
+      gettingAround:
+        'מרכז ניקוסיה קטן וכולו הליכה בתוך החומות. אוטובוסים בין-עירוניים מחברים ללרנקה, ללימסול ולפאפוס. רכב שכור נוח לשאר האי אבל מיותר בעיר עצמה.',
+      kosherOverview:
+        'אין מסעדות כשרות בניקוסיה. בלרנקה פועל בית חב״ד המספק אוכל כשר בתיאום מראש, ויש קהילה קטנה. מי שמקפיד יצטייד בלרנקה או יביא מזון. לוודא מול חב״ד קפריסין. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
+    },
+  },
+  {
     slug: 'larnaca',
     name: 'לרנקה',
     nameLocal: 'Larnaca / Λάρνακα',
@@ -6913,6 +7434,39 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Larnaca_01-2017_img08_Pieridis_Museum_of_Antiquities.jpg/500px-Larnaca_01-2017_img08_Pieridis_Museum_of_Antiquities.jpg',
       },
+      {
+        id: 'lca-hala-sultan',
+        name: 'הלה סולטן טקה',
+        nameLocal: 'Hala Sultan Tekke',
+        category: 'attraction',
+        lat: 34.88528,
+        lng: 33.61001,
+        description:
+          'מסגד ומתחם קברים על שפת אגם המלח של לרנקה, אחד האתרים המקודשים באסלאם. בחורף ובאביב האגם מתמלא ופלמינגו נוחתים בו.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['history', 'outdoors'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=34.88528,33.61001',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Hala_Sultan_Tekke_Larnaca_1.JPG/500px-Hala_Sultan_Tekke_Larnaca_1.JPG',
+      },
+      {
+        id: 'lca-khirokitia',
+        name: 'חירוקיטיה',
+        nameLocal: 'Khirokitia',
+        category: 'attraction',
+        lat: 34.79673,
+        lng: 33.34372,
+        description:
+          'יישוב ניאוליתי מהאלף השביעי לפנה״ס, אתר מורשת עולמית, ובו שוחזרו בתים עגולים. אחד היישובים הקדומים שנחשפו באגן הים התיכון.',
+        durationMin: 75,
+        priceLevel: 1,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=34.79673,33.34372',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Khirokitia_near_Larnaca_01-2017_img7.jpg/500px-Khirokitia_near_Larnaca_01-2017_img7.jpg',
+      },
     ],
     itinerary: [
       {
@@ -6951,6 +7505,128 @@ export const destinations: Destination[] = [
         'רכב שכור כמעט הכרחי כדי להגיע לטרודוס, לכף גרקו ולמערב האי - אין תחבורה ציבורית נוחה ביניהם. בתוך לרנקה ואיה נאפה יש אוטובוסים וטקסי.',
       kosherOverview:
         'לקפריסין תשתית כשרות אמיתית בזכות בית חב"ד קפריסין: קפיטריה כשרה "שמיים" בלרנקה עם משלוחי ארוחות למלון, ובית חב"ד נוסף באיה נאפה עם חנות כשרה וארוחות שבת (בעיקר בעונת הקיץ, כשמגיעים אלפי ישראלים). מומלץ לוודא שעות וארוחות שבת מול בית חב"ד מראש.',
+    },
+  },
+  {
+    slug: 'kazbegi-mtskheta',
+    name: 'קזבגי ומצחטה',
+    nameLocal: 'Kazbegi & Mtskheta',
+    countrySlug: 'georgia',
+    flag: '🇬🇪',
+    center: { lat: 42.25, lng: 44.67 },
+    zoom: 9,
+    tagline: 'הדרך הצבאית הגאורגית, מהבירה העתיקה אל הקווקז',
+    summary:
+      'הציר שצפונה מטביליסי הוא הטיול הקלאסי בגאורגיה: מצחטה, הבירה העתיקה והמרכז הרוחני של המדינה, ומשם הדרך הצבאית הגאורגית דרך מבצר אנאנורי אל סטפנצמינדה (קזבגי) שלמרגלות הר קזבק בגובה 5,033 מטר. אפשר ביום ארוך אחד, ועדיף לפצל לשניים עם לינה בקזבגי.',
+    bestSeason: 'מאי עד אוקטובר. בחורף הדרך הצבאית נסגרת לעיתים בגלל שלג, וכדאי לבדוק לפני היציאה.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Gergeti_Trinity_Church_09.23.jpg/500px-Gergeti_Trinity_Church_09.23.jpg',
+    iconicLandmark: {
+      name: 'כנסיית השילוש בגרגטי',
+      nameLocal: 'Gergeti Trinity Church',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Gergeti_Trinity_Church_09.23.jpg/500px-Gergeti_Trinity_Church_09.23.jpg',
+      blurb:
+        'כנסייה מהמאה ה-14 בגובה 2,170 מטר מעל קזבגי, על רקע הר קזבק המושלג.',
+    },
+    editorialRating: {
+      score: 4.5,
+      verdict:
+        'אחד הנופים המרשימים בקווקז, במרחק נסיעה אחת מטביליסי. מצחטה מוסיפה שכבה היסטורית אמיתית. חסרונות: הדרך ארוכה ומפותלת ולא נוחה למי שסובל ממחלת דרכים, בחורף היא נסגרת, והתשתית התיירותית בקזבגי בסיסית.',
+    },
+    places: [
+      {
+        id: 'geo-gergeti',
+        name: 'כנסיית השילוש בגרגטי',
+        nameLocal: 'Gergeti Trinity Church',
+        category: 'attraction',
+        lat: 42.6625,
+        lng: 44.62028,
+        description:
+          'כנסייה מהמאה ה-14 בגובה 2,170 מטר מעל קזבגי, על רקע הר קזבק המושלג. עולים ברגל בכשעה וחצי או ברכב שטח.',
+        durationMin: 240,
+        priceLevel: 0,
+        tags: ['outdoors', 'history', 'romantic'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=42.6625,44.62028',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Gergeti_Trinity_Church_09.23.jpg/500px-Gergeti_Trinity_Church_09.23.jpg',
+      },
+      {
+        id: 'geo-ananuri',
+        name: 'מבצר אנאנורי',
+        nameLocal: 'Ananuri Fortress',
+        category: 'attraction',
+        lat: 42.16361,
+        lng: 44.70389,
+        description:
+          'מתחם מבוצר מהמאה ה-17 על שפת מאגר ז׳ינוואלי, על הדרך הצבאית הגאורגית. עצירה קלאסית בדרך צפונה.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['history', 'outdoors'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=42.16361,44.70389',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Georgian_Fortress_Ananuri.jpg/500px-Georgian_Fortress_Ananuri.jpg',
+      },
+      {
+        id: 'geo-jvari',
+        name: 'מנזר ג׳ווארי',
+        nameLocal: 'Jvari Monastery',
+        category: 'attraction',
+        lat: 41.83861,
+        lng: 44.73389,
+        description:
+          'מנזר מהמאה השישית על צוק מעל מפגש הנהרות, אתר מורשת עולמית. משם נשקפת מצחטה כולה.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=41.83861,44.73389',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Georgia_Jvari_monastery_IMG_9345_2070.jpg/500px-Georgia_Jvari_monastery_IMG_9345_2070.jpg',
+      },
+      {
+        id: 'geo-mtskheta',
+        name: 'מצחטה',
+        nameLocal: 'Mtskheta',
+        category: 'attraction',
+        lat: 41.84639,
+        lng: 44.71944,
+        description:
+          'הבירה העתיקה של גאורגיה ומרכזה הרוחני, כעשרים דקות מטביליסי. קתדרלת סווטיצחובלי שבמרכזה היא אתר מורשת עולמית.',
+        durationMin: 180,
+        priceLevel: 0,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=41.84639,44.71944',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/View_to_Mtskheta_from_Jvari.jpg/500px-View_to_Mtskheta_from_Jvari.jpg',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'מצחטה: הבירה העתיקה',
+        placeIds: ['geo-mtskheta', 'geo-jvari'],
+        notes:
+          'כעשרים דקות מטביליסי. לעלות לג׳ווארי בשביל הנוף על מפגש הנהרות.',
+      },
+      {
+        day: 2,
+        title: 'הדרך הצבאית וקזבגי',
+        placeIds: ['geo-ananuri', 'geo-gergeti'],
+        notes:
+          'לאנאנורי עוצרים בדרך. לגרגטי עולים ברכב שטח או ברגל בכשעה וחצי; הכנסייה פעילה ולבוש צנוע נדרש.',
+      },
+    ],
+    practical: {
+      flights:
+        'מגיעים דרך טביליסי (TBS), שאליה יש טיסות ישירות מנתב״ג של כשלוש שעות. מטביליסי למצחטה כעשרים דקות, ולקזבגי כשלוש שעות נסיעה צפונה.',
+      gettingAround:
+        'הדרך הצבאית הגאורגית דורשת רכב: נהג פרטי, סיור מאורגן או מרשוטקה מטביליסי. הכביש מפותל ובחורף עלול להיסגר. בקזבגי עצמה הכול קרוב, אבל לגרגטי צריך רכב שטח או רגליים.',
+      kosherOverview:
+        'אין תשתית כשרות בקזבגי ובמצחטה. בטביליסי יש בית חב״ד ומסעדה כשרה, ומשם צריך להצטייד ליום או ליומיים. לוודא מול חב״ד טביליסי מראש. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
     },
   },
   {
@@ -18238,6 +18914,126 @@ export const destinations: Destination[] = [
         'המטרו מגיע משדה התעופה למרכז ולרוב האזורים ונוח מאוד. יש גם טראמים ואוטובוסים, וכרטיס אחד תקף לכולם. המרכז ההיסטורי כולו הליכה. לוויטושה יוצאים אוטובוסים עירוניים מקצה קו המטרו.',
       kosherOverview:
         'בסופיה קהילה יהודית קטנה סביב בית הכנסת המרכזי, ופועל בעיר בית חב״ד שמספק ארוחות שבת בתיאום מראש. אין מסעדות כשרות קבועות, וההיצע בחנויות מוגבל. מי שמקפיד צריך להיערך מראש ולתאם מול חב״ד סופיה. לוודא מול המקום. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
+    },
+  },
+  {
+    slug: 'plovdiv',
+    name: 'פלובדיב',
+    nameLocal: 'Plovdiv',
+    countrySlug: 'bulgaria',
+    flag: '🇧🇬',
+    center: { lat: 42.1421, lng: 24.7499 },
+    zoom: 14,
+    tagline: 'אחת הערים העתיקות באירופה, על שבע גבעות',
+    summary:
+      'פלובדיב היא העיר השנייה בבולגריה ואחת הערים המיושבות ברציפות הוותיקות באירופה. העיר העתיקה שלה היא רובע שלם של בתי סוחרים מהמאה ה-19 על גבעה מרוצפת אבן, ומתחת לרחוב הראשי המודרני חשופים אצטדיון ותיאטרון רומיים.',
+    bestSeason: 'אפריל עד יוני וספטמבר עד אוקטובר. הקיץ חם מאוד בעמק, והחורף קר אך שקט וזול.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Renovated_house_in_plovdiv_old_town.jpg/500px-Renovated_house_in_plovdiv_old_town.jpg',
+    iconicLandmark: {
+      name: 'נבט טפה',
+      nameLocal: 'Nebet Tepe',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/View_from_Nebet_hill%2C_Plovdiv%2C_Bulgaria.jpg/500px-View_from_Nebet_hill%2C_Plovdiv%2C_Bulgaria.jpg',
+      blurb:
+        'גבעת ההתיישבות הקדומה בקצה העיר העתיקה, עם שרידי ביצורים תראקיים ונוף פנורמי על פלובדיב.',
+    },
+    editorialRating: {
+      score: 3.9,
+      verdict:
+        'תוספת טבעית וזולה לסופיה, כשעתיים ברכב או ברכבת, ולדעת רבים יפה ממנה. שכבות ההיסטוריה חשופות ממש ברחוב. חסרונות: קטנה, יומיים מספיקים, ואין בה תשתית כשרות כלל.',
+    },
+    places: [
+      {
+        id: 'plo-old-town',
+        name: 'העיר העתיקה של פלובדיב',
+        nameLocal: 'Plovdiv Old Town',
+        category: 'attraction',
+        lat: 42.14982,
+        lng: 24.75267,
+        description:
+          'רובע בתי הסוחרים מהמאה ה-19 על גבעה מרוצפת אבן, עם חזיתות צבעוניות ובתי מוזיאון. פלובדיב נחשבת לאחת הערים המיושבות ברציפות הוותיקות באירופה.',
+        durationMin: 150,
+        priceLevel: 0,
+        tags: ['history', 'art'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=42.14982,24.75267',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Renovated_house_in_plovdiv_old_town.jpg/500px-Renovated_house_in_plovdiv_old_town.jpg',
+      },
+      {
+        id: 'plo-stadium',
+        name: 'האצטדיון הרומי',
+        nameLocal: 'Roman Stadium of Philippopolis',
+        category: 'attraction',
+        lat: 42.14757,
+        lng: 24.74802,
+        description:
+          'אצטדיון רומי מהמאה השנייה לספירה שנחשף מתחת לרחוב הראשי, וחלקו גלוי היום מתחת לרחבת ההליכה.',
+        durationMin: 45,
+        priceLevel: 0,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=42.14757,24.74802',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Ancient_Stadium%2C_Philippopolis_5.jpg/500px-Ancient_Stadium%2C_Philippopolis_5.jpg',
+      },
+      {
+        id: 'plo-nebet-tepe',
+        name: 'נבט טפה',
+        nameLocal: 'Nebet Tepe',
+        category: 'viewpoint',
+        lat: 42.15361,
+        lng: 24.75222,
+        description:
+          'גבעת ההתיישבות הקדומה בקצה העיר העתיקה, עם שרידי ביצורים תראקיים ונוף פנורמי על פלובדיב. פופולרית בשקיעה.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['history', 'outdoors'],
+        externalUrl: 'https://maps.google.com/?q=42.15361,24.75222',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/View_from_Nebet_hill%2C_Plovdiv%2C_Bulgaria.jpg/500px-View_from_Nebet_hill%2C_Plovdiv%2C_Bulgaria.jpg',
+      },
+      {
+        id: 'plo-bachkovo',
+        name: 'מנזר בצ׳קובו',
+        nameLocal: 'Bachkovo Monastery',
+        category: 'attraction',
+        lat: 41.94222,
+        lng: 24.84944,
+        description:
+          'המנזר השני בגודלו בבולגריה, מ-1083, כשלושים קילומטר דרומה מפלובדיב בהרי רודופי. פרסקאות וחצר אבן מוצלת.',
+        durationMin: 120,
+        priceLevel: 0,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=41.94222,24.84944',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Church_of_the_Dormition%2C_Bachkovo_Monastery_01.jpg/500px-Church_of_the_Dormition%2C_Bachkovo_Monastery_01.jpg',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'העיר העתיקה והשכבות הרומיות',
+        placeIds: ['plo-old-town', 'plo-stadium', 'plo-nebet-tepe'],
+        notes:
+          'העיר העתיקה כולה מרוצפת אבן ותלולה. נבט טפה בשקיעה.',
+      },
+      {
+        day: 2,
+        title: 'מנזר בצ׳קובו',
+        placeIds: ['plo-bachkovo'],
+        notes:
+          'כשלושים קילומטר דרומה, נסיעה של כחצי שעה. אפשר לשלב עם עצירה בהרי רודופי.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסה ישירה קבועה מנתב״ג לפלובדיב. מגיעים דרך סופיה (SOF) וממנה כשעתיים ברכב, באוטובוס או ברכבת. יש שדה תעופה קטן (PDV) עם קווי עונה בלבד.',
+      gettingAround:
+        'מרכז פלובדיב קטן וכולו הליכה, אם כי העיר העתיקה תלולה ומרוצפת אבן. למנזר בצ׳קובו צריך רכב או סיור מאורגן.',
+      kosherOverview:
+        'אין תשתית כשרות בפלובדיב: אין מסעדות כשרות ואין בית חב״ד. הקהילה היהודית קטנה ויש בית כנסת היסטורי. מי שמקפיד צריך להצטייד בסופיה או להביא מזון. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
     },
   },
   {
