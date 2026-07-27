@@ -31159,6 +31159,246 @@ export const destinations: Destination[] = [
         'אין בצפון מקדוניה אף מסעדה כשרה, אף חנות כשרה ואין בית חב״ד. הקהילה היהודית מונה כמאתיים איש, כמעט כולם בסקופיה, ובית הכנסת בעיר פעיל בעיקר בחגים. מי ששומר כשרות מסתמך על מוצרים סגורים עם הכשר בסופרמרקטים הגדולים בסקופיה, על ירקות ופירות ועל דגי אגם שקונים ומבשלים לבד. הכיוון המעשי הוא לינה עם מטבח.',
     },
   },
+  {
+    slug: 'mongolia-steppe-gobi',
+    name: 'הערבה והגובי',
+    nameLocal: 'Steppe & Gobi',
+    countrySlug: 'mongolia',
+    flag: '🇲🇳',
+    center: { lat: 46.3, lng: 104.6 },
+    zoom: 5,
+    tagline: 'מאולן באטור אל הדיונות, המצוקים האדומים והאגם הצפוני',
+    summary:
+      'הטיול הקלאסי במונגוליה מתחיל באולן באטור עם המנזרים והכיכר, ממשיך מזרחה לפארק טרלג׳ ולפסל הענק של ג׳ינגיס חאן, ומשם דרומה למדבר גובי - קניון היולין אם, מצוקי באיאנזאג האדומים ודיונות חונגורין אלס. מי שיש לו שבועיים מוסיף את קרקורום, בירתו של ג׳ינגיס חאן, ואת אגם חובסגול בצפון. המרחקים עצומים, הכבישים לרוב לא סלולים, וכמעט כולם נוסעים עם נהג ורכב שטח.',
+    bestSeason:
+      'יוני עד ספטמבר, וזהו. ביולי ואוגוסט הערבה ירוקה, הטמפרטורות נעימות והנאדם - פסטיבל הספורט הלאומי - נערך בתחילת יולי. בחורף מונגוליה יורדת למינוס שלושים עד מינוס ארבעים, רוב מחנות הגר סגורים והדרכים בערבה חסומות. מאי וספטמבר עדיין עובדים אבל הלילות קפואים, וגם באמצע הקיץ צריך שכבה חמה ללילה במדבר.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Genghis_Khan_Equestrian_Statue%2C_photo_by_Vaiz_Ha.jpg/960px-Genghis_Khan_Equestrian_Statue%2C_photo_by_Vaiz_Ha.jpg',
+    iconicLandmark: {
+      name: 'פסל הפרש של ג׳ינגיס חאן',
+      nameLocal: 'Genghis Khan Equestrian Statue',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Chinggis_Khaan_statue_Complex.jpg/500px-Chinggis_Khaan_statue_Complex.jpg',
+      blurb:
+        'פסל נירוסטה בגובה ארבעים מטר של ג׳ינגיס חאן על סוסו, שהוקם ב-2008 בערבה חשופה שעה מזרחית לאולן באטור. עולים במעלית בתוך הפסל ויוצאים על ראש הסוס, ממש מול פניו.',
+    },
+    editorialRating: {
+      score: 4.4,
+      verdict:
+        'אחד המקומות האחרונים בעולם שבהם אפשר לנסוע יום שלם ולא לראות גדר, כביש או בניין. מוריד ניקוד: הכל דורש שעות נסיעה על דרכי עפר, עונת הטיולים קצרה מאוד, ואין שום תשתית לשומרי כשרות ולצמחונים.',
+    },
+    places: [
+      {
+        id: 'mn-gandan',
+        name: 'מנזר גנדן',
+        nameLocal: 'Gandantegchinlen Monastery',
+        category: 'attraction',
+        lat: 47.923054,
+        lng: 106.894997,
+        description:
+          'המנזר הבודהיסטי הפעיל הגדול במונגוליה, והיחיד שהמשיך לפעול, ולו חלקית, גם בתקופה הקומוניסטית. במרכזו פסל מוזהב של אווָלוקיטֶשְׂוָורָה בגובה 26 מטר, שיחזור של פסל שנשדד ב-1938. מגיעים בבוקר לתפילת הנזירים - היא פתוחה למבקרים, בשקט ובלי צילום פנים.',
+        rating: 4.5,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=47.923054,106.894997',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Gandantegchinlen_Monastery_16.jpg/500px-Gandantegchinlen_Monastery_16.jpg',
+        priceLevel: 1,
+        tags: ['history', 'art'],
+        mustSee: true,
+      },
+      {
+        id: 'mn-sukhbaatar',
+        name: 'כיכר סוחבאטר',
+        nameLocal: 'Sükhbaatar Square',
+        category: 'attraction',
+        lat: 47.918888,
+        lng: 106.917503,
+        description:
+          'הכיכר המרכזית של אולן באטור, עם ארמון הממשלה ופסל ישיבה ענק של ג׳ינגיס חאן בחזיתו. סביבה מרוכזים המוזיאון הלאומי, שהוא הדרך הטובה ביותר להבין את סיפור האימפריה המונגולית לפני שיוצאים לערבה, והאופרה. אפשר לכסות את כל מרכז העיר בהליכה מכאן.',
+        rating: 4.1,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=47.918888,106.917503',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Chinggis_Square.jpg/500px-Chinggis_Square.jpg',
+        priceLevel: 0,
+        tags: ['history', 'families'],
+      },
+      {
+        id: 'mn-genghis',
+        name: 'פסל הפרש של ג׳ינגיס חאן',
+        nameLocal: 'Genghis Khan Equestrian Statue',
+        category: 'attraction',
+        lat: 47.808056,
+        lng: 107.529747,
+        description:
+          'ארבעים מטר של נירוסטה על גבעה בערבה, במקום שבו לפי המסורת מצא ג׳ינגיס חאן שוט זהב. מעלית ומדרגות מובילות מבפנים אל רעמת הסוס, ומשם מרפסת תצפית שמביטה ישירות בפני הפסל ועל הערבה מסביב. במתחם למטה יש מוזיאון קטן ואפשרות לירות בקשת מונגולית.',
+        rating: 4.3,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=47.808056,107.529747',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Gate_to_the_Genghis_Khan_Equestrian_Statue%2C_Tsonjin_Boldog.jpg/500px-Gate_to_the_Genghis_Khan_Equestrian_Statue%2C_Tsonjin_Boldog.jpg',
+        priceLevel: 2,
+        tags: ['history', 'families'],
+        mustSee: true,
+      },
+      {
+        id: 'mn-terelj',
+        name: 'פארק לאומי גורחי טרלג׳',
+        nameLocal: 'Gorkhi-Terelj National Park',
+        category: 'nature',
+        lat: 48.150204,
+        lng: 107.576004,
+        description:
+          'הטבע הנגיש ביותר מאולן באטור, כשעה וחצי נסיעה. עמק עם סלעי גרניט מעוגלים, ביניהם סלע הצב המפורסם, נחלים ויערות אורן, ומחנות גר לאורך הדרך. אפשר לצאת לרכיבה על סוסים מונגוליים, לטפס למנזר המדיטציה אריאפאלה ולישון בגר בלילה - זו ההיכרות הראשונה עם הערבה.',
+        rating: 4.5,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=48.150204,107.576004',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Gorkhi-Terelj_National_Park_57.jpg/500px-Gorkhi-Terelj_National_Park_57.jpg',
+        priceLevel: 2,
+        tags: ['outdoors', 'families', 'romantic'],
+        mustSee: true,
+      },
+      {
+        id: 'mn-erdene-zuu',
+        name: 'מנזר ארדנה זו בקרקורום',
+        nameLocal: 'Erdene Zuu Monastery, Kharkhorin',
+        category: 'attraction',
+        lat: 47.201668,
+        lng: 102.84333,
+        description:
+          'המנזר הבודהיסטי העתיק במונגוליה, שנבנה ב-1585 מאבני חורבותיה של קרקורום - בירת האימפריה של ג׳ינגיס חאן. חומה מרובעת שמקיפים אותה מאה ושמונה סטופות לבנות, ובתוכה שלושה מקדשים ששרדו את ההרס של 1937. קרקורום עצמה כמעט לא קיימת מעל פני הקרקע, וזה בדיוק החלק המפתיע בביקור.',
+        rating: 4.4,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=47.201668,102.84333',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Erdene_Zuu_Monastery_Stupa.jpg/500px-Erdene_Zuu_Monastery_Stupa.jpg',
+        priceLevel: 1,
+        tags: ['history', 'art'],
+      },
+      {
+        id: 'mn-yolyn-am',
+        name: 'יולין אם - עמק הנשרים',
+        nameLocal: 'Yolyn Am',
+        category: 'nature',
+        lat: 43.493099,
+        lng: 104.083801,
+        description:
+          'קניון צר וגבוה בהרי גורוון סאיחאן, בלב מדבר גובי, שבו קרחון נחל שורד לעיתים עד תוך הקיץ - קרח במדבר. הליכה קלה של כשעה בכל כיוון לאורך הנחל בין קירות אנכיים, עם נשרי זקן וגרבילים בסלעים. אחד המקומות הקרירים במונגוליה גם באוגוסט.',
+        rating: 4.4,
+        durationMin: 210,
+        externalUrl: 'https://maps.google.com/?q=43.493099,104.083801',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Yoliinam.jpg/500px-Yoliinam.jpg',
+        priceLevel: 1,
+        tags: ['outdoors', 'families'],
+      },
+      {
+        id: 'mn-bayanzag',
+        name: 'באיאנזאג - המצוקים הבוערים',
+        nameLocal: 'Bayanzag (Flaming Cliffs)',
+        category: 'viewpoint',
+        lat: 44.138515,
+        lng: 103.727783,
+        description:
+          'מצוקי חול אדומים שבשקיעה נראים ממש בוערים, ובעיקר האתר שבו מצאה משלחת רוי צ׳פמן אנדרוז ב-1923 את קן ביצי הדינוזאורים הראשון שזוהה בעולם. אפשר להלך לאורך שפת המצוק ולרדת אל התחתית. שעת ההגעה הנכונה היא כשעה לפני השקיעה, ולא באמצע היום.',
+        rating: 4.3,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=44.138515,103.727783',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Flaming_cliffs_5.jpg/500px-Flaming_cliffs_5.jpg',
+        priceLevel: 1,
+        tags: ['outdoors', 'history'],
+      },
+      {
+        id: 'mn-khongoryn',
+        name: 'דיונות חונגורין אלס',
+        nameLocal: 'Khongoryn Els',
+        category: 'nature',
+        lat: 43.733333,
+        lng: 102.333333,
+        description:
+          'רצועת דיונות באורך כמאה ושמונים קילומטרים ובגובה שמגיע לשלוש מאות מטר, שנקראות הדיונות השרות בגלל הרעש העמוק שמשמיע החול כשהוא נשפך. הטיפוס לרכס לוקח כשעה קשה בחול, והירידה לוקחת שתי דקות. למרגלות הדיונות יש נחל ומשפחות רועים שמציעות רכיבה על גמלים.',
+        rating: 4.6,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=43.733333,102.333333',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Khongoryn_Els_sand_dunes.jpg/500px-Khongoryn_Els_sand_dunes.jpg',
+        priceLevel: 2,
+        tags: ['outdoors', 'romantic'],
+        mustSee: true,
+      },
+      {
+        id: 'mn-khovsgol',
+        name: 'אגם חובסגול',
+        nameLocal: 'Lake Khövsgöl',
+        category: 'nature',
+        lat: 51.099998,
+        lng: 100.5,
+        description:
+          'אגם מים מתוקים ענק בצפון המדינה, קרוב לגבול רוסיה, שמחזיק כאחוז מכל מי המתוקים הנגישים בעולם ושקוף עד עומק של עשרות מטרים. סביבו יערות טייגה, מסלולי רכיבה על סוסים וקהילות צאטאן שמגדלות איילי צפון. הנסיעה מאולן באטור היא יום שלם או טיסה פנימית למורון, וזה חלק מהמחיר.',
+        rating: 4.5,
+        durationMin: 1440,
+        externalUrl: 'https://maps.google.com/?q=51.099998,100.5',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Panoramic_view_of_Lake_Kh%C3%B6vsg%C3%B6l.jpg/500px-Panoramic_view_of_Lake_Kh%C3%B6vsg%C3%B6l.jpg',
+        priceLevel: 2,
+        tags: ['outdoors', 'romantic'],
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'אולן באטור',
+        placeIds: ['mn-gandan', 'mn-sukhbaatar'],
+        notes:
+          'בוקר במנזר גנדן בזמן התפילה, ואחריו הכיכר והמוזיאון הלאומי - שווה להקדיש לו שעתיים לפני שיוצאים לשטח, כי הוא נותן את ההקשר לכל השאר. בערב לקנות מזומן ומים לימים הבאים, כי מחוץ לעיר אין כספומטים.',
+      },
+      {
+        day: 2,
+        title: 'טרלג׳ ופסל ג׳ינגיס חאן',
+        placeIds: ['mn-genghis', 'mn-terelj'],
+        notes:
+          'יוצאים מזרחה, עוצרים בפסל ועולים לראש הסוס, וממשיכים לפארק טרלג׳. אחר הצהריים רכיבה על סוסים או הליכה לסלע הצב, ולינה בגר. זו ההזדמנות הראשונה והכי נוחה לישון באוהל לבד.',
+      },
+      {
+        day: 3,
+        title: 'קרקורום',
+        placeIds: ['mn-erdene-zuu'],
+        notes:
+          'יום נסיעה ארוך מערבה, כשש עד שבע שעות. מגיעים לארדנה זו אחר הצהריים ומספיקים את המנזר לפני הסגירה. לינה במחנה גר ליד קרקורום, ומכאן פונים דרומה לגובי.',
+      },
+      {
+        day: 4,
+        title: 'הדרך לגובי',
+        placeIds: ['mn-yolyn-am'],
+        notes:
+          'יום נסיעה על דרכי עפר עד הרי גורוון סאיחאן, ואז הליכה בקניון היולין אם. אם הגעתם בתחילת הקיץ יש סיכוי טוב לראות את הקרח בתחתית. קחו שכבה חמה - בקניון קר גם בצהריים.',
+      },
+      {
+        day: 5,
+        title: 'הדיונות',
+        placeIds: ['mn-khongoryn'],
+        notes:
+          'ארבע שעות נסיעה מערבה. מגיעים לפני הצהריים, נחים בחום, ומטפסים לרכס בשעה שלפני השקיעה - זה טיפוס קשה בחול ולוקח כשעה. לינה במחנה למרגלות הדיונות ושמי לילה בלי שום זיהום אור.',
+      },
+      {
+        day: 6,
+        title: 'באיאנזאג וחזרה',
+        placeIds: ['mn-bayanzag'],
+        notes:
+          'נוסעים מזרחה לבאיאנזאג ומגיעים לשעה האדומה של אחר הצהריים. משם או טיסה פנימית מדלנזדגד חזרה לאולן באטור, או שני ימי נסיעה. מי שיש לו עוד שבוע ממשיך צפונה לאגם חובסגול.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסות ישירות מתל אביב לאולן באטור (UBN). המסלולים הנפוצים הם דרך איסטנבול עם טורקיש, שמפעילה קו ישיר לאולן באטור, או דרך סיאול, פקין ומוסקבה. שדה התעופה נמצא כחמישים דקות מהעיר. טיסות פנים אל דלנזדגד שבגובי ואל מורון שליד אגם חובסגול חוסכות ימי נסיעה שלמים ושוות את המחיר.',
+      gettingAround:
+        'למעשה כולם נוסעים עם נהג ורכב שטח או מיניוואן רוסי, ולא לבד. מחוץ לכביש אולן באטור-קרקורום כמעט אין כבישים סלולים, אין תמרורים ואין תחנות דלק לאורך מאות קילומטרים, וניווט עצמאי בערבה הוא סיכון אמיתי. יש רכבת בין אולן באטור לסיביר ולסין, אבל היא לא מגיעה לשום יעד טבע. בעיר עצמה הפקקים כבדים והמוניות זולות.',
+      kosherOverview:
+        'אין במונגוליה מסעדה כשרה ואין חנות כשרה. יש בית חב״ד באולן באטור שמשרת קהילה קטנה ומטיילים, וכדאי ליצור איתו קשר מראש לגבי שבת וארוחות. מחוץ לעיר הבעיה חריפה: המטבח המונגולי בנוי כמעט כולו על כבש ובקר, ובמחנות גר מגישים מה שיש. מי ששומר כשרות יוצא לערבה עם שימורים, טונה, קרקרים ומוצרים סגורים מהסופרמרקטים הגדולים באולן באטור.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
