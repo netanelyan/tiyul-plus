@@ -297,9 +297,111 @@ const placeName = (citySlug: string, placeId: string) =>
 const validSlugs = () =>
   [...destinations.map((d) => d.slug), ...sessionExplored.map((d) => d.slug)].join(', ');
 
+/**
+ * מרחקים אמיתיים מסיכה לעצירות של אותה עיר בטיול.
+ *
+ * למה זה קיים: המודל רוצה לומר משהו מועיל על המלון של המטייל, ובלי
+ * נתון אמיתי הוא המציא קרבה ("במרחק הליכה", "צמוד ל-UFO"). איסור בפרומפט
+ * נבדק פעמיים בסשן ולא החזיק. יש לנו את הנתון בפועל - לסיכה יש lat/lng
+ * ולכל מקום בקטלוג יש lat/lng - אז במקום להיאבק בסימפטום, מוסרים לו את
+ * המספר הנכון ומרשים לו לצטט רק אותו.
+ *
+ * זה מרחק אווירי, לא הליכה: אין לנו נתוני רשת דרכים, ולכן הכתובית
+ * אומרת "אווירי" והפרומפט אוסר להמיר את זה לדקות הליכה.
+ */
+function airDistanceLabel(km: number): string {
+  if (km < 1) return `${Math.round((km * 1000) / 50) * 50} מ׳ אווירי`;
+  return `${km < 10 ? km.toFixed(1) : Math.round(km)} ק״מ אווירי`;
+}
+
+export function pinDistances(
+  trip: Trip,
+  pin: Pick<TripPin, 'citySlug' | 'lat' | 'lng'>,
+): { name: string; away: string }[] {
+  if (typeof pin.lat !== 'number' || typeof pin.lng !== 'number' || !pin.citySlug) return [];
+  const dest = destOf(pin.citySlug);
+  if (!dest) return [];
+  const at = { lat: pin.lat, lng: pin.lng };
+  // רק העצירות שנמצאות בפועל בטיול לעיר הזו, בלי כפילויות
+  const ids = new Set(
+    trip.days.filter((d) => d.citySlug === pin.citySlug).flatMap((d) => d.placeIds),
+  );
+  return [...ids]
+    .map((id) => {
+      const place = dest.places.find((p) => p.id === id);
+      if (!place || !Number.isFinite(place.lat) || !Number.isFinite(place.lng)) return null;
+      return { name: place.name, km: haversineKm(at, { lat: place.lat, lng: place.lng }) };
+    })
+    .filter((x): x is { name: string; km: number } => x !== null)
+    .sort((a, b) => a.km - b.km)
+    .map((x) => ({ name: x.name, away: airDistanceLabel(x.km) }));
+}
+
 function fail(trip: Trip | null, message: string): AgentToolResult {
   return { trip, ok: false, message };
 }
+
+/**
+ * תזכורת קצרה שנתלית על תוצאות הכלים שמשנים את המסלול.
+ *
+ * למה כאן ולא רק בפרומפט: הכללים האלה קיימים ב-SYSTEM_PROMPT ונבדקו חי
+ * שלוש פעמים - בתור הראשון הם נשמרו, ובתור שמכיל הרבה קריאות כלים המודל
+ * חזר להמציא ("הכול במרחק הליכה מהמלון", "לדווין נוסעים באוטובוס 29,
+ * כרבע שעה"). תוצאת הכלי היא הטקסט האחרון שהוא קורא לפני שהוא מנסח את
+ * התשובה, וזה הרובד שעבד כבר בשכבת ההזמנות. קצר בכוונה - הוא נשלח בכל
+ * קריאת כלי.
+ */
+/**
+ * מנקה מהערת יום פרט תחבורה עם מספר שלא ניתן לאמת.
+ *
+ * הבדיקה החיה הראתה שגם כשהתשובה בצ׳אט מתוקנת ("יש אוטובוס או שיט"),
+ * המודל עדיין כותב "נוסעים באוטובוס 29" לתוך `notes` - וההערה נשמרת
+ * בטיול, מודפסת ב-PDF ונשלחת בשיתוף. הערה היא דאטה של הטיול, ולכן חלה
+ * עליה בדיוק אותה דרישת אמת כמו על הקטלוג.
+ *
+ * לא חוסמים מספרים גורפים: אם אותו מספר מופיע ב-gettingAround של היעד -
+ * כלומר מישהו כתב אותו ידנית לתוך הדאטה - הוא נשאר. אחרת מוחלף בנוסח
+ * שאומר את האמת בלי להמציא מספר. אותה גישה כמו
+ * filterKosherUnlessOptedIn: מתקנים בשקט ומסבירים למודל למה.
+ */
+const TRANSIT_LINE =
+  /(?:אוטובוס|קו|טרמוואי|טראם|חשמלית|מטרו|רכבת|רכבל|מעבורת)\s*(?:מספר\s*)?(\d{1,3}[A-Za-z]?)/g;
+
+export function sanitizeDayNote(
+  note: string,
+  citySlug: string,
+): { note: string; changed: boolean } {
+  const dest = destOf(citySlug);
+  const practical = [
+    dest?.practical?.gettingAround ?? '',
+    dest?.practical?.flights ?? '',
+  ]
+    .join(' ')
+    .toLowerCase();
+  let changed = false;
+  const cleaned = note.replace(TRANSIT_LINE, (match, num: string) => {
+    // מספר שכבר קיים בדאטה של היעד הוא מאומת - משאירים אותו כמו שהוא
+    if (practical.includes(String(num).toLowerCase())) return match;
+    changed = true;
+    const mode = match.split(/\s+/)[0];
+    return mode;
+  });
+  return { note: changed ? cleaned.replace(/\s{2,}/g, ' ').trim() : note, changed };
+}
+
+/** הערה שהמודל כתב, מנוקה ומקוצרת - ראו sanitizeDayNote */
+function cleanNote(value: unknown, citySlug: string, max: number): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const trimmed = value.trim().slice(0, max);
+  if (!trimmed) return undefined;
+  return sanitizeDayNote(trimmed, citySlug).note || undefined;
+}
+
+const NOTE_CLEANED =
+  ' שים לב: הוסר מההערה מספר קו תחבורה שאינו מופיע בדאטה של היעד - אל תכתוב מספרי קווים, זמני נסיעה או מחירי כרטיס שלא מופיעים ב-gettingAround.';
+
+const PROSE_DISCIPLINE =
+  ' בתשובה ובהערות: מספרי קווים, זמני נסיעה ומחירי כרטיס רק אם הם כתובים ב-gettingAround של היעד; בלי "במרחק הליכה"/"ברגל"/"צמוד" - רק המרחקים האוויריים שקיבלת, עם המילה "אווירי".';
 
 function needTrip(trip: Trip | null): trip is Trip {
   return trip !== null;
@@ -494,8 +596,7 @@ export function executeAgentTool(
           id: newId(),
           citySlug: dest.slug,
           placeIds: ids,
-          notes:
-            typeof dp.notes === 'string' && dp.notes.trim() ? dp.notes.trim().slice(0, 200) : undefined,
+          notes: cleanNote(dp.notes, dest.slug, 200),
         });
       });
       if (errors.length > 0) {
@@ -516,7 +617,7 @@ export function executeAgentTool(
       return {
         trip: next,
         ok: true,
-        message: `נוצר "${tripName}": ${days.length} ימים, ${totalStops} עצירות.${kosherNote}${routeSummary(days)}`,
+        message: `נוצר "${tripName}": ${days.length} ימים, ${totalStops} עצירות.${kosherNote}${routeSummary(days)}${PROSE_DISCIPLINE}`,
         action: `יצרתי טיול חדש: "${tripName}" (${days.length} ימים, ${totalStops} עצירות)`,
       };
     }
@@ -550,7 +651,7 @@ export function executeAgentTool(
       return {
         trip: next,
         ok: true,
-        message: `יום ${n} עודכן: ${ids.length} עצירות${ids.length ? ` (${ids.join(' ← ')})` : ''}.`,
+        message: `יום ${n} עודכן: ${ids.length} עצירות${ids.length ? ` (${ids.join(' ← ')})` : ''}.${PROSE_DISCIPLINE}`,
         action: `עדכנתי את העצירות של יום ${n} (${ids.length} מקומות)`,
       };
     }
@@ -582,7 +683,7 @@ export function executeAgentTool(
       return {
         trip: next,
         ok: true,
-        message: `נוסף יום ${next.days.length} ב${dest.name}. הטיול כולל עכשיו ${next.days.length} ימים.`,
+        message: `נוסף יום ${next.days.length} ב${dest.name}. הטיול כולל עכשיו ${next.days.length} ימים.${PROSE_DISCIPLINE}`,
         action: `הוספתי יום ב${dest.name} (יום ${next.days.length})`,
       };
     }
@@ -630,7 +731,7 @@ export function executeAgentTool(
       return {
         trip: next,
         ok: true,
-        message: `${place.name} נוסף כעצירה ${day.placeIds.length + 1} ביום ${n}.`,
+        message: `${place.name} נוסף כעצירה ${day.placeIds.length + 1} ביום ${n}.${PROSE_DISCIPLINE}`,
         action: `הוספתי את ${place.name} ליום ${n}`,
       };
     }
@@ -679,7 +780,7 @@ export function executeAgentTool(
       return {
         trip: next,
         ok: true,
-        message: `הסדר עודכן: ${ids.join(' ← ')}.`,
+        message: `הסדר עודכן: ${ids.join(' ← ')}.${PROSE_DISCIPLINE}`,
         action: `הזזתי את ${placeName(day.citySlug, moved)} למקום ${to} ביום ${n}`,
       };
     }
@@ -688,7 +789,9 @@ export function executeAgentTool(
       if (!needTrip(trip)) return fail(trip, 'אין טיול פעיל.');
       const day = dayAt(trip, input.dayNumber);
       if (!day) return fail(trip, `dayNumber מחוץ לטווח. בטיול יש ${trip.days.length} ימים.`);
-      const notes = typeof input.notes === 'string' ? input.notes.trim().slice(0, 300) : '';
+      const raw = typeof input.notes === 'string' ? input.notes.trim().slice(0, 300) : '';
+      const scrubbed = raw ? sanitizeDayNote(raw, day.citySlug) : { note: '', changed: false };
+      const notes = scrubbed.note;
       const n = Number(input.dayNumber);
       const next: Trip = {
         ...trip,
@@ -697,7 +800,7 @@ export function executeAgentTool(
       return {
         trip: next,
         ok: true,
-        message: `ההערות של יום ${n} עודכנו.`,
+        message: `ההערות של יום ${n} עודכנו.${scrubbed.changed ? NOTE_CLEANED : ''}`,
         action: `עדכנתי הערות ליום ${n}`,
       };
     }
@@ -827,12 +930,23 @@ export function executeAgentTool(
           : trip.preferences;
 
       const label = PIN_KIND_LABELS[kind];
+      const updated: Trip = { ...trip, pins, preferences };
+      // מרחקים אמיתיים לעצירות של אותה עיר - כדי שהמודל יצטט מספר נכון
+      // במקום להמציא קרבה. ראו pinDistances.
+      const near = pinDistances(updated, pin);
+      const nearLine =
+        near.length > 0
+          ? ` מרחקים אמיתיים מהסיכה לעצירות בעיר (אווירי, לא הליכה): ${near
+              .slice(0, 6)
+              .map((n) => `${n.name} - ${n.away}`)
+              .join('; ')}. מותר לצטט רק את המספרים האלה, תמיד עם המילה "אווירי", ואסור להמיר אותם לדקות הליכה.`
+          : '';
       return {
-        trip: { ...trip, pins, preferences },
+        trip: updated,
         ok: true,
         message: resolved
-          ? `הסיכה נשמרה ומוקמה על המפה: ${pinName} (${resolved.address}). אל תכתוב קואורדינטות בתשובה - המפה כבר מציגה אותה.`
-          : `הסיכה נשמרה אבל לא הצלחנו לאתר את המיקום המדויק. אמור למטייל שהיא מסומנת "מיקום לא אומת" ושהוא יכול לגרור אותה למקום הנכון על המפה. אל תנחש היכן היא נמצאת.`,
+          ? `הסיכה נשמרה ומוקמה על המפה: ${pinName} (${resolved.address}). אל תכתוב קואורדינטות בתשובה - המפה כבר מציגה אותה. נשמרו רק שם, עיר, הכתובת הזו והערה חופשית: אין בסיכה תאריכים, שעות צ׳ק-אין או מחיר, אז אל תגיד שנשמרו.${nearLine}`
+          : `הסיכה נשמרה אבל לא הצלחנו לאתר את המיקום המדויק. אמור למטייל שהיא מסומנת "מיקום לא אומת" ושהוא יכול לגרור אותה למקום הנכון על המפה. אל תנחש היכן היא נמצאת ואל תתאר את הסביבה בכלל.`,
         action: resolved ? `הוספתי למפה: ${label} · ${pinName}` : `שמרתי ${label}: ${pinName} (מיקום לא אומת)`,
       };
     }
@@ -875,6 +989,10 @@ export function serializeTripForModel(trip: Trip | null): string {
       citySlug: p.citySlug,
       locatedOnMap: typeof p.lat === 'number' && typeof p.lng === 'number',
       note: p.note,
+      // המרחקים נוסעים איתנו בכל תור, לא רק בתור שבו הסיכה נוספה: הבדיקה
+      // החיה הראתה שההמצאה של "במרחק הליכה" קרתה דווקא בתור מאוחר יותר,
+      // בלי קריאה ל-add_pin, כשלמודל לא היה שום מספר אמיתי ביד.
+      airDistancesToStops: pinDistances(trip, p).slice(0, 6),
     })),
     days: trip.days.map((d, i) => ({
       day: i + 1,

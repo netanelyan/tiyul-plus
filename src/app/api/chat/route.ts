@@ -9,6 +9,7 @@ import {
   type ResolvedPinLocation,
 } from '@/lib/trip/agent';
 import { geocodePlace } from '@/lib/server/geocode';
+import { isTransient } from '@/lib/server/transient';
 import type { Trip } from '@/lib/trip/types';
 import type { Destination } from '@/lib/types';
 import { exploreDestination, type ExploreScope } from '@/lib/explore/resolver';
@@ -213,7 +214,11 @@ BOOKING - YOU RAISE IT, THE APP LINKS IT
 PINS - THE TRAVELER'S OWN PLACES ON THE MAP
 - CURRENT TRIP has a "pins" array: places the TRAVELER told you about - the hotel they booked, a restaurant they reserved, any point they want to see on the map. They are not DATA places and never become itinerary stops.
 - Whenever the user names such a place - in chat or in an attached booking confirmation - call add_pin in that same turn, with the name exactly as they said it and the citySlug it belongs to. A hotel is kind='stay', a booked restaurant or activity is 'reservation', anything else is 'other'. add_pin on a stay also records stay='have', so don't call set_booking_status for it separately.
-- You NEVER supply coordinates and NEVER state where a pin is. The server looks the place up on OpenStreetMap by itself. If the tool comes back saying the location was not verified, tell the user plainly that the pin is saved but not located and that they can drag it to the right spot on the map. Guessing "it's near the center" is a hard error.
+- You NEVER supply coordinates, and you never write coordinates into a reply. The server looks the place up on OpenStreetMap by itself. If the tool comes back saying the location was NOT verified, say plainly that the pin is saved but not located and that they can drag it to the right spot on the map - and in that case say NOTHING at all about where it is.
+- Orientation about a pin is allowed only WITH A CAVEAT, in the same sentence. You may add at most one short line of general orientation from your own knowledge ("על גדת הדנובה", "ברובע היהודי") but it must be marked unverified right there, e.g. "לפי מה שידוע לי - לא מאומת, כדאי לוודא מול המלון". Stating it as plain fact is a hard error.
+- DISTANCE FROM A PIN: quote the numbers, never your own sense of it. Each located pin in CURRENT TRIP carries "airDistancesToStops" - real distances, computed from the coordinates, to that city's stops in the plan; add_pin returns the same list. Those numbers are the ONLY distances you may state, and you must keep the word "אווירי" on them ("העיר העתיקה - 400 מ׳ אווירי מהמלון"). Never convert them into walking minutes, never round them into "במרחק הליכה" / "ברגל" / "צמוד ל" / "קרוב ל", and never claim a distance to something that is not in that list - you have no road network and no idea what is walkable for these travelers. If the list is empty, say nothing about distance. Same rule for a star rating, a price, a room type or a street address: only from the tool result or from an image you actually read.
+- Never infer how long they are staying. The pin carries no dates and no number of nights, so "המלון מוזמן לכמה לילות" or "ההזמנה תואמת את התוכנית" are inventions. If the length of stay matters for what you are about to suggest, ask.
+- Be exact about what a pin holds: a name, a city, the OpenStreetMap address when it was found, and one short free-text note. It has NO dates, NO check-in field and NO price. So never say the app saved "the check-in and check-out times", and never claim the trip knows a booking "matches days 5-6". If you read a time or a date off the confirmation image, attribute it to the image instead ("לפי האישור ששלחת, צ׳ק-אין מ-14:00") - and if it disagrees with the plan, point that out and offer to fix the plan.
 - ASKING ABOUT THE STAY: once a real itinerary exists, go city by city, in trip order, and ask about the accommodation for ONE city per turn - one short sentence at the end of your reply, with suggest_quick_replies. Never ask about a city that already has a stay pin (check "pins" for kind='stay' with that citySlug), and never ask before an itinerary exists. If they haven't booked yet, say the search button for that city appears under the plan - do not write a link.
 - If the user says a booking was cancelled or wrong, call remove_pin.
 
@@ -228,6 +233,8 @@ IMAGES THE USER ATTACHES
 
 BOUNDARIES
 - You don't book, take payments, or hold personal data. You may say that booking options appear as buttons under the plan, but never write out a link, a price or an availability claim yourself.
+- TRANSIT DETAILS COME FROM THE DATA, NOT FROM MEMORY. A line number, a platform, a journey duration or a fare may be stated ONLY when that detail is written in the destination's own "gettingAround" text. When it IS there, use it confidently - "לדווין - אוטובוס 29" is real, it is in the Bratislava data. When it is not there, do not supply one from memory: say it in kind terms instead ("יש אוטובוס מהמרכז - בדקו את המספר והזמנים באפליקציית התחבורה המקומית"). Adding "כרבע שעה נסיעה" to a line that the data never timed is the same kind of invention as inventing the number itself.
+- A day's "notes" are part of the trip - they get printed, shared and re-read - so they are held to exactly the same standard as your reply. A line number written into a note that is not in the DATA is removed by the server, and you will be told it was.
 - Stay on travel topics; politely steer back if the conversation drifts far off.
 - If you're not sure about something, say so plainly - trust is the product.
 
@@ -415,6 +422,21 @@ interface ApiMessage {
 }
 
 /**
+ * כשל HTTP מול Anthropic. הקוד חייב לשרוד כאובייקט ולא רק כטקסט בהודעה:
+ * `isTransient` מחליטה לפי `status` אם לנסות שוב, ו-`new Error('anthropic 529')`
+ * החזיק את הקוד רק בתוך המחרוזת - כך ש-529/429/500 סווגו כשגיאה קבועה
+ * והניסיון השני לא רץ אף פעם. זה בדיוק המסלול שהפיל תור אמיתי בפרודקשן.
+ */
+class AnthropicHttpError extends Error {
+  readonly status: number;
+  constructor(status: number) {
+    super(`anthropic ${status}`);
+    this.name = 'AnthropicHttpError';
+    this.status = status;
+  }
+}
+
+/**
  * איטרציה אחת מול Claude בסטרימינג: טקסט מוזרם ללקוח מיד; בלוקים של
  * tool_use נצברים (partial_json) ומוחזרים לביצוע. needSeparator מוסיף
  * שורה ריקה לפני הטקסט הראשון כשכבר הוזרם טקסט מאיטרציה קודמת.
@@ -463,7 +485,7 @@ async function runClaudeTurn(
     }),
   });
 
-  if (!res.ok || !res.body) throw new Error(`anthropic ${res.status}`);
+  if (!res.ok || !res.body) throw new AnthropicHttpError(res.status);
 
   const reader = res.body.getReader();
   const decoder = new TextDecoder();
@@ -831,13 +853,13 @@ const AGENT_ERROR_MESSAGE =
   'משהו השתבש אצלי באמצע התשובה 🙏\n\n' +
   'הטיול שלכם לא נפגע - הוא שמור כמו שהיה. אפשר לנסות לשלוח את אותה הודעה שוב.';
 
-/** שגיאות שסביר שיעברו בניסיון נוסף: עומס, הגבלת קצב ותקלות שרת */
-function isTransient(err: unknown): boolean {
-  const status = (err as { status?: number })?.status;
-  if (typeof status === 'number') return status === 429 || status >= 500;
-  const text = String((err as { message?: string })?.message ?? err).toLowerCase();
-  return /overloaded|rate.?limit|timeout|econnreset|fetch failed|socket hang up/.test(text);
-}
+/**
+ * כשהתור נפל *אחרי* שכבר הוזרם טקסט אין מה לנסות שוב (חלק מהתשובה כבר
+ * על המסך), אבל גם אסור לשתוק: עד עכשיו התשובה פשוט נעצרה באמצע משפט
+ * והמטייל לא ידע אם זה הסוף, אם הטיול השתנה, או אם כדאי לשאול שוב.
+ */
+const AGENT_TRUNCATED_MESSAGE =
+  '\n\n---\nנקטעתי כאן באמצע 🙏 מה שכבר נשמר בטיול תקין. אפשר לבקש ממני להמשיך.';
 
 const QUOTA_MESSAGE =
   'הגעתם למכסת השימוש היומית בסוכן החכם של התוכנית החינמית 🙏\n\n' +
@@ -933,7 +955,12 @@ export async function POST(request: Request) {
           // החוקים - הענף שלו ל"לא זוהה יעד" הוא ברכת פתיחה שמונה את כל
           // המדינות, ובאמצע שיחה היא נקראת כאילו הסוכן שכח את כל ההקשר
           // (וזה בדיוק מה שקרה למטייל שביקש לערוך את הטיול לפי המלון).
-          if (!emitted && !recovered) send({ type: 'text', text: AGENT_ERROR_MESSAGE });
+          if (!recovered) {
+            // שני מצבים שונים: תור שלא הספיק לומר כלום מקבל הסבר מלא,
+            // ותור שנקטע באמצע מקבל סיומת קצרה - אחרת ההודעה הארוכה
+            // נקראת כאילו כל התשובה שמעליה בוטלה.
+            send({ type: 'text', text: emitted ? AGENT_TRUNCATED_MESSAGE : AGENT_ERROR_MESSAGE });
+          }
         } finally {
           // הרישום קורה גם כשהתור נכשל באמצע - הטוקנים כבר נצרכו
           recordAiUnits(caller.id, meter.units);
