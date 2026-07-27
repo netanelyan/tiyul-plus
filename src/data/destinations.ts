@@ -2226,6 +2226,8 @@ export const destinations: Destination[] = [
         rating: 4.8,
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=Acropolis+Museum',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/The_Acropolis_Museum_as_seen_from_the_top_of_the_Acropolis_hill.jpg/500px-The_Acropolis_Museum_as_seen_from_the_top_of_the_Acropolis_hill.jpg',
       },
       {
         id: 'ath-plaka',
@@ -2562,6 +2564,8 @@ export const destinations: Destination[] = [
         rating: 4.7,
         durationMin: 300,
         externalUrl: 'https://maps.google.com/?q=38.4794,22.4936',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Delfoi_temple_skyline_view.jpg/500px-Delfoi_temple_skyline_view.jpg',
         priceLevel: 2,
         tags: ['history', 'outdoors'],
         mustSee: true,
@@ -3202,6 +3206,8 @@ export const destinations: Destination[] = [
         rating: 4.5,
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=Jewish+Museum+Berlin',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Berlin_J%C3%BCdisches_Museum_und_der_Libeskind-Bau_(cropped).jpg/500px-Berlin_J%C3%BCdisches_Museum_und_der_Libeskind-Bau_(cropped).jpg',
       },
       {
         id: 'ber-kudamm',
@@ -12429,6 +12435,8 @@ export const destinations: Destination[] = [
         rating: 4.7,
         durationMin: 480,
         externalUrl: 'https://maps.google.com/?q=Samarkand',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/500px-RegistanSquare_Samarkand.jpg',
       },
       {
         id: 'uzb-bukhara',
@@ -12514,6 +12522,8 @@ export const destinations: Destination[] = [
         rating: 4.3,
         durationMin: 360,
         externalUrl: 'https://maps.google.com/?q=Tashkent',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Nest_One_Tashkent.jpg/500px-Nest_One_Tashkent.jpg',
       },
       {
         id: 'uzb-aral',
@@ -23669,6 +23679,8 @@ export const destinations: Destination[] = [
         tags: ['history'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=44.90399932861328,15.9370002746582',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Utvrda_Ostrozac01.jpg/500px-Utvrda_Ostrozac01.jpg',
       },
       {
         id: 'ba-bosanska-krupa',
@@ -29060,6 +29072,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'outdoors'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=10.41932,-75.52572',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Convento_de_Santa_Cruz_de_la_Popa_CTG_11_2019_2966.jpg/500px-Convento_de_Santa_Cruz_de_la_Popa_CTG_11_2019_2966.jpg',
       },
       {
         id: 'co-bocagrande',
