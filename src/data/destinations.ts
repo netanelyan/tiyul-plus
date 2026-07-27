@@ -14933,6 +14933,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=Sighisoara+Romania',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Sighisoara_vedere_spre_cetate_de_pe_podul_peste_Tarnava.jpg/500px-Sighisoara_vedere_spre_cetate_de_pe_podul_peste_Tarnava.jpg',
       },
       {
         id: 'trn-corvin',
@@ -15437,6 +15439,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=Bansko+Bulgaria',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Pirin-mountains-Bansko.jpg/500px-Pirin-mountains-Bansko.jpg',
       },
       {
         id: 'rlp-melnik',
@@ -15781,6 +15785,8 @@ export const destinations: Destination[] = [
         tags: ['history'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=Roskilde+Cathedral',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/View_of_Roskilde_Domkirke_from_Bishop%27s_house.jpg/500px-View_of_Roskilde_Domkirke_from_Bishop%27s_house.jpg',
       },
       {
         id: 'nzl-viking-ships',
@@ -16555,6 +16561,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=Sigulda+Latvia',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Sigulda_Castle_closeup.jpg/500px-Sigulda_Castle_closeup.jpg',
       },
       {
         id: 'rga-turaida',
@@ -16832,6 +16840,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=Mostar+Old+Bridge',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Bosnia%2C_Mostar%2C_old_bridge_2.jpg/500px-Bosnia%2C_Mostar%2C_old_bridge_2.jpg',
       },
       {
         id: 'bih-blagaj',
@@ -19785,6 +19795,8 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=52.08039855957031,4.314300060272217',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/2010-05-22-den-haag-by-RalfR-48.jpg/500px-2010-05-22-den-haag-by-RalfR-48.jpg',
       },
       {
         id: 'nl-binnenhof',
@@ -20589,6 +20601,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=51.85100173950195,-8.296699523925781',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Cobh_Panorama_at_Dusk.jpg/500px-Cobh_Panorama_at_Dusk.jpg',
       },
       {
         id: 'ie-blarney-castle',
@@ -23816,6 +23830,8 @@ export const destinations: Destination[] = [
         tags: ['history'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=41.51083374023438,19.79249954223633',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Qyteti_i_Krujes_nga_Kalaja.jpg/500px-Qyteti_i_Krujes_nga_Kalaja.jpg',
       },
     ],
     itinerary: [
@@ -26579,6 +26595,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=12.883333,104.066666',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Dwellings_on_Tonl%C3%A9_Sap.jpg/500px-Dwellings_on_Tonl%C3%A9_Sap.jpg',
       },
       {
         id: 'kh-siem-reap',
@@ -26594,6 +26612,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'nightlife'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=13.362223,103.859726',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Siem_Reap_Pub_Street_02.jpg/500px-Siem_Reap_Pub_Street_02.jpg',
       },
     ],
     itinerary: [
@@ -27018,6 +27038,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=31.047222,-7.128889',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Ait_Ben_Haddou_(16112394620).jpg/500px-Ait_Ben_Haddou_(16112394620).jpg',
       },
       {
         id: 'ma-ouarzazate',
@@ -27225,6 +27247,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=42.490276,78.391670',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/2015-09-07-165935_-_Karakol_-_Dunganen-Moschee.jpg/500px-2015-09-07-165935_-_Karakol_-_Dunganen-Moschee.jpg',
       },
       {
         id: 'kg-naryn',
