@@ -228,6 +228,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vie-koscherland',
+        tags: ['foodie', 'families'],
         priceLevel: 1,
         kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'חנות - מוצרים ארוזים עם הכשרים' },
         name: 'קושרלנד (סופר כשר)',
@@ -819,9 +820,24 @@ export const destinations: Destination[] = [
       },
       {
         day: 2,
-        title: 'מורשת יהודית וטבע',
-        placeIds: ['bts-chatam-sofer', 'bts-devin', 'bts-chabad'],
-        notes: 'את אתר החת"ם סופר מתאמים מראש. לדווין נוסעים באוטובוס 29 או בשיט על הדנובה.',
+        title: 'מורשת יהודית',
+        placeIds: ['bts-chatam-sofer', 'bts-synagogue', 'bts-jewish-museum', 'bts-chabad'],
+        notes:
+            'את אתר החת"ם סופר מתאמים מראש - הוא נעול רוב הזמן. בית הכנסת ברחוב היידוקובה והמוזיאון לתרבות יהודית נמצאים במרחק הליכה זה מזה, והם מה שנשאר מפרסבורג היהודית אחרי שהעיר העתיקה היהודית נהרסה בשנות השישים.',
+      },
+      {
+        day: 3,
+        title: 'דווין והדנובה',
+        placeIds: ['bts-devin', 'bts-janka-krala', 'bts-eurovea'],
+        notes:
+            'לדווין נוסעים באוטובוס 29 או בשיט על הדנובה - השיט יקר יותר ושווה את זה. בחזרה חוצים לגדה השנייה לפארק יאנקו קראל, ומסיימים בטיילת של יורוביאה.',
+      },
+      {
+        day: 4,
+        title: 'העיר לעומק והיערות',
+        placeIds: ['bts-main-square', 'bts-primates', 'bts-cathedral', 'bts-old-market', 'bts-kamzik'],
+        notes:
+            'יום למי שנשאר יותר מסופ"ש: הכיכר הראשית, ארמון הפרימאס והקתדרלה שבה הוכתרו מלכי הונגריה, אולם השוק הישן, ואחר צהריים במגדל קמז׳יק ביערות שמעל העיר.',
       },
     ],
     practical: {
@@ -2541,8 +2557,30 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'שווקים ושקיעה',
-        placeIds: ['ath-monastiraki', 'ath-lycabettus'],
-        notes: 'בוקר בשוק הפשפשים, אחר צהריים רגוע ושקיעה מליקבטוס - להביא מים.',
+        placeIds: ['ath-monastiraki', 'ath-agora', 'ath-psiri', 'ath-lycabettus'],
+        notes:
+            'בוקר בשוק הפשפשים של מונסטיראקי, משם רגלית לאגורה העתיקה, פסירי אחר הצהריים, ושקיעה מליקבטוס - להביא מים, העלייה חשופה.',
+      },
+      {
+        day: 3,
+        title: 'אתונה הקלאסית והמודרנית',
+        placeIds: ['ath-temple-zeus', 'ath-panathenaic', 'ath-national-garden', 'ath-syntagma', 'ath-ermou'],
+        notes:
+            'ציר אחד רצוף: מקדש זאוס, האצטדיון הפנאתנאי משיש לבן, הגן הלאומי בצל, חילופי המשמר בסינטגמה (בכל שעה עגולה), וירידה ברחוב ארמו.',
+      },
+      {
+        day: 4,
+        title: 'מוזיאונים ומורשת יהודית',
+        placeIds: ['ath-archaeological', 'ath-jewish-museum', 'ath-benaki', 'ath-chabad'],
+        notes:
+            'המוזיאון הארכיאולוגי הלאומי הוא האוסף החשוב בעיר וקל לבלות בו חצי יום. המוזיאון היהודי של יוון מספר את סיפור קהילות רומניוטים וסלוניקי.',
+      },
+      {
+        day: 5,
+        title: 'הרחבה: סוניון',
+        placeIds: ['ath-sounion', 'ath-anafiotika', 'ath-philopappos'],
+        notes:
+            'יציאה לכף סוניון (כשעה וחצי באוטובוס KTEL מהמרכז) למקדש פוסידון. מי שנשאר בעיר: אנפיוטיקה הקיקלדית וגבעת פילופאפוס מול האקרופוליס.',
       },
     ],
     practical: {
@@ -3711,6 +3749,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bkk-jcafe',
+        tags: ['foodie', 'families'],
         priceLevel: 1,
         kosherVerification: {
           source: 'curated',
@@ -3815,6 +3854,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'auh-kosherplace',
+        tags: ['foodie', 'families'],
         priceLevel: 2,
         kosherVerification: {
           source: 'curated',
@@ -4058,6 +4098,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'auh-galleria',
+        tags: ['families'],
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/The_Galleria_Al_Maryah_Island%2C.jpg/500px-The_Galleria_Al_Maryah_Island%2C.jpg',
         priceLevel: 3,
@@ -4074,6 +4115,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'auh-sababa',
+        tags: ['foodie', 'families'],
         priceLevel: 1,
         kosherVerification: {
           source: 'curated',
