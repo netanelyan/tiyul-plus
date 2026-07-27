@@ -1,117 +1,75 @@
 import Link from 'next/link';
 import { getProvider } from '@/lib/providers';
-import Flag from '@/components/Flag';
-import SiteSearch from '@/components/SiteSearch';
+import DestinationBrowser from '@/components/DestinationBrowser';
+import { buildDestinationCards } from '@/lib/destinationFacets';
 
 export const metadata = { title: 'יעדים | טיול+' };
 
-/** קטלוג היעדים - עבר מדף הבית כשהשיחה הפכה לכוכב (Phase 3). */
+/**
+ * קטלוג היעדים.
+ *
+ * היה רשת של כרטיסי **מדינות**. נתנאל הראה דפדפן יעדים של מתחרה - טאבי
+ * יבשת עם מונים וצ׳יפים של אופי - ואמר שזו פיצ׳ר טובה, וזה נכון: כרטיס
+ * מדינה לא יכול להגיד לך שהיא רומנטית או טובה למשפחות, ולכן הוא גרוע
+ * לגילוי. עכשיו הרשת היא **יעדים**, והמדינות נשארות במרחק לחיצה מכל
+ * כרטיס ומהחיפוש.
+ *
+ * הפאסטים מחושבים בשרת (`buildDestinationCards` מייבא את כל הקטלוג) ומה
+ * שעובר ללקוח הוא מערך שטוח - הקטלוג עצמו לא נכנס ל-bundle.
+ */
 export default async function CountriesPage() {
   const provider = getProvider();
   const [countries, dests] = await Promise.all([
     provider.getCountries(),
     provider.getDestinations(),
   ]);
-  const citiesOf = (slug: string) => dests.filter((d) => d.countrySlug === slug);
+  const cards = buildDestinationCards();
 
   return (
     <div>
-      <div className="flex items-end justify-between">
+      <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="display text-3xl text-night">לאן טסים?</h1>
           <p className="mt-2 text-night/60">
-            {countries.length} מדינות, {dests.length} ערים עם מסלול מוכן, מפה ושכבת כשרות. עוד בדרך.
+            {dests.length} יעדים ב-{countries.length} מדינות, כל אחד עם מסלול מוכן, מפה ושכבת
+            כשרות. אפשר לבחור יבשת, ואז לצמצם לפי אופי.
           </p>
         </div>
-      </div>
-      {/* החיפוש הוא הפעולה הראשית בקטלוג - כאן הוא שדה, לא אייקון */}
-      <div className="mt-5 max-w-xl">
-        <SiteSearch variant="field" />
+        <Link
+          href="/chat"
+          className="rounded-xl bg-shell px-4 py-2.5 text-sm font-bold text-night ring-1 ring-night/15 transition hover:ring-night/30"
+        >
+          לא בטוחים? לשאול את הסוכן ←
+        </Link>
       </div>
 
-      <div className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {countries.map((c) => {
-          const cities = citiesOf(c.slug);
-          const totalDays = cities.reduce((n, d) => n + d.days, 0);
-          const totalKosher = cities.reduce((n, d) => n + d.kosherCount, 0);
-          return (
+      {/*
+        אין כאן שדה חיפוש כלל-אתרי. הוא היה, ויצר שני שדות חיפוש זה מעל
+        זה - בדיוק הכפילות שהוסרה מהניווט. לדפדפן יש סינון משלו שמסנן את
+        הרשת הזו, והחיפוש הכלל-אתרי (שמוצא גם מקומות בתוך ערים) נשאר
+        באייקון בניווט ובקיצור Ctrl+K, בכל עמוד באתר.
+      */}
+      <div className="mt-6">
+        <DestinationBrowser cards={cards} />
+      </div>
+
+      <div className="mt-10 rounded-2xl bg-night/[0.03] p-5">
+        <h2 className="text-sm font-bold text-night/70">לגלוש לפי מדינה</h2>
+        <p className="mt-1 text-xs font-medium text-night/50">
+          ויזה, מטבע, סים ותשלומים הם מידע ברמת המדינה - שם הוא נמצא.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {countries.map((c) => (
             <Link
               key={c.slug}
               href={`/countries/${c.slug}`}
-              className="card-pop group overflow-hidden rounded-2xl bg-shell ring-1 ring-night/10"
+              className="rounded-full bg-shell px-3 py-1.5 text-xs font-semibold text-night/70 ring-1 ring-night/10 transition hover:text-night hover:ring-night/25"
             >
-              <div
-                className="photo-bg relative h-44"
-                style={
-                  c.photo
-                    ? {
-                        backgroundImage: `linear-gradient(180deg, rgba(15,14,26,0) 40%, rgba(15,14,26,0.7) 100%), url("${c.photo}")`,
-                      }
-                    : undefined
-                }
-              >
-                <span className="badge absolute end-4 top-4 rounded-full bg-cream/95 px-2.5 py-0.5 text-xl">
-                  <Flag flag={c.flag} label={c.name} size="md" />
-                </span>
-                <div className="absolute bottom-3 start-4">
-                  <h3 className="display text-2xl text-cream drop-shadow">{c.name}</h3>
-                  <div className="text-xs font-medium text-cream/80">{c.nameLocal}</div>
-                </div>
-              </div>
-              <div className="p-5">
-                <p className="text-sm leading-relaxed text-night/75">{c.tagline}</p>
-                <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
-                  <span className="rounded-full bg-night/5 px-3 py-1.5 text-night/70">
-                    {cities.length === 1 ? `עיר אחת: ${cities[0].name}` : `${cities.length} ערים`}
-                  </span>
-                  <span className="rounded-full bg-night/5 px-3 py-1.5 text-night/60">
-                    {totalDays} ימי מסלול מוכן
-                  </span>
-                  {totalKosher > 0 && (
-                    <span className="rounded-full bg-[#00a896]/10 px-3 py-1.5 text-[#007f76]">
-                      {totalKosher} נקודות כשרות
-                    </span>
-                  )}
-                </div>
-              </div>
+              {c.name}
             </Link>
-          );
-        })}
+          ))}
+        </div>
       </div>
-
-      {/* Value props */}
-      <section className="mt-16 grid gap-5 sm:grid-cols-3">
-        {[
-          {
-            emoji: '🗺️',
-            title: 'מסלול + מפה ביחד',
-            text: 'כל יום במסלול מוצג על מפה אינטראקטיבית עם סדר עצירות - לא עוד רשימה בלי הקשר.',
-          },
-          {
-            emoji: '✡️',
-            title: 'שכבת כשרות',
-            text: 'מסעדות כשרות, סופרים כשרים והערות השגחה - מסומנים על המפה בכל יעד.',
-          },
-          {
-            // דגל ישראל כתמונה ולא כאימוג׳י - ראו ההסבר ב-Flag.tsx
-            flagCode: 'il',
-            title: 'מידע פרקטי לישראלים',
-            text: 'טיסות ישירות מנתב"ג, ויזות, eSIM, תשלומים - מה שבאמת צריך לדעת לפני שטסים.',
-          },
-        ].map((f) => (
-          <div key={f.title} className="card-pop rounded-2xl bg-shell p-6 ring-1 ring-night/10">
-            <div className="badge h-10 w-10 justify-center rounded-xl bg-night/5 text-xl">
-              {'flagCode' in f && f.flagCode ? (
-                <Flag code={f.flagCode} label="ישראל" size="md" />
-              ) : (
-                f.emoji
-              )}
-            </div>
-            <h3 className="mt-4 text-lg font-bold text-night">{f.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-night/70">{f.text}</p>
-          </div>
-        ))}
-      </section>
     </div>
   );
 }

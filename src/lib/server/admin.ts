@@ -50,6 +50,23 @@ async function userIdFromToken(token: string): Promise<string | null> {
 }
 
 /**
+ * האם אזור הניהול מוגדר בשרת בכלל - כלומר יש URL ויש service role.
+ * שימושי כדי להבדיל בין "אין לך הרשאה" לבין "המפתח חסר" (ראו /api/admin/me).
+ */
+export const adminConfigured = () => adminDbEnabled();
+
+/**
+ * רק "האם זה מישהו מחובר באמת", בלי ה-service role. מאפשר להחזיר הודעת
+ * "לא מוגדר" למשתמש מחובר גם כשאין מפתח - כי בלי המפתח אין שום דרך לקרוא
+ * את התפקיד שלו ולכן אין דרך אחרת להבדיל בין המצבים.
+ */
+export async function signedInUserId(req: Request): Promise<string | null> {
+  const token = bearer(req);
+  return token ? userIdFromToken(token) : null;
+}
+
+
+/**
  * מי הקורא. מחזיר null כשאין טוקן תקין, כשה-service role לא מוגדר, או
  * כשעמודת role עוד לא קיימת (ה-SQL לא רץ) - בכל המקרים האלה אין ניהול,
  * וזה המצב הבטוח.

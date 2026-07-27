@@ -62,6 +62,8 @@ const hebrewDate = (iso: string | null | undefined) =>
 
 export default function AdminClient() {
   const [me, setMe] = useState<Me | null | 'loading'>('loading');
+  /** השרת ענה 503: הפיצ׳ר לא מוגדר, לא חוסר הרשאה. שני מצבים שונים לגמרי. */
+  const [unconfigured, setUnconfigured] = useState(false);
 
   const api = useCallback(async (path: string, init?: RequestInit) => {
     const auth = await authHeader();
@@ -75,8 +77,13 @@ export default function AdminClient() {
   useEffect(() => {
     let alive = true;
     void (async () => {
-      const { ok, data } = await api('/api/admin/me');
+      const { ok, status, data } = await api('/api/admin/me');
       if (!alive) return;
+      if (status === 503 && (data as { error?: string })?.error === 'not_configured') {
+        setUnconfigured(true);
+        setMe(null);
+        return;
+      }
       setMe(ok ? (data as Me) : null);
     })();
     return () => {
@@ -88,6 +95,47 @@ export default function AdminClient() {
     return (
       <div className="mx-auto max-w-md py-20">
         <ThinkingIndicator label="בודק הרשאות" className="justify-center" />
+      </div>
+    );
+  }
+
+  /*
+    למה מסך נפרד: נתנאל היה owner בדאטהבייס וראה "הדף לא נמצא", כי המפתח
+    לא היה ב-env. שתי סיבות שונות לחלוטין נראו זהות. עמוד שיודע מה חסר
+    שווה יותר מעמוד שמנחש בשבילך.
+  */
+  if (unconfigured) {
+    return (
+      <div className="mx-auto max-w-xl py-16">
+        <h1 className="display text-3xl text-night">אזור הניהול עוד לא מוגדר</h1>
+        <p className="mt-3 text-sm font-medium leading-relaxed text-night/70">
+          התפקיד שלכם אולי כבר מוגדר בדאטהבייס, אבל השרת לא יכול לקרוא אותו: חסר המשתנה{' '}
+          <code className="rounded bg-night/5 px-1.5 py-0.5 text-xs font-bold" dir="ltr">
+            SUPABASE_SERVICE_ROLE_KEY
+          </code>
+          .
+        </p>
+        <ol className="mt-4 space-y-2 text-sm font-medium leading-relaxed text-night/70">
+          <li>
+            <b>1.</b> Supabase → Settings → API Keys → להעתיק את המפתח הסודי
+            (service_role או sb_secret_).
+          </li>
+          <li>
+            <b>2.</b> Vercel → הפרויקט → Settings → Environment Variables → להוסיף בשם
+            הזה, ל-Production ול-Preview. שרת בלבד, בלי NEXT_PUBLIC_.
+          </li>
+          <li>
+            <b>3.</b> <b>דיפלוי מחדש.</b> משתני סביבה לא נכנסים לתוקף בדיפלוי שכבר רץ - זה
+            השלב שהכי קל לפספס.
+          </li>
+          <li>
+            <b>4.</b> להריץ את <code dir="ltr">supabase-admin.sql</code> ב-SQL Editor, אם עוד
+            לא.
+          </li>
+        </ol>
+        <p className="mt-4 text-xs font-medium text-night/45">
+          המסך הזה מוצג רק למשתמש מחובר, והוא לא חושף שום מפתח או נתון.
+        </p>
       </div>
     );
   }
