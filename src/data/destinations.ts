@@ -29293,6 +29293,294 @@ export const destinations: Destination[] = [
         'פריז היא אחת הערים הכי נוחות בעולם לשומרי כשרות מחוץ לישראל, בזכות קהילה יהודית גדולה. יש עשרות בתי עסק כשרים, בעיקר במארה סביב רחוב הרוזייה, ברובע ה-19 סביב שדרות סקרטן, וברובע ה-17. הסופרמרקטים הכשרים מחזיקים מגוון רחב, ואפשר להסתדר גם בלי להביא אוכל מהארץ. חשוב לדעת שההשגחות שונות זו מזו ומתחלפות מדי פעם, ושרוב המקומות סגורים בשבת ופתוחים בראשון, כך שתכנון ארוחות סוף השבוע נעשה מראש בימי חמישי ושישי.',
     },
   },
+  {
+    slug: 'london',
+    name: 'לונדון',
+    nameLocal: 'London',
+    countrySlug: 'united-kingdom',
+    flag: '🇬🇧',
+    center: { lat: 51.5072, lng: -0.1276 },
+    zoom: 12,
+    tagline: 'עיר שאפשר לחזור אליה עשר פעמים ולא לחזור על עצמך',
+    summary:
+      'לונדון גדולה בצורה שלא מתיישבת עם מפה - היא לא מרכז אחד אלא עשרות שכונות שהיו פעם כפרים ונדבקו זו לזו. זה גם היתרון הגדול שלה: אפשר לבלות יום שלם ברובע אחד ולהרגיש שראית עיר. המוזיאונים הלאומיים הגדולים כולם בכניסה חופשית, מה שהופך את לונדון לזולה בהרבה ממה שנדמה, ובמקביל הלינה והתחבורה שם מהיקרות באירופה. לישראלי שומר כשרות יש כאן צפון לונדון עם קהילה גדולה ותשתית מלאה.',
+    bestSeason:
+      'מאי עד ספטמבר, עם הימים הארוכים והפארקים בשיאם. הגשם אפשרי בכל חודש ולכן הוא לא שיקול אמיתי. דצמבר קר ואפל אבל התאורה והשווקים העירוניים שווים בפני עצמם, ואוגוסט הוא החודש היקר והצפוף ביותר.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Tower_Bridge_at_Dawn.jpg/960px-Tower_Bridge_at_Dawn.jpg',
+    iconicLandmark: {
+      name: 'גשר המצודה',
+      nameLocal: 'Tower Bridge',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Tower_Bridge_at_Dawn.jpg/500px-Tower_Bridge_at_Dawn.jpg',
+      blurb:
+        'גשר מתרומם משנת 1894 עם שני מגדלים ניאו גותיים ומעבר זכוכית ביניהם. הוא עדיין נפתח כמה פעמים בשבוע למעבר ספינות, והלוח זמנים מפורסם מראש.',
+    },
+    editorialRating: {
+      score: 4.6,
+      verdict:
+        'המוזיאונים החינמיים והפארקים מצדיקים את הנסיעה, אבל המחירים דורשים תכנון אמיתי ולא אלתור.',
+    },
+    places: [
+      {
+        id: 'lon-tower',
+        name: 'מצודת לונדון',
+        nameLocal: 'Tower of London',
+        category: 'attraction',
+        lat: 51.508235,
+        lng: -0.076303,
+        description:
+          'מבצר מהמאה ה-11 ששימש ארמון, בית סוהר ובית מטבעה, והיום מחזיק את תכשיטי הכתר. הסיורים עם שומרי הביפיטר כלולים בכרטיס ושווים את ההמתנה. התור לתכשיטים ארוך ביותר בצהריים.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=51.508235,-0.076303',
+        priceLevel: 3,
+        tags: ['history', 'families'],
+        mustSee: true,
+      },
+      {
+        id: 'lon-tower-bridge',
+        name: 'גשר המצודה',
+        nameLocal: 'Tower Bridge',
+        category: 'attraction',
+        lat: 51.50559,
+        lng: -0.07528,
+        description:
+          'הגשר המזוהה ביותר עם לונדון, לעיתים קרובות מבולבל עם גשר לונדון שנמצא במעלה הנהר. המעבר עליו חינם, ויש כרטיס נפרד לתערוכה ולמסדרון העליון עם רצפת הזכוכית.',
+        rating: 4.6,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=51.50559,-0.07528',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Tower_Bridge_at_Dawn.jpg/500px-Tower_Bridge_at_Dawn.jpg',
+        priceLevel: 1,
+        tags: ['history', 'families', 'romantic'],
+        mustSee: true,
+      },
+      {
+        id: 'lon-british-museum',
+        name: 'המוזיאון הבריטי',
+        nameLocal: 'British Museum',
+        category: 'museum',
+        lat: 51.519452,
+        lng: -0.127083,
+        description:
+          'אחד האוספים הגדולים בעולם לתולדות האדם, מאבן רוזטה ועד שערי אשור. הכניסה חינם וגם ההיכל המרכזי המקורה שווה כניסה בפני עצמו. אין סיכוי לראות הכל, ולכן בוחרים שתיים או שלוש אולמות מראש.',
+        rating: 4.8,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=51.519452,-0.127083',
+        priceLevel: 0,
+        tags: ['history', 'art', 'families'],
+        mustSee: true,
+      },
+      {
+        id: 'lon-westminster',
+        name: 'מנזר וסטמינסטר',
+        nameLocal: 'Westminster Abbey',
+        category: 'attraction',
+        lat: 51.499373,
+        lng: -0.128462,
+        description:
+          'כנסייה גותית שבה מוכתרים מלכי אנגליה מאז 1066, וגם מקום קבורתם של ניוטון, דרווין ודיקנס. ממש לידה בית הפרלמנט והביג בן. סגורה לביקורים בימי ראשון, שמיועדים לתפילות בלבד.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=51.499373,-0.128462',
+        priceLevel: 2,
+        tags: ['history'],
+        mustSee: true,
+      },
+      {
+        id: 'lon-buckingham',
+        name: 'ארמון בקינגהאם',
+        nameLocal: 'Buckingham Palace',
+        category: 'attraction',
+        lat: 51.500942,
+        lng: -0.142887,
+        description:
+          'משכן המלוכה הרשמי בלונדון. חדרי המדינה נפתחים לקהל בקיץ בלבד ובכרטיס מוזמן מראש. טקס חילופי המשמר מתקיים בימים קבועים ולא כל יום, ומי שרוצה לראות באמת מגיע כשעה מראש.',
+        rating: 4.3,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=51.500942,-0.142887',
+        priceLevel: 2,
+        tags: ['history', 'families'],
+      },
+      {
+        id: 'lon-eye',
+        name: 'העין של לונדון',
+        nameLocal: 'London Eye',
+        category: 'viewpoint',
+        lat: 51.503267,
+        lng: -0.119605,
+        description:
+          'גלגל ענק בגובה 135 מטר על הגדה הדרומית, מול בית הפרלמנט. סיבוב אחד נמשך כחצי שעה. השעה הכי מבוקשת היא השקיעה ולכן היא נמכרת ראשונה, ומזג אוויר בהיר משנה כאן הכל.',
+        rating: 4.4,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=51.503267,-0.119605',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/London-Eye-2009.jpg/500px-London-Eye-2009.jpg',
+        priceLevel: 2,
+        tags: ['families', 'romantic'],
+      },
+      {
+        id: 'lon-tate',
+        name: 'טייט מודרן',
+        nameLocal: 'Tate Modern',
+        category: 'museum',
+        lat: 51.507607,
+        lng: -0.099413,
+        description:
+          'תחנת כוח לשעבר על גדת התמזה שהוסבה למוזיאון האמנות המודרנית של בריטניה. האוסף הקבוע בכניסה חינם, התערוכות המתחלפות בתשלום. מרפסת התצפית בקומה העליונה חינמית ומשקיפה על קתדרלת פאולוס הקדוש.',
+        rating: 4.5,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=51.507607,-0.099413',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Tate_Modern_-_Bankside_Power_Station.jpg/500px-Tate_Modern_-_Bankside_Power_Station.jpg',
+        priceLevel: 0,
+        tags: ['art'],
+      },
+      {
+        id: 'lon-stpauls',
+        name: 'קתדרלת פאולוס הקדוש',
+        nameLocal: "St Paul's Cathedral",
+        category: 'attraction',
+        lat: 51.513857,
+        lng: -0.098298,
+        description:
+          'הכיפה שהגדירה את קו הרקיע של לונדון מאז המאה ה-17 ושרדה את הבליץ. מי שמטפס 528 מדרגות מגיע לגלריית הזהב עם תצפית פתוחה, ובדרך עוברים בגלריית הלחישות האקוסטית.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=51.513857,-0.098298',
+        priceLevel: 2,
+        tags: ['history'],
+      },
+      {
+        id: 'lon-borough',
+        name: 'שוק בורו',
+        nameLocal: 'Borough Market',
+        category: 'shopping',
+        lat: 51.505283,
+        lng: -0.09039,
+        description:
+          'שוק מזון בן מאות שנים מתחת לקשתות הרכבת ליד גשר לונדון. דוכני גבינות, מאפים ואוכל מוכן, ובשעת הצהריים הוא צפוף מאוד. סגור או מצומצם בתחילת השבוע, ולכן בודקים ימים לפני שמתכננים סביבו.',
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=51.505283,-0.09039',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/London_2018_March_IMG_0663.jpg/500px-London_2018_March_IMG_0663.jpg',
+        priceLevel: 2,
+        tags: ['foodie'],
+        mustSee: true,
+      },
+      {
+        id: 'lon-camden',
+        name: 'שוק קמדן',
+        nameLocal: 'Camden Market',
+        category: 'shopping',
+        lat: 51.539759,
+        lng: -0.143305,
+        description:
+          'מתחם שווקים סביב תעלת ריג׳נט, עם דוכני אוכל מכל העולם, בגדי יד שנייה ומוזיקה. עמוס מאוד בסופי שבוע. ההליכה לאורך התעלה מכאן לכיוון ליטל ונציה שקטה בהרבה מהשוק עצמו.',
+        rating: 4.3,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=51.539759,-0.143305',
+        priceLevel: 1,
+        tags: ['foodie', 'nightlife', 'families'],
+      },
+      {
+        id: 'lon-hyde',
+        name: 'הייד פארק',
+        nameLocal: 'Hyde Park',
+        category: 'nature',
+        lat: 51.50735,
+        lng: -0.16571,
+        description:
+          'הפארק הגדול במרכז לונדון, כולל אגם הסרפנטיין וגני קנזינגטון הצמודים. פינת הנואמים בקצה הצפוני מזרחי עדיין פעילה בימי ראשון. אפשר לשכור סירה או אופניים, והשבילים מקשרים כמעט לכל מערב לונדון.',
+        rating: 4.6,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=51.50735,-0.16571',
+        priceLevel: 0,
+        tags: ['outdoors', 'families', 'romantic'],
+      },
+      {
+        id: 'lon-nhm',
+        name: 'מוזיאון הטבע',
+        nameLocal: 'Natural History Museum',
+        category: 'museum',
+        lat: 51.49676,
+        lng: -0.17637,
+        description:
+          'מוזיאון בכניסה חופשית בבניין ויקטוריאני מרהיב בדרום קנזינגטון, עם אולם דינוזאורים ושלד לווייתן תלוי בהיכל הראשי. אחד המקומות הכי טובים בלונדון עם ילדים. התור בכניסה ארוך בסופי שבוע ובחופשות.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=51.49676,-0.17637',
+        priceLevel: 0,
+        tags: ['families', 'history'],
+        mustSee: true,
+      },
+      {
+        id: 'lon-golders',
+        name: 'גולדרס גרין',
+        nameLocal: 'Golders Green',
+        category: 'kosher-food',
+        lat: 51.57631,
+        lng: -0.20033,
+        description:
+          'שכונה בצפון לונדון שהיא מרכז החיים היהודיים בעיר, יחד עם גולדרס גרין רואד הסמוכה ועם המשך הריכוז בהנדון ובסטנמור. לאורך הרחוב הראשי מסעדות, מאפיות וסופרמרקטים כשרים, וגם בתי כנסת פעילים. כרבע שעה ברכבת התחתית ממרכז העיר בקו הנורת׳רן.',
+        rating: 4.4,
+        durationMin: 120,
+        kosherNote:
+          'רוב העסקים הכשרים באזור נמצאים תחת השגחת KLBD, בית הדין של הרבנות הראשית של לונדון, וחלק תחת השגחות נוספות. ההשגחה מוצגת בתעודה בחזית העסק ומתחלפת לעיתים, ולכן מוודאים במקום. הכל סגור בשבת ונסגר מוקדם בערבי שבת.',
+        externalUrl: 'https://maps.google.com/?q=51.57631,-0.20033',
+        priceLevel: 2,
+        tags: ['foodie', 'families'],
+        mustSee: true,
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'וסטמינסטר והגדה הדרומית',
+        placeIds: ['lon-westminster', 'lon-buckingham', 'lon-eye'],
+        notes:
+          'מתחילים במנזר לפני שהתור נבנה, וממשיכים ברגל לארמון. בודקים מראש אם יש חילופי משמר באותו יום. מסיימים בגלגל בשקיעה, בהזמנה מראש.',
+      },
+      {
+        day: 2,
+        title: 'המצודה, הגשר ובורו',
+        placeIds: ['lon-tower', 'lon-tower-bridge', 'lon-borough', 'lon-tate'],
+        notes:
+          'המצודה נפתחת מוקדם וזו השעה הטובה לתכשיטי הכתר. חוצים את הגשר לגדה הדרומית והולכים מערבה לאורך הנהר, כך שבורו וטייט נופלים על הדרך.',
+      },
+      {
+        day: 3,
+        title: 'המוזיאון הבריטי וקמדן',
+        placeIds: ['lon-british-museum', 'lon-camden'],
+        notes:
+          'המוזיאון בכניסה חופשית אבל עדיין דורש רישום מראש בעונה. אחרי הצהריים עולים לקמדן, ומי שרוצה שקט הולך משם לאורך התעלה במקום בתוך השוק.',
+      },
+      {
+        day: 4,
+        title: 'קנזינגטון, הפארק והקתדרלה',
+        placeIds: ['lon-nhm', 'lon-hyde', 'lon-stpauls'],
+        notes:
+          'מוזיאון הטבע בבוקר, ומשם הליכה מזרחה דרך גני קנזינגטון והייד פארק. פאולוס הקדוש סוגר כניסה מוקדם יחסית באחר הצהריים.',
+      },
+      {
+        day: 5,
+        title: 'צפון לונדון היהודית',
+        placeIds: ['lon-golders'],
+        notes:
+          'יום קצר ופשוט שמתאים גם כהשלמה ליום אחר. הכי הגיוני בימים ראשון עד חמישי, כי בשישי הכל נסגר מוקדם ובשבת סגור לגמרי.',
+      },
+    ],
+    practical: {
+      flights:
+        'יש טיסות ישירות רבות מתל אביב, רובן להית׳רו (LHR) וחלקן ללוטון (LTN) או גאטוויק (LGW), בכ-5 שעות. מהית׳רו מגיעים למרכז ברכבת התחתית בקו הפיקדילי בכשעה, או ברכבת האליזבת המהירה יותר. משדות התעופה המשניים הנסיעה ארוכה יותר ובאוטובוס או ברכבת אקספרס בתשלום נפרד, וכדאי לשקלל את זה במחיר הכרטיס הזול.',
+      gettingAround:
+        'מצמידים כרטיס אשראי או טלפון ישירות בשער התחתית ובאוטובוס, בלי לקנות כרטיס. המערכת מחשבת אוטומטית תקרה יומית ושבועית, ולכן זה כמעט תמיד הזול ביותר. חשוב להצמיד את אותו כרטיס בכניסה וביציאה, אחרת נגבה תעריף מלא. באוטובוסים מצמידים רק בעלייה. המרחקים במרכז קצרים מכפי שנראה במפת התחתית המעוותת, ולעיתים קרובות שתי תחנות הן חמש דקות הליכה.',
+      kosherOverview:
+        'ללונדון תשתית כשרות רחבה, אבל היא לא במרכז התיירותי אלא בצפון העיר. גולדרס גרין, הנדון וסטנמור מרכזות מסעדות, מאפיות וסופרמרקטים כשרים, ומשם מגיעים למרכז בכרבע עד חצי שעה ברכבת התחתית. רוב ההשגחות הן של KLBD, בית הדין של לונדון, ותעודה תלויה בחזית העסק. שווה לתכנן מראש: במרכז לונדון עצמו כמעט אין אפשרויות כשרות, ולכן מי שמבלה יום שלם באזור המוזיאונים לוקח איתו אוכל. סופי שבוע דורשים הזמנה מראש כי הכל נסגר בשעות המוקדמות של יום שישי.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
