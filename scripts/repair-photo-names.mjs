@@ -186,14 +186,70 @@ console.log(`${dead.length} dead URLs across ${names.length} distinct filenames.
 const candByName = new Map(names.map((n) => [n, variants(n)]));
 const found = await lookup([...new Set([...candByName.values()].flat())]);
 
+/**
+ * צורה מנורמלת לזיהוי "אותו שם, איות אחר": מורידים ניקוד/דיאקריטיקה, מאחדים
+ * אותיות גדולות/קטנות, וזורקים כל מה שאינו אות או ספרה. כך `Üçhisar` ו-`Uçhisar`,
+ * `Krakow` ו-`Kraków`, `Slîtere` ו-`Slītere`, וכל שלושת סוגי הגרש (ASCII ' ,
+ * U+2019 ’ , U+02BB ʻ) מתמפים לאותה מחרוזת.
+ *
+ * זה **לא** ניחוש: התאמה כאן פירושה שהשם זהה עד כדי איות, ולכן זו עדיין
+ * שינוי-שם של אותו קובץ ולא בחירה של תמונה אחרת. התאמה חלקית או דומה נשארת
+ * מחוץ לזה ומדווחת לאדם.
+ */
+const norm = (s) =>
+  s
+    .replace(/\.[A-Za-z]+$/, '')
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '');
+
 const fix = new Map(); // oldName -> { name, width }
-const unresolved = [];
+const stillOpen = [];
 for (const [n, cands] of candByName) {
   const hit = cands.find((c) => found.has(c));
-  if (hit) fix.set(n, { name: hit, srcWidth: found.get(hit) });
-  else unresolved.push(n);
+  if (hit) fix.set(n, { name: hit, srcWidth: found.get(hit), how: 'variant' });
+  else stillOpen.push(n);
 }
-console.log(`repairable: ${fix.size}   unresolved: ${unresolved.length}`);
+const byVariant = fix.size;
+
+// שלב שני: למה שלא נפתר, שואלים את חיפוש Commons ומקבלים **רק** תוצאה שהצורה
+// המנורמלת שלה זהה לשם המקורי. זה תופס הבדלי דיאקריטיקה, סוג גרש ופיסוק - כלומר
+// אותו קובץ בדיוק - בלי לפתוח פתח לבחירת תמונה אחרת.
+const unresolved = [];
+for (const n of stillOpen) {
+  const target = norm(n);
+  const term = n.replace(/\.[A-Za-z]+$/, '').replace(/[_-]+/g, ' ').replace(/%[0-9A-F]{2}/gi, ' ');
+  let matched = null;
+  try {
+    const r = await fetch(
+      `${API}?action=query&format=json&formatversion=2&generator=search&gsrsearch=${encodeURIComponent(
+        `filetype:bitmap ${term}`,
+      )}&gsrnamespace=6&gsrlimit=8&prop=imageinfo&iiprop=size`,
+      { headers: { 'User-Agent': HEADERS['User-Agent'] } },
+    );
+    const j = await r.json();
+    for (const p of j?.query?.pages ?? []) {
+      if (!p.imageinfo?.[0]) continue;
+      const cand = p.title.replace(/^File:/, '').replace(/ /g, '_');
+      if (norm(cand) === target) {
+        matched = { name: cand, srcWidth: p.imageinfo[0].width, how: 'spelling' };
+        break;
+      }
+    }
+  } catch {
+    /* חיפוש הוא עזר - כישלון שלו רק משאיר את השם ברשימה לאדם */
+  }
+  if (matched) fix.set(n, matched);
+  else unresolved.push(n);
+  await new Promise((r) => setTimeout(r, PACE_MS));
+}
+const bySpelling = fix.size - byVariant;
+console.log(
+  `repairable: ${fix.size} (${byVariant} by filename variant, ${bySpelling} by spelling-only match)   unresolved: ${unresolved.length}`,
+);
+for (const [n, f] of fix)
+  if (f.how === 'spelling') console.log(`  spelling: ${n}\n         -> ${f.name}`);
 
 let rewrites = 0;
 for (const file of FILES) {
