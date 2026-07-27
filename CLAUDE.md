@@ -299,6 +299,66 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-27 (e) - The actual cause, at last: the history blew the context window
+
+The body-logging shipped an hour earlier paid for itself immediately. Netanel's
+next log line:
+
+    400 invalid_request_error
+    "prompt is too long: 408754 tokens > 200000 maximum"
+
+**Twice the context window.** My leading-assistant hypothesis from entry (d) was
+wrong - the fourth wrong root cause in one day. This is what had been killing his
+conversations since the morning.
+
+**Why, measured rather than assumed.** The history was capped by MESSAGE COUNT
+(40) and per-message length (8,000 chars): up to **320,000 characters**. That
+looks fine under the English assumption of ~4 chars per token. This conversation
+is dense Hebrew, where **a token is roughly one character**. Derived from his own
+log: 408,754 total minus ~70k of constants (grounding index ~45k, system prompt,
+detail block, trip state) leaves ~337k tokens for a history of at most 320,000
+chars - more than a token per char.
+
+**A number in these docs was misleading in the other direction, and that is
+worth fixing here.** The grounding index is 179,196 chars, but only **9% Hebrew**
+- slugs, ids and JSON keys are ASCII - so the ~45k-token figure the data sessions
+have been measuring against is about right, and the ~190,000-char ceiling is a
+reasonable guardrail. **The index was never the problem.** Do not panic-shrink
+the catalog over this entry.
+
+**The property that made it look unfixable:** history only grows, so once a
+conversation crosses the limit **every subsequent turn fails with the identical
+400 forever**. That is exactly what he experienced - the same error again and
+again in one long thread - and it is why three earlier fixes appeared to change
+nothing for him. Each of those fixes was real; none of them touched this.
+
+**The fix:** a 50,000-char budget on the whole history, filled newest-first
+because the relevant context is the end of the conversation. The current user
+turn always survives, truncated rather than dropped. Worst case drops from ~390k
+tokens to ~120k against the 200k limit.
+
+**Ordering is load-bearing and commented:** the budget must run BEFORE the
+leading-assistant rule from entry (d), because trimming can itself expose an
+assistant message at the head of the array. There is a test for that exact
+interaction.
+
+A context-length 400 also gets its own message now - it tells the traveller the
+conversation grew too long and to start a new one, instead of
+"משהו השתבש, נסו שוב", which invites the single action that cannot possibly work.
+
+**53 tests.** One caught my own wrong expectation again: the per-message 8,000
+cap applies before the budget, so a single enormous message is capped there
+first, and the "current turn always survives" branch is insurance against a
+future cap change rather than a live path. The test now documents that instead of
+asserting fiction.
+
+**The honest summary of today.** Five root causes, four of my diagnoses wrong
+before this one, and the thing that finally closed it was not cleverness - it was
+logging the response body instead of the status code. `catch {}` and
+`Error(\`anthropic ${status}\`)` cost Netanel an entire day of deploys. When an
+external API rejects a request, capture what it *said*, not just that it failed.
+
+
 ### 2026-07-27 (d) - The blank-message fix traded one 400 for another. Mine.
 
 Netanel's Vercel log named it in one line:
