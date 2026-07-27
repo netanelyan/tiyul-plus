@@ -377,8 +377,17 @@ product principle, so this is worth a real fix.
 **Also still open from earlier entries:** share links drop hotel pins
 (`share.ts` has no `pins`); the agent characterises a hotel without a caveat
 before `add_pin` runs; a `geocode.ts` unit test is owed; `supabase-accounts.sql`
-may be unrun. Never live-verified: whether the model reaches for `set_day_city`
-rather than offering a rebuild.
+may be unrun.
+
+**CLOSED, by a screenshot from Netanel on the deployed site.** Entry (c) shipped
+`set_day_city`/`move_day` and flagged as unverified whether the model would
+actually reach for them instead of offering to wipe and rebuild. His run - the
+same Slovakia trip, the same hotel confirmation - answered it: the pin landed
+("✓ הוספתי למפה: לינה · Hotel Devin"), and the days moved
+("✓ הזזתי את ברטיסלבה מיום 5 ליום 1", "מיום 6 ליום 2"), with a two-sentence
+reply and no offer to rebuild. That is the exact request that produced
+"המערכת לא מאפשרת לי" this morning, now working end to end, and it also confirms
+the brevity work on a real restructuring turn rather than a probe.
 
 ### 2026-07-27 (g) - Catalog: North Macedonia, Mongolia, Bhutan, an 18-photo sweep, and a validator lesson
 
