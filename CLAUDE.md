@@ -299,6 +299,56 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-27 (n) - Two mobile bugs from the founder's own phone: keyboard on load, zoom on focus
+
+**1. "when opening the website on mobile, the textboxes are being opened
+automatically."** `HeroPrompt` carried a bare `autoFocus`, so every arrival at the
+homepage or the `/chat` landing from a phone popped the keyboard instantly. It
+covers about half the screen, pushes the heading and the idea chips out of view,
+and forces the traveller to dismiss it before they can even see where they landed.
+Instead of inviting them to type it hid the explanation of *what* to type.
+
+**The project had already solved this twice and the hero was never updated:**
+`AccountButton`'s login modal and `CityCombobox` both focus only when
+`(pointer: fine)` matches, each with a comment saying exactly why. Same guard now
+in `HeroPrompt` - desktop keeps the focus, phones do not.
+
+**2. "when selecting a textbox, the website zooms in."** That is iOS Safari's
+rule, not a layout bug: focusing a field whose `font-size` is under 16px zooms the
+page, and it does not zoom back. Seven fields sat at 14px - the agent composer, the
+day-notes textarea, the add-day search, the map-import URL box, the planner's
+free-text field and two account fields. All raised to 16px **below the `sm`
+breakpoint only** (`text-base sm:text-sm`), so the trigger goes away and the
+desktop design is untouched.
+
+**Deliberately NOT `maximum-scale=1` / `user-scalable=no`.** That is the usual
+one-line fix for this and it works by forbidding pinch-zoom, which breaks
+magnification for anyone who needs it - on a site that ships an accessibility
+widget and a statement page. The viewport meta stays
+`width=device-width, initial-scale=1`.
+
+**Method worth reusing:** the offenders were found by measuring **computed**
+`font-size` in a real iPhone 13 emulation, not by grepping for `text-sm`. A first
+pass with a regex over the JSX reported *zero* offenders because `className` often
+spans lines - the browser found seven. When the question is "what does the user
+actually get", ask the browser.
+
+**Verified:** 17 reachable fields across the homepage, the site-search overlay, the
+workspace, the day-note disclosure, the add-day picker, the chat drawer, `/start`
+and `/kosher` are all ≥16px, zero remaining; plus 14/14 checks - nothing focused
+on load on `/`, `/chat`, `/planner`, `/start`; no horizontal overflow on any of
+them; `visualViewport.scale` exactly 1; no `maximum-scale` in the meta; and the
+desktop hero input still autofocuses.
+
+**One honest limit:** headless Chromium does not implement Safari's
+zoom-on-focus, so what is verified is the **mechanism** (every field ≥16px), not
+the symptom. Final confirmation is Netanel's own iPhone.
+
+**For future work: any new `<input>`, `<textarea>` or `<select>` must be ≥16px at
+mobile widths**, i.e. `text-base sm:text-sm` rather than `text-sm`, or iOS will
+zoom the page the moment it is focused. There is no lint rule for this; the
+harness in this entry is the way to catch it.
+
 ### 2026-07-27 (m) - The deployment freeze was mine: an ignoreCommand that skipped everything
 
 Netanel, looking at a wall of red X marks: *"i dont understand why they are not
