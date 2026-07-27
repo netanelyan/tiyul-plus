@@ -30103,6 +30103,215 @@ export const destinations: Destination[] = [
         'הקהילה היהודית במלטה קטנה מאוד, כמה עשרות משפחות, ואין באי מסעדה כשרה. פועל בית חב״ד שמארגן ארוחות שבת ואירוח בתיאום מראש, וזו למעשה האפשרות היחידה לארוחה כשרה מבושלת. בסופרמרקטים הגדולים אפשר למצוא מוצרים ארוזים עם השגחה אירופית, ודגים ופירות בשפע. מי שמקפיד מביא איתו בשר ומוצרים בסיסיים, ומתכנן על בישול עצמי בדירה או בסוויטה עם מטבחון.',
     },
   },
+  {
+    slug: 'brussels-flanders',
+    name: 'בריסל ופלנדריה',
+    nameLocal: 'Brussels & Flanders',
+    countrySlug: 'belgium',
+    flag: '🇧🇪',
+    center: { lat: 50.85, lng: 4.35 },
+    zoom: 9,
+    tagline: 'ארבע ערים במרחק חצי שעה זו מזו',
+    summary:
+      'זה אחד היעדים היחידים באירופה שבו אפשר לישון במקום אחד ולראות ארבע ערים שונות לגמרי. בריסל היא בירה בירוקרטית עם כיכר בארוקית מהיפות ביבשת, ברוז׳ היא עיר תעלות מימי הביניים ששרדה כמעט שלמה, גנט היא אותו דבר בלי ההמון, ואנטוורפן היא עיר נמל, יהלומים ואופנה עם הרובע היהודי החי ביותר במערב אירופה. הרכבות מקשרות ביניהן בפחות משעה, והכרטיס זול.',
+    bestSeason:
+      'מאי עד ספטמבר הם הנוחים ביותר, עם ימים ארוכים וטמפרטורות נעימות, אם כי גשם אפשרי בכל חודש ומטרייה היא ציוד קבוע. דצמבר מביא את שווקי חג המולד, שיפים במיוחד בברוז׳ ובגנט. ינואר ופברואר קרים, אפורים וחשוכים מוקדם, אבל גם הזולים והריקים ביותר.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Grand-Place_de_Bruxelles_en_heure_bleue.jpg/960px-Grand-Place_de_Bruxelles_en_heure_bleue.jpg',
+    iconicLandmark: {
+      name: 'הכיכר הגדולה של בריסל',
+      nameLocal: 'Grand-Place / Grote Markt',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Grand-Place_de_Bruxelles_en_heure_bleue.jpg/500px-Grand-Place_de_Bruxelles_en_heure_bleue.jpg',
+      blurb:
+        'כיכר סגורה שכל ארבעת צדדיה בתי גילדות מוזהבים מסוף המאה השבע עשרה, שנבנו מחדש אחרי שהצרפתים הפגיזו את העיר. היא אתר מורשת עולמית, והשעה היפה שלה היא רבע השעה שאחרי השקיעה כשמדליקים את התאורה.',
+    },
+    editorialRating: {
+      score: 4.4,
+      verdict:
+        'צפיפות ערים היסטוריות ומרחקים קצרים שהופכים כל יום ליעד אחר, ואנטוורפן היא בונוס אמיתי לשומרי כשרות. בריסל עצמה פחות מרשימה ממה שמצפים ממנה.',
+    },
+    places: [
+      {
+        id: 'be-grand-place',
+        name: 'הכיכר הגדולה',
+        nameLocal: 'Grand-Place / Grote Markt',
+        category: 'attraction',
+        lat: 50.846668,
+        lng: 4.3525,
+        description:
+          'לב בריסל וכיכר בתי הגילדות. מסביבה יושבים בתי הקפה היקרים של העיר, ומהם יוצאות הסמטאות עם דוכני הוופל והשוקולד. אחת לשנתיים, באוגוסט, פורשים על הרצפה שטיח פרחי בגוניה ענק שמכסה את כל הכיכר.',
+        rating: 4.8,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=50.846668,4.3525',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Grand-Place%2C_Brussels_-_panorama%2C_June_2018.jpg/500px-Grand-Place%2C_Brussels_-_panorama%2C_June_2018.jpg',
+        priceLevel: 0,
+        tags: ['history', 'romantic', 'foodie'],
+        mustSee: true,
+      },
+      {
+        id: 'be-manneken',
+        name: 'מאנקן פיס',
+        nameLocal: 'Manneken Pis',
+        category: 'attraction',
+        lat: 50.844986,
+        lng: 4.349993,
+        description:
+          'פסל ברונזה של ילד משתין בגובה 55 סנטימטר, שנמצא שני רחובות מהכיכר הגדולה והוא הסמל הלא רשמי של העיר. הוא קטן בהרבה ממה שכולם מדמיינים, וזה חלק מהבדיחה. יש לו מלתחה של יותר מאלף תלבושות והוא מולבש בהן בהזדמנויות שונות לאורך השנה.',
+        rating: 3.6,
+        durationMin: 15,
+        externalUrl: 'https://maps.google.com/?q=50.844986,4.349993',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Bruxelles_Manneken_Pis_cropped.jpg/500px-Bruxelles_Manneken_Pis_cropped.jpg',
+        priceLevel: 0,
+        tags: ['families', 'history'],
+      },
+      {
+        id: 'be-atomium',
+        name: 'האטומיום',
+        nameLocal: 'Atomium',
+        category: 'viewpoint',
+        lat: 50.894722,
+        lng: 4.341111,
+        description:
+          'מבנה בגובה 102 מטר בצורת גביש ברזל מוגדל פי 165 מיליארד, שנבנה לתערוכה העולמית של 1958. שש מתשע הכדורים פתוחים לקהל ומחוברים בצינורות עם מדרגות נעות, ובעליונה יש תצפית על בריסל. סביבו פארק ומיני אירופה, ולכן זה יעד טוב במיוחד עם ילדים.',
+        rating: 4.2,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=50.894722,4.341111',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Brussels_-_Atomium_2022.jpg/500px-Brussels_-_Atomium_2022.jpg',
+        priceLevel: 2,
+        tags: ['families', 'art'],
+      },
+      {
+        id: 'be-waterloo',
+        name: 'שדה הקרב של ווטרלו וגבעת האריה',
+        nameLocal: "Lion's Mound, Waterloo",
+        category: 'attraction',
+        lat: 50.678333,
+        lng: 4.404722,
+        description:
+          'כאן הסתיימה תקופת נפוליאון ביוני 1815. גבעה מלאכותית בגובה 43 מטר עם פסל אריה יצוק בראשה, ו-226 מדרגות אל התצפית שממנה רואים את כל שדה הקרב. במרכז המבקרים התת קרקעי יש סרט פנורמי ותצוגה, וסביב הגבעה מפוזרות חוות שהיו נקודות מפתח בקרב.',
+        rating: 4.3,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=50.678333,4.404722',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/0_Braine-l%27Alleud_051012_(1).jpg/500px-0_Braine-l%27Alleud_051012_(1).jpg',
+        priceLevel: 2,
+        tags: ['history', 'outdoors', 'families'],
+      },
+      {
+        id: 'be-bruges',
+        name: 'ברוז׳ - הכיכר ומגדל הפעמונים',
+        nameLocal: 'Markt & Belfort, Brugge',
+        category: 'viewpoint',
+        lat: 51.208332,
+        lng: 3.224722,
+        description:
+          'ברוז׳ היא עיר תעלות מימי הביניים ששרדה כמעט בלי נזק, ומרכזה הוא כיכר השוק עם מגדל הפעמונים בן 83 המטרים. 366 מדרגות מובילות לראשו ולתצפית על כל הגגות. מסביב יוצאות ההפלגות הקצרות בתעלות, שהן הדרך הטובה ביותר לראות את העיר. אחרי חמש אחר הצהריים, כשקבוצות היום היוצא נוסעות, היא נעשית שקטה לגמרי.',
+        rating: 4.8,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=51.208332,3.224722',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Brugge_Belfort_HDR.jpg/500px-Brugge_Belfort_HDR.jpg',
+        priceLevel: 1,
+        tags: ['history', 'romantic', 'families'],
+        mustSee: true,
+      },
+      {
+        id: 'be-ghent',
+        name: 'מצודת גראבנסטין, גנט',
+        nameLocal: 'Gravensteen, Gent',
+        category: 'attraction',
+        lat: 51.05722,
+        lng: 3.720556,
+        description:
+          'טירת מים מהמאה השתים עשרה בלב גנט, עם חפיר, חומות שאפשר להסתובב עליהן ואוסף כלי עינויים בפנים. גנט עצמה היא הגרסה של ברוז׳ בלי התיירים - אותה ארכיטקטורה פלמית, אותן תעלות, אבל עיר אוניברסיטאית חיה ולא מוזיאון פתוח.',
+        rating: 4.4,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=51.05722,3.720556',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Gent_Gravensteen_R01.jpg/500px-Gent_Gravensteen_R01.jpg',
+        priceLevel: 1,
+        tags: ['history', 'families'],
+      },
+      {
+        id: 'be-antwerp-cathedral',
+        name: 'קתדרלת גבירתנו, אנטוורפן',
+        nameLocal: 'Onze-Lieve-Vrouwekathedraal, Antwerpen',
+        category: 'attraction',
+        lat: 51.220554,
+        lng: 4.400556,
+        description:
+          'הכנסייה הגותית הגדולה בארצות השפלה, עם מגדל בגובה 123 מטר שנראה מכל העיר. בפנים תלויים ארבעה מזבחות של רובנס, ביניהם ״הורדה מהצלב״, והם הסיבה המרכזית להיכנס. הכיכר שלמרגלותיה היא המרכז ההיסטורי של אנטוורפן.',
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=51.220554,4.400556',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Exterior_of_Onze-Lieve-Vrouwekathedraal_(Antwerp)-.jpg/500px-Exterior_of_Onze-Lieve-Vrouwekathedraal_(Antwerp)-.jpg',
+        priceLevel: 1,
+        tags: ['history', 'art'],
+        mustSee: true,
+      },
+      {
+        id: 'be-antwerp-jewish',
+        name: 'הרובע היהודי ורובע היהלומים, אנטוורפן',
+        nameLocal: 'Joodse wijk & Diamantwijk, Antwerpen',
+        category: 'kosher-food',
+        lat: 51.217224,
+        lng: 4.421111,
+        description:
+          'הנקודה המסומנת היא תחנת הרכבת המרכזית של אנטוורפן, שהיא בעצמה אחת מתחנות הרכבת היפות באירופה ושווה עשר דקות. מדרום לה, לאורך פליקאנסטראט, הובנירסטראט ולנחה קיביטסטראט, משתרעים רובע היהלומים והרובע היהודי - עשרות חנויות, מאפיות ומסעדות כשרות בטווח הליכה של רבע שעה.',
+        rating: 4.7,
+        durationMin: 150,
+        kosherNote:
+          'זו תשתית הכשרות הרצינית ביותר במערב אירופה אחרי לונדון, ובחלק מהמדדים אף לפניה. פועלות כאן מאפיות, קצביות, מסעדות בשריות וחלביות ומכולות עם מבחר מלא, רובן בהשגחת שתי הקהילות הגדולות בעיר, שומרי הדת ומחזיקי הדת. שימו לב ששבת מורגשת מאוד - כמעט הכל סגור מצהרי שישי עד מוצאי שבת - ורוב העסקים סגורים גם בחגים יהודיים.',
+        externalUrl: 'https://maps.google.com/?q=51.217224,4.421111',
+        priceLevel: 2,
+        tags: ['foodie', 'history'],
+        mustSee: true,
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'בריסל',
+        placeIds: ['be-grand-place', 'be-manneken', 'be-atomium'],
+        notes:
+          'בוקר בכיכר הגדולה ובסמטאות סביבה, ומשם שני רחובות למאנקן פיס. אחר הצהריים מטרו צפונה לאטומיום, ואם יש ילדים גם למיני אירופה שלידו. חוזרים לכיכר לשעה שאחרי השקיעה.',
+      },
+      {
+        day: 2,
+        title: 'ברוז׳',
+        placeIds: ['be-bruges'],
+        notes:
+          'רכבת מבריסל, כשעה ורבע. עולים למגדל הפעמונים בבוקר לפני התור, מפליגים בתעלות בצהריים, ונשארים עד אחרי חמש - זו השעה שבה העיר משתנה לגמרי. אפשר גם ללון בה לילה.',
+      },
+      {
+        day: 3,
+        title: 'אנטוורפן',
+        placeIds: ['be-antwerp-jewish', 'be-antwerp-cathedral'],
+        notes:
+          'מגיעים לתחנה המרכזית, מקדישים כמה דקות לבניין עצמו, ויוצאים דרומה לרובע היהודי. ארוחת צהריים כשרה שם, ואחר הצהריים הליכה של עשרים דקות מערבה לקתדרלה ולעיר העתיקה. לא ביום שישי אחר הצהריים ולא בשבת.',
+      },
+      {
+        day: 4,
+        title: 'גנט וווטרלו',
+        placeIds: ['be-ghent', 'be-waterloo'],
+        notes:
+          'אפשר לפצל את השניים לשני ימים נפרדים, כי ווטרלו נמצא דרומית לבריסל וגנט צפונית מערבית. מי שיש לו רכב יעשה את שניהם ביום אחד, ומי שנוסע ברכבת יבחר אחד.',
+      },
+    ],
+    practical: {
+      flights:
+        'יש טיסות ישירות מתל אביב לבריסל (BRU) בכארבע שעות וחצי, ולעיתים גם לשארלרואה (CRL) בטיסות זולות. משדה בריסל יש רכבת ישירה למרכז העיר בכ-20 דקות, ומשארלרואה נוסעים באוטובוס שאטל כשעה. אפשר גם לטוס לאמסטרדם ולהגיע ברכבת מהירה בפחות משעתיים.',
+      gettingAround:
+        'הרכבות של SNCB הן הדרך הנכונה - בריסל לגנט חצי שעה, לאנטוורפן 45 דקות, לברוז׳ שעה ורבע, והכל בתדירות של כמה רכבות בשעה. כרטיס עשר נסיעות זול משמעותית מכרטיסים בודדים. בתוך הערים הכל בהליכה, ובבריסל יש גם מטרו. רכב שכור מיותר אלא אם רוצים את ווטרלו או את הכפרים.',
+      kosherOverview:
+        'אנטוורפן היא הסיבה שבלגיה עולה מעל רוב יעדי אירופה מבחינת כשרות. ברובע היהודי שדרומית לתחנה המרכזית יש עשרות עסקים כשרים בטווח הליכה - מאפיות, קצביות, מסעדות ומכולות עם מבחר מלא - ואפשר לנהל שם שבוע שלם בלי בעיה. בבריסל יש מספר עסקים כשרים בשכונות אנדרלכט ואיקסל וכן בית חב״ד, אבל התמונה מצומצמת בהרבה. בברוז׳ ובגנט אין כמעט כלום, ולכן מי שמבלה שם יום שלם עושה קניות באנטוורפן ולוקח איתו.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
