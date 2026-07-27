@@ -12365,8 +12365,6 @@ export const destinations: Destination[] = [
       },
       {
         id: 'uzb-samarkand',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/500px-RegistanSquare_Samarkand.jpg',
         tags: ['history', 'foodie'],
         priceLevel: 1,
         name: 'סמרקנד',
@@ -13132,8 +13130,6 @@ export const destinations: Destination[] = [
       },
       {
         id: 'can-banff',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Panorama_of_Peyto_Lake%2C_Banff_National_Park%2C_Alberta%2C_Canada.jpg/500px-Panorama_of_Peyto_Lake%2C_Banff_National_Park%2C_Alberta%2C_Canada.jpg',
         tags: ['outdoors'],
         priceLevel: 2,
         mustSee: true,
@@ -13202,8 +13198,6 @@ export const destinations: Destination[] = [
       },
       {
         id: 'can-jasper',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/MaligneLakeBaldHills.JPG/500px-MaligneLakeBaldHills.JPG',
         tags: ['outdoors'],
         priceLevel: 2,
         name: 'הפארק הלאומי יאספר',

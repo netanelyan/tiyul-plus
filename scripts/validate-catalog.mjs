@@ -111,6 +111,20 @@ for (const d of destinations) {
       err(`${where}: rating ${p.rating} is outside 0-5`);
   }
 
+  // Two places in the SAME destination sharing a photo means the list renders
+  // the same image twice and one of the two captions is wrong - usually a
+  // broad "the national park" entry wearing the photo of one specific lake
+  // that is also its own place. Across destinations this is fine and expected:
+  // Sveti Stefan legitimately appears under both Kotor and Budva.
+  const byPhoto = new Map();
+  for (const p of d.places) {
+    if (!p.photo) continue;
+    byPhoto.set(p.photo, (byPhoto.get(p.photo) ?? []).concat(p.id));
+  }
+  for (const [url, ids2] of byPhoto)
+    if (ids2.length > 1)
+      err(`${d.slug}: places ${ids2.join(', ')} all use the same photo -> ${url}`);
+
   const days = d.itinerary.map((x) => x.day);
   if (days.some((v, i) => v !== i + 1))
     err(`${d.slug}: itinerary days are ${days.join(',')} - expected 1..${days.length}`);
