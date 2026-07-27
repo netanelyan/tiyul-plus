@@ -30703,6 +30703,239 @@ export const destinations: Destination[] = [
         'אין בסיני שום תשתית כשרות - אין מסעדה כשרה, אין מכולת כשרה ואין בית חב״ד. מי ששומר כשרות מביא איתו את כל האוכל מישראל, וזה פשוט יחסית כשנכנסים ביבשה בטאבה. בכמה מהמחנות בדהב ובנוויבע אפשר לבקש מטבחון או מקרר. פירות, ירקות, ביצים ודגים מהשוק המקומי הם הפתרון המקובל למי שמסתדר עם מטבח בסיסי.',
     },
   },
+  {
+    slug: 'muscat-north-oman',
+    name: 'מסקאט וצפון עומאן',
+    nameLocal: 'Muscat & Northern Oman',
+    countrySlug: 'oman',
+    flag: '🇴🇲',
+    center: { lat: 22.8, lng: 58.3 },
+    zoom: 7,
+    tagline: 'מצודות, ואדיות ודיונות בטווח נסיעה ממסקאט',
+    summary:
+      'מסקאט היא בירה שטוחה ולבנה שנלחצת בין ההרים לים, ורוב מה שמעניין בעומאן נמצא בשעתיים עד שלוש נסיעה ממנה. מערבה יושבות ניזווא ובהלא עם המצודות ושוק התמרים, ומעליהן ג׳בל שאמס וקניון בעומק אלף מטר. דרומה משתרעים חוף הוואדיות עם בריכות המים הירוקות ודיונות רמלת אל ואהיבה. שבוע עם רכב שטח מכסה את הכל.',
+    bestSeason:
+      'אוקטובר עד אפריל בלבד. בחודשים האלה מסקאט נעה סביב 25 עד 30 מעלות והמדבר נעים בבוקר ובערב. מיוני עד ספטמבר הטמפרטורות עוברות 45 מעלות עם לחות גבוהה בחוף, וטיולים ביבשה הופכים למסוכנים. ינואר ופברואר הם השיא, ובהרים סביב ג׳בל שאמס הלילות אז קרים ממש.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Sultan_Qaboos_Grand_Mosque_RB.jpg/960px-Sultan_Qaboos_Grand_Mosque_RB.jpg',
+    iconicLandmark: {
+      name: 'מסגד הסולטאן קאבוס הגדול',
+      nameLocal: 'Sultan Qaboos Grand Mosque',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Grand_Mosque_Muscat_(19)_(40275047024).jpg/500px-Grand_Mosque_Muscat_(19)_(40275047024).jpg',
+      blurb:
+        'המסגד הראשי של עומאן, שנחנך ב-2001 ומחזיק שטיח פרסי ארוג ביד במשקל 21 טון ונברשת קריסטל בגובה 14 מטר. הוא אחד המסגדים הבודדים בעומאן שפתוחים למבקרים שאינם מוסלמים, בבקרים בלבד.',
+    },
+    editorialRating: {
+      score: 4.4,
+      verdict:
+        'הגרסה האותנטית של חצי האי ערב - מצודות, ואדיות ומדבר בלי הראוותנות של המפרץ, ועם רמת ביטחון גבוהה. מוריד ניקוד: יקר, חם רוב השנה, ובלי רכב שטח חצי מהיעדים סגורים בפניכם.',
+    },
+    places: [
+      {
+        id: 'om-grand-mosque',
+        name: 'מסגד הסולטאן קאבוס הגדול',
+        nameLocal: 'Sultan Qaboos Grand Mosque',
+        category: 'attraction',
+        lat: 23.583889,
+        lng: 58.389168,
+        description:
+          'אולם התפילה הראשי מכיל שישה אלפים מתפללים, ובו השטיח הארוג ביד השני בגודלו בעולם - 21 טון, ארבע שנות עבודה של 600 אורגות. פתוח למבקרים שאינם מוסלמים בשעות הבוקר בלבד, וקוד הלבוש נאכף בקפדנות: כתפיים וברכיים מכוסות, ונשים בכיסוי ראש.',
+        rating: 4.8,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=23.583889,58.389168',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Sultan_Qaboos_Grand_Mosque_(19).jpg/500px-Sultan_Qaboos_Grand_Mosque_(19).jpg',
+        priceLevel: 0,
+        tags: ['history', 'art'],
+        mustSee: true,
+      },
+      {
+        id: 'om-mutrah',
+        name: 'מוטרה - הקורניש והשוק',
+        nameLocal: 'Mutrah Corniche & Souq',
+        category: 'shopping',
+        lat: 23.6177,
+        lng: 58.5572,
+        description:
+          'רצועת טיילת לאורך הנמל הישן, עם בתים לבנים מצד אחד והרי גיר חשופים מהצד השני. השוק שנפתח ממנה הוא אחד השווקים המקורים הוותיקים בערב - סמטאות צרות עם לבונה, כסף, בדים ומטבחי קפה. השעה הנכונה היא אחרי חמש, כשהחום שוכך והמקומיים יוצאים.',
+        rating: 4.5,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=23.6177,58.5572',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/MUTRAHCORNICHE2.jpg/500px-MUTRAHCORNICHE2.jpg',
+        priceLevel: 1,
+        tags: ['foodie', 'history', 'romantic'],
+        mustSee: true,
+      },
+      {
+        id: 'om-nizwa',
+        name: 'מצודת ניזווא והשוק',
+        nameLocal: 'Nizwa Fort & Souq',
+        category: 'attraction',
+        lat: 22.933332,
+        lng: 57.530277,
+        description:
+          'ניזווא הייתה בירת עומאן במאה השביעית והמצודה שלה מהמאה השבע עשרה היא האתר המבוקר ביותר במדינה. המגדל העגול בקוטר 36 מטר נבנה כפלטפורמת תותחים והתצפית מראשו סוקרת את כל נווה המדבר. לצידה שוק תמרים וכסף, ובימי שישי בבוקר מתקיים שוק הבקר המסורתי.',
+        rating: 4.6,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=22.933332,57.530277',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Nizwa_Fort_(8729892924).jpg/500px-Nizwa_Fort_(8729892924).jpg',
+        priceLevel: 1,
+        tags: ['history'],
+        mustSee: true,
+      },
+      {
+        id: 'om-bahla',
+        name: 'מצודת בהלא',
+        nameLocal: 'Bahla Fort',
+        category: 'attraction',
+        lat: 22.964167,
+        lng: 57.301109,
+        description:
+          'מצודת חימר ענקית מהמאה השלוש עשרה, אתר המורשת העולמית הראשון של עומאן, שסביבה חומה באורך שנים עשר קילומטרים. השחזור נמשך עשרות שנים ורק ב-2012 היא נפתחה לקהל. בהלא נחשבת בפולקלור העומאני לעיר הכישוף, ומייצרים בה כלי חרס עד היום.',
+        rating: 4.3,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=22.964167,57.301109',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Bahla_Fort.jpg/500px-Bahla_Fort.jpg',
+        priceLevel: 1,
+        tags: ['history'],
+      },
+      {
+        id: 'om-jebel-shams',
+        name: 'ג׳בל שאמס והקניון הגדול',
+        nameLocal: 'Jebel Shams & Wadi Ghul',
+        category: 'viewpoint',
+        lat: 23.236944,
+        lng: 57.263889,
+        description:
+          'ההר הגבוה בעומאן, כשלושת אלפים מטר, ולמרגלותיו ואדי ע׳ול - קניון בעומק כאלף מטר שזכה לכינוי הקניון הגדול של ערב. מסלול המרפסת, שמוליך על מדף בקיר הקניון אל כפר נטוש, הוא ההליכה המפורסמת בעומאן ולוקח כארבע שעות הלוך ושוב. הכביש האחרון תלול ודורש רכב שטח.',
+        rating: 4.8,
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=23.236944,57.263889',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Jebel_Shams_Balcony_Walk_Hike_2019.jpg/500px-Jebel_Shams_Balcony_Walk_Hike_2019.jpg',
+        priceLevel: 1,
+        tags: ['outdoors'],
+        mustSee: true,
+      },
+      {
+        id: 'om-wadi-shab',
+        name: 'ואדי שאב',
+        nameLocal: 'Wadi Shab',
+        category: 'nature',
+        lat: 22.839217,
+        lng: 59.245261,
+        description:
+          'הוואדי היפה בעומאן. מגיעים בסירה קטנה שחוצה את השפך, ומשם הולכים כארבעים דקות בין קירות סלע ובריכות מים ירוקות. בסוף המסלול שוחים דרך סדק צר במערה ומגיעים למפל תת קרקעי - הקטע הזה מחייב לשחות עם התיק על הראש או להשאיר אותו מאחור. לובשים בגד ים מתחת לבגדים ונועלים נעליים שנרטבות.',
+        rating: 4.9,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=22.839217,59.245261',
+        priceLevel: 1,
+        tags: ['outdoors'],
+        mustSee: true,
+      },
+      {
+        id: 'om-bimmah',
+        name: 'הבולען של בימה',
+        nameLocal: 'Bimmah Sinkhole',
+        category: 'nature',
+        lat: 23.036,
+        lng: 59.072,
+        description:
+          'בולען גיר טבעי בגודל 50 על 70 מטר ובעומק כעשרים מטר, מלא במים בצבע טורקיז שהם תערובת של מי ים ומי מעיין. יש מדרגות אבן שיורדות למים ואפשר לשחות. הוא נמצא ממש ליד הכביש הראשי בין מסקאט לסור, ולכן זו עצירה קלה ולא טיול.',
+        rating: 4.4,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=23.036,59.072',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Oman2-059_(8480995570).jpg/500px-Oman2-059_(8480995570).jpg',
+        priceLevel: 0,
+        tags: ['outdoors', 'families'],
+      },
+      {
+        id: 'om-sur',
+        name: 'סור ומספנות הדאו',
+        nameLocal: 'Sur',
+        category: 'attraction',
+        lat: 22.566668,
+        lng: 59.528889,
+        description:
+          'עיר נמל שהייתה מרכז הסחר הימי של עומאן עם זנזיבר והודו, ועד היום בונים בה ספינות דאו מעץ בשיטות המסורתיות. אפשר להיכנס למספנה ולראות את הבנייה. במרחק קצר משם, ברס אל ג׳ינז, נמצא אתר ההטלה הגדול של צבי ים ירוקים, וסיורי לילה מודרכים יוצאים אליו כל השנה.',
+        rating: 4.2,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=22.566668,59.528889',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Dhow_Sur_Oman.jpg/500px-Dhow_Sur_Oman.jpg',
+        priceLevel: 1,
+        tags: ['history', 'families', 'outdoors'],
+      },
+      {
+        id: 'om-wahiba',
+        name: 'דיונות רמלת אל ואהיבה',
+        nameLocal: 'Wahiba Sands',
+        category: 'nature',
+        lat: 21.93333,
+        lng: 58.916667,
+        description:
+          'שדה דיונות באורך כמאתיים קילומטרים, עם רכסים שמגיעים למאה מטר ומשנים גוון מכתום לאדום לאורך היום. לנים במחנה מדברי - חלקם בסיסיים וחלקם יוקרתיים - והפעילות היא גלישה על הדיונות, רכיבה על גמלים ושמי לילה בלי זיהום אור. הכניסה לחול היא רק ברכב שטח עם הורדת לחץ אוויר, ולא לבד.',
+        rating: 4.6,
+        durationMin: 900,
+        externalUrl: 'https://maps.google.com/?q=21.93333,58.916667',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Wahiba_Sands%2C_sunrise_(6896834297).jpg/500px-Wahiba_Sands%2C_sunrise_(6896834297).jpg',
+        priceLevel: 2,
+        tags: ['outdoors', 'romantic', 'families'],
+        mustSee: true,
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'מסקאט',
+        placeIds: ['om-grand-mosque', 'om-mutrah'],
+        notes:
+          'בוקר במסגד הגדול, שפתוח למבקרים עד אחת עשרה בלבד, עם לבוש צנוע. אחר הצהריים מנוחה מהחום, ומחמש הליכה על הקורניש של מוטרה ועד לשוק. ארוחת ערב על הטיילת מול הנמל.',
+      },
+      {
+        day: 2,
+        title: 'ניזווא ובהלא',
+        placeIds: ['om-nizwa', 'om-bahla'],
+        notes:
+          'שעה וחצי מערבה ממסקאט. מתחילים במצודת ניזווא בפתיחה, וממשיכים לשוק. אחר הצהריים ארבעים דקות לבהלא. מי שמגיע ביום שישי יקדים לשש בבוקר לשוק הבקר בניזווא.',
+      },
+      {
+        day: 3,
+        title: 'ג׳בל שאמס',
+        placeIds: ['om-jebel-shams'],
+        notes:
+          'רכב שטח הוא חובה בקטע האחרון. יוצאים מוקדם ועושים את מסלול המרפסת לפני שהשמש מגיעה לקיר הקניון. ללון בהר, כי הטמפרטורה שם נמוכה בעשר מעלות ממסקאט ושמי הלילה יוצאי דופן.',
+      },
+      {
+        day: 4,
+        title: 'חוף הוואדיות',
+        placeIds: ['om-bimmah', 'om-wadi-shab', 'om-sur'],
+        notes:
+          'נוסעים דרומה בכביש החוף. עצירה קצרה בבולען, ואחריה ואדי שאב שדורש חצי יום שלם עם בגד ים. ממשיכים לסור ללינה, ובערב אפשר לצאת לסיור צבי הים ברס אל ג׳ינז - מזמינים מראש.',
+      },
+      {
+        day: 5,
+        title: 'הדיונות',
+        placeIds: ['om-wahiba'],
+        notes:
+          'שעתיים מסור. נכנסים לחול רק עם מחנה שאסף אתכם או עם מדריך, ולא לבד. שקיעה על רכס, לילה במחנה, וזריחה למחרת. משם כשעתיים וחצי חזרה למסקאט.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסות ישירות מתל אביב למסקאט (MCT) ואין יחסים דיפלומטיים בין המדינות. מי שמגיע בדרכון זר טס בדרך כלל דרך דובאי, דוחא או איסטנבול. בדקו את דרישות האשרה העדכניות מול הרשויות העומאניות לפני כל הזמנה.',
+      gettingAround:
+        'רכב שכור הוא הכרחי, ולג׳בל שאמס, לדיונות ולחלק מהוואדיות צריך רכב שטח ממש ולא ג׳יפון עירוני. הכבישים הראשיים מצוינים ומסומנים באנגלית, והנהיגה בצד ימין. אין רכבות ותחבורה ציבורית קיימת רק בין הערים הגדולות. תדלקו לפני שיוצאים מהעיר, ואל תיכנסו לוואדי אחרי גשם - שיטפונות פתאומיים הם הסכנה המרכזית כאן.',
+      kosherOverview:
+        'אין בעומאן שום תשתית כשרות - אין מסעדה כשרה, אין חנות כשרה ואין קהילה יהודית מאורגנת. מי ששומר כשרות מסתמך על אוכל שהביא איתו ועל מוצרים סגורים עם הכשר שאפשר למצוא בסופרמרקטים הגדולים במסקאט. מזון ימי ופירות טריים זמינים בכל מקום, וזה הפתרון המעשי לרוב הימים.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
