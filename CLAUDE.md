@@ -299,6 +299,74 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-27 (c) - "The AI is very broken. Rethink it." It was boxed in, not malfunctioning
+
+Netanel sent a screenshot where the agent, asked to build days 1-2 around his
+Bratislava hotel, replied **"המערכת לא מאפשרת לי להכניס אטרקציות של ברטיסלבה
+לתוך ימים אלה"**, offered to wipe and rebuild the whole trip, showed
+"✓ עדכנתי הערות ליום 1 / ליום 2" as its accomplishment, and then died on "כן"
+with "אופס, משהו השתבש". Two crash fixes had already shipped today and the
+product still failed at the same request. He was right to ask for a rethink.
+
+**The agent was telling the truth.** Days are pinned to a city;
+`set_day_places` rejects any place that does not belong to that day's city; and
+there was **no tool to change a day's city and no tool to reorder days**. So
+"days 1-2 in Bratislava instead of the Tatras" had exactly one legal path -
+`create_trip_full`, which wipes the trip and rebuilds it, which the prompt
+(correctly) gates behind a confirmation. Editing notes was the only legal action
+left, so that is what it did. Every symptom in that screenshot follows from one
+missing capability.
+
+**Two new tools.** `set_day_city` moves an existing day to another city; its
+stops belong to the old city so they are cleared, the tool result names exactly
+which ones (Netanel's call: clear and say so) and demands `set_day_places` in
+the same turn so no day is left empty. `move_day` reorders days, stops
+travelling with them, nothing lost. Neither is destructive and neither needs
+confirmation.
+
+**`citySlugs` is now derived from day order**, not accumulated in insertion
+order. This is not cosmetic: `citySlugs` drives the inter-city travel legs, the
+route summary and the booking city picker, so a restructure that fixed the days
+while leaving that array stale would have shown a correct itinerary attached to
+a wrong route.
+
+**Second bug, on the exact path the old flow forced.** `stop_reason:
+'max_tokens'` is not `'tool_use'`, so the loop just broke - **a tool call
+truncated mid-JSON was dropped in complete silence**: no error, no retry,
+nothing rendered. A whole-trip rebuild is the largest JSON the model ever
+emits, against a 2048-token cap, in Hebrew, which is token-expensive. It now
+gets one corrective nudge to split the work into smaller calls, with a 4096
+ceiling while it does.
+
+**Third bug, and the reason all of this reads as "the AI is broken."**
+`useTripChat` threw on any non-ok response into an empty `catch {}`, so **HTTP
+429 rendered as "אופס, משהו השתבש. נסו שוב"** - a message that invites another
+tap, which extends the rate limit. Free plan is 6 requests/minute and he had
+been tapping repeatedly. Failures now name the real cause (rate limit with the
+wait time from `Retry-After`, payload too large, server, network) and the error
+is logged instead of swallowed - the same `catch {}` sin the server had.
+
+**43 tests**, including his exact scenario end to end: both days move to
+Bratislava, get refilled, the trip id is unchanged and Vienna is untouched. One
+test earned its keep immediately by catching me inventing place ids in my own
+fixture (`hta-` instead of the real `tat-`) - `placeName` had been silently
+falling back to the raw id in the message the model reads.
+
+**NOT VERIFIED, and it matters given this session's record.** Whether the model
+actually reaches for `set_day_city` rather than offering a rebuild is prompt
+behaviour, and the device bridge disconnected before the live replay could run,
+so the API key could not be re-staged. Everything deterministic is covered by
+tests; the choice is on trust. First real check is the deployed site with his
+own Slovakia trip.
+
+**The pattern worth carrying out of today.** Three sessions in a row I fixed
+the failure I could see - the error message, then the retry classifier, then
+the 400 - and the user's actual request kept failing. The question that would
+have short-circuited all of it: *is there any legal sequence of tool calls that
+satisfies this request?* When the answer is no, no amount of error handling is
+the bug.
+
+
 ### 2026-07-27 (b) - The real crash: a blank user message, and a 400 no retry could survive
 
 Netanel sent three more screenshots from production, timestamped 49 minutes
