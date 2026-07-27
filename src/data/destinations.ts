@@ -29857,6 +29857,230 @@ export const destinations: Destination[] = [
         'לסינגפור קהילה יהודית קטנה ומאורגנת שמרוכזת ברחוב ווטרלו סביב בית הכנסת מגן אבות. שם נמצאים המסעדה הכשרה והמכולת של הקהילה, ובנוסף פועל בעיר בית חב"ד עם ארוחות ואירוח שבת. מחוץ למתחם הזה אין כמעט אפשרויות כשרות, וגם מרכזי הדוכנים העירוניים המצוינים אינם רלוונטיים לשומרי כשרות. המחירים במסעדה הכשרה גבוהים, כמו כל דבר בסינגפור, ולכן מי ששוהה כמה ימים משלים עם פירות, ירקות ומוצרים ארוזים עם הכשר מהסופרמרקטים הגדולים.',
     },
   },
+  {
+    slug: 'malta',
+    name: 'מלטה',
+    nameLocal: 'Malta',
+    countrySlug: 'malta',
+    flag: '🇲🇹',
+    center: { lat: 35.8997, lng: 14.5148 },
+    zoom: 11,
+    tagline: 'אי אחד, שבעת אלפים שנה, ושבוע שמספיק לכל זה',
+    summary:
+      'מלטה נראית קטנה במפה וגדולה מאוד כשמגיעים אליה. באי אחד יש מקדשים ניאוליתיים שקדמו לפירמידות, בירה בארוקית שלמה שבנו אבירי מסדר יוחנן אחרי המצור הגדול, כנסייה אחת עם שני ציורים של קרוואג׳ו, כפר דייגים עם סירות צבועות בעיניים פיניקיות, ואי שני, גוזו, שהוא איטי ופסטורלי לגמרי. הכל בטווח של פחות משעת נסיעה, האנגלית שפה רשמית, והמחירים עדיין נמוכים ממערב אירופה.',
+    bestSeason:
+      'אפריל עד יוני וספטמבר עד אוקטובר הם החודשים הטובים ביותר - חם ונעים, הים כבר או עדיין נעים לרחצה, והאתרים לא עמוסים. יולי ואוגוסט חמים מאוד ומלאים בתיירים, ומחירי הלינה מזנקים. בחורף נעים לטיולי הליכה אבל יורד גשם ורוב שירותי הסירות לקומינו מצטמצמים.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Aerial_view_Mdina%2C_Malta.jpg/960px-Aerial_view_Mdina%2C_Malta.jpg',
+    iconicLandmark: {
+      name: 'מדינה, העיר השקטה',
+      nameLocal: 'Mdina',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Malta_Mdina.jpg/500px-Malta_Mdina.jpg',
+      blurb:
+        'בירת האי עד שהאבירים העבירו את השלטון לוולטה, ומאז כמעט לא השתנתה. בתוך החומות גרים כמה מאות תושבים בלבד, כלי רכב פרטיים אסורים ברובה, ובלילה הסמטאות ריקות לגמרי - מכאן הכינוי העיר השקטה.',
+    },
+    editorialRating: {
+      score: 4.3,
+      verdict:
+        'צפיפות היסטורית יוצאת דופן ביחס לגודל, נוחה מאוד לישראלים בזכות האנגלית והמרחקים הקצרים, אבל חופי החול מעטים והקיץ עמוס מדי.',
+    },
+    places: [
+      {
+        id: 'mt-stjohns',
+        name: 'הקתדרלה של יוחנן הקדוש',
+        nameLocal: "St John's Co-Cathedral",
+        category: 'attraction',
+        lat: 35.89777,
+        lng: 14.5125,
+        description:
+          'מבחוץ מבנה אבן מאופק כמעט כמו מבצר, ומבפנים אחד הפנימים הבארוקיים המרשימים באירופה - רצפה שכולה מצבות שיש משובצות של אבירי המסדר, וכיפות מצוירות מקיר לקיר. באולם התפילה הצדדי תלוי ״עריפת ראשו של יוחנן המטביל״ של קרוואג׳ו, הציור הגדול ביותר שלו והיחיד שעליו חתם.',
+        rating: 4.8,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=35.89777,14.5125',
+        priceLevel: 2,
+        tags: ['history', 'art'],
+        mustSee: true,
+      },
+      {
+        id: 'mt-barrakka',
+        name: 'גני ברקה העליונים',
+        nameLocal: 'Upper Barrakka Gardens',
+        category: 'viewpoint',
+        lat: 35.894722,
+        lng: 14.512222,
+        description:
+          'מרפסת גנים על ראש חומות ולטה, ומשם התצפית הקלאסית על הנמל הגדול ועל שלוש הערים שמנגד. מתחת לגנים ניצבת סוללת התותחים שיורה ירייה טקסית בשעה שתים עשרה ובארבע אחר הצהריים. מעלית מהרציף חוסכת את העלייה ברגל.',
+        rating: 4.6,
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=35.894722,14.512222',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Upper_barrakka_gardens-IMG_1670.jpg/500px-Upper_barrakka_gardens-IMG_1670.jpg',
+        priceLevel: 0,
+        tags: ['outdoors', 'romantic', 'history'],
+        mustSee: true,
+      },
+      {
+        id: 'mt-elmo',
+        name: 'מצודת סנט אלמו והמוזיאון הלאומי למלחמה',
+        nameLocal: 'Fort Saint Elmo',
+        category: 'museum',
+        lat: 35.901667,
+        lng: 14.519167,
+        description:
+          'המצודה שבקצה לשון היבשה של ולטה, זו שהחזיקה מעמד שבועות במצור הגדול של 1565 עד שנפלה עד האחרון. היום היא מארחת את המוזיאון הלאומי למלחמה, שמספר גם את סיפור המצור וגם את ההפצצות של מלחמת העולם השנייה, שבהן מלטה הייתה מהמקומות המופצצים בעולם.',
+        rating: 4.4,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=35.901667,14.519167',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Valletta%2C_Malta_-_2018_(39570984425).jpg/500px-Valletta%2C_Malta_-_2018_(39570984425).jpg',
+        priceLevel: 2,
+        tags: ['history', 'families'],
+      },
+      {
+        id: 'mt-mdina',
+        name: 'מדינה',
+        nameLocal: 'Mdina',
+        category: 'attraction',
+        lat: 35.886359,
+        lng: 14.403115,
+        description:
+          'עיר מוקפת חומה על גבעה במרכז האי, בירת מלטה עד המאה השש עשרה. הליכה בסמטאות שלה לוקחת שעה ומרגישה כמו מעבר בזמן, ומהחומות רואים כמעט את כל האי. בקצה הצפוני יש נקודת תצפית עם בתי קפה, ומחוץ לשער נמצאת רבאט עם הקטקומבות של פאולוס הקדוש.',
+        rating: 4.7,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=35.886359,14.403115',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Malta_-_Mdina_(Triq_San_Oswald)_02_ies.jpg/500px-Malta_-_Mdina_(Triq_San_Oswald)_02_ies.jpg',
+        priceLevel: 0,
+        tags: ['history', 'romantic', 'families'],
+        mustSee: true,
+      },
+      {
+        id: 'mt-hagar-qim',
+        name: 'מקדשי חג׳ר קים',
+        nameLocal: 'Ħaġar Qim',
+        category: 'attraction',
+        lat: 35.82777,
+        lng: 14.441944,
+        description:
+          'מקדש מגליתי על צוק מעל הים, שנבנה בערך בשנת 3600 לפני הספירה - כאלף שנים לפני הפירמידות ולפני סטונהנג׳. אחת מאבני החזית שוקלת יותר מעשרים טונות. אוהל הגנה מקורה פרוש מעל האתר, ולידו נמצא מקדש מנאיידרה במרחק הליכה קצרה במורד השביל, ושני האתרים נכללים באותו כרטיס.',
+        rating: 4.5,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=35.82777,14.441944',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Facade_Hagar_Qim.jpg/500px-Facade_Hagar_Qim.jpg',
+        priceLevel: 2,
+        tags: ['history', 'outdoors'],
+      },
+      {
+        id: 'mt-blue-grotto',
+        name: 'המערה הכחולה',
+        nameLocal: 'Blue Grotto',
+        category: 'nature',
+        lat: 35.82027,
+        lng: 14.455556,
+        description:
+          'מערכת מערות ים וקשת סלע טבעית בחוף הדרומי, שאליהן נכנסים בסירה קטנה מהמזח בווייד איז זורריק. האור המוקדם, בערך בין שבע לתשע בבוקר, הוא זה שהופך את המים לכחול הזוהר שבגללו באים. הסירות מבטלות הפלגות ברוח חזקה, ולכן בודקים בבוקר לפני שנוסעים.',
+        rating: 4.3,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=35.82027,14.455556',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Blue_Grotto_Malta.jpg/500px-Blue_Grotto_Malta.jpg',
+        priceLevel: 2,
+        tags: ['outdoors', 'families'],
+      },
+      {
+        id: 'mt-marsaxlokk',
+        name: 'מרסשלוק',
+        nameLocal: 'Marsaxlokk',
+        category: 'attraction',
+        lat: 35.84214,
+        lng: 14.54296,
+        description:
+          'כפר דייגים בדרום מזרח האי, ובנמל שלו עשרות סירות לוצו צבועות בצהוב, אדום וכחול, עם עין פיניקית מצוירת על החרטום להגנה. שוק הדגים הגדול מתקיים בימי ראשון בבוקר, ובשאר השבוע יש דוכנים קטנים ומסעדות דגים לאורך הרציף.',
+        rating: 4.4,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=35.84214,14.54296',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Marsaxlokk_Harbour.jpg/500px-Marsaxlokk_Harbour.jpg',
+        priceLevel: 1,
+        tags: ['foodie', 'families', 'outdoors'],
+      },
+      {
+        id: 'mt-cittadella',
+        name: 'הציטדלה של ויקטוריה, גוזו',
+        nameLocal: 'Cittadella, Victoria (Gozo)',
+        category: 'attraction',
+        lat: 36.046391,
+        lng: 14.239445,
+        description:
+          'מצודה מבוצרת על גבעה במרכז גוזו, מעל העיר ויקטוריה. מהחומות רואים את כל האי מקצה לקצה, ובפנים יש קתדרלה, מוזיאון ארכיאולוגי ורחובות ריקים כמעט לגמרי. גוזו כולו איטי יותר ממלטה, והמעבורת מצ׳ירקווה אורכת כרבע שעה.',
+        rating: 4.5,
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=36.046391,14.239445',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Citadel-Gozo.jpg/500px-Citadel-Gozo.jpg',
+        priceLevel: 1,
+        tags: ['history', 'outdoors', 'romantic'],
+        mustSee: true,
+      },
+      {
+        id: 'mt-comino',
+        name: 'קומינו והלגונה הכחולה',
+        nameLocal: 'Comino / Blue Lagoon',
+        category: 'nature',
+        lat: 36.01226,
+        lng: 14.33669,
+        description:
+          'אי קטן בין מלטה לגוזו כמעט בלי תושבים, ובו מפרץ רדוד עם מים בצבע תכלת שקוף שהוא התמונה המפורסמת ביותר של מלטה. הסירות יוצאות מצ׳ירקווה ומגוזו. בקיץ המקום עמוס מאוד בין עשר לארבע, ולכן מגיעים בסירה הראשונה של הבוקר או בשעות אחר הצהריים המאוחרות.',
+        rating: 4.4,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=36.01226,14.33669',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/The_Blue_Lagoon.jpg/500px-The_Blue_Lagoon.jpg',
+        priceLevel: 2,
+        tags: ['outdoors', 'families', 'romantic'],
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'ולטה',
+        placeIds: ['mt-stjohns', 'mt-barrakka', 'mt-elmo'],
+        notes:
+          'ולטה כולה בהליכה, אבל היא בנויה על גבעה ויש הרבה מדרגות. מתחילים בקתדרלה בבוקר כשהיא ריקה יחסית, ממשיכים לגני ברקה לירי התותחים בשעה שתים עשרה, ומסיימים במצודת סנט אלמו.',
+      },
+      {
+        day: 2,
+        title: 'מדינה והדרום העתיק',
+        placeIds: ['mt-mdina', 'mt-hagar-qim', 'mt-blue-grotto'],
+        notes:
+          'יום שדורש רכב או סיור מאורגן. אפשר גם להפוך את הסדר ולהתחיל במערה הכחולה בשעות האור הטובות, ואז לעלות למדינה לקראת השקיעה, שזו השעה היפה שלה.',
+      },
+      {
+        day: 3,
+        title: 'גוזו',
+        placeIds: ['mt-cittadella'],
+        notes:
+          'מעבורת מצ׳ירקווה, כרבע שעה. את הרכב אפשר להעלות למעבורת, וזו הדרך הנוחה לראות גם את שאר האי - מלחי הים בשלנדי ומפרץ רמלה החולי. אפשר גם ללון לילה בגוזו כדי לא לרוץ.',
+      },
+      {
+        day: 4,
+        title: 'קומינו ומרסשלוק',
+        placeIds: ['mt-comino', 'mt-marsaxlokk'],
+        notes:
+          'סירת בוקר ראשונה ללגונה הכחולה לפני ההמון, חזרה בצהריים, ואחר הצהריים בכפר הדייגים. אם היום הוא יום ראשון מתחילים דווקא בשוק של מרסשלוק בבוקר.',
+      },
+    ],
+    practical: {
+      flights:
+        'יש טיסות ישירות עונתיות מתל אביב למלטה (MLA) בכשלוש שעות וחצי, ובשאר השנה טסים דרך רומא, מילאנו, אתונה או וינה. שדה התעופה נמצא כשמונה קילומטרים מוולטה, כרבע שעה נסיעה, ויש ממנו קו אוטובוס אקספרס וגם מוניות במחיר קבוע מראש לפי אזור.',
+      gettingAround:
+        'רשת האוטובוסים מכסה כמעט הכל וזולה, אבל איטית ובקיץ עמוסה מאוד. רכב שכור נותן חופש אמיתי, ובלבד שזוכרים שנוסעים בצד שמאל ושהחניה בוולטה כמעט בלתי אפשרית - משאירים את הרכב מחוץ לחומות. בין ולטה לשלוש הערים יש מעבורת נוסעים קצרה שהיא גם הדרך הכי יפה לחצות את הנמל.',
+      kosherOverview:
+        'הקהילה היהודית במלטה קטנה מאוד, כמה עשרות משפחות, ואין באי מסעדה כשרה. פועל בית חב״ד שמארגן ארוחות שבת ואירוח בתיאום מראש, וזו למעשה האפשרות היחידה לארוחה כשרה מבושלת. בסופרמרקטים הגדולים אפשר למצוא מוצרים ארוזים עם השגחה אירופית, ודגים ופירות בשפע. מי שמקפיד מביא איתו בשר ומוצרים בסיסיים, ומתכנן על בישול עצמי בדירה או בסוויטה עם מטבחון.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
