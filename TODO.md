@@ -62,6 +62,21 @@ Hungary→Lake Balaton, Slovakia→High Tatras.
       nature entry (Charyn is already IN Almaty; Kolsai/Kaindy are further).
       BLOCKED on coordinates: `Kolsai_Lakes` and `Kaindy_Lake` on dbpedia
       return an empty JSON object. Needs another source. Do NOT estimate.
+- [ ] **`samarkand` → `uzb-aral` has a placeholder coordinate.** The place is
+      the Moynaq ship cemetery but it carries `lat: 45, lng: 60`, which is the
+      rounded centroid of the Aral Sea and sits roughly 140km from Moynaq.
+      `scripts/validate-catalog.mjs` reports it as the one hard ERROR in the
+      catalog. Fix by fetching `Mo'ynoq` from dbpedia (it 502'd / timed out on
+      every attempt during the 2026-07-27 run) and replacing both the lat/lng
+      and the itinerary day-6 note. Do NOT estimate the coordinate, and do not
+      "fix" it by nudging the numbers - either a real published value or the
+      place comes out and day 6 goes with it.
+- [ ] **London / United Kingdom is blocked for the same reason as Paris.**
+      Re-tested 2026-07-27: `Tower_of_London`, `British_Museum` and
+      `Buckingham_Palace` all return no geo:lat/geo:long because the article
+      is large enough that the fetcher truncates before the geo block.
+      `Tower_Bridge` returns a thumbnail but no coordinates. Build London from
+      a normal network, not from this sandbox.
 - [x] **Jordan → Dead Sea + Wadi Mujib + Amman/Jerash** (2nd Jordan entry,
       north; land crossing note like Petra).
 - [x] **Cyprus → Paphos + Akamas/Avakas Gorge** (2nd Cyprus entry; direct

@@ -1602,8 +1602,6 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-newyork-cafe',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/en/thumb/5/58/Anantara_New_York_Palace_Budapest_Hotel.png/500px-Anantara_New_York_Palace_Budapest_Hotel.png',
         name: 'ניו יורק קפה',
         nameLocal: 'New York Café',
         category: 'cafe',
@@ -10101,8 +10099,6 @@ export const destinations: Destination[] = [
       },
       {
         id: 'isl-bluelagoon',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/en/thumb/0/00/Blue_Lagoon_Main_Building.JPG/500px-Blue_Lagoon_Main_Building.JPG',
         tags: ['romantic', 'families'],
         priceLevel: 3,
         name: 'הלגונה הכחולה',
@@ -12414,8 +12410,6 @@ export const destinations: Destination[] = [
       },
       {
         id: 'uzb-tashkent',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/en/thumb/f/f6/Nest_One_Tashkent.jpg/500px-Nest_One_Tashkent.jpg',
         tags: ['foodie', 'art'],
         priceLevel: 1,
         name: 'טשקנט',
