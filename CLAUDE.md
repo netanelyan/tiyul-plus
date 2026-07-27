@@ -585,6 +585,93 @@ the symptom. Final confirmation is Netanel's own iPhone.
 mobile widths**, i.e. `text-base sm:text-sm` rather than `text-sm`, or iOS will
 zoom the page the moment it is focused. There is no lint rule for this; the
 harness in this entry is the way to catch it.
+### 2026-07-27 (u) - Overnight run: eight new cities, and three missing capitals nobody had noticed
+
+Netanel went to sleep and asked for the full programme across the 17 countries Israelis
+actually fly to. This entry covers the whole run. **Catalog went 153 to 161
+destinations and 1,377 to 1,479 places, 0 errors throughout.**
+
+**The pattern held: the gaps were not thin place-lists, they were missing cities.**
+After Dubai, New York and the Cyclades in entry (t), auditing the "thin" countries
+turned up three absent CAPITALS: **Bulgaria had no Sofia, Romania had no Bucharest,
+Poland had no Warsaw.** Also added: **Venice, Florence** (Italy had Rome, Dolomites and
+Sicily but neither), **Nice/Riviera** (France was Paris only), **Edinburgh** (UK was
+London only) and **Buenos Aires** (Argentina was 6 places total, the worst on the list).
+
+Country totals now, against where they started this session: italy 37 to 63, greece 38
+to 52, usa 19 to 46, uae 22 to 45, poland 17 to 27, romania 13 to 24, uk 13 to 25,
+bulgaria 12 to 24, france 15 to 25, argentina 6 to 23.
+
+**Every place: coordinates from the Wikipedia coordinates API, photo confirmed against
+Commons with `redirects=1`, then browser-probed. 86 + 15 + 11 URLs probed, 0 dead.**
+1,539 of 1,557 catalog photo URLs now carry HTTP evidence; the 18 unproven remain the
+known-unrepairable filenames from entry (s).
+
+**The trap list grew, and it is worth reading before sourcing anything else.** Wikipedia
+lead images are unreliable in specific, repeatable ways. Rejected this run:
+- **Location-map SVGs/PNGs** posing as photos: Santorini, Mykonos, Warsaw Old Town.
+- **Corporate logos**: Rockefeller Center, One World Trade Center, Caffè Florian,
+  E. Wedel.
+- **Montage collages**: San Telmo, Palermo, Puerto Madero.
+- **An 1856 painting** offered for Antico Caffè Greco, which is an archival artwork and
+  not a photograph of the café. Same call as the 1901 Puerta del Reloj rejection.
+- **Wrong subject**: Central Park returns a music-festival crowd.
+- **Wrong place entirely**: `Agios Sostis` resolved to longitude 21.95, the Peloponnese,
+  ~300km from Mykonos. `Deira` resolved to a UK article with a Northumbria image.
+- **Rounded coordinates**: Nea Kameni and Santorini caldera came back as 36.4,25.4,
+  which is kilometres of error on a map pin. Dropped rather than shipped imprecise.
+- **Non-Commons local uploads** (licensing, not style): five Dubai landmarks, because
+  the UAE has no freedom of panorama; also Bucharest's Palace of the Parliament and
+  Arcul de Triumf.
+
+**I also caught one of my own.** I gave Edinburgh an `iconicLandmark` named "Edinburgh
+Castle" carrying the Calton Hill photograph. Relabelled before pushing. The lesson is
+that the wrong-subject trap does not only come from the source; it comes from assembly.
+
+**Roundness: real progress on `cafe`, and an honest wall on `kosher-market`.** The cafe
+gap went from 14 countries to 6, filled with genuinely notable, verifiable places (Les
+Deux Magots and Café de Flore, Els Quatre Gats where Picasso first exhibited, Café
+Kranzler, Caru cu Bere, Jama Michalika, Fortnum & Mason, Caffè Florian). Museums added
+for Georgia and Cyprus, a viewpoint for Argentina.
+
+**`kosher-market` is still missing in 16 of 17 countries and I did not fake it.** Kosher
+supermarkets, butchers and bakeries almost never have Wikipedia articles, so their
+coordinates cannot be verified from here, and Nominatim freezes the browser bridge on
+every attempt. Every city that has real kosher infrastructure says so in
+`practical.kosherOverview` with the supervising bodies named as reported, and every one
+of those texts ends by saying the place list is not yet in the catalog. **That sentence
+is load-bearing - do not delete it to make the data look complete.** Getting these in
+needs a geocoding path this sandbox does not currently have.
+
+**Kosher honesty cut both ways this run.** Buenos Aires and New York got genuinely good
+news (largest communities outside Israel, Once and Villa Crespo, the Upper West Side).
+Santorini and Mykonos got the opposite, stated plainly: no kosher restaurants, no Chabad
+house, stock up in Athens or bring food. Edinburgh: stock up in Glasgow. Sofia: Chabad
+only, coordinate ahead.
+
+**Other editorial calls recorded in the data itself:** Katz's Delicatessen is marked NOT
+kosher; La Boca says stay in the tourist streets and not after dark; the Warsaw Rising
+Museum entry distinguishes the 1944 uprising from the Ghetto Uprising; Warsaw's Old Town
+says everything medieval-looking was rebuilt after 1945; Bucharest's parliament and
+Jewish sites note passport-and-booking entry; Venice notes the day-visitor access fee.
+
+**Index: 211,871 chars against the 260,000 ceiling** - roughly 335 places of headroom
+left. Cost per place is steady at ~144 chars.
+
+**Next session, in priority order.** (1) The 18 dead photo URLs from entry (s), which
+need a human to pick replacements. (2) `kosher-market` and the remaining `cafe` gaps
+(cyprus, argentina, bulgaria, georgia, uae, greece) - both blocked on geocoding, not on
+research. (3) Thinnest countries are now cyprus 17, argentina 23, bulgaria 24, georgia
+23 - the obvious next cities are Nicosia, Plovdiv and Kutaisi/Mtskheta. (4) Consider
+Madrid: Spain has Barcelona, Mallorca and Andalusia but no capital, the same gap this
+run found three times.
+
+**Tooling, unchanged and still true:** the Chrome extension is the only route to Commons
+from this sandbox. Navigate to `en.wikipedia.org/wiki/Special:BlankPage`, then make
+SAME-ORIGIN `/w/api.php` calls. Cross-origin fetches freeze the renderer reliably. Keep
+each call under ~45s and re-read `tabs_context_mcp` after every navigate. dbpedia was
+down for most of this run.
+
 ### 2026-07-27 (t) - Coverage vs the real market: Dubai and New York added, six itineraries unblocked
 
 Netanel asked for depth and roundness across the 17 countries Israelis actually fly to,

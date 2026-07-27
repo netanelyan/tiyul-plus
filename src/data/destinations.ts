@@ -3174,6 +3174,22 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=Cadaques+Spain',
       },
+      {
+        id: 'bcn-quatre-gats',
+        name: 'אלס קואטרה גאטס',
+        nameLocal: 'Els Quatre Gats',
+        category: 'cafe',
+        lat: 41.38556,
+        lng: 2.17333,
+        description:
+          'בית הקפה המודרניסטי מ-1897 שבו הציג פיקאסו הצעיר את תערוכתו הראשונה. הבניין של פואיג׳ אי קדאפאלק.',
+        durationMin: 60,
+        priceLevel: 2,
+        tags: ['history', 'art', 'foodie'],
+        externalUrl: 'https://maps.google.com/?q=41.38556,2.17333',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/15-10-27-Els_Quatre_Gats-RalfR-WMA_2729.jpg/500px-15-10-27-Els_Quatre_Gats-RalfR-WMA_2729.jpg',
+      },
     ],
     itinerary: [
       {
@@ -3598,6 +3614,22 @@ export const destinations: Destination[] = [
         tags: ['history'],
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=Potsdamer+Platz',
+      },
+      {
+        id: 'ber-kranzler',
+        name: 'קפה קרנצלר',
+        nameLocal: 'Café Kranzler',
+        category: 'cafe',
+        lat: 52.504,
+        lng: 13.331,
+        description:
+          'הרוטונדה עם הסוכך הפסים בקצה הקודאם, סמל של ברלין המערבית מימי החלוקה. פועל כיום כבית קפה מחודש.',
+        durationMin: 45,
+        priceLevel: 2,
+        tags: ['history', 'foodie'],
+        externalUrl: 'https://maps.google.com/?q=52.504,13.331',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Caf%C3%A9_Kranzler%2C_Berlin%2C_1988.JPG/500px-Caf%C3%A9_Kranzler%2C_Berlin%2C_1988.JPG',
       },
     ],
     itinerary: [
@@ -5139,6 +5171,22 @@ export const destinations: Destination[] = [
           'בשרי, בהשגחת בית חב"ד טביליסי (מהדרין). פתוחה בדרך כלל מהצהריים ועד חצות - מומלץ לוודא שעות וארוחות שבת מול בית חב"ד מראש.',
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=Chabad+Tbilisi',
+      },
+      {
+        id: 'tbs-national-museum',
+        name: 'המוזיאון הלאומי של גאורגיה',
+        nameLocal: 'Georgian National Museum',
+        category: 'museum',
+        lat: 41.69605,
+        lng: 44.80026,
+        description:
+          'המוזיאון המרכזי של גאורגיה בשדרות רוסתוולי, ובו אוצר הזהב הארכיאולוגי ומוזיאון הכיבוש הסובייטי.',
+        durationMin: 120,
+        priceLevel: 1,
+        tags: ['history', 'art'],
+        externalUrl: 'https://maps.google.com/?q=41.69605,44.80026',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Museum_of_the_Soviet_Occupation_in_Tbilisi.jpg/500px-Museum_of_the_Soviet_Occupation_in_Tbilisi.jpg',
       },
     ],
     itinerary: [
@@ -6849,6 +6897,22 @@ export const destinations: Destination[] = [
         durationMin: 45,
         externalUrl: 'https://maps.google.com/?q=Chabad+Larnaca',
       },
+      {
+        id: 'lca-pierides',
+        name: 'מוזיאון פיירידס',
+        nameLocal: 'Pierides Museum',
+        category: 'museum',
+        lat: 34.9161,
+        lng: 33.6363,
+        description:
+          'האוסף הפרטי הוותיק בקפריסין, בבית משפחה מ-1815. ממצאים מהתקופה הניאוליתית ועד ימי הביניים.',
+        durationMin: 75,
+        priceLevel: 1,
+        tags: ['history', 'art'],
+        externalUrl: 'https://maps.google.com/?q=34.9161,33.6363',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Larnaca_01-2017_img08_Pieridis_Museum_of_Antiquities.jpg/500px-Larnaca_01-2017_img08_Pieridis_Museum_of_Antiquities.jpg',
+      },
     ],
     itinerary: [
       {
@@ -8058,6 +8122,20 @@ export const destinations: Destination[] = [
         externalUrl: 'https://maps.google.com/?q=45.486,12.417',
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Burano_Venice_17.jpg/500px-Burano_Venice_17.jpg',
+      },
+      {
+        id: 'ven-florian',
+        name: 'קפה פלוריאן',
+        nameLocal: 'Caffè Florian',
+        category: 'cafe',
+        lat: 45.43361,
+        lng: 12.33806,
+        description:
+          'בית הקפה הוותיק באירופה שפועל ברציפות, מ-1720, תחת הקשתות של כיכר סן מרקו. תוספת תשלום כשהתזמורת מנגנת.',
+        durationMin: 60,
+        priceLevel: 3,
+        tags: ['history', 'foodie', 'romantic'],
+        externalUrl: 'https://maps.google.com/?q=45.43361,12.33806',
       },
     ],
     itinerary: [
@@ -16112,6 +16190,22 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/2018-07-03_Zakopane_from_air_05.jpg/500px-2018-07-03_Zakopane_from_air_05.jpg',
       },
+      {
+        id: 'kra-jama-michalika',
+        name: 'ימה מיכליקה',
+        nameLocal: 'Jama Michalika',
+        category: 'cafe',
+        lat: 50.06413,
+        lng: 19.94094,
+        description:
+          'בית קפה מ-1895 ברחוב פלוריאנסקה, מעוצב בסגנון ארט נובו ובעבר מרכז הבוהמה של קרקוב. הפנים המקורי נשמר כמעט כולו.',
+        durationMin: 60,
+        priceLevel: 2,
+        tags: ['history', 'art', 'foodie'],
+        externalUrl: 'https://maps.google.com/?q=50.06413,19.94094',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Kawiarnia_Jama_Michalika_01_AB.jpg/500px-Kawiarnia_Jama_Michalika_01_AB.jpg',
+      },
     ],
     itinerary: [
       {
@@ -17327,6 +17421,22 @@ export const destinations: Destination[] = [
         tags: ['history'],
         externalUrl: 'https://maps.google.com/?q=44.46722,26.07807',
       },
+      {
+        id: 'buc-caru-cu-bere',
+        name: 'קארו קו ברה',
+        nameLocal: 'Caru cu Bere',
+        category: 'cafe',
+        lat: 44.4321,
+        lng: 26.0981,
+        description:
+          'בית בירה מ-1879 באולם ניאו-גותי עם ויטראז׳ים וציורי קיר, בלב העיר העתיקה. תיירותי מאוד אך המבנה עצמו שווה כניסה.',
+        durationMin: 90,
+        priceLevel: 1,
+        tags: ['foodie', 'history', 'nightlife'],
+        externalUrl: 'https://maps.google.com/?q=44.4321,26.0981',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Caru_cu_Bere_(MAR_2023)_-_img_05.jpg/500px-Caru_cu_Bere_(MAR_2023)_-_img_05.jpg',
+      },
     ],
     itinerary: [
       {
@@ -18080,6 +18190,22 @@ export const destinations: Destination[] = [
         externalUrl: 'https://maps.google.com/?q=42.56361,23.28139',
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Vitosha3.jpg/500px-Vitosha3.jpg',
+      },
+      {
+        id: 'sof-mineral-baths',
+        name: 'המרחצאות המינרליים המרכזיים',
+        nameLocal: 'Central Mineral Baths',
+        category: 'museum',
+        lat: 42.69917,
+        lng: 23.32389,
+        description:
+          'מבנה מרחצאות מ-1913 בסגנון ניאו-ביזנטי, שמשמש היום כמוזיאון ההיסטורי של סופיה. מול הכניסה יש ברזיות של מים מינרליים חמים שהתושבים ממלאים מהן בקבוקים.',
+        durationMin: 75,
+        priceLevel: 1,
+        tags: ['history', 'families'],
+        externalUrl: 'https://maps.google.com/?q=42.69917,23.32389',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Zentralbad_Sofia_Oct_2012_PD_IMG_1683.jpg/500px-Zentralbad_Sofia_Oct_2012_PD_IMG_1683.jpg',
       },
     ],
     itinerary: [
@@ -30418,6 +30544,22 @@ export const destinations: Destination[] = [
         tags: ['nightlife', 'romantic'],
         externalUrl: 'https://maps.google.com/?q=-34.61194,-58.36472',
       },
+      {
+        id: 'ba-torre-monumental',
+        name: 'המגדל המונומנטלי',
+        nameLocal: 'Torre Monumental',
+        category: 'viewpoint',
+        lat: -34.5923,
+        lng: -58.3737,
+        description:
+          'מגדל שעון בסגנון אנגלי מ-1916 מול תחנת רטירו, עם תצפית בקומה העליונה. נקרא בעבר מגדל האנגלים ושמו הוחלף אחרי מלחמת פוקלנד.',
+        durationMin: 45,
+        priceLevel: 0,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=-34.5923,-58.3737',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/2019_Buenos_Aires_-_Torre_Monumental.jpg/500px-2019_Buenos_Aires_-_Torre_Monumental.jpg',
+      },
     ],
     itinerary: [
       {
@@ -32700,6 +32842,38 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         tags: ['history'],
       },
+      {
+        id: 'par-deux-magots',
+        name: 'לה דה מאגו',
+        nameLocal: 'Les Deux Magots',
+        category: 'cafe',
+        lat: 48.854,
+        lng: 2.3332,
+        description:
+          'בית הקפה של סן ז׳רמן, שבו ישבו סארטר, דה בובואר והמינגוויי. יקר מאוד לכוס קפה, אבל המחיר הוא הישיבה והמיקום.',
+        durationMin: 60,
+        priceLevel: 3,
+        tags: ['foodie', 'history'],
+        externalUrl: 'https://maps.google.com/?q=48.854,2.3332',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Les_Deux_Magots%2C_25_September_2019.jpg/500px-Les_Deux_Magots%2C_25_September_2019.jpg',
+      },
+      {
+        id: 'par-cafe-flore',
+        name: 'קפה דה פלור',
+        nameLocal: 'Café de Flore',
+        category: 'cafe',
+        lat: 48.85417,
+        lng: 2.33264,
+        description:
+          'שכנו של לה דה מאגו ויריבו ההיסטורי, מ-1887. אותה סצנה ספרותית ואותם מחירים.',
+        durationMin: 60,
+        priceLevel: 3,
+        tags: ['foodie', 'history'],
+        externalUrl: 'https://maps.google.com/?q=48.85417,2.33264',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Caf%C3%A9_de_Flore%2C_172_boulevard_Saint-Germain%2C_Paris_6e.jpg/500px-Caf%C3%A9_de_Flore%2C_172_boulevard_Saint-Germain%2C_Paris_6e.jpg',
+      },
     ],
     itinerary: [
       {
@@ -33252,6 +33426,22 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         tags: ['foodie', 'families'],
         mustSee: true,
+      },
+      {
+        id: 'lon-fortnum',
+        name: 'פורטנום ומייסון',
+        nameLocal: 'Fortnum & Mason',
+        category: 'cafe',
+        lat: 51.5083,
+        lng: -0.1384,
+        description:
+          'חנות מזון וכלבו מ-1707 בפיקדילי, ובה אולם תה בקומה העליונה. גם מי שלא קונה נכנס לראות את מחלקת התה ואת הקומה של הריבות.',
+        durationMin: 75,
+        priceLevel: 3,
+        tags: ['foodie', 'history'],
+        externalUrl: 'https://maps.google.com/?q=51.5083,-0.1384',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Fortnum_and_Mason.jpg/500px-Fortnum_and_Mason.jpg',
       },
     ],
     itinerary: [
