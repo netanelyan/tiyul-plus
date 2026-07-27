@@ -299,6 +299,92 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-27 (g) - Catalog: North Macedonia, Mongolia, Bhutan, an 18-photo sweep, and a validator lesson
+
+Data track only. Feature files untouched. Catalog went from 139 destinations /
+72 countries to **142 destinations / 75 countries / 1,259 places**, validator at
+**0 errors, 21 warnings**.
+
+**What was added.** Three countries, each with one destination, in
+`src/data/countries.ts` and `src/data/destinations.ts`:
+
+- **North Macedonia** (`north-macedonia`) -> destination `ohrid-skopje`
+  (`אוחריד וסקופיה`), 8 places, centre 41.5/21.05, score 4.3, iconic landmark
+  the Church of St John at Kaneo. The country visa field says explicitly that
+  this is outside Schengen so the stay does not eat the Schengen quota.
+- **Mongolia** (`mongolia`) -> destination `mongolia-steppe-gobi`
+  (`הערבה והגובי`), 9 places, centre 46.3/104.6, score 4.4, iconic landmark the
+  Genghis Khan equestrian statue.
+- **Bhutan** (`bhutan`) -> destination `paro-thimphu-punakha`
+  (`פארו, טהימפו ופונאכה`), 7 places, centre 27.5/89.72, score 4.6, iconic
+  landmark Paro Taktsang.
+
+**Product decisions.** Bhutan's visa field leads with the fact that independent
+travel is impossible and that every tourist pays a Sustainable Development Fee
+of 100 USD per person per night, hedged `נכון להיום ובכפוף לשינויים`, because a
+reader who discovers that number after booking flights has been badly served.
+All three `kosherOverview` blocks state the absence of kosher infrastructure
+plainly - no restaurant, no shop, and for Macedonia and Bhutan no Chabad house
+either; Ulaanbaatar does have one and that is said. No kosher business was
+invented anywhere. Choijin Lama Temple was fetched successfully for Mongolia
+and then **deliberately dropped** to protect the grounding-index budget, and
+Chele La was dropped from Bhutan because dbpedia returned `{ }` and a guessed
+coordinate is worse than an absent place.
+
+**Photos.** 18 missing place photos filled across three commits (`3f9cc2e`,
+`261683a`, `4ea0740`) in Paris, London, Singapore, Malta, Reykjavik, Athens,
+Berlin, Uzbekistan, Bosnia and Cartagena. Photoless count is down from 82 to
+about 64, of which roughly 60 are Chabad and kosher-business entries that are
+permanently unfillable.
+
+Two bits of tooling made this repeatable and should be rebuilt rather than
+re-guessed. `/tmp/ids.mjs` imports `destinations` by **absolute** path and
+prints `slug, id, nameLocal` for every place with no photo, which ends the
+recurring mistake of guessing a place id. `/tmp/apply1.py` inserts a `photo:`
+line immediately after the `externalUrl:` line of a named id, asserting both
+that the id occurs exactly once and that no photo is already present.
+
+**New sourcing findings.**
+
+- When a dbpedia HTML page yields no `Special:FilePath` strings, ask for
+  `Special:FilePath **or dbp:image**`. Buckingham Palace had none of the first
+  and did expose the second.
+- Article-name fallbacks that rescued dead lookups:
+  `Genghis_Khan_Equestrian_Statue` -> `Equestrian_statue_of_Genghis_Khan`;
+  `Lake_Khovsgol` / `Khovsgol_Lake` -> `Lake_Khövsgöl` (umlauts required);
+  `Bayanzag` -> `Flaming_Cliffs`.
+- Confirmed dead, do not retry: `Chele_La`, `Kolsai_Lakes`,
+  `Getsemaní,_Cartagena`, `Clock_Tower_Monument` (all `{ }`);
+  `Nemunas_Delta_Regional_Park` (coords, no images); `Tower_of_London` (no
+  images in JSON, HTML 502 twice - `lon-tower` stays photoless on purpose).
+- Ukraine research was abandoned mid-flight: `Kyiv_Pechersk_Lavra` 502'd twice
+  and `Saint_Sophia_Cathedral,_Kyiv` read-timed-out. The rule is two failures
+  then move on, so it is worth a clean retry later, not a hammering.
+
+**What went wrong, and the rule that fixes it.** I pushed a validator-failing
+state to `main` as `261683a`: `uzb-samarkand` got
+`RegistanSquare_Samarkand.jpg`, which `uzb-registan` already used, and two
+places in one destination sharing a photo is an ERROR. It reached `main`
+because the `git add / commit / push` sat on its own line instead of being
+chained behind the validator. **Always chain the commit behind the validator
+with `&&` on the same line, and check a candidate photo URL is not already
+present in the destination before assigning it.** Fixed one commit later with
+`Shah-i-Zinda_01.jpg` (`4ea0740`).
+
+**Warnings kept honestly.** Mongolia's centre was retuned by hand from 46.8 to
+46.3, which pulled Yolyn Am and Khongoryn Els inside the 3-degree threshold.
+`mn-khovsgol` still warns at 4.8 degrees because it genuinely is that far, and
+moving the centre to silence it would misplace the rest.
+
+**For the next data session.** The grounding index is at **180,648 chars**
+against the ~190,000 ceiling - about 9,350 chars, roughly 6-7 destinations, of
+headroom. Measure before adding, budget ~1.4k chars per destination. Note the
+(f) entry above: the index is only ~9% Hebrew, the per-city detail block was
+the real overflow and is now capped, and **the catalog is not to be shrunk over
+either entry.** Obvious remaining gaps: Ukraine, Moldova, and a second Indian
+destination (Rajasthan). The photo backlog costs no index budget at all and is
+the safest work when headroom is tight.
+
 ### 2026-07-27 (f) - The other half of the overflow, and a message that gave advice that could not work
 
 Netanel, five minutes after the history-budget deploy: **"when i refresh, the
