@@ -95,6 +95,60 @@ tokens per new destination while the detail block stays flat, so the
 practical ceiling is now far higher. Re-measure (dev console logs one
 usage line per model call) if the catalog roughly doubles again.
 
+## Coverage audit vs the real Israeli market (added 2026-07-27, session (s))
+
+Netanel asked for depth and roundness across the 17 countries Israelis actually fly
+to. Measured against the catalog rather than guessed. **The headline finding is not
+thin place-lists - it is that the top markets are missing their flagship cities.**
+
+Market ranking (Israel Airports Authority, 2025, by passengers): Greece ~2.2M,
+USA ~1.6M, UAE ~1.5M, Italy ~1.2M, Cyprus ~1.2M. Winter 2025/26 (PassportCard):
+Thailand 1st, Hungary 2nd, Romania/Czechia/Poland rising, Argentina 9th.
+Ranks 6-15 are NOT published anywhere reachable - do not invent them. The full CBS
+table is at cbs.gov.il/he/mediarelease/DocLib/2026/007/28_26_007b.pdf (robots-blocked
+from this sandbox; Netanel can paste it).
+
+### Priority 1 - missing flagship cities (agreed order)
+
+| gap | why it matters |
+|---|---|
+| **Dubai** | UAE is the #3 market. Catalog has Abu Dhabi + uae-mountains only. Dubai is where Israelis actually go. |
+| **New York** | USA is #2. Catalog has grand-canyon + new-england only, and USA is 14 nature places vs 2 attractions. |
+| **Greek islands** (Santorini / Mykonos / Rhodes) | Greece is #1 by a wide margin. Catalog has athens, crete, meteora-epirus. No Cyclades at all. |
+| **Venice + Florence** | Italy is #4 and has only rome, dolomites, sicily. |
+| **Nice / Riviera** | France is a top market with **Paris only**, 15 places. |
+| (UK is london only, 13 places - Edinburgh is the obvious second city) | |
+
+### Priority 2 - thin countries (places today)
+
+argentina 6 (1 city) · bulgaria 12 · romania 13 · united-kingdom 13 · france 15 ·
+cyprus 17 · poland 17 · usa 19 · uae 22 · georgia 23. Target ~20 per city.
+
+### Priority 3 - roundness, and these are systemic
+
+- **`cafe` missing entirely in 12 of 17 countries.** Only hungary, czechia and
+  thailand have any.
+- **`kosher-market` missing in 16 of 17.** Only usa and thailand have one.
+- **`museum` missing in 6**: argentina, bulgaria, romania, cyprus, georgia, usa.
+- **`nightlife` tag missing in 6** countries; argentina is missing 4 of 7 tags and
+  6 of 8 categories.
+
+Empty categories mean the UI filters return nothing, silently - the same class of
+invisible failure as the gradient photo fallback.
+
+### Budget
+
+The index ceiling was raised to **260,000 chars** on Netanel's decision (2026-07-27).
+Index measured at 188,780 chars, so headroom is ~71,000 chars, about **495 places** at
+the measured 143.8 chars/place, or roughly 24 new cities. **Budget is not the
+constraint any more; verified research is.**
+
+### Standing rule for this programme
+
+Netanel chose **fully verified only**: no place ships without probed coordinates and a
+confirmed photo. Do not relax this to hit a number - the 151 broken photos in session
+(r)/(s) came from exactly that shortcut.
+
 ## Second-city / nature expansion (in progress)
 
 Goal: map each country beyond its one big city, nature-forward
