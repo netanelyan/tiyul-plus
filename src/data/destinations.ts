@@ -17635,6 +17635,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors', 'foodie'],
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=-43.3667,147.2833',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Aerial_perspective_of_the_isthmus_of_Bruny_Island.jpg/500px-Aerial_perspective_of_the_isthmus_of_Bruny_Island.jpg',
       },
       {
         id: 'au-freycinet',
@@ -19110,6 +19112,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'families'],
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=45.8925,-59.985',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Forteresse_de_Louisbourg.jpg/500px-Forteresse_de_Louisbourg.jpg',
       },
       {
         id: 'ca-grand-pre',
@@ -19281,6 +19285,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'families'],
         priceLevel: 3,
         externalUrl: 'https://maps.google.com/?q=44.47528,-72.70222',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Stowe_Community_Church_2022.jpg/500px-Stowe_Community_Church_2022.jpg',
       },
       {
         id: 'us-mount-mansfield',
@@ -19330,6 +19336,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors', 'families'],
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=41.83722,-69.97278',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Nauset-light-cape-cod.jpg/500px-Nauset-light-cape-cod.jpg',
       },
     ],
     itinerary: [
@@ -19718,6 +19726,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=47.92861,23.8925',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/2023-APR_-_Memorialul_Sighet_(Exterior)_IMG_09.jpg/500px-2023-APR_-_Memorialul_Sighet_(Exterior)_IMG_09.jpg',
       },
     ],
     itinerary: [
@@ -24987,6 +24997,8 @@ export const destinations: Destination[] = [
         tags: ['families', 'romantic'],
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=39.28333282470703,20.39999961853027',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Parga_Panorama_Peer.jpg/500px-Parga_Panorama_Peer.jpg',
       },
     ],
     itinerary: [
@@ -25861,6 +25873,8 @@ export const destinations: Destination[] = [
         priceLevel: 3,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=47.52,13.66',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Krippenstein_Dachstein_panorama_description.jpg/500px-Krippenstein_Dachstein_panorama_description.jpg',
       },
       {
         id: 'at-bad-ischl',
@@ -26365,6 +26379,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'foodie'],
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=6.966667,80.76667',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Nuwara_Eliya.jpg/500px-Nuwara_Eliya.jpg',
       },
       {
         id: 'lk-horton-plains',
