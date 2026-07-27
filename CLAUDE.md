@@ -299,6 +299,49 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-27 (m) - The deployment freeze was mine: an ignoreCommand that skipped everything
+
+Netanel, looking at a wall of red X marks: *"i dont understand why they are not
+being deployed, maybe that's the vercel plan?"* Reasonable guess. Wrong culprit -
+it was me, and this is the second wrong deployment diagnosis I have written today.
+
+**The evidence that settled it, in two fetches.** `/countries/bolivia` was live;
+`/countries/seychelles`, from a later commit, returned 404. So production was
+pinned to `d0965d7` - and `d0965d7` is the last commit before `08c1c4d`, where I
+widened the Vercel `ignoreCommand` from two literal filenames to the wildcard
+`':(exclude)*.md'`. Everything after it showed a red X with **no deployment row**,
+including data commits touching `src/data/destinations.ts` that must always build.
+
+**Mechanism.** "Everything skipped" is what an exclude-only pathspec that matches
+nothing produces: `git diff --quiet` finds no differences, exits 0, and **0 means
+SKIP**. I tested that command in this container against three real commits and it
+classified all three correctly, so the wildcard evidently does not resolve the
+same way in Vercel's build image. **Testing a build-config command somewhere other
+than where it runs is not testing it.**
+
+**Reverted by deleting the file, not by narrowing it back**, for three reasons:
+
+1. **The premise was already wrong.** I added it to conserve deployments against a
+   Hobby-plan cap I had inferred from red X marks - and entry (j), written an hour
+   earlier, already records that the cap theory was wrong and the X's were
+   superseded commits. It optimised a problem that did not exist.
+2. **It made the commit list look broken by design.** A skipped build reports as a
+   red X on GitHub, so every docs-only commit would have shown as a failure
+   forever - while Netanel was already spending the afternoon asking why commits
+   show X.
+3. A wasted build on a session-log commit costs 45 seconds and nothing else. There
+   was no real saving to protect.
+
+Confirmed after the revert: Seychelles renders in production, so the workspace
+simplification, the og:image fix and the data session's backlog all shipped
+together.
+
+**The rule worth carrying:** never put a command in build config that decides
+whether to deploy unless it has run in the build environment at least once. And
+when a change to deployment plumbing is followed by deployments stopping, suspect
+the change before suspecting the platform - the timing was visible in the commit
+list the whole time.
+
 ### 2026-07-27 (l) - "It looks like flying an airplane": measured the cockpit, then uncrowded it
 
 Netanel, as the founder looking at his own trip screen: *"i fear this looks like
