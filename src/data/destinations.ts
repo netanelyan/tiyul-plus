@@ -2546,6 +2546,22 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=Temple+of+Poseidon+Sounion',
       },
+      {
+        id: 'ath-delphi',
+        name: 'דלפי',
+        nameLocal: 'Delphi / Δελφοί',
+        category: 'attraction',
+        lat: 38.4794,
+        lng: 22.4936,
+        description:
+          'האתר שהיוונים ראו בו את טבור העולם, על מדרון הר פרנסוס. כאן ישבה הפיתיה ומסרה את הנבואות שהכריעו מלחמות. האתר הארכיאולוגי והמוזיאון הצמוד לו הם שני כרטיסים ושעתיים כל אחד, וההליכה במעלה הדרך הקדושה תלולה. כשעתיים וחצי נסיעה מאתונה.',
+        rating: 4.7,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=38.4794,22.4936',
+        priceLevel: 2,
+        tags: ['history', 'outdoors'],
+        mustSee: true,
+      },
     ],
     itinerary: [
       {
@@ -2581,6 +2597,13 @@ export const destinations: Destination[] = [
         placeIds: ['ath-sounion', 'ath-anafiotika', 'ath-philopappos'],
         notes:
             'יציאה לכף סוניון (כשעה וחצי באוטובוס KTEL מהמרכז) למקדש פוסידון. מי שנשאר בעיר: אנפיוטיקה הקיקלדית וגבעת פילופאפוס מול האקרופוליס.',
+      },
+      {
+        day: 6,
+        title: 'הרחבה: דלפי',
+        placeIds: ['ath-delphi'],
+        notes:
+          'יום שלם מחוץ לעיר, כשעתיים וחצי לכל כיוון. יש אוטובוס KTEL ישיר מתחנת ליוסיון, אבל רכב שכור נותן חופש לעצור בערבארובה בדרך. האתר חשוף לשמש ותלול, ולכן בוקר עדיף על צהריים.',
       },
     ],
     practical: {
@@ -5282,6 +5305,22 @@ export const destinations: Destination[] = [
         durationMin: 45,
         externalUrl: 'https://maps.google.com/?q=Chabad+Almaty',
       },
+      {
+        id: 'ala-kolsai',
+        name: 'אגמי קולסאי',
+        nameLocal: 'Kolsai Lakes / Колсай көлдері',
+        category: 'nature',
+        lat: 42.96446,
+        lng: 77.582245,
+        description:
+          'שרשרת של שלושה אגמים הרריים בפארק לאומי בטיאן שאן, מוקפים יערות אשוח. האגם הראשון נגיש ברכב, השני בהליכה של כשלוש שעות במעלה, והשלישי כבר קרוב לגבול קירגיזסטן ודורש אישור. כארבע וחצי שעות נסיעה מאלמטי, ולכן זה יום שלם או לינה בכפר סאטי.',
+        rating: 4.7,
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=42.96446,77.582245',
+        priceLevel: 1,
+        tags: ['outdoors', 'romantic'],
+        mustSee: true,
+      },
     ],
     itinerary: [
       {
@@ -5304,6 +5343,13 @@ export const destinations: Destination[] = [
         placeIds: ['ala-charyn', 'ala-chabad'],
         notes:
           'טיול יום מלא מזרחה לקניון צ׳ארין (כ-200 ק"מ, נהג או טיול מאורגן) - הליכה בעמק הטירות בין עמודי הסלע האדומים. לתאם ארוחות כשרות מראש עם בית חב"ד.',
+      },
+      {
+        day: 4,
+        title: 'אגמי קולסאי',
+        placeIds: ['ala-kolsai'],
+        notes:
+          'יום ארוך מאוד ביציאה והחזרה באותו יום, כארבע וחצי שעות לכל כיוון בדרך הררית. מי שיכול לינה אחת בכפר סאטי מרוויח בוקר שקט על האגם. יוצאים לפנות בוקר, ובחורף הדרך עלולה להיסגר.',
       },
     ],
     practical: {
