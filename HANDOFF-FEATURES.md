@@ -17,6 +17,10 @@ same repo at the same time, so read section 2 before you touch anything.
 | `photo-report.json` | **data session (not you)** |
 | Everything else: components, routes, `src/lib/**`, API routes, styling, config | **you** |
 
+One exception already taken: the data session made a small surgical fix in
+`src/app/api/chat/route.ts` (the `runAgent` catch block - see §6). Pull before
+you touch that file. Everything else in your column is untouched.
+
 The data session is filling 610 missing place photos and then resuming
 catalog expansion. Those are enormous mechanical diffs in two files. If you
 also edit them, every merge is a conflict resolved by hand across thousands
@@ -153,6 +157,15 @@ it is current as of commit `a1b92c0`. The short version:
   guesses the city centre.
 - `f3e4435` + `0cd8087` - image attachments in the agent chat, with a daily
   cap.
+- **The silent-fallback bug in `/api/chat`.** When `runAgent` threw, the catch
+  block called the keyless rule-based responder. Its no-destination branch is a
+  first-time greeting listing every country, so a mid-conversation API failure
+  looked exactly like the agent forgetting the whole trip. The catch now logs
+  the error (it was `catch {}` before, which is why nothing was diagnosable),
+  retries once on a transient error, and otherwise says plainly that something
+  broke and the trip is safe. The rule-based responder is now only used when
+  there is genuinely no `ANTHROPIC_API_KEY`. If you see other `catch {}` blocks
+  swallowing agent errors, they deserve the same treatment.
 
 ## 7. The feature backlog (from `TODO.md`)
 

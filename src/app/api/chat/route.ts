@@ -823,6 +823,22 @@ function singleMessageStream(text: string): Response {
   });
 }
 
+/**
+ * תקלה בתור של הסוכן. חשוב שההודעה תגיד שהטיול עצמו לא נפגע: הטיול חי
+ * ב-localStorage אצל הלקוח ולא נשלח לשום מקום בתור שנכשל, אז אין מה לאבד.
+ */
+const AGENT_ERROR_MESSAGE =
+  'משהו השתבש אצלי באמצע התשובה 🙏\n\n' +
+  'הטיול שלכם לא נפגע - הוא שמור כמו שהיה. אפשר לנסות לשלוח את אותה הודעה שוב.';
+
+/** שגיאות שסביר שיעברו בניסיון נוסף: עומס, הגבלת קצב ותקלות שרת */
+function isTransient(err: unknown): boolean {
+  const status = (err as { status?: number })?.status;
+  if (typeof status === 'number') return status === 429 || status >= 500;
+  const text = String((err as { message?: string })?.message ?? err).toLowerCase();
+  return /overloaded|rate.?limit|timeout|econnreset|fetch failed|socket hang up/.test(text);
+}
+
 const QUOTA_MESSAGE =
   'הגעתם למכסת השימוש היומית בסוכן החכם של התוכנית החינמית 🙏\n\n' +
   'המכסה מתאפסת פעם ביום. בינתיים אפשר להמשיך לערוך את הטיול ידנית במתכנן - להוסיף ימים, להזיז עצירות ולפתוח ניווט.\n\n' +
@@ -897,14 +913,33 @@ export async function POST(request: Request) {
         const meter = { units: 0 };
         try {
           await runAgent(messages, clientTrip, send, kosherHint, explored, meter);
-        } catch {
-          // נפילה חיננית למנוע החוקים - רק אם עוד לא הוזרם טקסט
-          if (!emitted) sendRuleBased(last, send);
+        } catch (err) {
+          // אסור להשתיק: בלי הלוג הזה אי אפשר לדעת מה נפל בפרודקשן
+          console.error('[chat] agent turn failed', err);
+
+          // ניסיון שני, רק אם עוד לא הוזרם טקסט: רוב הכשלים כאן הם
+          // עומס או שגיאה חולפת של ה-API, ולמטייל אין שום דרך לדעת זאת.
+          let recovered = false;
+          if (!emitted && isTransient(err)) {
+            try {
+              await runAgent(messages, clientTrip, send, kosherHint, explored, meter);
+              recovered = true;
+            } catch (retryErr) {
+              console.error('[chat] agent retry failed', retryErr);
+            }
+          }
+
+          // אם גם זה נכשל: אומרים את האמת. במפורש לא נופלים כאן למנוע
+          // החוקים - הענף שלו ל"לא זוהה יעד" הוא ברכת פתיחה שמונה את כל
+          // המדינות, ובאמצע שיחה היא נקראת כאילו הסוכן שכח את כל ההקשר
+          // (וזה בדיוק מה שקרה למטייל שביקש לערוך את הטיול לפי המלון).
+          if (!emitted && !recovered) send({ type: 'text', text: AGENT_ERROR_MESSAGE });
         } finally {
           // הרישום קורה גם כשהתור נכשל באמצע - הטוקנים כבר נצרכו
           recordAiUnits(caller.id, meter.units);
         }
       } else {
+        // המצב חסר המפתח: כאן ברכת הפתיחה של מנוע החוקים במקומה
         sendRuleBased(last, send);
       }
       send({ type: 'done' });
