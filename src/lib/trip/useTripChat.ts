@@ -20,6 +20,42 @@ import { authHeader } from '@/lib/auth/client';
 
 export type ChatMessage = StoredChatMessage;
 
+/** תשובת HTTP שאינה ok - הסטטוס נשמר כדי שההודעה למשתמש תהיה נכונה */
+class HttpError extends Error {
+  constructor(
+    readonly status: number,
+    readonly retryAfterSec: number,
+  ) {
+    super(`http ${status}`);
+    this.name = 'HttpError';
+  }
+}
+
+/**
+ * הודעת כישלון לפי הסיבה האמיתית.
+ *
+ * "אופס, משהו השתבש" על הגבלת קצב היא לא רק לא מדויקת - היא מזיקה:
+ * המטייל מבין ממנה שכדאי לנסות שוב מיד, וזה בדיוק מה שמאריך את החסימה.
+ */
+function failureMessage(err: unknown): string {
+  const status = err instanceof HttpError ? err.status : 0;
+  if (status === 429) {
+    const wait = err instanceof HttpError && err.retryAfterSec > 0 ? err.retryAfterSec : 60;
+    return `שלחתי יותר מדי בקשות בזמן קצר 🙏 חכו בבקשה ${wait} שניות ונסו שוב - הטיול שלכם שמור.`;
+  }
+  if (status === 413) {
+    return 'ההודעה כבדה מדי בשבילי 😅 נסו בלי התמונה, או עם תמונה קטנה יותר.';
+  }
+  if (status >= 500) {
+    return 'השרת שלי לא זמין כרגע 🙏 הטיול שלכם שמור - נסו לשלוח את ההודעה שוב בעוד רגע.';
+  }
+  if (status >= 400) {
+    return 'משהו בבקשה לא היה תקין 🙏 נסו לנסח מחדש, או לרענן את הדף אם זה חוזר.';
+  }
+  // שגיאת רשת/סטרים - אין סטטוס
+  return 'נראה שהחיבור נקטע 🙏 הטיול שלכם שמור - בדקו את החיבור ונסו שוב.';
+}
+
 export interface TripChat {
   messages: ChatMessage[];
   input: string;
@@ -118,7 +154,14 @@ export function useTripChat(options?: {
           explored: exploredRef.current.length > 0 ? exploredRef.current : undefined,
         }),
       });
-      if (!res.ok || !res.body) throw new Error('bad response');
+      // קוד הסטטוס חייב להגיע להודעה למשתמש. עד עכשיו כל תשובה שאינה
+      // ok נזרקה כ-'bad response' ונתפסה ב-catch ריק, כך ש**הגבלת קצב
+      // (429) נראתה למטייל בדיוק כמו קריסה** - "אופס, משהו השתבש" -
+      // והוא לחץ שוב, מה שרק החמיר את ההגבלה. בתוכנית החינמית הפרץ הוא
+      // 6 בקשות בדקה, כך שזה מסלול שקורה בפועל.
+      if (!res.ok || !res.body) {
+        throw new HttpError(res.status, Number(res.headers.get('Retry-After')) || 0);
+      }
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -185,12 +228,11 @@ export function useTripChat(options?: {
         }
       }
       if (!appended) throw new Error('empty stream');
-    } catch {
+    } catch (err) {
+      // בלי הלוג הזה אי אפשר לדעת מה נפל אצל משתמש אמיתי
+      console.error('[chat] request failed', err);
       if (!appended) {
-        setMessages((m) => [
-          ...m,
-          { role: 'assistant', content: 'אופס, משהו השתבש. נסו שוב.' },
-        ]);
+        setMessages((m) => [...m, { role: 'assistant', content: failureMessage(err) }]);
       }
     } finally {
       setLoading(false);

@@ -157,6 +157,32 @@ export const AGENT_TOOLS = [
     },
   },
   {
+    name: 'set_day_city',
+    description:
+      "Move an EXISTING day to a different city, keeping the trip and every other day intact. This is how you restructure a trip - e.g. the traveler booked a hotel in Bratislava and wants days 1-2 there instead of the Tatras. USE THIS INSTEAD OF rebuilding the trip with create_trip_full: rebuilding throws away everything the traveler already has. The day's current stops belong to the old city and are cleared - the tool tells you exactly which ones - so call set_day_places for that day in the SAME turn to fill it from the new city.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        dayNumber: dayNumberSchema,
+        citySlug: { type: 'string', description: 'The city slug this day should move to' },
+      },
+      required: ['dayNumber', 'citySlug'],
+    },
+  },
+  {
+    name: 'move_day',
+    description:
+      'Reorder days: take the day at fromDay and put it at toDay (both 1-based), shifting the rest. Use it to fix the visit order - e.g. the arrival city must be day 1, or a warned zigzag needs the days regrouped per city. Stops travel with the day; nothing is lost. Prefer this over rebuilding the trip.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        fromDay: { type: 'integer', description: '1-based day number to move' },
+        toDay: { type: 'integer', description: '1-based position it should end up at' },
+      },
+      required: ['fromDay', 'toDay'],
+    },
+  },
+  {
     name: 'add_place',
     description:
       "Add a place as the last stop of a day. placeId must be an id that exists in the DATA for that day's city - never invent ids.",
@@ -387,6 +413,25 @@ export function sanitizeDayNote(
     return mode;
   });
   return { note: changed ? cleaned.replace(/\s{2,}/g, ' ').trim() : note, changed };
+}
+
+/**
+ * סדר הערים נגזר מסדר הימים, ולא נצבר לפי סדר ההוספה.
+ *
+ * זה נחוץ לכלים שמשנים מבנה (set_day_city / move_day): אחרי שיום עובר
+ * עיר או מחליף מקום, `citySlugs` הוא מה שמזין את רגלי המעבר בין ערים,
+ * את סיכום המסלול ואת בורר הערים - ואם הוא נשאר בסדר ההוספה המקורי,
+ * הטיול יראה נכון בימים אבל שגוי בנתיב.
+ */
+function citySlugsFromDays(days: TripDay[]): string[] {
+  return [...new Set(days.map((d) => d.citySlug))];
+}
+
+/** "יום 1: ברטיסלבה · יום 2: וינה" - כדי שהמודל יראה את המבנה שיצא */
+function dayOrderSummary(days: TripDay[]): string {
+  return days
+    .map((d, i) => `יום ${i + 1}: ${destOf(d.citySlug)?.name ?? d.citySlug}`)
+    .join(' · ');
 }
 
 /** הערה שהמודל כתב, מנוקה ומקוצרת - ראו sanitizeDayNote */
@@ -705,6 +750,74 @@ export function executeAgentTool(
         ok: true,
         message: `יום ${n} הוסר. נשארו ${days.length} ימים (המספור התעדכן).`,
         action: `הסרתי את יום ${n} (${cityName})`,
+      };
+    }
+
+    /**
+     * העברת יום קיים לעיר אחרת.
+     *
+     * הכלי הזה נולד מכשל אמיתי: מטייל הזמין מלון בברטיסלבה וביקש שימים
+     * 1-2 יהיו שם במקום בהרי הטטרה. ימים מקובעים לעיר, ו-set_day_places
+     * דוחה כל מקום שאינו בעיר של אותו יום - ולכן **לא היה שום מסלול חוקי**
+     * לבקשה הזאת חוץ מ-create_trip_full, שמוחק את הטיול ובונה מחדש.
+     * הסוכן אמר בדיוק את זה ("המערכת לא מאפשרת לי"), וזה היה נכון; הדבר
+     * היחיד שהוא כן היה יכול לעשות היה לעדכן הערות, ולכן זה מה שהוא עשה.
+     */
+    case 'set_day_city': {
+      if (!needTrip(trip)) return fail(trip, 'אין טיול פעיל.');
+      const day = dayAt(trip, input.dayNumber);
+      if (!day) return fail(trip, `dayNumber מחוץ לטווח. בטיול יש ${trip.days.length} ימים.`);
+      const slug = String(input.citySlug ?? '');
+      const dest = destOf(slug);
+      if (!dest) return fail(trip, `citySlug לא מוכר: "${slug}". הערכים החוקיים: ${validSlugs()}.`);
+      const n = Number(input.dayNumber);
+      if (day.citySlug === slug) {
+        return fail(trip, `יום ${n} כבר ב${dest.name} - אין מה לשנות.`);
+      }
+      const fromName = destOf(day.citySlug)?.name ?? day.citySlug;
+      // העצירות שייכות לעיר הקודמת ולכן נמחקות. שמות מדווחים במפורש
+      // כדי שהסוכן יוכל לומר למטייל מה ירד ולמלא את היום מיד.
+      const dropped = day.placeIds.map((id) => placeName(day.citySlug, id));
+      const days = trip.days.map((d) =>
+        d.id === day.id ? { ...d, citySlug: slug, placeIds: [] } : d,
+      );
+      const next: Trip = { ...trip, days, citySlugs: citySlugsFromDays(days) };
+      const droppedNote =
+        dropped.length > 0
+          ? ` העצירות שהיו בו (${dropped.join(', ')}) הוסרו כי הן ב${fromName} - אמור זאת למטייל.`
+          : '';
+      return {
+        trip: next,
+        ok: true,
+        message:
+          `יום ${n} עבר מ${fromName} ל${dest.name}.${droppedNote} עכשיו קרא ל-set_day_places ליום ${n} ומלא אותו במקומות של ${dest.name} באותו תור - אסור להשאיר יום ריק. סדר הימים: ${dayOrderSummary(days)}.${PROSE_DISCIPLINE}`,
+        action: `העברתי את יום ${n} ל${dest.name}`,
+      };
+    }
+
+    /** שינוי סדר הימים. העצירות נעות עם היום - שום דבר לא נמחק. */
+    case 'move_day': {
+      if (!needTrip(trip)) return fail(trip, 'אין טיול פעיל.');
+      const total = trip.days.length;
+      const from = Number(input.fromDay);
+      const to = Number(input.toDay);
+      if (!Number.isInteger(from) || from < 1 || from > total) {
+        return fail(trip, `fromDay מחוץ לטווח. בטיול יש ${total} ימים.`);
+      }
+      if (!Number.isInteger(to) || to < 1 || to > total) {
+        return fail(trip, `toDay מחוץ לטווח. בטיול יש ${total} ימים.`);
+      }
+      if (from === to) return fail(trip, 'fromDay ו-toDay זהים - אין מה להזיז.');
+      const days = [...trip.days];
+      const [moved] = days.splice(from - 1, 1);
+      days.splice(to - 1, 0, moved);
+      const next: Trip = { ...trip, days, citySlugs: citySlugsFromDays(days) };
+      const cityName = destOf(moved.citySlug)?.name ?? moved.citySlug;
+      return {
+        trip: next,
+        ok: true,
+        message: `יום ${from} (${cityName}) הועבר למקום ${to}. סדר הימים עכשיו: ${dayOrderSummary(days)}.${PROSE_DISCIPLINE}`,
+        action: `הזזתי את ${cityName} מיום ${from} ליום ${to}`,
       };
     }
 

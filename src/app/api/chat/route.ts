@@ -148,12 +148,13 @@ TRIP EDITING - YOU ARE AN AGENT WITH TOOLS
 - placeIds must come from the DATA. If the user names a place that is not in the DATA, say honestly that it's not in your curated data and offer the closest real alternatives - NEVER invent an id.
 - Building a NEW trip: use create_trip_full - ONE call with the name and every day's places, in geographic order (relaxed pace ≈ 3-4 stops/day, packed ≈ 5-6). Honor stored preferences: kosher=true → include a kosher-food place each day where the city has one; kosher not set → include NO kosher places.
 - ROUTE ORDER IS GEOGRAPHY, NOT A LIST. Day 1 starts where the user actually lands (if they said where they arrive - that city is day 1, no exceptions) and the last day ends at the departure city; when arrival = departure, plan a loop that travels outward and returns only at the end. Each city gets ONE contiguous block of days - never leave a city and come back to it mid-trip. Order the cities so each hop is the short next step, not a crossing of the whole country. After create_trip_full the tool result reports the REAL route with computed distances; if it carries a זגזוג warning, you got the order wrong - fix it with set_day_places in the SAME turn before replying.
+- RESTRUCTURING AN EXISTING TRIP IS NOT A REBUILD. To change which city a day is in, call set_day_city; to change the order of the days, call move_day. Both keep the rest of the trip exactly as it is, neither is destructive, and neither needs the user's confirmation - just do it and say what changed. Example: the traveler booked a hotel in Bratislava and wants days 1-2 there instead of the Tatras → set_day_city for day 1, set_day_places to fill it, set_day_city for day 2, set_day_places, then move_day only if the order still needs fixing. NEVER answer a restructuring request with "המערכת לא מאפשרת לי", never offer to wipe and rebuild the trip for it, and never settle for editing the day's notes instead of actually moving the day - notes are not a substitute for the change the user asked for.
 - NEVER leave a day empty at the end of your turn. If you used create_trip/add_day, fill every day with set_day_places before finishing. The granular tools (add_place, remove_place, move_place) are for small edits only.
 - Inventory is limited: each city has only 8-12 curated places, and a place may appear ONCE in the whole trip. For long stays in one city plan fewer stops per day (2-3) or lighter days with a good note - if places genuinely run out, say so honestly. Plan the distribution BEFORE calling create_trip_full so the call passes validation the first time.
 - NEVER end your turn announcing a build or a fix you have not executed ("אני בונה עכשיו", "אני מתקן") - make the corrected tool call in the same turn, then summarize.
 - If the destination(s) and trip length are known - BUILD IMMEDIATELY with sensible defaults (relaxed pace, even day split between cities, no assumed preferences) and note briefly that everything is adjustable. Do NOT ask clarifying questions first in that case. Ask 1-2 short questions only when the destination or the number of days is genuinely missing; small edits need no questions. When a question has a small closed set of answers (מספר ימים, יעד, מי נוסע) also call suggest_quick_replies with 2-4 short Hebrew options.
 - NEVER ask about kashrut, Shabbat, or any religious observance. These preferences arrive silently from UI toggles (or the user volunteering them) and appear in CURRENT TRIP preferences - read them fresh every turn and apply them without commenting on the change. If kosher is not set, do not raise the topic AND do not put kosher-food/kosher-market places into the itinerary at all - not even one, not as a "nice option". Recommend ordinary places instead. (The tool layer strips kosher places from create_trip_full/set_day_places when the preference is not set, so planning them is wasted effort.) Only when the user explicitly asks about kosher - or sets the preference - do kosher places enter the plan.
-- Destructive changes - remove_day, or create_trip/create_trip_full when a trip already exists - require confirmation: describe what will be lost and ask; call the tool only after the user confirms in their next message.
+- Destructive changes - remove_day, or create_trip/create_trip_full when a trip already exists - require confirmation: describe what will be lost and ask; call the tool only after the user confirms in their next message. But reaching for them at all is almost always the wrong move on an existing trip: moving a day to another city or reordering days is set_day_city / move_day, which destroy nothing. create_trip_full on a live trip is a last resort, for "start over completely", not for restructuring.
 - When the user states a lasting preference (כשרות, שבת, תקציב, קצב, מי נוסע, תחומי עניין) call set_preferences, and let it shape every recommendation from then on. Preferences are options, never assumptions - store only what was actually said.
 - After making changes, wrap up with one or two natural Hebrew sentences summarizing what you did. The trip panel in the UI updates live, so don't dump the full itinerary as text.
 
@@ -317,6 +318,10 @@ function toolStatusText(name: string, input: Record<string, unknown>): string {
       return 'מזיז עצירה…';
     case 'remove_day':
       return 'מוחק יום…';
+    case 'set_day_city':
+      return `מעביר את יום${day} לעיר אחרת…`;
+    case 'move_day':
+      return 'משנה את סדר הימים…';
     case 'rename_trip':
       return 'מעדכן את שם הטיול…';
     case 'set_preferences':
@@ -580,12 +585,17 @@ async function runAgent(
   // (ששיקוף מהצד גם רמז כשרות שדורש להחזיר את הטיול ללקוח, גם בלי כלי).
   let toolBuiltSomething = false;
   let forcedBuildRetry = false;
+  // האם התור כבר נקטע פעם אחת בגלל max_tokens (מרחיב את התקרה ומנחה
+  // לקריאות קטנות יותר, פעם אחת בלבד - כדי שלא ייווצר לופ)
+  let truncatedRetry = false;
   // פירוט רק לערים שהשיחה נוגעת בהן (ראו buildGroundingDetail); היעדים
   // שנחקרו מצורפים בכל איטרציה מחדש - חקירה באיטרציה N זמינה ב-N+1
   const baseDetail = buildGroundingDetail(relevantCitySlugs(messages, clientTrip));
 
   for (let iter = 0; iter < 16; iter++) {
-    const maxTokens = editIntent || iter > 0 ? 2048 : 1024;
+    // אחרי קטיעה נותנים תקרה גבוהה יותר: ההנחיה לקריאות קטנות היא העיקר,
+    // אבל אין סיבה להיחתך שוב על אותה מגבלה בזמן שמתקנים.
+    const maxTokens = truncatedRetry ? 4096 : editIntent || iter > 0 ? 2048 : 1024;
     if (iter === 0) send({ type: 'status', text: 'קורא את הבקשה…' });
     const turn = await runClaudeTurn(
       apiMessages,
@@ -601,6 +611,20 @@ async function runAgent(
     full += turn.text;
 
     if (turn.stopReason !== 'tool_use') {
+      // max_tokens אינו tool_use, ולכן עד עכשיו הוא פשוט שבר את הלולאה:
+      // קריאת כלי שנקטעה באמצע ה-JSON נזרקה בשקט, בלי שגיאה ובלי ניסיון
+      // נוסף, והמטייל קיבל כלום. זה פוגע דווקא בבנייה מחדש של טיול שלם -
+      // ה-JSON הגדול ביותר שהמודל מפיק, ובעברית שהיא יקרה בטוקנים.
+      if (turn.stopReason === 'max_tokens' && !truncatedRetry) {
+        truncatedRetry = true;
+        if (turn.text) apiMessages.push({ role: 'assistant', content: turn.text });
+        apiMessages.push({
+          role: 'user',
+          content:
+            'תזכורת מערכת: התשובה הקודמת שלך נקטעה באמצע כי היא הייתה ארוכה מדי, וקריאת הכלי שהתחלת לא הושלמה ולכן לא בוצעה. עשה את אותה עבודה בכמה קריאות כלי קטנות במקום אחת גדולה - למשל set_day_city ואחריו set_day_places ליום אחד בכל פעם, במקום create_trip_full לכל הטיול - וכתוב תשובה קצרה.',
+        });
+        continue;
+      }
       // הדפוס הזה קורה בפועל: המודל מתאר מסלול יום-אחר-יום בטקסט (בפורמט
       // **יום N** שהפרומפט מלמד לתשובות המלצה) אבל שוכח לקרוא בפועל לכלי
       // שבונה את הטיול - הצ׳אט "מבטיח" תוכנית, אבל הפאנל/המפה נשארים ריקים
