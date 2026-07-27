@@ -37,9 +37,25 @@ export async function generateMetadata({
     .filter(Boolean)
     .join(' · ');
   const stops = shared.days.reduce((n, d) => n + d.placeIds.length, 0);
+  const title = `${shared.name} | טיול+`;
+  const description = `מסלול של ${shared.days.length} ימים ו-${stops} עצירות ב${cities} - נבנה בטיול+, סוכן הנסיעות החכם.`;
+  // openGraph נכתב במפורש ולא בהסתמכות על ה-layout: מטא-דאטה ב-Next
+  // מתמזגת לפי שדה, כך ש-title/description כאן **לא** מחלחלים לתוך
+  // openGraph של האב - והכרטיס בוואטסאפ היה מציג את שם האתר הגנרי במקום
+  // את שם הטיול. הקישור הזה הוא בדיוק מה שנשלח בוואטסאפ, אז זה השדה
+  // שהכי חשוב שיהיה מדויק.
   return {
-    title: `${shared.name} | טיול+`,
-    description: `מסלול של ${shared.days.length} ימים ו-${stops} עצירות ב${cities} - נבנה בטיול+, סוכן הנסיעות החכם.`,
+    title,
+    description,
+    openGraph: {
+      type: 'article',
+      locale: 'he_IL',
+      siteName: 'טיול+',
+      title,
+      description,
+      images: [{ url: '/og.png', width: 1200, height: 630, alt: 'טיול+' }],
+    },
+    twitter: { card: 'summary_large_image', title, description, images: ['/og.png'] },
   };
 }
 

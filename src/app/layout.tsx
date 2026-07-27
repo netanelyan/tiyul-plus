@@ -12,10 +12,48 @@ import './globals.css';
 // מוחל את הגדרות הנגישות השמורות עוד לפני הצביעה הראשונה (בלי הבזק).
 const A11Y_BOOT = `(function(){try{var s=JSON.parse(localStorage.getItem('tiyul-plus:a11y')||'{}');var el=document.documentElement;if(s.contrast)el.classList.add('a11y-contrast');if(s.grayscale)el.classList.add('a11y-grayscale');if(s.underlineLinks)el.classList.add('a11y-underline-links');if(s.highlightLinks)el.classList.add('a11y-highlight-links');if(s.spacing)el.classList.add('a11y-spacing');if(s.bigCursor)el.classList.add('a11y-cursor');if(s.noMotion)el.classList.add('a11y-no-motion');if(s.fontLevel)el.style.setProperty('--a11y-font-scale',String(1+s.fontLevel*0.12));}catch(e){}})();`;
 
+const SITE_URL = 'https://www.tiyulplus.com';
+const SITE_TITLE = 'טיול+ | סוכן הנסיעות החכם לישראלים';
+const SITE_DESCRIPTION =
+  'לא עוד מדריך לגלול בו - סוכן AI שבונה לכם טיול אמיתי: מספרים לו לאן ועם מי, והוא מתכנן מסלול יום-אחרי-יום על מפה אינטראקטיבית, בעברית - כולל שכבת אוכל כשר וכל מה שצריך לדעת מנתב"ג: ויזות, סים ותשלומים.';
+
+/**
+ * תצוגה מקדימה בוואטסאפ ובפייסבוק.
+ *
+ * ## הבאג
+ *
+ * נתנאל שלח קישור לאתר בוואטסאפ וקיבל את **הלוגו של Vercel** - עיגול שחור
+ * עם משולש - ליד הכותרת והתיאור הנכונים של טיול+. שני דברים הרכיבו את זה:
+ *
+ * 1. לא היה `og:image` בכלל באתר, ולכן הסורק של וואטסאפ נפל חזרה לאייקון.
+ * 2. `src/app/favicon.ico` היה עדיין **ברירת המחדל של create-next-app**,
+ *    כלומר המשולש של Next/Vercel. `icon.svg` (מטוס הנייר) נוסף בסשן קודם
+ *    אבל ה-ico לא הוחלף, והדפדפן מעדיף את ה-svg - ולכן זה לא נראה באתר
+ *    עצמו והתגלה רק דרך שיתוף.
+ *
+ * שניהם תוקנו: `public/og.png` הוא תמונת שיתוף 1200x630 בפלטת האתר, וה-ico
+ * נבנה מהלוגו האמיתי. ההרכב **ממורכז בכוונה** - וואטסאפ חותך את התצוגה
+ * המקדימה הקטנה לריבוע, וכל עוד השם והסמל במרכז הם שורדים את החיתוך.
+ *
+ * `metadataBase` חייב להיות מוחלט: יחסי לא עובד בסורקים, וזה גם מה שהופך
+ * את `images: ['/og.png']` לכתובת מלאה.
+ */
 export const metadata: Metadata = {
-  title: 'טיול+ | סוכן הנסיעות החכם לישראלים',
-  description:
-    'לא עוד מדריך לגלול בו - סוכן AI שבונה לכם טיול אמיתי: מספרים לו לאן ועם מי, והוא מתכנן מסלול יום-אחרי-יום על מפה אינטראקטיבית, בעברית - כולל שכבת אוכל כשר וכל מה שצריך לדעת מנתב"ג: ויזות, סים ותשלומים.',
+  metadataBase: new URL(SITE_URL),
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    type: 'website',
+    locale: 'he_IL',
+    siteName: 'טיול+',
+    url: SITE_URL,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    // הרוחב והגובה מוצהרים כדי שוואטסאפ יבחר בכרטיס הגדול ולא בתמונה
+    // הזעירה שלצד הכותרת
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'טיול+ - סוכן הנסיעות החכם לישראלים' }],
+  },
+  twitter: { card: 'summary_large_image', title: SITE_TITLE, description: SITE_DESCRIPTION, images: ['/og.png'] },
 };
 
 export default function RootLayout({
