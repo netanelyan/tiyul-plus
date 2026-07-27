@@ -10,16 +10,56 @@ the CLAUDE.md session log.
 
 ## Sourcing coordinates from this sandbox
 
-**READ THIS BEFORE DECLARING A PLACE BLOCKED: `https://www.geonames.org/search.html?q=<name>&country=<ISO2>`
-is reachable through WebFetch and returns real decimal coordinates.** Found
-2026-07-27 after dbpedia spent hours returning 502s and read timeouts. It is
-now the second working source alongside `https://dbpedia.org/data/<Article>.json`,
-and it is strictly better in two ways: it does not truncate, so the large
-articles that block Paris and London are not a problem, and it covers places
-with no Wikipedia article at all. It does NOT carry photos, so dbpedia is
-still the source for those. Sources confirmed blocked, do not retry them:
-`www.wikidata.org/w/api.php` and `query.wikidata.org/sparql` (both
-"cache-only"), nominatim, photon, and the Wikipedia REST API. bash has no
+**READ THIS BEFORE DECLARING A PLACE BLOCKED.** Three sources work through
+WebFetch, in this order of preference:
+
+1. `https://dbpedia.org/data/<Article>.json` - one call returns thumbnail,
+   depictions, `geo:lat` and `geo:long`. Best for small and medium articles.
+   Truncates on very large ones (Eiffel Tower, British Museum), which is what
+   made Paris and London look blocked for weeks.
+2. `https://dbpedia.org/page/<Article>` - the HTML rendering of the same
+   record. Slower and more timeout-prone, but it survives truncation on large
+   articles, so it is the rescue path when (1) comes back without images.
+   It does NOT reliably expose coordinates. **Prompt technique that matters:**
+   do not ask for `dbo:thumbnail`. Ask "Search the whole page for strings
+   containing Special:FilePath. List every distinct filename." That reliably
+   pulls images out of a page the fetcher otherwise truncates.
+3. `https://www.geonames.org/search.html?q=<name>&country=<ISO2>` -
+   coordinates only, no photos, never truncates, and covers places with no
+   Wikipedia article at all.
+
+**Throttle to 2-3 concurrent WebFetch calls.** 502s and read timeouts cluster
+hard above that. Retrying the identical URL after a timeout often works; give
+up after two failures and move on.
+
+**Five dbpedia traps, all confirmed by example. Always read the returned
+filename before using it:**
+
+- **Coat of arms instead of a photograph.** Nearly every small European town:
+  `Pt-prg1.png`, `Banskogerb.jpg`, `Coat_of_Arms_of_Sigulda.svg`,
+  `Sombor-grb.png`, `Kuldiga_COA.svg`, `Flag_of_Krujë.gif`, `Grb_Cazina.svg`.
+  For towns, skip the thumbnail entirely and go straight to depictions.
+- **Corporate logo instead of a photograph.** `British_Museum_logo.svg`,
+  `Musée_d'Orsay_logo.svg`, `Skansen Logo.svg`, `Keukenhoflogo.svg`,
+  `Legoland_Billund_logo.svg`, `Anne_Frank_House_logo_SVG_replacement.svg`.
+- **WRONG CITY, same article name.** The dangerous one, because the data looks
+  confident. `Palace_of_the_Inquisition` returns the *Mexico City* palace;
+  `Cartagena_Cathedral` returns the *Spanish* Cartagena's. Check that the
+  depiction filenames name the city you meant.
+- **Montage or composite instead of a photograph.** `Marsaxlokk_montage.png`,
+  `Montaje_Cartagena,_Colombia.jpg`, `Valladolid_Yucatan_collage.jpg`.
+- **Ambiguous image.** Montmartre's thumbnail is a generic Paris rooftop view.
+  Leave the place photoless rather than shipping a picture of nothing.
+
+**GeoNames trap:** when GeoNames has no record it silently falls back to
+Wikipedia results for a *different* place - it returned Kortrijk for a
+"Markt Brugge" query. Always check the returned name matches what you asked.
+
+Sources confirmed blocked, do not retry them: `www.wikidata.org/w/api.php`,
+`query.wikidata.org/sparql`, `dbpedia.org/sparql`,
+`commons.wikimedia.org/w/api.php` (all cache-only or 403), nominatim, photon,
+the Wikipedia REST API, every language-specific dbpedia (SSL hostname
+mismatch), and `dbpedia.org/data/X.ntriples` (unreadable binary). bash has no
 outbound network in this sandbox at all.
 
 **Not a TODO, recorded so it stops being re-raised:** an audit flagged 134
@@ -77,37 +117,41 @@ Hungary→Lake Balaton, Slovakia→High Tatras.
       day-trips from the existing Abu Dhabi entry, or a Dubai/RAK hub.
 - [x] **Azerbaijan → Sheki / Qabala / Caucasus** (mountains, waterfalls,
       Laza) — from Baku.
-- [ ] **Kazakhstan → Kolsai & Kaindy Lakes / Charyn** — a 2nd Almaty-area
-      nature entry (Charyn is already IN Almaty; Kolsai/Kaindy are further).
-      BLOCKED on coordinates: `Kolsai_Lakes` and `Kaindy_Lake` on dbpedia
-      return an empty JSON object. Needs another source. Do NOT estimate.
+- [x] **Kazakhstan → Kolsai & Kaindy Lakes / Charyn** — DONE. Coordinates came
+      from GeoNames after dbpedia returned an empty object for both articles.
+      Lake Kaindy itself is still photoless; retry when dbpedia is healthy.
 - [x] **`samarkand` → `uzb-aral` placeholder coordinate - FIXED 2026-07-27.**
       It carried `lat: 45, lng: 60`, the rounded centroid of the Aral Sea,
       about 140km from Moynaq. dbpedia never answered for any spelling. Fixed
       from GeoNames (see the new source note below): Muynak is 43.76833,
       59.021389. The catalog validator now reports zero errors.
-- [ ] **London / United Kingdom is blocked for the same reason as Paris.**
-      Re-tested 2026-07-27: `Tower_of_London`, `British_Museum` and
-      `Buckingham_Palace` all return no geo:lat/geo:long because the article
-      is large enough that the fetcher truncates before the geo block.
-      `Tower_Bridge` returns a thumbnail but no coordinates. Build London from
-      a normal network, not from this sandbox.
-- [ ] **Re-try the whole blocked list against GeoNames.** Paris, London,
-      Kolsai/Kaindy (GeoNames has "Kolsai" at 42.96446, 77.582245 - spot
-      checked, not yet built), Delphi. None of these are hard; they were only
-      unreachable from the one source that was being used.
+- [x] **London / United Kingdom** — DONE 2026-07-27. The article-truncation
+      problem was real but not fatal: coordinates came from GeoNames and
+      photos from the `dbpedia.org/page/` HTML endpoint. Same fix unblocked
+      Paris and Delphi, which had been sitting on the same excuse.
+- [x] **Re-try the whole blocked list against GeoNames.** Paris, London,
+      Kolsai/Kaindy and Delphi all shipped. None of them were hard; they were
+      only unreachable from the one source that was being used.
 - [ ] **Countries with no destination at all** (candidates, in rough order of
-      how much an Israeli traveller would want them): Colombia, Egypt, Oman,
-      Singapore, Malta, Mongolia, Bhutan, North Macedonia, Ukraine, Moldova,
-      Belgium. India has one entry (Himachal) and Rajasthan is the obvious
-      second. Grounding-index headroom is about 20 destinations, so this list
-      is roughly the budget - pick deliberately rather than first-come.
-- [ ] **121 of 1,149 places carry no `photo`.** Breakdown: 33 kosher-food, 48
-      attraction, 17 nature, 11 museum, 4 kosher-market, 3 cafe, 3 viewpoint,
-      2 shopping. The kosher, cafe and shopping ones mostly have no Wikipedia
-      article and no freely licensed image exists - do not invent one, leave
-      them blank. The attraction/nature/museum ones are the real opportunity.
-- [ ] **103 of 131 destinations contain no kosher place.** Some of that is
+      how much an Israeli traveller would want them): Egypt, Oman, Mongolia,
+      Bhutan, North Macedonia, Ukraine, Moldova. India has one entry
+      (Himachal) and Rajasthan is the obvious second. **Done since this list
+      was written:** Colombia, Singapore, Malta, Belgium, France, UK.
+      Grounding-index headroom is now about 11 destinations (see the scale
+      note above), so this list is over budget - pick deliberately.
+- [ ] **78 of 1,216 places carry no `photo`.** Down from 121. Roughly 60 of
+      the remainder are Chabad houses and kosher restaurants with no freely
+      licensed image anywhere - treat those as permanently blank, do not keep
+      re-raising them. The tractable remainder: Cartagena (7, but dbpedia
+      serves wrong-city articles for it), Paris (Montmartre, Champs-Élysées,
+      Pompidou, Rue des Rosiers), London (Tower of London, Buckingham Palace,
+      Golders Green), Singapore (Merlion, Botanic Gardens, Raffles), plus
+      singles: Havelské tržiště, Café Louvre, New York Café, Samarkand,
+      Tashkent, Blue Lagoon Iceland, Nemunas Delta, Quva, Chust, Ostrožac
+      Castle, St John's Co-Cathedral, the Antwerp Jewish quarter, Lake Kaindy.
+      **Get the current list with `node /tmp/photoless.mjs`** rather than
+      trusting any hardcoded list in this file.
+- [ ] **103 of 137 destinations contain no kosher place.** Some of that is
       honest (there is no kosher food in Torres del Paine) and the copy should
       say so; some of it is just unresearched. Worth a pass that separates the
       two rather than treating every blank the same.
@@ -117,72 +161,26 @@ Hungary→Lake Balaton, Slovakia→High Tatras.
 - [x] **Cyprus → Paphos + Akamas/Avakas Gorge** (2nd Cyprus entry; direct
       PFO flights) — nature: Avakas Gorge, Blue Lagoon, Baths of Aphrodite.
 
-**Photos pending (added without `photo`, UI falls back to the gradient):**
-the sandbox has no egress to Wikimedia, so no image URL could be HTTP-verified
-and none was invented. Re-run `scripts/verify-photos.mjs` from a normal network
-and fill photos for: country `portugal`; destination `lisbon`; places
-`lis-jeronimos`, `lis-belem-tower`, `lis-sao-jorge`, `lis-alfama`, `lis-se`,
-`lis-comercio`, `lis-santa-justa`, `lis-oceanario`, `lis-pena`, `lis-mouros`,
-`lis-cabo-roca`, `vie-melk`, `vie-durnstein`, `prg-karlstejn`,
-`prg-kutna-hora`, `prg-sedlec`; country `poland`; destination `krakow`;
-places `kra-rynek`, `kra-mariacki`, `kra-wawel`, `kra-kazimierz`,
-`kra-schindler`, `kra-auschwitz`, `kra-wieliczka`, `kra-kosciuszko`,
-`kra-ojcow`, `kra-zakopane`, `rom-villa-deste`, `rom-villa-adriana`,
-`ath-sounion`, `bcn-montserrat`; destination `paphos` and places
-`paf-archaeological`, `paf-tombs`, `paf-castle`, `paf-romiou`, `paf-akamas`,
-`paf-coral-bay`, `paf-troodos`, `paf-kykkos`; country `netherlands`;
-destination `amsterdam`; places `ams-anne-frank`,
-`ams-portuguese-synagogue`, `ams-rembrandt-house`, `ams-begijnhof`,
-`ams-vondelpark`, `ams-zaanse-schans`, `ams-volendam`, `ams-keukenhof`,
-`ams-kinderdijk`; destination `amman-north`; places `amn-jerash`,
-`amn-citadel`, `amn-roman-theatre`, `amn-madaba`, `amn-nebo`, `amn-mujib`,
-`amn-umm-qais`, `amn-ajloun`, `amn-maghtas`; destination `sheki-caucasus`;
-places `she-palace`, `she-old-town`, `she-qabala`, `she-qirmizi`,
-`she-khinalug`, `she-shamakhi`; destination `uae-mountains`; places
-`uae-hatta`, `uae-jebel-jais`, `uae-liwa`, `uae-jebel-hafeet`, `uae-jahili`;
-places `bcn-tossa`, `bcn-cadaques`, `bud-szentendre`, `bud-visegrad`,
-`bts-devin`; country `romania`; destination `transylvania`; places
-`trn-bran`, `trn-peles`, `trn-sighisoara`, `trn-corvin`,
-`trn-transfagarasan`, `trn-balea`; country `turkey`; destination
-`cappadocia`; places `cpd-goreme`, `cpd-uchisar`, `cpd-urgup`,
-`cpd-derinkuyu`, `cpd-avanos`, `cpd-nevsehir`; country `ireland`;
-destination `west-ireland`; places `irw-moher`, `irw-galway`,
-`irw-kylemore`, `irw-connemara`, `irw-dun-aonghasa`, `irw-poulnabrone`;
-country `bulgaria`; destination `rila-pirin`; places `rlp-rila`,
-`rlp-seven-lakes`, `rlp-bansko`, `rlp-melnik`, `rlp-sandanski`; country
-`sweden`; destination `stockholm`; places `sth-gamla-stan`, `sth-vasa`,
-`sth-skansen`, `sth-djurgarden`, `sth-city-hall`, `sth-palace`,
-`sth-fotografiska`, `sth-drottningholm`; country `denmark`; destination
-`north-zealand`; places `nzl-frederiksborg`, `nzl-louisiana`,
-`nzl-roskilde-cathedral`, `nzl-viking-ships`, `nzl-fredensborg`,
-`nzl-frilandsmuseet`, `nzl-bakken`; country `finland`; destination
-`finnish-lapland`; places `fla-rovaniemi`, `fla-pyha-luosto`, `fla-levi`,
-`fla-saariselka`, `fla-ukk`, `fla-inari`, `fla-ranua`, `fla-kemi`; country
-`lithuania`; destination `vilnius`; places `vln-cathedral`, `vln-gediminas`,
-`vln-st-anne`, `vln-gate-of-dawn`, `vln-uzupis`, `vln-paneriai`, `vln-trakai`;
-country `estonia`; destination `tallinn`; places `tln-toompea`, `tln-nevsky`,
-`tln-st-olaf`, `tln-kadriorg`, `tln-kumu`, `tln-lahemaa`; country `latvia`;
-destination `riga`; places `rga-blackheads`, `rga-st-peters`, `rga-cathedral`,
-`rga-freedom-monument`, `rga-sigulda`, `rga-turaida`, `rga-gauja`; country
-`albania`; destination `south-albania`; places `alb-butrint`, `alb-ksamil`,
-`alb-saranda`, `alb-porto-palermo`, `alb-llogara`, `alb-berat`. Country `bosnia`; destination `mostar-sarajevo`; places `bih-mostar`, `bih-blagaj`, `bih-kravica`, `bih-bascarsija`, `bih-tunnel`. Country `serbia`; destination `vojvodina`; places `rs-petrovaradin`, `rs-synagogue`, `rs-karlovci`, `rs-fruska-gora`, `rs-palic`, `rs-sombor`, `rs-vrsac`. Country `mexico`; destination `yucatan`; places `mx-merida`, `mx-uxmal`, `mx-chichen-itza`, `mx-valladolid`, `mx-izamal`, `mx-rio-lagartos`, `mx-celestun`. Country `south-korea`; destination `gyeongju-busan`; places `kr-gyeongju`, `kr-bulguksa`, `kr-seokguram`, `kr-hahoe`, `kr-yonggungsa`, `kr-gamcheon`, `kr-jagalchi`. Country `australia`; destination `tasmania`; places `au-mona`, `au-kunanyi`, `au-port-arthur`, `au-bruny`, `au-freycinet`, `au-bay-of-fires`, `au-cradle-mountain`. Country `indonesia`; destination `java`; places `id-borobudur`, `id-prambanan`, `id-kraton`, `id-merapi`, `id-parangtritis`, `id-bromo`, `id-ijen`. Country `malaysia`; destination `penang-perak`; places `my-fort-cornwallis`, `my-kek-lok-si`, `my-penang-hill`, `my-taiping`, `my-kellies-castle`, `my-cameron-highlands`. Destination `douro` (Portugal); places `pt-peso-da-regua`, `pt-lamego`, `pt-foz-coa`, `pt-mateus-palace`, `pt-amarante`, `pt-mesao-frio`, `pt-alijo`. Destination `gdansk-pomerania` (Poland); places `pl-solidarity-centre`, `pl-westerplatte`, `pl-oliwa-cathedral`, `pl-malbork`, `pl-stutthof`, `pl-hel`, `pl-frombork`. Destination `colca-titicaca` (Peru); places `pe-misti`, `pe-salinas-reserve`, `pe-chivay`, `pe-colca-canyon`, `pe-sillustani`, `pe-puno`. Destination `hoi-an-central` (Vietnam); places `vn-hoi-an`, `vn-my-son`, `vn-hai-van`, `vn-lang-co`, `vn-thien-mu`, `vn-ba-na-hills`. Destination `lycian-coast` (Turkey); places `tr-fethiye`, `tr-oludeniz`, `tr-xanthos`, `tr-patara`, `tr-kas`, `tr-kekova`, `tr-myra`. Destination `nova-scotia` (Canada); places `ca-cabot-trail`, `ca-cape-breton-park`, `ca-louisbourg`, `ca-grand-pre`, `ca-annapolis-royal`, `ca-kejimkujik`. Destination `new-england` (USA); places `us-acadia`, `us-franconia-notch`, `us-stowe`, `us-mount-mansfield`, `us-green-mountains`, `us-cape-cod`. Destination `north-iceland` (Iceland); places `is-godafoss`, `is-myvatn`, `is-dimmuborgir`, `is-dettifoss`, `is-asbyrgi`, `is-husavik`, `is-seydisfjordur`. Destination `bucovina-maramures` (Romania); places `ro-voronet`, `ro-sucevita`, `ro-moldovita`, `ro-humor`, `ro-barsana`, `ro-merry-cemetery`, `ro-sighet`. Destination `south-holland` (Netherlands); places `nl-mauritshuis`, `nl-binnenhof`, `nl-madurodam`, `nl-nieuwe-kerk-delft`, `nl-gouda`, `nl-euromast`, `nl-cube-houses`. Destination `valais-zermatt` (Switzerland); places `ch-zermatt`, `ch-gornergrat`, `ch-saas-fee`, `ch-aletsch`, `ch-leukerbad`, `ch-zinal`, `ch-crans-montana`. Destination `swedish-lapland` (Sweden); places `se-abisko`, `se-kiruna`, `se-jukkasjarvi`, `se-kebnekaise`, `se-sarek`, `se-jokkmokk`, `se-gammelstad`. Destination `istria` (Croatia); places `hr-rovinj`, `hr-pula-arena`, `hr-euphrasian`, `hr-motovun`, `hr-groznjan`, `hr-brijuni`, `hr-opatija`. Destination `ireland-ancient-east` (Ireland); places `ie-newgrange`, `ie-glendalough`, `ie-powerscourt`, `ie-kilkenny-castle`, `ie-hook-lighthouse`, `ie-cobh`, `ie-blarney-castle`. Destination `jutland` (Denmark); places `dk-aros`, `dk-den-gamle-by`, `dk-jelling`, `dk-legoland`, `dk-ribe`, `dk-rabjerg-mile`, `dk-grenen`. Destination `north-island-nz` (New Zealand); places `nz-whakarewarewa`, `nz-huka-falls`, `nz-tongariro`, `nz-hobbiton`, `nz-taranaki`, `nz-waitangi`. Destination `slovenia-karst-east` (Slovenia); places `si-skocjan`, `si-cerknica`, `si-sneznik-castle`, `si-idrija`, `si-velika-planina`, `si-logarska`, `si-ptujska-gora`. Destination `finnish-lakeland` (Finland); places `fi-savonlinna`, `fi-olavinlinna`, `fi-punkaharju`, `fi-linnansaari`, `fi-koli`, `fi-repovesi`, `fi-verla`. Destination `west-estonia-islands` (Estonia); places `ee-kuressaare`, `ee-kaali`, `ee-panga`, `ee-vilsandi`, `ee-haapsalu`, `ee-matsalu`, `ee-soomaa`. Destination `kurzeme-zemgale` (Latvia); places `lv-rundale`, `lv-bauska`, `lv-kuldiga`, `lv-ventspils`, `lv-kolka`, `lv-slitere`, `lv-liepaja`. Destination `western-lithuania` (Lithuania); places `lt-curonian-spit`, `lt-nida`, `lt-hill-of-crosses`, `lt-palanga`, `lt-zemaitija`, `lt-nemunas-delta`, `lt-rambynas`. Destination `northern-bulgaria` (Bulgaria); places `bg-belogradchik`, `bg-madara`, `bg-ivanovo`, `bg-devetashka`, `bg-tryavna`, `bg-shipka`, `bg-buzludzha`. Destination `lori-tavush` (Armenia); places `am-haghpat`, `am-sanahin`, `am-akhtala`, `am-odzun`, `am-kobayr`, `am-haghartsin`, `am-goshavank`. Destination `oaxaca` (Mexico); places `mx-oaxaca-city`, `mx-monte-alban`, `mx-mitla`, `mx-hierve-el-agua`, `mx-tule`, `mx-yagul`, `mx-puerto-escondido`. Destination `fergana-valley` (Uzbekistan); places `uz-kokand`, `uz-margilan`, `uz-fergana`, `uz-quva`, `uz-andijan`, `uz-namangan`, `uz-chust`. Destination `lumbini-terai` (Nepal); places `np-lumbini`, `np-tilaurakot`, `np-bardiya`, `np-nepalgunj`, `np-tansen`, `np-janakpur`, `np-koshi-tappu`. Destination `zanzibar-swahili-coast` (Tanzania); places `tz-stone-town`, `tz-changuu`, `tz-jozani`, `tz-nungwi`, `tz-pemba`, `tz-bagamoyo`, `tz-kilwa-kisiwani`. Destination `malaysian-borneo` (Malaysia); places `my-kinabalu-park`, `my-sepilok`, `my-kinabatangan`, `my-sipadan`, `my-mulu`, `my-bako`. Destination `bali-lesser-sunda` (Indonesia); places `id-tanah-lot`, `id-uluwatu`, `id-goa-gajah`, `id-batur`, `id-besakih`, `id-rinjani`, `id-komodo`. Destination `western-serbia` (Serbia); places `rs-mokra-gora`, `rs-zlatibor`, `rs-sirogojno`, `rs-uvac`, `rs-studenica`, `rs-sopocani`. Destination `bosanska-krajina` (Bosnia); places `ba-una-park`, `ba-ostrozac`, `ba-bosanska-krupa`, `ba-kozara`, `ba-prijedor`, `ba-travnik`. Destination `northern-albania` (Albania); places `al-rozafa`, `al-lake-skadar`, `al-valbone`, `al-kruje`. Destination `seoul-dmz` (South Korea); places `kr-changdeokgung`, `kr-jongmyo`, `kr-bukchon`, `kr-gwangjang`, `kr-bukhansan`, `kr-jsa`, `kr-hwaseong`. Destination `red-centre` (Australia); places `au-uluru`, `au-kata-tjuta`, `au-kings-canyon`, `au-alice-springs`, `au-simpsons-gap`, `au-standley-chasm`, `au-devils-marbles`. Destination `turkestan-south-kazakhstan` (Kazakhstan); places `kz-yasawi`, `kz-otrar`, `kz-arystan-bab`, `kz-taraz`, `kz-aisha-bibi`, `kz-aksu-zhabagly`. Destination `sicily` (Italy); places `it-valle-templi`, `it-villa-casale`, `it-ortygia`, `it-noto`, `it-taormina`, `it-monreale`, `it-cefalu`. Destination `andalusia` (Spain); places `es-alhambra`, `es-mezquita`, `es-alcazar-seville`, `es-ronda`, `es-setenil`, `es-caminito`, `es-cabo-de-gata`. Destination `meteora-epirus` (Greece); places `gr-meteora`, `gr-vikos`, `gr-papingo`, `gr-ioannina`, `gr-dodona`, `gr-metsovo`, `gr-parga`. Destination `rhine-moselle` (Germany); places `de-burg-eltz`, `de-porta-nigra`, `de-cochem`, `de-bacharach`, `de-marksburg`, `de-lorelei`, `de-worms`. Destination `japanese-alps` (Japan); places `jp-matsumoto-castle`, `jp-takayama`, `jp-kenrokuen`, `jp-kamikochi`, `jp-jigokudani`, `jp-zenkoji`, `jp-tsumago`. Destination `northern-thailand` (Thailand); places `th-wat-rong-khun`, `th-doi-inthanon`, `th-doi-suthep`, `th-sukhothai`, `th-pai`, `th-wat-chedi-luang`. Destination `saxon-switzerland` (Germany); places `sax-bastei`, `sax-konigstein`, `sax-lilienstein`, `sax-schrammsteine`, `sax-bad-schandau`, `sax-rathen`, `sax-pirna`. Destination `salzkammergut` (Austria); places `at-hallstatt`, `at-dachstein`, `at-bad-ischl`, `at-st-wolfgang`, `at-attersee`, `at-traunsee`, `at-gmunden`. Destination `dalmatia-split` (Croatia); places `hr-diocletian`, `hr-krka`, `hr-kornati`, `hr-hvar`, `hr-korcula`, `hr-salona`. Country `sri-lanka` (hero photo also pending); destination `cultural-triangle`; places `lk-sigiriya`, `lk-dambulla`, `lk-polonnaruwa`, `lk-anuradhapura`, `lk-minneriya`; destination `hill-country-south-coast`; places `lk-ella`, `lk-nuwara-eliya`, `lk-horton-plains`, `lk-udawalawe`, `lk-yala`, `lk-galle`, `lk-mirissa`. Country `cambodia` (hero photo also pending); destination `angkor`; places `kh-bayon`, `kh-ta-prohm`, `kh-banteay-srei`, `kh-beng-mealea`, `kh-tonle-sap`, `kh-siem-reap`; destination `phnom-penh-coast`; places `kh-tuol-sleng`, `kh-choeung-ek`, `kh-wat-phnom`, `kh-battambang`, `kh-koh-rong`. Country `laos` (hero photo also pending); destination `luang-prabang-mekong`; places `la-wat-xieng-thong`, `la-kuang-si`, `la-pak-ou`, `la-nong-khiaw`, `la-vang-vieng`, `la-pha-that-luang`, `la-buddha-park`. Country `morocco` (hero photo also pending); destination `atlas-sahara`; places `ma-tichka`, `ma-ait-benhaddou`, `ma-ouarzazate`, `ma-skoura`, `ma-dades`, `ma-todgha`, `ma-erg-chebbi`. Country `kyrgyzstan` (hero photo also pending); destination `tian-shan-issyk-kul`; places `kg-burana`, `kg-cholpon-ata`, `kg-issyk-kul`, `kg-karakol`, `kg-naryn`, `kg-tash-rabat`, `kg-arslanbob`. Country `argentina` (hero photo also pending); destination `patagonia-south`; places `ar-el-calafate`, `ar-perito-moreno`, `ar-los-glaciares`, `ar-el-chalten`, `ar-ushuaia`, `ar-tierra-del-fuego`. Country `costa-rica` (hero photo also pending); destination `costa-rica-classic`; places `cr-arenal`, `cr-la-fortuna`, `cr-monteverde`, `cr-rincon-vieja`, `cr-manuel-antonio`, `cr-tortuguero`, `cr-corcovado`. Country `taiwan` (hero photo also pending); destination `taiwan-island-loop`; places `tw-beitou`, `tw-jiufen`, `tw-taroko`, `tw-hualien`, `tw-sun-moon-lake`, `tw-kenting`. Country `chile` (hero photo also pending); destination `atacama`; places `cl-san-pedro`, `cl-el-tatio`, `cl-salar-atacama`, `cl-valle-luna`, `cl-licancabur`, `cl-calama`.
+**Photos pending - RESOLVED as a list.** This section used to carry a
+hand-maintained inventory of every photoless place. It went stale the moment
+the photo sweep started and it is now deleted rather than half-corrected.
+The live count is 78 of 1,216 and the live list comes from
+`node /tmp/photoless.mjs`. See the photo bullet above for what is tractable
+and what is permanently blank.
 
-**Blocked on coordinates - France / Paris.** France is the biggest
-remaining country gap, but dbpedia's `/data/*.json` for very famous
-articles (Eiffel Tower, Louvre, Notre-Dame) is too large and the
-coordinates get truncated out of the fetched page; the dbpedia SPARQL
-endpoint returns 403 through the proxy, wikidata and commons are
-cache-only, nominatim is robots-disallowed, and fr.dbpedia has no
-coordinates either. Build Paris when a working coordinate source exists
-(e.g. a run from a normal network). Do NOT estimate the coordinates.
+**~~Blocked on coordinates - France / Paris.~~ RESOLVED 2026-07-27.** France
+and Paris shipped. The truncation diagnosis was right but the conclusion was
+wrong: GeoNames supplies the coordinates and `dbpedia.org/page/` supplies the
+photos, both from inside this sandbox. Kept here as a reminder that "blocked"
+in this file has twice meant "one source was tried".
 
 **Also worth doing:** enrich the original 8 European CITY entries with a
 nature day-trip place or two each (Vienna→Wachau DONE: Melk + Dürnstein;
 Prague→Karlštejn + Kutná Hora + Sedlec DONE; Rome→Tivoli DONE (Villa d'Este
 + Villa Adriana); Athens→Sounion DONE; Barcelona→Montserrat DONE;
 Barcelona→Costa Brava DONE (Tossa de Mar + Cadaqués); Budapest→Danube Bend
-DONE (Szentendre + Visegrád); Bratislava→Devín DONE. Athens→Delphi is
-BLOCKED: `Delphi` on dbpedia has no geo:lat/geo:long. Do NOT estimate). Lower priority than net-new destinations.
+DONE (Szentendre + Visegrád); Bratislava→Devín DONE; Athens→Delphi DONE via
+GeoNames). Lower priority than net-new destinations.
 
 ## Skipped / blocked (need a decision or a data source)
 
