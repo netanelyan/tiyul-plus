@@ -299,6 +299,51 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-27 (j) - The red X on GitHub is a SUPERSEDED deployment, not a failure
+
+Netanel asked what the red X next to some commits means. Worth writing down
+because I got the answer wrong once on the way, and because with two sessions
+pushing to `main` all day it will keep appearing.
+
+**What it is.** GitHub shows Vercel's deployment check; `✗ 0/1` means no
+successful deployment for that commit. The dashboard showed the real story: the
+X'd commits have **no deployment row at all** - Vercel never built them.
+
+**My first explanation was wrong.** I concluded the Hobby plan was refusing
+deployments because the two sessions had pushed 63 commits that day, and I said
+so in the `vercel.json` commit message. Then the next data commit (Bolivia,
+`d0965d7`) went green two minutes later, which a quota would not permit.
+
+**The actual mechanism, and every observation fits it.** Vercel builds one
+commit per branch at a time and **skips a commit that a newer push has already
+superseded**. Trace it:
+
+    b5d29e3 (og fix)   pushed → no check at all
+    d17c315 (its log)  pushed 2 min later → superseded b5d29e3, then got ✗ itself
+    dc37fab (vercel.json) pushed → superseded d17c315, then got ✗ itself
+    d0965d7 (data, Bolivia) pushed → newest, so it BUILT ✓
+
+So the X marks commits that were leapfrogged. **Nothing was broken and nothing
+was lost:** production lands on the newest commit, which contains all the earlier
+ones, and the og:image fix went live inside the Bolivia deployment - verified by
+reading the served HTML (all ten `og:` tags present, `/og.png` serving). The only
+real effect is a delay: a feature commit ships whenever the next build happens,
+which may be the other session's.
+
+**The practical rule for two parallel sessions:** if a change needs to be live
+*now*, check that the deployment actually ran instead of trusting the push, and
+be aware the other session's next push will carry it up anyway.
+
+**Kept anyway, on its own merit:** `vercel.json` now has
+`ignoreCommand: git diff --quiet HEAD^ HEAD -- ':(exclude)CLAUDE.md'
+':(exclude)TODO.md'`, so a commit touching only the session log or the TODO does
+not spend a build. 15 of the day's 63 commits were docs-only, i.e. about a
+quarter of all builds produced a byte-identical site. Tested against three real
+commits: docs-only exits 0 and skips, code and data exit 1 and build; a missing
+`HEAD^` errors non-zero, so the failure mode is "build anyway", never "skip a
+real change". **This was not the fix for the X's** - do not read it as one.
+
+
 ### 2026-07-27 (i) - WhatsApp showed Vercel's logo: no og:image, and the starter favicon
 
 Netanel shared `www.tiyulplus.com` in WhatsApp and got a **black circle with a
