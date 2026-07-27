@@ -192,6 +192,70 @@ test('תפקיד לא מוכר נחשב user, וטקסט ארוך נחתך', () 
   assert.equal(out[1].content.length, 8000);
 });
 
+/*
+ * תקציב ההיסטוריה. הרקע: לוג פרודקשן אמיתי החזיר
+ * "prompt is too long: 408754 tokens > 200000 maximum" - יותר מפי שניים
+ * מחלון ההקשר. ההגבלה הקודמת הייתה 40 הודעות x 8,000 תווים = עד 320,000
+ * תווים, וזה נראה סביר רק תחת ההנחה האנגלית של ~4 תווים לטוקן. בעברית
+ * צפופה טוקן שווה בקירוב תו, ולכן ההיסטוריה לבדה חרגה. וזו שגיאה
+ * מתמשכת: היסטוריה רק גדלה, אז שיחה שחצתה את התקרה מתה לתמיד.
+ */
+
+const long = (n: number) => 'א'.repeat(n);
+
+test('הרגרסיה השלישית: היסטוריה ארוכה נחתכת לתקציב', () => {
+  // 20 הודעות של 8,000 תווים = 160,000 - פי שלושה מהתקציב
+  const many = Array.from({ length: 20 }, (_, i) => ({
+    role: i % 2 === 0 ? 'user' : 'assistant',
+    content: long(8000),
+  }));
+  const out = sanitizeMessages(many);
+  const total = out.reduce((n, m) => n + m.content.length, 0);
+  assert.ok(total <= 50_000, `סך התווים ${total} חייב להיות בתוך התקציב`);
+  assert.ok(out.length < many.length, 'חלק מההודעות נחתכו');
+  assert.ok(out.length > 0, 'לא נחתך הכול');
+});
+
+test('ההודעות שנשמרות הן החדשות, כי שם ההקשר הרלוונטי', () => {
+  const many = Array.from({ length: 30 }, (_, i) => ({
+    role: 'user',
+    content: `${long(4000)}#${i}`,
+  }));
+  const out = sanitizeMessages(many);
+  assert.match(out[out.length - 1].content, /#29$/, 'ההודעה האחרונה תמיד נשמרת');
+  assert.ok(!out.some((m) => m.content.endsWith('#0')), 'הישנות נחתכות');
+});
+
+test('הודעה בודדת ענקית נחתכת ולא נזרקת', () => {
+  // שני חיתוכים שונים פועלים כאן, וחשוב לדעת מי ראשון: תקרת ההודעה
+  // הבודדת (8,000 תווים) חלה בשלב הקריאה, לפני תקציב ההיסטוריה. כלומר
+  // הודעה בודדת לא יכולה לחרוג מהתקציב בכלל, והשמירה על "התור הנוכחי
+  // תמיד שורד" היא ביטוח למקרה שמישהו יעלה בעתיד את תקרת ההודעה מעל
+  // התקציב.
+  const out = sanitizeMessages([{ role: 'user', content: long(120_000) }]);
+  assert.equal(out.length, 1, 'התור הנוכחי חייב לשרוד גם כשהוא ענק');
+  assert.equal(out[0].content.length, 8000, 'תקרת ההודעה הבודדת חלה קודם');
+});
+
+test('היסטוריה קצרה עוברת שלמה - התקציב לא מתערב', () => {
+  const normal = [
+    { role: 'user', content: 'שלום' },
+    { role: 'assistant', content: 'היי' },
+    { role: 'user', content: 'תבנה טיול לווינה' },
+  ];
+  assert.deepEqual(sanitizeMessages(normal), normal);
+});
+
+test('החיתוך לא חושף assistant בראש המערך', () => {
+  // אחרי חיתוך התקציב ההודעה הראשונה שנשארת עלולה להיות assistant
+  const many = Array.from({ length: 30 }, (_, i) => ({
+    role: i % 2 === 0 ? 'assistant' : 'user',
+    content: long(6000),
+  }));
+  const out = sanitizeMessages(many);
+  assert.equal(out[0].role, 'user', 'שני הכללים חייבים לעבוד יחד');
+});
+
 test('ההיסטוריה מוגבלת ל-40 הודעות אחרונות', () => {
   const many = Array.from({ length: 60 }, (_, i) => ({ role: 'user', content: `m${i}` }));
   const out = sanitizeMessages(many);

@@ -52,6 +52,35 @@ export const MAX_IMAGE_CHARS = 1_400_000;
 /** כמה תמונות מותר בבקשה אחת (ההיסטוריה נשלחת שוב בכל תור) */
 export const MAX_IMAGES_PER_REQUEST = 2;
 
+/**
+ * תקציב תווים להיסטוריית השיחה כולה.
+ *
+ * ## למה זה קיים, ומה זה תיקן
+ *
+ * עד עכשיו ההיסטוריה הוגבלה ב**מספר הודעות** (40) ובאורך הודעה בודדת
+ * (8,000 תווים), כלומר עד 320,000 תווים. זה נראה סביר בהנחה האנגלית של
+ * ~4 תווים לטוקן. אבל השיחה כאן היא עברית צפופה, **ובעברית טוקן שווה
+ * בקירוב תו אחד**.
+ *
+ * המספר הזה לא נוחש - הוא נגזר מלוג פרודקשן אמיתי:
+ *
+ *   400 invalid_request_error - "prompt is too long: 408754 tokens
+ *   > 200000 maximum"
+ *
+ * החלקים הקבועים (אינדקס ההשענה ~45k טוקנים, הפרומפט, הפירוט, הטיול)
+ * מסבירים כ-70k. כלומר ההיסטוריה לבדה תרמה כ-337k טוקנים על 320,000
+ * תווים לכל היותר - יחס של יותר מטוקן לתו.
+ *
+ * **וזה כשל מתמשך, לא חד-פעמי:** היסטוריה רק גדלה, ולכן ברגע ששיחה
+ * חוצה את התקרה **כל תור נוסף בה נכשל באותה 400 לנצח**. זה מסביר למה
+ * מטייל אמיתי ראה את אותה שגיאה שוב ושוב באותו שרשור ארוך, ולמה תיקונים
+ * אחרים לא שינו לו כלום.
+ *
+ * 50,000 תווים ≈ 50k טוקנים בעברית. עם כ-88k של חלקים קבועים במקרה
+ * הגרוע נשאר מרווח נוח מתחת ל-200k, כולל מקום לפלט.
+ */
+const HISTORY_CHAR_BUDGET = 50_000;
+
 /** הודעה שאין בה לא טקסט ולא תמונה לא נושאת שום מידע */
 function carriesNothing(m: ChatMessage): boolean {
   return !m.image && m.content.trim().length === 0;
@@ -85,6 +114,26 @@ export function sanitizeMessages(raw: unknown): ChatMessage[] {
   // שכל תוכנה היה תמונה.
   const carrying = msgs.filter((m) => !carriesNothing(m));
 
+  // תקציב התווים - מהחדש לישן, כי ההקשר הרלוונטי הוא הסוף של השיחה.
+  // ההודעה האחרונה תמיד נכנסת (היא התור הנוכחי): אם היא לבדה גדולה
+  // מהתקציב היא נחתכת ולא נזרקת, אחרת המטייל שולח משהו ארוך ולא מקבל
+  // תשובה בכלל. חייב לרוץ לפני כלל ה-assistant-הראשון, אחרת החיתוך
+  // עצמו יכול לחשוף assistant בראש המערך.
+  const budgeted: ChatMessage[] = [];
+  let used = 0;
+  for (let i = carrying.length - 1; i >= 0; i--) {
+    const m = carrying[i];
+    const cost = m.content.length;
+    if (budgeted.length === 0) {
+      budgeted.unshift(cost > HISTORY_CHAR_BUDGET ? { ...m, content: m.content.slice(-HISTORY_CHAR_BUDGET) } : m);
+      used += Math.min(cost, HISTORY_CHAR_BUDGET);
+      continue;
+    }
+    if (used + cost > HISTORY_CHAR_BUDGET) break;
+    budgeted.unshift(m);
+    used += cost;
+  }
+
   // ההיסטוריה חייבת להיפתח בהודעת user. שתי דרכים להגיע למצב שהיא לא:
   //
   // 1. **רגרסיה שהתיקון שלמעלה יצר.** שיחה שנפתחה בתמונה בלי טקסט -
@@ -97,6 +146,6 @@ export function sanitizeMessages(raw: unknown): ChatMessage[] {
   // הסרה היא הפתרון הנכון ולא רק החוקי: להודעת assistant בתחילת המערך
   // אין תור user שהיא עונה עליו, אז היא לא נושאת הקשר שימושי בכל מקרה.
   let firstUser = 0;
-  while (firstUser < carrying.length && carrying[firstUser].role !== 'user') firstUser += 1;
-  return firstUser === 0 ? carrying : carrying.slice(firstUser);
+  while (firstUser < budgeted.length && budgeted[firstUser].role !== 'user') firstUser += 1;
+  return firstUser === 0 ? budgeted : budgeted.slice(firstUser);
 }
