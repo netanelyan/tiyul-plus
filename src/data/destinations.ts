@@ -9646,6 +9646,536 @@ export const destinations: Destination[] = [
     },
   },
   {
+    slug: 'new-york',
+    name: 'ניו יורק',
+    nameLocal: 'New York City',
+    countrySlug: 'usa',
+    flag: '🇺🇸',
+    center: { lat: 40.7549, lng: -73.984 },
+    zoom: 12,
+    tagline: 'העיר שאף אחד לא צריך שיסבירו לו למה',
+    summary:
+      'ניו יורק היא נקודת הכניסה הקלאסית של ישראלים לארצות הברית, וגם היעד היחיד שבו טיסה ארוכה מרגישה מוצדקת כבר ביום הראשון. מנהטן קומפקטית ונוחה להליכה, הרכבת התחתית פועלת עשרים וארבע שעות, והקהילה היהודית הגדולה בעולם מחוץ לישראל הופכת את נושא הכשרות לפשוט במיוחד: יש מאות מסעדות וסופרים כשרים, בעיקר באפר ווסט סייד, במידטאון ובברוקלין.',
+    bestSeason: 'אפריל עד יוני וספטמבר עד נובמבר. הקיץ חם ולח מאוד, והחורף קר עם שלג, אבל דצמבר בעיר הוא חוויה בפני עצמה.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/New_york_times_square-terabass.jpg/500px-New_york_times_square-terabass.jpg',
+    iconicLandmark: {
+      name: 'פסל החירות',
+      nameLocal: 'Statue of Liberty',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Front_view_of_Statue_of_Liberty_%28cropped%29.jpg/500px-Front_view_of_Statue_of_Liberty_%28cropped%29.jpg',
+      blurb:
+        'מתנת צרפת לארצות הברית משנת 1886, על אי ליברטי במפרץ ניו יורק. המעבורת אליו יוצאת מבטרי פארק.',
+    },
+    editorialRating: {
+      score: 4.8,
+      verdict:
+        'אחד המעטים שבהם הציפייה והמציאות נפגשות. תשתית כשרות שאין לה מתחרה מחוץ לישראל, תחבורה ציבורית מסביב לשעון, ומוזיאונים ברמה עולמית. חסרונות: יקרה מאוד בלינה, הטיסה ארוכה, והוויזה (ESTA או ויזה אמריקאית) דורשת טיפול מראש. לא יעד לסוף שבוע.',
+    },
+    places: [
+      {
+        id: 'nyc-statue-liberty',
+        name: 'פסל החירות',
+        nameLocal: 'Statue of Liberty',
+        category: 'attraction',
+        lat: 40.68917,
+        lng: -74.04444,
+        description:
+          'סמל הכניסה לאמריקה, מתנת צרפת מ-1886. המעבורת יוצאת מבטרי פארק ועוצרת גם באליס איילנד. עלייה לכתר דורשת הזמנה חודשים מראש.',
+        durationMin: 180,
+        priceLevel: 2,
+        tags: ['history', 'families'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.68917,-74.04444',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Front_view_of_Statue_of_Liberty_(cropped).jpg/500px-Front_view_of_Statue_of_Liberty_(cropped).jpg',
+      },
+      {
+        id: 'nyc-ellis',
+        name: 'אליס איילנד',
+        nameLocal: 'Ellis Island',
+        category: 'museum',
+        lat: 40.69944,
+        lng: -74.03972,
+        description:
+          'תחנת ההגירה שדרכה עברו מיליוני מהגרים לארצות הברית, ובהם חלק גדול מיהדות מזרח אירופה. היום מוזיאון ההגירה, באותה מעבורת של פסל החירות.',
+        durationMin: 120,
+        priceLevel: 2,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.69944,-74.03972',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Aerial_view_of_Ellis_Island%2C_Jersey_City%2C_New_Jersey_LCCN2011635626_-_cropped_balance.jpg/500px-Aerial_view_of_Ellis_Island%2C_Jersey_City%2C_New_Jersey_LCCN2011635626_-_cropped_balance.jpg',
+      },
+      {
+        id: 'nyc-times-square',
+        name: 'טיימס סקוור',
+        nameLocal: 'Times Square',
+        category: 'attraction',
+        lat: 40.7575,
+        lng: -73.9858,
+        description:
+          'צומת השלטים המוארים של מנהטן. הכי מרשים אחרי רדת החשכה, והכי צפוף אז. משם מתחיל רובע התיאטראות של ברודוויי.',
+        durationMin: 45,
+        priceLevel: 0,
+        tags: ['nightlife', 'families'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.7575,-73.9858',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/New_york_times_square-terabass.jpg/500px-New_york_times_square-terabass.jpg',
+      },
+      {
+        id: 'nyc-empire-state',
+        name: 'אמפייר סטייט בילדינג',
+        nameLocal: 'Empire State Building',
+        category: 'viewpoint',
+        lat: 40.7483,
+        lng: -73.9856,
+        description:
+          'הגורד המפורסם בעולם, נפתח ב-1931. תצפית בקומה 86 ועוד אחת בקומה 102. הנוף לילי מרהיב, אבל התור קצר יותר בבוקר מוקדם.',
+        durationMin: 120,
+        priceLevel: 3,
+        tags: ['romantic', 'families'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.7483,-73.9856',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Empire_State_Building_(aerial_view).jpg/500px-Empire_State_Building_(aerial_view).jpg',
+      },
+      {
+        id: 'nyc-rockefeller',
+        name: 'טופ אוף דה רוק ורוקפלר סנטר',
+        nameLocal: 'Top of the Rock, Rockefeller Center',
+        category: 'viewpoint',
+        lat: 40.75889,
+        lng: -73.97917,
+        description:
+          'התצפית שממנה רואים את האמפייר סטייט עצמו בתוך הקו הרקיע, וזה בדיוק היתרון שלה עליו. למטה מתחם רוקפלר ורחבת ההחלקה בחורף.',
+        durationMin: 90,
+        priceLevel: 3,
+        tags: ['romantic', 'families'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.75889,-73.97917',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/30_Rockefeller_Plaza_view_from_Empire_State_Building%2C_around_1_pm.jpg/500px-30_Rockefeller_Plaza_view_from_Empire_State_Building%2C_around_1_pm.jpg',
+      },
+      {
+        id: 'nyc-central-park',
+        name: 'סנטרל פארק',
+        nameLocal: 'Central Park',
+        category: 'nature',
+        lat: 40.78222,
+        lng: -73.96528,
+        description:
+          'פארק בשטח של 3.4 קמ״ר בלב מנהטן. אפשר להקדיש לו שעה או יום שלם: אגמים, גשרים, בטסדה טראס והמדשאות הגדולות.',
+        durationMin: 180,
+        priceLevel: 0,
+        tags: ['outdoors', 'families', 'romantic'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.78222,-73.96528',
+      },
+      {
+        id: 'nyc-met',
+        name: 'מוזיאון המטרופוליטן',
+        nameLocal: 'The Metropolitan Museum of Art',
+        category: 'museum',
+        lat: 40.7794,
+        lng: -73.9631,
+        description:
+          'אחד המוזיאונים הגדולים בעולם, על שפת סנטרל פארק. אוסף שנע ממצרים העתיקה ועד אמנות מודרנית, ובכלל זה מקדש דנדור השלם.',
+        durationMin: 240,
+        priceLevel: 3,
+        tags: ['art', 'history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.7794,-73.9631',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Metropolitan_Museum_of_Art_(The_Met)_-_Central_Park%2C_NYC.jpg/500px-Metropolitan_Museum_of_Art_(The_Met)_-_Central_Park%2C_NYC.jpg',
+      },
+      {
+        id: 'nyc-moma',
+        name: 'מומ״א - מוזיאון האמנות המודרנית',
+        nameLocal: 'Museum of Modern Art (MoMA)',
+        category: 'museum',
+        lat: 40.7617,
+        lng: -73.9775,
+        description:
+          'אוסף המאה העשרים: ואן גוך, פיקאסו, וורהול, מונק. קומפקטי יחסית למטרופוליטן ואפשר לכסות אותו בחצי יום.',
+        durationMin: 180,
+        priceLevel: 3,
+        tags: ['art'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.7617,-73.9775',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/MoMa_NY_USA_1.jpg/500px-MoMa_NY_USA_1.jpg',
+      },
+      {
+        id: 'nyc-guggenheim',
+        name: 'מוזיאון גוגנהיים',
+        nameLocal: 'Solomon R. Guggenheim Museum',
+        category: 'museum',
+        lat: 40.78306,
+        lng: -73.95889,
+        description:
+          'המבנה הספירלי של פרנק לויד רייט הוא חלק מהתערוכה. יורדים במדרון מהקומה העליונה כלפי מטה.',
+        durationMin: 120,
+        priceLevel: 3,
+        tags: ['art'],
+        externalUrl: 'https://maps.google.com/?q=40.78306,-73.95889',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Solomon_R._Guggenheim_Museum_(48059131351).jpg/500px-Solomon_R._Guggenheim_Museum_(48059131351).jpg',
+      },
+      {
+        id: 'nyc-amnh',
+        name: 'מוזיאון הטבע',
+        nameLocal: 'American Museum of Natural History',
+        category: 'museum',
+        lat: 40.78083,
+        lng: -73.97444,
+        description:
+          'דינוזאורים, לווייתן הכחול התלוי באוויר והפלנטריום. מהמוזיאונים הטובים בעולם לילדים, בצד המערבי של סנטרל פארק.',
+        durationMin: 210,
+        priceLevel: 3,
+        tags: ['families', 'history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.78083,-73.97444',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/USA-NYC-American_Museum_of_Natural_History.JPG/500px-USA-NYC-American_Museum_of_Natural_History.JPG',
+      },
+      {
+        id: 'nyc-911',
+        name: 'אנדרטת ומוזיאון 11 בספטמבר',
+        nameLocal: '9/11 Memorial & Museum',
+        category: 'museum',
+        lat: 40.71167,
+        lng: -74.01361,
+        description:
+          'שתי בריכות ענק בטביעת הרגל של המגדלים התאומים, ובשוליהן חרוטים שמות הנספים. הכניסה לרחבה חופשית, למוזיאון בתשלום.',
+        durationMin: 150,
+        priceLevel: 2,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.71167,-74.01361',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/9-11_Memorial_and_Museum_(28815276064).jpg/500px-9-11_Memorial_and_Museum_(28815276064).jpg',
+      },
+      {
+        id: 'nyc-jewish-heritage',
+        name: 'מוזיאון מורשת יהדות',
+        nameLocal: 'Museum of Jewish Heritage',
+        category: 'museum',
+        lat: 40.70621,
+        lng: -74.01875,
+        description:
+          'מוזיאון השואה והמורשת היהודית של ניו יורק, בקצה הדרומי של מנהטן מול פסל החירות.',
+        durationMin: 120,
+        priceLevel: 2,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=40.70621,-74.01875',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Museum_of_Jewish_Heritage_005.JPG/500px-Museum_of_Jewish_Heritage_005.JPG',
+      },
+      {
+        id: 'nyc-brooklyn-bridge',
+        name: 'גשר ברוקלין',
+        nameLocal: 'Brooklyn Bridge',
+        category: 'attraction',
+        lat: 40.7057,
+        lng: -73.9964,
+        description:
+          'גשר מ-1883 עם מעבר הולכי רגל מוגבה. חוצים אותו ברגל ממנהטן לברוקלין בכחצי שעה, והנוף הטוב ביותר הוא לכיוון מנהטן.',
+        durationMin: 75,
+        priceLevel: 0,
+        tags: ['outdoors', 'romantic', 'history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.7057,-73.9964',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Brooklyn_Bridge_and_the_Lower_Manhattan_skyline_from_Pebble_Beach%2C_New_York.jpg/500px-Brooklyn_Bridge_and_the_Lower_Manhattan_skyline_from_Pebble_Beach%2C_New_York.jpg',
+      },
+      {
+        id: 'nyc-dumbo',
+        name: 'דמבו',
+        nameLocal: 'DUMBO',
+        category: 'viewpoint',
+        lat: 40.703,
+        lng: -73.99,
+        description:
+          'הרובע שמתחת לגשר מנהטן. הצילום המפורסם של הגשר בין בנייני הלבנים נמצא בפינת Washington ו-Water.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['art', 'romantic'],
+        externalUrl: 'https://maps.google.com/?q=40.703,-73.99',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/DUMBO_Brooklyn%2C_as_seen_from_the_viewing_gallery_of_One_World_Trade_Center.jpg/500px-DUMBO_Brooklyn%2C_as_seen_from_the_viewing_gallery_of_One_World_Trade_Center.jpg',
+      },
+      {
+        id: 'nyc-brooklyn-bridge-park',
+        name: 'פארק גשר ברוקלין',
+        nameLocal: 'Brooklyn Bridge Park',
+        category: 'nature',
+        lat: 40.69778,
+        lng: -73.99833,
+        description:
+          'רצועת פארק לאורך המים בברוקלין, מול קו הרקיע של מנהטן. מזחים, דשא וקרוסלה מקורה.',
+        durationMin: 90,
+        priceLevel: 0,
+        tags: ['outdoors', 'families'],
+        externalUrl: 'https://maps.google.com/?q=40.69778,-73.99833',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/View_of_Brooklyn_Bridge_Park_from_Manhattan_Bridge.jpg/500px-View_of_Brooklyn_Bridge_Park_from_Manhattan_Bridge.jpg',
+      },
+      {
+        id: 'nyc-williamsburg',
+        name: 'וויליאמסבורג',
+        nameLocal: 'Williamsburg',
+        category: 'attraction',
+        lat: 40.71,
+        lng: -73.96,
+        description:
+          'רובע בברוקלין ששילב בין קהילה חרדית ותיקה לסצנה צעירה של בתי קפה, חנויות יד שנייה וגלריות. שני העולמות חיים זה לצד זה.',
+        durationMin: 120,
+        priceLevel: 1,
+        tags: ['foodie', 'art', 'nightlife'],
+        externalUrl: 'https://maps.google.com/?q=40.71,-73.96',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/WilliamsburgBK.jpg/500px-WilliamsburgBK.jpg',
+      },
+      {
+        id: 'nyc-prospect',
+        name: 'פרוספקט פארק',
+        nameLocal: 'Prospect Park',
+        category: 'nature',
+        lat: 40.66167,
+        lng: -73.97083,
+        description:
+          'הפארק הגדול של ברוקלין, מאותם מתכננים של סנטרל פארק ולדעת רבים היפה מבין השניים. שקט ומקומי הרבה יותר.',
+        durationMin: 120,
+        priceLevel: 0,
+        tags: ['outdoors', 'families'],
+        externalUrl: 'https://maps.google.com/?q=40.66167,-73.97083',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Prospect_Park_New_York_October_2015_003.jpg/500px-Prospect_Park_New_York_October_2015_003.jpg',
+      },
+      {
+        id: 'nyc-coney',
+        name: 'קוני איילנד',
+        nameLocal: 'Coney Island',
+        category: 'nature',
+        lat: 40.575,
+        lng: -73.9825,
+        description:
+          'חוף ולונה פארק היסטורי בקצה הדרומי של ברוקלין, בסוף קו הרכבת התחתית. רכבת ההרים Cyclone פועלת מאז 1927.',
+        durationMin: 180,
+        priceLevel: 1,
+        tags: ['families', 'outdoors'],
+        externalUrl: 'https://maps.google.com/?q=40.575,-73.9825',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Coney_Island_beach_and_amusement_parks_(June_2016).jpg/500px-Coney_Island_beach_and_amusement_parks_(June_2016).jpg',
+      },
+      {
+        id: 'nyc-grand-central',
+        name: 'גרנד סנטרל',
+        nameLocal: 'Grand Central Terminal',
+        category: 'attraction',
+        lat: 40.7528,
+        lng: -73.9772,
+        description:
+          'תחנת רכבת מ-1913 עם אולם ראשי ותקרת כוכבים מצוירת. הכניסה חופשית, וגם מי שלא נוסע ברכבת נכנס להסתכל.',
+        durationMin: 45,
+        priceLevel: 0,
+        tags: ['history', 'families'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=40.7528,-73.9772',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Image-Grand_central_Station_Outside_Night_2.jpg/500px-Image-Grand_central_Station_Outside_Night_2.jpg',
+      },
+      {
+        id: 'nyc-nypl',
+        name: 'הספרייה הציבורית',
+        nameLocal: 'New York Public Library, Main Branch',
+        category: 'attraction',
+        lat: 40.75306,
+        lng: -73.98194,
+        description:
+          'בניין הבוזאר עם שני האריות בכניסה, וחדר הקריאה הראשי המפואר בקומה השלישית. כניסה חופשית.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['history', 'art'],
+        externalUrl: 'https://maps.google.com/?q=40.75306,-73.98194',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/New_York_Public_Library_-_Main_Branch_(51396225599).jpg/500px-New_York_Public_Library_-_Main_Branch_(51396225599).jpg',
+      },
+      {
+        id: 'nyc-bryant',
+        name: 'ברייאנט פארק',
+        nameLocal: 'Bryant Park',
+        category: 'nature',
+        lat: 40.75389,
+        lng: -73.98389,
+        description:
+          'כיכר ירוקה צמודה לספרייה, מוקפת גורדי שחקים. בחורף יש בה רחבת החלקה ושוק חג חופשיים לכניסה.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['families', 'outdoors'],
+        externalUrl: 'https://maps.google.com/?q=40.75389,-73.98389',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/New-York_-_Bryant_Park.jpg/500px-New-York_-_Bryant_Park.jpg',
+      },
+      {
+        id: 'nyc-washington-sq',
+        name: 'כיכר וושינגטון',
+        nameLocal: 'Washington Square Park',
+        category: 'nature',
+        lat: 40.73083,
+        lng: -73.9975,
+        description:
+          'הכיכר עם שער הניצחון בלב הכפר הגריניצ׳י, מוקפת בניני אוניברסיטת ניו יורק. מוזיקאי רחוב ושחמטאים כמעט תמיד.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['outdoors', 'art'],
+        externalUrl: 'https://maps.google.com/?q=40.73083,-73.9975',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Washington_Square_Arch-Isabella.jpg/500px-Washington_Square_Arch-Isabella.jpg',
+      },
+      {
+        id: 'nyc-flatiron',
+        name: 'בניין הפלטאיירון',
+        nameLocal: 'Flatiron Building',
+        category: 'attraction',
+        lat: 40.74111,
+        lng: -73.98972,
+        description:
+          'הגורד המשולש מ-1902, אחד המבנים המצולמים בעיר. נראה הכי טוב מכיכר מדיסון שממול.',
+        durationMin: 30,
+        priceLevel: 0,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=40.74111,-73.98972',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Edificio_Fuller_(Flatiron)_en_2010_desde_el_Empire_State_crop_boxin.jpg/500px-Edificio_Fuller_(Flatiron)_en_2010_desde_el_Empire_State_crop_boxin.jpg',
+      },
+      {
+        id: 'nyc-radio-city',
+        name: 'רדיו סיטי מיוזיק הול',
+        nameLocal: 'Radio City Music Hall',
+        category: 'attraction',
+        lat: 40.75972,
+        lng: -73.97917,
+        description:
+          'אולם אר-ט דקו מ-1932 ליד רוקפלר סנטר. יש סיורים מודרכים ביום, ובדצמבר מופע חג המולד המסורתי.',
+        durationMin: 90,
+        priceLevel: 2,
+        tags: ['art'],
+        externalUrl: 'https://maps.google.com/?q=40.75972,-73.97917',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Radio_City_Music_Hall_(51395756913).jpg/500px-Radio_City_Music_Hall_(51395756913).jpg',
+      },
+      {
+        id: 'nyc-chelsea-market',
+        name: 'צ׳לסי מרקט',
+        nameLocal: 'Chelsea Market',
+        category: 'shopping',
+        lat: 40.7425,
+        lng: -74.00611,
+        description:
+          'שוק אוכל מקורה במפעל עוגיות לשעבר, בקצה הדרומי של ההיי ליין. דוכני אוכל, מאפיות וחנויות קטנות.',
+        durationMin: 90,
+        priceLevel: 2,
+        tags: ['foodie', 'families'],
+        externalUrl: 'https://maps.google.com/?q=40.7425,-74.00611',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Chelsea_Market_(49052085186).jpg/500px-Chelsea_Market_(49052085186).jpg',
+      },
+      {
+        id: 'nyc-battery',
+        name: 'בטרי פארק',
+        nameLocal: 'The Battery',
+        category: 'nature',
+        lat: 40.70361,
+        lng: -74.01611,
+        description:
+          'הפארק בקצה הדרומי של מנהטן, ונקודת היציאה של המעבורות לפסל החירות ולאליס איילנד.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['outdoors'],
+        externalUrl: 'https://maps.google.com/?q=40.70361,-74.01611',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Battery_Park.JPG/500px-Battery_Park.JPG',
+      },
+      {
+        id: 'nyc-katz',
+        name: 'כץ דליקטסן',
+        nameLocal: "Katz's Delicatessen",
+        category: 'cafe',
+        lat: 40.72233,
+        lng: -73.98742,
+        description:
+          'מוסד ניו יורקי מ-1888 בלואר איסט סייד, מפורסם בכריכי הפסטרמה. חשוב לדעת: המקום אינו כשר, למרות האופי היהודי שלו.',
+        durationMin: 60,
+        priceLevel: 2,
+        tags: ['foodie', 'history'],
+        externalUrl: 'https://maps.google.com/?q=40.72233,-73.98742',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Katz%27s_Delicatessen_(51623899326).jpg/500px-Katz%27s_Delicatessen_(51623899326).jpg',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'מידטאון: טיימס סקוור, האמפייר סטייט וגרנד סנטרל',
+        placeIds: ['nyc-times-square', 'nyc-grand-central', 'nyc-nypl', 'nyc-bryant', 'nyc-empire-state'],
+        notes:
+          'הכול במרחק הליכה. לעלות לאמפייר סטייט לקראת השקיעה, כדי לראות את העיר באור יום ובלילה באותו ביקור.',
+      },
+      {
+        day: 2,
+        title: 'סנטרל פארק והמוזיאונים',
+        placeIds: ['nyc-central-park', 'nyc-met', 'nyc-guggenheim', 'nyc-amnh'],
+        notes:
+          'המטרופוליטן והגוגנהיים על הצד המזרחי של הפארק, מוזיאון הטבע על המערבי. לבחור אחד או שניים, לא את כולם.',
+      },
+      {
+        day: 3,
+        title: 'דאון טאון: 11 בספטמבר, פסל החירות ואליס איילנד',
+        placeIds: ['nyc-911', 'nyc-battery', 'nyc-statue-liberty', 'nyc-ellis', 'nyc-jewish-heritage'],
+        notes:
+          'המעבורת לפסל החירות יוצאת מבטרי פארק וכדאי להזמין כרטיס מראש. יום ארוך, להתחיל מוקדם.',
+      },
+      {
+        day: 4,
+        title: 'ברוקלין: הגשר, דמבו ווויליאמסבורג',
+        placeIds: ['nyc-brooklyn-bridge', 'nyc-dumbo', 'nyc-brooklyn-bridge-park', 'nyc-williamsburg'],
+        notes:
+          'לחצות את הגשר ברגל ממנהטן לכיוון ברוקלין, ולחזור ברכבת התחתית. הנוף לכיוון מנהטן הוא הצד היפה.',
+      },
+      {
+        day: 5,
+        title: 'צ׳לסי, הכפר וכיכר וושינגטון',
+        placeIds: ['nyc-chelsea-market', 'nyc-washington-sq', 'nyc-flatiron', 'nyc-katz'],
+        notes:
+          'יום עירוני ורגוע. שימו לב שכץ אינו כשר; מי שמקפיד ימצא חלופות כשרות רבות במידטאון ובאפר ווסט סייד.',
+      },
+      {
+        day: 6,
+        title: 'רוקפלר, רדיו סיטי וברודוויי',
+        placeIds: ['nyc-rockefeller', 'nyc-radio-city'],
+        notes:
+          'טופ אוף דה רוק היא התצפית שממנה רואים את האמפייר סטייט בתוך הנוף. כרטיסים למחזות זמר נמכרים גם בהנחה ביום ההצגה.',
+      },
+      {
+        day: 7,
+        title: 'ברוקלין הירוקה וקוני איילנד',
+        placeIds: ['nyc-prospect', 'nyc-coney'],
+        notes: 'קוני איילנד בסוף קו הרכבת התחתית, כשעה ממנהטן. מתאים ליום קיץ.',
+      },
+    ],
+    practical: {
+      flights:
+        'טיסות ישירות מנתב״ג לנמל התעופה JFK ולניוארק (EWR), כ-12 שעות בכיוון מערב וכ-10.5 שעות בחזרה. מפעילות אל על ודלתא, ולעיתים גם חברות נוספות. הפרש השעות מישראל הוא שבע שעות אחורה. נדרש אישור ESTA מראש (או ויזה אמריקאית) - לא לחכות לרגע האחרון.',
+      gettingAround:
+        'הרכבת התחתית פועלת מסביב לשעון ומכסה את כל האזורים; כרטיס OMNY נטען בכרטיס אשראי או בטלפון ישירות בשער. מנהטן בנויה כרשת ונוחה מאוד להליכה. מוניות צהובות ואובר זמינים אבל תקועים בפקקים בשעות העומס, ולרוב הרכבת מהירה יותר.',
+      kosherOverview:
+        'ניו יורק היא ככל הנראה העיר הקלה בעולם לשמור בה כשרות מחוץ לישראל: מאות מסעדות, מאפיות וסופרים כשרים, בעיקר באפר ווסט סייד, במידטאון (רחוב 47 והסביבה), בבורו פארק, בקראון הייטס ובוויליאמסבורג. ההשגחות הנפוצות הן OU, OK, Star-K ו-Kof-K, וגם השגחות מקומיות. הסצנה גדולה ומשתנה, ולכן כדאי לבדוק מול המקום או מול רשימות מעודכנות לפני הנסיעה. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
+    },
+  },
+  {
     slug: 'grand-canyon',
     name: 'הגרנד קניון ופארקי הדרום-מערב',
     nameLocal: 'Grand Canyon & the American Southwest',
