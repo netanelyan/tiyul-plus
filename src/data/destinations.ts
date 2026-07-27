@@ -14025,6 +14025,8 @@ export const destinations: Destination[] = [
         tags: ['families', 'outdoors'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=Coral+Bay+Cyprus',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Coral_Bay%2C_Cyprus.jpg/500px-Coral_Bay%2C_Cyprus.jpg',
       },
       {
         id: 'paf-troodos',
@@ -14670,6 +14672,8 @@ export const destinations: Destination[] = [
         tags: ['history'],
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=Shamakhi+Azerbaijan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Mezquita_del_Viernes%2C_Shamakhi%2C_Azerbaiy%C3%A1n%2C_2016-09-27%2C_DD_22-36_HDR_PAN.jpg/500px-Mezquita_del_Viernes%2C_Shamakhi%2C_Azerbaiy%C3%A1n%2C_2016-09-27%2C_DD_22-36_HDR_PAN.jpg',
       },
     ],
     itinerary: [
@@ -15770,6 +15774,8 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=Louisiana+Museum+of+Modern+Art+Humlebaek',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Outside_Louisiana_Museum_of_Modern_Art.jpg/500px-Outside_Louisiana_Museum_of_Modern_Art.jpg',
       },
       {
         id: 'nzl-roskilde-cathedral',
@@ -21513,6 +21519,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=58.7599983215332,23.59694480895996',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Matsalu_Keemu_bird_tower.jpg/500px-Matsalu_Keemu_bird_tower.jpg',
       },
       {
         id: 'ee-soomaa',
@@ -27249,6 +27257,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'families'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=42.650002,77.083336',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Petroglyph_Museum_of_Cholpon-Ata_06.jpg/500px-Petroglyph_Museum_of_Cholpon-Ata_06.jpg',
       },
       {
         id: 'kg-issyk-kul',
@@ -28827,6 +28837,8 @@ export const destinations: Destination[] = [
         tags: ['families', 'outdoors'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=-22.967501,-43.223888',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Imperial_palm_trees.jpg/500px-Imperial_palm_trees.jpg',
       },
       {
         id: 'br-pedra-gavea',
