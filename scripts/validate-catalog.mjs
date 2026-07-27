@@ -50,6 +50,21 @@ for (const d of destinations) {
       err(`${d.slug}: editorialRating.score ${s} is outside 1-5 (the UI renders it as "/5")`);
   }
 
+  // The destination-level hero and the iconic-landmark card are hotlinked the
+  // same way place photos are, so they carry the same licensing and width
+  // constraints. They were unchecked until every photoless destination got one.
+  for (const [what, url] of [
+    ['photo', d.photo],
+    ['iconicLandmark.photo', d.iconicLandmark?.photo],
+  ]) {
+    if (!url) continue;
+    if (!PHOTO_HOSTS.some((h) => url.startsWith(h)))
+      err(`${d.slug}: ${what} is not a freely licensed source -> ${url}`);
+    const w = url.match(/\/(\d+)px-/);
+    if (w && !ALLOWED_WIDTHS.includes(+w[1]))
+      err(`${d.slug}: ${what} width ${w[1]} is not one of ${ALLOWED_WIDTHS.join('/')}`);
+  }
+
   const ids = new Set();
   for (const p of d.places) {
     const where = `${d.slug}/${p.id}`;
