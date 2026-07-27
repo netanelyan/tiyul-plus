@@ -13189,6 +13189,8 @@ export const destinations: Destination[] = [
         rating: 4.8,
         durationMin: 1440,
         externalUrl: 'https://maps.google.com/?q=Banff+National+Park',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Banff_from_Sulphur_Mountain_2020.jpg/500px-Banff_from_Sulphur_Mountain_2020.jpg',
       },
       {
         id: 'can-peyto',
@@ -13256,6 +13258,8 @@ export const destinations: Destination[] = [
         rating: 4.7,
         durationMin: 1440,
         externalUrl: 'https://maps.google.com/?q=Jasper+National+Park',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Spirit_Island%2C_Maligne_Lake%2C_Jasper_NP.jpg/500px-Spirit_Island%2C_Maligne_Lake%2C_Jasper_NP.jpg',
       },
       {
         id: 'can-maligne',
@@ -13772,6 +13776,8 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=Auschwitz-Birkenau+Memorial',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Auschwitz_I_(22_May_2010)_b.jpg/500px-Auschwitz_I_(22_May_2010)_b.jpg',
       },
       {
         id: 'kra-wieliczka',
@@ -13839,6 +13845,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors', 'families'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=Zakopane',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/2018-07-03_Zakopane_from_air_05.jpg/500px-2018-07-03_Zakopane_from_air_05.jpg',
       },
     ],
     itinerary: [
@@ -14129,6 +14137,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=Anne+Frank+House+Amsterdam',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Amsterdam_(NL)%2C_Anne-Frank-Huis_--_2015_--_7185.jpg/500px-Amsterdam_(NL)%2C_Anne-Frank-Huis_--_2015_--_7185.jpg',
       },
       {
         id: 'ams-portuguese-synagogue',
@@ -14249,6 +14259,8 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=Keukenhof+Lisse',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Keukenhof_8.jpg/500px-Keukenhof_8.jpg',
       },
       {
         id: 'ams-kinderdijk',
@@ -15572,6 +15584,8 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=Skansen+Stockholm',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Seglora_church_050701.jpg/500px-Seglora_church_050701.jpg',
       },
       {
         id: 'sth-djurgarden',
@@ -15638,6 +15652,8 @@ export const destinations: Destination[] = [
         tags: ['art', 'nightlife'],
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=Fotografiska+Stockholm',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Fotografiska_2010a.jpg/500px-Fotografiska_2010a.jpg',
       },
       {
         id: 'sth-drottningholm',
@@ -29230,6 +29246,8 @@ export const destinations: Destination[] = [
         rating: 4.8,
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=48.859929,2.326119',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Pont_Royal_and_Mus%C3%A9e_d%27Orsay_Paris_10_July_2020.jpg/500px-Pont_Royal_and_Mus%C3%A9e_d%27Orsay_Paris_10_July_2020.jpg',
         priceLevel: 2,
         tags: ['art'],
         mustSee: true,
@@ -29612,6 +29630,8 @@ export const destinations: Destination[] = [
         rating: 4.7,
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=51.49676,-0.17637',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Natural_History_Museum_London_Jan_2006.jpg/500px-Natural_History_Museum_London_Jan_2006.jpg',
         priceLevel: 0,
         tags: ['families', 'history'],
         mustSee: true,
@@ -29791,6 +29811,8 @@ export const destinations: Destination[] = [
         rating: 4.4,
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=1.307238,103.849758',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Panoramic_view_of_Serangoon_Road%2C_Little_India%2C_Singapore_-_20080829.jpg/500px-Panoramic_view_of_Serangoon_Road%2C_Little_India%2C_Singapore_-_20080829.jpg',
         priceLevel: 1,
         tags: ['foodie', 'history'],
       },
@@ -29822,6 +29844,8 @@ export const destinations: Destination[] = [
         rating: 4.3,
         durationMin: 360,
         externalUrl: 'https://maps.google.com/?q=1.24972,103.8296',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/1_sentosa_aerial_2016.jpg/500px-1_sentosa_aerial_2016.jpg',
         priceLevel: 3,
         tags: ['families', 'outdoors'],
       },
@@ -29852,6 +29876,8 @@ export const destinations: Destination[] = [
         rating: 4.2,
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=1.288537,103.846496',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/1_clarke_quay_singapore_night_2014.jpg/500px-1_clarke_quay_singapore_night_2014.jpg',
         priceLevel: 2,
         tags: ['nightlife', 'foodie'],
       },
