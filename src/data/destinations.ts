@@ -418,26 +418,50 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'מרכז העיר הקיסרי',
-        placeIds: ['vie-stephansdom', 'vie-hofburg', 'vie-cafe-central', 'vie-alef-alef'],
-        notes: 'הכול במרחק הליכה. מסיימים בארוחת ערב כשרה ליד בית הכנסת העירוני.',
+        placeIds: [
+          'vie-stephansdom',
+          'vie-graben',
+          'vie-hofburg',
+          'vie-cafe-central',
+          'vie-alef-alef',
+        ],
+        notes:
+          'הכול במרחק הליכה בתוך הרינג. קפה סנטרל הוא מוסד, ולרוב יש בו תור.',
       },
       {
         day: 2,
-        title: 'שנברון ובלוודר',
+        title: 'שנברון, נאשמרקט ובלוודר',
         placeIds: ['vie-schonbrunn', 'vie-naschmarkt', 'vie-belvedere'],
-        notes: 'לשנברון מגיעים עם U4. את קלימט משאירים לאחר הצהריים כשהאור יפה בגנים.',
+        notes:
+          'לשנברון כדאי להגיע עם הפתיחה. בבלוודר נמצא "הנשיקה" של קלימט.',
       },
       {
         day: 3,
-        title: 'הרובע היהודי ופראטר',
-        placeIds: ['vie-koscherland', 'vie-bahur-tov', 'vie-prater'],
-        notes: 'יום רגוע ברובע השני: קניות בסופר הכשר, צהריים בגריל, ואחר צהריים בפראטר.',
+        title: 'מוזיאונים, האופרה והרטהאוס',
+        placeIds: ['vie-kunsthistorisches', 'vie-albertina', 'vie-opera', 'vie-rathaus'],
+        notes:
+          'לאופרה הממלכתית יש סיורים מודרכים ביום, וגם כרטיסי עמידה זולים מאוד להופעות בערב.',
       },
       {
         day: 4,
-        title: 'יער וינה והכרמים',
-        placeIds: ['vie-kahlenberg'],
-        notes: 'אוטובוס 38A לפסגה, ירידה רגלית דרך הכרמים. להביא מים ונעליים נוחות.',
+        title: 'הרובע השני, פראטר והדנובה',
+        placeIds: ['vie-koscherland', 'vie-bahur-tov', 'vie-prater', 'vie-donauinsel'],
+        notes:
+          'הרובע השני (לאופולדשטאדט) הוא מרכז הכשרות של וינה, וממנו קצרה הדרך לפראטר.',
+      },
+      {
+        day: 5,
+        title: 'וינה האחרת: הונדרטוואסר, שטאדטפארק ומריאהילפר',
+        placeIds: ['vie-hundertwasser', 'vie-stadtpark', 'vie-mariahilfer'],
+        notes:
+          'יום קליל ועירוני, טוב גם למזג אוויר לא מושלם.',
+      },
+      {
+        day: 6,
+        title: 'יער וינה, הכרמים והוואכאו',
+        placeIds: ['vie-kahlenberg', 'vie-melk', 'vie-durnstein'],
+        notes:
+          'קאהלנברג צמוד לעיר. מלק ודירנשטיין הם עמק הוואכאו, כשעה וחצי מערבה, ומתאימים ליום עם רכב או שיט.',
       },
     ],
     practical: {
@@ -1273,21 +1297,63 @@ export const destinations: Destination[] = [
     itinerary: [
       {
         day: 1,
-        title: 'העיר העתיקה והרובע היהודי',
-        placeIds: ['prg-oldtown', 'prg-josefov', 'prg-dinitz'],
-        notes: 'הרובע היהודי סגור בשבת. צהריים כשרים בדיניץ במרחק 3 דקות הליכה.',
+        title: 'העיר העתיקה, הרובע היהודי והשווקים',
+        placeIds: [
+          'prg-oldtown',
+          'prg-josefov',
+          'prg-jerusalem-synagogue',
+          'prg-havelske',
+          'prg-dinitz',
+        ],
+        notes:
+          'להתחיל מוקדם בכיכר העיר העתיקה, לפני קבוצות המטיילים. הרובע היהודי דורש כרטיס משולב לבתי הכנסת ולבית העלמין.',
       },
       {
         day: 2,
-        title: 'המצודה וגשר קרל',
-        placeIds: ['prg-castle', 'prg-charles', 'prg-king-solomon'],
-        notes: 'מתחילים מוקדם במצודה, יורדים דרך מאלה סטראנה וחוצים את גשר קרל לכיוון ארוחת ערב.',
+        title: 'המצודה, סטרהוב ומאלה סטראנה',
+        placeIds: [
+          'prg-castle',
+          'prg-strahov',
+          'prg-mala-strana',
+          'prg-charles',
+          'prg-king-solomon',
+        ],
+        notes:
+          'לרדת מהמצודה ברגל דרך מאלה סטראנה אל גשר קרל. הגשר עמוס ביום ויפה בשעות הבוקר המוקדמות.',
       },
       {
         day: 3,
-        title: 'ירוק ונוף',
-        placeIds: ['prg-petrin', 'prg-charles'],
-        notes: 'רכבל לפטרשין, ובערב חזרה לגשר קרל כשהוא ריק ומואר.',
+        title: 'העיר החדשה: ואצלב, הבית הרוקד ובתי הקפה',
+        placeIds: [
+          'prg-wenceslas',
+          'prg-national-museum',
+          'prg-dancing-house',
+          'prg-cafe-louvre',
+          'prg-palladium',
+        ],
+        notes:
+          'יום עירוני ורגוע יותר, כולו במרחק הליכה לאורך העיר החדשה.',
+      },
+      {
+        day: 4,
+        title: 'פארקים ותצפיות',
+        placeIds: ['prg-petrin', 'prg-kampa', 'prg-letna', 'prg-zizkov'],
+        notes:
+          'הרכבל לפטרשין חוסך את העלייה. פארק לטנה נותן את הנוף הקלאסי על הגשרים ועל הנהר.',
+      },
+      {
+        day: 5,
+        title: 'וישהראד וטירת קרלשטיין',
+        placeIds: ['prg-vysehrad', 'prg-karlstejn'],
+        notes:
+          'קרלשטיין היא נסיעת רכבת של כשעה מפראג, ומשם עוד כחצי שעה הליכה בעלייה אל הטירה.',
+      },
+      {
+        day: 6,
+        title: 'קוטנה הורה ובית העצמות',
+        placeIds: ['prg-kutna-hora', 'prg-sedlec'],
+        notes:
+          'טיול יום ברכבת, כשעה מפראג. סדלץ נמצאת ליד תחנת הרכבת ואילו מרכז קוטנה הורה כשלושה קילומטרים משם.',
       },
     ],
     practical: {
@@ -1707,21 +1773,51 @@ export const destinations: Destination[] = [
     itinerary: [
       {
         day: 1,
-        title: 'פשט: פרלמנט והרובע היהודי',
-        placeIds: ['bud-parliament', 'bud-shoes', 'bud-dohany', 'bud-carmel'],
-        notes: 'יום רגלי בצד פשט. מסיימים בערב ברובע היהודי - הוא גם מרכז חיי הלילה.',
+        title: 'פשט: הפרלמנט, הרובע היהודי והנעליים',
+        placeIds: ['bud-parliament', 'bud-shoes', 'bud-dohany', 'bud-kazinczy', 'bud-carmel'],
+        notes:
+          'בית הכנסת הגדול ברחוב דוהאני וזה שברחוב קזינצי נמצאים באותו רובע, במרחק הליכה קצר.',
       },
       {
         day: 2,
-        title: 'בודה: הטירה והמצודה',
-        placeIds: ['bud-castle', 'bud-bastion', 'bud-hanna'],
-        notes: 'חוצים את גשר השלשלאות, עולים ברכבל. בערב חוזרים לפשט לארוחה כשרה.',
+        title: 'בודה: הטירה, המצודה וגבעת גלרט',
+        placeIds: [
+          'bud-castle',
+          'bud-bastion',
+          'bud-gellert-hill',
+          'bud-liberty-bridge',
+          'bud-hanna',
+        ],
+        notes:
+          'לעלות לטירה ברכבל או באוטובוס, ולרדת ברגל דרך גשר השלשלאות. גבעת גלרט נותנת את הנוף הרחב על שני חלקי העיר.',
       },
       {
         day: 3,
-        title: 'מרחצאות ופארק העיר',
-        placeIds: ['bud-szechenyi'],
-        notes: 'יום פינוק בסצ׳ני. להביא בגד ים וכפכפים; אפשר לשכור מגבת במקום.',
+        title: 'שדרת אנדראשי, כיכר הגיבורים ופארק העיר',
+        placeIds: ['bud-andrassy', 'bud-heroes', 'bud-citypark', 'bud-szechenyi'],
+        notes:
+          'אפשר לעשות את כל הציר ברכבת התחתית הצהובה, הקו ההיסטורי מ-1896. המרחצאות בפארק פתוחים עד הערב.',
+      },
+      {
+        day: 4,
+        title: 'מרכז פשט: הבזיליקה, ואצי ובתי הקפה',
+        placeIds: ['bud-basilica', 'bud-vaci', 'bud-gerbeaud', 'bud-newyork-cafe'],
+        notes:
+          'יום עירוני קליל. ניו יורק קפה מפואר מאוד ותור נפוץ בשעות הצהריים.',
+      },
+      {
+        day: 5,
+        title: 'מים: מרחצאות גלרט ואי מרגרט',
+        placeIds: ['bud-gellert-baths', 'bud-margaret'],
+        notes:
+          'אי מרגרט הוא פארק ארוך באמצע הדנובה, נעים להליכה או לאופניים אחרי המרחצאות.',
+      },
+      {
+        day: 6,
+        title: 'טיול יום: סנטנדרה ווישגרד',
+        placeIds: ['bud-szentendre', 'bud-visegrad'],
+        notes:
+          'סנטנדרה כארבעים דקות מבודפשט ברכבת הפרברים. וישגרד ממשיכה צפונה ומשקיפה על קשת הדנובה.',
       },
     ],
     practical: {
@@ -2143,20 +2239,51 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'רומא העתיקה',
-        placeIds: ['rom-colosseum', 'rom-forum', 'rom-baghetto'],
-        notes: 'מתחילים מוקדם בקולוסיאום. הגטו במרחק הליכה מהפורום - ארוחת ערב כשרה מושלמת לסיום.',
+        placeIds: ['rom-colosseum', 'rom-forum', 'rom-mouth', 'rom-baghetto'],
+        notes:
+          'כרטיס משולב לקולוסיאום ולפורום. להגיע מוקדם, הצל בשטח החפירות כמעט ואינו קיים.',
       },
       {
         day: 2,
-        title: 'מרכז העיר הבארוקי',
-        placeIds: ['rom-pantheon', 'rom-trevi', 'rom-ghetto', 'rom-yotvata'],
-        notes: 'יום רגלי: פנתאון, טרווי, ואחר צהריים שלם בגטו היהודי כולל המוזיאון.',
+        title: 'המרכז הבארוקי: פנתיאון, נבונה וטרווי',
+        placeIds: [
+          'rom-pantheon',
+          'rom-navona',
+          'rom-trevi',
+          'rom-campo',
+          'rom-ghetto',
+          'rom-yotvata',
+        ],
+        notes:
+          'כל היום במרחק הליכה. הגטו היהודי צמוד לקמפו דה פיורי ולפנתיאון.',
       },
       {
         day: 3,
-        title: 'הוותיקן',
-        placeIds: ['rom-vatican'],
-        notes: 'להזמין כניסה ל-8:00 בבוקר. אחרי הביקור - חזרה לגטו לארוחה, 20 דקות בחשמלית.',
+        title: 'הוותיקן וקסטל סנט אנג׳לו',
+        placeIds: ['rom-peter-square', 'rom-vatican', 'rom-castel'],
+        notes:
+          'למוזיאוני הוותיקן חובה להזמין כרטיס לשעה מראש. לבוש צנוע נדרש בבזיליקה.',
+      },
+      {
+        day: 4,
+        title: 'הצפון: המדרגות הספרדיות, פופולו והקורסו',
+        placeIds: ['rom-spanish-steps', 'rom-popolo', 'rom-corso', 'rom-borghese'],
+        notes:
+          'לגלריה בורגזה יש כניסה בחלונות זמן קבועים ומספר מבקרים מוגבל, אז מזמינים מראש.',
+      },
+      {
+        day: 5,
+        title: 'טראסטוורה, ג׳ניקולו והדרך האפּיה',
+        placeIds: ['rom-trastevere', 'rom-gianicolo', 'rom-appia'],
+        notes:
+          'טראסטוורה נעימה במיוחד לקראת הערב. הדרך האפּיה סגורה לתנועה בימי ראשון וטובה לאופניים.',
+      },
+      {
+        day: 6,
+        title: 'טיול יום: טיבולי',
+        placeIds: ['rom-villa-deste', 'rom-villa-adriana'],
+        notes:
+          'שתי הווילות בטיבולי, כשעה מרומא. אפשר לשלב את שתיהן ביום אחד, אבל זה יום ארוך והליכה רבה.',
       },
     ],
     practical: {
@@ -3052,20 +3179,44 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'גאודי הגדול',
-        placeIds: ['bcn-sagrada', 'bcn-guell', 'bcn-maccabi'],
-        notes: 'סגרדה פמיליה בבוקר, פארק גואל אחר הצהריים (20 דקות באוטובוס ביניהם), ערב כשר במכבי.',
+        placeIds: ['bcn-sagrada', 'bcn-guell', 'bcn-sant-pau', 'bcn-maccabi'],
+        notes:
+          'כרטיסים לסגרדה פמיליה ולפארק גואל נמכרים לפי שעת כניסה וכדאי להזמין מראש. מתחם סנט פאו נמצא ממש מולה.',
       },
       {
         day: 2,
-        title: 'העיר העתיקה',
-        placeIds: ['bcn-gothic', 'bcn-boqueria', 'bcn-batllo'],
-        notes: 'רובע גותי כולל אל קול היהודי, שוק הבוקריה לצהריים, ובדרך חזרה קאסה באטיו מוארת.',
+        title: 'העיר העתיקה: הגותי, אל בורן ופיקאסו',
+        placeIds: ['bcn-gothic', 'bcn-cathedral', 'bcn-boqueria', 'bcn-born', 'bcn-picasso'],
+        notes:
+          'כל היום במרחק הליכה. הבוקריה סוגרת מוקדם יחסית בערב, אז כדאי להתחיל בה או לעבור בה בצהריים.',
       },
       {
         day: 3,
-        title: 'ים וטיילת',
-        placeIds: ['bcn-barceloneta'],
-        notes: 'בוקר רגוע בחוף, שכירת אופניים לאורך הטיילת. אפשר לשלב שיט קצר מהנמל.',
+        title: 'מודרניזם ואיישמפלה',
+        placeIds: ['bcn-batllo', 'bcn-casa-mila', 'bcn-gracia', 'bcn-chabad'],
+        notes:
+          'פאסג׳ דה גרסיה מרכז את בתי המודרניזם ואת החנויות, והכול על ציר אחד.',
+      },
+      {
+        day: 4,
+        title: 'ים, פארק וקאמפ נואו',
+        placeIds: ['bcn-barceloneta', 'bcn-ciutadella', 'bcn-camp-nou'],
+        notes:
+          'יום קליל. הביקור בקאמפ נואו דורש בדיקה מראש בגלל עבודות השיפוץ במתחם.',
+      },
+      {
+        day: 5,
+        title: 'מונז׳ואיק והתצפיות',
+        placeIds: ['bcn-montjuic', 'bcn-mnac', 'bcn-bunkers', 'bcn-tibidabo'],
+        notes:
+          'הרכבל למונז׳ואיק נוח. בונקרס דל כרמל הוא נקודת השקיעה המפורסמת של העיר, ופשוט מאוד להגיע אליו באוטובוס.',
+      },
+      {
+        day: 6,
+        title: 'טיולי יום: מונסראט והקוסטה בראווה',
+        placeIds: ['bcn-montserrat', 'bcn-tossa', 'bcn-cadaques'],
+        notes:
+          'מונסראט היא נסיעת רכבת ורכבל של כשעה וחצי. טוסה וקדאקס רחוקות יותר ומתאימות ליום עם רכב שכור.',
       },
     ],
     practical: {
@@ -3452,21 +3603,38 @@ export const destinations: Destination[] = [
     itinerary: [
       {
         day: 1,
-        title: 'הציר ההיסטורי',
-        placeIds: ['ber-brandenburg', 'ber-reichstag', 'ber-memorial'],
-        notes: 'להרשם לכיפת הרייכסטאג מראש. שלושת האתרים במרחק הליכה זה מזה.',
+        title: 'הציר ההיסטורי: שער ברנדנבורג, הרייכסטאג והאנדרטה',
+        placeIds: ['ber-brandenburg', 'ber-reichstag', 'ber-memorial', 'ber-potsdamer'],
+        notes:
+          'הביקור בכיפת הרייכסטאג הוא בחינם אבל דורש הרשמה מראש באינטרנט.',
       },
       {
         day: 2,
-        title: 'מוזיאונים וזיכרון',
-        placeIds: ['ber-museum-island', 'ber-jewish-museum', 'ber-bleibergs'],
-        notes: 'בוקר באי המוזיאונים, אחה"צ במוזיאון היהודי, וערב שקשוקה כשרה בשרלוטנבורג.',
+        title: 'אי המוזיאונים והרובע היהודי',
+        placeIds: ['ber-museum-island', 'ber-neue-synagoge', 'ber-hackesche', 'ber-tv-tower'],
+        notes:
+          'כרטיס יומי לאי המוזיאונים משתלם אם נכנסים ליותר ממוזיאון אחד.',
       },
       {
         day: 3,
-        title: 'החומה וברלין הצעירה',
-        placeIds: ['ber-eastside', 'ber-chabad'],
-        notes: 'איסט סייד גאלרי ושוטטות בקרויצברג/פרידריכסהיין. שישי? ארוחת שבת בחב"ד.',
+        title: 'החומה והזיכרון',
+        placeIds: ['ber-eastside', 'ber-checkpoint', 'ber-topography', 'ber-jewish-museum'],
+        notes:
+          'טופוגרפיה של הטרור היא כניסה חופשית ונמצאת על קטע חומה מקורי, ליד צ׳קפוינט צ׳רלי.',
+      },
+      {
+        day: 4,
+        title: 'מערב ברלין: קודאם, שרלוטנבורג וטירגארטן',
+        placeIds: ['ber-kudamm', 'ber-charlottenburg', 'ber-tiergarten', 'ber-bleibergs'],
+        notes:
+          'הצד המערבי של העיר, שקט ומרווח יותר. טירגארטן הוא הריאה הירוקה שבין השניים.',
+      },
+      {
+        day: 5,
+        title: 'ברלין הצעירה: מאוארפארק, טמפלהוף וז׳נדרמנמרקט',
+        placeIds: ['ber-mauerpark', 'ber-tempelhof', 'ber-gendarmenmarkt', 'ber-chabad'],
+        notes:
+          'שוק הפשפשים במאוארפארק והקריוקי שלו הם של יום ראשון. טמפלהוף הוא שדה תעופה נטוש שהפך לפארק ענק.',
       },
     ],
     practical: {

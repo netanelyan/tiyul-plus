@@ -245,6 +245,29 @@ npm run lint
    (c) anything left broken or deferred, (d) what the next session
    should know. No exceptions - docs-only sessions included.
 
+## Grounding index budget (authoritative - read this before trusting a session log)
+
+**The ceiling is 260,000 chars.** Netanel raised it from ~190,000 on 2026-07-27.
+
+Older session-log entries below quote the ~190,000 figure. They are kept as written
+because they are a historical record, but **do not act on that number**, and above all
+do not trim the catalog because the index now measures above it.
+
+What the number actually is, measured rather than assumed:
+
+- The ceiling is a **self-imposed guardrail. It appears nowhere in the code** - grep
+  for it and you will find nothing. There is no API limit at this value.
+- The real constraint is the 200k context window, shared by the grounding index +
+  the detail block (capped at 6 cities, ~39,000 chars worst case) + the history budget
+  (50,000 chars, see entry 2026-07-27 (e)) + system prompt and tools.
+- Measured 2026-07-27: index 191,951 chars at 1,336 places, **90% ASCII / 10% Hebrew**,
+  which is roughly 61k-67k tokens. An earlier entry's "~45k tokens" understates it.
+- Cost per place is stable at **~144 chars**, so 260,000 leaves room for roughly 470
+  more places, about 20 cities.
+
+The index does NOT serialize photo URLs, so **photo work costs zero budget**. Verify
+with `/tmp/measure.mjs`-style measurement before quoting any new figure.
+
 ## Roadmap (execute one phase per session, in order)
 
 - **Phase 1 - Agent Core** ✅ DONE: chat runs a server-side tool loop
