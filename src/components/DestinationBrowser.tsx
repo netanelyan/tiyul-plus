@@ -61,7 +61,13 @@ export default function DestinationBrowser({ cards }: { cards: DestinationCard[]
   return (
     <div>
       {/* ---------- טאבי יבשת ---------- */}
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
+      {/*
+        עוטפים ולא גוללים. הגרסה הראשונה הייתה `overflow-x-auto` בכל
+        רוחב, ומתחת ל-640px זה **חתך כרטיסים באמצע מילה** - "אפריקה
+        והמזרח התיכון" נראה חצי, וזה קורא כמו תקלה ולא כמו רמז לגלילה.
+        עכשיו הטאבים מתחלקים בשורה ויורדים לשורה הבאה, וכלום לא נחתך.
+      */}
+      <div className="flex flex-wrap gap-2">
         <ContinentTab
           label="העולם כולו"
           emoji="🌍"
@@ -252,7 +258,9 @@ function ContinentTab({
       aria-pressed={active}
       // מונה 0 לא מושבת בכוונה: הוא מידע ("אין כאן כלום עם הסינון הזה")
       // ולחיצה עליו עדיין מעבירה ליבשת, מה שמאפשר לשחרר פילטר אחר.
-      className={`flex shrink-0 flex-col items-center gap-0.5 rounded-2xl px-4 py-3 text-sm font-bold transition ${
+      // flex-1 עם רוחב מינימלי: הטאבים מתחלקים בשורה במקום להיחתך, ושם
+      // ארוך כמו "אפריקה והמזרח התיכון" נשבר לשתי שורות בתוך הכרטיס.
+      className={`flex min-w-[6.25rem] flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl px-3 py-3 text-center text-sm font-bold transition ${
         active
           ? 'bg-shell text-night ring-2 ring-sunset'
           : 'bg-shell/70 text-night/60 ring-1 ring-night/10 hover:ring-night/25'
@@ -261,7 +269,7 @@ function ContinentTab({
       <span aria-hidden className="text-lg">
         {emoji}
       </span>
-      <span className="whitespace-nowrap">{label}</span>
+      <span className="leading-tight">{label}</span>
       <span className={`text-xs font-semibold ${active ? 'text-sunset-deep' : 'text-night/35'}`}>
         {count}
       </span>
