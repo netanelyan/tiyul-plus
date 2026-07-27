@@ -485,6 +485,83 @@ the symptom. Final confirmation is Netanel's own iPhone.
 mobile widths**, i.e. `text-base sm:text-sm` rather than `text-sm`, or iOS will
 zoom the page the moment it is focused. There is no lint rule for this; the
 harness in this entry is the way to catch it.
+### 2026-07-27 (t) - Coverage vs the real market: Dubai and New York added, six itineraries unblocked
+
+Netanel asked for depth and roundness across the 17 countries Israelis actually fly to,
+then left me to it. The audit changed the job: **the problem was not thin place-lists,
+it was that the top markets had no flagship city.** UAE is the #3 market and the catalog
+had Abu Dhabi but no Dubai. USA is #2 and had Grand Canyon and New England but no New
+York, which is why it read 14 nature places against 2 attractions.
+
+Market data is sourced, not remembered: Israel Airports Authority 2025 gives Greece
+~2.2M, USA ~1.6M, UAE ~1.5M, Italy ~1.2M, Cyprus ~1.2M, and PassportCard winter 2025/26
+puts Thailand 1st and Hungary 2nd. **Ranks 6-15 are published nowhere reachable** - the
+TODO says so explicitly so a later session does not invent them.
+
+**Dubai, 23 places. New York, 27 places.** Every coordinate from the Wikipedia
+coordinates API, every photo filename confirmed against the Commons API with
+`redirects=1` (so the Kykkos redirect trap cannot recur) and its real source width read
+before choosing a thumbnail width. All 45 resulting URLs were then browser-probed:
+**0 dead**, and they are recorded ok:true in the manifest.
+
+**Four sourcing traps caught in one sitting, which is why lead images cannot be trusted
+blindly:**
+- **Local non-free uploads.** Five Dubai lead images (Dubai Mall, Dubai Frame, Museum of
+  the Future, Burj Al Arab, Dubai Opera) live on English Wikipedia, not Commons, because
+  **the UAE has no freedom of panorama** for modern buildings. Those places ship with no
+  photo. Hotlinking them would be a licensing problem, not a style one.
+- **Corporate logo SVGs.** Rockefeller Center and One World Trade Center both return a
+  logo as their lead image. Used the 30 Rockefeller Plaza photo for the former; dropped
+  the latter rather than illustrate a tower with its wordmark.
+- **Right subject, wrong photo.** Central Park's lead image is a crowd at the Global
+  Citizen Festival. Central Park therefore ships with NO photo. A gradient beats a
+  concert crowd captioned as a park.
+- **Wrong place entirely.** `Deira` resolved to a UK article with a Northumbria image.
+  Dropped.
+
+**Katz's Delicatessen carries an explicit "not kosher" line in its description.** For
+this audience that correction is the useful part of the entry, and leaving it implied
+was the dishonest option.
+
+**Six flagship cities were hiding half their own research.** Prague, Barcelona,
+Budapest, Rome, Berlin and Vienna each had 20-23 researched places but only 3-4
+itinerary days, so 11-16 places per city never appeared in any suggested route - the
+same failure the Hebrew entry found for Bratislava and Athens. All six rebuilt from
+existing places, grouped geographically so each day is walkable. Unused places per city
+went 16/16/14/14/12/11 to **0/0/0/0/0/0**. No new research, no index cost, no
+verification risk.
+
+**Kosher, deliberately incomplete rather than fabricated.** Dubai has real
+infrastructure (Chabad Dubai / Rabbi Duchman, EAKC, OU, Badatz Tiferet Yisrael) and New
+York is the easiest kosher city outside Israel. Both are described in
+`practical.kosherOverview` with supervising bodies named as reported plus the standing
+"verify with the venue" caveat. **No kosher PLACES were added in either city**, because
+restaurant coordinates could not be verified from here, and both texts say so rather
+than implying the list is complete.
+
+**Also:** an authoritative `## Grounding index budget` section near the top of this file.
+The ceiling is 260,000 and the index now measures 195,677, which is above the ~190,000
+that a dozen older entries still quote. Those entries stay as written, but a future
+session reading one could easily conclude the catalog needs trimming. The new section
+states plainly that the figure is a self-imposed guardrail, appears nowhere in the code,
+and what the real 200k-context constraint actually is.
+
+Scope now: **152 destinations, 83 countries, 1,363 places, 0 errors.** USA 19 to 46
+places, UAE 22 to 45. 1,427 of 1,445 photo URLs carry HTTP evidence; the 18 unproven are
+the known-unrepairable filenames from entry (s).
+
+**Next, in the agreed order:** Greek islands (Greece is #1 and has no Cyclades at all),
+then Venice and Florence, then Nice, then Edinburgh. Then priority 2 (thin countries:
+argentina 6 places, bulgaria 12, romania 13, uk 13) and priority 3 (roundness: `cafe`
+missing in 12 of 17 countries, `kosher-market` in 16 of 17).
+
+**Tooling note for whoever picks this up:** the Chrome extension is the only route to
+Commons from this sandbox and it freezes often. What works: navigate to
+`en.wikipedia.org/wiki/Special:BlankPage`, then make **same-origin** `/w/api.php` calls.
+Cross-origin fetches (Commons from Wikipedia, Nominatim from anywhere) freeze the
+renderer reliably. Keep each call under ~45s and re-read `tabs_context_mcp` for a fresh
+tab id after every navigate.
+
 ### 2026-07-27 (s) - The photos are actually fixed: 151 dead down to 18, every one probed
 
 **Netanel reconnected the Chrome extension after a full restart, and it held.** That
