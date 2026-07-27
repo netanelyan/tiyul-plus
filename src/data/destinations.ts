@@ -7085,6 +7085,316 @@ export const destinations: Destination[] = [
     },
   },
   {
+    slug: 'santorini-mykonos',
+    name: 'סנטוריני ומיקונוס',
+    nameLocal: 'Santorini & Mykonos (Cyclades)',
+    countrySlug: 'greece',
+    flag: '🇬🇷',
+    center: { lat: 36.94, lng: 25.39 },
+    zoom: 9,
+    tagline: 'הקלדרה, הכפרים הלבנים והאיים שכולם מתכוונים אליהם',
+    summary:
+      'שני האיים המבוקשים בקיקלאדס, ושניהם במרחק טיסה קצרה או מעבורת מאתונה. סנטוריני היא הקלדרה, השקיעה באואיה והאתר המינואי באקרוטירי; מיקונוס היא חורה הלבנה, טחנות הרוח וקרבה לאי הארכיאולוגי דלוס. אפשר לשלב את שניהם בחופשה אחת: מעבורת מהירה ביניהם לוקחת כשעתיים עד שלוש.',
+    bestSeason: 'מאי עד יוני וספטמבר עד אוקטובר. יולי-אוגוסט חמים ועמוסים מאוד ובמחירי שיא, ובחורף חלק גדול מהעסקים באיים פשוט סגור.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Oia_sunset_-_panoramio_%282%29.jpg/500px-Oia_sunset_-_panoramio_%282%29.jpg',
+    iconicLandmark: {
+      name: 'טחנות הרוח של מיקונוס',
+      nameLocal: 'Windmills of Mykonos',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Against_Greek_skies%2C_one_of_the_Mykonos_Island_Windmills%2C_Chora._Cyclades%2C_Agean_Sea%2C_Greece.jpg/500px-Against_Greek_skies%2C_one_of_the_Mykonos_Island_Windmills%2C_Chora._Cyclades%2C_Agean_Sea%2C_Greece.jpg',
+      blurb:
+        'שורת טחנות הרוח הלבנות מהמאה ה-16 מעל חורה של מיקונוס, מעל רובע ונציה הקטנה.',
+    },
+    editorialRating: {
+      score: 4.5,
+      verdict:
+        'הנוף עומד בציפיות, וזה לא מובן מאליו. טיסה קצרה מתל אביב לאתונה ומשם פנימית או מעבורת, ואפשר לשלב שני איים בשבוע. חסרונות: יקר בעונה, עמוס מאוד ביולי-אוגוסט, וכמעט אין תשתית כשרות באיים עצמם, כך שמי שמקפיד צריך להיערך מראש. מיקונוס גם יקרה במיוחד בחיי הלילה.',
+    },
+    places: [
+      {
+        id: 'cyc-oia',
+        name: 'אואיה',
+        nameLocal: 'Oia',
+        category: 'viewpoint',
+        lat: 36.46667,
+        lng: 25.36667,
+        description:
+          'הכפר הלבן בקצה הצפוני של סנטוריני, ומקום השקיעה המפורסם ביותר באיים היווניים. צפוף מאוד לקראת השקיעה, אז כדאי לתפוס מקום מוקדם.',
+        durationMin: 120,
+        priceLevel: 0,
+        tags: ['romantic', 'outdoors'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=36.46667,25.36667',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Oia_sunset_-_panoramio_(2).jpg/500px-Oia_sunset_-_panoramio_(2).jpg',
+      },
+      {
+        id: 'cyc-fira',
+        name: 'פירה',
+        nameLocal: 'Fira',
+        category: 'attraction',
+        lat: 36.42,
+        lng: 25.43167,
+        description:
+          'בירת סנטוריני, על שפת הקלדרה. משם יוצאים רוב האוטובוסים באי, ומשם יורדים לנמל הישן ברכבל, ברגל או על גב חמור.',
+        durationMin: 150,
+        priceLevel: 1,
+        tags: ['nightlife', 'foodie'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=36.42,25.43167',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Santorini_Fira3_tango7174.jpg/500px-Santorini_Fira3_tango7174.jpg',
+      },
+      {
+        id: 'cyc-imerovigli',
+        name: 'אימרוביגלי',
+        nameLocal: 'Imerovigli',
+        category: 'viewpoint',
+        lat: 36.43333,
+        lng: 25.41667,
+        description:
+          'הכפר הגבוה ביותר על שפת הקלדרה, בין פירה לאואיה. שקט בהרבה מאואיה ועם אותו נוף בדיוק.',
+        durationMin: 60,
+        priceLevel: 0,
+        tags: ['romantic'],
+        externalUrl: 'https://maps.google.com/?q=36.43333,25.41667',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Imerovigli_01.jpg/500px-Imerovigli_01.jpg',
+      },
+      {
+        id: 'cyc-amoudi',
+        name: 'מפרץ אמודי',
+        nameLocal: 'Amoudi Bay',
+        category: 'nature',
+        lat: 36.46,
+        lng: 25.37056,
+        description:
+          'מפרץ קטן למרגלות אואיה, בתחתית כשלוש מאות מדרגות. מסעדות דגים על המים ומקום קפיצה לים מהסלעים.',
+        durationMin: 120,
+        priceLevel: 2,
+        tags: ['foodie', 'outdoors'],
+        externalUrl: 'https://maps.google.com/?q=36.46,25.37056',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Santorini_AmmoudiBay_tango7174.jpg/500px-Santorini_AmmoudiBay_tango7174.jpg',
+      },
+      {
+        id: 'cyc-akrotiri',
+        name: 'אקרוטירי הפרהיסטורית',
+        nameLocal: 'Akrotiri',
+        category: 'attraction',
+        lat: 36.35139,
+        lng: 25.40361,
+        description:
+          'עיר מינואית שנקברה תחת אפר געשי במאה ה-17 לפנה״ס ונשתמרה היטב, ולכן מכונה לעיתים "פומפיי של האגאי". האתר מקורה ונוח גם בחום.',
+        durationMin: 90,
+        priceLevel: 2,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=36.35139,25.40361',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Ancient_Akrotiri.jpeg/500px-Ancient_Akrotiri.jpeg',
+      },
+      {
+        id: 'cyc-ancient-thera',
+        name: 'תרה העתיקה',
+        nameLocal: 'Ancient Thera',
+        category: 'attraction',
+        lat: 36.36459,
+        lng: 25.47794,
+        description:
+          'שרידי עיר מהתקופה ההלניסטית על רכס מסה וונו, מעל קמארי ופריסה. הדרך אליה תלולה, והנוף משם על שני צדי האי.',
+        durationMin: 120,
+        priceLevel: 1,
+        tags: ['history', 'outdoors'],
+        externalUrl: 'https://maps.google.com/?q=36.36459,25.47794',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Santorini_ancient_thera_1.jpg/500px-Santorini_ancient_thera_1.jpg',
+      },
+      {
+        id: 'cyc-red-beach',
+        name: 'החוף האדום',
+        nameLocal: 'Red Beach',
+        category: 'nature',
+        lat: 36.34732,
+        lng: 25.39459,
+        description:
+          'חוף חלוקים למרגלות צוקי לבה אדומים, ליד אקרוטירי. הגישה בשביל קצר, ולעיתים נסגרת בגלל סכנת מפולות. לבדוק במקום.',
+        durationMin: 90,
+        priceLevel: 0,
+        tags: ['outdoors'],
+        externalUrl: 'https://maps.google.com/?q=36.34732,25.39459',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Red_Beach%2C_Greece_Oct_29%2C_2018_07-12-47.jpeg/500px-Red_Beach%2C_Greece_Oct_29%2C_2018_07-12-47.jpeg',
+      },
+      {
+        id: 'cyc-kamari',
+        name: 'קמארי',
+        nameLocal: 'Kamari',
+        category: 'nature',
+        lat: 36.37678,
+        lng: 25.48183,
+        description:
+          'חוף החלוקים השחורים הגדול של סנטוריני, עם טיילת מסעדות ובתי קפה. נוח יותר לשהייה ארוכה מהחופים הקטנים.',
+        durationMin: 180,
+        priceLevel: 1,
+        tags: ['families', 'outdoors'],
+        externalUrl: 'https://maps.google.com/?q=36.37678,25.48183',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Santorini_kamari.jpg/500px-Santorini_kamari.jpg',
+      },
+      {
+        id: 'cyc-emporeio',
+        name: 'אמפוריו',
+        nameLocal: 'Emporeio',
+        category: 'attraction',
+        lat: 36.35833,
+        lng: 25.44444,
+        description:
+          'הכפר המסורתי הגדול בסנטוריני, עם מבוך סמטאות מוצל שנבנה כהגנה מפני פיראטים. כמעט בלי תיירים לעומת אואיה.',
+        durationMin: 75,
+        priceLevel: 0,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=36.35833,25.44444',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Emporeio001.jpg/500px-Emporeio001.jpg',
+      },
+      {
+        id: 'cyc-thera-museum',
+        name: 'המוזיאון לפרהיסטוריה של תרה',
+        nameLocal: 'Museum of Prehistoric Thera',
+        category: 'museum',
+        lat: 36.4185,
+        lng: 25.437,
+        description:
+          'בפירה, ומציג את הממצאים מאקרוטירי: ציורי קיר, כלים וכלי זהב. הביקור בו משלים את האתר עצמו.',
+        durationMin: 75,
+        priceLevel: 1,
+        tags: ['history', 'art'],
+        externalUrl: 'https://maps.google.com/?q=36.4185,25.437',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Pr%C3%A4historisches_Museum_Thira_01.jpg/500px-Pr%C3%A4historisches_Museum_Thira_01.jpg',
+      },
+      {
+        id: 'cyc-mykonos-windmills',
+        name: 'טחנות הרוח של מיקונוס',
+        nameLocal: 'Windmills of Mykonos (Kato Mili)',
+        category: 'viewpoint',
+        lat: 37.4445,
+        lng: 25.3256,
+        description:
+          'שורת טחנות הרוח הלבנות מעל חורה, סמל האי. מתחתיהן מתחיל רובע ונציה הקטנה.',
+        durationMin: 45,
+        priceLevel: 0,
+        tags: ['romantic'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=37.4445,25.3256',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Against_Greek_skies%2C_one_of_the_Mykonos_Island_Windmills%2C_Chora._Cyclades%2C_Agean_Sea%2C_Greece.jpg/500px-Against_Greek_skies%2C_one_of_the_Mykonos_Island_Windmills%2C_Chora._Cyclades%2C_Agean_Sea%2C_Greece.jpg',
+      },
+      {
+        id: 'cyc-paraportiani',
+        name: 'כנסיית פאראפורטיאני',
+        nameLocal: 'Panagia Paraportiani',
+        category: 'attraction',
+        lat: 37.4471,
+        lng: 25.3257,
+        description:
+          'מכלול של חמש כנסיות שנבנו זו על זו לאורך מאות שנים, בכניסה לחורה של מיקונוס. אחד המבנים המצולמים ביוון.',
+        durationMin: 30,
+        priceLevel: 0,
+        tags: ['history', 'art'],
+        externalUrl: 'https://maps.google.com/?q=37.4471,25.3257',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Church_of_Panagia_Paraportiani.jpg/500px-Church_of_Panagia_Paraportiani.jpg',
+      },
+      {
+        id: 'cyc-delos',
+        name: 'דלוס',
+        nameLocal: 'Delos',
+        category: 'attraction',
+        lat: 37.39333,
+        lng: 25.27111,
+        description:
+          'אי ארכיאולוגי שלם, אתר מורשת עולמית ומקום הולדתם של אפולו וארטמיס במיתולוגיה. מגיעים בסירה ממיקונוס, וכיום איש אינו גר בו.',
+        durationMin: 240,
+        priceLevel: 2,
+        tags: ['history'],
+        mustSee: true,
+        externalUrl: 'https://maps.google.com/?q=37.39333,25.27111',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Delos_general.jpg/500px-Delos_general.jpg',
+      },
+      {
+        id: 'cyc-mykonos-museum',
+        name: 'המוזיאון הארכיאולוגי של מיקונוס',
+        nameLocal: 'Archaeological Museum of Mykonos',
+        category: 'museum',
+        lat: 37.45,
+        lng: 25.3297,
+        description:
+          'מוזיאון קטן בחורה שמרכז ממצאים מדלוס ומהאיים הסמוכים, ובהם כדי קבורה מהמאה השביעית לפנה״ס.',
+        durationMin: 60,
+        priceLevel: 1,
+        tags: ['history'],
+        externalUrl: 'https://maps.google.com/?q=37.45,25.3297',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Building_of_the_AM_of_Mykonos%2C_143545.jpg/500px-Building_of_the_AM_of_Mykonos%2C_143545.jpg',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'סנטוריני: פירה והקלדרה',
+        placeIds: ['cyc-fira', 'cyc-thera-museum', 'cyc-imerovigli'],
+        notes:
+          'פירה היא צומת האוטובוסים של האי. השביל שבין פירה לאימרוביגלי הוא הליכה יפה על שפת הקלדרה.',
+      },
+      {
+        day: 2,
+        title: 'אואיה, אמודי והשקיעה',
+        placeIds: ['cyc-oia', 'cyc-amoudi'],
+        notes:
+          'לרדת לאמודי אחר הצהריים ולעלות בחזרה לאואיה לקראת השקיעה. שלוש מאות מדרגות בכל כיוון.',
+      },
+      {
+        day: 3,
+        title: 'דרום האי: אקרוטירי, החוף האדום והכפרים',
+        placeIds: ['cyc-akrotiri', 'cyc-red-beach', 'cyc-emporeio'],
+        notes:
+          'אקרוטירי מקורה ולכן נוחה גם בשעות החמות. הגישה לחוף האדום נסגרת לפעמים, כדאי לבדוק במקום.',
+      },
+      {
+        day: 4,
+        title: 'תרה העתיקה וחוף קמארי',
+        placeIds: ['cyc-ancient-thera', 'cyc-kamari'],
+        notes: 'לעלות לתרה העתיקה בבוקר, ולרדת לקמארי לשארית היום.',
+      },
+      {
+        day: 5,
+        title: 'מעבר למיקונוס: חורה וטחנות הרוח',
+        placeIds: ['cyc-mykonos-windmills', 'cyc-paraportiani', 'cyc-mykonos-museum'],
+        notes:
+          'המעבורת המהירה בין האיים לוקחת כשעתיים עד שלוש, תלוי בקו. חורה סגורה לרכבים ומסתובבים בה ברגל.',
+      },
+      {
+        day: 6,
+        title: 'דלוס',
+        placeIds: ['cyc-delos'],
+        notes:
+          'הסירות יוצאות מהנמל הישן של מיקונוס בבוקר וחוזרות אחר הצהריים. אין צל כמעט באתר, וצריך כובע ומים.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסות ישירות מנתב״ג לסנטוריני או למיקונוס ברוב השנה. הדרך המקובלת היא טיסה לאתונה (כשעתיים וחצי) ומשם טיסה פנימית של כ-45 דקות או מעבורת (כ-5 עד 8 שעות לסנטוריני). בקיץ מופיעים לעיתים קווי צ׳רטר ישירים - כדאי לבדוק לתאריכים המדויקים.',
+      gettingAround:
+        'בסנטוריני יש קווי אוטובוס שמתרכזים בתחנה המרכזית בפירה, והם זולים אך מתמלאים בעונה. השכרת רכב או קטנוע נפוצה מאוד, אבל החניה באואיה ובפירה קשה. במיקונוס חורה סגורה לתנועה, ויש אוטובוסים לחופים העיקריים. מוניות באיים מעטות ויקרות.',
+      kosherOverview:
+        'אין כיום תשתית כשרות של ממש בסנטוריני ובמיקונוס: אין מסעדות כשרות קבועות ואין בית חב״ד באיים. מי שמקפיד על כשרות נוהג להצטייד באתונה, שבה יש מסעדה כשרה ובית חב״ד, או להביא מזון מישראל. באיים אפשר להסתמך על דגים, ירקות ומוצרים ארוזים עם הכשר, אבל זו היערכות מראש ולא משהו שמסתדר במקום. לוודא מול המקום ומול חב״ד יוון לפני הנסיעה.',
+    },
+  },
+  {
     slug: 'crete',
     name: 'כרתים',
     nameLocal: 'Crete / Κρήτη',
