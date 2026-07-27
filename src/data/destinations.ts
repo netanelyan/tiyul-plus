@@ -30936,6 +30936,229 @@ export const destinations: Destination[] = [
         'אין בעומאן שום תשתית כשרות - אין מסעדה כשרה, אין חנות כשרה ואין קהילה יהודית מאורגנת. מי ששומר כשרות מסתמך על אוכל שהביא איתו ועל מוצרים סגורים עם הכשר שאפשר למצוא בסופרמרקטים הגדולים במסקאט. מזון ימי ופירות טריים זמינים בכל מקום, וזה הפתרון המעשי לרוב הימים.',
     },
   },
+  {
+    slug: 'ohrid-skopje',
+    name: 'אוחריד וסקופיה',
+    nameLocal: 'Ohrid & Skopje',
+    countrySlug: 'north-macedonia',
+    flag: '🇲🇰',
+    center: { lat: 41.5, lng: 21.05 },
+    zoom: 8,
+    tagline: 'אגם בן מיליון שנה, כנסיות על צוק ובירה שלא דומה לכלום',
+    summary:
+      'אוחריד יושבת על אחד האגמים העתיקים והעמוקים באירופה, עם עיר עתיקה של סמטאות אבן שמטפסות במעלה גבעה וכנסיות ביזנטיות קטנות שנבנו על קצה הצוק. סקופיה, שלוש שעות צפונה, היא עיר מפוצלת: בזאר עות׳מאני חי ונושם מצד אחד של הוארדר, ומרכז שיש עם פסלים ענקיים משנות האלפיים מהצד השני. בין השתיים יש קניון, אגם הרים ופארק לאומי, והכל בזול.',
+    bestSeason:
+      'מאי עד אוקטובר. יולי ואוגוסט הם עונת הרחצה באגם, המים מגיעים לעשרים ושלוש מעלות והעיר העתיקה מלאה - אבל גם אז זה עמוס פחות מכל יעד אגם באיטליה. ספטמבר הוא החודש הטוב ביותר: מים עדיין חמימים, מחירים נמוכים ובלי תורים. בחורף אוחריד שקטה כמעט לגמרי וסקופיה סובלת מזיהום אוויר כבד, וזו סיבה אמיתית לא להגיע בדצמבר עד פברואר.',
+    photo:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Church_of_St._John_at_Kaneo_7.jpg/960px-Church_of_St._John_at_Kaneo_7.jpg',
+    iconicLandmark: {
+      name: 'כנסיית סנט יוחנן בקאנאו',
+      nameLocal: 'Church of St John at Kaneo',
+      photo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Church_of_St._John_at_Kaneo_6.jpg/500px-Church_of_St._John_at_Kaneo_6.jpg',
+      blurb:
+        'כנסייה ביזנטית קטנה מהמאה ה-13 שיושבת על צוק בולט מעל האגם, והתמונה המזוהה ביותר עם צפון מקדוניה כולה. השביל אליה מהעיר העתיקה עובר ביער ולוקח כרבע שעה.',
+    },
+    editorialRating: {
+      score: 4.3,
+      verdict:
+        'יחס תמורה למחיר מהטובים באירופה - אגם יפהפה, מורשת ביזנטית אמיתית ומחירים של חצי מקרואטיה. מוריד ניקוד: התחבורה הציבורית איטית, סקופיה עצמה מפוצלת ולא תמיד נעימה, ואין שום תשתית כשרות.',
+    },
+    places: [
+      {
+        id: 'mk-kaneo',
+        name: 'כנסיית סנט יוחנן בקאנאו',
+        nameLocal: 'Church of St John at Kaneo',
+        category: 'attraction',
+        lat: 41.111088,
+        lng: 20.788658,
+        description:
+          'כנסייה מהמאה ה-13 על צוק מעל האגם, בשילוב של אדריכלות ביזנטית וארמנית, עם ציורי קיר מקוריים בפנים. הכנסייה עצמה קטנה מאוד ולוקח עשר דקות לראות אותה, אבל המקום הוא בעיקר הנקודה עצמה - צוק, אגם והרים אלבניים מולו. לשקיעה מגיעים מוקדם, כי המרפסת מתמלאת.',
+        rating: 4.8,
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=41.111088,20.788658',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Church_of_St._John_at_Kaneo_2.jpg/500px-Church_of_St._John_at_Kaneo_2.jpg',
+        priceLevel: 1,
+        tags: ['history', 'romantic', 'art'],
+        mustSee: true,
+      },
+      {
+        id: 'mk-samuel',
+        name: 'מצודת שמואל',
+        nameLocal: "Samuel's Fortress",
+        category: 'attraction',
+        lat: 41.115002,
+        lng: 20.791,
+        description:
+          'המצודה שבנה הצאר שמואל הבולגרי במאה ה-10, כשאוחריד הייתה בירת ממלכתו. חומות משוחזרות שאפשר להלך עליהן כמעט לכל אורכן, והנוף מהן משתרע על העיר העתיקה, האגם וההרים. מתחת למצודה, בדרך למטה, יושב התיאטרון האנטיקי ההלניסטי שעדיין מארח הופעות בקיץ.',
+        rating: 4.4,
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=41.115002,20.791',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Ohrid_samuilova_krepost.jpg/500px-Ohrid_samuilova_krepost.jpg',
+        priceLevel: 1,
+        tags: ['history', 'outdoors'],
+        mustSee: true,
+      },
+      {
+        id: 'mk-sveti-naum',
+        name: 'מנזר סווטי נאום',
+        nameLocal: 'Sveti Naum Monastery',
+        category: 'attraction',
+        lat: 40.9139,
+        lng: 20.74047,
+        description:
+          'מנזר מהמאה ה-10 בקצה הדרומי של האגם, ממש על גבול אלבניה, עם כנסייה מכוסה ציורי קיר וטווסים שמסתובבים בחצר. ליד המנזר נובעים מעיינות שחור דרים והמים בהם שקופים לחלוטין - סירות משוט לוקחות סיבוב קצר ביניהם. אפשר להגיע בסירה מאוחריד, וזו הדרך היפה יותר.',
+        rating: 4.5,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=40.9139,20.74047',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/SaintNaum.jpg/500px-SaintNaum.jpg',
+        priceLevel: 1,
+        tags: ['history', 'outdoors', 'families'],
+      },
+      {
+        id: 'mk-bazaar',
+        name: 'הבזאר העתיק בסקופיה',
+        nameLocal: 'Skopje Old Bazaar',
+        category: 'shopping',
+        lat: 42.000755,
+        lng: 21.436954,
+        description:
+          'אחד הבזארים העות׳מאניים הגדולים ששרדו בבלקן, ופועל ברציפות מהמאה ה-12. סמטאות אבן עם צורפי כסף, חייטים, מסגדים מהמאה ה-15 וחאנים משוחזרים, והכל עדיין שוק אמיתי שהמקומיים קונים בו ולא תפאורה. בערב הוא הופך לאזור הבילוי הטוב בעיר, עם בתי קפה ומסעדות מקדוניות ואלבניות.',
+        rating: 4.5,
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=42.000755,21.436954',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Old_Bazaar2.jpg/500px-Old_Bazaar2.jpg',
+        priceLevel: 1,
+        tags: ['history', 'foodie', 'nightlife'],
+        mustSee: true,
+      },
+      {
+        id: 'mk-holocaust',
+        name: 'מוזיאון השואה של יהודי מקדוניה',
+        nameLocal: 'Holocaust Memorial Center for the Jews of Macedonia',
+        category: 'museum',
+        lat: 41.998611,
+        lng: 21.433611,
+        description:
+          'מוזיאון שנפתח ב-2011 בשולי הרובע היהודי ההיסטורי של סקופיה, ומספר את סיפורה של קהילה ספרדית בת חמש מאות שנה. במרץ 1943 גורשו 7,144 יהודי מקדוניה לטרבלינקה ביום אחד, וכמעט אף אחד לא שרד - זהו אחד מאחוזי ההשמדה הגבוהים באירופה כולה. התצוגה עוברת מהקהילה הספרדית ועד הגירוש, וכתובה גם באנגלית.',
+        rating: 4.6,
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=41.998611,21.433611',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Holocaust_Memorial_center_for_the_jews_of_Macedonia%2C_Skopje.jpg/500px-Holocaust_Memorial_center_for_the_jews_of_Macedonia%2C_Skopje.jpg',
+        priceLevel: 1,
+        tags: ['history'],
+        mustSee: true,
+      },
+      {
+        id: 'mk-matka',
+        name: 'קניון מטקה',
+        nameLocal: 'Matka Canyon',
+        category: 'nature',
+        lat: 41.94,
+        lng: 21.3,
+        description:
+          'קניון עם אגם מלאכותי ירוק כהה, במרחק חצי שעה בלבד ממרכז סקופיה. שביל צמוד קיר לוקח כשעה עד מנזר ומערות, ומשם אפשר לשכור קיאק או לעלות על סירה למערת ורלו, שנחשבת מהעמוקות בעולם. פעילות של חצי יום, וזו ההימלטות הכי קלה מהעיר.',
+        rating: 4.4,
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=41.94,21.3',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Canyon_Matka.jpg/500px-Canyon_Matka.jpg',
+        priceLevel: 1,
+        tags: ['outdoors', 'families'],
+      },
+      {
+        id: 'mk-heraclea',
+        name: 'הרקליאה ליקנסטיס',
+        nameLocal: 'Heraclea Lyncestis',
+        category: 'attraction',
+        lat: 41.010834,
+        lng: 21.3425,
+        description:
+          'עיר שייסד פיליפוס השני, אביו של אלכסנדר מוקדון, במאה הרביעית לפני הספירה. מה ששרד ומצדיק את העצירה הוא רצפות הפסיפס הביזנטיות מהבזיליקות - שטח גדול של פסיפס צבעוני עם חיות ומוטיבים צמחיים, במצב שימור טוב במיוחד. נמצא בקצה הדרומי של ביטולה, העיר השנייה בגודלה במדינה.',
+        rating: 4.2,
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=41.010834,21.3425',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Heraclea_Lyncestis.jpg/500px-Heraclea_Lyncestis.jpg',
+        priceLevel: 1,
+        tags: ['history', 'art'],
+      },
+      {
+        id: 'mk-mavrovo',
+        name: 'פארק לאומי מברובו',
+        nameLocal: 'Mavrovo National Park',
+        category: 'nature',
+        lat: 41.683334,
+        lng: 20.7,
+        description:
+          'הפארק הלאומי הגדול במדינה, בין אוחריד לסקופיה, עם אגם מלאכותי שבתוכו עומדת כנסייה שקועה למחצה - האתר המצולם ביותר כאן. בקיץ יש מסלולי הליכה ומפלים, ובחורף פועל אתר הסקי הגדול בצפון מקדוניה. בפארק חיים דובים חומים וזאבים, וסיכוי לראות אותם אפסי אבל השטח באמת פראי.',
+        rating: 4.2,
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=41.683334,20.7',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Mavrovo_national_park_3.jpg/500px-Mavrovo_national_park_3.jpg',
+        priceLevel: 1,
+        tags: ['outdoors', 'families'],
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'סקופיה',
+        placeIds: ['mk-bazaar', 'mk-holocaust'],
+        notes:
+          'בוקר במוזיאון השואה, שנמצא בקצה הרובע היהודי ההיסטורי, וממנו הליכה קצרה אל הבזאר העתיק. אחר הצהריים בסמטאות הבזאר, ובערב לאכול שם. מרכז העיר עם הפסלים נמצא מעבר לגשר האבן והוא חצי שעה של סיבוב, לא יותר.',
+      },
+      {
+        day: 2,
+        title: 'קניון מטקה',
+        placeIds: ['mk-matka'],
+        notes:
+          'חצי שעה מסקופיה. יוצאים בבוקר, הולכים את השביל הצמוד לקיר עד המנזר, ומשם סירה למערת ורלו או קיאק על האגם. חוזרים לעיר אחר הצהריים, ואפשר לצאת משם לכיוון אוחריד באותו ערב.',
+      },
+      {
+        day: 3,
+        title: 'מברובו בדרך לאוחריד',
+        placeIds: ['mk-mavrovo'],
+        notes:
+          'הנסיעה מסקופיה לאוחריד לוקחת כשלוש שעות, ומברובו יושב בדיוק באמצע. עוצרים לכנסייה השקועה באגם ולמסלול הליכה קצר, ומגיעים לאוחריד לפנות ערב. שימו לב שהכביש הררי ומתפתל ואי אפשר למהר בו.',
+      },
+      {
+        day: 4,
+        title: 'אוחריד העתיקה',
+        placeIds: ['mk-samuel', 'mk-kaneo'],
+        notes:
+          'עולים בבוקר למצודת שמואל כשעוד קריר, ויורדים ממנה דרך התיאטרון האנטיקי. אחר הצהריים מנוחה או רחצה באגם, ואת קאנאו שומרים לשעה שלפני השקיעה - מגיעים שלושת רבעי שעה מראש כדי לתפוס מקום על הצוק.',
+      },
+      {
+        day: 5,
+        title: 'סווטי נאום',
+        placeIds: ['mk-sveti-naum'],
+        notes:
+          'סירה מהנמל של אוחריד לוקחת כשעה וחצי לכיוון ומגיעה ישירות למנזר, וזו הדרך היפה יותר מהכביש. מבלים בחצר, יוצאים לסיבוב סירת משוט במעיינות, וחוזרים בשעות אחר הצהריים.',
+      },
+      {
+        day: 6,
+        title: 'ביטולה והרקליאה',
+        placeIds: ['mk-heraclea'],
+        notes:
+          'שעה וחצי מאוחריד. מתחילים בפסיפסים של הרקליאה בבוקר, וממשיכים לשירוק סוקאק, רחוב הטיילת של ביטולה, לקפה וארוחה. אפשר לסגור את היום בחזרה לאוחריד או להמשיך משם לגבול יוון.',
+      },
+    ],
+    practical: {
+      flights:
+        'אין טיסות ישירות מתל אביב. הדרך הנפוצה היא טיסה עם חיבור לסקופיה (SKP) דרך וינה, איסטנבול או בודפשט. שדה התעופה של אוחריד (OHD) קטן ומקבל בעיקר טיסות עונתיות מאירופה, ולכן רוב הישראלים נוחתים בסקופיה. אפשרות מעשית נוספת היא לנחות בתסלוניקי ולנסוע כשלוש שעות ברכב.',
+      gettingAround:
+        'רכב שכור הוא הפתרון הטוב ביותר, במיוחד למברובו, למטקה ולחוף האגם, והשכרה כאן זולה מאוד. הכבישים הראשיים תקינים אבל הררים ומתפתלים, וזמני הנסיעה ארוכים ממה שהמפה מבטיחה. יש אוטובוסים בין סקופיה לאוחריד ולביטולה בתדירות סבירה ובמחיר אפסי, אך הם איטיים. באוחריד עצמה הכל בהליכה, והעיר העתיקה תלולה - נעליים סגורות.',
+      kosherOverview:
+        'אין בצפון מקדוניה אף מסעדה כשרה, אף חנות כשרה ואין בית חב״ד. הקהילה היהודית מונה כמאתיים איש, כמעט כולם בסקופיה, ובית הכנסת בעיר פעיל בעיקר בחגים. מי ששומר כשרות מסתמך על מוצרים סגורים עם הכשר בסופרמרקטים הגדולים בסקופיה, על ירקות ופירות ועל דגי אגם שקונים ומבשלים לבד. הכיוון המעשי הוא לינה עם מטבח.',
+    },
+  },
 ];
 
 export function getDestinationBySlug(slug: string): Destination | undefined {
