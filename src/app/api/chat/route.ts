@@ -396,8 +396,12 @@ interface ApiMessage {
  */
 class AnthropicHttpError extends Error {
   readonly status: number;
-  constructor(status: number) {
-    super(`anthropic ${status}`);
+  constructor(status: number, detail = '') {
+    // גוף התשובה נכנס להודעה בכוונה: `anthropic 400` לבד לא אומר כלום,
+    // ו-400 אמיתי בפרודקשן עלה בסיבוב שלם של דיאגנוסטיקה כי לא היה כתוב
+    // איזה שדה נפסל. Anthropic מחזיר שם נתיב שדה ("messages.2: ...") ולא
+    // תוכן של המשתמש, ובכל זאת חותכים - לוג הוא לא מקום לגוף תשובה מלא.
+    super(detail ? `anthropic ${status}: ${detail.slice(0, 400)}` : `anthropic ${status}`);
     this.name = 'AnthropicHttpError';
     this.status = status;
   }
@@ -452,7 +456,11 @@ async function runClaudeTurn(
     }),
   });
 
-  if (!res.ok || !res.body) throw new AnthropicHttpError(res.status);
+  if (!res.ok || !res.body) {
+    // קריאת הגוף לא יכולה להפיל את הטיפול בשגיאה עצמו
+    const detail = await res.text().catch(() => '');
+    throw new AnthropicHttpError(res.status, detail);
+  }
 
   const reader = res.body.getReader();
   const decoder = new TextDecoder();

@@ -37,6 +37,67 @@ test('הרגרסיה: תמונה שיצאה מהחלון לא משאירה הו�
   assert.ok(out.some((m) => m.content.includes('Hotel Devin')));
 });
 
+/*
+ * הקבוצה הזאת היא האילוץ שלא בדקתי מול ה-API לפני שבחרתי את התיקון
+ * למעלה - בדקתי תוכן ריק ב-user, תוכן ריק ב-assistant ותפקידים רצופים,
+ * ולא בדקתי "ההודעה הראשונה היא assistant". זה בדיוק מה שנשבר
+ * בפרודקשן: השמטת ההודעה הריקה הראשונה חשפה את תשובת הסוכן בראש
+ * המערך, וה-API דוחה את זה ב-400.
+ */
+
+test('הרגרסיה השנייה: השמטת ההודעה הראשונה לא משאירה assistant בראש', () => {
+  // בדיוק מה שהלקוח שולח בשיחה שנפתחה בצילום אישור בלי טקסט, אחרי
+  // שהתמונה יצאה מחלון שתי ההודעות האחרונות
+  const out = sanitizeMessages([
+    { role: 'user', content: '' }, // אישור ההזמנה - נזרק
+    { role: 'assistant', content: 'מעולה! רואה את Hotel Devin.' },
+    { role: 'user', content: 'תוסיף את המלון למפה' },
+  ]);
+  assert.equal(out[0].role, 'user', 'ההיסטוריה חייבת להיפתח ב-user');
+  assert.equal(out.length, 1, 'התשובה שאין לה תור user נזרקת איתה');
+  assert.equal(out[0].content, 'תוסיף את המלון למפה');
+});
+
+test('חלון 40 ההודעות שנפתח על assistant - קיים גם בלי תמונות', () => {
+  // 41 הודעות מתחלפות שמתחילות ב-user: החלון חותך ומתחיל על assistant
+  const many = Array.from({ length: 41 }, (_, i) => ({
+    role: i % 2 === 0 ? 'user' : 'assistant',
+    content: `m${i}`,
+  }));
+  const out = sanitizeMessages(many);
+  assert.equal(out[0].role, 'user');
+  // m1 היה ה-assistant שהחלון נפתח עליו - הוא נזרק, m2 הוא ה-user הראשון
+  assert.equal(out[0].content, 'm2');
+});
+
+test('כמה הודעות assistant בראש - כולן נזרקות', () => {
+  const out = sanitizeMessages([
+    { role: 'assistant', content: 'א' },
+    { role: 'assistant', content: 'ב' },
+    { role: 'user', content: 'ג' },
+    { role: 'assistant', content: 'ד' },
+  ]);
+  assert.equal(out[0].role, 'user');
+  assert.deepEqual(out.map((m) => m.content), ['ג', 'ד'], 'assistant אחרי user נשאר');
+});
+
+test('הכול assistant - מערך ריק, וה-route עוצר לפני הקריאה', () => {
+  const out = sanitizeMessages([
+    { role: 'assistant', content: 'א' },
+    { role: 'assistant', content: 'ב' },
+  ]);
+  assert.deepEqual(out, []);
+});
+
+test('היסטוריה תקינה לא נפגעת מהתיקון', () => {
+  const normal = [
+    { role: 'user', content: 'שלום' },
+    { role: 'assistant', content: 'היי' },
+    { role: 'user', content: 'עוד' },
+  ];
+  assert.deepEqual(sanitizeMessages(normal), normal);
+});
+
 test('תמונה בשתי ההודעות האחרונות נשמרת, גם בלי טקסט', () => {
   const out = sanitizeMessages([
     { role: 'user', content: 'שלום' },
@@ -103,8 +164,15 @@ test('תמונה פסולה נדחית, וההודעה נושרת אם לא נש
 });
 
 test('תמונה על הודעת assistant לא מתקבלת', () => {
-  const out = sanitizeMessages([{ role: 'assistant', content: 'טקסט', image: img() }]);
-  assert.equal(out[0].image, undefined);
+  // ההיסטוריה נפתחת ב-user בכוונה: הודעת assistant לבדה נזרקת עכשיו
+  // כליל (ראו הקבוצה על ההודעה הראשונה), וזה היה מסתיר את מה שנבדק כאן.
+  const out = sanitizeMessages([
+    { role: 'user', content: 'שלום' },
+    { role: 'assistant', content: 'טקסט', image: img() },
+  ]);
+  assert.equal(out.length, 2);
+  assert.equal(out[1].role, 'assistant');
+  assert.equal(out[1].image, undefined, 'רק המשתמש יכול לצרף תמונה');
 });
 
 test('קלט זבל לא מפיל כלום', () => {

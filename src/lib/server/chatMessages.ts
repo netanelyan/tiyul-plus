@@ -83,5 +83,20 @@ export function sanitizeMessages(raw: unknown): ChatMessage[] {
   }
   // חייב לרוץ אחרי הסרת התמונות: ההסרה היא בעצמה מה שמרוקן הודעה
   // שכל תוכנה היה תמונה.
-  return msgs.filter((m) => !carriesNothing(m));
+  const carrying = msgs.filter((m) => !carriesNothing(m));
+
+  // ההיסטוריה חייבת להיפתח בהודעת user. שתי דרכים להגיע למצב שהיא לא:
+  //
+  // 1. **רגרסיה שהתיקון שלמעלה יצר.** שיחה שנפתחה בתמונה בלי טקסט -
+  //    ההודעה הראשונה מתרוקנת כשהתמונה יוצאת מהחלון, נזרקת כאן, ומה
+  //    שנשאר ראשון הוא התשובה של הסוכן. ה-API מחזיר על זה 400, כלומר
+  //    התיקון של ה"תוכן הריק" החליף שגיאה אחת באחרת. נמצא בפרודקשן.
+  // 2. **קדם לזה:** `raw.slice(-40)` יכול לפתוח את החלון על הודעת
+  //    assistant בכל שיחה ארוכה מ-40 הודעות, בלי קשר לתמונות.
+  //
+  // הסרה היא הפתרון הנכון ולא רק החוקי: להודעת assistant בתחילת המערך
+  // אין תור user שהיא עונה עליו, אז היא לא נושאת הקשר שימושי בכל מקרה.
+  let firstUser = 0;
+  while (firstUser < carrying.length && carrying[firstUser].role !== 'user') firstUser += 1;
+  return firstUser === 0 ? carrying : carrying.slice(firstUser);
 }
