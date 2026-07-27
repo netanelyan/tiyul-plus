@@ -77,6 +77,35 @@ Hungary→Lake Balaton, Slovakia→High Tatras.
       is large enough that the fetcher truncates before the geo block.
       `Tower_Bridge` returns a thumbnail but no coordinates. Build London from
       a normal network, not from this sandbox.
+- [ ] **Coordinate sourcing itself is the bottleneck, and every known source is
+      now either blocked or down.** Confirmed 2026-07-27, late run: dbpedia
+      returns 502 or a read timeout on every request including `/sparql`;
+      `www.wikidata.org/w/api.php` and `query.wikidata.org/sparql` are both
+      "cache-only and cannot be fetched" through WebFetch; nominatim, photon
+      and the Wikipedia REST API were already blocked. bash has no egress. The
+      first thing a session with real network should do is drain the blocked
+      list above in one pass - Paris, London, Moynaq, Kolsai/Kaindy, Delphi -
+      because none of them are hard, they are only unreachable from here.
+- [ ] **Countries with no destination at all** (candidates, in rough order of
+      how much an Israeli traveller would want them): Colombia, Egypt, Oman,
+      Singapore, Malta, Mongolia, Bhutan, North Macedonia, Ukraine, Moldova,
+      Belgium. India has one entry (Himachal) and Rajasthan is the obvious
+      second. Grounding-index headroom is about 20 destinations, so this list
+      is roughly the budget - pick deliberately rather than first-come.
+- [ ] **121 of 1,149 places carry no `photo`.** Breakdown: 33 kosher-food, 48
+      attraction, 17 nature, 11 museum, 4 kosher-market, 3 cafe, 3 viewpoint,
+      2 shopping. The kosher, cafe and shopping ones mostly have no Wikipedia
+      article and no freely licensed image exists - do not invent one, leave
+      them blank. The attraction/nature/museum ones are the real opportunity.
+- [ ] **103 of 131 destinations contain no kosher place.** Some of that is
+      honest (there is no kosher food in Torres del Paine) and the copy should
+      say so; some of it is just unresearched. Worth a pass that separates the
+      two rather than treating every blank the same.
+
+**Not a TODO, recorded so it stops being re-raised:** an audit flagged 134
+places with descriptions under 100 characters. They were reviewed on
+2026-07-27 and they are dense and correct, not stubs. Padding them adds noise
+and invites invented detail. Leave them alone.
 - [x] **Jordan → Dead Sea + Wadi Mujib + Amman/Jerash** (2nd Jordan entry,
       north; land crossing note like Petra).
 - [x] **Cyprus → Paphos + Akamas/Avakas Gorge** (2nd Cyprus entry; direct
