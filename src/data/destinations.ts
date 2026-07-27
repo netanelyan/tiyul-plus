@@ -3759,6 +3759,8 @@ export const destinations: Destination[] = [
         rating: 4.4,
         durationMin: 45,
         externalUrl: 'https://maps.google.com/?q=Chao+Phraya+Express+Boat',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Chao_Phraya_River_in_central_Bangkok%2C_Thailand.jpg/500px-Chao_Phraya_River_in_central_Bangkok%2C_Thailand.jpg',
       },
       {
         id: 'bkk-chabad',
@@ -4789,6 +4791,8 @@ export const destinations: Destination[] = [
         rating: 4.0,
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=Bangla+Road+Patong',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Bangla_Road_Patong_Thajsko_2018_5.jpg/500px-Bangla_Road_Patong_Thajsko_2018_5.jpg',
       },
       {
         id: 'hkt-chabad',
