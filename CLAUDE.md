@@ -299,6 +299,93 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-07-27 - Why a live turn died, and why the agent kept inventing distances
+
+Netanel sent three screenshots of one real conversation on tiyul-plus.vercel.app:
+he asked to put his hotel on the map, attached the booking confirmation, the
+agent added the pin and described where the hotel is as plain fact - and then
+the next message ("תערוך את הטיול לפי בית המלון") came back as the first-time
+greeting that lists every country. Three separate problems, diagnosed
+separately.
+
+**1. The greeting was already fixed; the crash behind it was not.** The
+amnesia reply is the keyless rule-based responder, reachable only from the
+`runAgent` catch block, and `4f24672` had already stopped that - committed
+06:06 UTC, five minutes after the screenshots at 06:01 UTC. But that commit
+only changed the message. The reason the turn failed was untouched:
+`runClaudeTurn` threw `new Error('anthropic ${status}')`, so the code lived
+only inside the message string, and `isTransient` checked `err.status` (absent)
+and then a word list containing no digits. **Every 429 and 5xx from Anthropic
+was therefore classified as permanent and the single retry never ran once.**
+Fixed with an `AnthropicHttpError` carrying `status`; `isTransient` moved to
+`src/lib/server/transient.ts` and now reads the status from the object, from
+`TimeoutError`/`AbortError`, or from digits in the text.
+
+Also: a turn that failed *after* text had streamed sent nothing at all, so the
+reply just stopped mid-sentence. It now appends a short honest note.
+
+**2. Invented proximity - the part that took four live runs.** Netanel's
+decision was that orientation about your own hotel is allowed *with* an
+unverified caveat, like kosher supervision. The caveat itself landed on the
+first try. What would not die was proximity: two rounds of explicit prompt
+bans still produced "צמוד לגשר ה-UFO", "הכול במרחק הליכה מהמלון", and wrote
+"הכול במרחק הליכה" into the *saved day notes*.
+
+The framing was wrong. The model invented because it wanted to say something
+useful and had no real number - **and we have the number.** Pins carry lat/lng,
+every catalog place carries lat/lng, and `haversineKm` was already exported
+from `travel.ts`. `pinDistances()` (in `agent.ts`, exported and tested) returns
+true distances from the pin to that city's stops in the trip, labelled
+`אווירי` because straight-line is not walking distance and we have no road
+network. They ride in the `add_pin` tool result **and** in `serializeTripForModel`
+every turn - that second part matters, because the worst leak happened in a
+later turn with no `add_pin` call, where the model had nothing real in hand.
+The prompt now says quote these numbers and nothing else. Live result: "350 מ׳
+אווירי מהעיר העתיקה" instead of a guess.
+
+**3. A correction I owe the record.** While testing I reported "לדווין תגיעו
+באוטובוס 29" to Netanel as a fabrication and wrote a prompt rule using it as
+the bad example. It is not a fabrication - Bratislava's own
+`practical.gettingAround` says "לדווין - אוטובוס 29". My own test failed and
+that is how I found out. The rule was rewritten to say the opposite: transit
+numbers in the DATA should be used confidently, and only ones absent from it
+are inventions (the "כרבע שעה נסיעה" it added alongside was one). There is now
+a regression test asserting bus 29 survives.
+
+`sanitizeDayNote()` enforces this on data rather than prose: a transit line
+number in a day note is stripped unless it appears in that destination's
+`gettingAround`, and the tool result tells the model why - the same
+correct-quietly-and-explain pattern as `filterKosherUnlessOptedIn`. Notes are
+trip data: they print, they share, they get re-read.
+
+**Testing infrastructure, because there was none.** `npm test` now runs
+`node:test` over `src/**/*.test.ts` with **zero new dependencies** (vitest/jest
+would need approval per hard rule 6). Two things blocked it, both
+tsconfig-to-bundler contracts Node cannot see: the `@/` alias and
+extensionless relative imports. A resolve hook in `scripts/alias-hooks.mjs`
+handles both. It is registered *by path*, not as a `data:` URL that imports its
+own helper - that first version recursed through itself and blew the call
+stack. `allowImportingTsExtensions` added to tsconfig; safe under `noEmit`, and
+Next never sees the test files. **23 tests, all passing.** This also unblocks
+the `geocode.ts` unit test that has been on the backlog.
+
+**Verified:** `tsc` clean, `npm run build` clean, 23/23 tests, lint unchanged at
+the pre-existing 29 problems / 25 errors with zero hits in the touched files.
+Four full replays of the hotel conversation against the **real Sonnet** with
+Netanel's key (his explicit go-ahead) and Nominatim stubbed via
+`GEOCODE_NOMINATIM` - the env override finally earned its keep, since the
+sandbox has no OSM egress. No amnesia greeting in any run.
+
+**Not fixed, and worth knowing.** Soft walkability phrasing survives ("ממש
+ליד", "התחלה רגלית") - it now sits on top of true numbers rather than
+replacing them, so it was left rather than chased with a fifth prompt round.
+The retry path itself is covered only by unit tests: the Anthropic base URL is
+hardcoded, so there is no way to force a 529 end-to-end without making it
+env-overridable, which would be the honest next step. No data files were
+touched, so `verify-photos.mjs` was not run (and remains blocked from this
+sandbox).
+
+
 ### 2026-07-27 - תמונה חסרה שלא מתחזה לתמונה, וטורס דל פאינה
 
 **הבאג של התמונות החסרות.** נטנאל דיווח על "באג עם תמונות חסרות", וזה
