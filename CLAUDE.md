@@ -240,7 +240,149 @@ npm run lint
    changed pages (RTL + design consistency), commit + push with a clear
    message.
 8. Every work session ALSO ends by appending a dated entry to
-   "## Session log" (bottom of this file) with: (a) what was built/
+   "## Session log
+### 2026-07-27 (w) - A deleted trip that would not stay deleted, the three unmetered paths, and a real Maps export
+
+Three items, in the order Netanel asked for them while he was offline.
+
+---
+
+**1. "Delete a trip, reload, it comes back." Reproduced, and the cause was
+structural rather than a slip.**
+
+Every other change to a trip carries `updatedAt`, so the account merge can
+decide "latest wins". **A deletion carried nothing** - it was expressed only as
+the absence of a row - so any remote copy beat it. Three ways that bites, all
+reproduced in a browser against a Supabase stand-in:
+
+- the initial pull is in flight when the user deletes. Its snapshot predates the
+  click, the merge sees a trip missing locally, and puts it back. **This is the
+  reported bug**, deterministic with a 2.5s pull.
+- a second device that still holds the trip pushes it straight back up.
+- deleting while signed out, then signing in, restores it.
+
+Deletion is data now. `TripState.deleted` maps id → when (pruned at 90 days and
+200 entries), `mergeTrips` treats that timestamp like any other, and the remote
+side stores a **tombstone row**: the same `user_trips` row survives with its
+`data` replaced by `{ id, deletedAt }`. That gives cross-device deletion with
+**no schema change** - nothing new for Netanel to run - and stops storing the
+contents of a trip somebody deleted. Writing tombstones is idempotent and
+repeated on every pull, so a delete that failed or raced repairs itself instead
+of sitting "gone here, alive on the server".
+
+An edit genuinely newer than the deletion still wins, in both directions. The
+rule did not change; deletions just joined it.
+
+**He asked whether renaming or removing a stop had the same cause. They did
+not**, and now there is a test saying so: those carry stamps, so the merge
+already resolved them correctly - verified by making both edits *during* a slow
+pull and confirming they survive.
+
+**Verified 14/14** in a real browser, fresh context and fresh mock user per
+scenario. The harness fights back in one way worth writing down: `TripProvider`
+writes its own (empty) state right after hydrating, so a test that seeds
+localStorage too early has its seed silently overwritten and the app renders the
+landing hero. Wait for the page to settle before seeding.
+
+---
+
+**2. Rate limiting: the audit found three unmetered paths, not a missing layer.**
+
+Chat, generate-trip, share, import and checkout were already metered. What was
+not:
+
+- **Promo redemption had no limit at all**, and it is the one where success
+  costs real money. A code is 3-24 alphanumeric characters, so one signed-in
+  account could scan thousands of guesses a minute. Every other defence there
+  (atomic RPC, row lock, identical messages for "no such code" and "code full")
+  quietly assumed nobody could guess at speed. Now **5 an hour, 20 a day**, per
+  account AND per address - and **the address check runs before authentication**,
+  because otherwise each guess still costs a GoTrue round trip and a database
+  read. Deliberately not plan-based: premium should not buy a faster guess.
+- **`explore_destination`** (Wikipedia) and **`add_pin`** (OpenStreetMap) were
+  unbounded. Neither costs us money; both spend somebody else's free service,
+  and the Nominatim throttle is serial and global, so one person hammering pins
+  stalls geocoding for everyone. **20 explores / 30 geocodes a day** free,
+  100/150 premium, plus a per-turn ceiling of 3 and 6 - one turn can run 16 tool
+  iterations and no real request needs more.
+- **`/api/generate-trip` parsed an unbounded body.** Capped at 20k chars, like
+  chat.
+
+**The numbers, and why.** A free traveller gets 40 chat turns, 6 a minute,
+300,000 AI units, 15 quick builds, 3 images, 5 map imports, 10 share links a
+day. A full trip build plus dozens of edits sits well inside that; the caps
+exist to stop an afternoon of abuse, not to shape normal use. Premium is 10x on
+the AI numbers.
+
+**Every refusal is a Hebrew sentence that says what happened and what to do
+instead.** Two are worth calling out: over the explore quota **the agent
+explains it in conversation** and offers catalog cities, which beats an error
+box because it can still help; and one silence was fixed - over quota the
+planner still builds from the buttons, and it used to drop the free-text
+quietly, so it now says the text was not read this time. **15/15** against the
+running production build.
+
+---
+
+**3. Google Maps export: there WAS a link here, and it was two-thirds right.**
+
+Right day, right order. What it was not:
+
+- It built `/maps/dir/lat,lng/...` by hand. The documented `?api=1` form takes an
+  origin, a destination and at most **nine** waypoints, so **a day with 12 stops
+  silently lost the rest.** Someone setting out with a route that quietly dropped
+  four stops is the worst version of this feature. Long days now split into
+  consecutive legs that overlap by one point, and the UI says why.
+- No `travelmode`, so Google guessed driving even for a walking day in a city
+  centre. Now derived from `preferences.booking.car` - the same field that
+  already decides whether an inter-city leg is a drive or a flight.
+- It did not say what it would do before opening another app. The button names
+  the day and a line under it reads "5 נקודות · ברגל".
+
+Added: when the traveller has pinned their hotel **and the location was actually
+verified**, the route starts there. An unlocated pin is ignored rather than
+guessed - same rule as everywhere else on this site.
+
+**Coordinates, never names.** We have verified coordinates; "Café Central" can
+resolve to a different city entirely. A less pretty URL beats navigating someone
+to the wrong country.
+
+**21/21** in a real browser at 1440 and 390: label, order, mode, the hotel start
+and its explanation, an unlocated pin refused, a 14-stop day split with every
+stop still reachable, 44px touch target, no RTL overflow, and no button at all on
+a day with one stop.
+
+---
+
+**Left alone deliberately, per his "write it down instead of fixing it" rule:**
+
+- **`/t/<code>` has no rate limit.** It is a read, it is the viral surface, and
+  many people share one address behind NAT - limiting it would break sharing to
+  stop something cheap. Flagged, not fixed.
+- **`/api/admin/*` is unmetered.** Role-gated and costs nothing; `/api/admin/me`
+  is the only route a signed-in stranger can reach and it does two reads.
+- **A pending push is cancelled on navigation.** `AccountSync`'s debounce timer
+  is cleared by the effect cleanup, so an edit made in the last 1.5s before
+  leaving the page is not pushed. Local state is safe and the next pull merges
+  it, so it is not data loss - but it is real, and it is not part of these three
+  items.
+- Cross-device deletion propagates through the tombstone row, which means a
+  device that never syncs again keeps its copy. That is inherent to
+  last-writer-wins and not worth more machinery today.
+
+**NOT PUSHED.** Four commits sit on local `main`, rebased onto the data
+session's latest: the account-count fix, the three items above. This session no
+longer holds a GitHub token (the one used earlier in the day was pasted in chat
+and is not in the environment after the context reset). `git push` needs it
+supplied again - **and that token should be rotated regardless**, since it was
+pasted into a chat window.
+
+**Also still waiting on Netanel**, unchanged from earlier entries: add
+`SUPABASE_SERVICE_ROLE_KEY` to Vercel and redeploy; re-run the updated
+`supabase-admin.sql`; run `supabase-profiles.sql` and `supabase-community.sql`;
+approve the 19.90 ₪ price; supply affiliate IDs; fill the `[למילוי]`
+placeholders in the accessibility statement.
+" (bottom of this file) with: (a) what was built/
    changed and in which files, (b) product decisions made and why,
    (c) anything left broken or deferred, (d) what the next session
    should know. No exceptions - docs-only sessions included.
