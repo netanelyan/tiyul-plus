@@ -242,6 +242,76 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-28 (z) - "The image is not good, and the blue bar is still showing" - one cause, and it was a class
+
+Two reports from Netanel's phone, on `/destinations/nova-scotia`. **One root
+cause**, and the second report was not the bug he thought it was.
+
+**The image: a road SIGN was serving as the photograph.** `CabotTrailSign.png`
+is the Cabot Trail's highway marker - a dark navy field with a silhouetted
+coastline, a road and the words CABOT TRAIL. It sat in three fields on that one
+page: destination hero, `iconicLandmark`, and the place `ca-cabot-trail`.
+
+**The blue bar was the SAME file, and I measured that instead of guessing.**
+With the search overlay open at 390px, a scan of every visible element found
+exactly one blue background on the page: `.photo-bg`, the hero card, whose
+background is the brand purple gradient - the deliberate no-photo fallback.
+**`CabotTrailSign.png` has an alpha channel**, so the gradient showed straight
+through it and the card rendered as a blue bar with a silhouette on it. Nothing
+in the search overlay was ever blue; entry (x)'s `::selection` fix was a real
+and separate bug. Two reports, one file.
+
+**Audited as a class.** All 1,848 photo fields were checked against the naming
+Commons actually uses for non-photographs. Sixteen more offenders, in three
+groups: **signs** (Cabot Trail, Hatta, the Vaci utca street sign), **montages
+and collages** (Szentendre, Shaki, Qabala, Rovaniemi, Kemi, Merida, Izamal,
+Gyeongju, Kiruna, Travnik, Ioannina, Punta Arenas) and **a Wikivoyage banner**
+(Gouda - a real photograph, but cropped 7:1 and unusable in a card). A montage
+at 500px is six thumbnails in one frame; it is worse than an empty card.
+
+**Replacements came only from photos already in the catalog with recorded HTTP
+evidence** - no new URLs, no research, zero verification risk. nova-scotia's
+hero is now Little River in Fall, and its landmark moved **wholesale** to the
+Fortress of Louisbourg (name, nameLocal, photo and blurb together) - a card
+titled "מסלול קאבוט" carrying a Louisbourg photograph is precisely the Edinburgh
+assembly error entry (u) records. gyeongju-busan got Gamcheon village and
+Bulguksa; Bosnia's country card got the Mostar bridge. The other fourteen simply
+lose their photo and fall back to the category tile.
+
+**`validate-catalog.mjs` now ERRORS on the class.** The pre-existing rule caught
+only `.svg`, and this species ships as `.png` and `.jpg` constantly while the
+filename announces itself. The new check matches the DECODED filename with
+separator anchors, which is what keeps it honest: `Piazza_Signoria`,
+`Iconsiam` and `Panorama` are photographs and must not trip a naive `/sign/`
+test. 0 errors after the fixes.
+
+**Flagged and deliberately NOT changed, because a filename is not evidence and
+`upload.wikimedia.org` cannot be viewed from this sandbox:** `Turkestan.png`
+(used three times - and entry (s) records that a Turkestan search once offered a
+1900s portrait of an irrigation official), `Aisha_bibi.png`, `MADABA_2.png`,
+`Quilotoa_Ecuador_Hike.png`, `Mount_kinabalu_01.png`, `Mogren_Beach_Budva_1b.png`,
+and the Jeronimos and POLIN museum PNGs. A `.png` is *suspicious* for a
+photograph, not disqualifying. These need a human to look at them.
+
+**The generalisable bit:** "photo is verified" has meant three different things
+in this project and only the first two were ever enforced - the URL is well
+FORMED (entry q), the URL SERVES 200 (entry r/s), and the file is actually a
+PHOTOGRAPH OF THE THING. The third has been caught by eye four times now
+(Abu Dhabi's recycling bin, the Reina Sofia logo, the Bedesten 3D model, this
+sign) and never by a check. The filename rule closes the cheapest slice of it.
+
+**16/16 in a real browser** at 390 and 1440, with a NEUTRAL GREY png served for
+the blocked image hosts - deliberately grey, so any blue found would be CSS
+rather than the photograph. No sign or montage left in the markup, the hero
+paints an opaque photo over the gradient, no other blue element anywhere, RTL
+intact, zero overflow. Validator 0 errors / 43 warnings, 107 tests, tsc and
+build clean.
+
+**Also worth a look eventually, not fixed:** at 390px the destination hero
+breaks the Latin `nameLocal` across two lines ("Nova / Scotia") beside the
+Hebrew title. Cosmetic, pre-existing, and not what he reported.
+
+
 ### 2026-07-28 (y) - Kosher: 15 verified venues, and the coordinate route that finally worked
 
 Third item of bundle B. The previous three sessions all stopped at the same
