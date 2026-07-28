@@ -12,6 +12,7 @@ import { useTripChat } from '@/lib/trip/useTripChat';
 import { dayDescription, dayPlaces } from '@/lib/trip/dayDescription';
 import { dayColor } from '@/lib/trip/dayColors';
 import { encodeTripShare } from '@/lib/trip/share';
+import { travelModeFor } from '@/lib/trip/mapsExport';
 import PlacesMap from '@/components/PlacesMap';
 import type { MapGroup, MapPin } from '@/components/MapInner';
 import BookingPanel from '@/components/BookingPanel';
@@ -22,6 +23,7 @@ import Logo from '@/components/Logo';
 import AddDayPicker from '@/components/AddDayPicker';
 import ImportMapModal from '@/components/ImportMapModal';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
+import DayNavExport from '@/components/DayNavExport';
 
 /**
  * התצוגה המאוחדת של הטיול - מסך אחד לכל מה שקשור לטיול הפעיל:
@@ -181,8 +183,22 @@ export default function TripWorkspace({
   }
 
   const totalStops = t?.days.reduce((n, d) => n + d.placeIds.length, 0) ?? 0;
-  const googleDirectionsUrl =
-    'https://www.google.com/maps/dir/' + places.map((p) => `${p.lat},${p.lng}`).join('/');
+
+  /**
+   * נקודת הפתיחה של הניווט: מקום הלינה בעיר של היום, אם המטייל רשם אותו
+   * **והמיקום אומת**. סיכה בלי קואורדינטות לא נכנסת - ניווט לנקודה מנוחשת
+   * הוא בדיוק סוג הטעות שהאתר הזה נמנע ממנה בכל מקום אחר.
+   */
+  const dayStart = (() => {
+    const stay = (t?.pins ?? []).find(
+      (p) =>
+        p.kind === 'stay' &&
+        typeof p.lat === 'number' &&
+        typeof p.lng === 'number' &&
+        (!p.citySlug || p.citySlug === day?.citySlug),
+    );
+    return stay ? { name: stay.name, lat: stay.lat!, lng: stay.lng! } : null;
+  })();
 
   const setPrefs = (patch: Partial<TripPreferences>) => {
     if (!t) return;
@@ -680,21 +696,19 @@ export default function TripWorkspace({
                     + הערה ליום
                   </button>
                 )}
-                {places.length > 1 && (
-                  <a
-                    href={googleDirectionsUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    /*
-                      היה הכפתור הקורל המלא - ולכן הדבר הבולט ביותר במסך.
-                      זו פעולה של יום הנסיעה עצמו, לא של מי שמתכנן מהספה,
-                      אז הוא נשאר במקומו ומפסיק להיות הגורם החזק ביותר.
-                    */
-                    className="mt-3 flex items-center justify-center gap-2 rounded-xl bg-night/5 px-4 py-2.5 text-center text-sm font-bold text-night/75 ring-1 ring-night/10 transition hover:bg-night/10 hover:text-night"
-                  >
-                    <span aria-hidden>🧭</span> ניווט היום ב-Google Maps
-                  </a>
-                )}
+                {/*
+                  ניווט היום. היה כאן הכפתור הקורל המלא - ולכן הדבר הבולט
+                  ביותר במסך; זו פעולה של יום הנסיעה עצמו ולא של מי שמתכנן
+                  מהספה, אז הוא נשאר במקומו ובעוצמה הזאת. הבנייה עצמה עברה
+                  ל-`lib/trip/mapsExport.ts` - ראו שם למה שרשור קואורדינטות
+                  לא הספיק.
+                */}
+                <DayNavExport
+                  dayNumber={dayIndex + 1}
+                  stops={places.map((p) => ({ name: p.name, lat: p.lat, lng: p.lng }))}
+                  start={dayStart}
+                  mode={travelModeFor(t?.preferences?.booking?.car)}
+                />
               </div>
 
               {/* עצירות */}
