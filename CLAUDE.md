@@ -242,6 +242,77 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-28 (aa) - "I deleted 2 of those and they are back" - the tombstones held; the layer above them did not
+
+Netanel, with a screenshot of three trips in the nav dropdown.
+
+**First: the tombstone mechanism from entry (w) is fine.** The 14-check
+browser suite still passes 14/14 against the Supabase stand-in - the reported
+race, the signed-out delete, the cross-device propagation, all of it. I re-ran
+it before touching anything, because the alternative was to start rewriting a
+mechanism that was not broken.
+
+**The defect is one layer above.** `AccountSync` applied the result of a pull
+with `trip.upsertTrip()`, and `upsertTrip` stamps `updatedAt: Date.now()` **by
+design** - it is the call used when somebody actually changes something. So
+**merely signing in re-dated every trip that came down from the server to
+"now"**, and the debounced push 1.5 seconds later wrote that fabricated
+timestamp back up. From then on the merge does exactly what it is told - "an
+edit newer than the deletion wins" - and a trip deleted earlier on another
+device is restored everywhere, with the tombstone overwritten and lost.
+
+Note what makes this nasty: **every individual piece behaved correctly.** The
+merge was right, the tombstone was right, the last-writer-wins rule was right.
+The only lie was the timestamp, and once a lie is in the data every correct
+rule downstream faithfully propagates it.
+
+**The fix is to stop impersonating an edit.** New `applyRemoteTrips()` in
+`TripContext` merges pulled trips in with their timestamps EXACTLY as they
+arrived, does **not** clear the tombstone (only a real local create or edit
+does that - that path is still live and still correct), and does **not** hijack
+`currentId`. That last one was a second, quieter bug: `upsertTrip` calls
+`setCurrentId`, so signing in silently switched which trip was open, to
+whichever happened to be applied last.
+
+**Two unit tests pin the mechanism rather than the symptom:** with the
+re-stamp a pulled trip beats a tombstone, without it the deletion holds, and a
+GENUINE edit after a deletion still wins - the rule is not weakened, it just
+stopped firing on its own. 109 tests. Plus a new focused browser check: a trip
+seeded remotely with an `updatedAt` an hour old is now applied locally with
+**0s drift** instead of being re-dated, and the open trip is not switched.
+
+**The honest limit, stated because this log already contains four confident
+wrong diagnoses.** This is a real defect with a proven mechanism. It is **not
+proven to be the cause of what he saw.** The competing explanation is mundane:
+he deleted those trips BEFORE the tombstone fix shipped, so the deletion only
+ever existed in one browser and the next sign-in legitimately restored them -
+a one-time event that cannot recur. Both fit the screenshot equally well, and
+the difference is not decidable from here.
+
+So the deliverable includes **`supabase-trips-check.sql`**: read-only, lists
+his rows split into live trips and tombstones with both timestamps, and its
+header says how to read the answer. If a trip is on screen AND has a tombstone
+row, the bug is live and that query is the evidence. If the row is a live trip
+with no tombstone, it was the pre-fix deletion and deleting again sticks. This
+is the cheap way to end an argument that would otherwise take another round
+trip - the same lesson as the `information_schema` diagnostic in entry (p).
+
+**Harness notes, because two of them cost real time.** (1) `NEXT_PUBLIC_*` is
+inlined at BUILD time, so the accounts suite needs
+`NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:3140 npm run build`, not just the
+env at `next start` - without it the login button never renders and the suite
+fails looking like a product bug. (2) The `for p in $(pgrep -f ...)` kill
+pattern matched my own shell **again** (exit 144, third time this week). What
+actually works: `ps -eo pid,ppid,args`, read the real pid, `kill -9` it by
+number. `lsof -t -i:PORT` reported the port free while a detached `next-server`
+was still bound to `0.0.0.0` - do not trust it alone.
+
+**Left alone deliberately:** the pull runs once per sign-in, so a tab left open
+does not learn about a deletion made elsewhere until it reloads. That is
+inherent to the current design, it self-heals on reload, and adding polling to
+fix it is a bigger decision than this bug warranted.
+
+
 ### 2026-07-28 (z) - "The image is not good, and the blue bar is still showing" - one cause, and it was a class
 
 Two reports from Netanel's phone, on `/destinations/nova-scotia`. **One root
