@@ -241,6 +241,84 @@ npm run lint
    message.
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
+### 2026-07-27 (x) - Four polish items, and a fixture that invented a fifth
+
+Netanel: "make trip screen be as clean as possible + navbar trips + fix shopping
+selection + fix blue bar when searching." Visual and interaction only, one
+branch, one merge.
+
+**Read this first: the harness invented a layout bug and I nearly acted on it.**
+The first screenshots of the trip screen showed the day tabs as **giant coral
+circles** with a broken image inside, overflowing the row at 390px. They are
+`rounded-full px-4 py-2` pills with a small `<Flag>` image. flagcdn.com is
+blocked from this sandbox, a broken `<img>` renders its **alt text**
+("דגל אוסטריה"), the text wraps, the pill becomes roughly square, and
+`rounded-full` on a square is a circle. On a real machine they are ordinary
+small pills. **Serving a real PNG for flagcdn and upload.wikimedia.org is now
+the first thing the check script does** - four lines, and it is the difference
+between fixing the product and redesigning around a broken fixture. That is the
+fourth time this week (stale server, unloaded stylesheet, stateful mock, and
+now a blocked image host).
+
+**1. The blue bar when searching was the browser, not a component.** Nothing in
+the site had ever set `::selection`, so selecting text - which is what you do
+constantly in a search field - painted the OS blue across a cream and coral
+page. It is a 26% coral tint now, built from the existing tokens so
+high-contrast mode inherits it. The same one-liner fixed two neighbours:
+`accent-color` (checkboxes and radios still drew system blue) and the grey-blue
+Android tap flash, which is noise on a design that already shows its own
+pressed states. Zero behaviour change - the same selection, in the brand.
+
+**2. Shopping "selection" was not a selection - the chips CYCLED.** Each click
+advanced to the next value, so reaching "שופינג: פחות" took four clicks through
+two wrong values, with no way to see what the options were. Worse: **every one
+of those intermediate clicks writes to the trip and syncs to the account.** The
+chip opens a list now, with the current value ticked and an explicit
+"בלי העדפה" row rather than a fifth click back to nothing. Pace and "מי נוסע"
+cycled identically, so all three changed together - leaving two spinning would
+be a worse screen than either consistent state. Kosher stays a plain toggle,
+because it genuinely is binary.
+
+**3. Navbar trips were three controls pretending to be navigation.** Up to two
+trips rendered as loose pills between "כשרות" and the account button, the active
+one in solid coral so it read as a nav section, plus a separate "עוד (N)" - and
+`max-w-24 truncate` chopped the labels, so "ברטיסלבה + וינה" showed as
+"ברטיסלב…". One "הטיולים שלי · N" control now, listing every trip with the full
+name (wrapping to two lines when long) and marking the open one. Identical
+actions; three fewer objects in the row. Mobile already had a proper list and
+just lost its truncation.
+
+**4. The trip screen: two real things, and a lot that was already fine.** The day
+strip was `-mx-4 overflow-x-auto` below sm, so at 390px the last control was
+sliced against the viewport edge - **the same failure Netanel already reported
+once on the catalog's continent tabs**, which is a hint that a scrolling strip
+of pills is simply the wrong pattern in this layout. It wraps now. And the map's
+view switch repeated the selected day in the same coral as the day tab 55px
+above it; it is a view toggle, not a primary action, so it is neutral and the
+screen has one accent instead of two saying the same thing.
+
+**Deliberately NOT changed**, because the screen turned out to be less crowded
+than the first (broken) screenshots suggested: the header actions, the stats
+chip, the per-stop menus, the agent column and the coach mark. Control count at
+first paint moved 44 to 42 at 1440 and stayed at 29 on mobile - which is the
+honest number. The win here is hierarchy, not density: what was removed is
+duplicated emphasis, and the metric barely sees that. Same lesson as entry (l).
+
+**Verified 33/33** in a real browser at 1440 and 390, fresh context per width,
+against the production build: the selection colour and its high-contrast twin,
+the far shopping value in ONE click, clearing, the other two pickers, no loose
+nav pills, no truncated names, picking a trip still opens it, the mobile menu,
+zero overflow, nothing clipped, RTL intact. 107 unit tests, tsc, build, lint
+unchanged.
+
+**Three assertions of mine failed and all three were the test, not the product**
+- worth recording because they are the same species as the flag: Leaflet tiles
+legitimately overflow their pane (the container clips them, and page-level
+overflow was 0 the whole time); the map view switch also matches `^יום \d+$`
+so the day-tab count read 4; and the CSS minifier **splits one authored
+`::selection` rule into several**, so reading "the" rule found the background
+and missed the colour.
+
 ### 2026-07-27 (w) - A deleted trip that would not stay deleted, the three unmetered paths, and a real Maps export
 
 Three items, in the order Netanel asked for them while he was offline.
