@@ -160,6 +160,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vie-cafe-central',
+        kosherStatus: 'not-kosher',
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Palais_Ferstel.jpg/500px-Palais_Ferstel.jpg',
         tags: ['foodie', 'romantic', 'history'],
@@ -378,6 +379,66 @@ export const destinations: Destination[] = [
         tags: ['romantic'],
         priceLevel: 3,
         externalUrl: 'https://maps.google.com/?q=Graben+Vienna',
+      },
+      {
+        id: 'vie-demel',
+        name: 'דמל - הקונדיטוריה הקיסרית',
+        nameLocal: 'Demel',
+        category: 'cafe',
+        lat: 48.20861111,
+        lng: 16.36722222,
+        description:
+          'קונדיטוריה שהייתה ספקית החצר הקיסרית ההבסבורגית, פועלת מאז המאה ה-18. האופים עובדים מאחורי חלון זכוכית אל הקהל, וזו גם הכתובת השנייה במחלוקת הידועה על מי המציא את עוגת הזאכר. לא כשרה - עוגות חלביות בלי השגחה.',
+        durationMin: 60,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=48.20861111,16.36722222',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Demel',
+          title: 'Demel - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'vie-sacher',
+        name: 'קפה זאכר ועוגת הזאכר המקורית',
+        nameLocal: 'Cafe Sacher Wien',
+        category: 'cafe',
+        lat: 48.20388889,
+        lng: 16.36944444,
+        description:
+          'בית הקפה של מלון זאכר, מול האופרה, שבו נמצאת ה-Original Sacher-Torte - עוגת השוקולד שהיא הדבר הקולינרי שווינה מזוהה איתו יותר מכל. הזכות על השם נסגרה בבית משפט מול דמל. לא כשרה.',
+        durationMin: 60,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=48.20388889,16.36944444',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Hotel_Sacher',
+          title: 'Hotel Sacher - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'vie-hawelka',
+        name: 'קפה הוולקה',
+        nameLocal: 'Cafe Hawelka',
+        category: 'cafe',
+        lat: 48.20777778,
+        lng: 16.36944444,
+        description:
+          'בית קפה וינאי קטן ואפלולי מ-1939 שהיה מוקד לסופרים ולאמנים אחרי המלחמה, ושמר על הריהוט והאווירה המקוריים. מזוהה עם הבוכטלן - כיסוני שמרים ממולאים שיוצאים מהתנור בערב. לא כשר.',
+        durationMin: 45,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'art'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=48.20777778,16.36944444',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Café_Hawelka',
+          title: 'Cafe Hawelka - Wikipedia',
+          checked: '2026-07-28',
+        },
       },
       {
         id: 'vie-melk',
@@ -1229,6 +1290,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'prg-cafe-louvre',
+        kosherStatus: 'not-kosher',
         name: 'קפה לובר',
         nameLocal: 'Café Louvre',
         category: 'cafe',
@@ -1684,6 +1746,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-newyork-cafe',
+        kosherStatus: 'not-kosher',
         name: 'ניו יורק קפה',
         nameLocal: 'New York Café',
         category: 'cafe',
@@ -1718,6 +1781,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-gerbeaud',
+        kosherStatus: 'not-kosher',
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Cafe_Gerbeaud_01.JPG/500px-Cafe_Gerbeaud_01.JPG',
         name: 'קפה ג׳רבו',
@@ -1974,6 +2038,65 @@ export const destinations: Destination[] = [
         rating: 4.3,
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=Via+del+Corso',
+      },
+      {
+        id: 'rom-caffe-greco',
+        name: 'אנטיקו קפה גרקו',
+        nameLocal: 'Antico Caffe Greco',
+        category: 'cafe',
+        lat: 41.905558,
+        lng: 12.481436,
+        description:
+          'בית הקפה הוותיק ברומא, פועל מאז 1760 ברחוב קונדוטי. ישבו בו קיטס, גתה, סטנדל וקזנובה, והקירות עמוסים ביצירות אמנות; האתר מוכר כאתר מורשת מוגן. לא כשר.',
+        durationMin: 45,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'history', 'art'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=41.905558,12.481436',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Antico_Caffè_Greco',
+          title: 'Antico Caffe Greco - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'rom-giolitti',
+        name: 'ג׳ולטי - גלידריה',
+        nameLocal: 'Giolitti',
+        category: 'food',
+        lat: 41.90107,
+        lng: 12.47733,
+        description:
+          'גלידריה רומאית שפועלת מתחילת המאה ה-20 ליד הפנתיאון, ונחשבת לאחת המוסדות של הגלידה בעיר. לא כשרה - מוצרי חלב בלי השגחה.',
+        durationMin: 30,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=41.90107,12.47733',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Giolitti',
+          title: 'Giolitti - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'rom-porta-portese',
+        name: 'שוק הפשפשים פורטה פורטזה',
+        nameLocal: 'Porta Portese',
+        category: 'market',
+        lat: 41.883898,
+        lng: 12.474022,
+        description:
+          'שוק הפשפשים הגדול של רומא, נפרש בבקרי ראשון לאורך רחובות טרסטוורה מכיוון שער פורטה פורטזה מהמאה ה-17. בגדים יד שנייה, רהיטים, ספרים ועתיקות. צפוף מאוד - לשים לב לחפצים אישיים.',
+        durationMin: 90,
+        tags: ['history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=41.883898,12.474022',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Porta_Portese',
+          title: 'Porta Portese - Wikipedia',
+          checked: '2026-07-28',
+        },
       },
       {
         id: 'rom-baghetto',
@@ -2924,6 +3047,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'mad-san-miguel',
+        kosherStatus: 'not-kosher',
         name: 'שוק סן מיגל',
         nameLocal: 'Mercado de San Miguel',
         category: 'cafe',
@@ -3143,6 +3267,63 @@ export const destinations: Destination[] = [
         rating: 4.5,
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=Passeig+de+Gracia',
+      },
+      {
+        id: 'bcn-santa-caterina',
+        name: 'שוק סנטה קטרינה',
+        nameLocal: 'Mercat de Santa Caterina',
+        category: 'market',
+        lat: 41.38618,
+        lng: 2.17834,
+        description:
+          'שוק המזון של הרובע העתיק, מתחת לגג גלי בפסיפס צבעוני שתוכנן על ידי אנריק מיראייס. שוק שכונתי אמיתי ולא תיירותי כמו הבוקריה, ובחפירות שנעשו בו נחשפו שרידי מנזר מימי הביניים שמוצגים באתר.',
+        durationMin: 60,
+        tags: ['foodie', 'art'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=41.38618,2.17834',
+        source: {
+          url: 'https://ca.wikipedia.org/wiki/Mercat_de_Santa_Caterina',
+          title: 'Mercat de Santa Caterina - Viquipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'bcn-sant-antoni',
+        name: 'שוק סנט אנטוני',
+        nameLocal: 'Mercat de Sant Antoni',
+        category: 'market',
+        lat: 41.37861,
+        lng: 2.16208,
+        description:
+          'שוק ברזל ויצוק מהמאה ה-19 בצורת צלב, שנפתח מחדש אחרי שיפוץ ארוך. בימי ראשון מתקיים בו שוק הספרים המשומשים והאספנות - קומיקסים, תקליטים ובולים - שהוא מוסד ברצלוני בפני עצמו.',
+        durationMin: 60,
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=41.37861,2.16208',
+        source: {
+          url: 'https://ca.wikipedia.org/wiki/Mercat_de_Sant_Antoni',
+          title: 'Mercat de Sant Antoni - Viquipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'bcn-gispert',
+        name: 'קאסה חיספרט',
+        nameLocal: 'Casa Gispert',
+        category: 'shopping',
+        lat: 41.384315,
+        lng: 2.182079,
+        description:
+          'חנות אגוזים ופיצוחים ברובע אל בורן שפועלת מ-1851, ועדיין קולה את השקדים והאגוזים בתנור עצים מקורי בירכתי החנות. אחת החנויות ההיסטוריות המוכרות של העיר, וקניית מזכרת אכילה שאינה מגנט.',
+        durationMin: 30,
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=41.384315,2.182079',
+        source: {
+          url: 'https://ca.wikipedia.org/wiki/Casa_Gispert',
+          title: 'Casa Gispert - Viquipedia',
+          checked: '2026-07-28',
+        },
       },
       {
         id: 'bcn-maccabi',
@@ -3418,6 +3599,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bcn-quatre-gats',
+        kosherStatus: 'not-kosher',
         name: 'אלס קואטרה גאטס',
         nameLocal: 'Els Quatre Gats',
         category: 'cafe',
@@ -3859,6 +4041,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ber-kranzler',
+        kosherStatus: 'not-kosher',
         name: 'קפה קרנצלר',
         nameLocal: 'Café Kranzler',
         category: 'cafe',
@@ -4182,6 +4365,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bkk-onlokyun',
+        kosherStatus: 'not-kosher',
         tags: ['foodie'],
         priceLevel: 0,
         name: 'און לוק יון - מסעדת בוקר ותיקה',
@@ -4190,7 +4374,7 @@ export const destinations: Destination[] = [
         lat: 13.7511,
         lng: 100.4978,
         description:
-          'מסעדת בוקר תאילנדית-סינית כמעט בת 80 שנה ליד העיר העתיקה - טוסט חמאה, ביצים ותה חלב תאילנדי. לא כשרה, אבל מוסד בנגקוקי אמיתי. סגורה בימי ראשון.',
+          'מסעדת בוקר תאילנדית-סינית כמעט בת 80 שנה ליד העיר העתיקה - טוסט חמאה, ביצים ותה חלב תאילנדי. לא כשרה, אבל מוסד בנגקוקי אמיתי.',
         rating: 4.3,
         durationMin: 45,
         externalUrl: 'https://maps.google.com/?q=On+Lok+Yun+Bangkok',
@@ -4280,6 +4464,64 @@ export const destinations: Destination[] = [
         rating: 4.5,
         durationMin: 105,
         externalUrl: 'https://maps.google.com/?q=ICONSIAM+Bangkok',
+      },
+      {
+        id: 'bkk-jayfai',
+        name: 'ג׳יי פאי',
+        nameLocal: 'Jay Fai',
+        category: 'food',
+        lat: 13.7525,
+        lng: 100.50472222,
+        description:
+          'דוכן אוכל רחוב ברובע פרה נאקהון שקיבל כוכב מישלן - הבעלים מבשלת בעצמה בוואק על גחלים, עם משקפי מגן, והמנה המזוהה איתה היא חביתת הסרטן. תור ארוך והזמנה מראש נהוגה. לא כשר - פירות ים ובשר לא כשר.',
+        durationMin: 90,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=13.7525,100.50472222',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Jay_Fai',
+          title: 'Jay Fai - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'bkk-pak-khlong',
+        name: 'פאק קלונג טלאט - שוק הפרחים',
+        nameLocal: 'Pak Khlong Talat',
+        category: 'market',
+        lat: 13.742209,
+        lng: 100.496567,
+        description:
+          'שוק הפרחים הגדול בבנגקוק, פועל מסביב לשעון ליד נהר צ׳או פראיה. סחלבים, זרי מלאי לבתי המקדש וערימות ציפורן - הכי חי בשעות הלילה המאוחרות, כשהמשאיות פורקות סחורה טרייה.',
+        durationMin: 60,
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=13.742209,100.496567',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Pak_Khlong_Talat',
+          title: 'Pak Khlong Talat - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'bkk-talat-noi',
+        name: 'טלאט נוי',
+        nameLocal: 'Talat Noi',
+        category: 'market',
+        lat: 13.73333333,
+        lng: 100.51388889,
+        description:
+          'שכונה סינית ותיקה על גדת הנהר, דרומית ליאווארט - סמטאות צרות של מוסכים ומחסני חלקי מנוע, בתי מגורים ישנים, גרפיטי ומקדש סיני מהמאה ה-17. רובע להליכה ולצילום יותר מאשר לקניות.',
+        durationMin: 90,
+        tags: ['history', 'art'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=13.73333333,100.51388889',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Talat_Noi',
+          title: 'Talat Noi - Wikipedia',
+          checked: '2026-07-28',
+        },
       },
       {
         id: 'bkk-asiatique',
@@ -8842,6 +9084,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ven-florian',
+        kosherStatus: 'not-kosher',
         name: 'קפה פלוריאן',
         nameLocal: 'Caffè Florian',
         category: 'cafe',
@@ -11776,6 +12019,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nyc-katz',
+        kosherStatus: 'not-kosher',
         name: 'כץ דליקטסן',
         nameLocal: "Katz's Delicatessen",
         category: 'cafe',
@@ -16970,6 +17214,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kra-jama-michalika',
+        kosherStatus: 'not-kosher',
         name: 'ימה מיכליקה',
         nameLocal: 'Jama Michalika',
         category: 'cafe',
@@ -18195,6 +18440,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'buc-caru-cu-bere',
+        kosherStatus: 'not-kosher',
         name: 'קארו קו ברה',
         nameLocal: 'Caru cu Bere',
         category: 'cafe',
@@ -33766,6 +34012,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'par-deux-magots',
+        kosherStatus: 'not-kosher',
         name: 'לה דה מאגו',
         nameLocal: 'Les Deux Magots',
         category: 'cafe',
@@ -33782,6 +34029,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'par-cafe-flore',
+        kosherStatus: 'not-kosher',
         name: 'קפה דה פלור',
         nameLocal: 'Café de Flore',
         category: 'cafe',
@@ -34366,6 +34614,7 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lon-fortnum',
+        kosherStatus: 'not-kosher',
         name: 'פורטנום ומייסון',
         nameLocal: 'Fortnum & Mason',
         category: 'cafe',

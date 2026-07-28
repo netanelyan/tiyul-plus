@@ -8,9 +8,29 @@ export type PlaceCategory =
   | 'nature'
   | 'viewpoint'
   | 'cafe'
+  | 'food'
+  | 'market'
   | 'shopping'
   | 'kosher-food'
   | 'kosher-market';
+
+// סטטוס כשרות מפורש למקום שאוכלים בו. **חובה, ולעולם לא ניחוש.**
+// 'kosher' נאמר רק על מקום עם השגחה מדווחת; 'not-kosher' על מקום ללא
+// השגחה או שמגיש מה שאסור; 'unknown' כשבאמת אי אפשר לדעת - וזה מוצג
+// למשתמש ככזה ולא נבלע בשקט.
+//
+// **הסטטוס של רשומות kosher-* נגזר ולא נכתב** (ראה kosherStatusOf
+// ב-src/lib/categories.ts), כדי שאף רשומת כשרות קיימת לא תיגע.
+export type KosherStatus = 'kosher' | 'not-kosher' | 'unknown';
+
+// מקור אמיתי לרשומה, עם תאריך. הכלל: אין רשומת אוכל/שוק/קניות חדשה
+// בלי מקור. `checked` הוא היום שבו המקור נקרא בפועל - לא היום שבו
+// המקום נפתח ולא תאריך שהומצא.
+export interface PlaceSource {
+  url: string; // הכתובת שנקראה בפועל
+  title: string; // מה זה, בשפת המקור או באנגלית
+  checked: string; // ISO date, YYYY-MM-DD
+}
 
 // תגיות קהל - סט סגור, משמש גם לסינון וגם להתאמת העדפות בציון האשף
 export type PlaceTag =
@@ -45,6 +65,8 @@ export interface Place {
   durationMin?: number; // typical visit length
   kosherNote?: string; // hechsher / kashrut details, Hebrew
   kosherVerification?: KosherVerification; // תג האמון של רשומות כשרות
+  kosherStatus?: KosherStatus; // חובה לכל קטגוריה שאוכלים בה - ראה kosherStatusOf
+  source?: PlaceSource; // מאיפה זה הגיע ומתי נבדק
   externalUrl?: string; // deep link to Google Maps / TripAdvisor page
   photo?: string; // verified URL (Wikimedia/Unsplash); UI falls back to gradient
   priceLevel?: 0 | 1 | 2 | 3; // 0=חינם, 3=יקר
