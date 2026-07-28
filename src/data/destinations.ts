@@ -4829,6 +4829,51 @@ export const destinations: Destination[] = [
         tags: ['art', 'romantic'],
         externalUrl: 'https://maps.google.com/?q=25.19561,55.27189',
       },
+      {
+        id: 'dxb-kikkos',
+        name: 'קיקוס (סושי ובשרים כשר)',
+        nameLocal: "Kikko's Sushi & Meat",
+        category: 'kosher-food',
+        lat: 25.1910579,
+        lng: 55.2930666,
+        description:
+          'מסעדה כשרה בשרית עם סושי בביזנס ביי, במגדל The Bay Tower מול הרדיסון בלו על תעלת דובאי.',
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'EAKC - הסוכנות הכשרותית של האמירויות (הרב לוי דוכמן) - כפי שדווח' },
+        durationMin: 90,
+        priceLevel: 3,
+        tags: ['foodie'],
+        externalUrl: 'https://maps.google.com/?q=Kikkos+Sushi+Meat+Dubai',
+      },
+      {
+        id: 'dxb-rimon-market',
+        name: 'רימון (סופר כשר)',
+        nameLocal: 'Rimon Market',
+        category: 'kosher-market',
+        lat: 25.185524,
+        lng: 55.239055,
+        description:
+          'הסופרמרקט הכשר של דובאי, ב-Wasl Square על Al Wasl Road בשכונת אל צפא 1. בשר ועוף, מוצרים ארוזים וייבוא מישראל, מאירופה ומארה״ב.',
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'EAKC - כפי שדווח' },
+        durationMin: 30,
+        priceLevel: 2,
+        tags: ['foodie'],
+        externalUrl: 'https://maps.google.com/?q=Rimon+Market+Kosher+Dubai',
+      },
+      {
+        id: 'dxb-mosaica',
+        name: 'מוזאיקה (מסעדה כשרה)',
+        nameLocal: 'Mosaica',
+        category: 'kosher-food',
+        lat: 25.1998645,
+        lng: 55.2692193,
+        description:
+          'מסעדה כשרה בקומה ה-31 של מלון סופיטל דובאי דאונטאון, עם נוף לקו הרקיע של דאונטאון.',
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'EAKC - כפי שדווח ברשימת בית חב״ד דובאי' },
+        durationMin: 120,
+        priceLevel: 3,
+        tags: ['foodie', 'romantic'],
+        externalUrl: 'https://maps.google.com/?q=Mosaica+Sofitel+Dubai+Downtown',
+      },
     ],
     itinerary: [
       {
@@ -4877,7 +4922,7 @@ export const destinations: Destination[] = [
       gettingAround:
         'הרכבת הקלה (Dubai Metro) נוחה וזולה ומחברת את רוב האטרקציות המרכזיות; כרטיס Nol נרכש בתחנה. מוניות זמינות וזולות יחסית, וגם קארים (Careem) פועל. בין דירה לבר דובאי כדאי אברה. המרחקים גדולים - לא עיר להליכה בין אזורים.',
       kosherOverview:
-        'דובאי היא כיום אחת הערים בעולם הערבי עם תשתית כשרות מסודרת. פועלות בה מסעדות כשרות בבשרי, חלבי ודגים באזורי דקל ג׳ומיירה, דאונטאון, ביזנס ביי, המרינה וג׳ומיירה, לצד סופרמרקט כשר (רימון, באזור אל צפא) ושירותי קייטרינג. רוב ההשגחות הן של בית חב״ד דובאי (הרב דוכמן) ושל EAKC, וחלק מהמקומות תחת השגחות אחרות כמו OU או בד״ץ תפארת ישראל. הסצנה משתנה מהר: מקומות נפתחים ונסגרים, ולכן חובה לוודא מול המקום ומול בית חב״ד לפני שמגיעים. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
+        'דובאי היא כיום אחת הערים בעולם הערבי עם תשתית כשרות מסודרת. פועלות בה מסעדות כשרות בבשרי, חלבי ודגים באזורי דקל ג׳ומיירה, דאונטאון, ביזנס ביי, המרינה וג׳ומיירה, לצד סופרמרקט כשר (רימון, באזור אל צפא) ושירותי קייטרינג. רוב ההשגחות הן של בית חב״ד דובאי (הרב דוכמן) ושל EAKC, וחלק מהמקומות תחת השגחות אחרות כמו OU או בד״ץ תפארת ישראל. הסצנה משתנה מהר: מקומות נפתחים ונסגרים, ולכן חובה לוודא מול המקום ומול בית חב״ד לפני שמגיעים. בקטלוג יש כעת שלושה מקומות מאומתים בלבד - מדגם, ולא רשימה מלאה.',
     },
   },
   {
@@ -11749,6 +11794,67 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Katz%27s_Delicatessen_(51623899326).jpg/500px-Katz%27s_Delicatessen_(51623899326).jpg',
       },
+      {
+        id: 'nyc-barnea',
+        name: 'ברנע ביסטרו (מסעדה כשרה)',
+        nameLocal: 'Barnea Bistro',
+        category: 'kosher-food',
+        lat: 40.7532009,
+        lng: -73.9717563,
+        description:
+          'ביסטרו כשר בשרי במידטאון, ברחוב 211 East 46th Street, סמוך לגרנד סנטרל ולבניין האו״ם. מטבח צרפתי ובשרים.',
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'OU (Orthodox Union) - כפי שדווח' },
+        durationMin: 90,
+        priceLevel: 3,
+        tags: ['foodie'],
+        externalUrl: 'https://maps.google.com/?q=Barnea+Bistro+New+York',
+      },
+      {
+        id: 'nyc-reserve-cut',
+        name: 'ריזרב קאט (סטייקהאוס כשר)',
+        nameLocal: 'Reserve Cut',
+        category: 'kosher-food',
+        lat: 40.7608714,
+        lng: -73.9706595,
+        description:
+          'סטייקהאוס כשר במידטאון, ברחוב 109 East 56th Street. בשרים וסושי באותו תפריט.',
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'OU גלאט - כפי שדווח' },
+        durationMin: 90,
+        priceLevel: 3,
+        tags: ['foodie'],
+        externalUrl: 'https://maps.google.com/?q=Reserve+Cut+New+York',
+      },
+      {
+        id: 'nyc-noi-due',
+        name: 'נוי דואה (קפה כשר חלבי)',
+        nameLocal: 'Noi Due Cafe',
+        category: 'kosher-food',
+        lat: 40.7849326,
+        lng: -73.9730595,
+        description:
+          'קפה כשר חלבי באפר ווסט סייד, ברחוב 491 Columbus Avenue. פסטות, פיצות, סלטים ודגים.',
+        kosherNote: 'חלבי ודגים בלבד - אין בשר בתפריט.',
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'OK Kosher, חלבי וחלב ישראל - כפי שדווח' },
+        durationMin: 60,
+        priceLevel: 2,
+        tags: ['foodie', 'families'],
+        externalUrl: 'https://maps.google.com/?q=Noi+Due+Cafe+New+York',
+      },
+      {
+        id: 'nyc-kosher-marketplace',
+        name: 'קושר מרקטפלייס (סופר כשר)',
+        nameLocal: 'The Kosher Marketplace',
+        category: 'kosher-market',
+        lat: 40.79094,
+        lng: -73.974152,
+        description:
+          'סופרמרקט כשר באפר ווסט סייד, ברחוב 2442 Broadway. מוצרים ארוזים, בשר ועוף, דגים ומוכן לשבת.',
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'הרב מרמורשטיין - כפי שדווח ברשימת הקהילה' },
+        durationMin: 30,
+        priceLevel: 2,
+        tags: ['foodie'],
+        externalUrl: 'https://maps.google.com/?q=The+Kosher+Marketplace+New+York',
+      },
     ],
     itinerary: [
       {
@@ -11806,7 +11912,7 @@ export const destinations: Destination[] = [
       gettingAround:
         'הרכבת התחתית פועלת מסביב לשעון ומכסה את כל האזורים; כרטיס OMNY נטען בכרטיס אשראי או בטלפון ישירות בשער. מנהטן בנויה כרשת ונוחה מאוד להליכה. מוניות צהובות ואובר זמינים אבל תקועים בפקקים בשעות העומס, ולרוב הרכבת מהירה יותר.',
       kosherOverview:
-        'ניו יורק היא ככל הנראה העיר הקלה בעולם לשמור בה כשרות מחוץ לישראל: מאות מסעדות, מאפיות וסופרים כשרים, בעיקר באפר ווסט סייד, במידטאון (רחוב 47 והסביבה), בבורו פארק, בקראון הייטס ובוויליאמסבורג. ההשגחות הנפוצות הן OU, OK, Star-K ו-Kof-K, וגם השגחות מקומיות. הסצנה גדולה ומשתנה, ולכן כדאי לבדוק מול המקום או מול רשימות מעודכנות לפני הנסיעה. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
+        'ניו יורק היא ככל הנראה העיר הקלה בעולם לשמור בה כשרות מחוץ לישראל: מאות מסעדות, מאפיות וסופרים כשרים, בעיקר באפר ווסט סייד, במידטאון (רחוב 47 והסביבה), בבורו פארק, בקראון הייטס ובוויליאמסבורג. ההשגחות הנפוצות הן OU, OK, Star-K ו-Kof-K, וגם השגחות מקומיות. הסצנה גדולה ומשתנה, ולכן כדאי לבדוק מול המקום או מול רשימות מעודכנות לפני הנסיעה. בקטלוג יש כעת ארבעה מקומות מאומתים במנהטן בלבד - מדגם קטן מאוד מהמציאות בעיר, ולא רשימה מלאה.',
     },
   },
   {
@@ -31362,6 +31468,52 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/2019_Buenos_Aires_-_Torre_Monumental.jpg/500px-2019_Buenos_Aires_-_Torre_Monumental.jpg',
       },
+      {
+        id: 'ba-lo-de-victor',
+        name: 'לו דה ויקטור (מסעדת בשרים כשרה)',
+        nameLocal: 'Lo De Victor',
+        category: 'kosher-food',
+        lat: -34.601757,
+        lng: -58.4036209,
+        description:
+          'פארייה כשרה בשכונת אונסה, ברחוב Paso 610. נתחי בקר על הגריל, עוף, צ׳יפס וסלטים - האסאדו הארגנטינאי בגרסה כשרה.',
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'הרב שחיבר - כפי שדווח' },
+        durationMin: 90,
+        priceLevel: 2,
+        tags: ['foodie'],
+        externalUrl: 'https://maps.google.com/?q=Lo+De+Victor+Buenos+Aires',
+      },
+      {
+        id: 'ba-malena',
+        name: 'מלנה (מאפייה כשרה)',
+        nameLocal: 'Confiteria Malena',
+        category: 'kosher-market',
+        lat: -34.6001044,
+        lng: -58.4043754,
+        description:
+          'מאפייה כשרה באונסה, בשדרות Pueyrredón 880. לחמים, מאפים וחלות לשבת, בגרסאות פרווה וחלבי.',
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'הרב שחיבר - כפי שדווח' },
+        durationMin: 20,
+        priceLevel: 1,
+        tags: ['foodie', 'families'],
+        externalUrl: 'https://maps.google.com/?q=Confiteria+Malena+Buenos+Aires',
+      },
+      {
+        id: 'ba-super-modelo',
+        name: 'סופר מודלו (סופר כשר)',
+        nameLocal: 'Super Modelo',
+        category: 'kosher-market',
+        lat: -34.601959,
+        lng: -58.403999,
+        description:
+          'סופרמרקט כשר באונסה, ברחוב Tucumán 2650. מופיע ברשימת העסקים הכשרים של עיריית בואנוס איירס ובשל בית חב״ד רקולטה.',
+        kosherNote: 'הרשימות הציבוריות לא מפרסמות את גוף ההשגחה של החנות. לברר מול החנות לפני קנייה.',
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'לא פורסמה השגחה ברשימות הקהילה - לוודא מול החנות' },
+        durationMin: 30,
+        priceLevel: 1,
+        tags: ['foodie'],
+        externalUrl: 'https://maps.google.com/?q=Super+Modelo+Kosher+Buenos+Aires',
+      },
     ],
     itinerary: [
       {
@@ -31406,7 +31558,7 @@ export const destinations: Destination[] = [
       gettingAround:
         'הסובטה (רכבת תחתית) זולה ומהירה, ומשלמים בכרטיס SUBE שנרכש בקיוסקים. אוטובוסים (colectivos) מכסים הכול ופועלים כל הלילה, גם הם ב-SUBE. מוניות ואפליקציות זמינות וזולות יחסית. העיר גדולה, ולא כדאי לתכנן הכול ברגל.',
       kosherOverview:
-        'בואנוס איירס היא מרכז הכשרות הגדול באמריקה הלטינית: קהילה יהודית של כ-180 אלף איש, ובעיקר בשכונות אונסה (Once) ואגם (Villa Crespo) יש מסעדות, מאפיות, קצביות וסופרים כשרים. פועלים בעיר בתי חב״ד ובתי כנסת רבים, וההשגחה המקובלת היא של הרבנות המקומית. שימו לב שאתרים יהודיים דורשים לרוב תיאום מראש והצגת דרכון בכניסה, מסיבות ביטחוניות. לוודא מול המקום. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
+        'בואנוס איירס היא מרכז הכשרות הגדול באמריקה הלטינית: קהילה יהודית של כ-180 אלף איש, ובעיקר בשכונות אונסה (Once) ואגם (Villa Crespo) יש מסעדות, מאפיות, קצביות וסופרים כשרים. פועלים בעיר בתי חב״ד ובתי כנסת רבים, וההשגחה המקובלת היא של הרבנות המקומית. שימו לב שאתרים יהודיים דורשים לרוב תיאום מראש והצגת דרכון בכניסה, מסיבות ביטחוניות. לוודא מול המקום. בקטלוג יש כעת שלושה מקומות מאומתים באזור אונסה בלבד - מדגם קטן מהמציאות בעיר, ולא רשימה מלאה.',
     },
   },
   {
@@ -33676,6 +33828,21 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Caf%C3%A9_de_Flore%2C_172_boulevard_Saint-Germain%2C_Paris_6e.jpg/500px-Caf%C3%A9_de_Flore%2C_172_boulevard_Saint-Germain%2C_Paris_6e.jpg',
       },
+      {
+        id: 'par-as-du-fallafel',
+        name: 'לאס דו פלאפל (פלאפל כשר)',
+        nameLocal: "L'As du Fallafel",
+        category: 'kosher-food',
+        lat: 48.857415,
+        lng: 2.359068,
+        description:
+          'דוכן הפלאפל הידוע של המארה, ברחוב 34 rue des Rosiers. פלאפל, חומוס ושווארמה בפיתה - האוכל המהיר הכשר המזוהה ביותר עם פריז.',
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'בית הדין של פריז (Beth Din de Paris) - כפי שדווח' },
+        durationMin: 40,
+        priceLevel: 1,
+        tags: ['foodie', 'families'],
+        externalUrl: 'https://maps.google.com/?q=As+du+Fallafel+rue+des+Rosiers+Paris',
+      },
     ],
     itinerary: [
       {
@@ -34244,6 +34411,51 @@ export const destinations: Destination[] = [
         externalUrl: 'https://maps.google.com/?q=51.5083,-0.1384',
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Fortnum_and_Mason.jpg/500px-Fortnum_and_Mason.jpg',
+      },
+      {
+        id: 'lon-novellino',
+        name: 'נובלינו ביסטרו (מסעדה כשרה)',
+        nameLocal: 'Novellino Bistro',
+        category: 'kosher-food',
+        lat: 51.5734,
+        lng: -0.20037,
+        description:
+          'ביסטרו כשר בשרי בגולדרס גרין, ברחוב 111a-113 Golders Green Road - לב אזור הכשרות של צפון לונדון.',
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'KLBD - בית הדין של לונדון - כפי שדווח' },
+        durationMin: 90,
+        priceLevel: 2,
+        tags: ['foodie'],
+        externalUrl: 'https://maps.google.com/?q=Novellino+Bistro+Golders+Green+London',
+      },
+      {
+        id: 'lon-kosher-kingdom',
+        name: 'קושר קינגדום (סופר כשר)',
+        nameLocal: 'Kosher Kingdom',
+        category: 'kosher-market',
+        lat: 51.57806,
+        lng: -0.20718,
+        description:
+          'סופרמרקט כשר בגולדרס גרין, ב-7 Russell Parade על Golders Green Road. ירקות ופירות, מכולת, יין ודוכני מוכן.',
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'KLBD - כפי שדווח באתר החנות' },
+        durationMin: 40,
+        priceLevel: 2,
+        tags: ['foodie', 'families'],
+        externalUrl: 'https://maps.google.com/?q=Kosher+Kingdom+Golders+Green+London',
+      },
+      {
+        id: 'lon-tony-page',
+        name: 'טוני פייג׳ (מסעדה כשרה)',
+        nameLocal: 'Tony Page',
+        category: 'kosher-food',
+        lat: 51.520625,
+        lng: -0.155523,
+        description:
+          'מסעדה כשרה בשרית במרילבון, ברחוב 26 Paddington Street - האפשרות הכשרה הנדירה במרכז לונדון עצמו, בטווח הליכה מאוקספורד סטריט.',
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'בית הדין של לונדון (KLBD) - כפי שדווח' },
+        durationMin: 90,
+        priceLevel: 3,
+        tags: ['foodie'],
+        externalUrl: 'https://maps.google.com/?q=Tony+Page+Restaurant+Marylebone+London',
       },
     ],
     itinerary: [
@@ -34932,6 +35144,21 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         tags: ['foodie', 'history'],
         mustSee: true,
+      },
+      {
+        id: 'be-kleinblatt',
+        name: 'קלייןבלאט (מאפייה כשרה)',
+        nameLocal: 'Kleinblatt',
+        category: 'kosher-market',
+        lat: 51.21149,
+        lng: 4.42605,
+        description:
+          'מאפייה כשרה ותיקה ברובע היהודי של אנטוורפן, ברחוב Provinciestraat 206. לחמים, מאפים וחלות.',
+        kosherVerification: { source: 'curated', lastChecked: 'pending-review', supervision: 'מחזיקי הדת אנטוורפן - כפי שדווח' },
+        durationMin: 20,
+        priceLevel: 1,
+        tags: ['foodie', 'families'],
+        externalUrl: 'https://maps.google.com/?q=Kleinblatt+Antwerp',
       },
     ],
     itinerary: [
