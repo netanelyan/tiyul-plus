@@ -110,6 +110,25 @@ function checkPhoto(where, what, url, cssBackground) {
   if (/\.svg(\.png)?$/i.test(url))
     err(`${where}: ${what} is an SVG (emblem/logo/map), not a photograph -> ${url}`);
 
+  // The SVG rule above only catches the vector case. The same species ships as
+  // .png and .jpg all the time, and the filename says so out loud: Commons names
+  // montages "X_montage", collages "X_collage", and road/street signs "X_Sign".
+  // Nova Scotia's hero was CabotTrailSign.png - a road-sign GRAPHIC on a dark
+  // navy field, with transparency, so the card read as a blue bar with a
+  // silhouette on it. A montage is worse than useless in a card: it is six tiny
+  // photos in one frame, unreadable at 500px.
+  //
+  // Matched on the decoded FILENAME, not the URL, and anchored with separators
+  // so real words survive: "Piazza_Signoria" (Florence), "Iconsiam" (Bangkok)
+  // and "Panorama" are photographs and must not trip this.
+  const file = decodeURIComponent(url.split('/').pop() ?? '').replace(/^\d+px-/, '');
+  const GRAPHIC = /(^|[_\-(])(sign|montage|montaje|collage|logo|emblem|seal|banner|wordmark|coat[_-]of[_-]arms|blason|wappen|escudo)([_\-)./]|$)/i;
+  const m = file.match(GRAPHIC);
+  if (m)
+    err(
+      `${where}: ${what} filename says "${m[2]}" - that is a graphic (sign/montage/collage/logo), not a photograph -> ${file}`,
+    );
+
   if (cssBackground && url.includes('"'))
     err(`${where}: ${what} contains a double quote and is rendered inside CSS url("...") -> ${url}`);
 }

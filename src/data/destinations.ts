@@ -1499,8 +1499,6 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-vaci',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Vaci_utca_street_sign-Budapest.jpg/500px-Vaci_utca_street_sign-Budapest.jpg',
         tags: ['foodie'],
         priceLevel: 1,
         name: 'רחוב ואצי ושוק המרכזי',
@@ -1737,8 +1735,6 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-szentendre',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Szentendre_montage1.jpg/500px-Szentendre_montage1.jpg',
         name: 'סנטנדרה',
         nameLocal: 'Szentendre',
         category: 'attraction',
@@ -17729,8 +17725,6 @@ export const destinations: Destination[] = [
       },
       {
         id: 'she-old-town',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Shaki_montage2.jpg/500px-Shaki_montage2.jpg',
         name: 'שקי - העיר העתיקה',
         nameLocal: 'Shaki / Şəki',
         category: 'attraction',
@@ -17747,8 +17741,6 @@ export const destinations: Destination[] = [
       },
       {
         id: 'she-qabala',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Montage_of_Qabala_2019.jpg/500px-Montage_of_Qabala_2019.jpg',
         name: 'קבלה',
         nameLocal: 'Qabala / Qəbələ',
         category: 'nature',
@@ -17879,8 +17871,6 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'uae-hatta',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Hatta_Sign.jpg/500px-Hatta_Sign.jpg',
         name: 'חטא',
         nameLocal: 'Hatta',
         category: 'nature',
@@ -19703,8 +19693,6 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'fla-rovaniemi',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Rovaniemi_Montage.jpg/500px-Rovaniemi_Montage.jpg',
         name: 'רובניימי',
         nameLocal: 'Rovaniemi',
         category: 'attraction',
@@ -19824,8 +19812,6 @@ export const destinations: Destination[] = [
       },
       {
         id: 'fla-kemi',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Montage_of_Kemi_03.jpg/500px-Montage_of_Kemi_03.jpg',
         name: 'קמי',
         nameLocal: 'Kemi',
         category: 'attraction',
@@ -20958,8 +20944,6 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'mx-merida',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Collage_Merida_Yucatan.jpg/500px-Collage_Merida_Yucatan.jpg',
         name: 'מרידה',
         nameLocal: 'Mérida',
         category: 'attraction',
@@ -21029,8 +21013,6 @@ export const destinations: Destination[] = [
       },
       {
         id: 'mx-izamal',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Izamal_collage.jpg/500px-Izamal_collage.jpg',
         name: 'איסמל',
         nameLocal: 'Izamal',
         category: 'attraction',
@@ -21140,14 +21122,14 @@ export const destinations: Destination[] = [
           'שילוב חזק של היסטוריה אמיתית ועיר גדולה חיה, והרבה יותר מעניין ממה שרוב הישראלים עושים בקוריאה. החסרונות: גיונגג׳ו עצמה מפוזרת מאוד ובלי רכב או אופניים מבזבזים חצי יום על אוטובוסים, בוסן ענקית ואפורה בחלקים גדולים ממנה, והאתרים הבודהיסטיים המפורסמים נסגרים מוקדם ומתמלאים בטיולי בתי ספר. בעונת הגשמים ביולי ובאוגוסט הלחות מתישה.',
     },
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Gyeongju_montage.png/960px-Gyeongju_montage.png',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Gamcheon_Houses%2C_2024.jpg/500px-Gamcheon_Houses%2C_2024.jpg',
     iconicLandmark: {
-      name: 'גיונגג׳ו',
-      nameLocal: 'Gyeongju',
+      name: 'מקדש בולגוקסה',
+      nameLocal: 'Bulguksa',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Gyeongju_montage.png/500px-Gyeongju_montage.png',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Lotus_Flower_Bridge_and_Seven_Treasure_Bridge_at_Bulguksa_in_Gyeongju%2C_Korea.jpg/500px-Lotus_Flower_Bridge_and_Seven_Treasure_Bridge_at_Bulguksa_in_Gyeongju%2C_Korea.jpg',
       blurb:
-        'עיירה שהייתה בירת ממלכת שילה, ובמרכזה פארק עם תלי קבורה מלכותיים ענקיים מכוסי דשא.',
+        'מקדש בודהיסטי מהמאה השמינית עם גשרי אבן מדורגים, אתר מורשת עולמית.',
     },
     summary:
         'הפינה הדרומית-מזרחית של קוריאה מחזיקה שתי חוויות שונות במרחק שעה זו מזו. גיונגג׳ו הייתה במשך אלף שנים בירת ממלכת שילה, והיא היום עיירה שקטה שמפוזרים בה תלי קבורה ענקיים, מקדשים ומערת גרניט עם פסל בודהה מהמאה השמינית. בוסן, שעה דרומה ברכבת מהירה, היא עיר הנמל השנייה בגודלה במדינה, עם חופים, שוק דגים עצום ושכונת גבעה צבעונית. אפשר להוסיף יום באנדונג בצפון, לכפר מסורתי אמיתי שאנשים עדיין גרים בו.',
@@ -21156,8 +21138,6 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'kr-gyeongju',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Gyeongju_montage.png/500px-Gyeongju_montage.png',
         name: 'גיונגג׳ו',
         nameLocal: 'Gyeongju',
         category: 'attraction',
@@ -22832,14 +22812,14 @@ export const destinations: Destination[] = [
         'זה יעד לאוהבי נסיעות ארוכות ונופים שקטים, ולא למי שמחפש דרמה. המרחקים גדולים מאוד ורוב היום עובר ברכב, בלי תחבורה ציבורית ממשית מחוץ להליפקס. העונה שבה כדאי להגיע קצרה מאוד: החורף כאן ארוך, קר ומושלג, וחלק ניכר מהאכסניות והמסעדות סגור בין נובמבר למאי. גם בקיץ הערפל מהאוקיינוס נפוץ ויכול למחוק את הנוף לימים שלמים, והמים קרים מכדי לשחות בהם בנוחות. באוקטובר צבעי הסתיו יפים אבל אז המחירים גבוהים והכל תפוס חודשים מראש.',
     },
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/CabotTrailSign.png/960px-CabotTrailSign.png',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Little_River_in_Fall.jpg/500px-Little_River_in_Fall.jpg',
     iconicLandmark: {
-      name: 'מסלול קאבוט',
-      nameLocal: 'Cabot Trail',
+      name: 'מצודת לואיסבורג',
+      nameLocal: 'Fortress of Louisbourg',
       photo:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/CabotTrailSign.png/500px-CabotTrailSign.png',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Forteresse_de_Louisbourg.jpg/500px-Forteresse_de_Louisbourg.jpg',
       blurb:
-        'כביש טבעתי שמקיף את צפון האי קייפ ברטון, מטפס על רכסים ויורד אל מפרצים.',
+        'מצודה צרפתית מהמאה ה-18 על חוף האוקיינוס, משוחזרת ברובע שלם של מבנים.',
     },
     summary:
       'נובה סקוטיה היא חצי אי בקצה המזרחי של קנדה, מוקף אוקיינוס כמעט מכל צדדיו, וזה מרגיש. יש כאן היסטוריה קולוניאלית צרפתית ובריטית שהשאירה מצודות שלמות, כפרי דייגים עם בתי עץ צבעוניים, ובצפון רמה הררית שהכביש הנופי הידוע במדינה מקיף אותה מעל צוקי הים. לישראלים זה יעד פחות מוכר מהרי הרוקי במערב, ובדיוק בגלל זה הוא שקט יותר, אבל הוא דורש רכב ותכנון של מרחקים.',
@@ -22848,8 +22828,6 @@ export const destinations: Destination[] = [
     places: [
       {
         id: 'ca-cabot-trail',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/CabotTrailSign.png/500px-CabotTrailSign.png',
         name: 'מסלול קאבוט',
         nameLocal: 'Cabot Trail',
         category: 'viewpoint',
@@ -23647,8 +23625,6 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nl-gouda',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Banner_wikivoyage_2.jpg/500px-Banner_wikivoyage_2.jpg',
         name: 'חאודה',
         nameLocal: 'Gouda',
         category: 'attraction',
@@ -23957,8 +23933,6 @@ export const destinations: Destination[] = [
       },
       {
         id: 'se-kiruna',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Kiruna_montage.png/500px-Kiruna_montage.png',
         name: 'קירונה',
         nameLocal: 'Kiruna',
         category: 'attraction',
@@ -27505,8 +27479,6 @@ export const destinations: Destination[] = [
       },
       {
         id: 'ba-travnik',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Travnik_%28collage_image%29.jpg/500px-Travnik_%28collage_image%29.jpg',
         name: 'טרווניק',
         nameLocal: 'Travnik',
         category: 'attraction',
@@ -28732,8 +28704,6 @@ export const destinations: Destination[] = [
       },
       {
         id: 'gr-ioannina',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Ioannina_Montage_L.png/500px-Ioannina_Montage_L.png',
         name: 'יואנינה',
         nameLocal: 'Ιωάννινα',
         category: 'attraction',
@@ -32377,8 +32347,6 @@ export const destinations: Destination[] = [
       },
       {
         id: 'cl-punta-arenas',
-        photo:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Montaje_Punta_Arenas.png/500px-Montaje_Punta_Arenas.png',
         name: 'פונטה ארנאס',
         nameLocal: 'Punta Arenas',
         category: 'attraction',
