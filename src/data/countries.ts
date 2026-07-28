@@ -15,7 +15,7 @@ export const countries: Country[] = [
     summary:
       'אוסטריה היא מהיעדים הנוחים ביותר לישראלים: טיסה קצרה, סדר וניקיון אירופיים, תרבות בכל פינה - וקהילה יהודית חזקה עם תשתית כשרות מלאה בווינה.',
     photo:
-      'https://images.unsplash.com/photo-1516550893923-42d28e5677af?auto=format&fit=crop&w=1600&q=70',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Krimml_Waterfalls%2C_2014_%2802%29.JPG/500px-Krimml_Waterfalls%2C_2014_%2802%29.JPG',
     practical: {
       visa: 'ישראלים לא צריכים ויזה לשנגן (עד 90 יום). לוודא דרכון בתוקף 6 חודשים.',
       currency: 'אירו (€).',
@@ -32,7 +32,7 @@ export const countries: Country[] = [
     summary:
       'סלובקיה היא תוספת מושלמת לטיול באזור וינה: בירה קטנה ומהלכת, מחירים נוחים משמעותית ממערב אירופה, ומורשת יהודית עמוקה - ברטיסלבה היא עירו של החת"ם סופר.',
     photo:
-      'https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?auto=format&fit=crop&w=1600&q=70',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Slovensky_raj-Stratenska_pila.jpg/500px-Slovensky_raj-Stratenska_pila.jpg',
     practical: {
       visa: 'שנגן - ללא ויזה לישראלים עד 90 יום.',
       currency: 'אירו (€). זולה משמעותית מאוסטריה וממערב אירופה.',
@@ -49,7 +49,7 @@ export const countries: Country[] = [
     summary:
       'צ׳כיה מציעה את אחת הערים היפות באירופה, מחירים נוחים והיסטוריה יהודית של מאות שנים - הרובע היהודי של פראג הוא מהמשומרים בעולם, עם מסעדות כשרות ומניינים פעילים.',
     photo:
-      'https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=1600&q=70',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Tisk%C3%A9_st%C4%9Bny%2C_v%C3%BDhled_na_Tisou%2C_2020.jpg/500px-Tisk%C3%A9_st%C4%9Bny%2C_v%C3%BDhled_na_Tisou%2C_2020.jpg',
     practical: {
       visa: 'שנגן - ללא ויזה לישראלים עד 90 יום.',
       currency: 'קרונה צ׳כית (CZK), לא אירו! להימנע מהמרות בדוכני רחוב - רק כרטיס או בנק.',
@@ -66,7 +66,7 @@ export const countries: Country[] = [
     summary:
       'הונגריה משלבת בירה מרהיבה על הדנובה עם מחירים נוחים וחיים יהודיים תוססים: הרובע היהודי של בודפשט הוא מהפעילים באירופה, עם מסעדות כשרות ובתי כנסת מפוארים.',
     photo:
-      'https://images.unsplash.com/photo-1549877452-9c387954fbc2?auto=format&fit=crop&w=1600&q=70',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/H%C3%A9v%C3%ADz.jpg/500px-H%C3%A9v%C3%ADz.jpg',
     practical: {
       visa: 'שנגן - ללא ויזה לישראלים עד 90 יום.',
       currency: 'פורינט הונגרי (HUF), לא אירו. המחירים נוחים משמעותית ממערב אירופה.',
@@ -83,7 +83,7 @@ export const countries: Country[] = [
     summary:
       'איטליה היא יעד שאי אפשר למצות: היסטוריה בכל אבן, האוכל הכי מדובר באירופה - וקהילה יהודית בת יותר מ-2,000 שנה עם מטבח רומאי-יהודי ייחודי ותשתית כשרות מהטובות ביבשת.',
     photo:
-      'https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1600&q=70',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Seiser_Alm_01.jpg/500px-Seiser_Alm_01.jpg',
     practical: {
       visa: 'שנגן - ללא ויזה לישראלים עד 90 יום.',
       currency: 'אירו (€).',
@@ -100,7 +100,7 @@ export const countries: Country[] = [
     summary:
       'יוון היא חצר האחורית של ישראל באירופה: הטיסות הקצרות והזולות ביותר, מזג אוויר מוכר, אוכל ים-תיכוני - וקהילות יהודיות ותיקות באתונה ובסלוניקי.',
     photo:
-      'https://images.unsplash.com/photo-1555993539-1732b0258235?auto=format&fit=crop&w=1600&q=70',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Samaria_Gorge%2C_Crete_%28150854%29_%289450552265%29.jpg/500px-Samaria_Gorge%2C_Crete_%28150854%29_%289450552265%29.jpg',
     practical: {
       visa: 'שנגן - ללא ויזה לישראלים עד 90 יום.',
       currency: 'אירו (€).',
@@ -117,7 +117,7 @@ export const countries: Country[] = [
     summary:
       'ספרד מציעה שילוב נדיר של אמנות, חוף ים ואנרגיה עירונית - לצד ההיסטוריה העמוקה של יהדות ספרד, מהרבעים היהודיים של ימי הביניים ועד קהילות מתחדשות היום.',
     photo:
-      'https://images.unsplash.com/photo-1583422409516-2895a77efded?auto=format&fit=crop&w=1600&q=70',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Parc_guell_-_panoramio.jpg/500px-Parc_guell_-_panoramio.jpg',
     practical: {
       visa: 'שנגן - ללא ויזה לישראלים עד 90 יום.',
       currency: 'אירו (€).',
@@ -134,7 +134,7 @@ export const countries: Country[] = [
     summary:
       'גרמניה היא יעד שכל ישראלי חווה אחרת: התמודדות מרגשת עם ההיסטוריה לצד סצנה צעירה, זולה ויצירתית - ועשרות אלפי ישראלים שהפכו את ברלין לבית שני.',
     photo:
-      'https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=1600&q=70',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Lake_Eibsee_and_Zugspitze.jpg/500px-Lake_Eibsee_and_Zugspitze.jpg',
     practical: {
       visa: 'שנגן - ללא ויזה לישראלים עד 90 יום.',
       currency: 'אירו (€).',
@@ -152,7 +152,7 @@ export const countries: Country[] = [
     summary:
       'תאילנד היא הכניסה הטבעית לישראלים לדרום-מזרח אסיה: טיסה ישירה יציבה מנתב"ג, פטור מוויזה, מחירים נוחים משמעותית מאירופה - ובבנגקוק, קהילה יהודית קטנה אך פעילה סביב בית חב"ד שמזוהה מזה עשורים עם דור התרמילאים הישראלי.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/A_roof_of_a_building_at_the_Grand_Palace%2C_Bangkok%2C_sunrise%2C_2017.jpg/500px-A_roof_of_a_building_at_the_Grand_Palace%2C_Bangkok%2C_sunrise%2C_2017.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Naphamethinidon%2C_Naphaphonphumisiri_near_summit_of_Doi_Inthanon.jpg/500px-Naphamethinidon%2C_Naphaphonphumisiri_near_summit_of_Doi_Inthanon.jpg',
     practical: {
       visa:
         'ישראלים פטורים מוויזה לשהות של עד 60 יום (ניתן להאריך פעם אחת ב-30 יום נוספים, בתשלום, מול הרשות המקומית). מ-2025 נדרשת גם הרשמה מקוונת ל-Thailand Digital Arrival Card (TDAC) עד 72 שעות לפני הנחיתה. לוודא דרכון בתוקף 6 חודשים.',
@@ -171,7 +171,7 @@ export const countries: Country[] = [
     summary:
       'איחוד האמירויות היא הכניסה הערבית הראשונה של טיול+: טיסה ישירה מנתב"ג, פטור מוויזה מלא, ותשתית כשרות אמיתית שצמחה מאז הסכמי אברהם - כולל בית הכנסת הראשון שנבנה במיוחד במדינה. אבו דאבי משלבת מסורת ומודרניות בניגודים חדים: מסגדי שיש לצד מוזיאון הלובר ופארקי שעשועים ברמה עולמית.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Abu_Dhabi_Skyline_fron_Corniche_Rd.JPG/500px-Abu_Dhabi_Skyline_fron_Corniche_Rd.JPG',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/View_from_Jebel_Jais_-_panoramio.jpg/500px-View_from_Jebel_Jais_-_panoramio.jpg',
     practical: {
       visa:
         'ישראלים עם דרכון רגיל/ביומטרי בתוקף 6 חודשים לפחות פטורים מוויזה מכוח הסכם הדדי בין ישראל לאיחוד האמירויות, לשהות של עד 90 יום בתוך חלון של 180 יום. חשוב: דרכון עם מדבקת הארכה או תעודת מעבר (לאיסה פאסה) אינו קביל לכניסה - רק דרכון ישראלי רגיל/ביומטרי תקין.',
@@ -190,7 +190,7 @@ export const countries: Country[] = [
     summary:
       'גאורגיה היא מהיעדים האהובים על ישראלים: טיסה ישירה של פחות משלוש שעות, פטור מוויזה נדיב, מחירים נוחים מאוד - ושילוב נדיר של עיר עתיקה מקסימה, נופי הרים דרמטיים ומטבח ויין מהעתיקים בעולם. לצד כל אלה יש בטביליסי קהילה יהודית ותיקה ותשתית כשרות מהחזקות באזור, סביב בית חב"ד.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Narikala_fortress%2C_Tbilisi%2C_Georgia.jpg/500px-Narikala_fortress%2C_Tbilisi%2C_Georgia.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Mtirala_National_Park%2C_Adjara%2C_Georgia.jpg/500px-Mtirala_National_Park%2C_Adjara%2C_Georgia.jpg',
     practical: {
       visa:
         'ישראלים פטורים מוויזה לגאורגיה לשהות של עד שנה - מהפטורים הנדיבים בעולם. לוודא דרכון בתוקף.',
@@ -209,7 +209,7 @@ export const countries: Country[] = [
     summary:
       'אזרבייג׳ן היא יעד מפתיע וקרוב לישראלים: טיסה ישירה של כשלוש שעות, יחסים חמים, ושילוב נדיר של בירה מודרנית ונוצצת על הים הכספי עם פלאי טבע של "ארץ האש" - הרים בוערים והרי בוץ. יש בה גם אחת הקהילות היהודיות הייחודיות בעולם: הכפר האדום, מהיישובים היהודיים השלמים האחרונים מחוץ לישראל.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Flame_Towers.jpg/500px-Flame_Towers.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/%C5%9E%C9%99ki_xan_saray%C4%B1.jpg/500px-%C5%9E%C9%99ki_xan_saray%C4%B1.jpg',
     practical: {
       visa:
         'ישראלים נדרשים לוויזה. הכי נוח: e-visa (ASAN) מקוונת דרך האתר הרשמי - מונפקת תוך 3 ימי עבודה (יש גם מסלול מזורז), לשהות של עד 30 יום. קיימת גם ויזה בהגעה לשדה התעופה. דרכון בתוקף 6 חודשים לפחות.',
@@ -228,7 +228,7 @@ export const countries: Country[] = [
     summary:
       'קזחסטן היא יעד טבע יוצא דופן שרק מתחיל להתגלות לישראלים: טיסה ישירה, פטור מוויזה, ואלמטי - העיר הגדולה למרגלות הרי טיאן שאן המושלגים, שער לקניון צ׳ארין, אגמי הרים ואתרי סקי. יש בה גם קהילת חב"ד ותיקה עם בית כנסת מרכזי וחנות כשרה.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Big_Almaty_Lake_on_29_Aug_2019.jpg/500px-Big_Almaty_Lake_on_29_Aug_2019.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Aksu_Jabagly_2.JPG/500px-Aksu_Jabagly_2.JPG',
     practical: {
       visa:
         'ישראלים פטורים מוויזה לקזחסטן לשהות של עד 30 יום. נדרש דרכון בתוקף 6 חודשים וכרטיס טיסה יוצא.',
@@ -247,7 +247,7 @@ export const countries: Country[] = [
     summary:
       'מונטנגרו קטנה ומגוונת להפליא: מפרץ בוקה הדרמטי שנראה כמו פיורד, ערים עתיקות מוקפות חומה על הים האדריאטי, ומעליהן הרי בלקן פראיים עם קניונים, יערות ואגמים. הכול במרחקים קצרים, עם פטור מוויזה וטיסה קצרה בקיץ - יעד טבע מושלם לישראלים. אין במדינה תשתית כשרות מסודרת.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Kotor%2C_Montenegro.jpg/500px-Kotor%2C_Montenegro.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Mogren_Beach_Budva_1b.png/500px-Mogren_Beach_Budva_1b.png',
     practical: {
       visa:
         'ישראלים פטורים מוויזה למונטנגרו לשהות של עד 90 יום (בתוך חלון 180 יום). דרכון בתוקף 6 חודשים לפחות ועם דף פנוי.',
@@ -266,7 +266,7 @@ export const countries: Country[] = [
     summary:
       'ירדן היא אחד היעדים הקרובים והמרשימים ביותר לישראלים - לא בטיסה אלא במעבר יבשתי מאילת: פטרה החצובה בסלע, מדבר ואדי ראם האדום, והים האדום באקבה. שילוב נדיר של פלא ארכיאולוגי ונופי מדבר עוצרי נשימה, במרחק שעות ספורות מהגבול. אין בדרום ירדן תשתית כשרות מסודרת.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Al_Khazneh_Petra_edit_2.jpg/500px-Al_Khazneh_Petra_edit_2.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Mount_Nebo_BW_6.JPG/500px-Mount_Nebo_BW_6.JPG',
     practical: {
       visa:
         'ישראלים נכנסים דרך מעבר ערבה (יצחק רבין) באילת-אקבה. הכי משתלם ופשוט: לרכוש מראש באתר הרשמי את Jordan Pass, שכולל את אגרת הוויזה (בתנאי שהות 3 לילות לפחות) ואת הכניסה לפטרה ולעשרות אתרים. ליחידים ויזה אינה מונפקת בערבה עצמה - להסדיר מראש. דרכון בתוקף 6 חודשים.',
@@ -285,7 +285,7 @@ export const countries: Country[] = [
     summary:
       'קפריסין היא היעד הקרוב ביותר לישראלים: טיסה של פחות משעה, עשרות טיסות ביום, ואי שלם של חופים, הרי טרודוס ירוקים, שוניות וסלעים דרמטיים - הכול קטן ונגיש. יש בה גם קהילת חב"ד גדולה ופעילה עם תשתית כשרות אמיתית בלרנקה ובאיה נאפה, מה שהופך אותה לנוחה במיוחד למטיילים שומרי כשרות.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Petra_tou_romiou_1.jpg/500px-Petra_tou_romiou_1.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Eastern_side_of_Troodos_Mountains%2C_Cyprus_01.jpg/500px-Eastern_side_of_Troodos_Mountains%2C_Cyprus_01.jpg',
     practical: {
       visa: 'ישראלים פטורים מוויזה לקפריסין (חברת האיחוד האירופי) לשהות של עד 90 יום. דרכון בתוקף.',
       currency: 'אירו (€).',
@@ -321,7 +321,7 @@ export const countries: Country[] = [
     summary:
       'יפן היא היעד שהכי קשה להסביר עד שמגיעים: ערים ענקיות ומסודרות להפליא לצד מקדשים שקטים, הרי געש, מעיינות חמים ופריחת דובדבן. הכול עובד בדיוק בזמן, הבטיחות יוצאת דופן, ורשת הרכבות מגיעה כמעט לכל מקום - אבל השפה והמנהגים דורשים קצת הכנה, וזה יעד רחוק ויקר יחסית.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg/960px-View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Arashiyama%2C_Part_II_-_Arashiyama7534.jpg/500px-Arashiyama%2C_Part_II_-_Arashiyama7534.jpg',
     practical: {
       visa: 'ישראלים פטורים מוויזה ליפן לשהות תיירותית של עד 90 יום. הדרכון צריך להיות בתוקף, ובביקורת הגבולות עשויים לבקש כרטיס חזור ואישור מקום לינה.',
       currency:
@@ -340,7 +340,7 @@ export const countries: Country[] = [
     summary:
       'טנזניה היא הספארי בגרסתו הקלאסית: מישורי סרנגטי, מכתש נגורונגורו והנדידה הגדולה של מיליוני פרסתנים - ולצדם הפסגה הגבוהה באפריקה, קילימנג׳רו, ואיי זנזיבר. זה יעד שדורש תכנון (טיסה עם החלפה, ויזה, אגרות פארקים גבוהות), אבל מחזיר חוויה שאין דומה לה. בארושה, עיר הבסיס של הספארי, פועל בית חב"ד עם מטבח כשר.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Kilimanjaro_from_Amboseli.jpg/960px-Kilimanjaro_from_Amboseli.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Original_4b713299-08fb-4d32-9299-6844e8a97a78_IMG_20211201_154556.jpg/500px-Original_4b713299-08fb-4d32-9299-6844e8a97a78_IMG_20211201_154556.jpg',
     practical: {
       visa: 'ישראלים חייבים ויזה. אפשר להוציא e-Visa מראש באתר הרשמי (מומלץ - להגיש כמה שבועות לפני) או ויזה בהגעה בנמלי התעופה הראשיים; ויזת תייר לכניסה בודדת עולה 50 דולר ותקפה ל-90 יום. הדרכון חייב להיות בתוקף לחצי שנה לפחות. לבדוק גם דרישת חיסון קדחת צהובה בהתאם למסלול הטיסה והחניות.',
       currency:
@@ -359,7 +359,7 @@ export const countries: Country[] = [
     summary:
       'פרו היא אחת התחנות הקלאסיות של הטיול הגדול אחרי הצבא, וגם יעד מדהים לכל גיל: מאצ׳ו פיצ׳ו והעמק הקדוש של האינקה, אגמים קרחוניים בגובה 4,000 מ׳, הרים בצבעי קשת ואגם טיטיקקה. בקוסקו יש בית חב"ד גדול עם מסעדות כשרות - נקודת עוגן לישראלים רבים באזור.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Machu_Picchu%2C_2023_%28012%29.jpg/960px-Machu_Picchu%2C_2023_%28012%29.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Sillustani%2C_Per%C3%BA%2C_2015-08-01%2C_DD_87.JPG/500px-Sillustani%2C_Per%C3%BA%2C_2015-08-01%2C_DD_87.JPG',
     practical: {
       visa: 'ישראלים פטורים מוויזה לפרו לשהות תיירותית ארוכה (עד 183 יום בשנה). דרוש דרכון בתוקף לחצי שנה לפחות, וייתכן שיבקשו כרטיס יציאה והוכחת אמצעים.',
       currency: 'סול פרואני (PEN). דולרים מקובלים בחלק מהעסקים התיירותיים, אך בשער נחות - עדיף להחליף או למשוך סולים.',
@@ -377,7 +377,7 @@ export const countries: Country[] = [
     summary:
       'ניו זילנד היא אחד מיעדי הטבע היפים בעולם: פיורדים תלולים, קרחונים שיורדים כמעט עד הים, אגמים בצבע טורקיז והרים מושלגים - והכול בתוך מדינה קטנה, בטוחה ומאורגנת שמתוכננת סביב מטיילים. החיסרון היחיד הוא המרחק: זו הטיסה הארוכה ביותר מישראל, ולכן שווה להגיע לשבועיים-שלושה לפחות.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Milford_Sound_%28New_Zealand%29.JPG/960px-Milford_Sound_%28New_Zealand%29.JPG',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/WhakarewarewaAerial.jpg/500px-WhakarewarewaAerial.jpg',
     practical: {
       visa: 'ישראלים נכנסים בפטור מוויזה, אבל חייבים להוציא מראש אישור נסיעה אלקטרוני NZeTA (עלות של כ-17-23 דולר ניו-זילנדי) ולשלם את היטל התייר IVL (כ-35 NZD) - שניהם באותה בקשה, עד 24 שעות לפני הטיסה. האישור תקף לשנתיים ומאפשר שהיות של עד 90 יום.',
       currency: 'דולר ניו-זילנדי (NZD).',
@@ -395,7 +395,7 @@ export const countries: Country[] = [
     summary:
       'ארצות הברית היא כמה יעדים בתוך מדינה אחת, ובשביל מטיילי טבע הדרום-מערב הוא הפנינה: הגרנד קניון, פארקי יוטה, קניוני אבן חול אדומה ומדבריות - הכול נגיש ברכב שכור ובכבישים מצוינים. מאז 2023 ישראלים נכנסים עם ESTA בלי ויזה, מה שהפך את היעד לפשוט הרבה יותר.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Dawn_on_the_S_rim_of_the_Grand_Canyon_%288645178272%29.jpg/960px-Dawn_on_the_S_rim_of_the_Grand_Canyon_%288645178272%29.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Zion_angels_landing_view.jpg/500px-Zion_angels_landing_view.jpg',
     practical: {
       visa: 'ישראל צורפה לתוכנית פטור מוויזה (VWP) ב-2023: בעלי דרכון ביומטרי בתוקף מגישים ESTA מקוון (כ-21 דולר, תקף לשנתיים, שהות של עד 90 יום) לפחות 72 שעות לפני הטיסה. מי שנדחה ב-ESTA חייב ויזת B1/B2; ויזות קיימות בתוקף ממשיכות לעבוד.',
       currency: 'דולר אמריקאי (USD).',
@@ -413,7 +413,7 @@ export const countries: Country[] = [
     summary:
       'איסלנד היא יעד טבע קיצוני ונגיש בו-זמנית: מפלים ענקיים, שדות לבה, גייזרים, לגונות קרחונים וחופים שחורים - כולם על טבעת כביש אחת שאפשר לנסוע בה ברכב שכור. בקיץ יש אור כמעט 24 שעות ובחורף אפשר לראות זוהר צפוני. מ-2026 יש בריקיאוויק גם מרכז יהודי עם חנות כשרה - שינוי גדול למי שמקפיד.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/J%C3%B6kuls%C3%A1rl%C3%B3n_lagoon_in_southeastern_Iceland.jpg/960px-J%C3%B6kuls%C3%A1rl%C3%B3n_lagoon_in_southeastern_Iceland.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/1_Go%C3%B0afoss_aerial_pano_2017.jpg/960px-1_Go%C3%B0afoss_aerial_pano_2017.jpg',
     practical: {
       visa: 'איסלנד במרחב שנגן - ישראלים פטורים מוויזה עד 90 יום. דרכון בתוקף.',
       currency: 'כתר איסלנדי (ISK). איסלנד היא מהמדינות היקרות באירופה - כדאי לתכנן תקציב בהתאם.',
@@ -431,7 +431,7 @@ export const countries: Country[] = [
     summary:
       'סלובניה דוחסת לשטח קטן כמעט הכול: פסגות האלפים היוליאניים ואגם בלד, נהר סוצ׳ה בצבע טורקיז, מערות ענק, בירה קטנה ומקסימה וגם רצועת חוף על הים האדריאטי. המרחקים קצרים - שעה-שעתיים בין הרים לים - וזה הופך אותה ליעד נוח במיוחד לטיול טבע קצר.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Lake_Bled_from_the_Mountain.jpg/960px-Lake_Bled_from_the_Mountain.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/LogarskaDolina.JPG/500px-LogarskaDolina.JPG',
     practical: {
       visa: 'סלובניה באיחוד האירופי ובמרחב שנגן - ישראלים פטורים מוויזה עד 90 יום.',
       currency: 'אירו (€).',
@@ -449,7 +449,7 @@ export const countries: Country[] = [
     summary:
       'קרואטיה משלבת שני עולמות: פנים הארץ עם אגמי פליטביצה ומפלי קרקה - מהיפים באירופה - וחוף אדריאטי ארוך עם אלף איים, ערים עתיקות כמו ספליט ודוברובניק ומים צלולים. המרחקים סבירים, התשתית טובה, ובזאגרב יש בית חב"ד שמספק אוכל כשר בתיאום מראש.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/View_in_Plitvice_Lakes_National_Park.jpg/960px-View_in_Plitvice_Lakes_National_Park.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Krkawatervallen.jpg/500px-Krkawatervallen.jpg',
     practical: {
       visa: 'קרואטיה באיחוד האירופי ובמרחב שנגן (מאז 2023) - ישראלים פטורים מוויזה עד 90 יום.',
       currency: 'אירו (€) - קרואטיה עברה מהקונה לאירו ב-2023.',
@@ -467,7 +467,7 @@ export const countries: Country[] = [
     summary:
       'נפאל היא אחת התחנות הקלאסיות של המטיילים הישראלים: רכסי ההימלאיה עם האוורסט והאנאפורנה, מסלולי טרק שאפשר ללכת בהם ימים בין כפרים ובקתות, עמק קטמנדו העמוס במקדשים, ופארק צ׳יטוואן עם הקרנפים. בקטמנדו פועל בית חב"ד עם מסעדה כשרה - אחד המרכזים הישראליים המוכרים באסיה.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Mt._Everest_from_Gokyo_Ri_November_5%2C_2012.jpg/960px-Mt._Everest_from_Gokyo_Ri_November_5%2C_2012.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/BRP_Lumbini_Mayadevi_temple.jpg/500px-BRP_Lumbini_Mayadevi_temple.jpg',
     practical: {
       visa: 'ישראלים מקבלים ויזה בהגעה בנמל התעופה של קטמנדו (או e-Visa מראש). האגרות נכון ל-2026: כ-30 דולר ל-15 יום, 50 דולר ל-30 יום ו-125 דולר ל-90 יום, בתשלום מזומן - כדאי להגיע עם דולרים ועם תמונת דרכון, ולבדוק את הכללים העדכניים לפני הנסיעה.',
       currency: 'רופי נפאלי (NPR). כדאי מזומן; בכפרים ובמסלולי הטרק אין כספומטים.',
@@ -485,7 +485,7 @@ export const countries: Country[] = [
     summary:
       'וייטנאם היא אחד היעדים הפופולריים באסיה לישראלים: מפרץ הא לונג עם אלפי צוקי הגיר, שדות האורז המדורגים של סאפה, מערות ענק, ערים תוססות ואוכל רחוב מעולה - והכול בעלויות נמוכות. מ-2026 יש גם טיסות ישירות מנתב"ג להאנוי, ובהאנוי ובהו צ׳י מין פועלים בתי חב"ד עם מסעדות כשרות.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Ha_Long_Bay_in_2019.jpg/960px-Ha_Long_Bay_in_2019.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/2024_-_M%E1%BB%B9_S%C6%A1n_Group_B%2C_C_and_D_-_img_23.jpg/500px-2024_-_M%E1%BB%B9_S%C6%A1n_Group_B%2C_C_and_D_-_img_23.jpg',
     practical: {
       visa: 'ישראלים חייבים ויזה. הדרך הפשוטה היא e-Visa מקוון לעד 90 יום (כ-25 דולר לכניסה בודדת, כ-50 דולר לריבוי כניסות), שמונפק תוך כשלושה ימי עבודה. הדרכון חייב להיות בתוקף לחצי שנה ועם שני דפים ריקים.',
       currency: 'דונג וייטנאמי (VND). המספרים גדולים - שווה לשים לב לכמות האפסים בשטרות.',
@@ -503,7 +503,7 @@ export const countries: Country[] = [
     summary:
       'נורווגיה היא הפיורדים בגרסתם המפורסמת: מפרצים צרים בין קירות סלע של מאות מטרים, כפרי דייגים אדומים באיי לופוטן, מסלולי צוק דרמטיים כמו פרייקסטולן וטרולטונגה - ובצפון, מעל החוג הארקטי, זוהר צפוני בחורף ושמש חצות בקיץ. יעד יקר, אבל מאורגן ובטוח.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Moskenes_Reinebringen_lub_2025-07-21_img09_Aussicht.jpg/960px-Moskenes_Reinebringen_lub_2025-07-21_img09_Aussicht.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Lyse_Fjord_et_Preikestolen.jpg/500px-Lyse_Fjord_et_Preikestolen.jpg',
     practical: {
       visa: 'נורווגיה אינה באיחוד האירופי אך כן במרחב שנגן - ישראלים פטורים מוויזה עד 90 יום.',
       currency: 'כתר נורווגי (NOK), לא אירו.',
@@ -521,7 +521,7 @@ export const countries: Country[] = [
     summary:
       'דרום אפריקה מציעה שילוב נדיר: ספארי של החמישייה הגדולה בקרוגר, קייפטאון עם הר השולחן והחופים, כביש הגן, יקבים - ולצד זה קהילה יהודית ותיקה וגדולה עם תשתית כשרות מהמפותחות מחוץ לישראל וארה"ב. המחירים נוחים יחסית, אבל נדרשת תשומת לב לביטחון אישי ולנהיגה.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Table_Mountain_DanieVDM.jpg/960px-Table_Mountain_DanieVDM.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Elephant_Addo.jpg/500px-Elephant_Addo.jpg',
     practical: {
       visa: 'ישראלים פטורים מוויזה לשהות של עד 90 יום. הדרכון חייב להיות בתוקף לחצי שנה מעבר לשהות ועם דפים ריקים, וייתכן שיבקשו כרטיס יציאה מהמדינה.',
       currency: 'ראנד דרום אפריקאי (ZAR).',
@@ -539,7 +539,7 @@ export const countries: Country[] = [
     summary:
       'ארמניה היא יעד קרוב (טיסה של פחות משלוש שעות), זול ועדיין לא שחוק: מנזרים מהמאות הראשונות שחצובים בסלע ותלויים מעל קניונים, אגם סוואן ההררי, יערות דיליז׳אן והרי ארגאץ - וברקע פסגת אררט המושלגת. ירוואן עצמה עיר נעימה עם מטבח מצוין ומחירים נוחים.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Mount_Ararat_and_the_Yerevan_skyline_%28June_2018%29.jpg/960px-Mount_Ararat_and_the_Yerevan_skyline_%28June_2018%29.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Sanahin-external-view.jpg/500px-Sanahin-external-view.jpg',
     practical: {
       visa: 'ישראלים פטורים מוויזה לשהות תיירותית בארמניה. משך השהות המותר משתנה בין הגדרות שונות - כדאי לבדוק את הכללים העדכניים לפני הנסיעה, ולהגיע עם דרכון בתוקף.',
       currency: 'דראם ארמני (AMD). כדאי מזומן מחוץ לירוואן.',
@@ -557,7 +557,7 @@ export const countries: Country[] = [
     summary:
       'אוזבקיסטן היא דרך המשי בגרסתה המרשימה: סמרקנד, בוכרה וחיווה עם מדרסות, מסגדים וכיפות טורקיז - שלושתן אתרי מורשת עולמית - וגם הרי צ׳ימגן ואגם צ׳ארוואק ליד טשקנט ושרידי ים אראל בצפון. לישראלים זה גם מסע שורשים: הקהילה היהודית הבוכרית חיה כאן מאות שנים, והרובע היהודי בבוכרה עדיין עומד.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/RegistanSquare_Samarkand.jpg/960px-RegistanSquare_Samarkand.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Khudayar_Khan_Palace%2C_Kokand_01.JPG/500px-Khudayar_Khan_Palace%2C_Kokand_01.JPG',
     practical: {
       visa: 'ישראלים נכנסים לאוזבקיסטן ללא ויזה לשהות תיירותית קצרה (נכון להסדר הפטור הקיים - כדאי לוודא את התנאים ואת משך השהות המותר לפני הנסיעה). דרכון בתוקף לחצי שנה.',
       currency: 'סום אוזבקי (UZS). המספרים גדולים; להחליף במקומות מוסמכים ולא ברחוב.',
@@ -575,7 +575,7 @@ export const countries: Country[] = [
     summary:
       'קנדה היא ארץ של מרחבים: הרי הרוקי עם אגמי טורקיז שנוצרו מקמח קרחונים, כבישים נופיים שנמשכים מאות קילומטרים, דובים ואיילי קורא לצד הדרך - וערים נקיות ובטוחות. זה יעד שמתאים במיוחד לרוד טריפ, ודורש תכנון של מרחקים גדולים ושל עונות.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Moraine_Lake_17092005.jpg/960px-Moraine_Lake_17092005.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Montagne_au_Cap-Breton.jpg/500px-Montagne_au_Cap-Breton.jpg',
     practical: {
       visa: 'ישראלים פטורים מוויזה אך חייבים אישור נסיעה אלקטרוני eTA לפני עלייה למטוס (עלות סמלית, תקף עד חמש שנים או עד תפוגת הדרכון, ומאפשר שהות של עד שישה חודשים). כדאי להגיש לפחות 72 שעות לפני הטיסה.',
       currency: 'דולר קנדי (CAD).',
@@ -593,7 +593,7 @@ export const countries: Country[] = [
     summary:
       'פורטוגל היא אחת המדינות הנוחות באירופה לישראלים: מזג אוויר נעים כמעט כל השנה, מחירים נמוכים ממערב אירופה, אנשים שמדברים אנגלית בקלות - וקו חוף אטלנטי ארוך עם ערים היסטוריות שמשקיפות עליו. ההיסטוריה היהודית כאן עמוקה ומורכבת (גירוש 1496 והאנוסים), והיא מסומנת היום באתרי מורשת ברחבי המדינה.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/The_Jer%C3%B3nimos_Monastery_or_Hieronymites_Monastery.png/960px-The_Jer%C3%B3nimos_Monastery_or_Hieronymites_Monastery.png',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Vila_Nova_de_Foz_C%C3%B4a_(13469416314).jpg/500px-Vila_Nova_de_Foz_C%C3%B4a_(13469416314).jpg',
     practical: {
       visa: 'שנגן - ללא ויזה לישראלים עד 90 יום. דרכון בתוקף שישה חודשים.',
       currency: 'אירו (€). זולה יותר מספרד, איטליה וצרפת כמעט בכל סעיף.',
@@ -611,7 +611,7 @@ export const countries: Country[] = [
     summary:
       'פולין היא אחד היעדים הטעונים ביותר לישראלים, ואחד הזולים באירופה. לצד אתרי הזיכרון והשורשים שרבים מגיעים בשבילם, יש כאן ערים היסטוריות שלמות ששרדו או שוחזרו, אזור הרים אמיתי בדרום (הטטרה), ואוכל ואירוח במחירים שנמוכים משמעותית ממערב אירופה. חשוב לדעת מראש: ביקור באתרי הזיכרון הוא חוויה קשה רגשית, וכדאי לתכנן סביבו יום שלם ולא לדחוס אותו בין אטרקציות.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Sukiennice_and_Main_Market_Square_Krakow_Poland.JPG/960px-Sukiennice_and_Main_Market_Square_Krakow_Poland.JPG',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Wolnica_Square_and_former_city_hall_of_Kazimierz%2C_view_from_E%2C_Kazimierz%2C_Krak%C3%B3w%2C_Poland.jpg/500px-Wolnica_Square_and_former_city_hall_of_Kazimierz%2C_view_from_E%2C_Kazimierz%2C_Krak%C3%B3w%2C_Poland.jpg',
     practical: {
       visa: 'שנגן - ללא ויזה לישראלים עד 90 יום. דרכון בתוקף שישה חודשים.',
       currency:
@@ -630,7 +630,7 @@ export const countries: Country[] = [
     summary:
       'הולנד היא מהמדינות הנוחות באירופה לישראלים: טיסות ישירות תכופות, אנגלית ברמה גבוהה כמעט אצל כולם, מרחקים קטנים ורכבות מצוינות בין הערים. אמסטרדם היא נקודת הכניסה, אבל כל המדינה נגישה ממנה בשעה-שעתיים.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.JPG/960px-Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.JPG',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/2010-05-22-den-haag-by-RalfR-48.jpg/500px-2010-05-22-den-haag-by-RalfR-48.jpg',
     practical: {
       visa: 'שנגן - ללא ויזה לישראלים עד 90 יום. דרכון בתוקף חצי שנה.',
       currency: 'אירו (€).',
@@ -648,7 +648,7 @@ export const countries: Country[] = [
     summary:
       'רומניה היא אחת המדינות המשתלמות באירופה: טיסה של שלוש שעות, מחירים נמוכים משמעותית ממערב אירופה, הרי קרפטים עם יערות ודובים, ועיירות סקסיות מימי הביניים. לרבים מהישראלים יש כאן גם שורשים משפחתיים.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/RO_B_Transfagarasan_view_towards_the_north_from_Balea_Lake_2.jpg/960px-RO_B_Transfagarasan_view_towards_the_north_from_Balea_Lake_2.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Sighisoara_vedere_spre_cetate_de_pe_podul_peste_Tarnava.jpg/500px-Sighisoara_vedere_spre_cetate_de_pe_podul_peste_Tarnava.jpg',
     practical: {
       visa: 'ללא ויזה לישראלים עד 90 יום. רומניה חברה באיחוד האירופי ומאז 2025 גם בשנגן - כדאי לוודא את הנוהל העדכני לפני הנסיעה.',
       currency: 'ליאו רומני (RON), לא אירו. להמיר בבנקים או בחלפנים מוסדרים ולא בשדה התעופה.',
@@ -666,7 +666,7 @@ export const countries: Country[] = [
     summary:
       'טורקיה היא אחד היעדים הקרובים ביותר לישראל שמרגיש באמת רחוק: מהעיר הענקית איסטנבול, דרך עמקי הטוף של קפדוקיה ועד חופי הים התיכון והאגאי. המחירים נמוכים משמעותית מאירופה המערבית, המטבח מצוין, והתשתית התיירותית מפותחת מאוד. חשוב לזכור שהמצב הפוליטי בין ישראל לטורקיה משתנה, ושהיציבות של הקווים הישירים והנחיות המשרדים הרלוונטיים משתנות גם הן - לבדוק את המצב העדכני לפני שמזמינים.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/G%C3%B6reme_town_and_valley_2015.JPG/960px-G%C3%B6reme_town_and_valley_2015.JPG',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Paragliding_view_oludeniz_-_panoramio_%282%29.jpg/500px-Paragliding_view_oludeniz_-_panoramio_%282%29.jpg',
     practical: {
       visa: 'ישראלים נדרשו בעבר ל-e-Visa מקוונת, והנוהל השתנה יותר מפעם אחת בשנים האחרונות. חובה לבדוק את הדרישה העדכנית באתר הרשמי של רשות ההגירה הטורקית ואת המלצות המסע של משרד החוץ הישראלי לפני ההזמנה - זה לא פרט שכדאי להסתמך עליו מהזיכרון.',
       currency: 'לירה טורקית (TRY). האינפלציה בטורקיה גבוהה מאוד ושער החליפין זז מהר, אז מחירים שראיתם ברשת עשויים להיות לא רלוונטיים. עדיף להמיר בחלפנים מקומיים (döviz) בעיר ולא בשדה התעופה, ולמשוך סכומים בינוניים כדי לחסוך עמלות.',
@@ -683,7 +683,7 @@ export const countries: Country[] = [
     summary:
       'אירלנד היא יעד של נופים ואנשים יותר מאשר של אתרים גדולים: כבישים צרים בין גדרות אבן, מצוקים שנופלים לאוקיינוס האטלנטי, כפרים קטנים ופאבים שבהם מנגנים מוזיקה מסורתית כמעט כל ערב. המחירים גבוהים (במיוחד לינה בדבלין ובגאלוויי בקיץ), מזג האוויר משתנה כמה פעמים ביום בכל עונה, וכמעט כל מסלול טוב דורש רכב שכור. בתמורה מקבלים אחד מקווי החוף היפים באירופה.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Cliffs-Of-Moher-OBriens-From-South.JPG/960px-Cliffs-Of-Moher-OBriens-From-South.JPG',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/St._Kevin%27s_Kitchen%2C_Glendalough%2C_Co._Wicklow_%282023%29.jpg/500px-St._Kevin%27s_Kitchen%2C_Glendalough%2C_Co._Wicklow_%282023%29.jpg',
     practical: {
       visa: 'ללא ויזה לישראלים עד 90 יום. שימו לב שאירלנד חברה באיחוד האירופי אבל לא בשנגן - שהות באירלנד לא נספרת במכסת 90 הימים של שנגן, ולהיפך. צפון אירלנד היא חלק מבריטניה עם כללי כניסה נפרדים, אז חציית הגבול בתוך האי דורשת בדיקה של הדרישות הבריטיות.',
       currency: 'אירו (EUR) ברפובליקה של אירלנד. בצפון אירלנד משתמשים בליש"ט (GBP) - מי שמתכנן מסלול שחוצה את הגבול צריך את שני המטבעות או כרטיס רב-מטבעי.',
@@ -700,7 +700,7 @@ export const countries: Country[] = [
     summary:
       'בולגריה היא אחת הטיסות הקצרות והזולות מישראל, ובכל זאת מקבלים בה נופים אירופיים מלאים: רכסי רילה ופירין עם פסגות מעל 2,900 מטר, מנזרים מהמאה ה-10, ערים עתיקות ואתרי סקי במחירים שאין להם מקבילה במערב אירופה. הקהילה הישראלית מכירה בעיקר את בנסקו ואת בורגס והחוף, אבל החלק ההררי הוא הכי מעניין. חסרונות: התשתיות משתנות מאוד באיכותן, האנגלית מחוץ לערים חלקית, ובשלטים רבים משתמשים רק בקירילית.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Rila_Monastery%2C_August_2013.jpg/960px-Rila_Monastery%2C_August_2013.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Vr-ezeren-pan-sm.jpg/500px-Vr-ezeren-pan-sm.jpg',
     practical: {
       visa: 'ללא ויזה לישראלים עד 90 יום. בולגריה חברה באיחוד האירופי ומאז 2025 גם בשנגן - כדאי לוודא את הנוהל העדכני ואת ספירת הימים במרחב שנגן לפני הנסיעה.',
       currency: 'לב בולגרי (BGN). בולגריה נמצאת בתהליך מעבר לאירו, והמצב עשוי להשתנות - לבדוק מה המטבע בפועל בזמן הנסיעה. כדאי להמיר בחלפנים בעיר ולא בשדה התעופה, ולהיזהר מדוכני המרה שמפרסמים שער מפתה וגובים עמלה גבוהה.',
@@ -717,7 +717,7 @@ export const countries: Country[] = [
     summary:
       'שוודיה היא המדינה הגדולה בסקנדינביה ואחת הנוחות ביותר לתייר: תחבורה ציבורית מצוינת, אנגלית ברמה כמעט מלאה בכל מקום, ותכנון עירוני שמכניס טבע ומים לתוך הערים. הקיץ הצפוני נותן אור עד חצות והחורף הפוך לגמרי, עם ימים קצרים מאוד. החיסרון המרכזי הוא המחיר: שוודיה יקרה משמעותית מרוב אירופה, במיוחד באוכל בחוץ ובאלכוהול, שנמכר רק בחנויות המדינה.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Stockholm_Vasa_Museum_and_Nordic_Museum_09.jpg/960px-Stockholm_Vasa_Museum_and_Nordic_Museum_09.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Jukkasj%C3%A4rvi%2C_Sweden.jpg/960px-Jukkasj%C3%A4rvi%2C_Sweden.jpg',
     practical: {
       visa: 'ללא ויזה לישראלים עד 90 יום. שוודיה חברה באיחוד האירופי ובמרחב שנגן, אז הימים נספרים במכסת שנגן הכללית.',
       currency: 'כתר שוודי (SEK), לא אירו - למרות החברות באיחוד. שער החליפין משתנה, ומחירים באירו שמוצגים לתיירים כמעט תמיד גרועים יותר.',
@@ -734,7 +734,7 @@ export const countries: Country[] = [
     summary:
       'דנמרק היא הקטנה והנוחה מבין מדינות סקנדינביה: הכל קרוב, הרכבות מדויקות, ואפשר לראות טירה מהמאה ה-17 ומוזיאון אמנות על הים באותו יום. האופניים הם אמצעי תחבורה לגיטימי לגמרי, והנוף שטוח וחקלאי בלי הרים בכלל. המחירים גבוהים, והמזג אוויר הפכפכ גם בקיץ - כדאי להביא שכבה עוצרת רוח בכל עונה.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Frederiksborg_Castle_and_boat_crop.jpg/960px-Frederiksborg_Castle_and_boat_crop.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Skagen_aka_the_skaw_northmost_point_of_denmark_6th_may_2006.jpg/500px-Skagen_aka_the_skaw_northmost_point_of_denmark_6th_may_2006.jpg',
     practical: {
       visa: 'ללא ויזה לישראלים עד 90 יום. דנמרק חברה באיחוד האירופי ובמרחב שנגן, והימים נספרים במכסת שנגן הכללית.',
       currency: 'כתר דני (DKK), לא אירו. חלק מהמקומות התיירתיים מציגים מחיר באירו, אבל השער שלהם כמעט תמיד גרוע יותר מתשלום בכרטיס בכתרים.',
@@ -751,7 +751,7 @@ export const countries: Country[] = [
     summary:
       'פינלנד היא המדינה הצפונית והשקטה מבין מדינות סקנדינביה: שטח ענק של יערות ואגמים עם מעט מאוד אנשים, ורבע מהמדינה מעל החוג הארקטי. החורף הוא העונה שבשבילה מגיעים לרוב הצפון - שלג, כלבי מזחלות וזוהר צפוני - אבל הוא גם חשוך מאוד וקר קיצוני. הפינים שומרי מרחק ומנומסים, האנגלית מצוינת, והתשתיות מסודרות. המחירים גבוהים, במיוחד בצפון ובעונת החורף.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Inari-sreetscene_20200203141555.jpg/960px-Inari-sreetscene_20200203141555.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Punkaharju_road.jpg/500px-Punkaharju_road.jpg',
     practical: {
       visa: 'ללא ויזה לישראלים עד 90 יום. פינלנד חברה באיחוד האירופי ובמרחב שנגן, והימים נספרים במכסת שנגן הכללית.',
       currency: 'אירו (EUR). פינלנד היא היחידה בסקנדינביה שאימצה את האירו, מה שחוסך המרות מיותרות למי שמגיע גם לשאר אירופה.',
@@ -768,7 +768,7 @@ export const countries: Country[] = [
     summary:
       'ליטא היא הגדולה מבין מדינות הבלטיות, ולישראלים רבים היא בראש ובראשונה ליטא של העולם היהודי שהיה כאן - וילנה, הישיבות, והאתרים שבהם הקהילה הזאת נכחדה. לצד זה זו מדינה זולה יחסית לאירופה, עם עיר עתיקה יפה במיוחד, יערות ואגמים, ותשתית תיירות שהשתפרה מאוד בעשור האחרון. הביקור באתרי המורשת והזיכרון הוא חוויה כבדה רגשית וכדאי לתכנן אותו בנפרד משאר הטיול.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Vilnius_Cathedral_20.jpg/960px-Vilnius_Cathedral_20.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Nida_from_bird%27s-eye_view.jpg/960px-Nida_from_bird%27s-eye_view.jpg',
     practical: {
       visa: 'ללא ויזה לישראלים עד 90 יום. ליטא חברה באיחוד האירופי ובמרחב שנגן, והימים נספרים במכסת שנגן הכללית.',
       currency: 'אירו (EUR) מאז 2015. המחירים נמוכים מהממוצע במערב אירופה, במיוחד באוכל, בלינה ובתחבורה.',
@@ -785,7 +785,7 @@ export const countries: Country[] = [
     summary:
       'אסטוניה היא הקטנה והצפונית מבין מדינות הבלטיות, קרובה יותר לפינלנד מבחינה תרבותית ולשונית מאשר לשכנותיה מדרום. טאלין שומרת על אחת הערים העתיקות השלמות באירופה, ומחוץ לה יש יערות, ביצות וחוף ים שקט. המדינה מתקדמת מאוד דיגיטלית - כמעט הכל נעשה באפליקציה - והיא זולה יחסית למערב אירופה, אם כי כבר לא זולה כמו פעם. החורף ארוך, קר וחשוך.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Tallinn_Toompea_Upper_Old_Town_2013.jpg/960px-Tallinn_Toompea_Upper_Old_Town_2013.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Pangapank3.jpg/500px-Pangapank3.jpg',
     practical: {
       visa: 'ללא ויזה לישראלים עד 90 יום. אסטוניה חברה באיחוד האירופי ובמרחב שנגן, והימים נספרים במכסת שנגן הכללית.',
       currency: 'אירו (EUR) מאז 2011. המחירים נמוכים מסקנדינביה אבל כבר לא זולים במיוחד, במיוחד בעיר העתיקה של טאלין.',
@@ -802,7 +802,7 @@ export const countries: Country[] = [
     summary:
       'לטביה יושבת בין אסטוניה לליטא, וריגה שלה היא הגדולה והשוקקת מבין שלוש בירות הבלטיות. העיר מחזיקה שילוב לא שגרתי: עיר עתיקה הנזאית מצד אחד, ורובע שלם של בנייני ארט נובו מהמאה ה-20 מצד שני. מחוץ לעיר יש יערות אורן, נהר גאויה עם טירות, וחוף חולי ארוך על הים הבלטי. המחירים נמוכים יחסית למערב אירופה, והחורף ארוך וקר.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/House_of_Blackheads_at_Dusk_3%2C_Riga%2C_Latvia_-_Diliff.jpg/960px-House_of_Blackheads_at_Dusk_3%2C_Riga%2C_Latvia_-_Diliff.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Kuldiga_bridge.jpg/500px-Kuldiga_bridge.jpg',
     practical: {
       visa: 'ללא ויזה לישראלים עד 90 יום. לטביה חברה באיחוד האירופי ובמרחב שנגן, והימים נספרים במכסת שנגן הכללית.',
       currency: 'אירו (EUR) מאז 2014. ריגה זולה משמעותית ממערב אירופה, במיוחד באוכל ובלינה, אבל המחירים במרכז התיירותי גבוהים מהשאר.',
@@ -819,7 +819,7 @@ export const countries: Country[] = [
     summary:
       'אלבניה היא אחד היעדים הזולים והמפתיעים באירופה: חוף על הים היוני עם מים בצבע לא הגיוני, הרים גבוהים, ערים עות׳מאניות משומרות, ושרידים מהמשטר הקומוניסטי המבודד שסגר את המדינה עד 1991. התשתיות עדיין מאחור - כבישים הרריים צרים, שילוט חלקי ותחבורה ציבורית מבלבלת - אבל האנשים מסבירי פנים במיוחד והמחירים נמוכים מאוד. בחודשי הקיץ החוף מתמלא, ובאוגוסט הוא עמוס מאוד.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Amphitheatre_of_Butrint_2009.jpg/960px-Amphitheatre_of_Butrint_2009.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Rozafa_Castle_in_July_2013_%285%29.JPG/500px-Rozafa_Castle_in_July_2013_%285%29.JPG',
     practical: {
       visa: 'ללא ויזה לישראלים לשהייה תיירותית. אלבניה אינה חברה באיחוד האירופי ואינה במרחב שנגן, כך שהימים כאן אינם נספרים במכסת שנגן - יתרון למי שמותח טיול ארוך באירופה. את משך השהייה המדויק המותר יש לוודא מול הנציגות האלבנית או מול משרד החוץ לפני הנסיעה, כי התנאים משתנים.',
       currency: 'לק אלבני (ALL), לא אירו. חלק מהעסקים בחוף מקבלים אירו אבל בשער גרוע. עדיף למשוך לק בכספומט או להחליף בחלפנים מורשים בערים.',
@@ -836,7 +836,7 @@ export const countries: Country[] = [
     summary:
       'בוסניה היא אחת המדינות המעניינות בבלקן ואחת הפחות מטויילות: שכבות עות׳מאניות, אוסטרו-הונגריות ויוגוסלביות זו על גבי זו, נהרות בצבע ירוק-טורקיז, והרים שמקיפים כמעט כל עיר. המלחמה של שנות התשעים עדיין נוכחת בכל מקום - בסימני קליעים בקירות, במוזיאונים ובאופן שבו אנשים מדברים - וזה חלק בלתי נפרד מהביקור. המחירים נמוכים מאוד, האוכל טוב, והתשתיות בסיסיות אבל מספיקות.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Fontaine_Sebilj.jpg/960px-Fontaine_Sebilj.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Travnik_%28collage_image%29.jpg/500px-Travnik_%28collage_image%29.jpg',
     practical: {
       visa: 'ללא ויזה לישראלים לשהייה תיירותית קצרה. בוסניה אינה חברה באיחוד האירופי ואינה במרחב שנגן, כך שהימים כאן אינם נספרים במכסת שנגן. את משך השהייה המדויק המותר ואת התנאים העדכניים יש לוודא מול משרד החוץ לפני הנסיעה.',
       currency: 'מארק בוסני מתחלף (BAM), שצמוד לאירו בשער קבוע. חלק מהעסקים בערים התיירותיות מקבלים אירו, לרוב בשער פחות טוב. כספומטים זמינים בערים.',
@@ -853,7 +853,7 @@ export const countries: Country[] = [
     summary:
         'סרביה היא אחת המדינות הזולות באירופה, ועדיין אחת הפחות מתויירות בה. הצפון, חבל ווֹיְווֹדִינָה, שטוח לגמרי, מלא כנסיות ומנזרים אוסטרו-הונגריים ואזורי יין, ומרגיש קרוב יותר להונגריה מאשר לבלקן. השפה הרשמית סרבית, ובצפון גם הונגרית וסלובקית. שימו לב שסרביה איננה במסגרת האיחוד האירופי ולא במרחב שנגן, כך שכל מה שקשור לחבילות סלולר, ביטוח וכניסה עובד אחרת ממה שהתרגלתם באירופה המערבית.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1radi_v%C3%A1r%2C_Peterwardein%29.JPG/960px-Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1radi_v%C3%A1r%2C_Peterwardein%29.JPG',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Uvac_River_and_Eagle.jpg/500px-Uvac_River_and_Eagle.jpg',
     practical: {
       visa: 'סרביה נמצאת מחוץ למרחב שנגן, כך שימי השהייה בה אינם נספרים במכסת התשעים הימים של שנגן. את משך השהייה המותר בפועל לבעלי דרכון ישראלי, ואת הדרישות לתוקף הדרכון וביטוח, חובה לאמת מול הנציגות הסרבית ומול אתר משרד החוץ הישראלי לפני הזמנת הטיסות. אל תסתמכו על מה שכתוב בפורומים.',
       currency: 'המטבע הוא דינר סרבי (RSD), לא אירו. חנויות רבות ינקבו מחיר באירו אבל יגבו בדינרים בשער שלהן, שכמעט תמיד גרוע. עדיף למשוך דינרים מכספומט של בנק גדול ולסרב להמרה במטבע שלכם במסך.',
@@ -870,7 +870,7 @@ export const countries: Country[] = [
     summary:
         'מקסיקו היא מדינה עצומה, וטעות נפוצה של מטיילים ישראלים היא לנסות לכסות אותה בטיול אחד. חצי האי יוקטן בדרום-מזרח, מדינת אוהחה בדרום ומרכז הארץ סביב מקסיקו סיטי הם שלושה טיולים שונים לגמרי, וכל אחד מהם דורש לפחות שבוע. השפה ספרדית, ואנגלית מדוברת בעיקר באזורי התיירות. הטיסה מישראל ארוכה מאוד וכוללת לפחות עצירה אחת, לרוב באירופה או בצפון אמריקה.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Uxmal_Pyramid_of_the_Magician.jpg/960px-Uxmal_Pyramid_of_the_Magician.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/HierveElAguaMexico1.jpg/500px-HierveElAguaMexico1.jpg',
     practical: {
       visa: 'את דרישות הכניסה לבעלי דרכון ישראלי, את משך השהייה המותר ואת השאלה האם נדרש אישור אלקטרוני מראש, חובה לאמת מול הנציגות המקסיקנית ומול אתר משרד החוץ הישראלי לפני הזמנת הטיסות. הכללים משתנים ואל תסתמכו על מה שכתוב בפורומים או על ניסיון של חבר משנה שעברה.',
       currency: 'המטבע הוא פסו מקסיקני (MXN). באזורי תיירות ינקבו מחירים בדולר, וכמעט תמיד בשער גרוע. משכו פסו מכספומט של בנק גדול, סרבו להמרה במטבע שלכם במסך, והיזהרו מכספומטים עצמאיים בלובי של מלונות שגובים עמלות גבוהות.',
@@ -887,7 +887,7 @@ export const countries: Country[] = [
     summary:
         'דרום קוריאה היא אחת המדינות הנוחות באסיה לטיול עצמאי: הרכבות מדויקות, הערים בטוחות, הכל דיגיטלי והמרחקים קצרים יחסית. רוב הישראלים מגיעים לסיאול ולא יוצאים ממנה, וזו החמצה, כי הדרום-מזרח של המדינה, סביב גיונגג׳ו ובוסן, מחזיק את המורשת ההיסטורית העיקרית ואת החופים. השפה קוריאנית, ואנגלית מדוברת פחות ממה שמצפים, אבל אפליקציות תרגום פותרות כמעט הכל.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Gyeongju_montage.png/960px-Gyeongju_montage.png',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/InsideTheJointSecurityArea1.jpg/960px-InsideTheJointSecurityArea1.jpg',
     practical: {
       visa: 'את דרישות הכניסה לבעלי דרכון ישראלי, ובפרט את השאלה האם נדרש אישור נסיעה אלקטרוני מראש ומה תוקפו, חובה לאמת מול הנציגות הקוריאנית ומול אתר משרד החוץ הישראלי לפני הזמנת הטיסות. הכללים בנושא השתנו יותר מפעם אחת בשנים האחרונות.',
       currency: 'המטבע הוא וון קוריאני (KRW). המחירים נקובים באלפים, אז שווה להתרגל לחלק בערך באלף כדי לקבל תחושה. כספומטים שמקבלים כרטיסים זרים מסומנים במפורש כ-Global ATM, ולא כל כספומט יעבוד לכם.',
@@ -904,7 +904,7 @@ export const countries: Country[] = [
     summary:
         'אוסטרליה היא יבשת, ולא יעד שמכסים בטיול אחד. הטיסה הפנימית בין סידני לפרת׳ ארוכה כמו טיסה מתל אביב ללונדון, ומי שמנסה לדחוס את החוף המזרחי, את המרכז האדום ואת טסמניה לשבועיים יבלה את רובם בשדות תעופה. הכניסה למדינה דורשת אישור מראש שמוסדר אונליין, והביקורת הביולוגית בכניסה קפדנית מאוד ואוסרת על הכנסת מזון, זרעים ומוצרי עץ. הטיסה מישראל ארוכה במיוחד וכוללת לפחות עצירה אחת.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Wineglass_Bay%2C_Freycinet_Peninsula%2C_Tasmania%2C_Australia_%2819333396893%29.jpg/960px-Wineglass_Bay%2C_Freycinet_Peninsula%2C_Tasmania%2C_Australia_%2819333396893%29.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Aerial_Kata_Tjuta_olgas4799.jpg/500px-Aerial_Kata_Tjuta_olgas4799.jpg',
     practical: {
       visa: 'אוסטרליה דורשת אישור כניסה מוסדר מראש כמעט מכל מבקר, כולל בעלי דרכון ישראלי, ולא ניתן להסתדר בלעדיו בשדה התעופה. את סוג האישור המדויק, את אופן ההגשה, את העלות ואת משך התוקף חובה לאמת מול רשות ההגירה האוסטרלית ומול אתר משרד החוץ הישראלי לפני הזמנת הטיסות, והרבה לפני מועד הנסיעה.',
       currency: 'המטבע הוא דולר אוסטרלי (AUD). המדינה יקרה, במיוחד לינה ומסעדות, ותכנון תקציב לפי מחירי אירופה יוביל להפתעה לא נעימה. סרבו להמרה במטבע שלכם בכספומט ובמסופי תשלום.',
@@ -921,7 +921,7 @@ export const countries: Country[] = [
     summary:
         'אינדונזיה משתרעת על אלפי איים, וג׳אווה לבדה מחזיקה מקדשים בודהיסטיים והינדואיסטיים ענקיים לצד רכס הרי געש פעילים. לפני שמתחילים לתכנן חשוב לדעת שאין לאינדונזיה יחסים דיפלומטיים עם ישראל, ולכן שאלת הכניסה לבעלי דרכון ישראלי אינה טריוויאלית ואינה דומה לשום יעד אחר באתר. אל תזמינו כלום, גם לא טיסה שנראית זולה במיוחד, לפני שבדקתם את המצב העדכני מול הגורמים הרשמיים.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Borobudur-Nothwest-view.jpg/960px-Borobudur-Nothwest-view.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Pura_Luhur_Uluwatu_2017-08-17_%2834%29.jpg/500px-Pura_Luhur_Uluwatu_2017-08-17_%2834%29.jpg',
     practical: {
       visa: 'לאינדונזיה אין יחסים דיפלומטיים עם ישראל, ולכן כניסה לבעלי דרכון ישראלי היא סוגיה מורכבת שמשתנה מעת לעת ולא ניתן להסתמך בה על ניסיון של מטיילים אחרים או על מידע מפורומים. חובה לברר את המצב העדכני מול אתר משרד החוץ הישראלי ומול הגורמים האינדונזיים הרלוונטיים לפני כל הזמנה. בדקו גם את אזהרות המסע העדכניות של המטה לביטחון לאומי לפני שאתם סוגרים תאריכים.',
       currency: 'המטבע הוא רופיה אינדונזית (IDR), והמספרים גדולים מאוד, מאות אלפים ומיליונים. משכו מכספומטים של בנקים גדולים בלבד, כי כספומטים עצמאיים ברחוב הם מוקד ידוע להונאות שכפול כרטיסים. סרבו להמרה במטבע שלכם במסך.',
@@ -938,7 +938,7 @@ export const countries: Country[] = [
     summary:
         'מלזיה היא אחת המדינות המגוונות באסיה מבחינה תרבותית: אוכלוסייה מלאית מוסלמית, קהילה סינית גדולה וקהילה הודית ותיקה חיות זו לצד זו, וזה ניכר בעיקר באוכל ובאדריכלות. הצפון-מערבי, פנאנג ופראק, מציע ערים קולוניאליות, מקדשים ורמות תה קרירות. חשוב לדעת מראש שאין למלזיה יחסים דיפלומטיים עם ישראל ושכניסה עם דרכון ישראלי אינה עניין מובן מאליו, ולכן זה היעד שבו הבדיקה המוקדמת קריטית יותר מהתכנון עצמו.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Kek_Lok_Si_at_dusk.jpg/960px-Kek_Lok_Si_at_dusk.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Mount_kinabalu_01.png/500px-Mount_kinabalu_01.png',
     practical: {
       visa: 'אין למלזיה יחסים דיפלומטיים עם ישראל, וכניסה של בעלי דרכון ישראלי כפופה למגבלות ואינה דומה לשום יעד רגיל. אל תזמינו טיסה או לינה לפני שבדקתם את המצב העדכני מול משרד החוץ הישראלי ומול הגורמים המלזיים, ובדקו גם את אזהרות המסע העדכניות של המטה לביטחון לאומי. מידע מפורומים או מניסיון של אחרים אינו תחליף לבדיקה רשמית.',
       currency: 'המטבע הוא רינגיט מלזי (MYR). המדינה זולה יחסית, במיוחד אוכל ותחבורה. משכו מכספומטים של בנקים גדולים וסרבו להמרה במטבע שלכם במסך.',
@@ -955,7 +955,7 @@ export const countries: Country[] = [
     summary:
       'סרי לנקה דוחסת למרחק של כמה שעות נסיעה דברים שבמדינות אחרות רחוקים ימים זה מזה: ערי בירה בודהיסטיות בנות אלפיים שנה במישור היבש בצפון, הרי תה קרירים במרכז, ספארי עם פילים וברדלסים בדרום, וחופים משני צידי האי. התחבורה איטית והכבישים מפותלים, אז שבועיים הם המינימום ההגיוני. המדינה יצאה ממשבר כלכלי חריף ב-2022 ותשתיות התיירות התאוששו, אך המחירים עלו והתכנון דורש בדיקה עדכנית.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Sigiriya_%28141688197%29.jpeg/960px-Sigiriya_%28141688197%29.jpeg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Srilankamountainforest.jpg/500px-Srilankamountainforest.jpg',
     practical: {
       visa: 'ישראלים נדרשים לאישור כניסה אלקטרוני מסוג ETA לפני הטיסה, שנרכש באתר הרשמי של רשות ההגירה. התנאים והאגרות משתנים לעיתים קרובות ויש לבדוק את האתר הרשמי סמוך לנסיעה. חשוב להיזהר מאתרי תיווך המציגים עצמם כרשמיים וגובים תוספת.',
       currency: 'רופי סרי לנקי (LKR). שער החליפין השתנה מאוד בשנים האחרונות, כדאי לבדוק לפני. המרה נוחה בבנקים ובשדה התעופה.',
@@ -973,7 +973,7 @@ export const countries: Country[] = [
     summary:
       'קמבודיה היא מדינה קטנה יחסית שאפשר לחצות בכמה שעות, ובה שני קטבים: מתחם המקדשים של אנגקור, אחד האתרים הארכיאולוגיים הגדולים בעולם, ומצד שני אתרי הזיכרון של רצח העם שביצע משטר החמר רוז׳ בשנים 1975-1979, שבו נספת כרבע מהאוכלוסייה. זו מדינה ענייה עם תשתיות בסיסיות, אבל היחס למבקרים חם במיוחד. רוב המטיילים משלבים אותה עם תאילנד או וייטנאם.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.JPG/960px-Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.JPG',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Tuol_Sleng.jpg/500px-Tuol_Sleng.jpg',
     practical: {
       visa: 'ישראלים נדרשים לוויזה. אפשר להוציא e-Visa באתר הרשמי של משרד החוץ הקמבודי לפני הטיסה, או ויזה בהגעה בשדות התעופה של פנום פן וסיאם ריפ, בתשלום דולרים מזומן ועם תמונת דרכון. יש להיזהר מאתרים מתחזים ולבדוק את התנאים העדכניים סמוך לנסיעה.',
       currency: 'ריאל קמבודי (KHR), אך הדולר האמריקאי משמש בפועל כמטבע שני ומקובל כמעט בכל מקום. עודף קטן מתחת לדולר מוחזר בריאל. כדאי להביא שטרות דולר קטנים ובמצב טוב, שטרות קרועים נדחים.',
@@ -990,7 +990,7 @@ export const countries: Country[] = [
     tagline: 'המדינה השקטה של דרום-מזרח אסיה, נהר המקונג והרים ירוקים',
     summary: 'לאוס היא היעד האיטי של דרום-מזרח אסיה. אין כאן ים, אין ערים ענקיות ואין חיי לילה גדולים, ובדיוק בגלל זה מטיילים שמגיעים מתאילנד או מווייטנאם מתארים אותה כהפוגה. לואנג פראבנג היא עיר מקדשים קטנה ורשומה כאתר מורשת עולמית, ומצפון לה מתחילים נופי ההרים והמערות. חשוב לדעת מראש שהתשתיות בסיסיות, הנסיעות ארוכות ואיטיות הרבה מעבר למה שהמפה מרמזת, והחשמל והאינטרנט אינם יציבים מחוץ לערים.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/The_river_of_Kuang_si_waterfalls.jpg/960px-The_river_of_Kuang_si_waterfalls.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Temple_Wat_Xieng_Thong_-_Luang_Prabang_-_Laos.jpg/500px-Temple_Wat_Xieng_Thong_-_Luang_Prabang_-_Laos.jpg',
     practical: {
       visa: 'ישראלים נדרשים לאשרה. אפשר להוציא אשרת כניסה מקוונת מראש דרך אתר הממשלה הרשמי, או לקבל אשרה בהגעה בשדות התעופה הבינלאומיים ובמעברי היבשה הראשיים. באשרה בהגעה נדרש תשלום במזומן בדולרים, תמונת פספורט ודרכון בתוקף לחצי שנה לפחות. יש אתרי תיווך שגובים תוספת משמעותית, לכן כדאי לוודא שמדובר באתר הרשמי.',
       currency: 'קיפ לאואני. שער החליפין השתנה מאוד בשנים האחרונות והמחירים מתעדכנים תכופות, לכן אין להסתמך על מחירים ישנים מבלוגים. דולר אמריקאי ובאט תאילנדי מתקבלים בחלק מהמקומות אך בשער נחות. כספומטים קיימים בערים אך לא בכפרים, ומומלץ למשוך מראש.',
@@ -1006,7 +1006,7 @@ export const countries: Country[] = [
     tagline: 'מדינות, מדבר וההרים הגבוהים של צפון אפריקה',
     summary: 'מרוקו היא אחד היעדים הטעונים והמרגשים ביותר עבור מטיילים ישראלים, בין השאר בגלל השורשים המרוקאים של מאות אלפי משפחות בישראל. במרחק קצר יחסית נמצאים בה שווקים עתיקים, רכסי האטלס הגבוה, נאות מדבר וכפרי אבן, ולצידם מורשת יהודית עשירה עם בתי כנסת ובתי עלמין שנשמרים עד היום. חשוב להתייחס למרוקו כאל יעד שדורש הכנה: המדינות העתיקות עמוסות ואינטנסיביות, המרחקים בין הערים גדולים, והתנהלות מול מדריכים וסוחרים דורשת גבולות ברורים.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Merzouga_Dunes_2011.jpg/960px-Merzouga_Dunes_2011.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Coranic_School_(106589859).jpeg/500px-Coranic_School_(106589859).jpeg',
     practical: {
       visa: 'מדיניות הכניסה לבעלי דרכון ישראלי השתנתה יותר מפעם אחת בשנים האחרונות בעקבות התפתחויות אזוריות, ולכן אין להסתמך על מידע מבלוגים או מטיולים קודמים. יש לוודא את המצב העדכני מול הגורמים הרשמיים ומול חברת התעופה לפני רכישת כרטיסים, ולבדוק גם את המלצות הנסיעה של משרד החוץ הישראלי. הדרכון צריך להיות בתוקף לחצי שנה לפחות.',
       currency: 'דירהם מרוקאי. זהו מטבע סגור שאסור להוציא ממנו כמויות גדולות מהמדינה, ולכן ממירים בתוך מרוקו ומחליפים בחזרה לפני הטיסה. כספומטים זמינים בערים ובעיירות הגדולות, אך בכפרי האטלס ובמדבר יש להגיע עם מזומן.',
@@ -1022,7 +1022,7 @@ export const countries: Country[] = [
     tagline: 'הרים גבוהים, אגמי אלפים ותרבות נוודים חיה',
     summary: 'קירגיזסטן היא אחת המדינות ההרריות בעולם, ויותר משמונים אחוז משטחה נמצא מעל אלף וחמש מאות מטר. היא הפכה בשנים האחרונות ליעד מוביל בקרב מטיילים ישראלים שמחפשים טבע פתוח בלי המוני תיירים, עם מסלולי הליכה ורכיבה, אגמי הרים ולינה באוהלי יורטה אצל משפחות רועים. חשוב לדעת שהעונה קצרה מאוד: המעברים הגבוהים והמרעה העליון פתוחים בערך מסוף יוני עד תחילת ספטמבר בלבד, והתשתיות מחוץ לבירה בסיסיות מאוד.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Issykkul_plyag.jpg/960px-Issykkul_plyag.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Tash_Rabat_in_mountains.jpg/500px-Tash_Rabat_in_mountains.jpg',
     practical: {
       visa: 'ישראלים פטורים בדרך כלל מאשרה לשהייה קצרה בקירגיזסטן, אך המדיניות באזור משתנה ויש לאמת אותה מול הגורמים הרשמיים ומול חברת התעופה לפני הנסיעה. הדרכון צריך להיות בתוקף לחצי שנה. שימו לב שאזורי הגבול הגבוהים, ובהם חלק מהאזורים סביב טאש רבאט, עשויים לדרוש היתר מיוחד שמסדירים דרך סוכנות מקומית מראש.',
       currency: 'סום קירגיזי. כספומטים זמינים בבישקק, באוש ובקאראקול, אך בכפרים ובמרעה אין כלום. יש להיכנס להרים עם מזומן מספיק לכל הימים, כולל תשלום למשפחות היורטה שמקבלות מזומן בלבד.',
@@ -1038,7 +1038,7 @@ export const countries: Country[] = [
     tagline: 'פטגוניה, קרחונים, יין ואחת הקהילות היהודיות הגדולות בעולם',
     summary: 'ארגנטינה היא מדינה ענקית שמשתרעת מהטרופי בצפון ועד קרח הדרום, והיא אחד היעדים הקלאסיים של המטייל הישראלי אחרי הצבא. בואנוס איירס היא עיר אירופית ותוססת עם קהילה יהודית מהגדולות בעולם, ומדרום לה נפרשת פטגוניה עם קרחונים, פסגות גרניט ואגמים. חשוב לתכנן סביב שני דברים: המרחקים אדירים ורוב הקטעים דורשים טיסה פנימית, והמצב הכלכלי הביא לתנודתיות גדולה במחירים, כך שאין להסתמך על מידע ישן.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Perito_Moreno_Glacier_2023.jpg/960px-Perito_Moreno_Glacier_2023.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/El_Chalt%C3%A9n.JPG/500px-El_Chalt%C3%A9n.JPG',
     practical: {
       visa: 'ישראלים פטורים מאשרה לביקור תיירותי של עד תשעים יום. נדרש דרכון בתוקף וכרטיס המשך או יציאה. מומלץ לוודא את הדרישות העדכניות מול חברת התעופה, ובכניסה יבשתית לצ׳ילה ובחזרה שימו לב לאיסור החמור על הכנסת מזון טרי, בשר ומוצרי חלב, שנאכף בקנסות גבוהים.',
       currency: 'פסו ארגנטינאי. האינפלציה בשנים האחרונות הייתה גבוהה מאוד והמחירים והשערים השתנו בקצב מהיר, ולכן אין להסתמך על מחירים מבלוגים או ממדריכים ישנים. כדאי לבדוק את המצב העדכני סמוך לנסיעה, ולהחזיק גם מזומן בדולרים בשטרות שלמים ונקיים, שכן שטרות קרועים נדחים.',
@@ -1054,7 +1054,7 @@ export const countries: Country[] = [
     tagline: 'הרי געש, יער ענן וחיות בר במדינה קטנה אחת',
     summary: 'קוסטה ריקה היא מדינה קטנה בין שני אוקיינוסים שמרכזת בתוכה צפיפות מדהימה של בתי גידול: הרי געש פעילים, יערות ענן, יער גשם טרופי וחופים בשני צדדים. כרבע משטחה מוגן בפארקים ובשמורות, וזו הסיבה שאפשר לראות בה עצלנים, טוקנים וקופים בלי מאמץ מיוחד. היא גם היקרה במדינות מרכז אמריקה, בפער משמעותי, ומי שמגיע עם ציפיות של תקציב מרכז אמריקאי מופתע לרעה.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Monteverdeskyline01.jpg/960px-Monteverdeskyline01.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Arenal_volcano_%2870785p%29_%28cropped%29.jpg/500px-Arenal_volcano_%2870785p%29_%28cropped%29.jpg',
     practical: {
       visa: 'ישראלים פטורים מאשרה לביקור תיירותי, ובדרך כלל מקבלים אישור שהייה של עד תשעים יום לפי שיקול פקיד הגבול. נדרש דרכון בתוקף וכן הוכחת כרטיס יציאה מהמדינה, ולעיתים מבקשים אותה בעלייה למטוס. מומלץ לוודא את הדרישות העדכניות מול חברת התעופה.',
       currency: 'קולון קוסטה ריקני. דולר אמריקאי מתקבל כמעט בכל מקום שפונה לתיירים, אך העודף יינתן בקולון ולעיתים בשער נחות. כספומטים זמינים בערים ובעיירות התיירות, פחות בכפרים ובחופים המרוחקים.',
@@ -1070,7 +1070,7 @@ export const countries: Country[] = [
     tagline: 'קניוני שיש, שווקי לילה והרים גבוהים באי אחד',
     summary: 'טאיוואן היא אי בגודל של פחות מפעמיים ישראל, ובתוכו מאתיים ושישים פסגות מעל שלושת אלפים מטר, קניוני שיש, מעיינות חמים וחופים טרופיים. היא נחשבת לאחד היעדים הבטוחים והנוחים באסיה, עם רכבות מהירות מצוינות, תחבורה ציבורית פשוטה להבנה ואנשים ידידותיים במיוחד, והיא עדיין הרבה פחות מוכרת למטייל הישראלי מיפן או מתאילנד. תרבות שווקי הלילה היא הלב של החוויה הקולינרית כאן.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Jiuqudong_2003-01.jpg/960px-Jiuqudong_2003-01.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Jiufen_Amei_Tea_House_08.23.jpg/500px-Jiufen_Amei_Tea_House_08.23.jpg',
     practical: {
       visa: 'ישראלים נדרשים בדרך כלל להסדיר כניסה מראש, ומדיניות הפטור בטאיוואן שונה ממדינה למדינה ומתעדכנת מעת לעת. יש לבדוק את המצב העדכני מול הנציגות הרשמית ומול חברת התעופה לפני רכישת כרטיסים, ולא להסתמך על מידע מטיולים קודמים. נדרש דרכון בתוקף לחצי שנה וכרטיס יציאה.',
       currency: 'דולר טאיוואני חדש. כספומטים זמינים בכל מקום, כולל בחנויות הנוחות הפתוחות עשרים וארבע שעות, וזו הדרך הנוחה למשוך מזומן. שווקי הלילה ודוכני האוכל עובדים במזומן.',
@@ -1086,7 +1086,7 @@ export const countries: Country[] = [
     tagline: 'רצועת ארץ באורך 4,300 ק״מ, מהמדבר היבש בעולם ועד קרחוני פטגוניה',
     summary: 'צ׳ילה היא מדינה צרה וארוכה בצורה קיצונית, וזה משנה לחלוטין את אופן התכנון של הטיול. בצפון נמצא מדבר אטקמה, המקום היבש ביותר על פני כדור הארץ, עם גייזרים, אגמי מלח ושמיים שנחשבים לבהירים בעולם לצפיית בכוכבים. במרכז נמצאים סנטיאגו, עמקי היין והחוף, ובדרום מתחילה פטגוניה עם קרחונים, פיורדים ורוחות עזות. המרחקים אדירים, והמעבר בין האזורים דורש כמעט תמיד טיסה פנים ארצית. מבחינת תשתיות, תחבורה ובטיחות זו אחת המדינות המסודרות בדרום אמריקה, וגם מהיקרות שבהן.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/G%C3%A9iseres_del_Tatio%2C_Atacama%2C_Chile%2C_2016-02-01%2C_DD_01-02_HDR.JPG/960px-G%C3%A9iseres_del_Tatio%2C_Atacama%2C_Chile%2C_2016-02-01%2C_DD_01-02_HDR.JPG',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Islamagdalena.jpg/500px-Islamagdalena.jpg',
     practical: {
       visa: 'ישראלים פטורים מאשרת כניסה לשהייה קצרה של עד 90 ימים, אך המדיניות מתעדכנת מעת לעת ויש לוודא מול הגורמים הרשמיים וחברת התעופה לפני רכישת כרטיסים. בכניסה ממלאים טופס הצהרה חקלאית, והאיסור על הכנסת מזון טרי, בשר, חלב ופירות נאכף ברצינות רבה ובקנסות כבדים, גם במעברי היבשה מארגנטינה ובוליביה.',
       currency: 'פזו צ׳ילאני (CLP). המחירים בצ׳ילה גבוהים במונחי דרום אמריקה, ובאטקמה הם גבוהים עוד יותר כי הכול מובא מרחוק. בערים הגדולות כרטיסי אשראי מתקבלים כמעט בכל מקום, אבל בסן פדרו דה אטקמה ובכפרים מסביב הרבה עסקים קטנים וטיולים עובדים במזומן בלבד, וכספומטים נותנים עמלות גבוהות ולפעמים נגמרים ממזומן.',
@@ -1102,7 +1102,7 @@ export const countries: Country[] = [
     tagline: 'יבשת שלמה במדינה אחת, ומהיעדים הוותיקים ביותר של המטייל הישראלי',
     summary: 'הודו היא מהיעדים המזוהים ביותר עם הטיול הישראלי הארוך, וכבר עשרות שנים שהיא מהווה תחנה מרכזית אחרי הצבא ולא רק. היא עצומה ומגוונת עד כדי כך שאי אפשר להתייחס אליה כאל יעד אחד: צפון ההימלאיה עם עמקים קרירים, מנזרים ומסלולי הליכה הוא עולם אחר לגמרי מהמדבר של רג׳סטאן, מהערים הגדולות במישור הגנגס או מהחופים והתבלינים של הדרום. הודו היא גם היעד שדורש הכי הרבה הכנה: הבירוקרטיה איטית, התחבורה עמוסה, הפערים החברתיים גלויים לעין, ורמת ההיגיינה במזון ובמים מחייבת זהירות אמיתית. מי שמגיע מוכן מקבל מדינה זולה, מרתקת וידידותית למטיילים, עם תשתית תיירותית ותיקה ומקומיים שרגילים לאורחים.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/McLeod_Ganj_Dharamkot_Dharmsala_Himachal_Pradesh_India_April_2014.jpg/960px-McLeod_Ganj_Dharamkot_Dharmsala_Himachal_Pradesh_India_April_2014.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Kullu_Valley_from_Rohtang_Pass%2C_India.jpg/500px-Kullu_Valley_from_Rohtang_Pass%2C_India.jpg',
     practical: {
       visa: 'בעלי דרכון ישראלי חייבים באשרת כניסה, ורוב המטיילים משתמשים באשרה אלקטרונית לתיירות שמוגשת מראש באתר הרשמי של ממשלת הודו. הבקשה דורשת צילום דרכון, תמונת פנים ותשלום, והאישור מגיע בדרך כלל תוך כמה ימי עסקים אבל עלול להתעכב, ולכן לא מגישים ברגע האחרון. יש להגיש אך ורק דרך האתר הממשלתי, כי קיימים אתרי תיווך רבים שגובים תוספת מיותרת. תנאי הזכאות, משך התוקף ומספר הכניסות המותרות משתנים מעת לעת, ויש לוודא הכול מול הגורמים הרשמיים לפני רכישת כרטיסים. הדרכון צריך להיות בתוקף לחצי שנה לפחות עם שני עמודים ריקים.',
       currency: 'רופי הודי (INR). הודו היא מהיעדים הזולים בעולם למטייל, ובעמקי ההימלאיה במיוחד. כספומטים נפוצים בערים ובעיירות הגדולות אך מגבילים משיכה בכל פעם וגובים עמלה, ולפעמים פשוט נגמר בהם המזומן בסופי שבוע ובחגים. מומלץ להחזיק תמיד שטרות קטנים, כי לעודף משטר גדול יש מחסור כרוני. אסור להוציא רופי מהמדינה בכמות משמעותית, ולכן מחליפים בחזרה לפני הטיסה.',
@@ -1118,7 +1118,7 @@ export const countries: Country[] = [
     tagline: 'יבשת בתוך מדינה: חופים, יערות גשם, מפלים וקרנבל',
     summary: 'ברזיל היא המדינה הגדולה בדרום אמריקה וחמישית בגודלה בעולם, וההבדל בין אזוריה גדול מההבדל בין מדינות שלמות באירופה. בדרום מזרח נמצאות הערים הגדולות, ריו דה ז׳ניירו וסאו פאולו, עם החופים, ההרים והחיים העירוניים. בצפון משתרע אגן האמזונס. בצפון מזרח יש אלפי קילומטרים של חוף טרופי ותרבות אפרו ברזילאית עמוקה, ובדרום נמצאים מפלי איגואסו על הגבול עם ארגנטינה. השפה היא פורטוגזית, לא ספרדית, ואנגלית פחות נפוצה ממה שמטיילים מצפים, גם באזורי תיירות. ברזיל היא יעד ארוך: טיסה מישראל היא לפחות שש עשרה שעות עם חיבור אחד, והמרחקים הפנימיים מחייבים טיסות מקומיות ולא אוטובוסים, אלא אם יש הרבה זמן.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Christ_the_Redeemer_-_Cristo_Redentor.jpg/960px-Christ_the_Redeemer_-_Cristo_Redentor.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Praia_de_Copacabana_-_Rio_de_Janeiro%2C_Brasil.jpg/500px-Praia_de_Copacabana_-_Rio_de_Janeiro%2C_Brasil.jpg',
     practical: {
       visa: 'ישראלים פטורים מוויזה לביקור תיירותי של עד תשעים יום בברזיל. הדרכון חייב להיות בתוקף לפחות שישה חודשים מיום הכניסה. בכניסה עשויים לבקש הוכחת כרטיס יציאה מהמדינה והוכחת מקום לינה, ולכן כדאי שיהיו זמינים בטלפון. שימו לב שהפטור הוא הדדי ויכול להשתנות, ולכן נכון לוודא באתר הקונסוליה הברזילאית לפני הנסיעה. חיסון קדחת צהובה אינו נדרש לכניסה מישראל, אבל הוא מומלץ בפועל למי שנוסע לאזור האמזונס, לפנטנל או לאזורי היער, וחלק מהמדינות השכנות ידרשו אישור חיסון אם תיכנסו אליהן מברזיל.',
       currency: 'המטבע הוא ריאל ברזילאי, BRL, ומסומן R$. אין צורך להביא מזומן מישראל: הדרך הזולה היא למשוך מכספומט של בנק גדול, בעיקר Banco do Brasil, Bradesco או Santander, ולסרב תמיד להמרה שהמכשיר מציע בשקלים או בדולרים. כספומטים רבים מגבילים משיכה ללילה ומפסיקים לפעול בשעות הקטנות מטעמי ביטחון. אל תמשכו כסף ממכשיר ברחוב פתוח ובוודאי לא בלילה, אלא רק בתוך סניף, קניון או שדה תעופה. נהוג להשאיר את הארנק בבית: לוקחים סכום קטן ליום, וכרטיס אחד.',
@@ -1135,7 +1135,7 @@ export const countries: Country[] = [
     summary:
       'קולומביה יושבת על שני אוקיינוסים ועל שרשרת האנדים, כך שבתוך טיסה פנימית אחת עוברים מעיר חומות קריבית לבוגוטה בגובה 2,600 מטר או לאזור הקפה הירוק. השתנתה מאוד בעשור וחצי האחרונים והפכה ליעד תיירות מרכזי, אבל הפערים בין אזור לאזור עדיין גדולים והתכנון צריך להיות לפי אזור ולא לפי המדינה כולה.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/62_-_Carthag%C3%A8ne_-_D%C3%A9cembre_2008.jpg/960px-62_-_Carthag%C3%A8ne_-_D%C3%A9cembre_2008.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Karibiska_havet_i_Colombia.jpg/500px-Karibiska_havet_i_Colombia.jpg',
     practical: {
       visa: 'ישראלים פטורים מאשרה לביקור תיירותי של עד 90 יום, וניתן להאריך עד 180 יום בשנה קלנדרית. הפטור הוא הדדי ויכול להשתנות, ולכן בודקים באתר משרד החוץ הקולומביאני לפני הנסיעה. חיסון קדחת צהובה אינו נדרש בכניסה מישראל, אבל מומלץ למי שנוסע לאמזונס או לפארקים בצפון - ויש מדינות שדורשות אישור חיסון ממי שמגיע אליהן אחרי שהות בקולומביה.',
       currency:
@@ -1154,7 +1154,7 @@ export const countries: Country[] = [
     summary:
       'צרפת היא היעד האירופי שהכי קל להגיע אליו מישראל ובו בזמן הכי קשה לסכם במשפט אחד. פריז לבדה מספיקה לשבוע, אבל אותה כרטיסייה פותחת גם את חופי הריביירה, את הרי האלפים, את מטעי היין בבורדו ובבורגונדי ואת הכפרים של פרובאנס. לנוסע הישראלי יש כאן יתרון נדיר באירופה: קהילה יהודית גדולה ומאורגנת, ולכן תשתית כשרות אמיתית ולא סמלית, בעיקר בפריז ובאזורים עם ריכוז יהודי.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Arc_de_Triomphe%2C_Paris_21_October_2010.jpg/960px-Arc_de_Triomphe%2C_Paris_21_October_2010.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Sainte_Chapelle_-_Upper_level_1.jpg/500px-Sainte_Chapelle_-_Upper_level_1.jpg',
     practical: {
       visa: 'צרפת חברה במרחב שנגן וישראלים פטורים מאשרה לשהייה של עד 90 יום בתוך כל 180 יום. חשוב לזכור שהמכסה נספרת על פני כל מדינות שנגן יחד ולא לכל מדינה בנפרד, כך שביקור קודם בגרמניה או ביוון נכנס לאותו חשבון. הדרכון חייב להיות בתוקף לפחות שלושה חודשים אחרי מועד היציאה המתוכנן ולהיות מונפק בעשר השנים האחרונות. מערכת ההרשמה האירופית החדשה לכניסה נמצאת בהטמעה הדרגתית ועשויה להוסיף רישום מקוון לפני הנסיעה, ולכן בודקים באתר הרשמי לפני שקונים כרטיס.',
       currency:
@@ -1173,7 +1173,7 @@ export const countries: Country[] = [
     summary:
       'בריטניה היא ארבע מדינות בממלכה אחת, ובכל אחת מהן חוקים, נופים ואפילו שטרות משלה. רוב הישראלים מגיעים ללונדון ונשארים בה, וזה הגיוני, אבל רשת הרכבות הופכת את אדינבורו, את מחוז האגמים ואת קורנוול ליעדים של נסיעה אחת. מזג האוויר הוא הבדיחה הקבועה וגם האמת - שכבות ומטרייה הן ציוד חובה בכל עונה. יש כאן קהילה יהודית ותיקה וגדולה, בעיקר בצפון לונדון ובמנצ׳סטר, ולכן תשתית כשרות אמיתית.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Tower_Bridge_at_Dawn.jpg/960px-Tower_Bridge_at_Dawn.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/November_2019_in_London_-_44.jpg/500px-November_2019_in_London_-_44.jpg',
     practical: {
       visa: 'בריטניה אינה חלק ממרחב שנגן ויש לה מערכת כניסה נפרדת. ישראלים פטורים מאשרה לביקור של עד שישה חודשים, אבל נדרשת הרשאת נסיעה אלקטרונית מקוונת (ETA) שנרכשת מראש דרך האתר או האפליקציה הרשמית לפני העלייה למטוס. האישור אינו מיידי תמיד, ולכן מגישים כמה ימים לפני הטיסה ולא בשדה. הדרכון צריך להיות בתוקף למשך כל השהייה.',
       currency:
@@ -1192,7 +1192,7 @@ export const countries: Country[] = [
     summary:
       'סינגפור היא מדינה בגודל של אזור המרכז בישראל, ובתוכה נמל מהעמוסים בעולם, שכונות סיניות, מלאיות והודיות שכולן חיות זו לצד זו, ותשתית ציבורית שעובדת בצורה כמעט מוגזמת. בגלל הגודל אפשר לראות אותה בשלושה עד ארבעה ימים, ולכן היא עובדת מצוין כעצירת ביניים בדרך לאוסטרליה או לדרום מזרח אסיה - וגם כיעד קצר בפני עצמו. היא גם היקרה ביותר באזור בפער גדול.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Supertree_Grove%2C_Gardens_by_the_Bay%2C_Singapore_-_20120712-02.jpg/960px-Supertree_Grove%2C_Gardens_by_the_Bay%2C_Singapore_-_20120712-02.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Symphony_Lake%2C_Singapore_Botanic_Gardens_-_20041025.jpg/500px-Symphony_Lake%2C_Singapore_Botanic_Gardens_-_20041025.jpg',
     practical: {
       visa: 'ישראלים פטורים מאשרה לביקור של עד 30 יום. לפני הכניסה יש למלא כרטיס נוסע אלקטרוני מקוון (SG Arrival Card) בתוך שלושה ימים לפני ההגעה, והוא חינם באתר הרשמי - יש אתרים שגובים עליו כסף שלא לצורך. שימו לב שסינגפור מחמירה מאוד בסמים, כולל בעונש מוות, ובחוקי יבוא: מסטיק, סיגריות אלקטרוניות ומוצרי ניקוטין אסורים לגמרי, וגם החזקה פרטית אסורה.',
       currency:
@@ -1211,7 +1211,7 @@ export const countries: Country[] = [
     summary:
       'מלטה היא ארכיפלג של שלושה איים מיושבים בין סיציליה לצפון אפריקה, קטן מספיק שאפשר לחצות אותו ברכב בשעה. השילוב שלה יוצא דופן: מקדשים ניאוליתיים שקדמו לפירמידות, עיר בירה בארוקית שבנו אבירי מסדר יוחנן, אנגלית כשפה רשמית משנות השלטון הבריטי, ומטבח שהוא ים תיכוני עם נגיעה סיציליאנית. בשביל ישראלים היא נוחה במיוחד - קרובה, מדברת אנגלית, ובגודל שמאפשר לראות הכל בשבוע.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Malta_Mdina.jpg/960px-Malta_Mdina.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Upper_barrakka_gardens-IMG_1670.jpg/500px-Upper_barrakka_gardens-IMG_1670.jpg',
     practical: {
       visa: 'מלטה חברה באיחוד האירופי ובמרחב שנגן, וישראלים פטורים מאשרה לשהייה של עד 90 יום בתוך כל 180 יום. המכסה נספרת על פני כל מדינות שנגן יחד, כך שביקור קודם ביוון או באיטליה נכנס לאותו חשבון. הדרכון צריך להיות בתוקף לפחות שלושה חודשים אחרי היציאה המתוכננת.',
       currency:
@@ -1230,7 +1230,7 @@ export const countries: Country[] = [
     summary:
       'בלגיה מחולקת לשניים - פלנדריה הדוברת הולנדית בצפון וואלוניה הדוברת צרפתית בדרום - ובבריסל שבאמצע שתי השפות מופיעות על כל שלט. היא קטנה מאוד, ורכבת מבריסל לברוז׳, לגנט או לאנטוורפן לוקחת פחות משעה, כך שאפשר לישון במקום אחד ולראות את כל השאר. באנטוורפן חיה אחת הקהילות היהודיות החרדיות הגדולות באירופה, ואיתה תשתית כשרות שהיא בליגה של עצמה ביבשת.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Grand-Place_de_Bruxelles_en_heure_bleue.jpg/960px-Grand-Place_de_Bruxelles_en_heure_bleue.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Brugge_Belfort_HDR.jpg/500px-Brugge_Belfort_HDR.jpg',
     practical: {
       visa: 'בלגיה חברה באיחוד האירופי ובמרחב שנגן, וישראלים פטורים מאשרה לשהייה של עד 90 יום בתוך כל 180 יום. המכסה נספרת יחד עם כל שאר מדינות שנגן. הדרכון צריך להיות בתוקף לפחות שלושה חודשים אחרי מועד היציאה המתוכנן ולהיות מונפק בעשר השנים האחרונות.',
       currency:
@@ -1249,7 +1249,7 @@ export const countries: Country[] = [
     summary:
       'הקטלוג כאן מכסה את חצי האי סיני בלבד, ולא את קהיר ואת עמק הנילוס. סיני הוא היעד המצרי שישראלים באמת נוסעים אליו: חוף מפרץ אילת עם שוניות שנחשבות מהטובות בעולם, הרי גרניט מדבריים, ומנזר סנטה קתרינה למרגלות הר סיני. אפשר להגיע דרך מעבר טאבה ביבשה, וזו נסיעה קצרה מאוד מאילת.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Skt_Katharina_Klosteret.jpg/960px-Skt_Katharina_Klosteret.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Coral_reef_in_Ras_Muhammad_nature_park.JPG/500px-Coral_reef_in_Ras_Muhammad_nature_park.JPG',
     practical: {
       visa: 'לישראלים יש פטור מאשרה לאזור מזרח סיני בלבד - מטאבה ועד שארם א־שייח׳ ומנזר סנטה קתרינה - לשהייה של עד 14 יום, שמונפק במעבר טאבה עצמו. כניסה לשאר מצרים, כולל קהיר, מחייבת אשרה מלאה מראש. חשוב מאוד: קראו את אזהרות המסע העדכניות של המטה לביטחון לאומי לפני שקובעים כל דבר, כי הסיווג לסיני משתנה ולעיתים הוא אזהרה חמורה.',
       currency:
@@ -1268,7 +1268,7 @@ export const countries: Country[] = [
     summary:
       'עומאן היא ההפך מדובאי. אין כאן מגדלים ואין קניונים ענקיים, אלא מצודות חימר, שווקים מקורים, ואדיות עם בריכות מים ירוקות והרים בגובה שלושת אלפים מטר. מסקאט קטנה ונמוכה בכוונה - יש חוק שאוסר על בנייה גבוהה - ותוך שעתיים נסיעה ממנה מגיעים למדבר, למצודות ולהרים. זו אחת המדינות הבטוחות והרגועות באזור.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Muscat%2C_moschea_del_sultano_qaboos%2C_esterno_01.jpg/960px-Muscat%2C_moschea_del_sultano_qaboos%2C_esterno_01.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Jebel_Shams_Balcony_Walk_Hike_2019.jpg/500px-Jebel_Shams_Balcony_Walk_Hike_2019.jpg',
     practical: {
       visa: 'עומאן וישראל אינן מקיימות יחסים דיפלומטיים, ונכון להיום דרכון ישראלי אינו מתקבל לכניסה לעומאן. מי שמחזיק גם באזרחות זרה צריך לבדוק את מדיניות האשרות העדכנית מול הרשויות העומאניות ולא להסתמך על מידע כללי. הערך הזה נכתב כדי שהמידע יהיה קיים כשהמצב ישתנה, ולא כהמלצה לצאת לדרך היום.',
       currency:
@@ -1287,7 +1287,7 @@ export const countries: Country[] = [
     summary:
       'צפון מקדוניה היא מדינה קטנה וזולה בלב הבלקן, ובמרכזה אגם אוחריד - אחד האגמים העתיקים בעולם, כמיליון וחצי שנה, ואתר מורשת עולמית כפול על טבע ותרבות גם יחד. סקופיה הבירה היא תערובת מוזרה של בזאר עות׳מאני אמיתי מצד אחד של הנהר ופסלי שיש ענקיים שהוקמו בשנות האלפיים מהצד השני. הכל במרחקים קצרים והמחירים מהנמוכים ביבשת.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Church_of_St._John_at_Kaneo_6.jpg/960px-Church_of_St._John_at_Kaneo_6.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Church_of_St._John_at_Kaneo_2.jpg/500px-Church_of_St._John_at_Kaneo_2.jpg',
     practical: {
       visa: 'צפון מקדוניה אינה חברה באיחוד האירופי ואינה במרחב שנגן, וישראלים פטורים מאשרה לשהייה של עד 90 יום בתוך כל 180 יום. השהייה כאן אינה נספרת במכסת שנגן, וזה יתרון למי שמשלב אותה בטיול ארוך באירופה. הדרכון צריך להיות בתוקף לפחות שלושה חודשים מעבר למועד היציאה.',
       currency:
@@ -1306,7 +1306,7 @@ export const countries: Country[] = [
     summary:
       'מונגוליה גדולה פי שבעים מישראל וחיים בה שלושה מיליון איש, כשליש מהם עדיין נוודים. זו אחת המדינות הריקות בעולם: נוסעים שעות בערבה בלי לפגוש כביש סלול, לנים בגר - אוהל לבד עגול - אצל משפחות רועים, ומגיעים למדבר גובי עם דיונות, קניון קרח ומצוקים אדומים שבהם נמצאו ביצי הדינוזאורים הראשונות. אולן באטור היא הבירה הקרה בעולם ורוב הטיול מתרחש מחוצה לה.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Chinggis_Khaan_statue_Complex.jpg/960px-Chinggis_Khaan_statue_Complex.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Khongoryn_Els_sand_dunes.jpg/500px-Khongoryn_Els_sand_dunes.jpg',
     practical: {
       visa: 'ישראלים פטורים מאשרה לשהייה של עד 30 יום, במסגרת הסכם פטור הדדי. הדרכון צריך להיות בתוקף לפחות שישה חודשים מיום הכניסה. אין דרישות חיסון חובה, אבל בגלל המרחק מכל בית חולים מסודר ביטוח רפואי עם כיסוי לפינוי הוא לא המלצה אלא הכרח.',
       currency:
@@ -1325,7 +1325,7 @@ export const countries: Country[] = [
     summary:
       'בהוטן היא הממלכה הבודהיסטית האחרונה בהימלאיה, והמדינה היחידה בעולם שמודדת את עצמה במדד האושר הלאומי הגולמי במקום בתמ״ג. הטלוויזיה הגיעה לכאן רק ב-1999, החוקה מחייבת שישים אחוז כיסוי יער לנצח, והבנייה המסורתית נאכפת בחוק - כך שכל כפר נראה כמו שנראה לפני מאה שנה. מנזרי מצוק, מבצרי דזונג ועמקים ירוקים, ומעט מאוד מטיילים.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Taktshang2.jpg/960px-Taktshang2.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Druk_Wangyal_Chortens%2C_Bhutan_01.jpg/500px-Druk_Wangyal_Chortens%2C_Bhutan_01.jpg',
     practical: {
       visa: 'אי אפשר לטייל בבהוטן באופן עצמאי. כל תייר, כולל ישראלים, חייב אשרה שמונפקת דרך סוכנות מורשית או ישירות מול הרשות לתיירות, ומשלם היטב פיתוח בר-קיימא של 100 דולר לאדם ללילה - נכון להיום ובכפוף לשינויים - בנוסף לעלות הטיול עצמו. יש הנחות לילדים. הכניסה היחידה שאינה דורשת את ההיטב היא לאזרחי הודו. תכננו את התקציב סביב המספר הזה מהרגע הראשון.',
       currency:
@@ -1344,7 +1344,7 @@ export const countries: Country[] = [
     summary:
       'מולדובה היא המדינה הפחות מבוקרת באירופה, וזו בדיוק הסיבה להגיע. יש בה שני מרתפי היין הגדולים בעולם - עיר תת-קרקעית שנוסעים בה ברכב - מנזרים חצובים בסלע מעל נהר, וכפרים שהזמן עצר בהם. לישראלים יש כאן גם שכבה נוספת: קישינב הייתה מרכז יהודי ענק, ושם הפוגרום של 1903 שינה את תולדות הציונות. הכל קרוב, זול מאוד ואפשר לכסות במסע של ארבעה עד חמישה ימים.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Orheiul_vechi3.jpg/960px-Orheiul_vechi3.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Orhei_Vechi%2C_Moldova_-_Flickr_-_Dave_Proffer_(14).jpg/500px-Orhei_Vechi%2C_Moldova_-_Flickr_-_Dave_Proffer_(14).jpg',
     practical: {
       visa: 'ישראלים פטורים מאשרה לשהייה של עד 90 יום בתוך חצי שנה, נכון להיום ובכפוף לשינויים. הדרכון צריך להיות בתוקף לפחות שלושה חודשים מעבר לתאריך היציאה המתוכנן. מולדובה אינה חברה באיחוד האירופי ואינה במרחב שנגן, ולכן הימים כאן אינם נספרים במכסת שנגן.',
       currency:
@@ -1363,7 +1363,7 @@ export const countries: Country[] = [
     summary:
       'בוליביה היא המדינה הגבוהה, הזולה והפראית ביותר בדרום אמריקה, ומזה עשרות שנים היא תחנה מרכזית במסלול של מטיילים ישראלים. הכוכב שלה הוא סלאר דה אויוני, מדבר המלח הגדול בעולם, שבעונה הלחה הופך למראה ענקית. סביבו יש לגונות אדומות וירוקות, גייזרים בגובה ארבעת אלפים ומאתיים מטר ופלמינגו שחי במים ששייכים לנוף אחר לגמרי. הכל דורש התאקלמות רצינית לגובה.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Wet_season_on_Salar_de_Uyuni.jpg/960px-Wet_season_on_Salar_de_Uyuni.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Isla_del_Pescado%2C_Salar_de_Uyuni%2C_Bolivia%2C_2016-02-04%2C_DD_38.JPG/500px-Isla_del_Pescado%2C_Salar_de_Uyuni%2C_Bolivia%2C_2016-02-04%2C_DD_38.JPG',
     practical: {
       visa: 'בנובמבר 2025 ביטלה בוליביה את חובת האשרה לישראלים, והשהייה מותרת כיום עד 90 יום עם דרכון בתוקף בלבד. היחסים הדיפלומטיים בין המדינות חודשו רשמית בדצמבר 2025. זהו שינוי טרי בכיוון החיובי, אבל בדיוק בגלל זה חובה לוודא את המצב מול נציגות בוליביה סמוך לנסיעה, ולעקוב אחר אזהרות המטה לביטחון לאומי.',
       currency:
@@ -1382,7 +1382,7 @@ export const countries: Country[] = [
     summary:
       'גואטמלה היא הלב של עולם המאיה ואחת התחנות הוותיקות במסלול הישראלי בדרום ומרכז אמריקה. במרחק של שעות ספורות זו מזו יש בה עיר קולוניאלית שלמה עם רחובות אבן והרי געש מעשנים מעליה, אגם בלוע געשי מוקף כפרים אינדיאניים, שוק ילידי שפועל מאות שנים, ופירמידות טיקאל שמתנשאות מעל חופת הג׳ונגל. הכל זול, צבעוני ואינטנסיבי.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Volcanoes_of_lake_Atitlan.jpg/960px-Volcanoes_of_lake_Atitlan.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Lago_Atitlan%2C_seen_from_San_Marcos.jpg/500px-Lago_Atitlan%2C_seen_from_San_Marcos.jpg',
     practical: {
       visa: 'ישראלים פטורים מאשרה ומקבלים חותמת של 90 יום בכניסה, נכון להיום ובכפוף לשינויים. הדרכון צריך להיות בתוקף לפחות שישה חודשים. שימו לב להסכם CA-4: תשעים הימים הם מכסה משותפת לגואטמלה, אל סלוודור, הונדורס וניקרגואה יחד, ומעבר ביניהן אינו מאפס את הספירה. יציאה למקסיקו, לבליז או לקוסטה ריקה כן פותחת תקופה חדשה.',
       currency:
@@ -1401,7 +1401,7 @@ export const countries: Country[] = [
     summary:
       'הפיליפינים הן ארכיפלג של יותר משבעת אלפים איים, ובהן כמה מהחופים והלגונות היפים באסיה - בלי ההמונים של תאילנד. הכוכב הוא פלאוואן: צוקי גיר שעולים מתוך מים בצבע בלתי אפשרי, לגונות נסתרות שנכנסים אליהן בקיאק, ואתרי צלילה מהטובים בעולם. האנגלית מדוברת כמעט אצל כולם, וזה הופך את הנסיעה לפשוטה בהרבה משנראה על המפה.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/El_Nido_Bay_December_2018.jpg/960px-El_Nido_Bay_December_2018.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Isola_di_coron%2C_baia_nei_pressi_del_lago_kayangan_06.jpg/500px-Isola_di_coron%2C_baia_nei_pressi_del_lago_kayangan_06.jpg',
     practical: {
       visa: 'לישראלים יש כאן הסדר מיוחד: פטור מאשרה לשהייה של עד 59 יום, ארוך משמעותית מהשלושים שמקבלים רוב הלאומים, נכון להיום ובכפוף לשינויים. נדרש דרכון בתוקף לשישה חודשים לפחות מעבר לתאריך היציאה וכרטיס יציאה מהמדינה. כמו כן נדרש רישום מקוון במערכת eTravel בימים שלפני הנחיתה - ללא עלות, אבל בלעדיו מעכבים בשדה.',
       currency:
@@ -1420,7 +1420,7 @@ export const countries: Country[] = [
     summary:
       'פנמה היא רצועה צרה שמחברת בין שתי אמריקות ומפרידה בין שני אוקיינוסים, ובשעתיים נסיעה אפשר לעבור בה מחוף הים הקריבי לחוף האוקיינוס השקט. יש בה עיר גדולה עם קו רקיע וקסקו ויכו הקולוניאלי, את תעלת פנמה שעדיין מרשימה מקרוב, איים קריביים כמעט ריקים בשליטת בני הגונה, והרי געש קרירים עם מטעי קפה. הדולר האמריקאי הוא המטבע, וזה מפשט הכל.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Panama_Canal_-_Pacific_Side_Entrance.jpg/960px-Panama_Canal_-_Pacific_Side_Entrance.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Isla_Perro_en_la_Comarca_Guna_Yala.JPG/500px-Isla_Perro_en_la_Comarca_Guna_Yala.JPG',
     practical: {
       visa: 'ישראלים פטורים מאשרה לשהייה של עד 90 יום, נכון להיום ובכפוף לשינויים. נדרש דרכון בתוקף לשישה חודשים לפחות. בכניסה נהוג לבקש כרטיס יציאה מהמדינה והוכחת אמצעים כספיים, ולעיתים באמת בודקים - שווה להגיע עם כרטיס המשך מודפס.',
       currency:
@@ -1439,7 +1439,7 @@ export const countries: Country[] = [
     summary:
       'אקוודור היא הקטנה שבמדינות האנדים, וזה בדיוק היתרון שלה: בתוך כמה שעות נסיעה עוברים מעיר קולוניאלית בגובה 2,850 מטר להר געש מושלג, מאגם בלוע ירוק לעיירת מפלים בשער האמזונס. קיטו הייתה האתר הראשון שהוכרז כמורשת עולמית, קו המשווה עובר ממש בפאתיה, והמדינה משתמשת בדולר האמריקאי. מכאן גם יוצאים לאיי גלפגוס.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Panorama_quilotoa_crater_lake_ecuador.jpg/960px-Panorama_quilotoa_crater_lake_ecuador.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Cotopaxi_volcano_2008-06-27T1322.jpg/500px-Cotopaxi_volcano_2008-06-27T1322.jpg',
     practical: {
       visa: 'ישראלים פטורים מאשרה לשהייה של עד 90 יום בשנה קלנדרית, נכון להיום ובכפוף לשינויים. נדרש דרכון בתוקף לשישה חודשים. בכניסה עשויים לבקש כרטיס יציאה וביטוח בריאות בתוקף - ביטוח נסיעות הוא דרישה רשמית לתיירים באקוודור, וכדאי להחזיק אישור מודפס.',
       currency:
@@ -1458,7 +1458,7 @@ export const countries: Country[] = [
     summary:
       'מאוריציוס היא אי געשי באוקיינוס ההודי, כאלפיים קילומטרים ממזרח לאפריקה, ובגודל של פחות מחמישית ישראל. מקיפה אותה שרשרת שוניות שיוצרת לגונה רדודה ושקטה כמעט לכל אורך החוף, ובפנים האי הרים חדים, יערות גשם ומפלים. האוכלוסייה הודית, אפריקאית, סינית וצרפתית גם יחד, וזה מורגש בכל דבר: בשפות, במקדשים ובאוכל. יעד יקר יחסית אבל שקט ובטוח.',
     photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Underwater_waterfall_Mauritius_HDR.jpg/960px-Underwater_waterfall_Mauritius_HDR.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Le_Morne_Peninsula_in_Mauritius_(53697779236).jpg/500px-Le_Morne_Peninsula_in_Mauritius_(53697779236).jpg',
     practical: {
       visa: 'ישראלים פטורים מאשרה לשהייה של עד 90 יום, נכון להיום ובכפוף לשינויים. הדרכון צריך להיות בתוקף לכל תקופת השהייה, ובכניסה מבקשים כרטיס חזור, כתובת לינה והוכחת אמצעים. לפני הטיסה יש למלא באינטרנט את טופס הכניסה הממשלתי המאוחד, ולשמור את האישור.',
       currency:
