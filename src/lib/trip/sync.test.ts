@@ -82,3 +82,45 @@ test('גזימת מצבות: לפי גיל ולפי תקרה', () => {
   assert.equal(Object.keys(pruneTombstones(many, now)).length, 200);
   assert.deepEqual(pruneTombstones(undefined), {});
 });
+
+/**
+ * הבאג שנתנאל דיווח עליו בפעם השנייה: "מחקתי שניים מהם לפני זמן מה, והם חזרו."
+ *
+ * המצבות עצמן עובדות. מה ששבר אותן הוא **החתמה מחדש**: `upsertTrip` בהקשר
+ * חתם `updatedAt: Date.now()` על כל טיול, כולל טיול שהגיע מהשרת בלי שינוי,
+ * ו-`AccountSync` השתמש בו כדי להחיל את תוצאת המשיכה. לכן **עצם ההתחברות
+ * במכשיר שני הפכה טיול ישן ל"נערך עכשיו"**, והדחיפה שאחריה כתבה אותו לשרת עם
+ * חותמת מאוחרת מהמחיקה. מאותו רגע המיזוג עושה בדיוק מה שנתבקש - "עריכה
+ * מאוחרת מהמחיקה מנצחת" - ומחזיר את הטיול לחיים בכל המכשירים, והמצבה אבודה.
+ *
+ * הכלל לא השתנה. מה שהשתנה הוא שהחלת מצב מהשרת מפסיקה להתחזות לעריכה.
+ */
+test('a device that only PULLED a trip must not restamp it into an edit that beats a deletion', () => {
+  const T0 = 1_000; // הטיול נוצר ונערך לאחרונה
+  const T1 = 2_000; // מכשיר א׳ מחק אותו
+  const T2 = 3_000; // מכשיר ב׳ התחבר ומשך
+
+  const trip = { id: 'a', name: 'וינה', citySlugs: [], days: [], createdAt: T0, updatedAt: T0 };
+
+  // מכשיר ב׳ מושך את הטיול (עדיין בלי לדעת על המחיקה - הוא התחבר לפניה)
+  const pulled = mergeTrips([], [trip], {}, {});
+  assert.equal(pulled.applyLocally.length, 1);
+
+  // ההחלה הישנה: החתמה מחדש ל"עכשיו". זה כל ההבדל.
+  const restamped = { ...pulled.applyLocally[0], updatedAt: T2 };
+  const applied = { ...pulled.applyLocally[0] }; // ההחלה הנכונה: כפי שהגיע
+
+  // מכשיר א׳ מושך אחרי שמכשיר ב׳ דחף. המצבה שלו היא T1.
+  const withRestamp = mergeTrips([], [restamped], { a: T1 }, { a: T1 });
+  const withoutRestamp = mergeTrips([], [applied], { a: T1 }, { a: T1 });
+
+  assert.equal(withRestamp.applyLocally.length, 1, 'הבאג: החתמה מחדש מחזירה את הטיול לחיים');
+  assert.equal(withoutRestamp.applyLocally.length, 0, 'בלי החתמה מחדש המחיקה מחזיקה');
+});
+
+/** עריכה אמיתית אחרי המחיקה עדיין מנצחת - הכלל לא נחלש, רק הפסיק לירות לבד */
+test('a REAL edit after the deletion still wins', () => {
+  const trip = { id: 'a', name: 'וינה', citySlugs: [], days: [], createdAt: 1_000, updatedAt: 5_000 };
+  const merged = mergeTrips([], [trip], { a: 2_000 }, { a: 2_000 });
+  assert.equal(merged.applyLocally.length, 1);
+});

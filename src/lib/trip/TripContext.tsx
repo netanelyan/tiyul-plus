@@ -23,6 +23,12 @@ interface TripApi {
    */
   deleted: Record<string, number>;
   /**
+   * טיולים שהגיעו מהשרת: מוחלים **כפי שהם**, בלי חותמת חדשה ובלי לגעת
+   * בטיול הפתוח. שימוש ב-`upsertTrip` כאן הוא הבאג שהחזיר טיולים מחוקים
+   * לחיים - ראו את ההסבר המלא ליד המימוש.
+   */
+  applyRemoteTrips: (trips: Trip[]) => void;
+  /**
    * מצבות שהגיעו מהשרת (מכשיר אחר מחק): מוחק מקומית ורושם את המצבה, אלא
    * אם הגרסה המקומית נערכה **אחרי** המחיקה - אז העריכה המאוחרת מנצחת,
    * בדיוק כמו בכל מיזוג אחר.
@@ -81,9 +87,9 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
 
   const currentTrip = trips.find((t) => t.id === currentId) ?? null;
 
-  // כל מוטציה מקבלת חותמת updatedAt - שכבת הסנכרון לחשבון ממזגת לפי
-  // "המאוחר מנצח" בין מכשירים. גם עדכונים שמגיעים מהשרת נחתמים מחדש
-  // (הד חוזר יחיד ולא מזיק - התוכן זהה והמיזוג מתכנס).
+  // כל מוטציה מקומית מקבלת חותמת updatedAt - שכבת הסנכרון ממזגת לפי
+  // "המאוחר מנצח" בין מכשירים. **מצב שמגיע מהשרת אינו מוטציה** ואסור לו
+  // לקבל חותמת חדשה; הוא עובר דרך `applyRemoteTrips`.
   const update = useCallback((id: string, fn: (t: Trip) => Trip) => {
     setTrips((prev) => prev.map((t) => (t.id === id ? { ...fn(t), updatedAt: Date.now() } : t)));
   }, []);
@@ -165,6 +171,29 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     // המצבה נרשמת יחד עם המחיקה, לא אחריה: היא מה שמונע החזרה לחיים
     // ע"י משיכה מהשרת שכבר הייתה באוויר כשהמשתמש לחץ מחיקה.
     setDeleted((prev) => ({ ...prev, [id]: Date.now() }));
+  }, []);
+
+  /**
+   * החלת טיולים שהגיעו מהשרת - **בלי להתחזות לעריכה**.
+   *
+   * `upsertTrip` חותם `updatedAt: Date.now()` בכוונה, כי הוא נקרא כשמישהו
+   * באמת שינה משהו. `AccountSync` השתמש בו גם כדי להחיל את תוצאת המשיכה,
+   * ובזה נשבר כל מנגנון המצבות: **עצם ההתחברות במכשיר שני הפכה טיול ישן
+   * ל"נערך עכשיו"**, הדחיפה שאחריה כתבה אותו לשרת עם חותמת מאוחרת מהמחיקה,
+   * והמיזוג - בצדק, לפי הכלל "עריכה מאוחרת מנצחת" - החזיר אותו לחיים בכל
+   * המכשירים. זה מה שנתנאל ראה: מחק שניים, והם חזרו.
+   *
+   * לכן כאן: החותמת נשמרת כפי שהגיעה, המצבה **לא** נמחקת (רק יצירה או
+   * עריכה מקומית מפורשת מבטלות מצבה), וה-currentId לא נחטף - התחברות לא
+   * אמורה להחליף למשתמש את הטיול הפתוח.
+   */
+  const applyRemoteTrips = useCallback((incoming: Trip[]) => {
+    if (incoming.length === 0) return;
+    setTrips((prev) => {
+      const byId = new Map(prev.map((t) => [t.id, t]));
+      for (const t of incoming) byId.set(t.id, t);
+      return [...byId.values()];
+    });
   }, []);
 
   const applyRemoteDeletions = useCallback((tombstones: Record<string, number>) => {
@@ -341,6 +370,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         currentId,
         hydrated,
         deleted,
+        applyRemoteTrips,
         applyRemoteDeletions,
         setCurrentId,
         createTrip,

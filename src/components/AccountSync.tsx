@@ -58,8 +58,10 @@ export default function AccountSync() {
         deletedRef.current,
         pulled.tombstones,
       );
+      // **לא `upsertTrip`.** הוא חותם `updatedAt: Date.now()`, וזה הפך כל
+      // התחברות לעריכה מזויפת שמנצחת מחיקה אמיתית - ראו ההסבר ב-TripContext.
       applyingRef.current = applyLocally.length > 0;
-      for (const t of applyLocally) trip.upsertTrip(t);
+      trip.applyRemoteTrips(applyLocally);
       if (Object.keys(applyDeletions).length > 0) trip.applyRemoteDeletions(applyDeletions);
       if (Object.keys(writeRemotely).length > 0) {
         if (await writeTombstones(supabase, writeRemotely))
