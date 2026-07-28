@@ -8,28 +8,60 @@ import type { Trip } from './types';
 
 const KEY = 'tiyul-plus:trips:v1';
 
+/**
+ * מצבות (tombstones): מתי כל טיול נמחק.
+ *
+ * **למה זה חייב להיות כאן ולא רק "השורה נעלמה".** כל שינוי אחר בטיול נושא
+ * `updatedAt`, ולכן המיזוג עם החשבון יודע להכריע "המאוחר מנצח". מחיקה, לעומת
+ * זאת, התבטאה עד היום רק בהיעדר - ולהיעדר אין חותמת. כל עותק מרוחק, גם מ-
+ * snapshot שנקרא רגע לפני המחיקה, "ניצח" את המחיקה והחזיר את הטיול לחיים.
+ * זה הבאג שנתנאל דיווח עליו: מוחקים, מרעננים, והטיול חוזר.
+ */
+const TOMBSTONE_TTL_MS = 90 * 24 * 60 * 60 * 1000;
+const MAX_TOMBSTONES = 200;
+
 export interface TripState {
   trips: Trip[];
   currentId: string | null;
+  /** id של טיול שנמחק → מתי (ms). נגזם לפי גיל ולפי מספר. */
+  deleted?: Record<string, number>;
+}
+
+const EMPTY: TripState = { trips: [], currentId: null, deleted: {} };
+
+/** גזימה: מצבה בת 90 יום אין לה מה להגן עליו, ורשימה בלי תקרה גדלה לנצח. */
+export function pruneTombstones(
+  deleted: Record<string, number> | undefined,
+  now = Date.now(),
+): Record<string, number> {
+  if (!deleted) return {};
+  const fresh = Object.entries(deleted)
+    .filter(([, at]) => typeof at === 'number' && Number.isFinite(at) && now - at < TOMBSTONE_TTL_MS)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, MAX_TOMBSTONES);
+  return Object.fromEntries(fresh);
 }
 
 export function loadTrips(): TripState {
-  if (typeof window === 'undefined') return { trips: [], currentId: null };
+  if (typeof window === 'undefined') return { ...EMPTY };
   try {
     const raw = window.localStorage.getItem(KEY);
-    if (!raw) return { trips: [], currentId: null };
+    if (!raw) return { ...EMPTY };
     const parsed = JSON.parse(raw) as TripState;
-    if (!Array.isArray(parsed.trips)) return { trips: [], currentId: null };
-    return parsed;
+    if (!Array.isArray(parsed.trips)) return { ...EMPTY };
+    return { ...parsed, deleted: pruneTombstones(parsed.deleted) };
   } catch {
-    return { trips: [], currentId: null };
+    return { ...EMPTY };
   }
 }
 
 export function saveTrips(state: TripState): void {
   if (typeof window === 'undefined') return;
   try {
-    window.localStorage.setItem(KEY, JSON.stringify(state));
+    window.localStorage.setItem(
+      KEY,
+      JSON.stringify({ ...state, deleted: pruneTombstones(state.deleted) }),
+    );
   } catch {
     // אחסון מלא/חסום - מתעלמים בשקט, המצב נשאר בזיכרון
   }

@@ -17,6 +17,17 @@ interface TripApi {
   currentTrip: Trip | null;
   currentId: string | null;
   hydrated: boolean;
+  /**
+   * id של טיול שנמחק → מתי. שכבת הסנכרון קוראת מכאן כדי לא להחזיר לחיים
+   * טיול שנמחק (ראו ההסבר ב-`storage.ts`).
+   */
+  deleted: Record<string, number>;
+  /**
+   * מצבות שהגיעו מהשרת (מכשיר אחר מחק): מוחק מקומית ורושם את המצבה, אלא
+   * אם הגרסה המקומית נערכה **אחרי** המחיקה - אז העריכה המאוחרת מנצחת,
+   * בדיוק כמו בכל מיזוג אחר.
+   */
+  applyRemoteDeletions: (tombstones: Record<string, number>) => void;
   setCurrentId: (id: string | null) => void;
   createTrip: (name: string, citySlug?: string) => Trip;
   createTripFrom: (trip: Trip) => void; // מוסיף טיול מוכן (אשף/תבנית)
@@ -44,14 +55,20 @@ export function useTrip(): TripApi {
 export function TripProvider({ children }: { children: React.ReactNode }) {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [currentId, setCurrentId] = useState<string | null>(null);
+  const [deleted, setDeleted] = useState<Record<string, number>>({});
   const [hydrated, setHydrated] = useState(false);
   const loaded = useRef(false);
+  // הערך העדכני באופן סינכרוני - נדרש כדי להחליט על currentId בלי להסתמך
+  // על ה-updater של React (אותה מלכודת שתוקנה כבר ב-AuthContext)
+  const tripsRef = useRef<Trip[]>(trips);
+  tripsRef.current = trips;
 
   // טעינה ראשונית מהדפדפן (אחרי mount, כדי לא לשבור SSR)
   useEffect(() => {
     const state = loadTrips();
     setTrips(state.trips);
     setCurrentId(state.currentId);
+    setDeleted(state.deleted ?? {});
     loaded.current = true;
     setHydrated(true);
   }, []);
@@ -59,8 +76,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   // שמירה על כל שינוי
   useEffect(() => {
     if (!loaded.current) return;
-    saveTrips({ trips, currentId });
-  }, [trips, currentId]);
+    saveTrips({ trips, currentId, deleted });
+  }, [trips, currentId, deleted]);
 
   const currentTrip = trips.find((t) => t.id === currentId) ?? null;
 
@@ -90,21 +107,39 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     [],
   );
 
-  const createTripFrom = useCallback((trip: Trip) => {
-    const stamped = { ...trip, updatedAt: Date.now() };
-    setTrips((prev) => [...prev, stamped]);
-    setCurrentId(stamped.id);
+  /** הוספה/עדכון מקומיים מפורשים מבטלים מצבה קיימת - מי שיצר מנצח מחיקה ישנה */
+  const clearTombstone = useCallback((id: string) => {
+    setDeleted((prev) => {
+      if (!(id in prev)) return prev;
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
   }, []);
 
-  const upsertTrip = useCallback((trip: Trip) => {
-    const stamped = { ...trip, updatedAt: Date.now() };
-    setTrips((prev) =>
-      prev.some((t) => t.id === stamped.id)
-        ? prev.map((t) => (t.id === stamped.id ? stamped : t))
-        : [...prev, stamped],
-    );
-    setCurrentId(stamped.id);
-  }, []);
+  const createTripFrom = useCallback(
+    (trip: Trip) => {
+      const stamped = { ...trip, updatedAt: Date.now() };
+      setTrips((prev) => [...prev, stamped]);
+      setCurrentId(stamped.id);
+      clearTombstone(stamped.id);
+    },
+    [clearTombstone],
+  );
+
+  const upsertTrip = useCallback(
+    (trip: Trip) => {
+      const stamped = { ...trip, updatedAt: Date.now() };
+      setTrips((prev) =>
+        prev.some((t) => t.id === stamped.id)
+          ? prev.map((t) => (t.id === stamped.id ? stamped : t))
+          : [...prev, stamped],
+      );
+      setCurrentId(stamped.id);
+      clearTombstone(stamped.id);
+    },
+    [clearTombstone],
+  );
 
   const duplicateTrip = useCallback((id: string) => {
     setTrips((prev) => {
@@ -127,6 +162,34 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   const deleteTrip = useCallback((id: string) => {
     setTrips((prev) => prev.filter((t) => t.id !== id));
     setCurrentId((cur) => (cur === id ? null : cur));
+    // המצבה נרשמת יחד עם המחיקה, לא אחריה: היא מה שמונע החזרה לחיים
+    // ע"י משיכה מהשרת שכבר הייתה באוויר כשהמשתמש לחץ מחיקה.
+    setDeleted((prev) => ({ ...prev, [id]: Date.now() }));
+  }, []);
+
+  const applyRemoteDeletions = useCallback((tombstones: Record<string, number>) => {
+    const entries = Object.entries(tombstones);
+    if (entries.length === 0) return;
+    setDeleted((prev) => {
+      const next = { ...prev };
+      for (const [id, at] of entries) next[id] = Math.max(next[id] ?? 0, at);
+      return next;
+    });
+    setTrips((prev) =>
+      prev.filter((t) => {
+        const at = tombstones[t.id];
+        if (at === undefined) return true;
+        return (t.updatedAt ?? t.createdAt) > at; // נערך אחרי המחיקה - נשאר
+      }),
+    );
+    setCurrentId((cur) => {
+      if (!cur) return cur;
+      const at = tombstones[cur];
+      if (at === undefined) return cur;
+      const local = tripsRef.current.find((t) => t.id === cur);
+      const survived = local ? (local.updatedAt ?? local.createdAt) > at : false;
+      return survived ? cur : null;
+    });
   }, []);
 
   const renameTrip = useCallback(
@@ -277,6 +340,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         currentTrip,
         currentId,
         hydrated,
+        deleted,
+        applyRemoteDeletions,
         setCurrentId,
         createTrip,
         createTripFrom,
