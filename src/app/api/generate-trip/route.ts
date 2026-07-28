@@ -293,9 +293,15 @@ export async function POST(request: Request) {
   const unitsUsed = process.env.ANTHROPIC_API_KEY ? await aiUnitsUsedToday(caller.id) : 0;
   const aiAllowed = daily.ok && unitsUsed < limits.aiUnitsPerDay;
 
+  // קוראים כטקסט קודם וחוסמים גוף עצום לפני JSON.parse - אותה הגנה שיש
+  // ב-/api/chat. בלעדיה אפשר להעסיק את השרת בפרסור של מגה-בייטים.
   let body: Record<string, unknown> = {};
+  const rawBody = await request.text();
+  if (rawBody.length > 20_000) {
+    return Response.json({ error: 'הבקשה גדולה מדי - נסו לקצר את התיאור' }, { status: 413 });
+  }
   try {
-    body = (await request.json()) as Record<string, unknown>;
+    body = JSON.parse(rawBody) as Record<string, unknown>;
   } catch {
     /* גוף לא תקין → prefs חסרות */
   }
@@ -349,5 +355,16 @@ export async function POST(request: Request) {
         }
       : generateTrip(prefs, destinations, name, tripPreferences);
 
-  return Response.json({ trip, understood: buildUnderstood(prefs, party, interests) });
+  // מעל המכסה הטיול עדיין נבנה (הבנייה המקומית חינמית), אבל הטקסט החופשי
+  // של המטייל **לא** נקרא - וזה חייב להיאמר. "בנינו לך טיול" בלי לספר
+  // שהבקשה החופשית לא נלקחה בחשבון הוא בדיוק סוג השקט שנראה כמו באג.
+  const notice =
+    notes && !aiAllowed
+      ? 'הגעתם למכסת ה-AI היומית, ולכן בניתי את המסלול מהבחירות שסימנתם בלבד - הטקסט החופשי לא נקרא הפעם. המכסה מתאפסת פעם ביום, ואפשר לערוך את המסלול ידנית או להמשיך עם הסוכן מחר.'
+      : undefined;
+  return Response.json({
+    trip,
+    understood: buildUnderstood(prefs, party, interests),
+    ...(notice ? { notice } : {}),
+  });
 }

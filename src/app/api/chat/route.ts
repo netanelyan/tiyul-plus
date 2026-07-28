@@ -25,7 +25,7 @@ import type { Destination } from '@/lib/types';
 import { exploreDestination, type ExploreScope } from '@/lib/explore/resolver';
 import { exploredToDestination, sanitizeExploredDestinations } from '@/lib/explore/adapter';
 import { checkLimit, aiUnitsUsedToday, recordAiUnits } from '@/lib/server/limits';
-import { resolveCaller } from '@/lib/server/identity';
+import { resolveCaller, type Caller } from '@/lib/server/identity';
 import { PLAN_LIMITS, aiUnits } from '@/lib/plans';
 
 /**
@@ -601,8 +601,19 @@ async function runAgent(
   kosherHint: boolean,
   explored: Destination[],
   meter: { units: number },
+  caller: Caller,
 ): Promise<void> {
   let working = clientTrip;
+  /**
+   * שני הכלים היחידים שיוצאים לשירות חיצוני בחינם (ויקיפדיה, OpenStreetMap),
+   * ולכן שני הכלים היחידים שאפשר להפעיל דרכם עומס על מישהו אחר. מכסה יומית
+   * לאדם, **ותקרה נוספת לתור אחד** - תור אחד יכול להריץ עד 16 איטרציות, ואין
+   * שום בקשה אמיתית שצריכה בתוכה יותר משלוש חקירות או שישה איתורים.
+   */
+  const perTurn = { explores: 0, geocodes: 0 };
+  const MAX_EXPLORES_PER_TURN = 3;
+  const MAX_GEOCODES_PER_TURN = 6;
+  const planLimits = PLAN_LIMITS[caller.plan];
   const actions: string[] = [];
   let touched = false;
   let full = '';
@@ -743,7 +754,24 @@ async function runAgent(
             action: undefined,
             quickReplies: undefined,
           };
+        } else if (
+          perTurn.explores >= MAX_EXPLORES_PER_TURN ||
+          !checkLimit('explore-day', caller.id, planLimits.exploresPerDay, 24 * 60 * 60 * 1000).ok
+        ) {
+          // המכסה נאמרת למודל כתוצאת כלי, והוא זה שמסביר אותה למטייל בשיחה -
+          // זה הרבה יותר טוב מהודעת שגיאה, כי הוא יכול להציע במקום זה יעדים
+          // מהקטלוג. חשוב שיהיה כתוב במפורש שזו מכסה ולא תקלה, אחרת הוא
+          // ינסה שוב באיטרציה הבאה.
+          out = {
+            trip: working,
+            ok: false,
+            message:
+              'הגעתם למכסת חקירת היעדים להיום (חקירה פונה למקורות ציבוריים חינמיים, ולכן היא מוגבלת). זו מכסה ולא תקלה - אל תנסה שוב בתור הזה. אמור למטייל בעברית ובנימוס שמכסת חקירת היעדים להיום נגמרה ושהיא מתאפסת מחר, והצע שני-שלושה יעדים מהקטלוג שכן זמינים עכשיו.',
+            action: undefined,
+            quickReplies: undefined,
+          };
         } else {
+          perTurn.explores += 1;
           // טווח החקירה: מי שיש לו (או רוצה) רכב לא מוגבל לרדיוס העיר.
           // המודל יכול לדרוס במפורש, וברירת המחדל נגזרת ממצב ההזמנות.
           const car = working?.preferences?.booking?.car;
@@ -800,11 +828,20 @@ async function runAgent(
         const context = city
           ? [city.nameLocal || city.name, country?.nameLocal].filter(Boolean).join(', ')
           : undefined;
+        // מעל המכסה הסיכה עדיין נשמרת - פשוט בלי מיקום, ומסומנת "לא אומת",
+        // בדיוק כמו כישלון איתור. אין שום סיבה שמכסה תמנע מהמטייל לרשום
+        // שהוא הזמין מלון.
+        const geoAllowed =
+          perTurn.geocodes < MAX_GEOCODES_PER_TURN &&
+          checkLimit('geocode-day', caller.id, planLimits.geocodesPerDay, 24 * 60 * 60 * 1000).ok;
         let located: ResolvedPinLocation | null = null;
-        try {
-          located = pinName ? await geocodePlace(pinName, context) : null;
-        } catch {
-          located = null;
+        if (geoAllowed && pinName) {
+          perTurn.geocodes += 1;
+          try {
+            located = await geocodePlace(pinName, context);
+          } catch {
+            located = null;
+          }
         }
         out = executeAgentTool(working, block.name, input, explored, located);
       } else {
@@ -1016,7 +1053,7 @@ export async function POST(request: Request) {
       if (process.env.ANTHROPIC_API_KEY && (await agentEnabled())) {
         const meter = { units: 0 };
         try {
-          await runAgent(messages, clientTrip, send, kosherHint, explored, meter);
+          await runAgent(messages, clientTrip, send, kosherHint, explored, meter, caller);
         } catch (err) {
           // אסור להשתיק: בלי הלוג הזה אי אפשר לדעת מה נפל בפרודקשן
           console.error('[chat] agent turn failed', err);
@@ -1026,7 +1063,7 @@ export async function POST(request: Request) {
           let recovered = false;
           if (!emitted && isTransient(err)) {
             try {
-              await runAgent(messages, clientTrip, send, kosherHint, explored, meter);
+              await runAgent(messages, clientTrip, send, kosherHint, explored, meter, caller);
               recovered = true;
             } catch (retryErr) {
               console.error('[chat] agent retry failed', retryErr);

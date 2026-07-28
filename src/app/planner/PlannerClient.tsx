@@ -58,7 +58,7 @@ export default function PlannerClient({
       {/* מה ה-AI הבין מהבקשה - שורה אחת, ניתנת לסגירה */}
       {aiAck && (
         <div className="rise-in mb-4 flex items-start justify-between gap-3 rounded-xl bg-sunset/10 px-4 py-3 ring-1 ring-sunset/25 print:hidden">
-          <p className="text-sm font-semibold leading-relaxed text-night">{aiAck}</p>
+          <p className="whitespace-pre-line text-sm font-semibold leading-relaxed text-night">{aiAck}</p>
           <button
             onClick={() => setAiAck(null)}
             aria-label="סגירה"
@@ -144,13 +144,20 @@ function Onboarding({
         headers: { 'Content-Type': 'application/json', ...(await authHeader()) },
         body: JSON.stringify({ prefs, party, notes: notes.trim() }),
       });
-      const data = (await res.json()) as { trip?: Trip; understood?: string; error?: string };
+      const data = (await res.json()) as {
+        trip?: Trip;
+        understood?: string;
+        notice?: string;
+        error?: string;
+      };
       if (!data.trip) {
         setError(data.error ?? 'משהו השתבש בדרך - נסו שוב עוד רגע');
         return;
       }
       trip.createTripFrom(data.trip);
-      onDone(data.understood ?? null);
+      // `notice` מגיע כשהמכסה היומית נגמרה והטקסט החופשי לא נקרא - נאמר
+      // באותו באנר, כי טיול שנבנה חלקית בשקט נראה כמו באג
+      onDone([data.understood, data.notice].filter(Boolean).join('\n') || null);
     } catch {
       setError('לא הצלחנו להתחבר לשרת - בדקו את החיבור ונסו שוב');
     } finally {

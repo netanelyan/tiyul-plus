@@ -672,22 +672,27 @@ function PromoRedeem() {
         headers: { 'Content-Type': 'application/json', ...headers },
         body: JSON.stringify({ code }),
       });
-      const data = (await res.json()) as { ok?: boolean; days?: number; error?: string };
+      const data = (await res.json()) as {
+        ok?: boolean;
+        days?: number;
+        error?: string;
+        retryAfterSec?: number;
+      };
       if (data.ok) {
         setMsg({ ok: true, text: `הקוד נפדה - ${data.days} ימי פרימיום נוספו לחשבון.` });
         setCode('');
         await auth.reloadProfile();
       } else {
+        const minutes = Math.max(1, Math.ceil((data.retryAfterSec ?? 3600) / 60));
+        const byError: Record<string, string> = {
+          too_many_attempts: `ניסינו כמה קודים ברצף 🙏 אפשר לנסות שוב בעוד ${minutes} דקות. אם הקוד הגיע במייל, כדאי להעתיק אותו משם במקום להקליד.`,
+          already_redeemed: 'כבר פדיתם את הקוד הזה.',
+          not_signed_in: 'צריך להתחבר כדי לפדות קוד.',
+          unavailable: 'הפדיון לא זמין כרגע. כדאי לנסות שוב בהמשך.',
+        };
         setMsg({
           ok: false,
-          text:
-            data.error === 'already_redeemed'
-              ? 'כבר פדיתם את הקוד הזה.'
-              : data.error === 'not_signed_in'
-                ? 'צריך להתחבר כדי לפדות קוד.'
-                : data.error === 'unavailable'
-                  ? 'הפדיון לא זמין כרגע. כדאי לנסות שוב בהמשך.'
-                  : 'הקוד לא תקף, פג או נגמרו הפדיונות שלו.',
+          text: byError[data.error ?? ''] ?? 'הקוד לא תקף, פג או נגמרו הפדיונות שלו.',
         });
       }
     } catch {

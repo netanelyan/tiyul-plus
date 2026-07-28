@@ -67,6 +67,22 @@ export interface PlanLimits {
    * תמונה עולה למודל הרבה יותר מטקסט, ולכן המכסה נמוכה בכוונה.
    */
   imagesPerDay: number;
+  /**
+   * חקירות יעד ביום (`explore_destination` → ויקיפדיה).
+   *
+   * זו לא עלות של מודל אלא **עלות אצל מישהו אחר**: ויקיפדיה נותנת לנו
+   * שירות בחינם ומבקשת שימוש הוגן, ואין שום סיבה שמשתמש אחד יוכל לשלוח
+   * אליה אלפי חיפושים דרך האתר שלנו. מטייל אמיתי חוקר עיר או שתיים בשיחה.
+   */
+  exploresPerDay: number;
+  /**
+   * איתורי מיקום ביום (`add_pin` → OpenStreetMap/Nominatim).
+   *
+   * Nominatim מוגבל למדיניות של בקשה אחת בשנייה, וה-throttle שלנו הוא
+   * **טורי וגלובלי** - כלומר משתמש אחד ששולח מאה איתורים תוקע את התור
+   * של כולם, וגם מסכן חסימה של הכתובת שלנו. לכן מכסה נפרדת.
+   */
+  geocodesPerDay: number;
 }
 
 export const PLAN_LIMITS: Record<Plan, PlanLimits> = {
@@ -78,6 +94,8 @@ export const PLAN_LIMITS: Record<Plan, PlanLimits> = {
     sharesPerDay: 10,
     importsPerDay: 5,
     imagesPerDay: 3,
+    exploresPerDay: 20,
+    geocodesPerDay: 30,
   },
   premium: {
     chatPerDay: 400,
@@ -87,6 +105,8 @@ export const PLAN_LIMITS: Record<Plan, PlanLimits> = {
     sharesPerDay: 100,
     importsPerDay: 50,
     imagesPerDay: 30,
+    exploresPerDay: 100,
+    geocodesPerDay: 150,
   },
 };
 
@@ -108,6 +128,17 @@ export function aiUnits(usage: {
  * ב-Stripe (STRIPE_PRICE_ID) - חובה לוודא שהשניים תואמים לפני השקה.
  */
 export const PREMIUM_PRICE_ILS = 19.9;
+
+/**
+ * ניסיונות פדיון קוד הטבה. **לא תלוי בתוכנית בכוונה** - זו הגנה מפני
+ * ניחוש קודים ולא מכסת שימוש, ופרימיום לא אמור לקנות זכות לנחש מהר יותר.
+ *
+ * הקוד הוא 3-24 תווים אלפאנומריים, כלומר מרחב שאפשר לסרוק אותו: בלי
+ * הגבלה, חשבון מחובר אחד יכול לנסות אלפי קודים בדקה ולזכות בפרימיום.
+ * חמישה ניסיונות בשעה זה יותר ממה שמישהו צריך כדי להקליד קוד מהמייל.
+ */
+export const PROMO_ATTEMPTS_PER_HOUR = 5;
+export const PROMO_ATTEMPTS_PER_DAY = 20;
 
 /** שורות ההשוואה בעמוד הפרימיום - נגזרות מהמכסות האמיתיות, לא מועתקות */
 export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string }[] = [
