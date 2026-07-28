@@ -1,6 +1,6 @@
 import { PLAN_LIMITS } from '@/lib/plans';
 import { requireRole, denied, ok } from '@/lib/server/admin';
-import { adminSelect } from '@/lib/server/supabaseAdmin';
+import { adminSelect, countAuthUsers } from '@/lib/server/supabaseAdmin';
 
 /**
  * לוח המצב: מה הסוכן עולה, ומי נתקע.
@@ -27,6 +27,10 @@ export async function GET(req: Request) {
     'profiles',
     'select=plan,plan_until,role&limit=5000',
   );
+  // **חשבונות נספרים מ-auth.users ולא מ-profiles.** שורת profiles נוצרת רק
+  // כשמישהו שומר פרופיל, ולכן הספירה הקודמת הראתה "1" כשהיו כמה חשבונות
+  // של בני משפחה שפשוט לא נגעו באזור האישי.
+  const users = await countAuthUsers();
 
   const todayRows = (rows ?? []).filter((r) => r.day === today);
   const byDay = new Map<string, number>();
@@ -51,7 +55,10 @@ export async function GET(req: Request) {
     },
     week: [...byDay.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([day, units]) => ({ day, units })),
     accounts: {
-      total: profiles?.length ?? 0,
+      total: users?.total ?? profiles?.length ?? 0,
+      capped: users?.capped ?? false,
+      /** מתוכם שמרו פרופיל - ההפרש הוא מי שנכנס ולא נגע באזור האישי */
+      withProfile: profiles?.length ?? 0,
       premium: (profiles ?? []).filter(
         (p) => p.plan === 'premium' && (!p.plan_until || Date.parse(p.plan_until) > Date.now()),
       ).length,

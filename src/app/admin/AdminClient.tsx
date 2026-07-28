@@ -43,7 +43,7 @@ interface Stats {
     top: { kind: string; units: number }[];
   };
   week: { day: string; units: number }[];
-  accounts: { total: number; premium: number; admins: number };
+  accounts: { total: number; capped?: boolean; withProfile?: number; premium: number; admins: number };
   freeCap: number;
 }
 
@@ -436,7 +436,10 @@ function StatsCard({
           ['יחידות AI היום', s.today.units.toLocaleString('he-IL')],
           ['קרובים למכסה', String(s.today.nearCap)],
           ['נחסמו במכסה', String(s.today.atCap)],
-          ['חשבונות', s.accounts.total.toLocaleString('he-IL')],
+          [
+            'חשבונות',
+            `${s.accounts.total.toLocaleString('he-IL')}${s.accounts.capped ? '+' : ''}`,
+          ],
           ['פרימיום פעיל', String(s.accounts.premium)],
           ['אדמינים', String(s.accounts.admins)],
           ['מחוברים / אנונימיים', `${s.today.loggedIn} / ${s.today.anonymous}`],
@@ -464,6 +467,19 @@ function StatsCard({
             ))}
           </div>
         </div>
+      )}
+      {/*
+        ההפרש בין חשבונות לבין "מתוכם עם פרופיל" הוא מי שנכנס ולא נגע
+        באזור האישי. הצגתי אותו כי בלעדיו המספר "חשבונות" נראה כמו טעות:
+        לנתנאל היו כמה חשבונות של בני משפחה והלוח הראה 1, כי ספרתי שורות
+        ב-profiles במקום ב-auth.users.
+      */}
+      {typeof s.accounts.withProfile === 'number' && s.accounts.withProfile < s.accounts.total && (
+        <p className="mt-3 text-xs font-medium text-night/45">
+          מתוך {s.accounts.total.toLocaleString('he-IL')} החשבונות,{' '}
+          {s.accounts.withProfile.toLocaleString('he-IL')} שמרו פרופיל (שם, תמונה או דרכון מדינות).
+          השאר נכנסו ולא נגעו באזור האישי - הם חשבונות לכל דבר.
+        </p>
       )}
       {s.today.atCap > 0 && (
         <p className="mt-3 rounded-xl bg-sunset/10 px-3 py-2 text-xs font-semibold text-sunset-deep ring-1 ring-sunset/25">

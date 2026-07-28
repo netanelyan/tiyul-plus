@@ -144,3 +144,42 @@ export async function emailByUserId(userId: string): Promise<string | null> {
     return null;
   }
 }
+
+/**
+ * מספר החשבונות האמיתי, מ-`auth.users` ולא מ-`profiles`.
+ *
+ * ## הבאג שהפונקציה הזאת נולדה ממנה
+ *
+ * לוח המצב הראה "חשבונות: 1" בזמן שלנתנאל היו כמה חשבונות של בני משפחה.
+ * הסיבה: ספרתי שורות ב-`profiles`, ושורה שם נוצרת רק כשמישהו **שומר**
+ * פרופיל (שם תצוגה, תמונה, דרכון מדינות). מי שנכנס והשתמש באתר בלי
+ * לגעת באזור האישי פשוט לא קיים שם.
+ *
+ * המסקנה הכללית: `profiles` היא טבלת העדפות, לא רשימת המשתמשים. רשימת
+ * המשתמשים היא `auth.users`, ואליה מגיעים דרך Admin API של GoTrue.
+ *
+ * דפדוף: GoTrue מחזיר עד `per_page` בכל עמוד ולא מבטיח שדה total, ולכן
+ * מדפדפים עד שעמוד חוזר חלקי. תקרה של 25 עמודות (5,000 חשבונות) שומרת
+ * מפני לופ, ומסומנת ב-`capped` כדי שהמספר לא יוצג כמדויק אם נחתך.
+ */
+export async function countAuthUsers(): Promise<{ total: number; capped: boolean } | null> {
+  if (!adminDbEnabled()) return null;
+  const perPage = 200;
+  let total = 0;
+  for (let page = 1; page <= 25; page++) {
+    try {
+      const res = await fetch(`${url()}/auth/v1/admin/users?page=${page}&per_page=${perPage}`, {
+        headers: headers(),
+        cache: 'no-store',
+      });
+      if (!res.ok) return page === 1 ? null : { total, capped: false };
+      const data = (await res.json()) as { users?: unknown[] };
+      const n = Array.isArray(data.users) ? data.users.length : 0;
+      total += n;
+      if (n < perPage) return { total, capped: false };
+    } catch {
+      return page === 1 ? null : { total, capped: false };
+    }
+  }
+  return { total, capped: true };
+}
