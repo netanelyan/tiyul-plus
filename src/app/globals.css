@@ -42,6 +42,30 @@ body {
      חורגים ברוחב פס-הגלילה כשיש גלילה אנכית. `clip` (ולא `hidden`)
      חותך את החריגה בלי ליצור scroll-container - ה-sticky של ההדר נשמר. */
   overflow-x: clip;
+  /* צבע ברירת המחדל של פקדי טופס (checkbox, radio, סמן טקסט בחלק
+     מהדפדפנים) הוא הכחול של המערכת. הטמעה אחת כאן, ולא utility בכל שדה. */
+  accent-color: var(--color-sunset);
+  caret-color: var(--color-sunset);
+}
+
+/* ===== סימון טקסט =====
+   הפס הכחול שנתנאל דיווח עליו בחיפוש הוא **ברירת המחדל של הדפדפן**:
+   בחירת טקסט מסומנת בכחול מערכת, וזה נראה כמו רכיב זר על רקע קרם וקורל -
+   הכי בולט בשדה החיפוש, כי שם בוחרים ומחליפים טקסט כל הזמן.
+   אין כאן שינוי התנהגות: אותה בחירה בדיוק, בצבעי המותג. */
+::selection {
+  background: color-mix(in srgb, var(--color-sunset) 26%, transparent);
+  color: var(--color-night);
+}
+::-moz-selection {
+  background: color-mix(in srgb, var(--color-sunset) 26%, transparent);
+  color: var(--color-night);
+}
+
+/* הבזק הכחול-אפור של אנדרואיד בכל נגיעה. המצבים הפעילים כבר מסומנים
+   ע"י העיצוב עצמו, ולכן ההבזק הוא רעש בלבד. */
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ===== מצבי נגישות (ווידג'ט הנגישות) - נדלקים ע"י class על <html> ===== */
