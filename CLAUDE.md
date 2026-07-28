@@ -241,6 +241,99 @@ npm run lint
    message.
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
+
+### 2026-07-28 (y) - Kosher: 15 verified venues, and the coordinate route that finally worked
+
+Third item of bundle B. The previous three sessions all stopped at the same
+wall and wrote it down honestly: kosher restaurants and shops have no Wikipedia
+articles, so their coordinates could not be verified from this sandbox. That
+was true. It was also incomplete - **the wall was the geocoder, not the venue**,
+and nobody had gone looking for a different door.
+
+**What is blocked from here, tested this session, not assumed:** Nominatim and
+Photon (robots-disallowed), overpass-api.de and api.openstreetmap.org
+(robots-disallowed), the Wikipedia action API and Wikidata (cache-only),
+overpass mirrors kumi.systems / private.coffee (an ID lookup returns instantly,
+any tag+bbox query times out), openstreetmap.fr (DNS). dbpedia works but was
+throwing 502s all session and rate-limits hard.
+
+**What works: Mapcarta**, which publishes OpenStreetMap-derived coordinates at
+six decimal places on `mapcarta.com/<Name_With_Underscores>` slug URLs - reachable
+by slug, not by search. Plus 2GIS and a few business-specific listings. The rule
+applied to every single one: **accept a coordinate only from a page that also
+prints the venue's street, and only when that street matches the address the
+kashrut source gave.** The pin and the address corroborate each other, which is
+the difference between a verified coordinate and a confident-looking wrong one.
+
+**Fifteen venues added**, each with name, exact street address and supervision
+traced to the venue's own site, a certifying body or a community list:
+
+| city | venues |
+|---|---|
+| new-york | Barnea Bistro, Reserve Cut (OU), Noi Due (OK, dairy), The Kosher Marketplace |
+| buenos-aires | Lo De Victor, Confiteria Malena (Rabbi Chehebar), Super Modelo |
+| dubai | Kikko’s, Rimon Market, Mosaica (all EAKC / Rabbi Duchman) |
+| london | Novellino Bistro, Kosher Kingdom (KLBD), Tony Page |
+| paris | L’As du Fallafel (Beth Din de Paris) |
+| antwerp | Kleinblatt |
+
+**Supervision is recorded as REPORTED, never asserted.** Super Modelo is the
+entry worth reading: the City of Buenos Aires kosher list AND the Chabad
+Recoleta list both carry the shop, and neither publishes its hechsher - so the
+field says exactly that instead of borrowing a plausible one from a neighbour.
+
+**Eleven candidates were dropped rather than guessed**, and the reasons are the
+useful part: Madrid (no venue coordinate verifiable at all - the city gets
+nothing this round); Kingston Kosher (Chabad says Malabia 460, two other sources
+say Vera 532); Aux Délices d’Abraham (the OSM object and the kosher directories
+spell the name differently); Hypercacher Meaux (the only Mapcarta match is the
+Porte de Vincennes branch - **wrong branch is the restaurant version of the
+wrong-city trap**); Hoffy’s and Eighteen in Antwerp, Carmelli and Bread in
+London (absent from OSM); Le Fournil and three more Dubai venues (no
+confirmable address page). Villa Crespo’s dbpedia coordinate is -34.6/-58.45,
+a coarse grid - rejected on the same rule that rejected Ayia Napa.
+
+**The load-bearing sentence stayed load-bearing.** Three cities said "the place
+list is not yet in the catalog". That sentence was true and is now false, so it
+was replaced - not deleted - with an equally honest one naming what is actually
+there (four places in Manhattan, three around Once, three in Dubai) and saying
+plainly that this is a small sample, not a full list. Deleting it to make the
+data look complete is still forbidden; so is leaving a statement standing after
+it stops being true.
+
+**Redundancy caught by looking at the render, not the diff.** The first pass gave
+every entry a `kosherNote` restating its supervision, and the card then printed
+the same fact twice - once in the note, once in the badge. Thirteen notes
+removed; the two that survive add something the badge cannot (Noi Due is dairy
+and fish only; Super Modelo’s hechsher is unpublished). Also removed two
+opening-hours claims I had written from habit and could not source.
+
+**Numbers:** kosher entries 42 to 57, `kosher-market` 4 to 10, cities with kosher
+data 32 to 35, catalog 1,510 to 1,525 places. Validator 0 errors and the same
+44 warnings. Grounding index 218,568 of the 260,000 ceiling. 107 tests, tsc and
+build clean. **22/22 in a real browser** at 1440 and 390 on /kosher: the three
+new cities appear in the directory, search opens them, every entry renders its
+supervision line and the "verify with the venue" caveat, RTL intact, zero
+overflow. Photos: none of the fifteen has one, deliberately - kosher venues have
+no freely-licensed photograph, and the UI already falls back to a category tile.
+
+**Also shipped: `supabase-check.sql`**, because Netanel asked mid-session how he
+could tell which SQL files he had actually run. It is read-only, reports OK or
+MISSING per file with the exact missing object, and queries only the Postgres
+catalog - so it cannot fail on a file that has not been run yet, which is the
+exact failure that cost a round trip when an earlier diagnostic assumed
+`p.plan` existed.
+
+**Next session should know.** (1) Mapcarta slug URLs are now the coordinate route
+for anything without a Wikipedia article - it is worth trying before concluding
+a place cannot be pinned. (2) Madrid, and Antwerp beyond Kleinblatt, are still
+open and are pure coordinate problems, not research problems. (3) The remaining
+big kosher gaps are Milan (not in the catalog at all), Brooklyn, and Rome beyond
+its two Ghetto restaurants. (4) The standing user actions are unchanged: rotate
+the GitHub token, add `SUPABASE_SERVICE_ROLE_KEY` to Vercel, run the SQL files
+that `supabase-check.sql` reports as MISSING, approve the 19.90 ₪ price, supply
+affiliate IDs, fill the accessibility placeholders.
+
 ### 2026-07-27 (x) - Four polish items, and a fixture that invented a fifth
 
 Netanel: "make trip screen be as clean as possible + navbar trips + fix shopping
