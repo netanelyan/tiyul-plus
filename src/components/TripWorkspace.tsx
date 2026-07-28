@@ -409,71 +409,43 @@ export default function TripWorkspace({
             label="כשר"
             onClick={() => setPrefs({ kosher: t.preferences?.kosher === true ? undefined : true })}
           />
-          <ToggleChip
-            active={Boolean(t.preferences?.pace)}
-            label={
-              t.preferences?.pace === 'packed'
-                ? 'קצב: דחוס'
-                : t.preferences?.pace === 'relaxed'
-                  ? 'קצב: רגוע'
-                  : 'קצב'
-            }
-            onClick={() =>
-              setPrefs({
-                pace:
-                  t.preferences?.pace === undefined
-                    ? 'relaxed'
-                    : t.preferences.pace === 'relaxed'
-                      ? 'packed'
-                      : undefined,
-              })
-            }
+          {/*
+            העדפה נבחרת מרשימה, לא מחזורית.
+            קודם כל צ׳יפ כאן היה כפתור שמחליף ערך בכל לחיצה: כדי להגיע
+            ל"שופינג: פחות" היה צריך ללחוץ ארבע פעמים דרך שני ערכים
+            שגויים - **וכל לחיצה נכתבת לטיול ומסונכרנת לחשבון** - בלי
+            שום דרך לדעת מה הסדר או מה האפשרויות. עכשיו לוחצים ורואים
+            את שלוש האפשרויות עם סימון על הנוכחית.
+          */}
+          <PrefSelect
+            label="קצב"
+            current={t.preferences?.pace}
+            options={[
+              { value: 'relaxed', label: 'רגוע' },
+              { value: 'packed', label: 'דחוס' },
+            ]}
+            onPick={(v) => setPrefs({ pace: v })}
           />
-          <ToggleChip
-            active={Boolean(t.preferences?.party)}
-            label={
-              t.preferences?.party
-                ? { couple: 'זוג', family: 'משפחה', friends: 'חברים', solo: 'סולו' }[
-                    t.preferences.party
-                  ]
-                : 'מי נוסע'
-            }
-            onClick={() =>
-              setPrefs({
-                party:
-                  t.preferences?.party === undefined
-                    ? 'couple'
-                    : t.preferences.party === 'couple'
-                      ? 'family'
-                      : t.preferences.party === 'family'
-                        ? 'friends'
-                        : t.preferences.party === 'friends'
-                          ? 'solo'
-                          : undefined,
-              })
-            }
+          <PrefSelect
+            label="מי נוסע"
+            current={t.preferences?.party}
+            options={[
+              { value: 'couple', label: 'זוג' },
+              { value: 'family', label: 'משפחה' },
+              { value: 'friends', label: 'חברים' },
+              { value: 'solo', label: 'סולו' },
+            ]}
+            onPick={(v) => setPrefs({ party: v })}
           />
-          <ToggleChip
-            active={Boolean(t.preferences?.shopping)}
-            label={
-              t.preferences?.shopping
-                ? { more: 'שופינג: יותר', normal: 'שופינג: רגיל', less: 'שופינג: פחות' }[
-                    t.preferences.shopping
-                  ]
-                : 'שופינג'
-            }
-            onClick={() =>
-              setPrefs({
-                shopping:
-                  t.preferences?.shopping === undefined
-                    ? 'more'
-                    : t.preferences.shopping === 'more'
-                      ? 'normal'
-                      : t.preferences.shopping === 'normal'
-                        ? 'less'
-                        : undefined,
-              })
-            }
+          <PrefSelect
+            label="שופינג"
+            current={t.preferences?.shopping}
+            options={[
+              { value: 'more', label: 'יותר' },
+              { value: 'normal', label: 'רגיל' },
+              { value: 'less', label: 'פחות' },
+            ]}
+            onPick={(v) => setPrefs({ shopping: v })}
           />
           {t.preferences?.shabbatAware && <PrefChip label="שומרי שבת" />}
           {t.preferences?.budget && (
@@ -490,7 +462,14 @@ export default function TripWorkspace({
 
       {/* ---------- טאבי הימים + מעברי ערים ---------- */}
       {t && t.days.length > 0 && (
-        <div className="mt-4 -mx-4 flex items-center gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 print:hidden">
+        /*
+          עוטפים ולא גוללים. הרצועה הייתה `-mx-4 overflow-x-auto` מתחת
+          ל-sm, כך שב-390px הפקד האחרון ("+ יום") נחתך באמצע מול קצה
+          המסך - בדיוק אותה תקלה שדווחה על טאבי היבשות בקטלוג: רמז
+          לגלילה שחותך מילה נקרא כשבירה. עכשיו הימים יורדים לשורה הבאה
+          וכלום לא נחתך.
+        */
+        <div className="mt-4 flex flex-wrap items-center gap-2 print:hidden">
           {t.days.map((d, i) => {
             const dst = destOf(d.citySlug);
             const prev = i > 0 ? t.days[i - 1] : null;
@@ -545,7 +524,9 @@ export default function TripWorkspace({
                     onClick={() => setMapMode('day')}
                     aria-pressed={mapMode === 'day'}
                     className={`rounded-full px-4 py-1.5 text-xs font-bold transition ${
-                      mapMode === 'day' ? 'bg-sunset text-cream' : 'text-night/60 hover:text-night'
+                      mapMode === 'day'
+                        ? 'bg-night/10 text-night'
+                        : 'text-night/50 hover:text-night'
                     }`}
                   >
                     יום {dayIndex + 1}
@@ -554,7 +535,9 @@ export default function TripWorkspace({
                     onClick={() => setMapMode('trip')}
                     aria-pressed={mapMode === 'trip'}
                     className={`rounded-full px-4 py-1.5 text-xs font-bold transition ${
-                      mapMode === 'trip' ? 'bg-sunset text-cream' : 'text-night/60 hover:text-night'
+                      mapMode === 'trip'
+                        ? 'bg-night/10 text-night'
+                        : 'text-night/50 hover:text-night'
                     }`}
                   >
                     🗺️ כל הטיול
@@ -1140,17 +1123,24 @@ function Menu({
   icon,
   items,
   compact = false,
+  chip = false,
+  chipActive = false,
 }: {
   label: string;
   ariaLabel: string;
   icon?: React.ReactNode;
   compact?: boolean;
+  /** מראה של צ׳יפ העדפה במקום כפתור פעולה */
+  chip?: boolean;
+  chipActive?: boolean;
   items: {
     label: string;
     onClick: () => void;
     icon?: React.ReactNode;
     danger?: boolean;
     disabled?: boolean;
+    /** מסומן כערך הנוכחי */
+    selected?: boolean;
     /** קו מפריד מעליו - לפעולות הרסניות */
     separated?: boolean;
   }[];
@@ -1188,7 +1178,13 @@ function Menu({
         className={
           compact
             ? 'flex h-7 w-7 items-center justify-center rounded-full text-night/35 transition hover:bg-night/5 hover:text-night'
-            : 'inline-flex items-center gap-1.5 rounded-xl bg-shell px-3.5 py-2 text-sm font-semibold text-night ring-1 ring-night/15 transition hover:bg-night/5 hover:ring-night/30'
+            : chip
+              ? `rounded-full px-2.5 py-1 text-xs font-semibold transition ${
+                  chipActive
+                    ? 'bg-sunset text-cream'
+                    : 'bg-night/5 text-night/50 hover:bg-night/10 hover:text-night'
+                }`
+              : 'inline-flex items-center gap-1.5 rounded-xl bg-shell px-3.5 py-2 text-sm font-semibold text-night ring-1 ring-night/15 transition hover:bg-night/5 hover:ring-night/30'
         }
       >
         {icon && <span className="opacity-80">{icon}</span>}
@@ -1211,17 +1207,61 @@ function Menu({
                 className={`flex w-full items-center gap-2 px-3.5 py-2 text-start text-sm font-semibold transition ${
                   it.danger
                     ? 'text-sunset-deep hover:bg-sunset/10'
-                    : 'text-night/80 hover:bg-night/5 hover:text-night'
+                    : it.selected
+                      ? 'bg-sunset/10 text-sunset-deep'
+                      : 'text-night/80 hover:bg-night/5 hover:text-night'
                 }`}
               >
                 {it.icon && <span className="opacity-70">{it.icon}</span>}
                 {it.label}
+                {it.selected && (
+                  <span aria-hidden className="ms-auto text-xs">
+                    ✓
+                  </span>
+                )}
               </button>
             </div>
           ))}
         </div>
       )}
     </div>
+  );
+}
+
+/**
+ * צ׳יפ העדפה שנפתח לרשימת ערכים. `undefined` מנקה את ההעדפה - שורה
+ * מפורשת ("בלי העדפה") ולא סיבוב נוסף במעגל, כי "לא בחרתי" הוא מצב
+ * אמיתי שהסוכן קורא ולא סתם היעדר.
+ */
+function PrefSelect<T extends string>({
+  label,
+  current,
+  options,
+  onPick,
+}: {
+  label: string;
+  current: T | undefined;
+  options: { value: T; label: string }[];
+  onPick: (v: T | undefined) => void;
+}) {
+  const currentLabel = options.find((o) => o.value === current)?.label;
+  return (
+    <Menu
+      chip
+      chipActive={Boolean(current)}
+      ariaLabel={`בחירת ${label}`}
+      label={currentLabel ? `${label}: ${currentLabel}` : label}
+      items={[
+        ...options.map((o) => ({
+          label: o.label,
+          selected: o.value === current,
+          onClick: () => onPick(o.value),
+        })),
+        ...(current
+          ? [{ label: 'בלי העדפה', separated: true, onClick: () => onPick(undefined) }]
+          : []),
+      ]}
+    />
   );
 }
 

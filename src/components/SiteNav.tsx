@@ -16,15 +16,19 @@ const NAV_LINKS = [
   { href: '/kosher', label: 'כשרות' },
 ];
 
-// מ-md+: כמה טאבי טיול מוצגים ישירות בשורה לפני שהשאר מתקפלים ל"עוד"
-const INLINE_TRIP_TABS = 2;
-
 /**
- * ניווט האתר: מ-md ומעלה קישורים בשורה + טאבי הטיולים
- * הפתוחים (עד INLINE_TRIP_TABS ישירות, השאר מתקפל ל"עוד" נפתח); מתחת
+ * ניווט האתר: מ-md ומעלה קישורים בשורה + **פקד אחד** לטיולים; מתחת
  * ל-md המבורגר שפותח תפריט נפתח (כולל רשימת כל הטיולים ואת הקישורים).
  * נסגר בלחיצה על קישור/טאב ובהקשה מחוץ לתפריט. בלי ספריית תפריטים -
  * state + טוקנים בלבד.
+ *
+ * **למה פקד אחד ולא טאבים.** קודם הוצגו עד שני טיולים כגלולות ישירות
+ * בשורה ועוד כפתור "עוד (N)". שלוש בעיות, כולן נראות בצילום מסך אחד:
+ * הגלולה של הטיול הפעיל היא קורל מלא ויושבת בדיוק ליד "כשרות", כך
+ * שהיא נקראת כפריט ניווט; שני טיולים הם רעש קבוע בשורה שאמורה להיות
+ * קישורי האתר; ו-`max-w-24 truncate` חתך שמות ("ברטיסלבה + וינה"
+ * נהיה "ברטיסלב…"). עכשיו: כניסה אחת שאומרת כמה טיולים יש, ורשימה
+ * מלאה בלי חיתוך. אותן פעולות בדיוק, פחות רעש.
  */
 export default function SiteNav() {
   const [open, setOpen] = useState(false);
@@ -53,8 +57,7 @@ export default function SiteNav() {
     setTripsMenuOpen(false);
   };
 
-  const inlineTrips = hydrated ? trips.slice(0, INLINE_TRIP_TABS) : [];
-  const overflowTrips = hydrated ? trips.slice(INLINE_TRIP_TABS) : [];
+  const myTrips = hydrated ? trips : [];
 
   return (
     <div ref={rootRef} className="relative">
@@ -70,42 +73,43 @@ export default function SiteNav() {
             {l.label}
           </Link>
         ))}
-        {inlineTrips.map((t) => (
-          <button
-            key={t.id}
-            onClick={() => openTrip(t.id)}
-            title={t.name}
-            className={`max-w-24 truncate rounded-full px-3 py-1.5 text-xs font-bold transition ${
-              t.id === currentId
-                ? 'bg-sunset text-cream'
-                : 'bg-night/5 text-night/60 hover:bg-night/10 hover:text-night'
-            }`}
-          >
-            {tripLabel(t)}
-          </button>
-        ))}
-        {overflowTrips.length > 0 && (
+        {myTrips.length > 0 && (
           <div className="relative">
             <button
               onClick={() => setTripsMenuOpen((v) => !v)}
               aria-expanded={tripsMenuOpen}
-              className="rounded-full bg-night/5 px-3 py-1.5 text-xs font-bold text-night/60 transition hover:bg-night/10 hover:text-night"
+              aria-haspopup="menu"
+              className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium text-night/70 transition hover:bg-night/5 hover:text-night"
             >
-              עוד ({overflowTrips.length})
+              הטיולים שלי
+              <span className="rounded-full bg-night/10 px-1.5 text-xs font-bold text-night/60">
+                {myTrips.length}
+              </span>
+              <span aria-hidden className="text-[10px] text-night/40">
+                ▾
+              </span>
             </button>
             {tripsMenuOpen && (
-              <div className="absolute end-0 top-full z-50 mt-2 w-48 rounded-2xl bg-shell p-2 shadow-[var(--shadow-pop)] ring-1 ring-night/10">
-                {overflowTrips.map((t) => (
+              <div
+                role="menu"
+                className="absolute end-0 top-full z-50 mt-2 w-60 rounded-2xl bg-shell p-2 shadow-[var(--shadow-pop)] ring-1 ring-night/10"
+              >
+                {myTrips.map((t) => (
                   <button
                     key={t.id}
+                    role="menuitem"
                     onClick={() => openTrip(t.id)}
-                    className={`block w-full truncate rounded-xl px-3.5 py-2 text-start text-sm font-semibold transition ${
+                    className={`block w-full rounded-xl px-3.5 py-2 text-start transition ${
                       t.id === currentId
                         ? 'bg-sunset/10 text-sunset-deep'
                         : 'text-night/80 hover:bg-night/5'
                     }`}
                   >
-                    {tripLabel(t)}
+                    {/* השם המלא, בלי חיתוך - ארוך נשבר לשתי שורות */}
+                    <span className="block text-sm font-semibold leading-snug">{tripLabel(t)}</span>
+                    <span className="block text-xs font-medium text-night/40">
+                      {t.id === currentId ? 'פתוח עכשיו' : `${t.days.length} ימים`}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -172,13 +176,17 @@ export default function SiteNav() {
                 <button
                   key={t.id}
                   onClick={() => openTrip(t.id)}
-                  className={`block w-full truncate rounded-xl px-4 py-2.5 text-start font-medium transition ${
+                  className={`block w-full rounded-xl px-4 py-2.5 text-start transition ${
                     t.id === currentId
                       ? 'bg-sunset/10 text-sunset-deep'
                       : 'text-night/80 hover:bg-night/5'
                   }`}
                 >
-                  {tripLabel(t)}
+                  {/* בלי truncate: שם ארוך נשבר לשתי שורות במקום להיחתך */}
+                  <span className="block font-semibold leading-snug">{tripLabel(t)}</span>
+                  <span className="block text-xs font-medium text-night/40">
+                    {t.id === currentId ? 'פתוח עכשיו' : `${t.days.length} ימים`}
+                  </span>
                 </button>
               ))}
             </>
