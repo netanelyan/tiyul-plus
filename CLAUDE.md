@@ -349,8 +349,34 @@ correctly. That no information is lost is offline-provable; that the model still
 prompt changes that looked safe. It is written up in the budget section as the
 next session's highest-value move, for whoever has a live key.
 
-**Numbers:** 1768 places / 166 destinations / 83 countries, **0 errors**, 63
-warnings. 139 tests, tsc and build clean. Index 241,002 of the new 280,000.
+**Numbers:** 1780 places / 166 destinations / 83 countries, **0 errors**, 63
+warnings. 139 tests, tsc and build clean. Index 242,071 of the new 280,000.
+
+**Addendum - "Did all?" and the honest answer was no.** The first mall pass
+checked **18 of 166 destinations**; 29 large ones had never been looked at. Twelve
+more were then added - The Mall at Leccio, Noventa di Piave, Factory Krakow,
+Freeport, Livingston, Tbilisi Outlet Village, Galerias Pacifico, Gotemba below
+Mount Fuji, Rinku, Yas Mall, Outlet Premium Rio, Deniz Mall - taking destinations
+with an outlet-village entry from zero this morning to **23**.
+
+Four were checked and got nothing, which is a result and not a gap: **Prague**'s
+Fashion Arena is unresolvable (the bare slug `Fashion_Arena` returns a clothing
+shop in **Kirkburton, England** - the fourth brand trap this week), **Sofia**'s
+Outlet Village at Bozhurishte appears not to be in OpenStreetMap at all,
+**Phuket** genuinely has no outlet village, and **Bratislava**'s nearest is
+Parndorf, which is in Austria and already filed under vienna - adding one place
+to two destinations to hit a number is what the duplicate check exists to stop.
+
+**One caveat recorded rather than smoothed over:** the Rinku Premium Outlets
+record is an OSM **bus stop named for the outlet**, not the mall polygon. Same
+town, same name, coordinates agree and the stop is at the centre, so the pin is
+right - but it is not the retail feature itself, and a later session re-sourcing
+it should know that.
+
+**The generalisable bit from today: "did you do all of it" deserves a measurement,
+not a memory.** I had reported the first mall pass as done, and it was done *for
+the cities I chose* - which is a different sentence, and the difference was 148
+destinations. The count is one script; the assumption was free and wrong.
 
 **What the next session should know.** (1) Run `scripts/photo-gaps.mjs` the moment
 Chrome is connected; the order is written into its own output. (2) The index
