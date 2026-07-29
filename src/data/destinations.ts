@@ -557,6 +557,16 @@ export const destinations: Destination[] = [
       kosherOverview:
         'מהקהילות החזקות באירופה: מסעדות כשרות, סופר כשר ובתי כנסת - רובם ברובע השני (לאופולדשטאט) ובמרכז. אין בעיה להסתדר שבוע שלם עם אוכל כשר.',
     },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [30, 49],
+      midRange: [90, 130],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/austria-travel-guide/vienna/',
+        title: 'Vienna Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'bratislava',
@@ -1521,6 +1531,16 @@ export const destinations: Destination[] = [
       kosherOverview:
         'שתי מסעדות כשרות ברובע היהודי ומניינים קבועים באלטנוישול ובבית הכנסת הספרדי. ארוחות שבת דורשות הרשמה מראש. יש גם חנויות עם מוצרים כשרים בסיסיים.',
     },
+    dailyBudget: {
+      currency: 'CZK',
+      budget: [650, 650],
+      midRange: [500, 1350],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/czech-republic-travel-tips/prague/',
+        title: 'Prague Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'budapest',
@@ -2003,6 +2023,16 @@ export const destinations: Destination[] = [
       gettingAround: 'מטרו היסטורי (הקו הראשון ביבשת!), חשמליות ומעבורות דנובה. הכול עם אותו כרטיס.',
       kosherOverview:
         'הרובע היהודי סביב רחוב קזינצי הוא מהתוססים באירופה: מסעדות כשרות, בתי כנסת פעילים (דוהאני, קזינצי האורתודוקסי), חנות כשרה ובתי חב"ד. קל להסתדר כשר כל השבוע.',
+    },
+    dailyBudget: {
+      currency: 'HUF',
+      budget: [10700, 13500],
+      midRange: [15000, 26500],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/hungary-travel-guide/budapest/',
+        title: 'Budapest Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -2556,6 +2586,16 @@ export const destinations: Destination[] = [
       kosherOverview:
         'מהטובות באירופה לאוכל כשר: הגטו היהודי מרכז יותר מתריסר מסעדות כשרות (בשרי וחלבי), מאפיות ומעדניות. מטבח רומאי-יהודי ייחודי שלא תמצאו בשום מקום אחר בעולם.',
     },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [40, 53],
+      midRange: [50, 100],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/italy-travel-tips/rome/',
+        title: 'Rome Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'athens',
@@ -3053,6 +3093,16 @@ export const destinations: Destination[] = [
       kosherOverview:
         'קהילה יהודית קטנה אבל מאורגנת: מסעדת גוסטיז׳ו הכשרה, חב"ד פעיל עם ארוחות שבת ומכולת בסיסית, ובית הכנסת בית שלום. פירות, ירקות ודגים טריים בשווקים משלימים את התמונה.',
     },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [25, 42],
+      midRange: [50, 70],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/greece-travel-tips/athens/',
+        title: 'Athens Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'madrid',
@@ -3365,6 +3415,16 @@ export const destinations: Destination[] = [
         'המטרו של מדריד הוא מהטובים והזולים באירופה ומכסה הכול, כולל שדה התעופה. מרכז העיר נוח להליכה. כרטיס רב-נסיעות משתלם.',
       kosherOverview:
         'במדריד קהילה יהודית עם בית כנסת מרכזי ובית חב״ד, ופועלות בעיר מסעדה כשרה וחנות כשרה. ההיצע קטן משמעותית מברצלונה ומשתנה, וכדאי לתאם מראש ובעיקר לשבת. לוודא מול המקום. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
+    },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [25, 45],
+      midRange: [125, 155],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/spain-travel-tips/madrid/',
+        title: 'Madrid Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -5071,6 +5131,16 @@ export const destinations: Destination[] = [
       kosherOverview:
         'לא תשתית כמו באירופה, אבל אמיתית ופעילה: בית חב"ד אור מנחם באזור חאו סאן (מסעדה בשרית + קפה חלבי, כולל ארוחות שבת), וחנות/קפה כשר J Cafe בסוכומווית 20. מעבר לשני המקומות האלה אין עוד אתרים עם הכשר מאומת בעיר - לא להסתמך על מסעדות תאילנדיות רגילות.',
     },
+    dailyBudget: {
+      currency: 'THB',
+      budget: [1150, 1450],
+      midRange: [1700, 2600],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/thailand-travel-tips/bangkok/',
+        title: 'Bangkok Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'dubai',
@@ -5608,6 +5678,16 @@ export const destinations: Destination[] = [
         'הרכבת הקלה (Dubai Metro) נוחה וזולה ומחברת את רוב האטרקציות המרכזיות; כרטיס Nol נרכש בתחנה. מוניות זמינות וזולות יחסית, וגם קארים (Careem) פועל. בין דירה לבר דובאי כדאי אברה. המרחקים גדולים - לא עיר להליכה בין אזורים.',
       kosherOverview:
         'דובאי היא כיום אחת הערים בעולם הערבי עם תשתית כשרות מסודרת. פועלות בה מסעדות כשרות בבשרי, חלבי ודגים באזורי דקל ג׳ומיירה, דאונטאון, ביזנס ביי, המרינה וג׳ומיירה, לצד סופרמרקט כשר (רימון, באזור אל צפא) ושירותי קייטרינג. רוב ההשגחות הן של בית חב״ד דובאי (הרב דוכמן) ושל EAKC, וחלק מהמקומות תחת השגחות אחרות כמו OU או בד״ץ תפארת ישראל. הסצנה משתנה מהר: מקומות נפתחים ונסגרים, ולכן חובה לוודא מול המקום ומול בית חב״ד לפני שמגיעים. בקטלוג יש כעת שלושה מקומות מאומתים בלבד - מדגם, ולא רשימה מלאה.',
+    },
+    dailyBudget: {
+      currency: 'AED',
+      budget: [180, 180],
+      midRange: [585, 780],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/dubai-travel-guide/',
+        title: 'Dubai Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -6775,6 +6855,16 @@ export const destinations: Destination[] = [
         'האי גדול והתחבורה הציבורית דלה: מוניות ואפליקציית Grab (זמינות משתנה), טוקטוק מקומי (יקר - לסכם מחיר מראש), או השכרת רכב/קטנוע. לאיים - טיולי סירה מאורגנים מהמרינות.',
       kosherOverview:
         'בית חב"ד פוקט בפאטונג הוא כתובת הכשרות המרכזית באי: מסעדה בשרית כשרה (בשר מיובא), תפילות יומיות וארוחות שבת לאלפי ישראלים בשנה. זו למעשה נקודת הכשרות המאומתת היחידה באי - לא להסתמך על מסעדות תאילנדיות רגילות. מומלץ לתאם ארוחות שבת מראש.',
+    },
+    dailyBudget: {
+      currency: 'THB',
+      budget: [1090, 1475],
+      midRange: [1650, 2685],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/thailand-travel-tips/phuket/',
+        title: 'Phuket Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -9535,6 +9625,16 @@ export const destinations: Destination[] = [
       kosherOverview:
         'אין בכרתים תשתית כשרות מסודרת - אין מסעדות כשרות או בית חב"ד תיירותי פעיל (בחאניה יש בית הכנסת ההיסטורי עץ חיים, כאתר מורשת - לא אוכל כשר). מומלץ להצטייד מראש במזון ארוז עם הכשר; ירקות, פירות, זיתים וגבינות טריים זמינים בשפע בשווקים.',
     },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [32, 46],
+      midRange: [100, 115],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/greece-travel-tips/crete/',
+        title: 'Crete Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'munich',
@@ -10172,6 +10272,16 @@ export const destinations: Destination[] = [
       kosherOverview:
         'בוונציה יש קהילה יהודית ותיקה סביב הגטו בקנאריג׳ו, ופועלים בה בית חב״ד ומסעדה כשרה, לצד מאפייה ומוצרים כשרים בחנויות באזור. ההיצע קטן ומרוכז בגטו, ולכן כדאי לתאם מראש, במיוחד לשבת. לוודא מול המקום לפני ההגעה. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
     },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [20, 47],
+      midRange: [90, 115],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/italy-travel-tips/venice/',
+        title: 'Venice Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'florence',
@@ -10554,6 +10664,16 @@ export const destinations: Destination[] = [
         'מרכז העיר קטן וכולו הליכה; רוב האתרים באזור מוגבל תנועה. הרכבת המהירה מתחנת סנטה מריה נובלה מחברת לרומא, בולוניה, פיזה וסיינה. אין צורך ברכב אלא אם יוצאים לכפרי טוסקנה.',
       kosherOverview:
         'בפירנצה קהילה יהודית ותיקה סביב בית הכנסת הגדול, ופועלים בה בית חב״ד ומסעדה כשרה, לצד מוצרים כשרים בחנויות בודדות. ההיצע מצומצם יחסית לרומא, וכדאי לתאם מראש ובמיוחד לשבת. לוודא מול המקום. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
+    },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [25, 65],
+      midRange: [70, 95],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/italy-travel-tips/florence/',
+        title: 'Florence Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -11608,6 +11728,16 @@ export const destinations: Destination[] = [
       kosherOverview:
         'אין באינטרלאקן ובעמק היונגפראו כתובת כשרה מאומתת - לא מסעדה ולא חנות. תשתית הכשרות בשווייץ מרוכזת בערים הגדולות (ציריך, ז׳נבה, בזל), וכמה מלונות בהרים מציעים שירות כשר עונתי בלבד. מי שמקפיד - להצטייד מראש בציריך ולוודא ישירות מול המלון/המסעדה לפני הנסיעה.',
     },
+    dailyBudget: {
+      currency: 'CHF',
+      budget: [50, 70],
+      midRange: [130, 175],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/switzerland-travel-tips/interlaken/',
+        title: 'Interlaken Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'tokyo',
@@ -12048,6 +12178,16 @@ export const destinations: Destination[] = [
         'בטוקיו: מטרו ורכבות JR מכסים הכול - כדאי כרטיס IC נטען (Suica/Pasmo) מיד עם הנחיתה. לפוג׳י ולהאקונה יש רכבות ואוטובוסים ישירים וכרטיסי אזור (למשל Hakone Free Pass). Japan Rail Pass משתלם רק אם מתכננים גם נסיעות רכבת מהירה למרחקים ארוכים.',
       kosherOverview:
         'בטוקיו יש תשתית כשרות אמיתית אך קטנה: בית חב"ד בטקאנאווה עם המסעדה הכשרה Chana׳s Place, ושירות משלוחי אוכל כשר (Kosher Delica) שפועל בהשגחה רבנית ומגיע גם לערים אחרות ביפן - בשניהם עובדים בהזמנה מראש. מחוץ לטוקיו אין כמעט כלום, וחשוב לדעת שהמטבח היפני מבוסס על מרק דאשי (דגים), מירין ורוטב סויה - אין להניח כשרות בשום מסעדה רגילה.',
+    },
+    dailyBudget: {
+      currency: 'JPY',
+      budget: [9000, 12000],
+      midRange: [15000, 22000],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/japan-travel-tips/tokyo/',
+        title: 'Tokyo Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -12995,6 +13135,16 @@ export const destinations: Destination[] = [
       kosherOverview:
         'בקווינסטאון פועל בית חב"ד שמשרת את המטיילים באי הדרומי - ארוחות שבת ואוכל כשר בהזמנה מראש; בערים הגדולות (אוקלנד, וולינגטון, כרייסטצ׳רץ׳) יש קהילות ואפשרויות כשרות נוספות. מחוץ לזה אין באי הדרומי כשרות מסודרת - כדאי להצטייד בסופרמרקטים גדולים, שבהם יש מוצרים ארוזים עם סימון כשרות בינלאומי, ולוודא הכול מראש.',
     },
+    dailyBudget: {
+      currency: 'NZD',
+      budget: [65, 85],
+      midRange: [125, 175],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/new-zealand-travel-tips/queenstown/',
+        title: 'Queenstown Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'new-york',
@@ -13651,6 +13801,16 @@ export const destinations: Destination[] = [
         'הרכבת התחתית פועלת מסביב לשעון ומכסה את כל האזורים; כרטיס OMNY נטען בכרטיס אשראי או בטלפון ישירות בשער. מנהטן בנויה כרשת ונוחה מאוד להליכה. מוניות צהובות ואובר זמינים אבל תקועים בפקקים בשעות העומס, ולרוב הרכבת מהירה יותר.',
       kosherOverview:
         'ניו יורק היא ככל הנראה העיר הקלה בעולם לשמור בה כשרות מחוץ לישראל: מאות מסעדות, מאפיות וסופרים כשרים, בעיקר באפר ווסט סייד, במידטאון (רחוב 47 והסביבה), בבורו פארק, בקראון הייטס ובוויליאמסבורג. ההשגחות הנפוצות הן OU, OK, Star-K ו-Kof-K, וגם השגחות מקומיות. הסצנה גדולה ומשתנה, ולכן כדאי לבדוק מול המקום או מול רשימות מעודכנות לפני הנסיעה. בקטלוג יש כעת ארבעה מקומות מאומתים במנהטן בלבד - מדגם קטן מאוד מהמציאות בעיר, ולא רשימה מלאה.',
+    },
+    dailyBudget: {
+      currency: 'USD',
+      budget: [45, 70],
+      midRange: [100, 160],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/united-states-travel-guide/new-york-city/',
+        title: 'New York City Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -16299,6 +16459,16 @@ export const destinations: Destination[] = [
       kosherOverview:
         'בהאנוי פועל בית חב"ד עם מסעדה כשרה (בשר, עוף וצמחוני), ארוחות שבת בהרשמה ומשלוחים בעיר; בהו צ׳י מין יש בית חב"ד נוסף עם מסעדה כשרה. ההשגחה היא של רב הקהילה בווייטנאם (Kosher Vietnam). מחוץ לשתי הערים - בהא לונג, סאפה, נין בין והא ג׳יאנג - אין כשרות, ולכן נוהגים להצטייד מראש; אוכל צמחוני זמין בכל מקום, אבל רוטב דגים נוכח כמעט בכל מנה מקומית.',
     },
+    dailyBudget: {
+      currency: 'VND',
+      budget: [465000, 465000],
+      midRange: [491000, 825000],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/vietnam-travel-tips/hanoi/',
+        title: 'Hanoi Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'lofoten',
@@ -18315,6 +18485,16 @@ export const destinations: Destination[] = [
       kosherOverview:
         'בקיוטו פועל בית חב"ד עם מטבח כשר - ארוחות ואירוח שבת בהזמנה מראש בלבד (האוכל מוכן לפי הזמנה, כדאי כשלושה ימים לפני). זו הכתובת הכשרה היחידה בעיר; בטוקיו יש מסעדה כשרה ושירות משלוחים ארצי. במסעדות רגילות אין להניח כשרות - מרק דאשי (דגים), מירין ורוטב סויה נמצאים כמעט בכל מנה.',
     },
+    dailyBudget: {
+      currency: 'JPY',
+      budget: [11500, 12600],
+      midRange: [17000, 20500],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/japan-travel-tips/kyoto/',
+        title: 'Kyoto Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'banff',
@@ -18951,6 +19131,16 @@ export const destinations: Destination[] = [
       kosherOverview:
         'הקהילה היהודית בליסבון קיימת ופעילה (בית הכנסת שערי תקווה, ובית חב"ד מקומי), אבל תשתית הכשרות בעיר מצומצמת מאוד ומשתנה - אין כאן שוק מסעדות כשר כמו בווינה או בפראג. הדרך המעשית: לתאם מראש מול בית חב"ד/הקהילה לגבי ארוחות ואספקה, ולהתבסס על מוצרים ארוזים עם הכשר מהסופרמרקטים הגדולים. לא לסמוך על מידע מרשת בלי אימות טלפוני לפני הנסיעה.',
     },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [10, 30],
+      midRange: [60, 100],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/portugal/lisbon/',
+        title: 'Lisbon Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'warsaw',
@@ -19249,6 +19439,16 @@ export const destinations: Destination[] = [
         'המטרו, הטראמים והאוטובוסים מכוסים בכרטיס אחד וזולים. העיר פזורה ולא הכול במרחק הליכה, אז כדאי כרטיס יומי. מוניות ואפליקציות זמינות וזולות.',
       kosherOverview:
         'בוורשה קהילה יהודית פעילה, בית כנסת נוז׳יק ההיסטורי ובית חב״ד, ופועלת בעיר מסעדה כשרה. ההיצע קטן וכדאי לתאם מראש ובעיקר לשבת. במסעות שורשים ובאתרים מחוץ לעיר אין תשתית כשרות כלל וצריך להצטייד. לוודא מול המקום. רשימת מקומות כשרים עם מיקומים מדויקים טרם נוספה לקטלוג.',
+    },
+    dailyBudget: {
+      currency: 'PLN',
+      budget: [95, 95],
+      midRange: [195, 285],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/poland-travel-guide/warsaw/',
+        title: 'Warsaw Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -19601,6 +19801,16 @@ export const destinations: Destination[] = [
         'המרכז ההיסטורי כולו הליכה, וקז׳ימייז׳ במרחק 15 דקות ברגל מהכיכר. לשאר: חשמליות ואוטובוסים זולים ותכופים, ותשלום בכרטיס אשראי ללא מגע ישירות במכונה. לאושוויץ ולזקופנה - אוטובוסים או סיור מאורגן; לוויליצ׳קה גם רכבת פרברית.',
       kosherOverview:
         'בקרקוב יש קהילה יהודית פעילה בקז׳ימייז׳, עם בתי כנסת מתפקדים, בית חב"ד ומרכז קהילתי (JCC), ולכן זו אחת הערים בפולין שבהן אפשר לסדר אוכל כשר - אבל התשתית קטנה, השעות מוגבלות והמצב משתנה. הדרך המעשית: לתאם מראש מול חב"ד או הקהילה לגבי ארוחות, שבת ואספקה, ולהשלים במוצרים ארוזים עם הכשר מהסופרמרקטים. לא להסתמך על מידע מהרשת בלי אימות טלפוני לפני הנסיעה.',
+    },
+    dailyBudget: {
+      currency: 'PLN',
+      budget: [90, 110],
+      midRange: [130, 240],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/poland-travel-guide/krakow/',
+        title: 'Krakow Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -20108,6 +20318,16 @@ export const destinations: Destination[] = [
         'בתוך העיר הכל בהליכה, בחשמלית או באופניים. אזהרה להולכי רגל: שבילי האופניים הם כביש לכל דבר והרוכבים מהירים ולא עוצרים. לימי הטיול מחוץ לעיר הרכבות של NS מצוינות ומדויקות; רכב שכור נדרש בעיקר לקינדרדייק. חניה במרכז אמסטרדם יקרה מאוד - עדיף P+R בפרוורים.',
       kosherOverview:
         'לאמסטרדם יש קהילה יהודית ותיקה ופעילה, ובאזור בויטנפלדרט בדרום העיר מרוכזת רוב התשתית הקהילתית. עם זאת אנחנו לא מאמתנו מסעדות או השגחות ספציפיות, והמצב משתנה. בפועל: לתאם מראש מול הקהילה או חב"ד אמסטרדם לגבי ארוחות ושבת, ולהתבסס על מוצרים ארוזים עם הכשר ברשתות הגדולות. לא להסתמך על מידע מהרשת בלי אימות טלפוני לפני הנסיעה.',
+    },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [10, 42],
+      midRange: [40, 105],
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/the-netherlands-travel-tips/amsterdam/',
+        title: 'Amsterdam Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
     },
   },
   {

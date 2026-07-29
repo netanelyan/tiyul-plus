@@ -136,6 +136,7 @@ export interface Destination {
   places: Place[];
   itinerary: DayPlan[];
   practical: CityPractical;
+  dailyBudget?: DailyBudget; // עלות יומית על הקרקע - ראה DailyBudget
 }
 
 // דירוג עריכתי של צוות טיול+ - במפורש לא ממוצע ביקורות משתמשים אמיתי.
@@ -144,6 +145,27 @@ export interface Destination {
 export interface EditorialRating {
   score: number; // 1-5
   verdict: string; // Hebrew, משפט אחד - למה
+}
+
+// עלות יומית טיפוסית למטייל ביעד - **על הקרקע בלבד**: אוכל, תחבורה מקומית,
+// כניסות וקניות קטנות. **לא כולל טיסות ולא כולל לינה**, וזו ההגדרה שכל
+// רשומה כאן חייבת לעמוד בה. רוב מקורות התקציב בעולם מפרסמים סכום יומי
+// שכולל לינה, ולכן מספר שנלקח מהם כמו שהוא אינו מודד את אותו הדבר.
+//
+// למה יש רק שתי מדרגות: המקור מפרסם שלוש (backpacker / midrange / upscale),
+// אבל המדרגה העליונה שלו פתוחה מלמעלה ("100k+ JPY") או שאין לה מחיר לינה
+// מפורסם שאפשר להפריד. לכן `comfortable` נשאר ריק בכל היעדים - ריק הוא
+// התשובה הנכונה, לא ניחוש. אין להסיק אותו מעיר אחרת ואין להכפיל מקדם.
+//
+// כללים קשיחים לכל ערך כאן: מקור אחד ליעד, בקנה מידה של אותה עיר בלבד.
+// אסור לגזור עיר משכנתה, אסור לשערך ממוצע ארצי על עיר, ואסור להמיר מטבע -
+// הסכום נרשם במטבע שבו באמת משלמים שם.
+export interface DailyBudget {
+  currency: string; // ISO 4217, המטבע שמשלמים בו בעיר עצמה
+  budget?: [number, number]; // טווח; ערך יחיד נרשם כשני קצוות זהים
+  midRange?: [number, number];
+  comfortable?: [number, number]; // ראה ההערה למעלה - ריק בכוונה
+  source: PlaceSource;
 }
 
 export interface DestinationSummary {
