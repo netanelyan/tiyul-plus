@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import type { Country, Destination, PlaceCategory } from '@/lib/types';
 import { categoryMeta, isKosher } from '@/lib/categories';
+import { formatDurationHe } from '@/lib/duration';
 import PlacesMap from '@/components/PlacesMap';
 import AddToTripButton from '@/components/AddToTripButton';
 import PlaceThumb from '@/components/PlaceThumb';
@@ -240,8 +241,8 @@ export default function DestinationClient({
                       {place.priceLevel === 0 ? 'חינם' : '₪'.repeat(place.priceLevel)}
                     </span>
                   )}
-                  {place.durationMin && (
-                    <span>כ-{Math.round(place.durationMin / 30) / 2} שעות</span>
+                  {formatDurationHe(place.durationMin) && (
+                    <span>{formatDurationHe(place.durationMin)}</span>
                   )}
                   {place.externalUrl && (
                     <a
