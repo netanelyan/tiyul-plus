@@ -242,6 +242,118 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-29 (gg) - The long tail at two per destination: 126 entries, nine countries that resisted
+
+Netanel: "Continue, now 2 per destination." This closes the food and shopping
+rollout across the 113 destinations outside the priority countries.
+
+**Result: coverage went from 62 of 166 destinations to 132, and the countries
+with no eating or shopping place at all fell from 47 to nine.** The gap at two
+per destination was 213 entries; 126 were written. The other 87 do not exist in
+any form this sandbox can verify, and the nine remaining empty countries are
+worth naming because each is a specific, diagnosable failure rather than a
+skipped queue item: **Kazakhstan, Norway, Turkey, Albania, Kyrgyzstan, India,
+Bolivia, the Philippines, Panama.**
+
+**Almaty is the single most instructive miss.** The Green Bazaar is real, famous
+and central. `/Green_Bazaar` resolves to **Baku**. `/Green_Bazar` resolves to a
+supermarket in **Kerala**. `/Zelyony_Bazar` resolves to **Tashkent**.
+`/Zeleny_Bazar` resolves to an Almaty **bus stop**. The one node URL that a
+site-restricted search surfaced with the right name and city serves a page about
+**Verniy Fortress** instead, twice, with no bazaar coordinates printed anywhere.
+Five distinct wrong answers for one obviously-real place. That is the shape of
+this whole pass: the bar was rarely the problem, the coordinate source was.
+
+**Method: fifteen research subagents in three waves, my own curation, then four
+independent coordinate audits.** The wrong-place trap fired constantly and every
+instance was discarded rather than adjusted - "Marché des Halles" (Menton)
+returned **Halė Market in Vilnius**, which is itself in this batch from the other
+direction; "Targ Rybny" (Gdańsk) returned the fish market in **Batumi**, also in
+this batch; "Nili" (a Lappish restaurant in Rovaniemi) returned **Nili District,
+Afghanistan**; "Kaupé" (Ushuaia) returned a village in **Lithuania**; "Tepa"
+(Mostar) returned a town in **Ghana**; "Crab Market" (Kep) returned
+**Bangladesh**; "Malioboro" (Yogyakarta) returned a restaurant in **Surabaya**;
+"Turasan" (Cappadocia) returned a locality in **East Java**; "Hanoi Old Quarter"
+returned a Vietnamese restaurant in **Hawthorn, Australia**; "Neighbourgoods
+Market" (Cape Town) returned the **Johannesburg** one; "Knysna Oyster Company"
+returned its **Cape Town** branch; "Peters' Drive-In" (Calgary) returned
+**Edmonton**; "Mercado de Mariscos" (Panama City) returned **Tegucigalpa**.
+
+**Three duplicates, caught by the widened check.** Bratislava's **Stará tržnica**
+was already in the catalog as an `attraction` **70 metres away under the same
+name**. Savonlinna's market square sits **73 metres** from the town pin.
+Marsaxlokk's fish market is **232 metres** from the village entry whose entire
+fame is that market. None of the three would have been caught by searching the
+food categories - the lesson from entry (ee) held, and running candidates against
+every place in the catalog is now simply how this is done.
+
+**Two entries dropped on placement, not quality, and the guard found both.**
+Jakarta's Glodok was offered for `java`, a destination whose places are
+Yogyakarta and the eastern volcanoes - 5.19 degrees away with no Jakarta presence
+at all. Porto's Mercado do Bolhão was offered for `douro`, whose westernmost
+place is Amarante; **Porto is the Douro's port city but it is not in the valley**,
+and filing it there to fill a slot is exactly the kind of quiet
+mis-categorisation that makes a catalog untrustworthy. Both went.
+
+**The guard's margin moved 5% → 10% of a destination's own spread**, because at
+5% it failed Kuching's Satok market by a hair - and the bound defining the
+tolerance was Bako National Park, which *is* Kuching's own national park 20km
+away. Re-verified that the Triana typo is still caught at 10%. This is the second
+time the margin has needed loosening, and both times the false positive came from
+the reference frame being a place in the same city as the entry being checked.
+If it needs a third loosening, the right fix is a different reference frame, not
+a bigger number.
+
+**I cut roughly a third of what the research returned.** Njeguši and Mačkat came
+back as village pins rather than venues - the same shape as the Geroskipou
+rejection in entry (ee), so they went for consistency. King of Donair has
+franchised beyond Halifax, so it fails the no-chains rule even though the
+original is the genuine article. Peters' Drive-In and Las Vegas Chinatown do not
+clear "would regret missing". The Scotch Whisky Experience is an attraction.
+Paspatur came back labelled a tourist attraction with no confirmation it is a
+food or market place at all. Two Takayama morning markets 500m apart collapsed to
+one; so did two Ljubljana market entries on the same square.
+
+**One rule applied more carefully than last time.** Several of these markets
+trade on one day a week - Salamanca, Farm Gate, Remarkables, Harbourside, Satok,
+Gaya Street, Kumtepa, Rissani, Kolaportið, the Old Biscuit Mill. Naming the day
+would be storing a schedule, which is the thing this feature refuses to do
+because schedules go stale silently and the traveller finds out at a locked gate.
+Every one says it is a weekly market and to confirm the day before going.
+
+**Verification.** 126 coordinates re-read against their source pages by four
+independent auditors: **126 matched, 0 failed.** The southern-hemisphere and
+western-longitude rows were audited specifically for a dropped minus - Cape Town,
+Zanzibar, Mauritius, Seychelles, Bali, Cusco, Arequipa, Puerto Natales, Quito,
+Rio, Hobart, Queenstown, Wellington, Auckland, Halifax, Calgary - and every page
+prints the sign the catalog carries. A programmatic pass separately asserted that
+every written coordinate matches the research record, every `externalUrl` matches
+its own lat/lng, and every eating place carries a kashrut status.
+
+**Numbers:** 1750 places / 166 destinations / 83 countries, **0 errors**, 63
+warnings. 128 tests, tsc and build clean at 277 pages. Grounding index **239,396
+of the 260,000 ceiling** - about 20,600 chars left, roughly 187 more entries, so
+the remaining 87-entry gap would still fit if the coordinate problem were ever
+solved.
+
+**What the next session should know.** (1) The nine empty countries are blocked
+on **coordinates, not research** - every one has a real, nameable candidate that
+Mapcarta cannot resolve. If a second geocoder ever becomes reachable from this
+sandbox, that list is the highest-value work available and it is already scoped.
+(2) **None of these 126 entries has a photo**, deliberately - the Chrome
+extension has been down for three passes now, and an unprobed URL is what
+produced 151 dead links. The unprobed-photo debt is unchanged at 19 from entry
+(dd). (3) No browser RTL/overflow check has been run on any of the 175 entries
+added across passes (dd), (ee) and (ff) - that is the largest untested surface in
+this feature. (4) Mapcarta's OSM-node URL form (`mapcarta.com/N…`, `/W…`) works
+where slugs 404 and rescued perhaps a fifth of this batch; its `?q=` search
+endpoint does not exist and resolves "Search" as a slug (it returns a sculpture
+in Omaha). A web search restricted to `mapcarta.com` is how you find the node
+URLs. (5) Standing and unchanged: the 18 dead photo URLs, the `kosher-market` and
+`cafe` gaps, the 2.5MB client bundle, `feat/catalog-supabase` unmerged pending
+Netanel's review, and **both GitHub PATs still need revoking at
+https://github.com/settings/tokens**.
+
 ### 2026-07-29 (ff) - "Is there any way to make the website faster?" - measured first, and the answer was not the server
 
 Netanel asked the open question. Measured on a production build in a real
