@@ -7,18 +7,23 @@ import { completeRange, countdown, formatHebrewRange, rangeDays, todayISO } from
 /**
  * תאריכי הטיול: מתי יוצאים ומתי חוזרים.
  *
- * ## שתי החלטות שמסבירות את כל הרכיב
+ * ## שלוש החלטות שמסבירות את הרכיב
  *
- * **1. התאריך לא משנה את התוכנית.** נתנאל בחר טווח (התחלה וסיום) ולא
- * תאריך יציאה בודד, ולטווח יש מספר ימים משלו - שיכול לא להסכים עם
- * מספר הימים שכבר בנויים. הפיתוי הוא לגזור את הימים מהטווח, וזו בדיוק
- * הדרך שבה בחירת תאריך מוחקת יום עם עצירות. לכן: הפער **מוצג** ומוצע
- * לו כפתור מפורש, והוספת ימים (פעולה מוסיפה, לא הרסנית) היא היחידה
- * שהרכיב הזה עושה בעצמו. קיצור נשאר בידיים של המשתמש, במחיקת יום.
+ * **1. אין פקד חדש במסך.** הגרסה הראשונה הוסיפה גלולה משלה ("הוספת
+ * תאריכים") ובכך שורה שלמה מעל המפה - במסך שכבר סבל מ-29 פקדים מעל
+ * הקיפול ו-48% מהגובה לפני שרואים משהו מהטיול. נתנאל צילם את זה ואמר
+ * "מכוער, לא פשוט". עכשיו התאריכים יושבים **בתוך צ׳יפ הסיכום שכבר
+ * קיים** ("8 ימים · 22 עצירות"), שממילא היה חסר-פעולה - אותו מקום,
+ * אפס אובייקטים חדשים.
  *
- * **2. קצה אחד מספיק.** מי שממלא רק "יוצאים" מקבל "חוזרים" מחושב לפי
- * אורך הטיול הקיים, ולהיפך - כך שהמצב הרגיל תמיד עקבי ואי-ההתאמה היא
- * מצב חריג שהמשתמש יצר במכוון.
+ * **2. התאריך לא משנה את התוכנית.** נתנאל בחר טווח ולא תאריך יציאה
+ * בודד, ולטווח יש מספר ימים משלו שיכול לא להסכים עם מה שכבר בנוי.
+ * הפיתוי הוא לגזור את הימים מהטווח - וזו בדיוק הדרך שבה בחירת תאריך
+ * מוחקת יום עם עצירות. הפער מוצג, ההוספה היא כפתור מפורש, ומחיקה
+ * לעולם לא קורית מכאן.
+ *
+ * **3. קצה אחד מספיק.** מי שממלא רק "יוצאים" מקבל "חוזרים" לפי אורך
+ * הטיול, ולהיפך - כך שהמצב הרגיל תמיד עקבי.
  *
  * הספירה לאחור מחושבת **אחרי ה-mount** בלבד: השרת והדפדפן יכולים להיות
  * בימים שונים, וטקסט שתלוי בשעון בזמן hydration הוא אי-התאמה מובטחת
@@ -26,18 +31,50 @@ import { completeRange, countdown, formatHebrewRange, rangeDays, todayISO } from
  */
 export default function TripDates({
   trip,
+  summary,
   onSet,
   onAddDays,
 }: {
   trip: Trip;
+  /** הטקסט שהיה בצ׳יפ הסיכום ממילא - "22 עצירות · 8 ימים" */
+  summary: string;
   onSet: (dates: { startDate?: string; endDate?: string }) => void;
   onAddDays: (n: number) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [today, setToday] = useState<string | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  /**
+   * הזזה אופקית שמחזירה את הפאנל לתוך המסך.
+   *
+   * **למה במדידה ולא ב-CSS.** הכפתור יושב באמצע שורת הכותרת, ולכן שום
+   * עיגון קבוע לא עובד: `end-0` הגליש 114px ימינה (זה הצילום השני של
+   * נתנאל - שדה "יוצאים" מחוץ למסך), ו-`start-0` הגליש 64px שמאלה.
+   * `position: fixed` לא בא בחשבון כאן כי לשורש המסך יש `.rise-in`,
+   * שמשאיר transform ולכן הופך ל-containing block - המלכודת שכבר
+   * מתועדת בקובץ הזה ובגוטצ׳ות. מדידה אחרי הפתיחה עובדת בכל רוחב,
+   * בשני כיווני הכתיבה, ובכל מקום שבו הכפתור יימצא בעתיד.
+   */
+  const [shift, setShift] = useState(0);
 
   useEffect(() => setToday(todayISO()), []);
+
+  useEffect(() => {
+    if (!open) {
+      setShift(0);
+      return;
+    }
+    const el = panelRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const M = 8;
+    let dx = 0;
+    if (r.left < M) dx = M - r.left;
+    else if (r.right > window.innerWidth - M) dx = window.innerWidth - M - r.right;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (dx) setShift(dx);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -67,31 +104,34 @@ export default function TripDates({
   };
 
   return (
-    <div ref={rootRef} className="relative">
+    <div ref={rootRef} className="relative shrink-0">
       <button
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold ring-1 transition ${
-          label
-            ? 'bg-sunset/10 text-night ring-sunset/25 hover:bg-sunset/15'
-            : 'bg-shell text-night/60 ring-night/15 hover:text-night'
-        }`}
+        aria-label={label ? `תאריכי הטיול: ${label}` : 'הוספת תאריכים לטיול'}
+        className="badge flex items-center gap-1.5 rounded-full bg-night/5 px-3 py-1 text-xs font-semibold text-night/60 transition hover:bg-night/10 hover:text-night"
       >
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
-          <rect x="3" y="5" width="18" height="16" rx="2" />
-          <path d="M3 10h18M8 3v4M16 3v4" />
-        </svg>
-        {label || 'הוספת תאריכים'}
-        {cd && cd.kind !== 'past' && (
-          <span className="rounded-full bg-sunset px-2 py-0.5 text-xs font-bold text-cream">
-            {cd.label}
-          </span>
+        <span>{summary}</span>
+        {label ? (
+          <span className="font-bold text-sunset-deep">· {label}</span>
+        ) : (
+          <span className="text-night/40">· + תאריכים</span>
         )}
-        <span aria-hidden className="text-[10px] text-night/40">▾</span>
       </button>
 
+      {/* הספירה לאחור היא מידע, לא פקד - שורה שקטה מתחת, בלי גלולה משלה */}
+      {cd && cd.kind !== 'past' && (
+        <span className="pointer-events-none absolute -bottom-4 end-1 whitespace-nowrap text-[11px] font-bold text-sunset-deep">
+          {cd.label}
+        </span>
+      )}
+
       {open && (
-        <div className="absolute end-0 top-full z-40 mt-2 w-72 rounded-2xl bg-shell p-4 shadow-[var(--shadow-pop)] ring-1 ring-night/10">
+        <div
+          ref={panelRef}
+          style={shift ? { transform: `translateX(${shift}px)` } : undefined}
+          className="absolute start-0 top-full z-40 mt-2 w-72 max-w-[calc(100vw-1rem)] rounded-2xl bg-shell p-4 shadow-[var(--shadow-pop)] ring-1 ring-night/10"
+        >
           <div className="grid grid-cols-2 gap-3">
             <label className="block">
               <span className="mb-1 block text-xs font-bold text-night/50">יוצאים</span>
@@ -116,15 +156,15 @@ export default function TripDates({
             </label>
           </div>
 
-          {span !== null && (
+          {span !== null && mismatch === 0 && (
             <p className="mt-2.5 text-xs font-medium text-night/50">
-              {span} {span === 1 ? 'יום' : 'ימים'} · בתוכנית {dayCount} {dayCount === 1 ? 'יום' : 'ימים'}
+              {span} {span === 1 ? 'יום' : 'ימים'} - בדיוק כמו בתוכנית
             </p>
           )}
 
           {/* אי-התאמה: אומרים אותה, ולא מתקנים אותה מאחורי הגב */}
           {mismatch > 0 && (
-            <div className="mt-2 rounded-xl bg-sunset/10 p-2.5 ring-1 ring-sunset/25">
+            <div className="mt-2.5 rounded-xl bg-sunset/10 p-2.5 ring-1 ring-sunset/25">
               <p className="text-xs font-semibold leading-relaxed text-night">
                 התאריכים מכסים {mismatch} {mismatch === 1 ? 'יום' : 'ימים'} יותר מהתוכנית.
               </p>
@@ -137,7 +177,7 @@ export default function TripDates({
             </div>
           )}
           {mismatch < 0 && (
-            <p className="mt-2 rounded-xl bg-night/5 p-2.5 text-xs font-semibold leading-relaxed text-night/70">
+            <p className="mt-2.5 rounded-xl bg-night/5 p-2.5 text-xs font-semibold leading-relaxed text-night/70">
               בתוכנית {-mismatch} {-mismatch === 1 ? 'יום' : 'ימים'} יותר ממה שהתאריכים מכסים. אפשר
               להאריך את תאריך החזרה, או למחוק ימים מהתוכנית - לא נמחק לכם ימים לבד.
             </p>

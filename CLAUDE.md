@@ -248,6 +248,64 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-29 (ll) - "This looks very ugly, not simple or appealing" - he was right, and one screenshot was a bug
+
+Two screenshots from his phone, both of the trip screen. The second one showed
+the date panel **half outside the viewport**, with the "יוצאים" field cut off
+the edge - that is a defect, not taste. The first one was the taste complaint,
+and measuring it made it concrete: at 402px (iPhone 16 Pro) the map started at
+**y=417 of an 874px viewport**. Almost half the screen was controls before any
+of his trip appeared: title row, three action buttons, a preferences row, and
+**three rows of day pills**, then a map-mode toggle on its own row.
+
+**I made it worse the day before.** The dates feature added its own pill
+("הוספת תאריכים") and with it a whole row, to a screen that entry (l) had
+already been through once for exactly this reason. Adding a control to a
+crowded screen and calling the feature done is how a screen becomes a cockpit.
+
+**Four changes, all measured:**
+
+- **The dates moved into the summary chip that was already there.**
+  "22 עצירות · 8 ימים" was inert; it now reads "22 עצירות · 8 ימים · 10-17
+  באוגוסט", opens the date editor, and carries the countdown as a quiet line
+  under it. **Zero new objects on screen** for a feature that had a pill and a
+  row the day before.
+- **The day strip went from three rows of wide pills to one row of compact
+  chips.** "🇸🇰 יום 3" for every day is the same flag eight times; the chip is
+  now the number, 44px tall so the touch target is unchanged, and the flag
+  appears **only where the city changes** - where it actually says something
+  ("from here it is Vienna"). The accessible name is still the full "יום 3
+  בברטיסלבה, 12 באוגוסט", so nothing was lost for screen readers.
+- **The map-mode switch moved onto the map**, top corner, where a map control
+  belongs. That is a whole row back.
+- **Preferences joined the actions row** instead of owning one.
+
+**Result at 402px: the map starts at y=328 instead of 417**, and the header is
+two rows instead of four. Not a redesign - the same controls, fewer rows.
+
+**The popover bug is worth its own note.** No fixed anchor works: the trigger
+sits in the middle of the header, so `end-0` overflowed 114px to one side and
+`start-0` overflowed 64px to the other. `position: fixed` is not available
+either - the screen root carries `.rise-in`, whose animation leaves a transform
+and therefore a containing block (the trap this file already documents twice).
+The fix measures the panel after opening and translates it back inside with an
+8px margin - direction-agnostic, width-agnostic, and it works wherever the
+button ends up living next.
+
+**And a second-order bug the fix created**, caught only because the browser
+suite clicks the button rather than looking at it: the map-mode switch was
+`z-[500]` to clear Leaflet's panes, which put it **above the date panel**, so
+the "add days" button was covered and the click went to the map toggle. The map
+wrapper now has `isolation: isolate`, the switch is `z-[1001]` inside that
+context, and the whole map subtree stays below the popovers outside it.
+
+**Also fixed while there:** the longer summary chip squeezed the trip name to
+"סלובקיה ווי" - the name row now wraps on mobile instead of shrinking the name.
+
+**Verified 30/30 (dates) + 31/31 (trip screen)** in a real browser at 402px
+DPR3 and 1440px, plus the panel-stays-on-screen assertion that would have
+caught his screenshot. 165 unit tests, validator 0 errors, tsc/lint/build clean.
+
 ### 2026-07-29 (kk) - Trip dates: a range that never edits the plan behind your back
 
 Netanel asked for dates on a trip and chose, in the clarifying questions, a

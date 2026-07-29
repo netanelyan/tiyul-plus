@@ -331,20 +331,33 @@ export default function TripWorkspace({
     <div className="rise-in pb-24 lg:pb-0">
       {/* ---------- כותרת הטיול ---------- */}
       <div className="flex flex-wrap items-center justify-between gap-3 print:hidden">
-        <div className="flex min-w-0 items-center gap-2">
+        <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
           {t ? (
             <input
               value={t.name}
               onChange={(e) => trip.renameTrip(t.id, e.target.value)}
               aria-label="שם הטיול"
-              className="display w-48 min-w-0 rounded-xl bg-transparent text-2xl text-night outline-none ring-sunset/50 transition focus:ring-2 sm:w-64"
+              className="display w-full min-w-0 rounded-xl bg-transparent text-2xl text-night outline-none ring-sunset/50 transition focus:ring-2 sm:w-64"
             />
           ) : (
             <span className="display text-2xl text-night">הטיול החדש שלכם</span>
           )}
-          <span className="badge shrink-0 rounded-full bg-night/5 px-3 py-1 text-xs font-semibold text-night/60">
-            {t ? `${totalStops} עצירות · ${t.days.length} ימים` : 'הסוכן בונה…'}
-          </span>
+          {t ? (
+            <TripDates
+              trip={t}
+              summary={`${totalStops} עצירות · ${t.days.length} ימים`}
+              onSet={(dates) => trip.setTripDates(t.id, dates)}
+              onAddDays={(n) => {
+                // מוסיפים בעיר האחרונה של הטיול - ההמשך הטבעי של המסלול
+                const slug = t.days[t.days.length - 1]?.citySlug ?? t.citySlugs[0];
+                if (slug) for (let i = 0; i < n; i++) trip.addDay(slug);
+              }}
+            />
+          ) : (
+            <span className="badge shrink-0 rounded-full bg-night/5 px-3 py-1 text-xs font-semibold text-night/60">
+              הסוכן בונה…
+            </span>
+          )}
         </div>
         {/*
           שלושה פקדים במקום שבעה. הכל נשאר בהישג יד - שיתוף בתפריט אחד,
@@ -396,39 +409,26 @@ export default function TripWorkspace({
               ]}
             />
           )}
+          {/*
+            העדפות יושבות בשורת הפעולות ולא בשורה משלהן: שורה שלמה
+            לפקד אחד מקופל היא בדיוק סוג הבזבוז שדחף את המפה למחצית
+            התחתונה של המסך בצילום שנתנאל שלח.
+          */}
+          {t && (
+            <button
+              onClick={() => setPrefsOpen((v) => !v)}
+              aria-expanded={prefsOpen}
+              className="rounded-full bg-night/5 px-2.5 py-1.5 text-xs font-semibold text-night/55 transition hover:bg-night/10 hover:text-night"
+            >
+              העדפות{prefSummary ? `: ${prefSummary}` : ''}{' '}
+              <span aria-hidden className={`inline-block transition-transform ${prefsOpen ? 'rotate-180' : ''}`}>
+                ▾
+              </span>
+            </button>
+          )}
         </div>
       </div>
 
-      {/* ---------- העדפות: כפתורים, אף פעם לא שאלות בשיחה ---------- */}
-      {t && (
-        <div className="mt-3 flex flex-wrap items-center gap-1.5 print:hidden">
-          {/*
-            מקופל כברירת מחדל, אבל **הערכים שנבחרו נשארים גלויים כטקסט**
-            בתוך הכפתור עצמו - העדפות נקבעות פעם אחת ונקראות שוב לעיתים
-            רחוקות, ולכן ארבעה צ׳יפים פתוחים תמיד הם רעש; להסתיר מה שכבר
-            נבחר היה כבר שגיאה אחרת.
-          */}
-          <TripDates
-            trip={t}
-            onSet={(dates) => trip.setTripDates(t.id, dates)}
-            onAddDays={(n) => {
-              // מוסיפים בעיר האחרונה של הטיול - ההמשך הטבעי של המסלול
-              const slug = t.days[t.days.length - 1]?.citySlug ?? t.citySlugs[0];
-              if (slug) for (let i = 0; i < n; i++) trip.addDay(slug);
-            }}
-          />
-          <button
-            onClick={() => setPrefsOpen((v) => !v)}
-            aria-expanded={prefsOpen}
-            className="rounded-full bg-night/5 px-2.5 py-1 text-xs font-semibold text-night/55 transition hover:bg-night/10 hover:text-night"
-          >
-            העדפות{prefSummary ? `: ${prefSummary}` : ''}{' '}
-            <span aria-hidden className={`inline-block transition-transform ${prefsOpen ? 'rotate-180' : ''}`}>
-              ▾
-            </span>
-          </button>
-        </div>
-      )}
       {t && prefsOpen && (
         <div className="mt-1.5 flex flex-wrap items-center gap-1.5 print:hidden">
           <ToggleChip
@@ -496,39 +496,40 @@ export default function TripWorkspace({
           לגלילה שחותך מילה נקרא כשבירה. עכשיו הימים יורדים לשורה הבאה
           וכלום לא נחתך.
         */
-        <div className="mt-4 flex flex-wrap items-center gap-2 print:hidden">
+        <div className="mt-4 flex flex-wrap items-center gap-1.5 print:hidden">
           {t.days.map((d, i) => {
             const dst = destOf(d.citySlug);
             const prev = i > 0 ? t.days[i - 1] : null;
             const cityChanged = prev && prev.citySlug !== d.citySlug;
+            const iso = dayDate(t, i);
+            const active = day?.id === d.id;
             return (
-              <span key={d.id} className="flex shrink-0 items-center gap-2">
+              <span key={d.id} className="flex shrink-0 items-center gap-1.5">
                 {cityChanged && (
                   <span
                     title={legOf(prev!.citySlug, d.citySlug).label}
-                    className="rounded-full bg-night/5 px-2.5 py-1 text-xs font-medium text-night/50"
+                    aria-hidden
+                    className="text-xs text-night/35"
                   >
                     {legOf(prev!.citySlug, d.citySlug).emoji}
                   </span>
                 )}
                 <button
                   onClick={() => setSelectedDayId(d.id)}
-                  className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                    day?.id === d.id
+                  aria-label={`יום ${i + 1}${dst ? ` ב${dst.name}` : ''}${iso ? `, ${formatHebrewDate(iso)}` : ''}`}
+                  aria-current={active ? 'true' : undefined}
+                  className={`flex h-11 min-w-11 items-center justify-center gap-1 rounded-xl px-2 text-sm font-bold transition ${
+                    active
                       ? 'bg-sunset text-cream'
-                      : 'bg-shell text-night/60 ring-1 ring-night/10 hover:ring-night/25'
+                      : 'bg-shell text-night/55 ring-1 ring-night/10 hover:ring-night/25'
                   }`}
                 >
-                  <Flag flag={dst?.flag} label={dst?.name} size="sm" className="me-1.5" />
-                  יום {i + 1}
-                  {(() => {
-                    const iso = dayDate(t, i);
-                    return iso ? (
-                      <span className="ms-1 text-[11px] font-medium opacity-70">
-                        · {formatHebrewDate(iso)}
-                      </span>
-                    ) : null;
-                  })()}
+                  {/* הדגל רק כשהעיר מתחלפת - שם הוא אומר משהו ("מכאן וינה"),
+                      ובכל שאר הימים הוא היה חזרה של אותה תמונה שמנפחת גלולה */}
+                  {(i === 0 || cityChanged) && (
+                    <Flag flag={dst?.flag} label={dst?.name ?? ''} size="sm" />
+                  )}
+                  {i + 1}
                 </button>
               </span>
             );
@@ -549,39 +550,25 @@ export default function TripWorkspace({
         {/* מפה - ראשונה במובייל, עמודה אמצעית מ-lg */}
         <div className="order-first lg:order-none lg:col-start-2 lg:row-start-1">
           <div className="lg:sticky lg:top-20">
-            {/* מתג יום נבחר / כל הטיול */}
-            {t && t.days.length > 1 && tripGroups.length > 0 && (
-              <div className="mb-2 flex justify-center print:hidden">
-                <div className="inline-flex rounded-full bg-shell p-1 ring-1 ring-night/10">
-                  <button
-                    onClick={() => setMapMode('day')}
-                    aria-pressed={mapMode === 'day'}
-                    className={`rounded-full px-4 py-1.5 text-xs font-bold transition ${
-                      mapMode === 'day'
-                        ? 'bg-night/10 text-night'
-                        : 'text-night/50 hover:text-night'
-                    }`}
-                  >
-                    יום {dayIndex + 1}
-                  </button>
-                  <button
-                    onClick={() => setMapMode('trip')}
-                    aria-pressed={mapMode === 'trip'}
-                    className={`rounded-full px-4 py-1.5 text-xs font-bold transition ${
-                      mapMode === 'trip'
-                        ? 'bg-night/10 text-night'
-                        : 'text-night/50 hover:text-night'
-                    }`}
-                  >
-                    🗺️ כל הטיול
-                  </button>
-                </div>
-              </div>
-            )}
 
             {mapMode === 'trip' && tripGroups.length > 0 ? (
               <>
-                <div className="h-64 overflow-hidden rounded-2xl ring-1 ring-night/10 sm:h-80 lg:h-[30rem]">
+                <div className="relative isolate h-64 overflow-hidden rounded-2xl ring-1 ring-night/10 sm:h-80 lg:h-[30rem]">
+                {/*
+                  מתג התצוגה יושב על המפה ולא בשורה משלו מעליה. הוא פקד
+                  של המפה, וכשורה נפרדת הוא עלה ~60px מגובה המסך שבו
+                  צריך לראות את הטיול - במסך שנתנאל צילם, כמעט חצי
+                  הגובה היה פקדים לפני שהמפה מתחילה. `right`/`left`
+                  פיזיים בכוונה: מיכל Leaflet הוא LTR ופקדי הזום יושבים
+                  בשמאל הפיזי, אז המתג הולך לימין הפיזי.
+                */}
+                {t && t.days.length > 1 && tripGroups.length > 0 && (
+                  <MapModeSwitch
+                    mode={mapMode}
+                    dayLabel={`יום ${dayIndex + 1}`}
+                    onMode={setMapMode}
+                  />
+                )}
                   <PlacesMap
                     center={{
                       lat: tripGroups[0].places[0].lat,
@@ -628,7 +615,22 @@ export default function TripWorkspace({
                 </div>
               </>
             ) : dayDest && places.length > 0 ? (
-              <div className="h-64 overflow-hidden rounded-2xl ring-1 ring-night/10 sm:h-80 lg:h-[34rem]">
+              <div className="relative isolate h-64 overflow-hidden rounded-2xl ring-1 ring-night/10 sm:h-80 lg:h-[34rem]">
+              {/*
+                מתג התצוגה יושב על המפה ולא בשורה משלו מעליה. הוא פקד
+                של המפה, וכשורה נפרדת הוא עלה ~60px מגובה המסך שבו
+                צריך לראות את הטיול - במסך שנתנאל צילם, כמעט חצי
+                הגובה היה פקדים לפני שהמפה מתחילה. `right`/`left`
+                פיזיים בכוונה: מיכל Leaflet הוא LTR ופקדי הזום יושבים
+                בשמאל הפיזי, אז המתג הולך לימין הפיזי.
+              */}
+              {t && t.days.length > 1 && tripGroups.length > 0 && (
+                <MapModeSwitch
+                  mode={mapMode}
+                  dayLabel={`יום ${dayIndex + 1}`}
+                  onMode={setMapMode}
+                />
+              )}
                 <PlacesMap
                   center={dayDest.center}
                   zoom={dayDest.zoom}
@@ -1350,5 +1352,44 @@ function ToggleChip({
     >
       {label}
     </button>
+  );
+}
+
+/**
+ * מתג "היום הזה / כל הטיול" - צף על המפה בפינה, כי הוא פקד של המפה.
+ * מוצג רק כשיש בכלל יותר מיום אחד לצייר (הרכיב האב מחליט).
+ */
+function MapModeSwitch({
+  mode,
+  dayLabel,
+  onMode,
+}: {
+  mode: 'day' | 'trip';
+  dayLabel: string;
+  onMode: (m: 'day' | 'trip') => void;
+}) {
+  return (
+    <div className="pointer-events-none absolute right-2 top-2 z-[1001] print:hidden">
+      <div className="pointer-events-auto inline-flex rounded-full bg-shell/95 p-0.5 shadow-[0_2px_10px_-4px_rgba(36,27,77,0.45)] ring-1 ring-night/10 backdrop-blur-[2px]">
+        <button
+          onClick={() => onMode('day')}
+          aria-pressed={mode === 'day'}
+          className={`rounded-full px-3 py-1 text-xs font-bold transition ${
+            mode === 'day' ? 'bg-night/10 text-night' : 'text-night/50 hover:text-night'
+          }`}
+        >
+          {dayLabel}
+        </button>
+        <button
+          onClick={() => onMode('trip')}
+          aria-pressed={mode === 'trip'}
+          className={`rounded-full px-3 py-1 text-xs font-bold transition ${
+            mode === 'trip' ? 'bg-night/10 text-night' : 'text-night/50 hover:text-night'
+          }`}
+        >
+          כל הטיול
+        </button>
+      </div>
+    </div>
   );
 }

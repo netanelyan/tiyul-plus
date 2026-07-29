@@ -103,16 +103,18 @@ export default function AddDayPicker({
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="listbox"
-        className="rounded-full bg-shell px-3.5 py-2 text-sm font-semibold text-night/70 ring-1 ring-night/10 transition hover:ring-night/25"
+        aria-label="הוספת יום לטיול"
+        title="הוספת יום"
+        className="flex h-11 min-w-11 items-center justify-center rounded-xl bg-shell px-2 text-lg font-bold text-night/45 ring-1 ring-dashed ring-night/15 transition hover:text-night hover:ring-night/30"
       >
-        + יום…
+        +
       </button>
 
       {open && (
         <div
           role="listbox"
           aria-label="בחירת עיר ליום חדש"
-          className="absolute end-0 top-full z-40 mt-2 w-72 rounded-2xl bg-shell p-2 shadow-[var(--shadow-pop)] ring-1 ring-night/10"
+          className="absolute start-0 top-full z-40 mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-2xl bg-shell p-2 shadow-[var(--shadow-pop)] ring-1 ring-night/10"
         >
           <input
             ref={inputRef}
