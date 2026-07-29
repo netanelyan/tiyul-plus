@@ -407,6 +407,79 @@ Shabbat marking (he did not choose it), no "best month" warning - that one is
 impossible anyway, since `bestMonths` still does not exist in the catalog, and
 inventing a seasonal opinion from a date is exactly what hard rule 2 forbids.
 
+### 2026-07-29 (ll) - Photos: 272 fillable gaps down to 176, and a third retrieval method
+
+Netanel: "Yes, dont stop until finished." This is the sustained photo pass.
+**Tier A went 174 -> 78; total fillable 272 -> 176.** 96 photographs written
+across three commits, every one visually checked before it was written.
+
+**The worklist stopped being pasted.** The audit now fetches `/api/cities` from
+the deployed site, filters places with no photo in a Tier A category, and
+derives the gap list **in the browser**. No transcription, no drift between what
+I think the gaps are and what they are.
+
+**Three retrieval methods, and they are complementary rather than redundant:**
+
+| method | what it asks | finds |
+|---|---|---|
+| Commons file **geosearch** | which photographs are geotagged AT this coordinate | markets and places Wikipedia never wrote about |
+| **article** lead image | what does the article about this place lead with | landmarks with a real article |
+| Commons **name search** + `prop=coordinates` on the file, 5km check | is there a file named for this place, and is it actually there | the long tail the first two miss |
+
+The third was added for the 95 places the first two returned nothing for, and it
+produced 38 candidates. Name search alone would be the wrong-place trap in its
+purest form; checking the **file's own coordinates** is what makes it safe.
+
+**Several places were got right on the second or third attempt**, which is the
+argument for running more than one method: Reina Sofía was a public park, then
+the museum's front gate. Santa Caterina was a nativity scene, then the market's
+wavy roof. Souq el-Khodra was the *sugar* souq, then the vegetable one. Ballarò
+was a palazzo facade, then street food in the market. Atarazanas was a bar
+counter, then the market building.
+
+**The contact sheet remains the only thing that works.** Across the three
+batches it rejected **1 of 36, 29 of 55, 21 of 67 and 14 of 38** - call it 40%
+of everything the filters passed. Every rejected image is a real Commons
+photograph, correctly geotagged, within metres of the right place:
+
+> a bus depot for Designer Outlet Warszawa · the Remarkables mountain range for
+> the Remarkables Market · a canal for Piața Cibin · a Silla crown in a vitrine
+> for Gyeongju · a protest crowd for Arcul de Triumf · a politician at a podium
+> for Dubai Opera · stained glass for Dezerter Bazaar · Martyrs' Lane for Deniz
+> Mall · a horse-head sculpture for the Málaga outlet · a tray of brains for the
+> Haagse Markt · an information plaque for Cartagena's cathedral
+
+**Reading the filename beside the image is a second, separate check**, and it
+caught things the picture alone could not - because the picture looked fine:
+
+    The Mall outlet     -> "Leccio - Case coloniche"      (farmhouses)
+    Souq El-Khodra      -> "Souq Al-Sukar"                (the sugar souq)
+    Ringsted Outlet     -> "Opladestation Ringsted"       (an EV charging point)
+    Pärnu market        -> "Victoria Hotel. 1926"
+    Kuressaare market   -> "vaekoda"                      (the weigh-house)
+    ION Orchard         -> "Orchard Station exit"         (the MRT station)
+    Designer Outlet Berlin -> "Lehrter Bahn, Berliner Außenring"  (a railway)
+    Arusha market       -> "...street NEAR Arusha central market"
+
+**Verification got cheaper without getting weaker.** Every URL written is
+*derived* from the filename by `scripts/lib/commons-url.mjs`, and a derived URL
+is not a fetched one. Rather than carrying full URLs back to the browser, only
+the **md5 hash prefix** goes back; the browser rebuilds each URL from the
+filename it already holds, applying MediaWiki's own encoding rules, and probes
+it. That checks the derivation and the fetch in one pass. **96 built, 96 alive,
+0 dead, 0 derivation mismatches.**
+
+**Where it stands, honestly.** The remaining **78 Tier A** are places where all
+three methods returned nothing, or returned something the sheet rejected. They
+will not fall to re-running the same three - the next thing to try is
+**local-language Wikipedias** (a Latvian market has a `lv` article and no `en`
+one) and **Commons categories** by name. **Tier B is 98** and untouched by this
+pass; entry (hh) predicted a low hit rate there and nothing here contradicts it.
+Tier C stays at 53 and stays untouched.
+
+**Numbers:** 1814 places, **0 errors**, 67 warnings, 170 tests, tsc and build
+clean. Photo manifest 1,714 URLs with recorded HTTP evidence.
+
 ### 2026-07-29 (kk) - The browser check that had been owed for seven passes, and the Hebrew it found
 
 Netanel: "Do that" - the RTL/overflow check on the ~280 entries added across
