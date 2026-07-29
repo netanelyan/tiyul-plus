@@ -242,6 +242,126 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-29 (hh) - Outlet villages, the photo worklist, and a cap that was never the binding constraint
+
+Netanel, two instructions: mark the places without an image so the photo work is
+ready the moment Chrome connects, and - after I offered to cover malls and
+outlets at a different bar - "Do it. Increase the cap."
+
+**The photo mark is a script, not a data field.** `scripts/photo-gaps.mjs`. The
+absence of a `photo` field is already the mark; adding a flag would duplicate
+state and cost index budget for nothing. What was actually missing is a *stable*
+worklist - "which places have no photo" has now been re-derived by hand in four
+sessions with four throwaway `/tmp` scripts, shaped slightly differently each
+time.
+
+**The tiering is the whole point**, because a flat list of 312 gaps reads as 312
+units of work and it is not:
+
+| tier | n | what it is |
+|---|---|---|
+| A | 171 | public places - landmarks, museums, parks, markets. Usually have a Commons article. The real queue. |
+| B | 88 | businesses. The famous ones do have free photographs (Harry's Bar, Confeitaria Colombo, Pfunds Molkerei); neighbourhood ones never will. |
+| C | 53 | kosher venues. **DO NOT WORK** - four sessions have now confirmed a Chabad house or kosher grocery has no freely licensed photograph anywhere. |
+
+Plus a **re-probe list of 38** URLs already in the data with no passing HTTP
+evidence - 16 recorded dead, 22 never probed. Those come first when Chrome
+connects, because some are alive and merely lack a record, and one
+`verify-photos --force` settles them. Every row carries the place's lat/lng,
+because the wrong-subject trap is caught by comparing a candidate article's own
+coordinates and **never by name matching** - that is the check that would have
+caught the Abu Dhabi recycling bin and the Toronto restaurant that came back for
+a Florence gelateria.
+
+**A bug of mine in that script, worth recording because a terminal hides it.**
+`process.exit(0)` immediately after a large `console.log` truncates stdout when
+stdout is a **pipe** - it emitted 62KB of a 90KB document and produced invalid
+JSON that read exactly like a data bug. Caught only by piping `--json` into a
+parser. Falling off the end of the module lets Node flush.
+
+---
+
+**The shopping gap was real and specific.** 171 shopping-ish places existed but
+only **seven** mall-like ones, because the standing bar - "a market or street
+worth walking" - almost never admits a mall, and that was the right bar for that
+pass. The category genuinely missing is the one Israelis actually fly for:
+**designer outlet villages. There were zero.**
+
+Eighteen added: eleven outlet villages (Parndorf, La Roca, Las Rozas, Castel
+Romano, La Vallée, Berlin/Wustermark, Woodbury Common, Athens/Spata, Premier
+Outlet, Warszawa/Piaseczno) plus landmark stores and malls that are destinations
+in their own right (Galeries Lafayette Haussmann, Harrods, Macy's Herald Square,
+Mall of the Emirates, Siam Paragon, ION Orchard, Mustafa Centre, Lotte World
+Mall).
+
+**Most of what the research returned was rejected**, which is the bar working:
+Madrid Xanadú, Ibn Battuta, MBK, Băneasa, AFI Cotroceni, the whole Cyprus mall
+set, Westfield Arkadia and Mokotów, Golden Hall - ordinary city malls. Valmontone
+went because Rome already had Castel Romano and two outlets for one city is
+padding.
+
+**The distance guard decided scope, mechanically rather than by taste** - and
+this is the part worth carrying. An out-of-town outlet is *legitimately* outside
+its city, so the obvious move was an exemption for the new category. Instead the
+guard's own tolerance became the arbiter: Parndorf, La Roca, Woodbury, Piaseczno,
+Biatorbágy and Spata all pass and went in; **Bicester Village sits 1.03 degrees
+from London, past the floor, so it went** - the same call as Porto and the Douro.
+A brand-new category does not get a brand-new exemption; if it did, the guard
+would mean nothing within a month.
+
+**Two live brand traps, both caught.** The slug `Harrods` returns **Harrod,
+Ohio** with entirely plausible coordinates - the London store needed its OSM
+object id. And `Shinsegae Department Store` returns the **Uijeongbu** branch
+rather than the Myeongdong flagship, so Seoul got one entry instead of two. *A
+wrong branch of the right brand is still wrong* - the same lesson as All'Antico
+Vinaio's Milan branch in entry (ee), now confirmed as a systematic hazard for
+retail chains specifically. 18 of 18 coordinates re-read against source, 0
+failed, with the four multi-branch retail rows confirmed by town explicitly.
+
+---
+
+**The cap: raised, but it was never the binding constraint, and that is the
+finding.**
+
+260,000 → **280,000**, and the authoritative section now carries the full
+arithmetic instead of just a number. At 241,002 chars the index is ~78k-89k
+tokens; adding the other blocks at their own worst case (detail ~28k, history
+~45k, trip ~6k, system and tools ~6k) puts a worst-case request at **165k-177k of
+the 200k window**. Scaled: 280,000 leaves ~15k headroom, 300,000 leaves ~8k, and
+**340,000 is negative**. The failure mode is not gradual - entry (e) records a
+real 408k-token request that then failed identically on every subsequent turn
+forever, because history only grows.
+
+So the honest answer to "increase the cap" is that the cap can move a little and
+the window cannot. **The lever that actually creates room is the index FORMAT.**
+`buildGroundingIndex()` serialises each place as a JSON object, so
+`"id":"name":"category":"tags":"priceLevel":"mustSee":"durationMin":` repeats
+1,768 times. Measured: re-encoding the identical information as tuples with a
+one-line legend gives **132,184 chars instead of 241,002 - a 45% saving, ~107,000
+chars, room for about 975 more entries at zero cost to the context window.** That
+is four times what any safe ceiling raise buys.
+
+**It was deliberately NOT shipped.** The index is the single most load-bearing
+block in the prompt, the change alters how the model reads every place id, and
+there is no `ANTHROPIC_API_KEY` in this sandbox to verify the model still uses it
+correctly. That no information is lost is offline-provable; that the model still
+*behaves* is not, and this log already contains enough entries about
+prompt changes that looked safe. It is written up in the budget section as the
+next session's highest-value move, for whoever has a live key.
+
+**Numbers:** 1768 places / 166 destinations / 83 countries, **0 errors**, 63
+warnings. 139 tests, tsc and build clean. Index 241,002 of the new 280,000.
+
+**What the next session should know.** (1) Run `scripts/photo-gaps.mjs` the moment
+Chrome is connected; the order is written into its own output. (2) The index
+compaction above, before any further ceiling raise. (3) The nine countries with no
+food or shopping place at all are unchanged and still blocked on coordinates, not
+research. (4) No browser RTL/overflow check has been run on any of the 193 entries
+added across passes (dd) through (hh) - still the largest untested surface here.
+(5) Standing: the 18 dead photo URLs, the 2.5MB client bundle,
+`feat/catalog-supabase` unmerged, and **both GitHub PATs still need revoking at
+https://github.com/settings/tokens**.
+
 ### 2026-07-29 (gg) - The long tail at two per destination: 126 entries, nine countries that resisted
 
 Netanel: "Continue, now 2 per destination." This closes the food and shopping
