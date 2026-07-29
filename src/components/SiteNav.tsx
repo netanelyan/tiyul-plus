@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTrip } from '@/lib/trip/TripContext';
-import { tripLabel } from '@/lib/trip/label';
+import { tripLabel, type CityNames } from '@/lib/trip/label';
 import SiteSearch from '@/components/SiteSearch';
 import AccountButton from '@/components/AccountButton';
 
@@ -30,7 +30,7 @@ const NAV_LINKS = [
  * נהיה "ברטיסלב…"). עכשיו: כניסה אחת שאומרת כמה טיולים יש, ורשימה
  * מלאה בלי חיתוך. אותן פעולות בדיוק, פחות רעש.
  */
-export default function SiteNav() {
+export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
   const [open, setOpen] = useState(false);
   const [tripsMenuOpen, setTripsMenuOpen] = useState(false);
   const { trips, currentId, hydrated, setCurrentId } = useTrip();
@@ -106,7 +106,7 @@ export default function SiteNav() {
                     }`}
                   >
                     {/* השם המלא, בלי חיתוך - ארוך נשבר לשתי שורות */}
-                    <span className="block text-sm font-semibold leading-snug">{tripLabel(t)}</span>
+                    <span className="block text-sm font-semibold leading-snug">{tripLabel(t, cityNames)}</span>
                     <span className="block text-xs font-medium text-night/40">
                       {t.id === currentId ? 'פתוח עכשיו' : `${t.days.length} ימים`}
                     </span>
@@ -183,7 +183,7 @@ export default function SiteNav() {
                   }`}
                 >
                   {/* בלי truncate: שם ארוך נשבר לשתי שורות במקום להיחתך */}
-                  <span className="block font-semibold leading-snug">{tripLabel(t)}</span>
+                  <span className="block font-semibold leading-snug">{tripLabel(t, cityNames)}</span>
                   <span className="block text-xs font-medium text-night/40">
                     {t.id === currentId ? 'פתוח עכשיו' : `${t.days.length} ימים`}
                   </span>

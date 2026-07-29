@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import CardPhoto from '@/components/CardPhoto';
 
 export interface HighlightCard {
   slug: string;
@@ -59,9 +60,11 @@ export default function DestinationHighlights({ cards }: { cards: HighlightCard[
           className="card-pop group relative block h-44 overflow-hidden rounded-2xl ring-1 ring-cream/10 sm:h-56"
         >
           {d.heroPhoto ? (
-            <div
+            <CardPhoto
+              photo={d.heroPhoto}
+              overlay={null}
               className="photo-bg absolute inset-0 transition-transform duration-500 group-hover:scale-105"
-              style={{ backgroundImage: `url("${d.heroPhoto}")` }}
+              sizes="(min-width: 640px) 46vw, 94vw"
             />
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-night/60 to-night" />

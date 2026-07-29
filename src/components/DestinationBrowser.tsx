@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import Flag from '@/components/Flag';
+import CardPhoto from '@/components/CardPhoto';
 import type { PlaceTag } from '@/lib/types';
 import type { Continent } from '@/data/worldCountries';
 import {
@@ -186,18 +187,9 @@ export default function DestinationBrowser({ cards }: { cards: DestinationCard[]
               href={`/destinations/${c.slug}`}
               className="card-pop group overflow-hidden rounded-2xl bg-shell ring-1 ring-night/10"
             >
-              <div
-                /* url() במרכאות - תיקון של סשן הדאטה שהגיע במקביל: כתובת
-                   תמונה עם סוגריים או רווח שוברת background-image בלי הן */
-                className="photo-bg relative h-40"
-                style={
-                  c.photo
-                    ? {
-                        backgroundImage: `linear-gradient(180deg, rgba(15,14,26,0) 40%, rgba(15,14,26,0.72) 100%), url("${c.photo}")`,
-                      }
-                    : undefined
-                }
-              >
+              {/* `<img loading="lazy">` ולא background-image: 166 כרטיסים
+                  שלחו 166 בקשות תמונה בפתיחה. ראו CardPhoto. */}
+              <CardPhoto photo={c.photo}>
                 <span className="badge absolute end-3 top-3 rounded-full bg-cream/95 px-2 py-0.5">
                   <Flag flag={c.flag} label={c.country} size="sm" />
                 </span>
@@ -210,7 +202,7 @@ export default function DestinationBrowser({ cards }: { cards: DestinationCard[]
                   <h3 className="display truncate text-xl text-cream drop-shadow">{c.name}</h3>
                   <div className="truncate text-xs font-medium text-cream/80">{c.country}</div>
                 </div>
-              </div>
+              </CardPhoto>
               <div className="p-4">
                 <div className="flex flex-wrap gap-1.5">
                   {c.vibes.slice(0, 3).map((v) => {

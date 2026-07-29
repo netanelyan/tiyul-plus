@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { getProvider } from '@/lib/providers';
 import DestinationBrowser from '@/components/DestinationBrowser';
-import { buildDestinationCards } from '@/lib/destinationFacets';
+import { buildDestinationCards } from '@/lib/destinationCards';
 
 export const metadata = { title: 'יעדים | טיול+' };
 

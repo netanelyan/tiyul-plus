@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getProvider } from '@/lib/providers';
 import Flag from '@/components/Flag';
+import CardPhoto from '@/components/CardPhoto';
 import { countries } from '@/data/countries';
 
 export function generateStaticParams() {
@@ -86,21 +87,17 @@ export default async function CountryPage({
               href={`/destinations/${d.slug}`}
               className="card-pop group overflow-hidden rounded-2xl bg-shell ring-1 ring-night/10"
             >
-              <div
+              <CardPhoto
+                photo={d.photo}
                 className="photo-bg relative h-44"
-                style={
-                  d.photo
-                    ? {
-                        backgroundImage: `linear-gradient(180deg, rgba(15,14,26,0) 40%, rgba(15,14,26,0.7) 100%), url("${d.photo}")`,
-                      }
-                    : undefined
-                }
+                sizes="(min-width: 1024px) 32vw, (min-width: 640px) 48vw, 94vw"
+                overlay="linear-gradient(180deg, rgba(15,14,26,0) 40%, rgba(15,14,26,0.7) 100%)"
               >
                 <div className="absolute bottom-3 start-4">
                   <h3 className="display text-2xl text-cream drop-shadow">{d.name}</h3>
                   <div className="text-xs font-medium text-cream/80">{d.nameLocal}</div>
                 </div>
-              </div>
+              </CardPhoto>
               <div className="p-5">
                 <p className="text-sm leading-relaxed text-night/75">{d.tagline}</p>
                 <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold">

@@ -8,7 +8,7 @@ import { authHeader } from '@/lib/auth/client';
 import { getSupabase } from '@/lib/auth/client';
 import { imageToAvatar, searchPublicProfiles, type PublicProfile } from '@/lib/auth/profile';
 import { useTrip } from '@/lib/trip/TripContext';
-import { tripLabel } from '@/lib/trip/label';
+import { tripLabel, type CityNames } from '@/lib/trip/label';
 import {
   CONTINENTS,
   WORLD_COUNTRIES,
@@ -25,7 +25,7 @@ import ThinkingIndicator from '@/components/ThinkingIndicator';
  * גיימיפיקציה קלה עם דרגות) · הטיולים המסונכרנים · הגדרות חשבון.
  * כל שינוי נשמר אוטומטית (debounce לשדות טקסט, מיידי לבחירות).
  */
-export default function AccountClient() {
+export default function AccountClient({ cityNames }: { cityNames: CityNames }) {
   const auth = useAuth();
   const trip = useTrip();
   const router = useRouter();
@@ -74,6 +74,7 @@ export default function AccountClient() {
           <PassportCard />
           <CommunityCard />
           <TripsCard
+            cityNames={cityNames}
             onOpen={(id) => {
               trip.setCurrentId(id);
               router.push('/chat');
@@ -377,7 +378,7 @@ function flagToCode(flag: string): string | null {
 
 /* ========================== הטיולים שלי ========================== */
 
-function TripsCard({ onOpen }: { onOpen: (id: string) => void }) {
+function TripsCard({ onOpen, cityNames }: { onOpen: (id: string) => void; cityNames: CityNames }) {
   const trip = useTrip();
   if (!trip.hydrated) return null;
 
@@ -416,7 +417,7 @@ function TripsCard({ onOpen }: { onOpen: (id: string) => void }) {
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-bold text-night">{t.name}</span>
                   <span className="block text-xs font-medium text-night/50">
-                    {tripLabel(t)} · {t.days.length} ימים · {stops} עצירות
+                    {tripLabel(t, cityNames)} · {t.days.length} ימים · {stops} עצירות
                   </span>
                 </span>
                 <span className="shrink-0 text-sm font-bold text-sunset-deep">פתיחה ←</span>

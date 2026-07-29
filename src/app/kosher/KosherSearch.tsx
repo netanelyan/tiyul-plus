@@ -5,6 +5,7 @@ import Link from 'next/link';
 import type { Place } from '@/lib/types';
 import PlacesMap from '@/components/PlacesMap';
 import Flag from '@/components/Flag';
+import CardPhoto from '@/components/CardPhoto';
 import KosherBadge from '@/components/KosherBadge';
 
 export interface KosherCity {
@@ -206,15 +207,11 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
                   onClick={() => setSelectedSlug(city.slug)}
                   className="card-pop group overflow-hidden rounded-2xl bg-shell text-start ring-1 ring-night/10 transition hover:ring-sunset/40"
                 >
-                  <div
+                  <CardPhoto
+                    photo={city.photo}
                     className="photo-bg relative h-20 sm:h-24"
-                    style={
-                      city.photo
-                        ? {
-                            backgroundImage: `linear-gradient(180deg, rgba(15,14,26,0.1) 0%, rgba(15,14,26,0.72) 100%), url("${city.photo}")`,
-                          }
-                        : undefined
-                    }
+                    sizes="(min-width: 640px) 30vw, 46vw"
+                    overlay="linear-gradient(180deg, rgba(15,14,26,0.1) 0%, rgba(15,14,26,0.72) 100%)"
                   >
                     <span className="absolute end-2 top-2 rounded-full bg-[#00a896] px-2 py-0.5 text-[11px] font-bold text-white shadow">
                       {city.kosherPlaces.length}
@@ -225,7 +222,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
                       size="md"
                       className="absolute bottom-1.5 start-2 shadow-[0_0_0_1px_rgba(255,255,255,0.7)]"
                     />
-                  </div>
+                  </CardPhoto>
                   <div className="p-3">
                     <div className="truncate font-bold text-night">{city.name}</div>
                     <div className="truncate text-xs font-medium text-night/45">{city.country}</div>

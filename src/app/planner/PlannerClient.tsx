@@ -1,15 +1,18 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import type { Country, Destination } from '@/lib/types';
+import type { DestinationSummary } from '@/lib/types';
 import type { Trip, WizardPrefs } from '@/lib/trip/types';
 import { useTrip } from '@/lib/trip/TripContext';
 import { tripFromTemplate } from '@/lib/trip/generate';
+// הקטלוג המלא כבר נמצא ב-bundle של המסך הזה (TripWorkspace מייבא אותו),
+// ולכן התבנית נבנית ממנו במקום להוריד אותו שוב בתוך ה-HTML.
+import { destinations as curatedDestinations } from '@/data/destinations';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 import Flag from '@/components/Flag';
 import TripWorkspace from '@/components/TripWorkspace';
 import CityCombobox from '@/components/CityCombobox';
-import { buildCityOptions } from '@/lib/citySearch';
+import { buildCityOptionsFromSummaries } from '@/lib/citySearch';
 import { authHeader } from '@/lib/auth/client';
 
 /**
@@ -18,12 +21,10 @@ import { authHeader } from '@/lib/auth/client';
  * עם הסוכן במסך אחד, על אותו Trip object.
  */
 export default function PlannerClient({
-  countries,
-  destinations,
+  summaries,
   initialSlug,
 }: {
-  countries: Country[];
-  destinations: Destination[];
+  summaries: DestinationSummary[];
   initialSlug: string;
 }) {
   const trip = useTrip();
@@ -41,8 +42,7 @@ export default function PlannerClient({
   if (!trip.currentTrip || showWizard) {
     return (
       <Onboarding
-        countries={countries}
-        destinations={destinations}
+        summaries={summaries}
         initialSlug={initialSlug}
         onDone={(ack) => {
           setAiAck(ack ?? null);
@@ -68,7 +68,7 @@ export default function PlannerClient({
           </button>
         </div>
       )}
-      <TripWorkspace destinations={destinations} onNewTrip={() => setShowWizard(true)} />
+      <TripWorkspace onNewTrip={() => setShowWizard(true)} />
     </>
   );
 }
@@ -82,22 +82,20 @@ const AI_STATUSES = ['קורא את הבקשה…', 'בוחר מקומות מה�
 type Party = 'couple' | 'family' | 'friends' | 'solo';
 
 function Onboarding({
-  countries,
-  destinations,
+  summaries,
   initialSlug,
   onDone,
   onCancel,
 }: {
-  countries: Country[];
-  destinations: Destination[];
+  summaries: DestinationSummary[];
   initialSlug: string;
   onDone: (ack?: string | null) => void;
   onCancel?: () => void;
 }) {
   const trip = useTrip();
   const cityOptions = useMemo(
-    () => buildCityOptions(destinations, countries),
-    [destinations, countries],
+    () => buildCityOptionsFromSummaries(summaries),
+    [summaries],
   );
   const [prefs, setPrefs] = useState<WizardPrefs>({
     citySlugs: initialSlug ? [initialSlug] : [],
@@ -344,12 +342,14 @@ function Onboarding({
       <section className="mt-8">
         <h2 className="text-sm font-bold text-night/50">או מתחילים ממסלול מוכן</h2>
         <div className="mt-3 flex gap-3 overflow-x-auto pb-2">
-          {destinations.map((d) => (
+          {summaries.map((d) => (
             <button
               key={d.slug}
               onClick={() => {
                 // הכשרות מגיעה מהטוגל שנבחר למעלה - בלי בחירה אין מקומות כשרים
-                trip.createTripFrom(tripFromTemplate(d, { kosher: prefs.kosherOnly }));
+                const full = curatedDestinations.find((x) => x.slug === d.slug);
+                if (!full) return;
+                trip.createTripFrom(tripFromTemplate(full, { kosher: prefs.kosherOnly }));
                 onDone();
               }}
               className={`card-pop w-36 shrink-0 rounded-2xl bg-shell p-4 text-start ring-1 transition ${
@@ -358,7 +358,7 @@ function Onboarding({
             >
               <div><Flag flag={d.flag} label={d.name} size="lg" /></div>
               <div className="mt-1 truncate font-bold text-night">{d.name}</div>
-              <div className="text-xs font-medium text-night/50">{d.itinerary.length} ימים</div>
+              <div className="text-xs font-medium text-night/50">{d.days} ימים</div>
             </button>
           ))}
           <button

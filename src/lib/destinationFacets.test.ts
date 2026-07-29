@@ -13,10 +13,10 @@ import {
   EMPTY_FACETS,
   VIBES,
   availableVibes,
-  buildDestinationCards,
   continentCounts,
   filterDestinations,
 } from './destinationFacets.ts';
+import { buildDestinationCards } from './destinationCards.ts';
 
 const cards = buildDestinationCards();
 

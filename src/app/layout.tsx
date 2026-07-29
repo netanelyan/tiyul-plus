@@ -5,6 +5,7 @@ import { TripProvider } from '@/lib/trip/TripContext';
 import { AuthProvider } from '@/lib/auth/AuthContext';
 import AccountSync from '@/components/AccountSync';
 import SiteNav from '@/components/SiteNav';
+import { cityNames } from '@/lib/server/cityNames';
 import AccessibilityWidget from '@/components/AccessibilityWidget';
 import Logo from '@/components/Logo';
 import './globals.css';
@@ -87,7 +88,7 @@ export default function RootLayout({
                 · סוכן הנסיעות החכם
               </span>
             </Link>
-            <SiteNav />
+            <SiteNav cityNames={cityNames()} />
           </div>
         </header>
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>

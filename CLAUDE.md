@@ -242,6 +242,129 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-29 (ff) - "Is there any way to make the website faster?" - measured first, and the answer was not the server
+
+Netanel asked the open question. Measured on a production build in a real
+browser at 390px before touching anything, because "faster" has three possible
+meanings here and only one of them turned out to matter.
+
+**The server was already fine and is not the story.** TTFB 13-19ms, FCP
+340-610ms across every route. The weight is entirely in what the browser is
+asked to download.
+
+---
+
+**1. The whole catalog shipped as JavaScript on every page - 492 kB compressed,
+about 60% of all JS on the site.**
+
+Traced rather than guessed: a script walked every `'use client'` file's static
+import graph and found ten client entries reaching `src/data/destinations.ts`.
+The load-bearing one is **`SiteNav` → `lib/trip/label.ts` → the catalog**, and
+`SiteNav` lives in the layout - so **every page in the site**, including the
+homepage and the 166 city pages that never touch it, downloaded 2 MB of trip
+data to turn a slug into a Hebrew city name.
+
+`tripLabel` now takes a `Record<slug, name>` built by the server
+(`lib/server/cityNames.ts`) and passed as a prop: about 4 kB, always in sync
+with the catalog because it is derived from it. A generated-and-committed file
+would have saved the 4 kB and gone stale in silence every time the nightly data
+session adds a city - a bad trade.
+
+Second entry, same shape: `DestinationBrowser` (a client component) imported
+`buildDestinationCards` from `destinationFacets.ts`, which imports the catalog -
+**even though the server already computes the cards and passes them as props.**
+The builder moved to `lib/destinationCards.ts` (server-only by import), the
+filtering/constants/types stayed put for the client.
+
+| route | resources before | after |
+|---|---|---|
+| /destinations/[slug] | 816 kB | **328 kB** |
+| /kosher | 761 kB | **273 kB** |
+| / and /countries | 843 kB | 847 kB initial payload clean; see below |
+
+`/` and `/countries` still end up fetching that chunk **after** the load event
+(measured: starts at 944ms, load finished at 501ms) because Next prefetches the
+`/chat` link. It is no longer part of any page's initial payload; it is a
+background prefetch of the app screen. Left as-is deliberately - it makes the
+main CTA instant, and `prefetch={false}` is a one-line reversal if the mobile
+data cost turns out to matter more.
+
+---
+
+**2. `/countries` requested 166 full-size photos the moment it opened.**
+
+Every card painted its photo as a CSS `background-image`, and
+`background-image` **cannot be lazily loaded** - the browser fetches it as soon
+as the element is styled. 166 Commons thumbnails at ~50-90 kB is roughly
+8-14 MB on a phone, before a single scroll, and it dwarfed every other cost on
+the page.
+
+New `CardPhoto` renders an `<img loading="lazy" decoding="async">` under an
+absolutely-positioned overlay carrying the exact same gradient values, so the
+card looks identical. **166 requests on load → 5.** Applied to the four card
+surfaces that had the same pattern: the catalog browser, the country page's
+city cards, the /kosher city cards (27 → 11) and the homepage highlights. The
+page **heroes were deliberately left as backgrounds** - a hero is the LCP
+element and lazy-loading it would make the page slower, not faster.
+
+**One honest correction to my own first claim.** I also added `srcSet` with
+250/330/500 (`lib/photo.ts`, which refuses to widen a thumbnail - the exact
+mistake that killed 170 URLs in entry (k), now with a test). In practice the
+browser almost always still picks 500w, because a card is ~360 CSS px wide and
+phones are DPR 3. **The win here is the lazy loading, not the srcset**; the
+srcset only helps low-density screens. Saying both would have been overclaiming.
+
+---
+
+**3. `/planner` served 555 kB of HTML.**
+
+The page fetched all 166 destinations **in full** through the provider and
+serialized them into the RSC payload - while `TripWorkspace` was separately
+importing the same catalog as JavaScript. The same 2 MB delivered twice, and
+555 kB of render-blocking HTML is roughly three seconds on a slow phone before
+anything paints at all.
+
+It now passes `provider.getDestinations()` summaries (the provider abstraction
+is intact - hard rule 4 - just at summary granularity), the template cards read
+name/flag/days from the summary and resolve the full destination from the
+catalog already in the bundle, and `TripWorkspace` falls back to its own
+curated import exactly as it already does on `/chat`. **HTML 555 kB → 63 kB.**
+The `getCountries()` call went too: it was fetched, passed down, and never read.
+
+---
+
+**4. Agent response time: measured, and there is nothing left to win in our
+code.** Building the grounding index costs 7ms (and is cached since this
+morning), the detail block 1.3ms, `serializeTripForModel` 0.02ms, and the
+catalog module loads in 290ms once per cold start. Total server CPU per model
+call is single-digit milliseconds. **The remaining latency is model time and
+the number of sequential tool calls**, which entry "Latency" already addressed
+(37.6s → 22.2s, trip on screen at ~10s). Measuring further needs his key staged
+live; I did not guess at it.
+
+---
+
+**Verified 36/36 in a real browser** at 390px (DPR 3) and 1440px: all 166 cards
+render, photos are lazy `<img>` and actually paint, only the visible ones load,
+the catalog filters still narrow correctly, /kosher and country-page cards
+paint, the planner's city picker and template-to-trip flow still build exactly
+one trip, the nav still shows the city-derived trip label, and zero horizontal
+overflow anywhere. 133 tests, validator 0 errors, tsc, lint and build unchanged.
+
+**Two harness lessons, both the same species as the flag-image trap.** The
+suite reported "country page photos do not paint" twice: the first time because
+those images are below the fold and lazy loading was *working*, the second
+because that page's first card photo is an **Unsplash** URL and only
+`upload.wikimedia.org` and `flagcdn.com` were stubbed. And an assertion that
+lazy images stay deferred is simply false on a 10-card page - Chrome's lazy
+threshold is ~1250px on a fast connection, so it loads them all. Each time the
+number was surprising, the fixture was wrong.
+
+**Left for a decision, not silently:** `/chat` and `/planner` still ship the
+catalog as JS (~490 kB) because `TripWorkspace` needs place data for whatever
+cities a trip touches; loading only the trip's cities means fetching per city
+at runtime, which is a real change to the core screen and not a bundle tweak.
+
 ### 2026-07-29 (ee) - The priority-country rollout: 49 entries, and the 45 that do not exist
 
 Netanel picked the second option - three per destination for the countries
@@ -439,7 +562,6 @@ human-chosen replacements, the `kosher-market` and `cafe` gaps blocked on
 geocoding, the 2.5MB client bundle, `feat/catalog-supabase` unmerged pending
 Netanel's own review, and **both GitHub PATs still need revoking at
 https://github.com/settings/tokens**.
-
 ### 2026-07-29 (cc) - Kosher volunteered itself into prose, and the search overlay was trapped inside the navbar
 
 Two reports from Netanel, both from the deployed site on his phone. They are

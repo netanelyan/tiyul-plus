@@ -1,5 +1,4 @@
 import { getProvider } from '@/lib/providers';
-import { destinations } from '@/data/destinations';
 import PlannerClient from './PlannerClient';
 
 export const metadata = { title: 'מתכנן מסלולים | טיול+' };
@@ -11,12 +10,13 @@ export default async function PlannerPage({
 }) {
   const { dest } = await searchParams;
   const provider = getProvider();
-  // בספק sample זה מגיע מהרפו; בספקים חיצוניים המסלול האוצר מועשר בנתוני אמת.
-  const [countries, full] = await Promise.all([
-    provider.getCountries(),
-    Promise.all(destinations.map((d) => provider.getDestination(d.slug))),
-  ]);
-  const all = full.filter((d) => d !== null);
-  const initial = all.find((d) => d.slug === dest)?.slug ?? all[0]?.slug ?? '';
-  return <PlannerClient countries={countries} destinations={all} initialSlug={initial} />;
+  // **תקצירים, לא יעדים מלאים.** קודם נשלפו כאן כל 166 היעדים במלואם
+  // והועברו כ-props - כלומר הקטלוג כולו נסרל אל תוך ה-HTML של הדף:
+  // 555kB, ו-TTFB של ~200ms מול 10-20ms בשאר הדפים. הוא ממילא מגיע
+  // ללקוח פעם שנייה כ-JS דרך TripWorkspace, כך שזו הייתה מסירה כפולה
+  // של אותה דאטה. הבחירה והתבניות צריכות שם, דגל ומספר ימים בלבד.
+  // רשימת המדינות המלאה נשלפה כאן ולא נקראה בכלל בצד הלקוח - ירדה.
+  const summaries = await provider.getDestinations();
+  const initial = summaries.find((d) => d.slug === dest)?.slug ?? summaries[0]?.slug ?? '';
+  return <PlannerClient summaries={summaries} initialSlug={initial} />;
 }
