@@ -23410,6 +23410,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=56.93596,24.07242',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Agenskalna_tirgus_-_panoramio.jpg/500px-Agenskalna_tirgus_-_panoramio.jpg',
         source: {
           url: 'https://mapcarta.com/%C4%80genskalna_Tirgus',
           title: 'Agenskalns Market, Riga (Mapcarta)',
@@ -23763,6 +23765,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=43.85902,18.42335',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Markale_%28interior%29.jpg/500px-Markale_%28interior%29.jpg',
         source: {
           url: 'https://mapcarta.com/Markale',
           title: 'Markale, Sarajevo (Mapcarta)',
@@ -24008,6 +24012,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=45.25288,19.83709',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Novi_Sad%2C_Bulevar_Oslobo%C4%91enja%2C_Futo%C5%A1ka_pijaca.jpg/500px-Novi_Sad%2C_Bulevar_Oslobo%C4%91enja%2C_Futo%C5%A1ka_pijaca.jpg',
         source: {
           url: 'https://mapcarta.com/Futo%C5%A1ka_pijaca',
           title: 'Futoska pijaca, Novi Sad (Mapcarta)',
@@ -24098,6 +24104,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=20.9667,-89.6167',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/06939_MERIDA_MERIDA_YUCATAN_02.jpg/500px-06939_MERIDA_MERIDA_YUCATAN_02.jpg',
       },
       {
         id: 'mx-uxmal',
@@ -24213,6 +24221,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=20.9637,-89.62073',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Mercado_Lucas_de_Galvez%2C_M%C3%A9rida%2C_Yucat%C3%A1n_Junio_2024.jpg/500px-Mercado_Lucas_de_Galvez%2C_M%C3%A9rida%2C_Yucat%C3%A1n_Junio_2024.jpg',
         source: {
           url: 'https://mapcarta.com/Mercado_Lucas_de_G%C3%A1lvez',
           title: 'Mercado Lucas de Galvez, Merida (Mapcarta)',
@@ -24231,6 +24241,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=20.69252,-88.19542',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Mercado_de_Valladolid%2C_Yucat%C3%A1n%2C_Mx._-_panoramio.jpg/500px-Mercado_de_Valladolid%2C_Yucat%C3%A1n%2C_Mx._-_panoramio.jpg',
         source: {
           url: 'https://mapcarta.com/W373635325',
           title: 'Mercado Municipal Donato Bates Herrera, Valladolid (Mapcarta)',
@@ -25138,6 +25150,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=5.41782,100.3318',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Chowrasta_Market_in_George_Town%2C_Penang_-_November_2024.jpg/500px-Chowrasta_Market_in_George_Town%2C_Penang_-_November_2024.jpg',
         source: {
           url: 'https://mapcarta.com/Chowrasta_Market',
           title: 'Chowrasta Market, George Town (Mapcarta)',
@@ -25818,6 +25832,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=-16.40309,-71.535',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/503_Mercado_San_Camilo%2C_Arequipa.jpg/500px-503_Mercado_San_Camilo%2C_Arequipa.jpg',
         source: {
           url: 'https://mapcarta.com/Mercado_San_Camilo',
           title: 'Mercado San Camilo, Arequipa (Mapcarta)',
@@ -26440,6 +26456,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=44.63637,-63.56564',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Halifax_Seaport_Farmers%27_Market.jpg/500px-Halifax_Seaport_Farmers%27_Market.jpg',
         source: {
           url: 'https://mapcarta.com/Halifax_Seaport_Farmers%27_Market',
           title: "Halifax Seaport Farmers' Market (Mapcarta)",
@@ -27616,6 +27634,8 @@ export const destinations: Destination[] = [
         tags: ['history'],
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=67.84889221191406,20.30277824401855',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Statshustorget_Kiruna_with_snow_at_night_2026-01-10_02.jpg/500px-Statshustorget_Kiruna_with_snow_at_night_2026-01-10_02.jpg',
       },
       {
         id: 'se-jukkasjarvi',
@@ -28151,6 +28171,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=53.15445,-6.91656',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Kildare_Village_Shopping_Outlet_-_geograph.org.uk_-_4183700.jpg/500px-Kildare_Village_Shopping_Outlet_-_geograph.org.uk_-_4183700.jpg',
         source: {
           url: 'https://mapcarta.com/W45737505',
           title: 'Kildare Village Outlet, Co. Kildare (Mapcarta)',
@@ -28956,6 +28978,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=62.89192,27.67853',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Kuopion_kauppahalli.jpg/500px-Kuopion_kauppahalli.jpg',
         source: {
           url: 'https://mapcarta.com/Kuopion_Kauppahalli',
           title: 'Kuopio Market Hall (Mapcarta)',
@@ -30132,6 +30156,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=17.05894,-96.72668',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Mercado_Oaxaque%C3%B1o_-_panoramio.jpg/500px-Mercado_Oaxaque%C3%B1o_-_panoramio.jpg',
         source: {
           url: 'https://mapcarta.com/Mercado_Benito_Ju%C3%A1rez',
           title: 'Mercado Benito Juarez, Oaxaca (Mapcarta)',
@@ -30345,6 +30371,8 @@ export const destinations: Destination[] = [
         tags: ['art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=40.47636,71.71783',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Yodgorlik_fabrikasi_2.jpg/500px-Yodgorlik_fabrikasi_2.jpg',
         source: {
           url: 'https://mapcarta.com/Yodgorlik_Silk_Factory',
           title: 'Yodgorlik Silk Factory, Margilan (Mapcarta)',
@@ -30748,6 +30776,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=-6.16221,39.19373',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Darajani_Market_%2833883054484%29.jpg/500px-Darajani_Market_%2833883054484%29.jpg',
         source: {
           url: 'https://mapcarta.com/Darajani_Market',
           title: 'Darajani Market, Stone Town (Mapcarta)',
@@ -30968,6 +30998,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=1.55484,110.32222',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Medan_Niaga_Satok.jpg/500px-Medan_Niaga_Satok.jpg',
         source: {
           url: 'https://mapcarta.com/N5168368221',
           title: 'Sunday Market (Satok), Kuching (Mapcarta)',
@@ -30986,6 +31018,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=5.98357,116.077',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Gaya_Street_Sunday_Market%2C_2024_%2812%29.jpg/500px-Gaya_Street_Sunday_Market%2C_2024_%2812%29.jpg',
         source: {
           url: 'https://mapcarta.com/N9906350513',
           title: 'Gaya Street Sunday Market, Kota Kinabalu (Mapcarta)',
@@ -32557,6 +32591,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'nightlife', 'history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=38.11816,13.36519',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mercato_Vucciria%2C_Castellammare%2C_Palermo%2C_Sicily%2C_Italy_-_panoramio_%282%29.jpg/500px-Mercato_Vucciria%2C_Castellammare%2C_Palermo%2C_Sicily%2C_Italy_-_panoramio_%282%29.jpg',
         source: {
           url: 'https://mapcarta.com/Vucciria',
           title: 'Vucciria - Mapcarta (OpenStreetMap)',
@@ -32594,6 +32630,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=37.57305,14.47973',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Sicilia_outlet_village%2C_Agira%2C_Province_of_Enna%2C_Sicily%2C_Italy_-_panoramio.jpg/500px-Sicilia_outlet_village%2C_Agira%2C_Province_of_Enna%2C_Sicily%2C_Italy_-_panoramio.jpg',
         source: {
           url: 'https://mapcarta.com/Sicilia_Outlet_Village',
           title: 'Sicilia Outlet Village, Agira (Mapcarta)',
@@ -32817,6 +32855,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=37.38572,-6.00317',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Halles_March%C3%A9_Triana_-_S%C3%A9ville_%28ES61%29_-_2023-04-24_-_2.jpg/500px-Halles_March%C3%A9_Triana_-_S%C3%A9ville_%28ES61%29_-_2023-04-24_-_2.jpg',
         source: {
           url: 'https://mapcarta.com/Mercado_de_Triana',
           title: 'Mercado de Triana / Castle of San Jorge - Mapcarta (OpenStreetMap)',
@@ -33982,6 +34022,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=51.0638,13.75982',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Pfunds_Molkerei_2.jpg/500px-Pfunds_Molkerei_2.jpg',
         source: {
           url: 'https://mapcarta.com/Pfunds_Molkerei',
           title: 'Pfunds Molkerei, Dresden (Mapcarta)',
@@ -34000,6 +34042,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=51.06021,13.74491',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/2026-07-18_Neust%C3%A4dter_Markthalle_15.jpg/500px-2026-07-18_Neust%C3%A4dter_Markthalle_15.jpg',
         source: {
           url: 'https://mapcarta.com/Neust%C3%A4dter_Markthalle',
           title: 'Neustadter Markthalle, Dresden (Mapcarta)',
@@ -34582,6 +34626,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=7.29193,80.63415',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Market_Kandy.jpg/500px-Market_Kandy.jpg',
         source: {
           url: 'https://mapcarta.com/W1077650796',
           title: 'Kandy Municipal Market (Mapcarta)',
@@ -34784,6 +34830,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=7.024134,80.71942',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Damro-2-nuwara_eliya-Sri_Lanka.jpg/500px-Damro-2-nuwara_eliya-Sri_Lanka.jpg',
         source: {
           url: 'https://mapcarta.com/N1886599268',
           title: 'Damro Labookellie Tea Centre (Mapcarta)',
@@ -35585,6 +35633,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=31.28129,-4.26626',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Rissani_City_Gate_2011.jpg/500px-Rissani_City_Gate_2011.jpg',
         source: {
           url: 'https://mapcarta.com/W101820697',
           title: 'Rissani Souk, Errachidia (Mapcarta)',
@@ -36092,6 +36142,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'foodie', 'nightlife'],
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=-34.62056,-58.37167',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/San_Telmo%2C_Autonomous_City_of_Buenos_Aires%2C_Argentina_-_panoramio_%281%29.jpg/500px-San_Telmo%2C_Autonomous_City_of_Buenos_Aires%2C_Argentina_-_panoramio_%281%29.jpg',
       },
       {
         id: 'ba-puerto-madero',
@@ -36106,6 +36158,8 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         tags: ['nightlife', 'romantic'],
         externalUrl: 'https://maps.google.com/?q=-34.61194,-58.36472',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Puerto_Madero_by_night_-_2_%285458729409%29.jpg/500px-Puerto_Madero_by_night_-_2_%285458729409%29.jpg',
       },
       {
         id: 'ba-torre-monumental',
@@ -36182,6 +36236,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=-34.61906,-58.37224',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/San_Telmo_Market_%285423587950%29.jpg/500px-San_Telmo_Market_%285423587950%29.jpg',
         source: {
           url: 'https://mapcarta.com/Mercado_de_San_Telmo',
           title: 'San Telmo Market - Mapcarta (OpenStreetMap)',
@@ -36617,6 +36673,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=9.93471,-84.08201',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/San_Jose_-_San_Jos%C3%A9%2C_Costa_Rica_-_Tagzania_-_1775779329771.jpg/500px-San_Jose_-_San_Jos%C3%A9%2C_Costa_Rica_-_Tagzania_-_1775779329771.jpg',
         source: {
           url: 'https://mapcarta.com/W264040874',
           title: 'Mercado Central de San Jose (Mapcarta)',
@@ -36842,6 +36900,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=25.01498,121.21391',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Gloria_Outlets_01_20260428.jpg/500px-Gloria_Outlets_01_20260428.jpg',
         source: {
           url: 'https://mapcarta.com/W609175001',
           title: 'GLORIA OUTLETS, Taoyuan (Mapcarta)',
@@ -37494,6 +37554,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=31.62888,-7.98705',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Rahba_Kedima_in_Marrakech%2C_20250125_1333_7257.jpg/500px-Rahba_Kedima_in_Marrakech%2C_20250125_1333_7257.jpg',
         source: {
           url: 'https://mapcarta.com/W15164098',
           title: 'Rahba Kedima Square, Marrakech (Mapcarta)',
@@ -38101,6 +38163,8 @@ export const destinations: Destination[] = [
         tags: ['history'],
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=10.422669,-75.548861',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Torre_del_Reloj_-_Cartagena_de_Indias.jpg/500px-Torre_del_Reloj_-_Cartagena_de_Indias.jpg',
       },
       {
         id: 'co-plaza-santo-domingo',
@@ -38116,6 +38180,8 @@ export const destinations: Destination[] = [
         tags: ['romantic', 'nightlife'],
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=10.424592,-75.552489',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Vista_de_la_plaza_e_iglesis_de_Santo_Domingo_Cartagena._Colombia..JPG/500px-Vista_de_la_plaza_e_iglesis_de_Santo_Domingo_Cartagena._Colombia..JPG',
       },
       {
         id: 'co-catedral',
@@ -38146,6 +38212,8 @@ export const destinations: Destination[] = [
         tags: ['history'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=10.42332,-75.55157',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Colombia%2C_Cartagena%2C_Palacio_de_la_Inquisici%C3%B3n.jpg/500px-Colombia%2C_Cartagena%2C_Palacio_de_la_Inquisici%C3%B3n.jpg',
       },
       {
         id: 'co-getsemani',
@@ -38244,6 +38312,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=10.4122,-75.52482',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Mojarra_roja_Bazurto.jpg/500px-Mojarra_roja_Bazurto.jpg',
         source: {
           url: 'https://mapcarta.com/Mercado_de_Bazurto',
           title: 'Mercado de Bazurto, Cartagena (Mapcarta)',
@@ -38446,6 +38516,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'families'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=43.6956,7.275039',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Olives_sur_le_march%C3%A9_Saleya_de_Nice.jpg/500px-Olives_sur_le_march%C3%A9_Saleya_de_Nice.jpg',
         source: {
           url: 'https://fr.wikipedia.org/wiki/Cours_Saleya',
           title: 'Cours Saleya - Wikipedia',
@@ -38948,6 +39020,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=48.85344,2.78446',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/La_Vall%C3%A9e_Village%2C_f%C3%A9vrier_2025_2.jpg/500px-La_Vall%C3%A9e_Village%2C_f%C3%A9vrier_2025_2.jpg',
         source: {
           url: 'https://mapcarta.com/La_Vallee_Village',
           title: 'La Vallee Village, Serris (Mapcarta)',
@@ -39222,6 +39296,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=55.94776,-3.20355',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Farmers%27_Market_-_geograph.org.uk_-_7618270.jpg/500px-Farmers%27_Market_-_geograph.org.uk_-_7618270.jpg',
         source: {
           url: 'https://mapcarta.com/Edinburgh_Farmers_Market',
           title: "Edinburgh Farmers' Market (Mapcarta)",
@@ -39240,6 +39316,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=55.88316,-3.51991',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Livingston_Designer_Outlet_-_geograph.org.uk_-_1861119.jpg/500px-Livingston_Designer_Outlet_-_geograph.org.uk_-_1861119.jpg',
         source: {
           url: 'https://mapcarta.com/Livingston_Designer_Outlet',
           title: 'Livingston Designer Outlet, West Lothian (Mapcarta)',
@@ -39966,6 +40044,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=1.31012,103.85532',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Mustafa_Centre%2C_2023_%2801%29.jpg/500px-Mustafa_Centre%2C_2023_%2801%29.jpg',
         source: {
           url: 'https://mapcarta.com/Mustafa_Centre',
           title: 'Mustafa Centre, Little India, Singapore (Mapcarta)',
@@ -40717,6 +40797,8 @@ export const destinations: Destination[] = [
         rating: 3.5,
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=29.49199,34.89572',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Sinai_-_Taba_-_panoramio.jpg/500px-Sinai_-_Taba_-_panoramio.jpg',
         priceLevel: 1,
         tags: ['outdoors'],
       },
@@ -40915,6 +40997,8 @@ export const destinations: Destination[] = [
         rating: 4.9,
         durationMin: 300,
         externalUrl: 'https://maps.google.com/?q=22.839217,59.245261',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Wadi_Shab%2C_Oman_03.jpg/500px-Wadi_Shab%2C_Oman_03.jpg',
         priceLevel: 1,
         tags: ['outdoors'],
         mustSee: true,
@@ -41218,6 +41302,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=42.00361,21.43959',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Bit_Pazar%2C_Skopje_1.jpg/500px-Bit_Pazar%2C_Skopje_1.jpg',
         source: {
           url: 'https://mapcarta.com/Bit_Pazar',
           title: 'Bit Pazar, Skopje (Mapcarta)',
@@ -41476,6 +41562,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=47.90962,106.9499',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Narantuul_Market_2.jpg/500px-Narantuul_Market_2.jpg',
         source: {
           url: 'https://mapcarta.com/W111314450',
           title: 'Narantuul market, Ulaanbaatar (Mapcarta)',
@@ -41699,6 +41787,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=27.47562,89.64134',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Centenary_Farmers_Market%2C_Thimphu.jpg/500px-Centenary_Farmers_Market%2C_Thimphu.jpg',
         source: {
           url: 'https://mapcarta.com/Centenary_Farmers_Market',
           title: 'Centenary Farmers Market, Thimphu (Mapcarta)',
@@ -41829,6 +41919,8 @@ export const destinations: Destination[] = [
         rating: 4.5,
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=47.133335,28.85',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Podgorii_-_Cricova.jpg/500px-Podgorii_-_Cricova.jpg',
         priceLevel: 2,
         tags: ['foodie'],
       },
