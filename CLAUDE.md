@@ -242,6 +242,91 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-29 (dd) - Scaling the food/shopping pass: 39 entries, five duplicates I missed, and a coordinate typo of my own
+
+Netanel: "good. scale. use chrome session for images", then "Finish all of those
+destinations". This entry covers both passes - the 27-entry rollout and the final
+11 - since entry (bb) logged only the 12-entry sample.
+
+**I told him scaling did not fit, and I was wrong.** Entry (bb) computed the cost
+of ~500 new places using the catalog-wide average of 144 chars per place and
+concluded there was no room under the 260,000 ceiling. That average is dominated
+by places with descriptions, tags and durations. A food or market entry serialises
+**110 chars**, because `buildGroundingIndex()` writes only id/name/category/tags/
+priceLevel/mustSee/durationMin - not description, not source, not kosherStatus,
+not coordinates, not photos. At 110 chars the headroom is **364 places, not
+285**, and the pass fits comfortably. I corrected this to him unprompted, because
+a wrong arithmetic result that says "stop" is more expensive than one that says
+"go" - it silently cancels work nobody re-examines.
+
+**39 entries now across 29 destinations.** The final nine: `ven-rialto-market`,
+`it-ballaro`, `it-vucciria`, `ath-varvakeios`, `her-chania-agora`,
+`es-mercado-triana`, `pmi-olivar`, `tbs-dezerter`, `th-warorot`,
+`ba-san-telmo-market`, `ba-tortoni`.
+
+**Mapcarta carried the whole pass, and that is the reusable finding.** The Chrome
+extension went down twice, once mid-probe, so the Wikipedia coordinates API was
+unavailable for most of this work. Mapcarta publishes OSM-derived six-decimal
+coordinates at `mapcarta.com/<Name_With_Underscores>` and **is reachable from
+this sandbox** where Wikipedia, Wikidata and Commons are cache-only. It traces
+location and nothing else - so every entry written from it asserts a position and
+a name, and no founding date, no numeric claim, no history.
+
+**Photos shipped absent rather than unprobed.** 19 of them. `verify-photos` could
+not run, and recording `ok:true` for a URL nobody fetched is exactly how the 151
+dead links in entry (s) came to exist. They are deliberately missing from
+`scripts/photo-verified.json`; the UI falls back to a category tile.
+
+**Two mistakes of mine, both caught by machinery rather than by me.**
+
+*Five duplicates.* My pre-filter searched for existing `food` and `market`
+entries. Places already filed as `shopping` or `attraction` were invisible to it,
+and I proposed five things the catalog already had: `dxb-gold-souk`,
+`nyc-chelsea-market`, Sofia's `sof-hali` against `sof-market-hall`, London's
+`lon-borough-market` against `lon-borough`, Budapest's `bud-vasarcsarnok` against
+`bud-vaci`. The validator's duplicate check caught all five; I removed them.
+Near-misses were correctly kept - Russ & Daughters sits 80m from Katz's and is a
+different business.
+
+*A latitude typo.* Triana went in as 38.38572 where Mapcarta says 37.38572. One
+character, ~111 kilometres, and it would have put a Seville market in the
+mountains north of Córdoba. I found it re-reading my own JSON against the source
+values, then wrote `/tmp/verify_coords.mjs` asserting all eleven coordinates
+against their source pages - all matched, and every `externalUrl` matched its own
+lat/lng. **The pre-existing externalUrl check was structurally incapable of
+catching this**, because the link is generated from the same wrong number.
+
+**So the guard is new, and its threshold is the interesting part.** My first
+version errored past a flat one degree. It reported five failures, and all five
+were legitimate: a kosher market in Las Vegas inside the country-scale
+`grand-canyon` destination, Union Oyster House in Boston inside `new-england`,
+Triana inside `andalusia`, and Chabad houses in Reykjavik and Zagreb serving
+regions from the nearest city. A destination that spans a country legitimately
+holds urban amenities a degree or two from its map centre.
+
+The tolerance is now **the destination's own geographic spread, measured from its
+NON-urban places**. Attractions, nature and viewpoints are what legitimately
+spread out across a regional destination, and they are not the bug class the
+check guards, so they are the honest reference frame. `andalusia` spreads
+1.00/2.50, so Triana at 0.19/1.40 passes - and the typo version at 1.19/1.40 is
+still caught, on latitude. All five false positives cleared, the real error still
+errors. Verified by re-injecting the typo and watching it fail.
+
+**Numbers:** 1575 places, 166 destinations, 83 countries, **0 errors**, 60
+warnings - the same warning count as before the pass, so nothing regressed. 117
+tests, tsc and build clean at 277 pages.
+
+**What the next session needs to know.** (1) The 19 photos from this pass are
+unprobed and absent from the manifest - re-run `verify-photos` from a real
+network and commit it. (2) No browser RTL/overflow check was done on the scaled
+entries; the extension was down. (3) Mapcarta is the coordinate route when the
+Chrome extension is unavailable, and it is worth trying before concluding a place
+cannot be pinned. (4) Standing and unchanged: the 18 dead photo URLs needing
+human-chosen replacements, the `kosher-market` and `cafe` gaps blocked on
+geocoding, the 2.5MB client bundle, `feat/catalog-supabase` unmerged pending
+Netanel's own review, and **both GitHub PATs still need revoking at
+https://github.com/settings/tokens**.
+
 ### 2026-07-29 (cc) - Kosher volunteered itself into prose, and the search overlay was trapped inside the navbar
 
 Two reports from Netanel, both from the deployed site on his phone. They are
