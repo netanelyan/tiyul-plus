@@ -477,8 +477,33 @@ one) and **Commons categories** by name. **Tier B is 98** and untouched by this
 pass; entry (hh) predicted a low hit rate there and nothing here contradicts it.
 Tier C stays at 53 and stays untouched.
 
+**Addendum - a fourth method, and where the pass actually ended.** After the
+three above, 78 Tier A remained. A fourth was added: find the Commons **category**
+named for the place, then take a file from it, preferring one whose own geotag is
+within 5km. Categories are how Commons organises places, so this reaches subjects
+with **no article and no geotagged photograph** - Kolsai Lakes, Hoi An Market, the
+Cabot Trail, Pula's market hall, Wellington's Harbourside, the Karakol animal
+market, Nacpan Beach.
+
+It is also the **loosest** method and the sheet rejected 16 of 37. The one to
+remember: Budapest's **Premier Outlet matched the category for GUAM Premier
+Outlets** - right brand words, wrong hemisphere. Nothing but looking at the
+picture stood between that and the catalog.
+
+**Final for the session: Tier A 174 -> 57, total fillable 272 -> 155, 117
+photographs written**, every one visually checked, every URL derived and probed
+(117 built, 117 alive, 0 dead).
+
+**The remaining 57 Tier A have now had four methods run against them and yielded
+nothing that survived review.** They are not "not yet tried" - they are the hard
+tail, and a fifth pass should start from a different premise: local-language
+Wikipedias (a Latvian market has an `lv` article and no `en` one), or accepting
+that some of these have no free photograph and marking them so the worklist stops
+re-offering them. Roughly a third of what remains is outlet malls and modern
+retail, which Commons genuinely under-covers.
+
 **Numbers:** 1814 places, **0 errors**, 67 warnings, 170 tests, tsc and build
-clean. Photo manifest 1,714 URLs with recorded HTTP evidence.
+clean. Photo manifest 1,735 URLs with recorded HTTP evidence.
 
 ### 2026-07-29 (kk) - The browser check that had been owed for seven passes, and the Hebrew it found
 
