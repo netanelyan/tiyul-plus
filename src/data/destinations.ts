@@ -394,7 +394,7 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=48.20861111,16.36722222',
-        source: {
+                source: {
           url: 'https://en.wikipedia.org/wiki/Demel',
           title: 'Demel - Wikipedia',
           checked: '2026-07-28',
@@ -414,6 +414,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=48.20388889,16.36944444',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Cafe_Sacher%2C_Hotel_Sacher%2C_Wien.JPG/500px-Cafe_Sacher%2C_Hotel_Sacher%2C_Wien.JPG',
         source: {
           url: 'https://en.wikipedia.org/wiki/Hotel_Sacher',
           title: 'Hotel Sacher - Wikipedia',
@@ -434,6 +436,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=48.20777778,16.36944444',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Caf%C3%A9_Hawelka_%2852034117098%29.jpg/500px-Caf%C3%A9_Hawelka_%2852034117098%29.jpg',
         source: {
           url: 'https://en.wikipedia.org/wiki/Café_Hawelka',
           title: 'Cafe Hawelka - Wikipedia',
@@ -1350,6 +1354,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'foodie'],
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=Cafe+Louvre+Prague',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Prague_Caf%C3%A9_Louvre_Interior_4.jpg/500px-Prague_Caf%C3%A9_Louvre_Interior_4.jpg',
       },
       {
         id: 'prg-karlstejn',
@@ -1438,6 +1444,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history', 'art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=50.08182,14.413258',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Praha_-_Kav%C3%A1rna_Slavia.jpg/500px-Praha_-_Kav%C3%A1rna_Slavia.jpg',
         source: {
           url: 'https://cs.wikipedia.org/wiki/Kav%C3%A1rna_Slavia',
           title: 'Kavarna Slavia - Wikipedie',
@@ -2165,6 +2173,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history', 'art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=41.905558,12.481436',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Caff%C3%A8_Greco._Roma.jpg/500px-Caff%C3%A8_Greco._Roma.jpg',
         source: {
           url: 'https://en.wikipedia.org/wiki/Antico_Caffè_Greco',
           title: 'Antico Caffe Greco - Wikipedia',
@@ -2185,6 +2195,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=41.90107,12.47733',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Ceiling_Giolitti_Ice_Creams%2C_Rome%2C_Italy.jpg/500px-Ceiling_Giolitti_Ice_Creams%2C_Rome%2C_Italy.jpg',
         source: {
           url: 'https://en.wikipedia.org/wiki/Giolitti',
           title: 'Giolitti - Wikipedia',
@@ -3287,6 +3299,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=40.41677,-3.7068',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Churros_con_Chocolate_en_Chocolateria_San_Gines.jpg/500px-Churros_con_Chocolate_en_Chocolateria_San_Gines.jpg',
         source: {
           url: 'https://mapcarta.com/Chocolater%C3%ADa_San_Gin%C3%A9s',
           title: 'Chocolateria San Gines, Madrid (Mapcarta)',
@@ -4353,6 +4367,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=52.54048611,13.41217611',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Konopkes_Imbi%C3%9F_%286384176443%29.jpg/500px-Konopkes_Imbi%C3%9F_%286384176443%29.jpg',
         source: {
           url: 'https://de.wikipedia.org/wiki/Konnopkes_Imbi%C3%9F',
           title: 'Konnopkes Imbiss - Wikipedia',
@@ -10054,6 +10070,8 @@ export const destinations: Destination[] = [
         priceLevel: 3,
         tags: ['history', 'foodie', 'romantic'],
         externalUrl: 'https://maps.google.com/?q=45.43361,12.33806',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Caff%C3%A9_Florian_1720_%282%29.JPG/500px-Caff%C3%A9_Florian_1720_%282%29.JPG',
       },
       {
         id: 'ven-rialto-market',
@@ -10736,6 +10754,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=46.52773,12.00813',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Panorama_delle_Dolomiti_da_Lagazuoi_-_panoramio.jpg/500px-Panorama_delle_Dolomiti_da_Lagazuoi_-_panoramio.jpg',
         source: {
           url: 'https://mapcarta.com/Rifugio_Lagazuoi',
           title: "Rifugio Lagazuoi, Cortina d'Ampezzo (Mapcarta)",
@@ -11210,6 +11230,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=39.56991,2.65262',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Can_Joan_de_s%27aigo_2013-10-20_08-24.jpg/500px-Can_Joan_de_s%27aigo_2013-10-20_08-24.jpg',
         source: {
           url: 'https://mapcarta.com/Ca%27n_Joan_de_S%27Aigo',
           title: "Ca'n Joan de s'Aigo, Palma (Mapcarta)",
@@ -12892,6 +12914,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=-45.031742,168.659462',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Fergburger-hole-in-wall.jpg/500px-Fergburger-hole-in-wall.jpg',
         source: {
           url: 'https://mapcarta.com/Fergburger',
           title: 'Fergburger, Queenstown (Mapcarta)',
@@ -14642,6 +14666,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=46.794236,17.495354',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Badacsonytomaj%2C_Kisfaludy_S%C3%A1ndor_utca.jpg/500px-Badacsonytomaj%2C_Kisfaludy_S%C3%A1ndor_utca.jpg',
         source: {
           url: 'https://mapcarta.com/Kisfaludy_H%C3%A1z',
           title: 'Kisfaludy-haz, Badacsonytomaj (Mapcarta)',
@@ -14943,6 +14969,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=64.14816,-21.93784',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Iceland%2C_Reykjav%C3%ADk%2C_Tryggvagata_%2801%29%2C_B%C3%A6jarins_Beztu_Pylsur.jpg/500px-Iceland%2C_Reykjav%C3%ADk%2C_Tryggvagata_%2801%29%2C_B%C3%A6jarins_Beztu_Pylsur.jpg',
         source: {
           url: 'https://mapcarta.com/B%C3%A6jarins_Beztu_Pylsur',
           title: 'Baejarins Beztu Pylsur, Reykjavik (Mapcarta)',
@@ -16195,6 +16223,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=21.035324,105.85004',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Hanoi_Art_Deco_%2822776452687%29.jpg/500px-Hanoi_Art_Deco_%2822776452687%29.jpg',
         source: {
           url: 'https://mapcarta.com/N11090978626',
           title: 'Old Quarter, Hanoi (Mapcarta)',
@@ -16885,6 +16915,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=-33.92748,18.45758',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Old_Biscuit_Mill_Woodstock_Cape_Town_Taxi_Cabs.jpg/500px-Old_Biscuit_Mill_Woodstock_Cape_Town_Taxi_Cabs.jpg',
         source: {
           url: 'https://mapcarta.com/Old_Biscuit_Mill',
           title: 'Old Biscuit Mill, Cape Town (Mapcarta)',
@@ -18855,6 +18887,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=38.69748,-9.20332',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Past%C3%A9is_de_Bel%C3%A9m_%2822342611376%29.jpg/500px-Past%C3%A9is_de_Bel%C3%A9m_%2822342611376%29.jpg',
         source: {
           url: 'https://mapcarta.com/Pasteis_de_Belem',
           title: 'Pasteis de Belem, Lisbon (Mapcarta)',
@@ -19126,6 +19160,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'nightlife'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=52.2222,21.01103',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Hala_Koszyki%2C_Warszawa%2C_Poland_%28Unsplash%29.jpg/500px-Hala_Koszyki%2C_Warszawa%2C_Poland_%28Unsplash%29.jpg',
         source: {
           url: 'https://mapcarta.com/Hala_Koszyki',
           title: 'Hala Koszyki, Warsaw (Mapcarta)',
@@ -19145,6 +19181,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=52.2158,21.02059',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Bar_Mleczny_Prasowy_w_Warszawie.png/500px-Bar_Mleczny_Prasowy_w_Warszawie.png',
         source: {
           url: 'https://mapcarta.com/Bar_Mleczny_Prasowy',
           title: 'Bar Mleczny Prasowy, Warsaw (Mapcarta)',
@@ -19998,6 +20036,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=52.37906,4.89424',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/2015.11.25.102842_Stubbe_Haring_Singel_Amsterdam.jpg/500px-2015.11.25.102842_Stubbe_Haring_Singel_Amsterdam.jpg',
         source: {
           url: 'https://mapcarta.com/Stubbe%27s_Haring',
           title: "Stubbe's Haring, Amsterdam (Mapcarta)",
@@ -21480,6 +21520,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=53.21094,-8.89512',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Morans_Kilcolgan.jpg/500px-Morans_Kilcolgan.jpg',
         source: {
           url: 'https://mapcarta.com/Moran%27s_Oyster_Cottage',
           title: "Moran's Oyster Cottage, Kilcolgan (Mapcarta)",
@@ -21911,6 +21953,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'nightlife'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=42.149273,24.748909',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Kapana.jpg/500px-Kapana.jpg',
         source: {
           url: 'https://mapcarta.com/N3779372494',
           title: 'Kapana, Plovdiv (Mapcarta)',
@@ -22553,6 +22597,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=55.69317,12.60978',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Reffen_Copenhagen_360%C2%B0_-_50471325113.jpg/500px-Reffen_Copenhagen_360%C2%B0_-_50471325113.jpg',
         source: {
           url: 'https://mapcarta.com/Reffen',
           title: 'Reffen, Copenhagen (Mapcarta)',
@@ -23226,6 +23272,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=59.43836,24.74569',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/%D0%A2%D0%B0%D0%BB%D0%BB%D0%B8%D0%BD._%D0%9A%D0%B0%D1%84%D0%B5_Maiasmokk_%28%D0%9B%D0%B0%D0%BA%D0%BE%D0%BC%D0%BA%D0%B0%29_-_panoramio.jpg/500px-%D0%A2%D0%B0%D0%BB%D0%BB%D0%B8%D0%BD._%D0%9A%D0%B0%D1%84%D0%B5_Maiasmokk_%28%D0%9B%D0%B0%D0%BA%D0%BE%D0%BC%D0%BA%D0%B0%29_-_panoramio.jpg',
         source: {
           url: 'https://mapcarta.com/Maiasmokk',
           title: 'Maiasmokk, Tallinn (Mapcarta)',
@@ -23822,6 +23870,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=43.858598,18.430178',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Cevabdzinica_Zeljo.jpg/500px-Cevabdzinica_Zeljo.jpg',
         source: {
           url: 'https://mapcarta.com/N5310378867',
           title: 'Cevabdzinica Zeljo, Sarajevo (Mapcarta)',
@@ -25893,6 +25943,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=-16.387046,-71.539698',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Pumpkin_curry_and_beef_stew_at_Picanteria_Nueva_Palomino%2C_Arequipa.jpg/500px-Pumpkin_curry_and_beef_stew_at_Picanteria_Nueva_Palomino%2C_Arequipa.jpg',
         source: {
           url: 'https://mapcarta.com/La_Nueva_Palomino',
           title: 'La Nueva Palomino, Arequipa (Mapcarta)',
@@ -26718,6 +26770,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=44.00252,-69.66422',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/At_Red%27s_Eats_in_Maine_with_Ariana_%26_Nathan_%289726183054%29.jpg/500px-At_Red%27s_Eats_in_Maine_with_Ariana_%26_Nathan_%289726183054%29.jpg',
         source: {
           url: 'https://mapcarta.com/Red%27s_Eats',
           title: "Red's Eats, Wiscasset, Maine (Mapcarta)",
@@ -26737,6 +26791,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=42.36419,-71.05424',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Mike%27s_Pastry_-2_%286709504099%29.jpg/500px-Mike%27s_Pastry_-2_%286709504099%29.jpg',
         source: {
           url: 'https://mapcarta.com/Mike%27s_Pastry',
           title: "Mike's Pastry, Boston (Mapcarta)",
@@ -27575,6 +27631,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=46.29414,7.52133',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Ch%C3%A2teau_de_Villa-Sierre-3.jpg/500px-Ch%C3%A2teau_de_Villa-Sierre-3.jpg',
         source: {
           url: 'https://mapcarta.com/Ch%C3%A2teau_de_Villa',
           title: 'Chateau de Villa, Sierre (Mapcarta)',
@@ -28183,6 +28241,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=53.34185,-6.28674',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Guinness_Brewery%2C_Dublin_%2817131065328%29.jpg/500px-Guinness_Brewery%2C_Dublin_%2817131065328%29.jpg',
         source: {
           url: 'https://mapcarta.com/Guinness_Storehouse',
           title: 'Guinness Storehouse, Dublin (Mapcarta)',
@@ -30196,6 +30256,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=17.05798,-96.72688',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Pasillo_del_humo_o_de_la_carne_asada%2C_Mercado_20_de_noviembre_Oaxaca.jpg/500px-Pasillo_del_humo_o_de_la_carne_asada%2C_Mercado_20_de_noviembre_Oaxaca.jpg',
         source: {
           url: 'https://mapcarta.com/Mercado_20_de_Noviembre',
           title: 'Mercado 20 de Noviembre, Oaxaca (Mapcarta)',
@@ -30855,6 +30917,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=-6.160547,39.188773',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Forodhani_Gardens_%2834023630713%29.jpg/500px-Forodhani_Gardens_%2834023630713%29.jpg',
         source: {
           url: 'https://mapcarta.com/Forodhani_Park',
           title: 'Forodhani Park, Stone Town (Mapcarta)',
@@ -32674,6 +32738,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=38.11633,13.36614',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Antica_Focacceria_San_Francesco_%28Palermo%29.jpg/500px-Antica_Focacceria_San_Francesco_%28Palermo%29.jpg',
         source: {
           url: 'https://mapcarta.com/Antica_Focacceria_San_Francesco',
           title: 'Antica Focacceria San Francesco, Palermo (Mapcarta)',
@@ -33414,6 +33480,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=49.9236,7.06982',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Bernkastel-Kues_-_Weingut_Dr._Loosen_-_panoramio.jpg/500px-Bernkastel-Kues_-_Weingut_Dr._Loosen_-_panoramio.jpg',
         source: {
           url: 'https://mapcarta.com/Weingut_Dr._Loosen',
           title: 'Weingut Dr. Loosen, Bernkastel-Kues (Mapcarta)',
@@ -34314,6 +34382,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=47.71087,13.62183',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Cafe_Restaurant_Zauner_Bad_Ischl_Austria_-_panoramio_%281%29.jpg/500px-Cafe_Restaurant_Zauner_Bad_Ischl_Austria_-_panoramio_%281%29.jpg',
         source: {
           url: 'https://mapcarta.com/N729814510',
           title: 'Zauner, Bad Ischl (Mapcarta)',
@@ -35119,6 +35189,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'nightlife'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=13.35483,103.85478',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Sangkat_Svay_Dangkum%2C_Krong_Siem_Reap%2C_Cambodia_-_panoramio_%285%29.jpg/500px-Sangkat_Svay_Dangkum%2C_Krong_Siem_Reap%2C_Cambodia_-_panoramio_%285%29.jpg',
         source: {
           url: 'https://mapcarta.com/Pub_Street',
           title: 'Pub Street, Siem Reap (Mapcarta)',
@@ -36328,6 +36400,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history', 'nightlife'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=-34.60869,-58.37814',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Kafejo_Tortoni_02.jpg/500px-Kafejo_Tortoni_02.jpg',
         source: {
           url: 'https://mapcarta.com/Caf%C3%A9_Tortoni',
           title: 'Cafe Tortoni - Mapcarta (OpenStreetMap)',
@@ -38094,6 +38168,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=-22.90517,-43.17874',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Confeitaria_Colombo_-_Rio_de_Janeiro_-_20230323130249.jpg/500px-Confeitaria_Colombo_-_Rio_de_Janeiro_-_20230323130249.jpg',
         source: {
           url: 'https://mapcarta.com/Confeitaria_Colombo',
           title: 'Confeitaria Colombo, Rio de Janeiro (Mapcarta)',
@@ -38113,6 +38189,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'nightlife'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=-22.89741,-43.22042',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Caricaturist_at_Feira_De_Sao_Cristovao_-_Zona_Norte_-_Rio_de_Janeiro_-_Brazil_%2817369294228%29.jpg/500px-Caricaturist_at_Feira_De_Sao_Cristovao_-_Zona_Norte_-_Rio_de_Janeiro_-_Brazil_%2817369294228%29.jpg',
         source: {
           url: 'https://mapcarta.com/Centro_Luiz_Gonzaga_de_Tradi%C3%A7%C3%B5es_Nordestinas',
           title: 'Centro Luiz Gonzaga de Tradicoes Nordestinas, Rio (Mapcarta)',
@@ -40086,6 +40164,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=1.280352,103.844739',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Wikimania_2023-Food-Maxwell_Food_Court-02960.jpg/500px-Wikimania_2023-Food-Maxwell_Food_Court-02960.jpg',
         source: {
           url: 'https://mapcarta.com/W47298639',
           title: 'Maxwell Food Center, Singapore (Mapcarta)',
@@ -40614,6 +40694,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=50.83681,4.38148',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Place_Jourdan_northview.jpg/500px-Place_Jourdan_northview.jpg',
         source: {
           url: 'https://mapcarta.com/Maison_Antoine',
           title: 'Maison Antoine, Brussels (Mapcarta)',
@@ -42109,6 +42191,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=46.89209,29.2918',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Fabrica_de_vin_Mimi.jpg/500px-Fabrica_de_vin_Mimi.jpg',
         source: {
           url: 'https://mapcarta.com/Castel_Mimi',
           title: 'Castel Mimi, Bulboaca (Mapcarta)',
