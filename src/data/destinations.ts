@@ -5407,6 +5407,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         tags: ['families', 'history'],
         externalUrl: 'https://maps.google.com/?q=25.23548,55.30034',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/190410_Dubai_Frame.jpg/500px-190410_Dubai_Frame.jpg',
       },
       {
         id: 'dxb-museum-future',
@@ -5438,6 +5440,8 @@ export const destinations: Destination[] = [
         priceLevel: 3,
         tags: ['romantic'],
         externalUrl: 'https://maps.google.com/?q=25.14139,55.18528',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/BURJ_AL_ARAB_-_panoramio.jpg/500px-BURJ_AL_ARAB_-_panoramio.jpg',
       },
       {
         id: 'dxb-opera',
@@ -7268,6 +7272,8 @@ export const destinations: Destination[] = [
         rating: 4.7,
         durationMin: 480,
         externalUrl: 'https://maps.google.com/?q=42.96446,77.582245',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/020251009_Kolsay.jpg/500px-020251009_Kolsay.jpg',
         priceLevel: 1,
         tags: ['outdoors', 'romantic'],
         mustSee: true,
@@ -13091,6 +13097,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors', 'families', 'romantic'],
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=40.78222,-73.96528',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/All_together_now_%283649625122%29.jpg/500px-All_together_now_%283649625122%29.jpg',
       },
       {
         id: 'nyc-met',
@@ -18521,6 +18529,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=50.985119,-114.051556',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Calgary_Farmer%27s_Market_%282341935523%29.jpg/500px-Calgary_Farmer%27s_Market_%282341935523%29.jpg',
         source: {
           url: 'https://mapcarta.com/Calgary_Farmers%27_Market',
           title: "Calgary Farmers' Market (Mapcarta)",
@@ -22975,6 +22985,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=54.67337,25.28651',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Hales_Market_-_panoramio.jpg/500px-Hales_Market_-_panoramio.jpg',
         source: {
           url: 'https://mapcarta.com/Hal%C4%97_Market',
           title: 'Hale Market, Vilnius (Mapcarta)',
@@ -26072,6 +26084,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=15.8768,108.33136',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Hoi_An_Market.jpg/500px-Hoi_An_Market.jpg',
         source: {
           url: 'https://mapcarta.com/35926856',
           title: 'Hoi An Market (Mapcarta)',
@@ -26387,6 +26401,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=46.48695,-60.74611',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/1998-07-26_Cabot_Trail_in_Cape_Breton_Island_%281%29.jpg/500px-1998-07-26_Cabot_Trail_in_Cape_Breton_Island_%281%29.jpg',
       },
       {
         id: 'ca-cape-breton-park',
@@ -27966,6 +27982,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=44.86709,13.84904',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Market_hall%2C_Pula.jpg/500px-Market_hall%2C_Pula.jpg',
         source: {
           url: 'https://mapcarta.com/Tr%C5%BEnica_Pula',
           title: 'Trznica Pula (Mapcarta)',
@@ -28584,6 +28602,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=-41.29125,174.78327',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Harbourside_Market%2C_Wellington%2C_New_Zealand_-_DSC09756.jpg/500px-Harbourside_Market%2C_Wellington%2C_New_Zealand_-_DSC09756.jpg',
         source: {
           url: 'https://mapcarta.com/Harbourside_Market',
           title: 'Harbourside Market, Wellington (Mapcarta)',
@@ -33086,6 +33106,8 @@ export const destinations: Destination[] = [
         tags: ['history'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=39.66361236572266,20.85222244262695',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Roof_of_Ioannina_palace_kitchens%3B_now_a_snack_bar.jpg/500px-Roof_of_Ioannina_palace_kitchens%3B_now_a_snack_bar.jpg',
       },
       {
         id: 'gr-dodona',
@@ -33603,6 +33625,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=36.14469,137.25785',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Miyagawa_Morning_Market_20150123.JPG/500px-Miyagawa_Morning_Market_20150123.JPG',
         source: {
           url: 'https://mapcarta.com/Miyagawa_Morning_Market',
           title: 'Miyagawa Morning Market, Takayama (Mapcarta)',
@@ -35878,6 +35902,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=42.5103,78.37802',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Karakol_-_102_%2849360770647%29.jpg/500px-Karakol_-_102_%2849360770647%29.jpg',
         source: {
           url: 'https://www.openstreetmap.org/#map=19/42.5103/78.37802',
           title: 'Karakol animal market (OpenStreetMap)',
@@ -37582,6 +37608,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=31.62773,-7.98867',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Baskets_on_display%2C_Marrakech_%282901404315%29.jpg/500px-Baskets_on_display%2C_Marrakech_%282901404315%29.jpg',
         source: {
           url: 'https://mapcarta.com/35900502',
           title: 'Souks de Marrakech (Mapcarta)',
@@ -38276,6 +38304,8 @@ export const destinations: Destination[] = [
         tags: ['art', 'nightlife', 'foodie'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=10.4166667,-75.55',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Calle_30%2C_Cartagena.jpg/500px-Calle_30%2C_Cartagena.jpg',
       },
       {
         id: 'co-popa',
@@ -39745,6 +39775,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history', 'art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=51.52194444,-0.07166667',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/123_Brick_Lane_%285438159345%29.jpg/500px-123_Brick_Lane_%285438159345%29.jpg',
         source: {
           url: 'https://en.wikipedia.org/wiki/Brick_Lane',
           title: 'Brick Lane - Wikipedia',
@@ -40072,6 +40104,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=1.30396,103.83197',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/ION_CENTER_-_panoramio.jpg/500px-ION_CENTER_-_panoramio.jpg',
         source: {
           url: 'https://mapcarta.com/ION_Orchard',
           title: 'ION Orchard, Singapore (Mapcarta)',
@@ -40598,6 +40632,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=51.055634,3.722419',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Gent_Groentenmarkt_3_-_132012_-_onroerenderfgoed.jpg/500px-Gent_Groentenmarkt_3_-_132012_-_onroerenderfgoed.jpg',
         source: {
           url: 'https://mapcarta.com/Tierenteyn-Verlent',
           title: 'Tierenteyn-Verlent, Ghent (Mapcarta)',
@@ -40860,6 +40896,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=27.86596,34.29484',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/MosqueSSH.jpg/500px-MosqueSSH.jpg',
         source: {
           url: 'https://mapcarta.com/N354816887',
           title: 'Old Market, Sharm el-Sheikh (Mapcarta)',
@@ -42050,6 +42088,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=47.0195,28.84282',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/AIRM_-_Pia%C8%9Ba_Central%C4%83_-_dec_2014_-_01.jpg/500px-AIRM_-_Pia%C8%9Ba_Central%C4%83_-_dec_2014_-_01.jpg',
         source: {
           url: 'https://mapcarta.com/Pia%C8%9Ba_Central%C4%83',
           title: 'Piata Centrala, Chisinau (Mapcarta)',
@@ -42626,6 +42666,8 @@ export const destinations: Destination[] = [
         rating: 4.4,
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=11.323056,119.43',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/El_Nido_-_Nacpan_Beach.jpg/500px-El_Nido_-_Nacpan_Beach.jpg',
         priceLevel: 1,
         tags: ['outdoors'],
       },
