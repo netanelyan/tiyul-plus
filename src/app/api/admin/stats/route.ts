@@ -1,4 +1,5 @@
 import { PLAN_LIMITS } from '@/lib/plans';
+import { gte, pgLimit, pgOrder, pgQuery, pgSelect } from '@/lib/server/pgrest';
 import { requireRole, denied, ok } from '@/lib/server/admin';
 import { adminSelect, countAuthUsers } from '@/lib/server/supabaseAdmin';
 
@@ -21,7 +22,7 @@ export async function GET(req: Request) {
 
   const rows = await adminSelect<{ identity: string; day: string; units: number }>(
     'usage_daily',
-    `day=gte.${weekAgo}&select=identity,day,units&order=units.desc&limit=2000`,
+    pgQuery(gte('day', weekAgo), pgSelect(['identity', 'day', 'units']), pgOrder('units', 'desc'), pgLimit(2000)),
   );
   const profiles = await adminSelect<{ plan?: string; plan_until?: string | null; role?: string }>(
     'profiles',

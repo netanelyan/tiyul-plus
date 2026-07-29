@@ -40,10 +40,14 @@ export async function GET(req: Request) {
     );
   }
 
+  // slug הוא מזהה, לא טקסט חופשי: מסננים לפי צורה במקום לסמוך על כך
+  // שהוא יפגוש רק חיפוש במערך בזיכרון. ספק חיצוני עתידי עלול לשים אותו
+  // ב-URL או בשאילתה, וזו בדיוק הנקודה שבה "זה רק slug" מפסיק להיות נכון.
+  const SLUG_OK = /^[a-z0-9-]{1,60}$/;
   const slugs = (url.searchParams.get('slugs') ?? '')
     .split(',')
     .map((s) => s.trim())
-    .filter(Boolean)
+    .filter((s) => SLUG_OK.test(s))
     .slice(0, MAX_SLUGS);
   if (slugs.length === 0) return NextResponse.json({ cities: [] }, { headers: { 'Cache-Control': CACHE } });
 

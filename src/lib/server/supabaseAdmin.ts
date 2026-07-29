@@ -5,10 +5,17 @@
  * REST ישיר מול Supabase עם ה-service role, בלי תלות חדשה (חוק קשיח 6),
  * באותו סגנון כמו `trip/shareStore.ts`.
  *
+ * **שמות טבלה/פונקציה וה-uuid נכנסים לנתיב ה-URL ולכן עוברים אימות**
+ * (`pgIdent` / `pgUuid`), והפילטרים נבנים ב-`pgrest.ts` בלבד - שם כל
+ * ערך מקודד. שתי השכבות האלה הן מה שהופך הזרקה ל-PostgREST לבלתי
+ * אפשרית מבנית ולא "בתנאי שכל קורא זכר להצפין".
+ *
  * בלי `SUPABASE_SERVICE_ROLE_KEY` הכל מחזיר null / false והפיצ׳רים
  * שתלויים בו כבויים בשקט - האתר עצמו ממשיך לעבוד בדיוק כמו קודם. זה
  * המצב בפועל עד שנתנאל מריץ את ה-SQL ומוסיף את המפתח.
  */
+
+import { pgIdent, pgUuid } from '@/lib/server/pgrest';
 
 const url = () => process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceKey = () => process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -35,7 +42,7 @@ function headers(extra: Record<string, string> = {}): Record<string, string> {
 export async function adminSelect<T>(table: string, query: string): Promise<T[] | null> {
   if (!adminDbEnabled()) return null;
   try {
-    const res = await fetch(`${url()}/rest/v1/${table}?${query}`, {
+    const res = await fetch(`${url()}/rest/v1/${pgIdent(table)}?${query}`, {
       headers: headers(),
       cache: 'no-store',
     });
@@ -54,7 +61,7 @@ export async function adminUpdate<T>(
 ): Promise<T[] | null> {
   if (!adminDbEnabled()) return null;
   try {
-    const res = await fetch(`${url()}/rest/v1/${table}?${query}`, {
+    const res = await fetch(`${url()}/rest/v1/${pgIdent(table)}?${query}`, {
       method: 'PATCH',
       headers: headers({ Prefer: 'return=representation' }),
       body: JSON.stringify(patch),
@@ -74,7 +81,7 @@ export async function adminInsert<T>(
 ): Promise<T[] | null> {
   if (!adminDbEnabled()) return null;
   try {
-    const res = await fetch(`${url()}/rest/v1/${table}`, {
+    const res = await fetch(`${url()}/rest/v1/${pgIdent(table)}`, {
       method: 'POST',
       headers: headers({
         Prefer: opts.upsert
@@ -94,7 +101,7 @@ export async function adminInsert<T>(
 export async function adminRpc<T>(fn: string, args: Record<string, unknown>): Promise<T | null> {
   if (!adminDbEnabled()) return null;
   try {
-    const res = await fetch(`${url()}/rest/v1/rpc/${fn}`, {
+    const res = await fetch(`${url()}/rest/v1/rpc/${pgIdent(fn)}`, {
       method: 'POST',
       headers: headers(),
       body: JSON.stringify(args),
@@ -133,7 +140,7 @@ export async function userByEmail(email: string): Promise<{ id: string; email: s
 export async function emailByUserId(userId: string): Promise<string | null> {
   if (!adminDbEnabled()) return null;
   try {
-    const res = await fetch(`${url()}/auth/v1/admin/users/${userId}`, {
+    const res = await fetch(`${url()}/auth/v1/admin/users/${pgUuid(userId)}`, {
       headers: headers(),
       cache: 'no-store',
     });

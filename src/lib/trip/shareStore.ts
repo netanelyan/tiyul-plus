@@ -14,6 +14,8 @@
  * נשמרים תחת החשבון - הקוד הקצר כבר ערוך לזה.
  */
 
+import { eq, pgLimit, pgQuery, pgSelect } from '@/lib/server/pgrest';
+
 const url = process.env.SUPABASE_URL;
 const key = process.env.SUPABASE_ANON_KEY;
 
@@ -67,7 +69,7 @@ export async function getSharedPayload(code: string): Promise<string | null> {
   if (!/^[a-zA-Z0-9]{6,12}$/.test(code)) return null;
   try {
     const res = await fetch(
-      `${url}/rest/v1/shared_trips?code=eq.${encodeURIComponent(code)}&select=payload&limit=1`,
+      `${url}/rest/v1/shared_trips?${pgQuery(eq('code', code), pgSelect(['payload']), pgLimit(1))}`,
       { headers: headers(), next: { revalidate: 3600 } },
     );
     if (!res.ok) return null;

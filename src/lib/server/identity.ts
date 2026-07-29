@@ -1,4 +1,5 @@
 import { effectivePlan, type Plan } from '@/lib/plans';
+import { eq, pgQuery, pgSelect } from '@/lib/server/pgrest';
 
 /**
  * שרת בלבד - זיהוי הקורא לצורך מכסות ותוכנית.
@@ -73,7 +74,7 @@ async function fetchPlan(userId: string, token: string): Promise<Plan> {
   try {
     const key = anonKey()!;
     const res = await fetch(
-      `${supaUrl()}/rest/v1/profiles?user_id=eq.${encodeURIComponent(userId)}&select=plan,plan_until`,
+      `${supaUrl()}/rest/v1/profiles?${pgQuery(eq('user_id', userId), pgSelect(['plan', 'plan_until']))}`,
       {
         headers: { apikey: key, Authorization: `Bearer ${token}` },
         signal: AbortSignal.timeout(4000),
@@ -95,7 +96,7 @@ async function fetchPlan(userId: string, token: string): Promise<Plan> {
     // ה-fallback ב-lib/auth/profile.ts, כדי שפרימיום קיים לא ייעלם.
     try {
       const res = await fetch(
-        `${supaUrl()}/rest/v1/profiles?user_id=eq.${encodeURIComponent(userId)}&select=plan`,
+        `${supaUrl()}/rest/v1/profiles?${pgQuery(eq('user_id', userId), pgSelect(['plan']))}`,
         {
           headers: { apikey: anonKey()!, Authorization: `Bearer ${token}` },
           signal: AbortSignal.timeout(4000),

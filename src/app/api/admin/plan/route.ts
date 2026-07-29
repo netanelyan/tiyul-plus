@@ -1,5 +1,6 @@
 import { requireRole, denied, badRequest, ok, audit } from '@/lib/server/admin';
 import { adminInsert, adminUpdate, userByEmail } from '@/lib/server/supabaseAdmin';
+import { eq } from '@/lib/server/pgrest';
 
 /**
  * הענקה או שלילה של פרימיום.
@@ -46,7 +47,7 @@ export async function POST(req: Request) {
       ? { plan: 'premium', plan_until: until, plan_source: 'grant', updated_at: new Date().toISOString() }
       : { plan: 'free', plan_until: null, plan_source: null, updated_at: new Date().toISOString() };
 
-  let rows = await adminUpdate<{ user_id: string }>('profiles', `user_id=eq.${user.id}`, patch);
+  let rows = await adminUpdate<{ user_id: string }>('profiles', eq('user_id', user.id), patch);
   // משתמש שנרשם אך טרם שמר פרופיל - אין לו שורה לעדכן, ולכן יוצרים אותה
   if (rows && rows.length === 0) {
     rows = await adminInsert<{ user_id: string }>('profiles', { user_id: user.id, ...patch }, { upsert: true });

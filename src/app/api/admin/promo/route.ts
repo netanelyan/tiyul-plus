@@ -1,4 +1,5 @@
 import { requireRole, denied, badRequest, ok, audit } from '@/lib/server/admin';
+import { eq } from '@/lib/server/pgrest';
 import { adminInsert, adminSelect, adminUpdate } from '@/lib/server/supabaseAdmin';
 
 /** אותיות וספרות בלבד, באנגלית - קוד שאפשר להכתיב בטלפון */
@@ -64,7 +65,7 @@ export async function PATCH(req: Request) {
   const code = typeof body.code === 'string' ? body.code.trim().toUpperCase() : '';
   if (!CODE_OK.test(code)) return badRequest('bad_code');
   const active = body.active === true;
-  const rows = await adminUpdate<{ code: string }>('promo_codes', `code=eq.${code}`, { active });
+  const rows = await adminUpdate<{ code: string }>('promo_codes', eq('code', code), { active });
   if (!rows) return badRequest('db_unavailable');
   await audit(actor, active ? 'enable_promo' : 'disable_promo', {}, { code });
   return ok({ code, active });

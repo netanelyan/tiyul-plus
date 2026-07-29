@@ -1,4 +1,5 @@
 import { PROMO_ATTEMPTS_PER_DAY, PROMO_ATTEMPTS_PER_HOUR } from '@/lib/plans';
+import { eq, pgLimit, pgQuery, pgSelect } from '@/lib/server/pgrest';
 import { actorFrom } from '@/lib/server/admin';
 import { checkLimit } from '@/lib/server/limits';
 import { requestIp } from '@/lib/server/identity';
@@ -68,7 +69,7 @@ export async function POST(req: Request) {
   // מאריכים מהתאריך הקיים אם הוא בעתיד, אחרת מעכשיו
   const current = await adminSelect<{ plan?: string; plan_until?: string | null }>(
     'profiles',
-    `user_id=eq.${actor.userId}&select=plan,plan_until&limit=1`,
+    pgQuery(eq('user_id', actor.userId), pgSelect(['plan', 'plan_until']), pgLimit(1)),
   );
   const row = current?.[0];
   const stripeForever = row?.plan === 'premium' && !row.plan_until;
@@ -84,7 +85,7 @@ export async function POST(req: Request) {
     plan_source: stripeForever ? 'stripe' : 'promo',
     updated_at: new Date().toISOString(),
   };
-  let rows = await adminUpdate<{ user_id: string }>('profiles', `user_id=eq.${actor.userId}`, patch);
+  let rows = await adminUpdate<{ user_id: string }>('profiles', eq('user_id', actor.userId), patch);
   if (rows && rows.length === 0) {
     rows = await adminInsert<{ user_id: string }>('profiles', { user_id: actor.userId, ...patch }, { upsert: true });
   }

@@ -1,4 +1,5 @@
 import { isRole } from '@/lib/plans';
+import { eq, pgLimit, pgQuery, pgSelect } from '@/lib/server/pgrest';
 import { requireRole, denied, badRequest, ok, audit } from '@/lib/server/admin';
 import { adminInsert, adminSelect, adminUpdate, userByEmail } from '@/lib/server/supabaseAdmin';
 
@@ -39,12 +40,12 @@ export async function POST(req: Request) {
 
   const existing = await adminSelect<{ role?: string }>(
     'profiles',
-    `user_id=eq.${user.id}&select=role&limit=1`,
+    pgQuery(eq('user_id', user.id), pgSelect(['role']), pgLimit(1)),
   );
   if (existing?.[0]?.role === 'owner') return badRequest('cannot_demote_owner');
 
   const patch = { role, updated_at: new Date().toISOString() };
-  let rows = await adminUpdate<{ user_id: string }>('profiles', `user_id=eq.${user.id}`, patch);
+  let rows = await adminUpdate<{ user_id: string }>('profiles', eq('user_id', user.id), patch);
   if (rows && rows.length === 0) {
     rows = await adminInsert<{ user_id: string }>('profiles', { user_id: user.id, ...patch }, { upsert: true });
   }

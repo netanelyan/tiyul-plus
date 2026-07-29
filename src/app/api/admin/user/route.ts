@@ -1,4 +1,5 @@
 import { effectivePlan, isRole } from '@/lib/plans';
+import { eq, pgLimit, pgQuery, pgSelect } from '@/lib/server/pgrest';
 import { requireRole, denied, badRequest, ok, audit } from '@/lib/server/admin';
 import { adminSelect, userByEmail } from '@/lib/server/supabaseAdmin';
 
@@ -33,18 +34,22 @@ export async function POST(req: Request) {
     plan_source?: string | null;
     display_name?: string | null;
     is_public?: boolean;
-  }>('profiles', `user_id=eq.${user.id}&select=role,plan,plan_until,plan_source,display_name,is_public&limit=1`);
+  }>('profiles', pgQuery(
+    eq('user_id', user.id),
+    pgSelect(['role', 'plan', 'plan_until', 'plan_source', 'display_name', 'is_public']),
+    pgLimit(1),
+  ));
   const p = profiles?.[0] ?? null;
 
   const trips = await adminSelect<{ id: string }>(
     'user_trips',
-    `user_id=eq.${user.id}&select=id`,
+    pgQuery(eq('user_id', user.id), pgSelect(['id'])),
   );
 
   const today = new Date().toISOString().slice(0, 10);
   const usage = await adminSelect<{ units: number }>(
     'usage_daily',
-    `identity=eq.user:${user.id}&day=eq.${today}&select=units&limit=1`,
+    pgQuery(eq('identity', `user:${user.id}`), eq('day', today), pgSelect(['units']), pgLimit(1)),
   );
 
   await audit(actor, 'lookup_user', { userId: user.id, email: user.email });

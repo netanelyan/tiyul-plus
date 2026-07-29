@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
+import { eq, pgQuery, pgSelect } from '@/lib/server/pgrest';
 import type { Plan } from '@/lib/plans';
 
 /**
@@ -120,7 +121,7 @@ export async function setUserPlan(
 export async function findUserByStripeCustomer(customerId: string): Promise<string | null> {
   try {
     const res = await fetch(
-      `${supaUrl()}/rest/v1/profiles?stripe_customer_id=eq.${encodeURIComponent(customerId)}&select=user_id`,
+      `${supaUrl()}/rest/v1/profiles?${pgQuery(eq('stripe_customer_id', customerId), pgSelect(['user_id']))}`,
       { headers: serviceHeaders(), signal: AbortSignal.timeout(8000) },
     );
     if (!res.ok) return null;

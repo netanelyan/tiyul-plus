@@ -17,6 +17,7 @@
 
 import { type Role, isRole, roleAtLeast } from '@/lib/plans';
 import { adminInsert, adminSelect, adminDbEnabled, emailByUserId } from '@/lib/server/supabaseAdmin';
+import { eq, pgLimit, pgQuery, pgSelect } from '@/lib/server/pgrest';
 
 export interface Actor {
   userId: string;
@@ -79,7 +80,7 @@ export async function actorFrom(req: Request): Promise<Actor | null> {
   if (!userId) return null;
   const rows = await adminSelect<{ role?: string }>(
     'profiles',
-    `user_id=eq.${encodeURIComponent(userId)}&select=role&limit=1`,
+    pgQuery(eq('user_id', userId), pgSelect(['role']), pgLimit(1)),
   );
   if (!rows || rows.length === 0) return null;
   const role = isRole(rows[0].role) ? rows[0].role : 'user';

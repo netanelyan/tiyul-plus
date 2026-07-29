@@ -324,7 +324,78 @@ Standing: the 18 dead photo URLs, the 2.5MB client bundle, `feat/catalog-supabas
 unmerged, and **both GitHub PATs still need revoking at
 https://github.com/settings/tokens**.
 
-### 2026-07-29 (hh) - Outlet villages, the photo worklist, and a cap that was never the binding constraint
+### 2026-07-29 (jj) - "Prevent SQL injection": the audit found none, so the fix was to make it structural
+
+Netanel asked to prevent SQL injection. The honest first half of this entry is
+that **the audit found no exploitable injection**, and the second half is that
+the safety rested on every caller remembering to escape - which this log has
+watched fail too many times to leave alone.
+
+**What was actually checked**, adversarially, not by pattern-matching:
+
+- **Every PostgREST call that interpolates a value** - twelve of them across
+  `admin.ts`, `identity.ts`, `limits.ts`, `billing.ts`, `shareStore.ts`, the six
+  `/api/admin/*` routes and `/api/promo/redeem`. Each value is either
+  `encodeURIComponent`d, regex-validated (`/^[A-Z0-9]{3,24}$/` for a promo
+  code), or a uuid that Supabase itself issued and the server read back from a
+  verified token. Nothing user-typed reaches a filter raw.
+- **The `x-forwarded-for` path**, which IS attacker-controlled: it becomes the
+  rate-limit identity `ip:<value>` and lands in a `usage_daily` filter - already
+  encoded, and it only ever reaches `bump_usage` through a JSON body.
+- **All three `security definer` functions** (`redeem_promo`,
+  `find_traveler_by_email`, `bump_usage`). Zero dynamic SQL - no `EXECUTE`, no
+  `||` concatenation, no `format`. All three already pin `set search_path =
+  public`, which is the real hardening for definer functions, and execute is
+  revoked from `anon`/`authenticated` where it should be.
+- **supabase-js on the client**: no `.or()` and no raw `.filter()` anywhere -
+  those are the two APIs that take a filter *expression* rather than a value.
+  The one `.ilike()` strips `%` and `_` before use.
+
+So: no finding with a reproducible attack path, and nothing was reported as one.
+
+**What changed, and why it is worth doing anyway.** `adminSelect(table, query:
+string)` invites exactly one thing:
+
+    adminSelect('profiles', `user_id=eq.${id}`)   // works. and waits.
+
+New `src/lib/server/pgrest.ts` is now the only place allowed to assemble a query
+string. Values go through `pgValue` (always encoded), identifiers through
+`pgIdent`, and the uuid that lands in GoTrue's admin URL path through `pgUuid`.
+All twelve call sites were converted; the generated strings are byte-identical
+to the old ones for legitimate input, which is how the change stays boring.
+
+**The test caught a real defect in my own first version, which is the reason it
+exists:** `encodeURIComponent` does **not** encode ``!'()*``. To PostgREST, `(`
+and `)` close an `in.(...)` list or an `or=(...)` tree and `*` is the `like`
+wildcard - so `pgIn('slug', ['a)', 'x'])` would have produced `slug=in.(a),x)`
+and changed the predicate. `pgValue` now percent-encodes those four as well.
+Guessing that `encodeURIComponent` "escapes everything" is precisely the kind of
+assumption this project keeps getting burned by.
+
+**The class guard.** A test walks all of `src/` and fails on any line matching a
+hand-built filter (`col=eq.${...}`, `in.(${...}`) or a `rest/v1/${...}` path that
+is not `pgIdent`. Verified by deliberately reintroducing one: the suite fails and
+names the file and line. That is what makes this a fix rather than a cleanup -
+the next session cannot quietly undo it.
+
+**Two small hardenings in the same pass:** `/api/cities` now filters its slugs
+by shape (`/^[a-z0-9-]{1,60}$/`) instead of trusting that they only ever meet an
+in-memory `find` - a future external provider would put them in a URL; and the
+traveler search strips `*` along with `%` and `_`, since `*` is PostgREST's own
+wildcard.
+
+**8 new tests (147 total)**, including live payloads (`1&role=eq.owner`, `x,y`,
+`(select 1)`, `../../admin/users`) asserted through `URLSearchParams` - the real
+question is not "are there odd characters" but "would the server see a second
+filter", and it does not. Plus the 31/31 trip-screen suite re-run, `/api/cities`
+probed with injection-shaped slugs (returns an empty list, no error), validator
+0 errors, tsc, lint and build clean.
+
+**Rules added to the Gotchas section** so this is findable by grep rather than by
+memory: never hand-build a PostgREST query, and any new SQL function must be
+`security definer` + `set search_path` and must never concatenate SQL.
+
+### 2026-07-29 (ii) - Outlet villages, the photo worklist, and a cap that was never the binding constraint
 
 Netanel, two instructions: mark the places without an image so the photo work is
 ready the moment Chrome connects, and - after I offered to cover malls and
@@ -469,7 +540,6 @@ added across passes (dd) through (hh) - still the largest untested surface here.
 (5) Standing: the 18 dead photo URLs, the 2.5MB client bundle,
 `feat/catalog-supabase` unmerged, and **both GitHub PATs still need revoking at
 https://github.com/settings/tokens**.
-
 ### 2026-07-29 (gg) - The long tail at two per destination: 126 entries, nine countries that resisted
 
 Netanel: "Continue, now 2 per destination." This closes the food and shopping
@@ -1679,6 +1749,18 @@ with `/tmp/measure.mjs`-style measurement before quoting any new figure.
   gradient photo fallbacks there are expected, not bugs.
 - `<blackz-signature>` is a custom element; TS declaration lives in
   `src/types/custom-elements.d.ts`.
+- **Never hand-build a PostgREST query string.** Every filter goes through
+  `src/lib/server/pgrest.ts` (`eq`/`gte`/`pgIn`/`pgSelect`/`pgQuery`), which
+  encodes values and validates identifiers; table, function and uuid names that
+  land in a URL path go through `pgIdent`/`pgUuid`. A test scans the whole of
+  `src/` and fails on a raw `col=eq.${...}`, so a reintroduction cannot ship
+  quietly. Note `encodeURIComponent` alone is NOT enough - it leaves `!'()*`,
+  and `(`, `)` and `*` are syntax to PostgREST.
+- **Any new SQL function must be `security definer` + `set search_path = public`
+  and must never build SQL by concatenation** (no `EXECUTE ... || param`; use
+  `format` with `%I`/`%L` if dynamic SQL ever becomes unavoidable). The three
+  existing functions - `redeem_promo`, `find_traveler_by_email`, `bump_usage` -
+  follow this and are parameterised throughout.
 - **Anything `position: fixed` rendered inside the `<header>` must be
   portalled to `document.body`.** The header carries `backdrop-blur`, and
   `backdrop-filter` creates a containing block, so `fixed inset-0` is

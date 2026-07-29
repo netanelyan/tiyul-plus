@@ -14,6 +14,8 @@
  *    המרוחק פנימה (max), הכתיבה היא fire-and-forget דרך RPC אטומי.
  */
 
+import { eq, pgQuery, pgSelect } from '@/lib/server/pgrest';
+
 interface WindowEntry {
   count: number;
   resetAt: number;
@@ -102,7 +104,7 @@ export async function aiUnitsUsedToday(id: string): Promise<number> {
     e.merged = true; // גם בכישלון לא מנסים שוב כל בקשה - best effort
     try {
       const res = await fetch(
-        `${supaUrl()}/rest/v1/usage_daily?identity=eq.${encodeURIComponent(id)}&day=eq.${e.day}&select=units`,
+        `${supaUrl()}/rest/v1/usage_daily?${pgQuery(eq('identity', id), eq('day', e.day), pgSelect(['units']))}`,
         { headers: serviceHeaders(), signal: AbortSignal.timeout(3000) },
       );
       if (res.ok) {

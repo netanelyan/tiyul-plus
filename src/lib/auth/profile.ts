@@ -191,7 +191,10 @@ export async function searchPublicProfiles(
     if (error || !data) return [];
     return (data as PublicRow[]).map(toPublic);
   }
-  const q = raw.replace(/[%_]/g, '');
+  // `%` ו-`_` הם תווים כלליים של SQL LIKE, ו-`*` הוא התו הכללי של
+  // PostgREST (שמתרגם אותו ל-`%`). כולם יורדים - החיפוש הזה מחפש שם,
+  // לא מריץ תבנית של המשתמש.
+  const q = raw.replace(/[%_*]/g, '');
   if (q.length < 2) return [];
   const { data, error } = await supabase
     .from('public_profiles')
