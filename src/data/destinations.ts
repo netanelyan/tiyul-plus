@@ -903,6 +903,8 @@ export const destinations: Destination[] = [
         tags: ['art'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=Nedbalka+Gallery',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Nedbalka_01.jpg/500px-Nedbalka_01.jpg',
       },
       {
         id: 'bts-zelezna',
@@ -918,6 +920,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors', 'families'],
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=Zelezna+studnicka',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Horn%C3%A1_stanica_Bratislava_3.jpg/500px-Horn%C3%A1_stanica_Bratislava_3.jpg',
       },
       {
         id: 'bts-mileticova',
@@ -1294,6 +1298,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=Havelske+trziste',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Havelsk%C3%A9_tr%C5%BEi%C5%A1t%C4%9B_-_panoramio.jpg/500px-Havelsk%C3%A9_tr%C5%BEi%C5%A1t%C4%9B_-_panoramio.jpg',
       },
       {
         id: 'prg-zizkov',
@@ -3095,6 +3101,8 @@ export const destinations: Destination[] = [
         tags: ['art'],
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=40.4086,-3.694',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Reina_Sof%C3%ADa_front_gate.jpg/500px-Reina_Sof%C3%ADa_front_gate.jpg',
       },
       {
         id: 'mad-thyssen',
@@ -3109,6 +3117,8 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         tags: ['art'],
         externalUrl: 'https://maps.google.com/?q=40.41604,-3.69493',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Madrid_Museo_Thyssen-Bornemisza_Salle_14_26022016_-_panoramio.jpg/500px-Madrid_Museo_Thyssen-Bornemisza_Salle_14_26022016_-_panoramio.jpg',
       },
       {
         id: 'mad-royal-palace',
@@ -3508,6 +3518,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=41.38618,2.17834',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Mercat_de_Santa_Caterina_-_20241105_171151.jpg/500px-Mercat_de_Santa_Caterina_-_20241105_171151.jpg',
         source: {
           url: 'https://ca.wikipedia.org/wiki/Mercat_de_Santa_Caterina',
           title: 'Mercat de Santa Caterina - Viquipedia',
@@ -10697,6 +10709,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=46.49972,11.35281',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Buildings_in_Piazza_delle_Erbe-Obstplatz%2C_Bolzano.jpg/500px-Buildings_in_Piazza_delle_Erbe-Obstplatz%2C_Bolzano.jpg',
         source: {
           url: 'https://mapcarta.com/Obstplatz',
           title: 'Piazza delle Erbe - Obstplatz, Bolzano (Mapcarta)',
@@ -20257,6 +20271,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=31.950015,35.935547',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Souq_el-Khodra2.png/500px-Souq_el-Khodra2.png',
         source: {
           url: 'https://mapcarta.com/N6979404485',
           title: 'Souq El-Khodra, Amman (Mapcarta)',
@@ -20358,6 +20374,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=Shaki+Azerbaijan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Shaki_View_004_3843.jpg/500px-Shaki_View_004_3843.jpg',
       },
       {
         id: 'she-qabala',
@@ -20674,6 +20692,8 @@ export const destinations: Destination[] = [
         tags: ['history'],
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=44.4275,26.0875',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Bucharest_Day_1_-_Unirii_%289327523715%29.jpg/500px-Bucharest_Day_1_-_Unirii_%289327523715%29.jpg',
       },
       {
         id: 'buc-atheneum',
@@ -22623,6 +22643,8 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=Rovaniemi+Finland',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Rovaniemi_Town_Hall_01.jpg/500px-Rovaniemi_Town_Hall_01.jpg',
       },
       {
         id: 'fla-pyha-luosto',
@@ -22741,6 +22763,8 @@ export const destinations: Destination[] = [
         tags: ['families', 'outdoors'],
         priceLevel: 3,
         externalUrl: 'https://maps.google.com/?q=Kemi+Finland',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Kemi_Church_20220421.jpg/500px-Kemi_Church_20220421.jpg',
       },
     ],
     itinerary: [
@@ -24174,6 +24198,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'art'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=20.9314,-89.0178',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Izamal%2C_Yucat%C3%A1n_%2872%29.jpg/500px-Izamal%2C_Yucat%C3%A1n_%2872%29.jpg',
       },
       {
         id: 'mx-rio-lagartos',
@@ -24340,6 +24366,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=35.85,129.2167',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Illuminated_Woljeonggyo_Bridge_at_blue_hour_in_Gyeongju_South_Korea.jpg/500px-Illuminated_Woljeonggyo_Bridge_at_blue_hour_in_Gyeongju_South_Korea.jpg',
       },
       {
         id: 'kr-bulguksa',
@@ -26267,6 +26295,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=36.62104,29.11158',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Fethiye_Bal%C4%B1k_Pazar%C4%B1_%2815318822292%29.jpg/500px-Fethiye_Bal%C4%B1k_Pazar%C4%B1_%2815318822292%29.jpg',
         source: {
           url: 'https://www.openstreetmap.org/#map=19/36.62104/29.11158',
           title: 'Fethiye Fish Market (OpenStreetMap)',
@@ -27269,6 +27299,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'foodie'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=52.01111221313477,4.711111068725586',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/13-06-27-gouda-by-RalfR-055.jpg/500px-13-06-27-gouda-by-RalfR-055.jpg',
       },
       {
         id: 'nl-euromast',
@@ -28570,6 +28602,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=-36.841311,174.756277',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Auckland_Fish_Market%2C_Truck_Loaded_With_Ice.jpg/500px-Auckland_Fish_Market%2C_Truck_Loaded_With_Ice.jpg',
         source: {
           url: 'https://mapcarta.com/Auckland_Fish_Market',
           title: 'Auckland Fish Market (Mapcarta)',
@@ -28774,6 +28808,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=46.051908,14.508536',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Vodnikov_trg_-_Ljubljana.jpg/500px-Vodnikov_trg_-_Ljubljana.jpg',
         source: {
           url: 'https://mapcarta.com/Vodnikov_trg',
           title: 'Vodnikov trg, Ljubljana (Mapcarta)',
@@ -29551,6 +29587,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=55.29999923706055,21.39999961853027',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/1._Rusn%C4%97%2C_Nemuno_deltos_parko_direkcija.JPG/500px-1._Rusn%C4%97%2C_Nemuno_deltos_parko_direkcija.JPG',
       },
       {
         id: 'lt-rambynas',
@@ -31602,6 +31640,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=44.22638702392578,17.65972137451172',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Travnik_Altstadt_3.JPG/500px-Travnik_Altstadt_3.JPG',
       },
     ],
     itinerary: [
@@ -32572,6 +32612,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=38.11004,13.36418',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Frittola_%26_Vespa_in_Ballaro_market_Palermo.jpg/500px-Frittola_%26_Vespa_in_Ballaro_market_Palermo.jpg',
         source: {
           url: 'https://mapcarta.com/Ballar%C3%B2',
           title: 'Ballaro - Mapcarta (OpenStreetMap)',
@@ -32875,6 +32917,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=36.71843,-4.42406',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Mercado_Central_de_Atarazanas_in_M%C3%A1laga_on_a_cloudy_day.jpg/500px-Mercado_Central_de_Atarazanas_in_M%C3%A1laga_on_a_cloudy_day.jpg',
         source: {
           url: 'https://mapcarta.com/Mercado_de_Atarazanas',
           title: 'Mercado de Atarazanas, Malaga (Mapcarta)',
@@ -37255,6 +37299,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'foodie'],
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=-53.166668,-70.933334',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/00_125_2524_Punta_Arenas_-_S%C3%BCdamerika_Chile.jpg/500px-00_125_2524_Punta_Arenas_-_S%C3%BCdamerika_Chile.jpg',
       },
       {
         id: 'cl-isla-magdalena',
@@ -43475,6 +43521,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=-4.62145,55.451452',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Fish_Mongers_Victoria_Market_Seychelles.jpg/500px-Fish_Mongers_Victoria_Market_Seychelles.jpg',
         source: {
           url: 'https://mapcarta.com/Sir_Selwyn_Selwyn-Clarke_Market',
           title: 'Sir Selwyn Selwyn-Clarke Market, Victoria (Mapcarta)',
