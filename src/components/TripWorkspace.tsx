@@ -487,59 +487,72 @@ export default function TripWorkspace({
         </div>
       )}
 
-      {/* ---------- טאבי הימים + מעברי ערים ---------- */}
-      {t && t.days.length > 0 && (
+      {/* ---------- בורר הימים: כרטיס לכל עיר, ימים כמספרים בתוכו ---------- */}
+      {t && t.days.length > 0 && (() => {
         /*
-          עוטפים ולא גוללים. הרצועה הייתה `-mx-4 overflow-x-auto` מתחת
-          ל-sm, כך שב-390px הפקד האחרון ("+ יום") נחתך באמצע מול קצה
-          המסך - בדיוק אותה תקלה שדווחה על טאבי היבשות בקטלוג: רמז
-          לגלילה שחותך מילה נקרא כשבירה. עכשיו הימים יורדים לשורה הבאה
-          וכלום לא נחתך.
+          הגלגול השלישי של הפקד הזה, והצורה נבחרה סוף סוף לפי מה שהוא
+          מייצג. גלולות "🇸🇰 יום N" לכל יום היו שלוש שורות של אותו דגל
+          שמונה פעמים; צ׳יפים מספריים חשופים נראו כמו מחשבון, והאימוג׳י
+          של הרכבת ריחף בין הריבועים כמו שארית. נתנאל צילם את שניהם.
+
+          לטיול יש מבנה אמיתי - רצפים של ימים באותה עיר - אז הפקד מצייר
+          בדיוק אותו: כרטיס לכל עיר עם שם ודגל פעם אחת, והימים כמספרים
+          בתוכו. השבירה בין שורות קורית בין כרטיסים (או בתוך כרטיס, כמו
+          לוח שנה קטן) - כלומר בגבול משמעותי, לא באמצע רצועה. אימוג׳י
+          המעבר ירד: הרווח בין הכרטיסים כבר אומר "כאן מחליפים עיר".
         */
-        <div className="mt-4 flex flex-wrap items-center gap-1.5 print:hidden">
-          {t.days.map((d, i) => {
-            const dst = destOf(d.citySlug);
-            const prev = i > 0 ? t.days[i - 1] : null;
-            const cityChanged = prev && prev.citySlug !== d.citySlug;
-            const iso = dayDate(t, i);
-            const active = day?.id === d.id;
-            return (
-              <span key={d.id} className="flex shrink-0 items-center gap-1.5">
-                {cityChanged && (
-                  <span
-                    title={legOf(prev!.citySlug, d.citySlug).label}
-                    aria-hidden
-                    className="text-xs text-night/35"
-                  >
-                    {legOf(prev!.citySlug, d.citySlug).emoji}
-                  </span>
-                )}
-                <button
-                  onClick={() => setSelectedDayId(d.id)}
-                  aria-label={`יום ${i + 1}${dst ? ` ב${dst.name}` : ''}${iso ? `, ${formatHebrewDate(iso)}` : ''}`}
-                  aria-current={active ? 'true' : undefined}
-                  className={`flex h-11 min-w-11 items-center justify-center gap-1 rounded-xl px-2 text-sm font-bold transition ${
-                    active
-                      ? 'bg-sunset text-cream'
-                      : 'bg-shell text-night/55 ring-1 ring-night/10 hover:ring-night/25'
-                  }`}
+        const segments: { citySlug: string; days: { id: string; index: number }[] }[] = [];
+        for (const [i, d] of t.days.entries()) {
+          const last = segments[segments.length - 1];
+          if (last && last.citySlug === d.citySlug) last.days.push({ id: d.id, index: i });
+          else segments.push({ citySlug: d.citySlug, days: [{ id: d.id, index: i }] });
+        }
+        return (
+          <div className="mt-4 flex flex-wrap items-end gap-2 print:hidden">
+            {segments.map((seg) => {
+              const dst = destOf(seg.citySlug);
+              return (
+                <div
+                  key={seg.days[0].id}
+                  role="group"
+                  aria-label={dst?.name}
+                  className="rounded-2xl bg-shell p-1.5 ring-1 ring-night/10"
                 >
-                  {/* הדגל רק כשהעיר מתחלפת - שם הוא אומר משהו ("מכאן וינה"),
-                      ובכל שאר הימים הוא היה חזרה של אותה תמונה שמנפחת גלולה */}
-                  {(i === 0 || cityChanged) && (
+                  <div className="flex items-center gap-1 px-1 pb-1 text-[11px] font-bold text-night/45">
                     <Flag flag={dst?.flag} label={dst?.name ?? ''} size="sm" />
-                  )}
-                  {i + 1}
-                </button>
-              </span>
-            );
-          })}
-          <AddDayPicker
-            tripCitySlugs={t.citySlugs}
-            onAddDay={(slug) => trip.addDay(slug)}
-          />
-        </div>
-      )}
+                    <span className="truncate">{dst?.name}</span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-1">
+                    {seg.days.map(({ id, index }) => {
+                      const iso = dayDate(t, index);
+                      const active = day?.id === id;
+                      return (
+                        <button
+                          key={id}
+                          onClick={() => setSelectedDayId(id)}
+                          aria-label={`יום ${index + 1}${dst ? ` ב${dst.name}` : ''}${iso ? `, ${formatHebrewDate(iso)}` : ''}`}
+                          aria-current={active ? 'true' : undefined}
+                          className={`flex h-10 min-w-10 items-center justify-center rounded-xl px-1.5 text-sm font-bold transition ${
+                            active
+                              ? 'bg-sunset text-cream'
+                              : 'bg-cream text-night/55 hover:bg-night/5'
+                          }`}
+                        >
+                          {index + 1}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+            <AddDayPicker
+              tripCitySlugs={t.citySlugs}
+              onAddDay={(slug) => trip.addDay(slug)}
+            />
+          </div>
+        );
+      })()}
 
       {/* ---------- המסך המאוחד: מסלול · מפה · שיחה ---------- */}
       {/*

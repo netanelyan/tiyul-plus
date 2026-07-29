@@ -133,27 +133,19 @@ export default function TripDates({
           className="absolute start-0 top-full z-40 mt-2 w-72 max-w-[calc(100vw-1rem)] rounded-2xl bg-shell p-4 shadow-[var(--shadow-pop)] ring-1 ring-night/10"
         >
           <div className="grid grid-cols-2 gap-3">
-            <label className="block">
-              <span className="mb-1 block text-xs font-bold text-night/50">יוצאים</span>
-              <input
-                type="date"
-                value={trip.startDate ?? ''}
-                onChange={(e) => set('startDate', e.target.value)}
-                aria-label="תאריך יציאה"
-                className="w-full rounded-xl border border-night/15 bg-cream px-2.5 py-2 text-base text-night outline-none transition focus:border-sunset/40 focus:ring-4 focus:ring-sunset/15 sm:text-sm"
-              />
-            </label>
-            <label className="block">
-              <span className="mb-1 block text-xs font-bold text-night/50">חוזרים</span>
-              <input
-                type="date"
-                value={trip.endDate ?? ''}
-                min={trip.startDate}
-                onChange={(e) => set('endDate', e.target.value)}
-                aria-label="תאריך חזרה"
-                className="w-full rounded-xl border border-night/15 bg-cream px-2.5 py-2 text-base text-night outline-none transition focus:border-sunset/40 focus:ring-4 focus:ring-sunset/15 sm:text-sm"
-              />
-            </label>
+            <DateField
+              label="יוצאים"
+              ariaLabel="תאריך יציאה"
+              value={trip.startDate}
+              onChange={(v) => set('startDate', v)}
+            />
+            <DateField
+              label="חוזרים"
+              ariaLabel="תאריך חזרה"
+              value={trip.endDate}
+              min={trip.startDate}
+              onChange={(v) => set('endDate', v)}
+            />
           </div>
 
           {span !== null && mismatch === 0 && (
@@ -197,5 +189,77 @@ export default function TripDates({
         </div>
       )}
     </div>
+  );
+}
+
+/**
+ * שדה תאריך שנראה כמו שדה גם כשהוא ריק.
+ *
+ * **הבאג שנתנאל צילם מהאייפון:** `<input type="date">` ריק ב-iOS Safari
+ * מרונדר כקופסה חלקה לגמרי - בלי placeholder, בלי רמז, כלום. שני
+ * מלבנים ריקים ומסתוריים בפאנל. כרום בדסקטופ דווקא מצייר שלד
+ * "dd/mm/yyyy" משלו, אז אי אפשר סתם להניח טקסט מעל - הוא היה מתנגש.
+ *
+ * הפתרון: כשהשדה ריק, טקסט הערך של הקלט נצבע שקוף (מעלים גם את השלד
+ * של כרום - אין בו מידע ממילא) ומעליו שכבת "בחירת תאריך" משלנו, זהה
+ * בכל דפדפן. ברגע שיש ערך - הקלט חוזר לצבוע את עצמו. `appearance-none`
+ * + `min-h` כי iOS נוטה לכווץ קלטי תאריך בלי תוכן, ו-`text-start` על
+ * ה-pseudo של הערך כי iOS ממרכז אותו.
+ *
+ * הצד השני של אותו תיקון, בדסקטופ: כרום מצייר אינדיקטור לוח-שנה משלו
+ * שהתנגש עם שכבת הרמז (יש לנו אייקון משלנו), אז הוא מוסתר - ובתמורה
+ * קליק פותח את הלוח דרך `showPicker()`. ובזמן פוקוס הקלט חוזר להיות
+ * גלוי (`focus:text-night`) והרמז נעלם, אחרת הקלדה ידנית של תאריך
+ * הייתה בלתי נראית - שקוף זה שקוף גם בשביל מי שמקליד.
+ */
+function DateField({
+  label,
+  ariaLabel,
+  value,
+  min,
+  onChange,
+}: {
+  label: string;
+  ariaLabel: string;
+  value?: string;
+  min?: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1 block text-xs font-bold text-night/50">{label}</span>
+      <span className="relative block">
+        <input
+          type="date"
+          value={value ?? ''}
+          min={min}
+          onChange={(e) => onChange(e.target.value)}
+          onClick={(e) => {
+            // בדסקטופ, בלי אינדיקטור, קליק רק ממקד - נפתח את לוח השנה בעצמנו
+            try {
+              e.currentTarget.showPicker?.();
+            } catch {
+              /* דפדפן בלי showPicker - הקלדה עדיין עובדת */
+            }
+          }}
+          aria-label={ariaLabel}
+          className={`peer min-h-11 w-full appearance-none rounded-xl border border-night/15 bg-cream px-2.5 py-2 text-base outline-none transition [color-scheme:light] focus:border-sunset/40 focus:text-night focus:ring-4 focus:ring-sunset/15 sm:text-sm [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-date-and-time-value]:text-start ${
+            value ? 'text-night' : 'text-transparent'
+          }`}
+        />
+        {!value && (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 start-2.5 flex items-center gap-1 text-sm font-medium text-night/40 peer-focus:hidden"
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+              <rect x="3" y="5" width="18" height="16" rx="2" />
+              <path d="M3 10h18M8 3v4M16 3v4" />
+            </svg>
+            בחירת תאריך
+          </span>
+        )}
+      </span>
+    </label>
   );
 }

@@ -248,6 +248,43 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-29 (mm) - The date fields were blank boxes on iOS, and the day switcher needed to look like the trip
+
+Two more phone screenshots from Netanel, both real. The first: the open date
+panel shows **two empty rounded boxes** with no hint at all - `<input
+type="date">` with no value renders as a featureless box in iOS Safari (no
+placeholder, no skeleton, nothing), so it reads as broken. The second: the
+day switcher, still not right - number chips floating in rows with the train
+emoji orphaned between them.
+
+**The date field now looks like a field when empty.** A `DateField` wrapper
+paints the input's own text transparent while it is empty (and hides Chrome's
+`::-webkit-calendar-picker-indicator`, which is redundant with our own icon and
+would collide) and lays a "📅 בחירת תאריך" hint over it, identical in every
+browser. On focus the input becomes visible again and the hint disappears -
+otherwise a manually typed date would be invisible, transparent for the typist
+too. On desktop a click calls `showPicker()` so the calendar still opens now
+that Chrome's indicator is gone. The panel's on-screen clamp from entry (ll)
+is unchanged and still holds.
+
+**The day switcher is now a card per city.** Three glgullim, three complaints:
+"🇸🇰 יום N" pills were the same flag eight times over three rows; bare number
+chips read like a calculator; and the city-change emoji floated between chips
+like a leftover. A trip has real structure - runs of days in one city - so the
+control finally draws exactly that: a card per city with the flag and name
+**once**, the days as plain numbers inside it, and the row break falls between
+cards (a meaningful boundary) instead of mid-strip. The transition emoji is
+gone; the gap between cards already says "here the city changes". Bratislava
+[1-2] · High Tatras [3-6] · Vienna [7-8], each self-labelled. Accessible names
+still carry the full "יום 5 בהרי הטטרה, 14 באוגוסט".
+
+**Verified 16/16** in a real browser at 402px DPR3 and 1440px (three groups,
+each city named once, clicking day 5 in the middle group opens day 5, the
+add-day button still reachable, the date fields show a hint rather than blank
+boxes, the panel stays on screen, no overflow, no console errors), plus the
+30/30 dates and 31/31 trip-screen suites re-run. 165 unit tests, validator 0
+errors, tsc/lint/build clean.
+
 ### 2026-07-29 (ll) - "This looks very ugly, not simple or appealing" - he was right, and one screenshot was a bug
 
 Two screenshots from his phone, both of the trip screen. The second one showed
