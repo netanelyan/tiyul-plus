@@ -5917,6 +5917,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=24.517721,54.378513',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Date_shop_at_Abu_Dhabi_Vegetable_Market.JPG/500px-Date_shop_at_Abu_Dhabi_Vegetable_Market.JPG',
         source: {
           url: 'https://mapcarta.com/W56070308',
           title: 'Al Mina Fruit & Vegetable Market, Abu Dhabi (Mapcarta)',
@@ -7730,6 +7732,8 @@ export const destinations: Destination[] = [
         rating: 4.1,
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=Slovenska+Plaza+Budva',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Budva_-_pla%C5%BEa_-_panoramio.jpg/500px-Budva_-_pla%C5%BEa_-_panoramio.jpg',
       },
       {
         id: 'bud-svetistefan',
@@ -10322,6 +10326,8 @@ export const destinations: Destination[] = [
         tags: ['romantic', 'outdoors'],
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=43.76278,11.26506',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Sunset_at_Piazzale_Michelangelo%2C_Florence%2C_Italy_%28wide%29.jpg/500px-Sunset_at_Piazzale_Michelangelo%2C_Florence%2C_Italy_%28wide%29.jpg',
       },
       {
         id: 'flo-san-lorenzo',
@@ -10420,6 +10426,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=43.77054,11.26689',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Firenze_-_Florence_-_Piazza_Lorenzo_Ghiberti_-_Il_Mercato_di_Sant%27Ambrogio_1873_by_Giuseppe_Mengoni_-_View_East.jpg/500px-Firenze_-_Florence_-_Piazza_Lorenzo_Ghiberti_-_Il_Mercato_di_Sant%27Ambrogio_1873_by_Giuseppe_Mengoni_-_View_East.jpg',
         source: {
           url: 'https://mapcarta.com/Mercato_di_Sant%27Ambrogio',
           title: "Mercato di Sant'Ambrogio, Florence (Mapcarta)",
@@ -11143,6 +11151,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'families'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=39.57389,2.65343',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Mercado_del_Olivar._Palma_de_Mallorca._-_panoramio.jpg/500px-Mercado_del_Olivar._Palma_de_Mallorca._-_panoramio.jpg',
         source: {
           url: 'https://mapcarta.com/Mercat_de_l%27Olivar',
           title: "Mercat de l'Olivar - Mapcarta (OpenStreetMap)",
@@ -12510,6 +12520,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=-13.52115,-71.98251',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Cusco.-_P%C3%A9rou_le_marche_San_Pedro_%285%29.jpg/500px-Cusco.-_P%C3%A9rou_le_marche_San_Pedro_%285%29.jpg',
         source: {
           url: 'https://mapcarta.com/Mercado_de_San_Pedro',
           title: 'San Pedro Market, Cusco (Mapcarta)',
@@ -13864,6 +13876,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=36.16351,-115.15768',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Shopping_in_Las_Vegas_-_panoramio.jpg/500px-Shopping_in_Las_Vegas_-_panoramio.jpg',
         source: {
           url: 'https://mapcarta.com/Las_Vegas_North_Premium_Outlets',
           title: 'Las Vegas North Premium Outlets, Nevada (Mapcarta)',
@@ -16572,6 +16586,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=60.39463,5.32371',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Norwegen_1998_%28118%29_Bergen-_Fisketorget_%2834930784296%29.jpg/500px-Norwegen_1998_%28118%29_Bergen-_Fisketorget_%2834930784296%29.jpg',
         source: {
           url: 'https://www.openstreetmap.org/#map=19/60.39463/5.32371',
           title: 'Bergen Fish Market (OpenStreetMap)',
@@ -16591,6 +16607,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=59.92212,10.75203',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Mathallen_Oslo_-_2026-6.jpg/500px-Mathallen_Oslo_-_2026-6.jpg',
         source: {
           url: 'https://www.openstreetmap.org/#map=19/59.92212/10.75203',
           title: 'Mathallen, Oslo (OpenStreetMap)',
@@ -17277,6 +17295,8 @@ export const destinations: Destination[] = [
         tags: ['art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=40.17586,44.51836',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Merkato_Vernissage_%28Erevano%29_10.jpg/500px-Merkato_Vernissage_%28Erevano%29_10.jpg',
         source: {
           url: 'https://mapcarta.com/Vernissage',
           title: 'Vernissage, Yerevan (Mapcarta)',
@@ -17565,6 +17585,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=39.77638,64.41664',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/27_Toqi_Zargaron_dome_095.jpg/500px-27_Toqi_Zargaron_dome_095.jpg',
         source: {
           url: 'https://mapcarta.com/Toqi_Zargaron',
           title: 'Toqi Zargaron, Bukhara (Mapcarta)',
@@ -18181,6 +18203,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=34.40596,135.29571',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/%E3%82%8A%E3%82%93%E3%81%8F%E3%81%86%E3%83%97%E3%83%AC%E3%83%9F%E3%82%A2%E3%83%A0%E3%83%BB%E3%82%A2%E3%82%A6%E3%83%88%E3%83%AC%E3%83%83%E3%83%88_Rinku_Premium_Outlets_2012.12.21_-_panoramio_%281%29.jpg/500px-%E3%82%8A%E3%82%93%E3%81%8F%E3%81%86%E3%83%97%E3%83%AC%E3%83%9F%E3%82%A2%E3%83%A0%E3%83%BB%E3%82%A2%E3%82%A6%E3%83%88%E3%83%AC%E3%83%83%E3%83%88_Rinku_Premium_Outlets_2012.12.21_-_panoramio_%281%29.jpg',
         source: {
           url: 'https://mapcarta.com/Rinku_Premium_Outlets',
           title: 'Rinku Premium Outlets, Izumisano (Mapcarta)',
@@ -18825,6 +18849,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=38.75215,-8.94084',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Outlet_Freeport_-_Alcochete_-_Portugal_%2811074249184%29.jpg/500px-Outlet_Freeport_-_Alcochete_-_Portugal_%2811074249184%29.jpg',
         source: {
           url: 'https://mapcarta.com/Freeport_Lisboa_Fashion_Outlet',
           title: 'Freeport Fashion Outlet, Alcochete (Mapcarta)',
@@ -18906,6 +18932,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'romantic'],
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=52.2497,21.0122',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Old_Town_Market_Place_%289629523647%29.jpg/500px-Old_Town_Market_Place_%289629523647%29.jpg',
       },
       {
         id: 'war-royal-castle',
@@ -19454,6 +19482,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=50.10959,19.84598',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Factory_Krak%C3%B3w%2C_Outlet_mall_in_Modlniczka%2C_Poland%2C_2019.jpg/500px-Factory_Krak%C3%B3w%2C_Outlet_mall_in_Modlniczka%2C_Poland%2C_2019.jpg',
         source: {
           url: 'https://mapcarta.com/Factory_Krak%C3%B3w',
           title: 'Factory Krakow, Modlniczka (Mapcarta)',
@@ -19962,6 +19992,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=52.52309,5.43863',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Batavia_Stad_2_klein.jpg/500px-Batavia_Stad_2_klein.jpg',
         source: {
           url: 'https://mapcarta.com/Batavia_Stad_Fashion_Outlet',
           title: 'Batavia Stad Fashion Outlet, Lelystad (Mapcarta)',
@@ -20341,6 +20373,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors', 'families'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=Qabala+Azerbaijan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Qabala_JumaMosque_004_3413.jpg/500px-Qabala_JumaMosque_004_3413.jpg',
       },
       {
         id: 'she-qirmizi',
@@ -20407,6 +20441,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=41.20085,47.16632',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Cheese_Vendor_in_Market_-_Taza_Bazaar_-_Sheki_-_Azerbaijan_%2818266429585%29.jpg/500px-Cheese_Vendor_in_Market_-_Taza_Bazaar_-_Sheki_-_Azerbaijan_%2818266429585%29.jpg',
         source: {
           url: 'https://mapcarta.com/N5084206122',
           title: 'Taza Bazar, Shaki (Mapcarta)',
@@ -20490,6 +20526,8 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=Hatta+UAE',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Hatta_Observatory.jpg/500px-Hatta_Observatory.jpg',
       },
       {
         id: 'uae-jebel-jais',
@@ -20828,6 +20866,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=44.45007,26.13007',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Bucharest_-_Obor_Market_2024_-_01.jpg/500px-Bucharest_-_Obor_Market_2024_-_01.jpg',
         source: {
           url: 'https://mapcarta.com/Obor_Market',
           title: 'Obor Market, Bucharest (Mapcarta)',
@@ -21692,6 +21732,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=42.7028,23.32058',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Zhenski_Pazar-_Ladies_Market_2026.jpg/500px-Zhenski_Pazar-_Ladies_Market_2026.jpg',
         source: {
           url: 'https://mapcarta.com/Zhenski_Pazar',
           title: "Zhenski Pazar (Women's Market), Sofia (Mapcarta)",
@@ -22218,6 +22260,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=59.33593,18.07769',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Stockholm_%C3%96stermalms_saluhall_%2852588933901%29.jpg/500px-Stockholm_%C3%96stermalms_saluhall_%2852588933901%29.jpg',
         source: {
           url: 'https://mapcarta.com/%C3%96stermalms_Saluhall',
           title: 'Ostermalm Market Hall, Stockholm (Mapcarta)',
@@ -22236,6 +22280,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=59.33428,18.06254',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Stockholm_H%C3%B6torgshallen_%2852589211104%29.jpg/500px-Stockholm_H%C3%B6torgshallen_%2852589211104%29.jpg',
         source: {
           url: 'https://mapcarta.com/H%C3%B6torgshallen',
           title: 'Hotorgshallen, Stockholm (Mapcarta)',
@@ -22254,6 +22300,8 @@ export const destinations: Destination[] = [
         tags: ['art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=59.333,18.069011',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Stockholm_-_Nordiska_Kompaniet_%283348031060%29.jpg/500px-Stockholm_-_Nordiska_Kompaniet_%283348031060%29.jpg',
         source: {
           url: 'https://mapcarta.com/N436371925',
           title: 'Nordiska Kompaniet, Stockholm (Mapcarta)',
@@ -22454,6 +22502,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=55.68388,12.56957',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Copenhagen_Torvehallerne_%2844135781481%29.jpg/500px-Copenhagen_Torvehallerne_%2844135781481%29.jpg',
         source: {
           url: 'https://mapcarta.com/Torvehallerne',
           title: 'Torvehallerne, Copenhagen (Mapcarta)',
@@ -23119,6 +23169,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=59.4411,24.73524',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Balti_Jaama_Turg%2C_2019.jpg/500px-Balti_Jaama_Turg%2C_2019.jpg',
         source: {
           url: 'https://mapcarta.com/Balti_Jaama_Turg',
           title: 'Balti Jaama Turg, Tallinn (Mapcarta)',
