@@ -23,6 +23,20 @@ const asJson = args.includes('--json');
 const onlyTier = args.includes('--tier') ? args[args.indexOf('--tier') + 1] : null;
 const onlyDest = args.includes('--dest') ? args[args.indexOf('--dest') + 1] : null;
 
+// Places that have been through EVERY retrieval method and yielded nothing usable.
+// Same status as tier C: not a to-do, a recorded dead end. The file names the
+// methods tried and the date, so "we already looked" is evidence rather than
+// memory - and so a future session with a NEW source knows exactly what to redo.
+const EXHAUSTED_FILE = 'scripts/photo-exhausted.json';
+let exhausted = new Set();
+if (existsSync(EXHAUSTED_FILE)) {
+  try {
+    exhausted = new Set(JSON.parse(readFileSync(EXHAUSTED_FILE, 'utf8')).ids ?? []);
+  } catch {
+    exhausted = new Set();
+  }
+}
+
 const MANIFEST = 'scripts/photo-verified.json';
 let manifest = {};
 if (existsSync(MANIFEST)) {
@@ -70,16 +84,17 @@ const TIER_NOTE = {
   A: 'public place - usually has a Commons article; highest hit rate',
   B: 'business - only the famous ones have a free photograph; expect misses',
   C: 'kosher venue - confirmed unfillable across four sessions; DO NOT WORK',
+  X: 'every retrieval method run, nothing usable found - see scripts/photo-exhausted.json',
 };
 
-const gaps = { A: [], B: [], C: [] };
+const gaps = { A: [], B: [], C: [], X: [] };
 const reprobe = []; // has a URL, but the manifest says dead or says nothing
 
 for (const d of destinations) {
   if (onlyDest && d.slug !== onlyDest) continue;
   for (const p of d.places) {
     if (!p.photo) {
-      const tier = TIER[p.category] ?? 'B';
+      const tier = exhausted.has(p.id) ? 'X' : (TIER[p.category] ?? 'B');
       gaps[tier].push({
         tier,
         dest: d.slug,
@@ -127,11 +142,11 @@ if (asJson) {
 const totalPlaces = destinations.reduce((n, d) => n + d.places.length, 0);
 console.log(`PHOTO WORKLIST - ${totalPlaces} places in the catalog\n`);
 
-for (const tier of ['A', 'B', 'C']) {
+for (const tier of ['A', 'B', 'C', 'X']) {
   if (onlyTier && tier !== onlyTier) continue;
   const list = gaps[tier];
   console.log(`── TIER ${tier}: ${list.length} places - ${TIER_NOTE[tier]}`);
-  if (tier === 'C') {
+  if (tier === 'C' || tier === 'X') {
     console.log('   (listed for completeness only; filling these is not work, it is a wild goose chase)\n');
     continue;
   }
@@ -156,7 +171,7 @@ for (const r of dead) console.log(`      ${r.dest}/${r.id}`);
 console.log(`   ${unprobed.length} never probed at all (just run verify-photos.mjs with a network)`);
 for (const r of unprobed) console.log(`      ${r.dest}/${r.id}`);
 
-console.log(`\nTOTAL fillable (A+B): ${gaps.A.length + gaps.B.length}   unfillable (C): ${gaps.C.length}   re-probe: ${reprobe.length}`);
+console.log(`\nTOTAL open work (A+B): ${gaps.A.length + gaps.B.length}   unfillable (C): ${gaps.C.length}   exhausted (X): ${gaps.X.length}   re-probe: ${reprobe.length}`);
 console.log(`
 When Chrome is connected, the order that works:
   1. node scripts/verify-photos.mjs --force   - settles the ${reprobe.length} re-probe rows first,

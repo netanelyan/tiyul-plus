@@ -6362,6 +6362,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=41.721166,44.79422',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Didube-Chugureti%2C_Tbilisi%2C_Georgia_-_panoramio_%289%29.jpg/500px-Didube-Chugureti%2C_Tbilisi%2C_Georgia_-_panoramio_%289%29.jpg',
         source: {
           url: 'https://mapcarta.com/Dezerter_Bazaar',
           title: 'Dezerter Bazaar - Mapcarta (OpenStreetMap)',
@@ -17331,6 +17333,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=40.16721,44.51502',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Spices_at_GUM_Market_in_Yerevan%2C_Armenia.jpg/500px-Spices_at_GUM_Market_in_Yerevan%2C_Armenia.jpg',
         source: {
           url: 'https://mapcarta.com/GUM_Market',
           title: 'GUM Market, Yerevan (Mapcarta)',
@@ -19778,6 +19782,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=34.77839,32.41911',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Alte_Markthalle_-_panoramio.jpg/500px-Alte_Markthalle_-_panoramio.jpg',
         source: {
           url: 'https://mapcarta.com/W9929452',
           title: 'Municipal market, Pafos (Mapcarta)',
@@ -21130,6 +21136,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=45.79926,24.14468',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Water_melons_-_panoramio.jpg/500px-Water_melons_-_panoramio.jpg',
         source: {
           url: 'https://mapcarta.com/Piata_Cibin',
           title: 'Piata Cibin, Sibiu (Mapcarta)',
@@ -23051,6 +23059,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=54.700322,25.284323',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Outdoor_Stalls_Vilnius_Market_A.jpg/500px-Outdoor_Stalls_Vilnius_Market_A.jpg',
         source: {
           url: 'https://mapcarta.com/W8024341',
           title: 'Kalvarija Market, Vilnius (Mapcarta)',
@@ -38349,6 +38359,8 @@ export const destinations: Destination[] = [
         tags: ['history'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=10.42368,-75.55098',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Interior_of_the_Catedral_de_Santa_Catalina_de_Alejandr%C3%ADa%2C_Cartagena_9.jpg/500px-Interior_of_the_Catedral_de_Santa_Catalina_de_Alejandr%C3%ADa%2C_Cartagena_9.jpg',
       },
       {
         id: 'co-inquisicion',
@@ -39873,6 +39885,8 @@ export const destinations: Destination[] = [
         tags: ['art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=51.49925,-0.16301',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Confectionery_counter%2C_Harrods_Food_Hall%2C_London.jpg/500px-Confectionery_counter%2C_Harrods_Food_Hall%2C_London.jpg',
         source: {
           url: 'https://mapcarta.com/26234344',
           title: 'Harrods, Knightsbridge, London (Mapcarta)',
@@ -42613,6 +42627,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=14.55863,-90.73903',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Man_Eating_at_the_Market_of_Antigua%2C_Guatemala.jpg/500px-Man_Eating_at_the_Market_of_Antigua%2C_Guatemala.jpg',
         source: {
           url: 'https://mapcarta.com/Mercado_de_Antigua',
           title: 'Mercado de Antigua, Guatemala (Mapcarta)',
