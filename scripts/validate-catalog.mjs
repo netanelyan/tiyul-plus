@@ -67,6 +67,8 @@ const KOSHER_STATUS = new Set(['kosher', 'not-kosher', 'unknown']);
 const SOURCED_CATEGORIES = new Set(['food', 'market']);
 const NO_HOURS_CATEGORIES = new Set(['food', 'market', 'cafe', 'shopping']);
 const LINK_BY_COORDS = new Set(['food', 'market']);
+// קטגוריות עירוניות: תמיד בתוך העיר או בפאתיה הקרובים.
+const URBAN_CATEGORIES = new Set(['food', 'market', 'cafe', 'shopping', 'kosher-food', 'kosher-market']);
 // שעון אמיתי, "שעות פתיחה", או "סגור ביום/בימי X". `1:25` של קנה מידה נופל
 // כאן בכוונה - עדיף אזהרת שווא אחת מאשר שעה שנשמרה בלי שאיש שם לב.
 const HOURS_RE =
@@ -183,6 +185,17 @@ for (const d of destinations) {
   checkPhoto(d.slug, 'photo', d.photo, true);
   checkPhoto(d.slug, 'iconicLandmark.photo', d.iconicLandmark?.photo, true);
 
+  // הפרישה הגאוגרפית הלגיטימית של היעד, נמדדת מהמקומות הלא-עירוניים
+  // בלבד (אתרים, טבע, מוזיאונים, תצפיות). משמשת כמסגרת ייחוס לבדיקה 3b.
+  const spread = { lat: 0, lng: 0 };
+  if (d.center)
+    for (const p of d.places) {
+      if (URBAN_CATEGORIES.has(p.category)) continue;
+      if (!Number.isFinite(p.lat) || !Number.isFinite(p.lng)) continue;
+      spread.lat = Math.max(spread.lat, Math.abs(p.lat - d.center.lat));
+      spread.lng = Math.max(spread.lng, Math.abs(p.lng - d.center.lng));
+    }
+
   const ids = new Set();
   for (const p of d.places) {
     const where = `${d.slug}/${p.id}`;
@@ -261,6 +274,25 @@ for (const d of destinations) {
       if (NO_HOURS_CATEGORIES.has(p.category))
         err(`${where}: description states ${what} - hours and prices are never stored`);
       else warn(`${where}: description states ${what} (legacy entry, outside the food/shopping rule)`);
+    }
+
+    // 3b. מקום עירוני רחוק מדי ממרכז היעד. שוק או מסעדה נמצאים כמעט תמיד
+    // בעיר עצמה, ולכן סטייה של מעלה שלמה היא כמעט תמיד שגיאת הקלדה - וזו
+    // בדיוק הטעות שנעשתה כאן (37.38 שנכתב 38.38, מרחק של ~111 ק"מ).
+    // בדיקת ה-externalUrl הקיימת אינה יכולה לתפוס את זה, כי הקישור נגזר
+    // מאותו ערך שגוי. סף האזהרה הכללי (3 מעלות) רחב מדי לקטגוריות האלה.
+    // הסף אינו קבוע: הוא נגזר מהפרישה של היעד עצמו. יעד בקנה מידה של
+    // מדינה שלמה (גרנד קניון, ניו אינגלנד, אנדלוסיה) מחזיק ממילא אתרים
+    // במרחק מעלות מהמרכז, ושם מסעדה בעיר השער היא נתון לגיטימי ולא טעות.
+    // מסגרת הייחוס היא דווקא המקומות הלא-עירוניים - הם אלה שנפרשים
+    // בלגיטימיות, והם אינם מחלקת הבאגים שהבדיקה הזאת שומרת עליה.
+    if (URBAN_CATEGORIES.has(p.category) && d.center) {
+      const dLat = Math.abs(p.lat - d.center.lat);
+      const dLng = Math.abs(p.lng - d.center.lng);
+      const tolLat = Math.max(1, spread.lat);
+      const tolLng = Math.max(1, spread.lng);
+      if (dLat > tolLat || dLng > tolLng)
+        err(`${where}: ${p.category} sits ${dLat.toFixed(2)}/${dLng.toFixed(2)} degrees from the destination centre, past this destination's own spread of ${tolLat.toFixed(2)}/${tolLng.toFixed(2)} - an urban amenity that far out is almost always a typo`);
     }
 
     // 4. קישור לפי קואורדינטות ולא לפי שם. שם מתחלף ופותר לעיר אחרת -

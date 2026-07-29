@@ -2861,6 +2861,25 @@ export const destinations: Destination[] = [
         tags: ['history', 'outdoors'],
         mustSee: true,
       },
+      {
+        id: 'ath-varvakeios',
+        name: 'שוק ורווקיוס המרכזי',
+        nameLocal: 'Varvakeios Agora',
+        category: 'market',
+        lat: 37.98038,
+        lng: 23.72763,
+        description:
+          'השוק המרכזי של אתונה על רחוב אתינאס, בין מונסטיראקי לאומוניה - אולם בשר ודגים מקורה, ומולו דוכני ירקות, זיתים ותבלינים. מקום עובד ולא מלוטש, והמסעדות שבתוכו פתוחות עד השעות הקטנות.',
+        durationMin: 60,
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=37.98038,23.72763',
+        source: {
+          url: 'https://mapcarta.com/Varvakeios_Market',
+          title: 'Varvakeios Market - Mapcarta (OpenStreetMap)',
+          checked: '2026-07-28',
+        },
+      },
     ],
     itinerary: [
       {
@@ -5969,6 +5988,25 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Museum_of_the_Soviet_Occupation_in_Tbilisi.jpg/500px-Museum_of_the_Soviet_Occupation_in_Tbilisi.jpg',
       },
+      {
+        id: 'tbs-dezerter',
+        name: 'שוק דזרטירי',
+        nameLocal: 'Dezerter Bazaar',
+        category: 'market',
+        lat: 41.721166,
+        lng: 44.79422,
+        description:
+          'השוק הגדול של טביליסי ליד תחנת הרכבת המרכזית - תבלינים, סוללות צ׳ורצ׳חלה תלויות, גבינת סולוגוני, אגוזים ודוכני לחם טונה. גדול, רועש ולגמרי מקומי; מיקוח מקובל ורצוי לשמור על החפצים.',
+        durationMin: 60,
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=41.721166,44.79422',
+        source: {
+          url: 'https://mapcarta.com/Dezerter_Bazaar',
+          title: 'Dezerter Bazaar - Mapcarta (OpenStreetMap)',
+          checked: '2026-07-28',
+        },
+      },
     ],
     itinerary: [
       {
@@ -8709,6 +8747,25 @@ export const destinations: Destination[] = [
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=Spinalonga+Crete',
       },
+      {
+        id: 'her-chania-agora',
+        name: 'שוק העירייה של חאניה',
+        nameLocal: 'Municipal Market of Chania',
+        category: 'market',
+        lat: 35.51451,
+        lng: 24.02028,
+        description:
+          'אולם שוק מוצלב בכיכר מרקופולו בחאניה, בנוי בצורת צלב עם ארבע כנפיים. גבינות כרתיות, עשבי תיבול הרריים, שמן זית ורקי, לצד דוכני דגים ובשר וכמה מסעדות קטנות בתוך הכנפיים.',
+        durationMin: 45,
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=35.51451,24.02028',
+        source: {
+          url: 'https://mapcarta.com/Municipal_Market_of_Chania',
+          title: 'Municipal Market of Chania - Mapcarta (OpenStreetMap)',
+          checked: '2026-07-28',
+        },
+      },
     ],
     itinerary: [
       {
@@ -9265,6 +9322,25 @@ export const destinations: Destination[] = [
         priceLevel: 3,
         tags: ['history', 'foodie', 'romantic'],
         externalUrl: 'https://maps.google.com/?q=45.43361,12.33806',
+      },
+      {
+        id: 'ven-rialto-market',
+        name: 'שוק ריאלטו',
+        nameLocal: 'Mercato di Rialto',
+        category: 'market',
+        lat: 45.43959,
+        lng: 12.33458,
+        description:
+          'שוק הדגים והירקות ההיסטורי של ונציה בסן פולו, לצד קמפו דלה פסקריה ובצמוד לגשר ריאלטו. דוכני הדגה נפרשים מתחת ללוג׳יה מקורה והסחורה מגיעה בסירות מהלגונה - אחד המקומות הבודדים במרכז ונציה שעדיין עובד בשביל מי שגר בה. פעיל בבקרים, ולא בכל ימות השבוע.',
+        durationMin: 45,
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=45.43959,12.33458',
+        source: {
+          url: 'https://mapcarta.com/Rialto_Market',
+          title: 'Rialto Market - Mapcarta (OpenStreetMap)',
+          checked: '2026-07-28',
+        },
       },
     ],
     itinerary: [
@@ -10193,6 +10269,25 @@ export const destinations: Destination[] = [
         rating: 4.5,
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=Coves+del+Drac',
+      },
+      {
+        id: 'pmi-olivar',
+        name: 'שוק לאוליבר',
+        nameLocal: "Mercat de l'Olivar",
+        category: 'market',
+        lat: 39.57389,
+        lng: 2.65343,
+        description:
+          'שוק המזון המרכזי של פלמה בכיכר לאוליבר - קומת דגים ופירות ים נפרדת, קומת ירקות, בשר ומעדנייה, ובה סוברסדה ונקניקי האי. שוק שכונתי עובד במרכז העיר, כמה דקות מפלאסה מאיור.',
+        durationMin: 45,
+        tags: ['foodie', 'families'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=39.57389,2.65343',
+        source: {
+          url: 'https://mapcarta.com/Mercat_de_l%27Olivar',
+          title: "Mercat de l'Olivar - Mapcarta (OpenStreetMap)",
+          checked: '2026-07-28',
+        },
       },
     ],
     itinerary: [
@@ -29062,6 +29157,44 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=38.03333282470703,14.01666641235352',
       },
+      {
+        id: 'it-ballaro',
+        name: 'שוק בלארו',
+        nameLocal: 'Ballaro',
+        category: 'market',
+        lat: 38.11004,
+        lng: 13.36418,
+        description:
+          'שוק הרחוב הוותיק של פלרמו ברובע אלברגריה - ערימות ירקות, דוכני דגים ודוכני אוכל מטוגן שמוכרים פאנלה וקרוקה. צעקני, צפוף ולא מטופח, וזה השוק שהכי פחות השתנה בשביל תיירים. עמוס בעיקר בבוקר.',
+        durationMin: 60,
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=38.11004,13.36418',
+        source: {
+          url: 'https://mapcarta.com/Ballar%C3%B2',
+          title: 'Ballaro - Mapcarta (OpenStreetMap)',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'it-vucciria',
+        name: 'שוק ווצ׳יריה',
+        nameLocal: 'Vucciria',
+        category: 'market',
+        lat: 38.11816,
+        lng: 13.36519,
+        description:
+          'רובע שוק במרכז ההיסטורי של פלרמו סביב ויה ארג׳נטריה. ביום הוא שקט וחלקו נטוש, ובלילה הכיכרות מתמלאות בדוכני אוכל ובשתייה בעמידה ברחוב - שני מצבים שונים לגמרי של אותו מקום.',
+        durationMin: 60,
+        tags: ['foodie', 'nightlife', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=38.11816,13.36519',
+        source: {
+          url: 'https://mapcarta.com/Vucciria',
+          title: 'Vucciria - Mapcarta (OpenStreetMap)',
+          checked: '2026-07-28',
+        },
+      },
     ],
     itinerary: [
       {
@@ -29265,6 +29398,25 @@ export const destinations: Destination[] = [
         tags: ['outdoors', 'families'],
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=36.78333282470703,-2.099999904632568',
+      },
+      {
+        id: 'es-mercado-triana',
+        name: 'שוק טריאנה',
+        nameLocal: 'Mercado de Triana',
+        category: 'market',
+        lat: 37.38572,
+        lng: -6.00317,
+        description:
+          'שוק המזון של רובע טריאנה בסביליה, בקצה המערבי של גשר איזבל השנייה. הוא בנוי מעל שרידי מצודת סן חורחה - מקום מושבה של האינקוויזיציה בסביליה - וחלק מהחפירות חשוף למבקרים מתחת לדוכנים.',
+        durationMin: 45,
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=37.38572,-6.00317',
+        source: {
+          url: 'https://mapcarta.com/Mercado_de_Triana',
+          title: 'Mercado de Triana / Castle of San Jorge - Mapcarta (OpenStreetMap)',
+          checked: '2026-07-28',
+        },
       },
     ],
     itinerary: [
@@ -30083,6 +30235,25 @@ export const destinations: Destination[] = [
         tags: ['history'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=18.786945,98.986389',
+      },
+      {
+        id: 'th-warorot',
+        name: 'שוק ווארורוט',
+        nameLocal: 'Warorot Market',
+        category: 'market',
+        lat: 18.79023,
+        lng: 99.00053,
+        description:
+          'השוק המקומי הגדול של צ׳יאנג מאי ברובע צ׳אנג מוי, ליד נהר הפינג - נקניקי צפון תאילנד, צ׳ילי דיפ נאם פריק, פירות יבשים ובדים. שוק שהתושבים קונים בו, בשונה משוקי הלילה התיירותיים בעיר העתיקה.',
+        durationMin: 60,
+        tags: ['foodie', 'families'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=18.79023,99.00053',
+        source: {
+          url: 'https://mapcarta.com/Warorot_Market',
+          title: 'Warorot Market - Mapcarta (OpenStreetMap)',
+          checked: '2026-07-28',
+        },
       },
     ],
     itinerary: [
@@ -32219,6 +32390,45 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         tags: ['foodie'],
         externalUrl: 'https://maps.google.com/?q=Super+Modelo+Kosher+Buenos+Aires',
+      },
+      {
+        id: 'ba-san-telmo-market',
+        name: 'שוק סן טלמו',
+        nameLocal: 'Mercado de San Telmo',
+        category: 'market',
+        lat: -34.61906,
+        lng: -58.37224,
+        description:
+          'אולם שוק מברזל ומזכוכית ברחוב דפנסה בלב סן טלמו - דוכני ירקות ובשר ותיקים לצד דוכני עתיקות ובתי קפה. בימי ראשון הוא נבלע בתוך יריד הרחוב הגדול שנפרש לאורך דפנסה עד פלאסה דוררגו.',
+        durationMin: 60,
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=-34.61906,-58.37224',
+        source: {
+          url: 'https://mapcarta.com/Mercado_de_San_Telmo',
+          title: 'San Telmo Market - Mapcarta (OpenStreetMap)',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'ba-tortoni',
+        name: 'קפה טורטוני',
+        nameLocal: 'Cafe Tortoni',
+        category: 'food',
+        lat: -34.60869,
+        lng: -58.37814,
+        description:
+          'בית הקפה הידוע בעיר, על שדרות דה מאיו - אולם עם עמודי שיש, ויטראז׳ים ושולחנות עץ, ובמרתף הופעות טנגו. תור בכניסה כמעט תמיד. הזמנה קלאסית היא שוקולד חם עם צ׳ורוס. לא כשר.',
+        durationMin: 60,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'history', 'nightlife'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=-34.60869,-58.37814',
+        source: {
+          url: 'https://mapcarta.com/Caf%C3%A9_Tortoni',
+          title: 'Cafe Tortoni - Mapcarta (OpenStreetMap)',
+          checked: '2026-07-28',
+        },
       },
     ],
     itinerary: [
