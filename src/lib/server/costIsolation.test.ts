@@ -37,7 +37,10 @@ test('אינדקס ההשענה ובלוק הפירוט לא נושאים אף �
   ];
   for (const block of blocks) {
     assert.equal(block.includes('dailyCost'), false);
-    assert.equal(/budgetyourtrip/i.test(block), false);
+    // `dailyBudget` יושב **בתוך** הקטלוג, ולכן הסיכון שידלוף לבלוק
+    // ההשענה גדול יותר מזה של קובץ נפרד - הבדיקה הזאת היא השמירה.
+    assert.equal(block.includes('dailyBudget'), false);
+    assert.equal(/budgetyourtrip|nomadicmatt/i.test(block), false);
     for (const slug of CITIES) {
       const c = DAILY_COSTS[slug];
       if (!c) continue;

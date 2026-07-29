@@ -27,6 +27,14 @@ import type { Destination } from '@/lib/types';
  * 3. הסכומים ב-LTR מבודד. שני מספרים שנפגשים בשורה RTL נדבקים - זה
  *    בדיוק הבאג של "יום 110 באוגוסט" מפיצ׳ר התאריכים.
  */
+/** שם קריא לאתר המקור, מתוך הכתובת עצמה - בלי טבלה שתתיישן */
+function siteLabel(url: string): string {
+  const host = (url.split('/')[2] ?? '').replace(/^www\./, '');
+  if (host.includes('budgetyourtrip')) return 'Budget Your Trip';
+  if (host.includes('nomadicmatt')) return 'Nomadic Matt';
+  return host || 'מקור';
+}
+
 export default function TripCost({
   trip,
   destinations,
@@ -41,7 +49,8 @@ export default function TripCost({
 
   const cities = useMemo(() => {
     const map: Record<string, CostCity> = {};
-    for (const d of destinations) map[d.slug] = { name: d.name, dailyCost: d.dailyCost };
+    for (const d of destinations)
+      map[d.slug] = { name: d.name, dailyCost: d.dailyCost, dailyBudget: d.dailyBudget };
     return map;
   }, [destinations]);
 
@@ -58,6 +67,18 @@ export default function TripCost({
     result.checked.length === 1
       ? formatHebrewDate(result.checked[0], { year: true })
       : `${formatHebrewDate(result.checked[0])} - ${formatHebrewDate(result.checked[result.checked.length - 1], { year: true })}`;
+
+  // מקור אחד לכל אתר שבשימוש, עם קישור לדף של העיר הראשונה שהגיעה
+  // ממנו. שני מקורות בטיול אחד הוא מצב רגיל כאן, ולכן אסור להציג
+  // קישור אחד כאילו הוא מכסה את כל השורות.
+  const sources = (() => {
+    const out: { url: string; label: string }[] = [];
+    for (const line of result.lines) {
+      const label = siteLabel(line.source.url);
+      if (!out.some((s) => s.label === label)) out.push({ url: line.source.url, label });
+    }
+    return out;
+  })();
 
   const headline = style
     ? result.totals
@@ -136,7 +157,13 @@ export default function TripCost({
                     <span className="text-xs text-night/40">
                       {line.days === 1 ? 'יום אחד' : `${line.days} ימים`}
                     </span>
+                    {/* נתון ברמת המדינה נאמר בשורה עצמה - הוא גס יותר
+                        מהיעד, ואסור שייקרא כמו מדידה של אותה עיר. */}
+                    {line.scope === 'country' && (
+                      <span className="text-xs text-night/40">נתון ברמת המדינה</span>
+                    )}
                     <span className="ms-auto text-night/70">
+                      {line.upperBoundOnly && <span className="text-xs text-night/40">עד </span>}
                       <span dir="ltr" className="inline-block">
                         {formatRange(line.perDayLow, line.perDayHigh, line.currency)}
                       </span>
@@ -183,23 +210,42 @@ export default function TripCost({
                     בו.
                   </p>
                 )}
+                {/* למה דווקא "בנוח" חסר בהרבה ערים - אחרת זה נראה כמו תקלה */}
+                {style === 'comfort' && result.missing.length > 0 && (
+                  <p className="mt-1 text-xs text-night/45">
+                    לסגנון "בנוח" יש נתון רק בחלק מהערים: המקור הרחב יותר מפרסם מדרגה
+                    עליונה פתוחה, ואי אפשר לגזור ממנה מספר בלי לינה.
+                  </p>
+                )}
               </div>
 
               <p className="mt-3 text-xs leading-relaxed text-night/55">
                 כך מוציאים מטיילים בערים האלה בדרך כלל, לאדם ליום. זו לא תחזית להוצאות
-                שלכם. <span className="font-semibold text-night/70">בלי טיסות ובלי לינה.</span>{' '}
-                הקצה התחתון הוא תחבורה מקומית ואוכל; העליון מוסיף גם כניסות ואטרקציות.
+                שלכם. <span className="font-semibold text-night/70">בלי טיסות ובלי לינה.</span>
+                {/* ההסבר על משמעות הטווח נכון רק לשורות שנבנו מחיבור
+                    שורות הקטגוריות. לשורה שהמקור שלה פרסם טווח מוכן,
+                    המשפט הזה פשוט לא נכון - ולכן הוא מותנה. */}
+                {result.bases.length === 1 && result.bases[0] === 'components'
+                  ? ' הקצה התחתון הוא תחבורה מקומית ואוכל; העליון מוסיף גם כניסות ואטרקציות.'
+                  : ' הטווח הוא כפי שהמקור מוסר אותו לכל עיר.'}
+                {result.hasUpperBound && ' בעיר אחת לפחות הנתון הוא חסם עליון ("עד"), לא טווח.'}
               </p>
               <p className="mt-1 text-xs text-night/40">
                 נבדק ב־{checkedLabel} ·{' '}
-                <a
-                  href={result.lines[0].source.url}
-                  target="_blank"
-                  rel="noopener noreferrer nofollow"
-                  className="underline decoration-night/20 underline-offset-2 hover:text-night/60"
-                >
-                  Budget Your Trip
-                </a>
+                {/* מקור לכל עיר, ולא קישור אחד שמתחזה לכסות את כולן */}
+                {sources.map((s, i) => (
+                  <span key={s.url}>
+                    {i > 0 && ' · '}
+                    <a
+                      href={s.url}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
+                      className="underline decoration-night/20 underline-offset-2 hover:text-night/60"
+                    >
+                      {s.label}
+                    </a>
+                  </span>
+                ))}
               </p>
             </>
           )}

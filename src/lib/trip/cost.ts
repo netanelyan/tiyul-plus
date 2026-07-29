@@ -1,4 +1,4 @@
-import type { DailyCost, DailyCostTier } from '@/lib/types';
+import type { DailyBudget, DailyCost, DailyCostTier, PlaceSource } from '@/lib/types';
 import type { Trip } from './types';
 
 /**
@@ -21,10 +21,36 @@ export function isTravelStyle(v: unknown): v is TravelStyle {
   return v === 'budget' || v === 'mid' || v === 'comfort';
 }
 
-/** מה שצריך לדעת על עיר כדי לחשב - שם לתצוגה, ואולי נתון עלות. */
+/**
+ * מה שצריך לדעת על עיר כדי לחשב. **שני מקורות, בכוונה.**
+ *
+ * `dailyCost` (src/data/dailyCosts.ts) מחזיק את שלוש שורות הקטגוריות
+ * שהמקור מפרסם לכל סגנון, ולכן אפשר לגזור ממנו גם "בנוח" וגם טווח
+ * שאפשר להסביר. `dailyBudget` (בתוך הקטלוג) מחזיק טווח מפורסם לשתי
+ * מדרגות בלבד ומכסה הרבה יותר יעדים. **הראשון קודם כשהוא קיים**, כי
+ * הוא מכסה את שלושת הסגנונות; השני מרחיב את הכיסוי מ-21 ל-71 יעדים.
+ *
+ * שניהם עומדים באותה הגדרה - הוצאה על הקרקע, בלי טיסות ובלי לינה -
+ * ולכן מותר לסכם אותם יחד. כל מה ש**שונה** ביניהם נשמר בשורה עצמה
+ * (`basis`, `scope`, `upperBoundOnly`) ומוצג, במקום להיטשטש בסכום.
+ */
 export interface CostCity {
   name: string;
   dailyCost?: DailyCost;
+  dailyBudget?: DailyBudget;
+}
+
+/** 'components' = חיבור שורות הקטגוריות · 'published' = טווח שהמקור פרסם */
+export type CostBasis = 'components' | 'published';
+
+interface ResolvedDaily {
+  currency: string;
+  low: number;
+  high: number;
+  source: PlaceSource;
+  basis: CostBasis;
+  scope: 'city' | 'country';
+  upperBoundOnly: boolean;
 }
 
 export interface CityCostLine {
@@ -38,7 +64,12 @@ export interface CityCostLine {
   /** מוכפל במספר הימים של העיר הזאת בטיול */
   totalLow: number;
   totalHigh: number;
-  source: DailyCost['source'];
+  source: PlaceSource;
+  basis: CostBasis;
+  /** 'country' = המקור מפרסם ברמת המדינה, כלומר גס יותר מהעיר */
+  scope: 'city' | 'country';
+  /** הערך הוא חסם עליון ("עד"), לא טווח - ראה DailyBudget */
+  upperBoundOnly: boolean;
 }
 
 export interface CurrencyTotal {
@@ -59,6 +90,12 @@ export interface TripCost {
   complete: boolean;
   /** תאריכי הבדיקה של המקורות שבשימוש, ממוינים */
   checked: string[];
+  /** הבסיסים שבשימוש בפועל - קובע איזה הסבר על הטווח מותר להציג */
+  bases: CostBasis[];
+  /** יש שורה שהמקור שלה מודד ברמת המדינה ולא ברמת העיר */
+  hasCountryScope: boolean;
+  /** יש שורה שהיא חסם עליון ולא טווח - הסכום נקרא "עד" */
+  hasUpperBound: boolean;
 }
 
 function tierOf(cost: DailyCost, style: TravelStyle): DailyCostTier {
@@ -75,6 +112,45 @@ export function perDayRange(cost: DailyCost, style: TravelStyle): { low: number;
   const t = tierOf(cost, style);
   const low = t.transport + t.food;
   return { low, high: low + t.activities };
+}
+
+/**
+ * הנתון של עיר לסגנון מסוים, מאיזה משני המקורות שיש לה - או null.
+ *
+ * **null הוא תשובה תקינה ושכיחה**, ולא רק כשאין לעיר נתון בכלל:
+ * ל-`dailyBudget` אין מדרגת "בנוח" באף יעד (המקור מפרסם מדרגה עליונה
+ * פתוחה מלמעלה, ואי אפשר להפחית ממנה לינה), ולכן עיר שנשענת עליו לא
+ * מציגה מספר כשנבחר "בנוח". זה בדיוק הכלל של הפיצ׳ר - אין נתון, אין
+ * הערכה - רק שהפעם הוא חל על צירוף של עיר וסגנון ולא על עיר שלמה.
+ */
+export function resolveDaily(city: CostCity | undefined, style: TravelStyle): ResolvedDaily | null {
+  if (city?.dailyCost) {
+    const { low, high } = perDayRange(city.dailyCost, style);
+    return {
+      currency: city.dailyCost.currency,
+      low,
+      high,
+      source: city.dailyCost.source,
+      basis: 'components',
+      scope: 'city',
+      upperBoundOnly: false,
+    };
+  }
+  const b = city?.dailyBudget;
+  if (!b) return null;
+  const range = style === 'budget' ? b.budget : style === 'mid' ? b.midRange : b.comfortable;
+  if (!range) return null;
+  const [low, high] = range;
+  if (!Number.isFinite(low) || !Number.isFinite(high)) return null;
+  return {
+    currency: b.currency,
+    low,
+    high,
+    source: b.source,
+    basis: 'published',
+    scope: b.scope ?? 'city',
+    upperBoundOnly: b.upperBoundOnly === true,
+  };
 }
 
 /** כמה ימים הטיול מקצה לכל עיר, לפי סדר ההופעה הראשונה. */
@@ -106,33 +182,38 @@ export function tripCost(
   const totals = new Map<string, CurrencyTotal>();
   const checked = new Set<string>();
 
+  const bases = new Set<CostBasis>();
+
   for (const { citySlug, days } of daysPerCity(trip)) {
     const city = cities[citySlug];
-    const cost = city?.dailyCost;
     const cityName = city?.name ?? citySlug;
-    if (!cost) {
+    const daily = resolveDaily(city, style);
+    if (!daily) {
       missing.push({ citySlug, cityName, days });
       continue;
     }
-    const { low, high } = perDayRange(cost, style);
-    const totalLow = low * days;
-    const totalHigh = high * days;
+    const totalLow = daily.low * days;
+    const totalHigh = daily.high * days;
     lines.push({
       citySlug,
       cityName,
       days,
-      currency: cost.currency,
-      perDayLow: low,
-      perDayHigh: high,
+      currency: daily.currency,
+      perDayLow: daily.low,
+      perDayHigh: daily.high,
       totalLow,
       totalHigh,
-      source: cost.source,
+      source: daily.source,
+      basis: daily.basis,
+      scope: daily.scope,
+      upperBoundOnly: daily.upperBoundOnly,
     });
-    checked.add(cost.source.checked);
-    const acc = totals.get(cost.currency) ?? { currency: cost.currency, low: 0, high: 0 };
+    checked.add(daily.source.checked);
+    bases.add(daily.basis);
+    const acc = totals.get(daily.currency) ?? { currency: daily.currency, low: 0, high: 0 };
     acc.low += totalLow;
     acc.high += totalHigh;
-    totals.set(cost.currency, acc);
+    totals.set(daily.currency, acc);
   }
 
   return {
@@ -142,6 +223,9 @@ export function tripCost(
     totals: [...totals.values()],
     complete: missing.length === 0 && lines.length > 0,
     checked: [...checked].sort(),
+    bases: [...bases],
+    hasCountryScope: lines.some((l) => l.scope === 'country'),
+    hasUpperBound: lines.some((l) => l.upperBoundOnly),
   };
 }
 
