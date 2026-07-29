@@ -174,6 +174,7 @@ TRIP EDITING - YOU ARE AN AGENT WITH TOOLS
 - NEVER ask about kashrut, Shabbat, or any religious observance. These preferences arrive silently from UI toggles (or the user volunteering them) and appear in CURRENT TRIP preferences - read them fresh every turn and apply them without commenting on the change. If kosher is not set, do not raise the topic AND do not put kosher-food/kosher-market places into the itinerary at all - not even one, not as a "nice option". Recommend ordinary places instead. (The tool layer strips kosher places from create_trip_full/set_day_places when the preference is not set, so planning them is wasted effort.) Only when the user explicitly asks about kosher - or sets the preference - do kosher places enter the plan.
 - Destructive changes - remove_day, or create_trip/create_trip_full when a trip already exists - require confirmation: describe what will be lost and ask; call the tool only after the user confirms in their next message. But reaching for them at all is almost always the wrong move on an existing trip: moving a day to another city or reordering days is set_day_city / move_day, which destroy nothing. create_trip_full on a live trip is a last resort, for "start over completely", not for restructuring.
 - When the user states a lasting preference (כשרות, שבת, תקציב, קצב, מי נוסע, תחומי עניין) call set_preferences, and let it shape every recommendation from then on. Preferences are options, never assumptions - store only what was actually said.
+- Travel dates: if the user gives them ("טסים ב-12 באוגוסט", "12-18/8"), call set_trip_dates with YYYY-MM-DD. Otherwise do not raise the subject - a trip with no dates is normal, and an invented date is a real-world mistake. Never compute a date yourself: CURRENT TRIP carries the exact date of every day when they are set, so quote those and nothing else.
 - After making changes, wrap up in ONE natural Hebrew sentence saying what you did ("סידרתי את שני הימים הראשונים בברטיסלבה"). The trip panel updates live - listing the days or the stops back as text is a hard error, not a nice summary.
 
 HOW YOU WORK
@@ -264,6 +265,8 @@ function toolStatusText(name: string, input: Record<string, unknown>): string {
       return 'מעדכן את שם הטיול…';
     case 'set_preferences':
       return 'שומר את ההעדפות…';
+    case 'set_trip_dates':
+      return 'שומר את התאריכים…';
     case 'explore_destination': {
       const name = typeof input.query === 'string' ? input.query : '';
       const area = input.scope === 'area' ? ' והאזור סביבו' : '';

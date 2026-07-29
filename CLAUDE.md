@@ -58,7 +58,13 @@ favor user trust and repeat usage over tech impressiveness.
   description generated from its REAL stops (`src/lib/trip/
   dayDescription.ts`) - shown under the day heading, in the all-days
   overview, in the copied summary and in print; empty days get a
-  neutral placeholder, never an invented theme. **Preferences UI:** the
+  neutral placeholder, never an invented theme. **Dates:** an optional
+  start+end range on the trip (`Trip.startDate` / `endDate`, `YYYY-MM-DD`),
+  set from a control beside the preference chips or by telling the agent
+  (`set_trip_dates`). Day N's date is DERIVED from the start date, so it
+  cannot drift from the day order; a range that disagrees with the day count
+  is reported, never silently applied - see `src/lib/trip/dates.ts`.
+  **Preferences UI:** the
   chips (כשר, קצב, מי נוסע, שופינג) are interactive toggles that write
   `Trip.preferences` directly - sensitive preferences (kashrut, Shabbat)
   are buttons BY DESIGN, the agent never asks about them in conversation
@@ -241,6 +247,70 @@ npm run lint
    message.
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
+
+### 2026-07-29 (kk) - Trip dates: a range that never edits the plan behind your back
+
+Netanel asked for dates on a trip and chose, in the clarifying questions, a
+**start + end range** (not a single departure date), settable **on the trip
+screen and by telling the agent**, showing on the day cards, carrying into
+print/share/WhatsApp, plus a countdown. He did not pick Shabbat marking, so
+nothing about pacing or `shabbatAware` changed.
+
+**The whole design turns on one problem the range creates.** A range has a
+length of its own, and it can disagree with the number of days already built.
+The obvious implementation derives the days from the range - and that is
+exactly how picking a date silently deletes a day full of stops. So:
+
+- **Day N's date is derived** from `startDate` (day 2 = start+1). It cannot
+  drift out of sync with the day order, and reordering days re-dates them for
+  free. `endDate` is stored because that is how people think about a trip.
+- **Filling one end completes the other** from the current day count, so the
+  normal path is always consistent and a mismatch is something the user
+  created deliberately.
+- **A mismatch is reported, not resolved.** Longer than the plan: it says so
+  and offers a button that adds the days. Shorter: it says so and says
+  plainly "לא נמחק לכם ימים לבד". The only thing the feature does on its own
+  is additive. The agent's tool gets the same treatment - its tool result
+  tells the model to state the gap in one sentence and forbids it from adding
+  or deleting days itself.
+
+**`dates.ts` is deliberately paranoid about two things.** `new Date('2026-08-12')`
+parses as midnight **UTC**, so anyone browsing from west of Greenwich would
+have seen 11 August - every date is parsed into local noon from its three
+numbers instead, and there is a test for it. And the Hebrew month and weekday
+names are a table in the file rather than `Intl`, so the display cannot depend
+on whether the runtime shipped full ICU data, and the tests assert one known
+string.
+
+**Share links went to v2, and v1 still opens.** The payload gained two optional
+fields at the end (`[2, name, days, start?, end?]`); a trip with no dates is
+still encoded as v1 so links do not grow for nothing, and the decoder accepts
+both. A link somebody sent on WhatsApp months ago has to keep working - there
+is a test that decodes a hand-built v1 payload, and another that feeds a v2
+payload with a garbage date and confirms the trip still opens without it.
+
+**The agent may not invent a date.** `set_trip_dates` takes `YYYY-MM-DD`,
+validates it as a real calendar date (2026-02-31 is rejected, not rolled into
+March), and the prompt rule is two lines: record dates the user states, never
+raise the subject otherwise, and never compute a date - CURRENT TRIP now
+carries the exact date of every day, so there is nothing left to calculate.
+That is the same "give it the number instead of banning the guess" pattern as
+`pinDistances` and the coverage counts.
+
+**Verified 26/26 in a real browser** at 390px (DPR 3) and 1440px: a dateless
+trip offers to add dates, the return date completes itself, the range shows on
+the chip and the weekday+date on the day card, a longer range reports the gap
+and leaves the plan at three days until the button is pressed, a shorter range
+refuses to delete, clearing removes both, the homepage card shows "עוד 12 ימים
+לטיול", and a shared link carries the dates to `/t/<code>`. 165 unit tests (18
+new). One real RTL bug caught by looking at the screenshot rather than the
+markup: "יום 1" followed by "10 באוגוסט" renders as "יום 110 באוגוסט", because
+two numbers meeting in an RTL line have no separator - a `·` fixes it.
+
+**Deliberately not built:** nothing dates-driven changes the planning. No
+Shabbat marking (he did not choose it), no "best month" warning - that one is
+impossible anyway, since `bestMonths` still does not exist in the catalog, and
+inventing a seasonal opinion from a date is exactly what hard rule 2 forbids.
 
 ### 2026-07-29 (ii) - "Continue to all destinations": the sweep, and two rejections that came from machinery rather than taste
 

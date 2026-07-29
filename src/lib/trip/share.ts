@@ -1,5 +1,6 @@
 import type { Trip, TripDay } from './types';
 import { newId } from './types';
+import { safeDates } from './dates';
 
 /**
  * קישור שיתוף לטיול - Phase 4 (viral loop), בלי backend:
@@ -17,7 +18,15 @@ import { newId } from './types';
  */
 
 export type ShareDay = [citySlug: string, placeIds: string[], notes?: string];
-type SharePayload = [version: 1, name: string, days: ShareDay[]];
+/**
+ * v1: `[1, name, days]`. v2 מוסיף תאריכים בסוף - `[2, name, days, start?, end?]`.
+ * **קישורי v1 ממשיכים להיפתח לנצח**: קוד ששותף בוואטסאפ לפני שנה חייב
+ * לעבוד, ולכן הפענוח מקבל את שתי הגרסאות ורק הקידוד עלה גרסה. טיול בלי
+ * תאריכים ממשיך להיות מקודד כ-v1, כך שהקישור לא מתארך בלי סיבה.
+ */
+type SharePayloadV1 = [version: 1, name: string, days: ShareDay[]];
+type SharePayloadV2 = [version: 2, name: string, days: ShareDay[], startDate?: string, endDate?: string];
+export type SharePayload = SharePayloadV1 | SharePayloadV2;
 
 /* ---------- base64url איזומורפי (דפדפן + Node) ל-UTF-8 ---------- */
 
@@ -42,15 +51,15 @@ export function fromBase64Url(code: string): string | null {
 /* ---------- קידוד ---------- */
 
 export function encodeTripShare(trip: Trip): string {
-  const payload: SharePayload = [
-    1,
-    trip.name,
-    trip.days.map((d): ShareDay => {
-      const day: ShareDay = [d.citySlug, d.placeIds];
-      if (d.notes) day[2] = d.notes;
-      return day;
-    }),
-  ];
+  const days = trip.days.map((d): ShareDay => {
+    const day: ShareDay = [d.citySlug, d.placeIds];
+    if (d.notes) day[2] = d.notes;
+    return day;
+  });
+  const { startDate, endDate } = safeDates(trip);
+  const payload: SharePayload = startDate
+    ? ([2, trip.name, days, startDate, endDate] as SharePayloadV2)
+    : ([1, trip.name, days] as SharePayloadV1);
   return toBase64Url(JSON.stringify(payload));
 }
 
@@ -59,6 +68,9 @@ export function encodeTripShare(trip: Trip): string {
 export interface SharedTrip {
   name: string;
   days: { citySlug: string; placeIds: string[]; notes?: string }[];
+  /** v2 בלבד; קישור v1 פשוט לא נושא תאריכים */
+  startDate?: string;
+  endDate?: string;
 }
 
 
@@ -74,5 +86,6 @@ export function tripFromShared(shared: SharedTrip): Trip {
     days: shared.days.map(
       (d): TripDay => ({ id: newId(), citySlug: d.citySlug, placeIds: [...d.placeIds], notes: d.notes }),
     ),
+    ...safeDates(shared),
   };
 }

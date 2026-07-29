@@ -41,6 +41,8 @@ interface TripApi {
   duplicateTrip: (id: string) => void;
   deleteTrip: (id: string) => void;
   renameTrip: (id: string, name: string) => void;
+  /** תאריכי הטיול. `undefined` בשדה = ניקוי אותו קצה. */
+  setTripDates: (id: string, dates: { startDate?: string; endDate?: string }) => void;
   addDay: (citySlug: string) => void;
   removeDay: (dayId: string) => void;
   setDayNotes: (dayId: string, notes: string) => void;
@@ -226,6 +228,17 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     [update],
   );
 
+  /**
+   * תאריכי הטיול. **לא נוגע בימים** בכוונה: אם הטווח ארוך או קצר
+   * ממספר הימים, המסך אומר את זה ומציע פעולה מפורשת - בחירת תאריך
+   * שמוחקת יום עם עצירות היא בדיוק סוג ההפתעה שאסורה כאן.
+   */
+  const setTripDates = useCallback(
+    (id: string, dates: { startDate?: string; endDate?: string }) =>
+      update(id, (t) => ({ ...t, startDate: dates.startDate, endDate: dates.endDate })),
+    [update],
+  );
+
   const addDay = useCallback(
     (citySlug: string) => {
       if (!currentId) return;
@@ -379,6 +392,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         duplicateTrip,
         deleteTrip,
         renameTrip,
+        setTripDates,
         addDay,
         removeDay,
         setDayNotes,

@@ -1,6 +1,7 @@
 import { destinations } from '@/data/destinations';
 import { isEating, isKosher, kosherStatusOf } from '@/lib/categories';
 import { haversineKm } from './travel';
+import { completeRange, dayDate, formatHebrewRange, isISODate, rangeDays, safeDates } from './dates';
 import { newId } from './types';
 import type {
   BookingKind,
@@ -257,6 +258,19 @@ export const AGENT_TOOLS = [
         shopping: { type: 'string', enum: ['more', 'normal', 'less'] },
         interests: { type: 'array', items: { type: 'string' }, description: 'Short Hebrew phrases' },
       },
+    },
+  },
+  {
+    name: 'set_trip_dates',
+    description:
+      "Record the traveler's real travel dates on the active trip, in YYYY-MM-DD. Use it ONLY when the user states dates themselves (\"we fly on August 12\", \"12-18/8\", \"the first week of September\" with a concrete year). NEVER invent, estimate or infer a date from anything else - no date is a perfectly normal state for a trip, and a wrong date is worse than none. Day 1 is startDate, day 2 is the next day and so on; endDate is the return date. If the range covers a different number of days than the plan has, say so plainly in one short sentence and let the user decide - do NOT add or remove days yourself.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        startDate: { type: 'string', description: 'YYYY-MM-DD, the departure date' },
+        endDate: { type: 'string', description: 'YYYY-MM-DD, the return date. Omit if unknown.' },
+      },
+      required: ['startDate'],
     },
   },
   {
@@ -1005,6 +1019,39 @@ export function executeAgentTool(
       };
     }
 
+    case 'set_trip_dates': {
+      if (!needTrip(trip)) return fail(trip, 'אין טיול פעיל - התאריכים נשמרים על טיול.');
+      const startDate = typeof input.startDate === 'string' ? input.startDate.trim() : '';
+      const endDateRaw = typeof input.endDate === 'string' ? input.endDate.trim() : '';
+      if (!isISODate(startDate)) {
+        return fail(
+          trip,
+          'תאריך היציאה חייב להיות בפורמט YYYY-MM-DD ולהיות תאריך אמיתי. אל תנחש תאריך - אם המשתמש לא אמר, אל תקרא לכלי הזה.',
+        );
+      }
+      if (endDateRaw && (!isISODate(endDateRaw) || rangeDays(startDate, endDateRaw) === null)) {
+        return fail(trip, 'תאריך החזרה אינו תקין או מוקדם מתאריך היציאה.');
+      }
+      // קצה אחד מספיק: הסוף מושלם לפי אורך הטיול, בדיוק כמו בממשק
+      const dates = completeRange(trip.days.length, startDate, endDateRaw || undefined);
+      const span = rangeDays(dates.startDate, dates.endDate);
+      const gap = span !== null && trip.days.length > 0 ? span - trip.days.length : 0;
+      // הפער נמסר למודל כעובדה, ובמפורש בלי רשות לתקן אותו לבד - הוספה
+      // או מחיקה של ימים בעקבות תאריך היא בדיוק ההפתעה שאסורה כאן.
+      const note =
+        gap === 0
+          ? ''
+          : gap > 0
+            ? ` שים לב: הטווח מכסה ${span} ימים והתוכנית היא ${trip.days.length} ימים. אמור זאת למשתמש במשפט אחד ושאל אם להוסיף ימים - אל תוסיף בעצמך.`
+            : ` שים לב: בתוכנית ${trip.days.length} ימים והטווח מכסה ${span}. אמור זאת למשתמש במשפט אחד - אל תמחק ימים בעצמך.`;
+      return {
+        trip: { ...trip, ...dates },
+        ok: true,
+        message: `תאריכי הטיול נשמרו: ${dates.startDate} עד ${dates.endDate}.${note}`,
+        action: `עדכנתי תאריכים: ${formatHebrewRange(dates.startDate, dates.endDate)}`,
+      };
+    }
+
     case 'set_booking_status': {
       if (!needTrip(trip)) {
         return fail(trip, 'אין טיול פעיל - מצב ההזמנות נשמר על טיול.');
@@ -1125,6 +1172,9 @@ export function serializeTripForModel(trip: Trip | null): string {
   if (!trip) return 'null (אין טיול פעיל - השתמש ב-create_trip כדי להתחיל)';
   return JSON.stringify({
     name: trip.name,
+    // התאריכים כעובדה, כולל התאריך המדויק של כל יום למטה: בלי זה המודל
+    // "מחשב" תאריכים בעצמו, וזה בדיוק סוג המספר שהוא ממציא בביטחון.
+    ...(trip.startDate ? { startDate: trip.startDate, endDate: trip.endDate } : {}),
     preferences: trip.preferences ?? {},
     // הסיכות שהמטייל כבר מסר - כדי שהסוכן לא ישאל שוב על עיר שכבר יש
     // בה לינה, ולא יציע חיפוש למקום ששמור. locatedOnMap=false פירושו
@@ -1142,6 +1192,7 @@ export function serializeTripForModel(trip: Trip | null): string {
     })),
     days: trip.days.map((d, i) => ({
       day: i + 1,
+      ...(trip.startDate ? { date: dayDate(trip, i) } : {}),
       citySlug: d.citySlug,
       city: destOf(d.citySlug)?.name ?? d.citySlug,
       places: d.placeIds.map((id) => ({ id, name: placeName(d.citySlug, id) })),
@@ -1210,6 +1261,8 @@ export function sanitizeClientTrip(raw: unknown): Trip | null {
       : [...new Set(days.map((d) => d.citySlug))],
     days,
     createdAt: typeof t.createdAt === 'number' ? t.createdAt : Date.now(),
+    // הלקוח שולח את הטיול שלו; תאריך שאינו YYYY-MM-DD תקין פשוט נופל
+    ...safeDates(t as { startDate?: unknown; endDate?: unknown }),
     pins: sanitizePins(t.pins),
     preferences:
       t.preferences && typeof t.preferences === 'object'

@@ -1,12 +1,13 @@
 import { destinations } from '@/data/destinations';
-import { fromBase64Url, type ShareDay, type SharedTrip } from '@/lib/trip/share';
+import { fromBase64Url, type SharePayload, type SharedTrip } from '@/lib/trip/share';
+import { safeDates } from '@/lib/trip/dates';
 
 /**
  * פענוח קוד שיתוף - **צד שרת בלבד**, כי הוא מאמת מול הקטלוג המלא.
  * ראו ההסבר ב-`share.ts`: הפרדה זו היא מה שמאפשר למסך הטיול לייצר
  * קישור בלי להוריד את הקטלוג ל-bundle.
  */
-type SharePayload = [version: 1, name: string, days: ShareDay[]];
+
 
 export function decodeTripShare(code: string): SharedTrip | null {
   const json = fromBase64Url(code);
@@ -17,8 +18,10 @@ export function decodeTripShare(code: string): SharedTrip | null {
   } catch {
     return null;
   }
-  if (!Array.isArray(parsed) || parsed[0] !== 1) return null;
-  const [, name, days] = parsed as SharePayload;
+  // v1 ו-v2 שניהם נפתחים: קוד ששותף בוואטסאפ לפני חודשים חייב להמשיך
+  // לעבוד, ולכן הגרסה החדשה **הוסיפה** שדות בסוף ולא שינתה את הקיימים.
+  if (!Array.isArray(parsed) || (parsed[0] !== 1 && parsed[0] !== 2)) return null;
+  const [, name, days, startDate, endDate] = parsed as SharePayload;
   if (typeof name !== 'string' || !Array.isArray(days)) return null;
 
   const cleanDays: SharedTrip['days'] = [];
@@ -37,5 +40,9 @@ export function decodeTripShare(code: string): SharedTrip | null {
     });
   }
   if (cleanDays.length === 0) return null;
-  return { name: name.slice(0, 80) || 'טיול משותף', days: cleanDays };
+  return {
+    name: name.slice(0, 80) || 'טיול משותף',
+    days: cleanDays,
+    ...safeDates({ startDate, endDate }),
+  };
 }

@@ -7,6 +7,7 @@ import { categoryMeta } from '@/lib/categories';
 import { useTrip } from '@/lib/trip/TripContext';
 import { travelLeg } from '@/lib/trip/travel';
 import { dayDescription } from '@/lib/trip/dayDescription';
+import { formatHebrewRange } from '@/lib/trip/dates';
 import type { SharedTrip } from '@/lib/trip/share';
 import { tripFromShared } from '@/lib/trip/share';
 import PlacesMap from '@/components/PlacesMap';
@@ -66,7 +67,11 @@ export default function SharedTripView({
         <p className="text-xs font-bold text-sunset-deep">טיול ששותף איתכם · צפייה חופשית</p>
         <h1 className="display mt-1 text-3xl text-night">{shared.name}</h1>
         <p className="mt-2 text-sm font-semibold text-night/60">
-          {shared.days.length} ימים · {totalStops} עצירות ·{' '}
+          {shared.days.length} ימים · {totalStops} עצירות
+          {formatHebrewRange(shared.startDate, shared.endDate)
+            ? ` · ${formatHebrewRange(shared.startDate, shared.endDate)}`
+            : ''}{' '}
+          ·{' '}
           {cities.map((c, i) => (
             <span key={c!.slug}>
               {i > 0 && ' + '}

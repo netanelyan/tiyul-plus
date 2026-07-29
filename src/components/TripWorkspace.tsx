@@ -10,6 +10,8 @@ import { useTripChat } from '@/lib/trip/useTripChat';
 import { useCityData } from '@/lib/trip/cityData';
 import { dayDescription, dayPlaces } from '@/lib/trip/dayDescription';
 import { dayColor } from '@/lib/trip/dayColors';
+import { dayDate, formatHebrewDate, formatHebrewRange } from '@/lib/trip/dates';
+import TripDates from '@/components/TripDates';
 import { encodeTripShare } from '@/lib/trip/share';
 import { travelModeFor } from '@/lib/trip/mapsExport';
 import PlacesMap from '@/components/PlacesMap';
@@ -284,7 +286,8 @@ export default function TripWorkspace({
     void getShareUrl().then((url) => {
       // 🧳 ולא ✈️: המטוס הוא תו Unicode ישן (U+2708+VS16) שחלק מהפלטפורמות
       // מציגות כ-� - המזוודה היא קודפוינט מודרני יחיד שמרונדר בכל מקום
-      const text = `שיתפתי איתך את הטיול "${t.name}" שבניתי בטיול+ 🧳\n${url}`;
+      const when = formatHebrewRange(t.startDate, t.endDate);
+      const text = `שיתפתי איתך את הטיול "${t.name}"${when ? ` · ${when}` : ''} שבניתי בטיול+ 🧳\n${url}`;
       const wa = `https://wa.me/?text=${encodeURIComponent(text)}`;
       if (win) win.location.href = wa;
       else window.open(wa, '_blank', 'noopener');
@@ -405,6 +408,15 @@ export default function TripWorkspace({
             רחוקות, ולכן ארבעה צ׳יפים פתוחים תמיד הם רעש; להסתיר מה שכבר
             נבחר היה כבר שגיאה אחרת.
           */}
+          <TripDates
+            trip={t}
+            onSet={(dates) => trip.setTripDates(t.id, dates)}
+            onAddDays={(n) => {
+              // מוסיפים בעיר האחרונה של הטיול - ההמשך הטבעי של המסלול
+              const slug = t.days[t.days.length - 1]?.citySlug ?? t.citySlugs[0];
+              if (slug) for (let i = 0; i < n; i++) trip.addDay(slug);
+            }}
+          />
           <button
             onClick={() => setPrefsOpen((v) => !v)}
             aria-expanded={prefsOpen}
@@ -509,6 +521,14 @@ export default function TripWorkspace({
                 >
                   <Flag flag={dst?.flag} label={dst?.name} size="sm" className="me-1.5" />
                   יום {i + 1}
+                  {(() => {
+                    const iso = dayDate(t, i);
+                    return iso ? (
+                      <span className="ms-1 text-[11px] font-medium opacity-70">
+                        · {formatHebrewDate(iso)}
+                      </span>
+                    ) : null;
+                  })()}
                 </button>
               </span>
             );
@@ -594,6 +614,14 @@ export default function TripWorkspace({
                           style={{ background: g.color }}
                         />
                         יום {i + 1} · {destOf(d.citySlug)?.name}
+                        {(() => {
+                          const iso = t ? dayDate(t, i) : null;
+                          return iso ? (
+                            <span className="ms-1.5 text-xs font-medium text-night/45">
+                              · {formatHebrewDate(iso)}
+                            </span>
+                          ) : null;
+                        })()}
                       </button>
                     );
                   })}
@@ -642,10 +670,20 @@ export default function TripWorkspace({
 
               <div className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
                 <div className="flex items-start justify-between gap-2">
-                  <h2 className="text-lg font-bold text-night">
-                    <Flag flag={dayDest.flag} label={dayDest.name} size="md" className="me-2" />
-                    יום {dayIndex + 1} · {dayDest.name}
-                  </h2>
+                  <div>
+                    <h2 className="text-lg font-bold text-night">
+                      <Flag flag={dayDest.flag} label={dayDest.name} size="md" className="me-2" />
+                      יום {dayIndex + 1} · {dayDest.name}
+                    </h2>
+                    {(() => {
+                      const iso = dayDate(t, dayIndex);
+                      return iso ? (
+                        <div className="mt-0.5 text-xs font-semibold text-sunset-deep">
+                          {formatHebrewDate(iso, { weekday: true })}
+                        </div>
+                      ) : null;
+                    })()}
+                  </div>
                   {t.days.length > 1 && (
                     <Menu
                       compact
@@ -898,6 +936,9 @@ export default function TripWorkspace({
               <h1>{t.name}</h1>
               <p className="print-meta">
                 {t.days.length} ימים · {totalStops} עצירות
+                {formatHebrewRange(t.startDate, t.endDate)
+                  ? ` · ${formatHebrewRange(t.startDate, t.endDate)}`
+                  : ''}
               </p>
               <div className="print-cities">
                 {Array.from(new Set(t.days.map((d) => d.citySlug))).map((slug) => {
@@ -937,6 +978,10 @@ export default function TripWorkspace({
                     <div>
                       <h2>
                         יום {i + 1} · {dst?.name}
+                        {(() => {
+                          const iso = dayDate(t, i);
+                          return iso ? ` · ${formatHebrewDate(iso, { weekday: true })}` : '';
+                        })()}
                       </h2>
                       <p className="print-day-desc">{dayDescription(d, dst)}</p>
                     </div>
