@@ -17,6 +17,13 @@ import {
   sanitizeMessages,
   type ChatMessage,
 } from '@/lib/server/chatMessages';
+import {
+  buildExploredGrounding,
+  buildGroundingDetail,
+  buildGroundingIndex,
+  kosherAllowed,
+  relevantCitySlugs,
+} from '@/lib/server/grounding';
 
 /** תקרת גוף הבקשה - לפני JSON.parse, כדי שגוף ענק לא יפיל את הפונקציה */
 const MAX_BODY_CHARS = 6_000_000;
@@ -226,122 +233,6 @@ const OUTPUT_DISCIPLINE = `OUTPUT DISCIPLINE - re-read this before every reply, 
 3. NEVER RE-WRITE THE PLAN. If a tool changed the trip this turn, the panel already shows every day and stop. One sentence about what changed. No day list, no **יום N** lines.
 4. NO CLOSING OFFER. Don't end with "אם תרצו, אשמח..." or a menu of what else you could do. The user knows they can ask. Stop at the answer.`;
 
-/**
- * ה-grounding בנוי בשתי שכבות, כי הקטלוג גדל ל-47 ערים ו-500+ מקומות:
- *
- * 1. INDEX - קבוע וזהה בכל קריאה, ולכן נושא את cache_control: כל עיר עם
- *    כל המקומות שלה ברמת id/שם/קטגוריה/תגיות. זה מה שהמודל חייב כדי
- *    לבנות ולתקף מסלול, ולעולם לא להמציא מזהה.
- * 2. DETAIL - רק לערים הרלוונטיות לתור הנוכחי (הערים שבטיול + ערים
- *    שהוזכרו בשיחה): תיאורי מקומות, מסלול אוצר, מידע פרקטי ומידע
- *    המדינה. הבלוק הזה קטן ומשתנה, ולכן יושב אחרי נקודת השבירה של
- *    המטמון.
- *
- * לפני הפיצול נשלחו ~118k טוקנים בכל קריאה - ובבניית טיול יש 5 קריאות
- * רצופות, כך שזה היה גורם הזמן הדומיננטי.
- */
-function buildGroundingIndex(): string {
-  return JSON.stringify({
-    note: 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block.',
-    // המספרים האמיתיים, כי המודל המציא אותם בבדיקה חיה ("50 יעדים ב-40
-    // מדינות" כשבפועל היו 139 ו-74). הוא סופר גרוע על רשימה ארוכה, ואין
-    // סיבה לתת לו לנחש נתון שאפשר פשוט למסור לו.
-    coverage: { cities: destinations.length, countries: countries.length },
-    cities: destinations.map((d) => ({
-      slug: d.slug,
-      name: d.name,
-      countrySlug: d.countrySlug,
-      places: d.places.map((p) => ({
-        id: p.id,
-        name: p.name,
-        category: p.category,
-        ...(p.tags?.length ? { tags: p.tags } : {}),
-        ...(p.priceLevel !== undefined ? { priceLevel: p.priceLevel } : {}),
-        ...(p.mustSee ? { mustSee: true } : {}),
-        ...(p.durationMin ? { durationMin: p.durationMin } : {}),
-      })),
-    })),
-    countries: countries.map((c) => ({ slug: c.slug, name: c.name })),
-  });
-}
-
-/** ערים שהשיחה נוגעת בהן: הטיול הפעיל + אזכור בשם עיר/מדינה/שם מקומי */
-function relevantCitySlugs(messages: ChatMessage[], trip: Trip | null): string[] {
-  const slugs = new Set<string>(trip?.citySlugs ?? []);
-  const text = messages
-    .slice(-6)
-    .map((m) => m.content)
-    .join(' ')
-    .toLowerCase();
-  for (const d of destinations) {
-    const country = countries.find((c) => c.slug === d.countrySlug);
-    const needles = [d.name, d.nameLocal, d.slug, country?.name].filter(Boolean) as string[];
-    if (needles.some((n) => text.includes(n.toLowerCase()))) slugs.add(d.slug);
-  }
-  // בלי שום רמז - נותנים פירוט על מדגם קטן כדי שהתשובה הראשונה לא תהיה עקרה
-  if (slugs.size === 0) return destinations.slice(0, 6).map((d) => d.slug);
-
-  // תקרה קשיחה על מספר הערים בבלוק הפירוט.
-  //
-  // בלי התקרה הזאת הבלוק היה חסר גבול, וזה הכשיל שיחות אמיתיות: הסריקה
-  // מוסיפה כל יעד ששמו, שמו הלטיני, ה-slug **או שם המדינה שלו** מופיע
-  // בשש ההודעות האחרונות - וההודעות של הסוכן עצמו מזכירות הרבה שמות
-  // ערים ומדינות. מדידה על הקטלוג האמיתי: כ-6,500 תווים לעיר, 45% מהם
-  // עברית, כלומר בערך 3,800 טוקנים לעיר. 20 ערים = ~65k טוקנים,
-  // 40 ערים = ~120k, וכל הקטלוג (139 יעדים) = ~370k טוקנים בבלוק אחד.
-  // ביחד עם האינדקס וההיסטוריה זה חרג מחלון ההקשר של 200k.
-  //
-  // הבעיה גם גדלה עם השיחה **ועם הקטלוג**: כל יעד חדש שנוסף מרחיב את
-  // מרחב ההתאמות. לכן תקרה, ולא רק אופטימיזציה.
-  //
-  // סדר העדיפויות: הערים של הטיול עצמו קודם - הן ההקשר שאי אפשר לוותר
-  // עליו - ואחר כן מה שהוזכר בשיחה, עד התקרה. מה שנחתך עדיין נמצא
-  // באינדקס עם כל המזהים והשמות, כך שהמודל יכול לבנות איתו; הוא רק לא
-  // מקבל את הפרוזה.
-  const MAX_DETAIL_CITIES = 6;
-  const tripFirst = (trip?.citySlugs ?? []).filter((s) => slugs.has(s));
-  const rest = [...slugs].filter((s) => !tripFirst.includes(s));
-  return [...tripFirst, ...rest].slice(0, MAX_DETAIL_CITIES);
-}
-
-/** בלוק grounding נפרד ליעדים שנחקרו - מסומן חד-משמעית כלא-מאומת */
-function buildExploredGrounding(explored: Destination[]): string {
-  if (explored.length === 0) return '';
-  return `\n\nAUTO-EXPLORED (unverified, from public sources - label as such to the user):\n${JSON.stringify(
-    explored.map((d) => ({
-      slug: d.slug,
-      name: d.name,
-      summary: d.summary.slice(0, 200),
-      places: d.places.map((p) => ({ id: p.id, name: p.name, category: p.category })),
-    })),
-  )}`;
-}
-
-function buildGroundingDetail(citySlugs: string[]): string {
-  const cities = destinations.filter((d) => citySlugs.includes(d.slug));
-  const countrySlugs = new Set(cities.map((d) => d.countrySlug));
-  return JSON.stringify({
-    note: 'DETAIL for the cities this conversation touches. Other cities: use the INDEX above, and say plainly if you need specifics we did not load.',
-    countries: countries
-      .filter((c) => countrySlugs.has(c.slug))
-      .map((c) => ({ slug: c.slug, name: c.name, summary: c.summary, practical: c.practical })),
-    cities: cities.map((d) => ({
-      slug: d.slug,
-      name: d.name,
-      summary: d.summary,
-      practical: d.practical, // טיסות, תחבורה, כשרות - ברמת עיר
-      itinerary: d.itinerary,
-      places: d.places.map((p) => ({
-        id: p.id,
-        name: p.name,
-        nameLocal: p.nameLocal,
-        category: p.category,
-        description: p.description.length > 90 ? `${p.description.slice(0, 90)}…` : p.description,
-        kosherNote: p.kosherNote,
-      })),
-    })),
-  });
-}
 
 /** טקסט התקדמות אמיתי לפי הכלי שרץ עכשיו - לא הודעות דמה מתחלפות */
 function toolStatusText(name: string, input: Record<string, unknown>): string {
@@ -468,6 +359,7 @@ async function runClaudeTurn(
   iter: number,
   kosherHint: boolean,
   groundingDetail: string,
+  kosherOk: boolean,
 ): Promise<{ blocks: AccBlock[]; stopReason: string; text: string; usage: AnthropicUsage }> {
   const model = process.env.ANTHROPIC_MODEL_AGENT ?? 'claude-sonnet-4-5';
   // טוגל כשרות מה-UI לפני שקיים טיול: מוסרים לסוכן בשקט דרך בלוק המצב
@@ -493,8 +385,14 @@ async function runClaudeTurn(
       // המשתנה יושב אחרי נקודת השבירה ולא פוגע בקריאות מהמטמון.
       system: [
         { type: 'text', text: SYSTEM_PROMPT },
-        // האינדקס קבוע -> נשאר במטמון בין תורים ובין משתמשים
-        { type: 'text', text: buildGroundingIndex(), cache_control: { type: 'ephemeral' } },
+        // האינדקס קבוע -> נשאר במטמון בין תורים ובין משתמשים. יש לו שתי
+        // גרסאות בלבד (עם כשרות ובלעדיה), שתיהן קבועות, כך שהשער החדש
+        // לא פוגע בפגיעות המטמון - כל אחת נשמרת בפני עצמה.
+        {
+          type: 'text',
+          text: buildGroundingIndex(kosherOk),
+          cache_control: { type: 'ephemeral' },
+        },
         // הפירוט משתנה לפי השיחה -> אחרי נקודת השבירה, בלי cache_control
         { type: 'text', text: groundingDetail },
         { type: 'text', text: `CURRENT TRIP (the user's active trip right now):\n${serializeTripForModel(trip)}${kosherNote}` },
@@ -662,9 +560,22 @@ async function runAgent(
   let truncatedRetry = false;
   // פירוט רק לערים שהשיחה נוגעת בהן (ראו buildGroundingDetail); היעדים
   // שנחקרו מצורפים בכל איטרציה מחדש - חקירה באיטרציה N זמינה ב-N+1
-  const baseDetail = buildGroundingDetail(relevantCitySlugs(messages, clientTrip));
+  const relevant = relevantCitySlugs(messages, clientTrip);
+  // שני וריאנטים לכל היותר לכל בקשה (עם כשרות/בלי), נבנים לפי דרישה:
+  // המודל יכול להדליק את ההעדפה באמצע התור עם set_preferences, ואז
+  // האיטרציה הבאה חייבת לקבל את שכבת הכשרות באמת ולא רק את ההרשאה.
+  const detailCache = new Map<boolean, string>();
+  const detailFor = (ok: boolean) => {
+    const hit = detailCache.get(ok);
+    if (hit !== undefined) return hit;
+    const built = buildGroundingDetail(relevant, ok);
+    detailCache.set(ok, built);
+    return built;
+  };
 
   for (let iter = 0; iter < 16; iter++) {
+    // נקרא מחדש בכל איטרציה: `working` משתנה תוך כדי התור.
+    const kosherOk = kosherAllowed(working, messages, kosherHint);
     // אחרי קטיעה נותנים תקרה גבוהה יותר: ההנחיה לקריאות קטנות היא העיקר,
     // אבל אין סיבה להיחתך שוב על אותה מגבלה בזמן שמתקנים.
     const maxTokens = truncatedRetry ? 4096 : editIntent || iter > 0 ? 2048 : 1024;
@@ -677,7 +588,8 @@ async function runAgent(
       maxTokens,
       iter,
       kosherHint,
-      baseDetail + buildExploredGrounding(explored),
+      detailFor(kosherOk) + buildExploredGrounding(explored),
+      kosherOk,
     );
     meter.units += aiUnits(turn.usage);
     full += turn.text;

@@ -242,6 +242,138 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-29 (cc) - Kosher volunteered itself into prose, and the search overlay was trapped inside the navbar
+
+Two reports from Netanel, both from the deployed site on his phone. They are
+unrelated bugs with the same shape: **a rule that was enforced in one layer and
+absent in the layer next to it.**
+
+---
+
+**1. "I asked about a restaurant in Rome and it started talking about kosher
+places, even though I did not switch the kosher button on."**
+
+He is right, and this was a known-open item - entry (h) recorded exactly this
+symptom in October's live testing and did not fix it. The two venues his
+screenshot names, בא-גטו and יטבתה, are precisely the two `kosher-food` entries
+Rome has in the catalog. **The model did not invent them; it read them.**
+
+`filterKosherUnlessOptedIn` guards the TOOLS - what may enter a trip - and the
+system prompt has said "do not raise the topic" in three progressively stronger
+wordings. **Prose was never guarded at all**, and the data was in front of the
+model every single turn.
+
+Entry (h)'s own lesson applies: *when the model ignores a rule, do not rewrite
+the rule harder - move it closer to the moment of generation, or replace it
+with a computed fact.* So this is not a fourth prompt round. It is structural:
+when kosher is off, **the kosher layer is not in the data the model receives.**
+New `src/lib/server/grounding.ts` (moved out of the route, because a route
+handler cannot export helpers and this needed tests - same reason
+`sanitizeMessages` moved) strips, when the gate is closed:
+
+- every `kosher-food` / `kosher-market` place, from BOTH the index and the detail block,
+- the city's `practical.kosherOverview`,
+- kosher ids inside the curated itineraries - **the back door**, since a day of
+  the curated route can carry a kosher stop and that is how the id reaches the
+  model without ever appearing in the place list.
+
+**The gate opens on a computed fact, not a vibe:** the kosher preference is on,
+`shabbatAware` is on, the UI toggle rode along with the request, or one of the
+last six **user** messages actually says כשר / מהדרין / גלאט / בד״ץ / השגחה /
+חב״ד / kosher / chabad. Deliberately not the assistant's messages: one mention
+by the agent would hold the gate open forever, which is the thing it exists to
+prevent. Deliberately not the word שבת either - "אני מגיע ביום שבת" is Saturday,
+not a kashrut request.
+
+**Two things were deliberately NOT stripped.** A `kosherNote` on a place that is
+*not* kosher is a warning, not a recommendation - Katz's Delicatessen says
+plainly it is not kosher, and hiding that would be the dishonest direction of
+this change. And the closed gate ships an explicit `kosherPolicy` line in the
+data telling the model it may not mention kosher **and may not claim the city
+has none** - it was simply not given that layer, and if asked it should say the
+site has a kosher layer and offer to switch it on. Silence that turns into
+"there's no kosher food in Rome" would be a worse bug than the one being fixed.
+
+**Cache safety, since the index is the expensive block:** there are exactly two
+index variants (with kosher, without), each built once per process and cached,
+so `cache_control` still hits on both. Index measures 218,568 chars with kosher
+and 211,038 without. As a side effect the index is no longer re-serialised on
+every model call - it used to be rebuilt for each of the 5 calls in a build.
+
+**10 new tests** (119 total), run against the real catalog rather than a fixture,
+because what is being asserted is literally what gets sent: his exact question
+("איזה מקום לאכול יש ברומא") produces grounding blocks containing neither
+`rom-baghetto` nor `rom-yotvata` nor their names; both come back when the
+preference is on OR when the user asks; the assistant's own kosher sentence does
+not open the gate; the not-kosher warning survives; the two index variants are
+stable and distinct.
+
+**The other half, found while rebasing onto entry (bb).** That session opened
+`food`/`market` categories and hardened the TOOL guard for travellers who DO
+keep kosher - Katz's could previously be added to a kosher trip. The prose side
+of that is the mirror of this entry's bug, and it was still open: with kosher
+ON, the grounding handed the model Café Central and Katz's with nothing marking
+them. Now every eating place carries its computed `kosherStatus` when the gate
+is open, plus a policy line - recommend only `kosher`, and a `not-kosher` or
+`unknown` place may be named ONLY to say plainly that it is not kosher.
+**Not stripped, deliberately:** an observant traveller who reads "Katz's is a
+New York institution, and it is not kosher" got exactly what they needed;
+deleting the row would have left them with no warning at all. 128 tests.
+
+---
+
+**2. "The line is not gone. On mobile."**
+
+The screenshot is the site-search overlay: a shaded band exactly the height of
+the navbar, ending in a hard horizontal line, with the panel floating below it
+on an undimmed page - plus a faint vertical dashed hairline down the right edge.
+
+**Measured rather than guessed, and the number is unambiguous:** the overlay
+that reads `fixed inset-0` renders at **360x74 instead of 360x740**. Its
+containing block is the `<header>`, because the header carries `backdrop-blur`
+and `backdrop-filter` creates a containing block for fixed descendants. So
+"full screen" was "the navbar": the dim painted only inside the header box, the
+panel spilled out below it onto a page it was never dimming, and `pt-[10vh]`
+lined the panel's top up with the header's bottom edge so it looked deliberate.
+
+**The project had already solved this once and the second site was never
+updated.** `AccountButton` carries a comment naming this exact trap and renders
+its modal through `createPortal` - the login modal would otherwise be jailed in
+the same navbar. `SiteSearch` never got it. It does now, with the measurement in
+the comment so the next person does not have to re-derive it, and the rule is in
+the Gotchas section: **anything `position: fixed` inside the header must be
+portalled to body.** (`.rise-in`'s sticky transform is the same species; it is
+already recorded in `TripWorkspace`.)
+
+**14/14 in a real browser** at 360x740 with DPR 3 and at 1440x900, through both
+entry points (mobile menu row, desktop nav icon): the overlay now measures
+exactly the viewport, its parent is `<body>`, the dim reaches the bottom-right
+corner of the screen, no horizontal overflow, Escape still closes.
+
+**The honest limit.** The vertical dashed hairline does NOT reproduce in
+headless Chromium - the DOM has no dashed border anywhere while the overlay is
+open (checked every element's four border styles and its outline). It sits
+exactly on the boundary of the clipped `backdrop-filter` region, which is a
+GPU-composited edge that software rendering here will not show, so the most
+likely explanation is a tiling artifact of that clip. That boundary no longer
+exists after this fix - the filter now covers the whole screen - so it should go
+with it. **If it survives, that is new information and worth another screenshot;
+I could not prove it from here.**
+
+---
+
+**Also worth knowing.** With the phone keyboard open, the panel is taller than
+the visible area (`pt-[10vh]` + `max-h-[60vh]` against a layout viewport that
+does not shrink for the keyboard), so about three rows show and the rest scrolls.
+That is real but it is not what he reported, and shaving the top padding buys
+about half a row - left alone rather than fiddled with.
+
+**Still waiting on Netanel, unchanged:** rotate the GitHub token (it was pasted
+into chat); run `supabase-check.sql` and `supabase-trips-check.sql` and say what
+they report; delete the two trips again and say whether they come back; add
+`SUPABASE_SERVICE_ROLE_KEY` to Vercel; approve the 19.90 ₪ price; affiliate IDs;
+the `[למילוי]` accessibility placeholders.
+
 ### 2026-07-28 (aa) - "I deleted 2 of those and they are back" - the tombstones held; the layer above them did not
 
 Netanel, with a screenshot of three trips in the nav dropdown.
@@ -765,6 +897,14 @@ with `/tmp/measure.mjs`-style measurement before quoting any new figure.
   gradient photo fallbacks there are expected, not bugs.
 - `<blackz-signature>` is a custom element; TS declaration lives in
   `src/types/custom-elements.d.ts`.
+- **Anything `position: fixed` rendered inside the `<header>` must be
+  portalled to `document.body`.** The header carries `backdrop-blur`, and
+  `backdrop-filter` creates a containing block, so `fixed inset-0` is
+  measured against the header instead of the screen (measured: 360x74
+  instead of 360x740). The same trap comes from `transform`, `filter` and
+  `contain` - `.rise-in` keeps its final transform forever, which is how
+  `TripWorkspace`'s mobile chat bar first hit it. `AccountButton` and
+  `SiteSearch` both use `createPortal`; copy that, don't re-derive it.
 
 ## Success metrics to design toward
 

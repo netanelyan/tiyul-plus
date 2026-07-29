@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import Flag from '@/components/Flag';
 import type { SearchHits, SearchKind, SearchResult } from '@/lib/siteSearch';
@@ -21,6 +22,14 @@ const KIND_LABELS: Record<SearchKind, string> = {
  *
  * הקטלוג עצמו נטען בייבוא דינמי ברגע הפתיחה בלבד, כך שכפתור בניווט לא
  * גורר את כל הדאטה ל-bundle של כל עמוד.
+ *
+ * **השכבה מרונדרת ב-portal אל ה-body, וזה לא קישוט.** הכפתור בניווט יושב
+ * בתוך ה-`<header>`, ולהדר יש `backdrop-blur` - ו-backdrop-filter יוצר
+ * containing block ל-position:fixed. בלי ה-portal, `fixed inset-0` נמדד
+ * מול ההדר במקום מול המסך: נמדד בדפדפן אמיתי ב-390px - 360x74 במקום
+ * 360x740. התוצאה על הטלפון היא בדיוק מה שנתנאל צילם: פס מוצל בגובה
+ * הניווט שנגמר בקו חד, והפאנל צף על עמוד לא מוצל מתחתיו. AccountButton
+ * כבר נפל במלכודת הזאת ותוקן; זה אותו באג בדיוק, בקומפוננטה אחרת.
  */
 
 type Variant = 'icon' | 'field' | 'menu-row';
@@ -165,125 +174,128 @@ export default function SiteSearch({
     <>
       {trigger}
 
-      {open && (
-        <div
-          className="fixed inset-0 z-[60] flex justify-center bg-night/40 px-4 pt-[10vh] backdrop-blur-[2px]"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setOpen(false);
-          }}
-        >
-          <div className="h-fit w-full max-w-xl overflow-hidden rounded-3xl bg-shell shadow-[var(--shadow-pop)] ring-1 ring-night/10">
-            <div className="flex items-center gap-2.5 border-b border-night/10 px-4 py-3">
-              <SearchIcon className="shrink-0 text-night/40" />
-              <input
-                ref={inputRef}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={onKeyDown}
-                role="combobox"
-                aria-expanded
-                aria-controls="site-search-results"
-                aria-label="חיפוש יעד, עיר או מקום"
-                placeholder="חיפוש יעד, עיר או מקום…"
-                className="w-full bg-transparent text-night outline-none placeholder:text-night/40"
-              />
-              <button
-                onClick={() => setOpen(false)}
-                aria-label="סגירה"
-                className="shrink-0 rounded-full px-2 py-1 text-xs font-semibold text-night/45 transition hover:bg-night/5 hover:text-night"
-              >
-                Esc
-              </button>
-            </div>
+      {open &&
+        typeof document !== 'undefined' &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[60] flex justify-center bg-night/40 px-4 pt-[10vh] backdrop-blur-[2px]"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setOpen(false);
+            }}
+          >
+            <div className="h-fit w-full max-w-xl overflow-hidden rounded-3xl bg-shell shadow-[var(--shadow-pop)] ring-1 ring-night/10">
+              <div className="flex items-center gap-2.5 border-b border-night/10 px-4 py-3">
+                <SearchIcon className="shrink-0 text-night/40" />
+                <input
+                  ref={inputRef}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={onKeyDown}
+                  role="combobox"
+                  aria-expanded
+                  aria-controls="site-search-results"
+                  aria-label="חיפוש יעד, עיר או מקום"
+                  placeholder="חיפוש יעד, עיר או מקום…"
+                  className="w-full bg-transparent text-night outline-none placeholder:text-night/40"
+                />
+                <button
+                  onClick={() => setOpen(false)}
+                  aria-label="סגירה"
+                  className="shrink-0 rounded-full px-2 py-1 text-xs font-semibold text-night/45 transition hover:bg-night/5 hover:text-night"
+                >
+                  Esc
+                </button>
+              </div>
 
-            <div id="site-search-results" role="listbox" className="max-h-[60vh] overflow-y-auto p-2">
-              {query.trim().length < 2 ? (
-                /*
-                  המצב הריק היה פסקת הסבר ושום דבר ללחוץ עליו - שכבת חיפוש
-                  שנפתחת ומראה תיעוד. עכשיו היא נפתחת עם יעדים אמיתיים,
-                  לפי הדירוג העריכתי שקיים בדאטה, וחצי המקלדת עובדים מיד.
-                */
-                popular.length > 0 ? (
-                  <>
-                    <div className="px-3 pb-1 pt-2 text-xs font-bold text-night/40">
-                      {/* שם מדויק ולא "פופולרי": אין לנו מדידת פופולריות,
-                          יש דירוג עריכתי בדאטה. */}
-                      היעדים המדורגים ביותר
-                    </div>
-                    {popular.map((r, i) => (
-                      <Row key={r.key} r={r} activeRow={i === active} onPick={() => go(r)} />
-                    ))}
-                  </>
-                ) : (
+              <div id="site-search-results" role="listbox" className="max-h-[60vh] overflow-y-auto p-2">
+                {query.trim().length < 2 ? (
+                  /*
+                    המצב הריק היה פסקת הסבר ושום דבר ללחוץ עליו - שכבת חיפוש
+                    שנפתחת ומראה תיעוד. עכשיו היא נפתחת עם יעדים אמיתיים,
+                    לפי הדירוג העריכתי שקיים בדאטה, וחצי המקלדת עובדים מיד.
+                  */
+                  popular.length > 0 ? (
+                    <>
+                      <div className="px-3 pb-1 pt-2 text-xs font-bold text-night/40">
+                        {/* שם מדויק ולא "פופולרי": אין לנו מדידת פופולריות,
+                            יש דירוג עריכתי בדאטה. */}
+                        היעדים המדורגים ביותר
+                      </div>
+                      {popular.map((r, i) => (
+                        <Row key={r.key} r={r} activeRow={i === active} onPick={() => go(r)} />
+                      ))}
+                    </>
+                  ) : (
+                    <p className="px-3 py-4 text-sm font-medium text-night/45">טוען את הקטלוג…</p>
+                  )
+                ) : !search ? (
                   <p className="px-3 py-4 text-sm font-medium text-night/45">טוען את הקטלוג…</p>
-                )
-              ) : !search ? (
-                <p className="px-3 py-4 text-sm font-medium text-night/45">טוען את הקטלוג…</p>
-              ) : results.length === 0 ? (
-                <div className="px-3 py-4">
-                  {/* מצב ריק כן: לא ממציאים תוצאה, מציעים לשאול את הסוכן */}
-                  <p className="text-sm font-semibold text-night">
-                    אין &quot;{query.trim()}&quot; בקטלוג שלנו.
-                  </p>
+                ) : results.length === 0 ? (
+                  <div className="px-3 py-4">
+                    {/* מצב ריק כן: לא ממציאים תוצאה, מציעים לשאול את הסוכן */}
+                    <p className="text-sm font-semibold text-night">
+                      אין &quot;{query.trim()}&quot; בקטלוג שלנו.
+                    </p>
+                    <button
+                      onClick={askAgent}
+                      className="mt-2 rounded-xl bg-sunset px-4 py-2 text-sm font-bold text-cream transition hover:bg-sunset-deep"
+                    >
+                      לשאול את הסוכן ←
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                  {results.map((r, i) => {
+                    const prev = results[i - 1];
+                    return (
+                      <div key={r.key}>
+                        {(!prev || prev.kind !== r.kind) && (
+                          <div className="px-3 pb-1 pt-2 text-xs font-bold text-night/40">
+                            {KIND_LABELS[r.kind]}
+                          </div>
+                        )}
+                        <Row
+                          r={r}
+                          activeRow={i === active}
+                          onHover={() => setActive(i)}
+                          onPick={() => go(r)}
+                        />
+                      </div>
+                    );
+                  })}
+                  {/* התקרה לכל סוג יכולה להשמיט תוצאות. אומרים את זה במקום
+                      להציג רשימה חתוכה בשקט. */}
+                  {hits.omitted > 0 && (
+                    <p className="px-3 pt-2 text-xs font-medium text-night/40">
+                      ועוד {hits.omitted} התאמות - כדאי לחדד את החיפוש.
+                    </p>
+                  )}
+                  {/* יש תוצאות, אבל לא בהכרח מה שחיפשו: החיפוש הוא הכלה
+                      בתת-מחרוזת, ולכן "דובאי" מוצא גם "נקיק אולדובאי".
+                      שורת מילוט קבועה שומרת על כנות - מה שאין בקטלוג, הסוכן
+                      יגיד עליו את האמת. */}
                   <button
                     onClick={askAgent}
-                    className="mt-2 rounded-xl bg-sunset px-4 py-2 text-sm font-bold text-cream transition hover:bg-sunset-deep"
+                    className="mt-1 flex w-full items-center gap-2 rounded-xl border-t border-night/10 px-3 py-2.5 text-start text-xs font-semibold text-night/50 transition hover:bg-night/[0.04] hover:text-night"
                   >
-                    לשאול את הסוכן ←
+                    לא מצאתם? לשאול את הסוכן על &quot;{query.trim()}&quot; ←
                   </button>
-                </div>
-              ) : (
-                <>
-                {results.map((r, i) => {
-                  const prev = results[i - 1];
-                  return (
-                    <div key={r.key}>
-                      {(!prev || prev.kind !== r.kind) && (
-                        <div className="px-3 pb-1 pt-2 text-xs font-bold text-night/40">
-                          {KIND_LABELS[r.kind]}
-                        </div>
-                      )}
-                      <Row
-                        r={r}
-                        activeRow={i === active}
-                        onHover={() => setActive(i)}
-                        onPick={() => go(r)}
-                      />
-                    </div>
-                  );
-                })}
-                {/* התקרה לכל סוג יכולה להשמיט תוצאות. אומרים את זה במקום
-                    להציג רשימה חתוכה בשקט. */}
-                {hits.omitted > 0 && (
-                  <p className="px-3 pt-2 text-xs font-medium text-night/40">
-                    ועוד {hits.omitted} התאמות - כדאי לחדד את החיפוש.
-                  </p>
+                  </>
                 )}
-                {/* יש תוצאות, אבל לא בהכרח מה שחיפשו: החיפוש הוא הכלה
-                    בתת-מחרוזת, ולכן "דובאי" מוצא גם "נקיק אולדובאי".
-                    שורת מילוט קבועה שומרת על כנות - מה שאין בקטלוג, הסוכן
-                    יגיד עליו את האמת. */}
-                <button
-                  onClick={askAgent}
-                  className="mt-1 flex w-full items-center gap-2 rounded-xl border-t border-night/10 px-3 py-2.5 text-start text-xs font-semibold text-night/50 transition hover:bg-night/[0.04] hover:text-night"
-                >
-                  לא מצאתם? לשאול את הסוכן על &quot;{query.trim()}&quot; ←
-                </button>
-                </>
-              )}
-              {/* רמז מקלדת: קיים כאן גם כדי שהפאנל לא ייראה חתוך בתחתית */}
-              <p className="mt-1 hidden items-center gap-2 border-t border-night/10 px-3 pt-2 text-[11px] font-medium text-night/35 sm:flex">
-                <kbd className="rounded bg-night/5 px-1.5 py-0.5 font-sans">↑</kbd>
-                <kbd className="rounded bg-night/5 px-1.5 py-0.5 font-sans">↓</kbd>
-                לבחירה
-                <kbd className="rounded bg-night/5 px-1.5 py-0.5 font-sans">Enter</kbd>
-                לפתיחה
-                <span className="ms-auto">חיפוש לפי שם בעברית, שם מקומי או מדינה</span>
-              </p>
+                {/* רמז מקלדת: קיים כאן גם כדי שהפאנל לא ייראה חתוך בתחתית */}
+                <p className="mt-1 hidden items-center gap-2 border-t border-night/10 px-3 pt-2 text-[11px] font-medium text-night/35 sm:flex">
+                  <kbd className="rounded bg-night/5 px-1.5 py-0.5 font-sans">↑</kbd>
+                  <kbd className="rounded bg-night/5 px-1.5 py-0.5 font-sans">↓</kbd>
+                  לבחירה
+                  <kbd className="rounded bg-night/5 px-1.5 py-0.5 font-sans">Enter</kbd>
+                  לפתיחה
+                  <span className="ms-auto">חיפוש לפי שם בעברית, שם מקומי או מדינה</span>
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </>
   );
 }
