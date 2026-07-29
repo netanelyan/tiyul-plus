@@ -370,6 +370,77 @@ Shabbat marking (he did not choose it), no "best month" warning - that one is
 impossible anyway, since `bestMonths` still does not exist in the catalog, and
 inventing a seasonal opinion from a date is exactly what hard rule 2 forbids.
 
+### 2026-07-29 (kk) - The browser check that had been owed for seven passes, and the Hebrew it found
+
+Netanel: "Do that" - the RTL/overflow check on the ~280 entries added across
+passes (dd) through (jj). Every one of those entries shipped with the same
+caveat in its log entry: no browser check had been run, because the Chrome
+extension was down. Seven passes of accumulated untested surface, closed here.
+
+**Method, and one thing worth stealing.** The extension reaches only public
+URLs, so this ran against **production** rather than a local build - which is
+the honest surface anyway. Instead of 24 navigations, the audit loads each page
+in a **same-origin iframe sized to the target viewport** and measures its
+document directly: `scrollWidth` vs `clientWidth`, every element's rect against
+the viewport edge, `dir`, broken images, and whether Hebrew is present. One
+tool call covers six pages at a real width, and the iframe's viewport drives the
+CSS media queries exactly as a phone would.
+
+**Result: clean.** 17 destination pages at 390px, 6 at 1440px, plus `/countries`,
+three country pages, `/kosher` and the homepage. **Horizontal overflow 0
+everywhere, `dir="rtl"` everywhere, 0 broken images, Hebrew present on every
+page.**
+
+Two categories of flagged element were investigated and both are known-good:
+Leaflet **tiles** and **pins** sit outside the viewport by design - verified
+their container is `.leaflet-container` with `overflow:hidden` ending at
+x=1288 - which entry (x) already recorded, and page-level overflow stayed 0
+throughout. The homepage's decorative flight-trails layer extends 8px past the
+viewport and is contained by the `overflow-x: clip` fix from entry (h).
+
+---
+
+**Then the visual pass found something the numbers could not, which is the whole
+reason to look at a screen.**
+
+The place cards rendered **"כ-1 שעות"** - literally "about 1 hours". The
+expression was `כ-{Math.round(min / 30) / 2} שעות`, and its *number* was
+correct, so no test, validator or type check could ever have caught it. Only
+reading the card does.
+
+The blast radius is not small: **156 places are 60 minutes and 92 are 45**, so
+**248 place cards** carried it, and 30-minute places printed "כ-0.5 שעות".
+
+Hebrew has a **dual** form, so the fix is not a special case for 1:
+
+    כחצי שעה · כשעה · כשעה וחצי · כשעתיים · כשעתיים וחצי · כ-3 שעות
+
+The interesting part is that **the codebase already knew this**. `travel.ts` has
+formatted journey times as "כשעה נסיעה" since entry (pp); the place cards simply
+never got the same treatment. It now lives in `src/lib/duration.ts` so the two
+callers can share one rule instead of one of them being right by accident.
+
+`formatDurationHe` returns **null** rather than a string when there is no real
+duration, so a place under a quarter-hour renders nothing instead of
+"כ-0 שעות" - the caller drops the element rather than printing a zero.
+
+Six tests, including a sweep of every duration from 1 to 600 minutes asserting
+that no output can match the broken singular again. 170 tests.
+
+**The generalisable bit.** Hard rule 7 asks for a "visual check of changed pages"
+at the end of every session, and for seven passes that was deferred with a good
+reason (the extension was down) and no cost visible - the catalog validated, the
+tests passed, the numbers were right. The cost was real and it was invisible by
+construction: **a correct number rendered in incorrect Hebrew on 248 cards.** A
+deferred visual check does not show up as a failing anything; it shows up as
+quiet, accumulating wrongness on the surface the user actually reads.
+
+**Still not covered by this pass, stated so it is not assumed:** the trip
+workspace (`/chat`, `/planner`) renders these same places and needs a seeded
+trip to check, which this pass did not do. The duration fix is committed but
+**was not visible in the production screenshots**, which still show the old
+build - it verifies on the next deploy.
+
 ### 2026-07-29 (jj) - Chrome came back, and it turned out the blocker was never the research
 
 Netanel, in order: "chrome is up, find images for places they dont exist", then
