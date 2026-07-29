@@ -242,6 +242,119 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-29 (ee) - The priority-country rollout: 49 entries, and the 45 that do not exist
+
+Netanel picked the second option - three per destination for the countries
+Israelis actually fly to, the long tail left thinner. This entry is that pass.
+
+**First, a correction he asked for and I owed him.** He asked whether all
+countries have restaurants and shopping now. They do not, and my previous
+message had let that stand. Measured: **28 of 166 destinations** carried a
+curated food or market entry, and **47 of 83 countries had neither an eating
+place nor a shopping place of any kind** - Portugal, the Netherlands, Turkey,
+Mexico, Morocco, South Korea, Canada, Australia and the whole Nordic and Baltic
+run among them. I had also reported "39 entries across 29 destinations" when the
+real figures were 42 across 28; the gap was pre-existing entries recategorised
+during the backfill, which my count double-handled. **Recount before quoting a
+number in a summary, not after.**
+
+**Scope, measured before writing.** The 17 priority countries hold 53
+destinations. Counting legacy `cafe` and `shopping` entries as already-covered,
+39 of them sat below three, a gap of **94 entries ≈ 10,340 index chars** - cheap,
+because a food entry serialises 110 chars and not the catalog-wide average of
+144. Note the UK's country slug is `united-kingdom`, not the `uk` shorthand the
+older session-log entries use; my first count silently omitted two destinations
+because of it.
+
+**49 written, 45 not found - and that is the deliverable, not a shortfall.**
+Nine destinations got fewer than three and six got nothing at all:
+`meteora-epirus`, `northern-bulgaria`, `bucovina-maramures`,
+`bohemian-switzerland`, `uae-mountains` and `grand-canyon`. The reasons are
+specific rather than "we ran out of time": Epirus's real food identity is
+handmade pies in village tavernas and a Metsovo dairy, none of which exist in
+any coordinate source reachable from this sandbox; Maramureș's is household
+horincă and periodic livestock fairs; the Southwest parks' is not food at all.
+Padding those six was the easy result and the wrong one.
+
+**Method: ten research subagents, then my own curation, then an independent
+coordinate audit.** The subagents were given the wrong-place trap explicitly and
+it fired constantly, which is the useful part - "Vivoli" (a Florence gelateria)
+returned a restaurant in Toronto, "Kaupé" (Ushuaia) returned a village in
+Lithuania, "Targ Rybny" (Gdańsk) returned the fish market in Batumi, "Do Mori"
+(Venice) returned a locality in Papua New Guinea, "Marché des Halles" (Menton)
+returned Halė Market in Vilnius, and **"All'Antico Vinaio" returned the Milan
+branch rather than the Florence original - a wrong branch of the right business
+is still wrong.** Every one was discarded rather than adjusted.
+
+**I then cut about a third of what came back**, which is where the bar actually
+gets held: two Dolomites rifugi collapsed to one, Lucky's Souvlakis and Mercado
+Victoria were dropped as merely fine, the Scotch Whisky Experience is an
+attraction and not a food place, Geroskipou came back as a village-centroid pin
+rather than a loukoumi workshop, Hatta's honey garden and the Las Vegas Chinatown
+strip do not clear "would regret missing", and Dedo Pene in Bansko arrived with
+Mapcarta's own administrative labelling wrong, so it went.
+
+**Two catches worth keeping.**
+
+*Grassmarket was already in the catalog*, filed as an `attraction`. That is the
+sixth instance of the duplicate class that got five past me last pass, and the
+reason it was caught this time is that the check now runs candidate names against
+**every** place in the catalog rather than against the food categories. The
+narrow check is the bug; the category a place was filed under has nothing to do
+with whether it is the same place.
+
+*The Punta Arenas market was offered for `patagonia-south`*, which is the
+Argentine destination - its places are El Calafate, Perito Moreno, Ushuaia. The
+city of Punta Arenas is Chilean and already lives in `torres-del-paine`. It went
+there. Filing it where the quota wanted it would have put a Chilean market inside
+Argentina.
+
+**The urban-distance guard from entry (dd) needed a margin.** Keying the
+tolerance to the destination's exact maximum spread turned out to be brittle in a
+way I did not anticipate: El Viejo Marino in Ushuaia failed by **0.002 degrees**,
+purely because the city of Ushuaia was itself the place defining the bound. The
+tolerance is now the spread **plus 5%**. The Triana typo is still caught (1.19
+against a 1.05 tolerance), which is the test that matters - a guard that stops
+catching its founding bug is not a guard.
+
+**Verification.** All 49 coordinates re-read against their source pages by three
+independent auditors: **49 matched, 0 failed**, signs included - the negative
+longitudes for Maine, Boston and Edinburgh and the negative pairs for Ushuaia and
+Punta Arenas were each confirmed explicitly, since a dropped minus is the other
+half of the transcription class. A programmatic pass separately asserted that
+every written coordinate matches the research record, that every `externalUrl`
+matches its own lat/lng, and that every eating place carries a kashrut status.
+
+**One rule I nearly broke by habit:** the first draft of the Edinburgh entry said
+the farmers' market runs "only at weekends". That is a schedule, and schedules
+are the thing this feature refuses to store because they go stale silently. It
+now says the market is seasonal and to confirm before relying on it - which is
+the honest version and does not rot.
+
+**Numbers:** 1624 places / 166 destinations / 83 countries, **0 errors**, 62
+warnings (the two new ones are the Ayutthaya-Krabi entries sitting far from that
+destination's midpoint - its own existing places all warn identically, because it
+is a two-city hub whose centre is the sea between them). 128 tests, tsc and build
+clean at 277 pages. Grounding index **228,505 of the 260,000 ceiling**, about
+31,000 chars of headroom left - roughly 280 more food entries, so the long tail
+fits if it is ever wanted.
+
+**What the next session should know.** (1) Coverage is now 62 of 166
+destinations; the 113 destinations outside the priority countries still have
+nothing, by decision rather than oversight. (2) The unprobed-photo debt from
+entry (dd) is unchanged and has grown by nothing - **none of these 49 entries has
+a photo**, deliberately, because the Chrome extension is still down and an
+unprobed URL is what produced 151 dead links. (3) No browser RTL check has been
+run on any of the scaled entries, for the same reason. (4) Mapcarta remains the
+only working coordinate route; when a name slug 404s, its OSM-node URL form
+(`mapcarta.com/N3779372494`) often works where the slug does not, and that is how
+Kapana, the three Cyprus markets and the Tbilisi and Batumi bazaars were
+resolved. (5) Standing and unchanged: the 18 dead photo URLs needing
+human-chosen replacements, the `kosher-market` and `cafe` gaps blocked on
+geocoding, the 2.5MB client bundle, `feat/catalog-supabase` unmerged pending
+Netanel's own review, and **both GitHub PATs still need revoking at
+https://github.com/settings/tokens**.
+
 ### 2026-07-29 (dd) - Scaling the food/shopping pass: 39 entries, five duplicates I missed, and a coordinate typo of my own
 
 Netanel: "good. scale. use chrome session for images", then "Finish all of those
