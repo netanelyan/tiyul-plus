@@ -248,6 +248,21 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-29 (nn) - The countdown was floating in the gap between the chip and the buttons
+
+Netanel: "the עוד 4 ימים לטיול is not placed correctly." It was an
+`absolute -bottom-4` span hanging below the summary chip - which put it in the
+dead space between the chip and the action-buttons row, reading as a stray line
+that drifts into another control's territory rather than belonging to anything.
+
+Folded it **into the summary chip** as a small filled sunset pill, right after
+the dates it describes: "12 עצירות · 8 ימים · 2-9 באוגוסט [עוד 4 ימים לטיול]".
+Now it is attached to what it means, cannot overlap a neighbour, and the chip
+gained `flex-wrap` so a long countdown wraps inside the chip instead of pushing
+width. It also removed a row: the map moved up because the countdown no longer
+needs its own vertical slot. The a11y name of the chip carries the countdown
+too. 30/30 dates + 170 unit tests, tsc/lint/build clean.
+
 ### 2026-07-29 (mm) - The date fields were blank boxes on iOS, and the day switcher needed to look like the trip
 
 Two more phone screenshots from Netanel, both real. The first: the open date

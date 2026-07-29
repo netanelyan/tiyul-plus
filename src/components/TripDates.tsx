@@ -108,8 +108,12 @@ export default function TripDates({
       <button
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        aria-label={label ? `תאריכי הטיול: ${label}` : 'הוספת תאריכים לטיול'}
-        className="badge flex items-center gap-1.5 rounded-full bg-night/5 px-3 py-1 text-xs font-semibold text-night/60 transition hover:bg-night/10 hover:text-night"
+        aria-label={
+          label
+            ? `תאריכי הטיול: ${label}${cd && cd.kind !== 'past' ? `, ${cd.label}` : ''}`
+            : 'הוספת תאריכים לטיול'
+        }
+        className="badge flex flex-wrap items-center gap-x-1.5 gap-y-1 rounded-full bg-night/5 px-3 py-1 text-xs font-semibold text-night/60 transition hover:bg-night/10 hover:text-night"
       >
         <span>{summary}</span>
         {label ? (
@@ -117,14 +121,19 @@ export default function TripDates({
         ) : (
           <span className="text-night/40">· + תאריכים</span>
         )}
+        {/*
+          הספירה לאחור **בתוך הצ׳יפ** ולא כשכבה מרחפת מתחתיו. הגרסה
+          הקודמת הייתה `absolute -bottom-4` וריחפה בין הצ׳יפ לשורת
+          הכפתורים, נקראת כשורה תלושה שנכנסת לשטח של פקד אחר (הצילום של
+          נתנאל). כגלולה מלאה בתוך הצ׳יפ היא צמודה למה שהיא מתארת, ואי
+          אפשר שתחפוף כלום.
+        */}
+        {cd && cd.kind !== 'past' && (
+          <span className="rounded-full bg-sunset px-1.5 py-0.5 text-[11px] font-bold leading-none text-cream">
+            {cd.label}
+          </span>
+        )}
       </button>
-
-      {/* הספירה לאחור היא מידע, לא פקד - שורה שקטה מתחת, בלי גלולה משלה */}
-      {cd && cd.kind !== 'past' && (
-        <span className="pointer-events-none absolute -bottom-4 end-1 whitespace-nowrap text-[11px] font-bold text-sunset-deep">
-          {cd.label}
-        </span>
-      )}
 
       {open && (
         <div
