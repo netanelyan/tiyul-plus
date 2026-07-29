@@ -486,6 +486,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=47.97926,16.84689',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Outlet_Parndorf_-_panoramio.jpg/500px-Outlet_Parndorf_-_panoramio.jpg',
         source: {
           url: 'https://mapcarta.com/Designer_Outlet_Parndorf',
           title: 'Designer Outlet Parndorf, Burgenland (Mapcarta)',
@@ -833,6 +835,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=Stara+trznica+Bratislava',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Stara_Tr%C5%BEnica_-_panoramio.jpg/500px-Stara_Tr%C5%BEnica_-_panoramio.jpg',
       },
       {
         id: 'bts-synagogue',
@@ -1652,6 +1656,8 @@ export const destinations: Destination[] = [
         rating: 4.4,
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=Vaci+Utca',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Lto-bud2016-markthalle-au%C3%9Fen.jpg/500px-Lto-bud2016-markthalle-au%C3%9Fen.jpg',
       },
       {
         id: 'bud-carmel',
@@ -2101,6 +2107,8 @@ export const destinations: Destination[] = [
         rating: 4.7,
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=Vatican+Museums',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Down_the_Exit_Stairs_at_the_Vatican_Museum_-_panoramio.jpg/500px-Down_the_Exit_Stairs_at_the_Vatican_Museum_-_panoramio.jpg',
       },
       {
         id: 'rom-ghetto',
@@ -2949,6 +2957,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=37.98038,23.72763',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Varvakeios_Market_at_night_on_October_26%2C_2022.jpg/500px-Varvakeios_Market_at_night_on_October_26%2C_2022.jpg',
         source: {
           url: 'https://mapcarta.com/Varvakeios_Market',
           title: 'Varvakeios Market - Mapcarta (OpenStreetMap)',
@@ -3285,6 +3295,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=40.51831,-3.90118',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Restaurante_-_Las_Rozas_Village_-_Chic_outlet_shopping_%286926664573%29.jpg/500px-Restaurante_-_Las_Rozas_Village_-_Chic_outlet_shopping_%286926664573%29.jpg',
         source: {
           url: 'https://mapcarta.com/Las_Rozas_Village',
           title: 'Las Rozas Village, Madrid (Mapcarta)',
@@ -3446,6 +3458,8 @@ export const destinations: Destination[] = [
         rating: 4.4,
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=Barceloneta+Beach',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Morning_walk%2C_Platja_de_la_Barceloneta%2C_Barcelona%2C_2015.jpg/500px-Morning_walk%2C_Platja_de_la_Barceloneta%2C_Barcelona%2C_2015.jpg',
       },
       {
         id: 'bcn-batllo',
@@ -3513,6 +3527,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=41.37861,2.16208',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/536_Mercat_de_Sant_Antoni_i_restes_del_baluard_de_Sant_Antoni%2C_c._Comte_d%27Urgell_%28Barcelona%29.jpg/500px-536_Mercat_de_Sant_Antoni_i_restes_del_baluard_de_Sant_Antoni%2C_c._Comte_d%27Urgell_%28Barcelona%29.jpg',
         source: {
           url: 'https://ca.wikipedia.org/wiki/Mercat_de_Sant_Antoni',
           title: 'Mercat de Sant Antoni - Viquipedia',
@@ -3839,6 +3855,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=41.610716,2.343548',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/La_Roca_Village_Chic_Outlet_Shopping_%2815275593127%29.jpg/500px-La_Roca_Village_Chic_Outlet_Shopping_%2815275593127%29.jpg',
         source: {
           url: 'https://mapcarta.com/La_Roca_Village',
           title: 'La Roca Village, Catalonia (Mapcarta)',
@@ -5392,6 +5410,8 @@ export const destinations: Destination[] = [
         tags: ['families', 'art'],
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=25.21912,55.2821',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Museum_of_the_Future.jpg/500px-Museum_of_the_Future.jpg',
       },
       {
         id: 'dxb-burj-al-arab',
@@ -6673,6 +6693,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=7.89117,98.30173',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/BaanZan_Fish-Market_2011_-_panoramio.jpg/500px-BaanZan_Fish-Market_2011_-_panoramio.jpg',
         source: {
           url: 'https://mapcarta.com/Banzaan_Fresh_Market',
           title: 'Banzaan Fresh Market, Patong (Mapcarta)',
@@ -7249,6 +7271,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=43.26368,76.9552',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/2008_Green_bazaar_Almaty_meat_2471950021.jpg/500px-2008_Green_bazaar_Almaty_meat_2471950021.jpg',
         source: {
           url: 'https://www.openstreetmap.org/#map=19/43.26368/76.9552',
           title: 'Green Bazaar, Almaty (OpenStreetMap)',
@@ -8123,6 +8147,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=35.169165,33.366109',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Old_Nicosia_marketplace_%28Laiki_agora%29_-_panoramio.jpg/500px-Old_Nicosia_marketplace_%28Laiki_agora%29_-_panoramio.jpg',
         source: {
           url: 'https://mapcarta.com/W402345513',
           title: 'Oxi Market, Nicosia (Mapcarta)',
@@ -8417,6 +8443,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=34.912392,33.636075',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Larnaka_Municipal_Market_%E2%80%93_Agora.jpg/500px-Larnaka_Municipal_Market_%E2%80%93_Agora.jpg',
         source: {
           url: 'https://mapcarta.com/N5189441967',
           title: 'Larnaca Municipal Retail Market (Mapcarta)',
@@ -9382,6 +9410,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=35.51451,24.02028',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Chania_market.jpg/500px-Chania_market.jpg',
         source: {
           url: 'https://mapcarta.com/Municipal_Market_of_Chania',
           title: 'Municipal Market of Chania - Mapcarta (OpenStreetMap)',
@@ -10016,6 +10046,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=45.43959,12.33458',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Mercato_di_Rialto_en_d%C3%A9cembre_2022_%282%29.JPG/500px-Mercato_di_Rialto_en_d%C3%A9cembre_2022_%282%29.JPG',
         source: {
           url: 'https://mapcarta.com/Rialto_Market',
           title: 'Rialto Market - Mapcarta (OpenStreetMap)',
