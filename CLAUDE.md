@@ -5697,3 +5697,89 @@ dbpedia: הכיכר הראשית, כנסיית מריה, ואוול, קז׳ימ�
 **מצב הקטלוג:** 49 יעדים, 34 מדינות, 592 מקומות. tsc + build נקיים,
 בדיקת השפיות עברה 0 בעיות. כל מה שנוסף - בלי `photo`, ורשום
 ב-TODO תחת Photos pending.
+
+### 2026-07-28 (bb) - Food and shopping beyond kosher-only, and the guard that was only half built
+
+Netanel asked to open food and shopping past the kosher categories: curated, not
+comprehensive - a dish or product the city is known for, a market worth walking,
+somewhere you would regret missing. Twelve entries across Vienna, Rome, Bangkok
+and Barcelona, shown to him as a sample before scaling. **Merged to main.**
+
+**The load-bearing finding is not the content.** The brief assumed food in this
+catalog was kosher-only. It was not - it was kosher-*labelled* only. Twelve
+`cafe` and restaurant entries already existed with no kashrut statement at all:
+Café Central, Katz's, Café de Flore, Les Deux Magots, Caru cu Bere, Fortnum &
+Mason, Gerbeaud, Florian and others. And `filterKosherUnlessOptedIn` opened with
+
+    if (trip?.preferences?.kosher === true) return { ids, dropped: [] };
+
+so a traveller who had **chosen** kosher was never filtered at all. The function
+only ever protected people who had NOT opted in, from places they had not asked
+for. That was safe exactly as long as every food entry carried a `kosher-*`
+category, and it had already stopped being true. **A traveller who ticked כשר
+could be handed Katz's Delicatessen.**
+
+Fixed in all three injection paths - the agent (`create_trip_full`,
+`set_day_places`), `tripFromTemplate`, and `validateDayPlans` in
+`/api/generate-trip`. **`'unknown'` is blocked exactly like `'not-kosher'`:**
+"we do not know" is not "probably fine" when somebody is trusting us on kashrut.
+The two refusal messages to the model are deliberately different and there is a
+test asserting they cannot be confused, because telling the model "kosher was
+not selected" when the truth is the opposite makes it re-add what was just
+removed.
+
+**Schema, kept small.** Two categories (`food`, `market` - `market` earns its
+place because "a market worth walking" behaves nothing like a shop), a required
+`kosherStatus` on anything you eat at, and `PlaceSource { url, title, checked }`.
+**No existing kosher row was edited:** `kosherStatusOf()` derives `'kosher'` from
+the `kosher-*` category rather than reading a field, so the migration touched
+zero kosher entries. The twelve unlabelled non-kosher ones were backfilled -
+leaving them blank is what the new rule forbids and is also what made them
+reachable.
+
+**The rules Netanel set, enforced in `validate-catalog.mjs` rather than by
+habit:** an eating place with no kashrut status is an ERROR (0 remain); a
+`food`/`market` entry without a source is an ERROR; a malformed source date is an
+ERROR; opening hours or a price inside a food/market/cafe/shopping description is
+an ERROR; and an `externalUrl` that links by NAME instead of coordinates is an
+ERROR - the catalog has already been burned by "Cartagena" resolving to Spain and
+"Deira" to Northumbria. Seventeen legacy entries elsewhere mention a time; those
+are WARN, not ERROR, because rewriting other people's content was not the task.
+**One real hours claim was removed in scope:** On Lok Yun's description said it
+closes on Sundays.
+
+**What is deliberately absent from the twelve, and each is a decision:** no
+`priceLevel` (a 0-3 bucket is not a price, but he said no prices - flagged for
+his call; the cost is that these do not appear under the "מחירי אטרקציות"
+filter), no `rating` (inventing an editorial score for a café is a fabricated
+number), and no `photo` (an image URL cannot be verified from this sandbox, and
+151 dead URLs is what that produced last time).
+
+**Sources.** Coordinates from the Wikipedia coordinates API via the Chrome
+extension - en for Vienna/Rome/Bangkok, **ca.wikipedia for the three Barcelona
+markets**, which is where they actually have articles. `Mercato di Testaccio`,
+`Figlmüller` and `Casa Gispert` on en all came back missing; Testaccio and
+Figlmüller were dropped rather than pinned at the neighbourhood, Casa Gispert was
+recovered from ca. Vienna's three are all coffee houses on purpose - the Viennese
+coffee house is what the city's food identity IS, and Naschmarkt and Café Central
+were already in the catalog.
+
+**Verified:** 117 tests (7 new, one of which caught a naive assertion of my own -
+the not-opted-in message legitimately contains the substring "שומר כשרות" in its
+closing clause), validator 0 errors / 60 warnings, tsc and build clean (277
+pages), and **44/44 in a real browser** at 1440 and 390: all twelve render, the
+new `שוק` and `אוכל` chips exist and the latter is distinct from `אוכל כשר`, RTL
+intact, zero overflow. verify-photos: 1,529 of 1,546 from cache, 17 live checks
+all 403 - **this branch added zero photo URLs** (confirmed by grep), so those are
+the known-unrepairable backlog from entry (s) plus the sandbox block, not a
+regression.
+
+**Scaling is blocked on a decision, not on work.** Three entries per destination
+across the remaining 162 is roughly 500 places ≈ 72,000 index chars, against
+~41,000 of headroom under the 260,000 ceiling. **It does not fit.** The options
+are priority cities only, fewer per city, or raising the ceiling - and that is
+Netanel's call, not something to discover halfway through.
+
+**Still open, unchanged:** the 18 dead photo URLs; `kosher-market` and the `cafe`
+gaps blocked on geocoding; the 2.5MB client bundle; and `feat/catalog-supabase`,
+which stays unmerged by his instruction until he reviews it himself.
