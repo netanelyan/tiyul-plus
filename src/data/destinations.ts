@@ -4001,6 +4001,18 @@ export const destinations: Destination[] = [
       kosherOverview:
         'קהילה יהודית ותיקה עם מסעדת מכבי הכשרה, חב"ד פעיל וההיסטוריה של אל קול - הרובע היהודי מימי הביניים. פחות שפע מרומא או בודפשט, אבל מסתדרים; רבים משלבים בישול עצמי עם מוצרים כשרים מהסופר.',
     },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [65, 65],
+      midRange: [20, 90],
+      scope: 'city',
+      upperBoundOnly: true,
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/spain-travel-tips/barcelona/',
+        title: 'Barcelona Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'berlin',
@@ -9341,6 +9353,17 @@ export const destinations: Destination[] = [
       kosherOverview:
         'אין כיום תשתית כשרות של ממש בסנטוריני ובמיקונוס: אין מסעדות כשרות קבועות ואין בית חב״ד באיים. מי שמקפיד על כשרות נוהג להצטייד באתונה, שבה יש מסעדה כשרה ובית חב״ד, או להביא מזון מישראל. באיים אפשר להסתמך על דגים, ירקות ומוצרים ארוזים עם הכשר, אבל זו היערכות מראש ולא משהו שמסתדר במקום. לוודא מול המקום ומול חב״ד יוון לפני הנסיעה.',
     },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [10, 54],
+      midRange: [20, 80],
+      scope: 'city',
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/greece-travel-tips/santorini/',
+        title: 'Santorini Travel Guide - Suggested Budgets (Nomadic Matt) - Santorini only, Mykonos prices differ',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'crete',
@@ -9929,6 +9952,18 @@ export const destinations: Destination[] = [
         'בעיר: מטרו (U-Bahn) ורכבת קלה (S-Bahn) מצוינות. לאלפים (נוישוונשטיין, צוגשפיצה, קניגסזה) - רכב שכור נוח בהרבה, אם כי חלק מהאתרים נגישים גם ברכבת + אוטובוס או בטיול מאורגן.',
       kosherOverview:
         'למינכן, הקהילה היהודית השנייה בגודלה בגרמניה, תשתית כשרות אמיתית: מסעדת איינשטיין הגלאט-כשרה במרכז הקהילתי, בית חב"ד, וכמה נקודות כשרות נוספות. מומלץ להזמין מקום מראש ולוודא שעות (יש מעבר ביטחוני בכניסה למרכז הקהילתי).',
+    },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [65, 65],
+      midRange: [150, 150],
+      scope: 'city',
+      upperBoundOnly: true,
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/germany-travel-tips/munich/',
+        title: 'Munich Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -22236,7 +22271,9 @@ export const destinations: Destination[] = [
     },
     dailyBudget: {
       currency: 'EUR',
+      budget: [15, 15],
       midRange: [10, 45],
+      upperBoundOnly: true,
       source: {
         url: 'https://www.nomadicmatt.com/travel-guides/bulgaria-travel-tips/plovdiv/',
         title: 'Plovdiv Travel Guide - Suggested Budgets (Nomadic Matt)',
@@ -25778,6 +25815,17 @@ export const destinations: Destination[] = [
       kosherOverview:
         'בעמק הדוארו עצמו אין תשתית כשרות. הקהילה היהודית הקרובה פועלת בפורטו, ונכון לברר מולה בטלפון לפני הנסיעה מה זמין בפועל בתאריכים שלכם. בפרקטיקה רוב המטיילים ששומרים כשרות קונים מראש בפורטו ונוסעים עם אוכל. חשוב לדעת שבמטבח הצפון-פורטוגלי בשר חזיר מופיע בכמעט כל מנה, גם במנות ששמן לא מרמז על כך.',
     },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [22, 30],
+      midRange: [50, 80],
+      scope: 'city',
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/portugal/porto/',
+        title: 'Porto Travel Guide - Suggested Budgets (Nomadic Matt) - Porto, the port city of the Douro',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'gdansk-pomerania',
@@ -27155,6 +27203,8 @@ export const destinations: Destination[] = [
     dailyBudget: {
       currency: 'USD',
       budget: [15, 40],
+      midRange: [105, 105],
+      upperBoundOnly: true,
       source: {
         url: 'https://www.nomadicmatt.com/travel-guides/united-states-travel-guide/boston/',
         title: 'Boston Travel Guide - Suggested Budgets (Nomadic Matt)',
@@ -27562,6 +27612,17 @@ export const destinations: Destination[] = [
         'רכב שכור הוא חובה מעשית. אין תחבורה ציבורית שמחברת בין המנזרים ובין כפרי מרמורש, והמרחקים איטיים בגלל מצב הכבישים ותנועה של רכב חקלאי. בחורף נדרשים צמיגי חורף ולעתים הדרכים המשניות חסומות.',
       kosherOverview:
         'באזור אין תשתית כשרות. הקהילות היהודית המאורגנות ברומניה נמצאות בבוקרשט ובכמה ערים גדולות, וגם שם ההיצע מוגבל, ולכן נכון לברר טלפונית מראש מה זמין בפועל ולתכנן קניות בהתאם. באזור עצמו מי ששומר כשרות מגיע עם מזון. חשוב לדעת שבמטבח הרומני הכפרי בשר חזיר ושומן חזיר הם מרכיב בסיסי כמעט בכל מנה, כולל במרקים ובמנות ירקות.',
+    },
+    dailyBudget: {
+      currency: 'RON',
+      budget: [70, 90],
+      midRange: [135, 175],
+      scope: 'country',
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/romania-travel-tips/',
+        title: 'Romania Travel Guide - Suggested Budgets (Nomadic Matt) - country-level',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -29268,6 +29329,17 @@ export const destinations: Destination[] = [
       gettingAround: 'רכב שכור הוא כמעט חובה, כי רוב האתרים כאן לא מקושרים בתחבורה ציבורית סבירה. הכבישים הראשיים מצוינים אבל המשניים צרים ומפותלים והנסיעה איטית מהצפוי. מדבקת כביש אגרה נדרשת לנסיעה בכבישים המהירים וקונים אותה בתחנות דלק. חניה ברוב האתרים זמינה וזולה.',
       kosherOverview: 'הקהילה היהודית בסלובניה קטנה מאוד ומרוכזת בליובליאנה, ואין באזורים האלה שום מסעדה או חנות כשרה שאפשר להתחייב עליה. מי שצריך כשרות צריך לתכנן קניות מראש, לינה עם מטבחון, ומוצרים ארוזים עם הכשר אירופי מהסופרים הגדולים. חשוב לדעת שבשר חזיר, נקניקים מיובשים ושומן חזיר הם בסיס המטבח הסלובני ומופיעים גם במרקים ובמנות ירקות. תמיד יש לאמת טלפונית מול הקהילה בליובליאנה או בזאגרב לפני הנסיעה.',
     },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [28, 34],
+      midRange: [70, 85],
+      scope: 'country',
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/slovenia-travel-guide/',
+        title: 'Slovenia Travel Guide - Suggested Budgets (Nomadic Matt) - country-level',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'finnish-lakeland',
@@ -29473,6 +29545,17 @@ export const destinations: Destination[] = [
       flights: 'אין טיסות ישירות לאזור. טסים להלסינקי ומשם רכבת לסאוונלינה או לקוופיו (כשלוש עד ארבע שעות), או נהיגה עצמאית.',
       gettingAround: 'רכב שכור הוא כמעט הכרחי. הרכבות מחברות רק בין הערים הגדולות, ולפארקים הלאומיים אין תחבורה ציבורית מעשית. מרחקים במפה מטעים כי הכבישים עוקפים אגמים.',
       kosherOverview: 'אין שום תשתית כשרות באזור האגמים, וגם לא קהילה יהודית. הקהילה היחידה הפעילה בפינלנד היא בהלסינקי, ושם בלבד אפשר לנסות להשיג מוצרים כשרים - וגם זה בתיאום טלפוני מראש. המטבח המקומי מבוסס על חזיר, דגים ובשר אייל צפוני. מומלץ מאוד להגיע עם מלאי מהארץ ולשכור צימר עם מטבחון. אין להסתמך על שום עסק בלי לוודא בעצמכם לפני הנסיעה.',
+    },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [27, 45],
+      midRange: [65, 85],
+      scope: 'country',
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/finland-travel-guide/',
+        title: 'Finland Travel Guide - Suggested Budgets (Nomadic Matt) - country-level',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -29694,6 +29777,17 @@ export const destinations: Destination[] = [
       gettingAround: 'רכב שכור הכרחי. המעבורות לסארמה יוצאות מוויראטסו והן פועלות לפי לוח זמנים קבוע, אך בקיץ יש להזמין מקום לרכב מראש. הכבישים באיים צרים ובחלקם לא סלולים.',
       kosherOverview: 'אין כשרות באזור, אין מסעדות כשרות ואין קהילה יהודית מחוץ לטאלין. בטאלין פועלת קהילה קטנה ובית כנסת, וזו האפשרות היחידה במדינה לנסות להשיג מוצרים כשרים - בתיאום מראש בלבד. המטבח האסטוני נשען על חזיר, נקניקי דם ודגים מעושנים. הפתרון המעשי הוא מלאי מהארץ ולינה עם מטבחון. אין להסתמך על שום עסק בלי בדיקה טלפונית שלכם לפני הנסיעה.',
     },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [20, 25],
+      midRange: [80, 80],
+      scope: 'country',
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/estonia-travel-guide/',
+        title: 'Estonia Travel Guide - Suggested Budgets (Nomadic Matt) - country-level',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'kurzeme-zemgale',
@@ -29872,6 +29966,17 @@ export const destinations: Destination[] = [
       flights: 'טסים לריגה, שיש אליה טיסות ישירות מתל אביב בחלק מהעונות, ומשם נוסעים מערבה או דרומה. כל האתרים באזור נמצאים בטווח של שעה עד שלוש שעות נהיגה מריגה.',
       gettingAround: 'רכב שכור הוא הכרחי. יש אוטובוסים בין הערים הגדולות אבל לא לפארקים ולחופים. חלק מדרכי הצד באזור החוף עדיין לא סלולות.',
       kosherOverview: 'אין כשרות בקורזמה ובזמגאלה. הקהילה היהודית היחידה הפעילה בלטביה נמצאת בריגה, ושם יש בית כנסת ואפשרות לנסות להשיג מוצרים כשרים בתיאום מראש. בליאפיה ובקולדיגה נותרו סימנים לקהילות יהודיות היסטוריות אך אין תשתית כשרות פעילה. המטבח הלטבי מבוסס על חזיר, נקניקים ודגים מעושנים. קחו מלאי מהארץ, שכרו לינה עם מטבחון, ואל תסתמכו על שום עסק בלי לוודא טלפונית בעצמכם לפני הנסיעה.',
+    },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [19, 30],
+      midRange: [70, 95],
+      scope: 'country',
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/latvia-travel-guide/',
+        title: 'Latvia Travel Guide - Suggested Budgets (Nomadic Matt) - country-level',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -30057,6 +30162,17 @@ export const destinations: Destination[] = [
       flights: 'טסים לווילנה או לקובנה ונוסעים מערבה כשלוש עד ארבע שעות, או טסים לפאלנגה בקונקשן פנימי. יש גם רכבות מווילנה לקלייפדה.',
       gettingAround: 'רכב שכור מומלץ מאוד. אל הלשון הקורונית מגיעים במעבורת מקלייפדה, ויש אגרת כניסה נפרדת לרכב. באזור הדלתא חלק מהדרכים מוצפות באביב.',
       kosherOverview: 'אין תשתית כשרות במערב ליטא. הקהילה היהודית הפעילה במדינה מרוכזת בווילנה, ושם יש בית כנסת ואפשרות לנסות להשיג מוצרים כשרים בתיאום מראש. באזור החוף אין דבר. המטבח הליטאי נשען מאוד על חזיר, שמנת ונקניקים, ואפילו מנות שנראות צמחוניות מכילות לעיתים קרובות חלקי חזיר. הפתרון המעשי הוא מלאי מהארץ ולינה עם מטבחון. בדקו כל עסק בעצמכם טלפונית לפני הנסיעה.',
+    },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [29, 32],
+      midRange: [60, 85],
+      scope: 'country',
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/lithuania-travel-guide/',
+        title: 'Lithuania Travel Guide - Suggested Budgets (Nomadic Matt) - country-level',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -30248,6 +30364,17 @@ export const destinations: Destination[] = [
       flights: 'טסים לסופיה או לוארנה, שתיהן עם קווים ישירים מתל אביב בעונה. סופיה נוחה יותר לחלק המערבי של המסלול, וארנה לחלק המזרחי.',
       gettingAround: 'רכב שכור הכרחי. הכבישים הראשיים סבירים, אבל דרכי הצד אל האתרים ההרריים לעיתים במצב גרוע. בחורף נדרשים צמיגי חורף לפי חוק.',
       kosherOverview: 'אין תשתית כשרות בצפון בולגריה. הקהילה היהודית המאורגנת של המדינה נמצאת בסופיה, שם יש בית כנסת גדול ואפשרות לנסות להשיג מוצרים כשרים בתיאום מראש; בוארנה ובפלובדיב יש קהילות קטנות. במסלול עצמו אין דבר. המטבח הבולגרי כולל הרבה חזיר ונקניקים, אך גם מגוון רחב של סלטים, גבינות וירקות שמקלים על צמחונים. קחו מלאי מהארץ ובדקו כל עסק בעצמכם לפני הנסיעה.',
+    },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [5, 20],
+      midRange: [10, 45],
+      scope: 'country',
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/bulgaria/',
+        title: 'Bulgaria Travel Guide - Suggested Budgets (Nomadic Matt) - country-level',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -32109,6 +32236,17 @@ export const destinations: Destination[] = [
         'רכב שכור הוא הכרחי, התחבורה הציבורית באזור דלילה ואיטית. הכבישים סלולים אך צרים ומפותלים בין העמקים, ויש קטעי עפר בגישה לאתרי טבע. המעבר בין הפדרציה לרפובליקה הסרפסקה חופשי ואינו גבול, אבל השילוט והכתב משתנים. אין לצאת מהשבילים או מהשוליים באזורים כפריים בשל שרידי מוקשים, ולכבד כל שילוט אזהרה.',
       kosherOverview:
         'אין מסעדה או חנות כשרה בצפון-מערב בוסניה. הקהילה היהודית היחידה במדינה עם פעילות מסודרת נמצאת בסרייבו, שם פועל בית הכנסת האשכנזי והמוזיאון היהודי, וכדאי לפנות אליה בטלפון מראש לגבי אספקה. המטבח הבוסני מבוסס מאוד על בשר: צ׳באפי, בורק בשר וגריל, וברפובליקה הסרפסקה חזיר נפוץ מאוד בעוד שבחלקים המוסלמיים הוא נדיר יותר - בשני המקרים הבשר אינו כשר וכלי הבישול משותפים. לצמחונים יש בסיס סביר של בורק גבינה ותרד, סלטים, איוור, שעועית וירקות בגריל, אך יש לברר על שומן ומרק בשר. מומלץ לוודא כל פרט בטלפון לפני הנסיעה.',
+    },
+    dailyBudget: {
+      currency: 'BAM',
+      budget: [57, 66],
+      midRange: [130, 130],
+      scope: 'country',
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/bosnia-herzegovina-travel-guide/',
+        title: 'Bosnia & Herzegovina Travel Guide - Suggested Budgets (Nomadic Matt) - country-level',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -35192,6 +35330,17 @@ export const destinations: Destination[] = [
       kosherOverview:
         'באזור אין שום מערך כשרות. בקולומבו פועל בית חב"ד שמשמש עוגן למטיילים ישראלים, וזו הכתובת המעשית היחידה במדינה - יש לפנות בטלפון מראש כדי לברר מה זמין ואם אפשר להזמין ארוחות או אספקה לדרך. המטבח הסרי לנקי נוח יחסית: "רייס אנד קארי" מוגש כמערך של תבשילי ירקות וקטניות, והבסיס הוא אורז, עדשים, קוקוס וירקות. עם זאת, רוטב דגים ומאלדיב פיש, שבבי דג מיובש, מפוזרים בהרבה מנות שנראות צמחוניות, אז חובה לשאול ספציפית. פירות טרופיים ומוצרים ארוזים עם הכשר בינלאומי בסופרים הגדולים בקולומבו הם הגיבוי.',
     },
+    dailyBudget: {
+      currency: 'LKR',
+      budget: [5700, 7700],
+      midRange: [11500, 15000],
+      scope: 'country',
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/sri-lanka-travel-tips/',
+        title: 'Sri Lanka Travel Guide - Suggested Budgets (Nomadic Matt) - country-level',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'hill-country-south-coast',
@@ -35409,6 +35558,17 @@ export const destinations: Destination[] = [
         'רכב עם נהג הוא שוב הפתרון המעשי, במיוחד לפארקים שבהם ממילא צריך ג׳יפ מקומי בכניסה. את קטע הרכבת קנדי-נאנו אויה-אלה כדאי לעשות ברכבת ולתאם שהנהג יאסוף בתחנה. לאורך החוף הדרומי הרכבת הישנה איטית אך ציורית וזולה מאוד. הזמנת כרטיסי מחלקה שמורה מראש היא ההבדל בין נסיעה נהדרת לשש שעות בעמידה.',
       kosherOverview:
         'אין כשרות באזור. בית חב"ד בקולומבו הוא הכתובת היחידה במדינה ויש ליצור קשר מראש. בחוף הדרומי ובאזור התה יש נוכחות ישראלית קיצית אך לא מערך מסודר ולא הכשר. במטבח המקומי הבסיס הצמחוני נוח - אורז, קארי עדשים, ירקות בקוקוס, רוטי ופירות - אבל שבבי דג מיובש ורוטב דגים נוכחים בהרבה תבשילים שנראים צמחוניים, ובחוף הדרומי הדגש הוא ממילא על דגים ופירות ים. חשוב לשאול ספציפית על מאלדיב פיש. בסופרמרקטים בקולומבו ובגאלה יש מוצרים ארוזים עם הכשר בינלאומי.',
+    },
+    dailyBudget: {
+      currency: 'LKR',
+      budget: [5700, 7700],
+      midRange: [11500, 15000],
+      scope: 'country',
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/sri-lanka-travel-tips/',
+        title: 'Sri Lanka Travel Guide - Suggested Budgets (Nomadic Matt) - country-level',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -36885,6 +37045,8 @@ export const destinations: Destination[] = [
     dailyBudget: {
       currency: 'ARS',
       budget: [5000, 20000],
+      midRange: [40000, 40000],
+      upperBoundOnly: true,
       source: {
         url: 'https://www.nomadicmatt.com/travel-guides/argentina-travel-tips/buenos-aires/',
         title: 'Buenos Aires Travel Guide - Suggested Budgets (Nomadic Matt)',
@@ -37285,6 +37447,17 @@ export const destinations: Destination[] = [
       flights: 'אין טיסות ישירות מישראל. מגיעים בקונקשן, בדרך כלל דרך אירופה או דרך מיאמי ואטלנטה, אל שדה התעופה של סן חוסה. יש גם שדה שני בליבריה בצפון מערב, שנוח יותר למי שמתחיל את המסלול באזור רינקון דה לה ויאחה ובחופי הצפון.',
       gettingAround: 'רכב שכור נותן את החופש הגדול ביותר, אך חשוב לדעת שתי נקודות: ביטוח צד שלישי מקומי הוא חובה ומתווסף למחיר שמופיע באתרי ההשוואה ולכן המחיר הסופי גבוה בהרבה, ורכב גבוה נדרש לחלק מהדרכים, בעיקר בעונת הגשמים. הכבישים מפותלים ואיטיים ונהיגה בלילה מחוץ לערים אינה מומלצת בגלל תאורה חסרה ובורות. לחלופין יש רשת אוטובוסים תיירותיים משותפים שמחברת את כל היעדים בדף הזה מדלת לדלת, וזו אפשרות נוחה ולא יקרה. אל טורטוגרו מגיעים רק בסירה או בטיסה קטנה.',
       kosherOverview: 'הקהילה היהודית בקוסטה ריקה מרוכזת בסן חוסה ובשכונת רורמוסר, ובה בתי כנסת פעילים ופעילות קהילתית, וזהו המקום היחיד במדינה שבו ניתן לארגן אוכל בהשגחה. גם שם ההיצע מצומצם ותלוי בתיאום מראש בטלפון, ואין להסתמך על שעות פתיחה שמופיעות ברשת. מחוץ לבירה, ובכל היעדים שבדף הזה, אין שום מקור לאוכל כשר. הצד החיובי הוא שהמטבח המקומי נוח יחסית: הבסיס הוא אורז, שעועית שחורה, בננות מטוגנות, ביצים וירקות, ופירות טרופיים בכל מקום, כך שקל להתבסס על מזון צמחי. עדיין יש לשאול לגבי שומן חזיר ולגבי מרק בשר שמופיעים לעיתים גם במנות שנראות צמחוניות, ובסופרמרקטים הגדולים אפשר למצוא מוצרים ארוזים עם הכשרים בינלאומיים.',
+    },
+    dailyBudget: {
+      currency: 'USD',
+      budget: [25, 35],
+      midRange: [75, 95],
+      scope: 'country',
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/costa-rica-travel-tips/',
+        title: 'Costa Rica Travel Guide - Suggested Budgets (Nomadic Matt) - country-level',
+        checked: '2026-07-29',
+      },
     },
   },
   {
@@ -39687,6 +39860,18 @@ export const destinations: Destination[] = [
       kosherOverview:
         'פריז היא אחת הערים הכי נוחות בעולם לשומרי כשרות מחוץ לישראל, בזכות קהילה יהודית גדולה. יש עשרות בתי עסק כשרים, בעיקר במארה סביב רחוב הרוזייה, ברובע ה-19 סביב שדרות סקרטן, וברובע ה-17. הסופרמרקטים הכשרים מחזיקים מגוון רחב, ואפשר להסתדר גם בלי להביא אוכל מהארץ. חשוב לדעת שההשגחות שונות זו מזו ומתחלפות מדי פעם, ושרוב המקומות סגורים בשבת ופתוחים בראשון, כך שתכנון ארוחות סוף השבוע נעשה מראש בימי חמישי ושישי.',
     },
+    dailyBudget: {
+      currency: 'EUR',
+      budget: [40, 40],
+      midRange: [75, 75],
+      scope: 'city',
+      upperBoundOnly: true,
+      source: {
+        url: 'https://www.nomadicmatt.com/travel-guides/france-travel-tips/paris/',
+        title: 'Paris Travel Guide - Suggested Budgets (Nomadic Matt)',
+        checked: '2026-07-29',
+      },
+    },
   },
   {
     slug: 'edinburgh',
@@ -40989,7 +41174,9 @@ export const destinations: Destination[] = [
     },
     dailyBudget: {
       currency: 'EUR',
+      budget: [35, 35],
       midRange: [70, 110],
+      upperBoundOnly: true,
       source: {
         url: 'https://www.nomadicmatt.com/travel-guides/malta-travel-guide/',
         title: 'Malta Travel Guide - Suggested Budgets (Nomadic Matt)',

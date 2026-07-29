@@ -165,6 +165,13 @@ export interface DailyBudget {
   budget?: [number, number]; // טווח; ערך יחיד נרשם כשני קצוות זהים
   midRange?: [number, number];
   comfortable?: [number, number]; // ראה ההערה למעלה - ריק בכוונה
+  // באיזו רזולוציה נמדד המספר. 'country' = המקור מפרסם ברמת המדינה בלבד
+  // והיעד הוא אזור בתוכה, כלומר המספר גס יותר מהיעד. נרשם במפורש כדי
+  // שלא ייקרא כמו מדידה של אותה עיר.
+  scope?: 'city' | 'country';
+  // true כשההפרש מול הקצה העליון של מחיר הלינה יצא אפס או שלילי, ולכן
+  // הופחת רק הקצה התחתון. התוצאה היא חסם עליון (ערך יחיד), לא טווח.
+  upperBoundOnly?: boolean;
   source: PlaceSource;
 }
 
