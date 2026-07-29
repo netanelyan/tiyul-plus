@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import Flag from '@/components/Flag';
 import type { SearchHits, SearchKind, SearchResult } from '@/lib/siteSearch';
+import { OFFLINE_HINT, useOnline } from '@/lib/offline/online';
 
 // כותרות הקבוצות מוגדרות כאן ולא מיובאות מ-`siteSearch`: כל ייבוא ערך
 // (לא-type) מהמודול ההוא היה גורר את כל הקטלוג לתוך ה-bundle הראשי
@@ -66,6 +67,13 @@ export default function SiteSearch({
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  /**
+   * חיפוש האתר סורק את **כל** הקטלוג, שנטען כאן ב-`import()` דינמי
+   * ואינו נשמר במכשיר בכוונה (רק הערים של הטיול נשמרות). בלי רשת אין
+   * מה לחפש בו, ולכן הכפתור מושבת ואומר זאת - במקום להיפתח על חלונית
+   * שנתקעת ריקה, שזה בדיוק "נראה שבור".
+   */
+  const offline = !useOnline();
 
   // הדאטה נטענת רק כשבאמת פותחים חיפוש
   useEffect(() => {
@@ -96,12 +104,13 @@ export default function SiteSearch({
     const onKey = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
+        if (offline) return;
         setOpen((v) => !v);
       } else if (e.key === 'Escape') setOpen(false);
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, []);
+  }, [offline]);
 
   const hits = useMemo(() => (search ? search(query) : { results: [], omitted: 0 }), [search, query]);
   /**
@@ -146,15 +155,21 @@ export default function SiteSearch({
     variant === 'field' ? (
       <button
         onClick={() => setOpen(true)}
-        className="flex w-full items-center gap-2.5 rounded-2xl border border-night/15 bg-shell px-4 py-3 text-start text-night/45 shadow-inner transition hover:border-sunset/40 hover:text-night/60"
+        disabled={offline}
+        title={offline ? OFFLINE_HINT : undefined}
+        className="flex w-full items-center gap-2.5 rounded-2xl border border-night/15 bg-shell px-4 py-3 text-start text-night/45 shadow-inner transition enabled:hover:border-sunset/40 enabled:hover:text-night/60 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <SearchIcon />
-        <span className="text-sm font-medium">חיפוש יעד, עיר או מקום…</span>
+        <span className="text-sm font-medium">
+          {offline ? 'חיפוש בקטלוג דורש חיבור' : 'חיפוש יעד, עיר או מקום…'}
+        </span>
       </button>
     ) : variant === 'menu-row' ? (
       <button
         onClick={() => setOpen(true)}
-        className="flex w-full items-center gap-2 rounded-xl px-4 py-2.5 text-start font-medium text-night/80 transition hover:bg-night/5"
+        disabled={offline}
+        title={offline ? OFFLINE_HINT : undefined}
+        className="flex w-full items-center gap-2 rounded-xl px-4 py-2.5 text-start font-medium text-night/80 transition enabled:hover:bg-night/5 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <SearchIcon />
         חיפוש
@@ -163,8 +178,9 @@ export default function SiteSearch({
       <button
         onClick={() => setOpen(true)}
         aria-label="חיפוש באתר"
-        title="חיפוש באתר (Ctrl+K)"
-        className="flex h-9 w-9 items-center justify-center rounded-full text-night/70 transition hover:bg-night/5 hover:text-night"
+        disabled={offline}
+        title={offline ? OFFLINE_HINT : 'חיפוש באתר (Ctrl+K)'}
+        className="flex h-9 w-9 items-center justify-center rounded-full text-night/70 transition enabled:hover:bg-night/5 enabled:hover:text-night disabled:cursor-not-allowed disabled:opacity-50"
       >
         <SearchIcon />
       </button>
@@ -174,7 +190,10 @@ export default function SiteSearch({
     <>
       {trigger}
 
+      {/* נותק החיבור בזמן שהחלונית פתוחה - היא נעלמת מיד, במקום להישאר
+          פתוחה מעל חיפוש שלא יחזיר כלום */}
       {open &&
+        !offline &&
         typeof document !== 'undefined' &&
         createPortal(
           <div

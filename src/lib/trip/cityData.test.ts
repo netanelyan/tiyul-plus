@@ -72,3 +72,39 @@ test('כישלון רשת לא מסמן את העיר כחסרה - הניסיו�
   assert.deepEqual(await fetchCities(['rome']), []);
   assert.equal(calls.length, 2);
 });
+
+/* ---------- פתיחה מחדש בלי רשת ---------- */
+
+/**
+ * זה **הטסט של הפיצ׳ר כולו**: העיר נטענה פעם אחת כשהייתה רשת, האפליקציה
+ * נסגרה (המטמון בזיכרון נמחק), והיא נפתחת שוב בלי רשת בכלל. אם המסלול לא
+ * מצויר כאן, מי שעומד ברחוב בעיר זרה מקבל מסך טעינה שלא ייגמר.
+ */
+test('עיר שנטענה כשהייתה רשת נקראת אחרי סגירה ופתיחה מחדש - בלי רשת', async () => {
+  const data = new Map<string, string>();
+  globalThis.window = {
+    localStorage: {
+      getItem: (k: string) => data.get(k) ?? null,
+      setItem: (k: string, v: string) => void data.set(k, v),
+      removeItem: (k: string) => void data.delete(k),
+    },
+  } as unknown as Window & typeof globalThis;
+
+  // --- מחוברים: העיר נטענת ונשמרת ---
+  await fetchCities(['rome']);
+  assert.equal(calls.length, 1);
+
+  // --- האפליקציה נסגרה ונפתחה: אין מטמון בזיכרון, ואין רשת בכלל ---
+  __resetCityCache();
+  globalThis.fetch = async () => {
+    calls.push('network-while-offline');
+    throw new Error('offline');
+  };
+
+  assert.equal(cachedCity('rome')?.slug, 'rome');
+  // ולא נשלחה שום בקשה כדי לגלות את זה
+  assert.equal(calls.length, 1);
+
+  // @ts-expect-error - ניקוי, כדי לא לדלוף לטסטים אחרים בקובץ
+  delete globalThis.window;
+});

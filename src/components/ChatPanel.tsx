@@ -7,6 +7,7 @@ import { fileToChatImage, IMAGE_ACCEPT } from '@/lib/trip/imageAttach';
 import { cachedCity, fetchCities } from '@/lib/trip/cityData';
 import PlacesMap from '@/components/PlacesMap';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
+import { OFFLINE_HINT, useOnline } from '@/lib/offline/online';
 
 /**
  * פאנל השיחה עם הסוכן - תצוגה בלבד. ה-state יושב ב-useTripChat אצל
@@ -107,8 +108,16 @@ export default function ChatPanel({
     setPending(data);
   };
 
+  /**
+   * הסוכן הוא הדבר היחיד באתר שאי אפשר להגיש מהמטמון: תשובה של מודל
+   * נוצרת בשרת בכל פעם מחדש. אין תור, אין ספינר ואין שגיאה גולמית -
+   * שורת הכתיבה נראית מושבתת ואומרת בעברית שצריך חיבור.
+   */
+  const online = useOnline();
+  const offline = !online;
+
   const submit = () => {
-    if (reading) return;
+    if (reading || offline) return;
     const image = pending ?? undefined;
     setPending(null);
     setImgError(null);
@@ -150,8 +159,9 @@ export default function ChatPanel({
               }
             }}
             aria-label="ניקוי השיחה"
-            title="ניקוי השיחה - הטיול נשאר"
-            className="flex h-8 shrink-0 items-center gap-1 rounded-full bg-night/5 px-2.5 text-xs font-semibold text-night/55 transition hover:bg-night/10 hover:text-night"
+            disabled={offline}
+            title={offline ? OFFLINE_HINT : 'ניקוי השיחה - הטיול נשאר'}
+            className="flex h-8 shrink-0 items-center gap-1 rounded-full bg-night/5 px-2.5 text-xs font-semibold text-night/55 transition enabled:hover:bg-night/10 enabled:hover:text-night disabled:cursor-not-allowed disabled:opacity-45"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5" aria-hidden>
               <path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" strokeLinecap="round" strokeLinejoin="round" />
@@ -191,7 +201,9 @@ export default function ChatPanel({
                 <button
                   key={s}
                   onClick={() => send(s)}
-                  className="rounded-full bg-shell px-3 py-1.5 text-xs font-semibold text-night/70 ring-1 ring-sunset/30 transition hover:bg-sunset/10 hover:text-night"
+                  disabled={offline}
+                  title={offline ? OFFLINE_HINT : undefined}
+                  className="rounded-full bg-shell px-3 py-1.5 text-xs font-semibold text-night/70 ring-1 ring-sunset/30 transition enabled:hover:bg-sunset/10 enabled:hover:text-night disabled:cursor-not-allowed disabled:opacity-45"
                 >
                   {s}
                 </button>
@@ -312,6 +324,16 @@ export default function ChatPanel({
         )}
         {imgError && <p className="mb-2 text-xs font-semibold text-sunset-deep">{imgError}</p>}
 
+        {/* אמירה אחת, שקטה, במקום קלט שנראה תקין ולא עושה כלום */}
+        {offline && (
+          <p
+            role="status"
+            className="mb-2 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold leading-relaxed text-night/60"
+          >
+            הסוכן צריך חיבור לאינטרנט. אפשר לקרוא את השיחה השמורה - לא לשלוח הודעה חדשה.
+          </p>
+        )}
+
         <div className="flex gap-2">
           <input
             ref={fileRef}
@@ -326,10 +348,10 @@ export default function ChatPanel({
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
-            disabled={loading || reading}
+            disabled={loading || reading || offline}
             aria-label="צירוף תמונה (אישור הזמנה, כרטיס)"
-            title="צירוף תמונה - אישור הזמנה, כרטיס טיסה, צילום מסך"
-            className="shrink-0 rounded-xl bg-cream px-3 py-3 text-base text-night/60 ring-1 ring-night/10 transition hover:bg-sunset/10 hover:text-night disabled:opacity-40"
+            title={offline ? OFFLINE_HINT : 'צירוף תמונה - אישור הזמנה, כרטיס טיסה, צילום מסך'}
+            className="shrink-0 rounded-xl bg-cream px-3 py-3 text-base text-night/60 ring-1 ring-night/10 transition enabled:hover:bg-sunset/10 enabled:hover:text-night disabled:cursor-not-allowed disabled:opacity-40"
           >
             {reading ? '…' : '📎'}
           </button>
@@ -337,14 +359,18 @@ export default function ChatPanel({
             value={input}
             autoFocus={autoFocus}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="תוסיף יום, תחליף מקום, מה כשר באזור…"
+            disabled={offline}
+            placeholder={
+              offline ? 'אין חיבור - השליחה מושבתת' : 'תוסיף יום, תחליף מקום, מה כשר באזור…'
+            }
             aria-label="בקשה לסוכן"
-            className="min-w-0 flex-1 rounded-xl bg-cream px-4 py-3 text-base sm:text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset"
+            className="min-w-0 flex-1 rounded-xl bg-cream px-4 py-3 text-base sm:text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset disabled:cursor-not-allowed disabled:opacity-55"
           />
           <button
             type="submit"
-            disabled={loading || reading || (!input.trim() && !pending)}
-            className="shrink-0 rounded-xl bg-sunset px-4 py-3 text-sm font-bold text-cream transition hover:bg-sunset-deep disabled:opacity-40"
+            disabled={loading || reading || offline || (!input.trim() && !pending)}
+            title={offline ? OFFLINE_HINT : undefined}
+            className="shrink-0 rounded-xl bg-sunset px-4 py-3 text-sm font-bold text-cream transition enabled:hover:bg-sunset-deep disabled:cursor-not-allowed disabled:opacity-40"
           >
             שליחה
           </button>

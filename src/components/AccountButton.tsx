@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useAuth } from '@/lib/auth/AuthContext';
 import Logo from '@/components/Logo';
 import { travelerLevel } from '@/data/worldCountries';
+import { OFFLINE_HINT, useOnline } from '@/lib/offline/online';
 
 /**
  * חשבון המשתמש בניווט + מודל ההתחברות.
@@ -24,6 +25,12 @@ export default function AccountButton() {
   const auth = useAuth();
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  /**
+   * התחברות היא קוד חד-פעמי במייל - כלומר שרת. בלי רשת הכפתור מושבת
+   * ואומר זאת, במקום לפתוח טופס ששולח לשום מקום. מי שכבר מחובר ממשיך
+   * לראות את התפריט: הוא נקרא מהמצב המקומי ולא מהרשת.
+   */
+  const offlineNow = !useOnline();
 
   if (!auth.enabled || !auth.ready) return null;
 
@@ -178,7 +185,9 @@ export default function AccountButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 rounded-xl bg-night/5 px-3.5 py-2 text-sm font-semibold text-night/70 ring-1 ring-night/10 transition hover:bg-night/10"
+        disabled={offlineNow}
+        title={offlineNow ? OFFLINE_HINT : undefined}
+        className="flex items-center gap-1.5 rounded-xl bg-night/5 px-3.5 py-2 text-sm font-semibold text-night/70 ring-1 ring-night/10 transition enabled:hover:bg-night/10 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <svg
           viewBox="0 0 24 24"

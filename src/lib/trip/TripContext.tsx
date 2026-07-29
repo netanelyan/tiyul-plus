@@ -12,7 +12,7 @@ import type { Trip, TripDay } from './types';
 import { newId } from './types';
 import { loadTrips, saveTrips } from './storage';
 
-interface TripApi {
+export interface TripApi {
   trips: Trip[];
   currentTrip: Trip | null;
   currentId: string | null;

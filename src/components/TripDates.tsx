@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Trip } from '@/lib/trip/types';
 import { completeRange, countdown, formatHebrewRange, rangeDays, todayISO } from '@/lib/trip/dates';
+import { OFFLINE_HINT } from '@/lib/offline/online';
 
 /**
  * תאריכי הטיול: מתי יוצאים ומתי חוזרים.
@@ -34,8 +35,11 @@ export default function TripDates({
   summary,
   onSet,
   onAddDays,
+  disabled = false,
 }: {
   trip: Trip;
+  /** ללא רשת: הצ׳יפ ממשיך להציג את התאריכים, אבל אי אפשר לערוך */
+  disabled?: boolean;
   /** הטקסט שהיה בצ׳יפ הסיכום ממילא - "22 עצירות · 8 ימים" */
   summary: string;
   onSet: (dates: { startDate?: string; endDate?: string }) => void;
@@ -107,6 +111,8 @@ export default function TripDates({
     <div ref={rootRef} className="relative shrink-0">
       <button
         onClick={() => setOpen((v) => !v)}
+        disabled={disabled}
+        title={disabled ? OFFLINE_HINT : undefined}
         aria-expanded={open}
         aria-label={
           label

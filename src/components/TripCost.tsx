@@ -10,6 +10,7 @@ import {
 import { formatHebrewDate } from '@/lib/trip/dates';
 import type { Trip, TripPreferences } from '@/lib/trip/types';
 import type { Destination } from '@/lib/types';
+import { OFFLINE_HINT } from '@/lib/offline/online';
 
 /**
  * "כמה מוציאים כאן ביום" - הצד הדטרמיניסטי של העלות.
@@ -39,10 +40,19 @@ export default function TripCost({
   trip,
   destinations,
   onSetPreferences,
+  offline = false,
 }: {
   trip: Trip;
   destinations: Destination[];
   onSetPreferences: (patch: Partial<TripPreferences>) => void;
+  /**
+   * המספרים עצמם שמורים במכשיר (הם חלק מהבילד), ולכן הם **נקראים
+   * גם בלי רשת** - וזה בדיוק המצב שבו רוצים לדעת כמה עולה יום כאן.
+   * מה שנחסם: בחירת סגנון נסיעה (כתיבה לטיול) והמעבר לאתר המקור.
+   * תאריך הבדיקה מוצג כרגיל - הוא הדבר שהופך מספר שמור למספר ישן
+   * ולא למספר שקרי.
+   */
+  offline?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const style = trip.preferences?.travelStyle;
@@ -121,14 +131,15 @@ export default function TripCost({
                   key={s.id}
                   type="button"
                   aria-pressed={active}
-                  title={s.hint}
+                  title={offline ? OFFLINE_HINT : s.hint}
+                  disabled={offline}
                   onClick={() =>
                     onSetPreferences({ travelStyle: active ? undefined : s.id })
                   }
-                  className={`min-w-0 flex-1 rounded-xl px-2 py-2 text-xs font-semibold ring-1 transition ${
+                  className={`min-w-0 flex-1 rounded-xl px-2 py-2 text-xs font-semibold ring-1 transition disabled:cursor-not-allowed disabled:opacity-45 ${
                     active
                       ? 'bg-sunset text-cream ring-sunset'
-                      : 'bg-cream text-night/70 ring-night/15 hover:ring-night/30'
+                      : 'bg-cream text-night/70 ring-night/15 enabled:hover:ring-night/30'
                   }`}
                 >
                   {s.label}
@@ -142,7 +153,9 @@ export default function TripCost({
           <p className="mt-2 text-xs leading-relaxed text-night/55">
             {style
               ? TRAVEL_STYLES.find((s) => s.id === style)?.hint
-              : 'בוחרים סגנון אחד, ורואים כמה מוציאים מטיילים בערים של הטיול הזה ביום רגיל.'}
+              : offline
+                ? 'בלי חיבור אי אפשר לבחור סגנון נסיעה. הסכומים יופיעו כשהחיבור יחזור.'
+                : 'בוחרים סגנון אחד, ורואים כמה מוציאים מטיילים בערים של הטיול הזה ביום רגיל.'}
           </p>
 
           {style && (
@@ -233,17 +246,23 @@ export default function TripCost({
               <p className="mt-1 text-xs text-night/40">
                 נבדק ב־{checkedLabel} ·{' '}
                 {/* מקור לכל עיר, ולא קישור אחד שמתחזה לכסות את כולן */}
+                {/* בלי רשת המקור נאמר בשם ולא כקישור: קישור שנלחץ ולא
+                    נפתח נראה כמו אתר שבור, ושם המקור הוא המידע החשוב. */}
                 {sources.map((s, i) => (
                   <span key={s.url}>
                     {i > 0 && ' · '}
-                    <a
-                      href={s.url}
-                      target="_blank"
-                      rel="noopener noreferrer nofollow"
-                      className="underline decoration-night/20 underline-offset-2 hover:text-night/60"
-                    >
-                      {s.label}
-                    </a>
+                    {offline ? (
+                      <span className="text-night/45">{s.label}</span>
+                    ) : (
+                      <a
+                        href={s.url}
+                        target="_blank"
+                        rel="noopener noreferrer nofollow"
+                        className="underline decoration-night/20 underline-offset-2 hover:text-night/60"
+                      >
+                        {s.label}
+                      </a>
+                    )}
                   </span>
                 ))}
               </p>
