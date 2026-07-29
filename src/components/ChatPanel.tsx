@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import type { Place } from '@/lib/types';
-import { destinations } from '@/data/destinations';
+import type { Destination, Place } from '@/lib/types';
 import type { TripChat } from '@/lib/trip/useTripChat';
 import { fileToChatImage, IMAGE_ACCEPT } from '@/lib/trip/imageAttach';
+import { cachedCity, fetchCities } from '@/lib/trip/cityData';
 import PlacesMap from '@/components/PlacesMap';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 
@@ -14,7 +14,25 @@ import ThinkingIndicator from '@/components/ThinkingIndicator';
  * המובייל: הודעה שנשלחת מכאן מעדכנת את אותו Trip שמצויר במפה ובמסלול.
  */
 
-const destOf = (slug: string) => destinations.find((d) => d.slug === slug);
+/**
+ * המפה הקטנה שמתחת להודעה מציירת עיר שהסוכן הזכיר, ולכן היא צריכה את
+ * דאטת אותה עיר - אבל **בלי לייבא את הקטלוג**, שזו בדיוק הסיבה
+ * ש-`/chat` הוריד 492kB דחוסים. היא לוקחת מהמטמון של `cityData`
+ * (הערים של הטיול כבר שם), ואם העיר עוד לא נטענה - היא נטענת לבד.
+ */
+function useCity(slug: string): Destination | undefined {
+  const [, bump] = useState(0);
+  const cached = cachedCity(slug);
+  useEffect(() => {
+    if (cachedCity(slug)) return;
+    let alive = true;
+    void fetchCities([slug]).then(() => alive && bump((n) => n + 1));
+    return () => {
+      alive = false;
+    };
+  }, [slug]);
+  return cached;
+}
 
 /** מרנדר **מודגש** בסיסי בלי ספריות */
 function renderText(text: string) {
@@ -32,7 +50,7 @@ function renderText(text: string) {
 }
 
 function MessageMap({ slug, placeIds }: { slug: string; placeIds: string[] }) {
-  const dest = destOf(slug);
+  const dest = useCity(slug);
   if (!dest) return null;
   const places = placeIds
     .map((id) => dest.places.find((p) => p.id === id))

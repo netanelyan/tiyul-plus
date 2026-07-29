@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { cache } from 'react';
 import { destinations } from '@/data/destinations';
-import { decodeTripShare, type SharedTrip } from '@/lib/trip/share';
+import type { SharedTrip } from '@/lib/trip/share';
+import { decodeTripShare } from '@/lib/server/shareDecode';
 import { getSharedPayload } from '@/lib/trip/shareStore';
 import SharedTripView from './SharedTripView';
 
@@ -79,5 +80,9 @@ export default async function SharedTripPage({
     );
   }
 
-  return <SharedTripView shared={shared} />;
+  // רק הערים של הטיול הזה יורדות ללקוח, לא הקטלוג
+  const citySlugs = [...new Set(shared.days.map((d) => d.citySlug))];
+  const cityData = destinations.filter((d) => citySlugs.includes(d.slug));
+
+  return <SharedTripView shared={shared} cityData={cityData} />;
 }

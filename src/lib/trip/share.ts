@@ -1,4 +1,3 @@
-import { destinations } from '@/data/destinations';
 import type { Trip, TripDay } from './types';
 import { newId } from './types';
 
@@ -10,9 +9,14 @@ import { newId } from './types';
  *
  * כשיגיעו חשבונות (backend), אותו מסך /t/<code> יקבל גם קודים קצרים
  * מהשרת - הפורמט כאן הוא v1 ומסומן בגרסה כדי לאפשר את המעבר.
+ *
+ * **הפענוח (`decodeTripShare`) יושב ב-`@/lib/server/shareDecode`** ולא
+ * כאן, כי הוא מאמת כל מזהה מול הקטלוג - וכל מי שמייבא את הקובץ הזה
+ * בצד הלקוח (מסך הטיול, שמייצר קישור) היה גורר את הקטלוג כולו איתו.
+ * שני הקוראים של הפענוח הם שרת ממילא: `/api/share` ו-`/t/[code]`.
  */
 
-type ShareDay = [citySlug: string, placeIds: string[], notes?: string];
+export type ShareDay = [citySlug: string, placeIds: string[], notes?: string];
 type SharePayload = [version: 1, name: string, days: ShareDay[]];
 
 /* ---------- base64url איזומורפי (דפדפן + Node) ל-UTF-8 ---------- */
@@ -24,7 +28,7 @@ function toBase64Url(s: string): string {
   return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
-function fromBase64Url(code: string): string | null {
+export function fromBase64Url(code: string): string | null {
   try {
     const b64 = code.replace(/-/g, '+').replace(/_/g, '/');
     const bin = atob(b64);
@@ -57,37 +61,6 @@ export interface SharedTrip {
   days: { citySlug: string; placeIds: string[]; notes?: string }[];
 }
 
-export function decodeTripShare(code: string): SharedTrip | null {
-  const json = fromBase64Url(code);
-  if (!json) return null;
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(json);
-  } catch {
-    return null;
-  }
-  if (!Array.isArray(parsed) || parsed[0] !== 1) return null;
-  const [, name, days] = parsed as SharePayload;
-  if (typeof name !== 'string' || !Array.isArray(days)) return null;
-
-  const cleanDays: SharedTrip['days'] = [];
-  for (const d of days) {
-    if (!Array.isArray(d) || typeof d[0] !== 'string' || !Array.isArray(d[1])) return null;
-    const dest = destinations.find((x) => x.slug === d[0]);
-    if (!dest) continue; // עיר שלא קיימת בקטלוג - מדלגים, לא ממציאים
-    // רק מזהי מקומות אמיתיים מהדאטה - כלל הברזל חל גם על קישורים
-    const placeIds = d[1].filter(
-      (id): id is string => typeof id === 'string' && dest.places.some((p) => p.id === id),
-    );
-    cleanDays.push({
-      citySlug: d[0],
-      placeIds,
-      notes: typeof d[2] === 'string' ? d[2].slice(0, 500) : undefined,
-    });
-  }
-  if (cleanDays.length === 0) return null;
-  return { name: name.slice(0, 80) || 'טיול משותף', days: cleanDays };
-}
 
 /** בונה Trip חדש (ids טריים) מהתוכן המשותף - לייבוא אל "הטיולים שלי" */
 export function tripFromShared(shared: SharedTrip): Trip {

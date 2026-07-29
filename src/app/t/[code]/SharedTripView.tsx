@@ -2,8 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { destinations } from '@/data/destinations';
-import type { Place } from '@/lib/types';
+import type { Destination, Place } from '@/lib/types';
 import { categoryMeta } from '@/lib/categories';
 import { useTrip } from '@/lib/trip/TripContext';
 import { travelLeg } from '@/lib/trip/travel';
@@ -13,13 +12,25 @@ import { tripFromShared } from '@/lib/trip/share';
 import PlacesMap from '@/components/PlacesMap';
 import Flag from '@/components/Flag';
 
-/** תצוגת קריאה-בלבד של טיול משותף + ייבוא עותק ל"טיולים שלי" */
-export default function SharedTripView({ shared }: { shared: SharedTrip }) {
+/**
+ * תצוגת קריאה-בלבד של טיול משותף + ייבוא עותק ל"טיולים שלי".
+ *
+ * **הערים מגיעות כ-props מהשרת** ולא מייבוא של הקטלוג: העמוד הזה כבר
+ * מפענח את הקוד בשרת ויודע בדיוק באילו ערים מדובר, כך שאין שום סיבה
+ * שהדפדפן יוריד 2MB של קטלוג בשביל טיול של עיר או שתיים.
+ */
+export default function SharedTripView({
+  shared,
+  cityData,
+}: {
+  shared: SharedTrip;
+  cityData: Destination[];
+}) {
   const trip = useTrip();
   const router = useRouter();
   const [saved, setSaved] = useState(false);
 
-  const destOf = (slug: string) => destinations.find((d) => d.slug === slug);
+  const destOf = (slug: string) => cityData.find((d) => d.slug === slug);
   const placeOf = (slug: string, id: string): Place | undefined =>
     destOf(slug)?.places.find((p) => p.id === id);
 

@@ -1,14 +1,13 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { Destination, Place } from '@/lib/types';
+import type { Place } from '@/lib/types';
 import type { TripPin, TripPreferences } from '@/lib/trip/types';
-import { destinations as curatedDestinations } from '@/data/destinations';
-import { countries } from '@/data/countries';
 import { categoryMeta } from '@/lib/categories';
 import { useTrip } from '@/lib/trip/TripContext';
 import { travelLeg } from '@/lib/trip/travel';
 import { useTripChat } from '@/lib/trip/useTripChat';
+import { useCityData } from '@/lib/trip/cityData';
 import { dayDescription, dayPlaces } from '@/lib/trip/dayDescription';
 import { dayColor } from '@/lib/trip/dayColors';
 import { encodeTripShare } from '@/lib/trip/share';
@@ -40,13 +39,10 @@ import DayNavExport from '@/components/DayNavExport';
  */
 
 export default function TripWorkspace({
-  destinations = curatedDestinations,
   onNewTrip,
   initialQuery,
   initialKosher,
 }: {
-  /** ברירת מחדל: הדאטה האוצרת. /planner מעביר את מה שהספק החזיר. */
-  destinations?: Destination[];
   onNewTrip: () => void;
   initialQuery?: string;
   initialKosher?: boolean;
@@ -94,14 +90,36 @@ export default function TripWorkspace({
     }
   };
   const [linkCopied, setLinkCopied] = useState(false);
+  /**
+   * קישור השיתוף: מנסים קוד קצר דרך /api/share (Supabase); בלי backend
+   * מוגדר - נופלים בשקט לקישור ה-inline הארוך (v1), שעובד תמיד.
+   * התוצאה נשמרת ב-ref לפי תוכן הטיול כדי לא לייצר קוד חדש בכל קליק.
+   *
+   * **ה-ref הזה חייב לשבת כאן, מעל ה-`return` המוקדם של מצב הטעינה.**
+   * הוא ישב מתחתיו, וזו הפרה של כללי ה-hooks שפשוט לא התפוצצה: המצב
+   * המוקדם היחיד היה `!trip.hydrated`, שלא נצבע בפועל. ברגע שנוסף מצב
+   * טעינה אמיתי (הערים), הרינדור הבא הריץ hook נוסף - React #310,
+   * ומסך הטיול נפל כולו. hook אחרי `return` מותנה הוא פצצת זמן.
+   */
+  const shareUrlCache = useRef<{ sig: string; url: string } | null>(null);
   /** סיכה שהמטייל בחר להניח ידנית: הלחיצה הבאה על המפה תקבע את מיקומה */
   const [placingPinId, setPlacingPinId] = useState<string | null>(null);
 
   const t = trip.currentTrip;
+  // **רק הערים של הטיול הזה נטענות**, מ-`/api/cities`, במקום לייבא את
+  // הקטלוג כולו אל ה-bundle של המסך (492kB דחוסים לטיול של עיר אחת).
+  // הן נשמרות במטמון ברמת המודול, כך שמעבר בין טיולים או בין /chat
+  // ל-/planner לא מבקש כלום שוב.
+  const tripCitySlugs = useMemo(
+    () => [...new Set([...(t?.citySlugs ?? []), ...(t?.days ?? []).map((d) => d.citySlug)])],
+    [t],
+  );
+  const { cities, loading: citiesLoading } = useCityData(tripCitySlugs);
+  const destinations = useMemo(() => Object.values(cities), [cities]);
   // curated קודם; יעדים שנחקרו אוטומטית (AI Explorer) כ-fallback, כדי
   // שטיול שנבנה ביעד נחקר יתרנדר כרגיל בקנבס/מפה/הדפסה.
   const destOf = (slug: string) =>
-    destinations.find((d) => d.slug === slug) ?? chat.explored.find((d) => d.slug === slug);
+    cities[slug] ?? chat.explored.find((d) => d.slug === slug);
   const placeOf = (slug: string, id: string): Place | undefined =>
     destOf(slug)?.places.find((p) => p.id === id);
 
@@ -137,7 +155,7 @@ export default function TripWorkspace({
         }))
         .filter((g) => g.places.length > 0),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [t, destinations, chat.explored],
+    [t, cities, chat.explored],
   );
 
   /**
@@ -174,7 +192,11 @@ export default function TripWorkspace({
     });
   }, [allPins, day?.citySlug, t?.pins]);
 
-  if (!trip.hydrated) {
+  // **גם המתנה לערים, ובכוונה.** בלי זה המסך היה מצייר לרגע טיול אמיתי
+  // עם ימים ריקים ומפה ריקה - כי כל שם, קואורדינטה ותיאור מגיעים מדאטת
+  // העיר. מסך טעינה כן עדיף על מסך שנראה כמו טיול שנמחק. זה רק בהמתנה
+  // הראשונה: ברגע שיש עיר אחת ביד ממשיכים לצייר (ראו useCityData).
+  if (!trip.hydrated || (citiesLoading && (t?.days.length ?? 0) > 0)) {
     return (
       <div className="rounded-2xl bg-shell p-10 text-center font-semibold text-night/40 ring-1 ring-night/10">
         <ThinkingIndicator label="טוען את הטיולים שלך" className="justify-center" />
@@ -225,13 +247,6 @@ export default function TripWorkspace({
     trip.upsertTrip({ ...t, pins: (t.pins ?? []).filter((p) => p.id !== id) });
     if (placingPinId === id) setPlacingPinId(null);
   };
-
-  /**
-   * קישור השיתוף: מנסים קוד קצר דרך /api/share (Supabase); בלי backend
-   * מוגדר - נופלים בשקט לקישור ה-inline הארוך (v1), שעובד תמיד.
-   * התוצאה נשמרת ב-ref לפי תוכן הטיול כדי לא לייצר קוד חדש בכל קליק.
-   */
-  const shareUrlCache = useRef<{ sig: string; url: string } | null>(null);
 
   async function getShareUrl(): Promise<string> {
     if (!t) return '';
@@ -499,8 +514,6 @@ export default function TripWorkspace({
             );
           })}
           <AddDayPicker
-            destinations={destinations}
-            countries={countries}
             tripCitySlugs={t.citySlugs}
             onAddDay={(slug) => trip.addDay(slug)}
           />

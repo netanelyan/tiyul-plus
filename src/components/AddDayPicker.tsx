@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { Country, Destination } from '@/lib/types';
 import Flag from '@/components/Flag';
-import { buildCityOptions, filterCities } from '@/lib/citySearch';
+import { filterCities, type CityOption } from '@/lib/citySearch';
 
 /**
  * הוספת יום לטיול: כפתור "+ יום…" שפותח רשימה עם חיפוש, במקום <select>
@@ -12,25 +11,43 @@ import { buildCityOptions, filterCities } from '@/lib/citySearch';
  *
  * הרכיב לא נוגע בלוגיקה: הוא רק קורא ל-onAddDay(slug) - בדיוק מה
  * שה-select עשה קודם עם trip.addDay.
+ *
+ * **רשימת הערים נטענת רק כשפותחים אותו.** קודם היא הגיעה מהקטלוג
+ * המלא שיובא אל ה-bundle של מסך הטיול; עכשיו זו בקשה אחת קטנה
+ * (`/api/cities?options=1`, slug/שם/מדינה/דגל) בפתיחה הראשונה, ואותה
+ * רשימה נשמרת לכל אורך חיי הטאב. מי שלא מוסיף יום לא משלם עליה כלום.
  */
+let optionsCache: CityOption[] | null = null;
 export default function AddDayPicker({
-  destinations,
-  countries,
   tripCitySlugs,
   onAddDay,
 }: {
-  destinations: Destination[];
-  countries: Country[];
   /** הערים שכבר בטיול - מוצגות בקבוצה נפרדת בראש הרשימה */
   tripCitySlugs: string[];
   onAddDay: (citySlug: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
+  const [options, setOptions] = useState<CityOption[]>(optionsCache ?? []);
   const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const options = useMemo(() => buildCityOptions(destinations, countries), [destinations, countries]);
+  useEffect(() => {
+    if (!open || optionsCache) return;
+    let alive = true;
+    void fetch('/api/cities?options=1')
+      .then((r) => (r.ok ? r.json() : { options: [] }))
+      .then((d: { options?: CityOption[] }) => {
+        optionsCache = d.options ?? [];
+        if (alive) setOptions(optionsCache);
+      })
+      .catch(() => {
+        /* רשת נפלה - הרשימה תישאר ריקה והמצב הריק אומר את זה */
+      });
+    return () => {
+      alive = false;
+    };
+  }, [open]);
   const filtered = useMemo(() => filterCities(options, query), [options, query]);
 
   const inTrip = useMemo(

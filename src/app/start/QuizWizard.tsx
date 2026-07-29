@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { destinations } from '@/data/destinations';
+import { fetchCities } from '@/lib/trip/cityData';
 import { useTrip } from '@/lib/trip/TripContext';
 import { generateTrip } from '@/lib/trip/generate';
 import type { TripPreferences, WizardPrefs } from '@/lib/trip/types';
@@ -124,8 +124,14 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
   const canNext = step === 0 ? citySlugs.length > 0 : true;
   const isLast = step === STEPS.length - 1;
 
-  const finish = () => {
+  const finish = async () => {
     setBuilding(true);
+    // רק הערים שנבחרו - האשף מדרג מקומות רק בתוכן
+    const chosen = await fetchCities(citySlugs);
+    if (chosen.length === 0) {
+      setBuilding(false);
+      return;
+    }
     const prefs: WizardPrefs = {
       citySlugs,
       totalDays,
@@ -143,7 +149,7 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
       ...(shabbat ? { shabbatAware: true } : {}),
       ...(interests.length > 0 ? { interests } : {}),
     };
-    const built = generateTrip(prefs, destinations, tripName(citySlugs, cities), preferences);
+    const built = generateTrip(prefs, chosen, tripName(citySlugs, cities), preferences);
     trip.createTripFrom(built);
     router.push('/planner');
   };
@@ -320,7 +326,7 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
         {isLast ? (
           <button
             type="button"
-            onClick={finish}
+            onClick={() => void finish()}
             disabled={building}
             className="rounded-xl bg-sunset px-6 py-3 font-bold text-cream transition hover:bg-sunset-deep disabled:opacity-70"
           >

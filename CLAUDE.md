@@ -353,6 +353,95 @@ URLs. (5) Standing and unchanged: the 18 dead photo URLs, the `kosher-market` an
 `cafe` gaps, the 2.5MB client bundle, `feat/catalog-supabase` unmerged pending
 Netanel's review, and **both GitHub PATs still need revoking at
 https://github.com/settings/tokens**.
+### 2026-07-29 (hh) - The last 490kB: the trip screen now loads the cities it needs, not the catalog
+
+Entry (ff) ended with one thing left as a decision rather than done: `/chat`
+and `/planner` still shipped the whole catalog as JavaScript, because
+`TripWorkspace` imported `src/data/destinations.ts` to render whatever cities a
+trip touches. Netanel: "do it."
+
+**The shape of the fix.** A new `GET /api/cities` serves either the full
+`Destination` objects for the slugs asked for, or (with `?options=1`) the
+compact city list the add-day picker needs. `lib/trip/cityData.ts` is a
+module-level cache in front of it, so a trip of one to six cities costs about
+7kB per city instead of 492kB compressed, and switching between `/chat`,
+`/planner` and trips costs nothing at all after the first load. **The request
+goes through `getProvider()`**, so hard rule 4 survives - an external provider
+that enriches a destination still enriches it here, which is exactly where that
+abstraction is supposed to earn its keep.
+
+Four separate import paths dragged the catalog into the trip screen and all
+four are closed:
+
+- `TripWorkspace` itself → the hook above.
+- `ChatPanel` → the little map under a message now reads the same cache and
+  fetches its one city if it is not there yet.
+- `lib/trip/share.ts` → **`decodeTripShare` moved to
+  `lib/server/shareDecode.ts`.** It validates every id against the catalog, and
+  both of its callers (`/api/share`, `/t/[code]`) are servers - the screen that
+  merely *creates* a link was pulling 2MB to do it.
+- `PlannerClient` → the template's city is fetched on click.
+
+Also `/start` (the quiz scores only the chosen cities, so it fetches those) and
+`/t/[code]`, where the server page already decodes the trip and now simply
+passes those cities down as props - no client fetch at all.
+
+| route | before this pair of sessions | now |
+|---|---|---|
+| / | 843 kB | **356 kB** |
+| /countries | 846 kB | **314 kB** |
+| /destinations/[slug] | 816 kB | **328 kB** |
+| /chat | 860 kB | **329 kB** |
+| /planner | 829 kB (555 kB of it HTML) | **295 kB** (63 kB HTML) |
+| /kosher | 761 kB | **273 kB** |
+
+**The bug this uncovered is the part worth writing down.** The first build
+crashed the whole trip screen with React error #310 - *rendered more hooks than
+during the previous render*. The cause was not the new code: `shareUrlCache =
+useRef(...)` had been sitting **below** `TripWorkspace`'s early `return` for the
+loading state for a long time. It never fired because the only early return was
+`!trip.hydrated`, which in practice never painted - so a hooks violation lived
+in the core screen indefinitely, invisible. Adding a second, real early state
+(waiting for the cities) made the early return actually happen, and the next
+render ran one more hook than the last. **A hook below a conditional return is a
+timer, not a bug that has been disproven by not crashing yet.** The ref moved up
+with the rest of the hooks and the comment says why.
+
+**A loading state was added deliberately**, not avoided: every stop name,
+coordinate and description comes from the city data, so painting the trip before
+it arrives would show a real trip with empty days - which reads as data loss.
+It waits only on the FIRST city of a session; once anything is in hand it keeps
+drawing, so adding a city mid-conversation never blanks the screen.
+
+**Verified 31/31 in a real browser** at 390px (DPR 3) and 1440px, on a
+production build: a seeded two-city trip renders from `/api/cities` with the
+right stop names, exactly rome+venice are requested and nothing else, no
+loading state left behind, day tabs and map pins draw, switching to the Venice
+day shows Venice's stops, the add-day picker fetches its city list **only when
+opened** and lists cities, a planner template still builds one real trip with
+stops, the `/start` quiz still builds a trip and lands on the planner, the share
+action still produces a `/t/<code>` link, and that page renders the shared trip
+from server props. Plus the 36/36 suite from entry (ff) re-run unchanged. Six
+new unit tests pin the cache itself (139 total): no city is fetched twice,
+concurrent callers share one request, only new slugs go in the second request,
+an unknown slug is not retried in a loop, and **a network failure does not mark
+a city as missing** - otherwise one dropped connection would blank that city for
+the rest of the session.
+
+**Harness notes.** `next dev` would not render a seeded trip at all here (the
+provider overwrites a seed written too early - the trap from entry (w)), so the
+minified #310 had to be traced through the built chunk instead: find the byte
+offset from the stack, read the surrounding minified source, recognise the
+share-URL ref. Also `fonts.googleapis.com` is blocked in this sandbox, so a
+naive "no console errors" assertion fails on every page; and the `/start` quiz
+cannot be driven without pressing Escape first, because the city dropdown
+intercepts the click on "הבא" - both recorded here so the next harness does not
+rediscover them.
+
+**Still true and deliberately unchanged:** `/` and `/countries` fetch the chat
+route's chunk *after* load because Next prefetches the `/chat` link - that chunk
+is now 254kB rather than 746kB, so the background cost fell with everything
+else.
 
 ### 2026-07-29 (ff) - "Is there any way to make the website faster?" - measured first, and the answer was not the server
 

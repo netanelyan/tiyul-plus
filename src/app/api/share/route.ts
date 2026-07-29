@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { Trip } from '@/lib/trip/types';
-import { encodeTripShare, decodeTripShare } from '@/lib/trip/share';
+import { encodeTripShare } from '@/lib/trip/share';
+import { decodeTripShare } from '@/lib/server/shareDecode';
 import { createShareCode } from '@/lib/trip/shareStore';
 import { checkLimit } from '@/lib/server/limits';
 import { resolveCaller } from '@/lib/server/identity';

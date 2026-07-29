@@ -5,9 +5,9 @@ import type { DestinationSummary } from '@/lib/types';
 import type { Trip, WizardPrefs } from '@/lib/trip/types';
 import { useTrip } from '@/lib/trip/TripContext';
 import { tripFromTemplate } from '@/lib/trip/generate';
-// הקטלוג המלא כבר נמצא ב-bundle של המסך הזה (TripWorkspace מייבא אותו),
-// ולכן התבנית נבנית ממנו במקום להוריד אותו שוב בתוך ה-HTML.
-import { destinations as curatedDestinations } from '@/data/destinations';
+// התבנית מבוססת על המסלול האוצר של עיר אחת - נטענת בלחיצה, כך שהמסך
+// לא נושא את הקטלוג לא כ-HTML ולא כ-JS.
+import { fetchCities } from '@/lib/trip/cityData';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 import Flag from '@/components/Flag';
 import TripWorkspace from '@/components/TripWorkspace';
@@ -345,9 +345,9 @@ function Onboarding({
           {summaries.map((d) => (
             <button
               key={d.slug}
-              onClick={() => {
+              onClick={async () => {
                 // הכשרות מגיעה מהטוגל שנבחר למעלה - בלי בחירה אין מקומות כשרים
-                const full = curatedDestinations.find((x) => x.slug === d.slug);
+                const [full] = await fetchCities([d.slug]);
                 if (!full) return;
                 trip.createTripFrom(tripFromTemplate(full, { kosher: prefs.kosherOnly }));
                 onDone();
