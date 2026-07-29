@@ -915,6 +915,25 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=Zelezna+studnicka',
       },
+      {
+        id: 'bts-mileticova',
+        name: 'שוק מילטיצ׳ובה',
+        nameLocal: 'Trhovisko Miletičova',
+        category: 'market',
+        lat: 48.15379,
+        lng: 17.13671,
+        description:
+          'שוק העיר הפתוח של ברטיסלבה ברחוב מילטיצ׳ובה, מזרחית למרכז ההיסטורי. דוכני ירקות ופירות של חקלאים מהאזור, גבינות מכבשים, נקניקים, פרחים ודוכני בגדים - שוק שכונתי עובד ולא אתר תיירות.',
+        durationMin: 45,
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=48.15379,17.13671',
+        source: {
+          url: 'https://www.openstreetmap.org/#map=19/48.15379/17.13671',
+          title: 'Trhovisko Mileticova, Bratislava (OpenStreetMap)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -5467,6 +5486,26 @@ export const destinations: Destination[] = [
           checked: '2026-07-29',
         },
       },
+      {
+        id: 'dxb-al-ustad',
+        name: 'אל אוסטאד',
+        nameLocal: 'Al Ustad Special Kabab',
+        category: 'food',
+        lat: 25.2598,
+        lng: 55.29883,
+        description:
+          'מסעדה איראנית ותיקה ברובע בור דובאי, ליד אל פאהידי ומינה בזאר. חדר קטן שקירותיו מכוסים בתצלומים, ובתפריט קבבים על גחלים עם אורז זעפרן. זו התשובה המקובלת לשאלה איפה אוכלים בדובאי הישנה.',
+        durationMin: 60,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=25.2598,55.29883',
+        source: {
+          url: 'https://www.openstreetmap.org/#map=19/25.2598/55.29883',
+          title: 'Al Ustad Special Kabab, Dubai (OpenStreetMap)',
+          checked: '2026-07-29',
+        },
+      },
       
     ],
     itinerary: [
@@ -7196,6 +7235,45 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         tags: ['outdoors', 'romantic'],
         mustSee: true,
+      },
+      {
+        id: 'ala-green-bazaar',
+        name: 'השוק הירוק',
+        nameLocal: 'Green Bazaar',
+        category: 'market',
+        lat: 43.26368,
+        lng: 76.9552,
+        description:
+          'הבזאר המרכזי של אלמטי ברחוב ז׳יבק ז׳ולי, אולם מקורה עם אגפים נפרדים לבשר, למוצרי חלב ולקורט, לפירות יבשים ואגוזים, לדבש ולתבלינים. המקום הנוח ביותר להכיר ממנו את מטבח קזחסטן ומרכז אסיה במקום אחד.',
+        durationMin: 60,
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=43.26368,76.9552',
+        source: {
+          url: 'https://www.openstreetmap.org/#map=19/43.26368/76.9552',
+          title: 'Green Bazaar, Almaty (OpenStreetMap)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'ala-alasha',
+        name: 'אלאשה',
+        nameLocal: 'Alasha',
+        category: 'food',
+        lat: 43.20214,
+        lng: 76.9763,
+        description:
+          'מסעדה אוזבקית-קזחית גדולה ברחוב אוספנוב, קרויה על שם השטיח הארוג שנפרש לאורחי כבוד. במרכז התפריט פלוב, בשר כבש בתנדיר, מרק סורפה ומגוון קבבים, ובערבים מוזיקה ומחול מרכז-אסייתיים.',
+        durationMin: 90,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=43.20214,76.9763',
+        source: {
+          url: 'https://www.openstreetmap.org/#map=19/43.20214/76.9763',
+          title: 'Alasha, Almaty (OpenStreetMap)',
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
@@ -13760,6 +13838,26 @@ export const destinations: Destination[] = [
           checked: '2026-07-29',
         },
       },
+      {
+        id: 'usa-lotus-siam',
+        name: 'לוטוס אוף סיאם',
+        nameLocal: 'Lotus of Siam',
+        category: 'food',
+        lat: 36.11519,
+        lng: -115.1497,
+        description:
+          'מסעדה תאילנדית בלאס וגאס, מחוץ לרצועה, ברחוב פלמינגו המזרחי. מתמחה במטבח הצפוני של תאילנד ונחשבת שנים לכתובת התאילנדית החשובה בארצות הברית. שימו לב שיש לרשת סניפים נוספים בעיר - זה הסניף המקורי.',
+        durationMin: 90,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=36.11519,-115.1497',
+        source: {
+          url: 'https://www.openstreetmap.org/#map=19/36.11519/-115.1497',
+          title: 'Lotus of Siam, Las Vegas (OpenStreetMap)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -16200,6 +16298,46 @@ export const destinations: Destination[] = [
         durationMin: 480,
         externalUrl: 'https://maps.google.com/?q=Lyngen+Alps',
       },
+      {
+        id: 'lof-anitas',
+        name: 'אניטס שומאט',
+        nameLocal: 'Anitas Sjomat',
+        category: 'food',
+        lat: 67.94182,
+        lng: 13.11186,
+        description:
+          'דוכן ומעדנייה של פירות ים על רציף הרורבו בסקריסוי, ממש לפני ריינה. מוכר בעיקר בזכות המבורגר הדגים מדגי המקום, לצד סלמון ופורל מעושנים בייצור עצמי, חסילונים וסרטן ענק.',
+        durationMin: 45,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=67.94182,13.11186',
+        source: {
+          url: 'https://www.openstreetmap.org/#map=19/67.94182/13.11186',
+          title: 'Anitas Sjomat, Sakrisoy (OpenStreetMap)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'lof-fiskekompaniet',
+        name: 'פיסקהקומפניאט',
+        nameLocal: 'Fiskekompaniet',
+        category: 'food',
+        lat: 69.65004,
+        lng: 18.96012,
+        description:
+          'מסעדת פירות הים המוכרת של טרומסה, על הנמל ברחוב קילנגרינס. עובדת עם השלל הארקטי - סרטן ענק, הליבוט, בקלה וצדפות - ומגישה גם ברים של פירות ים וגם תפריטי טעימות.',
+        durationMin: 90,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=69.65004,18.96012',
+        source: {
+          url: 'https://www.openstreetmap.org/#map=19/69.65004/18.96012',
+          title: 'Fiskekompaniet, Tromso (OpenStreetMap)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -16388,6 +16526,44 @@ export const destinations: Destination[] = [
         rating: 4.4,
         durationMin: 480,
         externalUrl: 'https://maps.google.com/?q=Oslo',
+      },
+      {
+        id: 'nor-fisketorget',
+        name: 'שוק הדגים של ברגן',
+        nameLocal: 'Fisketorget',
+        category: 'market',
+        lat: 60.39463,
+        lng: 5.32371,
+        description:
+          'כיכר השוק בראש נמל הוואגן, לצד בריגן, שבה נמכרים דגים מאז ימי הביניים. דוכנים של סלמון, חסילונים, סרטן ענק ולובסטר, דגים מעושנים ומזכרות מזון נורווגיות, וחלק מהמוכרים גם מבשלים במקום. יש חלק פתוח וגם אולם מקורה באותה כיכר.',
+        durationMin: 45,
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=60.39463,5.32371',
+        source: {
+          url: 'https://www.openstreetmap.org/#map=19/60.39463/5.32371',
+          title: 'Bergen Fish Market (OpenStreetMap)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'nor-mathallen',
+        name: 'מאטהאלן',
+        nameLocal: 'Mathallen',
+        category: 'market',
+        lat: 59.92212,
+        lng: 10.75203,
+        description:
+          'אולם מזון מקורה ברובע וולקן שעל גדת נהר האקרסלבה באוסלו, ובו עשרות דוכנים של יצרנים - דלפקי דגים ובשר, מאפיות, גבינות וקפה - לצד מסעדות קטנות ואזור ישיבה משותף.',
+        durationMin: 60,
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=59.92212,10.75203',
+        source: {
+          url: 'https://www.openstreetmap.org/#map=19/59.92212/10.75203',
+          title: 'Mathallen, Oslo (OpenStreetMap)',
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
@@ -20984,6 +21160,26 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=Nevsehir+Turkey',
       },
+      {
+        id: 'cap-dibek',
+        name: 'דיבק',
+        nameLocal: 'Dibek',
+        category: 'food',
+        lat: 38.64256,
+        lng: 34.82907,
+        description:
+          'מסעדה בבית אבן היסטורי בכיכר המרכזית של גורמה, עם ישיבה על כריות. הכי מוכרת בזכות טסטי קבב - כבש שמתבשל לאט בכד חרס אטום שנשבר ליד השולחן. את המנה הזאת בדרך כלל צריך להזמין מראש.',
+        durationMin: 90,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=38.64256,34.82907',
+        source: {
+          url: 'https://www.openstreetmap.org/#map=19/38.64256/34.82907',
+          title: 'Dibek, Goreme (OpenStreetMap)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -23301,6 +23497,26 @@ export const destinations: Destination[] = [
         externalUrl: 'https://maps.google.com/?q=Berat+Albania',
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Panorama_of_Berat%2C_Albania_2016.jpg/500px-Panorama_of_Berat%2C_Albania_2016.jpg',
+      },
+      {
+        id: 'alb-kujtimi',
+        name: 'קויטימי',
+        nameLocal: 'Kujtimi',
+        category: 'food',
+        lat: 40.07475,
+        lng: 20.1386,
+        description:
+          'מסעדה משפחתית בסמטה של הבזאר העות׳מאני בגירוקסטר. מגישה טאווה קוסי - כבש שנאפה ביוגורט - ואת הקיפקי המקומי, כדורי אורז וביצה עם נענע שמטוגנים במחבת. יש מרפסת מעל רחוב הבזאר.',
+        durationMin: 90,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=40.07475,20.1386',
+        source: {
+          url: 'https://www.openstreetmap.org/#map=19/40.07475/20.1386',
+          title: 'Kujtimi, Gjirokaster (OpenStreetMap)',
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
@@ -25937,6 +26153,25 @@ export const destinations: Destination[] = [
         tags: ['history'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=36.25917,29.98528',
+      },
+      {
+        id: 'lyc-fethiye-fish',
+        name: 'שוק הדגים של פתחיה',
+        nameLocal: 'Balik Pazari',
+        category: 'market',
+        lat: 36.62104,
+        lng: 29.11158,
+        description:
+          'מעגל של דוכני דגים במרכז פתחיה, מוקף במסעדות קטנות: בוחרים דג מהדוכן, משלמים לדייג, ומסעדה לבחירתכם מנקה, מבשלת ומגישה אותו עם מזטים. סביבו דוכני ירקות, קצבים, מחלבות ותבלינים שהופכים אותו לשוק עובד לכל דבר.',
+        durationMin: 90,
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=36.62104,29.11158',
+        source: {
+          url: 'https://www.openstreetmap.org/#map=19/36.62104/29.11158',
+          title: 'Fethiye Fish Market (OpenStreetMap)',
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
@@ -31384,6 +31619,26 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Qyteti_i_Krujes_nga_Kalaja.jpg/500px-Qyteti_i_Krujes_nga_Kalaja.jpg',
       },
+      {
+        id: 'alb-tradita',
+        name: 'טרדיטה',
+        nameLocal: 'Tradita G&T',
+        category: 'food',
+        lat: 42.0626,
+        lng: 19.51547,
+        description:
+          'מסעדה בבית אבן משוחזר מהמאה ה-17 בשקודרה, שמשמש גם אוסף אתנוגרפי פרטי של עתיקות ובגדי צמר מסורתיים. הבשר והדגים נצלים על אח פתוחה גדולה, ובתפריט דגי אגם שקודרה ומנות מההרים בצפון.',
+        durationMin: 90,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=42.0626,19.51547',
+        source: {
+          url: 'https://www.openstreetmap.org/#map=19/42.0626/19.51547',
+          title: 'Tradita G&T, Shkoder (OpenStreetMap)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -35432,6 +35687,25 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=41.333332,72.933334',
       },
+      {
+        id: 'kgz-karakol-animal',
+        name: 'שוק הבהמות של קаракול',
+        nameLocal: 'Mal Bazar',
+        category: 'market',
+        lat: 42.5103,
+        lng: 78.37802,
+        description:
+          'שוק בהמות בפאתי קаракול, שאליו מגיעים כפריים מכל אגן איסיק-קול לסחור בכבשים, בעזים, בסוסים ובבקר. זהו שוק שבועי שמתקיים בשעות הבוקר המוקדמות - כדאי לוודא מקומית את היום לפני שנוסעים.',
+        durationMin: 60,
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=42.5103,78.37802',
+        source: {
+          url: 'https://www.openstreetmap.org/#map=19/42.5103/78.37802',
+          title: 'Karakol animal market (OpenStreetMap)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -37315,6 +37589,26 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=31.733334,77.550003',
+      },
+      {
+        id: 'ind-tibet-kitchen',
+        name: 'טיבט קיצ׳ן',
+        nameLocal: 'Tibet Kitchen',
+        category: 'food',
+        lat: 32.23857,
+        lng: 76.32384,
+        description:
+          'מטבח טיבטי ותיק בכיכר המרכזית של מקלאוד גאנג׳, ברחוב ג׳וגיוורה. מעבר למומו מגיש גם מנות שפחות מוצאים במקומות אחרים - שאפטה בשר מוקפץ, ת׳נת׳וק מרק אטריות קרועות ביד ופינגשה.',
+        durationMin: 60,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=32.23857,76.32384',
+        source: {
+          url: 'https://www.openstreetmap.org/#map=19/32.23857/76.32384',
+          title: 'Tibet Kitchen, McLeod Ganj (OpenStreetMap)',
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
@@ -41757,6 +42051,25 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         tags: ['outdoors'],
       },
+      {
+        id: 'bol-uyuni-mercado',
+        name: 'השוק המרכזי של אויוני',
+        nameLocal: 'Mercado Central de Uyuni',
+        category: 'market',
+        lat: -20.46429,
+        lng: -66.82512,
+        description:
+          'שוק המזון העירוני של אויוני, כמה דקות הליכה מכיכר ארסה. דוכנים של פירות וירקות, סלטניאס, צ׳רקי בשר לאמה מיובש ומרק קינואה חם - הכתובת לארוחת בוקר אמיתית לפני יציאה מוקדמת למישורי המלח.',
+        durationMin: 45,
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=-20.46429,-66.82512',
+        source: {
+          url: 'https://www.openstreetmap.org/#map=19/-20.46429/-66.82512',
+          title: 'Mercado Central, Uyuni (OpenStreetMap)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -42361,6 +42674,26 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/El_Valle_(1).jpg/500px-El_Valle_(1).jpg',
         priceLevel: 1,
         tags: ['outdoors', 'families'],
+      },
+      {
+        id: 'pan-cafe-ruiz',
+        name: 'קפה רואיס',
+        nameLocal: 'Cafe Ruiz',
+        category: 'food',
+        lat: 8.78695,
+        lng: -82.43623,
+        description:
+          'בית קלייה ובית קפה של משפחת רואיס בבאחו בוקטה, בעמק הקפה שבמרומי צ׳יריקי. אפשר גם לשבת וגם לצאת לסיור מודרך שעובר בחווה, בבית העיבוד, במעבדת הקלייה ובטעימות. את הסיור צריך לתאם מראש.',
+        durationMin: 90,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=8.78695,-82.43623',
+        source: {
+          url: 'https://www.openstreetmap.org/#map=19/8.78695/-82.43623',
+          title: 'Cafe Ruiz, Boquete (OpenStreetMap)',
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
