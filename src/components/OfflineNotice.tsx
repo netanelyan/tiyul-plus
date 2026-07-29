@@ -38,10 +38,27 @@ export default function OfflineNotice() {
     // בקשות, וזה מייצר "באגים" שאינם קיימים בפרודקשן.
     if (process.env.NODE_ENV !== 'production') return;
     const onLoad = () => {
-      navigator.serviceWorker.register('/sw.js').catch(() => {
-        // דפדפן שחוסם SW (גלישה פרטית בחלק מהדפדפנים) - האתר עובד
-        // בדיוק כמו קודם, פשוט בלי מצב לא-מקוון.
-      });
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then(async () => {
+          // הטעינה הזאת עצמה לא עברה דרך ה-SW, ולכן ה-chunks שלה לא
+          // נשמרו. מוסרים לו את הרשימה כדי שביקור **אחד** יספיק כדי
+          // שהאפליקציה תיפתח בלי רשת - בלי זה צריך שתי כניסות, ומי
+          // שנכנס פעם אחת ואז ירד לרכבת התחתית נשאר בלי כלום.
+          const reg = await navigator.serviceWorker.ready;
+          const urls = performance
+            .getEntriesByType('resource')
+            .map((e) => e.name)
+            .filter((u) => u.startsWith(location.origin));
+          // מדברים עם ה-worker ה**פעיל** ולא עם `controller`: בטעינה
+          // הראשונה ה-claim עדיין רץ, אז `controller` הוא null והמסר
+          // היה נופל לרצפה בשקט - נמדד: נכס אחד נשמר במקום 17.
+          reg.active?.postMessage({ type: 'warm-assets', urls });
+        })
+        .catch(() => {
+          // דפדפן שחוסם SW (גלישה פרטית בחלק מהדפדפנים) - האתר עובד
+          // בדיוק כמו קודם, פשוט בלי מצב לא-מקוון.
+        });
     };
     if (document.readyState === 'complete') onLoad();
     else window.addEventListener('load', onLoad);

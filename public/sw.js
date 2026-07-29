@@ -55,6 +55,17 @@ self.addEventListener('install', (event) => {
   event.waitUntil(self.skipWaiting());
 });
 
+/**
+ * שלושת המסכים שמהם נפתח טיול. **זה לא precache של הקטלוג** - אלה שלושה
+ * מסמכי HTML של כמה עשרות kB, בלי דאטה של ערים ובלי מקומות.
+ *
+ * למה זה הכרחי: ה-SW נרשם בטעינה הראשונה אבל **לא הגיש אותה**, ולכן
+ * אחרי ביקור יחיד מטמון המסכים ריק לגמרי - נמדד: 0 מסכים ו-2 נכסים.
+ * מי שנכנס פעם אחת ואז יורד לרכבת התחתית היה מקבל את דינוזאור הניתוק
+ * של הדפדפן, כלומר בדיוק את הכישלון שהפיצ׳ר הזה בא למנוע.
+ */
+const SHELL_ROUTES = ['/chat', '/planner', '/'];
+
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     (async () => {
@@ -62,7 +73,54 @@ self.addEventListener('activate', (event) => {
       await Promise.all(
         keys.filter((k) => k.startsWith('tiyul-') && !k.endsWith(VERSION)).map((k) => caches.delete(k)),
       );
+      // best-effort: מסך שלא נענה פשוט לא נשמר, וזה לא מפיל את ההפעלה
+      const cache = await caches.open(SHELL);
+      await Promise.all(
+        SHELL_ROUTES.map(async (path) => {
+          try {
+            const res = await fetch(path, { credentials: 'same-origin' });
+            if (res && res.status === 200) await cache.put(path, res.clone());
+          } catch {
+            /* אין רשת בדיוק עכשיו - יישמר בניווט הבא */
+          }
+        }),
+      );
       await self.clients.claim();
+    })(),
+  );
+});
+
+/**
+ * הדף מדווח אילו נכסי בילד הוא באמת טען. גם כאן הסיבה היא שהטעינה
+ * הראשונה לא עברה דרך ה-SW: ה-chunks שלה כבר בזיכרון הדפדפן ולא
+ * במטמון שלנו, ובלעדיהם יש HTML שמור בלי JavaScript להפעיל אותו.
+ * נשמרים **רק** נתיבי `/_next/static/` מאותו origin - הדף לא יכול
+ * לבקש מכאן לשמור שום דבר אחר.
+ */
+self.addEventListener('message', (event) => {
+  const data = event.data;
+  if (!data || data.type !== 'warm-assets' || !Array.isArray(data.urls)) return;
+  event.waitUntil(
+    (async () => {
+      const cache = await caches.open(ASSETS);
+      for (const raw of data.urls.slice(0, 200)) {
+        let url;
+        try {
+          url = new URL(raw, self.location.origin);
+        } catch {
+          continue;
+        }
+        if (url.origin !== self.location.origin) continue;
+        if (!url.pathname.startsWith('/_next/static/') && !url.pathname.startsWith('/fonts/')) continue;
+        if (await cache.match(url.href)) continue;
+        try {
+          const res = await fetch(url.href);
+          if (res && res.status === 200) await cache.put(url.href, res.clone());
+        } catch {
+          /* מדלגים - זה חימום, לא נתיב קריטי */
+        }
+      }
+      await trim(ASSETS, MAX_ASSETS);
     })(),
   );
 });
