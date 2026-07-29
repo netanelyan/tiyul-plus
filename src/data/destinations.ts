@@ -474,6 +474,24 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=D%C3%BCrnstein',
       },
+      {
+        id: 'vie-parndorf',
+        name: 'אאוטלט פרנדורף',
+        nameLocal: 'Designer Outlet Parndorf',
+        category: 'shopping',
+        lat: 47.97926,
+        lng: 16.84689,
+        description:
+          'כפר אאוטלט של מותגים בפרנדורף, דרומית-מזרחית לווינה. יעד קניות שנוסעים אליו במיוחד ולא עוצרים בו דרך אגב.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=47.97926,16.84689',
+        source: {
+          url: 'https://mapcarta.com/Designer_Outlet_Parndorf',
+          title: 'Designer Outlet Parndorf, Burgenland (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -1871,6 +1889,24 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=Visegrad+Citadel+Hungary',
       },
+      {
+        id: 'bud-premier-outlet',
+        name: 'פרמייר אאוטלט',
+        nameLocal: 'Premier Outlet',
+        category: 'shopping',
+        lat: 47.46537,
+        lng: 18.88707,
+        description:
+          'מרכז אאוטלט בביאטורבאג׳, מערבית לבודפשט.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=47.46537,18.88707',
+        source: {
+          url: 'https://mapcarta.com/W370499946',
+          title: 'Premier Outlet, Biatorbagy (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
 
     ],
     itinerary: [
@@ -2396,6 +2432,24 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         externalUrl: 'https://maps.google.com/?q=Villa+Adriana+Tivoli',
       },
+      {
+        id: 'rom-castel-romano',
+        name: 'אאוטלט קסטל רומאנו',
+        nameLocal: 'Castel Romano Designer Outlet',
+        category: 'shopping',
+        lat: 41.71703,
+        lng: 12.44446,
+        description:
+          'כפר אאוטלט של מותגים בקצה הדרומי של שטח העירייה של רומא, הרחק מהמרכז ההיסטורי.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=41.71703,12.44446',
+        source: {
+          url: 'https://mapcarta.com/Castel_Romano_Designer_Outlet',
+          title: 'Castel Romano Designer Outlet, Rome (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -2880,6 +2934,24 @@ export const destinations: Destination[] = [
           checked: '2026-07-28',
         },
       },
+      {
+        id: 'ath-designer-outlet',
+        name: 'אאוטלט אתונה',
+        nameLocal: 'Designer Outlet Athens',
+        category: 'shopping',
+        lat: 37.98612,
+        lng: 23.91012,
+        description:
+          'כפר אאוטלט של מותגים בספאטה, מזרחית לאתונה בדרך לשדה התעופה.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=37.98612,23.91012',
+        source: {
+          url: 'https://mapcarta.com/W563121835',
+          title: 'Designer Outlet Athens, Spata (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -3177,6 +3249,24 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/Chocolater%C3%ADa_San_Gin%C3%A9s',
           title: 'Chocolateria San Gines, Madrid (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'mad-las-rozas',
+        name: 'לאס רוסאס וילג׳',
+        nameLocal: 'Las Rozas Village',
+        category: 'shopping',
+        lat: 40.51831,
+        lng: -3.90118,
+        description:
+          'כפר אאוטלט של מותגים בלאס רוסאס, צפונית-מערבית למדריד.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=40.51831,-3.90118',
+        source: {
+          url: 'https://mapcarta.com/Las_Rozas_Village',
+          title: 'Las Rozas Village, Madrid (Mapcarta)',
           checked: '2026-07-29',
         },
       },
@@ -3716,6 +3806,24 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/15-10-27-Els_Quatre_Gats-RalfR-WMA_2729.jpg/500px-15-10-27-Els_Quatre_Gats-RalfR-WMA_2729.jpg',
       },
+      {
+        id: 'bcn-la-roca',
+        name: 'לה רוקה וילג׳',
+        nameLocal: 'La Roca Village',
+        category: 'shopping',
+        lat: 41.610716,
+        lng: 2.343548,
+        description:
+          'כפר אאוטלט של מותגים בלה רוקה דל ואיס, צפונית-מזרחית לברצלונה.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=41.610716,2.343548',
+        source: {
+          url: 'https://mapcarta.com/La_Roca_Village',
+          title: 'La Roca Village, Catalonia (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -4198,6 +4306,24 @@ export const destinations: Destination[] = [
           url: 'https://de.wikipedia.org/wiki/Konnopkes_Imbi%C3%9F',
           title: 'Konnopkes Imbiss - Wikipedia',
           checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'ber-designer-outlet',
+        name: 'אאוטלט ברלין',
+        nameLocal: 'Designer Outlet Berlin',
+        category: 'shopping',
+        lat: 52.53966,
+        lng: 12.98097,
+        description:
+          'כפר אאוטלט של מותגים בווסטרמרק שבברנדנבורג, מערבית לברלין.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=52.53966,12.98097',
+        source: {
+          url: 'https://mapcarta.com/Designer_Outlet_Berlin',
+          title: 'Designer Outlet Berlin, Wustermark (Mapcarta)',
+          checked: '2026-07-29',
         },
       },
     ],
@@ -4814,6 +4940,24 @@ export const destinations: Destination[] = [
         durationMin: 30,
         externalUrl: 'https://maps.google.com/?q=J+Cafe+Kosher+Shoppe+Bangkok',
       },
+      {
+        id: 'bkk-siam-paragon',
+        name: 'סיאם פראגון',
+        nameLocal: 'Siam Paragon',
+        category: 'shopping',
+        lat: 13.7468,
+        lng: 100.53494,
+        description:
+          'קניון במרכז בנגקוק באזור סיאם, ובתוכו האקווריום סי לייף בנגקוק ובית קולנוע.',
+        tags: ['families'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=13.7468,100.53494',
+        source: {
+          url: 'https://mapcarta.com/Siam_Paragon',
+          title: 'Siam Paragon, Pathum Wan, Bangkok (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -5292,6 +5436,24 @@ export const destinations: Destination[] = [
         priceLevel: 3,
         tags: ['foodie', 'romantic'],
         externalUrl: 'https://maps.google.com/?q=Mosaica+Sofitel+Dubai+Downtown',
+      },
+      {
+        id: 'dxb-mall-emirates',
+        name: 'מול האמירויות',
+        nameLocal: 'Mall of the Emirates',
+        category: 'shopping',
+        lat: 25.11794,
+        lng: 55.20051,
+        description:
+          'קניון במערב דובאי על שייח׳ זאיד רואד, ובתוכו אתר סקי מקורה. מחובר לרכבת התחתית.',
+        tags: ['families'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=25.11794,55.20051',
+        source: {
+          url: 'https://mapcarta.com/Mall_of_the_Emirates',
+          title: 'Mall of the Emirates, Dubai (Mapcarta)',
+          checked: '2026-07-29',
+        },
       },
       
     ],
@@ -13058,6 +13220,42 @@ export const destinations: Destination[] = [
           checked: '2026-07-28',
         },
       },
+      {
+        id: 'nyc-woodbury',
+        name: 'וודברי קומון',
+        nameLocal: 'Woodbury Common Premium Outlets',
+        category: 'shopping',
+        lat: 41.31709,
+        lng: -74.12575,
+        description:
+          'כפר אאוטלט של מותגים בעמק ההדסון מצפון לעיר, יעד הקניות שנוסעים אליו מניו יורק ליום שלם.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=41.31709,-74.12575',
+        source: {
+          url: 'https://mapcarta.com/Woodbury_Common_Premium_Outlets',
+          title: 'Woodbury Common Premium Outlets, New York (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'nyc-macys',
+        name: 'מייסיס הרלד סקוור',
+        nameLocal: "Macy's Herald Square",
+        category: 'shopping',
+        lat: 40.75082,
+        lng: -73.98917,
+        description:
+          'חנות הדגל של מייסיס בהרלד סקוור במידטאון מנהטן.',
+        tags: ['art'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=40.75082,-73.98917',
+        source: {
+          url: 'https://mapcarta.com/Macy%27s_Herald_Square',
+          title: "Macy's Herald Square, Manhattan (Mapcarta)",
+          checked: '2026-07-29',
+        },
+      },
       
     ],
     itinerary: [
@@ -18420,6 +18618,24 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/Bar_Mleczny_Prasowy',
           title: 'Bar Mleczny Prasowy, Warsaw (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'war-designer-outlet',
+        name: 'אאוטלט ורשה',
+        nameLocal: 'Designer Outlet Warszawa',
+        category: 'shopping',
+        lat: 52.087306,
+        lng: 21.022632,
+        description:
+          'מרכז אאוטלט של מותגים בפיאסצ׳נו, דרומית לוורשה.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=52.087306,21.022632',
+        source: {
+          url: 'https://mapcarta.com/W700106611',
+          title: 'Designer Outlet Warszawa, Piaseczno (Mapcarta)',
           checked: '2026-07-29',
         },
       },
@@ -30929,6 +31145,24 @@ export const destinations: Destination[] = [
           checked: '2026-07-29',
         },
       },
+      {
+        id: 'kor-lotte-world-mall',
+        name: 'לוטה וורלד מול',
+        nameLocal: 'Lotte World Mall',
+        category: 'shopping',
+        lat: 37.51374,
+        lng: 127.10421,
+        description:
+          'קניון בן עשר קומות למרגלות מגדל לוטה וורלד בסונגפא, לצד פארק השעשועים לוטה וורלד.',
+        tags: ['families'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=37.51374,127.10421',
+        source: {
+          url: 'https://mapcarta.com/Lotte_World_Mall',
+          title: 'Lotte World Mall, Songpa, Seoul (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -37734,6 +37968,42 @@ export const destinations: Destination[] = [
           checked: '2026-07-28',
         },
       },
+      {
+        id: 'par-galeries-lafayette',
+        name: 'גלרי לאפייט',
+        nameLocal: 'Galeries Lafayette Paris Haussmann',
+        category: 'shopping',
+        lat: 48.87366,
+        lng: 2.3322,
+        description:
+          'חנות הדגל של רשת הכלבו הצרפתית בשדרת אוסמן, מוכרת בכיפת הזכוכית שמעל אולם המרכזי.',
+        tags: ['art'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=48.87366,2.3322',
+        source: {
+          url: 'https://mapcarta.com/Galeries_Lafayette_Haussmann',
+          title: 'Galeries Lafayette Haussmann, Paris (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'par-la-vallee-village',
+        name: 'לה ואלה וילג׳',
+        nameLocal: 'La Vallée Village',
+        category: 'shopping',
+        lat: 48.85344,
+        lng: 2.78446,
+        description:
+          'כפר אאוטלט של מותגים בסרי, מזרחית לפריז באזור מארן-לה-ואלה.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=48.85344,2.78446',
+        source: {
+          url: 'https://mapcarta.com/La_Vallee_Village',
+          title: 'La Vallee Village, Serris (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -38387,6 +38657,24 @@ export const destinations: Destination[] = [
           checked: '2026-07-28',
         },
       },
+      {
+        id: 'lon-harrods',
+        name: 'הרודס',
+        nameLocal: 'Harrods',
+        category: 'shopping',
+        lat: 51.49925,
+        lng: -0.16301,
+        description:
+          'כלבו היוקרה בברומפטון רואד בנייטסברידג׳, מוסד לונדוני בפני עצמו ולא רק חנות.',
+        tags: ['art'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=51.49925,-0.16301',
+        source: {
+          url: 'https://mapcarta.com/26234344',
+          title: 'Harrods, Knightsbridge, London (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -38675,6 +38963,42 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/W47298639',
           title: 'Maxwell Food Center, Singapore (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'sgp-ion-orchard',
+        name: 'איון אורצ׳רד',
+        nameLocal: 'ION Orchard',
+        category: 'shopping',
+        lat: 1.30396,
+        lng: 103.83197,
+        description:
+          'קניון על שדרת אורצ׳רד רואד, רחוב הקניות המרכזי של סינגפור, צמוד לתחנת הרכבת התחתית אורצ׳רד.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=1.30396,103.83197',
+        source: {
+          url: 'https://mapcarta.com/ION_Orchard',
+          title: 'ION Orchard, Singapore (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'sgp-mustafa',
+        name: 'מרכז מוסטפא',
+        nameLocal: 'Mustafa Centre',
+        category: 'shopping',
+        lat: 1.31012,
+        lng: 103.85532,
+        description:
+          'מרכז קניות בן חמש קומות ברובע ליטל אינדיה, מוסד סינגפורי שמוכר הכול תחת גג אחד.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=1.31012,103.85532',
+        source: {
+          url: 'https://mapcarta.com/Mustafa_Centre',
+          title: 'Mustafa Centre, Little India, Singapore (Mapcarta)',
           checked: '2026-07-29',
         },
       },

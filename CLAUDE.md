@@ -1354,11 +1354,12 @@ placeholders in the accessibility statement.
 
 ## Grounding index budget (authoritative - read this before trusting a session log)
 
-**The ceiling is 260,000 chars.** Netanel raised it from ~190,000 on 2026-07-27.
+**The ceiling is 280,000 chars.** Netanel raised it from ~190,000 to 260,000 on
+2026-07-27, and to 280,000 on 2026-07-29.
 
-Older session-log entries below quote the ~190,000 figure. They are kept as written
-because they are a historical record, but **do not act on that number**, and above all
-do not trim the catalog because the index now measures above it.
+Older session-log entries below quote ~190,000 and 260,000. They are kept as written
+because they are a historical record, but **do not act on those numbers**, and above all
+do not trim the catalog because the index now measures above them.
 
 What the number actually is, measured rather than assumed:
 
@@ -1369,8 +1370,40 @@ What the number actually is, measured rather than assumed:
   (50,000 chars, see entry 2026-07-27 (e)) + system prompt and tools.
 - Measured 2026-07-27: index 191,951 chars at 1,336 places, **90% ASCII / 10% Hebrew**,
   which is roughly 61k-67k tokens. An earlier entry's "~45k tokens" understates it.
-- Cost per place is stable at **~144 chars**, so 260,000 leaves room for roughly 470
-  more places, about 20 cities.
+- Cost per place is **~144 chars catalog-wide**, but only **110 chars** for a
+  food/market/shopping entry, which carries no description - see entry (dd).
+
+**280,000 is close to the real limit, and the arithmetic is why.** Measured
+2026-07-29 at 241,002 chars, the index is ~78k-89k tokens. Adding the other blocks at
+their own worst case - detail ~28k, history ~45k, trip ~6k, system and tools ~6k -
+puts a worst-case request at roughly **165k-177k of the 200k window**. Scaling that:
+
+| ceiling | worst-case prompt | headroom |
+|---|---|---|
+| 260,000 | ~165k-177k | ~23k |
+| **280,000** | ~171k-185k | **~15k** |
+| 300,000 | ~178k-192k | ~8k |
+| 340,000 | ~191k-206k | **negative** |
+
+So **do not raise this past 300,000 without changing something structural.** The
+failure mode is not gradual: entry (e) records a real 408k-token request that failed
+identically on every subsequent turn forever, because history only grows.
+
+**The lever that actually creates room is the index FORMAT, not the ceiling.**
+`buildGroundingIndex()` serialises each place as a JSON object, so the keys
+`"id":"name":"category":"tags":"priceLevel":"mustSee":"durationMin":` repeat 1,768
+times. Measured 2026-07-29: re-encoding the identical information as tuples with a
+one-line legend gives **132,184 chars instead of 241,002 - a 45% saving, about
+107,000 chars, room for ~975 more entries at zero cost to the context window.**
+That is four times what any safe ceiling raise buys.
+
+It was NOT shipped, deliberately: the index is the single most load-bearing block in
+the prompt, the change alters how the model reads every place id, and there is no
+`ANTHROPIC_API_KEY` in the authoring sandbox to verify the model still uses it
+correctly. Losing that would break the core product silently. It is offline-provable
+that no information is lost (assert every id and name survives); what cannot be
+proven from here is the model's behaviour. **Whoever has a live key should do this
+before raising the ceiling again.**
 
 The index does NOT serialize photo URLs, so **photo work costs zero budget**. Verify
 with `/tmp/measure.mjs`-style measurement before quoting any new figure.
