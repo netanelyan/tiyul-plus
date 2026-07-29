@@ -1355,6 +1355,48 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=Sedlec+Ossuary',
       },
+      {
+        id: 'prg-u-fleku',
+        name: 'או פלקו - מבשלת הבירה',
+        nameLocal: 'U Fleku',
+        category: 'food',
+        lat: 50.0788,
+        lng: 14.4172,
+        description:
+          'בית מזיגה ומבשלת בירה שפועלים באותו מקום מאז 1499, ומגישים לאגר כהה שמבושל בבית ואינו נמכר בשום מקום אחר. אולמות עץ ארוכים ותזמורת - תיירותי מאוד, ועדיין מוסד פראגאי אמיתי. לא כשר.',
+        durationMin: 90,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=50.0788,14.4172',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Prag%2C_U_Flek%C5%AF_--_2019_--_6735.jpg/500px-Prag%2C_U_Flek%C5%AF_--_2019_--_6735.jpg',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/U_Flek%C5%AF',
+          title: 'U Fleku - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'prg-slavia',
+        name: 'קפה סלביה',
+        nameLocal: 'Kavarna Slavia',
+        category: 'food',
+        lat: 50.08182,
+        lng: 14.413258,
+        description:
+          'בית קפה על גדת הוולטבה מול התיאטרון הלאומי, בסגנון ארט דקו, שהיה מקום מפגש של סופרים ומתנגדי משטר בתקופה הקומוניסטית - ואצלב האוול ישב בו קבוע. התצפית מהחלון על טירת פראג היא הסיבה לשבת דווקא כאן. לא כשר.',
+        durationMin: 45,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'history', 'art'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=50.08182,14.413258',
+        source: {
+          url: 'https://cs.wikipedia.org/wiki/Kav%C3%A1rna_Slavia',
+          title: 'Kavarna Slavia - Wikipedie',
+          checked: '2026-07-28',
+        },
+      },
     ],
     itinerary: [
       {
@@ -1829,6 +1871,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=Visegrad+Citadel+Hungary',
       },
+
     ],
     itinerary: [
       {
@@ -3078,6 +3121,27 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/M-estadio-santiago-bernabeu-diciembre-2024-c.jpg/500px-M-estadio-santiago-bernabeu-diciembre-2024-c.jpg',
       },
+      {
+        id: 'mad-san-anton',
+        name: 'שוק סן אנטון',
+        nameLocal: 'Mercado de San Anton',
+        category: 'market',
+        lat: 40.422,
+        lng: -3.69762778,
+        description:
+          'שוק שכונתי בצ׳ואקה שנבנה מחדש - קומת ירקות ודגים למטה, דוכני טאפאס באמצע וגג פתוח למעלה. פחות מבוים מסן מיגל התיירותי, ועדיין קונים בו אנשים שגרים ברחוב.',
+        durationMin: 45,
+        tags: ['foodie', 'nightlife'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=40.422,-3.69762778',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Mercado_de_San_Anton_during_World_Pride.jpg/500px-Mercado_de_San_Anton_during_World_Pride.jpg',
+        source: {
+          url: 'https://es.wikipedia.org/wiki/Mercado_de_San_Ant%C3%B3n',
+          title: 'Mercado de San Anton - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
     ],
     itinerary: [
       {
@@ -4055,6 +4119,48 @@ export const destinations: Destination[] = [
         externalUrl: 'https://maps.google.com/?q=52.504,13.331',
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Caf%C3%A9_Kranzler%2C_Berlin%2C_1988.JPG/500px-Caf%C3%A9_Kranzler%2C_Berlin%2C_1988.JPG',
+      },
+      {
+        id: 'ber-curry36',
+        name: 'קארי 36',
+        nameLocal: 'Curry 36',
+        category: 'food',
+        lat: 52.49349363,
+        lng: 13.38771924,
+        description:
+          'דוכן קארייוורסט בקרויצברג, אחת משתי הכתובות שברלינאים מתווכחים עליהן כשמדובר במנה הרחוב המזוהה עם העיר - נקניקייה חתוכה ברוטב עגבניות ואבקת קארי. עומדים ואוכלים בעמידה. לא כשר - בשר חזיר.',
+        durationMin: 30,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=52.49349363,13.38771924',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Berlin-Curry_36.jpg/500px-Berlin-Curry_36.jpg',
+        source: {
+          url: 'https://de.wikipedia.org/wiki/Curry_36',
+          title: 'Curry 36 - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'ber-konnopke',
+        name: 'קונופקה - דוכן הקארייוורסט',
+        nameLocal: 'Konnopkes Imbiss',
+        category: 'food',
+        lat: 52.54048611,
+        lng: 13.41217611,
+        description:
+          'דוכן משפחתי מתחת לגשר הרכבת התחתית בשנהאוזר אלה, פועל מאז 1930 והיה הדוכן שהמשיך לעבוד גם בברלין המזרחית - מה שהופך אותו לגרסה המזרחית של אותו ויכוח. לא כשר - בשר חזיר.',
+        durationMin: 30,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=52.54048611,13.41217611',
+        source: {
+          url: 'https://de.wikipedia.org/wiki/Konnopkes_Imbi%C3%9F',
+          title: 'Konnopkes Imbiss - Wikipedia',
+          checked: '2026-07-28',
+        },
       },
     ],
     itinerary: [
@@ -5112,6 +5218,7 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'romantic'],
         externalUrl: 'https://maps.google.com/?q=Mosaica+Sofitel+Dubai+Downtown',
       },
+      
     ],
     itinerary: [
       {
@@ -8815,6 +8922,68 @@ export const destinations: Destination[] = [
         durationMin: 75,
         externalUrl: 'https://maps.google.com/?q=Restaurant+Einstein+Munich',
       },
+      {
+        id: 'muc-viktualienmarkt',
+        name: 'ויקטואליינמרקט',
+        nameLocal: 'Viktualienmarkt',
+        category: 'market',
+        lat: 48.13527778,
+        lng: 11.57611111,
+        description:
+          'שוק המזון המרכזי של מינכן, פועל מאז 1807 בכיכר קבועה ליד מריאנפלאץ - דוכני גבינות, נקניקים, תבלינים ופרחים, ובאמצע גן בירה שמתחלף בין מבשלות העיר. זה השוק שממנו העיר אוכלת, לא אטרקציה שנבנתה לתיירים.',
+        durationMin: 75,
+        tags: ['foodie', 'families'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=48.13527778,11.57611111',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Viktualienmarkt_2016.jpg/500px-Viktualienmarkt_2016.jpg',
+        source: {
+          url: 'https://de.wikipedia.org/wiki/Viktualienmarkt',
+          title: 'Viktualienmarkt - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'muc-hofbrauhaus',
+        name: 'הופבראוהאוס',
+        nameLocal: 'Hofbrauhaus am Platzl',
+        category: 'food',
+        lat: 48.1375,
+        lng: 11.57972222,
+        description:
+          'אולם הבירה הבווארי הארכיטיפי, במקור מבשלת החצר של הדוכסות. שולחנות עץ משותפים, תזמורת בלאדרהוזן וספסלים לאלף איש - עמוס בתיירים בכל שעה, וגם ככה זה עדיין המקום שכל שאר אולמות הבירה בעולם מחקים. לא כשר.',
+        durationMin: 90,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'history', 'nightlife'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=48.1375,11.57972222',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Hofbrauhaus.JPG/500px-Hofbrauhaus.JPG',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Hofbr%C3%A4uhaus_am_Platzl',
+          title: 'Hofbrauhaus am Platzl - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'muc-dallmayr',
+        name: 'דלמאייר - חנות המעדנים',
+        nameLocal: 'Dallmayr',
+        category: 'shopping',
+        lat: 48.13826944,
+        lng: 11.57725,
+        description:
+          'בית מסחר למעדנים ליד מריאנפלאץ שהיה ספק החצר המלכותית הבווארית, ומזוהה בעיקר עם הקפה שלו. אולם המכירה עצמו - דלפקי דגים, גבינות ופירות - שווה כניסה גם בלי לקנות.',
+        durationMin: 30,
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=48.13826944,11.57725',
+        source: {
+          url: 'https://de.wikipedia.org/wiki/Dallmayr',
+          title: 'Dallmayr - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
     ],
     itinerary: [
       {
@@ -9392,6 +9561,27 @@ export const destinations: Destination[] = [
         externalUrl: 'https://maps.google.com/?q=43.80722,11.29194',
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/FiesoleDec102023_15.jpg/500px-FiesoleDec102023_15.jpg',
+      },
+      {
+        id: 'flo-mercato-centrale',
+        name: 'מרקטו צ׳נטרלה',
+        nameLocal: 'Mercato Centrale',
+        category: 'market',
+        lat: 43.776667,
+        lng: 11.253333,
+        description:
+          'אולם שוק מברזל וזכוכית מ-1874 ברובע סן לורנצו. הקומה התחתונה היא עדיין שוק מזון עובד - קצבים, דלפקי למפרדוטו וגבינות טוסקניות - והעליונה הפכה לקומת דוכני אוכל. סביבו שוק הדוכנים של סן לורנצו.',
+        durationMin: 60,
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=43.776667,11.253333',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Mercato_centrale_di_san_lorenzo_02.jpg/500px-Mercato_centrale_di_san_lorenzo_02.jpg',
+        source: {
+          url: 'https://it.wikipedia.org/wiki/Mercato_Centrale_(Firenze)',
+          title: 'Mercato Centrale (Firenze) - Wikipedia',
+          checked: '2026-07-28',
+        },
       },
     ],
     itinerary: [
@@ -10665,6 +10855,69 @@ export const destinations: Destination[] = [
         rating: 4.5,
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=Chabad+House+Tokyo+Takanawa',
+      },
+      {
+        id: 'jpn-tsukiji',
+        name: 'שוק צוקיג׳י החיצוני',
+        nameLocal: 'Tsukiji Outer Market',
+        category: 'market',
+        lat: 35.66138889,
+        lng: 139.76972222,
+        description:
+          'מכירת הדגים הסיטונאית עברה לטויוסו ב-2018, אבל השוק החיצוני נשאר - סמטאות של דוכני סשימי, ביצי טמאגו, סכיני מטבח וכלי אוכל. זה השוק שהולכים אליו כדי לאכול, לא כדי לראות מכירה פומבית. לא כשר.',
+        durationMin: 90,
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=35.66138889,139.76972222',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/2018_Tsukiji_fish_market.jpg/500px-2018_Tsukiji_fish_market.jpg',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Tsukiji_fish_market',
+          title: 'Tsukiji fish market - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'jpn-toyosu',
+        name: 'שוק טויוסו',
+        nameLocal: 'Toyosu Market',
+        category: 'market',
+        lat: 35.644167,
+        lng: 139.783611,
+        description:
+          'שוק הדגים הסיטונאי הגדול בעולם, שאליו עברה הפעילות מצוקיג׳י. הצפייה במכירה הפומבית של הטונה נעשית מגלריה מזוגגת מעל רצפת המסחר ובשעה מוקדמת מאוד, ומעליה קומת מסעדות ודוכנים.',
+        durationMin: 90,
+        tags: ['foodie', 'families'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=35.644167,139.783611',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Toyosu_Market_Tokyo_2.jpg/500px-Toyosu_Market_Tokyo_2.jpg',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Toyosu_Market',
+          title: 'Toyosu Market - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'jpn-kappabashi',
+        name: 'רחוב קאפאבאשי',
+        nameLocal: 'Kappabashi-dori',
+        category: 'shopping',
+        lat: 35.71444444,
+        lng: 139.78888889,
+        description:
+          'רחוב אספקה למסעדות בין אואנו לאסאקוסה - סכיני מטבח יפניות מזויפות ביד, כלי חרס, תבניות, ודגמי המזון מפלסטיק שמוצגים בחלונות מסעדות ביפן. חנות סכינים כאן היא מזכרת שמחזיקה שנים.',
+        durationMin: 60,
+        tags: ['foodie', 'families'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=35.71444444,139.78888889',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Kappabashi-dori_streetcorner_%28Kitchen_town_-_southern_end%29_Tokyo_Japan.jpg/500px-Kappabashi-dori_streetcorner_%28Kitchen_town_-_southern_end%29_Tokyo_Japan.jpg',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Kappabashi-dori',
+          title: 'Kappabashi-dori - Wikipedia',
+          checked: '2026-07-28',
+        },
       },
     ],
     itinerary: [
@@ -12095,6 +12348,29 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl: 'https://maps.google.com/?q=The+Kosher+Marketplace+New+York',
       },
+      {
+        id: 'nyc-russ-daughters',
+        name: 'ראס ודוטרס',
+        nameLocal: 'Russ & Daughters',
+        category: 'food',
+        lat: 40.72259,
+        lng: -73.98832,
+        description:
+          'חנות אפטייזינג במזרח הלואר סייד שנפתחה ב-1914 על ידי מהגר יהודי מגליציה, והייתה העסק הראשון בארצות הברית ששם בנות בשם החנות. סלמון מעושן, הרינג ובייגלס. עסק יהודי מובהק - אך אינו כשר, ופתוח בשבת.',
+        durationMin: 30,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=40.72259,-73.98832',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Russ_%26_Daughters_%2851624125108%29.jpg/500px-Russ_%26_Daughters_%2851624125108%29.jpg',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Russ_%26_Daughters',
+          title: 'Russ & Daughters - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      
     ],
     itinerary: [
       {
@@ -16210,6 +16486,49 @@ export const destinations: Destination[] = [
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=Chabad+of+Kyoto',
       },
+      {
+        id: 'kyo-nishiki',
+        name: 'שוק נישיקי',
+        nameLocal: 'Nishiki Market',
+        category: 'market',
+        lat: 35.00502778,
+        lng: 135.76613889,
+        description:
+          'סמטה מקורה באורך כ-400 מטר במרכז קיוטו, מכונה המטבח של קיוטו ופועלת כשוק כבר מאות שנים. חמוצים מקומיים, טופו, דגים מיובשים ותה מאצ׳ה, לצד דוכני נגיסה. צר וצפוף - צילום בתוך החנויות לרוב אסור.',
+        durationMin: 60,
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=35.00502778,135.76613889',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Nishiki_Ichiba_by_matsuyuki.jpg/500px-Nishiki_Ichiba_by_matsuyuki.jpg',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Nishiki_Market',
+          title: 'Nishiki Market - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'kyo-dotonbori',
+        name: 'דוטונבורי',
+        nameLocal: 'Dotonbori',
+        category: 'food',
+        lat: 34.668708,
+        lng: 135.501308,
+        description:
+          'רצועת התעלה של אוסקה שהיא לב תרבות ה-kuidaore - לאכול עד שנופלים. שלטי ניאון ענקיים, סרטן מתנועע ורץ הגליקו, ומתחתם דוכני טאקויאקי ואוקונומיאקי. אוסקה היא סיבה לנסוע מקיוטו לערב. לא כשר.',
+        durationMin: 90,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'nightlife', 'families'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=34.668708,135.501308',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Osaka_Dotonbori_Ebisu_Bridge.jpg/500px-Osaka_Dotonbori_Ebisu_Bridge.jpg',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/D%C5%8Dtonbori',
+          title: 'Dotonbori - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
     ],
     itinerary: [
       {
@@ -16969,6 +17288,25 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Warszawa_Centrum_Nauki_Kopernik_(dron).jpg/500px-Warszawa_Centrum_Nauki_Kopernik_(dron).jpg',
       },
+      {
+        id: 'war-hale-mirowskie',
+        name: 'אולמות מירוב',
+        nameLocal: 'Hale Mirowskie',
+        category: 'market',
+        lat: 52.238611,
+        lng: 20.996944,
+        description:
+          'זוג אולמות שוק מסוף המאה ה-19 שניצלו מהחורבן של 1944 - באחד שוק מזון עובד עם דוכני ירקות ובשר, ובשני חלל אירועים ואוכל. סביבם מוכרות זקנות פטריות וכרוב כבוש ישר מהמדרכה, וזו הוורשה שלא נבנתה מחדש.',
+        durationMin: 45,
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=52.238611,20.996944',
+        source: {
+          url: 'https://pl.wikipedia.org/wiki/Hale_Mirowskie',
+          title: 'Hale Mirowskie - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
     ],
     itinerary: [
       {
@@ -17228,6 +17566,71 @@ export const destinations: Destination[] = [
         externalUrl: 'https://maps.google.com/?q=50.06413,19.94094',
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Kawiarnia_Jama_Michalika_01_AB.jpg/500px-Kawiarnia_Jama_Michalika_01_AB.jpg',
+      },
+      {
+        id: 'kra-stary-kleparz',
+        name: 'שוק סטארי קלפאז׳',
+        nameLocal: 'Stary Kleparz',
+        category: 'market',
+        lat: 50.0675,
+        lng: 19.941111,
+        description:
+          'שוק המזון הוותיק של קרקוב, פועל באותו מקום מאז המאה ה-14 מצפון לעיר העתיקה. פירות, גבינות הרים מעושנות, נקניקים ופרחים - שוק שכונתי לגמרי, בלי דוכני מזכרות, כמה דקות הליכה מהכיכר הראשית.',
+        durationMin: 45,
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=50.0675,19.941111',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Kleparski_Market_Square_%28view_from_S%29%2C_Krak%C3%B3w%2C_Poland.jpg/500px-Kleparski_Market_Square_%28view_from_S%29%2C_Krak%C3%B3w%2C_Poland.jpg',
+        source: {
+          url: 'https://pl.wikipedia.org/wiki/Stary_Kleparz',
+          title: 'Stary Kleparz - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'kra-plac-nowy',
+        name: 'פלאץ נובי והאוקרונגלאק',
+        nameLocal: 'Plac Nowy',
+        category: 'food',
+        lat: 50.05167,
+        lng: 19.94493,
+        description:
+          'הכיכר המרכזית של קז׳ימייז׳, ובאמצעה מבנה עגול מ-1900 ששימש כבית מטבחיים כשר של הקהילה היהודית ומשמש היום דוכני זאפייקנקה - חצי באגט אפוי עם פטריות וגבינה, מנת הרחוב המזוהה עם קרקוב. לא כשר.',
+        durationMin: 45,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'nightlife', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=50.05167,19.94493',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Nowy_%28New%29_square%2C_Kazimierz%2C_Krakow%2C_Poland.jpg/500px-Nowy_%28New%29_square%2C_Kazimierz%2C_Krakow%2C_Poland.jpg',
+        source: {
+          url: 'https://pl.wikipedia.org/wiki/Plac_Nowy_w_Krakowie',
+          title: 'Plac Nowy w Krakowie - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'kra-wierzynek',
+        name: 'ויז׳ינק',
+        nameLocal: 'Wierzynek',
+        category: 'food',
+        lat: 50.060438,
+        lng: 19.937358,
+        description:
+          'מסעדה בכיכר הראשית שמייחסת את ראשיתה למשתה מלכותי שנערך ב-1364, ויושבת בבית עיר עתיק עם אולמות מקומרים. חדר האוכל המסופר ביותר בפולין, ומחירים בהתאם. לא כשרה.',
+        durationMin: 90,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'history', 'romantic'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=50.060438,19.937358',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Kamienica_Morsztynowska%2C_Krak%C3%B3w.jpg/500px-Kamienica_Morsztynowska%2C_Krak%C3%B3w.jpg',
+        source: {
+          url: 'https://pl.wikipedia.org/wiki/Wierzynek',
+          title: 'Wierzynek - Wikipedia',
+          checked: '2026-07-28',
+        },
       },
     ],
     itinerary: [
@@ -19225,6 +19628,7 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Zentralbad_Sofia_Oct_2012_PD_IMG_1683.jpg/500px-Zentralbad_Sofia_Oct_2012_PD_IMG_1683.jpg',
       },
+
     ],
     itinerary: [
       {
@@ -22473,6 +22877,27 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=54.35,19.68333',
       },
+      {
+        id: 'pl-hala-targowa',
+        name: 'אולם השוק של גדנסק',
+        nameLocal: 'Hala Targowa',
+        category: 'market',
+        lat: 54.352808,
+        lng: 18.651978,
+        description:
+          'אולם שוק ניאו-גותי מ-1896 בלב העיר העתיקה, ומתחתיו מרתף עם שרידי כנסייה דומיניקנית מהמאה ה-13 שנחשפו בשיפוץ ומוצגים באתר. עדיין שוק עובד של דוכני מזון וסחורה, לא מרכז מבקרים.',
+        durationMin: 45,
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=54.352808,18.651978',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Hala_Trargowa-Kupcy_Dominika%C5%84scy.jpg/500px-Hala_Trargowa-Kupcy_Dominika%C5%84scy.jpg',
+        source: {
+          url: 'https://pl.wikipedia.org/wiki/Hala_Targowa_w_Gda%C5%84sku',
+          title: 'Hala Targowa w Gdansku - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
     ],
     itinerary: [
       {
@@ -23346,6 +23771,28 @@ export const destinations: Destination[] = [
         externalUrl: 'https://maps.google.com/?q=41.83722,-69.97278',
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Nauset-light-cape-cod.jpg/500px-Nauset-light-cape-cod.jpg',
+      },
+      {
+        id: 'us-union-oyster',
+        name: 'יוניון אויסטר האוס',
+        nameLocal: 'Union Oyster House',
+        category: 'food',
+        lat: 42.36138889,
+        lng: -71.05694444,
+        description:
+          'המסעדה הוותיקה ביותר בארצות הברית שפועלת ברציפות, מ-1826, על שביל החירות בבוסטון. בר הצדפות החצי-עגול המקורי עדיין במקומו, ודניאל וובסטר ישב בו. צדפות וצ׳אודר. לא כשרה - פירות ים.',
+        durationMin: 75,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=42.36138889,-71.05694444',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Union_Oyster_House_2025.jpg/500px-Union_Oyster_House_2025.jpg',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Union_Oyster_House',
+          title: 'Union Oyster House - Wikipedia',
+          checked: '2026-07-28',
+        },
       },
     ],
     itinerary: [
@@ -29212,6 +29659,49 @@ export const destinations: Destination[] = [
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=49.63194274902344,8.365278244018555',
       },
+      {
+        id: 'de-drosselgasse',
+        name: 'דרוסלגאסה',
+        nameLocal: 'Drosselgasse',
+        category: 'shopping',
+        lat: 49.978341,
+        lng: 7.920766,
+        description:
+          'סמטה צרה בת כ-140 מטר ברידסהיים, דחוסה במרתפי יין וטברנות - הרחוב שמסמל יותר מכל את תרבות שתיית הריסלינג של עמק הריין. צפוף ותיירותי בקיץ, וזו בדיוק הנקודה שלו.',
+        durationMin: 45,
+        tags: ['foodie', 'nightlife'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=49.978341,7.920766',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Drosselgasse1.jpg/500px-Drosselgasse1.jpg',
+        source: {
+          url: 'https://de.wikipedia.org/wiki/Drosselgasse',
+          title: 'Drosselgasse - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'de-eberbach',
+        name: 'מנזר אברבך והיקב',
+        nameLocal: 'Kloster Eberbach',
+        category: 'food',
+        lat: 50.0425,
+        lng: 8.04667,
+        description:
+          'מנזר ציסטרציאני מהמאה ה-12 ברינגאו שהוא גם אחד מיקבי הריסלינג הוותיקים והחשובים בגרמניה, בבעלות מדינת הסן. אולמות האבן שימשו לצילומי שם הוורד, ובמרתפים מתקיימות טעימות. לא כשר.',
+        durationMin: 90,
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=50.0425,8.04667',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Kloster_Eberbach_fg01.JPG/500px-Kloster_Eberbach_fg01.JPG',
+        source: {
+          url: 'https://de.wikipedia.org/wiki/Kloster_Eberbach',
+          title: 'Kloster Eberbach - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
     ],
     itinerary: [
       {
@@ -33675,6 +34165,25 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Antibesbordmer.JPG/500px-Antibesbordmer.JPG',
       },
+      {
+        id: 'nce-cours-saleya',
+        name: 'שוק קור סאליה',
+        nameLocal: 'Cours Saleya',
+        category: 'market',
+        lat: 43.6956,
+        lng: 7.275039,
+        description:
+          'רחבה ארוכה בעיר העתיקה של ניס שבה נפרש בבקרים שוק הפרחים והירקות של הריביירה - לבנדר, זיתים, פירות הדר ותבלינים. בימי שני הוא מתחלף בשוק עתיקות, וזו הסיבה לבדוק איזה יום זה לפני שהולכים.',
+        durationMin: 60,
+        tags: ['foodie', 'families'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=43.6956,7.275039',
+        source: {
+          url: 'https://fr.wikipedia.org/wiki/Cours_Saleya',
+          title: 'Cours Saleya - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
     ],
     itinerary: [
       {
@@ -34058,6 +34567,48 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         tags: ['foodie', 'families'],
         externalUrl: 'https://maps.google.com/?q=As+du+Fallafel+rue+des+Rosiers+Paris',
+      },
+      {
+        id: 'par-mouffetard',
+        name: 'רחוב מופטאר',
+        nameLocal: 'Rue Mouffetard',
+        category: 'market',
+        lat: 48.84194444,
+        lng: 2.34972222,
+        description:
+          'אחד הרחובות העתיקים בפריז, יורד במדרון ברובע החמישי ומרוצף חנויות מזון - גבינות, מאפיות, דגים וירקות - עם דוכנים שנפרשים סביב כנסיית סן מדאר בקצה התחתון. הליכת קניות אמיתית ולא ויטרינה.',
+        durationMin: 60,
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=48.84194444,2.34972222',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Street_market_rue_Mouffetard_St_Medard_dsc00727.jpg/500px-Street_market_rue_Mouffetard_St_Medard_dsc00727.jpg',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Rue_Mouffetard',
+          title: 'Rue Mouffetard - Wikipedia',
+          checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'par-enfants-rouges',
+        name: 'שוק אנפאן רוז׳',
+        nameLocal: 'Marche des Enfants Rouges',
+        category: 'market',
+        lat: 48.86280556,
+        lng: 2.362,
+        description:
+          'השוק המקורה העתיק ביותר בפריז, פועל מאז 1615 בלב המארה, ונקרא על שם בית יתומים שילדיו לבשו אדום. היום שילוב של דוכני ירקות ותיקים ודוכני אוכל מוכן מכל העולם, בחלל קטן וצפוף.',
+        durationMin: 45,
+        tags: ['foodie', 'history'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=48.86280556,2.362',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/March%C3%A9_des_Enfants-Rouges%2C_Paris_May_2016.jpg/500px-March%C3%A9_des_Enfants-Rouges%2C_Paris_May_2016.jpg',
+        source: {
+          url: 'https://fr.wikipedia.org/wiki/March%C3%A9_des_Enfants-Rouges',
+          title: 'Marche des Enfants-Rouges - Wikipedia',
+          checked: '2026-07-28',
+        },
       },
     ],
     itinerary: [
@@ -34673,6 +35224,26 @@ export const destinations: Destination[] = [
         priceLevel: 3,
         tags: ['foodie'],
         externalUrl: 'https://maps.google.com/?q=Tony+Page+Restaurant+Marylebone+London',
+      },
+
+      {
+        id: 'lon-brick-lane',
+        name: 'בריק ליין',
+        nameLocal: 'Brick Lane',
+        category: 'market',
+        lat: 51.52194444,
+        lng: -0.07166667,
+        description:
+          'רחוב במזרח לונדון שעבר גלי הגירה - הוגנוטים, יהודים ואז בנגלים - וכיום מסעדות קארי, גרפיטי ושוק יום ראשון. שתי מאפיות בייגל ותיקות פועלות בו מסביב לשעון; הן יהודיות במוצאן אך אינן כשרות.',
+        durationMin: 75,
+        tags: ['foodie', 'history', 'art'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=51.52194444,-0.07166667',
+        source: {
+          url: 'https://en.wikipedia.org/wiki/Brick_Lane',
+          title: 'Brick Lane - Wikipedia',
+          checked: '2026-07-28',
+        },
       },
     ],
     itinerary: [
