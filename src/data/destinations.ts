@@ -2171,6 +2171,8 @@ export const destinations: Destination[] = [
         tags: ['history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=41.883898,12.474022',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Porta_Portese_28_09_2019.jpg/500px-Porta_Portese_28_09_2019.jpg',
         source: {
           url: 'https://en.wikipedia.org/wiki/Porta_Portese',
           title: 'Porta Portese - Wikipedia',
@@ -4496,6 +4498,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=14.35886,100.57948',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/%E0%B8%95%E0%B8%A5%E0%B8%B2%E0%B8%94%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%9E%E0%B8%A3%E0%B8%A1_%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%99%E0%B8%84%E0%B8%A3%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%AD%E0%B8%A2%E0%B8%B8%E0%B8%98%E0%B8%A2%E0%B8%B2_-_panoramio.jpg/500px-%E0%B8%95%E0%B8%A5%E0%B8%B2%E0%B8%94%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%9E%E0%B8%A3%E0%B8%A1_%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%99%E0%B8%84%E0%B8%A3%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%AD%E0%B8%A2%E0%B8%B8%E0%B8%98%E0%B8%A2%E0%B8%B2_-_panoramio.jpg',
         source: {
           url: 'https://mapcarta.com/Chao_Phrom_Market',
           title: 'Chao Phrom Market, Ayutthaya (Mapcarta)',
@@ -4805,6 +4809,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=13.742209,100.496567',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Flowermarket.jpg/500px-Flowermarket.jpg',
         source: {
           url: 'https://en.wikipedia.org/wiki/Pak_Khlong_Talat',
           title: 'Pak Khlong Talat - Wikipedia',
@@ -4824,6 +4830,8 @@ export const destinations: Destination[] = [
         tags: ['history', 'art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=13.73333333,100.51388889',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Rong_Kuak_Shrine_Talat_Noi_%E0%B8%A8%E0%B8%B2%E0%B8%A5%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B9%80%E0%B8%81%E0%B8%B7%E0%B8%AD%E0%B8%81_%E0%B8%95%E0%B8%A5%E0%B8%B2%E0%B8%94%E0%B8%99%E0%B9%89%E0%B8%AD%E0%B8%A2_2021_June.jpg/500px-Rong_Kuak_Shrine_Talat_Noi_%E0%B8%A8%E0%B8%B2%E0%B8%A5%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B9%80%E0%B8%81%E0%B8%B7%E0%B8%AD%E0%B8%81_%E0%B8%95%E0%B8%A5%E0%B8%B2%E0%B8%94%E0%B8%99%E0%B9%89%E0%B8%AD%E0%B8%A2_2021_June.jpg',
         source: {
           url: 'https://en.wikipedia.org/wiki/Talat_Noi',
           title: 'Talat Noi - Wikipedia',
@@ -4952,6 +4960,8 @@ export const destinations: Destination[] = [
         tags: ['families'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=13.7468,100.53494',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Siam_Paragon_06.23.jpg/500px-Siam_Paragon_06.23.jpg',
         source: {
           url: 'https://mapcarta.com/Siam_Paragon',
           title: 'Siam Paragon, Pathum Wan, Bangkok (Mapcarta)',
@@ -5449,6 +5459,8 @@ export const destinations: Destination[] = [
         tags: ['families'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=25.11794,55.20051',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Mall_of_the_Emirates_%283679338750%29.jpg/500px-Mall_of_the_Emirates_%283679338750%29.jpg',
         source: {
           url: 'https://mapcarta.com/Mall_of_the_Emirates',
           title: 'Mall of the Emirates, Dubai (Mapcarta)',
@@ -5864,6 +5876,8 @@ export const destinations: Destination[] = [
         tags: ['families'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=24.48854,54.60892',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Yas_Mall_Front.jpg/500px-Yas_Mall_Front.jpg',
         source: {
           url: 'https://mapcarta.com/Yas_Mall',
           title: 'Yas Mall, Yas Island (Mapcarta)',
@@ -9603,6 +9617,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=48.13826944,11.57725',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Dallmayr-Stammhaus.jpg/500px-Dallmayr-Stammhaus.jpg',
         source: {
           url: 'https://de.wikipedia.org/wiki/Dallmayr',
           title: 'Dallmayr - Wikipedia',
@@ -11815,6 +11831,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=35.30698,138.96496',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Gotemba_premium_outlets1.jpg/500px-Gotemba_premium_outlets1.jpg',
         source: {
           url: 'https://mapcarta.com/Gotemba_Premium_Outlets',
           title: 'Gotemba Premium Outlets, Shizuoka (Mapcarta)',
@@ -13376,6 +13394,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=41.31709,-74.12575',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Woodbury_Common_Premium_Outlets_Hudson_Valley_District.jpg/500px-Woodbury_Common_Premium_Outlets_Hudson_Valley_District.jpg',
         source: {
           url: 'https://mapcarta.com/Woodbury_Common_Premium_Outlets',
           title: 'Woodbury Common Premium Outlets, New York (Mapcarta)',
@@ -13394,6 +13414,8 @@ export const destinations: Destination[] = [
         tags: ['art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=40.75082,-73.98917',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/NYC-manhattan-macys.jpg/500px-NYC-manhattan-macys.jpg',
         source: {
           url: 'https://mapcarta.com/Macy%27s_Herald_Square',
           title: "Macy's Herald Square, Manhattan (Mapcarta)",
@@ -14773,6 +14795,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=64.14884,-21.93861',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Kolaportid.jpg/500px-Kolaportid.jpg',
         source: {
           url: 'https://mapcarta.com/Kolaporti%C3%B0',
           title: 'Kolaportid, Reykjavik (Mapcarta)',
@@ -15332,6 +15356,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=45.81419,15.97723',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Dolac_01.JPG/500px-Dolac_01.JPG',
         source: {
           url: 'https://mapcarta.com/Dolac_Market',
           title: 'Dolac Market, Zagreb (Mapcarta)',
@@ -15702,6 +15728,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=27.70824,85.31348',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/AnnapurnaAjima1.jpg/500px-AnnapurnaAjima1.jpg',
         source: {
           url: 'https://mapcarta.com/Asan,_Kathmandu',
           title: 'Asan, Kathmandu (Mapcarta)',
@@ -16019,6 +16047,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=21.03824,105.84967',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Dong_Xuan_market.jpg/500px-Dong_Xuan_market.jpg',
         source: {
           url: 'https://mapcarta.com/%C4%90%E1%BB%93ng_Xu%C3%A2n_Market',
           title: 'Dong Xuan Market, Hanoi (Mapcarta)',
@@ -17307,6 +17337,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=39.66279,66.98053',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Siyob_bozori_%28Siyab_bazaar%29.jpg/500px-Siyob_bozori_%28Siyab_bazaar%29.jpg',
         source: {
           url: 'https://mapcarta.com/Siyob_Bazaar',
           title: 'Siyob Bazaar, Samarkand (Mapcarta)',
@@ -18261,6 +18293,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=51.20438,-113.99419',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Cross_iron_mills_Calgary_the_food_court_%2813699190383%29.jpg/500px-Cross_iron_mills_Calgary_the_food_court_%2813699190383%29.jpg',
         source: {
           url: 'https://mapcarta.com/CrossIron_Mills',
           title: 'CrossIron Mills, Rocky View County (Mapcarta)',
@@ -18811,6 +18845,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=52.238611,20.996944',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Hala_Mirowska_radek_ko%C5%82akowski.jpg/500px-Hala_Mirowska_radek_ko%C5%82akowski.jpg',
         source: {
           url: 'https://pl.wikipedia.org/wiki/Hale_Mirowskie',
           title: 'Hale Mirowskie - Wikipedia',
@@ -19679,6 +19715,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=52.35573,4.89436',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Albert_Cuypmarkt.jpg/500px-Albert_Cuypmarkt.jpg',
         source: {
           url: 'https://mapcarta.com/Albert_Cuypmarkt',
           title: 'Albert Cuyp Market, Amsterdam (Mapcarta)',
@@ -23072,6 +23110,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'history'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=56.943938,24.116656',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Riga_Central_Market_Hall.jpg/500px-Riga_Central_Market_Hall.jpg',
         source: {
           url: 'https://mapcarta.com/Riga_Central_Market',
           title: 'Riga Central Market (Mapcarta)',
@@ -24104,6 +24144,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=35.101132,129.028154',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Gukje_Market%2C_October_2019_03.jpg/500px-Gukje_Market%2C_October_2019_03.jpg',
         source: {
           url: 'https://mapcarta.com/Gukje_Market',
           title: 'Gukje Market, Busan (Mapcarta)',
@@ -24340,6 +24382,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=-42.88599,147.33174',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Hobart_Tasmania_Salamanca_Place.jpg/500px-Hobart_Tasmania_Salamanca_Place.jpg',
         source: {
           url: 'https://mapcarta.com/Salamanca_Market',
           title: 'Salamanca Market, Hobart (Mapcarta)',
@@ -24831,6 +24875,8 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=5.24376,100.43677',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Design_Village%2C_Batu_Kawan%2C_Penang.jpg/500px-Design_Village%2C_Batu_Kawan%2C_Penang.jpg',
         source: {
           url: 'https://mapcarta.com/W449626655',
           title: 'Design Village, Batu Kawan (Mapcarta)',
@@ -25700,6 +25746,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=16.47253,107.58866',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Dong_Ba_Market_%28Hue%29_-_Ch%E1%BB%A3_%C4%90%C3%B4ng_Ba_Hu%E1%BA%BF_%28July_2024%29_-_img_02.jpg/500px-Dong_Ba_Market_%28Hue%29_-_Ch%E1%BB%A3_%C4%90%C3%B4ng_Ba_Hu%E1%BA%BF_%28July_2024%29_-_img_02.jpg',
         source: {
           url: 'https://mapcarta.com/Dong_Ba_Market',
           title: 'Dong Ba Market, Hue (Mapcarta)',
@@ -26929,6 +26977,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=51.91977,4.48626',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Markthal-Rotterdam.jpg/500px-Markthal-Rotterdam.jpg',
         source: {
           url: 'https://mapcarta.com/Markthal_Rotterdam',
           title: 'Markthal, Rotterdam (Mapcarta)',
@@ -27762,6 +27812,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=53.35058,-6.26284',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Moore_Street_market%2C_Dublin.jpg/500px-Moore_Street_market%2C_Dublin.jpg',
         source: {
           url: 'https://mapcarta.com/Moore_Street',
           title: 'Moore Street, Dublin (Mapcarta)',
@@ -31535,6 +31587,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=37.514747,126.937737',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Korea-Seoul-Noryangjin_Fish_Market-03.jpg/500px-Korea-Seoul-Noryangjin_Fish_Market-03.jpg',
         source: {
           url: 'https://mapcarta.com/Noryangjin_Fisheries_Wholesale_Market',
           title: 'Noryangjin Fisheries Wholesale Market, Seoul (Mapcarta)',
@@ -31553,6 +31607,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=37.55935,126.97744',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/%EB%82%A8%EB%8C%80%EB%AC%B8_%EC%A4%91%EC%95%99%EB%A1%9C%EC%9D%98_%EC%9D%B4%EB%8F%99%EC%8B%9D_%EB%85%B8%EC%A0%90.jpg/500px-%EB%82%A8%EB%8C%80%EB%AC%B8_%EC%A4%91%EC%95%99%EB%A1%9C%EC%9D%98_%EC%9D%B4%EB%8F%99%EC%8B%9D_%EB%85%B8%EC%A0%90.jpg',
         source: {
           url: 'https://mapcarta.com/Namdaemun_Market',
           title: 'Namdaemun Market, Seoul (Mapcarta)',
@@ -31571,6 +31627,8 @@ export const destinations: Destination[] = [
         tags: ['families'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=37.51374,127.10421',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Lotte_World_Mall_in_Seoul.jpg/500px-Lotte_World_Mall_in_Seoul.jpg',
         source: {
           url: 'https://mapcarta.com/Lotte_World_Mall',
           title: 'Lotte World Mall, Songpa, Seoul (Mapcarta)',
@@ -33330,6 +33388,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'families'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=18.79023,99.00053',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Warorot_Market_01.jpg/500px-Warorot_Market_01.jpg',
         source: {
           url: 'https://mapcarta.com/Warorot_Market',
           title: 'Warorot Market - Mapcarta (OpenStreetMap)',
@@ -34583,6 +34643,8 @@ export const destinations: Destination[] = [
         tags: ['foodie'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=13.35387,103.85518',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Photo_de_l%27int%C3%A9rieur_du_march%C3%A9_de_Siem_Reap_-_Cambodge.jpg/500px-Photo_de_l%27int%C3%A9rieur_du_march%C3%A9_de_Siem_Reap_-_Cambodge.jpg',
         source: {
           url: 'https://mapcarta.com/Psar_Chaa',
           title: 'Psar Chaa, Siem Reap (Mapcarta)',
@@ -34769,6 +34831,8 @@ export const destinations: Destination[] = [
         tags: ['foodie', 'art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=11.5696,104.92108',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Aerial_view_of_Phnom_Penh%27s_Central_Market_%28September_2021%29.jpg/500px-Aerial_view_of_Phnom_Penh%27s_Central_Market_%28September_2021%29.jpg',
         source: {
           url: 'https://mapcarta.com/W377373297',
           title: 'Central Market, Phnom Penh (Mapcarta)',
@@ -35798,6 +35862,8 @@ export const destinations: Destination[] = [
         tags: ['art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=-34.59924,-58.37474',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Galerias_DSC-0514.JPG/500px-Galerias_DSC-0514.JPG',
         source: {
           url: 'https://mapcarta.com/Galer%C3%ADas_Pac%C3%ADfico',
           title: 'Galerias Pacifico, Buenos Aires (Mapcarta)',
@@ -38484,6 +38550,8 @@ export const destinations: Destination[] = [
         tags: ['art'],
         externalUrl:
           'https://www.google.com/maps/search/?api=1&query=48.87366,2.3322',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/GaleriesLafayetteNuit.jpg/500px-GaleriesLafayetteNuit.jpg',
         source: {
           url: 'https://mapcarta.com/Galeries_Lafayette_Haussmann',
           title: 'Galeries Lafayette Haussmann, Paris (Mapcarta)',
@@ -38881,6 +38949,8 @@ export const destinations: Destination[] = [
         rating: 4.6,
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=51.508235,-0.076303',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Tower_of_London_from_the_Shard_%288515883950%29.jpg/500px-Tower_of_London_from_the_Shard_%288515883950%29.jpg',
         priceLevel: 3,
         tags: ['history', 'families'],
         mustSee: true,
