@@ -242,6 +242,88 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-29 (ii) - "Continue to all destinations": the sweep, and two rejections that came from machinery rather than taste
+
+Netanel: "continue to all destinations." Entry (hh)'s addendum had just recorded
+that the first mall pass covered 18 of 166 and the second added 29 more. This
+closes the remaining 132.
+
+**Method, chosen because of the mistake in (hh):** five research subagents, one
+per region, each given the full list of destinations in its region rather than a
+sample. **No destination was judged from memory.** That is the direct application
+of the lesson from the "Did all?" correction - the count is one script and the
+assumption was free and wrong.
+
+**26 candidates came back, 17 were written, 9 were dropped.** The drops are worth
+listing because six of them are precedents already set this week, applied without
+re-litigating:
+
+| dropped | why |
+|---|---|
+| BTC City Ljubljana, Canal Walk, Albrook Mall | ordinary city malls - the Madrid Xanadu / Ibn Battuta bar |
+| Markthal Rotterdam | already in the catalog from this morning's pass |
+| Magasin du Nord Aarhus | a branch, not a landmark - the Shinsegae Uijeongbu call |
+| Vila do Conde (offered for `douro`) | Porto is not in the valley |
+| Sofia Outlet Center (offered for `rila-pirin`) | same mis-file shape |
+
+**The two interesting rejections both came from machinery, and they failed at
+different stages - which is the point.**
+
+*Maasmechelen Village* failed the **distance guard**: 1.36 degrees from
+`brussels-flanders` against that destination's own 1.24 tolerance. Identical to
+Bicester Village at 1.03 from London. What makes it worth recording is that the
+research subagent had **independently flagged it before the guard ever ran** -
+the Mapcarta page prints a Maasmechelen address inside a *Dilsen-Stokkem*
+administrative breadcrumb, with the coordinate itself in Dilsen-Stokkem. Two
+unrelated checks, one from a reader and one from arithmetic, landed on the same
+row. That is what a working pipeline looks like.
+
+*Polygone Riviera* is the more instructive one, because it **passed the guard and
+failed the audit**. Coordinates matched the source to the digit, the town matched,
+the sign was right. But the page's own primary title is *Centre commercial
+Shopping Promenade Riviera* - the adjacent open-air retail park in the same ZAC,
+not the Polygone Riviera mall. Right site, right town, **different named entity**.
+
+So the source did not confirm the place the entry named, and there is no source
+here that does. It went. **The alternative was to rename the entry to what the
+page actually describes, and that is worse**: nobody flies to Nice searching for
+"Shopping Promenade Riviera", so the catalog would carry a row that is technically
+sourced and practically useless. This is a new member of the wrong-place family -
+not a wrong city, not a wrong branch, but **a wrong neighbour**: the coordinate is
+essentially correct and the identity is not. A distance check cannot catch it, by
+construction, because the two things are metres apart. Only reading the page does.
+
+**Verification.** 17 of 17 coordinates re-read against their source pages by two
+independent auditors: **17 matched, 0 failed.** The four negative-longitude rows -
+Kildare, Wrentham, Las Vegas, CrossIron - each had the minus sign or the "west"
+designation confirmed on the page explicitly, since a dropped sign is the other
+half of the transcription class. A programmatic pass separately asserted that
+every written coordinate matches the research record and every `externalUrl`
+matches its own lat/lng. Two rows carry a benign naming note rather than a
+correction: the Las Vegas page words the name "Las Vegas Premium Outlets North"
+(the catalog has "Las Vegas North Premium Outlets") and it is confirmed the north
+branch on Grand Central Parkway, not the south one; and Design Village's address
+says "Bandar Cassia", which is Batu Kawan's township name.
+
+**Numbers:** 1797 places / 166 destinations / 83 countries, **0 errors**, 64
+warnings. 139 tests, tsc and build clean. Index **243,643 of the 280,000 ceiling**
+- about 36,400 chars left, roughly 330 more entries.
+
+**What the next session should know.** (1) Destinations with an outlet or landmark
+mall entry went from **zero this morning to 40**; the sweep is complete and a
+sixth pass would be re-checking work, not finding gaps. (2) The photo worklist is
+unchanged and still the first thing to run when Chrome connects -
+`scripts/photo-gaps.mjs`, order written into its own output. (3) The index
+compaction in the budget section (45% saving, ~975 entries) is still the highest-
+value move available and still needs a live key. (4) **No browser RTL/overflow
+check has been run on any of the ~224 entries added across passes (dd) through
+(ii)** - unchanged as the largest untested surface in this feature, and it has now
+grown for six consecutive passes. (5) The nine countries with no food or shopping
+place at all are unchanged and still blocked on coordinates, not research. (6)
+Standing: the 18 dead photo URLs, the 2.5MB client bundle, `feat/catalog-supabase`
+unmerged, and **both GitHub PATs still need revoking at
+https://github.com/settings/tokens**.
+
 ### 2026-07-29 (hh) - Outlet villages, the photo worklist, and a cap that was never the binding constraint
 
 Netanel, two instructions: mark the places without an image so the photo work is
