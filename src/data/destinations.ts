@@ -5852,6 +5852,24 @@ export const destinations: Destination[] = [
           checked: '2026-07-29',
         },
       },
+      {
+        id: 'auh-yas-mall',
+        name: 'יאס מול',
+        nameLocal: 'Yas Mall',
+        category: 'shopping',
+        lat: 24.48854,
+        lng: 54.60892,
+        description:
+          'קניון האי יאס, אי הפנאי המתוכנן של אבו דאבי, לצד פרארי וורלד ומסלול הפורמולה.',
+        tags: ['families'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=24.48854,54.60892',
+        source: {
+          url: 'https://mapcarta.com/Yas_Mall',
+          title: 'Yas Mall, Yas Island (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -6258,6 +6276,24 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/W174304319',
           title: 'Bazari (Orbeliani market), Tbilisi (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'tbs-outlet-village',
+        name: 'כפר האאוטלט של טביליסי',
+        nameLocal: 'Tbilisi Outlet Village',
+        category: 'shopping',
+        lat: 41.67343,
+        lng: 45.01891,
+        description:
+          'מתחם אאוטלט בפאתי טביליסי, באזור וזיאני מזרחית לעיר.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=41.67343,45.01891',
+        source: {
+          url: 'https://mapcarta.com/Tbilisi_Outlet_Village',
+          title: 'Tbilisi Outlet Village (Mapcarta)',
           checked: '2026-07-29',
         },
       },
@@ -6870,6 +6906,24 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/Green_Bazaar',
           title: 'Green Bazaar, Baku (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'aze-deniz-mall',
+        name: 'דניז מול',
+        nameLocal: 'Deniz Mall',
+        category: 'shopping',
+        lat: 40.35825,
+        lng: 49.83741,
+        description:
+          'בניין קניות על טיילת הים הכספי בבאקו, בנוי על קרקע שהופשרה מהים בצורת להבה מרכזית שסביבה כנפיים בצורת כוכב.',
+        tags: ['art'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=40.35825,49.83741',
+        source: {
+          url: 'https://mapcarta.com/W732972138',
+          title: 'Deniz Mall, Baku Boulevard (Mapcarta)',
           checked: '2026-07-29',
         },
       },
@@ -9875,6 +9929,24 @@ export const destinations: Destination[] = [
           checked: '2026-07-29',
         },
       },
+      {
+        id: 'ven-noventa',
+        name: 'אאוטלט נובנטה די פיאווה',
+        nameLocal: 'Noventa di Piave Designer Outlet',
+        category: 'shopping',
+        lat: 45.67088,
+        lng: 12.53483,
+        description:
+          'כפר אאוטלט של מותגים בנובנטה די פיאווה, צפונית-מזרחית לוונציה.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=45.67088,12.53483',
+        source: {
+          url: 'https://mapcarta.com/Noventa_di_Piave_Designer_Outlet',
+          title: 'Noventa di Piave Designer Outlet, Veneto (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -10226,6 +10298,24 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/Trattoria_Mario',
           title: 'Trattoria Mario, Florence (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'flo-the-mall',
+        name: 'דה מול (לצ׳ו)',
+        nameLocal: 'The Mall, Leccio',
+        category: 'shopping',
+        lat: 43.70296,
+        lng: 11.46334,
+        description:
+          'מרכז אאוטלט של מותגי יוקרה ברג׳לו שבפרובינציית פירנצה, בעמק הארנו מזרחית לעיר. נוסעים אליו במיוחד.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=43.70296,11.46334',
+        source: {
+          url: 'https://mapcarta.com/W150069277',
+          title: 'The Mall, Reggello, Florence (Mapcarta)',
           checked: '2026-07-29',
         },
       },
@@ -11675,6 +11765,24 @@ export const destinations: Destination[] = [
           url: 'https://en.wikipedia.org/wiki/Kappabashi-dori',
           title: 'Kappabashi-dori - Wikipedia',
           checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'jpn-gotemba',
+        name: 'אאוטלט גוטמבה',
+        nameLocal: 'Gotemba Premium Outlets',
+        category: 'shopping',
+        lat: 35.30698,
+        lng: 138.96496,
+        description:
+          'מרכז האאוטלט הגדול ביפן, בגוטמבה שלמרגלות הר פוג׳י - עם תצפית על ההר מתוך המתחם.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=35.30698,138.96496',
+        source: {
+          url: 'https://mapcarta.com/Gotemba_Premium_Outlets',
+          title: 'Gotemba Premium Outlets, Shizuoka (Mapcarta)',
+          checked: '2026-07-29',
         },
       },
     ],
@@ -17749,6 +17857,24 @@ export const destinations: Destination[] = [
           checked: '2026-07-28',
         },
       },
+      {
+        id: 'kyo-rinku',
+        name: 'אאוטלט רינקו',
+        nameLocal: 'Rinku Premium Outlets',
+        category: 'shopping',
+        lat: 34.40596,
+        lng: 135.29571,
+        description:
+          'מרכז אאוטלט בסגנון נופש ברינקו טאון באיזומיסאנו, ממול לנמל התעופה קנסאי מעבר למים.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=34.40596,135.29571',
+        source: {
+          url: 'https://mapcarta.com/Rinku_Premium_Outlets',
+          title: 'Rinku Premium Outlets, Izumisano (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -18352,6 +18478,24 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/Pasteis_de_Belem',
           title: 'Pasteis de Belem, Lisbon (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'lis-freeport',
+        name: 'פריפורט אאוטלט',
+        nameLocal: 'Freeport Fashion Outlet',
+        category: 'shopping',
+        lat: 38.75215,
+        lng: -8.94084,
+        description:
+          'מרכז אאוטלט באלקושטה, מעבר לנהר הטז׳ו מליסבון.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=38.75215,-8.94084',
+        source: {
+          url: 'https://mapcarta.com/Freeport_Lisboa_Fashion_Outlet',
+          title: 'Freeport Fashion Outlet, Alcochete (Mapcarta)',
           checked: '2026-07-29',
         },
       },
@@ -18962,6 +19106,24 @@ export const destinations: Destination[] = [
           url: 'https://pl.wikipedia.org/wiki/Wierzynek',
           title: 'Wierzynek - Wikipedia',
           checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'kra-factory',
+        name: 'פקטורי קרקוב',
+        nameLocal: 'Factory Kraków',
+        category: 'shopping',
+        lat: 50.10959,
+        lng: 19.84598,
+        description:
+          'מרכז אאוטלט במודלניצ׳קה, מחוץ לגבול העיר קרקוב.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=50.10959,19.84598',
+        source: {
+          url: 'https://mapcarta.com/Factory_Krak%C3%B3w',
+          title: 'Factory Krakow, Modlniczka (Mapcarta)',
+          checked: '2026-07-29',
         },
       },
     ],
@@ -35336,6 +35498,24 @@ export const destinations: Destination[] = [
           checked: '2026-07-28',
         },
       },
+      {
+        id: 'ba-galerias-pacifico',
+        name: 'גלריאס פסיפיקו',
+        nameLocal: 'Galerías Pacífico',
+        category: 'shopping',
+        lat: -34.59924,
+        lng: -58.37474,
+        description:
+          'מרכז קניות היסטורי בשדרת קורדובה במרכז בואנוס איירס, בבניין מקומר שקירותיו מצוירים בפרסקאות. לצדו מרכז התרבות בורחס.',
+        tags: ['art'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=-34.59924,-58.37474',
+        source: {
+          url: 'https://mapcarta.com/Galer%C3%ADas_Pac%C3%ADfico',
+          title: 'Galerias Pacifico, Buenos Aires (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -37053,6 +37233,24 @@ export const destinations: Destination[] = [
           checked: '2026-07-29',
         },
       },
+      {
+        id: 'bra-outlet-premium',
+        name: 'אאוטלט פרמיום ריו',
+        nameLocal: 'Outlet Premium Rio de Janeiro',
+        category: 'shopping',
+        lat: -22.67546,
+        lng: -43.2881,
+        description:
+          'כפר אאוטלט פתוח על כביש וושינגטון לואיס בדוקה דה קשיאס, צפונית לריו.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=-22.67546,-43.2881',
+        source: {
+          url: 'https://mapcarta.com/Outlet_Premium_Rio_de_Janeiro',
+          title: 'Outlet Premium Rio de Janeiro, Duque de Caxias (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -38275,6 +38473,24 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/Edinburgh_Farmers_Market',
           title: "Edinburgh Farmers' Market (Mapcarta)",
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'edi-livingston',
+        name: 'אאוטלט ליווינגסטון',
+        nameLocal: 'Livingston Designer Outlet',
+        category: 'shopping',
+        lat: 55.88316,
+        lng: -3.51991,
+        description:
+          'מרכז האאוטלט הגדול בסקוטלנד, בליווינגסטון שממערב לאדינבורו.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=55.88316,-3.51991',
+        source: {
+          url: 'https://mapcarta.com/Livingston_Designer_Outlet',
+          title: 'Livingston Designer Outlet, West Lothian (Mapcarta)',
           checked: '2026-07-29',
         },
       },
