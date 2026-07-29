@@ -9609,6 +9609,24 @@ export const destinations: Destination[] = [
           checked: '2026-07-28',
         },
       },
+      {
+        id: 'muc-ingolstadt-village',
+        name: 'אינגולשטדט וילג׳',
+        nameLocal: 'Ingolstadt Village',
+        category: 'shopping',
+        lat: 48.78503,
+        lng: 11.47555,
+        description:
+          'כפר אאוטלט של מותגים באינגולשטדט שבבוואריה העילית, צפונית למינכן.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=48.78503,11.47555',
+        source: {
+          url: 'https://mapcarta.com/Ingolstadt_Village',
+          title: 'Ingolstadt Village, Bavaria (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -11039,6 +11057,24 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/Ca%27n_Joan_de_S%27Aigo',
           title: "Ca'n Joan de s'Aigo, Palma (Mapcarta)",
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'pmi-fashion-outlet',
+        name: 'אאוטלט מיורקה',
+        nameLocal: 'Mallorca Fashion Outlet',
+        category: 'shopping',
+        lat: 39.63226,
+        lng: 2.73235,
+        description:
+          'מרכז אאוטלט במראצ׳י מחוץ לפלמה, מוכר גם בשם פסטיבל פארק, ליד תחנת הרכבת אלס קאוליס.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=39.63226,2.73235',
+        source: {
+          url: 'https://mapcarta.com/36335354',
+          title: 'Mallorca Fashion Outlet, Marratxi (Mapcarta)',
           checked: '2026-07-29',
         },
       },
@@ -13684,6 +13720,24 @@ export const destinations: Destination[] = [
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=One+Stop+Kosher+Market+Las+Vegas',
       },
+      {
+        id: 'usa-lv-outlets',
+        name: 'אאוטלט לאס וגאס צפון',
+        nameLocal: 'Las Vegas Premium Outlets North',
+        category: 'shopping',
+        lat: 36.16351,
+        lng: -115.15768,
+        description:
+          'מרכז אאוטלט בלאס וגאס, עיר הבסיס ליציאה לפארקי הדרום-מערב. זהו האתר הצפוני - יש גם אתר דרומי נפרד.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=36.16351,-115.15768',
+        source: {
+          url: 'https://mapcarta.com/Las_Vegas_North_Premium_Outlets',
+          title: 'Las Vegas North Premium Outlets, Nevada (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -15300,6 +15354,24 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/La_%C5%A0truk',
           title: 'La Struk, Zagreb (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'hrv-designer-outlet',
+        name: 'אאוטלט קרואטיה',
+        nameLocal: 'Designer Outlet Croatia',
+        category: 'shopping',
+        lat: 45.79266,
+        lng: 16.15236,
+        description:
+          'כפר אאוטלט של מותגים ברוגביצה, מזרחית לזאגרב.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=45.79266,16.15236',
+        source: {
+          url: 'https://mapcarta.com/W506493219',
+          title: 'Designer Outlet Croatia, Rugvica (Mapcarta)',
           checked: '2026-07-29',
         },
       },
@@ -18177,6 +18249,24 @@ export const destinations: Destination[] = [
           checked: '2026-07-29',
         },
       },
+      {
+        id: 'can-crossiron',
+        name: 'קרוסאיירון מילס',
+        nameLocal: 'CrossIron Mills',
+        category: 'shopping',
+        lat: 51.20438,
+        lng: -113.99419,
+        description:
+          'מרכז קניות מקורה גדול במחוז רוקי ויו, מצפון לקלגרי על הדרך להרי הרוקי.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=51.20438,-113.99419',
+        source: {
+          url: 'https://mapcarta.com/CrossIron_Mills',
+          title: 'CrossIron Mills, Rocky View County (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -19611,6 +19701,24 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/Stubbe%27s_Haring',
           title: "Stubbe's Haring, Amsterdam (Mapcarta)",
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'ams-batavia-stad',
+        name: 'בטביה סטאד',
+        nameLocal: 'Batavia Stad Fashion Outlet',
+        category: 'shopping',
+        lat: 52.52309,
+        lng: 5.43863,
+        description:
+          'מרכז אאוטלט של אופנה בלליסטאד שבפלבולנד, מזרחית לאמסטרדם על גדת האייסלמיר.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=52.52309,5.43863',
+        source: {
+          url: 'https://mapcarta.com/Batavia_Stad_Fashion_Outlet',
+          title: 'Batavia Stad Fashion Outlet, Lelystad (Mapcarta)',
           checked: '2026-07-29',
         },
       },
@@ -21868,6 +21976,24 @@ export const destinations: Destination[] = [
           checked: '2026-07-29',
         },
       },
+      {
+        id: 'swe-nk',
+        name: 'נורדיסקה קומפניאט',
+        nameLocal: 'Nordiska Kompaniet',
+        category: 'shopping',
+        lat: 59.333,
+        lng: 18.069011,
+        description:
+          'כלבו היוקרה של שטוקהולם במרכז העיר, מוסד שוודי בפני עצמו ולא רק חנות.',
+        tags: ['art'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=59.333,18.069011',
+        source: {
+          url: 'https://mapcarta.com/N436371925',
+          title: 'Nordiska Kompaniet, Stockholm (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -22084,6 +22210,24 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/Reffen',
           title: 'Reffen, Copenhagen (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'dnk-ringsted-outlet',
+        name: 'אאוטלט רינגסטד',
+        nameLocal: 'Ringsted Outlet',
+        category: 'shopping',
+        lat: 55.45152,
+        lng: 11.78581,
+        description:
+          'מרכז אאוטלט ברינגסטד שבזילנד, מערבית לקופנהגן - מרכז האאוטלט העיקרי של האזור.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=55.45152,11.78581',
+        source: {
+          url: 'https://mapcarta.com/W516702475',
+          title: 'Ringsted Outlet, Region Zealand (Mapcarta)',
           checked: '2026-07-29',
         },
       },
@@ -22512,6 +22656,24 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/W8024341',
           title: 'Kalvarija Market, Vilnius (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'ltu-vilnius-outlet',
+        name: 'אאוטלט וילנה',
+        nameLocal: 'Vilnius Outlet',
+        category: 'shopping',
+        lat: 54.70352,
+        lng: 25.20634,
+        description:
+          'מרכז אאוטלט ברובע קרולינישקס בווילנה.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=54.70352,25.20634',
+        source: {
+          url: 'https://mapcarta.com/Vilnius_Outlet',
+          title: 'Vilnius Outlet, Karoliniskes (Mapcarta)',
           checked: '2026-07-29',
         },
       },
@@ -23948,6 +24110,24 @@ export const destinations: Destination[] = [
           checked: '2026-07-29',
         },
       },
+      {
+        id: 'kor-lotte-outlet',
+        name: 'אאוטלט לוטה דונגבוסן',
+        nameLocal: 'Lotte Premium Outlet Dongbusan',
+        category: 'shopping',
+        lat: 35.19231,
+        lng: 129.21272,
+        description:
+          'מרכז אאוטלט במחוז גיג׳אנג שבקצה הצפוני-מזרחי של בוסאן, על קו החוף.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=35.19231,129.21272',
+        source: {
+          url: 'https://mapcarta.com/W1066891234',
+          title: 'Lotte Premium Outlet Dongbusan, Gijang (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -24639,6 +24819,24 @@ export const destinations: Destination[] = [
           checked: '2026-07-29',
         },
       },
+      {
+        id: 'mys-design-village',
+        name: 'דיזיין וילג׳',
+        nameLocal: 'Design Village',
+        category: 'shopping',
+        lat: 5.24376,
+        lng: 100.43677,
+        description:
+          'מרכז אאוטלט בבאטו קאוואן שביבשת, מול ג׳ורג׳ טאון מעבר למיצר.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=5.24376,100.43677',
+        source: {
+          url: 'https://mapcarta.com/W449626655',
+          title: 'Design Village, Batu Kawan (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -25068,6 +25266,24 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/Bar_Przysta%C5%84',
           title: 'Bar Przystan, Sopot (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'pl-designer-outlet-gdansk',
+        name: 'אאוטלט גדנסק',
+        nameLocal: 'Designer Outlet Gdańsk',
+        category: 'shopping',
+        lat: 54.31963,
+        lng: 18.55234,
+        description:
+          'מרכז אאוטלט של מותגים בדרום גדנסק.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=54.31963,18.55234',
+        source: {
+          url: 'https://mapcarta.com/W111609684',
+          title: 'Designer Outlet Gdansk (Mapcarta)',
           checked: '2026-07-29',
         },
       },
@@ -26093,6 +26309,24 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/Mike%27s_Pastry',
           title: "Mike's Pastry, Boston (Mapcarta)",
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'us-wrentham',
+        name: 'אאוטלט ורנת׳ם',
+        nameLocal: 'Wrentham Village Premium Outlets',
+        category: 'shopping',
+        lat: 42.03975,
+        lng: -71.35452,
+        description:
+          'כפר אאוטלט של מותגים בוורנת׳ם שבמסצ׳וסטס, דרומית-מערבית לבוסטון.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=42.03975,-71.35452',
+        source: {
+          url: 'https://mapcarta.com/Wrentham_Village_Premium_Outlets',
+          title: 'Wrentham Village Premium Outlets, Massachusetts (Mapcarta)',
           checked: '2026-07-29',
         },
       },
@@ -27531,6 +27765,24 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/Moore_Street',
           title: 'Moore Street, Dublin (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'irl-kildare-village',
+        name: 'קילדר וילג׳',
+        nameLocal: 'Kildare Village Outlet',
+        category: 'shopping',
+        lat: 53.15445,
+        lng: -6.91656,
+        description:
+          'כפר אאוטלט של מותגים במחוז קילדר, מערבית לדבלין.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=53.15445,-6.91656',
+        source: {
+          url: 'https://mapcarta.com/W45737505',
+          title: 'Kildare Village Outlet, Co. Kildare (Mapcarta)',
           checked: '2026-07-29',
         },
       },
@@ -31933,6 +32185,24 @@ export const destinations: Destination[] = [
           checked: '2026-07-29',
         },
       },
+      {
+        id: 'it-sicilia-outlet',
+        name: 'אאוטלט סיציליה',
+        nameLocal: 'Sicilia Outlet Village',
+        category: 'shopping',
+        lat: 37.57305,
+        lng: 14.47973,
+        description:
+          'כפר אאוטלט של מותגים באג׳ירה שבמחוז אנה, בלב סיציליה בין קטניה לפלרמו.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=37.57305,14.47973',
+        source: {
+          url: 'https://mapcarta.com/Sicilia_Outlet_Village',
+          title: 'Sicilia Outlet Village, Agira (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -32171,6 +32441,24 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/Mercado_de_Atarazanas',
           title: 'Mercado de Atarazanas, Malaga (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'es-outlet-malaga',
+        name: 'אאוטלט מלגה',
+        nameLocal: 'Designer Outlet Málaga',
+        category: 'shopping',
+        lat: 36.658089,
+        lng: -4.478085,
+        description:
+          'מרכז אאוטלט של מותגים בשולי מלגה, ברחוב אלפונסו פונסה דה לאון.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=36.658089,-4.478085',
+        source: {
+          url: 'https://mapcarta.com/W1001991696',
+          title: 'Designer Outlet Malaga (Mapcarta)',
           checked: '2026-07-29',
         },
       },
@@ -36115,6 +36403,24 @@ export const destinations: Destination[] = [
         source: {
           url: 'https://mapcarta.com/W516455044',
           title: 'Raohe Night Market, Taipei (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'twn-gloria-outlets',
+        name: 'גלוריה אאוטלטס',
+        nameLocal: 'GLORIA OUTLETS',
+        category: 'shopping',
+        lat: 25.01498,
+        lng: 121.21391,
+        description:
+          'מרכז אאוטלט בג׳ונגלי שבטאויואן, במרחק הליכה קצר מתחנת הרכבת המהירה טאויואן.',
+        tags: ['outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=25.01498,121.21391',
+        source: {
+          url: 'https://mapcarta.com/W609175001',
+          title: 'GLORIA OUTLETS, Taoyuan (Mapcarta)',
           checked: '2026-07-29',
         },
       },
