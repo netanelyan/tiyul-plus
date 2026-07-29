@@ -370,6 +370,142 @@ Shabbat marking (he did not choose it), no "best month" warning - that one is
 impossible anyway, since `bestMonths` still does not exist in the catalog, and
 inventing a seasonal opinion from a date is exactly what hard rule 2 forbids.
 
+### 2026-07-29 (jj) - Chrome came back, and it turned out the blocker was never the research
+
+Netanel, in order: "chrome is up, find images for places they dont exist", then
+"All countries done?", then "Finish the food and shopping first, then add
+pictures". This entry covers all of it.
+
+**The headline: the nine empty countries are down to one.** Kazakhstan, Norway,
+Turkey, Albania, Kyrgyzstan, India, Bolivia and Panama now have a food or market
+place. Only the Philippines is still empty.
+
+**Why that happened today and not in any of the last four sessions is the whole
+lesson.** Every entry since (gg) has reported those nine as "blocked on
+coordinates, not research" and left them. That sentence was true, and it was a
+statement about **this sandbox**, not about the world - Mapcarta was simply the
+only coordinate source reachable from here. The moment Chrome connected,
+Nominatim became reachable, and eight of the nine closed in a single pass.
+
+**Almaty is the case worth keeping.** Entry (gg) recorded five distinct wrong
+answers across five slugs for the Green Bazaar - Baku, Kerala, Tashkent, an
+Almaty bus stop, a fortress. Nominatim returns it correctly on the first query
+**and still returns the two bus stops named after it.** What separates them is
+not the name, it is the OSM `class`/`type` field: the market is
+`type=marketplace`, the traps are `type=bus_stop`. **Filtering on type rather
+than on name is the unlock**, and it generalises to every market in the catalog.
+
+**A measurement bug of my own, found by asking the question properly.** Netanel
+asked "All countries done?", and the honest answer needed a count on two axes.
+It turned up four destinations - **Bratislava, Dubai, Almaty and grand-canyon** -
+that had *only* kosher eating places. Cause: the priority-country pass in (ee)
+counted legacy `shopping` entries as already-covered against a **food** quota, so
+Dubai looked covered on the strength of four malls. All four now have a general
+place; kosher-only destinations: 0.
+
+**Four candidates rejected, each by a different mechanism:**
+
+| rejected | caught by |
+|---|---|
+| Parlak (Antalya), KaLui (Puerto Princesa) | the distance guard |
+| Kruja Old Bazaar | duplicate - `al-kruje`'s own description already describes that bazaar |
+| Stará tržnica (Bratislava) | already in the catalog as an `attraction` |
+
+The two guard failures were **checked rather than assumed**: `lycian-coast`'s
+places stop at Myra, 0.7 degrees short of Antalya, and `palawan`'s southernmost
+place is the Subterranean River, 48km north of Puerto Princesa city. Both cities
+are genuinely outside their destination's footprint. **Dropping KaLui is exactly
+why the Philippines is still empty** - and El Nido's own candidate, Trattoria
+Altrove, has several branches within El Nido and fails the branch test. That is
+a real finding, not a gap.
+
+**The independent audit earned its keep again.** 17 coordinates re-checked
+against sources other than the geocoder that produced them: 16 matched, and it
+caught **Café Ruiz**, where OSM holds two outlets and ranks the Palmira one
+first - 4.8km outside Boquete. The wrong-branch trap, for the fourth time this
+week. Re-pinned to Bajo Boquete only after confirming OSM itself holds that
+second outlet at the audited coordinate.
+
+**One instruction from a researcher that was correctly refused.** Two venues came
+back flagged "permanently closed" (Dibek opens afternoons and shuts Sundays; the
+Karakol market is Sunday-morning only), and the researcher recommended publishing
+the opening hours to stop travellers arriving on a dead day. **Not done.**
+Storing a schedule is the thing this feature refuses to do, because schedules go
+stale silently and the traveller finds out at a locked gate. Karakol says only
+that it is a weekly market and to confirm the day locally.
+
+---
+
+**Photos: the re-probe list settled, and 51 Tier A places filled across two
+passes** (218 -> 174).
+
+Step 1 was the re-probe list, 38 rows -> 17. **Twenty-one of those URLs were
+alive the whole time** and merely had no evidence recorded - which is precisely
+why `photo-gaps.mjs` keeps "probed and failed" separate from "never probed".
+Zero unprobed rows remain in the catalog; the 17 dead are the known-unrepairable
+backlog from entry (s), now confirmed rather than assumed.
+
+**Two retrieval methods, and the second is better.** Exact-title article lookup
+finds the article about a place and takes its lead image; three filters then
+apply - Commons-only path (licensing), a bad-filename class, and a 12km
+coordinate check. The Commons rule immediately reproduced entry (u)'s
+freedom-of-panorama finding automatically, rejecting five Dubai landmarks whose
+leads are local non-free uploads.
+
+Then **Commons file geosearch** (`gsnamespace=6`), which inverts the problem:
+return FILES whose own geotag sits near the coordinate. Distance is measured to
+the photograph rather than to an article centroid - Rialto matched at 10 metres,
+Santa Caterina at 8, Chania at 4 - and it works for the many markets Wikipedia
+has never written about.
+
+**Both methods pass things that are still wrong, and that is the finding.**
+Article lookup offered Parndorf's parish church for an outlet village, a metro
+station for Mercat de Sant Antoni, the Dubai Fountain for the Dubai Mall, a 1915
+advertisement for Nordiska Kompaniet, rolling stock for Balti Jaama Turg, and a
+district map named `.svg.png` that slipped a rule checking only `.svg`. Geosearch
+added its own class: **substring matching** offered "Small Venice.jpg" for Deniz
+Mall because "Small" contains "mall" (the Olduvai bug again), and **city-name
+tokens** matched everything in the city - a freight station for Batumi Central
+Market, a business incubator for Ingolstadt Village.
+
+So every survivor was rendered as a contact sheet and looked at. **The sheet
+rejected 1 of 36 in the first pass and 10 of 26 in the second** - a nativity
+scene, an office block, a WWF reserve gate, a park standing in for the Reina
+Sofía, a stone lion, a festival crowd, three ambiguous Dubai frames, and a
+**railway photograph** for Designer Outlet Berlin that was caught only by reading
+the filename next to the image. Every one of those ten is a real Commons
+photograph, correctly geotagged, within metres of the right place. **No filter in
+this pipeline could have caught any of them.** Precision before the visual check
+was 62%; the check is not optional, and this project has skipped it four times.
+
+**Derived URLs were re-probed as written.** All 51 are built from the filename by
+`scripts/lib/commons-url.mjs` rather than copied from the API, and a derived URL
+is not a fetched one - 51 probed, 51 alive, 0 dead. Recording `ok:true` for a URL
+nobody fetched is what produced 151 dead links in entry (s).
+
+**Two harness bugs of mine, both the recurring species.** `/tmp/verify_new.mjs`
+compared coordinates as strings while this batch wrote them as numbers, and
+reported 32 failures whose "drift" was `-115.1497` vs `-115.1497`. And a
+42-place browser loop blew the 45-second CDP ceiling from entry (u) - the work
+completed in the page, so results accumulate in a window global and chunks stay
+under ~14 items.
+
+**Numbers:** 1814 places / 166 destinations / 83 countries, **0 errors**, 67
+warnings. 165 tests, tsc and build clean. Index 246,646 of the 280,000 ceiling.
+
+**What the next session should know.** (1) **Nominatim is reachable whenever
+Chrome is** - filter on OSM `type`, never on name, and re-read `kosher-market`
+and the `cafe` gaps in that light, because they were parked as "blocked on
+geocoding" under the old assumption and that assumption is now false. (2) 174
+Tier A photo gaps remain; both retrieval methods are proven and the contact sheet
+is mandatory. (3) The Philippines is the last empty country and needs a venue
+inside El Nido or Coron, not Puerto Princesa. (4) **No browser RTL/overflow check
+has run on any of the ~280 entries added across passes (dd) through (jj)** - it
+has now grown for seven consecutive passes and Chrome is currently connected,
+which is the first real opportunity to close it. (5) Standing: the 17 dead photo
+URLs, the 2.5MB client bundle, `feat/catalog-supabase` unmerged, and **both
+GitHub PATs still need revoking at https://github.com/settings/tokens**.
+
 ### 2026-07-29 (ii) - "Continue to all destinations": the sweep, and two rejections that came from machinery rather than taste
 
 Netanel: "continue to all destinations." Entry (hh)'s addendum had just recorded
