@@ -17,6 +17,7 @@ import { travelModeFor } from '@/lib/trip/mapsExport';
 import PlacesMap from '@/components/PlacesMap';
 import type { MapGroup, MapPin } from '@/components/MapInner';
 import BookingPanel from '@/components/BookingPanel';
+import TripCost from '@/components/TripCost';
 import PinsPanel from '@/components/PinsPanel';
 import ChatPanel from '@/components/ChatPanel';
 import Flag from '@/components/Flag';
@@ -867,6 +868,11 @@ export default function TripWorkspace({
       {/* ---------- שכבת ההזמנות: מה עוד חסר לטיול ---------- */}
       {t && t.days.length > 0 && (
         <BookingPanel trip={t} destinations={destinations} onSetPreferences={setPrefs} />
+      )}
+
+      {/* ---------- כמה מוציאים ביום: מספרים שמורים, חשבון בקוד ---------- */}
+      {t && t.days.length > 0 && (
+        <TripCost trip={t} destinations={destinations} onSetPreferences={setPrefs} />
       )}
 
       {/* ---------- הסיכות של המטייל: מה הוא כבר סגר בעצמו ---------- */}

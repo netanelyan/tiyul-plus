@@ -119,6 +119,31 @@ export interface IconicLandmark {
   blurb: string; // Hebrew, משפט-שניים עובדתיים, בלי שעות/מחיר/כשרות
 }
 
+// ---------- הוצאה יומית טיפוסית ----------
+// **הכלל של הבלוק הזה: כל מספר כאן הוא ציטוט של מקור, והחשבון נעשה בקוד.**
+// אנחנו שומרים בדיוק את שלוש השורות שהמקור מפרסם לכל סגנון נסיעה, ולא
+// סכום שלהן - כדי שכל ערך שמופיע בדאטה יהיה בר-השוואה מול הדף שממנו
+// נקרא. הסכימה, העיגול והכפלה במספר הימים קורים ב-`src/lib/trip/cost.ts`.
+//
+// **לינה וטיסות לא נשמרות כאן בכוונה.** המקור מפרסם גם אותן; אנחנו לא
+// מעתיקים אותן, כך שאי אפשר בטעות לכלול אותן בסכום. גם אלכוהול לא -
+// זו הוצאה שלא כל אחד מוציא, ולכן היא לא "הוצאה טיפוסית".
+export interface DailyCostTier {
+  transport: number; // תחבורה מקומית ליום, לאדם
+  food: number; // אוכל ליום, לאדם
+  activities: number; // כניסות, סיורים ואטרקציות ליום, לאדם
+}
+
+export interface DailyCost {
+  /** קוד המטבע המקומי כפי שהמקור הציג אותו (EUR, CZK, THB...) */
+  currency: string;
+  budget: DailyCostTier;
+  mid: DailyCostTier;
+  comfort: DailyCostTier;
+  /** הדף שנקרא בפועל ומתי - מוצג למשתמש, לא רק לתיעוד פנימי */
+  source: PlaceSource;
+}
+
 export interface Destination {
   slug: string;
   name: string; // Hebrew
@@ -133,6 +158,12 @@ export interface Destination {
   photo?: string; // hero photo URL (Unsplash); UI falls back to gradient
   iconicLandmark?: IconicLandmark;
   editorialRating?: EditorialRating;
+  /**
+   * הוצאה יומית טיפוסית ביעד הזה. **אופציונלי במכוון**: יעד בלי נתון
+   * לא מציג שום מספר, ולא מקבל הערכה. הנתון מחובר לדסטינציה בשכבת
+   * הספק (`src/lib/providers/sample.ts`) מתוך `src/data/dailyCosts.ts`.
+   */
+  dailyCost?: DailyCost;
   places: Place[];
   itinerary: DayPlan[];
   practical: CityPractical;
