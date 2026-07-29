@@ -4,6 +4,7 @@ import Script from 'next/script';
 import { TripProvider } from '@/lib/trip/TripContext';
 import { AuthProvider } from '@/lib/auth/AuthContext';
 import AccountSync from '@/components/AccountSync';
+import OfflineNotice from '@/components/OfflineNotice';
 import SiteNav from '@/components/SiteNav';
 import { cityNames } from '@/lib/server/cityNames';
 import AccessibilityWidget from '@/components/AccessibilityWidget';
@@ -91,6 +92,7 @@ export default function RootLayout({
             <SiteNav cityNames={cityNames()} />
           </div>
         </header>
+        <OfflineNotice />
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>
         </TripProvider>
         </AuthProvider>

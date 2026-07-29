@@ -26,6 +26,9 @@ import AddDayPicker from '@/components/AddDayPicker';
 import ImportMapModal from '@/components/ImportMapModal';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 import DayNavExport from '@/components/DayNavExport';
+import { OFFLINE_HINT, isoDay, useOnline } from '@/lib/offline/online';
+import { readOnlyIfOffline } from '@/lib/trip/readOnly';
+import { cachedAt, pruneCities } from '@/lib/trip/cityStore';
 
 /**
  * התצוגה המאוחדת של הטיול - מסך אחד לכל מה שקשור לטיול הפעיל:
@@ -50,7 +53,15 @@ export default function TripWorkspace({
   initialQuery?: string;
   initialKosher?: boolean;
 }) {
-  const trip = useTrip();
+  const online = useOnline();
+  const offline = !online;
+  /**
+   * ללא רשת הטיול נקרא ולא נערך - ראו ההנמקה ב-`lib/trip/readOnly.ts`.
+   * העטיפה כאן מחליפה את ה-API כולו, כך שכל קריאה במסך הזה עוברת דרכה
+   * ואי אפשר לפספס פקד. הפקדים עצמם מכובים בנפרד, כדי שזה ייראה מכובה
+   * ולא שבור.
+   */
+  const trip = readOnlyIfOffline(useTrip(), offline);
   const chat = useTripChat({ initialQuery, initialKosher });
   const [selectedDayId, setSelectedDayId] = useState<string | null>(null);
   /** 'day' = המפה של היום הנבחר · 'trip' = כל העצירות של כל הימים יחד */
@@ -118,6 +129,22 @@ export default function TripWorkspace({
     [t],
   );
   const { cities, loading: citiesLoading } = useCityData(tripCitySlugs);
+
+  /**
+   * "לא מטמנים את הקטלוג" הוא כלל שצריך לאכוף ולא רק להצהיר: כאן
+   * נמחק מהמכשיר כל מה שאף טיול שמור כבר לא נוגע בו - מחיקת טיול
+   * מפנה גם את התוכן שלו. רץ רק אחרי ההידרציה, אחרת מערך טיולים ריק
+   * לרגע היה מוחק את כל מה שנשמר.
+   */
+  useEffect(() => {
+    if (!trip.hydrated) return;
+    const keep = new Set<string>();
+    for (const tr of trip.trips) {
+      for (const s of tr.citySlugs) keep.add(s);
+      for (const d of tr.days) keep.add(d.citySlug);
+    }
+    pruneCities([...keep]);
+  }, [trip.hydrated, trip.trips]);
   const destinations = useMemo(() => Object.values(cities), [cities]);
   // curated קודם; יעדים שנחקרו אוטומטית (AI Explorer) כ-fallback, כדי
   // שטיול שנבנה ביעד נחקר יתרנדר כרגיל בקנבס/מפה/הדפסה.
@@ -137,7 +164,17 @@ export default function TripWorkspace({
       hasCar,
     });
 
+  /**
+   * מתי נשמרה במכשיר העיר של היום שמוצג. מוצג **רק** ליד מידע כשרות
+   * ורק כשאין רשת: תג השגחה שנשמר לפני שבוע ומוצג כאילו נבדק עכשיו
+   * הוא הכישלון החמור ביותר שהמצב הלא-מקוון יכול לייצר. נקרא רק כשאין
+   * רשת, כדי לא לגעת ב-localStorage בכל רינדור רגיל.
+   */
   const day = t ? (t.days.find((d) => d.id === selectedDayId) ?? t.days[0] ?? null) : null;
+  const dayCachedAt = useMemo(
+    () => (offline && day ? cachedAt(day.citySlug) : null),
+    [offline, day],
+  );
   const dayDest = day ? destOf(day.citySlug) : null;
   const dayIndex = t && day ? t.days.findIndex((d) => d.id === day.id) : -1;
 
@@ -337,6 +374,8 @@ export default function TripWorkspace({
             <input
               value={t.name}
               onChange={(e) => trip.renameTrip(t.id, e.target.value)}
+              readOnly={offline}
+              title={offline ? OFFLINE_HINT : undefined}
               aria-label="שם הטיול"
               className="display w-full min-w-0 rounded-xl bg-transparent text-2xl text-night outline-none ring-sunset/50 transition focus:ring-2 sm:w-64"
             />
@@ -345,6 +384,7 @@ export default function TripWorkspace({
           )}
           {t ? (
             <TripDates
+              disabled={offline}
               trip={t}
               summary={`${totalStops} עצירות · ${t.days.length} ימים`}
               onSet={(dates) => trip.setTripDates(t.id, dates)}
@@ -366,8 +406,12 @@ export default function TripWorkspace({
           לא אמורה לשבת במסך הראשון באותו משקל חזותי כמו שיתוף.
         */}
         <div className="flex flex-wrap items-center gap-2 text-sm">
-          <Btn onClick={onNewTrip}>+ טיול חדש</Btn>
-          {!t && <Btn onClick={() => setImportOpen(true)}>📍 ייבוא מפה</Btn>}
+          <Btn onClick={onNewTrip} disabled={offline} title={offline ? OFFLINE_HINT : undefined}>+ טיול חדש</Btn>
+          {!t && (
+            <Btn onClick={() => setImportOpen(true)} disabled={offline} title={offline ? OFFLINE_HINT : undefined}>
+              📍 ייבוא מפה
+            </Btn>
+          )}
           {t && !hasExploredCity && (
             <Menu
               ariaLabel="שיתוף הטיול"
@@ -377,9 +421,10 @@ export default function TripWorkspace({
                 {
                   label: linkCopied ? 'הקישור הועתק ✓' : 'העתקת קישור',
                   onClick: copyShareLink,
+                  disabled: offline,
                   icon: linkCopied ? ICONS.check : ICONS.link,
                 },
-                { label: 'שליחה בוואטסאפ', onClick: shareWhatsApp, icon: ICONS.whatsapp },
+                { label: 'שליחה בוואטסאפ', onClick: shareWhatsApp, icon: ICONS.whatsapp, disabled: offline },
               ]}
             />
           )}
@@ -392,12 +437,14 @@ export default function TripWorkspace({
                   label: 'שכפול הטיול',
                   onClick: () => trip.duplicateTrip(t.id),
                   icon: ICONS.duplicate,
+                  disabled: offline,
                 },
-                { label: '📍 ייבוא מפה מ-Google', onClick: () => setImportOpen(true) },
+                { label: '📍 ייבוא מפה מ-Google', onClick: () => setImportOpen(true), disabled: offline },
                 { label: 'הדפסה / PDF', onClick: () => window.print(), icon: ICONS.printer },
                 {
                   label: 'מחיקת הטיול',
                   danger: true,
+                  disabled: offline,
                   separated: true,
                   icon: ICONS.trash,
                   onClick: () => {
@@ -433,6 +480,7 @@ export default function TripWorkspace({
       {t && prefsOpen && (
         <div className="mt-1.5 flex flex-wrap items-center gap-1.5 print:hidden">
           <ToggleChip
+            disabled={offline}
             active={t.preferences?.kosher === true}
             label="כשר"
             onClick={() => setPrefs({ kosher: t.preferences?.kosher === true ? undefined : true })}
@@ -446,6 +494,7 @@ export default function TripWorkspace({
             את שלוש האפשרויות עם סימון על הנוכחית.
           */}
           <PrefSelect
+            disabled={offline}
             label="קצב"
             current={t.preferences?.pace}
             options={[
@@ -455,6 +504,7 @@ export default function TripWorkspace({
             onPick={(v) => setPrefs({ pace: v })}
           />
           <PrefSelect
+            disabled={offline}
             label="מי נוסע"
             current={t.preferences?.party}
             options={[
@@ -466,6 +516,7 @@ export default function TripWorkspace({
             onPick={(v) => setPrefs({ party: v })}
           />
           <PrefSelect
+            disabled={offline}
             label="שופינג"
             current={t.preferences?.shopping}
             options={[
@@ -548,6 +599,7 @@ export default function TripWorkspace({
               );
             })}
             <AddDayPicker
+              disabled={offline}
               tripCitySlugs={t.citySlugs}
               onAddDay={(slug) => trip.addDay(slug)}
             />
@@ -663,6 +715,16 @@ export default function TripWorkspace({
                   : 'כאן תופיע המפה של הטיול ברגע שהסוכן יבנה אותו'}
               </div>
             )}
+            {/*
+              הסיכות, הסדר וקו המסלול מצוירים מהמידע השמור ועובדים בלי
+              רשת - אריחי הרקע מגיעים משרת חיצוני ולא. בלי המשפט הזה,
+              מפה אפורה עם סיכות צפות נקראת בדיוק כמו תקלה.
+            */}
+            {offline && (places.length > 0 || tripGroups.length > 0) && (
+              <p className="mt-2 text-center text-xs font-medium text-night/45 print:hidden">
+                מפת הרקע דורשת חיבור. העצירות, הסדר והמסלול מוצגים מהמידע השמור.
+              </p>
+            )}
           </div>
         </div>
 
@@ -733,6 +795,8 @@ export default function TripWorkspace({
                   <textarea
                     value={day.notes ?? ''}
                     onChange={(e) => trip.setDayNotes(day.id, e.target.value)}
+                    readOnly={offline}
+                    title={offline ? OFFLINE_HINT : undefined}
                     placeholder="הערות ליום הזה…"
                     rows={2}
                     autoFocus={noteOpenFor === day.id && !day.notes}
@@ -801,24 +865,26 @@ export default function TripWorkspace({
                               {
                                 label: 'הזזה למעלה',
                                 onClick: () => trip.movePlace(day.id, i, -1),
-                                disabled: i === 0,
+                                disabled: offline || i === 0,
                               },
                               {
                                 label: 'הזזה למטה',
                                 onClick: () => trip.movePlace(day.id, i, 1),
-                                disabled: i === places.length - 1,
+                                disabled: offline || i === places.length - 1,
                               },
                               ...t.days
                                 .filter((d) => d.id !== day.id && d.citySlug === day.citySlug)
                                 .map((d) => ({
                                   label: `העברה ליום ${t.days.findIndex((x) => x.id === d.id) + 1}`,
                                   onClick: () => trip.movePlaceToDay(day.id, place.id, d.id),
+                                  disabled: offline,
                                 })),
                               {
                                 label: 'הסרה מהיום',
                                 danger: true,
                                 separated: true,
                                 onClick: () => trip.removePlace(day.id, place.id),
+                                disabled: offline,
                               },
                             ]}
                           />
@@ -826,6 +892,20 @@ export default function TripWorkspace({
                         <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-night/60">
                           {place.description}
                         </p>
+                        {/*
+                          כשרות + ללא רשת = התאריך חייב להיות על המסך.
+                          מוצג רק על עצירות כשרות, ורק במצב לא-מקוון: זו
+                          לא הערה כללית אלא אזהרה מדויקת על הפריט היחיד
+                          שבו "ישן" יכול להיות מסוכן ולא רק לא-מעודכן.
+                        */}
+                        {offline && place.category.startsWith('kosher') && dayCachedAt !== null && (
+                          <p className="mt-1.5 rounded-lg bg-night/5 px-2.5 py-1.5 text-xs font-semibold text-night/60">
+                            <span aria-hidden>✡️ </span>
+                            מידע הכשרות נשמר במכשיר ב־
+                            {formatHebrewDate(isoDay(dayCachedAt), { year: true })}
+                            <span className="font-medium text-night/45"> · לוודא מול המקום</span>
+                          </p>
+                        )}
                       </div>
                     </li>
                   );
@@ -859,7 +939,7 @@ export default function TripWorkspace({
             מתחת למפה, גם בלפטופים קטנים. במובייל - מגירה למטה. */}
         <ChatPanel
           chat={chat}
-          coach={coach}
+          coach={coach && online}
           onDismissCoach={dismissCoach}
           className="hidden lg:sticky lg:top-20 lg:col-start-3 lg:row-start-1 lg:flex lg:h-[36rem] lg:self-start"
         />
@@ -867,12 +947,12 @@ export default function TripWorkspace({
 
       {/* ---------- שכבת ההזמנות: מה עוד חסר לטיול ---------- */}
       {t && t.days.length > 0 && (
-        <BookingPanel trip={t} destinations={destinations} onSetPreferences={setPrefs} />
+        <BookingPanel trip={t} destinations={destinations} onSetPreferences={setPrefs} offline={offline} />
       )}
 
       {/* ---------- כמה מוציאים ביום: מספרים שמורים, חשבון בקוד ---------- */}
       {t && t.days.length > 0 && (
-        <TripCost trip={t} destinations={destinations} onSetPreferences={setPrefs} />
+        <TripCost trip={t} destinations={destinations} onSetPreferences={setPrefs} offline={offline} />
       )}
 
       {/* ---------- הסיכות של המטייל: מה הוא כבר סגר בעצמו ---------- */}
@@ -1058,10 +1138,21 @@ export default function TripWorkspace({
         onClick={() => setChatOpen(true)}
         className="fixed bottom-3 end-3 start-20 z-40 flex items-center gap-2 rounded-2xl bg-shell px-4 py-3 text-start shadow-[0_10px_30px_-12px_rgba(36,27,77,0.5)] ring-1 ring-night/15 lg:hidden print:hidden"
       >
+        {/* הסרגל נשאר לחיץ גם בלי רשת - השיחה השמורה היא תוכן שראוי
+            לקרוא. מה שמשתנה הוא ההזמנה: הוא מפסיק להציע לכתוב, והעיגול
+            מאבד את צבע הפעולה כדי לא להיראות ככפתור פעיל. */}
         <span className="truncate text-sm font-medium text-night/50">
-          {chat.loading ? 'הסוכן עונה…' : 'בקשה לסוכן: תוסיף יום, תחליף מקום…'}
+          {chat.loading
+            ? 'הסוכן עונה…'
+            : offline
+              ? 'הסוכן דורש חיבור · אפשר לקרוא את השיחה'
+              : 'בקשה לסוכן: תוסיף יום, תחליף מקום…'}
         </span>
-        <span className="ms-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sunset text-cream">
+        <span
+          className={`ms-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
+            offline ? 'bg-night/10 text-night/40' : 'bg-sunset text-cream'
+          }`}
+        >
           <span aria-hidden>💬</span>
         </span>
       </button>
@@ -1077,7 +1168,7 @@ export default function TripWorkspace({
             <ChatPanel
               chat={chat}
               autoFocus
-              coach={coach}
+              coach={coach && online}
               onDismissCoach={dismissCoach}
               onClose={() => setChatOpen(false)}
               className="flex h-full ring-0"
@@ -1160,17 +1251,23 @@ function Btn({
   danger = false,
   icon,
   iconClassName = '',
+  disabled = false,
+  title,
 }: {
   children: React.ReactNode;
   onClick: () => void;
   danger?: boolean;
   icon?: React.ReactNode;
   iconClassName?: string;
+  disabled?: boolean;
+  title?: string;
 }) {
   return (
     <button
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-semibold transition ${
+      disabled={disabled}
+      title={title}
+      className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-shell disabled:hover:ring-night/15 ${
         danger
           ? 'bg-shell text-sunset-deep ring-1 ring-night/10 hover:bg-sunset hover:text-cream'
           : 'bg-shell text-night ring-1 ring-night/15 hover:bg-night/5 hover:ring-night/30'
@@ -1317,11 +1414,13 @@ function PrefSelect<T extends string>({
   current,
   options,
   onPick,
+  disabled = false,
 }: {
   label: string;
   current: T | undefined;
   options: { value: T; label: string }[];
   onPick: (v: T | undefined) => void;
+  disabled?: boolean;
 }) {
   const currentLabel = options.find((o) => o.value === current)?.label;
   return (
@@ -1334,10 +1433,11 @@ function PrefSelect<T extends string>({
         ...options.map((o) => ({
           label: o.label,
           selected: o.value === current,
+          disabled,
           onClick: () => onPick(o.value),
         })),
         ...(current
-          ? [{ label: 'בלי העדפה', separated: true, onClick: () => onPick(undefined) }]
+          ? [{ label: 'בלי העדפה', separated: true, disabled, onClick: () => onPick(undefined) }]
           : []),
       ]}
     />
@@ -1356,14 +1456,18 @@ function ToggleChip({
   active,
   label,
   onClick,
+  disabled = false,
 }: {
   active: boolean;
   label: string;
   onClick: () => void;
+  disabled?: boolean;
 }) {
   return (
     <button
       onClick={onClick}
+      disabled={disabled}
+      title={disabled ? OFFLINE_HINT : undefined}
       aria-pressed={active}
       className={`rounded-full px-2.5 py-1 text-xs font-semibold transition ${
         active ? 'bg-sunset text-cream' : 'bg-night/5 text-night/50 hover:bg-night/10'

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { OFFLINE_HINT } from '@/lib/offline/online';
 import Flag from '@/components/Flag';
 import { filterCities, type CityOption } from '@/lib/citySearch';
 
@@ -21,7 +22,10 @@ let optionsCache: CityOption[] | null = null;
 export default function AddDayPicker({
   tripCitySlugs,
   onAddDay,
+  disabled = false,
 }: {
+  /** ללא רשת: רשימת הערים מגיעה מהשרת, ולכן הפקד מכובה */
+  disabled?: boolean;
   /** הערים שכבר בטיול - מוצגות בקבוצה נפרדת בראש הרשימה */
   tripCitySlugs: string[];
   onAddDay: (citySlug: string) => void;
@@ -101,10 +105,11 @@ export default function AddDayPicker({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
+        disabled={disabled}
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-label="הוספת יום לטיול"
-        title="הוספת יום"
+        title={disabled ? OFFLINE_HINT : 'הוספת יום'}
         className="flex h-11 min-w-11 items-center justify-center rounded-xl bg-shell px-2 text-lg font-bold text-night/45 ring-1 ring-dashed ring-night/15 transition hover:text-night hover:ring-night/30"
       >
         +

@@ -9,6 +9,7 @@ import {
 } from '@/lib/booking';
 import type { BookingKind, BookingStatus, Trip, TripPreferences } from '@/lib/trip/types';
 import type { Destination } from '@/lib/types';
+import { OFFLINE_HINT } from '@/lib/offline/online';
 
 /**
  * "מה עוד חסר לטיול" - שכבת ההזמנות בתוך תצוגת הטיול.
@@ -25,10 +26,18 @@ export default function BookingPanel({
   trip,
   destinations,
   onSetPreferences,
+  offline = false,
 }: {
   trip: Trip;
   destinations: Destination[];
   onSetPreferences: (patch: Partial<TripPreferences>) => void;
+  /**
+   * בלי רשת הפאנל נשאר **קריא** - מה כבר סגור ומה עוד חסר הוא בדיוק
+   * מה שרוצים לראות בשטח - אבל אי אפשר לשנות סטטוס (זו כתיבה לטיול)
+   * ואי אפשר לצאת לאתר של ספק. הקישור לא מוסתר: הוא נראה מושבת ואומר
+   * למה, כדי שלא ייראה כאילו הפיצ׳ר נשבר.
+   */
+  offline?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const booking = trip.preferences?.booking ?? {};
@@ -141,10 +150,12 @@ export default function BookingPanel({
                       key={s}
                       onClick={() => setStatus(p.kind, s)}
                       aria-pressed={status === s}
-                      className={`rounded-full px-2.5 py-1 text-[11px] font-semibold transition ${
+                      disabled={offline}
+                      title={offline ? OFFLINE_HINT : undefined}
+                      className={`rounded-full px-2.5 py-1 text-[11px] font-semibold transition disabled:cursor-not-allowed disabled:opacity-45 ${
                         status === s
                           ? 'bg-sunset text-cream'
-                          : 'bg-night/[0.05] text-night/60 hover:bg-night/10'
+                          : 'bg-night/[0.05] text-night/60 enabled:hover:bg-night/10'
                       }`}
                     >
                       {BOOKING_STATUS_LABELS[s]}
@@ -152,7 +163,11 @@ export default function BookingPanel({
                   ))}
                 </div>
 
-                {url ? (
+                {offline && url ? (
+                  <p className="mt-2 rounded-xl bg-night/[0.04] px-3 py-2 text-center text-xs font-semibold text-night/45">
+                    {p.cta} · דורש חיבור
+                  </p>
+                ) : url ? (
                   <a
                     href={url}
                     target="_blank"
