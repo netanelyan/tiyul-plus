@@ -509,6 +509,9 @@ const PREF_LABELS: Record<keyof TripPreferences, string> = {
   kosher: 'כשרות',
   shabbatAware: 'שמירת שבת',
   shopping: 'שופינג',
+  // לא מגיע לכאן דרך set_preferences (אין לו setEnum), אבל הטיפוס דורש
+  // ערך - וזה בדיוק הרצוי: מי שיוסיף לסוכן כתיבה לשדה יצטרך לעבור כאן.
+  travelStyle: 'סגנון נסיעה',
   interests: 'תחומי עניין',
   booking: 'מה כבר סגור',
 };
@@ -1167,6 +1170,17 @@ export function executeAgentTool(
   }
 }
 
+/**
+ * ההעדפות בלי סגנון הנסיעה. ראו את ההערה בנקודת השימוש: הסגנון קיים
+ * אך ורק בשביל תצוגת עלות שמחושבת בקוד, ולמודל אין בו שום שימוש.
+ */
+export function withoutTravelStyle(prefs: TripPreferences | undefined): TripPreferences {
+  if (!prefs) return {};
+  const rest = { ...prefs };
+  delete rest.travelStyle;
+  return rest;
+}
+
 /** מצב הטיול כפי שהמודל רואה אותו - ימים ממוספרים 1-based, מקומות עם שם+מזהה */
 export function serializeTripForModel(trip: Trip | null): string {
   if (!trip) return 'null (אין טיול פעיל - השתמש ב-create_trip כדי להתחיל)';
@@ -1175,7 +1189,11 @@ export function serializeTripForModel(trip: Trip | null): string {
     // התאריכים כעובדה, כולל התאריך המדויק של כל יום למטה: בלי זה המודל
     // "מחשב" תאריכים בעצמו, וזה בדיוק סוג המספר שהוא ממציא בביטחון.
     ...(trip.startDate ? { startDate: trip.startDate, endDate: trip.endDate } : {}),
-    preferences: trip.preferences ?? {},
+    // `travelStyle` מוסר מכאן במכוון. הוא משמש **רק** להצגת הוצאה
+    // יומית מתוך נתונים שמורים, והחשבון עליו נעשה בקוד. אם המודל היה
+    // רואה אותו, הוא היה נוטה להסביר אותו ולנקוב במספר משלו - וזה
+    // בדיוק המספר שאסור שיהיה כאן. מה שהוא לא רואה הוא לא יכול לתאר.
+    preferences: withoutTravelStyle(trip.preferences),
     // הסיכות שהמטייל כבר מסר - כדי שהסוכן לא ישאל שוב על עיר שכבר יש
     // בה לינה, ולא יציע חיפוש למקום ששמור. locatedOnMap=false פירושו
     // שהמיקום לא אומת והמטייל צריך להניח אותה בעצמו.
