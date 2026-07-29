@@ -1,5 +1,5 @@
 import { destinations } from '@/data/destinations';
-import { isKosher } from '@/lib/categories';
+import { isEating, isKosher, kosherStatusOf } from '@/lib/categories';
 import { countries } from '@/data/countries';
 import { generateTrip } from '@/lib/trip/generate';
 import { newId } from '@/lib/trip/types';
@@ -227,6 +227,9 @@ function validateDayPlans(dayPlans: AiDayPlan[], prefs: WizardPrefs): TripDay[] 
       const place = dest.places.find((p) => p.id === id);
       if (!place || usedPlaceIds.has(id)) return false;
       if (!prefs.kosherOnly && isKosher(place.category)) return false;
+      // ההפך, ולא פחות חשוב: שמר כשרות לא מקבל מקום אכילה לא כשר -
+      // גם אם המודל שיבץ אותו בכל זאת. 'unknown' נחסם כמו 'not-kosher'.
+      if (prefs.kosherOnly && isEating(place.category) && kosherStatusOf(place) !== 'kosher') return false;
       return true;
     });
     if (placeIds.length === 0) continue;

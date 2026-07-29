@@ -15,6 +15,8 @@ const THEME_WORD: Record<PlaceCategory, string> = {
   nature: 'טבע',
   viewpoint: 'תצפיות',
   cafe: 'בתי קפה',
+  food: 'אוכל',
+  market: 'שווקים',
   shopping: 'שופינג',
   'kosher-food': 'אוכל כשר',
   'kosher-market': 'קניות כשרות',

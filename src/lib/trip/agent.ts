@@ -1,5 +1,5 @@
 import { destinations } from '@/data/destinations';
-import { isKosher } from '@/lib/categories';
+import { isEating, isKosher, kosherStatusOf } from '@/lib/categories';
 import { haversineKm } from './travel';
 import { newId } from './types';
 import type {
@@ -510,20 +510,45 @@ function filterKosherUnlessOptedIn(
   ids: string[],
   destSlug: string,
   trip: Trip | null,
-): { ids: string[]; dropped: string[] } {
-  if (trip?.preferences?.kosher === true) return { ids, dropped: [] };
+): { ids: string[]; dropped: string[]; mode: 'not-opted-in' | 'kosher-only' } {
+  const optedIn = trip?.preferences?.kosher === true;
+  const mode = optedIn ? 'kosher-only' : 'not-opted-in';
   const dest = destOf(destSlug);
-  if (!dest) return { ids, dropped: [] };
+  if (!dest) return { ids, dropped: [], mode };
   const dropped: string[] = [];
   const kept = ids.filter((id) => {
     const place = dest.places.find((p) => p.id === id);
-    if (place && isKosher(place.category)) {
+    if (!place) return true;
+    // שמר כשרות: כל מקום שאוכלים בו וסטטוס הכשרות שלו אינו 'kosher'
+    // יורד - כולל 'unknown'. "לא ידוע" אינו "כנראה בסדר".
+    if (optedIn) {
+      if (isEating(place.category) && kosherStatusOf(place) !== 'kosher') {
+        dropped.push(id);
+        return false;
+      }
+      return true;
+    }
+    // לא בחר כשרות: מקומות כשרים לא נדחפים לו מיוזמתנו.
+    if (isKosher(place.category)) {
       dropped.push(id);
       return false;
     }
     return true;
   });
-  return { ids: kept, dropped };
+  return { ids: kept, dropped, mode };
+}
+
+/**
+ * ההסבר שחוזר למודל אחרי סינון. שתי הסיבות הפוכות זו לזו ואסור לבלבל
+ * ביניהן: "לא בחרת כשרות" מול "בחרת כשרות ולכן מקום לא כשר ירד".
+ * הודעה שגויה כאן גורמת למודל לנסות לשבץ שוב את מה שבדיוק הורדנו.
+ */
+function kosherDropNote(dropped: string[], mode: 'not-opted-in' | 'kosher-only'): string {
+  if (dropped.length === 0) return '';
+  const list = dropped.join(', ');
+  return mode === 'kosher-only'
+    ? ` הערה: הורדו מקומות אכילה שאינם כשרים או שכשרותם לא ידועה (${list}) - המטייל שומר כשרות. אל תשבץ אותם שוב ואל תתנצל; אפשר להציע במקומם מקומות כשרים אם יש בעיר.`
+    : ` הערה: לא שובצו מקומות כשרים (${list}) - העדפת כשרות לא נבחרה. אל תנסה לשבץ אותם שוב, ואל תשאל על כך; אם המשתמש יאמר במפורש שהוא שומר כשרות, קרא ל-set_preferences ואז שבץ.`;
 }
 
 /**
@@ -623,6 +648,7 @@ export function executeAgentTool(
       const days: TripDay[] = [];
       const errors: string[] = [];
       const droppedKosher: string[] = [];
+      let dropMode: 'not-opted-in' | 'kosher-only' = 'not-opted-in';
       plans.forEach((raw, i) => {
         const dp = (raw ?? {}) as Record<string, unknown>;
         const dest = destOf(String(dp.citySlug ?? ''));
@@ -634,6 +660,7 @@ export function executeAgentTool(
         // כשרות רק בבחירה מפורשת - אחרת מסננים כאן, לפני כל שאר הבדיקות
         const gated = filterKosherUnlessOptedIn(requested, dest.slug, trip);
         droppedKosher.push(...gated.dropped);
+        dropMode = gated.mode;
         const ids = gated.ids;
         const bad = ids.filter((id) => !dest.places.some((p) => p.id === id));
         if (bad.length > 0) {
@@ -664,10 +691,7 @@ export function executeAgentTool(
         createdAt: Date.now(),
       };
       const totalStops = days.reduce((n, d) => n + d.placeIds.length, 0);
-      const kosherNote =
-        droppedKosher.length > 0
-          ? ` הערה: לא שובצו מקומות כשרים (${droppedKosher.join(', ')}) - העדפת כשרות לא נבחרה. אל תנסה לשבץ אותם שוב, ואל תשאל על כך; אם המשתמש יאמר במפורש שהוא שומר כשרות, קרא ל-set_preferences ואז שבץ.`
-          : '';
+      const kosherNote = kosherDropNote(droppedKosher, dropMode);
       return {
         trip: next,
         ok: true,

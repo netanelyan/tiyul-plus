@@ -58,6 +58,21 @@ const PHOTO_HOSTS = [
 // The verification manifest, committed to the repo on purpose. The authoring
 // sandbox has no outbound network, so whoever adds a photo here CANNOT probe it;
 // the only thing standing between an unprobed URL and production is this file.
+// ---------- אוכל, שווקים וקניות ----------
+// קטגוריות שאוכלים בהן. חייבת להישאר תואמת ל-`isEating` ב-src/lib/categories.ts;
+// אם מוסיפים שם קטגוריה, להוסיף גם כאן, אחרת הבדיקה מפסיקה לכסות אותה בשקט.
+const EATING = new Set(['cafe', 'food', 'kosher-food']);
+const KOSHER_STATUS = new Set(['kosher', 'not-kosher', 'unknown']);
+// הקטגוריות שנוספו בפיצ׳ר האוכל והקניות - עליהן הכללים החדשים נאכפים.
+const SOURCED_CATEGORIES = new Set(['food', 'market']);
+const NO_HOURS_CATEGORIES = new Set(['food', 'market', 'cafe', 'shopping']);
+const LINK_BY_COORDS = new Set(['food', 'market']);
+// שעון אמיתי, "שעות פתיחה", או "סגור ביום/בימי X". `1:25` של קנה מידה נופל
+// כאן בכוונה - עדיף אזהרת שווא אחת מאשר שעה שנשמרה בלי שאיש שם לב.
+const HOURS_RE =
+  /(?:\d{1,2}:\d{2})|שעות\s*(?:ה)?פתיחה|סגור(?:ה|ים)?\s*(?:בימי|ביום|בשבת)|פתוח(?:ה|ים)?\s*(?:עד|24\/7)/;
+const PRICE_RE = /₪|\$\d|€\s?\d|\d+\s*(?:יורו|דולר|שקלים|שקל)|עלות\s*הכניסה\s*\d/;
+
 const MANIFEST_FILE = 'scripts/photo-verified.json';
 const manifestExists = existsSync(MANIFEST_FILE);
 let manifest = {};
@@ -206,6 +221,52 @@ for (const d of destinations) {
 
     if (p.rating !== undefined && !(p.rating >= 0 && p.rating <= 5))
       err(`${where}: rating ${p.rating} is outside 0-5`);
+
+    // ---------- אוכל, שווקים וקניות: מקור, כשרות, ובלי שעות ומחירים ----------
+
+    // 1. סטטוס כשרות מפורש לכל מקום שאוכלים בו. **ריק אינו מצב חוקי.**
+    // ההשלכה אינה תיוג: `kosherStatusOf` מחזיר 'unknown' כשהשדה חסר,
+    // וההגנה על מטייל שומר כשרות חוסמת 'unknown' בדיוק כמו 'not-kosher' -
+    // כלומר שדה חסר משתיק מקום במקום להסביר אותו. עדיף לומר מה ידוע.
+    if (EATING.has(p.category) && !p.category.startsWith('kosher')) {
+      if (!p.kosherStatus)
+        err(`${where}: category "${p.category}" is a place you eat at and has no kosherStatus - it must say kosher / not-kosher / unknown, never nothing`);
+      else if (!KOSHER_STATUS.has(p.kosherStatus))
+        err(`${where}: kosherStatus "${p.kosherStatus}" is not one of ${[...KOSHER_STATUS].join(' / ')}`);
+    }
+    // רשומת kosher-* גוזרת את הסטטוס שלה מהקטגוריה. שדה מפורש שסותר את
+    // הקטגוריה הוא בדיוק סוג הסתירה שמגיע למטייל כטעות כשרות.
+    if (p.category.startsWith('kosher') && p.kosherStatus && p.kosherStatus !== 'kosher')
+      err(`${where}: category "${p.category}" but kosherStatus "${p.kosherStatus}" - contradictory`);
+
+    // 2. מקור ותאריך. חובה על הקטגוריות שנוספו בפיצ׳ר הזה; הקטגוריות
+    // הישנות לא נדרשות רטרואקטיבית, אבל מקור שכן נכתב חייב להיות תקין.
+    if (p.source) {
+      if (!/^https:\/\/\S+$/.test(p.source.url || ''))
+        err(`${where}: source.url is not an https URL -> ${p.source.url}`);
+      if (!p.source.title) err(`${where}: source.title is empty`);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(p.source.checked || ''))
+        err(`${where}: source.checked "${p.source.checked}" is not an ISO date (YYYY-MM-DD)`);
+    } else if (SOURCED_CATEGORIES.has(p.category)) {
+      err(`${where}: category "${p.category}" requires a source { url, title, checked }`);
+    }
+
+    // 3. בלי שעות פתיחה ובלי מחירים - הם מתיישנים בשקט, והמטייל מגלה
+    // את זה מול דלת סגורה. נאכף על הקטגוריות של הפיצ׳ר; לשאר מודפסת
+    // אזהרה בלבד, כי זה תוכן קיים ולא הגיוני לשכתב אותו כאן.
+    const hoursHit = HOURS_RE.exec(p.description);
+    const priceHit = PRICE_RE.exec(p.description);
+    if (hoursHit || priceHit) {
+      const what = hoursHit ? `opening hours ("${hoursHit[0]}")` : `a price ("${priceHit[0]}")`;
+      if (NO_HOURS_CATEGORIES.has(p.category))
+        err(`${where}: description states ${what} - hours and prices are never stored`);
+      else warn(`${where}: description states ${what} (legacy entry, outside the food/shopping rule)`);
+    }
+
+    // 4. קישור לפי קואורדינטות ולא לפי שם. שם מתחלף ופותר לעיר אחרת -
+    // הקטלוג כבר נשרף על "Cartagena" שפתר לספרד ועל "Deira" לאנגליה.
+    if (LINK_BY_COORDS.has(p.category) && p.externalUrl && !/[?&]query=-?\d|[?&]q=-?\d/.test(p.externalUrl))
+      err(`${where}: externalUrl links by NAME, not coordinates -> ${p.externalUrl}`);
   }
 
   // Two places in the SAME destination sharing a photo means the list renders

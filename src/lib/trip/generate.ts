@@ -1,5 +1,5 @@
 import type { Destination, Place, PlaceCategory, PlaceTag } from '@/lib/types';
-import { isKosher } from '@/lib/categories';
+import { isEating, isKosher, kosherStatusOf } from '@/lib/categories';
 import type { Trip, TripDay, TripPreferences, WizardPrefs } from './types';
 import { newId } from './types';
 
@@ -51,6 +51,9 @@ function score(
   budget?: TripPreferences['budget'],
 ): number {
   if (place.category.startsWith('kosher')) return 0; // אוכל כשר משובץ בנפרד
+  // שמר כשרות: מקום שאוכלים בו ואינו כשר (או שכשרותו לא ידועה) לא נכנס
+  // לניקוד בכלל. בלי זה מסעדה לא כשרה הייתה מנצחת בציון ונכנסת למסלול.
+  if (prefs.kosherOnly && isEating(place.category) && kosherStatusOf(place) !== 'kosher') return 0;
   let w = TYPE_WEIGHTS[prefs.tripType][place.category] ?? 1;
   if (place.category === 'shopping') {
     if (prefs.shopping === 'more') w = 4;
@@ -181,9 +184,11 @@ export function generateTrip(
 export function tripFromTemplate(dest: Destination, opts?: { kosher?: boolean }): Trip {
   const kosher = opts?.kosher === true;
   const allowed = (id: string) => {
-    if (kosher) return true;
     const place = dest.places.find((p) => p.id === id);
-    return !place || !isKosher(place.category);
+    if (!place) return true;
+    // שמר כשרות: התבנית נשמרת כולה חוץ ממקומות אכילה שאינם כשרים.
+    if (kosher) return !(isEating(place.category) && kosherStatusOf(place) !== 'kosher');
+    return !isKosher(place.category);
   };
   return {
     id: newId(),
