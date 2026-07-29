@@ -3161,6 +3161,25 @@ export const destinations: Destination[] = [
           checked: '2026-07-28',
         },
       },
+      {
+        id: 'mad-san-gines',
+        name: 'שוקולטריה סן חינס',
+        nameLocal: 'Chocolatería San Ginés',
+        category: 'food',
+        lat: 40.41677,
+        lng: -3.7068,
+        description:
+          'מוסד מדרידי בפסאז׳ סן חינס ליד רחוב ארנל, שמגיש בעיקר דבר אחד: צ׳ורוס עם שוקו חם סמיך, החטיף שהעיר מזוהה איתו.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=40.41677,-3.7068',
+        source: {
+          url: 'https://mapcarta.com/Chocolater%C3%ADa_San_Gin%C3%A9s',
+          title: 'Chocolateria San Gines, Madrid (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -4338,6 +4357,43 @@ export const destinations: Destination[] = [
         externalUrl: 'https://maps.google.com/?q=8.01056,98.83944',
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Railay_Beach_5.jpg/500px-Railay_Beach_5.jpg',
+      },
+      {
+        id: 'th-chao-phrom',
+        name: 'שוק צ׳או פרום',
+        nameLocal: 'Chao Phrom Market',
+        category: 'market',
+        lat: 14.35886,
+        lng: 100.57948,
+        description:
+          'השוק המרכזי של העיר איוטהאיה, בצד הנהר של האי ההיסטורי. שוק עובד עם דוכני אוכל מבושל, ולא אתר מורשת.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=14.35886,100.57948',
+        source: {
+          url: 'https://mapcarta.com/Chao_Phrom_Market',
+          title: 'Chao Phrom Market, Ayutthaya (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'th-chaofa-night',
+        name: 'שוק הלילה צ׳או פא',
+        nameLocal: 'Chaofa Night Market',
+        category: 'food',
+        lat: 8.062592,
+        lng: 98.919219,
+        description:
+          'רחבת דוכני אוכל בלב העיר קראבי ליד מזח צ׳או פא, עם המטבח התאילנדי הדרומי ופירות ים. מקום לשבת ולאכול, לא לקנות בו מצרכים.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=8.062592,98.919219',
+        source: {
+          url: 'https://mapcarta.com/Chao_Fa_Night_Market',
+          title: 'Chaofa Night Market, Krabi (Mapcarta)',
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
@@ -5616,6 +5672,24 @@ export const destinations: Destination[] = [
         durationMin: 45,
         externalUrl: 'https://maps.google.com/?q=Sababa+Mushrif+Mall+Abu+Dhabi',
       },
+      {
+        id: 'auh-mina-produce',
+        name: 'שוק הפירות והירקות במינא',
+        nameLocal: 'Al Mina Fruit & Vegetable Market',
+        category: 'market',
+        lat: 24.517721,
+        lng: 54.378513,
+        description:
+          'שוק התוצרת של אבו דאבי באזור מינא, לצד שוק התמרים. שוק עובד, נפרד מהסוק האיראני שממוקם באותו אזור.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=24.517721,54.378513',
+        source: {
+          url: 'https://mapcarta.com/W56070308',
+          title: 'Al Mina Fruit & Vegetable Market, Abu Dhabi (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -6007,6 +6081,24 @@ export const destinations: Destination[] = [
           checked: '2026-07-28',
         },
       },
+      {
+        id: 'tbs-orbeliani-bazari',
+        name: 'שוק אורבליאני',
+        nameLocal: 'Orbeliani Bazari',
+        category: 'market',
+        lat: 41.69744,
+        lng: 44.8041,
+        description:
+          'שוק הקולחוז ההיסטורי של טביליסי אחרי שיפוץ: אולם מזון עם גבינות, יין, דבש ופירות יבשים, ודוכני אוכל בקומה שמעל.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=41.69744,44.8041',
+        source: {
+          url: 'https://mapcarta.com/W174304319',
+          title: 'Bazari (Orbeliani market), Tbilisi (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -6298,6 +6390,43 @@ export const destinations: Destination[] = [
           'מסעדה בשרית כשרה בהשגחת בית חב"ד פוקט. ארוחות שבת בהרשמה מראש - מומלץ ליצור קשר עם בית חב"ד לפני ההגעה ולוודא שעות.',
         durationMin: 75,
         externalUrl: 'https://maps.google.com/?q=Chabad+House+Phuket+Patong',
+      },
+      {
+        id: 'hkt-mee-ton-poe',
+        name: 'מי טון פו',
+        nameLocal: 'Mee Ton Poe',
+        category: 'food',
+        lat: 7.880072,
+        lng: 98.392149,
+        description:
+          'חנות נודלס ותיקה בעיר העתיקה של פוקט, מזוהה עם האטריות המוקפצות בסגנון הוקיאן - המנה שהעיר ידועה בה. השלט התאילנדי במקום נושא את השם ผัดหมี่.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=7.880072,98.392149',
+        source: {
+          url: 'https://mapcarta.com/Mee_Ton_Poe',
+          title: 'Mee Ton Poe, Phuket Town (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'hkt-banzaan',
+        name: 'שוק בנזאן',
+        nameLocal: 'Banzaan Fresh Market',
+        category: 'market',
+        lat: 7.89117,
+        lng: 98.30173,
+        description:
+          'שוק התוצרת והדגים המרכזי של פאטונג, ממש מאחורי אזור הקניות הראשי. הקומה התחתונה היא דגים, בשר וירקות.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=7.89117,98.30173',
+        source: {
+          url: 'https://mapcarta.com/Banzaan_Fresh_Market',
+          title: 'Banzaan Fresh Market, Patong (Mapcarta)',
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
@@ -7638,6 +7767,43 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Nicosia_01-2017_img08_Famagusta_Gate.jpg/500px-Nicosia_01-2017_img08_Famagusta_Gate.jpg',
       },
+      {
+        id: 'cy-oxi-market',
+        name: 'שוק אוקסי',
+        nameLocal: 'Oxi Market',
+        category: 'market',
+        lat: 35.169165,
+        lng: 33.366109,
+        description:
+          'שוק פתוח גדול במדרחוב שלצד חפיר מצודת קוסטנצה, בצד הדרומי של ניקוסיה. השוק השבועי המרכזי של העיר לתוצרת מקומית.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=35.169165,33.366109',
+        source: {
+          url: 'https://mapcarta.com/W402345513',
+          title: 'Oxi Market, Nicosia (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'cy-zanettos',
+        name: 'זאנטוס',
+        nameLocal: 'Zanettos Tavern',
+        category: 'food',
+        lat: 35.172776,
+        lng: 33.364693,
+        description:
+          'טברנה ותיקה בעיר העתיקה ברחוב חרילאאו טריקופי, מהכתובות הקלאסיות בניקוסיה למזה קפריסאי.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=35.172776,33.364693',
+        source: {
+          url: 'https://mapcarta.com/N6213752886',
+          title: 'Zanettos Tavern, Nicosia (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -7895,6 +8061,24 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Khirokitia_near_Larnaca_01-2017_img7.jpg/500px-Khirokitia_near_Larnaca_01-2017_img7.jpg',
       },
+      {
+        id: 'lca-municipal-market',
+        name: 'השוק העירוני של לרנקה',
+        nameLocal: 'Larnaca Municipal Retail Market',
+        category: 'market',
+        lat: 34.912392,
+        lng: 33.636075,
+        description:
+          'השוק העירוני המקורה של לרנקה ברחוב איפאיסטו, כמה מאות מטרים מכנסיית אגיוס לזרוס. תוצרת, גבינות ומוצרים מקומיים.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=34.912392,33.636075',
+        source: {
+          url: 'https://mapcarta.com/N5189441967',
+          title: 'Larnaca Municipal Retail Market (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -8030,6 +8214,25 @@ export const destinations: Destination[] = [
         externalUrl: 'https://maps.google.com/?q=41.84639,44.71944',
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/View_to_Mtskheta_from_Jvari.jpg/500px-View_to_Mtskheta_from_Jvari.jpg',
+      },
+      {
+        id: 'ge-salobie',
+        name: 'סלוביה',
+        nameLocal: 'Salobie',
+        category: 'food',
+        lat: 41.828447,
+        lng: 44.725094,
+        description:
+          'מסעדת דרכים ותיקה מחוץ למצחטה, בדרך לג׳ווארי, שנקראת על שם הלוביו - שעועית בסיר חרס שמוגשת עם מצ׳אדי. מוסד גאורגי ולא מסעדת תיירים.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=41.828447,44.725094',
+        source: {
+          url: 'https://mapcarta.com/Salobie',
+          title: 'Salobie, Mtskheta (Mapcarta)',
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
@@ -8211,6 +8414,43 @@ export const destinations: Destination[] = [
           'בשרי, בהשגחת בית חב"ד באטומי. ארוחות שבת בתיאום מראש - כדאי לוודא שעות מול בית חב"ד, במיוחד מחוץ לעונת הקיץ.',
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=Mendis+Kosher+Batumi',
+      },
+      {
+        id: 'bus-central-market',
+        name: 'השוק המרכזי של באטומי',
+        nameLocal: 'Batumi Central Market',
+        category: 'market',
+        lat: 41.64371,
+        lng: 41.65421,
+        description:
+          'הבזאר המרכזי של באטומי - תוצרת, גבינות, תבלינים וצ׳ורצ׳חלה. השוק העירוני האמיתי ולא גרסה מסודרת שלו.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=41.64371,41.65421',
+        source: {
+          url: 'https://mapcarta.com/W410953436',
+          title: 'Central Market (Boni), Batumi (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'bus-khachapuri-house',
+        name: 'בית החצ׳אפורי האדג׳רי',
+        nameLocal: 'Adjarian Khachapuri House',
+        category: 'food',
+        lat: 41.645813,
+        lng: 41.633561,
+        description:
+          'מסעדה בבאטומי שכל כולה סביב החצ׳אפורי האדג׳רי - סירת הבצק עם גבינה, חמאה וחלמון, שהיא המנה של אדג׳ריה עצמה ולא של גאורגיה בכלל.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=41.645813,41.633561',
+        source: {
+          url: 'https://mapcarta.com/N4229796486',
+          title: 'Adjarian Khachapuri House, Batumi (Mapcarta)',
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
@@ -8509,6 +8749,44 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Building_of_the_AM_of_Mykonos%2C_143545.jpg/500px-Building_of_the_AM_of_Mykonos%2C_143545.jpg',
       },
+      {
+        id: 'gr-metaxi-mas',
+        name: 'מטאקסי מאס',
+        nameLocal: 'Metaxi Mas',
+        category: 'food',
+        lat: 36.387952,
+        lng: 25.457357,
+        description:
+          'טברנה סנטורינית ותיקה במעלה האי ליד כנסיית אגיוס חרלמבוס, הרחק מרצועת הקלדרה. מטבח כפרי כרתי-סנטוריני, והמקום שהמקומיים שולחים אליו.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=36.387952,25.457357',
+        source: {
+          url: 'https://mapcarta.com/Metaxi_Mas',
+          title: 'Metaxi Mas, Santorini (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'gr-kikis-tavern',
+        name: 'טברנת קיקיס',
+        nameLocal: "Kiki's Tavern",
+        category: 'food',
+        lat: 37.48596,
+        lng: 25.36051,
+        description:
+          'טברנת גריל על חוף אגיוס סוסטיס המרוחק במיקונוס, בלי חשמל מהרשת ובלי מוזיקה - ההפך הגמור ממסעדות חופי המועדונים של האי.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=37.48596,25.36051',
+        source: {
+          url: 'https://mapcarta.com/Kiki%27s_Tavern',
+          title: "Kiki's Tavern, Mykonos (Mapcarta)",
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -8764,6 +9042,44 @@ export const destinations: Destination[] = [
           url: 'https://mapcarta.com/Municipal_Market_of_Chania',
           title: 'Municipal Market of Chania - Mapcarta (OpenStreetMap)',
           checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'her-peskesi',
+        name: 'פסקסי',
+        nameLocal: 'Peskesi',
+        category: 'food',
+        lat: 35.34017,
+        lng: 25.1325,
+        description:
+          'מסעדה בעיר העתיקה של הרקליון שכל כולה החייאה של המטבח הכרתי המסורתי ושל חומרי הגלם המקומיים - עשבי בר, חיטות ישנות ושמן זית של האי.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=35.34017,25.1325',
+        source: {
+          url: 'https://mapcarta.com/Peskesi',
+          title: 'Peskesi, Heraklion (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'her-dounias',
+        name: 'דוניאס',
+        nameLocal: 'Dounias',
+        category: 'food',
+        lat: 35.4092,
+        lng: 24.0148,
+        description:
+          'טברנה בכפר הררי מעל חאניה שמבשלת על אש עצים בסירי חרס, מתוצרת הבית ומתוצרת השכנים. הנסיעה לשם היא חלק מהעניין.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=35.4092,24.0148',
+        source: {
+          url: 'https://mapcarta.com/Dounias',
+          title: 'Dounias, Drakona, Chania (Mapcarta)',
+          checked: '2026-07-29',
         },
       },
     ],
@@ -9342,6 +9658,25 @@ export const destinations: Destination[] = [
           checked: '2026-07-28',
         },
       },
+      {
+        id: 'ven-harrys-bar',
+        name: 'הריס בר',
+        nameLocal: "Harry's Bar",
+        category: 'food',
+        lat: 45.43241,
+        lng: 12.33726,
+        description:
+          'הבר הוונציאני שבו נולדו הבליני והקרפצ׳ו, בסמטה היוצאת מכיכר סן מרקו. נקודת ציון בתולדות האוכל של העיר, לא רק מקום לשתות בו.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=45.43241,12.33726',
+        source: {
+          url: 'https://mapcarta.com/Harry%27s_Bar',
+          title: "Harry's Bar, Venice (Mapcarta)",
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -9659,6 +9994,43 @@ export const destinations: Destination[] = [
           checked: '2026-07-28',
         },
       },
+      {
+        id: 'flo-santambrogio',
+        name: 'שוק סנטאמברוג׳ו',
+        nameLocal: "Mercato di Sant'Ambrogio",
+        category: 'market',
+        lat: 43.77054,
+        lng: 11.26689,
+        description:
+          'שוק המזון השני של פירנצה מלבד המרקטו צ׳נטרלה: אולם מקורה ודוכנים בחוץ בפיאצה גיברטי. עדיין שוק שכונתי שהפירנצאים עצמם קונים בו, ולא אולם אוכל לתיירים.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=43.77054,11.26689',
+        source: {
+          url: 'https://mapcarta.com/Mercato_di_Sant%27Ambrogio',
+          title: "Mercato di Sant'Ambrogio, Florence (Mapcarta)",
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'flo-trattoria-mario',
+        name: 'טרטוריה מריו',
+        nameLocal: 'Trattoria Mario',
+        category: 'food',
+        lat: 43.776567,
+        lng: 11.254545,
+        description:
+          'טרטוריה זעירה עם שולחנות משותפים ליד סן לורנצו והמרקטו צ׳נטרלה, אחת הכתובות הקלאסיות בעיר לביסטקה אלה פיורנטינה ולמטבח טוסקני פשוט.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=43.776567,11.254545',
+        source: {
+          url: 'https://mapcarta.com/Trattoria_Mario',
+          title: 'Trattoria Mario, Florence (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -9872,6 +10244,43 @@ export const destinations: Destination[] = [
         rating: 4.4,
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=Bolzano+Otzi+Museum',
+      },
+      {
+        id: 'it-bolzano-obstplatz',
+        name: 'שוק פיאצה דלה ארבה',
+        nameLocal: 'Piazza delle Erbe - Obstplatz',
+        category: 'market',
+        lat: 46.49972,
+        lng: 11.35281,
+        description:
+          'שוק הירקות והפירות תחת כיפת השמיים בלב העיר העתיקה של בולצאנו, דו-לשוני איטלקי-גרמני כמו העיר עצמה. בדוכנים מוכרים תוצרת דרום-טירולית - שפק, גבינות הרים ולחם שיפון.',
+        tags: ['foodie', 'outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=46.49972,11.35281',
+        source: {
+          url: 'https://mapcarta.com/Obstplatz',
+          title: 'Piazza delle Erbe - Obstplatz, Bolzano (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'it-lagazuoi',
+        name: 'בקתת לגצואי',
+        nameLocal: 'Rifugio Lagazuoi',
+        category: 'food',
+        lat: 46.52773,
+        lng: 12.00813,
+        description:
+          'בקתת הרים גבוהה מעל קורטינה דאמפצו, שאליה עולים ברכבל. המרפסת צופה על רכסי הדולומיטים, והמטבח הוא מטבח ההרים של אמפצו ודרום טירול. אכילה בבקתה היא חלק מהחוויה בדולומיטים ולא רק הפסקה בדרך.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=46.52773,12.00813',
+        source: {
+          url: 'https://mapcarta.com/Rifugio_Lagazuoi',
+          title: "Rifugio Lagazuoi, Cortina d'Ampezzo (Mapcarta)",
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
@@ -10287,6 +10696,43 @@ export const destinations: Destination[] = [
           url: 'https://mapcarta.com/Mercat_de_l%27Olivar',
           title: "Mercat de l'Olivar - Mapcarta (OpenStreetMap)",
           checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'pmi-santa-catalina',
+        name: 'שוק סנטה קטלינה',
+        nameLocal: 'Mercat de Santa Catalina',
+        category: 'market',
+        lat: 39.57124,
+        lng: 2.63827,
+        description:
+          'שוק התוצרת והדגים של שכונת סנטה קטלינה בפלמה, בכיכר הנביגסיו. השוק הוא העוגן של השכונה, ומסביבו הבארים שהפכו אותה למה שהיא.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=39.57124,2.63827',
+        source: {
+          url: 'https://mapcarta.com/Mercat_de_Santa_Catalina',
+          title: 'Mercat de Santa Catalina, Palma (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'pmi-can-joan-saigo',
+        name: 'קאן ז׳ואן דה סאיגו',
+        nameLocal: "Ca'n Joan de s'Aigo",
+        category: 'food',
+        lat: 39.56991,
+        lng: 2.65262,
+        description:
+          'בית קפה היסטורי בעיר העתיקה של פלמה, הכתובת המיורקנית לאנסאימדה, לקוארטוס ולגלידת שקדים עם שוקו חם.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=39.56991,2.65262',
+        source: {
+          url: 'https://mapcarta.com/Ca%27n_Joan_de_S%27Aigo',
+          title: "Ca'n Joan de s'Aigo, Palma (Mapcarta)",
+          checked: '2026-07-29',
         },
       },
     ],
@@ -13487,6 +13933,25 @@ export const destinations: Destination[] = [
         rating: 4.4,
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=Balaton+Uplands+National+Park',
+      },
+      {
+        id: 'hu-kisfaludy-haz',
+        name: 'בית קישפלודי',
+        nameLocal: 'Kisfaludy-ház',
+        category: 'food',
+        lat: 46.794236,
+        lng: 17.495354,
+        description:
+          'מסעדה על גבעת היין הוולקנית של בדצ׳ון מעל אגם בלטון, עם מרפסת שצופה על האגם ועם יינות האזור.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=46.794236,17.495354',
+        source: {
+          url: 'https://mapcarta.com/Kisfaludy_H%C3%A1z',
+          title: 'Kisfaludy-haz, Badacsonytomaj (Mapcarta)',
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
@@ -17402,6 +17867,44 @@ export const destinations: Destination[] = [
           checked: '2026-07-28',
         },
       },
+      {
+        id: 'war-hala-koszyki',
+        name: 'הלה קושיקי',
+        nameLocal: 'Hala Koszyki',
+        category: 'food',
+        lat: 52.2222,
+        lng: 21.01103,
+        description:
+          'אולם שוק היסטורי ברחוב קושיקובה שהוסב לאולם אוכל בשתי קומות, לצד דוכני שוק. מקום לאכול בו יותר מאשר לקנות בו.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'nightlife'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=52.2222,21.01103',
+        source: {
+          url: 'https://mapcarta.com/Hala_Koszyki',
+          title: 'Hala Koszyki, Warsaw (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'war-bar-prasowy',
+        name: 'בר החלב פראסובי',
+        nameLocal: 'Bar Mleczny Prasowy',
+        category: 'food',
+        lat: 52.2158,
+        lng: 21.02059,
+        description:
+          'אחד מברי החלב ששרדו בוורשה, ברחוב מרשלקובסקה. בר חלב הוא מזנון עממי מסובסד מתקופת הקומוניזם, ומוסד פולני בפני עצמו.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=52.2158,21.02059',
+        source: {
+          url: 'https://mapcarta.com/Bar_Mleczny_Prasowy',
+          title: 'Bar Mleczny Prasowy, Warsaw (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -17940,6 +18443,24 @@ export const destinations: Destination[] = [
         tags: ['history', 'art'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=Kykkos+Monastery',
+      },
+      {
+        id: 'pfo-municipal-market',
+        name: 'השוק העירוני של פאפוס',
+        nameLocal: 'Paphos Municipal Market',
+        category: 'market',
+        lat: 34.77839,
+        lng: 32.41911,
+        description:
+          'אולם השוק המקורה בעיר העליונה קטימה, השוק הקמעונאי המסורתי של פאפוס.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=34.77839,32.41911',
+        source: {
+          url: 'https://mapcarta.com/W9929452',
+          title: 'Municipal market, Pafos (Mapcarta)',
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
@@ -18953,6 +19474,24 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Caru_cu_Bere_(MAR_2023)_-_img_05.jpg/500px-Caru_cu_Bere_(MAR_2023)_-_img_05.jpg',
       },
+      {
+        id: 'buc-obor',
+        name: 'שוק אובור',
+        nameLocal: 'Obor Market',
+        category: 'market',
+        lat: 44.45007,
+        lng: 26.13007,
+        description:
+          'השוק הגדול של בוקרשט, פתוח ומקורה גם יחד, ברחוב זידורי מושי. גם הכתובת הידועה בעיר למיצ׳י על הגריל.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=44.45007,26.13007',
+        source: {
+          url: 'https://mapcarta.com/Obor_Market',
+          title: 'Obor Market, Bucharest (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -19126,6 +19665,24 @@ export const destinations: Destination[] = [
         tags: ['outdoors'],
         priceLevel: 0,
         externalUrl: 'https://maps.google.com/?q=Balea+Lake+Romania',
+      },
+      {
+        id: 'ro-piata-cibin',
+        name: 'שוק צ׳יבין',
+        nameLocal: 'Piata Cibin',
+        category: 'market',
+        lat: 45.79926,
+        lng: 24.14468,
+        description:
+          'שוק האיכרים המסורתי של סיביו בעיר התחתונה ליד נהר הצ׳יבין, עם תוצרת אזורית, גבינות ובשרים מיובשים.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=45.79926,24.14468',
+        source: {
+          url: 'https://mapcarta.com/Piata_Cibin',
+          title: 'Piata Cibin, Sibiu (Mapcarta)',
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
@@ -19723,6 +20280,24 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Zentralbad_Sofia_Oct_2012_PD_IMG_1683.jpg/500px-Zentralbad_Sofia_Oct_2012_PD_IMG_1683.jpg',
       },
+      {
+        id: 'sof-zhenski-pazar',
+        name: 'השוק הנשי',
+        nameLocal: 'Zhenski Pazar',
+        category: 'market',
+        lat: 42.7028,
+        lng: 23.32058,
+        description:
+          'שוק הרחוב הפתוח הגדול של סופיה, לתוצרת, גבינות ותבלינים. שוק עובד ועממי, שונה לגמרי מאולם השוק המקורה שבמרכז.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=42.7028,23.32058',
+        source: {
+          url: 'https://mapcarta.com/Zhenski_Pazar',
+          title: "Zhenski Pazar (Women's Market), Sofia (Mapcarta)",
+          checked: '2026-07-29',
+        },
+      },
 
     ],
     itinerary: [
@@ -19850,6 +20425,25 @@ export const destinations: Destination[] = [
         externalUrl: 'https://maps.google.com/?q=41.94222,24.84944',
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Church_of_the_Dormition%2C_Bachkovo_Monastery_01.jpg/500px-Church_of_the_Dormition%2C_Bachkovo_Monastery_01.jpg',
+      },
+      {
+        id: 'bg-kapana',
+        name: 'קאפאנה',
+        nameLocal: 'Kapana',
+        category: 'food',
+        lat: 42.149273,
+        lng: 24.748909,
+        description:
+          'רשת הסמטאות הצפופה במרכז פלובדיב שבה מרוכזים בתי הקפה, הברים והמסעדות העצמאיות של העיר. זה רובע שמטיילים בו ברגל, לא מקום אחד.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'nightlife'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=42.149273,24.748909',
+        source: {
+          url: 'https://mapcarta.com/N3779372494',
+          title: 'Kapana, Plovdiv (Mapcarta)',
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
@@ -19992,6 +20586,25 @@ export const destinations: Destination[] = [
         tags: ['families', 'outdoors'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=Sandanski+Bulgaria',
+      },
+      {
+        id: 'bg-villa-melnik',
+        name: 'וילה מלניק',
+        nameLocal: 'Villa Melnik',
+        category: 'food',
+        lat: 41.47413,
+        lng: 23.38917,
+        description:
+          'יקב בעמק הסטרומה שעובד עם ענב המלניק המקומי, המוצר שהאזור באמת ידוע בו. היין כאן אינו כשר.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=41.47413,23.38917',
+        source: {
+          url: 'https://mapcarta.com/Villa_Melnik',
+          title: 'Villa Melnik winery, Pirin Macedonia (Mapcarta)',
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
@@ -22993,6 +23606,44 @@ export const destinations: Destination[] = [
           checked: '2026-07-28',
         },
       },
+      {
+        id: 'pl-pierogarnia-mandu',
+        name: 'פירוגרניה מנדו',
+        nameLocal: 'Pierogarnia Mandu',
+        category: 'food',
+        lat: 54.35375,
+        lng: 18.64672,
+        description:
+          'מסעדת פירוגי ברחוב אלז׳ביטנסקה בעיר העתיקה של גדנסק, עם מילויים אזוריים לצד הקלאסיים.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=54.35375,18.64672',
+        source: {
+          url: 'https://mapcarta.com/Pierogarnia_Mandu',
+          title: 'Pierogarnia Mandu, Gdansk (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'pl-bar-przystan',
+        name: 'בר פשיסטן',
+        nameLocal: 'Bar Przystań',
+        category: 'food',
+        lat: 54.43708,
+        lng: 18.58019,
+        description:
+          'מסעדת דגים בסופוט לצד נמל הדייגים, בשדרת ויסקה פולסקייגו. דגי הים הבלטי הם כל התפריט, ולכן אינה כשרה.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=54.43708,18.58019',
+        source: {
+          url: 'https://mapcarta.com/Bar_Przysta%C5%84',
+          title: 'Bar Przystan, Sopot (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -23887,6 +24538,44 @@ export const destinations: Destination[] = [
           url: 'https://en.wikipedia.org/wiki/Union_Oyster_House',
           title: 'Union Oyster House - Wikipedia',
           checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'us-reds-eats',
+        name: 'רדס איטס',
+        nameLocal: "Red's Eats",
+        category: 'food',
+        lat: 44.00252,
+        lng: -69.66422,
+        description:
+          'דוכן טייק-אווי בצד הכביש הראשי של ויסקאסט במיין, מהכתובות המדוברות ביותר במדינה ללובסטר רול. פירות ים ולכן לא כשר.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=44.00252,-69.66422',
+        source: {
+          url: 'https://mapcarta.com/Red%27s_Eats',
+          title: "Red's Eats, Wiscasset, Maine (Mapcarta)",
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'us-mikes-pastry',
+        name: 'מייקס פייסטרי',
+        nameLocal: "Mike's Pastry",
+        category: 'food',
+        lat: 42.36419,
+        lng: -71.05424,
+        description:
+          'מאפייה איטלקית ברחוב האנובר, רחוב האוכל של הנורת׳ אנד בבוסטון, שמזוהה מעל הכול עם הקנולי.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=42.36419,-71.05424',
+        source: {
+          url: 'https://mapcarta.com/Mike%27s_Pastry',
+          title: "Mike's Pastry, Boston (Mapcarta)",
+          checked: '2026-07-29',
         },
       },
     ],
@@ -29195,6 +29884,25 @@ export const destinations: Destination[] = [
           checked: '2026-07-28',
         },
       },
+      {
+        id: 'it-focacceria-san-francesco',
+        name: 'אנטיקה פוקאצ׳ריה סן פרנצ׳סקו',
+        nameLocal: 'Antica Focacceria San Francesco',
+        category: 'food',
+        lat: 38.11633,
+        lng: 13.36614,
+        description:
+          'הפוקאצ׳ריה ההיסטורית של פלרמו, הכתובת הידועה ביותר לאוכל הרחוב של העיר - פאני קא מאוזה, כריך הטחול, ופאנלה מקמח חומוס. הטחול והבשר כאן אינם כשרים.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=38.11633,13.36614',
+        source: {
+          url: 'https://mapcarta.com/Antica_Focacceria_San_Francesco',
+          title: 'Antica Focacceria San Francesco, Palermo (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -29416,6 +30124,24 @@ export const destinations: Destination[] = [
           url: 'https://mapcarta.com/Mercado_de_Triana',
           title: 'Mercado de Triana / Castle of San Jorge - Mapcarta (OpenStreetMap)',
           checked: '2026-07-28',
+        },
+      },
+      {
+        id: 'es-atarazanas',
+        name: 'שוק אטאראסאנאס',
+        nameLocal: 'Mercado Central de Atarazanas',
+        category: 'market',
+        lat: 36.71843,
+        lng: -4.42406,
+        description:
+          'השוק המרכזי המקורה של מלגה, בנוי סביב שער מספנות נסרי מהמאה השלוש-עשרה ומתחתיו חלון ויטראז׳ ענק. דלפקי הדגים ופירות הים הם הלב שלו.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=36.71843,-4.42406',
+        source: {
+          url: 'https://mapcarta.com/Mercado_de_Atarazanas',
+          title: 'Mercado de Atarazanas, Malaga (Mapcarta)',
+          checked: '2026-07-29',
         },
       },
     ],
@@ -29854,6 +30580,25 @@ export const destinations: Destination[] = [
           checked: '2026-07-28',
         },
       },
+      {
+        id: 'de-dr-loosen',
+        name: 'יקב ד״ר לוזן',
+        nameLocal: 'Weingut Dr. Loosen',
+        category: 'food',
+        lat: 49.9236,
+        lng: 7.06982,
+        description:
+          'יקב ריזלינג מוכר בעולם בסנקט יוהניסהוף שבברנקסטל, בלב כפרי היין של המוזל. היין כאן אינו כשר.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie', 'outdoors'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=49.9236,7.06982',
+        source: {
+          url: 'https://mapcarta.com/Weingut_Dr._Loosen',
+          title: 'Weingut Dr. Loosen, Bernkastel-Kues (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -30255,6 +31000,43 @@ export const destinations: Destination[] = [
           checked: '2026-07-28',
         },
       },
+      {
+        id: 'th-khao-soi-khun-yai',
+        name: 'קאו סוי קון יאי',
+        nameLocal: 'Khao Soi Khun Yai',
+        category: 'food',
+        lat: 18.79533,
+        lng: 98.9833,
+        description:
+          'דוכן קטן בתוך העיר העתיקה של צ׳יאנג מאי שמוקדש לקאו סוי, מרק אטריות הקארי הצפוני שהעיר מזוהה איתו.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=18.79533,98.9833',
+        source: {
+          url: 'https://mapcarta.com/Khao_Soi_Khun_Yai',
+          title: 'Khao Soi Khun Yai, Chiang Mai (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'th-chiangmai-gate',
+        name: 'שוק שער צ׳יאנג מאי',
+        nameLocal: 'Chiang Mai Gate Market',
+        category: 'market',
+        lat: 18.78179,
+        lng: 98.98839,
+        description:
+          'שוק בשער הדרומי של העיר העתיקה, שבערב הופך למפגש דוכני אוכל. משם יוצא גם רחוב ההליכה של ואולאי.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=18.78179,98.98839',
+        source: {
+          url: 'https://mapcarta.com/Chiang_Mai_Gate_Market',
+          title: 'Chiang Mai Gate Market (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -30452,6 +31234,42 @@ export const destinations: Destination[] = [
         tags: ['history', 'art'],
         priceLevel: 1,
         externalUrl: 'https://maps.google.com/?q=50.962223,13.940278',
+      },
+      {
+        id: 'de-pfunds-molkerei',
+        name: 'חלבניית פפונדס',
+        nameLocal: 'Pfunds Molkerei',
+        category: 'shopping',
+        lat: 51.0638,
+        lng: 13.75982,
+        description:
+          'חנות חלב היסטורית ברחוב באוצנר בדרזדן, שכל קירותיה מרוצפים אריחי חרס מצוירים ביד. מוכרים בה גבינות ומוצרי חלב.',
+        tags: ['foodie', 'art'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=51.0638,13.75982',
+        source: {
+          url: 'https://mapcarta.com/Pfunds_Molkerei',
+          title: 'Pfunds Molkerei, Dresden (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'de-neustadter-markthalle',
+        name: 'שוק ניישטדטר',
+        nameLocal: 'Neustädter Markthalle',
+        category: 'market',
+        lat: 51.06021,
+        lng: 13.74491,
+        description:
+          'אולם השוק המקורה ההיסטורי של דרזדן ברובע ניישטאדט, עם דוכני תוצרת ומזון.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=51.06021,13.74491',
+        source: {
+          url: 'https://mapcarta.com/Neust%C3%A4dter_Markthalle',
+          title: 'Neustadter Markthalle, Dresden (Mapcarta)',
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
@@ -32602,6 +33420,25 @@ export const destinations: Destination[] = [
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Beagle_Channel_seen_from_Tierra_del_Fuego_National_Park.jpg/500px-Beagle_Channel_seen_from_Tierra_del_Fuego_National_Park.jpg',
       },
+      {
+        id: 'ar-viejo-marino',
+        name: 'אל ויאחו מרינו',
+        nameLocal: 'El Viejo Marino',
+        category: 'food',
+        lat: -54.8062,
+        lng: -68.30107,
+        description:
+          'מסעדת פירות ים פשוטה על שדרת מאיפו באושוואיה, מהכתובות המוכרות בעיר לסנטוליה - סרטן המלך של הים הדרומי. פירות ים ולכן לא כשר.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=-54.8062,-68.30107',
+        source: {
+          url: 'https://mapcarta.com/El_Viejo_Marino',
+          title: 'El Viejo Marino, Ushuaia (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -33321,6 +34158,24 @@ export const destinations: Destination[] = [
         priceLevel: 3,
         mustSee: true,
         externalUrl: 'https://maps.google.com/?q=-52.919445,-70.578056',
+      },
+      {
+        id: 'cl-mercado-punta-arenas',
+        name: 'השוק העירוני של פונטה ארנס',
+        nameLocal: 'Mercado Municipal de Punta Arenas',
+        category: 'market',
+        lat: -53.1671,
+        lng: -70.91113,
+        description:
+          'אולם השוק העירוני של פונטה ארנס, המקום המסורתי לראות את פירות הים של מגלאנס ולאכול אותם בדוכנים שבקומה שמעל.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=-53.1671,-70.91113',
+        source: {
+          url: 'https://mapcarta.com/Mercado_Municipal_de_Punta_Arenas',
+          title: 'Mercado Municipal de Punta Arenas (Mapcarta)',
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [
@@ -34394,6 +35249,44 @@ export const destinations: Destination[] = [
           checked: '2026-07-28',
         },
       },
+      {
+        id: 'nce-fenocchio',
+        name: 'פנוקיו',
+        nameLocal: 'Fenocchio',
+        category: 'food',
+        lat: 43.69734,
+        lng: 7.27635,
+        description:
+          'גלידרייה בכיכר רוזטי בניס העתיקה, ידועה במבחר טעמים גדול ובלתי שגרתי לצד הקלאסיקות.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=43.69734,7.27635',
+        source: {
+          url: 'https://mapcarta.com/Fenocchio',
+          title: 'Fenocchio, Nice (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
+      {
+        id: 'nce-chez-pipo',
+        name: 'שה פיפו',
+        nameLocal: 'Chez Pipo',
+        category: 'food',
+        lat: 43.69995,
+        lng: 7.2855,
+        description:
+          'מקום ותיק ליד הנמל שמזוהה עם הסוקה - חביתית קמח החומוס שהיא אוכל הרחוב של ניס עצמה ולא של הריביירה בכלל.',
+        kosherStatus: 'not-kosher',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=43.69995,7.2855',
+        source: {
+          url: 'https://mapcarta.com/Chez_Pipo',
+          title: 'Chez Pipo, Nice (Mapcarta)',
+          checked: '2026-07-29',
+        },
+      },
     ],
     itinerary: [
       {
@@ -35075,6 +35968,24 @@ export const destinations: Destination[] = [
         externalUrl: 'https://maps.google.com/?q=55.949,-3.1956',
         photo:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Outlook_Tower%2C_Castlehill%2C_Edinburgh.JPG/500px-Outlook_Tower%2C_Castlehill%2C_Edinburgh.JPG',
+      },
+      {
+        id: 'edi-farmers-market',
+        name: 'שוק האיכרים של אדינבורו',
+        nameLocal: "Edinburgh Farmers' Market",
+        category: 'market',
+        lat: 55.94776,
+        lng: -3.20355,
+        description:
+          'שוק איכרים על קאסל טרס, ממש מתחת לסלע המצודה, עם תוצרת סקוטית מקומית ודוכני אוכל. שוק תקופתי - כדאי לוודא מול העירייה שהוא פעיל בתאריך שלכם.',
+        tags: ['foodie'],
+        externalUrl:
+          'https://www.google.com/maps/search/?api=1&query=55.94776,-3.20355',
+        source: {
+          url: 'https://mapcarta.com/Edinburgh_Farmers_Market',
+          title: "Edinburgh Farmers' Market (Mapcarta)",
+          checked: '2026-07-29',
+        },
       },
     ],
     itinerary: [

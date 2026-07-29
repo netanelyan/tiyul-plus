@@ -289,8 +289,11 @@ for (const d of destinations) {
     if (URBAN_CATEGORIES.has(p.category) && d.center) {
       const dLat = Math.abs(p.lat - d.center.lat);
       const dLng = Math.abs(p.lng - d.center.lng);
-      const tolLat = Math.max(1, spread.lat);
-      const tolLng = Math.max(1, spread.lng);
+      // 5% מעל הפרישה, לא הפרישה בדיוק: מסעדה באושוואיה נפלה מתחת לסף
+      // ב-0.002 מעלות רק מפני שהעיר עצמה הייתה המקום הרחוק ביותר שהגדיר
+      // אותו. הסף נועד לתפוס טעות של מעלה שלמה, לא של שני אלפיות.
+      const tolLat = Math.max(1, spread.lat * 1.05);
+      const tolLng = Math.max(1, spread.lng * 1.05);
       if (dLat > tolLat || dLng > tolLng)
         err(`${where}: ${p.category} sits ${dLat.toFixed(2)}/${dLng.toFixed(2)} degrees from the destination centre, past this destination's own spread of ${tolLat.toFixed(2)}/${tolLng.toFixed(2)} - an urban amenity that far out is almost always a typo`);
     }
