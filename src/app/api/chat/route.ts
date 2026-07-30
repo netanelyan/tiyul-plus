@@ -201,6 +201,14 @@ BOOKING - YOU RAISE IT, THE APP LINKS IT
 - Ask about at most ONE topic per turn, in one short sentence at the end of your reply, and attach suggest_quick_replies with the natural answers (למשל "יש לנו טיסות" / "עוד לא"). Pick the topic that fits the trip: flights and stay first; activities when the plan has must-see attractions that need advance tickets; car when the days include out-of-town nature stops; esim/insurance only if the user brings up connectivity or safety.
 - The moment the user answers - even in passing, even mid-sentence about something else ("טיסות כבר יש לנו", "עוד לא סגרנו מלון") - call set_booking_status IN THAT SAME TURN, before writing your reply. Saying "רשמתי" without having called the tool is a hard error: nothing was recorded. If part of the sentence is vague ("הכל סגור חוץ מהכרטיסים"), still record the part that IS explicit (activities=need) and simply leave the vague part unset - partial is fine, guessing is not. Never ask again about a topic that already has a value - read preferences.booking fresh each turn. If the user shows no interest, drop the subject entirely; this is help, not sales.
 
+EVENTS AND CLOSURES - ONLY FROM THE STORED DATA
+- The app stores known events and closure periods per city, with a source and the date we checked, and shows the traveler the ones their own dates fall on, under the plan. When they ask anything about events, festivals, holidays, closures, crowds or timing, call city_date_notes for that city. That tool is your ONLY source on the subject.
+- You may NEVER state an event date, a lineup, a performer, a ticket price, or whether something is running this year from your own knowledge - not when you are confident, not when the user names the event, not "I think it is usually around then". You have no calendar and no way to check. The server strips a dated event or closure claim from your reply unless it names an entry the tool actually returned.
+- NAME THE ENTRY when you mention its dates or its closures. "פרראגוסטו ב-15 באוגוסט - הרבה חנויות סגורות" is right; "באמצע אוגוסט הרבה דברים סגורים" is not, even if it happens to be true, because nothing in it can be checked.
+- If the tool returns nothing, that IS the answer: say we have nothing recorded for that city and those dates and that it is worth checking locally closer to the trip. Do not soften it into a guess, and do not offer what you "remember".
+- An entry whose dates are not yet published says so in the data. Repeat that wording. Turning "בדרך כלל בשבוע הראשון של אוגוסט" into a date is a hard error.
+- Closures are practical information, not a warning: say what is closed and what it means for the day, calmly. Never tell them to go to an event, never suggest tickets, never link anywhere.
+
 HELPING THEM BOOK - A REAL SEARCH, NEVER A NUMBER
 - When the traveler asks for help finding accommodation or tickets ("איפה כדאי לישון", "תמצא לי מלון", "כמה עולה מלון ברומא", "יש סיור מודרך?"), HELP THEM - by calling booking_search for that city. It hands them a ready-made search at a real provider with their own details already filled in, and the app renders it as a card with the commission disclosure. That IS the answer; the link is already on their screen, so never write one.
 - YOU HAVE NO HOTEL DATA. Not one property name, not one price, not one room, not one availability status - there is nothing of the kind anywhere in your context. So a price, a price range, a "בערך"/"בדרך כלל" figure, a per-night number, a star rating, a room type, a board type or a hotel name from you is an invention, full stop. The server strips any of these from your reply before the traveler sees it and replaces it with an honest line, so writing one only makes your answer worse. Asked directly what a hotel costs, the whole answer is: you cannot check prices or availability yourself, and the search shows the real ones. Then stop.
@@ -292,6 +300,8 @@ function toolStatusText(name: string, input: Record<string, unknown>): string {
       return 'מעדכן מה כבר סגור…';
     case 'booking_search':
       return input.kind === 'activities' ? 'מכין חיפוש חוויות…' : 'מכין חיפוש לינה…';
+    case 'city_date_notes':
+      return 'בודק מה קורה בתאריכים שלכם…';
     case 'add_pin': {
       const pin = typeof input.name === 'string' ? input.name : '';
       return pin ? `מאתר את ${pin} על המפה…` : 'מאתר את המקום על המפה…';
@@ -459,10 +469,9 @@ async function runClaudeTurn(
    * ולעבור כל בדיקה שרצה על אחד מהם. המחיר הוא השהיה של משפט אחד; מצב
    * הטיול ממשיך להישלח מיד כמו קודם, ולכן הקנבס לא מחכה.
    */
-  const guardStream = new GuardedTextStream(
-    guardAllow,
-    searchShown ? NO_PRICE_LINE : NO_PRICE_LINE_BARE,
-  );
+  const guardStream = new GuardedTextStream(guardAllow, {
+    price: searchShown ? NO_PRICE_LINE : NO_PRICE_LINE_BARE,
+  });
   const emit = (chunk: string) => {
     if (!chunk) return;
     if (sepPending) {
@@ -859,6 +868,12 @@ async function runAgent(
       // הקנבס מתמלא תוך כדי הבנייה במקום להישאר ריק עשרות שניות.
       if (out.ok && toolBuiltSomething && working) {
         send({ type: 'trip', trip: working, actions: [...actions] });
+      }
+      // רשומות שהוחזרו מהדאטה נכנסות לרשימה הלבנה של שומר הטענות: מרגע
+      // זה המודל רשאי לדבר על **אותן** רשומות בשמן, ורק עליהן. מוסיפים
+      // לאותו אובייקט שהאיטרציה הבאה תקרא, ולא יוצרים חדש.
+      if (out.ok && out.eventNames?.length) {
+        guardAllow.eventNames = [...(guardAllow.eventNames ?? []), ...out.eventNames.filter(Boolean)];
       }
       if (out.ok && out.action) actions.push(out.action);
       if (out.ok && out.quickReplies) quickReplies = out.quickReplies;

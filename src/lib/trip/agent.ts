@@ -3,6 +3,16 @@ import { isEating, isKosher, kosherStatusOf } from '@/lib/categories';
 import { haversineKm } from './travel';
 import { buildSearchCard, SEARCH_KINDS, type BookingSearchCard, type SearchKind } from '@/lib/bookingSearch';
 import { stripClaims } from '@/lib/priceGuard';
+import { cityDateWindows } from '@/data/dateWindows';
+import {
+  dayRangeLabel,
+  isConfirmed,
+  matchTripWindows,
+  sourceLabel,
+  typicalLabel,
+  windowDatesLabel,
+  windowsForCity,
+} from './dateWindows';
 import { completeRange, dayDate, formatHebrewRange, isISODate, rangeDays, safeDates } from './dates';
 import { newId } from './types';
 import type {
@@ -34,6 +44,11 @@ export interface AgentToolResult {
    * הכתובת, התאריכים ומספר האורחים שבו הם דאטה ולא טקסט שנוצר.
    */
   search?: BookingSearchCard;
+  /**
+   * שמות הרשומות שהוחזרו מ-`city_date_notes`. נכנסים לרשימה הלבנה של
+   * שומר הטענות, כך שהמודל יכול לדבר על מה שקיבל - ורק עליו.
+   */
+  eventNames?: string[];
 }
 
 const dayNumberSchema = {
@@ -294,6 +309,23 @@ export const AGENT_TOOLS = [
         insurance: { type: 'string', enum: ['have', 'need', 'not_needed'] },
         car: { type: 'string', enum: ['have', 'need', 'not_needed'] },
       },
+    },
+  },
+  {
+    /**
+     * אירועים וסגירות. **הכלי הזה הוא המקור היחיד** שממנו מותר לומר
+     * משהו על אירוע: אין בו שדה תאריך, ולכן אין מסלול שבו תאריך שהמודל
+     * "זוכר" נכנס לתשובה. תוצאה ריקה היא תשובה - "אין לנו מידע רשום".
+     */
+    name: 'city_date_notes',
+    description:
+      "Look up what is recorded for a city in the traveler's own dates: known events and closure periods, with their source and the date we checked. Call this WHENEVER the user asks about events, festivals, holidays, closures, crowds or timing ('is anything happening while we are there', 'is the museum open', 'why is it so busy then'). You pass only the city slug - the dates come from the trip itself. THIS TOOL IS YOUR ONLY SOURCE ON THIS SUBJECT. You may never state an event date, a lineup, a performer, a ticket price, or whether something is running this year from your own knowledge - not even if you are confident, not even if the user names the event. If the tool returns nothing, the honest and complete answer is that we have nothing recorded for that city and those dates, and that they should check locally; do not fill the gap. When an entry says its dates are not yet published, you must repeat that wording and must not turn it into a date.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        citySlug: { type: 'string', description: 'City slug from the DATA to look up' },
+      },
+      required: ['citySlug'],
     },
   },
   {
@@ -1130,6 +1162,85 @@ export function executeAgentTool(
         // מזכירים למודל שהקישור אינו שלו - הוא כבר מוצג בממשק
         message: `מצב ההזמנות עודכן: ${JSON.stringify(booking)}. כפתורי ההזמנה מוצגים בממשק אוטומטית - אל תכתוב קישורים, מחירים או זמינות.`,
         action: `סימנתי: ${labels}`,
+      };
+    }
+
+    /**
+     * אירועים וסגירות בתאריכים של המטייל.
+     *
+     * שתי התנהגויות, ושתיהן כנות: כשיש לטיול תאריכים מוחזרות הרשומות
+     * **שחופפות לימים שלו באותה עיר** (ראו `matchTripWindows`); כשאין
+     * תאריכים מוחזר מה ששמור על העיר, עם אמירה מפורשת שזה לא הותאם
+     * לתאריכים. בשני המקרים רשימה ריקה חוזרת כמשפט מפורש - "אין לנו
+     * מידע רשום" - ולא כשגיאה, כי זו לא תקלה.
+     */
+    case 'city_date_notes': {
+      const slug = String(input.citySlug ?? '');
+      const dest = destOf(slug);
+      if (!dest) return fail(trip, `citySlug לא מוכר "${slug}". החוקיים: ${validSlugs()}.`);
+
+      const RULES =
+        'חובה: אל תוסיף תאריך, שם אמן, הרכב, מחיר כרטיס או קביעה אם משהו מתקיים השנה - גם לא מהידע שלך, גם אם המשתמש נקב בשם האירוע. מותר לצטט רק את מה שכתוב כאן. רשומה שכתוב עליה שהתאריכים לא פורסמו - נאמרת בדיוק כך, ולא כתאריך. אין לצרף קישור לכרטיסים ואין להמליץ ללכת.';
+
+      const dated = Boolean(trip?.startDate);
+      const rows = dated
+        ? matchTripWindows(trip, cityDateWindows).filter((m) => m.window.citySlug === slug)
+        : [];
+
+      if (dated) {
+        if (rows.length === 0) {
+          return {
+            trip,
+            ok: true,
+            message: `אין לנו שום אירוע או תקופת סגירה רשומים ל${dest.name} בתאריכים של הטיול. אמור זאת בדיוק כך - שאין לנו מידע רשום לתאריכים האלה, ושכדאי לבדוק מקומית לקראת הנסיעה. אל תשלים מהידע שלך. ${RULES}`,
+            action: undefined,
+          };
+        }
+        const lines = rows.map((m) => ({
+          שם: m.window.name,
+          סוג: m.window.kind === 'closure' ? 'סגירות' : 'אירוע',
+          תאריכים: windowDatesLabel(m),
+          ודאות: isConfirmed(m.window) ? 'תאריכים מאושרים' : 'חלון אופייני בלבד - התאריכים לשנה הזו לא פורסמו',
+          'ימים בטיול': dayRangeLabel(m.dayNumbers),
+          משמעות: m.window.note,
+          מקור: sourceLabel(m.window),
+        }));
+        return {
+          trip,
+          ok: true,
+          eventNames: rows.flatMap((m) => [m.window.name, m.window.nameLocal ?? '']),
+          message: `רשומות שחופפות לימים של המטייל ב${dest.name}:\n${JSON.stringify(lines, null, 1)}\nהכרטיסים כבר מוצגים למטייל מתחת לתוכנית, אז אין צורך לחזור על הכול - משפט או שניים על מה שרלוונטי לו. ${RULES}`,
+          action: undefined,
+        };
+      }
+
+      const all = windowsForCity(slug, cityDateWindows);
+      if (all.length === 0) {
+        return {
+          trip,
+          ok: true,
+          message: `אין לנו שום אירוע או תקופת סגירה רשומים ל${dest.name}. אמור זאת בדיוק כך - שאין לנו מידע רשום - ואל תשלים מהידע שלך. ${RULES}`,
+          action: undefined,
+        };
+      }
+      const listed = all.map((w) => ({
+        שם: w.name,
+        סוג: w.kind === 'closure' ? 'סגירות' : 'אירוע',
+        תאריכים:
+          w.dates.kind === 'typical'
+            ? typicalLabel(w.dates.typical)
+            : w.dates.kind === 'exact'
+              ? `${w.dates.start} עד ${w.dates.end}`
+              : `${w.dates.start} עד ${w.dates.end} בכל שנה`,
+        משמעות: w.note,
+        מקור: sourceLabel(w),
+      }));
+      return {
+        trip,
+        ok: true,
+        eventNames: all.flatMap((w) => [w.name, w.nameLocal ?? '']),
+        message: `לטיול אין תאריכים, ולכן זו רשימת מה ששמור על ${dest.name} **בלי התאמה לתאריכים**. אמור למטייל שברגע שיהיו תאריכים לטיול נוכל לומר לו מה מהם נופל עליהם.\n${JSON.stringify(listed, null, 1)}\n${RULES}`,
+        action: undefined,
       };
     }
 

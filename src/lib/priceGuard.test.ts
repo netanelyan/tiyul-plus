@@ -13,6 +13,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import {
   GuardedTextStream,
+  NO_EVENT_LINE,
   NO_PRICE_LINE,
   NO_PRICE_LINE_BARE,
   guardText,
@@ -63,6 +64,50 @@ test('שם מלון שהמטייל לא נתן נחתך', () => {
   assert.equal(violationOf('אני ממליץ על Hotel Artemide.'), 'property-name');
   assert.equal(violationOf('שווה לבדוק את Trastevere Suites.'), 'property-name');
   assert.equal(violationOf('מלון Devin הוא אפשרות טובה.'), 'property-name');
+});
+
+/* ---------- אירועים ומועדים: רק ממה שהדאטה החזירה ---------- */
+
+test('טענה על אירוע במועד מסוים נחסמת כשלא הוחזר כלום מהדאטה', () => {
+  assert.equal(violationOf('אוקטוברפסט מתחיל ב-19 בספטמבר.'), 'event-claim');
+  assert.equal(violationOf('הפסטיבל מתקיים השנה כרגיל.'), 'event-claim');
+  assert.equal(violationOf('יש קרנבל גדול בפברואר.'), 'event-claim');
+});
+
+test('טענת סגירה עם מועד מסוים נחסמת גם היא', () => {
+  assert.equal(violationOf('רוב החנויות סגורות ב-15 באוגוסט.'), 'closure-claim');
+  assert.equal(violationOf('המוזיאונים סגורים ב-25.12.'), 'closure-claim');
+});
+
+test('אותה טענה עוברת כשהיא נוקבת בשם רשומה שהוחזרה', () => {
+  const allow = { eventNames: ['אוקטוברפסט', 'פרראגוסטו'] };
+  assert.equal(violationOf('אוקטוברפסט מתחיל ב-19 בספטמבר.', allow), null);
+  assert.equal(violationOf('פרראגוסטו ב-15 באוגוסט - הרבה חנויות סגורות.', allow), null);
+  // אירוע אחר, שלא הוחזר, עדיין נחסם - וזו הנקודה
+  assert.equal(violationOf('יש גם פסטיבל אורות בדצמבר.', allow), 'event-claim');
+});
+
+test('החלפה של טענת אירוע היא משפט על אירועים, לא על מחירים', () => {
+  const r = guardText('הקרנבל מתקיים בפברואר.');
+  assert.ok(r.text.includes('אין לי מידע רשום על אירועים'));
+  assert.ok(!r.text.includes('מחירים או זמינות'));
+});
+
+test('תשובה שנגעה גם במחיר וגם באירוע מסבירה את שניהם', () => {
+  const r = guardText('הפסטיבל מתקיים בספטמבר. מלון יעלה בסביבות 400 ש״ח ללילה.');
+  assert.ok(r.text.includes('אין לי מידע רשום על אירועים'));
+  assert.ok(r.text.includes('לא יכול לבדוק מחירים'));
+});
+
+test('משפטים תמימים על זמן ועל אירועים לא נחתכים', () => {
+  // בלי מועד מסוים - זו לא טענה שאפשר לבדוק, וגם לא כזו שמטעה
+  assert.ok(clean('בעיר יש הרבה אירועים לאורך השנה.'));
+  assert.ok(clean('הרובע שקט יותר בערבים.'));
+  // מועד בלי אירוע - זה פשוט המסלול
+  assert.ok(clean('יום 3 · 12 באוגוסט, מתחילים בקתדרלה.'));
+  assert.ok(clean('הוספתי יום בספטמבר.'));
+  // סגירה שבועית קבועה אינה טענה על מועד בשנה
+  assert.ok(clean('המוזיאון סגור בימי שני.'));
 });
 
 /* ---------- הרשימה הלבנה: מה שהמטייל עצמו אמר ---------- */
@@ -117,6 +162,7 @@ test('שם לטיני של מקום מהקטלוג הוא לא שם מלון', (
 test('שורות ההחלפה עצמן עוברות את הפילטר', () => {
   assert.equal(violationOf(NO_PRICE_LINE), null);
   assert.equal(violationOf(NO_PRICE_LINE_BARE), null);
+  assert.equal(violationOf(NO_EVENT_LINE), null);
   // אידמפוטנטיות: הרצה שנייה לא משנה כלום
   const once = guardText('זה עולה בערך 300 אירו.').text;
   assert.deepEqual(guardText(once).redactions, []);
