@@ -7,6 +7,7 @@ import { useTrip } from './TripContext';
 import { clearChat, loadChat, saveChat, type StoredChatMessage } from './chatStorage';
 import { loadExplored, saveExplored } from '@/lib/explore/storage';
 import { authHeader } from '@/lib/auth/client';
+import type { BookingSearchCard } from '@/lib/bookingSearch';
 
 /**
  * מצב השיחה עם הסוכן - הוצא מ-AgentWorkspace כדי שהתצוגה המאוחדת
@@ -185,6 +186,7 @@ export function useTripChat(options?: {
             actions?: string[];
             replies?: string[];
             destination?: Destination;
+            search?: BookingSearchCard;
           };
           try {
             event = JSON.parse(line.slice(5));
@@ -223,6 +225,21 @@ export function useTripChat(options?: {
           } else if (event.type === 'explored' && event.destination) {
             // יעד חדש נחקר - נשמר מקומית וזמין מיד לרינדור הקנבס
             setExplored(saveExplored(event.destination));
+          } else if (event.type === 'search' && event.search) {
+            /**
+             * הכרטיס יכול להגיע **לפני** שהוזרמה מילה אחת של טקסט (הכלי
+             * רץ באיטרציה הראשונה, הפרוזה נכתבת אחריו), ולכן אי אפשר
+             * להסתמך על `appended` כמו שעושים quickReplies: בלי הבדיקה
+             * הזאת הכרטיס היה נופל על הודעת המשתמש או נעלם.
+             */
+            const search = event.search;
+            if (appended) {
+              patchLast((msg) => ({ ...msg, searches: [...(msg.searches ?? []), search] }));
+            } else {
+              appended = true;
+              setLoading(false);
+              setMessages((m) => [...m, { role: 'assistant', content: '', searches: [search] }]);
+            }
           } else if (event.type === 'quickReplies' && appended && event.replies?.length) {
             const quickReplies = event.replies;
             patchLast((msg) => ({ ...msg, quickReplies }));

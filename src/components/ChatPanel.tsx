@@ -7,6 +7,7 @@ import { fileToChatImage, IMAGE_ACCEPT } from '@/lib/trip/imageAttach';
 import { cachedCity, fetchCities } from '@/lib/trip/cityData';
 import PlacesMap from '@/components/PlacesMap';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
+import BookingSearchCardView from '@/components/BookingSearchCard';
 import { OFFLINE_HINT, useOnline } from '@/lib/offline/online';
 
 /**
@@ -245,6 +246,14 @@ export default function ChatPanel({
               {msg.destinationSlug && msg.placeIds && msg.placeIds.length > 0 && (
                 <MessageMap slug={msg.destinationSlug} placeIds={msg.placeIds} />
               )}
+              {/*
+                חיפוש מוכן אצל ספק. זו התשובה האמיתית לבקשת לינה/כרטיסים -
+                הסוכן אומר שהוא לא יכול לבדוק מחירים, והכרטיס מראה את
+                האמיתיים. כל תוכנו נבנה בשרת מהטיול, לא מהמודל.
+              */}
+              {msg.searches?.map((card, k) => (
+                <BookingSearchCardView key={`${card.kind}-${card.cityLabel}-${k}`} card={card} />
+              ))}
               {/* תשובות מהירות - רק בהודעה האחרונה, לשאלות לא-רגישות */}
               {msg.role === 'assistant' &&
                 i === messages.length - 1 &&
