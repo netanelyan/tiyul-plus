@@ -56,6 +56,32 @@ export const metadata: Metadata = {
     images: [{ url: '/og.png', width: 1200, height: 630, alt: 'טיול+ - סוכן הנסיעות החכם לישראלים' }],
   },
   twitter: { card: 'summary_large_image', title: SITE_TITLE, description: SITE_DESCRIPTION, images: ['/og.png'] },
+  /**
+   * ## למה יש כאן manifest, וזה לא קוסמטיקה
+   *
+   * ה-service worker מחזיק את המסלול במטמון, אבל **סאפארי מוחקת אחסון
+   * שנכתב מ-JavaScript אחרי כשבוע בלי אינטראקציה עם האתר** (ITP) -
+   * localStorage וגם Cache API. כלומר בדיוק התרחיש של הפיצ׳ר, מטייל
+   * שפתח את הטיול בבית ופותח אותו שוב בחו״ל, הוא התרחיש שבו המטמון
+   * עלול להיעלם.
+   *
+   * אפליקציה שהותקנה למסך הבית מטופלת אחרת, ולכן ה-manifest וה-meta
+   * של אפל הם מה שהופך את "אולי יישמר" ל"יישמר". `start_url` הוא
+   * `/chat` כי זה המסך שממנו נפתח טיול - לא דף הבית.
+   *
+   * `apple-touch-icon` מוצהר במפורש: לאפל אין קונבנציית קובץ כאן והיא
+   * מתעלמת מ-`icons` שב-manifest.
+   */
+  manifest: '/manifest.webmanifest',
+  appleWebApp: { capable: true, title: 'טיול+', statusBarStyle: 'default' },
+  // `icon` מוצהר כאן במפורש ולא נשען על קונבנציית הקובץ: **נמדד** שברגע
+  // ש-`icons` קיים ב-metadata, הקישור ל-`icon.svg` שנגזר מהקובץ נעלם
+  // מה-HTML ונשאר רק ה-ico. הצהרה מפורשת מחזירה את שניהם.
+  icons: { icon: '/icon.svg', apple: '/apple-touch-icon.png' },
+  // Next מפיק רק את `mobile-web-app-capable` הלא-מתוילג. iOS מכבד
+  // `display: standalone` מה-manifest מאז 11.3, וזה כאן בשביל מכשירים
+  // ישנים יותר - שורה אחת שמסירה ספק.
+  other: { 'apple-mobile-web-app-capable': 'yes' },
 };
 
 export default function RootLayout({
