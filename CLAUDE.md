@@ -248,6 +248,77 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-30 (qq) - Three features landed on main, and two sessions had built the same one
+
+Netanel asked whether every branch was merged so that main is the live site.
+It was not: 18 of 20 were in, and the answer needed a measurement rather than a
+memory - `git merge-base --is-ancestor` per branch, which took one loop and
+settled it.
+
+**`feat/catalog-supabase` turned out to have nothing to review.** The Supabase
+catalog work shipped long ago; the only thing left on that branch was a single
+**docs commit** - the 76-line session-log entry - stranded exactly the way hard
+rule 7a warns about. Cherry-picked onto main, both sides of the CLAUDE.md
+conflict kept, branch closed. Worth noting the rule caught its own violation:
+the reason the entry conflicted is the reason it should never have been in a
+feature branch.
+
+**Two sessions had independently built the same feature.** A data session pushed
+`src/data/calendar.ts` - 161 events and closures, 69 with confirmed dates and 92
+as windows in words, with a validator - about thirty minutes before this session
+finished a trip-dates panel over its own 11-entry dataset. Neither knew about the
+other. The overlap was invisible from either side until someone asked a question
+that forced a look at the remote.
+
+**The merge is the interesting part, because the two schemas disagreed in a way
+that mattered.** Their entries scope to a **country or a list of destinations**;
+mine scoped to one city. Their dates are **explicit ranges per year**; mine had an
+`annual` kind with month-day wrap-around. Their unconfirmed entries carry **no
+dates at all**, only Hebrew prose.
+
+That last one forced a real design change rather than a rename. With no dates,
+92 of 161 entries **cannot be date-matched**, so the panel now has two lists:
+what actually overlaps the traveler's days, with its dates; and separately, under
+its own heading, the windows that merely fall near the trip - labelled
+"התאריכים לשנה הזו עדיין לא פורסמו", with the prose printed verbatim. Collapsing
+those into one list would have meant either dropping 57% of the data or
+manufacturing dates for it.
+
+Deciding *which* windows are near enough needed `monthsInWindow`, which reads
+Hebrew month names out of the prose ("ינואר עד מרץ" is three months, because
+"עד" is a range; "מאמצע נובמבר עד ינואר" wraps the year). **It decides only
+whether to show an entry, never what to display** - the text shown is always the
+curator's own words. When no month can be parsed the entry is hidden, which is
+the safe direction: missing a vague window costs less than showing every
+national entry on every trip.
+
+**One thing kept from the discarded side**, because it is the part that matters:
+overlap is measured against **the days in that city**, not the trip's range. A
+ten-day Munich-and-Rome trip starting 15 September "overlaps" Oktoberfest on a
+range comparison, and the traveler has left Munich before it opens. Day-by-day,
+with the city checked per day, is the only version that is not misleading, and it
+is what the tests are mostly about.
+
+**Also merged: the booking search feature** (`feat/booking-search`) - ready since
+earlier in the day and simply never merged.
+
+**The panel takes the trip's cities as a prop** rather than importing the catalog,
+so the country lookup costs nothing in the client bundle - the same rule entry
+(hh) established.
+
+**Numbers:** 286 tests, 26/26 in a real browser at 1440 and 390 against the real
+calendar, `validate-calendar` 0 errors on 161 entries, tsc, build and lint at
+baseline.
+
+**Two things the next session should know.** (1) The GitHub token stopped
+accepting writes mid-session while still authenticating for reads - the branch
+was delivered as a patch until a new token arrived, and that is the failure mode
+to recognise (`Invalid username or token` on push, `ls-remote` succeeding
+anonymously because the repo is public). (2) Several calendar notes state price
+movements as fact ("מחירי המלונות מזנקים פי 3-5"). They are human-written and
+sourced, so nothing was changed - but the agent is forbidden from saying exactly
+that by `priceGuard`, and the asymmetry is worth a decision rather than a drift.
+
 ### 2026-07-30 (oo) - "Does it really work? When people are offline they get the dino game" - the honest split, and the one real gap it exposed
 
 Netanel, after the offline feature merged. The right answer is not reassurance,
