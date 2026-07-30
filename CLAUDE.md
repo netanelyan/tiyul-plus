@@ -248,7 +248,76 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
-### 2026-07-29 (nn) - The countdown was floating in the gap between the chip and the buttons
+### 2026-07-30 (oo) - "Does it really work? When people are offline they get the dino game" - the honest split, and the one real gap it exposed
+
+Netanel, after the offline feature merged. The right answer is not reassurance,
+it is a list of what was actually proven and what was not, so this entry leads
+with that.
+
+**Proven, in a real browser against a real production build:** 39/39 on the
+offline suite - load a trip, kill the network completely, close the browser,
+reopen it, walk every day of the trip, then restore the network and watch it
+recover without a reload. Plus the case his screenshot actually describes, which
+is the interesting one: **after exactly ONE page load ever**, offline entry still
+opens the app (3 shell documents, 15 build assets cached). And the degraded-
+storage case: with the city cache wiped, or with every local key wiped, the screen
+is honest - no dino, no raw error, no infinite spinner.
+
+**Not proven, and this is the part that matters to his question:** none of it ran
+on **iOS Safari**, and none of it ran against **tiyulplus.com**. This sandbox
+cannot reach the deployed site, and headless Chromium is not WebKit. So the
+mechanism is verified and the symptom on his phone is not. What was verified about
+production specifically is narrow and worth stating exactly: `/sw.js` is served
+`Cache-Control: public, max-age=0`, so a service-worker update will actually land
+rather than being pinned by a CDN.
+
+**The gap the question exposed, and it is a real one.** A service worker cannot
+help if the browser has thrown its storage away, and Safari's ITP **deletes
+script-writable storage - localStorage AND the Cache API - after about seven days
+without interaction with the site.** That is precisely this feature's user: opened
+the trip at home, opens it again abroad. A **web app installed to the home screen
+is treated differently**, so the fix is not more caching, it is making the app
+installable:
+
+- `public/manifest.webmanifest` - `display: standalone`, `dir: rtl`, `lang: he`,
+  brand colors, and **`start_url: /chat`**, the screen a trip opens from, not the
+  homepage.
+- Four PNG icons built from the brand mark. The maskable one carries wider
+  padding on purpose so a circular crop cannot clip the plane's wing.
+- `metadata` in `layout.tsx`: `manifest`, `appleWebApp`, and an explicit
+  `apple-touch-icon` (Apple has no file convention here and ignores the manifest's
+  own icons).
+
+**Two things measured rather than assumed, both of which would have shipped
+broken.** The moment `icons` exists in `metadata`, Next **drops the `icon.svg`
+link derived from the file convention** and leaves only the `.ico` - caught by
+reading the served HTML, not the source, and fixed by declaring it explicitly.
+And Next emits only the unprefixed `mobile-web-app-capable`, so the Apple-prefixed
+one was added through `other` for older iOS.
+
+**Verification worth copying: the browser's own parser, not mine.** CDP
+`Page.getAppManifest` returns **zero errors** and resolves the scope, all three
+icons serve 200 `image/png` at their declared sizes, and the eight head tags were
+read out of the HTML the server actually serves. Then the whole offline suite was
+re-run to prove nothing regressed: 39/39, one-load-ever still 3 shell documents,
+both degraded-storage states still honest. 216 tests, tsc, build clean, lint at
+the main baseline.
+
+**Storage cost of a typical trip, measured** (one-city trip, since he asked): 62.2
+kB of city data plus 1.1 kB of trip data in localStorage, and 1.59 MB of service
+worker caches - of which 1.2 MB is build assets shared by every trip and 374 kB is
+the three shell documents. So the marginal cost of a second trip is tens of kB,
+not megabytes.
+
+**Left open, deliberately.** Photo caching in the SW is written and still
+unverified here, because the image hosts are blocked from this sandbox - a trip
+walked offline shows category tiles instead of photographs in this environment,
+which is the documented sandbox behaviour and not the product. And **the honest
+bottom line for him: the next real test is his own iPhone.** Add the site to the
+home screen, open it once online, turn the phone fully offline, and open it from
+the home-screen icon. If that shows the trip, the feature works where it was
+always going to be decided.
+
 
 Netanel: "the עוד 4 ימים לטיול is not placed correctly." It was an
 `absolute -bottom-4` span hanging below the summary chip - which put it in the
