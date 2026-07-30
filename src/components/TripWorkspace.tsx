@@ -19,6 +19,7 @@ import type { MapGroup, MapPin } from '@/components/MapInner';
 import BookingPanel from '@/components/BookingPanel';
 import TripCost from '@/components/TripCost';
 import PinsPanel from '@/components/PinsPanel';
+import TripDateNotes from '@/components/TripDateNotes';
 import ChatPanel from '@/components/ChatPanel';
 import Flag from '@/components/Flag';
 import Logo from '@/components/Logo';
@@ -944,6 +945,15 @@ export default function TripWorkspace({
           className="hidden lg:sticky lg:top-20 lg:col-start-3 lg:row-start-1 lg:flex lg:h-[36rem] lg:self-start"
         />
       </div>
+
+      {/*
+        ---------- מה קורה בתאריכים שלכם ----------
+        ממוקם ראשון מבין הפאנלים המשניים, כי הוא היחיד שבו הזמן קובע:
+        סגירה בתאריך שכבר נבחר היא מידע שמשפיע על התוכנית עצמה, ולא על
+        מה שקונים אחריה. הוא לא מרנדר כלום כשאין מה לדווח - כולל בטיול
+        בלי תאריכים, שאין ממנו מה לחשב.
+      */}
+      {t && t.days.length > 0 && <TripDateNotes trip={t} />}
 
       {/* ---------- שכבת ההזמנות: מה עוד חסר לטיול ---------- */}
       {t && t.days.length > 0 && (

@@ -39,6 +39,33 @@ export const NO_PRICE_LINE =
 export const NO_PRICE_LINE_BARE =
   'אני לא יכול לבדוק מחירים או זמינות בעצמי, ולכן לא אנקוב במספרים - חיפוש אצל הספק יראה את המצב האמיתי.';
 
+/**
+ * ההחלפה לטענה על אירוע או סגירה. **חייבת להיות נפרדת מזו של המחיר**:
+ * משפט על פסטיבל שמוחלף ב"אני לא יכול לבדוק מחירים" קורא כמו תקלה,
+ * ולא כמו תשובה כנה.
+ */
+export const NO_EVENT_LINE =
+  'אין לי מידע רשום על אירועים או סגירות בתאריכים האלה, ואני לא רוצה לנחש - כדאי לבדוק מקומית לקראת הנסיעה.';
+
+/** לאיזו שורת החלפה שייך כל כלל */
+const CATEGORY: Record<string, 'price' | 'event'> = {
+  superlative: 'price',
+  availability: 'price',
+  'room-type': 'price',
+  stars: 'price',
+  'per-unit-price': 'price',
+  'currency-amount': 'price',
+  'price-claim': 'price',
+  'property-name': 'price',
+  'event-claim': 'event',
+  'closure-claim': 'event',
+};
+
+export interface GuardReplacements {
+  price?: string;
+  event?: string;
+}
+
 /** מטבעות. לבד הם לגיטימיים לחלוטין ("המטבע הוא אירו") - מספר לידם לא. */
 const CURRENCY =
   /(₪|€|\$|£|\bILS\b|\bEUR\b|\bUSD\b|שקלים|שקל|ש"ח|ש״ח|אירו|יורו|דולרים|דולר)/;
@@ -72,6 +99,29 @@ const AVAILABILITY =
 const SUPERLATIVE =
   /(הזול ביותר|הזולה ביותר|הזולים ביותר|הזולות ביותר|הכי זול|הכי זולה|המחיר הטוב ביותר|המשתלם ביותר|המשתלמת ביותר|העסקה הטובה ביותר|cheapest|best price|lowest price)/i;
 
+/* ---------- אירועים ומועדים ---------- */
+
+/** מילים שמסמנות שמדובר באירוע */
+const EVENT_WORD =
+  /(פסטיבל|קרנבל|ביאנלה|אוקטוברפסט|מצעד|תהלוכה|יריד|קונצרט|הופעה|הופעות|מופע|מופעים|תערוכה|מרתון|חגיגות|טקס|אירוע|אירועים)/;
+
+/** מילים שמסמנות טענת סגירה */
+const CLOSURE_WORD = /(סגור|סגורה|סגורים|סגורות|סגירה|סגירות|ייסגר|תיסגר|נסגר|שובת|שביתה)/;
+
+/**
+ * מועד **מסוים**: שם חודש, שנה או תאריך מספרי.
+ *
+ * במכוון אין כאן "השנה" או "בקיץ" לבדן. "יש בעיר הרבה אירועים לאורך
+ * השנה" הוא משפט תקין לגמרי, וחסימה שלו הייתה הופכת את השומר לרעש
+ * שמישהו יכבה תוך שבוע. "השנה" נספר רק כשהוא צמוד לפועל התקיימות.
+ */
+const SPECIFIC_TIME =
+  /(בינואר|בפברואר|במרץ|באפריל|במאי|ביוני|ביולי|באוגוסט|בספטמבר|באוקטובר|בנובמבר|בדצמבר|ינואר|פברואר|מרץ|אפריל|מאי|יוני|יולי|אוגוסט|ספטמבר|אוקטובר|נובמבר|דצמבר|20\d{2}|\d{1,2}[./]\d{1,2})/;
+
+/** "מתקיים השנה" / "יתקיים ב-" - טענה על עצם ההתרחשות */
+const HAPPENING =
+  /(מתקיים|מתקיימת|מתקיימים|יתקיים|יתקיימו|נערך|ייערך|חוזר)\s*(השנה|ב-?\d|בתאריך)|השנה\s*(מתקיים|יתקיים|נערך)/;
+
 /** מילות עוגן שאחריהן מגיע שם של בית מלון */
 const STAY_WORD = /(מלון|המלון|הוסטל|אכסניה|אכסניית|וילה|ריזורט|בית הארחה)/;
 
@@ -89,14 +139,25 @@ export interface GuardAllowlist {
   userText?: string;
   /** שמות סיכות שכבר שמורות בטיול - המטייל נתן אותן */
   pinNames?: string[];
+  /**
+   * שמות האירועים ותקופות הסגירה ש**הוחזרו מהדאטה בתור הזה**
+   * (`city_date_notes`). זו הרשימה הלבנה של טענות על אירועים ומועדים.
+   *
+   * הכלל שנגזר מזה: משפט שמדבר על אירוע או סגירה עם מועד מסוים מותר
+   * רק אם הוא **נוקב בשם הרשומה**. זה לא רק שומר - זה גם דוחף לייחוס:
+   * "פרראגוסטו ב-15 באוגוסט" עובר, "ב-15 באוגוסט הרבה דברים סגורים"
+   * לא, וזו התשובה הטובה יותר ממילא. כשהרשימה ריקה - כלומר לא הוחזר
+   * כלום מהדאטה - שום טענה כזאת לא עוברת.
+   */
+  eventNames?: string[];
 }
 
 export interface GuardResult {
   text: string;
   /** מה נחתך, לצורך לוג ובדיקות. ריק = כלום לא נחתך. */
   redactions: string[];
-  /** האם הושתלה שורת ההחלפה בקריאה הזאת (ראו `alreadyReplaced`) */
-  replaced: boolean;
+  /** אילו שורות החלפה הושתלו בקריאה הזאת (ראו `alreadyReplaced`) */
+  replaced: Set<'price' | 'event'>;
 }
 
 /** כל רצף ספרות בטקסט */
@@ -181,7 +242,27 @@ export function violationOf(sentence: string, allow: GuardAllowlist = {}): strin
   const property = sentence.match(LATIN_PROPERTY) ?? sentence.match(NAMED_STAY);
   if (property && !nameIsUserOwn(property[0], allow)) return 'property-name';
 
+  /**
+   * טענה על אירוע או סגירה עם מועד מסוים.
+   *
+   * מותרת רק אם המשפט נוקב בשם רשומה שהוחזרה מהדאטה בתור הזה. כשלא
+   * הוחזר כלום - אין לו על מה להישען, וכל טענה כזאת היא מהזיכרון שלו.
+   */
+  const timed = SPECIFIC_TIME.test(sentence) || HAPPENING.test(sentence);
+  if (timed && !namesStoredEvent(sentence, allow)) {
+    if (EVENT_WORD.test(sentence)) return 'event-claim';
+    if (CLOSURE_WORD.test(sentence)) return 'closure-claim';
+  }
+
   return null;
+}
+
+/** האם המשפט נוקב בשם של רשומה שהוחזרה מהדאטה בתור הזה */
+function namesStoredEvent(sentence: string, allow: GuardAllowlist): boolean {
+  const names = allow.eventNames ?? [];
+  if (names.length === 0) return false;
+  const hay = norm(sentence);
+  return names.some((n) => n.trim().length >= 3 && hay.includes(norm(n)));
 }
 
 /**
@@ -199,31 +280,37 @@ export function splitSentences(text: string): string[] {
 export function guardText(
   text: string,
   allow: GuardAllowlist = {},
-  replacement: string = NO_PRICE_LINE_BARE,
+  replacements: GuardReplacements = {},
   /**
-   * האם השורה הכנה כבר נאמרה קודם **באותה תשובה**.
+   * לאילו קטגוריות כבר נאמרה השורה הכנה **באותה תשובה**.
    *
    * זה לא פרט: בהזרמה כל משפט עובר בקריאה נפרדת, ולכן מונה מקומי היה
    * חושב בכל פעם שהוא הראשון - וזה בדיוק מה שקרה בהרצת הדגמה, שבה
-   * המשתמש קיבל את אותו משפט התנצלות פעמיים ברצף.
+   * המשתמש קיבל את אותו משפט התנצלות פעמיים ברצף. הספירה היא לפי
+   * קטגוריה, כדי שתשובה שנגעה גם במחיר וגם באירוע תסביר את שניהם.
    */
-  alreadyReplaced = false,
+  alreadyReplaced: Set<'price' | 'event'> = new Set(),
 ): GuardResult {
+  const line = {
+    price: replacements.price ?? NO_PRICE_LINE_BARE,
+    event: replacements.event ?? NO_EVENT_LINE,
+  };
   const redactions: string[] = [];
-  let replaced = alreadyReplaced;
-  let replacedHere = false;
+  const replacedHere = new Set<'price' | 'event'>();
   const out = splitSentences(text).map((sentence) => {
     if (!sentence.trim()) return sentence;
     const bad = violationOf(sentence, allow);
     if (!bad) return sentence;
     redactions.push(bad);
-    if (replaced) return sentence.match(/\n+$/)?.[0] ?? '';
-    replaced = true;
-    replacedHere = true;
+    const cat = CATEGORY[bad] ?? 'price';
+    if (alreadyReplaced.has(cat) || replacedHere.has(cat)) {
+      return sentence.match(/\n+$/)?.[0] ?? '';
+    }
+    replacedHere.add(cat);
     // הפיצול משאיר את הרווח שאחרי הנקודה בתחילת המשפט הבא, ולכן אין
     // צורך להוסיף כאן רווח - רק לשמר שורות חדשות שנספחו לסוף.
     const tail = sentence.match(/\s+$/)?.[0] ?? '';
-    return replacement + tail;
+    return line[cat] + tail;
   });
   return { text: out.join(''), redactions, replaced: replacedHere };
 }
@@ -256,7 +343,7 @@ export function stripClaims(text: string, allow: GuardAllowlist = {}): GuardResu
     }
     out += clause + sep;
   }
-  return { text: out.replace(/[\s,;]+$/, '').trim(), redactions, replaced: false };
+  return { text: out.replace(/[\s,;]+$/, '').trim(), redactions, replaced: new Set() };
 }
 
 /**
@@ -277,17 +364,17 @@ export class GuardedTextStream {
   private acc = '';
   private emitted = 0;
   private readonly allow: GuardAllowlist;
-  private readonly replacement: string;
-  /** השורה הכנה נאמרת פעם אחת לכל תשובה, גם כשהיא מורכבת מכמה flush */
-  private replacedOnce = false;
+  private readonly replacements: GuardReplacements;
+  /** כל שורה כנה נאמרת פעם אחת לתשובה, גם כשהיא מורכבת מכמה flush */
+  private readonly replacedOnce = new Set<'price' | 'event'>();
 
   readonly redactions: string[] = [];
 
   // שדות מפורשים ולא constructor parameter properties: הטסטים רצים
   // ב-`--experimental-strip-types`, שלא תומך בתחביר הזה.
-  constructor(allow: GuardAllowlist, replacement: string = NO_PRICE_LINE_BARE) {
+  constructor(allow: GuardAllowlist, replacements: GuardReplacements = {}) {
     this.allow = allow;
-    this.replacement = replacement;
+    this.replacements = replacements;
   }
 
   /** מוסיף delta ומחזיר את מה שמותר לשלוח עכשיו (יכול להיות ריק) */
@@ -322,8 +409,8 @@ export class GuardedTextStream {
     const chunk = this.acc.slice(this.emitted, to);
     this.emitted = to;
     if (!chunk) return '';
-    const res = guardText(chunk, this.allow, this.replacement, this.replacedOnce);
-    if (res.replaced) this.replacedOnce = true;
+    const res = guardText(chunk, this.allow, this.replacements, this.replacedOnce);
+    for (const cat of res.replaced) this.replacedOnce.add(cat);
     this.redactions.push(...res.redactions);
     return res.text;
   }
