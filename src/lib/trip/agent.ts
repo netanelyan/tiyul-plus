@@ -1,6 +1,8 @@
 import { destinations } from '@/data/destinations';
 import { isEating, isKosher, kosherStatusOf } from '@/lib/categories';
 import { haversineKm } from './travel';
+import { buildSearchCard, SEARCH_KINDS, type BookingSearchCard, type SearchKind } from '@/lib/bookingSearch';
+import { stripClaims } from '@/lib/priceGuard';
 import { completeRange, dayDate, formatHebrewRange, isISODate, rangeDays, safeDates } from './dates';
 import { newId } from './types';
 import type {
@@ -27,6 +29,11 @@ export interface AgentToolResult {
   message: string; // תוכן ה-tool_result שהמודל רואה
   action?: string; // שורת "מה בוצע" בעברית למשתמש
   quickReplies?: string[]; // תשובות מהירות להצגה כצ׳יפים (suggest_quick_replies)
+  /**
+   * כרטיס חיפוש מוכן אצל ספק (booking_search). נבנה כאן ולא במודל, ולכן
+   * הכתובת, התאריכים ומספר האורחים שבו הם דאטה ולא טקסט שנוצר.
+   */
+  search?: BookingSearchCard;
 }
 
 const dayNumberSchema = {
@@ -290,6 +297,37 @@ export const AGENT_TOOLS = [
     },
   },
   {
+    /**
+     * הכלי שמחליף "לספר על מלונות" ב"לפתוח חיפוש אמיתי".
+     *
+     * שימו לב למה שאין כאן: אין פרמטר מחיר, אין תאריך, אין מספר אורחים,
+     * אין שם ואין טקסט חופשי. המודל בוחר סוג ועיר, וזה הכול - כל השאר
+     * נגזר מהטיול בשרת. זו הסיבה שהוא לא יכול להקליד מספר: **אין שדה.**
+     */
+    name: 'booking_search',
+    description:
+      "Hand the traveler a ready-made search at a real provider when they ask for help finding accommodation ('where should we stay', 'find us a hotel', 'what does a hotel cost') or tickets/tours/guided activities. kind='stay' for hotels and apartments, kind='activities' for tickets, tours and guided experiences. RESTAURANTS ARE NOT IN SCOPE: for food use the curated places in the DATA, never this tool. You pass ONLY the kind and the city slug - the app fills in the dates from the trip's own day order, the number of guests from the party preference, and the budget from the preferences, and it builds the link from its own affiliate config. There is deliberately NO parameter for a price, a date, a guest count, a hotel name or free text, because you must never produce any of those: you have no hotel data of any kind in your context, so any price, availability, room type, star rating or property name you write would be invented, and the server strips it from your reply. Your entire reply about this is: you cannot check prices or availability yourself, plus one short sentence about what the search covers. Never say 'the cheapest' or 'the best price' - we do not search every provider. Set kosher=true or accessible=true only when the user actually asked for it.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        kind: { type: 'string', enum: ['stay', 'activities'] },
+        citySlug: {
+          type: 'string',
+          description: 'City slug from the DATA (or an explored city) to search in',
+        },
+        kosher: {
+          type: 'boolean',
+          description: 'The user asked for a kosher kitchen / kosher-friendly stay',
+        },
+        accessible: {
+          type: 'boolean',
+          description: 'The user asked for accessibility (step-free, wheelchair)',
+        },
+      },
+      required: ['kind', 'citySlug'],
+    },
+  },
+  {
     name: 'add_pin',
     description:
       "Save a place the TRAVELER told you about - the hotel they booked, a restaurant they reserved, or any point they want on the map - so it appears on the trip map. Use it the moment the user names such a place (\"we booked Hotel Devin in Bratislava\"). kind='stay' for hotels and apartments, 'reservation' for booked restaurants/activities, 'other' for anything else. Pass name EXACTLY as the user said it, plus the city so the lookup is unambiguous. You must NEVER pass or invent coordinates: the server looks the place up on OpenStreetMap itself. If the lookup fails the pin is still saved and marked unverified, and the traveler can place it on the map by hand - tell them that plainly instead of guessing where it is.",
@@ -426,7 +464,21 @@ export function sanitizeDayNote(
     const mode = match.split(/\s+/)[0];
     return mode;
   });
-  return { note: changed ? cleaned.replace(/\s{2,}/g, ' ').trim() : note, changed };
+  /**
+   * אותו שומר מחירים שרץ על התשובה רץ גם כאן, **בלי רשימה לבנה**.
+   *
+   * הערת יום היא לא פרוזה חולפת: היא נדפסת, נשלחת בשיתוף ונקראת שוב
+   * בשטח חודשיים אחר כך. מחיר בתוכה קורא כמו הבטחה של האתר, ולא כמו
+   * משפט בשיחה. אין כאן רשימה לבנה כי אין כאן הקשר של שיחה - ומספר
+   * שהמטייל אמר יכול פשוט להישאר בשיחה, שם הוא כן מותר.
+   *
+   * `stripClaims` ולא `guardText`: בהערה מסירים את הפסוקית ומשאירים את
+   * המשפט, בלי להשתיל בה נוסח התנצלות.
+   */
+  const guarded = stripClaims(cleaned);
+  if (guarded.redactions.length > 0) changed = true;
+  const out = guarded.text;
+  return { note: changed ? out.replace(/\s{2,}/g, ' ').trim() : note, changed };
 }
 
 /**
@@ -1078,6 +1130,57 @@ export function executeAgentTool(
         // מזכירים למודל שהקישור אינו שלו - הוא כבר מוצג בממשק
         message: `מצב ההזמנות עודכן: ${JSON.stringify(booking)}. כפתורי ההזמנה מוצגים בממשק אוטומטית - אל תכתוב קישורים, מחירים או זמינות.`,
         action: `סימנתי: ${labels}`,
+      };
+    }
+
+    /**
+     * חיפוש מוכן אצל ספק. **הכלי היחיד שמחזיר משהו שהמשתמש לוחץ עליו**,
+     * ולכן הוא גם המקום שבו חשוב שלא ייכנס שום דבר מהמודל מלבד שתי
+     * בחירות: סוג ועיר. אין כאן טיפול ב"מה שהמודל ביקש שיהיה כתוב" -
+     * הכרטיס נבנה מהטיול.
+     *
+     * מכוון: **לא דורש טיול פעיל.** "תמצא לי מלון ברומא" לפני שנבנה
+     * מסלול היא בקשה לגיטימית; פשוט אין ממה לגזור תאריכים, והכרטיס
+     * אומר את זה במקום להמציא אותם.
+     */
+    case 'booking_search': {
+      const kind = String(input.kind ?? '') as SearchKind;
+      if (!SEARCH_KINDS.includes(kind)) {
+        return fail(
+          trip,
+          `kind לא חוקי: "${input.kind}". החוקיים: ${SEARCH_KINDS.join(', ')}. מסעדות אינן נתמכות בכלי הזה - לאוכל יש להשתמש במקומות מהדאטה, בלי חיפוש מחירים.`,
+        );
+      }
+      const slug = String(input.citySlug ?? '');
+      const dest = destOf(slug);
+      if (!dest) {
+        return fail(trip, `citySlug לא מוכר "${slug}". החוקיים: ${validSlugs()}.`);
+      }
+      // אותו כלל כמו ב-BookingPanel: nameLocal נכתב לעיתים
+      // "Vienna / Wien", ומחרוזת עם לוכסן מחזירה תוצאות ריקות אצל הספקים
+      const cityQuery = (dest.nameLocal || dest.name).split('/')[0].trim();
+      const card = buildSearchCard(trip, kind, slug, cityQuery, dest.name, {
+        kosher: input.kosher === true || undefined,
+        accessible: input.accessible === true || undefined,
+      });
+      if (!card) {
+        return fail(
+          trip,
+          'אין כרגע ספק מוגדר לסוג החיפוש הזה. אמור למטייל בכנות שאין לך דרך לפתוח חיפוש לזה, בלי להציע קישור משלך.',
+        );
+      }
+      const missing = card.onProvider.length
+        ? ` מה שלא נכנס לחיפוש ונקבע באתר הספק: ${card.onProvider.join(', ')}.`
+        : '';
+      return {
+        trip,
+        ok: true,
+        // התוצאה אומרת למודל **מה הוא לא צריך לכתוב**. זה אותו דפוס של
+        // PROSE_DISCIPLINE: הכלל יושב בתוצאת הכלי, כלומר בדבר האחרון
+        // שהמודל קורא לפני שהוא כותב.
+        message: `כרטיס חיפוש נוצר והוא מוצג למטייל בממשק, כולל גילוי נאות על עמלה. מה שכבר ממולא בחיפוש: ${card.understood.join(' · ')}.${missing}\nאל תכתוב מחיר, טווח מחירים, "בערך", זמינות, סוג חדר, דירוג כוכבים או שם מלון - אין לך נתונים כאלה והשרת מוריד אותם מהתשובה. אל תכתוב את הקישור: הוא כבר על המסך. אסור לומר "הזול ביותר" או "המחיר הטוב ביותר". תשובה נכונה כאן היא שתי שורות: שאתה לא יכול לבדוק מחירים וזמינות בעצמך, ומה החיפוש כבר כולל.`,
+        action: `פתחתי חיפוש ${kind === 'stay' ? 'לינה' : 'חוויות'} ב${dest.name}`,
+        search: card,
       };
     }
 

@@ -4,6 +4,8 @@
  * שכבה דקה כמו storage.ts - כשיהיה backend, מחליפים רק את הקובץ הזה.
  */
 
+import type { BookingSearchCard } from '@/lib/bookingSearch';
+
 export interface StoredChatMessage {
   role: 'user' | 'assistant';
   content: string;
@@ -11,6 +13,12 @@ export interface StoredChatMessage {
   placeIds?: string[];
   actions?: string[];
   quickReplies?: string[];
+  /**
+   * כרטיסי חיפוש שהסוכן פתח בהודעה הזאת. נשמרים כדי שהם יהיו שם גם אחרי
+   * רענון - מטייל שסגר את הטאב ופתח מחדש מצפה למצוא את הקישור, ולא
+   * להתחיל את השיחה מהתחלה. הכרטיס הוא דאטה שנבנתה בשרת, בלי טקסט מודל.
+   */
+  searches?: BookingSearchCard[];
   /** תמונה שצורפה להודעה (data URL מוקטן) - ראו imageAttach.ts */
   image?: string;
 }

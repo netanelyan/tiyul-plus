@@ -32,6 +32,16 @@ export interface BookingAffiliate {
   template: string;
   /** המפתח ב-AFFILIATE_IDS. ריק/חסר => נופלים ל-publicUrl. */
   idKey: keyof typeof AFFILIATE_IDS;
+  /**
+   * האם התבנית היא **עטיפת הפניה** (רשת שותפים שמקבלת את היעד האמיתי
+   * מקודד בתוך פרמטר, למשל `awin1.com/cread.php?...&ued=<encoded>`).
+   *
+   * זה לא פרט טכני שאפשר לדלג עליו: פרמטרים של חיפוש (תאריכים, אורחים)
+   * חייבים לשבת על **כתובת היעד**, ולהדביק אותם על העטיפה פירושו לשלוח
+   * אותם לרשת השותפים ולא לספק - כלומר קישור שנראה ממולא ומגיע לחיפוש
+   * ריק. כשמוסיפים ספק עטוף, מסמנים כאן true והפרמטרים לא יצורפו.
+   */
+  wrapped?: boolean;
 }
 
 export interface BookingProvider {
@@ -136,25 +146,46 @@ export const bookingProvider = (kind: BookingKind): BookingProvider | undefined 
  * מלבד סוג ההזמנה, והיעד מגיע מהדאטה המקומית של הטיול.
  *
  * @param query שם היעד לחיפוש אצל הספק (לטיני, למשל "Rome"). ריק => דף הבית.
+ * @param params פרמטרי חיפוש נוספים (תאריכים, אורחים). מצורפים **רק**
+ *   לכתובת חיפוש אמיתית: בלי יעד אין מה לסנן, ולעטיפת הפניה של רשת
+ *   שותפים הם היו נשלחים לכתובת הלא נכונה (ראו `BookingAffiliate.wrapped`).
+ *   כל הערכים כאן נגזרים מהטיול, לא מהמודל - ראו `bookingSearch.ts`.
  * @returns כתובת, או null אם אין עדיין ספק (מצב "בקרוב").
  */
-export function buildBookingUrl(kind: BookingKind, query?: string): string | null {
+export function buildBookingUrl(
+  kind: BookingKind,
+  query?: string,
+  params?: Record<string, string>,
+): string | null {
   const p = bookingProvider(kind);
   if (!p) return null;
 
   const q = encodeURIComponent((query ?? '').trim());
 
+  /** מצרף פרמטרים בעזרת URL API, כדי שקידוד ותווים מיוחדים לא ייכתבו ביד */
+  const withParams = (url: string, allow: boolean): string => {
+    if (!allow || !params || !q) return url;
+    const entries = Object.entries(params).filter(([, v]) => v);
+    if (entries.length === 0) return url;
+    const u = new URL(url);
+    for (const [k, v] of entries) u.searchParams.set(k, v);
+    return u.toString();
+  };
+
   if (p.affiliate) {
     const id = AFFILIATE_IDS[p.affiliate.idKey];
     // בלי מזהה אמיתי אין קישור אפיליאייט - לא ממציאים אחד
-    if (id) return p.affiliate.template.replace('{ID}', id).replace('{QUERY}', q);
+    if (id) {
+      const url = p.affiliate.template.replace('{ID}', id).replace('{QUERY}', q);
+      return withParams(url, !p.affiliate.wrapped);
+    }
   }
 
   if (!p.publicUrl) return null;
   if (!p.publicUrl.includes('{QUERY}')) return p.publicUrl;
   // בלי יעד לחיפוש - חוזרים לשורש האתר במקום לשלוח חיפוש ריק
   if (!q) return new URL(p.publicUrl).origin;
-  return p.publicUrl.replace('{QUERY}', q);
+  return withParams(p.publicUrl.replace('{QUERY}', q), true);
 }
 
 /** האם הספק כבר קיים (יש לאן להפנות) או שהכרטיס במצב "בקרוב" */

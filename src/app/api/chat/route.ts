@@ -34,6 +34,13 @@ import { exploredToDestination, sanitizeExploredDestinations } from '@/lib/explo
 import { checkLimit, aiUnitsUsedToday, recordAiUnits } from '@/lib/server/limits';
 import { resolveCaller, type Caller } from '@/lib/server/identity';
 import { PLAN_LIMITS, aiUnits } from '@/lib/plans';
+import type { BookingSearchCard } from '@/lib/bookingSearch';
+import {
+  GuardedTextStream,
+  NO_PRICE_LINE,
+  NO_PRICE_LINE_BARE,
+  type GuardAllowlist,
+} from '@/lib/priceGuard';
 
 /**
  * צ׳אט הטיולים - סוכן אמיתי מעל הטיול של המשתמש.
@@ -194,6 +201,14 @@ BOOKING - YOU RAISE IT, THE APP LINKS IT
 - Ask about at most ONE topic per turn, in one short sentence at the end of your reply, and attach suggest_quick_replies with the natural answers (למשל "יש לנו טיסות" / "עוד לא"). Pick the topic that fits the trip: flights and stay first; activities when the plan has must-see attractions that need advance tickets; car when the days include out-of-town nature stops; esim/insurance only if the user brings up connectivity or safety.
 - The moment the user answers - even in passing, even mid-sentence about something else ("טיסות כבר יש לנו", "עוד לא סגרנו מלון") - call set_booking_status IN THAT SAME TURN, before writing your reply. Saying "רשמתי" without having called the tool is a hard error: nothing was recorded. If part of the sentence is vague ("הכל סגור חוץ מהכרטיסים"), still record the part that IS explicit (activities=need) and simply leave the vague part unset - partial is fine, guessing is not. Never ask again about a topic that already has a value - read preferences.booking fresh each turn. If the user shows no interest, drop the subject entirely; this is help, not sales.
 
+HELPING THEM BOOK - A REAL SEARCH, NEVER A NUMBER
+- When the traveler asks for help finding accommodation or tickets ("איפה כדאי לישון", "תמצא לי מלון", "כמה עולה מלון ברומא", "יש סיור מודרך?"), HELP THEM - by calling booking_search for that city. It hands them a ready-made search at a real provider with their own details already filled in, and the app renders it as a card with the commission disclosure. That IS the answer; the link is already on their screen, so never write one.
+- YOU HAVE NO HOTEL DATA. Not one property name, not one price, not one room, not one availability status - there is nothing of the kind anywhere in your context. So a price, a price range, a "בערך"/"בדרך כלל" figure, a per-night number, a star rating, a room type, a board type or a hotel name from you is an invention, full stop. The server strips any of these from your reply before the traveler sees it and replaces it with an honest line, so writing one only makes your answer worse. Asked directly what a hotel costs, the whole answer is: you cannot check prices or availability yourself, and the search shows the real ones. Then stop.
+- NEVER "the cheapest" - not "הזול ביותר", not "הכי זול", not "המחיר הטוב ביותר". We do not search every provider and cannot make that claim. Say what is true instead: "חיפוש מלונות בתאריכים שלכם".
+- RESTAURANTS ARE OUT OF SCOPE. Food stays the curated places in the DATA, with their kashrut caveats - never booking_search, and never a price for a meal.
+- One city per card, at most two cards in a turn. Pick the city they asked about, or the first city of the trip if they were general. If they ask before any itinerary exists, the card still works - it just has no dates in it, and you say plainly that dates get set in the search.
+- Whether a provider pays us NEVER affects what you suggest or the order you suggest it in. Suggest what fits the trip; the app decides the links.
+
 PINS - THE TRAVELER'S OWN PLACES ON THE MAP
 - CURRENT TRIP has a "pins" array: places the TRAVELER told you about - the hotel they booked, a restaurant they reserved, any point they want to see on the map. They are not DATA places and never become itinerary stops.
 - Whenever the user names such a place - in chat or in an attached booking confirmation - call add_pin in that same turn, with the name exactly as they said it and the citySlug it belongs to. A hotel is kind='stay', a booked restaurant or activity is 'reservation', anything else is 'other'. add_pin on a stay also records stay='have', so don't call set_booking_status for it separately.
@@ -275,6 +290,8 @@ function toolStatusText(name: string, input: Record<string, unknown>): string {
     }
     case 'set_booking_status':
       return 'מעדכן מה כבר סגור…';
+    case 'booking_search':
+      return input.kind === 'activities' ? 'מכין חיפוש חוויות…' : 'מכין חיפוש לינה…';
     case 'add_pin': {
       const pin = typeof input.name === 'string' ? input.name : '';
       return pin ? `מאתר את ${pin} על המפה…` : 'מאתר את המקום על המפה…';
@@ -295,6 +312,8 @@ type StreamEvent =
   | { type: 'quickReplies'; replies: string[] }
   // יעד שנחקר אוטומטית בתור הזה - הלקוח שומר אותו ומרנדר איתו את הקנבס
   | { type: 'explored'; destination: Destination }
+  // כרטיס חיפוש מוכן אצל ספק - נבנה בשרת, הלקוח רק מרנדר אותו
+  | { type: 'search'; search: BookingSearchCard }
   | { type: 'done' };
 
 type Send = (event: StreamEvent) => void;
@@ -364,6 +383,10 @@ async function runClaudeTurn(
   kosherHint: boolean,
   groundingDetail: string,
   kosherOk: boolean,
+  /** מה שהמטייל עצמו אמר - הרשימה הלבנה של שומר המחירים */
+  guardAllow: GuardAllowlist,
+  /** האם הוצג כבר כרטיס חיפוש בתור הזה (משנה רק את נוסח ההחלפה) */
+  searchShown: boolean,
 ): Promise<{ blocks: AccBlock[]; stopReason: string; text: string; usage: AnthropicUsage }> {
   const model = process.env.ANTHROPIC_MODEL_AGENT ?? 'claude-sonnet-4-5';
   // טוגל כשרות מה-UI לפני שקיים טיול: מוסרים לסוכן בשקט דרך בלוק המצב
@@ -427,6 +450,30 @@ async function runClaudeTurn(
   let sepPending = needSeparator;
   const usage: AnthropicUsage = {};
 
+  /**
+   * שומר המחירים, על הזרם.
+   *
+   * הטקסט לא נשלח יותר delta-אחר-delta: הוא עובר דרך `GuardedTextStream`,
+   * שמשחרר **רק משפטים שלמים**. בלי זה אין שום דרך לסנן טענת מחיר - מה
+   * שנשלח נשלח, ו-"400" ו-"ש״ח ללילה" יכולים להגיע בשני delta נפרדים
+   * ולעבור כל בדיקה שרצה על אחד מהם. המחיר הוא השהיה של משפט אחד; מצב
+   * הטיול ממשיך להישלח מיד כמו קודם, ולכן הקנבס לא מחכה.
+   */
+  const guardStream = new GuardedTextStream(
+    guardAllow,
+    searchShown ? NO_PRICE_LINE : NO_PRICE_LINE_BARE,
+  );
+  const emit = (chunk: string) => {
+    if (!chunk) return;
+    if (sepPending) {
+      send({ type: 'text', text: '\n\n' });
+      text += '\n\n';
+      sepPending = false;
+    }
+    send({ type: 'text', text: chunk });
+    text += chunk;
+  };
+
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
@@ -464,14 +511,10 @@ async function runClaudeTurn(
       } else if (event.type === 'content_block_delta' && event.index !== undefined && event.delta) {
         const block = byIndex.get(event.index);
         if (event.delta.type === 'text_delta' && event.delta.text) {
-          if (sepPending) {
-            send({ type: 'text', text: '\n\n' });
-            text += '\n\n';
-            sepPending = false;
-          }
-          send({ type: 'text', text: event.delta.text });
-          text += event.delta.text;
+          // הבלוק שומר את הטקסט הגולמי - הוא חוזר להיסטוריה של המודל.
+          // המשתמש מקבל את מה שיוצא מהשומר.
           if (block?.type === 'text') block.text += event.delta.text;
+          emit(guardStream.push(event.delta.text));
         } else if (event.delta.type === 'input_json_delta' && event.delta.partial_json) {
           if (block?.type === 'tool_use') block.json += event.delta.partial_json;
         }
@@ -482,6 +525,15 @@ async function runClaudeTurn(
         Object.assign(usage, event.message.usage);
       }
     }
+  }
+
+  // מה שנשאר בחוצץ בסוף הזרם (המשפט האחרון, שאין אחריו פיסוק)
+  emit(guardStream.end());
+
+  // חתיכה שנחתכה היא מידע תפעולי אמיתי: היא אומרת שהמודל ניסה לנקוב
+  // במספר. נרשם בכל הסביבות ולא רק בפיתוח - זה הסימן שכדאי לבדוק פרומפט.
+  if (guardStream.redactions.length > 0) {
+    console.warn(`[chat] price guard redacted: ${guardStream.redactions.join(', ')}`);
   }
 
   // ניטור עלויות בפיתוח: cached > 0 מאיטרציה 2 ומטור 2 = ה-prompt cache עובד
@@ -515,6 +567,30 @@ async function runAgent(
   const perTurn = { explores: 0, geocodes: 0 };
   const MAX_EXPLORES_PER_TURN = 3;
   const MAX_GEOCODES_PER_TURN = 6;
+  /**
+   * כרטיסי חיפוש בתור אחד.
+   *
+   * המכסות הקיימות של הצ׳אט (פרץ לדקה, בקשות ליום, תקציב יחידות AI)
+   * מכסות את המסלול הזה במלואו - הכלי רץ **רק** בתוך `/api/chat`, אחרי
+   * שכל השערים האלה נבדקו, ואין דרך אחרת להגיע אליו. מכסה יומית נפרדת
+   * לא נוספה בכוונה: בשונה מחקירת יעד או איתור מיקום, הכלי הזה לא יוצא
+   * לשום שירות חיצוני - הוא מרכיב מחרוזת מקומית, בלי עלות ובלי עומס על
+   * אף אחד. מה שכן צריך גבול הוא **חוויית המשתמש**: תור שמדביק ארבעה
+   * כרטיסי אפיליאייט קורא כמו מכירה, וזה לא המוצר.
+   */
+  let searchesShown = 0;
+  const MAX_SEARCHES_PER_TURN = 2;
+  /**
+   * הרשימה הלבנה של שומר המחירים: מה שהמטייל עצמו כתב, ושמות הסיכות
+   * שהוא כבר נתן. **רק מהן** יכולים לצאת מספר או שם מלון בתשובה.
+   */
+  const guardAllow: GuardAllowlist = {
+    userText: messages
+      .filter((m) => m.role === 'user')
+      .map((m) => m.content)
+      .join(' \n '),
+    pinNames: (clientTrip?.pins ?? []).map((p) => p.name),
+  };
   const planLimits = PLAN_LIMITS[caller.plan];
   const actions: string[] = [];
   let touched = false;
@@ -594,6 +670,8 @@ async function runAgent(
       kosherHint,
       detailFor(kosherOk) + buildExploredGrounding(explored),
       kosherOk,
+      guardAllow,
+      searchesShown > 0,
     );
     meter.units += aiUnits(turn.usage);
     full += turn.text;
@@ -760,6 +838,15 @@ async function runAgent(
           }
         }
         out = executeAgentTool(working, block.name, input, explored, located);
+      } else if (block.name === 'booking_search' && searchesShown >= MAX_SEARCHES_PER_TURN) {
+        out = {
+          trip: working,
+          ok: false,
+          message:
+            'הצגת כבר את מספר כרטיסי החיפוש המותר בתור הזה. זו מכסה ולא תקלה - אל תנסה שוב עכשיו. אם המטייל צריך עוד חיפוש, בקש ממנו לומר לאיזו עיר בתור הבא.',
+          action: undefined,
+          quickReplies: undefined,
+        };
       } else {
         out = executeAgentTool(working, block.name, input, explored);
       }
@@ -775,6 +862,12 @@ async function runAgent(
       }
       if (out.ok && out.action) actions.push(out.action);
       if (out.ok && out.quickReplies) quickReplies = out.quickReplies;
+      // הכרטיס נשלח מיד: הוא התשובה האמיתית לבקשה, ואין סיבה שיחכה לסוף
+      // הפרוזה. הוא נבנה כולו בשרת מהטיול - ראו bookingSearch.ts.
+      if (out.ok && out.search) {
+        searchesShown += 1;
+        send({ type: 'search', search: out.search });
+      }
       results.push({
         type: 'tool_result',
         tool_use_id: block.id,
