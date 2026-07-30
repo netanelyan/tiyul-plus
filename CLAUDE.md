@@ -318,6 +318,96 @@ home screen, open it once online, turn the phone fully offline, and open it from
 the home-screen icon. If that shows the trip, the feature works where it was
 always going to be decided.
 
+### 2026-07-30 (pp) - The trip calendar: 142 entries, and a date rule that caught three of my own
+
+Netanel asked for a calendar of things that reshape a trip - **not** an events
+listing. Two kinds: big recurring events that take over a city, and periods when
+things are shut or unusual. He was explicit that **the closure half is the more
+useful one**, and the shipped split is **106 closures to 36 events**.
+
+**The date rule is the whole feature, and it is enforced in a script rather than
+by care.** Either the exact dates for a coming year are officially published and
+were read at the cited URL - `datesConfirmed: true` with ISO ranges - or they are
+not, and the entry carries **only** a window in plain words and is marked
+unconfirmed. `scripts/validate-calendar.mjs` errors on every crossing of that
+line: confirmed without dates, unconfirmed *with* dates, a window shorter than a
+sentence, and anything date-shaped smuggled into the window text. It was verified
+by injecting its founding bug (a `dates` array on an unconfirmed Obon entry) and
+watching it fail - and the injection then had to be removed by hand, because
+`git checkout` silently does nothing on an untracked file.
+
+**Scale: 18 entries in the first pass, 142 after six regional research passes,
+covering 77 of the 83 countries.** New data file `src/data/calendar.ts`, new
+types (`CalendarEntry`, `CalendarKind`, `CalendarImpact`, `CalendarDateRange`)
+in `src/lib/types.ts`. **Nothing was added to the places data** - this is its own
+separate set of entries, as instructed.
+
+---
+
+**The part worth keeping: an adversarial pass was run over all 63 confirmed
+entries, told to REFUTE rather than to check. Three did not survive.**
+
+| entry | what was wrong |
+|---|---|
+| `ge-new-year-christmas` | claimed one continuous block from New Year to Orthodox Christmas. The official Georgian holidays are **two separate ranges**; the days between are ordinary working days. The block was a merge nobody had read anywhere. |
+| `tw-lunar-new-year` | a seven-day 2027 range that **could only have been back-calculated** from the lunar date. The cited government report states the *number* of days off and never the dates. |
+| `mx-dia-de-muertos` | cited a ministry **homepage** that says nothing about dates at all. |
+
+All three were the exact failure mode the rule exists to stop: a date nobody
+actually read, wearing the confirmed flag. Two were demoted to windows, one was
+corrected to its real two ranges. **A guard that has never caught anything has
+not been tested; this one has now caught three.**
+
+**What the research pipeline rejected, and why that is the deliverable too.**
+Sources had to be governmental, an organiser's own site, a park or transport
+authority. Reference aggregators were accepted for a *window* and refused for a
+*confirmed date* - which is what killed Mongolia's Naadam range (fixed in law,
+but only an aggregator states it, so it is a window that says "fixed in law")
+and Portugal's Carnival (only a calendar-blog source). One researcher returned an
+Ecuador entry carrying a **Serengeti URL** as its source and said so honestly;
+it was dropped rather than re-sourced from memory.
+
+**The lunar and Julian calendars are the recurring trap and they are handled the
+same way everywhere:** Ramadan, both Eids, Nyepi, Lunar New Year, Seollal,
+Tsagaan Sar, Khmer and Lao New Year, Orthodox Easter in Serbia, Montenegro,
+Cyprus, Georgia and Armenia, Char Dham's opening, Bhutan's tshechus - all
+windows, every one, with the note saying *why* it is a window. **Albania is the
+single best example in the file:** the Bank of Albania's own official holiday
+calendar carries a standing disclaimer that its Islamic-holiday dates may still
+move with the moon. When the central bank will not treat its own published date
+as final, neither should we.
+
+**Reported to Netanel as asked:** 142 entries, 61 confirmed and 81 windows, 77
+of 83 countries covered, and the six with nothing - **Tanzania, Peru, Argentina,
+Moldova, Bolivia and Ecuador** - are a research gap and not a decision: the
+South America and Africa researcher hit its web-search quota partway through and
+stopped rather than guess. It had already surfaced real leads (the Inca Trail's
+annual February closure, Oruro's carnival, South African school terms) that a
+next pass should pick up from `scripts/` sources, not from memory.
+
+**Numbers:** 142 calendar entries / 0 validator errors, catalog unchanged at
+1814 places / 166 destinations / 83 countries / 0 errors, 170 tests, tsc and
+build clean.
+
+**NOT PUSHED.** Two commits sit on local `main` - the schema plus validator, and
+the scale-up plus the three corrections. This session has no GitHub credentials
+(`git push` fails on a credential prompt), so they need a token supplied. And the
+standing item is unchanged and now overdue: **both GitHub PATs still need
+revoking at https://github.com/settings/tokens.**
+
+**What the next session should know.** (1) The six empty countries above are
+scoped and cheap - the blocker was a quota, not the world. (2) The calendar is
+data with no UI yet: nothing reads `src/data/calendar.ts` outside the validator,
+so the next natural step is surfacing it on the destination and country pages,
+and deciding whether the agent should be grounded in it (it would cost index
+budget, which is at 246,646 of the 280,000 ceiling). (3) `recheckFrom` is
+deliberately English and machine-oriented - it says *where next year's dates get
+published*, so a future refresh pass has a worklist rather than a re-derivation.
+(4) Standing: 17 dead photo URLs, the Philippines still has no food or market
+venue inside El Nido or Coron, the 2.5MB client bundle, and
+`feat/catalog-supabase` unmerged.
+
+### 2026-07-29 (nn) - The countdown was floating in the gap between the chip and the buttons
 
 Netanel: "the עוד 4 ימים לטיול is not placed correctly." It was an
 `absolute -bottom-4` span hanging below the summary chip - which put it in the
