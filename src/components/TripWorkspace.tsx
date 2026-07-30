@@ -953,7 +953,7 @@ export default function TripWorkspace({
         מה שקונים אחריה. הוא לא מרנדר כלום כשאין מה לדווח - כולל בטיול
         בלי תאריכים, שאין ממנו מה לחשב.
       */}
-      {t && t.days.length > 0 && <TripDateNotes trip={t} />}
+      {t && t.days.length > 0 && <TripDateNotes trip={t} destinations={destinations} />}
 
       {/* ---------- שכבת ההזמנות: מה עוד חסר לטיול ---------- */}
       {t && t.days.length > 0 && (

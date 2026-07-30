@@ -1,138 +1,200 @@
 /**
- * ---------- חפיפה בין תאריכי הטיול לבין מה שקורה בעיר ----------
+ * ---------- מה קורה בתאריכים של המטייל ----------
+ *
+ * הדאטה היא `src/data/calendar.ts` (`CalendarEntry`) - לוח האירועים
+ * והסגירות של האתר. הקובץ הזה הוא **רק ההתאמה והתצוגה**: מה מהלוח נוגע
+ * לטיול הזה, ואיך אומרים את זה בלי להפוך חלון משוער לתאריך.
  *
  * ## ההחלטה המרכזית: חפיפה נמדדת מול **הימים בעיר**, לא מול הטיול
  *
  * טיול של עשרה ימים ברומא ובמינכן שמתחיל ב-15 בספטמבר "חופף" לאוקטוברפסט
- * אם בודקים טווח מול טווח. אבל אם המטייל נמצא במינכן רק ביומיים הראשונים,
+ * אם בודקים טווח מול טווח. אבל אם המטייל נמצא במינכן רק ביומיים הראשונים
  * הוא לא יהיה שם כשהפסטיבל נפתח, והכרטיס היה מטעה אותו. לכן הבדיקה היא
- * **יום-יום**: לכל יום יש עיר (`TripDay.citySlug`) ותאריך שנגזר מ-
- * `startDate` (`dayDate`), ורשומה נחשבת רלוונטית רק אם יש **יום אחד לפחות
- * שבו המטייל נמצא באותה עיר ובתוך החלון**.
+ * **יום-יום**: לכל יום יש עיר ותאריך שנגזר מ-`startDate`, ורשומה נחשבת
+ * רלוונטית רק אם יש יום אחד לפחות שבו המטייל נמצא בתחום שלה ובתוך החלון.
  *
- * שני מקרים שנופלים מזה מעצמם, וטוב שכך:
- * - טיול בלי תאריכים לא מייצר שום התראה. אין ממה לחשב, ולנחש כאן זה
- *   בדיוק ההפך ממה שהפיצ׳ר הזה בא לעשות.
- * - עיר שאין עליה רשומות פשוט לא מופיעה. "אין לנו מידע" הוא מצב
- *   לגיטימי ולא כישלון.
+ * רשומה חלה על יום אם היא מכוונת ל**יעד** של אותו יום, או שהיא ברמת
+ * **מדינה** (`destinationSlugs` ריק) ומדינת היעד תואמת.
+ *
+ * ## שתי רשימות, כי יש שתי דרגות ודאות - ואסור לערבב
+ *
+ * - `dated`   - `datesConfirmed: true`. יש טווחי תאריכים אמיתיים, והחפיפה
+ *               מחושבת עליהם. מוצג כתאריך.
+ * - `windows` - `datesConfirmed: false`. **אין תאריכים בכלל בדאטה**, רק
+ *               תיאור מילולי. אי אפשר לחשב חפיפה, ולכן הן לא מוצגות
+ *               כ"חופף לימים 3-5" אלא כ"החלון האופייני, התאריכים לשנה
+ *               הזו לא פורסמו" - וזה בדיוק מה שהן.
  */
 
+import type { CalendarEntry } from '@/lib/types';
 import type { Trip } from './types';
-import { dayDate, formatHebrewDate, formatHebrewRange } from './dates';
+import { dayDate, formatHebrewRange } from './dates';
 
-export type DateWindowKind = 'event' | 'closure';
-
-/** תאריכים שפורסמו לשנה מסוימת */
-export interface ExactDates {
-  kind: 'exact';
-  /** YYYY-MM-DD */
-  start: string;
-  end: string;
+/** מיפוי מינימלי של עיר → מדינה. מגיע מהערים של הטיול, לא מהקטלוג. */
+export interface CityCountry {
+  slug: string;
+  countrySlug: string;
 }
 
-/** תאריך קבוע שחוזר בכל שנה (חג לאומי, יום המלך) */
-export interface AnnualDates {
-  kind: 'annual';
-  /** MM-DD */
-  start: string;
-  end: string;
-}
-
-/**
- * חלון אופייני בלבד - **התאריכים לשנה הזו לא פורסמו**. הערך `typical`
- * הוא הניסוח בעברית שמוצג למשתמש ("בשבוע הראשון של אוגוסט"), והוא לעולם
- * לא מוצג בלי המשפט שאומר שאלה לא תאריכים סופיים.
- */
-export interface TypicalDates {
-  kind: 'typical';
-  /** MM-DD - גבולות רחבים לצורך ההתאמה בלבד, לא לתצוגה */
-  start: string;
-  end: string;
-  typical: string;
-}
-
-export interface CityDateWindow {
-  id: string;
-  citySlug: string;
-  kind: DateWindowKind;
-  name: string;
-  nameLocal?: string;
-  dates: ExactDates | AnnualDates | TypicalDates;
-  /** שורה אחת: מה זה אומר למטייל. בלי המלצה ובלי שכנוע. */
-  note: string;
-  source: { title: string; url: string; /** YYYY-MM-DD */ checked: string };
-}
-
-export interface MatchedWindow {
-  window: CityDateWindow;
-  /** מספרי הימים בטיול (1-based) שנופלים בתוך החלון */
+export interface DatedMatch {
+  entry: CalendarEntry;
+  /** מספרי הימים בטיול (1-based) שנופלים בתוך אחד מטווחי הרשומה */
   dayNumbers: number[];
-  /** התאריך הראשון והאחרון בטיול שנופלים בחלון (YYYY-MM-DD) */
-  firstDate: string;
-  lastDate: string;
+  /** הטווח שנפגש בפועל, לתצוגה */
+  range: { start: string; end: string };
 }
 
-/** האם התאריכים של הרשומה ודאיים, או רק חלון אופייני */
-export const isConfirmed = (w: CityDateWindow): boolean => w.dates.kind !== 'typical';
+export interface WindowMatch {
+  entry: CalendarEntry;
+  /** באיזו עיר בטיול הרשומה נוגעת (לתצוגה) */
+  cityLabel?: string;
+}
 
-const md = (iso: string) => iso.slice(5); // YYYY-MM-DD -> MM-DD
+export interface TripCalendar {
+  dated: DatedMatch[];
+  windows: WindowMatch[];
+}
+
+/* ---------- התאמת תחום ---------- */
+
+function appliesTo(entry: CalendarEntry, citySlug: string, countrySlug: string): boolean {
+  const scoped = entry.destinationSlugs ?? [];
+  if (scoped.length > 0) return scoped.includes(citySlug);
+  return entry.countrySlug === countrySlug;
+}
+
+/* ---------- חודשים מתוך תיאור מילולי ---------- */
+
+const MONTH_WORDS = [
+  'ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני',
+  'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר',
+];
 
 /**
- * האם `MM-DD` נמצא בין שני גבולות `MM-DD`, כולל.
+ * אילו חודשים מוזכרים בתיאור המילולי של חלון לא-מאושר.
  *
- * תומך בחלון שחוצה סוף שנה (למשל 12-20 עד 01-06): בלי זה שוק חג המולד
- * היה נעלם בדיוק בשבוע שבו מגיעים אליו רוב המטיילים.
- */
-function inAnnualRange(dayMD: string, start: string, end: string): boolean {
-  if (start <= end) return dayMD >= start && dayMD <= end;
-  return dayMD >= start || dayMD <= end;
-}
-
-function dayInWindow(dateISO: string, w: CityDateWindow): boolean {
-  const d = w.dates;
-  if (d.kind === 'exact') return dateISO >= d.start && dateISO <= d.end;
-  return inAnnualRange(md(dateISO), d.start, d.end);
-}
-
-/**
- * הרשומות שחופפות לטיול, לפי הכלל שבראש הקובץ.
+ * **זו הערכה, והיא משמשת אך ורק כדי להחליט אם להציג את הרשומה** - אף
+ * פעם לא כדי להציג תאריך. הטקסט עצמו מוצג מילה במילה כפי שנכתב.
  *
- * מוחזרות לפי סדר היום הראשון שבו הן נוגעות בטיול, כך שמי שקורא רואה
- * אותן בסדר שבו יפגוש אותן.
+ * "ינואר עד מרץ" נפרש כשלושה חודשים ולא כשניים: המילה "עד" (או מקף)
+ * בין שני חודשים היא טווח, ובלי המילוי הזה פברואר היה נופל בין הכיסאות.
+ * כשאי אפשר לזהות שום חודש - הרשומה **לא** מוצגת. עדיף להחמיץ חלון
+ * משוער מאשר להראות לכל טיול את כל מה ששמור על המדינה.
  */
-export function matchTripWindows(
-  trip: Trip | null,
-  windows: CityDateWindow[],
-): MatchedWindow[] {
-  if (!trip?.startDate || trip.days.length === 0) return [];
+export function monthsInWindow(text: string): number[] {
+  const found: { month: number; at: number; range: boolean }[] = [];
+  MONTH_WORDS.forEach((w, i) => {
+    let from = 0;
+    for (;;) {
+      const at = text.indexOf(w, from);
+      if (at < 0) break;
+      const before = text.slice(Math.max(0, at - 12), at);
+      found.push({ month: i + 1, at, range: /(עד|מ-|–|—|\bעד\b)\s*$/.test(before) });
+      from = at + w.length;
+    }
+  });
+  if (found.length === 0) return [];
+  found.sort((a, b) => a.at - b.at);
 
-  const byId = new Map<string, MatchedWindow>();
-
-  trip.days.forEach((day, index) => {
-    const date = dayDate(trip, index);
-    if (!date) return;
-    for (const w of windows) {
-      if (w.citySlug !== day.citySlug) continue;
-      if (!dayInWindow(date, w)) continue;
-      const hit = byId.get(w.id);
-      if (hit) {
-        hit.dayNumbers.push(index + 1);
-        hit.lastDate = date;
-      } else {
-        byId.set(w.id, { window: w, dayNumbers: [index + 1], firstDate: date, lastDate: date });
+  const months = new Set<number>();
+  found.forEach((f, idx) => {
+    months.add(f.month);
+    if (f.range && idx > 0) {
+      // ממלאים מהחודש הקודם עד זה, כולל מעבר שנה (נובמבר עד ינואר)
+      let m = found[idx - 1].month;
+      for (let guard = 0; guard < 12 && m !== f.month; guard++) {
+        m = (m % 12) + 1;
+        months.add(m);
       }
     }
   });
-
-  return [...byId.values()].sort((a, b) => a.dayNumbers[0] - b.dayNumbers[0]);
+  return [...months].sort((a, b) => a - b);
 }
 
+/* ---------- ההתאמה ---------- */
+
+export function matchTripCalendar(
+  trip: Trip | null,
+  entries: CalendarEntry[],
+  cities: CityCountry[],
+): TripCalendar {
+  if (!trip?.startDate || trip.days.length === 0) return { dated: [], windows: [] };
+
+  const countryOf = new Map(cities.map((c) => [c.slug, c.countrySlug]));
+  const dated = new Map<string, DatedMatch>();
+  /** חודש -> הערים שהמטייל נמצא בהן באותו חודש */
+  const monthCities = new Map<number, Set<string>>();
+
+  trip.days.forEach((day, index) => {
+    const date = dayDate(trip, index);
+    const country = countryOf.get(day.citySlug);
+    if (!date || !country) return;
+
+    const month = Number(date.slice(5, 7));
+    if (!monthCities.has(month)) monthCities.set(month, new Set());
+    monthCities.get(month)!.add(day.citySlug);
+
+    for (const entry of entries) {
+      if (!entry.datesConfirmed || !entry.dates?.length) continue;
+      if (!appliesTo(entry, day.citySlug, country)) continue;
+      const range = entry.dates.find((r) => date >= r.start && date <= r.end);
+      if (!range) continue;
+      const hit = dated.get(entry.id);
+      if (hit) hit.dayNumbers.push(index + 1);
+      else dated.set(entry.id, { entry, dayNumbers: [index + 1], range });
+    }
+  });
+
+  // חלונות לא-מאושרים: אין להם תאריכים, ולכן ההתאמה היא ברמת חודש+עיר
+  const windows: WindowMatch[] = [];
+  const seen = new Set<string>();
+  for (const entry of entries) {
+    if (entry.datesConfirmed || !entry.window) continue;
+    if (seen.has(entry.id)) continue;
+    const months = monthsInWindow(entry.window);
+    if (months.length === 0) continue;
+    const hitCity = months
+      .flatMap((m) => [...(monthCities.get(m) ?? [])])
+      .find((slug) => appliesTo(entry, slug, countryOf.get(slug) ?? ''));
+    if (!hitCity) continue;
+    seen.add(entry.id);
+    windows.push({ entry, cityLabel: hitCity });
+  }
+
+  return {
+    dated: [...dated.values()].sort((a, b) => a.dayNumbers[0] - b.dayNumbers[0]),
+    windows,
+  };
+}
+
+/* ---------- תצוגה ---------- */
+
 /**
- * כל מה ששמור על עיר, בלי קשר לתאריכים. משמש כשמישהו שואל את הסוכן
- * "מה קורה בברצלונה" בלי טיול מתוארך - התשובה עדיין מגיעה מהדאטה בלבד.
+ * הנוסח לחלון שהתאריכים שלו לא פורסמו.
+ *
+ * **המשפט הכי חשוב בפיצ׳ר הזה.** הוא מופיע במקום שבו אחרת היה תאריך,
+ * ולכן הוא לא הערת שוליים ולא כתב קטן.
  */
-export const windowsForCity = (slug: string, windows: CityDateWindow[]): CityDateWindow[] =>
-  windows.filter((w) => w.citySlug === slug);
+export const NOT_PUBLISHED = 'התאריכים לשנה הזו עדיין לא פורסמו';
+
+/** התאריכים של רשומה מאושרת, כטווח קריא */
+export const datedLabel = (m: DatedMatch) => formatHebrewRange(m.range.start, m.range.end);
+
+/** "מקור: X · נבדק ב-30 ביולי" */
+export const sourceLabel = (entry: CalendarEntry) =>
+  `מקור: ${entry.source.title} · נבדק ב-${hebrewShort(entry.source.checked)}`;
+
+function hebrewShort(iso: string): string {
+  const r = formatHebrewRange(iso, iso);
+  return r || iso;
+}
+
+export const impactLabel = (entry: CalendarEntry): string =>
+  entry.kind === 'closure' || entry.impact === 'closures'
+    ? 'סגירות'
+    : entry.impact === 'both'
+      ? 'אירוע · סגירות'
+      : 'אירוע';
 
 /**
  * טווח הימים בטיול כטקסט קצר: "יום 5" או "ימים 5-7".
@@ -140,35 +202,6 @@ export const windowsForCity = (slug: string, windows: CityDateWindow[]): CityDat
  * הימים נבדקים על רציפות ולא רק על קצוות: טיול שחוזר לאותה עיר בסוף
  * ייתן [2, 9], ו-"ימים 2-9" היה אומר שמונה ימים שלא היו.
  */
-/**
- * הנוסח לחלון שהתאריכים שלו לא פורסמו.
- *
- * **זה המשפט הכי חשוב בפיצ׳ר הזה.** הוא מופיע במקום שבו אחרת היה מוצג
- * תאריך, ולכן הוא לא הערת שוליים ולא כתב קטן: מי שקורא "בדרך כלל
- * בשבוע הראשון של אוגוסט" ורואה מיד אחריו שהתאריכים לא פורסמו, יודע
- * בדיוק כמה מזה לתכנן.
- */
-export const typicalLabel = (typical: string) =>
-  `בדרך כלל ${typical} · התאריכים לשנה הזו עדיין לא פורסמו`;
-
-/**
- * שורת התאריכים לתצוגה. השנה נלקחת מהיום בטיול שאליו הרשומה נוגעת,
- * כך שתאריך שנתי-חוזר מוצג בשנה שבה המטייל באמת שם.
- */
-export function windowDatesLabel(match: MatchedWindow): string {
-  const d = match.window.dates;
-  if (d.kind === 'exact') return formatHebrewRange(d.start, d.end);
-  if (d.kind === 'typical') return typicalLabel(d.typical);
-  const year = Number(match.firstDate.slice(0, 4));
-  // חלון שחוצה סוף שנה מסתיים בשנה שאחריה
-  const endYear = d.start <= d.end ? year : year + 1;
-  return formatHebrewRange(`${year}-${d.start}`, `${endYear}-${d.end}`);
-}
-
-/** "מקור: X · נבדק ב-30 ביולי" - מוצג לצד כל רשומה, ודאית או לא */
-export const sourceLabel = (w: CityDateWindow) =>
-  `מקור: ${w.source.title} · נבדק ב-${formatHebrewDate(w.source.checked)}`;
-
 export function dayRangeLabel(days: number[]): string {
   if (days.length === 0) return '';
   if (days.length === 1) return `יום ${days[0]}`;

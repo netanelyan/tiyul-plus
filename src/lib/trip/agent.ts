@@ -3,15 +3,14 @@ import { isEating, isKosher, kosherStatusOf } from '@/lib/categories';
 import { haversineKm } from './travel';
 import { buildSearchCard, SEARCH_KINDS, type BookingSearchCard, type SearchKind } from '@/lib/bookingSearch';
 import { stripClaims } from '@/lib/priceGuard';
-import { cityDateWindows } from '@/data/dateWindows';
+import { calendar } from '@/data/calendar';
 import {
+  NOT_PUBLISHED,
+  datedLabel,
   dayRangeLabel,
-  isConfirmed,
-  matchTripWindows,
+  impactLabel,
+  matchTripCalendar,
   sourceLabel,
-  typicalLabel,
-  windowDatesLabel,
-  windowsForCity,
 } from './dateWindows';
 import { completeRange, dayDate, formatHebrewRange, isISODate, rangeDays, safeDates } from './dates';
 import { newId } from './types';
@@ -24,7 +23,7 @@ import type {
   TripPinKind,
   TripPreferences,
 } from './types';
-import type { Destination } from '@/lib/types';
+import type { CalendarEntry, Destination } from '@/lib/types';
 
 /**
  * כלי הסוכן: הגדרות ה-tools של Anthropic + מבצע צד-שרת עם ולידציה קשיחה.
@@ -1180,14 +1179,36 @@ export function executeAgentTool(
       if (!dest) return fail(trip, `citySlug לא מוכר "${slug}". החוקיים: ${validSlugs()}.`);
 
       const RULES =
-        'חובה: אל תוסיף תאריך, שם אמן, הרכב, מחיר כרטיס או קביעה אם משהו מתקיים השנה - גם לא מהידע שלך, גם אם המשתמש נקב בשם האירוע. מותר לצטט רק את מה שכתוב כאן. רשומה שכתוב עליה שהתאריכים לא פורסמו - נאמרת בדיוק כך, ולא כתאריך. אין לצרף קישור לכרטיסים ואין להמליץ ללכת.';
+        'חובה: אל תוסיף תאריך, שם אמן, הרכב, מחיר כרטיס או קביעה אם משהו מתקיים השנה - גם לא מהידע שלך, גם אם המשתמש נקב בשם האירוע. מותר לצטט רק את מה שכתוב כאן. רשומה שהתאריכים שלה לא פורסמו - נאמרת בדיוק כך, במילים, ולא כתאריך. אין לצרף קישור לכרטיסים ואין להמליץ ללכת.';
 
-      const dated = Boolean(trip?.startDate);
-      const rows = dated
-        ? matchTripWindows(trip, cityDateWindows).filter((m) => m.window.citySlug === slug)
-        : [];
+      const cities = [{ slug, countrySlug: dest.countrySlug }];
+      const dated = trip?.startDate ? matchTripCalendar(trip, calendar, cities) : null;
+
+      /** רשומה אחת בצורה שהמודל קורא */
+      const row = (e: CalendarEntry, extra: Record<string, string> = {}) => ({
+        שם: e.name,
+        סוג: impactLabel(e),
+        משמעות: e.note,
+        מקור: sourceLabel(e),
+        ...extra,
+      });
 
       if (dated) {
+        const rows = [
+          ...dated.dated.map((m) =>
+            row(m.entry, {
+              תאריכים: datedLabel(m),
+              ודאות: 'תאריכים מאושרים',
+              'ימים בטיול': dayRangeLabel(m.dayNumbers),
+            }),
+          ),
+          ...dated.windows.map((w) =>
+            row(w.entry, {
+              'חלון משוער': w.entry.window ?? '',
+              ודאות: `לא מאושר - ${NOT_PUBLISHED}`,
+            }),
+          ),
+        ];
         if (rows.length === 0) {
           return {
             trip,
@@ -1196,25 +1217,23 @@ export function executeAgentTool(
             action: undefined,
           };
         }
-        const lines = rows.map((m) => ({
-          שם: m.window.name,
-          סוג: m.window.kind === 'closure' ? 'סגירות' : 'אירוע',
-          תאריכים: windowDatesLabel(m),
-          ודאות: isConfirmed(m.window) ? 'תאריכים מאושרים' : 'חלון אופייני בלבד - התאריכים לשנה הזו לא פורסמו',
-          'ימים בטיול': dayRangeLabel(m.dayNumbers),
-          משמעות: m.window.note,
-          מקור: sourceLabel(m.window),
-        }));
         return {
           trip,
           ok: true,
-          eventNames: rows.flatMap((m) => [m.window.name, m.window.nameLocal ?? '']),
-          message: `רשומות שחופפות לימים של המטייל ב${dest.name}:\n${JSON.stringify(lines, null, 1)}\nהכרטיסים כבר מוצגים למטייל מתחת לתוכנית, אז אין צורך לחזור על הכול - משפט או שניים על מה שרלוונטי לו. ${RULES}`,
+          eventNames: [
+            ...dated.dated.map((m) => m.entry.name),
+            ...dated.dated.map((m) => m.entry.nameLocal),
+            ...dated.windows.map((w) => w.entry.name),
+            ...dated.windows.map((w) => w.entry.nameLocal),
+          ],
+          message: `רשומות מלוח האירועים שנוגעות לימים של המטייל ב${dest.name}:\n${JSON.stringify(rows, null, 1)}\nהן כבר מוצגות למטייל מתחת לתוכנית, אז אין צורך לחזור על הכול - משפט או שניים על מה שרלוונטי לו. ${RULES}`,
           action: undefined,
         };
       }
 
-      const all = windowsForCity(slug, cityDateWindows);
+      const all = calendar.filter(
+        (e) => (e.destinationSlugs?.length ? e.destinationSlugs.includes(slug) : e.countrySlug === dest.countrySlug),
+      );
       if (all.length === 0) {
         return {
           trip,
@@ -1223,26 +1242,23 @@ export function executeAgentTool(
           action: undefined,
         };
       }
-      const listed = all.map((w) => ({
-        שם: w.name,
-        סוג: w.kind === 'closure' ? 'סגירות' : 'אירוע',
-        תאריכים:
-          w.dates.kind === 'typical'
-            ? typicalLabel(w.dates.typical)
-            : w.dates.kind === 'exact'
-              ? `${w.dates.start} עד ${w.dates.end}`
-              : `${w.dates.start} עד ${w.dates.end} בכל שנה`,
-        משמעות: w.note,
-        מקור: sourceLabel(w),
-      }));
       return {
         trip,
         ok: true,
-        eventNames: all.flatMap((w) => [w.name, w.nameLocal ?? '']),
-        message: `לטיול אין תאריכים, ולכן זו רשימת מה ששמור על ${dest.name} **בלי התאמה לתאריכים**. אמור למטייל שברגע שיהיו תאריכים לטיול נוכל לומר לו מה מהם נופל עליהם.\n${JSON.stringify(listed, null, 1)}\n${RULES}`,
+        eventNames: [...all.map((e) => e.name), ...all.map((e) => e.nameLocal)],
+        message: `לטיול אין תאריכים, ולכן זו רשימת מה ששמור על ${dest.name} **בלי התאמה לתאריכים**. אמור למטייל שברגע שיהיו תאריכים לטיול נוכל לומר לו מה מהם נופל עליהם.\n${JSON.stringify(
+          all.map((e) =>
+            row(e, e.datesConfirmed
+              ? { תאריכים: (e.dates ?? []).map((d) => `${d.start} עד ${d.end}`).join(', ') }
+              : { 'חלון משוער': e.window ?? '', ודאות: `לא מאושר - ${NOT_PUBLISHED}` }),
+          ),
+          null,
+          1,
+        )}\n${RULES}`,
         action: undefined,
       };
     }
+
 
     /**
      * חיפוש מוכן אצל ספק. **הכלי היחיד שמחזיר משהו שהמשתמש לוחץ עליו**,
