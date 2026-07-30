@@ -235,3 +235,48 @@ export interface PlacesProvider {
   /** Free-text search within a destination (Hebrew or local language). */
   searchPlaces(slug: string, query: string): Promise<Place[]>;
 }
+
+// ── לוח מה שמשנה טיול ───────────────────────────────────────────────────────
+// זה לא לוח אירועים ואנחנו לא מתחרים בטיקטמאסטר. השאלה שהוא עונה עליה היא
+// "אני נוסע לעיר הזאת בתאריכים האלה - מה שווה לי לדעת".
+//
+// שני סוגי רשומות, והשני חשוב יותר:
+//   'event'   - דבר גדול וחוזר ששולט בעיר (אוקטוברפסט, קרנבל, שוקי חג).
+//   'closure' - תקופה שבה דברים סגורים או חריגים (חגים לאומיים, צומות
+//               ומועדים דתיים, החודש שבו חצי מהעיר יוצאת לחופשה).
+//
+// **כלל התאריכים - הלב של הדבר הזה.** לכל רשומה: או שהתאריכים המדויקים
+// לשנה הקרובה **פורסמו רשמית**, ואז הם נרשמים ב-`dates` עם קישור למקור
+// הרשמי שבו נקראו; או שהם לא פורסמו, ואז נרשם **רק חלון במילים**
+// (`window`) ו-`datesConfirmed: false`.
+//
+// **אסור לכתוב תאריך שנגזר, חושב מהשנה שעברה, או נזכר.** אין אמצע. חלון
+// הוא תשובה טובה; תאריך שגוי הוא נזק. המלכודת החוזרת היא לוחות שנה
+// לא-גרגוריאניים - רמדאן, פסחא אורתודוקסי, טט, דשאין - שבהם תוצאות
+// החיפוש מלאות בתאריכים מחושבים שנראים רשמיים ואינם.
+//
+// `recheckFrom` הוא מתי הגוף הרשמי בדרך כלל מפרסם את השנה הבאה, כדי
+// שסשן עתידי יידע מתי חלון יכול להפוך לתאריך.
+export type CalendarKind = 'event' | 'closure';
+export type CalendarImpact = 'closures' | 'crowds' | 'both';
+
+export interface CalendarDateRange {
+  start: string; // ISO YYYY-MM-DD
+  end: string; // ISO YYYY-MM-DD
+}
+
+export interface CalendarEntry {
+  id: string;
+  kind: CalendarKind;
+  name: string; // עברית
+  nameLocal: string;
+  countrySlug: string;
+  destinationSlugs?: string[]; // ריק = משפיע על כל המדינה
+  datesConfirmed: boolean;
+  dates?: CalendarDateRange[]; // רק כשפורסם רשמית
+  window?: string; // עברית, מילים בלבד - כשלא פורסם
+  impact: CalendarImpact;
+  note: string; // עברית פשוטה: מה זה אומר בפועל למטייל
+  recheckFrom?: string; // מתי כדאי לבדוק שוב אם התאריכים פורסמו
+  source: PlaceSource;
+}
