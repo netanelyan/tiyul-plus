@@ -33,7 +33,7 @@ import type { Destination } from '@/lib/types';
 import { exploreDestination, type ExploreScope } from '@/lib/explore/resolver';
 import { exploredToDestination, sanitizeExploredDestinations } from '@/lib/explore/adapter';
 import { checkLimit, aiUnitsUsedToday, recordAiUnits } from '@/lib/server/limits';
-import { budgetState, maybeAlert, recordSpend } from '@/lib/server/budget';
+import { IP_BACKSTOP_MULTIPLE, budgetFor, maybeAlert, recordSpend } from '@/lib/server/budget';
 import { MAX_TURN_USD } from '@/lib/server/chatGuards';
 import {
   BUDGET_MESSAGE,
@@ -855,6 +855,9 @@ async function runAgent(
       route: 'chat',
       model: turn.model,
       usage: turn.usage,
+      // אם התשובה נקטעה לפני message_delta אין output_tokens, והטקסט
+      // שכן הוזרם הוא הבסיס לאומדן שמרני במקום אפס
+      streamedChars: turn.text.length,
     });
     full += turn.text;
 
@@ -1329,16 +1332,37 @@ export async function POST(request: Request) {
     if (used >= limits.aiUnitsPerDay) return singleMessageStream(QUOTA_MESSAGE);
 
     /*
-      **תקרת ההוצאה היומית לכולם יחד.** המכסות שמעל מגינות מפני משתמש
-      אחד; זו מגינה מפני אלף. מעל התקרה לא נשלחת אף בקשה ל-API, והמטייל
-      מקבל משפט רגוע - לא שגיאה. ראו lib/server/budget.ts.
+      **תקרת ההוצאה, בשני ארנקים.** המכסות שמעל מגינות מפני משתמש אחד;
+      זו מגינה מפני אלף - ובלי לתת לאף אחד מהם לכבות את המוצר לאחרים:
+      לתנועה אנונימית יש ארנק משלה, ולאף זהות אין יותר מחלק קטן מהיום.
+      ראו lib/server/budget.ts.
     */
-    const budget = await budgetState();
+    const budget = await budgetFor(caller.id);
+    /*
+      רשת ביטחון על ה-IP, **רחבה בכוונה**.
+
+      המכסה האמיתית היא לפי דפדפן, כי IP משותף במפעילת סלולר הוא
+      עשרות אלפי אנשים. ה-IP קיים רק כדי לתפוס מכונה אחת שמחליפה מזהי
+      דפדפן בלולאה, ולכן התקרה שלו היא פי `IP_BACKSTOP_MULTIPLE`
+      מהתקרה של אדם בודד. **כששני המדדים חלוקים - הדפדפן מנצח**, בדיוק
+      כפי שנתנאל ביקש: לחסום אדם אמיתי יקר לנו יותר מבקשה מיותרת אחת.
+    */
+    let ipBlocked = false;
+    if (caller.ip && caller.id !== caller.ip) {
+      const ipState = await budgetFor(caller.ip);
+      ipBlocked = ipState.callerSpent >= ipState.callerBudget * IP_BACKSTOP_MULTIPLE;
+      if (ipBlocked) {
+        console.warn(`[budget] ip backstop hit: ${caller.ip} $${ipState.callerSpent.toFixed(2)}`);
+      }
+    }
+    if (ipBlocked) return singleMessageStream(BUDGET_MESSAGE);
     if (budget.exceeded) {
-      console.warn(`[budget] blocked: $${budget.spent.toFixed(2)} / $${budget.budget.toFixed(2)}`);
+      console.warn(
+        `[budget] blocked (${budget.reason}) caller=$${budget.callerSpent.toFixed(3)}/$${budget.callerBudget.toFixed(2)} day=$${budget.spent.toFixed(2)}/$${budget.budget.toFixed(2)}`,
+      );
       return singleMessageStream(BUDGET_MESSAGE);
     }
-    void maybeAlert(budget);
+    void maybeAlert(budget, caller.id);
   }
 
   // קוראים כטקסט קודם: גוף ענק נעצר לפני JSON.parse

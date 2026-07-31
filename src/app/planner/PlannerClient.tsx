@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { clientIdHeader } from '@/lib/clientId';
 import type { DestinationSummary } from '@/lib/types';
 import type { Trip, WizardPrefs } from '@/lib/trip/types';
 import { useTrip } from '@/lib/trip/TripContext';
@@ -139,7 +140,13 @@ function Onboarding({
     try {
       const res = await fetch('/api/generate-trip', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(await authHeader()) },
+        headers: {
+          'Content-Type': 'application/json',
+          // מזהה דפדפן - כדי שמכסת האנונימיים לא תיספר לפי IP משותף
+          // של מפעילת סלולר. ראו lib/clientId.ts.
+          ...clientIdHeader(),
+          ...(await authHeader()),
+        },
         body: JSON.stringify({ prefs, party, notes: notes.trim() }),
       });
       const data = (await res.json()) as {

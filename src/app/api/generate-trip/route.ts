@@ -7,7 +7,7 @@ import type { Trip, TripDay, TripPreferences, WizardPrefs } from '@/lib/trip/typ
 import { checkLimit, aiUnitsUsedToday, recordAiUnits } from '@/lib/server/limits';
 import { resolveCaller } from '@/lib/server/identity';
 import { PLAN_LIMITS, aiUnits } from '@/lib/plans';
-import { budgetState, maybeAlert, recordSpend } from '@/lib/server/budget';
+import { budgetFor, maybeAlert, recordSpend } from '@/lib/server/budget';
 import { sameOriginOk } from '@/lib/server/chatGuards';
 
 /**
@@ -308,8 +308,8 @@ export async function POST(request: Request) {
     לכאורה**: הבנייה ממשיכה דרך `generateTrip` המקומי, בדיוק כמו בכל
     מצב אחר שבו העידון לא זמין. מה שנעצר הוא הקריאה למודל.
   */
-  const budget = process.env.ANTHROPIC_API_KEY ? await budgetState() : null;
-  if (budget) void maybeAlert(budget);
+  const budget = process.env.ANTHROPIC_API_KEY ? await budgetFor(caller.id) : null;
+  if (budget) void maybeAlert(budget, caller.id);
   const aiAllowed = daily.ok && unitsUsed < limits.aiUnitsPerDay && !budget?.exceeded;
 
   // קוראים כטקסט קודם וחוסמים גוף עצום לפני JSON.parse - אותה הגנה שיש
