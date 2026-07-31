@@ -170,6 +170,38 @@ const KOSHER_POLICY_OFF =
 const KOSHER_POLICY_ON =
   'The traveler keeps kosher. Every eating place carries kosherStatus. Recommend ONLY kosherStatus="kosher". A place marked "not-kosher" or "unknown" may be mentioned only to say plainly that it is not kosher (or that we could not confirm it) - never as a suggestion of where to eat, and never in the plan. "unknown" is not "probably fine". Always add the usual reminder to confirm kashrut and hours with the venue itself.';
 
+/**
+ * הביסוס של המסלול הקל - **המינימום המוחלט שעריכה מכנית צריכה**.
+ *
+ * מדוד: הפירוט המלא של שתי ערים הוא כ-34 אלף טוקנים, כי הוא נושא
+ * תקצירי מדינה, מידע מעשי, המסלול המומלץ ותיאור לכל מקום. עריכה
+ * מכנית לא נוגעת באף אחד מהם: היא מזיזה יום, מסירה עצירה, או מוסיפה
+ * מקום **מהעיר שכבר בטיול**. מה שנשאר נחוץ הוא זוג `id|name` לכל
+ * מקום בערים האלה, ותו לא.
+ *
+ * הפורמט הוא שורות ולא JSON: אותו מידע, בלי המפתחות שחוזרים על עצמם
+ * בכל רשומה - אותו שיקול שמתועד בסעיף תקציב האינדקס ב-CLAUDE.md.
+ *
+ * הכשרות מסוננת בדיוק כמו בפירוט המלא. אין כאן דלת אחורית.
+ */
+export function buildLightGrounding(citySlugs: string[], kosherOk: boolean): string {
+  const cities = destinations.filter((d) => citySlugs.includes(d.slug));
+  const lines = cities.map((d) => {
+    const places = d.places
+      .filter((p) => kosherOk || !isKosher(p.category))
+      .map((p) => `${p.id}|${p.name}`)
+      .join('\n');
+    return `## ${d.slug} (${d.name})\n${places}`;
+  });
+  return [
+    'PLACES available in the cities of this trip - id|name, one per line.',
+    'These are the only place ids you may use. There is no other catalog in this turn:',
+    'if the traveller asks for somewhere that is not listed here, say so in one sentence and call no tool.',
+    '',
+    ...lines,
+  ].join('\n');
+}
+
 export function buildGroundingDetail(citySlugs: string[], kosherOk: boolean): string {
   const cities = destinations.filter((d) => citySlugs.includes(d.slug));
   const countrySlugs = new Set(cities.map((d) => d.countrySlug));
