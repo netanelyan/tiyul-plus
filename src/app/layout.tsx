@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Script from 'next/script';
+import SiteFooter from '@/components/SiteFooter';
 import { TripProvider } from '@/lib/trip/TripContext';
 import { AuthProvider } from '@/lib/auth/AuthContext';
 import AccountSync from '@/components/AccountSync';
@@ -40,24 +41,6 @@ const SITE_DESCRIPTION =
  * `metadataBase` חייב להיות מוחלט: יחסי לא עובד בסורקים, וזה גם מה שהופך
  * את `images: ['/og.png']` לכתובת מלאה.
  */
-/**
- * קישורי הפוטר. רשימה אחת, קצרה בכוונה - זה לא מפת אתר: רק העמודים
- * שאתר ציבורי חייב שיהיה אליהם קישור קבוע מכל עמוד.
- *
- * הסדר הוא מהאנושי למשפטי: מי אנחנו, איך פונים אלינו, ואז המדיניות.
- * הצהרת הנגישות נשארת ברשימה הזאת ולא במקום נפרד, כפי שהייתה.
- */
-const FOOTER_LINKS = [
-  { href: '/about', label: 'אודות' },
-  { href: '/contact', label: 'יצירת קשר' },
-  { href: '/terms', label: 'תנאי שימוש' },
-  { href: '/privacy', label: 'מדיניות פרטיות' },
-  { href: '/cookies', label: 'עוגיות ונתוני שימוש' },
-  { href: '/affiliate-disclosure', label: 'קישורי שותפים' },
-  { href: '/refunds', label: 'ביטולים והחזרים' },
-  { href: '/accessibility', label: 'הצהרת נגישות' },
-];
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: SITE_TITLE,
@@ -141,63 +124,7 @@ export default function RootLayout({
         </TripProvider>
         </AuthProvider>
         <AccessibilityWidget />
-        <footer className="mt-16 bg-night py-10 text-center print:hidden">
-          <div className="flex items-center justify-center gap-2 text-lg font-bold text-cream">
-            <Logo reversed className="h-6 w-6" />
-            <span>
-              טיול<span className="text-sunset">+</span>
-            </span>
-          </div>
-          <p className="mx-auto mt-2 max-w-xl px-4 text-xs leading-relaxed text-cream/50">
-            טיול+ הוא סוכן AI שבונה מסלולים אוטומטית. תמיד כדאי לאמת שעות פתיחה,
-            מחירים, זמינות וכשרות מול המקומות עצמם לפני הנסיעה.
-          </p>
-          {/*
-            גילוי נאות על קישורי שותפים, בפוטר עצמו ולא רק בעמוד ייעודי:
-            מי שלוחץ על כפתור הזמנה לא בהכרח יגיע לעמוד הגילוי, והמשפט
-            הזה נדרש להופיע במקום שרואים אותו.
-            TODO(Netanel): הנוסח הוא שלך - זה מציין מקום בלבד.
-          */}
-          <p className="mx-auto mt-3 max-w-xl px-4 text-xs font-semibold leading-relaxed text-cream/45">
-            [למילוי] משפט גילוי נאות: חלק מהקישורים באתר הם קישורי שותפים, ואנחנו עשויים לקבל
-            עמלה.
-          </p>
-
-          {/*
-            שורות הקישורים. flex-wrap עם מפריד נקודה - נשאר שתי שורות
-            בדסקטופ ולא הופך לסרגל ניווט שני: אותו גודל טקסט כמו הכתב
-            הקטן שכבר בפוטר, בלי כותרות עמודות ובלי קיבוץ לקטגוריות.
-          */}
-          <nav aria-label="קישורי תחתית" className="mt-4 px-4">
-            <ul className="mx-auto flex max-w-xl flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs font-semibold text-cream/70">
-              {FOOTER_LINKS.map(({ href, label }, i) => (
-                <li key={href} className="flex items-center gap-x-3">
-                  <Link
-                    href={href}
-                    className="underline-offset-2 transition hover:text-cream hover:underline"
-                  >
-                    {label}
-                  </Link>
-                  {/*
-                    המפריד מרונדר לפי אינדקס ולא ב-CSS: `last:hidden` על
-                    ה-span הסתיר את **כולם**, כי הוא הילד האחרון של ה-li
-                    שלו ולא של הרשימה. נמדד בצילום מסך - הנקודות פשוט לא
-                    היו שם, והשורה נראתה כמו מילים שנדבקו זו לזו.
-                  */}
-                  {i < FOOTER_LINKS.length - 1 && (
-                    <span aria-hidden className="text-cream/25">
-                      ·
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </nav>
-          {/* BlackZ - חתימת הרשת (טריידמארק, מופיע בכל עמוד) */}
-          <div className="mt-4">
-            <blackz-signature></blackz-signature>
-          </div>
-        </footer>
+        <SiteFooter />
         <Script src="/blackz-signature.js" strategy="afterInteractive" />
       </body>
     </html>
