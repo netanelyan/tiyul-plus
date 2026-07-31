@@ -7,6 +7,7 @@ import { useTrip } from '@/lib/trip/TripContext';
 import { tripLabel, type CityNames } from '@/lib/trip/label';
 import SiteSearch from '@/components/SiteSearch';
 import AccountButton from '@/components/AccountButton';
+import { daysHe } from '@/lib/duration';
 
 // כניסה אחת לטיול: /chat הוא גם השיחה וגם התוכנית (תצוגה מאוחדת) -
 // אין יותר טאב צ׳אט נפרד מול טאב מתכנן.
@@ -108,7 +109,7 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
                     {/* השם המלא, בלי חיתוך - ארוך נשבר לשתי שורות */}
                     <span className="block text-sm font-semibold leading-snug">{tripLabel(t, cityNames)}</span>
                     <span className="block text-xs font-medium text-night/40">
-                      {t.id === currentId ? 'פתוח עכשיו' : `${t.days.length} ימים`}
+                      {t.id === currentId ? 'פתוח עכשיו' : daysHe(t.days.length)}
                     </span>
                   </button>
                 ))}
@@ -185,7 +186,7 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
                   {/* בלי truncate: שם ארוך נשבר לשתי שורות במקום להיחתך */}
                   <span className="block font-semibold leading-snug">{tripLabel(t, cityNames)}</span>
                   <span className="block text-xs font-medium text-night/40">
-                    {t.id === currentId ? 'פתוח עכשיו' : `${t.days.length} ימים`}
+                    {t.id === currentId ? 'פתוח עכשיו' : daysHe(t.days.length)}
                   </span>
                 </button>
               ))}

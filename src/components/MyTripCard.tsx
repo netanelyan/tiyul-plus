@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useTrip } from '@/lib/trip/TripContext';
 import { countdown, formatHebrewRange, todayISO } from '@/lib/trip/dates';
+import { daysHe } from '@/lib/duration';
 
 /** פס "הטיול שלי" - מודגש, מוצג רק כשיש טיול פעיל, מעל שורת הכניסות. */
 export default function MyTripCard() {
@@ -27,7 +28,7 @@ export default function MyTripCard() {
       <span className="min-w-0 flex-1 truncate font-bold text-night">
         {t.name}
         <span className="ms-2 font-medium text-night/55">
-          {t.days.length} ימים · {stops} עצירות{when ? ` · ${when}` : ''}
+          {daysHe(t.days.length)} · {stops} עצירות{when ? ` · ${when}` : ''}
         </span>
       </span>
       {cd && cd.kind !== 'past' && (
