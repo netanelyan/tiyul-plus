@@ -89,7 +89,7 @@ if (!customElements.get('blackz-signature')) {
                minimums keep the dim covering the screen there too */
             min-width: 100vw;
             min-height: 100vh;
-            background: rgba(8, 8, 10, 0.5);
+            background: rgba(8, 8, 10, 0.35);
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
@@ -193,9 +193,6 @@ if (!customElements.get('blackz-signature')) {
             letter-spacing: 1.5px;
           }
 
-          /* Click only. Hover-to-open made sense for a card pinned to the
-             trigger; for one centred over the page it would fire whenever
-             the pointer crossed the badge. */
           .bz-wrapper.open .bz-card {
             opacity: 1;
             visibility: visible;
@@ -205,7 +202,9 @@ if (!customElements.get('blackz-signature')) {
           .bz-wrapper.open .bz-backdrop {
             opacity: 1;
             visibility: visible;
-            pointer-events: auto;
+            /* pointer-events נשאר none גם כשהוא פתוח - ראו ההערה על לולאת
+               הריחוף. סגירה בלחיצה על הרקע מטופלת ע"י המאזין על document. */
+            pointer-events: none;
           }
 
           @media (prefers-reduced-motion: reduce) {
@@ -271,7 +270,30 @@ if (!customElements.get('blackz-signature')) {
         });
       };
 
+      /**
+       * פתיחה בריחוף, עם שתי התאמות שנדרשות דווקא בגלל שהכרטיס ממורכז:
+       *
+       * 1. **ריחוף פותח, אבל לא מחזיק.** הכרטיס יושב במרכז המסך והתג
+       *    בתחתית, ולכן הדרך מזה לזה עוברת בשטח שאינו אף אחד מהם. סגירה
+       *    ב-mouseleave הייתה סוגרת את הכרטיס באמצע הדרך אליו, ואי אפשר
+       *    היה להגיע לקישור שבתוכו. לכן יש שהות לפני הסגירה, והיא
+       *    מתבטלת ברגע שהעכבר נכנס לכרטיס (שהוא צאצא של אותו wrapper).
+       * 2. **רק במכשיר עם עכבר אמיתי.** במגע אין ריחוף, ותקן `hover:
+       *    hover` מונע מ-tap להיחשב כריחוף. שם הלחיצה היא הדרך היחידה,
+       *    והיא עובדת בשני המקרים.
+       */
+      let closeTimer = null;
+      const cancelClose = () => {
+        if (closeTimer) clearTimeout(closeTimer);
+        closeTimer = null;
+      };
+
       const setOpen = (open) => {
+        cancelClose();
+        // יציאה מוקדמת כשאין שינוי: בריחוף אפשר להיכנס ל-wrapper שוב ושוב
+        // (התג, ואז הכרטיס), וכל קריאה ל-clamp מאפסת את ההיסט ומודדת מחדש
+        // בפריים הבא - כלומר ריצוד קטן בכל כניסה. פתוח שנשאר פתוח לא זז.
+        if (wrapper.classList.contains('open') === open) return;
         wrapper.classList.toggle('open', open);
         trigger.setAttribute('aria-expanded', String(open));
         if (open) clamp();
@@ -293,6 +315,14 @@ if (!customElements.get('blackz-signature')) {
           trigger.focus();
         }
       });
+      if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        wrapper.addEventListener('mouseenter', () => setOpen(true));
+        wrapper.addEventListener('mouseleave', () => {
+          cancelClose();
+          closeTimer = setTimeout(() => setOpen(false), 400);
+        });
+      }
+
       window.addEventListener('resize', () => {
         if (wrapper.classList.contains('open')) clamp();
       });

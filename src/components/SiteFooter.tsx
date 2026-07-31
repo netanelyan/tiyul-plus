@@ -177,12 +177,17 @@ export default function SiteFooter() {
           />
         </div>
 
-        {/* ---------- השורה התחתונה ---------- */}
-        <div className="mt-7 border-t border-cream/10 pt-4">
+        {/*
+          ---------- השורה התחתונה ----------
+          ממורכזת כולה. העמודות למעלה מיושרות לימין כי הן רשימות שקוראים,
+          והשורה הזאת היא חתימה: היקף, זכויות, גילוי נאות וחותם. מיושרת
+          לימין היא נראתה כמו עוד עמודה שנגמרה באמצע.
+        */}
+        <div className="mt-7 border-t border-cream/10 pt-4 text-center">
           {/* היקף הקטלוג, נספר מהדאטה בכל בילד */}
           <p className="text-xs font-semibold text-cream/45">{coverageCountsLine()}</p>
 
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-cream/45">
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-cream/45">
             <span>© {year} טיול+</span>
             <span aria-hidden className="text-cream/20">
               ·
@@ -220,7 +225,7 @@ export default function SiteFooter() {
           {/*
             BlackZ - חתימת הרשת (טריידמארק, מופיע בכל עמוד).
 
-            **ממורכז ולא צמוד לימין, ועם מרווח תחתון.** כפתור הנגישות הצף
+            **מרווח תחתון, לא רק מרכוז.** כפתור הנגישות הצף
             יושב `fixed bottom-4 start-4`, כלומר בפינה הימנית-תחתונה של
             המסך ב-RTL - בדיוק המקום שאליו הגיע התג בקצה הימני של הפוטר.
             זה לא קרה רק בטלפון: המכולה היא `max-w-6xl`, ולכן מתחת
