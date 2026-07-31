@@ -11,6 +11,14 @@
 export type Plan = 'free' | 'premium';
 
 /**
+ * שכבת המכסות. נפרדת מ-`Plan` בכוונה: `Plan` הוא **מצב חיוב** (יש
+ * מנוי או אין), ו-`Tier` הוא **כמה מותר**. מבקר אנונימי אינו לקוח
+ * חינמי - הוא מישהו שעוד לא נרשם, ואין סיבה שהמשאב היקר ביותר במוצר
+ * יהיה זמין לו באותה מידה.
+ */
+export type Tier = 'anon' | Plan;
+
+/**
  * תפקידים. 'user' הוא ברירת המחדל ואין לו שום הרשאה מיוחדת.
  *
  * ההיררכיה היא סידורית בכוונה (`ROLE_RANK`), כך שבדיקת הרשאה היא השוואה
@@ -85,7 +93,24 @@ export interface PlanLimits {
   geocodesPerDay: number;
 }
 
-export const PLAN_LIMITS: Record<Plan, PlanLimits> = {
+export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
+  /*
+    אנונימי. **המספרים נבחרו כדי שביקור אמיתי לא ייגע בהם**: בניית
+    טיול מלא ועשר-חמש-עשרה עריכות היא כ-15 הודעות, וזו החוויה שאמורה
+    לשכנע מישהו להירשם. מה שנחתך כאן הוא היום השלם של מי שמתיישב על
+    הנתיב - וזה בדיוק ההבדל שנתנאל ביקש בין שימוש לרעה לשימוש רגיל.
+  */
+  anon: {
+    chatPerDay: 15,
+    chatBurstPerMin: 4,
+    aiUnitsPerDay: 120_000,
+    generatePerDay: 6,
+    sharesPerDay: 5,
+    importsPerDay: 2,
+    imagesPerDay: 1,
+    exploresPerDay: 8,
+    geocodesPerDay: 12,
+  },
   free: {
     chatPerDay: 40,
     chatBurstPerMin: 6,

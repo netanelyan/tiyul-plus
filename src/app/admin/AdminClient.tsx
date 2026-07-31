@@ -166,6 +166,7 @@ export default function AdminClient() {
       </header>
 
       <UserCard api={api} role={me.role} />
+      <SpendCard api={api} />
       <StatsCard api={api} />
       <PromoCard api={api} />
       <FlagsCard api={api} />
@@ -678,6 +679,218 @@ function FlagsCard({
       {!enabled && (
         <p className="mt-2 text-sm font-bold text-sunset-deep">
           הסוכן כבוי כרגע. מטיילים מקבלים תשובות בסיסיות בלבד.
+        </p>
+      )}
+    </section>
+  );
+}
+
+/* ============================================================
+   כמה ה-AI עולה, בכסף
+   ============================================================ */
+
+interface Spend {
+  budget: { limit: number; spent: number; ratio: number; exceeded: boolean; alertAt: number; source: string };
+  today: { usd: number; requests: number; chat: number; anonymous: number; loggedIn: number; trips: number };
+  days: { day: string; usd: number; requests: number }[];
+  perTrip: { median: number; max: number; counted: number };
+  topUsers: { kind: string; usd: number; requests: number }[];
+  topTrips: { usd: number; requests: number }[];
+  models: { model: string; usd: number; requests: number }[];
+  stored: boolean | null;
+}
+
+const money = (n: number) => `$${n < 1 ? n.toFixed(3) : n.toFixed(2)}`;
+
+/**
+ * הכרטיס שנתנאל ביקש: כמה הוצאנו, כמה נשאר עד התקרה, וכמה עולה
+ * **טיול אחד** - הנתון שמחליף ניחוש במספר.
+ *
+ * התקרה נערכת מכאן ישירות. זה המסלול המיועד לשינוי בלי דיפלוי.
+ */
+function SpendCard({
+  api,
+}: {
+  api: (p: string, i?: RequestInit) => Promise<{ ok: boolean; status: number; data: unknown }>;
+}) {
+  const [d, setD] = useState<Spend | null>(null);
+  /*
+    `null` = לא נגעו בשדה, ואז מוצג הערך מהשרת. שמירת מחרוזת ריקה
+    כברירת מחדל הייתה מחייבת setState נוסף בטעינה - וזה בדיוק הדפוס
+    שה-lint מסמן כאן.
+  */
+  const [draft, setDraft] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  /*
+    ריענון אחרי שמירה נעשה דרך מונה ולא דרך קריאה לפונקציה מתוך
+    האפקט: זה הדפוס שכבר קיים בכרטיסים האחרים כאן, והוא גם מה
+    שמונע את אזהרת cascading renders.
+  */
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    void (async () => {
+      const { ok, data } = await api('/api/admin/spend');
+      if (ok) setD(data as Spend);
+    })();
+  }, [api, tick]);
+
+  const shown = draft ?? (d ? String(d.budget.limit) : '');
+
+  const save = async () => {
+    const n = Number(shown);
+    if (!Number.isFinite(n) || n < 0) return;
+    setBusy(true);
+    await api('/api/admin/flags', {
+      method: 'POST',
+      body: JSON.stringify({ key: 'ai_daily_budget_usd', value: n }),
+    });
+    setDraft(null);
+    setTick((t) => t + 1);
+    setBusy(false);
+  };
+
+  if (!d) return null;
+  const pct = Math.min(100, Math.round(d.budget.ratio * 100));
+  const near = d.budget.ratio >= d.budget.alertAt;
+  const maxDay = Math.max(0.0001, ...d.days.map((x) => x.usd));
+
+  return (
+    <section
+      className={`rounded-2xl p-5 ring-1 ${
+        d.budget.exceeded ? 'bg-sunset/10 ring-sunset/40' : 'bg-shell ring-night/10'
+      }`}
+    >
+      <h2 className="text-lg font-bold text-night">💸 תקרת הוצאה</h2>
+
+      {/* ---------- היום מול התקרה ---------- */}
+      <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <span className="text-2xl font-black text-night" dir="ltr">
+          {money(d.budget.spent)}
+        </span>
+        <span className="text-sm font-semibold text-night/50" dir="ltr">
+          / {money(d.budget.limit)}
+        </span>
+        <span
+          className={`text-sm font-bold ${
+            d.budget.exceeded ? 'text-sunset-deep' : near ? 'text-sunset-deep' : 'text-night/45'
+          }`}
+        >
+          {pct}%
+        </span>
+      </div>
+      <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-night/10">
+        <div
+          className={`h-full rounded-full transition-all ${
+            d.budget.exceeded || near ? 'bg-sunset' : 'bg-lagoon'
+          }`}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      {d.budget.exceeded && (
+        <p className="mt-2 text-sm font-bold text-sunset-deep">
+          הסוכן לא מקבל בקשות חדשות כרגע. הוא יחזור מעצמו בחצות UTC, או מיד אם תעלה את התקרה.
+        </p>
+      )}
+      {!d.budget.exceeded && near && (
+        <p className="mt-2 text-sm font-bold text-sunset-deep">
+          מתקרבים לתקרה ({Math.round(d.budget.alertAt * 100)}% ומעלה). התראה נשלחה.
+        </p>
+      )}
+
+      {/* ---------- שינוי התקרה, בלי דיפלוי ---------- */}
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <label className="text-xs font-bold text-night/55" htmlFor="budget-input">
+          תקרה יומית ($)
+        </label>
+        <input
+          id="budget-input"
+          value={shown}
+          onChange={(e) => setDraft(e.target.value)}
+          inputMode="decimal"
+          dir="ltr"
+          className="w-24 rounded-xl bg-cream px-3 py-2 text-base text-night ring-1 ring-night/15 outline-none focus:ring-2 focus:ring-sunset sm:text-sm"
+        />
+        <button
+          onClick={() => void save()}
+          disabled={busy || shown === String(d.budget.limit)}
+          className="rounded-xl bg-night px-3 py-2 text-xs font-bold text-cream transition hover:bg-night/85 disabled:opacity-40"
+        >
+          שמירה
+        </button>
+        <span className="text-[11px] font-medium text-night/40">
+          חל מיד. 0 = הסוכן כבוי לגמרי.
+        </span>
+      </div>
+
+      {/* ---------- כמה עולה טיול ---------- */}
+      <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        {[
+          { label: 'טיול חציוני', v: money(d.perTrip.median) },
+          { label: 'הטיול היקר ביותר', v: money(d.perTrip.max) },
+          { label: 'טיולים היום', v: String(d.today.trips) },
+          { label: 'קריאות היום', v: String(d.today.requests) },
+        ].map((x) => (
+          <div key={x.label} className="rounded-xl bg-cream p-3">
+            <div className="text-lg font-black text-night" dir="ltr">
+              {x.v}
+            </div>
+            <div className="text-[11px] font-semibold text-night/50">{x.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* ---------- 14 יום ---------- */}
+      <div className="mt-4">
+        <div className="text-xs font-bold text-night/55">הוצאה יומית (14 יום)</div>
+        <div className="mt-2 flex h-16 items-end gap-1">
+          {d.days.map((x) => (
+            <div key={x.day} className="flex-1" title={`${x.day}: ${money(x.usd)}`}>
+              <div
+                className="w-full rounded-t bg-night/25"
+                style={{ height: `${Math.max(3, (x.usd / maxDay) * 100)}%` }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ---------- מי מוציא ---------- */}
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <div>
+          <div className="text-xs font-bold text-night/55">הכי יקרים היום ובשבועיים</div>
+          <ul className="mt-1.5 space-y-1">
+            {d.topUsers.slice(0, 5).map((u, i) => (
+              <li key={i} className="flex items-center gap-2 text-xs font-semibold text-night/70">
+                <span className="rounded-full bg-night/[0.06] px-2 py-0.5 text-[11px]">
+                  {u.kind === 'user' ? 'מחובר' : 'אנונימי'}
+                </span>
+                <span dir="ltr">{money(u.usd)}</span>
+                <span className="text-night/40">{u.requests} קריאות</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <div className="text-xs font-bold text-night/55">לפי מודל</div>
+          <ul className="mt-1.5 space-y-1">
+            {d.models.map((m) => (
+              <li key={m.model} className="flex items-center gap-2 text-xs font-semibold text-night/70">
+                <span dir="ltr">{m.model}</span>
+                <span dir="ltr" className="ms-auto">
+                  {money(m.usd)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {d.stored === null && (
+        <p className="mt-3 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold text-night/50">
+          אין עדיין היסטוריה שמורה. אם המספרים נשארים ריקים אחרי שימוש, כנראה שצריך להריץ את
+          supabase-ai-spend.sql - התקרה עצמה עובדת גם בלעדיו, לכל instance בנפרד.
         </p>
       )}
     </section>

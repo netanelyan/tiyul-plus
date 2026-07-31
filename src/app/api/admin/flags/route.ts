@@ -2,8 +2,16 @@ import { requireRole, denied, badRequest, ok, audit } from '@/lib/server/admin';
 import { adminInsert } from '@/lib/server/supabaseAdmin';
 import { allFlags, invalidateFlags } from '@/lib/server/flags';
 
-/** רק דגלים מוכרים - כדי שהטבלה לא תהפוך לשק זבל של מפתחות מומצאים */
-const KNOWN = new Set(['agent_enabled']);
+/**
+ * רק דגלים מוכרים - כדי שהטבלה לא תהפוך לשק זבל של מפתחות מומצאים.
+ *
+ * לכל דגל יש גם **סוג**, כי מפסק הוא בוליאני ותקרת הוצאה היא מספר,
+ * ודגל בלי סוג הוא הזמנה לכתוב "5" כמחרוזת ולגלות את זה בייצור.
+ */
+const KNOWN: Record<string, 'boolean' | 'number'> = {
+  agent_enabled: 'boolean',
+  ai_daily_budget_usd: 'number',
+};
 
 export async function GET(req: Request) {
   const actor = await requireRole(req, 'admin');
@@ -22,8 +30,15 @@ export async function POST(req: Request) {
     return badRequest('bad_json');
   }
   const key = typeof body.key === 'string' ? body.key : '';
-  if (!KNOWN.has(key)) return badRequest('unknown_flag');
-  if (typeof body.value !== 'boolean') return badRequest('bad_value');
+  const type = KNOWN[key];
+  if (!type) return badRequest('unknown_flag');
+  if (type === 'boolean' && typeof body.value !== 'boolean') return badRequest('bad_value');
+  if (type === 'number') {
+    const n = Number(body.value);
+    // תקרה שלילית אינה מצב - 0 היא "כבוי", וזה ערך חוקי ומכוון
+    if (!Number.isFinite(n) || n < 0 || n > 10_000) return badRequest('bad_value');
+    body.value = n;
+  }
 
   const rows = await adminInsert(
     'app_flags',

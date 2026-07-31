@@ -33,6 +33,19 @@ import type { Destination } from '@/lib/types';
 import { exploreDestination, type ExploreScope } from '@/lib/explore/resolver';
 import { exploredToDestination, sanitizeExploredDestinations } from '@/lib/explore/adapter';
 import { checkLimit, aiUnitsUsedToday, recordAiUnits } from '@/lib/server/limits';
+import { budgetState, maybeAlert, recordSpend } from '@/lib/server/budget';
+import { MAX_TURN_USD } from '@/lib/server/chatGuards';
+import {
+  BUDGET_MESSAGE,
+  MAX_MESSAGE_CHARS,
+  MAX_OUTPUT_TOKENS,
+  MAX_USER_MESSAGES,
+  OFF_TOPIC_MESSAGE,
+  TOO_LONG_MESSAGE,
+  TOO_MANY_TURNS_MESSAGE,
+  sameOriginOk,
+  topicOk,
+} from '@/lib/server/chatGuards';
 import {
   MAX_LIGHT_ITERATIONS,
   classifyTurn,
@@ -430,7 +443,7 @@ async function runClaudeTurn(
    * להשמיט את האינדקס, לא להפך.
    */
   light: boolean,
-): Promise<{ blocks: AccBlock[]; stopReason: string; text: string; usage: AnthropicUsage }> {
+): Promise<{ blocks: AccBlock[]; stopReason: string; text: string; usage: AnthropicUsage; model: string }> {
   const model = light
     ? (process.env.ANTHROPIC_MODEL_FAST ?? 'claude-haiku-4-5')
     : (process.env.ANTHROPIC_MODEL_AGENT ?? 'claude-sonnet-4-5');
@@ -610,7 +623,7 @@ async function runClaudeTurn(
   }
 
   const blocks = [...byIndex.entries()].sort(([a], [b]) => a - b).map(([, blk]) => blk);
-  return { blocks, stopReason, text, usage };
+  return { blocks, stopReason, text, usage, model };
 }
 
 /** לולאת הסוכן: קריאות מודל ↔ ביצוע כלים על עותק הטיול, עד תשובת טקסט */
@@ -620,7 +633,7 @@ async function runAgent(
   send: Send,
   kosherHint: boolean,
   explored: Destination[],
-  meter: { units: number },
+  meter: { units: number; usd: number },
   caller: Caller,
 ): Promise<void> {
   let working = clientTrip;
@@ -809,13 +822,10 @@ async function runAgent(
       הנמוכה היא גם מגן: קריאה שנקטעת היא `max_tokens`, וזה כבר טריגר
       להסלמה. 512 מספיקים בנוחות לכל אחד מהכלים ברשימה הלבנה.
     */
-    const maxTokens = light
-      ? 512
-      : truncatedRetry
-        ? 4096
-        : editIntent || iter > 0
-          ? 2048
-          : 1024;
+    const maxTokens = Math.min(
+      MAX_OUTPUT_TOKENS,
+      light ? 512 : truncatedRetry ? 4096 : editIntent || iter > 0 ? 2048 : 1024,
+    );
     if (iter === 0) send({ type: 'status', text: 'קורא את הבקשה…' });
     const turn = await runClaudeTurn(
       apiMessages,
@@ -834,7 +844,30 @@ async function runAgent(
       light,
     );
     meter.units += aiUnits(turn.usage);
+    /*
+      העלות האמיתית, לצד היחידות. היחידות הן מכסה אישית; הדולרים הם
+      התקרה הגלובלית ומה שנתנאל יראה באזור הניהול - כמה עולה טיול.
+    */
+    meter.usd += recordSpend({
+      identity: caller.id,
+      userId: caller.userId,
+      tripId: clientTrip?.id ?? null,
+      route: 'chat',
+      model: turn.model,
+      usage: turn.usage,
+    });
     full += turn.text;
+
+    /*
+      תקרת עלות לתור בודד. הסכנה איננה תשובה ארוכה אלא **לולאה**: 16
+      איטרציות שכל אחת שולחת את הקידומת מחדש. תור אמיתי עולה
+      $0.01-$0.13, ולכן התקרה רחוקה מכל שימוש אמיתי - היא קיימת כדי
+      שבאג לא ישרוף את התקציב היומי בבקשה אחת.
+    */
+    if (meter.usd > MAX_TURN_USD) {
+      console.warn(`[budget] turn aborted at $${meter.usd.toFixed(3)} (iter ${iter})`);
+      break;
+    }
     if (light) {
       lightIterations = iter + 1;
       lightStopReason = turn.stopReason;
@@ -1259,10 +1292,28 @@ const IMAGE_TOO_BIG_MESSAGE =
   'התמונה כבדה מדי בשבילי 😅 נסו צילום מסך או תמונה קטנה יותר, או פשוט כתבו לי את הפרטים.';
 
 export async function POST(request: Request) {
+  /*
+    ---------- השערים, מהזול ליקר ----------
+
+    כל מה שכאן רץ **לפני** שנשלח משהו ל-API, ולכן עולה אפס. הסדר הוא
+    לפי עלות הבדיקה: כותרת, זהות, מכסות בזיכרון, גוף, ורק בסוף התקרה
+    הגלובלית שדורשת אולי קריאת דאטהבייס.
+
+    אף אחד מהם לא נראה למטייל אמיתי. זה לא מקרי - זו הדרישה.
+  */
+
+  // בוט שפונה ישירות לנתיב, לפני הכול. דפדפן שולח Origin בכל POST.
+  if (!sameOriginOk(request)) {
+    return new Response(JSON.stringify({ error: 'forbidden' }), {
+      status: 403,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   // זיהוי הקורא (משתמש מחובר או IP) - לפני קריאת הגוף, כדי שגוף עצום
   // לא יעקוף את המכסות. ואז שערי המכסה, מהזול ליקר.
   const caller = await resolveCaller(request);
-  const limits = PLAN_LIMITS[caller.plan];
+  const limits = PLAN_LIMITS[caller.tier];
 
   const burst = checkLimit('chat-burst', caller.id, limits.chatBurstPerMin, 60_000);
   if (!burst.ok) {
@@ -1276,6 +1327,18 @@ export async function POST(request: Request) {
   if (process.env.ANTHROPIC_API_KEY) {
     const used = await aiUnitsUsedToday(caller.id);
     if (used >= limits.aiUnitsPerDay) return singleMessageStream(QUOTA_MESSAGE);
+
+    /*
+      **תקרת ההוצאה היומית לכולם יחד.** המכסות שמעל מגינות מפני משתמש
+      אחד; זו מגינה מפני אלף. מעל התקרה לא נשלחת אף בקשה ל-API, והמטייל
+      מקבל משפט רגוע - לא שגיאה. ראו lib/server/budget.ts.
+    */
+    const budget = await budgetState();
+    if (budget.exceeded) {
+      console.warn(`[budget] blocked: $${budget.spent.toFixed(2)} / $${budget.budget.toFixed(2)}`);
+      return singleMessageStream(BUDGET_MESSAGE);
+    }
+    void maybeAlert(budget);
   }
 
   // קוראים כטקסט קודם: גוף ענק נעצר לפני JSON.parse
@@ -1290,6 +1353,29 @@ export async function POST(request: Request) {
       headers: { 'Content-Type': 'application/json' },
     });
   }
+  /*
+    שני השערים האלה חייבים לרוץ על **הגוף הגולמי**, לפני הניקוי.
+    `sanitizeMessages` חותך כל הודעה ל-8,000 תווים ולוקח רק את 40
+    ההודעות האחרונות - כלומר אחריו ההודעה הענקית כבר קטנה והשיחה
+    האינסופית כבר קצרה, ואין מה לתפוס. זה נתפס בהארנס: שתי הבדיקות
+    עברו ירוקות בזמן שהן בדקו את התוצאה של החיתוך במקום את הקלט.
+  */
+  const rawMessages = Array.isArray(body.messages) ? body.messages : [];
+  const rawLongest = Math.max(
+    0,
+    ...rawMessages.map((m) =>
+      typeof (m as { content?: unknown })?.content === 'string'
+        ? ((m as { content: string }).content.length)
+        : 0,
+    ),
+  );
+  if (rawLongest > MAX_MESSAGE_CHARS) return singleMessageStream(TOO_LONG_MESSAGE);
+
+  const rawUserTurns = rawMessages.filter(
+    (m) => (m as { role?: unknown })?.role !== 'assistant',
+  ).length;
+  if (rawUserTurns > MAX_USER_MESSAGES) return singleMessageStream(TOO_MANY_TURNS_MESSAGE);
+
   const messages = sanitizeMessages(body.messages);
   // אחרי הניקוי אפשר להישאר בלי כלום (הודעה ריקה, או תמונה שנפסלה על
   // גודל/פורמט). שליחת מערך ריק ל-API היא 400 מובטחת, אז עוצרים כאן
@@ -1306,6 +1392,22 @@ export async function POST(request: Request) {
 
   const clientTrip = sanitizeClientTrip(body.trip);
   const kosherHint = body.kosher === true;
+
+  /*
+    שער הנושא. מסרב **רק** כשיש סימן מובהק לנושא אחר, אין שום סימן
+    לנסיעות, ואין טיול פעיל - ראו topicOk. הסירוב עולה אפס, וזו כל
+    הנקודה: לא לשרוף קריאת מודל כדי להחליט שלא לענות.
+  */
+  if (process.env.ANTHROPIC_API_KEY) {
+    const topic = topicOk(
+      messages[messages.length - 1]?.content ?? '',
+      Boolean(clientTrip && clientTrip.days.length > 0),
+    );
+    if (!topic.ok) {
+      console.log(`[chat] off-topic (${topic.why})`);
+      return singleMessageStream(OFF_TOPIC_MESSAGE);
+    }
+  }
   // יעדים שנחקרו בתורים קודמים - הלקוח מחזיר אותם, השרת לא סומך על הצורה
   const explored = sanitizeExploredDestinations(body.explored);
   const last = messages[messages.length - 1]?.content ?? '';
@@ -1323,7 +1425,7 @@ export async function POST(request: Request) {
       // הכללים בדיוק כמו במצב ללא מפתח - האתר עובד, ההוצאה על המודל
       // נעצרת מיד ובלי דיפלוי. ראו lib/server/flags.ts ו-/admin.
       if (process.env.ANTHROPIC_API_KEY && (await agentEnabled())) {
-        const meter = { units: 0 };
+        const meter = { units: 0, usd: 0 };
         try {
           await runAgent(messages, clientTrip, send, kosherHint, explored, meter, caller);
         } catch (err) {
