@@ -51,6 +51,44 @@ function Column({ title, links }: { title: string; links: FooterLink[] }) {
   );
 }
 
+/**
+ * שורת צ׳יפים אחת: תווית שקטה, הקישורים, ובסוף המעבר לקטלוג המלא.
+ *
+ * `flex-wrap` ולא גלילה אופקית: שורה שנגללת מסתירה חצי מהקישורים מאחורי
+ * מחווה, וגם קשה למצוא בה משהו. במובייל היא נשברת לשתיים-שלוש שורות
+ * נמוכות, וזה עדיין רבע מהגובה של עמודה.
+ */
+function ChipRow({
+  label,
+  links,
+  more,
+}: {
+  label: string;
+  links: FooterLink[];
+  more: FooterLink;
+}) {
+  return (
+    <nav aria-label={label} className="flex flex-wrap items-center gap-x-1.5 gap-y-1.5">
+      <span className="ms-1 text-[11px] font-bold text-cream/35">{label}</span>
+      {links.map((l) => (
+        <Link
+          key={l.href}
+          href={l.href}
+          className="rounded-full bg-cream/[0.07] px-2.5 py-1 text-[11px] font-semibold text-cream/70 ring-1 ring-cream/10 transition hover:bg-cream/15 hover:text-cream"
+        >
+          {l.label}
+        </Link>
+      ))}
+      <Link
+        href={more.href}
+        className="px-1 text-[11px] font-bold text-cream/50 underline-offset-2 transition hover:text-cream hover:underline"
+      >
+        {more.label} ←
+      </Link>
+    </nav>
+  );
+}
+
 const SITE: FooterLink[] = [
   { href: '/chat', label: 'תכנון טיול' },
   { href: '/countries', label: 'קטלוג היעדים' },
@@ -83,16 +121,16 @@ export default function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-16 bg-night pb-8 pt-12 print:hidden">
+    <footer className="mt-16 bg-night pb-7 pt-10 print:hidden">
       <div className="mx-auto max-w-6xl px-5 text-right">
         {/*
           שתי עמודות כבר בטלפון ולא רק מ-sm. ארבע רשימות בעמודה אחת הן
           31 קישורים בטור, כלומר פוטר גבוה מהמסך - "קיר" בדיוק במובן
           שביקשנו להימנע ממנו. נמדד בצילום מסך ב-390.
         */}
-        <div className="grid grid-cols-2 gap-x-6 gap-y-8 lg:grid-cols-12">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-7 lg:grid-cols-12">
           {/* מותג + הסתייגות הנסיעה (נשארת כאן) + הרשמה לדיוור */}
-          <div className="col-span-2 lg:col-span-4">
+          <div className="col-span-2 lg:col-span-6">
             <div className="flex items-center gap-2 text-lg font-bold text-cream">
               <Logo reversed className="h-6 w-6" />
               <span>
@@ -108,22 +146,39 @@ export default function SiteFooter() {
             </div>
           </div>
 
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             <Column title="האתר" links={SITE} />
           </div>
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             <Column title="מדיניות" links={POLICY} />
-          </div>
-          <div className="lg:col-span-2">
-            <Column title="יעדים מובילים" links={footerDestinations} />
-          </div>
-          <div className="lg:col-span-2">
-            <Column title="מדינות" links={footerCountries} />
           </div>
         </div>
 
+        {/*
+          ---------- יעדים ומדינות: שורות צ׳יפים, לא עמודות ----------
+
+          שתי עמודות ארוכות שלטו בפוטר והפכו אותו לכבד. אותם קישורים
+          בדיוק, בשתי שורות אופקיות: אותה תועלת לקורא ולחיפוש, בשליש
+          מהגובה.
+
+          **שום דבר כאן לא מתקפל ולא נפתח בלחיצה.** אלה קישורים רגילים
+          ב-HTML שהשרת מגיש - זו כל הסיבה שהם בפוטר.
+        */}
+        <div className="mt-6 space-y-2">
+          <ChipRow
+            label="יעדים"
+            links={footerDestinations}
+            more={{ href: '/countries', label: 'כל היעדים' }}
+          />
+          <ChipRow
+            label="מדינות"
+            links={footerCountries}
+            more={{ href: '/countries', label: 'כל המדינות' }}
+          />
+        </div>
+
         {/* ---------- השורה התחתונה ---------- */}
-        <div className="mt-10 border-t border-cream/10 pt-5">
+        <div className="mt-7 border-t border-cream/10 pt-4">
           {/* היקף הקטלוג, נספר מהדאטה בכל בילד */}
           <p className="text-xs font-semibold text-cream/45">{coverageCountsLine()}</p>
 
@@ -163,7 +218,7 @@ export default function SiteFooter() {
           </p>
 
           {/* BlackZ - חתימת הרשת (טריידמארק, מופיע בכל עמוד) */}
-          <div className="mt-5">
+          <div className="mt-4">
             <blackz-signature></blackz-signature>
           </div>
         </div>

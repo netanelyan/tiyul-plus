@@ -44,7 +44,7 @@ test('אף מספר בקוד אינו כתוב ביד', () => {
     .replace(/\/\*[\s\S]*?\*\//g, '')
     .replace(/(^|\s)\/\/.*$/gm, '');
   // מותרים רק המספרים שהם **תקרות תצוגה**, לא נתונים
-  const allowed = new Set(['12', '8', '2', '0', '1']);
+  const allowed = new Set(['12', '10', '6', '2', '0', '1']);
   const numbers = (src.match(/(?<![\w-])\d+(?![\w-])/g) ?? []).filter((n) => !allowed.has(n));
   assert.deepEqual(numbers, [], `מספר קשיח בקוד הפוטר: ${numbers.join(', ')}`);
 });
@@ -68,8 +68,8 @@ test('כל קישור מדינה מצביע על עמוד קיים בדאטה', 
 });
 
 test('הרשימה לא ארוכה מדי, ולא מתמלאת ממדינה אחת', () => {
-  assert.ok(footerDestinations.length <= 12, 'יותר מדי יעדים - הפוטר הופך לקיר');
-  assert.ok(footerCountries.length <= 8);
+  assert.ok(footerDestinations.length <= 10, 'יותר מדי יעדים - השורה הופכת לעמודה');
+  assert.ok(footerCountries.length <= 6);
   const perCountry = new Map<string, number>();
   for (const l of footerDestinations) {
     const d = destinations.find((x) => x.slug === l.href.replace('/destinations/', ''))!;
