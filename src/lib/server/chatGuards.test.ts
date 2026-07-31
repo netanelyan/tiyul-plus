@@ -16,6 +16,8 @@ import {
   topicOk,
 } from './chatGuards.ts';
 import { costUsd, priceFor } from './aiCost.ts';
+import { CALLER_SHARE, DEFAULT_DAILY_BUDGET_USD } from './budget.ts';
+import { PLAN_LIMITS } from '../plans.ts';
 
 /* ---------- שער הנושא: קודם כל מה שחייב לעבור ---------- */
 
@@ -158,4 +160,38 @@ test('התור שנמדד חי נופל הרבה מתחת לתקרת התור', 
     output_tokens: 111,
   });
   assert.ok(measured < MAX_TURN_USD / 4, `${measured}`);
+});
+
+
+/* ---------- מודל העלות, כפי שנמדד ---------- */
+
+/**
+ * **המספרים האלה הם מדידה ולא אומדן** (31.7): קריאה ראשונה בסשן $0.447,
+ * קריאה אחריה $0.063. ההפרש הוא כתיבת המטמון של קידומת הקטלוג, ומכאן
+ * שהעלות שלנו היא לכל סשן קר ולא לכל הודעה.
+ *
+ * הבדיקות כאן קושרות את המגבלות למספרים האלה, כדי שכוונון עתידי לא יחזיר
+ * את המצב שבו תור אמיתי נחסם.
+ */
+const MEASURED_COLD_TURN_USD = 0.447;
+const MEASURED_WARM_TURN_USD = 0.063;
+
+test('תקרת התור לא נסגרת על תור בנייה קר', () => {
+  // תור בנייה = קריאה קרה + שתיים-שלוש איטרציות חמות
+  const coldBuildTurn = MEASURED_COLD_TURN_USD + 3 * MEASURED_WARM_TURN_USD;
+  assert.ok(
+    MAX_TURN_USD > coldBuildTurn * 2,
+    `תקרת התור ${MAX_TURN_USD} חייבת לשבת בנוחות מעל ${coldBuildTurn.toFixed(3)}`,
+  );
+});
+
+test('מכסת ההודעות האנונימית מאפשרת סשן תכנון מלא', () => {
+  assert.ok(PLAN_LIMITS.anon.chatPerDay >= 25, String(PLAN_LIMITS.anon.chatPerDay));
+});
+
+test('תקרת הדולרים האישית גבוהה מהסשן האנונימי הגרוע ביותר', () => {
+  const worstSession =
+    2 * MEASURED_COLD_TURN_USD + (PLAN_LIMITS.anon.chatPerDay - 2) * MEASURED_WARM_TURN_USD;
+  const callerCap = DEFAULT_DAILY_BUDGET_USD * CALLER_SHARE;
+  assert.ok(callerCap > worstSession, `${callerCap} מול ${worstSession.toFixed(2)}`);
 });

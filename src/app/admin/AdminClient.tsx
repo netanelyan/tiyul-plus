@@ -34,6 +34,8 @@ interface UserInfo {
 }
 
 interface Stats {
+  /** false = הקריאה ל-usage_daily נכשלה. אפס אמיתי ואפס-מחוסר-נתונים אינם אותו דבר. */
+  tracked?: boolean;
   today: {
     identities: number;
     loggedIn: number;
@@ -438,6 +440,13 @@ function StatsCard({
       <p className="mt-1 text-sm font-medium text-night/55">
         נגזר מאותו מונה שמשמש למכסות - אין כאן איסוף חדש ואין מידע מזהה.
       </p>
+      {s.tracked === false && (
+        /* אפס שנובע מכשל קריאה נראה זהה לאפס אמיתי - אז אומרים מה קרה */
+        <p className="mt-2 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold text-night/55">
+          לא הצלחנו לקרוא את טבלת השימוש (usage_daily). המספרים למטה אינם אפס אמיתי - הם פשוט לא
+          ידועים. בדרך כלל זה supabase-premium.sql שעוד לא רץ.
+        </p>
+      )}
       <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {[
           ['משתמשים היום', s.today.identities.toLocaleString('he-IL')],

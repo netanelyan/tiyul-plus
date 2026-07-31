@@ -95,15 +95,23 @@ export interface PlanLimits {
 
 export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
   /*
-    אנונימי. **המספרים נבחרו כדי שביקור אמיתי לא ייגע בהם**: בניית
-    טיול מלא ועשר-חמש-עשרה עריכות היא כ-15 הודעות, וזו החוויה שאמורה
-    לשכנע מישהו להירשם. מה שנחתך כאן הוא היום השלם של מי שמתיישב על
-    הנתיב - וזה בדיוק ההבדל שנתנאל ביקש בין שימוש לרעה לשימוש רגיל.
+    אנונימי. **המספרים נגזרו מעלות שנמדדה, לא מהערכה** (31.7, אחרי
+    שנתנאל נחסם אחרי ארבע הודעות).
+
+    שתי מדידות אמיתיות: קריאה ראשונה בסשן $0.447, קריאה אחריה $0.063.
+    ההפרש הוא כתיבת המטמון של קידומת הקטלוג - כלומר **העלות שלנו היא
+    לכל סשן קר, לא לכל הודעה**.
+
+    25 הודעות הן סשן תכנון מלא (בנייה + עריכות + שאלות), וזו החוויה
+    שאמורה לשכנע מישהו להירשם. במחירים שנמדדו זה כ-$2.1 בסשן טיפוסי
+    וכ-$2.7 בגרוע - שניהם מתחת לתקרה האישית של $3.
+    היחידות כאן הן חגורה שנייה בלבד: התקרה בדולרים היא הכלי האמיתי,
+    והמספר נבחר כך שלא ייגע במי שלא נגע בתקרה.
   */
   anon: {
-    chatPerDay: 15,
+    chatPerDay: 25,
     chatBurstPerMin: 4,
-    aiUnitsPerDay: 120_000,
+    aiUnitsPerDay: 600_000,
     generatePerDay: 6,
     sharesPerDay: 5,
     importsPerDay: 2,
@@ -112,9 +120,9 @@ export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
     geocodesPerDay: 12,
   },
   free: {
-    chatPerDay: 40,
+    chatPerDay: 60,
     chatBurstPerMin: 6,
-    aiUnitsPerDay: 300_000,
+    aiUnitsPerDay: 1_200_000,
     generatePerDay: 15,
     sharesPerDay: 10,
     importsPerDay: 5,
@@ -125,7 +133,7 @@ export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
   premium: {
     chatPerDay: 400,
     chatBurstPerMin: 15,
-    aiUnitsPerDay: 3_000_000,
+    aiUnitsPerDay: 12_000_000,
     generatePerDay: 100,
     sharesPerDay: 100,
     importsPerDay: 50,

@@ -6,9 +6,17 @@ import { useTrip } from '@/lib/trip/TripContext';
 import { countdown, formatHebrewRange, todayISO } from '@/lib/trip/dates';
 import { daysHe } from '@/lib/duration';
 
-/** פס "הטיול שלי" - מודגש, מוצג רק כשיש טיול פעיל, מעל שורת הכניסות. */
+/**
+ * פס "הטיול שלי" - מודגש, מעל שורת הכניסות.
+ *
+ * **הטיול האחרון שנגעו בו, ולא "הטיול הפתוח".** אחרי שהטיול הפתוח הפסיק
+ * להישמר בין כניסות (ראו `AgentWorkspace`), "פתוח" הוא לא מצב שקיים בדף
+ * הבית. מה שכן קיים הוא "מה עשיתי לאחרונה", והקישור נושא `?trip=` - כלומר
+ * פתיחה מפורשת בלחיצה, שזה בדיוק מה שהכרטיס הזה אמור להיות.
+ */
 export default function MyTripCard() {
-  const { currentTrip: t, hydrated } = useTrip();
+  const { trips, hydrated } = useTrip();
+  const t = [...trips].sort((a, b) => (b.updatedAt ?? 0) - (a.updatedAt ?? 0))[0] ?? null;
   // התאריך נקרא אחרי ה-mount בלבד: השרת והדפדפן יכולים להיות בימים
   // שונים, וספירה לאחור שמרונדרת בשרת היא אי-התאמת hydration מובטחת.
   const [today, setToday] = useState<string | null>(null);
@@ -19,7 +27,7 @@ export default function MyTripCard() {
   const when = formatHebrewRange(t.startDate, t.endDate);
   return (
     <Link
-      href="/chat"
+      href={`/chat?trip=${encodeURIComponent(t.id)}`}
       className="mx-auto mb-4 flex w-full max-w-2xl items-center gap-3 rounded-2xl bg-sunset/10 px-5 py-3 ring-1 ring-sunset/25 transition hover:bg-sunset/15"
     >
       <span className="text-xl" aria-hidden>

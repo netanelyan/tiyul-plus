@@ -35,6 +35,13 @@ export interface TripApi {
    */
   applyRemoteDeletions: (tombstones: Record<string, number>) => void;
   setCurrentId: (id: string | null) => void;
+  /**
+   * **מי הבעלים של האחסון המקומי כרגע** (`null` = אנונימי), ומעבר לחשבון
+   * אחר. ראו את ההסבר המלא ליד המימוש - זה תיקון של מעבר בין אנשים על
+   * מכשיר משותף, לא ניהול מצב.
+   */
+  accountId: string | null;
+  switchAccount: (userId: string | null) => boolean;
   createTrip: (name: string, citySlug?: string) => Trip;
   createTripFrom: (trip: Trip) => void; // מוסיף טיול מוכן (אשף/תבנית)
   upsertTrip: (trip: Trip) => void; // מחליף לפי id או מוסיף - עדכונים מהסוכן
@@ -64,12 +71,15 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [deleted, setDeleted] = useState<Record<string, number>>({});
+  const [accountId, setAccountId] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const loaded = useRef(false);
   // הערך העדכני באופן סינכרוני - נדרש כדי להחליט על currentId בלי להסתמך
   // על ה-updater של React (אותה מלכודת שתוקנה כבר ב-AuthContext)
   const tripsRef = useRef<Trip[]>(trips);
   tripsRef.current = trips;
+  /** ה-accountId העדכני סינכרונית - ראו `switchAccount` */
+  const accountRef = useRef<string | null>(null);
 
   // טעינה ראשונית מהדפדפן (אחרי mount, כדי לא לשבור SSR)
   useEffect(() => {
@@ -77,6 +87,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     setTrips(state.trips);
     setCurrentId(state.currentId);
     setDeleted(state.deleted ?? {});
+    setAccountId(state.accountId ?? null);
+    accountRef.current = state.accountId ?? null;
     loaded.current = true;
     setHydrated(true);
   }, []);
@@ -84,10 +96,45 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   // שמירה על כל שינוי
   useEffect(() => {
     if (!loaded.current) return;
-    saveTrips({ trips, currentId, deleted });
-  }, [trips, currentId, deleted]);
+    saveTrips({ trips, currentId, deleted, accountId });
+  }, [trips, currentId, deleted, accountId]);
 
   const currentTrip = trips.find((t) => t.id === currentId) ?? null;
+
+  /**
+   * מעבר בין חשבונות על אותו דפדפן.
+   *
+   * **הבאג שזה סוגר:** יציאה מהחשבון השאירה את הטיולים באחסון המקומי,
+   * ולכן ההתחברות הבאה - של אדם אחר על אותו מחשב - מיזגה אותם. `mergeTrips`
+   * דוחפת לשרת כל טיול מקומי שאינו קיים בחשבון, וזו בדיוק הצורה של טיול
+   * של האדם הקודם. התוצאה: הטיולים שלו נכנסים לחשבון של מישהו אחר.
+   *
+   * הכלל כאן פשוט: **טיולים ששייכים לחשבון נעלמים מהמכשיר כשיוצאים ממנו.**
+   * הם לא אבודים - הם בחשבון, וחוזרים בהתחברות הבאה. טיולים אנונימיים
+   * (accountId === null) נשארים, כי אין להם שום מקום אחר לחיות בו, וזו
+   * גם ההגירה בהתחברות ראשונה.
+   */
+  const switchAccount = useCallback((userId: string | null): boolean => {
+    const prev = accountRef.current;
+    if (prev === userId) return false;
+    accountRef.current = userId;
+    setAccountId(userId);
+    // מהחשבון החוצה, או מחשבון אחד לאחר: מה שיש כאן אינו של הנכנס
+    const clearing = prev !== null;
+    if (clearing) {
+      tripsRef.current = [];
+      setTrips([]);
+      setCurrentId(null);
+      setDeleted({});
+    }
+    /*
+      **מוחזר סינכרונית בכוונה.** `setTrips` לא מתעדכן עד הרינדור הבא,
+      ושכבת הסנכרון ממזגת מיד אחרי הקריאה הזאת - כלומר בלי ערך מוחזר היא
+      הייתה ממזגת את הרשימה של האדם הקודם ודוחפת אותה לחשבון החדש, וזה
+      בדיוק הבאג. `AccountSync` בודקת את הערך הזה.
+    */
+    return clearing;
+  }, []);
 
   // כל מוטציה מקומית מקבלת חותמת updatedAt - שכבת הסנכרון ממזגת לפי
   // "המאוחר מנצח" בין מכשירים. **מצב שמגיע מהשרת אינו מוטציה** ואסור לו
@@ -380,6 +427,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       value={{
         trips,
         currentTrip,
+        accountId,
+        switchAccount,
         currentId,
         hydrated,
         deleted,

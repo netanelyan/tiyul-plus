@@ -22,6 +22,16 @@ const serviceKey = () => process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export const adminDbEnabled = () => Boolean(url() && serviceKey());
 
+/**
+ * **המקום היחיד שבונה כותרות service role.** `limits.ts` ו-`budget.ts`
+ * החזיקו עותק משלהן ששולח `Bearer` תמיד - ולכן עם מפתח `sb_secret_`
+ * (שאינו JWT) כל כתיבה שלהן נדחתה בשקט, והמונים בלוח הבקרה הראו אפס
+ * בזמן שקריאות באמת נעשו. עותק שני של לוגיקה כזאת הוא באג בהמתנה.
+ */
+export function serviceHeaders(extra: Record<string, string> = {}): Record<string, string> {
+  return headers(extra);
+}
+
 function headers(extra: Record<string, string> = {}): Record<string, string> {
   const k = serviceKey()!;
   const h: Record<string, string> = {
