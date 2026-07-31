@@ -18,6 +18,7 @@ import {
   type ChatMessage,
 } from '@/lib/server/chatMessages';
 import {
+  buildLightGrounding,
   buildExploredGrounding,
   buildGroundingDetail,
   buildGroundingIndex,
@@ -32,6 +33,12 @@ import type { Destination } from '@/lib/types';
 import { exploreDestination, type ExploreScope } from '@/lib/explore/resolver';
 import { exploredToDestination, sanitizeExploredDestinations } from '@/lib/explore/adapter';
 import { checkLimit, aiUnitsUsedToday, recordAiUnits } from '@/lib/server/limits';
+import {
+  MAX_LIGHT_ITERATIONS,
+  classifyTurn,
+  isLightTool,
+  shouldEscalate,
+} from '@/lib/server/modelRoute';
 import { resolveCaller, type Caller } from '@/lib/server/identity';
 import { PLAN_LIMITS, aiUnits } from '@/lib/plans';
 import type { BookingSearchCard } from '@/lib/bookingSearch';
@@ -383,6 +390,25 @@ class AnthropicHttpError extends Error {
  * tool_use נצברים (partial_json) ומוחזרים לביצוע. needSeparator מוסיף
  * שורה ריקה לפני הטקסט הראשון כשכבר הוזרם טקסט מאיטרציה קודמת.
  */
+/**
+ * ההנחיה היחידה שנוספת במסלול הקל.
+ *
+ * היא לא מנסה למנוע מהמודל לעשות דברים - הכלים כבר עושים את זה. היא
+ * אומרת לו מה כן לעשות כשהוא **לא** יכול: לומר זאת במשפט אחד ולעצור.
+ * תשובה בלי קריאת כלי היא בדיוק מה ש-`shouldEscalate` מחפש, ולכן
+ * "אני לא יכול" הופך אוטומטית לתור מחדש על המודל החזק - בלי שהמודל
+ * הזול יידע שקיים מודל אחר, ובלי מילת קסם שאפשר לשכוח.
+ */
+const LIGHT_TURN_NOTE = [
+  'QUICK EDIT TURN. Your ONLY job is the tool call.',
+  'The traveller asked for one small change to the trip that already exists.',
+  'Make exactly that change with one tool call. Do not write an explanation:',
+  'the app tells the traveller what changed, from the change itself. Any prose you write is discarded.',
+  'You do NOT have the full catalog here, only the places listed for the cities already in this trip.',
+  'If the request needs anything you cannot do with these tools, or names a place that is not listed,',
+  'do not improvise and do not guess: call NO tool and say so in a few words.',
+].join('\n');
+
 async function runClaudeTurn(
   apiMessages: ApiMessage[],
   trip: Trip | null,
@@ -397,8 +423,16 @@ async function runClaudeTurn(
   guardAllow: GuardAllowlist,
   /** האם הוצג כבר כרטיס חיפוש בתור הזה (משנה רק את נוסח ההחלפה) */
   searchShown: boolean,
+  /**
+   * המסלול הקל: מודל זול, כלים מוגבלים, **ובלי אינדקס הקטלוג**.
+   * ראו `src/lib/server/modelRoute.ts` - הכלים המוגבלים הם מה שמאפשר
+   * להשמיט את האינדקס, לא להפך.
+   */
+  light: boolean,
 ): Promise<{ blocks: AccBlock[]; stopReason: string; text: string; usage: AnthropicUsage }> {
-  const model = process.env.ANTHROPIC_MODEL_AGENT ?? 'claude-sonnet-4-5';
+  const model = light
+    ? (process.env.ANTHROPIC_MODEL_FAST ?? 'claude-haiku-4-5')
+    : (process.env.ANTHROPIC_MODEL_AGENT ?? 'claude-sonnet-4-5');
   // טוגל כשרות מה-UI לפני שקיים טיול: מוסרים לסוכן בשקט דרך בלוק המצב
   const kosherNote =
     kosherHint && !trip
@@ -416,22 +450,38 @@ async function runClaudeTurn(
       model,
       max_tokens: maxTokens,
       stream: true,
-      tools: AGENT_TOOLS,
+      // כלי שלא נשלח לא קיים בשביל המודל. זו הערובה, ולא הנחיה בפרומפט.
+      tools: light ? AGENT_TOOLS.filter((t) => isLightTool(t.name)) : AGENT_TOOLS,
       // סדר הרינדור: tools (סטטי) → system. ה-grounding הוא הבלוק עם
       // cache_control - כל הקידומת הקבועה נכנסת ל-prompt cache; מצב הטיול
       // המשתנה יושב אחרי נקודת השבירה ולא פוגע בקריאות מהמטמון.
       system: [
         { type: 'text', text: SYSTEM_PROMPT },
-        // האינדקס קבוע -> נשאר במטמון בין תורים ובין משתמשים. יש לו שתי
-        // גרסאות בלבד (עם כשרות ובלעדיה), שתיהן קבועות, כך שהשער החדש
-        // לא פוגע בפגיעות המטמון - כל אחת נשמרת בפני עצמה.
-        {
-          type: 'text',
-          text: buildGroundingIndex(kosherOk),
-          cache_control: { type: 'ephemeral' },
-        },
+        /*
+          **החיסכון הגדול כאן הוא ההשמטה הזאת, לא המודל.** האינדקס הוא
+          כ-240 אלף תווים (~80 אלף טוקנים) של כל הקטלוג, ונשלח כדי
+          שהמודל יוכל למצוא מקום חדש. עריכה מכנית פועלת על מה שכבר
+          בטיול, ולכן אין בו מה לחפש - והפירוט של ערי הטיול עצמן,
+          שנשלח בכל מקרה, מספיק גם ל-add_place.
+
+          באלף המקרים: אינדקס בלי המסלול הקל = תור זול שעולה יותר מהתור
+          שהוא החליף, כי כתיבת מטמון על מודל שני יקרה מקריאה ממטמון חם.
+        */
+        ...(light
+          ? []
+          : [
+              // האינדקס קבוע -> נשאר במטמון בין תורים ובין משתמשים. יש לו שתי
+              // גרסאות בלבד (עם כשרות ובלעדיה), שתיהן קבועות, כך שהשער החדש
+              // לא פוגע בפגיעות המטמון - כל אחת נשמרת בפני עצמה.
+              {
+                type: 'text' as const,
+                text: buildGroundingIndex(kosherOk),
+                cache_control: { type: 'ephemeral' as const },
+              },
+            ]),
         // הפירוט משתנה לפי השיחה -> אחרי נקודת השבירה, בלי cache_control
         { type: 'text', text: groundingDetail },
+        ...(light ? [{ type: 'text' as const, text: LIGHT_TURN_NOTE }] : []),
         { type: 'text', text: `CURRENT TRIP (the user's active trip right now):\n${serializeTripForModel(trip)}${kosherNote}` },
         // האחרון בכוונה. הכללים האלה קיימים למעלה ב-LANGUAGE & VOICE
         // ונבלעו בבדיקה חיה: הפרומפט ארוך, והמודל הפיק פירוק לפי יבשות
@@ -546,7 +596,13 @@ async function runClaudeTurn(
   }
 
   // ניטור עלויות בפיתוח: cached > 0 מאיטרציה 2 ומטור 2 = ה-prompt cache עובד
-  if (process.env.NODE_ENV === 'development') {
+  /*
+    שורת השימוש. הייתה עד היום ב-development בלבד, וזה בדיוק המצב שבו
+    אי אפשר לדעת כמה הניתוב חוסך בפועל: הפרודקשן הוא המקום שבו יש
+    תעבורה אמיתית ומטמון חם. היא לא מכילה שום דבר של המשתמש - שם מודל
+    ומספרים.
+  */
+  if (process.env.NODE_ENV === 'development' || process.env.CHAT_USAGE_LOG === 'on') {
     console.log(
       `[chat] ${model} iter=${iter} max=${maxTokens} in=${usage.input_tokens ?? 0} cached=${usage.cache_read_input_tokens ?? 0} cacheWrite=${usage.cache_creation_input_tokens ?? 0} out=${usage.output_tokens ?? 0}`,
     );
@@ -662,28 +718,126 @@ async function runAgent(
     return built;
   };
 
+  /*
+    ---------- ניתוב המודל ----------
+
+    ההחלטה מתקבלת פעם אחת, לפני הלולאה, מהטקסט ומהטיול - ולא מהמודל.
+    `light` פירושו: מודל זול, כלים מוגבלים לרשימה הלבנה, ובלי אינדקס
+    הקטלוג. ראו `src/lib/server/modelRoute.ts`.
+  */
+  const lastMsg = messages[messages.length - 1];
+  /*
+    מפסק. ברירת המחדל דלוקה, אבל `CHAT_MODEL_ROUTING=off` מחזיר את
+    ההתנהגות הקודמת בדיוק בלי דיפלוי של קוד - וזה גם מה שמאפשר למדוד
+    את שני המסלולים על אותה בקשה בדיוק.
+  */
+  const routingOn = process.env.CHAT_MODEL_ROUTING !== 'off';
+  const route = routingOn
+    ? classifyTurn(lastUser, clientTrip, Boolean(lastMsg?.image))
+    : { light: false, reason: 'ניתוב כבוי' };
+
+  /*
+    במסלול הקל **שום דבר לא נשלח ללקוח עד שהתור הוכיח את עצמו**.
+
+    זה לא זהירות יתר: אם התור מוסלם, המודל החזק מריץ הכול מחדש מאפס,
+    וטקסט או מצב-טיול שכבר הגיעו למסך היו הופכים להבהוב של עריכה שלא
+    קרתה. תור קל הוא ממילא משפט אחד, אז ההשהיה זניחה. `status` כן עובר
+    - הוא רק אומר "עובד על זה", ואין בו מה לבטל.
+  */
+  const buffered: StreamEvent[] = [];
+  let capturing = false;
+  const outSend: Send = (e) => {
+    if (capturing && e.type !== 'status') buffered.push(e);
+    else send(e);
+  };
+
+  /** מצב שצריך לחזור לאחור בהסלמה. מה שאינו כאן לא יכול להשתנות במסלול
+   *  הקל, כי הכלים שנוגעים בו פשוט לא נשלחו (חקירה, כרטיס חיפוש, סיכות). */
+  const snapshot = () => ({
+    working,
+    full,
+    actions: [...actions],
+    touched,
+    toolBuiltSomething,
+    quickReplies,
+    apiMessages: apiMessages.length,
+  });
+  const restore = (s: ReturnType<typeof snapshot>) => {
+    working = s.working;
+    full = s.full;
+    actions.length = 0;
+    actions.push(...s.actions);
+    touched = s.touched;
+    toolBuiltSomething = s.toolBuiltSomething;
+    quickReplies = s.quickReplies;
+    apiMessages.length = s.apiMessages;
+    buffered.length = 0;
+    // דגלי הניסיון-החד-פעמי שייכים לניסיון שנזרק, לא לזה שמתחיל עכשיו
+    truncatedRetry = false;
+    forcedBuildRetry = false;
+  };
+
+  let light = route.light;
+  let escalated = false;
+  let lightStopReason = '';
+  let lightToolFailed = false;
+  let lightIterations = 0;
+  let lightProseDropped = false;
+  let suppressActions = false;
+  const before = snapshot();
+  capturing = light;
+
+  if (light) {
+    console.log(`[chat] route=light (${route.reason})`);
+  } else {
+    console.log(`[chat] route=heavy (${route.reason})`);
+  }
+
+  /**
+   * גוף הלולאה, כפונקציה, כדי שאפשר יהיה להריץ אותו **פעמיים**:
+   * פעם קלה, ואם היא לא הצליחה - פעם כבדה על מצב משוחזר.
+   */
+  const runLoop = async () => {
   for (let iter = 0; iter < 16; iter++) {
     // נקרא מחדש בכל איטרציה: `working` משתנה תוך כדי התור.
     const kosherOk = kosherAllowed(working, messages, kosherHint);
     // אחרי קטיעה נותנים תקרה גבוהה יותר: ההנחיה לקריאות קטנות היא העיקר,
     // אבל אין סיבה להיחתך שוב על אותה מגבלה בזמן שמתקנים.
-    const maxTokens = truncatedRetry ? 4096 : editIntent || iter > 0 ? 2048 : 1024;
+    /*
+      תקרה קטנה למסלול הקל. הוא מפיק קריאת כלי אחת ומשפט קצר, והתקרה
+      הנמוכה היא גם מגן: קריאה שנקטעת היא `max_tokens`, וזה כבר טריגר
+      להסלמה. 512 מספיקים בנוחות לכל אחד מהכלים ברשימה הלבנה.
+    */
+    const maxTokens = light
+      ? 512
+      : truncatedRetry
+        ? 4096
+        : editIntent || iter > 0
+          ? 2048
+          : 1024;
     if (iter === 0) send({ type: 'status', text: 'קורא את הבקשה…' });
     const turn = await runClaudeTurn(
       apiMessages,
       working,
-      send,
+      outSend,
       full.length > 0,
       maxTokens,
       iter,
       kosherHint,
-      detailFor(kosherOk) + buildExploredGrounding(explored),
+      light
+        ? buildLightGrounding(clientTrip?.citySlugs ?? [], kosherOk)
+        : detailFor(kosherOk) + buildExploredGrounding(explored),
       kosherOk,
       guardAllow,
       searchesShown > 0,
+      light,
     );
     meter.units += aiUnits(turn.usage);
     full += turn.text;
+    if (light) {
+      lightIterations = iter + 1;
+      lightStopReason = turn.stopReason;
+    }
 
     if (turn.stopReason !== 'tool_use') {
       // max_tokens אינו tool_use, ולכן עד עכשיו הוא פשוט שבר את הלולאה:
@@ -867,7 +1021,7 @@ async function runAgent(
       // משדרים את הטיול מיד אחרי כל כלי שמשנה אותו, ולא רק בסוף התור:
       // הקנבס מתמלא תוך כדי הבנייה במקום להישאר ריק עשרות שניות.
       if (out.ok && toolBuiltSomething && working) {
-        send({ type: 'trip', trip: working, actions: [...actions] });
+        outSend({ type: 'trip', trip: working, actions: [...actions] });
       }
       // רשומות שהוחזרו מהדאטה נכנסות לרשימה הלבנה של שומר הטענות: מרגע
       // זה המודל רשאי לדבר על **אותן** רשומות בשמן, ורק עליהן. מוסיפים
@@ -883,6 +1037,7 @@ async function runAgent(
         searchesShown += 1;
         send({ type: 'search', search: out.search });
       }
+      if (!out.ok && light) lightToolFailed = true;
       results.push({
         type: 'tool_result',
         tool_use_id: block.id,
@@ -893,6 +1048,89 @@ async function runAgent(
     if (results.length === 0) break;
     apiMessages.push({ role: 'assistant', content: assistantContent });
     apiMessages.push({ role: 'user', content: results });
+
+    /*
+      תקרת איטרציות למסלול הקל. לא break אלא יציאה שמובילה להסלמה:
+      מודל שמגשש כבר בסיבוב הרביעי הוא בדיוק המקרה שהמסלול הקל לא
+      אמור לטפל בו.
+    */
+    /*
+      **תור קל = קריאת מודל אחת.** אחרי שהכלי בוצע אין למודל מה להוסיף:
+      המשפט למטייל נבנה מהפעולה עצמה ולא ממנו, וסיבוב שני היה שולח את
+      כל הקידומת פעם נוספת רק כדי לקבל טקסט שנזרק ממילא. במדידה הראשונה
+      זה היה חצי מעלות התור.
+
+      כל הכלים ברשימה הלבנה הם פעולה אחת שלמה, ולכן אין כאן מקרה שנחתך
+      באמצע - בשונה מהמסלול הכבד, שבו set_day_city גורר set_day_places.
+    */
+    if (light && toolBuiltSomething) break;
+    if (light && iter + 1 >= MAX_LIGHT_ITERATIONS) break;
+  }
+  };
+
+  await runLoop();
+
+  /*
+    ---------- ההסלמה ----------
+
+    כל דבר שאינו הצלחה נקייה חוזר למודל החזק, והתור מורץ **מאפס**:
+    ההיסטוריה, הטיול והטקסט משוחזרים למצב שלפני הניסיון הקל, כך שהמודל
+    החזק לא יורש חצי עריכה ולא צריך להבין מה קרה לפניו.
+
+    התור הזול לא מוחזר למונה: הטוקנים באמת נשרפו, וספירה שמעגלת אותם
+    למטה תגרום למדידה הבאה להיראות טובה משהיא.
+  */
+  if (light) {
+    const why = shouldEscalate({
+      toolRan: toolBuiltSomething,
+      toolFailed: lightToolFailed,
+      stopReason: lightStopReason,
+      iterations: lightIterations,
+    });
+    if (why) {
+      console.log(`[chat] escalate -> heavy (${why})`);
+      escalated = true;
+      light = false;
+      capturing = false;
+      restore(before);
+      send({ type: 'status', text: 'בודק את זה לעומק…' });
+      await runLoop();
+    } else {
+      /*
+        ---------- הפרוזה של המסלול הקל נזרקת ----------
+
+        נמדד חי על שישה תרחישים: **כל שש העריכות בוצעו נכון**, ושלושה
+        מהמשפטים שנכתבו עליהן היו שגויים - "השם כבר איטליה ואוסטריה"
+        אחרי ששינה אותו, "ההערה כבר קיימת" אחרי שהוסיף אותה, ו"לא
+        אוכל להוסיף" אחרי שהוסיף. המטייל קורא את המשפט.
+
+        המסקנה היא לא "המודל הזול לא מתאים" אלא **לא לתת לו לכתוב**:
+        קריאת הכלי היא מה שהוא עושה היטב, והמשפט כבר קיים בקוד -
+        `out.action` נבנה בשרת מהעריכה שבוצעה בפועל ("הזזתי את רומא
+        מיום 5 ליום 1"). זה אותו דפוס של `pinDistances` ו-`priceGuard`:
+        למסור עובדה מחושבת במקום לבקש מהמודל לא לטעות.
+
+        השבבים מושתקים בתור כזה כדי שהמשפט לא יופיע פעמיים - כאן הם
+        *הם* המשפט.
+      */
+      capturing = false;
+      const textEvents = buffered.filter((e) => e.type === 'text');
+      for (const e of buffered) {
+        if (e.type === 'text') continue;
+        send(e.type === 'trip' ? { ...e, actions: [] } : e);
+      }
+      buffered.length = 0;
+      if (actions.length > 0) {
+        full = actions.join(' · ');
+        send({ type: 'text', text: full });
+        lightProseDropped = textEvents.length > 0;
+        suppressActions = true;
+      } else {
+        // אין פעולות אבל גם לא הסלמנו - מצב שאמור להיות בלתי אפשרי
+        // (`shouldEscalate` תופס `toolRan: false`). נשמר כרשת ביטחון.
+        for (const e of textEvents) send(e);
+      }
+    }
   }
 
   if (!full) {
@@ -923,9 +1161,18 @@ async function runAgent(
     touched = true;
   }
 
+  /*
+    שורה אחת שמאפשרת למדוד את הניתוב בפרודקשן בלי הארנס: כמה תורים
+    ירדו למסלול הקל, וכמה מהם הוסלמו בחזרה. יחס הסלמה גבוה פירושו
+    שהמסווג רחב מדי - וזה הנתון שיגיד את זה, לא תחושה.
+  */
+  console.log(
+    `[chat] turn route=${route.light ? 'light' : 'heavy'} escalated=${escalated} proseDropped=${lightProseDropped} reason=${route.reason}`,
+  );
+
   const dest = findDestination(full);
   send({ type: 'meta', destinationSlug: dest?.slug });
-  if (touched && working) send({ type: 'trip', trip: working, actions });
+  if (touched && working) send({ type: 'trip', trip: working, actions: suppressActions ? [] : actions });
   if (quickReplies) send({ type: 'quickReplies', replies: quickReplies });
 }
 
