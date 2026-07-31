@@ -248,6 +248,83 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-31 (uu) - "One hotel is listed for all the places" - and a Hebrew bug the fix walked into
+
+Netanel, from the booking panel: *"1 hotel is listed for all the places, esim and
+other things should be trip-wide, hotels is per place"*.
+
+He is describing a data-model error, not a layout one. **"יש לנו לינה" is a
+sentence you cannot answer correctly on a Bratislava + Vienna trip** - it is true
+of one and false of the other, and `preferences.booking.stay` had exactly one
+slot for it.
+
+**The city picker above the cards was actively hiding this.** It switched the
+*search target* while the status stayed trip-wide, so pressing "כבר סגור" while
+Bratislava was selected also marked Vienna. The picker now lives inside the card
+it belongs to and switches the status too, and each city carries a dot saying
+whether it has been answered - otherwise the picker re-hides the same thing at a
+smaller scale.
+
+**The split is derived, not invented.** Lodging and tickets are precisely the two
+providers whose search URL takes `{QUERY}` - i.e. searches *a place*. Flights,
+eSIM, insurance and car do not, and are genuinely trip-wide. `perCity` is marked
+explicitly in the config, and a test pins it to `bookingSearchTakesPlace` so the
+flag and its meaning cannot drift apart. It also had to be added to the
+"no field a provider could be ranked by" guard, with a note saying why it is not
+a commercial signal - that guard firing on a new field is it working.
+
+**Back-compat is the delicate part.** Live trips in localStorage and in accounts
+carry a single `booking.stay`. It is read as the default for every city, and on
+the **first write it is spread across all the trip's cities** and then deleted.
+Without the spread, clearing one city would fall back to the legacy value and
+read as a click that did not register - there is a test named after exactly that.
+The spread happens on write, not on load, so merely opening a trip never rewrites
+stored data.
+
+**A bug that had been there since day one and only now could be fixed:** pinning
+a hotel set `stay: have` for the whole trip. The comment in that code said *"no
+point offering a hotel search for a city that already has one"* - the storage
+simply could not express "a city", so a hotel pinned in Vienna silenced the
+suggestion for Bratislava too.
+
+**The agent requires the city rather than defaulting to one.** `set_booking_status`
+takes a `citySlug`, demands it for lodging and tickets, and rejects a city that is
+not in the trip. Falling back to the first city would mean recording "we have a
+hotel" against the wrong one, and that is the kind of quiet error that ends with
+somebody arriving without a bed.
+
+---
+
+**And then the new button surfaced a Hebrew bug that predates all of it.**
+
+`` `ב${city.name}` `` renders **"בוינה"**. The correct unpointed spelling is
+**"בווינה"** - a prefix letter doubles a word-initial vav. Seven names in the
+catalog start with one (וינה, ונציה, ורשה, וילנה, וויוודינה, ואלה וזרמאט,
+וייטנאם) and Vienna is a flagship city. The construction appears in **14 places**:
+accessibility labels, a search placeholder, the agent's action chips, page
+descriptions.
+
+This is the same species as *"כ-1 שעות"* from entry (kk) - the value is right and
+the Hebrew is wrong, and no type check, validator or test can see it. The
+difference is that this one was caught before it shipped, in the CTA of the card
+I had just built. `hePrefix` is now the only place that does it, and its test runs
+against the real catalog, so a new city checks itself.
+
+**Verified:** a new 40/40 harness at 1440 and 390 - a picker only on the per-city
+cards and on none of the other four, no global picker left, marking Bratislava
+leaves Vienna unanswered, the outgoing link changes with the selected city
+(`ss=Bratislava` → `ss=Vienna`), the open counter counts cities separately (two
+open hotels are two things to do, not one), and a legacy trip still shows its
+status on both cities. 334 tests (25 new), plus the existing suites re-run -
+panels 40/40, sweep 28/28, date notes 26/26, booking search 30/30. tsc, build,
+lint at the pre-existing baseline.
+
+**One judgement recorded rather than smoothed over:** tickets were made per-city
+too, which is one step past what he wrote. The GetYourGuide search already takes a
+city name, and "we have tickets" is as unanswerable across two cities as the hotel
+was - so leaving it trip-wide would have preserved the reported bug in the card
+next door.
+
 ### 2026-07-31 (tt) - Routing by task: 11x cheaper, and the measurement that redesigned it
 
 Netanel: a simple request like moving a block to a different day should not run
