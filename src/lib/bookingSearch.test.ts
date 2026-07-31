@@ -217,7 +217,14 @@ test('מספר שהמודל בכל זאת מצרף לקלט לא נכנס לשו
  * בדיוק המטרה: לתפוס את הרגע שבו העמלה **מתחילה** להשפיע, לא אחרי.
  */
 test('אין בקונפיג של הספקים שום שדה שאפשר לדרג לפיו', () => {
-  const allowed = ['kind', 'emoji', 'title', 'blurb', 'cta', 'question', 'provider', 'affiliate', 'publicUrl'];
+  /*
+    `perCity` נוסף לרשימה במודע, והוא לא סימן מסחרי: הוא אומר **למי
+    שייכת ההזמנה** - לעיר או לטיול - ולא כמה היא שווה לנו. הוא לא נכנס
+    לשום מיון ולא לשום בחירה; הסדר הוא עדיין הליטרל שבטסט הבא. טסט נפרד
+    ב-bookingStatus.test.ts מצמיד אותו למי שהחיפוש שלו מקבל יעד, כדי
+    שגם המשמעות שלו לא תזוז בשקט.
+  */
+  const allowed = ['kind', 'perCity', 'emoji', 'title', 'blurb', 'cta', 'question', 'provider', 'affiliate', 'publicUrl'];
   for (const p of bookingProviders) {
     assert.deepEqual(
       Object.keys(p).filter((k) => !allowed.includes(k)),

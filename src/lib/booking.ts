@@ -47,6 +47,18 @@ export interface BookingAffiliate {
 export interface BookingProvider {
   kind: BookingKind;
   emoji: string;
+  /**
+   * האם ההזמנה שייכת ל**עיר** ולא לטיול.
+   *
+   * מלון נקנה בעיר אחת. "יש לנו לינה" בטיול של ברטיסלבה ווינה הוא
+   * משפט שאי אפשר לענות עליו נכון, וזה מה שנתנאל ראה במסך. טיסה,
+   * eSIM, ביטוח ורכב הם לטיול כולו ולא לאף עיר בפרט.
+   *
+   * הכלל מסומן במפורש ולא נגזר מהקונפיג, אבל **יש טסט שמוודא שהוא
+   * תואם למי שהחיפוש שלו מקבל `{QUERY}`** - כלומר לספק שמחפש במקום
+   * מסוים. שני הדברים לא יכולים להיפרד בשקט.
+   */
+  perCity?: boolean;
   /** כותרת בעברית */
   title: string;
   /** משפט קצר בעברית - מה זה נותן למטייל */
@@ -82,6 +94,7 @@ export const bookingProviders: BookingProvider[] = [
   },
   {
     kind: 'stay',
+    perCity: true,
     emoji: '🏨',
     title: 'לינה',
     blurb: 'מלונות ודירות באזור הימים שתכננתם.',
@@ -93,6 +106,7 @@ export const bookingProviders: BookingProvider[] = [
   },
   {
     kind: 'activities',
+    perCity: true,
     emoji: '🎟️',
     title: 'כרטיסים ופעילויות',
     blurb: 'דילוגי תור, סיורים וחוויות - להזמין מראש.',
@@ -140,6 +154,17 @@ export const bookingProviders: BookingProvider[] = [
 
 export const bookingProvider = (kind: BookingKind): BookingProvider | undefined =>
   bookingProviders.find((p) => p.kind === kind);
+
+/** האם הסוג הזה נשמר ומוצג לפי עיר */
+export const bookingIsPerCity = (kind: BookingKind): boolean =>
+  Boolean(bookingProvider(kind)?.perCity);
+
+/** האם החיפוש של הספק מקבל יעד - הבסיס לטסט שמצמיד את `perCity` למציאות */
+export const bookingSearchTakesPlace = (kind: BookingKind): boolean => {
+  const p = bookingProvider(kind);
+  if (!p) return false;
+  return Boolean(p.affiliate?.template.includes('{QUERY}') || p.publicUrl?.includes('{QUERY}'));
+};
 
 /**
  * מרכיב את הקישור היוצא. דטרמיניסטי לחלוטין: אין כאן שום קלט מהמודל

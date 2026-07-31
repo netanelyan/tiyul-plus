@@ -1,3 +1,4 @@
+import { inHe } from '@/lib/hebrew';
 /**
  * משפט אחד שמתאר את היקף הקטלוג, במקום לשפוך אותו.
  *
@@ -37,6 +38,6 @@ export function coverageLine(all: string[], bySlug: Record<string, string>): str
   // אם הדאטה השתנתה ואין מספיק מועדפות - משלימים מהתחלה, בלי כפילויות
   const examples = [...new Set([...preferred, ...all])].slice(0, MAX_EXAMPLES);
   if (all.length === 0) return 'הקטלוג בהרחבה כרגע.';
-  if (all.length <= MAX_EXAMPLES) return `יש לי מסלולים מלאים ב${examples.join(', ')}.`;
+  if (all.length <= MAX_EXAMPLES) return `יש לי מסלולים מלאים ${inHe(examples.join(', '))}.`;
   return `יש לי מסלולים מלאים ביותר מ-${all.length} מדינות - ${examples.join(', ')} ועוד.`;
 }

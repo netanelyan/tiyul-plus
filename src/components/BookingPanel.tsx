@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import {
   BOOKING_STATUS_LABELS,
   bookingIsAffiliate,
+  bookingIsPerCity,
   bookingProviders,
   buildBookingUrl,
 } from '@/lib/booking';
@@ -11,6 +12,13 @@ import type { BookingKind, BookingStatus, Trip, TripPreferences } from '@/lib/tr
 import type { Destination } from '@/lib/types';
 import { OFFLINE_HINT } from '@/lib/offline/online';
 import PanelSection from '@/components/PanelSection';
+import { inHe } from '@/lib/hebrew';
+import {
+  bookingStatusOf,
+  citiesNeeding,
+  openBookingCount,
+  toggleBookingStatus,
+} from '@/lib/trip/bookingStatus';
 
 /**
  * "מה עוד חסר לטיול" - שכבת ההזמנות בתוך תצוגת הטיול.
@@ -41,7 +49,6 @@ export default function BookingPanel({
   offline?: boolean;
 }) {
   const [open, setOpen] = useState(false);
-  const booking = trip.preferences?.booking ?? {};
 
   /**
    * ערי הטיול, לפי הסדר. בטיול רב-ערים חיפוש לפי העיר הראשונה בלבד
@@ -66,19 +73,27 @@ export default function BookingPanel({
     [trip.citySlugs, destinations],
   );
 
-  const [citySlug, setCitySlug] = useState<string | null>(null);
-  const active = cities.find((c) => c.slug === citySlug) ?? cities[0];
-  const query = active?.query ?? '';
+  /**
+   * העיר הנבחרת **לכל סוג בנפרד**, ולא לפאנל כולו.
+   *
+   * הבורר היה קודם אחד, מעל כל הכרטיסים, והוא הסתיר את הבעיה האמיתית:
+   * הוא החליף רק את *יעד החיפוש*, בזמן שהסטטוס נשמר לטיול כולו - כך
+   * שלחיצה על "כבר סגור" בברטיסלבה סימנה גם את וינה. עכשיו הבורר יושב
+   * בתוך הכרטיס שהוא שייך לו, והוא מחליף גם את החיפוש וגם את הסטטוס.
+   */
+  const [cityByKind, setCityByKind] = useState<Partial<Record<BookingKind, string>>>({});
+  const cityFor = (kind: BookingKind) => cityByKind[kind] ?? cities[0]?.slug ?? '';
 
-  const setStatus = (kind: BookingKind, status: BookingStatus) => {
-    const next = { ...booking };
-    // לחיצה חוזרת על אותו סטטוס מבטלת אותו (חזרה ל"עוד לא נשאל")
-    if (next[kind] === status) delete next[kind];
-    else next[kind] = status;
-    onSetPreferences({ booking: next });
+  const setStatus = (kind: BookingKind, status: BookingStatus, citySlug?: string) => {
+    onSetPreferences(
+      toggleBookingStatus(trip.preferences, kind, status, {
+        citySlug,
+        citySlugs: trip.citySlugs,
+      }),
+    );
   };
 
-  const openCount = bookingProviders.filter((p) => booking[p.kind] === 'need').length;
+  const openCount = openBookingCount(trip);
 
   return (
     <PanelSection
@@ -97,32 +112,17 @@ export default function BookingPanel({
       }
     >
       <>
-        {cities.length > 1 && (
-          <div className="mb-2 flex flex-wrap items-center gap-1.5 px-1">
-            <span className="text-xs font-semibold text-night/50">חיפוש עבור</span>
-            {cities.map((c) => (
-              <button
-                key={c.slug}
-                onClick={() => setCitySlug(c.slug)}
-                aria-pressed={c.slug === active?.slug}
-                className={`rounded-full px-2.5 py-1 text-xs font-bold transition ${
-                  c.slug === active?.slug
-                    ? 'bg-night text-cream'
-                    : 'bg-night/[0.05] text-night/60 hover:bg-night/10'
-                }`}
-              >
-                {c.label}
-              </button>
-            ))}
-          </div>
-        )}
-
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
           {bookingProviders.map((p) => {
-            const status = booking[p.kind];
-            const url = buildBookingUrl(p.kind, query);
+            const perCity = bookingIsPerCity(p.kind);
+            const slug = perCity ? cityFor(p.kind) : undefined;
+            const city = cities.find((c) => c.slug === slug);
+            const status = bookingStatusOf(trip.preferences, p.kind, slug);
+            const url = buildBookingUrl(p.kind, perCity ? (city?.query ?? '') : '');
             const affiliate = bookingIsAffiliate(p.kind);
             const muted = status === 'not_needed' || status === 'have';
+            // כמה ערים עוד פתוחות בסוג הזה - התשובה ל"מה נשאר" בלי לפתוח כל אחת
+            const needing = perCity ? citiesNeeding(trip, p.kind) : [];
             return (
               <article
                 key={p.kind}
@@ -137,18 +137,68 @@ export default function BookingPanel({
                   <h3 className="text-sm font-bold text-night">{p.title}</h3>
                   {status && (
                     <span className="ms-auto rounded-full bg-night/[0.06] px-2 py-0.5 text-[11px] font-semibold text-night/60">
+                      {/* הסטטוס שייך לעיר, ולכן הוא נאמר יחד איתה */}
+                      {perCity && cities.length > 1 && city ? `${city.label}: ` : ''}
                       {BOOKING_STATUS_LABELS[status]}
                     </span>
                   )}
                 </div>
                 <p className="mt-1 text-xs font-medium leading-relaxed text-night/55">{p.blurb}</p>
 
+                {/*
+                  בורר העיר, בתוך הכרטיס שהוא שייך לו. מוצג רק כשיש יותר
+                  מעיר אחת - בטיול לעיר אחת הוא היה שורה שאומרת את מה
+                  שכבר כתוב בכותרת הטיול.
+                */}
+                {perCity && cities.length > 1 && (
+                  <div
+                    role="group"
+                    aria-label={`${p.title} - בחירת עיר`}
+                    className="mt-2 flex flex-wrap gap-1"
+                  >
+                    {cities.map((c) => {
+                      const st = bookingStatusOf(trip.preferences, p.kind, c.slug);
+                      return (
+                        <button
+                          key={c.slug}
+                          onClick={() => setCityByKind((m) => ({ ...m, [p.kind]: c.slug }))}
+                          aria-pressed={c.slug === slug}
+                          className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold transition ${
+                            c.slug === slug
+                              ? 'bg-night text-cream'
+                              : 'bg-night/[0.05] text-night/60 hover:bg-night/10'
+                          }`}
+                        >
+                          {c.label}
+                          {/*
+                            נקודה קטנה על עיר שכבר נענתה. בלעדיה הבורר
+                            מסתיר את מה שהוא בא לפתור: אי אפשר לדעת אילו
+                            ערים כבר טופלו בלי ללחוץ על כל אחת.
+                          */}
+                          {st && (
+                            <span
+                              aria-hidden
+                              className={`h-1.5 w-1.5 rounded-full ${
+                                st === 'need'
+                                  ? 'bg-sunset'
+                                  : c.slug === slug
+                                    ? 'bg-cream/60'
+                                    : 'bg-night/30'
+                              }`}
+                            />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
                 {/* סימון ידני - אותו שדה בדיוק שהסוכן כותב אליו */}
                 <div className="mt-2 flex flex-wrap gap-1">
                   {STATUS_ORDER.map((s) => (
                     <button
                       key={s}
-                      onClick={() => setStatus(p.kind, s)}
+                      onClick={() => setStatus(p.kind, s, slug)}
                       aria-pressed={status === s}
                       disabled={offline}
                       title={offline ? OFFLINE_HINT : undefined}
@@ -163,6 +213,15 @@ export default function BookingPanel({
                   ))}
                 </div>
 
+                {needing.length > 0 && cities.length > 1 && (
+                  <p className="mt-1.5 text-[11px] font-semibold text-sunset-deep">
+                    עוד צריך:{' '}
+                    {needing
+                      .map((cs) => cities.find((c) => c.slug === cs)?.label ?? cs)
+                      .join(', ')}
+                  </p>
+                )}
+
                 {offline && url ? (
                   <p className="mt-2 rounded-xl bg-night/[0.04] px-3 py-2 text-center text-xs font-semibold text-night/45">
                     {p.cta} · דורש חיבור
@@ -175,6 +234,7 @@ export default function BookingPanel({
                     className="mt-2 flex items-center justify-center rounded-xl bg-night px-3 py-2 text-xs font-bold text-cream transition hover:bg-night/85"
                   >
                     {p.cta}
+                    {perCity && cities.length > 1 && city ? ` ${inHe(city.label)}` : ''}
                     {p.provider ? ` · ${p.provider}` : ''}
                   </a>
                 ) : (

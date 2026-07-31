@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { inHe } from '@/lib/hebrew';
 import Link from 'next/link';
 import type { Country, Destination, PlaceCategory } from '@/lib/types';
 import { categoryMeta, isKosher } from '@/lib/categories';
@@ -153,7 +154,7 @@ export default function DestinationClient({
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={`חיפוש מקום ב${dest.name}…`}
+            placeholder={`חיפוש מקום ${inHe(dest.name)}…`}
             className="w-full rounded-2xl border border-night/15 bg-shell py-2.5 pe-4 ps-10 text-sm text-night shadow-inner outline-none transition placeholder:text-night/40 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
           />
         </label>
