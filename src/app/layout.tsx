@@ -82,7 +82,10 @@ export const metadata: Metadata = {
   // Next מפיק רק את `mobile-web-app-capable` הלא-מתוילג. iOS מכבד
   // `display: standalone` מה-manifest מאז 11.3, וזה כאן בשביל מכשירים
   // ישנים יותר - שורה אחת שמסירה ספק.
-  other: { 'apple-mobile-web-app-capable': 'yes' },
+  other: {
+    'apple-mobile-web-app-capable': 'yes',
+    'impact-site-verification': '69f26c97-ed70-44c2-913f-3376cc0b34f2',
+  },
 };
 
 export default function RootLayout({
