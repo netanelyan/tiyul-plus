@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { clientIdHeader } from '@/lib/clientId';
 import type { Trip } from './types';
 import type { Destination } from '@/lib/types';
 import { useTrip } from './TripContext';
@@ -141,7 +142,13 @@ export function useTripChat(options?: {
       const res = await fetch('/api/chat', {
         method: 'POST',
         // מחוברים מקבלים מכסות לפי חשבון/תוכנית במקום לפי IP
-        headers: { 'Content-Type': 'application/json', ...(await authHeader()) },
+        headers: {
+          'Content-Type': 'application/json',
+          // מזהה דפדפן - כדי שמכסת האנונימיים לא תיספר לפי IP משותף
+          // של מפעילת סלולר. ראו lib/clientId.ts.
+          ...clientIdHeader(),
+          ...(await authHeader()),
+        },
         body: JSON.stringify({
           // תמונות נשלחות רק בשתי ההודעות האחרונות: הן יקרות למודל
           // ובכל תור נשלחת ההיסטוריה כולה, אז בלי הגבלה כל תמונה הייתה

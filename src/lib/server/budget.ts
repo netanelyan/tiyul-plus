@@ -4,46 +4,112 @@ import { allFlags } from '@/lib/server/flags';
 import { costUsd, type TokenUsage } from '@/lib/server/aiCost';
 
 /**
- * שרת בלבד - **תקרת ההוצאה היומית על ה-AI, לכל המשתמשים יחד**.
+ * שרת בלבד - **תקרת ההוצאה על ה-AI**, בשני ארנקים ועם תקרה אישית.
  *
- * ## למה זה הפריט החשוב ביותר
+ * ## מה השתנה, ולמה זה מבני
  *
- * המכסות האישיות מגינות מפני משתמש אחד. הן לא מגינות מפני **אלף
- * משתמשים**: קמפיין שמצליח, קישור שנתפס ברשת, או בוטנט שמחלק את
- * העומס על אלף כתובות - כל אחד מהם עומד בכל מכסה אישית, ויחד הם
- * חשבון שאי אפשר לשלם. נתנאל ניסח את זה מדויק: **עדיף להיות למטה
- * כמה שעות מאשר להתעורר לחשבון.**
+ * הגרסה הראשונה הייתה ארנק אחד. נתנאל הצביע על הפגם: מבקר אנונימי
+ * אחד יכול לשרוף חלק גדול מהתקרה, וכמה כאלה מכבים את הסוכן **לכולם**
+ * עד חצות. זה הופך בעיית עלות לנפילה, וזה גרוע יותר.
  *
- * ## איך זה נאכף
+ * שתי הגנות, שתיהן:
  *
- * לפני כל קריאת מודל נבדק כמה הוצא היום. מעל התקרה - הבקשה נעצרת
- * **לפני** שנשלח משהו ל-API, והמטייל מקבל משפט רגוע בעברית. זו לא
- * שגיאה ולא קריסה: המוצר ממשיך לעבוד, רק הסוכן שותק.
+ * 1. **שני ארנקים.** לתנועה אנונימית יש תקציב משלה. מחוברים מושכים
+ *    מ"כל מה שאנונימיים לא הוציאו", ולכן **תמיד** נשאר להם לפחות
+ *    `1 - ANON_SHARE` מהיום, ואין דרך שבה אנונימי יכבה אותם.
+ * 2. **תקרה אישית.** אף זהות - מחוברת או לא - לא יכולה לעבור חלק קטן
+ *    מהיום. גם עשרה מנצלים לא מכבים את המוצר, הם רק מכבים את עצמם.
  *
- * ## שלוש רמות של מקור לתקרה, לפי סדר
+ * ## למה מחוברים לא מקבלים ארנק קשיח משלהם
  *
- * 1. `app_flags.ai_daily_budget_usd` - **שינוי מיידי, בלי דיפלוי**,
- *    מהאזור האישי של הניהול. זה המסלול שנתנאל אמור להשתמש בו.
- * 2. `AI_DAILY_BUDGET_USD` בסביבה - למי שאין לו גישה לדאטהבייס.
- * 3. ברירת מחדל בקוד - כדי שגם התקנה נקייה תהיה מוגנת מהרגע הראשון.
+ * שני ארנקים קשיחים היו יוצרים את הבעיה ההפוכה: ביום שקט מבחינת
+ * אנונימיים, מחוברים היו נחסמים ב-70% בזמן ש-30% מהתקציב יושבים
+ * ללא שימוש. הנוסחה כאן נותנת למחוברים את כל מה שלא נוצל, ועדיין
+ * מבטיחה להם רצפה.
  *
- * ## הספירה עצמה
+ * ## איך נמדדת ההוצאה - וזו שאלה שנתנאל שאל במפורש
  *
- * בזיכרון תמיד, ובנוסף ב-`ai_spend_daily` כשיש service role. הזיכרון
- * לבדו מגן על instance בודד; הטבלה היא מה שהופך את התקרה למשותפת.
- * הסנכרון הוא כל 20 שניות ולא בכל בקשה - קריאת דאטהבייס לכל הודעה
- * היא בדיוק סוג העלות שהקובץ הזה בא למנוע.
+ * **מדיווח אמיתי, לא מהערכה.** המספרים מגיעים מ-`usage` של Anthropic
+ * עצמה: `message_start` נושא את הקלט ואת המטמון, `message_delta` את
+ * הפלט הסופי. אנחנו לא סופרים טוקנים בעצמנו.
  *
- * **הכיוון הבטוח לטעות הוא כלפי מטה.** כשלון קריאה מהדאטהבייס משאיר
- * את הספירה המקומית, שהיא תמיד ≤ האמיתית, ולכן במקרה הגרוע התקרה
- * נאכפת קצת מאוחר - לא נעלמת.
+ * שלושה מסלולים שבהם המספר **יכול לסטות כלפי מטה**, וכל אחד מטופל:
+ *
+ * 1. **קריאה שנקטעה באמצע** - `message_delta` לא הגיע, ולכן אין
+ *    `output_tokens`. הטוקנים כבר חויבו. `costUsd` מקבל הערכה שמרנית
+ *    מאורך הטקסט שכן הוזרם, במקום אפס.
+ * 2. **כתיבה לדאטהבייס שנכשלת** - הספירה המקומית עדיין נכונה
+ *    ל-instance הזה, והסנכרון הבא מושך את המקסימום.
+ * 3. **הדאטהבייס לא נגיש בכלל** - וזה החור האמיתי: בלי סכום משותף
+ *    כל instance סופר לעצמו, והתקרה בפועל מוכפלת במספר ה-instances.
+ *    **כאן המערכת נכשלת סגור**: אם ההתמדה מוגדרת ולא הצלחנו לקרוא
+ *    את הסכום היומי במשך `FAIL_CLOSED_MS`, הסוכן מפסיק לקבל בקשות.
+ *    עדיף להיות למטה כמה דקות מאשר להוציא בלי לדעת כמה.
  */
 
-/** ברירת המחדל, בדולרים ליום. ראו את ההסבר בסיכום לנתנאל. */
+/** ברירת המחדל, בדולרים ליום, לכל המשתמשים יחד */
 export const DEFAULT_DAILY_BUDGET_USD = 5;
 
-/** מעל האחוז הזה נשלחת התראה, פעם אחת ביום */
-export const ALERT_AT = 0.8;
+/**
+ * חלקה של התנועה האנונימית מהתקציב היומי.
+ *
+ * 30% הם מספיק כדי שמבקר סקרן יבנה טיול מלא ויתרשם - וזה כל תפקידה
+ * של התנועה האנונימית - ולא מספיק כדי לגעת במי שכבר נרשם.
+ */
+export const ANON_SHARE = 0.3;
+
+/**
+ * החלק המרבי של היום שזהות **אחת** יכולה להוציא.
+ *
+ * 15% פירושם שצריך שבעה מנצלים כדי למצות את היום, ולא שניים - ובפועל
+ * הרבה יותר, כי אנונימי כפוף גם לחלק מהארנק שלו. הבחירה נוטה כלפי
+ * מעלה בכוונה: מטייל אמיתי בסשן ארוך נמדד סביב $0.3-$0.5, וחסימה שלו
+ * היא בדיוק הנפילה שהמנגנון הזה בא למנוע.
+ */
+export const CALLER_SHARE = 0.15;
+
+/**
+ * החלק המרבי של הארנק האנונימי שזהות אנונימית אחת יכולה להוציא.
+ *
+ * מחמיר יותר מ-`CALLER_SHARE` במכוון: לאנונימי אין מה לאבד, ולכן
+ * הוא גם המקור הסביר לניצול. 15% מארנק של 30% הם 4.5% מהיום.
+ */
+export const ANON_CALLER_SHARE = 0.15;
+
+/**
+ * פי כמה גבוהה תקרת ה-IP מתקרת אדם בודד.
+ *
+ * ה-IP אינו מכסה אלא **רשת ביטחון**: מפעילת סלולר ישראלית מעמידה
+ * עשרות אלפי מכשירים מאחורי כתובת אחת, ולכן תקרה צמודה שם חוסמת
+ * אנשים שמעולם לא נכנסו לאתר. פי 25 פירושו שכתובת משותפת תיתקל בה
+ * רק אם עשרים וחמישה מבקרים שונים מיצו את המכסה האישית שלהם באותו
+ * יום מאותה כתובת - ובפועל הארנק האנונימי ייגמר הרבה לפני זה, כך
+ * שהרשת הזאת נוגעת רק במכונה אחת שמחליפה מזהים בלולאה.
+ */
+export const IP_BACKSTOP_MULTIPLE = 25;
+
+/** מעל האחוז הזה של היום נשלחת התראה כללית, פעם אחת ביום */
+export const ALERT_AT = 0.9;
+
+/**
+ * התראה **מיידית ונפרדת** על מקור בודד.
+ *
+ * נשלחת כשזהות אחת עברה 60% מהתקרה האישית שלה - כלומר **לפני**
+ * שהיא נחסמת, שזה הרגע היחיד שבו אפשר לעשות משהו. זו ההתראה שנתנאל
+ * ביקש להתעורר בשבילה; הכללית היא רק "היום עמוס".
+ */
+export const CALLER_ALERT_AT = 0.6;
+
+/**
+ * כמה זמן מותר להיות בלי סכום משותף לפני שנועלים.
+ *
+ * חמש דקות: מספיק כדי לספוג תקלה רגעית של הדאטהבייס בלי להפיל את
+ * המוצר, וקצר מספיק שלא נוציא הרבה בעיוורון.
+ */
+const FAIL_CLOSED_MS = 5 * 60_000;
+
+/** עלות שמיוחסת לקריאה שלא דיווחה שום מספר. שמרנית בכוונה. */
+const UNMEASURED_CALL_USD = 0.05;
 
 const supaUrl = () => process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceKey = () => process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -57,77 +123,222 @@ const headers = () => ({
 
 interface DayState {
   day: string;
+  /** סך הכול היום */
   usd: number;
+  /** מתוכו - תנועה אנונימית */
+  anonUsd: number;
   syncedAt: number;
+  /** מתי הצליח סנכרון בפעם האחרונה - הבסיס לכישלון-סגור */
+  lastOk: number;
+  /** הוצאה לפי זהות, היום */
+  callers: Map<string, number>;
+  /** זהויות שכבר נשלחה עליהן התראה */
+  alertedCallers: Set<string>;
+  alerted: boolean;
 }
 
-let state: DayState = { day: dayKey(), usd: 0, syncedAt: 0 };
+const fresh = (day: string): DayState => ({
+  day,
+  usd: 0,
+  anonUsd: 0,
+  syncedAt: 0,
+  lastOk: Date.now(),
+  callers: new Map(),
+  alertedCallers: new Set(),
+  alerted: false,
+});
+
+let state: DayState = fresh(dayKey());
 const SYNC_MS = 20_000;
 
 function today(): DayState {
   const day = dayKey();
-  if (state.day !== day) state = { day, usd: 0, syncedAt: 0 };
+  if (state.day !== day) state = fresh(day);
   return state;
 }
 
-/** התקרה בתוקף כרגע, לפי סדר המקורות שלמעלה */
-export async function dailyBudgetUsd(): Promise<number> {
-  const flags = await allFlags().catch(() => ({}) as Record<string, unknown>);
-  const raw = flags.ai_daily_budget_usd;
-  const fromFlag = typeof raw === 'number' ? raw : typeof raw === 'string' ? Number(raw) : NaN;
-  if (Number.isFinite(fromFlag) && fromFlag >= 0) return fromFlag;
+/** האם הזהות היא אנונימית (לפי המפתח שנקבע ב-identity.ts) */
+export const isAnonIdentity = (id: string): boolean => !id.startsWith('user:');
 
+/* ---------- התקרה ---------- */
+
+async function flagNumber(key: string): Promise<number | null> {
+  const flags = await allFlags().catch(() => ({}) as Record<string, unknown>);
+  const raw = flags[key];
+  const n = typeof raw === 'number' ? raw : typeof raw === 'string' ? Number(raw) : NaN;
+  return Number.isFinite(n) && n >= 0 ? n : null;
+}
+
+/** התקרה היומית הכוללת */
+export async function dailyBudgetUsd(): Promise<number> {
+  const fromFlag = await flagNumber('ai_daily_budget_usd');
+  if (fromFlag !== null) return fromFlag;
   const fromEnv = Number(process.env.AI_DAILY_BUDGET_USD);
   if (Number.isFinite(fromEnv) && fromEnv >= 0) return fromEnv;
-
   return DEFAULT_DAILY_BUDGET_USD;
 }
 
-/** כמה הוצא היום, לכל המשתמשים יחד */
-export async function spentTodayUsd(): Promise<number> {
-  const s = today();
-  if (persistent() && Date.now() - s.syncedAt > SYNC_MS) {
-    s.syncedAt = Date.now();
-    try {
-      const res = await fetch(
-        `${supaUrl()}/rest/v1/ai_spend_daily?${pgQuery(eq('day', s.day), pgSelect(['usd']))}`,
-        { headers: headers(), signal: AbortSignal.timeout(3000) },
-      );
-      if (res.ok) {
-        const rows = (await res.json()) as { usd?: number | string }[];
-        const remote = Number(rows[0]?.usd ?? 0);
-        // max ולא השמה: כתיבות של הרגע האחרון עוד לא בהכרח שם
-        if (Number.isFinite(remote) && remote > s.usd) s.usd = remote;
-      }
-    } catch {
-      /* נשארים עם הספירה המקומית - נמוכה מדי ולא גבוהה מדי */
-    }
+/* ---------- קריאת המצב ---------- */
+
+async function sync(s: DayState): Promise<void> {
+  if (!persistent() || Date.now() - s.syncedAt <= SYNC_MS) return;
+  s.syncedAt = Date.now();
+  try {
+    const res = await fetch(
+      `${supaUrl()}/rest/v1/ai_spend_daily?${pgQuery(eq('day', s.day), pgSelect(['usd', 'anon_usd']))}`,
+      { headers: headers(), signal: AbortSignal.timeout(3000) },
+    );
+    if (!res.ok) return;
+    const rows = (await res.json()) as { usd?: number | string; anon_usd?: number | string }[];
+    const total = Number(rows[0]?.usd ?? 0);
+    const anon = Number(rows[0]?.anon_usd ?? 0);
+    // max ולא השמה: כתיבות מהרגע האחרון עוד לא בהכרח שם
+    if (Number.isFinite(total) && total > s.usd) s.usd = total;
+    if (Number.isFinite(anon) && anon > s.anonUsd) s.anonUsd = anon;
+    s.lastOk = Date.now();
+  } catch {
+    /* נשארים עם הספירה המקומית; אם זה נמשך - נכשלים סגור למטה */
   }
-  return s.usd;
 }
+
+/** הוצאה של זהות אחת היום. ממזג מהאחסון בפעם הראשונה ביום. */
+async function callerSpend(s: DayState, identity: string): Promise<number> {
+  const local = s.callers.get(identity);
+  if (local !== undefined || !persistent()) return local ?? 0;
+  s.callers.set(identity, 0); // סימון "כבר ניסינו" - best effort, פעם אחת
+  try {
+    const res = await fetch(
+      `${supaUrl()}/rest/v1/ai_spend_caller?${pgQuery(eq('day', s.day), eq('identity', identity), pgSelect(['usd']))}`,
+      { headers: headers(), signal: AbortSignal.timeout(3000) },
+    );
+    if (res.ok) {
+      const rows = (await res.json()) as { usd?: number | string }[];
+      const remote = Number(rows[0]?.usd ?? 0);
+      if (Number.isFinite(remote) && remote > 0) s.callers.set(identity, remote);
+    }
+  } catch {
+    /* הזיכרון המקומי ממשיך להגן */
+  }
+  return s.callers.get(identity) ?? 0;
+}
+
+export type BlockReason = 'anon-pool' | 'caller' | 'total' | 'unmeasured' | null;
 
 export interface BudgetState {
+  /** התקרה היומית הכוללת */
   budget: number;
   spent: number;
-  /** האם לעצור בקשות חדשות */
+  anonSpent: number;
+  /** התקציב שנותר לקורא הזה, לפי הארנק שלו */
+  poolBudget: number;
+  poolSpent: number;
+  callerSpent: number;
+  callerBudget: number;
   exceeded: boolean;
+  reason: BlockReason;
   ratio: number;
-}
-
-export async function budgetState(): Promise<BudgetState> {
-  const [budget, spent] = await Promise.all([dailyBudgetUsd(), spentTodayUsd()]);
-  // תקרה 0 = כבוי לחלוטין; תקרה שלילית לא קיימת (נחסם בקריאה)
-  const ratio = budget > 0 ? spent / budget : 1;
-  return { budget, spent, exceeded: budget <= 0 || spent >= budget, ratio };
+  /** אחוז מהתקרה האישית - הבסיס להתראה על מקור בודד */
+  callerRatio: number;
 }
 
 /**
- * רישום עלות של קריאה אחת.
- *
- * מקומי מיד (כדי שהתקרה תתפוס גם בלי דאטהבייס), ומרוחק ברקע. שורת
- * הפירוט ב-`ai_spend` היא מה שמאפשר לראות עלות לפי יום, משתמש וטיול
- * - נתנאל ביקש לדעת כמה עולה טיול אמיתי לפני שהוא קובע מספרים.
+ * המצב עבור קורא מסוים. **זו הפונקציה שהשערים קוראים.**
  */
+export async function budgetFor(identity: string): Promise<BudgetState> {
+  const s = today();
+  const budget = await dailyBudgetUsd();
+  await sync(s);
+  const anon = isAnonIdentity(identity);
+  const callerSpent = await callerSpend(s, identity);
+
+  /*
+    הארנק של הקורא.
+
+    אנונימי: חלק קבוע מהיום, ותו לא.
+    מחובר: כל מה שאנונימיים לא הוציאו - כלומר לפחות `1-ANON_SHARE`
+    ותמיד יותר מזה כשהם שקטים. אין מסלול שבו אנונימי מוריד את הרצפה.
+  */
+  /*
+    ה-`min` אינו קישוט. בדיקת התקרה קורית **לפני** הקריאה, ולכן
+    הקריאה האחרונה של אנונימי יכולה לחצות את הארנק שלו במעט - ובלי
+    ההגבלה הזאת החריגה הייתה נגרעת מהרצפה של המחוברים. הטסט תפס את
+    זה בדיוק: 11 מבקרים הוציאו $1.65 מתוך ארנק של $1.50, והרצפה של
+    המחוברים ירדה מ-$3.50 ל-$3.35. הבטחה שנשחקת היא לא הבטחה.
+  */
+  const anonDraw = Math.min(s.anonUsd, budget * ANON_SHARE);
+  const poolBudget = anon ? budget * ANON_SHARE : budget - anonDraw;
+  const poolSpent = anon ? s.anonUsd : Math.max(0, s.usd - s.anonUsd);
+  const callerBudget = budget * (anon ? ANON_SHARE * ANON_CALLER_SHARE : CALLER_SHARE);
+
+  let reason: BlockReason = null;
+  if (budget <= 0) reason = 'total';
+  else if (persistent() && Date.now() - s.lastOk > FAIL_CLOSED_MS) reason = 'unmeasured';
+  else if (callerSpent >= callerBudget) reason = 'caller';
+  else if (poolSpent >= poolBudget) reason = anon ? 'anon-pool' : 'total';
+
+  return {
+    budget,
+    spent: s.usd,
+    anonSpent: s.anonUsd,
+    poolBudget,
+    poolSpent,
+    callerSpent,
+    callerBudget,
+    exceeded: reason !== null,
+    reason,
+    ratio: budget > 0 ? s.usd / budget : 1,
+    callerRatio: callerBudget > 0 ? callerSpent / callerBudget : 1,
+  };
+}
+
+/** מצב כללי לתצוגה בלבד (אזור הניהול) - בלי הקשר של קורא */
+export async function budgetOverview(): Promise<{
+  budget: number;
+  spent: number;
+  anonSpent: number;
+  userSpent: number;
+  ratio: number;
+  stale: boolean;
+}> {
+  const s = today();
+  const budget = await dailyBudgetUsd();
+  await sync(s);
+  return {
+    budget,
+    spent: s.usd,
+    anonSpent: s.anonUsd,
+    userSpent: Math.max(0, s.usd - s.anonUsd),
+    ratio: budget > 0 ? s.usd / budget : 1,
+    stale: persistent() && Date.now() - s.lastOk > FAIL_CLOSED_MS,
+  };
+}
+
+/* ---------- רישום ---------- */
+
+/**
+ * העלות של קריאה אחת, כולל טיפול בדיווח חסר.
+ *
+ * `streamedChars` הוא אורך הטקסט שהוזרם בפועל. הוא משמש **רק** כשאין
+ * `output_tokens` - כלומר כשהתשובה נקטעה לפני `message_delta` - ואז
+ * עדיף אומדן שמרני על פני אפס: הטוקנים האלה כבר חויבו.
+ */
+export function measuredCost(model: string, u: TokenUsage, streamedChars = 0): number {
+  const reported = costUsd(model, u);
+  const nothingReported =
+    !u.input_tokens && !u.cache_creation_input_tokens && !u.cache_read_input_tokens;
+
+  if (u.output_tokens === undefined && streamedChars > 0) {
+    // עברית היא בערך טוקן לתו-שניים; חצי מהתווים הוא אומדן זהיר ולא נדיב
+    const est = { ...u, output_tokens: Math.ceil(streamedChars / 2) };
+    return costUsd(model, est);
+  }
+  if (nothingReported && !u.output_tokens) {
+    // קריאה שלא דיווחה כלום - לא סופרים אותה כחינם
+    return reported > 0 ? reported : UNMEASURED_CALL_USD;
+  }
+  return reported;
+}
+
 export function recordSpend(entry: {
   identity: string;
   userId: string | null;
@@ -135,95 +346,132 @@ export function recordSpend(entry: {
   route: 'chat' | 'generate-trip';
   model: string;
   usage: TokenUsage;
+  /** אורך הטקסט שהוזרם - לאומדן כשהדיווח חסר */
+  streamedChars?: number;
 }): number {
-  const amount = costUsd(entry.model, entry.usage);
+  const amount = measuredCost(entry.model, entry.usage, entry.streamedChars ?? 0);
   if (!(amount > 0)) return 0;
   const s = today();
+  const anon = isAnonIdentity(entry.identity);
   s.usd += amount;
+  if (anon) s.anonUsd += amount;
+  s.callers.set(entry.identity, (s.callers.get(entry.identity) ?? 0) + amount);
+  if (s.callers.size > 20_000) s.callers.clear(); // הגנת זיכרון גסה
 
   if (!persistent()) return amount;
 
-  const row = {
-    day: s.day,
-    identity: entry.identity,
-    user_id: entry.userId,
-    trip_id: entry.tripId,
-    route: entry.route,
-    model: entry.model,
-    in_tokens: entry.usage.input_tokens ?? 0,
-    cached_tokens: entry.usage.cache_read_input_tokens ?? 0,
-    write_tokens: entry.usage.cache_creation_input_tokens ?? 0,
-    out_tokens: entry.usage.output_tokens ?? 0,
-    usd: Number(amount.toFixed(6)),
-  };
-  // fire and forget - רישום עלות לא מעכב תשובה למטייל ולא מפיל אותה
+  const usdRounded = Number(amount.toFixed(6));
   fetch(`${supaUrl()}/rest/v1/ai_spend`, {
     method: 'POST',
     headers: { ...headers(), Prefer: 'return=minimal' },
-    body: JSON.stringify(row),
+    body: JSON.stringify({
+      day: s.day,
+      identity: entry.identity,
+      user_id: entry.userId,
+      trip_id: entry.tripId,
+      route: entry.route,
+      model: entry.model,
+      in_tokens: entry.usage.input_tokens ?? 0,
+      cached_tokens: entry.usage.cache_read_input_tokens ?? 0,
+      write_tokens: entry.usage.cache_creation_input_tokens ?? 0,
+      out_tokens: entry.usage.output_tokens ?? 0,
+      usd: usdRounded,
+    }),
     signal: AbortSignal.timeout(3000),
   }).catch(() => {});
   fetch(`${supaUrl()}/rest/v1/rpc/bump_ai_spend`, {
     method: 'POST',
     headers: headers(),
-    body: JSON.stringify({ p_day: s.day, p_usd: Number(amount.toFixed(6)) }),
+    body: JSON.stringify({
+      p_day: s.day,
+      p_usd: usdRounded,
+      p_anon: anon,
+      p_identity: entry.identity,
+    }),
     signal: AbortSignal.timeout(3000),
   }).catch(() => {});
 
   return amount;
 }
 
+/* ---------- התראות ---------- */
+
+function post(text: string, extra: Record<string, unknown>): void {
+  console.warn(`[budget] ALERT ${text}`);
+  const hook = process.env.AI_BUDGET_ALERT_WEBHOOK;
+  if (!hook) return;
+  fetch(hook, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    // `text` לסלאק, `content` לדיסקורד - אותה הודעה, בלי תלות חדשה
+    body: JSON.stringify({ text, content: text, ...extra }),
+    signal: AbortSignal.timeout(4000),
+  }).catch(() => {});
+}
+
 /**
- * התראה לפני התקרה.
+ * שתי התראות שונות, וזה כל העניין.
  *
- * נתנאל ביקש לדעת שמתקרבים, ולא לגלות אחרי שהסוכן כבר כבוי. הנעילה
- * היא בדאטהבייס (`claim_ai_spend_alert` מחזיר true לקורא הראשון
- * בלבד), ולכן ההתראה נשלחת פעם אחת ביום גם כשרצים כמה instances.
+ * נתנאל: *"תגיד לי באיזה מצב אני - הרבה אנשים רגילים, או מקור אחד
+ * שמתנהג מוזר. השני הוא זה שצריך להעיר אותי."*
  *
- * היעד הוא webhook מהסביבה - כך אפשר להפנות אותו לסלאק, לדיסקורד או
- * לכל שירות שממיר בקשה למייל, בלי להוסיף תלות ובלי לבחור ספק במקומו.
- * בלי כתובת, ההתראה נכתבת ללוג ומופיעה באזור הניהול.
+ * 1. **מקור בודד** - מיידית, ברגע שזהות אחת עברה 60% מהתקרה שלה,
+ *    כלומר **לפני** שהיא נחסמת. פעם אחת לזהות ליום.
+ * 2. **היום עמוס** - ב-90% מהתקרה, עם סיווג: כמה זהויות פעילות היום
+ *    וכמה מהיום לקח הכבד ביותר. זו האבחנה בין "יום טוב" ל"מישהו
+ *    יושב עלינו".
  */
-export async function maybeAlert(s: BudgetState): Promise<void> {
-  if (s.ratio < ALERT_AT || s.budget <= 0) return;
+export async function maybeAlert(s: BudgetState, identity: string): Promise<void> {
+  const day = today();
+
+  // ---- 1. מקור בודד, מיידי ----
+  if (s.callerRatio >= CALLER_ALERT_AT && !day.alertedCallers.has(identity)) {
+    day.alertedCallers.add(identity);
+    const kind = isAnonIdentity(identity) ? 'אנונימי' : 'מחובר';
+    post(
+      `טיול+ · מקור בודד (${kind}) הוציא $${s.callerSpent.toFixed(2)} היום - ${Math.round(
+        s.callerRatio * 100,
+      )}% מהתקרה האישית שלו. הוא ייחסם ב-$${s.callerBudget.toFixed(2)} ולא ישפיע על אחרים. שווה מבט.`,
+      { kind: 'single-source', identity: identity.slice(0, 40), usd: s.callerSpent },
+    );
+  }
+
+  // ---- 2. היום מתקרב לתקרה ----
+  if (s.ratio < ALERT_AT || s.budget <= 0 || day.alerted) return;
+
+  const callers = [...day.callers.entries()].sort((a, b) => b[1] - a[1]);
+  const topShare = day.usd > 0 ? (callers[0]?.[1] ?? 0) / day.usd : 0;
+  const active = callers.filter(([, v]) => v > 0).length;
+  /*
+    הסיווג. מקור אחד שלקח יותר מרבע מהיום הוא ריכוז; עשרות זהויות עם
+    חלקים קטנים הן פשוט יום עמוס - וזה הדבר שאסור להעיר עליו.
+  */
+  const concentrated = topShare >= 0.25;
 
   if (persistent()) {
     try {
       const res = await fetch(`${supaUrl()}/rest/v1/rpc/claim_ai_spend_alert`, {
         method: 'POST',
         headers: headers(),
-        body: JSON.stringify({ p_day: today().day }),
+        body: JSON.stringify({ p_day: day.day }),
         signal: AbortSignal.timeout(3000),
       });
-      if (!res.ok) return;
-      if ((await res.json()) !== true) return; // instance אחר כבר התריע
+      if (!res.ok || (await res.json()) !== true) return; // instance אחר כבר התריע
     } catch {
       return;
     }
-  } else if (alertedLocally === today().day) {
-    return;
   }
-  alertedLocally = today().day;
+  day.alerted = true;
 
-  const pct = Math.round(s.ratio * 100);
-  const text = `טיול+ · ${pct}% מתקרת ההוצאה היומית על ה-AI ($${s.spent.toFixed(2)} מתוך $${s.budget.toFixed(2)}). מעל 100% הסוכן מפסיק לקבל בקשות עד חצות UTC.`;
-  console.warn(`[budget] ALERT ${text}`);
-
-  const hook = process.env.AI_BUDGET_ALERT_WEBHOOK;
-  if (!hook) return;
-  fetch(hook, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    // גם `text` וגם `content`: הראשון הוא מה שסלאק מצפה לו, השני דיסקורד.
-    body: JSON.stringify({ text, content: text, pct, spent: s.spent, budget: s.budget }),
-    signal: AbortSignal.timeout(4000),
-  }).catch(() => {});
+  post(
+    concentrated
+      ? `טיול+ · ${Math.round(s.ratio * 100)}% מהתקרה היומית ($${day.usd.toFixed(2)} מתוך $${s.budget.toFixed(2)}) - **וזה מרוכז**: המקור הכבד ביותר לקח ${Math.round(topShare * 100)}% מהיום, מתוך ${active} זהויות פעילות. כדאי להסתכל.`
+      : `טיול+ · ${Math.round(s.ratio * 100)}% מהתקרה היומית ($${day.usd.toFixed(2)} מתוך $${s.budget.toFixed(2)}) - תנועה מפוזרת על ${active} זהויות, הכבד ביותר ${Math.round(topShare * 100)}%. נראה כמו יום עמוס אמיתי.`,
+    { kind: concentrated ? 'concentrated' : 'broad', active, topShare, usd: day.usd },
+  );
 }
 
-let alertedLocally = '';
-
 /** לבדיקות בלבד */
-export function resetBudgetForTest(usdSpent = 0): void {
-  state = { day: dayKey(), usd: usdSpent, syncedAt: Date.now() };
-  alertedLocally = '';
+export function resetBudgetForTest(init?: Partial<DayState>): void {
+  state = { ...fresh(dayKey()), ...init };
 }

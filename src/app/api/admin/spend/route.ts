@@ -1,7 +1,12 @@
 import { requireRole, denied, ok } from '@/lib/server/admin';
 import { adminSelect } from '@/lib/server/supabaseAdmin';
 import { gte, pgLimit, pgOrder, pgQuery, pgSelect } from '@/lib/server/pgrest';
-import { ALERT_AT, budgetState } from '@/lib/server/budget';
+import {
+  ALERT_AT,
+  ANON_SHARE,
+  CALLER_SHARE,
+  budgetOverview,
+} from '@/lib/server/budget';
 import { MODEL_PRICES } from '@/lib/server/aiCost';
 
 /**
@@ -49,7 +54,7 @@ export async function GET(req: Request) {
   const actor = await requireRole(req, 'admin');
   if (!actor) return denied();
 
-  const state = await budgetState();
+  const state = await budgetOverview();
   const today = new Date().toISOString().slice(0, 10);
   const weekAgo = new Date(Date.now() - 13 * 86_400_000).toISOString().slice(0, 10);
 
@@ -79,8 +84,16 @@ export async function GET(req: Request) {
       limit: state.budget,
       spent: state.spent,
       ratio: state.ratio,
-      exceeded: state.exceeded,
+      exceeded: state.ratio >= 1,
       alertAt: ALERT_AT,
+      /** שני הארנקים - מה שמונע ממבקר אנונימי לכבות את הסוכן למחוברים */
+      anonSpent: state.anonSpent,
+      anonLimit: state.budget * ANON_SHARE,
+      userSpent: state.userSpent,
+      userLimit: state.budget - state.anonSpent,
+      callerLimit: state.budget * CALLER_SHARE,
+      /** אין סכום משותף - התקרה ננעלת עד שיחזור */
+      stale: state.stale,
       /** מאיפה התקרה הגיעה - כדי שיהיה ברור מה לשנות */
       source: state.budget === Number(process.env.AI_DAILY_BUDGET_USD) ? 'env' : 'flag',
     },

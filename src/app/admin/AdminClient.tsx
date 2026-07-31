@@ -690,7 +690,20 @@ function FlagsCard({
    ============================================================ */
 
 interface Spend {
-  budget: { limit: number; spent: number; ratio: number; exceeded: boolean; alertAt: number; source: string };
+  budget: {
+    limit: number;
+    spent: number;
+    ratio: number;
+    exceeded: boolean;
+    alertAt: number;
+    source: string;
+    anonSpent: number;
+    anonLimit: number;
+    userSpent: number;
+    userLimit: number;
+    callerLimit: number;
+    stale: boolean;
+  };
   today: { usd: number; requests: number; chat: number; anonymous: number; loggedIn: number; trips: number };
   days: { day: string; usd: number; requests: number }[];
   perTrip: { median: number; max: number; counted: number };
@@ -788,6 +801,55 @@ function SpendCard({
           style={{ width: `${pct}%` }}
         />
       </div>
+      {/* ---------- שני הארנקים ---------- */}
+      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+        {[
+          {
+            label: 'אנונימיים',
+            spent: d.budget.anonSpent,
+            limit: d.budget.anonLimit,
+            note: 'ארנק נפרד - לא יכול לכבות את הסוכן למחוברים',
+          },
+          {
+            label: 'מחוברים',
+            spent: d.budget.userSpent,
+            limit: d.budget.userLimit,
+            note: 'כל מה שאנונימיים לא הוציאו, ולפחות 70% מהיום',
+          },
+        ].map((p) => {
+          const r = p.limit > 0 ? Math.min(100, Math.round((p.spent / p.limit) * 100)) : 100;
+          return (
+            <div key={p.label} className="rounded-xl bg-cream p-3">
+              <div className="flex items-baseline gap-2">
+                <span className="text-sm font-bold text-night">{p.label}</span>
+                <span className="text-xs font-semibold text-night/50" dir="ltr">
+                  {money(p.spent)} / {money(p.limit)}
+                </span>
+                <span className="ms-auto text-xs font-bold text-night/45">{r}%</span>
+              </div>
+              <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-night/10">
+                <div
+                  className={`h-full rounded-full ${r >= 100 ? 'bg-sunset' : 'bg-lagoon'}`}
+                  style={{ width: `${r}%` }}
+                />
+              </div>
+              <p className="mt-1 text-[11px] font-medium text-night/45">{p.note}</p>
+            </div>
+          );
+        })}
+      </div>
+      <p className="mt-2 text-[11px] font-medium text-night/45">
+        תקרה לזהות בודדת: <span dir="ltr">{money(d.budget.callerLimit)}</span> ליום (אנונימי -
+        פחות). אף אחד לא יכול לקחת חלק גדול מהיום.
+      </p>
+
+      {d.budget.stale && (
+        <p className="mt-2 rounded-xl bg-sunset/10 px-3 py-2 text-sm font-bold text-sunset-deep">
+          אין סכום הוצאה משותף כרגע (הדאטהבייס לא נגיש). הסוכן נעול עד שהחיבור יחזור - עדיף
+          להיות למטה מאשר להוציא בלי לדעת כמה.
+        </p>
+      )}
+
       {d.budget.exceeded && (
         <p className="mt-2 text-sm font-bold text-sunset-deep">
           הסוכן לא מקבל בקשות חדשות כרגע. הוא יחזור מעצמו בחצות UTC, או מיד אם תעלה את התקרה.
