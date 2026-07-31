@@ -28,18 +28,37 @@ export interface FooterLink {
   label: string;
 }
 
-/** כמה מכל סוג. מספיק כדי להיות שימושי, לא מספיק כדי להיות קיר. */
-const MAX_DESTINATIONS = 12;
-const MAX_COUNTRIES = 8;
+/** כמה מכל סוג. שורה של צ׳יפים, לא עמודה - ולכן מספרים קטנים. */
+const MAX_DESTINATIONS = 10;
+const MAX_COUNTRIES = 6;
 const MAX_PER_COUNTRY = 2;
+
+/** מעל זה השם כבר לא נכנס לצ׳יפ בלי לשבור את השורה */
+const MAX_NAME_CHARS = 12;
+
+/**
+ * שם שמתאים לצ׳יפ.
+ *
+ * הדירוג העורכי לבדו העלה לפוטר את "הגרנד קניון ופארקי הדרום-מערב"
+ * ו"קווינסטאון והאי הדרומי" - שמות נכונים לגמרי, שבשורת צ׳יפים נראים
+ * מרופטים ודוחפים כל שורה לשתיים. שני הפוסלים הם אורך, ו-ו׳ החיבור
+ * שמסגירה שם מורכב ("X ו-Y"), ומקף שעושה את אותו הדבר.
+ *
+ * זה מסנן **מאיזה מאגר בוחרים**, לא מה נכון: היעדים האלה נשארים
+ * בקטלוג ובקישור "כל היעדים" שבסוף השורה.
+ */
+const isChipName = (name: string) =>
+  name.length <= MAX_NAME_CHARS && !/\sו/.test(name) && !name.includes('-');
 
 const score = (d: (typeof destinations)[number]) => d.editorialRating?.score ?? 0;
 
 /** היעדים המשמעותיים ביותר, בפיזור סביר בין מדינות */
 export const footerDestinations: FooterLink[] = (() => {
-  const ranked = [...destinations].sort(
-    (a, b) => score(b) - score(a) || b.places.length - a.places.length || a.slug.localeCompare(b.slug),
-  );
+  const ranked = [...destinations]
+    .filter((d) => isChipName(d.name))
+    .sort(
+      (a, b) => score(b) - score(a) || b.places.length - a.places.length || a.slug.localeCompare(b.slug),
+    );
   const perCountry = new Map<string, number>();
   const picked: FooterLink[] = [];
   for (const d of ranked) {
@@ -62,7 +81,7 @@ export const footerCountries: FooterLink[] = (() => {
     byCountry.set(d.countrySlug, acc);
   }
   return [...countries]
-    .filter((c) => byCountry.has(c.slug))
+    .filter((c) => byCountry.has(c.slug) && isChipName(c.name))
     .sort((a, b) => {
       const x = byCountry.get(a.slug)!;
       const y = byCountry.get(b.slug)!;
