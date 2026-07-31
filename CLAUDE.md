@@ -248,6 +248,109 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-31 (tt) - Routing by task: 11x cheaper, and the measurement that redesigned it
+
+Netanel: a simple request like moving a block to a different day should not run
+on the strongest model. He picked, from the clarifying questions, a deterministic
+router with escalation, scoped to mechanical edits - and left the second half
+open: *"1, maybe even 2 (not sure, you will have to check)"*. He staged his API
+key so the answer could be measured rather than argued.
+
+**Measured live, six scenarios, the same request run twice** - once with
+`CHAT_MODEL_ROUTING=off` and once on:
+
+| | calls | input | cached | cost | latency |
+|---|---|---|---|---|---|
+| before (sonnet) | 2.0 | 20,054 | 202,134 | **$0.1225** | 5,742ms |
+| after (haiku) | 1.0 | 10,339 | 0 | **$0.0108** | 1,304ms |
+
+**91.2% cheaper, 11.4x, and 4.4x faster.**
+
+**The model swap is the smaller half of that.** The grounding index is ~240,000
+characters, sent so the model can find a place it does not already have. A
+mechanical edit operates on what is already in the trip, so there is nothing in
+it to search. `buildLightGrounding` sends `id|name` for the trip's own cities and
+nothing else - that is what took input from 34k tokens to 10k. And the light turn
+is **one** call: once the tool has run there is nothing left for the model to do,
+where the heavy path spends a second full-prefix call just to write a sentence.
+
+**The decision is code, not a prompt**, which is the third time this file records
+that choice paying off (`priceGuard`, `filterKosherUnlessOptedIn`, now this). The
+cheap model is handed **ten tools**; build, delete, explore, booking search and
+the events calendar are not sent to it at all. A tool that is not sent does not
+exist. The bias is deliberate: misrouting upward costs fractions of a cent,
+misrouting downward costs a wrong edit on a traveller's screen.
+
+---
+
+**The finding that changed the design, and it would not have come from
+reasoning.** In the first live run **all six edits were performed correctly and
+three of the six sentences describing them were wrong**:
+
+> renamed the trip, then said *"the name is already איטליה ואוסטריה, no change
+> needed"* · added the note, then said *"that note already exists on day 2"* ·
+> added the Pantheon, then said *"I cannot add it"* **and then** *"I added the
+> Pantheon"* in the same reply.
+
+The tool calls were flawless. The prose was not. And the traveller reads the
+prose.
+
+The conclusion is not "the cheap model is unsuitable" - it is **do not let it
+write**. The sentence already exists in the codebase: `out.action` is built on
+the server from the edit that actually executed ("הזזתי את רומא מיום 5 ליום 1").
+Light turns now discard the model's text entirely and reply with that. Same
+pattern as `pinDistances`: hand over the computed fact instead of asking the
+model not to get it wrong. It also made the turn cheaper, because the reply no
+longer needs generating.
+
+---
+
+**The open question, answered with evidence: no, questions stay on the strong
+model.** Eight questions whose answers are entirely inside the trip object -
+the easiest possible case - scored 7/8, and the failures are the interesting
+part:
+
+- *"how many stops in total"* → **"8 stops: 4 in Vienna and 4 in Rome"**, in
+  bold. The trip has 7. A confident wrong number about the traveller's own data.
+- Four of eight drifted past the question. The worst: *"that is a combined
+  ticket, worth booking ahead"* - an availability claim invented by the model,
+  which `priceGuard` does not catch because it contains no number.
+
+The mechanical path is safe precisely **because** there is a deterministic
+sentence to swap in. A question has nothing but prose, so there is nothing to
+swap. That asymmetry is the whole answer.
+
+---
+
+**Escalation: anything that is not a clean success.** A failed tool, a truncated
+reply, or a turn where no edit happened - the trip, history and text are restored
+to the pre-attempt state and the strong model runs from scratch, so it never
+inherits half an edit. Verified live: "add the Eiffel Tower to day 2" and "move
+day 9 to day 1" both escalated and got good honest answers, including an offer to
+auto-explore Paris, which the light path cannot do.
+
+**An escalated turn costs 8.8% more than not routing at all**, so the break-even
+escalation rate is 91%. That number is the reason the classifier can afford to be
+conservative.
+
+**Nothing streams during a light attempt** except `status`. If the turn escalates
+the whole thing is rerun, and text or trip state already on screen would read as
+an edit that then un-happened.
+
+**Two things worth knowing for the next session.** (1) The daily AI-unit budget
+is real and it bit during measurement - eight scenarios burned the 300,000-unit
+free-plan budget, because a cold cache write on Sonnet is ~101,000 units in one
+turn. The harness now sends a distinct `x-forwarded-for` per scenario, which is
+how anonymous identity is keyed. (2) `CHAT_USAGE_LOG=on` exposes the per-call
+token line in production, and `[chat] turn route=... escalated=...` gives the
+escalation ratio on real traffic - if it comes back high, the classifier is too
+wide and that log will say so rather than a hunch.
+
+**The key was staged from `.env.local` for the measurement and deleted
+afterwards**, along with the staged upload copy.
+
+313 tests (18 new), tsc, build, lint at exactly the pre-existing baseline.
+
 ### 2026-07-31 (ss) - One emoji out of five, and what that turned out to be a symptom of
 
 Netanel sent a screenshot of the bottom of the trip screen: three collapsible
