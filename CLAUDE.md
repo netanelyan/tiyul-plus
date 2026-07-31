@@ -248,6 +248,92 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-31 (vv) - A ceiling on the bill, and the requirement that shaped every number
+
+Netanel asked for protection against runaway AI cost, with one constraint stated
+twice: *"Do not make the normal experience worse - a real person planning a trip
+should never notice any of this."* That is the sentence that set every value
+below, and it is why most of the new tests assert that a gate **does not** fire.
+
+**The ceiling is $5/day across everyone.** Not a guess: a measured turn costs
+$0.01-$0.13, and the light-routed edits land near $0.011, so $5 is roughly
+100-400 real planning turns a day. It is deliberately low for launch - his own
+framing was *"I'd rather be down for a few hours than wake up to a bill I can't
+pay"* - and it is the one number he is most likely to raise, so raising it takes
+a text field and no deploy.
+
+Three sources in order: `app_flags.ai_daily_budget_usd` (the admin page, applies
+within 30s), `AI_DAILY_BUDGET_USD`, then the code default. **0 turns the agent
+off entirely** - the same effect as the existing kill switch, through a second
+door.
+
+**Cost is now real dollars, not "units".** `aiCost.ts` prices all four token
+kinds per model. An unrecognised model is priced at **the most expensive rate we
+know**, because on a spending ceiling the safe direction to be wrong is upward -
+under-pricing means finding out from the invoice.
+
+**The per-trip number is the one he actually asked for.** *"I need to know what a
+normal trip actually costs before I set any real limits, and right now I'm
+guessing."* `/admin` reports a **median** rather than a mean: one runaway trip
+moves a mean, and the question is what a typical traveller costs.
+
+---
+
+**The caps, and why each is where it is.** 8,000 chars per message (a pasted
+booking confirmation is ~1,500). 80 user messages per conversation (a real
+planning session is 10-25, and message 80 costs more than message 3 because the
+whole history is resent). 4,096 output tokens. And **$0.60 per turn** - the real
+danger is not a long answer but a loop, since a turn can run 16 iterations and
+each resends the prefix.
+
+**The topic gate refuses only when three things are true at once:** a clear
+non-travel signal, no travel signal at all (including any city or country name
+from the catalog), and **no active trip**. That third condition removes most of
+the risk on its own - with a trip on screen, "translate this menu" is a travel
+request. It costs zero: no model call is spent deciding whether to spend a model
+call.
+
+**Anonymous is now its own tier**, separate from `Plan`, because `Plan` is a
+billing state and `Tier` is an allowance. 15 chats a day is enough to build a
+real trip and be convinced; what it cuts is somebody settling in on the endpoint.
+Bots calling the route directly get 403 before anything is spent - a browser
+sends `Origin` on every POST.
+
+---
+
+**A bug the harness caught that two green tests had been hiding.** The message-
+length and conversation-length gates ran **after** `sanitizeMessages`, which
+truncates each message to 8,000 chars and keeps the last 40. So they were
+measuring the output of the truncation, not the input, and a 9,000-character
+message sailed through while the assertion passed. Both moved to the raw body.
+
+**The lesson is the same one as entry (r):** when a number is surprising, suspect
+the fixture - but its twin is that when a guard passes on its first run, check
+what it is actually looking at. A gate placed downstream of a sanitiser measures
+the sanitiser.
+
+**And the harness got blocked by the feature it was testing** - the new anonymous
+burst limit is 4/min and the suite fired six requests from one address. A
+distinct `x-forwarded-for` per scenario fixed it, and it was a fair test of the
+limit.
+
+**Verified:** 33/33 in a new harness - 403 with no Origin, a 9,000-char message
+declined politely, a 90-message conversation winding down to the "ניקוי" button
+with an explicit promise that the trip is intact, and **zero occurrences of
+"מכסה" / "תקציב" / "עלות" / "$" anywhere on the chat screen** at 1440 and 390,
+with a real conversation answering normally throughout. 347 unit tests (13 new,
+most of them asserting the gates stay open), plus every existing suite re-run.
+
+**Waiting on Netanel:** run `supabase-ai-spend.sql`. Without it the ceiling still
+works - enforced per instance from memory - but there is no shared total and no
+history, and the admin card says so rather than showing a misleading zero.
+
+**One thing deliberately not built:** email alerting. There is no mailer in this
+project and choosing one is a decision, not a task. The alert POSTs to
+`AI_BUDGET_ALERT_WEBHOOK` with both `text` and `content` keys so Slack, Discord
+or any request-to-email service works without a dependency, and it always lands
+in the log and on the admin card.
+
 ### 2026-07-31 (uu) - "One hotel is listed for all the places" - and a Hebrew bug the fix walked into
 
 Netanel, from the booking panel: *"1 hotel is listed for all the places, esim and
