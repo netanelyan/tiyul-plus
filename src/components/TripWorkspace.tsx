@@ -20,6 +20,7 @@ import BookingPanel from '@/components/BookingPanel';
 import TripCost from '@/components/TripCost';
 import PinsPanel from '@/components/PinsPanel';
 import TripDateNotes from '@/components/TripDateNotes';
+import PanelSection from '@/components/PanelSection';
 import ChatPanel from '@/components/ChatPanel';
 import Flag from '@/components/Flag';
 import Logo from '@/components/Logo';
@@ -470,7 +471,7 @@ export default function TripWorkspace({
               className="rounded-full bg-night/5 px-2.5 py-1.5 text-xs font-semibold text-night/55 transition hover:bg-night/10 hover:text-night"
             >
               העדפות{prefSummary ? `: ${prefSummary}` : ''}{' '}
-              <span aria-hidden className={`inline-block transition-transform ${prefsOpen ? 'rotate-180' : ''}`}>
+              <span aria-hidden className={`inline-block text-xs text-night/40 transition-transform ${prefsOpen ? 'rotate-180' : ''}`}>
                 ▾
               </span>
             </button>
@@ -976,25 +977,21 @@ export default function TripWorkspace({
         />
       )}
 
-      {/* ---------- סקירת כל הימים (עם תיאור לכל יום) ---------- */}
+      {/*
+        ---------- סקירת כל הימים (עם תיאור לכל יום) ----------
+        היה פתוח תמיד מ-lg ומעלה. הוא חוזר על טאבי הימים ועל כרטיס
+        היום שכבר מוצגים למעלה, ולכן במסך הראשון הוא נטו רעש -
+        מקופל עכשיו בכל רוחב, במרחק לחיצה אחת.
+      */}
       {t && t.days.length > 0 && (
-        <section className="mt-5 print:hidden">
-          <button
-            onClick={() => setAllDaysOpen((v) => !v)}
-            aria-expanded={allDaysOpen}
-            /*
-              היה פתוח תמיד מ-lg ומעלה. הוא חוזר על טאבי הימים ועל כרטיס
-              היום שכבר מוצגים למעלה, ולכן במסך הראשון הוא נטו רעש -
-              מקופל עכשיו בכל רוחב, במרחק לחיצה אחת.
-            */
-            className="flex w-full items-center gap-2 rounded-xl bg-night/[0.03] px-4 py-2.5 text-start text-sm font-bold text-night/70 transition hover:bg-night/[0.06]"
-          >
-            כל הימים ({t.days.length})
-            <span className={`ms-auto text-xs transition-transform ${allDaysOpen ? 'rotate-180' : ''}`}>
-              ▾
-            </span>
-          </button>
-          <div className={allDaysOpen ? 'mt-2 block' : 'hidden'}>
+        <PanelSection
+          panelKey="alldays"
+          icon="📋"
+          title={`כל הימים (${t.days.length})`}
+          className="print:hidden"
+          open={allDaysOpen}
+          onToggle={() => setAllDaysOpen((v) => !v)}
+        >
             <ol className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
               {t.days.map((d, i) => {
                 const dst = destOf(d.citySlug);
@@ -1029,8 +1026,7 @@ export default function TripWorkspace({
                 );
               })}
             </ol>
-          </div>
-        </section>
+        </PanelSection>
       )}
 
       {/* ---------- ייצוא להדפסה/PDF: שער ממותג + ימים + פוטר ---------- */}

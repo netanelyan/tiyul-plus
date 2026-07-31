@@ -10,6 +10,7 @@ import {
 import type { BookingKind, BookingStatus, Trip, TripPreferences } from '@/lib/trip/types';
 import type { Destination } from '@/lib/types';
 import { OFFLINE_HINT } from '@/lib/offline/online';
+import PanelSection from '@/components/PanelSection';
 
 /**
  * "מה עוד חסר לטיול" - שכבת ההזמנות בתוך תצוגת הטיול.
@@ -80,23 +81,22 @@ export default function BookingPanel({
   const openCount = bookingProviders.filter((p) => booking[p.kind] === 'need').length;
 
   return (
-    <section className="mt-5 print:hidden">
-      <button
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        className="flex w-full items-center gap-2 rounded-2xl bg-shell px-4 py-3 text-start text-sm font-bold text-night ring-1 ring-night/10 transition hover:ring-night/20"
-      >
-        <span aria-hidden>🧳</span>
-        מה עוד חסר לטיול
-        {openCount > 0 && (
+    <PanelSection
+      panelKey="booking"
+      icon="🧳"
+      title="מה עוד חסר לטיול"
+      className="print:hidden"
+      open={open}
+      onToggle={() => setOpen((v) => !v)}
+      badge={
+        openCount > 0 ? (
           <span className="rounded-full bg-sunset/15 px-2 py-0.5 text-xs font-bold text-sunset-deep">
             {openCount} פתוחים
           </span>
-        )}
-        <span className={`ms-auto text-xs transition-transform ${open ? 'rotate-180' : ''}`}>▾</span>
-      </button>
-
-      <div className={open ? 'mt-2 block' : 'hidden'}>
+        ) : undefined
+      }
+    >
+      <>
         {cities.length > 1 && (
           <div className="mb-2 flex flex-wrap items-center gap-1.5 px-1">
             <span className="text-xs font-semibold text-night/50">חיפוש עבור</span>
@@ -195,11 +195,11 @@ export default function BookingPanel({
           תלוי בשאלה אם לספק יש מזהה שותפים - יש על זה טסט.
         */}
         <p className="mt-2 px-1 text-[11px] font-medium leading-relaxed text-night/45">
-          הקישורים מפנים לאתרי הזמנות חיצוניים, ואנחנו עשויים לקבל עמלה על הזמנה שמתבצעת דרכם.
-          זה לא משפיע על מה שאנחנו מציעים או על הסדר שבו. אנחנו לא מזמינים, לא גובים תשלום ולא
-          מחזיקים פרטי אשראי - המחיר, הזמינות ותנאי הביטול נקבעים אצל הספק.
+          הקישורים מפנים לאתרי הזמנות חיצוניים, ואנחנו עשויים לקבל עמלה על הזמנה שמתבצעת דרכם. זה לא
+          משפיע על מה שאנחנו מציעים או על הסדר שבו. אנחנו לא מזמינים, לא גובים תשלום ולא מחזיקים
+          פרטי אשראי - המחיר, הזמינות ותנאי הביטול נקבעים אצל הספק.
         </p>
-      </div>
-    </section>
+      </>
+    </PanelSection>
   );
 }

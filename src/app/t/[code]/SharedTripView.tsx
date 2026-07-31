@@ -149,7 +149,11 @@ export default function SharedTripView({
                         <div>
                           <p className="font-semibold text-night">
                             {p.name}
-                            {p.mustSee && <span className="ms-1.5 text-sm text-[#e0a400]">★</span>}
+                            {p.mustSee && (
+                              <span className="ms-1.5 text-sm text-zest" title="חובה לראות">
+                                ★
+                              </span>
+                            )}
                             <span className="ms-2 text-xs font-medium text-night/45">
                               {categoryMeta[p.category].label}
                             </span>

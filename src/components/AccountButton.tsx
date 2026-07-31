@@ -170,7 +170,7 @@ export default function AccountButton() {
                   </svg>
                   התנתקות
                 </button>
-                <p className="mt-1 px-3 pb-1 text-center text-[10px] font-medium text-[#007f76]">
+                <p className="mt-1 px-3 pb-1 text-center text-[10px] font-medium text-lagoon-deep">
                   ✓ הטיולים והפרופיל מסתנכרנים בין המכשירים
                 </p>
               </div>
@@ -448,15 +448,15 @@ function LoginModal({ onClose }: { onClose: () => void }) {
 
           {step === 'success' && (
             <div key="success" className="rise-in flex flex-col items-center py-6 text-center">
-              <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#00a896]/15">
+              <span className="flex h-16 w-16 items-center justify-center rounded-full bg-lagoon/15">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#007f76"
+                  stroke="currentColor"
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="h-8 w-8"
+                  className="h-8 w-8 text-lagoon-deep"
                   aria-hidden
                 >
                   <path d="M20 6 9 17l-5-5" />

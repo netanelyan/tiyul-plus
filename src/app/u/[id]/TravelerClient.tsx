@@ -136,7 +136,7 @@ export default function TravelerClient({ userId }: { userId: string }) {
             {common.map((c) => (
               <span
                 key={c.code}
-                className="flex items-center gap-1.5 rounded-full bg-[#00a896]/10 px-3 py-1.5 text-sm font-semibold text-night"
+                className="flex items-center gap-1.5 rounded-full bg-lagoon/10 px-3 py-1.5 text-sm font-semibold text-night"
               >
                 <Flag flag={codeToFlagEmoji(c.code)} label={c.name} size="sm" />
                 {c.name}
@@ -158,7 +158,7 @@ export default function TravelerClient({ userId }: { userId: string }) {
                 key={c.code}
                 className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold ${
                   myVisited.has(c.code)
-                    ? 'bg-[#00a896]/10 text-night'
+                    ? 'bg-lagoon/10 text-night'
                     : 'bg-night/[0.04] text-night/70 ring-1 ring-night/10'
                 }`}
                 title={myVisited.has(c.code) ? 'גם אתם הייתם כאן' : undefined}

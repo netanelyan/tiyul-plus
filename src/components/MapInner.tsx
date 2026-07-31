@@ -7,6 +7,8 @@ import type { Place } from '@/lib/types';
 import type { TripPinKind } from '@/lib/trip/types';
 import { categoryMeta } from '@/lib/categories';
 import PlaceThumb from '@/components/PlaceThumb';
+import KosherBadge from '@/components/KosherBadge';
+import KosherNote from '@/components/KosherNote';
 
 /**
  * מרמת הזום הזו ומעלה מציגים תמונה קטנה מעל הסיכה - בזום עירוני יש
@@ -211,12 +213,19 @@ function PlacePopup({ place, prefix = '' }: { place: Place; prefix?: string }) {
           <span>{place.priceLevel === 0 ? 'חינם' : '₪'.repeat(place.priceLevel)}</span>
         )}
       </div>
-      {place.kosherNote && (
-        <div style={{ fontSize: 12, marginTop: 4, color: '#0d9488' }}>✡️ {place.kosherNote}</div>
-      )}
+      {/*
+        היה כאן ירוק אחר (#0d9488) ובלי כרית, כך שאותה הערת כשרות נראתה
+        בחלונית המפה שונה לגמרי מהכרטיס שלצידה. עכשיו זה אותו רכיב.
+      */}
+      <KosherNote note={place.kosherNote} className="mt-1" />
       {place.kosherVerification && (
-        <div style={{ fontSize: 11, marginTop: 4, color: '#6b6394', fontWeight: 600 }}>
-          השגחה: {place.kosherVerification.supervision} · לוודא מול המקום
+        /*
+          התג עצמו ולא העתק שלו. הנוסח וההסתייגות "לוודא מול המקום"
+          חייבים להיות זהים בכל מקום שבו מוצגת השגחה - העתק שני היה
+          מתיישן בשקט ברגע שמישהו ישנה את המדיניות במקום אחד.
+        */
+        <div style={{ marginTop: 4 }}>
+          <KosherBadge verification={place.kosherVerification} />
         </div>
       )}
       {place.externalUrl && (

@@ -10,6 +10,7 @@ import AddToTripButton from '@/components/AddToTripButton';
 import PlaceThumb from '@/components/PlaceThumb';
 import Flag from '@/components/Flag';
 import KosherBadge from '@/components/KosherBadge';
+import KosherNote from '@/components/KosherNote';
 
 type Filter = 'all' | 'kosher' | PlaceCategory;
 
@@ -227,11 +228,7 @@ export default function DestinationClient({
                     <p className="mt-2 text-sm leading-relaxed text-night/70">{place.description}</p>
                   </div>
                 </div>
-                {place.kosherNote && (
-                  <p className="mt-2 rounded-lg bg-[#00a896]/10 px-3 py-2 text-xs font-semibold text-[#007f76]">
-                    ✡️ {place.kosherNote}
-                  </p>
-                )}
+                <KosherNote note={place.kosherNote} className="mt-2" />
                 <KosherBadge verification={place.kosherVerification} className="mt-1.5" />
                 <div className="mt-3 flex flex-wrap items-center gap-3 text-xs font-semibold text-night/50">
                   <AddToTripButton citySlug={dest.slug} placeId={place.id} />

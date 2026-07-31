@@ -7,6 +7,7 @@ import PlacesMap from '@/components/PlacesMap';
 import Flag from '@/components/Flag';
 import CardPhoto from '@/components/CardPhoto';
 import KosherBadge from '@/components/KosherBadge';
+import KosherNote from '@/components/KosherNote';
 
 export interface KosherCity {
   slug: string;
@@ -91,7 +92,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
     <div className="mt-5">
       {/* ---- שורת מספרים אמיתיים מהדאטה ---- */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="badge rounded-full bg-[#00a896]/12 px-3.5 py-1.5 text-sm font-bold text-[#007f76]">
+        <span className="badge rounded-full bg-lagoon/12 px-3.5 py-1.5 text-sm font-bold text-lagoon-deep">
           ✡️ {stats.places} מקומות כשרים
         </span>
         <span className="badge rounded-full bg-night/5 px-3.5 py-1.5 text-sm font-bold text-night/70">
@@ -162,11 +163,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
                   <div className="font-bold text-night">{place.name}</div>
                   <div className="text-xs font-medium text-night/40">{place.nameLocal}</div>
                   <p className="mt-2 text-sm leading-relaxed text-night/70">{place.description}</p>
-                  {place.kosherNote && (
-                    <p className="mt-2 rounded-lg bg-[#00a896]/10 px-3 py-2 text-xs font-semibold text-[#007f76]">
-                      ✡️ {place.kosherNote}
-                    </p>
-                  )}
+                  <KosherNote note={place.kosherNote} className="mt-2" />
                   <KosherBadge verification={place.kosherVerification} className="mt-1.5" />
                   {place.externalUrl && (
                     <a
@@ -213,7 +210,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
                     sizes="(min-width: 640px) 30vw, 46vw"
                     overlay="linear-gradient(180deg, rgba(15,14,26,0.1) 0%, rgba(15,14,26,0.72) 100%)"
                   >
-                    <span className="absolute end-2 top-2 rounded-full bg-[#00a896] px-2 py-0.5 text-[11px] font-bold text-white shadow">
+                    <span className="absolute end-2 top-2 rounded-full bg-lagoon px-2 py-0.5 text-[11px] font-bold text-white shadow">
                       {city.kosherPlaces.length}
                     </span>
                     <Flag
@@ -226,7 +223,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
                   <div className="p-3">
                     <div className="truncate font-bold text-night">{city.name}</div>
                     <div className="truncate text-xs font-medium text-night/45">{city.country}</div>
-                    <div className="mt-1.5 truncate text-xs font-semibold text-[#007f76]">
+                    <div className="mt-1.5 truncate text-xs font-semibold text-lagoon-deep">
                       ✡️ {breakdown(city.kosherPlaces)}
                     </div>
                   </div>

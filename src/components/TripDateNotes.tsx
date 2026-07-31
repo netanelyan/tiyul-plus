@@ -10,6 +10,7 @@ import {
   matchTripCalendar,
   sourceLabel,
 } from '@/lib/trip/dateWindows';
+import PanelSection from '@/components/PanelSection';
 import type { Trip } from '@/lib/trip/types';
 import type { CalendarEntry, Destination } from '@/lib/types';
 
@@ -55,10 +56,14 @@ export default function TripDateNotes({
   if (dated.length === 0 && windows.length === 0) return null;
 
   return (
-    <section className="mt-5 print:hidden" aria-label="מה קורה בתאריכים של הטיול">
-      <h3 className="px-1 text-xs font-bold text-night/45">מה קורה בתאריכים שלכם</h3>
-
-      <ul className="mt-1.5 space-y-1.5">
+    <PanelSection
+      panelKey="dates"
+      icon="📅"
+      title="מה קורה בתאריכים שלכם"
+      className="print:hidden"
+      ariaLabel="מה קורה בתאריכים של הטיול"
+    >
+      <ul className="space-y-1.5">
         {dated.map((m) => (
           <Row
             key={m.entry.id}
@@ -77,12 +82,17 @@ export default function TripDateNotes({
           </h4>
           <ul className="mt-1.5 space-y-1.5">
             {windows.map((w) => (
-              <Row key={w.entry.id} entry={w.entry} dates={w.entry.window ?? ''} confirmed={false} />
+              <Row
+                key={w.entry.id}
+                entry={w.entry}
+                dates={w.entry.window ?? ''}
+                confirmed={false}
+              />
             ))}
           </ul>
         </>
       )}
-    </section>
+    </PanelSection>
   );
 }
 
