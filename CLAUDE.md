@@ -248,6 +248,79 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-31 (rr) - The footer's signature row, and the seal that should have been a hover
+
+Netanel, from a screenshot of the bottom of the page: *"all of this should be
+centered, and the 'Part of BlacZ' card should be hover, not when clicked"*.
+
+**The centring is a judgement about what each block IS, not a global switch.**
+The columns above the divider stay right-aligned because they are lists you read
+- a heading with links under it wants a consistent starting edge. Everything
+below the divider is a signature: coverage counts, copyright, social, the
+affiliate line, the seal. Right-aligned, it read as one more column that ran out
+halfway. `text-center` on that block plus `justify-center` on the copyright row
+was the whole change.
+
+**The test is the one worth copying.** It measures **rectangle centre against
+container centre**, not the presence of `text-center`. That class can be on the
+element and be overridden by a parent's flex or by `dir`, which is exactly the
+kind of thing that ships looking fixed. Four widths, all landing on the nose:
+720/720, 512/512, 195/195, 160/160.
+
+---
+
+**Hover was not a one-line swap, and the reason is the previous session's fix.**
+The seal card is now `position: fixed` and centred on the screen (that is what
+stopped it overflowing on narrow phones), while its trigger sits at the bottom of
+the footer. So the pointer's route from trigger to card **crosses ground that
+belongs to neither**. Two consequences, each needing its own answer:
+
+1. **`mouseleave` cannot close immediately.** It fires the moment the pointer
+   leaves the trigger, i.e. halfway to the card, so the card vanished before you
+   could reach the Instagram link inside it. There is a 400ms grace period,
+   cancelled the instant the pointer enters the card - which works without extra
+   listeners because the card is a DOM descendant of the same wrapper, so
+   re-entering it fires `mouseenter` on the wrapper again.
+2. **The backdrop stays `pointer-events: none` even when open.** Otherwise the
+   pointer crossing it lands on an element outside the wrapper, hover drops, the
+   card closes, the pointer is now over the trigger area again, and it reopens -
+   a flicker loop. Closing on a backdrop click is handled by the existing
+   `document` listener, so nothing was lost by making it inert.
+
+**Hover is gated behind `(hover: hover) and (pointer: fine)`.** On touch there is
+no hover and the standard prevents a tap from counting as one, so the click path
+stays the only way in there - and it still works on desktop too, alongside
+hover. Escape and outside-click are unchanged.
+
+**One small thing that would have shipped as a visible defect:** `setOpen` now
+returns early when the state is unchanged. In hover you enter the wrapper
+repeatedly (trigger, then card), and every call ran `clamp()`, which zeroes the
+offset and re-measures on the next frame - a small jump each time. An open card
+that stays open should not move.
+
+**The trap in this file bit for the second time in one session.** A backtick
+inside a CSS comment inside the JS template literal terminates the string, and
+the custom element simply never registers - no error in the page, just a missing
+seal. `node --check` catches it in a second; reading the diff does not. It is
+now in the file twice as a comment, and it is worth remembering that the hazard
+is *any* backtick in that ~230-line string, including inside comments nobody
+reads.
+
+**Verified:** 57/57 on the new harness (centring at 1440/1024/390/320; hover at
+1440 and 1024 including the walk from trigger to card, the link inside being
+hit-testable, the grace period actually delaying the close, and click plus
+Escape still working; touch at 390 confirming no hover and click still opening),
+plus the existing seal suite 55/55 - which is what proves the accessibility
+button still clears the badge and the grayscale-mode clamp still holds - the
+footer suite 36/36, 293 unit tests, tsc and build clean.
+
+**A false alarm worth recording so the next session does not chase it.** The
+stop hook reported the branch as unpushed when it was already on GitHub at the
+same SHA. Cause: the push went through a full URL rather than the `origin`
+remote, so no `origin/<branch>` tracking ref was created and the branch had no
+upstream. The commit was fine; the local bookkeeping was not. Fetching the ref
+and setting the upstream cleared it.
+
 ### 2026-07-30 (qq) - Three features landed on main, and two sessions had built the same one
 
 Netanel asked whether every branch was merged so that main is the live site.
