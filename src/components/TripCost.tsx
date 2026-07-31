@@ -1,16 +1,12 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import {
-  TRAVEL_STYLES,
-  formatRange,
-  tripCost,
-  type CostCity,
-} from '@/lib/trip/cost';
+import { TRAVEL_STYLES, formatRange, tripCost, type CostCity } from '@/lib/trip/cost';
 import { formatHebrewDate } from '@/lib/trip/dates';
 import type { Trip, TripPreferences } from '@/lib/trip/types';
 import type { Destination } from '@/lib/types';
 import { OFFLINE_HINT } from '@/lib/offline/online';
+import PanelSection, { PanelBody } from '@/components/PanelSection';
 
 /**
  * "כמה מוציאים כאן ביום" - הצד הדטרמיניסטי של העלות.
@@ -60,15 +56,16 @@ export default function TripCost({
   const cities = useMemo(() => {
     const map: Record<string, CostCity> = {};
     for (const d of destinations)
-      map[d.slug] = { name: d.name, dailyCost: d.dailyCost, dailyBudget: d.dailyBudget };
+      map[d.slug] = {
+        name: d.name,
+        dailyCost: d.dailyCost,
+        dailyBudget: d.dailyBudget,
+      };
     return map;
   }, [destinations]);
 
   // מחושב תמיד על 'mid' כשאין בחירה, רק כדי לדעת אם יש בכלל מה להציג.
-  const result = useMemo(
-    () => tripCost(trip, style ?? 'mid', cities),
-    [trip, style, cities],
-  );
+  const result = useMemo(() => tripCost(trip, style ?? 'mid', cities), [trip, style, cities]);
 
   // אין ולו עיר אחת עם נתון - הרכיב לא מופיע בכלל. עדיף כלום מ"אין מידע".
   if (result.lines.length === 0) return null;
@@ -91,21 +88,18 @@ export default function TripCost({
   })();
 
   const headline = style
-    ? result.totals
-        .map((c) => formatRange(c.low, c.high, c.currency))
-        .join(' · ')
+    ? result.totals.map((c) => formatRange(c.low, c.high, c.currency)).join(' · ')
     : 'בחירת סגנון נסיעה';
 
   return (
-    <section className="mt-4 rounded-2xl bg-shell ring-1 ring-night/10">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        className="flex w-full items-center gap-2 rounded-2xl px-4 py-3 text-start"
-      >
-        <span className="text-sm font-semibold text-night/80">כמה מוציאים ביום</span>
-        <span className="min-w-0 flex-1 truncate text-xs text-night/50">
+    <PanelSection
+      panelKey="cost"
+      icon="💰"
+      title="כמה מוציאים ביום"
+      open={open}
+      onToggle={() => setOpen((v) => !v)}
+      meta={
+        <>
           {style ? (
             <span dir="ltr" className="inline-block">
               {headline}
@@ -114,14 +108,11 @@ export default function TripCost({
             headline
           )}
           {style && !result.complete && ' · חלקי'}
-        </span>
-        <span className={`text-night/40 transition-transform ${open ? 'rotate-180' : ''}`}>
-          ▾
-        </span>
-      </button>
-
-      {open && (
-        <div className="border-t border-night/10 px-4 py-4">
+        </>
+      }
+    >
+      <PanelBody>
+        <div>
           {/* ---------- סגנון הנסיעה: נבחר פעם אחת, ידנית ---------- */}
           <div className="flex gap-2">
             {TRAVEL_STYLES.map((s) => {
@@ -133,9 +124,7 @@ export default function TripCost({
                   aria-pressed={active}
                   title={offline ? OFFLINE_HINT : s.hint}
                   disabled={offline}
-                  onClick={() =>
-                    onSetPreferences({ travelStyle: active ? undefined : s.id })
-                  }
+                  onClick={() => onSetPreferences({ travelStyle: active ? undefined : s.id })}
                   className={`min-w-0 flex-1 rounded-xl px-2 py-2 text-xs font-semibold ring-1 transition disabled:cursor-not-allowed disabled:opacity-45 ${
                     active
                       ? 'bg-sunset text-cream ring-sunset'
@@ -192,9 +181,7 @@ export default function TripCost({
                     className="flex flex-wrap items-baseline gap-x-2 text-sm text-night/45"
                   >
                     <span className="font-semibold">{m.cityName}</span>
-                    <span className="text-xs">
-                      {m.days === 1 ? 'יום אחד' : `${m.days} ימים`}
-                    </span>
+                    <span className="text-xs">{m.days === 1 ? 'יום אחד' : `${m.days} ימים`}</span>
                     <span className="ms-auto text-xs">אין לנו נתון</span>
                   </li>
                 ))}
@@ -207,9 +194,7 @@ export default function TripCost({
                     {result.complete ? 'לכל הטיול' : 'לערים שיש להן נתון'}
                   </span>
                   <span className="ms-auto font-semibold text-night" dir="ltr">
-                    {result.totals
-                      .map((c) => formatRange(c.low, c.high, c.currency))
-                      .join(' · ')}
+                    {result.totals.map((c) => formatRange(c.low, c.high, c.currency)).join(' · ')}
                   </span>
                 </div>
                 {result.totals.length > 1 && (
@@ -219,22 +204,21 @@ export default function TripCost({
                 )}
                 {!result.complete && (
                   <p className="mt-1 text-xs text-night/55">
-                    הסכום חלקי: {result.missing.map((m) => m.cityName).join(', ')} לא נכלל
-                    בו.
+                    הסכום חלקי: {result.missing.map((m) => m.cityName).join(', ')} לא נכלל בו.
                   </p>
                 )}
                 {/* למה דווקא "בנוח" חסר בהרבה ערים - אחרת זה נראה כמו תקלה */}
                 {style === 'comfort' && result.missing.length > 0 && (
                   <p className="mt-1 text-xs text-night/45">
-                    לסגנון "בנוח" יש נתון רק בחלק מהערים: המקור הרחב יותר מפרסם מדרגה
-                    עליונה פתוחה, ואי אפשר לגזור ממנה מספר בלי לינה.
+                    לסגנון "בנוח" יש נתון רק בחלק מהערים: המקור הרחב יותר מפרסם מדרגה עליונה פתוחה,
+                    ואי אפשר לגזור ממנה מספר בלי לינה.
                   </p>
                 )}
               </div>
 
               <p className="mt-3 text-xs leading-relaxed text-night/55">
-                כך מוציאים מטיילים בערים האלה בדרך כלל, לאדם ליום. זו לא תחזית להוצאות
-                שלכם. <span className="font-semibold text-night/70">בלי טיסות ובלי לינה.</span>
+                כך מוציאים מטיילים בערים האלה בדרך כלל, לאדם ליום. זו לא תחזית להוצאות שלכם.{' '}
+                <span className="font-semibold text-night/70">בלי טיסות ובלי לינה.</span>
                 {/* ההסבר על משמעות הטווח נכון רק לשורות שנבנו מחיבור
                     שורות הקטגוריות. לשורה שהמקור שלה פרסם טווח מוכן,
                     המשפט הזה פשוט לא נכון - ולכן הוא מותנה. */}
@@ -244,8 +228,7 @@ export default function TripCost({
                 {result.hasUpperBound && ' בעיר אחת לפחות הנתון הוא חסם עליון ("עד"), לא טווח.'}
               </p>
               <p className="mt-1 text-xs text-night/40">
-                נבדק ב־{checkedLabel} ·{' '}
-                {/* מקור לכל עיר, ולא קישור אחד שמתחזה לכסות את כולן */}
+                נבדק ב־{checkedLabel} · {/* מקור לכל עיר, ולא קישור אחד שמתחזה לכסות את כולן */}
                 {/* בלי רשת המקור נאמר בשם ולא כקישור: קישור שנלחץ ולא
                     נפתח נראה כמו אתר שבור, ושם המקור הוא המידע החשוב. */}
                 {sources.map((s, i) => (
@@ -269,7 +252,7 @@ export default function TripCost({
             </>
           )}
         </div>
-      )}
-    </section>
+      </PanelBody>
+    </PanelSection>
   );
 }

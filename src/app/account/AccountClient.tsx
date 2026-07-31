@@ -179,7 +179,7 @@ function ProfileCard() {
             <p className="truncate text-sm font-medium text-night/50" dir="ltr">
               {email}
             </p>
-            <p className="text-[11px] font-semibold text-[#007f76]" aria-live="polite">
+            <p className="text-[11px] font-semibold text-lagoon-deep" aria-live="polite">
               {saved ? '✓ נשמר' : ' '}
             </p>
           </div>
@@ -386,7 +386,7 @@ function TripsCard({ onOpen, cityNames }: { onOpen: (id: string) => void; cityNa
     <section className="rounded-3xl bg-shell p-5 ring-1 ring-night/10 sm:p-6">
       <div className="flex items-center justify-between gap-3">
         <h2 className="display text-xl text-night">הטיולים שלי</h2>
-        <span className="rounded-full bg-[#00a896]/10 px-3 py-1 text-xs font-bold text-[#007f76]">
+        <span className="rounded-full bg-lagoon/10 px-3 py-1 text-xs font-bold text-lagoon-deep">
           ✓ מסונכרנים לחשבון
         </span>
       </div>

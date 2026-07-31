@@ -10,6 +10,18 @@
   --color-zest: #ffc531; /* yellow - rare small highlights only */
   --color-cream: #fdf6ec; /* warm page background */
   --color-shell: #fffdf8; /* card background */
+  /*
+     ירוק-ים. **לא צבע חדש** - הוא כבר היה באתר, כתוב ביד כ-#00a896
+     בתשעה מקומות (כשרות, "נשמר", מדינות משותפות, צ׳יפ בעמוד המדינה),
+     ובגוון שלישי לגמרי (#0d9488) בחלונית המפה. הוא לא מתחרה ב-sunset:
+     הוא לא מופיע על אף כפתור ראשי, רק על ציוני מצב וסימוני כשרות.
+
+     כטוקן הוא גם זהה בכל מקום וגם **נדרס במצב ניגודיות גבוהה** - צבע
+     קשיח פשוט מתעלם מהמצב הזה, וזו הייתה תקלת נגישות ולא רק חוסר
+     אחידות.
+  */
+  --color-lagoon: #00a896;
+  --color-lagoon-deep: #007f76;
 }
 
 :root {
@@ -81,6 +93,8 @@ html.a11y-contrast {
   --color-sunset: #b3200c;
   --color-sunset-deep: #8a1000;
   --color-zest: #7a5800;
+  --color-lagoon: #00504a;
+  --color-lagoon-deep: #00302c;
 }
 html.a11y-contrast body {
   background: #ffffff;

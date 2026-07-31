@@ -105,7 +105,7 @@ export default async function CountryPage({
                     {d.days} ימים
                   </span>
                   {d.kosherCount > 0 && (
-                    <span className="rounded-full bg-[#00a896]/10 px-3 py-1.5 text-[#007f76]">
+                    <span className="rounded-full bg-lagoon/10 px-3 py-1.5 text-lagoon-deep">
                       {d.kosherCount} נקודות כשרות
                     </span>
                   )}

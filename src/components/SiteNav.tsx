@@ -85,7 +85,7 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
               <span className="rounded-full bg-night/10 px-1.5 text-xs font-bold text-night/60">
                 {myTrips.length}
               </span>
-              <span aria-hidden className="text-[10px] text-night/40">
+              <span aria-hidden className="text-xs text-night/40">
                 ▾
               </span>
             </button>
