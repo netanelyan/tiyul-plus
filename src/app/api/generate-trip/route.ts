@@ -7,6 +7,8 @@ import type { Trip, TripDay, TripPreferences, WizardPrefs } from '@/lib/trip/typ
 import { checkLimit, aiUnitsUsedToday, recordAiUnits } from '@/lib/server/limits';
 import { resolveCaller } from '@/lib/server/identity';
 import { PLAN_LIMITS, aiUnits } from '@/lib/plans';
+import { budgetState, maybeAlert, recordSpend } from '@/lib/server/budget';
+import { sameOriginOk } from '@/lib/server/chatGuards';
 
 /**
  * בניית טיול מהעדפות-כפתורים + טקסט חופשי אופציונלי.
@@ -111,7 +113,7 @@ async function refineWithClaude(
   notes: string,
   prefs: WizardPrefs,
   party: Party | null,
-  meter: { units: number },
+  meter: { units: number; usage: Record<string, number>; model: string },
 ): Promise<AiRefinement | null> {
   const constraints = {
     citySlugs: prefs.citySlugs,
@@ -122,6 +124,7 @@ async function refineWithClaude(
     kosherOnly: prefs.kosherOnly,
     party: party ? PARTY_PROMPT[party] : 'unspecified',
   };
+  const model = process.env.ANTHROPIC_MODEL_FAST ?? 'claude-haiku-4-5';
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -133,7 +136,7 @@ async function refineWithClaude(
       signal: AbortSignal.timeout(50_000),
       body: JSON.stringify({
         // משימה חד-פעמית מובנית → המודל המהיר/זול (ניתוב מודלים לפי משימה)
-        model: process.env.ANTHROPIC_MODEL_FAST ?? 'claude-haiku-4-5',
+        model,
         max_tokens: 3000,
         // בלי thinking/effort - haiku-4-5 לא תומך בהם; structured outputs מספיק
         output_config: {
@@ -165,7 +168,10 @@ async function refineWithClaude(
       };
     };
     meter.units += aiUnits(data.usage ?? {});
-    if (process.env.NODE_ENV === 'development') {
+    // הצריכה נשמרת על ה-meter כדי שהקורא יוכל לרשום עלות אמיתית בדולרים
+    meter.usage = { ...(data.usage ?? {}) };
+    meter.model = model;
+    if (process.env.NODE_ENV === 'development' || process.env.CHAT_USAGE_LOG === 'on') {
       const u = data.usage ?? {};
       console.log(
         `[generate-trip] in=${u.input_tokens ?? 0} cached=${u.cache_read_input_tokens ?? 0} cacheWrite=${u.cache_creation_input_tokens ?? 0} out=${u.output_tokens ?? 0}`,
@@ -283,8 +289,11 @@ function buildUnderstood(prefs: WizardPrefs, party: Party | null, interests: str
 export async function POST(request: Request) {
   // מכסות: פרץ → 429; מכסה יומית → הבנייה ממשיכה לעבוד אבל בלי עידון
   // ה-AI (generateTrip המקומי חינם ולא ניתן להצפה יקרה).
+  if (!sameOriginOk(request)) {
+    return Response.json({ error: 'forbidden' }, { status: 403 });
+  }
   const caller = await resolveCaller(request);
-  const limits = PLAN_LIMITS[caller.plan];
+  const limits = PLAN_LIMITS[caller.tier];
   const burst = checkLimit('generate-burst', caller.id, 5, 60_000);
   if (!burst.ok) {
     return Response.json(
@@ -294,7 +303,14 @@ export async function POST(request: Request) {
   }
   const daily = checkLimit('generate-day', caller.id, limits.generatePerDay, 24 * 60 * 60 * 1000);
   const unitsUsed = process.env.ANTHROPIC_API_KEY ? await aiUnitsUsedToday(caller.id) : 0;
-  const aiAllowed = daily.ok && unitsUsed < limits.aiUnitsPerDay;
+  /*
+    תקרת ההוצאה הגלובלית חלה גם כאן. ההשפעה על המטייל היא **אפס
+    לכאורה**: הבנייה ממשיכה דרך `generateTrip` המקומי, בדיוק כמו בכל
+    מצב אחר שבו העידון לא זמין. מה שנעצר הוא הקריאה למודל.
+  */
+  const budget = process.env.ANTHROPIC_API_KEY ? await budgetState() : null;
+  if (budget) void maybeAlert(budget);
+  const aiAllowed = daily.ok && unitsUsed < limits.aiUnitsPerDay && !budget?.exceeded;
 
   // קוראים כטקסט קודם וחוסמים גוף עצום לפני JSON.parse - אותה הגנה שיש
   // ב-/api/chat. בלעדיה אפשר להעסיק את השרת בפרסור של מגה-בייטים.
@@ -321,9 +337,17 @@ export async function POST(request: Request) {
   let days: TripDay[] = [];
 
   if (notes && process.env.ANTHROPIC_API_KEY && aiAllowed) {
-    const meter = { units: 0 };
+    const meter = { units: 0, usage: {} as Record<string, number>, model: '' };
     const refinement = await refineWithClaude(notes, prefs, party, meter);
     recordAiUnits(caller.id, meter.units);
+    recordSpend({
+      identity: caller.id,
+      userId: caller.userId,
+      tripId: null,
+      route: 'generate-trip',
+      model: meter.model,
+      usage: meter.usage,
+    });
     if (refinement) {
       days = validateDayPlans(refinement.dayPlans, prefs);
       tripName =

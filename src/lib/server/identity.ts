@@ -1,4 +1,4 @@
-import { effectivePlan, type Plan } from '@/lib/plans';
+import { effectivePlan, type Plan, type Tier } from '@/lib/plans';
 import { eq, pgQuery, pgSelect } from '@/lib/server/pgrest';
 
 /**
@@ -16,7 +16,10 @@ import { eq, pgQuery, pgSelect } from '@/lib/server/pgrest';
 export interface Caller {
   /** מפתח המכסות: user:<uid> או ip:<addr> */
   id: string;
+  /** התוכנית לצורכי **חיוב**: free | premium */
   plan: Plan;
+  /** השכבה לצורכי **מכסות**: anon | free | premium. אנונימי מקבל פחות. */
+  tier: Tier;
   userId: string | null;
 }
 
@@ -130,10 +133,16 @@ export async function resolveCaller(request: Request): Promise<Caller> {
     const userId = await verifyToken(token);
     if (userId) {
       const plan = await fetchPlan(userId, token);
-      return { id: `user:${userId}`, plan, userId };
+      return { id: `user:${userId}`, plan, tier: plan, userId };
     }
   }
-  return { id: `ip:${requestIp(request)}`, plan: 'free', userId: null };
+  /*
+    אנונימי הוא **שכבה נפרדת ולא "free"**. נתנאל ביקש שהשימוש הכבד
+    יגיע מאנשים עם חשבון וטיולים: מי שלא נרשם מקבל מספיק כדי לבנות
+    טיול אמיתי ולהתרשם, ומי שכן נרשם מקבל את המכסה המלאה. `plan`
+    נשאר 'free' כי הוא שדה **חיוב** - חשבון אנונימי הוא לא לקוח.
+  */
+  return { id: `ip:${requestIp(request)}`, plan: 'free', tier: 'anon', userId: null };
 }
 
 /** ביטול מטמון התוכנית אחרי שדרוג (למשל מה-webhook) */
