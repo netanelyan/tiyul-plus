@@ -248,6 +248,123 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-31 (xx) - The dashboard, and the sentence "must get nothing at all"
+
+Netanel asked for an owner dashboard: an aggregate main view, a narrow lookup for
+one trip, real access control, a hostile search box, read-only, and a log of when
+an admin opens somebody's trip.
+
+**The aggregate view has no person in it, and that is enforced by the payload
+rather than by the layout.** `/api/admin/overview` returns counts, medians and
+slugs - no email, no display name, no trip id. The harness asserts it by
+searching the whole response for `@`, because a field added later would slip past
+a visual check.
+
+**It also says what it cannot see.** Only signed-in users' trips reach
+`user_trips`; an anonymous visitor's trip lives in their browser. So every number
+ships with `scope` text saying so. Without it "37 trips" reads as *all* trips,
+and that is a business decision made on a wrong number.
+
+**Typical length is a median, not a mean** - one 90-day outlier moves a mean to
+25 and there is a test named after exactly that.
+
+---
+
+**The search box: the claim is not that the string is escaped. It is that the
+string does not travel.**
+
+| typed | what reaches the database |
+|---|---|
+| email | a uuid from GoTrue, after an **exact** match |
+| destination | a slug from our own catalog - a closed list in code |
+| trip name | **nothing** - the filter runs in memory on rows already fetched |
+
+So even if `pgrest.ts` broke tomorrow there is no channel here, because no
+user string is in a query. `pgrest` stays the second layer, not the first. Length,
+control characters and LIKE wildcards are rejected on top of that - the wildcards
+are technically unnecessary and go anyway, so search behaviour is predictable
+rather than a pattern the user can run.
+
+**A partial email returns nothing, deliberately.** Exact match only is what stops
+the box from being an address scanner.
+
+**Read-only is structural.** The route has no POST, PATCH or DELETE - editing
+somebody else's trip is absent from the code, not blocked in it. The harness
+fires all four verbs and gets 405.
+
+**The log records opening a trip, not searching.** A search returns names and no
+content; a log that fills with noise is a log nobody reads. The write happens
+**before** the content is returned, and there is an assertion on that ordering.
+
+---
+
+**Two real bugs the aggregation tests caught, both in my own new code.**
+
+`typeof [] === 'object'`, so a row whose `data` was an array passed the guard and
+was counted as a real trip with zero days - inflating the count and dragging the
+median down at the same time. And a Rome+Venice trip counted **twice** for Italy,
+which would have turned "which countries people plan for" into a measure of how
+many cities each country has in the catalog.
+
+**And a third, older one, found by looking at the screen.** The new card rendered
+**"אורך טיפוסי: 1 ימים"**. That is the `כ-1 שעות` species from entry (kk), and it
+turned out not to be new: the nav, the homepage trip card, the summary chip, the
+account list, the shared-trip page and the OG description all print `${n} ימים`,
+so every one-day and two-day trip has been showing it. `daysHe` now returns
+יום אחד / יומיים / N ימים, exactly as `formatDurationHe` already did for hours,
+and a test sweeps 1..60 asserting the broken form cannot come back.
+
+---
+
+**Verified.** 96/96 in a new access harness against a Supabase stand-in that
+**logs every request the server makes**, which is what turns "gets nothing" from a
+UI claim into a measured one: an anonymous caller, a forged token and an ordinary
+signed-in user each get 404 from all thirteen admin endpoints, and for the
+non-admin the only calls that ever leave the server are token verification and the
+role read - **no trip row is fetched at all**. Plus 27 hostile payloads across the
+three modes returning nobody else's trip. 32/32 in a real browser at 1440 and 390:
+the cards render RTL with zero overflow, the search finds and opens a trip with
+place *names* rather than ids, and an ordinary user's `/admin` shows the same
+"not found" screen an anonymous visitor gets, with no trip name anywhere in the
+DOM. 385 unit tests (16 new), build and tsc clean, lint at the pre-existing 34.
+
+---
+
+**What now has to go in the privacy policy, plainly.** This is the list Netanel
+asked for; the wording is his.
+
+1. **Trips saved to an account are stored on our servers** (Supabase), not only in
+   the browser, and are readable by us. Anonymous trips are not - they stay on the
+   device. That distinction is worth stating because it is also the honest answer
+   to "what do you have on me".
+2. **Designated staff can open an individual trip** to give support or investigate
+   a problem: its name, days, stops, notes, the traveller's own pins and the
+   preferences they set, together with the account's email address. Say that it is
+   read-only and that nobody can edit or delete a traveller's trip.
+3. **Every such opening is logged** - who opened it, whose trip, and when - and the
+   log is retained. A right stated without its record reads worse than the record.
+4. **Aggregate statistics are produced** from all trips (counts, destinations,
+   typical length) and contain no personal data.
+5. **A counter of exports** (print, WhatsApp, share link, navigation) is kept per
+   day and per type, with no user, trip or time-of-day attached.
+6. **A local browser identifier** is stored on the device for abuse protection and
+   quotas (from the previous session's work); it holds no personal data and clearing
+   site data removes it.
+7. **AI usage and cost are recorded per request** - model, tokens, cost, and
+   whether the caller was signed in - without message content.
+8. **IP addresses are processed** for rate limiting and abuse protection.
+9. If you list processors, **Supabase** (database and authentication) and
+   **Anthropic** (the AI model) belong there, alongside Vercel and Stripe.
+
+**Waiting on Netanel:** run `supabase-admin-dash.sql`. Without it everything works
+except the export counter, and the card says so explicitly instead of showing a
+zero that looks like a real measurement. `supabase-ai-spend.sql` is still pending
+from the previous session.
+
+**One thing deliberately not built,** because he named it: no bulk export, no
+editing, no deleting, and nothing that emails a traveller. Also no impersonation -
+that remains refused since entry (o).
+
 ### 2026-07-31 (ww) - One wallet was the bug: a cost control that could cause an outage
 
 Netanel, on the ceiling shipped an hour earlier: **a single abuser can switch the
