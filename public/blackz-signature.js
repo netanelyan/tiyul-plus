@@ -80,14 +80,39 @@ if (!customElements.get('blackz-signature')) {
             padding-right: 6px; /* script tails get clipped without this */
           }
 
-          /* Card */
+          /* Backdrop - makes the centered card read as deliberate */
+          .bz-backdrop {
+            position: fixed;
+            inset: 0;
+            /* under html.a11y-grayscale the filter sits on <body>, which
+               becomes the containing block for fixed children - the
+               minimums keep the dim covering the screen there too */
+            min-width: 100vw;
+            min-height: 100vh;
+            background: rgba(8, 8, 10, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.2s ease, visibility 0.2s;
+            z-index: 2147483000;
+          }
+
+          /* Card.
+             Centred on the SCREEN, not on the trigger: the badge sits at
+             the edge of a right-aligned footer, so a trigger-anchored card
+             hung off the side and was clipped on phones. Width is clamped
+             to the viewport, and the --bz-dx / --bz-dy vars are a correction the
+             script applies after measuring - see the note in the JS. */
           .bz-card {
-            position: absolute;
-            bottom: calc(100% + 16px);
+            position: fixed;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%) translateY(10px);
-            width: 300px;
-            max-width: calc(100vw - 32px);
+            --bz-dx: 0px;
+            --bz-dy: 0px;
+            transform: translate(calc(-50% + var(--bz-dx)), calc(-50% + var(--bz-dy) + 8px));
+            width: min(300px, calc(100vw - 32px));
+            max-height: calc(100vh - 32px);
+            overflow-y: auto;
             background: var(--bz-ink);
             border: 1px solid var(--bz-line);
             border-radius: 14px;
@@ -96,21 +121,11 @@ if (!customElements.get('blackz-signature')) {
             visibility: hidden;
             pointer-events: none;
             transition: opacity 0.25s ease, transform 0.3s ease, visibility 0.25s;
-            z-index: 99999;
+            z-index: 2147483001;
             box-sizing: border-box;
             text-align: center;
             direction: ltr;
             overflow: hidden;
-          }
-
-          .bz-card::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 7px solid transparent;
-            border-top-color: var(--bz-ink);
           }
 
           /* Thin gold strip on top */
@@ -178,13 +193,19 @@ if (!customElements.get('blackz-signature')) {
             letter-spacing: 1.5px;
           }
 
-          .bz-wrapper:hover .bz-card,
-          .bz-wrapper:focus-within .bz-card,
+          /* Click only. Hover-to-open made sense for a card pinned to the
+             trigger; for one centred over the page it would fire whenever
+             the pointer crossed the badge. */
           .bz-wrapper.open .bz-card {
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
-            transform: translateX(-50%) translateY(0);
+            transform: translate(calc(-50% + var(--bz-dx)), calc(-50% + var(--bz-dy)));
+          }
+          .bz-wrapper.open .bz-backdrop {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
           }
 
           @media (prefers-reduced-motion: reduce) {
@@ -194,13 +215,15 @@ if (!customElements.get('blackz-signature')) {
         </style>
 
         <div class="bz-wrapper">
-          <button class="bz-trigger" type="button" aria-label="Part of BlackZ network">
+          <button class="bz-trigger" type="button" aria-label="Part of BlackZ network" aria-expanded="false">
             <span class="bz-dot"></span>
             <span>Part of</span>
             <span class="bz-mark">BlackZ</span>
           </button>
 
-          <div class="bz-card" role="tooltip">
+          <div class="bz-backdrop" part="backdrop"></div>
+
+          <div class="bz-card" role="dialog" aria-modal="false" aria-label="BlackZ network seal">
             <div class="bz-strip"></div>
             <div class="bz-body">
               <div class="bz-top-text-inner">Authorized Ecommerce Brand</div>
@@ -218,11 +241,61 @@ if (!customElements.get('blackz-signature')) {
 
       const wrapper = this.shadowRoot.querySelector('.bz-wrapper');
       const trigger = this.shadowRoot.querySelector('.bz-trigger');
+      const card = this.shadowRoot.querySelector('.bz-card');
+      const backdrop = this.shadowRoot.querySelector('.bz-backdrop');
+
+      /**
+       * Nudge the card back inside the viewport after it opens.
+       *
+       * `position: fixed` is normally enough, but this site's high-contrast
+       * / grayscale accessibility modes put a `filter` on <body>, and a
+       * filtered element becomes the containing block for fixed children -
+       * so "fixed" silently starts meaning "relative to the document".
+       * Measuring the real rect and correcting is the only version that
+       * cannot be wrong, and it costs one frame.
+       */
+      const clamp = () => {
+        card.style.setProperty('--bz-dx', '0px');
+        card.style.setProperty('--bz-dy', '0px');
+        requestAnimationFrame(() => {
+          const r = card.getBoundingClientRect();
+          const m = 16;
+          let dx = 0;
+          let dy = 0;
+          if (r.left < m) dx = m - r.left;
+          else if (r.right > window.innerWidth - m) dx = window.innerWidth - m - r.right;
+          if (r.top < m) dy = m - r.top;
+          else if (r.bottom > window.innerHeight - m) dy = window.innerHeight - m - r.bottom;
+          card.style.setProperty('--bz-dx', dx + 'px');
+          card.style.setProperty('--bz-dy', dy + 'px');
+        });
+      };
+
+      const setOpen = (open) => {
+        wrapper.classList.toggle('open', open);
+        trigger.setAttribute('aria-expanded', String(open));
+        if (open) clamp();
+      };
+
       trigger.addEventListener('click', (e) => {
         e.stopPropagation();
-        wrapper.classList.toggle('open');
+        setOpen(!wrapper.classList.contains('open'));
       });
-      document.addEventListener('click', () => wrapper.classList.remove('open'));
+      backdrop.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setOpen(false);
+      });
+      card.addEventListener('click', (e) => e.stopPropagation());
+      document.addEventListener('click', () => setOpen(false));
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && wrapper.classList.contains('open')) {
+          setOpen(false);
+          trigger.focus();
+        }
+      });
+      window.addEventListener('resize', () => {
+        if (wrapper.classList.contains('open')) clamp();
+      });
     }
   }
   customElements.define('blackz-signature', BlackZSignature);
