@@ -18,6 +18,7 @@ import {
 import { countries as catalogCountries } from '@/data/countries';
 import Flag from '@/components/Flag';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
+import { daysHe } from '@/lib/duration';
 
 /**
  * האזור האישי - הבית של המשתמש המחובר:
@@ -417,7 +418,7 @@ function TripsCard({ onOpen, cityNames }: { onOpen: (id: string) => void; cityNa
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-bold text-night">{t.name}</span>
                   <span className="block text-xs font-medium text-night/50">
-                    {tripLabel(t, cityNames)} · {t.days.length} ימים · {stops} עצירות
+                    {tripLabel(t, cityNames)} · {daysHe(t.days.length)} · {stops} עצירות
                   </span>
                 </span>
                 <span className="shrink-0 text-sm font-bold text-sunset-deep">פתיחה ←</span>

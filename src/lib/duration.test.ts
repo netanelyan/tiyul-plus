@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { formatDurationHe } from './duration.ts';
+import { daysHe, formatDurationHe } from './duration.ts';
 
 test('formatDurationHe: the two forms the old expression got wrong', () => {
   // 60 ו-45 הם המשכים הנפוצים ביותר בקטלוג (248 מקומות), ושניהם הציגו
@@ -40,4 +40,15 @@ test('formatDurationHe: no output ever contains the broken singular', () => {
     assert.ok(!/^כ-1 שעות$/.test(s), `${m} -> ${s}`);
     assert.ok(!/כ-0(\.5)? שעות/.test(s), `${m} -> ${s}`);
   }
+});
+
+test('אורך טיול בעברית: יחיד, זוגי ורבים', () => {
+  assert.equal(daysHe(1), 'יום אחד');
+  assert.equal(daysHe(2), 'יומיים');
+  assert.equal(daysHe(3), '3 ימים');
+  assert.equal(daysHe(14), '14 ימים');
+  // אף פלט לא חוזר לצורה השבורה
+  for (let n = 1; n <= 60; n++) assert.ok(!/^[12] ימים$/.test(daysHe(n)), String(n));
+  assert.equal(daysHe(0), 'בלי ימים');
+  assert.equal(daysHe(NaN), 'בלי ימים');
 });

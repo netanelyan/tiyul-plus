@@ -5,6 +5,7 @@ import type { SharedTrip } from '@/lib/trip/share';
 import { decodeTripShare } from '@/lib/server/shareDecode';
 import { getSharedPayload } from '@/lib/trip/shareStore';
 import SharedTripView from './SharedTripView';
+import { daysHe } from '@/lib/duration';
 
 /**
  * /t/<code> - צפייה בטיול משותף, לקריאה בלבד, לכל אחד (בלי חשבון).
@@ -39,7 +40,7 @@ export async function generateMetadata({
     .join(' · ');
   const stops = shared.days.reduce((n, d) => n + d.placeIds.length, 0);
   const title = `${shared.name} | טיול+`;
-  const description = `מסלול של ${shared.days.length} ימים ו-${stops} עצירות ב${cities} - נבנה בטיול+, סוכן הנסיעות החכם.`;
+  const description = `מסלול של ${daysHe(shared.days.length)} ו-${stops} עצירות ב${cities} - נבנה בטיול+, סוכן הנסיעות החכם.`;
   // openGraph נכתב במפורש ולא בהסתמכות על ה-layout: מטא-דאטה ב-Next
   // מתמזגת לפי שדה, כך ש-title/description כאן **לא** מחלחלים לתוך
   // openGraph של האב - והכרטיס בוואטסאפ היה מציג את שם האתר הגנרי במקום

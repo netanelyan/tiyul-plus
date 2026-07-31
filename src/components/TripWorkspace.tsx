@@ -15,6 +15,7 @@ import { dayDate, formatHebrewDate, formatHebrewRange } from '@/lib/trip/dates';
 import TripDates from '@/components/TripDates';
 import { encodeTripShare } from '@/lib/trip/share';
 import { travelModeFor } from '@/lib/trip/mapsExport';
+import { trackEvent } from '@/lib/events';
 import PlacesMap from '@/components/PlacesMap';
 import type { MapGroup, MapPin } from '@/components/MapInner';
 import BookingPanel from '@/components/BookingPanel';
@@ -32,6 +33,7 @@ import DayNavExport from '@/components/DayNavExport';
 import { OFFLINE_HINT, isoDay, useOnline } from '@/lib/offline/online';
 import { readOnlyIfOffline } from '@/lib/trip/readOnly';
 import { cachedAt, pruneCities } from '@/lib/trip/cityStore';
+import { daysHe } from '@/lib/duration';
 
 /**
  * התצוגה המאוחדת של הטיול - מסך אחד לכל מה שקשור לטיול הפעיל:
@@ -315,6 +317,7 @@ export default function TripWorkspace({
     if (!t) return;
     const url = await getShareUrl();
     navigator.clipboard.writeText(url).then(() => {
+      trackEvent('share');
       setLinkCopied(true);
       setTimeout(() => setLinkCopied(false), 2000);
     });
@@ -322,6 +325,7 @@ export default function TripWorkspace({
 
   function shareWhatsApp() {
     if (!t) return;
+    trackEvent('whatsapp');
     // פותחים חלון סינכרונית (שורד חוסמי פופאפ) ומנווטים כשהקישור מוכן
     const win = window.open('', '_blank');
     void getShareUrl().then((url) => {
@@ -389,7 +393,7 @@ export default function TripWorkspace({
             <TripDates
               disabled={offline}
               trip={t}
-              summary={`${totalStops} עצירות · ${t.days.length} ימים`}
+              summary={`${totalStops} עצירות · ${daysHe(t.days.length)}`}
               onSet={(dates) => trip.setTripDates(t.id, dates)}
               onAddDays={(n) => {
                 // מוסיפים בעיר האחרונה של הטיול - ההמשך הטבעי של המסלול
@@ -443,7 +447,15 @@ export default function TripWorkspace({
                   disabled: offline,
                 },
                 { label: '📍 ייבוא מפה מ-Google', onClick: () => setImportOpen(true), disabled: offline },
-                { label: 'הדפסה / PDF', onClick: () => window.print(), icon: ICONS.printer },
+                {
+                  label: 'הדפסה / PDF',
+                  onClick: () => {
+                    // נשלח לפני print, כי print חוסם את החוט. keepalive עושה את השאר.
+                    trackEvent('print');
+                    window.print();
+                  },
+                  icon: ICONS.printer,
+                },
                 {
                   label: 'מחיקת הטיול',
                   danger: true,
@@ -1043,7 +1055,7 @@ export default function TripWorkspace({
               </p>
               <h1>{t.name}</h1>
               <p className="print-meta">
-                {t.days.length} ימים · {totalStops} עצירות
+                {daysHe(t.days.length)} · {totalStops} עצירות
                 {formatHebrewRange(t.startDate, t.endDate)
                   ? ` · ${formatHebrewRange(t.startDate, t.endDate)}`
                   : ''}

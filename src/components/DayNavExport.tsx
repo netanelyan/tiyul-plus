@@ -6,6 +6,7 @@ import {
   type TravelMode,
   MAX_POINTS_PER_LEG,
 } from '@/lib/trip/mapsExport';
+import { trackEvent } from '@/lib/events';
 
 /**
  * "ניווט ליום N ב-Google Maps" - העצירות של היום, לפי הסדר שבתכנון.
@@ -49,6 +50,7 @@ export default function DayNavExport({
           href={legs[0].url}
           target="_blank"
           rel="noreferrer"
+          onClick={() => trackEvent('maps')}
           className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-night/5 px-4 py-2.5 text-center text-sm font-bold text-night/75 ring-1 ring-night/10 transition hover:bg-night/10 hover:text-night"
         >
           <span aria-hidden>🧭</span> ניווט ליום {dayNumber} ב-Google Maps
@@ -61,6 +63,7 @@ export default function DayNavExport({
               href={leg.url}
               target="_blank"
               rel="noreferrer"
+              onClick={() => trackEvent('maps')}
               className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-night/5 px-4 py-2.5 text-center text-sm font-bold text-night/75 ring-1 ring-night/10 transition hover:bg-night/10 hover:text-night"
             >
               <span aria-hidden>🧭</span> ניווט · קטע {i + 1} מתוך {legs.length}

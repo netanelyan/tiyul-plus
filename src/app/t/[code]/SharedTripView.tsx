@@ -12,6 +12,7 @@ import type { SharedTrip } from '@/lib/trip/share';
 import { tripFromShared } from '@/lib/trip/share';
 import PlacesMap from '@/components/PlacesMap';
 import Flag from '@/components/Flag';
+import { daysHe } from '@/lib/duration';
 
 /**
  * תצוגת קריאה-בלבד של טיול משותף + ייבוא עותק ל"טיולים שלי".
@@ -67,7 +68,7 @@ export default function SharedTripView({
         <p className="text-xs font-bold text-sunset-deep">טיול ששותף איתכם · צפייה חופשית</p>
         <h1 className="display mt-1 text-3xl text-night">{shared.name}</h1>
         <p className="mt-2 text-sm font-semibold text-night/60">
-          {shared.days.length} ימים · {totalStops} עצירות
+          {daysHe(shared.days.length)} · {totalStops} עצירות
           {formatHebrewRange(shared.startDate, shared.endDate)
             ? ` · ${formatHebrewRange(shared.startDate, shared.endDate)}`
             : ''}{' '}
