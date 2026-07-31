@@ -248,6 +248,106 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-31 (ss) - One emoji out of five, and what that turned out to be a symptom of
+
+Netanel sent a screenshot of the bottom of the trip screen: three collapsible
+boxes stacked, and only one of them carrying an emoji. *"go over the website and
+make sure the design is consistent - for example, if there is 1 emoji, the
+similar boxes should also contain emojis."*
+
+**The emoji was the visible half of a bigger thing.** Five blocks sit in that
+stack - dates, booking, cost, pins, all-days - written across five different
+sessions, and each one had invented its own header. Measured in the browser
+before touching anything:
+
+| | radius | background | ring | label | margin | caret |
+|---|---|---|---|---|---|---|
+| dates | (bare heading) | none | none | `text-xs font-bold /45` | mt-5 | - |
+| booking | 2xl | shell | yes | `text-sm font-bold night` | mt-5 | `text-xs`, dark |
+| cost | 2xl | shell | yes | `text-sm font-semibold /80` | **mt-4** | **no size class**, muted |
+| pins | 2xl | shell | yes | `text-base font-black` | mt-5 | - |
+| all-days | **xl** | **night/3%** | **none** | `text-sm font-bold /70` | mt-5 | `text-xs`, dark |
+
+Not one of them is wrong on its own. **The difference between siblings is the
+bug**, and that reframing is what decided the fix: hand-aligning three headers
+holds until the next session adds a sixth block, so the header moved into
+`PanelSection` and there is now nothing left to drift from.
+
+**`icon` is a required prop, deliberately.** One emoji out of five is exactly
+what an optional field produces over five sessions.
+
+**The body stays outside the bar, and that is not laziness.** `bg-shell` is
+`#fffdf8` on a `#fdf6ec` page - three colour values apart. A card nested inside
+the bar would have smeared into one block, so the bar is the object that must be
+identical and each block keeps its own body underneath.
+
+---
+
+**Then the audit found the same species twice more, and both are worse than
+cosmetic.**
+
+**One green, written by hand nine times.** `#00a896` appears across the kosher
+directory, the destination page, the account page, the traveler page and the
+country page - and the map popup renders the *same* `kosherNote` field in
+`#0d9488`, a different green, with no pill. So an identical sentence looked like
+two different things depending on whether you read it in the card or in the
+popup two centimetres away.
+
+The fix is a token, `--color-lagoon`, and **it closes an accessibility hole
+rather than just tidying up**: `html.a11y-contrast` overrides the colour tokens,
+so every hardcoded hex silently ignores high-contrast mode. Nine places were
+opting out of an accessibility feature by being written in hex. `KosherNote` is
+now the only renderer of `kosherNote`, the way `KosherBadge` was already the
+only renderer of supervision.
+
+**And the star.** `mustSee` renders as `text-zest` on the destination page and
+as `#e0a400` - a different gold - on the shared-trip page, which is the page
+people actually send each other.
+
+---
+
+**Three tests guard the class, not the instance.** No arbitrary colour value in
+a `className`; no `▾` outside the shared component or the three agreed
+exceptions; no hand-rolled kosher rendering. **Two of the three failed on their
+first run** and found the star and a `✡️` I had not noticed - so they are not
+decorative, they had already caught something before they were committed.
+
+The `▾` test carries an allowlist rather than banning the glyph, because three
+of the callers are genuinely not panels (a preferences chip, a nav menu, the
+ideas dropdown). An allowlist makes the next addition a decision instead of an
+accident.
+
+**A wrong turn worth recording.** My first read was that the teal was an
+un-tokenised stray and the map popup was right. It was the opposite: the teal
+was the established treatment on two surfaces and the popup was the outlier. Had
+I "fixed" it in the direction I first assumed, I would have broken the two pages
+that were already consistent. **Count the instances before deciding which one is
+the deviation.**
+
+**Also: do not run `npx prettier` in this repo without `--single-quote
+--print-width 100`.** There is no prettier config, so the defaults rewrote every
+string in five components to double quotes. Caught in the diff, reverted by
+re-running with the flags - the same trap entry (d) recorded for the data file,
+now confirmed for components too.
+
+**Verified:** a new 40/40 harness that compares the five blocks **to each other**
+in a real browser at 1440 and 390 - radius, background, ring, padding, margin,
+icon presence and size, label weight/size/colour, caret size and colour, and
+that all five occupy the same left and right edge - plus a 28/28 sweep over six
+pages asserting every `▾` on a page matches every other and that the kosher
+badges render identically. Existing suites re-run: seal 55/55, footer 36/36,
+date notes 26/26, booking search 30/30, offline 39/39. 296 unit tests, tsc,
+build, and lint at exactly the pre-existing baseline (34 problems, none new).
+
+**Deliberately not done, and it is a real remainder.** The heading scale outside
+the trip screen is still inconsistent - `/account` uses `display text-xl` and
+`text-2xl`, the destination page has `text-lg font-bold` and `display text-2xl`
+one screen apart, and `QuickServices` has its own. That is a typographic scale
+decision, not a drift fix, and it wants Netanel to say which of the three he
+wants before anything is normalised to it. `MapInner` also still styles its
+popup with inline hexes (`#6b6394`, `#ffc531`) - the second of those is the zest
+token written by hand - which the className guard cannot see.
+
 ### 2026-07-31 (rr) - The footer's signature row, and the seal that should have been a hover
 
 Netanel, from a screenshot of the bottom of the page: *"all of this should be
