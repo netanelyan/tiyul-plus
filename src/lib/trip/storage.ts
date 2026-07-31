@@ -25,9 +25,19 @@ export interface TripState {
   currentId: string | null;
   /** id של טיול שנמחק → מתי (ms). נגזם לפי גיל ולפי מספר. */
   deleted?: Record<string, number>;
+  /**
+   * **של מי הנתונים שיושבים כאן עכשיו.** `null` = אנונימי (טיולים שנבנו
+   * בלי חשבון), מחרוזת = ה-uuid של החשבון שממנו הם נמשכו.
+   *
+   * זה לא מטא-דאטה: בלי השדה הזה, מכשיר משותף מערבב אנשים. היציאה
+   * מהחשבון לא ניקתה את האחסון, ולכן ההתחברות הבאה מיזגה את הטיולים של
+   * הקודם לתוך החשבון החדש - `mergeTrips` דוחפת כל טיול מקומי שאינו
+   * בשרת, וזו בדיוק הצורה של "טיול מקומי שאינו בשרת". ראו `AccountSync`.
+   */
+  accountId?: string | null;
 }
 
-const EMPTY: TripState = { trips: [], currentId: null, deleted: {} };
+const EMPTY: TripState = { trips: [], currentId: null, deleted: {}, accountId: null };
 
 /** גזימה: מצבה בת 90 יום אין לה מה להגן עליו, ורשימה בלי תקרה גדלה לנצח. */
 export function pruneTombstones(
@@ -49,7 +59,7 @@ export function loadTrips(): TripState {
     if (!raw) return { ...EMPTY };
     const parsed = JSON.parse(raw) as TripState;
     if (!Array.isArray(parsed.trips)) return { ...EMPTY };
-    return { ...parsed, deleted: pruneTombstones(parsed.deleted) };
+    return { ...parsed, deleted: pruneTombstones(parsed.deleted), accountId: parsed.accountId ?? null };
   } catch {
     return { ...EMPTY };
   }

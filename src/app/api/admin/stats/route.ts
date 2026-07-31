@@ -33,6 +33,12 @@ export async function GET(req: Request) {
   // של בני משפחה שפשוט לא נגעו באזור האישי.
   const users = await countAuthUsers();
 
+  /*
+    **null אינו אפס.** קריאה שנכשלה (הטבלה לא קיימת, מפתח שגוי) החזירה
+    כאן אפס שנראה בדיוק כמו "אף אחד לא השתמש" - וזה מה שהוצג בלוח בזמן
+    שקריאות באמת נעשו. עכשיו זה נאמר.
+  */
+  const tracked = rows !== null;
   const todayRows = (rows ?? []).filter((r) => r.day === today);
   const byDay = new Map<string, number>();
   for (const r of rows ?? []) byDay.set(r.day, (byDay.get(r.day) ?? 0) + r.units);
@@ -42,10 +48,16 @@ export async function GET(req: Request) {
   const atCap = todayRows.filter((r) => r.units >= freeCap).length;
 
   return ok({
+    tracked,
     today: {
       identities: todayRows.length,
       loggedIn: todayRows.filter((r) => r.identity.startsWith('user:')).length,
-      anonymous: todayRows.filter((r) => r.identity.startsWith('ip:')).length,
+      /*
+        כל מה שאינו `user:` הוא אנונימי. הספירה הקודמת חיפשה `ip:` בלבד,
+        ומאז שהמכסה האנונימית עברה למזהה דפדפן (`anon:<id>`) רוב המבקרים
+        לא נספרו בשום צד - "משתמשים היום" הראה אפס בזמן שהיו כאלה.
+      */
+      anonymous: todayRows.filter((r) => !r.identity.startsWith('user:')).length,
       units: todayRows.reduce((n, r) => n + r.units, 0),
       nearCap,
       atCap,

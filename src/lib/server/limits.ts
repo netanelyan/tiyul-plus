@@ -15,6 +15,7 @@
  */
 
 import { eq, pgQuery, pgSelect } from '@/lib/server/pgrest';
+import { serviceHeaders } from '@/lib/server/supabaseAdmin';
 
 interface WindowEntry {
   count: number;
@@ -77,14 +78,6 @@ const supaUrl = () => process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABA
 const serviceKey = () => process.env.SUPABASE_SERVICE_ROLE_KEY;
 const persistent = () => Boolean(supaUrl() && serviceKey());
 
-function serviceHeaders(): Record<string, string> {
-  const key = serviceKey()!;
-  return {
-    apikey: key,
-    Authorization: `Bearer ${key}`,
-    'Content-Type': 'application/json',
-  };
-}
 
 function entryFor(id: string): UsageEntry {
   const day = dayKey();

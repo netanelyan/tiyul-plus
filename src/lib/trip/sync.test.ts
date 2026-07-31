@@ -124,3 +124,30 @@ test('a REAL edit after the deletion still wins', () => {
   const merged = mergeTrips([], [trip], { a: 2_000 }, { a: 2_000 });
   assert.equal(merged.applyLocally.length, 1);
 });
+
+/* ---------- מכשיר משותף: מעבר בין חשבונות ---------- */
+
+/**
+ * **הבאג שהבדיקות האלה שומרות עליו.** יציאה מהחשבון לא ניקתה את האחסון
+ * המקומי, ולכן ההתחברות הבאה על אותו מחשב מיזגה את הטיולים של האדם הקודם.
+ * המיזוג עצמו תקין - הוא אמור לדחוף טיול מקומי שאינו בשרת, וזו ההגירה של
+ * טיולים אנונימיים. מה שהיה שגוי הוא **מה נחשב "מקומי"** ברגע הזה.
+ */
+test('טיול של האדם הקודם היה נדחף לחשבון החדש - זו הצורה של הבאג', () => {
+  const previousPersons: Trip[] = [trip('svk', 1000)];
+  const { pushRemotely } = mergeTrips(previousPersons, [], {}, {});
+  assert.equal(pushRemotely.length, 1, 'מיזוג תמים דוחף אותו - ולכן חייבים לנקות לפניו');
+});
+
+test('אחרי ניקוי, ההתחברות של האדם החדש לא מעלה כלום שאינו שלו', () => {
+  // זה מה ש-AccountSync מעבירה כשה-switchAccount החזיר "ניקיתי"
+  const { pushRemotely, applyLocally } = mergeTrips([], [trip('rome', 500)], {}, {});
+  assert.deepEqual(pushRemotely, []);
+  assert.equal(applyLocally.length, 1, 'והטיולים שלו כן יורדים אליו');
+});
+
+test('טיול אנונימי אמיתי עדיין מהגר בהתחברות ראשונה', () => {
+  // accountId === null באחסון => לא מנקים => ההגירה נשמרת
+  const { pushRemotely } = mergeTrips([trip('anon', 900)], [], {}, {});
+  assert.equal(pushRemotely.length, 1);
+});

@@ -20,7 +20,11 @@ import {
   resetBudgetForTest,
 } from './budget.ts';
 
-const BUDGET = 5; // ברירת המחדל, ואין דגלים בסביבת הבדיקה
+import { DEFAULT_DAILY_BUDGET_USD } from './budget.ts';
+
+// נקרא מהקוד ולא נכתב כאן: מספר קשיח בבדיקה נשבר בכל כוונון תקציב,
+// והבדיקות האלה בודקות **יחסים**, לא את גובה התקרה.
+const BUDGET = DEFAULT_DAILY_BUDGET_USD;
 
 const spend = (identity: string, usd: number) => {
   // רישום ישיר: המחיר מחושב מטוקנים, אז מייצרים usage שמגיע לסכום
@@ -92,11 +96,33 @@ test('זהות אחת לא יכולה לקחת חלק גדול מהיום', asyn
   assert.equal((await budgetFor('user:other')).exceeded, false);
 });
 
-test('התקרה של אנונימי בודד מחמירה יותר', async () => {
+/**
+ * **התקרה האישית של אנונימי נגזרת מהיום, לא מהארנק** - שינוי מכוון,
+ * ותיקון של הבאג שחסם את נתנאל אחרי ארבע הודעות: 15% מארנק של 30% הם
+ * $0.225, פחות מקריאה קרה אחת שנמדדה ב-$0.447.
+ */
+test('התקרה האישית של אנונימי נגזרת מהיום ולא מהארנק', async () => {
   resetBudgetForTest();
   const s = await budgetFor('anon:dddddddddddddddd');
-  assert.equal(s.callerBudget, BUDGET * ANON_SHARE * ANON_CALLER_SHARE);
-  assert.ok(s.callerBudget < BUDGET * CALLER_SHARE);
+  assert.equal(s.callerBudget, BUDGET * ANON_CALLER_SHARE);
+  assert.equal(s.callerBudget, BUDGET * CALLER_SHARE, 'אותה תקרה שמקבל מחובר');
+});
+
+/**
+ * הטענה שכל הכיול הזה קיים בשבילה: **סשן תכנון אנונימי מלא נכנס
+ * בתקרה האישית**. המספרים הם מדידה (31.7): קריאה קרה $0.447, קריאה
+ * חמה $0.063, ומכסת ההודעות של השכבה האנונימית היא 25.
+ */
+test('סשן תכנון אנונימי מלא לא נחסם', async () => {
+  resetBudgetForTest();
+  const id = 'anon:eeeeeeeeeeeeeeee';
+  const COLD = 0.447;
+  const WARM = 0.063;
+  // התרחיש הגרוע: שתי קריאות קרות (הפסקה ארוכה באמצע) ועוד 23 חמות
+  spend(id, COLD * 2 + WARM * 23);
+  const s = await budgetFor(id);
+  assert.equal(s.exceeded, false, `סשן מלא עלה ${s.callerSpent} מול תקרה ${s.callerBudget}`);
+  assert.ok(s.callerBudget > COLD * 2 + WARM * 23, 'ובנוחות, לא בדיוק');
 });
 
 test('צריך הרבה מנצלים כדי למצות את היום', () => {

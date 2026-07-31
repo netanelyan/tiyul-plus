@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { clientIdHeader } from '@/lib/clientId';
 import type { DestinationSummary } from '@/lib/types';
 import type { Trip, WizardPrefs } from '@/lib/trip/types';
@@ -10,6 +10,7 @@ import { tripFromTemplate } from '@/lib/trip/generate';
 // לא נושא את הקטלוג לא כ-HTML ולא כ-JS.
 import { fetchCities } from '@/lib/trip/cityData';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
+import ResumeTrips from '@/components/ResumeTrips';
 import Flag from '@/components/Flag';
 import TripWorkspace from '@/components/TripWorkspace';
 import CityCombobox from '@/components/CityCombobox';
@@ -31,6 +32,27 @@ export default function PlannerClient({
   const trip = useTrip();
   const [showWizard, setShowWizard] = useState(false);
   const [aiAck, setAiAck] = useState<string | null>(null);
+  /**
+   * האם הטיול הפתוח נבחר **בכניסה הזאת**.
+   *
+   * אותו תיקון כמו ב-/chat: `currentTrip` שרד באחסון מפעם קודמת, ולכן
+   * כניסה ל-/planner נחתה בתוך הטיול הישן במקום במסך בניית טיול חדש.
+   * `?trip=<id>` הוא הדרך המפורשת להמשיך, והכתובת היא מה שמחזיק את המסך.
+   */
+  const [openedHere, setOpenedHere] = useState(false);
+  const entry = useRef(false);
+  useEffect(() => {
+    if (entry.current || !trip.hydrated) return;
+    entry.current = true;
+    const id = new URLSearchParams(window.location.search).get('trip');
+    if (id && trip.trips.some((t) => t.id === id)) {
+      trip.setCurrentId(id);
+      setOpenedHere(true);
+    } else if (trip.currentId) {
+      trip.setCurrentId(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trip.hydrated]);
 
   if (!trip.hydrated) {
     return (
@@ -40,7 +62,7 @@ export default function PlannerClient({
     );
   }
 
-  if (!trip.currentTrip || showWizard) {
+  if (!openedHere || !trip.currentTrip || showWizard) {
     return (
       <Onboarding
         summaries={summaries}
@@ -48,8 +70,10 @@ export default function PlannerClient({
         onDone={(ack) => {
           setAiAck(ack ?? null);
           setShowWizard(false);
+          // הטיול נבנה עכשיו, כאן - זו הבחירה המפורשת לפתוח אותו
+          setOpenedHere(true);
         }}
-        onCancel={trip.currentTrip ? () => setShowWizard(false) : undefined}
+        onCancel={openedHere && trip.currentTrip ? () => setShowWizard(false) : undefined}
       />
     );
   }
@@ -343,6 +367,9 @@ function Onboarding({
             <span className="text-xs font-semibold text-night/40">בחרו לפחות עיר אחת</span>
           )}
         </div>
+
+        {/* בחירה גלויה להמשיך טיול קיים - לצד הבנייה, אף פעם במקומה */}
+        <ResumeTrips className="mx-auto mt-7" />
       </section>
 
       {/* ---- 3. שלישוני: תבניות מוכנות ---- */}

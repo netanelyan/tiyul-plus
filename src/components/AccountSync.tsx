@@ -38,10 +38,21 @@ export default function AccountSync() {
       pulledForUser.current = null;
       pullDone.current = false;
       knownTombstones.current = {};
+      /*
+        **יציאה מהחשבון מנקה את הטיולים של אותו חשבון מהמכשיר.** בלי זה,
+        ההתחברות הבאה על אותו מחשב - של אדם אחר - מיזגה אותם לתוך החשבון
+        שלו, כי מיזוג דוחף כל טיול מקומי שאינו בשרת. הטיולים לא אבודים:
+        הם בחשבון וחוזרים בהתחברות הבאה.
+      */
+      trip.switchAccount(null);
       return;
     }
     if (pulledForUser.current === user.id) return;
     pulledForUser.current = user.id;
+    // חשבון אחר מזה שיושב באחסון? מנקים לפני המשיכה, לא אחריה.
+    // הערך המוחזר סינכרוני - ה-state עוד לא התרנדר, וללא זה המיזוג למטה
+    // היה עדיין רואה את הטיולים של הקודם ודוחף אותם לחשבון הזה.
+    const cleared = trip.switchAccount(user.id);
 
     (async () => {
       const pulled = await pullRemoteTrips(supabase);
@@ -53,9 +64,9 @@ export default function AccountSync() {
       // בדיוק היה הבאג: המשיכה יוצאת לדרך, המשתמש מוחק טיול בזמן שהיא
       // באוויר, והמיזוג חישב מול מצב מלפני המחיקה.
       const { applyLocally, pushRemotely, writeRemotely, applyDeletions } = mergeTrips(
-        tripsRef.current,
+        cleared ? [] : tripsRef.current,
         pulled.trips,
-        deletedRef.current,
+        cleared ? {} : deletedRef.current,
         pulled.tombstones,
       );
       // **לא `upsertTrip`.** הוא חותם `updatedAt: Date.now()`, וזה הפך כל

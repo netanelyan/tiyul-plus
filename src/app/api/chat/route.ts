@@ -423,6 +423,12 @@ const LIGHT_TURN_NOTE = [
   'do not improvise and do not guess: call NO tool and say so in a few words.',
 ].join('\n');
 
+/**
+ * תוקף המטמון של קידומת הקטלוג. `ANTHROPIC_CACHE_TTL=5m` מחזיר את
+ * ההתנהגות הקודמת בלי דיפלוי, אם אי פעם יתברר ש-1h יקר יותר בפועל.
+ */
+const CACHE_TTL: '1h' | null = process.env.ANTHROPIC_CACHE_TTL === '5m' ? null : '1h';
+
 async function runClaudeTurn(
   apiMessages: ApiMessage[],
   trip: Trip | null,
@@ -452,7 +458,8 @@ async function runClaudeTurn(
     kosherHint && !trip
       ? '\n\nUI PREFERENCE TOGGLE: the user switched ON "אוכל כשר" in the interface before any trip exists. Treat kosher=true from your first plan (include a kosher-food place per day where the city has one, with the usual verify-before-visiting reminder), and call set_preferences {kosher: true} immediately after creating a trip. Never ask about it.'
       : '';
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+  const callApi = (ttl: '1h' | null): Promise<Response> =>
+    fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -490,7 +497,17 @@ async function runClaudeTurn(
               {
                 type: 'text' as const,
                 text: buildGroundingIndex(kosherOk),
-                cache_control: { type: 'ephemeral' as const },
+                /*
+                  **המטמון נשמר לשעה ולא לחמש דקות.** זו העלות האמיתית
+                  של המוצר: קריאה קרה נמדדה ב-$0.447 וקריאה חמה ב-$0.063,
+                  וההפרש הוא בדיוק כתיבת הבלוק הזה. בחמש דקות, כל הפסקת
+                  חשיבה של מטייל מייצרת כתיבה נוספת; בשעה, סשן שלם משלם
+                  עליה פעם אחת. כתיבה לשעה עולה פי 2 מהקלט במקום פי 1.25
+                  (כ-$0.46 במקום $0.29), כלומר זה משתלם כבר אם נחסכה
+                  כתיבה אחת - ו**קריאה מהמטמון מאריכה את התוקף בחינם**,
+                  ולכן בתנועה יציבה הקידומת פשוט נשארת חמה.
+                */
+                cache_control: ttl ? { type: 'ephemeral' as const, ttl } : { type: 'ephemeral' as const },
               },
             ]),
         // הפירוט משתנה לפי השיחה -> אחרי נקודת השבירה, בלי cache_control
@@ -507,6 +524,21 @@ async function runClaudeTurn(
       messages: apiMessages,
     }),
   });
+
+  /*
+    **נסיגה אם ה-API לא מכיר את `ttl`.** לא ניתן היה לבדוק את זה חי
+    בסביבה הזאת, ובקשה שנדחית פירושה סוכן מת - לא תור יקר. אז 400
+    שמזכיר את השדה מנסה שוב בלעדיו, פעם אחת. אם השדה תקין, השורה הזאת
+    לא תרוץ אף פעם.
+  */
+  let res = await callApi(CACHE_TTL);
+  if (!res.ok && res.status === 400 && CACHE_TTL) {
+    const body = await res.clone().text().catch(() => '');
+    if (/ttl|cache_control/i.test(body)) {
+      console.warn('[chat] 1h cache ttl rejected, retrying without it');
+      res = await callApi(null);
+    }
+  }
 
   if (!res.ok || !res.body) {
     // קריאת הגוף לא יכולה להפיל את הטיפול בשגיאה עצמו
