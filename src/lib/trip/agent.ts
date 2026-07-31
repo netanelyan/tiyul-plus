@@ -3,6 +3,9 @@ import { isEating, isKosher, kosherStatusOf } from '@/lib/categories';
 import { haversineKm } from './travel';
 import { buildSearchCard, SEARCH_KINDS, type BookingSearchCard, type SearchKind } from '@/lib/bookingSearch';
 import { stripClaims } from '@/lib/priceGuard';
+import { inHe } from '@/lib/hebrew';
+import { bookingIsPerCity } from '@/lib/booking';
+import { setBookingStatus } from './bookingStatus';
 import { calendar } from '@/data/calendar';
 import {
   NOT_PUBLISHED,
@@ -297,7 +300,7 @@ export const AGENT_TOOLS = [
   {
     name: 'set_booking_status',
     description:
-      "Record what the traveler has ALREADY arranged and what they still need, per booking type. Set a field ONLY when the user actually said so - never assume, never guess from the itinerary. 'have' = already booked, 'need' = still needs it, 'not_needed' = irrelevant for this trip. You must NEVER output a booking URL, price, availability or provider name in your reply: the app attaches the real link itself from its own affiliate config. Your job is only to notice what is missing and record the answer.",
+      "Record what the traveler has ALREADY arranged and what they still need, per booking type. Set a field ONLY when the user actually said so - never assume, never guess from the itinerary. 'have' = already booked, 'need' = still needs it, 'not_needed' = irrelevant for this trip. LODGING AND TICKETS BELONG TO A CITY, not to the trip: pass citySlug together with stay/activities, and on a multi-city trip ask about one city at a time - \"we have a hotel\" cannot be true for a whole trip. flights/esim/insurance/car are trip-wide and take no citySlug. You must NEVER output a booking URL, price, availability or provider name in your reply: the app attaches the real link itself from its own affiliate config. Your job is only to notice what is missing and record the answer.",
     input_schema: {
       type: 'object',
       properties: {
@@ -307,6 +310,11 @@ export const AGENT_TOOLS = [
         esim: { type: 'string', enum: ['have', 'need', 'not_needed'] },
         insurance: { type: 'string', enum: ['have', 'need', 'not_needed'] },
         car: { type: 'string', enum: ['have', 'need', 'not_needed'] },
+        citySlug: {
+          type: 'string',
+          description:
+            'City slug from the trip - REQUIRED together with stay or activities. Ignored for the trip-wide kinds.',
+        },
       },
     },
   },
@@ -597,6 +605,7 @@ const PREF_LABELS: Record<keyof TripPreferences, string> = {
   travelStyle: 'סגנון נסיעה',
   interests: 'תחומי עניין',
   booking: 'מה כבר סגור',
+  bookingByCity: 'מה כבר סגור, לפי עיר',
 };
 
 /**
@@ -862,7 +871,7 @@ export function executeAgentTool(
         trip: next,
         ok: true,
         message: `נוסף יום ${next.days.length} ב${dest.name}. הטיול כולל עכשיו ${next.days.length} ימים.${PROSE_DISCIPLINE}`,
-        action: `הוספתי יום ב${dest.name} (יום ${next.days.length})`,
+        action: `הוספתי יום ${inHe(dest.name)} (יום ${next.days.length})`,
       };
     }
 
@@ -1144,22 +1153,48 @@ export function executeAgentTool(
       }
       const kinds: BookingKind[] = ['flights', 'stay', 'activities', 'esim', 'insurance', 'car'];
       const allowed: BookingStatus[] = ['have', 'need', 'not_needed'];
-      const booking = { ...(trip.preferences?.booking ?? {}) };
-      const changed: BookingKind[] = [];
+      /*
+        לינה וכרטיסים שייכים לעיר. `citySlug` נדרש עבורם, ונדחה אם הוא
+        לא עיר של הטיול הזה - **אין נפילה לעיר הראשונה**: ניחוש כאן
+        פירושו לרשום "יש מלון" על העיר הלא נכונה, וזה בדיוק סוג השקט
+        שגורם למטייל להגיע בלי מקום לישון בו.
+      */
+      const rawCity = typeof input.citySlug === 'string' ? input.citySlug.trim() : '';
+      const cityOk = rawCity && trip.citySlugs.includes(rawCity);
+      let prefs: TripPreferences = { ...trip.preferences };
+      const changed: string[] = [];
       for (const kind of kinds) {
         const v = input[kind];
-        if (typeof v === 'string' && (allowed as string[]).includes(v)) {
-          booking[kind] = v as BookingStatus;
-          changed.push(kind);
+        if (typeof v !== 'string' || !(allowed as string[]).includes(v)) continue;
+        const perCity = bookingIsPerCity(kind);
+        if (perCity && !cityOk) {
+          return fail(
+            trip,
+            rawCity
+              ? `"${rawCity}" אינה עיר של הטיול הזה. ${BOOKING_KIND_LABELS[kind]} נשמר לפי עיר - שלח citySlug מתוך ${JSON.stringify(trip.citySlugs)}.`
+              : `${BOOKING_KIND_LABELS[kind]} שייך לעיר ולא לטיול. שלח citySlug מתוך ${JSON.stringify(trip.citySlugs)}, ושאל על עיר אחת בכל פעם.`,
+          );
         }
+        prefs = {
+          ...prefs,
+          ...setBookingStatus(prefs, kind, v as BookingStatus, {
+            citySlug: perCity ? rawCity : undefined,
+            citySlugs: trip.citySlugs,
+          }),
+        };
+        changed.push(
+          perCity
+            ? `${BOOKING_KIND_LABELS[kind]} ${inHe(destOf(rawCity)?.name ?? rawCity)}`
+            : BOOKING_KIND_LABELS[kind],
+        );
       }
       if (changed.length === 0) return fail(trip, 'לא זוהה אף סוג הזמנה תקין בקלט.');
-      const labels = changed.map((k) => BOOKING_KIND_LABELS[k]).join(', ');
+      const labels = changed.join(', ');
       return {
-        trip: { ...trip, preferences: { ...trip.preferences, booking } },
+        trip: { ...trip, preferences: prefs },
         ok: true,
         // מזכירים למודל שהקישור אינו שלו - הוא כבר מוצג בממשק
-        message: `מצב ההזמנות עודכן: ${JSON.stringify(booking)}. כפתורי ההזמנה מוצגים בממשק אוטומטית - אל תכתוב קישורים, מחירים או זמינות.`,
+        message: `מצב ההזמנות עודכן: ${JSON.stringify({ booking: prefs.booking, byCity: prefs.bookingByCity })}. לינה וכרטיסים נשמרים לפי עיר. כפתורי ההזמנה מוצגים בממשק אוטומטית - אל תכתוב קישורים, מחירים או זמינות.`,
         action: `סימנתי: ${labels}`,
       };
     }
@@ -1306,7 +1341,7 @@ export function executeAgentTool(
         // PROSE_DISCIPLINE: הכלל יושב בתוצאת הכלי, כלומר בדבר האחרון
         // שהמודל קורא לפני שהוא כותב.
         message: `כרטיס חיפוש נוצר והוא מוצג למטייל בממשק, כולל גילוי נאות על עמלה. מה שכבר ממולא בחיפוש: ${card.understood.join(' · ')}.${missing}\nאל תכתוב מחיר, טווח מחירים, "בערך", זמינות, סוג חדר, דירוג כוכבים או שם מלון - אין לך נתונים כאלה והשרת מוריד אותם מהתשובה. אל תכתוב את הקישור: הוא כבר על המסך. אסור לומר "הזול ביותר" או "המחיר הטוב ביותר". תשובה נכונה כאן היא שתי שורות: שאתה לא יכול לבדוק מחירים וזמינות בעצמך, ומה החיפוש כבר כולל.`,
-        action: `פתחתי חיפוש ${kind === 'stay' ? 'לינה' : 'חוויות'} ב${dest.name}`,
+        action: `פתחתי חיפוש ${kind === 'stay' ? 'לינה' : 'חוויות'} ${inHe(dest.name)}`,
         search: card,
       };
     }
@@ -1348,11 +1383,24 @@ export function executeAgentTool(
         return fail(trip, `יש כבר ${MAX_PINS} סיכות בטיול - הסר אחת עם remove_pin לפני שמוסיפים.`);
       }
 
-      // לינה שנשמרה משנה גם את מצב ההזמנות: אין טעם להציע חיפוש מלון
-      // לעיר שכבר יש בה מלון. שאר הסוגים לא נוגעים בזה.
+      /*
+        לינה שנשמרה משנה גם את מצב ההזמנות: אין טעם להציע חיפוש מלון
+        לעיר שכבר יש בה מלון. שאר הסוגים לא נוגעים בזה.
+
+        **לעיר של הסיכה בלבד.** ההערה הזאת אמרה "לעיר" מהיום הראשון,
+        אבל האחסון ידע רק טיול שלם - כך שסיכת מלון בווינה סימנה גם את
+        ברטיסלבה כסגורה, והמטייל הפסיק לקבל הצעה לחפש שם. סיכה בלי עיר
+        לא משנה כלום: אין למי לזקוף אותה.
+      */
       const preferences =
-        kind === 'stay'
-          ? { ...trip.preferences, booking: { ...(trip.preferences?.booking ?? {}), stay: 'have' as BookingStatus } }
+        kind === 'stay' && pin.citySlug
+          ? {
+              ...trip.preferences,
+              ...setBookingStatus(trip.preferences, 'stay', 'have', {
+                citySlug: pin.citySlug,
+                citySlugs: trip.citySlugs,
+              }),
+            }
           : trip.preferences;
 
       const label = PIN_KIND_LABELS[kind];

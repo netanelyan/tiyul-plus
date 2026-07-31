@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { inHe } from '@/lib/hebrew';
 import { OFFLINE_HINT } from '@/lib/offline/online';
 import Flag from '@/components/Flag';
 import { filterCities, type CityOption } from '@/lib/citySearch';
@@ -135,7 +136,7 @@ export default function AddDayPicker({
               <>
                 <div className="px-3 pb-1 pt-2 text-xs font-bold text-night/40">כבר בטיול</div>
                 {inTrip.map((o) => (
-                  <Row key={`in-${o.slug}`} o={o} label={`עוד יום ב${o.name}`} />
+                  <Row key={`in-${o.slug}`} o={o} label={`עוד יום ${inHe(o.name)}`} />
                 ))}
               </>
             )}

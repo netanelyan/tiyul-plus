@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { inHe } from '@/lib/hebrew';
 import type { Place } from '@/lib/types';
 import type { TripPin, TripPreferences } from '@/lib/trip/types';
 import { categoryMeta } from '@/lib/categories';
@@ -584,7 +585,7 @@ export default function TripWorkspace({
                         <button
                           key={id}
                           onClick={() => setSelectedDayId(id)}
-                          aria-label={`יום ${index + 1}${dst ? ` ב${dst.name}` : ''}${iso ? `, ${formatHebrewDate(iso)}` : ''}`}
+                          aria-label={`יום ${index + 1}${dst ? ` ${inHe(dst.name)}` : ''}${iso ? `, ${formatHebrewDate(iso)}` : ''}`}
                           aria-current={active ? 'true' : undefined}
                           className={`flex h-10 min-w-10 items-center justify-center rounded-xl px-1.5 text-sm font-bold transition ${
                             active
