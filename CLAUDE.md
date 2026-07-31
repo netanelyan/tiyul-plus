@@ -248,6 +248,80 @@ npm run lint
 8. Every work session ALSO ends by appending a dated entry to
    "## Session log
 
+### 2026-07-31 (ww) - One wallet was the bug: a cost control that could cause an outage
+
+Netanel, on the ceiling shipped an hour earlier: **a single abuser can switch the
+AI off for everyone.** One anonymous visitor can spend a large share of the day,
+so a handful of them locks out every real user until midnight. That converts a
+cost problem into an outage, which is worse than the thing being prevented.
+
+He is right, and the fix is structural rather than a number change.
+
+---
+
+**Two wallets.** Anonymous traffic gets **30% of the day ($1.50 of $5)**.
+Signed-in users draw from *everything anonymous traffic has not spent*, so they
+always have **at least 70%** and on a quiet day they get the whole budget.
+
+Two hard wallets would have created the mirror of the reported bug - signed-in
+users blocked at 70% while 30% sits unused - so the signed-in side is a floor,
+not a cap. There is a test named after that, because it is the kind of thing a
+later "simplification" would undo.
+
+**A per-caller cap: 15% of the day** ($0.75), and for an anonymous caller 15% of
+*their* wallet ($0.225, i.e. 4.5% of the day). It takes seven heavy signed-in
+users or twenty-two anonymous ones to exhaust a day. 15% leans generous
+deliberately: a real long session measures around $0.3-$0.5, and blocking that
+person is precisely the outage this is meant to prevent.
+
+**A real bug the test caught.** The ceiling is checked *before* a call, so an
+anonymous caller can overshoot their wallet slightly. In the first version that
+overshoot was subtracted from the signed-in floor - $1.65 spent against a $1.50
+wallet dropped signed-in users from $3.50 to $3.35. A `min` on the anonymous draw
+made the floor absolute. **A guarantee that erodes is not a guarantee**, and the
+assertion that caught it was the one asserting the floor rather than the block.
+
+---
+
+**The anonymous quota now keys on the browser, not the address.** Israeli mobile
+carriers put enormous numbers of devices behind a handful of addresses, so an
+IP-keyed quota counts them as one person and blocks people who have never
+visited. `lib/clientId.ts` generates a local identifier - no personal data, resets
+with storage - and the IP stays as a **backstop 25x wider**, which only a machine
+cycling identifiers in a loop can reach. When the two disagree the browser wins,
+per his instruction that blocking a real user costs more than one extra request.
+Deleting the identifier gains nothing: you fall back to the IP, which is the
+stricter of the two.
+
+**The alerts split in two**, because one threshold cannot answer the question he
+actually has. The general one moved to **90%** and now classifies: traffic spread
+across many identities ("a busy day") versus concentrated, where the heaviest
+source took over a quarter of the day. And separately, an **immediate** alert the
+moment one identity crosses 60% of its own cap - i.e. **before** it gets blocked,
+which is the only moment anything can be done about it.
+
+---
+
+**How spending is measured, since he asked directly: from Anthropic's own
+reported `usage`, not an estimate.** `message_start` carries input and cache
+counts, `message_delta` the final output. Three paths drift low, all handled:
+
+1. **A turn cut off before `message_delta`** has no `output_tokens` and those
+   tokens were already billed - it now gets a conservative estimate from the
+   streamed text instead of zero.
+2. **A call reporting nothing at all** is charged a conservative flat cost rather
+   than counted free.
+3. **The database being unreachable** is the real hole: without a shared total,
+   each instance counts alone and the effective ceiling multiplies by the number
+   of instances. **This now fails closed** - five minutes without a successful
+   read and the agent stops accepting requests. Being down for a few minutes
+   beats spending without knowing how much.
+
+**Verified:** 35/35 in the harness, including two different browser identifiers
+behind one shared address both getting through - the carrier-NAT case - and a
+malformed identifier falling back to the IP rather than being accepted as a key.
+360 unit tests, every existing suite re-run, lint at baseline.
+
 ### 2026-07-31 (vv) - A ceiling on the bill, and the requirement that shaped every number
 
 Netanel asked for protection against runaway AI cost, with one constraint stated
