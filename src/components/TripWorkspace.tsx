@@ -21,6 +21,7 @@ import type { MapGroup, MapPin } from '@/components/MapInner';
 import BookingPanel from '@/components/BookingPanel';
 import TripCost from '@/components/TripCost';
 import PinsPanel from '@/components/PinsPanel';
+import ActivitiesPanel from '@/components/ActivitiesPanel';
 import TripDateNotes from '@/components/TripDateNotes';
 import PanelSection from '@/components/PanelSection';
 import ChatPanel from '@/components/ChatPanel';
@@ -977,6 +978,17 @@ export default function TripWorkspace({
       {/* ---------- כמה מוציאים ביום: מספרים שמורים, חשבון בקוד ---------- */}
       {t && t.days.length > 0 && (
         <TripCost trip={t} destinations={destinations} onSetPreferences={setPrefs} offline={offline} />
+      )}
+
+      {/*
+        ---------- פעילויות להזמנה בעיר של היום הנוכחי ----------
+        **תוכן של שותף, ולכן הוא יושב כאן ולא בתוך התוכנית.** הוא מקופל
+        כברירת מחדל, נטען רק בלחיצה, ולעולם לא נכנס לטיול עצמו - אין שום
+        מסלול שבו פעילות מ-Viator הופכת לעצירה. כשהמכשיר לא מקוון אין לו
+        מה לעשות בכלל.
+      */}
+      {t && day && dayDest && !offline && (
+        <ActivitiesPanel citySlug={dayDest.slug} cityName={dayDest.name} />
       )}
 
       {/* ---------- הסיכות של המטייל: מה הוא כבר סגר בעצמו ---------- */}

@@ -166,6 +166,40 @@ export function sameOriginOk(req: Request): boolean {
   }
 }
 
+/**
+ * אותה כוונה, אבל ל-**GET** - וזו לא אותה בדיקה.
+ *
+ * **דפדפן אינו שולח `Origin` בבקשת GET מאותו מקור.** התקן מחייב זאת רק
+ * בבקשות חוצות-מקור ובשיטות שאינן בטוחות, ולכן `sameOriginOk` - שנכתב
+ * ל-POST של הצ׳אט וצודק שם - דוחה כל בקשת GET אמיתית מהאתר שלנו. זה
+ * נתפס רק בדפדפן: `curl` עם `-H Origin` עבר מצוין, וכך המדור נראה תקין
+ * בכל בדיקת שרת בזמן שבמסך הוא היה ריק תמיד.
+ *
+ * לכן הסימן הראשי כאן הוא `Sec-Fetch-Site`, שדפדפנים שולחים גם ב-GET
+ * ואי אפשר לזייף מתוך JS (זו כותרת אסורה). `Origin`/`Referer` נשארים
+ * כנפילה אחורה לדפדפנים ישנים. בלי אף אחד מהשלושה - סירוב, כמו קודם.
+ */
+export function browserGetOk(req: Request): boolean {
+  if (process.env.CHAT_REQUIRE_ORIGIN === 'off') return true;
+  const host = req.headers.get('x-forwarded-host') ?? req.headers.get('host') ?? '';
+  if (!host) return false;
+
+  const site = req.headers.get('sec-fetch-site');
+  // 'none' הוא הקלדה בשורת הכתובת, ו-'cross-site' הוא בדיוק מה שנחסם
+  if (site) return site === 'same-origin';
+
+  for (const name of ['origin', 'referer']) {
+    const value = req.headers.get(name);
+    if (!value) continue;
+    try {
+      return new URL(value).host === host;
+    } catch {
+      return false;
+    }
+  }
+  return false;
+}
+
 /* ============ 6. הנוסחים ============ */
 
 /** מעל תקרת ההוצאה. רגוע, זמני, בלי מספרים ובלי התנצלות מוגזמת. */
