@@ -326,6 +326,34 @@ export async function budgetFor(identity: string): Promise<BudgetState> {
   };
 }
 
+/**
+ * מתי לאחרונה נגעה בקידומת קריאה כבדה **אמיתית** - כלומר מתי המטמון
+ * רוענן בפעם האחרונה, כולל חימומים (הם נרשמים כמו כל הוצאה אחרת).
+ *
+ * `null` = אי אפשר לדעת (אין התמדה, או קריאה שנכשלה). נתיב החימום מפרש
+ * את זה כ"לא מחממים": הכיוון הבטוח בספק הוא לא להוציא כסף.
+ */
+export async function lastHeavyCallAt(): Promise<number | null> {
+  if (!persistent()) return null;
+  try {
+    const res = await fetch(
+      `${supaUrl()}/rest/v1/ai_spend?${pgQuery(
+        eq('route', 'chat'),
+        pgSelect(['at']),
+        'order=at.desc',
+        'limit=1',
+      )}`,
+      { headers: headers(), cache: 'no-store', signal: AbortSignal.timeout(3000) },
+    );
+    if (!res.ok) return null;
+    const rows = (await res.json()) as { at?: string }[];
+    const at = rows[0]?.at ? Date.parse(rows[0].at) : NaN;
+    return Number.isFinite(at) ? at : null;
+  } catch {
+    return null;
+  }
+}
+
 /** מצב כללי לתצוגה בלבד (אזור הניהול) - בלי הקשר של קורא */
 export async function budgetOverview(): Promise<{
   budget: number;
