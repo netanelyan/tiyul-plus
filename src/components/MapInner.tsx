@@ -1,5 +1,7 @@
 'use client';
 
+import { outboundAttrs, outboundTarget, placeMapUrl } from '@/lib/outbound';
+
 import { useEffect, useMemo, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
@@ -228,14 +230,20 @@ function PlacePopup({ place, prefix = '' }: { place: Place; prefix?: string }) {
           <KosherBadge verification={place.kosherVerification} />
         </div>
       )}
-      {place.externalUrl && (
+      {/*
+        התווית נגזרת ממה שהקישור באמת פותח. מקום שנחקר אוטומטית נושא
+        ערך ויקיפדיה, והחלונית קראה לו "Google Maps" כי היא רנדרה את
+        `externalUrl` בעיוורון.
+      */}
+      {placeMapUrl(place) && (
         <a
-          href={place.externalUrl}
-          target="_blank"
-          rel="noreferrer"
-          style={{ fontSize: 12, color: '#e03e27', fontWeight: 700 }}
+          href={placeMapUrl(place)!}
+          {...outboundAttrs()}
+          style={{ fontSize: 12, color: 'var(--color-sunset-deep)', fontWeight: 700 }}
         >
-          פתיחה ב-Google Maps ↗
+          {outboundTarget(placeMapUrl(place)) === 'wikipedia'
+            ? 'פתיחה בוויקיפדיה ↗'
+            : 'פתיחה ב-Google Maps ↗'}
         </a>
       )}
     </div>

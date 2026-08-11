@@ -72,6 +72,8 @@ export function pgFilter(column: string, op: Op, value: Scalar): string {
 
 export const eq = (column: string, value: Scalar) => pgFilter(column, 'eq', value);
 export const gte = (column: string, value: Scalar) => pgFilter(column, 'gte', value);
+/** `col=neq.value` - שלילה. אותו קידוד בדיוק, ולכן אותה בטיחות. */
+export const neq = (column: string, value: Scalar) => pgFilter(column, 'neq', value);
 
 /** `col=in.(a,b,c)` - כל איבר מקודד בנפרד, כך שפסיק בתוך ערך לא מפצל */
 export function pgIn(column: string, values: Scalar[]): string {

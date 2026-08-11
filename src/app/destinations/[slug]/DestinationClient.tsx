@@ -1,5 +1,7 @@
 'use client';
 
+import { outboundAttrs, outboundTarget, placeMapUrl } from '@/lib/outbound';
+
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { inHe } from '@/lib/hebrew';
 import Link from 'next/link';
@@ -242,14 +244,13 @@ export default function DestinationClient({
                   {formatDurationHe(place.durationMin) && (
                     <span>{formatDurationHe(place.durationMin)}</span>
                   )}
-                  {place.externalUrl && (
+                  {placeMapUrl(place) && (
                     <a
-                      href={place.externalUrl}
-                      target="_blank"
-                      rel="noreferrer"
+                      href={placeMapUrl(place)!}
+                      {...outboundAttrs()}
                       className="text-sunset-deep transition hover:underline"
                     >
-                      Google Maps ↗
+                      {outboundTarget(placeMapUrl(place)) === 'wikipedia' ? 'ויקיפדיה' : 'Google Maps'} ↗
                     </a>
                   )}
                 </div>

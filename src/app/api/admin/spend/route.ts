@@ -4,7 +4,7 @@ import { gte, pgLimit, pgOrder, pgQuery, pgSelect } from '@/lib/server/pgrest';
 import {
   ALERT_AT,
   ANON_SHARE,
-  CALLER_SHARE,
+  CALLER_CAP_USD,
   budgetOverview,
 } from '@/lib/server/budget';
 import { MODEL_PRICES } from '@/lib/server/aiCost';
@@ -91,7 +91,7 @@ export async function GET(req: Request) {
       anonLimit: state.budget * ANON_SHARE,
       userSpent: state.userSpent,
       userLimit: state.budget - state.anonSpent,
-      callerLimit: state.budget * CALLER_SHARE,
+      callerLimit: Math.min(CALLER_CAP_USD, state.budget),
       /** אין סכום משותף - התקרה ננעלת עד שיחזור */
       stale: state.stale,
       /** מאיפה התקרה הגיעה - כדי שיהיה ברור מה לשנות */

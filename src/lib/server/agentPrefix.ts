@@ -160,7 +160,22 @@ export const WARM_QUIET_MS = 40 * 60_000;
 /** מעבר לזה המטמון כנראה כבר פג, וחימום ישלם כתיבה מלאה עבור אף אחד */
 export const WARM_STALE_MS = 70 * 60_000;
 
-export type WarmDecision = 'warm' | 'short_ttl' | 'unknown_traffic' | 'recent_traffic' | 'cache_expired';
+/**
+ * כמה זמן אחרי המבקר האמיתי האחרון עוד שווה לגשר.
+ *
+ * שלוש שעות. הרעיון הוא לגשר על **פערים בין מבקרים**, לא להחזיק מטמון
+ * חם לנצח: אחרי שלוש שעות בלי אף אדם ההימור שמישהו עומד להגיע בדיוק
+ * עכשיו כבר לא מחזיר את ההשקעה, והמבקר הבא ישלם ממילא כתיבה אחת.
+ */
+export const WARM_MAX_BRIDGE_MS = 3 * 60 * 60_000;
+
+export type WarmDecision =
+  | 'warm'
+  | 'short_ttl'
+  | 'unknown_traffic'
+  | 'recent_traffic'
+  | 'cache_expired'
+  | 'nobody_around';
 
 /**
  * **ההחלטה היחידה שיש כאן, ושלוש מתוך ארבע התשובות הן "לא".**
@@ -178,11 +193,22 @@ export function warmDecision(
   lastTouchMs: number | null,
   now: number,
   ttl: '1h' | null = CACHE_TTL,
+  /**
+   * מתי עברה קריאה של **אדם** - להבדיל מחימום שלנו.
+   *
+   * בלי הפרדה בין שני השעונים החימום מנציח את עצמו: הוא רושם הוצאה,
+   * ההוצאה הזאת היא "הנגיעה האחרונה", ו-40 דקות אחר כך הוא מחמם שוב
+   * לנצח - באתר בלי אף מבקר. הפרמטר אופציונלי כדי לא לשבור קורא קיים,
+   * ובהיעדרו ההתנהגות היא כמו קודם.
+   */
+  lastRealMs: number | null = lastTouchMs,
 ): WarmDecision {
   if (!ttl) return 'short_ttl';
   if (lastTouchMs === null) return 'unknown_traffic';
   const since = now - lastTouchMs;
   if (since < WARM_QUIET_MS) return 'recent_traffic';
   if (since > WARM_STALE_MS) return 'cache_expired';
+  // המטמון חי ואף אחד לא ריענן אותו - אבל האם יש בשביל מי?
+  if (lastRealMs === null || now - lastRealMs > WARM_MAX_BRIDGE_MS) return 'nobody_around';
   return 'warm';
 }

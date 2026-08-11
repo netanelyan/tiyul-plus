@@ -1,4 +1,5 @@
 import { destinations } from '@/data/destinations';
+import { currencyForCountry, viatorLanguage } from '@/lib/server/viatorLocale';
 
 /**
  * שרת בלבד - **פעילויות להזמנה מ-Viator, בשאילתה חיה.**
@@ -55,7 +56,11 @@ export const viatorBase = (mode: ViatorMode) =>
   (mode === 'production' ? 'https://api.viator.com/partner' : 'https://api.sandbox.viator.com/partner');
 
 /** מטבע הבקשה. התצוגה תמיד לפי מה שהם החזירו, לא לפי מה שביקשנו. */
-const currency = () => (process.env.VIATOR_CURRENCY ?? 'USD').toUpperCase();
+/*
+  המטבע נגזר עכשיו **מהמדינה של היעד** ולא מהגדרה אחת לכל האתר, וזה
+  יושב ב-`viatorLocale.ts` יחד עם הרשימה של מה שהם בכלל תומכים בו.
+  התצוגה לא מושפעת: היא תמיד מציגה את `pricing.currency` שהם החזירו.
+*/
 
 /**
  * **הדומיין החי.** במצב sandbox בקשה שמגיעה לדומיין הזה לא מקבלת כלום:
@@ -271,7 +276,7 @@ async function callViator<T>(path: string, body: unknown, mode: ViatorMode): Pro
       headers: {
         'exp-api-key': key,
         Accept: 'application/json;version=2.0',
-        'Accept-Language': process.env.VIATOR_LANGUAGE ?? 'en-US',
+        'Accept-Language': viatorLanguage(),
         ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
       },
       body: body === undefined ? undefined : JSON.stringify(body),
@@ -333,6 +338,11 @@ export function matchDestination(
   return best?.id ?? null;
 }
 
+/** המדינה של העיר, לגזירת המטבע. `null` כשהעיר אינה בקטלוג. */
+export function countryOfCity(citySlug: string): string | null {
+  return destinations.find((d) => d.slug === citySlug)?.countrySlug ?? null;
+}
+
 async function destinationIdFor(citySlug: string, mode: ViatorMode): Promise<number | null> {
   const dest = destinations.find((d) => d.slug === citySlug);
   if (!dest) return null;
@@ -372,7 +382,8 @@ export async function activitiesForCity(
   const destinationId = await destinationIdFor(citySlug, mode);
   if (destinationId === null) return { mode, offers: [], reason: 'no-destination' };
 
-  const key = `search|${mode}|${destinationId}|${currency()}`;
+  const cur = currencyForCountry(countryOfCity(citySlug));
+  const key = `search|${mode}|${destinationId}|${cur}`;
   let raw = cached<RawProduct[]>(key, PRODUCTS_TTL_MS);
   if (!raw) {
     const res = await callViator<{ products?: RawProduct[] }>(
@@ -381,7 +392,7 @@ export async function activitiesForCity(
         filtering: { destination: String(destinationId) },
         sorting: { sort: 'TRAVELER_RATING', order: 'DESCENDING' },
         pagination: { start: 1, count: 8 },
-        currency: currency(),
+        currency: cur,
       },
       mode,
     );

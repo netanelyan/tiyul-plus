@@ -1,5 +1,7 @@
 'use client';
 
+import { outboundAttrs, placeMapUrl } from '@/lib/outbound';
+
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import type { Place } from '@/lib/types';
@@ -165,11 +167,10 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
                   <p className="mt-2 text-sm leading-relaxed text-night/70">{place.description}</p>
                   <KosherNote note={place.kosherNote} className="mt-2" />
                   <KosherBadge verification={place.kosherVerification} className="mt-1.5" />
-                  {place.externalUrl && (
+                  {placeMapUrl(place) && (
                     <a
-                      href={place.externalUrl}
-                      target="_blank"
-                      rel="noreferrer"
+                      href={placeMapUrl(place)!}
+                      {...outboundAttrs()}
                       className="mt-3 inline-block text-xs font-semibold text-sunset-deep transition hover:underline"
                     >
                       Google Maps ↗
