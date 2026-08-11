@@ -17,13 +17,24 @@ import ThinkingIndicator from '@/components/ThinkingIndicator';
 /** פרופיל מטייל ציבורי: דרכון בלבד, לקריאה - עם "מדינות משותפות" כשמחוברים */
 export default function TravelerClient({ userId }: { userId: string }) {
   const auth = useAuth();
-  const [state, setState] = useState<'loading' | 'notfound' | 'ok'>('loading');
+  const [state, setState] = useState<'loading' | 'notfound' | 'signedout' | 'ok'>('loading');
   const [traveler, setTraveler] = useState<PublicProfile | null>(null);
 
   useEffect(() => {
     const supabase = getSupabase();
     if (!supabase || !/^[0-9a-f-]{36}$/i.test(userId)) {
       setState('notfound');
+      return;
+    }
+    /*
+      `public_profiles` אינו מוענק יותר ל-anon: ההענקה הישנה איפשרה
+      למשוך את כל הרשימה בבקשה אחת - ספרייה של שמות ותצלומים לגריפה,
+      בלי חשבון. המחיר הוא שמבקר לא מחובר מקבל תשובה ריקה כאן, ולכן
+      **אומרים לו את האמת** במקום להציג "פרופיל פרטי או שאינו קיים",
+      שהוא פשוט לא נכון במצב הזה.
+    */
+    if (!auth.user) {
+      setState('signedout');
       return;
     }
     let cancelled = false;
@@ -38,7 +49,7 @@ export default function TravelerClient({ userId }: { userId: string }) {
     return () => {
       cancelled = true;
     };
-  }, [userId]);
+  }, [userId, auth.user]);
 
   const visited = useMemo(() => new Set(traveler?.visited ?? []), [traveler]);
   const myVisited = useMemo(() => new Set(auth.profile?.visited ?? []), [auth.profile]);
@@ -55,6 +66,24 @@ export default function TravelerClient({ userId }: { userId: string }) {
     return (
       <div className="rounded-2xl bg-shell p-10 text-center ring-1 ring-night/10">
         <ThinkingIndicator label="טוען פרופיל מטייל" className="justify-center" />
+      </div>
+    );
+  }
+
+  if (state === 'signedout') {
+    return (
+      <div className="mx-auto max-w-xl rounded-3xl bg-shell p-10 text-center ring-1 ring-night/10">
+        <h1 className="display text-2xl text-night">פרופילי מטיילים גלויים למחוברים בלבד</h1>
+        <p className="mt-2 leading-relaxed text-night/60">
+          כך דרכון המדינות והתמונה של מטייל לא ניתנים לאיסוף בלי חשבון. אחרי התחברות הקישור
+          הזה ייפתח כרגיל.
+        </p>
+        <Link
+          href="/account"
+          className="mt-4 inline-block rounded-xl bg-sunset px-5 py-2.5 text-sm font-bold text-cream transition hover:bg-sunset-deep"
+        >
+          התחברות
+        </Link>
       </div>
     );
   }

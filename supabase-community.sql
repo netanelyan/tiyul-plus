@@ -17,7 +17,16 @@ create or replace view public.public_profiles as
     and display_name is not null
     and length(trim(display_name)) > 0;
 
-grant select on public.public_profiles to anon, authenticated;
+-- **מחוברים בלבד, ובכוונה.** ה-view עוקף RLS (אין `security_invoker`),
+-- וזה נכון: `security_invoker = true` היה מכפיף אותו ל-RLS של
+-- `profiles`, שהיא שורה-של-עצמך בלבד, ומשבית את חיפוש המטיילים כליל.
+-- מה שכן היה בעייתי הוא ההענקה ל-anon: היא איפשרה למשוך את **כל**
+-- הרשימה בבקשה אחת - ספרייה של שמות ותצלומים לגריפה, בלי חשבון.
+-- החיפוש ממילא חי מאחורי התחברות, ולכן ההענקה ל-anon לא שירתה אף
+-- מסלול אמיתי חוץ מזה. (פרויקט שכבר הריץ את הגרסה הישנה: הקובץ
+-- supabase-rls-fix.sql שולל אותה.)
+revoke select on public.public_profiles from anon;
+grant select on public.public_profiles to authenticated;
 
 -- חיפוש לפי מייל: התאמה מדויקת בלבד (בלי חיפוש חלקי - שלא ניתן יהיה
 -- לסרוק כתובות), רק למחוברים, רק פרופילים ציבוריים, והמייל עצמו לא
