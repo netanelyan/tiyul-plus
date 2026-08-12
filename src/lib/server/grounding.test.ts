@@ -16,6 +16,8 @@ import {
   buildGroundingDetail,
   buildGroundingIndex,
   kosherAllowed,
+  kosherAllowedNames,
+  kosherIntentText,
   relevantCitySlugs,
 } from './grounding.ts';
 import { destinations } from '../../data/destinations.ts';
@@ -133,4 +135,29 @@ test('שני וריאנטים בלבד לאינדקס, ושניהם יציבים
   assert.equal(buildGroundingIndex(true), buildGroundingIndex(true));
   assert.notEqual(buildGroundingIndex(true), buildGroundingIndex(false));
   assert.ok(buildGroundingIndex(false).length < buildGroundingIndex(true).length);
+});
+
+/* ---------- kosherAllowedNames: הרשימה הלבנה של priceGuard.ts ---------- */
+
+test('kosherAllowedNames ריקה לגמרי כשהשער סגור - גם על עיר עם כשרות אמיתית', () => {
+  assert.deepEqual(kosherAllowedNames(['rome'], false), []);
+});
+
+test('kosherAllowedNames ריקה לעיר שלא נשלחה בכלל (לא בקטלוג, או לא ברשימה) - הבאג המדויק', () => {
+  // השער עצמו (kosherOk) יכול להיות פתוח כי המשתמש שאל, אבל אם העיר
+  // שהוא שאל עליה לא ברשימת הערים שנשלחו בתור הזה - אין לה שם על מה
+  // לגבות טענה, גם אם השער הכללי פתוח.
+  assert.deepEqual(kosherAllowedNames(['not-a-real-city-slug'], true), []);
+  assert.deepEqual(kosherAllowedNames([], true), []);
+});
+
+test('kosherAllowedNames מחזירה שמות מקום ועיר אמיתיים כשהשער פתוח והעיר נשלחה', () => {
+  const names = kosherAllowedNames(['rome'], true);
+  assert.ok(names.includes(rome.name));
+  assert.ok(romeKosher.some((p) => names.includes(p.name)));
+});
+
+test('kosherIntentText היא הגרסה החד-הודעתית - לא סורקת חלון שיחה', () => {
+  assert.equal(kosherIntentText('יש מסעדה כשרה ברומא?'), true);
+  assert.equal(kosherIntentText('מה שעות הפתיחה של הקולוסיאום?'), false);
 });

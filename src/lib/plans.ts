@@ -91,6 +91,16 @@ export interface PlanLimits {
    * של כולם, וגם מסכן חסימה של הכתובת שלנו. לכן מכסה נפרדת.
    */
   geocodesPerDay: number;
+  /**
+   * חיפושי אינטרנט חיים ביום (`web_search`, שעות/מחיר-כניסה/קיום).
+   *
+   * בשונה מ-`exploresPerDay`/`geocodesPerDay` זו לא הגנה על שירות חינמי
+   * של מישהו אחר - חיפוש עולה לנו $0.01 אמיתיים לכל קריאה
+   * (`WEB_SEARCH_COST_USD`), ולכן המכסה נמוכה יותר בכוונה. תקרת ההוצאה
+   * הכללית (`budget.ts`) היא ההגנה האמיתית על הכסף; זו רק מונעת ניצול
+   * חוזר-ונשנה של אדם אחד.
+   */
+  lookupsPerDay: number;
 }
 
 export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
@@ -118,6 +128,7 @@ export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
     imagesPerDay: 1,
     exploresPerDay: 8,
     geocodesPerDay: 12,
+    lookupsPerDay: 5,
   },
   free: {
     chatPerDay: 60,
@@ -129,6 +140,7 @@ export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
     imagesPerDay: 3,
     exploresPerDay: 20,
     geocodesPerDay: 30,
+    lookupsPerDay: 10,
   },
   premium: {
     chatPerDay: 400,
@@ -140,19 +152,30 @@ export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
     imagesPerDay: 30,
     exploresPerDay: 100,
     geocodesPerDay: 150,
+    lookupsPerDay: 50,
   },
 };
+
+/**
+ * שווה-ערך ביחידות AI לחיפוש אחד: $0.01 (`WEB_SEARCH_COST_USD`) חלקי
+ * מחיר קלט טיפוסי של כ-$3 למיליון טוקן, כלומר בערך 3,333 יחידות -
+ * מעוגל ל-3,500 מאותה סיבה שכל שאר המספרים כאן מספרים עגולים ולא
+ * חישוב מדויק: זו חגורה שנייה, התקרה בדולרים היא הכלי האמיתי.
+ */
+const WEB_SEARCH_AI_UNITS = 3_500;
 
 /** חישוב יחידות AI מ-usage של Anthropic (קריאות מהמטמון לא נספרות) */
 export function aiUnits(usage: {
   input_tokens?: number;
   cache_creation_input_tokens?: number;
   output_tokens?: number;
+  web_search_requests?: number;
 }): number {
   return (
     (usage.input_tokens ?? 0) +
     (usage.cache_creation_input_tokens ?? 0) +
-    (usage.output_tokens ?? 0) * 4
+    (usage.output_tokens ?? 0) * 4 +
+    (usage.web_search_requests ?? 0) * WEB_SEARCH_AI_UNITS
   );
 }
 

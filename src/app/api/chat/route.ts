@@ -22,8 +22,18 @@ import {
   buildExploredGrounding,
   buildGroundingDetail,
   kosherAllowed,
+  kosherAllowedNames,
+  kosherIntentText,
   relevantCitySlugs,
 } from '@/lib/server/grounding';
+import {
+  LOOKUP_TOOL,
+  getCachedLookup,
+  lookupBudgetLeft,
+  lookupEligible,
+  rememberLookup,
+  todayIso,
+} from '@/lib/server/webLookup';
 
 /** תקרת גוף הבקשה - לפני JSON.parse, כדי שגוף ענק לא יפיל את הפונקציה */
 const MAX_BODY_CHARS = 6_000_000;
@@ -56,6 +66,7 @@ import { PLAN_LIMITS, aiUnits } from '@/lib/plans';
 import type { BookingSearchCard } from '@/lib/bookingSearch';
 import {
   GuardedTextStream,
+  LOOKUP_ANCHOR,
   NO_PRICE_LINE,
   NO_PRICE_LINE_BARE,
   type GuardAllowlist,
@@ -257,6 +268,8 @@ interface AnthropicUsage {
   cache_read_input_tokens?: number;
   cache_creation_input_tokens?: number;
   output_tokens?: number;
+  /** כמה קריאות web_search רצו בקריאה הזאת - ראו webLookup.ts */
+  server_tool_use?: { web_search_requests?: number };
 }
 
 interface AnthropicSSE {
@@ -347,6 +360,14 @@ async function runClaudeTurn(
    * להשמיט את האינדקס, לא להפך.
    */
   light: boolean,
+  /**
+   * האם לצרף את `LOOKUP_TOOL` לקריאה הזאת. **הערובה המבנית** נגד חיפוש
+   * על כשרות: תור שנשאל על כשרות מגיע לכאן עם `false`, ולכן הכלי פשוט
+   * לא קיים בשביל המודל - לא הנחיה, עובדה. ראו webLookup.ts.
+   */
+  allowLookup: boolean,
+  /** תאריך היום, או תשובה קודמת ממטמון - בלוק system נפרד ומשתנה */
+  lookupNote: string,
 ): Promise<{ blocks: AccBlock[]; stopReason: string; text: string; usage: AnthropicUsage; model: string }> {
   const model = light
     ? (process.env.ANTHROPIC_MODEL_FAST ?? 'claude-haiku-4-5')
@@ -369,8 +390,14 @@ async function runClaudeTurn(
       model,
       max_tokens: maxTokens,
       stream: true,
-      // כלי שלא נשלח לא קיים בשביל המודל. זו הערובה, ולא הנחיה בפרומפט.
-      tools: light ? AGENT_TOOLS.filter((t) => isLightTool(t.name)) : AGENT_TOOLS,
+      // כלי שלא נשלח לא קיים בשביל המודל. זו הערובה, ולא הנחיה בפרומפט -
+      // ובאותו עיקרון בדיוק, `allowLookup=false` (כל תור שנשמע כמו שאלת
+      // כשרות) פירושו ש-LOOKUP_TOOL פשוט לא במערך, בלי קשר למה שכתוב לו.
+      tools: light
+        ? AGENT_TOOLS.filter((t) => isLightTool(t.name))
+        : allowLookup
+          ? [...AGENT_TOOLS, LOOKUP_TOOL]
+          : AGENT_TOOLS,
       // סדר הרינדור: tools (סטטי) → system. ה-grounding הוא הבלוק עם
       // cache_control - כל הקידומת הקבועה נכנסת ל-prompt cache; מצב הטיול
       // המשתנה יושב אחרי נקודת השבירה ולא פוגע בקריאות מהמטמון.
@@ -396,6 +423,9 @@ async function runClaudeTurn(
         // הפירוט משתנה לפי השיחה -> אחרי נקודת השבירה, בלי cache_control
         { type: 'text', text: groundingDetail },
         ...(light ? [{ type: 'text' as const, text: LIGHT_TURN_NOTE }] : []),
+        // תאריך היום/תשובת מטמון לחיפוש - נגזר מהשעון בזמן הבקשה, ולכן
+        // חייב לשבת כאן ולא בקידומת השמורה (ראו webLookup.ts, todayIso).
+        ...(lookupNote ? [{ type: 'text' as const, text: lookupNote }] : []),
         { type: 'text', text: `CURRENT TRIP (the user's active trip right now):\n${serializeTripForModel(trip)}${kosherNote}` },
         // האחרון בכוונה. הכללים האלה קיימים למעלה ב-LANGUAGE & VOICE
         // ונבלעו בבדיקה חיה: הפרומפט ארוך, והמודל הפיק פירוק לפי יבשות
@@ -509,6 +539,9 @@ async function runClaudeTurn(
       } else if (event.type === 'message_delta') {
         if (event.delta?.stop_reason) stopReason = event.delta.stop_reason;
         if (event.usage?.output_tokens !== undefined) usage.output_tokens = event.usage.output_tokens;
+        // מספר החיפושים ידוע רק אחרי שהם רצו - כלומר בסוף, ב-message_delta,
+        // לא בתחילת הקריאה. בלי זה חיפוש עולה כסף בלי שהוא נרשם בשום מקום.
+        if (event.usage?.server_tool_use) usage.server_tool_use = event.usage.server_tool_use;
       } else if (event.type === 'message_start' && event.message?.usage) {
         Object.assign(usage, event.message.usage);
       }
@@ -625,6 +658,29 @@ async function runAgent(
   const mentionsDaysAndDest = /\d+\s*ימים?/.test(lastUser) && Boolean(findDestination(lastUser));
   const editIntent = hasVerbIntent || mentionsDaysAndDest;
 
+  /*
+    ---------- חיפוש חי: שעות/מחיר-כניסה/קיום ----------
+
+    `kosherAsk` בודק את ההודעה **הזאת בלבד**, ולא את חלון שש ההודעות
+    שהשער הכללי של הכשרות משתמש בו - שאלה עובדתית לא-קשורה בהמשך שיחה
+    שהזכירה כשרות פעם אחת לא צריכה להיחסם. אבל כשההודעה **הזאת** נשמעת
+    כמו שאלת כשרות, זה מנצח הכול: `allowLookup` יורד ל-false בלי קשר
+    למה ש-`lookupEligible` היה אומר, ו-LOOKUP_TOOL פשוט לא נכנס לקריאה.
+  */
+  const kosherAsk = kosherIntentText(lastUser);
+  const lookupQuotaOk =
+    !process.env.ANTHROPIC_API_KEY ||
+    checkLimit('lookup-day', caller.id, planLimits.lookupsPerDay, 24 * 60 * 60 * 1000).ok;
+  const lookupWanted = !kosherAsk && lookupQuotaOk && lookupEligible(lastUser) && lookupBudgetLeft(messages);
+  const cachedLookup = lookupWanted ? getCachedLookup(lastUser) : null;
+  /** האם לצרף בפועל את `LOOKUP_TOOL` - לא כשיש כבר תשובה במטמון */
+  const allowLookup = lookupWanted && !cachedLookup;
+  const lookupNote = cachedLookup
+    ? `A fresh, still-valid answer to this exact question was already looked up earlier - reuse it instead of searching again, with its citation:\n"""\n${cachedLookup}\n"""`
+    : allowLookup
+      ? `TODAY'S DATE, for citing when you checked something (never compute or guess this yourself): ${todayIso()}.`
+      : '';
+
   // האם קריאת כלי כלשהי בפועל שינתה את הטיול בסיבוב הזה - נבדל מ-touched
   // (ששיקוף מהצד גם רמז כשרות שדורש להחזיר את הטיול ללקוח, גם בלי כלי).
   let toolBuiltSomething = false;
@@ -730,6 +786,13 @@ async function runAgent(
   for (let iter = 0; iter < 16; iter++) {
     // נקרא מחדש בכל איטרציה: `working` משתנה תוך כדי התור.
     const kosherOk = kosherAllowed(working, messages, kosherHint);
+    // אותו עיקרון: `set_preferences` יכול להדליק כשרות באמצע תור, אז
+    // הרשימה הלבנה של שומר המחירים (`kosher-claim`) נבנית כאן מחדש בכל
+    // איטרציה ולא פעם אחת בתחילת runAgent - ראו kosherAllowedNames.
+    guardAllow.kosherNames = kosherAllowedNames(
+      light ? (clientTrip?.citySlugs ?? []) : Array.from(new Set([...relevant, ...(clientTrip?.citySlugs ?? [])])),
+      kosherOk,
+    );
     // אחרי קטיעה נותנים תקרה גבוהה יותר: ההנחיה לקריאות קטנות היא העיקר,
     // אבל אין סיבה להיחתך שוב על אותה מגבלה בזמן שמתקנים.
     /*
@@ -757,8 +820,21 @@ async function runAgent(
       guardAllow,
       searchesShown > 0,
       light,
+      // המסלול הקל לא מקבל חיפוש בשום מקרה - הוא כבר מוגבל לרשימה
+      // לבנה של כלים שלא כוללת אותו, וזה כאן רק כדי שהכוונה תהיה מפורשת.
+      !light && allowLookup,
+      light ? '' : lookupNote,
     );
-    meter.units += aiUnits(turn.usage);
+    /*
+      חיפוש נודע רק בדיעבד (server_tool_use ב-usage, ראו runClaudeTurn),
+      ולכן משוטח כאן פעם אחת לפני שהוא נכנס גם ליחידות וגם לדולרים - שני
+      השערים היחידים שקיימים על ההוצאה הזאת, ראו webLookup.ts.
+    */
+    const usageFlat = {
+      ...turn.usage,
+      web_search_requests: turn.usage.server_tool_use?.web_search_requests,
+    };
+    meter.units += aiUnits(usageFlat);
     /*
       העלות האמיתית, לצד היחידות. היחידות הן מכסה אישית; הדולרים הם
       התקרה הגלובלית ומה שנתנאל יראה באזור הניהול - כמה עולה טיול.
@@ -769,7 +845,7 @@ async function runAgent(
       tripId: clientTrip?.id ?? null,
       route: 'chat',
       model: turn.model,
-      usage: turn.usage,
+      usage: usageFlat,
       // אם התשובה נקטעה לפני message_delta אין output_tokens, והטקסט
       // שכן הוזרם הוא הבסיס לאומדן שמרני במקום אפס
       streamedChars: turn.text.length,
@@ -1121,6 +1197,15 @@ async function runAgent(
   console.log(
     `[chat] turn route=${route.light ? 'light' : 'heavy'} escalated=${escalated} proseDropped=${lightProseDropped} reason=${route.reason}`,
   );
+
+  /*
+    שמירה במטמון - רק אם באמת הצענו את הכלי (`allowLookup`) ורק אם מה
+    שיצא באמת נושא ציטוט אמיתי (שרד את שומר המחירים). תשובה שנחתכה
+    לגמרי לא נשמרת - אין מה לתת בחזרה לשאלה הבאה.
+  */
+  if (allowLookup && LOOKUP_ANCHOR.test(full)) {
+    rememberLookup(lastUser, full);
+  }
 
   const dest = findDestination(full);
   send({ type: 'meta', destinationSlug: dest?.slug });

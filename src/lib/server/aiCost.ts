@@ -47,6 +47,12 @@ const FALLBACK: ModelPrice = Object.values(MODEL_PRICES).reduce((a, b) =>
   a.output >= b.output ? a : b,
 );
 
+/**
+ * $10 לכל 1,000 חיפושים (מחיר Anthropic ל-`web_search_20260209`), כלומר
+ * $0.01 לחיפוש בודד. עלות קבועה, לא תלוית מודל - נספרת בנפרד מהטוקנים.
+ */
+export const WEB_SEARCH_COST_USD = 0.01;
+
 export function priceFor(model: string): ModelPrice {
   // התאמה לפי תחילית: "claude-sonnet-4-5-20260101" הוא אותו מחיר
   for (const [name, price] of Object.entries(MODEL_PRICES)) {
@@ -60,6 +66,8 @@ export interface TokenUsage {
   cache_creation_input_tokens?: number;
   cache_read_input_tokens?: number;
   output_tokens?: number;
+  /** כמה חיפושי web_search רצו בקריאה הזאת - ראו webLookup.ts */
+  web_search_requests?: number;
 }
 
 /**
@@ -67,6 +75,7 @@ export interface TokenUsage {
  *
  * `input_tokens` של Anthropic הוא הקלט **שלא** הגיע מהמטמון - קריאות
  * וכתיבות מטמון מדווחות בשדות נפרדים, ולכן אין כאן ספירה כפולה.
+ * חיפושים הם עלות קבועה, נספרת בנפרד מהטוקנים - ראו `WEB_SEARCH_COST_USD`.
  */
 export function costUsd(model: string, u: TokenUsage): number {
   const p = priceFor(model);
@@ -82,7 +91,8 @@ export function costUsd(model: string, u: TokenUsage): number {
         (process.env.ANTHROPIC_CACHE_TTL === '5m' ? p.cacheWrite : p.cacheWrite1h) +
       (u.cache_read_input_tokens ?? 0) * p.cacheRead +
       (u.output_tokens ?? 0) * p.output) /
-    1_000_000
+      1_000_000 +
+    (u.web_search_requests ?? 0) * WEB_SEARCH_COST_USD
   );
 }
 
