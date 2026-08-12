@@ -244,7 +244,7 @@ export default function DestinationClient({
                   {formatDurationHe(place.durationMin) && (
                     <span>{formatDurationHe(place.durationMin)}</span>
                   )}
-                  {placeMapUrl(place) && (
+                  {placeMapUrl(place) ? (
                     <a
                       href={placeMapUrl(place)!}
                       {...outboundAttrs()}
@@ -252,6 +252,15 @@ export default function DestinationClient({
                     >
                       {outboundTarget(placeMapUrl(place)) === 'wikipedia' ? 'ויקיפדיה' : 'Google Maps'} ↗
                     </a>
+                  ) : (
+                    /*
+                      אין קואורדינטה אמינה - עדיף שהיעדר הקישור ייראה
+                      במקום שיעלם בשקט. לא מוצג כפתור שמנחית במקום הלא
+                      נכון.
+                    */
+                    <span className="text-night/35" title="לא נמצאה עבור המקום הזה קואורדינטה אמינה">
+                      מיקום לא אומת
+                    </span>
                   )}
                 </div>
               </div>

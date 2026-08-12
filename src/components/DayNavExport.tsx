@@ -2,6 +2,7 @@
 
 import {
   googleMapsLegs,
+  isValidNavPoint,
   type NavPoint,
   type TravelMode,
   MAX_POINTS_PER_LEG,
@@ -37,11 +38,41 @@ export default function DayNavExport({
   mode: TravelMode;
 }) {
   const points: NavPoint[] = start ? [start, ...stops] : stops;
+  if (points.length === 0) return null;
+
+  /*
+    כמה נקודות באמת ייכנסו לניווט - `googleMapsLegs` מסננת קואורדינטה
+    לא תקינה בשקט (`isValidNavPoint`), וזה בדיוק הבאג הזה בגרסה קטנה
+    יותר: "5 נקודות" בכותרת כשרק 4 באמת נכנסו למסלול. אותה נקודה בדיוק
+    כמו placeMapUrl - קישור/ניווט "עובד" שמשמיט עצירה בשקט גרוע מהודעה
+    שאומרת זאת בגלוי.
+  */
+  const excluded = points.length - points.filter(isValidNavPoint).length;
   const legs = googleMapsLegs(points, mode);
-  if (legs.length === 0) return null;
+
+  if (legs.length === 0) {
+    /*
+      שני מצבים שונים לגמרי מובילים לאותו legs.length === 0, וצריך
+      להבדיל ביניהם: יום עם עצירה אחת בלבד (excluded === 0) הוא המצב
+      הרגיל ביותר - אין ממה לבנות מסלול, ואין כאן שום דבר לדווח עליו.
+      יום שבו עצירה כלשהי הודחה (excluded > 0) הוא כן פער דאטה שכדאי
+      שיֵראה, לא שיעלם בדיוק כמו הכפתור שהיה נעלם קודם.
+    */
+    if (excluded === 0) return null;
+    return (
+      <p className="mt-3 text-center text-xs font-medium text-night/40">
+        אין עדיין מספיק עצירות עם מיקום מאומת כדי לבנות ניווט ליום הזה
+      </p>
+    );
+  }
 
   const modeLabel = mode === 'driving' ? 'ברכב' : 'ברגל';
-  const summary = `${points.length} נקודות · ${modeLabel}${start ? ' · מתחיל מהלינה' : ''}`;
+  const navigable = points.length - excluded;
+  const summary = `${navigable} נקודות · ${modeLabel}${start ? ' · מתחיל מהלינה' : ''}`;
+  const excludedNote =
+    excluded > 0
+      ? ` · ${excluded} ${excluded === 1 ? 'עצירה אחת לא נכללה' : 'עצירות לא נכללו'} כי אין להן מיקום מאומת`
+      : '';
 
   return (
     <div className="mt-3">
@@ -74,8 +105,8 @@ export default function DayNavExport({
       )}
       <p className="mt-1.5 text-center text-xs font-medium text-night/40">
         {legs.length === 1
-          ? summary
-          : `${summary} · Google Maps מגבילה ${MAX_POINTS_PER_LEG} נקודות בניווט אחד, ולכן היום מחולק לקטעים רצופים`}
+          ? `${summary}${excludedNote}`
+          : `${summary} · Google Maps מגבילה ${MAX_POINTS_PER_LEG} נקודות בניווט אחד, ולכן היום מחולק לקטעים רצופים${excludedNote}`}
       </p>
     </div>
   );
