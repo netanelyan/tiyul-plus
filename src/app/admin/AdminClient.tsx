@@ -50,6 +50,18 @@ interface Stats {
   freeCap: number;
 }
 
+interface PurchaseInfo {
+  id: string;
+  status: 'pending' | 'paid' | 'failed' | 'revoked';
+  source: 'paypal' | 'admin_grant';
+  amount: number;
+  currency: string;
+  mode: 'sandbox' | 'production';
+  createdAt: string;
+  paidAt: string | null;
+  note: string | null;
+}
+
 interface PromoCode {
   code: string;
   days: number;
@@ -176,6 +188,7 @@ export default function AdminClient() {
       <TripLookupCard api={api} />
       <UserCard api={api} role={me.role} />
       <SpendCard api={api} />
+      <PurchasesCard api={api} />
       <StatsCard api={api} />
       <PromoCard api={api} />
       <FlagsCard api={api} />
@@ -1061,6 +1074,149 @@ function SpendCard({
 }
 
 /* ============================================================
+   בדיקה לפני הנסיעה - המוצר הראשון בתשלום
+   ============================================================ */
+
+interface PurchasesStats {
+  revenueILS: number;
+  paidCount: number;
+  pendingCount: number;
+  stuckPending: { id: string; userId: string; tripId: string; createdAt: string; ageMinutes: number }[];
+  failedCount: number;
+  adminGrantCount: number;
+}
+
+interface PurchasesOverview {
+  stats: PurchasesStats;
+  recent: {
+    id: string;
+    email: string | null;
+    tripId: string;
+    amount: number;
+    currency: string;
+    status: 'pending' | 'paid' | 'failed' | 'revoked';
+    source: 'paypal' | 'admin_grant';
+    mode: 'sandbox' | 'production';
+    createdAt: string;
+    paidAt: string | null;
+  }[];
+}
+
+const PURCHASE_STATUS_LABEL: Record<string, string> = {
+  paid: 'שולם',
+  pending: 'ממתין',
+  failed: 'נכשל',
+  revoked: 'נשלל',
+};
+
+/**
+ * לוח המצב של "בדיקה לפני הנסיעה". **התשובה הישירה לשאלה "איך אדע
+ * שלקחנו כסף ולא סיפקנו"**: `stuckPending` הוא בדיוק זה - רכישות
+ * ש-webhook לא סגר תוך יותר מ-15 דקות, מוצג כאן בכל טעינה. יש גם
+ * התראה חד-פעמית ל-3 דקות מתוך `/api/checks/status` עצמו (בזמן שהמטייל
+ * עוד מחכה) - שני מנגנונים משלימים, לא אחד תלוי בשני.
+ */
+function PurchasesCard({
+  api,
+}: {
+  api: (p: string, i?: RequestInit) => Promise<{ ok: boolean; status: number; data: unknown }>;
+}) {
+  const [d, setD] = useState<PurchasesOverview | null>(null);
+
+  useEffect(() => {
+    void (async () => {
+      const { ok, data } = await api('/api/admin/purchases');
+      if (ok) setD(data as PurchasesOverview);
+    })();
+  }, [api]);
+
+  if (!d) return null;
+  const { stats } = d;
+
+  return (
+    <section
+      className={`rounded-2xl p-5 ring-1 ${
+        stats.stuckPending.length > 0 ? 'bg-sunset/10 ring-sunset/40' : 'bg-shell ring-night/10'
+      }`}
+    >
+      <h2 className="text-lg font-bold text-night">🛫 בדיקה לפני הנסיעה</h2>
+      <p className="mt-1 text-sm font-medium text-night/55">
+        המוצר הראשון בתשלום. הכנסה נספרת רק מרכישות אמיתיות דרך PayPal - הענקות ידניות לא נכללות.
+      </p>
+
+      <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        {[
+          { label: 'הכנסה (₪)', v: stats.revenueILS.toFixed(2) },
+          { label: 'שולמו', v: String(stats.paidCount) },
+          { label: 'ממתינות', v: String(stats.pendingCount) },
+          { label: 'הענקות ידניות', v: String(stats.adminGrantCount) },
+        ].map((x) => (
+          <div key={x.label} className="rounded-xl bg-cream p-3">
+            <div className="text-lg font-black text-night" dir="ltr">
+              {x.v}
+            </div>
+            <div className="text-[11px] font-semibold text-night/50">{x.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {stats.stuckPending.length > 0 && (
+        <div className="mt-3 rounded-xl bg-sunset/15 p-3 ring-1 ring-sunset/30">
+          <p className="text-sm font-bold text-sunset-deep">
+            {stats.stuckPending.length} רכישות תקועות מעל 15 דקות - שולם ולא סופק
+          </p>
+          <ul className="mt-1.5 space-y-1">
+            {stats.stuckPending.map((p) => (
+              <li key={p.id} className="text-xs font-semibold text-night/70">
+                טיול {p.tripId} · {p.ageMinutes} דקות · מזהה רכישה <span dir="ltr">{p.id}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-1.5 text-[11px] font-medium text-night/50">
+            כנראה ה-webhook של PayPal התעכב או לא הגיע. לבדוק בדשבורד של PayPal, ואם התשלום אכן
+            הושלם - להעניק גישה ידנית ב״מטייל״ למעלה.
+          </p>
+        </div>
+      )}
+
+      {d.recent.length > 0 && (
+        <div className="mt-4">
+          <div className="text-xs font-bold text-night/55">רכישות אחרונות</div>
+          <ul className="mt-1.5 space-y-1">
+            {d.recent.map((r) => (
+              <li key={r.id} className="flex flex-wrap items-center gap-2 rounded-xl bg-cream px-3 py-2 text-xs">
+                <span className="font-bold text-night" dir="ltr">
+                  {r.email ?? '—'}
+                </span>
+                <span className="text-night/50">טיול {r.tripId}</span>
+                <span
+                  className={`rounded-full px-2 py-0.5 font-bold ${
+                    r.status === 'paid'
+                      ? 'bg-lagoon/20 text-night/70'
+                      : r.status === 'pending'
+                        ? 'bg-sunset/15 text-sunset-deep'
+                        : 'bg-night/10 text-night/50'
+                  }`}
+                >
+                  {PURCHASE_STATUS_LABEL[r.status] ?? r.status}
+                  {r.source === 'admin_grant' ? ' · הענקה' : ''}
+                </span>
+                {r.mode === 'sandbox' && (
+                  <span className="rounded-full bg-sunset px-2 py-0.5 font-black text-cream">sandbox</span>
+                )}
+                <span className="ms-auto text-[11px] font-semibold text-night/40">
+                  {hebrewDate(r.createdAt)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
+  );
+}
+
+/* ============================================================
    התצוגה המצטברת - המסך הראשי
    ============================================================ */
 
@@ -1315,6 +1471,42 @@ function TripLookupCard({
   const [hits, setHits] = useState<TripHit[] | null>(null);
   const [total, setTotal] = useState(0);
   const [open, setOpen] = useState<TripViewData | null>(null);
+  const [purchase, setPurchase] = useState<PurchaseInfo | null>(null);
+  const [purchaseBusy, setPurchaseBusy] = useState(false);
+  const [purchaseNote, setPurchaseNote] = useState('');
+  const [purchaseMsg, setPurchaseMsg] = useState<string | null>(null);
+
+  const loadPurchase = async (userId: string, tripId: string) => {
+    const { ok, data } = await api(
+      `/api/admin/purchases?userId=${encodeURIComponent(userId)}&tripId=${encodeURIComponent(tripId)}`,
+    );
+    if (ok) setPurchase((data as { purchase: PurchaseInfo | null }).purchase);
+  };
+
+  const setPurchaseAction = async (action: 'grant' | 'revoke') => {
+    if (!open?.owner.email) return;
+    setPurchaseBusy(true);
+    setPurchaseMsg(null);
+    const { ok, data } = await api('/api/admin/purchases', {
+      method: 'POST',
+      body: JSON.stringify({ email: open.owner.email, tripId: open.id, action, note: purchaseNote }),
+    });
+    setPurchaseBusy(false);
+    if (!ok) {
+      setPurchaseMsg('הפעולה נכשלה.');
+      return;
+    }
+    const d = data as { found: boolean; action?: string; granted?: boolean; reason?: string };
+    if (!d.found) setPurchaseMsg('אין חשבון עם המייל הזה.');
+    else if (d.action === 'grant' && d.granted === false) {
+      setPurchaseMsg(
+        d.reason === 'trip_not_found' ? 'הטיול לא נמצא - אי אפשר לבנות דוח בלעדיו.' : 'ההענקה נכשלה.',
+      );
+    } else {
+      setPurchaseMsg(action === 'grant' ? 'הבדיקה הוענקה, כולל דוח.' : 'הגישה נשללה.');
+    }
+    void loadPurchase(open.owner.userId, open.id);
+  };
 
   const search = async () => {
     if (!q.trim()) return;
@@ -1344,11 +1536,17 @@ function TripLookupCard({
 
   const openTrip = async (h: TripHit) => {
     setBusy(true);
+    setPurchase(null);
+    setPurchaseMsg(null);
     const { ok, data } = await api(
       `/api/admin/trips?id=${encodeURIComponent(h.id)}&user=${encodeURIComponent(h.userId)}`,
     );
     setBusy(false);
-    if (ok) setOpen(data as TripViewData);
+    if (ok) {
+      const view = data as TripViewData;
+      setOpen(view);
+      void loadPurchase(view.owner.userId, view.id);
+    }
   };
 
   return (
@@ -1513,6 +1711,58 @@ function TripLookupCard({
               </ul>
             </div>
           )}
+
+          {/* בדיקה לפני הנסיעה - מצב + הענקה/שלילה ידנית לטיול הפתוח */}
+          <div className="mt-3 rounded-xl bg-shell p-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-bold text-night/60">🛫 בדיקה לפני הנסיעה:</span>
+              {purchase ? (
+                <span
+                  className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                    purchase.status === 'paid'
+                      ? 'bg-lagoon/20 text-night/75'
+                      : purchase.status === 'pending'
+                        ? 'bg-sunset/15 text-sunset-deep'
+                        : 'bg-night/10 text-night/50'
+                  }`}
+                >
+                  {PURCHASE_STATUS_LABEL[purchase.status] ?? purchase.status}
+                  {purchase.source === 'admin_grant' ? ' · הענקה' : ''}
+                  {purchase.mode === 'sandbox' ? ' · sandbox' : ''}
+                </span>
+              ) : (
+                <span className="text-xs font-medium text-night/40">לא נרכשה</span>
+              )}
+            </div>
+            <div className="mt-2 flex flex-wrap items-end gap-2">
+              <label className="min-w-[8rem] flex-1 text-[11px] font-bold text-night/50">
+                הערה (נשמרת ביומן)
+                <input
+                  value={purchaseNote}
+                  onChange={(e) => setPurchaseNote(e.target.value)}
+                  placeholder="למשל: webhook התעכב, אימתתי מול PayPal"
+                  className="mt-1 block w-full rounded-lg bg-cream px-2.5 py-1.5 text-base sm:text-sm text-night ring-1 ring-night/10"
+                />
+              </label>
+              <button
+                onClick={() => void setPurchaseAction('grant')}
+                disabled={purchaseBusy || !open.owner.email}
+                className="rounded-xl bg-night px-3.5 py-2 text-xs font-bold text-cream transition hover:bg-night-soft disabled:opacity-50"
+              >
+                הענקה ידנית
+              </button>
+              {purchase?.status === 'paid' && (
+                <button
+                  onClick={() => void setPurchaseAction('revoke')}
+                  disabled={purchaseBusy}
+                  className="rounded-xl bg-shell px-3.5 py-2 text-xs font-bold text-sunset-deep ring-1 ring-night/10 transition hover:bg-sunset/10 disabled:opacity-50"
+                >
+                  שלילה
+                </button>
+              )}
+            </div>
+            {purchaseMsg && <p className="mt-1.5 text-xs font-semibold text-night/60">{purchaseMsg}</p>}
+          </div>
 
           <p className="mt-3 text-[11px] font-medium text-night/40">
             עדכון אחרון: {hebrewDate(open.updatedAt)} · הפתיחה הזאת נרשמה ביומן.

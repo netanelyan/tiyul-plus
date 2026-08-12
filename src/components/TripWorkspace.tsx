@@ -23,6 +23,7 @@ import TripCost from '@/components/TripCost';
 import PinsPanel from '@/components/PinsPanel';
 import ActivitiesPanel from '@/components/ActivitiesPanel';
 import TripDateNotes from '@/components/TripDateNotes';
+import PreDepartureCheck from '@/components/PreDepartureCheck';
 import PanelSection from '@/components/PanelSection';
 import ChatPanel from '@/components/ChatPanel';
 import Flag from '@/components/Flag';
@@ -969,6 +970,15 @@ export default function TripWorkspace({
         בלי תאריכים, שאין ממנו מה לחשב.
       */}
       {t && t.days.length > 0 && <TripDateNotes trip={t} destinations={destinations} />}
+
+      {/*
+        ---------- בדיקה לפני הנסיעה ----------
+        מוצר בתשלום, לא מונע כלום קיים. יושב מיד אחרי "מה קורה
+        בתאריכים שלכם" מאותה סיבה בדיוק - שניהם תלויים בזמן, ושניהם לא
+        מרנדרים כלום כשאין להם מה לומר (בלי תאריכים, רחוק מדי מהיציאה,
+        או שכבר נרכש - אז מוצגת התוצאה בפנים).
+      */}
+      {t && <PreDepartureCheck trip={t} offline={offline} />}
 
       {/* ---------- שכבת ההזמנות: מה עוד חסר לטיול ---------- */}
       {t && t.days.length > 0 && (
