@@ -721,6 +721,15 @@ export function executeAgentTool(
   input: Record<string, unknown>,
   exploredDestinations: Destination[] = [],
   resolved: ResolvedPinLocation | null = null,
+  /**
+   * התור הזה מתקן את התור הקודם (ראו `lib/server/correction.ts`).
+   *
+   * המשמעות היחידה כרגע: **בנייה מחדש מחליפה את הטיול הפתוח במקום
+   * להעמיד לידו טיול שני.** נתנאל תיקן "ברצלונה, לא ברטיסלבה" וקיבל
+   * טיול ברטיסלבה יתום ברשימה, כי `create_trip_full` מייצר מזהה חדש
+   * תמיד ולכן `upsertTrip` בלקוח מוסיף ולא מחליף.
+   */
+  isCorrection = false,
 ): AgentToolResult {
   sessionExplored = exploredDestinations;
   switch (name) {
@@ -792,20 +801,35 @@ export function executeAgentTool(
       if (errors.length > 0) {
         return fail(trip, `הקריאה נדחתה בשלמותה - תקן את השגיאות ונסה שוב:\n${errors.join('\n')}`);
       }
+      /*
+        **מזהה הטיול הוא ההבדל בין תיקון לבין טיול יתום.** בתור של
+        תיקון שומרים את המזהה (ואת `createdAt`, ואת ההעדפות והסיכות
+        שהמטייל כבר נתן) - ואז `upsertTrip` בלקוח מחליף את אותה שורה
+        במקום להוסיף אחת. בכל תור אחר ההתנהגות לא משתנה: "תבנה לי גם
+        טיול לרומא" עדיין יוצר טיול נוסף, כי הכיוון ההפוך היה דורס
+        טיול קיים.
+      */
+      const replacing = isCorrection && trip ? trip : null;
       const next: Trip = {
-        id: newId(),
+        ...(replacing ?? {}),
+        id: replacing?.id ?? newId(),
         name: tripName,
         citySlugs: [...new Set(days.map((d) => d.citySlug))],
         days,
-        createdAt: Date.now(),
+        createdAt: replacing?.createdAt ?? Date.now(),
       };
       const totalStops = days.reduce((n, d) => n + d.placeIds.length, 0);
       const kosherNote = kosherDropNote(droppedKosher, dropMode);
+      const built = replacing
+        ? `הטיול הקיים עודכן ל"${tripName}"`
+        : `נוצר "${tripName}"`;
       return {
         trip: next,
         ok: true,
-        message: `נוצר "${tripName}": ${days.length} ימים, ${totalStops} עצירות.${kosherNote}${routeSummary(days)}${PROSE_DISCIPLINE}`,
-        action: `יצרתי טיול חדש: "${tripName}" (${days.length} ימים, ${totalStops} עצירות)`,
+        message: `${built}: ${days.length} ימים, ${totalStops} עצירות.${kosherNote}${replacing ? ' זה תור של תיקון, ולכן הטיול הקיים עודכן במקומו ולא נוצר טיול שני. אמור למטייל שתיקנת את הטיול הקיים, לא שיצרת חדש.' : ''}${routeSummary(days)}${PROSE_DISCIPLINE}`,
+        action: replacing
+          ? `עדכנתי את הטיול: "${tripName}" (${days.length} ימים, ${totalStops} עצירות)`
+          : `יצרתי טיול חדש: "${tripName}" (${days.length} ימים, ${totalStops} עצירות)`,
       };
     }
 
