@@ -16,7 +16,7 @@ import {
   topicOk,
 } from './chatGuards.ts';
 import { costUsd, priceFor } from './aiCost.ts';
-import { CALLER_SHARE, DEFAULT_DAILY_BUDGET_USD } from './budget.ts';
+import { CALLER_CAP_USD, DEFAULT_DAILY_BUDGET_USD } from './budget.ts';
 import { PLAN_LIMITS } from '../plans.ts';
 
 /* ---------- שער הנושא: קודם כל מה שחייב לעבור ---------- */
@@ -132,13 +132,28 @@ test('x-forwarded-host מנצח - זה מה שוורסל שולח', () => {
 
 /* ---------- מחיר ---------- */
 
-test('העלות מחושבת מכל ארבעת סוגי הטוקנים', () => {
-  const c = costUsd('claude-sonnet-4-5', {
-    input_tokens: 1_000_000,
-    cache_creation_input_tokens: 1_000_000,
-    cache_read_input_tokens: 1_000_000,
-    output_tokens: 1_000_000,
-  });
+const MILLION_OF_EACH = {
+  input_tokens: 1_000_000,
+  cache_creation_input_tokens: 1_000_000,
+  cache_read_input_tokens: 1_000_000,
+  output_tokens: 1_000_000,
+};
+
+/**
+ * **כתיבת מטמון מתומחרת לפי ה-TTL שאנחנו שולחים.** הטסט הזה קודם דרש
+ * 3.75 - התעריף של 5 דקות - בזמן ש-`agentPrefix.ts` שולח `ttl: '1h'`,
+ * שעולה פי 2 מהקלט. כלומר כל קריאה קרה תומחרה ב-62.5% ממחירה, וזו
+ * הטעות בכיוון המסוכן על תקרת הוצאה.
+ */
+test('העלות מחושבת מכל ארבעת סוגי הטוקנים, לפי תוקף המטמון', () => {
+  delete process.env.ANTHROPIC_CACHE_TTL; // ברירת המחדל היא שעה
+  assert.equal(Number(costUsd('claude-sonnet-4-5', MILLION_OF_EACH).toFixed(2)), 3 + 6 + 0.3 + 15);
+});
+
+test('התעריף הקצר חוזר יחד עם ההגדרה הקצרה', () => {
+  process.env.ANTHROPIC_CACHE_TTL = '5m';
+  const c = costUsd('claude-sonnet-4-5', MILLION_OF_EACH);
+  delete process.env.ANTHROPIC_CACHE_TTL;
   assert.equal(Number(c.toFixed(2)), 3 + 3.75 + 0.3 + 15);
 });
 
@@ -192,6 +207,6 @@ test('מכסת ההודעות האנונימית מאפשרת סשן תכנון 
 test('תקרת הדולרים האישית גבוהה מהסשן האנונימי הגרוע ביותר', () => {
   const worstSession =
     2 * MEASURED_COLD_TURN_USD + (PLAN_LIMITS.anon.chatPerDay - 2) * MEASURED_WARM_TURN_USD;
-  const callerCap = DEFAULT_DAILY_BUDGET_USD * CALLER_SHARE;
+  const callerCap = Math.min(CALLER_CAP_USD, DEFAULT_DAILY_BUDGET_USD);
   assert.ok(callerCap > worstSession, `${callerCap} מול ${worstSession.toFixed(2)}`);
 });

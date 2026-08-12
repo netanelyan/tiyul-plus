@@ -1,4 +1,5 @@
 import { quickServices } from '@/lib/services';
+import { outboundAttrs } from '@/lib/outbound';
 
 /**
  * גישה מהירה לשירותי נסיעה - 4 כרטיסים (שורה בדסקטופ, טור במובייל)
@@ -8,6 +9,11 @@ import { quickServices } from '@/lib/services';
  *
  * כנות: כרגע אין אפיליאייט - הכפתורים מפנים לאתר הספק הציבורי (בלי
  * פרמטרי מעקב), או מציגים "בקרוב" כשעדיין לא נבחר ספק.
+ *
+ * ולכן גם ה-`rel` מגיע מ-`outboundAttrs` ולא נכתב ביד: הקוד כאן סימן
+ * את ארבעת הקישורים כ-`sponsored` בזמן שאף אחד מהם אינו קישור שותפים,
+ * וזו הצהרה שגויה. עכשיו הסימון נגזר מקיומו של `affiliateUrl`, כלומר
+ * הוא ייכנס מעצמו ביום שיהיה מזהה - ולא רגע לפני.
  */
 export default function QuickServices() {
   return (
@@ -49,8 +55,7 @@ export default function QuickServices() {
               ) : (
                 <a
                   href={href}
-                  target="_blank"
-                  rel="noreferrer nofollow sponsored"
+                  {...outboundAttrs({ affiliate: s.affiliateUrl !== null })}
                   className="mt-3 inline-flex items-center justify-center rounded-xl bg-sunset px-3 py-2.5 text-sm font-bold text-cream transition hover:bg-sunset-deep sm:mt-4 sm:px-4"
                 >
                   {s.cta} ↗

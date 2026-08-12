@@ -8,10 +8,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  ANON_CALLER_SHARE,
+  ANON_CALLER_CAP_USD,
   ANON_SHARE,
   CALLER_ALERT_AT,
-  CALLER_SHARE,
+  CALLER_CAP_USD,
   IP_BACKSTOP_MULTIPLE,
   budgetFor,
   isAnonIdentity,
@@ -88,7 +88,7 @@ test('ביום שקט מבחינת אנונימיים, מחוברים מקבלי
 test('זהות אחת לא יכולה לקחת חלק גדול מהיום', async () => {
   resetBudgetForTest();
   const id = 'user:heavy';
-  spend(id, BUDGET * CALLER_SHARE);
+  spend(id, CALLER_CAP_USD);
   const s = await budgetFor(id);
   assert.equal(s.exceeded, true);
   assert.equal(s.reason, 'caller');
@@ -97,15 +97,39 @@ test('זהות אחת לא יכולה לקחת חלק גדול מהיום', asyn
 });
 
 /**
- * **התקרה האישית של אנונימי נגזרת מהיום, לא מהארנק** - שינוי מכוון,
- * ותיקון של הבאג שחסם את נתנאל אחרי ארבע הודעות: 15% מארנק של 30% הם
- * $0.225, פחות מקריאה קרה אחת שנמדדה ב-$0.447.
+ * **התקרה האישית היא מספר מוחלט ואינה נגזרת מהיום** - זה השינוי שמאפשר
+ * להוריד את התקרה היומית בלי לחתוך אף אחד באמצע סשן. הטסט בודק את
+ * שתי הטענות: אותו סכום לאנונימי ולמחובר, ואי-תלות בגובה היום.
  */
-test('התקרה האישית של אנונימי נגזרת מהיום ולא מהארנק', async () => {
+test('התקרה האישית מוחלטת, זהה לשתי השכבות, ולא זזה עם היום', async () => {
   resetBudgetForTest();
   const s = await budgetFor('anon:dddddddddddddddd');
-  assert.equal(s.callerBudget, BUDGET * ANON_CALLER_SHARE);
-  assert.equal(s.callerBudget, BUDGET * CALLER_SHARE, 'אותה תקרה שמקבל מחובר');
+  assert.equal(s.callerBudget, ANON_CALLER_CAP_USD);
+  assert.equal(s.callerBudget, CALLER_CAP_USD, 'אותה תקרה שמקבל מחובר');
+
+  /*
+    הטענה המרכזית: היום זז פי ארבעה - $40 ואז $10 - **והתקרה האישית לא
+    זזה בכלל**. בגרסה הקודמת (12% מהיום) היא הייתה $4.80 ואז $1.20,
+    כלומר במקרה השני פחות מסשן אחד. שני הערכים כאן מעל $3 בכוונה, כדי
+    שהטענה תהיה על אי-התלות ולא על הגזימה.
+  */
+  for (const day of [40, 10]) {
+    resetBudgetForTest();
+    process.env.AI_DAILY_BUDGET_USD = String(day);
+    const at = await budgetFor('anon:dddddddddddddddd');
+    delete process.env.AI_DAILY_BUDGET_USD;
+    assert.equal(at.budget, day, 'היום באמת השתנה');
+    assert.equal(at.callerBudget, CALLER_CAP_USD, `התקרה האישית נגררה אחרי יום של $${day}`);
+  }
+});
+
+/** השומר היחיד שנשאר: תקרה אישית לא יכולה להיות גדולה מהיום כולו */
+test('תקרה יומית קטנה מהתקרה האישית גוזמת אותה', async () => {
+  resetBudgetForTest();
+  process.env.AI_DAILY_BUDGET_USD = '1';
+  const s = await budgetFor('user:x');
+  delete process.env.AI_DAILY_BUDGET_USD;
+  assert.equal(s.callerBudget, 1);
 });
 
 /**
@@ -125,10 +149,20 @@ test('סשן תכנון אנונימי מלא לא נחסם', async () => {
   assert.ok(s.callerBudget > COLD * 2 + WARM * 23, 'ובנוחות, לא בדיוק');
 });
 
-test('צריך הרבה מנצלים כדי למצות את היום', () => {
-  // 1/0.15 ≈ 7 מחוברים, והרבה יותר אנונימיים
-  assert.ok(1 / CALLER_SHARE >= 6, String(1 / CALLER_SHARE));
-  assert.ok(1 / (ANON_SHARE * ANON_CALLER_SHARE) >= 20);
+/**
+ * המספר הזה ירד במכוון כשהיום ירד מ-$25 ל-$10: צריך עכשיו **ארבעה**
+ * מנצלים כדי למצות יום, ולא שמונה. זו העלות המודעת של הורדת החשיפה
+ * מ-$750 ל-$300 בחודש - והבלם האמיתי ממילא אינו הכסף אלא מכסת
+ * ההודעות היומית ומגבלת הפרץ, שנתקלים בהן הרבה קודם.
+ */
+test('עדיין צריך כמה מנצלים כדי למצות את היום', () => {
+  const perDay = DEFAULT_DAILY_BUDGET_USD / CALLER_CAP_USD;
+  assert.ok(perDay >= 3, String(perDay));
+});
+
+/** הרצפה של המחוברים לא נפגעה מהעלאת חלקם של האנונימיים */
+test('למחוברים נשארת רצפה אמיתית', () => {
+  assert.ok(1 - ANON_SHARE >= 0.4, String(1 - ANON_SHARE));
 });
 
 /* ---------- IP כרשת ביטחון ולא כמכסה ---------- */

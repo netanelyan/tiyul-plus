@@ -1,4 +1,11 @@
-import { agentModel, anthropicBase, cachedPrefix, cachedTools, warmDecision } from '@/lib/server/agentPrefix';
+import {
+  CACHE_TTL,
+  agentModel,
+  anthropicBase,
+  cachedPrefix,
+  cachedTools,
+  warmDecision,
+} from '@/lib/server/agentPrefix';
 import { budgetFor, lastHeavyCallAt, measuredCost, recordSpend } from '@/lib/server/budget';
 import type { TokenUsage } from '@/lib/server/aiCost';
 
@@ -22,7 +29,10 @@ import type { TokenUsage } from '@/lib/server/aiCost';
  *    פג, חימום משלם **כתיבה** מלאה עבור אף אחד; בשלב הזה עדיף לתת
  *    למבקר האמיתי הבא לשלם אותה ממילא. זה גם מה שמונע מהנתיב לשרוף
  *    כסף ביום בלי אף מבקר.
- * 3. **יש תקציב** - התקרה היומית נבדקת כמו בכל קריאה אחרת.
+ * 3. **יש בשביל מי** - עברה קריאה של אדם אמיתי ב-3 השעות האחרונות.
+ *    בלי התנאי הזה הנתיב מנציח את עצמו: הוא רושם הוצאה, ההוצאה היא
+ *    "הנגיעה האחרונה", והוא מחמם שוב ושוב באתר בלי אף מבקר.
+ * 4. **יש תקציב** - התקרה היומית נבדקת כמו בכל קריאה אחרת.
  *
  * ## גרסה אחת בלבד
  *
@@ -62,7 +72,11 @@ async function handle(req: Request): Promise<Response> {
     ההחלטה עצמה יושבת ב-`agentPrefix.ts` כפונקציה טהורה, כי היא
     מה שראוי לבדוק: שלוש מארבע התשובות שלה הן סירוב להוציא כסף.
   */
-  const decision = warmDecision(await lastHeavyCallAt(), Date.now());
+  const [lastTouch, lastReal] = await Promise.all([
+    lastHeavyCallAt(), // כל נגיעה, כולל חימומים שלנו - קובעת אם המטמון עוד חי
+    lastHeavyCallAt(true), // רק בני אדם - קובעת אם יש בשביל מי
+  ]);
+  const decision = warmDecision(lastTouch, Date.now(), CACHE_TTL, lastReal);
   if (decision !== 'warm') return skip(decision);
 
   // תקציב: אותה בדיקה כמו בכל קריאה, עם זהות מערכת משלה

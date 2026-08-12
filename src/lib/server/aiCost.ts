@@ -18,14 +18,28 @@ export interface ModelPrice {
   /** דולר למיליון טוקנים */
   input: number;
   output: number;
+  /** כתיבת מטמון בתוקף 5 דקות - פי 1.25 מהקלט */
   cacheWrite: number;
+  /** כתיבת מטמון בתוקף שעה - **פי 2 מהקלט**, וזה מה שאנחנו שולחים בפועל */
+  cacheWrite1h: number;
   cacheRead: number;
 }
 
-/** דולר למיליון טוקנים, לפי platform.claude.com/docs/en/about-claude/pricing */
+/**
+ * דולר למיליון טוקנים, לפי platform.claude.com/docs/en/about-claude/pricing
+ *
+ * **`cacheWrite1h` נוסף כתיקון של תמחור חסר.** הטבלה תמחרה כל כתיבת
+ * מטמון בתעריף של 5 דקות (פי 1.25), בזמן ש-`agentPrefix.ts` שולח
+ * `ttl: '1h'` מאז שהמטמון הארוך נכנס - ותוקף של שעה עולה **פי 2**.
+ * כלומר כל קריאה קרה תומחרה ב-62.5% מהמחיר האמיתי שלה.
+ *
+ * על תקרת הוצאה זו הטעות בכיוון המסוכן: תמחור חסר פירושו לגלות את
+ * המספר האמיתי מהחשבונית. הקובץ הזה כבר קובע שדגם לא מזוהה מתומחר
+ * בתעריף היקר ביותר מאותה סיבה בדיוק, וזה פשוט לא הוחל על ה-TTL.
+ */
 export const MODEL_PRICES: Record<string, ModelPrice> = {
-  'claude-sonnet-4-5': { input: 3, output: 15, cacheWrite: 3.75, cacheRead: 0.3 },
-  'claude-haiku-4-5': { input: 1, output: 5, cacheWrite: 1.25, cacheRead: 0.1 },
+  'claude-sonnet-4-5': { input: 3, output: 15, cacheWrite: 3.75, cacheWrite1h: 6, cacheRead: 0.3 },
+  'claude-haiku-4-5': { input: 1, output: 5, cacheWrite: 1.25, cacheWrite1h: 2, cacheRead: 0.1 },
 };
 
 /** התעריף היקר ביותר שמוכר לנו - ברירת המחדל לדגם לא מזוהה */
@@ -58,7 +72,14 @@ export function costUsd(model: string, u: TokenUsage): number {
   const p = priceFor(model);
   return (
     ((u.input_tokens ?? 0) * p.input +
-      (u.cache_creation_input_tokens ?? 0) * p.cacheWrite +
+      /*
+        התעריף נבחר לפי ה-TTL שאנחנו **שולחים**, ולא לפי מה שהתשובה
+        מדווחת: `usage` לא מפריד בין שני סוגי הכתיבה בשדה שאנחנו קוראים,
+        וההגדרה שלנו ידועה לנו בוודאות. `ANTHROPIC_CACHE_TTL=5m` מחזיר
+        גם את התמחור לתעריף הקצר, כך שהשניים לא יכולים לצאת מסנכרון.
+      */
+      (u.cache_creation_input_tokens ?? 0) *
+        (process.env.ANTHROPIC_CACHE_TTL === '5m' ? p.cacheWrite : p.cacheWrite1h) +
       (u.cache_read_input_tokens ?? 0) * p.cacheRead +
       (u.output_tokens ?? 0) * p.output) /
     1_000_000
