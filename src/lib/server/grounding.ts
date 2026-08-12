@@ -42,6 +42,16 @@ import type { ChatMessage } from '@/lib/server/chatMessages';
 const KOSHER_ASK =
   /כשר(ו|י|ה|ות)?|מהדרין|גלאט|בד["״'׳]?ץ|הכשר|השגחה|חב["״'׳]?ד|בית חב|kosher|chabad|glatt|hechsher/i;
 
+/**
+ * האם משפט בודד נשמע כמו שאלת כשרות - הגרסה המשותפת של `KOSHER_ASK`,
+ * לשימוש בכל מקום שצריך להחליט על **הודעה אחת** ולא על חלון שיחה
+ * (למשל: האם לתת לסוכן כלי חיפוש חי בתור הזה - ראו `webLookup.ts`).
+ * כשרות היא הנושא היחיד שאסור לו לחפש עליו באינטרנט בשום נסיבות.
+ */
+export function kosherIntentText(text: string): boolean {
+  return KOSHER_ASK.test(text ?? '');
+}
+
 export function kosherAllowed(
   trip: Trip | null,
   messages: ChatMessage[],
@@ -58,7 +68,33 @@ export function kosherAllowed(
     .slice(-6)
     .map((m) => m.content)
     .join(' ');
-  return KOSHER_ASK.test(text);
+  return kosherIntentText(text);
+}
+
+/**
+ * הרשימה הלבנה של `priceGuard.ts` לטענות כשרות: שמות מקומות כשרים
+ * ושמות ערים שיש להן `kosherOverview` אמיתי, **רק מבין הערים שבאמת
+ * נשלחות בתור הזה** (`citySlugs`). זו לא רשימה של "מה קיים בקטלוג" -
+ * זו רשימה של "מה המודל באמת ראה עכשיו", וההבדל הוא בדיוק הפער שגרם
+ * לבאג: השער הכללי פתוח (`kosherOk`), אבל העיר הספציפית שנשאלת עליה
+ * לא נמצאת בשום מקום בדאטה שנשלחה - ואז כל טענה עליה היא מהזיכרון.
+ */
+export function kosherAllowedNames(citySlugs: string[], kosherOk: boolean): string[] {
+  if (!kosherOk) return [];
+  const cities = destinations.filter((d) => citySlugs.includes(d.slug));
+  const names: string[] = [];
+  for (const d of cities) {
+    if (d.practical.kosherOverview) {
+      if (d.name) names.push(d.name);
+      if (d.nameLocal) names.push(d.nameLocal);
+    }
+    for (const p of d.places) {
+      if (!isKosher(p.category)) continue;
+      if (p.name) names.push(p.name);
+      if (p.nameLocal) names.push(p.nameLocal);
+    }
+  }
+  return names.filter((n) => n.trim().length > 0);
 }
 
 /** אינדקס גדול (~218k תווים) - נבנה פעם אחת לכל וריאנט ולא בכל קריאת מודל */

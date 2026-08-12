@@ -3125,6 +3125,121 @@ eventually carry a booking action that feels like help, not advertising.
 
 ## Session log
 
+### 2026-08-12 - Live lookups for hours/price/existence, and closing the kashrut leak structurally
+
+Netanel asked for two things on one branch. First: let the agent answer factual,
+time-sensitive questions (opening hours, admission price, whether a place still
+exists) via a real web search, instead of the honest-but-useless "I don't know"
+it gives today. Second, and explicitly non-negotiable: no kashrut claim may ever
+come from the model's own knowledge or from a web search - he'd seen it twice in
+testing, the agent correctly refusing a specific place and then volunteering
+general kosher geography about the same region immediately after.
+
+**The search feature is gated at the tool level, not by wording.** A new
+`web_search_20260209` tool (`webLookup.ts`) is attached to the API call ONLY when
+a deterministic classifier says the turn is eligible: hours/admission-price/
+still-exists wording (`lookupEligible`), a per-conversation cap of 3 (counted by
+scanning the conversation's own assistant messages for the citation marker the
+model is required to write - no server state, same pattern as `relevantCitySlugs`
+scanning message history instead of keeping a counter), and a personal daily quota
+(`lookupsPerDay`: 5/10/50 by tier, same shape as `exploresPerDay`/`geocodesPerDay`).
+`max_uses: 2` bounds it further inside a single API call. **Kashrut turns never
+reach any of this**: `kosherIntentText(lastUser)` - the same regex that already
+gates whether kosher data enters the prompt - is checked first, and if it matches,
+`allowLookup` is `false` regardless of what `lookupEligible` would have said. A
+tool that isn't in the `tools` array literally cannot be called; this is the same
+structural guarantee `modelRoute.ts` already uses for the light-turn tool set.
+
+**The output side is the actual fix for the reported bug, and it runs on every
+turn, not just search turns.** `priceGuard.ts` - the same deterministic,
+sentence-by-sentence guard that already strips invented hotel prices and event
+dates - gained a `kosher-claim` category: any sentence carrying kashrut
+vocabulary AND an existence/quality assertion ("יש שם קהילה", "ידוע כמרכז
+כשרות", "יש בית חב״ד") is stripped unless it names a real catalog place or city
+that was actually sent to the model **this turn** (`kosherAllowedNames` in
+grounding.ts - new, mirrors `eventNames`). The reported leak happens exactly when
+the general kosher gate is open (the user asked, so `kosherOk=true`) but the
+specific city has nothing in the catalog - `kosherAllowedNames` returns `[]` for
+that city regardless of the gate, so any claim about it is cut. This is why it
+closes the bug even though the bug had nothing to do with search: the leak was
+always the model's own training knowledge, and the guard doesn't care where a
+sentence came from. Two independent layers, deliberately not dependent on each
+other - tool-gating blocks the *action*, the guard blocks the *output* - so a
+kashrut claim is unreachable whether it would have come from a search result or
+from the model just talking.
+
+**Hours/price/existence claims need a citation in the same sentence, or they're
+cut too.** New categories `hours-claim`/`existence-claim`, allowed only when the
+sentence also matches `LOOKUP_ANCHOR` ("נבדק ב-DATE" / "checked on/today"). It has
+to be the *same* sentence, not the next one: `GuardedTextStream` flushes
+sentence-by-sentence as the reply streams, so there's no "wait for the next
+sentence" available - the prompt teaches the model to write fact + citation as
+one clause. A narrow, separate exemption lets a cited admission-price sentence
+through the generic price ban (`TICKET_CONTEXT` + `LOOKUP_ANCHOR`), but it sits
+*after* the `ROOM_TYPE`/`STARS`/`PER_UNIT` checks, not before - so it cannot be
+used to sneak a lodging price past the existing, unrelated hotel-price ban that
+has held since `priceGuard.ts` was written. Verified with a regression test
+naming exactly that: `"כרטיס כניסה למלון 300 ש"ח ללילה (נבדק ב-...)."` still
+gets caught by `per-unit-price`, not waved through by the new exemption.
+
+**Cost and provenance.** Today's date is handed to the model as a fact
+(`todayIso()`) rather than something it computes - same rule as trip dates.
+Search is $10/1,000 = $0.01/call (`WEB_SEARCH_COST_USD`, `aiCost.ts`), folded
+into the *existing* dollar-budget machinery (`recordSpend`/`budget.ts`) via a
+flattened `usage.web_search_requests` read off `message_delta` (the count isn't
+known until the search has actually run) - the daily $10 cap, $3 per-caller cap
+and $1.50 per-turn cap all already cover this with zero new code, by
+construction. Also folded into the personal `aiUnits` quota at a rough
+dollar-equivalent (3,500 units/search). A process-local cache (`webLookup.ts`,
+12h TTL, keyed by normalized question text) skips re-attaching the tool for a
+literal repeat of the same question within the cache's lifetime - best-effort,
+same caveat as every other in-memory store in this codebase (`checkLimit`,
+`budget.ts`'s local state): doesn't survive a restart, doesn't sync across
+instances, and that's fine because it's a cost optimization, not a safety
+mechanism.
+
+**What it answers now, concretely.** Opening hours of a covered attraction with
+no catalog data: previously "I don't know"; now, if the turn is eligible, a real
+search runs and the reply reads like `"הקולוסיאום פתוח 9:00-19:00 (מקור:
+colosseo.it, נבדק ב-2026-08-12)."` - stripped down to `NO_LOOKUP_LINE` if the
+model forgets the citation. A kosher question about a city with nothing in the
+catalog: unchanged and now doubly guaranteed - no tool to search with, and even
+an invented answer from memory gets cut on the way out. Cost per eligible turn:
+the existing per-turn baseline (~$0.06-$0.45 depending on cache state) plus at
+most $0.02 for up to two searches - nowhere close to the $1.50 per-turn ceiling.
+
+**Verified:** 470 unit tests (21 new - `priceGuard.test.ts` covers the kosher-claim
+regression exactly as reported, the citation-anchor requirement, and the
+admission-price exemption *not* leaking into lodging prices; `grounding.test.ts`
+covers `kosherAllowedNames` returning empty for an uncovered or unsent city even
+with the gate open; `webLookup.test.ts` covers the eligibility classifier, the
+per-conversation cap, and the cache). Two real regex bugs were caught by my own
+tests before they shipped: `TICKET_CONTEXT` and `LOOKUP_INTENT`/`HOURS_CLAIM` had
+all been written as "דמי כניסה"/"שעות פתיחה" without the Hebrew definite article
+("דמי **ה**כניסה", "שעות **ה**פתיחה" is the form people actually write) - the
+tests used real Hebrew and failed until the regexes did too. `tsc`, `npm run
+build`, and lint (34 problems, all pre-existing, none new) all clean. **Not
+verified against a live model** - no `ANTHROPIC_API_KEY` in this sandbox, same
+standing limitation as every other agent-loop change in this log; the prompt
+section teaching the citation format (`agentPrefix.ts`, new "LIVE LOOKUPS"
+section) is written but its actual adherence is unverified live.
+
+**Scope, deliberately narrow per instruction:** touches `priceGuard.ts`,
+`grounding.ts`, `agentPrefix.ts`, `plans.ts`, `aiCost.ts`, `route.ts`, and the new
+`webLookup.ts`, plus three test files. Nothing in `billing.ts`, `stripe`, or
+anything payments-adjacent - a parallel session owns that. **On its own branch,
+not merged.**
+
+**Worth recording for whoever reads this next:** the working directory this
+session started in turned out to be shared, unisolated, with another concurrent
+session - mid-edit, `git reflog` showed branches being checked out and a hard
+reset happening that weren't this session's doing, and it wiped every uncommitted
+change more than once (nothing was lost only because nothing had been committed
+yet and the content was still recoverable from conversation history). Recovered
+by moving into an isolated git worktree and redoing the edits there, which is
+where this entry's diff actually lives. If two sessions are going to work in this
+repo at once, they need separate worktrees from the start, not the same checkout.
+
 ### 2026-07-27 (r) - "The cards are being cut": a real clip below 640px, and three fake readings
 
 Netanel reported cut cards on the new destination browser. **Above 640px nothing

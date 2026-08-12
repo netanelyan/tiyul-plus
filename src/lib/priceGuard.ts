@@ -47,8 +47,25 @@ export const NO_PRICE_LINE_BARE =
 export const NO_EVENT_LINE =
   'אין לי מידע רשום על אירועים או סגירות בתאריכים האלה, ואני לא רוצה לנחש - כדאי לבדוק מקומית לקראת הנסיעה.';
 
+/**
+ * ההחלפה לטענת כשרות שלא נסמכת על שום דבר בקטלוג שלנו - ראו
+ * `KOSHER_WORD`/`KOSHER_ASSERTION` למטה. **זה לא כלל נוסף בפרומפט אלא
+ * מבנה**: גם אם המודל כתב משפט כזה, הוא לא יוצא מהסוכן, מאותה סיבה
+ * בדיוק שמחיר בדוי לא יוצא.
+ */
+export const NO_KOSHER_LINE =
+  'לגבי כשרות אני יכול להתייחס רק למקומות שמאומתים אצלנו בקטלוג, ואין לי נתון כזה כרגע - כדאי לוודא מול המקום עצמו, או לשאול על עיר אחרת שכן מכוסה אצלנו.';
+
+/**
+ * ההחלפה לטענת שעות/מחיר-כניסה/קיום שלא צמודה לציטוט - ראו `LOOKUP_ANCHOR`.
+ * מנוסחת בהיפוך למה שהייתה עד היום ("אין לי דרך לבדוק") כי עכשיו יש: אם
+ * המודל לא באמת חיפש (או שכח לצטט), זו ההצעה הכנה - לא סירוב קבוע.
+ */
+export const NO_LOOKUP_LINE =
+  'לא בדקתי את זה בפועל בתור הזה, ולכן לא אכתוב שעות, מחיר כניסה או אם המקום עדיין קיים מהזיכרון שלי - אפשר לבקש שאבדוק את זה עכשיו.';
+
 /** לאיזו שורת החלפה שייך כל כלל */
-const CATEGORY: Record<string, 'price' | 'event'> = {
+const CATEGORY: Record<string, 'price' | 'event' | 'kosher' | 'lookup'> = {
   superlative: 'price',
   availability: 'price',
   'room-type': 'price',
@@ -59,11 +76,16 @@ const CATEGORY: Record<string, 'price' | 'event'> = {
   'property-name': 'price',
   'event-claim': 'event',
   'closure-claim': 'event',
+  'kosher-claim': 'kosher',
+  'hours-claim': 'lookup',
+  'existence-claim': 'lookup',
 };
 
 export interface GuardReplacements {
   price?: string;
   event?: string;
+  kosher?: string;
+  lookup?: string;
 }
 
 /** מטבעות. לבד הם לגיטימיים לחלוטין ("המטבע הוא אירו") - מספר לידם לא. */
@@ -134,6 +156,51 @@ const NAMED_STAY = new RegExp(
   `${STAY_WORD.source}\\s+(?:[A-Z][\\w&'.-]*|["״'][^"״']{2,40}["״'])`,
 );
 
+/* ---------- כשרות: לא מהזיכרון, לא מחיפוש - רק מהקטלוג ---------- */
+
+/**
+ * מילות כשרות. **אותה רשימה** כמו `KOSHER_ASK` ב-`grounding.ts` -
+ * ראו `kosherIntentText` שם, שהיא הגרסה המשותפת. מוגדרת כאן שוב ולא
+ * מיובאת, באותו סגנון שהקובץ הזה כבר מגדיר את כל התבניות שלו מקומית.
+ */
+const KOSHER_WORD =
+  /כשר(ו|י|ה|ות)?|מהדרין|גלאט|בד["״'׳]?ץ|הכשר|השגחה|חב["״'׳]?ד|בית חב|kosher|chabad|glatt|hechsher/i;
+
+/**
+ * מילות **טענה** - לא כל משפט שמזכיר כשרות הוא טענה שצריך לחסום.
+ * "כדאי לוודא כשרות מול המקום" היא הזהרה תקינה בלי שום עוגן; "יש שם
+ * קהילה יהודית גדולה ומסעדות כשרות" היא טענה על מציאות שצריך לגבות.
+ * בלי המילים האלה - השער לא נסגר, ולתזכורת הכנה יש מקום להישאר.
+ */
+const KOSHER_ASSERTION =
+  /(יש\s|ישנ(ם|ה)|נמצא(ת|ים)?|ממוקמ(ת|ים)?|קיימ(ת|ים)|מציע(ה)?|מגיש(ה)?|מומלץ|ידוע(ה)?\s*(כ|בתור)|מרכז|רובע|שכונה|קהילה|בית כנסת|מסעדה כשר|חנות כשר|אין\s*(שם\s*)?(כשרות|מסעד|חנויות))/;
+
+/* ---------- חיפוש חי: שעות/מחיר-כניסה/קיום, רק עם ציטוט צמוד ---------- */
+
+/**
+ * **הציטוט חייב להיות באותו משפט** - כי הזרמה היא משפט-אחר-משפט
+ * (`GuardedTextStream`), ואי אפשר "לחכות למשפט הבא" באמצע סטרימינג.
+ * הפרומפט מלמד את המודל לכתוב עובדה+ציטוט כמשפט אחד; מה שלא עומד בזה
+ * נחתך, וזה הכיוון הבטוח - עדיף לאבד עובדה מגובה מלהראות אחת שלא.
+ */
+export const LOOKUP_ANCHOR =
+  /נבדק ב-?\s*\d{1,2}[./]\d{1,2}([./]\d{2,4})?|נבדק היום|checked\s+(on|today)/i;
+
+/** שעות פעילות - מספר עם נקודתיים, או "פתוח בין"/"נסגר ב-" */
+const HOURS_CLAIM =
+  /\d{1,2}:\d{2}|שעות\s*ה?(פתיחה|פעילות)\s*(הן|הם)?|פתוח(ה)?\s*(בין|מ-?\d)|נסגר(ת)?\s*ב-?\d{1,2}(:\d{2})?/;
+
+/** האם מקום מסוים עדיין קיים/פתוח, או נסגר לצמיתות */
+const EXISTENCE_CLAIM =
+  /(עדיין\s*(פתוח|קיים|פועל|קיימת|פועלת)|נסגר(ה)?\s*לצמיתות|כבר לא (קיים|פועל)|is\s+(still\s+)?(open|closed)|has closed permanently|no longer exists)/i;
+
+/**
+ * הקשר של דמי כניסה - צר ומכוון, כדי שלא יתערב עם מחירי לינה.
+ * `(ה)?` לפני "כניסה": "דמי הכניסה" עברית תקנית לגמרי, לא רק "דמי כניסה".
+ */
+const TICKET_CONTEXT =
+  /(דמי\s*ה?כניסה|כרטיס\s*ה?כניסה|מחיר\s*ה?כניסה|עלות\s*ה?כניסה|entrance fee|admission (fee|price)|ticket price)/i;
+
 export interface GuardAllowlist {
   /** טקסטים שהמטייל עצמו כתב בשיחה (כולל תיאורי תמונות שהוא צירף) */
   userText?: string;
@@ -150,6 +217,13 @@ export interface GuardAllowlist {
    * כלום מהדאטה - שום טענה כזאת לא עוברת.
    */
   eventNames?: string[];
+  /**
+   * שמות שמותר לגבות בהם טענת כשרות: שמות מקומות כשרים ושמות ערים
+   * **שנשלחו בפועל בתור הזה** - נבנה ב-`kosherAllowedNames` ב-grounding.ts
+   * ומתעדכן בכל איטרציה, כי `set_preferences` יכול להדליק כשרות באמצע
+   * תור. ריק = אף טענת כשרות לא עוברת, גם אם השער הכללי פתוח.
+   */
+  kosherNames?: string[];
 }
 
 export interface GuardResult {
@@ -157,7 +231,7 @@ export interface GuardResult {
   /** מה נחתך, לצורך לוג ובדיקות. ריק = כלום לא נחתך. */
   redactions: string[];
   /** אילו שורות החלפה הושתלו בקריאה הזאת (ראו `alreadyReplaced`) */
-  replaced: Set<'price' | 'event'>;
+  replaced: Set<'price' | 'event' | 'kosher' | 'lookup'>;
 }
 
 /** כל רצף ספרות בטקסט */
@@ -215,6 +289,17 @@ function nameIsUserOwn(segment: string, allow: GuardAllowlist): boolean {
 export function violationOf(sentence: string, allow: GuardAllowlist = {}): string | null {
   const allowed = allowedNumbers(allow);
 
+  /*
+    כשרות קודם לכול. שער הכשרות (`kosherAllowed` ב-grounding.ts) יכול
+    להיות פתוח בזמן שהעיר הספציפית שהמודל מדבר עליה לא נמצאת בכלל
+    בקטלוג - וזה בדיוק המצב שבו הוא נוטה להשלים גיאוגרפיה כשרה מהזיכרון.
+    הבדיקה כאן לא סומכת על השער; היא בודקת אם המשפט **הזה** נשען על שם
+    אמיתי מהדאטה של התור הזה.
+  */
+  if (KOSHER_WORD.test(sentence) && KOSHER_ASSERTION.test(sentence) && !namesAllowedKosher(sentence, allow)) {
+    return 'kosher-claim';
+  }
+
   if (SUPERLATIVE.test(sentence)) return 'superlative';
   if (AVAILABILITY.test(sentence)) return 'availability';
 
@@ -232,10 +317,17 @@ export function violationOf(sentence: string, allow: GuardAllowlist = {}): strin
   }
 
   const hasDigit = /\d/.test(sentence);
-  if (hasDigit && CURRENCY.test(sentence) && !numbersAreUserOwn(sentence, allowed)) {
+  /*
+    דמי כניסה מצוטטים חורגים מהמחסום הכללי - **רק הם**, ורק כשהם צמודים
+    לציטוט. `ROOM_TYPE`/`STARS`/`PER_UNIT` שנבדקו למעלה כבר תפסו כל
+    ניסוח שנשמע כמו לינה, ולכן הפריצה הזאת לא יכולה "לעקוף" אותם -
+    ההיתר מגיע רק אחרי שהם כבר לא מצאו כלום.
+  */
+  const admissionOk = hasDigit && TICKET_CONTEXT.test(sentence) && LOOKUP_ANCHOR.test(sentence);
+  if (hasDigit && CURRENCY.test(sentence) && !numbersAreUserOwn(sentence, allowed) && !admissionOk) {
     return 'currency-amount';
   }
-  if (hasDigit && MONEY_WORD.test(sentence) && !numbersAreUserOwn(sentence, allowed)) {
+  if (hasDigit && MONEY_WORD.test(sentence) && !numbersAreUserOwn(sentence, allowed) && !admissionOk) {
     return 'price-claim';
   }
 
@@ -254,6 +346,14 @@ export function violationOf(sentence: string, allow: GuardAllowlist = {}): strin
     if (CLOSURE_WORD.test(sentence)) return 'closure-claim';
   }
 
+  /*
+    שעות פתיחה וקיום - אותו עיקרון כמו אירועים, אבל העוגן כאן הוא ציטוט
+    ולא שם רשומה: אין "דאטה" קבועה לגבות בה שעות פתיחה, יש רק חיפוש חי
+    שקרה או לא קרה בתור הזה. ראו `LOOKUP_ANCHOR`.
+  */
+  if (HOURS_CLAIM.test(sentence) && !LOOKUP_ANCHOR.test(sentence)) return 'hours-claim';
+  if (EXISTENCE_CLAIM.test(sentence) && !LOOKUP_ANCHOR.test(sentence)) return 'existence-claim';
+
   return null;
 }
 
@@ -263,6 +363,14 @@ function namesStoredEvent(sentence: string, allow: GuardAllowlist): boolean {
   if (names.length === 0) return false;
   const hay = norm(sentence);
   return names.some((n) => n.trim().length >= 3 && hay.includes(norm(n)));
+}
+
+/** האם המשפט נוקב בשם כשר אמיתי (מקום או עיר) שהוחזר מהדאטה בתור הזה */
+function namesAllowedKosher(sentence: string, allow: GuardAllowlist): boolean {
+  const names = allow.kosherNames ?? [];
+  if (names.length === 0) return false;
+  const hay = norm(sentence);
+  return names.some((n) => n.trim().length >= 2 && hay.includes(norm(n)));
 }
 
 /**
@@ -289,14 +397,16 @@ export function guardText(
    * המשתמש קיבל את אותו משפט התנצלות פעמיים ברצף. הספירה היא לפי
    * קטגוריה, כדי שתשובה שנגעה גם במחיר וגם באירוע תסביר את שניהם.
    */
-  alreadyReplaced: Set<'price' | 'event'> = new Set(),
+  alreadyReplaced: Set<'price' | 'event' | 'kosher' | 'lookup'> = new Set(),
 ): GuardResult {
   const line = {
     price: replacements.price ?? NO_PRICE_LINE_BARE,
     event: replacements.event ?? NO_EVENT_LINE,
+    kosher: replacements.kosher ?? NO_KOSHER_LINE,
+    lookup: replacements.lookup ?? NO_LOOKUP_LINE,
   };
   const redactions: string[] = [];
-  const replacedHere = new Set<'price' | 'event'>();
+  const replacedHere = new Set<'price' | 'event' | 'kosher' | 'lookup'>();
   const out = splitSentences(text).map((sentence) => {
     if (!sentence.trim()) return sentence;
     const bad = violationOf(sentence, allow);
@@ -366,7 +476,7 @@ export class GuardedTextStream {
   private readonly allow: GuardAllowlist;
   private readonly replacements: GuardReplacements;
   /** כל שורה כנה נאמרת פעם אחת לתשובה, גם כשהיא מורכבת מכמה flush */
-  private readonly replacedOnce = new Set<'price' | 'event'>();
+  private readonly replacedOnce = new Set<'price' | 'event' | 'kosher' | 'lookup'>();
 
   readonly redactions: string[] = [];
 

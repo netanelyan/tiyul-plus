@@ -13,7 +13,10 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import {
   GuardedTextStream,
+  LOOKUP_ANCHOR,
   NO_EVENT_LINE,
+  NO_KOSHER_LINE,
+  NO_LOOKUP_LINE,
   NO_PRICE_LINE,
   NO_PRICE_LINE_BARE,
   guardText,
@@ -266,4 +269,104 @@ test('שום קופי בשכבת ההזמנות לא אומר "הזול ביות
   };
   roots.forEach(walk);
   assert.deepEqual(offenders, [], `נוסח אסור ("הזול ביותר") הופיע ב: ${offenders.join(', ')}`);
+});
+
+/* ---------- כשרות: לא מהזיכרון, לא מחיפוש - רק מהקטלוג ---------- */
+
+test('הרגרסיה המדווחת: גיאוגרפיה כשרה כללית על אזור לא-מכוסה נחתכת', () => {
+  // בדיוק התיאור של נתנאל: הסוכן מסרב למקום ספציפי, ואז מתנדב "יש שם
+  // קהילה יהודית" מהזיכרון שלו - בלי שום עיר/מקום מהקטלוג בטקסט.
+  assert.equal(
+    violationOf('יש שם קהילה יהודית קטנה וכמה מסעדות כשרות באזור.'),
+    'kosher-claim',
+  );
+  assert.equal(violationOf('האזור ידוע בתור מרכז כשרות בסביבה.'), 'kosher-claim');
+  assert.equal(violationOf('יש בית חב"ד ומסעדה כשרה בעיר השכנה.'), 'kosher-claim');
+});
+
+test('אותה טענה עוברת רק כשהיא נוקבת בשם שהוחזר מהדאטה של התור הזה', () => {
+  const allow = { kosherNames: ['רומא', 'Rome', 'בא-גטו'] };
+  assert.equal(violationOf('ברומא יש קהילה יהודית ותיקה ומסעדות כשרות.', allow), null);
+  assert.equal(violationOf('מומלץ לנסות את בא-גטו, שם יש השגחה טובה.', allow), null);
+  // עיר אחרת שלא נשלחה - עדיין נחסמת, וזו כל הנקודה
+  assert.equal(
+    violationOf('גם בברלין יש קהילה יהודית ומסעדות כשרות.', allow),
+    'kosher-claim',
+  );
+});
+
+test('שער כללי פתוח לא מכשיר עיר ספציפית שלא נשלחה בכלל - הבאג המדויק', () => {
+  // kosherOk יכול להיות true (המשתמש שאל על כשרות), אבל אם kosherNames
+  // ריקה לעיר הזאת - כי היא לא בקטלוג, או שהיא בקטלוג בלי נתוני כשרות -
+  // שום טענה עליה לא עוברת. זה בדיוק המקום שבו הבאג המדווח קרה.
+  const allow = { kosherNames: [] as string[] };
+  assert.equal(violationOf('יש שם קהילה יהודית קטנה ומסעדה כשרה אחת.', allow), 'kosher-claim');
+});
+
+test('אזהרה כללית בלי טענת מציאות לא נחסמת - יש לה מקום להישאר', () => {
+  assert.ok(clean('כדאי לוודא כשרות ושעות מול המקום עצמו.'));
+  assert.ok(clean('לא בדקתי את הכשרות של המקום הזה.'));
+});
+
+test('החלפה של טענת כשרות היא המשפט הכנה, ולא נוסח המחיר או האירוע', () => {
+  const r = guardText('יש שם קהילה יהודית גדולה ומסעדות כשרות רבות.');
+  assert.ok(r.text.includes('רק למקומות שמאומתים אצלנו בקטלוג'));
+  assert.ok(!r.text.includes('לא יכול לבדוק מחירים'));
+  assert.ok(!r.text.includes('אירועים'));
+});
+
+test('GuardedTextStream חוסם טענת כשרות בהזרמה, בדיוק כמו מחיר', () => {
+  const s = new GuardedTextStream({ kosherNames: [] });
+  const out = s.push('יש שם קהילה יהודית ומסעדות כשרות. ') + s.end();
+  assert.ok(!out.includes('קהילה יהודית'));
+  assert.ok(out.includes(NO_KOSHER_LINE));
+});
+
+/* ---------- חיפוש חי: שעות/מחיר-כניסה/קיום, רק עם ציטוט צמוד ---------- */
+
+test('LOOKUP_ANCHOR מזהה את תבנית התאריך שהמודל מצווה לכתוב', () => {
+  assert.ok(LOOKUP_ANCHOR.test('נבדק ב-12.8.2026'));
+  assert.ok(LOOKUP_ANCHOR.test('checked on 2026-08-12'));
+  assert.ok(!LOOKUP_ANCHOR.test('ביקרנו שם באוגוסט'));
+});
+
+test('שעות פתיחה בלי ציטוט צמוד נחתכות', () => {
+  assert.equal(violationOf('הקולוסיאום פתוח בין 9:00 ל-19:00.'), 'hours-claim');
+  assert.equal(violationOf('שעות הפתיחה הן 08:00 עד 17:00.'), 'hours-claim');
+});
+
+test('אותה טענת שעות עוברת כשהציטוט באותו משפט', () => {
+  assert.equal(
+    violationOf('הקולוסיאום פתוח בין 9:00 ל-19:00 (מקור: colosseo.it, נבדק ב-12.8.2026).'),
+    null,
+  );
+});
+
+test('טענת קיום ("עדיין פתוח/נסגר לצמיתות") נחתכת בלי ציטוט', () => {
+  assert.equal(violationOf('המקום עדיין קיים וניתן לבקר בו.'), 'existence-claim');
+  assert.equal(violationOf('המסעדה נסגרה לצמיתות בשנה שעברה.'), 'existence-claim');
+  assert.equal(
+    violationOf('המקום עדיין קיים (מקור: tripadvisor.com, נבדק ב-1.1.2026).'),
+    null,
+  );
+});
+
+test('מחיר כניסה מצוטט עובר, אבל רק הוא - מחיר לינה נשאר חסום לגמרי', () => {
+  assert.equal(
+    violationOf('דמי הכניסה למוזיאון הם 15 יורו (מקור: museum.it, נבדק ב-1.1.2026).'),
+    null,
+  );
+  // אותו ניסוח, בלי ציטוט - חסום כרגיל דרך שער המחיר הכללי
+  assert.equal(violationOf('דמי הכניסה למוזיאון הם 15 יורו.'), 'currency-amount');
+  // הפרצה שנסגרה בכוונה: ניסוח שמערבב "כרטיס כניסה" עם מחיר לינה,
+  // עם ציטוט - PER_UNIT כבר תפס אותו למעלה ולא מגיע להיתר בכלל
+  assert.equal(
+    violationOf('כרטיס כניסה למלון 300 ש"ח ללילה (נבדק ב-1.1.2026).'),
+    'per-unit-price',
+  );
+});
+
+test('החלפה של טענת חיפוש היא הנוסח הכנה שלה, לא של מחיר/אירוע/כשרות', () => {
+  const r = guardText('הקולוסיאום פתוח בין 9:00 ל-19:00.');
+  assert.ok(r.text.includes(NO_LOOKUP_LINE));
 });
