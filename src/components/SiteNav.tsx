@@ -13,6 +13,7 @@ import { daysHe } from '@/lib/duration';
 // אין יותר טאב צ׳אט נפרד מול טאב מתכנן.
 const NAV_LINKS = [
   { href: '/countries', label: 'יעדים' },
+  { href: '/ask', label: 'שאל את הסוכן' },
   { href: '/chat', label: 'תכנון טיול' },
   { href: '/kosher', label: 'כשרות' },
 ];

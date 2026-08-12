@@ -22,8 +22,12 @@ import type { BookingSearchCard } from '@/lib/bookingSearch';
 
 export type ChatMessage = StoredChatMessage;
 
-/** תשובת HTTP שאינה ok - הסטטוס נשמר כדי שההודעה למשתמש תהיה נכונה */
-class HttpError extends Error {
+/**
+ * תשובת HTTP שאינה ok - הסטטוס נשמר כדי שההודעה למשתמש תהיה נכונה.
+ * מיוצא כי `useFreeChat` (דף השיחה החופשית, בלי טיול) חוזר על אותה
+ * לולאת סטרימינג ורוצה את אותה הודעת כישלון - במקום לשכפל אותה.
+ */
+export class HttpError extends Error {
   constructor(
     readonly status: number,
     readonly retryAfterSec: number,
@@ -39,7 +43,7 @@ class HttpError extends Error {
  * "אופס, משהו השתבש" על הגבלת קצב היא לא רק לא מדויקת - היא מזיקה:
  * המטייל מבין ממנה שכדאי לנסות שוב מיד, וזה בדיוק מה שמאריך את החסימה.
  */
-function failureMessage(err: unknown): string {
+export function failureMessage(err: unknown): string {
   const status = err instanceof HttpError ? err.status : 0;
   if (status === 429) {
     const wait = err instanceof HttpError && err.retryAfterSec > 0 ? err.retryAfterSec : 60;
