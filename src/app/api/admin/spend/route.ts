@@ -3,8 +3,8 @@ import { adminSelect } from '@/lib/server/supabaseAdmin';
 import { gte, pgLimit, pgOrder, pgQuery, pgSelect } from '@/lib/server/pgrest';
 import {
   ALERT_AT,
-  ANON_SHARE,
   CALLER_CAP_USD,
+  anonShare,
   budgetOverview,
 } from '@/lib/server/budget';
 import { MODEL_PRICES } from '@/lib/server/aiCost';
@@ -55,6 +55,7 @@ export async function GET(req: Request) {
   if (!actor) return denied();
 
   const state = await budgetOverview();
+  const share = await anonShare();
   const today = new Date().toISOString().slice(0, 10);
   const weekAgo = new Date(Date.now() - 13 * 86_400_000).toISOString().slice(0, 10);
 
@@ -88,7 +89,7 @@ export async function GET(req: Request) {
       alertAt: ALERT_AT,
       /** שני הארנקים - מה שמונע ממבקר אנונימי לכבות את הסוכן למחוברים */
       anonSpent: state.anonSpent,
-      anonLimit: state.budget * ANON_SHARE,
+      anonLimit: state.budget * share,
       userSpent: state.userSpent,
       userLimit: state.budget - state.anonSpent,
       callerLimit: Math.min(CALLER_CAP_USD, state.budget),
@@ -96,6 +97,8 @@ export async function GET(req: Request) {
       stale: state.stale,
       /** מאיפה התקרה הגיעה - כדי שיהיה ברור מה לשנות */
       source: state.budget === Number(process.env.AI_DAILY_BUDGET_USD) ? 'env' : 'flag',
+      /** חלקה של התנועה האנונימית - השדה שהופך את זה לניתן לכוונון מ-/admin */
+      anonShare: share,
     },
     today: {
       usd: todayRows.reduce((n, r) => n + num(r.usd), 0),

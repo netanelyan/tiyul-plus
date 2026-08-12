@@ -15,18 +15,21 @@ import { serviceHeaders } from '@/lib/server/supabaseAdmin';
  *
  * שתי הגנות, שתיהן:
  *
- * 1. **שני ארנקים.** לתנועה אנונימית יש תקציב משלה. מחוברים מושכים
- *    מ"כל מה שאנונימיים לא הוציאו", ולכן **תמיד** נשאר להם לפחות
- *    `1 - ANON_SHARE` מהיום, ואין דרך שבה אנונימי יכבה אותם.
+ * 1. **שני ארנקים.** לתנועה אנונימית יש תקציב משלה - `anonShare()` מהיום,
+ *    מתכוונן בלי דיפלוי מ-/admin (ראו שם). מחוברים מושכים מ"כל מה
+ *    שאנונימיים לא הוציאו", ולכן **תמיד** נשאר להם לפחות
+ *    `1 - anonShare()` מהיום, ואין דרך שבה אנונימי יכבה אותם - בלי
+ *    תלות בערך של anonShare() באותו רגע.
  * 2. **תקרה אישית.** אף זהות - מחוברת או לא - לא יכולה לעבור חלק קטן
  *    מהיום. גם עשרה מנצלים לא מכבים את המוצר, הם רק מכבים את עצמם.
  *
  * ## למה מחוברים לא מקבלים ארנק קשיח משלהם
  *
  * שני ארנקים קשיחים היו יוצרים את הבעיה ההפוכה: ביום שקט מבחינת
- * אנונימיים, מחוברים היו נחסמים ב-70% בזמן ש-30% מהתקציב יושבים
- * ללא שימוש. הנוסחה כאן נותנת למחוברים את כל מה שלא נוצל, ועדיין
- * מבטיחה להם רצפה.
+ * אנונימיים, מחוברים היו נחסמים בחלק הקבוע שלהם בזמן שהחלק האנונימי
+ * יושב ללא שימוש. הנוסחה כאן נותנת למחוברים את כל מה שלא נוצל, ועדיין
+ * מבטיחה להם רצפה - ראו הטסט "ביום שקט מבחינת אנונימיים, מחוברים
+ * מקבלים את כל התקציב".
  *
  * ## איך נמדדת ההוצאה - וזו שאלה שנתנאל שאל במפורש
  *
@@ -83,18 +86,23 @@ import { serviceHeaders } from '@/lib/server/supabaseAdmin';
 export const DEFAULT_DAILY_BUDGET_USD = 10;
 
 /**
- * חלקה של התנועה האנונימית מהתקציב היומי.
+ * ברירת המחדל לחלקה של התנועה האנונימית מהתקציב היומי, כשאין דגל
+ * ואין משתנה סביבה שקובעים ערך אחר. **קרא `anonShare()` בזמן ריצה -
+ * הקבוע הזה הוא רק הנפילה האחורית.**
  *
- * **הועלה ל-55% יחד עם ירידת היום ל-$10, וזה לא כוונון אלא הכרח.**
- * ב-40% הארנק האנונימי היה $4, כלומר סשן מלא אחד ועוד קצת - והדרישה
- * המקורית הייתה שמבקר אנונימי יוכל להשלים סשן ולצאת משוכנע. ב-55%
- * הארנק הוא $5.50: שני סשנים קרים, ובמטמון חם שלושה עד ארבעה.
+ * **55%, כלומר יותר מחצי - ולא במקרה.** ערב ההשקה כמעט כל התנועה
+ * (אורגנית ופרסומות) מגיעה מנותקים, ומחובר כמעט ואין - ולכן החסימה
+ * היקרה היא של אנונימי, לא של מחובר. ב-40% הארנק האנונימי היה $4,
+ * כלומר סשן מלא אחד ועוד קצת; ב-55% הוא $5.50 - שני סשנים קרים, ובמטמון
+ * חם שלושה עד ארבעה.
  *
- * הרצפה של המחוברים היא עדיין רצפה אמיתית - 45% מהיום - ובימים שקטים
- * מבחינת אנונימיים הם מקבלים את הכל. ההעדפה כאן מודעת: לפני ההשקה כמעט
- * כל המבקרים אנונימיים, והחסימה שלהם היא הנזק היקר.
+ * **זה עדיין רק ברירת מחדל.** נתנאל מכוונן את היחס עצמו מ-/admin בלי
+ * דיפלוי (`ai_anon_share`, ראו `anonShare()`) לפי מה שבאמת מגיע בהשקה -
+ * ולכן שום מספר כאן, כולל 55%, לא אמור להיחשב "הערך הנכון" קבוע.
+ * הרצפה של המחוברים היא `1 - anonShare()`, ובימים שקטים מבחינת
+ * אנונימיים הם מקבלים את הכל (ראו `budgetFor`).
  */
-export const ANON_SHARE = 0.55;
+export const DEFAULT_ANON_SHARE = 0.55;
 
 /**
  * **התקרה שזהות אחת יכולה להוציא ביום, בדולרים. מספר מוחלט.**
@@ -119,10 +127,11 @@ export const CALLER_CAP_USD = 3.0;
  * פחות מקריאה קרה אחת שנמדדה ב-$0.447 - ומבקר אנונימי נחסם אחרי הודעה
  * או שתיים. זה בדיוק מה שקרה לנתנאל.
  *
- * המשמעות עכשיו: אנונימי אחד יכול לקחת עד $3 מתוך ארנק אנונימי של
- * $5.50. זו החלפה מודעת - "מבקר אחד שמשלים סשן" עדיף על "שלושה מבקרים
- * שכולם נחסמים באמצע", וכל מי שבאמת מנצל נתקל קודם במכסת ההודעות
- * היומית ובמגבלת הפרץ, הרבה לפני התקרה הכספית.
+ * המשמעות עכשיו: אנונימי אחד יכול לקחת עד $3 מתוך ארנק אנונימי שגודלו
+ * `budget * anonShare()` (בברירת המחדל, $10 * 55% = $5.50). זו החלפה
+ * מודעת - "מבקר אחד שמשלים סשן" עדיף על "שלושה מבקרים שכולם נחסמים
+ * באמצע", וכל מי שבאמת מנצל נתקל קודם במכסת ההודעות היומית ובמגבלת
+ * הפרץ, הרבה לפני התקרה הכספית.
  */
 export const ANON_CALLER_CAP_USD = CALLER_CAP_USD;
 
@@ -229,6 +238,25 @@ export async function dailyBudgetUsd(): Promise<number> {
   return DEFAULT_DAILY_BUDGET_USD;
 }
 
+/** שבר תקין - 0..1. ערך פגום (למשל דרך שורה שנכתבה ידנית ב-DB) נופל הלאה. */
+const clampShare = (n: number): number | null => (Number.isFinite(n) && n >= 0 && n <= 1 ? n : null);
+
+/**
+ * חלקה של התנועה האנונימית מהתקציב היומי - **מתכוונן בזמן ריצה, כמו
+ * `dailyBudgetUsd`, ובאותו סדר עדיפויות בדיוק**: דגל (`/admin`, בלי
+ * דיפלוי) → משתנה סביבה → `DEFAULT_ANON_SHARE`.
+ *
+ * הרצפה של המחוברים (`1 - anonShare()`) לעולם לא נשחקת ע"י הערך הזה
+ * לבדו - ראו את ה-`min` ב-`budgetFor`, שהוא ההגנה בפועל.
+ */
+export async function anonShare(): Promise<number> {
+  const fromFlag = clampShare((await flagNumber('ai_anon_share')) ?? NaN);
+  if (fromFlag !== null) return fromFlag;
+  const fromEnv = clampShare(Number(process.env.AI_ANON_SHARE));
+  if (fromEnv !== null) return fromEnv;
+  return DEFAULT_ANON_SHARE;
+}
+
 /* ---------- קריאת המצב ---------- */
 
 async function sync(s: DayState): Promise<void> {
@@ -298,6 +326,7 @@ export interface BudgetState {
 export async function budgetFor(identity: string): Promise<BudgetState> {
   const s = today();
   const budget = await dailyBudgetUsd();
+  const share = await anonShare();
   await sync(s);
   const anon = isAnonIdentity(identity);
   const callerSpent = await callerSpend(s, identity);
@@ -305,9 +334,10 @@ export async function budgetFor(identity: string): Promise<BudgetState> {
   /*
     הארנק של הקורא.
 
-    אנונימי: חלק קבוע מהיום, ותו לא.
-    מחובר: כל מה שאנונימיים לא הוציאו - כלומר לפחות `1-ANON_SHARE`
-    ותמיד יותר מזה כשהם שקטים. אין מסלול שבו אנונימי מוריד את הרצפה.
+    אנונימי: חלק קבוע מהיום (`anonShare()`), ותו לא.
+    מחובר: כל מה שאנונימיים לא הוציאו - כלומר לפחות `1 - anonShare()`
+    ותמיד יותר מזה כשהם שקטים. אין מסלול שבו אנונימי מוריד את הרצפה,
+    **בלי קשר לערך של anonShare() ברגע הזה** - זה מה שה-min שלמטה אוכף.
   */
   /*
     ה-`min` אינו קישוט. בדיקת התקרה קורית **לפני** הקריאה, ולכן
@@ -316,8 +346,8 @@ export async function budgetFor(identity: string): Promise<BudgetState> {
     זה בדיוק: 11 מבקרים הוציאו $1.65 מתוך ארנק של $1.50, והרצפה של
     המחוברים ירדה מ-$3.50 ל-$3.35. הבטחה שנשחקת היא לא הבטחה.
   */
-  const anonDraw = Math.min(s.anonUsd, budget * ANON_SHARE);
-  const poolBudget = anon ? budget * ANON_SHARE : budget - anonDraw;
+  const anonDraw = Math.min(s.anonUsd, budget * share);
+  const poolBudget = anon ? budget * share : budget - anonDraw;
   const poolSpent = anon ? s.anonUsd : Math.max(0, s.usd - s.anonUsd);
   /*
     **מספר מוחלט, לא אחוז מהיום.**
@@ -494,17 +524,50 @@ export function recordSpend(entry: {
 
 /* ---------- התראות ---------- */
 
-function post(text: string, extra: Record<string, unknown>): void {
+export interface AlertPostResult {
+  /** יש בכלל כתובת מוגדרת */
+  configured: boolean;
+  /** ה-fetch הצליח (סטטוס 2xx) */
+  ok: boolean;
+  /** למה זה לא הצליח, אם לא הצליח - ל-UI ולללוג */
+  error?: string;
+}
+
+/**
+ * שולחת בפועל, ו**מחזירה אם זה עבד** - לא רק "יריתי ושכחתי".
+ *
+ * הגרסה הקודמת בלעה כל כישלון: `.catch(() => {})` בלי אפילו לוג. כתובת
+ * webhook שגויה או שירות שנופל היו נשארים בלי שום עקבות, וההתראה
+ * שאמורה "להעיר את נתנאל" הייתה נעלמת בדיוק ברגע שהיא הכי נחוצה.
+ * עכשיו כל כישלון נכתב ל-`console.warn` (נראה בלוגים של Vercel) גם
+ * בנתיב הרגיל, ומוחזר במפורש כשמישהו קורא בהמתנה - ראו `sendTestAlert`.
+ */
+async function post(text: string, extra: Record<string, unknown>): Promise<AlertPostResult> {
   console.warn(`[budget] ALERT ${text}`);
   const hook = process.env.AI_BUDGET_ALERT_WEBHOOK;
-  if (!hook) return;
-  fetch(hook, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    // `text` לסלאק, `content` לדיסקורד - אותה הודעה, בלי תלות חדשה
-    body: JSON.stringify({ text, content: text, ...extra }),
-    signal: AbortSignal.timeout(4000),
-  }).catch(() => {});
+  if (!hook) {
+    console.warn('[budget] ALERT not sent: AI_BUDGET_ALERT_WEBHOOK is not configured');
+    return { configured: false, ok: false, error: 'no_webhook_configured' };
+  }
+  try {
+    const res = await fetch(hook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      // `text` לסלאק, `content` לדיסקורד - אותה הודעה, בלי תלות חדשה
+      body: JSON.stringify({ text, content: text, ...extra }),
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!res.ok) {
+      const error = `webhook_http_${res.status}`;
+      console.warn(`[budget] ALERT delivery failed: ${error}`);
+      return { configured: true, ok: false, error };
+    }
+    return { configured: true, ok: true };
+  } catch (e) {
+    const error = e instanceof Error ? e.message : 'webhook_fetch_failed';
+    console.warn(`[budget] ALERT delivery failed: ${error}`);
+    return { configured: true, ok: false, error };
+  }
 }
 
 /**
@@ -526,7 +589,7 @@ export async function maybeAlert(s: BudgetState, identity: string): Promise<void
   if (s.callerRatio >= CALLER_ALERT_AT && !day.alertedCallers.has(identity)) {
     day.alertedCallers.add(identity);
     const kind = isAnonIdentity(identity) ? 'אנונימי' : 'מחובר';
-    post(
+    void post(
       `טיול+ · מקור בודד (${kind}) הוציא $${s.callerSpent.toFixed(2)} היום - ${Math.round(
         s.callerRatio * 100,
       )}% מהתקרה האישית שלו. הוא ייחסם ב-$${s.callerBudget.toFixed(2)} ולא ישפיע על אחרים. שווה מבט.`,
@@ -561,11 +624,28 @@ export async function maybeAlert(s: BudgetState, identity: string): Promise<void
   }
   day.alerted = true;
 
-  post(
+  void post(
     concentrated
       ? `טיול+ · ${Math.round(s.ratio * 100)}% מהתקרה היומית ($${day.usd.toFixed(2)} מתוך $${s.budget.toFixed(2)}) - **וזה מרוכז**: המקור הכבד ביותר לקח ${Math.round(topShare * 100)}% מהיום, מתוך ${active} זהויות פעילות. כדאי להסתכל.`
       : `טיול+ · ${Math.round(s.ratio * 100)}% מהתקרה היומית ($${day.usd.toFixed(2)} מתוך $${s.budget.toFixed(2)}) - תנועה מפוזרת על ${active} זהויות, הכבד ביותר ${Math.round(topShare * 100)}%. נראה כמו יום עמוס אמיתי.`,
     { kind: concentrated ? 'concentrated' : 'broad', active, topShare, usd: day.usd },
+  );
+}
+
+/**
+ * שולחת התראת בדיקה **אמיתית** לערוץ המוגדר, וממתינה לתשובה - זה מה
+ * שהופך "כנראה מוגדר נכון" ל"בדקתי, וזה עבד". קוראת ל-`post` ישירות
+ * ולא דרך `maybeAlert`: אין תלות בהגעה ל-90%/60% אמיתיים, ואין דגימה
+ * כפולה (`alertedCallers`/`day.alerted`) שתמנע שליחה חוזרת - בדיקה
+ * צריכה לעבוד בכל רגע, לא רק פעם ביום.
+ *
+ * נקראת רק מ-`/api/admin/alert-test`, כלומר רק ע"י מי שכבר עבר שער
+ * הרשאות admin.
+ */
+export async function sendTestAlert(): Promise<AlertPostResult> {
+  return post(
+    'טיול+ · 🧪 בדיקת התראה - אם ההודעה הזאת הגיעה, ערוץ ההתראות מחובר ועובד.',
+    { kind: 'test' },
   );
 }
 

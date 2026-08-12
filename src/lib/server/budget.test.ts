@@ -5,19 +5,22 @@
  * אנונימית מכבה את הסוכן למי שמחובר. זו הייתה הבעיה שנתנאל הצביע
  * עליה, והיא הופכת בעיית עלות לנפילה.
  */
-import { test } from 'node:test';
+import { test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   ANON_CALLER_CAP_USD,
-  ANON_SHARE,
   CALLER_ALERT_AT,
   CALLER_CAP_USD,
+  DEFAULT_ANON_SHARE,
   IP_BACKSTOP_MULTIPLE,
+  anonShare,
   budgetFor,
   isAnonIdentity,
+  maybeAlert,
   measuredCost,
   recordSpend,
   resetBudgetForTest,
+  sendTestAlert,
 } from './budget.ts';
 
 import { DEFAULT_DAILY_BUDGET_USD } from './budget.ts';
@@ -25,6 +28,35 @@ import { DEFAULT_DAILY_BUDGET_USD } from './budget.ts';
 // נקרא מהקוד ולא נכתב כאן: מספר קשיח בבדיקה נשבר בכל כוונון תקציב,
 // והבדיקות האלה בודקות **יחסים**, לא את גובה התקרה.
 const BUDGET = DEFAULT_DAILY_BUDGET_USD;
+// בלי דגל ובלי משתנה סביבה, anonShare() נופלת בדיוק לברירת המחדל -
+// ראו את הטסטים הייעודיים לה למטה שבודקים את שרשרת העדיפויות עצמה.
+const ANON_SHARE = DEFAULT_ANON_SHARE;
+
+/*
+  מוק ל-fetch הגלובלי, לבדיקות ההתראה בלבד: שאר הקובץ אף פעם לא קורא
+  ל-fetch באמת (persistent() הוא false בלי SUPABASE_URL), כך שהמוק הזה
+  לא משנה התנהגות של אף טסט אחר כאן - הוא רק תופס את מה שיוצא ל-webhook.
+*/
+const realFetch = globalThis.fetch;
+let calls: { url: string; body: unknown }[] = [];
+/** null = fetch מצליח (200); מספר = קוד סטטוס שגוי; 'throw' = הרשת נופלת */
+let mockOutcome: 'ok' | number | 'throw' = 'ok';
+
+beforeEach(() => {
+  calls = [];
+  mockOutcome = 'ok';
+  globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
+    calls.push({ url: String(input), body: init?.body ? JSON.parse(String(init.body)) : null });
+    if (mockOutcome === 'throw') throw new Error('network down');
+    const status = mockOutcome === 'ok' ? 200 : mockOutcome;
+    return new Response('{}', { status });
+  }) as typeof fetch;
+});
+
+afterEach(() => {
+  globalThis.fetch = realFetch;
+  delete process.env.AI_BUDGET_ALERT_WEBHOOK;
+});
 
 const spend = (identity: string, usd: number) => {
   // רישום ישיר: המחיר מחושב מטוקנים, אז מייצרים usage שמגיע לסכום
@@ -165,6 +197,56 @@ test('למחוברים נשארת רצפה אמיתית', () => {
   assert.ok(1 - ANON_SHARE >= 0.4, String(1 - ANON_SHARE));
 });
 
+/* ---------- חלקם של האנונימיים - ניתן לכוונון בלי דיפלוי ---------- */
+
+/**
+ * `anonShare()` וזוגתה `dailyBudgetUsd()` חייבות ללכת יחד: אותה שרשרת
+ * עדיפויות (דגל → env → ברירת מחדל), כי אלה שני המספרים שאמורים
+ * להשתנות מ-/admin **באותה דרך בדיוק** בזמן ההשקה.
+ */
+test('ברירת המחדל של anonShare() נותנת לאנונימיים את החלק הגדול', async () => {
+  resetBudgetForTest();
+  assert.equal(await anonShare(), DEFAULT_ANON_SHARE);
+  assert.ok(DEFAULT_ANON_SHARE > 0.5, 'זו כל הבקשה - אנונימי גדול ממחובר כברירת מחדל');
+});
+
+test('משתנה סביבה דורס את ברירת המחדל, בדיוק כמו בתקרה היומית', async () => {
+  process.env.AI_ANON_SHARE = '0.8';
+  try {
+    assert.equal(await anonShare(), 0.8);
+  } finally {
+    delete process.env.AI_ANON_SHARE;
+  }
+});
+
+test('ערך env מחוץ לטווח 0..1 נופל לברירת המחדל ולא נזרק כשגיאה', async () => {
+  process.env.AI_ANON_SHARE = '5'; // 500%, בטעות אנוש קלאסית
+  try {
+    assert.equal(await anonShare(), DEFAULT_ANON_SHARE);
+  } finally {
+    delete process.env.AI_ANON_SHARE;
+  }
+});
+
+/**
+ * **הטענה שהכול הזה קיים בשבילה**: לא משנה איזה ערך anonShare()
+ * מחזירה - 20%, 55%, 90% - הרצפה של המחוברים תמיד `1 - share`, ואף
+ * חריגה אנונימית לא נוגסת בה. אותו טסט בדיוק כמו "אנונימיים ששרפו את
+ * הארנק שלהם לא נוגעים במחוברים" למעלה, רק עם ערך share קיצוני.
+ */
+test('גם עם anonShare() גבוה מאוד, אנונימי שחורג לא נוגס ברצפה של המחובר', async () => {
+  resetBudgetForTest();
+  process.env.AI_ANON_SHARE = '0.9';
+  try {
+    for (let i = 0; i < 11; i++) spend(`anon:${'g'.repeat(15)}${i}`, (BUDGET * 0.9) / 10);
+    const user = await budgetFor('user:someone-else');
+    assert.equal(user.exceeded, false);
+    assert.ok(user.poolBudget >= BUDGET * 0.1 - 1e-9, String(user.poolBudget));
+  } finally {
+    delete process.env.AI_ANON_SHARE;
+  }
+});
+
 /* ---------- IP כרשת ביטחון ולא כמכסה ---------- */
 
 test('תקרת ה-IP רחבה בהרבה מתקרת אדם - בגלל CGNAT', async () => {
@@ -218,4 +300,114 @@ test('התקרה נעולה כשהתקציב אפס', async () => {
   assert.equal(s.exceeded, true);
   assert.equal(s.reason, 'total');
   delete process.env.AI_DAILY_BUDGET_USD;
+});
+
+/*
+  עד כאן הטסטים בדקו רק את הספים כמספרים. מה שהיה חסר, וזו בקשה מפורשת
+  של נתנאל לפני שהוא מריץ את התקרה קרוב לקצה: הוכחה שההתראה **באמת
+  יוצאת ל-webhook**, לא רק שהקוד שמחליט מתי להתריע נכון. שלושת הטסטים
+  הבאים תופסים את קריאת ה-fetch עצמה.
+*/
+
+test('התראת מקור בודד באמת יוצאת ל-webhook, פעם אחת לזהות ליום', async () => {
+  resetBudgetForTest();
+  process.env.AI_BUDGET_ALERT_WEBHOOK = 'https://hooks.example/test';
+  const id = 'user:watched';
+  spend(id, CALLER_CAP_USD * 0.65);
+  const s = await budgetFor(id);
+  assert.ok(s.callerRatio >= CALLER_ALERT_AT, String(s.callerRatio));
+
+  await maybeAlert(s, id);
+  await new Promise((r) => setTimeout(r, 0)); // מפנה את ה-microtask של ה-fetch הפנימי
+
+  assert.equal(calls.length, 1, 'קריאה אחת יצאה ל-webhook');
+  assert.equal(calls[0].url, 'https://hooks.example/test');
+  const payload = calls[0].body as { text: string; content: string; kind: string };
+  assert.ok(payload.text.includes('מקור בודד'), payload.text);
+  assert.equal(payload.text, payload.content, 'אותה הודעה לסלאק (text) ולדיסקורד (content)');
+  assert.equal(payload.kind, 'single-source');
+
+  // אותה זהות, אותו יום - לא שולחת שוב
+  const s2 = await budgetFor(id);
+  await maybeAlert(s2, id);
+  await new Promise((r) => setTimeout(r, 0));
+  assert.equal(calls.length, 1, 'לא נשלחת פעמיים לאותה זהות באותו יום');
+});
+
+test('התראת מקור בודד לא יוצאת מתחת לסף', async () => {
+  resetBudgetForTest();
+  process.env.AI_BUDGET_ALERT_WEBHOOK = 'https://hooks.example/test';
+  const id = 'user:quiet';
+  spend(id, CALLER_CAP_USD * 0.2); // רחוק מ-CALLER_ALERT_AT
+  const s = await budgetFor(id);
+  assert.ok(s.callerRatio < CALLER_ALERT_AT, String(s.callerRatio));
+
+  await maybeAlert(s, id);
+  await new Promise((r) => setTimeout(r, 0));
+  assert.equal(calls.length, 0, 'מתחת לסף - שום דבר לא נשלח');
+});
+
+test('התראת התקרה הכללית באמת יוצאת ל-webhook ב-90%, ולא לפני, פעם אחת ביום', async () => {
+  resetBudgetForTest();
+  process.env.AI_DAILY_BUDGET_USD = '10';
+  process.env.AI_BUDGET_ALERT_WEBHOOK = 'https://hooks.example/test';
+  try {
+    spend('user:heavy-day', 9.5); // 95% מהיום, ריכוז אצל זהות אחת
+    const s = await budgetFor('user:someone');
+    assert.ok(s.ratio >= 0.9, String(s.ratio));
+
+    await maybeAlert(s, 'user:someone');
+    await new Promise((r) => setTimeout(r, 0));
+
+    assert.equal(calls.length, 1);
+    const payload = calls[0].body as { text: string; kind: string };
+    assert.ok(payload.text.includes('90%') || /9\d%/.test(payload.text), payload.text);
+    assert.equal(payload.kind, 'concentrated', 'זהות אחת לקחה את כל היום - זה ריכוז, לא יום עמוס');
+
+    // קריאה נוספת אותו יום - לא שולחת שוב
+    const s2 = await budgetFor('user:someone-else');
+    await maybeAlert(s2, 'user:someone-else');
+    await new Promise((r) => setTimeout(r, 0));
+    assert.equal(calls.length, 1, 'ההתראה הכללית לא נשלחת פעמיים באותו יום');
+  } finally {
+    delete process.env.AI_DAILY_BUDGET_USD;
+  }
+});
+
+/* ---------- sendTestAlert: מה שנתנאל בפועל ילחץ ב-/admin ---------- */
+
+test('sendTestAlert מדווחת "לא מוגדר" כשאין webhook, בלי לזרוק', async () => {
+  const r = await sendTestAlert();
+  assert.equal(r.configured, false);
+  assert.equal(r.ok, false);
+  assert.equal(calls.length, 0);
+});
+
+test('sendTestAlert מאשרת הצלחה אמיתית כשה-webhook עונה 200', async () => {
+  process.env.AI_BUDGET_ALERT_WEBHOOK = 'https://hooks.example/test';
+  mockOutcome = 'ok';
+  const r = await sendTestAlert();
+  assert.equal(r.configured, true);
+  assert.equal(r.ok, true);
+  assert.equal(calls.length, 1);
+  const payload = calls[0].body as { text: string };
+  assert.ok(payload.text.includes('בדיקת התראה'), payload.text);
+});
+
+test('sendTestAlert מדווחת כישלון אמיתי כשה-webhook מחזיר שגיאה, ולא בולעת אותו', async () => {
+  process.env.AI_BUDGET_ALERT_WEBHOOK = 'https://hooks.example/test';
+  mockOutcome = 500;
+  const r = await sendTestAlert();
+  assert.equal(r.configured, true);
+  assert.equal(r.ok, false);
+  assert.ok(r.error?.includes('500'), String(r.error));
+});
+
+test('sendTestAlert מדווחת כישלון כשהרשת נופלת (לא רק HTTP שגוי)', async () => {
+  process.env.AI_BUDGET_ALERT_WEBHOOK = 'https://hooks.example/test';
+  mockOutcome = 'throw';
+  const r = await sendTestAlert();
+  assert.equal(r.configured, true);
+  assert.equal(r.ok, false);
+  assert.ok(r.error, 'יש סיבת כישלון, לא רק ok:false שקט');
 });
