@@ -23,15 +23,17 @@
 
 export type PaypalMode = 'off' | 'sandbox' | 'production';
 
+/**
+ * דורשת את שלושת האישורים - כולל `webhookId` - ולא רק client id/secret.
+ * בלעדיה מצב יכול "להיראות" מוגדר (`paypalConfigured()` אומר כן) בזמן
+ * שאימות ה-webhook נכשל תמיד כי אין webhook id לבדוק מולו - מצב גרוע
+ * מ"לא מוגדר": מציג כפתור תשלום שתמיד ייכשל בשקט בסוף.
+ */
 export function paypalMode(): PaypalMode {
   const raw = (process.env.PAYPAL_MODE ?? '').toLowerCase();
   if (raw === 'off') return 'off';
-  if (raw === 'production') {
-    return process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET ? 'production' : 'off';
-  }
-  return process.env.PAYPAL_CLIENT_ID_SANDBOX && process.env.PAYPAL_CLIENT_SECRET_SANDBOX
-    ? 'sandbox'
-    : 'off';
+  if (raw === 'production') return credentials('production') ? 'production' : 'off';
+  return credentials('sandbox') ? 'sandbox' : 'off';
 }
 
 export const paypalConfigured = () => paypalMode() !== 'off';
@@ -277,15 +279,19 @@ export async function verifyWebhookSignature(
   if (!headers.authAlgo || !headers.certUrl || !headers.transmissionId || !headers.transmissionSig || !headers.transmissionTime) {
     return false;
   }
-  const token = await accessToken(mode);
-  if (!token) return false;
 
+  // נבדק לפני קריאת הרשת ל-OAuth בכוונה: גוף פגום לא אמור לעלות לנו
+  // קריאה ל-PayPal, ובוודאי לא להיות הסיבה הראשונה שרואים אם הבדיקה
+  // נכשלת - כישלון פרסור הוא זול, ולכן הוא בא ראשון.
   let event: unknown;
   try {
     event = JSON.parse(rawBody);
   } catch {
     return false;
   }
+
+  const token = await accessToken(mode);
+  if (!token) return false;
 
   try {
     const res = await fetch(`${paypalApiBase(mode)}/v1/notifications/verify-webhook-signature`, {
