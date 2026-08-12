@@ -67,6 +67,8 @@ function MessageMap({ slug, placeIds }: { slug: string; placeIds: string[] }) {
 
 // הצעות פתיחה לשיחה על טיול קיים - כולן פעולות עריכה על התוכנית שמוצגת
 const STARTERS = ['תוסיף לי יום', 'תחליף מקום ביום הזה', 'מה כשר באזור?', 'תעשה לי יום רגוע יותר'];
+const DEFAULT_EMPTY_HINT = 'אפשר לערוך את הטיול בשיחה - בלי לעבור מסך.';
+const DEFAULT_CLEAR_CONFIRM = 'לנקות את השיחה? הטיול עצמו יישאר בדיוק כמו שהוא.';
 
 export default function ChatPanel({
   chat,
@@ -75,6 +77,12 @@ export default function ChatPanel({
   onClose,
   coach = false,
   onDismissCoach,
+  starters = STARTERS,
+  emptyHint = DEFAULT_EMPTY_HINT,
+  clearConfirmMessage = DEFAULT_CLEAR_CONFIRM,
+  headerLabel = 'הסוכן שלכם',
+  headerHint = 'כותבים - והתוכנית משתנה',
+  placeholder = 'תוסיף יום, תחליף מקום, מה כשר באזור…',
 }: {
   chat: TripChat;
   className?: string;
@@ -87,6 +95,17 @@ export default function ChatPanel({
    */
   coach?: boolean;
   onDismissCoach?: () => void;
+  /**
+   * חמישה טקסטים ניתנים להחלפה - כדי שאותו רכיב ישרת גם את דף השיחה
+   * החופשית (`/ask`, בלי טיול) בלי להעתיק אותו. הכל אופציונלי; ברירת
+   * המחדל היא בדיוק הנוסח הקיים בשיחת הטיול.
+   */
+  starters?: string[];
+  emptyHint?: string;
+  clearConfirmMessage?: string;
+  headerLabel?: string;
+  headerHint?: string;
+  placeholder?: string;
 }) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -141,9 +160,9 @@ export default function ChatPanel({
       */}
       <header className="flex shrink-0 items-center gap-2 border-b border-night/10 px-4 py-3">
         <span className="badge text-base font-bold text-night">
-          <span aria-hidden>🧭</span> הסוכן שלכם
+          <span aria-hidden>🧭</span> {headerLabel}
         </span>
-        <span className="truncate text-xs font-medium text-night/45">כותבים - והתוכנית משתנה</span>
+        <span className="truncate text-xs font-medium text-night/45">{headerHint}</span>
         <div className="ms-auto flex shrink-0 items-center gap-1">
         {/*
           ניקוי השיחה, בלי לגעת בטיול. נוסף אחרי שמטייל קיבל את ההודעה
@@ -155,7 +174,7 @@ export default function ChatPanel({
         {messages.length > 0 && (
           <button
             onClick={() => {
-              if (window.confirm('לנקות את השיחה? הטיול עצמו יישאר בדיוק כמו שהוא.')) {
+              if (window.confirm(clearConfirmMessage)) {
                 clearConversation();
               }
             }}
@@ -194,11 +213,9 @@ export default function ChatPanel({
       >
         {messages.length === 0 && !loading && (
           <div className="rounded-2xl bg-cream p-4">
-            <p className="text-sm font-semibold leading-relaxed text-night/70">
-              אפשר לערוך את הטיול בשיחה - בלי לעבור מסך.
-            </p>
+            <p className="text-sm font-semibold leading-relaxed text-night/70">{emptyHint}</p>
             <div className="mt-3 flex flex-wrap gap-1.5">
-              {STARTERS.map((s) => (
+              {starters.map((s) => (
                 <button
                   key={s}
                   onClick={() => send(s)}
@@ -369,9 +386,7 @@ export default function ChatPanel({
             autoFocus={autoFocus}
             onChange={(e) => setInput(e.target.value)}
             disabled={offline}
-            placeholder={
-              offline ? 'אין חיבור - השליחה מושבתת' : 'תוסיף יום, תחליף מקום, מה כשר באזור…'
-            }
+            placeholder={offline ? 'אין חיבור - השליחה מושבתת' : placeholder}
             aria-label="בקשה לסוכן"
             className="min-w-0 flex-1 rounded-xl bg-cream px-4 py-3 text-base sm:text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset disabled:cursor-not-allowed disabled:opacity-55"
           />

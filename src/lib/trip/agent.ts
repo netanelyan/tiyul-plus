@@ -146,7 +146,7 @@ export const AGENT_TOOLS = [
   {
     name: 'suggest_quick_replies',
     description:
-      'Attach 2-4 short Hebrew tappable answer options to a NON-sensitive clarifying question you are asking in this same reply (pace, number of days, destination, who is traveling). They render as chips under your message. NEVER use this for kashrut, Shabbat or any religious or private matter.',
+      'Attach 2-4 short Hebrew tappable answer options to a NON-sensitive clarifying question you are asking in this same reply (pace, number of days, destination, who is traveling), or to a one-time offer to build a trip from the conversation. They render as chips under your message. NEVER use this for kashrut, Shabbat or any religious or private matter.',
     input_schema: {
       type: 'object',
       properties: {
