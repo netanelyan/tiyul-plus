@@ -8427,3 +8427,174 @@ against real launch traffic, and guessing a number he explicitly wants to
 discover would be answering a question he didn't ask. Branch
 `feat/anon-share-tunable`, cut from `main`, committed but **not pushed** - a
 cost-control change affecting live spend gets a look before it ships.
+
+### 2026-08-12 (aaa) - Four branches into main, merge-only, and the two conflicts that were exactly where predicted
+
+Netanel asked for a pure merge - four branches into `main`, one at a time,
+build+tests verified between each, nothing else touched. He named the risk in
+advance: branches 2 (`feat/agent-web-lookup`) and 3 (ambiguity + trip-creation
++ `/ask`) both edit the agent's system prompt and `chat/route.ts`, and a
+careless resolution could quietly drop one of four required behaviors -
+ambiguous-city question, no trip without a clear ask, web search gated to
+eligible questions, kashrut claims stripped for uncatalogued places.
+
+**Before touching anything: confirmed nothing was in flight.** Two worktrees
+(`agent-web-lookup`, `predeparture-check`) existed under `.claude/worktrees/`
+- both fully committed, zero uncommitted changes, safe to merge from. One
+stash (`stash@{0}`, mine, from an earlier session) is stale debris superseded
+by real commits on those two worktrees - left untouched, flagged below rather
+than dropped. `main` matched `origin/main` exactly. Working directory clean.
+
+**"The trip-creation and /ask branch" turned out to be two git branches, not
+one** - `feat/ask-agent-no-auto-trip` (clear-yes trip creation, the offer/
+accept chip flow, `/ask`) and `fix/ambiguous-city-and-corrections` (the names
+gate, correction-not-duplicate). Confirmed rather than guessed: the four
+required post-merge behaviors map exactly one-to-one onto these two branches
+plus branch 2, so "step 3" had to mean both, merged in sequence with
+verification after each - five merges total for four named branches.
+
+**Merge 1 (anon-share-tunable) and merge 4 (predeparture-check): clean, no
+conflicts**, including a merge-4 oddity worth naming - `agentPrefix.ts`,
+`agent.ts` and `useTripChat.ts` showed real diffs in `main`-vs-branch stat but
+produced an EMPTY diff after the merge, because by then `main` already
+carried everything that branch had touched in those files. Confirmed via
+direct diff against the pre-merge commit rather than trusted on faith.
+
+**Merge 2 (agent-web-lookup): clean auto-merge, but it explained a standing
+mystery.** `CLAUDE.md` auto-merged with zero conflict markers even though
+both this session's own prior branch and `agent-web-lookup` append to a
+"## Session log" - because the file has **two separate append points**: a
+literal end-of-file tail (where most sessions, including mine, append) and a
+heading partway through the file (~line 3126) where at least one earlier
+session prepended instead. Not a merge bug - a pre-existing inconsistency in
+how this file has been maintained, surfaced by this merge rather than caused
+by it. Worth a human decision on which convention wins; not touched here per
+"nothing else."
+
+**Merge 3a (ambiguous-city-and-corrections): the predicted conflict, exactly
+where predicted, exactly as narrow as it should be.** Two hunks, both in
+`runClaudeTurn` - the function's parameter list and its one call site - where
+branch 2 had added `allowLookup`/`lookupNote` and branch 3a had independently
+added `serverVerdicts` at the same position. Pure "keep both": neither
+addition depended on or excluded the other, both belong, resolved by
+concatenating the two parameter blocks and the two argument lists in the same
+relative order each branch already used. Traced the full data flow after
+resolving - both features' variable definitions, both features' consumption
+sites in the system-prompt assembly, and the tool-execution loop's "names
+gate" (branch 3a) sitting cleanly alongside the web-search tool gating
+(branch 2) with zero overlap - to confirm the merge was semantically correct,
+not just textually conflict-free. `tsc` clean before the merge commit even
+landed.
+
+**Merge 3b (ask-agent-no-auto-trip): zero conflicts, and that absence was
+itself worth verifying, not just accepting.** Read the actual diff introduced
+by this merge (not the branch-vs-main diff, which is 3x larger for
+unrelated reasons) for `agentPrefix.ts` and `chat/route.ts` specifically:
+confirmed the full "CREATING THE FIRST TRIP NEEDS A CLEAR YES" rule landed
+intact and correctly renumbered against the surrounding rules it was inserted
+into, and confirmed `buildAskIntent`/`acceptsOffer` compose correctly with
+the pre-existing `editIntent` (kept, deliberately, for token-budget sizing
+only - not for the build-trigger decision, which is the whole point of the
+narrower flag).
+
+**One pre-existing test flake surfaced, unrelated to any of the four
+branches**: `limits.test.ts`'s "the window resets when its time passes" uses
+a live 1ms rate-limit window with a busy-wait loop and failed once across
+~6 total suite runs during this session, passing cleanly every other time.
+Not touched (none of the four branches touch `limits.test.ts`) - flagged for
+Netanel rather than fixed, per instruction.
+
+**One pre-existing lint error found in code that shipped wholesale with a
+merged branch**: `placeResolve.test.ts:60` (`fix/ambiguous-city-and-corrections`)
+declares `let noisy: string[] = []` and only ever pushes to it - `prefer-const`.
+Confirmed present on the source branch itself, not introduced by conflict
+resolution. Not fixed, per instruction - flagged.
+
+**One noisy false positive from the new ambiguous-name matcher, seen live and
+worth watching**: asking the agent "ספר לי בדיחה קצרה" (tell me a joke) logged
+`verdicts names=ספר:one` - the imperative "ספר" (tell) matched some catalog
+token closely enough to produce a disambiguation verdict on an entirely
+ordinary Hebrew sentence with no place-name intent at all. Harmless here
+because the verdict only ever *blocks* a tool call that picks a mismatched
+city, and no tool was called - but it is unwanted noise riding into the
+model's prompt on unrelated turns. Not touched (would be exactly the kind of
+"improvement along the way" this session was told not to make) - flagged for
+whoever owns `placeResolve.ts` next.
+
+**Full-suite verification: `tsc` clean, `npm run build` clean (293 pages),
+553 unit tests passing after all five merges** (up from 460 before this
+session's own first merge - the added tests belong to the merged branches,
+not to this session). `npx eslint` on the full changed-file set (all five
+branches' files against the pre-merge base) found exactly the one
+`placeResolve.test.ts` issue above and nothing else - the repo-wide
+`npm run lint` is currently unusable from this checkout because it also
+walks `.claude/worktrees/*/.next` build output belonging to the two
+concurrent sessions; scoped the check to touched files instead of chasing
+that.
+
+**Live browser verification, real `ANTHROPIC_API_KEY` and Supabase
+credentials from `.env.local`, production build, desktop (1400px) and phone
+(390px) - not just the test suite, per explicit instruction, because these
+are prompt-level behaviors a merge can break without failing a single test.**
+All four required behaviors reproduced live post-merge:
+
+- **Ambiguous city**: "תבנה לי טיול 4 ימים בויאנה" -> the agent asked
+  "התכוונת לוינה (אוסטריה) או לוילנה (ליטא)?" and built nothing until
+  answered.
+- **No trip without a clear ask**: "5 ימים באיטליה, מה כדאי לראות?" got a
+  short recommendation and zero trip; following up with "מעולה, זה מספיק לי
+  כרגע" got a polite close and still zero trip, across two full turns that
+  each named both a destination and a day count. A control case
+  ("תבנה לי טיול 4 ימים לוינה") built a real 4-day, 14-stop trip immediately,
+  confirming the restriction is specific to unclear asks, not building in
+  general.
+- **Web search gating**: a built Berlin trip, asked "מה מחיר הכניסה
+  לרייכסטאג?" (eligible - admission price), got a specific, confident answer
+  (free entry, advance registration required, booking opens ~3 months out) -
+  reads like a genuinely checked fact, not a guess. The same conversation
+  asked "ספר לי בדיחה קצרה על טיסות" (ineligible) got "אני מומחה לתכנון
+  טיולים, לא לבדיחות" and a redirect to real TLV-Berlin flight data already in
+  the catalog - no search artifact, no confusion between the two turns.
+- **Kashrut for an uncatalogued place**: "יש משהו כשר בקייב?" got an honest
+  "קייב לא נמצאת בקטלוג היעדים שלי" - the model declined before ever reaching
+  for a kashrut claim, which is the best possible outcome (the `priceGuard`
+  strip is the safety net for when this doesn't happen, not the first line of
+  defense).
+
+One test-harness lesson worth keeping: an early multi-turn run produced a
+garbled-looking transcript (a "tell me a joke" turn appearing to answer about
+Colosseum opening hours) that read like a real bug. Rerunning the identical
+scenario with longer waits between sequential messages reproduced cleanly and
+correctly both ways - it was this session's own script sending the second
+message before the client had settled the first, not a product defect.
+Confirmed by re-testing in isolation before concluding either way, which is
+the same discipline this file has recorded before: a surprising result is
+grounds to suspect the harness first, not the product - but only after
+actually checking, not by assuming it away.
+
+**Also verified, with real limits stated plainly**: `/ask` answers general
+questions with no trip and no login; the mobile chat drawer (`TripWorkspace`'s
+fixed bottom bar) opens and renders the same conversation correctly at 390px
+with no overflow. **Not independently live-verified**: the admin spend card
+and its test-alert button - this environment's `.env.local` has Supabase URL
+and anon key but no `SUPABASE_SERVICE_ROLE_KEY`, so `/admin` correctly serves
+the anonymous-visitor 404 (this session was never logged in - no email access
+for the OTP flow) rather than the authenticated "not configured" screen;
+confirmed this is the documented, correct behavior for that exact
+configuration by reading `/api/admin/me`'s own comment, not a gap the merge
+created. The 27 tests covering that card's logic (written in the branch this
+session merged first) already cover the delivery-confirmation logic directly,
+including mocked webhook success/failure/network-error paths. Also **not
+independently verified**: a live Viator link's parameters - no Viator API
+credentials in this environment - but confirmed none of the four merged
+branches touched `viator.ts`, `viatorLocale.ts`, `ActivitiesPanel.tsx` or
+`/api/activities` at all, so there was no merge risk to it in the first
+place; its own existing test suite ran clean as part of the full 553.
+
+**What this session did not do, on instruction**: no refactor, no fix, no
+"while I'm here" cleanup - not the flaky test, not the lint error, not the
+noisy name-matcher false positive, not the dual-append-point CLAUDE.md
+inconsistency, not the stale stash. All five are named above instead. All
+four branches were left as-is on `main` in a single local checkout,
+**not pushed** to `origin` - a batch this size, touching the agent's core
+prompt logic and a live payment integration, gets a look before it ships.
