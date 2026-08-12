@@ -61,6 +61,8 @@ import {
   type GuardAllowlist,
 } from '@/lib/priceGuard';
 import { CACHE_TTL, SYSTEM_PROMPT, anthropicBase, cachedPrefix } from '@/lib/server/agentPrefix';
+import { cityGate, resolveMessage, verdictBlock } from '@/lib/server/placeResolve';
+import { CORRECTION_INSTRUCTION, detectCorrection } from '@/lib/server/correction';
 
 /**
  * צ׳אט הטיולים - סוכן אמיתי מעל הטיול של המשתמש.
@@ -86,6 +88,31 @@ interface ChatReply {
   reply: string;
   destinationSlug?: string;
   placeIds?: string[];
+}
+
+/**
+ * ה-slugים שקריאת הכלי הזאת עומדת לכתוב, אם היא בוחרת עיר בכלל.
+ *
+ * הרשימה מכוונת: אלה הכלים שבהם **המודל בוחר איזו עיר**, כלומר המקומות
+ * שבהם שם שהמטייל הקליד מתורגם ל-slug. כלים שפועלים על עיר שכבר בטיול
+ * (`add_place`, `move_place`, `set_day_notes`) לא נכללים - אין בהם מה
+ * לפרש, וחסימה שלהם הייתה שוברת עריכות תקינות.
+ */
+function citySlugsOf(name: string, input: Record<string, unknown>): string[] {
+  const one = (v: unknown) => (typeof v === 'string' && v ? [v] : []);
+  switch (name) {
+    case 'create_trip_full':
+      return (Array.isArray(input.dayPlans) ? input.dayPlans : []).flatMap((d) =>
+        one((d as Record<string, unknown>)?.citySlug),
+      );
+    case 'create_trip':
+      return (Array.isArray(input.citySlugs) ? input.citySlugs : []).flatMap(one);
+    case 'add_day':
+    case 'set_day_city':
+      return one(input.citySlug);
+    default:
+      return [];
+  }
 }
 
 function findDestination(text: string) {
@@ -347,6 +374,14 @@ async function runClaudeTurn(
    * להשמיט את האינדקס, לא להפך.
    */
   light: boolean,
+  /**
+   * הכרעות שהשרת חישב על ההודעה הזאת ושאסור למודל לסתור: פרשנות שם
+   * מקום (`placeResolve.ts`) והאם זה תור של תיקון (`correction.ts`).
+   *
+   * נשלח **אחרי** `OUTPUT_DISCIPLINE`, כלומר אחרון. היומן של הפרויקט
+   * מתעד פעמיים שכלל בראש פרומפט ארוך נבלע ושאותו כלל בסוף עובד.
+   */
+  serverVerdicts: string,
 ): Promise<{ blocks: AccBlock[]; stopReason: string; text: string; usage: AnthropicUsage; model: string }> {
   const model = light
     ? (process.env.ANTHROPIC_MODEL_FAST ?? 'claude-haiku-4-5')
@@ -403,6 +438,7 @@ async function runClaudeTurn(
         // כאן הם הדבר האחרון שנקרא לפני השיחה - אותו עיקרון שגרם
         // ל-PROSE_DISCIPLINE לעבוד מתוך תוצאת הכלי.
         { type: 'text', text: OUTPUT_DISCIPLINE },
+        ...(serverVerdicts ? [{ type: 'text' as const, text: serverVerdicts }] : []),
       ],
       messages: apiMessages,
     }),
@@ -666,6 +702,30 @@ async function runAgent(
     : { light: false, reason: 'ניתוב כבוי' };
 
   /*
+    ---------- שתי הכרעות שהשרת מחשב, לא המודל ----------
+
+    1. **פרשנות שם מקום.** `ברסלוונה` הפכה בשקט לברטיסלבה, ואף שורת קוד
+       לא הייתה מעורבת: `findDestination` דורש התאמה מדויקת ולכן לא זיהה
+       כלום, וההחלטה נפלה כולה בתוך המודל. עכשיו היא נמדדת ב-
+       `placeResolve.ts`, נמסרת למודל כעובדה, **ונאכפת ברמת הכלי**.
+    2. **האם זה תיקון.** אם כן, בנייה מחדש מחליפה את הטיול הפתוח במקום
+       להעמיד שני לידו. ראו `correction.ts`.
+  */
+  const nameVerdicts = resolveMessage(lastUser);
+  const correction = detectCorrection(messages, clientTrip);
+  const serverVerdicts = [
+    verdictBlock(nameVerdicts),
+    correction.correction ? CORRECTION_INSTRUCTION : '',
+  ]
+    .filter(Boolean)
+    .join('\n\n');
+  if (nameVerdicts.length > 0 || correction.correction) {
+    console.log(
+      `[chat] verdicts names=${nameVerdicts.map((v) => `${v.typed}:${v.kind}`).join(',') || '-'} correction=${correction.correction} (${correction.why})`,
+    );
+  }
+
+  /*
     במסלול הקל **שום דבר לא נשלח ללקוח עד שהתור הוכיח את עצמו**.
 
     זה לא זהירות יתר: אם התור מוסלם, המודל החזק מריץ הכול מחדש מאפס,
@@ -757,6 +817,7 @@ async function runAgent(
       guardAllow,
       searchesShown > 0,
       light,
+      serverVerdicts,
     );
     meter.units += aiUnits(turn.usage);
     /*
@@ -963,7 +1024,28 @@ async function runAgent(
           quickReplies: undefined,
         };
       } else {
-        out = executeAgentTool(working, block.name, input, explored);
+        /*
+          ---------- שער השמות, ברמת הכלי ----------
+
+          הבלוק שנשלח למודל הוא הנחיה, והיומן כאן מתעד שוב ושוב שהנחיה
+          נבלעת. לכן הבחירה נמדדת שוב **ברגע שהיא נכתבת**: כלי שבוחר עיר
+          נבדק מול מה שהמטייל הקליד בפועל, ובמצב "כמה סבירות" הוא נכשל
+          ומחזיר למודל את האפשרויות. כלי שלא בוצע לא יכול ליצור טיול
+          שגוי - זה אותו דפוס של `filterKosherUnlessOptedIn`.
+
+          הבדיקה חלה רק על הכלים שבוחרים עיר. `add_place`/`move_place`
+          פועלים על העיר שכבר בטיול, ואין בהם שם לפרש.
+        */
+        const chosen = citySlugsOf(block.name, input);
+        const gate = chosen.length > 0 ? cityGate(lastUser, chosen) : { ok: true as const, note: '' };
+        if (!gate.ok) {
+          console.log(`[chat] city gate blocked ${block.name} -> ${chosen.join(',')}`);
+          out = { trip: working, ok: false, message: gate.message, action: undefined, quickReplies: undefined };
+        } else {
+          out = executeAgentTool(working, block.name, input, explored, null, correction.correction);
+          // הפרשנות נמסרת למודל יחד עם ההצלחה, כדי שיאמר אותה למטייל
+          if (out.ok && gate.note) out = { ...out, message: out.message + gate.note };
+        }
       }
       if (out.ok && out.trip !== working) {
         touched = true; // suggest_quick_replies לא נוגע בטיול
@@ -1085,12 +1167,43 @@ async function runAgent(
     }
   }
 
-  if (!full) {
-    const fallback = touched
-      ? 'עדכנתי את הטיול לפי הבקשה - הפירוט בפאנל הטיול.'
-      : 'לא הצלחתי לנסח תשובה - נסו שוב.';
-    send({ type: 'text', text: fallback });
-    full = fallback;
+  /*
+    ---------- תשובה שנגמרה באמצע משפט ----------
+
+    נתנאל קיבל בדיוק את זה: **"סידרתי לך סופ״ש בברצלונה:" ואחריו כלום.**
+
+    השחזור (מול שרת Anthropic מדומה, על בילד פרודקשן) הראה תור בן שתי
+    קריאות מודל: בקריאה הראשונה המודל כתב משפט פתיחה **ואת קריאת
+    `create_trip_full` יחד**, המשפט הוזרם מיד (שומר המחירים משחרר על
+    `:`, ולכן העצירה בדיוק שם), ובקריאה השנייה - זו שהייתה אמורה לשאת
+    את התוכן - הוא לא כתב כלום. בדקתי את החלופות באותו הארנס: משפט
+    רגיל, רשימת **יום N** וגם רווחים בלבד - כולם מגיעים ללקוח שלמים.
+    כלומר שום דבר בשרת לא בלע טקסט; פשוט לא נכתב טקסט.
+
+    **החלק שהוא שלנו הוא שאף אחד לא בדק.** רשת הביטחון שהייתה כאן
+    תופסת רק תשובה **ריקה לגמרי**. משפט שנגמר בנקודתיים הוא, מבחינת
+    הקוד, תשובה תקינה לחלוטין - ולכן הוא עבר.
+
+    התיקון הוא אותו דפוס של המסלול הקל: יש כבר משפט אמיתי שנבנה בשרת
+    מהעריכה שבוצעה בפועל (`out.action`), והוא מוצמד לזנב הפתוח. המטייל
+    לא מקבל יותר הבטחה בלי המשך.
+  */
+  const trimmedFull = full.trim();
+  const dangling = trimmedFull.length === 0 || /[:\-–—]$/.test(trimmedFull);
+  if (dangling) {
+    const tail =
+      actions.length > 0
+        ? actions.join(' · ')
+        : touched
+          ? 'עדכנתי את הטיול לפי הבקשה - הפירוט בפאנל הטיול.'
+          : 'לא הצלחתי לנסח תשובה - נסו שוב.';
+    const text = trimmedFull.length === 0 ? tail : `\n${tail}`;
+    send({ type: 'text', text });
+    full += text;
+    // השבבים מושתקים כשהם *הם* המשפט, בדיוק כמו במסלול הקל - אחרת
+    // אותה שורה מופיעה פעמיים, פעם כטקסט ופעם כצ׳יפ מתחתיו.
+    if (actions.length > 0) suppressActions = true;
+    if (trimmedFull.length > 0) console.log('[chat] dangling reply completed from actions');
   }
 
   // רשת ביטחון: הלולאה הסתיימה עם ימים ריקים בלבד - אומרים זאת ביושר,
