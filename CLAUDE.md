@@ -8598,3 +8598,32 @@ inconsistency, not the stale stash. All five are named above instead. All
 four branches were left as-is on `main` in a single local checkout,
 **not pushed** to `origin` - a batch this size, touching the agent's core
 prompt logic and a live payment integration, gets a look before it ships.
+
+### 2026-08-12 (bbb) - A real 404 page: the site had none
+
+The site had no `app/not-found.tsx` at all - every broken link fell through
+to Next's stock, unbranded, English "This page could not be found." Added
+one: a server component (no client JS needed, same reasoning as
+`SiteFooter` - nothing here depends on the browser), reusing the exact hero
+visual language from `HomeHero` (the warm radial wash, `.display`/`.rise-in`,
+the paper-plane `Logo` tilted off its course) so it reads as the same site
+mid-error, not a generic fallback.
+
+The copy names real numbers rather than a generic apology: `catalogCounts`
+(the same source `SiteFooter` already uses for "1,814 מקומות · 166 יעדים ·
+83 מדינות") drives "בדקנו מול כל 166 היעדים ב-83 המדינות שיש לנו" - so it
+can never drift out of sync with the catalog the way a hardcoded number
+would. `robots: { index: false, follow: true }` so broken URLs don't
+accumulate in search results while links back to the real site still get
+followed.
+
+Verified this is a genuine HTTP 404 (not just a page that looks like one) -
+`curl` against an unknown path on a production build returns status 404 -
+and checked in a real browser at 1400px and 390px: zero horizontal overflow,
+`dir="rtl"` correct, buttons wrap cleanly to full-width stacking at phone
+width. `tsc`, `eslint` on the new file, and the full 553-test suite all
+clean; no new tests added - this is static presentational content with no
+logic to test, the same judgment already applied to `SiteFooter`.
+
+Pushed straight to `main` on explicit instruction - a missing 404 page is
+pure upside with no behavioral risk to anything else on the site.
