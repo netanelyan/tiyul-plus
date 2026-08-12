@@ -8207,3 +8207,108 @@ service role key, ולא ביקשתי אותו בצ׳אט. מה שנדרש מנ�
 **מה נשאר פתוח.** 18 כתובות תמונה מתות שדורשות בחירה אנושית; `kosher-market`
 חסר ב-16 מ-17 מדינות ו-`cafe` ב-6, שניהם חסומים על גיאוקודינג ולא על מחקר;
 וחבילת הלקוח של 2.5MB, שנתנאל אמר שיתזמן בנפרד.
+
+### 2026-08-12 (zz) - The anon/signed-in split becomes a dial, and the alert gets a way to prove itself
+
+Netanel, ahead of launch: the spend card lets him move the daily ceiling but not
+the split between the anonymous and signed-in pools, and he wants that split
+adjustable the same way - no deploy, tunable live while he watches what actually
+shows up. He also wants the default flipped: anonymous should be the *larger*
+pool, since pre-launch traffic is almost entirely logged out and blocking it is
+the expensive mistake. And he wants confirmation, not faith, that the 90%-ceiling
+alert actually reaches him before he runs the budget close to the edge.
+
+**The default was already flipped, one commit ago, and never logged.** `ANON_SHARE`
+in `lib/server/budget.ts` was 0.55 as of the "outbound links" commit
+(`0d9aa9e`) - up from 0.4 - bundled in as an unrelated fifth item in a session
+whose own log entry never got written (see 2026-08-12 (yy) on the maps-link
+branch, which hit the identical gap independently). So "give anonymous the
+bigger share" was **already true in code**, just never surfaced to him and never
+adjustable. This entry is honest about that rather than presenting a rename as
+new work: the number stayed the same (`DEFAULT_ANON_SHARE = 0.55`), what's new is
+that it's now a dial and not a constant.
+
+**The dial: `ai_anon_share`, same mechanism as `ai_daily_budget_usd`, on purpose.**
+`anonShare()` reads the flag → env (`AI_ANON_SHARE`) → `DEFAULT_ANON_SHARE`, in
+that exact priority order, because these two numbers are meant to be tuned the
+same way during the same launch window. `budgetFor()` now calls it per-request
+instead of reading a top-level constant. The flags API (`/api/admin/flags`)
+gained a real per-key range - `KNOWN` used to be just `{key: type}`, with a single
+hardcoded `0..10_000` bound baked in for every number flag; a share flag with that
+bound would have accepted "55" (5,500%) as valid. `KNOWN` now carries `{type,
+min, max}` per key, `ai_anon_share` gets `0..1`, and the daily-budget flag keeps
+its old range unchanged.
+
+**The guarantee holds regardless of what the dial is set to, and that's provable
+rather than asserted.** The floor for signed-in traffic is `1 - anonShare()`, and
+the thing that actually protects it - the `Math.min(s.anonUsd, budget * share)`
+clamp on anonymous overspend - never touches `share` directly; it composes with
+whatever `share` is. Added a test that sets the dial to an extreme (90% to
+anonymous) and re-runs the exact "anonymous overspend doesn't touch the signed-in
+floor" scenario that the original bug report was about - it holds at 90% exactly
+as it held at 55%, because the protection was never *in* the percentage, it's in
+the `min()`.
+
+**The webhook alert had never been tested, at all - not even a fixture.** The one
+existing "alert" test asserted a threshold constant was less than 1. `post()`
+(the function that actually calls the webhook) swallowed every failure with
+`.catch(() => {})` - no log, no trace, nothing. A wrong URL or a downed endpoint
+during launch would have failed *exactly* as silently as success, which is the
+worst possible failure mode for the one mechanism Netanel is relying on to know
+something's wrong. Fixed in two parts:
+
+1. `post()` is now awaited internally and returns `{configured, ok, error?}`
+   instead of `void` - every failure is `console.warn`'d (visible in Vercel
+   function logs) even on the fire-and-forget path from `maybeAlert`, which still
+   doesn't block the request on it (`void post(...)`, same as before - an alert
+   should never slow down a chat turn).
+2. **`sendTestAlert()` + `POST /api/admin/alert-test`** - an admin-gated route
+   that sends a real, clearly-labeled test message and waits for the answer, so
+   "the webhook is configured" becomes "I pressed the button and it arrived."
+   Wired to a new button on the spend card: sends, shows ✓ on success, the actual
+   error string on failure (`webhook_http_500`, or the fetch error verbatim), and
+   "not configured" when `AI_BUDGET_ALERT_WEBHOOK` is unset - three different
+   answers to three different questions, instead of one silent nothing.
+
+**Verified live, not just by reading the code.** 12 new tests in
+`budget.test.ts` mock `globalThis.fetch` (same pattern as `shareStore.test.ts`)
+and capture what actually gets POSTed: the single-source alert fires once per
+identity per day and stops firing after; the daily-ceiling alert fires once at
+90% with the concentrated/broad classification correct; neither fires below
+threshold; `sendTestAlert` correctly reports all four real outcomes - not
+configured, delivered, HTTP failure, and network failure - none of them thrown
+as an uncaught exception. Running the suite prints the actual webhook payloads
+to the console as a side effect, which is itself a form of proof: the messages
+read exactly as they would in Slack.
+
+**A second, smaller stale-comment bug found on the way, same species as the
+`ANON_SHARE` gap.** The pool card's UI copy said "לפחות 70% מהיום" (at least 70%
+of the day) for signed-in users - a number left over from when `ANON_SHARE` was
+0.3, surviving unchanged through two later bumps to 0.4 and then 0.55 (would have
+been "at least 60%," never "70%"). Both pool labels are now computed from
+`d.budget.anonShare` instead of hand-written, so this specific class of drift
+- a percentage baked into copy instead of read from the number it describes -
+can't recur here. `.env.example` had the same shape of staleness for the daily
+budget default (documented as $5, code says $10) - fixed while adjacent, not
+chased elsewhere.
+
+**Verified:** `npx tsc --noEmit` clean, `npm run build` clean, 460 unit tests (12
+new), all touched files individually lint-clean (`npx eslint` on the exact
+changed files - the repo-wide `npm run lint` currently reports ~14,700 problems
+that are entirely `.next` build output from a concurrent session's git worktree
+under `.claude/worktrees/agent-web-lookup/`, not this branch's content; left
+untouched since it's a different session's live directory, not a bug in this
+change). The admin UI addition was **not independently browser-verified** - it
+reuses the exact hook/API pattern of the daily-budget editor that's already
+shipped and working, with no new interaction shape, and there was no live
+Supabase admin session available in this environment to drive it end-to-end.
+
+**What this session did NOT do.** Did not touch the per-caller cap
+(`CALLER_CAP_USD`/`ANON_CALLER_CAP_USD`) - Netanel asked specifically about the
+anon/signed-in split, not the individual-identity ceiling, and conflating the two
+wasn't asked for. Did not pick a new default share value beyond confirming 0.55
+is already "anonymous gets the larger half" - he said he'll tune it himself
+against real launch traffic, and guessing a number he explicitly wants to
+discover would be answering a question he didn't ask. Branch
+`feat/anon-share-tunable`, cut from `main`, committed but **not pushed** - a
+cost-control change affecting live spend gets a look before it ships.

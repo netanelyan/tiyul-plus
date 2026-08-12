@@ -719,6 +719,8 @@ interface Spend {
     userLimit: number;
     callerLimit: number;
     stale: boolean;
+    /** חלקם של האנונימיים מהיום, 0..1 - ראו anonShare() ב-lib/server/budget.ts */
+    anonShare: number;
   };
   today: { usd: number; requests: number; chat: number; anonymous: number; loggedIn: number; trips: number };
   days: { day: string; usd: number; requests: number }[];
@@ -752,6 +754,19 @@ function SpendCard({
   const [busy, setBusy] = useState(false);
 
   /*
+    אותו דפוס בדיוק בשביל חלקם של האנונימיים - שדה נפרד, כי זה ערך
+    נפרד עם יחידה שונה (אחוז, לא דולר) ונתיב שמירה זהה (flags).
+  */
+  const [shareDraft, setShareDraft] = useState<string | null>(null);
+  const [shareBusy, setShareBusy] = useState(false);
+
+  /** תוצאת שליחת התראת הבדיקה - null עד שלוחצים, אחר כך נשארת עד הלחיצה הבאה */
+  const [alertResult, setAlertResult] = useState<null | { configured: boolean; ok: boolean; error?: string }>(
+    null,
+  );
+  const [alertBusy, setAlertBusy] = useState(false);
+
+  /*
     ריענון אחרי שמירה נעשה דרך מונה ולא דרך קריאה לפונקציה מתוך
     האפקט: זה הדפוס שכבר קיים בכרטיסים האחרים כאן, והוא גם מה
     שמונע את אזהרת cascading renders.
@@ -766,6 +781,7 @@ function SpendCard({
   }, [api, tick]);
 
   const shown = draft ?? (d ? String(d.budget.limit) : '');
+  const shareShown = shareDraft ?? (d ? String(Math.round(d.budget.anonShare * 1000) / 10) : '');
 
   const save = async () => {
     const n = Number(shown);
@@ -778,6 +794,27 @@ function SpendCard({
     setDraft(null);
     setTick((t) => t + 1);
     setBusy(false);
+  };
+
+  /** האחוז המוקלד הופך לשבר 0..1 רק כאן - הדגל עצמו נשמר כשבר, לא כאחוז */
+  const saveShare = async () => {
+    const pct = Number(shareShown);
+    if (!Number.isFinite(pct) || pct < 0 || pct > 100) return;
+    setShareBusy(true);
+    await api('/api/admin/flags', {
+      method: 'POST',
+      body: JSON.stringify({ key: 'ai_anon_share', value: pct / 100 }),
+    });
+    setShareDraft(null);
+    setTick((t) => t + 1);
+    setShareBusy(false);
+  };
+
+  const testAlert = async () => {
+    setAlertBusy(true);
+    const { data } = await api('/api/admin/alert-test', { method: 'POST' });
+    setAlertResult(data as { configured: boolean; ok: boolean; error?: string });
+    setAlertBusy(false);
   };
 
   if (!d) return null;
@@ -821,7 +858,7 @@ function SpendCard({
       <div className="mt-3 grid gap-2 sm:grid-cols-2">
         {[
           {
-            label: 'אנונימיים',
+            label: `אנונימיים (${Math.round(d.budget.anonShare * 100)}%)`,
             spent: d.budget.anonSpent,
             limit: d.budget.anonLimit,
             note: 'ארנק נפרד - לא יכול לכבות את הסוכן למחוברים',
@@ -830,7 +867,7 @@ function SpendCard({
             label: 'מחוברים',
             spent: d.budget.userSpent,
             limit: d.budget.userLimit,
-            note: 'כל מה שאנונימיים לא הוציאו, ולפחות 70% מהיום',
+            note: `כל מה שאנונימיים לא הוציאו, ולפחות ${Math.round((1 - d.budget.anonShare) * 100)}% מהיום`,
           },
         ].map((p) => {
           const r = p.limit > 0 ? Math.min(100, Math.round((p.spent / p.limit) * 100)) : 100;
@@ -900,6 +937,54 @@ function SpendCard({
         <span className="text-[11px] font-medium text-night/40">
           חל מיד. 0 = הסוכן כבוי לגמרי.
         </span>
+      </div>
+
+      {/* ---------- חלקם של האנונימיים, בלי דיפלוי ---------- */}
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        <label className="text-xs font-bold text-night/55" htmlFor="anon-share-input">
+          חלק האנונימיים (%)
+        </label>
+        <input
+          id="anon-share-input"
+          value={shareShown}
+          onChange={(e) => setShareDraft(e.target.value)}
+          inputMode="decimal"
+          dir="ltr"
+          className="w-24 rounded-xl bg-cream px-3 py-2 text-base text-night ring-1 ring-night/15 outline-none focus:ring-2 focus:ring-sunset sm:text-sm"
+        />
+        <button
+          onClick={() => void saveShare()}
+          disabled={shareBusy || shareShown === String(Math.round(d.budget.anonShare * 1000) / 10)}
+          className="rounded-xl bg-night px-3 py-2 text-xs font-bold text-cream transition hover:bg-night/85 disabled:opacity-40"
+        >
+          שמירה
+        </button>
+        <span className="text-[11px] font-medium text-night/40">
+          חל מיד. השאר תמיד למחוברים - לא ניתן לכבות אותם דרך השדה הזה.
+        </span>
+      </div>
+
+      {/* ---------- בדיקת התראה אמיתית ---------- */}
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        <button
+          onClick={() => void testAlert()}
+          disabled={alertBusy}
+          className="rounded-xl bg-cream px-3 py-2 text-xs font-bold text-night ring-1 ring-night/15 transition hover:bg-night/5 disabled:opacity-40"
+        >
+          🧪 שליחת התראת בדיקה
+        </button>
+        {alertBusy && <span className="text-[11px] font-medium text-night/40">שולח…</span>}
+        {!alertBusy && alertResult && (
+          <span
+            className={`text-[11px] font-bold ${alertResult.ok ? 'text-lagoon' : 'text-sunset-deep'}`}
+          >
+            {alertResult.ok
+              ? '✓ הגיעה בהצלחה - הערוץ מחובר ועובד'
+              : !alertResult.configured
+                ? 'לא מוגדר AI_BUDGET_ALERT_WEBHOOK - שום דבר לא נשלח'
+                : `נכשלה: ${alertResult.error ?? 'שגיאה לא ידועה'}`}
+          </span>
+        )}
       </div>
 
       {/* ---------- כמה עולה טיול ---------- */}
