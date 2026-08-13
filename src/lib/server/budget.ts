@@ -1,5 +1,5 @@
 import { dayKey } from '@/lib/server/limits';
-import { eq, neq, pgQuery, pgSelect } from '@/lib/server/pgrest';
+import { eq, neq, pgLimit, pgOrder, pgQuery, pgSelect } from '@/lib/server/pgrest';
 import { allFlags } from '@/lib/server/flags';
 import { costUsd, type TokenUsage } from '@/lib/server/aiCost';
 import { serviceHeaders } from '@/lib/server/supabaseAdmin';
@@ -527,6 +527,68 @@ export async function premiumBudgetFor(userId: string): Promise<PremiumBudgetSta
     exceeded: spent >= budget,
     ratio: budget > 0 ? spent / budget : 1,
   };
+}
+
+/**
+ * הכסף האמיתי של המנויים, **לאזור הניהול בלבד** - נתנאל: "בלוח הבקרה
+ * אני עדיין רוצה לראות את הכסף האמיתי, לפי מנוי ובסך הכול. זה בשבילי,
+ * לא בשבילם." שום חלק מזה לא מגיע לאף משטח משתמש.
+ *
+ * קריאה אחת עד 1,000 שורות לחודש הנוכחי (מנויים נספרים בעשרות, לא
+ * באלפים - ואם נגיע לאלף מנויים משלמים, truncated יגיד את זה במקום
+ * להציג סכום חסר כאילו הוא שלם).
+ */
+export interface PremiumSpendOverview {
+  month: string;
+  totalUsd: number;
+  subscribers: number;
+  capUsd: number;
+  top: { userId: string; usd: number; requests: number }[];
+  truncated: boolean;
+  /** false = אין התמדה או שהקריאה נכשלה - שיוצג "לא נאסף", לא אפס */
+  stored: boolean;
+}
+
+export async function premiumSpendOverview(topN = 10): Promise<PremiumSpendOverview> {
+  const month = monthKey();
+  const base: PremiumSpendOverview = {
+    month,
+    totalUsd: 0,
+    subscribers: 0,
+    capUsd: SUBSCRIBER_MONTHLY_CAP_USD,
+    top: [],
+    truncated: false,
+    stored: false,
+  };
+  if (!persistent()) return base;
+  try {
+    const MAX_ROWS = 1000;
+    const res = await fetch(
+      `${supaUrl()}/rest/v1/subscriber_spend_monthly?${pgQuery(
+        eq('month', month),
+        pgSelect(['user_id', 'usd', 'requests']),
+        pgOrder('usd', 'desc'),
+        pgLimit(MAX_ROWS),
+      )}`,
+      { headers: headers(), cache: 'no-store', signal: AbortSignal.timeout(3000) },
+    );
+    if (!res.ok) return base;
+    const rows = (await res.json()) as { user_id: string; usd: number | string; requests?: number }[];
+    const parsed = rows
+      .map((r) => ({ userId: r.user_id, usd: Number(r.usd) || 0, requests: r.requests ?? 0 }))
+      .filter((r) => r.userId);
+    return {
+      month,
+      totalUsd: parsed.reduce((n, r) => n + r.usd, 0),
+      subscribers: parsed.length,
+      capUsd: SUBSCRIBER_MONTHLY_CAP_USD,
+      top: parsed.slice(0, topN),
+      truncated: rows.length >= MAX_ROWS,
+      stored: true,
+    };
+  } catch {
+    return base;
+  }
 }
 
 /** מעל האחוז הזה מהתקרה החודשית האישית - התראה מיידית, פעם אחת לחודש למנוי */

@@ -41,7 +41,7 @@ import type { Trip } from '@/lib/trip/types';
 import type { Destination } from '@/lib/types';
 import { exploreDestination, type ExploreScope } from '@/lib/explore/resolver';
 import { exploredToDestination, sanitizeExploredDestinations } from '@/lib/explore/adapter';
-import { checkLimit, aiUnitsUsedToday, recordAiUnits } from '@/lib/server/limits';
+import { checkLimit, peekUsed, aiUnitsUsedToday, recordAiUnits } from '@/lib/server/limits';
 import {
   IP_BACKSTOP_MULTIPLE,
   budgetFor,
@@ -71,7 +71,7 @@ import {
   shouldEscalate,
 } from '@/lib/server/modelRoute';
 import { resolveCaller, type Caller } from '@/lib/server/identity';
-import { PLAN_LIMITS, aiUnits, periodMsFor } from '@/lib/plans';
+import { PLAN_LIMITS, PREMIUM_TRIP_BUILDS_PER_MONTH, aiUnits, periodMsFor } from '@/lib/plans';
 import type { BookingSearchCard } from '@/lib/bookingSearch';
 import {
   GuardedTextStream,
@@ -1139,6 +1139,25 @@ async function runAgent(
           action: undefined,
           quickReplies: undefined,
         };
+      } else if (
+        block.name === 'create_trip_full' &&
+        caller.plan === 'premium' &&
+        peekUsed('trip-builds-month', caller.id) >= PREMIUM_TRIP_BUILDS_PER_MONTH
+      ) {
+        /*
+          מכסת הבניות המלאות של המנוי. `peekUsed` ולא `checkLimit` - הצריכה
+          בפועל קורית רק אחרי בנייה **שהצליחה** (למטה), כדי שניסיון שנפל
+          בוולידציה לא ישרוף אחת משתי הבניות של החודש. ההודעה היא תוצאת
+          כלי - המודל מסביר אותה למטייל בשיחה, בלי לנקוב באף מספר כספי.
+        */
+        out = {
+          trip: working,
+          ok: false,
+          message:
+            `מכסת בניית הטיולים המלאים החודשית של המנוי (${PREMIUM_TRIP_BUILDS_PER_MONTH} בחודש) נוצלה. זו מכסה ולא תקלה - אל תנסה שוב בתור הזה. אמור למטייל בעברית ובנימוס שמכסת הבניות המלאות לחודש נוצלה ושהיא מתחדשת בתחילת תקופת החיוב הבאה, ושבינתיים אפשר להמשיך לערוך את הטיולים הקיימים בלי הגבלה כזאת, או לבנות טיול במתכנן המהיר.`,
+          action: undefined,
+          quickReplies: undefined,
+        };
       } else {
         /*
           ---------- שער השמות, ברמת הכלי ----------
@@ -1166,6 +1185,11 @@ async function runAgent(
       if (out.ok && out.trip !== working) {
         touched = true; // suggest_quick_replies לא נוגע בטיול
         toolBuiltSomething = true;
+      }
+      // צריכת מכסת הבניות המלאות של המנוי - רק על בנייה שהצליחה בפועל
+      // (ראו peekUsed בשער למעלה). ה-checkLimit כאן הוא הרישום עצמו.
+      if (out.ok && block.name === 'create_trip_full' && caller.plan === 'premium') {
+        checkLimit('trip-builds-month', caller.id, PREMIUM_TRIP_BUILDS_PER_MONTH, periodMsFor('premium'));
       }
       working = out.trip;
       // משדרים את הטיול מיד אחרי כל כלי שמשנה אותו, ולא רק בסוף התור:
@@ -1434,7 +1458,10 @@ const AGENT_TRUNCATED_MESSAGE =
 const QUOTA_MESSAGE =
   'הגעתם למכסת השימוש היומית בסוכן החכם של התוכנית החינמית 🙏\n\n' +
   'המכסה מתאפסת פעם ביום. בינתיים אפשר להמשיך לערוך את הטיול ידנית במתכנן - להוסיף ימים, להזיז עצירות ולפתוח ניווט.\n\n' +
-  'רוצים להמשיך לתכנן עם הסוכן בלי לחכות? טיול+ פרימיום מגדיל את המכסה משמעותית - כל הפרטים בעמוד "פרימיום" (tiyulplus.com/premium).';
+  // בלי "מכסה גדולה יותר" - מאז שהמכסות של פרימיום נגזרות מהעלות
+  // האמיתית, ההבטחה הזאת פשוט לא נכונה. מה שפרימיום כן נותן: מסלול
+  // אישי שלא תלוי בזמינות המשותפת, ובדיקה לפני הנסיעה כלולה.
+  'בטיול+ פרימיום הסוכן זמין במסלול אישי מובטח שלא תלוי בעומס באתר, והבדיקה לפני הנסיעה כלולה - כל הפרטים בעמוד "פרימיום" (tiyulplus.com/premium).';
 
 /**
  * הגעה למכסת ה**ספירה** החודשית (הודעות/יחידות) - נדיר, כי התקרה
@@ -1448,8 +1475,9 @@ const PREMIUM_QUOTA_MESSAGE =
 
 const IMAGE_QUOTA_MESSAGE =
   `הגעתם למכסת התמונות היומית (${PLAN_LIMITS.free.imagesPerDay} תמונות ביום בתוכנית החינמית) 📷\n\n` +
-  'קריאת תמונה יקרה הרבה יותר מקריאת טקסט, ולכן המכסה נמוכה. המכסה מתאפסת פעם ביום, ובינתיים אפשר פשוט לכתוב לי את הפרטים - שם המלון, התאריכים והעיר - ואטפל בזה בדיוק אותו דבר.\n\n' +
-  'בטיול+ פרימיום המכסה גדולה בהרבה - כל הפרטים בעמוד "פרימיום" (tiyulplus.com/premium).';
+  // בלי הבטחת "מכסה גדולה בהרבה" בפרימיום - היא כבר לא נכונה (ראו
+  // QUOTA_MESSAGE). הטקסט פשוט אומר מה אפשר לעשות במקום.
+  'קריאת תמונה יקרה הרבה יותר מקריאת טקסט, ולכן המכסה נמוכה. המכסה מתאפסת פעם ביום, ובינתיים אפשר פשוט לכתוב לי את הפרטים - שם המלון, התאריכים והעיר - ואטפל בזה בדיוק אותו דבר.';
 
 /** אותו מצב, למנוי פרימיום - בלי הצעת שדרוג, ועם היחידה הנכונה (חודש) */
 const PREMIUM_IMAGE_QUOTA_MESSAGE =

@@ -8845,3 +8845,92 @@ editor (premium enforcement and the new source bucketing don't take effect
 without it), and decide whether premium subscription checkout should actually
 move to PayPal or wait for Stripe - the copy now says PayPal, the code still
 calls Stripe, and that gap is deliberate rather than silent.
+
+### 2026-08-13 (b) - The dollar cap goes invisible, and the visible numbers must fit under it
+
+Netanel, on the previous entry: the $2 cap is right but must never be shown -
+"'$2 of planning' means nothing to anyone." Users see only counts (trips,
+messages); the dollar figure stays as the internal backstop; and the binding
+order **inverts**: the visible allowance must run out before the money cap in
+every realistic path, because "if someone is cut off by the dollar cap while
+the page told them they had trips remaining, that's a broken promise and a
+refund."
+
+**The one dollar leak was mine, from the previous entry.** `PLAN_FEATURE_ROWS`
+showed "עד $2.00 בחודש" on the pricing card - removed. Grep of every
+user-facing surface found no other dollar display; a test now locks that
+(`plans.test.ts` scans every feature row and both block messages for `$`).
+
+**The visible numbers, and the arithmetic that produced them.** The previous
+entry's premium quotas (150 chats/month) were sized as a soft ceiling with the
+dollar cap expected to bind first - exactly the order Netanel now forbids. At
+worst-realistic prices, 150 chats alone is ~$9.5, nearly 5x the cap. The new
+numbers are derived backwards from $2.00 with margin:
+
+| visible allowance (monthly)     | worst price | cost    |
+|---------------------------------|-------------|---------|
+| 2 full agent trip builds        | $0.53       | $1.06   |
+| 10 agent chats (builds inside)  | $0.063 × 8  | $0.504  |
+| 5 wizard quick builds (Haiku)   | $0.02       | $0.10   |
+| 5 live lookups                  | $0.01       | $0.05   |
+| 5 image attachments (in chats)  | +$0.01      | $0.05   |
+| **total, everything maxed**     |             | **$1.76** |
+
+88% of the cap; the test asserts ≤90% and fails any future quota bump that
+breaks the arithmetic. In *typical* pricing (warm cache, light routing) the
+same full consumption is ~$0.6-0.9. The only realistic path to the cap is
+deliberate tool-loop abuse, per-turn bounded by MAX_TURN_USD ($1.50) - which
+is precisely the case the cap exists for. Zero-AI-cost quotas (imports 30,
+shares 60, explores/geocodes 150/200) stay generous; they're not in the
+arithmetic because they cost nothing.
+
+**Netanel's illustrative "5 טיולים מלאים בחודש" does not fit**: 5 × $0.53 =
+$2.65 on builds alone, over the cap before a single message. Displaying 5
+trips honestly needs a cap around $3.50-4.00. He said keep the cap exactly
+as it is, so the numbers are what $2.00 affords - flagged in the summary
+rather than quietly fudged.
+
+**A new gate: full builds are counted separately from chats.** A build turn
+costs ~8x an edit turn, so "10 chats" without a build limit would allow 10
+builds = $5.30. `create_trip_full` for premium callers is capped at
+`PREMIUM_TRIP_BUILDS_PER_MONTH = 2` inside the tool-dispatch in
+`chat/route.ts`. The mechanics matter: the gate checks with a new
+**`peekUsed`** (read-only, `limits.ts`) and consumes via `checkLimit` only
+after the build *succeeded* - otherwise a build attempt that failed
+validation (model retries in the same turn) would burn one of the two
+monthly builds on nothing. The blocked-tool message tells the model to
+explain the monthly build allowance conversationally, with no money numbers.
+
+**Honest-copy sweep, because the new numbers falsified old promises.** The
+premium page h1 said "תכננו בלי מכסות" (premium now has *tighter* counts
+than free, monthly instead of daily); the free-tier quota message and image
+quota message both promised premium has "a much bigger quota" - no longer
+true, and a user who upgraded on that promise would have a refund case. All
+rewritten around what premium actually is: a guaranteed personal lane
+(never blocked by the shared daily pool), a monthly package sized for one-two
+real trips, and pre-departure checks included. The `/account` blurb still
+said "מכסות מוגדלות פי 10" - same fix. The comparison card gained a
+"זמינות הסוכן" row making the guarantee explicit, since it - not quota
+size - is now the honest headline.
+
+**Admin sees the real money, everywhere it matters.** `/api/admin/spend`
+gains a `premium` block from new `premiumSpendOverview()` (`budget.ts`):
+month total, subscriber count, per-subscriber list with emails (fetched only
+for displayed rows, same rule as `/api/admin/trips`), and `stored: false`
+distinct from zero when `supabase-premium-budget.sql` hasn't run.
+`/api/admin/user` returns `premiumUsdMonth`/`premiumCapUsd` for premium
+accounts; both render in AdminClient.
+
+**A self-inflicted bug caught by counting, worth its place in this file's
+pattern-list.** The new guard tests were written into `src/lib/plans.test.ts`
+with Write - **which silently clobbered an existing file of the same name**
+holding 10 tests (effectivePlan expiry, role ranking, isRole). The tell was
+the suite total: 566 before, 562 after, when 6 tests had been *added*. The
+diff of test names between stash and working tree named the missing ten;
+the file was recovered from HEAD and merged. The lesson is the standing one:
+a surprising number is a harness/process suspect first - and Write to a path
+you haven't Read is how files die quietly.
+
+**Verified:** 572/572 tests (16 vs HEAD: 6 new, 10 recovered), tsc clean,
+build clean, lint at the pre-existing baseline (the two remaining hits
+reproduce on unmodified HEAD). Pushed to main.

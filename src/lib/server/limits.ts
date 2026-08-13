@@ -60,6 +60,21 @@ export function checkLimit(bucket: string, id: string, max: number, windowMs: nu
   };
 }
 
+/**
+ * קריאה בלבד: כמה כבר נספר בחלון הפעיל, בלי לצרוך.
+ *
+ * קיים עבור מכסים שנספרים לפי **הצלחה** ולא לפי ניסיון - מכסת בניית
+ * הטיולים המלאים של פרימיום. שם `checkLimit` הרגיל היה שורף אחת
+ * מהבניות המותרות על כל ניסיון שנכשל בוולידציה, והמודל שמנסה שוב
+ * באותו תור היה מבזבז את המכסה בלי שנבנה כלום. הדפוס: `peekUsed`
+ * לפני הביצוע (חסימה בלי צריכה), `checkLimit` אחרי הצלחה (צריכה).
+ */
+export function peekUsed(bucket: string, id: string): number {
+  const e = windows.get(`${bucket}|${id}`);
+  if (!e || e.resetAt <= Date.now()) return 0;
+  return e.count;
+}
+
 /** מפתח יום בזמן UTC - עקבי בין instances באזורים שונים */
 export const dayKey = (d = new Date()) => d.toISOString().slice(0, 10);
 

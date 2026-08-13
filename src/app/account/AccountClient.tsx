@@ -472,7 +472,7 @@ function SettingsCard({ onDeletedAll }: { onDeletedAll: () => void }) {
           <p className="text-sm font-bold text-night">התוכנית שלי</p>
           <p className="text-xs text-night/50">
             {profile.plan === 'premium'
-              ? 'טיול+ פרימיום - מכסות מוגדלות פי 10'
+              ? 'טיול+ פרימיום - מסלול אישי מובטח ובדיקה לפני הנסיעה כלולה'
               : 'תוכנית חינם - מספיקה לטיול מלא ועשרות עריכות ביום'}
           </p>
         </div>

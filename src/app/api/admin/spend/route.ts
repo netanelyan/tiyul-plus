@@ -1,11 +1,12 @@
 import { requireRole, denied, ok } from '@/lib/server/admin';
-import { adminSelect } from '@/lib/server/supabaseAdmin';
+import { adminSelect, emailByUserId } from '@/lib/server/supabaseAdmin';
 import { gte, pgLimit, pgOrder, pgQuery, pgSelect } from '@/lib/server/pgrest';
 import {
   ALERT_AT,
   CALLER_CAP_USD,
   anonShare,
   budgetOverview,
+  premiumSpendOverview,
 } from '@/lib/server/budget';
 import { MODEL_PRICES } from '@/lib/server/aiCost';
 
@@ -73,6 +74,17 @@ export async function GET(req: Request) {
   const todayRows = rows.filter((r) => r.day === today);
   const byDay = group(rows, (r) => r.day).sort((a, b) => a.key.localeCompare(b.key));
 
+  /*
+    הכסף האמיתי של המנויים - **כאן ורק כאן, לנתנאל**. שום משטח משתמש
+    לא רואה דולרים; המנוי רואה ספירות (טיולים, שיחות). המייל נשלף רק
+    לשורות שמוצגות בפועל, לא לכל מי שנסרק - אותו כלל כמו ב-/api/admin/trips.
+  */
+  const premium = await premiumSpendOverview(10);
+  const premiumTop = [];
+  for (const t of premium.top) {
+    premiumTop.push({ ...t, email: await emailByUserId(t.userId) });
+  }
+
   const trips = group(todayRows, (r) => r.trip_id);
   const allTrips = group(rows, (r) => r.trip_id);
   // חציון ולא ממוצע: טיול חריג אחד מזיז ממוצע, והשאלה כאן היא מה
@@ -125,6 +137,8 @@ export async function GET(req: Request) {
     topTrips: allTrips.slice(0, 10).map((t) => ({ usd: t.usd, requests: t.requests })),
     models: group(rows, (r) => r.model).map((m) => ({ model: m.key, usd: m.usd, requests: m.requests })),
     prices: MODEL_PRICES,
+    /** הארנק הנפרד של המנויים: סה"כ החודש + פירוט לפי מנוי */
+    premium: { ...premium, top: premiumTop },
     /** בלי הטבלאות אין היסטוריה - נאמר במפורש ולא מוצג כאפס */
     stored: rows.length > 0 || null,
   });

@@ -22,6 +22,7 @@ import {
   measuredCost,
   monthKey,
   premiumBudgetFor,
+  premiumSpendOverview,
   recordSpend,
   resetBudgetForTest,
   sendTestAlert,
@@ -515,6 +516,43 @@ test('periodMsFor: יממה לאנונימי/חינם, 30 יום לפרימיו�
   assert.equal(periodMsFor('anon'), DAY_MS);
   assert.equal(periodMsFor('free'), DAY_MS);
   assert.equal(periodMsFor('premium'), 30 * DAY_MS);
+});
+
+test('premiumSpendOverview: סכום, פירוט לפי מנוי, ו"לא נאסף" כשאין התמדה', async () => {
+  resetBudgetForTest();
+
+  // בלי SUPABASE - מדווח stored:false, לא אפס שנראה כמו מדידה אמיתית
+  const off = await premiumSpendOverview();
+  assert.equal(off.stored, false);
+  assert.equal(off.totalUsd, 0);
+
+  // עם התמדה - קורא את שורות החודש וממיין מהיקר לזול
+  process.env.SUPABASE_URL = 'https://example.supabase.co';
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'sb_secret_test';
+  try {
+    globalThis.fetch = (async (input: string | URL | Request) => {
+      const url = String(input);
+      assert.ok(url.includes('subscriber_spend_monthly'), url);
+      assert.ok(url.includes(`month=eq.${monthKey()}`), 'מסונן לחודש הנוכחי');
+      return new Response(
+        JSON.stringify([
+          { user_id: 'u-heavy', usd: '1.4', requests: 20 },
+          { user_id: 'u-light', usd: 0.2, requests: 3 },
+        ]),
+        { status: 200 },
+      );
+    }) as typeof fetch;
+
+    const on = await premiumSpendOverview();
+    assert.equal(on.stored, true);
+    assert.equal(on.subscribers, 2);
+    assert.ok(Math.abs(on.totalUsd - 1.6) < 1e-9, String(on.totalUsd));
+    assert.equal(on.top[0].userId, 'u-heavy');
+    assert.equal(on.capUsd, SUBSCRIBER_MONTHLY_CAP_USD);
+  } finally {
+    delete process.env.SUPABASE_URL;
+    delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+  }
 });
 
 test('maybeAlertPremium: מתריעה פעם אחת מעל הסף, לא לפני', async () => {

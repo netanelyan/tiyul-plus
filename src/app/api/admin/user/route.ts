@@ -2,6 +2,7 @@ import { effectivePlan, isRole } from '@/lib/plans';
 import { eq, pgLimit, pgQuery, pgSelect } from '@/lib/server/pgrest';
 import { requireRole, denied, badRequest, ok, audit } from '@/lib/server/admin';
 import { adminSelect, userByEmail } from '@/lib/server/supabaseAdmin';
+import { premiumBudgetFor } from '@/lib/server/budget';
 
 /**
  * חיפוש מטייל לפי מייל, לצורכי תמיכה.
@@ -59,13 +60,18 @@ export async function POST(req: Request) {
 
   await audit(actor, 'lookup_user', { userId: user.id, email: user.email });
 
+  const plan = effectivePlan(p ?? null);
+  // הכסף האמיתי של המנוי החודש - לאדמין בלבד. למשתמש עצמו זה לעולם
+  // לא מוצג בדולרים, רק בספירות (ראו plans.ts).
+  const premiumSpend = plan === 'premium' ? await premiumBudgetFor(user.id) : null;
+
   return ok({
     found: true,
     email: user.email,
     userId: user.id,
     displayName: p?.display_name ?? null,
     role: isRole(p?.role) ? p!.role : 'user',
-    plan: effectivePlan(p ?? null),
+    plan,
     planStored: p?.plan ?? 'free',
     planUntil: p?.plan_until ?? null,
     planSource: p?.plan_source ?? null,
@@ -75,5 +81,7 @@ export async function POST(req: Request) {
     // ספירה מדויקת - נאמר את זה במפורש ולא מוצג כאילו זה הכול.
     tripsCapped: (trips?.length ?? 0) >= TRIPS_CAP,
     unitsToday: usage?.[0]?.units ?? 0,
+    premiumUsdMonth: premiumSpend?.spent ?? null,
+    premiumCapUsd: premiumSpend?.budget ?? null,
   });
 }

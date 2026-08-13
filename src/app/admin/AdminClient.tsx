@@ -32,6 +32,9 @@ interface UserInfo {
   trips?: number;
   tripsCapped?: boolean;
   unitsToday?: number;
+  /** הכסף האמיתי של המנוי החודש - לאדמין בלבד, null למי שאינו פרימיום */
+  premiumUsdMonth?: number | null;
+  premiumCapUsd?: number | null;
 }
 
 interface Stats {
@@ -353,6 +356,15 @@ function UserCard({
               <dt className="text-night/40">יחידות AI היום</dt>
               <dd className="font-bold text-night/75">{(info.unitsToday ?? 0).toLocaleString('he-IL')}</dd>
             </div>
+            {typeof info.premiumUsdMonth === 'number' && (
+              <div>
+                <dt className="text-night/40">עלות AI החודש (מנוי)</dt>
+                <dd className="font-bold text-night/75" dir="ltr">
+                  ${info.premiumUsdMonth.toFixed(2)}
+                  {typeof info.premiumCapUsd === 'number' && ` / $${info.premiumCapUsd.toFixed(2)}`}
+                </dd>
+              </div>
+            )}
           </dl>
 
           <div className="flex flex-wrap items-end gap-2 border-t border-night/10 pt-3">
@@ -745,6 +757,16 @@ interface Spend {
   topUsers: { kind: string; usd: number; requests: number }[];
   topTrips: { usd: number; requests: number }[];
   models: { model: string; usd: number; requests: number }[];
+  /** הארנק הנפרד של מנויי הפרימיום - הכסף האמיתי, לאדמין בלבד */
+  premium: {
+    month: string;
+    totalUsd: number;
+    subscribers: number;
+    capUsd: number;
+    top: { userId: string; usd: number; requests: number; email: string | null }[];
+    truncated: boolean;
+    stored: boolean;
+  };
   stored: boolean | null;
 }
 
@@ -1065,6 +1087,39 @@ function SpendCard({
             ))}
           </ul>
         </div>
+      </div>
+
+      {/* ---------- הארנק של המנויים: הכסף האמיתי, כאן בלבד ---------- */}
+      <div className="mt-4 rounded-xl bg-cream p-3">
+        <div className="flex flex-wrap items-baseline gap-2">
+          <span className="text-xs font-bold text-night/55">מנויי פרימיום החודש ({d.premium.month})</span>
+          {d.premium.stored ? (
+            <span className="text-sm font-black text-night" dir="ltr">
+              {money(d.premium.totalUsd)}
+            </span>
+          ) : (
+            <span className="text-[11px] font-semibold text-night/40">
+              לא נאסף - צריך להריץ את supabase-premium-budget.sql
+            </span>
+          )}
+          {d.premium.stored && (
+            <span className="text-[11px] font-semibold text-night/40">
+              {d.premium.subscribers} מנויים פעילים · תקרה אישית {money(d.premium.capUsd)} לחודש
+              {d.premium.truncated && ' · הגענו לתקרת השורות, הסכום חלקי'}
+            </span>
+          )}
+        </div>
+        {d.premium.top.length > 0 && (
+          <ul className="mt-2 space-y-1">
+            {d.premium.top.map((t) => (
+              <li key={t.userId} className="flex items-center gap-2 text-xs font-semibold text-night/70">
+                <span className="truncate">{t.email ?? t.userId.slice(0, 8)}</span>
+                <span dir="ltr" className="ms-auto">{money(t.usd)}</span>
+                <span className="text-night/40">{t.requests} קריאות</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       {d.stored === null && (

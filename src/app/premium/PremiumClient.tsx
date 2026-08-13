@@ -55,10 +55,11 @@ export default function PremiumClient() {
     <div className="rise-in mx-auto max-w-3xl">
       <div className="text-center">
         <p className="text-xs font-bold text-sunset-deep">טיול+ פרימיום</p>
-        <h1 className="display mt-1 text-3xl text-night sm:text-4xl">מתכננים בגדול? תכננו בלי מכסות</h1>
+        <h1 className="display mt-1 text-3xl text-night sm:text-4xl">הסוכן החכם, במסלול אישי מובטח</h1>
         <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-night/60">
-          התוכנית החינמית מספיקה לטיול מלא ועשרות עריכות ביום. פרימיום נועד למי שמתכנן הרבה -
-          משפחות שמתכננות כמה טיולים, מדריכים, וחובבי &quot;עוד שינוי אחד קטן&quot;.
+          התוכנית החינמית מספיקה לתכנון טיול אמיתי - אבל היא משותפת, ותלויה בזמינות היומית של
+          האתר. פרימיום נותן מסלול אישי שלא תלוי באף אחד אחר, חבילה חודשית לטיול-שניים מלאים,
+          ובדיקה לפני הנסיעה כלולה לכל טיול.
         </p>
       </div>
 
