@@ -1,11 +1,19 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { authHeader } from '@/lib/auth/client';
 import type { Role } from '@/lib/plans';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 import { daysHe } from '@/lib/duration';
+import { markInternalBrowser } from '@/lib/events';
+import {
+  GROWTH_METRICS,
+  computeGrowth,
+  growthEverCounted,
+  type EventRow,
+  type GrowthRange,
+} from '@/lib/growthMath';
 
 /**
  * אזור הניהול, עברית RTL כמו כל האתר.
@@ -103,6 +111,12 @@ export default function AdminClient() {
         setMe(null);
         return;
       }
+      /*
+        אדמין מאומת = דפדפן פנימי. מכאן והלאה שום אירוע (טיולים,
+        שיתופים, ביקורים) מהדפדפן הזה לא נספר במוני הצמיחה - "טיול
+        שאני יוצר תוך בדיקה אסור שינפח את המספרים". ראו lib/events.ts.
+      */
+      if (ok) markInternalBrowser();
       setMe(ok ? (data as Me) : null);
     })();
     return () => {
@@ -189,6 +203,7 @@ export default function AdminClient() {
         על "מה קורה באתר", והחיפוש הוא כלי שנכנסים אליו בכוונה.
       */}
       <OverviewCard api={api} />
+      <GrowthCard api={api} />
       <TripLookupCard api={api} />
       <UserCard api={api} role={me.role} />
       <SpendCard api={api} />
@@ -1273,6 +1288,153 @@ function PurchasesCard({
             ))}
           </ul>
         </div>
+      )}
+    </section>
+  );
+}
+
+/* ============================================================
+   מדדי הצמיחה - חמשת המספרים של נתנאל + המרת השיתופים
+   ============================================================ */
+
+interface GrowthData {
+  stored: boolean;
+  rows: EventRow[];
+  truncated: boolean;
+  today: string;
+}
+
+const GROWTH_RANGES: { value: GrowthRange; label: string }[] = [
+  { value: 7, label: '7 ימים' },
+  { value: 30, label: '30 יום' },
+  { value: 'all', label: 'הכול' },
+];
+
+/**
+ * שישה מספרים, טווח נבחר, ומגמה מול הטווח המקביל הקודם - בלי גרפים.
+ *
+ * הנתיב מחזיר את כל השורות פעם אחת; החלפת טווח היא חישוב מקומי
+ * (`computeGrowth`, נבדק ביחידה). שלושת המצבים הכנים:
+ *  - `stored: false` → "לא נאסף" - הטבלה לא נקראת. לא אפס.
+ *  - נקרא אבל אף אירוע-צמיחה לא נספר אי-פעם → כנראה שהרשימה הסגורה
+ *    של bump_event ישנה (הקובץ לא הורץ מחדש) - נאמר במפורש.
+ *  - מספרים אמיתיים, כולל אפס אמיתי של שבוע שקט.
+ */
+function GrowthCard({
+  api,
+}: {
+  api: (p: string, i?: RequestInit) => Promise<{ ok: boolean; status: number; data: unknown }>;
+}) {
+  const [d, setD] = useState<GrowthData | null>(null);
+  const [range, setRange] = useState<GrowthRange>(7);
+
+  useEffect(() => {
+    void (async () => {
+      const { ok, data } = await api('/api/admin/growth');
+      if (ok) setD(data as GrowthData);
+      else setD({ stored: false, rows: [], truncated: false, today: '' });
+    })();
+  }, [api]);
+
+  const values = useMemo(
+    () => (d?.stored ? computeGrowth(d.rows, d.today, range) : null),
+    [d, range],
+  );
+
+  if (!d) return null;
+
+  const everCounted = d.stored && growthEverCounted(d.rows);
+
+  /** מגמה מול הטווח הקודם: חץ + הפרש. ב"הכול" אין קודם - אין מגמה. */
+  const trend = (current: number, previous: number | null) => {
+    if (previous === null) return <span className="text-[11px] font-semibold text-night/35">—</span>;
+    const delta = current - previous;
+    if (delta > 0)
+      return (
+        <span className="text-[11px] font-bold text-lagoon" dir="ltr">
+          ▲ +{delta}
+        </span>
+      );
+    if (delta < 0)
+      return (
+        <span className="text-[11px] font-bold text-sunset-deep" dir="ltr">
+          ▼ {delta}
+        </span>
+      );
+    return <span className="text-[11px] font-semibold text-night/40" dir="ltr">=</span>;
+  };
+
+  return (
+    <section className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-lg font-bold text-night">📈 צמיחה</h2>
+        <div className="flex gap-1.5">
+          {GROWTH_RANGES.map((r) => (
+            <button
+              key={String(r.value)}
+              onClick={() => setRange(r.value)}
+              className={`rounded-full px-3 py-1 text-xs font-bold transition ${
+                range === r.value
+                  ? 'bg-night text-cream'
+                  : 'bg-night/[0.06] text-night/60 hover:bg-night/10'
+              }`}
+            >
+              {r.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {!d.stored ? (
+        /* הכלל: מונה שלא נקרא מציג "לא נאסף", לא אפס - שבוע שקט ומונה
+           שבור אסור שייראו זהים */
+        <p className="mt-3 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold text-night/55">
+          לא נאסף - אין קריאה לטבלת האירועים (app_events). אם ה-SQL כבר רץ, לבדוק את
+          SUPABASE_SERVICE_ROLE_KEY.
+        </p>
+      ) : (
+        <>
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+            {GROWTH_METRICS.map((m) => {
+              const v = values![m.key];
+              const isAdopt = m.key === 'adopts';
+              const opens = values!.opens.current;
+              return (
+                <div key={m.key} className="rounded-xl bg-cream p-3">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-lg font-black text-night" dir="ltr">
+                      {v.current}
+                    </span>
+                    {trend(v.current, v.previous)}
+                  </div>
+                  <div className="text-[11px] font-semibold leading-snug text-night/50">
+                    {m.label}
+                    {isAdopt && opens > 0 && (
+                      <span className="text-night/40">
+                        {' '}
+                        · {Math.round((v.current / opens) * 100)}% מהפתיחות
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <p className="mt-2 text-[11px] font-medium text-night/40">
+            המגמה משווה לטווח המקביל הקודם (7 הימים שלפני 7 האחרונים, וכן הלאה).
+            &quot;ביקורים חוזרים&quot; = דפדפן שכבר ביקר ביום קודם, נספר פעם אחת ליום.
+            {d.truncated && ' · הגענו לתקרת השורות - המספרים חלקיים.'}
+          </p>
+
+          {!everCounted && (
+            <p className="mt-2 rounded-xl bg-zest/15 px-3 py-2 text-xs font-semibold text-night/70">
+              אף אירוע-צמיחה עוד לא נספר. אם האתר בשימוש וזה נשאר אפס - כנראה שהרשימה
+              הסגורה של bump_event ישנה: להריץ מחדש את supabase-admin-dash.sql
+              (supabase-check.sql יגיד בוודאות).
+            </p>
+          )}
+        </>
       )}
     </section>
   );

@@ -5,6 +5,7 @@ import SiteFooter from '@/components/SiteFooter';
 import { TripProvider } from '@/lib/trip/TripContext';
 import { AuthProvider } from '@/lib/auth/AuthContext';
 import AccountSync from '@/components/AccountSync';
+import VisitPing from '@/components/VisitPing';
 import OfflineNotice from '@/components/OfflineNotice';
 import SiteNav from '@/components/SiteNav';
 import { cityNames } from '@/lib/server/cityNames';
@@ -108,6 +109,7 @@ export default function RootLayout({
         <AuthProvider>
         <TripProvider>
         <AccountSync />
+        <VisitPing />
         <header className="sticky top-0 z-50 border-b border-night/10 bg-cream/85 backdrop-blur print:hidden">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
             <Link href="/" className="flex items-center gap-2 text-xl font-bold text-night">

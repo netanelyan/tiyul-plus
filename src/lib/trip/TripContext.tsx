@@ -11,6 +11,7 @@ import {
 import type { Trip, TripDay } from './types';
 import { newId } from './types';
 import { loadTrips, saveTrips } from './storage';
+import { trackTripCreated } from '@/lib/events';
 
 export interface TripApi {
   trips: Trip[];
@@ -78,6 +79,21 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   // על ה-updater של React (אותה מלכודת שתוקנה כבר ב-AuthContext)
   const tripsRef = useRef<Trip[]>(trips);
   tripsRef.current = trips;
+  /**
+   * מזהי הטיולים שכבר מוכרים לדפדפן הזה - הבסיס למונה "טיולים שנוצרו".
+   *
+   * מונה, לא state: הבדיקה חייבת להיות סינכרונית ומחוץ ל-updater של
+   * React (updater חייב להיות טהור, ו-StrictMode מריץ אותו פעמיים).
+   * הכלל: מוטציה מקומית שמוסיפה id לא-מוכר נספרת פעם אחת; מה שמגיע
+   * מהשרת (applyRemoteTrips) או מה-hydration נכנס לסט **בלי** להיספר -
+   * שחזור אינו יצירה.
+   */
+  const knownIdsRef = useRef<Set<string>>(new Set());
+  const noteCreated = useCallback((id: string) => {
+    if (knownIdsRef.current.has(id)) return;
+    knownIdsRef.current.add(id);
+    trackTripCreated();
+  }, []);
   /** ה-accountId העדכני סינכרונית - ראו `switchAccount` */
   const accountRef = useRef<string | null>(null);
 
@@ -89,6 +105,8 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     setDeleted(state.deleted ?? {});
     setAccountId(state.accountId ?? null);
     accountRef.current = state.accountId ?? null;
+    // טיולים שכבר באחסון אינם "נוצרו עכשיו" - נכנסים לסט בלי להיספר
+    for (const t of state.trips) knownIdsRef.current.add(t.id);
     loaded.current = true;
     setHydrated(true);
   }, []);
@@ -157,9 +175,10 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       };
       setTrips((prev) => [...prev, trip]);
       setCurrentId(trip.id);
+      noteCreated(trip.id);
       return trip;
     },
-    [],
+    [noteCreated],
   );
 
   /** הוספה/עדכון מקומיים מפורשים מבטלים מצבה קיימת - מי שיצר מנצח מחיקה ישנה */
@@ -178,8 +197,9 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       setTrips((prev) => [...prev, stamped]);
       setCurrentId(stamped.id);
       clearTombstone(stamped.id);
+      noteCreated(stamped.id);
     },
-    [clearTombstone],
+    [clearTombstone, noteCreated],
   );
 
   const upsertTrip = useCallback(
@@ -192,14 +212,23 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       );
       setCurrentId(stamped.id);
       clearTombstone(stamped.id);
+      // נספר רק כשה-id חדש - הסוכן קורא לזה שוב ושוב תוך כדי בנייה
+      // עם אותו טיול, וה-Set הוא מה שהופך את זה לאירוע אחד
+      noteCreated(stamped.id);
     },
-    [clearTombstone],
+    [clearTombstone, noteCreated],
   );
 
-  const duplicateTrip = useCallback((id: string) => {
-    setTrips((prev) => {
-      const src = prev.find((t) => t.id === id);
-      if (!src) return prev;
+  /*
+    ה-id של העותק נוצר **מחוץ** ל-updater: ה-updater חייב להיות טהור
+    (StrictMode מריץ אותו פעמיים), ו-noteCreated הוא תופעת לוואי.
+    tripsRef נותן את הרשימה העדכנית סינכרונית - אותו דפוס כמו
+    switchAccount שמעליו.
+  */
+  const duplicateTrip = useCallback(
+    (id: string) => {
+      const src = tripsRef.current.find((t) => t.id === id);
+      if (!src) return;
       const copy: Trip = {
         ...src,
         id: newId(),
@@ -209,10 +238,12 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
         createdAt: Date.now(),
         updatedAt: Date.now(),
       };
+      setTrips((prev) => [...prev, copy]);
       setCurrentId(copy.id);
-      return [...prev, copy];
-    });
-  }, []);
+      noteCreated(copy.id);
+    },
+    [noteCreated],
+  );
 
   const deleteTrip = useCallback((id: string) => {
     setTrips((prev) => prev.filter((t) => t.id !== id));
@@ -238,6 +269,9 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
    */
   const applyRemoteTrips = useCallback((incoming: Trip[]) => {
     if (incoming.length === 0) return;
+    // שחזור מהשרת אינו יצירה - המזהים נכנסים לסט המוכרים בלי להיספר,
+    // כדי שעריכה עתידית שלהם (upsertTrip) לא תיספר כ"טיול נוצר"
+    for (const t of incoming) knownIdsRef.current.add(t.id);
     setTrips((prev) => {
       const byId = new Map(prev.map((t) => [t.id, t]));
       for (const t of incoming) byId.set(t.id, t);

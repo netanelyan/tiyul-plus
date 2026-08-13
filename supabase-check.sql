@@ -60,6 +60,10 @@ with expected(file, kind, obj) as (
     -- supabase-admin-dash.sql (owner dashboard: export counter + indexes)
     ('supabase-admin-dash.sql','table',  'public.app_events'),
     ('supabase-admin-dash.sql','func',   'public.bump_event'),
+    -- הפונקציה קיימת זה לא מספיק: הרשימה הסגורה בגוף שלה התרחבה
+    -- (אירועי הצמיחה, 2026-08-13). גרסה ישנה בולעת אותם בשקט - אפסים
+    -- שנראים כמו שבוע שקט. fnbody בודק שהגוף מכיל את הסוג החדש.
+    ('supabase-admin-dash.sql','fnbody', 'public.bump_event:trip_created'),
 
     -- supabase-newsletter.sql (mailing list signups)
     ('supabase-newsletter.sql','table',  'public.newsletter_signups'),
@@ -86,6 +90,15 @@ checked as (
       when 'view'   then to_regclass(e.obj) is not null
       -- אינדקס הוא relation בדיוק כמו טבלה - אותה בדיקה עובדת
       when 'index'  then to_regclass(e.obj) is not null
+      -- 'schema.func:needle' - הפונקציה קיימת *וגם* גוף הקוד שלה מכיל
+      -- את המחרוזת. ככה מזהים פונקציה שרצה בגרסה ישנה של הקובץ.
+      when 'fnbody' then exists (
+        select 1 from pg_proc p
+        join pg_namespace n on n.oid = p.pronamespace
+        where n.nspname = split_part(e.obj, '.', 1)
+          and p.proname = split_part(split_part(e.obj, '.', 2), ':', 1)
+          and p.prosrc like '%' || split_part(e.obj, ':', 2) || '%'
+      )
       when 'func'   then exists (
         select 1 from pg_proc p
         join pg_namespace n on n.oid = p.pronamespace

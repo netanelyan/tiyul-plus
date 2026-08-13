@@ -83,20 +83,31 @@ export async function adminUpdate<T>(
   }
 }
 
-/** INSERT (עם upsert אופציונלי לפי מפתח ראשי) */
+/**
+ * INSERT (עם upsert אופציונלי לפי מפתח ראשי).
+ *
+ * `ignoreDuplicates` הוא הצורה השנייה של upsert: כפילות לא נכתבת
+ * **וגם לא מוחזרת** - מערך ריק פירושו "הכול היה כפול". זה מה שמאפשר
+ * לנתיב הניוזלטר לספור רק כתובות חדשות באמת בלי לשנות את התשובה
+ * ללקוח (שנשארת זהה לחדש ולכפול, בכוונה - שהטופס לא יהפוך לבודק
+ * "האם הכתובת הזאת רשומה"). הבדל תוכן אחד מ-merge: כפילות לא נוגעת
+ * בשורה הקיימת - חתימת המקור והתאריך המקוריים נשמרים.
+ */
 export async function adminInsert<T>(
   table: string,
   rows: Record<string, unknown> | Record<string, unknown>[],
-  opts: { upsert?: boolean } = {},
+  opts: { upsert?: boolean; ignoreDuplicates?: boolean } = {},
 ): Promise<T[] | null> {
   if (!adminDbEnabled()) return null;
   try {
     const res = await fetch(`${url()}/rest/v1/${pgIdent(table)}`, {
       method: 'POST',
       headers: headers({
-        Prefer: opts.upsert
-          ? 'resolution=merge-duplicates,return=representation'
-          : 'return=representation',
+        Prefer: opts.ignoreDuplicates
+          ? 'resolution=ignore-duplicates,return=representation'
+          : opts.upsert
+            ? 'resolution=merge-duplicates,return=representation'
+            : 'return=representation',
       }),
       body: JSON.stringify(rows),
     });

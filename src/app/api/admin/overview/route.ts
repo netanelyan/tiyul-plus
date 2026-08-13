@@ -53,8 +53,16 @@ export async function GET(req: Request) {
     sharesPerDay.set(d, (sharesPerDay.get(d) ?? 0) + 1);
   }
 
+  /*
+    רק סוגי הייצוא. app_events נושאת מאז 2026-08-13 גם את אירועי
+    הצמיחה (trip_created, return_visit...) - להם יש כרטיס משלהם
+    (/api/admin/growth), ובלי הסינון הזה הם היו מופיעים כאן בתוך
+    "ייצואים" כאילו מישהו הדפיס טיול.
+  */
+  const EXPORT_KINDS = new Set(['print', 'pdf', 'whatsapp', 'share', 'maps']);
   const exportsByKind = new Map<string, number>();
   for (const e of events ?? []) {
+    if (!EXPORT_KINDS.has(e.kind)) continue;
     exportsByKind.set(e.kind, (exportsByKind.get(e.kind) ?? 0) + e.count);
   }
 

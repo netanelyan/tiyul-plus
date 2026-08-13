@@ -15,7 +15,7 @@ import { dayDate, formatHebrewDate, formatHebrewRange } from '@/lib/trip/dates';
 import TripDates from '@/components/TripDates';
 import { encodeTripShare } from '@/lib/trip/share';
 import { travelModeFor } from '@/lib/trip/mapsExport';
-import { trackEvent } from '@/lib/events';
+import { rememberOwnShare, trackEvent } from '@/lib/events';
 import PlacesMap from '@/components/PlacesMap';
 import type { MapGroup, MapPin } from '@/components/MapInner';
 import BookingPanel from '@/components/BookingPanel';
@@ -299,7 +299,11 @@ export default function TripWorkspace({
     if (!t) return '';
     const sig = JSON.stringify([t.name, t.days.map((d) => [d.citySlug, d.placeIds, d.notes ?? ''])]);
     if (shareUrlCache.current?.sig === sig) return shareUrlCache.current.url;
-    let url = `${window.location.origin}/t/${encodeTripShare(t)}`;
+    const longToken = encodeTripShare(t);
+    let url = `${window.location.origin}/t/${longToken}`;
+    // שני הטוקנים נרשמים כ"שלי": מונה "פתיחות של קישור משותף" לא אמור
+    // לספור את הבעלים שפותח את הקישור של עצמו - ראו lib/events.ts
+    rememberOwnShare(longToken);
     try {
       const res = await fetch('/api/share', {
         method: 'POST',
@@ -307,7 +311,10 @@ export default function TripWorkspace({
         body: JSON.stringify({ trip: t }),
       });
       const data = (await res.json()) as { code?: string | null };
-      if (data.code) url = `${window.location.origin}/t/${data.code}`;
+      if (data.code) {
+        url = `${window.location.origin}/t/${data.code}`;
+        rememberOwnShare(data.code);
+      }
     } catch {
       /* נשארים עם הקישור הארוך */
     }

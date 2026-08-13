@@ -17,9 +17,17 @@
 --  **אגרגטיבי בכוונה, ולא יומן התנהגות.** אין כאן user_id, אין
 --  trip_id ואין חותמת זמן מדויקת - רק "ביום הזה היו N הדפסות". זו
 --  התשובה לשאלה של נתנאל בלי ליצור מעקב אחרי אנשים.
+--
+--  2026-08-13: לרשימה נוספו אירועי הצמיחה של הדשבורד - טיול נוצר,
+--  שיתוף נפתח, המרת שיתוף, הרשמה לניוזלטר, ביקור חוזר. אותו עיקרון
+--  בדיוק: יום + סוג + מונה, שום זהות. **מי שכבר הריץ את הקובץ הזה
+--  צריך להריץ אותו שוב** - create or replace מחליף את הפונקציה עם
+--  הרשימה המורחבת; בלעדיה הסוגים החדשים נבלעים בשקט (הפונקציה מחזירה
+--  בלי לכתוב) והדשבורד יראה אפסים שנראים כמו שבוע שקט.
+--  supabase-check.sql יודע לזהות את המצב הזה ולומר להריץ מחדש.
 create table if not exists public.app_events (
   day   date not null,
-  kind  text not null,          -- print | pdf | whatsapp | share | maps
+  kind  text not null,          -- ראו הרשימה הסגורה בפונקציה למטה
   count integer not null default 0,
   primary key (day, kind)
 );
@@ -33,7 +41,10 @@ as $$
 begin
   -- רשימה סגורה בתוך הפונקציה: גם אם משהו יקרא לה עם ערך אחר, לא
   -- ייווצר מפתח חדש. הנתיב מאמת ממילא; זו השכבה השנייה.
-  if p_kind not in ('print', 'pdf', 'whatsapp', 'share', 'maps') then
+  if p_kind not in (
+    'print', 'pdf', 'whatsapp', 'share', 'maps',
+    'trip_created', 'shared_open', 'shared_adopt', 'newsletter', 'return_visit'
+  ) then
     return;
   end if;
   insert into public.app_events (day, kind, count)
