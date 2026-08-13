@@ -54,7 +54,7 @@ interface Stats {
 interface PurchaseInfo {
   id: string;
   status: 'pending' | 'paid' | 'failed' | 'revoked';
-  source: 'paypal' | 'admin_grant';
+  source: 'paypal' | 'admin_grant' | 'premium_included';
   amount: number;
   currency: string;
   mode: 'sandbox' | 'production';
@@ -1088,6 +1088,7 @@ interface PurchasesStats {
   stuckPending: { id: string; userId: string; tripId: string; createdAt: string; ageMinutes: number }[];
   failedCount: number;
   adminGrantCount: number;
+  premiumIncludedCount: number;
 }
 
 interface PurchasesOverview {
@@ -1099,7 +1100,7 @@ interface PurchasesOverview {
     amount: number;
     currency: string;
     status: 'pending' | 'paid' | 'failed' | 'revoked';
-    source: 'paypal' | 'admin_grant';
+    source: 'paypal' | 'admin_grant' | 'premium_included';
     mode: 'sandbox' | 'production';
     createdAt: string;
     paidAt: string | null;
@@ -1145,15 +1146,16 @@ function PurchasesCard({
     >
       <h2 className="text-lg font-bold text-night">🛫 בדיקה לפני הנסיעה</h2>
       <p className="mt-1 text-sm font-medium text-night/55">
-        המוצר הראשון בתשלום. הכנסה נספרת רק מרכישות אמיתיות דרך PayPal - הענקות ידניות לא נכללות.
+        הכנסה נספרת רק מרכישות אמיתיות דרך PayPal - הענקות ידניות והטבות מנוי פרימיום לא נכללות.
       </p>
 
-      <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+      <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
         {[
           { label: 'הכנסה (₪)', v: stats.revenueILS.toFixed(2) },
           { label: 'שולמו', v: String(stats.paidCount) },
           { label: 'ממתינות', v: String(stats.pendingCount) },
           { label: 'הענקות ידניות', v: String(stats.adminGrantCount) },
+          { label: 'כלולות בפרימיום', v: String(stats.premiumIncludedCount) },
         ].map((x) => (
           <div key={x.label} className="rounded-xl bg-cream p-3">
             <div className="text-lg font-black text-night" dir="ltr">
@@ -1204,6 +1206,7 @@ function PurchasesCard({
                 >
                   {PURCHASE_STATUS_LABEL[r.status] ?? r.status}
                   {r.source === 'admin_grant' ? ' · הענקה' : ''}
+                  {r.source === 'premium_included' ? ' · כלול בפרימיום' : ''}
                 </span>
                 {r.mode === 'sandbox' && (
                   <span className="rounded-full bg-sunset px-2 py-0.5 font-black text-cream">sandbox</span>
@@ -1732,6 +1735,7 @@ function TripLookupCard({
                 >
                   {PURCHASE_STATUS_LABEL[purchase.status] ?? purchase.status}
                   {purchase.source === 'admin_grant' ? ' · הענקה' : ''}
+                  {purchase.source === 'premium_included' ? ' · כלול בפרימיום' : ''}
                   {purchase.mode === 'sandbox' ? ' · sandbox' : ''}
                 </span>
               ) : (

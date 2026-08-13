@@ -90,6 +90,17 @@ test('הענקה ידנית: amount=0 ו-source=admin_grant, לעולם לא נ�
   assert.equal(body.granted_by, 'admin1');
 });
 
+test('בדיקה כלולה בפרימיום: amount=0 ו-source=premium_included, לא נספרת כתשלום ולא כהענקה', async () => {
+  const { grantPremiumIncluded } = await load();
+  respond = () => new Response(JSON.stringify([{ id: 'row-3' }]), { status: 201 });
+  await grantPremiumIncluded({ userId: 'u1', tripId: 't1', report: REPORT });
+  const body = JSON.parse(String(calls[0].init.body));
+  assert.equal(body.amount, 0);
+  assert.equal(body.source, 'premium_included');
+  assert.equal(body.status, 'paid');
+  assert.equal(body.granted_by, undefined, 'זו הטבת מנוי אוטומטית, לא הענקה של אדם - אין granted_by');
+});
+
 test('שלילה: מסננת status=paid בלבד, לא נוגעת ברכישות שלא שולמו', async () => {
   const { adminRevoke } = await load();
   respond = () => new Response('[]', { status: 200 });
@@ -110,12 +121,16 @@ test('סטטיסטיקה: הכנסה נספרת רק מ-paypal ששולם, לא 
     { id: '3', user_id: 'u', trip_id: 't', status: 'pending', source: 'paypal', amount: 29.9, created_at: old },
     { id: '4', user_id: 'u', trip_id: 't', status: 'pending', source: 'paypal', amount: 29.9, created_at: recent },
     { id: '5', user_id: 'u', trip_id: 't', status: 'failed', source: 'paypal', amount: 29.9, created_at: now.toISOString() },
+    { id: '6', user_id: 'u', trip_id: 't2', status: 'paid', source: 'premium_included', amount: 0, created_at: now.toISOString() },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ] as any[];
   const stats = computeStats(rows);
-  assert.equal(stats.revenueILS, 29.9);
-  assert.equal(stats.paidCount, 2);
+  assert.equal(stats.revenueILS, 29.9, 'הטבת פרימיום לא נחשבת הכנסה, בדיוק כמו הענקה ידנית');
+  assert.equal(stats.paidCount, 3);
   assert.equal(stats.adminGrantCount, 1);
+  // המונה החדש נספר בנפרד - לא נבלע בתוך adminGrantCount, כדי שהתמונה
+  // תבדיל בין תמיכה אנושית לבין הטבת מנוי אוטומטית
+  assert.equal(stats.premiumIncludedCount, 1);
   assert.equal(stats.pendingCount, 2);
   assert.equal(stats.failedCount, 1);
   assert.equal(stats.stuckPending.length, 1, 'רק ה-pending בת 20 הדקות אמורה להיחשב תקועה');

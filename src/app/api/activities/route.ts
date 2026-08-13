@@ -2,7 +2,6 @@ import { activitiesForCity } from '@/lib/server/viator';
 import { browserGetOk } from '@/lib/server/chatGuards';
 import { checkLimit } from '@/lib/server/limits';
 import { resolveCaller } from '@/lib/server/identity';
-import { PLAN_LIMITS } from '@/lib/plans';
 
 /**
  * פעילויות להזמנה בעיר של הטיול, בשאילתה חיה מול Viator.
@@ -37,12 +36,15 @@ export async function GET(req: Request) {
   if (!SLUG.test(city)) return empty('bad-city');
 
   const caller = await resolveCaller(req);
-  const limits = PLAN_LIMITS[caller.tier];
   /*
-    תקרה יומית נדיבה יחסית לשימוש אמיתי (מטייל פותח את המדור לכמה ערים),
-    ופרץ צר. שתיהן נגזרות מהמכסות הקיימות ולא ממספר שנשלף מהאוויר.
+    תקרה יומית קבועה, **לא נגזרת מ-`exploresPerDay`**. עד שפרימיום עבר
+    לחלון חודשי (`periodMsFor`) הגזירה הזאת הייתה סבירה; עכשיו
+    `exploresPerDay` של פרימיום הוא מספר חודשי, וכפל אותו ב-3 והפעלתו
+    כתקרה **יומית** היה נותן ~450/יום - בטעות, לא בכוונה. הנתיב הזה
+    לא עולה לנו כלום (Viator, בלי קריאת AI), אז אין סיבה כלכלית
+    לתקרה מורכבת - נדיבה וקבועה לכולם, קצת יותר לפרימיום.
   */
-  const perDay = Math.max(20, limits.exploresPerDay * 3);
+  const perDay = caller.plan === 'premium' ? 120 : 60;
   if (!checkLimit('activities', caller.id, perDay, 24 * 60 * 60_000).ok) return empty('quota');
   if (!checkLimit('activities-burst', caller.id, 10, 60_000).ok) return empty('quota');
 

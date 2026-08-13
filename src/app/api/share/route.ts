@@ -5,7 +5,7 @@ import { decodeTripShare } from '@/lib/server/shareDecode';
 import { createShareCode } from '@/lib/trip/shareStore';
 import { checkLimit } from '@/lib/server/limits';
 import { resolveCaller } from '@/lib/server/identity';
-import { PLAN_LIMITS } from '@/lib/plans';
+import { PLAN_LIMITS, periodMsFor } from '@/lib/plans';
 
 /**
  * POST { trip } → { code | null }.
@@ -23,7 +23,12 @@ export async function POST(req: Request) {
   // מכסה לא חוסמת.
   const caller = await resolveCaller(req);
   const burst = checkLimit('share-burst', caller.id, 5, 10 * 60_000);
-  const daily = checkLimit('share-day', caller.id, PLAN_LIMITS[caller.plan].sharesPerDay, 24 * 60 * 60 * 1000);
+  const daily = checkLimit(
+    'share-day',
+    caller.id,
+    PLAN_LIMITS[caller.plan].sharesPerDay,
+    periodMsFor(caller.plan),
+  );
   if (!burst.ok || !daily.ok) {
     return NextResponse.json({ code: null, error: 'rate-limited' }, { status: 429 });
   }

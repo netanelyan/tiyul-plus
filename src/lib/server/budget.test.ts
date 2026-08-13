@@ -13,15 +13,20 @@ import {
   CALLER_CAP_USD,
   DEFAULT_ANON_SHARE,
   IP_BACKSTOP_MULTIPLE,
+  PREMIUM_ALERT_AT,
   anonShare,
   budgetFor,
   isAnonIdentity,
   maybeAlert,
+  maybeAlertPremium,
   measuredCost,
+  monthKey,
+  premiumBudgetFor,
   recordSpend,
   resetBudgetForTest,
   sendTestAlert,
 } from './budget.ts';
+import { periodMsFor, SUBSCRIBER_MONTHLY_CAP_USD } from '../plans.ts';
 
 import { DEFAULT_DAILY_BUDGET_USD } from './budget.ts';
 
@@ -410,4 +415,124 @@ test('sendTestAlert מדווחת כישלון כשהרשת נופלת (לא רק
   assert.equal(r.configured, true);
   assert.equal(r.ok, false);
   assert.ok(r.error, 'יש סיבת כישלון, לא רק ok:false שקט');
+});
+
+/* ============================================================
+   הארנק השלישי: מנוי פרימיום, מבודד לגמרי משני הארנקים למעלה
+   ============================================================ */
+
+/** אותו רעיון כמו spend() למעלה, אבל מזקיף להוצאה של מנוי */
+const spendPremium = (userId: string, usd: number) => {
+  recordSpend({
+    identity: `user:${userId}`,
+    userId,
+    tripId: null,
+    route: 'chat',
+    model: 'claude-haiku-4-5',
+    usage: { output_tokens: Math.round(usd * 200_000) },
+    premium: true,
+  });
+};
+
+test('הוצאה של מנוי פרימיום לא נוגעת בתקציב היומי המשותף (usd/anonUsd)', async () => {
+  resetBudgetForTest();
+  // מדד לפני: תקציב יומי מלא, כי עדיין אף אחד לא הוציא כלום
+  const before = await budgetFor('user:free-signed-in');
+  assert.equal(before.poolSpent, 0);
+
+  // מנוי פרימיום מוציא סכום גדול - קרוב לתקרה החודשית שלו
+  spendPremium('prem-1', SUBSCRIBER_MONTHLY_CAP_USD * 0.9);
+
+  // התקציב היומי המשותף של מחוברים-חינמיים לא זז בכלל
+  const after = await budgetFor('user:free-signed-in');
+  assert.equal(after.poolSpent, 0, 'הוצאת הפרימיום נכנסה לתקציב היומי המשותף - זה בדיוק הבאג שאסור');
+  assert.equal(after.exceeded, false);
+});
+
+test('הוצאה כבדה של אנונימי/חינם לא נוגעת בתקרה החודשית של מנוי פרימיום', async () => {
+  resetBudgetForTest();
+  // ממצים את כל התקציב היומי המשותף עם תנועה אנונימית
+  for (let i = 0; i < 11; i++) spend(`anon:${'e'.repeat(15)}${i}`, (BUDGET * ANON_SHARE) / 10);
+  assert.equal((await budgetFor('anon:zzzzzzzzzzzzzzzz')).exceeded, true, 'ודאות שהתקציב המשותף באמת מוצה');
+
+  // מנוי פרימיום, שמעולם לא הוציא כלום החודש, לא מושפע כלל
+  const premium = await premiumBudgetFor('prem-untouched');
+  assert.equal(premium.spent, 0);
+  assert.equal(premium.exceeded, false);
+});
+
+test('premiumBudgetFor חוסמת בתקרה החודשית ($2.00), ולא לפני', async () => {
+  resetBudgetForTest();
+  const under = await premiumBudgetFor('prem-under');
+  assert.equal(under.budget, SUBSCRIBER_MONTHLY_CAP_USD);
+  assert.equal(under.exceeded, false);
+
+  spendPremium('prem-at-cap', SUBSCRIBER_MONTHLY_CAP_USD);
+  const at = await premiumBudgetFor('prem-at-cap');
+  assert.equal(at.exceeded, true);
+
+  spendPremium('prem-just-under', SUBSCRIBER_MONTHLY_CAP_USD - 0.01);
+  const justUnder = await premiumBudgetFor('prem-just-under');
+  assert.equal(justUnder.exceeded, false);
+});
+
+test('שני מנויי פרימיום לא רואים את ההוצאה זה של זה', async () => {
+  resetBudgetForTest();
+  spendPremium('prem-alice', SUBSCRIBER_MONTHLY_CAP_USD); // ממצה את עצמה בלבד
+  const alice = await premiumBudgetFor('prem-alice');
+  const bob = await premiumBudgetFor('prem-bob');
+  assert.equal(alice.exceeded, true, 'אליס מיצתה את שלה');
+  assert.equal(bob.exceeded, false, 'בוב לא נגע בכלום - לא אמור להיחסם');
+  assert.equal(bob.spent, 0);
+});
+
+test('recordSpend עם premium:true בלי userId מתייחס כלא-פרימיום (אין למי לזקוף חודשית)', async () => {
+  resetBudgetForTest();
+  const before = await budgetFor('user:someone-else');
+  assert.equal(before.poolSpent, 0);
+  recordSpend({
+    identity: 'user:no-id-somehow',
+    userId: null,
+    tripId: null,
+    route: 'chat',
+    model: 'claude-haiku-4-5',
+    usage: { output_tokens: 100_000 }, // $0.50
+    premium: true, // מסומן פרימיום אבל אין userId
+  });
+  // בלי userId ההוצאה חוזרת למסלול הרגיל ונכנסת ל-usd הכללי, לא נעלמת בשקט
+  const after = await budgetFor('user:someone-else');
+  assert.ok(after.poolSpent > 0, 'ההוצאה לא נעלמה - נזקפה לארנק הרגיל כמצופה');
+});
+
+test('monthKey הוא YYYY-MM ועקבי בין קריאות באותו רגע', () => {
+  const k = monthKey();
+  assert.match(k, /^\d{4}-\d{2}$/);
+  assert.equal(k, monthKey());
+});
+
+test('periodMsFor: יממה לאנונימי/חינם, 30 יום לפרימיום', () => {
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  assert.equal(periodMsFor('anon'), DAY_MS);
+  assert.equal(periodMsFor('free'), DAY_MS);
+  assert.equal(periodMsFor('premium'), 30 * DAY_MS);
+});
+
+test('maybeAlertPremium: מתריעה פעם אחת מעל הסף, לא לפני', async () => {
+  const month = monthKey();
+  const below = { budget: 2, spent: 1, exceeded: false, ratio: 0.5 };
+  maybeAlertPremium(below, 'prem-quiet', month);
+  assert.equal(calls.length, 0, 'מתחת לסף - בלי התראה');
+
+  process.env.AI_BUDGET_ALERT_WEBHOOK = 'https://hooks.example/test';
+  const above = { budget: 2, spent: 1.7, exceeded: false, ratio: PREMIUM_ALERT_AT + 0.01 };
+  maybeAlertPremium(above, 'prem-loud', month);
+  await new Promise((r) => setTimeout(r, 0)); // post() היא void - נותנים לה טיק להשלים
+  assert.equal(calls.length, 1);
+  const payload = calls[0].body as { text: string };
+  assert.ok(payload.text.includes('פרימיום'), payload.text);
+
+  // פעם שנייה באותו חודש לאותו משתמש - שקט
+  maybeAlertPremium(above, 'prem-loud', month);
+  await new Promise((r) => setTimeout(r, 0));
+  assert.equal(calls.length, 1, 'לא מתריעים פעמיים לאותו מנוי באותו חודש');
 });

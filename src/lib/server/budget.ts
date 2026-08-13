@@ -3,6 +3,7 @@ import { eq, neq, pgQuery, pgSelect } from '@/lib/server/pgrest';
 import { allFlags } from '@/lib/server/flags';
 import { costUsd, type TokenUsage } from '@/lib/server/aiCost';
 import { serviceHeaders } from '@/lib/server/supabaseAdmin';
+import { SUBSCRIBER_MONTHLY_CAP_USD } from '@/lib/plans';
 
 /**
  * שרת בלבד - **תקרת ההוצאה על ה-AI**, בשני ארנקים ועם תקרה אישית.
@@ -441,6 +442,116 @@ export async function budgetOverview(): Promise<{
   };
 }
 
+/* ---------- ארנק פרימיום, מבודד לגמרי מהשניים למעלה ---------- */
+
+/**
+ * **הארנק השלישי, ולמה הוא לא "עוד חלק" מהנוסחה של `budgetFor`.**
+ *
+ * אנונימי וחינם-מחובר חולקים תקציב יומי אחד, מחולק לפי `anonShare()`.
+ * מנוי פרימיום **לא נכנס לנוסחה הזאת בכלל** - לא כארנק שלישי בתוכה
+ * וגם לא כתוספת ל"מחוברים". שתי סיבות, וזו הדרישה המפורשת: תנועה
+ * אנונימית שממצה את היום שלה **אסור** שתחסום מנוי משלם (הוא לא בודק
+ * מול `budgetFor` בכלל - ראו למטה), ומנוי פרימיום שמנצל לרעה **אסור**
+ * שיגרע מהתקציב שהחינמיים חולקים (`recordSpend` מדלג על `bump_ai_spend`
+ * עבורו - ראו שם). שני הכיוונים, בו-זמנית, ע"י כך ששני המנגנונים
+ * פשוט אף פעם לא נוגעים באותם מספרים.
+ *
+ * התקרה עצמה **חודשית ואישית**: `SUBSCRIBER_MONTHLY_CAP_USD` (בקובץ
+ * המשותף `lib/plans.ts`, כי היא גם מוצגת בעמוד הפרימיום) לכל user_id,
+ * נמדדת מ-`subscriber_spend_monthly` (ראו `supabase-premium-budget.sql`) -
+ * טבלת צבירה נפרדת, לא סכימה של ai_spend הגולמית לפני כל בקשה, מאותה
+ * סיבה בדיוק שקיימת `ai_spend_daily`.
+ */
+
+/** מפתח חודש בזמן UTC - 'YYYY-MM', עקבי בין instances כמו `dayKey`. */
+export const monthKey = (d = new Date()): string => d.toISOString().slice(0, 7);
+
+interface MonthState {
+  month: string;
+  /** הוצאה לפי מנוי, החודש - אותו דפוס בדיוק כמו `DayState.callers` */
+  subscribers: Map<string, number>;
+}
+
+const freshMonth = (month: string): MonthState => ({ month, subscribers: new Map() });
+let monthState: MonthState = freshMonth(monthKey());
+
+function thisMonth(): MonthState {
+  const month = monthKey();
+  if (monthState.month !== month) monthState = freshMonth(month);
+  return monthState;
+}
+
+/** הוצאה של מנוי אחד החודש. ממזג מהאחסון המרוחק בקריאה הראשונה. */
+async function subscriberSpend(m: MonthState, userId: string): Promise<number> {
+  const local = m.subscribers.get(userId);
+  if (local !== undefined || !persistent()) return local ?? 0;
+  m.subscribers.set(userId, 0); // סימון "כבר ניסינו" - best effort, פעם אחת
+  try {
+    const res = await fetch(
+      `${supaUrl()}/rest/v1/subscriber_spend_monthly?${pgQuery(
+        eq('user_id', userId),
+        eq('month', m.month),
+        pgSelect(['usd']),
+      )}`,
+      { headers: headers(), signal: AbortSignal.timeout(3000) },
+    );
+    if (res.ok) {
+      const rows = (await res.json()) as { usd?: number | string }[];
+      const remote = Number(rows[0]?.usd ?? 0);
+      if (Number.isFinite(remote) && remote > 0) m.subscribers.set(userId, remote);
+    }
+  } catch {
+    /* הזיכרון המקומי ממשיך להגן */
+  }
+  return m.subscribers.get(userId) ?? 0;
+}
+
+export interface PremiumBudgetState {
+  budget: number;
+  spent: number;
+  exceeded: boolean;
+  ratio: number;
+}
+
+/**
+ * המצב עבור מנוי פרימיום אחד. **זו הפונקציה ש-`/api/chat` קורא לה
+ * במקום `budgetFor` כשהקורא הוא פרימיום** - לא בנוסף אליה.
+ */
+export async function premiumBudgetFor(userId: string): Promise<PremiumBudgetState> {
+  const m = thisMonth();
+  const spent = await subscriberSpend(m, userId);
+  const budget = SUBSCRIBER_MONTHLY_CAP_USD;
+  return {
+    budget,
+    spent,
+    exceeded: spent >= budget,
+    ratio: budget > 0 ? spent / budget : 1,
+  };
+}
+
+/** מעל האחוז הזה מהתקרה החודשית האישית - התראה מיידית, פעם אחת לחודש למנוי */
+export const PREMIUM_ALERT_AT = 0.8;
+const premiumAlerted = new Set<string>(); // 'userId|month', מתאפס לבד כשה-month בשם משתנה
+
+/**
+ * התראה על מנוי שמתקרב לתקרה שלו. **לפני** שהוא נחסם, כמו ההתראה על
+ * מקור בודד למעלה - זה הרגע שבו עוד אפשר לבדוק אם זה שימוש אמיתי
+ * (שווה לשקול להעלות את התקרה) או ניצול לרעה.
+ */
+export function maybeAlertPremium(s: PremiumBudgetState, userId: string, month: string): void {
+  if (s.ratio < PREMIUM_ALERT_AT) return;
+  const key = `${userId}|${month}`;
+  if (premiumAlerted.has(key)) return;
+  premiumAlerted.add(key);
+  if (premiumAlerted.size > 20_000) premiumAlerted.clear(); // הגנת זיכרון גסה
+  void post(
+    `טיול+ · מנוי פרימיום הוציא $${s.spent.toFixed(2)} החודש - ${Math.round(
+      s.ratio * 100,
+    )}% מהתקרה האישית שלו ($${s.budget.toFixed(2)}). לא ישפיע על אף אחד אחר - שווה מבט אם זה שימוש אמיתי.`,
+    { kind: 'premium-subscriber', userId: userId.slice(0, 40), usd: s.spent },
+  );
+}
+
 /* ---------- רישום ---------- */
 
 /**
@@ -476,24 +587,49 @@ export function recordSpend(entry: {
   usage: TokenUsage;
   /** אורך הטקסט שהוזרם - לאומדן כשהדיווח חסר */
   streamedChars?: number;
+  /**
+   * מנוי פרימיום? - קובע לאיזה ארנק ההוצאה הזאת נזקפת. `true` דורש
+   * `userId` (פרימיום הוא תמיד מחובר בהגדרה) - אחרת מטופל כלא-פרימיום,
+   * כי אין למי לזקוף הוצאה חודשית-אישית.
+   */
+  premium?: boolean;
 }): number {
   const amount = measuredCost(entry.model, entry.usage, entry.streamedChars ?? 0);
   if (!(amount > 0)) return 0;
-  const s = today();
-  const anon = isAnonIdentity(entry.identity);
-  s.usd += amount;
-  if (anon) s.anonUsd += amount;
-  s.callers.set(entry.identity, (s.callers.get(entry.identity) ?? 0) + amount);
-  if (s.callers.size > 20_000) s.callers.clear(); // הגנת זיכרון גסה
+  const isPremium = Boolean(entry.premium && entry.userId);
+
+  /*
+    **הפיצול קורה כאן, ולא שורה קודם.** שורת ai_spend הגולמית (למטה)
+    נכתבת לכולם בדיוק אותו דבר - היא רק תיעוד. מה שנבדל הוא איזו
+    צבירה מתעדכנת: פרימיום מעדכן רק את `subscriber_spend_monthly`
+    (חודשי, אישי), לא-פרימיום מעדכן רק את `ai_spend_daily`/`ai_spend_caller`
+    (יומי, משותף) - לעולם לא שניהם לאותה הוצאה. זו האכיפה בפועל של
+    "שני הכיוונים": פרימיום לא נספר בתקציב שהחינמיים חולקים, וההפך.
+  */
+  if (isPremium) {
+    const m = thisMonth();
+    m.subscribers.set(entry.userId!, (m.subscribers.get(entry.userId!) ?? 0) + amount);
+    if (m.subscribers.size > 20_000) m.subscribers.clear(); // הגנת זיכרון גסה
+  } else {
+    const s = today();
+    const anon = isAnonIdentity(entry.identity);
+    s.usd += amount;
+    if (anon) s.anonUsd += amount;
+    s.callers.set(entry.identity, (s.callers.get(entry.identity) ?? 0) + amount);
+    if (s.callers.size > 20_000) s.callers.clear(); // הגנת זיכרון גסה
+  }
 
   if (!persistent()) return amount;
 
   const usdRounded = Number(amount.toFixed(6));
+  const day = dayKey();
+  // שורת התיעוד הגולמית - לכולם, כולל פרימיום. שום חסימה לא נשענת
+  // על הטבלה הזאת (ראו ההערה למעלה על ai_spend_daily), רק דוחות.
   fetch(`${supaUrl()}/rest/v1/ai_spend`, {
     method: 'POST',
     headers: { ...headers(), Prefer: 'return=minimal' },
     body: JSON.stringify({
-      day: s.day,
+      day,
       identity: entry.identity,
       user_id: entry.userId,
       trip_id: entry.tripId,
@@ -507,17 +643,27 @@ export function recordSpend(entry: {
     }),
     signal: AbortSignal.timeout(3000),
   }).catch(() => {});
-  fetch(`${supaUrl()}/rest/v1/rpc/bump_ai_spend`, {
-    method: 'POST',
-    headers: headers(),
-    body: JSON.stringify({
-      p_day: s.day,
-      p_usd: usdRounded,
-      p_anon: anon,
-      p_identity: entry.identity,
-    }),
-    signal: AbortSignal.timeout(3000),
-  }).catch(() => {});
+
+  if (isPremium) {
+    fetch(`${supaUrl()}/rest/v1/rpc/bump_subscriber_spend`, {
+      method: 'POST',
+      headers: headers(),
+      body: JSON.stringify({ p_user: entry.userId, p_month: monthKey(), p_usd: usdRounded }),
+      signal: AbortSignal.timeout(3000),
+    }).catch(() => {});
+  } else {
+    fetch(`${supaUrl()}/rest/v1/rpc/bump_ai_spend`, {
+      method: 'POST',
+      headers: headers(),
+      body: JSON.stringify({
+        p_day: day,
+        p_usd: usdRounded,
+        p_anon: isAnonIdentity(entry.identity),
+        p_identity: entry.identity,
+      }),
+      signal: AbortSignal.timeout(3000),
+    }).catch(() => {});
+  }
 
   return amount;
 }
@@ -652,4 +798,6 @@ export async function sendTestAlert(): Promise<AlertPostResult> {
 /** לבדיקות בלבד */
 export function resetBudgetForTest(init?: Partial<DayState>): void {
   state = { ...fresh(dayKey()), ...init };
+  monthState = freshMonth(monthKey());
+  premiumAlerted.clear();
 }

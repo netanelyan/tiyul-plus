@@ -42,7 +42,15 @@ import type { Destination } from '@/lib/types';
 import { exploreDestination, type ExploreScope } from '@/lib/explore/resolver';
 import { exploredToDestination, sanitizeExploredDestinations } from '@/lib/explore/adapter';
 import { checkLimit, aiUnitsUsedToday, recordAiUnits } from '@/lib/server/limits';
-import { IP_BACKSTOP_MULTIPLE, budgetFor, maybeAlert, recordSpend } from '@/lib/server/budget';
+import {
+  IP_BACKSTOP_MULTIPLE,
+  budgetFor,
+  maybeAlert,
+  maybeAlertPremium,
+  monthKey,
+  premiumBudgetFor,
+  recordSpend,
+} from '@/lib/server/budget';
 import { MAX_TURN_USD } from '@/lib/server/chatGuards';
 import {
   BUDGET_MESSAGE,
@@ -50,6 +58,7 @@ import {
   MAX_OUTPUT_TOKENS,
   MAX_USER_MESSAGES,
   OFF_TOPIC_MESSAGE,
+  PREMIUM_BUDGET_MESSAGE,
   TOO_LONG_MESSAGE,
   TOO_MANY_TURNS_MESSAGE,
   sameOriginOk,
@@ -62,7 +71,7 @@ import {
   shouldEscalate,
 } from '@/lib/server/modelRoute';
 import { resolveCaller, type Caller } from '@/lib/server/identity';
-import { PLAN_LIMITS, aiUnits } from '@/lib/plans';
+import { PLAN_LIMITS, aiUnits, periodMsFor } from '@/lib/plans';
 import type { BookingSearchCard } from '@/lib/bookingSearch';
 import {
   GuardedTextStream,
@@ -726,7 +735,7 @@ async function runAgent(
   const kosherAsk = kosherIntentText(lastUser);
   const lookupQuotaOk =
     !process.env.ANTHROPIC_API_KEY ||
-    checkLimit('lookup-day', caller.id, planLimits.lookupsPerDay, 24 * 60 * 60 * 1000).ok;
+    checkLimit('lookup-day', caller.id, planLimits.lookupsPerDay, periodMsFor(caller.tier)).ok;
   const lookupWanted = !kosherAsk && lookupQuotaOk && lookupEligible(lastUser) && lookupBudgetLeft(messages);
   const cachedLookup = lookupWanted ? getCachedLookup(lastUser) : null;
   /** האם לצרף בפועל את `LOOKUP_TOOL` - לא כשיש כבר תשובה במטמון */
@@ -930,6 +939,8 @@ async function runAgent(
       // אם התשובה נקטעה לפני message_delta אין output_tokens, והטקסט
       // שכן הוזרם הוא הבסיס לאומדן שמרני במקום אפס
       streamedChars: turn.text.length,
+      // מזקיף את ההוצאה לארנק הנכון - ראו ההסבר המלא ב-budget.ts
+      premium: caller.plan === 'premium' && Boolean(caller.userId),
     });
     full += turn.text;
 
@@ -1031,7 +1042,7 @@ async function runAgent(
           };
         } else if (
           perTurn.explores >= MAX_EXPLORES_PER_TURN ||
-          !checkLimit('explore-day', caller.id, planLimits.exploresPerDay, 24 * 60 * 60 * 1000).ok
+          !checkLimit('explore-day', caller.id, planLimits.exploresPerDay, periodMsFor(caller.tier)).ok
         ) {
           // המכסה נאמרת למודל כתוצאת כלי, והוא זה שמסביר אותה למטייל בשיחה -
           // זה הרבה יותר טוב מהודעת שגיאה, כי הוא יכול להציע במקום זה יעדים
@@ -1108,7 +1119,7 @@ async function runAgent(
         // שהוא הזמין מלון.
         const geoAllowed =
           perTurn.geocodes < MAX_GEOCODES_PER_TURN &&
-          checkLimit('geocode-day', caller.id, planLimits.geocodesPerDay, 24 * 60 * 60 * 1000).ok;
+          checkLimit('geocode-day', caller.id, planLimits.geocodesPerDay, periodMsFor(caller.tier)).ok;
         let located: ResolvedPinLocation | null = null;
         if (geoAllowed && pinName) {
           perTurn.geocodes += 1;
@@ -1423,12 +1434,27 @@ const AGENT_TRUNCATED_MESSAGE =
 const QUOTA_MESSAGE =
   'הגעתם למכסת השימוש היומית בסוכן החכם של התוכנית החינמית 🙏\n\n' +
   'המכסה מתאפסת פעם ביום. בינתיים אפשר להמשיך לערוך את הטיול ידנית במתכנן - להוסיף ימים, להזיז עצירות ולפתוח ניווט.\n\n' +
-  'רוצים להמשיך לתכנן עם הסוכן בלי לחכות? טיול+ פרימיום מגדיל את המכסה פי 10 - כל הפרטים בעמוד "פרימיום" (tiyulplus.com/premium).';
+  'רוצים להמשיך לתכנן עם הסוכן בלי לחכות? טיול+ פרימיום מגדיל את המכסה משמעותית - כל הפרטים בעמוד "פרימיום" (tiyulplus.com/premium).';
+
+/**
+ * הגעה למכסת ה**ספירה** החודשית (הודעות/יחידות) - נדיר, כי התקרה
+ * בדולרים (`PREMIUM_BUDGET_MESSAGE` ב-chatGuards.ts) אמורה להיתקל
+ * קודם אצל כל שימוש אמיתי. הודעה נפרדת מ-`QUOTA_MESSAGE` כי הטקסט
+ * ההוא מציע לשדרג לפרימיום - חסר טעם למי שכבר שם.
+ */
+const PREMIUM_QUOTA_MESSAGE =
+  'הגעתם למכסת השימוש החודשית בתוכנית הפרימיום 🙏\n\n' +
+  'המכסה מתאפסת בתחילת החודש. אפשר להמשיך לערוך את הטיול ידנית במתכנן בינתיים - להוסיף ימים, להזיז עצירות ולפתוח ניווט.';
 
 const IMAGE_QUOTA_MESSAGE =
   `הגעתם למכסת התמונות היומית (${PLAN_LIMITS.free.imagesPerDay} תמונות ביום בתוכנית החינמית) 📷\n\n` +
   'קריאת תמונה יקרה הרבה יותר מקריאת טקסט, ולכן המכסה נמוכה. המכסה מתאפסת פעם ביום, ובינתיים אפשר פשוט לכתוב לי את הפרטים - שם המלון, התאריכים והעיר - ואטפל בזה בדיוק אותו דבר.\n\n' +
   'בטיול+ פרימיום המכסה גדולה בהרבה - כל הפרטים בעמוד "פרימיום" (tiyulplus.com/premium).';
+
+/** אותו מצב, למנוי פרימיום - בלי הצעת שדרוג, ועם היחידה הנכונה (חודש) */
+const PREMIUM_IMAGE_QUOTA_MESSAGE =
+  `הגעתם למכסת התמונות החודשית של תוכנית הפרימיום (${PLAN_LIMITS.premium.imagesPerDay} תמונות בחודש) 📷\n\n` +
+  'קריאת תמונה יקרה הרבה יותר מקריאת טקסט, ולכן יש מכסה גם כאן. המכסה מתאפסת עם החיוב הבא, ובינתיים אפשר פשוט לכתוב לי את הפרטים - שם המלון, התאריכים והעיר - ואטפל בזה בדיוק אותו דבר.';
 
 const EMPTY_REQUEST_MESSAGE =
   'לא קיבלתי טקסט ולא תמונה שאני יכול לקרוא 🙏 כתבו לי מה תרצו שאעשה, או צרפו תמונה קטנה יותר.';
@@ -1467,44 +1493,65 @@ export async function POST(request: Request) {
       headers: { 'Content-Type': 'application/json', 'Retry-After': String(burst.retryAfterSec) },
     });
   }
-  const daily = checkLimit('chat-day', caller.id, limits.chatPerDay, 24 * 60 * 60 * 1000);
-  if (!daily.ok) return singleMessageStream(QUOTA_MESSAGE);
+  const isPremium = caller.plan === 'premium' && Boolean(caller.userId);
+  const daily = checkLimit('chat-day', caller.id, limits.chatPerDay, periodMsFor(caller.tier));
+  if (!daily.ok) return singleMessageStream(isPremium ? PREMIUM_QUOTA_MESSAGE : QUOTA_MESSAGE);
   if (process.env.ANTHROPIC_API_KEY) {
     const used = await aiUnitsUsedToday(caller.id);
-    if (used >= limits.aiUnitsPerDay) return singleMessageStream(QUOTA_MESSAGE);
+    if (used >= limits.aiUnitsPerDay) {
+      return singleMessageStream(isPremium ? PREMIUM_QUOTA_MESSAGE : QUOTA_MESSAGE);
+    }
 
-    /*
-      **תקרת ההוצאה, בשני ארנקים.** המכסות שמעל מגינות מפני משתמש אחד;
-      זו מגינה מפני אלף - ובלי לתת לאף אחד מהם לכבות את המוצר לאחרים:
-      לתנועה אנונימית יש ארנק משלה, ולאף זהות אין יותר מחלק קטן מהיום.
-      ראו lib/server/budget.ts.
-    */
-    const budget = await budgetFor(caller.id);
-    /*
-      רשת ביטחון על ה-IP, **רחבה בכוונה**.
-
-      המכסה האמיתית היא לפי דפדפן, כי IP משותף במפעילת סלולר הוא
-      עשרות אלפי אנשים. ה-IP קיים רק כדי לתפוס מכונה אחת שמחליפה מזהי
-      דפדפן בלולאה, ולכן התקרה שלו היא פי `IP_BACKSTOP_MULTIPLE`
-      מהתקרה של אדם בודד. **כששני המדדים חלוקים - הדפדפן מנצח**, בדיוק
-      כפי שנתנאל ביקש: לחסום אדם אמיתי יקר לנו יותר מבקשה מיותרת אחת.
-    */
-    let ipBlocked = false;
-    if (caller.ip && caller.id !== caller.ip) {
-      const ipState = await budgetFor(caller.ip);
-      ipBlocked = ipState.callerSpent >= ipState.callerBudget * IP_BACKSTOP_MULTIPLE;
-      if (ipBlocked) {
-        console.warn(`[budget] ip backstop hit: ${caller.ip} $${ipState.callerSpent.toFixed(2)}`);
+    if (isPremium) {
+      /*
+        **מנוי פרימיום לא נכנס ל-budgetFor בכלל.** זו הדרישה: תנועה
+        אנונימית/חינמית שממצה את התקציב היומי המשותף אסור שתחסום מנוי
+        משלם, ולכן הוא פשוט לא בודק מולו - התקרה שלו היא אך ורק
+        `premiumBudgetFor`, חודשית ואישית, מטבלה נפרדת לגמרי. ראו
+        ההסבר המלא ב-budget.ts.
+      */
+      const premiumBudget = await premiumBudgetFor(caller.userId!);
+      if (premiumBudget.exceeded) {
+        console.warn(
+          `[budget] premium blocked user=${caller.userId} $${premiumBudget.spent.toFixed(2)}/$${premiumBudget.budget.toFixed(2)}`,
+        );
+        return singleMessageStream(PREMIUM_BUDGET_MESSAGE);
       }
+      maybeAlertPremium(premiumBudget, caller.userId!, monthKey());
+    } else {
+      /*
+        **תקרת ההוצאה, בשני ארנקים.** המכסות שמעל מגינות מפני משתמש אחד;
+        זו מגינה מפני אלף - ובלי לתת לאף אחד מהם לכבות את המוצר לאחרים:
+        לתנועה אנונימית יש ארנק משלה, ולאף זהות אין יותר מחלק קטן מהיום.
+        ראו lib/server/budget.ts.
+      */
+      const budget = await budgetFor(caller.id);
+      /*
+        רשת ביטחון על ה-IP, **רחבה בכוונה**.
+
+        המכסה האמיתית היא לפי דפדפן, כי IP משותף במפעילת סלולר הוא
+        עשרות אלפי אנשים. ה-IP קיים רק כדי לתפוס מכונה אחת שמחליפה מזהי
+        דפדפן בלולאה, ולכן התקרה שלו היא פי `IP_BACKSTOP_MULTIPLE`
+        מהתקרה של אדם בודד. **כששני המדדים חלוקים - הדפדפן מנצח**, בדיוק
+        כפי שנתנאל ביקש: לחסום אדם אמיתי יקר לנו יותר מבקשה מיותרת אחת.
+      */
+      let ipBlocked = false;
+      if (caller.ip && caller.id !== caller.ip) {
+        const ipState = await budgetFor(caller.ip);
+        ipBlocked = ipState.callerSpent >= ipState.callerBudget * IP_BACKSTOP_MULTIPLE;
+        if (ipBlocked) {
+          console.warn(`[budget] ip backstop hit: ${caller.ip} $${ipState.callerSpent.toFixed(2)}`);
+        }
+      }
+      if (ipBlocked) return singleMessageStream(BUDGET_MESSAGE);
+      if (budget.exceeded) {
+        console.warn(
+          `[budget] blocked (${budget.reason}) caller=$${budget.callerSpent.toFixed(3)}/$${budget.callerBudget.toFixed(2)} day=$${budget.spent.toFixed(2)}/$${budget.budget.toFixed(2)}`,
+        );
+        return singleMessageStream(BUDGET_MESSAGE);
+      }
+      void maybeAlert(budget, caller.id);
     }
-    if (ipBlocked) return singleMessageStream(BUDGET_MESSAGE);
-    if (budget.exceeded) {
-      console.warn(
-        `[budget] blocked (${budget.reason}) caller=$${budget.callerSpent.toFixed(3)}/$${budget.callerBudget.toFixed(2)} day=$${budget.spent.toFixed(2)}/$${budget.budget.toFixed(2)}`,
-      );
-      return singleMessageStream(BUDGET_MESSAGE);
-    }
-    void maybeAlert(budget, caller.id);
   }
 
   // קוראים כטקסט קודם: גוף ענק נעצר לפני JSON.parse
@@ -1552,8 +1599,10 @@ export async function POST(request: Request) {
   // כדי ששליחה חוזרת של ההיסטוריה לא תבזבז את המכסה.
   const freshImage = Boolean(messages[messages.length - 1]?.image);
   if (freshImage && process.env.ANTHROPIC_API_KEY) {
-    const imgLimit = checkLimit('chat-images', caller.id, limits.imagesPerDay, 24 * 60 * 60 * 1000);
-    if (!imgLimit.ok) return singleMessageStream(IMAGE_QUOTA_MESSAGE);
+    const imgLimit = checkLimit('chat-images', caller.id, limits.imagesPerDay, periodMsFor(caller.tier));
+    if (!imgLimit.ok) {
+      return singleMessageStream(isPremium ? PREMIUM_IMAGE_QUOTA_MESSAGE : IMAGE_QUOTA_MESSAGE);
+    }
   }
 
   const clientTrip = sanitizeClientTrip(body.trip);

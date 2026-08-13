@@ -466,7 +466,7 @@ function SettingsCard({ onDeletedAll }: { onDeletedAll: () => void }) {
 
       <PromoRedeem />
 
-      {/* תוכנית המנוי - לקריאה בלבד; משתנה דרך Stripe, הענקה או קוד הטבה */}
+      {/* תוכנית המנוי - לקריאה בלבד; משתנה דרך תשלום (כרגע: PayPal פעיל, Stripe בקוד אך לא מוגדר), הענקה או קוד הטבה */}
       <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-cream px-4 py-3 ring-1 ring-night/10">
         <div>
           <p className="text-sm font-bold text-night">התוכנית שלי</p>

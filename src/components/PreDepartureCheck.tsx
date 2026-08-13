@@ -197,6 +197,8 @@ export default function PreDepartureCheck({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth.ready, auth.user?.id, trip.id, trip.startDate, trip.endDate]);
 
+  const isPremium = auth.profile?.plan === 'premium';
+
   const buy = async () => {
     setBusy(true);
     setError(null);
@@ -208,19 +210,41 @@ export default function PreDepartureCheck({
         body: JSON.stringify({ tripId: trip.id }),
       });
       const data = (await res.json().catch(() => null)) as
-        | { url: string | null; error?: string; mode?: string }
+        | { url: string | null; error?: string; mode?: string; included?: boolean }
         | null;
       if (data?.url) {
         window.location.href = data.url;
+        return;
+      }
+      /*
+        פרימיום: אין PayPal ואין redirect - הדוח כבר נכתב בשרת ברגע
+        שהתשובה חזרה. שאילתת status אחת מציגה אותו מייד, בדיוק כמו
+        אחרי לכידה מוצלחת של PayPal - אותו מנגנון תצוגה, מקור שונה.
+      */
+      if (data?.included) {
+        setPhase({ kind: 'processing', note: 'מכינים את הדוח…' });
+        const statusHeaders = await authHeader();
+        const statusRes = await fetch(`/api/checks/status?tripId=${encodeURIComponent(trip.id)}`, {
+          headers: statusHeaders,
+        });
+        const statusData = (await statusRes.json().catch(() => null)) as
+          | { status?: string; report?: PreDepartureReport; paidAt?: string | null }
+          | null;
+        if (statusData?.status === 'paid' && statusData.report) {
+          setPhase({ kind: 'result', report: statusData.report, paidAt: statusData.paidAt ?? null });
+        } else {
+          // לא אמור לקרות (הכתיבה סינכרונית), אבל אם כן - הסקר הרגיל יתפוס את זה
+          pollStatus();
+        }
         return;
       }
       if (data?.error === 'not-configured') setError('התשלום עדיין לא מוגדר באתר - ממש בקרוב.');
       else if (data?.error === 'already-purchased') setError('הבדיקה כבר נרכשה לטיול הזה.');
       else if (data?.error === 'sandbox-blocked') setError('הרכישה כבויה כרגע באתר החי (מצב בדיקה).');
       else if (data?.error === 'not-eligible') setError('הבדיקה רלוונטית רק בסמוך לתאריך היציאה.');
-      else setError('משהו השתבש בדרך לתשלום - נסו שוב עוד רגע.');
+      else setError('משהו השתבש - נסו שוב עוד רגע.');
     } catch {
-      setError('משהו השתבש בדרך לתשלום - נסו שוב עוד רגע.');
+      setError('משהו השתבש - נסו שוב עוד רגע.');
     } finally {
       setBusy(false);
     }
@@ -277,9 +301,11 @@ export default function PreDepartureCheck({
                   title={offline ? OFFLINE_HINT : undefined}
                   className="rounded-xl bg-sunset px-5 py-2.5 text-sm font-bold text-cream transition hover:bg-sunset-deep disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {busy ? 'רגע…' : `בדיקה לפני הנסיעה · ${priceLabel()}`}
+                  {busy ? 'רגע…' : isPremium ? 'בדיקה לפני הנסיעה · כלול בפרימיום ★' : `בדיקה לפני הנסיעה · ${priceLabel()}`}
                 </button>
-                <span className="text-xs font-medium text-night/45">תשלום חד-פעמי, לטיול הזה בלבד</span>
+                <span className="text-xs font-medium text-night/45">
+                  {isPremium ? 'בלי תשלום נוסף - כלול במנוי שלכם' : 'תשלום חד-פעמי, לטיול הזה בלבד'}
+                </span>
               </div>
             </>
           )}
@@ -288,10 +314,13 @@ export default function PreDepartureCheck({
             <p className="mt-2 rounded-xl bg-sunset/10 px-3 py-2 text-xs font-bold text-sunset-deep">{error}</p>
           )}
 
-          <p className="mt-3 text-[11px] font-medium leading-relaxed text-night/40">
-            התשלום מאובטח דרך PayPal - אנחנו לא רואים ולא שומרים פרטי כרטיס. הגישה נפתחת ברגע
-            שהתשלום מאומת אצלנו, לרוב תוך כמה שניות.
-          </p>
+          {phase.kind === 'offer' && (
+            <p className="mt-3 text-[11px] font-medium leading-relaxed text-night/40">
+              {isPremium
+                ? 'הדוח נפתח מייד - אין תשלום ואין העברה לאתר חיצוני.'
+                : 'התשלום מאובטח דרך PayPal - אנחנו לא רואים ולא שומרים פרטי כרטיס. הגישה נפתחת ברגע שהתשלום מאומת אצלנו, לרוב תוך כמה שניות.'}
+            </p>
+          )}
         </div>
       )}
     </PanelSection>

@@ -19,7 +19,7 @@ import type { PreDepartureReport } from '@/lib/predeparture';
 import type { PaypalMode } from '@/lib/server/paypal';
 
 export type PurchaseStatus = 'pending' | 'paid' | 'failed' | 'revoked';
-export type PurchaseSource = 'paypal' | 'admin_grant';
+export type PurchaseSource = 'paypal' | 'admin_grant' | 'premium_included';
 
 export interface PurchaseRow {
   id: string;
@@ -140,6 +140,35 @@ export async function markPaid(
   return rows?.[0] ?? null;
 }
 
+/**
+ * הבדיקה **כלולה בפרימיום** - הפיצ'ר הממשי הראשון שמנוי פרימיום מקבל
+ * ואין לאף אחד אחר. `amount: 0` ו-`source: 'premium_included'` בכוונה
+ * (מקביל ל-`adminGrant` למטה): זו לא הכנסה אמיתית, ו-`computeStats`
+ * חייב להבדיל בינה לבין הענקת תמיכה אנושית כדי שהדוח הפיננסי יישאר
+ * מדויק. **הקריאה היחידה שאמורה לקרוא לזה** היא `/api/checks/create-order`,
+ * אחרי שהוא עצמו וידא ש-`caller.plan === 'premium'` מהטוקן המאומת -
+ * לא מגוף הבקשה.
+ */
+export async function grantPremiumIncluded(input: {
+  userId: string;
+  tripId: string;
+  report: PreDepartureReport;
+}): Promise<PurchaseRow | null> {
+  const rows = await adminInsert<PurchaseRow>('purchases', {
+    user_id: input.userId,
+    trip_id: input.tripId,
+    product: 'predeparture-check',
+    amount: 0,
+    currency: 'ILS',
+    status: 'paid',
+    source: 'premium_included',
+    mode: 'production',
+    report: input.report,
+    paid_at: nowIso(),
+  });
+  return rows?.[0] ?? null;
+}
+
 /** נכשל בפועל (למשל אי-התאמת סכום) - לא מעניק, אבל כן משאיר עקבה */
 export async function markFailed(orderId: string, note: string, rawWebhook?: unknown): Promise<boolean> {
   const rows = await adminUpdate<{ id: string }>(
@@ -218,6 +247,8 @@ export interface PurchaseStats {
   stuckPending: { id: string; userId: string; tripId: string; createdAt: string; ageMinutes: number }[];
   failedCount: number;
   adminGrantCount: number;
+  /** בדיקות שניתנו כהטבת מנוי אוטומטית - לא תמיכה אנושית ולא הכנסה */
+  premiumIncludedCount: number;
 }
 
 const STUCK_AFTER_MS = 15 * 60_000;
@@ -229,12 +260,17 @@ export function computeStats(rows: PurchaseRow[]): PurchaseStats {
   let pendingCount = 0;
   let failedCount = 0;
   let adminGrantCount = 0;
+  let premiumIncludedCount = 0;
   const stuckPending: PurchaseStats['stuckPending'] = [];
 
   for (const r of rows) {
     if (r.status === 'paid') {
       paidCount += 1;
+      // רק paypal הוא הכנסה אמיתית - admin_grant ו-premium_included
+      // שניהם amount=0 בעיצוב, אבל לא אותו דבר: אחד תמיכה אנושית,
+      // השני הטבת מנוי אוטומטית. שני מונים נפרדים כדי שהתמונה תישאר מדויקת.
       if (r.source === 'paypal') revenueILS += Number(r.amount) || 0;
+      else if (r.source === 'premium_included') premiumIncludedCount += 1;
       else adminGrantCount += 1;
     } else if (r.status === 'pending') {
       pendingCount += 1;
@@ -259,5 +295,6 @@ export function computeStats(rows: PurchaseRow[]): PurchaseStats {
     stuckPending,
     failedCount,
     adminGrantCount,
+    premiumIncludedCount,
   };
 }

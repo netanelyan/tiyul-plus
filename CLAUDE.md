@@ -8709,3 +8709,139 @@ makes it something a future edit can't silently break.
 
 **Verified:** `tsc --noEmit` clean, `npm run build` clean, 557/557 tests
 (4 new), lint clean on every touched file.
+
+### 2026-08-13 - Fixing premium: real quotas, a real cap, a real pool, and a real feature
+
+Netanel did the arithmetic himself and it was damning: ₪19.90/month is ~$4 net
+after VAT and payment fees, a measured turn costs $0.063 (cached) to $0.45
+(cold), and the card was promising 400 chats and 100 builds **a day**. At
+zero margin $4 buys ~60 turns or ~7 trips a month; a subscriber using a
+fraction of the promised quota already costs more than they pay. Five things
+to fix, all implemented, all pushed.
+
+**1. Monthly quotas, sized to the money, not to ×30 of the old daily number.**
+`periodMsFor(tier)` (`plans.ts`) returns a day for anon/free and 30 days for
+premium; every `checkLimit` call site that reads a `PlanLimits` field
+(`chat/route.ts`, `generate-trip/route.ts`, `share/route.ts`,
+`import-map/route.ts`) now asks for the right window instead of a hardcoded
+`24*60*60*1000`. The new premium numbers are monthly and generous *relative to
+real usage*, not relative to the old daily ceiling: 150 chats, 20 quick
+builds, 20 images, 30 map imports, 60 shares, 60 live lookups - each sized so
+"plan two real trips with plenty of editing room" fits comfortably inside the
+$2 cap below, while the old "12,000 chats/month" ceiling is gone. Full
+arithmetic lives next to `PLAN_LIMITS.premium` in `plans.ts`. One quota
+(`activities/route.ts`'s Viator browsing cap) had been *derived* from
+`exploresPerDay * 3` as a daily figure - once `exploresPerDay` meant "per
+month" for premium that derivation would have silently produced ~450/day. Cut
+loose from that field entirely; it's zero-cost to us either way, so it's now
+a flat generous number per tier instead of inherited math that stopped making
+sense.
+
+**2. A real per-subscriber money cap: $2.00/month, in `SUBSCRIBER_MONTHLY_CAP_USD`.**
+50% of the $4 net - a subscriber who fully maxes it out still leaves us 50%
+margin on themselves, and the constant lives in `plans.ts` (the shared
+file), not `budget.ts` (server-only), because `PLAN_FEATURE_ROWS` displays
+it on `/premium`. It buys, concretely, about two full trip builds
+(2×$0.53) plus ~15 cached edit/question turns (15×$0.063) - "generous for
+one or two real trips," matching what he asked for. Enforced from a **new,
+separate monthly rollup table**, `subscriber_spend_monthly` (new
+`supabase-premium-budget.sql`, **Netanel needs to run this**), read via a
+cheap PK lookup (`premiumBudgetFor`) rather than summing raw spend rows
+before every request - same reasoning that produced `ai_spend_daily` in an
+earlier session, applied to the new table before it could repeat the mistake.
+
+**3. The protected pool - bidirectional, and it's structural, not a check.**
+Premium calls **never touch `budgetFor()`/the daily anon-free pool at all**:
+`chat/route.ts` and `generate-trip/route.ts` branch on `caller.plan ===
+'premium'` and call `premiumBudgetFor()` instead, full stop - there's no
+code path where a premium request even reads the shared daily budget. And
+`recordSpend()` now branches on a new `premium` flag: for a premium caller it
+updates *only* the new monthly table (local cache + `bump_subscriber_spend`
+RPC) and explicitly skips `bump_ai_spend` (which is what feeds
+`ai_spend_daily.usd`/`anon_usd`, the numbers the free/anon pool math reads).
+The raw per-call `ai_spend` row is still written for everyone, unconditionally
+- it's bookkeeping, nothing sums it before a request, so it costs nothing and
+keeps admin reporting complete. Two independent tests in `budget.test.ts`
+assert the actual property, not the intent: heavy premium spend leaves a
+free-tier caller's `poolSpent` at exactly 0, and heavy anon/free spend leaves
+a premium subscriber's monthly `spent` at exactly 0 - each direction proven,
+not just each mechanism proven to exist.
+
+**4. Payment copy: audited every mention, and one page was flatly wrong.**
+`/premium`'s trust line said "מאובטח דרך Stripe" - false today: Stripe billing
+has never processed a single transaction (no `STRIPE_SECRET_KEY` anywhere
+this session could see), and PayPal is the site's only live processor
+(already running real money through the pre-departure check). Changed to
+PayPal, with a code comment flagging the mismatch explicitly: the checkout
+button still calls the Stripe-coded `/api/billing/checkout`, which is
+unconfigured and returns "coming soon" regardless of what the trust line
+says. **Not fixed here, deliberately**: actually wiring premium subscription
+billing through PayPal is a real, untested, financially-sensitive new
+integration (PayPal Subscriptions API, new webhook event types) that wasn't
+itemized as an engineering task and couldn't be verified from this sandbox -
+flagged for a decision rather than guessed at. The bigger find was
+`refunds/page.tsx`, which stated outright "we don't sell anything, nothing
+can be purchased" - directly false, since the pre-departure check has been a
+real PayPal purchase for weeks. Rewritten to describe what's actually
+purchasable today (the check) versus what's built but inactive (the
+subscription), with the subscription section's own honest "not active" framing
+left untouched since it's still true. `privacy/page.tsx`'s processor
+disclosure was missing PayPal entirely, despite it being the one processor
+that's actually run a transaction - added, and the Stripe line re-labeled as
+conditional on a subscription that isn't live. `/premium` also got
+`robots: { index: false, follow: true }` - a one-line change, and per his
+"nobody knows the site exists yet" - reasonable to keep it out of search
+until there's something to actually buy.
+
+**5. The feature: pre-departure checks, included and unlimited for premium.**
+`predeparture.ts` has a comment from whoever built it saying it must never be
+tied to `Plan`/`Tier` - a real, deliberate decision at the time, for a
+standalone one-time product. Reconsidered here because the request explicitly
+invited it: the check is a deterministic catalog validation with **zero
+marginal AI cost** (no model call at all), making it free to give away and the
+first thing premium offers that isn't just a bigger number on the same
+product. `checks/create-order/route.ts` now branches before it ever touches
+PayPal: a premium caller (from `resolveCaller`'s server-verified token, never
+client-supplied) gets `buildPreDepartureReport()` run immediately and a
+`purchases` row written with a new `source: 'premium_included'`
+(`amount: 0`, like `admin_grant` but counted separately in `computeStats` so
+the admin dashboard can tell automatic subscriber perks from human support
+grants - `supabase-premium-budget.sql` widens the `source` check constraint,
+discovering its real auto-generated name via `pg_constraint` rather than
+guessing it). `PreDepartureCheck.tsx` shows "כלול בפרימיום" instead of a price
+and skips the PayPal round-trip entirely - the report is ready before the
+button's spinner would have stopped. **The one real tension, stated plainly**:
+premium is ₪19.90/month and a single check alone sells for ₪29.90 - someone
+could subscribe for a month, grab checks on every trip they own, and cancel,
+for less than one check would have cost standalone. Recorded as a known,
+accepted trade rather than something quietly engineered around: it's the same
+shape as any no-lock-in monthly plan giving away a bundled perk, the check
+costs nothing to produce, and the alternative (rate-limiting an included
+feature to guard against a hypothetical opportunist) adds real complexity
+against a low-value abuse case.
+
+**Verified, per his explicit ask, before pushing.** Full rebuild + `tsc` +
+566 tests (13 new, covering both isolation directions, the cap boundary, the
+new source bucketing) all clean. Then the part that actually mattered: he was
+right to worry that touching the gate ahead of the model call could silently
+change agent behavior, so before pushing, the two live scenarios he named were
+tested against a **production build with a real key** - direct `/api/chat`
+calls, not just reading the diff. Kashrut for an uncatalogued city (Kyiv)
+still declines rather than fabricating. The ambiguous-city/no-auto-build flow
+turned up something that looked exactly like a regression at first: asking
+for a Vienna trip, even across two turns with the city stated outright,
+consistently got "where do you want to travel?" instead of a build. Rather
+than assume either way, it was A/B'd - `git stash`, clean rebuild, same exact
+requests replayed against unmodified `main` before any of today's edits. Same
+result, byte for byte, twice. **Pre-existing on `main`, not caused by this
+session** - confirmed by the harness, not asserted from a diff read. Flagged
+here rather than fixed, since it's a real product issue but out of scope for
+a quota/billing task, and now has a reproduction recipe instead of a vague
+impression.
+
+**Deployment status:** everything above pushed to `main`. The two items that
+need Netanel directly: run `supabase-premium-budget.sql` in the Supabase SQL
+editor (premium enforcement and the new source bucketing don't take effect
+without it), and decide whether premium subscription checkout should actually
+move to PayPal or wait for Stripe - the copy now says PayPal, the code still
+calls Stripe, and that gap is deliberate rather than silent.

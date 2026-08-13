@@ -8,6 +8,8 @@
  * עריכות ביום - המכסה נועדה לעצור שימוש לרעה, לא שימוש אמיתי.
  */
 
+import { priceLabel as predepartureCheckPriceLabel } from '@/lib/predeparture';
+
 export type Plan = 'free' | 'premium';
 
 /**
@@ -57,26 +59,40 @@ export function effectivePlan(
   return until > now ? 'premium' : 'free';
 }
 
+/**
+ * **השדות כאן נקראים `PerDay` אבל התקופה בפועל נגזרת מהשכבה, לא מהשם.**
+ * `periodMsFor(tier)` מחזיר יממה לאנונימי/חינם ו-30 יום לפרימיום; כל
+ * קורא ל-`checkLimit` משתמש בה במקום לקבע 24 שעות בקוד. השמות נשארו
+ * כפי שהיו כדי לא להרחיב שינוי כלכלי לשינוי-שם בכל הקבצים שקוראים
+ * אותם - `PLAN_FEATURE_ROWS` הוא המקום היחיד שצריך גם לתאר את היחידה
+ * הנכונה למשתמש, וזה עושה את זה בפירוש ("ביום"/"בחודש") ולא דרך השם.
+ */
 export interface PlanLimits {
-  /** בקשות צ׳אט ביום (גם במצב ללא מפתח - מגן על השרת עצמו) */
+  /** בקשות צ׳אט - ליום (אנונימי/חינם) או לחודש (פרימיום) */
   chatPerDay: number;
-  /** בקשות צ׳אט בדקה (הגנת פרץ) */
+  /** בקשות צ׳אט בדקה (הגנת פרץ - נשאר קצר בכל שכבה, זו לא תלויה בתקופה) */
   chatBurstPerMin: number;
-  /** תקציב יחידות AI יומי (קלט לא-מקאש + פלט*4) */
+  /**
+   * תקציב יחידות AI - ליום (אנונימי/חינם) או לחודש (פרימיום).
+   *
+   * **לפרימיום זו כבר לא ההגנה האמיתית** - `SUBSCRIBER_MONTHLY_CAP_USD`
+   * ב-`budget.ts` היא, כי דולרים מודדים עלות אמיתית ויחידות הן קירוב.
+   * המספר כאן נשאר כרשת ביטחון שנייה גבוהה, שלא אמורה להיות זו שנוגעת.
+   */
   aiUnitsPerDay: number;
-  /** בניות מסלול מהירות (/api/generate-trip) ביום */
+  /** בניות מסלול מהירות (/api/generate-trip) - ליום או לחודש */
   generatePerDay: number;
-  /** קודי שיתוף קצרים ביום */
+  /** קישורי שיתוף קצרים - ליום או לחודש */
   sharesPerDay: number;
-  /** ייבוא מפות (Google My Maps) ביום */
+  /** ייבוא מפות (Google My Maps) - ליום או לחודש */
   importsPerDay: number;
   /**
-   * תמונות שאפשר לצרף לשיחה ביום (צילום אישור הזמנה, כרטיס טיסה).
-   * תמונה עולה למודל הרבה יותר מטקסט, ולכן המכסה נמוכה בכוונה.
+   * תמונות שאפשר לצרף לשיחה - ליום או לחודש (צילום אישור הזמנה, כרטיס
+   * טיסה). תמונה עולה למודל הרבה יותר מטקסט, ולכן המכסה נמוכה בכוונה.
    */
   imagesPerDay: number;
   /**
-   * חקירות יעד ביום (`explore_destination` → ויקיפדיה).
+   * חקירות יעד - ליום או לחודש (`explore_destination` → ויקיפדיה).
    *
    * זו לא עלות של מודל אלא **עלות אצל מישהו אחר**: ויקיפדיה נותנת לנו
    * שירות בחינם ומבקשת שימוש הוגן, ואין שום סיבה שמשתמש אחד יוכל לשלוח
@@ -84,7 +100,7 @@ export interface PlanLimits {
    */
   exploresPerDay: number;
   /**
-   * איתורי מיקום ביום (`add_pin` → OpenStreetMap/Nominatim).
+   * איתורי מיקום - ליום או לחודש (`add_pin` → OpenStreetMap/Nominatim).
    *
    * Nominatim מוגבל למדיניות של בקשה אחת בשנייה, וה-throttle שלנו הוא
    * **טורי וגלובלי** - כלומר משתמש אחד ששולח מאה איתורים תוקע את התור
@@ -92,16 +108,33 @@ export interface PlanLimits {
    */
   geocodesPerDay: number;
   /**
-   * חיפושי אינטרנט חיים ביום (`web_search`, שעות/מחיר-כניסה/קיום).
+   * חיפושי אינטרנט חיים - ליום או לחודש (`web_search`, שעות/מחיר-כניסה/קיום).
    *
    * בשונה מ-`exploresPerDay`/`geocodesPerDay` זו לא הגנה על שירות חינמי
    * של מישהו אחר - חיפוש עולה לנו $0.01 אמיתיים לכל קריאה
-   * (`WEB_SEARCH_COST_USD`), ולכן המכסה נמוכה יותר בכוונה. תקרת ההוצאה
-   * הכללית (`budget.ts`) היא ההגנה האמיתית על הכסף; זו רק מונעת ניצול
-   * חוזר-ונשנה של אדם אחד.
+   * (`WEB_SEARCH_COST_USD`), ולכן המכסה נמוכה יותר בכוונה. לפרימיום זה
+   * גם נספר בתוך `SUBSCRIBER_MONTHLY_CAP_USD` - התקרה בדולרים היא
+   * ההגנה האמיתית על הכסף; זו רק מונעת ניצול חוזר-ונשנה של אדם אחד.
    */
   lookupsPerDay: number;
 }
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+/** 30 יום, לא "חודש קלנדרי" - פשוט וקבוע, כמו כל שאר המכסות כאן */
+const MONTH_MS = 30 * DAY_MS;
+
+/**
+ * אורך חלון המכסה לשכבה: יממה לאנונימי/חינם, 30 יום לפרימיום.
+ *
+ * **זו כל הנקודה של "מכסות בחודשים, לא בימים".** הכרטיס הבטיח 400
+ * שיחות ו-100 בניות **ביום** לפרימיום - אף מנוי אמיתי לא מתכנן ככה,
+ * אבל מי שכן היה עולה הרבה יותר ממה שהוא משלם. אותם מספרים, נגזרים
+ * מהתקציב האמיתי של $4 לחודש ולא מהערכה, ונבדקים על פני 30 יום.
+ *
+ * כל קורא ל-`checkLimit` צריך להשתמש בזה במקום ב-`24 * 60 * 60 * 1000`
+ * הקבוע, כדי שפרימיום יקבל את החלון הנכון בלי לשנות אף מספר.
+ */
+export const periodMsFor = (tier: Tier): number => (tier === 'premium' ? MONTH_MS : DAY_MS);
 
 export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
   /*
@@ -142,17 +175,50 @@ export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
     geocodesPerDay: 30,
     lookupsPerDay: 10,
   },
+  /*
+    פרימיום. **מספרים חודשיים, נגזרים מהתקציב האמיתי - לא מהערכה ולא
+    מ-×30 של המספר היומי הישן.**
+
+    ₪19.90/חודש כולל מע"מ ≈ ₪16.90 נטו ≈ ₪15 אחרי עמלות סליקה ≈ $4.
+    במרווח רווח אפס $4 קונים כ-63 תורים ממטמון ($0.063), כ-9 תורים
+    קרים ($0.45), או כ-7.5 בניות טיול מלאות ($0.53) - זו התקרה
+    העליונה המוחלטת, לא תקציב סביר. `SUBSCRIBER_MONTHLY_CAP_USD`
+    ב-budget.ts קובעת $2.00 (50% מה-$4), ומשם נגזרים המספרים כאן:
+    שימוש טיפוסי-נדיב בתוך $2 הוא ~2 בניות מלאות (2×$0.53=$1.06) +
+    כ-15 תורי עריכה/שאלה ממטמון (15×$0.063≈$0.94) = כ-$2.00 -
+    "שני טיולים אמיתיים, עם המון מקום לעריכות" - בדיוק הכוונה.
+
+    המספרים כאן נדיבים יותר מהשימוש הטיפוסי הזה (הם התקרה הרכה,
+    לא התחזית) אבל רחוקים מהתקרה הישנה של 400/יום=12,000/חודש:
+    - chatPerDay (בחודש): 150 - כ-6 מפגשי תכנון מלאים של 25 הודעות,
+      פי הרבה מ"שני טיולים אמיתיים". התקרה בדולרים תיגע קודם למי
+      שבאמת מנצל לרעה.
+    - generatePerDay (בחודש): 20 - בניות/רענון מהיר של המתכנן, כמה
+      נסיונות לכל טיול ועוד רזרבה.
+    - imagesPerDay (בחודש): 20 - העלאת כמה אישורי הזמנה על פני כמה
+      טיולים.
+    - importsPerDay (בחודש): 30 - ייבוא כמה מפות Google My Maps.
+    - sharesPerDay (בחודש): 60 - שיתוף עם כמה אנשים, כמה פעמים.
+      לא עולה AI כלל (רק יצירת קישור), נדיב במכוון.
+    - exploresPerDay/geocodesPerDay (בחודש): 150/200 - אלה לא עולים
+      לנו כסף (ויקיפדיה/Nominatim חינמיים), הנדיבות כאן היא רק
+      הגינות כלפי השירות החיצוני, לא שיקול תקציב.
+    - lookupsPerDay (בחודש): 60 - $0.01 לחיפוש, מקסימום $0.60 -
+      חלק קטן מתוך תקרת ה-$2, נספר בתוכה.
+    - aiUnitsPerDay (בחודש): 6,000,000 - נשאר גבוה בכוונה. זו כבר
+      לא ההגנה האמיתית לפרימיום; ראו ההערה על השדה.
+  */
   premium: {
-    chatPerDay: 400,
+    chatPerDay: 150,
     chatBurstPerMin: 15,
-    aiUnitsPerDay: 12_000_000,
-    generatePerDay: 100,
-    sharesPerDay: 100,
-    importsPerDay: 50,
-    imagesPerDay: 30,
-    exploresPerDay: 100,
-    geocodesPerDay: 150,
-    lookupsPerDay: 50,
+    aiUnitsPerDay: 6_000_000,
+    generatePerDay: 20,
+    sharesPerDay: 60,
+    importsPerDay: 30,
+    imagesPerDay: 20,
+    exploresPerDay: 150,
+    geocodesPerDay: 200,
+    lookupsPerDay: 60,
   },
 };
 
@@ -180,8 +246,14 @@ export function aiUnits(usage: {
 }
 
 /**
- * המחיר המוצג בעמוד הפרימיום. החיוב בפועל נקבע ע"י ה-Price שמוגדר
- * ב-Stripe (STRIPE_PRICE_ID) - חובה לוודא שהשניים תואמים לפני השקה.
+ * המחיר המוצג בעמוד הפרימיום.
+ *
+ * **התשתית בקוד ל-checkout היא Stripe (billing.ts, STRIPE_PRICE_ID),
+ * אבל היא לא מוגדרת ולא פעילה - שום מנוי מעולם לא חויב דרכה.** הספק
+ * הפעיל היחיד באתר כרגע הוא PayPal (`server/paypal.ts`), ששם כבר
+ * מריץ תשלום אמיתי עבור "בדיקה לפני הנסיעה". אם/כשההרשמה לפרימיום
+ * תיפתח בפועל, זו החלטה פתוחה איזה משני הנתיבים יחייב אותה - ראו
+ * ההערה על כך ב-`PremiumClient.tsx`. עד אז הכפתור מחזיר "בקרוב".
  */
 export const PREMIUM_PRICE_ILS = 19.9;
 
@@ -196,36 +268,68 @@ export const PREMIUM_PRICE_ILS = 19.9;
 export const PROMO_ATTEMPTS_PER_HOUR = 5;
 export const PROMO_ATTEMPTS_PER_DAY = 20;
 
-/** שורות ההשוואה בעמוד הפרימיום - נגזרות מהמכסות האמיתיות, לא מועתקות */
+/**
+ * **התקרה האמיתית על מנוי פרימיום בודד, בדולרים אמיתיים - $2.00 לחודש.**
+ *
+ * חי כאן (הקובץ המשותף) ולא ב-`budget.ts` (שרת בלבד) כי `PLAN_FEATURE_ROWS`
+ * למטה מציג אותה בעמוד הפרימיום; `budget.ts` מייבא את הקבוע הזה משם
+ * ואוכף אותו בפועל דרך `premiumBudgetFor()` - שם נמצא כל ההסבר על
+ * **איך** זה נאכף (ובידוד מוחלט מהתקציב היומי של אנונימי/חינם).
+ *
+ * החישוב: ₪19.90/חודש כולל מע"מ ≈ ₪16.90 נטו ≈ ₪15 אחרי עמלות סליקה
+ * ≈ $4. $2.00 הם 50% מזה - גם מנוי שממצה את התקרה במלואה משאיר לנו
+ * רווח גולמי של 50% על עצמו, ורוב המנויים לא יתקרבו לזה כלל. זה קונה
+ * בנוחות "שני טיולים אמיתיים": 2 בניות מלאות (2×$0.53) + כ-15 תורי
+ * עריכה/שאלה ממטמון (15×$0.063) ≈ $2.00. פירוט מלא ליד `PLAN_LIMITS.premium`.
+ */
+export const SUBSCRIBER_MONTHLY_CAP_USD = 2.0;
+
+/**
+ * שורות ההשוואה בעמוד הפרימיום - נגזרות מהמכסות האמיתיות, לא מועתקות.
+ *
+ * **היחידה נכתבת בכל תא בנפרד ("ביום"/"בחודש")**, כי מאז שפרימיום
+ * עבר לחלון חודשי (`periodMsFor`) שני הצדדים של אותה שורה כבר לא
+ * חולקים תקופה - הצגת שני מספרים גולמיים זה לצד זה בלי היחידה הייתה
+ * משאירה את הרושם השגוי שהכול עדיין "ליום".
+ *
+ * השורה הראשונה (`predeparture`) היא לא מכסה - היא **הפיצ'ר** שפרימיום
+ * בכלל נותן, לא רק מספר גדול יותר. ראו ההחלטה ב-predeparture.ts /
+ * PreDepartureCheck.tsx.
+ */
 export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string }[] = [
   {
-    label: 'שיחות עם הסוכן ביום',
-    free: String(PLAN_LIMITS.free.chatPerDay),
-    premium: String(PLAN_LIMITS.premium.chatPerDay),
+    label: 'בדיקה לפני הנסיעה',
+    free: `${predepartureCheckPriceLabel()} לטיול`,
+    premium: 'כלולה, בלי הגבלה',
   },
   {
-    label: 'תקציב AI יומי (בניות ועריכות מסלול)',
-    free: 'בסיסי - טיול מלא + עשרות עריכות',
-    premium: 'פי 10 - ללא דאגות',
+    label: 'שיחות עם הסוכן',
+    free: `${PLAN_LIMITS.free.chatPerDay} ביום`,
+    premium: `${PLAN_LIMITS.premium.chatPerDay} בחודש`,
+  },
+  {
+    label: 'תקציב AI (בניות ועריכות מסלול)',
+    free: 'בסיסי - טיול מלא + עשרות עריכות ביום',
+    premium: `עד $${SUBSCRIBER_MONTHLY_CAP_USD.toFixed(2)} בחודש - כשני טיולים מלאים ועריכות`,
   },
   {
     label: 'בניות מסלול מהירות (שאלון/מתכנן)',
-    free: String(PLAN_LIMITS.free.generatePerDay),
-    premium: String(PLAN_LIMITS.premium.generatePerDay),
+    free: `${PLAN_LIMITS.free.generatePerDay} ביום`,
+    premium: `${PLAN_LIMITS.premium.generatePerDay} בחודש`,
   },
   {
-    label: 'צירוף תמונות לשיחה ביום (אישור הזמנה, כרטיס)',
-    free: String(PLAN_LIMITS.free.imagesPerDay),
-    premium: String(PLAN_LIMITS.premium.imagesPerDay),
+    label: 'צירוף תמונות לשיחה (אישור הזמנה, כרטיס)',
+    free: `${PLAN_LIMITS.free.imagesPerDay} ביום`,
+    premium: `${PLAN_LIMITS.premium.imagesPerDay} בחודש`,
   },
   {
-    label: 'ייבוא מפות מ-Google My Maps ביום',
-    free: String(PLAN_LIMITS.free.importsPerDay),
-    premium: String(PLAN_LIMITS.premium.importsPerDay),
+    label: 'ייבוא מפות מ-Google My Maps',
+    free: `${PLAN_LIMITS.free.importsPerDay} ביום`,
+    premium: `${PLAN_LIMITS.premium.importsPerDay} בחודש`,
   },
   {
-    label: 'קישורי שיתוף קצרים ביום',
-    free: String(PLAN_LIMITS.free.sharesPerDay),
-    premium: String(PLAN_LIMITS.premium.sharesPerDay),
+    label: 'קישורי שיתוף קצרים',
+    free: `${PLAN_LIMITS.free.sharesPerDay} ביום`,
+    premium: `${PLAN_LIMITS.premium.sharesPerDay} בחודש`,
   },
 ];

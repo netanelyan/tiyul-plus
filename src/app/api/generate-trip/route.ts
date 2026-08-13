@@ -6,8 +6,8 @@ import { newId } from '@/lib/trip/types';
 import type { Trip, TripDay, TripPreferences, WizardPrefs } from '@/lib/trip/types';
 import { checkLimit, aiUnitsUsedToday, recordAiUnits } from '@/lib/server/limits';
 import { resolveCaller } from '@/lib/server/identity';
-import { PLAN_LIMITS, aiUnits } from '@/lib/plans';
-import { budgetFor, maybeAlert, recordSpend } from '@/lib/server/budget';
+import { PLAN_LIMITS, aiUnits, periodMsFor } from '@/lib/plans';
+import { budgetFor, maybeAlert, maybeAlertPremium, monthKey, premiumBudgetFor, recordSpend } from '@/lib/server/budget';
 import { sameOriginOk } from '@/lib/server/chatGuards';
 
 /**
@@ -301,16 +301,31 @@ export async function POST(request: Request) {
       { status: 429, headers: { 'Retry-After': String(burst.retryAfterSec) } },
     );
   }
-  const daily = checkLimit('generate-day', caller.id, limits.generatePerDay, 24 * 60 * 60 * 1000);
+  const isPremium = caller.plan === 'premium' && Boolean(caller.userId);
+  const daily = checkLimit('generate-day', caller.id, limits.generatePerDay, periodMsFor(caller.tier));
   const unitsUsed = process.env.ANTHROPIC_API_KEY ? await aiUnitsUsedToday(caller.id) : 0;
   /*
     תקרת ההוצאה הגלובלית חלה גם כאן. ההשפעה על המטייל היא **אפס
     לכאורה**: הבנייה ממשיכה דרך `generateTrip` המקומי, בדיוק כמו בכל
     מצב אחר שבו העידון לא זמין. מה שנעצר הוא הקריאה למודל.
+
+    מנוי פרימיום נבדק מול `premiumBudgetFor` בלבד - התקרה החודשית
+    האישית שלו - ולא מול `budgetFor` (התקציב היומי המשותף של
+    אנונימי/חינם), מאותה סיבה בדיוק כמו ב-/api/chat.
   */
-  const budget = process.env.ANTHROPIC_API_KEY ? await budgetFor(caller.id) : null;
-  if (budget) void maybeAlert(budget, caller.id);
-  const aiAllowed = daily.ok && unitsUsed < limits.aiUnitsPerDay && !budget?.exceeded;
+  let budgetExceeded = false;
+  if (process.env.ANTHROPIC_API_KEY) {
+    if (isPremium) {
+      const premiumBudget = await premiumBudgetFor(caller.userId!);
+      budgetExceeded = premiumBudget.exceeded;
+      maybeAlertPremium(premiumBudget, caller.userId!, monthKey());
+    } else {
+      const budget = await budgetFor(caller.id);
+      budgetExceeded = budget.exceeded;
+      void maybeAlert(budget, caller.id);
+    }
+  }
+  const aiAllowed = daily.ok && unitsUsed < limits.aiUnitsPerDay && !budgetExceeded;
 
   // קוראים כטקסט קודם וחוסמים גוף עצום לפני JSON.parse - אותה הגנה שיש
   // ב-/api/chat. בלעדיה אפשר להעסיק את השרת בפרסור של מגה-בייטים.
@@ -347,6 +362,7 @@ export async function POST(request: Request) {
       route: 'generate-trip',
       model: meter.model,
       usage: meter.usage,
+      premium: isPremium,
     });
     if (refinement) {
       days = validateDayPlans(refinement.dayPlans, prefs);

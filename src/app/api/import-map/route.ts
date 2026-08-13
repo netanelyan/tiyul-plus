@@ -9,7 +9,7 @@ import {
 } from '@/lib/import/mymaps';
 import { checkLimit } from '@/lib/server/limits';
 import { resolveCaller } from '@/lib/server/identity';
-import { PLAN_LIMITS } from '@/lib/plans';
+import { PLAN_LIMITS, periodMsFor } from '@/lib/plans';
 
 /**
  * POST { url } → { destination } (בסגנון explored) או { error } בעברית.
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     'import-day',
     caller.id,
     PLAN_LIMITS[caller.plan].importsPerDay,
-    24 * 60 * 60 * 1000,
+    periodMsFor(caller.plan),
   );
   if (!daily.ok) {
     return NextResponse.json(
