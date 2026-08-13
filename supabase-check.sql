@@ -48,7 +48,33 @@ with expected(file, kind, obj) as (
     -- supabase-catalog.sql (the catalog in the database)
     ('supabase-catalog.sql',   'table',  'public.catalog_countries'),
     ('supabase-catalog.sql',   'table',  'public.catalog_destinations'),
-    ('supabase-catalog.sql',   'table',  'public.catalog_places')
+    ('supabase-catalog.sql',   'table',  'public.catalog_places'),
+
+    -- supabase-ai-spend.sql (daily AI spend ceiling + history)
+    ('supabase-ai-spend.sql',  'table',  'public.ai_spend'),
+    ('supabase-ai-spend.sql',  'table',  'public.ai_spend_daily'),
+    ('supabase-ai-spend.sql',  'table',  'public.ai_spend_caller'),
+    ('supabase-ai-spend.sql',  'func',   'public.bump_ai_spend'),
+    ('supabase-ai-spend.sql',  'func',   'public.claim_ai_spend_alert'),
+
+    -- supabase-admin-dash.sql (owner dashboard: export counter + indexes)
+    ('supabase-admin-dash.sql','table',  'public.app_events'),
+    ('supabase-admin-dash.sql','func',   'public.bump_event'),
+
+    -- supabase-newsletter.sql (mailing list signups)
+    ('supabase-newsletter.sql','table',  'public.newsletter_signups'),
+
+    -- supabase-purchases.sql (pre-departure check purchases via PayPal)
+    ('supabase-purchases.sql', 'table',  'public.purchases'),
+
+    -- supabase-premium-budget.sql (per-subscriber monthly AI wallet)
+    ('supabase-premium-budget.sql', 'table', 'public.subscriber_spend_monthly'),
+    ('supabase-premium-budget.sql', 'func',  'public.bump_subscriber_spend'),
+
+    -- supabase-perf-indexes.sql (indexes for queries that already run)
+    ('supabase-perf-indexes.sql', 'index', 'public.ai_spend_route_at_idx'),
+    ('supabase-perf-indexes.sql', 'index', 'public.purchases_created_idx'),
+    ('supabase-perf-indexes.sql', 'index', 'public.profiles_display_name_trgm_idx')
 ),
 checked as (
   select
@@ -58,6 +84,8 @@ checked as (
     case e.kind
       when 'table'  then to_regclass(e.obj) is not null
       when 'view'   then to_regclass(e.obj) is not null
+      -- אינדקס הוא relation בדיוק כמו טבלה - אותה בדיקה עובדת
+      when 'index'  then to_regclass(e.obj) is not null
       when 'func'   then exists (
         select 1 from pg_proc p
         join pg_namespace n on n.oid = p.pronamespace

@@ -27,11 +27,16 @@ create table if not exists public.purchases (
   currency text not null default 'ILS',
   status text not null default 'pending'
     check (status in ('pending', 'paid', 'failed', 'revoked')),
-  -- 'paypal' = תשלום אמיתי; 'admin_grant' = הענקה ידנית מ-/admin ולכן
-  -- **לא** הכנסה אמיתית - ההבדל הזה הוא מה ששומר על הדוח הפיננסי נכון,
-  -- באותו עיקרון בדיוק כמו plan_source ב-supabase-premium.sql.
+  -- 'paypal' = תשלום אמיתי; 'admin_grant' = הענקה ידנית מ-/admin;
+  -- 'premium_included' = הטבת מנוי פרימיום אוטומטית. שני האחרונים הם
+  -- **לא** הכנסה אמיתית (amount=0) - ההבדל הזה הוא מה ששומר על הדוח
+  -- הפיננסי נכון, באותו עיקרון בדיוק כמו plan_source ב-supabase-premium.sql,
+  -- והם נספרים בנפרד זה מזה כדי להבדיל תמיכה אנושית מהטבת מנוי.
+  -- הרשימה כאן חייבת להישאר תואמת ל-PurchaseSource ב-lib/server/purchases.ts;
+  -- להתקנה שרצה עם הגרסה הישנה, supabase-premium-budget.sql מרחיב את
+  -- המגבלה - שני הקבצים בטוחים בכל סדר הרצה.
   source text not null default 'paypal'
-    check (source in ('paypal', 'admin_grant')),
+    check (source in ('paypal', 'admin_grant', 'premium_included')),
   -- באיזה סביבת PayPal זה קרה. purchase שנוצר תחת sandbox לעולם לא
   -- יכול להיחשב paid על ידי קוד שרץ תחת production, ולהיפך - ראו
   -- ההערה על כך ב-server/paypal.ts (sandboxBlocked).

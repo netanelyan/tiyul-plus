@@ -113,10 +113,24 @@ grant execute on function public.bump_subscriber_spend(uuid, text, numeric) to s
 -- ההנחה ש-pgrest.ts קיים כדי למנוע במקום אחר. הבלוק הזה **מוצא** את
 -- שם המגבלה בפועל דרך pg_constraint (המגבלה היחידה על עמודת source
 -- שהיא CHECK, לא FK/PK) ומוריד אותה לפי השם האמיתי שלה.
+--
+-- **והקובץ הזה לא תלוי בסדר ההרצה.** ההרצה הראשונה אצל נתנאל נפלה
+-- עם `relation "public.purchases" does not exist` - הוא הריץ את הקובץ
+-- הזה לפני supabase-purchases.sql. זה בדיוק הלקח שכבר נרשם ביומן על
+-- supabase-admin.sql: "הערת 'דרישה מוקדמת' בכותרת לא מנעה את הטעות,
+-- ולכן הקובץ הפסיק להיות תלוי בסדר ההרצה." לכן: אם הטבלה עוד לא
+-- קיימת - מדלגים בשקט (עם notice), כי supabase-purchases.sql עודכן
+-- ליצור את המגבלה **כבר עם** 'premium_included', כך שבכל סדר הרצה
+-- התוצאה הסופית זהה. בטוח להריץ שוב אחרי שהטבלה נוצרת.
 do $$
 declare
   real_name text;
 begin
+  if to_regclass('public.purchases') is null then
+    raise notice 'public.purchases עוד לא קיימת - מדלגים. supabase-purchases.sql יוצר אותה כבר עם premium_included, כך שאין מה להריץ כאן שוב.';
+    return;
+  end if;
+
   select con.conname into real_name
   from pg_constraint con
   join pg_class rel on rel.oid = con.conrelid
@@ -129,11 +143,11 @@ begin
   if real_name is not null then
     execute format('alter table public.purchases drop constraint %I', real_name);
   end if;
+
+  alter table public.purchases add constraint purchases_source_check
+    check (source in ('paypal', 'admin_grant', 'premium_included'));
 end
 $$;
-
-alter table public.purchases add constraint purchases_source_check
-  check (source in ('paypal', 'admin_grant', 'premium_included'));
 
 -- ---------- אימות ----------
 -- `select conname, pg_get_constraintdef(oid) from pg_constraint
