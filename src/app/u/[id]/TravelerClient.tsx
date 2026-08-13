@@ -126,7 +126,13 @@ export default function TravelerClient({ userId }: { userId: string }) {
             <span className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-sunset text-3xl font-black text-cream ring-4 ring-shell">
               {traveler.avatar ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={traveler.avatar} alt="" className="h-full w-full object-cover" />
+                <img
+                  src={traveler.avatar}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
               ) : (
                 (traveler.displayName[0] ?? 'א').toUpperCase()
               )}

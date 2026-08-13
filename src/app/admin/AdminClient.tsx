@@ -30,6 +30,7 @@ interface UserInfo {
   planUntil?: string | null;
   planSource?: string | null;
   trips?: number;
+  tripsCapped?: boolean;
   unitsToday?: number;
 }
 
@@ -343,7 +344,10 @@ function UserCard({
             </div>
             <div>
               <dt className="text-night/40">טיולים</dt>
-              <dd className="font-bold text-night/75">{info.trips}</dd>
+              <dd className="font-bold text-night/75">
+                {info.trips}
+                {info.tripsCapped && <span className="ms-1 font-normal text-night/40">ומעלה</span>}
+              </dd>
             </div>
             <div>
               <dt className="text-night/40">יחידות AI היום</dt>

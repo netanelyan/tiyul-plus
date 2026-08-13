@@ -41,9 +41,14 @@ export async function POST(req: Request) {
   ));
   const p = profiles?.[0] ?? null;
 
+  // תקרה הגנתית: זו רק ספירה, אבל בלי pgLimit שאילתה ל-user_trips
+  // בלי מגבלת שורות היא בדיוק סוג הסריקה הבלתי-חסומה שאסור שתהיה
+  // כאן - חשבון שנוצל לרעה ונושא אלפי שורות לא אמור להאט את החיפוש.
+  // TRIPS_CAP תואם את ה-MAX_ROWS שכבר קיים ב-/api/admin/trips.
+  const TRIPS_CAP = 2000;
   const trips = await adminSelect<{ id: string }>(
     'user_trips',
-    pgQuery(eq('user_id', user.id), pgSelect(['id'])),
+    pgQuery(eq('user_id', user.id), pgSelect(['id']), pgLimit(TRIPS_CAP)),
   );
 
   const today = new Date().toISOString().slice(0, 10);
@@ -66,6 +71,9 @@ export async function POST(req: Request) {
     planSource: p?.plan_source ?? null,
     isPublic: Boolean(p?.is_public),
     trips: trips?.length ?? 0,
+    // כמו countAuthUsers: אם הגענו לתקרה, המספר למעלה הוא רצפה ולא
+    // ספירה מדויקת - נאמר את זה במפורש ולא מוצג כאילו זה הכול.
+    tripsCapped: (trips?.length ?? 0) >= TRIPS_CAP,
     unitsToday: usage?.[0]?.units ?? 0,
   });
 }

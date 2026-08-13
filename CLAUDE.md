@@ -8627,3 +8627,85 @@ logic to test, the same judgment already applied to `SiteFooter`.
 
 Pushed straight to `main` on explicit instruction - a missing 404 page is
 pure upside with no behavioral risk to anything else on the site.
+
+### 2026-08-13 - Performance pass, then "make sure a user can't get another user's info"
+
+Two asks in one session, both audits first and code second.
+
+**Performance: most of the 5 standard items were already done, and saying so
+mattered more than pretending to redo them.** AI streaming is already SSE end
+to end (`/api/chat`); `generate-trip` is correctly non-streaming (it returns
+one atomic structured trip, not prose). Lazy loading already existed on the
+photo-heavy surfaces (`CardPhoto`, `Flag`, `PlaceThumb`, `ActivitiesPanel`).
+Every list-returning API route already caps rows and reports truncation
+honestly. Image format conversion (WebP/AVIF) is **not applicable and not
+attempted**: every catalog photo is hotlinked from Wikimedia/Unsplash, there
+is no upload pipeline we own, and this file's own history records 150+ dead
+links from a past session that rewrote photo URLs without live HTTP
+verification - rewriting them again for format conversion would be the same
+mistake with a different excuse.
+
+What was real and got fixed: `supabase-admin-dash.sql` tried to index
+`admin_audit (at desc)` - that column doesn't exist (it's `created_at`), so
+that line has been silently failing every time the file ran. Removed it; the
+correct index already exists in `supabase-admin.sql`. New
+`supabase-perf-indexes.sql` adds three indexes for queries that already run
+in the code with no covering index: `ai_spend(route, at desc)` (the warm-path
+check, on a table that grows one row per AI call forever), `purchases
+(created_at desc)` (the unfiltered admin "recent purchases" listing), and a
+`pg_trgm` GIN index on `profiles.display_name` (the community search does a
+leading-wildcard `ILIKE`, which no plain btree can ever use). **Netanel needs
+to run this file.** `/api/admin/user` had one real unbounded query (all of a
+user's trip ids, no limit) - capped it and added a `tripsCapped` flag,
+mirroring the `{total, capped}` pattern `countAuthUsers` already uses.
+Six `<img>` tags were missing `loading="lazy" decoding="async"` - added,
+matching the pattern already established elsewhere; left the chat's
+pending-attachment preview eager on purpose, same reasoning `CardPhoto`
+already documents for its hero image.
+
+**Then: "make sure a user can not get the info of any other user."** This
+was a verification request, and the honest way to answer it is to actually
+trace every path, not to assert confidence. Read every RLS policy in every
+`supabase-*.sql` file, and every API route that accepts an identifier, and
+checked: does identity come from a verified auth token, or from something
+the client sent? `user_trips` and `profiles` policies are both
+`auth.uid() = user_id` - the standard, correct shape. `admin_audit`,
+`purchases`, `usage_daily`, `ai_spend*`, `shared_trips`, `app_flags` are all
+`revoke all from anon, authenticated` - service-role-only, no policy at all,
+which per `supabase-rls-fix.sql`'s own hard-won lesson is "nobody" and not
+"everybody". The one deliberately-public surface, `public_profiles`, exposes
+only `user_id/display_name/avatar/visited` for rows the owner explicitly
+marked public, granted to `authenticated` only (not `anon`), with email
+search going through a `SECURITY DEFINER` function that requires an *exact*
+match and never returns the email itself.
+
+Every route that scopes to "my data" - `checks/create-order`,
+`checks/capture` (explicit `purchase.user_id !== caller.userId` check),
+`checks/status`, `billing/checkout`, `promo/redeem`, `share` - derives the
+acting user from `resolveCaller`/`actorFrom`, which verify the bearer token
+against GoTrue and read the uuid back from Supabase; none of them trust a
+`userId` field from the request body. The only two places a `user`/`userId`
+query param is read (`admin/trips`, `admin/purchases`) are both
+`requireRole(req, 'admin')`-gated and logged to `admin_audit` before the
+data is returned - an admin looking up a specific user by design, not a
+regular user reaching another user's data. `emailByUserId`/`userByEmail` are
+only ever called from admin routes or from `actorFrom` resolving the
+caller's *own* email. Newsletter signup returns the same response for "just
+signed up" and "already signed up," so it can't be used as an oracle for
+whether an email exists.
+
+**Found no vulnerability - every path checked was already correctly scoped.**
+What I did add: `src/lib/server/userTrips.test.ts`, a permanent regression
+test on `findOwnTrip` - the primitive every money-touching route relies on
+to decide "is this really this user's trip." It asserts the actual query
+sent to Supabase filters on **both** `user_id` and trip id (not just the
+trip id, since `adminSelect` uses the service role and RLS does not apply -
+the isolation has to come from the filter the code sends, not from the
+database), that a row belonging to someone else comes back as `null`, and
+that a malformed/tombstoned row and a failed request both fail closed rather
+than open. This kind of check existed before only as one-off browser
+harnesses run during past sessions and never committed as a test file - this
+makes it something a future edit can't silently break.
+
+**Verified:** `tsc --noEmit` clean, `npm run build` clean, 557/557 tests
+(4 new), lint clean on every touched file.

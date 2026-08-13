@@ -52,4 +52,9 @@ revoke all on function public.bump_event(date, text) from anon, authenticated;
 -- ---------- 2. אינדקסים ללוח ----------
 create index if not exists user_trips_updated_idx on public.user_trips (updated_at desc);
 create index if not exists shared_trips_created_idx on public.shared_trips (created_at desc);
-create index if not exists admin_audit_at_idx on public.admin_audit (at desc);
+-- הוסר 2026-08-13: השורה שהייתה כאן ניסתה
+-- `create index ... on public.admin_audit (at desc)`, ועמודה כזו
+-- לא קיימת - ל-admin_audit יש created_at (ראו supabase-admin.sql
+-- שורה 84), לא at. ההרצה נכשלה על השורה הזו בכל פעם. האינדקס הנכון
+-- - `admin_audit_created_idx on public.admin_audit (created_at desc)`
+-- - כבר קיים ב-supabase-admin.sql; אין צורך בעוד אחד כאן.

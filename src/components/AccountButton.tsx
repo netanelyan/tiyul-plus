@@ -46,7 +46,13 @@ export default function AccountButton() {
         >
           {auth.profile?.avatar ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={auth.profile.avatar} alt="" className="h-full w-full object-cover" />
+            <img
+              src={auth.profile.avatar}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover"
+            />
           ) : (
             ((auth.profile?.displayName || email)[0] ?? 'א').toUpperCase()
           )}
@@ -77,7 +83,13 @@ export default function AccountButton() {
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-sunset text-lg font-black text-cream ring-2 ring-cream/20">
                     {auth.profile?.avatar ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={auth.profile.avatar} alt="" className="h-full w-full object-cover" />
+                      <img
+                        src={auth.profile.avatar}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        className="h-full w-full object-cover"
+                      />
                     ) : (
                       ((auth.profile?.displayName || email)[0] ?? 'א').toUpperCase()
                     )}

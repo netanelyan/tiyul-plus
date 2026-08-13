@@ -154,7 +154,13 @@ function ProfileCard() {
           >
             {profile.avatar ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={profile.avatar} alt="" className="h-full w-full object-cover" />
+              <img
+                src={profile.avatar}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover"
+              />
             ) : (
               <span className="flex h-full w-full items-center justify-center text-3xl font-black text-cream">
                 {initial}
@@ -613,7 +619,13 @@ function CommunityCard() {
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-sunset text-base font-black text-cream">
                   {r.avatar ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={r.avatar} alt="" className="h-full w-full object-cover" />
+                    <img
+                      src={r.avatar}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full w-full object-cover"
+                    />
                   ) : (
                     (r.displayName[0] ?? 'א').toUpperCase()
                   )}

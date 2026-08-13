@@ -244,6 +244,8 @@ export default function ChatPanel({
                 <img
                   src={msg.image}
                   alt="תמונה שצורפה לשיחה"
+                  loading="lazy"
+                  decoding="async"
                   className={`max-h-56 w-auto rounded-xl object-contain ${msg.content ? 'mb-2' : ''}`}
                 />
               )}
