@@ -8934,3 +8934,55 @@ you haven't Read is how files die quietly.
 **Verified:** 572/572 tests (16 vs HEAD: 6 new, 10 recovered), tsc clean,
 build clean, lint at the pre-existing baseline (the two remaining hits
 reproduce on unmodified HEAD). Pushed to main.
+
+### 2026-08-13 (c) - The pricing page inverts: the one-off check leads, the subscription steps back
+
+Netanel closed the "premium has no exclusive feature" question with a decision,
+not a feature: **don't build capability to justify a tier nobody has bought
+yet.** Instead, run the numbers as a buyer would - ₪19.90/month is ₪238.80 a
+year; the one-off check covers two trips for ₪59.80; for the typical Israeli
+travelling once or twice a year the subscription is four times the price of
+buying what they need. Anyone doing that arithmetic picks the one-off, and
+they'd be right. So the page now says it before the buyer has to work it out.
+
+**The new `/premium` structure** (route unchanged, framing inverted):
+
+1. Hero: "התכנון חינם. לפני היציאה - בדיקה אחת." - planning is free, the
+   product is the check.
+2. **The check as the star card** (it took the dark hero treatment the
+   subscription used to have, badge "🛫 לרוב המטיילים"): what it does, ₪29.90
+   per trip, bought from the trip screen within 21 days of departure, CTA to
+   `/chat`. A quiet line notes it's included for subscribers.
+3. **The arithmetic, in the open**: "החשבון, בגלוי:" - two checks ₪59.80 vs a
+   year of subscription ₪238.80, "לרוב המטיילים הבדיקה החד-פעמית משתלמת
+   בהרבה - וזו גם ההמלצה שלנו", and the break-even stated plainly: the
+   subscription starts justifying itself around 8 trips a year. All three
+   numbers are **computed from the real constants** (PRICE_ILS,
+   PREMIUM_PRICE_ILS), not typed - a price change updates the honest math
+   automatically.
+4. **The subscription, demoted and aimed**: "מתכננים כל הזמן? בשביל זה
+   המנוי" - families with several trips a year, guides and group leaders,
+   organizers, named in plain words. The free-vs-premium comparison cards
+   stay but both are now light shell cards; the subscription no longer
+   wears the star treatment.
+
+**The guaranteed lane stepped out of the headline** per instruction - its
+value is invisible until traffic actually exhausts the daily pool, and
+pre-launch that's nobody. It moved from the page h1 and from row #2 of
+`PLAN_FEATURE_ROWS` to after the quota rows (still in the table - it's true,
+it's just not the pitch), and the free-tier quota message's upsell line was
+reframed from mechanism ("מסלול מובטח") to audience ("מתכננים כל הזמן?").
+
+**Nothing was gated.** No code path changed - this is copy and structure
+only (`PremiumClient.tsx`, `premium/page.tsx` metadata, `PLAN_FEATURE_ROWS`
+order, one string in `chat/route.ts`). Live lookups and everything else free
+stay free, per the explicit line in the instruction.
+
+**Verified:** 572/572 tests, tsc/build/lint clean, and 13 content assertions
+against the served production HTML: the h1, the star card with per-trip
+price, both arithmetic figures and the break-even, the check card rendering
+above the subscription section, the guaranteed lane absent from the hero,
+PayPal (not Stripe) in the trust line, zero dollar signs. One SSR gotcha
+worth keeping: React splits JSX text interpolations with `<!-- -->` comment
+nodes in served HTML, so a naive substring assertion on "סביב 8 טיולים"
+fails against the raw page - strip the comment markers before asserting.

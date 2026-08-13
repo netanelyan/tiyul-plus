@@ -324,11 +324,6 @@ export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string }
     premium: 'כלולה, בלי הגבלה',
   },
   {
-    label: 'זמינות הסוכן החכם',
-    free: 'משותפת - תלויה בעומס היומי באתר',
-    premium: 'מסלול אישי מובטח - לא תלוי באף אחד אחר',
-  },
-  {
     label: 'שיחות עם הסוכן',
     free: `${PLAN_LIMITS.free.chatPerDay} ביום, לפי הזמינות המשותפת`,
     premium: `${PLAN_LIMITS.premium.chatPerDay} בחודש במסלול המובטח`,
@@ -337,6 +332,17 @@ export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string }
     label: 'בניית טיול מלא בשיחה',
     free: 'במסגרת המכסה היומית',
     premium: `עד ${PREMIUM_TRIP_BUILDS_PER_MONTH} טיולים מלאים בחודש`,
+  },
+  /*
+    שורת "המסלול המובטח" יושבת אחרי המכסות ולא בראש - הוראת נתנאל:
+    היתרון הזה אמיתי אבל בלתי-נראה עד שיש תנועה שממצה את התקציב
+    היומי, ולפני השקה זה אף אחד. הוא נשאר בטבלה כי הוא נכון; הוא
+    פשוט לא הכותרת.
+  */
+  {
+    label: 'זמינות הסוכן החכם',
+    free: 'משותפת - תלויה בעומס היומי באתר',
+    premium: 'מסלול אישי מובטח - לא תלוי באף אחד אחר',
   },
   {
     label: 'בניות מסלול מהירות (שאלון/מתכנן)',
