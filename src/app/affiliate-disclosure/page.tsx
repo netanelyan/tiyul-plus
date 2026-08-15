@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import PageShell from '@/components/PageShell';
-import { Gap, List, Section, Updated } from '@/components/PolicySection';
+import { List, Section, Updated } from '@/components/PolicySection';
 
 export const metadata = {
   title: 'קישורי שותפים | טיול+',
@@ -100,27 +100,26 @@ export default function Page() {
         </p>
       </Section>
 
-      <Section title="פרטים שעוד צריך לסגור">
-        <Gap kind="verify">
-          <strong>שיעור העמלה.</strong> אין בקוד שום נתון על אחוזים או תנאי תשלום, ולכן אין כאן
-          מספר. אם תרצה לפרסם אותו, הוא צריך להגיע מההסכם עצמו.
-        </Gap>
-        <Gap kind="verify">
+      <Section title="פרטים נוספים">
+        <p>
+          <strong>שיעור העמלה.</strong> אנחנו לא מפרסמים את שיעורי העמלה המדויקים מכל ספק - אלה
+          פרטים מסחריים שבין הצדדים, ואינם משפיעים על מה שמוצג לכם או על ההמלצות (ראו למעלה).
+        </p>
+        <p>
           <strong>הרשת השיווקית Impact.</strong> בכל עמוד באתר יושב תג אימות בעלות של Impact
           (רשת שותפים שדרכה מנוהלת גם התוכנית של Viator). התג לבדו רק מוכיח שנרשמנו שם - הוא לא
-          טוען דבר ולא אוסף דבר. צריך לוודא אילו תוכניות אושרו בפועל, ולציין כאן את השותפים שיצאו
-          לדרך.
-        </Gap>
-        <Gap kind="fill">
-          שאלות על העמוד הזה - לכתובת שתמלא בעמוד{' '}
+          טוען דבר ולא אוסף דבר. אנחנו לא מפרטים כאן בשמם אילו תוכניות שותפים אושרו לנו בפועל.
+        </p>
+        <p>
+          שאלות על העמוד הזה -{' '}
           <Link href="/contact" className="font-bold text-sunset-deep hover:underline">
             יצירת קשר
           </Link>
           .
-        </Gap>
+        </p>
       </Section>
 
-      <Updated date="11 באוגוסט 2026" />
+      <Updated date="15 באוגוסט 2026" />
     </PageShell>
   );
 }

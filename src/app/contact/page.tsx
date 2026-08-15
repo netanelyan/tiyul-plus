@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import PageShell from '@/components/PageShell';
-import { Gap, Section, Updated } from '@/components/PolicySection';
+import { Section, Updated } from '@/components/PolicySection';
 
 export const metadata = {
   title: 'יצירת קשר | טיול+',
@@ -15,11 +15,14 @@ export default function Page() {
       </p>
 
       <Section title="פרטים">
-        <Gap kind="fill">
-          כאן צריכים להיכנס הפרטים האמיתיים, ורצוי לפני פרסום העמודים המשפטיים - כמה מהם מפנים
-          לכאן: כתובת אימייל כללית, כתובת נפרדת לפניות פרטיות ומחיקת מידע (או ציון שהיא אותה
-          כתובת), הזהות המשפטית שמאחורי השירות ומספר העוסק או החברה, וכתובת למשלוח דואר אם נדרשת.
-        </Gap>
+        <p className="rounded-xl bg-shell p-4 ring-1 ring-night/10">
+          מייל: <a href="mailto:natikyan153@gmail.com" className="font-bold text-sunset-deep hover:underline">
+            natikyan153@gmail.com
+          </a>{' '}
+          - לכל הפניות, כולל פרטיות ומחיקת מידע. השירות מופעל על ידי{' '}
+          <strong>נתנאל יאנצ&rsquo;בסקי</strong>, עוסק מורשה מס&rsquo;{' '}
+          <strong dir="ltr" className="inline-block">327727525</strong>.
+        </p>
       </Section>
 
       <Section title="נושאים שמגיעים לכאן">
@@ -52,7 +55,7 @@ export default function Page() {
         </p>
       </Section>
 
-      <Updated date="11 באוגוסט 2026" />
+      <Updated date="15 באוגוסט 2026" />
     </PageShell>
   );
 }

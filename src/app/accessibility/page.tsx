@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Gap, List, Section, Updated } from '@/components/PolicySection';
+import { List, Section, Updated } from '@/components/PolicySection';
 
 export const metadata = {
   title: 'הצהרת נגישות | טיול+',
@@ -91,12 +91,17 @@ export default function AccessibilityStatementPage() {
 
       <Section title="יצירת קשר בנושא נגישות">
         <p>נתקלתם בבעיה, או יש לכם הצעה לשיפור? נשמח לשמוע, וזה באמת עוזר לנו לתקן.</p>
-        <Gap kind="fill">
-          שלושת הפרטים האלה הם הצהרה של אדם ולא משהו שאפשר לגזור מהקוד, ולכן נשארו לך:{' '}
-          <strong>שם רכז/ת הנגישות</strong>, <strong>כתובת אימייל</strong> לפניות נגישות, ו
-          <strong>מספר טלפון</strong>. התקנות דורשות דרך התקשרות זמינה, ומקובל לציין גם תוך כמה זמן
-          עונים.
-        </Gap>
+        <p className="rounded-xl bg-shell p-4 ring-1 ring-night/10">
+          רכז/ת הנגישות: <strong>נתנאל יאנצ&rsquo;בסקי</strong>. מייל:{' '}
+          <a href="mailto:natikyan153@gmail.com" className="font-bold text-sunset-deep hover:underline">
+            natikyan153@gmail.com
+          </a>
+          . טלפון:{' '}
+          <a href="tel:+972515310498" dir="ltr" className="inline-block font-bold text-sunset-deep hover:underline">
+            +972-51-531-0498
+          </a>
+          . אנחנו משתדלים לענות תוך <strong>עד 7 ימי עסקים</strong>.
+        </p>
         <p className="text-sm text-night/60">
           פניות בנושאים אחרים - בעמוד{' '}
           <Link href="/contact" className="font-bold text-sunset-deep hover:underline">
@@ -114,7 +119,7 @@ export default function AccessibilityStatementPage() {
         </p>
       </Section>
 
-      <Updated date="11 באוגוסט 2026" />
+      <Updated date="15 באוגוסט 2026" />
 
       <Link href="/" className="mt-6 inline-block font-bold text-sunset-deep hover:underline">
         ← חזרה לדף הבית

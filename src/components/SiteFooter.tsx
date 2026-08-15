@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Logo from '@/components/Logo';
-import NewsletterSignup from '@/components/NewsletterSignup';
 import {
   coverageCountsLine,
   footerCountries,
@@ -106,14 +105,11 @@ const POLICY: FooterLink[] = [
   { href: '/accessibility', label: 'הצהרת נגישות' },
 ];
 
-/**
- * רשתות חברתיות. `href` ריק = מוצג כטקסט דהוי ולא כקישור שבור.
- * TODO(Netanel): למלא כתובות אמיתיות (או להסיר רשת שלא תהיה).
- */
+/** רשתות חברתיות. `href` ריק = מוצג כטקסט דהוי ולא כקישור שבור. */
 const SOCIAL: FooterLink[] = [
-  { href: '', label: 'אינסטגרם' },
-  { href: '', label: 'פייסבוק' },
-  { href: '', label: 'טיקטוק' },
+  { href: 'https://instagram.com/tiyulplus', label: 'אינסטגרם' },
+  { href: 'https://facebook.com/tiyulplus', label: 'פייסבוק' },
+  { href: 'https://tiktok.com/@tiyulplus', label: 'טיקטוק' },
 ];
 
 export default function SiteFooter() {
@@ -141,9 +137,6 @@ export default function SiteFooter() {
               טיול+ הוא סוכן AI שבונה מסלולים אוטומטית. תמיד כדאי לאמת שעות פתיחה, מחירים,
               זמינות וכשרות מול המקומות עצמם לפני הנסיעה.
             </p>
-            <div className="max-w-sm">
-              <NewsletterSignup />
-            </div>
           </div>
 
           <div className="lg:col-span-3">
