@@ -7,5 +7,5 @@
  *
  * לעדכן את שני הערכים יחד בכל פעם שתוכן /terms משתנה מהותית.
  */
-export const TERMS_VERSION = '2026-08-14';
-export const TERMS_UPDATED_LABEL = '14 באוגוסט 2026';
+export const TERMS_VERSION = '2026-08-15';
+export const TERMS_UPDATED_LABEL = '15 באוגוסט 2026';
