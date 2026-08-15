@@ -133,22 +133,26 @@ export const bookingProviders: BookingProvider[] = [
     emoji: '🛡️',
     title: 'ביטוח נסיעות',
     blurb: 'כיסוי רפואי וביטול - לפי אורך הטיול והפעילויות.',
-    cta: 'בקרוב',
+    cta: 'חיפוש ביטוח נסיעות',
     question: 'דאגתם לביטוח נסיעות?',
-    provider: null,
+    provider: 'World Nomads',
     affiliate: null,
-    publicUrl: null, // ספק עדיין לא נבחר - מצב "בקרוב" מכוון
+    // דף הבית: אין מזהה שותפים עדיין, ואין ל-World Nomads slug תלוי-
+    // יעד שמתועד אצלנו - בדיוק כמו eSIM/טיסות למטה.
+    publicUrl: 'https://www.worldnomads.com/',
   },
   {
     kind: 'car',
     emoji: '🚗',
     title: 'השכרת רכב',
     blurb: 'רכב לימי הטיול - חופש לצאת מחוץ לעיר.',
-    cta: 'בקרוב',
+    cta: 'חיפוש רכב',
     question: 'המסלול יוצא מחוץ לעיר - תרצו שנבדוק רכב?',
-    provider: null,
+    provider: 'Rentalcars.com',
     affiliate: null,
-    publicUrl: null, // ספק עדיין לא נבחר
+    // דף הבית: השכרת רכב היא לטיול כולו ולא לעיר בודדת (perCity לא
+    // מסומן למעלה), כך שאין {QUERY} לצרף - אותה החלטה כמו טיסות ו-eSIM.
+    publicUrl: 'https://www.rentalcars.com/',
   },
 ];
 

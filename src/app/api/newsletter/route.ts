@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { adminDbEnabled, adminInsert } from '@/lib/server/supabaseAdmin';
-import { checkLimit } from '@/lib/server/limits';
+import { adminDbEnabled, adminInsert, adminRpc } from '@/lib/server/supabaseAdmin';
+import { checkLimit, dayKey } from '@/lib/server/limits';
 import { resolveCaller } from '@/lib/server/identity';
 
 /**
@@ -50,10 +50,22 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: 'not-configured' }, { status: 503 });
   }
 
-  // upsert: הרשמה חוזרת היא no-op שקט, ולכן התשובה זהה בשני המקרים
-  const saved = await adminInsert('newsletter_signups', { email, source }, { upsert: true });
+  /*
+    ignore-duplicates ולא merge: כפילות מוחזרת כמערך ריק, וזה מה
+    שמאפשר לספור לדשבורד רק כתובות **חדשות** - בלי לשנות את התשובה
+    ללקוח, שנשארת זהה לחדש ולכפול (שהטופס לא יהפוך לבודק כתובות).
+    תופעת לוואי רצויה: הרשמה חוזרת לא דורסת את המקור והתאריך המקוריים.
+
+    האירוע נספר **כאן בשרת** ולא בדפדפן, בכוונה כפולה: רק השרת יודע
+    להבדיל חדש מכפול, ונתיב /api/events דוחה את הסוג הזה מלקוחות -
+    אחרת אפשר היה לנפח את המונה בלולאה בלי לרשום אף כתובת.
+  */
+  const saved = await adminInsert('newsletter_signups', { email, source }, { ignoreDuplicates: true });
   if (!saved) {
     return NextResponse.json({ ok: false, error: 'store-failed' }, { status: 502 });
+  }
+  if (saved.length > 0) {
+    void adminRpc('bump_event', { p_day: dayKey(), p_kind: 'newsletter' });
   }
   return NextResponse.json({ ok: true });
 }

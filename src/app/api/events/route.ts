@@ -19,7 +19,17 @@ import { dayKey } from '@/lib/server/limits';
  * ומכסת קצב. הוא לא נוגע במודל ולא עולה כסף.
  */
 
-const KINDS = new Set(['print', 'pdf', 'whatsapp', 'share', 'maps']);
+/**
+ * הרשימה הסגורה של אירועים שדפדפן רשאי לדווח. אירועי הצמיחה החדשים
+ * (טיול נוצר, שיתוף נפתח, המרה, ביקור חוזר) נכנסו אליה; `newsletter`
+ * **בכוונה לא** - הוא נספר בשרת בלבד, בנתיב ההרשמה, ששם אפשר להבדיל
+ * כתובת חדשה מכפולה. לקוח שהיה רשאי לשלוח אותו היה יכול לנפח את
+ * "אימיילים שנאספו" בלולאה בלי לרשום אף כתובת.
+ */
+const KINDS = new Set([
+  'print', 'pdf', 'whatsapp', 'share', 'maps',
+  'trip_created', 'shared_open', 'shared_adopt', 'return_visit',
+]);
 
 export async function POST(req: Request) {
   /*

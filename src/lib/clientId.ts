@@ -45,3 +45,19 @@ export function clientIdHeader(): Record<string, string> {
   const id = clientId();
   return id ? { 'x-client-id': id } : {};
 }
+
+/**
+ * האם כבר קיים מזהה - **בלי ליצור אחד**. `clientId()` מייצר מזהה
+ * בהיעדרו, ולכן אי אפשר להשתמש בו כבדיקת "האם הדפדפן הזה ותיק":
+ * עצם הבדיקה הייתה הופכת כל דפדפן חדש לוותיק. מונה הביקורים החוזרים
+ * (events.ts) הוא הצרכן - דפדפן שנושא מזהה מלפני הפיצ'ר היה כאן קודם.
+ */
+export function hasClientId(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    const v = localStorage.getItem(KEY);
+    return Boolean(v && /^[a-z0-9]{16,64}$/.test(v));
+  } catch {
+    return false;
+  }
+}

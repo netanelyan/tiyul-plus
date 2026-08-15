@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Destination, Place } from '@/lib/types';
 import { categoryMeta } from '@/lib/categories';
+import { isOwnShare, markSharedVisit, trackEvent } from '@/lib/events';
 import { useTrip } from '@/lib/trip/TripContext';
 import { travelLeg } from '@/lib/trip/travel';
 import { dayDescription } from '@/lib/trip/dayDescription';
@@ -31,6 +32,29 @@ export default function SharedTripView({
   const trip = useTrip();
   const router = useRouter();
   const [saved, setSaved] = useState(false);
+
+  /*
+    מונה "פתיחות של קישור משותף" - רק צופה שאינו הבעלים (הטוקן לא
+    ברשימת השיתופים שהדפדפן הזה יצר), פעם אחת לטאב (רענון לא מנפח).
+    ממתין ל-hydration כי סמן ההמרה מוצב רק לדפדפן שעוד אין בו טיולים -
+    "הצופה יצר טיול משלו" מודד אנשים חדשים, לא מתכננים קיימים.
+    אדמין מושתק בתוך trackEvent עצמו (הדגל הפנימי).
+  */
+  useEffect(() => {
+    if (!trip.hydrated) return;
+    const token = decodeURIComponent(window.location.pathname.split('/t/')[1] ?? '');
+    if (!token || isOwnShare(token)) return;
+    const seenKey = `tiyul-plus:opened:${token.slice(0, 40)}`;
+    try {
+      if (sessionStorage.getItem(seenKey)) return;
+      sessionStorage.setItem(seenKey, '1');
+    } catch {
+      /* אין sessionStorage - סופרים בכל זאת, עדיף ספירה כפולה מאף ספירה */
+    }
+    trackEvent('shared_open');
+    if (trip.trips.length === 0) markSharedVisit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trip.hydrated]);
 
   const destOf = (slug: string) => cityData.find((d) => d.slug === slug);
   const placeOf = (slug: string, id: string): Place | undefined =>
