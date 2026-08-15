@@ -31,6 +31,13 @@ export interface UserProfile {
   role: Role;
   /** מתי הפרימיום פג. null = ללא הגבלה (מנוי פעיל או הענקה לתמיד). */
   planUntil: string | null;
+  /**
+   * מתי אושרו תנאי השימוש ומדיניות הפרטיות לראשונה, ולאיזו גרסה
+   * (ראו src/lib/legal.ts ו-supabase-consent.sql). null = טרם נרשמה
+   * הסכמה - למשל חשבון שנוצר לפני שהמנגנון הזה נבנה.
+   */
+  termsAcceptedAt: string | null;
+  termsVersion: string | null;
 }
 
 export const EMPTY_PROFILE: UserProfile = {
@@ -43,6 +50,8 @@ export const EMPTY_PROFILE: UserProfile = {
   plan: 'free',
   role: 'user',
   planUntil: null,
+  termsAcceptedAt: null,
+  termsVersion: null,
 };
 
 /** מה שנחשף על מטייל ציבורי - לעולם לא מייל/טלפון/טיולים */
@@ -63,20 +72,32 @@ interface Row {
   plan?: string;
   role?: string;
   plan_until?: string | null;
+  terms_accepted_at?: string | null;
+  terms_version?: string | null;
 }
 
 export async function fetchProfile(supabase: SupabaseClient): Promise<UserProfile | null> {
-  // עמודת plan מגיעה מ-supabase-premium.sql; אם ה-SQL עוד לא רץ הבחירה
-  // איתה נכשלת - נופלים לבחירה בלי העמודה כדי שפרופילים לא יישברו.
+  // עמודת plan מגיעה מ-supabase-premium.sql, terms_* מגיעות מ-
+  // supabase-consent.sql; אם קובץ SQL עוד לא רץ הבחירה איתו נכשלת -
+  // נופלים לבחירה בלי העמודות שלו כדי שפרופילים לא יישברו.
   //
-  // שלוש מדרגות נסיגה, כי כל בלוק SQL מוסיף עמודות ולא כולם רצו: קודם
+  // ארבע מדרגות נסיגה, כי כל בלוק SQL מוסיף עמודות ולא כולם רצו: קודם
+  // עם terms_accepted_at/terms_version (supabase-consent.sql), אחר כך
   // עם role/plan_until (supabase-admin.sql), אחר כך עם plan בלבד
   // (supabase-premium.sql), ולבסוף העמודות הבסיסיות. בלי זה, פרופיל
   // נשבר לגמרי רק כי בלוק SQL אחד עוד לא הורץ.
   let { data, error } = await supabase
     .from('profiles')
-    .select('display_name,phone,avatar,visited,prefs,is_public,plan,role,plan_until')
+    .select(
+      'display_name,phone,avatar,visited,prefs,is_public,plan,role,plan_until,terms_accepted_at,terms_version',
+    )
     .maybeSingle();
+  if (error) {
+    ({ data, error } = await supabase
+      .from('profiles')
+      .select('display_name,phone,avatar,visited,prefs,is_public,plan,role,plan_until')
+      .maybeSingle());
+  }
   if (error) {
     ({ data, error } = await supabase
       .from('profiles')
@@ -104,6 +125,8 @@ export async function fetchProfile(supabase: SupabaseClient): Promise<UserProfil
     plan: effectivePlan(r),
     role: isRole(r.role) ? r.role : 'user',
     planUntil: r.plan_until ?? null,
+    termsAcceptedAt: r.terms_accepted_at ?? null,
+    termsVersion: r.terms_version ?? null,
   };
 }
 
@@ -123,6 +146,35 @@ export async function upsertProfile(
       visited: profile.visited.slice(0, 250),
       prefs: profile.prefs,
       is_public: profile.isPublic,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: 'user_id' },
+  );
+  return !error;
+}
+
+/**
+ * רישום חד-פעמי של הסכמה לתנאי השימוש ולמדיניות הפרטיות. נקרא מ-
+ * AuthContext מיד אחרי אימות קוד מוצלח, ורק כשעוד לא נרשמה הסכמה
+ * קודמת - כדי שכניסה חוזרת לא תדרוס את התאריך המקורי בתאריך של היום.
+ *
+ * upsert חלקי בכוונה: האובייקט הנשלח מכיל רק את שתי העמודות האלה (ואת
+ * user_id/updated_at), ולכן הוא לא נוגע בשם תצוגה, טלפון או שאר
+ * הפרופיל - גם אם עדיין אין שורה בכלל, ה-upsert יוצר אותה עם ערכי
+ * ברירת המחדל בשאר העמודות.
+ */
+export async function recordTermsAcceptance(
+  supabase: SupabaseClient,
+  version: string,
+): Promise<boolean> {
+  const { data: userRes } = await supabase.auth.getUser();
+  const uid = userRes.user?.id;
+  if (!uid) return false;
+  const { error } = await supabase.from('profiles').upsert(
+    {
+      user_id: uid,
+      terms_accepted_at: new Date().toISOString(),
+      terms_version: version,
       updated_at: new Date().toISOString(),
     },
     { onConflict: 'user_id' },

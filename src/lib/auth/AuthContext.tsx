@@ -3,7 +3,8 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { getSupabase } from './client';
-import { EMPTY_PROFILE, fetchProfile, upsertProfile, type UserProfile } from './profile';
+import { EMPTY_PROFILE, fetchProfile, recordTermsAcceptance, upsertProfile, type UserProfile } from './profile';
+import { TERMS_VERSION } from '@/lib/legal';
 
 /**
  * הקשר החשבון: התחברות בקוד חד-פעמי למייל (OTP) - בלי סיסמאות.
@@ -112,7 +113,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (email: string, code: string) => {
       if (!supabase) return { ok: false, error: 'החשבונות לא מוגדרים בסביבה הזו' };
       const { error } = await supabase.auth.verifyOtp({ email, token: code, type: 'email' });
-      return error ? { ok: false, error: friendly(error.message) } : { ok: true };
+      if (error) return { ok: false, error: friendly(error.message) };
+      // ההתחברות עצמה היא רגע ההסכמה (ראו הטקסט ליד הכפתור במודל) -
+      // נרשמת כאן, בכניסה המוצלחת הראשונה בלבד, ולא בכל כניסה חוזרת.
+      // אם הרישום נכשל (רשת, או שהמיגרציה supabase-consent.sql עוד לא
+      // רצה) ההתחברות עדיין מצליחה - זה לא חוסם משתמש מהשירות.
+      try {
+        const p = await fetchProfile(supabase);
+        if (p && !p.termsAcceptedAt) await recordTermsAcceptance(supabase, TERMS_VERSION);
+      } catch {
+        /* לא קריטי - יישמר בכניסה הבאה */
+      }
+      return { ok: true };
     },
     [supabase],
   );

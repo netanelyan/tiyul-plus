@@ -489,7 +489,25 @@ function LoginModal({ onClose }: { onClose: () => void }) {
 
           {step === 'email' && (
             <p className="mt-5 border-t border-night/10 pt-3 text-center text-[11px] leading-relaxed text-night/40">
-              ההתחברות יוצרת חשבון אם עוד אין לך אחד · נשמרים רק המייל והטיולים שלך
+              בלחיצה על ״המשך עם המייל״ אתם מסכימים ל
+              <Link
+                href="/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-night/55 underline hover:text-sunset-deep"
+              >
+                תנאי השימוש
+              </Link>{' '}
+              ול
+              <Link
+                href="/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-night/55 underline hover:text-sunset-deep"
+              >
+                מדיניות הפרטיות
+              </Link>{' '}
+              שלנו · ההתחברות יוצרת חשבון אם עוד אין לך אחד
             </p>
           )}
         </div>

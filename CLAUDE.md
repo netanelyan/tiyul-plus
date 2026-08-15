@@ -8986,3 +8986,97 @@ PayPal (not Stripe) in the trust line, zero dollar signs. One SSR gotcha
 worth keeping: React splits JSX text interpolations with `<!-- -->` comment
 nodes in served HTML, so a naive substring assertion on "סביב 8 טיולים"
 fails against the raw page - strip the comment markers before asserting.
+
+### 2026-08-14 - The five clauses lawyers ask for, and a consent that never overwrites its own timestamp
+
+The site already had `/terms` and `/privacy` - hand-written, RTL, with the
+established `Gap` discipline (yellow-boxed, unmissable placeholders for
+anything requiring a lawyer or a business decision this session cannot make).
+The ask was five specific protective clauses plus a real consent record tied
+to signup. Nothing here was built from a blank slate; it was built to fit
+what was already there.
+
+**Two decisions were not mine to make, so they were asked rather than
+guessed** (Section 12/14's placeholder already refused to invent a
+jurisdiction, and hard rule 2 forbids fabricating facts): governing law and
+dispute-resolution shape, and the liability-cap wording. Netanel chose Israel
+with binding individual arbitration + an explicit class-action waiver, and a
+cap at the greater of ₪100 or amount paid in the trailing 12 months (most
+users pay ₪0, so the nominal floor is what usually applies).
+
+**`/terms` gained three sections and one was rewritten**, renumbered 8-14:
+Section 8 (limitation of liability) now leads with an explicit AS IS / AS
+AVAILABLE disclaimer, excludes indirect/incidental/special/consequential
+damages by name (including data loss and service outages), and states the
+cap. Section 9 (new) is indemnification - third-party claims arising from a
+user's own content, misuse or breach. Section 10 (new, split out of the old
+combined section) is suspension/termination: sole discretion, at any time,
+without prior notice - the graceful "we'll try to give notice" language now
+applies only to a full shutdown, not to closing an abusive account. Section
+14 is the dispute-resolution clause finally written out: Israeli law,
+binding individual arbitration (small-claims and injunctive-relief carve-
+outs), Hebrew-language, Tel Aviv-Yafo default seat, and an explicit
+class-action / consolidated-claim waiver. **What still can't be filled
+honestly stays in `Gap`, not prose**: the legal entity name and notice
+address (only Netanel has these), and a `verify` flag that Israeli consumer-
+protection law places real, specific restrictions on arbitration clauses
+against consumers and this wording needs a lawyer before it's load-bearing -
+writing it as settled fact would be exactly the "sounds right" trap this
+file's own `Gap` component exists to prevent.
+
+**Consent is clickwrap, not a checkbox** - the OTP login has no signup form
+to attach one to, and adding a mandatory tick would add friction to a flow
+this codebase has tuned hard for zero friction. The line under the email
+step now reads "בלחיצה על ׳המשך עם המייל׳ אתם מסכימים לתנאי השימוש ולמדיניות
+הפרטיות שלנו", with real links to both, opened in a new tab so the modal's
+in-progress state survives a click-through to read them.
+
+**The timestamp is recorded once, not on every login.** New columns
+`terms_accepted_at`/`terms_version` on `profiles` (`supabase-consent.sql`,
+additive, follows the same degrade-gracefully `fetchProfile` ladder pattern
+already used for `plan`/`role` - a fourth tier, so an account created before
+this migration runs doesn't break). `verifyCode` in `AuthContext` checks the
+freshly-fetched profile immediately after a successful OTP verify; if
+`termsAcceptedAt` is still null it writes today's date and the current
+`TERMS_VERSION` via a **partial** upsert (`recordTermsAcceptance` in
+`profile.ts`) that touches only those two columns - a returning user's
+display name, avatar or preferences are never touched by this call, and a
+second login never overwrites the original acceptance date. `TERMS_VERSION`/
+`TERMS_UPDATED_LABEL` live in one new file, `src/lib/legal.ts`, and `/terms`'
+own `<Updated>` stamp now reads from that same constant instead of a
+hand-typed string - the exact species of drift this file's session log has
+flagged more than once (a date duplicated by hand in two places, one of them
+quietly going stale).
+
+**`/privacy` got one line, not a rewrite.** It already promises to describe
+exactly what's collected under an account; a new field on `profiles` that
+it didn't mention would have made an accurate document quietly wrong the
+moment this shipped, so the "עם חשבון" list gained one bullet naming the new
+timestamp, and the page's own `Updated` date moved to match.
+
+**Verified:** `tsc --noEmit` clean, `npm run build` clean (all 293 routes,
+`/terms`/`/privacy` still static), 580/580 tests (a pre-existing, unrelated
+suite - no test file for `profile.ts`/`AuthContext.tsx` existed before this
+session). `npx eslint` on every touched file: one real new issue (straight
+quotes around AS IS/AS AVAILABLE, `react/no-unescaped-entities`) found and
+fixed; the remaining 5 hits in `AccountButton.tsx`/`AuthContext.tsx` are
+confirmed pre-existing by diffing against unmodified `HEAD` with the same
+files - all `react-hooks/set-state-in-effect`, the same class of finding
+this file's session log has repeatedly noted as baseline noise, not
+introduced here. `policyPages.test.ts`'s hard rule - every `[למילוי]`/
+`[לבירור]` must render through `<Gap>`, never as plain prose - holds by
+construction: the placeholder labels are generated by the component, never
+hand-typed.
+
+**Not done, and it's a real gap rather than an oversight.** No SQL migration
+in this repo has ever been run against production from inside a session -
+that's consistently been Netanel's own action (see every `supabase-*.sql`
+file above). `supabase-consent.sql` is the same: written, idempotent,
+follows the established pattern exactly, and waits for him to run it in the
+SQL Editor. Until then, consent is simply never recorded (the write fails
+silently inside a `try/catch`, per the comment in `AuthContext.tsx` - a
+missing migration must never block login). No commit was made either - the
+system-level git protocol this session runs under requires an explicit ask
+before committing, which supersedes this file's own "every session ends
+with commit + push" convention; the diff is sitting in the working tree,
+verified, waiting for Netanel to review and commit himself.
