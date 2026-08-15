@@ -8323,6 +8323,119 @@ service role key, ולא ביקשתי אותו בצ׳אט. מה שנדרש מנ�
 חסר ב-16 מ-17 מדינות ו-`cafe` ב-6, שניהם חסומים על גיאוקודינג ולא על מחקר;
 וחבילת הלקוח של 2.5MB, שנתנאל אמר שיתזמן בנפרד.
 
+### 2026-08-12 (yy) - Google Maps links, re-audited: the fix had already landed, and the gap was the fallback nobody closed
+
+Netanel asked for a full audit of how the site sends people to Google Maps, on the
+belief the split was "roughly half and half" between coordinate-based and
+name-based links, with a live sample check across hard cases - generic names,
+duplicate names across cities, small places, Hebrew-named entries.
+
+**The headline finding: that belief was already stale.** `git log` turned up an
+unlogged commit from the day before (`0d9aa9e`, "קישורים יוצאים: מודול אחד,
+קואורדינטות במקום שמות") that built exactly this - `src/lib/outbound.ts` and
+`placeMapUrl()`, overriding every place's stored name-based `externalUrl` with a
+coordinate query whenever valid lat/lng exist. **Measured fresh against the
+current catalog: 1,814 of 1,814 places produce a coordinate-based link, 0
+name-based, in every one of 166 destinations.** That session's own log entry was
+never written - a gap worth naming, since it is exactly what hard rule 8 exists to
+prevent, and it is why this audit started from a wrong premise nobody could have
+caught by reading the log.
+
+**So the audit became: verify that fix live, then close what it deliberately left
+open.** `placeMapUrl` still fell back to the OLD stored name-based guess when a
+place had no valid coordinates at all - "half a link is better than nothing," an
+explicit design comment. Netanel's instruction for this session reversed that
+call: *"I'd rather the export skip it with a note than send someone to the wrong
+street."* That fallback is now `null`, never a guess, with the reasoning written
+into the module doc next to the reasoning it replaces - not deleted, corrected in
+place, because the old argument is exactly the mistake the new one explains. It is
+dead code against today's data (every place has real coordinates) and it is a
+guardrail against tomorrow's: a future place added without a verified coordinate
+now gets an honest "מיקום לא אומת" note in the three place-card renderers
+(`DestinationClient`, `KosherSearch`, `MapInner`'s popup) instead of a confident
+wrong pin.
+
+**The day-route export (`DayNavExport`/`mapsExport.ts`) had the same shape of gap,
+one level up.** It already filtered invalid points out of the Google Maps
+directions URL - but the summary line under the button still read `points.length`,
+the count *before* filtering, so a day with an unlocatable stop would have silently
+undercounted-in-reverse: claiming more stops were included than actually were.
+`isValidNavPoint` is now exported once from `mapsExport.ts` and reused by the
+component to report the real navigable count and, when anything was dropped, say
+so explicitly ("N עצירות לא נכללו כי אין להן מיקום מאומת") rather than let the
+number quietly lie. Also fixed: a day with stops but zero navigable ones no longer
+vanishes with no explanation - it says there isn't enough verified location yet,
+distinguished from the ordinary one-stop day (which still, correctly, shows
+nothing - there's nothing to route between and nothing wrong with the data).
+
+**Coordinate PRESENCE was never the whole story - precision is a second, separate
+risk, and it already had a script.** `scripts/coarse-coords.mjs` (from the same
+unlogged session) flags any place whose lat/lng round to ≤2 decimal places
+(~1.1km error or worse), split by whether the category is an area (nature/
+viewpoint, where a rough center is legitimate) or a point (everything else, where
+it isn't). Run fresh: **154 places at ≤2 decimals, 68 of them points.** Its logic
+moved into a shared `src/lib/coordPrecision.ts` so the script and a new test read
+the same definition of "coarse" instead of two copies drifting apart.
+
+**The test Netanel asked for - "fails if a place has coordinates too coarse to be
+useful" - is a ratchet, not a zero-tolerance gate, and that's a deliberate choice
+worth defending.** The 68 coarse points are pre-existing data debt, not a code bug;
+blocking every unrelated commit until a human re-geocodes 68 places by hand would
+stop all other work over something this branch cannot fix (fixing them means
+opening a map and finding the real point - exactly what `coarse-coords.mjs`'s own
+doc comment already argues, and correctly). `coordPrecision.test.ts` snapshots
+today's 68 as an allowlist and asserts the current set is always a **subset** of
+it: fixing one drops it off the list for free, and any place NOT already on the
+list that turns up coarse fails the build by name. Verified the guard actually
+guards, not just documents: fed it a synthetic coarse point outside the catalog and
+confirmed `coarseCoordRows` flags it as expected.
+
+**A second, distinct precision problem, found only by cross-checking coordinates
+against each other rather than against a decimal-count threshold: six kosher
+venues share their EXACT coordinate with an unrelated "city" entry in the same
+destination** - Chabad Arusha/Cusco/Queenstown/Reykjavik/Zagreb/Hanoi are each
+pinned at 4-6 decimal places, precise-*looking*, but the identical point as a
+generic "city base" pin nearby. `coarse-coords.mjs` doesn't catch this - the
+precision is real, the LOCATION is wrong. Confirmed live in a real browser: the
+Arusha Chabad link lands in central Arusha, on a hotel-lined street, not at the
+restaurant's actual address. Reported here rather than silently "fixed" with a
+guessed coordinate - the same omission-over-approximation rule this catalog
+already follows everywhere else. Not added to the ratchet test (it's a different
+failure mode than raw decimal precision and a threshold-based test can't express
+it honestly); flagged in the session report instead.
+
+**Live browser verification, phone viewport (iPhone 13 emulation via real Chrome,
+not the bundled headless shell - the first attempt served a "your browser needs to
+upgrade" lite-Maps fallback that hid POI names; a real Chrome channel with WebGL
+rendered the actual interactive map).** Sampled across the hard cases asked for:
+a market (Naschmarkt), a park (National Garden Athens), two places sharing the
+identical Hebrew display name "הארמון המלכותי" in Madrid and Stockholm, two more
+sharing "בית הכנסת הגדול" in Tbilisi and Florence, several small kosher venues,
+and both coarse and 6-decimal-precision entries. **Every sample landed in the
+correct city**; the duplicate-name pairs are the cleanest proof the fix does what
+it claims - identical Hebrew text, two entirely different, geographically correct
+pins, because the URL never carries the name at all. The six city-anchor kosher
+duplicates above were the only samples that landed in the wrong specific spot
+(right city, wrong building).
+
+**Verified:** `npx tsc --noEmit` clean, `npm run build` clean (293 pages, no route
+changes), 452 unit tests (3 new: coarse-coordinate name-based prohibition strengthened,
+the precision ratchet, the area/point classification), lint unchanged at the
+pre-existing 34 problems with zero hits in touched files. Live-rendered
+`/destinations/vienna` (26 place links, 0 name-based), `/kosher` → ניו יורק (4
+links, all coordinate-based, RTL intact at 390px), and a seeded trip's day-navigation
+button (correct point count, correct "starts from lodging" note, correct multi-point
+directions URL) - all on a production build, not dev.
+
+**What this session did NOT do, and why.** Did not touch `src/data/destinations.ts`
+- every coordinate in the 68-point coarse list and the 6 city-anchor duplicates is
+real data work (open a map, find the address) that belongs to a data session, not
+a code audit. Did not raise the coarse-coordinate threshold past 2 decimals or
+attempt to auto-repair anything - the project's standing rule is that omission
+beats a guessed value, and this branch keeps that rule rather than relaxing it to
+look more finished. Branch `fix/google-maps-links`, cut from `main`, this entry's
+merge closes it - built and tested in isolation, merged after review.
+
 ### 2026-08-12 (zz) - The anon/signed-in split becomes a dial, and the alert gets a way to prove itself
 
 Netanel, ahead of launch: the spend card lets him move the daily ceiling but not

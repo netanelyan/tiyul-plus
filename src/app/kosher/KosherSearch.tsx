@@ -167,7 +167,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
                   <p className="mt-2 text-sm leading-relaxed text-night/70">{place.description}</p>
                   <KosherNote note={place.kosherNote} className="mt-2" />
                   <KosherBadge verification={place.kosherVerification} className="mt-1.5" />
-                  {placeMapUrl(place) && (
+                  {placeMapUrl(place) ? (
                     <a
                       href={placeMapUrl(place)!}
                       {...outboundAttrs()}
@@ -175,6 +175,8 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
                     >
                       Google Maps ↗
                     </a>
+                  ) : (
+                    <span className="mt-3 block text-xs font-semibold text-night/35">מיקום לא אומת</span>
                   )}
                 </div>
               ))}

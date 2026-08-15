@@ -37,11 +37,19 @@ export type TravelMode = 'walking' | 'driving' | 'transit';
 
 const coord = (p: NavPoint) => `${p.lat.toFixed(6)},${p.lng.toFixed(6)}`;
 
+/**
+ * נקודה שאפשר לנווט אליה בפועל - מספר סופי בטווח כדור הארץ. אותה
+ * הגדרה בדיוק כמו `isUsableCoord` ב-`lib/outbound.ts`, כי "מספיק תקין
+ * כדי לנווט אליו" הוא אותו קריטריון בשני המקומות. מיוצא כדי ש-
+ * `DayNavExport` יוכל לדווח בכנות על נקודות שהודחו, במקום שהן ייעלמו
+ * בשקט בתוך הפילטר של `googleMapsLegs`.
+ */
+export const isValidNavPoint = (p: NavPoint): boolean =>
+  Number.isFinite(p.lat) && Number.isFinite(p.lng) && Math.abs(p.lat) <= 90 && Math.abs(p.lng) <= 180;
+
 /** קישור ניווט אחד לרצף נקודות. מחזיר null אם אין לאן לנווט. */
 export function googleMapsUrl(points: NavPoint[], mode: TravelMode = 'walking'): string | null {
-  const valid = points.filter(
-    (p) => Number.isFinite(p.lat) && Number.isFinite(p.lng) && Math.abs(p.lat) <= 90 && Math.abs(p.lng) <= 180,
-  );
+  const valid = points.filter(isValidNavPoint);
   if (valid.length < 2) return null;
   const capped = valid.slice(0, MAX_POINTS_PER_LEG);
   const origin = capped[0];
@@ -70,7 +78,7 @@ export interface NavLeg {
  * במקום שבו הקודם נגמר, אחרת יש חור במסלול.
  */
 export function googleMapsLegs(points: NavPoint[], mode: TravelMode = 'walking'): NavLeg[] {
-  const valid = points.filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lng));
+  const valid = points.filter(isValidNavPoint);
   if (valid.length < 2) return [];
   const legs: NavLeg[] = [];
   let start = 0;

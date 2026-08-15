@@ -235,7 +235,7 @@ function PlacePopup({ place, prefix = '' }: { place: Place; prefix?: string }) {
         ערך ויקיפדיה, והחלונית קראה לו "Google Maps" כי היא רנדרה את
         `externalUrl` בעיוורון.
       */}
-      {placeMapUrl(place) && (
+      {placeMapUrl(place) ? (
         <a
           href={placeMapUrl(place)!}
           {...outboundAttrs()}
@@ -245,6 +245,8 @@ function PlacePopup({ place, prefix = '' }: { place: Place; prefix?: string }) {
             ? 'פתיחה בוויקיפדיה ↗'
             : 'פתיחה ב-Google Maps ↗'}
         </a>
+      ) : (
+        <span style={{ fontSize: 12, color: '#6b6394', fontWeight: 600 }}>מיקום לא אומת</span>
       )}
     </div>
   );
