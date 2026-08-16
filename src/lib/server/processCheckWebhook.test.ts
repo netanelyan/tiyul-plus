@@ -34,6 +34,8 @@ interface DbPurchase {
 let purchase: DbPurchase;
 let trip: unknown;
 let verifySignature: boolean;
+/** שורת profiles למוק - אירועי המנוי קוראים וכותבים אליה */
+let profile: { user_id: string; plan: string; plan_source: string | null } | null;
 
 beforeEach(() => {
   for (const k of ENV) saved[k] = process.env[k];
@@ -46,6 +48,7 @@ beforeEach(() => {
   delete process.env.PAYPAL_MODE;
 
   verifySignature = true;
+  profile = null;
   purchase = {
     id: 'purch-1',
     user_id: 'user-1',
@@ -97,6 +100,19 @@ beforeEach(() => {
     }
     if (url.includes('/rest/v1/user_trips')) {
       return new Response(JSON.stringify(trip ? [{ data: trip }] : []), { status: 200 });
+    }
+    if (url.includes('/rest/v1/profiles')) {
+      if (init.method === 'PATCH') {
+        if (profile && url.includes(`user_id=eq.${profile.user_id}`)) {
+          Object.assign(profile, JSON.parse(String(init.body)));
+          return new Response(JSON.stringify([{ ...profile }]), { status: 200 });
+        }
+        return new Response('[]', { status: 200 });
+      }
+      if (profile && url.includes(`user_id=eq.${profile.user_id}`)) {
+        return new Response(JSON.stringify([{ ...profile }]), { status: 200 });
+      }
+      return new Response('[]', { status: 200 });
     }
     return new Response('{}', { status: 500 });
   }) as typeof fetch;
@@ -202,4 +218,58 @@ test('לא מוגדר (בלי מפתחות) - 503, בלי בקשה לרשת', as
   const res = await processCheckWebhook(eventBody(), HEADERS);
   assert.equal(res.status, 503);
   assert.equal(purchase.status, 'pending');
+});
+
+/* ---------- מנוי הפרימיום: אותו webhook, אירועי BILLING.SUBSCRIPTION ---------- */
+
+const SUB_USER = 'c80e1062-403d-4bde-87d1-095cf40a6462';
+
+function subEvent(type: string, customId: string = SUB_USER): string {
+  return JSON.stringify({
+    event_type: type,
+    resource: { id: 'I-SUB123', custom_id: customId, status: 'ACTIVE' },
+  });
+}
+
+test('SUBSCRIPTION.ACTIVATED מדליק פרימיום עם plan_source=paypal', async () => {
+  profile = { user_id: SUB_USER, plan: 'free', plan_source: null };
+  const { processCheckWebhook } = await load();
+  const res = await processCheckWebhook(subEvent('BILLING.SUBSCRIPTION.ACTIVATED'), HEADERS);
+  assert.equal(res.status, 200);
+  assert.equal(profile.plan, 'premium');
+  assert.equal(profile.plan_source, 'paypal');
+});
+
+test('SUBSCRIPTION.CANCELLED מוריד רק פרימיום שמקורו PayPal - הענקת אדמין שורדת', async () => {
+  profile = { user_id: SUB_USER, plan: 'premium', plan_source: 'grant' };
+  const { processCheckWebhook } = await load();
+  await processCheckWebhook(subEvent('BILLING.SUBSCRIPTION.CANCELLED'), HEADERS);
+  assert.equal(profile.plan, 'premium', 'הענקה ידנית אינה של PayPal להוריד');
+  assert.equal(profile.plan_source, 'grant');
+
+  profile = { user_id: SUB_USER, plan: 'premium', plan_source: 'paypal' };
+  const { processCheckWebhook: run2 } = await load();
+  await run2(subEvent('BILLING.SUBSCRIPTION.CANCELLED'), HEADERS);
+  assert.equal(profile.plan, 'free');
+  assert.equal(profile.plan_source, null);
+});
+
+test('custom_id שאינו uuid - נבלע בלי לגעת בכלום (הגנת צורה)', async () => {
+  profile = { user_id: SUB_USER, plan: 'free', plan_source: null };
+  const { processCheckWebhook } = await load();
+  const res = await processCheckWebhook(
+    subEvent('BILLING.SUBSCRIPTION.ACTIVATED', 'not-a-uuid'),
+    HEADERS,
+  );
+  assert.equal(res.status, 200);
+  assert.equal(profile.plan, 'free');
+});
+
+test('אירוע מנוי עם חתימה לא תקפה - 400, שום דבר לא משתנה', async () => {
+  verifySignature = false;
+  profile = { user_id: SUB_USER, plan: 'free', plan_source: null };
+  const { processCheckWebhook } = await load();
+  const res = await processCheckWebhook(subEvent('BILLING.SUBSCRIPTION.ACTIVATED'), HEADERS);
+  assert.equal(res.status, 400);
+  assert.equal(profile.plan, 'free');
 });

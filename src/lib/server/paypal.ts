@@ -90,7 +90,8 @@ interface TokenEntry {
 }
 const tokenCache = new Map<PaypalMode, TokenEntry>();
 
-async function accessToken(mode: PaypalMode): Promise<string | null> {
+/** מיוצא עבור paypalSubs.ts (מנוי הפרימיום) - אותו OAuth, אותו מטמון */
+export async function accessToken(mode: PaypalMode): Promise<string | null> {
   const cached = tokenCache.get(mode);
   if (cached && cached.expiresAt > Date.now() + 30_000) return cached.token;
 

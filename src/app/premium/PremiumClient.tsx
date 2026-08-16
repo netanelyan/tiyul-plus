@@ -21,12 +21,11 @@ import { PRICE_ILS, priceLabel } from '@/lib/predeparture';
  * המספרים מחושבים מהקבועים האמיתיים, לא מוקלדים - שינוי מחיר מעדכן
  * את החשבון מעצמו.
  *
- * ## מצב התשלומים, נכון לעכשיו
- * הבדיקה החד-פעמית נמכרת באמת, דרך PayPal (`server/paypal.ts`).
- * ההרשמה למנוי - `/api/billing/checkout` - היא Stripe ואינה מוגדרת:
- * אף מנוי מעולם לא חויב דרכה, והכפתור מחזיר "בקרוב". מי שמפעיל את
- * ההרשמה צריך קודם להחליט אם היא עוברת ל-PayPal או נשארת Stripe,
- * ולעדכן את הקוד ואת הקופי ביחד.
+ * ## מצב התשלומים, נכון ל-2026-08-16
+ * גם הבדיקה החד-פעמית וגם המנוי עוברים דרך PayPal: `/api/billing/checkout`
+ * יוצר PayPal Subscription (`server/paypalSubs.ts`) ומחזיר קישור אישור;
+ * ההפעלה בפועל קורית רק ב-webhook המאומת. Stripe נשאר בקוד כמסלול
+ * ירושה למקרה שיחובר אי פעם - PayPal קודם.
  */
 export default function PremiumClient() {
   const auth = useAuth();
@@ -58,6 +57,8 @@ export default function PremiumClient() {
       }
       if (data.error === 'auth-required') setNotice('צריך להתחבר קודם - כפתור ההתחברות למעלה בניווט.');
       else if (data.error === 'already-premium') setNotice('אתם כבר בפרימיום 🎉');
+      else if (data.error === 'sandbox-blocked')
+        setNotice('ההרשמה כבויה כרגע באתר החי (מצב בדיקה) - ממש בקרוב.');
       else if (data.error === 'not-configured')
         setNotice('ההרשמה לפרימיום נפתחת ממש בקרוב - התשלומים בשלבי חיבור אחרונים.');
       else setNotice('משהו השתבש בדרך לתשלום - נסו שוב עוד רגע.');

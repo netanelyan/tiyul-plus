@@ -14,6 +14,7 @@
  */
 
 import { paypalConfigured, paypalMode, verifyWebhookSignature, type WebhookHeaders } from '@/lib/server/paypal';
+import { activatePaypalPremium, cancelPaypalPremium } from '@/lib/server/paypalSubs';
 import { findByOrderId, findById, markFailed, markPaid } from '@/lib/server/purchases';
 import { buildPreDepartureReport } from '@/lib/server/predepartureReport';
 import { findOwnTrip } from '@/lib/server/userTrips';
@@ -57,6 +58,30 @@ export async function processCheckWebhook(rawBody: string, headers: WebhookHeade
     event = JSON.parse(rawBody) as PaypalEvent;
   } catch {
     return { status: 400, body: { error: 'bad-json' } };
+  }
+
+  /*
+    מנוי הפרימיום עובר באותו webhook מאומת (האפליקציה רשומה על All
+    Events): ACTIVATED מדליק, ביטול/השעיה/פקיעה מכבים - עם השמירה
+    ש-cancelPaypalPremium מוריד רק פרימיום שמקורו PayPal, כדי שביטול
+    מנוי ישן לא ימחק הענקת אדמין. custom_id הוא ה-uuid שאנחנו קבענו
+    ביצירת המנוי, והאירוע חתום - זו לא זהות שהלקוח יכול לזייף.
+  */
+  const subUserId = event.resource?.custom_id;
+  if (event.event_type === 'BILLING.SUBSCRIPTION.ACTIVATED' && subUserId) {
+    const subId = (event.resource as { id?: string } | undefined)?.id ?? '';
+    const done = await activatePaypalPremium(subUserId, subId);
+    if (!done) console.warn('[checks webhook] premium activation failed', { subUserId });
+    return ok({ received: true, premium: done });
+  }
+  if (
+    (event.event_type === 'BILLING.SUBSCRIPTION.CANCELLED' ||
+      event.event_type === 'BILLING.SUBSCRIPTION.SUSPENDED' ||
+      event.event_type === 'BILLING.SUBSCRIPTION.EXPIRED') &&
+    subUserId
+  ) {
+    const done = await cancelPaypalPremium(subUserId);
+    return ok({ received: true, downgraded: done });
   }
 
   if (event.event_type !== 'PAYMENT.CAPTURE.COMPLETED') {

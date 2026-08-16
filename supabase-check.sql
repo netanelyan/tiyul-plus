@@ -65,6 +65,9 @@ with expected(file, kind, obj) as (
     -- שנראים כמו שבוע שקט. fnbody בודק שהגוף מכיל את הסוג החדש.
     ('supabase-admin-dash.sql','fnbody', 'public.bump_event:trip_created'),
 
+    -- supabase-paypal-subs.sql (premium subscription via PayPal)
+    ('supabase-paypal-subs.sql','column', 'public.profiles.paypal_subscription_id'),
+
     -- supabase-newsletter.sql (mailing list signups)
     ('supabase-newsletter.sql','table',  'public.newsletter_signups'),
 
