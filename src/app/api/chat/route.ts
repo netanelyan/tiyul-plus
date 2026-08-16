@@ -83,6 +83,7 @@ import {
 import { CACHE_TTL, SYSTEM_PROMPT, anthropicBase, cachedPrefix } from '@/lib/server/agentPrefix';
 import { cityGate, resolveMessage, verdictBlock } from '@/lib/server/placeResolve';
 import { CORRECTION_INSTRUCTION, detectCorrection } from '@/lib/server/correction';
+import { fallbackUncoveredQuickReplies } from '@/lib/server/uncoveredReplies';
 
 /**
  * צ׳אט הטיולים - סוכן אמיתי מעל הטיול של המשתמש.
@@ -227,7 +228,8 @@ const OUTPUT_DISCIPLINE = `OUTPUT DISCIPLINE - re-read this before every reply, 
 1. SHORT BY DEFAULT. Two to four sentences. A factual question gets one or two. Long is a defect here, not generosity.
 2. NO LISTS OF PLACES OR DESTINATIONS. Asked what you cover: the real counts from the index, then at most four or five example cities in ONE line, then ask where they want to go. Never a breakdown by continent or region, never bullets of city names, never a second or third line of them. This is the single most common way your answer becomes unreadable.
 3. NEVER RE-WRITE THE PLAN. If a tool changed the trip this turn, the panel already shows every day and stop. One sentence about what changed. No day list, no **יום N** lines.
-4. NO CLOSING OFFER. Don't end with "אם תרצו, אשמח..." or a menu of what else you could do. The user knows they can ask. Stop at the answer.`;
+4. NO CLOSING OFFER. Don't end with "אם תרצו, אשמח..." or a menu of what else you could do. The user knows they can ask. Stop at the answer.
+5. EVERY CLOSED-SET QUESTION GETS BUTTONS. If your reply ends with a question that has a short, nameable set of likely answers - how many days, which city, yes/no, pick one of a few options you just listed - call suggest_quick_replies with those exact options as short Hebrew chips, in the SAME turn. This is not optional and not just for one scenario: an open-ended question ("מה דעתך על המסלול?") stays free text, but a question you could answer yourself with a short list doesn't get left as typing-only.`;
 
 
 /** טקסט התקדמות אמיתי לפי הכלי שרץ עכשיו - לא הודעות דמה מתחלפות */
@@ -1387,7 +1389,11 @@ async function runAgent(
   const dest = findDestination(full);
   send({ type: 'meta', destinationSlug: dest?.slug });
   if (touched && working) send({ type: 'trip', trip: working, actions: suppressActions ? [] : actions });
-  if (quickReplies) send({ type: 'quickReplies', replies: quickReplies });
+  // רשת ביטחון: הפרומפט מבקש כפתורים כשמציעים לחקור יעד לא מכוסה, אבל
+  // זה לא נאכף באמינות (ראו uncoveredReplies.ts) - כשהמודל לא צירף
+  // כלום בעצמו, זו תוספת בלבד ולא דריסה.
+  const effectiveQuickReplies = quickReplies ?? fallbackUncoveredQuickReplies(full);
+  if (effectiveQuickReplies) send({ type: 'quickReplies', replies: effectiveQuickReplies });
 }
 
 function sendRuleBased(lastUserText: string, send: Send) {
