@@ -1,5 +1,5 @@
 import { requireRole, denied, ok } from '@/lib/server/admin';
-import { adminSelect, emailByUserId } from '@/lib/server/supabaseAdmin';
+import { adminSelect, emailsByUserIds } from '@/lib/server/supabaseAdmin';
 import { gte, pgLimit, pgOrder, pgQuery, pgSelect } from '@/lib/server/pgrest';
 import {
   ALERT_AT,
@@ -80,10 +80,9 @@ export async function GET(req: Request) {
     לשורות שמוצגות בפועל, לא לכל מי שנסרק - אותו כלל כמו ב-/api/admin/trips.
   */
   const premium = await premiumSpendOverview(10);
-  const premiumTop = [];
-  for (const t of premium.top) {
-    premiumTop.push({ ...t, email: await emailByUserId(t.userId) });
-  }
+  // במקביל ולא בלולאת await טורית - אותו תיקון N+1 כמו בשאר נתיבי האדמין
+  const premiumEmails = await emailsByUserIds(premium.top.map((t) => t.userId));
+  const premiumTop = premium.top.map((t) => ({ ...t, email: premiumEmails.get(t.userId) ?? null }));
 
   const trips = group(todayRows, (r) => r.trip_id);
   const allTrips = group(rows, (r) => r.trip_id);

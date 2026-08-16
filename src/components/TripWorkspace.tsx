@@ -24,6 +24,7 @@ import PinsPanel from '@/components/PinsPanel';
 import ActivitiesPanel from '@/components/ActivitiesPanel';
 import TripDateNotes from '@/components/TripDateNotes';
 import ShabbatKosherPanel from '@/components/ShabbatKosherPanel';
+import TripSkeleton from '@/components/TripSkeleton';
 import PreDepartureCheck from '@/components/PreDepartureCheck';
 import PanelSection from '@/components/PanelSection';
 import ChatPanel from '@/components/ChatPanel';
@@ -31,7 +32,6 @@ import Flag from '@/components/Flag';
 import Logo from '@/components/Logo';
 import AddDayPicker from '@/components/AddDayPicker';
 import ImportMapModal from '@/components/ImportMapModal';
-import ThinkingIndicator from '@/components/ThinkingIndicator';
 import DayNavExport from '@/components/DayNavExport';
 import { OFFLINE_HINT, isoDay, useOnline } from '@/lib/offline/online';
 import { readOnlyIfOffline } from '@/lib/trip/readOnly';
@@ -270,11 +270,9 @@ export default function TripWorkspace({
   // העיר. מסך טעינה כן עדיף על מסך שנראה כמו טיול שנמחק. זה רק בהמתנה
   // הראשונה: ברגע שיש עיר אחת ביד ממשיכים לצייר (ראו useCityData).
   if (!trip.hydrated || (citiesLoading && (t?.days.length ?? 0) > 0)) {
-    return (
-      <div className="rounded-2xl bg-shell p-10 text-center font-semibold text-night/40 ring-1 ring-night/10">
-        <ThinkingIndicator label="טוען את הטיולים שלך" className="justify-center" />
-      </div>
-    );
+    // שלד בצורת המסך במקום קופסת "טוען" בודדת - המבנה מופיע מיד
+    // והתוכן מתמלא לתוכו, בלי קפיצה מכלום-להכול (ראו TripSkeleton).
+    return <TripSkeleton />;
   }
 
   const totalStops = t?.days.reduce((n, d) => n + d.placeIds.length, 0) ?? 0;

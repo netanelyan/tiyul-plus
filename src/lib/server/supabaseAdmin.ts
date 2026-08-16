@@ -158,8 +158,22 @@ export async function userByEmail(email: string): Promise<{ id: string; email: s
   }
 }
 
+/**
+ * מטמון מייל-לפי-uuid, בזיכרון התהליך. מייל של חשבון כמעט לא משתנה,
+ * וכל טעינת דשבורד אדמין שלפה את אותם מיילים שוב - קריאת HTTP אחת
+ * ל-GoTrue לכל שורה מוצגת, ועוד אחת ב-`requireRole` על כל בקשת אדמין.
+ * TTL קצר (10 דק׳) כי המחיר של ערך ישן הוא קוסמטי בלבד (תצוגה בדשבורד,
+ * ושדה actor ביומן הביקורת - שממילא נושא גם uuid). **כישלון לא נשמר**:
+ * null מהרשת יכול להיות תקלה זמנית, ולקבע אותו ל-10 דקות היה מציג
+ * "אין מייל" על חשבון תקין.
+ */
+const EMAIL_TTL_MS = 10 * 60_000;
+const emailCache = new Map<string, { email: string; at: number }>();
+
 export async function emailByUserId(userId: string): Promise<string | null> {
   if (!adminDbEnabled()) return null;
+  const hit = emailCache.get(userId);
+  if (hit && Date.now() - hit.at < EMAIL_TTL_MS) return hit.email;
   try {
     const res = await fetch(`${url()}/auth/v1/admin/users/${pgUuid(userId)}`, {
       headers: headers(),
@@ -167,10 +181,29 @@ export async function emailByUserId(userId: string): Promise<string | null> {
     });
     if (!res.ok) return null;
     const u = (await res.json()) as { email?: string };
+    if (u.email) {
+      emailCache.set(userId, { email: u.email, at: Date.now() });
+      if (emailCache.size > 5_000) emailCache.clear(); // הגנת זיכרון גסה
+    }
     return u.email ?? null;
   } catch {
     return null;
   }
+}
+
+/**
+ * שליפת מיילים לכמה משתמשים במקביל - התיקון לדפוס ה-N+1 שישב בשלושה
+ * נתיבי אדמין (purchases / trips / spend): לולאת `await` טורית ששילמה
+ * סיבוב רשת מלא לכל שורה. ל-GoTrue אין endpoint אצווה, אז המקבילות
+ * היא Promise.all - N סיבובים במקביל במקום בטור, והמטמון למעלה הופך
+ * את הטעינה השנייה של אותו דשבורד לאפס קריאות רשת.
+ */
+export async function emailsByUserIds(userIds: string[]): Promise<Map<string, string | null>> {
+  const unique = [...new Set(userIds)];
+  const pairs = await Promise.all(
+    unique.map(async (id) => [id, await emailByUserId(id)] as const),
+  );
+  return new Map(pairs);
 }
 
 /**

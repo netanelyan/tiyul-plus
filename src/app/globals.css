@@ -230,6 +230,27 @@ html.a11y-no-motion *::after {
   animation: thinking-bounce 1s ease-in-out infinite;
 }
 
+/* בלוק שלד בזמן טעינה: צורת התוכן, עם נצנוץ שקט - TripSkeleton ודומיו */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -50% 0;
+  }
+}
+
+.skeleton-block {
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--color-night) 6%, transparent) 40%,
+    color-mix(in srgb, var(--color-night) 11%, transparent) 50%,
+    color-mix(in srgb, var(--color-night) 6%, transparent) 60%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rise-in,
   .rise-in-late {
@@ -243,6 +264,10 @@ html.a11y-no-motion *::after {
   .thinking-dot {
     animation: none;
     opacity: 0.6;
+  }
+  .skeleton-block {
+    animation: none;
+    background: color-mix(in srgb, var(--color-night) 8%, transparent);
   }
 }
 

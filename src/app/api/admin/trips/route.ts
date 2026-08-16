@@ -1,5 +1,5 @@
 import { requireRole, denied, badRequest, ok, audit } from '@/lib/server/admin';
-import { adminSelect, emailByUserId, userByEmail } from '@/lib/server/supabaseAdmin';
+import { adminSelect, emailByUserId, emailsByUserIds, userByEmail } from '@/lib/server/supabaseAdmin';
 import { eq, pgLimit, pgOrder, pgQuery, pgSelect } from '@/lib/server/pgrest';
 import { checkLimit } from '@/lib/server/limits';
 import { nameMatches, parseAdminQuery } from '@/lib/server/adminSearch';
@@ -116,11 +116,9 @@ export async function GET(req: Request) {
   }
 
   const page = found.slice(0, MAX_RESULTS);
-  // המייל נשלף רק לתוצאות שמוצגות בפועל, ולא לכל מי שנסרק
-  const emails = new Map<string, string | null>();
-  for (const t of page) {
-    if (!emails.has(t.userId)) emails.set(t.userId, await emailByUserId(t.userId));
-  }
+  // המייל נשלף רק לתוצאות שמוצגות בפועל, ולא לכל מי שנסרק - ובמקביל,
+  // לא בלולאת await טורית (דפוס ה-N+1 שהוסר מכל נתיבי האדמין)
+  const emails = await emailsByUserIds(page.map((t) => t.userId));
 
   return ok({
     label,

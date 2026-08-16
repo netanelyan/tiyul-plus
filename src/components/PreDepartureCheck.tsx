@@ -36,6 +36,26 @@ type Phase =
 const POLL_MS = 3000;
 const POLL_CEILING = 40; // ~2 דקות לפני שעוברים למצב "רגוע" בלי לפרוץ קריאות
 
+/**
+ * מצב ה-PayPal ברמת המודול - הוא נגזר ממשתני סביבה בשרת ולא משתנה בלי
+ * דיפלוי, ובכל זאת נשלף מחדש בכל mount של מסך הטיול (כל מעבר בין
+ * טיולים). פעם אחת לסשן מספיקה; הבטחה משותפת גם מונעת בקשות כפולות
+ * כששני מופעי הרכיב עולים יחד. אותו דפוס כמו המטמון של cityData.
+ */
+let modePromise: Promise<string | null> | null = null;
+function fetchModeOnce(): Promise<string | null> {
+  modePromise ??= (async () => {
+    try {
+      const res = await fetch('/api/checks/mode');
+      const data = (await res.json().catch(() => null)) as { mode?: string } | null;
+      return data?.mode ?? null;
+    } catch {
+      return null;
+    }
+  })();
+  return modePromise;
+}
+
 export default function PreDepartureCheck({
   trip,
   offline = false,
@@ -51,18 +71,13 @@ export default function PreDepartureCheck({
   const pollTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const returnHandled = useRef(false);
 
-  // מצב sandbox/production - עצמאי מכל שאר הזרימה, כדי שהפס יופיע מיד
+  // מצב sandbox/production - עצמאי מכל שאר הזרימה, כדי שהפס יופיע מיד.
+  // נשלף פעם אחת לסשן (fetchModeOnce) - לא בכל mount של מסך הטיול.
   useEffect(() => {
     let alive = true;
-    void (async () => {
-      try {
-        const res = await fetch('/api/checks/mode');
-        const data = (await res.json().catch(() => null)) as { mode?: string } | null;
-        if (alive && data?.mode) setMode(data.mode as 'off' | 'sandbox' | 'production');
-      } catch {
-        /* בלי מצב ידוע - פשוט לא מוצג פס */
-      }
-    })();
+    void fetchModeOnce().then((m) => {
+      if (alive && m) setMode(m as 'off' | 'sandbox' | 'production');
+    });
     return () => {
       alive = false;
     };

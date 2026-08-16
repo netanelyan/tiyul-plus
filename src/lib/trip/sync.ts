@@ -50,7 +50,15 @@ function isTombstone(data: unknown): data is { deletedAt: number } {
 }
 
 export async function pullRemoteTrips(supabase: SupabaseClient): Promise<PullResult | null> {
-  const { data, error } = await supabase.from('user_trips').select('id,data,updated_at');
+  // תקרה הגנתית: משתמש אמיתי מחזיק טיולים בודדים, וגיזום המצבות ממילא
+  // חוסם ב-200 - אבל שאילתה בלי גבול היא הדבר שמפתיע בעוד שנה. 500
+  // מרווח בטוח מעל כל שימוש לגיטימי, החדשים-ראשונים כדי שאם התקרה
+  // אי פעם נחתכת, מה שנופל הוא הישן ביותר.
+  const { data, error } = await supabase
+    .from('user_trips')
+    .select('id,data,updated_at')
+    .order('updated_at', { ascending: false })
+    .limit(500);
   if (error) return null;
   const trips: Trip[] = [];
   const tombstones: Record<string, number> = {};

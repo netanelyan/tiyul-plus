@@ -231,10 +231,19 @@ export async function adminRevoke(input: {
 
 const MAX_ROWS = 2000;
 
-export async function recentPurchases(limit = 500): Promise<PurchaseRow[]> {
-  const rows = await adminSelect<PurchaseRow>(
+/**
+ * שורה רזה לדשבורד: כל מה שהסטטיסטיקה והרשימה צריכים, **בלי** `report`
+ * ו-`raw_webhook` - שני שדות jsonb של כמה KB כל אחד, שרכבו על 500 שורות
+ * בכל טעינת דשבורד (מגה-בייטים מ-Supabase בשביל 15 שורות מוצגות).
+ * הדוח המלא נשלף רק כשפותחים רכישה בודדת (`findForUserTrip`/`findById`).
+ */
+export type PurchaseListRow = Omit<PurchaseRow, 'report' | 'raw_webhook'>;
+const LIST_COLUMNS = COLUMNS.filter((c) => c !== 'report' && c !== 'raw_webhook');
+
+export async function recentPurchases(limit = 500): Promise<PurchaseListRow[]> {
+  const rows = await adminSelect<PurchaseListRow>(
     'purchases',
-    pgQuery(pgSelect(COLUMNS), pgOrder('created_at', 'desc'), pgLimit(Math.min(limit, MAX_ROWS))),
+    pgQuery(pgSelect(LIST_COLUMNS), pgOrder('created_at', 'desc'), pgLimit(Math.min(limit, MAX_ROWS))),
   );
   return rows ?? [];
 }
@@ -253,7 +262,7 @@ export interface PurchaseStats {
 
 const STUCK_AFTER_MS = 15 * 60_000;
 
-export function computeStats(rows: PurchaseRow[]): PurchaseStats {
+export function computeStats(rows: PurchaseListRow[]): PurchaseStats {
   const now = Date.now();
   let revenueILS = 0;
   let paidCount = 0;

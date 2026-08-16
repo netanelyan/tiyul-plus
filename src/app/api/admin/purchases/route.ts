@@ -1,5 +1,5 @@
 import { audit, badRequest, denied, ok, requireRole } from '@/lib/server/admin';
-import { emailByUserId, userByEmail } from '@/lib/server/supabaseAdmin';
+import { emailsByUserIds, userByEmail } from '@/lib/server/supabaseAdmin';
 import { checkLimit } from '@/lib/server/limits';
 import {
   adminGrant,
@@ -53,10 +53,8 @@ export async function GET(req: Request) {
   const rows = await recentPurchases(500);
   const stats = computeStats(rows);
   const recentRows = rows.slice(0, 15);
-  const emails = new Map<string, string | null>();
-  for (const r of recentRows) {
-    if (!emails.has(r.user_id)) emails.set(r.user_id, await emailByUserId(r.user_id));
-  }
+  // במקביל ולא בלולאת await טורית - N סיבובי רשת ל-GoTrue הפכו לאחד
+  const emails = await emailsByUserIds(recentRows.map((r) => r.user_id));
 
   return ok({
     stats,
