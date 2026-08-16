@@ -67,6 +67,8 @@ export interface TripChat {
   input: string;
   setInput: (v: string) => void;
   loading: boolean;
+  /** טקסט עדיין זורם מהשרת (אחרי המילה הראשונה, לפני שהסטרים נסגר) - כדי שהודעה שנעצרה תיראה כתקועה ולא כגמורה */
+  streaming: boolean;
   /** מה הסוכן עושה ממש עכשיו (מגיע כאירוע status מהשרת) */
   status: string | null;
   /** מונה עדכוני טיול שהגיעו מהסוכן - כדי לסמן "התוכנית עודכנה" ב-UI */
@@ -93,6 +95,7 @@ export function useTripChat(options?: {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [streaming, setStreaming] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [tripUpdates, setTripUpdates] = useState(0);
   // יעדים שנחקרו - נטענים אחרי mount (localStorage לא קיים ב-SSR)
@@ -211,6 +214,7 @@ export function useTripChat(options?: {
             if (!appended) {
               appended = true;
               setLoading(false);
+              setStreaming(true);
               setMessages((m) => [...m, { role: 'assistant', content: chunk }]);
             } else {
               patchLast((msg) => ({ ...msg, content: msg.content + chunk }));
@@ -249,6 +253,7 @@ export function useTripChat(options?: {
             } else {
               appended = true;
               setLoading(false);
+              setStreaming(true);
               setMessages((m) => [...m, { role: 'assistant', content: '', searches: [search] }]);
             }
           } else if (event.type === 'quickReplies' && appended && event.replies?.length) {
@@ -266,6 +271,7 @@ export function useTripChat(options?: {
       }
     } finally {
       setLoading(false);
+      setStreaming(false);
       setStatus(null);
     }
   }, [kosherHint, loading]);
@@ -342,5 +348,18 @@ export function useTripChat(options?: {
     setExplored(saveExplored(dest));
   }, []);
 
-  return { messages, input, setInput, loading, status, tripUpdates, explored, addExplored, send, reset, clearConversation };
+  return {
+    messages,
+    input,
+    setInput,
+    loading,
+    streaming,
+    status,
+    tripUpdates,
+    explored,
+    addExplored,
+    send,
+    reset,
+    clearConversation,
+  };
 }

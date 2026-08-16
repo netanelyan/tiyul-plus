@@ -42,6 +42,7 @@ export function useFreeChat(): FreeChat {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [streaming, setStreaming] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [tripUpdates, setTripUpdates] = useState(0);
   const [explored, setExplored] = useState<Destination[]>([]);
@@ -139,6 +140,7 @@ export function useFreeChat(): FreeChat {
             if (!appended) {
               appended = true;
               setLoading(false);
+              setStreaming(true);
               setMessages((m) => [...m, builtMsg]);
             } else {
               patchLast(builtMsg);
@@ -164,6 +166,7 @@ export function useFreeChat(): FreeChat {
             } else {
               appended = true;
               setLoading(false);
+              setStreaming(true);
               setMessages((m) => [...m, builtMsg]);
             }
           } else if (event.type === 'quickReplies' && appended && event.replies?.length) {
@@ -195,6 +198,7 @@ export function useFreeChat(): FreeChat {
       }
     } finally {
       setLoading(false);
+      setStreaming(false);
       setStatus(null);
     }
   }, [loading, trip]);
@@ -221,6 +225,7 @@ export function useFreeChat(): FreeChat {
     input,
     setInput,
     loading,
+    streaming,
     status,
     tripUpdates,
     explored,

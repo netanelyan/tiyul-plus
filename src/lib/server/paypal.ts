@@ -67,11 +67,17 @@ const CHECKOUT_HOST = (mode: PaypalMode) =>
  * הדומיין החי. במצב sandbox בקשה מהדומיין הזה נדחית באופן גורף - אין
  * דרך שרכישת בדיקה תעניק גישה אמיתית למישהו אמיתי, אפילו לא בטעות
  * תצורה. אותה רשימה בדיוק כמו `server/viator.ts`.
+ *
+ * **חריגה מכוונת, לבדיקה זמנית בלבד:** `PAYPAL_ALLOW_SANDBOX_LIVE_DOMAIN=true`
+ * מבטל את החסימה הזאת. זה דגל נפרד ומפורש - לא הסרה של הבדיקה - כדי
+ * שכיבוי החזרה יהיה הסרת משתנה סביבה אחד ב-Vercel ולא דיפלוי שני של
+ * קוד. **למחוק את המשתנה הזה מ-Vercel ברגע שהבדיקה נגמרת.**
  */
 const PROD_HOSTS = new Set(['tiyulplus.com', 'www.tiyulplus.com']);
 
 export function sandboxBlocked(host: string | null, mode: PaypalMode): boolean {
   if (mode !== 'sandbox') return false;
+  if (process.env.PAYPAL_ALLOW_SANDBOX_LIVE_DOMAIN === 'true') return false;
   const h = (host ?? '').toLowerCase().split(':')[0];
   return PROD_HOSTS.has(h);
 }

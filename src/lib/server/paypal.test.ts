@@ -15,6 +15,7 @@ const ENV = [
   'PAYPAL_MODE', 'PAYPAL_API_BASE',
   'PAYPAL_CLIENT_ID_SANDBOX', 'PAYPAL_CLIENT_SECRET_SANDBOX', 'PAYPAL_WEBHOOK_ID_SANDBOX',
   'PAYPAL_CLIENT_ID', 'PAYPAL_CLIENT_SECRET', 'PAYPAL_WEBHOOK_ID',
+  'PAYPAL_ALLOW_SANDBOX_LIVE_DOMAIN',
 ] as const;
 const saved: Record<string, string | undefined> = {};
 const realFetch = globalThis.fetch;
@@ -114,6 +115,19 @@ test('sandbox על כל דומיין אחר - מותר', async () => {
 test('production אף פעם לא חסום', async () => {
   const { sandboxBlocked } = await load();
   assert.equal(sandboxBlocked('tiyulplus.com', 'production'), false);
+});
+
+test('PAYPAL_ALLOW_SANDBOX_LIVE_DOMAIN=true מבטל את החסימה - חריגה מפורשת בלבד', async () => {
+  process.env.PAYPAL_ALLOW_SANDBOX_LIVE_DOMAIN = 'true';
+  const { sandboxBlocked } = await load();
+  assert.equal(sandboxBlocked('tiyulplus.com', 'sandbox'), false);
+  assert.equal(sandboxBlocked('www.tiyulplus.com', 'sandbox'), false);
+});
+
+test('כל ערך אחר מלבד "true" נשאר חוסם - אין נפילה בטעות', async () => {
+  process.env.PAYPAL_ALLOW_SANDBOX_LIVE_DOMAIN = '1';
+  const { sandboxBlocked } = await load();
+  assert.equal(sandboxBlocked('tiyulplus.com', 'sandbox'), true);
 });
 
 /* ---------- 3. יצירת הזמנה: הסכום הוא הפרמטר, ותו לא ---------- */

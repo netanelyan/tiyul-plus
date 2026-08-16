@@ -109,7 +109,7 @@ export default function ChatPanel({
 }) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-  const { messages, loading, status, input, setInput, send, clearConversation } = chat;
+  const { messages, loading, streaming, status, input, setInput, send, clearConversation } = chat;
   // תמונה שמחכה לשליחה (data URL מוקטן) + שגיאת בחירה קצרה
   const [pending, setPending] = useState<string | null>(null);
   const [imgError, setImgError] = useState<string | null>(null);
@@ -250,6 +250,10 @@ export default function ChatPanel({
                 />
               )}
               {renderText(msg.content)}
+              {/* עדיין מקבלים טקסט מהשרת - בלי זה הודעה שנעצרה נראית גמורה במקרה */}
+              {streaming && msg.role === 'assistant' && i === messages.length - 1 && (
+                <ThinkingIndicator className="text-night/40" />
+              )}
               {msg.actions && msg.actions.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {msg.actions.map((a, k) => (
@@ -277,6 +281,7 @@ export default function ChatPanel({
               {msg.role === 'assistant' &&
                 i === messages.length - 1 &&
                 !loading &&
+                !streaming &&
                 msg.quickReplies &&
                 msg.quickReplies.length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-2">
