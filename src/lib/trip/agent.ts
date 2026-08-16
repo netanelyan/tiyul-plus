@@ -820,13 +820,28 @@ export function executeAgentTool(
       };
       const totalStops = days.reduce((n, d) => n + d.placeIds.length, 0);
       const kosherNote = kosherDropNote(droppedKosher, dropMode);
+      /*
+        יום ריק על המסך הוא בדיוק מה שגורם לאנשים לעזוב (דיווח אמיתי:
+        "יום 2 - אנרגילנדיה" נבנה כיום ריק עם הערת טקסט, כי הפארק לא
+        בקטלוג והמודל לא חקר אותו). הנג׳וד יושב בתוצאת הכלי - המקום
+        שהוכח כציות הגבוה ביותר - ודורש מילוי באותו תור, כולל המסלול
+        הנכון ליום סביב מקום שלא בקטלוג: explore_destination ואז
+        set_day_city + set_day_places עם המקומות שנחקרו.
+      */
+      const emptyDays = days
+        .map((d, i) => (d.placeIds.length === 0 ? i + 1 : 0))
+        .filter(Boolean);
+      const emptyNote =
+        emptyDays.length > 0
+          ? ` שים לב: יום ${emptyDays.join(' ויום ')} נשאר ללא עצירות - אסור לסיים את התור כך. אם היום מתוכנן סביב מקום שאינו בקטלוג (פארק שעשועים, עיירה, אתר), קרא עכשיו ל-explore_destination עם שמו, ואז שבץ את המקומות שנחקרו ליום הזה (set_day_city לעיר שנחקרה + set_day_places) - הערת טקסט לבדה אינה תחליף לעצירות על המפה.`
+          : '';
       const built = replacing
         ? `הטיול הקיים עודכן ל"${tripName}"`
         : `נוצר "${tripName}"`;
       return {
         trip: next,
         ok: true,
-        message: `${built}: ${days.length} ימים, ${totalStops} עצירות.${kosherNote}${replacing ? ' זה תור של תיקון, ולכן הטיול הקיים עודכן במקומו ולא נוצר טיול שני. אמור למטייל שתיקנת את הטיול הקיים, לא שיצרת חדש.' : ''}${routeSummary(days)}${PROSE_DISCIPLINE}`,
+        message: `${built}: ${days.length} ימים, ${totalStops} עצירות.${kosherNote}${emptyNote}${replacing ? ' זה תור של תיקון, ולכן הטיול הקיים עודכן במקומו ולא נוצר טיול שני. אמור למטייל שתיקנת את הטיול הקיים, לא שיצרת חדש.' : ''}${routeSummary(days)}${PROSE_DISCIPLINE}`,
         action: replacing
           ? `עדכנתי את הטיול: "${tripName}" (${days.length} ימים, ${totalStops} עצירות)`
           : `יצרתי טיול חדש: "${tripName}" (${days.length} ימים, ${totalStops} עצירות)`,
@@ -894,7 +909,12 @@ export function executeAgentTool(
       return {
         trip: next,
         ok: true,
-        message: `נוסף יום ${next.days.length} ב${dest.name}. הטיול כולל עכשיו ${next.days.length} ימים.${PROSE_DISCIPLINE}`,
+        // היום נולד ריק - הדרישה למלא אותו באותו תור יושבת כאן, בתוצאת
+        // הכלי, מאותה סיבה כמו ב-set_day_city וב-create_trip_full: יום
+        // ריק על המסך הוא מה שגורם לאנשים לעזוב, והמודל הוכח כמי שעוצר
+        // אחרי add_day בלי למלא ("תוסיף יום באושוויץ" -> יום ריק בקרקוב
+        // בזמן שאושוויץ-בירקנאו נמצא בדאטה של קרקוב).
+        message: `נוסף יום ${next.days.length} ב${dest.name} - כרגע ריק. חובה למלא אותו עכשיו, באותו תור, עם set_day_places ומקומות אמיתיים מהדאטה של ${dest.name}. אם המשתמש ביקש את היום סביב מקום מסוים - שבץ אותו (ואם הוא לא בדאטה, explore_destination קודם). אסור לסיים תור עם יום ריק. הטיול כולל עכשיו ${next.days.length} ימים.${PROSE_DISCIPLINE}`,
         action: `הוספתי יום ${inHe(dest.name)} (יום ${next.days.length})`,
       };
     }

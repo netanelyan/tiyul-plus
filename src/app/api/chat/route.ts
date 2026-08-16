@@ -1348,17 +1348,23 @@ async function runAgent(
     if (trimmedFull.length > 0) console.log('[chat] dangling reply completed from actions');
   }
 
-  // רשת ביטחון: הלולאה הסתיימה עם ימים ריקים בלבד - אומרים זאת ביושר,
-  // בלי למלא אוטומטית מאחורי הגב.
-  if (
-    touched &&
-    working &&
-    working.days.length > 0 &&
-    working.days.every((d) => d.placeIds.length === 0)
-  ) {
-    const note = '\n\nשימו לב: הימים נוצרו אבל עדיין בלי מקומות. כתבו "תמלא את הימים" ואשבץ מקומות אמיתיים מהמאגר.';
-    send({ type: 'text', text: note });
-    full += note;
+  // רשת ביטחון: הלולאה הסתיימה עם יום ריק - אומרים זאת ביושר, בלי
+  // למלא אוטומטית מאחורי הגב. עד 2026-08-16 הבדיקה דרשה שכל הימים
+  // יהיו ריקים, ולכן "יום 2 - אנרגילנדיה" שנבנה ריק לצד יום 1 מלא עבר
+  // בשקט - וזה בדיוק המסך שגורם לאנשים לעזוב.
+  if (touched && working && working.days.length > 0) {
+    const emptyDayNums = working.days
+      .map((d, i) => (d.placeIds.length === 0 ? i + 1 : 0))
+      .filter(Boolean);
+    if (emptyDayNums.length === working.days.length) {
+      const note = '\n\nשימו לב: הימים נוצרו אבל עדיין בלי מקומות. כתבו "תמלא את הימים" ואשבץ מקומות אמיתיים מהמאגר.';
+      send({ type: 'text', text: note });
+      full += note;
+    } else if (emptyDayNums.length > 0) {
+      const note = `\n\nשימו לב: יום ${emptyDayNums.join(' ויום ')} עדיין בלי עצירות על המפה. כתבו "תמלא את יום ${emptyDayNums[0]}" ואשבץ מקומות אמיתיים.`;
+      send({ type: 'text', text: note });
+      full += note;
+    }
   }
 
   // רשת ביטחון דטרמיניסטית: אם הטוגל דלוק והסוכן לא קרא ל-set_preferences,
