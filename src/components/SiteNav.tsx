@@ -19,6 +19,19 @@ const NAV_LINKS = [
 ];
 
 /**
+ * "תכנון טיול" בזמן שכבר נמצאים ב-/chat הוא ניווט לאותו ראוט - Next לא
+ * מרנדר מחדש את העמוד, אז AgentWorkspace לעולם לא קורא שוב את הפרמטרים
+ * והטיול הקודם נשאר על המסך למרות שהכתובת התנקתה. האירוע הזה אומר לו
+ * במפורש "המשתמש ביקש שיחה חדשה" - הוא מאזין לו ומאפס למסך הנחיתה.
+ */
+export const NEW_CHAT_EVENT = 'tiyul:new-chat';
+function notifySameRouteChat(href: string) {
+  if (href === '/chat' && window.location.pathname === '/chat') {
+    window.dispatchEvent(new Event(NEW_CHAT_EVENT));
+  }
+}
+
+/**
  * ניווט האתר: מ-md ומעלה קישורים בשורה + **פקד אחד** לטיולים; מתחת
  * ל-md המבורגר שפותח תפריט נפתח (כולל רשימת כל הטיולים ואת הקישורים).
  * נסגר בלחיצה על קישור/טאב ובהקשה מחוץ לתפריט. בלי ספריית תפריטים -
@@ -70,6 +83,7 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
           <Link
             key={l.href}
             href={l.href}
+            onClick={() => notifySameRouteChat(l.href)}
             className="rounded-full px-3.5 py-1.5 text-sm font-medium text-night/70 transition hover:bg-night/5 hover:text-night"
           >
             {l.label}
@@ -163,7 +177,10 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
             <Link
               key={l.href}
               href={l.href}
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                setOpen(false);
+                notifySameRouteChat(l.href);
+              }}
               className="block rounded-xl px-4 py-2.5 font-medium text-night/80 transition hover:bg-night/5"
             >
               {l.label}

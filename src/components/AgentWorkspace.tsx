@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useTrip } from '@/lib/trip/TripContext';
+import { NEW_CHAT_EVENT } from '@/components/SiteNav';
 import HeroPrompt from '@/components/HeroPrompt';
 import TripWorkspace from '@/components/TripWorkspace';
 import ResumeTrips from '@/components/ResumeTrips';
@@ -130,6 +131,37 @@ export default function AgentWorkspace() {
     setStarted(false);
     writeTripParam(null);
   }
+
+  /*
+    ניווט לאותו ראוט לא ממונטב מחדש: "תכנון טיול" מתוך /chat?trip=X
+    משנה את הכתובת ל-/chat אבל הקומפוננטה נשארת - והמסך היה נשאר בטיול
+    הקודם. SiteNav משדר NEW_CHAT_EVENT בדיוק במקרה הזה; popstate מכסה
+    את אותו פער עבור חזרה/קדימה בדפדפן. הפונקציות נקראות דרך ref כדי
+    שהמאזינים יירשמו פעם אחת ותמיד יראו את ה-state העדכני.
+  */
+  const startNewTripRef = useRef(startNewTrip);
+  useEffect(() => {
+    startNewTripRef.current = startNewTrip;
+  });
+  useEffect(() => {
+    const onNewChat = () => startNewTripRef.current();
+    const onPop = () => {
+      const tripId = new URLSearchParams(window.location.search).get('trip');
+      if (tripId) {
+        resuming.current = true;
+        setPendingTripId(tripId);
+        setStarted(true);
+      } else {
+        startNewTripRef.current();
+      }
+    };
+    window.addEventListener(NEW_CHAT_EVENT, onNewChat);
+    window.addEventListener('popstate', onPop);
+    return () => {
+      window.removeEventListener(NEW_CHAT_EVENT, onNewChat);
+      window.removeEventListener('popstate', onPop);
+    };
+  }, []);
 
   /*
     **`trip.currentTrip` כבר לא מחליט את המסך.** זה היה הבאג: ערך שנשמר
