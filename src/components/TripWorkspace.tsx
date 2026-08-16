@@ -11,7 +11,7 @@ import { useTripChat } from '@/lib/trip/useTripChat';
 import { useCityData } from '@/lib/trip/cityData';
 import { dayDescription, dayPlaces } from '@/lib/trip/dayDescription';
 import { dayColor } from '@/lib/trip/dayColors';
-import { dayDate, formatHebrewDate, formatHebrewRange } from '@/lib/trip/dates';
+import { dayDate, formatHebrewDate, formatHebrewRange, todayISO } from '@/lib/trip/dates';
 import TripDates from '@/components/TripDates';
 import { encodeTripShare } from '@/lib/trip/share';
 import { travelModeFor } from '@/lib/trip/mapsExport';
@@ -23,6 +23,7 @@ import TripCost from '@/components/TripCost';
 import PinsPanel from '@/components/PinsPanel';
 import ActivitiesPanel from '@/components/ActivitiesPanel';
 import TripDateNotes from '@/components/TripDateNotes';
+import ShabbatKosherPanel from '@/components/ShabbatKosherPanel';
 import PreDepartureCheck from '@/components/PreDepartureCheck';
 import PanelSection from '@/components/PanelSection';
 import ChatPanel from '@/components/ChatPanel';
@@ -204,6 +205,31 @@ export default function TripWorkspace({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [t, cities, chat.explored],
   );
+
+  /**
+   * "היום" של הטיול: האינדקס של היום שתאריכו הוא היום בפועל - null
+   * כשאין תאריכים או כשהטיול לא בעיצומו. זה מה שמפעיל את מצב הליווי:
+   * פתיחה אוטומטית על היום הנכון + פס "היום" מעל בורר הימים.
+   */
+  const todayIdx = useMemo(() => {
+    if (!t?.startDate || t.days.length === 0) return null;
+    const today = todayISO();
+    const idx = t.days.findIndex((_, i) => dayDate(t, i) === today);
+    return idx >= 0 ? idx : null;
+  }, [t]);
+
+  /*
+    פתיחה אוטומטית על היום של היום - פעם אחת לכל טיול, כדי לא להילחם
+    במשתמש שבחר יום אחר בכוונה. באמצע טיול אמיתי, לפתוח על יום 1 זה
+    להגיש למטייל מסך שהוא כבר סיים איתו.
+  */
+  const autoOpenedFor = useRef<string | null>(null);
+  useEffect(() => {
+    if (!t || todayIdx === null || autoOpenedFor.current === t.id) return;
+    autoOpenedFor.current = t.id;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (todayIdx > 0) setSelectedDayId(t.days[todayIdx].id);
+  }, [t, todayIdx]);
 
   /**
    * הסיכות של המטייל על המפה. רק כאלה שיש להן מיקום ממשי - סיכה
@@ -562,6 +588,35 @@ export default function TripWorkspace({
           )}
         </div>
       )}
+
+      {/* ---------- "היום": מצב ליווי כשהטיול בעיצומו ---------- */}
+      {t && todayIdx !== null && (() => {
+        const todayDay = t.days[todayIdx];
+        const dst = destOf(todayDay.citySlug);
+        const iso = dayDate(t, todayIdx);
+        const viewingToday = day?.id === todayDay.id;
+        return (
+          <div className="mt-4 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 rounded-2xl bg-sunset/10 px-4 py-3 ring-1 ring-sunset/25 print:hidden">
+            <span aria-hidden className="text-base leading-none">🧭</span>
+            <span className="text-sm font-bold text-night">
+              היום · יום {todayIdx + 1} מתוך {t.days.length}
+              {dst ? ` ${inHe(dst.name)}` : ''}
+              {iso ? ` · ${formatHebrewDate(iso, { weekday: true })}` : ''}
+            </span>
+            <span className="min-w-0 flex-1 truncate text-xs font-semibold text-night/55">
+              {dayDescription(todayDay, dst)}
+            </span>
+            {!viewingToday && (
+              <button
+                onClick={() => setSelectedDayId(todayDay.id)}
+                className="rounded-full bg-sunset px-3 py-1 text-xs font-bold text-cream transition hover:bg-sunset-deep"
+              >
+                ליום של היום ←
+              </button>
+            )}
+          </div>
+        );
+      })()}
 
       {/* ---------- בורר הימים: כרטיס לכל עיר, ימים כמספרים בתוכו ---------- */}
       {t && t.days.length > 0 && (() => {
@@ -977,6 +1032,14 @@ export default function TripWorkspace({
         בלי תאריכים, שאין ממנו מה לחשב.
       */}
       {t && t.days.length > 0 && <TripDateNotes trip={t} destinations={destinations} />}
+
+      {/*
+        ---------- שבת וכשרות בטיול ----------
+        מרונדר רק כשהעדפת הכשרות דלוקה (opt-in, אף פעם לא הנחה) ורק
+        כשיש לו תוכן אמיתי - זמני שבת מחושבים לתאריכי הטיול או דאטת
+        כשרות לערי הטיול. הכללים המלאים בראש הקומפוננטה.
+      */}
+      {t && t.days.length > 0 && <ShabbatKosherPanel trip={t} destOf={destOf} />}
 
       {/*
         ---------- בדיקה לפני הנסיעה ----------
