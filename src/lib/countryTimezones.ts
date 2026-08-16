@@ -108,7 +108,11 @@ const MULTI_ZONE: Record<string, (lng: number) => string | null> = {
     return 'America/Vancouver';
   },
   mexico: (lng) => (lng > -89.7 ? 'America/Cancun' : 'America/Mexico_City'),
-  australia: (lng) => (lng > 140 ? 'Australia/Hobart' : null), // טסמניה בלבד בקטלוג
+  australia: (lng) => {
+    if (lng > 140) return 'Australia/Hobart'; // טסמניה
+    if (lng > 128) return 'Australia/Darwin'; // המרכז האדום (אולורו, אליס ספרינגס)
+    return 'Australia/Perth';
+  },
   indonesia: (lng) => (lng > 112 ? 'Asia/Makassar' : 'Asia/Jakarta'), // באלי / ג׳אווה
   kazakhstan: () => 'Asia/Almaty',
   brazil: () => 'America/Sao_Paulo', // ריו בלבד בקטלוג

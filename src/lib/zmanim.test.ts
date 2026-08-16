@@ -91,3 +91,29 @@ test('formatInZone: שעון קיץ אמיתי דרך Intl - שקיעת קיץ �
 test('formatInZone: אזור לא קיים - null, לא זריקה ולא זמן שגוי', () => {
   assert.equal(formatInZone(new Date(), 'Not/AZone'), null);
 });
+
+/*
+  הערובה של "מחשב שבת בכל מקום": כל יעד בקטלוג האמיתי חייב לפתור אזור
+  זמן. יעד חדש שנוסף בלי מיפוי מפיל את הטסט הזה בשמו - במקום להופיע
+  למטייל כ"בדקו לוח מקומי" בלי שאף אחד שם לב.
+*/
+test('לכל יעד בקטלוג יש אזור זמן - זמני שבת זמינים בכל מקום', async () => {
+  const { destinations } = await import('@/data/destinations.ts');
+  const missing = destinations
+    .filter((d) => !timezoneFor(d.countrySlug, d.center.lng))
+    .map((d) => `${d.slug} (${d.countrySlug}, lng=${d.center.lng})`);
+  assert.deepEqual(missing, [], `יעדים בלי אזור זמן:\n${missing.join('\n')}`);
+});
+
+test('ולכל יעד גם שקיעה חישובית אמיתית בתאריך רגיל - לא רק אזור', async () => {
+  const { destinations } = await import('@/data/destinations.ts');
+  const broken = destinations
+    .filter((d) => {
+      const t = shabbatTimesFor('2026-08-21', d.center.lat, d.center.lng);
+      if (!t) return true;
+      const zone = timezoneFor(d.countrySlug, d.center.lng)!;
+      return !formatInZone(t.candles, zone);
+    })
+    .map((d) => d.slug);
+  assert.deepEqual(broken, [], `יעדים בלי זמני שבת:\n${broken.join('\n')}`);
+});
