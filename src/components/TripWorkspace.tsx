@@ -25,6 +25,7 @@ import ActivitiesPanel from '@/components/ActivitiesPanel';
 import TripDateNotes from '@/components/TripDateNotes';
 import ShabbatKosherPanel from '@/components/ShabbatKosherPanel';
 import TripSkeleton from '@/components/TripSkeleton';
+import { shabbatRowsFor } from '@/lib/trip/shabbatRows';
 import PreDepartureCheck from '@/components/PreDepartureCheck';
 import PanelSection from '@/components/PanelSection';
 import ChatPanel from '@/components/ChatPanel';
@@ -1212,6 +1213,9 @@ export default function TripWorkspace({
                             <span className="print-stop-local">{p.nameLocal}</span>
                           </p>
                           <p className="print-stop-cat">{categoryMeta[p.category].label}</p>
+                          {p.description && (
+                            <p className="print-stop-desc">{p.description}</p>
+                          )}
                           {p.kosherNote && (
                             <p className="print-stop-kosher">✡️ {p.kosherNote}</p>
                           )}
@@ -1226,6 +1230,70 @@ export default function TripWorkspace({
               </div>
             );
           })}
+
+          {/* נספח שבת: אותו חישוב בדיוק כמו הפאנל (shabbatRows.ts) */}
+          {(() => {
+            const rows = shabbatRowsFor(t, destOf);
+            if (rows.length === 0) return null;
+            return (
+              <section className="print-annex">
+                <h2>🕯️ זמני שבת במסלול</h2>
+                <ul>
+                  {rows.map((s) => (
+                    <li key={s.fridayIso}>
+                      <strong>
+                        שבת {inHe(s.cityName)} · יום {s.dayNumber} · {formatHebrewDate(s.fridayIso)}
+                      </strong>
+                      {s.candles && s.havdalah
+                        ? ` — הדלקת נרות ${s.candles} · צאת השבת ${s.havdalah} (שעון מקומי)`
+                        : ' — בדקו לוח זמנים מקומי'}
+                    </li>
+                  ))}
+                </ul>
+                <p className="print-annex-note">
+                  מחושב אסטרונומית: נרות 18 דק׳ לפני השקיעה, צאת השבת לפי 8.5 מעלות - מנהגים
+                  משתנים, בדקו עם הרב שלכם.
+                </p>
+              </section>
+            );
+          })()}
+
+          {/* נספח כשרות: רק כשההעדפה דלוקה - אותו כלל opt-in כמו הפאנל */}
+          {t.preferences?.kosher === true &&
+            (() => {
+              const cities = Array.from(new Set(t.days.map((d) => d.citySlug)))
+                .map((slug) => destOf(slug))
+                .filter((d): d is NonNullable<typeof d> => Boolean(d))
+                .map((dst) => ({
+                  dst,
+                  places: dst.places.filter((p) => p.category.startsWith('kosher')),
+                }))
+                .filter((c) => c.places.length > 0 || c.dst.practical?.kosherOverview);
+              if (cities.length === 0) return null;
+              return (
+                <section className="print-annex">
+                  <h2>✡️ כשרות בערי הטיול</h2>
+                  {cities.map(({ dst, places }) => (
+                    <div key={dst.slug} className="print-annex-city">
+                      <h3>{dst.name}</h3>
+                      {dst.practical?.kosherOverview && <p>{dst.practical.kosherOverview}</p>}
+                      {places.length > 0 && (
+                        <ul>
+                          {places.map((p) => (
+                            <li key={p.id}>
+                              <strong>{p.name}</strong>
+                              {p.kosherVerification?.supervision
+                                ? ` — השגחה: ${p.kosherVerification.supervision} · לוודא מול המקום`
+                                : ' — לוודא מול המקום'}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                </section>
+              );
+            })()}
 
           {/* פוטר: דיסקליימר + חתימת BlackZ */}
           <div className="print-footer">

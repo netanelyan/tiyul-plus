@@ -5,9 +5,8 @@ import type { Destination } from '@/lib/types';
 import type { Trip } from '@/lib/trip/types';
 import PanelSection from '@/components/PanelSection';
 import KosherBadge from '@/components/KosherBadge';
-import { dayDate, formatHebrewDate } from '@/lib/trip/dates';
-import { shabbatTimesFor, weekdayOf } from '@/lib/zmanim';
-import { formatInZone, timezoneFor } from '@/lib/countryTimezones';
+import { formatHebrewDate } from '@/lib/trip/dates';
+import { shabbatRowsFor, type ShabbatRow } from '@/lib/trip/shabbatRows';
 import { inHe } from '@/lib/hebrew';
 
 /**
@@ -28,14 +27,6 @@ import { inHe } from '@/lib/hebrew';
  *    מקבלת משפט כן שאומר לבדוק לוח מקומי.
  */
 
-interface ShabbatRow {
-  fridayIso: string;
-  dayNumber: number; // היום בטיול שבו חלה שבת (שישי)
-  cityName: string;
-  candles: string | null; // שעה מקומית, או null כשאין אזור זמן
-  havdalah: string | null;
-}
-
 export default function ShabbatKosherPanel({
   trip,
   destOf,
@@ -48,26 +39,8 @@ export default function ShabbatKosherPanel({
   // כשרות היא opt-in - בלי ההעדפה, הפאנל לא קיים בכלל
   if (trip.preferences?.kosher !== true) return null;
 
-  /* ---------- זמני שבת: כל שישי שנופל בתוך ימי הטיול ---------- */
-  const shabbatot: ShabbatRow[] = [];
-  if (trip.startDate) {
-    trip.days.forEach((d, i) => {
-      const iso = dayDate(trip, i);
-      if (!iso || weekdayOf(iso) !== 5) return;
-      const dest = destOf(d.citySlug);
-      if (!dest) return;
-      const times = shabbatTimesFor(iso, dest.center.lat, dest.center.lng);
-      if (!times) return;
-      const zone = timezoneFor(dest.countrySlug, dest.center.lng);
-      shabbatot.push({
-        fridayIso: iso,
-        dayNumber: i + 1,
-        cityName: dest.name,
-        candles: zone ? formatInZone(times.candles, zone) : null,
-        havdalah: zone ? formatInZone(times.havdalah, zone) : null,
-      });
-    });
-  }
+  /* ---------- זמני שבת: החישוב המשותף עם ספר הטיול (shabbatRows.ts) ---------- */
+  const shabbatot: ShabbatRow[] = shabbatRowsFor(trip, destOf);
 
   /* ---------- מקומות כשרים בערי הטיול - מהקטלוג בלבד ---------- */
   const citySlugs = [...new Set([...trip.citySlugs, ...trip.days.map((d) => d.citySlug)])];

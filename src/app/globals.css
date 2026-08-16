@@ -501,6 +501,51 @@ html.a11y-no-motion *::after {
     font-weight: 600;
     color: #241b4d;
   }
+  .print-stop-desc {
+    margin: 2px 0 0;
+    font-size: 11px;
+    line-height: 1.5;
+    color: rgba(36, 27, 77, 0.7);
+  }
+
+  /* נספחים (זמני שבת, כשרות) - עמוד משלהם, באותה שפה כמו הימים */
+  .print-annex {
+    break-before: page;
+    break-inside: avoid;
+    margin-top: 18px;
+  }
+  .print-annex h2 {
+    margin: 0 0 8px;
+    padding-inline-start: 10px;
+    border-inline-start: 3px solid #ff6b5e;
+    font-size: 16px;
+    font-weight: 800;
+    color: #241b4d;
+  }
+  .print-annex h3 {
+    margin: 10px 0 3px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #241b4d;
+  }
+  .print-annex ul {
+    margin: 4px 0;
+    padding-inline-start: 16px;
+    font-size: 11.5px;
+    line-height: 1.7;
+    color: rgba(36, 27, 77, 0.8);
+  }
+  .print-annex p {
+    margin: 2px 0;
+    font-size: 11.5px;
+    line-height: 1.6;
+    color: rgba(36, 27, 77, 0.75);
+  }
+  .print-annex .print-annex-note {
+    margin-top: 6px;
+    font-size: 10px;
+    color: rgba(36, 27, 77, 0.5);
+  }
 
   /* פוטר: דיסקליימר + חתימה */
   .print-footer {
