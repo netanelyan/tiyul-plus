@@ -63,6 +63,21 @@ export async function adminSelect<T>(table: string, query: string): Promise<T[] 
   }
 }
 
+/** DELETE לפי שאילתת pgrest. מחזיר את השורות שנמחקו (או null בכישלון). */
+export async function adminDelete<T>(table: string, query: string): Promise<T[] | null> {
+  if (!adminDbEnabled()) return null;
+  try {
+    const res = await fetch(`${url()}/rest/v1/${pgIdent(table)}?${query}`, {
+      method: 'DELETE',
+      headers: headers({ Prefer: 'return=representation' }),
+    });
+    if (!res.ok) return null;
+    return (await res.json()) as T[];
+  } catch {
+    return null;
+  }
+}
+
 /** PATCH לפי תנאי. מחזיר את השורות המעודכנות, או null בכישלון. */
 export async function adminUpdate<T>(
   table: string,

@@ -72,6 +72,11 @@ with expected(file, kind, obj) as (
     ('supabase-stories.sql','table', 'public.trip_stories'),
     ('supabase-stories.sql','func',  'public.get_trip_story'),
 
+    -- supabase-group-trips.sql (shared trips - premium organizer)
+    ('supabase-group-trips.sql','table', 'public.trip_group_invites'),
+    ('supabase-group-trips.sql','table', 'public.trip_group_members'),
+    ('supabase-group-trips.sql','table', 'public.trip_group_votes'),
+
     -- supabase-newsletter.sql (mailing list signups)
     ('supabase-newsletter.sql','table',  'public.newsletter_signups'),
 

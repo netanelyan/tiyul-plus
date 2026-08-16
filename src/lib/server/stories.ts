@@ -23,6 +23,8 @@ export const MAX_STORY_PHOTOS = 40;
 export const MAX_PHOTO_DATAURL = 1_800_000; // ~1.3MB בפועל אחרי base64
 
 export interface StoryStop {
+  /** מזהה הקטלוג - נחוץ להצבעות בטיול המשותף; מידע ציבורי ממילא */
+  id: string;
   name: string;
   lat: number;
   lng: number;
@@ -74,7 +76,7 @@ export function buildSnapshot(trip: {
     const stops: StoryStop[] = d.placeIds
       .map((pid) => dest?.places.find((p) => p.id === pid))
       .filter((p): p is NonNullable<typeof p> => Boolean(p))
-      .map((p) => ({ name: p.name, lat: p.lat, lng: p.lng, ...(p.mustSee ? { mustSee: true } : {}) }));
+      .map((p) => ({ id: p.id, name: p.name, lat: p.lat, lng: p.lng, ...(p.mustSee ? { mustSee: true } : {}) }));
     return { dayNumber: i + 1, cityName: dest?.name ?? d.citySlug, stops };
   });
   return {
