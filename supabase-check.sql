@@ -68,6 +68,10 @@ with expected(file, kind, obj) as (
     -- supabase-paypal-subs.sql (premium subscription via PayPal)
     ('supabase-paypal-subs.sql','column', 'public.profiles.paypal_subscription_id'),
 
+    -- supabase-stories.sql (trip stories - premium)
+    ('supabase-stories.sql','table', 'public.trip_stories'),
+    ('supabase-stories.sql','func',  'public.get_trip_story'),
+
     -- supabase-newsletter.sql (mailing list signups)
     ('supabase-newsletter.sql','table',  'public.newsletter_signups'),
 

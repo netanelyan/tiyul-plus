@@ -26,6 +26,7 @@ import TripDateNotes from '@/components/TripDateNotes';
 import ShabbatKosherPanel from '@/components/ShabbatKosherPanel';
 import TripSkeleton from '@/components/TripSkeleton';
 import { shabbatRowsFor } from '@/lib/trip/shabbatRows';
+import TripStoryPanel from '@/components/TripStoryPanel';
 import PreDepartureCheck from '@/components/PreDepartureCheck';
 import PanelSection from '@/components/PanelSection';
 import ChatPanel from '@/components/ChatPanel';
@@ -1039,6 +1040,9 @@ export default function TripWorkspace({
         כשרות לערי הטיול. הכללים המלאים בראש הקומפוננטה.
       */}
       {t && t.days.length > 0 && <ShabbatKosherPanel trip={t} destOf={destOf} />}
+
+      {/* ---------- סיפור הטיול (פרימיום): הטיול הופך לעמוד לשיתוף ---------- */}
+      {t && t.days.length > 0 && <TripStoryPanel trip={t} />}
 
       {/*
         ---------- בדיקה לפני הנסיעה ----------
