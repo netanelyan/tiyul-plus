@@ -12,6 +12,7 @@ import type { TripDay } from './types';
 
 // A short subject word per category - chosen so it joins nicely into "X and Y" in Hebrew
 const THEME_WORD: Record<PlaceCategory, string> = {
+  historic: 'אתרים היסטוריים',
   attraction: 'אתרים',
   museum: 'מוזיאונים',
   nature: 'טבע',

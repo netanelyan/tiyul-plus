@@ -50,7 +50,7 @@ test('enrichSnapshot: תמונה, תיאור וקטגוריה מגיעים מה�
   const stop = enriched.days[0].stops[0];
   assert.ok(stop.photo && stop.photo.startsWith('http'), 'a real photo URL is attached');
   assert.ok(stop.description && stop.description.length > 20, 'the catalog description is attached');
-  assert.equal(stop.category, 'attraction');
+  assert.equal(stop.category, 'historic'); // a real catalog category, not the default
   assert.equal(stop.lat, 48.18);
   assert.equal(enriched.days[0].cityName, 'וינה');
 });

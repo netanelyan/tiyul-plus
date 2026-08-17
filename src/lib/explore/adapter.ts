@@ -43,6 +43,7 @@ export function exploredToDestination(x: ExploredDestination): Destination {
 
 const CATEGORIES: PlaceCategory[] = [
   'attraction',
+  'historic',
   'museum',
   'nature',
   'viewpoint',

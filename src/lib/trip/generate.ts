@@ -15,10 +15,18 @@ import { newId } from './types';
 
 type Weights = Partial<Record<PlaceCategory, number>>;
 
+/**
+ * `historic` carries the same weight as `attraction` in every trip type, and that
+ * is not laziness - it is what keeps this table meaning what it meant before the
+ * split. `Weights` is a Partial, so a category with no entry scores 0: when 547 of
+ * the 731 attractions became `historic`, omitting it here would have quietly
+ * dropped three quarters of the sightseeing from every wizard-built trip, with
+ * nothing failing to show it.
+ */
 const TYPE_WEIGHTS: Record<WizardPrefs['tripType'], Weights> = {
-  city: { attraction: 3, museum: 3, cafe: 2, shopping: 2.5, viewpoint: 1.5, nature: 0.7 },
-  nature: { nature: 3.5, viewpoint: 3, attraction: 1.2, museum: 0.6, cafe: 1, shopping: 0.4 },
-  combined: { attraction: 2.2, museum: 2, nature: 2.2, viewpoint: 2.2, cafe: 1.3, shopping: 1.3 },
+  city: { attraction: 3, historic: 3, museum: 3, cafe: 2, shopping: 2.5, viewpoint: 1.5, nature: 0.7 },
+  nature: { nature: 3.5, viewpoint: 3, attraction: 1.2, historic: 1.2, museum: 0.6, cafe: 1, shopping: 0.4 },
+  combined: { attraction: 2.2, historic: 2.2, museum: 2, nature: 2.2, viewpoint: 2.2, cafe: 1.3, shopping: 1.3 },
 };
 
 // Free-text Hebrew interests -> tags from the closed set

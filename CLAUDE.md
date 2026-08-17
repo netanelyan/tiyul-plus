@@ -9738,3 +9738,49 @@ it would destroy work waiting on him). There are no stray patches, logs or scrat
 files tracked at the root to remove.
 
 627 tests, tsc, build and lint clean.
+
+### 2026-08-17 (h) - Historical places get their own category
+
+Netanel: *"change the places that are historical from attractions to historical
+places."*
+
+**The rule is the catalog's own tag, not my judgement of 731 places.** Every place
+already carries editorial `tags`, and `history` is one of them - so the migration
+is exactly: `category: 'attraction'` **and** tagged `history` becomes
+`category: 'historic'`. Re-deciding by name would have meant 731 unauditable
+judgement calls; this is one rule anybody can check.
+
+**Only the generic bucket splits.** The `history` tag also sits on 71 museums, 38
+viewpoints, 29 nature places, 21 markets and 15 cafes - none of them moved. A
+museum is a museum and a historic cafe is still a cafe; `attraction` was the only
+category that was a grab-bag. Result: **547 historic, 184 attraction**, 1814 places
+unchanged in total, and zero places either tagged-but-left or moved-but-untagged.
+
+**The emoji and colour stayed with the bigger half, deliberately.** `historic`
+keeps the classical-building emoji and the purple that these places already had,
+so most pins on most maps do not change at all; `attraction` - what is left is an
+opera house, a funfair, the Dancing House - takes a neutral pin and a steel blue,
+because a symbol that suits Schonbrunn misdescribes the Prater.
+
+**The change that would have been silent.** `TYPE_WEIGHTS` in `generate.ts` is a
+`Partial<Record<PlaceCategory, number>>`, so a category with no entry scores **0**.
+Adding `historic` to the type without adding it there would have dropped three
+quarters of the sightseeing out of every wizard-built trip, with nothing failing -
+no type error, no test, just thinner trips. `historic` carries `attraction`'s
+weight in all three trip types so the table means what it meant before. The same
+class of omission was checked in `photo-gaps.mjs` (historic is Tier A, like
+attraction) and in the explored-place allowlist. `URBAN_CATEGORIES` in the
+validator correctly needed nothing - it is a denylist of urban categories, and
+historic is not one.
+
+**Two tests failed and both were right to.** They pinned Schonbrunn as
+`attraction`; that is precisely what changed, so they were updated. The
+`enrichSnapshot` test asserting `'attraction'` for a place NOT in the catalog was
+left alone - there it is the neutral default, not a catalog value.
+
+**Verified:** catalog validator 0 errors and **306 warnings, identical to HEAD**
+(checked by stashing and re-running, because a warning count that moves during a
+data pass is the thing worth catching); 627 tests, tsc, build and lint clean. In a
+real browser at 1400 and 390: both categories render as separate filter chips,
+place cards show the new badge, the map draws 9 distinct pin colours, zero
+horizontal overflow.

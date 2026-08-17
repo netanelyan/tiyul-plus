@@ -4,6 +4,7 @@
 
 export type PlaceCategory =
   | 'attraction'
+  | 'historic'
   | 'museum'
   | 'nature'
   | 'viewpoint'

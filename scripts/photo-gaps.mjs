@@ -70,6 +70,7 @@ const probeState = (url) => {
 //     a category tile, which is the correct end state. DO NOT WORK THIS TIER.
 const TIER = {
   attraction: 'A',
+  historic: 'A',
   museum: 'A',
   nature: 'A',
   viewpoint: 'A',

@@ -112,7 +112,8 @@ test('תמונת מצב המסלול נושאת שם, קטגוריה ומספר 
   const r = buildPreDepartureReport(t);
   assert.deepEqual(r.itinerary[0].stops[0], {
     name: 'ארמון שנברון',
-    category: 'attraction',
+    // Schonbrunn moved attraction -> historic on 2026-08-17 with the category split
+    category: 'historic',
     mustSee: true,
   });
   assert.equal(r.itinerary[0].dayNumber, 1);

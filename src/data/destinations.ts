@@ -46,7 +46,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'ארמון שנברון',
         nameLocal: 'Schönbrunn Palace',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.1845,
         lng: 16.3122,
         description:
@@ -64,7 +64,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'קתדרלת סנט סטפן',
         nameLocal: "St. Stephen's Cathedral",
-        category: 'attraction',
+        category: 'historic',
         lat: 48.2085,
         lng: 16.3731,
         description:
@@ -81,7 +81,7 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         name: 'ארמון הופבורג',
         nameLocal: 'Hofburg Palace',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.2065,
         lng: 16.3657,
         description:
@@ -285,7 +285,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Wien_Rathaus_hochaufl%C3%B6send.jpg/500px-Wien_Rathaus_hochaufl%C3%B6send.jpg',
         name: 'בית העירייה וכיכר הרטהאוס',
         nameLocal: 'Rathausplatz',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.2108,
         lng: 16.3572,
         description:
@@ -451,7 +451,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Stift_Melk%2C_Westansicht.jpg/500px-Stift_Melk%2C_Westansicht.jpg',
         name: 'מנזר מלק',
         nameLocal: 'Stift Melk',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.2281,
         lng: 15.3339,
         description:
@@ -606,7 +606,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'טירת ברטיסלבה',
         nameLocal: 'Bratislava Castle',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.1421,
         lng: 17.1,
         description:
@@ -624,7 +624,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'העיר העתיקה ושער מיכאל',
         nameLocal: "Old Town & Michael's Gate",
-        category: 'attraction',
+        category: 'historic',
         lat: 48.145,
         lng: 17.1067,
         description:
@@ -709,7 +709,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'אתר הזיכרון של החת"ם סופר',
         nameLocal: 'Chatam Sofer Memorial',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.1408,
         lng: 17.0946,
         description:
@@ -740,7 +740,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Palacio_primacial%2C_Bratislava%2C_Eslovaquia%2C_2020-02-01%2C_DD_30.jpg/500px-Palacio_primacial%2C_Bratislava%2C_Eslovaquia%2C_2020-02-01%2C_DD_30.jpg',
         name: 'ארמון הפרימאס',
         nameLocal: "Primate's Palace",
-        category: 'attraction',
+        category: 'historic',
         lat: 48.144,
         lng: 17.109,
         description:
@@ -757,7 +757,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Hlavn%C3%A9_n%C3%A1mestie-The_napoleonic_soldier%2C_Old_Town_Hall_and_Roland_Fountain-Bratislava.JPG/500px-Hlavn%C3%A9_n%C3%A1mestie-The_napoleonic_soldier%2C_Old_Town_Hall_and_Roland_Fountain-Bratislava.JPG',
         name: 'הכיכר הראשית',
         nameLocal: 'Hlavné námestie',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.1437,
         lng: 17.1085,
         description:
@@ -774,7 +774,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Catedral_de_San_Mart%C3%ADn%2C_Bratislava%2C_Eslovaquia%2C_2020-02-01%2C_DD_48.jpg/500px-Catedral_de_San_Mart%C3%ADn%2C_Bratislava%2C_Eslovaquia%2C_2020-02-01%2C_DD_48.jpg',
         name: 'קתדרלת מרטין הקדוש',
         nameLocal: "St Martin's Cathedral",
-        category: 'attraction',
+        category: 'historic',
         lat: 48.1417,
         lng: 17.1048,
         description:
@@ -859,7 +859,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Orthodox_Synagogue%2C_Heydukova_street%2C_Bratislava.jpg/500px-Orthodox_Synagogue%2C_Heydukova_street%2C_Bratislava.jpg',
         name: 'בית הכנסת ברחוב היידוקובה',
         nameLocal: 'Heydukova Street Synagogue',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.1466,
         lng: 17.1112,
         description:
@@ -1032,7 +1032,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'גשר קרל',
         nameLocal: 'Charles Bridge',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.0865,
         lng: 14.4114,
         description:
@@ -1050,7 +1050,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'מצודת פראג',
         nameLocal: 'Prague Castle',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.09,
         lng: 14.4,
         description:
@@ -1068,7 +1068,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'כיכר העיר העתיקה והשעון האסטרונומי',
         nameLocal: 'Old Town Square',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.0875,
         lng: 14.4213,
         description:
@@ -1169,7 +1169,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Prague_Praha_2014_Holmstad_Vaclavplassen_i_nybyen_Nove_Mesto_flott.jpg/500px-Prague_Praha_2014_Holmstad_Vaclavplassen_i_nybyen_Nove_Mesto_flott.jpg',
         name: 'כיכר ואצלב',
         nameLocal: 'Wenceslas Square',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.081,
         lng: 14.4278,
         description:
@@ -1186,7 +1186,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/19.7.16_Prague_Castle_12_%2828395711206%29.jpg/500px-19.7.16_Prague_Castle_12_%2828395711206%29.jpg',
         name: 'מאלה סטראנה',
         nameLocal: 'Malá Strana',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.088,
         lng: 14.4037,
         description:
@@ -1203,7 +1203,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Parn%C3%ADk_Vy%C5%A1ehrad_pod_Vy%C5%A1ehradem.jpg/500px-Parn%C3%ADk_Vy%C5%A1ehrad_pod_Vy%C5%A1ehradem.jpg',
         name: 'מצודת וישהראד',
         nameLocal: 'Vyšehrad',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.0645,
         lng: 14.418,
         description:
@@ -1288,7 +1288,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Praha%2C_Hradcany_-_Strahovsky_klaster_%28pohled_z_ulice_Uvoz%29.jpg/500px-Praha%2C_Hradcany_-_Strahovsky_klaster_%28pohled_z_ulice_Uvoz%29.jpg',
         name: 'מנזר סטרהוב והספרייה',
         nameLocal: 'Strahov Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.0862,
         lng: 14.3896,
         description:
@@ -1339,7 +1339,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Prag_Jerusalemer-Synagoge_Feb-2014_IMG_2162.JPG/500px-Prag_Jerusalemer-Synagoge_Feb-2014_IMG_2162.JPG',
         name: 'בית הכנסת הירושלמי',
         nameLocal: 'Jerusalem Synagogue',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.0843,
         lng: 14.4341,
         description:
@@ -1374,7 +1374,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Burg_Karlstein_-_Karl%C5%A1tejn_-_panoramio.jpg/500px-Burg_Karlstein_-_Karl%C5%A1tejn_-_panoramio.jpg',
         name: 'טירת קרלשטיין',
         nameLocal: 'Hrad Karlštejn',
-        category: 'attraction',
+        category: 'historic',
         lat: 49.9394,
         lng: 14.1881,
         description:
@@ -1391,7 +1391,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Kutn%C3%A1_Hora_%28003%29.jpg/500px-Kutn%C3%A1_Hora_%28003%29.jpg',
         name: 'קוטנה הורה',
         nameLocal: 'Kutná Hora',
-        category: 'attraction',
+        category: 'historic',
         lat: 49.9483,
         lng: 15.2683,
         description:
@@ -1408,7 +1408,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Kostnice_Sedlec.JPG/500px-Kostnice_Sedlec.JPG',
         name: 'בית העצמות בסדלץ',
         nameLocal: 'Kostnice Sedlec',
-        category: 'attraction',
+        category: 'historic',
         lat: 49.9619,
         lng: 15.2883,
         description:
@@ -1580,7 +1580,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'בניין הפרלמנט',
         nameLocal: 'Hungarian Parliament',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.5076,
         lng: 19.0459,
         description:
@@ -1615,7 +1615,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'טירת בודה',
         nameLocal: 'Buda Castle',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.4962,
         lng: 19.0397,
         description:
@@ -1668,7 +1668,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'הנעליים על גדת הדנובה',
         nameLocal: 'Shoes on the Danube Bank',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.5039,
         lng: 19.0454,
         description:
@@ -1734,7 +1734,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Budapest_Szent_Istvan_Bazilika_R01.jpg/500px-Budapest_Szent_Istvan_Bazilika_R01.jpg',
         name: 'בזיליקת סנט אישטוואן',
         nameLocal: "St. Stephen's Basilica",
-        category: 'attraction',
+        category: 'historic',
         lat: 47.5008,
         lng: 19.054,
         description:
@@ -1751,7 +1751,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/HUN-2015-Budapest-Heroes%E2%80%99_Square.jpg/500px-HUN-2015-Budapest-Heroes%E2%80%99_Square.jpg',
         name: 'כיכר הגיבורים',
         nameLocal: "Heroes' Square",
-        category: 'attraction',
+        category: 'historic',
         lat: 47.515,
         lng: 19.0779,
         description:
@@ -1802,7 +1802,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Andr%C3%A1ssi%C3%BAtl%C3%A9gifot%C3%B3.jpg/500px-Andr%C3%A1ssi%C3%BAtl%C3%A9gifot%C3%B3.jpg',
         name: 'שדרת אנדראשי',
         nameLocal: 'Andrássy Avenue',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.5064,
         lng: 19.0651,
         description:
@@ -1853,7 +1853,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Kazinczy_utcai_zsinagoga_02.jpg/500px-Kazinczy_utcai_zsinagoga_02.jpg',
         name: 'בית הכנסת ברחוב קזינצי',
         nameLocal: 'Kazinczy Street Synagogue',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.4966,
         lng: 19.0621,
         description:
@@ -1921,7 +1921,7 @@ export const destinations: Destination[] = [
         id: 'bud-szentendre',
         name: 'סנטנדרה',
         nameLocal: 'Szentendre',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.7044,
         lng: 19.0686,
         description:
@@ -2073,7 +2073,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'הקולוסיאום',
         nameLocal: 'Colosseum',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.8902,
         lng: 12.4922,
         description:
@@ -2090,7 +2090,7 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         name: 'הפורום הרומאי',
         nameLocal: 'Roman Forum',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.8925,
         lng: 12.4853,
         description:
@@ -2126,7 +2126,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'הפנתאון',
         nameLocal: 'Pantheon',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.8986,
         lng: 12.4769,
         description:
@@ -2363,7 +2363,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Castel_Sant%27Angelo_at_Night.jpg/500px-Castel_Sant%27Angelo_at_Night.jpg',
         name: 'קסטל סנט אנג׳לו',
         nameLocal: "Castel Sant'Angelo",
-        category: 'attraction',
+        category: 'historic',
         lat: 41.9031,
         lng: 12.4663,
         description:
@@ -2414,7 +2414,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/St_Peter%27s_Square%2C_Vatican_City_-_April_2007.jpg/500px-St_Peter%27s_Square%2C_Vatican_City_-_April_2007.jpg',
         name: 'כיכר פטרוס הקדוש',
         nameLocal: "St. Peter's Square",
-        category: 'attraction',
+        category: 'historic',
         lat: 41.9022,
         lng: 12.4568,
         description:
@@ -2482,7 +2482,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Villa_Deste_park_Rometta_2011_2.jpg/500px-Villa_Deste_park_Rometta_2011_2.jpg',
         name: 'וילה ד׳אסטה (טיבולי)',
         nameLocal: "Villa d'Este",
-        category: 'attraction',
+        category: 'historic',
         lat: 41.9625,
         lng: 12.7961,
         description:
@@ -2499,7 +2499,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Villa_Hadriana_%28Villa_Adriana_Tivoli%29_1000_03.jpg/500px-Villa_Hadriana_%28Villa_Adriana_Tivoli%29_1000_03.jpg',
         name: 'וילה אדריאנה (טיבולי)',
         nameLocal: 'Villa Adriana',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.946,
         lng: 12.7725,
         description:
@@ -2635,7 +2635,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'האקרופוליס והפרתנון',
         nameLocal: 'Acropolis',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.9715,
         lng: 23.7267,
         description:
@@ -2769,7 +2769,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Agora_-_Ath%C3%A8nes_%28GRA1%29_-_2022-03-26_-_97.jpg/500px-Agora_-_Ath%C3%A8nes_%28GRA1%29_-_2022-03-26_-_97.jpg',
         name: 'האגורה העתיקה',
         nameLocal: 'Ancient Agora',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.9747,
         lng: 23.7217,
         description:
@@ -2786,7 +2786,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/L%27Olympieion_%28Ath%C3%A8nes%29_%2830776483926%29.jpg/500px-L%27Olympieion_%28Ath%C3%A8nes%29_%2830776483926%29.jpg',
         name: 'מקדש זאוס האולימפי',
         nameLocal: 'Temple of Olympian Zeus',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.9693,
         lng: 23.7331,
         description:
@@ -2803,7 +2803,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Panathenaic_Stadium_-_panoramio_%281%29.jpg/500px-Panathenaic_Stadium_-_panoramio_%281%29.jpg',
         name: 'האצטדיון הפנאתנאי',
         nameLocal: 'Panathenaic Stadium',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.9683,
         lng: 23.741,
         description:
@@ -2989,7 +2989,7 @@ export const destinations: Destination[] = [
         id: 'ath-delphi',
         name: 'דלפי',
         nameLocal: 'Delphi / Δελφοί',
-        category: 'attraction',
+        category: 'historic',
         lat: 38.4794,
         lng: 22.4936,
         description:
@@ -3187,7 +3187,7 @@ export const destinations: Destination[] = [
         id: 'mad-royal-palace',
         name: 'הארמון המלכותי',
         nameLocal: 'Royal Palace of Madrid',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.41806,
         lng: -3.71417,
         description:
@@ -3204,7 +3204,7 @@ export const destinations: Destination[] = [
         id: 'mad-almudena',
         name: 'קתדרלת אלמודנה',
         nameLocal: 'Almudena Cathedral',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.41559,
         lng: -3.71456,
         description:
@@ -3220,7 +3220,7 @@ export const destinations: Destination[] = [
         id: 'mad-plaza-mayor',
         name: 'פלאסה מאיור',
         nameLocal: 'Plaza Mayor',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.41536,
         lng: -3.70739,
         description:
@@ -3465,7 +3465,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'סגרדה פמיליה',
         nameLocal: 'Sagrada Família',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.4036,
         lng: 2.1744,
         description:
@@ -3501,7 +3501,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'הרובע הגותי',
         nameLocal: 'Gothic Quarter (Barri Gòtic)',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.3833,
         lng: 2.177,
         description:
@@ -3698,7 +3698,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Barcelona_Cathedral_Saint_Eulalia.jpg/500px-Barcelona_Cathedral_Saint_Eulalia.jpg',
         name: 'קתדרלת ברצלונה',
         nameLocal: 'Barcelona Cathedral',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.3839,
         lng: 2.1762,
         description:
@@ -3732,7 +3732,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Santa_Maria_del_Mar%2C_Barcelona_05.jpg/500px-Santa_Maria_del_Mar%2C_Barcelona_05.jpg',
         name: 'רובע אל בורן',
         nameLocal: 'El Born & Santa Maria del Mar',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.3838,
         lng: 2.182,
         description:
@@ -3834,7 +3834,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Hospital_Sant_Pau%2C_main_facade.jpg/500px-Hospital_Sant_Pau%2C_main_facade.jpg',
         name: 'מתחם סנט פאו המודרניסטי',
         nameLocal: 'Recinte Modernista de Sant Pau',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.4114,
         lng: 2.1743,
         description:
@@ -4052,7 +4052,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'שער ברנדנבורג',
         nameLocal: 'Brandenburg Gate',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.5163,
         lng: 13.3777,
         description:
@@ -4070,7 +4070,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'הרייכסטאג וכיפת הזכוכית',
         nameLocal: 'Reichstag Building',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.5186,
         lng: 13.3762,
         description:
@@ -4088,7 +4088,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'אנדרטת השואה',
         nameLocal: 'Memorial to the Murdered Jews of Europe',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.5139,
         lng: 13.3789,
         description:
@@ -4124,7 +4124,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'איסט סייד גאלרי',
         nameLocal: 'East Side Gallery',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.505,
         lng: 13.4399,
         description:
@@ -4206,7 +4206,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Berlin_-_Checkpoint_Charlie_1963.jpg/500px-Berlin_-_Checkpoint_Charlie_1963.jpg',
         name: 'צ׳קפוינט צ׳רלי',
         nameLocal: 'Checkpoint Charlie',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.5075,
         lng: 13.3904,
         description:
@@ -4257,7 +4257,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Gendarmenmarkt_Panorama.jpg/500px-Gendarmenmarkt_Panorama.jpg',
         name: 'ז׳נדרמנמרקט',
         nameLocal: 'Gendarmenmarkt',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.5138,
         lng: 13.3927,
         description:
@@ -4291,7 +4291,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Neue_Synagoge%2C_Berlin-Mitte%2C_160328%2C_ako.jpg/500px-Neue_Synagoge%2C_Berlin-Mitte%2C_160328%2C_ako.jpg',
         name: 'בית הכנסת החדש',
         nameLocal: 'Neue Synagoge',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.5249,
         lng: 13.3944,
         description:
@@ -4325,7 +4325,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Charlottenburg_Hohenzollern_2.jpg/500px-Charlottenburg_Hohenzollern_2.jpg',
         name: 'ארמון שרלוטנבורג',
         nameLocal: 'Charlottenburg Palace',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.5208,
         lng: 13.2957,
         description:
@@ -4376,7 +4376,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Berlin_-_Potsdamer_Platz_-_2016.jpg/500px-Berlin_-_Potsdamer_Platz_-_2016.jpg',
         name: 'פוטסדאמר פלאץ',
         nameLocal: 'Potsdamer Platz',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.5096,
         lng: 13.3759,
         description:
@@ -4544,7 +4544,7 @@ export const destinations: Destination[] = [
         id: 'ayu-wat-mahathat',
         name: 'ואט מהאתאט',
         nameLocal: 'Wat Mahathat',
-        category: 'attraction',
+        category: 'historic',
         lat: 14.3569,
         lng: 100.5675,
         description:
@@ -4561,7 +4561,7 @@ export const destinations: Destination[] = [
         id: 'ayu-si-sanphet',
         name: 'ואט פרה סי סנפט',
         nameLocal: 'Wat Phra Si Sanphet',
-        category: 'attraction',
+        category: 'historic',
         lat: 14.3558,
         lng: 100.5583,
         description:
@@ -4578,7 +4578,7 @@ export const destinations: Destination[] = [
         id: 'ayu-chaiwatthanaram',
         name: 'ואט צ׳אייוואטנאראם',
         nameLocal: 'Wat Chaiwatthanaram',
-        category: 'attraction',
+        category: 'historic',
         lat: 14.34306,
         lng: 100.54167,
         description:
@@ -4595,7 +4595,7 @@ export const destinations: Destination[] = [
         id: 'ayu-bang-pa-in',
         name: 'ארמון בנג פה-אין',
         nameLocal: 'Bang Pa-In Royal Palace',
-        category: 'attraction',
+        category: 'historic',
         lat: 14.2325,
         lng: 100.57917,
         description:
@@ -4733,7 +4733,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'הארמון המלכותי ווואט פרה קאו',
         nameLocal: 'Grand Palace & Wat Phra Kaew',
-        category: 'attraction',
+        category: 'historic',
         lat: 13.7501,
         lng: 100.492,
         description:
@@ -4751,7 +4751,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'וואט ארון - מקדש השחר',
         nameLocal: 'Wat Arun',
-        category: 'attraction',
+        category: 'historic',
         lat: 13.7436,
         lng: 100.4889,
         description:
@@ -4769,7 +4769,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'וואט פו - מקדש הבודהה השוכב',
         nameLocal: 'Wat Pho',
-        category: 'attraction',
+        category: 'historic',
         lat: 13.7464,
         lng: 100.4936,
         description:
@@ -4786,7 +4786,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'וואט טריימיט - הבודהה מזהב',
         nameLocal: 'Wat Traimit (Golden Buddha)',
-        category: 'attraction',
+        category: 'historic',
         lat: 13.7381,
         lng: 100.5136,
         description:
@@ -5001,7 +5001,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'מקדש אראוואן',
         nameLocal: 'Erawan Shrine',
-        category: 'attraction',
+        category: 'historic',
         lat: 13.7444,
         lng: 100.5404,
         description:
@@ -5253,7 +5253,7 @@ export const destinations: Destination[] = [
         id: 'dxb-jumeirah-mosque',
         name: 'מסגד ג׳ומיירה',
         nameLocal: 'Jumeirah Mosque',
-        category: 'attraction',
+        category: 'historic',
         lat: 25.234,
         lng: 55.2655,
         description:
@@ -5269,7 +5269,7 @@ export const destinations: Destination[] = [
         id: 'dxb-creek',
         name: 'הקריק - מפרץ דובאי',
         nameLocal: 'Dubai Creek',
-        category: 'attraction',
+        category: 'historic',
         lat: 25.25583,
         lng: 55.31667,
         description:
@@ -5286,7 +5286,7 @@ export const destinations: Destination[] = [
         id: 'dxb-bastakiya',
         name: 'הרובע ההיסטורי אל פאהידי',
         nameLocal: 'Al Fahidi Historical Neighbourhood',
-        category: 'attraction',
+        category: 'historic',
         lat: 25.26389,
         lng: 55.3,
         description:
@@ -5740,7 +5740,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'מסגד שיח׳ זאיד הגדול',
         nameLocal: 'Sheikh Zayed Grand Mosque',
-        category: 'attraction',
+        category: 'historic',
         lat: 24.412,
         lng: 54.474,
         description:
@@ -5780,7 +5780,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'קצר אל-וואטן - ארמון האומה',
         nameLocal: 'Qasr Al Watan',
-        category: 'attraction',
+        category: 'historic',
         lat: 24.46225,
         lng: 54.30551,
         description:
@@ -5797,7 +5797,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'אנדרטת המייסד',
         nameLocal: "The Founder's Memorial",
-        category: 'attraction',
+        category: 'historic',
         lat: 24.4631,
         lng: 54.3224,
         description:
@@ -5849,7 +5849,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'בית המשפחה האברהמית',
         nameLocal: 'Abrahamic Family House',
-        category: 'attraction',
+        category: 'historic',
         lat: 24.530933,
         lng: 54.406101,
         description:
@@ -6153,7 +6153,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'מבצר נריקלה',
         nameLocal: 'Narikala Fortress',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.68778,
         lng: 44.80861,
         description:
@@ -6171,7 +6171,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'מרחצאות הגופרית (אבנוטובאני)',
         nameLocal: 'Abanotubani Sulfur Baths',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.68778,
         lng: 44.81111,
         description:
@@ -6189,7 +6189,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'קתדרלת השילוש הקדוש (סמבה)',
         nameLocal: 'Holy Trinity Cathedral (Sameba)',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.6975,
         lng: 44.81667,
         description:
@@ -6223,7 +6223,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'כנסיית מטחי',
         nameLocal: 'Metekhi Church',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.69,
         lng: 44.81111,
         description:
@@ -6240,7 +6240,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'שדרת רוסטוולי',
         nameLocal: 'Rustaveli Avenue',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.7007,
         lng: 44.7953,
         description:
@@ -6257,7 +6257,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'כיכר החירות',
         nameLocal: 'Freedom Square',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.6938,
         lng: 44.8014,
         description:
@@ -6343,7 +6343,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'מנזר ג׳ווארי (מצחתה)',
         nameLocal: 'Jvari Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.8383,
         lng: 44.7335,
         description:
@@ -6360,7 +6360,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'קתדרלת סווטיצחוולי (מצחתה)',
         nameLocal: 'Svetitskhoveli Cathedral',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.8419,
         lng: 44.7211,
         description:
@@ -6395,7 +6395,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'בית הכנסת הגדול',
         nameLocal: 'Great Synagogue of Tbilisi',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.69,
         lng: 44.8073,
         description:
@@ -6588,7 +6588,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'הבודהה הגדול',
         nameLocal: 'The Big Buddha',
-        category: 'attraction',
+        category: 'historic',
         lat: 7.8275,
         lng: 98.3124,
         description:
@@ -6726,7 +6726,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'וואט צ׳אלונג',
         nameLocal: 'Wat Chalong',
-        category: 'attraction',
+        category: 'historic',
         lat: 7.8467,
         lng: 98.3367,
         description:
@@ -6743,7 +6743,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'העיר העתיקה של פוקט',
         nameLocal: 'Old Phuket Town',
-        category: 'attraction',
+        category: 'historic',
         lat: 7.8846,
         lng: 98.3921,
         description:
@@ -6935,7 +6935,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'מגדל הבתולה והעיר העתיקה',
         nameLocal: 'Maiden Tower & Old City',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.3661,
         lng: 49.8372,
         description:
@@ -6952,7 +6952,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'ארמון השירוואנשאהים',
         nameLocal: 'Palace of the Shirvanshahs',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.3661,
         lng: 49.8334,
         description:
@@ -7057,7 +7057,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'מקדש האש אטשגה',
         nameLocal: 'Ateshgah Fire Temple',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.4154,
         lng: 50.0086,
         description:
@@ -7074,7 +7074,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'הכפר האדום (קרסניה סלובודה)',
         nameLocal: 'Red Village (Qırmızı Qəsəbə)',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.3736,
         lng: 48.5106,
         description:
@@ -7299,7 +7299,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'קתדרלת זנקוב',
         nameLocal: 'Ascension (Zenkov) Cathedral',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.2588,
         lng: 76.9532,
         description:
@@ -7316,7 +7316,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'פארק 28 הגווארדים של פנפילוב',
         nameLocal: 'Panfilov Park',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.2605,
         lng: 76.9543,
         description:
@@ -7333,7 +7333,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'כיכר הרפובליקה ואנדרטת העצמאות',
         nameLocal: 'Republic Square',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.2389,
         lng: 76.9455,
         description:
@@ -7517,7 +7517,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'העיר העתיקה של קוטור',
         nameLocal: 'Kotor Old Town',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.4243,
         lng: 18.7712,
         description:
@@ -7552,7 +7552,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'פראסט',
         nameLocal: 'Perast',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.4869,
         lng: 18.6992,
         description:
@@ -7569,7 +7569,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'כנסיית גבירתנו של הסלעים',
         nameLocal: 'Our Lady of the Rocks',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.4867,
         lng: 18.6889,
         description:
@@ -7605,7 +7605,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'העיר העתיקה של בודווה',
         nameLocal: 'Budva Old Town',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.2781,
         lng: 18.8386,
         description:
@@ -7779,7 +7779,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'העיר העתיקה של בודווה',
         nameLocal: 'Budva Old Town',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.2781,
         lng: 18.8386,
         description:
@@ -8004,7 +8004,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'הח׳זנה - "האוצר" והסיק',
         nameLocal: 'Al-Khazneh (The Treasury) & the Siq',
-        category: 'attraction',
+        category: 'historic',
         lat: 30.3225,
         lng: 35.4516,
         description:
@@ -8056,7 +8056,7 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         name: 'פטרה בלילה',
         nameLocal: 'Petra by Night',
-        category: 'attraction',
+        category: 'historic',
         lat: 30.3226,
         lng: 35.4517,
         description:
@@ -8073,7 +8073,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'פטרה הקטנה (סיק אל-בארד)',
         nameLocal: 'Little Petra (Siq al-Barid)',
-        category: 'attraction',
+        category: 'historic',
         lat: 30.3675,
         lng: 35.4456,
         description:
@@ -8199,7 +8199,7 @@ export const destinations: Destination[] = [
         id: 'nic-ledra',
         name: 'רחוב לדרה ומעבר הגבול',
         nameLocal: 'Ledra Street',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.17444,
         lng: 33.36139,
         description:
@@ -8233,7 +8233,7 @@ export const destinations: Destination[] = [
         id: 'nic-selimiye',
         name: 'מסגד סלימייה',
         nameLocal: 'Selimiye Mosque',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.1765,
         lng: 33.3645,
         description:
@@ -8250,7 +8250,7 @@ export const destinations: Destination[] = [
         id: 'nic-buyuk-han',
         name: 'בויוק האן',
         nameLocal: 'Büyük Han',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.1763,
         lng: 33.3625,
         description:
@@ -8266,7 +8266,7 @@ export const destinations: Destination[] = [
         id: 'nic-famagusta-gate',
         name: 'שער פמגוסטה',
         nameLocal: 'Famagusta Gate',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.1743,
         lng: 33.3712,
         description:
@@ -8459,7 +8459,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'מנזר קיקוס',
         nameLocal: 'Kykkos Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 34.9839,
         lng: 32.7412,
         description:
@@ -8494,7 +8494,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'קוריון העתיקה',
         nameLocal: 'Kourion',
-        category: 'attraction',
+        category: 'historic',
         lat: 34.6642,
         lng: 32.8877,
         description:
@@ -8545,7 +8545,7 @@ export const destinations: Destination[] = [
         id: 'lca-hala-sultan',
         name: 'הלה סולטן טקה',
         nameLocal: 'Hala Sultan Tekke',
-        category: 'attraction',
+        category: 'historic',
         lat: 34.88528,
         lng: 33.61001,
         description:
@@ -8562,7 +8562,7 @@ export const destinations: Destination[] = [
         id: 'lca-khirokitia',
         name: 'חירוקיטיה',
         nameLocal: 'Khirokitia',
-        category: 'attraction',
+        category: 'historic',
         lat: 34.79673,
         lng: 33.34372,
         description:
@@ -8666,7 +8666,7 @@ export const destinations: Destination[] = [
         id: 'geo-gergeti',
         name: 'כנסיית השילוש בגרגטי',
         nameLocal: 'Gergeti Trinity Church',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.6625,
         lng: 44.62028,
         description:
@@ -8683,7 +8683,7 @@ export const destinations: Destination[] = [
         id: 'geo-ananuri',
         name: 'מבצר אנאנורי',
         nameLocal: 'Ananuri Fortress',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.16361,
         lng: 44.70389,
         description:
@@ -8700,7 +8700,7 @@ export const destinations: Destination[] = [
         id: 'geo-jvari',
         name: 'מנזר ג׳ווארי',
         nameLocal: 'Jvari Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.83861,
         lng: 44.73389,
         description:
@@ -8717,7 +8717,7 @@ export const destinations: Destination[] = [
         id: 'geo-mtskheta',
         name: 'מצחטה',
         nameLocal: 'Mtskheta',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.84639,
         lng: 44.71944,
         description:
@@ -8829,7 +8829,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'כיכר פיאצה והעיר העתיקה',
         nameLocal: 'Piazza Square & Old Town',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.6516,
         lng: 41.6377,
         description:
@@ -8899,7 +8899,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'מבצר גוניו-אפסארוס',
         nameLocal: 'Gonio-Apsaros Fortress',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.5733,
         lng: 41.5738,
         description:
@@ -9105,7 +9105,7 @@ export const destinations: Destination[] = [
         id: 'cyc-akrotiri',
         name: 'אקרוטירי הפרהיסטורית',
         nameLocal: 'Akrotiri',
-        category: 'attraction',
+        category: 'historic',
         lat: 36.35139,
         lng: 25.40361,
         description:
@@ -9122,7 +9122,7 @@ export const destinations: Destination[] = [
         id: 'cyc-ancient-thera',
         name: 'תרה העתיקה',
         nameLocal: 'Ancient Thera',
-        category: 'attraction',
+        category: 'historic',
         lat: 36.36459,
         lng: 25.47794,
         description:
@@ -9170,7 +9170,7 @@ export const destinations: Destination[] = [
         id: 'cyc-emporeio',
         name: 'אמפוריו',
         nameLocal: 'Emporeio',
-        category: 'attraction',
+        category: 'historic',
         lat: 36.35833,
         lng: 25.44444,
         description:
@@ -9219,7 +9219,7 @@ export const destinations: Destination[] = [
         id: 'cyc-paraportiani',
         name: 'כנסיית פאראפורטיאני',
         nameLocal: 'Panagia Paraportiani',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.4471,
         lng: 25.3257,
         description:
@@ -9235,7 +9235,7 @@ export const destinations: Destination[] = [
         id: 'cyc-delos',
         name: 'דלוס',
         nameLocal: 'Delos',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.39333,
         lng: 25.27111,
         description:
@@ -9403,7 +9403,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'העיר העתיקה של חאניה',
         nameLocal: 'Chania Old Town',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.5167,
         lng: 24.0167,
         description:
@@ -9490,7 +9490,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'העיר העתיקה של רתימנו',
         nameLocal: 'Rethymno Old Town',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.3684,
         lng: 24.4744,
         description:
@@ -9525,7 +9525,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'ארמון קנוסוס',
         nameLocal: 'Knossos',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.2981,
         lng: 25.1631,
         description:
@@ -9542,7 +9542,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'האי ספינלונגה',
         nameLocal: 'Spinalonga',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.2975,
         lng: 25.7381,
         description:
@@ -9697,7 +9697,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'מריאנפלאץ והעיר העתיקה',
         nameLocal: 'Marienplatz & Old Town',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.1373,
         lng: 11.5755,
         description:
@@ -9731,7 +9731,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'ארמון נימפנבורג',
         nameLocal: 'Nymphenburg Palace',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.1581,
         lng: 11.5036,
         description:
@@ -9749,7 +9749,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'טירת נוישוונשטיין',
         nameLocal: 'Neuschwanstein Castle',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.5575,
         lng: 10.7494,
         description:
@@ -9999,7 +9999,7 @@ export const destinations: Destination[] = [
         id: 'ven-san-marco',
         name: 'כיכר סן מרקו',
         nameLocal: 'Piazza San Marco',
-        category: 'attraction',
+        category: 'historic',
         lat: 45.43389,
         lng: 12.33806,
         description:
@@ -10016,7 +10016,7 @@ export const destinations: Destination[] = [
         id: 'ven-basilica',
         name: 'בזיליקת סן מרקו',
         nameLocal: "St Mark's Basilica",
-        category: 'attraction',
+        category: 'historic',
         lat: 45.43444,
         lng: 12.33972,
         description:
@@ -10066,7 +10066,7 @@ export const destinations: Destination[] = [
         id: 'ven-rialto',
         name: 'גשר ריאלטו',
         nameLocal: 'Rialto Bridge',
-        category: 'attraction',
+        category: 'historic',
         lat: 45.438,
         lng: 12.336,
         description:
@@ -10083,7 +10083,7 @@ export const destinations: Destination[] = [
         id: 'ven-salute',
         name: 'סנטה מריה דלה סלוטה',
         nameLocal: 'Santa Maria della Salute',
-        category: 'attraction',
+        category: 'historic',
         lat: 45.43083,
         lng: 12.33444,
         description:
@@ -10099,7 +10099,7 @@ export const destinations: Destination[] = [
         id: 'ven-ghetto',
         name: 'הגטו היהודי',
         nameLocal: 'Venetian Ghetto',
-        category: 'attraction',
+        category: 'historic',
         lat: 45.44528,
         lng: 12.32639,
         description:
@@ -10351,7 +10351,7 @@ export const destinations: Destination[] = [
         id: 'flo-duomo',
         name: 'הדואומו של פירנצה',
         nameLocal: 'Florence Cathedral (Duomo)',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.77306,
         lng: 11.25694,
         description:
@@ -10402,7 +10402,7 @@ export const destinations: Destination[] = [
         id: 'flo-ponte-vecchio',
         name: 'פונטה וקיו',
         nameLocal: 'Ponte Vecchio',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.76799,
         lng: 11.25316,
         description:
@@ -10419,7 +10419,7 @@ export const destinations: Destination[] = [
         id: 'flo-signoria',
         name: 'פיאצה דלה סיניוריה',
         nameLocal: 'Piazza della Signoria',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.76972,
         lng: 11.25556,
         description:
@@ -10452,7 +10452,7 @@ export const destinations: Destination[] = [
         id: 'flo-santa-croce',
         name: 'בזיליקת סנטה קרוצ׳ה',
         nameLocal: 'Basilica of Santa Croce',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.76842,
         lng: 11.26272,
         description:
@@ -10517,7 +10517,7 @@ export const destinations: Destination[] = [
         id: 'flo-san-lorenzo',
         name: 'בזיליקת סן לורנצו',
         nameLocal: 'Basilica of San Lorenzo',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.77492,
         lng: 11.25386,
         description:
@@ -10549,7 +10549,7 @@ export const destinations: Destination[] = [
         id: 'flo-synagogue',
         name: 'בית הכנסת הגדול',
         nameLocal: 'Great Synagogue of Florence',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.77278,
         lng: 11.26639,
         description:
@@ -10870,7 +10870,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'בולצאנו ומוזיאון אצי',
         nameLocal: 'Bolzano & Ötzi Museum',
-        category: 'attraction',
+        category: 'historic',
         lat: 46.5,
         lng: 11.35,
         description:
@@ -10997,7 +10997,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'העיר העתיקה של זלצבורג',
         nameLocal: 'Salzburg Old Town',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.8,
         lng: 13.0422,
         description:
@@ -11223,7 +11223,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'פלמה - הקתדרלה והעיר העתיקה',
         nameLocal: 'Palma & La Seu Cathedral',
-        category: 'attraction',
+        category: 'historic',
         lat: 39.5674,
         lng: 2.6481,
         description:
@@ -11293,7 +11293,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'ואלדמוסה',
         nameLocal: 'Valldemossa',
-        category: 'attraction',
+        category: 'historic',
         lat: 39.7117,
         lng: 2.6226,
         description:
@@ -11310,7 +11310,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'סולר והחשמלית',
         nameLocal: 'Sóller',
-        category: 'attraction',
+        category: 'historic',
         lat: 39.7676,
         lng: 2.714,
         description:
@@ -11935,7 +11935,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'מקדש סנסו-ג׳י (אסקוסה)',
         nameLocal: 'Sensō-ji, Asakusa',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.7147,
         lng: 139.7968,
         description:
@@ -11970,7 +11970,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'מקדש מייג׳י',
         nameLocal: 'Meiji Shrine / 明治神宮',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.6761,
         lng: 139.6992,
         description:
@@ -12038,7 +12038,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'קמאקורה',
         nameLocal: 'Kamakura / 鎌倉',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.3197,
         lng: 139.5525,
         description:
@@ -12056,7 +12056,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'הבודהה הגדול של קמאקורה',
         nameLocal: 'Kōtoku-in, Great Buddha',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.3168,
         lng: 139.5357,
         description:
@@ -12525,7 +12525,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'מאצ׳ו פיצ׳ו',
         nameLocal: 'Machu Picchu',
-        category: 'attraction',
+        category: 'historic',
         lat: -13.1633,
         lng: -72.5456,
         description:
@@ -12579,7 +12579,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'קוסקו - העיר העתיקה',
         nameLocal: 'Cusco Historic Centre',
-        category: 'attraction',
+        category: 'historic',
         lat: -13.5169,
         lng: -71.9786,
         description:
@@ -12596,7 +12596,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'סקסייוואמן',
         nameLocal: 'Sacsayhuamán',
-        category: 'attraction',
+        category: 'historic',
         lat: -13.5078,
         lng: -71.9822,
         description:
@@ -12630,7 +12630,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'אולנטייטמבו',
         nameLocal: 'Ollantaytambo',
-        category: 'attraction',
+        category: 'historic',
         lat: -13.2581,
         lng: -72.2633,
         description:
@@ -12647,7 +12647,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'פיסק - שוק ומדרגות',
         nameLocal: 'Písac',
-        category: 'attraction',
+        category: 'historic',
         lat: -13.4242,
         lng: -71.8578,
         description:
@@ -12664,7 +12664,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'מוראי - המדרגות המעגליות',
         nameLocal: 'Moray',
-        category: 'attraction',
+        category: 'historic',
         lat: -13.3293,
         lng: -72.1964,
         description:
@@ -13214,7 +13214,7 @@ export const destinations: Destination[] = [
         id: 'nyc-statue-liberty',
         name: 'פסל החירות',
         nameLocal: 'Statue of Liberty',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.68917,
         lng: -74.04444,
         description:
@@ -13416,7 +13416,7 @@ export const destinations: Destination[] = [
         id: 'nyc-brooklyn-bridge',
         name: 'גשר ברוקלין',
         nameLocal: 'Brooklyn Bridge',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.7057,
         lng: -73.9964,
         description:
@@ -13513,7 +13513,7 @@ export const destinations: Destination[] = [
         id: 'nyc-grand-central',
         name: 'גרנד סנטרל',
         nameLocal: 'Grand Central Terminal',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.7528,
         lng: -73.9772,
         description:
@@ -13530,7 +13530,7 @@ export const destinations: Destination[] = [
         id: 'nyc-nypl',
         name: 'הספרייה הציבורית',
         nameLocal: 'New York Public Library, Main Branch',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.75306,
         lng: -73.98194,
         description:
@@ -13578,7 +13578,7 @@ export const destinations: Destination[] = [
         id: 'nyc-flatiron',
         name: 'בניין הפלטאיירון',
         nameLocal: 'Flatiron Building',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.74111,
         lng: -73.98972,
         description:
@@ -14368,7 +14368,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'טירת ספיש',
         nameLocal: 'Spiš Castle (Spišský hrad)',
-        category: 'attraction',
+        category: 'historic',
         lat: 49.0006,
         lng: 20.7683,
         description:
@@ -14599,7 +14599,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'דצ׳ין',
         nameLocal: 'Děčín',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.7736,
         lng: 14.1961,
         description:
@@ -14721,7 +14721,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'טיהאני והמנזר',
         nameLocal: 'Tihany Abbey & Peninsula',
-        category: 'attraction',
+        category: 'historic',
         lat: 46.9089,
         lng: 17.8792,
         description:
@@ -14791,7 +14791,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'מצודת סיגליגט',
         nameLocal: 'Szigliget Castle',
-        category: 'attraction',
+        category: 'historic',
         lat: 46.7961,
         lng: 17.4383,
         description:
@@ -15403,7 +15403,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'טירת פרדיאמה',
         nameLocal: 'Predjama Castle',
-        category: 'attraction',
+        category: 'historic',
         lat: 45.8153,
         lng: 14.1267,
         description:
@@ -15636,7 +15636,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'זאדאר',
         nameLocal: 'Zadar',
-        category: 'attraction',
+        category: 'historic',
         lat: 44.1142,
         lng: 15.2275,
         description:
@@ -15654,7 +15654,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'ספליט',
         nameLocal: 'Split',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.51,
         lng: 16.44,
         description:
@@ -15671,7 +15671,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'ארמון דיוקלטיאנוס',
         nameLocal: "Diocletian's Palace",
-        category: 'attraction',
+        category: 'historic',
         lat: 43.5083,
         lng: 16.44,
         description:
@@ -15689,7 +15689,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'דוברובניק',
         nameLocal: 'Dubrovnik',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.6403,
         lng: 18.1083,
         description:
@@ -16006,7 +16006,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'קטמנדו וכיכר הדורבר',
         nameLocal: 'Kathmandu Durbar Square',
-        category: 'attraction',
+        category: 'historic',
         lat: 27.71,
         lng: 85.32,
         description:
@@ -16024,7 +16024,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'סטופת בודהנאת',
         nameLocal: 'Boudhanath Stupa',
-        category: 'attraction',
+        category: 'historic',
         lat: 27.7214,
         lng: 85.3619,
         description:
@@ -16041,7 +16041,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'סוואיאמבונאת (מקדש הקופים)',
         nameLocal: 'Swayambhunath',
-        category: 'attraction',
+        category: 'historic',
         lat: 27.715,
         lng: 85.29,
         description:
@@ -16058,7 +16058,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'בהקטפור',
         nameLocal: 'Bhaktapur',
-        category: 'attraction',
+        category: 'historic',
         lat: 27.6722,
         lng: 85.4278,
         description:
@@ -16361,7 +16361,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'האנוי',
         nameLocal: 'Hanoi',
-        category: 'attraction',
+        category: 'historic',
         lat: 21.0,
         lng: 105.85,
         description:
@@ -16807,7 +16807,7 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         name: 'ברגן',
         nameLocal: 'Bergen',
-        category: 'attraction',
+        category: 'historic',
         lat: 60.3894,
         lng: 5.33,
         description:
@@ -17343,7 +17343,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'מנזר חור וירפ',
         nameLocal: 'Khor Virap',
-        category: 'attraction',
+        category: 'historic',
         lat: 39.8783,
         lng: 44.5761,
         description:
@@ -17361,7 +17361,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'מנזר גגהארד',
         nameLocal: 'Geghard Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.1404,
         lng: 44.8185,
         description:
@@ -17378,7 +17378,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'מקדש גרני',
         nameLocal: 'Garni Temple',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.1124,
         lng: 44.7303,
         description:
@@ -17413,7 +17413,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'מנזר סוואנאוואנק',
         nameLocal: 'Sevanavank',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.5639,
         lng: 45.0108,
         description:
@@ -17449,7 +17449,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'מנזר טאטב ורכבל "כנפי טאטב"',
         nameLocal: 'Tatev Monastery & Wings of Tatev',
-        category: 'attraction',
+        category: 'historic',
         lat: 39.3794,
         lng: 46.25,
         description:
@@ -17466,7 +17466,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'מנזר נורוואנק',
         nameLocal: 'Noravank',
-        category: 'attraction',
+        category: 'historic',
         lat: 39.6841,
         lng: 45.2329,
         description:
@@ -17652,7 +17652,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'כיכר הרגיסטן',
         nameLocal: 'Registan Square',
-        category: 'attraction',
+        category: 'historic',
         lat: 39.6547,
         lng: 66.9756,
         description:
@@ -17670,7 +17670,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'שאה-אי-זינדה',
         nameLocal: 'Shah-i-Zinda',
-        category: 'attraction',
+        category: 'historic',
         lat: 39.6631,
         lng: 66.9878,
         description:
@@ -17687,7 +17687,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'מאוזוליאום גור-אמיר',
         nameLocal: 'Gur-e-Amir',
-        category: 'attraction',
+        category: 'historic',
         lat: 39.6483,
         lng: 66.9689,
         description:
@@ -17702,7 +17702,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'סמרקנד',
         nameLocal: 'Samarkand',
-        category: 'attraction',
+        category: 'historic',
         lat: 39.6506,
         lng: 66.9653,
         description:
@@ -17722,7 +17722,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'בוכרה',
         nameLocal: 'Bukhara',
-        category: 'attraction',
+        category: 'historic',
         lat: 39.7667,
         lng: 64.4231,
         description:
@@ -17739,7 +17739,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'מתחם פוי-קליאן',
         nameLocal: 'Po-i-Kalyan',
-        category: 'attraction',
+        category: 'historic',
         lat: 39.7758,
         lng: 64.4142,
         description:
@@ -17757,7 +17757,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'חיווה (איצ׳אן קאלה)',
         nameLocal: 'Khiva / Ichan Kala',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.3814,
         lng: 60.3611,
         description:
@@ -18053,7 +18053,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'אוסטרוחוורן',
         nameLocal: 'Oudtshoorn',
-        category: 'attraction',
+        category: 'historic',
         lat: -33.5833,
         lng: 22.2,
         description:
@@ -18105,7 +18105,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'מוסל ביי',
         nameLocal: 'Mossel Bay',
-        category: 'attraction',
+        category: 'historic',
         lat: -34.1833,
         lng: 22.1333,
         description:
@@ -18225,7 +18225,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'פושימי אינארי',
         nameLocal: 'Fushimi Inari-taisha',
-        category: 'attraction',
+        category: 'historic',
         lat: 34.9672,
         lng: 135.7728,
         description:
@@ -18243,7 +18243,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'קיומיזו-דרה',
         nameLocal: 'Kiyomizu-dera',
-        category: 'attraction',
+        category: 'historic',
         lat: 34.995,
         lng: 135.785,
         description:
@@ -18279,7 +18279,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'הביתן הזהב (קינקאקו-ג׳י)',
         nameLocal: 'Kinkaku-ji',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.0395,
         lng: 135.7285,
         description:
@@ -18296,7 +18296,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'הביתן הכסף (גינקאקו-ג׳י)',
         nameLocal: 'Ginkaku-ji',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.0267,
         lng: 135.7983,
         description:
@@ -18313,7 +18313,7 @@ export const destinations: Destination[] = [
         priceLevel: 2,
         name: 'קיוטו - העיר',
         nameLocal: 'Kyoto',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.0116,
         lng: 135.7681,
         description:
@@ -18331,7 +18331,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'טודאי-ג׳י ופארק נארה',
         nameLocal: 'Tōdai-ji & Nara Park',
-        category: 'attraction',
+        category: 'historic',
         lat: 34.6892,
         lng: 135.8397,
         description:
@@ -18893,7 +18893,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'מנזר ז׳ירונימוש',
         nameLocal: 'Mosteiro dos Jerónimos',
-        category: 'attraction',
+        category: 'historic',
         lat: 38.69778,
         lng: -9.20611,
         description:
@@ -18911,7 +18911,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'מגדל בלם',
         nameLocal: 'Torre de Belém',
-        category: 'attraction',
+        category: 'historic',
         lat: 38.69167,
         lng: -9.21611,
         description:
@@ -18929,7 +18929,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'מצודת סאו ז׳ורז׳ה',
         nameLocal: 'Castelo de São Jorge',
-        category: 'attraction',
+        category: 'historic',
         lat: 38.71389,
         lng: -9.13361,
         description:
@@ -18946,7 +18946,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'רובע אלפמה',
         nameLocal: 'Alfama',
-        category: 'attraction',
+        category: 'historic',
         lat: 38.71222,
         lng: -9.13,
         description:
@@ -18963,7 +18963,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'קתדרלת ליסבון',
         nameLocal: 'Sé de Lisboa',
-        category: 'attraction',
+        category: 'historic',
         lat: 38.70972,
         lng: -9.13306,
         description:
@@ -18980,7 +18980,7 @@ export const destinations: Destination[] = [
         priceLevel: 0,
         name: 'כיכר המסחר',
         nameLocal: 'Praça do Comércio',
-        category: 'attraction',
+        category: 'historic',
         lat: 38.7075,
         lng: -9.13639,
         description:
@@ -19032,7 +19032,7 @@ export const destinations: Destination[] = [
         mustSee: true,
         name: 'ארמון פנה (סינטרה)',
         nameLocal: 'Palácio Nacional da Pena',
-        category: 'attraction',
+        category: 'historic',
         lat: 38.78778,
         lng: -9.39056,
         description:
@@ -19049,7 +19049,7 @@ export const destinations: Destination[] = [
         priceLevel: 1,
         name: 'טירת המורים (סינטרה)',
         nameLocal: 'Castelo dos Mouros',
-        category: 'attraction',
+        category: 'historic',
         lat: 38.7925,
         lng: -9.38944,
         description:
@@ -19210,7 +19210,7 @@ export const destinations: Destination[] = [
         id: 'war-old-town',
         name: 'העיר העתיקה',
         nameLocal: 'Old Town (Stare Miasto)',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.2497,
         lng: 21.0122,
         description:
@@ -19244,7 +19244,7 @@ export const destinations: Destination[] = [
         id: 'war-barbican',
         name: 'הברביקן',
         nameLocal: 'Warsaw Barbican',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.25056,
         lng: 21.01,
         description:
@@ -19521,7 +19521,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Sukiennice_and_Main_Market_Square_Krakow_Poland.JPG/500px-Sukiennice_and_Main_Market_Square_Krakow_Poland.JPG',
         name: 'כיכר השוק הראשית',
         nameLocal: 'Rynek Główny',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.0617,
         lng: 19.9372,
         description:
@@ -19539,7 +19539,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Church_of_Our_Lady_Assumed_into_Heaven%2C_5_Mariacki_square%2C_Old_Town%2C_Krak%C3%B3w%2C_Poland.jpg/500px-Church_of_Our_Lady_Assumed_into_Heaven%2C_5_Mariacki_square%2C_Old_Town%2C_Krak%C3%B3w%2C_Poland.jpg',
         name: 'כנסיית מריה הקדושה',
         nameLocal: 'Bazylika Mariacka',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.0617,
         lng: 19.9392,
         description:
@@ -19556,7 +19556,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Wawel_%284%29.jpg/500px-Wawel_%284%29.jpg',
         name: 'טירת ואוול והקתדרלה',
         nameLocal: 'Wawel',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.0539,
         lng: 19.9347,
         description:
@@ -19574,7 +19574,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Wolnica_Square_and_former_city_hall_of_Kazimierz%2C_view_from_E%2C_Kazimierz%2C_Krak%C3%B3w%2C_Poland.jpg/500px-Wolnica_Square_and_former_city_hall_of_Kazimierz%2C_view_from_E%2C_Kazimierz%2C_Krak%C3%B3w%2C_Poland.jpg',
         name: 'קז׳ימייז׳ - הרובע היהודי',
         nameLocal: 'Kazimierz',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.0517,
         lng: 19.9447,
         description:
@@ -19627,7 +19627,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/%CE%91%CE%BB%CE%B1%CF%84%CF%89%CF%81%CF%85%CF%87%CE%B5%CE%AF%CE%B1_%CE%92%CE%B9%CE%B5%CE%BB%CE%AF%CF%84%CF%83%CE%BA%CE%B1_5021.jpg/500px-%CE%91%CE%BB%CE%B1%CF%84%CF%89%CF%81%CF%85%CF%87%CE%B5%CE%AF%CE%B1_%CE%92%CE%B9%CE%B5%CE%BB%CE%AF%CF%84%CF%83%CE%BA%CE%B1_5021.jpg',
         name: 'מכרה המלח ויליצ׳קה',
         nameLocal: 'Kopalnia soli Wieliczka',
-        category: 'attraction',
+        category: 'historic',
         lat: 49.9792,
         lng: 20.0639,
         description:
@@ -19883,7 +19883,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Paphos_panorama_-_Cyprus_-_3_May_2015.jpg/500px-Paphos_panorama_-_Cyprus_-_3_May_2015.jpg',
         name: 'הפארק הארכיאולוגי של פאפוס',
         nameLocal: 'Paphos Archaeological Park',
-        category: 'attraction',
+        category: 'historic',
         lat: 34.7557,
         lng: 32.4042,
         description:
@@ -19901,7 +19901,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Tombs_of_the_Kings_%28Paphos%29.jpg/500px-Tombs_of_the_Kings_%28Paphos%29.jpg',
         name: 'קברי המלכים',
         nameLocal: 'Tombs of the Kings',
-        category: 'attraction',
+        category: 'historic',
         lat: 34.775,
         lng: 32.4069,
         description:
@@ -19919,7 +19919,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Fort_pafos.jpg/500px-Fort_pafos.jpg',
         name: 'מצודת פאפוס והנמל',
         nameLocal: 'Paphos Castle',
-        category: 'attraction',
+        category: 'historic',
         lat: 34.7537,
         lng: 32.4069,
         description:
@@ -20005,7 +20005,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Kykkos_monastery_from_the_air.jpg/500px-Kykkos_monastery_from_the_air.jpg',
         name: 'מנזר קיקוס',
         nameLocal: 'Kykkos Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 34.984,
         lng: 32.741,
         description:
@@ -20102,7 +20102,7 @@ export const destinations: Destination[] = [
         id: 'ams-anne-frank',
         name: 'בית אנה פראנק',
         nameLocal: 'Anne Frank House',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.3753,
         lng: 4.8843,
         description:
@@ -20122,7 +20122,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.JPG/500px-Amsterdam%2C_Portugese_Synagoge%2C_%2817_januari_2015%29_131.JPG',
         name: 'בית הכנסת הפורטוגזי',
         nameLocal: 'Portugese Synagoge',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.3675,
         lng: 4.9054,
         description:
@@ -20140,7 +20140,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Rembrandshuis.jpg/500px-Rembrandshuis.jpg',
         name: 'בית רמברנדט',
         nameLocal: 'Museum Het Rembrandthuis',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.3694,
         lng: 4.9013,
         description:
@@ -20157,7 +20157,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/BegijnhofAmsterdamPanorama.jpg/500px-BegijnhofAmsterdamPanorama.jpg',
         name: 'בגיינהוף',
         nameLocal: 'Begijnhof',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.3694,
         lng: 4.8901,
         description:
@@ -20401,7 +20401,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Oval_Plaza_%28Forum_Romanum%2C_Gerasa_-_Jerash%2C_Jordan%29_-_%D8%B3%D8%A7%D8%AD%D8%A9_%D8%A7%D9%84%D9%86%D8%AF%D9%88%D8%A9%2C_%D8%AC%D8%B1%D8%B4.jpg/500px-Oval_Plaza_%28Forum_Romanum%2C_Gerasa_-_Jerash%2C_Jordan%29_-_%D8%B3%D8%A7%D8%AD%D8%A9_%D8%A7%D9%84%D9%86%D8%AF%D9%88%D8%A9%2C_%D8%AC%D8%B1%D8%B4.jpg',
         name: 'גרש',
         nameLocal: 'Jerash / جرش',
-        category: 'attraction',
+        category: 'historic',
         lat: 32.2806,
         lng: 35.8972,
         description:
@@ -20419,7 +20419,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Amman_Citadel.jpg/500px-Amman_Citadel.jpg',
         name: 'מצדת עמאן',
         nameLocal: 'Amman Citadel / جبل القلعة',
-        category: 'attraction',
+        category: 'historic',
         lat: 31.9547,
         lng: 35.9343,
         description:
@@ -20437,7 +20437,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Roman_theater_of_Amman_01.jpg/500px-Roman_theater_of_Amman_01.jpg',
         name: 'התאטרון הרומי בעמאן',
         nameLocal: 'Roman Theatre, Amman',
-        category: 'attraction',
+        category: 'historic',
         lat: 31.9517,
         lng: 35.9393,
         description:
@@ -20454,7 +20454,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/MADABA_2.png/500px-MADABA_2.png',
         name: 'מדבא ומפת הפסיפס',
         nameLocal: 'Madaba / مأدبا',
-        category: 'attraction',
+        category: 'historic',
         lat: 31.7167,
         lng: 35.8,
         description:
@@ -20524,7 +20524,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Ajloun_Castle.jpg/500px-Ajloun_Castle.jpg',
         name: 'מבצר עגלון',
         nameLocal: 'Ajloun Castle / قلعة عجلون',
-        category: 'attraction',
+        category: 'historic',
         lat: 32.3252,
         lng: 35.7273,
         description:
@@ -20541,7 +20541,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Bethany_%285%29.JPG/500px-Bethany_%285%29.JPG',
         name: 'אל-מוע׳טס (מקום הטבילה)',
         nameLocal: 'Al-Maghtas / Bethany Beyond the Jordan',
-        category: 'attraction',
+        category: 'historic',
         lat: 31.8372,
         lng: 35.5503,
         description:
@@ -20659,7 +20659,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/%C5%9E%C9%99ki_xan_saray%C4%B1.jpg/500px-%C5%9E%C9%99ki_xan_saray%C4%B1.jpg',
         name: 'ארמון חאני שקי',
         nameLocal: 'Palace of Shaki Khans',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.2044,
         lng: 47.1976,
         description:
@@ -20675,7 +20675,7 @@ export const destinations: Destination[] = [
         id: 'she-old-town',
         name: 'שקי - העיר העתיקה',
         nameLocal: 'Shaki / Şəki',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.1919,
         lng: 47.1706,
         description:
@@ -20712,7 +20712,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Red_village_and_Guba_in_Azerbaijan.jpg/500px-Red_village_and_Guba_in_Azerbaijan.jpg',
         name: 'איירמיזי קסבה - הכפר האדום',
         nameLocal: 'Qırmızı Qəsəbə / Red Village',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.3736,
         lng: 48.5106,
         description:
@@ -20746,7 +20746,7 @@ export const destinations: Destination[] = [
         id: 'she-shamakhi',
         name: 'שמאחי',
         nameLocal: 'Shamakhi / Şamaxı',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.6303,
         lng: 48.6414,
         description:
@@ -20918,7 +20918,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Entrance_Up_Close.jpg/500px-Entrance_Up_Close.jpg',
         name: 'מבצר אל ג׳אהילי',
         nameLocal: 'Al Jahili Fort',
-        category: 'attraction',
+        category: 'historic',
         lat: 24.2161,
         lng: 55.7525,
         description:
@@ -20994,7 +20994,7 @@ export const destinations: Destination[] = [
         id: 'buc-parliament',
         name: 'ארמון הפרלמנט',
         nameLocal: 'Palace of the Parliament',
-        category: 'attraction',
+        category: 'historic',
         lat: 44.4275,
         lng: 26.0875,
         description:
@@ -21011,7 +21011,7 @@ export const destinations: Destination[] = [
         id: 'buc-atheneum',
         name: 'האתנאום הרומני',
         nameLocal: 'Romanian Athenaeum',
-        category: 'attraction',
+        category: 'historic',
         lat: 44.4413,
         lng: 26.0973,
         description:
@@ -21028,7 +21028,7 @@ export const destinations: Destination[] = [
         id: 'buc-lipscani',
         name: 'ליפסקאני - העיר העתיקה',
         nameLocal: 'Lipscani (Old Town)',
-        category: 'attraction',
+        category: 'historic',
         lat: 44.43183,
         lng: 26.10165,
         description:
@@ -21045,7 +21045,7 @@ export const destinations: Destination[] = [
         id: 'buc-stavropoleos',
         name: 'מנזר סטברופולאוס',
         nameLocal: 'Stavropoleos Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 44.43182,
         lng: 26.09879,
         description:
@@ -21061,7 +21061,7 @@ export const destinations: Destination[] = [
         id: 'buc-curtea-veche',
         name: 'החצר הישנה',
         nameLocal: 'Curtea Veche',
-        category: 'attraction',
+        category: 'historic',
         lat: 44.43015,
         lng: 26.10096,
         description:
@@ -21093,7 +21093,7 @@ export const destinations: Destination[] = [
         id: 'buc-choral-temple',
         name: 'המקדש הכוראלי',
         nameLocal: 'Choral Temple',
-        category: 'attraction',
+        category: 'historic',
         lat: 44.43106,
         lng: 26.1067,
         description:
@@ -21159,7 +21159,7 @@ export const destinations: Destination[] = [
         id: 'buc-arcul',
         name: 'שער הניצחון',
         nameLocal: 'Arcul de Triumf',
-        category: 'attraction',
+        category: 'historic',
         lat: 44.46722,
         lng: 26.07807,
         description:
@@ -21281,7 +21281,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Castelul_Bran2.jpg/500px-Castelul_Bran2.jpg',
         name: 'טירת בראן',
         nameLocal: 'Castelul Bran',
-        category: 'attraction',
+        category: 'historic',
         lat: 45.515,
         lng: 25.3672,
         description:
@@ -21298,7 +21298,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/01_Chateau_Peles.jpg/500px-01_Chateau_Peles.jpg',
         name: 'טירת פלש',
         nameLocal: 'Castelul Peleș',
-        category: 'attraction',
+        category: 'historic',
         lat: 45.3598,
         lng: 25.5427,
         description:
@@ -21314,7 +21314,7 @@ export const destinations: Destination[] = [
         id: 'trn-sighisoara',
         name: 'סיגישוארה',
         nameLocal: 'Sighișoara',
-        category: 'attraction',
+        category: 'historic',
         lat: 46.2169,
         lng: 24.7911,
         description:
@@ -21334,7 +21334,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Hunedoara_castle.jpg/500px-Hunedoara_castle.jpg',
         name: 'טירת קורווין',
         nameLocal: 'Castelul Corvinilor',
-        category: 'attraction',
+        category: 'historic',
         lat: 45.7492,
         lng: 22.8883,
         description:
@@ -21467,7 +21467,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/G%C3%B6reme_town_and_valley_2015.JPG/500px-G%C3%B6reme_town_and_valley_2015.JPG',
         name: 'גורמה',
         nameLocal: 'Göreme',
-        category: 'attraction',
+        category: 'historic',
         lat: 38.6431,
         lng: 34.8289,
         description:
@@ -21503,7 +21503,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/General_view_of_%C3%9Crg%C3%BCp.jpg/500px-General_view_of_%C3%9Crg%C3%BCp.jpg',
         name: 'אורגופ',
         nameLocal: 'Ürgüp',
-        category: 'attraction',
+        category: 'historic',
         lat: 38.6314,
         lng: 34.9131,
         description:
@@ -21520,7 +21520,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Derinkuyu_Underground_City_9843_Nevit_Enhancer.jpg/500px-Derinkuyu_Underground_City_9843_Nevit_Enhancer.jpg',
         name: 'העיר התת-קרקעית דרינקויו',
         nameLocal: 'Derinkuyu Underground City',
-        category: 'attraction',
+        category: 'historic',
         lat: 38.3735,
         lng: 34.7351,
         description:
@@ -21555,7 +21555,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Nevsehirpanorama.jpg/500px-Nevsehirpanorama.jpg',
         name: 'נבשהיר',
         nameLocal: 'Nevşehir',
-        category: 'attraction',
+        category: 'historic',
         lat: 38.6264,
         lng: 34.7139,
         description:
@@ -21689,7 +21689,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Connemara_-_Kylemore_Abbey_-_panoramio_%281%29.jpg/500px-Connemara_-_Kylemore_Abbey_-_panoramio_%281%29.jpg',
         name: 'מנזר קיילמור',
         nameLocal: 'Kylemore Abbey',
-        category: 'attraction',
+        category: 'historic',
         lat: 53.5617,
         lng: -9.8894,
         description:
@@ -21724,7 +21724,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Dun_Aonghasa_%28cropped%29.JPG/500px-Dun_Aonghasa_%28cropped%29.JPG',
         name: 'דון אנגוסה, איי אראן',
         nameLocal: 'Dún Aonghasa, Aran Islands',
-        category: 'attraction',
+        category: 'historic',
         lat: 53.1258,
         lng: -9.7681,
         description:
@@ -21741,7 +21741,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Paulnabrone.jpg/500px-Paulnabrone.jpg',
         name: 'הדולמן פולנברון',
         nameLocal: 'Poulnabrone Dolmen',
-        category: 'attraction',
+        category: 'historic',
         lat: 53.0487,
         lng: -9.14,
         description:
@@ -21874,7 +21874,7 @@ export const destinations: Destination[] = [
         id: 'sof-nevski',
         name: 'קתדרלת אלכסנדר נבסקי',
         nameLocal: 'Alexander Nevsky Cathedral',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.69583,
         lng: 23.33296,
         description:
@@ -21891,7 +21891,7 @@ export const destinations: Destination[] = [
         id: 'sof-synagogue',
         name: 'בית הכנסת של סופיה',
         nameLocal: 'Sofia Synagogue',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.7,
         lng: 23.32111,
         description:
@@ -21908,7 +21908,7 @@ export const destinations: Destination[] = [
         id: 'sof-rotunda',
         name: 'רוטונדת סנט ג׳ורג׳',
         nameLocal: 'Rotunda of St George',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.69694,
         lng: 23.32278,
         description:
@@ -21924,7 +21924,7 @@ export const destinations: Destination[] = [
         id: 'sof-hagia-sofia',
         name: 'כנסיית סנטה סופיה',
         nameLocal: 'Saint Sophia Church',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.69651,
         lng: 23.33142,
         description:
@@ -21940,7 +21940,7 @@ export const destinations: Destination[] = [
         id: 'sof-banya-bashi',
         name: 'מסגד באניה באשי',
         nameLocal: 'Banya Bashi Mosque',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.69944,
         lng: 23.3225,
         description:
@@ -22004,7 +22004,7 @@ export const destinations: Destination[] = [
         id: 'sof-ndk',
         name: 'ארמון התרבות הלאומי',
         nameLocal: 'National Palace of Culture (NDK)',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.68472,
         lng: 23.31889,
         description:
@@ -22020,7 +22020,7 @@ export const destinations: Destination[] = [
         id: 'sof-boyana',
         name: 'כנסיית בויאנה',
         nameLocal: 'Boyana Church',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.64467,
         lng: 23.26617,
         description:
@@ -22162,7 +22162,7 @@ export const destinations: Destination[] = [
         id: 'plo-old-town',
         name: 'העיר העתיקה של פלובדיב',
         nameLocal: 'Plovdiv Old Town',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.14982,
         lng: 24.75267,
         description:
@@ -22179,7 +22179,7 @@ export const destinations: Destination[] = [
         id: 'plo-stadium',
         name: 'האצטדיון הרומי',
         nameLocal: 'Roman Stadium of Philippopolis',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.14757,
         lng: 24.74802,
         description:
@@ -22212,7 +22212,7 @@ export const destinations: Destination[] = [
         id: 'plo-bachkovo',
         name: 'מנזר בצ׳קובו',
         nameLocal: 'Bachkovo Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.94222,
         lng: 24.84944,
         description:
@@ -22316,7 +22316,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Rila_Monastery%2C_August_2013.jpg/500px-Rila_Monastery%2C_August_2013.jpg',
         name: 'מנזר רילה',
         nameLocal: 'Rila Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.1333,
         lng: 23.3403,
         description:
@@ -22370,7 +22370,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Meleniko.jpg/500px-Meleniko.jpg',
         name: 'מלניק',
         nameLocal: 'Melnik',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.5167,
         lng: 23.4,
         description:
@@ -22484,7 +22484,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Gamla_stan_September_2014_01.jpg/500px-Gamla_stan_September_2014_01.jpg',
         name: 'גמלה סטאן, העיר העתיקה',
         nameLocal: 'Gamla stan',
-        category: 'attraction',
+        category: 'historic',
         lat: 59.325,
         lng: 18.0708,
         description:
@@ -22518,7 +22518,7 @@ export const destinations: Destination[] = [
         id: 'sth-skansen',
         name: 'סקנסן',
         nameLocal: 'Skansen',
-        category: 'attraction',
+        category: 'historic',
         lat: 59.3261,
         lng: 18.1036,
         description:
@@ -22555,7 +22555,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Stockholms_Stadshuset_City_Hall_Stockholm_2016_01.jpg/500px-Stockholms_Stadshuset_City_Hall_Stockholm_2016_01.jpg',
         name: 'בית העירייה',
         nameLocal: 'Stadshuset',
-        category: 'attraction',
+        category: 'historic',
         lat: 59.3275,
         lng: 18.055,
         description:
@@ -22572,7 +22572,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/The_Royal_Palace_%2815891592359%29.jpg/500px-The_Royal_Palace_%2815891592359%29.jpg',
         name: 'הארמון המלכותי',
         nameLocal: 'Kungliga slottet',
-        category: 'attraction',
+        category: 'historic',
         lat: 59.3269,
         lng: 18.0717,
         description:
@@ -22606,7 +22606,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Drottningholmpalace.jpg/500px-Drottningholmpalace.jpg',
         name: 'ארמון דרוטנינגהולם',
         nameLocal: 'Drottningholm Palace',
-        category: 'attraction',
+        category: 'historic',
         lat: 59.3217,
         lng: 17.8861,
         description:
@@ -22754,7 +22754,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Frederiksborg_Castle_and_boat_crop.jpg/500px-Frederiksborg_Castle_and_boat_crop.jpg',
         name: 'טירת פרדריקסבורג',
         nameLocal: 'Frederiksborg Slot',
-        category: 'attraction',
+        category: 'historic',
         lat: 55.935,
         lng: 12.3008,
         description:
@@ -22788,7 +22788,7 @@ export const destinations: Destination[] = [
         id: 'nzl-roskilde-cathedral',
         name: 'קתדרלת רוסקילדה',
         nameLocal: 'Roskilde Domkirke',
-        category: 'attraction',
+        category: 'historic',
         lat: 55.6428,
         lng: 12.08,
         description:
@@ -22824,7 +22824,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Fredensborg_Slot_124.JPG/500px-Fredensborg_Slot_124.JPG',
         name: 'ארמון פרדנסבורג',
         nameLocal: 'Fredensborg Slot',
-        category: 'attraction',
+        category: 'historic',
         lat: 55.9825,
         lng: 12.3953,
         description:
@@ -23081,7 +23081,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Inari-sreetscene_20200203141555.jpg/500px-Inari-sreetscene_20200203141555.jpg',
         name: 'אינארי',
         nameLocal: 'Inari',
-        category: 'attraction',
+        category: 'historic',
         lat: 68.905,
         lng: 27.0303,
         description:
@@ -23208,7 +23208,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Vilnius_Cathedral_20.jpg/500px-Vilnius_Cathedral_20.jpg',
         name: 'קתדרלת וילנה והכיכר',
         nameLocal: 'Vilniaus arkikatedra',
-        category: 'attraction',
+        category: 'historic',
         lat: 54.6858,
         lng: 25.2878,
         description:
@@ -23243,7 +23243,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/St._Anne%27s_Church_Exterior_3%2C_Vilnius%2C_Lithuania_-_Diliff.jpg/500px-St._Anne%27s_Church_Exterior_3%2C_Vilnius%2C_Lithuania_-_Diliff.jpg',
         name: 'כנסיית סנטה אנה',
         nameLocal: 'Sv. Onos baznycia',
-        category: 'attraction',
+        category: 'historic',
         lat: 54.6831,
         lng: 25.2933,
         description:
@@ -23260,7 +23260,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Au%C5%A1ros_Vart%C5%B3_02%28js%29_Vilnius.jpg/500px-Au%C5%A1ros_Vart%C5%B3_02%28js%29_Vilnius.jpg',
         name: 'שער השחר',
         nameLocal: 'Ausros vartai',
-        category: 'attraction',
+        category: 'historic',
         lat: 54.6743,
         lng: 25.2895,
         description:
@@ -23294,7 +23294,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Ponary_massacre_July_1941.jpg/500px-Ponary_massacre_July_1941.jpg',
         name: 'פונאר - אתר ההנצחה',
         nameLocal: 'Paneriai / Ponary',
-        category: 'attraction',
+        category: 'historic',
         lat: 54.6264,
         lng: 25.1612,
         description:
@@ -23312,7 +23312,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Trakai_castle_2016.jpg/500px-Trakai_castle_2016.jpg',
         name: 'טירת טראקאי',
         nameLocal: 'Traku salos pilis',
-        category: 'attraction',
+        category: 'historic',
         lat: 54.6525,
         lng: 24.9331,
         description:
@@ -23449,7 +23449,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Tallinn_Toompea_Upper_Old_Town_2013.jpg/500px-Tallinn_Toompea_Upper_Old_Town_2013.jpg',
         name: 'טירת טומפאה והגבעה',
         nameLocal: 'Toompea loss',
-        category: 'attraction',
+        category: 'historic',
         lat: 59.4356,
         lng: 24.7372,
         description:
@@ -23467,7 +23467,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Catedral_de_Alejandro_Nevsky%2C_Tallin%2C_Estonia%2C_2012-08-11%2C_DD_46.JPG/500px-Catedral_de_Alejandro_Nevsky%2C_Tallin%2C_Estonia%2C_2012-08-11%2C_DD_46.JPG',
         name: 'קתדרלת אלכסנדר נבסקי',
         nameLocal: 'Aleksander Nevski katedraal',
-        category: 'attraction',
+        category: 'historic',
         lat: 59.4358,
         lng: 24.7394,
         description:
@@ -23654,7 +23654,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/House_of_Blackheads_at_Dusk_3%2C_Riga%2C_Latvia_-_Diliff.jpg/500px-House_of_Blackheads_at_Dusk_3%2C_Riga%2C_Latvia_-_Diliff.jpg',
         name: 'בית ראשי השחורים',
         nameLocal: 'Melngalvju nams',
-        category: 'attraction',
+        category: 'historic',
         lat: 56.9472,
         lng: 24.1069,
         description:
@@ -23689,7 +23689,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Riga_Petrikirche_Blick_vom_Turm_zum_Dom_3.JPG/500px-Riga_Petrikirche_Blick_vom_Turm_zum_Dom_3.JPG',
         name: 'קתדרלת ריגה',
         nameLocal: 'Rigas Doms',
-        category: 'attraction',
+        category: 'historic',
         lat: 56.9492,
         lng: 24.1044,
         description:
@@ -23706,7 +23706,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/0873_LVA_Riga_freedom_monument_SE.jpg/500px-0873_LVA_Riga_freedom_monument_SE.jpg',
         name: 'אנדרטת החירות',
         nameLocal: 'Brivibas piemineklis',
-        category: 'attraction',
+        category: 'historic',
         lat: 56.9514,
         lng: 24.1131,
         description:
@@ -23721,7 +23721,7 @@ export const destinations: Destination[] = [
         id: 'rga-sigulda',
         name: 'סיגולדה',
         nameLocal: 'Sigulda',
-        category: 'attraction',
+        category: 'historic',
         lat: 57.15,
         lng: 24.8667,
         description:
@@ -23741,7 +23741,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Turaida_Castle.JPG/500px-Turaida_Castle.JPG',
         name: 'טירת טוראידה',
         nameLocal: 'Turaidas pils',
-        category: 'attraction',
+        category: 'historic',
         lat: 57.1822,
         lng: 24.8503,
         description:
@@ -23876,7 +23876,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Amphitheatre_of_Butrint_2009.jpg/500px-Amphitheatre_of_Butrint_2009.jpg',
         name: 'בוטרינט',
         nameLocal: 'Butrint',
-        category: 'attraction',
+        category: 'historic',
         lat: 39.7456,
         lng: 20.0206,
         description:
@@ -23929,7 +23929,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Kalaja_e_Porto_Palermos_nga_droni_3_-_Shqip%C3%ABri.jpg/500px-Kalaja_e_Porto_Palermos_nga_droni_3_-_Shqip%C3%ABri.jpg',
         name: 'מצודת פורטו פאלרמו',
         nameLocal: 'Kalaja e Porto Palermos',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.0623,
         lng: 19.7905,
         description:
@@ -23962,7 +23962,7 @@ export const destinations: Destination[] = [
         id: 'alb-berat',
         name: 'בראט',
         nameLocal: 'Berat',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.7022,
         lng: 19.9583,
         description:
@@ -24060,7 +24060,7 @@ export const destinations: Destination[] = [
         id: 'bih-mostar',
         name: 'מוסטר והגשר העתיק',
         nameLocal: 'Mostar / Stari Most',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.3436,
         lng: 17.8075,
         description:
@@ -24080,7 +24080,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Blagaj_Ceilings.jpg/500px-Blagaj_Ceilings.jpg',
         name: 'בלגאי',
         nameLocal: 'Blagaj',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.2574,
         lng: 17.8947,
         description:
@@ -24115,7 +24115,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Fontaine_Sebilj.jpg/500px-Fontaine_Sebilj.jpg',
         name: 'באשצ׳רשייה - הבזאר של סרייבו',
         nameLocal: 'Bascarsija',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.859,
         lng: 18.43,
         description:
@@ -24260,7 +24260,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1radi_v%C3%A1r%2C_Peterwardein%29.JPG/500px-Petrovaradin_Fortress_%28P%C3%A9terv%C3%A1radi_v%C3%A1r%2C_Peterwardein%29.JPG',
         name: 'מבצר פטרוורדין',
         nameLocal: 'Petrovaradin Fortress',
-        category: 'attraction',
+        category: 'historic',
         lat: 45.2525,
         lng: 19.8625,
         description:
@@ -24278,7 +24278,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/%D0%A1%D0%B8%D0%BD%D0%B0%D0%B3%D0%BE%D0%B3%D0%B0_%D1%83_%D0%9D%D0%BE%D0%B2%D0%BE%D0%BC_%D0%A1%D0%B0%D0%B4%D1%83_3.JPG/500px-%D0%A1%D0%B8%D0%BD%D0%B0%D0%B3%D0%BE%D0%B3%D0%B0_%D1%83_%D0%9D%D0%BE%D0%B2%D0%BE%D0%BC_%D0%A1%D0%B0%D0%B4%D1%83_3.JPG',
         name: 'בית הכנסת של נובי סאד',
         nameLocal: 'Novi Sad Synagogue',
-        category: 'attraction',
+        category: 'historic',
         lat: 45.2531,
         lng: 19.8408,
         description:
@@ -24293,7 +24293,7 @@ export const destinations: Destination[] = [
         id: 'rs-karlovci',
         name: 'סרמסקי קרלובץי',
         nameLocal: 'Sremski Karlovci',
-        category: 'attraction',
+        category: 'historic',
         lat: 45.2028,
         lng: 19.9336,
         description:
@@ -24345,7 +24345,7 @@ export const destinations: Destination[] = [
         id: 'rs-sombor',
         name: 'סומבור',
         nameLocal: 'Sombor',
-        category: 'attraction',
+        category: 'historic',
         lat: 45.7833,
         lng: 19.1167,
         description:
@@ -24486,7 +24486,7 @@ export const destinations: Destination[] = [
         id: 'mx-merida',
         name: 'מרידה',
         nameLocal: 'Mérida',
-        category: 'attraction',
+        category: 'historic',
         lat: 20.9667,
         lng: -89.6167,
         description:
@@ -24506,7 +24506,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Uxmal_Pyramid_of_the_Magician.jpg/500px-Uxmal_Pyramid_of_the_Magician.jpg',
         name: 'אושמל',
         nameLocal: 'Uxmal',
-        category: 'attraction',
+        category: 'historic',
         lat: 20.3594,
         lng: -89.7714,
         description:
@@ -24524,7 +24524,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Chichen_Itza_3.jpg/500px-Chichen_Itza_3.jpg',
         name: 'צ׳יצ׳ן איצה',
         nameLocal: 'Chichén Itzá',
-        category: 'attraction',
+        category: 'historic',
         lat: 20.6831,
         lng: -88.5686,
         description:
@@ -24540,7 +24540,7 @@ export const destinations: Destination[] = [
         id: 'mx-valladolid',
         name: 'ויאדוליד',
         nameLocal: 'Valladolid',
-        category: 'attraction',
+        category: 'historic',
         lat: 20.6894,
         lng: -88.2017,
         description:
@@ -24557,7 +24557,7 @@ export const destinations: Destination[] = [
         id: 'mx-izamal',
         name: 'איסמל',
         nameLocal: 'Izamal',
-        category: 'attraction',
+        category: 'historic',
         lat: 20.9314,
         lng: -89.0178,
         description:
@@ -24724,7 +24724,7 @@ export const destinations: Destination[] = [
         id: 'kr-gyeongju',
         name: 'גיונגג׳ו',
         nameLocal: 'Gyeongju',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.85,
         lng: 129.2167,
         description:
@@ -24744,7 +24744,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Lotus_Flower_Bridge_and_Seven_Treasure_Bridge_at_Bulguksa_in_Gyeongju%2C_Korea.jpg/500px-Lotus_Flower_Bridge_and_Seven_Treasure_Bridge_at_Bulguksa_in_Gyeongju%2C_Korea.jpg',
         name: 'מקדש בולגוקסה',
         nameLocal: 'Bulguksa',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.79,
         lng: 129.3322,
         description:
@@ -24762,7 +24762,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Front_view_of_Seokguram_from_front_chamber.jpg/500px-Front_view_of_Seokguram_from_front_chamber.jpg',
         name: 'מערת סוקגוראם',
         nameLocal: 'Seokguram',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.795,
         lng: 129.3492,
         description:
@@ -24779,7 +24779,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Hahoe_Folk_Village_02.jpg/500px-Hahoe_Folk_Village_02.jpg',
         name: 'כפר האהוה',
         nameLocal: 'Hahoe Folk Village',
-        category: 'attraction',
+        category: 'historic',
         lat: 36.5392,
         lng: 128.5167,
         description:
@@ -24796,7 +24796,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/%ED%95%B4%EB%8F%99%EC%9A%A9%EA%B6%81%EC%82%AC_%EC%82%AC%EC%B0%B0_%EC%A0%84%EA%B2%BD.jpg/500px-%ED%95%B4%EB%8F%99%EC%9A%A9%EA%B6%81%EC%82%AC_%EC%82%AC%EC%B0%B0_%EC%A0%84%EA%B2%BD.jpg',
         name: 'מקדש הדונג יונגגונגסה',
         nameLocal: 'Haedong Yonggungsa',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.1881,
         lng: 129.2231,
         description:
@@ -24997,7 +24997,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/PortArthurPenitentiary.jpg/500px-PortArthurPenitentiary.jpg',
         name: 'פורט ארתור',
         nameLocal: 'Port Arthur',
-        category: 'attraction',
+        category: 'historic',
         lat: -43.15,
         lng: 147.85,
         description:
@@ -25213,7 +25213,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Borobudur-Nothwest-view.jpg/500px-Borobudur-Nothwest-view.jpg',
         name: 'בורובודור',
         nameLocal: 'Borobudur',
-        category: 'attraction',
+        category: 'historic',
         lat: -7.608,
         lng: 110.204,
         description:
@@ -25231,7 +25231,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Prambanan_Temple_Yogyakarta_Indonesia.jpg/500px-Prambanan_Temple_Yogyakarta_Indonesia.jpg',
         name: 'פרמבנן',
         nameLocal: 'Prambanan',
-        category: 'attraction',
+        category: 'historic',
         lat: -7.7522,
         lng: 110.4917,
         description:
@@ -25249,7 +25249,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Jogja_-_Kraton_Yogyakarta_-_Donopratono_gate_%282025%29_-_img_02.jpg/500px-Jogja_-_Kraton_Yogyakarta_-_Donopratono_gate_%282025%29_-_img_02.jpg',
         name: 'ארמון הסולטן ביוגיאקרטה',
         nameLocal: 'Kraton Ngayogyakarta Hadiningrat',
-        category: 'attraction',
+        category: 'historic',
         lat: -7.8057,
         lng: 110.3641,
         description:
@@ -25437,7 +25437,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Fort_Cornwallis%2C_Penang_2023_01.jpg/500px-Fort_Cornwallis%2C_Penang_2023_01.jpg',
         name: 'מצודת קורנווליס',
         nameLocal: 'Fort Cornwallis',
-        category: 'attraction',
+        category: 'historic',
         lat: 5.4205,
         lng: 100.3439,
         description:
@@ -25454,7 +25454,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Kek_Lok_Si_at_dusk.jpg/500px-Kek_Lok_Si_at_dusk.jpg',
         name: 'מקדש קק לוק סי',
         nameLocal: 'Kek Lok Si',
-        category: 'attraction',
+        category: 'historic',
         lat: 5.3995,
         lng: 100.2737,
         description:
@@ -25489,7 +25489,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/TaipingKotaRoad.jpg/500px-TaipingKotaRoad.jpg',
         name: 'טאיפינג',
         nameLocal: 'Taiping',
-        category: 'attraction',
+        category: 'historic',
         lat: 4.85,
         lng: 100.7333,
         description:
@@ -25506,7 +25506,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Kellie%27s_castle_%28main_entrance%29.jpg/500px-Kellie%27s_castle_%28main_entrance%29.jpg',
         name: 'טירת קלי',
         nameLocal: "Kellie's Castle",
-        category: 'attraction',
+        category: 'historic',
         lat: 4.4744,
         lng: 101.0878,
         description:
@@ -25684,7 +25684,7 @@ export const destinations: Destination[] = [
         id: 'pt-lamego',
         name: 'למגו',
         nameLocal: 'Lamego',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.10083,
         lng: -7.81,
         description:
@@ -25702,7 +25702,7 @@ export const destinations: Destination[] = [
         id: 'pt-foz-coa',
         name: 'וילה נובה דה פוז קואה',
         nameLocal: 'Vila Nova de Foz Côa',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.08,
         lng: -7.14,
         description:
@@ -25722,7 +25722,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/MateusPalace1.jpg/500px-MateusPalace1.jpg',
         name: 'ארמון מאטאוש',
         nameLocal: 'Casa de Mateus',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.29694,
         lng: -7.7125,
         description:
@@ -25737,7 +25737,7 @@ export const destinations: Destination[] = [
         id: 'pt-amarante',
         name: 'אמרנטה',
         nameLocal: 'Amarante',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.27028,
         lng: -8.08083,
         description:
@@ -25881,7 +25881,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/00565_Westerplatte_Monument_von_SE.jpg/500px-00565_Westerplatte_Monument_von_SE.jpg',
         name: 'ווסטרפלטה',
         nameLocal: 'Westerplatte',
-        category: 'attraction',
+        category: 'historic',
         lat: 54.4075,
         lng: 18.67139,
         description:
@@ -25898,7 +25898,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Archcathedral_Basilica_in_Oliwa.jpg/500px-Archcathedral_Basilica_in_Oliwa.jpg',
         name: 'קתדרלת אוליווה',
         nameLocal: 'Katedra w Oliwie',
-        category: 'attraction',
+        category: 'historic',
         lat: 54.41101,
         lng: 18.55891,
         description:
@@ -25915,7 +25915,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Zesp%C3%B3%C5%82_Zamku_Krzy%C5%BCackiego_MALBORK_01.jpg/500px-Zesp%C3%B3%C5%82_Zamku_Krzy%C5%BCackiego_MALBORK_01.jpg',
         name: 'מצודת מלבורק',
         nameLocal: 'Zamek w Malborku',
-        category: 'attraction',
+        category: 'historic',
         lat: 54.03972,
         lng: 19.02778,
         description:
@@ -25967,7 +25967,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Frombork_z_Anity_5.jpg/500px-Frombork_z_Anity_5.jpg',
         name: 'פרומבורק',
         nameLocal: 'Frombork',
-        category: 'attraction',
+        category: 'historic',
         lat: 54.35,
         lng: 19.68333,
         description:
@@ -26199,7 +26199,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Sillustani%2C_Per%C3%BA%2C_2015-08-01%2C_DD_87.JPG/500px-Sillustani%2C_Per%C3%BA%2C_2015-08-01%2C_DD_87.JPG',
         name: 'סיוסטני',
         nameLocal: 'Sillustani',
-        category: 'attraction',
+        category: 'historic',
         lat: -15.72111,
         lng: -70.15833,
         description:
@@ -26344,7 +26344,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Hoi_An_%28I%29.jpg/500px-Hoi_An_%28I%29.jpg',
         name: 'הוי אן',
         nameLocal: 'Hội An',
-        category: 'attraction',
+        category: 'historic',
         lat: 15.87972,
         lng: 108.33195,
         description:
@@ -26362,7 +26362,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/2024_-_M%E1%BB%B9_S%C6%A1n_Group_B%2C_C_and_D_-_img_23.jpg/500px-2024_-_M%E1%BB%B9_S%C6%A1n_Group_B%2C_C_and_D_-_img_23.jpg',
         name: 'מי סון',
         nameLocal: 'Mỹ Sơn',
-        category: 'attraction',
+        category: 'historic',
         lat: 15.76667,
         lng: 108.11667,
         description:
@@ -26414,7 +26414,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/ThienMuPagoda.jpg/500px-ThienMuPagoda.jpg',
         name: 'מקדש ת׳יין מו',
         nameLocal: 'Chùa Thiên Mụ',
-        category: 'attraction',
+        category: 'historic',
         lat: 16.4536,
         lng: 107.54482,
         description:
@@ -26560,7 +26560,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Fethiye_Town_in_Daylight_%28cropped%29.jpg/500px-Fethiye_Town_in_Daylight_%28cropped%29.jpg',
         name: 'פתייה',
         nameLocal: 'Fethiye',
-        category: 'attraction',
+        category: 'historic',
         lat: 36.65139,
         lng: 29.12306,
         description:
@@ -26595,7 +26595,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Mosaic_of_Xanthos.jpg/500px-Mosaic_of_Xanthos.jpg',
         name: 'קסנתוס',
         nameLocal: 'Xanthos',
-        category: 'attraction',
+        category: 'historic',
         lat: 36.35611,
         lng: 29.31861,
         description:
@@ -26612,7 +26612,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Patara_Ruins_%287023429755%29.jpg/500px-Patara_Ruins_%287023429755%29.jpg',
         name: 'פטרה הליקית',
         nameLocal: 'Patara',
-        category: 'attraction',
+        category: 'historic',
         lat: 36.26622,
         lng: 29.31722,
         description:
@@ -26665,7 +26665,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Myra_theatre.jpg/500px-Myra_theatre.jpg',
         name: 'מירה',
         nameLocal: 'Myra',
-        category: 'attraction',
+        category: 'historic',
         lat: 36.25917,
         lng: 29.98528,
         description:
@@ -26825,7 +26825,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Grand_Pr%C3%A9.JPG/500px-Grand_Pr%C3%A9.JPG',
         name: 'גראן פרה',
         nameLocal: 'Grand-Pré',
-        category: 'attraction',
+        category: 'historic',
         lat: 45.10504,
         lng: -64.29868,
         description:
@@ -26842,7 +26842,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Lighthouse_DSC02664_-_Annapolis_Royal_Lighthouse_%287986972342%29.jpg/500px-Lighthouse_DSC02664_-_Annapolis_Royal_Lighthouse_%287986972342%29.jpg',
         name: 'אנפוליס רויאל',
         nameLocal: 'Annapolis Royal',
-        category: 'attraction',
+        category: 'historic',
         lat: 44.74166,
         lng: -65.51527,
         description:
@@ -27458,7 +27458,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Voronet_Intrare.JPG/500px-Voronet_Intrare.JPG',
         name: 'מנזר וורונץ',
         nameLocal: 'Mănăstirea Voroneț',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.5171,
         lng: 25.86425,
         description:
@@ -27476,7 +27476,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Biserica_si_curtea_manastirii_Sucevita.jpg/500px-Biserica_si_curtea_manastirii_Sucevita.jpg',
         name: 'מנזר סוצ׳ביצה',
         nameLocal: 'Mănăstirea Sucevița',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.77816,
         lng: 25.71123,
         description:
@@ -27494,7 +27494,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Manastirea_Moldovita%2C_vedere_laterala.jpg/500px-Manastirea_Moldovita%2C_vedere_laterala.jpg',
         name: 'מנזר מולדוביצה',
         nameLocal: 'Mănăstirea Moldovița',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.65705,
         lng: 25.57113,
         description:
@@ -27511,7 +27511,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Rares.jpg/500px-Rares.jpg',
         name: 'מנזר הומור',
         nameLocal: 'Mănăstirea Humorului',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.5931,
         lng: 25.8569,
         description:
@@ -27528,7 +27528,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Overview_of_B%C3%A2rsana_monastery%2C_B%C3%A2rsana%2C_2017.jpg/500px-Overview_of_B%C3%A2rsana_monastery%2C_B%C3%A2rsana%2C_2017.jpg',
         name: 'בורסנה',
         nameLocal: 'Bârsana',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.815,
         lng: 24.05972,
         description:
@@ -27545,7 +27545,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cimitirul_Vesel%2C_S%C4%83p%C3%A2n%C8%9Ba%2C_Maramure%C8%99_-_%282023%29_-_IMG_18.jpg/500px-Cimitirul_Vesel%2C_S%C4%83p%C3%A2n%C8%9Ba%2C_Maramure%C8%99_-_%282023%29_-_IMG_18.jpg',
         name: 'בית העלמין העליז',
         nameLocal: 'Cimitirul Vesel',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.97139,
         lng: 23.69555,
         description:
@@ -27561,7 +27561,7 @@ export const destinations: Destination[] = [
         id: 'ro-sighet',
         name: 'סיגט מרמצייה',
         nameLocal: 'Sighetu Marmației',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.92861,
         lng: 23.8925,
         description:
@@ -27675,7 +27675,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Den_Haag_Binnenhof_02.jpg/500px-Den_Haag_Binnenhof_02.jpg',
         name: 'הבינֶנהוף',
         nameLocal: 'Binnenhof',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.07963180541992,
         lng: 4.313035011291504,
         description: 'מתחם הפרלמנט ההולנדי סביב חצר מימי הביניים, ממש ליד מאוריצהאוס. חלק מהמבנים עברו שיפוץ ארוך ולא תמיד פתוחים לביקור, אז שווה לבדוק מה זמין לפני שמגיעים. גם מבחוץ החצר והבריכה הסמוכה שווים סיבוב.',
@@ -27707,7 +27707,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Delft%2C_de_Nieuwe_Kerk_foto1_RM11872_foto4_2016-03-13_12.38.jpg/500px-Delft%2C_de_Nieuwe_Kerk_foto1_RM11872_foto4_2016-03-13_12.38.jpg',
         name: 'הכנסייה החדשה בדלפט',
         nameLocal: 'Nieuwe Kerk',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.01229858398438,
         lng: 4.360899925231934,
         description: 'הכנסייה שבמרכז כיכר השוק של דלפט, ובה קבר בית המלוכה ההולנדי. אפשר לעלות במגדל, אבל זה כמה מאות מדרגות במדרגות לולייניות צרות ולא מתאים לכל אחד. הכיכר סביבה היא הלב של דלפט ומלאה בבתי קפה.',
@@ -27722,7 +27722,7 @@ export const destinations: Destination[] = [
         id: 'nl-gouda',
         name: 'חאודה',
         nameLocal: 'Gouda',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.01111221313477,
         lng: 4.711111068725586,
         description: 'עיירה קטנה שהשם שלה מוכר בעיקר בזכות הגבינה, עם בניין עירייה גותי שעומד בודד באמצע כיכר השוק. שוק הגבינות המסורתי מתקיים רק בתאריכים מסוימים בקיץ והוא מופע לתיירים, אז אל תבנו על זה. ביום רגיל זה סיבוב נעים של שעתיים.',
@@ -28101,7 +28101,7 @@ export const destinations: Destination[] = [
         id: 'se-kiruna',
         name: 'קירונה',
         nameLocal: 'Kiruna',
-        category: 'attraction',
+        category: 'historic',
         lat: 67.84889221191406,
         lng: 20.30277824401855,
         description: 'העיר הצפונית בשוודיה, שקמה סביב מכרה ברזל ענק ונמצאת בתהליך העתקה פיזית של מרכזה בגלל שקיעת קרקע מהכרייה. זה לא יעד יפה, אבל הוא מרתק כסיפור ומהווה את בסיס התחבורה של כל האזור, עם שדה תעופה וקו רכבת.',
@@ -28168,7 +28168,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Jokkmokks_kyrka.JPG/500px-Jokkmokks_kyrka.JPG',
         name: 'יוקמוק',
         nameLocal: 'Jokkmokk',
-        category: 'attraction',
+        category: 'historic',
         lat: 66.61666870117188,
         lng: 19.83333396911621,
         description: 'עיירה ממש על קו חוג הקוטב, ומרכז חשוב לתרבות הסאמי, עם מוזיאון שמסביר את ההיסטוריה ואת רעיית איילי הצפון. השוק החורפי המסורתי מתקיים בפברואר ואז המקום מלא לגמרי והלינה נגמרת חודשים מראש.',
@@ -28184,7 +28184,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Gammelstad.jpg/500px-Gammelstad.jpg',
         name: 'עיירת הכנסייה גאמלסטאד',
         nameLocal: 'Gammelstads kyrkstad',
-        category: 'attraction',
+        category: 'historic',
         lat: 65.64611053466797,
         lng: 22.02861022949219,
         description: 'אתר מורשת עולמית ליד לולאה: מאות בתי עץ אדומים קטנים סביב כנסיית אבן מהמאה ה-15, שנבנו כדי שאיכרים מרוחקים יוכלו ללון אחרי התפילה. חלק מהבתים עדיין בשימוש פרטי ולא נכנסים אליהם. סיבוב של שעה עד שעתיים.',
@@ -28271,7 +28271,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Rovinj%2C_Croatia.jpg/500px-Rovinj%2C_Croatia.jpg',
         name: 'רוביניי',
         nameLocal: 'Rovinj',
-        category: 'attraction',
+        category: 'historic',
         lat: 45.08333206176758,
         lng: 13.63333320617676,
         description: 'עיירת נמל בנויה על חצי אי, עם סמטאות תלולות שעולות אל מגדל הכנסייה בפסגה. היפה באיסטריה, ולכן גם העמוסה בה. בשעות הצהריים בקיץ הסמטאות מלאות לגמרי, וכדאי להסתובב מוקדם בבוקר או אחרי שקיעה. הרחוב הראשי מסחרי מאוד.',
@@ -28288,7 +28288,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Croatia_Pula_Amphitheatre_2014-10-11_11-04-27.jpg/500px-Croatia_Pula_Amphitheatre_2014-10-11_11-04-27.jpg',
         name: 'האמפיתיאטרון של פולה',
         nameLocal: 'Pulska Arena',
-        category: 'attraction',
+        category: 'historic',
         lat: 44.87300109863281,
         lng: 13.85000038146973,
         description: 'אמפיתיאטרון רומי מהמאה הראשונה שנשמר כמעט בשלמותו, כולל טבעת הקירות החיצונית. אחד הששה הגדולים שנותרו. אין בו כמעט צל והביקור בצהריים באוגוסט קשה פיזית. בקיץ מתקיימים בו מופעים, וביום מופע חלק מהאתר סגור לביקור.',
@@ -28305,7 +28305,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Croatia_Porec_Euphrasius_Basilika_BW_2014-10-08_11-02-20.jpg/500px-Croatia_Porec_Euphrasius_Basilika_BW_2014-10-08_11-02-20.jpg',
         name: 'הבזיליקה האאופרסיאנית',
         nameLocal: 'Eufrazijeva bazilika',
-        category: 'attraction',
+        category: 'historic',
         lat: 45.22861099243164,
         lng: 13.5936107635498,
         description: 'בזיליקה מהמאה השישית בפורץ, עם פסיפסים ביזנטיים מוזהבים ששרדו במקומם. אתר מורשת עולמית, וקטן מאוד ביחס לתהילה שלו, כך שהביקור אורך פחות משעה. אפשר לעלות למגדל הפעמונים בתשלום נפרד. זהו אתר פעיל ולכן יש קוד לבוש.',
@@ -28489,7 +28489,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Irelands_history.jpg/500px-Irelands_history.jpg',
         name: 'ניוגריינג׳',
         nameLocal: 'Newgrange',
-        category: 'attraction',
+        category: 'historic',
         lat: 53.69472503662109,
         lng: -6.475565433502197,
         description: 'קבר מעבר מהאלף הרביעי לפני הספירה בעמק הבוין, מבוגר מהפירמידות ומסטונהנג׳. נכנסים רק בסיור מודרך שיוצא ממרכז המבקרים, והמקומות מוגבלים ונגמרים, אז מזמינים מראש. המסדרון הפנימי צר ונמוך ולא מתאים לסובלים מקלאוסטרופוביה.',
@@ -28539,7 +28539,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Kilkenny-castle.jpg/500px-Kilkenny-castle.jpg',
         name: 'טירת קילקני',
         nameLocal: 'Kilkenny Castle',
-        category: 'attraction',
+        category: 'historic',
         lat: 52.65027618408203,
         lng: -7.249166488647461,
         description: 'טירה נורמנית מהמאה ה-12 שעברה שיפוצים ויקטוריאניים, בלב עיירה שקל להסתובב בה ברגל. הפארק סביבה פתוח וחינמי וזה לעיתים החלק הטוב יותר. פנים הטירה משוחזר ומרוהט בסגנון המאה ה-19 ולא בסגנון ימי הביניים.',
@@ -28569,7 +28569,7 @@ export const destinations: Destination[] = [
         id: 'ie-cobh',
         name: 'קוב',
         nameLocal: 'Cobh',
-        category: 'attraction',
+        category: 'historic',
         lat: 51.85100173950195,
         lng: -8.296699523925781,
         description: 'עיירת נמל צבעונית מול מפרץ קורק, נמל היציאה של מיליוני מהגרים אירים ותחנת העגינה האחרונה של הטיטאניק. יש כאן מרכז מבקרים בנושא ההגירה וקתדרלה שנשקפת מכל נקודה. העלייה מהנמל לעיירה תלולה מאוד.',
@@ -28588,7 +28588,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Blarney_Castle_Ireland.jpg/500px-Blarney_Castle_Ireland.jpg',
         name: 'טירת בלארני',
         nameLocal: 'Blarney Castle',
-        category: 'attraction',
+        category: 'historic',
         lat: 51.92890167236328,
         lng: -8.570799827575684,
         description: 'טירה מהמאה ה-15 שמפורסמת באבן שלפי האגדה מעניקה כושר דיבור למי שמנשק אותה. הטקס עצמו כרוך בהמתנה ארוכה ובשכיבה על הגב מעל תהום קטנה, ורבים מוצאים אותו מאכזב ולא היגייני. הגנים סביב הטירה גדולים ויפים ולדעתנו הם הסיבה האמיתית לבוא.',
@@ -28763,7 +28763,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Runesten_i_Jelling.jpg/500px-Runesten_i_Jelling.jpg',
         name: 'אבני ילינג',
         nameLocal: 'Jellingstenene',
-        category: 'attraction',
+        category: 'historic',
         lat: 55.75666809082031,
         lng: 9.41944408416748,
         description: 'שתי אבני רונות מהמאה העשירית שנחשבות למסמך הייסוד של דנמרק, מוגנות היום בתוך תיבות זכוכית. אתר מורשת עולמית וגם אתר קטן מאוד. מרכז המבקרים הסמוך הוא מה שהופך את הביקור למשמעותי, בלעדיו זו עצירה של רבע שעה.',
@@ -28795,7 +28795,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/RibeVue.jpg/500px-RibeVue.jpg',
         name: 'ריבה',
         nameLocal: 'Ribe',
-        category: 'attraction',
+        category: 'historic',
         lat: 55.32833480834961,
         lng: 8.762222290039062,
         description: 'העיר הוותיקה בדנמרק, עם מרכז ימי ביניימי קטן וקתדרלה שאפשר לעלות במגדל שלה. הכל כאן בקנה מידה זעיר וסיבוב מלא לוקח חצי יום. באזור הביצות הסמוך מתרחשת בעונות המעבר תופעת נחילי הזרזירים המקומית.',
@@ -28938,7 +28938,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/WhakarewarewaAerial.jpg/500px-WhakarewarewaAerial.jpg',
         name: 'וואקארווארווה',
         nameLocal: 'Whakarewarewa',
-        category: 'attraction',
+        category: 'historic',
         lat: -38.16222381591797,
         lng: 176.2563934326172,
         description: 'כפר מאורי חי באזור גיאותרמי ליד רוטורואה, שבו התושבים עדיין מבשלים במעיינות החמים. יש כאן גייזרים ובריכות רותחות וגם סיור בהדרכת תושבים. חשוב לזכור שאלה בתים של אנשים ולא תפאורה, ויש כללי התנהגות. ריח הגופרית חזק מאוד.',
@@ -29020,7 +29020,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Te_whare_runanga.jpg/500px-Te_whare_runanga.jpg',
         name: 'וואיטנגי',
         nameLocal: 'Waitangi',
-        category: 'attraction',
+        category: 'historic',
         lat: -35.26610946655273,
         lng: 174.0800018310547,
         description: 'המקום שבו נחתם ב-1840 ההסכם בין הכתר הבריטי לצ׳יפים המאוריים, המסמך המכונן והשנוי במחלוקת ביותר בהיסטוריה של המדינה. מרכז המבקרים מציג את שתי הגרסאות של ההסכם ואת הפערים ביניהן, וזה החלק המעניין באמת. במפרץ האיים שסביב יש גם שיט וחופים.',
@@ -29190,7 +29190,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Grad_Sneznik01.jpg/500px-Grad_Sneznik01.jpg',
         name: 'טירת סנז׳ניק',
         nameLocal: 'Grad Snežnik',
-        category: 'attraction',
+        category: 'historic',
         lat: 45.68283843994141,
         lng: 14.46931648254395,
         description: 'טירה קטנה על שפת אגם קטן ביער, מהמעטות בסלובניה ששמרו על הריהוט המקורי שלהן. הביקור בפנים רק בסיור מודרך בשעות קבועות. האזור מיוער וחלק מיערות הדובים של סלובניה, אך הסיכוי לראות דוב אפסי.',
@@ -29206,7 +29206,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Idrija-view-2025-Luka-Peternel.jpg/500px-Idrija-view-2025-Luka-Peternel.jpg',
         name: 'אידריה',
         nameLocal: 'Idrija',
-        category: 'attraction',
+        category: 'historic',
         lat: 46.00249862670898,
         lng: 14.02750015258789,
         description: 'עיירה שנבנתה סביב מכרה כספית שפעל כחמש מאות שנה והוא אתר מורשת עולמית. הסיור במכרה יורד לפירים המקוריים ודורש קסדה ומעיל, ומסביר תעשייה שהרעילה דורות של עובדים. העיירה מפורסמת גם בתחרה בעבודת יד ובכיסונים מקומיים.',
@@ -29256,7 +29256,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/PtujskaGora1.jpg/500px-PtujskaGora1.jpg',
         name: 'פטויסקה גורה',
         nameLocal: 'Ptujska Gora',
-        category: 'attraction',
+        category: 'historic',
         lat: 46.35348129272461,
         lng: 15.76105308532715,
         description: 'כנסיית עלייה לרגל גותית על גבעה במזרח סלובניה, שידועה בתבליט אבן מהמאה ה-15 שנחשב מהיפים באזור. אתר קטן ושקט לגמרי, בלי תשתית תיירותית, וזו בדיוק הסיבה לעצור בו בדרך מזרחה. זהו אתר פעיל ויש קוד לבוש.',
@@ -29390,7 +29390,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Olavinlinna_Savonlinna_Finland.jpg/500px-Olavinlinna_Savonlinna_Finland.jpg',
         name: 'מבצר אולאווילינה',
         nameLocal: 'Olavinlinna Castle',
-        category: 'attraction',
+        category: 'historic',
         lat: 61.86388778686523,
         lng: 28.9011116027832,
         description: 'מבצר אבן משנת 1475 שנבנה על אי סלעי בלב המצר, המבצר השמור ביותר בצפון אירופה. ביולי מתקיים בחצרו פסטיבל האופרה. הכניסה לפנים רק בסיור מודרך.',
@@ -29591,7 +29591,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Kuressaare_Castle.jpg/500px-Kuressaare_Castle.jpg',
         name: 'מבצר קורסארה',
         nameLocal: 'Kuressaare Castle',
-        category: 'attraction',
+        category: 'historic',
         lat: 58.25,
         lng: 22.48332977294922,
         description: 'מבצר אבן מהמאה ה-14 מוקף חפיר, המבצר הימי-ביניימי השמור ביותר במדינות הבלטיות. בתוכו מוזיאון סארמה על תולדות האי.',
@@ -29656,7 +29656,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Haapsalu_-_view_from_Castle.jpg/500px-Haapsalu_-_view_from_Castle.jpg',
         name: 'האפסאלו',
         nameLocal: 'Haapsalu',
-        category: 'attraction',
+        category: 'historic',
         lat: 58.93944549560547,
         lng: 23.54083251953125,
         description: 'עיירת נופש היסטורית עם בתי עץ, טיילת ים וחורבות מצודת הבישוף. הייתה אתר מרחצאות בוץ אופנתי בתקופה הצארית.',
@@ -29822,7 +29822,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Rundale_Palace_%286483271573%29.jpg/500px-Rundale_Palace_%286483271573%29.jpg',
         name: 'ארמון רונדאלה',
         nameLocal: 'Rundāle Palace',
-        category: 'attraction',
+        category: 'historic',
         lat: 56.41379928588867,
         lng: 24.02479934692383,
         description: 'ארמון ברוק מהמאה ה-18 שתכנן ברטולומאו רסטרלי, אותו אדריכל שבנה את ארמון החורף בסנקט פטרבורג. אולמות משוחזרים וגן צרפתי גדול.',
@@ -29839,7 +29839,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Bauskas_pils_foto_Sandris_Kuzmickis.jpg/500px-Bauskas_pils_foto_Sandris_Kuzmickis.jpg',
         name: 'מצודת באוסקה',
         nameLocal: 'Bauska Castle',
-        category: 'attraction',
+        category: 'historic',
         lat: 56.40361022949219,
         lng: 24.17361068725586,
         description: 'חורבות מצודה מהמאה ה-15 ואגף מאוחר יותר שהשתמר, על רכס בין שני נהרות. עצירה טבעית עשרים דקות מרונדאלה.',
@@ -29853,7 +29853,7 @@ export const destinations: Destination[] = [
         id: 'lv-kuldiga',
         name: 'קולדיגה',
         nameLocal: 'Kuldīga',
-        category: 'attraction',
+        category: 'historic',
         lat: 56.96666717529297,
         lng: 21.96666717529297,
         description: 'עיירת עץ שמורה במיוחד על נהר ונטה, ובה המפל הרחב באירופה - רחב מאוד אך נמוך מאוד, בערך שני מטרים בלבד. אתר מורשת עולם של אונסקו.',
@@ -29918,7 +29918,7 @@ export const destinations: Destination[] = [
         id: 'lv-liepaja',
         name: 'ליאפיה',
         nameLocal: 'Liepāja',
-        category: 'attraction',
+        category: 'historic',
         lat: 56.51166534423828,
         lng: 21.01388931274414,
         description: 'עיר נמל דרומית עם חוף רחב ורובע קרוסטה, בסיס ימי צארי וסובייטי לשעבר עם מבנים נטושים דרמטיים. לפני השואה חיה כאן קהילה יהודית גדולה.',
@@ -30046,7 +30046,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Kry%C5%BEi%C5%B3_kalnas_%28G%C3%B3ra_Krzy%C5%BCy%29.JPG/500px-Kry%C5%BEi%C5%B3_kalnas_%28G%C3%B3ra_Krzy%C5%BCy%29.JPG',
         name: 'גבעת הצלבים',
         nameLocal: 'Hill of Crosses',
-        category: 'attraction',
+        category: 'historic',
         lat: 56.01527786254883,
         lng: 23.41666603088379,
         description: 'גבעה קטנה שעליה מאות אלפי צלבים שהניחו מאמינים לאורך מאתיים שנה. הסובייטים פינו אותה בבולדוזרים שלוש פעמים והתושבים החזירו את הצלבים בכל פעם.',
@@ -30232,7 +30232,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/JE%25C5%25BADZIEC_Z_MADARY.jpg/500px-JE%25C5%25BADZIEC_Z_MADARY.jpg',
         name: 'הרוכב ממדארה',
         nameLocal: 'Madara Rider',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.27669525146484,
         lng: 27.11955642700195,
         description: 'תבליט סלע מהמאה השמינית שמתאר פרש דוקר אריה, חצוב על צוק בגובה עשרות מטרים. אתר מורשת עולם ואחד מסמלי בולגריה, אך קטן מאוד ביחס למרחק הצפייה.',
@@ -30248,7 +30248,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Ivanovski_skalni_tsarkvi_20110714-61.JPG/500px-Ivanovski_skalni_tsarkvi_20110714-61.JPG',
         name: 'כנסיות הסלע של איבאנובו',
         nameLocal: 'Rock-hewn Churches of Ivanovo',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.71666717529297,
         lng: 25.96666717529297,
         description: 'מנזרים וכנסיות חצובים בקירות קניון נהר לום, עם ציורי קיר מהמאה ה-14 שנחשבים מהיפים באמנות הביזנטית המאוחרת. אתר מורשת עולם.',
@@ -30281,7 +30281,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Tryavna-imagesfrombulgaria.JPG/500px-Tryavna-imagesfrombulgaria.JPG',
         name: 'טריאבנה',
         nameLocal: 'Tryavna',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.866943359375,
         lng: 25.5,
         description: 'עיירת הרים מתקופת התחייה הלאומית, עם רחוב אבן מרוצף, בתי עץ ואבן ומסורת גילוף עץ שנמשכת עד היום.',
@@ -30313,7 +30313,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Sunset_and_Buzludza.jpg/500px-Sunset_and_Buzludza.jpg',
         name: 'אנדרטת בוזלודז׳ה',
         nameLocal: 'Buzludzha Monument',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.73580169677734,
         lng: 25.39380073547363,
         description: 'אולם כינוסים של המפלגה הקומוניסטית משנת 1981 בצורת צלחת ענק על פסגת הר, נטוש מאז 1989 ומתפורר. הכניסה פנימה אסורה, צופים מבחוץ בלבד.',
@@ -30411,7 +30411,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Haghpat_aerial_2023.3.jpg/500px-Haghpat_aerial_2023.3.jpg',
         name: 'מנזר הגפטאט',
         nameLocal: 'Haghpat Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.09388732910156,
         lng: 44.71194458007812,
         description: 'מכלול מנזר מהמאה העשירית על מדרון מעל קניון דבד, אתר מורשת עולם. כולל כנסייה מרכזית, ספרייה חצובה ומגדל פעמונים נפרד.',
@@ -30428,7 +30428,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Sanahin-external-view.jpg/500px-Sanahin-external-view.jpg',
         name: 'מנזר סנהין',
         nameLocal: 'Sanahin Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.08722305297852,
         lng: 44.66611099243164,
         description: 'מנזר תאום להגפטאט ואתר מורשת עולם בזכות עצמו, עם אולם אקדמיה מהמאה ה-11 ואוסף חצ׳קרים חצובים. הכניסה חופשית.',
@@ -30445,7 +30445,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Akhtala_monastery_110.JPG/500px-Akhtala_monastery_110.JPG',
         name: 'מנזר אחטלה',
         nameLocal: 'Akhtala Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.15057754516602,
         lng: 44.76391983032227,
         description: 'מבצר-מנזר עם ציורי קיר ביזנטיים נדירים בגוני כחול, שנעשו כשהמקום השתייך לעדה הארמנית-כלקדונית. שמור חלקית בלבד.',
@@ -30461,7 +30461,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Odzun-church-south.jpg/500px-Odzun-church-south.jpg',
         name: 'כנסיית אודזון',
         nameLocal: 'Odzun Church',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.05084991455078,
         lng: 44.61641693115234,
         description: 'בזיליקה מאבן בזלת ורודה מהמאות השישית עד השמינית, מהכנסיות הוותיקות ששרדו בארמניה, על מישור מעל הקניון.',
@@ -30477,7 +30477,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Kobayr_0012.jpg/500px-Kobayr_0012.jpg',
         name: 'מנזר קובאיר',
         nameLocal: 'Kobayr Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.00583267211914,
         lng: 44.63666534423828,
         description: 'חורבות מנזר מהמאה ה-12 שנצמדות לצוק מעל הקניון, עם שרידי ציורי קיר. מגיעים בעלייה רגלית תלולה של כעשרים דקות.',
@@ -30493,7 +30493,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Haghartsin_monastery_2015.jpg/500px-Haghartsin_monastery_2015.jpg',
         name: 'מנזר הגרצין',
         nameLocal: 'Haghartsin Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.76848983764648,
         lng: 44.89087677001953,
         description: 'מנזר מהמאות ה-10 עד ה-13 בלב יער צפוף מעל דיליז׳אן, שעבר שחזור נרחב. אחד המקומות המצולמים בארמניה.',
@@ -30510,7 +30510,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Goshavank_general_view.jpg/500px-Goshavank_general_view.jpg',
         name: 'גושוואנק',
         nameLocal: 'Goshavank',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.72987747192383,
         lng: 44.99772644042969,
         description: 'מנזר מהמאה ה-12 בכפר גוש, מפורסם בחצ׳קר מגולף במיוחד שנחשב לאחד המשוכללים בארמניה.',
@@ -30589,7 +30589,7 @@ export const destinations: Destination[] = [
         id: 'mx-oaxaca-city',
         name: 'העיר אואחקה',
         nameLocal: 'Oaxaca City',
-        category: 'attraction',
+        category: 'historic',
         lat: 17.06055641174316,
         lng: -96.72528076171875,
         description: 'מרכז קולוניאלי מרוצף אבן עם כנסיות ברוק, מנזר סנטו דומינגו, שווקים מקורים ורחובות בצבעים עזים. אתר מורשת עולם ומרכז הקולינריה של דרום מקסיקו.',
@@ -30608,7 +30608,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Monte_Alban_West_Side_Platform.jpg/500px-Monte_Alban_West_Side_Platform.jpg',
         name: 'מונטה אלבן',
         nameLocal: 'Monte Albán',
-        category: 'attraction',
+        category: 'historic',
         lat: 17.04388809204102,
         lng: -96.76777648925781,
         description: 'בירת הזאפוטקים, עיר שנבנתה על רכס מיושר בפסגה מעל העמק והתקיימה למעלה מאלף שנה. אתר מורשת עולם, עם כיכר מרכזית עצומה. אין צל, כובע ומים חובה.',
@@ -30625,7 +30625,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/12-05oaxaca076.jpg/500px-12-05oaxaca076.jpg',
         name: 'מיטלה',
         nameLocal: 'Mitla',
-        category: 'attraction',
+        category: 'historic',
         lat: 16.92722129821777,
         lng: -96.35944366455078,
         description: 'אתר זאפוטקי-מישטקי מאוחר שמפורסם בפסיפסי אבן גיאומטריים מורכבים, שנבנו ללא מלט. אתר מורשת עולם, קטן יותר ממונטה אלבן אך ייחודי בעיטוריו.',
@@ -30674,7 +30674,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Zona_Arqueol%C3%B3gica_de_Yagul.jpg/500px-Zona_Arqueol%C3%B3gica_de_Yagul.jpg',
         name: 'יאגול',
         nameLocal: 'Yagul',
-        category: 'attraction',
+        category: 'historic',
         lat: 16.95833396911621,
         lng: -96.45027923583984,
         description: 'אתר זאפוטקי מבוצר על גבעה, עם מגרש כדור גדול ומבוך של חצרות. חלק מאתר מורשת עולם של מערות פרהיסטוריות בעמק, וכמעט ריק ממבקרים.',
@@ -30822,7 +30822,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Khudayar_Khan_Palace%2C_Kokand_01.JPG/500px-Khudayar_Khan_Palace%2C_Kokand_01.JPG',
         name: 'קוקנד',
         nameLocal: 'Kokand',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.52861022949219,
         lng: 70.94249725341797,
         description: 'בירת ח׳אנות קוקנד עד הכיבוש הרוסי, עם ארמון הח׳אן חודויאר משנות השישים של המאה ה-19 וחזית אריחים צבעונית רחבה במיוחד.',
@@ -30839,7 +30839,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Khonakhan_Mosque%2C_Margilan_%28496142%29.jpg/500px-Khonakhan_Mosque%2C_Margilan_%28496142%29.jpg',
         name: 'מרגילן',
         nameLocal: 'Margilan',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.47111129760742,
         lng: 71.72472381591797,
         description: 'מרכז המשי של אוזבקיסטן כבר יותר מאלף שנה. במפעל יודגורליק מדגימים את כל שלבי הייצור בעבודת יד, כולל צביעת אקאט מסורתית.',
@@ -30870,7 +30870,7 @@ export const destinations: Destination[] = [
         id: 'uz-quva',
         name: 'קובה',
         nameLocal: 'Quva',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.52472305297852,
         lng: 72.06999969482422,
         description: 'עיירה עתיקה שהייתה תחנה על דרך המשי, ובה נחשפו שרידי מנזר בודהיסטי מהמאות השביעית והשמינית - עדות לשכבה שקדמה לאסלאם בעמק.',
@@ -30888,7 +30888,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Devonaboy_Jome_Mosque_in_Andijan.jpg/500px-Devonaboy_Jome_Mosque_in_Andijan.jpg',
         name: 'אנדיז׳אן',
         nameLocal: 'Andijan',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.78333282470703,
         lng: 72.33333587646484,
         description: 'עיר הולדתו של באבור, מייסד האימפריה המוגולית בהודו, עם מוזיאון המוקדש לו ושוק גדול. העיר נהרסה ברעידת אדמה ב-1902 ונבנתה מחדש.',
@@ -30902,7 +30902,7 @@ export const destinations: Destination[] = [
         id: 'uz-namangan',
         name: 'נמנגן',
         nameLocal: 'Namangan',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.0011100769043,
         lng: 71.6683349609375,
         description: 'העיר השנייה בגודלה בעמק, מרכז דתי מסורתי עם מדרסות מהמאה ה-18 ופארקים גדולים. אזור שמרני במיוחד, לבוש צנוע חשוב כאן.',
@@ -31039,7 +31039,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/BRP_Lumbini_Mayadevi_temple.jpg/500px-BRP_Lumbini_Mayadevi_temple.jpg',
         name: 'לומביני',
         nameLocal: 'Lumbini',
-        category: 'attraction',
+        category: 'historic',
         lat: 27.48138809204102,
         lng: 83.27583312988281,
         description:
@@ -31057,7 +31057,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Suddhodana_Palace-east_gate.JPG/500px-Suddhodana_Palace-east_gate.JPG',
         name: 'טילאוראקוט',
         nameLocal: 'Tilaurakot',
-        category: 'attraction',
+        category: 'historic',
         lat: 27.57999992370605,
         lng: 83.08000183105469,
         description:
@@ -31126,7 +31126,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Janki_Mandir.JPG/500px-Janki_Mandir.JPG',
         name: 'ג׳נקפור',
         nameLocal: 'Janakpur',
-        category: 'attraction',
+        category: 'historic',
         lat: 26.72861099243164,
         lng: 85.92500305175781,
         description:
@@ -31236,7 +31236,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Zanzibar_sultan_palace.jpg/500px-Zanzibar_sultan_palace.jpg',
         name: 'סטון טאון',
         nameLocal: 'Stone Town',
-        category: 'attraction',
+        category: 'historic',
         lat: -6.162399768829346,
         lng: 39.19129943847656,
         description:
@@ -31323,7 +31323,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Old_Arab_Tea_House_-_Bagamoyo_-_Tanzania_-_01.jpg/500px-Old_Arab_Tea_House_-_Bagamoyo_-_Tanzania_-_01.jpg',
         name: 'בגמויו',
         nameLocal: 'Bagamoyo',
-        category: 'attraction',
+        category: 'historic',
         lat: -6.44444465637207,
         lng: 38.90277862548828,
         description:
@@ -31340,7 +31340,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Great_Mosque_Kilwa_Interior.jpg/500px-Great_Mosque_Kilwa_Interior.jpg',
         name: 'קילווה קיסיוואני',
         nameLocal: 'Kilwa Kisiwani',
-        category: 'attraction',
+        category: 'historic',
         lat: -8.960000038146973,
         lng: 39.51279830932617,
         description:
@@ -31697,7 +31697,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/TanahLot_2014.JPG/500px-TanahLot_2014.JPG',
         name: 'טאנה לוט',
         nameLocal: 'Tanah Lot',
-        category: 'attraction',
+        category: 'historic',
         lat: -8.62106990814209,
         lng: 115.087158203125,
         description:
@@ -31715,7 +31715,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Pura_Luhur_Uluwatu_2017-08-17_%2834%29.jpg/500px-Pura_Luhur_Uluwatu_2017-08-17_%2834%29.jpg',
         name: 'מקדש אולוואטו',
         nameLocal: 'Uluwatu Temple',
-        category: 'attraction',
+        category: 'historic',
         lat: -8.828888893127441,
         lng: 115.0852813720703,
         description:
@@ -31733,7 +31733,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Bali_-_Goa_Gajah_%282022%29_-_img_20.jpg/500px-Bali_-_Goa_Gajah_%282022%29_-_img_20.jpg',
         name: 'גואה גאג׳ה',
         nameLocal: 'Goa Gajah',
-        category: 'attraction',
+        category: 'historic',
         lat: -8.523388862609863,
         lng: 115.2863616943359,
         description:
@@ -31767,7 +31767,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Besakih_Bali_Indonesia_Pura-Besakih-02.jpg/500px-Besakih_Bali_Indonesia_Pura-Besakih-02.jpg',
         name: 'מקדש בסאקי',
         nameLocal: 'Besakih Temple',
-        category: 'attraction',
+        category: 'historic',
         lat: -8.374367713928223,
         lng: 115.4509353637695,
         description:
@@ -32007,7 +32007,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Manastir_Studenica_10.jpg/500px-Manastir_Studenica_10.jpg',
         name: 'מנזר סטודניצה',
         nameLocal: 'Studenica Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.48611068725586,
         lng: 20.53667068481445,
         description:
@@ -32025,7 +32025,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/%D0%A1%D0%BE%D0%BF%D0%BE%D1%9B%D0%B0%D0%BD%D0%B8%2C_%D0%BF%D0%BE%D0%BD%D0%BE%D1%81_%D0%9D%D0%B5%D0%BC%D0%B0%D1%9A%D0%B8%D1%9B%D0%B0.jpg/500px-%D0%A1%D0%BE%D0%BF%D0%BE%D1%9B%D0%B0%D0%BD%D0%B8%2C_%D0%BF%D0%BE%D0%BD%D0%BE%D1%81_%D0%9D%D0%B5%D0%BC%D0%B0%D1%9A%D0%B8%D1%9B%D0%B0.jpg',
         name: 'מנזר סופוצ׳אני',
         nameLocal: 'Sopocani Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.11805725097656,
         lng: 20.3738899230957,
         description:
@@ -32122,7 +32122,7 @@ export const destinations: Destination[] = [
         id: 'ba-ostrozac',
         name: 'מצודת אוסטרוז׳אץ',
         nameLocal: 'Ostrozac Castle',
-        category: 'attraction',
+        category: 'historic',
         lat: 44.90399932861328,
         lng: 15.9370002746582,
         description:
@@ -32173,7 +32173,7 @@ export const destinations: Destination[] = [
         id: 'ba-prijedor',
         name: 'פרייידור',
         nameLocal: 'Prijedor',
-        category: 'attraction',
+        category: 'historic',
         lat: 44.9808349609375,
         lng: 16.71333312988281,
         description:
@@ -32190,7 +32190,7 @@ export const destinations: Destination[] = [
         id: 'ba-travnik',
         name: 'טרווניק',
         nameLocal: 'Travnik',
-        category: 'attraction',
+        category: 'historic',
         lat: 44.22638702392578,
         lng: 17.65972137451172,
         description:
@@ -32285,7 +32285,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Rozafa_Castle_in_July_2013_%285%29.JPG/500px-Rozafa_Castle_in_July_2013_%285%29.JPG',
         name: 'מצודת רוזאפה',
         nameLocal: 'Rozafa Castle',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.04650115966797,
         lng: 19.49349975585938,
         description:
@@ -32336,7 +32336,7 @@ export const destinations: Destination[] = [
         id: 'al-kruje',
         name: 'קרויה',
         nameLocal: 'Kruje',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.51083374023438,
         lng: 19.79249954223633,
         description:
@@ -32445,7 +32445,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Changdeokgung_Palace_Oct_2014_002.JPG/500px-Changdeokgung_Palace_Oct_2014_002.JPG',
         name: 'ארמון צ׳אנגדוקגונג',
         nameLocal: 'Changdeokgung',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.57944488525391,
         lng: 126.9927749633789,
         description:
@@ -32463,7 +32463,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Jeongjeon%2C_Jongmyo_%28Autumn%2C_2012%29.jpg/500px-Jeongjeon%2C_Jongmyo_%28Autumn%2C_2012%29.jpg',
         name: 'מקדש ג׳ונגמיו',
         nameLocal: 'Jongmyo Shrine',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.57472229003906,
         lng: 126.9936141967773,
         description:
@@ -32480,7 +32480,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Bukchon_Hanok_Village_01.jpg/500px-Bukchon_Hanok_Village_01.jpg',
         name: 'כפר ההאנוק בוקצ׳ון',
         nameLocal: 'Bukchon Hanok Village',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.58305740356445,
         lng: 126.9836120605469,
         description:
@@ -32529,7 +32529,7 @@ export const destinations: Destination[] = [
         id: 'kr-jsa',
         name: 'אזור הביטחון המשותף',
         nameLocal: 'Joint Security Area',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.95583343505859,
         lng: 126.6766662597656,
         description:
@@ -32549,7 +32549,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Hwaseong_Fortress%2C_Suwon%2C_Gyeonggi-do%2C_Republic_of_Korea_%282%29.jpg/500px-Hwaseong_Fortress%2C_Suwon%2C_Gyeonggi-do%2C_Republic_of_Korea_%282%29.jpg',
         name: 'מצודת הוואסונג',
         nameLocal: 'Hwaseong Fortress',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.27222061157227,
         lng: 127.0083312988281,
         description:
@@ -32749,7 +32749,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Alice_Springs%2C_2015_%2801%29.JPG/500px-Alice_Springs%2C_2015_%2801%29.JPG',
         name: 'אליס ספרינגס',
         nameLocal: 'Alice Springs',
-        category: 'attraction',
+        category: 'historic',
         lat: -23.70000076293945,
         lng: 133.8699951171875,
         description:
@@ -32897,7 +32897,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Turkestan.png/500px-Turkestan.png',
         name: 'המאוזוליאום של חוג׳ה אחמד יאסאווי',
         nameLocal: 'Mausoleum of Khoja Ahmed Yasawi',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.29777908325195,
         lng: 68.27083587646484,
         description:
@@ -32915,7 +32915,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/%D0%93%D0%BE%D1%80%D0%BE%D0%B4%D0%B8%D1%89%D0%B5_%D0%9E%D1%82%D1%8B%D1%80%D1%80%D0%B0%D1%80_%D1%81_%D0%B2%D0%BE%D0%B7%D0%B4%D1%83%D1%85%D0%B0.jpg/500px-%D0%93%D0%BE%D1%80%D0%BE%D0%B4%D0%B8%D1%89%D0%B5_%D0%9E%D1%82%D1%8B%D1%80%D1%80%D0%B0%D1%80_%D1%81_%D0%B2%D0%BE%D0%B7%D0%B4%D1%83%D1%85%D0%B0.jpg',
         name: 'חורבות אוטראר',
         nameLocal: 'Otrar',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.85250091552734,
         lng: 68.30278015136719,
         description:
@@ -32932,7 +32932,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Aristanbab.jpg/500px-Aristanbab.jpg',
         name: 'המאוזוליאום של אריסטן באב',
         nameLocal: 'Arystan Bab Mausoleum',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.85100173950195,
         lng: 68.26799774169922,
         description:
@@ -32949,7 +32949,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Dostyk_Square_%284983211403%29.jpg/500px-Dostyk_Square_%284983211403%29.jpg',
         name: 'טראז',
         nameLocal: 'Taraz',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.90000152587891,
         lng: 71.36666870117188,
         description:
@@ -32966,7 +32966,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Aisha_bibi.png/500px-Aisha_bibi.png',
         name: 'איישה ביבי',
         nameLocal: 'Aisha Bibi',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.83361053466797,
         lng: 71.21028137207031,
         description:
@@ -33064,7 +33064,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Concordiatempel_Tempio_della_Temple_of_Concordia_de_la_Concorde_Tal_der_Tempel_Valle_dei_Templi_Agrigento_Sizilien_Foto_Wolfgang_Pehlemann_DSC07490.jpg/500px-Concordiatempel_Tempio_della_Temple_of_Concordia_de_la_Concorde_Tal_der_Tempel_Valle_dei_Templi_Agrigento_Sizilien_Foto_Wolfgang_Pehlemann_DSC07490.jpg',
         name: 'עמק המקדשים, אגריג׳נטו',
         nameLocal: 'Valle dei Templi',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.28972244262695,
         lng: 13.59333324432373,
         description:
@@ -33082,7 +33082,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Villa_romana_di_Piazza_Armerina_-_Sicilia_-_tigre.JPG/500px-Villa_romana_di_Piazza_Armerina_-_Sicilia_-_tigre.JPG',
         name: 'וילה רומנה דל קזאלה',
         nameLocal: 'Villa Romana del Casale',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.36472320556641,
         lng: 14.3347225189209,
         description:
@@ -33100,7 +33100,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Ortigia_dall%27alto.jpg/500px-Ortigia_dall%27alto.jpg',
         name: 'אורטיג׳ה, סירקוזה',
         nameLocal: 'Ortigia',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.05916595458984,
         lng: 15.28555583953857,
         description:
@@ -33118,7 +33118,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/La_cattedrale_di_Noto_restaurata.JPG/500px-La_cattedrale_di_Noto_restaurata.JPG',
         name: 'נוטו',
         nameLocal: 'Noto',
-        category: 'attraction',
+        category: 'historic',
         lat: 36.88333511352539,
         lng: 15.08333301544189,
         description:
@@ -33135,7 +33135,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Aerial_image_of_the_coast_of_Taormina_%28view_from_the_southeast%29.jpg/500px-Aerial_image_of_the_coast_of_Taormina_%28view_from_the_southeast%29.jpg',
         name: 'טאורמינה',
         nameLocal: 'Taormina',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.85222244262695,
         lng: 15.29194450378418,
         description:
@@ -33152,7 +33152,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/%22Die_Kathedrale_zeigt_in_besonders_eindrucksvoller_Weise_den_normannisch-arabisch-byzantinischen_Baustil%22_02.jpg/500px-%22Die_Kathedrale_zeigt_in_besonders_eindrucksvoller_Weise_den_normannisch-arabisch-byzantinischen_Baustil%22_02.jpg',
         name: 'קתדרלת מונרֵאלֶה',
         nameLocal: 'Duomo di Monreale',
-        category: 'attraction',
+        category: 'historic',
         lat: 38.08185958862305,
         lng: 13.29206657409668,
         description:
@@ -33170,7 +33170,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Cefalu-bjs2007-01.jpg/500px-Cefalu-bjs2007-01.jpg',
         name: 'צ׳פאלו',
         nameLocal: 'Cefalù',
-        category: 'attraction',
+        category: 'historic',
         lat: 38.03333282470703,
         lng: 14.01666641235352,
         description:
@@ -33352,7 +33352,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Granada-Alhambra12.jpg/500px-Granada-Alhambra12.jpg',
         name: 'אלהמברה',
         nameLocal: 'La Alhambra',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.1775016784668,
         lng: -3.589999914169312,
         description:
@@ -33370,7 +33370,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Mezquita_de_C%C3%B3rdoba_desde_el_aire_%28C%C3%B3rdoba%2C_Espa%C3%B1a%29.jpg/500px-Mezquita_de_C%C3%B3rdoba_desde_el_aire_%28C%C3%B3rdoba%2C_Espa%C3%B1a%29.jpg',
         name: 'המסגד-קתדרלה של קורדובה',
         nameLocal: 'Mezquita-Catedral de Córdoba',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.87916564941406,
         lng: -4.779722213745117,
         description:
@@ -33388,7 +33388,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Sevilla-2-2_%2848040287512%29.jpg/500px-Sevilla-2-2_%2848040287512%29.jpg',
         name: 'האלקאסר של סביליה',
         nameLocal: 'Real Alcázar de Sevilla',
-        category: 'attraction',
+        category: 'historic',
         lat: 37.38388824462891,
         lng: -5.99138879776001,
         description:
@@ -33406,7 +33406,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Panorama_of_Ronda.jpg/500px-Panorama_of_Ronda.jpg',
         name: 'רונדה',
         nameLocal: 'Ronda',
-        category: 'attraction',
+        category: 'historic',
         lat: 36.73722076416016,
         lng: -5.164722442626953,
         description:
@@ -33619,7 +33619,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Meteora%27s_monastery_2.jpg/500px-Meteora%27s_monastery_2.jpg',
         name: 'מטאורה',
         nameLocal: 'Μετέωρα',
-        category: 'attraction',
+        category: 'historic',
         lat: 39.71416854858398,
         lng: 21.63111114501953,
         description:
@@ -33670,7 +33670,7 @@ export const destinations: Destination[] = [
         id: 'gr-ioannina',
         name: 'יואנינה',
         nameLocal: 'Ιωάννινα',
-        category: 'attraction',
+        category: 'historic',
         lat: 39.66361236572266,
         lng: 20.85222244262695,
         description:
@@ -33689,7 +33689,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Dodona-Greece-April-2008-107.JPG/500px-Dodona-Greece-April-2008-107.JPG',
         name: 'דודונה',
         nameLocal: 'Δωδώνη',
-        category: 'attraction',
+        category: 'historic',
         lat: 39.54639053344727,
         lng: 20.78777694702148,
         description:
@@ -33816,7 +33816,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Le_ch%C3%A2teau_d%27Eltz_%28Burg_Eltz%29_en_allemagne_%28cropped%29.jpg/500px-Le_ch%C3%A2teau_d%27Eltz_%28Burg_Eltz%29_en_allemagne_%28cropped%29.jpg',
         name: 'טירת אלץ',
         nameLocal: 'Burg Eltz',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.20505523681641,
         lng: 7.336596965795,
         description:
@@ -33834,7 +33834,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Porta_Nigra_morgens_%28100MP%29.jpg/500px-Porta_Nigra_morgens_%28100MP%29.jpg',
         name: 'פורטה ניגרה, טרייר',
         nameLocal: 'Porta Nigra',
-        category: 'attraction',
+        category: 'historic',
         lat: 49.75972366333008,
         lng: 6.6438889503479,
         description:
@@ -33869,7 +33869,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Bacharach_from_the_Postenturm.jpg/500px-Bacharach_from_the_Postenturm.jpg',
         name: 'באכאראך',
         nameLocal: 'Bacharach',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.06666564941406,
         lng: 7.766666889190674,
         description:
@@ -33886,7 +33886,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Marksburg-Braubach.jpg/500px-Marksburg-Braubach.jpg',
         name: 'טירת מרקסבורג',
         nameLocal: 'Marksburg',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.27180480957031,
         lng: 7.649166584014893,
         description:
@@ -33920,7 +33920,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Worms_01.jpg/500px-Worms_01.jpg',
         name: 'וורמס',
         nameLocal: 'Worms',
-        category: 'attraction',
+        category: 'historic',
         lat: 49.63194274902344,
         lng: 8.365278244018555,
         description:
@@ -34072,7 +34072,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Matsumoto_Castle_Keep_Tower.jpg/500px-Matsumoto_Castle_Keep_Tower.jpg',
         name: 'טירת מאצומוטו',
         nameLocal: '松本城',
-        category: 'attraction',
+        category: 'historic',
         lat: 36.23888778686523,
         lng: 137.9691619873047,
         description:
@@ -34090,7 +34090,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Sushi%2C_Hida_Beef.jpg/500px-Sushi%2C_Hida_Beef.jpg',
         name: 'טקיאמה',
         nameLocal: '高山',
-        category: 'attraction',
+        category: 'historic',
         lat: 36.14602661132812,
         lng: 137.2521667480469,
         description:
@@ -34108,7 +34108,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Stone_lantern_Kenrokuen.jpg/500px-Stone_lantern_Kenrokuen.jpg',
         name: 'גן קנרוקואן, קנזאווה',
         nameLocal: '兼六園',
-        category: 'attraction',
+        category: 'historic',
         lat: 36.56194305419922,
         lng: 136.6625061035156,
         description:
@@ -34161,7 +34161,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/160501_Zenkoji_Nagano_Japan06s3.jpg/500px-160501_Zenkoji_Nagano_Japan06s3.jpg',
         name: 'זנקוג׳י, נגאנו',
         nameLocal: '善光寺',
-        category: 'attraction',
+        category: 'historic',
         lat: 36.66166687011719,
         lng: 138.1877746582031,
         description:
@@ -34178,7 +34178,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/1_tsumago_juku_2024.jpg/500px-1_tsumago_juku_2024.jpg',
         name: 'צומאגו-ג׳וקו',
         nameLocal: '妻籠宿',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.57529830932617,
         lng: 137.5950927734375,
         description:
@@ -34298,7 +34298,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Wat_Rong_Khun_-_Chiang_Rai.jpg/500px-Wat_Rong_Khun_-_Chiang_Rai.jpg',
         name: 'ואט רונג חון (המקדש הלבן)',
         nameLocal: 'Wat Rong Khun',
-        category: 'attraction',
+        category: 'historic',
         lat: 19.824667,
         lng: 99.763336,
         description:
@@ -34334,7 +34334,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Wat_Phra_That_Doi_Suthep_-_Chiang_Mai.jpg/500px-Wat_Phra_That_Doi_Suthep_-_Chiang_Mai.jpg',
         name: 'ואט פרה תאת דוי סותפ',
         nameLocal: 'Wat Phra That Doi Suthep',
-        category: 'attraction',
+        category: 'historic',
         lat: 18.804979,
         lng: 98.921562,
         description:
@@ -34352,7 +34352,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Wat_srichum_03.jpg/500px-Wat_srichum_03.jpg',
         name: 'הפארק ההיסטורי סוכותאי',
         nameLocal: 'Sukhothai Historical Park',
-        category: 'attraction',
+        category: 'historic',
         lat: 17.021111,
         lng: 99.703613,
         description:
@@ -34387,7 +34387,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/%E0%B9%80%E0%B8%88%E0%B8%94%E0%B8%B5%E0%B8%A2%E0%B9%8C%E0%B8%AB%E0%B8%A5%E0%B8%A7%E0%B8%87.jpg/500px-%E0%B9%80%E0%B8%88%E0%B8%94%E0%B8%B5%E0%B8%A2%E0%B9%8C%E0%B8%AB%E0%B8%A5%E0%B8%A7%E0%B8%87.jpg',
         name: 'ואט צ׳די לואנג',
         nameLocal: 'Wat Chedi Luang',
-        category: 'attraction',
+        category: 'historic',
         lat: 18.786945,
         lng: 98.986389,
         description:
@@ -34566,7 +34566,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Aerial_photo_of_Festung_K%C3%B6nigstein%2C_October_2008.jpg/500px-Aerial_photo_of_Festung_K%C3%B6nigstein%2C_October_2008.jpg',
         name: 'מצודת קניגשטיין',
         nameLocal: 'Festung Königstein',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.918888,
         lng: 14.056666,
         description:
@@ -34653,7 +34653,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Human_rights_memorial_Castle-Fortress_Sonnenstein_117956973.jpg/500px-Human_rights_memorial_Castle-Fortress_Sonnenstein_117956973.jpg',
         name: 'פירנה',
         nameLocal: 'Pirna',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.962223,
         lng: 13.940278,
         description:
@@ -34772,7 +34772,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Hallstatt_-_Zentrum_.JPG/500px-Hallstatt_-_Zentrum_.JPG',
         name: 'האלשטאט',
         nameLocal: 'Hallstatt',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.562,
         lng: 13.649,
         description:
@@ -34808,7 +34808,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Bad_Ischl_and_Traun_River.jpg/500px-Bad_Ischl_and_Traun_River.jpg',
         name: 'באד אישל',
         nameLocal: 'Bad Ischl',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.720276,
         lng: 13.633333,
         description:
@@ -34976,7 +34976,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Croatia-01239_-_The_Peristil_%289551533404%29.jpg/500px-Croatia-01239_-_The_Peristil_%289551533404%29.jpg',
         name: 'ארמון דיוקלטיאנוס, ספליט',
         nameLocal: 'Diocletian\u2019s Palace',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.508335,
         lng: 16.44,
         description:
@@ -35047,7 +35047,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/More%C5%A1ka_in_Kor%C4%8Dula.jpg/500px-More%C5%A1ka_in_Kor%C4%8Dula.jpg',
         name: 'קורצ׳ולה',
         nameLocal: 'Korčula',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.95,
         lng: 16.9,
         description:
@@ -35064,7 +35064,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Episcopal_Center_%28Salona%29_03.jpg/500px-Episcopal_Center_%28Salona%29_03.jpg',
         name: 'סלונה העתיקה',
         nameLocal: 'Salona',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.539444,
         lng: 16.483055,
         description:
@@ -35198,7 +35198,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Sigiriya_%28141688197%29.jpeg/500px-Sigiriya_%28141688197%29.jpeg',
         name: 'סלע סיגיריה',
         nameLocal: 'Sigiriya',
-        category: 'attraction',
+        category: 'historic',
         lat: 7.956944,
         lng: 80.75972,
         description:
@@ -35216,7 +35216,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Dambulla-buddhastupa.jpg/500px-Dambulla-buddhastupa.jpg',
         name: 'מקדשי המערה בדמבולה',
         nameLocal: 'Dambulla Cave Temple',
-        category: 'attraction',
+        category: 'historic',
         lat: 7.856667,
         lng: 80.64917,
         description:
@@ -35234,7 +35234,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Polonnaruwa.jpg/500px-Polonnaruwa.jpg',
         name: 'פולונרואה',
         nameLocal: 'Polonnaruwa',
-        category: 'attraction',
+        category: 'historic',
         lat: 7.933333,
         lng: 81.0,
         description:
@@ -35252,7 +35252,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/SL_Anuradhapura_asv2020-01_img11_Ruwanwelisaya_Stupa.jpg/500px-SL_Anuradhapura_asv2020-01_img11_Ruwanwelisaya_Stupa.jpg',
         name: 'אנוראדהפורה',
         nameLocal: 'Anuradhapura',
-        category: 'attraction',
+        category: 'historic',
         lat: 8.335,
         lng: 80.410835,
         description:
@@ -35395,7 +35395,7 @@ export const destinations: Destination[] = [
         id: 'lk-nuwara-eliya',
         name: 'נוארה אליה',
         nameLocal: 'Nuwara Eliya',
-        category: 'attraction',
+        category: 'historic',
         lat: 6.966667,
         lng: 80.76667,
         description:
@@ -35466,7 +35466,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Galle_Fort.jpg/500px-Galle_Fort.jpg',
         name: 'המצודה של גאלה',
         nameLocal: 'Galle Fort',
-        category: 'attraction',
+        category: 'historic',
         lat: 6.032778,
         lng: 80.215553,
         description:
@@ -35608,7 +35608,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.JPG/500px-Bayon%2C_Angkor_Thom%2C_Camboya%2C_2013-08-17%2C_DD_37.JPG',
         name: 'מקדש באיון',
         nameLocal: 'Bayon',
-        category: 'attraction',
+        category: 'historic',
         lat: 13.441112,
         lng: 103.858612,
         description:
@@ -35626,7 +35626,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Ta_Prohm_%28III%29.jpg/500px-Ta_Prohm_%28III%29.jpg',
         name: 'טה פרוהם',
         nameLocal: 'Ta Prohm',
-        category: 'attraction',
+        category: 'historic',
         lat: 13.435,
         lng: 103.889168,
         description:
@@ -35644,7 +35644,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Banteay_Srei_full2.jpg/500px-Banteay_Srei_full2.jpg',
         name: 'בנטיאי סריי',
         nameLocal: 'Banteay Srei',
-        category: 'attraction',
+        category: 'historic',
         lat: 13.598889,
         lng: 103.962776,
         description:
@@ -35661,7 +35661,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Bengmealea.jpg/500px-Bengmealea.jpg',
         name: 'בנג מיאליאה',
         nameLocal: 'Beng Mealea',
-        category: 'attraction',
+        category: 'historic',
         lat: 13.476389,
         lng: 104.238335,
         description:
@@ -35861,7 +35861,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Wat_Phnom_Doun_Penh.jpg/500px-Wat_Phnom_Doun_Penh.jpg',
         name: 'ואט פנום',
         nameLocal: 'Wat Phnom',
-        category: 'attraction',
+        category: 'historic',
         lat: 11.576111,
         lng: 104.923058,
         description:
@@ -35878,7 +35878,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Aerial_view_of_Battambang_city.jpg/500px-Aerial_view_of_Battambang_city.jpg',
         name: 'בטמבנג',
         nameLocal: 'Battambang',
-        category: 'attraction',
+        category: 'historic',
         lat: 13.1,
         lng: 103.2,
         description:
@@ -36019,7 +36019,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Temple_Wat_Xieng_Thong_-_Luang_Prabang_-_Laos.jpg/500px-Temple_Wat_Xieng_Thong_-_Luang_Prabang_-_Laos.jpg',
         name: 'ואט שיאנג טונג',
         nameLocal: 'Wat Xieng Thong',
-        category: 'attraction',
+        category: 'historic',
         lat: 19.897499,
         lng: 102.143059,
         description: 'המקדש המפורסם בלואנג פראבנג, מהמאה ה-16, בקצה הרובע ההיסטורי בין שני הנהרות. הגגות היורדים כמעט עד הקרקע הם הסגנון הלאואני הקלאסי, ובקיר האחורי יש פסיפס זכוכית של עץ החיים. נדרש לבוש צנוע עם כתפיים וברכיים מכוסות, וחולצים נעליים לפני הכניסה למבנים.',
@@ -36053,7 +36053,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Pak-Ou-Caves-2017.jpg/500px-Pak-Ou-Caves-2017.jpg',
         name: 'מערות פאק או',
         nameLocal: 'Pak Ou Caves',
-        category: 'attraction',
+        category: 'historic',
         lat: 20.048700,
         lng: 102.210503,
         description: 'שתי מערות בצוק מעל המקונג, מלאות באלפי פסלי בודהה קטנים שהובאו לכאן במשך מאות שנים. מגיעים בהפלגה של כשעתיים במעלה הנהר, וההפלגה עצמה היא חלק מהחוויה. המערה העליונה חשוכה לגמרי ודורשת פנס.',
@@ -36101,7 +36101,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Pha_That_Luang%2C_July_2023.jpg/500px-Pha_That_Luang%2C_July_2023.jpg',
         name: 'פא טאט לואנג',
         nameLocal: 'Pha That Luang',
-        category: 'attraction',
+        category: 'historic',
         lat: 17.976166,
         lng: 102.634247,
         description: 'הסטופה המוזהבת הגדולה בוויינטיאן, הסמל הלאומי של לאוס ומופיעה על שטרות הכסף. הרחבה סביבה פתוחה וללא צל, ולכן עדיף להגיע בשעה מוקדמת או לקראת שקיעה, כשהזהב תופס את האור.',
@@ -36236,7 +36236,7 @@ export const destinations: Destination[] = [
         id: 'ma-ait-benhaddou',
         name: 'אייט בן חדו',
         nameLocal: 'A\u00eft Benhaddou',
-        category: 'attraction',
+        category: 'historic',
         lat: 31.047222,
         lng: -7.128889,
         description: 'כפר מבוצר עשוי בוץ וקש על מדרון גבעה, אתר מורשת עולמית ואחד הנופים המזוהים ביותר עם מרוקו. שימש כרקע לעשרות הפקות קולנוע וטלוויזיה. הטיפוס אל המבצר שבראש לוקח כעשרים דקות במדרגות לא סדירות ואין בו צל. כדאי להגיע לפני עשר או אחרי ארבע.',
@@ -36255,7 +36255,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Kasbah_Taourirt_in_Ouarzazate_2011.jpg/500px-Kasbah_Taourirt_in_Ouarzazate_2011.jpg',
         name: 'ורזאזאת',
         nameLocal: 'Ouarzazate',
-        category: 'attraction',
+        category: 'historic',
         lat: 30.916666,
         lng: -6.916667,
         description: 'שער המדבר ועיר הבסיס של הדרום, מוכרת גם כמרכז תעשיית הקולנוע המרוקאית עם אולפנים ואתרי צילום פתוחים לקהל. העיר עצמה תפקודית ולא יפה במיוחד, אך היא הנקודה ההגיונית ללינה ולהצטיידות לפני הכניסה לעמקים.',
@@ -36422,7 +36422,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Burana_Tower%2C_Kyrgyzstan.jpg/500px-Burana_Tower%2C_Kyrgyzstan.jpg',
         name: 'מגדל בורנה',
         nameLocal: 'Burana Tower',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.746944,
         lng: 75.248611,
         description: 'מינרט מהמאה האחת עשרה שנותר משרידי העיר בלסגון על דרך המשי, כשעה וחצי מהבירה. אפשר לטפס בגרם מדרגות פנימי צר וחשוך אל הראש ולראות את העמק. סביב המגדל שדה של אבני קבורה מגולפות בדמות פנים אנושיות. עצירה קצרה ונוחה בדרך מזרחה.',
@@ -36436,7 +36436,7 @@ export const destinations: Destination[] = [
         id: 'kg-cholpon-ata',
         name: 'צ׳ולפון אטא',
         nameLocal: 'Cholpon-Ata',
-        category: 'attraction',
+        category: 'historic',
         lat: 42.650002,
         lng: 77.083336,
         description: 'עיירת הנופש הראשית על החוף הצפוני של איסיק קול, ובה שדה ציורי סלע פתוח עם חריטות בנות אלפי שנים של ציידים ובעלי חיים. באוגוסט זהו יעד הנופש הפנימי של האזור והחופים מלאים, אבל מחוץ לשבועות הללו העיירה שקטה למדי.',
@@ -36504,7 +36504,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Tash_Rabat_in_mountains.jpg/500px-Tash_Rabat_in_mountains.jpg',
         name: 'טאש רבאט',
         nameLocal: 'Tash Rabat',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.823151,
         lng: 75.288765,
         description: 'קרוואנסראי אבן מהמאה החמש עשרה בעמק מבודד קרוב לגבול הסיני, בגובה של יותר משלושת אלפים מטר. מבנה כיפות אפלולי ומרשים ששימש שיירות בדרך המשי, וסביבו רק מרעה ריק ויורטות בודדות. הלינה כאן היא באוהל, קרה מאוד בלילה, ולעיתים נדרש היתר אזור גבול שמסדירים מראש.',
@@ -36629,7 +36629,7 @@ export const destinations: Destination[] = [
         id: 'ba-plaza-mayo',
         name: 'פלאסה דה מאיו',
         nameLocal: 'Plaza de Mayo',
-        category: 'attraction',
+        category: 'historic',
         lat: -34.60833,
         lng: -58.37194,
         description:
@@ -36646,7 +36646,7 @@ export const destinations: Destination[] = [
         id: 'ba-casa-rosada',
         name: 'קאסה רוסאדה',
         nameLocal: 'Casa Rosada',
-        category: 'attraction',
+        category: 'historic',
         lat: -34.60806,
         lng: -58.37028,
         description:
@@ -36663,7 +36663,7 @@ export const destinations: Destination[] = [
         id: 'ba-teatro-colon',
         name: 'תיאטרון קולון',
         nameLocal: 'Teatro Colón',
-        category: 'attraction',
+        category: 'historic',
         lat: -34.60108,
         lng: -58.38308,
         description:
@@ -36680,7 +36680,7 @@ export const destinations: Destination[] = [
         id: 'ba-obelisco',
         name: 'האובליסק',
         nameLocal: 'Obelisco',
-        category: 'attraction',
+        category: 'historic',
         lat: -34.60361,
         lng: -58.38167,
         description:
@@ -36696,7 +36696,7 @@ export const destinations: Destination[] = [
         id: 'ba-recoleta',
         name: 'בית העלמין רקולטה',
         nameLocal: 'La Recoleta Cemetery',
-        category: 'attraction',
+        category: 'historic',
         lat: -34.58806,
         lng: -58.39306,
         description:
@@ -36713,7 +36713,7 @@ export const destinations: Destination[] = [
         id: 'ba-la-boca',
         name: 'לה בוקה',
         nameLocal: 'La Boca',
-        category: 'attraction',
+        category: 'historic',
         lat: -34.63556,
         lng: -58.36472,
         description:
@@ -36812,7 +36812,7 @@ export const destinations: Destination[] = [
         id: 'ba-templo-libertad',
         name: 'טמפלו ליברטד ובית הכנסת המרכזי',
         nameLocal: 'Templo Libertad',
-        category: 'attraction',
+        category: 'historic',
         lat: -34.59947,
         lng: -58.38369,
         description:
@@ -36844,7 +36844,7 @@ export const destinations: Destination[] = [
         id: 'ba-san-telmo',
         name: 'סן טלמו',
         nameLocal: 'San Telmo',
-        category: 'attraction',
+        category: 'historic',
         lat: -34.62056,
         lng: -58.37167,
         description:
@@ -37727,7 +37727,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/San_Pedro_de_Atacama_oasis.jpg/500px-San_Pedro_de_Atacama_oasis.jpg',
         name: 'סן פדרו דה אטקמה',
         nameLocal: 'San Pedro de Atacama',
-        category: 'attraction',
+        category: 'historic',
         lat: -22.916666,
         lng: -68.199997,
         description: 'כפר האדובה שמשמש בסיס לכל האזור. רחובות עפר, בתי טיט לבנים, כנסייה קולוניאלית קטנה ורחוב ראשי אחד שבו מרוכזות כל סוכנויות הטיולים, המסעדות והלינה. הכפר עצמו קטן מאוד וניתן להקיף אותו ברגל בשעה, והערך שלו הוא בעיקר לוגיסטי ובאווירת הערב.',
@@ -37982,7 +37982,7 @@ export const destinations: Destination[] = [
         id: 'cl-punta-arenas',
         name: 'פונטה ארנאס',
         nameLocal: 'Punta Arenas',
-        category: 'attraction',
+        category: 'historic',
         lat: -53.166668,
         lng: -70.933334,
         description: 'העיר הגדולה בפטגוניה הצ׳ילאנית, יושבת על מיצר מגלן ומשמשת שער הכניסה האווירי לאזור. בכיכר המרכזית ניצב אנדרטת מגלן, ומסביבה אחוזות מגדלי הכבשים העשירים מתחילת המאה העשרים שמעידות על העושר של תקופת הצמר. משם יוצאות גם ההפלגות אל מושבות הפינגווינים. הנסיעה מכאן לפוארטו נטאלס אורכת כשלוש שעות.',
@@ -38119,7 +38119,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Djemaa_el_Fna.jpg/500px-Djemaa_el_Fna.jpg',
         name: 'כיכר ג׳מאע אל פנא',
         nameLocal: 'Jemaa el-Fnaa',
-        category: 'attraction',
+        category: 'historic',
         lat: 31.625834,
         lng: -7.989444,
         description: 'הכיכר המרכזית של המדינה העתיקה ולב הפעילות של העיר, מוכרזת על ידי אונסק״ו כמורשת תרבות בלתי מוחשית. ביום היא בעיקר דוכני מיץ ומעבר, ואחרי רדת החשכה היא מתמלאת בדוכני אוכל, מספרי סיפורים, מוזיקאים ונחשונים. שווה לדעת ששני דברים כאן כרוכים בתשלום שלא תמיד מוצג מראש: צילום של אמן רחוב, וישיבה בדוכן. סוכמים מחיר לפני ולא אחרי.',
@@ -38136,7 +38136,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Marokko0112_(retouched).jpg/500px-Marokko0112_(retouched).jpg',
         name: 'מסגד קוטוביה',
         nameLocal: 'Kutubiyya Mosque',
-        category: 'attraction',
+        category: 'historic',
         lat: 31.624125,
         lng: -7.993541,
         description: 'המסגד הגדול של מרקש מהמאה השתים עשרה, והצריח שלו בגובה כשבעים מטר הוא נקודת הציון הבולטת של העיר ומשמש לניווט מכל כיוון. כמו ברוב מסגדי מרוקו, הכניסה פנימה אינה מותרת ללא מוסלמים, אבל הגנים שסביבו פתוחים לכולם והם מהמקומות הנעימים לשבת בהם בעיר, במיוחד לפני השקיעה כשהאבן מאדימה.',
@@ -38153,7 +38153,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Bahia_Palace_large_court.jpg/500px-Bahia_Palace_large_court.jpg',
         name: 'ארמון באהיה',
         nameLocal: 'Bahia Palace',
-        category: 'attraction',
+        category: 'historic',
         lat: 31.621592,
         lng: -7.982231,
         description: 'ארמון מהמאה התשע עשרה שנבנה עבור וזיר רב עוצמה, והוא ההדגמה הנגישה ביותר בעיר של אומנות הבנייה המרוקאית: תקרות ארז מצוירות, טיח מגולף, פסיפסי זליג׳ וחצרות פנימיות עם עצי הדר. הארמון ריק מרהיטים, מה שמפנה את תשומת הלב לחומרים עצמם. מתמלא מאוד בין אחת עשרה לשלוש, ולכן עדיף להגיע מיד עם הפתיחה.',
@@ -38170,7 +38170,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Saadian_Tombs_1044-HDR.jpg/500px-Saadian_Tombs_1044-HDR.jpg',
         name: 'קברי הסעדים',
         nameLocal: 'Saadian Tombs',
-        category: 'attraction',
+        category: 'historic',
         lat: 31.617300,
         lng: -7.988702,
         description: 'מתחם קבורה מלכותי מסוף המאה השש עשרה שנחתם במשך מאות שנים ונפתח מחדש רק במאה העשרים, ולכן הקישוט בו נשמר במצב יוצא דופן. האולם המרשים ביותר הוא אולם שנים עשר העמודים, עם עמודי שיש איטלקי ותקרת ארז מגולפת. המתחם קטן והמעבר בין החדרים צר, כך שבשעות העומס נוצר תור ארוך למרות ששווה בסך הכול כחצי שעה בפנים.',
@@ -38186,7 +38186,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/%CE%9A%CE%B5%CE%BD%CF%84%CF%81%CE%B9%CE%BA%CE%AE_%CE%B1%CF%85%CE%BB%CE%AE_%CE%95%CE%BB_%CE%9C%CF%80%CE%B1%CE%BD%CF%84%CE%AF_1127.jpg/500px-%CE%9A%CE%B5%CE%BD%CF%84%CF%81%CE%B9%CE%BA%CE%AE_%CE%B1%CF%85%CE%BB%CE%AE_%CE%95%CE%BB_%CE%9C%CF%80%CE%B1%CE%BD%CF%84%CE%AF_1127.jpg',
         name: 'ארמון אל בדיע',
         nameLocal: 'El Badi Palace',
-        category: 'attraction',
+        category: 'historic',
         lat: 31.618299,
         lng: -7.985800,
         description: 'חורבות ארמון ענק מהמאה השש עשרה שנבנה משיש, זהב ואוניקס ופורק כמעט כולו כמאה שנה אחר כך כדי לבנות ארמון אחר. מה שנשאר הוא חצר עצומה עם בריכות שקועות וחומות עפר גבוהות שעליהן מקננות חסידות, ואפשר לעלות על החומה לתצפית טובה על העיר ועל האטלס. זה מקום פתוח לגמרי בלי צל, ולכן לא כדאי להגיע אליו בשעות הצהריים.',
@@ -38202,7 +38202,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Coranic_School_(106589859).jpeg/500px-Coranic_School_(106589859).jpeg',
         name: 'מדרסת בן יוסף',
         nameLocal: 'Ben Youssef Madrasa',
-        category: 'attraction',
+        category: 'historic',
         lat: 31.631945,
         lng: -7.986195,
         description: 'בית מדרש איסלאמי מהמאה השש עשרה שהיה מהגדולים בצפון אפריקה, ופעל כמוסד לימודים עד שנות השישים של המאה העשרים. החצר המרכזית עם בריכת השיש, קירות הזליג׳ והכתובות המגולפות בגבס ובארז היא מהמקומות המצולמים בעיר, ומאחוריה מסדרונות של תאי מגורים זעירים לתלמידים. עבר שיפוץ מקיף ונפתח מחדש, וכיום מוגבל מספר המבקרים בו זמנית.',
@@ -38219,7 +38219,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Mellah_in_Marrakech_-_panoramio.jpg/500px-Mellah_in_Marrakech_-_panoramio.jpg',
         name: 'בית הכנסת סלאת אל עזאמה והמלאח',
         nameLocal: 'Slat al-Azama Synagogue',
-        category: 'attraction',
+        category: 'historic',
         lat: 31.620111,
         lng: -7.982333,
         description: 'בית הכנסת ההיסטורי של המלאח, הרובע היהודי של מרקש, שהוקם על ידי מגורשי ספרד ופעיל עד היום. הוא בנוי סביב חצר פנימית כחולה־לבנה, ולצידו תצוגה קטנה על ההיסטוריה של יהודי העיר. הרובע עצמו, על הסמטאות והשוק שבו, נמצא בדרום המדינה ליד ארמון באהיה. הכניסה בתשלום סמלי, מומלץ ללבוש לבוש צנוע, וכדאי לוודא שעות מראש כי הן משתנות בשבתות ובחגים.',
@@ -38443,7 +38443,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/McLeod_Ganj_Dharamkot_Dharmsala_Himachal_Pradesh_India_April_2014.jpg/500px-McLeod_Ganj_Dharamkot_Dharmsala_Himachal_Pradesh_India_April_2014.jpg',
         name: 'מקלוד גנג׳',
         nameLocal: 'McLeod Ganj',
-        category: 'attraction',
+        category: 'historic',
         lat: 32.238609,
         lng: 76.323608,
         description: 'העיירה שמעל דהרמסלה, מושבו של הדלאי לאמה ומרכז הקהילה הטיבטית הגולה בהודו. בלב שלה מתחם המקדש והמנזר, ומסביבו מוסדות תרבות טיבטיים, בתי מדרש לבודהיזם, קורסי מדיטציה ומסעדות טיבטיות. מעל העיירה מתחילים מסלולי הליכה אל הרכס, והכפרים דהרמקוט ובהגסו שלידה הם המקום השקט יותר ללון. האווירה כאן שונה לגמרי משאר הודו.',
@@ -38683,7 +38683,7 @@ export const destinations: Destination[] = [
           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Convento_de_Santa_Teresa_no_Morro_de_Santa_Teresa.jpg/500px-Convento_de_Santa_Teresa_no_Morro_de_Santa_Teresa.jpg',
         name: 'רובע סנטה טרזה',
         nameLocal: 'Santa Teresa',
-        category: 'attraction',
+        category: 'historic',
         lat: -22.9175,
         lng: -43.188057,
         description: 'שכונה על גבעה מעל מרכז העיר, עם רחובות מרוצפים תלולים, בתים קולוניאליים, גלריות וסטודיואים של אמנים. הדרך הנעימה להגיע היא בחשמלית הצהובה, הבונדינו, שחזרה לפעול אחרי שנים של השבתה וחוצה את אמות המים של לאפה. סנטה טרזה היא הניגוד המוחלט לחוף: כאן יושבים בבר קטן, מסתכלים על העיר מלמעלה ולא ממהרים לשום מקום. חשוב לדעת שהגבולות בין השכונה לפאבלות שסביבה מטושטשים, ולכן נצמדים לרחובות המרכזיים ולא מטיילים בסמטאות אקראיות.',
@@ -38898,7 +38898,7 @@ export const destinations: Destination[] = [
         id: 'co-san-felipe',
         name: 'מצודת סן פליפה דה בראחס',
         nameLocal: 'Castillo San Felipe de Barajas',
-        category: 'attraction',
+        category: 'historic',
         lat: 10.4225,
         lng: -75.5392,
         description:
@@ -38916,7 +38916,7 @@ export const destinations: Destination[] = [
         id: 'co-torre-reloj',
         name: 'מגדל השעון ושער העיר',
         nameLocal: 'Torre del Reloj',
-        category: 'attraction',
+        category: 'historic',
         lat: 10.422669,
         lng: -75.548861,
         description:
@@ -38951,7 +38951,7 @@ export const destinations: Destination[] = [
         id: 'co-catedral',
         name: 'קתדרלת סנטה קטלינה',
         nameLocal: 'Catedral de Santa Catalina de Alejandría',
-        category: 'attraction',
+        category: 'historic',
         lat: 10.42368,
         lng: -75.55098,
         description:
@@ -39187,7 +39187,7 @@ export const destinations: Destination[] = [
         id: 'nce-cathedral',
         name: 'קתדרלת סנט רפרט',
         nameLocal: 'Nice Cathedral',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.69722,
         lng: 7.27583,
         description:
@@ -39269,7 +39269,7 @@ export const destinations: Destination[] = [
         id: 'nce-antibes',
         name: 'אנטיב',
         nameLocal: 'Antibes',
-        category: 'attraction',
+        category: 'historic',
         lat: 43.5808,
         lng: 7.1239,
         description:
@@ -39423,7 +39423,7 @@ export const destinations: Destination[] = [
         id: 'par-eiffel',
         name: 'מגדל אייפל',
         nameLocal: 'Tour Eiffel',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.858323,
         lng: 2.294517,
         description:
@@ -39459,7 +39459,7 @@ export const destinations: Destination[] = [
         id: 'par-notre-dame',
         name: 'נוטרדאם',
         nameLocal: 'Cathédrale Notre-Dame de Paris',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.852955,
         lng: 2.350066,
         description:
@@ -39477,7 +39477,7 @@ export const destinations: Destination[] = [
         id: 'par-sainte-chapelle',
         name: 'סנט שאפל',
         nameLocal: 'Sainte-Chapelle',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.855278,
         lng: 2.345,
         description:
@@ -39495,7 +39495,7 @@ export const destinations: Destination[] = [
         id: 'par-sacre-coeur',
         name: 'סקרה קר',
         nameLocal: 'Basilique du Sacré-Cœur',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.886653,
         lng: 2.342952,
         description:
@@ -39530,7 +39530,7 @@ export const destinations: Destination[] = [
         id: 'par-arc',
         name: 'שער הניצחון',
         nameLocal: 'Arc de Triomphe',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.873861,
         lng: 2.29507,
         description:
@@ -39617,7 +39617,7 @@ export const destinations: Destination[] = [
         id: 'par-pere-lachaise',
         name: 'בית הקברות פר לשז',
         nameLocal: 'Cimetière du Père-Lachaise',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.860649,
         lng: 2.394848,
         description:
@@ -39634,7 +39634,7 @@ export const destinations: Destination[] = [
         id: 'par-versailles',
         name: 'ארמון ורסאי',
         nameLocal: 'Château de Versailles',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.804941,
         lng: 2.121305,
         description:
@@ -39907,7 +39907,7 @@ export const destinations: Destination[] = [
         id: 'edi-castle',
         name: 'טירת אדינבורו',
         nameLocal: 'Edinburgh Castle',
-        category: 'attraction',
+        category: 'historic',
         lat: 55.94861,
         lng: -3.20083,
         description:
@@ -39924,7 +39924,7 @@ export const destinations: Destination[] = [
         id: 'edi-royal-mile',
         name: 'הרויאל מייל',
         nameLocal: 'Royal Mile',
-        category: 'attraction',
+        category: 'historic',
         lat: 55.95056,
         lng: -3.18556,
         description:
@@ -40024,7 +40024,7 @@ export const destinations: Destination[] = [
         id: 'edi-grassmarket',
         name: 'גראסמרקט',
         nameLocal: 'Grassmarket',
-        category: 'attraction',
+        category: 'historic',
         lat: 55.9475,
         lng: -3.19611,
         description:
@@ -40207,7 +40207,7 @@ export const destinations: Destination[] = [
         id: 'lon-tower',
         name: 'מצודת לונדון',
         nameLocal: 'Tower of London',
-        category: 'attraction',
+        category: 'historic',
         lat: 51.508235,
         lng: -0.076303,
         description:
@@ -40225,7 +40225,7 @@ export const destinations: Destination[] = [
         id: 'lon-tower-bridge',
         name: 'גשר המצודה',
         nameLocal: 'Tower Bridge',
-        category: 'attraction',
+        category: 'historic',
         lat: 51.50559,
         lng: -0.07528,
         description:
@@ -40261,7 +40261,7 @@ export const destinations: Destination[] = [
         id: 'lon-westminster',
         name: 'מנזר וסטמינסטר',
         nameLocal: 'Westminster Abbey',
-        category: 'attraction',
+        category: 'historic',
         lat: 51.499373,
         lng: -0.128462,
         description:
@@ -40279,7 +40279,7 @@ export const destinations: Destination[] = [
         id: 'lon-buckingham',
         name: 'ארמון בקינגהאם',
         nameLocal: 'Buckingham Palace',
-        category: 'attraction',
+        category: 'historic',
         lat: 51.500942,
         lng: -0.142887,
         description:
@@ -40330,7 +40330,7 @@ export const destinations: Destination[] = [
         id: 'lon-stpauls',
         name: 'קתדרלת פאולוס הקדוש',
         nameLocal: "St Paul's Cathedral",
-        category: 'attraction',
+        category: 'historic',
         lat: 51.513857,
         lng: -0.098298,
         description:
@@ -40680,7 +40680,7 @@ export const destinations: Destination[] = [
         id: 'sg-chinatown',
         name: 'צ׳יינה טאון',
         nameLocal: 'Chinatown',
-        category: 'attraction',
+        category: 'historic',
         lat: 1.28241,
         lng: 103.844,
         description:
@@ -40698,7 +40698,7 @@ export const destinations: Destination[] = [
         id: 'sg-little-india',
         name: 'ליטל אינדיה',
         nameLocal: 'Little India',
-        category: 'attraction',
+        category: 'historic',
         lat: 1.307238,
         lng: 103.849758,
         description:
@@ -40750,7 +40750,7 @@ export const destinations: Destination[] = [
         id: 'sg-raffles',
         name: 'מלון ראפלס',
         nameLocal: 'Raffles Hotel',
-        category: 'attraction',
+        category: 'historic',
         lat: 1.2948,
         lng: 103.8546,
         description:
@@ -40963,7 +40963,7 @@ export const destinations: Destination[] = [
         id: 'mt-stjohns',
         name: 'הקתדרלה של יוחנן הקדוש',
         nameLocal: "St John's Co-Cathedral",
-        category: 'attraction',
+        category: 'historic',
         lat: 35.89777,
         lng: 14.5125,
         description:
@@ -41016,7 +41016,7 @@ export const destinations: Destination[] = [
         id: 'mt-mdina',
         name: 'מדינה',
         nameLocal: 'Mdina',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.886359,
         lng: 14.403115,
         description:
@@ -41034,7 +41034,7 @@ export const destinations: Destination[] = [
         id: 'mt-hagar-qim',
         name: 'מקדשי חג׳ר קים',
         nameLocal: 'Ħaġar Qim',
-        category: 'attraction',
+        category: 'historic',
         lat: 35.82777,
         lng: 14.441944,
         description:
@@ -41085,7 +41085,7 @@ export const destinations: Destination[] = [
         id: 'mt-cittadella',
         name: 'הציטדלה של ויקטוריה, גוזו',
         nameLocal: 'Cittadella, Victoria (Gozo)',
-        category: 'attraction',
+        category: 'historic',
         lat: 36.046391,
         lng: 14.239445,
         description:
@@ -41219,7 +41219,7 @@ export const destinations: Destination[] = [
         id: 'be-grand-place',
         name: 'הכיכר הגדולה',
         nameLocal: 'Grand-Place / Grote Markt',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.846668,
         lng: 4.3525,
         description:
@@ -41237,7 +41237,7 @@ export const destinations: Destination[] = [
         id: 'be-manneken',
         name: 'מאנקן פיס',
         nameLocal: 'Manneken Pis',
-        category: 'attraction',
+        category: 'historic',
         lat: 50.844986,
         lng: 4.349993,
         description:
@@ -41271,7 +41271,7 @@ export const destinations: Destination[] = [
         id: 'be-waterloo',
         name: 'שדה הקרב של ווטרלו וגבעת האריה',
         nameLocal: "Lion's Mound, Waterloo",
-        category: 'attraction',
+        category: 'historic',
         lat: 50.678333,
         lng: 4.404722,
         description:
@@ -41306,7 +41306,7 @@ export const destinations: Destination[] = [
         id: 'be-ghent',
         name: 'מצודת גראבנסטין, גנט',
         nameLocal: 'Gravensteen, Gent',
-        category: 'attraction',
+        category: 'historic',
         lat: 51.05722,
         lng: 3.720556,
         description:
@@ -41323,7 +41323,7 @@ export const destinations: Destination[] = [
         id: 'be-antwerp-cathedral',
         name: 'קתדרלת גבירתנו, אנטוורפן',
         nameLocal: 'Onze-Lieve-Vrouwekathedraal, Antwerpen',
-        category: 'attraction',
+        category: 'historic',
         lat: 51.220554,
         lng: 4.400556,
         description:
@@ -41582,7 +41582,7 @@ export const destinations: Destination[] = [
         id: 'eg-st-catherine',
         name: 'מנזר סנטה קתרינה',
         nameLocal: "Saint Catherine's Monastery",
-        category: 'attraction',
+        category: 'historic',
         lat: 28.555555,
         lng: 33.976112,
         description:
@@ -41765,7 +41765,7 @@ export const destinations: Destination[] = [
         id: 'om-grand-mosque',
         name: 'מסגד הסולטאן קאבוס הגדול',
         nameLocal: 'Sultan Qaboos Grand Mosque',
-        category: 'attraction',
+        category: 'historic',
         lat: 23.583889,
         lng: 58.389168,
         description:
@@ -41801,7 +41801,7 @@ export const destinations: Destination[] = [
         id: 'om-nizwa',
         name: 'מצודת ניזווא והשוק',
         nameLocal: 'Nizwa Fort & Souq',
-        category: 'attraction',
+        category: 'historic',
         lat: 22.933332,
         lng: 57.530277,
         description:
@@ -41819,7 +41819,7 @@ export const destinations: Destination[] = [
         id: 'om-bahla',
         name: 'מצודת בהלא',
         nameLocal: 'Bahla Fort',
-        category: 'attraction',
+        category: 'historic',
         lat: 22.964167,
         lng: 57.301109,
         description:
@@ -41889,7 +41889,7 @@ export const destinations: Destination[] = [
         id: 'om-sur',
         name: 'סור ומספנות הדאו',
         nameLocal: 'Sur',
-        category: 'attraction',
+        category: 'historic',
         lat: 22.566668,
         lng: 59.528889,
         description:
@@ -42019,7 +42019,7 @@ export const destinations: Destination[] = [
         id: 'mk-kaneo',
         name: 'כנסיית סנט יוחנן בקאנאו',
         nameLocal: 'Church of St John at Kaneo',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.111088,
         lng: 20.788658,
         description:
@@ -42037,7 +42037,7 @@ export const destinations: Destination[] = [
         id: 'mk-samuel',
         name: 'מצודת שמואל',
         nameLocal: "Samuel's Fortress",
-        category: 'attraction',
+        category: 'historic',
         lat: 41.115002,
         lng: 20.791,
         description:
@@ -42055,7 +42055,7 @@ export const destinations: Destination[] = [
         id: 'mk-sveti-naum',
         name: 'מנזר סווטי נאום',
         nameLocal: 'Sveti Naum Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 40.9139,
         lng: 20.74047,
         description:
@@ -42125,7 +42125,7 @@ export const destinations: Destination[] = [
         id: 'mk-heraclea',
         name: 'הרקליאה ליקנסטיס',
         nameLocal: 'Heraclea Lyncestis',
-        category: 'attraction',
+        category: 'historic',
         lat: 41.010834,
         lng: 21.3425,
         description:
@@ -42262,7 +42262,7 @@ export const destinations: Destination[] = [
         id: 'mn-gandan',
         name: 'מנזר גנדן',
         nameLocal: 'Gandantegchinlen Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.923054,
         lng: 106.894997,
         description:
@@ -42280,7 +42280,7 @@ export const destinations: Destination[] = [
         id: 'mn-sukhbaatar',
         name: 'כיכר סוחבאטר',
         nameLocal: 'Sükhbaatar Square',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.918888,
         lng: 106.917503,
         description:
@@ -42297,7 +42297,7 @@ export const destinations: Destination[] = [
         id: 'mn-genghis',
         name: 'פסל הפרש של ג׳ינגיס חאן',
         nameLocal: 'Genghis Khan Equestrian Statue',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.808056,
         lng: 107.529747,
         description:
@@ -42333,7 +42333,7 @@ export const destinations: Destination[] = [
         id: 'mn-erdene-zuu',
         name: 'מנזר ארדנה זו בקרקורום',
         nameLocal: 'Erdene Zuu Monastery, Kharkhorin',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.201668,
         lng: 102.84333,
         description:
@@ -42522,7 +42522,7 @@ export const destinations: Destination[] = [
         id: 'bt-taktsang',
         name: 'מנזר קן הנמר',
         nameLocal: "Paro Taktsang (Tiger's Nest)",
-        category: 'attraction',
+        category: 'historic',
         lat: 27.491911,
         lng: 89.363487,
         description:
@@ -42540,7 +42540,7 @@ export const destinations: Destination[] = [
         id: 'bt-rinpung',
         name: 'דזונג רינפונג בפארו',
         nameLocal: 'Rinpung Dzong',
-        category: 'attraction',
+        category: 'historic',
         lat: 27.426666,
         lng: 89.423302,
         description:
@@ -42557,7 +42557,7 @@ export const destinations: Destination[] = [
         id: 'bt-tashichho',
         name: 'דזונג טאשיצ׳ו בטהימפו',
         nameLocal: 'Tashichho Dzong',
-        category: 'attraction',
+        category: 'historic',
         lat: 27.489721,
         lng: 89.635002,
         description:
@@ -42609,7 +42609,7 @@ export const destinations: Destination[] = [
         id: 'bt-punakha',
         name: 'דזונג פונאכה',
         nameLocal: 'Punakha Dzong',
-        category: 'attraction',
+        category: 'historic',
         lat: 27.581944,
         lng: 89.863052,
         description:
@@ -42740,7 +42740,7 @@ export const destinations: Destination[] = [
         id: 'md-orhei',
         name: 'אורהיי העתיקה',
         nameLocal: 'Orheiul Vechi',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.316666,
         lng: 28.966667,
         description:
@@ -42758,7 +42758,7 @@ export const destinations: Destination[] = [
         id: 'md-milestii',
         name: 'מרתפי מילשטי מיץ׳',
         nameLocal: 'Mileștii Mici',
-        category: 'attraction',
+        category: 'historic',
         lat: 46.900833,
         lng: 28.795856,
         description:
@@ -42793,7 +42793,7 @@ export const destinations: Destination[] = [
         id: 'md-soroca',
         name: 'מצודת סורוקה',
         nameLocal: 'Soroca Fort',
-        category: 'attraction',
+        category: 'historic',
         lat: 48.161217,
         lng: 28.305477,
         description:
@@ -42810,7 +42810,7 @@ export const destinations: Destination[] = [
         id: 'md-capriana',
         name: 'מנזר קפריאנה',
         nameLocal: 'Căpriana Monastery',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.116619,
         lng: 28.510637,
         description:
@@ -42827,7 +42827,7 @@ export const destinations: Destination[] = [
         id: 'md-nativity',
         name: 'קתדרלת המולד',
         nameLocal: 'Nativity Cathedral',
-        category: 'attraction',
+        category: 'historic',
         lat: 47.026054,
         lng: 28.834528,
         description:
@@ -43014,7 +43014,7 @@ export const destinations: Destination[] = [
         id: 'bo-uyuni-town',
         name: 'העיירה אויוני',
         nameLocal: 'Uyuni',
-        category: 'attraction',
+        category: 'historic',
         lat: -20.459665,
         lng: -66.825027,
         description:
@@ -43181,7 +43181,7 @@ export const destinations: Destination[] = [
         id: 'gt-antigua',
         name: 'אנטיגואה גואטמלה',
         nameLocal: 'Antigua Guatemala',
-        category: 'attraction',
+        category: 'historic',
         lat: 14.5575,
         lng: -90.73333,
         description:
@@ -43217,7 +43217,7 @@ export const destinations: Destination[] = [
         id: 'gt-tikal',
         name: 'טיקאל',
         nameLocal: 'Tikal',
-        category: 'attraction',
+        category: 'historic',
         lat: 17.221945,
         lng: -89.623611,
         description:
@@ -43287,7 +43287,7 @@ export const destinations: Destination[] = [
         id: 'gt-flores',
         name: 'פלורס',
         nameLocal: 'Flores, Petén',
-        category: 'attraction',
+        category: 'historic',
         lat: 16.929722,
         lng: -89.89167,
         description:
@@ -43606,7 +43606,7 @@ export const destinations: Destination[] = [
         id: 'pa-casco',
         name: 'קסקו ויכו',
         nameLocal: 'Casco Viejo',
-        category: 'attraction',
+        category: 'historic',
         lat: 8.9525,
         lng: -79.535,
         description:
@@ -43624,7 +43624,7 @@ export const destinations: Destination[] = [
         id: 'pa-canal',
         name: 'תאי מיראפלורס',
         nameLocal: 'Miraflores Locks',
-        category: 'attraction',
+        category: 'historic',
         lat: 8.99657,
         lng: -79.5917,
         description:
@@ -43834,7 +43834,7 @@ export const destinations: Destination[] = [
         id: 'ec-quito',
         name: 'קיטו העתיקה',
         nameLocal: 'Centro Histórico de Quito',
-        category: 'attraction',
+        category: 'historic',
         lat: -0.25,
         lng: -78.5833,
         description:
@@ -44093,7 +44093,7 @@ export const destinations: Destination[] = [
         id: 'mu-portlouis',
         name: 'פורט לואי',
         nameLocal: 'Port Louis',
-        category: 'attraction',
+        category: 'historic',
         lat: -20.164444,
         lng: 57.504166,
         description:
@@ -44343,7 +44343,7 @@ export const destinations: Destination[] = [
         id: 'sc-victoria',
         name: 'ויקטוריה',
         nameLocal: 'Victoria',
-        category: 'attraction',
+        category: 'historic',
         lat: -4.623055,
         lng: 55.452499,
         description:

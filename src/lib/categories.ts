@@ -4,7 +4,14 @@ export const categoryMeta: Record<
   PlaceCategory,
   { label: string; emoji: string; color: string }
 > = {
-  attraction: { label: 'אטרקציה', emoji: '🏛️', color: '#5c46c9' },
+  // The classical-building emoji and the purple stay with the HISTORIC bucket:
+  // it is by far the larger of the two (547 places against 184), so keeping them
+  // there means most pins on most maps do not change colour at all.
+  historic: { label: 'אתר היסטורי', emoji: '🏛️', color: '#5c46c9' },
+  // What is left in 'attraction' is the genuine grab-bag - an opera house, a
+  // funfair, the Dancing House - so it gets a neutral pin rather than a symbol
+  // that would misdescribe half of it.
+  attraction: { label: 'אטרקציה', emoji: '📍', color: '#2f6f9f' },
   museum: { label: 'מוזיאון', emoji: '🖼️', color: '#c23c6f' },
   nature: { label: 'טבע', emoji: '🌿', color: '#0f8c46' },
   viewpoint: { label: 'תצפית', emoji: '🌄', color: '#e07c1e' },
