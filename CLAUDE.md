@@ -9193,3 +9193,133 @@ system-level git protocol this session runs under requires an explicit ask
 before committing, which supersedes this file's own "every session ends
 with commit + push" convention; the diff is sitting in the working tree,
 verified, waiting for Netanel to review and commit himself.
+
+### 2026-08-16/17 - The "do everything" run: PayPal subscription live, zmanim everywhere, trip book, story, group trips - cut short by a PC shutdown
+
+Written retroactively by the next session (hard rule 8 was owed): the
+machine shut down mid-flight and the session left `HANDOFF-NEXT-SESSION.md`
+instead of this entry. Everything below WAS committed and pushed to main
+before the shutdown; the handoff's own warning is worth keeping verbatim -
+**a /teleport attempt wiped uncommitted work once mid-session** and it had
+to be recreated from conversation context and re-verified (tsc + 618 tests)
+before the final push. Commit before any teleport.
+
+**What shipped, seven commits:**
+
+1. **Performance audit fixes** (`9ed35f1`) - an emails N+1, thin rows for
+   the admin dashboard, caches, and a skeleton for the trip screen.
+2. **PayPal premium subscription, live** (`6d61e8d`) - `paypalSubs.ts`,
+   `/api/billing/checkout` now creates a real PayPal Subscription and
+   returns the approval link; activation happens only in the verified
+   webhook; `supabase-paypal-subs.sql` widens the `plan_source` CHECK to
+   include 'paypal' (without it activation fails silently) and adds a
+   support-only `paypal_subscription_id` column.
+3. **Two trip-screen features** (`ca6bf47`): "today" mode (trip in
+   progress → opens on the right day, once, with a "היום · יום N מתוך M"
+   bar) and `ShabbatKosherPanel` + `lib/zmanim.ts` (NOAA astronomical
+   candle-lighting/havdala times in the real local clock via IANA
+   timezones, opt-in when the kosher preference is on). **Both shipped
+   ungated** - the commit title says "לחבילת הפרימיום" but no premium
+   check exists in either; that's framing, not enforcement, and the
+   pricing page must not claim otherwise.
+4. **Zmanim guaranteed catalog-wide** (`8cc3061`) - all 166 destinations
+   resolve a timezone, locked by a test.
+5. **ספר הטיול, free** (`2813a5a`) - print export upgraded: place
+   descriptions per stop + Shabbat annex + kosher annex (opt-in), with the
+   panel and print reading one shared source (`lib/trip/shabbatRows.ts`).
+6. **סיפור הטיול, premium** (`a04ab05`) - the trip becomes a public story
+   page: `supabase-stories.sql`, `lib/server/stories.ts`, `/api/story`,
+   `/story/[slug]` (+`StoryView`), `TripStoryPanel` in TripWorkspace.
+   Creation is premium (enforced server-side in `/api/story`); viewing is
+   free and the slug-only `get_trip_story` RPC exposes published snapshots
+   only. Photos go through a Supabase Storage bucket (`story-photos`) with
+   strict server-side data-URL validation.
+7. **טיול משותף, premium** (`f29126e`) - invite link `/join/<code>`,
+   friends join free (login required - one vote per person), see a live
+   server-built snapshot of the trip and vote 👍/👎 per stop; the organizer
+   sees tallies in `TripGroupPanel`. `supabase-group-trips.sql`,
+   `lib/server/groupTrips.ts` (+4 tests), `/api/group`, `JoinClient`.
+
+**Pricing decisions (Netanel: "price to your liking"):** premium stays
+₪19.90/month and story + group are its content; creation premium-only,
+viewing/joining free - the viewers and joiners are the viral loop; the
+pre-departure check unchanged (₪29.90 standalone, included in premium).
+
+**Left owed to the next session:** full build + lint on the final commit
+(the PC died after tsc + 618 tests but before them), the /premium
+rebundle, this log entry, and live verification - none of the three
+premium features had run against real Supabase, only mocks.
+
+### 2026-08-17 - Closing the handoff: the deferred verification, and /premium finally sells what premium is
+
+This session picked up `HANDOFF-NEXT-SESSION.md` and closed everything in
+it that a session can close. The handoff file itself is deleted - its
+content is absorbed here and in the entry above, and a stale handoff
+claiming "premium rebundle NOT DONE" would mislead the next reader.
+
+**1. The deferred verification passed.** `npm run build` on the untouched
+main (exit 0), `npx eslint` on every file the handoff named
+(groupTrips.ts/.test.ts, api/group/route.ts, join/[code]/*,
+TripGroupPanel.tsx, supabaseAdmin.ts, stories.ts) - zero findings. The
+previous session's final commit was sound; only the proof was missing.
+
+**2. The /premium rebundle - the last planned step of the "do everything"
+directive.** The page kept its inversion (the one-off check leads, per
+entry 2026-08-13 (c)) and the subscription section now sells what the
+subscription actually contains: a three-card strip (📖 סיפור הטיול,
+🤝 טיול משותף, 🛫 הבדיקה כלולה - content, not quotas), the intro reworded
+from "חבילת סוכן חודשית" to "יש בו דברים שקיימים רק למנויים", and the
+open-arithmetic box's closing line now names the content features as the
+other reason to subscribe. `PLAN_FEATURE_ROWS` gained two rows (story,
+group) whose free column says honestly what free gets - viewing and
+joining - because that IS the free half of the feature, not a lack.
+Deliberately NOT claimed for premium: today-mode and the Shabbat panel,
+which shipped ungated (see the entry above). Also fixed while there: the
+`PREMIUM_PRICE_ILS` doc comment and the /premium `page.tsx` metadata
+comment both still said the subscribe button returns "בקרוב" - stale
+since `6d61e8d` made PayPal subscriptions live; both now describe
+reality, and the metadata description mentions the new bundle.
+
+**3. The Supabase state, measured rather than assumed.** With the service
+role key, PostgREST answered 404 for all four new tables (`trip_stories`,
+`trip_group_invites`, `trip_group_members`, `trip_group_votes`) and 400
+for `profiles.paypal_subscription_id` - **none of the three SQL files has
+been run.** DDL cannot go through PostgREST and SQL Editor runs have
+always been Netanel's own action, so this stays with him (list below).
+Consequence: live verification of story/group/PayPal-activation remains
+blocked on that, not on code.
+
+**4. Browser/RTL checks, owed since the features shipped.** Production
+build, headless Edge over CDP, 390px (DPR 2, real mobile metrics) and
+1280px: /premium renders the new trio + both new comparison rows with
+zero horizontal overflow at both widths; /story/<bad-slug> shows the
+orderly "הסיפור לא נמצא" page; /join/<code> logged-out shows the clean
+invitation + login prompt; and a seeded two-day Vienna trip on
+/chat?trip= renders both new panels ("טיול משותף", "סיפור הטיול", each
+tagged פרימיום ★) with honest logged-out states and scrollW exactly 390.
+One harness note worth keeping: a clean `/chat` deliberately resets
+`currentId` (entry "הטיול הפתוח יושב בכתובת"), so a seeded trip does NOT
+open by itself - navigate to `/chat?trip=<id>`; clicking the landing chip
+via CDP `.click()` on a Next Link doesn't navigate in headless Edge.
+
+**Verified:** tsc clean, 618/618 tests, `npm run build` clean twice (before
+and after the rebundle), eslint clean on all touched files, plus the
+browser checks above. The feature-row guard tests (no `$` anywhere,
+premium quotas fit under the internal cap) pass with the new rows.
+
+**Waiting on Netanel, in order:**
+1. Run in the Supabase SQL Editor (all idempotent; `supabase-check.sql`
+   verifies them): `supabase-paypal-subs.sql`, `supabase-stories.sql`,
+   `supabase-group-trips.sql`. Until the first runs, PayPal premium
+   activation fails silently on the old plan_source constraint; until the
+   others, story/group return errors on creation.
+2. Live end-to-end: create story + upload photo + publish + open
+   /story/<slug>; create invite + join from a second account + vote;
+   PayPal sandbox subscription (subscribe → webhook activates → cancel
+   downgrades). His account is owner + permanent premium grant, so the
+   subscribe button will say "already premium" - use another account.
+3. After sandbox testing: remove `PAYPAL_ALLOW_SANDBOX_LIVE_DOMAIN=true`
+   from Vercel + redeploy; create live PayPal keys (PAYPAL_MODE is still
+   `sandbox`). The production webhook URL MUST be
+   https://www.tiyulplus.com/... (with www) - non-www 308-redirects and
+   PayPal drops the delivery.

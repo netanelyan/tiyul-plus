@@ -16,6 +16,12 @@ import { PRICE_ILS, priceLabel } from '@/lib/predeparture';
  * "המסלול המובטח" אמיתי אבל לא מוביל את העמוד: הערך שלו בלתי-נראה עד
  * שיש מספיק תנועה שממצה את התקציב היומי, ולפני השקה זה אף אחד.
  *
+ * מאז 2026-08-17 למנוי יש גם **תוכן משלו**, לא רק מכסות: סיפור הטיול
+ * (הטיול הופך לעמוד ציבורי עם המסלול והתמונות) וטיול משותף (חברים
+ * מצטרפים בקישור, רואים את הטיול חי ומצביעים על עצירות). היצירה
+ * פרימיום; הצפייה וההצטרפות חינם בכוונה - הצופים והמצטרפים הם
+ * המשתמשים הבאים. שני הפיצ'רים נאכפים בשרת (/api/story, /api/group).
+ *
  * הצגת החשבון בגלוי היא הפואנטה: מי שיעשה את החשבון לבד יגיע לאותה
  * מסקנה, אז עדיף שנציג אותו אנחנו - זה קורא כהוגן ולא כתרגיל מכירה.
  * המספרים מחושבים מהקבועים האמיתיים, לא מוקלדים - שינוי מחיר מעדכן
@@ -138,7 +144,8 @@ export default function PremiumClient() {
           <b className="text-night">{twoChecks.toFixed(2)} ₪</b>. שנה של מנוי עולה{' '}
           <b className="text-night">{yearOfPremium.toFixed(2)} ₪</b>. לרוב המטיילים הבדיקה
           החד-פעמית משתלמת בהרבה - וזו גם ההמלצה שלנו. המנוי מתחיל להצדיק את עצמו סביב{' '}
-          {breakEvenTripsPerYear} טיולים בשנה, או כשצריכים את חבילת הסוכן החודשית שלו.
+          {breakEvenTripsPerYear} טיולים בשנה - או כשרוצים את מה שיש רק בו: סיפור הטיול, טיול
+          משותף עם חברים, וחבילת סוכן חודשית משלכם.
         </p>
       </div>
 
@@ -147,8 +154,45 @@ export default function PremiumClient() {
         <h2 className="display text-2xl text-night">מתכננים כל הזמן? בשביל זה המנוי</h2>
         <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-night/60">
           טיול+ פרימיום מיועד למי שהתכנון אצלו שוטף: משפחות שמתכננות כמה טיולים בשנה, מדריכים
-          ומלווי קבוצות, מארגני טיולים. הבדיקה כלולה בלי הגבלה, ויש חבילת סוכן חודשית משלכם.
+          ומלווי קבוצות, מארגני טיולים. חוץ מהמכסות - יש בו דברים שקיימים רק למנויים.
         </p>
+      </div>
+
+      {/*
+        שלושת הפיצ'רים שקיימים רק במנוי - תוכן, לא מכסות. הצפייה
+        וההצטרפות חינם בכוונה (ערוץ ההפצה); מה שנקנה הוא היצירה.
+      */}
+      <div className="mt-6 grid gap-4 sm:grid-cols-3">
+        <div className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
+          <p className="text-2xl" aria-hidden>
+            📖
+          </p>
+          <h3 className="mt-2 font-bold text-night">סיפור הטיול</h3>
+          <p className="mt-1 text-sm leading-relaxed text-night/60">
+            הטיול הופך לעמוד ציבורי יפה עם המסלול, הימים והתמונות שלכם - קישור אחד לשלוח
+            למשפחה ולחברים. כל אחד יכול לצפות; רק מנויים יוצרים.
+          </p>
+        </div>
+        <div className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
+          <p className="text-2xl" aria-hidden>
+            🤝
+          </p>
+          <h3 className="mt-2 font-bold text-night">טיול משותף</h3>
+          <p className="mt-1 text-sm leading-relaxed text-night/60">
+            שולחים קישור הזמנה, החברים מצטרפים בחינם, רואים את הטיול חי ומצביעים על כל עצירה
+            - ואתם רואים מה עבר ומה לא לפני שסוגרים.
+          </p>
+        </div>
+        <div className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
+          <p className="text-2xl" aria-hidden>
+            🛫
+          </p>
+          <h3 className="mt-2 font-bold text-night">הבדיקה כלולה</h3>
+          <p className="mt-1 text-sm leading-relaxed text-night/60">
+            הבדיקה לפני הנסיעה - {priceLabel()} לטיול לכל אחד אחר - כלולה במנוי בלי הגבלה,
+            לכל טיול שתתכננו.
+          </p>
+        </div>
       </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
