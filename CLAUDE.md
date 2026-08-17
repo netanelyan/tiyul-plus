@@ -9897,3 +9897,86 @@ the organizer sees all of it and accepts the suggestion into the trip.
 `sql/supabase-consent.sql`, still outstanding from an earlier session). Optionally
 set `GROUP_NOTIFY_WEBHOOK` - without it the notifications simply log, which is the
 correct behaviour and not a failure.
+
+### 2026-08-17 (d) - The pricing page, and the sentence it was quietly getting wrong
+
+Netanel: update /premium with the group-planning work and make it optimal for
+sales. Two separate jobs turned out to be in that, and the second one is the
+interesting half.
+
+**The undersell.** The page described the subscription's one real feature as
+"friends join, see the trip and vote on the stops". After the morning's work that
+is a quarter of what it does, and voting is the least valuable quarter - the
+things people actually fight about while planning are *why* somebody objected,
+*what they would do instead*, *which dates work* and *who is even coming*. The
+shared trip now gets the full page width and four concrete cards instead of a
+line, with the point stated plainly underneath: **friends pay nothing and never
+subscribe - only the person who creates the link does.** That sentence removes the
+objection ("so I'd be asking five people to pay?") that would otherwise kill the
+feature at the moment somebody considers using it.
+
+---
+
+**The sentence that was wrong, and it was wrong in our favour.** A month of
+subscription is ₪19.90. One pre-departure check is ₪29.90. **The check is included
+in the subscription.** So for a traveller with a single trip who is willing to
+cancel afterwards, the subscription is not merely competitive - it strictly
+dominates: cheaper, and it contains the thing they were about to buy. The page's
+"open arithmetic" box, which exists precisely so a reader does not have to do the
+sums themselves, was recommending the more expensive option to exactly those
+people.
+
+That is now the first line of the box, in bold, ending with "we are telling you
+this even though it earns us less". It is the honest reading and it is also the
+better sale: a subscriber who stays three months is worth more than one check, and
+a page that names the cheaper option is a page people believe on everything else.
+
+**It renders from the two constants and is conditional.** `monthBeatsOneCheck =
+PREMIUM_PRICE_ILS < PRICE_ILS` - if the prices ever cross, the paragraph removes
+itself rather than turning into a false claim. Same discipline as the rest of the
+box, and the reason it exists: the year-total, the two-check total and the
+break-even in trips are all computed, never typed.
+
+**The known trade this creates, recorded rather than engineered around:** somebody
+can subscribe for one month, take checks on every trip they own, and cancel. The
+2026-08-13 (b) entry already accepted that; this page now makes it obvious instead
+of leaving it as something a clever reader discovers. The check costs nothing to
+produce, so the alternative - rate-limiting an included feature against a
+hypothetical opportunist - buys complexity and no money.
+
+---
+
+**The rest is ordinary conversion work, all of it honest.** The headline names the
+count ("two things cost money") instead of one of them. The check card opens with
+the situation rather than the feature list - *"you planned two months ago and you
+fly in two weeks. What changed since?"* The CTA carries the price and the terms
+(`התחלת מנוי · 19.90 ₪ לחודש`, "cancel in one click, no commitment") rather than
+saying "sign up" and making the reader scroll back for the number. A four-question
+FAQ answers what people actually ask before paying - what stays free, do my
+friends pay, what happens to my trips if I cancel, are the monthly quotas enough -
+and the answers are the true ones, including "if you hit a wall while planning a
+real trip, write to us and it will be sorted".
+
+**One gap the screenshot showed that the assertions could not.** The arithmetic
+box tells the reader to subscribe and then gives them nothing to press - the
+button is three sections further down. There is now an in-page link straight to it
+(`#premium-plan`, with `scroll-mt-24` so the sticky header does not eat the
+heading). Reading the rendered page found that; no automated check would have.
+
+**`PLAN_FEATURE_ROWS`** gained the fuller description of the shared trip, so the
+comparison table and the page cannot drift apart - it is the only place the free
+column has to be honest about what free actually gets, and there it says
+"joining and taking part - free".
+
+**Verified:** 637 tests, tsc, build and lint clean, plus **38/38 in a real browser
+at 390px and 1400px** - the four capabilities all present, the price comparison
+rendered from the constants, the CTA carrying its price, the FAQ closed by default
+and its answers rendering when opened, no dollar sign anywhere, no mention of the
+retired story feature, zero horizontal overflow and nothing past the viewport edge
+at either width.
+
+**Worth knowing:** the page now sells the shared trip as the reason to subscribe,
+and that feature does not work until `sql/supabase-group-planning.sql` has been
+run. Until then a subscriber who creates an invite gets the panel's error state -
+so the SQL is now on the critical path for the pricing page being true, not only
+for the feature being complete.

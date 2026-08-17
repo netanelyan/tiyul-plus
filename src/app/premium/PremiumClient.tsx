@@ -8,30 +8,32 @@ import { PLAN_FEATURE_ROWS, PREMIUM_PRICE_ILS } from '@/lib/plans';
 import { PRICE_ILS, priceLabel } from '@/lib/predeparture';
 
 /**
- * The pricing page. **The lead product is the one-off check, not the
- * subscription** - Netanel's decision, and the arithmetic behind it is shown
- * openly on the page itself: someone who travels once or twice a year pays about
- * a quarter of a year's subscription for two checks, and would be right to choose
- * them. The subscription is a secondary option, addressed in explicit words to
- * people who plan all the time - families with several trips a year, guides,
- * group organisers. "The guaranteed lane" is real but does not lead the page: its
- * value is invisible until there is enough traffic to exhaust the daily budget,
- * and before launch that is nobody.
+ * The pricing page.
  *
- * Beyond the quotas the subscription has **content of its own**: the group trip
- * (friends join by link, see the trip live and vote on stops) and the
- * pre-departure check included. Creating the invite is premium; joining and
- * voting are free on purpose - the joiners are the next users. Enforced on the
- * server (/api/group).
+ * **The one-off check leads the page** - Netanel's decision, and the arithmetic
+ * behind it is shown openly rather than argued: anyone who works it out reaches
+ * the same conclusion, so it reads as fair rather than as a sales trick. Every
+ * figure is computed from the real constants, never typed, so a price change
+ * updates the argument by itself.
  *
- * A third feature, the trip story, was retired on 2026-08-17: it rendered the
- * itinerary on a public URL and nothing on it came from the traveller, so it was
- * not worth charging for. See the session log.
+ * **The comparison the page must not hide.** A month of subscription
+ * (PREMIUM_PRICE_ILS) currently costs LESS than a single check (PRICE_ILS), and
+ * the check is included in it. So for a traveller with one trip who is willing to
+ * cancel, the subscription is strictly the better buy - and a page that kept
+ * recommending the one-off without saying so would be selling the more expensive
+ * option to the people it claims to be advising. The comparison is rendered from
+ * the two constants and is CONDITIONAL: if the prices ever cross, the sentence
+ * disappears on its own instead of becoming a lie.
  *
- * Showing the arithmetic openly is the point: anyone who works it out themselves
- * reaches the same conclusion, so it is better that we present it - that reads as
- * fair rather than as a sales trick. The numbers are computed from the real
- * constants, not typed in - a price change updates the arithmetic by itself.
+ * **What the subscription actually contains, as of 2026-08-17**: the shared trip -
+ * which is no longer "friends vote on stops" but a place to plan together
+ * (comments per stop, friends suggesting catalog places, a date poll, RSVP) - and
+ * the pre-departure check included. Creating the invite is premium; joining,
+ * voting, commenting and suggesting are free on purpose, because the joiners are
+ * the next users. Enforced on the server (/api/group), not in this page.
+ *
+ * The trip story was retired on 2026-08-17 - it rendered the itinerary on a public
+ * URL and nothing on it came from the traveller. See the session log.
  *
  * ## Payment status, as of 2026-08-16
  * Both the one-off check and the subscription go through PayPal:
@@ -48,12 +50,13 @@ export default function PremiumClient() {
 
   /*
     The arithmetic a buyer does in their head, made from the constants themselves:
-    a year of subscription against two checks, and the break-even in trips per
-    year. toFixed(2) because these are shekels.
+    a year of subscription against two checks, the break-even in trips per year,
+    and whether one month is cheaper than one check. toFixed(2) - these are shekels.
   */
   const yearOfPremium = PREMIUM_PRICE_ILS * 12;
   const twoChecks = PRICE_ILS * 2;
   const breakEvenTripsPerYear = Math.ceil(yearOfPremium / PRICE_ILS);
+  const monthBeatsOneCheck = PREMIUM_PRICE_ILS < PRICE_ILS;
 
   async function upgrade() {
     if (busy) return;
@@ -88,23 +91,28 @@ export default function PremiumClient() {
       <div className="text-center">
         <p className="text-xs font-bold text-sunset-deep">מחירים</p>
         <h1 className="display mt-1 text-3xl text-night sm:text-4xl">
-          התכנון חינם. לפני היציאה - בדיקה אחת.
+          התכנון חינם. שני דברים עולים כסף.
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-night/60">
-          לתכנן עם הסוכן, לערוך, לשתף ולהדפיס - הכול בחינם. מה שכן עולה כסף: בדיקה לפני
-          הנסיעה לטיול ספציפי, ומנוי חודשי למי שמתכנן כל הזמן.
+          לתכנן עם הסוכן, לערוך, לשתף, להדפיס ולנווט - הכול בחינם, בלי כרטיס אשראי.
+          בתשלום: בדיקה לפני היציאה לטיול מסוים, ומנוי חודשי למי שמתכנן עם עוד אנשים
+          או מתכנן כל הזמן.
         </p>
       </div>
 
       {/* ---------- The lead product: the one-off check ---------- */}
       <div className="relative mt-8 rounded-3xl bg-night p-6 ring-1 ring-night">
         <span className="absolute -top-3 end-5 rounded-full bg-zest px-3 py-1 text-xs font-black text-night">
-          🛫 לרוב המטיילים
+          🛫 לטיול אחד
         </span>
         <h2 className="font-bold text-cream">בדיקה לפני הנסיעה</h2>
         <p className="mt-1 text-2xl font-black text-cream">
           {priceLabel()}
           <span className="text-sm font-semibold text-cream/60"> / לטיול אחד</span>
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-cream/70">
+          תכננתם לפני חודשיים, והטיול בעוד שבועיים. מה השתנה מאז? זה מה שהבדיקה עונה
+          עליו - בבת אחת, על כל הטיול.
         </p>
         <ul className="mt-4 space-y-2.5 text-sm text-cream/80">
           <li className="flex items-start gap-2">
@@ -140,58 +148,116 @@ export default function PremiumClient() {
           </span>
         </div>
         <p className="mt-3 text-[11px] font-medium leading-relaxed text-cream/45">
-          תשלום חד-פעמי מאובטח דרך PayPal - אנחנו לא רואים ולא שומרים פרטי כרטיס. למנויי
-          פרימיום הבדיקה כלולה בלי תשלום נוסף.
+          תשלום חד-פעמי מאובטח דרך PayPal - אנחנו לא רואים ולא שומרים פרטי כרטיס.
         </p>
       </div>
 
       {/* ---------- The arithmetic, in the open ---------- */}
       <div className="mt-4 rounded-2xl bg-shell p-4 ring-1 ring-night/10">
-        <p className="text-sm leading-relaxed text-night/70">
-          <b className="text-night">החשבון, בגלוי:</b> נוסעים פעם-פעמיים בשנה? שתי בדיקות עולות{' '}
-          <b className="text-night">{twoChecks.toFixed(2)} ₪</b>. שנה של מנוי עולה{' '}
-          <b className="text-night">{yearOfPremium.toFixed(2)} ₪</b>. לרוב המטיילים הבדיקה
-          החד-פעמית משתלמת בהרבה - וזו גם ההמלצה שלנו. המנוי מתחיל להצדיק את עצמו סביב{' '}
-          {breakEvenTripsPerYear} טיולים בשנה - או כשרוצים את מה שיש רק בו: טיול משותף עם
-          חברים, וחבילת סוכן חודשית משלכם.
-        </p>
+        <p className="text-sm font-bold text-night">החשבון, בגלוי:</p>
+        <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-night/70">
+          {monthBeatsOneCheck && (
+            <li className="flex items-start gap-2">
+              <span className="mt-0.5 text-sunset-deep">←</span>
+              <span>
+                <b className="text-night">חודש מנוי עולה פחות מבדיקה אחת</b> (
+                {PREMIUM_PRICE_ILS.toFixed(2)} ₪ מול {PRICE_ILS.toFixed(2)} ₪),
+                והבדיקה כלולה בו. אז אם אתם עומדים לקנות בדיקה בודדת - שווה פשוט
+                להירשם לחודש, ולבטל אחר כך אם לא צריך יותר. אנחנו אומרים את זה
+                למרות שזה פחות כסף בשבילנו.{' '}
+                <a href="#premium-plan" className="font-bold text-sunset-deep underline">
+                  לפרטי המנוי ↓
+                </a>
+              </span>
+            </li>
+          )}
+          <li className="flex items-start gap-2">
+            <span className="mt-0.5 text-night/35">•</span>
+            <span>
+              שתי בדיקות בשנה, בלי מנוי: <b className="text-night">{twoChecks.toFixed(2)} ₪</b>.
+              שנה שלמה של מנוי: <b className="text-night">{yearOfPremium.toFixed(2)} ₪</b>.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="mt-0.5 text-night/35">•</span>
+            <span>
+              מנוי שנתי מצדיק את עצמו סביב <b className="text-night">{breakEvenTripsPerYear} טיולים בשנה</b>{' '}
+              - או מהטיול הראשון, אם אתם מתכננים אותו עם עוד אנשים.
+            </span>
+          </li>
+        </ul>
       </div>
 
-      {/* ---------- The subscription: a secondary option, for people who plan all the time ---------- */}
-      <div className="mt-10 text-center">
-        <h2 className="display text-2xl text-night">מתכננים כל הזמן? בשביל זה המנוי</h2>
+      {/* ---------- The subscription ---------- */}
+      <div id="premium-plan" className="mt-10 scroll-mt-24 text-center">
+        <h2 className="display text-2xl text-night">מתכננים עם עוד אנשים? בשביל זה המנוי</h2>
         <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-night/60">
-          טיול+ פרימיום מיועד למי שהתכנון אצלו שוטף: משפחות שמתכננות כמה טיולים בשנה, מדריכים
-          ומלווי קבוצות, מארגני טיולים. חוץ מהמכסות - יש בו דברים שקיימים רק למנויים.
+          משפחה, חברים או קבוצה - הרגע שבו התכנון נשבר הוא בדרך כלל לא התכנון עצמו,
+          אלא הניסיון לתאם אותו: צילומי מסך בקבוצה, שלושה תאריכים שאף אחד לא זוכר,
+          ומישהו שאמר &quot;יש רעיון יותר טוב&quot; ואיש לא מצא איפה זה נכתב.
         </p>
       </div>
 
       {/*
-        The three features that exist only in the subscription - content, not
-        quotas. Viewing and joining are free on purpose (the distribution channel);
-        what is bought is the creating.
+        The shared trip is the reason to subscribe, so it gets the whole width and
+        the concrete list - "friends vote" undersold it badly. Joining is free on
+        purpose: the joiners are the next users.
       */}
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        <div className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
-          <p className="text-2xl" aria-hidden>
+      <div className="mt-6 rounded-3xl bg-shell p-6 ring-1 ring-night/15">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-2xl" aria-hidden>
             🤝
-          </p>
-          <h3 className="mt-2 font-bold text-night">טיול משותף</h3>
-          <p className="mt-1 text-sm leading-relaxed text-night/60">
-            שולחים קישור הזמנה, החברים מצטרפים בחינם, רואים את הטיול חי ומצביעים על כל עצירה
-            - ואתם רואים מה עבר ומה לא לפני שסוגרים.
-          </p>
+          </span>
+          <h3 className="text-lg font-black text-night">טיול משותף - מתכננים ביחד, במקום אחד</h3>
         </div>
-        <div className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
-          <p className="text-2xl" aria-hidden>
+        <p className="mt-2 text-sm leading-relaxed text-night/70">
+          שולחים קישור אחד. כל מי שנכנס רואה את הטיול חי - עם התמונות, התיאורים
+          והמפה - וגם אחרי שתערכו אותו. ואז, במקום ויכוח בוואטסאפ:
+        </p>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+          <li className="rounded-2xl bg-cream/70 p-3 ring-1 ring-night/10">
+            <p className="text-sm font-bold text-night">👍 מצביעים על כל עצירה</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-night/60">
+              אתם רואים בדיוק מה עבר ומה לא - לפני שסוגרים כרטיסים.
+            </p>
+          </li>
+          <li className="rounded-2xl bg-cream/70 p-3 ring-1 ring-night/10">
+            <p className="text-sm font-bold text-night">💬 כותבים למה</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-night/60">
+              תגובה על כל עצירה, ושיחה כללית לצד - &quot;היינו שם, לכו מוקדם&quot;
+              נשמר על העצירה עצמה.
+            </p>
+          </li>
+          <li className="rounded-2xl bg-cream/70 p-3 ring-1 ring-night/10">
+            <p className="text-sm font-bold text-night">💡 מציעים מקומות</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-night/60">
+              חבר בוחר מקום מהקטלוג ומסביר למה. אישור אחד שלכם - והוא נכנס לטיול.
+            </p>
+          </li>
+          <li className="rounded-2xl bg-cream/70 p-3 ring-1 ring-night/10">
+            <p className="text-sm font-bold text-night">📅 מסכמים תאריכים ומי מגיע</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-night/60">
+              מציעים כמה תאריכים, כל אחד מסמן מה מתאים, ורואים את החפיפה ומי חסום.
+            </p>
+          </li>
+        </ul>
+        <p className="mt-4 rounded-xl bg-lagoon/10 px-3 py-2 text-xs font-semibold text-night/75">
+          לחברים זה חינם לגמרי - הם לא נרשמים למנוי ולא משלמים כלום. רק מי שיוצר
+          את הקישור צריך מנוי.
+        </p>
+      </div>
+
+      <div className="mt-4 rounded-2xl bg-shell p-5 ring-1 ring-night/10">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xl" aria-hidden>
             🛫
-          </p>
-          <h3 className="mt-2 font-bold text-night">הבדיקה כלולה</h3>
-          <p className="mt-1 text-sm leading-relaxed text-night/60">
-            הבדיקה לפני הנסיעה - {priceLabel()} לטיול לכל אחד אחר - כלולה במנוי בלי הגבלה,
-            לכל טיול שתתכננו.
-          </p>
+          </span>
+          <h3 className="font-bold text-night">והבדיקה לפני הנסיעה - כלולה</h3>
         </div>
+        <p className="mt-1 text-sm leading-relaxed text-night/60">
+          {priceLabel()} לטיול לכל אחד אחר, כלולה במנוי בלי הגבלה - לכל טיול שתתכננו,
+          כל חודש.
+        </p>
       </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -219,7 +285,7 @@ export default function PremiumClient() {
         </div>
 
         {/* Premium */}
-        <div className="rounded-3xl bg-shell p-6 ring-1 ring-night/15">
+        <div className="rounded-3xl bg-shell p-6 ring-2 ring-sunset/40">
           <h3 className="font-bold text-night">★ פרימיום</h3>
           <p className="mt-1 text-2xl font-black text-night">
             {PREMIUM_PRICE_ILS.toFixed(2)} ₪
@@ -240,13 +306,18 @@ export default function PremiumClient() {
               ★ אתם בפרימיום - תודה שאתם איתנו
             </p>
           ) : (
-            <button
-              onClick={upgrade}
-              disabled={busy}
-              className="mt-5 w-full rounded-xl bg-night px-6 py-3 font-bold text-cream transition hover:bg-night/85 disabled:opacity-60"
-            >
-              {busy ? 'רגע…' : 'הרשמה לפרימיום'}
-            </button>
+            <>
+              <button
+                onClick={upgrade}
+                disabled={busy}
+                className="mt-5 w-full rounded-xl bg-sunset px-6 py-3 font-bold text-cream transition hover:bg-sunset-deep disabled:opacity-60"
+              >
+                {busy ? 'רגע…' : `התחלת מנוי · ${PREMIUM_PRICE_ILS.toFixed(2)} ₪ לחודש`}
+              </button>
+              <p className="mt-2 text-center text-[11px] font-medium text-night/50">
+                ביטול בלחיצה, בכל רגע · בלי התחייבות
+              </p>
+            </>
           )}
         </div>
       </div>
@@ -257,10 +328,59 @@ export default function PremiumClient() {
         </p>
       )}
 
+      {/* ---------- The questions people actually ask before paying ---------- */}
+      <div className="mt-10">
+        <h2 className="display text-center text-xl text-night">שאלות שנשאלות לפני שמשלמים</h2>
+        <div className="mt-4 space-y-3">
+          <details className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
+            <summary className="cursor-pointer text-sm font-bold text-night">
+              מה בעצם נשאר חינם?
+            </summary>
+            <p className="mt-2 text-sm leading-relaxed text-night/65">
+              כמעט הכול: שיחה עם הסוכן, בניית מסלול, עריכה, המפה, קטלוג היעדים ושכבת
+              הכשרות, קישור שיתוף לצפייה, הדפסה ו-PDF, וניווט לכל יום. גם להצטרף לטיול
+              משותף של מישהו אחר, להצביע, להגיב ולהציע מקומות - הכול חינם. בתשלום: יצירת
+              הטיול המשותף, והבדיקה לפני הנסיעה.
+            </p>
+          </details>
+          <details className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
+            <summary className="cursor-pointer text-sm font-bold text-night">
+              החברים שלי צריכים לשלם או להירשם?
+            </summary>
+            <p className="mt-2 text-sm leading-relaxed text-night/65">
+              לא לשלם. הם כן מתחברים עם המייל שלהם (קוד חד-פעמי, בלי סיסמה) - רק כדי
+              שנדע מי הצביע מה, ושכל אחד יצביע פעם אחת.
+            </p>
+          </details>
+          <details className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
+            <summary className="cursor-pointer text-sm font-bold text-night">
+              מה קורה לטיולים שלי אם אבטל?
+            </summary>
+            <p className="mt-2 text-sm leading-relaxed text-night/65">
+              כלום. הטיולים נשארים, ממשיכים להיערך ולהישלח כרגיל, והחשבון חוזר לתוכנית
+              החינמית. מה שנסגר הוא יצירת טיול משותף חדש והבדיקה הכלולה.
+            </p>
+          </details>
+          <details className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
+            <summary className="cursor-pointer text-sm font-bold text-night">
+              המכסות במנוי חודשיות - זה יספיק לי?
+            </summary>
+            <p className="mt-2 text-sm leading-relaxed text-night/65">
+              הן מחושבות סביב שני טיולים אמיתיים בחודש, כולל הרבה מקום לעריכות ושאלות
+              באמצע. הן קיימות כדי למנוע שימוש לרעה, לא כדי לעצור מישהו באמצע תכנון -
+              ואם נתקלתם בקיר בתכנון אמיתי, כתבו לנו וזה ייפתר.
+            </p>
+          </details>
+        </div>
+      </div>
+
       <p className="mt-6 text-center text-xs leading-relaxed text-night/45">
-        התשלום מאובטח דרך PayPal - אנחנו לא רואים ולא שומרים פרטי אשראי. את המנוי אפשר לבטל
-        בכל רגע, והתוכנית החינמית חוזרת לפעול כרגיל. המכסות נועדו למנוע שימוש לרעה - לא נעצור
-        אף אחד באמצע תכנון טיול אמיתי.
+        התשלום מאובטח דרך PayPal - אנחנו לא רואים ולא שומרים פרטי אשראי. את המנוי אפשר
+        לבטל בכל רגע והתוכנית החינמית חוזרת לפעול כרגיל.{' '}
+        <Link href="/refunds" className="underline hover:text-night/70">
+          ביטולים והחזרים
+        </Link>
+        .
       </p>
     </div>
   );

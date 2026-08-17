@@ -369,8 +369,11 @@ export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string }
     premium: 'כלולה, בלי הגבלה',
   },
   {
-    label: 'טיול משותף - חברים רואים את הטיול ומצביעים',
-    free: 'הצטרפות והצבעה בחינם',
+    // Named by what it does, not by what it is called: "shared trip" alone means
+    // nothing to somebody who has not seen it, and the four verbs are the reason
+    // to pay.
+    label: 'טיול משותף - הצבעות, תגובות, הצעות מקומות ותאריכים',
+    free: 'הצטרפות והשתתפות מלאה - בחינם',
     premium: 'יצירת קישור הזמנה לחברים',
   },
   {
