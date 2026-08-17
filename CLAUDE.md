@@ -10154,3 +10154,44 @@ same sentence twice on one page reads as a template rather than as writing.
 **Verified:** 48/48 in a real browser at 390px and 1400px (two new assertions -
 the check renders as a block and not a footnote, and the standalone section names
 the shared trip as subscription-only), 638 tests, tsc, build and lint clean.
+
+### 2026-08-17 (h) - Two tall columns, and a standalone card for a product that has no standalone price
+
+Netanel, with a screenshot: *"2 high blocks, not fat. also below that - 2 options
+for the check alone, and the second thing alone"*.
+
+**The layout half is straightforward and it was a real defect.** The two paid
+products were stacked full width, so each was a wide slab and the price at the
+top of the card sat a screen away from the CTA at the bottom - a reader had to
+scroll to discover the subscription contains two things at all. They are now a
+two-column grid, each column tall and narrow, both visible in one eyeful. The
+four capability tiles inside the shared-trip column stack instead of pairing up,
+which is what makes that column tall rather than square. `h-full` on both so a
+shorter column does not leave a ragged edge.
+
+**The second half needed a decision I did not make.** "The second thing alone"
+asks for the shared trip to be buyable on its own, and it has no price. Two
+reasons it was not simply invented:
+
+1. **It is a business decision.** A number typed into a pricing page is a
+   commitment, and this one interacts with the subscription: at any price below
+   about two months it is strictly better than subscribing, and at any price
+   above it nobody buys it.
+2. **The subscription would lose its reason to renew.** The shared trip is the
+   only thing here that is worth paying for every month rather than once. Selling
+   it per trip converts a recurring product into a transactional one, which is a
+   different business, not a different card.
+
+So the section now has **two cards, one per product, mirroring the card above**:
+the check with its real price and its real route to purchase, and the shared trip
+saying plainly that it is not sold per trip, why (it is the heart of the
+subscription), what it contains, and pointing back up to the plan - with the
+already-true line that one month costs less than a single check. If a standalone
+price is ever set, that card is where the number goes and nothing else moves.
+
+**Verified:** 50/50 in a real browser at 390px and 1400px (two new assertions -
+two standalone cards exist, and the shared-trip card is honest about having no
+one-off price), 638 tests, tsc, build and lint clean. The rendered page was looked
+at, at 1100px, which is how the first screenshot attempt was caught: the clip fell
+outside the emulated viewport and showed an empty band where the cards are, and
+the cards were in the DOM the whole time.
