@@ -13,15 +13,16 @@ const ASK_STARTERS = [
 ];
 
 /**
- * `/ask` - שיחה חופשית עם הסוכן, בלי טיול. הכניסה הקלה לאתר: שואלים,
- * מקבלים תשובה אמיתית מהקטלוג, וזהו - אין כאן מסלול, מפה או התחברות.
+ * `/ask` - a free conversation with the agent, with no trip. The easy way into the site: you
+ * ask, you get a real answer from the catalog, and that is it - there is no itinerary, no map
+ * and no login here.
  *
- * `useFreeChat` הוא זה ששולח `trip: null` לאורך כל השיחה, כך שהסוכן
- * לעולם לא יוצר טיול מעצמו כאן - ראו ההסבר שם ובפרומפט המערכת
- * ("CREATING THE FIRST TRIP NEEDS A CLEAR YES"). ברגע שהוא כן נוצר -
- * כי המשתמש ביקש, או קיבל את ההצעה של הסוכן - `builtTripId` מתמלא
- * וממנו והלאה זו כבר עבודה של `/chat`: מנווטים לשם, עם השיחה שכבר
- * שם (useFreeChat שמר אותה תחת מזהה הטיול, לפני שהניווט קרה).
+ * `useFreeChat` is what sends `trip: null` throughout the conversation, so the agent never
+ * creates a trip by itself here - see the explanation there and in the system prompt
+ * ("CREATING THE FIRST TRIP NEEDS A CLEAR YES"). The moment one is created - because the user
+ * asked, or accepted the agent's offer - `builtTripId` is filled, and from then on this is
+ * `/chat`'s job: we navigate there, with the conversation already there (useFreeChat stored it
+ * under the trip id, before the navigation happened).
  */
 export default function AskClient() {
   const chat = useFreeChat();

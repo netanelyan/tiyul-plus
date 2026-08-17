@@ -1,8 +1,8 @@
 /**
- * מחוון "חושב/טוען" משותף - שלוש נקודות קופצות (bg-current, כך שהצבע
- * יורש מהטקסט הסובב) במקום טקסט סטטי שנראה תקוע. מכבד prefers-reduced-
- * motion (ראו globals.css) - במקום קפיצה, הנקודות נשארות במקום בגוון
- * קבוע אך ברור מבחינה חזותית.
+ * A shared "thinking/loading" indicator - three bouncing dots (bg-current, so the colour is
+ * inherited from the surrounding text) instead of static text that looks stuck. Respects
+ * prefers-reduced-motion (see globals.css) - instead of bouncing, the dots stay put in a fixed but
+ * visually clear shade.
  */
 export default function ThinkingIndicator({
   label,

@@ -1,19 +1,19 @@
 import { thumbSrcSet } from '@/lib/photo';
 
 /**
- * תמונת הרקע של כרטיס יעד/עיר - כ`<img>` ולא כ-`background-image`.
+ * The background photo of a destination/city card - as an `<img>` and not as a `background-image`.
  *
- * **זה לא רפקטור קוסמטי.** `background-image` בכלל לא נטענת בעצלתיים,
- * ולכן דף `/countries` שלח 166 בקשות תמונה ברגע הפתיחה, לפני שהמשתמש
- * גלל פיקסל אחד - בערך 8-14 מגה על טלפון. `loading="lazy"` על `<img>`
- * מוריד את זה לכמה כרטיסים שנראים במסך, ו-`srcSet` נותן למסך רגיל
- * להוריד 250/330 במקום 500.
+ * **This is not a cosmetic refactor.** A `background-image` is not lazily loaded at all, so the
+ * `/countries` page sent 166 image requests the moment it opened, before the user had scrolled a
+ * single pixel - roughly 8-14 MB on a phone. `loading="lazy"` on an `<img>` brings that down to
+ * the few cards visible on screen, and `srcSet` lets an ordinary screen download 250/330 instead
+ * of 500.
  *
- * הגרדיאנט הכהה נשאר שכבה נפרדת מעל התמונה, עם בדיוק אותם ערכים כמו
- * קודם, כדי שהכרטיס ייראה זהה. כשאין תמונה - `photo-bg` לבדה מציירת
- * את גרדיאנט המותג, בדיוק כמו קודם.
+ * The dark gradient stays a separate layer above the image, with exactly the same values as
+ * before, so the card looks identical. When there is no photo, `photo-bg` alone draws the brand
+ * gradient, exactly as before.
  */
-/** ברירת המחדל היא בדיוק הגרדיאנט שהיה על כרטיסי היעדים */
+/** The default is exactly the gradient that was on the destination cards */
 const DEFAULT_OVERLAY = 'linear-gradient(180deg, rgba(15,14,26,0) 40%, rgba(15,14,26,0.72) 100%)';
 
 export default function CardPhoto({
@@ -27,7 +27,7 @@ export default function CardPhoto({
   photo?: string;
   className?: string;
   sizes?: string;
-  /** null = בלי שכבת כהות (כשהכרטיס מצייר גרדיאנט משלו) */
+  /** null = no darkening layer (when the card draws a gradient of its own) */
   overlay?: string | null;
   imgClassName?: string;
   children?: React.ReactNode;

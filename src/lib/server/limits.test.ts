@@ -11,7 +11,7 @@ test('חלון קבוע: עד max, ואז חסום - וגם בקשה חסומה 
   resetLimitsForTest();
   for (let i = 0; i < 3; i++) assert.ok(checkLimit('b', 'x', 3, 60_000).ok, `בקשה ${i + 1}`);
   assert.equal(checkLimit('b', 'x', 3, 60_000).ok, false);
-  // ממשיך להיות חסום - מציף שלוחץ שוב לא מרוויח כלום
+  // Stays blocked - a flooder who clicks again gains nothing
   assert.equal(checkLimit('b', 'x', 3, 60_000).ok, false);
 });
 
@@ -35,7 +35,7 @@ test('החלון מתאפס כשעובר זמנו', () => {
   assert.equal(checkLimit('b', 'x', 1, 1).ok, false);
   const until = Date.now() + 5;
   while (Date.now() < until) {
-    /* המתנה קצרה כדי שהחלון של 1ms יפוג */
+    /* a short wait so the 1ms window expires */
   }
   assert.ok(checkLimit('b', 'x', 1, 1).ok, 'חלון חדש');
 });
@@ -48,7 +48,7 @@ test('פדיון קוד: חמישה ניסיונות בשעה, ואז חסום',
 });
 
 test('מכסת פדיון הקוד אינה תלויה בתוכנית - פרימיום לא קונה זכות לנחש', () => {
-  // אין שדה כזה ב-PlanLimits, וזה בכוונה. הטסט מתעד את ההחלטה.
+  // There is no such field in PlanLimits, and that is deliberate. The test documents the decision.
   assert.equal('promoAttemptsPerHour' in PLAN_LIMITS.premium, false);
   assert.ok(PROMO_ATTEMPTS_PER_DAY > PROMO_ATTEMPTS_PER_HOUR);
 });

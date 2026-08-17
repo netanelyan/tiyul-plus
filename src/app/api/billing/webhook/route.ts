@@ -7,13 +7,13 @@ import {
 import { invalidatePlanCache } from '@/lib/server/identity';
 
 /**
- * ה-webhook של Stripe - הדרך היחידה שעמודת plan משתנה.
+ * Stripe's webhook - the only way the plan column changes.
  *
- * checkout.session.completed  → plan='premium' (+ שמירת customer id)
- * customer.subscription.deleted / updated עם סטטוס לא-פעיל → plan='free'
+ * checkout.session.completed  -> plan='premium' (+ storing the customer id)
+ * customer.subscription.deleted / updated with an inactive status -> plan='free'
  *
- * החתימה מאומתת ידנית מול STRIPE_WEBHOOK_SECRET; בלי חתימה תקפה - 400,
- * בלי לגעת בכלום. אירועים לא מוכרים מקבלים 200 (Stripe שולח עשרות סוגים).
+ * The signature is verified manually against STRIPE_WEBHOOK_SECRET; with no valid signature -
+ * 400, and nothing is touched. Unrecognised events get a 200 (Stripe sends dozens of kinds).
  */
 
 interface StripeEvent {
@@ -76,6 +76,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, reason: 'no-user' });
   }
 
-  // אירוע שלא מטופל - מאשרים כדי ש-Stripe לא ינסה שוב לנצח
+  // An event we do not handle - acknowledge it so Stripe does not retry forever
   return NextResponse.json({ received: true });
 }

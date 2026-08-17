@@ -4,7 +4,7 @@ import { countries } from '@/data/countries';
 /**
  * ---------- Who decided this was Bratislava? ----------
  *
- * Netanel typed a misspelled city name ("ברסלוונה"). The agent quietly decided
+ * Netanel typed a misspelled city name. The agent quietly decided
  * it was Bratislava, built a two-day route and created a trip. Not a single
  * line of code was involved in that decision: `findDestination` requires an
  * exact substring match, so it recognized nothing - **the name interpretation
@@ -45,7 +45,7 @@ const FINALS: Record<string, string> = { ך: 'כ', ם: 'מ', ן: 'נ', ף: 'פ',
  * ("in Barcelona", "to Vienna" as one word), and without stripping them every
  * edit distance starts one character in debt.
  *
- * **The full form is kept too**: "Morocco" (מרוקו) starts with a mem that is
+ * **The full form is kept too**: some country names begin with a letter that is
  * NOT a prefix letter, so the comparison runs against both forms and the
  * better of the two is taken.
  */
@@ -65,8 +65,8 @@ export function normalizeName(s: string): string {
 function forms(token: string): string[] {
   const n = normalizeName(token);
   const out = [n];
-  // From 4 characters up, because "in Japan" (ביפן) is four letters and
-  // "Japan" (יפן) is the answer. In the version with the threshold at 5, the
+  // From 4 characters up, because a prefixed "in Japan" is four letters and
+  // "Japan" is the answer. In the version with the threshold at 5, the
   // traveler who wrote "a week in Japan" got 'I understood Japan (you wrote
   // "in Japan")'. Down to two letters, because words like "and to Jerusalem"
   // or "and in Vienna" are ordinary Hebrew.
@@ -195,8 +195,8 @@ export function isExactName(token: string): boolean {
 /**
  * Common words that survive the filtering and can land close to a catalog
  * name. Every row here was measured on real sentences, not guessed: "visa"
- * (ויזה) landed on Vienna, "recommendation" (המלצה) on Malta, "history"
- * (היסטוריה) on Istria.
+ * landed on Vienna, "recommendation" on Malta, "history"
+ * on Istria.
  *
  * **The list is a noise filter, not the guarantee.** The guarantee is
  * `cityGate`, which blocks only when the tool picked a city related to the
@@ -218,7 +218,7 @@ const STOPWORDS = new Set(
   ].map(normalizeName),
 );
 
-/** A stopword in any of the word's forms - "at night" (בלילה) is derived to "night" (לילה) and rejected thanks to it */
+/** A stopword in any of the word's forms - a prefixed "at night" is derived to "night" and rejected thanks to it */
 const isStopword = (token: string): boolean => forms(token).some((f) => STOPWORDS.has(f));
 
 /* ---------- The verdict ---------- */
@@ -283,7 +283,7 @@ function bestMatches(token: string): { slug: string; label: string; dist: number
  *    farther from it.
  *
  * What remains `many` is exactly the case that needs it: **a tie.** The
- * misspelling "Viana" (ויאנה) is one error away from both Vienna and Vilnius,
+ * misspelling "Viana" is one error away from both Vienna and Vilnius,
  * and there is no basis whatsoever for choosing.
  */
 export function resolveToken(token: string): NameVerdict | null {

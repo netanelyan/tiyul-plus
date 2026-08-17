@@ -60,9 +60,9 @@ with expected(file, kind, obj) as (
     -- supabase-admin-dash.sql (owner dashboard: export counter + indexes)
     ('supabase-admin-dash.sql','table',  'public.app_events'),
     ('supabase-admin-dash.sql','func',   'public.bump_event'),
-    -- הפונקציה קיימת זה לא מספיק: הרשימה הסגורה בגוף שלה התרחבה
-    -- (אירועי הצמיחה, 2026-08-13). גרסה ישנה בולעת אותם בשקט - אפסים
-    -- שנראים כמו שבוע שקט. fnbody בודק שהגוף מכיל את הסוג החדש.
+    -- The function existing is not enough: the closed list in its body was extended
+    -- (the growth events, 2026-08-13). An old version swallows them silently - zeros
+    -- that look like a quiet week. fnbody checks that the body contains the new kind.
     ('supabase-admin-dash.sql','fnbody', 'public.bump_event:trip_created'),
 
     -- supabase-paypal-subs.sql (premium subscription via PayPal)
@@ -100,10 +100,10 @@ checked as (
     case e.kind
       when 'table'  then to_regclass(e.obj) is not null
       when 'view'   then to_regclass(e.obj) is not null
-      -- אינדקס הוא relation בדיוק כמו טבלה - אותה בדיקה עובדת
+      -- An index is a relation exactly like a table - the same check works
       when 'index'  then to_regclass(e.obj) is not null
-      -- 'schema.func:needle' - הפונקציה קיימת *וגם* גוף הקוד שלה מכיל
-      -- את המחרוזת. ככה מזהים פונקציה שרצה בגרסה ישנה של הקובץ.
+      -- 'schema.func:needle' - the function exists *and* its body contains the
+      -- string. That is how an old version of the file still running is detected.
       when 'fnbody' then exists (
         select 1 from pg_proc p
         join pg_namespace n on n.oid = p.pronamespace

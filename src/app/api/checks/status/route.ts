@@ -5,14 +5,15 @@ import { findForUserTrip } from '@/lib/server/purchases';
 import { postAlert } from '@/lib/server/alert';
 
 /**
- * GET → מצב הרכישה עבור טיול, לסקר אחרי חזרה מ-PayPal ולתצוגת
- * "כבר נרכש - רואים תוצאה, לא הצעה".
+ * GET -> the purchase state for a trip, for polling after returning from PayPal and for the
+ * "already purchased - you see a result, not an offer" display.
  *
- * **גם מנגנון הנראות ל"תקוע":** אם עברו יותר מ-3 דקות ועדיין `pending`,
- * זה בדיוק הרגע שהמטייל יושב ומחכה - ההתראה יוצאת כאן, פעם אחת לרכישה,
- * ולא ממתינה למישהו שיפתח את /admin. ה-3-דקות הזה משלים ולא מחליף את
- * הכרטיס באדמין: מטייל שסגר את הטאב לפני שהספיק לסקר לא יפעיל את זה,
- * ואז /admin (שמסמן רכישות תקועות מעל 15 דקות בכל טעינה) הוא הרשת השנייה.
+ * **Also the visibility mechanism for "stuck":** if more than 3 minutes have passed and it
+ * is still `pending`, that is exactly the moment the traveller is sitting there waiting - the
+ * alert goes out here, once per purchase, and does not wait for somebody to open /admin. That
+ * 3-minute rule complements rather than replaces the admin card: a traveller who closed the
+ * tab before polling will not trigger it, and then /admin (which flags purchases stuck for
+ * more than 15 minutes on every load) is the second net.
  */
 
 const POLL_ALERT_AFTER_MS = 3 * 60_000;
@@ -45,6 +46,6 @@ export async function GET(request: Request) {
     }
     return NextResponse.json({ status: 'pending' });
   }
-  // failed / revoked - מבחינת הלקוח זה כמו "לא נרכש", אפשר להציע שוב
+  // failed / revoked - from the client's point of view this is like "not purchased", it can be offered again
   return NextResponse.json({ status: 'none' });
 }

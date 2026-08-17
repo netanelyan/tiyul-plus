@@ -9331,3 +9331,77 @@ premium quotas fit under the internal cap) pass with the new rows.
    `sandbox`). The production webhook URL MUST be
    https://www.tiyulplus.com/... (with www) - non-www 308-redirects and
    PayPal drops the delivery.
+
+### 2026-08-17 (b) - English-only developer notes: 2,368 comment lines, and a guard that was blind to a fifth of the repo
+
+Netanel: no Hebrew in any note in any file - comments English-only, and Claude
+always commits in English. Hard rule 9 (added earlier the same day) is the
+policy; this entry is the sweep that made the codebase match it.
+
+**Scale: 2,368 Hebrew comment lines across 146 files, now zero.** Not a
+mechanical translation - these comments are the densest design documentation in
+the project (the `chat/route.ts` header alone is 352 lines explaining model
+routing, escalation and the two-wallet budget), so each was rewritten as English
+prose that keeps the reasoning, the measured numbers and the named incidents.
+
+**Method, because a 2,368-line hand-edit needs one.** A line-range patch
+pipeline: a scanner reusing the guard's own detection prints the offending
+runs, a JSON patch supplies replacement blocks by line range, and an applier
+splices them bottom-up per file with an overlap check. The point is that I only
+ever WRITE English - I never retype the Hebrew - so a transcription error is
+impossible by construction. `tsc` after every batch, four checkpoint commits.
+
+**What stays Hebrew, deliberately:** UI copy, catalog data, test names and test
+fixture strings. The applier enforces exactly that distinction - its first
+version rejected any Hebrew in a replacement, and it fired on
+`dolomites: { name: 'הדולומיטים' }, // no figure - deliberately`, where the
+Hebrew is *test data* and only the trailing comment is a note. The guard now
+checks the comment portion only, using the same rule as the scan.
+
+---
+
+**Two real defects in the guard test itself, both found by disbelieving it.**
+
+**1. `accept="image/*"` turned on block-comment mode and never turned it off.**
+The tracker tested for `/*` anywhere on a line, so a JSX MIME attribute in
+`AccountClient.tsx` made every subsequent line count as a comment - and seven
+Hebrew *UI strings* below it were reported as Hebrew comments. I nearly
+"translated" `aria-label="בחירת קובץ תמונה"`, which would have shipped an
+English accessibility label into a Hebrew RTL product. The opener must start a
+line; that is how block comments are actually written here, and it makes the
+check both safe and exact. **This is the fixture-before-code lesson again: the
+surprising reading was the tool, not the file.**
+
+**2. The guard was blind to 21 files - and they were the ones full of Hebrew.**
+`SCAN_DIRS = ['src','scripts','public','supabase']`, but there is no `supabase/`
+directory: the 21 `supabase-*.sql` files live at the **repo root**, along with
+`next.config.ts`. So 81 Hebrew comment lines sat permanently outside the guard
+while it passed green. It now walks the whole repo with a denylist of build
+output - an allowlist of source directories is precisely what could not see a
+new location, and a denylist cannot make that mistake again.
+
+**The guard was then verified to actually guard**, not merely to pass: injecting
+one Hebrew comment into `next.config.ts` fails the test and names
+`next.config.ts:19` - i.e. it now catches a regression at the repo root, exactly
+where it was previously blind. Restored, re-verified green.
+
+---
+
+**A note on quoted Hebrew inside comments.** Several comments quoted Hebrew as
+evidence - real model output ("I have arranged a weekend in Barcelona for you:"),
+misspellings that resolved to the wrong city, the `hePrefix` doubling rule. A
+quote reproduced verbatim would reintroduce Hebrew, so these are rendered as
+English glosses, and `hebrew.ts`'s examples are transliterated
+(`prefix B + "Vina" -> "BVVina"`) so the rule they document still reads. Nothing
+was dropped to make the sweep easier.
+
+**Verified:** 619/619 tests, `tsc` clean, `npm run build` clean (303 pages),
+and lint measured A/B on the exact changed-file set - **8 errors before, 8
+after**, all pre-existing (`react-hooks/set-state-in-effect`, plus the
+`prefer-const` in `placeResolve.test.ts` this log already records). Zero Hebrew
+comment lines repo-wide.
+
+**One thing worth knowing for the next session:** writing these patch files
+through a bash heredoc mangles backslashes (`'\'` arrived as `'\'`), which cost
+three failed script writes. Use the Write tool for any file containing regex or
+escape sequences; heredocs are fine only for plain prose.

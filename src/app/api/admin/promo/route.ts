@@ -2,10 +2,10 @@ import { requireRole, denied, badRequest, ok, audit } from '@/lib/server/admin';
 import { eq } from '@/lib/server/pgrest';
 import { adminInsert, adminSelect, adminUpdate } from '@/lib/server/supabaseAdmin';
 
-/** אותיות וספרות בלבד, באנגלית - קוד שאפשר להכתיב בטלפון */
+/** Letters and digits only, in Latin script - a code that can be dictated over the phone */
 const CODE_OK = /^[A-Z0-9]{3,24}$/;
 
-/** GET: כל הקודים. POST: יצירה. PATCH: כיבוי/הדלקה. */
+/** GET: all the codes. POST: create. PATCH: enable/disable. */
 export async function GET(req: Request) {
   const actor = await requireRole(req, 'admin');
   if (!actor) return denied();
@@ -45,8 +45,8 @@ export async function POST(req: Request) {
     expires_at,
     created_by: actor.userId,
   });
-  // מפתח ראשי כפול -> null. עדיף להגיד "הקוד תפוס" מלדרוס קוד קיים
-  // שאולי כבר חולק לאנשים.
+  // A duplicate primary key -> null. Better to say "that code is taken" than to overwrite an
+  // existing code that may already have been handed out to people.
   if (!rows) return badRequest('code_taken_or_db_unavailable');
 
   await audit(actor, 'create_promo', {}, { code, days, max, expires_at, note: note ?? undefined });

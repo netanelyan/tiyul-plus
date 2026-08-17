@@ -2,8 +2,8 @@ import { test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 
 /**
- * הלוגיקה של הטיול המשותף מול מוק Supabase - ההצטרפות, הפקיעה,
- * ההצבעה על עצירה אמיתית בלבד, וסיכום ההצבעות.
+ * The group trip's logic against a Supabase mock - joining, expiry, voting on a real stop only, and
+ * the vote tally.
  */
 
 const ENV = ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY'] as const;

@@ -1,8 +1,8 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // מכבה את אינדיקטור הפיתוח הצף של Next - הוא נראה כלשונית שבורה בקצה
-  // המסך כשבודקים את שרת הפיתוח מטלפון ברשת המקומית. dev בלבד ממילא.
+  // Turns off Next's floating dev indicator - it looks like a broken tab at the edge of
+  // the screen when testing the dev server from a phone on the local network. Dev only anyway.
   devIndicators: false,
   images: {
     remotePatterns: [

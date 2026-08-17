@@ -11,14 +11,15 @@ import type { Destination } from '@/lib/types';
 import QuizWizard from './QuizWizard';
 
 /**
- * שלוש דרכים להתחיל, כולן מובילות לאותו Trip:
- * 1. שיחה חופשית - טקסט חופשי → /chat?q=
- * 2. שאלון מובנה - שאלון מודרך רב-שלבי (QuizWizard) שאוסף העדפות לפי
- *    המודל הקיים ומייצר טיול אמיתי עם generateTrip, ואז נוחת במתכנן.
- * 3. קישור - Google My Maps נתמך באמת (ייבוא KML → טיול); רילים
- *    וסרטונים עדיין לא (הערת כנות): חילוץ אמיתי דורש החלטת מקור-נתונים
- *    (YouTube בלבד ריאלי, בתשלום/תלות), ואינסטגרם/טיקטוק לא ניתנים בלי
- *    הפרת תנאי שימוש. לא בונים כפתור מזויף.
+ * Three ways to start, all leading to the same Trip:
+ * 1. Free conversation - free text -> /chat?q=
+ * 2. Structured questionnaire - a guided multi-step questionnaire (QuizWizard) that collects
+ *    preferences using the existing model and produces a real trip with generateTrip, then lands
+ *    in the planner.
+ * 3. A link - Google My Maps is genuinely supported (KML import -> trip); reels and videos are not
+ *    yet (an honesty note): real extraction requires a data-source decision (only YouTube is
+ *    realistic, at a cost or a dependency), and Instagram/TikTok cannot be done without breaching
+ *    their terms of use. We do not build a fake button.
  */
 
 type Tab = 'chat' | 'quiz' | 'link';
@@ -40,7 +41,7 @@ export default function StartClient({ cities }: { cities: CityOption[] }) {
   const submitLink = async () => {
     const url = link.trim();
     if (!url || importing) return;
-    // Google My Maps - נתמך באמת: ייבוא הנקודות לטיול חדש
+    // Google My Maps - genuinely supported: importing the points into a new trip
     if (looksLikeMyMaps(url)) {
       setImporting(true);
       setLinkMsg('מושכים את המפה מ-Google My Maps…');
@@ -84,7 +85,7 @@ export default function StartClient({ cities }: { cities: CityOption[] }) {
 
   return (
     <div className="mt-8">
-      {/* בורר שלושת הכניסות */}
+      {/* The three-entry picker */}
       <div className="flex flex-wrap gap-2">
         <TabButton active={tab === 'quiz'} onClick={() => setTab('quiz')}>
           📋 שאלון מובנה

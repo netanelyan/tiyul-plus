@@ -10,11 +10,11 @@ import {
 } from '@/lib/server/stories';
 
 /**
- * סיפור הטיול - יצירה, תמונות ופרסום. **פרימיום בלבד ליצירה**; הצפייה
- * הציבורית היא ב-/story/[slug] וחופשית לכולם.
+ * The trip story - creating, photos and publishing. **Premium only for creating**; the public
+ * view is at /story/[slug] and is free for everyone.
  *
- * `caller.plan` מגיע מ-resolveCaller (טוקן מאומת → דאטהבייס), לעולם לא
- * מגוף הבקשה - אותו כלל כמו בבדיקה לפני הנסיעה.
+ * `caller.plan` comes from resolveCaller (verified token -> database), never from the request
+ * body - the same rule as in the pre-departure check.
  */
 
 function storyView(s: NonNullable<Awaited<ReturnType<typeof findStory>>>) {
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
   if (!burst.ok) return NextResponse.json({ error: 'rate-limited' }, { status: 429 });
   if (!caller.userId) return NextResponse.json({ error: 'auth-required' }, { status: 401 });
   if (caller.plan !== 'premium') {
-    // יצירת סיפור היא פיצ׳ר מנוי - נאמר במפורש, לא 404 עמום
+    // Creating a story is a subscription feature - said explicitly, not an opaque 404
     return NextResponse.json({ error: 'premium-required' }, { status: 403 });
   }
 

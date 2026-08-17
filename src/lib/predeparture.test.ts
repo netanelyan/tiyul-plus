@@ -1,6 +1,6 @@
 /**
- * זכאות ההצעה - **מתי בכלל שווה להציע את הבדיקה**. כל הטענות כאן על
- * תאריך אמיתי שנמסר מבחוץ (`todayISO`), בלי `Date.now()` בפנים.
+ * The offer's eligibility - **when it is worth offering the check at all**. Every claim here is
+ * about a real date passed in from outside (`todayISO`), with no `Date.now()` inside.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';

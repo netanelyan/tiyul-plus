@@ -15,7 +15,7 @@ export interface HighlightCard {
 
 const GRID_SIZE = 8;
 
-// Fisher-Yates - סיכוי שווה לכל יעד להופיע, לא רק למי שקרוב לתחילת המערך.
+// Fisher-Yates - an equal chance for every destination to appear, not just those near the start of the array.
 function shuffle<T>(items: T[]): T[] {
   const arr = [...items];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -26,10 +26,10 @@ function shuffle<T>(items: T[]): T[] {
 }
 
 /**
- * הבחירה האקראית קורית רק אחרי mount (useEffect) - הדף עצמו נשאר סטטי
- * (prerendered ב-build), ובזמן ה-render הראשון (גם בשרת וגם בלקוח לפני
- * ה-effect) מוצג שלד יציב וזהה משני הצדדים כדי למנוע hydration mismatch.
- * אותו דפוס בדיוק כמו pickChips() ב-PromptChips.
+ * The random selection happens only after mount (useEffect) - the page itself stays static
+ * (prerendered at build), and on the first render (both on the server and on the client before
+ * the effect) a stable skeleton identical on both sides is shown to avoid a hydration mismatch.
+ * Exactly the same pattern as pickChips() in PromptChips.
  */
 export default function DestinationHighlights({ cards }: { cards: HighlightCard[] }) {
   const [picked, setPicked] = useState<HighlightCard[] | null>(null);
@@ -69,7 +69,7 @@ export default function DestinationHighlights({ cards }: { cards: HighlightCard[
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-night/60 to-night" />
           )}
-          {/* גרדיאנט night תחתון ללגיביליות הטקסט */}
+          {/* A night gradient at the bottom for text legibility */}
           <div className="absolute inset-0 bg-gradient-to-t from-night/85 via-night/15 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 p-4">
             <div className="display text-lg leading-tight text-cream drop-shadow sm:text-xl">

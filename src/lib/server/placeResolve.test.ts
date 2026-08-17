@@ -12,9 +12,9 @@ import {
 } from './placeResolve';
 
 /**
- * הטסטים רצים מול **הקטלוג האמיתי** ולא מול fixture, כי מה שנטען כאן
- * הוא בדיוק "מול 166 היעדים שלנו, מה קורה למילה הזאת". fixture בן שלוש
- * ערים היה מוכיח את האלגוריתם ולא את המוצר.
+ * The tests run against **the real catalog** and not against a fixture, because what is claimed
+ * here is exactly "against our 166 destinations, what happens to this word". A three-city fixture
+ * would prove the algorithm and not the product.
  */
 
 test('normalizeName: אותיות סופיות, מרכאות וניקוד לא משנים התאמה', () => {
@@ -72,8 +72,9 @@ test('אף שם אמיתי בקטלוג, עם אותיות שימוש, לא מי
 });
 
 /**
- * הטסט הזה הוא הסיבה שהסבילות נגזרת מהקצר מבין השניים ומ"שגיאה לכל
- * ארבע אותיות". בגרסה בלעדיהם "המלצה" נפלה על מלטה ו"רומנטי" על רומניה.
+ * This test is the reason the tolerance is derived from the shorter of the two and from "one
+ * error per four letters". In the version without them, "recommendation" fell on Malta and
+ * "romantic" on Romania.
  */
 test('משפטי עברית רגילים אינם מייצרים פסק', () => {
   const ordinary = [
@@ -90,7 +91,7 @@ test('משפטי עברית רגילים אינם מייצרים פסק', () => 
   }
 });
 
-/* ---------- השער ---------- */
+/* ---------- The gate ---------- */
 
 test('השער חוסם בחירה של יעד אחר מזה שהמילה נפתרת אליו', () => {
   const g = cityGate('סופש בברסלוונה', ['bratislava']);

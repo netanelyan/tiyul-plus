@@ -1,11 +1,11 @@
-// צובר תוצאות של חיפוש תמונות ידני מול dbpedia אל photo-report.json.
-// הקלט הוא TSV פשוט ב-/tmp/photos.tsv עם השדות:
+// Accumulates the results of a manual image search against dbpedia into photo-report.json.
+// The input is a simple TSV at /tmp/photos.tsv with the fields:
 //   placeId <TAB> dbpediaArticle <TAB> thumbFile <TAB> lat <TAB> long
-// (lat/long יכולים להיות NONE - אז אין אימות גיאוגרפי והרשומה נכנסת
-// כ-review במקום ok.)
+// (lat/long may be NONE - in which case there is no geographic verification and the record
+// goes in as review rather than ok.)
 //
-// הסקריפט מוודא מרחק מול הקואורדינטות שכבר בדאטה, פוסל שמות קבצים
-// שנראים כמו לוגו/דגל/מפה, ובונה את כתובת הממוזערת דטרמיניסטית.
+// The script verifies the distance against the coordinates already in the data, rejects
+// filenames that look like a logo/flag/map, and builds the thumbnail URL deterministically.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { parsePlaces, distanceKm } from './parse-places.mjs';
 import { commonsThumb, BAD_FILE } from './commons-url.mjs';
@@ -21,7 +21,7 @@ const byId = new Map(places.map((p) => [p.id, p]));
 const prev = existsSync(OUT) ? JSON.parse(readFileSync(OUT, 'utf8')) : { results: [] };
 const results = new Map((prev.results ?? []).map((r) => [r.id, r]));
 
-// dbpedia מחזירה לפעמים ‎\uXXXX‎ ולפעמים כתובת עם ‎?width=300‎ בזנב
+// dbpedia sometimes returns a \uXXXX escape and sometimes a URL with ?width=300 on the tail
 const decode = (s) =>
   s
     .replace(/\\u([0-9a-fA-F]{4})/g, (_, h) => String.fromCharCode(parseInt(h, 16)))

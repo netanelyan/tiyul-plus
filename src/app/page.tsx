@@ -7,10 +7,10 @@ import DestinationHighlights from '@/components/DestinationHighlights';
 import QuickServices from '@/components/QuickServices';
 
 /**
- * דף הבית - פורטל נחיתה עם צבע אמיתי: הירו → צ׳יפים → רשת פלאים חיה
- * (תמונות היעדים המאומתות הן הצבע של הדף, על פס night שמבליט אותן) →
- * שורת כניסות משנית רזה (מתכנן/קטלוג + פס הטיול הנוכחי). בלי קישוטים
- * ריקים ובלי שטחי קרם מתים.
+ * The homepage - a landing portal with real colour: hero -> chips -> a live grid of wonders
+ * (the verified destination photos are the page's colour, on a night band that sets them off)
+ * -> a slim secondary row of entries (planner/catalog + the current-trip bar). No empty
+ * decoration and no dead expanses of cream.
  */
 
 export default async function Home() {
@@ -33,7 +33,7 @@ export default async function Home() {
     <div>
       <HomeHero />
 
-      {/* פלאים שמחכים לכם - הלב הרגשי של הדף: פס night עם כרטיסי פלא */}
+      {/* Wonders waiting for you - the emotional heart of the page: a night band with wonder cards */}
       <section className="rounded-3xl bg-night px-4 py-8 sm:px-8 sm:py-10">
         <div className="flex items-end justify-between gap-3">
           <div>
@@ -53,10 +53,10 @@ export default async function Home() {
         <DestinationHighlights cards={cards} />
       </section>
 
-      {/* גישה מהירה: שירותי נסיעה (טיסות/לינה/אטרקציות/רכב) */}
+      {/* Quick access: travel services (flights/lodging/attractions/car) */}
       <QuickServices />
 
-      {/* כניסות משניות - רזות וממורכזות, לא כרטיסים גדולים */}
+      {/* Secondary entries - slim and centred, not large cards */}
       <section className="mx-auto max-w-3xl py-10">
         <MyTripCard />
         <div className="flex flex-wrap items-center justify-center gap-3">

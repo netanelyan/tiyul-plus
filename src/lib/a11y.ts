@@ -1,10 +1,10 @@
-// ---------- הגדרות נגישות ----------
-// מצב הווידג'ט נשמר ב-localStorage ומוחל כ-classes על <html> (+ משתנה
-// CSS לגודל טקסט). סקריפט אתחול קטן ב-layout מחיל את זה עוד לפני הצביעה
-// כדי שלא יהיה הבזק; הקומפוננטה משתמשת ב-applyA11y כדי לעדכן בזמן אמת.
+// ---------- Accessibility settings ----------
+// The widget's state is stored in localStorage and applied as classes on <html> (+ a CSS
+// variable for text size). A small init script in layout applies it before the first paint so
+// there is no flash; the component uses applyA11y to update in real time.
 
 export interface A11ySettings {
-  fontLevel: number; // -2..+4, 0 = רגיל
+  fontLevel: number; // -2..+4, 0 = normal
   contrast: boolean;
   grayscale: boolean;
   underlineLinks: boolean;
@@ -47,11 +47,11 @@ export function saveA11y(s: A11ySettings): void {
   try {
     window.localStorage.setItem(A11Y_KEY, JSON.stringify(s));
   } catch {
-    /* אחסון חסום - נשאר בזיכרון */
+    /* storage blocked - stays in memory */
   }
 }
 
-/** מחיל את ההגדרות על אלמנט השורש (classes + משתנה גודל טקסט). */
+/** Applies the settings to the root element (classes + the text-size variable). */
 export function applyA11y(s: A11ySettings): void {
   if (typeof document === 'undefined') return;
   const el = document.documentElement;

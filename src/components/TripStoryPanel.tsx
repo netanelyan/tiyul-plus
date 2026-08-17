@@ -9,13 +9,13 @@ import { fileToChatImage, IMAGE_ACCEPT } from '@/lib/trip/imageAttach';
 import type { Trip } from '@/lib/trip/types';
 
 /**
- * "סיפור הטיול" - פיצ׳ר הפרימיום: הטיול הופך לעמוד סיפור ציבורי עם
- * המסלול, הימים והתמונות של המטיילים. היצירה פרימיום; הקישור שנוצר
- * פתוח לכולם - הצופים הם המשתמשים הבאים.
+ * "The trip story" - the premium feature: the trip becomes a public story page with the
+ * itinerary, the days and the travellers' photos. Creating is premium; the link it produces is
+ * open to everyone - the viewers are the next users.
  *
- * ה-snapshot נבנה בשרת מהטיול השמור - "רענון" אחרי עריכת הטיול בונה
- * אותו מחדש; תמונות מועלות דחוסות (fileToChatImage, אותו צינור כמו
- * תמונות הצ׳אט) ועוברות ולידציה בשרת.
+ * The snapshot is built on the server from the stored trip - "refresh" after editing the trip
+ * rebuilds it; photos are uploaded compressed (fileToChatImage, the same pipeline as the chat
+ * images) and are validated on the server.
  */
 
 interface StoryState {

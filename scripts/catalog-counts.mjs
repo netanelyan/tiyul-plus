@@ -1,16 +1,17 @@
 /**
- * המספרים האמיתיים של הקטלוג, במקום אחד.
+ * The catalog's real numbers, in one place.
  *
- * ## למה זה סקריפט
+ * ## Why this is a script
  *
- * מספרי הקטלוג מופיעים בחומר שיווקי, בעמוד האודות ובסיכומי סשן, והם
- * מתיישנים **בכל פעם שמישהו מוסיף עיר** - כלומר כמעט כל יום. היומן הזה
- * כבר מתעד פעם אחת שבה דווח מספר שגוי בסיכום ("39 רשומות ב-29 יעדים"
- * כשבפועל היו 42 ב-28), והמסקנה שנרשמה שם הייתה לספור לפני שמצטטים.
+ * The catalog numbers appear in marketing material, on the about page and in session
+ * summaries, and they go stale **every time somebody adds a city** - i.e. almost every day.
+ * This log already records one occasion where a wrong number was reported in a summary ("39
+ * records across 29 destinations" when in fact there were 42 across 28), and the conclusion
+ * recorded there was to count before quoting.
  *
- * זה הסקריפט שהופך את המסקנה הזאת לזולה.
+ * This is the script that makes that conclusion cheap.
  *
- * הרצה:
+ * Usage:
  *   node --experimental-strip-types --import ./scripts/alias-loader.mjs \
  *     scripts/catalog-counts.mjs [--json]
  */

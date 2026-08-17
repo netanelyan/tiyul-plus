@@ -543,7 +543,7 @@ function OtpBoxes({
       className="relative mt-5 cursor-text"
       onClick={() => inputRef.current?.focus()}
     >
-      {/* ה-input האמיתי - בלתי נראה, סופג הקלדה, הדבקה ו-autofill של קוד */}
+      {/* The real input - invisible, absorbs typing, pasting and code autofill */}
       <input
         ref={inputRef}
         value={value}

@@ -3,18 +3,18 @@ import { adminInsert, adminUpdate, userByEmail } from '@/lib/server/supabaseAdmi
 import { eq } from '@/lib/server/pgrest';
 
 /**
- * הענקה או שלילה של פרימיום.
+ * Granting or revoking premium.
  *
- * `days` חיובי = פרימיום שפג מעצמו אחרי X ימים. `days: 0` = לתמיד
- * (plan_until נשאר NULL). זה הפער שהמייסד בחר להשאיר פתוח - "שניהם,
- * לפי המקרה" - ולכן ברירת המחדל ב-UI היא 30 יום ולא "לתמיד": הענקה
- * שפגה מעצמה לא הופכת בשקט למנוי חינם לנצח.
+ * A positive `days` = premium that expires by itself after X days. `days: 0` = forever
+ * (plan_until stays NULL). This is the gap the founder chose to leave open - "both, depending on
+ * the case" - which is why the default in the UI is 30 days and not "forever": a grant that
+ * expires by itself does not quietly become a free subscription for life.
  *
- * **plan_source='grant'** מבדיל בין מתנה לבין מנוי בתשלום. בלי זה, ה-
- * webhook של Stripe שמוריד מנוי מבוטל היה מוריד גם הענקות ידניות.
+ * **plan_source='grant'** distinguishes a gift from a paid subscription. Without it, the Stripe
+ * webhook that downgrades a cancelled subscription would have downgraded manual grants too.
  *
- * שלילה מנקה את שלושת השדות יחד - אחרת נשאר plan_until עזוב על חשבון
- * חינמי, שזה מצב שקשה להסביר בעוד חצי שנה.
+ * Revoking clears all three fields together - otherwise plan_until is left orphaned on a free
+ * account, which is a state that is hard to explain in six months' time.
  */
 export async function POST(req: Request) {
   const actor = await requireRole(req, 'admin');
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
       : { plan: 'free', plan_until: null, plan_source: null, updated_at: new Date().toISOString() };
 
   let rows = await adminUpdate<{ user_id: string }>('profiles', eq('user_id', user.id), patch);
-  // משתמש שנרשם אך טרם שמר פרופיל - אין לו שורה לעדכן, ולכן יוצרים אותה
+  // A user who signed up but has not saved a profile yet has no row to update, so we create it
   if (rows && rows.length === 0) {
     rows = await adminInsert<{ user_id: string }>('profiles', { user_id: user.id, ...patch }, { upsert: true });
   }

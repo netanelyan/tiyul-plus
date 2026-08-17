@@ -1,10 +1,10 @@
 /**
- * התאריכים מקצה לקצה: הכלי של הסוכן, וקישור השיתוף.
+ * Dates end to end: the agent's tool, and the share link.
  *
- * שני דברים נבדקים כאן ולא בעין. הראשון הוא שהכלי **לא נוגע בימים**:
- * הפיתוי הגדול של "טווח תאריכים" הוא לגזור ממנו את מספר הימים, וזה
- * מוחק ימים עם עצירות. השני הוא שקישור ישן (v1) ממשיך להיפתח אחרי
- * שהפורמט עלה ל-v2 - קוד ששותף בוואטסאפ לפני חודשים חייב לעבוד.
+ * Two things are checked here rather than by eye. The first is that the tool **does not touch
+ * the days**: the great temptation of a "date range" is to derive the day count from it, and
+ * that deletes days that have stops. The second is that an old link (v1) still opens after the
+ * format moved to v2 - a code shared on WhatsApp months ago has to keep working.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -59,7 +59,7 @@ test('תאריך לא תקין נדחה במקום להישמר', () => {
     assert.equal(res.ok, false, bad);
     assert.equal(res.trip?.startDate, undefined, bad);
   }
-  // סוף לפני התחלה
+  // End before start
   const back = run(trip(), { startDate: '2026-08-12', endDate: '2026-08-01' });
   assert.equal(back.ok, false);
 });
@@ -72,7 +72,7 @@ test('המודל מקבל את התאריך של כל יום כעובדה, לא 
     seen.days.map((d: { date: string }) => d.date),
     ['2026-08-12', '2026-08-13', '2026-08-14'],
   );
-  // בלי תאריכים - השדות פשוט לא שם, ולא null שהמודל ינסה לפרש
+  // With no dates - the fields are simply absent, rather than null for the model to interpret
   const bare = JSON.parse(serializeTripForModel(trip()));
   assert.equal('startDate' in bare, false);
   assert.equal('date' in bare.days[0], false);
@@ -87,7 +87,7 @@ test('קישור שיתוף נושא את התאריכים הלוך ושוב', (
 });
 
 test('קישור v1 ישן ממשיך להיפתח - רק בלי תאריכים', () => {
-  // בדיוק הפורמט שנשלח לפני שהתאריכים קיימו
+  // Exactly the format that was sent before dates existed
   const legacy = Buffer.from(
     JSON.stringify([1, 'רומא', [['rome', ['rom-colosseum']]]]),
     'utf8',

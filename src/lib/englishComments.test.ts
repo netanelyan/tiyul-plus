@@ -20,18 +20,24 @@ import { join } from 'node:path';
 const HEBREW = /[֐-׿]/;
 const ROOT = join(import.meta.dirname, '..', '..');
 
-const SCAN_DIRS = ['src', 'scripts', 'public', 'supabase'];
-const EXTS = new Set(['.ts', '.tsx', '.js', '.mjs', '.sql', '.css']);
+// Walks the whole repo rather than a list of subdirectories. The first version
+// scanned only src/scripts/public/supabase, and the 21 `supabase-*.sql` files
+// live at the REPO ROOT - so every SQL comment in them was outside the guard
+// and stayed Hebrew while the test passed. A denylist of build output cannot
+// miss a new directory the way an allowlist of source directories did.
+const SKIP_DIRS = new Set(['node_modules', 'dist', 'build', 'coverage']);
+const EXTS = new Set(['.ts', '.tsx', '.js', '.mjs', '.cjs', '.sql', '.css']);
 
 function* walk(dir: string): Generator<string> {
   let entries: string[];
   try {
     entries = readdirSync(dir);
   } catch {
-    return; // directory may not exist (e.g. before the sql move) - fine
+    return; // unreadable directory - nothing to check
   }
   for (const name of entries) {
-    if (name === 'node_modules' || name.startsWith('.')) continue;
+    // dot-directories are .next/.git/.claude - build output and tooling
+    if (SKIP_DIRS.has(name) || name.startsWith('.')) continue;
     const full = join(dir, name);
     if (statSync(full).isDirectory()) yield* walk(full);
     else if (EXTS.has(name.slice(name.lastIndexOf('.')))) yield full;
@@ -59,10 +65,10 @@ const COMMENT_START = /^\s*(\/\/|\/\*|\*|\{\/\*|--|#)/;
 /** A multi-line block comment opener, which only ever starts a line here. */
 const BLOCK_OPEN = /^\s*\{?\/\*/;
 
-test('no Hebrew in comments anywhere in src/, scripts/, public/, supabase/', () => {
+test('no Hebrew in comments anywhere in the repo', () => {
   const offenders: string[] = [];
-  for (const dir of SCAN_DIRS) {
-    for (const file of walk(join(ROOT, dir))) {
+  {
+    for (const file of walk(ROOT)) {
       const lines = readFileSync(file, 'utf8').split('\n');
       let inBlock = false;
       lines.forEach((line, i) => {

@@ -8,7 +8,7 @@ export const metadata = {
     'טיול+ לא מציב אף עוגייה. מה כן נשמר בדפדפן שלכם, למה, ואיך מוחקים - בשפה פשוטה.',
 };
 
-/** שורה בטבלת האחסון. `pii` מסמן מה שקשור אליכם באופן אישי. */
+/** A row in the storage table. `pii` marks what relates to you personally. */
 function Row({ name, what, why, pii }: { name: string; what: string; why: string; pii?: boolean }) {
   return (
     <div className="rounded-xl bg-shell p-3 ring-1 ring-night/10">

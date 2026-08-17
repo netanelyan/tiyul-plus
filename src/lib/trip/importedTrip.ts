@@ -3,9 +3,9 @@ import type { Trip, TripDay } from './types';
 import { newId } from './types';
 
 /**
- * טיול מתוך יעד מיובא (Google My Maps): כל הנקודות לפי סדר המפה
- * המקורית, עד 4 עצירות ביום. משותף למודל הייבוא בסדנת הטיול ולטאב
- * הקישור ב-/start.
+ * A trip from an imported destination (Google My Maps): all the points in the order of the original
+ * map, up to 4 stops per day. Shared by the import modal in the trip workspace and the link tab in
+ * /start.
  */
 export const IMPORT_STOPS_PER_DAY = 4;
 
@@ -27,7 +27,7 @@ export function buildTripFromImport(dest: Destination): Trip {
   };
 }
 
-/** קישור שנראה כמו Google My Maps / קישור מפות מקוצר - לזיהוי בטאבים */
+/** A link that looks like Google My Maps / a shortened maps link - for detection in the tabs */
 export function looksLikeMyMaps(url: string): boolean {
   return /google\.[a-z.]+\/maps\/d\/|maps\.app\.goo\.gl|[?&]mid=/i.test(url);
 }

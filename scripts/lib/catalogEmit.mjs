@@ -41,9 +41,9 @@ export function lit(v, indent = 0) {
 
 const banner = (what) => `// ${what}
 //
-// ** נוצר אוטומטית מ-Supabase על ידי scripts/catalog-pull.mjs. **
-// אין לערוך ידנית: עריכה כאן תימחק בהרצה הבאה. מקור האמת הוא הטבלאות
-// catalog_* ב-Supabase. אחרי יצירה מחדש הריצו:
+// ** Generated automatically from Supabase by scripts/catalog-pull.mjs. **
+// Do not edit by hand: edits here are wiped on the next run. The source of truth is the
+// catalog_* tables in Supabase. After regenerating, run:
 //   node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/catalog-roundtrip.mjs
 //   node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/validate-catalog.mjs
 `;

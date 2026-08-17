@@ -1,19 +1,19 @@
 -- ============================================================
---  טיול+ · מנוי פרימיום דרך PayPal Subscriptions
---  להריץ ב-Supabase → SQL Editor. בטוח להריץ פעמיים.
+--  tiyul+ - premium subscription via PayPal Subscriptions
+--  Run in Supabase -> SQL Editor. Safe to run twice.
 -- ============================================================
 --
---  מה הקובץ עושה:
---  1. מרחיב את מגבלת ה-CHECK על profiles.plan_source כך שתכלול
---     'paypal' - הערך שה-webhook כותב כשמנוי PayPal מופעל. בלעדיו
---     ההפעלה נכשלת בשקט על המגבלה הישנה ('stripe','grant','promo').
---  2. מוסיף עמודת paypal_subscription_id - לתמיכה בלבד (לאתר את
---     המנוי בדשבורד של PayPal מול משתמש). הזרימה עצמה לא תלויה בה:
---     custom_id על אירועי ה-webhook נושא את זהות המשתמש.
+--  What this file does:
+--  1. Widens the CHECK constraint on profiles.plan_source to include 'paypal' - the
+--     value the webhook writes when a PayPal subscription is activated. Without it,
+--     activation fails silently on the old constraint ('stripe','grant','promo').
+--  2. Adds a paypal_subscription_id column - for support only (to locate the
+--     subscription in PayPal's dashboard against a user). The flow itself does not
+--     depend on it: custom_id on the webhook events carries the user's identity.
 --
---  המגבלה הישנה נוצרה ללא שם מפורש (add column ... check inline),
---  ולכן השם האמיתי מאותר דרך pg_constraint - אותו דפוס בדיוק כמו
---  supabase-premium-budget.sql, מאותה סיבה.
+--  The old constraint was created without an explicit name (add column ... check inline),
+--  so its real name is located via pg_constraint - exactly the same pattern as
+--  supabase-premium-budget.sql, for the same reason.
 
 do $$
 declare
@@ -42,8 +42,8 @@ begin
     check (plan_source is null or plan_source in ('stripe', 'grant', 'promo', 'paypal'));
 end $$;
 
--- עמודת התמיכה. עמודה חדשה אינה נכנסת לרשימת ה-grant הקיימת של
--- authenticated (ההרשאות שם הן פר-עמודה מאז supabase-premium.sql),
--- ולכן היא נכתבת אוטומטית ע"י ה-service role בלבד - אין צורך ב-revoke.
+-- The support column. A new column does not enter authenticated's existing grant list
+-- (the grants there have been per-column since supabase-premium.sql), so it is written
+-- only by the service role - no revoke is needed.
 alter table public.profiles
   add column if not exists paypal_subscription_id text;

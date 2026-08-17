@@ -5,20 +5,20 @@ import { useTrip } from '@/lib/trip/TripContext';
 import { daysHe } from '@/lib/duration';
 
 /**
- * "יש לכם טיולים פתוחים" - **בחירה גלויה, אף פעם לא ברירת מחדל.**
+ * "You have open trips" - **a visible choice, never a default.**
  *
- * נתנאל: *"טיול קיים נפתח רק כשמישהו בוחר בו במפורש. אם אנחנו מציעים
- * להמשיך, זו בחירה גלויה לצד התחלה חדשה - לעולם לא ברירת מחדל ולא בשקט."*
+ * Netanel: *"An existing trip opens only when somebody explicitly chooses it. If we offer to
+ * continue, that is a visible choice alongside starting fresh - never a default and never silently."*
  *
- * לכן זה רכיב תצוגה בלבד: הוא לא קורא ל-`setCurrentId` ולא פותח כלום.
- * כל שורה היא קישור ל-`/chat?trip=<id>`, כלומר הפתיחה קורית רק בעקבות
- * לחיצה, והיא מופיעה בכתובת - מה שגם מאפשר לרענון להישאר באותו טיול.
+ * So this is a presentational component only: it does not call `setCurrentId` and does not open
+ * anything. Each row is a link to `/chat?trip=<id>`, i.e. opening happens only as a result of a
+ * click, and it shows up in the URL - which also lets a refresh stay on the same trip.
  */
 export default function ResumeTrips({ className = '' }: { className?: string }) {
   const { trips, hydrated } = useTrip();
   if (!hydrated || trips.length === 0) return null;
 
-  // האחרון שנגעו בו קודם - זה מה שמישהו מחפש כשהוא בא להמשיך
+  // Most recently touched first - that is what somebody is looking for when they come to continue
   const ordered = [...trips].sort((a, b) => (b.updatedAt ?? 0) - (a.updatedAt ?? 0)).slice(0, 4);
 
   return (

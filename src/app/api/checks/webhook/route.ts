@@ -3,8 +3,8 @@ import { processCheckWebhook } from '@/lib/server/processCheckWebhook';
 import type { WebhookHeaders } from '@/lib/server/paypal';
 
 /**
- * עטיפת `NextResponse` דקה בלבד - כל הלוגיקה ב-`processCheckWebhook.ts`,
- * כדי שהיא תהיה ניתנת לבדיקה בלי לייבא את `next/server`. ראו שם.
+ * A thin `NextResponse` wrapper only - all the logic is in `processCheckWebhook.ts`, so that it can
+ * be tested without importing `next/server`. See there.
  */
 
 function headersFrom(req: Request): WebhookHeaders {

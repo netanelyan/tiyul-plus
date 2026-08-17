@@ -4,18 +4,18 @@ import { requireRole, denied, badRequest, ok, audit } from '@/lib/server/admin';
 import { adminInsert, adminSelect, adminUpdate, userByEmail } from '@/lib/server/supabaseAdmin';
 
 /**
- * שינוי תפקיד - **owner בלבד**, לפי הבחירה של נתנאל.
+ * Changing a role - **owner only**, per Netanel's choice.
  *
- * שלוש סירובים מכוונים, וכל אחד מהם הוא באג אבטחה אם הוא חסר:
+ * Three deliberate refusals, and each of them is a security bug if it is missing:
  *
- * 1. **אי אפשר לשנות את התפקיד של עצמך.** אחרת owner מוריד את עצמו
- *    בטעות ואין יותר אף owner במערכת - מצב שאי אפשר לתקן מה-UI, רק
- *    בחזרה ל-SQL Editor.
- * 2. **אי אפשר להוריד owner אחר.** owner הוא הגבול העליון; מי שצריך
- *    לשנות אותו עושה זאת מול הדאטהבייס במודע.
- * 3. **אי אפשר למנות owner מכאן.** התפקיד הזה נזרע ב-SQL עם המייל
- *    המפורש, וזו הדרך היחידה - כך ש"מי הבעלים" הוא החלטה שמישהו כתב,
- *    ולא משהו שקרה בלחיצה.
+ * 1. **You cannot change your own role.** Otherwise an owner accidentally demotes themselves and
+ *    there is no owner left in the system - a state that cannot be fixed from the UI, only by
+ *    going back to the SQL Editor.
+ * 2. **You cannot demote another owner.** Owner is the upper bound; whoever needs to change one
+ *    does it against the database deliberately.
+ * 3. **You cannot appoint an owner from here.** That role is seeded in SQL with the explicit
+ *    email address, and that is the only way - so that "who the owner is" is a decision somebody
+ *    wrote down, and not something that happened on a click.
  */
 export async function POST(req: Request) {
   const actor = await requireRole(req, 'owner');

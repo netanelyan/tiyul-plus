@@ -12,9 +12,9 @@ import { resolveCaller } from '@/lib/server/identity';
 import { PLAN_LIMITS, periodMsFor } from '@/lib/plans';
 
 /**
- * POST { url } → { destination } (בסגנון explored) או { error } בעברית.
- * המפה חייבת להיות משותפת כ"כל מי שיש לו הקישור" - אחרת גוגל לא מחזיר
- * KML ואנחנו אומרים את זה למשתמש במקום לנחש.
+ * POST { url } -> { destination } (explored-style) or { error } in Hebrew.
+ * The map must be shared as "anyone with the link" - otherwise Google does not return KML, and we
+ * say so to the user instead of guessing.
  */
 export const maxDuration = 30;
 
@@ -45,11 +45,11 @@ export async function POST(request: Request) {
     const body = (await request.json()) as { url?: unknown };
     url = typeof body.url === 'string' ? body.url.trim().slice(0, 500) : '';
   } catch {
-    /* גוף לא תקין */
+    /* invalid body */
   }
   if (!url) return NextResponse.json({ error: 'הדביקו קישור למפה מ-Google My Maps' }, { status: 400 });
 
-  // mid ישירות מהקישור, או פתיחה אחת של קישור מקוצר של גוגל
+  // mid straight from the link, or one expansion of a Google short link
   let mid = extractMid(url);
   if (!mid && isShortLink(url)) mid = await resolveShortLink(url);
   if (!mid) {

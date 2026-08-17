@@ -7,14 +7,14 @@ import { buildTripFromImport } from '@/lib/trip/importedTrip';
 import { authHeader } from '@/lib/auth/client';
 
 /**
- * ייבוא מפה מ-Google My Maps לטיול חדש.
+ * Importing a map from Google My Maps into a new trip.
  *
- * המשתמש מדביק קישור למפה ששותפה כ"כל מי שיש לו הקישור"; השרת מושך את
- * ה-KML, מפרק את הנקודות, ומחזיר יעד בסגנון explored. כאן בונים ממנו
- * טיול חדש (עד 4 עצירות ביום, לפי סדר הנקודות במפה) ומוסרים אותו הלאה.
+ * The user pastes a link to a map shared as "anyone with the link"; the server fetches the
+ * KML, parses the points, and returns an explored-style destination. Here we build a new trip
+ * from it (up to 4 stops per day, following the order of the points on the map) and hand it on.
  *
- * TripAdvisor: אין לו ייצוא ציבורי של מפות/Trips שמורים - נאמר במודל
- * בכנות במקום להעמיד פנים שנתמך.
+ * TripAdvisor: it has no public export of saved maps or trips - said honestly in the modal
+ * rather than pretending it is supported.
  */
 
 export default function ImportMapModal({
@@ -24,7 +24,7 @@ export default function ImportMapModal({
 }: {
   open: boolean;
   onClose: () => void;
-  /** מקבל את היעד ואת הטיול המוכן - הקורא שומר explored ויוצר את הטיול */
+  /** Receives the destination and the ready trip - the caller stores explored and creates the trip */
   onImported: (dest: Destination, trip: Trip) => void;
 }) {
   const [url, setUrl] = useState('');

@@ -4,8 +4,8 @@ import { googleProvider } from './google';
 import { tripadvisorProvider } from './tripadvisor';
 
 /**
- * בחירת ספק הנתונים דרך משתנה סביבה - החלפת ספק היא שינוי קונפיגורציה,
- * לא שכתוב. ברירת מחדל: נתוני הדוגמה המקומיים (עובד בלי מפתחות).
+ * Choosing the data provider through an environment variable - swapping provider is a configuration
+ * change, not a rewrite. Default: the local sample data (works with no keys).
  *
  *   NEXT_PUBLIC_PLACES_PROVIDER=sample | google | tripadvisor
  */

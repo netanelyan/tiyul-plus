@@ -1,18 +1,18 @@
 /**
- * הערת הכשרות של מקום - **המקום היחיד שמרנדר `Place.kosherNote`**.
+ * A place's kashrut note - **the only place that renders `Place.kosherNote`**.
  *
- * למה זה קיים: אותו שדה בדיוק צויר בשלושה מקומות בשלוש צורות. בעמוד
- * הכשרות ובעמוד היעד הוא כרית ירוקה ב-`#00a896`, ובחלונית המפה הוא היה
- * שורת טקסט ב-`#0d9488` - ירוק אחר לגמרי, בלי כרית. אף אחת מהן לא
- * הייתה שגויה בפני עצמה; ההבדל ביניהן הוא הבאג.
+ * Why this exists: exactly the same field was drawn in three places in three forms. On the
+ * kashrut page and the destination page it was a green pill in one hex value, and in the map
+ * popup it was a line of text in a different hex - an entirely different green, with no pill.
+ * None of them was wrong on its own; the difference between them is the bug.
  *
- * הצבע הוא טוקן (`--color-kosher`) ולא הקס קשיח, ולכן הוא גם זהה בכל
- * מקום וגם עובר לגוון נגיש כשמפעילים ניגודיות גבוהה. הקס קשיח פשוט
- * מתעלם מהמצב הזה, וזו הייתה תקלת נגישות ולא רק חוסר אחידות.
+ * The colour is a token (`--color-kosher`) and not a hardcoded hex, so it is both identical
+ * everywhere and switches to an accessible shade when high contrast is enabled. A hardcoded hex
+ * simply ignores that mode, and that was an accessibility defect and not merely an inconsistency.
  *
- * זה **לא** תג ההשגחה - זה `KosherBadge`, והוא נשאר נפרד: השגחה היא
- * עובדה שנמסרה במקור ומגיעה עם ההסתייגות "לוודא מול המקום", וההערה
- * היא תיאור חופשי. שני דברים שונים, שני רכיבים.
+ * This is **not** the supervision badge - that is `KosherBadge`, and it stays separate:
+ * supervision is a fact reported by a source and arrives with the "verify with the venue" caveat,
+ * whereas the note is free-form description. Two different things, two components.
  */
 export default function KosherNote({
   note,

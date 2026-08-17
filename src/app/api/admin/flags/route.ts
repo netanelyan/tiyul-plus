@@ -3,19 +3,20 @@ import { adminInsert } from '@/lib/server/supabaseAdmin';
 import { allFlags, invalidateFlags } from '@/lib/server/flags';
 
 /**
- * רק דגלים מוכרים - כדי שהטבלה לא תהפוך לשק זבל של מפתחות מומצאים.
+ * Known flags only - so the table does not become a junk bag of invented keys.
  *
- * לכל דגל יש גם **סוג וטווח**, כי מפסק הוא בוליאני, תקרת הוצאה היא
- * מספר בדולרים, וחלק אנונימי הוא שבר בין 0 ל-1 - ודגל בלי טווח משלו
- * הוא הזמנה לכתוב 55 (כלומר 5,500%) במקום 0.55 ולגלות את זה בייצור.
+ * Every flag also carries a **type and a range**, because a kill switch is a boolean, a
+ * spend ceiling is a number in dollars, and an anonymous share is a fraction between 0
+ * and 1 - and a flag with no range of its own is an invitation to type 55 (i.e. 5,500%)
+ * instead of 0.55 and discover it in production.
  */
 const KNOWN: Record<string, { type: 'boolean' | 'number'; min?: number; max?: number }> = {
   agent_enabled: { type: 'boolean' },
   ai_daily_budget_usd: { type: 'number', min: 0, max: 10_000 },
   /**
-   * חלקה של התנועה האנונימית מהתקציב היומי, 0..1. ראו `anonShare()`
-   * ב-`lib/server/budget.ts` - הרצפה של המחוברים (1-הערך) מוגנת שם
-   * ע"י `min()` ולא כאן, כך שאין ערך שהטווח הזה מרשה שיכול לשבור אותה.
+   * Anonymous traffic's share of the daily budget, 0..1. See `anonShare()` in
+   * `lib/server/budget.ts` - the signed-in floor (1 minus the value) is protected there
+   * by `min()` and not here, so there is no value this range permits that can break it.
    */
   ai_anon_share: { type: 'number', min: 0, max: 1 },
 };
@@ -42,7 +43,7 @@ export async function POST(req: Request) {
   if (spec.type === 'boolean' && typeof body.value !== 'boolean') return badRequest('bad_value');
   if (spec.type === 'number') {
     const n = Number(body.value);
-    // גבול תחתון שלילי אינו מצב - 0 הוא ערך חוקי ומכוון (למשל "כבוי")
+    // A negative lower bound is not a state - 0 is a valid and deliberate value (for example "off")
     if (!Number.isFinite(n) || n < (spec.min ?? 0) || n > (spec.max ?? 10_000)) {
       return badRequest('bad_value');
     }

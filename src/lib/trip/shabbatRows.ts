@@ -5,13 +5,13 @@ import { shabbatTimesFor, weekdayOf } from '@/lib/zmanim';
 import { formatInZone, timezoneFor } from '@/lib/countryTimezones';
 
 /**
- * שורות זמני השבת של טיול - החישוב המשותף לפאנל "שבת וכשרות" ולספר
- * הטיול המודפס. מקור אחד, כדי ששני המקומות לא יסטו זה מזה (אותו כלל
- * כמו dayDescription: תצוגה נגזרת ממקום אחד).
+ * A trip's Shabbat time rows - the computation shared by the "Shabbat and kashrut" panel and the
+ * printed trip book. One source, so the two places cannot drift apart (the same rule as
+ * dayDescription: a display is derived from one place).
  *
- * לכל שישי שנופל בימי הטיול: העיר של אותו ערב, זמני נרות/הבדלה
- * מחושבים אסטרונומית לקואורדינטות שלה, בשעון המקומי האמיתי. עיר בלי
- * אזור זמן ממופה מחזירה null בשדות הזמן - וה-UI אומר זאת בכנות.
+ * For every Friday falling within the trip's days: that evening's city, with candle-lighting and
+ * havdala times computed astronomically for its coordinates, on the real local clock. A city with
+ * no mapped time zone returns null in the time fields - and the UI says so honestly.
  */
 export interface ShabbatRow {
   fridayIso: string;

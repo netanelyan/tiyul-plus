@@ -9,8 +9,8 @@ import type { Destination } from '@/lib/types';
 import type { Trip } from '@/lib/trip/types';
 
 /**
- * הצד של המארגן בטיול משותף: יצירת קישור הזמנה (פרימיום), מונה חברים,
- * ותוצאות ההצבעה של החברים לצד שמות העצירות האמיתיים.
+ * The organiser's side of a group trip: creating an invitation link (premium), a member counter,
+ * and the friends' voting results alongside the real stop names.
  */
 export default function TripGroupPanel({
   trip,
@@ -30,7 +30,7 @@ export default function TripGroupPanel({
 
   const isPremium = auth.profile?.plan === 'premium';
 
-  // תוצאות + מונה חברים - בכל פתיחה, כדי שהמארגן יראה הצבעות טריות
+  // Results + member count - on every open, so the organiser sees fresh votes
   useEffect(() => {
     if (!open || !auth.user) return;
     let alive = true;
@@ -46,7 +46,7 @@ export default function TripGroupPanel({
           setVotes(data.votes ?? []);
         }
       } catch {
-        /* הפתיחה הבאה תנסה שוב */
+        /* the next open will try again */
       }
     })();
     return () => {
@@ -80,7 +80,7 @@ export default function TripGroupPanel({
     }
   }
 
-  /** שם עצירה אמיתי לתוצאה - הצבעות בלי שם לא מוצגות */
+  /** A real stop name for a result - votes with no name are not displayed */
   function placeName(placeId: string): string | null {
     for (const d of trip.days) {
       if (!d.placeIds.includes(placeId)) continue;

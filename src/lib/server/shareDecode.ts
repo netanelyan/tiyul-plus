@@ -3,9 +3,9 @@ import { fromBase64Url, type SharePayload, type SharedTrip } from '@/lib/trip/sh
 import { safeDates } from '@/lib/trip/dates';
 
 /**
- * פענוח קוד שיתוף - **צד שרת בלבד**, כי הוא מאמת מול הקטלוג המלא.
- * ראו ההסבר ב-`share.ts`: הפרדה זו היא מה שמאפשר למסך הטיול לייצר
- * קישור בלי להוריד את הקטלוג ל-bundle.
+ * Decoding a share code - **server side only**, because it validates against the full catalog.
+ * See the explanation in `share.ts`: that separation is what lets the trip screen produce a
+ * link without pulling the catalog into the bundle.
  */
 
 
@@ -18,8 +18,8 @@ export function decodeTripShare(code: string): SharedTrip | null {
   } catch {
     return null;
   }
-  // v1 ו-v2 שניהם נפתחים: קוד ששותף בוואטסאפ לפני חודשים חייב להמשיך
-  // לעבוד, ולכן הגרסה החדשה **הוסיפה** שדות בסוף ולא שינתה את הקיימים.
+  // v1 and v2 both open: a code shared on WhatsApp months ago has to keep working, so the new
+  // version **added** fields at the end rather than changing the existing ones.
   if (!Array.isArray(parsed) || (parsed[0] !== 1 && parsed[0] !== 2)) return null;
   const [, name, days, startDate, endDate] = parsed as SharePayload;
   if (typeof name !== 'string' || !Array.isArray(days)) return null;
@@ -28,8 +28,8 @@ export function decodeTripShare(code: string): SharedTrip | null {
   for (const d of days) {
     if (!Array.isArray(d) || typeof d[0] !== 'string' || !Array.isArray(d[1])) return null;
     const dest = destinations.find((x) => x.slug === d[0]);
-    if (!dest) continue; // עיר שלא קיימת בקטלוג - מדלגים, לא ממציאים
-    // רק מזהי מקומות אמיתיים מהדאטה - כלל הברזל חל גם על קישורים
+    if (!dest) continue; // a city that does not exist in the catalog - skip it, do not invent
+    // Only real place ids from the data - the iron rule applies to links too
     const placeIds = d[1].filter(
       (id): id is string => typeof id === 'string' && dest.places.some((p) => p.id === id),
     );

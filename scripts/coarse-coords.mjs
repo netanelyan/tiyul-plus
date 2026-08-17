@@ -1,14 +1,13 @@
 /**
- * מקומות שהקואורדינטה שלהם גסה מכדי לסמוך עליה - עוטף
- * `src/lib/coordPrecision.ts` (ראו שם את הנימוקים) ומדפיס worklist.
+ * Places whose coordinate is too coarse to trust - wraps `src/lib/coordPrecision.ts` (see
+ * there for the reasoning) and prints a worklist.
  *
- * למה זה סקריפט ולא בדיקה שנכשלת על כל שורה: קואורדינטה גסה אינה
- * שגיאה שאפשר לתקן בקוד - היא **פער דאטה**, וצריך מישהו שיפתח מפה
- * וימצא את הנקודה הנכונה. `coordPrecision.test.ts` נועל את הרשימה
- * הקיימת (לא מרשה לה לגדול) בלי לחסום כל קומיט שאינו קשור עד שהיא
- * תרד לאפס.
+ * Why this is a script and not a check that fails on every row: a coarse coordinate is not
+ * an error that can be fixed in code - it is a **data gap**, and it needs somebody to open a
+ * map and find the right point. `coordPrecision.test.ts` locks the existing list (does not
+ * let it grow) without blocking every unrelated commit until it reaches zero.
  *
- * הרצה:
+ * Usage:
  *   node --experimental-strip-types --import ./scripts/alias-loader.mjs \
  *     scripts/coarse-coords.mjs [--json]
  */

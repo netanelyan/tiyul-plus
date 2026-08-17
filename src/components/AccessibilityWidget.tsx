@@ -13,10 +13,10 @@ import {
 } from '@/lib/a11y';
 
 /**
- * ווידג'ט הנגישות: כפתור צף (fixed, פינה תחתונה, RTL-aware) שפותח פאנל
- * עם בקרות - גודל טקסט, ניגודיות, גווני אפור, קו תחתון/הדגשת קישורים,
- * ריווח, סמן מוגדל, עצירת אנימציות, ואיפוס. המצב נשמר ב-localStorage
- * ומוחל על <html>. בשפת העיצוב של האתר (night/sunset/zest/cream).
+ * The accessibility widget: a floating button (fixed, bottom corner, RTL-aware) that opens a
+ * panel of controls - text size, contrast, greyscale, underline/highlight links, spacing, an
+ * enlarged cursor, stop animations, and reset. The state is stored in localStorage and applied
+ * to <html>. In the site's design language (night/sunset/zest/cream).
  */
 export default function AccessibilityWidget() {
   const [open, setOpen] = useState(false);
@@ -24,12 +24,12 @@ export default function AccessibilityWidget() {
   const panelRef = useRef<HTMLDivElement>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
 
-  // טעינה ראשונית (הסקריפט ב-layout כבר החיל; כאן מסנכרנים את ה-state)
+  // Initial load (the script in layout has already applied it; here we sync the state)
   useEffect(() => {
     setS(loadA11y());
   }, []);
 
-  // סגירה בלחיצה מחוץ לפאנל / Escape
+  // Close on a click outside the panel / on Escape
   useEffect(() => {
     if (!open) return;
     const onOutside = (e: MouseEvent) => {
@@ -76,7 +76,7 @@ export default function AccessibilityWidget() {
 
   return (
     <div className="print:hidden">
-      {/* הכפתור הצף */}
+      {/* The floating button */}
       <button
         ref={btnRef}
         onClick={() => setOpen((v) => !v)}
@@ -85,7 +85,7 @@ export default function AccessibilityWidget() {
         aria-label="הגדרות נגישות"
         className="fixed bottom-4 start-4 z-[60] flex h-11 w-11 items-center justify-center rounded-full bg-night text-cream shadow-[0_6px_20px_-6px_rgba(36,27,77,0.5)] ring-2 ring-cream transition hover:bg-night-soft focus:outline-none focus-visible:ring-4 focus-visible:ring-sunset sm:h-12 sm:w-12"
       >
-        {/* אייקון נגישות אוניברסלי (person-in-circle) */}
+        {/* The universal accessibility icon (person-in-circle) */}
         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden className="sm:h-[26px] sm:w-[26px]">
           <circle cx="12" cy="4" r="2" />
           <path d="M12 7c-2.5 0-6 .8-6 2.2 0 .9 3 1.3 4.5 1.5l-1.2 6.6a1 1 0 0 0 1.97.36L12 14.5l.75 3.66a1 1 0 0 0 1.97-.36L13.5 10.7c1.5-.2 4.5-.6 4.5-1.5C18 7.8 14.5 7 12 7z" />
@@ -113,7 +113,7 @@ export default function AccessibilityWidget() {
             </button>
           </div>
 
-          {/* גודל טקסט */}
+          {/* Text size */}
           <div className="rounded-xl bg-cream p-3 ring-1 ring-night/10">
             <div className="mb-2 text-sm font-bold text-night">גודל טקסט</div>
             <div className="flex items-center gap-2">
@@ -142,7 +142,7 @@ export default function AccessibilityWidget() {
             </div>
           </div>
 
-          {/* טוגלים */}
+          {/* Toggles */}
           <div className="mt-3 space-y-1.5">
             {toggles.map((t) => {
               const on = s[t.key] as boolean;
@@ -171,7 +171,7 @@ export default function AccessibilityWidget() {
             })}
           </div>
 
-          {/* איפוס + קישור להצהרה */}
+          {/* Reset + a link to the statement */}
           <button
             onClick={reset}
             className="mt-3 w-full rounded-xl bg-night px-3.5 py-2.5 text-sm font-bold text-cream transition hover:bg-night-soft"

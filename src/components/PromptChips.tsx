@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from 'react';
 import { pickChips, type PromptChip } from '@/lib/promptChips';
 
 /**
- * הצעות הפתיחה כ-dropdown אחד במקום גלולות עטופות: כפתור "💡 רעיונות
- * לטיול" פותח פאנל עם שורות (אימוג׳י + טקסט). בחירה ממלאת את הקלט
- * (chip.fill כשקיים) וסוגרת - לא שולחת. מקלדת: חצים בין שורות, Escape
- * סוגר; נסגר גם בלחיצה בחוץ. בלי ספריית תפריטים - טוקנים בלבד.
- * הטריגר דטרמיניסטי (בטוח ל-SSR); הבחירה האקראית רצה אחרי mount.
+ * The opening suggestions as a single dropdown instead of wrapped pills: an "ideas for a trip"
+ * button opens a panel of rows (emoji + text). Selecting fills the input (chip.fill when
+ * present) and closes - it does not send. Keyboard: arrows between rows, Escape closes; it
+ * also closes on an outside click. No menu library - tokens only.
+ * The trigger is deterministic (SSR-safe); the random selection runs after mount.
  */
 export default function PromptChips({
   onPick,
@@ -54,8 +54,8 @@ export default function PromptChips({
 
   return (
     <div ref={rootRef} onKeyDown={onRootKeyDown} className="relative mx-auto mt-4 w-full max-w-2xl">
-      {/* badge הוא inline-flex ולכן mx-auto לא ממרכז אותו - עוטפים ב-flex.
-          trailing (טוגל הכשרות) יושב באותה שורה ממורכזת. */}
+      {/* badge is inline-flex, so mx-auto does not centre it - wrap it in a flex row.
+          trailing (the kashrut toggle) sits in the same centred row. */}
       <div className="flex flex-wrap items-center justify-center gap-2">
         <button
           type="button"

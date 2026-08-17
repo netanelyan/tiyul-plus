@@ -2,18 +2,18 @@ import { quickServices } from '@/lib/services';
 import { outboundAttrs } from '@/lib/outbound';
 
 /**
- * גישה מהירה לשירותי נסיעה - 4 כרטיסים (שורה בדסקטופ, טור במובייל)
- * בשפת ה-card-pop/סטיקר של האתר. כל כרטיס: אייקון, כותרת, משפט קצר
- * וכפתור. מקור הקישור מגיע מ-`src/lib/services.ts` (config), כך שאפשר
- * להדביק קישור שותפים אמיתי מאוחר יותר בלי לגעת כאן.
+ * Quick access to travel services - 4 cards (a row on desktop, a column on mobile) in the site's
+ * card-pop/sticker language. Each card: an icon, a title, a short sentence and a button. The link
+ * source comes from `src/lib/services.ts` (config), so a real affiliate link can be pasted in
+ * later without touching this file.
  *
- * כנות: כרגע אין אפיליאייט - הכפתורים מפנים לאתר הספק הציבורי (בלי
- * פרמטרי מעקב), או מציגים "בקרוב" כשעדיין לא נבחר ספק.
+ * Honesty: there is no affiliate right now - the buttons point at the provider's public site (with
+ * no tracking parameters), or show "coming soon" when no provider has been chosen yet.
  *
- * ולכן גם ה-`rel` מגיע מ-`outboundAttrs` ולא נכתב ביד: הקוד כאן סימן
- * את ארבעת הקישורים כ-`sponsored` בזמן שאף אחד מהם אינו קישור שותפים,
- * וזו הצהרה שגויה. עכשיו הסימון נגזר מקיומו של `affiliateUrl`, כלומר
- * הוא ייכנס מעצמו ביום שיהיה מזהה - ולא רגע לפני.
+ * Which is also why `rel` comes from `outboundAttrs` and is not written by hand: the code here
+ * marked all four links as `sponsored` while none of them was an affiliate link, and that is a
+ * false declaration. Now the marking is derived from whether an `affiliateUrl` exists, i.e. it
+ * will appear by itself the day there is an id - and not a moment before.
  */
 export default function QuickServices() {
   return (
@@ -25,7 +25,7 @@ export default function QuickServices() {
         </p>
       </div>
 
-      {/* 2×2 במובייל, 4 בשורה בדסקטופ */}
+      {/* 2x2 on mobile, 4 across on desktop */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {quickServices.map((s) => {
           const href = s.affiliateUrl ?? s.publicUrl;

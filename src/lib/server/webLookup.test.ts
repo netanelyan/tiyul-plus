@@ -1,11 +1,11 @@
 /**
- * טסטים ל-webLookup.ts: מתי מותר לחפש, כמה פעמים בשיחה, והמטמון.
+ * Tests for webLookup.ts: when a search is allowed, how many times per conversation, and the cache.
  *
- * מה שלא נבדק כאן בכוונה: חסימת כשרות. זו אחריות של `kosherIntentText`
- * ב-grounding.ts (route.ts הוא מי שמרכיב `!kosherAsk && lookupEligible(...)`),
- * וזה בדיוק למה `kosherIntentText` נבדקת שם ולא כאן - הקובץ הזה לא יודע
- * שום דבר על כשרות, וזו הנקודה: אין לו שום מסלול שדרכו כשרות יכולה
- * להגיע לחיפוש בכלל.
+ * What is deliberately not tested here: the kashrut block. That is the responsibility of
+ * `kosherIntentText` in grounding.ts (route.ts is what composes
+ * `!kosherAsk && lookupEligible(...)`), and that is exactly why `kosherIntentText` is tested
+ * there and not here - this file knows nothing at all about kashrut, and that is the point:
+ * it has no path by which kashrut can reach a search in the first place.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -47,7 +47,7 @@ test('lookupsUsedSoFar סופרת ציטוטים בתשובות הסוכן בל�
   const messages = [
     usr('מה שעות הפתיחה?'),
     asst('פתוח בין 9:00 ל-19:00 (מקור: site.com, נבדק ב-1.1.2026).'),
-    usr('נבדק ב-1.1.2026 - זה כתוב בהודעה שלי'), // לא נספר - זה לא תשובת סוכן
+    usr('נבדק ב-1.1.2026 - זה כתוב בהודעה שלי'), // not counted - this is not an agent reply
     asst('בלי ציטוט בכלל'),
   ];
   assert.equal(lookupsUsedSoFar(messages), 1);
@@ -66,7 +66,7 @@ test('מטמון: שאלה זהה פעם שנייה מחזירה את התשוב
   assert.equal(getCachedLookup('מה שעות הפתיחה של הקולוסיאום?'), null);
   rememberLookup('מה שעות הפתיחה של הקולוסיאום?', 'פתוח 9-19 (נבדק ב-1.1.2026).');
   assert.equal(
-    getCachedLookup('  מה שעות הפתיחה של הקולוסיאום?  '), // רווחים/אותיות לא משנים את המפתח
+    getCachedLookup('  מה שעות הפתיחה של הקולוסיאום?  '), // whitespace and case do not change the key
     'פתוח 9-19 (נבדק ב-1.1.2026).',
   );
   assert.equal(getCachedLookup('שאלה אחרת לגמרי'), null);

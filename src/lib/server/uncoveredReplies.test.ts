@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { fallbackUncoveredQuickReplies } from './uncoveredReplies.ts';
 
-/* חמישה טקסטים אמיתיים מהמודל החי, כולם על קייב - שניים מהם הגיעו בלי suggest_quick_replies בפועל */
+/* Five real texts from the live model, all about Kyiv - two of them arrived without suggest_quick_replies in practice */
 
 test('טקסט אמיתי בלי כפתורים - מקבל ברירת מחדל', () => {
   const text =
@@ -27,7 +27,7 @@ test('"כרגע לא נמצאת בקטלוג" עדיין נתפס', () => {
 });
 
 test('שאלה כללית על כיסוי בלי הצעת חקירה - לא נתפס', () => {
-  // "לא בקטלוג" בלי "לחקור" הוא לא בהכרח הצעת חקירה - שיחה אחרת לגמרי
+  // "not in the catalog" without "explore" is not necessarily an explore offer - an entirely different conversation
   const text = 'יש לי כיסוי של 166 ערים ב-83 מדינות - וינה, פראג ורומא לא בקטלוג המורחב אבל כן בעיקרי.';
   assert.equal(fallbackUncoveredQuickReplies(text), null);
 });
@@ -38,7 +38,7 @@ test('תשובה רגילה על טיול בכיסוי - לא נתפס', () => {
 });
 
 test('המודל כן צירף כפתורים בעצמו - הפונקציה עדיין מחזירה ברירת מחדל (הקורא הוא זה שמחליט אם להשתמש)', () => {
-  // האחריות לא-לדרוס שייכת לקורא (route.ts: !quickReplies), לא לפונקציה עצמה
+  // The responsibility not to override belongs to the caller (route.ts: !quickReplies), not to the function itself
   const text = 'קייב אינה בקטלוג שלי. רוצה שאנסה לחקור?';
   assert.ok(fallbackUncoveredQuickReplies(text));
 });

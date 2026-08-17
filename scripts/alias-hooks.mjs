@@ -1,10 +1,11 @@
 /**
- * ה-resolve hook עצמו. חי בקובץ נפרד ונרשם לפי נתיב (ולא כ-data: URL עם
- * import דינמי) בכוונה: גרסה קודמת ייבאה את קובץ העזר מתוך ה-hook, וה-
- * import הזה עבר שוב דרך ה-hook - רקורסיה אינסופית ו-"Maximum call stack
- * size exceeded". static import כאן נפתר לפני שה-hook פעיל, ולכן בטוח.
+ * The resolve hook itself. It lives in a separate file and is registered by path (rather than
+ * as a data: URL with a dynamic import) deliberately: an earlier version imported the helper
+ * file from inside the hook, and that import went through the hook again - infinite recursion
+ * and "Maximum call stack size exceeded". A static import here resolves before the hook is
+ * active, and is therefore safe.
  *
- * מה הוא פותר, ולמה זה נדרש - ראו alias-loader.mjs.
+ * What it solves, and why it is needed - see alias-loader.mjs.
  */
 import { existsSync } from 'node:fs';
 
@@ -19,12 +20,12 @@ function firstExisting(base, rest) {
 }
 
 export async function resolve(specifier, context, next) {
-  // הכינוי של הפרויקט: "@/data/x" -> src/data/x
+  // The project's alias: "@/data/x" -> src/data/x
   if (specifier.startsWith('@/')) {
     const url = firstExisting(SRC, specifier.slice(2));
     if (url) return { url, shortCircuit: true };
   }
-  // ייבוא יחסי בלי סיומת: type-stripping דורש נתיב מפורש
+  // Extensionless relative imports: type-stripping needs an explicit path
   if (context.parentURL && /^\.{1,2}\//.test(specifier) && !/\.[a-z]+$/i.test(specifier)) {
     const url = firstExisting(context.parentURL, specifier);
     if (url) return { url, shortCircuit: true };

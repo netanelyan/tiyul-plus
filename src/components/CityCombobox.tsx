@@ -5,13 +5,13 @@ import Flag from '@/components/Flag';
 import { filterCities, type CityOption } from '@/lib/citySearch';
 
 /**
- * בחירת ערים לטיול: שדה חיפוש אחד עם רשימה נפתחת, במקום רשת של עשרות
- * כרטיסים (הקטלוג עבר מזמן את 8 הערים המקוריות). הבחירה נשארת מרובה -
- * הערים הנבחרות מוצגות כצ׳יפים הניתנים להסרה.
+ * Choosing cities for a trip: a single search field with a dropdown, instead of a grid of dozens
+ * of cards (the catalog passed the original 8 cities long ago). The selection stays multiple - the
+ * chosen cities are shown as removable chips.
  *
- * הרכיב הוא תצוגה בלבד: הוא לא מחזיק state של הטיול, אלא מקבל את
- * citySlugs ומדווח על שינוי דרך onToggle - בדיוק אותה לוגיקה שהייתה ברשת.
- * משותף לאשף התכנון (/planner) ולשאלון המובנה (/start).
+ * The component is presentational only: it holds no trip state, but receives citySlugs and
+ * reports changes through onToggle - exactly the same logic the grid had.
+ * Shared by the planner (/planner) and the structured questionnaire (/start).
  */
 
 export default function CityCombobox({
@@ -23,7 +23,7 @@ export default function CityCombobox({
   options: CityOption[];
   citySlugs: string[];
   onToggle: (slug: string) => void;
-  /** מיקוד אוטומטי - רק במסכים עם עכבר, שלא תקפוץ מקלדת במובייל */
+  /** Autofocus - only on screens with a mouse, so a keyboard does not pop up on mobile */
   autoFocus?: boolean;
 }) {
   const [query, setQuery] = useState('');
@@ -43,7 +43,7 @@ export default function CityCombobox({
 
   const matches = useMemo(() => {
     const pool = filterCities(options, query);
-    // הערים שכבר נבחרו יורדות לסוף הרשימה, לא נעלמות (אפשר להסיר גם משם)
+    // Cities already chosen sink to the end of the list rather than disappearing (they can be removed from there too)
     return [...pool].sort(
       (a, b) => Number(citySlugs.includes(a.slug)) - Number(citySlugs.includes(b.slug)),
     );
@@ -51,7 +51,7 @@ export default function CityCombobox({
 
   useEffect(() => setActiveIndex(0), [query]);
 
-  // סגירה בלחיצה מחוץ לרכיב
+  // Close on a click outside the component
   useEffect(() => {
     if (!open) return;
     const onOutside = (e: MouseEvent) => {
@@ -84,14 +84,14 @@ export default function CityCombobox({
     } else if (e.key === 'Escape') {
       setOpen(false);
     } else if (e.key === 'Backspace' && !query && selected.length > 0) {
-      // מחיקה בשדה ריק מסירה את הצ׳יפ האחרון - התנהגות מוכרת מתגיות
+      // Backspace in an empty field removes the last chip - behaviour familiar from tag inputs
       onToggle(selected[selected.length - 1].slug);
     }
   };
 
   return (
     <div ref={rootRef} className="relative">
-      {/* צ׳יפים של הערים שנבחרו */}
+      {/* Chips for the chosen cities */}
       {selected.length > 0 && (
         <div className="mb-2 flex flex-wrap gap-1.5">
           {selected.map((o) => (

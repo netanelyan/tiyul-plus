@@ -7,15 +7,18 @@ export const metadata = {
 };
 
 /*
- * ההצהרה הזאת נכתבה מתוך בדיקה של הקוד, ולא מתוך נוסח לדוגמה.
+ * This statement was written from a review of the code, not from a template.
  *
- * **הכלל שקבע את הניסוח: אין לטעון עמידה בתקן שלא נבדקה בפועל.** הצהרת
- * נגישות היא מסמך משפטי, וטענת עמידה בת״י 5568 שלא נבדקה היא הצהרה
- * כוזבת - חמורה יותר מלומר בכנות שהבדיקה טרם נעשתה. לכן פרק ״מה עדיין
- * לא נגיש״ קיים, והוא מפורט: מה שמדיד נמדד ונכתב במספרים.
+ * **The rule that decided the wording: do not claim conformance to a standard that was not
+ * actually tested.** An accessibility statement is a legal document, and claiming conformance
+ * to the Israeli standard without having tested it is a false declaration - more serious than
+ * saying honestly that the testing has not been done yet. That is why the "what is still not
+ * accessible" section exists, and why it is detailed: whatever is measurable was measured and
+ * written down as numbers.
  *
- * שלושת הפרטים שנשארו [למילוי] הם הצהרות של אדם - שם רכז נגישות, דרכי
- * קשר. אי אפשר לגזור אותם מקוד, ואסור להמציא אותם.
+ * The three details left as placeholders are declarations by a person - an accessibility
+ * coordinator's name and contact details. They cannot be derived from code, and must not be
+ * invented.
  */
 
 export default function AccessibilityStatementPage() {

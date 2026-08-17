@@ -1,17 +1,17 @@
 /**
- * טסטים לרשת הביטחון של מצב קריאה-בלבד.
+ * Tests for the read-only mode's safety net.
  *
- * הממשק מכבה את הפקדים בעצמו, ולכן קל לחשוב שהשכבה הזאת מיותרת. היא
- * לא: פקד שנשכח, קיצור מקלדת או קוד עתידי הם בדיוק הדרך שבה עריכה
- * ללא רשת מגיעה בשקט לסנכרון ומוחקת עבודה של מישהו. הטסטים כאן
- * בודקים את ההבטחה עצמה - **שום מוטציה לא עוברת** - ולא את המסך.
+ * The interface disables the controls itself, so it is easy to think this layer is redundant. It is
+ * not: a forgotten control, a keyboard shortcut or future code are exactly how an offline edit
+ * quietly reaches the sync and deletes somebody's work. The tests here check the promise itself -
+ * **no mutation gets through** - and not the screen.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import type { TripApi } from './TripContext';
 import { readOnlyIfOffline } from './readOnly.ts';
 
-/** מרגל: כל קריאה נרשמת, כדי שנוכל לטעון שכלום לא נקרא */
+/** A spy: every call is recorded, so we can claim that nothing was called */
 function spyApi(): { api: TripApi; calls: string[] } {
   const calls: string[] = [];
   const rec =
@@ -47,8 +47,8 @@ function spyApi(): { api: TripApi; calls: string[] } {
   return { api, calls };
 }
 
-/** כל מה שמשנה נתונים. אם מישהו יוסיף מוטציה ל-TripApi ולא לרשימה
- *  הזאת, הטסט האחרון כאן ייפול - וזו בדיוק המטרה. */
+/** Everything that changes data. If somebody adds a mutation to TripApi and not to this
+ *  list, the last test here will fail - and that is exactly the point. */
 const MUTATIONS: ((api: TripApi) => void)[] = [
   (a) => a.createTrip('x'),
   (a) => a.createTripFrom({} as never),
@@ -95,8 +95,8 @@ test('בלי רשת - שדות הקריאה עוברים כמו שהם', () => {
 
 test('addPlace מחזיר צורה תקינה ולא undefined', () => {
   const { api } = spyApi();
-  // קורא שמפרק את התוצאה מיד היה מתפוצץ על undefined - הכיבוי חייב
-  // להיות שקט, לא קריסה
+  // A caller that destructures the result immediately would blow up on undefined - the disabling
+  // has to be quiet, not a crash
   const got = readOnlyIfOffline(api, true).addPlace('vienna', 'p1');
   assert.deepEqual(got, { dayIndex: 0 });
 });
@@ -112,7 +112,7 @@ test('createTrip מחזיר טיול תקין שלא נשמר בשום מקום'
 test('כל פונקציה ב-TripApi היא או קריאה מוכרת או מוטציה חסומה', () => {
   const { api, calls } = spyApi();
   const guarded = readOnlyIfOffline(api, true);
-  /** הפונקציות שמותר להן לעבור: קריאה, או תוצאה של סנכרון שדורש רשת ממילא */
+  /** The functions allowed through: a read, or the result of a sync that requires a network anyway */
   const ALLOWED = new Set(['setCurrentId', 'applyRemoteTrips', 'applyRemoteDeletions']);
   const fnNames = Object.entries(api)
     .filter(([, v]) => typeof v === 'function')

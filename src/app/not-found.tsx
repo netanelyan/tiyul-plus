@@ -4,13 +4,13 @@ import Logo from '@/components/Logo';
 import { catalogCounts } from '@/lib/server/footerLinks';
 
 /**
- * 404 גלובלי - `app/not-found.tsx` הוא הקונבנציה של Next למסלול שלא נמצא
- * בכלל, אז הוא רץ בשרת ומחזיר סטטוס 404 אמיתי, לא רק דף שנראה כמוני.
- * רכיב שרת בכוונה, כמו SiteFooter: אין כאן שום דבר שדורש לקוח, ומספרי
- * הכיסוי (`catalogCounts`) כבר מחושבים בשרת ממילא.
+ * The global 404 - `app/not-found.tsx` is Next's convention for a route that does not exist
+ * at all, so it runs on the server and returns a real 404 status, not just a page that looks
+ * like one. Deliberately a server component, like SiteFooter: nothing here needs a client, and
+ * the coverage numbers (`catalogCounts`) are already computed on the server anyway.
  *
- * `robots: noindex` כי כתובת שבורה לא אמורה להצטבר בתוצאות חיפוש, אבל
- * `follow: true` כדי שגוגל עדיין יעקוב מכאן חזרה לדף הבית ולקטלוג.
+ * `robots: noindex` because a broken URL should not accumulate in search results, but
+ * `follow: true` so Google still follows from here back to the homepage and the catalog.
  */
 export const metadata: Metadata = {
   title: 'הדף לא נמצא | טיול+',
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <div className="relative flex flex-col items-center px-4 py-16 text-center sm:py-24">
-      {/* שטיפה חמה עדינה, אותו טוקנים כמו הירו של דף הבית */}
+      {/* A subtle warm wash, the same tokens as the homepage hero */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 -z-10 mx-auto h-[320px] w-full max-w-3xl rounded-full bg-[radial-gradient(55%_55%_at_50%_35%,rgba(255,89,65,0.08),rgba(255,197,49,0.05)_55%,transparent_78%)]"

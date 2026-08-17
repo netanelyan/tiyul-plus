@@ -2,14 +2,15 @@ import type { Destination } from '@/lib/types';
 import { isExploredSlug } from './adapter';
 
 /**
- * צד לקוח: יעדים שנחקרו (בצורת Destination מלאה, כפי שהשרת שידר אותם
- * באירוע {type:'explored'}) נשמרים מקומית וגם נשלחים חזרה לשרת בכל תור
- * שיחה, כדי שהסוכן ימשיך לתקף מולם טיולים שנבנו בהם. כשיגיעו חשבונות,
- * הקובץ הזה מוחלף בגיבוי שרת בדיוק כמו trip/storage.ts.
+ * Client side: explored destinations (as full Destination objects, exactly as the server
+ * streamed them in the {type:'explored'} event) are stored locally and are also sent back to the
+ * server on every conversation turn, so the agent keeps validating against them for trips built
+ * on them. When accounts arrive, this file is replaced by a server-backed one exactly like
+ * trip/storage.ts.
  */
 
 const KEY = 'tiyul-plus:explored:v2';
-const MAX = 6; // גם תקרת השרת (sanitizeExploredDestinations)
+const MAX = 6; // also the server's ceiling (sanitizeExploredDestinations)
 
 export function loadExplored(): Destination[] {
   if (typeof window === 'undefined') return [];
@@ -28,7 +29,7 @@ export function saveExplored(dest: Destination): Destination[] {
   try {
     window.localStorage.setItem(KEY, JSON.stringify(next));
   } catch {
-    /* אחסון מלא - נשארים עם מה שבזיכרון */
+    /* storage full - stay with whatever is in memory */
   }
   return next;
 }

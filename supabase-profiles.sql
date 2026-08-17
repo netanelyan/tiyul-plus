@@ -1,16 +1,16 @@
--- טיול+ · שלב 3: פרופיל משתמש (האזור האישי)
--- להריץ פעם אחת ב-SQL Editor (אחרי supabase-setup.sql ו-supabase-accounts.sql).
+-- tiyul+ - step 3: user profile (the account area)
+-- Run once in the SQL Editor (after supabase-setup.sql and supabase-accounts.sql).
 
 create table if not exists public.profiles (
   user_id uuid primary key references auth.users (id) on delete cascade,
   display_name text,
   phone text,
-  -- תמונת פרופיל כ-data URL מוקטן (נדחס בצד הלקוח ל~20KB);
-  -- מעבר ל-Supabase Storage הוא שדרוג עתידי שקוף
+  -- Profile picture as a downscaled data URL (compressed on the client to ~20KB);
+  -- moving to Supabase Storage is a transparent future upgrade
   avatar text,
-  -- קודי מדינות (ISO2) שהמשתמש ביקר בהן - פיצ'ר "חותמות בדרכון"
+  -- Country codes (ISO2) the user has visited - the "passport stamps" feature
   visited jsonb not null default '[]',
-  -- העדפות ברירת-מחדל של החשבון (למשל kosher)
+  -- The account's default preferences (for example kosher)
   prefs jsonb not null default '{}',
   updated_at timestamptz not null default now()
 );

@@ -2,11 +2,11 @@ import { requireRole, denied, ok, audit } from '@/lib/server/admin';
 import { sendTestAlert } from '@/lib/server/budget';
 
 /**
- * שולחת התראת בדיקה אמיתית, וממתינה לתשובה.
+ * Sends a real test alert, and waits for the answer.
  *
- * זה ההבדל בין "ה-webhook מוגדר" לבין "בדקתי, וזה עבד" - נתנאל עומד
- * להריץ את התקרה קרוב לקצה ורוצה לדעת **לפני** שהוא צריך את ההתראה
- * שהיא באמת מגיעה, לא רק שהקוד שכותב אותה נראה נכון.
+ * This is the difference between "the webhook is configured" and "I checked, and it worked" -
+ * Netanel is about to run the ceiling close to the edge and wants to know **before** he needs the
+ * alert that it genuinely arrives, not merely that the code writing it looks right.
  */
 export async function POST(req: Request) {
   const actor = await requireRole(req, 'admin');

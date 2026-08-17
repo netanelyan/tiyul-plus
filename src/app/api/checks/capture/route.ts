@@ -5,11 +5,11 @@ import { captureOrder } from '@/lib/server/paypal';
 import { findById, markFailed } from '@/lib/server/purchases';
 
 /**
- * POST → מפעילה את הלכידה מול PayPal אחרי שהמטייל אישר שם. **זה לא
- * המקום שמעניק גישה** - ראו הכותרת של `server/paypal.ts`. לכידה
- * מוצלחת רק מבטיחה שהכסף זז; מה שקובע `status='paid'` הוא ורק ה-webhook
- * המאומת ב-`/api/checks/webhook`. עמוד החזרה קורא לזה ואז עובר למצב
- * "מאמתים", לא למצב "שולם".
+ * POST -> triggers the capture against PayPal after the traveller approved it there. **This
+ * is not the place that grants access** - see the header of `server/paypal.ts`. A successful
+ * capture only guarantees that the money moved; what sets `status='paid'` is the verified
+ * webhook in `/api/checks/webhook`, and only that. The return page calls this and then moves
+ * to a "verifying" state, not to a "paid" state.
  */
 export async function POST(request: Request) {
   const caller = await resolveCaller(request);
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
   if (!purchaseId) return NextResponse.json({ ok: false, error: 'bad-request' }, { status: 400 });
 
   const purchase = await findById(purchaseId);
-  // בעלות: אף אחד לא יכול לגרום לתשלום שלו ללכוד עבור מישהו אחר
+  // Ownership: nobody can make their own payment capture on somebody else's behalf
   if (!purchase || purchase.user_id !== caller.userId) {
     return NextResponse.json({ ok: false, error: 'not-found' }, { status: 404 });
   }
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 
   const outcome = await captureOrder(purchase.mode, purchase.paypal_order_id);
   if (outcome.ok) {
-    // ה-status נשאר pending בכוונה. הלקוח עובר לסקר את /api/checks/status.
+    // The status deliberately stays pending. The client moves on to poll /api/checks/status.
     return NextResponse.json({ ok: true, captured: true });
   }
 
@@ -48,6 +48,6 @@ export async function POST(request: Request) {
     await markFailed(purchase.paypal_order_id, 'paypal capture declined');
     return NextResponse.json({ ok: false, error: 'declined' });
   }
-  // 'network' / 'not-configured' / 'bad-response': זמני, לא נוגעים בשורה - אפשר לנסות שוב
+  // 'network' / 'not-configured' / 'bad-response': transient, the row is untouched - it can be retried
   return NextResponse.json({ ok: false, error: 'retry' }, { status: 503 });
 }

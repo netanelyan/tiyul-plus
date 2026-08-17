@@ -1,9 +1,9 @@
 import type { Country } from '@/lib/types';
 
-// שכבת המדינות: "טסים לאיטליה" זה המודל המנטלי, התכנון עצמו נשאר ברמת עיר.
-// המידע הפרקטי כאן (ויזה, מטבע, סים, תשלומים) נכון לכל הערים במדינה;
-// מידע עירוני (טיסות לשדה הספציפי, תחבורה, כשרות) נשאר על כל עיר
-// ב-destinations.ts, שמצביעה הנה דרך countrySlug.
+// The country layer: "we are flying to Italy" is the mental model, while the planning itself stays
+// at city level. The practical information here (visa, currency, SIM, payments) holds for every
+// city in the country; city-level information (flights to the specific airport, getting around,
+// kashrut) stays on each city in destinations.ts, which points here via countrySlug.
 
 export const countries: Country[] = [
   {

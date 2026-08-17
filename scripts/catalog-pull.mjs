@@ -33,7 +33,7 @@ if (!url || !key) {
 }
 const db = createClient(url, key, { auth: { persistSession: false } });
 
-/** Supabase מחזיר 1000 שורות כברירת מחדל; 1,510 מקומות דורשים דפדוף. */
+/** Supabase returns 1000 rows by default; 1,510 places require pagination. */
 async function all(table) {
   const out = [];
   for (let from = 0; ; from += 1000) {
@@ -49,8 +49,8 @@ console.log('from supabase: countries=%d destinations=%d places=%d', countryRows
 
 const { countries, destinations } = rowsToCatalog({ countryRows, destinationRows, placeRows });
 
-// ההדפסה עצמה חיה ב-scripts/lib/catalogEmit.mjs כדי שאפשר יהיה לבדוק
-// אותה בלי רשת. ראה catalog-roundtrip.mjs.
+// The emitting itself lives in scripts/lib/catalogEmit.mjs so that it can be tested without a
+// network. See catalog-roundtrip.mjs.
 const cSrc = emitCountries(countries);
 const dSrc = emitDestinations(destinations);
 writeFileSync('src/data/countries.generated.ts', cSrc);

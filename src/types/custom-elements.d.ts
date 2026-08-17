@@ -1,6 +1,6 @@
 import type * as React from 'react';
 
-// מאפשר להשתמש ב-<blackz-signature> בתוך JSX
+// Allows <blackz-signature> to be used inside JSX
 declare module 'react' {
   namespace JSX {
     interface IntrinsicElements {

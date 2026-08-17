@@ -5,19 +5,19 @@ import { categoryMeta } from '@/lib/categories';
 import type { Place } from '@/lib/types';
 
 /**
- * התמונה הקטנה של מקום - עם נפילה מסודרת כשאין תמונה.
+ * A place's small photo - with an orderly fallback when there is no photo.
  *
- * חלק מהמקומות בקטלוג פשוט אין להם תמונה חופשית: מסעדות כשרות,
- * בתי חב"ד, שווקים ובתי כנסת קטנים כמעט אף פעם לא מצולמים
- * בוויקישיתוף ברישיון פתוח. עד היום פשוט לא הצגנו כלום, וזה גרם
- * לרשימה להיראות שבורה - חלק מהכרטיסים עם ריבוע וחלק בלי.
+ * Some places in the catalog simply have no freely licensed photo: kosher restaurants, Chabad
+ * houses, markets and small synagogues are almost never photographed on Wikimedia Commons under
+ * an open licence. Until now we simply showed nothing, which made the list look broken - some
+ * cards with a square and some without.
  *
- * במקום זה מוצג כאן ריבוע בצבע הקטגוריה עם האימוג׳י שלה. הוא
- * נראה מכוון, שומר על אותה רוחב-גובה בכל הכרטיסים, ולא מתחזה
- * לתצלום של המקום.
+ * Instead, a square in the category's colour with its emoji is shown here. It looks deliberate,
+ * keeps the same aspect ratio across all the cards, and does not pretend to be a photograph of
+ * the place.
  *
- * אותה נפילה תופסת גם כשכתובת תמונה קיימת אבל לא נטענת (onError),
- * כדי שקישור שבור לא יישאר כריבוע ריק.
+ * The same fallback also catches the case where a photo URL exists but fails to load (onError),
+ * so a broken link does not leave an empty square.
  */
 export default function PlaceThumb({
   place,
@@ -25,7 +25,7 @@ export default function PlaceThumb({
   rounded = 'rounded-xl',
 }: {
   place: Place;
-  /** מידות - נקבעות במקום הקריאה, למשל "h-20 w-20 shrink-0" */
+  /** Dimensions - set at the call site, for example "h-20 w-20 shrink-0" */
   className?: string;
   rounded?: string;
 }) {

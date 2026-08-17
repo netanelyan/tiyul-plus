@@ -1,7 +1,7 @@
-// אימות לוח "מה שמשנה טיול". הכלל היחיד שבאמת חשוב כאן הוא כלל התאריכים:
-// datesConfirmed=true חייב להגיע עם dates אמיתיים ומקור, ו-false חייב להגיע
-// עם window במילים ובלי שום תאריך. הבדיקה קיימת כדי שתאריך משוער לא ייכנס
-// בשקט מתחת לדגל "מאומת" - זה כל מה שמפריד כאן בין נתון לניחוש.
+// Validating the "what changes a trip" calendar. The only rule that genuinely matters here is the
+// dates rule: datesConfirmed=true must come with real dates and a source, and false must come with
+// a window in words and no date at all. The check exists so an estimated date cannot slip in
+// quietly under the "confirmed" flag - that is all that separates a fact from a guess here.
 import { calendar } from '../src/data/calendar.ts';
 import { destinations } from '../src/data/destinations.ts';
 import { countries } from '../src/data/countries.ts';
@@ -12,7 +12,7 @@ const ids = new Set();
 const destSlugs = new Set(destinations.map((d) => d.slug));
 const countrySlugs = new Set(countries.map((c) => c.slug));
 const ISO = /^\d{4}-\d{2}-\d{2}$/;
-// כל דבר שנראה כמו תאריך, כדי לתפוס תאריך שהוברח לתוך שדה חופשי
+// Anything that looks like a date, to catch a date smuggled into a free-text field
 const DATEISH = /\b\d{4}-\d{2}-\d{2}\b|\b\d{1,2}[./]\d{1,2}[./]\d{4}\b/;
 
 for (const e of calendar) {

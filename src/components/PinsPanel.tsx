@@ -5,12 +5,13 @@ import type { Trip, TripPin, TripPinKind } from '@/lib/trip/types';
 import PanelSection, { PanelBody } from '@/components/PanelSection';
 
 /**
- * הסיכות של המטייל: המלון שהזמין, מסעדה ששמר בה שולחן, נקודות משלו.
- * הן נוצרות בעיקר בשיחה עם הסוכן (add_pin), והפאנל הזה הוא מקום
- * לראות אותן, להסיר, ובעיקר - לתקן מיקום שלא אותר.
+ * The traveller's pins: the hotel they booked, a restaurant they reserved a table at, points of
+ * their own. They are created mostly in the conversation with the agent (add_pin), and this panel
+ * is a place to see them, remove them, and above all - to fix a location that was not resolved.
  *
- * המיקום מגיע תמיד מחיפוש בשרת מול OpenStreetMap או מהאצבע של
- * המטייל. אין כאן ניחוש: סיכה בלי מיקום מוצגת ככזו, במפורש.
+ * The location always comes from a server-side search against OpenStreetMap or from the
+ * traveller's own finger. There is no guessing here: a pin with no location is shown as such,
+ * explicitly.
  */
 
 const KIND_META: Record<TripPinKind, { emoji: string; label: string }> = {

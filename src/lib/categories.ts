@@ -19,9 +19,9 @@ export const categoryMeta: Record<
 export const isKosher = (c: PlaceCategory) => c.startsWith('kosher');
 
 /**
- * קטגוריות שאוכלים בהן - בשונה משוק או חנות, שבהם אפשר להסתובב בלי
- * לאכול. הבחנה זו היא מה שקובע אם מטייל ששמר "כשר" יראה את המקום:
- * מסעדה לא כשרה תיחסם, שוק פרחים לא.
+ * Categories you eat at - unlike a market or a shop, where you can walk around without
+ * eating. That distinction is what decides whether a traveller who set "kosher" sees the
+ * place: a non-kosher restaurant is blocked, a flower market is not.
  */
 const EATING: ReadonlySet<PlaceCategory> = new Set<PlaceCategory>([
   'cafe',
@@ -32,12 +32,12 @@ const EATING: ReadonlySet<PlaceCategory> = new Set<PlaceCategory>([
 export const isEating = (c: PlaceCategory) => EATING.has(c);
 
 /**
- * הסטטוס האפקטיבי. **רשומות kosher-* מחזירות 'kosher' בגזירה ולא
- * מהשדה**, כדי ששום רשומת כשרות קיימת לא תצטרך להשתנות - התוספת של
- * הפיצ׳ר הזה לא נוגעת בהן בכלל.
+ * The effective status. **kosher-* records return 'kosher' by derivation and not from the
+ * field**, so that no existing kashrut record has to change - this feature's addition does
+ * not touch them at all.
  *
- * היעדר שדה מחזיר 'unknown' ולא 'kosher'. ברירת המחדל חייבת להיות
- * הזהירה: מקום שלא נבדק מוצג כלא ידוע, לא כמותר.
+ * A missing field returns 'unknown' and not 'kosher'. The default has to be the cautious
+ * one: a place that was not checked is shown as unknown, not as permitted.
  */
 export function kosherStatusOf(
   p: Pick<Place, 'category' | 'kosherStatus'>,

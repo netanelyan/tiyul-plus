@@ -1,10 +1,10 @@
 /**
- * הצבירה של לוח הבקרה.
+ * The dashboard's aggregation.
  *
- * מספר שגוי בלוח מצב הוא החלטה עסקית שגויה, ולכן הפונקציות האלה טהורות
- * ונבדקות ישירות. שתי טענות שחוזרות כאן: **שורה פגומה לא נספרת** (ולא
- * מפילה את הלוח), ו**עיר נספרת פעם אחת לטיול** גם אם היא נמשכת חמישה
- * ימים - אחרת "לאן מתכננים" מודד אורך שהייה במקום פופולריות.
+ * A wrong number on a dashboard is a wrong business decision, so these functions are pure and
+ * are tested directly. Two claims recur here: **a malformed row is not counted** (and does not
+ * bring the dashboard down), and **a city is counted once per trip** even if it runs for five
+ * days - otherwise "where people plan to go" measures length of stay instead of popularity.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -108,7 +108,7 @@ test('אורך טיפוסי הוא חציון - טיול חריג אחד לא מ
     });
   const a = aggregate(summaries([mk(3, 'a'), mk(3, 'b'), mk(4, 'c'), mk(90, 'd')]));
   assert.equal(a.medianDays, 4);
-  // ממוצע היה 25 - וזה בדיוק המספר שהיה גורם להחלטה שגויה
+  // A mean would have been 25 - and that is exactly the number that would have caused a wrong decision
 });
 
 test('יום בלי טיולים מוצג כאפס ולא נעלם מהגרף', () => {

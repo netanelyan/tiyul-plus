@@ -59,7 +59,7 @@ test('יום ארוך מפוצל לקטעים - ושום עצירה לא נעל�
   const stops = many(14);
   const legs = googleMapsLegs(stops);
   assert.ok(legs.length > 1, 'התפצל');
-  // כל נקודה מופיעה לפחות פעם אחת באחד הקטעים
+  // Every point appears at least once in one of the legs
   const seen = new Set<string>();
   for (const leg of legs) {
     const q = new URL(leg.url).searchParams;

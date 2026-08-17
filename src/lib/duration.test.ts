@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import { daysHe, formatDurationHe } from './duration.ts';
 
 test('formatDurationHe: the two forms the old expression got wrong', () => {
-  // 60 ו-45 הם המשכים הנפוצים ביותר בקטלוג (248 מקומות), ושניהם הציגו
-  // "כ-1 שעות" לפני התיקון. זו הבדיקה שהבאג לא יחזור.
+  // 60 and 45 are the most common durations in the catalog (248 places), and both displayed the
+  // broken singular form before the fix. This is the check that the bug does not come back.
   assert.equal(formatDurationHe(60), 'כשעה');
   assert.equal(formatDurationHe(45), 'כשעה');
   assert.equal(formatDurationHe(30), 'כחצי שעה');
@@ -29,7 +29,7 @@ test('formatDurationHe: nothing to show returns null, never a stray label', () =
   assert.equal(formatDurationHe(undefined), null);
   assert.equal(formatDurationHe(null), null);
   assert.equal(formatDurationHe(NaN), null);
-  // מתחת לרבע שעה מתעגל לאפס - עדיף לא להציג מאשר "כ-0 שעות"
+  // Under a quarter of an hour rounds to zero - better to show nothing than "about 0 hours"
   assert.equal(formatDurationHe(5), null);
 });
 
@@ -47,7 +47,7 @@ test('אורך טיול בעברית: יחיד, זוגי ורבים', () => {
   assert.equal(daysHe(2), 'יומיים');
   assert.equal(daysHe(3), '3 ימים');
   assert.equal(daysHe(14), '14 ימים');
-  // אף פלט לא חוזר לצורה השבורה
+  // No output returns to the broken form
   for (let n = 1; n <= 60; n++) assert.ok(!/^[12] ימים$/.test(daysHe(n)), String(n));
   assert.equal(daysHe(0), 'בלי ימים');
   assert.equal(daysHe(NaN), 'בלי ימים');
