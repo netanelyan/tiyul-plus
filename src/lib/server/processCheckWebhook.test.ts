@@ -1,10 +1,10 @@
 /**
- * לוגיקת ה-webhook, קצה-לקצה נגד מוק PayPal + מוק Supabase - לא רק
- * הפונקציות שמתחתיה. **הטענה שהטסטים כאן קיימים כדי להוכיח: webhook
- * כפול אינו הענקה כפולה, וחתימה לא תקפה או סכום שגוי אינם מעניקים
- * כלום.** המוק של `purchases` מדמה בפועל את `WHERE status='pending'`
- * שמדברים עליו ב-`purchases.ts` - הוא בודק את זה בעצמו, לא רק "מחזיר
- * את מה שביקשו".
+ * The webhook logic, end to end against a PayPal mock + a Supabase mock - not just the
+ * functions beneath it. **The claim these tests exist to prove: a duplicate webhook is not
+ * a duplicate grant, and an invalid signature or a wrong amount grants nothing.** The
+ * `purchases` mock actually emulates the `WHERE status='pending'` discussed in
+ * `purchases.ts` - it checks that itself, rather than merely "returning what was asked
+ * for".
  */
 import { test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
@@ -34,7 +34,7 @@ interface DbPurchase {
 let purchase: DbPurchase;
 let trip: unknown;
 let verifySignature: boolean;
-/** שורת profiles למוק - אירועי המנוי קוראים וכותבים אליה */
+/** A profiles row for the mock - the subscription events read from and write to it */
 let profile: { user_id: string; plan: string; plan_source: string | null } | null;
 
 beforeEach(() => {
@@ -82,8 +82,8 @@ beforeEach(() => {
       );
     }
     if (url.includes('/rest/v1/purchases')) {
-      // **מדמה את Postgres בפועל**: PATCH עם status=eq.pending בשאילתה
-      // נכשל בשקט (0 שורות) אם השורה כבר לא pending.
+      // **Emulates real Postgres**: a PATCH with status=eq.pending in the query fails
+      // silently (0 rows) if the row is no longer pending.
       if (init.method === 'PATCH') {
         const matchesOrder = url.includes(`paypal_order_id=eq.${purchase.paypal_order_id}`);
         const requiresPending = url.includes('status=eq.pending');
@@ -220,7 +220,7 @@ test('לא מוגדר (בלי מפתחות) - 503, בלי בקשה לרשת', as
   assert.equal(purchase.status, 'pending');
 });
 
-/* ---------- מנוי הפרימיום: אותו webhook, אירועי BILLING.SUBSCRIPTION ---------- */
+/* ---------- The premium subscription: the same webhook, BILLING.SUBSCRIPTION events ---------- */
 
 const SUB_USER = 'c80e1062-403d-4bde-87d1-095cf40a6462';
 

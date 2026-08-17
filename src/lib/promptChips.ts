@@ -1,9 +1,10 @@
 /**
- * מאגר צ׳יפים לקלט הפתיחה - במקום מסלולים קנויים, הצ׳יפים מלמדים מה
- * הקלט מבין: מצבי חיים, יכולות של הסוכן ושאלות. הקטגוריה שקופה למשתמש.
- * months = רלוונטיות עונתית (1-12); צ׳יפ עונתי מוצג רק בחודשים שלו.
- * pinned = מופיע בכל הגרלה (הטיול הגדול). fill = הטקסט שממלא את הקלט
- * כשהוא שונה מהטקסט המוצג על הגלולה.
+ * The pool of chips for the opening input - instead of off-the-shelf itineraries, the
+ * chips teach what the input understands: life situations, the agent's capabilities and
+ * questions. The category is invisible to the user.
+ * months = seasonal relevance (1-12); a seasonal chip is shown only in its months.
+ * pinned = appears in every draw (the big post-army trip). fill = the text that fills
+ * the input when it differs from the text shown on the pill.
  */
 
 export interface PromptChip {
@@ -12,11 +13,11 @@ export interface PromptChip {
   category: 'situation' | 'capability' | 'question';
   months?: number[]; // 1-12
   pinned?: boolean;
-  fill?: string; // ברירת מחדל: text
+  fill?: string; // default: text
 }
 
 export const CHIP_POOL: PromptChip[] = [
-  // מצבים
+  // Situations
   {
     emoji: '🎖️',
     text: 'הטיול הגדול אחרי צבא',
@@ -31,13 +32,13 @@ export const CHIP_POOL: PromptChip[] = [
   { emoji: '🧳', text: 'חופשה עם ההורים, בלי הרבה הליכה', category: 'situation' },
   { emoji: '🕎', text: 'חנוכה באירופה', category: 'situation', months: [11, 12] },
   { emoji: '🏖️', text: 'בריחה מהחום של אוגוסט', category: 'situation', months: [7, 8] },
-  // הדגמות יכולת
+  // Capability demonstrations
   { emoji: '👨‍👩‍👧‍👦', text: '5 ימים, בלי מוזיאונים, עם שני ילדים', category: 'capability' },
   { emoji: '🍽️', text: 'משהו רגוע עם הרבה אוכל טוב', category: 'capability' },
   { emoji: '🌍', text: 'שבוע בשתי מדינות, טבע ושופינג', category: 'capability' },
   { emoji: '🏛️', text: '4 ימים, היסטוריה ואוכל כשר', category: 'capability' },
   { emoji: '🍝', text: 'טיול אוכל ושווקים, תקציב בינוני', category: 'capability' },
-  // שאלות
+  // Questions
   { emoji: '❄️', text: 'לאן הכי שווה לטוס בדצמבר?', category: 'question', months: [10, 11, 12] },
   { emoji: '💸', text: 'איפה הכי זול באירופה עכשיו?', category: 'question' },
   { emoji: '✈️', text: 'לאן טסים לסופ״ש ארוך?', category: 'question' },
@@ -54,10 +55,11 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 /**
- * בוחר 6 צ׳יפים: המוצמדים (pinned) תמיד בפנים, והשאר מאוזנים בין
- * הקטגוריות (2 מכל אחת, כולל המוצמדים במניין). עונתיים של החודש קודמים,
- * עונתיים מחוץ לעונה לא מוצגים, והסדר אקראי.
- * לקרוא רק בצד הלקוח (אחרי mount) - התוצאה אקראית ותשבור הידרציה ב-SSR.
+ * Picks 6 chips: the pinned ones are always in, and the rest are balanced across the
+ * categories (2 from each, counting the pinned ones). Seasonal chips for the current
+ * month come first, out-of-season ones are not shown, and the order is shuffled.
+ * Call only on the client (after mount) - the result is random and would break
+ * hydration in SSR.
  */
 export function pickChips(date = new Date()): PromptChip[] {
   const month = date.getMonth() + 1;
@@ -72,7 +74,7 @@ export function pickChips(date = new Date()): PromptChip[] {
     picked.push(...[...inSeason, ...evergreen].slice(0, quota));
   }
   const result = shuffle(picked);
-  // הרכיב מציג 4 כברירת מחדל - מוודאים שהמוצמדים בתוך הארבעה הגלויים
+  // The component shows 4 by default - make sure the pinned ones are among the 4 visible
   for (let i = 4; i < result.length; i++) {
     if (result[i].pinned) {
       const j = Math.floor(Math.random() * 4);

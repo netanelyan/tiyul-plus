@@ -5,18 +5,20 @@ import { useRouter } from 'next/navigation';
 import HeroPrompt from '@/components/HeroPrompt';
 
 /**
- * ההירו של דף הבית - פורטל, לא סביבת עבודה: שליחה מנווטת ל-/chat עם
- * הטקסט (והעדפת הכשרות אם הודלקה) ב-query. הירו נקי וטיפוגרפי - קרם עם
- * שטיפת גרדיאנט עדינה בלבד; הצבע של הדף הוא רשת היעדים שמתחת.
+ * The homepage hero - a portal, not a workspace: submitting navigates to /chat with the
+ * text (and the kashrut preference if it was turned on) in the query. A clean, typographic
+ * hero - cream with only a subtle gradient wash; the page's colour is the destination grid
+ * below it.
  */
 export default function HomeHero() {
   const router = useRouter();
 
   return (
     <div className="relative flex flex-col items-center px-2 pb-8 pt-10 sm:pb-10 sm:pt-14">
-      {/* טקסטורת רקע full-bleed: נתיבי טיסה עדינים, דוהה לשקיפות מלאה לפני
-          פס "יעדים פופולריים" - טכניקת ה-margin ל-breakout (לא left-1/2 +
-          translate, שגורם לגלילה אופקית כשמקונן בתוך main הממורכז) */}
+      {/* A full-bleed background texture: subtle flight paths, fading to full transparency
+          before the popular-destinations band - the margin technique for the breakout (not
+          left-1/2 + translate, which causes horizontal scrolling when nested inside the
+          centred main) */}
       <div
         aria-hidden
         className="pointer-events-none absolute top-0 -z-20 ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] h-[460px] w-screen overflow-hidden opacity-[0.12] sm:h-[560px]"
@@ -29,7 +31,7 @@ export default function HomeHero() {
           WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
         }}
       />
-      {/* שטיפה חמה עדינה - צבעי הטוקנים sunset/zest בשקיפות נמוכה */}
+      {/* A subtle warm wash - the sunset/zest tokens at low opacity */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 -top-10 -z-10 mx-auto h-[340px] w-full max-w-4xl rounded-full bg-[radial-gradient(55%_55%_at_50%_35%,rgba(255,89,65,0.08),rgba(255,197,49,0.05)_55%,transparent_78%)]"
@@ -50,8 +52,9 @@ export default function HomeHero() {
         onSubmit={(text, kosher) =>
           router.push(`/chat?q=${encodeURIComponent(text)}${kosher ? '&kosher=1' : ''}`)
         }
-        // גלולה אחות באותה שורה: שאלון מודרך (דף הבית בלבד - נחיתת /chat
-        // נשארת מינימליסטית לפי CLAUDE.md). ההסבר עולה בטולטיפ, לא בטקסט.
+        // A sibling pill in the same row: the guided questionnaire (homepage only - the
+        // /chat landing stays minimal per CLAUDE.md). The explanation goes in a tooltip,
+        // not in the text.
         extraChips={
           <Link
             href="/start"

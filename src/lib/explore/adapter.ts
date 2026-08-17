@@ -2,13 +2,14 @@ import type { Destination, Place, PlaceCategory } from '@/lib/types';
 import type { ExploredDestination } from './resolver';
 
 /**
- * גשר בין ה-Explorer לדומיין הטיול: יעד שנחקר הופך ל-Destination מלא
- * (slug עם קידומת explored-) כדי שכל שכבות הטיול - קנבס, מפה, הדפסה,
- * הסוכן - יעבדו עליו בלי מקרים מיוחדים. השדות שאין לנו נאמרים בכנות
- * ("נחקר אוטומטית - לא נבדק"), לא מומצאים.
+ * A bridge between the Explorer and the trip domain: an explored destination becomes a full
+ * Destination (a slug prefixed explored-) so that every trip layer - canvas, map, print, the
+ * agent - works on it with no special cases. The fields we do not have are stated honestly
+ * ("explored automatically - not checked"), not invented.
  *
- * sanitizeExploredDestinations מאמת את מה שהלקוח שולח חזרה לשרת (יעדים
- * שנחקרו בתורים קודמים ונשמרו אצלו) - השרת לא סומך על צורת הקלט.
+ * sanitizeExploredDestinations validates what the client sends back to the server
+ * (destinations explored in earlier turns and stored on their side) - the server does not
+ * trust the shape of the input.
  */
 
 export const EXPLORED_PREFIX = 'explored-';
@@ -38,7 +39,7 @@ export function exploredToDestination(x: ExploredDestination): Destination {
   };
 }
 
-/* ---------- אימות קלט לקוח ---------- */
+/* ---------- Validating client input ---------- */
 
 const CATEGORIES: PlaceCategory[] = [
   'attraction',
@@ -82,8 +83,8 @@ function sanitizePlace(raw: unknown): Place | null {
 }
 
 /**
- * עד 6 יעדים, עד 40 מקומות ליעד (חקירה מחזירה עד 12; ייבוא ממפת
- * My Maps עד 40); כל מה שלא עובר אימות נזרק בשקט.
+ * Up to 6 destinations, up to 40 places each (an explore returns up to 12; an import from a
+ * My Maps map up to 40); anything that fails validation is dropped silently.
  */
 export function sanitizeExploredDestinations(raw: unknown): Destination[] {
   if (!Array.isArray(raw)) return [];

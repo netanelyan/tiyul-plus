@@ -1,19 +1,19 @@
 /**
- * טסטים ל-isTransient. הרצה: `npm test`.
+ * Tests for isTransient. Run with: `npm test`.
  *
- * הכלים הם node:test ו-node:assert המובנים, ו-TypeScript נקרא דרך
- * type-stripping של Node - במפורש בלי להוסיף תלות פיתוח (חוק קשיח 6).
+ * The tools are the built-in node:test and node:assert, and TypeScript is read through
+ * Node's type-stripping - deliberately without adding a dev dependency (hard rule 6).
  *
- * המקרה הראשון הוא הרגרסיה האמיתית: הקוד הקודם בדק `err.status` ואז
- * חיפש מילים בטקסט, אבל השגיאה שנזרקה בפועל הייתה
- * `new Error('anthropic 529')` - בלי status ובלי אף מילה מהרשימה - ולכן
- * עומס של ה-API סווג כשגיאה קבועה והניסיון השני לא רץ אף פעם.
+ * The first case is the real regression: the previous code checked `err.status` and then
+ * looked for words in the text, but the error actually thrown was
+ * `new Error('anthropic 529')` - with no status and none of the listed words - so an API
+ * overload was classified as a permanent error and the second attempt never ran.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { isTransient } from './transient.ts';
 
-/** בדיוק הצורה שנזרקה מ-runClaudeTurn לפני התיקון */
+/** Exactly the shape thrown from runClaudeTurn before the fix */
 const legacyShape = (status: number) => new Error(`anthropic ${status}`);
 
 class WithStatus extends Error {
@@ -53,7 +53,7 @@ test('408 ו-429 מטופלים כחולפים', () => {
 });
 
 test('timeout של AbortSignal.timeout', () => {
-  // בדיוק מה ש-AbortSignal.timeout(50_000) זורק
+  // Exactly what AbortSignal.timeout(50_000) throws
   const err = new DOMException('The operation was aborted due to timeout', 'TimeoutError');
   assert.equal(isTransient(err), true);
   assert.equal(isTransient(new DOMException('aborted', 'AbortError')), true);

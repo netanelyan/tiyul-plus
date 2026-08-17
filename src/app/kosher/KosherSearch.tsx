@@ -24,8 +24,9 @@ export interface KosherCity {
   kosherPlaces: Place[];
 }
 
-// כינויים נפוצים בעברית שלא מופיעים ב-name/nameLocal - כדי שחיפוש "וינה"
-// וגם "וינא" ימצאו את אותה עיר. לא רשימה ממצה - רק תקלות איות שכיחות.
+// Common Hebrew aliases that do not appear in name/nameLocal - so that both the correct
+// spelling and a common misspelling find the same city. Not an exhaustive list - only
+// frequent spelling slips.
 const ALIASES: Record<string, string[]> = {
   vienna: ['וינא'],
   prague: ["פראג'"],
@@ -44,7 +45,7 @@ function matches(city: KosherCity, query: string): boolean {
   return haystacks.some((h) => normalize(h).includes(q));
 }
 
-/** "2 מסעדות · חנות אחת" - מה באמת יש בעיר, לפי הקטגוריות שבדאטה */
+/** "2 restaurants - one shop" - what the city actually has, by the categories in the data */
 function breakdown(places: Place[]): string {
   const food = places.filter((p) => p.category === 'kosher-food').length;
   const market = places.filter((p) => p.category === 'kosher-market').length;
@@ -58,7 +59,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
   const [query, setQuery] = useState('');
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
 
-  // רק ערים שבאמת יש בהן רשומות כשרות בדאטה - לא ממציאים כיסוי
+  // Only cities that genuinely have kosher records in the data - we do not invent coverage
   const covered = useMemo(
     () =>
       cities
@@ -76,13 +77,13 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
     };
   }, [cities, covered]);
 
-  // סינון חי של הרשת בזמן ההקלדה
+  // Live filtering of the grid while typing
   const filtered = useMemo(() => {
     if (!query.trim()) return covered;
     return covered.filter((c) => matches(c, query));
   }, [covered, query]);
 
-  // חיפוש שלא מצא עיר מכוסה - אבל אולי העיר קיימת בקטלוג בלי כשרות
+  // A search that found no covered city - but the city may exist in the catalog with no kashrut data
   const uncoveredMatch = useMemo(() => {
     if (!query.trim() || filtered.length > 0) return null;
     return cities.find((c) => c.kosherPlaces.length === 0 && matches(c, query)) ?? null;
@@ -92,7 +93,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
 
   return (
     <div className="mt-5">
-      {/* ---- שורת מספרים אמיתיים מהדאטה ---- */}
+      {/* ---- A row of real numbers from the data ---- */}
       <div className="flex flex-wrap items-center gap-2">
         <span className="badge rounded-full bg-lagoon/12 px-3.5 py-1.5 text-sm font-bold text-lagoon-deep">
           ✡️ {stats.places} מקומות כשרים
@@ -105,7 +106,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
         </span>
       </div>
 
-      {/* ---- חיפוש ---- */}
+      {/* ---- Search ---- */}
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -125,7 +126,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
         />
       </form>
 
-      {/* ---- העיר הנבחרת: מפה + רשימה ---- */}
+      {/* ---- The selected city: map + list ---- */}
       {selected && (
         <div className="rise-in mt-7">
           <button
@@ -149,7 +150,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
           </div>
           <p className="mt-2 max-w-2xl leading-relaxed text-night/70">{selected.kosherOverview}</p>
 
-          {/* דיסקליימר כללי - מדיניות אחת לכל הרשומות */}
+          {/* A general disclaimer - one policy for every record */}
           <p className="mt-4 max-w-2xl rounded-xl bg-night/5 px-4 py-2.5 text-sm leading-relaxed text-night/60">
             המידע נאסף ממקורות ציבוריים (בתי חב&quot;ד וגופי ההשגחה) - לוודא כשרות, השגחה
             ושעות פתיחה מול המקום לפני שמסתמכים עליו.
@@ -185,7 +186,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
         </div>
       )}
 
-      {/* ---- ברירת המחדל: ספריית הערים (גם תוצאות החיפוש החי) ---- */}
+      {/* ---- The default: the city directory (also the live search results) ---- */}
       {!selected && (
         <div className="mt-7">
           <div className="flex flex-wrap items-baseline gap-2">
@@ -234,7 +235,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
               ))}
             </div>
           ) : (
-            /* מצב ריק כן: או שהעיר בקטלוג בלי כשרות, או שאינה בקטלוג בכלל */
+            /* An honest empty state: either the city is in the catalog with no kashrut, or it is not in the catalog at all */
             <div className="mt-4 max-w-xl rounded-2xl bg-zest/15 px-5 py-5 ring-1 ring-zest/40">
               <p className="font-bold text-night">
                 עדיין אין לנו מידע כשרות ל&quot;{query.trim()}&quot;

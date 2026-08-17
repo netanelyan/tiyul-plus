@@ -7,17 +7,17 @@ import Flag from '@/components/Flag';
 import { filterCities, type CityOption } from '@/lib/citySearch';
 
 /**
- * הוספת יום לטיול: כפתור "+ יום…" שפותח רשימה עם חיפוש, במקום <select>
- * נייטיב שמנה את כל 45+ הערים בקטלוג. הערים שכבר בטיול מופיעות למעלה
- * ("עוד יום ב-"), ומתחתן שאר הקטלוג.
+ * Adding a day to the trip: a "+ day..." button that opens a searchable list, instead of
+ * a native <select> listing all 45+ cities in the catalog. Cities already in the trip
+ * appear at the top ("another day in ..."), with the rest of the catalog beneath them.
  *
- * הרכיב לא נוגע בלוגיקה: הוא רק קורא ל-onAddDay(slug) - בדיוק מה
- * שה-select עשה קודם עם trip.addDay.
+ * The component touches no logic: it only calls onAddDay(slug) - exactly what the select
+ * did before with trip.addDay.
  *
- * **רשימת הערים נטענת רק כשפותחים אותו.** קודם היא הגיעה מהקטלוג
- * המלא שיובא אל ה-bundle של מסך הטיול; עכשיו זו בקשה אחת קטנה
- * (`/api/cities?options=1`, slug/שם/מדינה/דגל) בפתיחה הראשונה, ואותה
- * רשימה נשמרת לכל אורך חיי הטאב. מי שלא מוסיף יום לא משלם עליה כלום.
+ * **The city list is loaded only when it is opened.** Previously it came from the full
+ * catalog imported into the trip screen's bundle; now it is one small request
+ * (`/api/cities?options=1`, slug/name/country/flag) on first open, and that list is kept
+ * for the whole lifetime of the tab. Anyone who does not add a day pays nothing for it.
  */
 let optionsCache: CityOption[] | null = null;
 export default function AddDayPicker({
@@ -25,9 +25,9 @@ export default function AddDayPicker({
   onAddDay,
   disabled = false,
 }: {
-  /** ללא רשת: רשימת הערים מגיעה מהשרת, ולכן הפקד מכובה */
+  /** Offline: the city list comes from the server, so the control is disabled */
   disabled?: boolean;
-  /** הערים שכבר בטיול - מוצגות בקבוצה נפרדת בראש הרשימה */
+  /** The cities already in the trip - shown as a separate group at the top of the list */
   tripCitySlugs: string[];
   onAddDay: (citySlug: string) => void;
 }) {
@@ -47,7 +47,7 @@ export default function AddDayPicker({
         if (alive) setOptions(optionsCache);
       })
       .catch(() => {
-        /* רשת נפלה - הרשימה תישאר ריקה והמצב הריק אומר את זה */
+        /* The network failed - the list stays empty and the empty state says so */
       });
     return () => {
       alive = false;

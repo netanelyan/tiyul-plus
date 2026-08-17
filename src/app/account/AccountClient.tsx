@@ -562,7 +562,7 @@ function CommunityCard() {
   const [busy, setBusy] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // חיפוש חי עם debounce - שאילתה מול public_profiles (ציבוריים בלבד)
+  // Live search with a debounce - a query against public_profiles (public rows only)
   useEffect(() => {
     const q = query.trim();
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -666,11 +666,12 @@ function CameraIcon() {
   );
 }
 
-/* ============================ קוד הטבה ============================ */
+/* ============================ Promo code ============================ */
 /**
- * פדיון קוד. מוצג לכולם - גם למי שכבר פרימיום, כי קוד מאריך תוקף קיים
- * ולא דורס אותו. ההודעות מכוונות להיות מדויקות: "כבר פדיתם את הקוד הזה"
- * הוא מצב שונה מ"הקוד לא תקף", והמטייל צריך לדעת מה מהם.
+ * Redeeming a code. Shown to everyone - including someone who is already premium,
+ * because a code extends an existing expiry rather than overwriting it. The messages are
+ * deliberately precise: "you have already redeemed this code" is a different state from
+ * "the code is not valid", and the traveller needs to know which.
  */
 function PromoRedeem() {
   const auth = useAuth();

@@ -56,6 +56,8 @@ function trailingLineComment(line: string): string | null {
 }
 
 const COMMENT_START = /^\s*(\/\/|\/\*|\*|\{\/\*|--|#)/;
+/** A multi-line block comment opener, which only ever starts a line here. */
+const BLOCK_OPEN = /^\s*\{?\/\*/;
 
 test('no Hebrew in comments anywhere in src/, scripts/, public/, supabase/', () => {
   const offenders: string[] = [];
@@ -65,10 +67,14 @@ test('no Hebrew in comments anywhere in src/, scripts/, public/, supabase/', () 
       let inBlock = false;
       lines.forEach((line, i) => {
         const isCommentLine = COMMENT_START.test(line) || inBlock;
-        // track /* ... */ blocks so continuation lines without a leading *
-        // are still covered (rare in this codebase, but cheap to handle)
-        if (/\/\*/.test(line) && !/\*\//.test(line.slice(line.indexOf('/*') + 2))) inBlock = true;
-        if (/\*\//.test(line)) inBlock = false;
+        // Track /* ... */ blocks so continuation lines without a leading * are
+        // still covered. The opener must be at the START of the line: the first
+        // version tested for `/*` anywhere, and `accept="image/*"` in a JSX
+        // attribute switched block mode on and never off, so every Hebrew UI
+        // string below it was reported as a comment. A block comment in this
+        // codebase always opens its own line, so this is both safe and exact.
+        if (BLOCK_OPEN.test(line) && !/\*\//.test(line.slice(line.indexOf('/*') + 2))) inBlock = true;
+        if (inBlock && /\*\//.test(line)) inBlock = false;
         if (isCommentLine) {
           if (HEBREW.test(line)) offenders.push(`${file}:${i + 1}`);
           return;

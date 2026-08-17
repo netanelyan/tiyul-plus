@@ -3,18 +3,19 @@
 import { useState } from 'react';
 
 /**
- * הרשמה לרשימת הדיוור, בפוטר. שורה אחת ושדה - בלי פופאפ, בלי הבטחה,
- * בלי "הירשמו וקבלו".
+ * Newsletter signup, in the footer. One line and a field - no popup, no promise, no
+ * "sign up and receive".
  *
- * הכתובות נשמרות ב-`newsletter_signups` ב-Supabase דרך `/api/newsletter`
- * (ראו `supabase-newsletter.sql`). הטופס לא נוגע במסד ישירות.
+ * Addresses are stored in `newsletter_signups` in Supabase via `/api/newsletter` (see
+ * `supabase-newsletter.sql`). The form does not touch the database directly.
  *
- * **הכישלון נאמר, לא מוסתר.** בלי מפתח ה-service role מוגדר הנתיב מחזיר
- * 503, והטופס אומר שההרשמה לא זמינה - במקום לצייר וי ירוק ולזרוק את
- * הכתובת. טופס שמשקר בהצלחה הוא הדבר היחיד כאן שגרוע מלא להיות קיים.
+ * **Failure is stated, not hidden.** Without the service role key configured the route
+ * returns 503, and the form says signup is unavailable - instead of drawing a green tick
+ * and throwing the address away. A form that lies about success is the one thing here that
+ * would be worse than not existing.
  */
 
-/* TODO(Netanel): המשפט הזה הוא שלך. מציין מקום בלבד. */
+/* TODO(Netanel): this sentence is yours. A placeholder only. */
 const LINE = '[למילוי] שורה אחת שמסבירה למה כדאי להשאיר כתובת.';
 
 type State = 'idle' | 'sending' | 'done' | 'error';
@@ -71,7 +72,7 @@ export default function NewsletterSignup() {
             if (state !== 'idle') setState('idle');
           }}
           placeholder="האימייל שלכם"
-          // 16px במובייל, אחרת iOS מזיז את כל העמוד בפוקוס (רשומה n)
+          // 16px on mobile, otherwise iOS shifts the whole page on focus (entry n)
           className="min-w-0 flex-1 rounded-xl bg-cream/10 px-3 py-2 text-base text-cream outline-none ring-1 ring-cream/15 transition placeholder:text-cream/35 focus:ring-2 focus:ring-sunset sm:text-sm"
         />
         <button

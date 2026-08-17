@@ -1,23 +1,23 @@
 /**
- * `isoDay` נראה זניח וזה בדיוק למה הוא כאן.
+ * `isoDay` looks trivial and that is exactly why it is here.
  *
- * הוא מזין את התאריך שמוצג ליד מידע כשרות ומחירים ללא רשת, ו-
- * `toISOString()` היה מחזיר UTC: מטייל שעומד במקסיקו סיטי בערב היה
- * רואה את התוכן שלו מתוארך **יום קדימה**, ומטייל בטוקיו יום אחורה.
- * זו אותה מלכודת שכבר תועדה ב-`dates.ts` והיא חוזרת בכל פעם שמישהו
- * ממיר חותמת זמן לתאריך.
+ * It feeds the date shown beside kashrut information and prices when offline, and
+ * `toISOString()` would have returned UTC: a traveller standing in Mexico City in the
+ * evening would have seen their content dated **a day forward**, and a traveller in Tokyo a
+ * day back. This is the same trap already documented in `dates.ts`, and it returns every
+ * time somebody converts a timestamp into a date.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { isoDay, OFFLINE_HINT } from './online.ts';
 
 test('מחזיר את התאריך המקומי, לא UTC', () => {
-  // חצות מקומית בדיוק: כל המרה דרך UTC במקום מזרחית לגריניץ׳ תחזיר
-  // את היום הקודם
+  // Exactly local midnight: any conversion through UTC from east of Greenwich would return
+  // the previous day
   const local = new Date(2026, 6, 29, 0, 0, 0);
   assert.equal(isoDay(local.getTime()), '2026-07-29');
 
-  // רגע לפני חצות - עדיין אותו יום מקומי
+  // A moment before midnight - still the same local day
   const late = new Date(2026, 6, 29, 23, 59, 59);
   assert.equal(isoDay(late.getTime()), '2026-07-29');
 });

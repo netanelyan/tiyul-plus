@@ -1,14 +1,14 @@
 /**
- * שרת בלבד - דגלי מערכת, כלומר מפסק חירום בלי דיפלוי.
+ * Server only - system flags, i.e. a kill switch with no deploy.
  *
- * למה זה קיים: הסוכן הוא ההוצאה הגדולה של המוצר. אם משהו נשבר - קמפיין
- * שמביא מאות אנשים בבת אחת, באג שמייצר לופ, מפתח שנחשף - הדרך לעצור
- * חייבת להיות מהירה יותר מדיפלוי. `agent_enabled=false` מפיל את
- * `/api/chat` לתשובות מבוססות הכללים שכבר קיימות למצב ללא מפתח, כך
- * שהאתר ממשיך לעבוד וההוצאה נעצרת מיד.
+ * Why this exists: the agent is the product's largest expense. If something breaks - a
+ * campaign bringing hundreds of people at once, a bug producing a loop, a leaked key -
+ * the way to stop must be faster than a deploy. `agent_enabled=false` drops `/api/chat`
+ * to the rule-based replies that already exist for the keyless mode, so the site keeps
+ * working and the spend stops immediately.
  *
- * מטמון של 30 שניות: מספיק קצר כדי שהמפסק ירגיש מיידי, ומספיק ארוך כדי
- * לא להוסיף קריאת דאטהבייס לכל הודעה.
+ * A 30-second cache: short enough that the switch feels immediate, and long enough not to
+ * add a database read to every message.
  */
 
 import { adminSelect, adminDbEnabled } from '@/lib/server/supabaseAdmin';
@@ -20,8 +20,8 @@ async function load(): Promise<Record<string, unknown>> {
   if (cache && Date.now() - cache.at < TTL) return cache.flags;
   if (!adminDbEnabled()) return {};
   const rows = await adminSelect<{ key: string; value: unknown }>('app_flags', 'select=key,value');
-  // כישלון קריאה לא מפעיל את המפסק: ברירת המחדל היא "הסוכן פועל", אחרת
-  // תקלה רגעית בדאטהבייס הייתה משתיקה את המוצר כולו.
+  // A failed read does not trip the switch: the default is "the agent is running",
+  // otherwise a momentary database glitch would silence the whole product.
   if (!rows) return cache?.flags ?? {};
   const flags: Record<string, unknown> = {};
   for (const r of rows) flags[r.key] = r.value;
@@ -29,7 +29,7 @@ async function load(): Promise<Record<string, unknown>> {
   return flags;
 }
 
-/** האם הסוכן החכם פעיל. ברירת המחדל, בכל מקרה של ספק: כן. */
+/** Whether the smart agent is active. The default, in any case of doubt: yes. */
 export async function agentEnabled(): Promise<boolean> {
   const flags = await load();
   return flags.agent_enabled === false ? false : true;
@@ -39,7 +39,7 @@ export async function allFlags(): Promise<Record<string, unknown>> {
   return load();
 }
 
-/** אחרי כתיבה - כדי שהמפסק לא יחכה 30 שניות */
+/** After a write - so the switch does not wait 30 seconds */
 export function invalidateFlags() {
   cache = null;
 }

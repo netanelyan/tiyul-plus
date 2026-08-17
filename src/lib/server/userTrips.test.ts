@@ -1,10 +1,11 @@
 /**
- * `findOwnTrip` הוא הפרימיטיב שכל נתיב כסף (`checks/create-order`,
- * `checks/status`, בניית דוח לפני-הנסיעה) נשען עליו כדי לענות "האם זה
- * באמת הטיול של המשתמש הזה". הטסט כאן נועד לא לתת לזה לרדרג בשקט:
- * לא רק "אם התשובה תואמת" - אלא **מה נשלח בפועל ל-Supabase**, כי RLS
- * כבר לא מגן כאן (adminSelect משתמש ב-service role שעוקף RLS לגמרי -
- * הבידוד בין משתמשים חייב לבוא מהפילטר שהקוד עצמו שולח).
+ * `findOwnTrip` is the primitive every money-touching route (`checks/create-order`,
+ * `checks/status`, building the pre-departure report) relies on to answer "is this
+ * really this user's trip". The test here exists so that cannot regress quietly: not
+ * just "whether the answer matches" - but **what is actually sent to Supabase**, because
+ * RLS no longer protects this path (adminSelect uses the service role, which bypasses
+ * RLS entirely - the isolation between users has to come from the filter the code itself
+ * sends).
  */
 import { test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
@@ -50,22 +51,22 @@ test('הבקשה ל-Supabase מסננת גם לפי user_id וגם לפי trip i
   await findOwnTrip('user-a', 'trip-1');
 
   const q = decodeURIComponent(calls[0].url);
-  // זו הטענה המרכזית: השאילתה עצמה, לא רק הפונקציה, חייבת לדרוש את
-  // שני התנאים. שאילתה שמסננת רק לפי trip id הייתה מחזירה את הטיול
-  // הזה למי שרק ניחש/ראה את ה-id שלו, בלי קשר למי שביקש.
+  // This is the central claim: the query itself, not just the function, must require
+  // both conditions. A query filtering only by trip id would have returned this trip to
+  // anyone who guessed or saw its id, regardless of who asked.
   assert.match(q, /user_id=eq\.user-a/);
   assert.match(q, /id=eq\.trip-1/);
 });
 
 test('טיול שקיים אבל שייך למשתמש אחר - השורה שחוזרת מ-Supabase (המסוננת כבר) לא נסמכת על user_id שהתקבל', async () => {
   /*
-    בהינתן ש-RLS לא חל כאן (service role), הבידוד היחיד הוא הפילטר.
-    הטסט הקודם מוודא שהפילטר נשלח נכון; זה כאן מוודא שהפונקציה לא
-    "מתקנת" בעצמה תשובה ריקה לתוצאה - כלומר שאין נתיב שמחזיר טיול
-    שלא חזר בפועל מהשאילתה המסוננת.
+    Given that RLS does not apply here (service role), the only isolation is the filter.
+    The previous test verifies that the filter is sent correctly; this one verifies that
+    the function does not "fix" an empty answer into a result by itself - i.e. that there
+    is no path returning a trip that the filtered query did not actually return.
   */
   const { findOwnTrip } = await load();
-  respond = () => new Response('[]', { status: 200 }); // כך Supabase עונה כש-user_id לא תואם
+  respond = () => new Response('[]', { status: 200 }); // this is how Supabase answers when user_id does not match
   const trip = await findOwnTrip('user-a', 'trip-owned-by-user-b');
   assert.equal(trip, null);
 });

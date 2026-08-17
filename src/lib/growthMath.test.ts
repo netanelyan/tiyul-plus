@@ -1,8 +1,9 @@
 /**
- * חשבון הטווחים של מדדי הצמיחה. הטענות שחשוב לנעול:
- * גבולות החלונות (יום 6 בפנים, יום 7 בקודם, יום 14 בחוץ), ש"הכול"
- * באמת מסכם הכול בלי מגמה, שסוגי הייצוא הישנים לא דולפים למדדים,
- * ושהזיהוי של "פונקציה ישנה" לא מתבלבל מסוגי share הוותיקים.
+ * The range arithmetic for the growth metrics. The claims worth locking down: the window
+ * boundaries (day 6 inside, day 7 in the previous one, day 14 outside), that "all" really
+ * does total everything with no trend, that the older export kinds do not leak into the
+ * metrics, and that the "old function" detection is not confused by the long-standing
+ * share kinds.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -27,11 +28,11 @@ test('גבולות חלון 7 הימים: יום 6 בנוכחי, יום 7 בקו
     row(6, 'trip_created', 2),
     row(7, 'trip_created', 4),
     row(13, 'trip_created', 8),
-    row(14, 'trip_created', 16), // מחוץ לשני החלונות
+    row(14, 'trip_created', 16), // outside both windows
   ];
   const g = computeGrowth(rows, TODAY, 7);
-  assert.equal(g.trips.current, 3); // ימים 0 ו-6
-  assert.equal(g.trips.previous, 12); // ימים 7 ו-13
+  assert.equal(g.trips.current, 3); // days 0 and 6
+  assert.equal(g.trips.previous, 12); // days 7 and 13
 });
 
 test('"הכול" מסכם את כל ההיסטוריה ואין לו מגמה (previous=null)', () => {
@@ -45,7 +46,7 @@ test('שיתופים = share + whatsapp ביחד; סוגי ייצוא אחרים
   const rows = [
     row(1, 'share', 2),
     row(2, 'whatsapp', 3),
-    row(1, 'print', 50), // ייצוא, לא צמיחה
+    row(1, 'print', 50), // an export, not growth
     row(1, 'maps', 50),
     row(1, 'סוג-שלא-קיים', 50),
   ];
@@ -79,8 +80,8 @@ test('שורה עם תאריך עתידי (הסטת שעון) נספרת בנו�
 });
 
 test('growthEverCounted: share ותיק לא נחשב הוכחה שהפונקציה עודכנה', () => {
-  // האתר ספר share/print חודשים לפני הפיצ'ר - שורות כאלה לא אומרות
-  // ש-bump_event מכיר את הסוגים החדשים
+  // The site counted share/print for months before the feature - rows like those say
+  // nothing about whether bump_event knows the new kinds
   assert.equal(growthEverCounted([row(1, 'share', 9), row(1, 'print', 9)]), false);
   assert.equal(growthEverCounted([row(1, 'trip_created', 1)]), true);
   assert.equal(growthEverCounted([]), false);

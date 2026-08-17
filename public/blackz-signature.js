@@ -202,8 +202,8 @@ if (!customElements.get('blackz-signature')) {
           .bz-wrapper.open .bz-backdrop {
             opacity: 1;
             visibility: visible;
-            /* pointer-events נשאר none גם כשהוא פתוח - ראו ההערה על לולאת
-               הריחוף. סגירה בלחיצה על הרקע מטופלת ע"י המאזין על document. */
+            /* pointer-events stays none even when open - see the note about the hover
+               loop. Closing on a click on the backdrop is handled by the document listener. */
             pointer-events: none;
           }
 
@@ -271,16 +271,17 @@ if (!customElements.get('blackz-signature')) {
       };
 
       /**
-       * פתיחה בריחוף, עם שתי התאמות שנדרשות דווקא בגלל שהכרטיס ממורכז:
+       * Opening on hover, with two adjustments needed precisely because the card is centred:
        *
-       * 1. **ריחוף פותח, אבל לא מחזיק.** הכרטיס יושב במרכז המסך והתג
-       *    בתחתית, ולכן הדרך מזה לזה עוברת בשטח שאינו אף אחד מהם. סגירה
-       *    ב-mouseleave הייתה סוגרת את הכרטיס באמצע הדרך אליו, ואי אפשר
-       *    היה להגיע לקישור שבתוכו. לכן יש שהות לפני הסגירה, והיא
-       *    מתבטלת ברגע שהעכבר נכנס לכרטיס (שהוא צאצא של אותו wrapper).
-       * 2. **רק במכשיר עם עכבר אמיתי.** במגע אין ריחוף, ותקן `hover:
-       *    hover` מונע מ-tap להיחשב כריחוף. שם הלחיצה היא הדרך היחידה,
-       *    והיא עובדת בשני המקרים.
+       * 1. **Hover opens, but does not hold.** The card sits in the centre of the screen
+       *    and the badge at the bottom, so the route from one to the other crosses ground
+       *    belonging to neither. Closing on mouseleave would close the card halfway there,
+       *    and the link inside it could never be reached. So there is a grace period before
+       *    closing, and it is cancelled the moment the pointer enters the card (which is a
+       *    descendant of the same wrapper).
+       * 2. **Only on a device with a real pointer.** On touch there is no hover, and the
+       *    `hover: hover` standard prevents a tap from counting as one. There, clicking is
+       *    the only way in, and it works in both cases.
        */
       let closeTimer = null;
       const cancelClose = () => {
@@ -290,9 +291,10 @@ if (!customElements.get('blackz-signature')) {
 
       const setOpen = (open) => {
         cancelClose();
-        // יציאה מוקדמת כשאין שינוי: בריחוף אפשר להיכנס ל-wrapper שוב ושוב
-        // (התג, ואז הכרטיס), וכל קריאה ל-clamp מאפסת את ההיסט ומודדת מחדש
-        // בפריים הבא - כלומר ריצוד קטן בכל כניסה. פתוח שנשאר פתוח לא זז.
+        // Early return when nothing changed: on hover you can enter the wrapper repeatedly
+        // (the badge, then the card), and every call to clamp zeroes the offset and
+        // re-measures on the next frame - i.e. a small jump on each entry. An open card
+        // that stays open should not move.
         if (wrapper.classList.contains('open') === open) return;
         wrapper.classList.toggle('open', open);
         trigger.setAttribute('aria-expanded', String(open));

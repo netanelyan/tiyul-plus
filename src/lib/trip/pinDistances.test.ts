@@ -1,13 +1,14 @@
 /**
- * טסטים ל-pinDistances - המרחקים האמיתיים מסיכה לעצירות של אותה עיר.
+ * Tests for pinDistances - the real distances from a pin to the stops in the same city.
  *
- * הפונקציה נכתבה אחרי שבדיקה חיה מול המודל הראתה שהוא ממציא קרבה
- * ("במרחק הליכה מהמלון", "צמוד לגשר ה-UFO") כשאין לו נתון אמיתי, ושאיסור
- * בפרומפט לא החזיק. הטסט מוודא שהמספרים נכונים ושהכתובית תמיד אומרת
- * "אווירי" - כי זה מרחק אווירי ולא מרחק הליכה, וזו כל ההבטחה כאן.
+ * The function was written after live testing against the model showed that it invents
+ * proximity ("within walking distance of the hotel", "right by the UFO bridge") when it has
+ * no real figure, and that a ban in the prompt did not hold. The test verifies that the
+ * numbers are correct and that the caption always says "straight-line" - because it is a
+ * straight-line distance and not a walking distance, and that is the whole promise here.
  *
- * המרחקים נבדקים מול הדאטה האמיתית, לא מול פיקסטורה, כדי שהטסט ייפול
- * אם קואורדינטה בקטלוג תשתנה מתחתינו.
+ * The distances are checked against the real data, not against a fixture, so the test fails
+ * if a coordinate in the catalog changes underneath us.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -55,20 +56,20 @@ test('מסודר מהקרוב לרחוק', () => {
   });
   const km = out.map((r) => Number(r.away.replace(/[^\d.]/g, '')) * (r.away.includes('מ׳') ? 0.001 : 1));
   assert.deepEqual(km, [...km].sort((a, b) => a - b), 'הסדר חייב להיות עולה');
-  // דווין באמת רחוקה מהמרכז - היא חייבת להיות האחרונה
+  // Devin really is far from the centre - it has to be last
   assert.equal(out[out.length - 1].name, bratislava.places.find((p) => p.id === 'bts-devin')!.name);
 });
 
 test('מתחת לקילומטר במטרים, מעל לקילומטר בקילומטרים', () => {
   const near = pinDistances(tripWith(['bts-castle']), {
     citySlug: 'bratislava',
-    lat: castle.lat + 0.002, // ~220 מ׳
+    lat: castle.lat + 0.002, // ~220 m
     lng: castle.lng,
   });
   assert.match(near[0].away, /^\d+ מ׳ אווירי$/);
   const far = pinDistances(tripWith(['bts-castle']), {
     citySlug: 'bratislava',
-    lat: castle.lat + 0.2, // ~22 ק"מ
+    lat: castle.lat + 0.2, // ~22 km
     lng: castle.lng,
   });
   assert.match(far[0].away, /ק״מ אווירי$/);

@@ -1,16 +1,17 @@
-// העלאת הקטלוג מ-`src/data/*.ts` ל-Supabase. **בטוח להריץ פעמיים.**
+// Uploading the catalog from `src/data/*.ts` to Supabase. **Safe to run twice.**
 //
-// אידמפוטנטיות: upsert לפי המפתח הראשי, ואחריו מחיקה של רשומות שכבר
-// אינן בקבצים. שתי הרצות רצופות מייצרות בדיוק את אותו מצב, ואין כפילויות.
+// Idempotency: an upsert on the primary key, followed by deleting records that are no
+// longer in the files. Two consecutive runs produce exactly the same state, with no duplicates.
 //
-// מפתחות: **רק ממשתני סביבה.** צריך SUPABASE_URL ו-SUPABASE_SERVICE_ROLE_KEY.
-// ה-service role עוקף RLS, ולכן זו הדרך היחידה לכתוב לקטלוג - הדפדפן
-// לעולם לא יכול. אל תשים את המפתח הזה ב-NEXT_PUBLIC_* ואל תכניס אותו לריפו.
+// Keys: **from environment variables only.** SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY
+// are required. The service role bypasses RLS, which is why this is the only way to write
+// to the catalog - the browser never can. Do not put this key in NEXT_PUBLIC_* and do not
+// commit it to the repo.
 //
-// הרצה:
+// Usage:
 //   SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... \
 //   node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/catalog-push.mjs
-//   הוסף --dry להרצה שמדפיסה מה יקרה בלי לכתוב.
+//   Add --dry for a run that prints what would happen without writing.
 import { createClient } from '@supabase/supabase-js';
 import { countries } from '../src/data/countries.ts';
 import { destinations } from '../src/data/destinations.ts';
@@ -37,7 +38,7 @@ if (!url || !key) {
 
 const db = createClient(url, key, { auth: { persistSession: false } });
 
-/** Supabase מגביל גודל בקשה; אצוות קטנות גם נותנות התקדמות גלויה. */
+/** Supabase limits request size; small batches also give visible progress. */
 async function upsertAll(table, rows, onConflict, chunk = 200) {
   for (let i = 0; i < rows.length; i += chunk) {
     const { error } = await db.from(table).upsert(rows.slice(i, i + chunk), { onConflict });
@@ -47,13 +48,14 @@ async function upsertAll(table, rows, onConflict, chunk = 200) {
   console.log('');
 }
 
-// סדר ההעלאה נגזר ממפתחות זרים: מדינות -> יעדים -> מקומות.
+// The upload order follows the foreign keys: countries -> destinations -> places.
 await upsertAll('catalog_countries', countryRows, 'slug');
 await upsertAll('catalog_destinations', destinationRows, 'slug');
 await upsertAll('catalog_places', placeRows, 'destination_slug,id');
 
-// גיזום: מה שכבר לא בקבצים יורד. הסדר הפוך להעלאה, שוב בגלל המפתחות
-// הזרים. בלי זה, מקום שנמחק מהקבצים היה נשאר בדאטהבייס לנצח.
+// Pruning: whatever is no longer in the files goes. The order is the reverse of the
+// upload, again because of the foreign keys. Without this, a place deleted from the files
+// would stay in the database forever.
 const placeKeys = new Set(placeRows.map((p) => `${p.destination_slug}|${p.id}`));
 const { data: dbPlaces, error: pe } = await db.from('catalog_places').select('destination_slug,id');
 if (pe) throw new Error(pe.message);
@@ -72,7 +74,7 @@ for (const c of staleCountries) await db.from('catalog_countries').delete().eq('
 
 console.log('pruned: countries=%d destinations=%d places=%d', staleCountries.length, staleDests.length, stalePlaces.length);
 
-// אימות אחרי כתיבה: סופרים מהדאטהבייס עצמו ולא סומכים על מה ששלחנו.
+// Verification after writing: count from the database itself rather than trusting what we sent.
 const count = async (t) => (await db.from(t).select('*', { count: 'exact', head: true })).count;
 const [c1, c2, c3] = [await count('catalog_countries'), await count('catalog_destinations'), await count('catalog_places')];
 console.log('in supabase: countries=%d destinations=%d places=%d', c1, c2, c3);

@@ -1,21 +1,21 @@
 import Link from 'next/link';
 
 /**
- * שלד לעמודי התוכן של האתר (תנאים, פרטיות, אודות, צור קשר...).
+ * A shell for the site's content pages (terms, privacy, about, contact...).
  *
- * **הוא מכיל כותרת ומבנה בלבד, ובכוונה אין בו שום תוכן.** נתנאל כותב את
- * הטקסט של כל אחד מהעמודים האלה בעצמו; שלד שמגיע עם נוסח "לדוגמה" הוא
- * בדיוק הדבר שגורם לטקסט משפטי גנרי להישאר באתר עד שמישהו נתבע.
+ * **It contains a heading and structure only, and deliberately holds no content.** Netanel
+ * writes the text of each of these pages himself; a shell that arrives with "example"
+ * wording is exactly what leaves generic legal text on a site until somebody gets sued.
  *
- * מה שכן מובטח כאן: הכיווניות, הטיפוגרפיה, הרוחב, הקישור חזרה, ושהעמוד
- * ייראה כמו שאר האתר ברגע שיהיה בו תוכן.
+ * What is guaranteed here: the direction, the typography, the width, the link back, and
+ * that the page will look like the rest of the site the moment it has content.
  */
 export default function PageShell({
   title,
   children,
 }: {
   title: string;
-  /** התוכן שנתנאל יכתוב. ריק = מוצג מצב "עדיין לא נכתב". */
+  /** The content Netanel will write. Empty = the "not written yet" state is shown. */
   children?: React.ReactNode;
 }) {
   const empty = children === undefined || children === null || children === false;
@@ -26,9 +26,9 @@ export default function PageShell({
 
       {empty ? (
         /*
-          מצב "עדיין לא נכתב", מסומן בבירור.
-          הוא נראה כמו מציין מקום ולא כמו תוכן - אף אחד לא יטעה לחשוב
-          שזו המדיניות, וקל לראות מרשימת העמודים מה עוד חסר.
+          The "not written yet" state, clearly marked.
+          It looks like a placeholder and not like content - nobody will mistake it for the
+          policy, and it is easy to see from the page list what is still missing.
         */
         <p className="mt-6 rounded-2xl bg-shell p-5 text-sm font-semibold leading-relaxed text-night/45 ring-1 ring-dashed ring-night/15">
           [למילוי] תוכן העמוד הזה עדיין לא נכתב.

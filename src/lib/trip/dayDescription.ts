@@ -2,13 +2,15 @@ import type { Destination, Place, PlaceCategory } from '@/lib/types';
 import type { TripDay } from './types';
 
 /**
- * תיאור קצר ליום בטיול - נגזר אך ורק מהעצירות האמיתיות שכבר נמצאות ביום
- * (הקטגוריות והשמות שלהן מהדאטה האוצרת). אין כאן שום המצאה: לא שעות,
- * לא אירועים, לא "אווירה" - רק סיכום של מה שהיום באמת מכיל.
- * יום ריק מקבל ניסוח ניטרלי מפורש ולא תיאור מומצא (כלל הברזל של הפרויקט).
+ * A short description for a day in the trip - derived solely from the real stops already
+ * in that day (their categories and names from the curated data). There is no invention
+ * here: no hours, no events, no "atmosphere" - only a summary of what the day actually
+ * contains.
+ * An empty day gets an explicit neutral wording and not an invented description (the
+ * project's iron rule).
  */
 
-// מילת נושא קצרה לכל קטגוריה - נבחרה כך שתצטרף יפה ל"X ו-Y" בעברית
+// A short subject word per category - chosen so it joins nicely into "X and Y" in Hebrew
 const THEME_WORD: Record<PlaceCategory, string> = {
   attraction: 'אתרים',
   museum: 'מוזיאונים',
@@ -24,7 +26,7 @@ const THEME_WORD: Record<PlaceCategory, string> = {
 
 export const EMPTY_DAY_DESCRIPTION = 'עדיין אין עצירות ביום הזה';
 
-/** העצירות של היום, לפי הסדר, מסוננות למקומות שבאמת קיימים בדאטה */
+/** The day's stops, in order, filtered to places that genuinely exist in the data */
 export function dayPlaces(day: TripDay, dest?: Destination | null): Place[] {
   if (!dest) return [];
   return day.placeIds
@@ -32,7 +34,7 @@ export function dayPlaces(day: TripDay, dest?: Destination | null): Place[] {
     .filter((p): p is Place => Boolean(p));
 }
 
-/** "אתרים ומוזיאונים" / "טבע" - עד שתי הקטגוריות הנפוצות ביום */
+/** "Sights and museums" / "nature" - up to the two most common categories in the day */
 function themeOf(places: Place[]): string {
   const order: PlaceCategory[] = [];
   const counts = new Map<PlaceCategory, number>();
@@ -51,9 +53,10 @@ function themeOf(places: Place[]): string {
 const stopsWord = (n: number) => (n === 1 ? 'עצירה אחת' : `${n} עצירות`);
 
 /**
- * שורה אחת: נושא היום לפי הקטגוריות + העצירה הבולטת (mustSee אם יש,
- * אחרת הראשונה במסלול) + כמה עצירות נוספות. הכול מהדאטה, כלום מהדמיון.
- * דוגמה: "טבע ותצפיות · אגם הצב ועוד 3 עצירות".
+ * One line: the day's subject from the categories + the standout stop (mustSee if there is
+ * one, otherwise the first on the route) + how many further stops. All from the data,
+ * nothing from imagination.
+ * For example: "nature and viewpoints - Turtle Lake and 3 more stops".
  */
 export function dayDescription(day: TripDay, dest?: Destination | null): string {
   const places = dayPlaces(day, dest);

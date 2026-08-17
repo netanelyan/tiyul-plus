@@ -1,22 +1,23 @@
 /**
- * צבע לכל יום בתצוגת "כל הטיול" - כדי שאפשר יהיה להבחין בין העצירות
- * של ימים שונים על מפה אחת. הפלטה נבחרה כך שהצבעים יישארו נבדלים
- * גם זה מזה וגם מהרקע הקרם של האתר, ומתחילה בגוון המותג (sunset).
+ * A colour per day in the "whole trip" view - so the stops of different days can be
+ * told apart on one map. The palette was chosen so the colours stay distinct both from
+ * each other and from the site's cream background, and it starts with the brand hue
+ * (sunset).
  */
 export const DAY_COLORS = [
-  '#ff5941', // sunset - צבע המותג
-  '#2563eb', // כחול
-  '#0d9488', // טורקיז
-  '#7c3aed', // סגול
-  '#e0a400', // חרדל
-  '#db2777', // ורוד עמוק
-  '#15803d', // ירוק
-  '#0891b2', // תכלת עמוק
-  '#b45309', // חום־כתום
-  '#4f46e5', // אינדיגו
+  '#ff5941', // sunset - the brand colour
+  '#2563eb', // blue
+  '#0d9488', // teal
+  '#7c3aed', // purple
+  '#e0a400', // mustard
+  '#db2777', // deep pink
+  '#15803d', // green
+  '#0891b2', // deep cyan
+  '#b45309', // brown-orange
+  '#4f46e5', // indigo
 ];
 
-/** צבע היום לפי האינדקס שלו בטיול (מחזורי - טיול ארוך יחזור על צבעים) */
+/** The day's colour by its index in the trip (cyclic - a long trip repeats colours) */
 export function dayColor(index: number): string {
   return DAY_COLORS[((index % DAY_COLORS.length) + DAY_COLORS.length) % DAY_COLORS.length];
 }

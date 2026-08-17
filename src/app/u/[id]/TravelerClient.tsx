@@ -14,7 +14,7 @@ import {
 import Flag from '@/components/Flag';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 
-/** פרופיל מטייל ציבורי: דרכון בלבד, לקריאה - עם "מדינות משותפות" כשמחוברים */
+/** A public traveller profile: the passport only, read-only - with "countries in common" when signed in */
 export default function TravelerClient({ userId }: { userId: string }) {
   const auth = useAuth();
   const [state, setState] = useState<'loading' | 'notfound' | 'signedout' | 'ok'>('loading');
@@ -27,11 +27,11 @@ export default function TravelerClient({ userId }: { userId: string }) {
       return;
     }
     /*
-      `public_profiles` אינו מוענק יותר ל-anon: ההענקה הישנה איפשרה
-      למשוך את כל הרשימה בבקשה אחת - ספרייה של שמות ותצלומים לגריפה,
-      בלי חשבון. המחיר הוא שמבקר לא מחובר מקבל תשובה ריקה כאן, ולכן
-      **אומרים לו את האמת** במקום להציג "פרופיל פרטי או שאינו קיים",
-      שהוא פשוט לא נכון במצב הזה.
+      `public_profiles` is no longer granted to anon: the old grant made it possible to
+      pull the entire list in one request - a directory of names and photographs ready to
+      scrape, with no account. The price is that a visitor who is not signed in gets an
+      empty answer here, so **we tell them the truth** instead of showing "this profile is
+      private or does not exist", which is simply not true in that case.
     */
     if (!auth.user) {
       setState('signedout');
@@ -109,7 +109,7 @@ export default function TravelerClient({ userId }: { userId: string }) {
 
   return (
     <div className="rise-in mx-auto max-w-2xl">
-      {/* כרטיס המטייל */}
+      {/* The traveller card */}
       <section className="overflow-hidden rounded-3xl bg-shell ring-1 ring-night/10">
         <div className="relative h-24 bg-night">
           <div
@@ -143,7 +143,7 @@ export default function TravelerClient({ userId }: { userId: string }) {
             {current.emoji} {current.title} · {visited.size} מדינות
           </p>
 
-          {/* פירוק יבשות */}
+          {/* Per-continent breakdown */}
           {visited.size > 0 && (
             <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-night/55">
               {CONTINENTS.map((cont) => {
@@ -161,7 +161,7 @@ export default function TravelerClient({ userId }: { userId: string }) {
         </div>
       </section>
 
-      {/* מדינות משותפות - החיבור החברתי הכיפי */}
+      {/* Countries in common - the fun social connection */}
       {auth.user && common.length > 0 && (
         <section className="mt-5 rounded-3xl bg-shell p-5 ring-1 ring-night/10 sm:p-6">
           <h2 className="font-bold text-night">
@@ -181,7 +181,7 @@ export default function TravelerClient({ userId }: { userId: string }) {
         </section>
       )}
 
-      {/* הדרכון שלהם */}
+      {/* Their passport */}
       <section className="mt-5 rounded-3xl bg-shell p-5 ring-1 ring-night/10 sm:p-6">
         <h2 className="font-bold text-night">דרכון המדינות</h2>
         {theirCountries.length === 0 ? (

@@ -1,12 +1,12 @@
 /**
- * PayPal בלי SDK - **שלוש טענות אבטחה, וכולן על מה שאסור לקרות.**
+ * PayPal without an SDK - **three security claims, and all of them about what must not happen.**
  *
- * 1. המחיר בבקשת היצירה הוא תמיד `priceILS.toFixed(2)` - הפרמטר שהעביר
- *    הקורא, אף פעם לא ערך שממציא הקובץ הזה.
- * 2. `paypalMode()` לעולם לא נופלת בשקט מ-production ל-sandbox: בלי
- *    מפתח חי, `PAYPAL_MODE=production` הוא `off`, לא sandbox.
- * 3. `verifyWebhookSignature` שולחת את ה-`webhook_id` שהוגדר **אצלנו**,
- *    לא כל דבר שהגיע בכותרות הבקשה.
+ * 1. The price in the create request is always `priceILS.toFixed(2)` - the parameter the
+ *    caller passed, never a value this file invents.
+ * 2. `paypalMode()` never falls silently from production to sandbox: with no live key,
+ *    `PAYPAL_MODE=production` is `off`, not sandbox.
+ * 3. `verifyWebhookSignature` sends the `webhook_id` configured **on our side**, not
+ *    whatever arrived in the request headers.
  */
 import { test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
@@ -56,7 +56,7 @@ function configureSandbox() {
 
 const tokenResponse = () => new Response(JSON.stringify({ access_token: 'TOKEN', expires_in: 3600 }), { status: 200 });
 
-/* ---------- 1. מצב ---------- */
+/* ---------- 1. Mode ---------- */
 
 test('בלי מפתחות בכלל - off', async () => {
   const { paypalMode } = await load();
@@ -81,7 +81,7 @@ test('production דורש שלושתם: client id, secret ו-webhook id', async 
   process.env.PAYPAL_MODE = 'production';
   process.env.PAYPAL_CLIENT_ID = 'live-client';
   process.env.PAYPAL_CLIENT_SECRET = 'live-secret';
-  // בלי PAYPAL_WEBHOOK_ID
+  // With no PAYPAL_WEBHOOK_ID
   const { paypalMode } = await load();
   assert.equal(paypalMode(), 'off');
 
@@ -97,7 +97,7 @@ test('PAYPAL_MODE=off מכבה גם כשיש מפתחות', async () => {
   assert.equal(paypalMode(), 'off');
 });
 
-/* ---------- 2. הדומיין החי חסום ב-sandbox ---------- */
+/* ---------- 2. The live domain is blocked in sandbox ---------- */
 
 test('sandbox על הדומיין החי - חסום', async () => {
   const { sandboxBlocked } = await load();
@@ -130,7 +130,7 @@ test('כל ערך אחר מלבד "true" נשאר חוסם - אין נפילה �
   assert.equal(sandboxBlocked('tiyulplus.com', 'sandbox'), true);
 });
 
-/* ---------- 3. יצירת הזמנה: הסכום הוא הפרמטר, ותו לא ---------- */
+/* ---------- 3. Creating an order: the amount is the parameter, and nothing else ---------- */
 
 test('הבקשה ל-PayPal נושאת בדיוק את המחיר שהועבר, ולא משהו אחר', async () => {
   configureSandbox();
@@ -202,7 +202,7 @@ test('מחיר תקין עם עיגול צף (29.9 * 100 !== 2990 בדיוק) ל
   assert.ok(r, 'המחיר האמיתי של המוצר לא אמור להידחות');
 });
 
-/* ---------- 4. לכידה ---------- */
+/* ---------- 4. Capture ---------- */
 
 test('לכידה מוצלחת מחזירה captureId וסכום', async () => {
   configureSandbox();
@@ -258,7 +258,7 @@ test('תשובת לכידה מעורערת (בלי capture) - bad-response, לא
   assert.equal((r as { reason: string }).reason, 'bad-response');
 });
 
-/* ---------- 5. אימות חתימת webhook ---------- */
+/* ---------- 5. Verifying the webhook signature ---------- */
 
 const FULL_HEADERS = {
   authAlgo: 'SHA256withRSA',

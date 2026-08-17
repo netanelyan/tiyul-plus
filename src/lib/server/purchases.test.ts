@@ -1,9 +1,9 @@
 /**
- * שכבת ה-DB של הרכישות. **הטענה המרכזית: `markPaid` היא עדכון מותנה
- * שדורש `status=pending` בשאילתה עצמה** - זה מה שהופך webhook כפול
- * ל-no-op ב-Postgres האמיתי, ולא בדיקה כלשהי בקוד. הטסט כאן מוודא
- * שהתנאי הזה נשלח בפועל, ושכשהדאטהבייס (המדומה) מחזיר אפס שורות -
- * בדיוק מה שקורה כשהשורה כבר לא `pending` - הפונקציה מחזירה `null`.
+ * The purchases DB layer. **The central claim: `markPaid` is a conditional update that
+ * requires `status=pending` in the query itself** - that is what makes a duplicate webhook
+ * a no-op in real Postgres, and not some check in the code. The test here verifies that
+ * the condition is actually sent, and that when the (mocked) database returns zero rows -
+ * exactly what happens when the row is no longer `pending` - the function returns `null`.
  */
 import { test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
@@ -74,7 +74,7 @@ test('**markPaid שולחת WHERE על paypal_order_id וגם על status=pendin
 
 test('**webhook כפול: הדאטהבייס מחזיר 0 שורות (השורה כבר לא pending) - markPaid מחזירה null**', async () => {
   const { markPaid } = await load();
-  respond = () => new Response('[]', { status: 200 }); // בדיוק מה ש-PostgREST מחזיר על WHERE שלא תפס שורה
+  respond = () => new Response('[]', { status: 200 }); // exactly what PostgREST returns for a WHERE that matched no row
   const result = await markPaid('ORDER1', { captureId: 'CAP1', payerEmail: null, report: REPORT, rawWebhook: {} });
   assert.equal(result, null, 'עדכון שני על אותה הזמנה לא אמור "להצליח" שוב');
 });
@@ -113,8 +113,8 @@ test('שלילה: מסננת status=paid בלבד, לא נוגעת ברכישו�
 test('סטטיסטיקה: הכנסה נספרת רק מ-paypal ששולם, לא מהענקות', async () => {
   const { computeStats } = await load();
   const now = new Date();
-  const old = new Date(now.getTime() - 20 * 60_000).toISOString(); // 20 דקות - מעל הסף
-  const recent = new Date(now.getTime() - 2 * 60_000).toISOString(); // 2 דקות - מתחת לסף
+  const old = new Date(now.getTime() - 20 * 60_000).toISOString(); // 20 minutes - above the threshold
+  const recent = new Date(now.getTime() - 2 * 60_000).toISOString(); // 2 minutes - below the threshold
   const rows = [
     { id: '1', user_id: 'u', trip_id: 't', status: 'paid', source: 'paypal', amount: 29.9, created_at: now.toISOString() },
     { id: '2', user_id: 'u', trip_id: 't', status: 'paid', source: 'admin_grant', amount: 0, created_at: now.toISOString() },
@@ -128,8 +128,8 @@ test('סטטיסטיקה: הכנסה נספרת רק מ-paypal ששולם, לא 
   assert.equal(stats.revenueILS, 29.9, 'הטבת פרימיום לא נחשבת הכנסה, בדיוק כמו הענקה ידנית');
   assert.equal(stats.paidCount, 3);
   assert.equal(stats.adminGrantCount, 1);
-  // המונה החדש נספר בנפרד - לא נבלע בתוך adminGrantCount, כדי שהתמונה
-  // תבדיל בין תמיכה אנושית לבין הטבת מנוי אוטומטית
+  // The new counter is counted separately - not folded into adminGrantCount, so the picture
+  // distinguishes human support from an automatic subscriber perk
   assert.equal(stats.premiumIncludedCount, 1);
   assert.equal(stats.pendingCount, 2);
   assert.equal(stats.failedCount, 1);

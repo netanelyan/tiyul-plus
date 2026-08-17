@@ -1,11 +1,12 @@
 import type { Destination } from '@/lib/types';
 
-// נתוני דוגמה שנאספו ידנית. דירוגים הם הערכה מערכתית; כשרות ושעות פתיחה
-// משתנות - תמיד לוודא מול המקום לפני ההגעה.
-// כשמחברים ספק חיצוני (Google Places / TripAdvisor), הנתונים כאן משמשים
-// כבסיס והספק מעשיר אותם בדירוגים, תמונות ושעות אמת.
-// מידע ברמת מדינה (ויזה, מטבע, סים, תשלומים) גר ב-countries.ts;
-// כאן נשאר רק מה שעירוני באמת: טיסות לשדה של העיר, תחבורה, כשרות.
+// Hand-collected sample data. Ratings are an editorial assessment; kashrut and opening
+// hours change - always verify with the venue before arriving.
+// When an external provider is connected (Google Places / TripAdvisor), the data here
+// serves as the base and the provider enriches it with ratings, photos and live hours.
+// Country-level information (visa, currency, SIM, payments) lives in countries.ts;
+// what stays here is only what is genuinely city-level: flights to the city's airport,
+// getting around, kashrut.
 
 export const destinations: Destination[] = [
   {
@@ -30191,12 +30192,13 @@ export const destinations: Destination[] = [
     photo:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/%D0%9E%D0%B1%D0%BB_%D0%92%D0%B8%D0%B4%D0%B8%D0%BD_-_%D0%91%D0%B5%D0%BB%D0%BE%D0%B3%D1%80%D0%B0%D0%B4%D1%87%D0%B8%D0%BA_-_%D0%91%D0%B5%D0%BB%D0%BE%D0%B3%D1%80%D0%B0%D0%B4%D1%87%D0%B8%D1%88%D0%BA%D0%B8_%D1%81%D0%BA%D0%B0%D0%BB%D0%B8_-_%2812%29.jpg/960px-%D0%9E%D0%B1%D0%BB_%D0%92%D0%B8%D0%B4%D0%B8%D0%BD_-_%D0%91%D0%B5%D0%BB%D0%BE%D0%B3%D1%80%D0%B0%D0%B4%D1%87%D0%B8%D0%BA_-_%D0%91%D0%B5%D0%BB%D0%BE%D0%B3%D1%80%D0%B0%D0%B4%D1%87%D0%B8%D1%88%D0%BA%D0%B8_%D1%81%D0%BA%D0%B0%D0%BB%D0%B8_-_%2812%29.jpg',
     iconicLandmark: {
-      // היה כאן "סלעי בלוגראדצ׳יק" עם כתובת תמונה מתה (אחת מ-18 הידועות,
-      // שם קובץ קטוע ב-Commons). **לא הוחלפה רק התמונה**: כרטיס שכותרתו
-      // "סלעי בלוגראדצ׳יק" נושא צילום של איבאנובו הוא בדיוק טעות ההרכבה
-      // שתועדה על אדינבורו. הוחלף הסמל כולו - שם, שם לועזי, תמונה מאומתת
-      // ותקציר שנגזר מהתיאור הקיים של אותו מקום. הסלעים עצמם נשארים
-      // בקטלוג כמקום, בלי תמונה, עד שיימצא צילום אמיתי.
+      // This used to be the Belogradchik Rocks with a dead photo URL (one of the 18 known
+      // ones, a truncated filename on Commons). **It was not only the photo that was
+      // replaced**: a card titled "Belogradchik Rocks" carrying a photograph of Ivanovo is
+      // exactly the assembly error documented for Edinburgh. The whole landmark was
+      // replaced - name, Latin name, a verified photo and a blurb derived from the existing
+      // description of that place. The rocks themselves stay in the catalog as a place,
+      // with no photo, until a real photograph is found.
       name: 'כנסיות הסלע של איבאנובו',
       nameLocal: 'Rock-hewn Churches of Ivanovo',
       photo:

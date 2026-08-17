@@ -5,9 +5,9 @@ import PlacesMap from '@/components/PlacesMap';
 import type { Place } from '@/lib/types';
 
 /**
- * תצוגת סיפור הטיול - קריאה בלבד, יפה, ניתנת לשיתוף. המסלול על מפה,
- * הימים כציר סיפור, והתמונות שהמטיילים העלו כגלריה. הכול מה-snapshot -
- * שום קריאה לטיול חי.
+ * The trip story view - read only, presentable, shareable. The route on a map, the days
+ * as a narrative timeline, and the photos the travellers uploaded as a gallery. All of it
+ * from the snapshot - never a read of the live trip.
  */
 export default function StoryView({
   title,
@@ -18,7 +18,7 @@ export default function StoryView({
   snapshot: StorySnapshot;
   photos: { url: string; caption: string | null }[];
 }) {
-  // סיכות המפה: כל העצירות של כל הימים. Place מינימלי מספיק ל-PlacesMap.
+  // Map pins: every stop of every day. A minimal Place is enough for PlacesMap.
   const mapPlaces: Place[] = snapshot.days.flatMap((d, di) =>
     d.stops.map((s, si) => ({
       id: `story-${di}-${si}`,
@@ -34,7 +34,7 @@ export default function StoryView({
   const totalStops = mapPlaces.length;
   const cities = [...new Set(snapshot.days.map((d) => d.cityName))];
 
-  // מרכז המפה: ממוצע העצירות. FitBounds הפנימי ממילא מתאים את התצוגה.
+  // Map centre: the mean of the stops. The internal FitBounds adjusts the view anyway.
   const center = mapPlaces.length
     ? {
         lat: mapPlaces.reduce((s, p) => s + p.lat, 0) / mapPlaces.length,
@@ -44,7 +44,7 @@ export default function StoryView({
 
   return (
     <div className="rise-in mx-auto max-w-3xl pb-16">
-      {/* כותרת הסיפור */}
+      {/* The story title */}
       <header className="rounded-3xl bg-night px-6 py-10 text-center text-cream">
         <p className="text-xs font-bold text-zest">סיפור טיול · טיול+</p>
         <h1 className="display mt-2 text-3xl sm:text-4xl">{title}</h1>
@@ -53,14 +53,14 @@ export default function StoryView({
         </p>
       </header>
 
-      {/* המסלול על המפה */}
+      {/* The route on the map */}
       {mapPlaces.length > 0 && (
         <div className="mt-6 overflow-hidden rounded-3xl ring-1 ring-night/10">
           <PlacesMap places={mapPlaces} center={center} zoom={11} className="h-72 sm:h-96" />
         </div>
       )}
 
-      {/* הימים - ציר הסיפור */}
+      {/* The days - the narrative timeline */}
       <ol className="mt-8 space-y-4">
         {snapshot.days.map((d) => (
           <li key={d.dayNumber} className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
@@ -83,7 +83,7 @@ export default function StoryView({
         ))}
       </ol>
 
-      {/* הגלריה */}
+      {/* The gallery */}
       {photos.length > 0 && (
         <section className="mt-10">
           <h2 className="display text-2xl text-night">רגעים מהטיול</h2>
@@ -109,7 +109,7 @@ export default function StoryView({
         </section>
       )}
 
-      {/* הזמנה שקטה - הצופה הוא המשתמש הבא */}
+      {/* A quiet invitation - the viewer is the next user */}
       <div className="mt-12 rounded-3xl bg-sunset/10 p-6 text-center ring-1 ring-sunset/25">
         <p className="text-sm font-bold text-night">הטיול הזה תוכנן עם טיול+</p>
         <p className="mt-1 text-xs font-semibold text-night/60">

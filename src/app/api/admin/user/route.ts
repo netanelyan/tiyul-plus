@@ -5,12 +5,12 @@ import { adminSelect, userByEmail } from '@/lib/server/supabaseAdmin';
 import { premiumBudgetFor } from '@/lib/server/budget';
 
 /**
- * חיפוש מטייל לפי מייל, לצורכי תמיכה.
+ * Looking up a traveller by email, for support purposes.
  *
- * מה נחזיר ומה לא: תוכנית, תפקיד, תאריך פקיעה, מספר טיולים ושימוש AI
- * היום. **לא** מוחזרים תוכן טיולים, שיחות, טלפון או תמונה - אדמין צריך
- * לדעת אם למישהו יש פרימיום ואם הוא נתקע במכסה, לא לקרוא את הטיולים
- * שלו. גם החיפוש עצמו נרשם ביומן: הצפייה בחשבון של משתמש היא פעולה.
+ * What is returned and what is not: plan, role, expiry date, trip count and today's AI
+ * usage. Trip content, conversations, phone number and photo are **not** returned - an
+ * admin needs to know whether somebody has premium and whether they hit a quota, not to
+ * read their trips. The search itself is logged too: viewing a user's account is an action.
  */
 export async function POST(req: Request) {
   const actor = await requireRole(req, 'admin');
@@ -42,10 +42,10 @@ export async function POST(req: Request) {
   ));
   const p = profiles?.[0] ?? null;
 
-  // תקרה הגנתית: זו רק ספירה, אבל בלי pgLimit שאילתה ל-user_trips
-  // בלי מגבלת שורות היא בדיוק סוג הסריקה הבלתי-חסומה שאסור שתהיה
-  // כאן - חשבון שנוצל לרעה ונושא אלפי שורות לא אמור להאט את החיפוש.
-  // TRIPS_CAP תואם את ה-MAX_ROWS שכבר קיים ב-/api/admin/trips.
+  // A protective ceiling: this is only a count, but without pgLimit a query to user_trips
+  // with no row limit is exactly the kind of unbounded scan that must not exist here - an
+  // abused account carrying thousands of rows should not slow the search down.
+  // TRIPS_CAP matches the MAX_ROWS that already exists in /api/admin/trips.
   const TRIPS_CAP = 2000;
   const trips = await adminSelect<{ id: string }>(
     'user_trips',
@@ -61,8 +61,8 @@ export async function POST(req: Request) {
   await audit(actor, 'lookup_user', { userId: user.id, email: user.email });
 
   const plan = effectivePlan(p ?? null);
-  // הכסף האמיתי של המנוי החודש - לאדמין בלבד. למשתמש עצמו זה לעולם
-  // לא מוצג בדולרים, רק בספירות (ראו plans.ts).
+  // The subscriber's real money this month - for the admin only. It is never shown to the
+  // user themselves in dollars, only as counts (see plans.ts).
   const premiumSpend = plan === 'premium' ? await premiumBudgetFor(user.id) : null;
 
   return ok({
@@ -77,8 +77,8 @@ export async function POST(req: Request) {
     planSource: p?.plan_source ?? null,
     isPublic: Boolean(p?.is_public),
     trips: trips?.length ?? 0,
-    // כמו countAuthUsers: אם הגענו לתקרה, המספר למעלה הוא רצפה ולא
-    // ספירה מדויקת - נאמר את זה במפורש ולא מוצג כאילו זה הכול.
+    // Like countAuthUsers: if we reached the cap, the number above is a floor and not an
+    // exact count - say so explicitly rather than present it as the whole picture.
     tripsCapped: (trips?.length ?? 0) >= TRIPS_CAP,
     unitsToday: usage?.[0]?.units ?? 0,
     premiumUsdMonth: premiumSpend?.spent ?? null,

@@ -1,13 +1,13 @@
 /**
- * טסטים ל-set_day_city ו-move_day - שני הכלים שאִפשרו בכלל לשנות מבנה
- * של טיול קיים.
+ * Tests for set_day_city and move_day - the two tools that made it possible at all to
+ * change the structure of an existing trip.
  *
- * הרקע: מטייל הזמין מלון בברטיסלבה וביקש שימים 1-2 יהיו שם במקום בהרי
- * הטטרה. ימים מקובעים לעיר, `set_day_places` דוחה כל מקום שאינו בעיר של
- * אותו יום, ולא היה שום כלי שמזיז יום או מחליף לו עיר - כך שהמסלול
- * החוקי היחיד היה `create_trip_full`, שמוחק את הטיול ובונה מחדש. הסוכן
- * אמר "המערכת לא מאפשרת לי" וזה היה מדויק; הדבר היחיד שהוא כן היה יכול
- * לעשות הוא לעדכן הערות, ולכן זה מה שהוא עשה.
+ * The background: a traveller booked a hotel in Bratislava and asked for days 1-2 to be
+ * there instead of in the High Tatras. Days are pinned to a city, `set_day_places` rejects
+ * any place not in that day's city, and there was no tool that moves a day or changes its
+ * city - so the only legal path was `create_trip_full`, which deletes the trip and rebuilds
+ * it. The agent said "the system does not allow me to" and that was accurate; the only
+ * thing it could do was update notes, so that is what it did.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -35,7 +35,7 @@ test('set_day_city מעביר יום לעיר אחרת ומנקה את העצי�
   const days = out.trip!.days;
   assert.equal(days[0].citySlug, 'bratislava');
   assert.deepEqual(days[0].placeIds, [], 'עצירות של הטטרה לא יכולות להישאר');
-  // שאר הימים לא נגעו
+  // The other days were not touched
   assert.equal(days[1].citySlug, 'high-tatras');
   assert.deepEqual(days[1].placeIds, ['tat-lomnicky']);
   assert.equal(days[2].citySlug, 'vienna');
@@ -44,7 +44,7 @@ test('set_day_city מעביר יום לעיר אחרת ומנקה את העצי�
 test('העצירות שהוסרו מדווחות בשמן, כדי שהסוכן יוכל לומר מה ירד', () => {
   const out = run(trip(), 'set_day_city', { dayNumber: 1, citySlug: 'bratislava' });
   assert.match(out.message, /הוסרו/);
-  // השמות האמיתיים מהקטלוג, לא המזהים
+  // The real names from the catalog, not the ids
   assert.ok(!out.message.includes('tat-strbske'), 'מזהה גולמי אינו שם');
   assert.match(out.message, /set_day_places/, 'ההנחיה למלא את היום מיד');
 });
@@ -120,12 +120,12 @@ test('התרחיש המלא של נטנאל: ימים 1-2 עוברים לברט�
     assert.equal(filled.ok, true, filled.message);
     t = filled.trip!;
   }
-  // אותו טיול, לא חדש
+  // The same trip, not a new one
   assert.equal(t.id, originalId);
   assert.equal(t.days.length, 3);
   assert.deepEqual(t.days[0].placeIds, ['bts-oldtown', 'bts-castle']);
   assert.deepEqual(t.days[1].placeIds, ['bts-ufo']);
-  // וינה נשארה כמו שהייתה
+  // Vienna stayed as it was
   assert.equal(t.days[2].citySlug, 'vienna');
   assert.deepEqual(t.days[2].placeIds, ['vie-schonbrunn']);
 });
