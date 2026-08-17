@@ -12,6 +12,7 @@ import { formatHebrewRange } from '@/lib/trip/dates';
 import type { SharedTrip } from '@/lib/trip/share';
 import { tripFromShared } from '@/lib/trip/share';
 import PlacesMap from '@/components/PlacesMap';
+import PlaceThumb from '@/components/PlaceThumb';
 import Flag from '@/components/Flag';
 import { daysHe } from '@/lib/duration';
 
@@ -166,7 +167,7 @@ export default function SharedTripView({
                 {d.notes && (
                   <p className="mt-3 rounded-lg bg-zest/15 px-3 py-2 text-sm text-night">💡 {d.notes}</p>
                 )}
-                <ol className="mt-3 space-y-2">
+                <ol className="mt-3 space-y-3">
                   {d.placeIds.map((pid, j) => {
                     const p = placeOf(d.citySlug, pid);
                     if (!p) return null;
@@ -175,7 +176,11 @@ export default function SharedTripView({
                         <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-night/5 text-xs font-bold text-night/70">
                           {j + 1}
                         </span>
-                        <div>
+                        {/* The cities already arrive as full Destination props, so the
+                            photo costs nothing extra here - and PlaceThumb falls back to
+                            the category tile for the places that have none. */}
+                        <PlaceThumb place={p} className="h-16 w-16 shrink-0 sm:h-20 sm:w-20" />
+                        <div className="min-w-0">
                           <p className="font-semibold text-night">
                             {p.name}
                             {p.mustSee && (
@@ -183,11 +188,11 @@ export default function SharedTripView({
                                 ★
                               </span>
                             )}
-                            <span className="ms-2 text-xs font-medium text-night/45">
+                            <span className="ms-2 whitespace-nowrap text-xs font-medium text-night/45">
                               {categoryMeta[p.category].label}
                             </span>
                           </p>
-                          <p className="line-clamp-2 text-sm leading-relaxed text-night/60">
+                          <p className="line-clamp-3 text-sm leading-relaxed text-night/60">
                             {p.description}
                           </p>
                         </div>

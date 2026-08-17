@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { cache } from 'react';
 import { adminRpc } from '@/lib/server/supabaseAdmin';
-import { storyPhotoUrl, type StoryPhoto, type StorySnapshot } from '@/lib/server/stories';
+import { enrichSnapshot, storyPhotoUrl, type StoryPhoto, type StorySnapshot } from '@/lib/server/stories';
 import StoryView from './StoryView';
 
 /**
@@ -64,9 +64,12 @@ export default async function StoryPage({ params }: { params: Promise<{ slug: st
   }
 
   return (
+    // The catalog photos and descriptions are attached HERE, on the server:
+    // StoryView is a client component, and importing the catalog into it would
+    // ship ~2MB to every viewer of a public story.
     <StoryView
       title={story.title}
-      snapshot={story.trip_data}
+      snapshot={enrichSnapshot(story.trip_data)}
       photos={story.photos.map((p) => ({ url: storyPhotoUrl(p.path), caption: p.caption ?? null }))}
     />
   );

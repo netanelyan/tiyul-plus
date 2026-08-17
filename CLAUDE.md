@@ -9405,3 +9405,84 @@ comment lines repo-wide.
 through a bash heredoc mangles backslashes (`'\'` arrived as `'\'`), which cost
 three failed script writes. Use the Write tool for any file containing regex or
 escape sequences; heredocs are fine only for plain prose.
+
+### 2026-08-17 (c) - Photos and descriptions on the two read-only pages, and a map that was 0px tall on a phone
+
+Netanel: add pictures and descriptions of places to the shared trip and to the
+trip story. The two surfaces started from very different places, and the
+interesting part is the story side.
+
+**`/t/<code>` was the easy half.** It already rendered descriptions, and the page
+already passes full `Destination` objects down from the server, so the photos
+were sitting in props doing nothing. One `PlaceThumb` per stop, and the
+description clamp went 2 lines to 3. `PlaceThumb` was reused rather than a
+second `<img>` written, so the places with no photograph keep the category tile
+and the broken-URL `onError` fallback for free.
+
+**The story side needed a decision: the snapshot, or the catalog?** A story row
+stores a frozen snapshot precisely so that editing or deleting the traveller's
+TRIP cannot change or break a published story. The tempting move is to freeze the
+photo and description into it too - and that would leave every already-published
+story bare forever, until its owner happened to press "refresh".
+
+**So they are resolved at render time from the catalog, by the `id` the snapshot
+already stores** (it was there for the group-trip votes, and is public
+information anyway). A photo and a description are not trip data - they are our
+own curated content, static per deploy and identical for everyone. Existing
+stories get their photos with nobody doing anything, and a photo URL we later
+repair propagates instead of staying dead in dozens of frozen snapshots.
+
+**The name is deliberately NOT re-resolved.** It stays exactly as the snapshot
+recorded it, so a place renamed in the catalog cannot silently rewrite somebody's
+published story. There is a test named after that, using a stop whose name
+differs from the catalog's on purpose.
+
+**The enrichment happens in `page.tsx`, on the server.** `StoryView` is a client
+component; importing the catalog into it would ship ~2MB to every viewer of a
+public story - the exact regression `label.ts` and `destinationCards.ts` were
+already fixed for. Same shape as `/t/<code>` passing `cityData` as props.
+
+A side effect worth having: the story's map pins now carry the real category and
+photo, so they draw in category colour and show the place photo above the pin at
+city zoom, like the planning screen. Previously every pin was a grey `attraction`.
+
+---
+
+**The bug this turned up, which was not what I was asked to do.** Reading the
+390px screenshot, the story's map looked like a thin line. Measured rather than
+assumed: **`.leaflet-container` was 288x0 - zero pixels tall on a phone.**
+
+`MapInner` renders its container as `h-full w-full ${className}`, and the story
+passed `className="h-72 sm:h-96"`. Two height utilities of equal specificity, so
+the winner is whichever Tailwind emits last - `sm:h-96` happened to beat `h-full`
+on desktop, and `h-72` happened to lose to it on mobile. The parent had no
+height, so `h-full` resolved to zero. **The map on a public shareable page was
+invisible on phones, which is how most people open a shared link.** The height
+moved to the wrapper, exactly as `/t/<code>` already does it. Measured after:
+288px with 12 tiles.
+
+**And a harness trap that cost three wrong readings, already in this file once.**
+After rebuilding, both pages reported no map at all - including the shared page I
+had barely touched. The served HTML did not contain the new wrapper class: a
+**stale `next start` still held the port**, so I was measuring the previous build.
+`pkill -f "next start"` silently matched nothing on Windows; the process had to be
+found by port (`netstat -ano`) and stopped by pid. The rule from entry (l) stands
+and is worth repeating: kill the previous server before measuring a rebuild, and
+when a number is surprising, suspect the fixture first.
+
+**A third gap in the English-comments guard, found by reading a SQL file for an
+unrelated reason.** The guard checks trailing `//` comments but SQL uses `--`, so
+a Hebrew note written after code on a SQL line was invisible to it - four of them
+were sitting in `supabase-accounts.sql` and `supabase-stories.sql` while the test
+passed green. It now uses a SQL-aware trailing-comment reader (single-quoted
+strings tracked, so a literal containing a double hyphen is not misread), and it
+caught all four immediately.
+
+**Verified:** 623 unit tests (4 new on `enrichSnapshot`), tsc, build and lint
+clean. In a real browser at 1400 and 390, against a production build: **16/16 on
+each surface** - six stop rows, four photos that actually decode plus two
+category tiles for the places with none, a real thumbnail size, a description on
+every row, zero horizontal overflow, RTL intact, no console errors. The story was
+checked end to end through the real page, by publishing a temporary row to
+`trip_stories` with the service role and deleting it afterwards (confirmed gone).
+`supabase-stories.sql` has been run since the last session - the table exists now.

@@ -6,8 +6,8 @@
 
 create table if not exists public.user_trips (
   user_id uuid not null references auth.users (id) on delete cascade,
-  id text not null,                 -- Trip.id מהאפליקציה
-  data jsonb not null,              -- אובייקט הטיול המלא
+  id text not null,                 -- Trip.id from the app
+  data jsonb not null,              -- the full trip object
   updated_at timestamptz not null default now(),
   primary key (user_id, id)
 );

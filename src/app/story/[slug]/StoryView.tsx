@@ -1,34 +1,51 @@
 'use client';
 
-import type { StorySnapshot } from '@/lib/server/stories';
+import type { EnrichedSnapshot, EnrichedStop } from '@/lib/server/stories';
 import PlacesMap from '@/components/PlacesMap';
+import PlaceThumb from '@/components/PlaceThumb';
+import { categoryMeta } from '@/lib/categories';
 import type { Place } from '@/lib/types';
 
 /**
  * The trip story view - read only, presentable, shareable. The route on a map, the days
- * as a narrative timeline, and the photos the travellers uploaded as a gallery. All of it
- * from the snapshot - never a read of the live trip.
+ * as a narrative timeline with a photo and a description per stop, and the photos the
+ * travellers uploaded as a gallery.
+ *
+ * The trip itself comes entirely from the snapshot - never a read of the live trip. The
+ * place photos and descriptions are attached to it on the server (`enrichSnapshot`), so
+ * the catalog never reaches the browser; see the note there for why they are resolved
+ * rather than frozen into the snapshot.
  */
+
+/** The shape PlaceThumb and the map need, built from a snapshot stop. */
+function asPlace(s: EnrichedStop, key: string): Place {
+  return {
+    id: key,
+    name: s.name,
+    nameLocal: s.name,
+    category: s.category,
+    lat: s.lat,
+    lng: s.lng,
+    description: s.description ?? '',
+    ...(s.photo ? { photo: s.photo } : {}),
+    ...(s.mustSee ? { mustSee: true } : {}),
+  };
+}
+
 export default function StoryView({
   title,
   snapshot,
   photos,
 }: {
   title: string;
-  snapshot: StorySnapshot;
+  snapshot: EnrichedSnapshot;
   photos: { url: string; caption: string | null }[];
 }) {
-  // Map pins: every stop of every day. A minimal Place is enough for PlacesMap.
+  // Map pins: every stop of every day. Carrying the real category and photo means the
+  // map draws each pin in its category colour, and shows the place photo above the pin
+  // once zoomed into a city - the same treatment as the planning screen.
   const mapPlaces: Place[] = snapshot.days.flatMap((d, di) =>
-    d.stops.map((s, si) => ({
-      id: `story-${di}-${si}`,
-      name: s.name,
-      nameLocal: s.name,
-      category: 'attraction' as const,
-      lat: s.lat,
-      lng: s.lng,
-      description: '',
-    })),
+    d.stops.map((s, si) => asPlace(s, `story-${di}-${si}`)),
   );
 
   const totalStops = mapPlaces.length;
@@ -53,10 +70,17 @@ export default function StoryView({
         </p>
       </header>
 
-      {/* The route on the map */}
+      {/* The route on the map.
+
+          The height belongs to the WRAPPER, not to a className on the map.
+          MapInner renders its container as `h-full w-full {className}`, so a
+          height passed in competes with `h-full` and loses on whichever Tailwind
+          emits last: `sm:h-96` happened to win on desktop while `h-72` lost on
+          mobile, so the map measured 0px tall on a phone - which is how most
+          people open a shared story. Measured at 390: 0px before, 288px after. */}
       {mapPlaces.length > 0 && (
-        <div className="mt-6 overflow-hidden rounded-3xl ring-1 ring-night/10">
-          <PlacesMap places={mapPlaces} center={center} zoom={11} className="h-72 sm:h-96" />
+        <div className="mt-6 h-72 overflow-hidden rounded-3xl ring-1 ring-night/10 sm:h-96">
+          <PlacesMap places={mapPlaces} center={center} zoom={11} />
         </div>
       )}
 
@@ -68,11 +92,34 @@ export default function StoryView({
               יום {d.dayNumber} · {d.cityName}
             </h2>
             {d.stops.length > 0 ? (
-              <ol className="mt-2 space-y-1 text-sm text-night/75">
+              <ol className="mt-3 space-y-3">
                 {d.stops.map((s, i) => (
-                  <li key={i}>
-                    {i + 1}. {s.name}
-                    {s.mustSee && <span className="text-zest"> ★</span>}
+                  <li key={i} className="flex items-start gap-3">
+                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-night/5 text-xs font-bold text-night/70">
+                      {i + 1}
+                    </span>
+                    <PlaceThumb
+                      place={asPlace(s, `d${d.dayNumber}-${i}`)}
+                      className="h-16 w-16 shrink-0 sm:h-20 sm:w-20"
+                    />
+                    <div className="min-w-0">
+                      <p className="font-semibold text-night">
+                        {s.name}
+                        {s.mustSee && (
+                          <span className="ms-1.5 text-sm text-zest" title="חובה לראות">
+                            ★
+                          </span>
+                        )}
+                        <span className="ms-2 whitespace-nowrap text-xs font-medium text-night/45">
+                          {categoryMeta[s.category].label}
+                        </span>
+                      </p>
+                      {s.description && (
+                        <p className="mt-0.5 line-clamp-3 text-sm leading-relaxed text-night/65">
+                          {s.description}
+                        </p>
+                      )}
+                    </div>
                   </li>
                 ))}
               </ol>

@@ -61,6 +61,29 @@ function trailingLineComment(line: string): string | null {
   return null;
 }
 
+/**
+ * Trailing `-- ...` comment text in SQL, or null.
+ *
+ * `trailingLineComment` only understands `//`, so a Hebrew note written after
+ * code on a SQL line (`id text not null,  -- ...`) was invisible to this guard
+ * even once it walked the whole repo. Single-quoted strings are tracked so a
+ * literal containing a double hyphen is not mistaken for a comment.
+ */
+function trailingSqlComment(line: string): string | null {
+  let inStr = false;
+  for (let i = 0; i < line.length - 1; i++) {
+    const c = line[i];
+    if (inStr) {
+      if (c === "'") inStr = false;
+    } else if (c === "'") {
+      inStr = true;
+    } else if (c === '-' && line[i + 1] === '-') {
+      return line.slice(i + 2);
+    }
+  }
+  return null;
+}
+
 const COMMENT_START = /^\s*(\/\/|\/\*|\*|\{\/\*|--|#)/;
 /** A multi-line block comment opener, which only ever starts a line here. */
 const BLOCK_OPEN = /^\s*\{?\/\*/;
@@ -85,7 +108,9 @@ test('no Hebrew in comments anywhere in the repo', () => {
           if (HEBREW.test(line)) offenders.push(`${file}:${i + 1}`);
           return;
         }
-        const trailing = trailingLineComment(line);
+        const trailing = file.endsWith('.sql')
+          ? trailingSqlComment(line)
+          : trailingLineComment(line);
         if (trailing && HEBREW.test(trailing)) offenders.push(`${file}:${i + 1}`);
       });
     }

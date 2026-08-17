@@ -14,7 +14,7 @@
 --  would also break when the trip is deleted.
 
 create table if not exists public.trip_stories (
-  slug        text primary key,             -- קצר, אקראי, בקישור הציבורי
+  slug        text primary key,             -- short, random, used in the public link
   user_id     uuid not null,
   trip_id     text not null,
   title       text not null,
@@ -25,7 +25,7 @@ create table if not exists public.trip_stories (
   published   boolean not null default false,
   created_at  timestamptz not null default now(),
   updated_at  timestamptz not null default now(),
-  unique (user_id, trip_id)                 -- סיפור אחד לטיול
+  unique (user_id, trip_id)                 -- one story per trip
 );
 
 alter table public.trip_stories enable row level security;

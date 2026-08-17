@@ -15,6 +15,7 @@
  */
 
 import { destinations } from '@/data/destinations';
+import type { Place, PlaceCategory } from '@/lib/types';
 import { findOwnTrip } from '@/lib/server/userTrips';
 import { adminInsert, adminSelect, adminUpdate } from '@/lib/server/supabaseAdmin';
 import { eq, pgQuery, pgSelect } from '@/lib/server/pgrest';
@@ -84,6 +85,69 @@ export function buildSnapshot(trip: {
     ...(trip.startDate ? { startDate: trip.startDate } : {}),
     ...(trip.endDate ? { endDate: trip.endDate } : {}),
     days,
+  };
+}
+
+/* ---------- Catalog content for the public page ---------- */
+
+/**
+ * A stop plus the catalog content the public story page displays.
+ *
+ * **Why this is resolved at render time and not stored in the snapshot.** The
+ * snapshot exists so that editing or deleting the traveller's TRIP cannot change
+ * or break a published story - see principle 2 at the top of this file. A photo
+ * and a description are not trip data: they are our own curated catalog content,
+ * which is static per deploy and identical for everyone. Resolving them by `id`
+ * (already stored on every stop) means stories published before this feature get
+ * their photos immediately, with nobody having to press "refresh", and a photo URL
+ * we later repair propagates to every story instead of staying dead in dozens of
+ * frozen snapshots.
+ *
+ * **The name is never re-resolved.** It stays exactly as the snapshot recorded it,
+ * so a place renamed in the catalog does not silently rewrite somebody's published
+ * story. Only the illustrative fields are enriched.
+ *
+ * A stop whose place is no longer in the catalog keeps its name and coordinates and
+ * simply has no photo - the same graceful state as a place that never had one.
+ */
+export interface EnrichedStop extends StoryStop {
+  category: PlaceCategory;
+  description?: string;
+  photo?: string;
+}
+export interface EnrichedStoryDay extends Omit<StoryDay, 'stops'> {
+  stops: EnrichedStop[];
+}
+export interface EnrichedSnapshot extends Omit<StorySnapshot, 'days'> {
+  days: EnrichedStoryDay[];
+}
+
+/** Every catalog place by id, built once per process - the data is static. */
+let placeById: Map<string, Place> | null = null;
+function catalogPlace(id: string): Place | undefined {
+  if (!placeById) {
+    placeById = new Map();
+    for (const d of destinations) for (const p of d.places) placeById.set(p.id, p);
+  }
+  return placeById.get(id);
+}
+
+export function enrichSnapshot(snapshot: StorySnapshot): EnrichedSnapshot {
+  return {
+    ...snapshot,
+    days: snapshot.days.map((d) => ({
+      ...d,
+      stops: d.stops.map((s) => {
+        const p = s.id ? catalogPlace(s.id) : undefined;
+        return {
+          ...s,
+          // 'attraction' is the neutral default already used for the story map pins
+          category: p?.category ?? 'attraction',
+          ...(p?.description ? { description: p.description } : {}),
+          ...(p?.photo ? { photo: p.photo } : {}),
+        };
+      }),
+    })),
   };
 }
 
