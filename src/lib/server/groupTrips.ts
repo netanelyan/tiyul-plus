@@ -36,11 +36,13 @@ export function newInviteCode(): string {
 
 export const isInviteCode = (code: string) => /^gr[a-z2-9]{8,12}$/.test(code);
 
-interface InviteRow {
+export interface InviteRow {
   code: string;
   owner_id: string;
   trip_id: string;
   expires_at: string;
+  /** Candidate dates the organiser put up for the group to answer (supabase-group-planning.sql) */
+  date_options?: string[];
 }
 
 /** Create an invite link (or replace the existing one) - organizer only, premium is enforced in the route */
@@ -64,7 +66,7 @@ export async function findInvite(code: string): Promise<InviteRow | null> {
   if (!isInviteCode(code)) return null;
   const rows = await adminSelect<InviteRow>(
     'trip_group_invites',
-    pgQuery(eq('code', code), pgSelect(['code', 'owner_id', 'trip_id', 'expires_at'])),
+    pgQuery(eq('code', code), pgSelect(['code', 'owner_id', 'trip_id', 'expires_at', 'date_options'])),
   );
   return rows?.[0] ?? null;
 }
@@ -121,6 +123,26 @@ export async function isMember(code: string, memberId: string): Promise<InviteRo
 export async function groupTripSnapshot(invite: InviteRow): Promise<EnrichedSnapshot | null> {
   const trip = await findOwnTrip(invite.owner_id, invite.trip_id);
   return trip ? enrichSnapshot(buildSnapshot(trip)) : null;
+}
+
+/**
+ * The place ids actually in the trip right now.
+ *
+ * Comments and suggestions are both validated against this, for the same reason
+ * `castVote` is: a member must not be able to file either one against a place
+ * that is not in the trip - that is how a group thread ends up carrying rows
+ * nothing on screen can ever show.
+ */
+export async function tripPlaceIds(invite: InviteRow): Promise<ReadonlySet<string>> {
+  const trip = await findOwnTrip(invite.owner_id, invite.trip_id);
+  if (!trip) return new Set();
+  return new Set(trip.days.flatMap((d) => d.placeIds));
+}
+
+/** The trip's name, for a notification that says which trip it is about. */
+export async function tripName(invite: InviteRow): Promise<string> {
+  const trip = await findOwnTrip(invite.owner_id, invite.trip_id);
+  return trip?.name ?? 'הטיול';
 }
 
 export interface VoteTally {
@@ -198,4 +220,34 @@ export async function memberCount(ownerId: string, tripId: string): Promise<numb
     pgQuery(eq('owner_id', ownerId), eq('trip_id', tripId), pgSelect(['member_id'])),
   );
   return rows?.length ?? 0;
+}
+
+/**
+ * Everyone whose answer counts, **including the organiser**.
+ *
+ * This is the denominator for "can everyone make the 12th", so leaving the
+ * organiser out would let a date read as unanimous while the person planning the
+ * trip has not said whether they can make it. They never appear in
+ * `trip_group_members` - joining your own trip is meaningless - so they are added
+ * here rather than stored.
+ */
+export async function memberIds(ownerId: string, tripId: string): Promise<string[]> {
+  const rows = await adminSelect<{ member_id: string }>(
+    'trip_group_members',
+    pgQuery(eq('owner_id', ownerId), eq('trip_id', tripId), pgSelect(['member_id'])),
+  );
+  return [...new Set([ownerId, ...(rows ?? []).map((r) => r.member_id)])];
+}
+
+/** The organiser's own invite for a trip - how their trip screen reads the group data. */
+export async function inviteForTrip(ownerId: string, tripId: string): Promise<InviteRow | null> {
+  const rows = await adminSelect<InviteRow>(
+    'trip_group_invites',
+    pgQuery(
+      eq('owner_id', ownerId),
+      eq('trip_id', tripId),
+      pgSelect(['code', 'owner_id', 'trip_id', 'expires_at', 'date_options']),
+    ),
+  );
+  return rows?.[0] ?? null;
 }

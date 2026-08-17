@@ -42,6 +42,7 @@ test('enrichSnapshot: תמונה, תיאור וקטגוריה מגיעים מה�
     days: [
       {
         dayNumber: 1,
+        citySlug: 'vienna',
         cityName: 'וינה',
         stops: [{ id: 'vie-schonbrunn', name: 'ארמון שנברון', lat: 48.18, lng: 16.31 }],
       },
@@ -61,6 +62,7 @@ test('enrichSnapshot: השם נשאר של ה-snapshot ולא נדרס מהקט�
     days: [
       {
         dayNumber: 1,
+        citySlug: 'vienna',
         cityName: 'וינה',
         // Deliberately a name that is NOT the catalog's, to prove it survives
         stops: [{ id: 'vie-schonbrunn', name: 'הארמון שבו התארסנו', lat: 48.18, lng: 16.31 }],
@@ -77,6 +79,7 @@ test('enrichSnapshot: מקום שכבר לא בקטלוג נשאר קריא - ב
     days: [
       {
         dayNumber: 1,
+        citySlug: 'gone',
         cityName: 'עיר',
         stops: [
           { id: 'no-such-place-anymore', name: 'מקום שהוסר', lat: 1, lng: 2, mustSee: true },

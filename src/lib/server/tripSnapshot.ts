@@ -25,6 +25,8 @@ export interface TripStop {
 }
 export interface TripSnapshotDay {
   dayNumber: number;
+  /** The catalog slug, so a reader can offer places from the same city. */
+  citySlug: string;
   cityName: string;
   stops: TripStop[];
 }
@@ -54,7 +56,7 @@ export function buildSnapshot(trip: {
         lng: p.lng,
         ...(p.mustSee ? { mustSee: true } : {}),
       }));
-    return { dayNumber: i + 1, cityName: dest?.name ?? d.citySlug, stops };
+    return { dayNumber: i + 1, citySlug: d.citySlug, cityName: dest?.name ?? d.citySlug, stops };
   });
   return {
     name: String(trip.name).slice(0, 80),

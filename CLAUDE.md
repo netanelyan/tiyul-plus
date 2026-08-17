@@ -9784,3 +9784,116 @@ data pass is the thing worth catching); 627 tests, tsc, build and lint clean. In
 real browser at 1400 and 390: both categories render as separate filter chips,
 place cards show the new badge, the map draws 9 distinct pin colours, zero
 horizontal overflow.
+
+### 2026-08-17 (c) - The shared trip becomes a planning tool: comments, suggestions, dates, RSVP
+
+Netanel: *"add comments to the shared trip, and other features, so it will be very
+optimal for planning together, and people will pay"* - and, asked which, chose all
+four: friends can suggest places, dates that work for everyone, who is coming, and
+tell people when something changes.
+
+**The framing that decided the shape.** Until now a friend could only approve or
+reject the organizer's plan. A vote says THAT somebody objected; it cannot say why,
+and it cannot say "what about the market instead". That gap is the whole reason the
+real conversation was happening in WhatsApp while the plan sat here - two places,
+neither complete. Every one of the four features exists to move one more part of
+that conversation onto the trip itself.
+
+**New: `sql/supabase-group-planning.sql`** - `trip_group_comments`,
+`trip_group_suggestions`, `trip_group_dates`, `trip_group_rsvp`, plus a
+`date_options text[]` column on the existing invites table. All four follow the
+pattern this project settled on: **RLS on, no policy, execute revoked from `anon`
+and `authenticated`** - service-role only, so the API route is the only door and
+membership is proved there rather than in four separate policies.
+**Netanel has to run this file**; until then the group panel's writes fail and the
+friend page shows its honest error, which is the intended degraded state.
+
+**`groupPlanning.ts` is the whole server half, and every function takes the invite
+rather than re-deriving permission.** The route proves membership ONCE per request
+(`isMember(code, userId)` for a friend, `inviteForTrip(userId, tripId)` for the
+organizer) and hands the resulting row down. That is deliberate: eleven actions
+each doing their own permission check is eleven chances to get one wrong. The two
+organizer-only actions - deciding a suggestion and setting the candidate days - are
+additionally checked against `invite.owner_id` **inside** groupPlanning, not in the
+UI, because a panel that merely does not draw a button is not access control.
+
+**Only real catalog places may be suggested.** The picker is built from
+`useCityData` (the same per-city fetch the trip screen uses, so the catalog is
+never shipped whole to a friend's phone), and the server re-checks the place
+against the catalog and against the trip's own cities anyway. A picker is a
+convenience; it is never the guarantee. Places already in the trip are filtered out
+on both sides - suggesting something already planned is noise, not a suggestion.
+
+**Accepting a suggestion actually adds the place to the trip.** The first version
+only flipped a status column, and that is worse than rejecting: a friend whose idea
+is marked "accepted" and then never appears in the plan has been told yes and given
+nothing. `decide()` calls `tripApi.addPlace(citySlug, placeId)` before it records
+the decision.
+
+---
+
+**The date poll is the piece with real arithmetic, so it is the piece with its own
+tested module.** `dateOverlap.ts` + 10 tests. The claim it exists to protect is one
+sentence: **silence is `pending`, never agreement.** A day nobody answered must not
+be counted as a day that works, because the organizer books flights on that number.
+`pending` is therefore a separate count from `no` rather than folded into either
+side, `everyone` is true only when every member said yes explicitly, and `blockers`
+names who said no so "September 4th doesn't work" is a person and not a statistic.
+Only the organizer sets the candidate days - a poll everyone can edit is not a
+poll.
+
+**Notifications: organizer-only, deliberately.** `groupNotify.ts` POSTs to
+`GROUP_NOTIFY_WEBHOOK` (`{text, content, event}`, so Slack, Discord or any
+request-to-email service works with no dependency - the same shape as the existing
+budget alert). It never blocks a write, never throws, and logs when unconfigured
+instead of failing silently. **Notifying members was not built**: sending a message
+to somebody who joined a trip through a link is a consent question, not a task, and
+guessing the answer is how a planning tool turns into unsolicited mail.
+
+---
+
+**One client bug avoided, and it is the same species as the vote lag from earlier
+today.** Every write returns the WHOLE planning payload, so a comment, an RSVP and
+a date answer each leave the screen holding one truth with no second fetch. But the
+vote is optimistic - it paints before the round trip - so a comment reply arriving
+mid-vote would have replaced the tally map and rolled the tap back on screen. The
+non-vote poster now merges votes exactly the way the vote path does, keeping the
+local number for any place whose own write is still open. The vote path itself is
+unchanged and stays hand-rolled for that reason; everything else takes the server's
+answer as truth.
+
+**Also fixed while there:** the organizer's GET now returns the existing invite
+`code`, so reopening the panel shows the link that already exists instead of
+minting a second invite for the same trip. And `TripSnapshotDay` gained `citySlug`
+- the friend page needs it to offer places from the trip's own cities, and it was
+the one field the snapshot dropped.
+
+---
+
+**Verified:** 637 tests (17 new - the date arithmetic, and the vote tally the
+optimistic path depends on), `tsc` clean, `npm run build` clean, `npx eslint` clean
+on every touched file. Two lint findings in my own new hook were real and fixed
+rather than suppressed: a ref written during render, and an effect the rule could
+trace into - the ref turned out to be dead weight (no consumer used it) and the
+effect only needed its fetch wrapped.
+
+**NOT browser-verified, and that is worth stating precisely rather than glossing.**
+The four tables do not exist in Supabase yet, so there is no way to drive the real
+flow. A CDP harness with `/api/group` stubbed and an auth session seeded into
+localStorage got as far as proving the page loads, is RTL and has zero horizontal
+overflow at 390px and 1400px - and then stalled: supabase-js never finished
+`getSession()` against a hand-made session, so `auth.ready` stayed false and the
+page sat on its loading state forever. Three things were ruled out on the way and
+are worth recording so the next harness does not rediscover them: **a request a
+service worker makes never surfaces as `Fetch.requestPaused` on the page target**
+(use `Network.setBypassServiceWorker`); a narrow `urlPattern` that matches nothing
+reads exactly like a broken page; and fulfilling the *document* request with JSON
+poisons the service-worker cache for every later run in that profile. The real
+verification is Netanel's own, after the SQL: organizer creates an invite, a second
+account joins, votes, comments, suggests a place, answers a date and an RSVP, and
+the organizer sees all of it and accepts the suggestion into the trip.
+
+**Waiting on Netanel:** run `sql/supabase-group-planning.sql` (and
+`sql/supabase-consent.sql`, still outstanding from an earlier session). Optionally
+set `GROUP_NOTIFY_WEBHOOK` - without it the notifications simply log, which is the
+correct behaviour and not a failure.
