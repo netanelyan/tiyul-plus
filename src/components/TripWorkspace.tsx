@@ -26,7 +26,6 @@ import TripDateNotes from '@/components/TripDateNotes';
 import ShabbatKosherPanel from '@/components/ShabbatKosherPanel';
 import TripSkeleton from '@/components/TripSkeleton';
 import { shabbatRowsFor } from '@/lib/trip/shabbatRows';
-import TripStoryPanel from '@/components/TripStoryPanel';
 import TripGroupPanel from '@/components/TripGroupPanel';
 import PreDepartureCheck from '@/components/PreDepartureCheck';
 import PanelSection from '@/components/PanelSection';
@@ -1069,11 +1068,8 @@ export default function TripWorkspace({
       */}
       {t && t.days.length > 0 && <ShabbatKosherPanel trip={t} destOf={destOf} />}
 
-      {/* ---------- Trip story (premium): the trip becomes a page to share ---------- */}
       {/* ---------- Group trip (premium): friends view it and vote ---------- */}
       {t && t.days.length > 0 && <TripGroupPanel trip={t} destOf={destOf} />}
-
-      {t && t.days.length > 0 && <TripStoryPanel trip={t} />}
 
       {/*
         ---------- Pre-departure check ----------

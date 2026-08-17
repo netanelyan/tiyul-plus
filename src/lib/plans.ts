@@ -352,24 +352,21 @@ export const SUBSCRIBER_MONTHLY_CAP_USD = 2.0;
  * (`periodMsFor`) the two sides of the same row no longer share a
  * period.
  *
- * The first three rows (the check, the trip story, the shared trip) and
- * the availability row are not quotas - they are **the features**
- * premium gives in the first place: the check included, story creation
- * and shared trip (viewing and joining free for everyone -
- * deliberately, that is the distribution channel), and the agent on a
- * personal lane that does not depend on the site's shared daily load
- * (see budget.ts).
+ * The first two rows (the check, the shared trip) and the availability
+ * row are not quotas - they are **the features** premium gives in the
+ * first place: the check included, the shared trip (joining and voting
+ * free for everyone - deliberately, that is the distribution channel),
+ * and the agent on a personal lane that does not depend on the site's
+ * shared daily load (see budget.ts).
+ *
+ * A third feature row, the trip story, was removed on 2026-08-17 when
+ * that feature was retired - see the session log for why.
  */
 export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string }[] = [
   {
     label: 'בדיקה לפני הנסיעה',
     free: `${predepartureCheckPriceLabel()} לטיול`,
     premium: 'כלולה, בלי הגבלה',
-  },
-  {
-    label: 'סיפור הטיול - עמוד ציבורי עם המסלול והתמונות',
-    free: 'צפייה חופשית בכל סיפור',
-    premium: 'יצירה ופרסום מהטיול שלכם',
   },
   {
     label: 'טיול משותף - חברים רואים את הטיול ומצביעים',

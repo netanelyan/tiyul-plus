@@ -6,7 +6,7 @@ import { authHeader } from '@/lib/auth/client';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 import { ZoomablePhoto } from '@/components/PhotoLightbox';
 import { categoryMeta } from '@/lib/categories';
-import type { EnrichedSnapshot, EnrichedStop } from '@/lib/server/stories';
+import type { EnrichedSnapshot, EnrichedStop } from '@/lib/server/tripSnapshot';
 import type { VoteTally } from '@/lib/server/groupTrips';
 import { applyVote, nextVote } from '@/lib/trip/voteTally';
 import type { Place } from '@/lib/types';

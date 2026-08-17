@@ -18,12 +18,15 @@ import { PRICE_ILS, priceLabel } from '@/lib/predeparture';
  * value is invisible until there is enough traffic to exhaust the daily budget,
  * and before launch that is nobody.
  *
- * Since 2026-08-17 the subscription also has **content of its own**, not just
- * quotas: the trip story (the trip becomes a public page with the itinerary and
- * photos) and the group trip (friends join by link, see the trip live and vote on
- * stops). Creating is premium; viewing and joining are free on purpose - the
- * viewers and joiners are the next users. Both features are enforced on the
- * server (/api/story, /api/group).
+ * Beyond the quotas the subscription has **content of its own**: the group trip
+ * (friends join by link, see the trip live and vote on stops) and the
+ * pre-departure check included. Creating the invite is premium; joining and
+ * voting are free on purpose - the joiners are the next users. Enforced on the
+ * server (/api/group).
+ *
+ * A third feature, the trip story, was retired on 2026-08-17: it rendered the
+ * itinerary on a public URL and nothing on it came from the traveller, so it was
+ * not worth charging for. See the session log.
  *
  * Showing the arithmetic openly is the point: anyone who works it out themselves
  * reaches the same conclusion, so it is better that we present it - that reads as
@@ -149,8 +152,8 @@ export default function PremiumClient() {
           <b className="text-night">{twoChecks.toFixed(2)} ₪</b>. שנה של מנוי עולה{' '}
           <b className="text-night">{yearOfPremium.toFixed(2)} ₪</b>. לרוב המטיילים הבדיקה
           החד-פעמית משתלמת בהרבה - וזו גם ההמלצה שלנו. המנוי מתחיל להצדיק את עצמו סביב{' '}
-          {breakEvenTripsPerYear} טיולים בשנה - או כשרוצים את מה שיש רק בו: סיפור הטיול, טיול
-          משותף עם חברים, וחבילת סוכן חודשית משלכם.
+          {breakEvenTripsPerYear} טיולים בשנה - או כשרוצים את מה שיש רק בו: טיול משותף עם
+          חברים, וחבילת סוכן חודשית משלכם.
         </p>
       </div>
 
@@ -168,17 +171,7 @@ export default function PremiumClient() {
         quotas. Viewing and joining are free on purpose (the distribution channel);
         what is bought is the creating.
       */}
-      <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <div className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
-          <p className="text-2xl" aria-hidden>
-            📖
-          </p>
-          <h3 className="mt-2 font-bold text-night">סיפור הטיול</h3>
-          <p className="mt-1 text-sm leading-relaxed text-night/60">
-            הטיול הופך לעמוד ציבורי יפה עם המסלול, הימים והתמונות שלכם - קישור אחד לשלוח
-            למשפחה ולחברים. כל אחד יכול לצפות; רק מנויים יוצרים.
-          </p>
-        </div>
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
         <div className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
           <p className="text-2xl" aria-hidden>
             🤝

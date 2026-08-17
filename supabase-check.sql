@@ -68,9 +68,11 @@ with expected(file, kind, obj) as (
     -- supabase-paypal-subs.sql (premium subscription via PayPal)
     ('supabase-paypal-subs.sql','column', 'public.profiles.paypal_subscription_id'),
 
-    -- supabase-stories.sql (trip stories - premium)
-    ('supabase-stories.sql','table', 'public.trip_stories'),
-    ('supabase-stories.sql','func',  'public.get_trip_story'),
+    -- supabase-stories.sql was retired on 2026-08-17 together with the trip-story
+    -- feature, so it is no longer checked. The trip_stories table and the
+    -- story-photos bucket may still exist in a project where it was run; they are
+    -- harmless and are left alone rather than dropped from here - a check file
+    -- must not delete anybody's data. See supabase-retire-stories.sql to remove them.
 
     -- supabase-group-trips.sql (shared trips - premium organizer)
     ('supabase-group-trips.sql','table', 'public.trip_group_invites'),

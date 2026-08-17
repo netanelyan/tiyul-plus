@@ -13,13 +13,13 @@
  * ## A member's view is the live trip, through the server
  *
  * A member reads the organizer's trip through a snapshot built on the server
- * (the same buildSnapshot the stories use - names from the catalog only) on
+ * (buildSnapshot - names from the catalog only) on
  * every request - meaning the organizer's edits are visible on the next
  * read. Nothing is ever written to the trip itself: members vote, they do
  * not edit.
  */
 
-import { buildSnapshot, enrichSnapshot, type EnrichedSnapshot } from '@/lib/server/stories';
+import { buildSnapshot, enrichSnapshot, type EnrichedSnapshot } from '@/lib/server/tripSnapshot';
 import { findOwnTrip } from '@/lib/server/userTrips';
 import { adminDelete, adminInsert, adminSelect, adminUpdate } from '@/lib/server/supabaseAdmin';
 import { eq, pgQuery, pgSelect } from '@/lib/server/pgrest';

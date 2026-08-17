@@ -9629,3 +9629,71 @@ line is that drift.
 390 on the throttled join page, 16/16 re-run on the shared trip to confirm the
 zoom wrapper changed nothing there, and the panel measurement above. The throwaway
 user, trip, invite and votes were deleted and the deletion confirmed by re-query.
+
+### 2026-08-17 (f) - The trip story is retired
+
+Netanel: *"The trip story is still not it.. not worth paying a penny for."*
+
+He is right, and the comparison makes it obvious. Rendered side by side, the paid
+page was a **poorer** version of the free one:
+
+| | free `/t/<code>` | premium `/story/<slug>` |
+|---|---|---|
+| name, map, stops with photo + description | yes | yes |
+| trip dates | yes | **no** |
+| travel legs between cities | yes | **no** |
+| day descriptions | yes | **no** |
+| the traveller's own per-day notes | yes | **no** |
+| uploaded photo grid | no | yes |
+
+Everything on it was generated. The descriptions added the day before come from
+the catalog and are identical for every trip to Rome. Nothing on the page came
+from the person who took the trip, so it was not a story - it was the itinerary
+with a nicer header, behind a paywall, next to a free page that showed more.
+
+**The feature had been wired up short, and that is visible in the schema.**
+`StoryPhoto` carries `dayNumber`, `/api/story` accepts a `caption` - and the panel
+sent `{action:'photo', photo}` with neither, ever. The hooks for a real story (a
+photo attached to the day it belongs to, in the traveller's own words) were
+designed and never connected, so every upload landed in an undifferentiated grid.
+
+Given the choice between building that and removing it, he chose removal.
+
+**What went.** `/story/[slug]`, `/api/story`, `TripStoryPanel`, `server/stories.ts`
+and `supabase-stories.sql`; the feature card, the comparison row and the copy on
+`/premium`, and the entry in `supabase-check.sql`. Premium is now the group trip,
+the pre-departure check included, and the monthly agent package - all three of
+which are things the free tier genuinely does not have.
+
+**What survived, and why it moved.** `buildSnapshot`/`enrichSnapshot` were never
+story-specific - the group trip reads a member's view through them - so they moved
+to `server/tripSnapshot.ts` with `StorySnapshot` renamed `TripSnapshot`, rather
+than being deleted along with the file that happened to host them. Their tests
+moved too: the guarantees they carry (names from the catalog only, the snapshot's
+name never re-resolved, an unknown place degrading instead of vanishing) matter
+more now that the group trip is the only caller.
+
+**The database is left alone.** `supabase-check.sql` no longer looks for
+`trip_stories`, and a separate `supabase-retire-stories.sql` drops the table and
+the function **only if Netanel chooses to run it** - a check file must not delete
+anybody's data, and the story-photos bucket holds travellers' own photographs, so
+emptying it is spelled out as a deliberate manual step rather than bundled in.
+Nothing in the app reads any of it now, so leaving it costs nothing.
+
+**Verified:** 627 tests (the three story-only ones went with the feature), tsc,
+build and lint clean; `/story/<slug>` and `/api/story` both return 404; no story
+route in the build output; the word appears nowhere in product copy (the remaining
+hits are catalog prose like "the story of Slovak Jewry" and one chat-guard regex).
+The group trip was re-run end to end under 400ms of emulated latency **after** the
+deletion, 18/18 at 1400 and 390 - which is the check that matters here, since the
+snapshot code it depends on moved house. The trip screen now shows the group panel
+and no story panel.
+
+**A note on the sequence, because it is the lesson.** The day before, this same
+page got photos, descriptions, a map fix and a lightbox - real work, on a feature
+that should not have existed. None of that was wasted (the photo/description work
+serves the shared trip and the group trip, and the lightbox serves all of them),
+but the question "is this worth paying for" would have been cheaper to ask before
+polishing it than after. When the founder says a feature is not worth money, the
+useful first move is to compare it against the free thing next to it, not to
+improve it.
