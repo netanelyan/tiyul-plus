@@ -10,27 +10,32 @@ import { PRICE_ILS, priceLabel } from '@/lib/predeparture';
 /**
  * The pricing page.
  *
- * **The one-off check leads the page** - Netanel's decision, and the arithmetic
- * behind it is shown openly rather than argued: anyone who works it out reaches
- * the same conclusion, so it reads as fair rather than as a sales trick. Every
- * figure is computed from the real constants, never typed, so a price change
- * updates the argument by itself.
+ * **The subscription leads and the shared trip is its star** - Netanel,
+ * 2026-08-17, reversing the earlier "the one-off check leads" arrangement. The
+ * reversal is not a change of mind about honesty, it follows a change in the
+ * product: the shared trip stopped being "friends vote on stops" and became the
+ * place a group plans together (comments per stop, friends suggesting catalog
+ * places, a date poll, RSVP). That is the only thing here nobody gets for free,
+ * and it is the reason to subscribe - so it sits inside the lead card rather than
+ * in a row of a comparison table. The one-off check keeps its own card below, for
+ * people who want exactly one thing and no subscription.
  *
- * **The comparison the page must not hide.** A month of subscription
- * (PREMIUM_PRICE_ILS) currently costs LESS than a single check (PRICE_ILS), and
- * the check is included in it. So for a traveller with one trip who is willing to
- * cancel, the subscription is strictly the better buy - and a page that kept
- * recommending the one-off without saying so would be selling the more expensive
- * option to the people it claims to be advising. The comparison is rendered from
- * the two constants and is CONDITIONAL: if the prices ever cross, the sentence
- * disappears on its own instead of becoming a lie.
+ * **The arithmetic stays open, and it now argues FOR the lead product**, which is
+ * a coincidence rather than a design: a month of subscription (PREMIUM_PRICE_ILS)
+ * costs less than a single check (PRICE_ILS) and the check is included in it. That
+ * comparison was worth printing when the check led the page and it is still worth
+ * printing now. It renders from the two constants and is CONDITIONAL - if the
+ * prices ever cross it removes itself instead of becoming a lie. Every other
+ * figure (the year total, two checks, the break-even in trips) is computed too,
+ * never typed.
  *
- * **What the subscription actually contains, as of 2026-08-17**: the shared trip -
- * which is no longer "friends vote on stops" but a place to plan together
- * (comments per stop, friends suggesting catalog places, a date poll, RSVP) - and
- * the pre-departure check included. Creating the invite is premium; joining,
- * voting, commenting and suggesting are free on purpose, because the joiners are
- * the next users. Enforced on the server (/api/group), not in this page.
+ * **Free is stated loudly and repeatedly on purpose.** Planning, editing, the map,
+ * the catalog, sharing to view, print and navigation are all free, and so is
+ * *taking part* in somebody else's shared trip - joining, voting, commenting and
+ * suggesting. Only creating the invite is paid. Saying that plainly removes the
+ * objection ("so I would be asking five people to pay?") that would otherwise kill
+ * the feature at the moment somebody considers using it, and the joiners are the
+ * next users.
  *
  * The trip story was retired on 2026-08-17 - it rendered the itinerary on a public
  * URL and nothing on it came from the traveller. See the session log.
@@ -86,70 +91,118 @@ export default function PremiumClient() {
     }
   }
 
+  /** The subscription CTA, rendered twice - under the star card and under the table. */
+  const cta = (extraClass = '') =>
+    isPremium ? (
+      <p
+        className={`rounded-xl bg-zest/20 px-3 py-2 text-center text-xs font-bold text-night ${extraClass}`}
+      >
+        ★ אתם בפרימיום - תודה שאתם איתנו
+      </p>
+    ) : (
+      <div className={extraClass}>
+        <button
+          onClick={upgrade}
+          disabled={busy}
+          className="w-full rounded-xl bg-sunset px-6 py-3.5 font-bold text-cream transition hover:bg-sunset-deep disabled:opacity-60"
+        >
+          {busy ? 'רגע…' : `התחלת מנוי · ${PREMIUM_PRICE_ILS.toFixed(2)} ₪ לחודש`}
+        </button>
+        <p className="mt-2 text-center text-[11px] font-medium text-night/50">
+          ביטול בלחיצה, בכל רגע · בלי התחייבות · התשלום דרך PayPal
+        </p>
+      </div>
+    );
+
   return (
     <div className="rise-in mx-auto max-w-3xl">
       <div className="text-center">
         <p className="text-xs font-bold text-sunset-deep">מחירים</p>
         <h1 className="display mt-1 text-3xl text-night sm:text-4xl">
-          התכנון חינם. שני דברים עולים כסף.
+          לתכנן לבד זה חינם. לתכנן ביחד - זה המנוי.
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-night/60">
-          לתכנן עם הסוכן, לערוך, לשתף, להדפיס ולנווט - הכול בחינם, בלי כרטיס אשראי.
-          בתשלום: בדיקה לפני היציאה לטיול מסוים, ומנוי חודשי למי שמתכנן עם עוד אנשים
-          או מתכנן כל הזמן.
+          הסוכן, המסלול, המפה, השיתוף, ההדפסה והניווט - חינם, בלי כרטיס אשראי.
+          המנוי פותח את הדבר האחד שאי אפשר לעשות לבד: לתכנן את הטיול עם כל מי
+          שנוסע איתכם, במקום אחד.
         </p>
       </div>
 
-      {/* ---------- The lead product: the one-off check ---------- */}
-      <div className="relative mt-8 rounded-3xl bg-night p-6 ring-1 ring-night">
+      {/* ---------- The star: the subscription, built around the shared trip ---------- */}
+      <div id="premium-plan" className="relative mt-9 scroll-mt-24 rounded-3xl bg-night p-6 ring-1 ring-night sm:p-7">
         <span className="absolute -top-3 end-5 rounded-full bg-zest px-3 py-1 text-xs font-black text-night">
-          🛫 לטיול אחד
+          ★ המנוי
         </span>
-        <h2 className="font-bold text-cream">בדיקה לפני הנסיעה</h2>
-        <p className="mt-1 text-2xl font-black text-cream">
-          {priceLabel()}
-          <span className="text-sm font-semibold text-cream/60"> / לטיול אחד</span>
+
+        <h2 className="font-bold text-cream">טיול+ פרימיום</h2>
+        <p className="mt-1 text-3xl font-black text-cream">
+          {PREMIUM_PRICE_ILS.toFixed(2)} ₪
+          <span className="text-sm font-semibold text-cream/60"> / לחודש</span>
         </p>
-        <p className="mt-2 text-sm leading-relaxed text-cream/70">
-          תכננתם לפני חודשיים, והטיול בעוד שבועיים. מה השתנה מאז? זה מה שהבדיקה עונה
-          עליו - בבת אחת, על כל הטיול.
-        </p>
+
+        {/* The shared trip IS the subscription's argument, so it lives inside the
+            card rather than as a row in a table further down. */}
+        <div className="mt-6 rounded-2xl bg-cream/10 p-4 ring-1 ring-cream/15">
+          <p className="text-xs font-bold text-zest">הכוכב של המנוי</p>
+          <h3 className="mt-1 text-lg font-black text-cream">
+            🤝 טיול משותף - מתכננים ביחד, במקום אחד
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-cream/75">
+            שולחים קישור אחד. כל מי שנכנס רואה את הטיול חי - התמונות, התיאורים והמפה -
+            וגם אחרי שתערכו אותו. ואז, במקום צילומי מסך בקבוצה:
+          </p>
+          <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
+            <li className="rounded-xl bg-night/40 p-3 ring-1 ring-cream/10">
+              <p className="text-sm font-bold text-cream">👍 מצביעים על כל עצירה</p>
+              <p className="mt-0.5 text-xs leading-relaxed text-cream/60">
+                אתם רואים בדיוק מה עבר ומה לא - לפני שסוגרים כרטיסים.
+              </p>
+            </li>
+            <li className="rounded-xl bg-night/40 p-3 ring-1 ring-cream/10">
+              <p className="text-sm font-bold text-cream">💬 כותבים למה</p>
+              <p className="mt-0.5 text-xs leading-relaxed text-cream/60">
+                תגובה על כל עצירה ושיחה כללית לצד - &quot;היינו שם, לכו מוקדם&quot;
+                נשמר על העצירה עצמה.
+              </p>
+            </li>
+            <li className="rounded-xl bg-night/40 p-3 ring-1 ring-cream/10">
+              <p className="text-sm font-bold text-cream">💡 מציעים מקומות</p>
+              <p className="mt-0.5 text-xs leading-relaxed text-cream/60">
+                חבר בוחר מקום מהקטלוג ומסביר למה. אישור אחד שלכם - והוא נכנס לטיול.
+              </p>
+            </li>
+            <li className="rounded-xl bg-night/40 p-3 ring-1 ring-cream/10">
+              <p className="text-sm font-bold text-cream">📅 מסכמים תאריכים ומי מגיע</p>
+              <p className="mt-0.5 text-xs leading-relaxed text-cream/60">
+                מציעים כמה תאריכים, כל אחד מסמן מה מתאים, ורואים את החפיפה ומי חסום.
+              </p>
+            </li>
+          </ul>
+          <p className="mt-3.5 rounded-lg bg-lagoon/20 px-3 py-2 text-xs font-semibold text-cream/90">
+            לחברים זה חינם לגמרי - הם לא נרשמים למנוי ולא משלמים כלום. רק מי שיוצר את
+            הקישור צריך מנוי.
+          </p>
+        </div>
+
+        {/* The other two things the subscription carries - real, but not the reason */}
         <ul className="mt-4 space-y-2.5 text-sm text-cream/80">
           <li className="flex items-start gap-2">
             <span className="mt-0.5 text-zest">✓</span>
-            <span>כל עצירה בטיול נבדקת מחדש מול הקטלוג - מה שהשתנה או ירד מסומן</span>
+            <span>
+              <b className="text-cream">הבדיקה לפני הנסיעה כלולה</b> - {priceLabel()} לטיול
+              לכל אחד אחר, כאן בלי הגבלה, לכל טיול שתתכננו
+            </span>
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-0.5 text-zest">✓</span>
-            <span>רשומות הכשרות נקראות שוב, עם הפרטים העדכניים</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="mt-0.5 text-zest">✓</span>
-            <span>סגירות, חגים ואירועים - מול התאריכים המדויקים שלכם</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="mt-0.5 text-zest">✓</span>
-            <span>בדיקת סדר הימים והמסלול</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="mt-0.5 text-zest">✓</span>
-            <span>מסמך אחד נקי לשמור, להדפיס או לשלוח</span>
+            <span>
+              <b className="text-cream">מסלול אישי מובטח לסוכן</b> - חבילה חודשית משלכם,
+              שלא תלויה בעומס של אף אחד אחר באתר
+            </span>
           </li>
         </ul>
-        <div className="mt-5 flex flex-wrap items-center gap-3">
-          <Link
-            href="/chat"
-            className="rounded-xl bg-sunset px-6 py-3 font-bold text-cream transition hover:bg-sunset-deep"
-          >
-            למסך הטיול שלי
-          </Link>
-          <span className="text-xs font-medium text-cream/55">
-            נקנית מתוך מסך הטיול, החל מ-21 יום לפני היציאה
-          </span>
-        </div>
-        <p className="mt-3 text-[11px] font-medium leading-relaxed text-cream/45">
-          תשלום חד-פעמי מאובטח דרך PayPal - אנחנו לא רואים ולא שומרים פרטי כרטיס.
-        </p>
+
+        {cta('mt-6')}
       </div>
 
       {/* ---------- The arithmetic, in the open ---------- */}
@@ -162,12 +215,8 @@ export default function PremiumClient() {
               <span>
                 <b className="text-night">חודש מנוי עולה פחות מבדיקה אחת</b> (
                 {PREMIUM_PRICE_ILS.toFixed(2)} ₪ מול {PRICE_ILS.toFixed(2)} ₪),
-                והבדיקה כלולה בו. אז אם אתם עומדים לקנות בדיקה בודדת - שווה פשוט
-                להירשם לחודש, ולבטל אחר כך אם לא צריך יותר. אנחנו אומרים את זה
-                למרות שזה פחות כסף בשבילנו.{' '}
-                <a href="#premium-plan" className="font-bold text-sunset-deep underline">
-                  לפרטי המנוי ↓
-                </a>
+                והבדיקה כלולה בו. אז גם מי שרוצה רק את הבדיקה - עדיף לו להירשם לחודש
+                ולבטל אחר כך. אנחנו אומרים את זה למרות שזה פחות כסף בשבילנו.
               </span>
             </li>
           )}
@@ -182,85 +231,72 @@ export default function PremiumClient() {
             <span className="mt-0.5 text-night/35">•</span>
             <span>
               מנוי שנתי מצדיק את עצמו סביב <b className="text-night">{breakEvenTripsPerYear} טיולים בשנה</b>{' '}
-              - או מהטיול הראשון, אם אתם מתכננים אותו עם עוד אנשים.
+              - או כבר מהטיול הראשון, אם מתכננים אותו עם עוד אנשים.
             </span>
           </li>
         </ul>
       </div>
 
-      {/* ---------- The subscription ---------- */}
-      <div id="premium-plan" className="mt-10 scroll-mt-24 text-center">
-        <h2 className="display text-2xl text-night">מתכננים עם עוד אנשים? בשביל זה המנוי</h2>
+      {/* ---------- Below: the standalone feature, for people who want one thing ---------- */}
+      <div className="mt-10 text-center">
+        <h2 className="display text-2xl text-night">רק צריכים דבר אחד?</h2>
         <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-night/60">
-          משפחה, חברים או קבוצה - הרגע שבו התכנון נשבר הוא בדרך כלל לא התכנון עצמו,
-          אלא הניסיון לתאם אותו: צילומי מסך בקבוצה, שלושה תאריכים שאף אחד לא זוכר,
-          ומישהו שאמר &quot;יש רעיון יותר טוב&quot; ואיש לא מצא איפה זה נכתב.
+          אפשר גם בלי מנוי. הבדיקה לפני הנסיעה נמכרת בנפרד, לטיול אחד, בלי חשבון
+          מתמשך ובלי התחייבות.
         </p>
       </div>
 
-      {/*
-        The shared trip is the reason to subscribe, so it gets the whole width and
-        the concrete list - "friends vote" undersold it badly. Joining is free on
-        purpose: the joiners are the next users.
-      */}
-      <div className="mt-6 rounded-3xl bg-shell p-6 ring-1 ring-night/15">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-2xl" aria-hidden>
-            🤝
-          </span>
-          <h3 className="text-lg font-black text-night">טיול משותף - מתכננים ביחד, במקום אחד</h3>
+      <div className="mt-5 rounded-3xl bg-shell p-6 ring-1 ring-night/15">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h3 className="text-lg font-black text-night">🛫 בדיקה לפני הנסיעה</h3>
+          <p className="text-2xl font-black text-night">
+            {priceLabel()}
+            <span className="text-sm font-semibold text-night/50"> / לטיול אחד</span>
+          </p>
         </div>
         <p className="mt-2 text-sm leading-relaxed text-night/70">
-          שולחים קישור אחד. כל מי שנכנס רואה את הטיול חי - עם התמונות, התיאורים
-          והמפה - וגם אחרי שתערכו אותו. ואז, במקום ויכוח בוואטסאפ:
+          תכננתם לפני חודשיים, והטיול בעוד שבועיים. מה השתנה מאז? זה מה שהבדיקה עונה
+          עליו - בבת אחת, על כל הטיול.
         </p>
-        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-          <li className="rounded-2xl bg-cream/70 p-3 ring-1 ring-night/10">
-            <p className="text-sm font-bold text-night">👍 מצביעים על כל עצירה</p>
-            <p className="mt-0.5 text-xs leading-relaxed text-night/60">
-              אתם רואים בדיוק מה עבר ומה לא - לפני שסוגרים כרטיסים.
-            </p>
+        <ul className="mt-4 grid gap-2 text-sm text-night/70 sm:grid-cols-2">
+          <li className="flex items-start gap-2">
+            <span className="mt-0.5 text-sunset-deep">✓</span>
+            <span>כל עצירה נבדקת מחדש מול הקטלוג - מה שהשתנה או ירד מסומן</span>
           </li>
-          <li className="rounded-2xl bg-cream/70 p-3 ring-1 ring-night/10">
-            <p className="text-sm font-bold text-night">💬 כותבים למה</p>
-            <p className="mt-0.5 text-xs leading-relaxed text-night/60">
-              תגובה על כל עצירה, ושיחה כללית לצד - &quot;היינו שם, לכו מוקדם&quot;
-              נשמר על העצירה עצמה.
-            </p>
+          <li className="flex items-start gap-2">
+            <span className="mt-0.5 text-sunset-deep">✓</span>
+            <span>רשומות הכשרות נקראות שוב, עם הפרטים העדכניים</span>
           </li>
-          <li className="rounded-2xl bg-cream/70 p-3 ring-1 ring-night/10">
-            <p className="text-sm font-bold text-night">💡 מציעים מקומות</p>
-            <p className="mt-0.5 text-xs leading-relaxed text-night/60">
-              חבר בוחר מקום מהקטלוג ומסביר למה. אישור אחד שלכם - והוא נכנס לטיול.
-            </p>
+          <li className="flex items-start gap-2">
+            <span className="mt-0.5 text-sunset-deep">✓</span>
+            <span>סגירות, חגים ואירועים - מול התאריכים המדויקים שלכם</span>
           </li>
-          <li className="rounded-2xl bg-cream/70 p-3 ring-1 ring-night/10">
-            <p className="text-sm font-bold text-night">📅 מסכמים תאריכים ומי מגיע</p>
-            <p className="mt-0.5 text-xs leading-relaxed text-night/60">
-              מציעים כמה תאריכים, כל אחד מסמן מה מתאים, ורואים את החפיפה ומי חסום.
-            </p>
+          <li className="flex items-start gap-2">
+            <span className="mt-0.5 text-sunset-deep">✓</span>
+            <span>בדיקת סדר הימים והמסלול</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="mt-0.5 text-sunset-deep">✓</span>
+            <span>מסמך אחד נקי לשמור, להדפיס או לשלוח</span>
           </li>
         </ul>
-        <p className="mt-4 rounded-xl bg-lagoon/10 px-3 py-2 text-xs font-semibold text-night/75">
-          לחברים זה חינם לגמרי - הם לא נרשמים למנוי ולא משלמים כלום. רק מי שיוצר
-          את הקישור צריך מנוי.
-        </p>
-      </div>
-
-      <div className="mt-4 rounded-2xl bg-shell p-5 ring-1 ring-night/10">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xl" aria-hidden>
-            🛫
+        <div className="mt-5 flex flex-wrap items-center gap-3">
+          <Link
+            href="/chat"
+            className="rounded-xl bg-night px-6 py-3 font-bold text-cream transition hover:bg-night/85"
+          >
+            למסך הטיול שלי
+          </Link>
+          <span className="text-xs font-medium text-night/50">
+            נקנית מתוך מסך הטיול, החל מ-21 יום לפני היציאה
           </span>
-          <h3 className="font-bold text-night">והבדיקה לפני הנסיעה - כלולה</h3>
         </div>
-        <p className="mt-1 text-sm leading-relaxed text-night/60">
-          {priceLabel()} לטיול לכל אחד אחר, כלולה במנוי בלי הגבלה - לכל טיול שתתכננו,
-          כל חודש.
-        </p>
       </div>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+      {/* ---------- What free actually is, next to what the subscription adds ---------- */}
+      <h2 className="display mt-10 text-center text-2xl text-night">מה יש בכל תוכנית</h2>
+
+      <div className="mt-5 grid gap-4 sm:grid-cols-2">
         {/* Free */}
         <div className="rounded-3xl bg-shell p-6 ring-1 ring-night/10">
           <h3 className="font-bold text-night">חינם</h3>
@@ -301,24 +337,7 @@ export default function PremiumClient() {
               </li>
             ))}
           </ul>
-          {isPremium ? (
-            <p className="mt-5 rounded-xl bg-zest/20 px-3 py-2 text-center text-xs font-bold text-night">
-              ★ אתם בפרימיום - תודה שאתם איתנו
-            </p>
-          ) : (
-            <>
-              <button
-                onClick={upgrade}
-                disabled={busy}
-                className="mt-5 w-full rounded-xl bg-sunset px-6 py-3 font-bold text-cream transition hover:bg-sunset-deep disabled:opacity-60"
-              >
-                {busy ? 'רגע…' : `התחלת מנוי · ${PREMIUM_PRICE_ILS.toFixed(2)} ₪ לחודש`}
-              </button>
-              <p className="mt-2 text-center text-[11px] font-medium text-night/50">
-                ביטול בלחיצה, בכל רגע · בלי התחייבות
-              </p>
-            </>
-          )}
+          {cta('mt-5')}
         </div>
       </div>
 

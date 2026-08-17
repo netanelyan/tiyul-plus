@@ -9980,3 +9980,54 @@ and that feature does not work until `sql/supabase-group-planning.sql` has been
 run. Until then a subscriber who creates an invite gets the panel's error state -
 so the SQL is now on the critical path for the pricing page being true, not only
 for the feature being complete.
+
+### 2026-08-17 (e) - The page inverts: the subscription leads, the shared trip is the star
+
+Netanel, immediately after entry (d): *"the shared trip should be the superstar.
+but most - the premium subscription, then the features alone below"*. So the
+arrangement entry (d) kept - the one-off check leading, the subscription as a
+secondary option - is now the other way round. Entry (d) is not wrong, it is
+superseded; read them in order.
+
+**The reversal follows a change in the product, not a change of mind about
+honesty.** When the check was made to lead (entry 2026-08-13 (c)) the
+subscription's only exclusive content was "friends join and vote on the stops" -
+genuinely thin next to a concrete pre-departure report. This morning that feature
+became the place a group actually plans: comments per stop, friends proposing
+catalog places, a date poll, RSVP. It is now the one thing on the site nobody gets
+for free, so it belongs in the lead card rather than in a row of a comparison
+table three screens down.
+
+**Structure now:** headline → the subscription as a full dark card, with the
+shared trip as a block INSIDE it (labelled "the star of the subscription", four
+tiles for the four things friends can do, and the friends-pay-nothing line) plus
+the two other things it carries (the check included, the guaranteed lane) and the
+CTA → the open arithmetic → **"רק צריכים דבר אחד?"** and the one-off check as a
+standalone card → the free-vs-premium table → the FAQ.
+
+**The one-off check was demoted, not weakened.** It keeps its full feature list,
+its price, its own heading and its route into the trip screen - somebody who wants
+exactly one thing and no recurring charge can still find it in one scroll, and the
+section is named for that person rather than for the product. Selling a
+subscription by making the alternative hard to find is the thing this page has
+deliberately not done since it was written.
+
+**The arithmetic box did not need rewriting to fit the new order**, which is worth
+noting: it already said that a month of subscription costs less than one check and
+includes it. Under the old arrangement that was an admission against interest;
+under the new one it is the strongest argument on the page. The same true sentence
+did both jobs, and it is still rendered conditionally from the two constants, so
+it removes itself if the prices ever cross.
+
+**Two CTAs now, not one** - under the star card and under the comparison table -
+because the page is long and a reader who is convinced by the table should not
+have to scroll back up. They are one function rendered twice, so the label, the
+price and the cancellation line cannot drift apart between them.
+
+**Verified:** 637 tests, tsc, build and lint clean, and **46/46 in a real browser
+at 390px and 1400px** - including an assertion on the ORDER (the subscription card
+must appear before the standalone section, measured by position in the rendered
+text, not by reading the JSX), both CTAs present, all four capabilities, the price
+comparison, the FAQ closed by default, no dollar sign, zero horizontal overflow and
+nothing past the viewport edge at either width. The rendered page was also looked
+at rather than only asserted.
