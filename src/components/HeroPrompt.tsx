@@ -6,23 +6,24 @@ import PromptChips from '@/components/PromptChips';
 const KOSHER_KEY = 'tiyul-plus:kosher-pref';
 
 /**
- * קלט ההירו המשותף (דף הבית + נחיתת הצ׳אט): שדה גדול, כפתור שתמיד
- * צבעוני, dropdown רעיונות - ולידו טוגל שקט "🍽️ אוכל כשר". העדפות
- * רגישות הן כפתורים, לא שאלות (אייקון וי-מאומת, לא צלחת): הטוגל עובר עם השליחה והסוכן קורא אותו
- * בשקט. מצב הטוגל נשמר ב-localStorage (ברירת מחדל: כבוי).
+ * The shared hero input (homepage + chat landing): a large field, a button that is
+ * always coloured, an ideas dropdown - and beside it a quiet "kosher food" toggle.
+ * Sensitive preferences are buttons, not questions (hence a verified-check icon, not
+ * a plate): the toggle rides along with the submission and the agent reads it
+ * silently. The toggle state is stored in localStorage (default: off).
  */
 export default function HeroPrompt({
   onSubmit,
   extraChips,
 }: {
   onSubmit: (text: string, kosher: boolean) => void;
-  // גלולות נוספות באותה שורה (למשל "שאלון מהיר" בדף הבית בלבד) - נכנסות
-  // ל-trailing של PromptChips כדי שכולן יישבו כאחיות אחידות.
+  // Extra pills in the same row (for example the quick questionnaire, homepage only) -
+  // they go into PromptChips' `trailing` so they all sit as uniform siblings.
   extraChips?: React.ReactNode;
 }) {
   const [text, setText] = useState('');
   const [kosher, setKosher] = useState(false);
-  // placeholder מקוצר במובייל - הארוך עם הדוגמה נחתך ב-390px
+  // A shortened placeholder on mobile - the long one with the example is cut off at 390px
   const [placeholder, setPlaceholder] = useState(
     'ספרו לי על החופשה שאתם מדמיינים… למשל: שבוע באיטליה עם ילדים',
   );
@@ -34,24 +35,24 @@ export default function HeroPrompt({
       setPlaceholder('ספרו לי על החופשה שאתם מדמיינים…');
     }
     /*
-      פוקוס אוטומטי רק במכשירים עם מקלדת פיזית.
+      Autofocus only on devices with a physical keyboard.
 
-      דיווח של נטנאל: "when opening the website on mobile, the textboxes are
-      being opened automatically". השדה נשא `autoFocus` יבש, ולכן בכל כניסה
-      לדף הבית או לנחיתת /chat מהטלפון המקלדת נפתחה מיד - היא מכסה כמחצית
-      המסך, דוחפת את הכותרת והצ׳יפים מחוץ לתצוגה, ומכריחה את המטייל לסגור
-      אותה כדי לראות בכלל לאן הוא הגיע. במקום להזמין להקליד, זה מסתיר את
-      ההסבר מה להקליד.
+      Netanel reported: "when opening the website on mobile, the textboxes are being
+      opened automatically". The field carried a bare `autoFocus`, so every arrival at
+      the homepage or the /chat landing from a phone popped the keyboard immediately -
+      it covers about half the screen, pushes the heading and the chips out of view,
+      and forces the traveller to dismiss it before they can even see where they
+      landed. Instead of inviting them to type, it hid the explanation of what to type.
 
-      אותו תיקון בדיוק כמו ב-AccountButton (מודל ההתחברות) וב-CityCombobox -
-      שם זה כבר נפתר, וההירו פשוט לא עודכן. בדסקטופ הפוקוס נשאר, כי שם הוא
-      חוסך קליק ולא עולה כלום.
+      Exactly the same fix as in AccountButton (the login modal) and CityCombobox -
+      it was already solved there, and the hero simply was never updated. On desktop
+      the focus stays, because there it saves a click and costs nothing.
     */
     if (window.matchMedia('(pointer: fine)').matches) inputRef.current?.focus();
     try {
       setKosher(window.localStorage.getItem(KOSHER_KEY) === '1');
     } catch {
-      /* אחסון חסום - נשארים בברירת המחדל */
+      /* storage blocked - stay with the default */
     }
   }, []);
 
@@ -61,7 +62,7 @@ export default function HeroPrompt({
       try {
         window.localStorage.setItem(KOSHER_KEY, next ? '1' : '0');
       } catch {
-        /* אחסון חסום */
+        /* storage blocked */
       }
       return next;
     });
@@ -76,7 +77,7 @@ export default function HeroPrompt({
         }}
         className="rise-in-late mt-8 w-full max-w-2xl"
       >
-        {/* מתחת ל-sm: שדה מלא + כפתור מלא מתחתיו. מ-sm: כפתור בתוך השדה */}
+        {/* Below sm: a full-width field with a full-width button under it. From sm: the button sits inside the field */}
         <div className="relative">
           <input
             ref={inputRef}

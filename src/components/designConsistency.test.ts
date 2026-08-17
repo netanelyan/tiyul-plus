@@ -1,12 +1,13 @@
 /**
- * שמירה על העקביות שהסשן הזה תיקן - כמחלקה, לא כמופע.
+ * Preserving the consistency this session fixed - as a class, not as an instance.
  *
- * מה שנשבר במקור לא היה עיצוב שגוי אלא **חמישה בלוקים שכל אחד המציא
- * לעצמו כותרת**. תיקון ידני של השלושה שנראו הכי גרוע מחזיק עד הבלוק
- * הבא שמישהו יוסיף, ולכן הבדיקות כאן סורקות את כל `src` ונופלות על
- * הדפוס עצמו: צבע כתוב ביד, וחץ פתיחה שנוצר מחוץ לרכיב המשותף.
+ * What was originally broken was not wrong design but **five blocks each of which
+ * invented its own header**. Fixing by hand the three that looked worst holds only
+ * until the next block somebody adds, so the checks here scan all of `src` and fail on
+ * the pattern itself: a colour written by hand, and a disclosure caret produced
+ * outside the shared component.
  *
- * שתיהן ירוקות היום. הערך שלהן הוא ברגע שמישהו יחזיר את הדפוס.
+ * Both are green today. Their value is the moment somebody brings the pattern back.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -23,14 +24,14 @@ function walk(dir: string, out: string[] = []): string[] {
 }
 
 /*
-  נתיבי ה-API מוחרגים: הם מחזירים **טקסט לשיחה**, לא ממשק. אימוג׳י
-  בתשובה של הסוכן הוא תוכן, לא רכיב עיצוב.
+  The API routes are excluded: they return **text for a conversation**, not an
+  interface. An emoji in the agent's reply is content, not a design element.
 */
 const FILES = walk('src').filter(
   (f) => !f.endsWith('.test.ts') && !f.includes(join('app', 'api')),
 );
 
-/** הערות מוסרות לפני סריקה: הן בדיוק המקום שבו כתוב מה *היה* פעם */
+/** Comments are stripped before scanning: they are precisely where what *used* to be is written */
 const stripComments = (src: string) =>
   src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|\s)\/\/.*$/gm, '');
 
@@ -38,7 +39,7 @@ test('אין צבע כתוב ביד ב-className - רק טוקנים', () => {
   const hits: string[] = [];
   for (const file of FILES) {
     const src = stripComments(readFileSync(file, 'utf8'));
-    // ערך צבע שרירותי של Tailwind: bg-[#...], text-[#...], ring-[#...] וכו׳
+    // An arbitrary Tailwind colour value: bg-[#...], text-[#...], ring-[#...] and so on
     for (const m of src.matchAll(/\b(?:bg|text|ring|border|from|to|via|fill|stroke)-\[#[0-9a-fA-F]{3,8}\]/g)) {
       hits.push(`${file}: ${m[0]}`);
     }
@@ -52,10 +53,11 @@ test('אין צבע כתוב ביד ב-className - רק טוקנים', () => {
 
 test('חץ הפתיחה נוצר רק במקומות שהוסכם עליהם', () => {
   /*
-    ▾ הוא הסימן של "זה נפתח". כשכל רכיב מצייר אותו בעצמו הוא מקבל גם
-    גודל וצבע משלו - היו שלושה גדלים שונים על מסך אחד. הרשימה כאן היא
-    ההסכמה: הבלוקים המתקפלים עוברים דרך PanelSection, ושלושת החריגים
-    הם פקדים שאינם בלוקים (צ׳יפ העדפות, תפריט ניווט, רשימת רעיונות).
+    The caret is the sign of "this opens". When every component draws it itself it also
+    gets its own size and colour - there were three different sizes on one screen. The
+    list here is the agreement: collapsible blocks go through PanelSection, and the
+    three exceptions are controls that are not blocks (the preferences chip, the nav
+    menu, the ideas list).
   */
   const ALLOWED = new Set([
     join('src', 'components', 'PanelSection.tsx'),
@@ -75,9 +77,10 @@ test('חץ הפתיחה נוצר רק במקומות שהוסכם עליהם', (
 
 test('הערת כשרות וסטטוס השגחה מרונדרים כל אחד במקום אחד בלבד', () => {
   /*
-    ✡️ הופיע ידנית בשלושה קבצים בשלוש צורות. הרשימה כאן היא הרכיבים
-    המשותפים ועוד שני חריגים אמיתיים: אזהרת "המידע נשמר במכשיר" במצב
-    לא-מקוון, וגיליון ההדפסה - שניהם אומרים משהו אחר, לא סטטוס כשרות.
+    The kashrut glyph appeared by hand in three files in three forms. The list here is
+    the shared components plus two genuine exceptions: the "data is stored on the
+    device" warning in offline mode, and the print sheet - both of which say something
+    else, not a kashrut status.
   */
   const ALLOWED = new Set([
     join('src', 'components', 'KosherNote.tsx'),

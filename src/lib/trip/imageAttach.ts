@@ -1,32 +1,33 @@
 'use client';
 
 /**
- * צירוף תמונה לשיחה עם הסוכן - צילום מסך של אישור הזמנה, כרטיס טיסה,
- * שלט או תפריט. הכל קורה בדפדפן, בלי ספרייה חדשה ובלי אחסון: הקובץ
- * מוקטן ל-data URL קטן (canvas, בדיוק כמו imageToAvatar בפרופיל) ונשלח
- * ל-/api/chat בגוף הבקשה בלבד. התמונה לא נשמרת בשרת ולא נכתבת ללוג.
+ * Attaching an image to the conversation with the agent - a screenshot of a booking
+ * confirmation, a boarding pass, a sign or a menu. Everything happens in the browser, with
+ * no new library and no storage: the file is downscaled to a small data URL (canvas,
+ * exactly like imageToAvatar in the profile) and sent to /api/chat in the request body
+ * only. The image is not stored on the server and is not written to any log.
  *
- * הרזולוציה נבחרה כדי שטקסט קטן בצילום מסך יישאר קריא למודל (1400px
- * בצלע הארוכה), אבל שהתמונה עדיין תישאר בסדר גודל של מאות KB.
+ * The resolution was chosen so that small text in a screenshot stays legible to the model
+ * (1400px on the long edge), while the image still stays in the hundreds of KB.
  */
 
-/** הצלע הארוכה אחרי ההקטנה - מספיק כדי לקרוא טקסט בצילום מסך */
+/** The long edge after downscaling - enough to read text in a screenshot */
 const MAX_EDGE = 1400;
-/** תקרת גודל אחרי ההקטנה (תווים של data URL) - השרת אוכף את אותו גבול */
+/** The size ceiling after downscaling (data URL characters) - the server enforces the same limit */
 export const MAX_IMAGE_CHARS = 1_400_000;
-/** מה שהדפדפן מורשה לבחור מלכתחילה */
+/** What the browser is allowed to pick in the first place */
 export const IMAGE_ACCEPT = 'image/png,image/jpeg,image/webp';
-/** תקרת קובץ גולמי לפני הקטנה - הגנה מקבצים ענקיים */
+/** A raw-file ceiling before downscaling - protection against enormous files */
 const MAX_SOURCE_BYTES = 12 * 1024 * 1024;
 
 export interface AttachError {
-  /** הודעה בעברית להצגה למשתמש */
+  /** A Hebrew message to show the user */
   message: string;
 }
 
 /**
- * ממיר קובץ שנבחר ל-data URL של JPEG מוקטן. מחזיר null כשהקובץ אינו
- * תמונה קריאה, גדול מדי, או שלא הצלחנו לדחוס אותו מספיק.
+ * Converts a selected file into a downscaled JPEG data URL. Returns null when the file is
+ * not a readable image, is too large, or could not be compressed enough.
  */
 export function fileToChatImage(file: File): Promise<string | null> {
   if (!file.type.startsWith('image/') || file.size > MAX_SOURCE_BYTES) {
@@ -45,11 +46,11 @@ export function fileToChatImage(file: File): Promise<string | null> {
       canvas.height = h;
       const ctx = canvas.getContext('2d');
       if (!ctx) return resolve(null);
-      // רקע לבן: צילומי מסך עם שקיפות לא ייצאו שחורים ב-JPEG
+      // A white background: screenshots with transparency must not come out black in JPEG
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, w, h);
       ctx.drawImage(img, 0, 0, w, h);
-      // יורדים באיכות עד שנכנסים לתקרה - עדיף תמונה קצת רכה מכישלון
+      // Step the quality down until it fits the ceiling - a slightly soft image beats a failure
       for (const q of [0.82, 0.7, 0.6, 0.5]) {
         const data = canvas.toDataURL('image/jpeg', q);
         if (data.length <= MAX_IMAGE_CHARS) return resolve(data);

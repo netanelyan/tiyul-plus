@@ -4,27 +4,28 @@ import type { TripApi } from './TripContext';
 import type { Trip } from './types';
 
 /**
- * מצב קריאה-בלבד ללא רשת, כרשת ביטחון מתחת לממשק.
+ * Read-only mode when offline, as a safety net beneath the interface.
  *
- * **ההחלטה שמאחורי הקובץ הזה, במפורש:** בלי חיבור, טיול נקרא ולא
- * נערך. האלטרנטיבה - לאפשר עריכה ולסנכרן בחזרה - נשמעת נדיבה יותר
- * ונכשלת בשקט: הסנכרון לחשבון מכריע "המאוחר מנצח" לפי `updatedAt`,
- * שהוא **שעון המכשיר**. טלפון בחו"ל עם שעון שגוי, או מכשיר שני
- * שערך את אותו טיול בינתיים, הופכים את זה למחיקה שקטה של עבודה של
- * מישהו. עריכה שנעלמת גרועה מעריכה שלא התאפשרה, וזה הכיוון שנבחר.
+ * **The decision behind this file, stated explicitly:** with no connection, a trip is
+ * read and not edited. The alternative - allowing edits and syncing them back - sounds
+ * more generous and fails silently: syncing to the account resolves "latest wins" by
+ * `updatedAt`, which is **the device clock**. A phone abroad with a wrong clock, or a
+ * second device that edited the same trip meanwhile, turns that into a silent deletion
+ * of somebody's work. An edit that disappears is worse than an edit that was not
+ * allowed, and that is the direction chosen.
  *
- * הממשק מכבה את הפקדים בעצמו, ולכן הפונקציות כאן כמעט לעולם לא
- * נקראות. הן קיימות כדי שפקד שנשכח, קיצור מקלדת או קוד עתידי לא
- * יוכלו לכתוב בכל זאת - **הגנה מבנית, לא הודעה למשתמש.**
+ * The interface disables the controls itself, so the functions here are almost never
+ * called. They exist so that a forgotten control, a keyboard shortcut or future code
+ * cannot write anyway - **structural protection, not a message to the user.**
  *
- * שתי פעולות **אינן** חסומות כאן במכוון:
- * `setCurrentId` - מעבר בין טיולים שמורים הוא קריאה, וחייב לעבוד
- * גם בלי רשת; ו-`applyRemoteTrips`/`applyRemoteDeletions`, שנקראות
- * רק כשיש רשת ממילא (הן *התוצאה* של סנכרון, לא עריכה מקומית).
+ * Two operations are deliberately **not** blocked here:
+ * `setCurrentId` - switching between saved trips is a read, and must work with no
+ * network; and `applyRemoteTrips`/`applyRemoteDeletions`, which are only called when
+ * there is a network anyway (they are the *result* of syncing, not a local edit).
  */
 
-/** טיול ריק שמוחזר מ-`createTrip` החסום. הוא לא נשמר בשום מקום -
- *  הוא קיים רק כדי שקורא שמצפה ל-`Trip` לא יקבל `undefined`. */
+/** The empty trip returned by the blocked `createTrip`. It is not stored anywhere -
+ *  it exists only so a caller expecting a `Trip` does not receive `undefined`. */
 function noTrip(): Trip {
   return { id: '', name: '', citySlugs: [], days: [], createdAt: 0 };
 }
@@ -43,8 +44,8 @@ export function readOnlyIfOffline(api: TripApi, offline: boolean): TripApi {
     addDay: () => {},
     removeDay: () => {},
     setDayNotes: () => {},
-    // `addPlace` מחזיר { dayIndex } - קורא שמצפה לאובייקט לא יקבל
-    // undefined ויתפוצץ, ולכן מחזירים צורה תקינה.
+    // `addPlace` returns { dayIndex } - a caller expecting an object must not receive
+    // undefined and blow up, so a valid shape is returned.
     addPlace: () => ({ dayIndex: 0 }),
     removePlace: () => {},
     movePlace: () => {},

@@ -1,19 +1,20 @@
 /**
- * שרת בלבד - בונה את הדוח של "בדיקה לפני הנסיעה".
+ * Server only - builds the "pre-departure check" report.
  *
- * מיובא רק כאן ולא מרכיב לקוח: `destinations`/`calendar` הם הקטלוג
- * המלא (~2MB), ואין שום סיבה שהוא יגיע לדפדפן בשביל הפיצ'ר הזה - אותו
- * שיקול בדיוק כמו `server/tripStats.ts`.
+ * Imported only here and not by a client component: `destinations`/`calendar` are the
+ * full catalog (~2MB), and there is no reason for it to reach the browser for this
+ * feature - exactly the same consideration as `server/tripStats.ts`.
  *
- * ## מה "נבדק" אומר כאן, בכנות
+ * ## What "checked" means here, honestly
  *
- * שני הדברים - "כל מקום נבדק מחדש" ו"הכשרות נבדקת מחדש" - הם **אותו
- * מנגנון**: `Trip` שומר רק `placeIds`, ולכן כל תצוגה ממילא פותרת אותם
- * מול הקטלוג **החי**, לא מול תמונת מצב ישנה. הדוח הזה עושה בדיוק את
- * זה בצורה מפורשת ומתועדת, וכן - **לא** מתקשר לאף מקום. השגחת כשרות
- * מוצגת בדיוק כמו שהיא כתובה בקטלוג, עם אותו כיסוי "לוודא מול המקום"
- * שקיים בכל האתר (ראו `KosherBadge.tsx` ומדיניות הכשרות ב-CLAUDE.md) -
- * "נבדק מחדש" פירושו שהמידע נקרא שוב, עכשיו, ולא שהוא אומת בשטח.
+ * Both claims - "every place is re-checked" and "the kashrut is re-checked" - are **the
+ * same mechanism**: a `Trip` stores only `placeIds`, so every view resolves them against
+ * the **live** catalog anyway, not against an old snapshot. This report does exactly that
+ * explicitly and on the record, and yes - it does **not** telephone anywhere. Kashrut
+ * supervision is presented exactly as written in the catalog, with the same "verify with
+ * the venue" caveat that exists everywhere on the site (see `KosherBadge.tsx` and the
+ * kashrut policy in CLAUDE.md) - "re-checked" means the information was read again, now,
+ * not that it was verified on the ground.
  */
 
 import { destinations } from '@/data/destinations';
@@ -50,9 +51,10 @@ function kosherNoteFor(place: Place): string {
 }
 
 /**
- * סדר הימים תקין - **אותו רעיון בדיוק כמו `routeSummary` ב-`trip/agent.ts`**,
- * עצמאי מכוונה (בלי תלות בקובץ הסוכן): רצף ערים, ומעבר חוזר לעיר
- * שכבר עזבו (חוץ מלולאה שחוזרת לעיר ההתחלה בסוף הטיול) הוא זגזוג.
+ * Day order is valid - **exactly the same idea as `routeSummary` in `trip/agent.ts`**,
+ * kept independent on purpose (with no dependency on the agent file): a run of cities,
+ * and returning to a city already left (except a loop back to the starting city at the
+ * end of the trip) is a zigzag.
  */
 function checkRouteOrder(citySlugsInOrder: string[]): { ok: boolean; note?: string } {
   const seq: string[] = [];

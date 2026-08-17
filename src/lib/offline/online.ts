@@ -3,16 +3,17 @@
 import { useEffect, useState } from 'react';
 
 /**
- * האם יש חיבור לרשת.
+ * Whether there is a network connection.
  *
- * `navigator.onLine` הוא **סימן ולא הוכחה**: הדפדפן מדווח true גם
- * כשיש חיבור ל-WiFi בלי אינטרנט בכלל. עבור הפיצ׳ר הזה זה בסדר, כי
- * מה שהוא מפעיל הוא הצגת מצב וכיבוי פקדים - לא החלטה הרסנית. הכיוון
- * החשוב מדויק: `false` פירושו כמעט תמיד שבאמת אין רשת, וזה הרגע
- * שבו המשתמש עומד ברחוב וצריך לראות את המסלול.
+ * `navigator.onLine` is **a signal and not proof**: the browser reports true even when
+ * connected to WiFi with no internet at all. For this feature that is fine, because what
+ * it drives is showing a state and disabling controls - not a destructive decision. The
+ * direction that matters is accurate: `false` almost always means there genuinely is no
+ * network, and that is the moment the user is standing in the street and needs to see the
+ * itinerary.
  *
- * מתחיל תמיד ב-`true`: השרת לא יודע, ואתחול מ-`navigator` היה יוצר
- * אי-התאמת hydration - אותה מלכודת שכבר תועדה כאן ב-PromptChips.
+ * Always starts at `true`: the server does not know, and initialising from `navigator`
+ * would create a hydration mismatch - the same trap already documented here in PromptChips.
  */
 export function useOnline(): boolean {
   const [online, setOnline] = useState(true);
@@ -22,8 +23,9 @@ export function useOnline(): boolean {
     sync();
     window.addEventListener('online', sync);
     window.addEventListener('offline', sync);
-    // גיבוי: מכשירים ניידים לא תמיד יורים את האירועים אחרי חזרה
-    // מרדמה, ובדיקה בכל חזרה למסך מחזירה את המצב לאמת בלי רענון.
+    // A backstop: mobile devices do not always fire the events after waking from sleep,
+    // and checking on every return to the screen brings the state back to the truth
+    // without a refresh.
     document.addEventListener('visibilitychange', sync);
     return () => {
       window.removeEventListener('online', sync);
@@ -35,14 +37,14 @@ export function useOnline(): boolean {
   return online;
 }
 
-/** נוסח אחיד לכל פקד שכובה בגלל היעדר רשת (title + aria-label) */
+/** Uniform wording for every control disabled because there is no network (title + aria-label) */
 export const OFFLINE_HINT = 'אין חיבור לאינטרנט - הפעולה הזאת דורשת חיבור';
 
 /**
- * חותמת זמן (ms) → `YYYY-MM-DD` **מקומי**, כדי להזין את
- * `formatHebrewDate`. הבנייה היא מהשדות המקומיים ולא מ-`toISOString`,
- * שהוא UTC: מטייל שנמצא ממערב לגריניץ׳ היה רואה את התוכן שלו מתוארך
- * יום אחורה - בדיוק המלכודת שתועדה כבר ב-`dates.ts`.
+ * A timestamp (ms) -> a **local** `YYYY-MM-DD`, to feed `formatHebrewDate`. It is built
+ * from the local fields and not from `toISOString`, which is UTC: a traveller west of
+ * Greenwich would have seen their content dated a day earlier - exactly the trap already
+ * documented in `dates.ts`.
  */
 export function isoDay(ms: number): string {
   const d = new Date(ms);

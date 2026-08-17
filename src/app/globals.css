@@ -375,7 +375,7 @@ html.a11y-no-motion *::after {
     color: rgba(36, 27, 77, 0.45);
   }
 
-  /* מפריד מעבר בין ערים - קו טיסה מקווקו */
+  /* Inter-city travel separator - a dashed flight line */
   .print-leg {
     break-inside: avoid;
     page-break-inside: avoid;
@@ -389,7 +389,7 @@ html.a11y-no-motion *::after {
     text-align: center;
   }
 
-  /* יום = כרטיס עדין שלא נשבר באמצע עמוד */
+  /* A day = a subtle card that does not break across a page */
   .print-day {
     break-inside: avoid;
     page-break-inside: avoid;
@@ -438,7 +438,7 @@ html.a11y-no-motion *::after {
     color: #241b4d;
   }
 
-  /* עצירות היום */
+  /* The day's stops */
   .print-stops {
     margin-top: 4px;
     list-style: none;
@@ -480,8 +480,8 @@ html.a11y-no-motion *::after {
     font-size: 12px;
   }
   .print-stop-local {
-    /* margin משני הצדדים: הכיוון הפנימי של ה-span הוא ltr, אז
-       margin-inline-start לבדו נופל בצד הלא-נכון ביחס לשם העברי */
+    /* Margin on both sides: the span's internal direction is ltr, so
+       margin-inline-start alone lands on the wrong side relative to the Hebrew name */
     margin-inline: 7px;
     font-size: 11px;
     font-weight: 500;
@@ -512,7 +512,7 @@ html.a11y-no-motion *::after {
     color: rgba(36, 27, 77, 0.7);
   }
 
-  /* נספחים (זמני שבת, כשרות) - עמוד משלהם, באותה שפה כמו הימים */
+  /* Annexes (Shabbat times, kashrut) - a page of their own, in the same language as the days */
   .print-annex {
     break-before: page;
     break-inside: avoid;
@@ -551,7 +551,7 @@ html.a11y-no-motion *::after {
     color: rgba(36, 27, 77, 0.5);
   }
 
-  /* פוטר: דיסקליימר + חתימה */
+  /* Footer: disclaimer + signature */
   .print-footer {
     margin-top: 24px;
     padding-top: 14px;
@@ -576,13 +576,13 @@ html.a11y-no-motion *::after {
   z-index: 0;
 }
 
-/* מרכך מעט את הגוונים הקרים של CARTO Positron לכיוון הפלטה החמה של
-   האתר - רק על שכבת האריחים, כדי לא לגעת בפינים/פופאפים הצבעוניים. */
-/* בסיס המפה: CARTO Voyager - נקי ומודרני אבל עם הגדרה אמיתית (מים
-   כחלחלים, פארקים ירוקים, כבישים ברורים) בניגוד ל-Positron החיוור.
-   הכוונון כאן קטן בכוונה: מעט קונטרסט וחמימות כדי להתיישב על הקרם של
-   האתר, בלי לפגוע בקריאות התוויות. חל רק על שכבת הטיילים - הסיכות
-   והפופאפים יושבים ב-panes אחרים ולא מושפעים. */
+/* Softens CARTO Positron's cool tones slightly towards the site's warm palette -
+   on the tile layer only, so the colourful pins and popups are untouched. */
+/* The basemap: CARTO Voyager - clean and modern but with real definition (bluish
+   water, green parks, clear roads), unlike the pale Positron. The tuning here is
+   deliberately small: a little contrast and warmth so it sits on the site's cream,
+   without hurting label legibility. It applies only to the tile layer - the pins
+   and popups live in other panes and are unaffected. */
 .leaflet-tile-pane {
   filter: saturate(1.04) contrast(1.06) brightness(0.99) sepia(0.05);
 }
@@ -644,7 +644,7 @@ html.a11y-no-motion *::after {
   border: none;
 }
 
-/* עמודת תמונה+סיכה - הטרנספורם של ההדגשה יושב כאן */
+/* The photo+pin column - the highlight transform lives here */
 .pin-marker .pin-stack {
   display: flex;
   flex-direction: column;
@@ -653,7 +653,7 @@ html.a11y-no-motion *::after {
   transform-origin: bottom center;
 }
 
-/* תמונת המקום שמעל הסיכה בזום עירוני */
+/* The place photo above the pin at city zoom */
 .pin-marker .pin-photo {
   width: 44px;
   height: 40px;

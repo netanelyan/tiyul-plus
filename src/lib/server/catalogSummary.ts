@@ -1,41 +1,44 @@
 import { inHe } from '@/lib/hebrew';
 /**
- * משפט אחד שמתאר את היקף הקטלוג, במקום לשפוך אותו.
+ * One sentence describing the catalog's scope, instead of dumping it.
  *
- * ## למה הקובץ הזה קיים
+ * ## Why this file exists
  *
- * התשובה חסרת-המפתח פתחה ב"כרגע יש לי מסלולים מלאים ב:" ואז
- * `countries.map(c => c.name).join(' · ')` - **כל** שמות המדינות. כשהיו
- * שמונה מדינות זה היה סביר. הקטלוג עומד היום על יותר משבעים, וסשן הדאטה
- * מוסיף עוד כל שעה, כך שאותה שורת קוד גדלה לקיר טקסט שאף אחד לא קורא -
- * וגם דוחפת את הדבר החשוב (מה אפשר לשאול) מתחת לקיפול.
+ * The keyless reply opened with "right now I have full itineraries in:" and then
+ * `countries.map(c => c.name).join(' - ')` - **every** country name. With eight
+ * countries that was reasonable. The catalog today holds more than seventy, and the
+ * data session adds more every hour, so that one line of code grew into a wall of
+ * text nobody reads - and it also pushed the important part (what you can ask) below
+ * the fold.
  *
- * זה גם הטקסט שנתנאל ראה בפועל: התשובה שנראתה כמו אמנזיה בצילומי המסך
- * מהבוקר הייתה בדיוק המשפט הזה עם כל המדינות.
+ * This is also the text Netanel actually saw: the reply that looked like amnesia in
+ * the morning's screenshots was exactly this sentence with every country in it.
  *
- * ## הכלל
+ * ## The rule
  *
- * מספר + כמה דוגמאות + שאלה חזרה. המספר נגזר מהדאטה, ולכן הוא נשאר נכון
- * בלי לגעת בקוד; הדוגמאות מוגבלות ל-`MAX_EXAMPLES` ולכן האורך **לא גדל
- * עם הקטלוג**, וזו הנקודה כולה.
+ * A number + a few examples + a question back. The number is derived from the data, so
+ * it stays correct without touching the code; the examples are capped at
+ * `MAX_EXAMPLES`, so the length **does not grow with the catalog**, and that is the
+ * whole point.
  */
 
-/** כמה מדינות מוזכרות בשם. יותר מזה זו כבר רשימה, לא דוגמה. */
+/** How many countries are named. More than that is a list, not an example. */
 export const MAX_EXAMPLES = 5;
 
 /**
- * דוגמאות מועדפות: מדינות מזוהות שקל להיקשר אליהן, ולא מה שיצא ראשון
- * בקובץ. מסונן מול הדאטה, כך שמדינה שתוסר מהקטלוג לא תופיע כאן.
+ * Preferred examples: recognisable countries that are easy to connect with, rather
+ * than whatever happens to come first in the file. Filtered against the data, so a
+ * country removed from the catalog will not appear here.
  */
 const PREFERRED = ['italy', 'greece', 'japan', 'thailand', 'portugal', 'georgia'];
 
 /**
- * @param all כל שמות המדינות בקטלוג, לפי סדר הדאטה
- * @param bySlug מיפוי slug לשם, לבחירת הדוגמאות המועדפות
+ * @param all every country name in the catalog, in data order
+ * @param bySlug a slug-to-name map, for picking the preferred examples
  */
 export function coverageLine(all: string[], bySlug: Record<string, string>): string {
   const preferred = PREFERRED.map((s) => bySlug[s]).filter(Boolean);
-  // אם הדאטה השתנתה ואין מספיק מועדפות - משלימים מהתחלה, בלי כפילויות
+  // If the data changed and there are not enough preferred ones - top up from the start, with no duplicates
   const examples = [...new Set([...preferred, ...all])].slice(0, MAX_EXAMPLES);
   if (all.length === 0) return 'הקטלוג בהרחבה כרגע.';
   if (all.length <= MAX_EXAMPLES) return `יש לי מסלולים מלאים ${inHe(examples.join(', '))}.`;

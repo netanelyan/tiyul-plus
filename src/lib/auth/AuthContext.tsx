@@ -7,23 +7,24 @@ import { EMPTY_PROFILE, fetchProfile, recordTermsAcceptance, upsertProfile, type
 import { TERMS_VERSION } from '@/lib/legal';
 
 /**
- * הקשר החשבון: התחברות בקוד חד-פעמי למייל (OTP) - בלי סיסמאות.
- * enabled=false כשאין הגדרות Supabase - הממשק פשוט לא מציג התחברות.
+ * The account context: login by a one-time code sent to an email address (OTP) -
+ * with no passwords. enabled=false when there is no Supabase configuration - the
+ * interface simply does not show a login option.
  */
 
 interface AuthApi {
   enabled: boolean;
   user: User | null;
-  /** null עד שבדיקת הסשן הראשונית הסתיימה */
+  /** null until the initial session check has finished */
   ready: boolean;
-  /** פרופיל המשתמש (נטען אחרי התחברות); null כשלא מחוברים/עוד נטען */
+  /** The user's profile (loaded after login); null when signed out or still loading */
   profile: UserProfile | null;
-  /** עדכון פרופיל: אופטימי בזיכרון + upsert לשרת */
+  /** Updating the profile: optimistic in memory + an upsert to the server */
   saveProfile: (patch: Partial<UserProfile>) => Promise<boolean>;
   /**
-   * קריאה מחדש של הפרופיל מהשרת. נדרש כשמשהו **מחוץ** ללקוח שינה אותו -
-   * פדיון קוד הטבה, הענקת פרימיום או שינוי תפקיד נכתבים ע"י ה-service
-   * role, ולכן הפרופיל שבזיכרון לא יודע עליהם כלום.
+   * Re-reading the profile from the server. Needed when something **outside** the
+   * client changed it - redeeming a promo code, a premium grant or a role change are
+   * written by the service role, so the in-memory profile knows nothing about them.
    */
   reloadProfile: () => Promise<void>;
   sendCode: (email: string) => Promise<{ ok: boolean; error?: string }>;
@@ -44,9 +45,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  // המצב העדכני באופן סינכרוני - saveProfile חייב לחשב את המיזוג מיד,
-  // בלי להסתמך על עדכון ה-state (שאינו מובטח להיות סינכרוני): שני
-  // saveProfile רצופים היו עלולים לדרוס שדות עם פרופיל ריק.
+  // The current state, synchronously - saveProfile must compute the merge immediately
+  // rather than relying on a state update (which is not guaranteed to be synchronous):
+  // two consecutive saveProfile calls could otherwise overwrite fields with an empty profile.
   const profileRef = useRef<UserProfile | null>(null);
   profileRef.current = profile;
 
@@ -56,7 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (p) setProfile(p);
   }, [supabase, user]);
 
-  // טעינת הפרופיל אחרי התחברות; איפוס בהתנתקות
+  // Load the profile after login; reset on sign-out
   useEffect(() => {
     if (!supabase || !user) {
       setProfile(null);
@@ -75,7 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (patch: Partial<UserProfile>) => {
       if (!supabase || !user) return false;
       const next: UserProfile = { ...(profileRef.current ?? EMPTY_PROFILE), ...patch };
-      profileRef.current = next; // שרשור saveProfile-ים באותו טיק נשאר עקבי
+      profileRef.current = next; // chaining saveProfile calls in the same tick stays consistent
       setProfile(next);
       return upsertProfile(supabase, next);
     },
@@ -114,15 +115,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!supabase) return { ok: false, error: 'החשבונות לא מוגדרים בסביבה הזו' };
       const { error } = await supabase.auth.verifyOtp({ email, token: code, type: 'email' });
       if (error) return { ok: false, error: friendly(error.message) };
-      // ההתחברות עצמה היא רגע ההסכמה (ראו הטקסט ליד הכפתור במודל) -
-      // נרשמת כאן, בכניסה המוצלחת הראשונה בלבד, ולא בכל כניסה חוזרת.
-      // אם הרישום נכשל (רשת, או שהמיגרציה supabase-consent.sql עוד לא
-      // רצה) ההתחברות עדיין מצליחה - זה לא חוסם משתמש מהשירות.
+      // The login itself is the moment of consent (see the text beside the button in
+      // the modal) - recorded here, on the first successful sign-in only, and not on
+      // every subsequent one. If the write fails (network, or the supabase-consent.sql
+      // migration has not run yet) the login still succeeds - this must not block a
+      // user from the service.
       try {
         const p = await fetchProfile(supabase);
         if (p && !p.termsAcceptedAt) await recordTermsAcceptance(supabase, TERMS_VERSION);
       } catch {
-        /* לא קריטי - יישמר בכניסה הבאה */
+        /* not critical - it will be recorded on the next sign-in */
       }
       return { ok: true };
     },
@@ -142,10 +144,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** תרגום שגיאות GoTrue הנפוצות לעברית אנושית */
+/** Translating the common GoTrue errors into human Hebrew */
 function friendly(message: string): string {
   const m = message.toLowerCase();
-  // עוזר לאבחון: השגיאה המקורית נשמרת בקונסול (לא מוצגת למשתמש)
+  // Helps diagnosis: the original error is kept in the console (not shown to the user)
   console.error('[auth]', message);
   if (m.includes('error sending') || m.includes('smtp'))
     return 'שליחת המייל נכשלה - כנראה בעיה בהגדרות שליחת המיילים (SMTP). בדקו את הגדרות השולח.';

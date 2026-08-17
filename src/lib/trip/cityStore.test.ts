@@ -1,11 +1,11 @@
 /**
- * טסטים לאחסון הערים במכשיר - השכבה שהופכת "טיול שנפתח פעם אחת" ל-
- * "טיול שנפתח בלי רשת".
+ * Tests for on-device city storage - the layer that turns "a trip that was opened once"
+ * into "a trip that opens with no network".
  *
- * מה שנבדק כאן הוא בדיוק מה שיכול להיכשל בשקט: רשומה פגומה שמפילה את
- * המסך במקום להיזרק, מטמון שגדל בלי גבול עד שהמכסה מתפוצצת, גיזום
- * שמוחק עיר שטיול חי עדיין צריך, ותאריך שמירה שנעלם - ובלעדיו מידע
- * כשרות ישן מוצג כאילו נבדק עכשיו.
+ * What is tested here is exactly what can fail silently: a malformed record that brings
+ * the screen down instead of being discarded, a cache that grows without bound until the
+ * quota blows, pruning that deletes a city a live trip still needs, and a save date that
+ * disappears - without which stale kashrut information is shown as if just checked.
  */
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
@@ -23,7 +23,7 @@ import {
 
 const KEY = 'tiyul-plus:cities:v1';
 
-/** localStorage מינימלי - node לא מספק אחד, והמודול עובד מולו ישירות */
+/** A minimal localStorage - node does not provide one, and the module works against it directly */
 function stubStorage(): void {
   const data = new Map<string, string>();
   const storage = {
@@ -31,7 +31,7 @@ function stubStorage(): void {
     setItem: (k: string, v: string) => void data.set(k, v),
     removeItem: (k: string) => void data.delete(k),
   };
-  // @ts-expect-error - סביבת דפדפן מזויפת לצורך הטסט
+  // @ts-expect-error - a fake browser environment for the test
   globalThis.window = { localStorage: storage };
 }
 
@@ -53,18 +53,18 @@ test('עיר שנשמרה נקראת בחזרה, עם תאריך השמירה ש
 test('הוותק שמוצג הוא של הפריט הישן ביותר על המסך', () => {
   saveCities([city('vienna')], 1_000);
   saveCities([city('rome')], 5_000);
-  // מסך שמראה את שתיהן הוא ותיק כמו הישנה מביניהן, לא כמו הטרייה
+  // A screen showing both is as old as the older of them, not as the fresher one
   assert.equal(oldestCachedAt(['vienna', 'rome']), 1_000);
   assert.equal(oldestCachedAt(['rome']), 5_000);
-  // עיר שאינה שמורה בכלל לא מזייפת תאריך
+  // A city that is not stored at all does not fake a date
   assert.equal(oldestCachedAt(['nope']), null);
 });
 
 test('רשומה פגומה נזרקת בשקט ולא מפילה את השאר', () => {
   saveCities([city('vienna')], 1_000);
   const raw = JSON.parse(window.localStorage.getItem(KEY)!);
-  raw['broken'] = { city: { slug: 'broken' }, cachedAt: 'לא מספר' }; // אין places, אין תאריך
-  raw['mismatch'] = { city: { slug: 'other', places: [] }, cachedAt: 2_000 }; // slug לא תואם
+  raw['broken'] = { city: { slug: 'broken' }, cachedAt: 'לא מספר' }; // no places, no date
+  raw['mismatch'] = { city: { slug: 'other', places: [] }, cachedAt: 2_000 }; // slug does not match
   window.localStorage.setItem(KEY, JSON.stringify(raw));
 
   const got = storedCities();
@@ -90,7 +90,7 @@ test('גיזום עם רשימה ריקה מפנה הכול - מחקו את כל
 });
 
 test('תקרת ערים: הישנות יוצאות ראשונות', () => {
-  // 20 ערים ותיקות, ואז אחת חדשה - הוותיקה ביותר היא זו שמפנה מקום
+  // 20 old cities, then one new - the oldest is the one that makes room
   for (let i = 0; i < 20; i++) saveCities([city(`old-${i}`)], 1_000 + i);
   saveCities([city('new')], 9_999);
   const keys = Object.keys(storedCities());
@@ -104,7 +104,7 @@ test('מכסה מלאה מוותרת על השמירה ולא על המסך', ()
   window.localStorage.setItem = () => {
     throw new Error('QuotaExceededError');
   };
-  // לא זורק - האפליקציה ממשיכה לעבוד, רק בלי המצב הלא-מקוון
+  // Does not throw - the app keeps working, just without the offline mode
   assert.doesNotThrow(() => saveCities([city('rome')], 2_000));
   assert.deepEqual(Object.keys(storedCities()), ['vienna']);
 });
@@ -114,12 +114,12 @@ test('storageBytes מודד את מה שבאמת תופס מקום', () => {
   saveCities([city('vienna')], 1_000);
   const bytes = storageBytes();
   assert.ok(bytes > 0);
-  // UTF-16: שני בתים לכל תו, כפי ש-localStorage סופר בפועל
+  // UTF-16: two bytes per character, as localStorage actually counts
   assert.equal(bytes, window.localStorage.getItem(KEY)!.length * 2);
 });
 
 test('בשרת (בלי window) הכול שקט ומחזיר ריק', () => {
-  // @ts-expect-error - מדמים רינדור בשרת
+  // @ts-expect-error - simulating server-side rendering
   delete globalThis.window;
   assert.deepEqual(storedCities(), {});
   assert.deepEqual(loadCities(), {});

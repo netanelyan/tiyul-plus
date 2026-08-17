@@ -11,21 +11,23 @@ import {
 } from '@/lib/destinationFacets';
 
 /**
- * בניית כרטיסי היעדים מהקטלוג - **צד שרת בלבד.**
+ * Building the destination cards from the catalog - **server side only.**
  *
- * הופרד מ-`destinationFacets.ts` מסיבת ביצועים מדודה: הדפדפן הוריד את
- * כל הקטלוג בכל עמוד באתר רק כדי לסנן רשימה שהשרת כבר חישב. הסינון,
- * הטיפוסים והקבועים נשארו שם (לקוח); כל מה שקורא `destinations` נמצא
- * כאן, ומיובא אך ורק מ-`app/countries/page.tsx`.
+ * Separated from `destinationFacets.ts` for a measured performance reason: the browser
+ * downloaded the entire catalog on every page of the site merely to filter a list the
+ * server had already computed. The filtering, the types and the constants stayed there
+ * (client); everything that reads `destinations` is here, and is imported only from
+ * `app/countries/page.tsx`.
  */
 /**
- * היבשות מגיעות מ-WORLD_COUNTRIES, שנבנה לדרכון המדינות באזור האישי.
- * ההצמדה היא לפי קוד ISO2 שנגזר מאימוג׳י הדגל, ובגיבוי לפי שם.
+ * The continents come from WORLD_COUNTRIES, which was built for the country passport in
+ * the account area. The match is by ISO2 code derived from the flag emoji, with a
+ * fallback by name.
  *
- * 81 מתוך 83 מדינות הקטלוג נמצאו כך. השתיים שלא - עומאן ובהוטן - יושבות
- * כאן כ-override ולא כתיקון ב-`worldCountries.ts`, כי `src/data/*` בבעלות
- * סשן הדאטה המקביל ועריכה שם מתנגשת. אם הן יתווספו שם, ה-override פשוט
- * יהפוך למיותר ולא ישבור כלום.
+ * 81 of the catalog's 83 countries were found this way. The two that were not - Oman and
+ * Bhutan - sit here as an override rather than as a fix in `worldCountries.ts`, because
+ * `src/data/*` is owned by the parallel data session and editing there conflicts. If they
+ * are added there, the override simply becomes redundant and breaks nothing.
  */
 const CONTINENT_OVERRIDES: Record<string, Continent> = {
   oman: 'אפריקה והמזרח התיכון',
@@ -47,7 +49,7 @@ function priceBand(levels: number[]): PriceBand | null {
   return 'high';
 }
 
-/** נבנה פעם אחת לכל טעינת מודול - הדאטה סטטית */
+/** Built once per module load - the data is static */
 let cached: DestinationCard[] | null = null;
 
 export function buildDestinationCards(): DestinationCard[] {
@@ -86,7 +88,7 @@ export function buildDestinationCards(): DestinationCard[] {
         .length,
       rating: d.editorialRating?.score,
       continent,
-      vibes: [] as PlaceTag[], // ממולא בשלב שני, אחרי שכל היעדים ידועים
+      vibes: [] as PlaceTag[], // filled in a second pass, once every destination is known
       price: priceBand(levels),
       seasons,
       haystack: [d.name, d.nameLocal, d.slug, country?.name ?? '', country?.nameLocal ?? '']
@@ -95,8 +97,8 @@ export function buildDestinationCards(): DestinationCard[] {
     };
   });
 
-  // שלב שני: האופי נקבע ביחס לשאר הקטלוג, ולכן אפשר לחשב אותו רק אחרי
-  // שכל היעדים נבנו.
+  // Second pass: the character is determined relative to the rest of the catalog, so it
+  // can only be computed once every destination has been built.
   const shares = new Map<string, Map<PlaceTag, number>>();
   for (const d of destinations) {
     const m = new Map<PlaceTag, number>();

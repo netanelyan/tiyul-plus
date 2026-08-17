@@ -1,7 +1,7 @@
 /**
- * היסטוריית שיחה לכל טיול בנפרד (localStorage, לפי מזהה טיול) - כדי
- * שמעבר בין טאבים בניווט (SiteNav) ישחזר גם את השיחה וגם את נתוני הטיול.
- * שכבה דקה כמו storage.ts - כשיהיה backend, מחליפים רק את הקובץ הזה.
+ * Conversation history per trip (localStorage, keyed by trip id) - so that switching
+ * between tabs in the navigation (SiteNav) restores both the conversation and the trip
+ * data. A thin layer like storage.ts - when there is a backend, only this file changes.
  */
 
 import type { BookingSearchCard } from '@/lib/bookingSearch';
@@ -14,22 +14,23 @@ export interface StoredChatMessage {
   actions?: string[];
   quickReplies?: string[];
   /**
-   * כרטיסי חיפוש שהסוכן פתח בהודעה הזאת. נשמרים כדי שהם יהיו שם גם אחרי
-   * רענון - מטייל שסגר את הטאב ופתח מחדש מצפה למצוא את הקישור, ולא
-   * להתחיל את השיחה מהתחלה. הכרטיס הוא דאטה שנבנתה בשרת, בלי טקסט מודל.
+   * Search cards the agent opened in this message. Stored so they are still there
+   * after a refresh - a traveller who closed the tab and reopened it expects to find
+   * the link, not to start the conversation over. The card is data built on the
+   * server, with no model text.
    */
   searches?: BookingSearchCard[];
-  /** תמונה שצורפה להודעה (data URL מוקטן) - ראו imageAttach.ts */
+  /** An image attached to the message (a downscaled data URL) - see imageAttach.ts */
   image?: string;
 }
 
 const PREFIX = 'tiyul-plus:chat:';
 
 /**
- * כמה מההודעות האחרונות שומרות את התמונה שצורפה להן. תמונה היא מאות KB
- * ול-localStorage יש כמה מגה בסך הכל, אז היסטוריה ארוכה עם תמונות הייתה
- * מפוצצת את האחסון ומאבדת את השיחה כולה. ההודעות הישנות נשמרות בלי
- * התמונה - הטקסט נשאר, רק התצוגה המקדימה נעלמת אחרי רענון.
+ * How many of the most recent messages keep the image attached to them. An image is
+ * hundreds of KB and localStorage has a few MB in total, so a long history with images
+ * would blow the storage and lose the whole conversation. Older messages are stored
+ * without the image - the text stays, only the preview disappears after a refresh.
  */
 const KEEP_IMAGES_IN_LAST = 4;
 
@@ -46,20 +47,21 @@ export function loadChat(tripId: string): StoredChatMessage[] {
 }
 
 /**
- * מוחק את השיחה של טיול אחד, ומשאיר את הטיול עצמו.
+ * Deletes one trip's conversation, leaving the trip itself.
  *
- * נוצר מדיווח של מטייל: הודעת "השיחה ארוכה מדי" הציעה לרענן את הדף, והוא
- * ענה "כשאני מרענן, הצ׳אט נשאר". הוא צדק - `loadChat` משחזר מ-localStorage
- * בכל טעינה, ו-`reset()` ב-useTripChat ניקה רק את ה-state בזיכרון (וגם
- * אף אחד לא קרא לו). כלומר לא הייתה שום דרך לנקות שיחה, והעצה שנתנו
- * במקרה של חריגה מחלון ההקשר פשוט לא עבדה.
+ * Created from a traveller's report: the "this conversation is too long" message
+ * suggested refreshing the page, and they replied "when I refresh, the chat stays".
+ * They were right - `loadChat` restores from localStorage on every load, and `reset()`
+ * in useTripChat cleared only the in-memory state (and nothing called it either). So
+ * there was no way at all to clear a conversation, and the advice given on exceeding
+ * the context window simply did not work.
  */
 export function clearChat(tripId: string): void {
   if (typeof window === 'undefined') return;
   try {
     window.localStorage.removeItem(PREFIX + tripId);
   } catch {
-    // אחסון חסום - השיחה בזיכרון כבר נוקתה בכל מקרה
+    // Storage blocked - the in-memory conversation has been cleared anyway
   }
 }
 
@@ -72,6 +74,6 @@ export function saveChat(tripId: string, messages: StoredChatMessage[]): void {
   try {
     window.localStorage.setItem(PREFIX + tripId, JSON.stringify(trimmed));
   } catch {
-    // אחסון מלא/חסום - מתעלמים בשקט, השיחה נשארת בזיכרון בלבד
+    // Storage full or blocked - ignore silently, the conversation stays in memory only
   }
 }

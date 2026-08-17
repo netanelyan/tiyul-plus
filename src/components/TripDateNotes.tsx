@@ -15,32 +15,32 @@ import type { Trip } from '@/lib/trip/types';
 import type { CalendarEntry, Destination } from '@/lib/types';
 
 /**
- * "מה קורה בתאריכים שלכם" - מה שהתאריכים של הטיול נופלים עליו.
+ * "What is happening on your dates" - what the trip's dates land on.
  *
- * ## שלוש החלטות עיצוב שהן בעצם החלטות תוכן
+ * ## Three design decisions that are really content decisions
  *
- * 1. **משני למסלול.** אין רקע צבעוני, אין מסגרת מודגשת ואין אייקון
- *    אזהרה. הפאנל יושב מתחת לתוכנית, בגוונים של הטקסט השקט שכבר קיים
- *    במסך. המסלול הוא מה שהמטייל בא לראות.
- * 2. **סגירה היא מידע ולא התראה.** אין משולש צהוב ואין "שימו לב":
- *    התווית אומרת "סגירות", והשורה אומרת מה סגור. אזהרה גורמת לאנשים
- *    לשנות תוכניות בגלל הטון ולא בגלל העובדה.
- * 3. **אין קריאה לפעולה.** אין כרטיסים, אין "כדאי ללכת", אין קישור
- *    לספק. הקישור היחיד הוא **המקור**, כדי שאפשר יהיה לבדוק אותנו.
+ * 1. **Secondary to the itinerary.** No coloured background, no emphasised ring and
+ *    no warning icon. The panel sits below the plan, in the shades of the quiet text
+ *    already on the screen. The itinerary is what the traveller came to see.
+ * 2. **A closure is information, not an alert.** No yellow triangle and no "attention":
+ *    the label says "closures", and the row says what is closed. A warning makes
+ *    people change plans because of the tone rather than because of the fact.
+ * 3. **No call to action.** No cards, no "worth going", no link to a provider. The
+ *    only link is **the source**, so that we can be checked.
  *
- * שתי הרשימות מופרדות ויזואלית ולא רק בטקסט: מה שיש לו תאריך מוצג עם
- * התאריך ועם הימים שהוא נוגע בהם, ומה שאין לו מוצג תחת כותרת משלו
- * שאומרת מראש שאלה חלונות ולא תאריכים.
+ * The two lists are separated visually and not only in the text: what has a date is
+ * shown with the date and the days it touches, and what does not is shown under a
+ * heading of its own that says up front that these are windows and not dates.
  *
- * כשאין מה לדווח הרכיב לא מרנדר כלום - לא כותרת ולא "אין אירועים".
- * מסך ריק מכותרת חסרת תוכן הוא בדיוק "משני".
+ * When there is nothing to report the component renders nothing - no heading and no
+ * "no events". An empty screen with a contentless heading is exactly "secondary".
  */
 export default function TripDateNotes({
   trip,
   destinations,
 }: {
   trip: Trip;
-  /** הערים של הטיול בלבד - מהן נגזרת המדינה, בלי לייבא את הקטלוג ללקוח */
+  /** The trip's cities only - the country is derived from them, without importing the catalog to the client */
   destinations: Destination[];
 }) {
   const { dated, windows } = useMemo(
@@ -118,8 +118,9 @@ function Row({
       </div>
 
       {/*
-        שורת התאריכים. בחלון לא-מאושר זהו התיאור המילולי כפי שנכתב
-        בדאטה, מילה במילה - לא נגזר ממנו תאריך ולא מוצג מספר.
+        The dates row. For an unconfirmed window this is the prose description exactly
+        as written in the data, word for word - no date is derived from it and no
+        number is displayed.
       */}
       <p
         className={`mt-1 text-xs font-semibold leading-relaxed ${

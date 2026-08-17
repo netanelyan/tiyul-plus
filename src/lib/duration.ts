@@ -1,21 +1,23 @@
-// עברית תקנית למשך שהייה במקום.
+// Correct Hebrew for how long a visit to a place takes.
 //
-// למה זה קובץ ולא ביטוי בתוך ה-JSX: הניסוח הקודם היה
-// `כ-{Math.round(min / 30) / 2} שעות`, שמייצר "כ-1 שעות" ו-"כ-0.5 שעות".
-// זה לא עברית. 248 מתוך המקומות בקטלוג יושבים בדיוק על 45 או 60 דקות,
-// כלומר רוב הכרטיסים בעמוד יעד הציגו את הצורה השגויה.
+// Why this is a file and not an expression inside the JSX: the previous wording
+// computed a half-hour figure inline and printed it with a plural noun, producing the
+// equivalent of "about 1 hours" and "about 0.5 hours". That is not Hebrew. 248 of the
+// places in the catalog sit on exactly 45 or 60 minutes, i.e. most of the cards on a
+// destination page were showing the wrong form.
 //
-// העברית מבחינה בין יחיד, זוגי ורבים, ו-`travel.ts` כבר עושה את זה נכון
-// עבור זמני נסיעה ("כשעה נסיעה"). זו אותה הבחנה, במקום אחד משותף.
+// Hebrew distinguishes singular, dual and plural, and `travel.ts` already does this
+// correctly for journey times. This is the same distinction, in one shared place.
 
-/** מעגל לחצאי שעה, כמו שהעמוד עשה קודם - רק הניסוח משתנה. */
+/** Rounds to the half hour, exactly as the page did before - only the wording changes. */
 export function roundToHalfHours(minutes: number): number {
   return Math.round(minutes / 30) / 2;
 }
 
 /**
- * "כחצי שעה" / "כשעה" / "כשעה וחצי" / "כשעתיים" / "כשעתיים וחצי" / "כ-3 שעות"
- * מחזיר null כשאין משך אמיתי, כדי שהקורא פשוט לא יציג כלום.
+ * Produces the correct singular / dual / plural Hebrew form for half an hour, one
+ * hour, an hour and a half, two hours, two and a half, and three or more.
+ * Returns null when there is no real duration, so the caller simply shows nothing.
  */
 export function formatDurationHe(minutes: number | undefined | null): string | null {
   if (!minutes || !Number.isFinite(minutes) || minutes <= 0) return null;
@@ -28,21 +30,22 @@ export function formatDurationHe(minutes: number | undefined | null): string | n
   if (hours === 2) return 'כשעתיים';
   if (hours === 2.5) return 'כשעתיים וחצי';
 
-  // משלוש שעות ומעלה הצורה המספרית תקינה בעברית ("כ-3 שעות", "כ-4.5 שעות").
+  // From three hours upwards the numeric form is correct Hebrew, so a plain number is used.
   const n = hours % 1 === 0 ? String(hours) : hours.toFixed(1);
   return `כ-${n} שעות`;
 }
 
 /**
- * "יום" / "יומיים" / "3 ימים" - אותה הבחנה בדיוק, על משך טיול.
+ * One day / two days / N days - exactly the same distinction, applied to a trip length.
  *
- * נמצא בלוח הבקרה החדש ("אורך טיפוסי: 1 ימים") ואז התברר שהוא קיים
- * מזמן בכל מקום שמציג אורך של טיול: הניווט, כרטיס הטיול בדף הבית,
- * צ׳יפ הסיכום, האזור האישי, הטיול המשותף ותיאור ה-OG. טיול של יום או
- * יומיים הוא מקרה נפוץ לגמרי, ולכן זה לא מקרה קצה.
+ * Found on the new dashboard ("typical length: 1 days") and then it turned out to have
+ * existed for a long time everywhere a trip length is shown: the navigation, the
+ * homepage trip card, the summary chip, the account area, the shared trip and the OG
+ * description. A one- or two-day trip is an entirely common case, so this is not an
+ * edge case.
  *
- * `withCount` מחזיר "יומיים" ולא "2 ימים", כי בעברית זו הצורה - בדיוק
- * כמו "כשעתיים" למעלה. לשלושה ומעלה הצורה המספרית תקינה.
+ * `withCount` returns the dual form rather than "2 days", because that is the Hebrew
+ * form - exactly like "two hours" above. From three upwards the numeric form is correct.
  */
 export function daysHe(n: number): string {
   if (!Number.isFinite(n) || n <= 0) return 'בלי ימים';

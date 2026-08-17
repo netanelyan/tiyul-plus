@@ -1,22 +1,22 @@
-// המרה דו-כיוונית בין `src/data/*.ts` לבין שורות Supabase.
+// Two-way conversion between `src/data/*.ts` and Supabase rows.
 //
-// **למה שני הכיוונים חיים במודול אחד:** כדי שאפשר יהיה להוכיח סימטריה
-// בלי רשת בכלל. `scripts/catalog-roundtrip.mjs` מריץ
-// files -> rows -> files ומשווה השוואה עמוקה. אם ההמרה מאבדת שדה,
-// הופכת סדר או "מתקנת" ערך, הבדיקה נופלת מיד. זו ההוכחה האמיתית
-// שההעברה היא העתקה טהורה; ספירת רשומות לבדה לא הייתה תופסת שדה חסר.
+// **Why both directions live in one module:** so that symmetry can be proved with no
+// network at all. `scripts/catalog-roundtrip.mjs` runs files -> rows -> files and does
+// a deep comparison. If the conversion loses a field, reorders something or "fixes" a
+// value, the check fails immediately. That is the real proof that the transfer is a
+// pure copy; counting records alone would not have caught a missing field.
 //
-// שני כללים שקובעים כמעט הכול כאן:
+// Two rules decide almost everything here:
 //
-// 1. **שדה שלא היה קיים במקור חייב לא להיות קיים אחרי החזרה.** בטיפוסים
-//    שדות אופציונליים פשוט נעדרים (אין `photo: undefined`). לכן ההמרה
-//    לשורה כותבת null, וההמרה חזרה **משמיטה** את המפתח. `mustSee` הוא
-//    המקרה החד ביותר: הוא מופיע רק כשהוא true ולעולם לא כ-false.
-// 2. **הסדר הוא תוכן.** סדר המדינות, היעדים והמקומות הוא החלטה עריכתית
-//    (מה מופיע ראשון בעמוד), ולכן נשמר ב-`position` ולא מושאר לגחמת
-//    ה-ORDER BY של הדאטהבייס.
+// 1. **A field that did not exist in the source must not exist after the round trip.**
+//    In the types, optional fields are simply absent (there is no `photo: undefined`).
+//    So the conversion to a row writes null, and the conversion back **omits** the key.
+//    `mustSee` is the sharpest case: it appears only when true and never as false.
+// 2. **Order is content.** The order of countries, destinations and places is an
+//    editorial decision (what appears first on a page), so it is stored in `position`
+//    rather than left to the database's ORDER BY whim.
 
-/** שדות אופציונליים: null בדאטהבייס פירושו "לא קיים", לא "ריק". */
+/** Optional fields: null in the database means "does not exist", not "empty". */
 const opt = (v) => (v === undefined ? null : v);
 const put = (obj, key, val) => {
   if (val !== null && val !== undefined) obj[key] = val;
@@ -92,8 +92,8 @@ export function catalogToRows(countries, destinations) {
 }
 
 // ---------- rows -> files ----------
-// סדר המפתחות כאן הוא סדר השדות ב-`src/lib/types.ts`. הוא לא משפיע על
-// שוויון עמוק, אבל שומר על קובץ שנוצר יציב וקריא בין הרצות.
+// The key order here is the field order in `src/lib/types.ts`. It does not affect deep
+// equality, but it keeps a generated file stable and readable between runs.
 
 export function rowToCountry(r) {
   const c = { slug: r.slug, name: r.name, nameLocal: r.name_local, flag: r.flag, tagline: r.tagline, summary: r.summary };

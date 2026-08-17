@@ -4,21 +4,22 @@ import { checkLimit } from '@/lib/server/limits';
 import { resolveCaller } from '@/lib/server/identity';
 
 /**
- * פעילויות להזמנה בעיר של הטיול, בשאילתה חיה מול Viator.
+ * Bookable activities in the trip's city, from a live query against Viator.
  *
- * **הנתיב הזה קיים כדי שהמפתח יישאר בשרת.** הדפדפן מקבל רק את מה שכבר
- * מסונן ומוכן להצגה, וכתובת ההזמנה מגיעה בנויה - כלומר גם מזהה השותף
- * שלנו נבנה כאן ולא שם.
+ * **This route exists so the key stays on the server.** The browser receives only
+ * what is already filtered and ready to display, and the booking URL arrives fully
+ * built - meaning our partner id is assembled here and not there.
  *
- * שלוש הגנות, כולן זולות:
- * 1. **מקור הבקשה** - `browserGetOk`, ולא `sameOriginOk`: ב-GET מאותו
- *    מקור דפדפן **לא** שולח `Origin`, אז הבדיקה של הצ׳אט הייתה דוחה כאן
- *    כל בקשה אמיתית. הסימן שכן קיים ב-GET הוא `Sec-Fetch-Site`.
- * 2. **מכסה לפי קורא**, מעל מד הקצב היוצא שב-`viator.ts`. המכסה נגזרת
- *    מהשכבה של הקורא כמו בכל נתיב אחר, כך שאי אפשר להשתמש בזה כדי
- *    להריץ בקשות על החשבון שלנו.
- * 3. **כישלון שקט** - כל מצב שאינו הצלחה מחזיר 200 עם רשימה ריקה וסיבה.
- *    מסך הטיול לא אמור לדעת ש-Viator קיימת, ובטח לא להציג שגיאה.
+ * Three protections, all of them cheap:
+ * 1. **Request origin** - `browserGetOk`, not `sameOriginOk`: on a same-origin GET a
+ *    browser does **not** send `Origin`, so the chat's check would reject every real
+ *    request here. The signal that does exist on a GET is `Sec-Fetch-Site`.
+ * 2. **A per-caller quota**, on top of the outbound rate limiter in `viator.ts`. The
+ *    quota is derived from the caller's tier as in every other route, so this cannot
+ *    be used to run requests on our account.
+ * 3. **Silent failure** - any state that is not a success returns 200 with an empty
+ *    list and a reason. The trip screen should not need to know Viator exists, and
+ *    certainly should not display an error.
  */
 
 const SLUG = /^[a-z0-9-]{1,60}$/;
@@ -37,12 +38,12 @@ export async function GET(req: Request) {
 
   const caller = await resolveCaller(req);
   /*
-    תקרה יומית קבועה, **לא נגזרת מ-`exploresPerDay`**. עד שפרימיום עבר
-    לחלון חודשי (`periodMsFor`) הגזירה הזאת הייתה סבירה; עכשיו
-    `exploresPerDay` של פרימיום הוא מספר חודשי, וכפל אותו ב-3 והפעלתו
-    כתקרה **יומית** היה נותן ~450/יום - בטעות, לא בכוונה. הנתיב הזה
-    לא עולה לנו כלום (Viator, בלי קריאת AI), אז אין סיבה כלכלית
-    לתקרה מורכבת - נדיבה וקבועה לכולם, קצת יותר לפרימיום.
+    A fixed daily ceiling, **not derived from `exploresPerDay`**. Until premium moved
+    to a monthly window (`periodMsFor`) that derivation was reasonable; now premium's
+    `exploresPerDay` is a monthly figure, and multiplying it by 3 and applying it as a
+    **daily** ceiling would have given ~450/day - by accident, not by intent. This
+    route costs us nothing (Viator, with no AI call), so there is no economic reason
+    for a complicated ceiling - generous and fixed for everyone, a little more for premium.
   */
   const perDay = caller.plan === 'premium' ? 120 : 60;
   if (!checkLimit('activities', caller.id, perDay, 24 * 60 * 60_000).ok) return empty('quota');
@@ -55,7 +56,7 @@ export async function GET(req: Request) {
     status: 200,
     headers: {
       'Content-Type': 'application/json',
-      // המטמון שלנו בזיכרון בלבד. שום דבר מ-Viator לא נשמר בדיסק או ב-CDN.
+      // Our cache is in memory only. Nothing from Viator is stored on disk or in a CDN.
       'Cache-Control': 'no-store',
     },
   });

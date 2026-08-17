@@ -1,11 +1,12 @@
 /**
- * טסטים לעלות הטיול.
+ * Tests for the trip cost.
  *
- * שלושה דברים כאן אינם "בדיקת שפיות". הראשון הוא שעיר בלי נתון
- * **לא נעלמת מהסכום בשקט** - זה בדיוק הכשל שהופך מספר חלקי למספר
- * שקרי. השני הוא שטיול בשני מטבעות לא מסוכם למספר אחד. והשלישי הוא
- * שהמספרים בדאטה זהים למה שהמקור הדפיס, כולל השברים - טסט על הקטלוג
- * האמיתי, לא על פיקסצ׳ר.
+ * Three things here are not "sanity checks". The first is that a city with no figure
+ * **does not vanish from the total silently** - that is exactly the failure that turns
+ * a partial number into a false one. The second is that a trip in two currencies is
+ * not summed into a single number. And the third is that the numbers in the data are
+ * identical to what the source printed, fractions included - a test against the real
+ * catalog, not against a fixture.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -38,7 +39,7 @@ const trip = (cities: string[]): Pick<Trip, 'days'> => ({
 const cities: Record<string, CostCity> = {
   rome: { name: 'רומא', dailyCost: cost('EUR', 10) },
   prague: { name: 'פראג', dailyCost: cost('CZK', 100) },
-  dolomites: { name: 'הדולומיטים' }, // אין נתון - בכוונה
+  dolomites: { name: 'הדולומיטים' }, // no figure - deliberately
 };
 
 test('הטווח היומי: התחתון בלי כניסות, העליון איתן', () => {
@@ -69,7 +70,7 @@ test('**עיר בלי נתון לא נופלת מהסכום בשקט**', () => {
   const res = tripCost(trip(['rome', 'dolomites', 'dolomites']), 'mid', cities);
   assert.equal(res.complete, false, 'הסכום חלקי');
   assert.deepEqual(res.missing, [{ citySlug: 'dolomites', cityName: 'הדולומיטים', days: 2 }]);
-  // הסכום שכן מוצג הוא רק של רומא, ולא מתיימר להיות של הטיול
+  // The total that is shown is Rome's only, and does not claim to be the trip's
   assert.deepEqual(res.totals, [{ currency: 'EUR', low: 60, high: 80 }]);
   assert.equal(res.lines.length, 1, 'לדולומיטים אין שורה עם מספרים');
 });
@@ -119,7 +120,7 @@ test('ולידציה של סגנון הנסיעה', () => {
   for (const bad of ['low', 'luxury', '', null, undefined, 3]) assert.equal(isTravelStyle(bad), false);
 });
 
-// ---------- הדאטה עצמה ----------
+// ---------- The data itself ----------
 
 test('כל רשומה בדאטה שלמה, עם מקור ותאריך תקין', () => {
   const entries = Object.entries(DAILY_COSTS);
@@ -133,7 +134,7 @@ test('כל רשומה בדאטה שלמה, עם מקור ותאריך תקין',
       for (const [k, v] of Object.entries(t)) {
         assert.ok(Number.isFinite(v) && v > 0, `${slug}.${style}.${k}`);
       }
-      // סדר הגיוני בין הסגנונות נבדק למטה; כאן רק שהמספר קיים
+      // A sensible ordering between the styles is checked below; here only that the number exists
     }
     assert.ok(
       c.budget.food < c.mid.food && c.mid.food < c.comfort.food,
@@ -143,7 +144,7 @@ test('כל רשומה בדאטה שלמה, עם מקור ותאריך תקין',
 });
 
 test('המספרים בדאטה הם בדיוק מה שהמקור הדפיס - כולל השברים', () => {
-  // דגימה קשיחה: אם מישהו "יסדר" את 7.09 ל-7, הטסט נופל.
+  // A hard sample: if somebody "tidies" 7.09 into 7, the test fails.
   assert.equal(DAILY_COSTS.vienna.budget.transport, 7.09);
   assert.equal(DAILY_COSTS.berlin.budget.activities, 8.78);
   assert.equal(DAILY_COSTS.lisbon.budget.activities, 9.34);
@@ -153,7 +154,7 @@ test('המספרים בדאטה הם בדיוק מה שהמקור הדפיס - �
   assert.equal(DAILY_COSTS.tokyo.mid.activities, 10487);
 });
 
-// ---------- שני המקורות ----------
+// ---------- The two sources ----------
 
 const budgetCity = (extra: Partial<import('../types.ts').DailyBudget> = {}) => ({
   name: 'ברלין',
@@ -185,7 +186,7 @@ test('"בנוח" חסר במקור הרחב - וזה "אין נתון", לא א�
   assert.equal(res.lines.length, 0);
   assert.deepEqual(res.missing, [{ citySlug: 'berlin', cityName: 'ברלין', days: 1 }]);
   assert.equal(res.complete, false);
-  // ואותה עיר עם dailyCost כן מציגה "בנוח"
+  // And the same city with a dailyCost does show the mid-range figure
   const withComponents = tripCost(trip(['berlin']), 'comfort', {
     berlin: { ...budgetCity(), dailyCost: cost('EUR', 10) },
   });
@@ -200,7 +201,7 @@ test('ההבדלים בין המקורות נשמרים בשורה ולא נטמ
   assert.equal(res.lines[0].upperBoundOnly, true);
   assert.equal(res.hasCountryScope, true);
   assert.equal(res.hasUpperBound, true);
-  // ובלי הדגלים - שניהם כבויים
+  // And with neither flag - both are off
   const plain = tripCost(trip(['berlin']), 'mid', { berlin: budgetCity() });
   assert.equal(plain.hasCountryScope, false);
   assert.equal(plain.hasUpperBound, false);
@@ -234,8 +235,8 @@ test('שני המקורות יחד מכסים יותר יעדים מכל אחד 
 });
 
 test('כל slug בדאטה הוא יעד אמיתי בקטלוג', async () => {
-  // slug עם טעות כתיב לא מייצר שגיאה - הוא פשוט לא מוצג לעולם, וזה
-  // הכשל השקט שהטסט הזה קיים בשבילו.
+  // A misspelled slug does not raise an error - it simply never displays, and that is
+  // the silent failure this test exists for.
   const { destinations } = await import('../../data/destinations.ts');
   const known = new Set(destinations.map((d) => d.slug));
   for (const slug of Object.keys(DAILY_COSTS)) {
@@ -244,8 +245,8 @@ test('כל slug בדאטה הוא יעד אמיתי בקטלוג', async () => {
 });
 
 test('הערים שנבדקו ונדחו אינן בדאטה', () => {
-  // לקרקוב, בוקרשט וסופיה אין במקור טבלה מפולחת לפי סגנון נסיעה.
-  // ממוצע יחיד אינו תשובה ל"כמה מוציא מטייל חסכוני", ולכן אין להן רשומה.
+  // Krakow, Bucharest and Sofia have no table at the source broken down by travel style.
+  // A single average is not an answer to "how much does a budget traveller spend", so they have no record.
   for (const slug of ['krakow', 'bucharest', 'sofia']) {
     assert.equal(DAILY_COSTS[slug], undefined, slug);
   }

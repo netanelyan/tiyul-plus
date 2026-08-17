@@ -27,41 +27,42 @@
 import type { Trip } from '@/lib/trip/types';
 
 /**
- * ניסוחי תיקון מפורשים. כולם אומרים "מה שקרה עכשיו אינו מה שרציתי".
+ * Explicit correction phrasings. All of them say "what just happened is not what I wanted".
  *
- * `שלילה + חלופה` ("ברצלונה, לא ברטיסלבה" / "לא רומא, מילאנו") מטופלת
- * בנפרד למטה, כי "לא" לבדה מופיעה בהמון משפטים תמימים ("לא צריך מלון").
+ * `negation + alternative` ("Barcelona, not Bratislava" / "not Rome, Milan") is handled
+ * separately below, because the bare word "not" appears in a great many innocent
+ * sentences ("no need for a hotel").
  */
 const EXPLICIT =
   /התכוונתי|התכוונו|לא התכוונתי|טעות|טעיתי|התבלבל|תיקון[:\s]|לא נכון|לא ביקשתי|לא רציתי|לא זה|זה לא מה|לא ככה|במקום ה?זה|אמרתי ל?|כתבתי ל?|שיניתי את דעתי/;
 
 /**
- * שלילה של משהו + חלופה באותה נשימה. הצורה שנתנאל כתב בפועל.
+ * Negating something plus an alternative in the same breath. The form Netanel actually wrote.
  *
- * דורש פסיק או "אלא"/"ולא"/"לא" בין שני שמות - כלומר מבנה של החלפה,
- * ולא סתם המילה "לא".
+ * Requires a comma or an explicit contrastive word between the two names - i.e. the
+ * structure of a substitution, and not merely the word "not".
  */
 const NEGATED_ALTERNATIVE =
   /[^,]{2,30},\s*(?:ו?לא|אלא לא)\s+\S{2,}|(?:^|\s)לא\s+\S{2,30},\s*\S{2,}|\s(?:אלא|ולא)\s+\S{2,}/;
 
 export interface CorrectionVerdict {
   correction: boolean;
-  /** לוג ולסיכום - איזה סימן הכריע */
+  /** For the log and the summary - which signal decided it */
   why: string;
 }
 
 /**
- * האם ההודעה הזאת מתקנת את התור הקודם.
+ * Whether this message corrects the previous turn.
  *
- * שלושה תנאים, כולם חובה:
+ * Three conditions, all mandatory:
  *
- * 1. **יש טיול פעיל.** בלי משהו קיים אין מה לתקן.
- * 2. **ההודעה הקודמת היא של הסוכן.** תיקון מתייחס לתשובה, ולכן אחרי
- *    הודעת משתמש שלא נענתה אין למה להתייחס.
- * 3. **יש ניסוח תיקון מפורש**, או שלילה עם חלופה.
+ * 1. **There is an active trip.** With nothing existing there is nothing to correct.
+ * 2. **The previous message is the agent's.** A correction refers to a reply, so after
+ *    an unanswered user message there is nothing to refer to.
+ * 3. **There is an explicit correction phrasing**, or a negation with an alternative.
  *
- * ההודעה גם חייבת להיות קצרה יחסית: תיקון הוא משפט. פסקה שמתחילה
- * ב"טעיתי" וממשיכה לבקשה חדשה לגמרי היא בקשה חדשה.
+ * The message must also be relatively short: a correction is a sentence. A paragraph
+ * that opens with "I was wrong" and continues into an entirely new request is a new request.
  */
 export function detectCorrection(
   messages: { role: string; content: string }[],
@@ -83,10 +84,11 @@ export function detectCorrection(
 }
 
 /**
- * ההנחיה שנשלחת למודל בתור של תיקון, בבלוק האחרון של ה-system.
+ * The instruction sent to the model on a correction turn, in the last block of the system prompt.
  *
- * המשפט המקביל בתוצאת הכלי יושב ב-`agent.ts` עצמו ולא כאן - `agent.ts`
- * נטען גם בדפדפן, ואין סיבה לגרור אליו מודול שרת בשביל מחרוזת.
+ * The parallel sentence in the tool result lives in `agent.ts` itself rather than here -
+ * `agent.ts` is also loaded in the browser, and there is no reason to drag a server
+ * module into it for the sake of one string.
  */
 export const CORRECTION_INSTRUCTION =
   'CORRECTION TURN - the server detected that this message corrects the previous turn, not that it starts something new. ' +

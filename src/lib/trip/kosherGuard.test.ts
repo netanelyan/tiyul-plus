@@ -1,17 +1,17 @@
 /**
- * טסטים לשמירה ההפוכה: מטייל ששמר "כשר" לא מקבל מקום אכילה שאינו כשר.
+ * Tests for the reverse guard: a traveller who set "kosher" is not handed a non-kosher eating place.
  *
- * הרקע, וזה לא באג שנולד עם הפיצ׳ר הזה. עד עכשיו כל האוכל בקטלוג היה
- * בקטגוריות `kosher-*`, ולכן `filterKosherUnlessOptedIn` יכלה להסתפק
- * בחצי עבודה: לסנן כשרות למי שלא ביקש, ולהחזיר `return { ids }` מיד
- * כשההעדפה כן נבחרה. אבל כבר אז ישבו בקטלוג ארבע רשומות אוכל שאינן
- * כשרות בקטגוריה `cafe` (קפה צנטרל, און לוק יון, אלס קואטרה גאטס
- * ועוד) - ומטייל שסימן "כשר" יכול היה לקבל אותן ליום שלו בלי שום
- * מחסום. הוספת מסעדות לא כשרות רק הגדילה את הפער הזה.
+ * The background, and this is not a bug born with this feature. Until now all the food
+ * in the catalog was in `kosher-*` categories, so `filterKosherUnlessOptedIn` could get
+ * away with half the job: filter kashrut out for those who did not ask, and
+ * `return { ids }` immediately once the preference was set. But even then the catalog
+ * held four non-kosher food records in the `cafe` category - and a traveller who ticked
+ * "kosher" could get them into their day with no barrier at all. Adding non-kosher
+ * restaurants only widened that gap.
  *
- * לכן הכלל כאן: **'unknown' נחסם בדיוק כמו 'not-kosher'.** "לא ידוע"
- * אינו "כנראה בסדר". זו ההחלטה היחידה שאפשר לקבל כשמישהו סומך עלינו
- * בכשרות.
+ * Hence the rule here: **'unknown' is blocked exactly like 'not-kosher'.** "We do not
+ * know" is not "probably fine". That is the only decision available when somebody is
+ * trusting us on kashrut.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -23,7 +23,7 @@ import type { Trip } from './types';
 
 const vienna = destinations.find((d) => d.slug === 'vienna')!;
 
-/** מקומות אכילה לא כשרים אמיתיים מהקטלוג, לא פיקסצ׳ר. */
+/** Real non-kosher eating places from the catalog, not a fixture. */
 const nonKosherEating = vienna.places
   .filter((p) => isEating(p.category) && kosherStatusOf(p) !== 'kosher')
   .map((p) => p.id);
@@ -66,9 +66,9 @@ test('create_trip_full: a kosher traveller does not receive a non-kosher restaur
   assert.equal(res.ok, true);
   const placed = res.trip!.days.flatMap((d) => d.placeIds);
   for (const id of nonKosherEating) assert.ok(!placed.includes(id), `${id} reached a kosher trip`);
-  // מה שאינו אוכל נשאר - הסינון הוא על אכילה, לא על העיר
+  // Anything that is not food stays - the filter is on eating, not on the city
   assert.ok(placed.includes('vie-stephansdom'));
-  // והמודל מקבל הסבר, אחרת הוא ינסה לשבץ אותם שוב בתור הבא
+  // And the model gets an explanation, otherwise it will try to schedule them again next turn
   assert.match(res.message, /שומר כשרות/);
 });
 
@@ -105,10 +105,10 @@ test('the two explanations are not interchangeable', () => {
     'create_trip_full',
     { name: 'x', dayPlans: [{ citySlug: 'vienna', placeIds: kosherEating }] },
   );
-  // מדובר על המשפט הפותח, לא על צירוף מילים כלשהו: ההודעה של
-  // "לא בחר כשרות" מסתיימת ב"אם המשתמש יאמר במפורש שהוא שומר כשרות",
-  // ולכן חיפוש נאיבי של "שומר כשרות" מוצא אותה - וזה בדיוק מה שהטסט
-  // הזה תפס בגרסה הראשונה שלו.
+  // This is about the opening sentence, not any occurrence of the phrase: the
+  // "kashrut was not selected" message ends with a clause about the user saying
+  // explicitly that they keep kosher, so a naive search for that phrase finds it -
+  // and that is exactly what this test caught in its first version.
   assert.ok(optedIn.message.includes('הורדו מקומות אכילה שאינם כשרים'));
   assert.ok(!optedIn.message.includes('לא שובצו מקומות כשרים'));
   assert.ok(notOptedIn.message.includes('לא שובצו מקומות כשרים'));
@@ -119,7 +119,7 @@ test('tripFromTemplate: the curated itinerary loses only its non-kosher eating s
   const trip = tripFromTemplate(vienna, { kosher: true });
   const placed = trip.days.flatMap((d) => d.placeIds);
   for (const id of nonKosherEating) assert.ok(!placed.includes(id), `${id} survived into a kosher template`);
-  // ולא הפכנו את התבנית לריקה - זו הייתה "התיקון" הגרוע
+  // And we did not make the pattern empty - that was the bad "fix"
   assert.ok(placed.length > 5, `template collapsed to ${placed.length} stops`);
 });
 

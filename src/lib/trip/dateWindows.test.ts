@@ -1,13 +1,13 @@
 /**
- * טסטים להתאמה בין תאריכי הטיול ללוח האירועים והסגירות.
+ * Tests for matching the trip's dates against the events-and-closures calendar.
  *
- * הדאטה עצמה (`src/data/calendar.ts`, 161 רשומות) נבדקת ע"י
- * `scripts/validate-calendar.mjs` - כאן נבדקים **ההתאמה והניסוח**:
+ * The data itself (`src/data/calendar.ts`, 161 records) is checked by
+ * `scripts/validate-calendar.mjs` - what is tested here is **the matching and the wording**:
  *
- * 1. **מה נחשב חפיפה.** יום-בעיר ולא טווח-מול-טווח, ולכן רוב הטסטים הם
- *    דווקא מקרים שבהם התשובה הנכונה היא "לא להציג".
- * 2. **ששתי דרגות הוודאות לא מתערבבות.** רשומה בלי תאריכים מאושרים לא
- *    יכולה להופיע כ"חופף לימים 3-5", כי אין לה תאריכים בכלל.
+ * 1. **What counts as an overlap.** Day-in-city and not range-against-range, which is why
+ *    most of the tests are in fact cases where the correct answer is "do not show it".
+ * 2. **That the two certainty levels do not mix.** A record with no confirmed dates cannot
+ *    appear as "overlaps days 3-5", because it has no dates at all.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -52,17 +52,17 @@ const trip = (startDate: string | undefined, cities: string[]): Trip => ({
   ...(startDate ? { startDate } : {}),
 });
 
-/* ---------- ההחלטה: חפיפה נמדדת מול הימים בעיר ---------- */
+/* ---------- The decision: overlap is measured against the days in the city ---------- */
 
 test('חופף רק אם המטייל נמצא באותו מקום באותו יום', () => {
-  // 17-18 בספטמבר במינכן, ואז רומא. האירוע נפתח ב-19 - הוא כבר לא שם.
+  // 17-18 September in Munich, then Rome. The event opens on the 19th - they are no longer there.
   const before = trip('2026-09-17', ['munich', 'munich', 'rome', 'rome']);
   assert.deepEqual(matchTripCalendar(before, [entry()], CITIES).dated, []);
 
   const during = trip('2026-09-17', ['munich', 'munich', 'munich', 'munich']);
   const got = matchTripCalendar(during, [entry()], CITIES).dated;
   assert.equal(got.length, 1);
-  assert.deepEqual(got[0].dayNumbers, [3, 4]); // 19-20 בספטמבר
+  assert.deepEqual(got[0].dayNumbers, [3, 4]); // 19-20 September
 });
 
 test('אותם תאריכים בעיר אחרת לא מדליקים כלום', () => {
@@ -108,7 +108,7 @@ test('כל טווח שנה נבדק בנפרד, ושנה שאין לה טווח 
   assert.equal(matchTripCalendar(trip('2028-09-20', ['munich']), [twoYears], CITIES).dated.length, 0);
 });
 
-/* ---------- חלון לא מאושר: לעולם לא כתאריך ---------- */
+/* ---------- An unconfirmed window: never as a date ---------- */
 
 test('רשומה בלי תאריכים מאושרים לא מופיעה ברשימת התאריכים', () => {
   const soft = entry({
@@ -120,7 +120,7 @@ test('רשומה בלי תאריכים מאושרים לא מופיעה ברשי
   const got = matchTripCalendar(t, [soft], CITIES);
   assert.deepEqual(got.dated, []);
   assert.equal(got.windows.length, 1);
-  // מה שמוצג הוא הטקסט כפי שנכתב, בלי תאריך נגזר
+  // What is shown is the text as written, with no derived date
   assert.equal(got.windows[0].entry.window, 'בדרך כלל בשבוע הראשון של אוגוסט');
   assert.ok(!/\d{4}-\d{2}-\d{2}/.test(got.windows[0].entry.window!));
 });
@@ -143,7 +143,7 @@ test('זיהוי חודשים בטקסט חופשי - כולל טווח וכול
   assert.deepEqual(monthsInWindow('אין כאן חודש'), []);
 });
 
-/* ---------- ניסוח ---------- */
+/* ---------- Wording ---------- */
 
 test('תווית הסוג מבדילה סגירות מאירוע', () => {
   assert.equal(impactLabel(entry({ kind: 'closure', impact: 'closures' })), 'סגירות');
@@ -161,7 +161,7 @@ test('נוסח "לא פורסם" הוא מחרוזת אחת משותפת', () =>
   assert.equal(NOT_PUBLISHED, 'התאריכים לשנה הזו עדיין לא פורסמו');
 });
 
-/* ---------- מול הדאטה האמיתית ---------- */
+/* ---------- Against the real data ---------- */
 
 test('הלוח האמיתי מייצר התאמה אמיתית לטיול במינכן בספטמבר', () => {
   const t = trip('2026-09-20', ['munich', 'munich', 'munich']);
@@ -184,7 +184,7 @@ test('החלוקה בין "תאריך" ל"חלון" לא דולפת בשום ע�
   }
 });
 
-/* ---------- הסוכן: אין מידע זו תשובה ---------- */
+/* ---------- The agent: "no information" is an answer ---------- */
 
 test('אין מידע לעיר ולתאריכים - הכלי אומר זאת במפורש ולא נכשל', () => {
   const t = trip('2026-06-03', ['bratislava', 'bratislava']);
