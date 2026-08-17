@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     'share-day',
     caller.id,
     PLAN_LIMITS[caller.plan].sharesPerDay,
-    periodMsFor(caller.plan),
+    periodMsFor(),
   );
   if (!burst.ok || !daily.ok) {
     return NextResponse.json({ code: null, error: 'rate-limited' }, { status: 429 });

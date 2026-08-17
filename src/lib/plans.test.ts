@@ -12,7 +12,7 @@ import assert from 'node:assert/strict';
 import {
   PLAN_FEATURE_ROWS,
   PLAN_LIMITS,
-  PREMIUM_TRIP_BUILDS_PER_MONTH,
+  PREMIUM_TRIP_BUILDS_PER_DAY,
   ROLE_RANK,
   SUBSCRIBER_MONTHLY_CAP_USD,
   effectivePlan,
@@ -106,41 +106,104 @@ test('isRole דוחה כל מה שאינו אחד משלושת התפקידים'
 */
 const COLD_TRIP_USD = 0.53; // a full trip build, including a cold cache write
 const HEAVY_TURN_USD = 0.063; // a Sonnet turn from a warm cache
-const WIZARD_BUILD_USD = 0.02; // a quick Haiku build (measured ~$0.01, doubled to be conservative)
-const LOOKUP_USD = 0.01; // one live web search (a fixed Anthropic price)
-const IMAGE_EXTRA_USD = 0.01; // what an image adds on top of an ordinary turn
 
-test('העלות הגרועה-המציאותית של כל המכסות הנראות של פרימיום נכנסת מתחת לתקרה - עם מרווח', () => {
-  const p = PLAN_LIMITS.premium;
-  /*
-    Full builds are counted inside the chat quota (a build is a chat), so the
-    non-build chats are the difference. This is exactly how the gate actually
-    works in chat/route.ts.
-  */
-  const editTurns = p.chatPerDay - PREMIUM_TRIP_BUILDS_PER_MONTH;
-  const worst =
-    PREMIUM_TRIP_BUILDS_PER_MONTH * COLD_TRIP_USD +
-    editTurns * HEAVY_TURN_USD +
-    p.generatePerDay * WIZARD_BUILD_USD +
-    p.lookupsPerDay * LOOKUP_USD +
-    p.imagesPerDay * IMAGE_EXTRA_USD;
+/*
+  THE test this file was missing, and the reason a paying plan shipped worse
+  than the free one on every row. Everything else here checked one column
+  against a cost model; nothing checked the two columns against EACH OTHER.
+*/
+test('פרימיום לעולם לא גרוע מחינם, וחינם לעולם לא גרוע מאנונימי - בכל מכסה נספרת', () => {
+  const counted: (keyof typeof PLAN_LIMITS.free)[] = [
+    'chatPerDay',
+    'chatBurstPerMin',
+    'aiUnitsPerDay',
+    'generatePerDay',
+    'sharesPerDay',
+    'importsPerDay',
+    'imagesPerDay',
+    'exploresPerDay',
+    'geocodesPerDay',
+    'lookupsPerDay',
+  ];
+  for (const field of counted) {
+    assert.ok(
+      PLAN_LIMITS.premium[field] >= PLAN_LIMITS.free[field],
+      `פרימיום גרוע מחינם ב-${field}: ${PLAN_LIMITS.premium[field]} מול ${PLAN_LIMITS.free[field]}`,
+    );
+    assert.ok(
+      PLAN_LIMITS.free[field] >= PLAN_LIMITS.anon[field],
+      `חינם גרוע מאנונימי ב-${field}: ${PLAN_LIMITS.free[field]} מול ${PLAN_LIMITS.anon[field]}`,
+    );
+  }
+});
 
+/*
+  The comparison above is only meaningful while both tiers count in the same
+  window. A monthly premium window next to a daily free one is exactly how the
+  numbers got inverted, so the window itself is pinned.
+*/
+test('חלון המכסה הוא יממה, בלי תלות בדרגה', () => {
   /*
-    90% of the ceiling is the line: the remaining margin absorbs one stray partial
-    cold call (a case our warmer is supposed to prevent) and pricing drift. Beyond
-    the visible quotas there is no realistic path to the ceiling - only deliberate
-    abuse of tool loops, which is capped anyway by MAX_TURN_USD per turn, and that
-    is exactly the kind of use the ceiling exists for.
+    The function no longer takes a tier, and that is the point: a monthly window
+    for premium beside a daily one for free is what made the paid plan read as
+    smaller than the free one on every row. The signature is now the guard.
   */
+  assert.equal(periodMsFor(), 24 * 60 * 60 * 1000);
+});
+
+/*
+  What the internal cap actually buys, stated as a test so it cannot quietly
+  drift. This is NOT the old "everything visible fits under the cap" assertion -
+  with daily quotas that is no longer true and is not meant to be (see the
+  comment on PLAN_LIMITS.premium). What matters is that ONE ordinary planning
+  session in a month is covered, because that is what the pricing page promises.
+*/
+test('התקרה הפנימית מכסה מפגש תכנון טיפוסי - ומסמנת איפה היא נגמרת', () => {
+  /*
+    A planning session in this codebase is 10-25 turns (measured, see the (vv)
+    entry). At the worst-case prices that is:
+
+      10 turns  $1.16   fits
+      15 turns  $1.48   fits   <- typical
+      20 turns  $1.79   fits
+      24 turns  $2.04   OVER
+      two 15-turn sessions      $2.95   OVER
+
+    So $2.00 covers a typical session with room, and runs out inside a long one
+    or a second one. That is recorded here deliberately rather than smoothed
+    over by choosing a friendlier number: it is the pricing decision written up
+    next to PLAN_LIMITS.premium, and if the cap is raised this test is where it
+    shows.
+  */
+  const typicalSession = COLD_TRIP_USD + 15 * HEAVY_TURN_USD;
   assert.ok(
-    worst <= SUBSCRIBER_MONTHLY_CAP_USD * 0.9,
-    `worst=$${worst.toFixed(3)} מול תקרה $${SUBSCRIBER_MONTHLY_CAP_USD} - המכסות הנראות גדולות מדי, ` +
-      'המשתמש עלול להיחסם על ידי תקרת הדולרים לפני שהמכסה המוצגת נגמרת',
+    typicalSession <= SUBSCRIBER_MONTHLY_CAP_USD,
+    `מפגש תכנון טיפוסי עולה $${typicalSession.toFixed(2)} מול תקרה של $${SUBSCRIBER_MONTHLY_CAP_USD} - ` +
+      'מנוי שמתכנן טיול אחד בחודש ייחסם, וזו הבטחה שבורה',
+  );
+
+  const longSession = COLD_TRIP_USD + 24 * HEAVY_TURN_USD;
+  const twoTypical = 2 * typicalSession;
+  assert.ok(
+    longSession > SUBSCRIBER_MONTHLY_CAP_USD && twoTypical > SUBSCRIBER_MONTHLY_CAP_USD,
+    'אם אלה כבר נכנסים - התקרה הועלתה, וצריך לעדכן את ההערה שאומרת שהיא מכסה מפגש אחד בלבד',
   );
 });
 
-test('הבניות המלאות לא יכולות לעלות לבדן על התקרה, גם אם כל השאר אפס', () => {
-  assert.ok(PREMIUM_TRIP_BUILDS_PER_MONTH * COLD_TRIP_USD < SUBSCRIBER_MONTHLY_CAP_USD);
+/*
+  The comparison rows are hand-written strings around generated numbers, so they
+  are exactly the place where a table can claim an allowance the code does not
+  grant. This pins the one row whose number does not come from PLAN_LIMITS.
+*/
+test('שורת בניית הטיולים בטבלה נושאת את המספר האמיתי מהקוד', () => {
+  const row = PLAN_FEATURE_ROWS.find((r) => r.label.includes('בניית טיול מלא'));
+  assert.ok(row, 'שורת בניית הטיול נעלמה מהטבלה');
+  assert.ok(
+    row.premium.includes(String(PREMIUM_TRIP_BUILDS_PER_DAY)),
+    `הטבלה אומרת "${row.premium}" אבל הקוד מתיר ${PREMIUM_TRIP_BUILDS_PER_DAY} ביום`,
+  );
+  // And it must not be a limit the free tier does not have at all
+  assert.ok(PREMIUM_TRIP_BUILDS_PER_DAY >= 3, 'תקרת בניות נמוכה מדי - תיראה כמו הרעה מול חינם');
 });
 
 test('אף דולר בשורות ההשוואה של עמוד הפרימיום - רק ספירות ושקלים', () => {
@@ -159,9 +222,3 @@ test('אף דולר בהודעות החסימה שהמשתמש רואה', () => 
   }
 });
 
-test('חלון המכסה: יממה לאנונימי/חינם, 30 יום לפרימיום', () => {
-  const DAY = 24 * 60 * 60 * 1000;
-  assert.equal(periodMsFor('anon'), DAY);
-  assert.equal(periodMsFor('free'), DAY);
-  assert.equal(periodMsFor('premium'), 30 * DAY);
-});

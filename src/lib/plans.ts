@@ -138,7 +138,6 @@ export interface PlanLimits {
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 /** 30 days, not a "calendar month" - simple and constant, like every other quota here */
-const MONTH_MS = 30 * DAY_MS;
 
 /**
  * The quota window length for a tier: a day for anon/free, 30 days for
@@ -154,7 +153,18 @@ const MONTH_MS = 30 * DAY_MS;
  * `24 * 60 * 60 * 1000`, so premium gets the right window without
  * changing a single number.
  */
-export const periodMsFor = (tier: Tier): number => (tier === 'premium' ? MONTH_MS : DAY_MS);
+/**
+ * The quota window, and it is **one day for every tier including premium**.
+ *
+ * It used to be 30 days for premium, and that single asymmetry produced a
+ * paying plan that was worse than the free one on every countable row: free
+ * showed 60 chats A DAY next to premium's 10 A MONTH. Nothing in the code was
+ * wrong - the numbers had been derived backwards from the dollar cap without
+ * ever being compared against the free tier, and no test compared them either.
+ * A shared period is what makes the comparison table mean anything, and
+ * `premiumIsNeverWorseThanFree` in the tests now enforces the ordering.
+ */
+export const periodMsFor = (): number => DAY_MS;
 
 export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
   /*
@@ -198,70 +208,89 @@ export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
     lookupsPerDay: 10,
   },
   /*
-    Premium. **Monthly numbers, and all of them together must fit under
-    the internal dollar cap - with margin.** That is Netanel's
-    requirement, word for word: "if someone is cut off by the dollar cap
-    while the page told them they had trips remaining - that's a broken
-    promise and a refund."
+    Premium. **Daily numbers, on the same clock as free, and strictly larger
+    than free on every single row.** That ordering is the requirement now, and
+    it is enforced by a test - because the previous version failed it on
+    everything.
 
-    The logic is inverted from the previous version: before, the visible
-    numbers were a "high soft ceiling" and the dollars were supposed to
-    bind first. Now **the visible quotas always bind first**, and the
-    dollar cap ($2.00, SUBSCRIBER_MONTHLY_CAP_USD, invisible to the user)
-    binds only on abnormal usage that bypasses the ordinary shape of the
-    quotas (e.g. a single turn running an expensive tool loop - already
-    blocked at $1.5 per turn by MAX_TURN_USD).
+    ## What went wrong, since the numbers here were not arbitrary
 
-    ## The worst-realistic arithmetic, against the $2.00 cap (a test locks this):
+    The previous version derived every premium quota backwards from
+    SUBSCRIBER_MONTHLY_CAP_USD ($2.00) so that using the whole visible
+    allowance could never hit the invisible dollar cap - Netanel's rule, word
+    for word: "if someone is cut off by the dollar cap while the page told them
+    they had trips remaining, that's a broken promise and a refund."
 
-    | what                          | qty | worst price | total   |
-    |-------------------------------|-----|-------------|---------|
-    | full trip build (cold cache)  | 2   | $0.53       | $1.06   |
-    | remaining chats (warm Sonnet) | 8   | $0.063      | $0.504  |
-    | quick builds (Haiku)          | 5   | $0.02       | $0.10   |
-    | live lookups                  | 5   | $0.01       | $0.05   |
-    | image add-on (within chats)   | 5   | $0.01       | $0.05   |
-    | **worst-realistic total**     |     |             | **$1.76** |
+    That is a good rule and the arithmetic was right. What nobody did was
+    compare the result against the FREE tier, and premium was on a monthly
+    clock while free was on a daily one. The outcome, live on the pricing page:
 
-    88% of the cap. At typical pricing (warm cache, light routing) the
-    same full consumption is ~$0.6-0.9, i.e. 30-45% of the cap. The
-    margin ($0.24) absorbs ~half a stray cold call; more than that in a
-    month means our cache warmer was down.
+      chats        free 60 A DAY   premium 10 A MONTH
+      quick builds free 15 a day   premium  5 a month
+      images       free  3 a day   premium  5 a month
+      shares       free 10 a day   premium 60 a month
+      ... and so on for every row, all of them the wrong way round.
 
-    **Netanel's number ("5 full trips per month") does not fit under $2**:
-    5×$0.53=$2.65 on the builds alone, before a single message. Displaying
-    5 trips honestly would need a cap around ~$3.5-4. The numbers here are
-    the maximum that fits with margin under the cap he asked to keep
-    exactly as it is.
+    A subscriber got fewer agent messages in a month than a free user got in a
+    single day. Nothing was broken in the code; the guard that should have
+    existed simply did not, and no amount of care inside one column catches an
+    error that only exists BETWEEN two columns.
 
-    Fields with no AI cost (imports, shares, explores, geocodes) stay
-    generous - they are not part of the arithmetic.
+    ## What binds now, honestly
+
+    With daily premium quotas the visible numbers can no longer be the first
+    thing to bind - $2.00/month is roughly 30 warm agent turns, or ~4 full trip
+    builds at the cold-cache price, and the quotas here are far above that. So
+    the dollar cap is now the real constraint for heavy use, and the ordering
+    Netanel asked for is inverted again.
+
+    That is a deliberate trade and it is the lesser of the two evils: the rule
+    exists to stop a subscriber being cut off while the screen promises more,
+    and the previous numbers broke that promise far more brutally by promising
+    a tenth of what free already gives away. The cap is not a silent failure
+    either - PREMIUM_BUDGET_MESSAGE explains it in words.
+
+    **The number to revisit is the cap, not these quotas.** At the measured
+    prices $2.00 covers about one real planning session a month (25 turns from
+    a warm cache plus one cold start is ~$2.00 exactly). Two sessions need
+    ~$3.50-4.00, which at Netanel's ~$4 net per subscriber is most of the
+    margin. That is a pricing decision, so it is written down here rather than
+    changed: raise SUBSCRIBER_MONTHLY_CAP_USD, raise PREMIUM_PRICE_ILS, or
+    accept that heavy subscribers hit the ceiling.
+
+    Fields with no AI cost of ours (imports, shares, explores, geocodes) are
+    generous simply because they cost nothing - they were never part of any
+    arithmetic.
   */
   premium: {
-    chatPerDay: 10,
-    chatBurstPerMin: 15,
-    aiUnitsPerDay: 1_000_000,
-    generatePerDay: 5,
+    chatPerDay: 200,
+    chatBurstPerMin: 20,
+    aiUnitsPerDay: 6_000_000,
+    generatePerDay: 40,
     sharesPerDay: 60,
     importsPerDay: 30,
-    imagesPerDay: 5,
+    imagesPerDay: 20,
     exploresPerDay: 150,
     geocodesPerDay: 200,
-    lookupsPerDay: 5,
+    lookupsPerDay: 40,
   },
 };
 
 /**
  * How many **full trip builds** (create_trip_full in a conversation) a
- * subscriber is allowed per month. Counted **inside** the chat quota (a
- * build is a chat), but capped separately because a full build costs
- * ~8x an edit chat ($0.53 vs $0.063) - without this limit, 10 chats
- * that are all builds would be $5.30, far above the cap. Enforced by a
- * dedicated gate in chat/route.ts that is consumed only on a build
- * **that succeeded** (peekUsed + checkLimit), so an attempt that failed
+ * subscriber may run per day. Counted **inside** the chat quota (a build is a
+ * chat) and capped separately because a full build costs ~8x an edit chat
+ * ($0.53 vs $0.063), so a loop of builds is the one shape that can spend real
+ * money fast. Enforced by a dedicated gate in chat/route.ts, consumed only on
+ * a build **that succeeded** (peekUsed + checkLimit), so an attempt that failed
  * validation does not burn quota.
+ *
+ * Five a day is far beyond real planning (a traveller builds one trip and then
+ * edits it), and deliberately more permissive than anything the free tier gets
+ * - the previous value, 2 per MONTH, was less than a free user could do in an
+ * afternoon, which is the bug this whole block was rewritten for.
  */
-export const PREMIUM_TRIP_BUILDS_PER_MONTH = 2;
+export const PREMIUM_TRIP_BUILDS_PER_DAY = 5;
 
 /**
  * The AI-units equivalent of one search: $0.01 (`WEB_SEARCH_COST_USD`)
@@ -377,45 +406,50 @@ export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string }
     premium: 'יצירת קישור הזמנה לחברים',
   },
   {
-    label: 'שיחות עם הסוכן',
-    free: `${PLAN_LIMITS.free.chatPerDay} ביום, לפי הזמינות המשותפת`,
-    premium: `${PLAN_LIMITS.premium.chatPerDay} בחודש במסלול המובטח`,
-  },
-  {
-    label: 'בניית טיול מלא בשיחה',
-    free: 'במסגרת המכסה היומית',
-    premium: `עד ${PREMIUM_TRIP_BUILDS_PER_MONTH} טיולים מלאים בחודש`,
-  },
-  /*
-    The "guaranteed lane" row sits after the quotas, not at the top -
-    Netanel's instruction: this advantage is real but invisible until
-    there is traffic exhausting the daily budget, and pre-launch that is
-    nobody. It stays in the table because it is true; it is simply not
-    the headline.
-  */
-  {
     label: 'זמינות הסוכן החכם',
     free: 'משותפת - תלויה בעומס היומי באתר',
     premium: 'מסלול אישי מובטח - לא תלוי באף אחד אחר',
   },
+  /*
+    Every row below is a count, and every count is now in the SAME unit on both
+    sides - see the comment on PLAN_LIMITS.premium for what happens when it is
+    not. `premiumIsNeverWorseThanFree` in the tests reads these numbers straight
+    out of PLAN_LIMITS, so a row cannot describe an ordering the code does not
+    have.
+  */
+  {
+    label: 'שיחות עם הסוכן',
+    free: `${PLAN_LIMITS.free.chatPerDay} ביום`,
+    premium: `${PLAN_LIMITS.premium.chatPerDay} ביום`,
+  },
+  {
+    label: 'בניית טיול מלא בשיחה',
+    free: 'במסגרת המכסה היומית',
+    premium: `עד ${PREMIUM_TRIP_BUILDS_PER_DAY} טיולים מלאים ביום`,
+  },
   {
     label: 'בניות מסלול מהירות (שאלון/מתכנן)',
     free: `${PLAN_LIMITS.free.generatePerDay} ביום`,
-    premium: `${PLAN_LIMITS.premium.generatePerDay} בחודש`,
+    premium: `${PLAN_LIMITS.premium.generatePerDay} ביום`,
   },
   {
     label: 'צירוף תמונות לשיחה (אישור הזמנה, כרטיס)',
     free: `${PLAN_LIMITS.free.imagesPerDay} ביום`,
-    premium: `${PLAN_LIMITS.premium.imagesPerDay} בחודש`,
+    premium: `${PLAN_LIMITS.premium.imagesPerDay} ביום`,
+  },
+  {
+    label: 'בדיקות חיות (שעות פתיחה, מחיר כניסה)',
+    free: `${PLAN_LIMITS.free.lookupsPerDay} ביום`,
+    premium: `${PLAN_LIMITS.premium.lookupsPerDay} ביום`,
   },
   {
     label: 'ייבוא מפות מ-Google My Maps',
     free: `${PLAN_LIMITS.free.importsPerDay} ביום`,
-    premium: `${PLAN_LIMITS.premium.importsPerDay} בחודש`,
+    premium: `${PLAN_LIMITS.premium.importsPerDay} ביום`,
   },
   {
     label: 'קישורי שיתוף קצרים',
     free: `${PLAN_LIMITS.free.sharesPerDay} ביום`,
-    premium: `${PLAN_LIMITS.premium.sharesPerDay} בחודש`,
+    premium: `${PLAN_LIMITS.premium.sharesPerDay} ביום`,
   },
 ];

@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     'import-day',
     caller.id,
     PLAN_LIMITS[caller.plan].importsPerDay,
-    periodMsFor(caller.plan),
+    periodMsFor(),
   );
   if (!daily.ok) {
     return NextResponse.json(

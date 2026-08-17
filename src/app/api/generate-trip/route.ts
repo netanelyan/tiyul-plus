@@ -307,7 +307,7 @@ export async function POST(request: Request) {
     );
   }
   const isPremium = caller.plan === 'premium' && Boolean(caller.userId);
-  const daily = checkLimit('generate-day', caller.id, limits.generatePerDay, periodMsFor(caller.tier));
+  const daily = checkLimit('generate-day', caller.id, limits.generatePerDay, periodMsFor());
   const unitsUsed = process.env.ANTHROPIC_API_KEY ? await aiUnitsUsedToday(caller.id) : 0;
   /*
     The global spending ceiling applies here too. The effect on the traveler

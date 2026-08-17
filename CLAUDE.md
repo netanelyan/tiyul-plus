@@ -10031,3 +10031,126 @@ text, not by reading the JSX), both CTAs present, all four capabilities, the pri
 comparison, the FAQ closed by default, no dollar sign, zero horizontal overflow and
 nothing past the viewport edge at either width. The rendered page was also looked
 at rather than only asserted.
+
+### 2026-08-17 (f) - "How is that possible?" - the paid plan was worse than the free one on every single row
+
+Netanel, with a screenshot of two rows of the comparison table: free showing
+**15 a day** next to premium showing **5 a month**. He was right, and it was not
+those two rows. Measured against `PLAN_LIMITS`, **premium was worse than free on
+every countable quota there is**:
+
+| | free | premium | free, per month |
+|---|---|---|---|
+| chats | 60 a day | **10 a month** | 1,800 |
+| quick builds | 15 a day | 5 a month | 450 |
+| images | 3 a day | 5 a month | 90 |
+| live lookups | 10 a day | 5 a month | 300 |
+| shares | 10 a day | 60 a month | 300 |
+| imports | 5 a day | 30 a month | 150 |
+| explores | 20 a day | 150 a month | 600 |
+| geocodes | 30 a day | 200 a month | 900 |
+
+A subscriber paying 19.90 a month got **fewer agent messages in a month than a
+free user gets in a single day**. The full trip build was the same shape: 2 a
+month for premium, while free has no build limit at all beyond its chat quota.
+
+**How it happened, because nothing here was careless.** Entry 2026-08-13 (b)
+derived every premium quota backwards from `SUBSCRIBER_MONTHLY_CAP_USD` so that
+spending the whole visible allowance could never hit the invisible dollar cap -
+Netanel's own rule, word for word: *"if someone is cut off by the dollar cap
+while the page told them they had trips remaining, that's a broken promise and a
+refund."* The arithmetic in that entry is correct and there is a test locking it.
+What nobody did was compare the result against the **free** column - and premium
+was on a monthly clock while free was on a daily one, so the two columns were
+never even in the same unit.
+
+**No amount of care inside one column catches an error that only exists between
+two columns.** That is the whole lesson, and it is why the fix is a test before
+it is a number.
+
+---
+
+**The fix.** `periodMsFor` returns one day for every tier - it no longer takes a
+tier at all, so the signature itself is the guard - and premium's numbers are
+daily and strictly larger than free's on every row (200 chats vs 60, 40 quick
+builds vs 15, 20 images vs 3, 40 lookups vs 10). `PREMIUM_TRIP_BUILDS_PER_MONTH`
+became `PREMIUM_TRIP_BUILDS_PER_DAY = 5`, which real planning never reaches and
+which is deliberately more permissive than what free effectively gets.
+
+**The test that should have existed** asserts premium >= free >= anon on all ten
+countable fields, and names the field and both numbers when it fails. Verified by
+putting the bug back: `פרימיום גרוע מחינם ב-chatPerDay: 10 מול 60`. A second test
+pins the window to a day for every tier, because the differing window is what
+made the inversion possible in the first place, and a third pins the one table
+row whose number is hand-written (the build cap) to the constant behind it.
+
+---
+
+**What this costs, stated plainly rather than smoothed over.** With daily premium
+quotas the visible numbers can no longer be the first thing to bind - so the rule
+from entry (b) is inverted again, and the $2.00 cap is now the real constraint for
+heavy use. That is a deliberate trade and it is the lesser evil: the rule exists
+to stop a subscriber being cut off while the screen promises more, and the old
+numbers broke that promise far more brutally by promising a tenth of what free
+gives away for nothing.
+
+**And the number that actually needs Netanel's decision, measured:**
+
+| a planning session | cost | fits under $2.00? |
+|---|---|---|
+| 10 turns | $1.16 | yes |
+| 15 turns (typical) | $1.48 | yes |
+| 20 turns | $1.79 | yes |
+| 24 turns | $2.04 | **no** |
+| two 15-turn sessions | $2.95 | **no** |
+
+So **$2.00 a month covers about one ordinary planning session** and runs out
+inside a long one or a second one. The pricing page's own FAQ used to claim the
+quotas were "sized around two real trips a month" - that sentence was false and
+has been rewritten. Raising the cap to ~$3.50 would make two sessions fit, at
+roughly 12% margin on ~$4 net per subscriber instead of 50%. **That is a pricing
+decision, so it is written up in `plans.ts` and reported rather than changed**:
+raise `SUBSCRIBER_MONTHLY_CAP_USD`, raise `PREMIUM_PRICE_ILS`, or accept that
+heavy subscribers meet the ceiling. Two tests encode today's answer - one asserts
+a typical session fits, the other asserts a long one does **not**, so if the cap
+is ever raised the second test fails and points at the comment that needs
+updating.
+
+**Also corrected while there:** the premium page said the agent lane was a
+"monthly package" and the FAQ said the quotas were monthly - both now describe
+daily quotas, larger than free's and guaranteed regardless of site load.
+
+**Verified:** 638 tests (3 new, 2 removed with the arithmetic they locked), tsc,
+build and lint clean on every touched file (the remaining `src/lib` findings are
+the pre-existing AuthContext/TripContext/placeResolve ones), and **46/46 in a real
+browser at 390px and 1400px**, plus the rendered comparison table read row by row
+out of the live page to confirm every line is now the right way round in matching
+units.
+
+### 2026-08-17 (g) - Both paid products, at equal weight, and what can be bought alone
+
+Netanel, on the rebuilt page: *"premium should show it has the trip sharing, and
+the check before the trip, and then below - options to buy them alone."*
+
+The subscription contains **two** products and the card was showing one. The
+shared trip had a full block; the pre-departure check - a real 29.90 product on
+its own - was a single tick line underneath, which is where a reader's eye stops
+counting. Both now get the same treatment inside the lead card: their own panel,
+their own heading, and for the check a short list of what it actually does. The
+guaranteed agent lane stays one line under them, because it is real but it is not
+a product.
+
+**Below the card is now "רוצים רק אחד מהם?" - and it says what can be bought
+alone honestly.** Today that is the check and only the check: the shared trip has
+no standalone price, so the section states that rather than leaving a reader to
+work it out from an absence. **Giving the shared trip its own one-off price would
+be a business decision, not a page edit**, so it is reported instead of invented -
+if Netanel names a price it drops into the same section.
+
+Small thing worth keeping: the standalone card no longer repeats the "you planned
+two months ago" line, which now belongs to the block inside the subscription. The
+same sentence twice on one page reads as a template rather than as writing.
+
+**Verified:** 48/48 in a real browser at 390px and 1400px (two new assertions -
+the check renders as a block and not a footnote, and the standalone section names
+the shared trip as subscription-only), 638 tests, tsc, build and lint clean.

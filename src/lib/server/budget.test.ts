@@ -523,11 +523,11 @@ test('monthKey הוא YYYY-MM ועקבי בין קריאות באותו רגע',
   assert.equal(k, monthKey());
 });
 
-test('periodMsFor: יממה לאנונימי/חינם, 30 יום לפרימיום', () => {
+test('periodMsFor: יממה, בלי תלות בדרגה', () => {
   const DAY_MS = 24 * 60 * 60 * 1000;
-  assert.equal(periodMsFor('anon'), DAY_MS);
-  assert.equal(periodMsFor('free'), DAY_MS);
-  assert.equal(periodMsFor('premium'), 30 * DAY_MS);
+  // Premium used to be a 30-day window, and that asymmetry is what made the paid
+  // plan read as smaller than the free one on every row. See plans.ts.
+  assert.equal(periodMsFor(), DAY_MS);
 });
 
 test('premiumSpendOverview: סכום, פירוט לפי מנוי, ו"לא נאסף" כשאין התמדה', async () => {

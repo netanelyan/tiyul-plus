@@ -71,7 +71,7 @@ import {
   shouldEscalate,
 } from '@/lib/server/modelRoute';
 import { resolveCaller, type Caller } from '@/lib/server/identity';
-import { PLAN_LIMITS, PREMIUM_TRIP_BUILDS_PER_MONTH, aiUnits, periodMsFor } from '@/lib/plans';
+import { PLAN_LIMITS, PREMIUM_TRIP_BUILDS_PER_DAY, aiUnits, periodMsFor } from '@/lib/plans';
 import type { BookingSearchCard } from '@/lib/bookingSearch';
 import {
   GuardedTextStream,
@@ -772,7 +772,7 @@ async function runAgent(
   const kosherAsk = kosherIntentText(lastUser);
   const lookupQuotaOk =
     !process.env.ANTHROPIC_API_KEY ||
-    checkLimit('lookup-day', caller.id, planLimits.lookupsPerDay, periodMsFor(caller.tier)).ok;
+    checkLimit('lookup-day', caller.id, planLimits.lookupsPerDay, periodMsFor()).ok;
   const lookupWanted = !kosherAsk && lookupQuotaOk && lookupEligible(lastUser) && lookupBudgetLeft(messages);
   const cachedLookup = lookupWanted ? getCachedLookup(lastUser) : null;
   /** Whether to actually attach `LOOKUP_TOOL` - not when an answer is already cached */
@@ -1094,7 +1094,7 @@ async function runAgent(
           };
         } else if (
           perTurn.explores >= MAX_EXPLORES_PER_TURN ||
-          !checkLimit('explore-day', caller.id, planLimits.exploresPerDay, periodMsFor(caller.tier)).ok
+          !checkLimit('explore-day', caller.id, planLimits.exploresPerDay, periodMsFor()).ok
         ) {
           // The quota is told to the model as a tool result, and the model is the
           // one that explains it to the traveller in conversation - far better
@@ -1175,7 +1175,7 @@ async function runAgent(
         // should stop a traveller recording that they booked a hotel.
         const geoAllowed =
           perTurn.geocodes < MAX_GEOCODES_PER_TURN &&
-          checkLimit('geocode-day', caller.id, planLimits.geocodesPerDay, periodMsFor(caller.tier)).ok;
+          checkLimit('geocode-day', caller.id, planLimits.geocodesPerDay, periodMsFor()).ok;
         let located: ResolvedPinLocation | null = null;
         if (geoAllowed && pinName) {
           perTurn.geocodes += 1;
@@ -1198,7 +1198,7 @@ async function runAgent(
       } else if (
         block.name === 'create_trip_full' &&
         caller.plan === 'premium' &&
-        peekUsed('trip-builds-month', caller.id) >= PREMIUM_TRIP_BUILDS_PER_MONTH
+        peekUsed('trip-builds-day', caller.id) >= PREMIUM_TRIP_BUILDS_PER_DAY
       ) {
         /*
           The subscriber's full-build quota. `peekUsed` rather than `checkLimit` -
@@ -1211,7 +1211,7 @@ async function runAgent(
           trip: working,
           ok: false,
           message:
-            `מכסת בניית הטיולים המלאים החודשית של המנוי (${PREMIUM_TRIP_BUILDS_PER_MONTH} בחודש) נוצלה. זו מכסה ולא תקלה - אל תנסה שוב בתור הזה. אמור למטייל בעברית ובנימוס שמכסת הבניות המלאות לחודש נוצלה ושהיא מתחדשת בתחילת תקופת החיוב הבאה, ושבינתיים אפשר להמשיך לערוך את הטיולים הקיימים בלי הגבלה כזאת, או לבנות טיול במתכנן המהיר.`,
+            `מכסת בניית הטיולים המלאים היומית של המנוי (${PREMIUM_TRIP_BUILDS_PER_DAY} ביום) נוצלה. זו מכסה ולא תקלה - אל תנסה שוב בתור הזה. אמור למטייל בעברית ובנימוס שמכסת הבניות המלאות להיום נוצלה ושהיא מתחדשת מחר, ושבינתיים אפשר להמשיך לערוך את הטיולים הקיימים בלי הגבלה כזאת, או לבנות טיול במתכנן המהיר.`,
           action: undefined,
           quickReplies: undefined,
         };
@@ -1249,7 +1249,7 @@ async function runAgent(
       // Consuming the subscriber's full-build quota - only on a build that actually
       // succeeded (see peekUsed at the gate above). The checkLimit here is the record itself.
       if (out.ok && block.name === 'create_trip_full' && caller.plan === 'premium') {
-        checkLimit('trip-builds-month', caller.id, PREMIUM_TRIP_BUILDS_PER_MONTH, periodMsFor('premium'));
+        checkLimit('trip-builds-day', caller.id, PREMIUM_TRIP_BUILDS_PER_DAY, periodMsFor());
       }
       working = out.trip;
       // We stream the trip immediately after every tool that changes it, not only
@@ -1617,7 +1617,7 @@ export async function POST(request: Request) {
     });
   }
   const isPremium = caller.plan === 'premium' && Boolean(caller.userId);
-  const daily = checkLimit('chat-day', caller.id, limits.chatPerDay, periodMsFor(caller.tier));
+  const daily = checkLimit('chat-day', caller.id, limits.chatPerDay, periodMsFor());
   if (!daily.ok) return singleMessageStream(isPremium ? PREMIUM_QUOTA_MESSAGE : QUOTA_MESSAGE);
   if (process.env.ANTHROPIC_API_KEY) {
     const used = await aiUnitsUsedToday(caller.id);
@@ -1726,7 +1726,7 @@ export async function POST(request: Request) {
   // so resending the history does not spend the quota.
   const freshImage = Boolean(messages[messages.length - 1]?.image);
   if (freshImage && process.env.ANTHROPIC_API_KEY) {
-    const imgLimit = checkLimit('chat-images', caller.id, limits.imagesPerDay, periodMsFor(caller.tier));
+    const imgLimit = checkLimit('chat-images', caller.id, limits.imagesPerDay, periodMsFor());
     if (!imgLimit.ok) {
       return singleMessageStream(isPremium ? PREMIUM_IMAGE_QUOTA_MESSAGE : IMAGE_QUOTA_MESSAGE);
     }

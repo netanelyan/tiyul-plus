@@ -184,23 +184,47 @@ export default function PremiumClient() {
           </p>
         </div>
 
-        {/* The other two things the subscription carries - real, but not the reason */}
-        <ul className="mt-4 space-y-2.5 text-sm text-cream/80">
-          <li className="flex items-start gap-2">
-            <span className="mt-0.5 text-zest">✓</span>
-            <span>
-              <b className="text-cream">הבדיקה לפני הנסיעה כלולה</b> - {priceLabel()} לטיול
-              לכל אחד אחר, כאן בלי הגבלה, לכל טיול שתתכננו
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="mt-0.5 text-zest">✓</span>
-            <span>
-              <b className="text-cream">מסלול אישי מובטח לסוכן</b> - חבילה חודשית משלכם,
-              שלא תלויה בעומס של אף אחד אחר באתר
-            </span>
-          </li>
-        </ul>
+        {/* The second paid feature, given the SAME treatment as the shared trip
+            rather than a one-line tick: the subscription contains two products,
+            and a reader should see both before the price sinks in. */}
+        <div className="mt-4 rounded-2xl bg-cream/10 p-4 ring-1 ring-cream/15">
+          <p className="text-xs font-bold text-zest">וגם, כלול</p>
+          <h3 className="mt-1 text-lg font-black text-cream">
+            🛫 הבדיקה לפני הנסיעה - בלי הגבלה
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-cream/75">
+            תכננתם לפני חודשיים, והטיול בעוד שבועיים. מה השתנה מאז? הבדיקה עונה על זה
+            בבת אחת, על כל הטיול - {priceLabel()} לטיול לכל אחד אחר, וכאן לכל טיול
+            שתתכננו:
+          </p>
+          <ul className="mt-3 grid gap-1.5 text-sm text-cream/80 sm:grid-cols-2">
+            <li className="flex items-start gap-2">
+              <span className="mt-0.5 text-zest">✓</span>
+              <span>כל עצירה נבדקת מחדש מול הקטלוג</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="mt-0.5 text-zest">✓</span>
+              <span>רשומות הכשרות נקראות שוב</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="mt-0.5 text-zest">✓</span>
+              <span>סגירות וחגים מול התאריכים שלכם</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="mt-0.5 text-zest">✓</span>
+              <span>מסמך אחד לשמור, להדפיס או לשלוח</span>
+            </li>
+          </ul>
+        </div>
+
+        {/* The third thing is real but is not a product, so it stays a line */}
+        <p className="mt-4 flex items-start gap-2 text-sm text-cream/80">
+          <span className="mt-0.5 text-zest">✓</span>
+          <span>
+            <b className="text-cream">ומסלול אישי מובטח לסוכן</b> - מכסות יומיות גדולות
+            בהרבה מהחינמיות, ובלי תלות בעומס של אף אחד אחר באתר
+          </span>
+        </p>
 
         {cta('mt-6')}
       </div>
@@ -237,26 +261,30 @@ export default function PremiumClient() {
         </ul>
       </div>
 
-      {/* ---------- Below: the standalone feature, for people who want one thing ---------- */}
+      {/*
+        Below the subscription: what can be bought on its own. Today that is the
+        check and only the check - the shared trip has no standalone price, and
+        the section says so rather than leaving the reader to wonder. Inventing a
+        price for it would be a business decision, not a page edit.
+      */}
       <div className="mt-10 text-center">
-        <h2 className="display text-2xl text-night">רק צריכים דבר אחד?</h2>
+        <h2 className="display text-2xl text-night">רוצים רק אחד מהם?</h2>
         <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-night/60">
-          אפשר גם בלי מנוי. הבדיקה לפני הנסיעה נמכרת בנפרד, לטיול אחד, בלי חשבון
-          מתמשך ובלי התחייבות.
+          אפשר גם בלי מנוי: הבדיקה לפני הנסיעה נמכרת בנפרד, לטיול אחד, בלי חשבון
+          מתמשך ובלי התחייבות. הטיול המשותף קיים רק במנוי.
         </p>
       </div>
 
       <div className="mt-5 rounded-3xl bg-shell p-6 ring-1 ring-night/15">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h3 className="text-lg font-black text-night">🛫 בדיקה לפני הנסיעה</h3>
+          <h3 className="text-lg font-black text-night">🛫 בדיקה לפני הנסיעה, בנפרד</h3>
           <p className="text-2xl font-black text-night">
             {priceLabel()}
             <span className="text-sm font-semibold text-night/50"> / לטיול אחד</span>
           </p>
         </div>
         <p className="mt-2 text-sm leading-relaxed text-night/70">
-          תכננתם לפני חודשיים, והטיול בעוד שבועיים. מה השתנה מאז? זה מה שהבדיקה עונה
-          עליו - בבת אחת, על כל הטיול.
+          אותה בדיקה בדיוק שכלולה במנוי, לטיול אחד ובתשלום חד-פעמי:
         </p>
         <ul className="mt-4 grid gap-2 text-sm text-night/70 sm:grid-cols-2">
           <li className="flex items-start gap-2">
@@ -382,12 +410,12 @@ export default function PremiumClient() {
           </details>
           <details className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
             <summary className="cursor-pointer text-sm font-bold text-night">
-              המכסות במנוי חודשיות - זה יספיק לי?
+              המכסות של המנוי - זה יספיק לי?
             </summary>
             <p className="mt-2 text-sm leading-relaxed text-night/65">
-              הן מחושבות סביב שני טיולים אמיתיים בחודש, כולל הרבה מקום לעריכות ושאלות
-              באמצע. הן קיימות כדי למנוע שימוש לרעה, לא כדי לעצור מישהו באמצע תכנון -
-              ואם נתקלתם בקיר בתכנון אמיתי, כתבו לנו וזה ייפתר.
+              המכסות של המנוי הן יומיות, כמו בחינם - פשוט גדולות בהרבה, ומובטחות לכם
+              בלי תלות בעומס באתר. הן קיימות כדי למנוע שימוש לרעה, לא כדי לעצור מישהו
+              באמצע תכנון - ואם נתקלתם בקיר בתכנון אמיתי, כתבו לנו וזה ייפתר.
             </p>
           </details>
         </div>
