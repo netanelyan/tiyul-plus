@@ -1,9 +1,10 @@
 import type { Country, Destination, DestinationSummary } from '@/lib/types';
 
 /**
- * חיפוש ערים משותף לכל בוררי הערים באתר (אשף התכנון, הוספת יום לטיול).
- * מחפש על שם בעברית, שם מקומי, slug, שם המדינה וכינויים נפוצים - אותה
- * גישה שכבר קיימת בחיפוש הכשרות, במקום אחד כדי שלא תתפצל.
+ * City search shared by all city pickers on the site (the planning wizard,
+ * adding a day to a trip). Searches on the Hebrew name, the local name, the
+ * slug, the country name and common aliases - the same approach that
+ * already exists in the kosher search, in one place so it does not fork.
  */
 
 export interface CityOption {
@@ -12,11 +13,11 @@ export interface CityOption {
   nameLocal: string;
   flag: string;
   country: string;
-  /** כל שדות החיפוש מנורמלים ומחוברים - להשוואה מהירה */
+  /** All the search fields normalized and joined - for fast comparison */
   haystack: string;
 }
 
-// כינויים בעברית שלא מופיעים ב-name/nameLocal - רק תקלות איות שכיחות
+// Hebrew aliases that do not appear in name/nameLocal - common misspellings only
 const ALIASES: Record<string, string[]> = {
   vienna: ['וינא'],
   prague: ["פראג'"],
@@ -47,8 +48,9 @@ export function buildCityOptions(destinations: Destination[], countries: Country
 }
 
 /**
- * אותן אפשרויות מתוך DestinationSummary - הצורה שדפי שרת מקבלים
- * מה-provider (שם המדינה כבר פתור בתוכה, בלי צורך ברשימת המדינות).
+ * The same options from a DestinationSummary - the shape server pages get
+ * from the provider (the country name is already resolved inside it, no
+ * need for the country list).
  */
 export function buildCityOptionsFromSummaries(summaries: DestinationSummary[]): CityOption[] {
   return summaries.map((d) => toOption(d, d.country));

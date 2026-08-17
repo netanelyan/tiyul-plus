@@ -1,6 +1,7 @@
 /**
- * בונה הדוח - נגד הקטלוג **האמיתי**, לא פיקסטורה, כי זו בדיוק הטענה:
- * המקומות נפתרים מול הנתונים החיים.
+ * The report builder - against the **real** catalog, not a fixture,
+ * because that is exactly the claim: places are resolved against the live
+ * data.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';

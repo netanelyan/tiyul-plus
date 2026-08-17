@@ -1,11 +1,12 @@
 /**
- * Viator - **ארבע טענות, וכולן על מה שאסור לקרות.**
+ * Viator - **four claims, all about what must not happen.**
  *
- * 1. קישור בלי מזהה שותף = אין קישור, ואין כרטיס. זה כל מה שאנחנו
- *    מרוויחים ממנו, ולכן זה מה שנבדק ראשון.
- * 2. שום מספר ושום שם לא נוצרים אצלנו - מוצר חסר נזרק ולא מושלם.
- * 3. דאטת sandbox לא יכולה להגיע לדומיין החי, ולא יכולה להגיע בלי סימון.
- * 4. שום דבר מ-Viator לא נכנס לקטלוג או לטיול.
+ * 1. A link without a partner id = no link, and no card. That is all we earn
+ *    from it, so it is what gets tested first.
+ * 2. No number and no name are ever created on our side - an incomplete product
+ *    is thrown out, not completed.
+ * 3. Sandbox data cannot reach the live domain, and cannot arrive unmarked.
+ * 4. Nothing from Viator enters the catalog or the trip.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -25,7 +26,7 @@ import {
 const ATTR: Attribution = { pid: 'P00049694', mcid: '42383', medium: 'api', campaign: 'trip-panel' };
 const URL_OK = 'https://www.viator.com/tours/Rome/Colosseum/d511-1234ABC';
 
-/* ---------- 1. השיוך ---------- */
+/* ---------- 1. Attribution ---------- */
 
 test('הקישור נושא את כל ארבעת הפרמטרים', () => {
   const u = new URL(affiliateUrl(URL_OK, ATTR)!);
@@ -69,7 +70,7 @@ test('מזהה עם תו לא חוקי נדחה - התיעוד שלהם אומר
   delete process.env.VIATOR_MCID;
 });
 
-/* ---------- 2. שום דבר לא מומצא ---------- */
+/* ---------- 2. Nothing is invented ---------- */
 
 const RAW = {
   productCode: '1234ABC',
@@ -99,7 +100,7 @@ test('חסר כותרת, קישור או מחיר => המוצר נזרק ולא 
     { productUrl: undefined, webURL: undefined },
     { pricing: undefined },
     { pricing: { summary: {}, currency: 'USD' } },
-    { pricing: { summary: { fromPrice: 62.5 } } }, // מחיר בלי מטבע הוא מחיר מטעה
+    { pricing: { summary: { fromPrice: 62.5 } } }, // A price without a currency is a misleading price
     { productCode: undefined },
   ] as Record<string, unknown>[]) {
     assert.equal(toOffer({ ...RAW, ...patch }, ATTR, false), null, JSON.stringify(patch));
@@ -123,7 +124,7 @@ test('בלי שיוך גם מוצר מושלם לא מייצר כרטיס', () =
   assert.equal(toOffer(RAW, null, false), null);
 });
 
-/* ---------- 3. הכלה של sandbox ---------- */
+/* ---------- 3. Containing the sandbox ---------- */
 
 test('sandbox חסום על הדומיין החי, ופתוח בכל מקום אחר', () => {
   for (const host of ['tiyulplus.com', 'www.tiyulplus.com', 'TIYULPLUS.COM', 'tiyulplus.com:443']) {
@@ -132,7 +133,7 @@ test('sandbox חסום על הדומיין החי, ופתוח בכל מקום א
   for (const host of ['localhost:3000', 'tiyul-plus-git-x.vercel.app', null]) {
     assert.equal(sandboxBlocked(host, 'sandbox'), false, String(host));
   }
-  // בפרודקשן אין מה לחסום - הדאטה אמיתית
+  // In production there is nothing to block - the data is real
   assert.equal(sandboxBlocked('tiyulplus.com', 'production'), false);
 });
 
@@ -154,7 +155,7 @@ test('**המפתח החי לא נכנס לשימוש עד שאומרים במפ�
   process.env.VIATOR_MODE = 'off';
   assert.equal(viatorMode(), 'off');
 
-  // production בלי מפתח חי = כבוי, לא נפילה חזרה ל-sandbox בשקט
+  // production without a live key = off, not a silent fallback to sandbox
   process.env.VIATOR_MODE = 'production';
   delete process.env.VIATOR_API_KEY;
   assert.equal(viatorMode(), 'off');
@@ -162,7 +163,7 @@ test('**המפתח החי לא נכנס לשימוש עד שאומרים במפ�
   process.env = saved;
 });
 
-/* ---------- 4. שום דבר לא נשמר אצלנו ---------- */
+/* ---------- 4. Nothing is stored on our side ---------- */
 
 function walk(dir: string): string[] {
   return readdirSync(dir).flatMap((f) => {
@@ -172,9 +173,9 @@ function walk(dir: string): string[] {
 }
 
 /**
- * שומר המחלקה. התוכן של Viator הוא שלהם והוא מתיישן, ולכן הוא לא הופך
- * לשורה בקטלוג ולא לשדה על טיול. הבדיקה סורקת את שתי התיקיות שבהן זה
- * היה קורה אם מישהו ינסה.
+ * The class guard. Viator's content is theirs and it goes stale, so it never
+ * becomes a row in the catalog or a field on a trip. The check scans the two
+ * directories where that would happen if someone tried.
  */
 test('viator לא מופיע בקטלוג ולא בדומיין של הטיול', () => {
   for (const dir of ['src/data', 'src/lib/trip']) {
@@ -188,7 +189,7 @@ test('viator לא מופיע בקטלוג ולא בדומיין של הטיול'
 
 test('המפתח לא יכול להגיע לדפדפן', () => {
   for (const file of walk('src')) {
-    // הבדיקה עצמה מכילה את המחרוזת שהיא מחפשת - היא לא הפרה שלה
+    // The test itself contains the string it searches for - it is not a violation of itself
     if (!/\.(ts|tsx)$/.test(file) || file.includes('.test.')) continue;
     const src = readFileSync(file, 'utf8');
     assert.ok(!/NEXT_PUBLIC_VIATOR/.test(src), `${file} חושף מפתח ללקוח`);
@@ -201,14 +202,15 @@ test('המפתח לא יכול להגיע לדפדפן', () => {
   }
 });
 
-/* ---------- מי מורשה לקרוא לנתיב ---------- */
+/* ---------- Who is allowed to call the route ---------- */
 
 const req = (headers: Record<string, string>) =>
   new Request('https://tiyulplus.com/api/activities?city=rome', { headers });
 
 /**
- * הבדיקה הזאת נכתבה **אחרי** שדפדפן אמיתי הראה מדור ריק תמיד: השומר
- * של הצ׳אט דרש `Origin`, ובבקשת GET מאותו מקור דפדפן לא שולח אותו.
+ * This test was written **after** a real browser showed an always-empty
+ * section: the chat's guard required `Origin`, and on a same-origin GET request
+ * a browser does not send it.
  */
 test('בקשת GET אמיתית מהאתר מתקבלת - גם בלי Origin', () => {
   assert.equal(browserGetOk(req({ host: 'tiyulplus.com', 'sec-fetch-site': 'same-origin' })), true);
@@ -229,7 +231,7 @@ test('נפילה אחורה לדפדפן ישן שכן שולח Origin או Refe
   assert.equal(browserGetOk(req({ ...H, referer: 'https://tiyulplus.com/chat?trip=1' })), true);
 });
 
-/* ---------- התאמת יעד ---------- */
+/* ---------- Destination matching ---------- */
 
 const LIST = [
   { destinationId: 511, name: 'Rome', center: { latitude: 41.9028, longitude: 12.4964 } },
@@ -243,6 +245,6 @@ test('היעד נבחר לפי קואורדינטות ולא לפי שם', () =>
 });
 
 test('מעבר לטווח סביר לא מחזירים כלום במקום לנחש', () => {
-  assert.equal(matchDestination(LIST, 32.08, 34.78), null); // תל אביב
+  assert.equal(matchDestination(LIST, 32.08, 34.78), null); // Tel Aviv
   assert.equal(matchDestination([], 41.9, 12.5), null);
 });

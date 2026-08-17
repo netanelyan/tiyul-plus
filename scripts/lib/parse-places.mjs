@@ -1,10 +1,10 @@
-// פרסור קליל של src/data/destinations.ts בלי להריץ TypeScript.
-// הקובץ נכתב ביד ובפורמט אחיד, ולכן סריקה לפי הזחה מספיקה כאן ובטוחה
-// יותר מאשר להריץ את הקוד: אין תלות ב-tsc, אין path aliases, ואין סיכון
-// שהרצת דאטה תפעיל תופעות לוואי.
+// Lightweight parsing of src/data/destinations.ts without running TypeScript.
+// The file is hand-written in a uniform format, so an indentation-based scan
+// is sufficient here and safer than executing the code: no tsc dependency,
+// no path aliases, and no risk that running the data triggers side effects.
 //
-// שני הסקריפטים (fetch-photos, apply-photos) חולקים את הפרסור הזה כדי
-// שההתאמה בין הדוח לבין הקובץ תהיה על אותו בסיס בדיוק.
+// The two scripts (fetch-photos, apply-photos) share this parser so that the
+// match between the report and the file rests on exactly the same basis.
 import { readFileSync } from 'node:fs';
 
 export const DESTINATIONS_FILE = 'src/data/destinations.ts';
@@ -12,14 +12,14 @@ export const DESTINATIONS_FILE = 'src/data/destinations.ts';
 /**
  * @typedef {object} ParsedPlace
  * @property {string} id
- * @property {string} destSlug     ה-slug של היעד שהמקום שייך לו
- * @property {string} name         שם עברי
- * @property {string} nameLocal    שם לועזי - זה מה שמחפשים בוויקיפדיה
+ * @property {string} destSlug     the slug of the destination the place belongs to
+ * @property {string} name         Hebrew name
+ * @property {string} nameLocal    Latin name - this is what gets searched on Wikipedia
  * @property {number} lat
  * @property {number} lng
  * @property {boolean} hasPhoto
- * @property {number} idLine       מספר שורה (0-based) של שורת ה-id
- * @property {string} indent       ההזחה של שדות האובייקט, לשמירה על פורמט
+ * @property {number} idLine       line number (0-based) of the id line
+ * @property {string} indent       the indentation of the object's fields, to preserve formatting
  */
 
 /** @returns {{ places: ParsedPlace[], lines: string[], source: string }} */
@@ -45,8 +45,9 @@ export function parsePlaces(file = DESTINATIONS_FILE) {
     /** @type {Record<string, string>} */
     const fields = {};
 
-    // שדות של אותו אובייקט = שורות באותה הזחה בדיוק, עד ה-id הבא או עד
-    // שההזחה מתקצרת (סוף האובייקט). ערכים רב-שורתיים לא מעניינים אותנו.
+    // Fields of the same object = lines at exactly the same indentation, up
+    // to the next id or until the indentation shortens (end of the object).
+    // Multi-line values are of no interest to us.
     for (let j = i + 1; j < lines.length; j++) {
       const line = lines[j];
       if (line.trim() === '') continue;
@@ -58,8 +59,9 @@ export function parsePlaces(file = DESTINATIONS_FILE) {
       if (kv) fields[kv[1]] = kv[2];
     }
 
-    // שם יכול להיות בגרש בודד או במרכאות כפולות: prettier עובר למרכאות
-    // כפולות כשיש גרש בתוך המחרוזת (למשל "St. Stephen's Cathedral").
+    // A name can be in single quotes or double quotes: prettier switches to
+    // double quotes when the string contains an apostrophe (e.g.
+    // "St. Stephen's Cathedral").
     const str = (raw) =>
       (raw ?? '').match(/^'([^']*)'/)?.[1] ?? (raw ?? '').match(/^"([^"]*)"/)?.[1] ?? '';
 
@@ -68,8 +70,8 @@ export function parsePlaces(file = DESTINATIONS_FILE) {
     const nameLocal = str(fields.nameLocal);
     const name = str(fields.name);
 
-    // אובייקט שאין לו קואורדינטות ושם לועזי הוא לא מקום (למשל רשומה אחרת
-    // שבמקרה יש בה id) - מדלגים במקום לנחש.
+    // An object with no coordinates and no Latin name is not a place (e.g.
+    // some other record that happens to carry an id) - skip instead of guess.
     if (!Number.isFinite(lat) || !Number.isFinite(lng) || !nameLocal) continue;
 
     places.push({
@@ -88,7 +90,7 @@ export function parsePlaces(file = DESTINATIONS_FILE) {
   return { places, lines, source };
 }
 
-/** מרחק בקילומטרים בין שתי נקודות (haversine) */
+/** Distance in kilometers between two points (haversine) */
 export function distanceKm(aLat, aLng, bLat, bLng) {
   const R = 6371;
   const rad = (d) => (d * Math.PI) / 180;

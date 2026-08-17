@@ -14,25 +14,27 @@ export type PlaceCategory =
   | 'kosher-food'
   | 'kosher-market';
 
-// סטטוס כשרות מפורש למקום שאוכלים בו. **חובה, ולעולם לא ניחוש.**
-// 'kosher' נאמר רק על מקום עם השגחה מדווחת; 'not-kosher' על מקום ללא
-// השגחה או שמגיש מה שאסור; 'unknown' כשבאמת אי אפשר לדעת - וזה מוצג
-// למשתמש ככזה ולא נבלע בשקט.
+// Explicit kashrut status for a place you eat at. **Required, and never a guess.**
+// 'kosher' is said only of a place with reported supervision; 'not-kosher' of a
+// place with no supervision or that serves what is forbidden; 'unknown' when it
+// genuinely cannot be known - and that is shown to the user as such, never
+// swallowed silently.
 //
-// **הסטטוס של רשומות kosher-* נגזר ולא נכתב** (ראה kosherStatusOf
-// ב-src/lib/categories.ts), כדי שאף רשומת כשרות קיימת לא תיגע.
+// **The status of kosher-* entries is derived, not written** (see kosherStatusOf
+// in src/lib/categories.ts), so that no existing kosher entry is ever touched.
 export type KosherStatus = 'kosher' | 'not-kosher' | 'unknown';
 
-// מקור אמיתי לרשומה, עם תאריך. הכלל: אין רשומת אוכל/שוק/קניות חדשה
-// בלי מקור. `checked` הוא היום שבו המקור נקרא בפועל - לא היום שבו
-// המקום נפתח ולא תאריך שהומצא.
+// A real source for an entry, with a date. The rule: no new food/market/shopping
+// entry without a source. `checked` is the day the source was actually read - not
+// the day the place opened and not an invented date.
 export interface PlaceSource {
-  url: string; // הכתובת שנקראה בפועל
-  title: string; // מה זה, בשפת המקור או באנגלית
+  url: string; // the URL that was actually read
+  title: string; // what it is, in the source language or in English
   checked: string; // ISO date, YYYY-MM-DD
 }
 
-// תגיות קהל - סט סגור, משמש גם לסינון וגם להתאמת העדפות בציון האשף
+// Audience tags - a closed set, used both for filtering and for preference
+// matching in the wizard's scoring
 export type PlaceTag =
   | 'families'
   | 'nightlife'
@@ -42,15 +44,17 @@ export type PlaceTag =
   | 'foodie'
   | 'outdoors';
 
-// פרטי כשרות כפי שנמסרו במקור (בית חב"ד / גוף ההשגחה). מדיניות
-// 2026-07-25: אין מערכת אימות פר-רשומה ב-UI - ההשגחה מוצגת כדיווח
-// ("השגחה: ...") לצד דיסקליימר כללי "לוודא מול המקום". השדה lastChecked
-// נשאר בדאטה לתאימות ולשימוש עתידי, אבל לא מוצג ולא מייצר תגי אזהרה.
-// המקום היחיד שמרנדר את הסטטוס: src/components/KosherBadge.tsx.
+// Kashrut details as reported by the source (Chabad house / the certifying
+// body). Policy 2026-07-25: no per-entry verification system in the UI - the
+// supervision is shown as a report (the "supervision: ..." line) alongside a
+// general "verify with the venue" disclaimer. The lastChecked field stays in
+// the data for compatibility and future use, but is not rendered and produces
+// no warning badges. The only place that renders the status:
+// src/components/KosherBadge.tsx.
 export interface KosherVerification {
-  source: string; // מי קבע (curated / community / official)
-  lastChecked: string; // ISO date או "pending-review"
-  supervision: string; // גוף ההשגחה, עברית
+  source: string; // who determined it (curated / community / official)
+  lastChecked: string; // ISO date or "pending-review"
+  supervision: string; // the certifying body, in Hebrew
 }
 
 export interface Place {
@@ -64,19 +68,19 @@ export interface Place {
   rating?: number; // 0-5, from provider (sample data = editorial estimate)
   durationMin?: number; // typical visit length
   kosherNote?: string; // hechsher / kashrut details, Hebrew
-  kosherVerification?: KosherVerification; // תג האמון של רשומות כשרות
-  kosherStatus?: KosherStatus; // חובה לכל קטגוריה שאוכלים בה - ראה kosherStatusOf
-  source?: PlaceSource; // מאיפה זה הגיע ומתי נבדק
+  kosherVerification?: KosherVerification; // the trust badge of kosher entries
+  kosherStatus?: KosherStatus; // required for every category you eat at - see kosherStatusOf
+  source?: PlaceSource; // where this came from and when it was checked
   externalUrl?: string; // deep link to Google Maps / TripAdvisor page
   photo?: string; // verified URL (Wikimedia/Unsplash); UI falls back to gradient
-  priceLevel?: 0 | 1 | 2 | 3; // 0=חינם, 3=יקר
+  priceLevel?: 0 | 1 | 2 | 3; // 0=free, 3=expensive
   tags?: PlaceTag[];
   mustSee?: boolean;
 }
 
 export interface DayPlan {
   day: number; // 1-based
-  title: string; // Hebrew, e.g. "העיר העתיקה והקתדרלה"
+  title: string; // Hebrew, e.g. an "old town and the cathedral" style day title
   placeIds: string[]; // ordered stops, referencing Place.id
   notes?: string; // Hebrew tips for the day
 }
@@ -109,38 +113,41 @@ export interface CityPractical {
   kosherOverview: string; // state of kosher food in the city
 }
 
-// הפלא האיקוני של העיר - להצגה בכרטיס ההיכרות הראשון (עמוד הבית).
-// חייב להצביע על מקום אמיתי ומאומת; אם אין כזה עדיין, משאירים TODO
-// ולא ממציאים מקום שנראה אמיתי (כלל הברזל של הפרויקט).
+// The city's iconic wonder - shown on the first introduction card (homepage).
+// Must point at a real, verified place; if there is none yet, leave a TODO
+// rather than inventing a place that looks real (the project's iron rule).
 export interface IconicLandmark {
   name: string; // Hebrew
   nameLocal: string;
-  photo: string; // verified URL, אותו מקור/פורמט כמו Place.photo
-  blurb: string; // Hebrew, משפט-שניים עובדתיים, בלי שעות/מחיר/כשרות
+  photo: string; // verified URL, same source/format as Place.photo
+  blurb: string; // Hebrew, one-two factual sentences, no hours/price/kashrut
 }
 
-// ---------- הוצאה יומית טיפוסית ----------
-// **הכלל של הבלוק הזה: כל מספר כאן הוא ציטוט של מקור, והחשבון נעשה בקוד.**
-// אנחנו שומרים בדיוק את שלוש השורות שהמקור מפרסם לכל סגנון נסיעה, ולא
-// סכום שלהן - כדי שכל ערך שמופיע בדאטה יהיה בר-השוואה מול הדף שממנו
-// נקרא. הסכימה, העיגול והכפלה במספר הימים קורים ב-`src/lib/trip/cost.ts`.
+// ---------- Typical daily spend ----------
+// **This block's rule: every number here is a quotation of a source, and the
+// arithmetic happens in code.** We store exactly the three lines the source
+// publishes for each travel style, and not a sum of them - so that every value
+// appearing in the data is comparable against the page it was read from. The
+// summing, rounding and multiplication by the number of days happen in
+// `src/lib/trip/cost.ts`.
 //
-// **לינה וטיסות לא נשמרות כאן בכוונה.** המקור מפרסם גם אותן; אנחנו לא
-// מעתיקים אותן, כך שאי אפשר בטעות לכלול אותן בסכום. גם אלכוהול לא -
-// זו הוצאה שלא כל אחד מוציא, ולכן היא לא "הוצאה טיפוסית".
+// **Lodging and flights are deliberately not stored here.** The source publishes
+// them too; we do not copy them, so they cannot accidentally be included in a
+// sum. Alcohol neither - it is an expense not everyone incurs, so it is not a
+// "typical expense".
 export interface DailyCostTier {
-  transport: number; // תחבורה מקומית ליום, לאדם
-  food: number; // אוכל ליום, לאדם
-  activities: number; // כניסות, סיורים ואטרקציות ליום, לאדם
+  transport: number; // local transport per day, per person
+  food: number; // food per day, per person
+  activities: number; // entries, tours and attractions per day, per person
 }
 
 export interface DailyCost {
-  /** קוד המטבע המקומי כפי שהמקור הציג אותו (EUR, CZK, THB...) */
+  /** The local currency code as the source presented it (EUR, CZK, THB...) */
   currency: string;
   budget: DailyCostTier;
   mid: DailyCostTier;
   comfort: DailyCostTier;
-  /** הדף שנקרא בפועל ומתי - מוצג למשתמש, לא רק לתיעוד פנימי */
+  /** The page actually read and when - shown to the user, not just internal record-keeping */
   source: PlaceSource;
 }
 
@@ -159,49 +166,56 @@ export interface Destination {
   iconicLandmark?: IconicLandmark;
   editorialRating?: EditorialRating;
   /**
-   * הוצאה יומית טיפוסית ביעד הזה. **אופציונלי במכוון**: יעד בלי נתון
-   * לא מציג שום מספר, ולא מקבל הערכה. הנתון מחובר לדסטינציה בשכבת
-   * הספק (`src/lib/providers/sample.ts`) מתוך `src/data/dailyCosts.ts`.
+   * Typical daily spend at this destination. **Optional on purpose**: a
+   * destination without a figure shows no number, and gets no estimate. The
+   * figure is attached to the destination in the provider layer
+   * (`src/lib/providers/sample.ts`) from `src/data/dailyCosts.ts`.
    */
   dailyCost?: DailyCost;
   places: Place[];
   itinerary: DayPlan[];
   practical: CityPractical;
-  dailyBudget?: DailyBudget; // עלות יומית על הקרקע - ראה DailyBudget
+  dailyBudget?: DailyBudget; // daily on-the-ground cost - see DailyBudget
 }
 
-// דירוג עריכתי של צוות טיול+ - במפורש לא ממוצע ביקורות משתמשים אמיתי.
-// מוצג עם ניסוח שקוף ("המלצת הצוות") ובלי אייקון כוכב, כדי שלא יתבלבל
-// עם Place.rating (שם: הערכה עריכתית לכל מקום, כאן: ציון+נימוק ברמת העיר).
+// An editorial rating by the tiyul+ team - explicitly NOT an average of real
+// user reviews. Shown with transparent wording (the "team's recommendation"
+// label) and without a star icon, so it cannot be confused with Place.rating
+// (there: an editorial estimate per place; here: a score+reasoning at city level).
 export interface EditorialRating {
   score: number; // 1-5
-  verdict: string; // Hebrew, משפט אחד - למה
+  verdict: string; // Hebrew, one sentence - why
 }
 
-// עלות יומית טיפוסית למטייל ביעד - **על הקרקע בלבד**: אוכל, תחבורה מקומית,
-// כניסות וקניות קטנות. **לא כולל טיסות ולא כולל לינה**, וזו ההגדרה שכל
-// רשומה כאן חייבת לעמוד בה. רוב מקורות התקציב בעולם מפרסמים סכום יומי
-// שכולל לינה, ולכן מספר שנלקח מהם כמו שהוא אינו מודד את אותו הדבר.
+// A traveler's typical daily cost at a destination - **on the ground only**:
+// food, local transport, entries and small purchases. **Not including flights
+// and not including lodging**, and that is the definition every entry here must
+// meet. Most budget sources in the world publish a daily figure that includes
+// lodging, so a number taken from them as-is does not measure the same thing.
 //
-// למה יש רק שתי מדרגות: המקור מפרסם שלוש (backpacker / midrange / upscale),
-// אבל המדרגה העליונה שלו פתוחה מלמעלה ("100k+ JPY") או שאין לה מחיר לינה
-// מפורסם שאפשר להפריד. לכן `comfortable` נשאר ריק בכל היעדים - ריק הוא
-// התשובה הנכונה, לא ניחוש. אין להסיק אותו מעיר אחרת ואין להכפיל מקדם.
+// Why there are only two tiers: the source publishes three (backpacker /
+// midrange / upscale), but its top tier is open-ended at the top ("100k+ JPY")
+// or has no published lodging price that can be separated out. So `comfortable`
+// stays empty at every destination - empty is the correct answer, not a guess.
+// It must not be inferred from another city and no multiplier may be applied.
 //
-// כללים קשיחים לכל ערך כאן: מקור אחד ליעד, בקנה מידה של אותה עיר בלבד.
-// אסור לגזור עיר משכנתה, אסור לשערך ממוצע ארצי על עיר, ואסור להמיר מטבע -
-// הסכום נרשם במטבע שבו באמת משלמים שם.
+// Hard rules for every value here: one source per destination, at the scale of
+// that same city only. Never derive a city from its neighbor, never project a
+// national average onto a city, and never convert currency - the amount is
+// recorded in the currency people actually pay in there.
 export interface DailyBudget {
-  currency: string; // ISO 4217, המטבע שמשלמים בו בעיר עצמה
-  budget?: [number, number]; // טווח; ערך יחיד נרשם כשני קצוות זהים
+  currency: string; // ISO 4217, the currency paid in the city itself
+  budget?: [number, number]; // a range; a single value is recorded as two identical ends
   midRange?: [number, number];
-  comfortable?: [number, number]; // ראה ההערה למעלה - ריק בכוונה
-  // באיזו רזולוציה נמדד המספר. 'country' = המקור מפרסם ברמת המדינה בלבד
-  // והיעד הוא אזור בתוכה, כלומר המספר גס יותר מהיעד. נרשם במפורש כדי
-  // שלא ייקרא כמו מדידה של אותה עיר.
+  comfortable?: [number, number]; // see the note above - empty on purpose
+  // At what resolution the number was measured. 'country' = the source
+  // publishes at country level only and the destination is a region inside it,
+  // i.e. the number is coarser than the destination. Recorded explicitly so it
+  // is not read as a measurement of that same city.
   scope?: 'city' | 'country';
-  // true כשההפרש מול הקצה העליון של מחיר הלינה יצא אפס או שלילי, ולכן
-  // הופחת רק הקצה התחתון. התוצאה היא חסם עליון (ערך יחיד), לא טווח.
+  // true when the difference against the upper end of the lodging price came
+  // out zero or negative, so only the lower end was subtracted. The result is
+  // an upper bound (a single value), not a range.
   upperBoundOnly?: boolean;
   source: PlaceSource;
 }
@@ -236,27 +250,32 @@ export interface PlacesProvider {
   searchPlaces(slug: string, query: string): Promise<Place[]>;
 }
 
-// ── לוח מה שמשנה טיול ───────────────────────────────────────────────────────
-// זה לא לוח אירועים ואנחנו לא מתחרים בטיקטמאסטר. השאלה שהוא עונה עליה היא
-// "אני נוסע לעיר הזאת בתאריכים האלה - מה שווה לי לדעת".
+// ── The calendar of what reshapes a trip ────────────────────────────────────
+// This is not an events listing and we are not competing with Ticketmaster. The
+// question it answers is "I am traveling to this city on these dates - what is
+// worth my knowing".
 //
-// שני סוגי רשומות, והשני חשוב יותר:
-//   'event'   - דבר גדול וחוזר ששולט בעיר (אוקטוברפסט, קרנבל, שוקי חג).
-//   'closure' - תקופה שבה דברים סגורים או חריגים (חגים לאומיים, צומות
-//               ומועדים דתיים, החודש שבו חצי מהעיר יוצאת לחופשה).
+// Two kinds of entries, and the second matters more:
+//   'event'   - a big recurring thing that takes over the city (Oktoberfest,
+//               carnival, holiday markets).
+//   'closure' - a period when things are closed or unusual (national holidays,
+//               fasts and religious observances, the month when half the city
+//               goes on vacation).
 //
-// **כלל התאריכים - הלב של הדבר הזה.** לכל רשומה: או שהתאריכים המדויקים
-// לשנה הקרובה **פורסמו רשמית**, ואז הם נרשמים ב-`dates` עם קישור למקור
-// הרשמי שבו נקראו; או שהם לא פורסמו, ואז נרשם **רק חלון במילים**
-// (`window`) ו-`datesConfirmed: false`.
+// **The dates rule - the heart of this thing.** For every entry: either the
+// exact dates for the coming year **were officially published**, and then they
+// are recorded in `dates` with a link to the official source where they were
+// read; or they were not published, and then **only a window in words**
+// (`window`) is recorded, with `datesConfirmed: false`.
 //
-// **אסור לכתוב תאריך שנגזר, חושב מהשנה שעברה, או נזכר.** אין אמצע. חלון
-// הוא תשובה טובה; תאריך שגוי הוא נזק. המלכודת החוזרת היא לוחות שנה
-// לא-גרגוריאניים - רמדאן, פסחא אורתודוקסי, טט, דשאין - שבהם תוצאות
-// החיפוש מלאות בתאריכים מחושבים שנראים רשמיים ואינם.
+// **Never write a date that was derived, computed from last year, or
+// remembered.** There is no middle ground. A window is a good answer; a wrong
+// date is damage. The recurring trap is non-Gregorian calendars - Ramadan,
+// Orthodox Easter, Tet, Dashain - where search results are full of computed
+// dates that look official and are not.
 //
-// `recheckFrom` הוא מתי הגוף הרשמי בדרך כלל מפרסם את השנה הבאה, כדי
-// שסשן עתידי יידע מתי חלון יכול להפוך לתאריך.
+// `recheckFrom` is when the official body usually publishes next year, so a
+// future session knows when a window can become a date.
 export type CalendarKind = 'event' | 'closure';
 export type CalendarImpact = 'closures' | 'crowds' | 'both';
 
@@ -268,15 +287,15 @@ export interface CalendarDateRange {
 export interface CalendarEntry {
   id: string;
   kind: CalendarKind;
-  name: string; // עברית
+  name: string; // Hebrew
   nameLocal: string;
   countrySlug: string;
-  destinationSlugs?: string[]; // ריק = משפיע על כל המדינה
+  destinationSlugs?: string[]; // empty = affects the whole country
   datesConfirmed: boolean;
-  dates?: CalendarDateRange[]; // רק כשפורסם רשמית
-  window?: string; // עברית, מילים בלבד - כשלא פורסם
+  dates?: CalendarDateRange[]; // only when officially published
+  window?: string; // Hebrew, words only - when not published
   impact: CalendarImpact;
-  note: string; // עברית פשוטה: מה זה אומר בפועל למטייל
-  recheckFrom?: string; // מתי כדאי לבדוק שוב אם התאריכים פורסמו
+  note: string; // plain Hebrew: what this means in practice for the traveler
+  recheckFrom?: string; // when it is worth checking again whether the dates were published
   source: PlaceSource;
 }

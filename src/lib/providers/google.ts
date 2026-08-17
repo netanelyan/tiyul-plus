@@ -2,18 +2,19 @@ import type { Country, Destination, DestinationSummary, Place, PlacesProvider } 
 import { sampleProvider } from './sample';
 
 /**
- * מתאם Google Places (New) API.
+ * Google Places (New) API adapter.
  *
- * הרעיון: התוכן האוצר (יעדים, מסלולים, מידע כשרות) נשאר מקומי,
- * ו-Google מעשיר אותו בזמן אמת - דירוגים, שעות פתיחה, תמונות,
- * וחיפוש חופשי של מקומות שלא קיימים בדאטה שלנו.
+ * The idea: the curated content (destinations, itineraries, kosher info)
+ * stays local, and Google enriches it in real time - ratings, opening
+ * hours, photos, and free-text search for places that don't exist in our
+ * data.
  *
- * להפעלה:
- * 1. פתחו פרויקט ב-Google Cloud והפעילו את "Places API (New)".
- * 2. הוסיפו ל-.env.local:  GOOGLE_PLACES_API_KEY=...
- * 3. הגדירו  NEXT_PUBLIC_PLACES_PROVIDER=google
+ * To enable:
+ * 1. Open a project in Google Cloud and enable "Places API (New)".
+ * 2. Add to .env.local:  GOOGLE_PLACES_API_KEY=...
+ * 3. Set  NEXT_PUBLIC_PLACES_PROVIDER=google
  *
- * שימו לב: ל-Places API יש מכסה חינמית חודשית, ואחריה חיוב.
+ * Note: the Places API has a free monthly quota, after which billing kicks in.
  */
 
 const API_KEY = process.env.GOOGLE_PLACES_API_KEY;
@@ -36,7 +37,7 @@ async function googleTextSearch(query: string, lang = 'iw'): Promise<Place[]> {
     headers: {
       'Content-Type': 'application/json',
       'X-Goog-Api-Key': API_KEY,
-      // בקשת שדות ממוקדת = חיוב נמוך יותר
+      // A focused field mask = lower billing
       'X-Goog-FieldMask':
         'places.id,places.displayName,places.location,places.rating,places.googleMapsUri,places.editorialSummary',
     },
@@ -60,7 +61,7 @@ async function googleTextSearch(query: string, lang = 'iw'): Promise<Place[]> {
 export const googleProvider: PlacesProvider = {
   providerName: 'google',
 
-  // מדינות, יעדים ומסלולים הם תוכן אוצר - תמיד מהדאטה המקומי.
+  // Countries, destinations and itineraries are curated content - always from the local data.
   getCountries(): Promise<Country[]> {
     return sampleProvider.getCountries();
   },
@@ -76,8 +77,8 @@ export const googleProvider: PlacesProvider = {
   async getDestination(slug: string): Promise<Destination | null> {
     const dest = await sampleProvider.getDestination(slug);
     if (!dest || !API_KEY) return dest;
-    // העשרה: מעדכנים דירוגים חיים מגוגל לפי שם המקום.
-    // (בפרודקשן כדאי לשמור place_id קבוע לכל מקום ולהשתמש ב-Place Details.)
+    // Enrichment: update live ratings from Google by place name.
+    // (In production it's better to store a fixed place_id per place and use Place Details.)
     const enriched = await Promise.all(
       dest.places.map(async (place) => {
         try {
@@ -94,7 +95,7 @@ export const googleProvider: PlacesProvider = {
   async searchPlaces(slug: string, query: string): Promise<Place[]> {
     const dest = await sampleProvider.getDestination(slug);
     if (!API_KEY || !dest) return sampleProvider.searchPlaces(slug, query);
-    // חיפוש חופשי אמיתי בגוגל, מוגבל לאזור היעד
+    // A real free-text search on Google, restricted to the destination's area
     return googleTextSearch(`${query} in ${dest.nameLocal}`);
   },
 };

@@ -2,86 +2,93 @@ import { destinations } from '@/data/destinations';
 import { countries } from '@/data/countries';
 
 /**
- * שרת בלבד - השערים הזולים, כלומר כל מה שנבדק **לפני** שנשלח משהו
- * ל-API ולכן עולה אפס.
+ * Server only - the cheap gates, i.e. everything that is checked **before**
+ * anything is sent to the API and therefore costs zero.
  *
- * ## הכלל שמעל כולם
+ * ## The rule above all others
  *
- * נתנאל היה מפורש: *"אל תהפוך את החוויה הרגילה לגרועה יותר - אדם
- * אמיתי שמתכנן טיול לא אמור לשים לב לשום דבר מזה."* לכן כל מספר כאן
- * נבחר **הרבה מעל** מה שאדם אמיתי עושה, ושער הנושא מוטה בבירור לכיוון
- * "לענות": ספק פועל לטובת המטייל, תמיד.
+ * Netanel was explicit: *"Do not make the normal experience worse - a real
+ * person planning a trip should never notice any of this."* Therefore every
+ * number here is chosen **far above** what a real person does, and the topic
+ * gate is clearly biased toward "answer": doubt works in the traveler's
+ * favor, always.
  *
- * ## מה כאן ומה לא
+ * ## What is here and what is not
  *
- * כאן: אורך הודעה, אורך שיחה, ונושא. כולם דטרמיניסטיים.
- * לא כאן: תקרת ההוצאה (`budget.ts`) והמכסות האישיות (`limits.ts`).
+ * Here: message length, conversation length, and topic. All deterministic.
+ * Not here: the spending ceiling (`budget.ts`) and the personal quotas
+ * (`limits.ts`).
  */
 
-/* ============ 1. אורך הודעה ============ */
+/* ============ 1. Message length ============ */
 
 /**
- * תווים להודעה אחת.
+ * Characters per single message.
  *
- * לשם השוואה: אישור הזמנה שמודבק לצ׳אט הוא כ-1,500 תווים, ותיאור טיול
- * ארוך במיוחד שנמדד בשיחות אמיתיות הוא כ-600. 8,000 הם פי חמישה
- * מהמקרה הקיצוני, ובערך שלושה עמודי טקסט - מי שמגיע לשם הדביק מסמך.
+ * For comparison: a booking confirmation pasted into the chat is ~1,500
+ * characters, and an especially long trip description measured in real
+ * conversations is ~600. 8,000 is five times the extreme case, and roughly
+ * three pages of text - whoever gets there pasted a document.
  *
- * ההודעה **נדחית ולא נחתכת**: חיתוך שקט פירושו שהסוכן עונה על חצי
- * ממה שנשלח, והמטייל לא יודע איזה חצי.
+ * The message is **rejected, not truncated**: silent truncation means the
+ * agent answers half of what was sent, and the traveler does not know which
+ * half.
  */
 export const MAX_MESSAGE_CHARS = 8_000;
 
-/* ============ 2. אורך שיחה ============ */
+/* ============ 2. Conversation length ============ */
 
 /**
- * הודעות משתמש בשיחה אחת.
+ * User messages in a single conversation.
  *
- * כל תור שולח את ההיסטוריה כולה מחדש, ולכן **הודעה מספר 80 עולה יותר
- * מהודעה מספר 3**. תקציב ההיסטוריה (50,000 תווים) כבר גוזם את התוכן,
- * אבל הוא לא עוצר את הצמיחה של מספר התורים.
+ * Every turn resends the entire history, so **message number 80 costs more
+ * than message number 3**. The history budget (50,000 chars) already trims
+ * the content, but it does not stop the growth in the number of turns.
  *
- * שיחת תכנון אמיתית שנמדדה כאן היא 10-25 הודעות. 80 הן ארבע שיחות
- * כאלה ברצף - ומעבר לזה זה כבר לא אותו טיול, ועדיף להתחיל נקי.
+ * A real planning conversation measured here is 10-25 messages. 80 is four
+ * such conversations in a row - and beyond that it is no longer the same
+ * trip, and starting clean is better.
  */
 export const MAX_USER_MESSAGES = 80;
 
-/* ============ 3. פלט ============ */
+/* ============ 3. Output ============ */
 
 /**
- * תקרת טוקנים לתשובה אחת. התשובות בפועל הן 40-200 טוקנים; אפילו בניית
- * טיול שלם, שהיא ה-JSON הגדול ביותר שהמודל מפיק, נחתכה פעם אחת ב-2048
- * וזה כבר טופל בהרחבה ל-4096. התקרה כאן היא הרצפה של הבטיחות, לא של
- * החוויה.
+ * Token ceiling for a single reply. Actual replies are 40-200 tokens; even a
+ * full trip build, which is the largest JSON the model emits, was truncated
+ * once at 2048 and that was already handled by widening to 4096. The ceiling
+ * here is the safety floor, not the experience's.
  */
 export const MAX_OUTPUT_TOKENS = 4_096;
 
 /**
- * תקרת עלות לתור אחד, בדולרים.
+ * Cost ceiling for a single turn, in dollars.
  *
- * הסכנה האמיתית איננה תשובה אחת ארוכה אלא **לולאה**: התור רץ עד 16
- * איטרציות, וכל אחת שולחת את כל הקידומת מחדש.
+ * The real danger is not one long reply but a **loop**: a turn runs up to 16
+ * iterations, and each one resends the entire prefix.
  *
- * **$0.60 היה נמוך מדי, ומהסיבה שהפילה את כל שאר המספרים.** האומדן
- * הישן ("תור עולה $0.01-$0.13") לא הכיר בכתיבת המטמון: תור **קר**
- * נמדד ב-$0.447, ותור בנייה קר עם שתיים-שלוש איטרציות מגיע ל-$0.6
- * בדיוק - כלומר השער היה נסגר על התור הראשון של מבקר אמיתי.
- * $1.50 הם פי שלושה מתור קר מלא, ועדיין 6% מהיום.
+ * **$0.60 was too low, and for the reason that felled all the other
+ * numbers.** The old estimate ("a turn costs $0.01-$0.13") did not account
+ * for cache writes: a **cold** turn measured at $0.447, and a cold build turn
+ * with two-three iterations reaches exactly $0.6 - meaning the gate would
+ * close on a real visitor's first turn. $1.50 is three times a full cold
+ * turn, and still 6% of the day.
  */
 export const MAX_TURN_USD = 1.5;
 
-/* ============ 4. שער הנושא ============ */
+/* ============ 4. The topic gate ============ */
 
 /**
- * סימנים שהבקשה **כן** קשורה לטיול. די באחד.
+ * Signals that the request **is** travel-related. One is enough.
  *
- * הרשימה כוללת גם את כל שמות היעדים והמדינות מהקטלוג, כי "3 ימים
- * בקוטור" הוא בקשת טיול מובהקת בלי אף מילת מפתח כללית.
+ * The list also includes all destination and country names from the catalog,
+ * because "3 days in Kotor" is an unmistakable trip request without a single
+ * generic keyword.
  */
 const TRAVEL_WORDS =
   /טיול|לטייל|מסלול|חופש|נופש|יעד|לטוס|טיסה|מלון|לינה|לישון|מזוודה|ויזה|דרכון|נחית|נוסע|נסיעה|לנסוע|ימים|יומיים|שבוע|סופ"ש|סופש|אטרקצי|מוזיאון|מסעד|לאכול|כשר|שופינג|חוף|הרים|מפה|עצירה|יום \d|להמליץ|המלצות|לבקר|אירופה|העולם|חו"ל|חול|באיזו עונה|מזג אוויר|esim|eSIM/i;
 
-/** נבנה פעם אחת - השמות מהדאטה, באורך שלא ייתן התאמות מקריות */
+/** Built once - the names come from the data, at a length that avoids accidental matches */
 const CATALOG_NAMES: string[] = [
   ...destinations.flatMap((d) => [d.name, d.nameLocal ?? '']),
   ...countries.flatMap((c) => [c.name, c.nameLocal ?? '']),
@@ -90,12 +97,12 @@ const CATALOG_NAMES: string[] = [
   .filter((s) => s.length >= 3);
 
 /**
- * סימנים שהבקשה **בבירור** אינה קשורה לטיול.
+ * Signals that the request is **clearly** not travel-related.
  *
- * הרשימה קצרה ומכוונת לשימושים שאנשים באמת מנסים: שיעורי בית, קוד,
- * תרגום, כתיבה יצירתית. היא לא מנסה לכסות הכול - שער נושא שמנסה
- * לחסום כל דבר חוסם בסוף גם את "איפה כדאי לאכול", וזו הבקשה שהמוצר
- * קיים בשבילה.
+ * The list is short and aimed at what people actually try: homework, code,
+ * translation, creative writing. It does not try to cover everything - a
+ * topic gate that tries to block everything ends up blocking "where should I
+ * eat" too, and that is the request the product exists for.
  */
 const OFF_TOPIC: { re: RegExp; why: string }[] = [
   { re: /```|<\?php|function\s*\(|console\.log|import\s+\w+\s+from|def\s+\w+\(|SELECT\s+.*\s+FROM/i, why: 'קוד' },
@@ -113,16 +120,18 @@ export interface TopicVerdict {
 }
 
 /**
- * האם לענות על הבקשה בכלל.
+ * Whether to answer the request at all.
  *
- * **שלושה תנאים חייבים להתקיים יחד כדי לסרב**, וזו כל ההגנה מפני
- * סירוב למטייל אמיתי:
+ * **Three conditions must hold together in order to refuse**, and that is the
+ * entire protection against refusing a real traveler:
  *
- * 1. יש סימן מובהק של נושא אחר,
- * 2. **אין** שום סימן של נסיעות - כולל שם של עיר או מדינה מהקטלוג,
- * 3. **אין טיול פעיל.** למי שיש טיול על המסך, כמעט כל שאלה היא שאלה
- *    עליו: "תתרגם לי את התפריט הזה" בזמן תכנון רומא היא בקשת נסיעות
- *    לכל דבר. הכלל הזה לבדו מוציא את רוב הסיכון.
+ * 1. there is a clear signal of another topic,
+ * 2. there is **no** travel signal at all - including a city or country name
+ *    from the catalog,
+ * 3. there is **no active trip.** For someone with a trip on screen, almost
+ *    every question is a question about it: "translate this menu for me"
+ *    while planning Rome is a travel request in every sense. This rule alone
+ *    removes most of the risk.
  */
 export function topicOk(text: string, hasTrip: boolean): TopicVerdict {
   if (hasTrip) return { ok: true, why: 'יש טיול פעיל' };
@@ -141,17 +150,19 @@ export function topicOk(text: string, hasTrip: boolean): TopicVerdict {
   return { ok: false, why: off.why };
 }
 
-/* ============ 5. בקשות שאינן מהאתר ============ */
+/* ============ 5. Requests that are not from the site ============ */
 
 /**
- * בוט שפונה ישירות לנתיב.
+ * A bot hitting the route directly.
  *
- * דפדפן שולח `Origin` בכל POST, גם באותו מקור - ולכן בקשה בלי `Origin`
- * או עם מקור זר לא הגיעה מהאתר שלנו. זו לא הגנה מושלמת (אפשר לזייף
- * כותרת), אבל היא עוצרת את המקרה הנפוץ - סקריפט שמפוצץ את הנתיב -
- * **לפני שהוצאנו אגורה**, וזה בדיוק מה שנתנאל ביקש.
+ * A browser sends `Origin` on every POST, even same-origin - so a request
+ * without an `Origin`, or with a foreign origin, did not come from our site.
+ * This is not a perfect defense (a header can be forged), but it stops the
+ * common case - a script hammering the route - **before we spent a cent**,
+ * which is exactly what Netanel asked for.
  *
- * `CHAT_REQUIRE_ORIGIN=off` מכבה, למקרה שפרוקסי כלשהו יבלע את הכותרת.
+ * `CHAT_REQUIRE_ORIGIN=off` disables it, in case some proxy swallows the
+ * header.
  */
 export function sameOriginOk(req: Request): boolean {
   if (process.env.CHAT_REQUIRE_ORIGIN === 'off') return true;
@@ -167,17 +178,19 @@ export function sameOriginOk(req: Request): boolean {
 }
 
 /**
- * אותה כוונה, אבל ל-**GET** - וזו לא אותה בדיקה.
+ * Same intent, but for **GET** - and it is not the same check.
  *
- * **דפדפן אינו שולח `Origin` בבקשת GET מאותו מקור.** התקן מחייב זאת רק
- * בבקשות חוצות-מקור ובשיטות שאינן בטוחות, ולכן `sameOriginOk` - שנכתב
- * ל-POST של הצ׳אט וצודק שם - דוחה כל בקשת GET אמיתית מהאתר שלנו. זה
- * נתפס רק בדפדפן: `curl` עם `-H Origin` עבר מצוין, וכך המדור נראה תקין
- * בכל בדיקת שרת בזמן שבמסך הוא היה ריק תמיד.
+ * **A browser does not send `Origin` on a same-origin GET request.** The
+ * standard mandates it only for cross-origin requests and non-safe methods,
+ * so `sameOriginOk` - written for the chat's POST and correct there -
+ * rejects every real GET request from our own site. This is only caught in a
+ * browser: `curl` with `-H Origin` passed fine, so the section looked healthy
+ * in every server-side check while on screen it was always empty.
  *
- * לכן הסימן הראשי כאן הוא `Sec-Fetch-Site`, שדפדפנים שולחים גם ב-GET
- * ואי אפשר לזייף מתוך JS (זו כותרת אסורה). `Origin`/`Referer` נשארים
- * כנפילה אחורה לדפדפנים ישנים. בלי אף אחד מהשלושה - סירוב, כמו קודם.
+ * Therefore the primary signal here is `Sec-Fetch-Site`, which browsers send
+ * on GET too and which cannot be forged from JS (it is a forbidden header).
+ * `Origin`/`Referer` remain as fallbacks for old browsers. With none of the
+ * three - refusal, as before.
  */
 export function browserGetOk(req: Request): boolean {
   if (process.env.CHAT_REQUIRE_ORIGIN === 'off') return true;
@@ -185,7 +198,7 @@ export function browserGetOk(req: Request): boolean {
   if (!host) return false;
 
   const site = req.headers.get('sec-fetch-site');
-  // 'none' הוא הקלדה בשורת הכתובת, ו-'cross-site' הוא בדיוק מה שנחסם
+  // 'none' is typing in the address bar, and 'cross-site' is exactly what gets blocked
   if (site) return site === 'same-origin';
 
   for (const name of ['origin', 'referer']) {
@@ -200,18 +213,20 @@ export function browserGetOk(req: Request): boolean {
   return false;
 }
 
-/* ============ 6. הנוסחים ============ */
+/* ============ 6. The wordings ============ */
 
-/** מעל תקרת ההוצאה. רגוע, זמני, בלי מספרים ובלי התנצלות מוגזמת. */
+/** Over the spending ceiling. Calm, temporary, no numbers and no excessive apology. */
 export const BUDGET_MESSAGE =
   'הסוכן החכם לא זמין כרגע 🙏\n\n' +
   'זה זמני - כדאי לנסות שוב מאוחר יותר היום או מחר. הטיול שלכם שמור ולא נפגע, ואפשר להמשיך לערוך אותו במתכנן: להוסיף ימים, להזיז עצירות, לפתוח ניווט ולהדפיס.';
 
 /**
- * מעל **התקרה האישית של המנוי**, לא תקרת האתר - הודעה שונה בכוונה.
- * `BUDGET_MESSAGE` למעלה מנוסח "המערכת עמוסה", וזה שקר למנוי שהתקרה
- * שלו-בלבד היא מה שנגעה בה; ההוצאה של אף אחד אחר לא קשורה למצב הזה
- * (ראו premiumBudgetFor ב-budget.ts) והוא לא אמור לחשוב שהיא כן.
+ * Over the **subscriber's personal ceiling**, not the site ceiling - a
+ * different message on purpose. `BUDGET_MESSAGE` above is worded as "the
+ * system is busy", and that is a lie to a subscriber whose own-only ceiling
+ * is what was hit; nobody else's spending has anything to do with this state
+ * (see premiumBudgetFor in budget.ts) and they should not be led to think it
+ * does.
  */
 export const PREMIUM_BUDGET_MESSAGE =
   'הגעתם לתקרת השימוש החודשית האישית שלכם בתוכנית הפרימיום 🙏\n\n' +

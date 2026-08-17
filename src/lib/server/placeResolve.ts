@@ -2,53 +2,58 @@ import { destinations } from '@/data/destinations';
 import { countries } from '@/data/countries';
 
 /**
- * ---------- מי החליט שזאת ברטיסלבה? ----------
+ * ---------- Who decided this was Bratislava? ----------
  *
- * נתנאל הקליד `ברסלוונה`. הסוכן החליט בשקט שזו ברטיסלבה, בנה מסלול
- * יומיים ויצר טיול. אף שורת קוד לא הייתה מעורבת בהחלטה הזאת:
- * `findDestination` דורש התאמת תת-מחרוזת מדויקת, ולכן הוא לא זיהה כלום -
- * **פרשנות השם קרתה כולה בתוך המודל**, מול אינדקס של 166 יעדים, בלי
- * שום שלב שאפשר לכתוב לו טסט.
+ * Netanel typed a misspelled city name ("ברסלוונה"). The agent quietly decided
+ * it was Bratislava, built a two-day route and created a trip. Not a single
+ * line of code was involved in that decision: `findDestination` requires an
+ * exact substring match, so it recognized nothing - **the name interpretation
+ * happened entirely inside the model**, against an index of 166 destinations,
+ * with no step a test could be written for.
  *
- * הקובץ הזה הוא אותו דפוס שכבר עבד כאן שלוש פעמים (`priceGuard`,
- * `filterKosherUnlessOptedIn`, `modelRoute`): **ערובה מבנית במקום
- * משמעת של פרומפט.** ההתאמה מחושבת בקוד, הפסק נמסר למודל כעובדה, ובמצב
- * "כמה אפשרויות" הכלים שבוחרים עיר פשוט **נחסמים לתור הזה** - כלומר
- * המודל לא יכול לבחור גם אם ירצה.
+ * This file is the same pattern that has already worked here three times
+ * (`priceGuard`, `filterKosherUnlessOptedIn`, `modelRoute`): **a structural
+ * guarantee instead of prompt discipline.** The match is computed in code, the
+ * verdict is handed to the model as a fact, and in the "several options" state
+ * the city-choosing tools are simply **blocked for this turn** - meaning the
+ * model cannot choose even if it wants to.
  *
- * ## שלוש התוצאות, בדיוק כפי שנתנאל ניסח אותן
+ * ## The three outcomes, exactly as Netanel phrased them
  *
- * | תוצאה | מה קורה |
+ * | outcome | what happens |
  * |---|---|
- * | `one` - התאמה אחת ברורה | משתמשים בה, ואומרים את זה במשפט קצר |
- * | `many` - כמה סבירות | שואלים באיזו, ומציעים אותן. הכלים חסומים |
- * | *כלום קרוב* | לא מחזירים פסק בכלל - זו מילה רגילה או עיר שאיננו מכסים, והכלל הקיים ("לא מכוסה, הנה מה שכן") מטפל בה |
+ * | `one` - a single clear match | use it, and say so in one short sentence |
+ * | `many` - several plausible ones | ask which, and offer them. Tools blocked |
+ * | *nothing close* | no verdict is returned at all - it is an ordinary word or a city we do not cover, and the existing rule ("not covered, here is what is") handles it |
  *
- * ## למה לא מחזירים `none` מפורש
+ * ## Why we do not return an explicit `none`
  *
- * כי אי אפשר להבדיל בלי מודל בין "עיר שלא כיסינו" לבין מילה עברית
- * רגילה. טוקן שאין לו שום שכן קרוב בקטלוג פשוט לא מדווח - וזה הכיוון
- * הבטוח לטעות בו: פסק שגוי על מילה רגילה היה עוצר שיחה תקינה.
+ * Because without a model there is no way to tell "a city we did not cover"
+ * from an ordinary Hebrew word. A token with no close neighbor in the catalog
+ * simply goes unreported - and that is the safe direction to err in: a wrong
+ * verdict on an ordinary word would have stopped a perfectly good conversation.
  */
 
-/* ---------- נורמליזציה ---------- */
+/* ---------- Normalization ---------- */
 
-/** אותיות סופיות - כדי ש"וינ**ה**" ו"וינ**ה**" ייראו אותו דבר גם אחרי חיתוך */
+/** Final letters - so a name with a final form and one without look the same even after truncation */
 const FINALS: Record<string, string> = { ך: 'כ', ם: 'מ', ן: 'נ', ף: 'פ', ץ: 'צ' };
 
 /**
- * אותיות שימוש בתחילת מילה. `ב`/`ל`/`מ`/`ה`/`ו`/`ש`/`כ` הן הצורה שבה
- * ישראלי כותב עיר ברוב המשפטים ("בברצלונה", "לוינה"), ובלעדיהן כל
- * מרחק עריכה מתחיל בחוב של תו אחד.
+ * Prefix letters at the start of a word. The Hebrew prepositional prefixes
+ * (b/l/m/h/v/sh/k) are how an Israeli writes a city in most sentences
+ * ("in Barcelona", "to Vienna" as one word), and without stripping them every
+ * edit distance starts one character in debt.
  *
- * **נשמרת גם הצורה המלאה**: "מרוקו" מתחילה ב-מ׳ שאיננה אות שימוש, אז
- * ההשוואה נעשית מול שתי הצורות ונלקח הטוב מביניהן.
+ * **The full form is kept too**: "Morocco" (מרוקו) starts with a mem that is
+ * NOT a prefix letter, so the comparison runs against both forms and the
+ * better of the two is taken.
  */
 const PREFIXES = /^[בלמהושכ]/;
 
 export function normalizeName(s: string): string {
   return (s ?? '')
-    .replace(/[֑-ׇ]/g, '') // ניקוד וטעמים
+    .replace(/[֑-ׇ]/g, '') // niqqud and cantillation marks
     .replace(/["'`״׳.,()\-–—]/g, '')
     .replace(/[ךםןףץ]/g, (c) => FINALS[c])
     .replace(/\s+/g, ' ')
@@ -56,13 +61,15 @@ export function normalizeName(s: string): string {
     .toLowerCase();
 }
 
-/** שתי הצורות שאותן משווים: כמו שנכתב, וגם בלי אות שימוש פותחת */
+/** The two forms being compared: as written, and also without a leading prefix letter */
 function forms(token: string): string[] {
   const n = normalizeName(token);
   const out = [n];
-  // מ-4 ומעלה, כי "ביפן" הוא ארבע אותיות ו"יפן" הוא התשובה. בגרסה עם
-  // הסף על 5 המטייל שכתב "שבוע ביפן" קיבל "הבנתי יפן (כתבת ביפן)".
-  // עד שתי אותיות, כי "ולירושלים" ו"ובוינה" הן עברית רגילה.
+  // From 4 characters up, because "in Japan" (ביפן) is four letters and
+  // "Japan" (יפן) is the answer. In the version with the threshold at 5, the
+  // traveler who wrote "a week in Japan" got 'I understood Japan (you wrote
+  // "in Japan")'. Down to two letters, because words like "and to Jerusalem"
+  // or "and in Vienna" are ordinary Hebrew.
   let cur = n;
   for (let i = 0; i < 2; i++) {
     if (cur.length >= 4 && PREFIXES.test(cur)) {
@@ -73,14 +80,15 @@ function forms(token: string): string[] {
   return out;
 }
 
-/* ---------- מרחק עריכה ---------- */
+/* ---------- Edit distance ---------- */
 
 /**
- * Damerau-Levenshtein (עם החלפת שכנים).
+ * Damerau-Levenshtein (with adjacent transposition).
  *
- * ההחלפה חשובה כאן ולא קישוט: `ברסלוונה` מול `ברצלונה` היא בדיוק
- * שגיאת הקלדה שבה אות אחת הוחלפה ואחת הוכפלה, וזה גם הדפוס של
- * "טיסלבה"/"טילסבה".
+ * The transposition matters here and is not decoration: the misspelling that
+ * started all this vs. "Barcelona" is exactly the typo where one letter was
+ * swapped and one doubled, and it is also the pattern of the common
+ * "Bratislava" misspellings.
  */
 export function editDistance(a: string, b: string): number {
   if (a === b) return 0;
@@ -107,11 +115,12 @@ export function editDistance(a: string, b: string): number {
 }
 
 /**
- * כמה שגיאות מותרות למילה באורך נתון.
+ * How many errors are allowed for a word of a given length.
  *
- * **סולם ולא מספר קבוע**, כי שתי שגיאות במילה בת ארבע אותיות הן מילה
- * אחרת לגמרי, ובמילה בת תשע הן הקלדה. הסולם הזה הוא מה שמונע מ"קייב"
- * (עיר שאיננו מכסים) להיתפס בטעות כ"קרקוב".
+ * **A scale, not a fixed number**, because two errors in a four-letter word
+ * are a completely different word, while in a nine-letter word they are a
+ * typo. This scale is what keeps "Kyiv" (a city we do not cover) from being
+ * mistakenly caught as "Krakow".
  */
 function tolerance(len: number): number {
   if (len <= 4) return 1;
@@ -119,18 +128,18 @@ function tolerance(len: number): number {
   return 3;
 }
 
-/* ---------- הקטלוג, פעם אחת ---------- */
+/* ---------- The catalog, once ---------- */
 
 export interface NameEntry {
-  /** slug של יעד. למדינה - היעד הראשון שלה, בדיוק כמו `findDestination` */
+  /** A destination slug. For a country - its first destination, exactly like `findDestination` */
   slug: string;
-  /** השם שיוצג למטייל */
+  /** The name shown to the traveler */
   label: string;
-  /** מה שמשווים מולו */
+  /** What is compared against */
   norm: string;
 }
 
-/** נבנה פעם אחת לתהליך - הקטלוג סטטי */
+/** Built once per process - the catalog is static */
 let entriesCache: NameEntry[] | null = null;
 export function nameEntries(): NameEntry[] {
   if (entriesCache) return entriesCache;
@@ -155,12 +164,14 @@ export function nameEntries(): NameEntry[] {
 }
 
 /**
- * שם שקיים בקטלוג כפי שהוא - אין כאן שום דבר לפרש.
+ * A name that exists in the catalog as-is - there is nothing to interpret here.
  *
- * **גם מילה שלמה בתוך שם מורכב נחשבת מדויקת**, וזה לא פינוק: שם היעד
- * בקטלוג הוא "טוקיו והר פוג׳י", ובלי הכלל הזה הטוקן `טוקיו` לא היה
- * מדויק, היה נמדד מול הקטלוג כולו, ונופל על **טורקיה** במרחק 2. שלחתי
- * מטייל ליפן לתורכיה בבדיקה הראשונה של הקובץ הזה.
+ * **A whole word inside a compound name also counts as exact**, and that is
+ * not indulgence: the catalog's destination name is "Tokyo and Mount Fuji",
+ * and without this rule the token "Tokyo" would not have been exact, would
+ * have been measured against the whole catalog, and would have landed on
+ * **Turkey** at distance 2. I sent a traveler bound for Japan to Turkey in the
+ * first test of this file.
  */
 let wordCache: Set<string> | null = null;
 function catalogWords(): Set<string> {
@@ -179,17 +190,18 @@ export function isExactName(token: string): boolean {
   return forms(token).some((f) => set.has(f));
 }
 
-/* ---------- מילים שאינן שמות מקום ---------- */
+/* ---------- Words that are not place names ---------- */
 
 /**
- * מילים נפוצות שנשארות אחרי הסינון ועלולות ליפול קרוב לשם בקטלוג.
- * כל שורה כאן נמדדה על משפטים אמיתיים ולא נוחשה: "ויזה" נפלה על וינה,
- * "המלצה" על מלטה, "היסטוריה" על איסטריה.
+ * Common words that survive the filtering and can land close to a catalog
+ * name. Every row here was measured on real sentences, not guessed: "visa"
+ * (ויזה) landed on Vienna, "recommendation" (המלצה) on Malta, "history"
+ * (היסטוריה) on Istria.
  *
- * **הרשימה היא מסנן רעש, לא הערובה.** הערובה היא `cityGate`, שחוסם רק
- * כשהכלי בחר עיר שקשורה לטוקן - ולכן פסק רועש על מילה שאיש לא בחר
- * לפיה לא עושה דבר. הרשימה קצרה בכוונה: כל מילה כאן היא הזדמנות
- * להחמיץ שם אמיתי.
+ * **The list is a noise filter, not the guarantee.** The guarantee is
+ * `cityGate`, which blocks only when the tool picked a city related to the
+ * token - so a noisy verdict on a word nobody chose by does nothing. The list
+ * is deliberately short: every word here is a chance to miss a real name.
  */
 const STOPWORDS = new Set(
   [
@@ -206,44 +218,45 @@ const STOPWORDS = new Set(
   ].map(normalizeName),
 );
 
-/** מילת עצירה בכל אחת מצורות המילה - "בלילה" נגזר ל"לילה" ונפסל בזכותה */
+/** A stopword in any of the word's forms - "at night" (בלילה) is derived to "night" (לילה) and rejected thanks to it */
 const isStopword = (token: string): boolean => forms(token).some((f) => STOPWORDS.has(f));
 
-/* ---------- הפסק ---------- */
+/* ---------- The verdict ---------- */
 
 export interface NameVerdict {
-  /** מה המטייל הקליד, כפי שהקליד */
+  /** What the traveler typed, as typed */
   typed: string;
   kind: 'one' | 'many';
-  /** במצב `one` - ההתאמה. במצב `many` - האפשרויות, לפי קרבה */
+  /** In the `one` state - the match. In the `many` state - the options, by closeness */
   options: { slug: string; label: string }[];
 }
 
-/** התאמות ייחודיות לפי slug, ממוינות לפי מרחק */
+/** Unique matches by slug, sorted by distance */
 function bestMatches(token: string): { slug: string; label: string; dist: number }[] {
   const byslug = new Map<string, { slug: string; label: string; dist: number }>();
   for (const form of forms(token)) {
     for (const e of nameEntries()) {
       /*
-        **הסבילות נגזרת מהקצר מבין השניים**, ובלי זה הקובץ הזה רועש.
-        נמדד על עשר הודעות עברית רגילות: "המלצה" נפלה על מלטה, "והרבה"
-        על ורשה, "בינוני" על יוון - כולן מילים בנות חמש-שש אותיות
-        שנמדדו בסבילות שלהן מול שם קטלוג בן ארבע. שם קצר חייב התאמה
-        קרובה יותר, אחרת כל מילה עברית שנייה היא יעד.
+        **The tolerance is derived from the shorter of the two**, and without
+        this the file is noisy. Measured on ten ordinary Hebrew messages:
+        "recommendation" landed on Malta, "and many" on Warsaw, "medium" on
+        Greece - all five-six letter words measured at their own tolerance
+        against a four-letter catalog name. A short name demands a closer
+        match, otherwise every other Hebrew word is a destination.
       */
       /*
-        ובנוסף **שגיאה אחת לכל ארבע אותיות לכל היותר**. זה מה שסילק את
-        הרעש שנשאר: "איטלקי"→איטליה, "רומנטי"→רומניה, "המלצה"→מלטה,
-        "יין"→יפן - כולן שתי שגיאות במילה בת חמש-שש, כלומר שליש מהמילה.
-        שגיאת הקלדה אמיתית היא שבר קטן מהמילה, וסיומת עברית פרודוקטיבית
-        היא לא.
+        And additionally **at most one error per four letters**. This is what
+        removed the remaining noise: "Italian"→Italy, "romantic"→Romania,
+        "recommendation"→Malta, "wine"→Japan - all two errors in a five-six
+        letter word, i.e. a third of the word. A real typo is a small fraction
+        of the word; a productive Hebrew suffix is not.
       */
       const tol = Math.min(
         tolerance(form.length),
         tolerance(e.norm.length),
         Math.floor(0.25 * Math.max(form.length, e.norm.length)),
       );
-      // הפרש אורך גדול מהסבילות לא יכול להשתפר - חיסכון אמיתי על 166 יעדים
+      // A length gap larger than the tolerance cannot improve - a real saving over 166 destinations
       if (Math.abs(e.norm.length - form.length) > tol) continue;
       const dist = editDistance(form, e.norm);
       if (dist > tol) continue;
@@ -255,20 +268,23 @@ function bestMatches(token: string): { slug: string; label: string; dist: number
 }
 
 /**
- * הפסק לטוקן אחד. `null` = אין מה לומר עליו.
+ * The verdict for a single token. `null` = nothing to say about it.
  *
- * **"ברורה" מוגדרת כאן במספרים ולא בתחושה**, בשלושה תנאים:
+ * **"Clear" is defined here in numbers, not by feel**, with three conditions:
  *
- * 1. התאמה יחידה, או
- * 2. השנייה רחוקה מהראשונה בשתי שגיאות לפחות, או
- * 3. **שגיאה אחת בלבד בראשונה, וכל השאר גרועות ממנה.** התנאי הזה נוסף
- *    אחרי מדידה: `מדריט` הפיק "מדריד או מצרים?" - מדריד במרחק 1 ומצרים
- *    במרחק 2, כלומר הפרש של אחת, כלומר "כמה סבירות" לפי הכלל הקודם.
- *    שאלה כזאת גרועה מבחירה. שגיאת הקלדה בודדת היא הצורה הכי מובהקת
- *    של התאמה, ולכן היא מכריעה מול כל מה שרחוק ממנה.
+ * 1. A single match, or
+ * 2. The second is at least two errors farther than the first, or
+ * 3. **Only one error in the first, and all the rest are worse.** This
+ *    condition was added after measurement: a one-letter typo of "Madrid"
+ *    produced "Madrid or Egypt?" - Madrid at distance 1 and Egypt at
+ *    distance 2, i.e. a gap of one, i.e. "several plausible" under the
+ *    previous rule. A question like that is worse than choosing. A single
+ *    typo is the most unambiguous form of a match, so it wins over anything
+ *    farther from it.
  *
- * מה שנשאר `many` הוא בדיוק המקרה שצריך: **תיקו**. `ויאנה` נמצאת במרחק
- * שגיאה אחת גם מוינה וגם מוילנה, ואין שום בסיס לבחור.
+ * What remains `many` is exactly the case that needs it: **a tie.** The
+ * misspelling "Viana" (ויאנה) is one error away from both Vienna and Vilnius,
+ * and there is no basis whatsoever for choosing.
  */
 export function resolveToken(token: string): NameVerdict | null {
   const norm = normalizeName(token);
@@ -293,7 +309,7 @@ export function resolveToken(token: string): NameVerdict | null {
   };
 }
 
-/** מילים מועמדות מתוך הודעה: עברית או לטינית, שלוש אותיות ומעלה */
+/** Candidate words from a message: Hebrew or Latin, three letters or more */
 export function candidateTokens(text: string): string[] {
   const raw = (text ?? '').match(/[֐-׿A-Za-z][֐-׿A-Za-z'׳״-]{2,}/g) ?? [];
   const seen = new Set<string>();
@@ -308,8 +324,9 @@ export function candidateTokens(text: string): string[] {
 }
 
 /**
- * הפסק להודעה שלמה. רץ **בכל תור**, לא רק בראשון - זה מה שנתנאל ביקש
- * במפורש, כי שם עיר מתפרש גם בתיקון ובאמצע שיחה.
+ * The verdict for a whole message. Runs **on every turn**, not only the
+ * first - this is what Netanel asked for explicitly, because a city name gets
+ * interpreted in a correction and mid-conversation too.
  */
 export function resolveMessage(text: string): NameVerdict[] {
   const out: NameVerdict[] = [];
@@ -320,7 +337,7 @@ export function resolveMessage(text: string): NameVerdict[] {
   return out;
 }
 
-/** ה-slugים שאסור לבחור מתוכם לבד בתור הזה */
+/** The slugs that must not be chosen from unassisted this turn */
 export function blockedSlugs(verdicts: NameVerdict[]): Set<string> {
   const out = new Set<string>();
   for (const v of verdicts) {
@@ -330,34 +347,39 @@ export function blockedSlugs(verdicts: NameVerdict[]): Set<string> {
   return out;
 }
 
-/** האם ההודעה נוקבת בשם שקיים בקטלוג כמו שהוא */
+/** Whether the message names something that exists in the catalog as-is */
 export function namesCatalogExactly(text: string): boolean {
   return candidateTokens(text).some((t) => isExactName(t));
 }
 
-/* ---------- השער ---------- */
+/* ---------- The gate ---------- */
 
 export type CityGate = { ok: true; note: string } | { ok: false; message: string };
 
 /**
- * **השער עצמו, והוא הסיבה שהקובץ קיים.**
+ * **The gate itself, and it is the reason this file exists.**
  *
- * הבלוק שנשלח למודל הוא הנחיה, וההיסטוריה של הפרויקט הזה אומרת שהנחיה
- * נבלעת. לכן ההכרעה נאכפת גם ברמת הכלי: לפני שכלי בוחר עיר מבוצע,
- * הבחירה שלו נמדדת מול מה שהמטייל **באמת הקליד**.
+ * The block sent to the model is an instruction, and this project's history
+ * says instructions get swallowed. So the ruling is enforced at the tool
+ * level too: before a city-choosing tool executes, its choice is measured
+ * against what the traveler **actually typed**.
  *
- * שלוש תוצאות:
+ * Three outcomes:
  *
- * 1. **המילה קרובה לכמה יעדים והכלי בחר אחד מהם** - נכשל. זה בדיוק
- *    "אסור לבחור", והמודל מקבל את האפשרויות בחזרה כדי שישאל.
- * 2. **המילה נפתרת ליעד אחד והכלי בחר יעד אחר** - נכשל. זה המקרה
- *    שקרה בפועל: `ברסלוונה` נפתרת לברצלונה, והמודל בחר ברטיסלבה.
- * 3. **אחרת** - עובר, ואם הייתה פרשנות מחזירים משפט קצר שהמודל חייב
- *    לומר ("הבנתי ברצלונה, כתבת ברסלוונה").
+ * 1. **The word is close to several destinations and the tool picked one of
+ *    them** - fail. This is exactly "must not choose", and the model gets the
+ *    options back so it will ask.
+ * 2. **The word resolves to one destination and the tool picked a different
+ *    one** - fail. This is the case that actually happened: the misspelling
+ *    resolves to Barcelona, and the model picked Bratislava.
+ * 3. **Otherwise** - pass, and if there was an interpretation, return a short
+ *    sentence the model must say (e.g. 'I understood Barcelona - you wrote
+ *    the misspelled form').
  *
- * `chosen` הם ה-slugים שהכלי עומד לכתוב. הבדיקה רצה רק כשההודעה
- * **אינה** נוקבת בשם מהקטלוג כמו שהוא: מי שכתב "רומא" נקי לא צריך שאף
- * אחד יפרש לו כלום, ופסק רועש על מילה אחרת באותה הודעה לא ייחסום אותו.
+ * `chosen` are the slugs the tool is about to write. The check runs only when
+ * the message does **not** name a catalog name as-is: whoever wrote "Rome"
+ * cleanly needs nobody interpreting anything for them, and a noisy verdict on
+ * another word in the same message must not block them.
  */
 export function cityGate(lastUserText: string, chosen: string[]): CityGate {
   const uniq = [...new Set(chosen.filter(Boolean))];
@@ -399,9 +421,10 @@ export function cityGate(lastUserText: string, chosen: string[]): CityGate {
 }
 
 /**
- * הבלוק שנשלח למודל. נשלח **אחרון** בסדרת ה-system, כמו
- * `OUTPUT_DISCIPLINE` - היומן של הפרויקט מתעד שכלל שיושב בראש פרומפט
- * ארוך נבלע, ושאותו כלל בסוף עובד.
+ * The block sent to the model. Sent **last** in the system sequence, like
+ * `OUTPUT_DISCIPLINE` - the project's log documents that a rule sitting at
+ * the top of a long prompt gets swallowed, and that the same rule at the end
+ * works.
  */
 export function verdictBlock(verdicts: NameVerdict[]): string {
   if (verdicts.length === 0) return '';

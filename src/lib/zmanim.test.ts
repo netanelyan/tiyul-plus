@@ -3,14 +3,15 @@ import assert from 'node:assert/strict';
 import { shabbatTimesFor, sunset, weekdayOf } from './zmanim.ts';
 import { formatInZone, timezoneFor } from './countryTimezones.ts';
 
-/** הפרש בדקות בין Date לשעת UTC צפויה באותו יום */
+/** Difference in minutes between a Date and an expected UTC time on the same day */
 function minutesFromUTC(d: Date, hh: number, mm: number): number {
   return Math.abs(d.getUTCHours() * 60 + d.getUTCMinutes() - (hh * 60 + mm));
 }
 
 /*
-  ערכי ייחוס מהעולם האמיתי, בדיוק של דקות בודדות. אם האסטרונומיה שבורה
-  - הם אלה שיגידו, לא בדיקת עשן על "מספר כלשהו חזר".
+  Reference values from the real world, accurate to single minutes. If the
+  astronomy is broken - these are what will say so, not a smoke test that
+  "some number came back".
 */
 
 test('שקיעה בתל אביב בשיא הקיץ - בסביבות 16:47 UTC (19:47 שעון קיץ)', () => {
@@ -32,7 +33,7 @@ test('שקיעה בניו יורק בשיא החורף - בסביבות 21:32 UT
 });
 
 test('קו רוחב קוטבי בלי שקיעה - null, לא ערך מומצא', () => {
-  // טרומסו באמצע הקיץ: שמש חצות
+  // Tromso at midsummer: midnight sun
   assert.equal(sunset('2026-06-21', 69.65, 18.96), null);
 });
 
@@ -43,13 +44,13 @@ test('weekdayOf: 21 באוגוסט 2026 הוא שישי (אומת מול המו�
 });
 
 test('shabbatTimesFor: שישי מחזיר נרות לפני שקיעה והבדלה במוצ"ש', () => {
-  const t = shabbatTimesFor('2026-08-21', 50.06, 19.94); // קרקוב
+  const t = shabbatTimesFor('2026-08-21', 50.06, 19.94); // Krakow
   assert.ok(t);
   assert.equal(t.friday, '2026-08-21');
   const fridaySunset = sunset('2026-08-21', 50.06, 19.94)!;
   assert.equal(fridaySunset.getTime() - t.candles.getTime(), 18 * 60_000);
   assert.ok(t.havdalah.getTime() > fridaySunset.getTime());
-  // הבדלה בין 30 ל-90 דקות אחרי שקיעת שישי (יום אחד קדימה + זווית 8.5)
+  // Havdalah between 30 and 90 minutes after Friday's sunset (one day ahead + 8.5-degree angle)
   const gapMin = (t.havdalah.getTime() - fridaySunset.getTime()) / 60_000;
   assert.ok(gapMin > 23 * 60 && gapMin < 26 * 60, `gap ${gapMin}min`);
 });
@@ -61,7 +62,7 @@ test('shabbatTimesFor: שבת עצמה מחזירה את אותה שבת; יום
   assert.equal(shabbatTimesFor('2026-08-19', 50.06, 19.94), null);
 });
 
-/* ---------- אזורי זמן ---------- */
+/* ---------- Time zones ---------- */
 
 test('מדינות עם אזור יחיד ממופות; מדינה לא מוכרת - null', () => {
   assert.equal(timezoneFor('poland', 19.9), 'Europe/Warsaw');
@@ -81,10 +82,10 @@ test('קנדה: הליפקס אטלנטיק, לא טורונטו - הסדר של
 });
 
 test('formatInZone: שעון קיץ אמיתי דרך Intl - שקיעת קיץ בפולין מוצגת CEST', () => {
-  const s = sunset('2026-06-21', 50.06, 19.94)!; // קרקוב, ~18:53 UTC
+  const s = sunset('2026-06-21', 50.06, 19.94)!; // Krakow, ~18:53 UTC
   const local = formatInZone(s, 'Europe/Warsaw');
   assert.ok(local);
-  // CEST = UTC+2: התצוגה חייבת להיות 20:xx, לא 19:xx (החמצת שעון קיץ)
+  // CEST = UTC+2: the display must be 20:xx, not 19:xx (a missed DST)
   assert.match(local, /^20:/);
 });
 
@@ -93,9 +94,10 @@ test('formatInZone: אזור לא קיים - null, לא זריקה ולא זמן
 });
 
 /*
-  הערובה של "מחשב שבת בכל מקום": כל יעד בקטלוג האמיתי חייב לפתור אזור
-  זמן. יעד חדש שנוסף בלי מיפוי מפיל את הטסט הזה בשמו - במקום להופיע
-  למטייל כ"בדקו לוח מקומי" בלי שאף אחד שם לב.
+  The guarantee of "computes Shabbat everywhere": every destination in the
+  real catalog must resolve a time zone. A new destination added without a
+  mapping fails this test by name - instead of appearing to the traveller as
+  "check a local calendar" without anyone noticing.
 */
 test('לכל יעד בקטלוג יש אזור זמן - זמני שבת זמינים בכל מקום', async () => {
   const { destinations } = await import('@/data/destinations.ts');

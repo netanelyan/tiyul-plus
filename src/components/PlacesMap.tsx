@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import type { MapProps } from './MapInner';
 import ThinkingIndicator from './ThinkingIndicator';
 
-// Leaflet נוגע ב-window, לכן טוענים אותו רק בצד הלקוח.
+// Leaflet touches window, so it is loaded client-side only.
 const MapInner = dynamic(() => import('./MapInner'), {
   ssr: false,
   loading: () => (

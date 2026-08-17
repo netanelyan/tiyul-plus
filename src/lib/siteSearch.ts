@@ -4,11 +4,11 @@ import { categoryMeta } from '@/lib/categories';
 import { normalizeQuery } from '@/lib/citySearch';
 
 /**
- * חיפוש כלל-אתרי: ערים, מדינות ומקומות - בעברית, בשם המקומי או ב-slug.
+ * Site-wide search: cities, countries and places - by Hebrew name, local name or slug.
  *
- * הקובץ הזה מייבא את כל הדאטה, ולכן הוא נטען בייבוא דינמי בלבד (ראו
- * `SiteSearch.tsx`) - כדי שהקטלוג לא ייכנס ל-bundle של כל עמוד באתר
- * רק בגלל כפתור חיפוש בניווט.
+ * This file imports all of the data, so it is loaded only through a dynamic import
+ * (see `SiteSearch.tsx`) - so the catalog does not enter every page's bundle merely
+ * because of a search button in the navigation.
  */
 
 export type SearchKind = 'city' | 'country' | 'place';
@@ -17,7 +17,7 @@ export interface SearchResult {
   kind: SearchKind;
   key: string;
   title: string;
-  /** שורת ההקשר מתחת לשם (מדינה / עיר + קטגוריה) */
+  /** The context line under the name (country / city + category) */
   subtitle: string;
   flag?: string;
   href: string;
@@ -32,7 +32,7 @@ export const SEARCH_KIND_LABELS: Record<SearchKind, string> = {
   place: 'מקומות',
 };
 
-/** נבנה פעם אחת לכל טעינת מודול (הדאטה סטטית) */
+/** Built once per module load (the data is static) */
 let cached: SearchResult[] | null = null;
 
 export function buildSearchIndex(): SearchResult[] {
@@ -72,7 +72,7 @@ export function buildSearchIndex(): SearchResult[] {
         title: p.name,
         subtitle: `${categoryMeta[p.category]?.label ?? ''} · ${d.name}`,
         flag: d.flag,
-        // ?place= פותח את דף היעד וגולל/מדגיש את המקום עצמו
+        // ?place= opens the destination page and scrolls to / highlights the place itself
         href: `/destinations/${d.slug}?place=${encodeURIComponent(p.id)}`,
         haystack: [p.name, p.nameLocal, p.id, d.name].map(normalizeQuery).join(' | '),
       });
@@ -84,8 +84,9 @@ export function buildSearchIndex(): SearchResult[] {
 }
 
 /**
- * דירוג פשוט וצפוי: התאמה בתחילת שם > התאמה בתחילת מילה > הכלה כלשהי,
- * ובתוך אותה רמה - מדינות, ערים ואז מקומות. בלי ניקוד מטושטש שמפתיע.
+ * Simple, predictable ranking: a match at the start of a name > a match at the start
+ * of a word > any containment, and within the same level - countries, cities, then
+ * places. No fuzzy scoring that surprises.
  */
 function score(r: SearchResult, q: string): number {
   const title = normalizeQuery(r.title);
@@ -97,19 +98,20 @@ function score(r: SearchResult, q: string): number {
 }
 
 /**
- * תקרה **לכל סוג בנפרד**, ולא תקרה אחת של 24 לכולם.
+ * A cap **per kind separately**, rather than a single cap of 24 for everything.
  *
- * למה: חיפוש "וינה" החזיר עיר אחת ואחריה 23 מקומות בווינה - כל בית קפה,
- * כל שוק וכל מסעדה כשרה. מי שמקליד שם של עיר מחפש את העיר, ואולי כמה
- * נקודות בולטות; קיר של עשרים שורות הוא לא תוצאה עשירה, הוא חיפוש שקשה
- * לקרוא. הפרדת התקרות שומרת על המדינה והעיר תמיד גלויות, גם כשלעיר יש
- * עשרים מקומות שתואמים.
+ * Why: searching "Vienna" returned one city followed by 23 places in Vienna - every
+ * cafe, every market and every kosher restaurant. Someone typing a city name is
+ * looking for the city, and perhaps a few standout points; a wall of twenty rows is
+ * not a rich result, it is a search that is hard to read. Separating the caps keeps
+ * the country and the city always visible, even when the city has twenty matching
+ * places.
  */
 const KIND_CAPS: Record<SearchKind, number> = { country: 4, city: 8, place: 6 };
 
 export interface SearchHits {
   results: SearchResult[];
-  /** כמה הושמטו מעל התקרה, לפי סוג - כדי שה-UI יוכל להגיד זאת בכנות */
+  /** How many were dropped above the cap, per kind - so the UI can say so honestly */
   omitted: number;
 }
 
@@ -136,18 +138,19 @@ export function searchSiteHits(index: SearchResult[], query: string): SearchHits
   return { results, omitted };
 }
 
-/** נשמר לתאימות; מחזיר רק את השורות */
+/** Kept for compatibility; returns only the rows */
 export function searchSite(index: SearchResult[], query: string): SearchResult[] {
   return searchSiteHits(index, query).results;
 }
 
 /**
- * מה מציגים כשהשדה עוד ריק.
+ * What to show while the field is still empty.
  *
- * המצב הריק הקודם היה פסקת הסבר ("מחפשים לפי שם בעברית...") ושום דבר
- * ללחוץ עליו - שכבת חיפוש שנפתחת ומראה תיעוד. כאן יש התחלה אמיתית:
- * היעדים עם הדירוג העריכתי הגבוה ביותר, שזה נתון קיים בדאטה ולא בחירה
- * שהומצאה כאן. יעד בלי דירוג פשוט לא מופיע.
+ * The previous empty state was a paragraph of explanation and nothing to click - a
+ * search layer that opens and shows documentation. Here there is a real starting
+ * point: the destinations with the highest editorial rating, which is an existing
+ * field in the data rather than a choice invented here. A destination with no rating
+ * simply does not appear.
  */
 export function popularDestinations(index: SearchResult[], count = 6): SearchResult[] {
   const byKey = new Map(
@@ -159,8 +162,9 @@ export function popularDestinations(index: SearchResult[], count = 6): SearchRes
     .filter((r) => byKey.has(r.key))
     .sort((a, b) => byKey.get(b.key)!.score - byKey.get(a.key)!.score);
 
-  // יעד אחד לכל מדינה. בלי זה שורות הפתיחה מתמלאות בשתי יבשות עם דירוג
-  // גבוה, והרשימה נראית כמו מדף אחד של הקטלוג ולא כמו הרוחב שלו.
+  // One destination per country. Without this the opening rows fill up with two
+  // highly-rated continents, and the list looks like one shelf of the catalog rather
+  // than its breadth.
   const seen = new Set<string>();
   const out: SearchResult[] = [];
   for (const r of ranked) {

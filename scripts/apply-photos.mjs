@@ -1,13 +1,14 @@
-// כתיבת התמונות מ-photo-report.json אל src/data/destinations.ts.
-// הסקריפט הזה לא נוגע ברשת בכוונה: כל האימות כבר נעשה ב-fetch-photos.mjs,
-// וההפרדה הזו היא שמאפשרת להריץ את האיתור על מחשב עם רשת ואת העריכה
-// בסביבה שבה הריפו חי.
+// Writing the photos from photo-report.json into src/data/destinations.ts.
+// This script deliberately touches no network: all verification was already
+// done in fetch-photos.mjs, and this separation is what allows running the
+// lookup on a machine with network access and the editing in the
+// environment where the repo lives.
 //
-//   node scripts/apply-photos.mjs                  רק רשומות status=ok
-//   node scripts/apply-photos.mjs --include-review גם מה שסומן לבדיקה
-//   node scripts/apply-photos.mjs --dry-run        בלי לכתוב
+//   node scripts/apply-photos.mjs                  only status=ok entries
+//   node scripts/apply-photos.mjs --include-review also what was flagged for review
+//   node scripts/apply-photos.mjs --dry-run        without writing
 //
-// אחרי הריצה: npx prettier --write src/data/destinations.ts
+// After the run: npx prettier --write src/data/destinations.ts
 import { readFileSync, writeFileSync } from 'node:fs';
 import { parsePlaces, DESTINATIONS_FILE } from './lib/parse-places.mjs';
 
@@ -32,7 +33,7 @@ for (const entry of entries) {
     skipped.push(`${entry.id}: no such place in ${DESTINATIONS_FILE}`);
     continue;
   }
-  // לעולם לא לדרוס תמונה קיימת - הרצה חוזרת חייבת להיות בטוחה
+  // Never overwrite an existing photo - a repeat run must be safe
   if (place.hasPhoto) {
     skipped.push(`${entry.id}: already has a photo`);
     continue;
@@ -48,12 +49,13 @@ for (const entry of entries) {
   applied.push({ entry, place });
 }
 
-// מוסיפים מלמטה למעלה כדי שמספרי השורות שנשמרו בפרסור יישארו נכונים
+// Insert bottom-up so the line numbers recorded during parsing stay correct
 applied.sort((a, b) => b.place.idLine - a.place.idLine);
 
 for (const { entry, place } of applied) {
-  // אותו פורמט שכבר קיים בקובץ: photo: בשורה נפרדת והכתובת מתחתיה,
-  // כי כתובות ויקימדיה תמיד ארוכות מ-printWidth של prettier.
+  // The same format that already exists in the file: photo: on its own
+  // line with the URL beneath it, because Wikimedia URLs are always longer
+  // than prettier's printWidth.
   lines.splice(place.idLine + 1, 0, `${place.indent}photo:`, `${place.indent}  '${entry.photo}',`);
 }
 
@@ -68,7 +70,8 @@ if (skipped.length) {
   for (const s of skipped.slice(0, 40)) console.log(`  ${s}`);
   if (skipped.length > 40) console.log(`  ...and ${skipped.length - 40} more`);
 }
-// בכוונה אין כאן הרצת prettier: אין בריפו קובץ הגדרות, וברירת המחדל של
-// prettier היא מרכאות כפולות - הרצה עליו מחליפה 22 אלף שורות של גרשיים
-// בודדים ומייצרת diff ענק שאין לו שום קשר לתמונות. הפורמט שנכתב כאן כבר
-// זהה לפורמט הקיים בקובץ.
+// Deliberately no prettier run here: the repo has no config file, and
+// prettier's default is double quotes - running it on the file replaces 22
+// thousand lines of single quotes and produces a huge diff that has nothing
+// to do with photos. The format written here is already identical to the
+// format existing in the file.

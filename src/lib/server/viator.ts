@@ -2,44 +2,48 @@ import { destinations } from '@/data/destinations';
 import { currencyForCountry, viatorLanguage } from '@/lib/server/viatorLocale';
 
 /**
- * שרת בלבד - **פעילויות להזמנה מ-Viator, בשאילתה חיה.**
+ * Server only - **bookable activities from Viator, via a live query.**
  *
- * ## ארבעה כללים שהקובץ הזה קיים כדי לאכוף
+ * ## Four rules this file exists to enforce
  *
- * 1. **המפתח לא עוזב את השרת.** אין כאן שום דבר עם `NEXT_PUBLIC_`, והנתיב
- *    היחיד שקורא לכאן הוא `/api/activities`.
- * 2. **שום מספר ושום שם לא נוצרים אצלנו.** כל שדה שמוצג מגיע מהתשובה שלהם
- *    כפי שהיא. מוצר בלי כותרת, בלי מחיר או בלי קישור פשוט **נזרק** - אנחנו
- *    לא משלימים חסר.
- * 3. **הדאטה שלהם לא נשמרת אצלנו.** מטמון בזיכרון בלבד, פחות מהתקרה
- *    שהתיעוד שלהם ממליץ עליה (מתחת ל-24 שעות), ושום דבר לא נכתב לקטלוג,
- *    לטיול או לדאטהבייס. יש טסט שסורק את `src/data` ואת `src/lib/trip`
- *    ונופל אם המילה viator מופיעה שם.
- * 4. **דאטת sandbox היא בדיונית ואסור שתגיע לאדם אמיתי.** ראו
- *    `sandboxBlocked` למטה - במצב sandbox על הדומיין החי לא מוחזר כלום.
+ * 1. **The key never leaves the server.** Nothing here uses `NEXT_PUBLIC_`,
+ *    and the only route calling into here is `/api/activities`.
+ * 2. **No number and no name are ever produced by us.** Every displayed field
+ *    comes from their response as-is. A product missing a title, a price or a
+ *    link is simply **dropped** - we do not fill in gaps.
+ * 3. **Their data is not stored by us.** In-memory cache only, below the
+ *    ceiling their docs recommend (under 24 hours), and nothing is written to
+ *    the catalog, the trip or the database. A test scans `src/data` and
+ *    `src/lib/trip` and fails if the word viator appears there.
+ * 4. **Sandbox data is fictional and must never reach a real person.** See
+ *    `sandboxBlocked` below - in sandbox mode on the live domain nothing is
+ *    returned at all.
  *
- * ## מה התיעוד שלהם אומר, ומה נגזר מזה
+ * ## What their docs say, and what follows from it
  *
- * - בסיס: `https://api.sandbox.viator.com/partner` מול
+ * - Base: `https://api.sandbox.viator.com/partner` vs
  *   `https://api.viator.com/partner`.
- * - אימות בכותרת `exp-api-key`, ו-`Accept: application/json;version=2.0`
- *   חובה (בלי הגרסה מקבלים 400).
- * - מגבלת קצב מתועדת: **150 בקשות בחלון מתגלגל של 10 שניות**, עם המלצה
- *   להמתין 2 שניות על 429. יש כאן מד קצב יוצא שמכבד את זה בהרבה מרווח.
- * - מטמון: התיעוד ממליץ TTL **מתחת ל-24 שעות** על חיפוש, מוצר בודד
- *   ותמונות. כאן זה 6 שעות למוצרים ו-12 לטקסונומיה.
- * - שיוך: `pid`, `mcid`, `medium` (ו-`campaign` אופציונלי) בכתובת היוצאת.
- *   **הסרה או שינוי שלהם = אין תשלום.** לכן בלי pid ו-mcid מוגדרים
- *   הפיצ׳ר לא מציג כלום בכלל - עדיף בלי, מאשר לשלוח תנועה חינם.
+ * - Auth via the `exp-api-key` header, and `Accept: application/json;version=2.0`
+ *   is mandatory (without the version you get 400).
+ * - Documented rate limit: **150 requests per rolling 10-second window**, with
+ *   a recommendation to wait 2 seconds on 429. There is an outbound rate
+ *   meter here that honors that with plenty of margin.
+ * - Cache: the docs recommend a TTL **under 24 hours** for search, single
+ *   product and images. Here it is 6 hours for products and 12 for taxonomy.
+ * - Attribution: `pid`, `mcid`, `medium` (and optional `campaign`) on the
+ *   outbound URL. **Removing or changing them = no payment.** Therefore
+ *   without pid and mcid configured the feature shows nothing at all - better
+ *   nothing than sending free traffic.
  */
 
-/* ============ 1. תצורה ============ */
+/* ============ 1. Configuration ============ */
 
 export type ViatorMode = 'off' | 'sandbox' | 'production';
 
 /**
- * **המפתח החי לא נכנס לשימוש עד שנתנאל יאמר.** גם אם `VIATOR_API_KEY`
- * מוגדר, המצב נשאר sandbox אלא אם `VIATOR_MODE=production` נכתב במפורש.
+ * **The live key is not used until Netanel says so.** Even if `VIATOR_API_KEY`
+ * is set, the mode stays sandbox unless `VIATOR_MODE=production` is written
+ * explicitly.
  */
 export function viatorMode(): ViatorMode {
   const raw = (process.env.VIATOR_MODE ?? '').toLowerCase();
@@ -55,17 +59,18 @@ export const viatorBase = (mode: ViatorMode) =>
   process.env.VIATOR_BASE_URL ??
   (mode === 'production' ? 'https://api.viator.com/partner' : 'https://api.sandbox.viator.com/partner');
 
-/** מטבע הבקשה. התצוגה תמיד לפי מה שהם החזירו, לא לפי מה שביקשנו. */
+/** The request currency. Display always follows what they returned, not what we asked for. */
 /*
-  המטבע נגזר עכשיו **מהמדינה של היעד** ולא מהגדרה אחת לכל האתר, וזה
-  יושב ב-`viatorLocale.ts` יחד עם הרשימה של מה שהם בכלל תומכים בו.
-  התצוגה לא מושפעת: היא תמיד מציגה את `pricing.currency` שהם החזירו.
+  The currency is now derived **from the destination's country** rather than a
+  single site-wide setting, and that lives in `viatorLocale.ts` together with
+  the list of what they even support. Display is unaffected: it always shows
+  the `pricing.currency` they returned.
 */
 
 /**
- * **הדומיין החי.** במצב sandbox בקשה שמגיעה לדומיין הזה לא מקבלת כלום:
- * הדאטה שלהם ב-sandbox היא בדיונית, ומטייל אמיתי לא יכול להיתקל בה גם
- * לא לרגע ולא בטעות של תצורה.
+ * **The live domain.** In sandbox mode, a request that reaches this domain
+ * gets nothing: their sandbox data is fictional, and a real traveler must not
+ * encounter it even for a moment or through a configuration mistake.
  */
 const PROD_HOSTS = new Set(['tiyulplus.com', 'www.tiyulplus.com']);
 
@@ -75,7 +80,7 @@ export function sandboxBlocked(host: string | null, mode: ViatorMode): boolean {
   return PROD_HOSTS.has(h);
 }
 
-/* ============ 2. שיוך - הדבר היחיד שאנחנו מרוויחים ממנו ============ */
+/* ============ 2. Attribution - the only thing we earn from ============ */
 
 export interface Attribution {
   pid: string;
@@ -84,7 +89,7 @@ export interface Attribution {
   campaign?: string;
 }
 
-/** רק אותיות, ספרות ומקפים - התיעוד שלהם אומר שתו אחר שובר שיוך לגמרי */
+/** Letters, digits and hyphens only - their docs say any other character breaks attribution entirely */
 const SAFE = /^[A-Za-z0-9-]{1,64}$/;
 
 export function attribution(): Attribution | null {
@@ -98,10 +103,12 @@ export function attribution(): Attribution | null {
 }
 
 /**
- * הכתובת היוצאת. **מוחזר `null` כשאי אפשר לשייך** - קישור בלי pid ו-mcid
- * הוא תנועה שאנחנו נותנים בחינם, וזו בדיוק הנקודה שנתנאל ביקש לבדוק.
+ * The outbound URL. **Returns `null` when attribution is impossible** - a link
+ * without pid and mcid is traffic we give away for free, and that is exactly
+ * the point Netanel asked to check.
  *
- * הפרמטרים נוספים לכתובת של Viator עצמה, ורק אם היא באמת שלהם.
+ * The parameters are added to Viator's own URL, and only if it is really
+ * theirs.
  */
 export function affiliateUrl(productUrl: string, attr: Attribution | null): string | null {
   if (!attr) return null;
@@ -114,7 +121,7 @@ export function affiliateUrl(productUrl: string, attr: Attribution | null): stri
   if (url.protocol !== 'https:') return null;
   const host = url.hostname.toLowerCase();
   if (host !== 'viator.com' && !host.endsWith('.viator.com')) return null;
-  // set ולא append: אם הם כבר החזירו pid משלהם, שלנו הוא הקובע
+  // set, not append: if they already returned a pid of their own, ours wins
   url.searchParams.set('pid', attr.pid);
   url.searchParams.set('mcid', attr.mcid);
   url.searchParams.set('medium', attr.medium);
@@ -122,17 +129,18 @@ export function affiliateUrl(productUrl: string, attr: Attribution | null): stri
   return url.toString();
 }
 
-/* ============ 3. הצורה שמוצגת - צרה בכוונה ============ */
+/* ============ 3. The displayed shape - deliberately narrow ============ */
 
 /**
- * מה שיוצא מכאן החוצה. **כל שדה מגיע מהתשובה שלהם**; אין שדה מחושב, אין
- * המרת מטבע, אין תרגום של הכותרת. `sandbox` נוסע עם כל פריט כדי שהממשק
- * לא יוכל להציג פריט בדיוני בלי לומר זאת.
+ * What leaves this module. **Every field comes from their response**; no
+ * computed field, no currency conversion, no title translation. `sandbox`
+ * travels with every item so the UI can never show a fictional item without
+ * saying so.
  */
 export interface ActivityOffer {
   code: string;
   title: string;
-  /** בדיוק כפי שהם החזירו, כולל המטבע שלהם */
+  /** Exactly as they returned it, including their currency */
   fromPrice: number | null;
   currency: string | null;
   rating: number | null;
@@ -157,13 +165,13 @@ interface RawProduct {
 const num = (v: unknown): number | null =>
   typeof v === 'number' && Number.isFinite(v) ? v : null;
 
-/** התמונה הראשונה שיש לה variant עם כתובת https. שום בנייה של כתובת. */
+/** The first image that has a variant with an https URL. No URL construction whatsoever. */
 function firstImage(images: unknown): string | null {
   if (!Array.isArray(images)) return null;
   for (const img of images) {
     const variants = (img as { variants?: unknown })?.variants;
     if (!Array.isArray(variants)) continue;
-    // הגדולה ביותר שעדיין סבירה לכרטיס
+    // the largest that is still reasonable for a card
     const sorted = [...variants].sort(
       (a, b) => (num((b as { width?: unknown }).width) ?? 0) - (num((a as { width?: unknown }).width) ?? 0),
     );
@@ -177,9 +185,9 @@ function firstImage(images: unknown): string | null {
 }
 
 /**
- * מיפוי סובלני בכוונה: **מוצר שחסר לו אחד מהשלושה - כותרת, קישור או
- * מחיר - נזרק.** לא ממציאים "מחיר לא זמין", ולא מציגים כרטיס שאי אפשר
- * להזמין דרכו.
+ * Deliberately tolerant mapping: **a product missing any of the three - a
+ * title, a link or a price - is dropped.** We do not invent "price
+ * unavailable", and we do not show a card that cannot be booked through.
  */
 export function toOffer(raw: RawProduct, attr: Attribution | null, sandbox: boolean): ActivityOffer | null {
   const code = typeof raw.productCode === 'string' ? raw.productCode : '';
@@ -188,11 +196,11 @@ export function toOffer(raw: RawProduct, attr: Attribution | null, sandbox: bool
   if (!code || !title || !rawUrl) return null;
 
   const url = affiliateUrl(rawUrl, attr);
-  if (!url) return null; // בלי שיוך אין קישור, ובלי קישור אין כרטיס
+  if (!url) return null; // no attribution means no link, and no link means no card
 
   const fromPrice = num(raw.pricing?.summary?.fromPrice);
   const cur = typeof raw.pricing?.currency === 'string' ? raw.pricing.currency : null;
-  if (fromPrice === null || !cur) return null; // מחיר חלקי הוא מחיר מטעה
+  if (fromPrice === null || !cur) return null; // a partial price is a misleading price
 
   return {
     code,
@@ -209,7 +217,7 @@ export function toOffer(raw: RawProduct, attr: Attribution | null, sandbox: bool
   };
 }
 
-/* ============ 4. מטמון ומד קצב ============ */
+/* ============ 4. Cache and rate meter ============ */
 
 interface Entry<T> {
   value: T;
@@ -217,7 +225,7 @@ interface Entry<T> {
 }
 const cache = new Map<string, Entry<unknown>>();
 
-/** מתחת לתקרה שהתיעוד שלהם ממליץ עליה (24 שעות), ובזיכרון בלבד. */
+/** Below the ceiling their docs recommend (24 hours), and in memory only. */
 const PRODUCTS_TTL_MS = 6 * 60 * 60_000;
 const TAXONOMY_TTL_MS = 12 * 60 * 60_000;
 
@@ -232,21 +240,22 @@ function cached<T>(key: string, ttl: number): T | undefined {
 }
 
 function put<T>(key: string, value: T): T {
-  if (cache.size > 500) cache.clear(); // הגנת זיכרון גסה, לא דליפה
+  if (cache.size > 500) cache.clear(); // crude memory guard, not a leak
   cache.set(key, { value, at: Date.now() });
   return value;
 }
 
-/** לניקוי בין בדיקות */
+/** For cleanup between tests */
 export function resetViatorCacheForTest(): void {
   cache.clear();
   outbound.length = 0;
 }
 
 /**
- * מד קצב **יוצא**, מעל המכסות שלנו למשתמש. התיעוד שלהם: 150 בקשות
- * בחלון מתגלגל של 10 שניות. כאן 30 - סדר גודל מתחת, כי אין שום תרחיש
- * אמיתי שדורש יותר, וחריגה אצלם היא חסימה שפוגעת בכל המשתמשים שלנו.
+ * **Outbound** rate meter, on top of our per-user quotas. Their docs: 150
+ * requests per rolling 10-second window. Here 30 - an order of magnitude
+ * below, because no real scenario needs more, and exceeding it on their side
+ * is a block that hurts all of our users.
  */
 const OUTBOUND_MAX = 30;
 const OUTBOUND_WINDOW_MS = 10_000;
@@ -260,11 +269,12 @@ function outboundAllowed(): boolean {
   return true;
 }
 
-/* ============ 5. הקריאה עצמה ============ */
+/* ============ 5. The call itself ============ */
 
 /**
- * **לעולם לא זורק.** כישלון, איטיות, 429 או שינוי בצורת התשובה מחזירים
- * `null`, והמסך ממשיך בלי המדור. תקלה אצלם היא לא תקלה אצלנו.
+ * **Never throws.** A failure, slowness, 429 or a change in the response
+ * shape returns `null`, and the screen continues without the section. An
+ * outage on their side is not an outage on ours.
  */
 async function callViator<T>(path: string, body: unknown, mode: ViatorMode): Promise<T | null> {
   const key = apiKey(mode);
@@ -293,7 +303,7 @@ async function callViator<T>(path: string, body: unknown, mode: ViatorMode): Pro
   }
 }
 
-/* ---------- טקסונומיה: מהעיר שלנו למזהה שלהם ---------- */
+/* ---------- Taxonomy: from our city to their id ---------- */
 
 interface ViatorDestination {
   destinationId?: unknown;
@@ -313,10 +323,11 @@ function km(aLat: number, aLng: number, bLat: number, bLng: number): number {
 }
 
 /**
- * **ההתאמה נעשית לפי קואורדינטות, לא לפי שם.** שם עיר הוא בדיוק המלכודת
- * שהקטלוג הזה נכווה ממנה שוב ושוב (קרטחנה בספרד, דיירה באנגליה). המרכז
- * של היעד שלנו כבר קיים ומאומת, אז נבחר היעד שלהם הקרוב אליו ביותר בטווח
- * סביר. מעבר לטווח - לא מחזירים כלום.
+ * **Matching is done by coordinates, not by name.** A city name is exactly
+ * the trap this catalog has been burned by again and again (Cartagena in
+ * Spain, Deira in England). Our destination's center already exists and is
+ * verified, so we pick their destination closest to it within a reasonable
+ * range. Beyond the range - return nothing.
  */
 const MAX_MATCH_KM = 60;
 
@@ -338,7 +349,7 @@ export function matchDestination(
   return best?.id ?? null;
 }
 
-/** המדינה של העיר, לגזירת המטבע. `null` כשהעיר אינה בקטלוג. */
+/** The city's country, for deriving the currency. `null` when the city is not in the catalog. */
 export function countryOfCity(citySlug: string): string | null {
   return destinations.find((d) => d.slug === citySlug)?.countrySlug ?? null;
 }
@@ -356,12 +367,12 @@ async function destinationIdFor(citySlug: string, mode: ViatorMode): Promise<num
   return matchDestination(list, dest.center.lat, dest.center.lng);
 }
 
-/* ---------- חיפוש ---------- */
+/* ---------- Search ---------- */
 
 export interface ActivitiesResult {
   mode: ViatorMode;
   offers: ActivityOffer[];
-  /** למה אין תוצאות. מוצג למשתמש בעברית ע"י הרכיב, לא כאן. */
+  /** Why there are no results. Shown to the user in Hebrew by the component, not here. */
   reason: 'ok' | 'off' | 'no-attribution' | 'no-destination' | 'unavailable' | 'empty' | 'sandbox-blocked';
 }
 
@@ -376,7 +387,7 @@ export async function activitiesForCity(
   if (sandboxBlocked(host, mode)) return { mode, offers: [], reason: 'sandbox-blocked' };
 
   const attr = attribution();
-  // בלי שיוך אין פיצ׳ר. עדיף בלי מדור מאשר לשלוח תנועה שלא נספרת לנו.
+  // Without attribution there is no feature. Better no section than sending traffic that is not counted for us.
   if (!attr) return { mode, offers: [], reason: 'no-attribution' };
 
   const destinationId = await destinationIdFor(citySlug, mode);

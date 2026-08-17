@@ -1,19 +1,20 @@
-// הוכחה שההעברה ל-Supabase היא העתקה טהורה. **אינו נוגע ברשת.**
+// Proof that the migration to Supabase is a pure copy. **Touches no network.**
 //
-// מריץ files -> rows -> files ומשווה השוואה עמוקה מול המקור. אם משהו
-// אבד, נוסף, שוכתב או שינה סדר - הבדיקה נופלת ומדפיסה את הנתיב המדויק
-// של ההבדל הראשון.
+// Runs files -> rows -> files and deep-compares against the source. If
+// anything was lost, added, rewritten or reordered - the check fails and
+// prints the exact path of the first difference.
 //
-// **למה זה ולא ספירה:** ספירת מדינות/יעדים/מקומות יכולה להיות מושלמת
-// בזמן ששדה `kosherNote` נשמט מכל רשומה. הספירה היא תנאי הכרחי ולא
-// מספיק. כאן משווים כל בייט של כל שדה.
+// **Why this and not a count:** counting countries/destinations/places can
+// be perfect while the `kosherNote` field is dropped from every record. The
+// count is a necessary condition, not a sufficient one. Here every byte of
+// every field is compared.
 //
-// הרצה: node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/catalog-roundtrip.mjs
+// Run: node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/catalog-roundtrip.mjs
 import { countries } from '../src/data/countries.ts';
 import { destinations } from '../src/data/destinations.ts';
 import { catalogToRows, rowsToCatalog } from './lib/catalogMap.mjs';
 
-/** משווה עמוק ומחזיר את הנתיב להבדל הראשון, או null אם זהים. */
+/** Deep-compares and returns the path to the first difference, or null if identical. */
 function firstDiff(a, b, path = '') {
   if (a === b) return null;
   if (typeof a !== typeof b) return `${path}: type ${typeof a} vs ${typeof b}`;
@@ -30,8 +31,9 @@ function firstDiff(a, b, path = '') {
   if (typeof a === 'object') {
     const ka = Object.keys(a);
     const kb = Object.keys(b);
-    // נוכחות מפתח היא חלק מהנתונים: שדה אופציונלי שנעדר במקור חייב
-    // להיעדר גם אחרי החזרה, ולא להופיע כ-undefined או null.
+    // Key presence is part of the data: an optional field absent in the
+    // source must also be absent after the return trip, and not appear as
+    // undefined or null.
     const missing = ka.filter((k) => !kb.includes(k));
     const extra = kb.filter((k) => !ka.includes(k));
     if (missing.length) return `${path}: key(s) LOST -> ${missing.join(', ')}`;
@@ -66,8 +68,9 @@ console.log('\ncounts identical: %s', countsMatch ? 'YES' : 'NO');
 console.log('countries deep-equal: %s', dc ? `NO -> ${dc}` : 'YES');
 console.log('destinations deep-equal: %s', dd ? `NO -> ${dd}` : 'YES');
 
-// דגימה נקודתית שמודפסת תמיד, כדי שאפשר יהיה לראות טקסט אמיתי ולא רק
-// סטטוס "עבר". נבחרו רשומות עם שדות אופציונליים, כשרות ועברית.
+// A spot sample that always prints, so real text can be seen rather than
+// just a "passed" status. Records with optional fields, kashrut and Hebrew
+// were chosen.
 const samples = ['dxb-burj-khalifa', 'nyc-katz', 'vie-alef-alef', 'cyc-oia', 'ba-la-boca'];
 console.log('\n--- spot checks (byte comparison of every field) ---');
 for (const id of samples) {
@@ -75,9 +78,10 @@ for (const id of samples) {
   for (const d of destinations) for (const p of d.places) if (p.id === id) before = p;
   for (const d of back.destinations) for (const p of d.places) if (p.id === id) after = p;
   if (!before) { console.log(`  ${id}: NOT FOUND in source`); continue; }
-  // משווים שדה-שדה ולא JSON.stringify: stringify רגיש לסדר המפתחות,
-  // וסדר מפתחות באובייקט אינו נתון. מה שנבדק כאן הוא שכל שדה קיים
-  // בשני הצדדים ושהבייטים שלו זהים.
+  // Compared field by field, not with JSON.stringify: stringify is
+  // sensitive to key order, and object key order is not data. What is
+  // checked here is that every field exists on both sides and that its
+  // bytes are identical.
   const keysB = Object.keys(before).sort();
   const keysA = Object.keys(after ?? {}).sort();
   const sameKeys = JSON.stringify(keysB) === JSON.stringify(keysA);
@@ -90,10 +94,12 @@ for (const id of samples) {
 
 const ok = countsMatch && !dc && !dd;
 
-// ---------- שלב 2: המדפיס עצמו ----------
-// עד כאן נבדק המיפוי בזיכרון. עכשיו נבדק שהקובץ שנוצר, אחרי שנכתב לדיסק
-// ונטען מחדש כ-TypeScript אמיתי, עדיין מכיל בדיוק את אותם נתונים. זה מה
-// שתופס באג ציטוט - גרש בתוך שם לטיני, בקסלאש, או עברית עם גרשיים.
+// ---------- Stage 2: the emitter itself ----------
+// Up to here the in-memory mapping was checked. Now we check that the
+// generated file, after being written to disk and re-loaded as real
+// TypeScript, still contains exactly the same data. This is what catches a
+// quoting bug - an apostrophe inside a Latin name, a backslash, or Hebrew
+// with quotation marks.
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { emitCountries, emitDestinations } from './lib/catalogEmit.mjs';
 

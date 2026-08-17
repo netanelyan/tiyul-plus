@@ -1,9 +1,11 @@
 /**
- * טסטים לקישורי הפוטר ולמספרי הכיסוי.
+ * Tests for the footer links and the coverage numbers.
  *
- * הדבר היחיד שנבדק כאן באמת: **שהכול נגזר מהדאטה**. רשימת יעדים בפוטר
- * ומספר מקומות הם בדיוק סוג הדברים שמישהו "יקבע רגע ביד" בעתיד כדי
- * לפתור משהו, והם יזדקנו בשקט - סשן הדאטה מוסיף יעדים כל לילה.
+ * The only thing really tested here: **that everything is derived from the
+ * data**. A destination list in the footer and a place count are exactly the
+ * kind of things someone will "just hardcode for a moment" in the future to
+ * solve something, and they will go stale silently - the data session adds
+ * destinations every night.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -23,7 +25,7 @@ test('המספרים תואמים לדאטה, ספירה מלאה ולא מדג�
     catalogCounts.places,
     destinations.reduce((n, d) => n + d.places.length, 0),
   );
-  // רק מדינות שיש להן יעד בפועל - מדינה בלי יעדים היא לא "כיסוי"
+  // Only countries that actually have a destination - a country with no destinations is not "coverage"
   const withDests = countries.filter((c) => destinations.some((d) => d.countrySlug === c.slug));
   assert.equal(catalogCounts.countries, withDests.length);
   assert.ok(catalogCounts.countries <= countries.length);
@@ -33,17 +35,18 @@ test('שורת הכיסוי מכילה את שלושת המספרים האמית
   const line = coverageCountsLine();
   assert.ok(line.includes(String(catalogCounts.destinations)));
   assert.ok(line.includes(String(catalogCounts.countries)));
-  // המקומות מוצגים עם מפריד אלפים, אז משווים לצורה המעוצבת
+  // Places are displayed with a thousands separator, so we compare against the formatted form
   assert.ok(line.includes(catalogCounts.places.toLocaleString('he-IL')));
 });
 
 test('אף מספר בקוד אינו כתוב ביד', () => {
   const src = readFileSync('src/lib/server/footerLinks.ts', 'utf8')
-    // הערות מוסרות לפני הסריקה: דוגמה בתיעוד ("1,814 מקומות · 166 יעדים")
-    // היא בדיוק מה שעוזר לקורא הבא, והיא לא נתון שמוצג למשתמש
+    // Comments are removed before the scan: an example in the docs (the
+    // "1,814 places · 166 destinations" line) is exactly what helps the next
+    // reader, and it is not a figure displayed to the user
     .replace(/\/\*[\s\S]*?\*\//g, '')
     .replace(/(^|\s)\/\/.*$/gm, '');
-  // מותרים רק המספרים שהם **תקרות תצוגה**, לא נתונים
+  // Only the numbers that are **display caps** are allowed, not data
   const allowed = new Set(['12', '10', '6', '2', '0', '1']);
   const numbers = (src.match(/(?<![\w-])\d+(?![\w-])/g) ?? []).filter((n) => !allowed.has(n));
   assert.deepEqual(numbers, [], `מספר קשיח בקוד הפוטר: ${numbers.join(', ')}`);

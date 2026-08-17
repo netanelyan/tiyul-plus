@@ -1,20 +1,22 @@
 /**
- * טיול משותף - צד השרת. המארגן פרימיום; החברים חינם.
+ * Shared group trip - server side. The organizer is premium; the friends are free.
  *
- * ## מודל ההרשאות: הקוד הוא ההרשאה
+ * ## The permission model: the code IS the permission
  *
- * קוד ההזמנה הוא capability: מי שמחזיק אותו ומחובר יכול להצטרף ולראות
- * את הטיול. אין רשימת "מוזמנים" לפי מייל - זו בכוונה אותה פשטות כמו
- * קישור שיתוף, רק עם זהות (member_id אמיתי מ-GoTrue) כדי שהצבעה תהיה
- * אחת לאדם. פקיעה של 30 יום מגבילה את חלון החשיפה של קוד שדלף;
- * חברים שכבר הצטרפו נשארים גם אחרי הפקיעה.
+ * The invite code is a capability: whoever holds it and is signed in can join
+ * and see the trip. There is no "invitees" list by email - this is
+ * deliberately the same simplicity as a share link, only with identity (a
+ * real member_id from GoTrue) so that voting is one per person. A 30-day
+ * expiry limits the exposure window of a leaked code; members who already
+ * joined stay even after expiry.
  *
- * ## הצפייה של חבר היא הטיול החי, דרך השרת
+ * ## A member's view is the live trip, through the server
  *
- * חבר קורא את הטיול של המארגן דרך snapshot שנבנה בשרת (אותו
- * buildSnapshot של הסיפורים - שמות מהקטלוג בלבד) בכל בקשה - כלומר
- * עריכות של המארגן נראות בקריאה הבאה. שום דבר לא נכתב לטיול עצמו:
- * חברים מצביעים, לא עורכים.
+ * A member reads the organizer's trip through a snapshot built on the server
+ * (the same buildSnapshot the stories use - names from the catalog only) on
+ * every request - meaning the organizer's edits are visible on the next
+ * read. Nothing is ever written to the trip itself: members vote, they do
+ * not edit.
  */
 
 import { buildSnapshot, type StorySnapshot } from '@/lib/server/stories';
@@ -41,7 +43,7 @@ interface InviteRow {
   expires_at: string;
 }
 
-/** יצירת קישור הזמנה (או החלפת הקיים) - למארגן בלבד, פרימיום נאכף בנתיב */
+/** Create an invite link (or replace the existing one) - organizer only, premium is enforced in the route */
 export async function createInvite(ownerId: string, tripId: string): Promise<InviteRow | null> {
   const trip = await findOwnTrip(ownerId, tripId);
   if (!trip) return null;
@@ -52,7 +54,7 @@ export async function createInvite(ownerId: string, tripId: string): Promise<Inv
     created_at: new Date().toISOString(),
     expires_at: new Date(Date.now() + INVITE_TTL_DAYS * 86_400_000).toISOString(),
   };
-  // הזמנה קיימת לטיול מוחלפת (unique על owner+trip) - מחיקה ואז הוספה
+  // An existing invite for the trip is replaced (unique on owner+trip) - delete then insert
   await adminDelete('trip_group_invites', pgQuery(eq('owner_id', ownerId), eq('trip_id', tripId)));
   const rows = await adminInsert<InviteRow>('trip_group_invites', row);
   return rows?.[0] ?? null;
@@ -73,7 +75,7 @@ export async function joinGroup(code: string, memberId: string): Promise<JoinRes
   const invite = await findInvite(code);
   if (!invite) return 'not-found';
   if (Date.parse(invite.expires_at) < Date.now()) return 'expired';
-  // המארגן עצמו אינו "חבר" - הוא כבר רואה הכול במסך הטיול
+  // The organizer themselves is not a "member" - they already see everything on the trip screen
   if (invite.owner_id === memberId) return 'already';
 
   const members = await adminSelect<{ member_id: string }>(
@@ -95,7 +97,7 @@ export async function joinGroup(code: string, memberId: string): Promise<JoinRes
 export async function isMember(code: string, memberId: string): Promise<InviteRow | null> {
   const invite = await findInvite(code);
   if (!invite) return null;
-  if (invite.owner_id === memberId) return invite; // המארגן תמיד רשאי
+  if (invite.owner_id === memberId) return invite; // the organizer is always allowed
   const rows = await adminSelect<{ member_id: string }>(
     'trip_group_members',
     pgQuery(
@@ -108,7 +110,7 @@ export async function isMember(code: string, memberId: string): Promise<InviteRo
   return rows && rows.length > 0 ? invite : null;
 }
 
-/** ה-snapshot החי של הטיול עבור חבר - נבנה מחדש בכל קריאה, עריכות נראות */
+/** The live snapshot of the trip for a member - rebuilt on every read, edits are visible */
 export async function groupTripSnapshot(invite: InviteRow): Promise<StorySnapshot | null> {
   const trip = await findOwnTrip(invite.owner_id, invite.trip_id);
   return trip ? buildSnapshot(trip) : null;
@@ -127,7 +129,7 @@ export async function castVote(
   placeId: string,
   vote: 1 | -1 | 0,
 ): Promise<boolean> {
-  // ההצבעה חייבת להיות על עצירה שקיימת בטיול - לא מזהה חופשי
+  // The vote must be on a stop that exists in the trip - not an arbitrary id
   const trip = await findOwnTrip(invite.owner_id, invite.trip_id);
   if (!trip) return false;
   const exists = trip.days.some((d) => d.placeIds.includes(placeId));

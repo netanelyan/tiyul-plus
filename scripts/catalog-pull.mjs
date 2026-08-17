@@ -1,21 +1,25 @@
-// יצירת `src/data/countries.ts` ו-`src/data/destinations.ts` מ-Supabase.
+// Generating `src/data/countries.ts` and `src/data/destinations.ts` from Supabase.
 //
-// זה הכיוון שהופך את Supabase למקור האמת: עורכים בדאטהבייס, מריצים את
-// זה, והקבצים נבנים מחדש. האתר ממשיך לקרוא קבצים ולהיבנות סטטית, ולכן
-// זמן הטעינה בפרודקשן לא משתנה בכלל.
+// This is the direction that makes Supabase the source of truth: edit in
+// the database, run this, and the files are rebuilt. The site keeps
+// reading files and building statically, so production load time does not
+// change at all.
 //
-// **פלט TypeScript ולא JSON, בכוונה.** JSON היה מאבד את בדיקת הטיפוסים
-// של tsc על הדאטה, וזה בדיוק מה שתופס `'shopping'` כתגית לא חוקית או
-// `score` מחוץ לטווח. הפרויקט נשרף על זה ארבע פעמים.
+// **TypeScript output and not JSON, deliberately.** JSON would lose tsc's
+// type checking on the data, and that is exactly what catches `'shopping'`
+// as an invalid tag or a `score` out of range. The project has been burned
+// by this four times.
 //
-// **הפורמט של הקובץ שנוצר לא יהיה זהה בייט-בבייט לקובץ הידני**, כי
-// הקבצים הידניים אינם מעוצבים באופן אחיד (ו-CLAUDE.md אוסר להריץ עליהם
-// prettier). מה שכן מובטח: הנתונים המפוענחים זהים. `scripts/catalog-roundtrip.mjs`
-// מוכיח את זה בהשוואה עמוקה, וכדאי להריץ אותו אחרי כל יצירה.
+// **The generated file's formatting will not be byte-identical to the
+// hand-written file**, because the hand-written files are not uniformly
+// formatted (and CLAUDE.md forbids running prettier on them). What IS
+// guaranteed: the decoded data is identical. `scripts/catalog-roundtrip.mjs`
+// proves that with a deep comparison, and it is worth running after every
+// generation.
 //
-// הרצה:
+// Running:
 //   SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... node scripts/catalog-pull.mjs
-//   (אפשר גם עם SUPABASE_ANON_KEY - הקריאה פתוחה לציבור לפי ה-RLS.)
+//   (SUPABASE_ANON_KEY also works - the read is publicly open per the RLS.)
 import { writeFileSync } from 'node:fs';
 import { createClient } from '@supabase/supabase-js';
 import { rowsToCatalog } from './lib/catalogMap.mjs';

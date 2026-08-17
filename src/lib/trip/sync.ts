@@ -4,23 +4,27 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Trip } from './types';
 
 /**
- * סנכרון טיולים לחשבון (טבלת user_trips, ראו supabase-accounts.sql).
- * המודל: localStorage נשאר מקור העבודה המיידי (offline-first); כשיש
- * משתמש מחובר - כל שינוי נדחף (debounced ע"י AccountSync) וכל התחברות
- * מושכת וממזגת. RLS בצד השרת מבטיח שכל אחד רואה רק את השורות שלו -
- * הלקוח לא שולח user_id בכלל, השרת גוזר אותו מהטוקן.
+ * Trip sync to the account (the user_trips table, see supabase-accounts.sql).
+ * The model: localStorage stays the immediate working copy (offline-first);
+ * when a user is signed in - every change is pushed (debounced by
+ * AccountSync) and every sign-in pulls and merges. RLS on the server side
+ * guarantees everyone sees only their own rows - the client never sends
+ * user_id at all, the server derives it from the token.
  *
- * ## מחיקה היא נתון, לא היעדר נתון
+ * ## A deletion is data, not the absence of data
  *
- * עד לתיקון הזה מחיקה התבטאה רק בכך שהשורה נעלמה. לכל שינוי אחר יש
- * `updatedAt`, ולכן המיזוג יודע להכריע - אבל להיעדר אין חותמת, ולכן
- * **כל עותק מרוחק ניצח כל מחיקה**: snapshot שנקרא רגע לפני הלחיצה, או
- * מכשיר שני שעוד לא סונכרן, החזירו את הטיול לחיים. זה הבאג שדווח.
+ * Until this fix, a deletion was expressed only by the row disappearing.
+ * Every other change has an `updatedAt`, so the merge can decide - but an
+ * absence carries no timestamp, and therefore **every remote copy beat
+ * every deletion**: a snapshot read a moment before the click, or a second
+ * device not yet synced, brought the trip back to life. That is the bug
+ * that was reported.
  *
- * עכשיו מחיקה נכתבת כשורת מצבה: אותה שורה ב-`user_trips` נשארת, אבל
- * ה-`data` שלה מוחלף בחתימה `{ id, name, deletedAt }` בלי תוכן הטיול.
- * זה נותן מצבה **חוצת-מכשירים בלי שינוי סכמה** (אין SQL חדש להריץ),
- * וגם מפסיק לאחסן את תוכן הטיול שנמחק.
+ * Now a deletion is written as a tombstone row: the same row in
+ * `user_trips` remains, but its `data` is replaced with the signature
+ * `{ id, name, deletedAt }` without the trip's content. That gives a
+ * **cross-device tombstone with no schema change** (no new SQL to run),
+ * and also stops storing the content of a trip somebody deleted.
  */
 
 interface Row {
@@ -31,7 +35,7 @@ interface Row {
 
 const stamp = (t: Trip): number => t.updatedAt ?? t.createdAt;
 
-/** שורת מצבה - ללא ימים וללא העדפות, רק כמה זה נמחק */
+/** A tombstone row - no days and no preferences, only when it was deleted */
 export interface TombstoneRow {
   id: string;
   deletedAt: number;
@@ -39,7 +43,7 @@ export interface TombstoneRow {
 
 export interface PullResult {
   trips: Trip[];
-  /** id → מתי נמחק, לפי מה שמכשירים אחרים כתבו */
+  /** id → when it was deleted, per what other devices wrote */
   tombstones: Record<string, number>;
 }
 
@@ -50,10 +54,11 @@ function isTombstone(data: unknown): data is { deletedAt: number } {
 }
 
 export async function pullRemoteTrips(supabase: SupabaseClient): Promise<PullResult | null> {
-  // תקרה הגנתית: משתמש אמיתי מחזיק טיולים בודדים, וגיזום המצבות ממילא
-  // חוסם ב-200 - אבל שאילתה בלי גבול היא הדבר שמפתיע בעוד שנה. 500
-  // מרווח בטוח מעל כל שימוש לגיטימי, החדשים-ראשונים כדי שאם התקרה
-  // אי פעם נחתכת, מה שנופל הוא הישן ביותר.
+  // Defensive cap: a real user holds a handful of trips, and tombstone
+  // pruning already blocks at 200 - but an unbounded query is the thing
+  // that surprises you a year from now. 500 is a safe margin above any
+  // legitimate use, newest-first so that if the cap is ever hit, what
+  // falls off is the oldest.
   const { data, error } = await supabase
     .from('user_trips')
     .select('id,data,updated_at')
@@ -89,9 +94,10 @@ export async function pushTrips(supabase: SupabaseClient, trips: Trip[]): Promis
 }
 
 /**
- * כותב מצבות במקום למחוק שורות. אידמפוטנטי בכוונה: AccountSync קורא לזה
- * בכל משיכה עבור כל מצבה מקומית, כך שמחיקה שנכשלה או שהתחרתה במשיכה
- * מתוקנת מעצמה בסבב הבא - במקום להישאר "מחוק מקומית, קיים בשרת".
+ * Writes tombstones instead of deleting rows. Idempotent on purpose:
+ * AccountSync calls this on every pull for every local tombstone, so a
+ * deletion that failed or raced against a pull repairs itself on the next
+ * round - instead of remaining "deleted locally, alive on the server".
  */
 export async function writeTombstones(
   supabase: SupabaseClient,
@@ -113,12 +119,16 @@ export async function writeTombstones(
 }
 
 /**
- * מיזוג משיכה: לכל id - הגרסה עם החותמת המאוחרת מנצחת; טיולים שקיימים
- * רק בצד אחד נשמרים. מצבות משתתפות במיזוג כמו כל חותמת אחרת:
- * - טיול מרוחק שיש לו מצבה מקומית מאוחרת יותר → **לא** מוחזר לחיים,
- *   ובמקום זאת נכתבת לו מצבה בשרת (תיקון עצמי של מחיקה שלא נקלטה).
- * - מצבה מרוחקת מאוחרת מהעריכה המקומית → הטיול נמחק גם כאן.
- * - עריכה מקומית מאוחרת מהמצבה → העריכה מנצחת, בדיוק כמו בכל התנגשות.
+ * Pull merge: for each id - the version with the later timestamp wins;
+ * trips that exist on only one side are kept. Tombstones participate in
+ * the merge like any other timestamp:
+ * - A remote trip that has a later local tombstone → is **not** brought
+ *   back to life; instead a tombstone is written for it on the server
+ *   (self-repair of a deletion that never landed).
+ * - A remote tombstone later than the local edit → the trip is deleted
+ *   here too.
+ * - A local edit later than the tombstone → the edit wins, exactly like
+ *   any other conflict.
  */
 export function mergeTrips(
   local: Trip[],
@@ -128,9 +138,9 @@ export function mergeTrips(
 ): {
   applyLocally: Trip[];
   pushRemotely: Trip[];
-  /** מצבות שצריך לכתוב לשרת (מחיקה מקומית שהשרת עוד לא יודע עליה) */
+  /** Tombstones to write to the server (a local deletion the server doesn't know about yet) */
   writeRemotely: Record<string, number>;
-  /** מצבות שהגיעו מהשרת וצריך להחיל מקומית */
+  /** Tombstones that arrived from the server and must be applied locally */
   applyDeletions: Record<string, number>;
 } {
   const applyLocally: Trip[] = [];
@@ -140,7 +150,7 @@ export function mergeTrips(
   const localById = new Map(local.map((t) => [t.id, t]));
   const remoteById = new Map(remote.map((t) => [t.id, t]));
 
-  /** המחיקה שהיא הקובעת לאותו id, מקומית או מרוחקת - המאוחרת מהשתיים */
+  /** The governing deletion for a given id, local or remote - the later of the two */
   const tombstoneAt = (id: string): number | null => {
     const a = localTombstones[id];
     const b = remoteTombstones[id];
@@ -151,7 +161,7 @@ export function mergeTrips(
   for (const r of remote) {
     const dead = tombstoneAt(r.id);
     if (dead !== null && dead >= stamp(r)) {
-      // נמחק, והעותק המרוחק אינו חדש מהמחיקה. לא מחזירים לחיים.
+      // Deleted, and the remote copy is not newer than the deletion. Do not resurrect.
       if (localTombstones[r.id] !== undefined && remoteTombstones[r.id] === undefined)
         writeRemotely[r.id] = localTombstones[r.id];
       continue;
@@ -164,17 +174,18 @@ export function mergeTrips(
   for (const l of local) {
     if (remoteById.has(l.id)) continue;
     const dead = tombstoneAt(l.id);
-    if (dead !== null && dead >= stamp(l)) continue; // נמחק - לא דוחפים בחזרה
+    if (dead !== null && dead >= stamp(l)) continue; // deleted - do not push back up
     pushRemotely.push(l);
   }
-  // מצבות מרוחקות שעוד לא ידועות מקומית
+  // Remote tombstones not yet known locally
   for (const [id, at] of Object.entries(remoteTombstones)) {
     if ((localTombstones[id] ?? 0) < at) applyDeletions[id] = at;
   }
-  // מצבות מקומיות שהשרת לא מכיר בכלל (השורה נמחקה, או מעולם לא עלתה).
-  // שווה לכתוב אותן כדי שמכשיר שני שעוד מחזיק את הטיול לא ידחוף אותו
-  // בחזרה - אבל בגבולות: רק מחיקות מהחודש האחרון ולא יותר מ-50 שורות,
-  // אחרת התחברות ראשונה במכשיר ותיק הייתה כותבת מאות שורות מצבה.
+  // Local tombstones the server doesn't know about at all (the row was
+  // deleted, or never went up). Worth writing them so that a second device
+  // still holding the trip doesn't push it back - but within bounds: only
+  // deletions from the last month and no more than 50 rows, otherwise a
+  // first sign-in on an old device would write hundreds of tombstone rows.
   const RECENT_MS = 30 * 24 * 60 * 60 * 1000;
   const now = Date.now();
   const pending = Object.entries(localTombstones)

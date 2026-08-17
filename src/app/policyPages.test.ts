@@ -1,13 +1,15 @@
 /**
- * עמודי המדיניות - **ארבע טענות על מה שאסור לקרות.**
+ * The policy pages - **four claims about what must not happen.**
  *
- * העמודים האלה הם מסמכים משפטיים, ושלוש דרכים לשבור אותם אינן נראות
- * בעין ואינן מפילות שום בדיקה קיימת:
+ * These pages are legal documents, and three ways of breaking them are
+ * invisible to the eye and fail no existing check:
  *
- * 1. עמוד שהקישור אליו קיים בפוטר אבל התוכן שלו עדיין ריק.
- * 2. עמוד עם תוכן שנשאר חסום מאינדוקס - מדיניות שאיש לא ימצא.
- * 3. פער ידוע שנכתב כטקסט רגיל ולכן נקרא כמו תוכן.
- * 4. עמוד בלי `description`, כך שגוגל מציג עליו את תיאור האתר הכללי.
+ * 1. A page linked from the footer whose content is still empty.
+ * 2. A page with content that stays blocked from indexing - a policy
+ *    nobody will find.
+ * 3. A known gap written as ordinary text and therefore reading as content.
+ * 4. A page without a `description`, so Google shows the generic site
+ *    description on it.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -16,7 +18,7 @@ import { join } from 'node:path';
 
 const APP = import.meta.dirname;
 
-/** העמודים שהפוטר מקשר אליהם תחת ״מידע ומדיניות״, ועמוד האודות */
+/** The pages the footer links to under the "info and policies" section, plus the about page */
 const POLICY_PAGES = [
   'about',
   'contact',
@@ -36,23 +38,25 @@ test('כל עמוד שהפוטר מקשר אליו קיים', () => {
 });
 
 /**
- * `PageShell` בלי children מרנדר את מצב ״עדיין לא נכתב״. זה מצב לגיטימי
- * לעמוד חדש, ולא לעמוד שכבר מקושר מכל עמוד באתר.
+ * `PageShell` without children renders the "not yet written" state. That
+ * is a legitimate state for a new page, not for a page already linked from
+ * every page on the site.
  */
 test('**אף עמוד מדיניות לא נשאר על מצב ״עדיין לא נכתב״**', () => {
   const empty: string[] = [];
   for (const p of POLICY_PAGES) {
     const s = src(p);
-    // <PageShell title="..." /> ללא children = השלד הריק
+    // <PageShell title="..." /> without children = the empty skeleton
     if (/<PageShell[^>]*\/>/.test(s)) empty.push(p);
   }
   assert.deepEqual(empty, [], `עמודים ריקים: ${empty.join(', ')}`);
 });
 
 /**
- * `robots: { index: false }` נוסף בכוונה כשהעמודים היו ריקים, כדי שגוגל
- * לא יאנדקס עמוד מדיניות בלי מדיניות. ברגע שיש תוכן זה הופך לבאג הפוך -
- * ותנאי שימוש שאי אפשר למצוא שווים פחות מכלום.
+ * `robots: { index: false }` was added deliberately when the pages were
+ * empty, so Google would not index a policy page with no policy. The
+ * moment there is content it becomes the opposite bug - and terms of use
+ * that cannot be found are worth less than nothing.
  */
 test('עמוד מדיניות עם תוכן אינו חסום מאינדוקס', () => {
   const blocked = POLICY_PAGES.filter((p) => /robots:\s*\{[^}]*index:\s*false/.test(src(p)));
@@ -65,10 +69,11 @@ test('לכל עמוד מדיניות יש description משלו', () => {
 });
 
 /**
- * **הטענה החשובה כאן.** פער ידוע חייב לעבור דרך `Gap`, שמרנדר אותו
- * ממוסגר וצהוב. פער שנכתב כפסקה רגילה נקרא כמו תוכן, וזה בדיוק המצב
- * שהעמודים האלה נכתבו כדי למנוע: טקסט שנשמע כמו מדיניות במקום שבו אין
- * מדיניות.
+ * **The important claim here.** A known gap must go through `Gap`, which
+ * renders it framed and yellow. A gap written as an ordinary paragraph
+ * reads as content, and that is exactly the situation these pages were
+ * written to prevent: text that sounds like policy where there is no
+ * policy.
  */
 test('**כל [למילוי] ו-[לבירור] עובר דרך רכיב Gap**', () => {
   const offenders: string[] = [];
@@ -76,7 +81,7 @@ test('**כל [למילוי] ו-[לבירור] עובר דרך רכיב Gap**', (
     const lines = src(p).split('\n');
     lines.forEach((line, i) => {
       if (!/\[(למילוי|לבירור)\]/.test(line)) return;
-      // מותר בתוך הרכיב עצמו (הכיתוב) ובתוך הערה שמסבירה את הכלל
+      // Allowed inside the component itself (the label) and inside a comment explaining the rule
       if (line.includes('//') || line.includes('*')) return;
       offenders.push(`${p}/page.tsx:${i + 1}: ${line.trim().slice(0, 70)}`);
     });
@@ -89,8 +94,9 @@ test('**כל [למילוי] ו-[לבירור] עובר דרך רכיב Gap**', (
 });
 
 /**
- * שלוש טענות עובדתיות שנכתבו מתוך ביקורת קוד, וששינוי בקוד יהפוך
- * לשקריות בלי שאיש ישים לב. הבדיקה קושרת את הטקסט למקור שלו.
+ * Three factual claims written out of a code audit, which a code change
+ * would make false without anyone noticing. The test ties the text to its
+ * source.
  */
 test('הטענה ״אין עוגיות״ עדיין נכונה', () => {
   const files: string[] = [];
@@ -105,9 +111,9 @@ test('הטענה ״אין עוגיות״ עדיין נכונה', () => {
   const hits: string[] = [];
   for (const f of files) {
     const s = readFileSync(f, 'utf8');
-    // הצבת עוגייה בדפדפן, או Set-Cookie מהשרת
+    // Setting a cookie in the browser, or Set-Cookie from the server
     if (/document\.cookie\s*=/.test(s) || /['"]Set-Cookie['"]/i.test(s)) hits.push(f);
-    // cookies() של next/headers
+    // cookies() from next/headers
     if (/from\s+['"]next\/headers['"]/.test(s) && /\bcookies\b/.test(s)) hits.push(f);
   }
   assert.deepEqual(

@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 };
 
 /**
- * /join/<code> - הצד של החברים בטיול משותף: מצטרפים דרך קישור ההזמנה,
- * רואים את הטיול החי ומצביעים 👍/👎 על עצירות. דורש התחברות (ההצבעה
- * היא אחת לאדם), אבל לא פרימיום - רק המארגן משלם.
+ * /join/<code> - the friends' side of a shared trip: they join via the invite
+ * link, see the live trip and vote 👍/👎 on stops. Requires signing in (the
+ * vote is one per person), but not premium - only the organizer pays.
  */
 export default async function JoinPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;

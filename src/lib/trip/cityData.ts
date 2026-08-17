@@ -5,28 +5,28 @@ import type { Destination } from '@/lib/types';
 import { saveCities, storedCities } from './cityStore';
 
 /**
- * מטמון הערים בצד הלקוח: מוריד מ-`/api/cities` רק את הערים שהטיול
- * באמת נוגע בהן, ושומר אותן לכל אורך החיים של הטאב.
+ * The client-side city cache: downloads from `/api/cities` only the cities the trip
+ * actually touches, and keeps them for the whole lifetime of the tab.
  *
- * **הבעיה שזה פותר, במספרים.** `TripWorkspace` ייבא את הקטלוג כולו
- * סטטית, ולכן `/chat` ו-`/planner` הורידו 492kB דחוסים (2MB לפני
- * דחיסה) כדי לצייר טיול של עיר אחת עד שש. עיר עולה כ-7kB.
+ * **The problem this solves, in numbers.** `TripWorkspace` imported the whole catalog
+ * statically, so `/chat` and `/planner` downloaded 492kB compressed (2MB uncompressed)
+ * in order to draw a trip of one to six cities. One city costs about 7kB.
  *
- * **למה מטמון ברמת המודול ולא state:** המשתמש מחליף בין `/chat`
- * ל-`/planner`, בין טיולים, ובין ימים - ובלי מטמון כל מעבר כזה היה
- * בקשת רשת נוספת על אותה דאטה בדיוק. הדאטה סטטית לכל deploy, אז אין
- * שום סיבה לבקש אותה פעמיים.
+ * **Why a module-level cache and not state:** the user switches between `/chat` and
+ * `/planner`, between trips, and between days - and with no cache every such switch
+ * would be another network request for exactly the same data. The data is static per
+ * deploy, so there is no reason to ask for it twice.
  */
 const cache = new Map<string, Destination>();
 const inflight = new Map<string, Promise<unknown>>();
-/** slug שהשרת החזיר עליו כלום - כדי לא לנסות אותו בלולאה */
+/** A slug the server returned nothing for - so we do not retry it in a loop */
 const missing = new Set<string>();
 
 /**
- * המטמון בזיכרון נטען פעם אחת מהדיסק (`cityStore`), כדי שפתיחה של
- * האפליקציה **בלי רשת** תצייר את הטיול מיד במקום להיתקע בטעינה.
- * זה גם מה שהופך את "טוען" למצב קצר ואמיתי: אם העיר כבר נשמרה,
- * אין המתנה בכלל, גם כשיש רשת.
+ * The in-memory cache is loaded once from disk (`cityStore`), so opening the app
+ * **with no network** draws the trip immediately instead of getting stuck on loading.
+ * That is also what makes "loading" a short and honest state: if the city is already
+ * saved there is no wait at all, even when there is a network.
  */
 let hydrated = false;
 function hydrate(): void {
@@ -40,7 +40,7 @@ export function cachedCity(slug: string): Destination | undefined {
   return cache.get(slug);
 }
 
-/** לטסטים בלבד: מטמון ברמת מודול שורד בין טסטים ומזייף תוצאות */
+/** For tests only: a module-level cache survives between tests and fakes results */
 export function __resetCityCache(): void {
   cache.clear();
   inflight.clear();
@@ -60,14 +60,14 @@ export async function fetchCities(slugs: string[]): Promise<Destination[]> {
       .then((data: { cities?: Destination[] }) => {
         const got = (data.cities ?? []).filter((c) => c?.slug);
         for (const c of got) cache.set(c.slug, c);
-        // לדיסק, כדי שהטיול ייפתח בלי רשת. נשמר רק מה שהתבקש בפועל
-        // עבור טיול - `pruneCities` בהמשך מוחק מה שכבר לא שייך לאף טיול.
+        // To disk, so the trip opens with no network. Only what was actually requested
+        // for a trip is stored - `pruneCities` later deletes whatever no longer belongs to any trip.
         saveCities(got);
-        // מה שלא חזר - לא קיים בקטלוג (או נכשל); מסמנים כדי לא לנסות שוב
+        // Whatever did not come back does not exist in the catalog (or failed); mark it so we do not retry
         for (const s of toFetch) if (!cache.has(s)) missing.add(s);
       })
       .catch(() => {
-        // רשת נפלה: **לא** מסמנים חסר, כדי שניסיון הבא יעבוד
+        // The network failed: we do **not** mark it missing, so the next attempt works
         for (const s of toFetch) inflight.delete(s);
       })
       .finally(() => {
@@ -83,12 +83,12 @@ export async function fetchCities(slugs: string[]): Promise<Destination[]> {
 
 export interface CityData {
   cities: Record<string, Destination>;
-  /** true רק בהמתנה הראשונה, כשעוד אין שום עיר ביד - ראו השימוש */
+  /** true only during the first wait, while no city is in hand yet - see the usage */
   loading: boolean;
 }
 
 export function useCityData(slugs: string[]): CityData {
-  // מפתח יציב: מערך חדש בכל render לא יפעיל את האפקט מחדש
+  // A stable key: a new array on every render must not re-trigger the effect
   const key = useMemo(() => [...new Set(slugs)].filter(Boolean).sort().join(','), [slugs]);
   const [, bump] = useState(0);
 
@@ -114,8 +114,8 @@ export function useCityData(slugs: string[]): CityData {
       const c = cache.get(s);
       if (c) cities[s] = c;
     }
-    // "טוען" = יש ערים לבקש ואף אחת מהן עוד לא ביד. אחרי שיש ולו אחת
-    // ממשיכים לצייר, כדי שהוספת עיר באמצע שיחה לא תרוקן את המסך.
+    // "Loading" = there are cities to request and none of them is in hand yet. Once
+    // even one is, we keep drawing, so adding a city mid-conversation does not blank the screen.
     const known = list.filter((s) => cache.has(s) || missing.has(s)).length;
     return { cities, loading: list.length > 0 && known === 0 };
   }, [key, cache.size, missing.size]);

@@ -9,26 +9,29 @@ import { travelerLevel } from '@/data/worldCountries';
 import { OFFLINE_HINT, useOnline } from '@/lib/offline/online';
 
 /**
- * חשבון המשתמש בניווט + מודל ההתחברות.
+ * The user account in the nav + the login modal.
  *
- * עקרונות המודל: בלי סיסמאות (קוד למייל), שישה תאי ספרות עם הדבקה
- * ושליחה אוטומטית, מצב הצלחה מונפש, זכירת המייל האחרון, ספירה לאחור
- * לשליחה חוזרת, Escape סוגר. אם המשתמש לוחץ על הקישור שבמייל במקום
- * להזין קוד - supabase-js קולט את הסשן מה-URL והמודל נסגר מעצמו.
+ * The modal's principles: no passwords (a code sent to email), six digit
+ * cells with paste and auto-submit, an animated success state, remembering
+ * the last email, a countdown for resending, Escape closes. If the user
+ * clicks the link in the email instead of typing a code - supabase-js picks
+ * up the session from the URL and the modal closes on its own.
  *
- * המודל מרונדר ב-portal אל ה-body: הוא יושב בתוך ההדר, ולהדר יש
- * backdrop-blur שיוצר containing block ל-position:fixed (אותה מלכודת
- * כמו rise-in+transform שמתועדת ב-TripWorkspace) - בלי portal ה"מסך
- * המלא" נכלא בתוך פס הניווט.
+ * The modal renders in a portal into the body: it sits inside the header,
+ * and the header has backdrop-blur which creates a containing block for
+ * position:fixed (the same trap as rise-in+transform documented in
+ * TripWorkspace) - without the portal the "full screen" gets jailed inside
+ * the nav bar.
  */
 export default function AccountButton() {
   const auth = useAuth();
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   /**
-   * התחברות היא קוד חד-פעמי במייל - כלומר שרת. בלי רשת הכפתור מושבת
-   * ואומר זאת, במקום לפתוח טופס ששולח לשום מקום. מי שכבר מחובר ממשיך
-   * לראות את התפריט: הוא נקרא מהמצב המקומי ולא מהרשת.
+   * Login is a one-time code by email - i.e. a server. Without a network the
+   * button is disabled and says so, instead of opening a form that submits
+   * to nowhere. Someone already signed in keeps seeing the menu: it is read
+   * from local state, not from the network.
    */
   const offlineNow = !useOnline();
 
@@ -69,7 +72,7 @@ export default function AccountButton() {
                 document.body,
               )}
             <div className="rise-in absolute end-0 top-11 z-50 w-72 overflow-hidden rounded-2xl bg-shell shadow-xl ring-1 ring-night/10">
-              {/* כותרת לילה - אותה שפה עיצובית כמו מודל ההתחברות */}
+              {/* Night header - the same design language as the login modal */}
               <div className="relative bg-night px-4 py-3.5">
                 <div
                   aria-hidden
@@ -106,7 +109,7 @@ export default function AccountButton() {
               </div>
 
               <div className="p-2">
-                {/* שורת הדרכון - סטטוס כיפי שמושך אל האזור האישי */}
+                {/* The passport row - a fun status that pulls toward the account area */}
                 <Link
                   href="/account"
                   onClick={() => setMenuOpen(false)}
@@ -144,10 +147,11 @@ export default function AccountButton() {
                   האזור האישי
                 </Link>
                 {/*
-                  קישור לניהול רק לאדמין/בעלים. זו נוחות ולא אבטחה: התפקיד
-                  כאן נקרא מהפרופיל בדפדפן, ולכן מי שיערוך אותו ידנית יראה
-                  קישור - ויקבל "לא נמצא", כי כל נתיב /api/admin קורא את
-                  התפקיד מהדאטהבייס מחדש בכל בקשה.
+                  An admin link only for admin/owner. This is convenience,
+                  not security: the role here is read from the profile in the
+                  browser, so someone who edits it manually will see a link -
+                  and get "not found", because every /api/admin route re-reads
+                  the role from the database on every request.
                 */}
                 {auth.profile && auth.profile.role !== 'user' && (
                   <Link
@@ -221,7 +225,7 @@ export default function AccountButton() {
   );
 }
 
-/* ================================ המודל ================================ */
+/* ================================ The modal ================================ */
 
 const RESEND_SECONDS = 30;
 const LAST_EMAIL_KEY = 'tiyul-plus:last-email';
@@ -239,23 +243,24 @@ function LoginModal({ onClose }: { onClose: () => void }) {
   const submittingRef = useRef(false);
   const emailInputRef = useRef<HTMLInputElement>(null);
 
-  // פוקוס אוטומטי רק במכשירים עם מקלדת פיזית: בטלפון autoFocus מקפיץ
-  // את המקלדת מיד ומסתיר את המודל לפני שרואים אותו בכלל.
+  // Auto-focus only on devices with a physical keyboard: on a phone,
+  // autoFocus pops the keyboard immediately and hides the modal before it is
+  // even seen.
   useEffect(() => {
     if (window.matchMedia('(pointer: fine)').matches) emailInputRef.current?.focus();
   }, []);
 
-  // מייל אחרון שזכור מהתחברות קודמת
+  // The last email remembered from a previous login
   useEffect(() => {
     try {
       const last = localStorage.getItem(LAST_EMAIL_KEY);
       if (last) setEmail(last);
     } catch {
-      /* אין אחסון - מתחילים ריק */
+      /* no storage - start empty */
     }
   }, []);
 
-  // Escape סוגר (לא באמצע אימות ולא במסך ההצלחה)
+  // Escape closes (not mid-verification and not on the success screen)
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && step !== 'success') onClose();
@@ -264,7 +269,7 @@ function LoginModal({ onClose }: { onClose: () => void }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [onClose, step]);
 
-  // התחברות שהושלמה מבחוץ (קישור מהמייל) - מדלגים ישר להצלחה
+  // A login completed externally (the link from the email) - skip straight to success
   useEffect(() => {
     if (auth.user && step !== 'success') {
       setStep('success');
@@ -292,7 +297,7 @@ function LoginModal({ onClose }: { onClose: () => void }) {
       try {
         localStorage.setItem(LAST_EMAIL_KEY, email.trim());
       } catch {
-        /* לא קריטי */
+        /* not critical */
       }
       setStep('code');
       setCode('');
@@ -333,7 +338,7 @@ function LoginModal({ onClose }: { onClose: () => void }) {
         aria-label="התחברות לטיול+"
         className="rise-in relative w-full max-w-sm overflow-hidden rounded-3xl bg-shell shadow-2xl ring-1 ring-night/10"
       >
-        {/* כותרת ממותגת: רקע לילה עם זריחה עדינה + הלוגו */}
+        {/* Branded header: night background with a subtle sunrise glow + the logo */}
         <div className="relative bg-night px-6 pb-5 pt-6">
           <div
             aria-hidden
@@ -518,7 +523,7 @@ function LoginModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-/* ---------- שישה תאי קוד: input נסתר אחד מעל תאים מעוצבים ---------- */
+/* ---------- Six code cells: one hidden input above styled cells ---------- */
 
 function OtpBoxes({
   value,

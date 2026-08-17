@@ -1,22 +1,24 @@
-// הדפסת הקטלוג לליטרלים של TypeScript.
+// Printing the catalog as TypeScript literals.
 //
-// **למה זה קובץ נפרד:** כדי ש-`catalog-roundtrip.mjs` יוכל לבדוק את
-// המדפיס בלי רשת. בדיקת המיפוי לבדה לא מספיקה - באג ציטוט כאן היה
-// משחית טקסט בלי שאף ספירה תשים לב. הפרויקט כבר נשרף על גרשים בתוך
-// מחרוזות עבריות, ולכן זה נבדק ולא נסמך על העין.
+// **Why this is a separate file:** so that `catalog-roundtrip.mjs` can test the
+// printer without a network. Testing the mapping alone is not enough - a quoting
+// bug here would corrupt text without any count noticing. The project has already
+// been burned by apostrophes inside Hebrew strings, so this is tested rather than
+// trusted to the eye.
 
 /**
- * ציטוט מחרוזת. מעדיף גרשיים בודדים; עובר לכפולים כשיש גרש בטקסט
- * (שמות לטיניים כמו "Schindler's", ובעברית משתמשים ב-׳ U+05F3 שאינו
- * דורש דבר). מחרוזת שיש בה גם וגם מטופלת בבריחה מפורשת, ולכן אין מקרה
- * שנשבר. בקסלאש חייב לברוח ראשון, אחרת הוא בורח מהבריחה שאחריו.
+ * String quoting. Prefers single quotes; switches to double quotes when the text
+ * contains an apostrophe (Latin names like "Schindler's"; Hebrew uses the
+ * geresh U+05F3, which requires nothing). A string containing both is handled with explicit
+ * escaping, so there is no breaking case. Backslash must be escaped first,
+ * otherwise it escapes the escape that follows it.
  */
 export function q(s) {
   const esc = s.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/\r/g, '\\r');
   return esc.includes("'") ? `"${esc.replace(/"/g, '\\"')}"` : `'${esc}'`;
 }
 
-/** ליטרל דטרמיניסטי: אותה כניסה נותנת תמיד אותו פלט, בלי diff מדומה. */
+/** Deterministic literal: the same input always yields the same output, no phantom diff. */
 export function lit(v, indent = 0) {
   const pad = ' '.repeat(indent);
   if (v === null) return 'null';

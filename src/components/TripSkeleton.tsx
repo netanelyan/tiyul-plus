@@ -1,18 +1,20 @@
 /**
- * שלד בצורת מסך הטיול, לטעינה הראשונה של הערים.
+ * A skeleton shaped like the trip screen, for the first load of the cities.
  *
- * עד עכשיו ההמתנה הזאת הציגה קופסה קטנה אחת עם "טוען את הטיולים שלך" -
- * מסך שלם מתחלף בכלום, ואז קופץ לתצוגה מלאה. השלד מצייר את **המבנה**
- * של מה שעומד להופיע - שורת כותרת, רצועת ימי טיול, מלבן מפה, שורות
- * עצירות - כך שהמסך "קיים" מהרגע הראשון והתוכן רק מתמלא לתוכו.
+ * Until now this wait showed one small box with a "loading your trips"
+ * message - a whole screen swapping to nothing, then jumping to the full
+ * view. The skeleton draws the **structure** of what is about to appear - a
+ * title row, a day-tabs strip, a map rectangle, stop rows - so the screen
+ * "exists" from the first moment and the content merely fills into it.
  *
- * אין כאן טקסט מזויף ואין נתונים מומצאים - רק צורות. הנצנוץ
- * (skeleton-block) מכבד prefers-reduced-motion וקופא לגוון סטטי.
+ * No fake text here and no invented data - only shapes. The shimmer
+ * (skeleton-block) respects prefers-reduced-motion and freezes to a static
+ * tint.
  */
 export default function TripSkeleton() {
   return (
     <div aria-label="טוען את הטיול" role="status" className="space-y-4">
-      {/* שורת הכותרת: שם הטיול + כפתורי פעולה */}
+      {/* The title row: trip name + action buttons */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="skeleton-block h-8 w-56 rounded-xl" />
         <div className="flex gap-2">
@@ -22,13 +24,13 @@ export default function TripSkeleton() {
         </div>
       </div>
 
-      {/* רצועת בורר הימים: כרטיס עיר עם מספרי ימים */}
+      {/* The day-switcher strip: a city card with day numbers */}
       <div className="flex gap-2">
         <div className="skeleton-block h-16 w-40 rounded-2xl" />
         <div className="skeleton-block h-16 w-28 rounded-2xl" />
       </div>
 
-      {/* הגוף: מסלול + מפה, באותו פיצול כמו המסך האמיתי */}
+      {/* The body: itinerary + map, in the same split as the real screen */}
       <div className="grid gap-4 lg:grid-cols-[16rem_1fr]">
         <div className="space-y-2.5">
           <div className="skeleton-block h-6 w-32 rounded-lg" />

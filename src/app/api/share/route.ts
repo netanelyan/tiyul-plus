@@ -9,18 +9,20 @@ import { PLAN_LIMITS, periodMsFor } from '@/lib/plans';
 
 /**
  * POST { trip } → { code | null }.
- * מקודדים את הטיול ל-payload של v1 (encodeTripShare), מוודאים שהוא
- * בכלל ניתן לפענוח מול הדאטה האוצרת, ושומרים אותו תחת קוד קצר.
- * בלי Supabase מוגדר - מחזירים null והלקוח נופל לקישור הארוך.
+ * Encode the trip into the v1 payload (encodeTripShare), verify it can be
+ * decoded at all against the curated data, and store it under a short code.
+ * Without Supabase configured - return null and the client falls back to
+ * the long link.
  */
 export async function POST(req: Request) {
-  // מכסה. **עד 2026-08-11 השער הזה היה עקיף**: הטבלה נשאה
-  // `insert to anon with check (true)`, כך שדפדפן יכול היה לכתוב אליה
-  // ישירות עם המפתח הציבורי ולדלג על כל מה שכתוב כאן. המדיניות הוסרה
-  // והכתיבה עוברת ב-service role, ולכן הנתיב הזה הוא עכשיו הדרך
-  // היחידה שיש - והמכסה חלה בפועל ולא רק בכוונה.
-  // חריגה מחזירה code:null - הלקוח נופל בשקט לקישור הארוך, ששום
-  // מכסה לא חוסמת.
+  // Quota. **Until 2026-08-11 this gate was bypassable**: the table carried
+  // `insert to anon with check (true)`, so a browser could write to it
+  // directly with the public key and skip everything written here. That
+  // policy was removed and the write goes through the service role, so this
+  // route is now the only way in - and the quota applies in practice, not
+  // just in intent.
+  // Exceeding it returns code:null - the client silently falls back to the
+  // long link, which no quota blocks.
   const caller = await resolveCaller(req);
   const burst = checkLimit('share-burst', caller.id, 5, 10 * 60_000);
   const daily = checkLimit(
@@ -44,7 +46,8 @@ export async function POST(req: Request) {
   }
 
   const payload = encodeTripShare(trip);
-  // אימות עגול: אם ה-payload לא נפתח לטיול תקין מול הדאטה - לא שומרים
+  // Round-trip validation: if the payload does not open into a valid trip
+  // against the data - do not store it
   if (!decodeTripShare(payload)) {
     return NextResponse.json({ code: null, error: 'invalid-trip' }, { status: 400 });
   }

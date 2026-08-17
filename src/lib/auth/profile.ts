@@ -4,37 +4,42 @@ import { effectivePlan, isRole, type Role } from '@/lib/plans';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 /**
- * פרופיל המשתמש (טבלת profiles, ראו supabase-profiles.sql):
- * שם תצוגה, טלפון, תמונה (data URL מוקטן), מדינות שביקר בהן והעדפות
- * ברירת-מחדל. RLS מבטיח שכל משתמש קורא/כותב רק את השורה שלו.
+ * The user's profile (the profiles table, see supabase-profiles.sql):
+ * display name, phone, avatar (downscaled data URL), countries visited and
+ * default preferences. RLS guarantees each user reads/writes only their own
+ * row.
  */
 
 export interface UserProfile {
   displayName: string;
   phone: string;
   avatar: string | null;
-  visited: string[]; // קודי ISO2
+  visited: string[]; // ISO2 codes
   prefs: { kosher?: boolean };
-  /** גילוי בחיפוש המטיילים - כבוי כברירת מחדל (פרטיות תחילה) */
+  /** Discoverability in the traveler search - off by default (privacy first) */
   isPublic: boolean;
   /**
-   * תוכנית המנוי - לקריאה בלבד בצד הלקוח: העמודה נכתבת אך ורק ע"י
-   * ה-webhook של Stripe דרך ה-service role (ראו supabase-premium.sql).
+   * The subscription plan - read-only on the client side: the column is
+   * written exclusively by the Stripe webhook via the service role (see
+   * supabase-premium.sql).
    */
   plan: 'free' | 'premium';
   /**
-   * התפקיד. נכתב אך ורק ע"י ה-service role (ראו supabase-admin.sql), אז
-   * מבחינת הלקוח זו עמודה לקריאה בלבד - וגם אם מישהו יערוך אותה בזיכרון
-   * הדפדפן זה לא יקנה לו כלום: כל נתיב ניהול קורא את התפקיד מהדאטהבייס
-   * מחדש. הערך כאן משמש רק להחלטה אם להציג קישור לאזור הניהול.
+   * The role. Written exclusively by the service role (see
+   * supabase-admin.sql), so from the client's perspective this is a
+   * read-only column - and even if somebody edits it in browser memory it
+   * buys them nothing: every admin route re-reads the role from the
+   * database. The value here is used only to decide whether to show a link
+   * to the admin area.
    */
   role: Role;
-  /** מתי הפרימיום פג. null = ללא הגבלה (מנוי פעיל או הענקה לתמיד). */
+  /** When premium expires. null = unlimited (an active subscription or a permanent grant). */
   planUntil: string | null;
   /**
-   * מתי אושרו תנאי השימוש ומדיניות הפרטיות לראשונה, ולאיזו גרסה
-   * (ראו src/lib/legal.ts ו-supabase-consent.sql). null = טרם נרשמה
-   * הסכמה - למשל חשבון שנוצר לפני שהמנגנון הזה נבנה.
+   * When the terms of use and privacy policy were first accepted, and for
+   * which version (see src/lib/legal.ts and supabase-consent.sql). null =
+   * consent not yet recorded - e.g. an account created before this
+   * mechanism was built.
    */
   termsAcceptedAt: string | null;
   termsVersion: string | null;
@@ -54,7 +59,7 @@ export const EMPTY_PROFILE: UserProfile = {
   termsVersion: null,
 };
 
-/** מה שנחשף על מטייל ציבורי - לעולם לא מייל/טלפון/טיולים */
+/** What is exposed about a public traveler - never email/phone/trips */
 export interface PublicProfile {
   userId: string;
   displayName: string;
@@ -77,15 +82,17 @@ interface Row {
 }
 
 export async function fetchProfile(supabase: SupabaseClient): Promise<UserProfile | null> {
-  // עמודת plan מגיעה מ-supabase-premium.sql, terms_* מגיעות מ-
-  // supabase-consent.sql; אם קובץ SQL עוד לא רץ הבחירה איתו נכשלת -
-  // נופלים לבחירה בלי העמודות שלו כדי שפרופילים לא יישברו.
+  // The plan column comes from supabase-premium.sql, terms_* come from
+  // supabase-consent.sql; if a SQL file has not run yet, the select that
+  // includes it fails - we fall back to a select without its columns so
+  // profiles do not break.
   //
-  // ארבע מדרגות נסיגה, כי כל בלוק SQL מוסיף עמודות ולא כולם רצו: קודם
-  // עם terms_accepted_at/terms_version (supabase-consent.sql), אחר כך
-  // עם role/plan_until (supabase-admin.sql), אחר כך עם plan בלבד
-  // (supabase-premium.sql), ולבסוף העמודות הבסיסיות. בלי זה, פרופיל
-  // נשבר לגמרי רק כי בלוק SQL אחד עוד לא הורץ.
+  // Four fallback tiers, because each SQL block adds columns and not all of
+  // them have run: first with terms_accepted_at/terms_version
+  // (supabase-consent.sql), then with role/plan_until (supabase-admin.sql),
+  // then with plan only (supabase-premium.sql), and finally the basic
+  // columns. Without this, a profile breaks entirely just because one SQL
+  // block was never run.
   let { data, error } = await supabase
     .from('profiles')
     .select(
@@ -111,7 +118,7 @@ export async function fetchProfile(supabase: SupabaseClient): Promise<UserProfil
       .maybeSingle());
     if (error) return null;
   }
-  if (!data) return { ...EMPTY_PROFILE }; // עוד אין שורה - פרופיל ריק
+  if (!data) return { ...EMPTY_PROFILE }; // no row yet - empty profile
   const r = data as Row;
   return {
     displayName: r.display_name ?? '',
@@ -120,8 +127,9 @@ export async function fetchProfile(supabase: SupabaseClient): Promise<UserProfil
     visited: Array.isArray(r.visited) ? (r.visited as string[]).filter((c) => typeof c === 'string') : [],
     prefs: r.prefs && typeof r.prefs === 'object' ? (r.prefs as UserProfile['prefs']) : {},
     isPublic: r.is_public === true,
-    // effectivePlan ולא השוואה ישירה: הענקה שפגה חוזרת ל-free גם ב-UI,
-    // כדי שהמסך לא יבטיח פרימיום שהשרת כבר לא מכבד.
+    // effectivePlan rather than a direct comparison: an expired grant
+    // reverts to free in the UI too, so the screen does not promise a
+    // premium the server no longer honors.
     plan: effectivePlan(r),
     role: isRole(r.role) ? r.role : 'user',
     planUntil: r.plan_until ?? null,
@@ -154,14 +162,15 @@ export async function upsertProfile(
 }
 
 /**
- * רישום חד-פעמי של הסכמה לתנאי השימוש ולמדיניות הפרטיות. נקרא מ-
- * AuthContext מיד אחרי אימות קוד מוצלח, ורק כשעוד לא נרשמה הסכמה
- * קודמת - כדי שכניסה חוזרת לא תדרוס את התאריך המקורי בתאריך של היום.
+ * One-time recording of consent to the terms of use and privacy policy.
+ * Called from AuthContext right after a successful code verification, and
+ * only when no prior consent was recorded - so a repeat login does not
+ * overwrite the original date with today's date.
  *
- * upsert חלקי בכוונה: האובייקט הנשלח מכיל רק את שתי העמודות האלה (ואת
- * user_id/updated_at), ולכן הוא לא נוגע בשם תצוגה, טלפון או שאר
- * הפרופיל - גם אם עדיין אין שורה בכלל, ה-upsert יוצר אותה עם ערכי
- * ברירת המחדל בשאר העמודות.
+ * A deliberately partial upsert: the object sent contains only these two
+ * columns (plus user_id/updated_at), so it does not touch the display name,
+ * phone or the rest of the profile - and even if there is no row at all
+ * yet, the upsert creates it with default values in the other columns.
  */
 export async function recordTermsAcceptance(
   supabase: SupabaseClient,
@@ -183,9 +192,9 @@ export async function recordTermsAcceptance(
 }
 
 /**
- * הקטנת תמונת פרופיל בצד הלקוח ל-data URL קטן (ריבוע 192px, JPEG).
- * כ-10-25KB - נשמר ישירות בטבלה, בלי Storage. מחזיר null אם הקובץ
- * לא נקרא כתמונה.
+ * Client-side downscaling of a profile picture to a small data URL
+ * (192px square, JPEG). ~10-25KB - stored directly in the table, no
+ * Storage. Returns null if the file could not be read as an image.
  */
 export function imageToAvatar(file: File): Promise<string | null> {
   return new Promise((resolve) => {
@@ -198,7 +207,7 @@ export function imageToAvatar(file: File): Promise<string | null> {
       canvas.height = SIZE;
       const ctx = canvas.getContext('2d');
       if (!ctx) return resolve(null);
-      // חיתוך ריבועי ממרכז התמונה
+      // Square crop from the center of the image
       const side = Math.min(img.width, img.height);
       ctx.drawImage(img, (img.width - side) / 2, (img.height - side) / 2, side, side, 0, 0, SIZE, SIZE);
       URL.revokeObjectURL(url);
@@ -212,7 +221,7 @@ export function imageToAvatar(file: File): Promise<string | null> {
   });
 }
 
-/* ---------- קהילת המטיילים (public_profiles view) ---------- */
+/* ---------- The traveler community (public_profiles view) ---------- */
 
 interface PublicRow {
   user_id: string;
@@ -229,9 +238,9 @@ const toPublic = (r: PublicRow): PublicProfile => ({
 });
 
 /**
- * חיפוש מטיילים ציבוריים: לפי שם (ilike חלקי), או - כשהקלט נראה כמו
- * כתובת מייל - התאמת מייל מדויקת דרך RPC (המייל לא נחשף לעולם; חיפוש
- * חלקי על מיילים חסום מעצם העיצוב).
+ * Searching public travelers: by name (partial ilike), or - when the input
+ * looks like an email address - an exact email match via RPC (the email is
+ * never exposed; partial search over emails is blocked by design).
  */
 export async function searchPublicProfiles(
   supabase: SupabaseClient,
@@ -243,9 +252,9 @@ export async function searchPublicProfiles(
     if (error || !data) return [];
     return (data as PublicRow[]).map(toPublic);
   }
-  // `%` ו-`_` הם תווים כלליים של SQL LIKE, ו-`*` הוא התו הכללי של
-  // PostgREST (שמתרגם אותו ל-`%`). כולם יורדים - החיפוש הזה מחפש שם,
-  // לא מריץ תבנית של המשתמש.
+  // `%` and `_` are SQL LIKE wildcards, and `*` is PostgREST's wildcard
+  // (which it translates to `%`). All of them are stripped - this search
+  // looks up a name, it does not run a user-supplied pattern.
   const q = raw.replace(/[%_*]/g, '');
   if (q.length < 2) return [];
   const { data, error } = await supabase
@@ -257,7 +266,7 @@ export async function searchPublicProfiles(
   return (data as PublicRow[]).map(toPublic);
 }
 
-/** פרופיל ציבורי בודד לפי מזהה - null אם פרטי/לא קיים */
+/** A single public profile by id - null if private/nonexistent */
 export async function fetchPublicProfile(
   supabase: SupabaseClient,
   userId: string,

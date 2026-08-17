@@ -1,9 +1,10 @@
 /**
- * השערים הזולים.
+ * The cheap gates.
  *
- * **רוב הבדיקות כאן מוודאות שהשער לא נסגר**, ולא שהוא נסגר. זו הדרישה
- * המפורשת של נתנאל: אדם אמיתי שמתכנן טיול לא אמור לשים לב לשום דבר
- * מזה, ולכן טעות לכיוון "מסרב" היא הרבה יותר יקרה מטעות לכיוון "עונה".
+ * **Most of the checks here assert that the gate does NOT close**, rather than
+ * that it does. That is Netanel's explicit requirement: a real person planning a
+ * trip should not notice any of this, so an error towards "refuse" is far more
+ * expensive than an error towards "answer".
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -19,7 +20,7 @@ import { costUsd, priceFor } from './aiCost.ts';
 import { CALLER_CAP_USD, DEFAULT_DAILY_BUDGET_USD } from './budget.ts';
 import { PLAN_LIMITS } from '../plans.ts';
 
-/* ---------- שער הנושא: קודם כל מה שחייב לעבור ---------- */
+/* ---------- The topic gate: first of all, what must get through ---------- */
 
 const ANSWERED = [
   'תבנה לי 5 ימים ברומא',
@@ -46,9 +47,9 @@ test('כל בקשת נסיעות סבירה נענית - גם בלי טיול פ
 
 test('עם טיול פעיל שום דבר לא נחסם', () => {
   /*
-    הכלל היחיד שמוציא את רוב הסיכון. למי שיש טיול על המסך, כמעט כל
-    שאלה היא שאלה עליו - "תתרגם לי את התפריט" בזמן תכנון רומא היא
-    בקשת נסיעות לכל דבר.
+    The single rule that removes most of the risk. For someone with a trip on
+    screen, almost any question is a question about it - "translate this menu for
+    me" while planning Rome is a travel request in every sense.
   */
   for (const t of ['כתוב לי קוד בפייתון', 'תפתור לי את המשוואה', '```js\\nfoo()\\n```']) {
     assert.equal(topicOk(t, true).ok, true, t);
@@ -71,8 +72,9 @@ test('בקשות שברור שאינן נסיעות נדחות - בלי טיול
 
 test('אותה בקשה עם הקשר נסיעות כן נענית', () => {
   /*
-    זה הלב של השער: "תתרגם" לבדו נדחה, "תתרגם את התפריט הזה שקיבלתי
-    במלון ברומא" נענה. סימן נסיעות אחד מספיק כדי לבטל את הדחייה.
+    This is the heart of the gate: "translate" on its own is refused, "translate
+    this menu I was given at the hotel in Rome" is answered. One travel signal is
+    enough to cancel the refusal.
   */
   assert.equal(topicOk('תתרגם לאנגלית: שלום', false).ok, false);
   assert.equal(topicOk('תתרגם לאנגלית את התפריט מהמלון ברומא', false).ok, true);
@@ -84,19 +86,19 @@ test('שם עיר מהקטלוג לבדו מספיק כדי לענות', () => {
   assert.equal(topicOk('תתרגם: ברטיסלבה', false).ok, true);
 });
 
-/* ---------- המספרים ---------- */
+/* ---------- The numbers ---------- */
 
 test('התקרות רחוקות משימוש אמיתי', () => {
-  // אישור הזמנה מודבק הוא כ-1,500 תווים; שיחת תכנון היא 10-25 הודעות
+  // A pasted booking confirmation is about 1,500 characters; a planning conversation is 10-25 messages
   assert.ok(MAX_MESSAGE_CHARS >= 5_000, String(MAX_MESSAGE_CHARS));
   assert.ok(MAX_USER_MESSAGES >= 50, String(MAX_USER_MESSAGES));
-  // תור אמיתי נמדד ב-$0.01-$0.13
+  // A real turn measures $0.01-$0.13
   assert.ok(MAX_TURN_USD >= 0.4, String(MAX_TURN_USD));
-  // בניית טיול שלם נחתכה פעם ב-2048 ולכן התקרה חייבת להיות מעליה
+  // A full trip build was once truncated at 2048, so the ceiling must be above it
   assert.ok(MAX_OUTPUT_TOKENS >= 4_096, String(MAX_OUTPUT_TOKENS));
 });
 
-/* ---------- מקור הבקשה ---------- */
+/* ---------- Where the request came from ---------- */
 
 const req = (headers: Record<string, string>) =>
   new Request('https://tiyulplus.com/api/chat', { method: 'POST', headers });
@@ -130,7 +132,7 @@ test('x-forwarded-host מנצח - זה מה שוורסל שולח', () => {
   );
 });
 
-/* ---------- מחיר ---------- */
+/* ---------- Price ---------- */
 
 const MILLION_OF_EACH = {
   input_tokens: 1_000_000,
@@ -140,13 +142,13 @@ const MILLION_OF_EACH = {
 };
 
 /**
- * **כתיבת מטמון מתומחרת לפי ה-TTL שאנחנו שולחים.** הטסט הזה קודם דרש
- * 3.75 - התעריף של 5 דקות - בזמן ש-`agentPrefix.ts` שולח `ttl: '1h'`,
- * שעולה פי 2 מהקלט. כלומר כל קריאה קרה תומחרה ב-62.5% ממחירה, וזו
- * הטעות בכיוון המסוכן על תקרת הוצאה.
+ * **A cache write is priced by the TTL we send.** This test previously demanded
+ * 3.75 - the 5-minute rate - while `agentPrefix.ts` sends `ttl: '1h'`, which costs
+ * 2x the input rate. So every cold call was priced at 62.5% of its real cost, and
+ * that is the error in the dangerous direction on a spend ceiling.
  */
 test('העלות מחושבת מכל ארבעת סוגי הטוקנים, לפי תוקף המטמון', () => {
-  delete process.env.ANTHROPIC_CACHE_TTL; // ברירת המחדל היא שעה
+  delete process.env.ANTHROPIC_CACHE_TTL; // the default is one hour
   assert.equal(Number(costUsd('claude-sonnet-4-5', MILLION_OF_EACH).toFixed(2)), 3 + 6 + 0.3 + 15);
 });
 
@@ -168,7 +170,7 @@ test('דגם לא מוכר מוערך לפי היקר ביותר - טעות בט
 });
 
 test('התור שנמדד חי נופל הרבה מתחת לתקרת התור', () => {
-  // המדידה מרשומה (tt): קלט 20,054, מטמון 202,134, פלט 111
+  // From the recorded measurement (tt): input 20,054, cached 202,134, output 111
   const measured = costUsd('claude-sonnet-4-5', {
     input_tokens: 20_054,
     cache_read_input_tokens: 202_134,
@@ -178,21 +180,22 @@ test('התור שנמדד חי נופל הרבה מתחת לתקרת התור', 
 });
 
 
-/* ---------- מודל העלות, כפי שנמדד ---------- */
+/* ---------- The cost model, as measured ---------- */
 
 /**
- * **המספרים האלה הם מדידה ולא אומדן** (31.7): קריאה ראשונה בסשן $0.447,
- * קריאה אחריה $0.063. ההפרש הוא כתיבת המטמון של קידומת הקטלוג, ומכאן
- * שהעלות שלנו היא לכל סשן קר ולא לכל הודעה.
+ * **These numbers are a measurement and not an estimate** (31.7): the first call in
+ * a session $0.447, a call after it $0.063. The difference is the cache write of the
+ * catalog prefix, from which it follows that our cost is per cold session and not
+ * per message.
  *
- * הבדיקות כאן קושרות את המגבלות למספרים האלה, כדי שכוונון עתידי לא יחזיר
- * את המצב שבו תור אמיתי נחסם.
+ * The checks here tie the limits to those numbers, so that future tuning does not
+ * bring back the state where a real turn is blocked.
  */
 const MEASURED_COLD_TURN_USD = 0.447;
 const MEASURED_WARM_TURN_USD = 0.063;
 
 test('תקרת התור לא נסגרת על תור בנייה קר', () => {
-  // תור בנייה = קריאה קרה + שתיים-שלוש איטרציות חמות
+  // A build turn = one cold call + two or three warm iterations
   const coldBuildTurn = MEASURED_COLD_TURN_USD + 3 * MEASURED_WARM_TURN_USD;
   assert.ok(
     MAX_TURN_USD > coldBuildTurn * 2,

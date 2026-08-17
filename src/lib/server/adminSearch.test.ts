@@ -1,17 +1,18 @@
 /**
- * תיבת החיפוש של אזור הניהול - **קלט עוין**.
+ * The admin area's search box - **hostile input**.
  *
- * הטענה שנבדקת כאן היא לא "המחרוזת מקודדת היטב" אלא **המחרוזת של
- * המשתמש לא ממשיכה הלאה בכלל**: מייל הופך ל-uuid מ-GoTrue, יעד הופך
- * ל-slug מרשימה סגורה, ושם טיול נשאר בזיכרון. לכן כל מטען זדוני חייב
- * לצאת מכאן כ-`invalid`, או כ-slug מהקטלוג - לעולם לא כטקסט חופשי.
+ * The claim tested here is not "the string is well encoded" but **the user's
+ * string does not travel onward at all**: an email becomes a uuid from GoTrue,
+ * a destination becomes a slug from a closed list, and a trip name stays in
+ * memory. Therefore every malicious payload must leave here as `invalid`, or
+ * as a slug from the catalog - never as free text.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { MAX_QUERY_CHARS, nameMatches, normalizeNeedle, parseAdminQuery } from './adminSearch.ts';
 import { destinations } from '../../data/destinations.ts';
 
-/* ---------- מטענים עוינים ---------- */
+/* ---------- Hostile payloads ---------- */
 
 const HOSTILE = [
   "' or '1'='1",
@@ -33,7 +34,7 @@ test('מטען עוין לא הופך למייל ולא ליעד', () => {
   for (const raw of HOSTILE) {
     assert.equal(parseAdminQuery(raw, 'email').kind, 'invalid', `email: ${raw}`);
     const place = parseAdminQuery(raw, 'place');
-    // אם במקרה משהו כן נתפס כיעד - זה חייב להיות slug מהקטלוג, לא הטקסט
+    // If something does happen to be picked up as a destination - it must be a catalog slug, not the text
     if (place.kind === 'place') {
       for (const s of place.slugs) {
         assert.ok(
@@ -49,7 +50,7 @@ test('חיפוש שם לא מוציא החוצה שום דבר מלבד needle �
   for (const raw of HOSTILE) {
     const q = parseAdminQuery(raw, 'name');
     if (q.kind !== 'name') continue;
-    // התו הכללי של LIKE יורד, ותווי בקרה נדחים כבר קודם
+    // The LIKE wildcard is stripped, and control characters are rejected even earlier
     assert.ok(!/[%_*]/.test(q.needle), `נשאר תו כללי ב-${raw}`);
     assert.ok(!/[\u0000-\u001f\u007f]/.test(q.needle), `נשאר תו בקרה ב-${raw}`);
   }
@@ -65,7 +66,7 @@ test('תווי בקרה, אורך ומצב לא מוכר נדחים', () => {
   assert.equal(parseAdminQuery('   ', 'name').kind, 'invalid');
 });
 
-/* ---------- המסלולים הלגיטימיים חייבים לעבוד ---------- */
+/* ---------- The legitimate paths must work ---------- */
 
 test('מייל תקין עובר ומנורמל לאותיות קטנות', () => {
   const q = parseAdminQuery('  Netanel@Example.COM ', 'email');
@@ -103,12 +104,12 @@ test('שם טיול קצר מדי נדחה, שם אמיתי עובר', () => {
   assert.equal(q.kind, 'name');
 });
 
-/* ---------- ההתאמה בזיכרון ---------- */
+/* ---------- The in-memory matching ---------- */
 
 test('nameMatches מנרמל את שני הצדדים', () => {
   assert.ok(nameMatches('Roma  &  Venezia', 'roma & venezia'));
   assert.ok(nameMatches('טיול לרומא', 'רומא'));
   assert.ok(!nameMatches('טיול לוינה', 'רומא'));
-  // תו כללי לא הופך לתו כללי
+  // A wildcard does not become a wildcard
   assert.ok(!nameMatches('טיול לוינה', normalizeNeedle('טיול*וינה')));
 });

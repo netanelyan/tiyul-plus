@@ -2,48 +2,57 @@ import { LOOKUP_ANCHOR } from '@/lib/priceGuard';
 import type { ChatMessage } from '@/lib/server/chatMessages';
 
 /**
- * שרת בלבד - חיפוש חי לשאלות עובדתיות ותלויות-זמן שהקטלוג שלנו לא
- * יכול לענות עליהן: שעות פתיחה, מחיר כניסה, האם מקום עדיין קיים/פתוח.
+ * Server-only - live lookup for factual, time-sensitive questions our
+ * catalog cannot answer: opening hours, admission price, whether a place
+ * still exists / is still open.
  *
- * ## למה זה קובץ נפרד ולא עוד `if` ב-route.ts
+ * ## Why this is a separate file and not another `if` in route.ts
  *
- * שלוש החלטות גרות כאן ולא בלולאת הסוכן: **מתי מותר בכלל** (מסווג
- * דטרמיניסטי, לא המודל), **כמה פעמים בשיחה** (נגזר מהיסטוריית ההודעות,
- * בלי state בשרת - אותו דפוס כמו `relevantCitySlugs`), ו**מה שכבר נשאל**
- * (מטמון פשוט לפי טקסט זהה). שלושתם צריכים טסט משלהם.
+ * Three decisions live here rather than in the agent loop: **when it is
+ * allowed at all** (a deterministic classifier, not the model), **how many
+ * times per conversation** (derived from the message history, no server
+ * state - the same pattern as `relevantCitySlugs`), and **what has already
+ * been asked** (a simple cache keyed by identical text). All three need
+ * their own tests.
  *
- * ## למה כשרות לא עוברת דרך כאן בשום צורה
+ * ## Why kashrut never passes through here in any form
  *
- * `wantsLookup` ב-route.ts קורא ל-`kosherIntentText` **לפני** שהוא שואל
- * את השאלה הזאת בכלל, ומחזיר `false` על כל הודעה שנשמעת כמו שאלת כשרות -
- * בלי קשר לשאלה אם היא גם עובדתית ("האם המסעדה הכשרה הזאת עדיין פתוחה?"
- * היא גם וגם, וכשרות מנצחת). זו לא הנחיה שאפשר לשכוח: כשהתנאי הזה false,
- * `LOOKUP_TOOL` פשוט לא נכנס למערך הכלים באותה קריאת API - כלי שלא נשלח
- * לא קיים בשביל המודל, אותו עיקרון בדיוק כמו `modelRoute.ts`. השכבה
- * השנייה, הבלתי-תלויה לגמרי בזאת, היא `priceGuard.ts`'s `kosher-claim`:
- * גם אם המודל יכתוב טענת כשרות מהזיכרון שלו (בלי שום קשר לחיפוש), היא
- * לא יוצאת אלא אם היא נוקבת בשם אמיתי מהקטלוג. שתי השכבות לא תלויות
- * זו בזו בכוונה - אחת חוסמת את הפעולה, השנייה חוסמת את הפלט.
+ * `wantsLookup` in route.ts calls `kosherIntentText` **before** it even
+ * asks this question, and returns `false` for any message that sounds like
+ * a kashrut question - regardless of whether it is also factual ("is this
+ * kosher restaurant still open?" is both, and kashrut wins). This is not a
+ * guideline that can be forgotten: when that condition is false,
+ * `LOOKUP_TOOL` simply never enters the tools array on that API call - a
+ * tool that is not sent does not exist for the model, the exact same
+ * principle as `modelRoute.ts`. The second layer, entirely independent of
+ * this one, is `priceGuard.ts`'s `kosher-claim`: even if the model writes a
+ * kashrut claim from its own memory (with no connection to search at all),
+ * it does not go out unless it names a real place from the catalog. The
+ * two layers are deliberately independent of each other - one blocks the
+ * action, the other blocks the output.
  */
 
-/** כלי החיפוש עצמו - שרת של Anthropic מריץ אותו, לא אנחנו. */
+/** The search tool itself - Anthropic's server runs it, not us. */
 export const LOOKUP_TOOL = {
   type: 'web_search_20260209' as const,
   name: 'web_search' as const,
-  /** תקרה בתוך קריאת API בודדת - שאלה עובדתית לא צריכה יותר משני חיפושים */
+  /** Cap within a single API call - a factual question needs no more than two searches */
   max_uses: 2,
 };
 
 /**
- * מסווג דטרמיניסטי: שעות/מחיר-כניסה/האם-עדיין-קיים. **לא** שאלות
- * כלליות ("מה כדאי לראות") ו**לא** שיחה רגילה - רק השאלה הצרה שהקטלוג
- * שלנו באמת לא יכול לענות עליה.
+ * Deterministic classifier: hours / admission-price / does-it-still-exist.
+ * **Not** general questions (like "what's worth seeing") and **not**
+ * ordinary conversation - only the narrow question our catalog genuinely
+ * cannot answer.
  */
 /*
-  `(ה)?` צמוד לכל שם עצם - "שעות הפתיחה"/"דמי הכניסה" הם הכתיב התקני
-  בעברית, לא "שעות פתיחה" בלי ה"א הידיעה. אותה מלכודת בדיוק תפסה
-  TICKET_CONTEXT ב-priceGuard.ts, ושתיהן נתפסו רק כי הטסטים כתובים
-  בעברית תקנית ולא בעברית "רשמית של regex".
+  The optional definite-article prefix group sits next to every noun in
+  this regex - the standard Hebrew wording uses the definite article ("the
+  opening hours" / "the admission fee"), not the article-less form. The
+  exact same trap caught TICKET_CONTEXT in priceGuard.ts, and both were
+  only caught because the tests are written in standard Hebrew rather than
+  in "regex-official" Hebrew.
 */
 const LOOKUP_INTENT =
   /שעות\s*ה?(פתיחה|פעילות)|פתוח(ה)?\s*(עכשיו|היום|בשעה)|סגור(ה)?\s*(עכשיו|היום)|עדיין\s*(פתוח|קיים|פועל|קיימת|פועלת)|כבר לא (קיים|פועל)|האם.{0,20}(נסגר|עדיין קיים|עדיין פועל|עדיין פתוח)|כמה עולה\s*ה?(כניסה|כרטיס)|מחיר\s*ה?כניסה|דמי\s*ה?כניסה|עלות\s*ה?כניסה|כרטיס\s*ה?כניסה|opening hours|admission (fee|price)|entrance fee|ticket price|is (it |the .+ )?still (open|there)|does (it|.+) still exist|has .+ closed/i;
@@ -52,16 +61,18 @@ export function lookupEligible(text: string): boolean {
   return LOOKUP_INTENT.test(text ?? '');
 }
 
-/** תקרה לכל שיחה - נספרת מההיסטוריה עצמה, בלי state בשרת */
+/** Per-conversation cap - counted from the history itself, no server state */
 const MAX_LOOKUPS_PER_CONVERSATION = 3;
 
 /**
- * כמה חיפושים כבר "נחתמו" בשיחה - נספר לפי `LOOKUP_ANCHOR` בתשובות
- * הסוכן עצמן. זה אותו עיקרון כמו ספירת ה-tokens בהיסטוריה: במקום
- * לשמור מונה בשרת (שלא שורד restart ולא מסתנכרן בין instances), קוראים
- * את מה שכבר נשלח למשתמש. תשובה שהמודל כתב עם ציטוט אחד או יותר סופרת
- * כניצול חיפוש אחד - גם אם בפועל הוא חיפש פעמיים באותה קריאת API,
- * כי `max_uses` על הכלי כבר עוצר את זה.
+ * How many lookups have already been "sealed" in the conversation - counted
+ * via `LOOKUP_ANCHOR` in the agent's own replies. The same principle as
+ * counting tokens from the history: instead of keeping a counter on the
+ * server (which does not survive a restart and does not sync between
+ * instances), we read what has already been sent to the user. A reply the
+ * model wrote with one or more citations counts as one lookup used - even
+ * if it actually searched twice within the same API call, because
+ * `max_uses` on the tool already stops that.
  */
 export function lookupsUsedSoFar(messages: ChatMessage[]): number {
   let n = 0;
@@ -77,27 +88,31 @@ export function lookupBudgetLeft(messages: ChatMessage[]): boolean {
 }
 
 /**
- * תאריך היום, כעובדה שמסופקת לו ולא מחושבת על ידו - אותו עיקרון בדיוק
- * כמו תאריכי הטיול ("Never compute a date yourself"). ננעל פעם אחת
- * לקריאה כדי שכל ה-retries/איטרציות של אותו תור יראו את אותו תאריך.
+ * Today's date, as a fact supplied to the model rather than computed by
+ * it - the exact same principle as trip dates ("Never compute a date
+ * yourself"). Locked once per call so all retries/iterations of the same
+ * turn see the same date.
  */
 export function todayIso(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
 /**
- * ---------- מטמון פשוט: אותה שאלה פעמיים = חיפוש אחד ----------
+ * ---------- Simple cache: the same question twice = one search ----------
  *
- * לא cache לפני-הקריאה של תוצאת חיפוש גולמית - `web_search` הוא כלי
- * שרת שרץ אוטומטית בתוך קריאת ה-API עצמה, ואין נקודה שבה אפשר ליירט
- * "המודל עומד לחפש X" ולהחזיר לו תשובה מוכנה בלי לקרוא ל-API בכלל.
- * מה שכן אפשר, וזה כל מה שהמטמון הזה עושה: לזהות ששאלה **זהה** כבר
- * נענתה, ולדלג על שליחת `LOOKUP_TOOL` בכלל בתור הזה - המודל מקבל את
- * התשובה הקודמת כעובדה מוכנה בבלוק הפירוט, בלי חיפוש נוסף.
+ * Not a pre-call cache of a raw search result - `web_search` is a server
+ * tool that runs automatically inside the API call itself, and there is no
+ * point at which we can intercept "the model is about to search for X" and
+ * hand it a ready answer without calling the API at all. What we can do,
+ * and it is all this cache does: recognize that an **identical** question
+ * has already been answered, and skip sending `LOOKUP_TOOL` at all on this
+ * turn - the model receives the previous answer as a ready fact in the
+ * detail block, with no additional search.
  *
- * זהו זיכרון תהליך בלבד (per-instance), באותו סגנון בדיוק כמו
- * `checkLimit` ב-limits.ts - לא שורד restart ולא מסתנכרן בין instances,
- * וזה בסדר: הוא אופטימיזציה למחיר, לא מנגנון בטיחות.
+ * This is process memory only (per-instance), in exactly the same style as
+ * `checkLimit` in limits.ts - it does not survive a restart and does not
+ * sync between instances, and that is fine: it is a cost optimization, not
+ * a safety mechanism.
  */
 interface CachedLookup {
   reply: string;
@@ -105,7 +120,7 @@ interface CachedLookup {
 }
 
 const CACHE_TTL_MS = 12 * 60 * 60_000;
-/** הגנת זיכרון גסה, אותו דפוס כמו `budget.ts`'s callers.size */
+/** Coarse memory guard, the same pattern as `budget.ts`'s callers.size */
 const CACHE_MAX_ENTRIES = 500;
 const cache = new Map<string, CachedLookup>();
 
@@ -132,7 +147,7 @@ export function rememberLookup(userText: string, reply: string): void {
   cache.set(key, { reply, at: Date.now() });
 }
 
-/** לבדיקות בלבד */
+/** For tests only */
 export function resetLookupCacheForTest(): void {
   cache.clear();
 }

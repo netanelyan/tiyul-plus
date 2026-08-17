@@ -1,32 +1,33 @@
 import type { Destination } from '@/lib/types';
 
 /**
- * קטע מעבר בין שתי ערים בטיול.
+ * A travel leg between two cities in a trip.
  *
- * שתי שכבות, בסדר הזה:
- * 1. טבלה ידנית קצרה לזוגות ערים שבדקנו (ניסוח אנושי טוב יותר).
- * 2. חישוב כן מתוך הקואורדינטות האמיתיות של הערים - מרחק haversine,
- *    מקדם דרכים, והאם למשתמש יש רכב.
+ * Two layers, in this order:
+ * 1. A short hand-written table for city pairs we checked (better human wording).
+ * 2. An honest computation from the cities' real coordinates - haversine distance,
+ *    a road factor, and whether the user has a car.
  *
- * מה שאסור (חוק ברזל 2 - לא ממציאים): לא מכריזים "טיסה" על מעבר
- * שאפשר לעשות ברכב באותה מדינה, ולא מכריזים "נסיעה" על מעבר שחוצה ים.
- * כשאין נתונים - אומרים את זה, לא ממציאים אמצעי תחבורה.
+ * What is forbidden (hard rule 2 - do not invent): we do not declare a "flight" for
+ * a leg that can be driven within the same country, and we do not declare a "drive"
+ * for a leg that crosses a sea. When there is no data - say so, do not invent a mode
+ * of transport.
  */
 
 export interface Leg {
   emoji: string;
-  label: string; // תיאור בעברית
+  label: string; // Hebrew description
 }
 
 export interface LegOptions {
-  /** היעדים המלאים (עם center) - מאפשרים חישוב מרחק אמיתי */
+  /** The full destinations (with center) - these allow a real distance computation */
   from?: Destination;
   to?: Destination;
-  /** למשתמש יש רכב (או מתכנן לשכור) - אז נסיעה היא ברירת המחדל */
+  /** The user has a car (or plans to rent one) - so driving is the default */
   hasCar?: boolean;
 }
 
-/** זוגות שנוסחו ידנית - הניסוח האנושי עדיף כשאין רכב */
+/** Hand-written pairs - the human wording is preferable when there is no car */
 const LEGS: Record<string, Leg> = {
   'vienna|bratislava': { emoji: '🚌', label: 'כשעה באוטובוס/רכבת' },
   'vienna|budapest': { emoji: '🚆', label: 'כ-2.5 שעות ברכבת' },
@@ -41,10 +42,11 @@ const LEGS: Record<string, Leg> = {
 };
 
 /**
- * יעדים שמופרדים בים מהיבשת (או זה מזה). מפתח = קבוצת יבשה/אי.
- * יעד שלא ברשימה נחשב מחובר בכביש ליבשת שלו - וזה נכון:
- * פוקט מחוברת לתאילנד דרך גשר סאראסין, ולופוטן מחוברת בכביש E10.
- * יעדים משתי קבוצות שונות (או אחד בקבוצה והשני לא) = חציית ים.
+ * Destinations separated by sea from the mainland (or from each other). Key = a
+ * landmass/island group. A destination not on the list is treated as connected by
+ * road to its own landmass - and that is correct: Phuket is connected to Thailand by
+ * the Sarasin bridge, and Lofoten by the E10 road. Destinations from two different
+ * groups (or one in a group and the other not) = a sea crossing.
  */
 const ISLAND_GROUP: Record<string, string> = {
   crete: 'crete',
@@ -56,7 +58,7 @@ const ISLAND_GROUP: Record<string, string> = {
   queenstown: 'nz',
 };
 
-/** מרחק אווירי בק"מ (haversine) */
+/** Straight-line distance in km (haversine) */
 export function haversineKm(
   a: { lat: number; lng: number },
   b: { lat: number; lng: number },
@@ -70,24 +72,24 @@ export function haversineKm(
   return 2 * 6371 * Math.asin(Math.min(1, Math.sqrt(h)));
 }
 
-/** שעות נסיעה משוערות - מהירות ממוצעת נמוכה יותר בקטעים קצרים */
+/** Estimated driving hours - a lower average speed on short legs */
 function drivingHours(roadKm: number): number {
   const avg = roadKm > 150 ? 85 : 65;
-  return Math.round((roadKm / avg) * 2) / 2; // עיגול לחצי שעה
+  return Math.round((roadKm / avg) * 2) / 2; // rounded to the half hour
 }
 
 const hoursLabel = (h: number) =>
   h <= 1 ? 'כשעה נסיעה' : `כ-${h % 1 === 0 ? h : h.toFixed(1)} שעות נסיעה`;
 
-/** מעבר יבשתי בכלל אפשרי? (אותה קבוצת יבשה/אי) */
+/** Is an overland crossing possible at all? (the same landmass/island group) */
 function sameLandmass(fromSlug: string, toSlug: string): boolean {
   return (ISLAND_GROUP[fromSlug] ?? '') === (ISLAND_GROUP[toSlug] ?? '');
 }
 
 /**
- * מחזיר את קטע המעבר בין שתי ערים.
- * מומלץ להעביר את היעדים המלאים ואת סטטוס הרכב - בלעדיהם נופלים
- * לתשובה כללית וכנה במקום לנחש אמצעי תחבורה.
+ * Returns the travel leg between two cities.
+ * Pass the full destinations and the car status where possible - without them we
+ * fall back to a general, honest answer rather than guessing a mode of transport.
  */
 export function travelLeg(from: string, to: string, opts: LegOptions = {}): Leg {
   const { from: fromDest, to: toDest, hasCar = false } = opts;
@@ -96,7 +98,7 @@ export function travelLeg(from: string, to: string, opts: LegOptions = {}): Leg 
   const a = fromDest?.center;
   const b = toDest?.center;
 
-  // אין קואורדינטות: הטבלה הידנית אם קיימת, אחרת תשובה כנה בלי המצאה
+  // No coordinates: the hand-written table if it exists, otherwise an honest answer with no invention
   if (!a || !b) {
     return curated ?? { emoji: '🧭', label: 'מעבר בין הערים - לבדוק חיבורים' };
   }
@@ -113,7 +115,7 @@ export function travelLeg(from: string, to: string, opts: LegOptions = {}): Leg 
 
   const roadKm = Math.round(airKm * 1.25);
 
-  // מרחק יבשתי ענק - גם עם רכב זו כבר החלטה של טיסה פנימית
+  // A huge overland distance - even with a car this is already a domestic-flight decision
   if (roadKm > 900) {
     return {
       emoji: '✈️',
@@ -128,7 +130,7 @@ export function travelLeg(from: string, to: string, opts: LegOptions = {}): Leg 
     };
   }
 
-  // בלי רכב: הניסוח הידני עדיף כשיש, אחרת ציבורית לפי מרחק
+  // No car: the hand-written wording is preferable where it exists, otherwise public transport by distance
   if (curated) return curated;
 
   if (roadKm <= 400) {

@@ -5,12 +5,13 @@ import { storyPhotoUrl, type StoryPhoto, type StorySnapshot } from '@/lib/server
 import StoryView from './StoryView';
 
 /**
- * /story/<slug> - עמוד סיפור הטיול הציבורי. צפייה חופשית לכל מי שקיבל
- * קישור (זה מנוע הצמיחה); היצירה פרימיום, במסך הטיול.
+ * /story/<slug> - the public trip-story page. Free viewing for anyone who
+ * got a link (that is the growth engine); creation is premium, on the trip
+ * screen.
  *
- * קורא **snapshot בלבד** דרך get_trip_story - פונקציית security definer
- * שמחזירה רק סיפורים שפורסמו ורק את שדות התצוגה. אין כאן שום גישה
- * לטיול החי או לזהות הבעלים.
+ * Reads a **snapshot only** through get_trip_story - a security definer
+ * function that returns only published stories and only the display fields.
+ * There is no access here to the live trip or the owner's identity.
  */
 
 interface StoryPublic {

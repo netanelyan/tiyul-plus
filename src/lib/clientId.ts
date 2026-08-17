@@ -1,23 +1,24 @@
 /**
- * מזהה דפדפן יציב, ללקוח בלבד.
+ * A stable browser identifier, client-side only.
  *
- * **למה הוא קיים:** מכסות אנונימיות שנשענות על כתובת IP לבדה סופרות
- * את כל לקוחות מפעילת הסלולר כאדם אחד - CGNAT מעמיד עשרות אלפי
- * מכשירים מאחורי מספר קטן של כתובות. התוצאה היא חסימה של אנשים
- * שמעולם לא נכנסו לאתר, בגלל מישהו אחר.
+ * **Why it exists:** anonymous quotas that rely on the IP address alone
+ * count all of a mobile carrier's customers as one person - CGNAT puts tens
+ * of thousands of devices behind a small number of addresses. The result is
+ * blocking people who have never visited the site, because of somebody else.
  *
- * זה **לא** מזהה משתמש ולא מנגנון אבטחה: אין בו שום מידע אישי, הוא
- * לא נשלח לשום צד שלישי, והוא מתאפס עם ניקוי האחסון בדפדפן. תפקידו
- * היחיד הוא להפריד בין מבקרים לצורך מכסה הוגנת.
+ * This is **not** a user identifier and not a security mechanism: it holds
+ * no personal data, is never sent to any third party, and resets when the
+ * browser's storage is cleared. Its only role is to separate visitors for
+ * the sake of a fair quota.
  *
- * מי שמוחק אותו לא מרוויח כלום: השרת נופל חזרה למכסה לפי IP, שהיא
- * המחמירה מבין השתיים.
+ * Deleting it gains nothing: the server falls back to the per-IP quota,
+ * which is the stricter of the two.
  */
 const KEY = 'tiyul-plus:client-id';
 
 let cached: string | null = null;
 
-/** מזהה מקומי (16 תווים), נוצר פעם אחת ונשמר */
+/** A local identifier (16 characters), created once and saved */
 export function clientId(): string {
   if (cached) return cached;
   if (typeof window === 'undefined') return '';
@@ -27,30 +28,32 @@ export function clientId(): string {
       cached = existing;
       return existing;
     }
-    // crypto.randomUUID קיים בכל דפדפן שאנחנו תומכים בו; בלעדיו אין
-    // מזהה, והשרת פשוט ישתמש ב-IP.
+    // crypto.randomUUID exists in every browser we support; without it there
+    // is no identifier, and the server will simply use the IP.
     const id = (globalThis.crypto?.randomUUID?.() ?? '').replace(/-/g, '').slice(0, 32);
     if (!/^[a-z0-9]{16,64}$/.test(id)) return '';
     localStorage.setItem(KEY, id);
     cached = id;
     return id;
   } catch {
-    // אחסון חסום (מצב פרטי מסוים) - נופלים ל-IP, וזה בסדר
+    // Storage blocked (certain private modes) - fall back to IP, and that is fine
     return '';
   }
 }
 
-/** הכותרת שמצורפת לכל בקשה שעולה כסף */
+/** The header attached to every request that costs money */
 export function clientIdHeader(): Record<string, string> {
   const id = clientId();
   return id ? { 'x-client-id': id } : {};
 }
 
 /**
- * האם כבר קיים מזהה - **בלי ליצור אחד**. `clientId()` מייצר מזהה
- * בהיעדרו, ולכן אי אפשר להשתמש בו כבדיקת "האם הדפדפן הזה ותיק":
- * עצם הבדיקה הייתה הופכת כל דפדפן חדש לוותיק. מונה הביקורים החוזרים
- * (events.ts) הוא הצרכן - דפדפן שנושא מזהה מלפני הפיצ'ר היה כאן קודם.
+ * Whether an identifier already exists - **without creating one**.
+ * `clientId()` generates an identifier when there is none, so it cannot be
+ * used as an "is this browser a returning one" check: the check itself would
+ * turn every new browser into a returning one. The returning-visits counter
+ * (events.ts) is the consumer - a browser carrying an identifier from before
+ * the feature was here earlier.
  */
 export function hasClientId(): boolean {
   if (typeof window === 'undefined') return false;

@@ -2,15 +2,16 @@ import type { Country, Destination, DestinationSummary, Place, PlacesProvider } 
 import { sampleProvider } from './sample';
 
 /**
- * מתאם TripAdvisor Content API.
+ * TripAdvisor Content API adapter.
  *
- * להפעלה:
- * 1. נרשמים ב-developer.tripadvisor.com ומקבלים מפתח (5,000 קריאות בחודש חינם).
- * 2. מוסיפים ל-.env.local:  TRIPADVISOR_API_KEY=...
- * 3. מגדירים  NEXT_PUBLIC_PLACES_PROVIDER=tripadvisor
+ * To enable:
+ * 1. Sign up at developer.tripadvisor.com and get a key (5,000 calls a month free).
+ * 2. Add to .env.local:  TRIPADVISOR_API_KEY=...
+ * 3. Set  NEXT_PUBLIC_PLACES_PROVIDER=tripadvisor
  *
- * ה-API תומך ב-languageCode כך שאפשר לבקש תוכן בעברית ("he") -
- * חלק מהתוכן מתורגם וחלק יחזור באנגלית, לכן שומרים fallback לדאטה המקומי.
+ * The API supports languageCode so content can be requested in Hebrew
+ * ("he") - some content is translated and some comes back in English, so a
+ * fallback to the local data is kept.
  */
 
 const API_KEY = process.env.TRIPADVISOR_API_KEY;
@@ -57,7 +58,7 @@ async function taSearch(query: string, latLong?: string): Promise<Place[]> {
 export const tripadvisorProvider: PlacesProvider = {
   providerName: 'tripadvisor',
 
-  // מדינות ויעדים הם תוכן אוצר - תמיד מהדאטה המקומי.
+  // Countries and destinations are curated content - always from the local data.
   getCountries(): Promise<Country[]> {
     return sampleProvider.getCountries();
   },
@@ -71,7 +72,7 @@ export const tripadvisorProvider: PlacesProvider = {
   },
 
   async getDestination(slug: string): Promise<Destination | null> {
-    // התוכן האוצר נשאר מקומי; TripAdvisor משמש לחיפוש ולדירוגים.
+    // The curated content stays local; TripAdvisor is used for search and ratings.
     return sampleProvider.getDestination(slug);
   },
 

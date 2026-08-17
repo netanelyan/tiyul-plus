@@ -1,56 +1,61 @@
 import type { Trip } from '@/lib/trip/types';
 
 /**
- * ניתוב מודל לפי סוג הבקשה - **בקוד, לא בפרומפט**.
+ * Model routing by request type - **in code, not in the prompt**.
  *
- * ## הבעיה
+ * ## The problem
  *
- * "תזיז את יום 5 ליום 1" ו"תבנה לי שבועיים באיטליה עם ילדים" רצו עד
- * היום על אותו מודל ועם אותה קידומת של 240 אלף תווים. הראשונה היא
- * הזזה של אינדקס במערך: היא לא צריכה את הקטלוג, היא לא צריכה שיפוט,
- * והשרת מאמת אותה ממילא.
+ * "Move day 5 to day 1" and "build me two weeks in Italy with kids" used to
+ * run on the same model with the same 240,000-char prefix. The first is an
+ * index move in an array: it does not need the catalog, it does not need
+ * judgement, and the server validates it anyway.
  *
- * ## למה זה מחלקן דטרמיניסטי ולא מודל שמסווג
+ * ## Why this is a deterministic classifier and not a classifying model
  *
- * מסווג שהוא מודל מוסיף קריאה לכל תור, ומעביר את ההחלטה עצמה למקום
- * שאי אפשר לכתוב לו טסט. הקובץ הזה הוא הדפוס שכבר עבד כאן פעמיים -
- * `priceGuard` ו-`filterKosherUnlessOptedIn`: **ערובה מבנית במקום
- * משמעת של פרומפט.**
+ * A classifier that is a model adds a call to every turn, and moves the
+ * decision itself somewhere no test can be written for. This file is the
+ * pattern that has already worked here twice - `priceGuard` and
+ * `filterKosherUnlessOptedIn`: **a structural guarantee instead of prompt
+ * discipline.**
  *
- * ## שתי החסכונות, והשני גדול מהראשון
+ * ## The two savings, and the second is bigger than the first
  *
- * 1. **מודל זול.** haiku במקום sonnet.
- * 2. **קידומת קטנה.** וזה העיקר: המסלול הקל **לא שולח את אינדקס
- *    הקטלוג בכלל** - כ-240 אלף תווים, כ-80 אלף טוקנים. הוא יכול
- *    להרשות זאת לעצמו רק בגלל סעיף הכלים למטה: כל כלי ברשימה הלבנה
- *    פועל על מה שכבר בטיול, ולכן אין מה לחפש בקטלוג.
+ * 1. **A cheap model.** haiku instead of sonnet.
+ * 2. **A small prefix.** And this is the main point: the light path **does
+ *    not send the catalog index at all** - about 240,000 chars, about 80,000
+ *    tokens. It can only afford that because of the tools clause below: every
+ *    whitelisted tool operates on what is already in the trip, so there is
+ *    nothing to look up in the catalog.
  *
- * ## הערובה עצמה
+ * ## The guarantee itself
  *
- * המודל הזול מקבל **רק את הכלים ברשימה הלבנה**. זו לא הנחיה שאפשר
- * להתעלם ממנה - כלי שלא נשלח לא קיים בשבילו. בקשה שדורשת יותר לא
- * "מבוצעת גרוע"; היא לא מבוצעת בכלל, והתור מוסלם למודל החזק ומורץ
- * מחדש מאפס.
+ * The cheap model receives **only the whitelisted tools**. This is not an
+ * instruction it can ignore - a tool that is not sent does not exist for it.
+ * A request that needs more is not "performed badly"; it is not performed at
+ * all, and the turn is escalated to the strong model and rerun from scratch.
  *
- * ## מה שנשאר בכוונה אצל המודל החזק
+ * ## What deliberately stays with the strong model
  *
- * בנייה ומחיקה (`create_trip*`, `remove_day`, `set_day_places`),
- * חקירת יעד, חיפוש הזמנות, לוח האירועים, וכל שאלה. הרישום בקובץ הזה
- * (CLAUDE.md, "Haiku as the agent") מתעד שני כשלים אמיתיים שנמדדו:
- * דילוג על אישור לפני שינוי הרסני, וסחיפה מהדאטה בהמלצות המשך. שתי
- * הרשימות למטה נגזרות ישירות משני הכשלים האלה.
+ * Building and deleting (`create_trip*`, `remove_day`, `set_day_places`),
+ * destination exploration, booking search, the events calendar, and every
+ * question. The record in this file (CLAUDE.md, "Haiku as the agent")
+ * documents two real, measured failures: skipping confirmation before a
+ * destructive change, and drifting off-data in follow-up suggestions. The
+ * two lists below derive directly from those two failures.
  */
 
 /**
- * הכלים היחידים שהמסלול הקל מקבל.
+ * The only tools the light path receives.
  *
- * המכנה המשותף: **כולם פועלים על משהו שכבר קיים בטיול**, המטייל
- * ציין אותו במפורש, והשרת מאמת כל שדה. אין ביניהם כלי שמוחק יום,
- * בונה טיול, פונה החוצה או מייצר טענה על העולם.
+ * The common denominator: **all of them operate on something that already
+ * exists in the trip**, the traveler named it explicitly, and the server
+ * validates every field. None of them deletes a day, builds a trip, reaches
+ * outward, or produces a claim about the world.
  *
- * `add_place` נשאר ברשימה למרות שהוא כן נוגע בקטלוג - ולכן המסלול
- * הקל כן מקבל את **הפירוט של ערי הטיול עצמו**. זה מה שהופך "תוסיף את
- * הקולוסיאום ליום 2" לאפשרי בלי לשלוח את 166 היעדים.
+ * `add_place` stays on the list even though it does touch the catalog - and
+ * so the light path DOES receive the **detail block for the trip's own
+ * cities**. That is what makes "add the Colosseum to day 2" possible without
+ * sending all 166 destinations.
  */
 export const LIGHT_TOOLS = [
   'move_day',
@@ -69,66 +74,69 @@ const LIGHT_SET = new Set<string>(LIGHT_TOOLS);
 export const isLightTool = (name: string): boolean => LIGHT_SET.has(name);
 
 /**
- * פעולות מכניות. חייבת להתקיים אחת מהן, אחרת אין סיבה להניח שזו בקשה
- * פשוטה - ברירת המחדל היא המודל החזק, תמיד.
+ * Mechanical actions. At least one of them must be present, otherwise there
+ * is no reason to assume this is a simple request - the default is the
+ * strong model, always.
  */
 const MECHANICAL =
   /תזיז|תעביר|להזיז|להעביר|תחליף בין|תוסיף|להוסיף|תוריד|להוריד|תסיר|להסיר|תמחק את העצירה|שנה את השם|תשנה את השם|תקרא לטיול|תרשום ליום|תוסיף הערה|ההערה של יום|תסמן|סמן|תעדכן תאריכ|התאריכים של הטיול|יוצאים ב|חוזרים ב/;
 
 /**
- * פוסלים. **מספיק אחד** כדי להישאר על המודל החזק - וזו הנטייה הנכונה
- * לטעות: ניתוב שגוי כלפי מטה עולה תור מבוזבז, ניתוב שגוי כלפי מעלה
- * עולה כמה אגורות.
+ * Disqualifiers. **One is enough** to stay on the strong model - and that is
+ * the right direction to err in: misrouting downward costs a wasted turn,
+ * misrouting upward costs a few cents.
  */
 const DISQUALIFY: { re: RegExp; why: string }[] = [
-  // בנייה מחדש - הכלי הכבד ביותר, וגם היחיד שנקטע על max_tokens
+  // Rebuilding - the heaviest tool, and also the only one that gets cut off on max_tokens
   { re: /תבנה|בנה לי|תבני|תכין|תכנן|תכנון|צור טיול|טיול חדש|מחדש|תתחיל מ|תתכנן/, why: 'בנייה' },
-  // מחיקה - הרישום מתעד דילוג על אישור לפני שינוי הרסני
+  // Deletion - the record documents skipping confirmation before a destructive change
   { re: /תמחק|למחוק|תבטל|לבטל|תרוקן|תוריד יום|תסיר יום/, why: 'מחיקה' },
-  // שאלה - כאן נמדדה סחיפה מהדאטה
+  // A question - this is where off-data drift was measured
   { re: /\?|מה |למה |איך |כדאי|האם |מתי |כמה |איזה |מומלץ|תמליץ|המלצ|תספר|ספר לי|תסביר/, why: 'שאלה' },
-  // דברים שמחייבים מקור: מחירים, אירועים, זמינות, יעד שאינו בקטלוג
+  // Things that require a source: prices, events, availability, a destination not in the catalog
   { re: /מחיר|עולה|תקציב|כמה כסף|זול|יקר/, why: 'מחיר' },
   { re: /אירוע|פסטיבל|סגור|חופשות|חופשת |חג /, why: 'לוח אירועים' },
   { re: /מלון|לינה|טיסה|כרטיס|הזמנ|לחפש|חיפוש/, why: 'הזמנות' },
-  // כשרות ושבת הן העדפות רגישות - נקבעות בכפתורים ולא בשיחה
+  // Kashrut and Shabbat are sensitive preferences - set via buttons, not in conversation
   { re: /כשר|מהדרין|גלאט|בד״ץ|בד"ץ|השגחה|חב״ד|חב"ד|שבת/, why: 'כשרות' },
 ];
 
 export interface TurnRoute {
-  /** true = המסלול הקל: מודל זול, קידומת קטנה, כלים מוגבלים */
+  /** true = the light path: cheap model, small prefix, restricted tools */
   light: boolean;
-  /** לוג בלבד - למה הוחלט כך */
+  /** log only - why this was decided */
   reason: string;
 }
 
 const HEAVY = (reason: string): TurnRoute => ({ light: false, reason });
 
 /**
- * אורך מרבי להודעה במסלול הקל. הודעה ארוכה כמעט תמיד מכילה יותר
- * מבקשה אחת ("תזיז את יום 5 לתחילת הטיול, ותוסיף שם משהו לילדים,
- * ואולי עדיף בכלל..."), וזה בדיוק המצב שבו כלי מוגבל נכשל.
+ * Maximum message length for the light path. A long message almost always
+ * contains more than one request ("move day 5 to the start of the trip, and
+ * add something for the kids there, and maybe it's actually better to..."),
+ * and that is exactly the situation in which a restricted tool fails.
  */
 const MAX_LIGHT_CHARS = 90;
 
 /**
- * בקשה מורכבת. אורך לבדו מפספס: "תזיז את יום 5 ליום 1, ותוסיף שם משהו
- * לילדים" הוא 46 תווים ושתי בקשות. **שתי פעולות מכניות בהודעה אחת הן
- * הסימן**, והן גם בדיוק המצב שבו הכלים המוגבלים נכשלים באמצע ומשאירים
- * חצי עריכה - עדיף שהמודל החזק יעשה את שתיהן מלכתחילה.
+ * A complex request. Length alone misses: "move day 5 to day 1, and add
+ * something for the kids there" is 46 characters and two requests. **Two
+ * mechanical actions in one message are the tell**, and they are also exactly
+ * the situation in which the restricted tools fail midway and leave half an
+ * edit - better for the strong model to do both from the start.
  */
 const MECHANICAL_GLOBAL = new RegExp(MECHANICAL.source, 'g');
 const countMechanical = (t: string): number => (t.match(MECHANICAL_GLOBAL) ?? []).length;
 
 /**
- * ההחלטה. `trip` הוא הטיול **לפני** התור.
+ * The decision. `trip` is the trip **before** the turn.
  */
 export function classifyTurn(lastUserText: string, trip: Trip | null, hasImage: boolean): TurnRoute {
   const text = (lastUserText ?? '').trim();
 
-  // בלי טיול אין מה לערוך - כל בקשה היא בנייה או שיחה
+  // With no trip there is nothing to edit - every request is a build or a conversation
   if (!trip || trip.days.length === 0) return HEAVY('אין טיול פעיל');
-  // תמונה = צריך מודל שרואה, וגם בקשה שאין דרך לסווג מהטקסט
+  // An image = needs a model that can see, and also a request that cannot be classified from the text
   if (hasImage) return HEAVY('תמונה מצורפת');
   if (text.length === 0) return HEAVY('הודעה ריקה');
   if (text.length > MAX_LIGHT_CHARS) return HEAVY(`הודעה ארוכה (${text.length})`);
@@ -143,20 +151,21 @@ export function classifyTurn(lastUserText: string, trip: Trip | null, hasImage: 
 }
 
 /**
- * האם התור הקל צריך לחזור למודל החזק.
+ * Whether the light turn needs to fall back to the strong model.
  *
- * הכלל: **כל דבר שאינו הצלחה נקייה מסלים.** התור הקל זול, ולכן שווה
- * לזרוק אותו ולהריץ מחדש ברגע הראשון שהוא לא עשה בדיוק את מה שהוא
- * נשלח לעשות - עדיף לשלם פעמיים מאשר להשאיר עריכה חלקית על הטיול.
+ * The rule: **anything that is not a clean success escalates.** The light
+ * turn is cheap, so it is worth throwing it away and rerunning the moment it
+ * did not do exactly what it was sent to do - better to pay twice than to
+ * leave a partial edit on the trip.
  */
 export function shouldEscalate(o: {
-  /** האם כלי כלשהו רץ ובוצע בהצלחה */
+  /** whether any tool ran and executed successfully */
   toolRan: boolean;
-  /** האם כלי כלשהו החזיר שגיאה (קלט שנפסל בשרת) */
+  /** whether any tool returned an error (input rejected by the server) */
   toolFailed: boolean;
-  /** stop_reason האחרון */
+  /** the last stop_reason */
   stopReason: string;
-  /** מספר האיטרציות שנוצלו */
+  /** number of iterations used */
   iterations: number;
 }): string | null {
   if (o.toolFailed) return 'כלי נכשל';
@@ -167,8 +176,9 @@ export function shouldEscalate(o: {
 }
 
 /**
- * תקרת איטרציות למסלול הקל. עריכה מכנית היא קריאה אחת, לפעמים שתיים
- * (למשל `set_day_city` ואחריו `add_place`). שלוש הן כבר סימן שהמודל
- * מגשש - וגישוש הוא בדיוק מה שהמודל החזק אמור לעשות.
+ * Iteration ceiling for the light path. A mechanical edit is one call,
+ * sometimes two (e.g. `set_day_city` followed by `add_place`). Three is
+ * already a sign the model is groping - and groping is exactly what the
+ * strong model is supposed to do.
  */
 export const MAX_LIGHT_ITERATIONS = 3;

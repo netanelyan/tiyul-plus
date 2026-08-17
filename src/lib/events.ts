@@ -1,23 +1,27 @@
 import { clientIdHeader, hasClientId } from '@/lib/clientId';
 
 /**
- * דיווח על פעולה שקורית בדפדפן בלבד (הדפסה, שיתוף, ניווט - ועכשיו גם
- * אירועי הצמיחה: יצירת טיול, פתיחת שיתוף, ביקור חוזר).
+ * Reporting an action that happens in the browser only (print, share,
+ * navigation - and now also the growth events: trip created, shared link
+ * opened, return visit).
  *
- * **מונה, לא מעקב.** נשלח רק סוג הפעולה - בלי מזהה טיול, בלי תוכן
- * ובלי חשבון. השרת סופר יום ומספר, וזה כל מה שנשמר. אין עוגיות, אין
- * צד שלישי, ושום מזהה לא עוזב את הדפדפן מעבר למה שכבר נשלח ממילא.
+ * **A counter, not tracking.** Only the action kind is sent - no trip id, no
+ * content and no account. The server counts a day and a number, and that is all
+ * that is stored. No cookies, no third party, and no identifier leaves the
+ * browser beyond what is already sent anyway.
  *
- * לא נכשל ולא מעכב: אם הבקשה נופלת, ההדפסה קורית בכל מקרה.
+ * Never fails and never delays: if the request drops, the print happens anyway.
  */
 /**
- * `pdf` קיים בסכימה ואינו נשלח היום: הדפסה ו-PDF הם אותו כפתור ואותו
- * דיאלוג דפדפן, ואי אפשר לדעת מהדף מה נבחר בו. מוטב שדה שלא מגיע על
- * פני מספר שנראה אמיתי ואינו.
+ * `pdf` exists in the schema and is not sent today: print and PDF are the same
+ * button and the same browser dialog, and the page cannot tell what was chosen
+ * in it. Better a field that never arrives than a number that looks real and
+ * is not.
  *
- * `newsletter` הוא חריג בכוונה: הוא נספר **בשרת בלבד** (נתיב ההרשמה
- * יודע להבדיל כתובת חדשה מכפולה, והדפדפן לא), ולכן נתיב /api/events
- * דוחה אותו מלקוחות - אחרת אפשר היה לנפח אותו בלולאה.
+ * `newsletter` is a deliberate exception: it is counted **server-side only**
+ * (the signup route knows how to tell a new address from a duplicate, and the
+ * browser does not), so the /api/events route rejects it from clients -
+ * otherwise it could be inflated in a loop.
  */
 export type AppEvent =
   | 'print'
@@ -31,30 +35,32 @@ export type AppEvent =
   | 'return_visit';
 
 /**
- * ---------- "רק אירועים אמיתיים" ----------
+ * ---------- "Real events only" ----------
  *
- * דרישה מפורשת של נתנאל: טיול שהוא יוצר תוך בדיקה, או אדמין שפותח
- * שיתוף של מישהו, אסור שינפחו את המונים. שני מנגנונים, שניהם זולים:
+ * An explicit requirement from Netanel: a trip he creates while testing, or an
+ * admin opening somebody's share, must not inflate the counters. Two
+ * mechanisms, both cheap:
  *
- * 1. **דגל דפדפן פנימי** - ברגע ש-/admin נטען בהצלחה (כלומר הדפדפן
- *    הזה שייך לאדמין מאומת), נקבע דגל מקומי וכל האירועים מהדפדפן הזה
- *    מושתקים מכאן והלאה - כולל מוני הייצוא הקיימים. מי שבודק את האתר
- *    הוא לא מבקר.
- * 2. **localhost מושתק תמיד** - פיתוח מקומי מול env אמיתי לא מלכלך
- *    את המונים של הייצור.
+ * 1. **An internal-browser flag** - the moment /admin loads successfully
+ *    (i.e. this browser belongs to a verified admin), a local flag is set and
+ *    all events from this browser are muted from then on - including the
+ *    existing export counters. Someone testing the site is not a visitor.
+ * 2. **localhost is always muted** - local development against a real env does
+ *    not dirty the production counters.
  *
- * הגבול הכן: הדגל הוא לפי דפדפן. אדמין בחלון גלישה בסתר (או במכשיר
- * שמעולם לא פתח בו את /admin) ייספר כמו כל מבקר. זה עדיין הרבה יותר
- * טוב מכלום, ומי שבודק בכוונה יודע לפתוח /admin קודם.
+ * The honest limit: the flag is per browser. An admin in an incognito window
+ * (or on a device that never opened /admin) is counted like any visitor. That
+ * is still far better than nothing, and whoever tests deliberately knows to
+ * open /admin first.
  */
 const INTERNAL_KEY = 'tiyul-plus:internal';
 
-/** נקרא מ-AdminClient אחרי ש-/api/admin/me אישר שזה אדמין אמיתי */
+/** Called from AdminClient after /api/admin/me confirmed this is a real admin */
 export function markInternalBrowser(): void {
   try {
     localStorage.setItem(INTERNAL_KEY, '1');
   } catch {
-    /* אחסון חסום - אין דגל, האדמין ייספר; עדיף מהתרסקות */
+    /* storage blocked - no flag, the admin gets counted; better than crashing */
   }
 }
 
@@ -62,7 +68,7 @@ function suppressed(): boolean {
   try {
     if (localStorage.getItem(INTERNAL_KEY) === '1') return true;
   } catch {
-    /* אחסון חסום - ממשיכים לבדיקת ה-host */
+    /* storage blocked - continue to the host check */
   }
   const h = window.location.hostname;
   return h === 'localhost' || h === '127.0.0.1';
@@ -76,31 +82,32 @@ export function trackEvent(kind: AppEvent): void {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...clientIdHeader() },
       body: JSON.stringify({ kind }),
-      keepalive: true, // שורד ניווט/הדפסה שמתחילים מיד אחרי
+      keepalive: true, // survives a navigation/print that starts right after
     }).catch(() => {});
   } catch {
-    /* מונה שנכשל הוא לא אירוע */
+    /* a failed counter is not an event */
   }
 }
 
-/** תאריך מקומי (לא UTC): "יום אחר" במשמעות האנושית של המבקר */
+/** Local date (not UTC): "a different day" in the visitor's human sense */
 export function localDay(): string {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
 /**
- * ---------- בעלות על קישורי שיתוף ----------
+ * ---------- Ownership of share links ----------
  *
- * "פתיחות של קישור משותף" לא אמורות לספור את הבעלים שפותח את הקישור
- * של עצמו. מטען השיתוף לא נושא מזהה בעלים (בכוונה - הוא רק הטיול),
- * אז הזיהוי נעשה בצד שיצר: כשדפדפן מייצר קישור שיתוף, הטוקן שלו
- * נשמר מקומית, וכשאותו דפדפן פותח /t/<token> - הוא לא נספר. בעלים
- * שפותח את הקישור שלו ממכשיר אחר ייספר; אין דרך לדעת, וזה נאמר.
+ * "Opens of a shared link" should not count the owner opening their own link.
+ * The share payload carries no owner id (deliberately - it is only the trip),
+ * so identification happens on the creating side: when a browser generates a
+ * share link, its token is stored locally, and when that same browser opens
+ * /t/<token> - it is not counted. An owner opening their link from another
+ * device will be counted; there is no way to know, and that is stated.
  */
 const MY_SHARES_KEY = 'tiyul-plus:my-shares';
 const MY_SHARES_CAP = 40;
-/** הטוקן הארוך יכול להיות אלפי תווים - קידומת מספיקה להשוואה */
+/** The long token can be thousands of chars - a prefix suffices for comparison */
 const TOKEN_PREFIX = 64;
 
 export function rememberOwnShare(token: string): void {
@@ -116,7 +123,7 @@ export function rememberOwnShare(token: string): void {
     try {
       localStorage.setItem(MY_SHARES_KEY, JSON.stringify([token.slice(0, TOKEN_PREFIX)]));
     } catch {
-      /* אחסון חסום */
+      /* storage blocked */
     }
   }
 }
@@ -132,64 +139,69 @@ export function isOwnShare(token: string): boolean {
 }
 
 /**
- * ---------- המרה: שיתוף → טיול של הצופה ----------
+ * ---------- Conversion: share → the viewer's own trip ----------
  *
- * המספר שנתנאל ביקש במפורש: כמה מהפתיחות של קישור משותף הובילו לכך
- * שהצופה יצר טיול משלו. המנגנון: צפייה בשיתוף (לא-בעלים, ובדפדפן
- * שעוד **אין** בו אף טיול - כלומר אדם חדש, שזה מה שוויראליות מודדת)
- * מניחה סמן מקומי; יצירת הטיול הבא בדפדפן הזה, בתוך 7 ימים, נספרת
- * פעם אחת כ-shared_adopt. "שמירה אצלי" עוברת כאן מעצמה - היא יוצרת
- * טיול, וזה כל מה שהסמן צריך.
+ * The number Netanel explicitly asked for: how many opens of a shared link led
+ * to the viewer creating a trip of their own. The mechanism: viewing a share
+ * (non-owner, and in a browser that does **not** yet hold any trip - i.e. a new
+ * person, which is what virality measures) drops a local marker; the next trip
+ * created in this browser, within 7 days, is counted once as shared_adopt.
+ * The "save it as mine" action passes through here on its own - it creates a
+ * trip, and that is all the marker needs.
  */
 const SHARE_REF_KEY = 'tiyul-plus:share-ref';
 const SHARE_REF_MAX_DAYS = 7;
 
-/** נקרא מעמוד השיתוף, רק כשהצופה אינו הבעלים ואין לו עדיין טיולים */
+/** Called from the share page, only when the viewer is not the owner and has no trips yet */
 export function markSharedVisit(): void {
   try {
     if (!localStorage.getItem(SHARE_REF_KEY)) {
       localStorage.setItem(SHARE_REF_KEY, localDay());
     }
   } catch {
-    /* אחסון חסום - אין ייחוס */
+    /* storage blocked - no attribution */
   }
 }
 
 /**
- * **נקודת הכניסה היחידה לספירת "טיול נוצר"** - TripContext קורא לה
- * מכל מסלולי היצירה המקומיים (סוכן, מתכנן, שאלון, ייבוא, שמירה של
- * שיתוף, שכפול) ו**לא** ממשיכה מהשרת (applyRemoteTrips) - שחזור אינו
- * יצירה. הייחוס לשיתוף נבדק כאן כדי שיהיה מקום אחד ולא ארבעה.
+ * **The single entry point for counting "trip created"** - TripContext calls it
+ * from every local creation path (agent, planner, quiz, import, saving a share,
+ * duplication) and **not** from server pulls (applyRemoteTrips) - restoring is
+ * not creating. The share attribution is checked here so there is one place and
+ * not four.
  */
 export function trackTripCreated(): void {
   trackEvent('trip_created');
   try {
     const day = localStorage.getItem(SHARE_REF_KEY);
     if (!day) return;
-    localStorage.removeItem(SHARE_REF_KEY); // נצרך פעם אחת, מוצלח או לא
+    localStorage.removeItem(SHARE_REF_KEY); // consumed once, successful or not
     const ageDays = (Date.now() - Date.parse(day)) / 86_400_000;
     if (Number.isFinite(ageDays) && ageDays >= 0 && ageDays <= SHARE_REF_MAX_DAYS) {
       trackEvent('shared_adopt');
     }
   } catch {
-    /* אחסון חסום */
+    /* storage blocked */
   }
 }
 
 /**
- * ---------- ביקור חוזר ----------
+ * ---------- Return visit ----------
  *
- * "דפדפן שכבר היה כאן ביום קודם", נספר **פעם אחת ליום** לכל דפדפן.
- * הזיהוי כולו מקומי: תאריך הביקור הראשון נשמר בדפדפן, ורק המונה
- * (בלי שום מזהה) נשלח. חשוב לומר ביושר מה המספר הזה: סכימה של טווח
- * היא "ימי-דפדפן-חוזר", לא "דפדפנים ייחודיים בטווח" - טבלת האירועים
- * אגרגטיבית בכוונה (בלי זהויות), אז ייחודיות על פני טווח שרירותי
- * אינה ניתנת לחישוב, וזה המדד הקרוב ביותר שנשאר נאמן לפרטיות.
+ * "A browser that was already here on a previous day", counted **once per day**
+ * per browser. Identification is entirely local: the first visit's date is
+ * stored in the browser, and only the counter (with no identifier) is sent. It
+ * matters to say honestly what this number is: a sum over a range is
+ * "returning-browser-days", not "unique browsers in the range" - the events
+ * table is aggregate on purpose (no identities), so uniqueness over an
+ * arbitrary range cannot be computed, and this is the closest measure that
+ * stays faithful to privacy.
  *
- * דפדפנים שהיו כאן לפני הפיצ'ר: אם כבר יש להם את מזהה-הדפדפן של
- * המכסות (clientId) אבל אין רשומת ביקור - הם דפדפנים ותיקים, והביקור
- * הנוכחי שלהם נספר כחוזר. זה השימוש במזהה הקיים שנתנאל ביקש, בלי
- * להוסיף שום דבר חדש ובלי לשלוח אותו לשום מקום.
+ * Browsers that were here before the feature: if they already carry the
+ * quotas' browser identifier (clientId) but have no visit record - they are
+ * veteran browsers, and their current visit is counted as returning. This is
+ * the reuse of the existing identifier Netanel asked for, without adding
+ * anything new and without sending it anywhere.
  */
 const VISIT_KEY = 'tiyul-plus:visit';
 
@@ -205,10 +217,11 @@ export function pingVisit(): void {
       rec = null;
     }
     if (!rec?.first) {
-      // אין רשומת ביקור. דפדפן שכבר נושא clientId היה כאן קודם -
-      // ביקור ותיק שנספר כחוזר; דפדפן נקי מתחיל את הספירה מהיום.
-      // hasClientId ולא clientId() - הקריאה השנייה מייצרת מזהה בהיעדרו,
-      // והייתה הופכת כל דפדפן חדש ל"ותיק".
+      // No visit record. A browser already carrying a clientId was here
+      // before - a veteran visit counted as returning; a clean browser starts
+      // the count from today. hasClientId and not clientId() - the latter
+      // creates an identifier when absent, and would have turned every new
+      // browser into a "veteran".
       const veteran = hasClientId();
       localStorage.setItem(
         VISIT_KEY,
@@ -222,6 +235,6 @@ export function pingVisit(): void {
       trackEvent('return_visit');
     }
   } catch {
-    /* אחסון חסום - אין ספירה, אין קריסה */
+    /* storage blocked - no count, no crash */
   }
 }

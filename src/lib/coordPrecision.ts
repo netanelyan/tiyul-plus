@@ -1,42 +1,50 @@
 /**
- * דיוק קואורדינטה - כמה ספרות עשרוניות באמת יש לה, ומה השגיאה שזה מרמז.
+ * Coordinate precision - how many decimal digits it really has, and what
+ * error that implies.
  *
- * ## למה זה קובץ נפרד מ-`outbound.ts`
+ * ## Why this is a separate file from `outbound.ts`
  *
- * `outbound.ts` עונה על "יש קואורדינטה תקינה?" (מספר סופי בטווח כדור
- * הארץ) - שאלה בינארית שקובעת אם בכלל בונים קישור. השאלה כאן שונה:
- * "עד כמה אפשר לסמוך על הקואורדינטה שכן קיימת?" קואורדינטה עם שתי
- * ספרות עשרוניות (`45.66,14`) עוברת את הבדיקה הבינארית בקלות ועדיין
- * מטעה במטרים מאות עד קילומטר - בדיוק סוג הפער שקישור "עובד" מסתיר.
+ * `outbound.ts` answers "is there a valid coordinate?" (a finite number in
+ * Earth range) - a binary question that decides whether a link is built at
+ * all. The question here is different: "how much can the coordinate that
+ * DOES exist be trusted?" A coordinate with two decimal digits
+ * (`45.66,14`) passes the binary check easily and still misleads by
+ * hundreds of meters up to a kilometer - exactly the kind of gap a
+ * "working" link hides.
  *
- * המודול הזה משותף בין `scripts/coarse-coords.mjs` (worklist קריא
- * לבן-אדם) ובין `coordPrecision.test.ts` (רשת שמונעת מהפער הזה לגדול
- * בשקט) - כדי שהגדרת "גס" לא תתפצל לשני מקומות ותסטה זה מזה.
+ * This module is shared between `scripts/coarse-coords.mjs` (a
+ * human-readable worklist) and `coordPrecision.test.ts` (a net that keeps
+ * this gap from growing silently) - so the definition of "coarse" does not
+ * split into two places and drift apart.
  *
- * ## למה הציר הגס קובע
+ * ## Why the coarser axis decides
  *
- * הדיוק של זוג נקבע ע"י הצלע החלשה: `45.66666793823242, 14` נראית
- * מדויקת עד שמסתכלים על הרכיב השני. הספרה הראשונה היא ארטיפקט של
- * float32, לא מדידה. לכן הדירוג הוא לפי `min(ספרות)`.
+ * A pair's precision is set by its weak side: `45.66666793823242, 14`
+ * looks precise until you look at the second component. The first digit is
+ * a float32 artifact, not a measurement. Hence the grading is by
+ * `min(digits)`.
  *
- * שגיאה משוערת בקו הרוחב: 0 ספרות ~111 ק"מ, 1 ~11 ק"מ, 2 ~1.1 ק"מ.
+ * Approximate latitude error: 0 digits ~111 km, 1 ~11 km, 2 ~1.1 km.
  *
- * ## שדה גדול מול נקודה
+ * ## A large area vs a point
  *
- * פארק לאומי או אגם הם שטח, ומרכז גס עבורם הוא לגיטימי. בית כנסת או
- * מסעדה הם נקודה, ושם קילומטר הוא ההבדל בין להגיע לבין לא. לכן כל
- * שורה מסומנת 'area' או 'point' - וזה מה שקובע אם היא באמת עבודה.
+ * A national park or a lake is an area, and a coarse center for them is
+ * legitimate. A synagogue or a restaurant is a point, and there a
+ * kilometer is the difference between arriving and not. So every row is
+ * marked 'area' or 'point' - and that is what decides whether it is really
+ * work to do.
  */
 
-/** קטגוריות שהן שטח ולא נקודה - מרכז גס עבורן סביר */
+/** Categories that are an area, not a point - a coarse center is reasonable for them */
 export const AREA_CATEGORIES = new Set(['nature', 'viewpoint']);
 
-/** שגיאת ק"מ משוערת בקו הרוחב, לפי מספר הספרות העשרוניות (0/1/2) */
+/** Approximate km error at the latitude, by decimal digit count (0/1/2) */
 export const KM_ERROR_BY_DECIMALS = [111, 11, 1.1] as const;
 
 /**
- * חיתוך ארטיפקטים של float32: `45.66666793823242` הוא בפועל 45.666667
- * שעבר עיגול כפול, ואין טעם לספור 14 ספרות משמעותיות שאיש לא מדד.
+ * Cutting float32 artifacts: `45.66666793823242` is really 45.666667 that
+ * went through double rounding, and there is no point counting 14
+ * significant digits nobody measured.
  */
 export function coordDecimals(n: number): number {
   const s = String(n);
@@ -65,16 +73,16 @@ export interface CoarseCoordRow {
   category: string;
   lat: number;
   lng: number;
-  /** min(ספרות lat, ספרות lng) */
+  /** min(lat digits, lng digits) */
   decimals: number;
   kmError: number;
   shape: 'area' | 'point';
 }
 
 /**
- * כל המקומות שהקואורדינטה שלהם גסה מ-`maxDecimals` ספרות עשרוניות
- * (כולל), ממוינים מהגס לעדין. `maxDecimals` תמיד 0/1/2 בפועל - מעבר
- * לזה `KM_ERROR_BY_DECIMALS` לא מוגדר.
+ * All places whose coordinate is coarser than (or equal to) `maxDecimals`
+ * decimal digits, sorted coarse-to-fine. `maxDecimals` is always 0/1/2 in
+ * practice - beyond that `KM_ERROR_BY_DECIMALS` is undefined.
  */
 export function coarseCoordRows(destinations: CoarseDestinationInput[], maxDecimals = 2): CoarseCoordRow[] {
   const rows: CoarseCoordRow[] = [];

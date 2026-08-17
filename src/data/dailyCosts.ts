@@ -1,34 +1,39 @@
 import type { DailyCost } from '@/lib/types';
 
 /**
- * הוצאה יומית טיפוסית לאדם, לפי סגנון נסיעה, במטבע המקומי.
+ * Typical daily spend per person, by travel style, in the local currency.
  *
- * **מאיפה המספרים.** כולם הועתקו מטבלת ה-budget / mid-range / luxury
- * שמפרסם Budget Your Trip לכל עיר, שנבנית מדיווחי הוצאות של מטיילים
- * קודמים. כל תא כאן הוא **ציטוט של תא בטבלה** - לא ממוצע שחישבנו, לא
- * המרה, ולא עיגול. הערכים הלא-שלמים (7.09, 8.78, 9.34...) נשמרים בדיוק
- * כפי שהודפסו, כי ברגע שמתחילים "לסדר" מספר מסודר, אי אפשר עוד להשוות
- * אותו למקור.
+ * **Where the numbers come from.** All of them were copied from the budget /
+ * mid-range / luxury table that Budget Your Trip publishes for each city, which is
+ * built from previous travellers' expense reports. Every cell here is **a quotation
+ * of a cell in that table** - not an average we computed, not a conversion, and not
+ * a rounding. The non-round values (7.09, 8.78, 9.34...) are kept exactly as
+ * printed, because the moment you start "tidying" a number you can no longer compare
+ * it to the source.
  *
- * **מה לא נשמר כאן, וזו החלטה ולא השמטה.** הטבלה במקור כוללת גם לינה
- * וגם אלכוהול. שניהם לא הועתקו: לינה מוחרגת מהפיצ׳ר במפורש (ולכן
- * הדרך הבטוחה להחריג אותה היא פשוט לא להחזיק אותה), ואלכוהול היא
- * הוצאה שרבים לא מוציאים בכלל, ולכן היא לא "הוצאה טיפוסית".
+ * **What is not kept here, and that is a decision rather than an omission.** The
+ * source table also includes lodging and alcohol. Neither was copied: lodging is
+ * explicitly excluded from the feature (and the safe way to exclude it is simply not
+ * to hold it), and alcohol is spending that many people do not have at all, so it is
+ * not a "typical" expense.
  *
- * **עיר בלי רשומה כאן לא מקבלת הערכה.** היא פשוט לא מציגה מספר, והסכום
- * של הטיול אומר במפורש שהוא חלקי. שלוש ערים בקטלוג נבדקו ונשארו בחוץ
- * בדיוק מהסיבה הזאת - קרקוב, בוקרשט וסופיה מוגשות במקור בתבנית ישנה
- * יותר שאין בה פילוח לפי סגנון נסיעה (ולקרקוב אין בכלל שורת אטרקציות).
- * ממוצע יחיד אינו התשובה לשאלה "כמה מוציא מטייל חסכוני", ולכן לא נלקח.
+ * **A city with no record here gets no estimate.** It simply shows no number, and
+ * the trip total says explicitly that it is partial. Three cities in the catalog were
+ * checked and left out for exactly that reason - Krakow, Bucharest and Sofia are
+ * served at the source in an older format with no breakdown by travel style (and
+ * Krakow has no attractions row at all). A single average is not the answer to "how
+ * much does a budget traveller spend", so it was not taken.
  *
- * **להוסיף עיר:** לקרוא את דף העיר במקור, להעתיק שלוש שורות בלבד
- * (Local Transportation / Food / Entertainment) בשלושת הטורים, לרשום
- * את המטבע כפי שהודפס ואת התאריך שבו הדף נקרא בפועל. אם אין טבלה
- * מפולחת - לא להוסיף. כל 21 הרשומות כאן נקראו פעמיים בקריאות בלתי
- * תלויות, ושמונה מהן עברו ביקורת שלישית נפרדת (8/8 זהות).
+ * **To add a city:** read the city's page at the source, copy three rows only
+ * (Local Transportation / Food / Entertainment) across the three columns, and record
+ * the currency exactly as printed together with the date the page was actually read.
+ * If there is no broken-down table - do not add it. All 21 records here were read
+ * twice in independent readings, and eight of them went through a separate third
+ * review (8/8 identical).
  *
- * שימו לב: הדף במקור מוגש לפעמים בתבנית מצומצמת עם מספרים אחרים
- * לגמרי וללא הטבלה. הכותרת היא הסימן - התבנית הנכונה נקראת
+ * Note: the source page is sometimes served in a reduced format with entirely
+ * different numbers and no table. The heading is the tell - the correct format is
+ * titled
  * "X Travel Cost - Average Price of a Vacation to X".
  */
 

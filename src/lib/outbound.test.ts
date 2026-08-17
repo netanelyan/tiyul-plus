@@ -1,11 +1,11 @@
 /**
- * קישורים יוצאים - **חמש טענות, וכולן על מה שאסור לקרות.**
+ * Outbound links - **five claims, all about what must never happen.**
  *
- * 1. קישור למקום נבנה מקואורדינטות, גם כשבדאטה כתוב שם.
- * 2. בלי קואורדינטות תקינות - `null`, לעולם לא ניחוש לפי שם.
- * 3. כתובת אמיתית של ספק חיצוני לא נדרסת ע"י מפה.
- * 4. `sponsored` מופיע רק כשיש באמת שיוך.
- * 5. אף רכיב לא מרנדר `externalUrl` בעצמו ועוקף את המודול.
+ * 1. A place link is built from coordinates, even when the data holds a name.
+ * 2. Without valid coordinates - `null`, never a name-based guess.
+ * 3. A real external provider's URL is not overridden by a map.
+ * 4. `sponsored` appears only when there is a real affiliation.
+ * 5. No component renders `externalUrl` on its own and bypasses the module.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -14,7 +14,7 @@ import { join } from 'node:path';
 import { mapsPointUrl, outboundAttrs, outboundTarget, placeMapUrl } from './outbound.ts';
 import { destinations } from '../data/destinations.ts';
 
-/* ---------- 1. קואורדינטות מנצחות שם ---------- */
+/* ---------- 1. Coordinates beat a name ---------- */
 
 test('**כתובת מבוססת-שם נדרסת ע"י הקואורדינטות**', () => {
   const url = placeMapUrl({
@@ -32,10 +32,11 @@ test('גם הצורה הישנה של כתובת-קואורדינטות מנור
 });
 
 /*
- * הגרסה הקודמת נפלה כאן בחזרה לכתובת השמורה (שם-מבוסס) "כי חצי קישור
- * עדיף על כלום". זו בדיוק ההתנהגות שהוחלט לבטל: קישור שמנחית מישהו
- * ברחוב הלא נכון גרוע מהיעדר קישור, כי הוא נחווה כוודאות. עכשיו כל
- * אחד מהמקרים האלה מחזיר `null`, בלי יוצא מן הכלל.
+ * The previous version fell back here to the stored (name-based) URL
+ * "because half a link is better than nothing". That is exactly the behavior
+ * that was decided against: a link that lands someone on the wrong street is
+ * worse than no link, because it is experienced as certainty. Now every one
+ * of these cases returns `null`, with no exception.
  */
 test('בלי קואורדינטות תקינות - null, לא כתובת-שם ישנה', () => {
   const namedGuess = 'https://maps.google.com/?q=Somewhere';
@@ -47,7 +48,7 @@ test('בלי קואורדינטות תקינות - null, לא כתובת-שם י
   assert.equal(placeMapUrl({}), null, 'לא נשלח כלום');
 });
 
-/* ---------- 2. דף אמיתי של ספק לא נדרס ---------- */
+/* ---------- 2. A provider's real page is not overridden ---------- */
 
 test('כתובת שאינה של גוגל שורדת, והתווית יודעת מה היא', () => {
   const wiki = 'https://he.wikipedia.org/wiki/%D7%9C%D7%99%D7%A1%D7%91%D7%95%D7%9F';
@@ -57,12 +58,12 @@ test('כתובת שאינה של גוגל שורדת, והתווית יודעת 
   assert.equal(outboundTarget(null), 'other');
 });
 
-/* ---------- 3. sponsored רק כשזו האמת ---------- */
+/* ---------- 3. sponsored only when it is the truth ---------- */
 
 test('`sponsored` רק על קישור משויך באמת', () => {
   assert.ok(!outboundAttrs().rel.includes('sponsored'));
   assert.ok(outboundAttrs({ affiliate: true }).rel.includes('sponsored'));
-  // ותמיד ההגנות הבסיסיות
+  // And always the basic protections
   for (const a of [outboundAttrs(), outboundAttrs({ affiliate: true })]) {
     assert.equal(a.target, '_blank');
     assert.ok(a.rel.includes('noopener'));
@@ -70,7 +71,7 @@ test('`sponsored` רק על קישור משויך באמת', () => {
   }
 });
 
-/* ---------- 4. שומר המחלקה ---------- */
+/* ---------- 4. The class guard ---------- */
 
 function walk(dir: string): string[] {
   return readdirSync(dir).flatMap((f) => {
@@ -80,10 +81,11 @@ function walk(dir: string): string[] {
 }
 
 /**
- * הבאג שהמודול הזה נולד בשבילו הוא שלושה רכיבים שרנדרו `externalUrl`
- * ישירות, ולכן ירשו את 725 הקישורים מבוססי-השם. הטסט מוודא שאיש לא
- * חוזר לשם: `href` שמקבל `externalUrl` בלי לעבור דרך `placeMapUrl`
- * הוא בדיוק החזרה של הבאג.
+ * The bug this module was born for is three components that rendered
+ * `externalUrl` directly, and therefore inherited the 725 name-based links.
+ * The test makes sure nobody goes back there: an `href` receiving
+ * `externalUrl` without going through `placeMapUrl` is exactly the bug's
+ * return.
  */
 test('אף רכיב לא מרנדר externalUrl ישירות אל href', () => {
   const bad: string[] = [];
@@ -99,15 +101,16 @@ test('אף רכיב לא מרנדר externalUrl ישירות אל href', () => {
   assert.deepEqual(bad, [], `יש לעבור דרך placeMapUrl:\n${bad.join('\n')}`);
 });
 
-/* ---------- הקטלוג האמיתי ---------- */
+/* ---------- The real catalog ---------- */
 
 const COORD_QUERY = /[?&]query=-?\d+\.\d+,-?\d+\.\d+$/;
 
 /**
- * **הטסט שהמשימה הזאת ביקשה במפורש: נכשל אם מקום כלשהו מפיק קישור
- * מבוסס-שם.** זו טענה ארכיטקטונית קבועה, לא תמונת מצב של הדאטה של
- * היום - `placeMapUrl` אסור לה להחזיר `maps.google.com/?q=<שם>` בשום
- * מצב, גם אם מחר מישהו יוסיף מקום עם כתובת שמורה כזאת ובלי קואורדינטות.
+ * **The test this task asked for explicitly: fails if any place produces a
+ * name-based link.** This is a standing architectural claim, not a snapshot
+ * of today's data - `placeMapUrl` must never return
+ * `maps.google.com/?q=<name>` under any circumstance, even if tomorrow
+ * somebody adds a place with such a stored URL and no coordinates.
  */
 test('אף מקום בקטלוג לא מפיק קישור מבוסס-שם', () => {
   const byName: string[] = [];
@@ -130,10 +133,11 @@ function isGoogleMapsHref(url: string): boolean {
 }
 
 /**
- * מצב הדאטה של היום: **כל** מקום בקטלוג מקבל קישור לפי נקודה - אף אחד
- * לא נופל ל-`null` בהיעדר מיקום. בניגוד לטסט הקודם, זו כן תמונת מצב
- * של הדאטה: אם היא תיכשל, המשמעות היא שמקום חדש נוסף בלי קואורדינטות
- * תקינות, וזה שווה בדיקה ידנית - לא בהכרח באג בקוד.
+ * Today's data state: **every** place in the catalog gets a point-based
+ * link - none falls to `null` for lack of a location. Unlike the previous
+ * test, this IS a snapshot of the data: if it fails, it means a new place
+ * was added without valid coordinates, and that is worth a manual check -
+ * not necessarily a code bug.
  */
 test('כל מקום בקטלוג מקבל קישור מבוסס-קואורדינטות (אף null)', () => {
   let total = 0;

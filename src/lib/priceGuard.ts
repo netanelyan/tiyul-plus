@@ -1,70 +1,75 @@
 /**
- * ---------- שומר המחירים: מה שהמודל לא יוכל לומר, גם אם ינסה ----------
+ * ---------- The price guard: what the model cannot say, even if it tries ----------
  *
- * ## למה זה קיים ולא עוד סעיף בפרומפט
+ * ## Why this exists instead of another prompt clause
  *
- * לסוכן אין בהקשר שלו **שום** נתון על מלונות: לא שם, לא מחיר, לא
- * זמינות. לכן כל מספר מחיר שהוא יכתוב הוא בהכרח המצאה. הפרומפט אוסר
- * את זה מזמן, והיומן של הפרויקט הזה מתעד שלושה מקרים שבהם איסור
- * בפרומפט לא החזיק - מרחקי הליכה, רשימות ערים, וכשרות שהתנדבה לפרוזה.
- * המסקנה שנכתבה שם היא הכלל שמופעל כאן: **כשהמודל מתעלם מכלל, לא
- * מנסחים את הכלל חזק יותר - מזיזים אותו למקום שבו הוא לא בחירה.**
+ * The agent has **no** hotel data in its context: no name, no price, no
+ * availability. Therefore any price number it writes is necessarily an
+ * invention. The prompt has long forbidden this, and this project's log
+ * documents three cases where a prompt ban did not hold - walking distances,
+ * city lists, and kashrut that volunteered itself into prose. The conclusion
+ * written there is the rule applied here: **when the model ignores a rule,
+ * don't phrase the rule harder - move it to a place where it isn't a choice.**
  *
- * הפילטר הזה רץ על **כל** תשובה, בשרת, אחרי המודל ולפני המשתמש. הוא
- * דטרמיניסטי, נבדק ביחידות, ואי אפשר לשכנע אותו.
+ * This filter runs on **every** reply, on the server, after the model and
+ * before the user. It is deterministic, unit-tested, and cannot be persuaded.
  *
- * ## העיקרון היחיד: מספר מותר רק אם המטייל אמר אותו
+ * ## The single principle: a number is allowed only if the traveler said it
  *
- * במקום להכריע מה "סביר", הרשימה הלבנה היא **מה שהמשתמש עצמו כתב**.
- * מטייל שאמר "התקציב שלי 400 ש״ח ללילה" יכול לקבל את 400 בחזרה; מספר
- * שלא נאמר בשיחה לא יכול לצאת ממנה. אותו דבר לשמות: שם מלון מותר רק
- * אם הוא כבר סיכה בטיול או שהמטייל הקליד אותו.
+ * Instead of deciding what is "reasonable", the whitelist is **what the user
+ * themselves wrote**. A traveler who said "my budget is 400 shekels a night"
+ * can get 400 back; a number not spoken in the conversation cannot leave it.
+ * Same for names: a hotel name is allowed only if it is already a pin on the
+ * trip or the traveler typed it.
  *
- * ## מה זה במפורש **לא** תופס
+ * ## What this explicitly does **not** catch
  *
- * שם מלון בדוי בכתיב עברי בלי שום מילת עוגן ("המלון ירושלים של מטה").
- * אין דרך להבדיל בין זה לבין פרוזה רגילה בלי מודל שני, וזה לא יהיה
- * דטרמיניסטי. שלוש שכבות אחרות מכסות את הסיכון הזה: אין לו נתוני
- * מלונות מהיכן להמציא, הפרומפט אוסר, וכל תשובה על לינה מגיעה עם כרטיס
- * חיפוש אמיתי שהמטייל לוחץ עליו.
+ * A made-up hotel name in Hebrew script with no anchor word at all (a
+ * fabricated Hebrew-named "Jerusalem hotel"). There is no way to distinguish
+ * that from ordinary prose without a second model, and that would not be
+ * deterministic. Three other layers cover this risk: it has no hotel data to
+ * invent from, the prompt forbids it, and every lodging answer arrives with a
+ * real search card the traveler clicks.
  */
 
 import { PREMIUM_PRICE_ILS } from './plans';
 
-/** הנוסח שמחליף טענה שנחתכה. חייב לעבור את הפילטר בעצמו - יש טסט. */
+/** The wording that replaces a cut claim. Must pass the filter itself - there's a test. */
 export const NO_PRICE_LINE =
   'אני לא יכול לבדוק מחירים או זמינות בעצמי, ולכן לא אנקוב במספרים - החיפוש שמצורף כאן מראה את המצב האמיתי אצל הספק.';
 
-/** אותו דבר, כשאין כרטיס חיפוש בתור הזה */
+/** Same, when there is no search card in this turn */
 export const NO_PRICE_LINE_BARE =
   'אני לא יכול לבדוק מחירים או זמינות בעצמי, ולכן לא אנקוב במספרים - חיפוש אצל הספק יראה את המצב האמיתי.';
 
 /**
- * ההחלפה לטענה על אירוע או סגירה. **חייבת להיות נפרדת מזו של המחיר**:
- * משפט על פסטיבל שמוחלף ב"אני לא יכול לבדוק מחירים" קורא כמו תקלה,
- * ולא כמו תשובה כנה.
+ * The replacement for a claim about an event or a closure. **Must be separate
+ * from the price one**: a sentence about a festival replaced with "I can't
+ * check prices" reads like a malfunction, not like an honest answer.
  */
 export const NO_EVENT_LINE =
   'אין לי מידע רשום על אירועים או סגירות בתאריכים האלה, ואני לא רוצה לנחש - כדאי לבדוק מקומית לקראת הנסיעה.';
 
 /**
- * ההחלפה לטענת כשרות שלא נסמכת על שום דבר בקטלוג שלנו - ראו
- * `KOSHER_WORD`/`KOSHER_ASSERTION` למטה. **זה לא כלל נוסף בפרומפט אלא
- * מבנה**: גם אם המודל כתב משפט כזה, הוא לא יוצא מהסוכן, מאותה סיבה
- * בדיוק שמחיר בדוי לא יוצא.
+ * The replacement for a kashrut claim not backed by anything in our catalog -
+ * see `KOSHER_WORD`/`KOSHER_ASSERTION` below. **This is not another prompt
+ * rule but structure**: even if the model wrote such a sentence, it does not
+ * leave the agent, for exactly the same reason a made-up price does not.
  */
 export const NO_KOSHER_LINE =
   'לגבי כשרות אני יכול להתייחס רק למקומות שמאומתים אצלנו בקטלוג, ואין לי נתון כזה כרגע - כדאי לוודא מול המקום עצמו, או לשאול על עיר אחרת שכן מכוסה אצלנו.';
 
 /**
- * ההחלפה לטענת שעות/מחיר-כניסה/קיום שלא צמודה לציטוט - ראו `LOOKUP_ANCHOR`.
- * מנוסחת בהיפוך למה שהייתה עד היום ("אין לי דרך לבדוק") כי עכשיו יש: אם
- * המודל לא באמת חיפש (או שכח לצטט), זו ההצעה הכנה - לא סירוב קבוע.
+ * The replacement for an hours/admission-price/existence claim not attached to
+ * a citation - see `LOOKUP_ANCHOR`. Phrased as the inverse of what it used to
+ * be ("I have no way to check") because now there is one: if the model did not
+ * actually search (or forgot to cite), this is the honest offer - not a
+ * permanent refusal.
  */
 export const NO_LOOKUP_LINE =
   'לא בדקתי את זה בפועל בתור הזה, ולכן לא אכתוב שעות, מחיר כניסה או אם המקום עדיין קיים מהזיכרון שלי - אפשר לבקש שאבדוק את זה עכשיו.';
 
-/** לאיזו שורת החלפה שייך כל כלל */
+/** Which replacement line each rule belongs to */
 const CATEGORY: Record<string, 'price' | 'event' | 'kosher' | 'lookup'> = {
   superlative: 'price',
   availability: 'price',
@@ -88,164 +93,178 @@ export interface GuardReplacements {
   lookup?: string;
 }
 
-/** מטבעות. לבד הם לגיטימיים לחלוטין ("המטבע הוא אירו") - מספר לידם לא. */
+/** Currencies. On their own they are entirely legitimate ("the currency is the euro") - a number next to them is not. */
 const CURRENCY =
   /(₪|€|\$|£|\bILS\b|\bEUR\b|\bUSD\b|שקלים|שקל|ש"ח|ש״ח|אירו|יורו|דולרים|דולר)/;
 
-/** מילות מחיר חזקות. "עולה" לא נכנס בכוונה - "המסלול עולה 300 מטר". */
+/** Strong price words. The Hebrew verb for "costs" is deliberately excluded - it also means "climbs" ("the trail climbs 300 meters"). */
 const MONEY_WORD = /(מחיר|מחירים|עלות|עלויות|תעריף|תעריפים|דמי כניסה|כמה עולה|יעלה לכם|בתקציב של)/;
 
-/** מספר שמוצמד ליחידת תמחור. תופס "400 ללילה" ולא "3 לילות". */
+/** A number attached to a pricing unit. Catches "400 per night" and not "3 nights". */
 const PER_UNIT =
   /\d[\d.,]*\s*(?:₪|€|\$|£|ש"ח|ש״ח|שקל\w*|אירו|יורו|דולר\w*)?\s*(ללילה|לאדם|לזוג|לחדר|לאורח|בלילה|לכניסה)/;
 
-/** דירוג כוכבים - אין לנו מלונות בדאטה, ולכן כל כוכב הוא המצאה */
+/** Star ratings - we have no hotels in the data, so every star is an invention */
 const STARS = /(\d\s*כוכבים|חמישה כוכבים|ארבעה כוכבים|שלושה כוכבים|5 כוכבים|4 כוכבים)/;
 
-/** סוגי חדר וארוחות - טענה על מלאי שאין לנו */
+/** Room types and meal plans - a claim about inventory we don't have */
 const ROOM_TYPE =
   /(סוויטה|סוויטות|חדר זוגי|חדר כפול|חדר משפחתי|חדר טווין|חצי פנסיון|פנסיון מלא|ארוחת בוקר כלולה|כולל ארוחת בוקר|הכל כלול|all[- ]inclusive)/i;
 
 /**
- * זמינות. **מנוסח צר בכוונה**: "יום פנוי" בתוכנית הוא משפט תקין ונפוץ,
- * ולכן התופס דורש את המילה חדר/מקום/הזמנה לידו.
+ * Availability. **Deliberately phrased narrowly**: "a free day" in a plan is a
+ * valid and common sentence, so the matcher requires the word room/place/
+ * booking next to it.
  */
 const AVAILABILITY =
   /(חדרים פנויים|חדר פנוי|יש זמינות|אין זמינות|נותרו \d|נותר חדר|מקומות אחרונים|אזל|אזלו|חדרים אחרונים|זמין להזמנה|תפוס בתאריכים)/;
 
 /**
- * "הזול ביותר" וחבריו. אסור **תמיד** ובלי רשימה לבנה: אנחנו לא סורקים
- * את כל הספקים ואי אפשר לטעון את זה, גם לא כתשובה לשאלה ישירה. משפט
- * שנחתך כאן מוחלף בהודעה הכנה, שאומרת בדיוק את מה שאמת.
+ * "The cheapest" and its friends. Forbidden **always** and with no whitelist:
+ * we do not scan all providers and cannot claim this, not even as an answer to
+ * a direct question. A sentence cut here is replaced with the honest message,
+ * which says exactly what is true.
  */
 const SUPERLATIVE =
   /(הזול ביותר|הזולה ביותר|הזולים ביותר|הזולות ביותר|הכי זול|הכי זולה|המחיר הטוב ביותר|המשתלם ביותר|המשתלמת ביותר|העסקה הטובה ביותר|cheapest|best price|lowest price)/i;
 
-/* ---------- אירועים ומועדים ---------- */
+/* ---------- Events and dates ---------- */
 
-/** מילים שמסמנות שמדובר באירוע */
+/** Words that signal an event is being discussed */
 const EVENT_WORD =
   /(פסטיבל|קרנבל|ביאנלה|אוקטוברפסט|מצעד|תהלוכה|יריד|קונצרט|הופעה|הופעות|מופע|מופעים|תערוכה|מרתון|חגיגות|טקס|אירוע|אירועים)/;
 
-/** מילים שמסמנות טענת סגירה */
+/** Words that signal a closure claim */
 const CLOSURE_WORD = /(סגור|סגורה|סגורים|סגורות|סגירה|סגירות|ייסגר|תיסגר|נסגר|שובת|שביתה)/;
 
 /**
- * מועד **מסוים**: שם חודש, שנה או תאריך מספרי.
+ * A **specific** date: a month name, a year, or a numeric date.
  *
- * במכוון אין כאן "השנה" או "בקיץ" לבדן. "יש בעיר הרבה אירועים לאורך
- * השנה" הוא משפט תקין לגמרי, וחסימה שלו הייתה הופכת את השומר לרעש
- * שמישהו יכבה תוך שבוע. "השנה" נספר רק כשהוא צמוד לפועל התקיימות.
+ * Deliberately, "this year" or "in the summer" alone are not here. "The city
+ * has many events throughout the year" is a perfectly valid sentence, and
+ * blocking it would turn the guard into noise somebody would switch off within
+ * a week. "This year" only counts when attached to an occurrence verb.
  */
 const SPECIFIC_TIME =
   /(בינואר|בפברואר|במרץ|באפריל|במאי|ביוני|ביולי|באוגוסט|בספטמבר|באוקטובר|בנובמבר|בדצמבר|ינואר|פברואר|מרץ|אפריל|מאי|יוני|יולי|אוגוסט|ספטמבר|אוקטובר|נובמבר|דצמבר|20\d{2}|\d{1,2}[./]\d{1,2})/;
 
-/** "מתקיים השנה" / "יתקיים ב-" - טענה על עצם ההתרחשות */
+/** "Takes place this year" / "will be held on" - a claim about the occurrence itself */
 const HAPPENING =
   /(מתקיים|מתקיימת|מתקיימים|יתקיים|יתקיימו|נערך|ייערך|חוזר)\s*(השנה|ב-?\d|בתאריך)|השנה\s*(מתקיים|יתקיים|נערך)/;
 
-/** מילות עוגן שאחריהן מגיע שם של בית מלון */
+/** Anchor words that are followed by a hotel name */
 const STAY_WORD = /(מלון|המלון|הוסטל|אכסניה|אכסניית|וילה|ריזורט|בית הארחה)/;
 
-/** ריצה לטינית שנושאת מילת מלון - הצורה הנפוצה של שם נכס */
+/** A Latin run carrying a hotel word - the common form of a property name */
 const LATIN_PROPERTY =
   /\b[A-Z][\w&'.-]*(?:\s+[A-Z][\w&'.-]*)*\s*\b(Hotel|Hostel|Hostal|Inn|Resort|Suites?|Apartments?|Guesthouse|Motel|Riad|Ryokan|Palace|Plaza)\b|\b(Hotel|Hostel|Resort|Inn)\s+[A-Z][\w&'.-]*(?:\s+[A-Z][\w&'.-]*)*/;
 
-/** מילת עוגן + שם לטיני או שם במרכאות: "מלון Devin", 'מלון "הגלים"' */
+/** Anchor word + a Latin name or a quoted name: the Hebrew word for hotel followed by "Devin" or a quoted Hebrew name */
 const NAMED_STAY = new RegExp(
   `${STAY_WORD.source}\\s+(?:[A-Z][\\w&'.-]*|["״'][^"״']{2,40}["״'])`,
 );
 
-/* ---------- כשרות: לא מהזיכרון, לא מחיפוש - רק מהקטלוג ---------- */
+/* ---------- Kashrut: not from memory, not from search - only from the catalog ---------- */
 
 /**
- * מילות כשרות. **אותה רשימה** כמו `KOSHER_ASK` ב-`grounding.ts` -
- * ראו `kosherIntentText` שם, שהיא הגרסה המשותפת. מוגדרת כאן שוב ולא
- * מיובאת, באותו סגנון שהקובץ הזה כבר מגדיר את כל התבניות שלו מקומית.
+ * Kashrut words. **The same list** as `KOSHER_ASK` in `grounding.ts` - see
+ * `kosherIntentText` there, which is the shared version. Defined here again
+ * rather than imported, in the same style in which this file already defines
+ * all of its patterns locally.
  */
 const KOSHER_WORD =
   /כשר(ו|י|ה|ות)?|מהדרין|גלאט|בד["״'׳]?ץ|הכשר|השגחה|חב["״'׳]?ד|בית חב|kosher|chabad|glatt|hechsher/i;
 
 /**
- * מילות **טענה** - לא כל משפט שמזכיר כשרות הוא טענה שצריך לחסום.
- * "כדאי לוודא כשרות מול המקום" היא הזהרה תקינה בלי שום עוגן; "יש שם
- * קהילה יהודית גדולה ומסעדות כשרות" היא טענה על מציאות שצריך לגבות.
- * בלי המילים האלה - השער לא נסגר, ולתזכורת הכנה יש מקום להישאר.
+ * **Assertion** words - not every sentence that mentions kashrut is a claim
+ * that must be blocked. "It's worth verifying kashrut with the venue" is a
+ * valid warning with no anchor at all; "there is a large Jewish community and
+ * kosher restaurants there" is a claim about reality that needs backing.
+ * Without these words - the gate does not close, and the honest reminder has
+ * room to remain.
  */
 const KOSHER_ASSERTION =
   /(יש\s|ישנ(ם|ה)|נמצא(ת|ים)?|ממוקמ(ת|ים)?|קיימ(ת|ים)|מציע(ה)?|מגיש(ה)?|מומלץ|ידוע(ה)?\s*(כ|בתור)|מרכז|רובע|שכונה|קהילה|בית כנסת|מסעדה כשר|חנות כשר|אין\s*(שם\s*)?(כשרות|מסעד|חנויות))/;
 
-/* ---------- חיפוש חי: שעות/מחיר-כניסה/קיום, רק עם ציטוט צמוד ---------- */
+/* ---------- Live lookup: hours/admission-price/existence, only with an attached citation ---------- */
 
 /**
- * **הציטוט חייב להיות באותו משפט** - כי הזרמה היא משפט-אחר-משפט
- * (`GuardedTextStream`), ואי אפשר "לחכות למשפט הבא" באמצע סטרימינג.
- * הפרומפט מלמד את המודל לכתוב עובדה+ציטוט כמשפט אחד; מה שלא עומד בזה
- * נחתך, וזה הכיוון הבטוח - עדיף לאבד עובדה מגובה מלהראות אחת שלא.
+ * **The citation must be in the same sentence** - because streaming is
+ * sentence-by-sentence (`GuardedTextStream`), and "waiting for the next
+ * sentence" is impossible mid-stream. The prompt teaches the model to write
+ * fact+citation as one sentence; anything that fails this is cut, and that is
+ * the safe direction - better to lose a backed fact than show an unbacked one.
  */
 export const LOOKUP_ANCHOR =
   /נבדק ב-?\s*\d{1,2}[./]\d{1,2}([./]\d{2,4})?|נבדק היום|checked\s+(on|today)/i;
 
-/** שעות פעילות - מספר עם נקודתיים, או "פתוח בין"/"נסגר ב-" */
+/** Opening hours - a number with a colon, or Hebrew "open between"/"closes at" */
 const HOURS_CLAIM =
   /\d{1,2}:\d{2}|שעות\s*ה?(פתיחה|פעילות)\s*(הן|הם)?|פתוח(ה)?\s*(בין|מ-?\d)|נסגר(ת)?\s*ב-?\d{1,2}(:\d{2})?/;
 
-/** האם מקום מסוים עדיין קיים/פתוח, או נסגר לצמיתות */
+/** Whether a specific place still exists/is open, or closed permanently */
 const EXISTENCE_CLAIM =
   /(עדיין\s*(פתוח|קיים|פועל|קיימת|פועלת)|נסגר(ה)?\s*לצמיתות|כבר לא (קיים|פועל)|is\s+(still\s+)?(open|closed)|has closed permanently|no longer exists)/i;
 
 /**
- * הקשר של דמי כניסה - צר ומכוון, כדי שלא יתערב עם מחירי לינה.
- * `(ה)?` לפני "כניסה": "דמי הכניסה" עברית תקנית לגמרי, לא רק "דמי כניסה".
+ * Admission-fee context - narrow and deliberate, so it does not interfere with
+ * lodging prices. The optional Hebrew definite-article prefix before "entry":
+ * "the entry fee" with the article is entirely standard Hebrew, not just the
+ * bare form.
  */
 const TICKET_CONTEXT =
   /(דמי\s*ה?כניסה|כרטיס\s*ה?כניסה|מחיר\s*ה?כניסה|עלות\s*ה?כניסה|entrance fee|admission (fee|price)|ticket price)/i;
 
 export interface GuardAllowlist {
-  /** טקסטים שהמטייל עצמו כתב בשיחה (כולל תיאורי תמונות שהוא צירף) */
+  /** Texts the traveler themselves wrote in the conversation (including descriptions of images they attached) */
   userText?: string;
-  /** שמות סיכות שכבר שמורות בטיול - המטייל נתן אותן */
+  /** Names of pins already saved on the trip - the traveler provided them */
   pinNames?: string[];
   /**
-   * שמות האירועים ותקופות הסגירה ש**הוחזרו מהדאטה בתור הזה**
-   * (`city_date_notes`). זו הרשימה הלבנה של טענות על אירועים ומועדים.
+   * Names of the events and closure periods **returned from the data in this
+   * turn** (`city_date_notes`). This is the whitelist for claims about events
+   * and dates.
    *
-   * הכלל שנגזר מזה: משפט שמדבר על אירוע או סגירה עם מועד מסוים מותר
-   * רק אם הוא **נוקב בשם הרשומה**. זה לא רק שומר - זה גם דוחף לייחוס:
-   * "פרראגוסטו ב-15 באוגוסט" עובר, "ב-15 באוגוסט הרבה דברים סגורים"
-   * לא, וזו התשובה הטובה יותר ממילא. כשהרשימה ריקה - כלומר לא הוחזר
-   * כלום מהדאטה - שום טענה כזאת לא עוברת.
+   * The rule derived from this: a sentence discussing an event or closure with
+   * a specific date is allowed only if it **names the record**. This is not
+   * just a guard - it also pushes attribution: "Ferragosto on August 15"
+   * passes, "on August 15 lots of things are closed" does not, and that is the
+   * better answer anyway. When the list is empty - i.e. nothing was returned
+   * from the data - no such claim passes.
    */
   eventNames?: string[];
   /**
-   * שמות שמותר לגבות בהם טענת כשרות: שמות מקומות כשרים ושמות ערים
-   * **שנשלחו בפועל בתור הזה** - נבנה ב-`kosherAllowedNames` ב-grounding.ts
-   * ומתעדכן בכל איטרציה, כי `set_preferences` יכול להדליק כשרות באמצע
-   * תור. ריק = אף טענת כשרות לא עוברת, גם אם השער הכללי פתוח.
+   * Names that a kashrut claim may be backed by: names of kosher places and
+   * names of cities **that were actually sent in this turn** - built in
+   * `kosherAllowedNames` in grounding.ts and updated on every iteration,
+   * because `set_preferences` can switch kosher on mid-turn. Empty = no
+   * kashrut claim passes, even if the general gate is open.
    */
   kosherNames?: string[];
 }
 
 export interface GuardResult {
   text: string;
-  /** מה נחתך, לצורך לוג ובדיקות. ריק = כלום לא נחתך. */
+  /** What was cut, for logging and tests. Empty = nothing was cut. */
   redactions: string[];
-  /** אילו שורות החלפה הושתלו בקריאה הזאת (ראו `alreadyReplaced`) */
+  /** Which replacement lines were injected in this call (see `alreadyReplaced`) */
   replaced: Set<'price' | 'event' | 'kosher' | 'lookup'>;
 }
 
-/** כל רצף ספרות בטקסט */
+/** Every digit run in the text */
 const digitRuns = (s: string): string[] => s.match(/\d[\d.,]*/g)?.map((n) => n.replace(/[.,]$/, '')) ?? [];
 
 /**
- * המספרים שמותר להחזיר: מה שהמטייל הקליד, ועוד מחיר הפרימיום - מספר
- * אמיתי ומאוחסן אצלנו, ואין סיבה שהסוכן לא יוכל לענות עליו.
+ * The numbers that may be echoed back: what the traveler typed, plus the
+ * premium price - a real number stored on our side, and there is no reason the
+ * agent cannot answer about it.
  */
 function allowedNumbers(allow: GuardAllowlist): Set<string> {
   const set = new Set<string>(digitRuns(allow.userText ?? ''));
-  // **רק הצורות המדויקות.** הגרסה הראשונה הוסיפה גם את המחיר המעוגל,
-  // וזה הכשיר בשקט את המספר "20" בכל תשובה באתר - טסט על הערת יום עם
-  // "כ-20 יורו לכניסה" הוא מה שתפס את זה.
+  // **Only the exact forms.** The first version also added the rounded price,
+  // and that quietly whitelisted the number "20" in every reply on the site -
+  // a test on a day note containing "about 20 euros for entry" is what
+  // caught it.
   for (const form of [
     String(PREMIUM_PRICE_ILS),
     String(PREMIUM_PRICE_ILS).replace('.', ','),
@@ -259,21 +278,21 @@ function allowedNumbers(allow: GuardAllowlist): Set<string> {
 
 const norm = (s: string) => s.toLowerCase().replace(/[\s"״'`.,-]/g, '');
 
-/** האם כל המספרים בקטע הם מספרים שהמטייל עצמו נתן */
+/** Whether every number in the segment is a number the traveler themselves gave */
 const numbersAreUserOwn = (segment: string, allowed: Set<string>): boolean => {
   const runs = digitRuns(segment);
   return runs.length > 0 && runs.every((n) => allowed.has(n));
 };
 
-/** האם השם שהופיע כאן הוא שם שהמטייל נתן (סיכה או הקלדה שלו) */
+/** Whether the name that appeared here is a name the traveler gave (a pin or their own typing) */
 function nameIsUserOwn(segment: string, allow: GuardAllowlist): boolean {
   const hay = norm(`${allow.userText ?? ''} ${(allow.pinNames ?? []).join(' ')}`);
   if (!hay) return false;
-  // כל ריצה לטינית של 3+ תווים בקטע צריכה להופיע במה שהמטייל נתן
+  // Every Latin run of 3+ characters in the segment must appear in what the traveler gave
   const tokens = segment.match(/[A-Za-z][A-Za-z&'.-]{2,}/g) ?? [];
   const named = tokens.filter((t) => !/^(hotel|hostel|resort|inn|suites?|apartments?|the|and)$/i.test(t));
   if (named.length === 0) {
-    // שם במרכאות בכתיב עברי
+    // A quoted name in Hebrew script
     const quoted = segment.match(/["״']([^"״']{2,40})["״']/);
     return quoted ? hay.includes(norm(quoted[1])) : false;
   }
@@ -281,20 +300,23 @@ function nameIsUserOwn(segment: string, allow: GuardAllowlist): boolean {
 }
 
 /**
- * בודק משפט אחד. מחזיר את שם הכלל שנשבר, או null אם הוא נקי.
+ * Checks a single sentence. Returns the name of the broken rule, or null if it
+ * is clean.
  *
- * הסדר לא משנה לתוצאה (משפט נחתך בכל מקרה) אבל כן לשם שנרשם בלוג,
- * ולכן הכללים הקטגוריים קודמים - הם המדויקים יותר.
+ * The order does not affect the outcome (the sentence is cut either way) but
+ * it does affect the name recorded in the log, so the categorical rules come
+ * first - they are the more precise ones.
  */
 export function violationOf(sentence: string, allow: GuardAllowlist = {}): string | null {
   const allowed = allowedNumbers(allow);
 
   /*
-    כשרות קודם לכול. שער הכשרות (`kosherAllowed` ב-grounding.ts) יכול
-    להיות פתוח בזמן שהעיר הספציפית שהמודל מדבר עליה לא נמצאת בכלל
-    בקטלוג - וזה בדיוק המצב שבו הוא נוטה להשלים גיאוגרפיה כשרה מהזיכרון.
-    הבדיקה כאן לא סומכת על השער; היא בודקת אם המשפט **הזה** נשען על שם
-    אמיתי מהדאטה של התור הזה.
+    Kashrut first of all. The kosher gate (`kosherAllowed` in grounding.ts)
+    can be open while the specific city the model is discussing is not in the
+    catalog at all - and that is exactly the situation in which it tends to
+    fill in kosher geography from memory. The check here does not trust the
+    gate; it checks whether **this** sentence rests on a real name from this
+    turn's data.
   */
   if (KOSHER_WORD.test(sentence) && KOSHER_ASSERTION.test(sentence) && !namesAllowedKosher(sentence, allow)) {
     return 'kosher-claim';
@@ -318,10 +340,11 @@ export function violationOf(sentence: string, allow: GuardAllowlist = {}): strin
 
   const hasDigit = /\d/.test(sentence);
   /*
-    דמי כניסה מצוטטים חורגים מהמחסום הכללי - **רק הם**, ורק כשהם צמודים
-    לציטוט. `ROOM_TYPE`/`STARS`/`PER_UNIT` שנבדקו למעלה כבר תפסו כל
-    ניסוח שנשמע כמו לינה, ולכן הפריצה הזאת לא יכולה "לעקוף" אותם -
-    ההיתר מגיע רק אחרי שהם כבר לא מצאו כלום.
+    Cited admission fees are exempt from the general block - **only they**,
+    and only when attached to a citation. `ROOM_TYPE`/`STARS`/`PER_UNIT`,
+    checked above, have already caught any phrasing that sounds like lodging,
+    so this carve-out cannot "bypass" them - the permission arrives only after
+    they have already found nothing.
   */
   const admissionOk = hasDigit && TICKET_CONTEXT.test(sentence) && LOOKUP_ANCHOR.test(sentence);
   if (hasDigit && CURRENCY.test(sentence) && !numbersAreUserOwn(sentence, allowed) && !admissionOk) {
@@ -335,10 +358,11 @@ export function violationOf(sentence: string, allow: GuardAllowlist = {}): strin
   if (property && !nameIsUserOwn(property[0], allow)) return 'property-name';
 
   /**
-   * טענה על אירוע או סגירה עם מועד מסוים.
+   * A claim about an event or closure with a specific date.
    *
-   * מותרת רק אם המשפט נוקב בשם רשומה שהוחזרה מהדאטה בתור הזה. כשלא
-   * הוחזר כלום - אין לו על מה להישען, וכל טענה כזאת היא מהזיכרון שלו.
+   * Allowed only if the sentence names a record returned from the data in this
+   * turn. When nothing was returned - it has nothing to rest on, and every
+   * such claim is from its memory.
    */
   const timed = SPECIFIC_TIME.test(sentence) || HAPPENING.test(sentence);
   if (timed && !namesStoredEvent(sentence, allow)) {
@@ -347,9 +371,10 @@ export function violationOf(sentence: string, allow: GuardAllowlist = {}): strin
   }
 
   /*
-    שעות פתיחה וקיום - אותו עיקרון כמו אירועים, אבל העוגן כאן הוא ציטוט
-    ולא שם רשומה: אין "דאטה" קבועה לגבות בה שעות פתיחה, יש רק חיפוש חי
-    שקרה או לא קרה בתור הזה. ראו `LOOKUP_ANCHOR`.
+    Opening hours and existence - the same principle as events, but the anchor
+    here is a citation rather than a record name: there is no fixed "data" to
+    back opening hours with, only a live lookup that either happened in this
+    turn or did not. See `LOOKUP_ANCHOR`.
   */
   if (HOURS_CLAIM.test(sentence) && !LOOKUP_ANCHOR.test(sentence)) return 'hours-claim';
   if (EXISTENCE_CLAIM.test(sentence) && !LOOKUP_ANCHOR.test(sentence)) return 'existence-claim';
@@ -357,7 +382,7 @@ export function violationOf(sentence: string, allow: GuardAllowlist = {}): strin
   return null;
 }
 
-/** האם המשפט נוקב בשם של רשומה שהוחזרה מהדאטה בתור הזה */
+/** Whether the sentence names a record that was returned from the data in this turn */
 function namesStoredEvent(sentence: string, allow: GuardAllowlist): boolean {
   const names = allow.eventNames ?? [];
   if (names.length === 0) return false;
@@ -365,7 +390,7 @@ function namesStoredEvent(sentence: string, allow: GuardAllowlist): boolean {
   return names.some((n) => n.trim().length >= 3 && hay.includes(norm(n)));
 }
 
-/** האם המשפט נוקב בשם כשר אמיתי (מקום או עיר) שהוחזר מהדאטה בתור הזה */
+/** Whether the sentence names a real kosher name (place or city) returned from the data in this turn */
 function namesAllowedKosher(sentence: string, allow: GuardAllowlist): boolean {
   const names = allow.kosherNames ?? [];
   if (names.length === 0) return false;
@@ -374,28 +399,32 @@ function namesAllowedKosher(sentence: string, allow: GuardAllowlist): boolean {
 }
 
 /**
- * פיצול למשפטים. שומר את הסימן בסוף המשפט כדי שהטקסט המורכב מחדש יהיה
- * זהה למקור כשאין מה לחתוך - יש טסט על זה.
+ * Sentence splitting. Keeps the mark at the end of each sentence so that the
+ * reassembled text is identical to the original when there is nothing to cut -
+ * there's a test for this.
  */
 export function splitSentences(text: string): string[] {
   return text.split(/(?<=[.!?:\n])/).filter((s) => s !== '');
 }
 
 /**
- * מריץ את הפילטר על טקסט. משפט שנשבר מוחלף בשורה הכנה - **פעם אחת**,
- * כדי שתשובה עם שלוש טענות מחיר לא תהפוך לשלוש חזרות של אותו משפט.
+ * Runs the filter on text. A broken sentence is replaced with the honest line -
+ * **once**, so that an answer with three price claims does not become three
+ * repetitions of the same sentence.
  */
 export function guardText(
   text: string,
   allow: GuardAllowlist = {},
   replacements: GuardReplacements = {},
   /**
-   * לאילו קטגוריות כבר נאמרה השורה הכנה **באותה תשובה**.
+   * For which categories the honest line has already been said **within the
+   * same reply**.
    *
-   * זה לא פרט: בהזרמה כל משפט עובר בקריאה נפרדת, ולכן מונה מקומי היה
-   * חושב בכל פעם שהוא הראשון - וזה בדיוק מה שקרה בהרצת הדגמה, שבה
-   * המשתמש קיבל את אותו משפט התנצלות פעמיים ברצף. הספירה היא לפי
-   * קטגוריה, כדי שתשובה שנגעה גם במחיר וגם באירוע תסביר את שניהם.
+   * This is not a detail: in streaming every sentence passes through a
+   * separate call, so a local counter would think each time that it is the
+   * first - and that is exactly what happened in a demo run, where the user
+   * got the same apology sentence twice in a row. The count is per category,
+   * so a reply that touched both a price and an event explains both.
    */
   alreadyReplaced: Set<'price' | 'event' | 'kosher' | 'lookup'> = new Set(),
 ): GuardResult {
@@ -417,8 +446,9 @@ export function guardText(
       return sentence.match(/\n+$/)?.[0] ?? '';
     }
     replacedHere.add(cat);
-    // הפיצול משאיר את הרווח שאחרי הנקודה בתחילת המשפט הבא, ולכן אין
-    // צורך להוסיף כאן רווח - רק לשמר שורות חדשות שנספחו לסוף.
+    // The split leaves the space after the period at the start of the next
+    // sentence, so there is no need to add a space here - only to preserve
+    // newlines attached to the end.
     const tail = sentence.match(/\s+$/)?.[0] ?? '';
     return line[cat] + tail;
   });
@@ -426,14 +456,16 @@ export function guardText(
 }
 
 /**
- * גרסת ה"הערות": חותכת את **הפסוקית** ולא את המשפט, ובלי להשתיל נוסח
- * התנצלות.
+ * The "notes" variant: cuts the **clause** rather than the sentence, and
+ * without injecting apology wording.
  *
- * הערת יום היא לא שיחה - אין בה מקום למשפט "אני לא יכול לבדוק מחירים",
- * והיא בדרך כלל משפט אחד עם פסיקים, כך שהחלפה ברמת משפט הייתה מוחקת גם
- * את החלק המועיל ("הקתדרלה שווה ביקור, כ-20 יורו לכניסה" הופך ל-
- * "הקתדרלה שווה ביקור"). זו גם ההתנהגות שכבר קיימת שם למספרי קווים:
- * מסירים את הפרט שאין לו כיסוי ומשאירים את המשפט.
+ * A day note is not a conversation - there is no room in it for an "I can't
+ * check prices" sentence, and it is usually one sentence with commas, so a
+ * sentence-level replacement would erase the useful part too ("the cathedral
+ * is worth a visit, about 20 euros for entry" would become "the cathedral is
+ * worth a visit" losing everything). This is also the behavior that already
+ * exists there for transit line numbers: remove the uncovered detail and keep
+ * the sentence.
  */
 export function stripClaims(text: string, allow: GuardAllowlist = {}): GuardResult {
   const parts = text.split(/([,;.!?:\n]+)/);
@@ -449,7 +481,7 @@ export function stripClaims(text: string, allow: GuardAllowlist = {}): GuardResu
     const bad = violationOf(clause, allow);
     if (bad) {
       redactions.push(bad);
-      continue; // הפסוקית והמפריד שאחריה יוצאים יחד
+      continue; // the clause and its trailing separator leave together
     }
     out += clause + sep;
   }
@@ -457,15 +489,17 @@ export function stripClaims(text: string, allow: GuardAllowlist = {}): GuardResu
 }
 
 /**
- * ---------- הזרמה בטוחה ----------
+ * ---------- Safe streaming ----------
  *
- * הטקסט מוזרם למשתמש תוך כדי כתיבה, ולכן אי אפשר לסנן "בסוף": מה שנשלח
- * נשלח. הפולט הזה משחרר **רק משפטים שלמים**, ולכן ביטוי מחיר לא יכול
- * להיחתך לשניים ולעבור חצי-חצי ("400" עכשיו, "ש״ח" אחר כך).
+ * The text is streamed to the user as it is written, so filtering "at the
+ * end" is impossible: what was sent was sent. This emitter releases **only
+ * complete sentences**, so a price expression cannot be split in two and pass
+ * half-and-half ("400" now, the currency word later).
  *
- * העלות היא השהיה של משפט אחד, לא של התשובה כולה. במשפט פתולוגית ארוך
- * (יותר מ-`HARD_CAP` בלי סימן פיסוק) משחררים בכל זאת, אבל **מחזיקים
- * זנב** של כמה תווים, כדי שצמד "מספר + מטבע" שנחתך בגבול יישאר יחד.
+ * The cost is a delay of one sentence, not of the whole reply. On a
+ * pathologically long sentence (more than `HARD_CAP` without punctuation) we
+ * release anyway, but **hold back a tail** of a few characters, so a
+ * "number + currency" pair cut at the boundary stays together.
  */
 const HARD_CAP = 700;
 const TAIL_KEEP = 48;
@@ -475,19 +509,19 @@ export class GuardedTextStream {
   private emitted = 0;
   private readonly allow: GuardAllowlist;
   private readonly replacements: GuardReplacements;
-  /** כל שורה כנה נאמרת פעם אחת לתשובה, גם כשהיא מורכבת מכמה flush */
+  /** Each honest line is said once per reply, even when it consists of several flushes */
   private readonly replacedOnce = new Set<'price' | 'event' | 'kosher' | 'lookup'>();
 
   readonly redactions: string[] = [];
 
-  // שדות מפורשים ולא constructor parameter properties: הטסטים רצים
-  // ב-`--experimental-strip-types`, שלא תומך בתחביר הזה.
+  // Explicit fields rather than constructor parameter properties: the tests
+  // run under `--experimental-strip-types`, which does not support that syntax.
   constructor(allow: GuardAllowlist, replacements: GuardReplacements = {}) {
     this.allow = allow;
     this.replacements = replacements;
   }
 
-  /** מוסיף delta ומחזיר את מה שמותר לשלוח עכשיו (יכול להיות ריק) */
+  /** Adds a delta and returns what may be sent now (can be empty) */
   push(delta: string): string {
     this.acc += delta;
     const pending = this.acc.slice(this.emitted);
@@ -496,13 +530,15 @@ export class GuardedTextStream {
       const at = pending.lastIndexOf(mark);
       if (at >= 0) cut = Math.max(cut, at + mark.length);
     }
-    // סוף משפט בסוף החוצץ בלי רווח אחריו נחשב גם הוא. הספרה שלפני
-    // מוחרגת כדי ש-"19.90" לא ייחתך באמצע ל-"19." ול-"90 ש״ח".
+    // A sentence-ending mark at the end of the buffer with no space after it
+    // counts too. The digit before it is excluded so that "19.90" is not cut
+    // mid-number into "19." and "90 ILS".
     if (/(?<!\d)[.!?:]$/.test(pending)) cut = Math.max(cut, pending.length);
     if (cut === 0 && pending.length > HARD_CAP) {
-      // משפט פתולוגי בלי פיסוק. משחררים ממנו רק אם **כולו** נקי - אחרת
-      // מחזיקים הכול, כי חיתוך באמצע יכול להפריד מספר מהמטבע שלו ואז
-      // שני החצאים עוברים בנפרד. עדיף להשהות מקרה קצה מלהחמיץ טענה.
+      // A pathological sentence with no punctuation. Release from it only if
+      // **all of it** is clean - otherwise hold everything, because a cut in
+      // the middle can separate a number from its currency and then the two
+      // halves pass separately. Better to delay an edge case than miss a claim.
       if (violationOf(pending, this.allow)) return '';
       cut = pending.length - TAIL_KEEP;
     }
@@ -510,7 +546,7 @@ export class GuardedTextStream {
     return this.flush(this.emitted + cut);
   }
 
-  /** משחרר את מה שנשאר. נקרא פעם אחת בסוף הזרם. */
+  /** Releases what remains. Called once at the end of the stream. */
   end(): string {
     return this.flush(this.acc.length);
   }

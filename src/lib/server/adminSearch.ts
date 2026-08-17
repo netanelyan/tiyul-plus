@@ -2,34 +2,35 @@ import { destinations } from '@/data/destinations';
 import { countries } from '@/data/countries';
 
 /**
- * שרת בלבד - **פירוק תיבת החיפוש של אזור הניהול**.
+ * Server only - **parsing the admin area's search box**.
  *
- * נתנאל: *"תתייחס לתיבת החיפוש כאל קלט עוין. זה החלק באתר שהכי שווה
- * לתקוף."* הוא צודק: זו התיבה היחידה במוצר שמאחוריה יושבת גישה
- * לנתונים של כולם.
+ * Netanel: *"Treat the search box as hostile input. It is the part of the site
+ * most worth attacking."* He is right: it is the only box in the product with
+ * access to everyone's data sitting behind it.
  *
- * ## ההחלטה המרכזית: המחרוזת של המשתמש לא נכנסת לשום שאילתה
+ * ## The central decision: the user's string never enters any query
  *
- * לא "מקודדת היטב" ולא "מסוננת" - **לא נכנסת**. שלושת מצבי החיפוש
- * מומרים כאן לערכים שהשרת עצמו מכיר, ורק הם ממשיכים הלאה:
+ * Not "well encoded" and not "filtered" - it **does not enter**. The three search
+ * modes are converted here into values the server itself knows, and only those go on:
  *
- * | מה הוקלד | מה ממשיך לדאטהבייס |
+ * | what was typed | what continues to the database |
  * |---|---|
- * | מייל | uuid שקיבלנו מ-GoTrue אחרי התאמה **מדויקת** |
- * | יעד/מדינה | slug מהקטלוג שלנו - רשימה סגורה בקוד |
- * | שם טיול | **כלום** - הסינון נעשה בזיכרון על שורות שכבר נשלפו |
+ * | email | a uuid we got from GoTrue after an **exact** match |
+ * | destination/country | a slug from our own catalog - a closed list in code |
+ * | trip name | **nothing** - the filter runs in memory on rows already fetched |
  *
- * כלומר גם אם `pgrest.ts` היה נשבר מחר, אין כאן ערוץ: אין מחרוזת
- * משתמש שמגיעה לשאילתה. `pgrest` נשאר השכבה השנייה, לא הראשונה.
+ * So even if `pgrest.ts` broke tomorrow there is no channel here: no user string
+ * reaches a query. `pgrest` stays the second layer, not the first.
  *
- * ## מה עוד נחסם כאן
+ * ## What else is blocked here
  *
- * אורך (חיפוש הוא לא ערוץ להעלאת נתונים), תווי בקרה, ותווים כלליים
- * של LIKE. האחרונים מיותרים טכנית - הסינון בזיכרון ממילא - אבל הם
- * יורדים כדי שהתנהגות החיפוש תהיה צפויה ולא תבנית שהמשתמש מריץ.
+ * Length (search is not a channel for uploading data), control characters, and
+ * LIKE wildcards. The last are technically unnecessary - the filtering happens in
+ * memory anyway - but they go so that search behaviour is predictable rather than
+ * a pattern the user can run.
  */
 
-/** אורך מרבי לשאילתה. שם טיול ארוך במיוחד בקטלוג הוא ~40 תווים. */
+/** Maximum query length. The longest trip name in the catalog is ~40 characters. */
 export const MAX_QUERY_CHARS = 80;
 
 export type AdminQuery =
@@ -38,13 +39,14 @@ export type AdminQuery =
   | { kind: 'name'; needle: string }
   | { kind: 'invalid'; why: string };
 
-/** מייל בצורתו בלבד - לא ולידציה מלאה, רק "זה נראה כמו כתובת" */
+/** Email by shape only - not full validation, just "this looks like an address" */
 const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,190}\.[a-z]{2,}$/i;
 
 /**
- * נירמול לחיפוש טקסט: הורדת רווחים כפולים, ניקוד לטיני, ותווים
- * כלליים. **לא** מסיר עברית ולא מסיר תווים "מוזרים" - שם של טיול
- * יכול להכיל כל דבר, והחיפוש נעשה בזיכרון ולכן אין מה להגן עליו שם.
+ * Normalisation for text search: collapse repeated spaces, strip Latin diacritics
+ * and wildcards. It does **not** strip Hebrew and does not strip "odd" characters -
+ * a trip name can contain anything, and the search runs in memory so there is
+ * nothing to protect there.
  */
 export function normalizeNeedle(raw: string): string {
   return raw
@@ -56,7 +58,7 @@ export function normalizeNeedle(raw: string): string {
     .toLowerCase();
 }
 
-/** כל שמות היעדים והמדינות, פעם אחת. זו הרשימה הסגורה. */
+/** Every destination and country name, once. This is the closed list. */
 const PLACES: { slug: string; label: string; names: string[]; countrySlug?: string }[] = [
   ...destinations.map((d) => ({
     slug: d.slug,
@@ -71,22 +73,22 @@ const PLACES: { slug: string; label: string; names: string[]; countrySlug?: stri
   })),
 ];
 
-/** יעדי הקטלוג לפי מדינה - כדי שחיפוש "איטליה" ימצא את רומא וונציה */
+/** Catalog destinations by country - so that searching "Italy" finds Rome and Venice */
 const BY_COUNTRY = new Map<string, string[]>();
 for (const d of destinations) {
   BY_COUNTRY.set(d.countrySlug, [...(BY_COUNTRY.get(d.countrySlug) ?? []), d.slug]);
 }
 
 /**
- * הפירוק. `mode` מגיע מהממשק ולא מהטקסט, כדי שחיפוש שם טיול שנראה
- * כמו מייל לא ייקרא בטעות כחיפוש מייל.
+ * The parse. `mode` comes from the interface and not from the text, so a trip-name
+ * search that happens to look like an email is not misread as an email search.
  */
 export function parseAdminQuery(raw: unknown, mode: unknown): AdminQuery {
   if (typeof raw !== 'string') return { kind: 'invalid', why: 'לא טקסט' };
   const text = raw.trim();
   if (!text) return { kind: 'invalid', why: 'ריק' };
   if (text.length > MAX_QUERY_CHARS) return { kind: 'invalid', why: 'ארוך מדי' };
-  // תווי בקרה לא מגיעים משום מסלול לגיטימי
+  // Control characters do not arrive by any legitimate route
   if (/[\u0000-\u001f\u007f]/.test(text)) return { kind: 'invalid', why: 'תווי בקרה' };
 
   if (mode === 'email') {
@@ -97,8 +99,8 @@ export function parseAdminQuery(raw: unknown, mode: unknown): AdminQuery {
 
   if (mode === 'place') {
     /*
-      **רשימה סגורה.** הטקסט מומר ל-slug מהקטלוג שלנו או נדחה; אין
-      מסלול שבו מחרוזת חופשית הופכת לתנאי חיפוש.
+      **A closed list.** The text is converted to a slug from our own catalog or
+      rejected; there is no path by which a free-form string becomes a search condition.
     */
     const needle = normalizeNeedle(text);
     if (!needle) return { kind: 'invalid', why: 'ריק' };
@@ -119,6 +121,6 @@ export function parseAdminQuery(raw: unknown, mode: unknown): AdminQuery {
   return { kind: 'invalid', why: 'מצב חיפוש לא מוכר' };
 }
 
-/** התאמת שם בזיכרון - אותו נירמול משני הצדדים */
+/** In-memory name matching - the same normalisation on both sides */
 export const nameMatches = (tripName: string, needle: string): boolean =>
   normalizeNeedle(tripName).includes(needle);

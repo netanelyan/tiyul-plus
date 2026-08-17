@@ -1,10 +1,11 @@
 /**
- * טסטים ל-`effectivePlan` ולדירוג התפקידים.
+ * Tests for `effectivePlan` and for role ranking.
  *
- * למה דווקא כאן: אלה שתי הפונקציות שבאג בהן הוא **הרשאה שניתנה בטעות**,
- * לא תקלה בתצוגה. `effectivePlan` שגוי אומר שהענקה ל-30 יום נשארת
- * לנצח - וזה בדיוק סוג הבאג שאף אחד לא מדווח עליו, כי הוא נראה כמו
- * נדיבות. `roleAtLeast` שגוי אומר שמשתמש רגיל נכנס לאזור הניהול.
+ * Why these two specifically: they are the functions where a bug is **a permission
+ * granted by mistake**, not a display glitch. A wrong `effectivePlan` means a
+ * 30-day grant lasts forever - exactly the kind of bug nobody reports, because it
+ * looks like generosity. A wrong `roleAtLeast` means an ordinary user gets into
+ * the admin area.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -51,8 +52,8 @@ test('פקיעה היא רגע, לא יום: שנייה אחרי - חינם', ()
 });
 
 test('תאריך פגום לא שולל מנוי שכבר שולם', () => {
-  // ההטיה כאן מכוונת: עמודה מקולקלת היא באג שלנו, ולא סיבה להוריד
-  // פרימיום ממי ששילם עליו. מתקנים את הדאטה, לא מענישים את המשתמש.
+  // The bias here is deliberate: a broken column is our bug, not a reason to take
+  // premium away from someone who paid for it. Fix the data, do not punish the user.
   assert.equal(effectivePlan({ plan: 'premium', plan_until: 'לא-תאריך' }, NOW), 'premium');
 });
 
@@ -83,36 +84,38 @@ test('isRole דוחה כל מה שאינו אחד משלושת התפקידים'
 });
 
 /* ============================================================
-   שני חוקים של נתנאל על המכסות הנראות, נעולים כטסטים
+   Two of Netanel's rules about the visible quotas, locked down as tests
    ============================================================
 
-   1. **"אם מישהו נחסם על ידי תקרת הדולרים בזמן שהעמוד אמר לו שנשארו
-      לו טיולים - זו הבטחה שבורה והחזר כספי."** כלומר: העלות של כל
-      המכסות הנראות ביחד, במחירים הגרועים-המציאותיים שנמדדו, חייבת
-      להיכנס מתחת לתקרת הדולרים הפנימית - עם מרווח. מי שמעלה מספר
-      מוצג חייב להפיל את הטסט הזה קודם, ואז לחשב מחדש.
+   1. **"If someone is cut off by the dollar ceiling while the page told them they
+      had trips remaining, that is a broken promise and a refund."** That is: the
+      cost of all the visible quotas together, at the worst realistic measured
+      prices, must fit under the internal dollar ceiling - with margin. Anyone
+      raising a displayed number has to break this test first, and then redo the
+      arithmetic.
 
-   2. **"אסור שדולר יופיע בשום מקום שמשתמש רואה - רק ספירות."** שקלים
-      של מחיר מוצר מותרים (מחיר הוא לא תקרת עלות); דולרים לא.
+   2. **"A dollar figure must never appear anywhere a user can see - counts only."**
+      Shekels for a product price are allowed (a price is not a cost ceiling);
+      dollars are not.
 */
 
 /*
-  המחירים שנמדדו (31.7, ומדידת ה-tt): אלה ה**עובדות** שהחשבון נשען
-  עליהן. אם מדידה חדשה תזיז אותם - לעדכן כאן ולתת לטסט להגיד אם
-  המכסות עדיין נכנסות.
+  The measured prices (31.7, and the (tt) measurement): these are the **facts** the
+  arithmetic rests on. If a new measurement moves them - update here and let the
+  test say whether the quotas still fit.
 */
-const COLD_TRIP_USD = 0.53; // בניית טיול מלאה, כולל כתיבת מטמון קרה
-const HEAVY_TURN_USD = 0.063; // תור Sonnet ממטמון חם
-const WIZARD_BUILD_USD = 0.02; // בנייה מהירה ב-Haiku (נמדד ~$0.01, שמרני כפול)
-const LOOKUP_USD = 0.01; // חיפוש אינטרנט חי (מחיר Anthropic קבוע)
-const IMAGE_EXTRA_USD = 0.01; // תוספת של תמונה מעל תור רגיל
+const COLD_TRIP_USD = 0.53; // a full trip build, including a cold cache write
+const HEAVY_TURN_USD = 0.063; // a Sonnet turn from a warm cache
+const WIZARD_BUILD_USD = 0.02; // a quick Haiku build (measured ~$0.01, doubled to be conservative)
+const LOOKUP_USD = 0.01; // one live web search (a fixed Anthropic price)
+const IMAGE_EXTRA_USD = 0.01; // what an image adds on top of an ordinary turn
 
 test('העלות הגרועה-המציאותית של כל המכסות הנראות של פרימיום נכנסת מתחת לתקרה - עם מרווח', () => {
   const p = PLAN_LIMITS.premium;
   /*
-    הבניות המלאות נספרות בתוך מכסת השיחות (בנייה היא שיחה), ולכן
-    השיחות שאינן-בנייה הן ההפרש. זה בדיוק איך שהשער בפועל עובד
-    ב-chat/route.ts.
+    Full builds are counted inside the chat quota (a build is a chat), so the
+    non-build chats are the difference. This is exactly how the gate actually
+    works in chat/route.ts.
   */
   const editTurns = p.chatPerDay - PREMIUM_TRIP_BUILDS_PER_MONTH;
   const worst =
@@ -123,10 +126,11 @@ test('העלות הגרועה-המציאותית של כל המכסות הנרא
     p.imagesPerDay * IMAGE_EXTRA_USD;
 
   /*
-    ‎90%‎ מהתקרה הוא הקו: המרווח הנותר סופג קריאה קרה תועה אחת-חלקית
-    (מקרה שהמחמם שלנו אמור למנוע) וסטיות תמחור. מעבר למכסות הנראות
-    אין מסלול מציאותי אל התקרה - רק ניצול מכוון של לולאות כלים, שחסום
-    ממילא ב-MAX_TURN_USD לתור, וזה בדיוק סוג השימוש שהתקרה קיימת בשבילו.
+    90% of the ceiling is the line: the remaining margin absorbs one stray partial
+    cold call (a case our warmer is supposed to prevent) and pricing drift. Beyond
+    the visible quotas there is no realistic path to the ceiling - only deliberate
+    abuse of tool loops, which is capped anyway by MAX_TURN_USD per turn, and that
+    is exactly the kind of use the ceiling exists for.
   */
   assert.ok(
     worst <= SUBSCRIBER_MONTHLY_CAP_USD * 0.9,

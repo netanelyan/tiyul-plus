@@ -1,30 +1,33 @@
 /**
- * מנוי הפרימיום דרך PayPal Subscriptions - **המסלול שמחליף את Stripe
- * שמעולם לא חובר.** אותם עקרונות בדיוק כמו `paypal.ts` (הרכישה
- * החד-פעמית): REST ישיר בלי SDK, מפתחות שרת בלבד, timeout על כל קריאה,
- * והכלל המרכזי - **שום דבר כאן לא מעניק פרימיום.** יצירת מנוי רק שולחת
- * את המשתמש לאישור ב-PayPal; מה שקובע `plan='premium'` הוא ורק ה-webhook
- * המאומת (BILLING.SUBSCRIPTION.ACTIVATED ב-processCheckWebhook), באותו
- * מבנה שבו רכישת בדיקה הופכת ל"שולם" רק מ-PAYMENT.CAPTURE.COMPLETED.
+ * The premium subscription via PayPal Subscriptions - **the path replacing the
+ * Stripe integration that was never wired up.** Exactly the same principles as
+ * `paypal.ts` (the one-time purchase): direct REST with no SDK, server-only
+ * keys, a timeout on every call, and the central rule - **nothing here grants
+ * premium.** Creating a subscription only sends the user to approve it on
+ * PayPal; what sets `plan='premium'` is only the verified webhook
+ * (BILLING.SUBSCRIPTION.ACTIVATED in processCheckWebhook), in the same
+ * structure where a check purchase becomes "paid" only from
+ * PAYMENT.CAPTURE.COMPLETED.
  *
- * ## המחיר לא מגיע מהלקוח
+ * ## The price never comes from the client
  *
- * תוכנית החיוב נבנית מ-`PREMIUM_PRICE_ILS` בלבד - הקבוע היחיד
- * ב-lib/plans.ts, אותו כלל כמו PRICE_ILS ברכישה החד-פעמית.
+ * The billing plan is built from `PREMIUM_PRICE_ILS` alone - the single
+ * constant in lib/plans.ts, the same rule as PRICE_ILS in the one-time purchase.
  *
- * ## מזהה התוכנית נשמר ב-app_flags, לא בקוד
+ * ## The plan id is stored in app_flags, not in code
  *
- * PayPal דורש Product + Plan שנוצרים פעם אחת לכל סביבה. הם נוצרים
- * אוטומטית בקריאה הראשונה ונשמרים תחת `paypal_plan_id_<mode>` -
- * בלי צעד ידני בדשבורד של PayPal ובלי מזהה מקובע בקוד שנשבר בין
- * sandbox לחי.
+ * PayPal requires a Product + Plan created once per environment. They are
+ * created automatically on the first call and stored under
+ * `paypal_plan_id_<mode>` - no manual step in the PayPal dashboard and no id
+ * hardcoded in the code that breaks between sandbox and live.
  *
- * ## מי המשתמש? custom_id, לא טבלה
+ * ## Who is the user? custom_id, not a table
  *
- * המנוי נוצר עם `custom_id = userId` (uuid מ-GoTrue, לא מגוף הבקשה),
- * ו-PayPal מחזיר אותו על כל אירוע webhook של אותו מנוי - כולל ביטול.
- * כך ההפעלה וההורדה לא תלויות בשום עמודה חדשה: האירוע המאומת נושא
- * בעצמו את זהות המשתמש שאנחנו קבענו ביצירה.
+ * The subscription is created with `custom_id = userId` (a uuid from GoTrue,
+ * not from the request body), and PayPal returns it on every webhook event of
+ * that subscription - including cancellation. So activation and downgrade
+ * depend on no new column: the verified event itself carries the user identity
+ * that we set at creation.
  */
 
 import { PREMIUM_PRICE_ILS } from '@/lib/plans';
@@ -48,9 +51,9 @@ async function storePlanId(mode: PaypalMode, planId: string): Promise<void> {
 }
 
 /**
- * מזהה תוכנית החיוב לסביבה - נוצר בפעם הראשונה (Product ואז Plan) ונשמר.
- * כישלון בכל שלב מחזיר null והקורא עונה "לא זמין כרגע" - אף פעם לא
- * תוכנית מומצאת.
+ * The billing plan id for the environment - created the first time (Product,
+ * then Plan) and stored. A failure at any step returns null and the caller
+ * answers "not available right now" - never an invented plan.
  */
 export async function ensureSubscriptionPlan(mode: PaypalMode): Promise<string | null> {
   const existing = await storedPlanId(mode);
@@ -92,7 +95,7 @@ export async function ensureSubscriptionPlan(mode: PaypalMode): Promise<string |
             frequency: { interval_unit: 'MONTH', interval_count: 1 },
             tenure_type: 'REGULAR',
             sequence: 1,
-            total_cycles: 0, // עד ביטול
+            total_cycles: 0, // Until cancelled
             pricing_scheme: {
               fixed_price: { value: PREMIUM_PRICE_ILS.toFixed(2), currency_code: 'ILS' },
             },
@@ -124,7 +127,7 @@ export interface CreatedSubscription {
   approveUrl: string;
 }
 
-/** יצירת מנוי לאישור המשתמש. לא מעניקה כלום - רק מחזירה לאן לשלוח אותו. */
+/** Creates a subscription for the user to approve. Grants nothing - only returns where to send them. */
 export async function createSubscription(
   mode: PaypalMode,
   input: { userId: string; returnUrl: string; cancelUrl: string },
@@ -140,7 +143,7 @@ export async function createSubscription(
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
-        // דאבל-קליק על "הרשמה" לא יוצר שני מנויים
+        // A double-click on the subscribe button does not create two subscriptions
         'PayPal-Request-Id': `sub:${input.userId}:${planId}`,
       },
       body: JSON.stringify({
@@ -171,15 +174,16 @@ export async function createSubscription(
   }
 }
 
-/* ============ צד ה-webhook: הפעלה והורדה ============ */
+/* ============ The webhook side: activation and downgrade ============ */
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /**
- * הפעלת פרימיום ממנוי PayPal שאושר. נקראת **רק** מ-processCheckWebhook
- * אחרי אימות חתימה - custom_id הוא ה-uuid שאנחנו קבענו ביצירה, והבדיקה
- * כאן היא הגנת צורה בלבד (אירוע עם custom_id שאינו uuid מעולם לא נוצר
- * אצלנו, ולכן נבלע בלי לגעת בכלום).
+ * Activating premium from an approved PayPal subscription. Called **only** from
+ * processCheckWebhook after signature verification - custom_id is the uuid we
+ * set at creation, and the check here is shape protection only (an event with a
+ * non-uuid custom_id was never created by us, so it is swallowed without
+ * touching anything).
  */
 export async function activatePaypalPremium(userId: string, subscriptionId: string): Promise<boolean> {
   if (!UUID_RE.test(userId)) return false;
@@ -191,7 +195,7 @@ export async function activatePaypalPremium(userId: string, subscriptionId: stri
     updated_at: new Date().toISOString(),
   };
   let rows = await adminUpdate<{ user_id: string }>('profiles', eq('user_id', userId), patch);
-  // שילם לפני שאי פעם שמר פרופיל - אין שורה לעדכן, יוצרים אותה
+  // Paid before ever saving a profile - no row to update, so we create it
   if (rows && rows.length === 0) {
     rows = await adminInsert<{ user_id: string }>('profiles', { user_id: userId, ...patch }, { upsert: true });
   }
@@ -199,9 +203,10 @@ export async function activatePaypalPremium(userId: string, subscriptionId: stri
 }
 
 /**
- * הורדה בביטול/השעיה/פקיעה - **רק כשהפרימיום הנוכחי באמת הגיע מ-PayPal.**
- * בלי השמירה הזאת, ביטול מנוי ישן היה מוחק גם הענקה ידנית של אדמין או
- * פדיון קוד שניתנו אחרי הביטול - בדיוק הבאג ש-plan_source קיים למנוע.
+ * Downgrade on cancellation/suspension/expiry - **only when the current premium
+ * really came from PayPal.** Without this safeguard, cancelling an old
+ * subscription would also erase a manual admin grant or a promo-code redemption
+ * given after the cancellation - exactly the bug plan_source exists to prevent.
  */
 export async function cancelPaypalPremium(userId: string): Promise<boolean> {
   if (!UUID_RE.test(userId)) return false;
@@ -210,7 +215,7 @@ export async function cancelPaypalPremium(userId: string): Promise<boolean> {
     pgQuery(eq('user_id', userId), pgSelect(['plan_source'])),
   );
   if (!rows || rows.length === 0) return false;
-  if (rows[0].plan_source !== 'paypal') return false; // הענקה/פרומו/סטרייפ - לא שלנו להוריד
+  if (rows[0].plan_source !== 'paypal') return false; // Grant/promo/Stripe - not ours to downgrade
   const updated = await adminUpdate<{ user_id: string }>('profiles', eq('user_id', userId), {
     plan: 'free',
     plan_until: null,

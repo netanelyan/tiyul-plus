@@ -1,30 +1,31 @@
-// תיקון שמות קבצים שבורים של Commons בקטלוג.
+// Repairing broken Commons filenames in the catalog.
 //
-// למה זה קיים: סריקה בדפדפן ב-2026-07-27 מצאה ש-151 מתוך 1,396 כתובות התמונות
-// בקטלוג מחזירות 404, ו**אף אחת מהן לא ניתנת להצלה ברוחב אחר** (נבדקו
-// 960/500/330/250). כלומר אלה קבצים מתים ולא בעיית רוחב. הסיבה השורשית ברוב
-// המקרים היא **אותיות הסיומת**: שמות קבצים ב-Commons רגישים לאותיות גדולות
-// וקטנות, ומעבר קודם המיר ".JPG" ל-".jpg". במדגם של 16 כתובות, 14 חזרו לחיים
-// מהחזרת האותיות המקוריות בלבד - אותה תמונה, אותו נושא.
+// Why this exists: a browser scan on 2026-07-27 found that 151 of the 1,396 photo
+// URLs in the catalog return 404, and **not one of them is rescuable at another
+// width** (960/500/330/250 were tried). In other words these are dead files, not a
+// width problem. The root cause in most cases is **extension letter case**: Commons
+// filenames are case-sensitive, and an earlier pass converted ".JPG" to ".jpg". In a
+// sample of 16 URLs, 14 came back to life from restoring the original case alone -
+// same photo, same subject.
 //
-// מחלקות קלקול נוספות שזוהו באותה סריקה:
-//   * קידוד כפול:  Torre_Bel%C3%A9m  (במקום Torre_Belém)
-//   * גרש שנבלע:   musée_dart        (במקום musée_d'art)
-//   * אות ראשונה קטנה: bengmealea    (Commons תמיד מגדיל אות ראשונה)
+// Additional corruption classes identified in the same scan:
+//   * double encoding:      Torre_Bel%C3%A9m  (instead of Torre_Belém)
+//   * swallowed apostrophe: musée_dart        (instead of musée_d'art)
+//   * lowercase first letter: bengmealea      (Commons always capitalizes the first letter)
 //
-// **המלכודת שהסתירה את כל זה:** שם קובץ שגוי עדיין מתאים ל-md5 של עצמו, כי
-// הקידומת /x/xy/ נגזרת מאותה מחרוזת שגויה. לכן סריקת קידומות על 1,620 כתובות
-// החזירה 0 שגיאות ולא הוכיחה כלום. רק בדיקת HTTP רואה את המחלקה הזאת - ולכן
-// הסקריפט הזה מאמת מול Commons ולא מנחש.
+// **The trap that hid all of this:** a wrong filename still matches its own md5,
+// because the /x/xy/ prefix is derived from the same wrong string. So a prefix scan
+// over 1,620 URLs returned 0 errors and proved nothing. Only an HTTP check can see
+// this class - which is why this script verifies against Commons instead of guessing.
 //
-// הרצה (דורש רשת - הסנדבוקס חוסם את upload.wikimedia.org, לכן זה רץ אצל נתנאל
-// או בסשן עם דפדפן):
-//   node scripts/repair-photo-names.mjs --dry     # רק מדווח, לא כותב
-//   node scripts/repair-photo-names.mjs           # מתקן וכותב
+// Running it (needs network - the sandbox blocks upload.wikimedia.org, so this runs
+// on Netanel's machine or in a session with a browser):
+//   node scripts/repair-photo-names.mjs --dry     # report only, no writes
+//   node scripts/repair-photo-names.mjs           # fix and write
 //
-// הסקריפט לעולם לא ממציא תמונה חלופית: הוא מתקן את **שם הקובץ הקיים** בלבד.
-// אם אף וריאנט לא נמצא ב-Commons, הכתובת נשארת כמו שהיא ומדווחת כ-UNRESOLVED,
-// כדי שאדם יחליט. השמטה עדיפה על ניחוש.
+// The script never invents a replacement photo: it fixes the **existing filename**
+// only. If no variant is found on Commons, the URL is left as-is and reported as
+// UNRESOLVED, so a human decides. Omission beats a guess.
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 
@@ -34,25 +35,27 @@ const MANIFEST = 'scripts/photo-verified.json';
 const API = 'https://commons.wikimedia.org/w/api.php';
 const ALLOWED_WIDTHS = [960, 500, 330, 250];
 
-// מדיניות Wikimedia דורשת User-Agent שמזהה את הכלי ונותן דרך ליצור קשר.
-// UA גנרי הוא סיבה מוכרת ל-429/403, וקיבלנו 429 בהרצה הראשונה.
+// Wikimedia policy requires a User-Agent that identifies the tool and gives a way
+// to make contact. A generic UA is a known cause of 429/403, and we got a 429 on the
+// first run.
 const HEADERS = {
   'User-Agent': 'tiyul-plus-photo-repair/1.1 (https://github.com/netanelyan/tiyul-plus)',
   'Content-Type': 'application/x-www-form-urlencoded',
   'Accept-Encoding': 'gzip',
 };
 const BACKOFF_MS = [2_000, 5_000, 12_000, 30_000, 60_000];
-const PACE_MS = 1_000; // בין אצוות. איטי בכוונה - עדיף לרוץ דקה יותר מאשר להיחסם.
+const PACE_MS = 1_000; // between batches. Deliberately slow - better to run a minute longer than to get blocked.
 
 /**
- * הנתיב ב-Commons הוא פונקציה טהורה של שם הקובץ: md5 של השם הלא-מקודד.
- * אומת מול הקטלוג: 1,106 מתוך 1,263 כתובות חיות משוחזרות בייט-בבייט.
+ * The Commons path is a pure function of the filename: md5 of the unencoded name.
+ * Verified against the catalog: 1,106 of 1,263 live URLs reproduce byte-for-byte.
  *
- * 157 הנותרות נבדלות רק בסגנון קידוד הסוגריים: encodeURIComponent משאיר
- * "(" ו-")" כמו שהם, ואילו MediaWiki מקודד אותם ל-%28/%29. **שתי הצורות
- * חיות בקטלוג ושתיהן עובדות**, ולכן זה ענייו של סגנון בלבד - אבל שומרים על
- * הסגנון המקורי כדי שה-diff יראה רק את התיקון האמיתי ולא רעש קידוד.
- * הקידומת md5 זהה בשתי הצורות, כי היא נגזרת מהשם המפוענח.
+ * The remaining 157 differ only in parenthesis-encoding style: encodeURIComponent
+ * leaves "(" and ")" as-is, while MediaWiki encodes them as %28/%29. **Both forms
+ * live in the catalog and both work**, so this is purely a style matter - but we
+ * keep the original style so the diff shows only the real fix and not encoding
+ * noise. The md5 prefix is identical in both forms, because it is derived from the
+ * decoded name.
  */
 function thumbUrl(filename, width, encodeParens = false) {
   const h = createHash('md5').update(filename, 'utf8').digest('hex');
@@ -61,21 +64,21 @@ function thumbUrl(filename, width, encodeParens = false) {
   return `https://upload.wikimedia.org/wikipedia/commons/thumb/${h[0]}/${h.slice(0, 2)}/${e}/${width}px-${e}`;
 }
 
-/** כל הווריאנטים הסבירים של שם קובץ שבור, מהסביר לפחות סביר. */
+/** All plausible variants of a broken filename, from most to least likely. */
 function variants(name) {
   const stem = name.replace(/\.[A-Za-z]+$/, '');
   const ext = (name.match(/\.[A-Za-z]+$/) || ['.jpg'])[0];
   const stems = new Set([stem]);
-  // קידוד כפול: אם נשארו רצפי %XX אחרי הפענוח, הם היו מקודדים פעמיים
+  // Double encoding: if %XX sequences remain after decoding, they were encoded twice
   if (stem.includes('%')) {
     try {
       const d = decodeURIComponent(stem);
       if (d !== stem) stems.add(d);
     } catch {
-      /* רצף % לא חוקי - מתעלמים */
+      /* invalid % sequence - ignore */
     }
   }
-  // Commons תמיד מגדיל את האות הראשונה
+  // Commons always capitalizes the first letter
   for (const s of [...stems]) if (/^[a-z]/.test(s)) stems.add(s[0].toUpperCase() + s.slice(1));
   const exts = [ext, '.JPG', '.jpg', '.jpeg', '.JPEG', '.png', '.PNG', '.tif', '.tiff'];
   const out = [];
@@ -84,35 +87,38 @@ function variants(name) {
 }
 
 /**
- * מלכודת REDIRECT, נתפסה בייצור ב-2026-07-27 ועלתה תיקון אחד מתוך 112:
- * `Kykkos_monastry_from_the_air.JPG` הוא **הפניה** ב-Commons אל
- * `Kykkos_monastery_from_the_air.jpg` (שים לב: גם איות וגם אותיות הסיומת).
- * ה-API מחזיר imageinfo מלא עבור ההפניה - קיים, 4416x3312, image/jpeg - אבל
- * **תמונות ממוזערות קיימות רק תחת השם הקנוני**, ולכן כתובת ה-thumb שבנינו
- * מהשם המופנה החזירה 404 בכל רוחב.
+ * The REDIRECT trap, caught in production on 2026-07-27 and it cost one fix out of
+ * 112: `Kykkos_monastry_from_the_air.JPG` is a Commons **redirect** to
+ * `Kykkos_monastery_from_the_air.jpg` (note: both the spelling AND the extension
+ * case). The API returns full imageinfo for the redirect - exists, 4416x3312,
+ * image/jpeg - but **thumbnails exist only under the canonical title**, so the thumb
+ * URL we built from the redirected name returned 404 at every width.
  *
- * המסקנה: `prop=imageinfo` לבדו לא מוכיח שה-thumb יעבוד. לכן מבקשים
- * `iiurlwidth` ולוקחים את `thumburl` **כמו שהוא** - הוא תמיד קנוני - ומוסיפים
- * `redirects=1` כדי שהכותרות ייפתרו. בניית md5 עצמאית נשארת רק כגיבוי.
+ * The conclusion: `prop=imageinfo` alone does not prove the thumb will work. So we
+ * request `iiurlwidth` and take `thumburl` **as-is** - it is always canonical - and
+ * add `redirects=1` so titles resolve. Independent md5 construction remains only as
+ * a fallback.
  */
-/** imageinfo מחזיר גם קיום וגם רוחב מקור - שניהם נחוצים לבחירת רוחב חוקי. */
+/** imageinfo returns both existence and source width - both are needed to pick a legal width. */
 /**
- * חיפוש קיום + רוחב מקור מול Commons.
+ * Existence + source-width lookup against Commons.
  *
- * **POST ולא GET, וזה לא קוסמטי.** הגרסה הראשונה דחסה 45 שמות קבצים למחרוזת
- * שאילתה של GET. חלק מהשמות כאן ארוכים מ-100 תווים, כך שה-URL עבר את המגבלה
- * והבקשה נכשלה - ו-`if (!res.ok) continue` בלע את הכישלון בשקט. התוצאה:
- * 88 קבצים דווחו "לא נמצאו" כשהם קיימים, והחלוקה נקבעה לפי מזל של אצווה ולא
- * לפי השם. חיפוש הגיבוי מצא בדיוק את אותם קבצים עם סיומת .JPG.
+ * **POST and not GET, and this is not cosmetic.** The first version packed 45
+ * filenames into a GET query string. Some of the names here are longer than 100
+ * characters, so the URL exceeded the limit and the request failed - and
+ * `if (!res.ok) continue` swallowed the failure silently. The result: 88 files were
+ * reported "not found" while they exist, and the split was determined by batch luck
+ * rather than by the name. The fallback search found exactly those same files with a
+ * .JPG extension.
  *
- * זאת בדיוק אותה שגיאה שהסשן הזה רודף אחריה כל הזמן: **היעדר ראיה נקרא
- * כראיה להיעדר.** לכן עכשיו: POST (אין מגבלת אורך), אצווה קטנה יותר, ניסיון
- * חוזר, וכישלון אמיתי **זורק** במקום להיבלע.
+ * This is exactly the same mistake this session keeps chasing: **absence of evidence
+ * read as evidence of absence.** So now: POST (no length limit), a smaller batch,
+ * retry, and a real failure **throws** instead of being swallowed.
  */
 async function lookup(titles) {
-  // מטמון על הדיסק, כי Commons מגביל קצב (429) ובלי זה כל חסימה מאבדת את כל
-  // ההתקדמות ומכריחה להתחיל מאפס - מה שרק מגדיל את העומס ומזמין עוד 429.
-  // הרצה חוזרת ממשיכה מאיפה שנעצרה.
+  // On-disk cache, because Commons rate-limits (429) and without it every block
+  // loses all progress and forces starting over from zero - which only increases the
+  // load and invites the next 429. A repeated run resumes from where it stopped.
   const CACHE = '.cache/commons-lookup.json';
   mkdirSync('.cache', { recursive: true });
   const cache = existsSync(CACHE) ? JSON.parse(readFileSync(CACHE, 'utf8')) : {};
@@ -132,8 +138,8 @@ async function lookup(titles) {
       prop: 'imageinfo',
       iiprop: 'size|url',
       titles: batch.map((t) => `File:${t}`).join('|'),
-      // redirects=1 פותר הפניות, ו-iiurlwidth מחזיר thumburl קנוני שאפשר
-      // להשתמש בו כמו שהוא במקום לבנות md5 בעצמנו. ראה מלכודת REDIRECT למעלה.
+      // redirects=1 resolves redirects, and iiurlwidth returns a canonical thumburl
+      // usable as-is instead of building the md5 ourselves. See the REDIRECT trap above.
       redirects: '1',
       iiurlwidth: '500',
     });
@@ -142,7 +148,7 @@ async function lookup(titles) {
       try {
         const res = await fetch(API, { method: 'POST', headers: HEADERS, body });
         if (res.status === 429 || res.status >= 500) {
-          // Retry-After הוא מה ש-Wikimedia מבקש שנכבד. בלעדיו - השהיה מעריכית.
+          // Retry-After is what Wikimedia asks us to honor. Without it - exponential backoff.
           const ra = Number(res.headers.get('retry-after'));
           const waitMs = Number.isFinite(ra) && ra > 0 ? ra * 1000 : BACKOFF_MS[attempt] ?? 60_000;
           if (attempt < 5) {
@@ -166,7 +172,7 @@ async function lookup(titles) {
         await new Promise((r) => setTimeout(r, BACKOFF_MS[attempt] ?? 60_000));
       }
     }
-    // formatversion=2 מחזיר pages כמערך, וכותרות עם רווחים במקום קו תחתון
+    // formatversion=2 returns pages as an array, and titles with spaces instead of underscores
     const hit = new Set();
     for (const p of j?.query?.pages ?? [])
       if (p.imageinfo?.[0]) {
@@ -175,7 +181,7 @@ async function lookup(titles) {
         hit.add(key);
         cache[key] = p.imageinfo[0].width;
       }
-    // רושמים גם את מה שנשאל ולא נמצא, אחרת כל הרצה חוזרת שואלת שוב את אותם שמות
+    // Also record what was asked and not found, otherwise every re-run asks the same names again
     for (const t of batch) if (!hit.has(t)) cache[t] = 0;
     writeFileSync(CACHE, JSON.stringify(cache));
     process.stdout.write(`\r  looked up ${Math.min(i + BATCH, todo.length)}/${todo.length}`);
@@ -203,14 +209,15 @@ const candByName = new Map(names.map((n) => [n, variants(n)]));
 const found = await lookup([...new Set([...candByName.values()].flat())]);
 
 /**
- * צורה מנורמלת לזיהוי "אותו שם, איות אחר": מורידים ניקוד/דיאקריטיקה, מאחדים
- * אותיות גדולות/קטנות, וזורקים כל מה שאינו אות או ספרה. כך `Üçhisar` ו-`Uçhisar`,
- * `Krakow` ו-`Kraków`, `Slîtere` ו-`Slītere`, וכל שלושת סוגי הגרש (ASCII ' ,
- * U+2019 ’ , U+02BB ʻ) מתמפים לאותה מחרוזת.
+ * A normalized form for detecting "same name, different spelling": strip
+ * accents/diacritics, fold case, and drop everything that is not a letter or digit.
+ * That way `Üçhisar` and `Uçhisar`, `Krakow` and `Kraków`, `Slîtere` and `Slītere`,
+ * and all three apostrophe kinds (ASCII ' , U+2019 ’ , U+02BB ʻ) map to the same
+ * string.
  *
- * זה **לא** ניחוש: התאמה כאן פירושה שהשם זהה עד כדי איות, ולכן זו עדיין
- * שינוי-שם של אותו קובץ ולא בחירה של תמונה אחרת. התאמה חלקית או דומה נשארת
- * מחוץ לזה ומדווחת לאדם.
+ * This is **not** a guess: a match here means the name is identical up to spelling,
+ * so it is still a rename of the same file and not a choice of a different photo. A
+ * partial or merely similar match stays outside this and is reported to a human.
  */
 const norm = (s) =>
   s
@@ -229,9 +236,10 @@ for (const [n, cands] of candByName) {
 }
 const byVariant = fix.size;
 
-// שלב שני: למה שלא נפתר, שואלים את חיפוש Commons ומקבלים **רק** תוצאה שהצורה
-// המנורמלת שלה זהה לשם המקורי. זה תופס הבדלי דיאקריטיקה, סוג גרש ופיסוק - כלומר
-// אותו קובץ בדיוק - בלי לפתוח פתח לבחירת תמונה אחרת.
+// Second stage: for what did not resolve, ask Commons search and accept **only** a
+// result whose normalized form is identical to the original name. That catches
+// diacritic, apostrophe-kind and punctuation differences - i.e. the exact same file
+// - without opening a door to picking a different photo.
 const unresolved = [];
 for (const n of stillOpen) {
   const target = norm(n);
@@ -254,7 +262,7 @@ for (const n of stillOpen) {
       }
     }
   } catch {
-    /* חיפוש הוא עזר - כישלון שלו רק משאיר את השם ברשימה לאדם */
+    /* search is an aid - its failure just leaves the name on the list for a human */
   }
   if (matched) fix.set(n, matched);
   else unresolved.push(n);
@@ -274,7 +282,7 @@ for (const file of FILES) {
     const f = fix.get(nameOf(u));
     if (!f) continue;
     const want = +(u.match(/\/(\d+)px-/)?.[1] ?? 500);
-    // אף פעם לא לבקש תמונה רחבה מהמקור - זה בדיוק ה-404 השקט מהתקלה הקודמת
+    // Never request a thumb wider than the source - that is exactly the silent 404 from the previous incident
     const width = ALLOWED_WIDTHS.find((w) => w <= f.srcWidth && w <= want) ?? ALLOWED_WIDTHS.at(-1);
     const next = thumbUrl(f.name, width, u.includes('%28') || u.includes('%29'));
     if (src.includes(u)) {
@@ -308,7 +316,7 @@ if (unresolved.length) {
         .filter((p) => p.imageinfo)
         .map((p) => `${p.title.replace(/^File:/, '')} (${p.imageinfo[0].width}px)`);
     } catch {
-      /* חיפוש הוא עזר בלבד - כישלון שלו לא מפיל את התיקון */
+      /* search is an aid only - its failure does not take down the repair */
     }
     console.log(`  ${n}`);
     for (const s of sug) console.log(`      ? ${s}`);

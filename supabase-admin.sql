@@ -1,29 +1,31 @@
 -- ============================================================
--- טיול+ : תפקידים (owner / admin), הענקות פרימיום, קודי הטבה,
---         דגלי מערכת ויומן ביקורת.
+-- tiyul+ : roles (owner / admin), premium grants, promo codes,
+--          app flags and an audit log.
 --
--- להריץ ב-SQL Editor של Supabase. אידמפוטנטי - בטוח להריץ שוב.
--- דרישה מוקדמת אחת בלבד: supabase-profiles.sql (טבלת profiles קיימת).
--- עמודות הפרימיום נוצרות כאן אם הן חסרות, כך שסדר ההרצה לא משנה.
+-- Run in Supabase's SQL Editor. Idempotent - safe to run again.
+-- Only one prerequisite: supabase-profiles.sql (the profiles table exists).
+-- The premium columns are created here if missing, so run order does not matter.
 --
 -- ============================================================
--- עקרון האבטחה של הקובץ הזה, בשורה אחת:
--- **הלקוח לא יכול לכתוב לאף אחת מהעמודות והטבלאות שכאן.**
--- role, plan, plan_until ו-plan_source נכתבות אך ורק ע"י ה-service role
--- (כלומר קוד שרת עם SUPABASE_SERVICE_ROLE_KEY), ולעולם לא מטוקן משתמש.
--- אם המשתמש היה יכול לכתוב role, כל חשבון היה יכול להפוך את עצמו ל-owner
--- בקריאת REST אחת. זו הסיבה שההרשאות כאן ניתנות ברמת עמודה ולא רק RLS.
+-- This file's security principle, in one line:
+-- **The client cannot write to any of the columns and tables here.**
+-- role, plan, plan_until and plan_source are written exclusively by the
+-- service role (i.e. server code with SUPABASE_SERVICE_ROLE_KEY), and never
+-- from a user token. If the user could write role, any account could make
+-- itself owner in a single REST call. That is why the grants here are given
+-- at column level and not just RLS.
 -- ============================================================
 
 
 -- ------------------------------------------------------------
--- 0. עמודות הפרימיום, אם supabase-premium.sql עוד לא רץ.
+-- 0. The premium columns, in case supabase-premium.sql has not run yet.
 --
---    למה זה כאן: נתנאל הריץ את הקובץ הזה לפני קובץ הפרימיום, וקיבל
---    `column p.plan does not exist`. תפקיד היה נזרע בהצלחה אבל הענקת
---    פרימיום הייתה נכשלת - אין עמודה לכתוב אליה. הערה בכותרת הקובץ על
---    "דרישה מוקדמת" לא מנעה את זה, ולכן הקובץ פשוט משלים את מה שחסר
---    במקום להסתמך על סדר הרצה. אידמפוטנטי, ולא דורס ערכים קיימים.
+--    Why this is here: Netanel ran this file before the premium file, and got
+--    `column p.plan does not exist`. The role seeded successfully but a premium
+--    grant would have failed - no column to write to. A "prerequisite" note in
+--    the file header did not prevent that, so the file simply fills in what is
+--    missing instead of relying on run order. Idempotent, and does not
+--    overwrite existing values.
 -- ------------------------------------------------------------
 alter table public.profiles
   add column if not exists plan text not null default 'free'
@@ -36,20 +38,22 @@ create index if not exists profiles_stripe_customer_idx
   where stripe_customer_id is not null;
 
 -- ------------------------------------------------------------
--- 1. תפקיד + פקיעת פרימיום + מקור הפרימיום
+-- 1. Role + premium expiry + premium source
 -- ------------------------------------------------------------
 alter table public.profiles
   add column if not exists role text not null default 'user'
     check (role in ('user', 'admin', 'owner'));
 
--- מתי הפרימיום פג. NULL = ללא הגבלת זמן (מנוי Stripe פעיל, או הענקה
--- "לתמיד"). ההשוואה נעשית בקוד דרך effectivePlan() ב-lib/plans.ts.
+-- When the premium expires. NULL = unlimited (an active Stripe subscription,
+-- or a "forever" grant). The comparison happens in code via effectivePlan()
+-- in lib/plans.ts.
 alter table public.profiles
   add column if not exists plan_until timestamptz;
 
--- 'stripe' = מנוי בתשלום · 'grant' = הענקה של אדמין · 'promo' = קוד הטבה.
--- בלי זה, webhook של Stripe שמוריד מנוי מבוטל היה מוריד גם פרימיום
--- שהוענק ידנית, ואי אפשר היה להבדיל בין לקוח משלם למי שקיבל מתנה.
+-- 'stripe' = paid subscription · 'grant' = an admin grant · 'promo' = a promo code.
+-- Without this, a Stripe webhook downgrading a cancelled subscription would
+-- also downgrade manually-granted premium, and there would be no way to tell
+-- a paying customer from someone who got a gift.
 alter table public.profiles
   add column if not exists plan_source text
     check (plan_source is null or plan_source in ('stripe', 'grant', 'promo'));
@@ -58,10 +62,10 @@ create index if not exists profiles_role_idx
   on public.profiles (role) where role <> 'user';
 
 -- ------------------------------------------------------------
--- 2. הקשחה: רשימת העמודות שמשתמש מחובר יכול לכתוב, במפורש.
---    role / plan / plan_until / plan_source / stripe_customer_id אינן בה.
---    (חוזר על מה ש-supabase-premium.sql עשה, כדי שהקובץ הזה יהיה נכון
---    גם אם הוא רץ ראשון או אם מישהו שינה הרשאות בינתיים.)
+-- 2. Hardening: the explicit list of columns a signed-in user may write.
+--    role / plan / plan_until / plan_source / stripe_customer_id are not in it.
+--    (Repeats what supabase-premium.sql did, so this file is correct even if
+--    it runs first or somebody changed grants in the meantime.)
 -- ------------------------------------------------------------
 revoke insert, update on table public.profiles from authenticated;
 grant insert (user_id, display_name, phone, avatar, visited, prefs, is_public, updated_at)
@@ -70,8 +74,9 @@ grant update (display_name, phone, avatar, visited, prefs, is_public, updated_at
   on table public.profiles to authenticated;
 
 -- ------------------------------------------------------------
--- 3. יומן ביקורת - כל פעולה של אדמין, בלי יוצא מן הכלל.
---    נשמר גם המייל ולא רק ה-uuid: אם חשבון נמחק, השורה עדיין קריאה.
+-- 3. Audit log - every admin action, without exception.
+--    The email is stored too, not just the uuid: if an account is deleted,
+--    the row is still readable.
 -- ------------------------------------------------------------
 create table if not exists public.admin_audit (
   id bigserial primary key,
@@ -88,14 +93,15 @@ create index if not exists admin_audit_created_idx on public.admin_audit (create
 create index if not exists admin_audit_target_idx on public.admin_audit (target_user_id);
 
 alter table public.admin_audit enable row level security;
--- אין policies בכוונה: anon ו-authenticated חסומים לחלוטין. ה-service
--- role עוקף RLS, וזו הדרך היחידה לכתוב ולקרוא - כלומר גם אדמין רואה את
--- היומן רק דרך קוד השרת שלנו, שמאמת את התפקיד שלו קודם.
+-- No policies on purpose: anon and authenticated are fully blocked. The
+-- service role bypasses RLS, and that is the only way to write and read -
+-- meaning even an admin sees the log only through our server code, which
+-- verifies their role first.
 revoke all on table public.admin_audit from anon, authenticated;
 revoke all on sequence public.admin_audit_id_seq from anon, authenticated;
 
 -- ------------------------------------------------------------
--- 4. קודי הטבה - אדמין יוצר, המטייל פודה בעצמו
+-- 4. Promo codes - an admin creates, the traveler redeems on their own
 -- ------------------------------------------------------------
 create table if not exists public.promo_codes (
   code text primary key,
@@ -114,8 +120,9 @@ create table if not exists public.promo_redemptions (
   user_id uuid not null,
   days integer not null,
   redeemed_at timestamptz not null default now(),
-  -- מונע פדיון כפול של אותו קוד ע"י אותו משתמש **ברמת הדאטהבייס**, ולא
-  -- בבדיקה בקוד שיכולה להיכשל בשתי בקשות במקביל.
+  -- Prevents double redemption of the same code by the same user **at the
+  -- database level**, not with a check in code that can fail under two
+  -- concurrent requests.
   primary key (code, user_id)
 );
 
@@ -125,14 +132,15 @@ revoke all on table public.promo_codes from anon, authenticated;
 revoke all on table public.promo_redemptions from anon, authenticated;
 
 -- ------------------------------------------------------------
--- 5. פדיון אטומי.
+-- 5. Atomic redemption.
 --
---    למה RPC ולא קריאה-ואז-כתיבה מהשרת: שתי בקשות במקביל על הקוד
---    האחרון היו שתיהן קוראות redeemed=0 ושתיהן מצליחות. כאן הבדיקה
---    והעדכון הם משפט אחד, ומפתח ראשי כפול תופס פדיון חוזר.
+--    Why an RPC and not read-then-write from the server: two concurrent
+--    requests on the last remaining code would both read redeemed=0 and both
+--    succeed. Here the check and the update are one statement, and a
+--    duplicate primary key catches a repeated redemption.
 --
---    מחזיר: days אם נפדה, 0 אם הקוד לא קיים/כבוי/פג/מלא,
---            -1 אם המשתמש הזה כבר פדה אותו.
+--    Returns: days if redeemed, 0 if the code does not exist/is
+--             disabled/expired/full, -1 if this user already redeemed it.
 -- ------------------------------------------------------------
 create or replace function public.redeem_promo(p_code text, p_user uuid)
 returns integer
@@ -143,7 +151,7 @@ as $$
 declare
   v_days integer;
 begin
-  -- נעילת השורה כדי שמניית הפדיונות תהיה נכונה גם בתחרות
+  -- Lock the row so the redemption count stays correct under contention
   select days into v_days
   from public.promo_codes
   where code = upper(trim(p_code))
@@ -174,10 +182,11 @@ $$;
 revoke execute on function public.redeem_promo(text, uuid) from public, anon, authenticated;
 
 -- ------------------------------------------------------------
--- 6. דגלי מערכת - מפסק חירום בלי דיפלוי
+-- 6. App flags - an emergency kill switch without a deploy
 --
---    agent_enabled=false מפיל את /api/chat לתשובות מבוססות-כללים בלי
---    מפתח, כלומר האתר ממשיך לעבוד וההוצאה על המודל נעצרת מיד.
+--    agent_enabled=false drops /api/chat to the keyless rule-based
+--    responses, i.e. the site keeps working and model spend stops
+--    immediately.
 -- ------------------------------------------------------------
 create table if not exists public.app_flags (
   key text primary key,
@@ -194,11 +203,12 @@ values ('agent_enabled', 'true'::jsonb)
 on conflict (key) do nothing;
 
 -- ------------------------------------------------------------
--- 7. זריעת ה-owner.
+-- 7. Seeding the owner.
 --
---    **זו השורה היחידה בקובץ שצריך לערוך** אם הכתובת משתנה.
---    עובד גם אם המשתמש עוד לא נכנס אף פעם (אז אין לו שורת profiles):
---    במקרה כזה השורה נוצרת. אם הוא כבר קיים - רק התפקיד מתעדכן.
+--    **This is the only line in the file that needs editing** if the address
+--    changes. Works even if the user has never logged in (so they have no
+--    profiles row): in that case the row is created. If they already exist -
+--    only the role is updated.
 -- ------------------------------------------------------------
 do $$
 declare

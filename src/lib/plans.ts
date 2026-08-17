@@ -1,11 +1,12 @@
 /**
- * תוכניות ומכסות - הקובץ המשותף היחיד בין השרת (אכיפה) ל-UI (עמוד
- * הפרימיום, הודעות המכסה). אין כאן סודות.
+ * Plans and quotas - the only file shared between the server (enforcement)
+ * and the UI (the premium page, quota messages). No secrets here.
  *
- * "יחידות AI" הן מדד העלות הפנימי של שיחת סוכן: טוקן קלט לא-מקאש = 1,
- * טוקן פלט = 4 (משקף בקירוב את יחס המחירים; קריאות מהמטמון כמעט חינם
- * ולכן לא נספרות). משתמש חופשי מקבל מספיק לבניית טיול מלא + עשרות
- * עריכות ביום - המכסה נועדה לעצור שימוש לרעה, לא שימוש אמיתי.
+ * "AI units" are the internal cost measure of an agent conversation: an
+ * uncached input token = 1, an output token = 4 (roughly reflecting the
+ * price ratio; cache reads are almost free and therefore not counted). A
+ * free user gets enough to build a full trip + dozens of edits per day -
+ * the quota is meant to stop abuse, not real usage.
  */
 
 import { priceLabel as predepartureCheckPriceLabel } from '@/lib/predeparture';
@@ -13,18 +14,20 @@ import { priceLabel as predepartureCheckPriceLabel } from '@/lib/predeparture';
 export type Plan = 'free' | 'premium';
 
 /**
- * שכבת המכסות. נפרדת מ-`Plan` בכוונה: `Plan` הוא **מצב חיוב** (יש
- * מנוי או אין), ו-`Tier` הוא **כמה מותר**. מבקר אנונימי אינו לקוח
- * חינמי - הוא מישהו שעוד לא נרשם, ואין סיבה שהמשאב היקר ביותר במוצר
- * יהיה זמין לו באותה מידה.
+ * The quota tier. Deliberately separate from `Plan`: `Plan` is a
+ * **billing state** (subscribed or not), and `Tier` is **how much is
+ * allowed**. An anonymous visitor is not a free customer - they are
+ * someone who has not signed up yet, and there is no reason the most
+ * expensive resource in the product should be equally available to them.
  */
 export type Tier = 'anon' | Plan;
 
 /**
- * תפקידים. 'user' הוא ברירת המחדל ואין לו שום הרשאה מיוחדת.
+ * Roles. 'user' is the default and has no special permission at all.
  *
- * ההיררכיה היא סידורית בכוונה (`ROLE_RANK`), כך שבדיקת הרשאה היא השוואה
- * אחת ולא רשימת if-ים שמישהו ישכח לעדכן כשיתווסף תפקיד.
+ * The hierarchy is ordinal on purpose (`ROLE_RANK`), so a permission
+ * check is a single comparison rather than a list of ifs that somebody
+ * will forget to update when a role is added.
  */
 export type Role = 'user' | 'admin' | 'owner';
 
@@ -33,20 +36,22 @@ export const ROLE_RANK: Record<Role, number> = { user: 0, admin: 1, owner: 2 };
 export const isRole = (v: unknown): v is Role =>
   v === 'user' || v === 'admin' || v === 'owner';
 
-/** האם ל-role יש לפחות את ההרשאות של need */
+/** Does `role` have at least the permissions of `need` */
 export const roleAtLeast = (role: Role, need: Role) => ROLE_RANK[role] >= ROLE_RANK[need];
 
 /**
- * התוכנית **בפועל**, אחרי פקיעה.
+ * The **effective** plan, after expiry.
  *
- * למה זו פונקציה ולא קריאה של העמודה: פרימיום יכול להגיע משני מקורות -
- * מנוי Stripe (בלי תאריך סיום; ה-webhook מוריד אותו כשהוא מתבטל) או
- * מהענקה של אדמין, שיכולה להיות מוגבלת בזמן. בלי הבדיקה הזאת הענקה
- * ל-30 יום הופכת בשקט לפרימיום לנצח - וזה בדיוק סוג הבאג שלא מתגלה,
- * כי הוא נראה כמו נדיבות.
+ * Why this is a function and not a read of the column: premium can come
+ * from two sources - a Stripe subscription (no end date; the webhook
+ * downgrades it when it is cancelled) or an admin grant, which can be
+ * time-limited. Without this check a 30-day grant quietly becomes
+ * premium forever - and that is exactly the kind of bug nobody reports,
+ * because it looks like generosity.
  *
- * **נקודת אמת אחת**: כל מי שמחליט אם מישהו פרימיום חייב לעבור כאן -
- * גם השרת (identity.ts, אכיפת מכסות) וגם ה-UI.
+ * **Single source of truth**: everyone who decides whether somebody is
+ * premium must go through here - both the server (identity.ts, quota
+ * enforcement) and the UI.
  */
 export function effectivePlan(
   row: { plan?: string | null; plan_until?: string | null } | null | undefined,
@@ -55,101 +60,118 @@ export function effectivePlan(
   if (!row || row.plan !== 'premium') return 'free';
   if (!row.plan_until) return 'premium';
   const until = Date.parse(row.plan_until);
-  if (Number.isNaN(until)) return 'premium'; // תאריך פגום לא שולל מנוי שכבר שולם
+  if (Number.isNaN(until)) return 'premium'; // a corrupt date must not revoke a subscription already paid for
   return until > now ? 'premium' : 'free';
 }
 
 /**
- * **השדות כאן נקראים `PerDay` אבל התקופה בפועל נגזרת מהשכבה, לא מהשם.**
- * `periodMsFor(tier)` מחזיר יממה לאנונימי/חינם ו-30 יום לפרימיום; כל
- * קורא ל-`checkLimit` משתמש בה במקום לקבע 24 שעות בקוד. השמות נשארו
- * כפי שהיו כדי לא להרחיב שינוי כלכלי לשינוי-שם בכל הקבצים שקוראים
- * אותם - `PLAN_FEATURE_ROWS` הוא המקום היחיד שצריך גם לתאר את היחידה
- * הנכונה למשתמש, וזה עושה את זה בפירוש ("ביום"/"בחודש") ולא דרך השם.
+ * **The fields here are named `PerDay` but the actual period is derived
+ * from the tier, not from the name.** `periodMsFor(tier)` returns a day
+ * for anon/free and 30 days for premium; every caller of `checkLimit`
+ * uses it instead of hardcoding 24 hours. The names stayed as they were
+ * so an economic change would not balloon into a rename across every
+ * file that reads them - `PLAN_FEATURE_ROWS` is the only place that also
+ * needs to describe the correct unit to the user, and it does that
+ * explicitly ("per day"/"per month") rather than through the name.
  */
 export interface PlanLimits {
-  /** בקשות צ׳אט - ליום (אנונימי/חינם) או לחודש (פרימיום) */
+  /** Chat requests - per day (anon/free) or per month (premium) */
   chatPerDay: number;
-  /** בקשות צ׳אט בדקה (הגנת פרץ - נשאר קצר בכל שכבה, זו לא תלויה בתקופה) */
+  /** Chat requests per minute (burst protection - stays short at every tier; not period-dependent) */
   chatBurstPerMin: number;
   /**
-   * תקציב יחידות AI - ליום (אנונימי/חינם) או לחודש (פרימיום).
+   * AI-units budget - per day (anon/free) or per month (premium).
    *
-   * **לפרימיום זו כבר לא ההגנה האמיתית** - `SUBSCRIBER_MONTHLY_CAP_USD`
-   * ב-`budget.ts` היא, כי דולרים מודדים עלות אמיתית ויחידות הן קירוב.
-   * המספר כאן נשאר כרשת ביטחון שנייה גבוהה, שלא אמורה להיות זו שנוגעת.
+   * **For premium this is no longer the real protection** -
+   * `SUBSCRIBER_MONTHLY_CAP_USD` in `budget.ts` is, because dollars
+   * measure real cost and units are an approximation. The number here
+   * stays as a high second safety net, which should never be the one
+   * that binds.
    */
   aiUnitsPerDay: number;
-  /** בניות מסלול מהירות (/api/generate-trip) - ליום או לחודש */
+  /** Quick trip builds (/api/generate-trip) - per day or per month */
   generatePerDay: number;
-  /** קישורי שיתוף קצרים - ליום או לחודש */
+  /** Short share links - per day or per month */
   sharesPerDay: number;
-  /** ייבוא מפות (Google My Maps) - ליום או לחודש */
+  /** Map imports (Google My Maps) - per day or per month */
   importsPerDay: number;
   /**
-   * תמונות שאפשר לצרף לשיחה - ליום או לחודש (צילום אישור הזמנה, כרטיס
-   * טיסה). תמונה עולה למודל הרבה יותר מטקסט, ולכן המכסה נמוכה בכוונה.
+   * Images that can be attached to a conversation - per day or per month
+   * (a photo of a booking confirmation, a flight ticket). An image costs
+   * the model far more than text, so the quota is deliberately low.
    */
   imagesPerDay: number;
   /**
-   * חקירות יעד - ליום או לחודש (`explore_destination` → ויקיפדיה).
+   * Destination explorations - per day or per month
+   * (`explore_destination` → Wikipedia).
    *
-   * זו לא עלות של מודל אלא **עלות אצל מישהו אחר**: ויקיפדיה נותנת לנו
-   * שירות בחינם ומבקשת שימוש הוגן, ואין שום סיבה שמשתמש אחד יוכל לשלוח
-   * אליה אלפי חיפושים דרך האתר שלנו. מטייל אמיתי חוקר עיר או שתיים בשיחה.
+   * This is not a model cost but **a cost borne by someone else**:
+   * Wikipedia gives us a free service and asks for fair use, and there
+   * is no reason one user should be able to send it thousands of
+   * searches through our site. A real traveler explores a city or two
+   * per conversation.
    */
   exploresPerDay: number;
   /**
-   * איתורי מיקום - ליום או לחודש (`add_pin` → OpenStreetMap/Nominatim).
+   * Geocoding lookups - per day or per month (`add_pin` →
+   * OpenStreetMap/Nominatim).
    *
-   * Nominatim מוגבל למדיניות של בקשה אחת בשנייה, וה-throttle שלנו הוא
-   * **טורי וגלובלי** - כלומר משתמש אחד ששולח מאה איתורים תוקע את התור
-   * של כולם, וגם מסכן חסימה של הכתובת שלנו. לכן מכסה נפרדת.
+   * Nominatim is bounded by a one-request-per-second policy, and our
+   * throttle is **serial and global** - meaning one user sending a
+   * hundred lookups stalls everyone's queue, and also risks our address
+   * being blocked. Hence a separate quota.
    */
   geocodesPerDay: number;
   /**
-   * חיפושי אינטרנט חיים - ליום או לחודש (`web_search`, שעות/מחיר-כניסה/קיום).
+   * Live web searches - per day or per month (`web_search`,
+   * hours/admission-price/existence).
    *
-   * בשונה מ-`exploresPerDay`/`geocodesPerDay` זו לא הגנה על שירות חינמי
-   * של מישהו אחר - חיפוש עולה לנו $0.01 אמיתיים לכל קריאה
-   * (`WEB_SEARCH_COST_USD`), ולכן המכסה נמוכה יותר בכוונה. לפרימיום זה
-   * גם נספר בתוך `SUBSCRIBER_MONTHLY_CAP_USD` - התקרה בדולרים היא
-   * ההגנה האמיתית על הכסף; זו רק מונעת ניצול חוזר-ונשנה של אדם אחד.
+   * Unlike `exploresPerDay`/`geocodesPerDay` this is not protecting
+   * someone else's free service - a search costs us a real $0.01 per
+   * call (`WEB_SEARCH_COST_USD`), so the quota is deliberately lower.
+   * For premium it is also counted inside `SUBSCRIBER_MONTHLY_CAP_USD` -
+   * the dollar cap is the real protection of the money; this one only
+   * prevents repeated exploitation by a single person.
    */
   lookupsPerDay: number;
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-/** 30 יום, לא "חודש קלנדרי" - פשוט וקבוע, כמו כל שאר המכסות כאן */
+/** 30 days, not a "calendar month" - simple and constant, like every other quota here */
 const MONTH_MS = 30 * DAY_MS;
 
 /**
- * אורך חלון המכסה לשכבה: יממה לאנונימי/חינם, 30 יום לפרימיום.
+ * The quota window length for a tier: a day for anon/free, 30 days for
+ * premium.
  *
- * **זו כל הנקודה של "מכסות בחודשים, לא בימים".** הכרטיס הבטיח 400
- * שיחות ו-100 בניות **ביום** לפרימיום - אף מנוי אמיתי לא מתכנן ככה,
- * אבל מי שכן היה עולה הרבה יותר ממה שהוא משלם. אותם מספרים, נגזרים
- * מהתקציב האמיתי של $4 לחודש ולא מהערכה, ונבדקים על פני 30 יום.
+ * **This is the whole point of "monthly quotas, not daily".** The card
+ * used to promise 400 chats and 100 builds **per day** for premium - no
+ * real subscriber plans like that, but anyone who did would cost far
+ * more than they pay. Same numbers, derived from the real $4/month
+ * budget rather than a guess, and checked over 30 days.
  *
- * כל קורא ל-`checkLimit` צריך להשתמש בזה במקום ב-`24 * 60 * 60 * 1000`
- * הקבוע, כדי שפרימיום יקבל את החלון הנכון בלי לשנות אף מספר.
+ * Every caller of `checkLimit` should use this instead of the constant
+ * `24 * 60 * 60 * 1000`, so premium gets the right window without
+ * changing a single number.
  */
 export const periodMsFor = (tier: Tier): number => (tier === 'premium' ? MONTH_MS : DAY_MS);
 
 export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
   /*
-    אנונימי. **המספרים נגזרו מעלות שנמדדה, לא מהערכה** (31.7, אחרי
-    שנתנאל נחסם אחרי ארבע הודעות).
+    Anonymous. **The numbers were derived from measured cost, not from a
+    guess** (July 31, after Netanel got blocked after four messages).
 
-    שתי מדידות אמיתיות: קריאה ראשונה בסשן $0.447, קריאה אחריה $0.063.
-    ההפרש הוא כתיבת המטמון של קידומת הקטלוג - כלומר **העלות שלנו היא
-    לכל סשן קר, לא לכל הודעה**.
+    Two real measurements: the first call in a session $0.447, a call
+    after it $0.063. The difference is the cache write of the catalog
+    prefix - meaning **our cost is per cold session, not per message**.
 
-    25 הודעות הן סשן תכנון מלא (בנייה + עריכות + שאלות), וזו החוויה
-    שאמורה לשכנע מישהו להירשם. במחירים שנמדדו זה כ-$2.1 בסשן טיפוסי
-    וכ-$2.7 בגרוע - שניהם מתחת לתקרה האישית של $3.
-    היחידות כאן הן חגורה שנייה בלבד: התקרה בדולרים היא הכלי האמיתי,
-    והמספר נבחר כך שלא ייגע במי שלא נגע בתקרה.
+    25 messages are a full planning session (build + edits + questions),
+    and that is the experience that is supposed to convince someone to
+    sign up. At the measured prices that is ~$2.1 in a typical session
+    and ~$2.7 in a bad one - both below the $3 personal cap.
+    The units here are only a second belt: the dollar cap is the real
+    tool, and the number was chosen so it never touches anyone who did
+    not touch the cap.
   */
   anon: {
     chatPerDay: 25,
@@ -176,40 +198,44 @@ export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
     lookupsPerDay: 10,
   },
   /*
-    פרימיום. **מספרים חודשיים, וכולם חייבים ביחד להיכנס מתחת לתקרת
-    הדולרים הפנימית - עם מרווח.** זו הדרישה של נתנאל, מילה במילה:
-    "אם מישהו נחסם על ידי תקרת הדולרים בזמן שהעמוד אמר לו שנשארו לו
-    טיולים - זו הבטחה שבורה והחזר כספי."
+    Premium. **Monthly numbers, and all of them together must fit under
+    the internal dollar cap - with margin.** That is Netanel's
+    requirement, word for word: "if someone is cut off by the dollar cap
+    while the page told them they had trips remaining - that's a broken
+    promise and a refund."
 
-    ההיגיון הפוך מהגרסה הקודמת: קודם המספרים המוצגים היו "תקרה רכה
-    גבוהה" והדולרים היו אמורים לגעת ראשונים. עכשיו **המכסות הנראות
-    נוגעות ראשונות תמיד**, ותקרת הדולרים ($2.00, SUBSCRIBER_MONTHLY_CAP_USD,
-    בלתי-נראית למשתמש) נוגעת רק בשימוש חריג שעוקף את הצורה הרגילה של
-    המכסות (למשל תור בודד שמריץ לולאת כלים יקרה - חסום ממילא ב-1.5$
-    לתור ע"י MAX_TURN_USD).
+    The logic is inverted from the previous version: before, the visible
+    numbers were a "high soft ceiling" and the dollars were supposed to
+    bind first. Now **the visible quotas always bind first**, and the
+    dollar cap ($2.00, SUBSCRIBER_MONTHLY_CAP_USD, invisible to the user)
+    binds only on abnormal usage that bypasses the ordinary shape of the
+    quotas (e.g. a single turn running an expensive tool loop - already
+    blocked at $1.5 per turn by MAX_TURN_USD).
 
-    ## חשבון הגרוע-המציאותי, מול תקרת $2.00 (יש טסט שנועל את זה):
+    ## The worst-realistic arithmetic, against the $2.00 cap (a test locks this):
 
-    | מה                         | כמות | מחיר גרוע  | סה"כ    |
-    |----------------------------|------|-----------|---------|
-    | בניית טיול מלאה (מטמון קר) | 2    | $0.53     | $1.06   |
-    | שאר השיחות (Sonnet חם)     | 8    | $0.063    | $0.504  |
-    | בניות מהירות (Haiku)       | 5    | $0.02     | $0.10   |
-    | חיפושים חיים               | 5    | $0.01     | $0.05   |
-    | תוספת תמונות (בתוך שיחות)  | 5    | $0.01     | $0.05   |
-    | **סה"כ הגרוע המציאותי**    |      |           | **$1.76** |
+    | what                          | qty | worst price | total   |
+    |-------------------------------|-----|-------------|---------|
+    | full trip build (cold cache)  | 2   | $0.53       | $1.06   |
+    | remaining chats (warm Sonnet) | 8   | $0.063      | $0.504  |
+    | quick builds (Haiku)          | 5   | $0.02       | $0.10   |
+    | live lookups                  | 5   | $0.01       | $0.05   |
+    | image add-on (within chats)   | 5   | $0.01       | $0.05   |
+    | **worst-realistic total**     |     |             | **$1.76** |
 
-    88% מהתקרה. בתמחור טיפוסי (מטמון חם, ניתוב קל) אותה צריכה מלאה
-    היא ~$0.6-0.9, כלומר 30-45% מהתקרה. המרווח ($0.24) סופג ~חצי
-    קריאה קרה תועה; יותר מזה בחודש אומר שהמחמם שלנו היה מושבת.
+    88% of the cap. At typical pricing (warm cache, light routing) the
+    same full consumption is ~$0.6-0.9, i.e. 30-45% of the cap. The
+    margin ($0.24) absorbs ~half a stray cold call; more than that in a
+    month means our cache warmer was down.
 
-    **המספר של נתנאל ("5 טיולים מלאים בחודש") לא נכנס מתחת ל-$2**:
-    ‎5×$0.53=$2.65 על הבניות לבדן, לפני אף הודעה. כדי להציג 5 טיולים
-    התקרה צריכה להיות ~$3.5-4. המספרים כאן הם המקסימום שנכנס עם מרווח
-    מתחת לתקרה שהוא ביקש להשאיר בדיוק כמו שהיא.
+    **Netanel's number ("5 full trips per month") does not fit under $2**:
+    5×$0.53=$2.65 on the builds alone, before a single message. Displaying
+    5 trips honestly would need a cap around ~$3.5-4. The numbers here are
+    the maximum that fits with margin under the cap he asked to keep
+    exactly as it is.
 
-    שדות בלי עלות AI (imports, shares, explores, geocodes) נשארים
-    נדיבים - הם לא חלק מהחשבון.
+    Fields with no AI cost (imports, shares, explores, geocodes) stay
+    generous - they are not part of the arithmetic.
   */
   premium: {
     chatPerDay: 10,
@@ -226,24 +252,27 @@ export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
 };
 
 /**
- * כמה **בניות טיול מלאות** (create_trip_full בשיחה) מותרות למנוי בחודש.
- * נספרות **בתוך** מכסת השיחות (בנייה היא שיחה), אבל מוגבלות בנפרד כי
- * בנייה מלאה עולה פי ~8 משיחת עריכה ($0.53 מול $0.063) - בלי הגבול
- * הזה, 10 שיחות שכולן בניות היו $5.30, הרבה מעל התקרה. נאכף בשער
- * ייעודי ב-chat/route.ts שנצרך רק על בנייה **שהצליחה** (peekUsed +
- * checkLimit), כדי שניסיון שנכשל בוולידציה לא ישרוף מכסה.
+ * How many **full trip builds** (create_trip_full in a conversation) a
+ * subscriber is allowed per month. Counted **inside** the chat quota (a
+ * build is a chat), but capped separately because a full build costs
+ * ~8x an edit chat ($0.53 vs $0.063) - without this limit, 10 chats
+ * that are all builds would be $5.30, far above the cap. Enforced by a
+ * dedicated gate in chat/route.ts that is consumed only on a build
+ * **that succeeded** (peekUsed + checkLimit), so an attempt that failed
+ * validation does not burn quota.
  */
 export const PREMIUM_TRIP_BUILDS_PER_MONTH = 2;
 
 /**
- * שווה-ערך ביחידות AI לחיפוש אחד: $0.01 (`WEB_SEARCH_COST_USD`) חלקי
- * מחיר קלט טיפוסי של כ-$3 למיליון טוקן, כלומר בערך 3,333 יחידות -
- * מעוגל ל-3,500 מאותה סיבה שכל שאר המספרים כאן מספרים עגולים ולא
- * חישוב מדויק: זו חגורה שנייה, התקרה בדולרים היא הכלי האמיתי.
+ * The AI-units equivalent of one search: $0.01 (`WEB_SEARCH_COST_USD`)
+ * divided by a typical input price of about $3 per million tokens, i.e.
+ * roughly 3,333 units - rounded to 3,500 for the same reason every
+ * other number here is a round number and not an exact calculation:
+ * this is a second belt, the dollar cap is the real tool.
  */
 const WEB_SEARCH_AI_UNITS = 3_500;
 
-/** חישוב יחידות AI מ-usage של Anthropic (קריאות מהמטמון לא נספרות) */
+/** Compute AI units from Anthropic's usage (cache reads are not counted) */
 export function aiUnits(usage: {
   input_tokens?: number;
   cache_creation_input_tokens?: number;
@@ -259,65 +288,77 @@ export function aiUnits(usage: {
 }
 
 /**
- * המחיר המוצג בעמוד הפרימיום.
+ * The price displayed on the premium page.
  *
- * מאז 2026-08-16 ההרשמה למנוי **פעילה דרך PayPal Subscriptions**
- * (`server/paypalSubs.ts`, `/api/billing/checkout` יוצר מנוי ומחזיר
- * קישור אישור; ההפעלה בפועל רק ב-webhook המאומת). המחיר כאן חייב
- * לתאום את ה-Plan שמוגדר ב-PayPal - שינוי צד אחד בלי השני מציג מחיר
- * שקרי. תשתית ה-Stripe (billing.ts) נשארת בקוד כמסלול ירושה בלבד -
- * שום מנוי מעולם לא חויב דרכה.
+ * Since 2026-08-16 subscription signup is **live through PayPal
+ * Subscriptions** (`server/paypalSubs.ts`; `/api/billing/checkout`
+ * creates a subscription and returns an approval link; actual activation
+ * happens only in the verified webhook). The price here must match the
+ * Plan configured in PayPal - changing one side without the other shows
+ * a false price. The Stripe infrastructure (billing.ts) stays in the
+ * code as a legacy path only - no subscription was ever charged
+ * through it.
  */
 export const PREMIUM_PRICE_ILS = 19.9;
 
 /**
- * ניסיונות פדיון קוד הטבה. **לא תלוי בתוכנית בכוונה** - זו הגנה מפני
- * ניחוש קודים ולא מכסת שימוש, ופרימיום לא אמור לקנות זכות לנחש מהר יותר.
+ * Promo-code redemption attempts. **Deliberately not plan-based** - this
+ * is protection against code guessing, not a usage quota, and premium
+ * should not buy the right to guess faster.
  *
- * הקוד הוא 3-24 תווים אלפאנומריים, כלומר מרחב שאפשר לסרוק אותו: בלי
- * הגבלה, חשבון מחובר אחד יכול לנסות אלפי קודים בדקה ולזכות בפרימיום.
- * חמישה ניסיונות בשעה זה יותר ממה שמישהו צריך כדי להקליד קוד מהמייל.
+ * A code is 3-24 alphanumeric characters, i.e. a space that can be
+ * scanned: without a limit, one signed-in account could try thousands
+ * of codes a minute and win premium. Five attempts an hour is more than
+ * anyone needs to type a code from their email.
  */
 export const PROMO_ATTEMPTS_PER_HOUR = 5;
 export const PROMO_ATTEMPTS_PER_DAY = 20;
 
 /**
- * **התקרה האמיתית על מנוי פרימיום בודד, בדולרים אמיתיים - $2.00 לחודש.**
+ * **The real cap on a single premium subscriber, in real dollars -
+ * $2.00 per month.**
  *
- * **בלתי-נראית למשתמש, בהוראה מפורשת של נתנאל**: "‎$2 של תכנון' לא
- * אומר כלום לאף אחד." מה שהמשתמש רואה הוא אך ורק המכסות הספירות
- * שב-`PLAN_FEATURE_ROWS` (טיולים, שיחות) - שמכוילות כך שהן נגמרות
- * **לפני** התקרה הזאת בכל מסלול מציאותי (ראו את טבלת החשבון ליד
- * `PLAN_LIMITS.premium`, ואת הטסט שנועל אותה). המקום היחיד שהסכום
- * הזה מוצג בו הוא אזור הניהול - שם נתנאל רואה את הכסף האמיתי, לפי
- * מנוי ובסך הכול.
+ * **Invisible to the user, on Netanel's explicit instruction**: "'$2 of
+ * planning' means nothing to anyone." What the user sees is only the
+ * countable quotas in `PLAN_FEATURE_ROWS` (trips, chats) - calibrated
+ * so they run out **before** this cap on every realistic path (see the
+ * arithmetic table next to `PLAN_LIMITS.premium`, and the test that
+ * locks it). The only place this amount is shown is the admin area -
+ * where Netanel sees the real money, per subscriber and in total.
  *
- * חי כאן (הקובץ המשותף) ולא ב-`budget.ts` כי הטסט של המרווח צריך
- * אותו לצד `PLAN_LIMITS`; `budget.ts` מייבא אותו ואוכף בפועל דרך
- * `premiumBudgetFor()` - שם ההסבר על האכיפה והבידוד מהארנקים האחרים.
+ * Lives here (the shared file) and not in `budget.ts` because the
+ * margin test needs it alongside `PLAN_LIMITS`; `budget.ts` imports it
+ * and actually enforces it through `premiumBudgetFor()` - the
+ * explanation of the enforcement and the isolation from the other
+ * wallets lives there.
  *
- * החישוב: ₪19.90/חודש כולל מע"מ ≈ ₪16.90 נטו ≈ ₪15 אחרי עמלות סליקה
- * ≈ $4. $2.00 הם 50% מזה - גם מנוי שממצה הכול משאיר רווח גולמי של
- * 50% על עצמו.
+ * The arithmetic: ₪19.90/month including VAT ≈ ₪16.90 net ≈ ₪15 after
+ * payment fees ≈ $4. $2.00 is 50% of that - even a subscriber who maxes
+ * everything out still leaves a 50% gross margin on themselves.
  */
 export const SUBSCRIBER_MONTHLY_CAP_USD = 2.0;
 
 /**
- * שורות ההשוואה בעמוד הפרימיום - נגזרות מהמכסות האמיתיות, לא מועתקות.
+ * The comparison rows on the premium page - derived from the real
+ * quotas, not copied.
  *
- * **אף דולר לא מופיע כאן, בהוראה מפורשת** - רק ספירות שמשתמש מבין:
- * טיולים, שיחות, בניות (יש טסט שנועל את זה). ₪ של מחיר מוצר (הבדיקה)
- * מותר - זה מחיר, לא תקרת עלות.
+ * **No dollar appears here, by explicit instruction** - only counts a
+ * user understands: trips, chats, builds (a test locks this). A ₪
+ * product price (the check) is allowed - that is a price, not a cost
+ * cap.
  *
- * **היחידה נכתבת בכל תא בנפרד ("ביום"/"בחודש")**, כי מאז שפרימיום
- * עבר לחלון חודשי (`periodMsFor`) שני הצדדים של אותה שורה כבר לא
- * חולקים תקופה.
+ * **The unit is written in each cell separately ("per day"/"per
+ * month")**, because since premium moved to a monthly window
+ * (`periodMsFor`) the two sides of the same row no longer share a
+ * period.
  *
- * שלוש השורות הראשונות (הבדיקה, סיפור הטיול, טיול משותף) ושורת
- * הזמינות הן לא מכסות - הן **הפיצ'רים** שפרימיום בכלל נותן: הבדיקה
- * כלולה, יצירת סיפור וטיול משותף (הצפייה וההצטרפות חינם לכולם -
- * בכוונה, זה ערוץ ההפצה), והסוכן במסלול אישי שלא תלוי בעומס היומי
- * המשותף של האתר (ראו budget.ts).
+ * The first three rows (the check, the trip story, the shared trip) and
+ * the availability row are not quotas - they are **the features**
+ * premium gives in the first place: the check included, story creation
+ * and shared trip (viewing and joining free for everyone -
+ * deliberately, that is the distribution channel), and the agent on a
+ * personal lane that does not depend on the site's shared daily load
+ * (see budget.ts).
  */
 export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string }[] = [
   {
@@ -346,10 +387,11 @@ export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string }
     premium: `עד ${PREMIUM_TRIP_BUILDS_PER_MONTH} טיולים מלאים בחודש`,
   },
   /*
-    שורת "המסלול המובטח" יושבת אחרי המכסות ולא בראש - הוראת נתנאל:
-    היתרון הזה אמיתי אבל בלתי-נראה עד שיש תנועה שממצה את התקציב
-    היומי, ולפני השקה זה אף אחד. הוא נשאר בטבלה כי הוא נכון; הוא
-    פשוט לא הכותרת.
+    The "guaranteed lane" row sits after the quotas, not at the top -
+    Netanel's instruction: this advantage is real but invisible until
+    there is traffic exhausting the daily budget, and pre-launch that is
+    nobody. It stays in the table because it is true; it is simply not
+    the headline.
   */
   {
     label: 'זמינות הסוכן החכם',

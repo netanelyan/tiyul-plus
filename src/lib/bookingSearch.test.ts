@@ -1,13 +1,15 @@
 /**
- * טסטים לחיפוש המוכן אצל ספק.
+ * Tests for the prepared provider search.
  *
- * שתי שאלות נבדקות כאן, ושתיהן על ההבטחה ולא על העיצוב:
+ * Two questions are tested here, both about the promise and not the design:
  *
- * 1. **מה נכנס לכתובת** - רק מה שנגזר מהטיול, ושום פרמטר מומצא. בפרט:
- *    אין פילטר מחיר, כי אין לנו פורמט מתועד שלו, ופרמטר שגוי היה מציג
- *    למטייל "מסונן לפי התקציב שלך" בלי שזה קרה.
- * 2. **מה הכלי מסרב לעשות** - מסעדות, עיר לא מוכרת, וכל ניסיון להעביר
- *    מספר (אין שדה כזה בסכימה, וזה נבדק כאן במפורש).
+ * 1. **What goes into the URL** - only what is derived from the trip, and no
+ *    invented parameter. In particular: no price filter, because we have no
+ *    documented format for one, and a wrong parameter would show the
+ *    traveler "filtered by your budget" without that having happened.
+ * 2. **What the tool refuses to do** - restaurants, an unknown city, and any
+ *    attempt to pass a number (no such field exists in the schema, and this
+ *    is tested here explicitly).
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -19,7 +21,7 @@ import type { Trip } from './trip/types';
 
 const dest = (slug: string) => destinations.find((d) => d.slug === slug)!;
 
-/** טיול דו-עירוני אמיתי: 3 ימים ברומא ואז 2 בווינה, מ-10 באוגוסט */
+/** A real two-city trip: 3 days in Rome then 2 in Vienna, from August 10 */
 function twoCityTrip(over: Partial<Trip> = {}): Trip {
   return {
     id: 't1',
@@ -43,13 +45,13 @@ function twoCityTrip(over: Partial<Trip> = {}): Trip {
 const card = (trip: Trip | null, kind: 'stay' | 'activities', slug: string, extra = {}) =>
   buildSearchCard(trip, kind, slug, (dest(slug).nameLocal || dest(slug).name).split('/')[0].trim(), dest(slug).name, extra)!;
 
-/* ---------- תאריכים: לפי העיר, לא לפי הטיול ---------- */
+/* ---------- Dates: per city, not per trip ---------- */
 
 test('טווח השהייה נגזר מהימים של אותה עיר, לא מהטיול כולו', () => {
   const trip = twoCityTrip();
-  // רומא היא ימים 1-3 => צ׳ק-אין 10/8, צ׳ק-אאוט 13/8 (שלושה לילות)
+  // Rome is days 1-3 => check-in 10/8, check-out 13/8 (three nights)
   assert.deepEqual(cityStayRange(trip, 'rome'), { checkIn: '2026-08-10', checkOut: '2026-08-13' });
-  // וינה היא ימים 4-5 => 13/8 עד 15/8
+  // Vienna is days 4-5 => 13/8 to 15/8
   assert.deepEqual(cityStayRange(trip, 'vienna'), { checkIn: '2026-08-13', checkOut: '2026-08-15' });
 });
 
@@ -58,7 +60,7 @@ test('צ׳ק-אאוט הוא היום שאחרי היום האחרון בעיר'
     days: [{ id: 'd1', citySlug: 'rome', placeIds: [] }],
     citySlugs: ['rome'],
   });
-  // יום אחד בעיר = לילה אחד
+  // One day in the city = one night
   assert.deepEqual(cityStayRange(one, 'rome'), { checkIn: '2026-08-10', checkOut: '2026-08-11' });
 });
 
@@ -82,12 +84,12 @@ test('בלי טיול בכלל - "תמצא לי מלון ברומא" עדיין 
   assert.ok(c.onProvider.includes('תאריכים'));
 });
 
-/* ---------- אורחים: רק כשזה חד-משמעי ---------- */
+/* ---------- Guests: only when it is unambiguous ---------- */
 
 test('מספר אורחים נשלח רק כשהוא נגזר בוודאות', () => {
   assert.equal(adultsFromParty('solo'), 1);
   assert.equal(adultsFromParty('couple'), 2);
-  // "חברים" ו"משפחה" לא אומרים מספר - עדיף לא לשלוח מלהמציא
+  // "friends" and "family" do not state a number - better not to send than to invent
   assert.equal(adultsFromParty('friends'), null);
   assert.equal(adultsFromParty('family'), null);
   assert.equal(adultsFromParty(undefined), null);
@@ -99,14 +101,14 @@ test('משפחה: אין group_adults בכתובת, והכרטיס אומר שז
   assert.ok(c.onProvider.includes('מספר אורחים'));
 });
 
-/* ---------- הכתובת: שום פרמטר מומצא ---------- */
+/* ---------- The URL: no invented parameter ---------- */
 
 test('כתובת הלינה נושאת אך ורק פרמטרים מוכרים', () => {
   const c = card(twoCityTrip(), 'stay', 'rome');
   const params = [...new URL(c.url).searchParams.keys()].sort();
   assert.deepEqual(params, ['checkin', 'checkout', 'group_adults', 'ss']);
   const u = new URL(c.url);
-  assert.equal(u.searchParams.get('ss'), 'Rome'); // לוכסן ב-nameLocal נחתך
+  assert.equal(u.searchParams.get('ss'), 'Rome'); // the slash in nameLocal is trimmed
   assert.equal(u.searchParams.get('checkin'), '2026-08-10');
   assert.equal(u.searchParams.get('group_adults'), '2');
 });
@@ -115,7 +117,7 @@ test('תקציב מוצג כטקסט ולא מסונן בכתובת - אין ל�
   const c = card(twoCityTrip({ preferences: { party: 'couple', budget: 'low' } }), 'stay', 'rome');
   assert.ok(c.understood.includes('תקציב חסכוני'));
   assert.ok(c.onProvider.includes('סינון לפי מחיר'));
-  // הדבר החשוב: לא נשלח פרמטר מחיר מנוחש
+  // The important thing: no guessed price parameter is sent
   assert.ok(!/price|nflt|budget/i.test(c.url));
 });
 
@@ -145,7 +147,7 @@ test('הגילוי הנאות אומר במפורש עמלה, ושהיא לא מ
   assert.ok(SEARCH_DISCLOSURE.includes('לא משפיע'));
 });
 
-/* ---------- הכלי: מה שהוא מסרב לעשות ---------- */
+/* ---------- The tool: what it refuses to do ---------- */
 
 const tool = AGENT_TOOLS.find((t) => t.name === 'booking_search')!;
 
@@ -155,11 +157,11 @@ test('בסכימת הכלי אין שום שדה שאפשר להקליד בו מ
     { type: string; enum?: string[] }
   >;
   assert.deepEqual(Object.keys(props).sort(), ['accessible', 'citySlug', 'kind', 'kosher']);
-  // citySlug הוא מזהה שנבדק מול הדאטה; השאר enum ובוליאנים
+  // citySlug is an identifier validated against the data; the rest are enums and booleans
   assert.deepEqual(props.kind.enum, ['stay', 'activities']);
   assert.equal(props.kosher.type, 'boolean');
   assert.equal(props.accessible.type, 'boolean');
-  // אין אף שדה מספרי, ואין שדה מחיר/תאריך/אורחים בשום שם
+  // There is no numeric field, and no price/date/guests field under any name
   const numeric = Object.values(props).filter((p) => p.type === 'number' || p.type === 'integer');
   assert.deepEqual(numeric, []);
   assert.ok(!/price|budget|date|guests|nights|name/i.test(Object.keys(props).join(',')));
@@ -183,7 +185,7 @@ test('הצלחה מחזירה כרטיס, ותוצאת הכלי אוסרת על 
   assert.equal(out.ok, true);
   assert.ok(out.search);
   assert.equal(out.search!.cityLabel, 'וינה');
-  // התוצאה היא הדבר האחרון שהמודל קורא לפני שהוא כותב - הכלל יושב שם
+  // The tool result is the last thing the model reads before it writes - the rule sits there
   for (const banned of ['מחיר', 'זמינות', 'שם מלון', 'הזול ביותר']) {
     assert.ok(out.message.includes(banned), `תוצאת הכלי חייבת לאסור "${banned}"`);
   }
@@ -194,7 +196,7 @@ test('מספר שהמודל בכל זאת מצרף לקלט לא נכנס לשו
   const out = executeAgentTool(twoCityTrip(), 'booking_search', {
     kind: 'stay',
     citySlug: 'rome',
-    // המודל "ממציא" שדות שאין בסכימה
+    // The model "invents" fields that are not in the schema
     maxPrice: 300,
     hotelName: 'Hotel Artemide',
     checkin: '2030-01-01',
@@ -203,26 +205,29 @@ test('מספר שהמודל בכל זאת מצרף לקלט לא נכנס לשו
   assert.ok(!out.search!.url.includes('300'));
   assert.ok(!out.search!.url.includes('Artemide'));
   assert.ok(!out.search!.url.includes('2030'));
-  assert.equal(out.search!.url.includes('2026-08-10'), true); // התאריך מהטיול
+  assert.equal(out.search!.url.includes('2026-08-10'), true); // the date from the trip
 });
 
-/* ---------- אמון: עמלה לא יכולה להשפיע על דירוג ---------- */
+/* ---------- Trust: a commission cannot influence ranking ---------- */
 
 /**
- * הבדיקה הזאת היא הסיבה שאין כאן פונקציית דירוג בכלל.
+ * This test is the reason there is no ranking function here at all.
  *
- * סדר הספקים הוא ליטרל קבוע בקונפיג, נקבע לפי מה שמטייל צריך (טיסות
- * ולינה קודם), ואין ולו שדה אחד שאפשר לתלות בו עדיפות מסחרית. הטסט
- * ייפול אם מישהו יוסיף `priority` / `payout` / `commission` לספק - וזו
- * בדיוק המטרה: לתפוס את הרגע שבו העמלה **מתחילה** להשפיע, לא אחרי.
+ * The provider order is a fixed literal in the config, decided by what a
+ * traveler needs (flights and lodging first), and there is not even one
+ * field that a commercial preference could hang on. The test will fail if
+ * somebody adds `priority` / `payout` / `commission` to a provider - and
+ * that is exactly the goal: catching the moment the commission **starts**
+ * to have influence, not afterward.
  */
 test('אין בקונפיג של הספקים שום שדה שאפשר לדרג לפיו', () => {
   /*
-    `perCity` נוסף לרשימה במודע, והוא לא סימן מסחרי: הוא אומר **למי
-    שייכת ההזמנה** - לעיר או לטיול - ולא כמה היא שווה לנו. הוא לא נכנס
-    לשום מיון ולא לשום בחירה; הסדר הוא עדיין הליטרל שבטסט הבא. טסט נפרד
-    ב-bookingStatus.test.ts מצמיד אותו למי שהחיפוש שלו מקבל יעד, כדי
-    שגם המשמעות שלו לא תזוז בשקט.
+    `perCity` was added to the list deliberately, and it is not a commercial
+    signal: it says **whom the booking belongs to** - the city or the trip -
+    and not how much it is worth to us. It enters no sort and no selection;
+    the order is still the literal in the next test. A separate test in
+    bookingStatus.test.ts pins it to whichever provider's search takes a
+    destination, so that its meaning cannot drift silently either.
   */
   const allowed = ['kind', 'perCity', 'emoji', 'title', 'blurb', 'cta', 'question', 'provider', 'affiliate', 'publicUrl'];
   for (const p of bookingProviders) {

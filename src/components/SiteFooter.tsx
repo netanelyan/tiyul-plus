@@ -8,28 +8,31 @@ import {
 } from '@/lib/server/footerLinks';
 
 /**
- * הפוטר. **רכיב שרת** - וזה לא פרט טכני:
+ * The footer. **A server component** - and that is not a technical detail:
  *
- * קישורי היעדים והמדינות כאן הם קישורים פנימיים אמיתיים, והם צריכים
- * להיות ב-HTML שהשרת מגיש כדי שיהיה להם ערך. רכיב לקוח היה גם מסתיר
- * אותם עד להידרציה וגם גורר את הקטלוג כולו לחבילת הדפדפן - בדיוק
- * המסלול שהוריד פעם 492kB לכל עמוד באתר דרך `SiteNav`.
+ * The destination and country links here are real internal links, and they need
+ * to be in the HTML the server serves for them to be worth anything. A client
+ * component would both hide them until hydration and drag the whole catalog into
+ * the browser bundle - exactly the path that once shipped 492kB to every page on
+ * the site via `SiteNav`.
  *
- * ## למה עמודות ולא שורות
+ * ## Why columns and not rows
  *
- * הגרסה הקודמת הייתה שורת קישורים ממורכזת: זה נראה כמו רשימה שנוצרה
- * מעצמה, וכל קישור נוסף החמיר את זה. עמודות עם כותרת שקטה אומרות שמישהו
- * החליט מה שייך לאן. הכותרות בגודל הכתב הקטן ובצבע דהוי - הפוטר נשאר
- * החלק השקט של העמוד, לא ניווט שני.
+ * The previous version was a centred row of links: it looked like a list that had
+ * assembled itself, and every extra link made that worse. Columns with a quiet
+ * heading say that somebody decided what belongs where. The headings use the small
+ * type size and a muted colour - the footer stays the quiet part of the page, not
+ * a second navigation.
  *
- * ## יישור
+ * ## Alignment
  *
- * `text-right` על המכולה, כולל במובייל. RTL לבדו מיישר טקסט לימין, אבל
- * `text-center` שהיה כאן קודם גבר עליו - ולכן היישור נקבע במפורש ונבדק
- * בדפדפן ב-390 מול הקצה הימני האמיתי של העמודה.
+ * `text-right` on the container, including on mobile. RTL alone aligns text to the
+ * right, but the `text-center` that used to be here overrode it - so the alignment
+ * is set explicitly and was checked in a browser at 390 against the column's real
+ * right edge.
  */
 
-/** קבוצת קישורים אחת = עמודה אחת */
+/** One link group = one column */
 function Column({ title, links }: { title: string; links: FooterLink[] }) {
   return (
     <nav aria-label={title}>
@@ -51,11 +54,11 @@ function Column({ title, links }: { title: string; links: FooterLink[] }) {
 }
 
 /**
- * שורת צ׳יפים אחת: תווית שקטה, הקישורים, ובסוף המעבר לקטלוג המלא.
+ * One chip row: a quiet label, the links, and at the end the way through to the full catalog.
  *
- * `flex-wrap` ולא גלילה אופקית: שורה שנגללת מסתירה חצי מהקישורים מאחורי
- * מחווה, וגם קשה למצוא בה משהו. במובייל היא נשברת לשתיים-שלוש שורות
- * נמוכות, וזה עדיין רבע מהגובה של עמודה.
+ * `flex-wrap` and not horizontal scrolling: a row that scrolls hides half its links
+ * behind a gesture, and is hard to search through as well. On mobile it breaks into
+ * two or three short rows, which is still a quarter of the height of a column.
  */
 function ChipRow({
   label,
@@ -105,7 +108,7 @@ const POLICY: FooterLink[] = [
   { href: '/accessibility', label: 'הצהרת נגישות' },
 ];
 
-/** רשתות חברתיות. `href` ריק = מוצג כטקסט דהוי ולא כקישור שבור. */
+/** Social networks. An empty `href` = rendered as muted text rather than a broken link. */
 const SOCIAL: FooterLink[] = [
   { href: 'https://instagram.com/tiyulplus', label: 'אינסטגרם' },
   { href: 'https://facebook.com/tiyulplus', label: 'פייסבוק' },
@@ -113,19 +116,20 @@ const SOCIAL: FooterLink[] = [
 ];
 
 export default function SiteFooter() {
-  // נגזר ולא קבוע. בעמודים סטטיים זה נקבע בזמן הבילד, וכל דיפלוי מעדכן.
+  // Derived, not hardcoded. On static pages this is fixed at build time, and every deploy refreshes it.
   const year = new Date().getFullYear();
 
   return (
     <footer className="mt-16 bg-night pb-7 pt-10 print:hidden">
       <div className="mx-auto max-w-6xl px-5 text-right">
         {/*
-          שתי עמודות כבר בטלפון ולא רק מ-sm. ארבע רשימות בעמודה אחת הן
-          31 קישורים בטור, כלומר פוטר גבוה מהמסך - "קיר" בדיוק במובן
-          שביקשנו להימנע ממנו. נמדד בצילום מסך ב-390.
+          Two columns already on a phone, not only from sm. Four lists in a single
+          column are 31 links stacked, i.e. a footer taller than the screen - a
+          "wall" in exactly the sense we set out to avoid. Measured in a screenshot
+          at 390.
         */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-7 lg:grid-cols-12">
-          {/* מותג + הסתייגות הנסיעה (נשארת כאן) + הרשמה לדיוור */}
+          {/* Brand + the travel disclaimer (stays here) + newsletter signup */}
           <div className="col-span-2 lg:col-span-6">
             <div className="flex items-center gap-2 text-lg font-bold text-cream">
               <Logo reversed className="h-6 w-6" />
@@ -148,14 +152,14 @@ export default function SiteFooter() {
         </div>
 
         {/*
-          ---------- יעדים ומדינות: שורות צ׳יפים, לא עמודות ----------
+          ---------- Destinations and countries: chip rows, not columns ----------
 
-          שתי עמודות ארוכות שלטו בפוטר והפכו אותו לכבד. אותם קישורים
-          בדיוק, בשתי שורות אופקיות: אותה תועלת לקורא ולחיפוש, בשליש
-          מהגובה.
+          Two long columns dominated the footer and made it heavy. Exactly the same
+          links, in two horizontal rows: the same value to a reader and to search,
+          at a third of the height.
 
-          **שום דבר כאן לא מתקפל ולא נפתח בלחיצה.** אלה קישורים רגילים
-          ב-HTML שהשרת מגיש - זו כל הסיבה שהם בפוטר.
+          **Nothing here collapses or opens on click.** These are ordinary links in
+          the HTML the server serves - which is the entire reason they are in the footer.
         */}
         <div className="mt-6 space-y-2">
           <ChipRow
@@ -171,13 +175,13 @@ export default function SiteFooter() {
         </div>
 
         {/*
-          ---------- השורה התחתונה ----------
-          ממורכזת כולה. העמודות למעלה מיושרות לימין כי הן רשימות שקוראים,
-          והשורה הזאת היא חתימה: היקף, זכויות, גילוי נאות וחותם. מיושרת
-          לימין היא נראתה כמו עוד עמודה שנגמרה באמצע.
+          ---------- The bottom row ----------
+          Fully centred. The columns above are right-aligned because they are lists
+          you read, and this row is a signature: coverage, copyright, disclosure and
+          seal. Right-aligned it looked like one more column that ran out halfway.
         */}
         <div className="mt-7 border-t border-cream/10 pt-4 text-center">
-          {/* היקף הקטלוג, נספר מהדאטה בכל בילד */}
+          {/* Catalog coverage, counted from the data on every build */}
           <p className="text-xs font-semibold text-cream/45">{coverageCountsLine()}</p>
 
           <div className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-cream/45">
@@ -197,7 +201,7 @@ export default function SiteFooter() {
                   {s.label}
                 </a>
               ) : (
-                // בלי כתובת אמיתית: טקסט, לא קישור שמוביל לשום מקום
+                // With no real address: text, not a link that leads nowhere
                 <span key={s.label} className="text-cream/25" title="בקרוב">
                   {s.label}
                 </span>
@@ -206,15 +210,17 @@ export default function SiteFooter() {
           </div>
 
           {/*
-            גילוי נאות - למטה וקטן, כפי שביקש נתנאל. הוא עדיין בכל עמוד:
-            מי שלוחץ על כפתור הזמנה לא בהכרח מגיע לעמוד הייעודי.
+            Affiliate disclosure - small and at the bottom, as Netanel asked. It is
+            still on every page: someone who clicks a booking button does not
+            necessarily pass through the dedicated page.
 
-            **״עשויים״ ולא ״מקבלים״, וזו לא זהירות אלא דיוק**: עמלה משולמת
-            רק על קישור שנושא שיוך תקין, וכרגע כל ששת הספקים ב-
-            `bookingProviders` הם קישור ציבורי נקי בלי מזהה - אין עדיין אף
-            מזהה שותפים אמיתי במשתני הסביבה. אותו ניסוח בדיוק מופיע ב-
-            `bookingSearch.ts` ובפאנלים, ויש טסט שמוודא שהוא אומר גם ״עמלה״
-            וגם ״לא משפיע״.
+            **"May" and not "do", and that is precision rather than caution**: a
+            commission is paid only on a link carrying a valid attribution, and right
+            now all six providers in `bookingProviders` are clean public links with no
+            identifier - there is not yet a single real affiliate id in the
+            environment. The identical wording appears in `bookingSearch.ts` and in
+            the panels, and there is a test asserting it says both "commission" and
+            "does not affect".
           */}
           <p className="mt-3 text-[11px] leading-relaxed text-cream/30">
             חלק מהקישורים היוצאים מהאתר הם קישורי שותפים, ואנחנו עשויים לקבל עמלה - בלי שזה משפיע
@@ -226,15 +232,15 @@ export default function SiteFooter() {
           </p>
 
           {/*
-            BlackZ - חתימת הרשת (טריידמארק, מופיע בכל עמוד).
+            BlackZ - the network's signature (trademark, appears on every page).
 
-            **מרווח תחתון, לא רק מרכוז.** כפתור הנגישות הצף
-            יושב `fixed bottom-4 start-4`, כלומר בפינה הימנית-תחתונה של
-            המסך ב-RTL - בדיוק המקום שאליו הגיע התג בקצה הימני של הפוטר.
-            זה לא קרה רק בטלפון: המכולה היא `max-w-6xl`, ולכן מתחת
-            לכ-1192px היא נוגעת בקצה המסך והשניים נחתכים זה בזה. מרכוז
-            מרחיק את התג מהצד שבו הכפתור יושב בכל רוחב, והמרווח מוסיף
-            שוליים גם אם הכפתור יגדל.
+            **Bottom spacing, not just centring.** The floating accessibility button
+            sits `fixed bottom-4 start-4`, i.e. in the bottom-right corner of the
+            screen under RTL - exactly where the badge at the footer's right edge
+            ended up. This was not only a phone problem: the container is `max-w-6xl`,
+            so below about 1192px it touches the screen edge and the two overlap.
+            Centring moves the badge away from the side the button occupies at every
+            width, and the spacing adds margin even if the button grows.
           */}
           <div className="mt-4 pb-10 text-center sm:pb-6">
             <blackz-signature></blackz-signature>

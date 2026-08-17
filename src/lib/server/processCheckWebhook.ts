@@ -1,16 +1,18 @@
 /**
- * לוגיקת ה-webhook של PayPal - **הדרך היחידה שעמודת `status` הופכת
- * ל-`paid`.** נפרד מ-`route.ts` בכוונה: `route.ts` מייבא `next/server`,
- * ומודול שמייבא אותו לא ניתן לטעינה ישירה תחת `node --test` (הרזולוציה
- * של `next/server` דורשת את שרשרת הטעינה המלאה של Next). הפרדת הלוגיקה
- * הטהורה לכאן היא מה שהופך את הזרימה הזאת - כולל האידמפוטנטיות - לניתנת
- * לבדיקה ישירות; `route.ts` נשאר עטיפת `NextResponse` דקה מעליה.
+ * The PayPal webhook logic - **the only way the `status` column ever becomes
+ * `paid`.** Separated from `route.ts` on purpose: `route.ts` imports
+ * `next/server`, and a module that imports it cannot be loaded directly under
+ * `node --test` (resolving `next/server` requires Next's full loading chain).
+ * Splitting the pure logic out here is what makes this flow - including the
+ * idempotency - directly testable; `route.ts` stays a thin `NextResponse`
+ * wrapper on top of it.
  *
- * חתימה נבדקת מול PayPal (`server/paypal.ts`); בלי חתימה תקפה - 400,
- * בלי לגעת בכלום. עדכון מותנה ב-`purchases.ts` (`WHERE ... AND
- * status='pending'`) הוא מה שהופך webhook כפול ל-no-op - לא בדיקה כאן.
+ * The signature is verified against PayPal (`server/paypal.ts`); without a valid
+ * signature - 400, without touching anything. The conditional update in
+ * `purchases.ts` (`WHERE ... AND status='pending'`) is what turns a duplicate
+ * webhook into a no-op - not a check here.
  *
- * אירועים לא מוכרים מקבלים 200 (PayPal שולח עשרות סוגי אירועים).
+ * Unrecognized events get 200 (PayPal sends dozens of event types).
  */
 
 import { paypalConfigured, paypalMode, verifyWebhookSignature, type WebhookHeaders } from '@/lib/server/paypal';
@@ -61,11 +63,13 @@ export async function processCheckWebhook(rawBody: string, headers: WebhookHeade
   }
 
   /*
-    מנוי הפרימיום עובר באותו webhook מאומת (האפליקציה רשומה על All
-    Events): ACTIVATED מדליק, ביטול/השעיה/פקיעה מכבים - עם השמירה
-    ש-cancelPaypalPremium מוריד רק פרימיום שמקורו PayPal, כדי שביטול
-    מנוי ישן לא ימחק הענקת אדמין. custom_id הוא ה-uuid שאנחנו קבענו
-    ביצירת המנוי, והאירוע חתום - זו לא זהות שהלקוח יכול לזייף.
+    The premium subscription goes through the same verified webhook (the app is
+    registered for All Events): ACTIVATED turns it on, cancellation/suspension/
+    expiry turn it off - with the safeguard that cancelPaypalPremium downgrades
+    only premium whose source is PayPal, so cancelling an old subscription never
+    erases an admin grant. custom_id is the uuid WE set when creating the
+    subscription, and the event is signed - this is not an identity the client
+    can forge.
   */
   const subUserId = event.resource?.custom_id;
   if (event.event_type === 'BILLING.SUBSCRIPTION.ACTIVATED' && subUserId) {
@@ -99,7 +103,7 @@ export async function processCheckWebhook(rawBody: string, headers: WebhookHeade
     return ok({ received: true, reason: 'malformed' });
   }
 
-  // מזהה ההזמנה קודם; custom_id (=מזהה הרכישה שלנו) הוא גיבוי אם הראשון חסר
+  // The order id comes first; custom_id (= our purchase id) is a fallback if the first is missing
   const purchase = orderId
     ? await findByOrderId(orderId)
     : resource.custom_id
@@ -111,7 +115,7 @@ export async function processCheckWebhook(rawBody: string, headers: WebhookHeade
     return ok({ received: true, reason: 'no-match' });
   }
   if (purchase.status !== 'pending') {
-    // כבר paid (webhook כפול) או failed/revoked - no-op מכוון, לא שגיאה
+    // Already paid (duplicate webhook) or failed/revoked - a deliberate no-op, not an error
     return ok({ received: true, alreadyProcessed: true });
   }
   const realOrderId = purchase.paypal_order_id;
@@ -119,7 +123,7 @@ export async function processCheckWebhook(rawBody: string, headers: WebhookHeade
     return ok({ received: true, reason: 'no-order-id' });
   }
 
-  // הסכום נקבע אצלנו בזמן יצירת ההזמנה - זה מה שמוודא שאף אחד לא שילם פחות
+  // The amount is set on our side when the order is created - this is what ensures nobody paid less
   const amountOk = Number(amountValue) === Number(purchase.amount) && currencyCode === purchase.currency;
   if (!amountOk) {
     await markFailed(
@@ -149,8 +153,8 @@ export async function processCheckWebhook(rawBody: string, headers: WebhookHeade
       };
 
   if (!trip) {
-    // שילמו וקיבלנו את הכסף, אבל אין לנו על מה לבנות דוח - זה בדיוק
-    // המצב שנתנאל ביקש לדעת עליו מיד.
+    // They paid and we received the money, but we have nothing to build a report
+    // from - this is exactly the situation Netanel asked to know about immediately.
     postAlert(
       `🚨 טיול+ · רכישה ${purchase.id} שולמה אבל הטיול (${purchase.trip_id}, משתמש ${purchase.user_id}) לא נמצא ב-user_trips. הגישה ניתנה בלי דוח תקין - לבדוק ידנית.`,
     );
@@ -163,7 +167,7 @@ export async function processCheckWebhook(rawBody: string, headers: WebhookHeade
     rawWebhook: event,
   });
   if (!updated) {
-    // הפסדנו מרוץ מול webhook כפול שהגיע כמעט באותו רגע - no-op תקין
+    // We lost a race against a duplicate webhook that arrived at almost the same moment - a valid no-op
     console.warn('[checks webhook] markPaid affected 0 rows (already processed)', { realOrderId });
   }
 

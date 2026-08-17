@@ -4,8 +4,8 @@ import { countries, getCountryBySlug } from '@/data/countries';
 import { dailyCostFor } from '@/data/dailyCosts';
 
 /**
- * ספק ברירת המחדל: נתונים שנאספו ידנית וגרים ברפו.
- * עובד בלי שום מפתח API - מושלם לפיתוח ול-MVP.
+ * The default provider: hand-curated data living in the repo.
+ * Works without any API key - perfect for development and the MVP.
  */
 export const sampleProvider: PlacesProvider = {
   providerName: 'sample',
@@ -37,9 +37,10 @@ export const sampleProvider: PlacesProvider = {
   async getDestination(slug: string): Promise<Destination | null> {
     const dest = getDestinationBySlug(slug);
     if (!dest) return null;
-    // עלות יומית מחוברת כאן ולא נכתבת לתוך `destinations.ts`: היא מגיעה
-    // ממקור חיצוני עם תאריך בדיקה משלה, ומחזור החיים שלה (רענון תקופתי)
-    // שונה מזה של הקטלוג. יעד בלי רשומה מקבל undefined ולא ערך ריק.
+    // Daily cost is attached here and not written into `destinations.ts`:
+    // it comes from an external source with its own check date, and its
+    // lifecycle (periodic refresh) differs from the catalog's. A
+    // destination without a record gets undefined, not an empty value.
     const dailyCost = dailyCostFor(slug);
     return dailyCost ? { ...dest, dailyCost } : dest;
   },

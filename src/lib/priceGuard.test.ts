@@ -1,11 +1,13 @@
 /**
- * טסטים לשומר המחירים.
+ * Tests for the price guard.
  *
- * מה שנבדק כאן הוא ההבטחה עצמה, ולא הפרומפט: **מספר מחיר, שם מלון,
- * זמינות או "הזול ביותר" לא יכולים לצאת מהסוכן**, גם אם המודל יכתוב
- * אותם. חצי מהטסטים הם דווקא בכיוון ההפוך - שהפילטר לא חותך משפטים
- * לגיטימיים ("המטבע הוא אירו", "אוטובוס 29", "3 לילות", "יום פנוי").
- * פילטר שחותך יותר מדי היה נעלם מהמוצר תוך שבוע.
+ * What is tested here is the promise itself, not the prompt: **a price
+ * number, a hotel name, availability or a "cheapest" claim cannot leave the
+ * agent**, even if the model writes them. Half of the tests are actually in
+ * the opposite direction - that the filter does not cut legitimate sentences
+ * (the "the currency is euro", "bus 29", "3 nights", "a free day" kind).
+ * A filter that cuts too much would have vanished from the product within a
+ * week.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -25,7 +27,7 @@ import {
 
 const clean = (s: string) => guardText(s).redactions.length === 0;
 
-/* ---------- מה שחייב להיחתך ---------- */
+/* ---------- What must be cut ---------- */
 
 test('מחיר עם מטבע לא יוצא מהסוכן', () => {
   const r = guardText('מלונות במרכז רומא בסביבות 450 ש״ח ללילה.');
@@ -59,7 +61,7 @@ test('"הזול ביותר" אסור תמיד, גם כתשובה לשאלה יש
   assert.equal(violationOf('המלון הזול ביותר ברומא הוא בטרסטוורה.'), 'superlative');
   assert.equal(violationOf('אמצא לכם את המחיר הטוב ביותר.'), 'superlative');
   assert.equal(violationOf('This is the cheapest option.'), 'superlative');
-  // גם כשהמטייל אמר את זה קודם - אנחנו לא סורקים את כל הספקים
+  // Even when the traveler said it first - we do not scan all the providers
   assert.equal(violationOf('הכי זול שיש', { userText: 'מה הכי זול' }), 'superlative');
 });
 
@@ -69,7 +71,7 @@ test('שם מלון שהמטייל לא נתן נחתך', () => {
   assert.equal(violationOf('מלון Devin הוא אפשרות טובה.'), 'property-name');
 });
 
-/* ---------- אירועים ומועדים: רק ממה שהדאטה החזירה ---------- */
+/* ---------- Events and dates: only from what the data returned ---------- */
 
 test('טענה על אירוע במועד מסוים נחסמת כשלא הוחזר כלום מהדאטה', () => {
   assert.equal(violationOf('אוקטוברפסט מתחיל ב-19 בספטמבר.'), 'event-claim');
@@ -86,7 +88,7 @@ test('אותה טענה עוברת כשהיא נוקבת בשם רשומה שה�
   const allow = { eventNames: ['אוקטוברפסט', 'פרראגוסטו'] };
   assert.equal(violationOf('אוקטוברפסט מתחיל ב-19 בספטמבר.', allow), null);
   assert.equal(violationOf('פרראגוסטו ב-15 באוגוסט - הרבה חנויות סגורות.', allow), null);
-  // אירוע אחר, שלא הוחזר, עדיין נחסם - וזו הנקודה
+  // Another event, one that was not returned, is still blocked - and that is the point
   assert.equal(violationOf('יש גם פסטיבל אורות בדצמבר.', allow), 'event-claim');
 });
 
@@ -103,22 +105,22 @@ test('תשובה שנגעה גם במחיר וגם באירוע מסבירה א�
 });
 
 test('משפטים תמימים על זמן ועל אירועים לא נחתכים', () => {
-  // בלי מועד מסוים - זו לא טענה שאפשר לבדוק, וגם לא כזו שמטעה
+  // Without a specific date - this is not a checkable claim, nor a misleading one
   assert.ok(clean('בעיר יש הרבה אירועים לאורך השנה.'));
   assert.ok(clean('הרובע שקט יותר בערבים.'));
-  // מועד בלי אירוע - זה פשוט המסלול
+  // A date without an event - that is simply the itinerary
   assert.ok(clean('יום 3 · 12 באוגוסט, מתחילים בקתדרלה.'));
   assert.ok(clean('הוספתי יום בספטמבר.'));
-  // סגירה שבועית קבועה אינה טענה על מועד בשנה
+  // A fixed weekly closure is not a claim about a date in the year
   assert.ok(clean('המוזיאון סגור בימי שני.'));
 });
 
-/* ---------- הרשימה הלבנה: מה שהמטייל עצמו אמר ---------- */
+/* ---------- The whitelist: what the traveler themselves said ---------- */
 
 test('מספר שהמטייל נקב בו חוזר אליו', () => {
   const allow = { userText: 'התקציב שלנו הוא 400 ש״ח ללילה' };
   assert.equal(violationOf('התקציב שציינתם, 400 ש״ח ללילה, נכנס לחיפוש.', allow), null);
-  // מספר אחר באותו הקשר - לא
+  // A different number in the same context - no
   assert.equal(violationOf('אפשר גם ב-250 ש״ח ללילה.', allow), 'per-unit-price');
 });
 
@@ -127,7 +129,7 @@ test('שם מלון שהמטייל נתן, או סיכה בטיול, מותר', 
   assert.equal(violationOf('בדקתי את Hotel Bristol שהזכרת.', { userText: 'הזמנתי את Hotel Bristol' }), null);
 });
 
-/* ---------- מה שאסור להיחתך (רגרסיות אמיתיות) ---------- */
+/* ---------- What must not be cut (real regressions) ---------- */
 
 test('מטבע בלי מספר הוא מידע פרקטי אמיתי', () => {
   assert.ok(clean('המטבע במדינה הוא אירו, וכדאי לשלם בכרטיס.'));
@@ -160,13 +162,13 @@ test('שם לטיני של מקום מהקטלוג הוא לא שם מלון', (
   assert.ok(clean('St. Stephen Cathedral במרכז וינה.'));
 });
 
-/* ---------- הנוסח המחליף חייב לשרוד את עצמו ---------- */
+/* ---------- The replacement wording must survive itself ---------- */
 
 test('שורות ההחלפה עצמן עוברות את הפילטר', () => {
   assert.equal(violationOf(NO_PRICE_LINE), null);
   assert.equal(violationOf(NO_PRICE_LINE_BARE), null);
   assert.equal(violationOf(NO_EVENT_LINE), null);
-  // אידמפוטנטיות: הרצה שנייה לא משנה כלום
+  // Idempotence: a second run changes nothing
   const once = guardText('זה עולה בערך 300 אירו.').text;
   assert.deepEqual(guardText(once).redactions, []);
   assert.equal(guardText(once).text, once);
@@ -179,7 +181,7 @@ test('שתי טענות מחיר לא מייצרות שתי חזרות של או
   assert.equal(occurrences, 1);
 });
 
-/* ---------- הזרמה: החלק שבלעדיו כל השאר לא שווה כלום ---------- */
+/* ---------- Streaming: the part without which all the rest is worth nothing ---------- */
 
 function streamAll(deltas: string[], allow = {}): { out: string; redactions: string[] } {
   const s = new GuardedTextStream(allow);
@@ -190,7 +192,7 @@ function streamAll(deltas: string[], allow = {}): { out: string; redactions: str
 }
 
 test('מחיר שנחתך בין שני delta נתפס בכל זאת', () => {
-  // בדיוק הצורה שבה סטרימינג מגיע: המספר בחתיכה אחת, המטבע בבאה
+  // Exactly the shape streaming arrives in: the number in one chunk, the currency in the next
   const { out, redactions } = streamAll(['מלון במרכז עולה ', 'בערך 4', '50', ' ש״ח', ' ללילה.']);
   assert.ok(redactions.length > 0);
   assert.ok(!out.includes('450'));
@@ -198,9 +200,9 @@ test('מחיר שנחתך בין שני delta נתפס בכל זאת', () => {
 });
 
 test('בהזרמה השורה הכנה נאמרת פעם אחת, לא פעם לכל משפט', () => {
-  // באג אמיתי שנתפס בהרצת הדגמה: כל משפט משתחרר בקריאה נפרדת לפילטר,
-  // ולכן מונה מקומי חשב בכל פעם שהוא הראשון - והמטייל קיבל את אותו
-  // משפט התנצלות פעמיים ברצף.
+  // A real bug caught in a demo run: each sentence is released in a separate
+  // call to the filter, so a local counter thought each time that it was the
+  // first - and the traveler got the same apology sentence twice in a row.
   const attempt =
     'המלון הזול ביותר הוא Hotel Artemide, בסביבות 320 ש״ח ללילה. ' +
     'זה מלון 4 כוכבים ויש חדרים פנויים. ' +
@@ -232,20 +234,23 @@ test('משפט ארוך בלי פיסוק שמכיל מחיר לא משתחרר 
   assert.ok(!out.includes('500'));
 });
 
-/* ---------- שמירה על הנוסח: הטסט שמונע חזרה של "הזול ביותר" ---------- */
+/* ---------- Guarding the copy: the test that prevents "cheapest" from coming back ---------- */
 
 /**
- * שמירת הנוסח, כשומר מחלקה ולא כמשמעת.
+ * Guarding the copy, as a class guard and not as discipline.
  *
- * הסריקה מכוונת ל**קופי שאנחנו מציגים כטענה שלנו על חיפוש** - רכיבי
- * הממשק ושכבת ההזמנות. שני אזורים מוחרגים במפורש, ולא מטעמי נוחות:
+ * The scan targets **copy that we present as our own claim about a search** -
+ * the UI components and the booking layer. Two areas are excluded explicitly,
+ * and not for convenience:
  *
- * - `src/data/**` - פרוזה עורכית שאדם כתב על **יעדים** ("היעד הזול
- *   ביותר באירופה" על בולגריה). זו לא טענת מחיר על מלון ולא תוצאה של
- *   חיפוש, והיא נחקרה ידנית. שינוי שלה הוא החלטה עורכית על הקטלוג,
- *   ולא עניינו של הפיצ׳ר הזה.
- * - טקסט פרומפט ותופסי regex - שם הביטוי מופיע דווקא כדי **לאסור**
- *   אותו. סריקה שמפילה את האיסור על עצמו היא סריקה חסרת תועלת.
+ * - `src/data/**` - editorial prose a human wrote about **destinations**
+ *   (the "cheapest destination in Europe" line about Bulgaria). That is not
+ *   a price claim about a hotel and not a search result, and it was
+ *   researched by hand. Changing it is an editorial decision about the
+ *   catalog, and not this feature's business.
+ * - Prompt text and regex matchers - there the phrase appears precisely in
+ *   order to **forbid** it. A scan that fails the prohibition on itself is a
+ *   useless scan.
  */
 test('שום קופי בשכבת ההזמנות לא אומר "הזול ביותר"', () => {
   const banned = [/הזול ביותר/, /הכי זול/, /המחיר הטוב ביותר/, /\bcheapest\b/i];
@@ -257,7 +262,7 @@ test('שום קופי בשכבת ההזמנות לא אומר "הזול ביות
     readFileSync(p, 'utf8')
       .split('\n')
       .forEach((line, i) => {
-        // שורת הערה אינה קופי שמוצג למישהו
+        // A comment line is not copy shown to anyone
         if (/^\s*(\/\/|\*|\/\*)/.test(line)) return;
         if (banned.some((re) => re.test(line))) offenders.push(`${rel}:${i + 1}`);
       });
@@ -271,11 +276,12 @@ test('שום קופי בשכבת ההזמנות לא אומר "הזול ביות
   assert.deepEqual(offenders, [], `נוסח אסור ("הזול ביותר") הופיע ב: ${offenders.join(', ')}`);
 });
 
-/* ---------- כשרות: לא מהזיכרון, לא מחיפוש - רק מהקטלוג ---------- */
+/* ---------- Kashrut: not from memory, not from a search - only from the catalog ---------- */
 
 test('הרגרסיה המדווחת: גיאוגרפיה כשרה כללית על אזור לא-מכוסה נחתכת', () => {
-  // בדיוק התיאור של נתנאל: הסוכן מסרב למקום ספציפי, ואז מתנדב "יש שם
-  // קהילה יהודית" מהזיכרון שלו - בלי שום עיר/מקום מהקטלוג בטקסט.
+  // Exactly Netanel's description: the agent refuses a specific place, then
+  // volunteers a "there is a Jewish community there" claim from its own
+  // memory - with no city/place from the catalog in the text.
   assert.equal(
     violationOf('יש שם קהילה יהודית קטנה וכמה מסעדות כשרות באזור.'),
     'kosher-claim',
@@ -288,7 +294,7 @@ test('אותה טענה עוברת רק כשהיא נוקבת בשם שהוחז�
   const allow = { kosherNames: ['רומא', 'Rome', 'בא-גטו'] };
   assert.equal(violationOf('ברומא יש קהילה יהודית ותיקה ומסעדות כשרות.', allow), null);
   assert.equal(violationOf('מומלץ לנסות את בא-גטו, שם יש השגחה טובה.', allow), null);
-  // עיר אחרת שלא נשלחה - עדיין נחסמת, וזו כל הנקודה
+  // A different city that was not sent - still blocked, and that is the whole point
   assert.equal(
     violationOf('גם בברלין יש קהילה יהודית ומסעדות כשרות.', allow),
     'kosher-claim',
@@ -296,9 +302,10 @@ test('אותה טענה עוברת רק כשהיא נוקבת בשם שהוחז�
 });
 
 test('שער כללי פתוח לא מכשיר עיר ספציפית שלא נשלחה בכלל - הבאג המדויק', () => {
-  // kosherOk יכול להיות true (המשתמש שאל על כשרות), אבל אם kosherNames
-  // ריקה לעיר הזאת - כי היא לא בקטלוג, או שהיא בקטלוג בלי נתוני כשרות -
-  // שום טענה עליה לא עוברת. זה בדיוק המקום שבו הבאג המדווח קרה.
+  // kosherOk can be true (the user asked about kashrut), but if kosherNames
+  // is empty for this city - because it is not in the catalog, or it is in
+  // the catalog with no kosher data - no claim about it passes. This is
+  // exactly the spot where the reported bug happened.
   const allow = { kosherNames: [] as string[] };
   assert.equal(violationOf('יש שם קהילה יהודית קטנה ומסעדה כשרה אחת.', allow), 'kosher-claim');
 });
@@ -322,7 +329,7 @@ test('GuardedTextStream חוסם טענת כשרות בהזרמה, בדיוק כ
   assert.ok(out.includes(NO_KOSHER_LINE));
 });
 
-/* ---------- חיפוש חי: שעות/מחיר-כניסה/קיום, רק עם ציטוט צמוד ---------- */
+/* ---------- Live lookup: hours/admission-price/existence, only with an adjacent citation ---------- */
 
 test('LOOKUP_ANCHOR מזהה את תבנית התאריך שהמודל מצווה לכתוב', () => {
   assert.ok(LOOKUP_ANCHOR.test('נבדק ב-12.8.2026'));
@@ -356,10 +363,11 @@ test('מחיר כניסה מצוטט עובר, אבל רק הוא - מחיר ל�
     violationOf('דמי הכניסה למוזיאון הם 15 יורו (מקור: museum.it, נבדק ב-1.1.2026).'),
     null,
   );
-  // אותו ניסוח, בלי ציטוט - חסום כרגיל דרך שער המחיר הכללי
+  // The same wording, without a citation - blocked as usual via the general price gate
   assert.equal(violationOf('דמי הכניסה למוזיאון הם 15 יורו.'), 'currency-amount');
-  // הפרצה שנסגרה בכוונה: ניסוח שמערבב "כרטיס כניסה" עם מחיר לינה,
-  // עם ציטוט - PER_UNIT כבר תפס אותו למעלה ולא מגיע להיתר בכלל
+  // The loophole closed deliberately: a wording that mixes an admission
+  // ticket with a lodging price, with a citation - PER_UNIT already caught
+  // it above and it never reaches the exemption at all
   assert.equal(
     violationOf('כרטיס כניסה למלון 300 ש"ח ללילה (נבדק ב-1.1.2026).'),
     'per-unit-price',

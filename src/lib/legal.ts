@@ -1,11 +1,13 @@
 /**
- * גרסת התנאים המוצגת למשתמש בזמן ההסכמה (התחברות/הרשמה) ונשמרת לצדו
- * בפרופיל (ראו supabase-consent.sql). תאריך יחיד, משותף לשלושה
- * מקומות - תגית "עודכן לאחרונה" בעמוד /terms, ההודעה ליד כפתור
- * ההתחברות, והערך שנכתב לדאטהבייס - כדי שהם לא יוכלו להתפצל לשלוש
- * גרסאות שונות של "מתי עודכנו התנאים".
+ * The terms version shown to the user at consent time (login/signup) and
+ * saved next to them on the profile (see supabase-consent.sql). A single
+ * date, shared by three places - the "last updated" tag on the /terms page,
+ * the notice next to the login button, and the value written to the
+ * database - so they cannot split into three different versions of "when
+ * were the terms updated".
  *
- * לעדכן את שני הערכים יחד בכל פעם שתוכן /terms משתנה מהותית.
+ * Update both values together whenever the content of /terms changes
+ * materially.
  */
 export const TERMS_VERSION = '2026-08-15';
 export const TERMS_UPDATED_LABEL = '15 באוגוסט 2026';

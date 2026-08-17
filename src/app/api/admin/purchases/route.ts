@@ -12,12 +12,12 @@ import { buildPreDepartureReport } from '@/lib/server/predepartureReport';
 import { findOwnTrip } from '@/lib/server/userTrips';
 
 /**
- * ניהול "בדיקה לפני הנסיעה": לוח מצב (GET בלי פרמטרים), מצב לרכישה
- * ספציפית (`?userId=&tripId=`, לשימוש בתוך כרטיס הטיול הבודד), והענקה/
- * שלילה ידנית (POST) - **אותו דפוס בדיוק כמו `/api/admin/plan`**.
+ * Admin for the pre-departure check: a status board (GET with no params), the status of
+ * a specific purchase (`?userId=&tripId=`, used inside the single-trip card), and manual
+ * grant/revoke (POST) - **the exact same pattern as `/api/admin/plan`**.
  *
- * הענקה ידנית בונה דוח אמיתי מהטיול בפועל (לא ריק ולא מזויף) ומסומנת
- * `source='admin_grant'` + `amount=0`, כדי שהיא לעולם לא תיספר כהכנסה.
+ * A manual grant builds a real report from the actual trip (not empty and not faked) and
+ * is marked `source='admin_grant'` + `amount=0`, so it can never be counted as revenue.
  */
 
 export async function GET(req: Request) {
@@ -53,7 +53,7 @@ export async function GET(req: Request) {
   const rows = await recentPurchases(500);
   const stats = computeStats(rows);
   const recentRows = rows.slice(0, 15);
-  // במקביל ולא בלולאת await טורית - N סיבובי רשת ל-GoTrue הפכו לאחד
+  // In parallel, not a serial await loop - N network round trips to GoTrue became one
   const emails = await emailsByUserIds(recentRows.map((r) => r.user_id));
 
   return ok({

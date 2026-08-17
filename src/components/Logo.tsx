@@ -1,7 +1,7 @@
-// סמל טיול+: מטוס נייר עם שובל קורל, בפלטת האתר. הגרסה הרגילה כהה
-// (על רקע בהיר); reversed=true צובע את המטוס בקרם לרקע כהה (פוטר/night).
-// השובל נשאר קורל בשתי הגרסאות. אותו נכס שמור גם ב-public/logo.svg
-// (favicon) - לשמור על סנכרון אם משנים כאן.
+// The tiyul+ mark: a paper plane with a coral trail, in the site palette. The regular
+// version is dark (on a light background); reversed=true paints the plane cream for a
+// dark background (footer/night). The trail stays coral in both versions. The same
+// asset is also kept in public/logo.svg (favicon) - keep them in sync when editing here.
 export default function Logo({
   reversed = false,
   className = '',

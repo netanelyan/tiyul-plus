@@ -1,17 +1,19 @@
 /**
- * מדינת קטלוג → אזור זמן IANA, לצורך הצגת זמני שבת בשעון המקומי האמיתי
- * (כולל שעון קיץ) דרך Intl - בלי תלות חדשה ובלי חישוב offset מקו אורך,
- * שטועה בשעה שלמה בכל מדינה עם שעון קיץ.
+ * Catalog country -> IANA time zone, for showing Shabbat times on the real local
+ * clock (including daylight saving) through Intl - with no new dependency and no
+ * offset computed from longitude, which is a whole hour wrong in every country with
+ * daylight saving.
  *
- * ## הכלל: אין ניחוש
+ * ## The rule: no guessing
  *
- * מדינה שאינה כאן, או עיר שנופלת מחוץ לטווחי הפיצול של מדינה
- * מרובת-אזורים, מקבלת null - וה-UI אומר בכנות שאין שעון אמין, במקום
- * להציג זמן הדלקת נרות שגוי בשעה. השמטה עדיפה על קירוב - במיוחד כאן,
- * שבו המחיר של טעות הוא הלכתי ולא רק מביך.
+ * A country not listed here, or a city falling outside the split ranges of a
+ * multi-zone country, gets null - and the UI says honestly that there is no reliable
+ * clock, rather than showing a candle-lighting time that is an hour wrong. Omission
+ * beats approximation - especially here, where the cost of an error is religious and
+ * not merely embarrassing.
  *
- * מדינות מרובות אזורים מפוצלות לפי קו האורך של העיר עצמה; הטווחים
- * נבחרו לפי הערים שבקטלוג בפועל, לא כמיפוי עולמי כללי.
+ * Multi-zone countries are split by the longitude of the city itself; the ranges were
+ * chosen from the cities actually in the catalog, not as a general world mapping.
  */
 
 const SINGLE_ZONE: Record<string, string> = {
@@ -92,35 +94,35 @@ const SINGLE_ZONE: Record<string, string> = {
   seychelles: 'Indian/Mahe',
 };
 
-/** מדינות מרובות אזורים: בחירה לפי קו האורך של העיר. טווחים לפי ערי הקטלוג. */
+/** Multi-zone countries: chosen by the city's longitude. Ranges follow the catalog's cities. */
 const MULTI_ZONE: Record<string, (lng: number) => string | null> = {
   usa: (lng) => {
-    if (lng > -90) return 'America/New_York'; // ניו יורק, ניו אינגלנד, מיאמי
-    if (lng > -110) return 'America/Denver'; // הפארקים של הדרום-מערב
-    if (lng > -125) return 'America/Los_Angeles'; // לאס וגאס, קליפורניה
+    if (lng > -90) return 'America/New_York'; // New York, New England, Miami
+    if (lng > -110) return 'America/Denver'; // the Southwest parks
+    if (lng > -125) return 'America/Los_Angeles'; // Las Vegas, California
     return null;
   },
   canada: (lng) => {
-    // הסדר קריטי: הליפקס (-63) חייבת להיבדק לפני הענף של טורונטו
+    // Order is critical: Halifax (-63) must be tested before the Toronto branch
     if (lng > -75) return 'America/Halifax';
     if (lng > -90) return 'America/Toronto';
-    if (lng > -120) return 'America/Edmonton'; // באנף, קלגרי
+    if (lng > -120) return 'America/Edmonton'; // Banff, Calgary
     return 'America/Vancouver';
   },
   mexico: (lng) => (lng > -89.7 ? 'America/Cancun' : 'America/Mexico_City'),
   australia: (lng) => {
-    if (lng > 140) return 'Australia/Hobart'; // טסמניה
-    if (lng > 128) return 'Australia/Darwin'; // המרכז האדום (אולורו, אליס ספרינגס)
+    if (lng > 140) return 'Australia/Hobart'; // Tasmania
+    if (lng > 128) return 'Australia/Darwin'; // the Red Centre (Uluru, Alice Springs)
     return 'Australia/Perth';
   },
-  indonesia: (lng) => (lng > 112 ? 'Asia/Makassar' : 'Asia/Jakarta'), // באלי / ג׳אווה
+  indonesia: (lng) => (lng > 112 ? 'Asia/Makassar' : 'Asia/Jakarta'), // Bali / Java
   kazakhstan: () => 'Asia/Almaty',
-  brazil: () => 'America/Sao_Paulo', // ריו בלבד בקטלוג
+  brazil: () => 'America/Sao_Paulo', // only Rio is in the catalog
   chile: () => 'America/Santiago',
 };
 
 /**
- * אזור הזמן של עיר בקטלוג. null = אין תשובה אמינה, וה-UI אומר זאת.
+ * The time zone of a city in the catalog. null = there is no reliable answer, and the UI says so.
  */
 export function timezoneFor(countrySlug: string, lng: number): string | null {
   const single = SINGLE_ZONE[countrySlug];
@@ -130,8 +132,8 @@ export function timezoneFor(countrySlug: string, lng: number): string | null {
 }
 
 /**
- * שעה מקומית אמיתית (כולל שעון קיץ) דרך Intl. מחזיר null כשהסביבה לא
- * מכירה את האזור (ICU חלקי) - עדיף כלום מזמן שגוי.
+ * A real local time (including daylight saving) through Intl. Returns null when the
+ * environment does not know the zone (partial ICU) - nothing is better than a wrong time.
  */
 export function formatInZone(utc: Date, timeZone: string): string | null {
   try {

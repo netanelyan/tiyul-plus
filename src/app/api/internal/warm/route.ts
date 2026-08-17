@@ -10,39 +10,46 @@ import { budgetFor, lastHeavyCallAt, measuredCost, recordSpend } from '@/lib/ser
 import type { TokenUsage } from '@/lib/server/aiCost';
 
 /**
- * **שמירת קידומת הקטלוג חמה - ורק כשאין מי שישמור אותה בשבילנו.**
+ * **Keeping the catalog prefix warm - and only when nobody keeps it warm
+ * for us.**
  *
- * ## למה זה קיים
+ * ## Why this exists
  *
- * ההפרש בין קריאה קרה לחמה נמדד: **$0.447 מול $0.063**, וכולו כתיבת
- * המטמון של האינדקס. קריאה מהמטמון **מאריכה את התוקף בחינם**, ולכן
- * מבקר אמיתי מחמם את הקידומת עבור הבא אחריו בלי לשלם על זה כלום.
+ * The difference between a cold call and a warm one is measured:
+ * **$0.447 vs $0.063**, all of it the index's cache write. A cache read
+ * **extends the TTL for free**, so a real visitor warms the prefix for
+ * the next one without paying anything for it.
  *
- * ## שלושת התנאים, וכל אחד מהם הוא סירוב להוציא כסף
+ * ## The conditions, each of which is a refusal to spend money
  *
- * הנתיב שולח בקשה מינימלית **רק** אם כל אלה מתקיימים:
+ * The route sends a minimal request **only** if all of these hold:
  *
- * 1. **הייתה שקטה** - לא עברה קריאה כבדה ב-`QUIET_MS` האחרונות. אם
- *    עברה, המטמון כבר רוענן בחינם וחימום הוא בזבוז נטו. **ככל שהאתר
- *    עסוק יותר, הנתיב הזה פועל פחות, ובתנועה יציבה הוא לא פועל בכלל.**
- * 2. **המטמון עוד חי** - הנגיעה האחרונה בתוך `STALE_MS`. אחרי שהתוקף
- *    פג, חימום משלם **כתיבה** מלאה עבור אף אחד; בשלב הזה עדיף לתת
- *    למבקר האמיתי הבא לשלם אותה ממילא. זה גם מה שמונע מהנתיב לשרוף
- *    כסף ביום בלי אף מבקר.
- * 3. **יש בשביל מי** - עברה קריאה של אדם אמיתי ב-3 השעות האחרונות.
- *    בלי התנאי הזה הנתיב מנציח את עצמו: הוא רושם הוצאה, ההוצאה היא
- *    "הנגיעה האחרונה", והוא מחמם שוב ושוב באתר בלי אף מבקר.
- * 4. **יש תקציב** - התקרה היומית נבדקת כמו בכל קריאה אחרת.
+ * 1. **There was quiet** - no heavy call in the last `QUIET_MS`. If one
+ *    happened, the cache was already refreshed for free and warming is a
+ *    net waste. **The busier the site, the less this route acts - under
+ *    steady traffic it does not act at all.**
+ * 2. **The cache is still alive** - the last touch is within `STALE_MS`.
+ *    Once the TTL expires, warming pays a full **write** for nobody; at
+ *    that point it is better to let the next real visitor pay it anyway.
+ *    This is also what keeps the route from burning money on a day with
+ *    no visitors at all.
+ * 3. **There is somebody to warm for** - a real human's call happened in
+ *    the last 3 hours. Without this condition the route perpetuates
+ *    itself: it records a spend, that spend is "the last touch", and it
+ *    keeps re-warming a site with no visitors.
+ * 4. **There is budget** - the daily ceiling is checked like on any other
+ *    call.
  *
- * ## גרסה אחת בלבד
+ * ## One variant only
  *
- * מחומם רק האינדקס **בלי שכבת הכשרות**, שהוא הנפוץ מבין השניים. חימום
- * שתי הגרסאות מכפיל את העלות בשביל הגרסה הנדירה יותר.
+ * Only the index **without the kosher layer** is warmed - the more common
+ * of the two. Warming both variants doubles the cost for the rarer one.
  *
- * ## אבטחה
+ * ## Security
  *
- * הנתיב עולה כסף, ולכן הוא **כבוי כל עוד `CRON_SECRET` לא מוגדר**, וכל
- * מי שאין לו את הסוד מקבל 404 - אותה תשובה שמקבל נתיב שלא קיים.
+ * The route costs money, so it is **off as long as `CRON_SECRET` is not
+ * set**, and anyone without the secret gets 404 - the same answer a
+ * nonexistent route gives.
  */
 
 const notFound = () =>
@@ -59,7 +66,7 @@ const skip = (why: string) =>
 
 function authorized(req: Request): boolean {
   const secret = process.env.CRON_SECRET;
-  if (!secret) return false; // בלי סוד הפיצ׳ר כבוי, ולא "פתוח לכולם"
+  if (!secret) return false; // no secret means the feature is off, not "open to everyone"
   const header = req.headers.get('authorization') ?? '';
   return header === `Bearer ${secret}`;
 }
@@ -69,17 +76,18 @@ async function handle(req: Request): Promise<Response> {
   if (!process.env.ANTHROPIC_API_KEY) return skip('no_key');
 
   /*
-    ההחלטה עצמה יושבת ב-`agentPrefix.ts` כפונקציה טהורה, כי היא
-    מה שראוי לבדוק: שלוש מארבע התשובות שלה הן סירוב להוציא כסף.
+    The decision itself lives in `agentPrefix.ts` as a pure function,
+    because it is the thing worth testing: three of its four answers are a
+    refusal to spend money.
   */
   const [lastTouch, lastReal] = await Promise.all([
-    lastHeavyCallAt(), // כל נגיעה, כולל חימומים שלנו - קובעת אם המטמון עוד חי
-    lastHeavyCallAt(true), // רק בני אדם - קובעת אם יש בשביל מי
+    lastHeavyCallAt(), // any touch, including our own warms - decides if the cache is still alive
+    lastHeavyCallAt(true), // humans only - decides if there is anyone to warm for
   ]);
   const decision = warmDecision(lastTouch, Date.now(), CACHE_TTL, lastReal);
   if (decision !== 'warm') return skip(decision);
 
-  // תקציב: אותה בדיקה כמו בכל קריאה, עם זהות מערכת משלה
+  // Budget: the same check as any other call, with its own system identity
   const budget = await budgetFor('system:warm');
   if (budget.exceeded) return skip(`budget_${budget.reason}`);
 
@@ -96,9 +104,9 @@ async function handle(req: Request): Promise<Response> {
       model,
       max_tokens: 1,
       /*
-        **בדיוק אותם כלים ואותם בלוקים כמו בצ׳אט**, מ-`agentPrefix.ts`.
-        הודעה קצרה אחת אחרי נקודת השבירה - היא לא חלק מהקידומת ולכן לא
-        משנה מה כתוב בה.
+        **Exactly the same tools and the same blocks as the chat**, from
+        `agentPrefix.ts`. One short message after the cache breakpoint - it
+        is not part of the prefix, so its content does not matter.
       */
       tools: cachedTools(),
       system: cachedPrefix(false),
@@ -115,8 +123,9 @@ async function handle(req: Request): Promise<Response> {
   const usage = data.usage ?? {};
   const usd = measuredCost(model, usage);
   /*
-    נרשם כמו כל הוצאה אחרת - גם כדי שהוא ייספר בתקרה, וגם כי הרישום
-    הזה **הוא** סימן הנגיעה האחרון: החימום הבא יראה אותו ולא יחמם שוב.
+    Recorded like any other spend - both so it counts against the ceiling,
+    and because this record **is** the last-touch marker: the next warm run
+    will see it and not warm again.
   */
   recordSpend({
     identity: 'system:warm',
@@ -129,7 +138,7 @@ async function handle(req: Request): Promise<Response> {
 
   const wrote = (usage.cache_creation_input_tokens ?? 0) > 0;
   if (wrote) {
-    // כתיבה פירושה שהמטמון היה קר - כלומר החלון שלמעלה לא היה מדויק
+    // A write means the cache was cold - i.e. the window above was not accurate
     console.warn('[warm] paid a cache WRITE, not a read - check QUIET/STALE window');
   }
   return new Response(

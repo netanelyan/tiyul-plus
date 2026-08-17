@@ -12,13 +12,13 @@ import {
 } from '@/lib/server/groupTrips';
 
 /**
- * טיול משותף. **המארגן פרימיום; הצטרפות והצבעה חינם** (לחברים מחוברים).
+ * Shared trip. **The organizer is premium; joining and voting are free** (for signed-in members).
  *
- * - POST action='invite' (מארגן, פרימיום): קישור הזמנה לטיול.
- * - POST action='join'   (כל מחובר, עם code): הצטרפות.
- * - GET  ?code=          (חבר/מארגן): הטיול החי + ההצבעות.
- * - GET  ?tripId=        (מארגן): מונה חברים + סיכום הצבעות למסך הטיול.
- * - POST action='vote'   (חבר, עם code): הצבעה 1 / -1 / 0 (הסרה).
+ * - POST action='invite' (organizer, premium): an invite link for the trip.
+ * - POST action='join'   (any signed-in user, with code): joining.
+ * - GET  ?code=          (member/organizer): the live trip + the votes.
+ * - GET  ?tripId=        (organizer): member count + vote summary for the trip screen.
+ * - POST action='vote'   (member, with code): a vote of 1 / -1 / 0 (removal).
  */
 
 export async function GET(request: Request) {
@@ -38,7 +38,7 @@ export async function GET(request: Request) {
   }
 
   if (tripId) {
-    // צד המארגן: הטיול שלו עצמו - אין צורך בקוד, רק בזהות
+    // Organizer side: their own trip - no code needed, only identity
     const votes = await voteTallies(caller.userId, tripId);
     const members = await memberCount(caller.userId, tripId);
     return NextResponse.json({ members, votes });

@@ -11,21 +11,23 @@ import { authHeader } from '@/lib/auth/client';
 import type { BookingSearchCard } from '@/lib/bookingSearch';
 
 /**
- * מצב השיחה עם הסוכן - הוצא מ-AgentWorkspace כדי שהתצוגה המאוחדת
- * (TripWorkspace) תוכל להחזיק שיחה אחת ולהציג אותה בשני מקומות: פאנל
- * הצד בדסקטופ ומגירת השיחה במובייל. אותו state, אותו טיול, בלי עותקים:
- * כל אירוע {trip} מהשרת נכנס ל-upsertTrip של אותו Trip object.
+ * The conversation state with the agent - extracted out of AgentWorkspace so the
+ * unified view (TripWorkspace) can hold one conversation and render it in two
+ * places: the side panel on desktop and the chat drawer on mobile. Same state,
+ * same trip, no copies: every {trip} event from the server goes into upsertTrip
+ * of the same Trip object.
  *
- * שמירה/טעינה של ההיסטוריה היא per-trip-id (chatStorage), כדי שמעבר בין
- * טאבי טיולים ישחזר גם את השיחה.
+ * History save/load is per-trip-id (chatStorage), so switching between trip tabs
+ * also restores the conversation.
  */
 
 export type ChatMessage = StoredChatMessage;
 
 /**
- * תשובת HTTP שאינה ok - הסטטוס נשמר כדי שההודעה למשתמש תהיה נכונה.
- * מיוצא כי `useFreeChat` (דף השיחה החופשית, בלי טיול) חוזר על אותה
- * לולאת סטרימינג ורוצה את אותה הודעת כישלון - במקום לשכפל אותה.
+ * A non-ok HTTP response - the status is kept so the message to the user is
+ * accurate. Exported because `useFreeChat` (the free-conversation page, no trip)
+ * repeats the same streaming loop and wants the same failure message - instead
+ * of duplicating it.
  */
 export class HttpError extends Error {
   constructor(
@@ -38,10 +40,11 @@ export class HttpError extends Error {
 }
 
 /**
- * הודעת כישלון לפי הסיבה האמיתית.
+ * A failure message based on the real cause.
  *
- * "אופס, משהו השתבש" על הגבלת קצב היא לא רק לא מדויקת - היא מזיקה:
- * המטייל מבין ממנה שכדאי לנסות שוב מיד, וזה בדיוק מה שמאריך את החסימה.
+ * A generic "oops, something went wrong" on a rate limit is not just inaccurate -
+ * it is harmful: the traveler reads it as "worth retrying immediately", which is
+ * exactly what extends the block.
  */
 export function failureMessage(err: unknown): string {
   const status = err instanceof HttpError ? err.status : 0;
@@ -58,7 +61,7 @@ export function failureMessage(err: unknown): string {
   if (status >= 400) {
     return 'משהו בבקשה לא היה תקין 🙏 נסו לנסח מחדש, או לרענן את הדף אם זה חוזר.';
   }
-  // שגיאת רשת/סטרים - אין סטטוס
+  // Network/stream error - no status
   return 'נראה שהחיבור נקטע 🙏 הטיול שלכם שמור - בדקו את החיבור ונסו שוב.';
 }
 
@@ -67,28 +70,28 @@ export interface TripChat {
   input: string;
   setInput: (v: string) => void;
   loading: boolean;
-  /** טקסט עדיין זורם מהשרת (אחרי המילה הראשונה, לפני שהסטרים נסגר) - כדי שהודעה שנעצרה תיראה כתקועה ולא כגמורה */
+  /** Text is still streaming from the server (after the first word, before the stream closes) - so a message that stopped mid-way reads as stuck rather than finished */
   streaming: boolean;
-  /** מה הסוכן עושה ממש עכשיו (מגיע כאירוע status מהשרת) */
+  /** What the agent is doing right now (arrives as a status event from the server) */
   status: string | null;
-  /** מונה עדכוני טיול שהגיעו מהסוכן - כדי לסמן "התוכנית עודכנה" ב-UI */
+  /** Counter of trip updates that arrived from the agent - to mark "the plan was updated" in the UI */
   tripUpdates: number;
-  /** יעדים שנחקרו אוטומטית (AI Explorer) - לרינדור ערים שאינן בקטלוג */
+  /** Auto-explored destinations (AI Explorer) - for rendering cities not in the catalog */
   explored: Destination[];
-  /** הוספת יעד explored מבחוץ (ייבוא מפה מ-My Maps) - נשמר ומרונדר מיד */
+  /** Adding an explored destination from outside (map import from My Maps) - saved and rendered immediately */
   addExplored: (dest: Destination) => void;
-  /** שליחה. image הוא data URL מוקטן (imageAttach.ts) - אופציונלי */
+  /** Send. image is a downscaled data URL (imageAttach.ts) - optional */
   send: (text: string, kosher?: boolean, image?: string) => void;
-  /** ניקוי השיחה המקומית (התחלת טיול חדש) */
+  /** Clear the local conversation (start a new trip) */
   reset: () => void;
-  /** ניקוי השיחה של הטיול הנוכחי (כולל האחסון) - הטיול נשאר */
+  /** Clear the current trip's conversation (including storage) - the trip stays */
   clearConversation: () => void;
 }
 
 export function useTripChat(options?: {
-  /** טקסט שנשלח פעם אחת עם העלייה (הגעה מדף הבית עם ?q=) */
+  /** Text sent once on mount (arriving from the homepage with ?q=) */
   initialQuery?: string;
-  /** טוגל הכשרות שנבחר לפני השליחה הראשונה */
+  /** The kosher toggle chosen before the first send */
   initialKosher?: boolean;
 }): TripChat {
   const trip = useTrip();
@@ -98,29 +101,30 @@ export function useTripChat(options?: {
   const [streaming, setStreaming] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [tripUpdates, setTripUpdates] = useState(0);
-  // יעדים שנחקרו - נטענים אחרי mount (localStorage לא קיים ב-SSR)
+  // Explored destinations - loaded after mount (localStorage does not exist in SSR)
   const [explored, setExplored] = useState<Destination[]>([]);
   useEffect(() => {
     setExplored(loadExplored());
   }, []);
   const exploredRef = useRef(explored);
   exploredRef.current = explored;
-  // טוגל הכשרות מה-UI: עובר לשרת בשקט עד שהוא נטמע ב-Trip.preferences
+  // The kosher toggle from the UI: rides to the server silently until it is absorbed into Trip.preferences
   const [kosherHint, setKosherHint] = useState(Boolean(options?.initialKosher));
 
-  // מעקב הטיול הפעיל לצורך שמירה/טעינה של השיחה:
-  // initializedRef - עיגון חד-פעמי אחרי הידרציה, לפני שמגיבים לשינויים.
-  // lastSyncedIdRef - הטיול שהשיחה המקומית מסונכרנת אליו כרגע.
-  // selfUpsertRef - "השינוי הבא ב-currentId מקורו בטיול שהשיחה הזו עצמה
-  //   יצרה/עדכנה עכשיו" - כדי לא לדרוס את ההודעות המקומיות בטעינה.
-  // suppressSaveRef - מדלג על שמירה אחת אחרי טעינה, כדי לא לשמור מחדש
-  //   טקסט ישן מעל החדש.
+  // Tracking the active trip for conversation save/load purposes:
+  // initializedRef - a one-time anchor after hydration, before reacting to changes.
+  // lastSyncedIdRef - the trip the local conversation is currently synced to.
+  // selfUpsertRef - "the next currentId change originates from a trip this very
+  //   conversation just created/updated" - so we don't overwrite the local
+  //   messages with a load.
+  // suppressSaveRef - skips one save right after a load, so old text is not
+  //   re-saved over the new.
   const initializedRef = useRef(false);
   const lastSyncedIdRef = useRef<string | null>(null);
   const selfUpsertRef = useRef<string | null>(null);
   const suppressSaveRef = useRef(false);
   const sentInitialRef = useRef(false);
-  // הטיול והשיחה העדכניים - כדי ש-send לא יסתמך על closure ישן
+  // The up-to-date trip and conversation - so send does not rely on a stale closure
   const tripRef = useRef(trip);
   tripRef.current = trip;
   const messagesRef = useRef(messages);
@@ -128,7 +132,7 @@ export function useTripChat(options?: {
 
   const send = useCallback(async (text: string, kosherArg?: boolean, image?: string) => {
     const trimmed = text.trim();
-    // תמונה לבדה היא בקשה לגיטימית ("הנה אישור ההזמנה") - אז מותר בלי טקסט
+    // An image alone is a legitimate request ("here is the booking confirmation") - so no text is allowed
     if ((!trimmed && !image) || loading) return;
     const kosher = kosherArg ?? kosherHint;
     if (kosherArg) setKosherHint(true);
@@ -148,34 +152,36 @@ export function useTripChat(options?: {
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
-        // מחוברים מקבלים מכסות לפי חשבון/תוכנית במקום לפי IP
+        // Signed-in users get quotas by account/plan instead of by IP
         headers: {
           'Content-Type': 'application/json',
-          // מזהה דפדפן - כדי שמכסת האנונימיים לא תיספר לפי IP משותף
-          // של מפעילת סלולר. ראו lib/clientId.ts.
+          // Browser identifier - so the anonymous quota is not counted by a
+          // shared mobile-carrier IP. See lib/clientId.ts.
           ...clientIdHeader(),
           ...(await authHeader()),
         },
         body: JSON.stringify({
-          // תמונות נשלחות רק בשתי ההודעות האחרונות: הן יקרות למודל
-          // ובכל תור נשלחת ההיסטוריה כולה, אז בלי הגבלה כל תמונה הייתה
-          // משולמת שוב ושוב. השרת אוכף את אותו כלל בעצמו.
+          // Images are sent only on the last two messages: they are expensive for
+          // the model and the whole history is resent every turn, so without a
+          // limit every image would be paid for over and over. The server
+          // enforces the same rule itself.
           messages: next.map(({ role, content, image }, i) => ({
             role,
             content,
             ...(image && i >= next.length - 2 ? { image } : {}),
           })),
           trip: tripRef.current.currentTrip,
-          kosher: kosher || undefined, // רמז ה-UI - השרת מטמיע אותו בטיול
-          // יעדים שנחקרו בעבר - כדי שהסוכן יתקף מולם טיולים קיימים
+          kosher: kosher || undefined, // the UI hint - the server absorbs it into the trip
+          // Previously explored destinations - so the agent validates existing trips against them
           explored: exploredRef.current.length > 0 ? exploredRef.current : undefined,
         }),
       });
-      // קוד הסטטוס חייב להגיע להודעה למשתמש. עד עכשיו כל תשובה שאינה
-      // ok נזרקה כ-'bad response' ונתפסה ב-catch ריק, כך ש**הגבלת קצב
-      // (429) נראתה למטייל בדיוק כמו קריסה** - "אופס, משהו השתבש" -
-      // והוא לחץ שוב, מה שרק החמיר את ההגבלה. בתוכנית החינמית הפרץ הוא
-      // 6 בקשות בדקה, כך שזה מסלול שקורה בפועל.
+      // The status code must reach the user-facing message. Until now every non-ok
+      // response was thrown as 'bad response' and caught in an empty catch, so
+      // **a rate limit (429) looked to the traveler exactly like a crash** - the
+      // generic "oops, something went wrong" - and they tapped again, which only
+      // worsened the limit. On the free plan the burst is 6 requests a minute, so
+      // this is a path that actually happens.
       if (!res.ok || !res.body) {
         throw new HttpError(res.status, Number(res.headers.get('Retry-After')) || 0);
       }
@@ -226,26 +232,28 @@ export function useTripChat(options?: {
               placeIds: event.placeIds,
             }));
           } else if (event.type === 'trip' && event.trip) {
-            // הטיול נוצר/עודכן מתוך השיחה הזו - כשה-currentId ישתנה בעקבות
-            // זה, לא טוענים מחדש מהאחסון (זה ידרוס את ההודעות העדכניות).
+            // The trip was created/updated from within this conversation - when
+            // currentId changes as a result, do not reload from storage (that
+            // would overwrite the up-to-date messages).
             selfUpsertRef.current = event.trip.id;
             tripRef.current.upsertTrip(event.trip);
             setTripUpdates((n) => n + 1);
-            // ההעדפה נטמעה בטיול - הרמז כבר לא נחוץ (הטוגל בממשק גובר)
+            // The preference was absorbed into the trip - the hint is no longer needed (the UI toggle wins)
             if (event.trip.preferences?.kosher) setKosherHint(false);
             if (appended && event.actions && event.actions.length > 0) {
               const actions = event.actions;
               patchLast((msg) => ({ ...msg, actions }));
             }
           } else if (event.type === 'explored' && event.destination) {
-            // יעד חדש נחקר - נשמר מקומית וזמין מיד לרינדור הקנבס
+            // A new destination was explored - saved locally and immediately available for canvas rendering
             setExplored(saveExplored(event.destination));
           } else if (event.type === 'search' && event.search) {
             /**
-             * הכרטיס יכול להגיע **לפני** שהוזרמה מילה אחת של טקסט (הכלי
-             * רץ באיטרציה הראשונה, הפרוזה נכתבת אחריו), ולכן אי אפשר
-             * להסתמך על `appended` כמו שעושים quickReplies: בלי הבדיקה
-             * הזאת הכרטיס היה נופל על הודעת המשתמש או נעלם.
+             * The card can arrive **before** a single word of text has streamed
+             * (the tool runs in the first iteration, the prose is written after
+             * it), so we cannot rely on `appended` the way quickReplies does:
+             * without this check the card would land on the user's message or
+             * disappear.
              */
             const search = event.search;
             if (appended) {
@@ -264,7 +272,7 @@ export function useTripChat(options?: {
       }
       if (!appended) throw new Error('empty stream');
     } catch (err) {
-      // בלי הלוג הזה אי אפשר לדעת מה נפל אצל משתמש אמיתי
+      // Without this log there is no way to know what failed for a real user
       console.error('[chat] request failed', err);
       if (!appended) {
         setMessages((m) => [...m, { role: 'assistant', content: failureMessage(err) }]);
@@ -276,7 +284,7 @@ export function useTripChat(options?: {
     }
   }, [kosherHint, loading]);
 
-  // שליחה ראשונה אוטומטית (הגעה מדף הבית עם ?q=) - פעם אחת בלבד
+  // Automatic first send (arriving from the homepage with ?q=) - once only
   useEffect(() => {
     const q = options?.initialQuery?.trim();
     if (!q || sentInitialRef.current) return;
@@ -285,9 +293,9 @@ export function useTripChat(options?: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options?.initialQuery]);
 
-  // סנכרון השיחה עם הטיול הפעיל: בעלייה טוענים את ההיסטוריה של הטיול
-  // הנוכחי (אלא אם התחלנו עכשיו שיחה חדשה עם ?q=), ובכל החלפת טאב טיול
-  // טוענים את השיחה השמורה שלו.
+  // Syncing the conversation with the active trip: on mount, load the current
+  // trip's history (unless we just started a new conversation with ?q=), and on
+  // every trip-tab switch load that trip's stored conversation.
   useEffect(() => {
     if (!trip.hydrated) return;
     const id = trip.currentId;
@@ -312,7 +320,7 @@ export function useTripChat(options?: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trip.currentId, trip.hydrated]);
 
-  // שמירת השיחה per-trip - מדלגת פעם אחת מיד אחרי טעינה
+  // Per-trip conversation save - skips once immediately after a load
   useEffect(() => {
     if (suppressSaveRef.current) {
       suppressSaveRef.current = false;
@@ -329,12 +337,12 @@ export function useTripChat(options?: {
   }, []);
 
   /**
-   * ניקוי השיחה של הטיול הנוכחי, בלי לגעת בטיול.
+   * Clear the current trip's conversation, without touching the trip.
    *
-   * `reset` לבדו ניקה רק את ה-state, כך שרענון היה משחזר את הכול
-   * מ-localStorage - וזה מה שמטייל דיווח עליו. כאן מוחקים גם את האחסון,
-   * ו-suppressSaveRef מונע מהאפקט שמסנכרן היסטוריה לכתוב מיד את המצב
-   * הישן חזרה על אותו tick.
+   * `reset` alone cleared only the state, so a refresh restored everything from
+   * localStorage - which is what a traveler reported. Here we also delete the
+   * storage, and suppressSaveRef prevents the history-sync effect from
+   * immediately writing the old state back on the same tick.
    */
   const clearConversation = useCallback(() => {
     const id = tripRef.current.currentId;

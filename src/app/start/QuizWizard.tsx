@@ -10,10 +10,11 @@ import type { CityOption } from '@/lib/citySearch';
 import CityCombobox from '@/components/CityCombobox';
 
 /**
- * שאלון מובנה מודרך: כמה צעדים פשוטים שאוספים את בסיס הטיול לפי מודל
- * ההעדפות הקיים (WizardPrefs + TripPreferences) - ולבסוף מייצרים טיול
- * אמיתי עם generateTrip (אותה לוגיקה של האשף/planner, keyless) ונוחתים
- * בתצוגת המתכנן. כשר/שבת הן העדפות שוות ואופציונליות, לא מודגשות.
+ * A guided structured questionnaire: a few simple steps that collect the trip's
+ * basics per the existing preferences model (WizardPrefs + TripPreferences) -
+ * and finally build a real trip with generateTrip (the same wizard/planner
+ * logic, keyless) and land in the planner view. Kosher/Shabbat are equal,
+ * optional preferences, not emphasized.
  */
 
 type City = CityOption;
@@ -30,7 +31,7 @@ const VIBE: { v: WizardPrefs['tripType']; label: string; hint: string }[] = [
   { v: 'nature', label: 'טבע', hint: 'נופים, הרים, אגמים' },
   { v: 'combined', label: 'משולב', hint: 'קצת מהכול' },
 ];
-// ערכי העברית תואמים ל-regex של generateTrip (targetTagsFromPreferences)
+// The Hebrew values match generateTrip's regex (targetTagsFromPreferences)
 const INTERESTS = ['היסטוריה', 'אמנות', 'אוכל', 'טבע', 'חיי לילה', 'רומנטי', 'משפחה'];
 const BUDGET = [
   { v: 'low', label: 'חסכוני' },
@@ -126,7 +127,7 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
 
   const finish = async () => {
     setBuilding(true);
-    // רק הערים שנבחרו - האשף מדרג מקומות רק בתוכן
+    // Only the chosen cities - the wizard ranks places only within them
     const chosen = await fetchCities(citySlugs);
     if (chosen.length === 0) {
       setBuilding(false);
@@ -156,7 +157,7 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
 
   return (
     <div className="mt-5 rounded-2xl bg-shell p-5 ring-1 ring-night/10 sm:p-7">
-      {/* פס התקדמות */}
+      {/* Progress bar */}
       <div className="mb-5 flex items-center gap-2">
         {STEPS.map((s, i) => (
           <div key={s} className="flex flex-1 flex-col items-center gap-1.5">
@@ -313,7 +314,7 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
         )}
       </div>
 
-      {/* ניווט */}
+      {/* Navigation */}
       <div className="mt-6 flex items-center justify-between gap-3">
         <button
           type="button"

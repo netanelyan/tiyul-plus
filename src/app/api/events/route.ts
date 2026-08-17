@@ -5,26 +5,30 @@ import { sameOriginOk } from '@/lib/server/chatGuards';
 import { dayKey } from '@/lib/server/limits';
 
 /**
- * מונה אירועים - **התשובה לשאלה "כמה טיולים מיוצאים", בלי מעקב**.
+ * Event counter - **the answer to "how many trips get exported", without tracking**.
  *
- * הדפסה, PDF, שיתוף בוואטסאפ וניווט קורים כולם בדפדפן ולא משאירים
- * שום עקבה בשרת, ולכן אי אפשר היה לענות על השאלה. הפתרון כאן הוא
- * **מונה ולא יומן**: נשמר רק "ביום הזה היו N הדפסות".
+ * Printing, PDF, WhatsApp sharing and navigation all happen in the browser
+ * and leave no trace on the server, so the question could not be answered.
+ * The solution here is **a counter, not a log**: only "on this day there
+ * were N prints" is stored.
  *
- * מה שבמכוון **לא** נשמר: מי, איזה טיול, מתי בדיוק, מאיזו כתובת.
- * שורה במונה לא ניתנת לשיוך לאף אדם, וזו הסיבה שהיא מותרת.
+ * What is deliberately **not** stored: who, which trip, exactly when, from
+ * which address. A counter row cannot be attributed to any person, and that
+ * is why it is allowed.
  *
- * הנתיב פתוח לכל מי שגולש באתר (הפעולות האלה זמינות גם בלי חשבון),
- * ולכן יש עליו את אותן הגנות זולות כמו על שאר הנתיבים: מקור הבקשה
- * ומכסת קצב. הוא לא נוגע במודל ולא עולה כסף.
+ * The route is open to anyone browsing the site (these actions are
+ * available without an account too), so it carries the same cheap
+ * protections as the other routes: request origin and a rate quota. It
+ * touches no model and costs no money.
  */
 
 /**
- * הרשימה הסגורה של אירועים שדפדפן רשאי לדווח. אירועי הצמיחה החדשים
- * (טיול נוצר, שיתוף נפתח, המרה, ביקור חוזר) נכנסו אליה; `newsletter`
- * **בכוונה לא** - הוא נספר בשרת בלבד, בנתיב ההרשמה, ששם אפשר להבדיל
- * כתובת חדשה מכפולה. לקוח שהיה רשאי לשלוח אותו היה יכול לנפח את
- * "אימיילים שנאספו" בלולאה בלי לרשום אף כתובת.
+ * The closed list of events a browser may report. The new growth events
+ * (trip created, share opened, adoption, return visit) joined it;
+ * `newsletter` **deliberately did not** - it is counted server-side only,
+ * in the signup route, where a new address can be distinguished from a
+ * duplicate. A client allowed to send it could inflate "emails collected"
+ * in a loop without registering a single address.
  */
 const KINDS = new Set([
   'print', 'pdf', 'whatsapp', 'share', 'maps',
@@ -33,17 +37,19 @@ const KINDS = new Set([
 
 export async function POST(req: Request) {
   /*
-    **כל תשובה כאן היא 204, כולל דחייה.** ב-`/api/chat` מקור זר מקבל 403
-    כי שם התשובה עולה כסף ומגיע לומר "לא". כאן אין מה להגן עליו מלבד
-    דיוק המונה, ולכן אין סיבה שהנתיב יענה תשובות שונות לבקשות שונות -
-    ובנוסף `trackEvent` נשלח תוך כדי ניווט, ותשובת שגיאה שם היא רעש
-    בקונסולה של המשתמש בשביל כלום.
+    **Every response here is a 204, rejection included.** In `/api/chat` a
+    foreign origin gets 403 because there the response costs money and
+    deserves a "no". Here there is nothing to protect except the counter's
+    accuracy, so there is no reason the route should answer differently to
+    different requests - and additionally `trackEvent` is sent mid-
+    navigation, and an error response there is noise in the user's console
+    for nothing.
   */
   const counted = sameOriginOk(req);
   if (!counted) return new Response(null, { status: 204 });
 
   const caller = await resolveCaller(req);
-  // תקרה נדיבה: אדם שמדפיס חמש פעמים הוא אדם, לא בעיה
+  // A generous ceiling: a person who prints five times is a person, not a problem
   if (!checkLimit('events', caller.id, 60, 60 * 60_000).ok) return new Response(null, { status: 204 });
 
   let kind = '';
@@ -53,10 +59,10 @@ export async function POST(req: Request) {
   } catch {
     return new Response(null, { status: 204 });
   }
-  // רשימה סגורה. ערך אחר לא יוצר מפתח חדש - הוא פשוט לא נספר.
+  // A closed list. A different value creates no new key - it simply is not counted.
   if (!KINDS.has(kind)) return new Response(null, { status: 204 });
 
-  // fire and forget: מונה לא מעכב הדפסה ולא מפיל אותה
+  // fire and forget: a counter neither delays a print nor fails it
   void adminRpc('bump_event', { p_day: dayKey(), p_kind: kind });
   return new Response(null, { status: 204 });
 }

@@ -1,39 +1,43 @@
-// איתור תמונות למקומות שאין להם photo - הסקריפט היחיד בפרויקט שחייב רשת.
+// Finding photos for places that have no photo field - the only script in the
+// project that requires a network.
 //
-// למה הוא קיים בכלל: סביבת הענן שבה הסוכן עובד חוסמת את כל דומייני
-// ויקימדיה (403 בפרוקסי), ולכן אי אפשר לאמת שם אף כתובת תמונה. הכלל
-// הקשיח של הפרויקט אוסר לכתוב נתון לא מאומת, אז במקום לנחש - הסקריפט
-// הזה רץ על מחשב שיש לו רשת, מאמת, וכותב דוח. הדוח הוא שנכנס לקוד,
-// דרך scripts/apply-photos.mjs, שלא נוגע ברשת בכלל.
+// Why it exists at all: the cloud environment the agent works in blocks all
+// the Wikimedia domains (403 at the proxy), so no image URL can be verified
+// there. The project's hard rule forbids writing an unverified value, so
+// instead of guessing - this script runs on a machine that has network
+// access, verifies, and writes a report. The report is what enters the code,
+// via scripts/apply-photos.mjs, which does not touch the network at all.
 //
-//   node scripts/fetch-photos.mjs                  כל המקומות החסרים
-//   node scripts/fetch-photos.mjs --limit 20       ריצת ניסיון
-//   node scripts/fetch-photos.mjs --only stockholm יעד אחד
+//   node scripts/fetch-photos.mjs                  all the missing places
+//   node scripts/fetch-photos.mjs --limit 20       a trial run
+//   node scripts/fetch-photos.mjs --only stockholm a single destination
 //
-// הפלט: photo-report.json בשורש הריפו.
+// Output: photo-report.json at the repo root.
 //
-// איך נמנעים מתמונה של הנושא הלא נכון: לא סומכים על הדירוג של מנוע
-// החיפוש. לכל מועמד שוויקיפדיה מחזירה נבדקות הקואורדינטות שלו מול
-// הקואורדינטות שכבר יש לנו בדאטה, והמועמד נפסל אם הוא רחוק מדי. תמונה
-// שאין לה אימות גיאוגרפי לא מסומנת 'ok' - היא נכנסת ל-'review' וממתינה
-// לעין אנושית. זה בדיוק הלקח מהבאץ' השני, שבו התוצאה הראשונה בחיפוש
-// Commons הייתה לעתים קרובות נושא אחר לגמרי.
+// How a wrong-subject photo is avoided: we do not trust the search engine's
+// ranking. For every candidate Wikipedia returns, its coordinates are
+// checked against the coordinates we already have in the data, and the
+// candidate is rejected if it is too far. A photo without geographic
+// verification is not marked 'ok' - it goes into 'review' and waits for a
+// human eye. This is precisely the lesson from the second batch, where the
+// first result in a Commons search was often an entirely different subject.
 import { writeFileSync } from 'node:fs';
 import { parsePlaces, distanceKm } from './lib/parse-places.mjs';
 
 const API = 'https://en.wikipedia.org/w/api.php';
 const UA = 'tiyul-plus/1.0 (travel catalog photo verification; contact via tiyulplus.com)';
-const THUMB_WIDTH = 500; // תואם לכתובות שכבר קיימות בדאטה
+const THUMB_WIDTH = 500; // matches the URLs already present in the data
 const OUT = 'photo-report.json';
 
-/** מתחת לזה המאמר הוא בוודאות אותו מקום */
+/** Below this the article is certainly the same place */
 const ACCEPT_KM = 12;
-/** בין ACCEPT_KM ל-REVIEW_KM: כנראה נכון, אבל דורש עין אנושית */
+/** Between ACCEPT_KM and REVIEW_KM: probably right, but requires a human eye */
 const REVIEW_KM = 60;
 const CONCURRENCY = 4;
 
-// שמות קבצים שכמעט תמיד מייצגים סמל ולא מקום. אלה נפסלים גם אם המרחק
-// מושלם: דגל של מדינה הוא לא תמונה של אתר.
+// Filenames that almost always represent a symbol and not a place. These are
+// rejected even if the distance is perfect: a country's flag is not a photo
+// of a site.
 const BAD_FILE = /(flag|coat[_ ]of[_ ]arms|logo|map[_ ]of|locator|seal|emblem|blank|wappen)/i;
 
 const argv = process.argv.slice(2);
@@ -67,7 +71,7 @@ async function getJson(url) {
   return res.json();
 }
 
-/** האם הכתובת באמת חיה ובאמת תמונה */
+/** Whether the URL is really alive and really an image */
 async function headOk(url) {
   try {
     const res = await fetch(url, {
@@ -82,9 +86,10 @@ async function headOk(url) {
 }
 
 /**
- * מבקש מוויקיפדיה עד 8 מועמדים לשם, ומחזיר לכל אחד כותרת, קואורדינטות
- * ותמונה ראשית. תמונה ראשית של מאמר היא מדד טוב בהרבה לנושא הנכון
- * מאשר תוצאה ראשונה בחיפוש טקסט חופשי ב-Commons.
+ * Asks Wikipedia for up to 8 candidates for the name, and returns each one's
+ * title, coordinates and lead image. An article's lead image is a far better
+ * indicator of the right subject than the first result in a free-text
+ * Commons search.
  */
 async function candidates(query) {
   const url =
@@ -130,8 +135,9 @@ async function resolve(place) {
     status = 'review';
     chosen = best;
   } else if (
-    // אין קואורדינטות בשום מועמד: מקבלים רק התאמת כותרת מדויקת, ורק
-    // כ-review. מוזיאונים וכנסיות רבים פשוט לא ממופים בוויקיפדיה.
+    // No coordinates on any candidate: only an exact title match is
+    // accepted, and only as review. Many museums and churches are simply
+    // not geotagged on Wikipedia.
     scored.some((c) => c.title.toLowerCase() === place.nameLocal.toLowerCase())
   ) {
     status = 'review';
@@ -160,7 +166,7 @@ async function resolve(place) {
   };
 }
 
-// ריצה עם תקרת מקביליות. ויקיפדיה סובלנית, אבל אין סיבה להעמיס.
+// Run with a concurrency cap. Wikipedia is tolerant, but there is no reason to pile on.
 const results = [];
 let cursor = 0;
 let done = 0;

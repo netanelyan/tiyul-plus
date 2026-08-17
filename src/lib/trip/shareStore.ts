@@ -1,40 +1,42 @@
 /**
- * שרת בלבד - לא לייבא מקומפוננטת client (המפתחות ב-env של השרת;
- * החבילה server-only לא בפרויקט, אז ההגנה היא המוסכמה הזו).
+ * Server only - do not import from a client component (the keys live in the
+ * server's env; the server-only package is not in the project, so the
+ * protection is this convention).
  *
- * אחסון קישורי שיתוף קצרים - Supabase (REST, בלי תלות חדשה).
+ * Storage for short share links - Supabase (REST, no new dependency).
  *
- * ## מה השתנה כאן, ולמה זה לא רק החלפת מפתח
+ * ## What changed here, and why it is not just a key swap
  *
- * הטבלה נשאה מדיניות `select ... to anon using (true)` בשם
- * "anyone can read a share link by code". **השם תיאר כוונה שהתנאי לא
- * ביטא**: `using (true)` הוא "כל שורה", ולכן כל מי שמחזיק את מפתח
- * ה-anon - שנשלח בכל דף שאנחנו מגישים - יכול היה למשוך את כל קישורי
- * השיתוף באתר בבקשה אחת.
+ * The table carried a `select ... to anon using (true)` policy named
+ * "anyone can read a share link by code". **The name described an intent
+ * the condition did not express**: `using (true)` is "every row", so anyone
+ * holding the anon key - shipped with every page we serve - could pull all
+ * of the site's share links in a single request.
  *
- * "צריך לדעת את הקוד" אינו תנאי שאפשר לנסח ב-RLS: מדיניות רואה שורה,
- * לא שאילתה, ולכן היא לא יכולה לדרוש שהקורא ציין `code`. לכן שני
- * המסלולים כאן שינו צורה, וכל אחד מסיבה אחרת:
+ * "Must know the code" is not a condition expressible in RLS: a policy sees
+ * a row, not a query, so it cannot require that the caller specified
+ * `code`. Hence both paths here changed shape, each for a different reason:
  *
- * - **קריאה** עוברת ל-`get_shared_trip(code)` (`security definer`).
- *   לפונקציה אין גרסה שמחזירה רשימה, ולכן "שורה אחת לפי קוד" הוא
- *   מבנה ולא הסכמה. אין כאן `select` על הטבלה בכלל.
- * - **כתיבה** עוברת ל-service role, כלומר רק מהשרת שלנו, כלומר תמיד
- *   מאחורי המכסות של `/api/share`. המדיניות הקודמת אפשרה לכל דפדפן
- *   לכתוב ישירות ולעקוף אותן לגמרי.
+ * - **Reads** go through `get_shared_trip(code)` (`security definer`).
+ *   The function has no list-returning variant, so "one row per code" is
+ *   structure, not convention. There is no `select` on the table here at all.
+ * - **Writes** go through the service role, i.e. only from our server, i.e.
+ *   always behind the quotas of `/api/share`. The previous policy let any
+ *   browser write directly and bypass them entirely.
  *
- * טבלת shared_trips (ראו supabase-setup.sql ו-supabase-rls-fix.sql):
- * code (PK) ← ה-payload המקודד של v1. שומרים את אותו base64url
- * שהקישור הארוך נושא, כך שהפענוח והאימות מול הדאטה האוצרת נשארים
- * ב-decodeTripShare - נקודת אמת אחת.
+ * The shared_trips table (see supabase-setup.sql and supabase-rls-fix.sql):
+ * code (PK) ← the encoded v1 payload. We store the same base64url the long
+ * link carries, so decoding and validation against the curated data stay in
+ * decodeTripShare - a single point of truth.
  *
- * **בלי `SUPABASE_SERVICE_ROLE_KEY` יצירת קישור קצר כבויה בשקט**
- * והלקוח נופל לקישור הארוך, שעובד במלואו ואינו תלוי בשום backend.
- * קריאה של קישורים קיימים ממשיכה לעבוד גם בלעדיו, כי לפונקציה יש
- * הרשאת הרצה ל-anon.
+ * **Without `SUPABASE_SERVICE_ROLE_KEY` short-link creation is silently
+ * off** and the client falls back to the long link, which works in full and
+ * depends on no backend. Reading existing links keeps working without it
+ * too, because the function has execute permission for anon.
  *
- * כשיגיעו חשבונות משתמש: אותה טבלה מקבלת עמודת user_id והטיולים
- * נשמרים תחת החשבון - הקוד הקצר כבר ערוך לזה.
+ * When user accounts arrive: the same table gains a user_id column and
+ * trips are stored under the account - the short code is already set up
+ * for that.
  */
 
 import { pgIdent } from '@/lib/server/pgrest';
@@ -43,9 +45,9 @@ const baseUrl = () => process.env.SUPABASE_URL;
 const anonKey = () => process.env.SUPABASE_ANON_KEY;
 const serviceKey = () => process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const ALPHABET = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789'; // בלי io01l
+const ALPHABET = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789'; // without io01l
 
-/** צורת הקוד - אותה צורה בדיוק נאכפת גם בתוך הפונקציה ב-SQL */
+/** Code shape - the exact same shape is also enforced inside the SQL function */
 const CODE_SHAPE = /^[a-zA-Z0-9]{6,12}$/;
 
 function randomCode(len = 8): string {
@@ -56,9 +58,9 @@ function randomCode(len = 8): string {
 }
 
 /**
- * מפתחות anon בפורמט הישן הם JWT ונשלחים גם כ-Bearer; מפתחות
- * `sb_publishable_` / `sb_secret_` החדשים עוברים ב-apikey בלבד
- * (PostgREST דוחה Bearer עם ערך שאינו JWT).
+ * Old-format anon keys are JWTs and are also sent as Bearer; the new
+ * `sb_publishable_` / `sb_secret_` keys go through apikey only
+ * (PostgREST rejects Bearer with a non-JWT value).
  */
 function headers(key: string): Record<string, string> {
   const h: Record<string, string> = { apikey: key, 'Content-Type': 'application/json' };
@@ -66,19 +68,20 @@ function headers(key: string): Record<string, string> {
   return h;
 }
 
-/** קריאה עובדת עם כל מפתח - הפונקציה מוענקת ל-anon ול-service_role */
+/** Reads work with any key - the function is granted to anon and to service_role */
 const readKey = () => serviceKey() ?? anonKey();
 
-/** קריאת קישור קיים אפשרית */
+/** Reading an existing link is possible */
 export const shareReadEnabled = () => Boolean(baseUrl() && readKey());
 
 /**
- * יצירת קישור קצר אפשרית. **דורש service role בכוונה** - זו הדרך
- * היחידה להבטיח שכל כתיבה עברה דרך המכסות שלנו.
+ * Creating a short link is possible. **Requires the service role on
+ * purpose** - it is the only way to guarantee that every write went
+ * through our quotas.
  */
 export const shareCreateEnabled = () => Boolean(baseUrl() && serviceKey());
 
-/** שומר payload ומחזיר קוד קצר, או null אם האחסון לא מוגדר/נכשל */
+/** Stores a payload and returns a short code, or null if storage is unconfigured/failed */
 export async function createShareCode(payload: string): Promise<string | null> {
   if (!shareCreateEnabled()) return null;
   const url = baseUrl()!;
@@ -92,7 +95,7 @@ export async function createShareCode(payload: string): Promise<string | null> {
         body: JSON.stringify({ code, payload }),
       });
       if (res.ok) return code;
-      if (res.status === 409) continue; // התנגשות קוד נדירה - מגרילים שוב
+      if (res.status === 409) continue; // rare code collision - roll a new one
       return null;
     } catch {
       return null;
@@ -102,15 +105,18 @@ export async function createShareCode(payload: string): Promise<string | null> {
 }
 
 /**
- * מאחזר payload לפי קוד קצר; null אם לא קיים או שהאחסון כבוי.
+ * Fetches a payload by short code; null if it does not exist or storage is
+ * off.
  *
- * דרך ה-RPC ולא דרך `select` על הטבלה: לפונקציה אין צורה שמחזירה
- * יותר משורה אחת, ולכן גם באג בקוד הזה לא יכול להפוך אותה לרשימה.
+ * Via the RPC and not via a `select` on the table: the function has no form
+ * that returns more than one row, so even a bug in this code cannot turn it
+ * into a list.
  */
 export async function getSharedPayload(code: string): Promise<string | null> {
   if (!shareReadEnabled()) return null;
-  // בדיקה מקומית לפני הרשת. אותה בדיקה חוזרת בתוך הפונקציה ב-SQL,
-  // כי הצד היחיד שאפשר לסמוך עליו הוא הצד שלא ניתן לעקוף.
+  // Local check before the network. The same check is repeated inside the
+  // SQL function, because the only side that can be trusted is the side
+  // that cannot be bypassed.
   if (!CODE_SHAPE.test(code)) return null;
   try {
     const res = await fetch(`${baseUrl()}/rest/v1/rpc/${pgIdent('get_shared_trip')}`, {
@@ -120,7 +126,7 @@ export async function getSharedPayload(code: string): Promise<string | null> {
       next: { revalidate: 3600 },
     });
     if (!res.ok) return null;
-    // הפונקציה מחזירה scalar: מחרוזת ה-payload, או null.
+    // The function returns a scalar: the payload string, or null.
     const payload = (await res.json()) as unknown;
     return typeof payload === 'string' && payload.length > 0 ? payload : null;
   } catch {

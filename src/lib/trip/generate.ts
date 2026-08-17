@@ -4,11 +4,13 @@ import type { Trip, TripDay, TripPreferences, WizardPrefs } from './types';
 import { newId } from './types';
 
 /**
- * האשף החכם: לוגיקת דירוג ואריזת ימים - צד לקוח בלבד, בלי AI ובלי עלות.
- * ציון לכל מקום לפי סוג הטיול והעדפות, ואז אריזה גיאוגרפית לימים
- * לפי תקציב זמן. הפלט הוא Trip רגיל שאפשר לערוך.
- * מ-Phase 2: הציון קורא גם את Trip.preferences - תגיות שתואמות תחומי עניין
- * והרכב נוסעים מקבלות דחיפה, ותקציב נמוך מעניש מקומות יקרים (priceLevel).
+ * The smart wizard: scoring and day-packing logic - client side only, with no AI and
+ * no cost. A score per place from the trip type and the preferences, then geographic
+ * packing into days against a time budget. The output is an ordinary Trip that can be
+ * edited.
+ * Since Phase 2 the score also reads Trip.preferences - tags matching the traveller's
+ * interests and party composition get a boost, and a low budget penalises expensive
+ * places (priceLevel).
  */
 
 type Weights = Partial<Record<PlaceCategory, number>>;
@@ -19,7 +21,7 @@ const TYPE_WEIGHTS: Record<WizardPrefs['tripType'], Weights> = {
   combined: { attraction: 2.2, museum: 2, nature: 2.2, viewpoint: 2.2, cafe: 1.3, shopping: 1.3 },
 };
 
-// תחומי עניין בעברית חופשית → תגיות מהסט הסגור
+// Free-text Hebrew interests -> tags from the closed set
 const INTEREST_TAGS: [RegExp, PlaceTag][] = [
   [/טבע|פארק|ירוק|הליכות/, 'outdoors'],
   [/היסטוריה|עתיק|מורשת/, 'history'],
@@ -30,7 +32,7 @@ const INTEREST_TAGS: [RegExp, PlaceTag][] = [
   [/לילה|בילוי|מסיבות|ברים/, 'nightlife'],
 ];
 
-/** גוזר תגיות יעד מהעדפות הטיול (הרכב נוסעים + תחומי עניין) */
+/** Derives destination tags from the trip preferences (party composition + interests) */
 export function targetTagsFromPreferences(preferences?: TripPreferences): Set<PlaceTag> {
   const target = new Set<PlaceTag>();
   if (!preferences) return target;
@@ -50,21 +52,22 @@ function score(
   targetTags: Set<PlaceTag>,
   budget?: TripPreferences['budget'],
 ): number {
-  if (place.category.startsWith('kosher')) return 0; // אוכל כשר משובץ בנפרד
-  // שמר כשרות: מקום שאוכלים בו ואינו כשר (או שכשרותו לא ידועה) לא נכנס
-  // לניקוד בכלל. בלי זה מסעדה לא כשרה הייתה מנצחת בציון ונכנסת למסלול.
+  if (place.category.startsWith('kosher')) return 0; // kosher food is scheduled separately
+  // Keeping kashrut: a place you eat at that is not kosher (or whose kashrut is
+  // unknown) does not enter the scoring at all. Without this a non-kosher restaurant
+  // would win on score and land in the itinerary.
   if (prefs.kosherOnly && isEating(place.category) && kosherStatusOf(place) !== 'kosher') return 0;
   let w = TYPE_WEIGHTS[prefs.tripType][place.category] ?? 1;
   if (place.category === 'shopping') {
     if (prefs.shopping === 'more') w = 4;
     if (prefs.shopping === 'less') return 0;
   }
-  // התאמת תגיות להעדפות - כל תגית תואמת מוסיפה דחיפה
+  // Matching tags against the preferences - each matching tag adds a boost
   if (targetTags.size > 0 && place.tags) {
     const matches = place.tags.filter((t) => targetTags.has(t)).length;
     w *= 1 + 0.35 * matches;
   }
-  // תקציב מול רמת מחיר
+  // Budget against price level
   if (budget === 'low') {
     if (place.priceLevel === 3) w *= 0.45;
     else if (place.priceLevel !== undefined && place.priceLevel <= 1) w *= 1.15;
@@ -76,13 +79,13 @@ function score(
 }
 
 function distKm(a: Place, b: Place): number {
-  // קירוב שטוח - מספיק לאשכול עצירות בתוך עיר
+  // A flat approximation - good enough for clustering stops within one city
   const dx = (a.lng - b.lng) * 111 * Math.cos((a.lat * Math.PI) / 180);
   const dy = (a.lat - b.lat) * 111;
   return Math.sqrt(dx * dx + dy * dy);
 }
 
-/** חלוקת ימים בין ערים: בסיס שווה, שארית לערים הראשונות */
+/** Splitting days between cities: an equal base, with the remainder going to the first cities */
 function allocateDays(totalDays: number, cities: string[]): Map<string, number> {
   const alloc = new Map<string, number>();
   const base = Math.max(1, Math.floor(totalDays / cities.length));
@@ -100,7 +103,7 @@ export function generateTrip(
   name: string,
   preferences?: TripPreferences,
 ): Trip {
-  const timeBudget = prefs.pace === 'relaxed' ? 300 : 480; // דקות ליום
+  const timeBudget = prefs.pace === 'relaxed' ? 300 : 480; // minutes per day
   const days: TripDay[] = [];
   const alloc = allocateDays(prefs.totalDays, prefs.citySlugs);
   const targetTags = targetTagsFromPreferences(preferences);
@@ -124,14 +127,14 @@ export function generateTrip(
       const placeIds: string[] = [];
       let minutes = 0;
 
-      // עוגן: המקום עם הציון הגבוה ביותר שעוד לא בשימוש
+      // The anchor: the highest-scoring place not yet used
       const seed = scored.find((x) => !used.has(x.place.id));
       if (seed) {
         placeIds.push(seed.place.id);
         used.add(seed.place.id);
         minutes += seed.place.durationMin ?? 60;
 
-        // ממשיכים גיאוגרפית: הקרוב הבא עם ציון טוב, עד גמר תקציב הזמן
+        // Continue geographically: the next nearest with a good score, until the time budget runs out
         let cursor = seed.place;
         while (minutes < timeBudget) {
           const candidates = scored.filter(
@@ -150,7 +153,7 @@ export function generateTrip(
         }
       }
 
-      // שיבוץ ארוחה כשרה: הקרובה ביותר לעצירה האחרונה
+      // Scheduling a kosher meal: the nearest one to the last stop
       if (prefs.kosherOnly && kosherSpots.length > 0 && placeIds.length > 0) {
         const last = dest.places.find((p) => p.id === placeIds[placeIds.length - 1]);
         const available = kosherSpots.filter((k) => !placeIds.includes(k.id));
@@ -175,18 +178,18 @@ export function generateTrip(
 }
 
 /**
- * יצירת טיול מתבנית מסלול מוכן של יעד.
+ * Building a trip from a destination's ready-made itinerary template.
  *
- * כשרות היא העדפה, לא הנחה (hard rule): המסלולים האוצרים בדאטה כוללים
- * לעתים עצירה כשרה, ולכן היא מסוננת החוצה אלא אם המשתמש בחר בכשרות
- * במפורש. הדאטה עצמה לא משתנה - רק מה שנכנס לטיול.
+ * Kashrut is a preference, not an assumption (hard rule): the curated itineraries in
+ * the data sometimes include a kosher stop, so it is filtered out unless the user
+ * chose kashrut explicitly. The data itself does not change - only what enters the trip.
  */
 export function tripFromTemplate(dest: Destination, opts?: { kosher?: boolean }): Trip {
   const kosher = opts?.kosher === true;
   const allowed = (id: string) => {
     const place = dest.places.find((p) => p.id === id);
     if (!place) return true;
-    // שמר כשרות: התבנית נשמרת כולה חוץ ממקומות אכילה שאינם כשרים.
+    // Keeping kashrut: the whole template is preserved except eating places that are not kosher.
     if (kosher) return !(isEating(place.category) && kosherStatusOf(place) !== 'kosher');
     return !isKosher(place.category);
   };

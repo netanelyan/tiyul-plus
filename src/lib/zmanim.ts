@@ -1,31 +1,34 @@
 /**
- * זמני שקיעה, הדלקת נרות וצאת שבת - **אסטרונומיה טהורה, אפס תלויות.**
+ * Sunset, candle-lighting and Shabbat-end times - **pure astronomy, zero dependencies.**
  *
- * ## למה זה בטוח לחשב ולא "המצאה"
+ * ## Why this is safe to compute and not "fabrication"
  *
- * חוק ברזל 2 אוסר להמציא עובדות - אבל שקיעה בקואורדינטה ותאריך נתונים
- * היא לא עובדה שאוספים, היא חישוב דטרמיניסטי (NOAA solar position,
- * אותו אלגוריתם שכל לוח זמנים משתמש בו). הקטלוג כבר נושא קואורדינטות
- * מאומתות לכל עיר, והטיול נושא תאריכים - שני הקלטים קיימים ואמינים.
+ * Hard rule 2 forbids inventing facts - but sunset at a given coordinate and
+ * date is not a fact one collects, it is a deterministic computation (NOAA
+ * solar position, the same algorithm every timetable uses). The catalog
+ * already carries verified coordinates for every city, and the trip carries
+ * dates - both inputs exist and are trustworthy.
  *
- * ## מה זה במפורש לא
+ * ## What this explicitly is not
  *
- * לא פסיקה הלכתית. הדלקת נרות מוצגת לפי המנהג הרווח (18 דקות לפני
- * השקיעה; ירושלים נוהגת 40 אך אינה יעד בקטלוג), וצאת השבת לפי 8.5
- * מעלות מתחת לאופק - מנהג נפוץ, לא היחיד. ה-UI מציג את זה עם הסתייגות
- * קבועה ("מנהגים משתנים - בדקו עם הרב שלכם"), באותה רוח שבה כל תג
- * כשרות באתר נושא "לוודא מול המקום".
+ * Not a halachic ruling. Candle lighting is shown per the prevailing custom
+ * (18 minutes before sunset; Jerusalem practices 40 but is not a catalog
+ * destination), and Shabbat end per 8.5 degrees below the horizon - a common
+ * custom, not the only one. The UI shows this with a standing disclaimer
+ * ("customs vary - check with your rabbi"), in the same spirit in which every
+ * kosher badge on the site carries "verify with the venue".
  *
- * ## דיוק
+ * ## Accuracy
  *
- * אלגוריתם NOAA מדויק לסדר גודל של דקה בטווח קווי הרוחב של הקטלוג.
- * בקווי רוחב קיצוניים (שמש חצות/לילה קוטבי) אין שקיעה - מוחזר null
- * ולא ערך מומצא, כרגיל בפרויקט הזה: השמטה עדיפה על קירוב.
+ * The NOAA algorithm is accurate to the order of a minute within the
+ * catalog's latitude range. At extreme latitudes (midnight sun / polar night)
+ * there is no sunset - null is returned rather than an invented value, as
+ * usual in this project: omission beats approximation.
  */
 
 const RAD = Math.PI / 180;
 
-/** יום יוליאני מ-ISO date (חצות UTC) */
+/** Julian day from an ISO date (midnight UTC) */
 function julianDay(iso: string): number {
   const [y, m, d] = iso.split('-').map(Number);
   const a = Math.floor((14 - m) / 12);
@@ -43,11 +46,12 @@ function julianDay(iso: string): number {
 }
 
 /**
- * זמן חציית השמש את הזווית הנתונה מתחת לאופק, בירידה (ערב), כ-Date
- * אמיתי (UTC). `angleDeg` = 0.833 לשקיעה נראית (רפרקציה + רדיוס השמש),
- * 8.5 לצאת שבת. מחזיר null כשהשמש לא מגיעה לזווית הזו באותו יום.
+ * The time the sun crosses the given angle below the horizon, descending
+ * (evening), as a real Date (UTC). `angleDeg` = 0.833 for apparent sunset
+ * (refraction + solar radius), 8.5 for Shabbat end. Returns null when the sun
+ * does not reach that angle on that day.
  *
- * NOAA sunrise/sunset algorithm - הצורה המקובלת, מיושמת ישירות.
+ * NOAA sunrise/sunset algorithm - the standard form, implemented directly.
  */
 export function sunCrossing(iso: string, lat: number, lng: number, angleDeg: number): Date | null {
   const jd = julianDay(iso);
@@ -62,41 +66,42 @@ export function sunCrossing(iso: string, lat: number, lng: number, angleDeg: num
   const cosHour =
     (Math.sin(-angleDeg * RAD) - Math.sin(lat * RAD) * sinDecl) /
     (Math.cos(lat * RAD) * cosDecl);
-  if (cosHour < -1 || cosHour > 1) return null; // אין חצייה ביום הזה (קוטבי)
+  if (cosHour < -1 || cosHour > 1) return null; // no crossing on this day (polar)
   const hourAngle = Math.acos(cosHour) / RAD;
   const jSet = jTransit + hourAngle / 360;
-  // יום יוליאני → epoch ms: היום היוליאני נספר מצהרי UTC
+  // Julian day → epoch ms: the Julian day is counted from noon UTC
   return new Date((jSet - 2440587.5) * 86400_000);
 }
 
-/** שקיעה נראית (0.833 מעלות - רפרקציה סטנדרטית + חצי קוטר השמש) */
+/** Apparent sunset (0.833 degrees - standard refraction + half the sun's diameter) */
 export const sunset = (iso: string, lat: number, lng: number) => sunCrossing(iso, lat, lng, 0.833);
 
 export interface ShabbatTimes {
-  /** תאריך יום שישי (ISO) */
+  /** The Friday date (ISO) */
   friday: string;
-  /** הדלקת נרות: 18 דקות לפני השקיעה של יום שישי */
+  /** Candle lighting: 18 minutes before Friday's sunset */
   candles: Date;
-  /** צאת השבת: 8.5 מעלות מתחת לאופק במוצ"ש - מנהג נפוץ, לא פסיקה */
+  /** Shabbat end: 8.5 degrees below the horizon on Saturday night - a common custom, not a ruling */
   havdalah: Date;
 }
 
-/** ISO של היום שאחרי */
+/** ISO of the following day */
 function nextDay(iso: string): string {
   const [y, m, d] = iso.split('-').map(Number);
   const dt = new Date(Date.UTC(y, m - 1, d + 1));
   return dt.toISOString().slice(0, 10);
 }
 
-/** 0=ראשון .. 5=שישי, 6=שבת - לפי הלוח האזרחי של התאריך עצמו */
+/** 0=Sunday .. 5=Friday, 6=Saturday - per the civil calendar of the date itself */
 export function weekdayOf(iso: string): number {
   const [y, m, d] = iso.split('-').map(Number);
   return new Date(Date.UTC(y, m - 1, d)).getUTCDay();
 }
 
 /**
- * זמני השבת שחלה בתאריך נתון, אם הוא שישי או שבת - לפי מיקום נתון.
- * מחזיר null כשהתאריך אינו שישי/שבת או כשאין שקיעה חישובית במקום.
+ * The times of the Shabbat that falls on a given date, if it is Friday or
+ * Saturday - for a given location. Returns null when the date is not
+ * Friday/Saturday or when there is no computable sunset at the location.
  */
 export function shabbatTimesFor(iso: string, lat: number, lng: number): ShabbatTimes | null {
   const dow = weekdayOf(iso);
@@ -118,8 +123,10 @@ function prevDay(iso: string): string {
 }
 
 /*
-  אין כאן פונקציית "שעה מקומית משוערת" מקו אורך, בכוונה: קירוב כזה
-  מחמיץ שעון קיץ בשעה שלמה, וכשמדובר בזמן הדלקת נרות זו לא טעות
-  קוסמטית. השעון המקומי האמיתי מגיע מ-lib/countryTimezones.ts (מיפוי
-  מדינה→אזור IANA + Intl), וכשאין שם תשובה - לא מציגים זמן בכלל.
+  There is no "estimated local time" function derived from longitude here, on
+  purpose: such an approximation misses daylight saving by a whole hour, and
+  when it comes to candle-lighting time that is not a cosmetic error. The
+  real local clock comes from lib/countryTimezones.ts (country→IANA zone
+  mapping + Intl), and when there is no answer there - no time is shown at
+  all.
 */

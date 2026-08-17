@@ -3,13 +3,14 @@ import { eq, pgQuery, pgSelect } from '@/lib/server/pgrest';
 import type { Plan } from '@/lib/plans';
 
 /**
- * שרת בלבד - Stripe בלי SDK (חוק ברזל 6: בלי תלות חדשה).
+ * Server only - Stripe without an SDK (hard rule 6: no new dependency).
  *
- * checkout: יצירת Checkout Session למנוי דרך ה-REST API (form-encoded).
- * webhook: אימות חתימת Stripe-Signature ידני (HMAC-SHA256 על
- * "<timestamp>.<raw body>", סבילות 5 דקות, השוואה קבועת-זמן).
- * עדכון התוכנית נכתב לפרופיל דרך ה-service role - הדרך היחידה שעמודת
- * plan משתנה (ראו supabase-premium.sql).
+ * checkout: creating a subscription Checkout Session via the REST API
+ * (form-encoded).
+ * webhook: manual Stripe-Signature verification (HMAC-SHA256 over
+ * "<timestamp>.<raw body>", 5-minute tolerance, constant-time comparison).
+ * The plan update is written to the profile via the service role - the only
+ * way the plan column changes (see supabase-premium.sql).
  */
 
 const stripeKey = () => process.env.STRIPE_SECRET_KEY;
@@ -22,7 +23,7 @@ export const billingConfigured = () =>
 
 const STRIPE_BASE = () => process.env.STRIPE_API_BASE ?? 'https://api.stripe.com';
 
-/** יצירת Checkout Session למנוי. מחזיר את כתובת התשלום או null בכשל. */
+/** Creates a subscription Checkout Session. Returns the payment URL or null on failure. */
 export async function createCheckoutSession(
   userId: string,
   origin: string,
@@ -55,8 +56,8 @@ export async function createCheckoutSession(
 }
 
 /**
- * אימות חתימת webhook של Stripe. מחזיר true רק כשהחתימה תואמת והחותמת
- * בת פחות מ-5 דקות (הגנת replay).
+ * Verifies a Stripe webhook signature. Returns true only when the signature
+ * matches and the timestamp is less than 5 minutes old (replay protection).
  */
 export function verifyStripeSignature(
   rawBody: string,
@@ -92,7 +93,7 @@ function serviceHeaders(): Record<string, string> {
   };
 }
 
-/** עדכון התוכנית של משתמש (service role - עוקף את הרשאות העמודות) */
+/** Updates a user's plan (service role - bypasses the column permissions) */
 export async function setUserPlan(
   userId: string,
   plan: Plan,
@@ -101,7 +102,7 @@ export async function setUserPlan(
   try {
     const patch: Record<string, unknown> = { plan };
     if (stripeCustomerId) patch.stripe_customer_id = stripeCustomerId;
-    // upsert: ייתכן שלמשתמש עוד אין שורת פרופיל (שילם לפני שמילא פרטים)
+    // upsert: the user may not have a profile row yet (paid before filling in details)
     const res = await fetch(
       `${supaUrl()}/rest/v1/profiles?on_conflict=user_id`,
       {
@@ -117,7 +118,7 @@ export async function setUserPlan(
   }
 }
 
-/** איתור משתמש לפי מזהה לקוח Stripe (לביטולי מנוי) */
+/** Finds a user by their Stripe customer id (for subscription cancellations) */
 export async function findUserByStripeCustomer(customerId: string): Promise<string | null> {
   try {
     const res = await fetch(

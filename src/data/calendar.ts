@@ -1,10 +1,12 @@
 import type { CalendarEntry } from '@/lib/types';
 
-// לוח "מה שמשנה טיול". ראה CalendarEntry ב-types.ts לכללים המלאים.
+// The "what reshapes a trip" calendar. See CalendarEntry in types.ts for the full rules.
 //
-// הכלל שאסור לשבור: `dates` נכתב אך ורק כשהתאריכים פורסמו רשמית ונקראו
-// בפועל בכתובת שב-`source`. אחרת נרשם `window` במילים ו-datesConfirmed:false.
-// אין להשלים תאריך מהשנה שעברה, מחישוב, או מהזיכרון - גם כשזה "ברור".
+// The rule that must not be broken: `dates` is written only when the dates
+// were officially published and actually read at the URL in `source`.
+// Otherwise a `window` is recorded in words with datesConfirmed:false.
+// Never fill in a date from last year, from computation, or from memory -
+// even when it is "obvious".
 export const calendar: CalendarEntry[] = [
   {
     id: 'de-oktoberfest',
@@ -352,7 +354,7 @@ export const calendar: CalendarEntry[] = [
       checked: '2026-07-30',
     },
   },
-  // ---- מערב אירופה ----
+  // ---- Western Europe ----
   {
     id: 'pt-websummit',
     kind: 'event',
@@ -638,7 +640,7 @@ export const calendar: CalendarEntry[] = [
     recheckFrom: 'limassolcarnival.cy publishes each year programme and dates',
     source: { url: 'https://www.limassolcarnival.cy/', title: 'Limassol Carnival - official site', checked: '2026-07-30' },
   },
-  // ---- סקנדינביה והבלטיות ----
+  // ---- Scandinavia and the Baltics ----
   {
     id: 'is-thjodhatid-verslunarmannahelgi',
     kind: 'event',
@@ -940,7 +942,7 @@ export const calendar: CalendarEntry[] = [
     note: 'לטביה נסגרת כמעט לגמרי במקטע חג המולד וראש השנה: חנויות, בנקים ומשרדים סגורים בשני המקטעים, והרבה מסעדות ומוזיאונים בריגה סגורים או בשעות מקוצרות סביבם. זו תקופה שקטה וסגורה, לא חלון טוב לסיור עירוני או לקניות.',
     source: { url: 'https://likumi.lv/ta/en/en/id/72608', title: 'Latvian Law on Holidays and Commemorative Days', checked: '2026-07-30' },
   },
-  // ---- מרכז ומזרח אירופה והבלקן ----
+  // ---- Central and Eastern Europe and the Balkans ----
   {
     id: 'pl-zakaz-handlu',
     kind: 'closure',
@@ -1091,7 +1093,7 @@ export const calendar: CalendarEntry[] = [
     note: 'החג הלאומי של בולגריה - בנקים, משרדי ממשלה, מוזיאונים ורוב החנויות סגורים בכל המדינה. יש טקסים רשמיים ומצעדים באנדרטת שיפקה ובסופיה שמושכים קהל וגורמים לחסימות כבישים סביב הכיכרות המרכזיות, והתחבורה הציבורית עוברת ללוח חג.',
     source: { url: 'https://www.gov.bg/en/About-Bulgaria/BULGARIAN-PUBLIC-HOLIDAYS', title: 'Council of Ministers of Bulgaria - public holidays', checked: '2026-07-30' },
   },
-  // ---- המזרח התיכון, הקווקז ומרכז אסיה ----
+  // ---- The Middle East, the Caucasus and Central Asia ----
   {
     id: 'tr-ramazan',
     kind: 'closure',
@@ -1431,7 +1433,7 @@ export const calendar: CalendarEntry[] = [
     note: 'החג המשפחתי החשוב ביותר במונגוליה: רוב העסקים, החנויות ומשרדי הממשלה סגורים לכמה ימים כשמשפחות מבקרות קרובים בסדר קבוע וחולקות ארוחות טקסיות. התחבורה הפנימית עמוסה מאוד כשכולם נוסעים לגרים ולבתי המשפחה, וקשה מאוד לארגן סיורים, מדריכים או נהגים בתקופה הזאת.',
     source: { url: 'https://en.wikipedia.org/wiki/Tsagaan_Sar', title: 'Tsagaan Sar - calendar reference', checked: '2026-07-30' },
   },
-  // ---- מזרח ודרום מזרח אסיה ואוקיאניה ----
+  // ---- East and Southeast Asia and Oceania ----
   {
     id: 'kr-chuseok',
     kind: 'closure',
@@ -1694,7 +1696,7 @@ export const calendar: CalendarEntry[] = [
     recheckFrom: 'the Department of Conservation publishes each Great Walks season dates and booking windows in the preceding months',
     source: { url: 'https://www.doc.govt.nz/parks-and-recreation/things-to-do/walking-and-tramping/great-walks/', title: 'New Zealand Department of Conservation - Great Walks', checked: '2026-07-30' },
   },
-  // ---- אמריקה ----
+  // ---- The Americas ----
   {
     id: 'us-thanksgiving',
     kind: 'closure',
@@ -2037,7 +2039,7 @@ export const calendar: CalendarEntry[] = [
     recheckFrom: 'ohridskoleto.com.mk publishes the season programme in the spring before the summer run',
     source: { url: 'https://ohridskoleto.com.mk', title: 'Ohrid Summer Festival - official site', checked: '2026-07-30' },
   },
-  // ---- עומק ליעדים המרכזיים: יוון, איטליה, ספרד וצרפת ----
+  // ---- Depth for the flagship destinations: Greece, Italy, Spain and France ----
   {
     id: 'gr-cyclades-winter-ferries',
     kind: 'closure',

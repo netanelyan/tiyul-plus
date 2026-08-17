@@ -16,11 +16,12 @@ import Flag from '@/components/Flag';
 import { daysHe } from '@/lib/duration';
 
 /**
- * תצוגת קריאה-בלבד של טיול משותף + ייבוא עותק ל"טיולים שלי".
+ * A read-only view of a shared trip + importing a copy into "my trips".
  *
- * **הערים מגיעות כ-props מהשרת** ולא מייבוא של הקטלוג: העמוד הזה כבר
- * מפענח את הקוד בשרת ויודע בדיוק באילו ערים מדובר, כך שאין שום סיבה
- * שהדפדפן יוריד 2MB של קטלוג בשביל טיול של עיר או שתיים.
+ * **The cities arrive as props from the server**, not by importing the
+ * catalog: this page already decodes the code on the server and knows
+ * exactly which cities are involved, so there is no reason the browser
+ * should download 2MB of catalog for a one- or two-city trip.
  */
 export default function SharedTripView({
   shared,
@@ -34,11 +35,13 @@ export default function SharedTripView({
   const [saved, setSaved] = useState(false);
 
   /*
-    מונה "פתיחות של קישור משותף" - רק צופה שאינו הבעלים (הטוקן לא
-    ברשימת השיתופים שהדפדפן הזה יצר), פעם אחת לטאב (רענון לא מנפח).
-    ממתין ל-hydration כי סמן ההמרה מוצב רק לדפדפן שעוד אין בו טיולים -
-    "הצופה יצר טיול משלו" מודד אנשים חדשים, לא מתכננים קיימים.
-    אדמין מושתק בתוך trackEvent עצמו (הדגל הפנימי).
+    The "shared link opens" counter - only a viewer who is not the owner
+    (the token is not in the list of shares this browser created), once per
+    tab (a refresh does not inflate it). Waits for hydration because the
+    conversion marker is only placed for a browser with no trips yet -
+    "the viewer created a trip of their own" measures new people, not
+    existing planners. Admin is muted inside trackEvent itself (the
+    internal flag).
   */
   useEffect(() => {
     if (!trip.hydrated) return;
@@ -49,7 +52,7 @@ export default function SharedTripView({
       if (sessionStorage.getItem(seenKey)) return;
       sessionStorage.setItem(seenKey, '1');
     } catch {
-      /* אין sessionStorage - סופרים בכל זאת, עדיף ספירה כפולה מאף ספירה */
+      /* No sessionStorage - count anyway, double counting beats no counting */
     }
     trackEvent('shared_open');
     if (trip.trips.length === 0) markSharedVisit();
@@ -87,7 +90,7 @@ export default function SharedTripView({
 
   return (
     <div className="rise-in">
-      {/* כותרת */}
+      {/* Header */}
       <div className="rounded-3xl bg-shell p-6 ring-1 ring-night/10 sm:p-8">
         <p className="text-xs font-bold text-sunset-deep">טיול ששותף איתכם · צפייה חופשית</p>
         <h1 className="display mt-1 text-3xl text-night">{shared.name}</h1>
@@ -119,19 +122,20 @@ export default function SharedTripView({
         </div>
       </div>
 
-      {/* מפה */}
+      {/* Map */}
       <div className="mt-5 h-[320px] overflow-hidden rounded-2xl ring-1 ring-night/10 sm:h-[400px]">
         <PlacesMap center={mapCenter} zoom={12} places={allPlaces} />
       </div>
 
-      {/* הימים */}
+      {/* The days */}
       <div className="mt-5 space-y-4">
         {shared.days.map((d, i) => {
           const dst = destOf(d.citySlug);
           const prev = i > 0 ? shared.days[i - 1] : null;
           const dayObj = { id: String(i), citySlug: d.citySlug, placeIds: d.placeIds, notes: d.notes };
-          // המעבר מחושב מהקואורדינטות האמיתיות. אין כאן דגל רכב:
-          // מטען השיתוף לא כולל preferences במכוון, אז hasCar נשאר false.
+          // The transfer is computed from the real coordinates. There is no
+          // car flag here: the share payload deliberately excludes
+          // preferences, so hasCar stays false.
           const leg =
             prev && prev.citySlug !== d.citySlug
               ? travelLeg(prev.citySlug, d.citySlug, {
@@ -197,7 +201,7 @@ export default function SharedTripView({
         })}
       </div>
 
-      {/* CTA תחתון */}
+      {/* Bottom CTA */}
       <div className="mt-6 rounded-2xl bg-night px-6 py-5 text-center">
         <p className="font-bold text-cream">רוצים לערוך את המסלול או לבנות אחד משלכם?</p>
         <button

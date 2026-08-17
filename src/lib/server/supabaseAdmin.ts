@@ -1,18 +1,21 @@
 /**
- * שרת בלבד. **לעולם לא לייבא מקומפוננטת client** - המפתח כאן עוקף RLS
- * לחלוטין, ודליפה שלו לדפדפן שווה למסירת הדאטהבייס.
+ * Server only. **Never import from a client component** - the key here
+ * bypasses RLS entirely, and leaking it to the browser is equivalent to
+ * handing over the database.
  *
- * REST ישיר מול Supabase עם ה-service role, בלי תלות חדשה (חוק קשיח 6),
- * באותו סגנון כמו `trip/shareStore.ts`.
+ * Direct REST against Supabase with the service role, no new dependency
+ * (hard rule 6), in the same style as `trip/shareStore.ts`.
  *
- * **שמות טבלה/פונקציה וה-uuid נכנסים לנתיב ה-URL ולכן עוברים אימות**
- * (`pgIdent` / `pgUuid`), והפילטרים נבנים ב-`pgrest.ts` בלבד - שם כל
- * ערך מקודד. שתי השכבות האלה הן מה שהופך הזרקה ל-PostgREST לבלתי
- * אפשרית מבנית ולא "בתנאי שכל קורא זכר להצפין".
+ * **Table/function names and the uuid go into the URL path and are therefore
+ * validated** (`pgIdent` / `pgUuid`), and the filters are built only in
+ * `pgrest.ts` - where every value is encoded. These two layers are what
+ * makes PostgREST injection structurally impossible rather than "provided
+ * every caller remembered to escape".
  *
- * בלי `SUPABASE_SERVICE_ROLE_KEY` הכל מחזיר null / false והפיצ׳רים
- * שתלויים בו כבויים בשקט - האתר עצמו ממשיך לעבוד בדיוק כמו קודם. זה
- * המצב בפועל עד שנתנאל מריץ את ה-SQL ומוסיף את המפתח.
+ * Without `SUPABASE_SERVICE_ROLE_KEY` everything returns null / false and
+ * the features that depend on it are silently off - the site itself keeps
+ * working exactly as before. That is the actual state until Netanel runs
+ * the SQL and adds the key.
  */
 
 import { pgIdent, pgUuid } from '@/lib/server/pgrest';
@@ -23,10 +26,12 @@ const serviceKey = () => process.env.SUPABASE_SERVICE_ROLE_KEY;
 export const adminDbEnabled = () => Boolean(url() && serviceKey());
 
 /**
- * **המקום היחיד שבונה כותרות service role.** `limits.ts` ו-`budget.ts`
- * החזיקו עותק משלהן ששולח `Bearer` תמיד - ולכן עם מפתח `sb_secret_`
- * (שאינו JWT) כל כתיבה שלהן נדחתה בשקט, והמונים בלוח הבקרה הראו אפס
- * בזמן שקריאות באמת נעשו. עותק שני של לוגיקה כזאת הוא באג בהמתנה.
+ * **The only place that builds service-role headers.** `limits.ts` and
+ * `budget.ts` kept a copy of their own that always sent `Bearer` - so with
+ * an `sb_secret_` key (which is not a JWT) every write of theirs was
+ * silently rejected, and the dashboard counters showed zero while calls
+ * were genuinely being made. A second copy of logic like this is a bug in
+ * waiting.
  */
 export function serviceHeaders(extra: Record<string, string> = {}): Record<string, string> {
   return headers(extra);
@@ -39,16 +44,17 @@ function headers(extra: Record<string, string> = {}): Record<string, string> {
     'Content-Type': 'application/json',
     ...extra,
   };
-  // רק מפתחות בפורמט הישן הם JWT ונשלחים גם כ-Bearer. מפתחות
-  // `sb_secret_...` החדשים של Supabase אינם JWT, ו-PostgREST דוחה Bearer
-  // עם ערך שאינו JWT - כלומר שליחה עיוורת של שניהם הייתה מפילה את אזור
-  // הניהול דווקא בפרויקטים חדשים. אותה הבחנה קיימת כבר ב-trip/shareStore.ts
-  // עבור מפתח ה-anon; היא הוחמצה כאן.
+  // Only keys in the old format are JWTs and are also sent as Bearer.
+  // Supabase's new `sb_secret_...` keys are not JWTs, and PostgREST rejects
+  // a Bearer whose value is not a JWT - i.e. blindly sending both would
+  // have broken the admin area precisely on new projects. The same
+  // distinction already exists in trip/shareStore.ts for the anon key; it
+  // was missed here.
   if (k.startsWith('eyJ')) h.Authorization = `Bearer ${k}`;
   return h;
 }
 
-/** GET על טבלה/view. `query` הוא query string של PostgREST בלי ה-? */
+/** GET on a table/view. `query` is a PostgREST query string without the ? */
 export async function adminSelect<T>(table: string, query: string): Promise<T[] | null> {
   if (!adminDbEnabled()) return null;
   try {
@@ -63,7 +69,7 @@ export async function adminSelect<T>(table: string, query: string): Promise<T[] 
   }
 }
 
-/** DELETE לפי שאילתת pgrest. מחזיר את השורות שנמחקו (או null בכישלון). */
+/** DELETE by a pgrest query. Returns the deleted rows (or null on failure). */
 export async function adminDelete<T>(table: string, query: string): Promise<T[] | null> {
   if (!adminDbEnabled()) return null;
   try {
@@ -78,7 +84,7 @@ export async function adminDelete<T>(table: string, query: string): Promise<T[] 
   }
 }
 
-/** PATCH לפי תנאי. מחזיר את השורות המעודכנות, או null בכישלון. */
+/** PATCH by a condition. Returns the updated rows, or null on failure. */
 export async function adminUpdate<T>(
   table: string,
   query: string,
@@ -99,14 +105,16 @@ export async function adminUpdate<T>(
 }
 
 /**
- * INSERT (עם upsert אופציונלי לפי מפתח ראשי).
+ * INSERT (with optional upsert by primary key).
  *
- * `ignoreDuplicates` הוא הצורה השנייה של upsert: כפילות לא נכתבת
- * **וגם לא מוחזרת** - מערך ריק פירושו "הכול היה כפול". זה מה שמאפשר
- * לנתיב הניוזלטר לספור רק כתובות חדשות באמת בלי לשנות את התשובה
- * ללקוח (שנשארת זהה לחדש ולכפול, בכוונה - שהטופס לא יהפוך לבודק
- * "האם הכתובת הזאת רשומה"). הבדל תוכן אחד מ-merge: כפילות לא נוגעת
- * בשורה הקיימת - חתימת המקור והתאריך המקוריים נשמרים.
+ * `ignoreDuplicates` is the second form of upsert: a duplicate is not
+ * written **and is not returned either** - an empty array means "everything
+ * was a duplicate". That is what lets the newsletter route count only
+ * genuinely new addresses without changing the response to the client
+ * (which stays identical for new and duplicate, deliberately - so the form
+ * cannot become an "is this address registered" oracle). One content
+ * difference from merge: a duplicate does not touch the existing row - the
+ * original source signature and date are preserved.
  */
 export async function adminInsert<T>(
   table: string,
@@ -133,7 +141,7 @@ export async function adminInsert<T>(
   }
 }
 
-/** קריאת RPC (security definer) */
+/** RPC call (security definer) */
 export async function adminRpc<T>(fn: string, args: Record<string, unknown>): Promise<T | null> {
   if (!adminDbEnabled()) return null;
   try {
@@ -150,8 +158,9 @@ export async function adminRpc<T>(fn: string, args: Record<string, unknown>): Pr
 }
 
 /**
- * מייל לפי uuid ולהיפך, דרך Admin API של GoTrue. המיילים יושבים ב-auth
- * ולא ב-profiles, ובכוונה: הם לא נחשפים לאף שאילתה של לקוח.
+ * Email by uuid and vice versa, via GoTrue's Admin API. The emails live in
+ * auth, not in profiles, deliberately: they are never exposed to any client
+ * query.
  */
 export async function userByEmail(email: string): Promise<{ id: string; email: string } | null> {
   if (!adminDbEnabled()) return null;
@@ -164,8 +173,9 @@ export async function userByEmail(email: string): Promise<{ id: string; email: s
     );
     if (!res.ok) return null;
     const data = (await res.json()) as { users?: { id: string; email?: string }[] };
-    // filter הוא חיפוש חלקי - מחייבים התאמה מדויקת כדי שלא נפעל על
-    // חשבון דומה בטעות (מייל הוא מזהה, לא חיפוש חופשי)
+    // `filter` is a partial search - we require an exact match so we never
+    // act on a similar account by mistake (an email is an identifier, not a
+    // free-text search)
     const hit = (data.users ?? []).find((u) => (u.email ?? '').toLowerCase() === clean);
     return hit ? { id: hit.id, email: hit.email ?? clean } : null;
   } catch {
@@ -174,13 +184,14 @@ export async function userByEmail(email: string): Promise<{ id: string; email: s
 }
 
 /**
- * מטמון מייל-לפי-uuid, בזיכרון התהליך. מייל של חשבון כמעט לא משתנה,
- * וכל טעינת דשבורד אדמין שלפה את אותם מיילים שוב - קריאת HTTP אחת
- * ל-GoTrue לכל שורה מוצגת, ועוד אחת ב-`requireRole` על כל בקשת אדמין.
- * TTL קצר (10 דק׳) כי המחיר של ערך ישן הוא קוסמטי בלבד (תצוגה בדשבורד,
- * ושדה actor ביומן הביקורת - שממילא נושא גם uuid). **כישלון לא נשמר**:
- * null מהרשת יכול להיות תקלה זמנית, ולקבע אותו ל-10 דקות היה מציג
- * "אין מייל" על חשבון תקין.
+ * Email-by-uuid cache, in process memory. An account's email almost never
+ * changes, and every admin dashboard load re-fetched the same emails - one
+ * HTTP call to GoTrue per displayed row, plus one in `requireRole` on every
+ * admin request. Short TTL (10 min) because the cost of a stale value is
+ * cosmetic only (dashboard display, and the actor field in the audit log -
+ * which carries the uuid anyway). **A failure is not cached**: a null from
+ * the network could be a transient fault, and pinning it for 10 minutes
+ * would show "no email" on a valid account.
  */
 const EMAIL_TTL_MS = 10 * 60_000;
 const emailCache = new Map<string, { email: string; at: number }>();
@@ -198,7 +209,7 @@ export async function emailByUserId(userId: string): Promise<string | null> {
     const u = (await res.json()) as { email?: string };
     if (u.email) {
       emailCache.set(userId, { email: u.email, at: Date.now() });
-      if (emailCache.size > 5_000) emailCache.clear(); // הגנת זיכרון גסה
+      if (emailCache.size > 5_000) emailCache.clear(); // crude memory guard
     }
     return u.email ?? null;
   } catch {
@@ -207,11 +218,12 @@ export async function emailByUserId(userId: string): Promise<string | null> {
 }
 
 /**
- * שליפת מיילים לכמה משתמשים במקביל - התיקון לדפוס ה-N+1 שישב בשלושה
- * נתיבי אדמין (purchases / trips / spend): לולאת `await` טורית ששילמה
- * סיבוב רשת מלא לכל שורה. ל-GoTrue אין endpoint אצווה, אז המקבילות
- * היא Promise.all - N סיבובים במקביל במקום בטור, והמטמון למעלה הופך
- * את הטעינה השנייה של אותו דשבורד לאפס קריאות רשת.
+ * Fetching emails for several users in parallel - the fix for the N+1
+ * pattern that sat in three admin routes (purchases / trips / spend): a
+ * serial `await` loop that paid a full network round-trip per row. GoTrue
+ * has no batch endpoint, so the parallelism is Promise.all - N round-trips
+ * in parallel instead of in series, and the cache above turns the second
+ * load of the same dashboard into zero network calls.
  */
 export async function emailsByUserIds(userIds: string[]): Promise<Map<string, string | null>> {
   const unique = [...new Set(userIds)];
@@ -222,21 +234,23 @@ export async function emailsByUserIds(userIds: string[]): Promise<Map<string, st
 }
 
 /**
- * מספר החשבונות האמיתי, מ-`auth.users` ולא מ-`profiles`.
+ * The real account count, from `auth.users` and not from `profiles`.
  *
- * ## הבאג שהפונקציה הזאת נולדה ממנה
+ * ## The bug this function was born from
  *
- * לוח המצב הראה "חשבונות: 1" בזמן שלנתנאל היו כמה חשבונות של בני משפחה.
- * הסיבה: ספרתי שורות ב-`profiles`, ושורה שם נוצרת רק כשמישהו **שומר**
- * פרופיל (שם תצוגה, תמונה, דרכון מדינות). מי שנכנס והשתמש באתר בלי
- * לגעת באזור האישי פשוט לא קיים שם.
+ * The status board showed "accounts: 1" while Netanel had several family
+ * members' accounts. The reason: I counted rows in `profiles`, and a row
+ * there is created only when somebody **saves** a profile (display name,
+ * photo, country passport). Someone who signed in and used the site without
+ * touching the personal area simply does not exist there.
  *
- * המסקנה הכללית: `profiles` היא טבלת העדפות, לא רשימת המשתמשים. רשימת
- * המשתמשים היא `auth.users`, ואליה מגיעים דרך Admin API של GoTrue.
+ * The general conclusion: `profiles` is a preferences table, not the user
+ * list. The user list is `auth.users`, reached via GoTrue's Admin API.
  *
- * דפדוף: GoTrue מחזיר עד `per_page` בכל עמוד ולא מבטיח שדה total, ולכן
- * מדפדפים עד שעמוד חוזר חלקי. תקרה של 25 עמודות (5,000 חשבונות) שומרת
- * מפני לופ, ומסומנת ב-`capped` כדי שהמספר לא יוצג כמדויק אם נחתך.
+ * Pagination: GoTrue returns up to `per_page` per page and does not
+ * guarantee a total field, so we page until a page comes back partial. A
+ * ceiling of 25 pages (5,000 accounts) guards against a loop, and is marked
+ * with `capped` so the number is not presented as exact if it was cut off.
  */
 export async function countAuthUsers(): Promise<{ total: number; capped: boolean } | null> {
   if (!adminDbEnabled()) return null;

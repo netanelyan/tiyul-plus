@@ -34,8 +34,9 @@ test('ניסוחי תיקון נוספים', () => {
 });
 
 /**
- * **הכיוון הבטוח לטעות.** בקשה חדשה שנחשבת בטעות לתיקון דורסת טיול
- * קיים, ולכן כל אחת מהשורות האלה חייבת להישאר "לא תיקון".
+ * **The safe direction to err.** A new request mistakenly treated as a
+ * correction overwrites an existing trip, so every one of these lines must
+ * remain "not a correction".
  */
 test('בקשות רגילות אינן תיקון - כולל "לא" תמימה', () => {
   for (const t of [
@@ -60,7 +61,7 @@ test('שלושת התנאים המקדימים', () => {
   assert.equal(detectCorrection(convo(long), trip).correction, false);
 });
 
-/* ---------- ההשלכה המבנית ---------- */
+/* ---------- The structural consequence ---------- */
 
 test('בתור של תיקון, בנייה מחדש שומרת את מזהה הטיול - אין טיול יתום', () => {
   const out = executeAgentTool(

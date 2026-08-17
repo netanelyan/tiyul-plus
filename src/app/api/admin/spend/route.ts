@@ -11,15 +11,15 @@ import {
 import { MODEL_PRICES } from '@/lib/server/aiCost';
 
 /**
- * מה ה-AI עולה, בכסף.
+ * What the AI costs, in money.
  *
- * נתנאל ניסח את הצורך במדויק: *"אני צריך לדעת כמה טיול רגיל באמת עולה
- * לפני שאני קובע מגבלות אמיתיות, וכרגע אני מנחש."* לכן הנתון המרכזי
- * כאן הוא **עלות לטיול** ולא סכום יומי - סכום יומי אומר כמה שילמנו,
- * עלות לטיול אומרת כמה עולה מטייל.
+ * Netanel put the need precisely: *"I need to know what a normal trip actually costs
+ * before I set any real limits, and right now I'm guessing."* So the central figure
+ * here is **cost per trip** and not a daily total - a daily total says how much we
+ * paid, cost per trip says how much a traveller costs.
  *
- * הכול נגזר מ-`ai_spend`, שנכתב ממילא בכל קריאת מודל. אין כאן איסוף
- * חדש ואין טקסט של משתמשים - מזהים, טוקנים ומספרים.
+ * Everything is derived from `ai_spend`, which is written on every model call anyway.
+ * There is no new collection here and no user text - identifiers, tokens and numbers.
  */
 
 interface Row {
@@ -35,7 +35,7 @@ interface Row {
 
 const num = (v: number | string) => (typeof v === 'number' ? v : Number(v) || 0);
 
-/** סכום + ספירה לפי מפתח, ממוין מהיקר לזול */
+/** Sum + count by key, sorted from most to least expensive */
 function group(rows: Row[], key: (r: Row) => string | null) {
   const m = new Map<string, { usd: number; requests: number }>();
   for (const r of rows) {
@@ -75,19 +75,20 @@ export async function GET(req: Request) {
   const byDay = group(rows, (r) => r.day).sort((a, b) => a.key.localeCompare(b.key));
 
   /*
-    הכסף האמיתי של המנויים - **כאן ורק כאן, לנתנאל**. שום משטח משתמש
-    לא רואה דולרים; המנוי רואה ספירות (טיולים, שיחות). המייל נשלף רק
-    לשורות שמוצגות בפועל, לא לכל מי שנסרק - אותו כלל כמו ב-/api/admin/trips.
+    The subscribers' real money - **here and only here, for Netanel**. No user-facing
+    surface sees dollars; a subscriber sees counts (trips, chats). The email is fetched
+    only for the rows actually displayed, not for everyone scanned - the same rule as in
+    /api/admin/trips.
   */
   const premium = await premiumSpendOverview(10);
-  // במקביל ולא בלולאת await טורית - אותו תיקון N+1 כמו בשאר נתיבי האדמין
+  // In parallel and not in a serial await loop - the same N+1 fix as in the other admin routes
   const premiumEmails = await emailsByUserIds(premium.top.map((t) => t.userId));
   const premiumTop = premium.top.map((t) => ({ ...t, email: premiumEmails.get(t.userId) ?? null }));
 
   const trips = group(todayRows, (r) => r.trip_id);
   const allTrips = group(rows, (r) => r.trip_id);
-  // חציון ולא ממוצע: טיול חריג אחד מזיז ממוצע, והשאלה כאן היא מה
-  // המחיר של מטייל **טיפוסי**.
+  // A median and not a mean: one outlier trip moves a mean, and the question here is
+  // what a **typical** traveller costs.
   const median = (xs: number[]) =>
     xs.length === 0 ? 0 : [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)];
 
@@ -98,17 +99,17 @@ export async function GET(req: Request) {
       ratio: state.ratio,
       exceeded: state.ratio >= 1,
       alertAt: ALERT_AT,
-      /** שני הארנקים - מה שמונע ממבקר אנונימי לכבות את הסוכן למחוברים */
+      /** The two wallets - what stops an anonymous visitor switching the agent off for signed-in users */
       anonSpent: state.anonSpent,
       anonLimit: state.budget * share,
       userSpent: state.userSpent,
       userLimit: state.budget - state.anonSpent,
       callerLimit: Math.min(CALLER_CAP_USD, state.budget),
-      /** אין סכום משותף - התקרה ננעלת עד שיחזור */
+      /** No shared total - the ceiling locks until it comes back */
       stale: state.stale,
-      /** מאיפה התקרה הגיעה - כדי שיהיה ברור מה לשנות */
+      /** Where the ceiling came from - so it is clear what to change */
       source: state.budget === Number(process.env.AI_DAILY_BUDGET_USD) ? 'env' : 'flag',
-      /** חלקה של התנועה האנונימית - השדה שהופך את זה לניתן לכוונון מ-/admin */
+      /** Anonymous traffic's share - the field that makes this tunable from /admin */
       anonShare: share,
     },
     today: {
@@ -120,7 +121,7 @@ export async function GET(req: Request) {
       trips: trips.length,
     },
     days: byDay.map((d) => ({ day: d.key, usd: d.usd, requests: d.requests })),
-    /** מטייל טיפוסי - הנתון שנתנאל ביקש כדי להפסיק לנחש */
+    /** A typical traveller - the figure Netanel asked for so he could stop guessing */
     perTrip: {
       median: median(allTrips.map((t) => t.usd)),
       max: allTrips[0]?.usd ?? 0,
@@ -136,9 +137,9 @@ export async function GET(req: Request) {
     topTrips: allTrips.slice(0, 10).map((t) => ({ usd: t.usd, requests: t.requests })),
     models: group(rows, (r) => r.model).map((m) => ({ model: m.key, usd: m.usd, requests: m.requests })),
     prices: MODEL_PRICES,
-    /** הארנק הנפרד של המנויים: סה"כ החודש + פירוט לפי מנוי */
+    /** The subscribers' separate wallet: the month's total + a breakdown per subscriber */
     premium: { ...premium, top: premiumTop },
-    /** בלי הטבלאות אין היסטוריה - נאמר במפורש ולא מוצג כאפס */
+    /** Without the tables there is no history - said explicitly rather than shown as a zero */
     stored: rows.length > 0 || null,
   });
 }

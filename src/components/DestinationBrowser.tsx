@@ -21,12 +21,12 @@ import {
 } from '@/lib/destinationFacets';
 
 /**
- * דפדפן היעדים: טאבי יבשת עם מונים, צ׳יפים לאופי ולמחירי אטרקציות,
- * וחיפוש חופשי - הכל בצד הלקוח על מערך שהשרת כבר חישב, כך שהקטלוג
- * המלא לא נכנס ל-bundle.
+ * The destination browser: continent tabs with counts, chips for character and for
+ * attraction prices, and a free-text search - all client-side over an array the
+ * server has already computed, so the full catalog never enters the bundle.
  *
- * המונה על כל טאב מחושב **בהינתן שאר הפילטרים**, כדי שלחיצה על מספר
- * לא תוביל למסך ריק.
+ * The count on each tab is computed **given the other filters**, so clicking a
+ * number never leads to an empty screen.
  */
 const CONTINENT_EMOJI: Record<Continent, string> = {
   אירופה: '🏰',
@@ -41,10 +41,11 @@ export default function DestinationBrowser({ cards }: { cards: DestinationCard[]
 
   const results = useMemo(() => filterDestinations(cards, f), [cards, f]);
   const counts = useMemo(() => continentCounts(cards, f), [cards, f]);
-  // הפילטר לפי עונה מופיע רק אם יש בכלל דאטת עונה - היום אין, ראו
-  // ההסבר ב-destinationFacets.ts. לא מציגים פילטר שמסנן להכל-ריק.
+  // The season filter appears only if there is any season data at all - today there
+  // is none, see the explanation in destinationFacets.ts. We do not show a filter
+  // that filters everything away.
   const seasonAvailable = useMemo(() => cards.some((c) => c.seasons.length > 0), [cards]);
-  // אותו עיקרון כמו העונה: מציגים רק צ׳יפים שיש מאחוריהם יעדים
+  // Same principle as the season: show only chips that have destinations behind them
   const vibes = useMemo(() => {
     const keys = availableVibes(cards);
     return VIBES.filter((v) => keys.includes(v.key));
@@ -61,12 +62,12 @@ export default function DestinationBrowser({ cards }: { cards: DestinationCard[]
 
   return (
     <div>
-      {/* ---------- טאבי יבשת ---------- */}
+      {/* ---------- Continent tabs ---------- */}
       {/*
-        עוטפים ולא גוללים. הגרסה הראשונה הייתה `overflow-x-auto` בכל
-        רוחב, ומתחת ל-640px זה **חתך כרטיסים באמצע מילה** - "אפריקה
-        והמזרח התיכון" נראה חצי, וזה קורא כמו תקלה ולא כמו רמז לגלילה.
-        עכשיו הטאבים מתחלקים בשורה ויורדים לשורה הבאה, וכלום לא נחתך.
+        Wrap, do not scroll. The first version was `overflow-x-auto` at every width,
+        and below 640px that **sliced cards mid-word** - a long continent name showed
+        as a half, which reads like a fault rather than a hint to scroll. Now the
+        tabs share the row and drop to the next one, and nothing is cut.
       */}
       <div className="flex flex-wrap gap-2">
         <ContinentTab
@@ -88,7 +89,7 @@ export default function DestinationBrowser({ cards }: { cards: DestinationCard[]
         ))}
       </div>
 
-      {/* ---------- אופי ---------- */}
+      {/* ---------- Character ---------- */}
       <div className="mt-4 flex flex-wrap items-center gap-1.5">
         <span className="text-xs font-bold text-night/40">אופי ·</span>
         {vibes.map((v) => (
@@ -102,7 +103,7 @@ export default function DestinationBrowser({ cards }: { cards: DestinationCard[]
         ))}
       </div>
 
-      {/* ---------- מחירי אטרקציות ---------- */}
+      {/* ---------- Attraction prices ---------- */}
       <div className="mt-2 flex flex-wrap items-center gap-1.5">
         <span className="text-xs font-bold text-night/40">מחירי אטרקציות ·</span>
         {PRICE_BANDS.map((b) => (
@@ -116,15 +117,16 @@ export default function DestinationBrowser({ cards }: { cards: DestinationCard[]
         ))}
       </div>
       {/*
-        גילוי נאות שהוא לא קישוט: המדד נגזר מ-priceLevel של האטרקציות
-        בקטלוג. טיסה ולינה הן רוב עלות הטיול ואין עליהן נתון, ולכן
-        הצ׳יפים מדברים על אטרקציות ולא מתיימרים לדרג יעדים כזולים.
+        A disclosure that is not decoration: the measure is derived from the
+        priceLevel of the attractions in the catalog. Flights and lodging are most of
+        a trip's cost and there is no data on them, so the chips talk about
+        attractions and do not pretend to rank destinations as cheap.
       */}
       <p className="mt-1.5 text-xs font-medium text-night/40">
         לפי מחירי הכניסה לאטרקציות בקטלוג בלבד - לא כולל טיסות ולינה, שהן רוב עלות הטיול.
       </p>
 
-      {/* ---------- עונה: רק כשיש דאטה ---------- */}
+      {/* ---------- Season: only when there is data ---------- */}
       {seasonAvailable && (
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
           <span className="text-xs font-bold text-night/40">עונה ·</span>
@@ -140,7 +142,7 @@ export default function DestinationBrowser({ cards }: { cards: DestinationCard[]
         </div>
       )}
 
-      {/* ---------- חיפוש ---------- */}
+      {/* ---------- Search ---------- */}
       <div className="mt-4 flex flex-wrap gap-2">
         <input
           value={f.query}
@@ -165,7 +167,7 @@ export default function DestinationBrowser({ cards }: { cards: DestinationCard[]
           : `${results.length} ${results.length === 1 ? 'יעד' : 'יעדים'}`}
       </p>
 
-      {/* ---------- התוצאות ---------- */}
+      {/* ---------- The results ---------- */}
       {results.length === 0 ? (
         <div className="mt-4 rounded-2xl bg-shell p-6 text-center ring-1 ring-night/10">
           <p className="text-sm font-medium leading-relaxed text-night/60">
@@ -187,8 +189,8 @@ export default function DestinationBrowser({ cards }: { cards: DestinationCard[]
               href={`/destinations/${c.slug}`}
               className="card-pop group overflow-hidden rounded-2xl bg-shell ring-1 ring-night/10"
             >
-              {/* `<img loading="lazy">` ולא background-image: 166 כרטיסים
-                  שלחו 166 בקשות תמונה בפתיחה. ראו CardPhoto. */}
+              {/* `<img loading="lazy">` and not background-image: 166 cards sent
+                  166 image requests on open. See CardPhoto. */}
               <CardPhoto photo={c.photo}>
                 <span className="badge absolute end-3 top-3 rounded-full bg-cream/95 px-2 py-0.5">
                   <Flag flag={c.flag} label={c.country} size="sm" />
@@ -248,10 +250,11 @@ function ContinentTab({
     <button
       onClick={onClick}
       aria-pressed={active}
-      // מונה 0 לא מושבת בכוונה: הוא מידע ("אין כאן כלום עם הסינון הזה")
-      // ולחיצה עליו עדיין מעבירה ליבשת, מה שמאפשר לשחרר פילטר אחר.
-      // flex-1 עם רוחב מינימלי: הטאבים מתחלקים בשורה במקום להיחתך, ושם
-      // ארוך כמו "אפריקה והמזרח התיכון" נשבר לשתי שורות בתוך הכרטיס.
+      // A count of 0 is deliberately not disabled: it is information ("there is
+      // nothing here with this filter") and clicking it still switches continent,
+      // which lets another filter be released. flex-1 with a minimum width: the tabs
+      // share the row instead of being cut, and a long name wraps to two lines
+      // inside the card.
       className={`flex min-w-[6.25rem] flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl px-3 py-3 text-center text-sm font-bold transition ${
         active
           ? 'bg-shell text-night ring-2 ring-sunset'

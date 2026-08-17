@@ -1,19 +1,20 @@
 import type { Trip } from './types';
 
 /**
- * תאריכים לטיול.
+ * Trip dates.
  *
- * ## הכלל היחיד שכל הקובץ נשען עליו: תאריך הוא `YYYY-MM-DD`, לא רגע בזמן.
+ * ## The one rule the whole file rests on: a date is `YYYY-MM-DD`, not an instant.
  *
- * `new Date('2026-08-12')` נקרא כחצות **UTC**. בישראל זה עדיין ה-12,
- * אבל בכל אזור זמן ממערב לגריניץ׳ זה ה-11 - כלומר עצם ההצגה של תאריך
- * הייתה מזיזה אותו ביום אחורה למי שגולש מניו יורק. לכן אין כאן שום
- * `new Date(string)`: מפרקים את המחרוזת לשלושה מספרים ובונים תאריך
- * מקומי בצהריים, שאין שעון קיץ שיזיז אותו מעבר לגבול היום.
+ * `new Date('2026-08-12')` is read as midnight **UTC**. In Israel that is still the
+ * 12th, but in any time zone west of Greenwich it is the 11th - so merely
+ * displaying a date would shift it a day backwards for anyone browsing from New
+ * York. Hence there is no `new Date(string)` here at all: the string is split into
+ * three numbers and a local date at noon is built, which no daylight-saving shift
+ * can move across a day boundary.
  *
- * שמות החודשים והימים כתובים כאן ולא מגיעים מ-`Intl`, כדי שהתצוגה
- * תהיה עברית גם אם ה-runtime נבנה בלי נתוני ICU מלאים - ובעיקר כדי
- * שהטסטים יבדקו מחרוזת אחת ידועה ולא את גרסת ה-ICU של המכונה.
+ * The month and weekday names are written here rather than taken from `Intl`, so
+ * the display is Hebrew even if the runtime was built without full ICU data - and
+ * above all so the tests assert one known string rather than the machine's ICU version.
  */
 
 const ISO = /^(\d{4})-(\d{2})-(\d{2})$/;
@@ -26,7 +27,7 @@ const MONTHS_BARE = [
   'ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני',
   'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר',
 ];
-/** getDay(): 0=ראשון */
+/** getDay(): 0=Sunday */
 const WEEKDAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
 
 export function isISODate(value: unknown): value is string {
@@ -35,7 +36,7 @@ export function isISODate(value: unknown): value is string {
   if (!m) return false;
   const [, y, mo, d] = m;
   const date = new Date(Number(y), Number(mo) - 1, Number(d), 12);
-  // דוחה 2026-02-31 וחבריו: הבנייה "מגלגלת" למרץ, וזה ייראה תקין
+  // Rejects 2026-02-31 and friends: the constructor "rolls" it into March, and that would look valid
   return (
     date.getFullYear() === Number(y) &&
     date.getMonth() === Number(mo) - 1 &&
@@ -43,7 +44,7 @@ export function isISODate(value: unknown): value is string {
   );
 }
 
-/** `YYYY-MM-DD` → Date מקומי בצהריים (ראו ההסבר למעלה) */
+/** `YYYY-MM-DD` -> a local Date at noon (see the explanation above) */
 export function parseISODate(value: string): Date | null {
   if (!isISODate(value)) return null;
   const [y, m, d] = value.split('-').map(Number);
@@ -62,7 +63,7 @@ export function addDays(iso: string, n: number): string | null {
   return toISODate(d);
 }
 
-/** מספר הימים שהטווח מכסה, כולל שני הקצוות. null אם אחד מהם לא תקין. */
+/** How many days the range covers, inclusive of both ends. null if either is invalid. */
 export function rangeDays(startDate?: string, endDate?: string): number | null {
   const a = startDate ? parseISODate(startDate) : null;
   const b = endDate ? parseISODate(endDate) : null;
@@ -71,15 +72,15 @@ export function rangeDays(startDate?: string, endDate?: string): number | null {
   return diff >= 0 ? diff + 1 : null;
 }
 
-/** התאריך של יום מספר `index` (0-based) בטיול, לפי תאריך היציאה */
+/** The date of day number `index` (0-based) in the trip, derived from the start date */
 export function dayDate(trip: Pick<Trip, 'startDate'>, index: number): string | null {
   return trip.startDate ? addDays(trip.startDate, index) : null;
 }
 
 export interface FormatOpts {
-  /** "שלישי, 12 באוגוסט" מול "12 באוגוסט" */
+  /** "Tuesday, 12 August" versus "12 August" */
   weekday?: boolean;
-  /** להוסיף שנה כשהיא אינה השנה הנוכחית */
+  /** Add the year when it is not the current year */
   year?: boolean;
 }
 
@@ -92,8 +93,8 @@ export function formatHebrewDate(iso: string, opts: FormatOpts = {}): string {
 }
 
 /**
- * טווח קריא: "12-18 באוגוסט", ובחציית חודש "28 באוגוסט - 3 בספטמבר".
- * חוצה שנה - מוסיף את השנה לשני הקצוות.
+ * A readable range: "12-18 August", and across a month boundary "28 August - 3
+ * September". Across a year boundary - the year is added to both ends.
  */
 export function formatHebrewRange(startDate?: string, endDate?: string): string {
   const a = startDate ? parseISODate(startDate) : null;
@@ -104,13 +105,13 @@ export function formatHebrewRange(startDate?: string, endDate?: string): string 
     return `${formatHebrewDate(startDate!, { year: true })} - ${formatHebrewDate(endDate!, { year: true })}`;
   }
   if (a.getMonth() === b.getMonth()) {
-    // אותו חודש: "12-18 באוגוסט" - שם החודש פעם אחת
+    // Same month: "12-18 August" - the month name once
     return `${a.getDate()}-${b.getDate()} ${MONTHS[a.getMonth()]}`;
   }
   return `${formatHebrewDate(startDate!)} - ${formatHebrewDate(endDate!)}`;
 }
 
-/** שם החודש בלי ה-ב׳ ("אוגוסט") - לכותרות */
+/** The month name without the Hebrew prefix letter - for headings */
 export function hebrewMonth(iso: string): string {
   const d = parseISODate(iso);
   return d ? MONTHS_BARE[d.getMonth()] : '';
@@ -123,9 +124,9 @@ export type Countdown =
   | { kind: 'past'; label: string };
 
 /**
- * ספירה לאחור. `today` נמסר כפרמטר ולא נקרא מ-`Date.now()` בפנים, כדי
- * שהטסט יוכל לקבע יום - ובעיקר כדי שלא ייווצר רינדור שתלוי בשעון בזמן
- * hydration (השרת והלקוח יכולים להיות בימים שונים).
+ * Countdown. `today` is passed in as a parameter rather than read from `Date.now()`
+ * inside, so a test can pin a day - and above all so no render depends on the clock
+ * during hydration (server and client can be on different days).
  */
 export function countdown(
   todayISO: string,
@@ -148,16 +149,17 @@ export function countdown(
   return { kind: 'past', label: 'הטיול הסתיים' };
 }
 
-/** התאריך של היום, כמחרוזת ISO מקומית */
+/** Today's date, as a local ISO string */
 export function todayISO(now: Date = new Date()): string {
   return toISODate(now);
 }
 
 /**
- * ההשלמה שהופכת "טווח" לנוח: מי שנתן קצה אחד בלבד מקבל את השני לפי
- * מספר הימים שכבר יש בטיול, כך שברירת המחדל תמיד עקבית עם התוכנית.
- * **לא נוגע בימים עצמם** - התאמה של אורך הטיול היא פעולה מפורשת
- * של המשתמש, לא תופעת לוואי של בחירת תאריך (ראו TripDates).
+ * The completion that makes a "range" convenient: giving only one end fills in the
+ * other from the number of days the trip already has, so the default is always
+ * consistent with the plan. **It does not touch the days themselves** - adjusting
+ * the trip's length is an explicit user action, not a side effect of picking a date
+ * (see TripDates).
  */
 export function completeRange(
   dayCount: number,
@@ -174,9 +176,9 @@ export function completeRange(
 }
 
 /**
- * תקינות תאריכים שמגיעים מבחוץ - הסוכן, קישור משותף, אחסון ישן.
- * מה שלא `YYYY-MM-DD` תקין נופל בשקט, וטווח הפוך מאבד את הסוף במקום
- * לשמור מצב שאי אפשר להציג.
+ * Validating dates that arrive from outside - the agent, a shared link, old storage.
+ * Anything that is not a valid `YYYY-MM-DD` is dropped silently, and a reversed
+ * range loses its end rather than keeping a state that cannot be displayed.
  */
 export function safeDates(t: { startDate?: unknown; endDate?: unknown }): {
   startDate?: string;

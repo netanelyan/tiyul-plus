@@ -10,21 +10,22 @@ import { shabbatRowsFor, type ShabbatRow } from '@/lib/trip/shabbatRows';
 import { inHe } from '@/lib/hebrew';
 
 /**
- * "שבת וכשרות בטיול" - החבילה שהמטרה שלה היא להיות הפיצ׳ר שאין לאף
- * מתחרה: שכבת הכשרות של הקטלוג + זמני שבת מחושבים לתאריכים ולמיקומים
- * המדויקים של הטיול הזה.
+ * "Shabbat and kashrut on the trip" - the package whose goal is to be the
+ * feature no competitor has: the catalog's kosher layer + Shabbat times
+ * computed for this trip's exact dates and locations.
  *
- * ## שלושה כללים שהפאנל הזה חי לפיהם
+ * ## Three rules this panel lives by
  *
- * 1. **כשרות היא opt-in, לעולם לא הנחה.** הפאנל מרונדר רק כשהעדפת
- *    הכשרות דלוקה על הטיול - אותו עיקרון שאוכף `filterKosherUnlessOptedIn`
- *    בצד הסוכן.
- * 2. **זמנים הם חישוב, לא פסיקה.** שקיעה בקואורדינטה ותאריך היא
- *    אסטרונומיה (lib/zmanim.ts); הדלקת נרות 18 דק׳ לפני והבדלה ב-8.5
- *    מעלות הם מנהגים נפוצים - וזה נאמר על המסך, לא מוסתר.
- * 3. **אין שעון - אין זמן.** עיר שאין לה אזור זמן ממופה
- *    (countryTimezones) לא מקבלת זמן משוער שעלול לטעות בשעה; היא
- *    מקבלת משפט כן שאומר לבדוק לוח מקומי.
+ * 1. **Kashrut is opt-in, never an assumption.** The panel renders only when
+ *    the kosher preference is switched on for the trip - the same principle
+ *    `filterKosherUnlessOptedIn` enforces on the agent side.
+ * 2. **Times are a computation, not a halachic ruling.** Sunset at a
+ *    coordinate and date is astronomy (lib/zmanim.ts); candle lighting 18
+ *    minutes before and havdalah at 8.5 degrees are common customs - and
+ *    that is stated on screen, not hidden.
+ * 3. **No clock - no time.** A city with no mapped timezone
+ *    (countryTimezones) does not get an estimated time that could be off by
+ *    an hour; it gets an honest sentence saying to check a local calendar.
  */
 
 export default function ShabbatKosherPanel({
@@ -36,13 +37,13 @@ export default function ShabbatKosherPanel({
 }) {
   const [open, setOpen] = useState(false);
 
-  // כשרות היא opt-in - בלי ההעדפה, הפאנל לא קיים בכלל
+  // Kashrut is opt-in - without the preference, the panel does not exist at all
   if (trip.preferences?.kosher !== true) return null;
 
-  /* ---------- זמני שבת: החישוב המשותף עם ספר הטיול (shabbatRows.ts) ---------- */
+  /* ---------- Shabbat times: the computation shared with the trip book (shabbatRows.ts) ---------- */
   const shabbatot: ShabbatRow[] = shabbatRowsFor(trip, destOf);
 
-  /* ---------- מקומות כשרים בערי הטיול - מהקטלוג בלבד ---------- */
+  /* ---------- Kosher places in the trip's cities - from the catalog only ---------- */
   const citySlugs = [...new Set([...trip.citySlugs, ...trip.days.map((d) => d.citySlug)])];
   const kosherByCity = citySlugs
     .map((slug) => {
@@ -55,8 +56,8 @@ export default function ShabbatKosherPanel({
     })
     .filter((c): c is NonNullable<typeof c> => c !== null);
 
-  // אין תוכן בכלל (אין שבתות בטווח ואין דאטת כשרות לערים) - לא מציגים
-  // פאנל ריק שמבטיח דבר שאין לנו
+  // No content at all (no Shabbatot in the range and no kosher data for the
+  // cities) - don't show an empty panel that promises something we don't have
   if (shabbatot.length === 0 && kosherByCity.length === 0) return null;
 
   const badge = (
@@ -111,9 +112,10 @@ export default function ShabbatKosherPanel({
 
         {kosherByCity.map(({ dest, places, overview }) => (
           <div key={dest.slug} className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
-            {/* בלי ✡️ בכוונה: הגליף שמור לרכיבי הכשרות המשותפים בלבד
-                (designConsistency.test.ts) - הסטטוס עצמו מרונדר למטה
-                דרך KosherBadge, כמו בכל שאר האתר */}
+            {/* No ✡️ on purpose: the glyph is reserved for the shared kosher
+                components only (designConsistency.test.ts) - the status
+                itself is rendered below through KosherBadge, like everywhere
+                else on the site */}
             <p className="text-sm font-bold text-night">כשרות {inHe(dest.name)}</p>
             {overview && (
               <p className="mt-1.5 text-xs font-semibold leading-relaxed text-night/60">

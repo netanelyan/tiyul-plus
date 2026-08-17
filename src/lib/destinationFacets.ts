@@ -2,26 +2,28 @@ import type { Continent } from '@/data/worldCountries';
 import type { PlaceTag } from '@/lib/types';
 
 /*
- * **הקובץ הזה לא נוגע בקטלוג בכוונה, וזאת לא קפדנות סגנון.**
- * `DestinationBrowser` הוא קומפוננטת לקוח שמייבאת מכאן, וכל ייבוא ערך
- * מ-`@/data/destinations` היה מכניס את הקטלוג כולו (2MB, 492kB דחוס)
- * ל-bundle של הדף - אף על פי שהשרת כבר מחשב את הכרטיסים ומעביר אותם
- * כ-props. הבנייה עצמה יושבת ב-`destinationCards.ts`, שרק השרת מייבא.
+ * **This file deliberately does not touch the catalog, and that is not style
+ * pedantry.** `DestinationBrowser` is a client component that imports from
+ * here, and any value import from `@/data/destinations` would pull the whole
+ * catalog (2MB, 492kB compressed) into the page's bundle - even though the
+ * server already computes the cards and passes them as props. The building
+ * itself sits in `destinationCards.ts`, which only the server imports.
  */
 
 /**
- * הפאסטים של דפדפן היעדים: יבשת, אופי, ומחירי אטרקציות.
+ * The destination browser's facets: continent, vibe, and attraction prices.
  *
- * הקובץ הזה **גוזר** הכל מהדאטה הקיימת ולא ממציא שום שדה חדש. זה
- * ההבדל בין פילטר שימושי לפילטר שנראה סמכותי ומשקר, וכל החלטה כאן
- * מתועדת עם מה שהיא באמת מודדת.
+ * This file **derives** everything from the existing data and invents no new
+ * field. That is the difference between a useful filter and a filter that
+ * looks authoritative and lies, and every decision here is documented with
+ * what it actually measures.
  *
- * נטען דרך העמוד (server component) ולא בלקוח - הוא מייבא את כל
- * הקטלוג, בדיוק כמו siteSearch.ts.
+ * Loaded through the page (server component), not on the client - it imports
+ * the whole catalog, exactly like siteSearch.ts.
  */
 
 /* ------------------------------------------------------------------ *
- * יבשת
+ * Continent
  * ------------------------------------------------------------------ */
 
 export const CONTINENTS: Continent[] = [
@@ -33,7 +35,7 @@ export const CONTINENTS: Continent[] = [
 ];
 
 /* ------------------------------------------------------------------ *
- * אופי
+ * Vibe
  * ------------------------------------------------------------------ */
 
 export const VIBES: { key: PlaceTag; label: string; emoji: string }[] = [
@@ -47,29 +49,33 @@ export const VIBES: { key: PlaceTag; label: string; emoji: string }[] = [
 ];
 
 /**
- * מתי יעד "הוא" אופי מסוים.
+ * When a destination "is" a certain vibe.
  *
- * שתי גישות פשוטות נבדקו ונפסלו על הדאטה האמיתית:
- * - **מספר מוחלט** ("לפחות 2 מקומות עם התגית"): 139 מתוך 150 היעדים
- *   סומנו כ"טבע". צ׳יפ שמחזיר 93% מהקטלוג הוא קישוט, לא פילטר.
- * - **יחס קבוע** (25% מהמקומות): טבע ירד ל-128 והיסטוריה ל-113 - עדיין
- *   רחב מדי - ואילו "חיי לילה" ירד ל-**אפס**, כי הקטלוג כמעט לא מתייג
- *   חיי לילה. צ׳יפ שמוביל תמיד למסך ריק גרוע מצ׳יפ שלא קיים.
+ * Two simple approaches were tried on the real data and rejected:
+ * - **An absolute number** ("at least 2 places with the tag"): 139 of the 150
+ *   destinations got marked "nature". A chip returning 93% of the catalog is
+ *   decoration, not a filter.
+ * - **A fixed ratio** (25% of the places): nature dropped to 128 and history to
+ *   113 - still too broad - while "nightlife" dropped to **zero**, because the
+ *   catalog barely tags nightlife. A chip that always leads to an empty screen
+ *   is worse than a chip that does not exist.
  *
- * הכלל שנבחר מנרמל את עצמו: מבין היעדים שיש בהם **בכלל** מקום עם התגית,
- * נבחרים אלה שהיחס שלהם בשליש-ארבעים העליון. המשמעות קריאה - "היעדים
- * שבהם זה הכי בולט" - והיא נכונה גם לתגית נדירה וגם לתגית שכיחה, בלי
- * מספר קסם לכל תגית בנפרד.
+ * The chosen rule normalizes itself: among destinations that have a place with
+ * the tag **at all**, those whose ratio is in the top forty percent qualify.
+ * The meaning is readable - "the destinations where this stands out most" -
+ * and it holds both for a rare tag and for a common one, with no magic number
+ * per tag.
  *
- * צ׳יפ שאחרי כל זה עדיין לא מגיע ל-`VIBE_MIN_RESULTS` יעדים פשוט לא
- * מוצג (ראו `availableVibes`), כך שהממשק גדל עם הדאטה בלי שינוי קוד.
+ * A chip that after all this still does not reach `VIBE_MIN_RESULTS`
+ * destinations is simply not shown (see `availableVibes`), so the UI grows
+ * with the data without a code change.
  */
-/** נצרך גם ע"י destinationCards.ts (בניית הכרטיסים בצד השרת) */
+/** Also consumed by destinationCards.ts (server-side card building) */
 export const VIBE_TOP_SHARE = 0.4;
 const VIBE_MIN_RESULTS = 5;
 
 /* ------------------------------------------------------------------ *
- * מחירי אטרקציות - ובמפורש לא "כמה יעלה הטיול"
+ * Attraction prices - and explicitly NOT "how much the trip will cost"
  * ------------------------------------------------------------------ */
 
 export type PriceBand = 'free' | 'low' | 'high';
@@ -81,28 +87,32 @@ export const PRICE_BANDS: { key: PriceBand; label: string; emoji: string }[] = [
 ];
 
 /**
- * הרצועה נגזרת מ-`priceLevel` של המקומות (0=חינם עד 3), שקיים ב-149
- * מתוך 150 היעדים עם לפחות 4 מקומות מתומחרים.
+ * The band is derived from the places' `priceLevel` (0=free through 3), which
+ * exists in 149 of the 150 destinations with at least 4 priced places.
  *
- * **מה זה לא:** זה לא "יעד זול". טיסה ולינה הן רוב עלות הטיול ואין עליהן
- * שום נתון בקטלוג, כך שיעד עם מוזיאונים חינמיים ומלונות יקרים ייראה כאן
- * "זול". לכן גם התוויות מדברות על אטרקציות ולא על היעד, ויש שורת הסבר
- * מתחת לפילטר. לתייג את שווייץ כ"חסכונית" כי הכניסה להרים חינם היה
- * בדיוק סוג הביטחון השקרי שחוק קשיח 2 קיים כדי למנוע.
+ * **What this is not:** it is not "a cheap destination". Flights and lodging
+ * are most of a trip's cost and the catalog holds no data on them, so a
+ * destination with free museums and expensive hotels would look "cheap" here.
+ * That is why the labels speak about attractions and not the destination, and
+ * there is an explanation line under the filter. Tagging Switzerland
+ * "budget-friendly" because entry to the mountains is free would have been
+ * exactly the kind of false confidence hard rule 2 exists to prevent.
  */
 
 /* ------------------------------------------------------------------ *
- * עונה - המנגנון קיים, הדאטה עדיין לא
+ * Season - the mechanism exists, the data does not yet
  * ------------------------------------------------------------------ */
 
 /**
- * הפילטר לפי עונה מוכן, אבל **אין בקטלוג שום שדה עונה** - לא חודשים
- * מומלצים, לא אקלים, כלום. גזירה מקו רוחב או מניחוש הייתה עצה טובה
- * למראה על בסיס לא קיים, וזה בדיוק מה שאסור כאן.
+ * The season filter is ready, but **the catalog has no season field at all** -
+ * no recommended months, no climate, nothing. Deriving one from latitude or a
+ * guess would be good-looking advice on a nonexistent basis, and that is
+ * exactly what is forbidden here.
  *
- * לכן: הקוד קורא שדה אופציונלי `bestMonths` (מספרי חודשים 1-12), הפילטר
- * מופיע בממשק **רק אם לפחות יעד אחד נושא אותו**, והיום הוא פשוט לא מוצג.
- * ברגע שסשן הדאטה יוסיף את השדה, הפילטר נדלק לבד בלי שינוי קוד.
+ * So: the code reads an optional `bestMonths` field (month numbers 1-12), the
+ * filter appears in the UI **only if at least one destination carries it**,
+ * and today it is simply not shown. The moment the data session adds the
+ * field, the filter turns itself on with no code change.
  */
 export const SEASONS: { key: string; label: string; emoji: string; months: number[] }[] = [
   { key: 'winter', label: 'חורף', emoji: '❄️', months: [12, 1, 2] },
@@ -130,14 +140,15 @@ export interface DestinationCard {
   vibes: PlaceTag[];
   price: PriceBand | null;
   seasons: string[];
-  /** לחיפוש חופשי: שם, שם מקומי, slug, מדינה */
+  /** For free-text search: name, local name, slug, country */
   haystack: string;
 }
 
 
 /**
- * רק אופיים שיש להם מספיק יעדים כדי להיות שימושיים. צ׳יפ שמחזיר שניים
- * או אפס מבזבז מקום ומאכזב - וכשהקטלוג יגדל, הוא יופיע מעצמו.
+ * Only vibes that have enough destinations to be useful. A chip returning two
+ * or zero wastes space and disappoints - and when the catalog grows, it will
+ * appear on its own.
  */
 export function availableVibes(cards: DestinationCard[]): PlaceTag[] {
   return VIBES.map((v) => v.key).filter(
@@ -161,7 +172,7 @@ export const EMPTY_FACETS: Facets = {
   query: '',
 };
 
-/** כל התנאים ב-AND; מספר אופיים נבחרים = חייב לענות על כולם */
+/** All conditions AND-ed; multiple selected vibes = must satisfy all of them */
 export function filterDestinations(cards: DestinationCard[], f: Facets): DestinationCard[] {
   const q = f.query.trim().toLowerCase();
   return cards.filter((c) => {
@@ -175,8 +186,9 @@ export function filterDestinations(cards: DestinationCard[], f: Facets): Destina
 }
 
 /**
- * מונה לכל טאב יבשת, **בהינתן שאר הפילטרים**. כך המספר על הטאב אומר
- * "כמה תמצאו אם תלחצו", ולא מספר כללי שמוביל למסך ריק.
+ * A count per continent tab, **given the other filters**. That way the number
+ * on the tab says "how many you will find if you click", not a general number
+ * that leads to an empty screen.
  */
 export function continentCounts(cards: DestinationCard[], f: Facets): Record<string, number> {
   const out: Record<string, number> = { all: filterDestinations(cards, { ...f, continent: 'all' }).length };

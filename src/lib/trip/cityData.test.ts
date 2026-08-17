@@ -1,10 +1,11 @@
 /**
- * טסטים למטמון הערים.
+ * Tests for the city cache.
  *
- * מה שנבדק כאן הוא בדיוק מה שהופך את השינוי לבטוח: שהמסך לא מבקש
- * מהשרת את אותה עיר פעמיים, שבקשות מקבילות מתאחדות לבקשה אחת, ושעיר
- * שלא קיימת לא נכנסת ללולאת בקשות. בלי זה, "רק הערים של הטיול" היה
- * הופך בקלות ליותר תעבורה מהקטלוג המלא, לא לפחות.
+ * What is tested here is exactly what makes the change safe: that the screen
+ * does not ask the server for the same city twice, that concurrent requests
+ * merge into one, and that a nonexistent city does not enter a request loop.
+ * Without this, "only the trip's cities" would easily turn into MORE traffic
+ * than the full catalog, not less.
  */
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
@@ -16,7 +17,7 @@ let calls: string[] = [];
 beforeEach(() => {
   __resetCityCache();
   calls = [];
-  // @ts-expect-error - stub של fetch לצורך הטסט
+  // @ts-expect-error - a fetch stub for the test
   globalThis.fetch = async (url: string) => {
     calls.push(url);
     const slugs = new URL(url, 'http://x').searchParams.get('slugs')!.split(',');
@@ -73,12 +74,14 @@ test('כישלון רשת לא מסמן את העיר כחסרה - הניסיו�
   assert.equal(calls.length, 2);
 });
 
-/* ---------- פתיחה מחדש בלי רשת ---------- */
+/* ---------- Reopening without a network ---------- */
 
 /**
- * זה **הטסט של הפיצ׳ר כולו**: העיר נטענה פעם אחת כשהייתה רשת, האפליקציה
- * נסגרה (המטמון בזיכרון נמחק), והיא נפתחת שוב בלי רשת בכלל. אם המסלול לא
- * מצויר כאן, מי שעומד ברחוב בעיר זרה מקבל מסך טעינה שלא ייגמר.
+ * This is **the test of the whole feature**: the city was loaded once while
+ * there was a network, the app was closed (the in-memory cache is gone), and
+ * it opens again with no network at all. If the itinerary does not render
+ * here, somebody standing on a street in a foreign city gets a loading
+ * screen that never ends.
  */
 test('עיר שנטענה כשהייתה רשת נקראת אחרי סגירה ופתיחה מחדש - בלי רשת', async () => {
   const data = new Map<string, string>();
@@ -90,11 +93,11 @@ test('עיר שנטענה כשהייתה רשת נקראת אחרי סגירה �
     },
   } as unknown as Window & typeof globalThis;
 
-  // --- מחוברים: העיר נטענת ונשמרת ---
+  // --- Online: the city loads and is persisted ---
   await fetchCities(['rome']);
   assert.equal(calls.length, 1);
 
-  // --- האפליקציה נסגרה ונפתחה: אין מטמון בזיכרון, ואין רשת בכלל ---
+  // --- The app was closed and reopened: no in-memory cache, and no network at all ---
   __resetCityCache();
   globalThis.fetch = async () => {
     calls.push('network-while-offline');
@@ -102,9 +105,9 @@ test('עיר שנטענה כשהייתה רשת נקראת אחרי סגירה �
   };
 
   assert.equal(cachedCity('rome')?.slug, 'rome');
-  // ולא נשלחה שום בקשה כדי לגלות את זה
+  // And no request was sent to find that out
   assert.equal(calls.length, 1);
 
-  // @ts-expect-error - ניקוי, כדי לא לדלוף לטסטים אחרים בקובץ
+  // @ts-expect-error - cleanup, so we do not leak into other tests in the file
   delete globalThis.window;
 });

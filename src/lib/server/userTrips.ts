@@ -1,8 +1,9 @@
 /**
- * שרת בלבד - קריאת טיול בודד ומאומת-בעלות מ-`user_trips`, בשביל
- * תשלומים (בדיקת זכאות ובניית הדוח). לא לבלבל עם `server/tripStats.ts`,
- * שמייצר **תצוגה** לאדמין - כאן מוחזר אובייקט `Trip` אמיתי, כי בונה
- * הדוח (`predepartureReport.ts`) צריך את השדות המלאים.
+ * Server only - reading a single, ownership-verified trip from
+ * `user_trips`, for payments (eligibility check and report building). Not
+ * to be confused with `server/tripStats.ts`, which produces a **view** for
+ * the admin - here a real `Trip` object is returned, because the report
+ * builder (`predepartureReport.ts`) needs the full fields.
  */
 
 import { adminSelect } from '@/lib/server/supabaseAdmin';
@@ -13,7 +14,7 @@ interface TripRow {
   data: unknown;
 }
 
-/** בדיקה רפויה בלבד - שורה שלא נראית כמו טיול פשוט לא מתקבלת, בלי לזרוק */
+/** A loose check only - a row that does not look like a trip is simply not accepted, without throwing */
 function looksLikeTrip(data: unknown): data is Trip {
   if (!data || typeof data !== 'object' || Array.isArray(data)) return false;
   const t = data as Record<string, unknown>;
@@ -25,7 +26,7 @@ function looksLikeTrip(data: unknown): data is Trip {
   );
 }
 
-/** הטיול, רק אם `userId` הוא הבעלים שלו לפי `user_trips`. `null` אחרת. */
+/** The trip, only if `userId` owns it per `user_trips`. `null` otherwise. */
 export async function findOwnTrip(userId: string, tripId: string): Promise<Trip | null> {
   const rows = await adminSelect<TripRow>(
     'user_trips',
@@ -33,7 +34,7 @@ export async function findOwnTrip(userId: string, tripId: string): Promise<Trip 
   );
   const data = rows?.[0]?.data;
   if (!looksLikeTrip(data)) return null;
-  // ימים פגומים לא מפילים את הקורא - מנוקים כאן במקום בכל צרכן בנפרד
+  // Corrupt days do not crash the caller - cleaned here instead of in every consumer separately
   const days = Array.isArray(data.days)
     ? data.days.filter((d) => d && typeof d === 'object' && Array.isArray((d as { placeIds?: unknown }).placeIds))
     : [];

@@ -1,14 +1,16 @@
 /**
- * טסטים לשער הכשרות שב-grounding.
+ * Tests for the kashrut gate in the grounding.
  *
- * הרגרסיה עצמה, מהדיווח של נתנאל על האתר החי: "כשאני שואל על מסעדה
- * ברומא, הוא מתחיל לדבר על מקומות כשרים, למרות שלא הדלקתי את הכפתור".
- * שני השמות שהופיעו בתשובה - בא-גטו ויטבתה - הם בדיוק שתי הרשומות
- * ב-`kosher-food` שיש לרומא בקטלוג, כלומר המודל לא המציא אותן: הוא קרא
- * אותן ב-grounding.
+ * The regression itself, from Netanel's report on the live site: "when I
+ * ask about a restaurant in Rome, it starts talking about kosher places,
+ * even though I did not switch the button on". The two names that appeared
+ * in the reply - Ba'Ghetto and Yotvata - are exactly the two `kosher-food`
+ * entries Rome has in the catalog, i.e. the model did not invent them: it
+ * read them from the grounding.
  *
- * הטסטים רצים מול הקטלוג האמיתי ולא מול fixture, כי מה שנבדק כאן הוא
- * בדיוק מה שנשלח למודל.
+ * The tests run against the real catalog and not against a fixture,
+ * because what is being asserted here is literally what gets sent to the
+ * model.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -42,10 +44,10 @@ test('הרגרסיה: שאלה על מסעדה ברומא בלי העדפת כש
     assert.ok(!detail.includes(p.id), `${p.id} still in detail`);
     assert.ok(!detail.includes(p.name), `${p.name} still in detail`);
   }
-  // גם האינדקס, שהוא הבלוק הגדול והמטומן
+  // The index too, which is the big, cached block
   const index = buildGroundingIndex(ok);
   for (const p of romeKosher) assert.ok(!index.includes(p.id), `${p.id} still in index`);
-  // ורומא עדיין שם: סינון, לא השתקה
+  // And Rome is still there: filtering, not silencing
   assert.ok(detail.includes('rom-colosseum'));
 });
 
@@ -54,7 +56,7 @@ test('כשהכשרות כבויה, גם סקירת הכשרות של העיר ו
   assert.ok(!detail.includes(rome.practical.kosherOverview.slice(0, 40)));
   const withKosher = buildGroundingDetail(['rome'], true);
   assert.ok(withKosher.includes(rome.practical.kosherOverview.slice(0, 40)));
-  // המסלול הוא הדלת האחורית: מזהה כשר בתוך יום של מסלול אוצר
+  // The itinerary is the back door: a kosher id inside a curated itinerary's day
   const inItinerary = rome.itinerary.some((d) =>
     d.placeIds.some((id) => romeKosher.some((p) => p.id === id)),
   );
@@ -104,8 +106,9 @@ test('כשהשער סגור נמסרת מדיניות מפורשת - כדי שה
 });
 
 test('הצד השני: כשהכשרות דלוקה, כל מקום אכילה נושא את הסטטוס שלו', () => {
-  // מאז קטגוריות food/market יש בקטלוג מקומות אכילה לא-כשרים. שכבת
-  // הכלים חוסמת אותם; הפרוזה צריכה את העובדה כדי להזהיר במקום להמליץ.
+  // Since the food/market categories, the catalog holds non-kosher eating
+  // places. The tool layer blocks them; the prose needs the fact so it can
+  // warn instead of recommend.
   const city = destinations.find((d) =>
     d.places.some((p) => isEating(p.category) && kosherStatusOf(p) !== 'kosher'),
   );
@@ -116,13 +119,13 @@ test('הצד השני: כשהכשרות דלוקה, כל מקום אכילה נ�
   assert.ok(eating.some((p: { kosherStatus: string }) => p.kosherStatus !== 'kosher'));
   assert.match(on.kosherPolicy, /Recommend ONLY kosherStatus="kosher"/);
   assert.match(on.kosherPolicy, /"unknown" is not "probably fine"/);
-  // וכשהשער סגור אין לזה מה לעשות שם
+  // And when the gate is closed it has no business being there
   const off = JSON.parse(buildGroundingDetail([city.slug], false));
   assert.ok(!off.cities[0].places.some((p: { kosherStatus?: string }) => p.kosherStatus));
 });
 
 test('אזהרת "המקום הזה אינו כשר" על מקום לא-כשר נשארת בכל מצב', () => {
-  // katz's delicatessen מסומן במפורש כלא-כשר, וזו אזהרה - לא המלצה.
+  // katz's delicatessen is explicitly marked not-kosher, and that is a warning - not a recommendation.
   const ny = destinations.find((d) => d.slug === 'new-york');
   const warned = ny?.places.find((p) => !isKosher(p.category) && p.kosherNote);
   if (!warned) return;
@@ -137,16 +140,17 @@ test('שני וריאנטים בלבד לאינדקס, ושניהם יציבים
   assert.ok(buildGroundingIndex(false).length < buildGroundingIndex(true).length);
 });
 
-/* ---------- kosherAllowedNames: הרשימה הלבנה של priceGuard.ts ---------- */
+/* ---------- kosherAllowedNames: priceGuard.ts's whitelist ---------- */
 
 test('kosherAllowedNames ריקה לגמרי כשהשער סגור - גם על עיר עם כשרות אמיתית', () => {
   assert.deepEqual(kosherAllowedNames(['rome'], false), []);
 });
 
 test('kosherAllowedNames ריקה לעיר שלא נשלחה בכלל (לא בקטלוג, או לא ברשימה) - הבאג המדויק', () => {
-  // השער עצמו (kosherOk) יכול להיות פתוח כי המשתמש שאל, אבל אם העיר
-  // שהוא שאל עליה לא ברשימת הערים שנשלחו בתור הזה - אין לה שם על מה
-  // לגבות טענה, גם אם השער הכללי פתוח.
+  // The gate itself (kosherOk) can be open because the user asked, but if
+  // the city they asked about is not in the list of cities sent this turn -
+  // it has no name there to back a claim with, even if the general gate is
+  // open.
   assert.deepEqual(kosherAllowedNames(['not-a-real-city-slug'], true), []);
   assert.deepEqual(kosherAllowedNames([], true), []);
 });

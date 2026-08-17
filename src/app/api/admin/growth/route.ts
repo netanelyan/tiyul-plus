@@ -5,15 +5,16 @@ import { checkLimit, dayKey } from '@/lib/server/limits';
 import type { EventRow } from '@/lib/growthMath';
 
 /**
- * מדדי הצמיחה לדשבורד - קריאה בלבד של `app_events`.
+ * The dashboard's growth metrics - read-only over `app_events`.
  *
- * הנתיב מחזיר את השורות **כמו שהן** והלקוח מחשב טווחים (7/30/הכול)
- * ומגמות מקומית (`lib/growthMath.ts`, שנבדק ביחידה): הטבלה אגרגטיבית
- * וקטנה - שורה ליום לכל סוג - אז בקשה אחת מכסה את כל הטווחים והחלפת
- * טווח לא עולה סיבוב שרת.
+ * The route returns the rows **as they are** and the client computes ranges
+ * (7/30/all) and trends locally (`lib/growthMath.ts`, unit-tested): the
+ * table is aggregate and small - one row per day per kind - so one request
+ * covers all ranges and switching a range costs no server round trip.
  *
- * **`stored: false` כשהטבלה לא נקראת - וזה מוצג "לא נאסף", לא אפס.**
- * הכלל של נתנאל, אות באות: שבוע שקט ומונה שבור אסור שייראו זהים.
+ * **`stored: false` when the table cannot be read - and that is displayed
+ * as "not collected", not zero.** Netanel's rule, letter for letter: a
+ * quiet week and a broken counter must not look the same.
  */
 export async function GET(req: Request) {
   const actor = await requireRole(req, 'admin');
@@ -23,9 +24,10 @@ export async function GET(req: Request) {
   if (!limit.ok) return badRequest('rate_limited');
 
   /*
-    תקרה נדיבה בכוונה: 10 סוגי אירועים × 365 יום הם ~3,650 שורות
-    בשנה - התקרה נוגעת רק אחרי יותר מחמש שנים, ואז truncated בצד
-    הלקוח יגיד שהמספרים חלקיים במקום להציג סכום חסר כשלם.
+    A deliberately generous ceiling: 10 event kinds × 365 days are ~3,650
+    rows a year - the ceiling only bites after more than five years, and
+    then truncated on the client side will say the numbers are partial
+    instead of presenting an incomplete sum as whole.
   */
   const MAX_ROWS = 20_000;
   const rows = await adminSelect<EventRow>(

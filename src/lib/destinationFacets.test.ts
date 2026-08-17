@@ -1,10 +1,11 @@
 /**
- * טסטים לפאסטים של דפדפן היעדים.
+ * Tests for the destination browser's facets.
  *
- * שני דברים נבדקים כאן, ושניהם על הדאטה האמיתית ולא על פיקסטורה: שכל
- * יעד מקבל יבשת (פילטר שמאבד יעדים הוא גרוע מפילטר שלא קיים), ושהסינון
- * באמת מסנן - סף שגוי היה מסמן כמעט כל יעד כ"טבע" והצ׳יפ היה מעטר את
- * הממשק בלי לעשות כלום.
+ * Two things are tested here, both against the real data and not a fixture:
+ * that every destination gets a continent (a filter that loses destinations is
+ * worse than no filter at all), and that the filtering actually filters - a
+ * wrong threshold would mark nearly every destination as "nature" and the chip
+ * would decorate the UI while doing nothing.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -103,8 +104,9 @@ test('רצועת המחיר קיימת כמעט לכל יעד, ואף רצועה
 });
 
 test('עונה: אין דאטה, ולכן אין תוצאות - וזו הסיבה שהפילטר מוסתר', () => {
-  // כשסשן הדאטה יוסיף bestMonths הטסט הזה ייפול, וזה בדיוק הרגע להסיר
-  // את ההסתרה בממשק. כישלון כאן הוא בשורה טובה, לא רגרסיה.
+  // When the data session adds bestMonths, this test will fail, and that is
+  // exactly the moment to un-hide it in the UI. A failure here is good news,
+  // not a regression.
   assert.equal(
     cards.filter((c) => c.seasons.length > 0).length,
     0,

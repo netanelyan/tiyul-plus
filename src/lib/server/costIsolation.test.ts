@@ -1,13 +1,14 @@
 /**
- * המספרים של העלות לא מגיעים למודל. נקודה.
+ * The cost numbers never reach the model. Period.
  *
- * הדרישה היא ש"ה-AI לא מייצר, לא מתקן ולא מתאר את המספרים האלה".
- * כלל בפרומפט הוא בקשה; הטסט הזה הוא ההוכחה. הוא בודק את שלושת
- * הצינורות היחידים שדרכם דאטה מגיעה למודל - אינדקס ההשענה, בלוק
- * הפירוט, ומצב הטיול - ומוודא שאף אחד מהם לא נושא נתון עלות.
+ * The requirement is that "the AI does not generate, correct or describe these
+ * numbers". A rule in the prompt is a request; this test is the proof. It checks
+ * the only three pipes through which data reaches the model - the grounding
+ * index, the detail block, and the trip state - and verifies that none of them
+ * carries a cost figure.
  *
- * זה נבדק מול הקטלוג האמיתי ולא מול פיקסצ׳ר, כי מה שנבדק כאן הוא
- * בדיוק מה שנשלח בפועל.
+ * This is tested against the real catalog and not against a fixture, because
+ * what is tested here is exactly what actually gets sent.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -23,7 +24,7 @@ test('הנתון בכלל מחובר לדסטינציה - אחרת הטסט הז
   const vienna = await sampleProvider.getDestination('vienna');
   assert.equal(vienna?.dailyCost?.currency, 'EUR');
   assert.equal(vienna?.dailyCost?.budget.transport, 7.09);
-  // יעד בלי רשומה נשאר בלי השדה - לא אובייקט ריק שמישהו ימלא בטעות
+  // A destination with no record stays without the field - not an empty object someone fills by mistake
   const dolomites = await sampleProvider.getDestination('dolomites');
   assert.equal(dolomites?.dailyCost, undefined);
 });
@@ -37,14 +38,14 @@ test('אינדקס ההשענה ובלוק הפירוט לא נושאים אף �
   ];
   for (const block of blocks) {
     assert.equal(block.includes('dailyCost'), false);
-    // `dailyBudget` יושב **בתוך** הקטלוג, ולכן הסיכון שידלוף לבלוק
-    // ההשענה גדול יותר מזה של קובץ נפרד - הבדיקה הזאת היא השמירה.
+    // `dailyBudget` sits **inside** the catalog, so the risk of it leaking into
+    // the grounding block is greater than for a separate file - this check is the guard.
     assert.equal(block.includes('dailyBudget'), false);
     assert.equal(/budgetyourtrip|nomadicmatt/i.test(block), false);
     for (const slug of CITIES) {
       const c = DAILY_COSTS[slug];
       if (!c) continue;
-      // מספר גדול וייחודי מכל שלוש השורות של כל סגנון
+      // A large, distinctive number from each of the three rows of every style
       for (const style of ['budget', 'mid', 'comfort'] as const) {
         const food = String(c[style].food);
         if (food.length >= 4) {
@@ -73,7 +74,7 @@ test('מצב הטיול שנשלח למודל לא כולל את סגנון הנ
   };
   const seen = JSON.parse(serializeTripForModel(trip));
   assert.equal('travelStyle' in seen.preferences, false);
-  // ושאר ההעדפות לא נפגעו בדרך
+  // And the rest of the preferences were not harmed along the way
   assert.equal(seen.preferences.kosher, true);
   assert.equal(seen.preferences.pace, 'relaxed');
   assert.equal(serializeTripForModel(trip).includes('comfort'), false);

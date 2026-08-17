@@ -2,45 +2,51 @@ import { bookingIsPerCity, bookingProviders } from '@/lib/booking';
 import type { BookingKind, BookingStatus, Trip, TripPreferences } from './types';
 
 /**
- * קריאה וכתיבה של מצב ההזמנות - **מימוש אחד** לפאנל ולסוכן.
+ * Reading and writing the booking state - **one implementation** for the
+ * panel and for the agent.
  *
- * ## מה השתנה ולמה
+ * ## What changed and why
  *
- * עד עכשיו לכל סוג הזמנה היה מצב אחד לטיול. נתנאל ראה את זה במסך:
- * בטיול של ברטיסלבה ווינה מוצג מלון אחד לכל הערים. **"יש לנו לינה"
- * הוא משפט שאי אפשר לענות עליו נכון בטיול רב-ערים** - הוא נכון לעיר
- * אחת ולא לשנייה. לינה וכרטיסים נשמרים עכשיו לפי עיר; טיסה, eSIM,
- * ביטוח ורכב נשארים לטיול, כי הם באמת לטיול.
+ * Until now each booking kind had one state per trip. Netanel saw it on
+ * screen: on a Bratislava + Vienna trip a single hotel is shown for all the
+ * cities. **"We have lodging" is a sentence that cannot be answered
+ * correctly on a multi-city trip** - it is true for one city and not the
+ * other. Lodging and tickets are now stored per city; flight, eSIM,
+ * insurance and car stay per trip, because they genuinely are per trip.
  *
- * ## התאימות לאחור היא הדבר העדין כאן
+ * ## Backward compatibility is the delicate part here
  *
- * טיולים קיימים - ב-localStorage ובחשבונות - נושאים `booking.stay`
- * בודד. שלוש התנהגויות, בסדר הזה:
+ * Existing trips - in localStorage and in accounts - carry a single
+ * `booking.stay`. Three behaviors, in this order:
  *
- * 1. **קריאה**: אין רשומה לעיר ⇒ נופלים לערך הישן. טיול שסומן "כבר
- *    סגור" ממשיך להיראות סגור בכל עיר, ולא מתאפס בשקט.
- * 2. **כתיבה ראשונה**: הערך הישן **נפרס לכל ערי הטיול** ורק אז חלה
- *    העריכה, והמפתח הישן נמחק. בלי זה, כיבוי סטטוס בעיר אחת היה
- *    "נופל" בחזרה לערך הישן ונראה כאילו הלחיצה לא נקלטה.
- * 3. **מחיקה**: לחיצה חוזרת על אותו סטטוס מנקה את העיר הזו בלבד.
+ * 1. **Read**: no record for the city ⇒ fall back to the legacy value. A
+ *    trip marked "already booked" keeps looking booked in every city, and
+ *    does not silently reset.
+ * 2. **First write**: the legacy value is **spread across all the trip's
+ *    cities** and only then the edit applies, and the legacy key is
+ *    deleted. Without this, clearing a status in one city would "fall"
+ *    back to the legacy value and read as a click that did not register.
+ * 3. **Delete**: pressing the same status again clears this city only.
  *
- * הפריסה קורית בכתיבה ולא בטעינה בכוונה: היא נשמרת עם הטיול בדרך
- * שהמשתמש יזם, ואין מסלול שבו טעינה בלבד משנה נתונים על הדיסק.
+ * The spread happens on write and not on load, deliberately: it is saved
+ * with the trip along a path the user initiated, and there is no path where
+ * merely loading changes data on disk.
  */
 
-/** הסוגים ששייכים לעיר, לפי הקונפיג */
+/** The kinds that belong to a city, per the config */
 export const PER_CITY_KINDS: BookingKind[] = bookingProviders
   .filter((p) => bookingIsPerCity(p.kind))
   .map((p) => p.kind);
 
-/** הסוגים ששייכים לטיול כולו */
+/** The kinds that belong to the trip as a whole */
 export const TRIP_WIDE_KINDS: BookingKind[] = bookingProviders
   .filter((p) => !bookingIsPerCity(p.kind))
   .map((p) => p.kind);
 
 /**
- * הסטטוס להצגה. `citySlug` נדרש לסוג עירוני; בלעדיו מוחזר `undefined`
- * ולא ניחוש, כי "המלון של איזו עיר" היא שאלה בלי תשובה ברירת-מחדל.
+ * The status to display. `citySlug` is required for a per-city kind; without
+ * it `undefined` is returned rather than a guess, because "which city's
+ * hotel" is a question with no default answer.
  */
 export function bookingStatusOf(
   prefs: TripPreferences | undefined,
@@ -53,10 +59,10 @@ export function bookingStatusOf(
 }
 
 /**
- * הפעלה/כיבוי של סטטוס. מחזיר **טלאי** להעדפות, לא טיול - אותה חתימה
- * שהפאנל והסוכן כבר עובדים איתה.
+ * Toggling a status on/off. Returns a **patch** to the preferences, not a
+ * trip - the same signature the panel and the agent already work with.
  *
- * לחיצה על הסטטוס שכבר פעיל מנקה אותו, בדיוק כמו קודם.
+ * Pressing the already-active status clears it, exactly as before.
  */
 export function toggleBookingStatus(
   prefs: TripPreferences | undefined,
@@ -68,9 +74,10 @@ export function toggleBookingStatus(
 }
 
 /**
- * קביעה, בלי כיבוי. זה מה שהסוכן משתמש בו: המטייל אמר "יש לנו מלון
- * בווינה", וסימון חוזר של אותו ערך חייב להישאר "יש" - לא להתהפך.
- * הכיבוי הוא מחווה של ממשק ולא של שיחה.
+ * Setting, without toggling off. This is what the agent uses: the traveler
+ * said "we have a hotel in Vienna", and re-marking the same value must stay
+ * "have" - not flip. The toggle-off is a UI gesture, not a conversational
+ * one.
  */
 export function setBookingStatus(
   prefs: TripPreferences | undefined,
@@ -101,7 +108,7 @@ function writeBookingStatus(
   const { citySlug, citySlugs } = opts;
   if (!citySlug) return { booking, bookingByCity: byCity };
 
-  // הפריסה החד-פעמית של הערך הישן, לפני שנוגעים במשהו
+  // The one-time spread of the legacy value, before touching anything
   const legacy = booking[kind];
   const cities: Record<string, BookingStatus> = { ...(byCity[kind] ?? {}) };
   if (legacy !== undefined) {
@@ -117,10 +124,11 @@ function writeBookingStatus(
 }
 
 /**
- * כמה פריטים עדיין פתוחים ("עוד צריך") - התג בכותרת הסעיף.
+ * How many items are still open (in the "still needed" sense) - the badge on
+ * the section header.
  *
- * סוג עירוני נספר **פעם אחת לעיר**: שני מלונות חסרים בטיול של שתי
- * ערים הם שני דברים לעשות, לא אחד.
+ * A per-city kind is counted **once per city**: two missing hotels on a
+ * two-city trip are two things to do, not one.
  */
 export function openBookingCount(trip: Trip | null): number {
   if (!trip) return 0;
@@ -135,7 +143,7 @@ export function openBookingCount(trip: Trip | null): number {
   return n;
 }
 
-/** אילו ערים עדיין פתוחות לסוג מסוים - לתווית קצרה על הכרטיס */
+/** Which cities are still open for a given kind - for a short label on the card */
 export function citiesNeeding(trip: Trip | null, kind: BookingKind): string[] {
   if (!trip || !bookingIsPerCity(kind)) return [];
   return trip.citySlugs.filter((slug) => bookingStatusOf(trip.preferences, kind, slug) === 'need');

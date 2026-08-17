@@ -11,10 +11,11 @@ export default function AddToTripButton({
   placeId: string;
 }) {
   /*
-    **מאיזה טיול מדובר נאמר במפורש.** מאז שהטיול הפתוח לא שורד בין כניסות,
-    כניסה לדף יעד היא בדרך כלל בלי טיול פתוח - ואז `addPlace` יוצר טיול
-    חדש. זה בסדר, אבל זה חייב להיאמר: כפתור שכתוב עליו "נוסף לטיול שלי"
-    בלי לומר לאיזה הוא בדיוק ההנחה השקטה שנתנאל ביקש להיפטר ממנה.
+    **Which trip is meant is stated explicitly.** Ever since the open trip
+    stopped surviving between visits, arriving at a destination page usually
+    means no open trip - and then `addPlace` creates a new one. That is fine,
+    but it has to be said: a button labeled "added to my trip" without saying
+    to WHICH trip is exactly the silent assumption Netanel asked to get rid of.
   */
   const { addPlace, currentTrip, hydrated } = useTrip();
   const [added, setAdded] = useState<{ dayIndex: number; name: string } | null>(null);

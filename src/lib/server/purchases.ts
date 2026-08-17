@@ -1,16 +1,17 @@
 /**
- * שרת בלבד - גישה לטבלת `purchases` (ראו `supabase-purchases.sql`).
- * REST ישיר עם ה-service role דרך `supabaseAdmin.ts`, פילטרים דרך
- * `pgrest.ts` בלבד - אותו דפוס בדיוק כמו `server/admin.ts`.
+ * Server only - access to the `purchases` table (see `supabase-purchases.sql`).
+ * Direct REST with the service role via `supabaseAdmin.ts`, filters via
+ * `pgrest.ts` only - the exact same pattern as `server/admin.ts`.
  *
- * ## האידמפוטנטיות יושבת כאן, במשפט אחד
+ * ## The idempotence lives here, in one sentence
  *
- * `markPaid` הוא `UPDATE ... WHERE paypal_order_id = X AND status = 'pending'`.
- * שתי בקשות webhook בו-זמניות לאותה הזמנה: רק אחת מהן פוגעת בשורה
- * שעדיין `pending` ומעדכנת אותה; השנייה מעדכנת אפס שורות. Postgres
- * מבטיח את זה ברמת ה-UPDATE הבודד - אין כאן צורך בנעילה מפורשת. גם
- * `paypal_capture_id unique` בטבלה עצמה הוא קו הגנה שני, זול, למקרה
- * שאי-פעם ינסו לכתוב את אותה לכידה תחת שתי שורות הזמנה שונות.
+ * `markPaid` is `UPDATE ... WHERE paypal_order_id = X AND status = 'pending'`.
+ * Two concurrent webhook requests for the same order: only one of them hits
+ * a row that is still `pending` and updates it; the other updates zero rows.
+ * Postgres guarantees this at the single-UPDATE level - no explicit lock is
+ * needed here. `paypal_capture_id unique` on the table itself is also a
+ * second, cheap defense line, in case anyone ever tries to write the same
+ * capture under two different order rows.
  */
 
 import { adminInsert, adminSelect, adminUpdate } from '@/lib/server/supabaseAdmin';
@@ -51,7 +52,7 @@ const COLUMNS = [
 
 const nowIso = () => new Date().toISOString();
 
-/** יצירת שורת רכישה חדשה במצב pending. מחזיר `null` כשה-DB לא זמין. */
+/** Creates a new purchase row in pending state. Returns `null` when the DB is unavailable. */
 export async function createPendingPurchase(input: {
   userId: string;
   tripId: string;
@@ -98,8 +99,9 @@ export async function findById(purchaseId: string): Promise<PurchaseRow | null> 
 }
 
 /**
- * הרכישה הרלוונטית ביותר עבור (משתמש, טיול): `paid` תמיד קודם - זה מה
- * שקובע "כבר נרכש, מציגים תוצאה ולא הצעה" - אחרת השורה העדכנית ביותר.
+ * The most relevant purchase for (user, trip): `paid` always first - that is
+ * what decides "already purchased, show a result and not an offer" -
+ * otherwise the most recent row.
  */
 export async function findForUserTrip(userId: string, tripId: string): Promise<PurchaseRow | null> {
   const rows = await adminSelect<PurchaseRow>(
@@ -111,9 +113,10 @@ export async function findForUserTrip(userId: string, tripId: string): Promise<P
 }
 
 /**
- * הענקה אמיתית - **הקריאה היחידה בקוד שאמורה לקרוא לזה היא נתיב ה-webhook**,
- * אחרי אימות חתימה. עדכון מותנה: משנה שורה רק אם היא עדיין `pending`,
- * ולכן קריאה כפולה (webhook שנשלח פעמיים) היא no-op בפעם השנייה.
+ * The real grant - **the only call site in the code that should call this is
+ * the webhook route**, after signature verification. Conditional update: it
+ * changes a row only if it is still `pending`, so a double call (a webhook
+ * sent twice) is a no-op the second time.
  */
 export async function markPaid(
   orderId: string,
@@ -141,13 +144,14 @@ export async function markPaid(
 }
 
 /**
- * הבדיקה **כלולה בפרימיום** - הפיצ'ר הממשי הראשון שמנוי פרימיום מקבל
- * ואין לאף אחד אחר. `amount: 0` ו-`source: 'premium_included'` בכוונה
- * (מקביל ל-`adminGrant` למטה): זו לא הכנסה אמיתית, ו-`computeStats`
- * חייב להבדיל בינה לבין הענקת תמיכה אנושית כדי שהדוח הפיננסי יישאר
- * מדויק. **הקריאה היחידה שאמורה לקרוא לזה** היא `/api/checks/create-order`,
- * אחרי שהוא עצמו וידא ש-`caller.plan === 'premium'` מהטוקן המאומת -
- * לא מגוף הבקשה.
+ * The check is **included in premium** - the first tangible feature a
+ * premium subscriber gets that nobody else has. `amount: 0` and
+ * `source: 'premium_included'` on purpose (parallel to `adminGrant` below):
+ * this is not real revenue, and `computeStats` must distinguish it from a
+ * human support grant so the financial report stays accurate. **The only
+ * call site that should call this** is `/api/checks/create-order`, after it
+ * has itself verified that `caller.plan === 'premium'` comes from the
+ * verified token - not from the request body.
  */
 export async function grantPremiumIncluded(input: {
   userId: string;
@@ -169,7 +173,7 @@ export async function grantPremiumIncluded(input: {
   return rows?.[0] ?? null;
 }
 
-/** נכשל בפועל (למשל אי-התאמת סכום) - לא מעניק, אבל כן משאיר עקבה */
+/** Failed for real (e.g. an amount mismatch) - grants nothing, but does leave a trace */
 export async function markFailed(orderId: string, note: string, rawWebhook?: unknown): Promise<boolean> {
   const rows = await adminUpdate<{ id: string }>(
     'purchases',
@@ -180,12 +184,12 @@ export async function markFailed(orderId: string, note: string, rawWebhook?: unk
 }
 
 /* ============================================================
-   אדמין - הענקה/שלילה ידנית
+   Admin - manual grant/revoke
    ============================================================ */
 
 /**
- * הענקה ידנית. `amount: 0` ו-`source: 'admin_grant'` בכוונה - זו לא
- * הכנסה אמיתית, ואסור שהדוח הפיננסי יספור אותה ככזאת.
+ * A manual grant. `amount: 0` and `source: 'admin_grant'` on purpose - this
+ * is not real revenue, and the financial report must not count it as such.
  */
 export async function adminGrant(input: {
   userId: string;
@@ -211,7 +215,7 @@ export async function adminGrant(input: {
   return rows?.[0] ?? null;
 }
 
-/** שלילה - הופכת רכישות ששולמו ל-revoked. **לא מוחקת** את רשומת התשלום. */
+/** Revocation - turns paid purchases into revoked. **Does not delete** the payment record. */
 export async function adminRevoke(input: {
   userId: string;
   tripId: string;
@@ -226,16 +230,17 @@ export async function adminRevoke(input: {
 }
 
 /* ============================================================
-   אדמין - רשימה וסטטיסטיקה
+   Admin - listing and statistics
    ============================================================ */
 
 const MAX_ROWS = 2000;
 
 /**
- * שורה רזה לדשבורד: כל מה שהסטטיסטיקה והרשימה צריכים, **בלי** `report`
- * ו-`raw_webhook` - שני שדות jsonb של כמה KB כל אחד, שרכבו על 500 שורות
- * בכל טעינת דשבורד (מגה-בייטים מ-Supabase בשביל 15 שורות מוצגות).
- * הדוח המלא נשלף רק כשפותחים רכישה בודדת (`findForUserTrip`/`findById`).
+ * A lean row for the dashboard: everything the statistics and the list need,
+ * **without** `report` and `raw_webhook` - two jsonb fields of a few KB each,
+ * which rode on 500 rows on every dashboard load (megabytes from Supabase
+ * for 15 displayed rows). The full report is fetched only when a single
+ * purchase is opened (`findForUserTrip`/`findById`).
  */
 export type PurchaseListRow = Omit<PurchaseRow, 'report' | 'raw_webhook'>;
 const LIST_COLUMNS = COLUMNS.filter((c) => c !== 'report' && c !== 'raw_webhook');
@@ -252,11 +257,11 @@ export interface PurchaseStats {
   revenueILS: number;
   paidCount: number;
   pendingCount: number;
-  /** ממתינות מעל 15 דקות - זה מה שאמור להיראות, לא רק להיספר */
+  /** Pending for over 15 minutes - this is what should be seen, not just counted */
   stuckPending: { id: string; userId: string; tripId: string; createdAt: string; ageMinutes: number }[];
   failedCount: number;
   adminGrantCount: number;
-  /** בדיקות שניתנו כהטבת מנוי אוטומטית - לא תמיכה אנושית ולא הכנסה */
+  /** Checks given as an automatic subscriber perk - not human support and not revenue */
   premiumIncludedCount: number;
 }
 
@@ -275,9 +280,10 @@ export function computeStats(rows: PurchaseListRow[]): PurchaseStats {
   for (const r of rows) {
     if (r.status === 'paid') {
       paidCount += 1;
-      // רק paypal הוא הכנסה אמיתית - admin_grant ו-premium_included
-      // שניהם amount=0 בעיצוב, אבל לא אותו דבר: אחד תמיכה אנושית,
-      // השני הטבת מנוי אוטומטית. שני מונים נפרדים כדי שהתמונה תישאר מדויקת.
+      // Only paypal is real revenue - admin_grant and premium_included are
+      // both amount=0 by design, but not the same thing: one is human
+      // support, the other an automatic subscriber perk. Two separate
+      // counters so the picture stays accurate.
       if (r.source === 'paypal') revenueILS += Number(r.amount) || 0;
       else if (r.source === 'premium_included') premiumIncludedCount += 1;
       else adminGrantCount += 1;

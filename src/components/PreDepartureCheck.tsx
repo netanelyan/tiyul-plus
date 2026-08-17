@@ -11,17 +11,17 @@ import { todayISO } from '@/lib/trip/dates';
 import type { Trip } from '@/lib/trip/types';
 
 /**
- * "בדיקה לפני הנסיעה" - המוצר הראשון בתשלום באתר. תמיד יושב כפאנל
- * אחד, לא מוצג בכלל כשאין מה להציע וכשלא כבר נרכש - בדיוק כמו
- * `TripDateNotes` הסמוך לו.
+ * "Pre-departure check" - the first paid product on the site. Always sits as one
+ * panel, and is not rendered at all when there is nothing to offer and it has not
+ * already been purchased - exactly like `TripDateNotes` next to it.
  *
- * ## איך זה נשאר בטוח, בקצרה (הפירוט ב-server/*)
+ * ## How this stays safe, in short (the detail is in server/*)
  *
- * הרכיב הזה **לעולם לא קובע שהתשלום הצליח**. הוא שולח לשרת, מציג מה
- * שהשרת אומר, ומסקר `/api/checks/status` עד שהוא רואה `paid` - וזה
- * קורה רק אחרי שה-webhook המאומת של PayPal עדכן את הדאטהבייס. חזרה
- * מ-PayPal (`?checkReturn=1`) לא "מצליחה" בעצמה; היא רק מפעילה לכידה
- * ועוברת למצב "מאמתים".
+ * This component **never decides that a payment succeeded**. It posts to the
+ * server, shows what the server says, and polls `/api/checks/status` until it sees
+ * `paid` - which happens only after PayPal's verified webhook has updated the
+ * database. Returning from PayPal (`?checkReturn=1`) does not "succeed" by itself;
+ * it only triggers a capture and moves to the "verifying" state.
  */
 
 type Phase =
@@ -34,13 +34,14 @@ type Phase =
   | { kind: 'notice'; message: string };
 
 const POLL_MS = 3000;
-const POLL_CEILING = 40; // ~2 דקות לפני שעוברים למצב "רגוע" בלי לפרוץ קריאות
+const POLL_CEILING = 40; // ~2 minutes before dropping to a calm mode, without a burst of requests
 
 /**
- * מצב ה-PayPal ברמת המודול - הוא נגזר ממשתני סביבה בשרת ולא משתנה בלי
- * דיפלוי, ובכל זאת נשלף מחדש בכל mount של מסך הטיול (כל מעבר בין
- * טיולים). פעם אחת לסשן מספיקה; הבטחה משותפת גם מונעת בקשות כפולות
- * כששני מופעי הרכיב עולים יחד. אותו דפוס כמו המטמון של cityData.
+ * The PayPal mode at module level - it is derived from server environment variables
+ * and does not change without a deploy, yet it was refetched on every mount of the
+ * trip screen (every switch between trips). Once per session is enough; a shared
+ * promise also prevents duplicate requests when both instances of the component
+ * mount together. The same pattern as the cityData cache.
  */
 let modePromise: Promise<string | null> | null = null;
 function fetchModeOnce(): Promise<string | null> {
@@ -71,8 +72,9 @@ export default function PreDepartureCheck({
   const pollTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const returnHandled = useRef(false);
 
-  // מצב sandbox/production - עצמאי מכל שאר הזרימה, כדי שהפס יופיע מיד.
-  // נשלף פעם אחת לסשן (fetchModeOnce) - לא בכל mount של מסך הטיול.
+  // sandbox/production mode - independent of the rest of the flow, so the banner
+  // appears immediately. Fetched once per session (fetchModeOnce) - not on every
+  // mount of the trip screen.
   useEffect(() => {
     let alive = true;
     void fetchModeOnce().then((m) => {
@@ -107,7 +109,7 @@ export default function PreDepartureCheck({
           return;
         }
       } catch {
-        /* ניסיון הבא */
+        /* next attempt */
       }
       if (attempts >= POLL_CEILING) {
         stopPolling();
@@ -128,8 +130,8 @@ export default function PreDepartureCheck({
 
     void (async () => {
       setError(null);
-      // פרמטרי חזרה מ-PayPal נצרכים פעם אחת בלבד, ולא נבדקים שוב בכל
-      // מעבר בין טיולים - הם שייכים לטעינת הדף, לא לטיול הפעיל.
+      // PayPal return parameters are consumed exactly once, and not re-checked on
+      // every switch between trips - they belong to the page load, not to the active trip.
       if (!returnHandled.current) {
         returnHandled.current = true;
         const params = new URLSearchParams(window.location.search);
@@ -158,7 +160,7 @@ export default function PreDepartureCheck({
               return;
             }
           } catch {
-            /* ה-capture עצמו לא הצליח מסיבה זמנית - עדיין שווה לסקר, ייתכן שה-webhook כבר בדרך */
+            /* the capture itself failed for a transient reason - still worth polling, the webhook may already be on its way */
           }
           setPhase({ kind: 'processing', note: 'התשלום נשלח לאימות - זה יכול לקחת כמה שניות…' });
           pollStatus();
@@ -191,7 +193,7 @@ export default function PreDepartureCheck({
           return;
         }
       } catch {
-        /* אין תשובה מהשרת - מתייחסים כאילו לא נרכש, ההצעה עדיין עובדת */
+        /* no answer from the server - treat it as not purchased, the offer still works */
       }
       evaluateOffer();
     })();
@@ -232,9 +234,10 @@ export default function PreDepartureCheck({
         return;
       }
       /*
-        פרימיום: אין PayPal ואין redirect - הדוח כבר נכתב בשרת ברגע
-        שהתשובה חזרה. שאילתת status אחת מציגה אותו מייד, בדיוק כמו
-        אחרי לכידה מוצלחת של PayPal - אותו מנגנון תצוגה, מקור שונה.
+        Premium: no PayPal and no redirect - the report was already written on the
+        server the moment the response came back. A single status query displays it
+        immediately, exactly as after a successful PayPal capture - the same display
+        mechanism, a different source.
       */
       if (data?.included) {
         setPhase({ kind: 'processing', note: 'מכינים את הדוח…' });
@@ -248,7 +251,7 @@ export default function PreDepartureCheck({
         if (statusData?.status === 'paid' && statusData.report) {
           setPhase({ kind: 'result', report: statusData.report, paidAt: statusData.paidAt ?? null });
         } else {
-          // לא אמור לקרות (הכתיבה סינכרונית), אבל אם כן - הסקר הרגיל יתפוס את זה
+          // Should not happen (the write is synchronous), but if it does, the ordinary poll catches it
           pollStatus();
         }
         return;
@@ -273,7 +276,7 @@ export default function PreDepartureCheck({
       icon="🛫"
       title="בדיקה לפני הנסיעה"
       ariaLabel="בדיקה לפני הנסיעה"
-      // רק תוצאה אמיתית שווה הדפסה - הצעה/עיבוד/הודעה הן מסך, לא מסמך
+      // Only a real result is worth printing - an offer/processing/notice is a screen, not a document
       className={phase.kind === 'result' ? '' : 'print:hidden'}
     >
       {mode === 'sandbox' && (
@@ -423,7 +426,7 @@ function ResultView({ report, paidAt }: { report: PreDepartureReport; paidAt: st
         </button>
       </div>
 
-      {/* גרסת ההדפסה: המסלול הנקי שנבדק, בלי כפתורים ובלי מצב הרגש */}
+      {/* The print version: the clean route that was checked, with no buttons and no emotional state */}
       <div className="hidden print:block">
         <h2 className="text-lg font-bold text-night">בדיקה לפני הנסיעה - {report.tripName}</h2>
         <p className="text-xs text-night/60">נבדק ב-{report.generatedAt.slice(0, 10)}</p>

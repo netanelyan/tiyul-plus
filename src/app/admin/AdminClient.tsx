@@ -16,12 +16,13 @@ import {
 } from '@/lib/growthMath';
 
 /**
- * אזור הניהול, עברית RTL כמו כל האתר.
+ * The admin area, Hebrew RTL like the rest of the site.
  *
- * ההרשאה לא נשמרת כאן ולא נסמכת על שום דבר בדפדפן: בכל טעינה שואלים את
- * /api/admin/me, וכל פעולה עוברת בנתיב שמאמת את התפקיד מחדש מול
- * הדאטהבייס. מי שאין לו הרשאה מקבל "לא נמצא" - אותה תשובה שמקבל מי
- * שלא מחובר בכלל, בלי לרמז שהאזור קיים.
+ * Authorization is not stored here and does not rely on anything in the
+ * browser: on every load we ask /api/admin/me, and every action goes through
+ * a route that re-verifies the role against the database. Whoever lacks
+ * permission gets "not found" - the same answer someone who is not logged in
+ * at all gets, without hinting that the area exists.
  */
 
 interface Me {
@@ -40,13 +41,13 @@ interface UserInfo {
   trips?: number;
   tripsCapped?: boolean;
   unitsToday?: number;
-  /** הכסף האמיתי של המנוי החודש - לאדמין בלבד, null למי שאינו פרימיום */
+  /** The subscriber's real money this month - admin only, null for anyone who is not premium */
   premiumUsdMonth?: number | null;
   premiumCapUsd?: number | null;
 }
 
 interface Stats {
-  /** false = הקריאה ל-usage_daily נכשלה. אפס אמיתי ואפס-מחוסר-נתונים אינם אותו דבר. */
+  /** false = the usage_daily read failed. A real zero and a zero-for-lack-of-data are not the same thing. */
   tracked?: boolean;
   today: {
     identities: number;
@@ -89,7 +90,7 @@ const hebrewDate = (iso: string | null | undefined) =>
 
 export default function AdminClient() {
   const [me, setMe] = useState<Me | null | 'loading'>('loading');
-  /** השרת ענה 503: הפיצ׳ר לא מוגדר, לא חוסר הרשאה. שני מצבים שונים לגמרי. */
+  /** The server answered 503: the feature is not configured, not a lack of permission. Two entirely different states. */
   const [unconfigured, setUnconfigured] = useState(false);
 
   const api = useCallback(async (path: string, init?: RequestInit) => {
@@ -112,9 +113,10 @@ export default function AdminClient() {
         return;
       }
       /*
-        אדמין מאומת = דפדפן פנימי. מכאן והלאה שום אירוע (טיולים,
-        שיתופים, ביקורים) מהדפדפן הזה לא נספר במוני הצמיחה - "טיול
-        שאני יוצר תוך בדיקה אסור שינפח את המספרים". ראו lib/events.ts.
+        A verified admin = an internal browser. From here on, no event
+        (trips, shares, visits) from this browser is counted in the growth
+        counters - "a trip I create while testing must not inflate the
+        numbers". See lib/events.ts.
       */
       if (ok) markInternalBrowser();
       setMe(ok ? (data as Me) : null);
@@ -133,9 +135,10 @@ export default function AdminClient() {
   }
 
   /*
-    למה מסך נפרד: נתנאל היה owner בדאטהבייס וראה "הדף לא נמצא", כי המפתח
-    לא היה ב-env. שתי סיבות שונות לחלוטין נראו זהות. עמוד שיודע מה חסר
-    שווה יותר מעמוד שמנחש בשבילך.
+    Why a separate screen: Netanel was owner in the database and saw the
+    "page not found" screen, because the key was not in env. Two entirely
+    different causes looked identical. A page that knows what is missing is
+    worth more than a page that guesses for you.
   */
   if (unconfigured) {
     return (
@@ -199,8 +202,9 @@ export default function AdminClient() {
       </header>
 
       {/*
-        המצטבר ראשון, האישי אחריו. זה לא רק סדר: המסך הראשי אמור לענות
-        על "מה קורה באתר", והחיפוש הוא כלי שנכנסים אליו בכוונה.
+        The aggregate first, the individual after it. This is not just
+        ordering: the main screen should answer "what is happening on the
+        site", and the lookup is a tool one enters deliberately.
       */}
       <OverviewCard api={api} />
       <GrowthCard api={api} />
@@ -220,7 +224,7 @@ export default function AdminClient() {
   );
 }
 
-/* ---------- מטייל: חיפוש, הענקה, תפקיד ---------- */
+/* ---------- Traveler: search, grant, role ---------- */
 function UserCard({
   api,
   role,
@@ -450,7 +454,7 @@ function UserCard({
   );
 }
 
-/* ---------- לוח מצב ---------- */
+/* ---------- Status board ---------- */
 function StatsCard({
   api,
 }: {
@@ -485,7 +489,7 @@ function StatsCard({
         נגזר מאותו מונה שמשמש למכסות - אין כאן איסוף חדש ואין מידע מזהה.
       </p>
       {s.tracked === false && (
-        /* אפס שנובע מכשל קריאה נראה זהה לאפס אמיתי - אז אומרים מה קרה */
+        /* A zero caused by a read failure looks identical to a real zero - so we say what happened */
         <p className="mt-2 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold text-night/55">
           לא הצלחנו לקרוא את טבלת השימוש (usage_daily). המספרים למטה אינם אפס אמיתי - הם פשוט לא
           ידועים. בדרך כלל זה supabase-premium.sql שעוד לא רץ.
@@ -530,10 +534,11 @@ function StatsCard({
         </div>
       )}
       {/*
-        ההפרש בין חשבונות לבין "מתוכם עם פרופיל" הוא מי שנכנס ולא נגע
-        באזור האישי. הצגתי אותו כי בלעדיו המספר "חשבונות" נראה כמו טעות:
-        לנתנאל היו כמה חשבונות של בני משפחה והלוח הראה 1, כי ספרתי שורות
-        ב-profiles במקום ב-auth.users.
+        The gap between accounts and the "of which with a profile" figure is
+        whoever signed in and never touched the personal area. I displayed it
+        because without it the "accounts" number looks like a mistake:
+        Netanel had several family-member accounts and the board showed 1,
+        because I counted rows in profiles instead of auth.users.
       */}
       {typeof s.accounts.withProfile === 'number' && s.accounts.withProfile < s.accounts.total && (
         <p className="mt-3 text-xs font-medium text-night/45">
@@ -552,7 +557,7 @@ function StatsCard({
   );
 }
 
-/* ---------- קודי הטבה ---------- */
+/* ---------- Promo codes ---------- */
 function PromoCard({
   api,
 }: {
@@ -571,9 +576,9 @@ function PromoCard({
   }, [api]);
 
   useEffect(() => {
-    // IIFE ולא `void load()` ישירות: הכלל react-hooks/set-state-in-effect
-    // מזהה קריאה סינכרונית לפונקציה שכותבת state, וזו הצורה שבה שאר
-    // הכרטיסים בקובץ הזה כבר עושים את זה.
+    // An IIFE and not `void load()` directly: the react-hooks/set-state-in-effect
+    // rule detects a synchronous call to a function that writes state, and this
+    // is the form the other cards in this file already use.
     void (async () => {
       await load();
     })();
@@ -681,7 +686,7 @@ function PromoCard({
   );
 }
 
-/* ---------- מפסק חירום ---------- */
+/* ---------- Kill switch ---------- */
 function FlagsCard({
   api,
 }: {
@@ -746,7 +751,7 @@ function FlagsCard({
 }
 
 /* ============================================================
-   כמה ה-AI עולה, בכסף
+   How much the AI costs, in money
    ============================================================ */
 
 interface Spend {
@@ -763,7 +768,7 @@ interface Spend {
     userLimit: number;
     callerLimit: number;
     stale: boolean;
-    /** חלקם של האנונימיים מהיום, 0..1 - ראו anonShare() ב-lib/server/budget.ts */
+    /** The anonymous share of the day, 0..1 - see anonShare() in lib/server/budget.ts */
     anonShare: number;
   };
   today: { usd: number; requests: number; chat: number; anonymous: number; loggedIn: number; trips: number };
@@ -772,7 +777,7 @@ interface Spend {
   topUsers: { kind: string; usd: number; requests: number }[];
   topTrips: { usd: number; requests: number }[];
   models: { model: string; usd: number; requests: number }[];
-  /** הארנק הנפרד של מנויי הפרימיום - הכסף האמיתי, לאדמין בלבד */
+  /** The premium subscribers' separate wallet - the real money, admin only */
   premium: {
     month: string;
     totalUsd: number;
@@ -788,10 +793,12 @@ interface Spend {
 const money = (n: number) => `$${n < 1 ? n.toFixed(3) : n.toFixed(2)}`;
 
 /**
- * הכרטיס שנתנאל ביקש: כמה הוצאנו, כמה נשאר עד התקרה, וכמה עולה
- * **טיול אחד** - הנתון שמחליף ניחוש במספר.
+ * The card Netanel asked for: how much we spent, how much is left before the
+ * ceiling, and how much **a single trip** costs - the figure that replaces a
+ * guess with a number.
  *
- * התקרה נערכת מכאן ישירות. זה המסלול המיועד לשינוי בלי דיפלוי.
+ * The ceiling is edited directly from here. This is the intended path for
+ * changing it without a deploy.
  */
 function SpendCard({
   api,
@@ -800,30 +807,33 @@ function SpendCard({
 }) {
   const [d, setD] = useState<Spend | null>(null);
   /*
-    `null` = לא נגעו בשדה, ואז מוצג הערך מהשרת. שמירת מחרוזת ריקה
-    כברירת מחדל הייתה מחייבת setState נוסף בטעינה - וזה בדיוק הדפוס
-    שה-lint מסמן כאן.
+    `null` = the field was not touched, and then the value from the server
+    is shown. Storing an empty string as the default would have required an
+    extra setState on load - which is exactly the pattern the lint flags
+    here.
   */
   const [draft, setDraft] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   /*
-    אותו דפוס בדיוק בשביל חלקם של האנונימיים - שדה נפרד, כי זה ערך
-    נפרד עם יחידה שונה (אחוז, לא דולר) ונתיב שמירה זהה (flags).
+    The exact same pattern for the anonymous share - a separate field,
+    because it is a separate value with a different unit (percent, not
+    dollars) and an identical save path (flags).
   */
   const [shareDraft, setShareDraft] = useState<string | null>(null);
   const [shareBusy, setShareBusy] = useState(false);
 
-  /** תוצאת שליחת התראת הבדיקה - null עד שלוחצים, אחר כך נשארת עד הלחיצה הבאה */
+  /** The test-alert send result - null until clicked, afterwards kept until the next click */
   const [alertResult, setAlertResult] = useState<null | { configured: boolean; ok: boolean; error?: string }>(
     null,
   );
   const [alertBusy, setAlertBusy] = useState(false);
 
   /*
-    ריענון אחרי שמירה נעשה דרך מונה ולא דרך קריאה לפונקציה מתוך
-    האפקט: זה הדפוס שכבר קיים בכרטיסים האחרים כאן, והוא גם מה
-    שמונע את אזהרת cascading renders.
+    Refresh after save happens through a counter and not by calling a
+    function from inside the effect: this is the pattern the other cards
+    here already use, and it is also what prevents the cascading renders
+    warning.
   */
   const [tick, setTick] = useState(0);
 
@@ -850,7 +860,7 @@ function SpendCard({
     setBusy(false);
   };
 
-  /** האחוז המוקלד הופך לשבר 0..1 רק כאן - הדגל עצמו נשמר כשבר, לא כאחוז */
+  /** The typed percentage becomes a 0..1 fraction only here - the flag itself is stored as a fraction, not a percentage */
   const saveShare = async () => {
     const pct = Number(shareShown);
     if (!Number.isFinite(pct) || pct < 0 || pct > 100) return;
@@ -884,7 +894,7 @@ function SpendCard({
     >
       <h2 className="text-lg font-bold text-night">💸 תקרת הוצאה</h2>
 
-      {/* ---------- היום מול התקרה ---------- */}
+      {/* ---------- Today against the ceiling ---------- */}
       <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span className="text-2xl font-black text-night" dir="ltr">
           {money(d.budget.spent)}
@@ -908,7 +918,7 @@ function SpendCard({
           style={{ width: `${pct}%` }}
         />
       </div>
-      {/* ---------- שני הארנקים ---------- */}
+      {/* ---------- The two wallets ---------- */}
       <div className="mt-3 grid gap-2 sm:grid-cols-2">
         {[
           {
@@ -968,7 +978,7 @@ function SpendCard({
         </p>
       )}
 
-      {/* ---------- שינוי התקרה, בלי דיפלוי ---------- */}
+      {/* ---------- Changing the ceiling, without a deploy ---------- */}
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <label className="text-xs font-bold text-night/55" htmlFor="budget-input">
           תקרה יומית ($)
@@ -993,7 +1003,7 @@ function SpendCard({
         </span>
       </div>
 
-      {/* ---------- חלקם של האנונימיים, בלי דיפלוי ---------- */}
+      {/* ---------- The anonymous share, without a deploy ---------- */}
       <div className="mt-2 flex flex-wrap items-center gap-2">
         <label className="text-xs font-bold text-night/55" htmlFor="anon-share-input">
           חלק האנונימיים (%)
@@ -1018,7 +1028,7 @@ function SpendCard({
         </span>
       </div>
 
-      {/* ---------- בדיקת התראה אמיתית ---------- */}
+      {/* ---------- A real alert test ---------- */}
       <div className="mt-2 flex flex-wrap items-center gap-2">
         <button
           onClick={() => void testAlert()}
@@ -1041,7 +1051,7 @@ function SpendCard({
         )}
       </div>
 
-      {/* ---------- כמה עולה טיול ---------- */}
+      {/* ---------- How much a trip costs ---------- */}
       <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {[
           { label: 'טיול חציוני', v: money(d.perTrip.median) },
@@ -1058,7 +1068,7 @@ function SpendCard({
         ))}
       </div>
 
-      {/* ---------- 14 יום ---------- */}
+      {/* ---------- 14 days ---------- */}
       <div className="mt-4">
         <div className="text-xs font-bold text-night/55">הוצאה יומית (14 יום)</div>
         <div className="mt-2 flex h-16 items-end gap-1">
@@ -1073,7 +1083,7 @@ function SpendCard({
         </div>
       </div>
 
-      {/* ---------- מי מוציא ---------- */}
+      {/* ---------- Who is spending ---------- */}
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <div>
           <div className="text-xs font-bold text-night/55">הכי יקרים היום ובשבועיים</div>
@@ -1104,7 +1114,7 @@ function SpendCard({
         </div>
       </div>
 
-      {/* ---------- הארנק של המנויים: הכסף האמיתי, כאן בלבד ---------- */}
+      {/* ---------- The subscribers' wallet: the real money, here only ---------- */}
       <div className="mt-4 rounded-xl bg-cream p-3">
         <div className="flex flex-wrap items-baseline gap-2">
           <span className="text-xs font-bold text-night/55">מנויי פרימיום החודש ({d.premium.month})</span>
@@ -1148,7 +1158,7 @@ function SpendCard({
 }
 
 /* ============================================================
-   בדיקה לפני הנסיעה - המוצר הראשון בתשלום
+   Pre-departure check - the first paid product
    ============================================================ */
 
 interface PurchasesStats {
@@ -1185,11 +1195,13 @@ const PURCHASE_STATUS_LABEL: Record<string, string> = {
 };
 
 /**
- * לוח המצב של "בדיקה לפני הנסיעה". **התשובה הישירה לשאלה "איך אדע
- * שלקחנו כסף ולא סיפקנו"**: `stuckPending` הוא בדיוק זה - רכישות
- * ש-webhook לא סגר תוך יותר מ-15 דקות, מוצג כאן בכל טעינה. יש גם
- * התראה חד-פעמית ל-3 דקות מתוך `/api/checks/status` עצמו (בזמן שהמטייל
- * עוד מחכה) - שני מנגנונים משלימים, לא אחד תלוי בשני.
+ * The status board for the pre-departure check. **The direct answer to the
+ * question "how will I know we took money and did not deliver"**:
+ * `stuckPending` is exactly that - purchases that a webhook did not close
+ * within more than 15 minutes, shown here on every load. There is also a
+ * one-time 3-minute alert from `/api/checks/status` itself (while the
+ * traveler is still waiting) - two complementary mechanisms, not one
+ * depending on the other.
  */
 function PurchasesCard({
   api,
@@ -1294,7 +1306,7 @@ function PurchasesCard({
 }
 
 /* ============================================================
-   מדדי הצמיחה - חמשת המספרים של נתנאל + המרת השיתופים
+   Growth metrics - Netanel's five numbers + the share conversion
    ============================================================ */
 
 interface GrowthData {
@@ -1311,14 +1323,15 @@ const GROWTH_RANGES: { value: GrowthRange; label: string }[] = [
 ];
 
 /**
- * שישה מספרים, טווח נבחר, ומגמה מול הטווח המקביל הקודם - בלי גרפים.
+ * Six numbers, a chosen range, and a trend against the previous parallel
+ * range - no charts.
  *
- * הנתיב מחזיר את כל השורות פעם אחת; החלפת טווח היא חישוב מקומי
- * (`computeGrowth`, נבדק ביחידה). שלושת המצבים הכנים:
- *  - `stored: false` → "לא נאסף" - הטבלה לא נקראת. לא אפס.
- *  - נקרא אבל אף אירוע-צמיחה לא נספר אי-פעם → כנראה שהרשימה הסגורה
- *    של bump_event ישנה (הקובץ לא הורץ מחדש) - נאמר במפורש.
- *  - מספרים אמיתיים, כולל אפס אמיתי של שבוע שקט.
+ * The route returns all the rows once; switching a range is a local
+ * computation (`computeGrowth`, unit-tested). The three honest states:
+ *  - `stored: false` → "not collected" - the table is not read. Not zero.
+ *  - read, but no growth event was ever counted → probably the closed list
+ *    in bump_event is stale (the file was not re-run) - stated explicitly.
+ *  - real numbers, including a real zero of a quiet week.
  */
 function GrowthCard({
   api,
@@ -1345,7 +1358,7 @@ function GrowthCard({
 
   const everCounted = d.stored && growthEverCounted(d.rows);
 
-  /** מגמה מול הטווח הקודם: חץ + הפרש. ב"הכול" אין קודם - אין מגמה. */
+  /** Trend against the previous range: arrow + delta. In "all" there is no previous - no trend. */
   const trend = (current: number, previous: number | null) => {
     if (previous === null) return <span className="text-[11px] font-semibold text-night/35">—</span>;
     const delta = current - previous;
@@ -1386,8 +1399,8 @@ function GrowthCard({
       </div>
 
       {!d.stored ? (
-        /* הכלל: מונה שלא נקרא מציג "לא נאסף", לא אפס - שבוע שקט ומונה
-           שבור אסור שייראו זהים */
+        /* The rule: a counter that was not read shows "not collected", not
+           zero - a quiet week and a broken counter must not look identical */
         <p className="mt-3 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold text-night/55">
           לא נאסף - אין קריאה לטבלת האירועים (app_events). אם ה-SQL כבר רץ, לבדוק את
           SUPABASE_SERVICE_ROLE_KEY.
@@ -1441,7 +1454,7 @@ function GrowthCard({
 }
 
 /* ============================================================
-   התצוגה המצטברת - המסך הראשי
+   The aggregate view - the main screen
    ============================================================ */
 
 interface Overview {
@@ -1478,7 +1491,7 @@ const EXPORT_LABEL: Record<string, string> = {
   maps: 'ניווט',
 };
 
-/** עמודות פשוטות. גובה יחסי למקסימום, כי המספרים כאן קטנים ומשתנים. */
+/** Simple bars. Height is relative to the maximum, because the numbers here are small and varying. */
 function Bars({ data, label }: { data: { day: string; n: number }[]; label: string }) {
   const max = Math.max(1, ...data.map((d) => d.n));
   const total = data.reduce((s, d) => s + d.n, 0);
@@ -1529,7 +1542,7 @@ function OverviewCard({
         {d.windowDays} הימים האחרונים. מספרים מצטברים בלבד - אין כאן אף אדם מסוים.
       </p>
 
-      {/* ---------- המספרים שנתנאל ביקש ---------- */}
+      {/* ---------- The numbers Netanel asked for ---------- */}
       <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {[
           { label: 'טיולים', v: String(d.trips.total) },
@@ -1550,7 +1563,7 @@ function OverviewCard({
         ))}
       </div>
 
-      {/* ---------- לאורך זמן ---------- */}
+      {/* ---------- Over time ---------- */}
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <Bars
           label="טיולים שנוצרו"
@@ -1562,7 +1575,7 @@ function OverviewCard({
         />
       </div>
 
-      {/* ---------- לאן מתכננים ---------- */}
+      {/* ---------- Where people plan for ---------- */}
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         {[
           { title: 'מדינות', rows: d.places.countries },
@@ -1593,7 +1606,7 @@ function OverviewCard({
         ))}
       </div>
 
-      {/* ---------- ייצוא ---------- */}
+      {/* ---------- Exports ---------- */}
       <div className="mt-4">
         <div className="text-xs font-bold text-night/55">ייצוא ושיתוף</div>
         {d.sharing.exportsTracked ? (
@@ -1612,8 +1625,8 @@ function OverviewCard({
           </div>
         ) : (
           /*
-            null ולא אפס: הטבלה לא קיימת עדיין. "0 הדפסות" הוא מספר שקרי
-            שנראה בדיוק כמו מספר אמיתי.
+            null and not zero: the table does not exist yet. "0 prints" is a
+            false number that looks exactly like a real one.
           */
           <p className="mt-1.5 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold text-night/50">
             מונה הייצוא עוד לא פעיל - צריך להריץ את supabase-admin-dash.sql. עד אז אין כאן אפס,
@@ -1631,7 +1644,7 @@ function OverviewCard({
 }
 
 /* ============================================================
-   החיפוש הצר - חיפוש ותצוגה, לא דפדוף
+   The narrow lookup - search and display, not browsing
    ============================================================ */
 
 type LookupMode = 'email' | 'place' | 'name';
@@ -1680,8 +1693,9 @@ const MODE_HINT: Record<LookupMode, string> = {
 };
 
 /**
- * החיפוש הצר. **בכוונה לא חוויית דפדוף**: אין רשימה שנפתחת מעצמה, אין
- * "כל הטיולים", ואי אפשר להגיע לטיול של מישהו בלי לחפש אותו קודם.
+ * The narrow lookup. **Deliberately not a browsing experience**: no list that
+ * opens on its own, no "all trips", and there is no way to reach somebody's
+ * trip without searching for it first.
  */
 function TripLookupCard({
   api,
@@ -1936,7 +1950,7 @@ function TripLookupCard({
             </div>
           )}
 
-          {/* בדיקה לפני הנסיעה - מצב + הענקה/שלילה ידנית לטיול הפתוח */}
+          {/* Pre-departure check - status + manual grant/revoke for the open trip */}
           <div className="mt-3 rounded-xl bg-shell p-3">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs font-bold text-night/60">🛫 בדיקה לפני הנסיעה:</span>

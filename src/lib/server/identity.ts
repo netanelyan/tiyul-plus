@@ -2,31 +2,33 @@ import { effectivePlan, type Plan, type Tier } from '@/lib/plans';
 import { eq, pgQuery, pgSelect } from '@/lib/server/pgrest';
 
 /**
- * שרת בלבד - זיהוי הקורא לצורך מכסות ותוכנית.
+ * Server only - identifying the caller for quotas and plan.
  *
- * מחובר (Authorization: Bearer <supabase access token>): הטוקן מאומת מול
- * GoTrue (/auth/v1/user) והתוכנית נקראת משורת הפרופיל שלו (RLS - הטוקן
- * של המשתמש קורא רק את השורה שלו). שני הצעדים במטמון קצר בזיכרון כדי
- * לא להוסיף שתי קריאות רשת לכל הודעת צ׳אט.
+ * Signed in (Authorization: Bearer <supabase access token>): the token is
+ * verified against GoTrue (/auth/v1/user) and the plan is read from their
+ * profile row (RLS - the user's token reads only their own row). Both
+ * steps sit in a short in-memory cache so we do not add two network calls
+ * to every chat message.
  *
- * לא מחובר: הזהות היא כתובת ה-IP (x-forwarded-for הראשון - מה ש-Vercel
- * מציב). אין ניסיון לזהות מעבר לזה.
+ * Not signed in: the identity is the IP address (the first
+ * x-forwarded-for - what Vercel sets). No attempt to identify beyond that.
  */
 
 export interface Caller {
-  /** מפתח המכסות: user:<uid> או ip:<addr> */
+  /** The quota key: user:<uid> or ip:<addr> */
   id: string;
-  /** התוכנית לצורכי **חיוב**: free | premium */
+  /** The plan for **billing** purposes: free | premium */
   plan: Plan;
-  /** השכבה לצורכי **מכסות**: anon | free | premium. אנונימי מקבל פחות. */
+  /** The tier for **quota** purposes: anon | free | premium. Anonymous gets less. */
   tier: Tier;
   /**
-   * מפתח ה-IP, בנפרד מ-`id`.
+   * The IP key, separate from `id`.
    *
-   * קיים רק לאנונימיים, והוא **רשת ביטחון רחבה** ולא מכסה: `id` הוא
-   * הדפדפן, וזה מה שמפריד בין אנשים. ה-IP קיים כדי לתפוס מכונה אחת
-   * שמחליפה מזהי דפדפן בלולאה - ולכן התקרה שלו גבוהה בהרבה, כדי שלא
-   * תיגע ב-CGNAT של מפעילה סלולרית.
+   * Exists only for anonymous callers, and it is a **wide safety net**,
+   * not a quota: `id` is the browser, and that is what separates people.
+   * The IP exists to catch a single machine cycling browser identifiers
+   * in a loop - which is why its ceiling is much higher, so it never
+   * touches a mobile carrier's CGNAT.
    */
   ip?: string;
   userId: string | null;
@@ -73,7 +75,7 @@ async function verifyToken(token: string): Promise<string | null> {
       if (typeof user.id === 'string' && user.id) userId = user.id;
     }
   } catch {
-    /* GoTrue לא זמין - מתייחסים כאנונימי, לא מפילים את הבקשה */
+    /* GoTrue unavailable - treat as anonymous, do not fail the request */
   }
   put(tokenCache, token, userId);
   return userId;
@@ -93,19 +95,21 @@ async function fetchPlan(userId: string, token: string): Promise<Plan> {
       },
     );
     if (res.ok) {
-      // effectivePlan ולא `plan === 'premium'`: הענקה של אדמין או קוד
-      // הטבה נושאת plan_until, ובלי הבדיקה הזאת הענקה ל-30 יום הייתה
-      // ממשיכה להעניק מכסת פרימיום לנצח. נקודת אמת אחת - ראו lib/plans.ts.
+      // effectivePlan and not `plan === 'premium'`: an admin grant or a
+      // promo code carries plan_until, and without this check a 30-day
+      // grant would keep granting the premium quota forever. Single source
+      // of truth - see lib/plans.ts.
       const rows = (await res.json()) as { plan?: string; plan_until?: string | null }[];
       plan = effectivePlan(rows[0] ?? null);
     }
   } catch {
-    /* אין קריאת תוכנית - free הוא ברירת המחדל הבטוחה */
+    /* No plan read - free is the safe default */
   }
   if (plan === 'free') {
-    // ה-SQL של supabase-admin.sql אולי עוד לא רץ, ואז הבחירה עם
-    // plan_until נכשלת כולה. ניסיון שני בלי העמודה, בדיוק כמו
-    // ה-fallback ב-lib/auth/profile.ts, כדי שפרימיום קיים לא ייעלם.
+    // The SQL of supabase-admin.sql may not have run yet, in which case
+    // the select with plan_until fails entirely. A second attempt without
+    // the column, exactly like the fallback in lib/auth/profile.ts, so
+    // existing premium does not vanish.
     try {
       const res = await fetch(
         `${supaUrl()}/rest/v1/profiles?${pgQuery(eq('user_id', userId), pgSelect(['plan']))}`,
@@ -119,7 +123,7 @@ async function fetchPlan(userId: string, token: string): Promise<Plan> {
         if (rows[0]?.plan === 'premium') plan = 'premium';
       }
     } catch {
-      /* נשארים ב-free */
+      /* stay on free */
     }
   }
   put(planCache, userId, plan);
@@ -146,10 +150,11 @@ export async function resolveCaller(request: Request): Promise<Caller> {
     }
   }
   /*
-    אנונימי הוא **שכבה נפרדת ולא "free"**. נתנאל ביקש שהשימוש הכבד
-    יגיע מאנשים עם חשבון וטיולים: מי שלא נרשם מקבל מספיק כדי לבנות
-    טיול אמיתי ולהתרשם, ומי שכן נרשם מקבל את המכסה המלאה. `plan`
-    נשאר 'free' כי הוא שדה **חיוב** - חשבון אנונימי הוא לא לקוח.
+    Anonymous is a **separate tier, not "free"**. Netanel asked that
+    heavy usage come from people with an account and trips: whoever has
+    not signed up gets enough to build a real trip and be impressed, and
+    whoever has gets the full quota. `plan` stays 'free' because it is a
+    **billing** field - an anonymous account is not a customer.
   */
   return {
     id: anonIdentity(request),
@@ -161,22 +166,25 @@ export async function resolveCaller(request: Request): Promise<Caller> {
 }
 
 /**
- * מזהה דפדפן, ורק אחריו כתובת IP.
+ * Browser identifier first, and only after it the IP address.
  *
- * **למה זה חשוב דווקא כאן:** מפעילות הסלולר בישראל מעמידות מספר עצום
- * של לקוחות מאחורי מספר קטן של כתובות (CGNAT). מכסה שנשענת על IP
- * לבדו סופרת את כולם כאדם אחד - כלומר חוסמת אנשים שמעולם לא נכנסו
- * לאתר, בגלל מישהו אחר שחולק איתם כתובת. זו בדיוק הנפילה שהמנגנון
- * הזה בא למנוע, רק מכיוון אחר.
+ * **Why this matters precisely here:** Israeli mobile carriers put an
+ * enormous number of customers behind a small number of addresses
+ * (CGNAT). A quota resting on IP alone counts them all as one person -
+ * i.e. it blocks people who have never visited the site, because of
+ * someone else sharing an address with them. That is exactly the
+ * failure this mechanism exists to prevent, just from the other
+ * direction.
  *
- * המזהה נוצר בדפדפן ונשמר אצלו (ראו `lib/clientId.ts`). הוא לא סוד
- * ואי אפשר לסמוך עליו מול תוקף - אבל הוא **לא נועד** להיות הגנה
- * מפני תוקף: הוא נועד להפריד בין אנשים אמיתיים. מי שמוחק אותו נופל
- * חזרה למכסה לפי IP, שהיא המחמירה מבין השתיים - כלומר אין רווח
- * בהשמטתו.
+ * The identifier is created in the browser and stored there (see
+ * `lib/clientId.ts`). It is not a secret and cannot be trusted against
+ * an attacker - but it is **not meant** to be protection against an
+ * attacker: it is meant to separate real people. Whoever deletes it
+ * falls back to the IP-based quota, which is the stricter of the two -
+ * i.e. there is no gain in dropping it.
  *
- * הפורמט מוגבל בכוונה לצורה שאנחנו מייצרים: מחרוזת שרירותית מהלקוח
- * לא תהפוך למפתח מכסה.
+ * The format is deliberately restricted to the shape we generate: an
+ * arbitrary string from the client will not become a quota key.
  */
 const CLIENT_ID = /^[a-z0-9]{16,64}$/;
 
@@ -186,12 +194,12 @@ export function anonIdentity(request: Request): string {
   return `ip:${requestIp(request)}`;
 }
 
-/** ביטול מטמון התוכנית אחרי שדרוג (למשל מה-webhook) */
+/** Invalidate the plan cache after an upgrade (e.g. from the webhook) */
 export function invalidatePlanCache(userId: string): void {
   planCache.delete(userId);
 }
 
-/** לבדיקות בלבד */
+/** For tests only */
 export function resetIdentityForTest(): void {
   tokenCache.clear();
   planCache.clear();

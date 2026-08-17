@@ -7,9 +7,10 @@ import Flag from '@/components/Flag';
 import type { SearchHits, SearchKind, SearchResult } from '@/lib/siteSearch';
 import { OFFLINE_HINT, useOnline } from '@/lib/offline/online';
 
-// כותרות הקבוצות מוגדרות כאן ולא מיובאות מ-`siteSearch`: כל ייבוא ערך
-// (לא-type) מהמודול ההוא היה גורר את כל הקטלוג לתוך ה-bundle הראשי
-// ומבטל בדיוק את מה שהייבוא הדינמי בא לחסוך.
+// The group headings are defined here rather than imported from `siteSearch`:
+// any value (non-type) import from that module would drag the entire catalog
+// into the main bundle and defeat exactly what the dynamic import is meant
+// to save.
 const KIND_LABELS: Record<SearchKind, string> = {
   country: 'מדינות',
   city: 'ערים',
@@ -17,20 +18,25 @@ const KIND_LABELS: Record<SearchKind, string> = {
 };
 
 /**
- * חיפוש כלל-אתרי - כפתור אחד שפותח שכבת חיפוש, ואותה שכבה משמשת בכל
- * מקום שבו יש כניסה לחיפוש (הניווט, קטלוג היעדים). יש שתי צורות לכפתור:
- * `icon` לניווט הצפוף, ו-`field` לדפים שבהם החיפוש הוא פעולה ראשית.
+ * Site-wide search - one button that opens a search overlay, and the same
+ * overlay is used everywhere search has an entry point (the nav, the
+ * destination catalog). The button has two shapes: `icon` for the dense
+ * nav, and `field` for pages where search is a primary action.
  *
- * הקטלוג עצמו נטען בייבוא דינמי ברגע הפתיחה בלבד, כך שכפתור בניווט לא
- * גורר את כל הדאטה ל-bundle של כל עמוד.
+ * The catalog itself is loaded via dynamic import only at the moment of
+ * opening, so a button in the nav does not drag all the data into every
+ * page's bundle.
  *
- * **השכבה מרונדרת ב-portal אל ה-body, וזה לא קישוט.** הכפתור בניווט יושב
- * בתוך ה-`<header>`, ולהדר יש `backdrop-blur` - ו-backdrop-filter יוצר
- * containing block ל-position:fixed. בלי ה-portal, `fixed inset-0` נמדד
- * מול ההדר במקום מול המסך: נמדד בדפדפן אמיתי ב-390px - 360x74 במקום
- * 360x740. התוצאה על הטלפון היא בדיוק מה שנתנאל צילם: פס מוצל בגובה
- * הניווט שנגמר בקו חד, והפאנל צף על עמוד לא מוצל מתחתיו. AccountButton
- * כבר נפל במלכודת הזאת ותוקן; זה אותו באג בדיוק, בקומפוננטה אחרת.
+ * **The overlay is rendered in a portal onto the body, and that is not
+ * decoration.** The nav button sits inside the `<header>`, and the header
+ * carries `backdrop-blur` - and backdrop-filter creates a containing block
+ * for position:fixed. Without the portal, `fixed inset-0` is measured
+ * against the header instead of the screen: measured in a real browser at
+ * 390px - 360x74 instead of 360x740. The result on the phone is exactly
+ * what Netanel photographed: a shaded band the height of the nav ending in
+ * a hard line, with the panel floating over an undimmed page below it.
+ * AccountButton already fell into this exact trap and was fixed; this is
+ * the very same bug, in a different component.
  */
 
 type Variant = 'icon' | 'field' | 'menu-row';
@@ -62,27 +68,28 @@ export default function SiteSearch({
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [search, setSearch] = useState<((q: string) => SearchHits) | null>(null);
-  /** יעדים להתחלה - נטענים יחד עם הקטלוג, כדי שהמצב הריק לא יהיה ריק */
+  /** Starter destinations - loaded together with the catalog, so the empty state is not empty */
   const [popular, setPopular] = useState<SearchResult[]>([]);
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   /**
-   * חיפוש האתר סורק את **כל** הקטלוג, שנטען כאן ב-`import()` דינמי
-   * ואינו נשמר במכשיר בכוונה (רק הערים של הטיול נשמרות). בלי רשת אין
-   * מה לחפש בו, ולכן הכפתור מושבת ואומר זאת - במקום להיפתח על חלונית
-   * שנתקעת ריקה, שזה בדיוק "נראה שבור".
+   * Site search scans the **entire** catalog, which is loaded here via a
+   * dynamic `import()` and is deliberately not stored on the device (only
+   * the trip's cities are stored). Without a network there is nothing to
+   * search, so the button is disabled and says so - instead of opening onto
+   * a panel stuck empty, which is exactly what "looks broken" means.
    */
   const offline = !useOnline();
 
-  // הדאטה נטענת רק כשבאמת פותחים חיפוש
+  // The data is loaded only when search is actually opened
   useEffect(() => {
     if (!open || search) return;
     let alive = true;
     import('@/lib/siteSearch').then((m) => {
       const index = m.buildSearchIndex();
       if (!alive) return;
-      // עוטפים בפונקציה נוספת כי setState מפרש פונקציה כעדכון-לפי-קודם
+      // Wrapped in an extra function because setState treats a function as an update-from-previous
       setSearch(() => (q: string) => m.searchSiteHits(index, q));
       setPopular(m.popularDestinations(index));
     });
@@ -99,7 +106,7 @@ export default function SiteSearch({
     }
   }, [open]);
 
-  // Ctrl/Cmd+K פותח, Escape סוגר
+  // Ctrl/Cmd+K opens, Escape closes
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
@@ -114,8 +121,9 @@ export default function SiteSearch({
 
   const hits = useMemo(() => (search ? search(query) : { results: [], omitted: 0 }), [search, query]);
   /**
-   * מה שמנווטים בו במקלדת. כשהשדה ריק אלה יעדי ההתחלה, ולכן חץ למטה
-   * ו-Enter עובדים מיד עם הפתיחה - בלי להקליד כלום.
+   * What keyboard navigation moves through. When the field is empty these
+   * are the starter destinations, so ArrowDown and Enter work immediately
+   * on open - without typing anything.
    */
   const results = query.trim().length < 2 ? popular : hits.results;
 
@@ -143,14 +151,14 @@ export default function SiteSearch({
     }
   };
 
-  /** מה שאין בקטלוג - שולחים לסוכן, שיודע לחקור יעד חדש ולומר בכנות מה ידוע */
+  /** Whatever is not in the catalog - hand off to the agent, which can explore a new destination and say honestly what is known */
   const askAgent = () => {
     setOpen(false);
     onNavigate?.();
     router.push(`/chat?q=${encodeURIComponent(`ספר לי על ${query.trim()}`)}`);
   };
 
-  // ---- הכפתור ----
+  // ---- The trigger button ----
   const trigger =
     variant === 'field' ? (
       <button
@@ -190,8 +198,9 @@ export default function SiteSearch({
     <>
       {trigger}
 
-      {/* נותק החיבור בזמן שהחלונית פתוחה - היא נעלמת מיד, במקום להישאר
-          פתוחה מעל חיפוש שלא יחזיר כלום */}
+      {/* Connection dropped while the panel is open - it disappears
+          immediately, instead of staying open over a search that will
+          return nothing */}
       {open &&
         !offline &&
         typeof document !== 'undefined' &&
@@ -229,15 +238,18 @@ export default function SiteSearch({
               <div id="site-search-results" role="listbox" className="max-h-[60vh] overflow-y-auto p-2">
                 {query.trim().length < 2 ? (
                   /*
-                    המצב הריק היה פסקת הסבר ושום דבר ללחוץ עליו - שכבת חיפוש
-                    שנפתחת ומראה תיעוד. עכשיו היא נפתחת עם יעדים אמיתיים,
-                    לפי הדירוג העריכתי שקיים בדאטה, וחצי המקלדת עובדים מיד.
+                    The empty state used to be an explanatory paragraph and
+                    nothing to click - a search overlay that opens and shows
+                    documentation. Now it opens with real destinations, by
+                    the editorial rating that exists in the data, and the
+                    arrow keys work immediately.
                   */
                   popular.length > 0 ? (
                     <>
                       <div className="px-3 pb-1 pt-2 text-xs font-bold text-night/40">
-                        {/* שם מדויק ולא "פופולרי": אין לנו מדידת פופולריות,
-                            יש דירוג עריכתי בדאטה. */}
+                        {/* A precise name, not "popular": we have no
+                            popularity measurement, there is an editorial
+                            rating in the data. */}
                         היעדים המדורגים ביותר
                       </div>
                       {popular.map((r, i) => (
@@ -251,7 +263,7 @@ export default function SiteSearch({
                   <p className="px-3 py-4 text-sm font-medium text-night/45">טוען את הקטלוג…</p>
                 ) : results.length === 0 ? (
                   <div className="px-3 py-4">
-                    {/* מצב ריק כן: לא ממציאים תוצאה, מציעים לשאול את הסוכן */}
+                    {/* An honest empty state: no invented results - we offer to ask the agent */}
                     <p className="text-sm font-semibold text-night">
                       אין &quot;{query.trim()}&quot; בקטלוג שלנו.
                     </p>
@@ -282,17 +294,19 @@ export default function SiteSearch({
                       </div>
                     );
                   })}
-                  {/* התקרה לכל סוג יכולה להשמיט תוצאות. אומרים את זה במקום
-                      להציג רשימה חתוכה בשקט. */}
+                  {/* The per-kind cap can omit results. We say so instead of
+                      silently showing a truncated list. */}
                   {hits.omitted > 0 && (
                     <p className="px-3 pt-2 text-xs font-medium text-night/40">
                       ועוד {hits.omitted} התאמות - כדאי לחדד את החיפוש.
                     </p>
                   )}
-                  {/* יש תוצאות, אבל לא בהכרח מה שחיפשו: החיפוש הוא הכלה
-                      בתת-מחרוזת, ולכן "דובאי" מוצא גם "נקיק אולדובאי".
-                      שורת מילוט קבועה שומרת על כנות - מה שאין בקטלוג, הסוכן
-                      יגיד עליו את האמת. */}
+                  {/* There are results, but not necessarily what was
+                      searched for: matching is substring containment, so
+                      searching for Dubai also finds Olduvai Gorge. A
+                      persistent escape row keeps things honest - whatever is
+                      not in the catalog, the agent will tell the truth
+                      about. */}
                   <button
                     onClick={askAgent}
                     className="mt-1 flex w-full items-center gap-2 rounded-xl border-t border-night/10 px-3 py-2.5 text-start text-xs font-semibold text-night/50 transition hover:bg-night/[0.04] hover:text-night"
@@ -301,7 +315,7 @@ export default function SiteSearch({
                   </button>
                   </>
                 )}
-                {/* רמז מקלדת: קיים כאן גם כדי שהפאנל לא ייראה חתוך בתחתית */}
+                {/* Keyboard hint: also here so the panel does not look cut off at the bottom */}
                 <p className="mt-1 hidden items-center gap-2 border-t border-night/10 px-3 pt-2 text-[11px] font-medium text-night/35 sm:flex">
                   <kbd className="rounded bg-night/5 px-1.5 py-0.5 font-sans">↑</kbd>
                   <kbd className="rounded bg-night/5 px-1.5 py-0.5 font-sans">↓</kbd>
@@ -320,8 +334,9 @@ export default function SiteSearch({
 }
 
 /**
- * שורת תוצאה. חולצה לרכיב משלה כי אותה שורה בדיוק משמשת גם את יעדי
- * ההתחלה וגם את תוצאות החיפוש - שני העתקים היו נפרדים בהתנהגות המקלדת.
+ * A result row. Extracted into its own component because the exact same row
+ * serves both the starter destinations and the search results - the two
+ * copies used to be separate in their keyboard behavior.
  */
 function Row({
   r,

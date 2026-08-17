@@ -11,15 +11,17 @@ import { budgetFor, maybeAlert, maybeAlertPremium, monthKey, premiumBudgetFor, r
 import { sameOriginOk } from '@/lib/server/chatGuards';
 
 /**
- * בניית טיול מהעדפות-כפתורים + טקסט חופשי אופציונלי.
+ * Building a trip from button preferences + optional free text.
  *
- * POST { prefs, party?, notes? } → { trip, understood } או { error }.
+ * POST { prefs, party?, notes? } → { trip, understood } or { error }.
  *
- * ההעדפות מהכפתורים הן אילוצים קשיחים - עוברות ולידציה בשרת ולעולם לא
- * משתנות ע"י ה-AI. הטקסט החופשי (אם יש, ויש ANTHROPIC_API_KEY) משמש רק
- * לעידון: אילו מקומות, סדר, הערות ליום, שם הטיול. מזהי מקומות שלא קיימים
- * בדאטה נזרקים; אם ה-dayPlans לא שורדים ולידציה מלאה - נופלים ל-generateTrip.
- * בלי טקסט או בלי מפתח: generateTrip ישירות, כך שהכול עובד גם keyless.
+ * The button preferences are hard constraints - validated on the server and
+ * never changed by the AI. The free text (if present, and ANTHROPIC_API_KEY
+ * exists) is used only for refinement: which places, order, day notes, trip
+ * name. Place ids that do not exist in the data are dropped; if the dayPlans
+ * do not survive full validation - we fall back to generateTrip. Without
+ * text or without a key: generateTrip directly, so everything works keyless
+ * too.
  */
 
 export const maxDuration = 60;
@@ -77,9 +79,10 @@ DATA (cities, their places and ready-made itineraries):
 `;
 
 /**
- * רק הערים שהמשתמש בחר בכפתורים. הבחירה היא אילוץ קשיח שנאכף גם
- * בוולידציה בשרת, ולכן שליחת כל 47 הערים היא בזבוז נטו: היא ניפחה את
- * הקלט לעשרות אלפי טוקנים והאטה את הבקשה בלי להוסיף שום יכולת.
+ * Only the cities the user chose with the buttons. The choice is a hard
+ * constraint also enforced by server-side validation, so sending all 47
+ * cities is a net waste: it inflated the input to tens of thousands of
+ * tokens and slowed the request without adding any capability.
  */
 function buildGrounding(citySlugs: string[]): string {
   const chosen = destinations.filter((d) => citySlugs.includes(d.slug));
@@ -135,15 +138,15 @@ async function refineWithClaude(
       },
       signal: AbortSignal.timeout(50_000),
       body: JSON.stringify({
-        // משימה חד-פעמית מובנית → המודל המהיר/זול (ניתוב מודלים לפי משימה)
+        // A one-shot structured task → the fast/cheap model (model routing by task)
         model,
         max_tokens: 3000,
-        // בלי thinking/effort - haiku-4-5 לא תומך בהם; structured outputs מספיק
+        // No thinking/effort - haiku-4-5 does not support them; structured outputs is enough
         output_config: {
           format: { type: 'json_schema', schema: REFINE_SCHEMA },
         },
-        // כמו בצ׳אט: ה-grounding הוא הבלוק האחרון עם cache_control - הפרומפט
-        // הקבוע נכנס ל-prompt cache, והאילוצים המשתנים יושבים בהודעת המשתמש.
+        // Like in the chat: the grounding is the last block with cache_control - the
+        // constant prompt goes into the prompt cache, and the varying constraints sit in the user message.
         system: [
           { type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } },
           { type: 'text', text: buildGrounding(prefs.citySlugs) },
@@ -168,7 +171,7 @@ async function refineWithClaude(
       };
     };
     meter.units += aiUnits(data.usage ?? {});
-    // הצריכה נשמרת על ה-meter כדי שהקורא יוכל לרשום עלות אמיתית בדולרים
+    // The usage is kept on the meter so the caller can record real cost in dollars
     meter.usage = { ...(data.usage ?? {}) };
     meter.model = model;
     if (process.env.NODE_ENV === 'development' || process.env.CHAT_USAGE_LOG === 'on') {
@@ -182,18 +185,18 @@ async function refineWithClaude(
     if (!text) return null;
     return JSON.parse(text) as AiRefinement;
   } catch {
-    return null; // כל כשל → נפילה חיננית ל-generateTrip
+    return null; // any failure → graceful fallback to generateTrip
   }
 }
 
-/* ---------- ולידציה ---------- */
+/* ---------- Validation ---------- */
 
 const PACES = new Set(['relaxed', 'packed']);
 const TYPES = new Set(['city', 'nature', 'combined']);
 const SHOPPING = new Set(['more', 'normal', 'less']);
 const PARTIES = new Set<Party>(['couple', 'family', 'friends', 'solo']);
 
-/** העדפות הכפתורים מהלקוח - האילוצים הקשיחים. null כשאין אף עיר תקפה. */
+/** The client's button preferences - the hard constraints. null when no valid city exists. */
 function sanitizeClientPrefs(raw: unknown): WizardPrefs | null {
   if (!raw || typeof raw !== 'object') return null;
   const r = raw as Record<string, unknown>;
@@ -215,9 +218,10 @@ function sanitizeClientPrefs(raw: unknown): WizardPrefs | null {
 }
 
 /**
- * ולידציית ה-dayPlans מה-AI מול האילוצים - חובה: עיר שלא נבחרה, מזהה מקום
- * שלא קיים בעיר שלו, או מקום שחוזר - נזרקים. משתמשים בתוצאה רק אם נשארו
- * בדיוק totalDays ימים; אחרת generateTrip.
+ * Validating the AI's dayPlans against the constraints - mandatory: a city
+ * that was not chosen, a place id that does not exist in its city, or a
+ * repeated place - all dropped. The result is used only if exactly
+ * totalDays days remain; otherwise generateTrip.
  */
 function validateDayPlans(dayPlans: AiDayPlan[], prefs: WizardPrefs): TripDay[] {
   const allowedCities = new Set(prefs.citySlugs);
@@ -227,14 +231,15 @@ function validateDayPlans(dayPlans: AiDayPlan[], prefs: WizardPrefs): TripDay[] 
     if (!allowedCities.has(dp?.citySlug)) continue;
     const dest = destinations.find((d) => d.slug === dp.citySlug);
     if (!dest) continue;
-    // כשרות היא opt-in בלבד: אם המשתמש לא ביקש, מקומות כשרים נזרקים כאן
-    // בצד השרת - גם אם המודל בכל זאת שיבץ אותם.
+    // Kashrut is opt-in only: if the user did not ask, kosher places are dropped
+    // here on the server side - even if the model scheduled them anyway.
     const placeIds = (Array.isArray(dp.placeIds) ? dp.placeIds : []).filter((id) => {
       const place = dest.places.find((p) => p.id === id);
       if (!place || usedPlaceIds.has(id)) return false;
       if (!prefs.kosherOnly && isKosher(place.category)) return false;
-      // ההפך, ולא פחות חשוב: שמר כשרות לא מקבל מקום אכילה לא כשר -
-      // גם אם המודל שיבץ אותו בכל זאת. 'unknown' נחסם כמו 'not-kosher'.
+      // The reverse, and no less important: a kosher-keeping traveler does not get
+      // a non-kosher eating place - even if the model scheduled it anyway.
+      // 'unknown' is blocked exactly like 'not-kosher'.
       if (prefs.kosherOnly && isEating(place.category) && kosherStatusOf(place) !== 'kosher') return false;
       return true;
     });
@@ -287,8 +292,8 @@ function buildUnderstood(prefs: WizardPrefs, party: Party | null, interests: str
 }
 
 export async function POST(request: Request) {
-  // מכסות: פרץ → 429; מכסה יומית → הבנייה ממשיכה לעבוד אבל בלי עידון
-  // ה-AI (generateTrip המקומי חינם ולא ניתן להצפה יקרה).
+  // Quotas: burst → 429; daily quota → building keeps working but without the
+  // AI refinement (the local generateTrip is free and cannot be expensively flooded).
   if (!sameOriginOk(request)) {
     return Response.json({ error: 'forbidden' }, { status: 403 });
   }
@@ -305,13 +310,14 @@ export async function POST(request: Request) {
   const daily = checkLimit('generate-day', caller.id, limits.generatePerDay, periodMsFor(caller.tier));
   const unitsUsed = process.env.ANTHROPIC_API_KEY ? await aiUnitsUsedToday(caller.id) : 0;
   /*
-    תקרת ההוצאה הגלובלית חלה גם כאן. ההשפעה על המטייל היא **אפס
-    לכאורה**: הבנייה ממשיכה דרך `generateTrip` המקומי, בדיוק כמו בכל
-    מצב אחר שבו העידון לא זמין. מה שנעצר הוא הקריאה למודל.
+    The global spending ceiling applies here too. The effect on the traveler
+    is **effectively zero**: building continues through the local
+    `generateTrip`, exactly like any other state in which the refinement is
+    unavailable. What is stopped is the model call.
 
-    מנוי פרימיום נבדק מול `premiumBudgetFor` בלבד - התקרה החודשית
-    האישית שלו - ולא מול `budgetFor` (התקציב היומי המשותף של
-    אנונימי/חינם), מאותה סיבה בדיוק כמו ב-/api/chat.
+    A premium subscriber is checked only against `premiumBudgetFor` - their
+    personal monthly ceiling - and not against `budgetFor` (the shared daily
+    budget of anonymous/free), for exactly the same reason as in /api/chat.
   */
   let budgetExceeded = false;
   if (process.env.ANTHROPIC_API_KEY) {
@@ -327,8 +333,8 @@ export async function POST(request: Request) {
   }
   const aiAllowed = daily.ok && unitsUsed < limits.aiUnitsPerDay && !budgetExceeded;
 
-  // קוראים כטקסט קודם וחוסמים גוף עצום לפני JSON.parse - אותה הגנה שיש
-  // ב-/api/chat. בלעדיה אפשר להעסיק את השרת בפרסור של מגה-בייטים.
+  // Read as text first and block a huge body before JSON.parse - the same
+  // protection /api/chat has. Without it the server can be kept busy parsing megabytes.
   let body: Record<string, unknown> = {};
   const rawBody = await request.text();
   if (rawBody.length > 20_000) {
@@ -337,7 +343,7 @@ export async function POST(request: Request) {
   try {
     body = JSON.parse(rawBody) as Record<string, unknown>;
   } catch {
-    /* גוף לא תקין → prefs חסרות */
+    /* invalid body → missing prefs */
   }
 
   const prefs = sanitizeClientPrefs(body.prefs);
@@ -378,7 +384,7 @@ export async function POST(request: Request) {
   }
 
   const name = tripName ?? defaultTripName(prefs.citySlugs);
-  // ההעדפות נשמרות על הטיול - הסוכן והמתכנן ימשיכו לכבד אותן
+  // The preferences are stored on the trip - the agent and the planner will keep honoring them
   const tripPreferences: TripPreferences = {
     pace: prefs.pace,
     shopping: prefs.shopping,
@@ -398,9 +404,10 @@ export async function POST(request: Request) {
         }
       : generateTrip(prefs, destinations, name, tripPreferences);
 
-  // מעל המכסה הטיול עדיין נבנה (הבנייה המקומית חינמית), אבל הטקסט החופשי
-  // של המטייל **לא** נקרא - וזה חייב להיאמר. "בנינו לך טיול" בלי לספר
-  // שהבקשה החופשית לא נלקחה בחשבון הוא בדיוק סוג השקט שנראה כמו באג.
+  // Over the quota the trip is still built (the local build is free), but the
+  // traveler's free text is **not** read - and that must be said. "We built you
+  // a trip" without saying the free-text request was not taken into account is
+  // exactly the kind of silence that reads as a bug.
   const notice =
     notes && !aiAllowed
       ? 'הגעתם למכסת ה-AI היומית, ולכן בניתי את המסלול מהבחירות שסימנתם בלבד - הטקסט החופשי לא נקרא הפעם. המכסה מתאפסת פעם ביום, ואפשר לערוך את המסלול ידנית או להמשיך עם הסוכן מחר.'

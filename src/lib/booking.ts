@@ -1,24 +1,26 @@
-// ---------- שכבת ההזמנות (booking) ----------
+// ---------- The booking layer ----------
 //
-// כלל הברזל של הקובץ הזה: **הסוכן לעולם לא מייצר קישורים**. המודל מחליט
-// רק *על מה* לדבר (טיסות? לינה? כרטיסים?) ושומר את התשובה של המשתמש דרך
-// הכלי set_booking_status. הקישור עצמו מורכב כאן, דטרמיניסטית, מהקונפיג
-// שלמטה - כך שאי אפשר להמציא כתובת, מזהה שותפים או מחיר.
+// This file's iron rule: **the agent never generates links**. The model decides
+// only *what* to talk about (flights? lodging? tickets?) and stores the user's
+// answer via the set_booking_status tool. The link itself is composed here,
+// deterministically, from the config below - so an address, an affiliate id or
+// a price cannot be invented.
 //
-// כנות מסחרית (נשמר מ-services.ts): נכון להיום אין בקוד אף שילוב
-// אפיליאייט אמיתי. כל עוד `affiliate` הוא null, הכפתור מפנה לאתר הציבורי
-// של הספק - בלי פרמטרי מעקב מומצאים. כשיגיע מזהה שותפים אמיתי, ממלאים
-// את `affiliate` (תבנית + שם משתנה סביבה) ושום קומפוננטה לא משתנה.
+// Commercial honesty (carried over from services.ts): as of today there is no
+// real affiliate integration in the code. As long as `affiliate` is null, the
+// button points at the provider's public site - with no invented tracking
+// parameters. When a real affiliate id arrives, fill in `affiliate` (template +
+// env var name) and no component changes.
 
 import type { BookingKind } from './trip/types';
 
 export type { BookingKind };
 
 /**
- * מזהי שותפים. חייבים להיקרא כגישה סטטית ל-`process.env.NEXT_PUBLIC_*`
- * כדי ש-Next יטמיע אותם גם בצד הלקוח (גישה דינמית לפי מפתח לא עוברת
- * הטמעה ותמיד תחזיר undefined בדפדפן). כולם ריקים היום - ראו הקובץ
- * `.env.example`; ברגע שיש מזהה אמיתי מוסיפים אותו שם ובוורסל.
+ * Affiliate ids. Must be read as static access to `process.env.NEXT_PUBLIC_*`
+ * so Next inlines them on the client side too (dynamic access by key is not
+ * inlined and always returns undefined in the browser). All empty today - see
+ * `.env.example`; the moment a real id exists, add it there and in Vercel.
  */
 const AFFILIATE_IDS: Record<string, string | undefined> = {
   skyscanner: process.env.NEXT_PUBLIC_AFFILIATE_SKYSCANNER,
@@ -28,18 +30,21 @@ const AFFILIATE_IDS: Record<string, string | undefined> = {
 };
 
 export interface BookingAffiliate {
-  /** תבנית הקישור. {ID} = מזהה השותפים, {QUERY} = יעד/עיר מקודדים ל-URL. */
+  /** The link template. {ID} = the affiliate id, {QUERY} = destination/city URL-encoded. */
   template: string;
-  /** המפתח ב-AFFILIATE_IDS. ריק/חסר => נופלים ל-publicUrl. */
+  /** The key in AFFILIATE_IDS. Empty/missing => fall back to publicUrl. */
   idKey: keyof typeof AFFILIATE_IDS;
   /**
-   * האם התבנית היא **עטיפת הפניה** (רשת שותפים שמקבלת את היעד האמיתי
-   * מקודד בתוך פרמטר, למשל `awin1.com/cread.php?...&ued=<encoded>`).
+   * Whether the template is a **redirect wrapper** (an affiliate network that
+   * receives the real destination encoded inside a parameter, e.g.
+   * `awin1.com/cread.php?...&ued=<encoded>`).
    *
-   * זה לא פרט טכני שאפשר לדלג עליו: פרמטרים של חיפוש (תאריכים, אורחים)
-   * חייבים לשבת על **כתובת היעד**, ולהדביק אותם על העטיפה פירושו לשלוח
-   * אותם לרשת השותפים ולא לספק - כלומר קישור שנראה ממולא ומגיע לחיפוש
-   * ריק. כשמוסיפים ספק עטוף, מסמנים כאן true והפרמטרים לא יצורפו.
+   * This is not a technical detail that can be skipped: search parameters
+   * (dates, guests) must sit on the **destination URL**, and pasting them onto
+   * the wrapper means sending them to the affiliate network and not to the
+   * provider - i.e. a link that looks filled-in and lands on an empty search.
+   * When adding a wrapped provider, mark true here and the parameters will not
+   * be appended.
    */
   wrapped?: boolean;
 }
@@ -48,32 +53,34 @@ export interface BookingProvider {
   kind: BookingKind;
   emoji: string;
   /**
-   * האם ההזמנה שייכת ל**עיר** ולא לטיול.
+   * Whether the booking belongs to a **city** rather than the trip.
    *
-   * מלון נקנה בעיר אחת. "יש לנו לינה" בטיול של ברטיסלבה ווינה הוא
-   * משפט שאי אפשר לענות עליו נכון, וזה מה שנתנאל ראה במסך. טיסה,
-   * eSIM, ביטוח ורכב הם לטיול כולו ולא לאף עיר בפרט.
+   * A hotel is bought in one city. "We have lodging" on a Bratislava+Vienna
+   * trip is a sentence that cannot be answered correctly, and that is what
+   * Netanel saw on the screen. A flight, eSIM, insurance and a car are for
+   * the whole trip and not for any city in particular.
    *
-   * הכלל מסומן במפורש ולא נגזר מהקונפיג, אבל **יש טסט שמוודא שהוא
-   * תואם למי שהחיפוש שלו מקבל `{QUERY}`** - כלומר לספק שמחפש במקום
-   * מסוים. שני הדברים לא יכולים להיפרד בשקט.
+   * The rule is marked explicitly rather than derived from the config, but
+   * **a test ensures it matches whichever provider's search takes `{QUERY}`**
+   * - i.e. a provider that searches a specific place. The two things cannot
+   * drift apart silently.
    */
   perCity?: boolean;
-  /** כותרת בעברית */
+  /** Title in Hebrew */
   title: string;
-  /** משפט קצר בעברית - מה זה נותן למטייל */
+  /** A short Hebrew sentence - what this gives the traveler */
   blurb: string;
-  /** תווית הכפתור */
+  /** The button label */
   cta: string;
-  /** שאלת הסוכן - נוסח קצר ולא דוחף, לשימוש חד-פעמי */
+  /** The agent's question - short, non-pushy wording, for one-time use */
   question: string;
-  /** שם הספק להצגה; null = עוד לא נבחר ספק ("בקרוב") */
+  /** Provider name for display; null = no provider chosen yet ("coming soon") */
   provider: string | null;
   affiliate: BookingAffiliate | null;
   /**
-   * חיפוש ציבורי אצל הספק. {QUERY} מוחלף בשם היעד באנגלית/לטינית.
-   * בלי {QUERY} - זה פשוט דף הבית של הספק.
-   * null => אין ספק => הכרטיס במצב "בקרוב".
+   * Public search at the provider. {QUERY} is replaced with the destination's
+   * English/Latin name. Without {QUERY} - it is simply the provider's homepage.
+   * null => no provider => the card is in "coming soon" state.
    */
   publicUrl: string | null;
 }
@@ -88,8 +95,8 @@ export const bookingProviders: BookingProvider[] = [
     question: 'כבר יש לכם טיסות ליעד, או שכדאי שאזכיר לחפש?',
     provider: 'Skyscanner',
     affiliate: null,
-    // דף הבית בלבד: קישור-עומק לטיסה דורש קודי שדה תעופה שאין בדאטה,
-    // ולא נמציא פורמט כתובת.
+    // Homepage only: a flight deep-link requires airport codes not in the
+    // data, and we will not invent a URL format.
     publicUrl: 'https://www.skyscanner.co.il/',
   },
   {
@@ -125,7 +132,7 @@ export const bookingProviders: BookingProvider[] = [
     question: 'יש לכם פתרון גלישה לחו"ל, או שנסתכל על eSIM?',
     provider: 'Airalo',
     affiliate: null,
-    // דף הבית: ה-slug של כל מדינה אצל הספק לא מתועד אצלנו.
+    // Homepage: each country's slug at the provider is not documented on our side.
     publicUrl: 'https://www.airalo.com/',
   },
   {
@@ -137,8 +144,8 @@ export const bookingProviders: BookingProvider[] = [
     question: 'דאגתם לביטוח נסיעות?',
     provider: 'World Nomads',
     affiliate: null,
-    // דף הבית: אין מזהה שותפים עדיין, ואין ל-World Nomads slug תלוי-
-    // יעד שמתועד אצלנו - בדיוק כמו eSIM/טיסות למטה.
+    // Homepage: no affiliate id yet, and World Nomads has no destination-
+    // dependent slug documented on our side - exactly like eSIM/flights below.
     publicUrl: 'https://www.worldnomads.com/',
   },
   {
@@ -150,8 +157,9 @@ export const bookingProviders: BookingProvider[] = [
     question: 'המסלול יוצא מחוץ לעיר - תרצו שנבדוק רכב?',
     provider: 'Rentalcars.com',
     affiliate: null,
-    // דף הבית: השכרת רכב היא לטיול כולו ולא לעיר בודדת (perCity לא
-    // מסומן למעלה), כך שאין {QUERY} לצרף - אותה החלטה כמו טיסות ו-eSIM.
+    // Homepage: a car rental is for the whole trip and not one city (perCity
+    // is not marked above), so there is no {QUERY} to append - the same
+    // decision as flights and eSIM.
     publicUrl: 'https://www.rentalcars.com/',
   },
 ];
@@ -159,11 +167,11 @@ export const bookingProviders: BookingProvider[] = [
 export const bookingProvider = (kind: BookingKind): BookingProvider | undefined =>
   bookingProviders.find((p) => p.kind === kind);
 
-/** האם הסוג הזה נשמר ומוצג לפי עיר */
+/** Whether this kind is stored and displayed per city */
 export const bookingIsPerCity = (kind: BookingKind): boolean =>
   Boolean(bookingProvider(kind)?.perCity);
 
-/** האם החיפוש של הספק מקבל יעד - הבסיס לטסט שמצמיד את `perCity` למציאות */
+/** Whether the provider's search takes a place - the basis for the test that pins `perCity` to reality */
 export const bookingSearchTakesPlace = (kind: BookingKind): boolean => {
   const p = bookingProvider(kind);
   if (!p) return false;
@@ -171,15 +179,18 @@ export const bookingSearchTakesPlace = (kind: BookingKind): boolean => {
 };
 
 /**
- * מרכיב את הקישור היוצא. דטרמיניסטי לחלוטין: אין כאן שום קלט מהמודל
- * מלבד סוג ההזמנה, והיעד מגיע מהדאטה המקומית של הטיול.
+ * Composes the outbound link. Entirely deterministic: there is no input from
+ * the model here besides the booking kind, and the destination comes from the
+ * trip's local data.
  *
- * @param query שם היעד לחיפוש אצל הספק (לטיני, למשל "Rome"). ריק => דף הבית.
- * @param params פרמטרי חיפוש נוספים (תאריכים, אורחים). מצורפים **רק**
- *   לכתובת חיפוש אמיתית: בלי יעד אין מה לסנן, ולעטיפת הפניה של רשת
- *   שותפים הם היו נשלחים לכתובת הלא נכונה (ראו `BookingAffiliate.wrapped`).
- *   כל הערכים כאן נגזרים מהטיול, לא מהמודל - ראו `bookingSearch.ts`.
- * @returns כתובת, או null אם אין עדיין ספק (מצב "בקרוב").
+ * @param query destination name to search at the provider (Latin, e.g. "Rome").
+ *   Empty => homepage.
+ * @param params additional search parameters (dates, guests). Appended **only**
+ *   to a real search URL: with no destination there is nothing to filter, and
+ *   on an affiliate network's redirect wrapper they would be sent to the wrong
+ *   address (see `BookingAffiliate.wrapped`). Every value here is derived from
+ *   the trip, not from the model - see `bookingSearch.ts`.
+ * @returns a URL, or null if there is no provider yet ("coming soon" state).
  */
 export function buildBookingUrl(
   kind: BookingKind,
@@ -191,7 +202,7 @@ export function buildBookingUrl(
 
   const q = encodeURIComponent((query ?? '').trim());
 
-  /** מצרף פרמטרים בעזרת URL API, כדי שקידוד ותווים מיוחדים לא ייכתבו ביד */
+  /** Appends parameters via the URL API, so encoding and special chars are not hand-written */
   const withParams = (url: string, allow: boolean): string => {
     if (!allow || !params || !q) return url;
     const entries = Object.entries(params).filter(([, v]) => v);
@@ -203,7 +214,7 @@ export function buildBookingUrl(
 
   if (p.affiliate) {
     const id = AFFILIATE_IDS[p.affiliate.idKey];
-    // בלי מזהה אמיתי אין קישור אפיליאייט - לא ממציאים אחד
+    // Without a real id there is no affiliate link - we do not invent one
     if (id) {
       const url = p.affiliate.template.replace('{ID}', id).replace('{QUERY}', q);
       return withParams(url, !p.affiliate.wrapped);
@@ -212,16 +223,16 @@ export function buildBookingUrl(
 
   if (!p.publicUrl) return null;
   if (!p.publicUrl.includes('{QUERY}')) return p.publicUrl;
-  // בלי יעד לחיפוש - חוזרים לשורש האתר במקום לשלוח חיפוש ריק
+  // With no destination to search - return to the site root rather than sending an empty search
   if (!q) return new URL(p.publicUrl).origin;
   return withParams(p.publicUrl.replace('{QUERY}', q), true);
 }
 
-/** האם הספק כבר קיים (יש לאן להפנות) או שהכרטיס במצב "בקרוב" */
+/** Whether the provider exists yet (somewhere to point at) or the card is in "coming soon" state */
 export const bookingAvailable = (kind: BookingKind): boolean =>
   buildBookingUrl(kind) !== null;
 
-/** האם הקישור הוא אפיליאייט אמיתי (משפיע על rel של הלינק ועל הגילוי הנאות) */
+/** Whether the link is a real affiliate one (affects the link's rel and the disclosure) */
 export function bookingIsAffiliate(kind: BookingKind): boolean {
   const p = bookingProvider(kind);
   return Boolean(p?.affiliate && AFFILIATE_IDS[p.affiliate.idKey]);

@@ -13,34 +13,38 @@ import KosherBadge from '@/components/KosherBadge';
 import KosherNote from '@/components/KosherNote';
 
 /**
- * מרמת הזום הזו ומעלה מציגים תמונה קטנה מעל הסיכה - בזום עירוני יש
- * מקום על המסך והתמונות עוזרות לזהות את העצירות; בזום ארצי הן היו
- * מסתירות זו את זו, אז נשארות רק הסיכות.
+ * From this zoom level and up we show a small photo above the pin - at
+ * city zoom there is room on screen and the photos help identify the
+ * stops; at country zoom they would hide one another, so only the pins
+ * remain.
  */
 const PHOTO_PIN_ZOOM = 13;
 
-/** תמונת מקום מעל הסיכה; אם התמונה לא נטענת - נעלמת בשקט, הסיכה נשארת */
+/** Place photo above the pin; if the image fails to load - it disappears quietly, the pin stays */
 function photoHtml(photo: string | undefined): string {
   if (!photo) return '';
   return `<img class="pin-photo" src="${photo}" alt="" loading="lazy" onerror="this.remove()" />`;
 }
 
 /**
- * קבוצת עצירות של יום אחד בתצוגת "כל הטיול" - כל יום בצבע משלו,
- * והתג (מספר היום) מוצג בתוך הסיכה במקום האימוג'י של הקטגוריה.
+ * One day's group of stops in the whole-trip view - each day in its own
+ * color, and the badge (the day number) shown inside the pin instead of
+ * the category emoji.
  */
 export interface MapGroup {
-  /** מה שמוצג בתוך הסיכה - בדרך כלל מספר היום */
+  /** What is shown inside the pin - usually the day number */
   badge: string;
-  /** צבע הסיכה של היום (מ-dayColors) */
+  /** The day's pin color (from dayColors) */
   color: string;
   places: Place[];
 }
 
 /**
- * סיכה של המטייל עצמו (מלון שהזמין, מסעדה ששמר בה שולחן) - לא עצירה
- * מהקטלוג ולא חלק מהמסלול, ולכן לא נכנסת לקו המסלול ולא ממוספרת.
- * מוצגות רק סיכות שיש להן מיקום: סיכה לא מאומתת מטופלת בממשק שמסביב.
+ * A pin belonging to the traveler themself (a hotel they booked, a
+ * restaurant where they reserved a table) - not a catalog stop and not
+ * part of the route, so it does not join the route line and is not
+ * numbered. Only pins that have a location are shown: an unverified pin
+ * is handled by the surrounding UI.
  */
 export interface MapPin {
   id: string;
@@ -62,24 +66,26 @@ export interface MapProps {
   center: { lat: number; lng: number };
   zoom: number;
   places: Place[];
-  /** סיכות המטייל שכבר יש להן מיקום */
+  /** Traveler pins that already have a location */
   pins?: MapPin[];
-  /** גרירת סיכה למקום הנכון - המטייל מתקן איתור שגוי או מניח ידנית */
+  /** Dragging a pin to the right spot - the traveler fixes a wrong geocode or places manually */
   onPinMove?: (id: string, lat: number, lng: number) => void;
   /**
-   * מזהה הסיכה שממתינה להנחה ידנית. כשהוא מוגדר, לחיצה על המפה
-   * קובעת את מיקומה - זה המסלול של סיכה שהאיתור האוטומטי לא מצא.
+   * The id of the pin awaiting manual placement. While it is set, a click
+   * on the map fixes its location - this is the path for a pin the
+   * automatic geocoder could not find.
    */
   placingPinId?: string | null;
-  /** מספור עצירות (למסלול יומי) - אינדקס לפי הסדר במערך */
+  /** Numbering the stops (for a daily route) - index by array order */
   numbered?: boolean;
-  /** ציור קו בין העצירות לפי הסדר */
+  /** Draw a line between the stops in order */
   showRoute?: boolean;
   highlightId?: string | null;
   className?: string;
   /**
-   * תצוגת כל הטיול: כשמועבר, הוא זה שקובע את הסיכות ואת הקו -
-   * העצירות של כל הימים יחד, כל יום בצבע ובתג שלו. `places` מתעלמים.
+   * Whole-trip view: when passed, it is what determines the pins and the
+   * line - all days' stops together, each day in its own color and badge.
+   * `places` is ignored.
    */
   groups?: MapGroup[];
 }
@@ -112,7 +118,7 @@ function makeIcon(
   });
 }
 
-/** סיכה בתצוגת כל הטיול: צבע היום + מספר היום בפנים */
+/** A pin in the whole-trip view: the day's color + the day number inside */
 function makeGroupIcon(
   badge: string,
   color: string,
@@ -137,8 +143,9 @@ function makeGroupIcon(
 }
 
 /**
- * סיכת מטייל: טבעת מקווקוות סביב הטיפה כדי שתיראה שונה מעצירות
- * המסלול - זו נקודה שהמטייל הביא, לא המלצה שלנו.
+ * A traveler pin: a dashed ring around the teardrop so it looks different
+ * from route stops - this is a point the traveler brought, not our
+ * recommendation.
  */
 function makePinIcon(kind: TripPinKind) {
   const { emoji, color } = PIN_STYLE[kind];
@@ -156,7 +163,7 @@ function makePinIcon(kind: TripPinKind) {
   });
 }
 
-/** מצב הנחה ידנית: הלחיצה הבאה על המפה קובעת את מיקום הסיכה */
+/** Manual placement mode: the next click on the map fixes the pin's location */
 function PlacementCatcher({ onPick }: { onPick: (lat: number, lng: number) => void }) {
   const map = useMapEvents({
     click: (e) => onPick(e.latlng.lat, e.latlng.lng),
@@ -172,7 +179,7 @@ function PlacementCatcher({ onPick }: { onPick: (lat: number, lng: number) => vo
   return null;
 }
 
-/** עוקב אחרי רמת הזום כדי להוסיף/להסיר את תמונות הסיכות */
+/** Tracks the zoom level so pin photos can be added/removed */
 function ZoomTracker({ onZoom }: { onZoom: (z: number) => void }) {
   const map = useMapEvents({
     zoomend: () => onZoom(map.getZoom()),
@@ -183,7 +190,7 @@ function ZoomTracker({ onZoom }: { onZoom: (z: number) => void }) {
   return null;
 }
 
-/** מרכז את המפה מחדש כשהנקודות משתנות (החלפת יום/יעד, סיכה חדשה) */
+/** Re-centers the map when the points change (day/destination switch, new pin) */
 function FitBounds({ places }: { places: { lat: number; lng: number }[] }) {
   const map = useMap();
   useEffect(() => {
@@ -198,7 +205,7 @@ function FitBounds({ places }: { places: { lat: number; lng: number }[] }) {
   return null;
 }
 
-/** תוכן החלונית של עצירה - זהה בתצוגת יום ובתצוגת כל הטיול */
+/** A stop's popup content - identical in the day view and the whole-trip view */
 function PlacePopup({ place, prefix = '' }: { place: Place; prefix?: string }) {
   return (
     <div style={{ minWidth: 180, maxWidth: 220 }}>
@@ -216,24 +223,26 @@ function PlacePopup({ place, prefix = '' }: { place: Place; prefix?: string }) {
         )}
       </div>
       {/*
-        היה כאן ירוק אחר (#0d9488) ובלי כרית, כך שאותה הערת כשרות נראתה
-        בחלונית המפה שונה לגמרי מהכרטיס שלצידה. עכשיו זה אותו רכיב.
+        There used to be a different green here (#0d9488) with no padding,
+        so the same kosher note looked completely different in the map
+        popup than in the card beside it. Now it is the same component.
       */}
       <KosherNote note={place.kosherNote} className="mt-1" />
       {place.kosherVerification && (
         /*
-          התג עצמו ולא העתק שלו. הנוסח וההסתייגות "לוודא מול המקום"
-          חייבים להיות זהים בכל מקום שבו מוצגת השגחה - העתק שני היה
-          מתיישן בשקט ברגע שמישהו ישנה את המדיניות במקום אחד.
+          The badge itself, not a copy of it. The wording and the
+          "verify with the venue" caveat must be identical everywhere
+          supervision is displayed - a second copy would quietly go stale
+          the moment somebody changed the policy in one place.
         */
         <div style={{ marginTop: 4 }}>
           <KosherBadge verification={place.kosherVerification} />
         </div>
       )}
       {/*
-        התווית נגזרת ממה שהקישור באמת פותח. מקום שנחקר אוטומטית נושא
-        ערך ויקיפדיה, והחלונית קראה לו "Google Maps" כי היא רנדרה את
-        `externalUrl` בעיוורון.
+        The label is derived from what the link actually opens. An
+        auto-explored place carries a Wikipedia article, and the popup used
+        to call it "Google Maps" because it rendered `externalUrl` blindly.
       */}
       {placeMapUrl(place) ? (
         <a
@@ -265,22 +274,24 @@ export default function MapInner({
   onPinMove,
   placingPinId = null,
 }: MapProps) {
-  // בתצוגת כל הטיול הקבוצות הן מקור האמת: הן קובעות את הגבולות,
-  // את קו המסלול (לפי סדר הימים) ואת הסיכות.
+  // In the whole-trip view the groups are the source of truth: they
+  // determine the bounds, the route line (by day order) and the pins.
   const grouped = groups && groups.length > 0;
-  // memo חובה: מערך חדש בכל רנדר היה מריץ את FitBounds מחדש והמפה
-  // הייתה קופצת חזרה לתצוגה המלאה בכל אינטראקציה (כולל כל שינוי זום)
+  // memo is mandatory: a new array on every render would re-run FitBounds
+  // and the map would snap back to the full view on every interaction
+  // (including every zoom change)
   const flat = useMemo(
     () => (grouped ? groups.flatMap((g) => g.places) : places),
     [grouped, groups, places],
   );
 
-  // בזום עירוני הסיכות מקבלות תמונה קטנה מעל הטיפה
+  // At city zoom the pins get a small photo above the teardrop
   const [zoomLevel, setZoomLevel] = useState(zoom);
   const withPhotos = zoomLevel >= PHOTO_PIN_ZOOM;
 
-  // הגבולות כוללים גם את סיכות המטייל: מלון בפרברים הוא חלק מהטיול
-  // שלו גם אם הוא לא עצירה במסלול. אותו memo, מאותה סיבה בדיוק.
+  // The bounds also include the traveler's pins: a hotel in the suburbs is
+  // part of their trip even if it is not a route stop. Same memo, for the
+  // exact same reason.
   const bounds = useMemo(
     () => [...flat, ...(pins ?? []).map((p) => ({ lat: p.lat, lng: p.lng }))],
     [flat, pins],
@@ -346,7 +357,7 @@ export default function MapInner({
             </Popup>
           </Marker>
         ))}
-      {/* סיכות המטייל - תמיד מעל, גרירה מתקנת מיקום שגוי */}
+      {/* The traveler's pins - always on top, dragging fixes a wrong location */}
       {(pins ?? []).map((pin) => (
         <Marker
           key={pin.id}

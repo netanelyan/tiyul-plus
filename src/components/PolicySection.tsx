@@ -1,16 +1,18 @@
 /**
- * אבני הבניין של עמודי המדיניות (פרטיות, תנאים, עוגיות, שותפים...).
+ * The building blocks of the policy pages (privacy, terms, cookies, affiliates...).
  *
- * ## למה יש כאן רכיב `Gap` ולמה הוא צועק
+ * ## Why there is a `Gap` component here and why it shouts
  *
- * העמודים האלה נכתבו מתוך ביקורת קוד, ובכמה מקומות הביקורת הגיעה לגבול
- * שלה: מה ספק שלישי עושה עם מידע, כמה זמן ספק אחסון שומר לוגים, מה
- * הוחלט על תקופת שמירה. הפיתוי הוא לכתוב שם משפט סביר.
+ * These pages were written out of a code review, and in a few places the review hit
+ * its limit: what a third-party vendor does with data, how long a hosting provider
+ * keeps logs, what was decided about a retention period. The temptation is to write
+ * a plausible-sounding sentence there.
  *
- * **משפט סביר במדיניות פרטיות הוא הצהרה משפטית, ומשפט סביר שאינו נכון
- * הוא הפרה.** לכן פער מסומן ונראה כמו פער - צהוב, ממוסגר, עם השאלה
- * המדויקת בתוכו - ולא מתחזה לתוכן. מי שקורא את העמוד רואה מיד מה עוד
- * לא הוכרע, וקל למצוא את כל אלה לפני פרסום.
+ * **A plausible sentence in a privacy policy is a legal statement, and a plausible
+ * sentence that is not true is a violation.** So a gap is marked and looks like a
+ * gap - yellow, framed, with the exact open question inside it - and does not
+ * masquerade as content. Whoever reads the page sees at once what has not been
+ * decided yet, and all of these are easy to find before publishing.
  */
 
 export function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -31,7 +33,7 @@ export function Sub({ title, children }: { title: string; children: React.ReactN
   );
 }
 
-/** רשימה - `list-inside` כדי שהתבליט יישאר בצד הנכון ב-RTL */
+/** A list - `list-inside` so the bullet stays on the correct side in RTL */
 export function List({ items }: { items: React.ReactNode[] }) {
   return (
     <ul className="list-inside list-disc space-y-1.5 ps-1">
@@ -43,9 +45,9 @@ export function List({ items }: { items: React.ReactNode[] }) {
 }
 
 /**
- * פער ידוע. `kind` קובע מי צריך לסגור אותו:
- * - `fill`   - נתנאל ממלא פרט (טלפון, כתובת, תאריך).
- * - `verify` - צריך לברר עובדה מחוץ לקוד לפני שאפשר לכתוב אותה.
+ * A known gap. `kind` determines who needs to close it:
+ * - `fill`   - Netanel fills in a detail (phone, address, date).
+ * - `verify` - a fact outside the code must be verified before it can be written.
  */
 export function Gap({ kind = 'fill', children }: { kind?: 'fill' | 'verify'; children: React.ReactNode }) {
   const label = kind === 'fill' ? '[למילוי]' : '[לבירור]';
@@ -56,7 +58,7 @@ export function Gap({ kind = 'fill', children }: { kind?: 'fill' | 'verify'; chi
   );
 }
 
-/** תאריך העדכון בתחתית כל עמוד מדיניות */
+/** The last-updated date at the bottom of every policy page */
 export function Updated({ date }: { date: string }) {
   return <p className="mt-10 text-sm text-night/50">עודכן לאחרונה: {date}</p>;
 }

@@ -1,11 +1,13 @@
 /**
- * המסווג. הוא הדבר היחיד שקובע איזה מודל רץ, ולכן הוא הדבר היחיד
- * שאפשר וצריך לבדוק אופליין - התנהגות המודל עצמו נמדדת חי.
+ * The classifier. It is the only thing that decides which model runs, so it
+ * is the only thing that can and should be tested offline - the model's own
+ * behavior is measured live.
  *
- * הטיית הבדיקות כאן מכוונת: **שגיאה כלפי מעלה זולה, שגיאה כלפי מטה
- * יקרה.** בקשה מורכבת שנשלחה בטעות למודל החזק עולה כמה אגורות; בקשה
- * מורכבת שנשלחה למודל הזול עולה תור מבוזבז ועריכה שגויה על מסך של
- * מטייל. לכן רוב המקרים כאן הם "ודא שזה **לא** ירד למסלול הקל".
+ * The bias of these tests is deliberate: **an error upward is cheap, an
+ * error downward is expensive.** A complex request mistakenly sent to the
+ * strong model costs a few cents; a complex request sent to the cheap model
+ * costs a wasted turn and a wrong edit on a traveller's screen. That is why
+ * most cases here are "make sure this does **not** drop to the light path".
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -88,11 +90,12 @@ test('נושאים שדורשים מקור נשארים על המודל החזק
     'תוסיף משהו זול ליום 3',
     'תזיז את יום 2 לשבת',
     /*
-      חפיפה מכוונת: "תסמן שיש לנו כבר מלון" הוא בדיוק `set_booking_status`,
-      כלי שכן ברשימה הלבנה - אבל המילה "מלון" פוסלת אותו. זה מקרה אמיתי
-      של שמרנות יתר, ונשאר כך: תור סימון הזמנות הוא נדיר, וההפרדה בין
-      "יש לנו מלון" ל"תמצא לי מלון" לפי מילות מפתח היא בדיוק סוג ההבחנה
-      שכשהיא נשברת היא נשברת לכיוון היקר.
+      Deliberate overlap: "mark that we already have a hotel" is exactly
+      `set_booking_status`, a tool that IS on the whitelist - but the word
+      "hotel" disqualifies it. This is a real case of over-conservatism, and
+      it stays that way: a booking-marking turn is rare, and separating "we
+      have a hotel" from "find me a hotel" by keywords is exactly the kind of
+      distinction that, when it breaks, breaks in the expensive direction.
     */
     'תסמן שיש לנו כבר מלון',
   ]) {
@@ -120,8 +123,9 @@ test('הודעה ארוכה - תמיד המודל החזק, גם אם יש בה 
 
 test('שתי פעולות בהודעה אחת - המודל החזק, גם כשהיא קצרה', () => {
   /*
-    46 תווים, שתי בקשות. אורך לבדו לא היה תופס את זה, וזה בדיוק המצב
-    שבו כלים מוגבלים משאירים חצי עריכה על הטיול.
+    46 characters, two requests. Length alone would not have caught this,
+    and it is exactly the situation where a limited tool set leaves half an
+    edit on the trip.
   */
   const t = 'תזיז את יום 5 ליום 1 ותוסיף שם עוד עצירה';
   assert.ok(t.length < 90);
@@ -134,7 +138,7 @@ test('הודעה בלי פועל מכני כלל - המודל החזק, גם א�
   }
 });
 
-/* ---------- הערובה המבנית ---------- */
+/* ---------- The structural guarantee ---------- */
 
 test('כל כלי ברשימה הלבנה קיים באמת', () => {
   const names = new Set(AGENT_TOOLS.map((t) => t.name));
@@ -143,9 +147,10 @@ test('כל כלי ברשימה הלבנה קיים באמת', () => {
 
 test('הכלים המסוכנים אינם ברשימה הלבנה', () => {
   /*
-    זו הרשימה שמגנה על השאר. `create_trip_full` בונה טיול, `remove_day`
-    מוחק, `set_day_places` דורס יום שלם, והשלושה האחרונים יוצאים החוצה
-    או מייצרים טענה על העולם - כולם דורשים את המודל החזק.
+    This is the list that protects everything else. `create_trip_full`
+    builds a trip, `remove_day` deletes, `set_day_places` overwrites a whole
+    day, and the last three go outward or produce a claim about the world -
+    all require the strong model.
   */
   for (const t of [
     'create_trip',
@@ -168,7 +173,7 @@ test('סינון הכלים בפועל מחזיר בדיוק את הרשימה �
   assert.ok(filtered.length < AGENT_TOOLS.length);
 });
 
-/* ---------- ההסלמה ---------- */
+/* ---------- The escalation ---------- */
 
 const base = { toolRan: true, toolFailed: false, stopReason: 'end_turn', iterations: 1 };
 
@@ -185,9 +190,10 @@ test('כל כישלון מסלים', () => {
 
 test('תשובה בלי אף כלי מסלימה - זה המסלול של "אני לא יכול"', () => {
   /*
-    ההנחיה במסלול הקל אומרת למודל לומר במשפט אחד שהוא לא ביצע, ולא
-    לקרוא לכלי. בלי הבדיקה הזאת "אני לא יכול" היה נשמר כתשובה סופית
-    למטייל במקום לעבור למודל שכן יכול.
+    The light-path instruction tells the model to say in one sentence that it
+    did not perform, and not to call a tool. Without this check, "I cannot"
+    would be kept as a final answer to the traveller instead of moving to a
+    model that can.
   */
   assert.equal(shouldEscalate({ ...base, toolRan: false }), 'לא בוצעה שום עריכה');
 });

@@ -1,19 +1,20 @@
 /**
- * מדינות העולם לפיצ'ר "איפה כבר הייתם" באזור האישי - קוד ISO2 (לדגל),
- * שם בעברית ויבשת. לא רשימת או"ם ממצה: ~85 היעדים שמטיילים ישראלים
- * באמת מגיעים אליהם, כולל כל מדינות הקטלוג. הוספת מדינה = שורה אחת.
+ * The world's countries for the "where have you already been" feature in the
+ * account area - ISO2 code (for the flag), Hebrew name and continent. Not an
+ * exhaustive UN list: the ~85 destinations Israeli travelers actually reach,
+ * including every catalog country. Adding a country = one line.
  */
 
 export type Continent = 'אירופה' | 'אסיה' | 'אפריקה והמזרח התיכון' | 'אמריקה' | 'אוקיאניה';
 
 export interface WorldCountry {
-  code: string; // ISO2, lowercase - משמש גם לדגל (flagcdn)
-  name: string; // עברית
+  code: string; // ISO2, lowercase - also used for the flag (flagcdn)
+  name: string; // Hebrew
   continent: Continent;
 }
 
 export const WORLD_COUNTRIES: WorldCountry[] = [
-  // ---- אירופה ----
+  // ---- Europe ----
   { code: 'fr', name: 'צרפת', continent: 'אירופה' },
   { code: 'gb', name: 'בריטניה', continent: 'אירופה' },
   { code: 'it', name: 'איטליה', continent: 'אירופה' },
@@ -54,7 +55,7 @@ export const WORLD_COUNTRIES: WorldCountry[] = [
   { code: 'md', name: 'מולדובה', continent: 'אירופה' },
   { code: 'ru', name: 'רוסיה', continent: 'אירופה' },
 
-  // ---- אסיה ----
+  // ---- Asia ----
   { code: 'tr', name: 'טורקיה', continent: 'אסיה' },
   { code: 'ge', name: 'גיאורגיה', continent: 'אסיה' },
   { code: 'am', name: 'ארמניה', continent: 'אסיה' },
@@ -81,7 +82,7 @@ export const WORLD_COUNTRIES: WorldCountry[] = [
   { code: 'np', name: 'נפאל', continent: 'אסיה' },
   { code: 'mv', name: 'המלדיביים', continent: 'אסיה' },
 
-  // ---- אפריקה והמזרח התיכון ----
+  // ---- Africa and the Middle East ----
   { code: 'il', name: 'ישראל', continent: 'אפריקה והמזרח התיכון' },
   { code: 'jo', name: 'ירדן', continent: 'אפריקה והמזרח התיכון' },
   { code: 'ae', name: 'איחוד האמירויות', continent: 'אפריקה והמזרח התיכון' },
@@ -95,7 +96,7 @@ export const WORLD_COUNTRIES: WorldCountry[] = [
   { code: 'mu', name: 'מאוריציוס', continent: 'אפריקה והמזרח התיכון' },
   { code: 'sc', name: 'סיישל', continent: 'אפריקה והמזרח התיכון' },
 
-  // ---- אמריקה ----
+  // ---- The Americas ----
   { code: 'us', name: 'ארצות הברית', continent: 'אמריקה' },
   { code: 'ca', name: 'קנדה', continent: 'אמריקה' },
   { code: 'mx', name: 'מקסיקו', continent: 'אמריקה' },
@@ -113,7 +114,7 @@ export const WORLD_COUNTRIES: WorldCountry[] = [
   { code: 'cl', name: 'צ׳ילה', continent: 'אמריקה' },
   { code: 'uy', name: 'אורוגוואי', continent: 'אמריקה' },
 
-  // ---- אוקיאניה ----
+  // ---- Oceania ----
   { code: 'au', name: 'אוסטרליה', continent: 'אוקיאניה' },
   { code: 'nz', name: 'ניו זילנד', continent: 'אוקיאניה' },
   { code: 'fj', name: 'פיג׳י', continent: 'אוקיאניה' },
@@ -127,7 +128,7 @@ export const CONTINENTS: Continent[] = [
   'אוקיאניה',
 ];
 
-/** קוד ISO2 → אמוג'י דגל (לרכיב Flag, שמפענח אותו חזרה לתמונה) */
+/** ISO2 code → flag emoji (for the Flag component, which decodes it back into an image) */
 export function codeToFlagEmoji(code: string): string {
   return String.fromCodePoint(
     ...code
@@ -137,7 +138,7 @@ export function codeToFlagEmoji(code: string): string {
   );
 }
 
-/** דרגות המטייל - גיימיפיקציה קלה, בגובה העיניים */
+/** Traveler levels - light gamification, at eye level */
 export interface TravelerLevel {
   min: number;
   title: string;

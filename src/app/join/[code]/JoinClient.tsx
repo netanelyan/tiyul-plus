@@ -8,8 +8,9 @@ import type { StorySnapshot } from '@/lib/server/stories';
 import type { VoteTally } from '@/lib/server/groupTrips';
 
 /**
- * הצד של החבר: הצטרפות בקוד, צפייה חיה בטיול, הצבעה על עצירות.
- * הטיול נקרא מהשרת בכל טעינה - עריכות של המארגן נראות ברענון.
+ * The friend's side: joining by code, live viewing of the trip, voting on
+ * stops. The trip is read from the server on every load - the organizer's
+ * edits show up on refresh.
  */
 export default function JoinClient({ code }: { code: string }) {
   const auth = useAuth();
@@ -20,13 +21,13 @@ export default function JoinClient({ code }: { code: string }) {
   const [busyPlace, setBusyPlace] = useState<string | null>(null);
 
   useEffect(() => {
-    // מצב "צריך להתחבר" נגזר ברינדור (auth.ready && !auth.user) - לא state
+    // The "must sign in" state is derived at render (auth.ready && !auth.user) - not state
     if (!auth.ready || !auth.user) return;
     let alive = true;
     void (async () => {
       try {
         const headers = { 'Content-Type': 'application/json', ...(await authHeader()) };
-        // הצטרפות אידמפוטנטית - 'already' הוא הצלחה
+        // Joining is idempotent - 'already' is a success
         const joinRes = await fetch('/api/group', {
           method: 'POST',
           headers,
@@ -75,7 +76,7 @@ export default function JoinClient({ code }: { code: string }) {
     setBusyPlace(placeId);
     try {
       const current = votes.get(placeId)?.mine;
-      const next = current === dir ? 0 : dir; // לחיצה חוזרת מסירה
+      const next = current === dir ? 0 : dir; // clicking again removes
       const res = await fetch('/api/group', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(await authHeader()) },
@@ -84,7 +85,7 @@ export default function JoinClient({ code }: { code: string }) {
       const data = (await res.json().catch(() => null)) as { votes?: VoteTally[] } | null;
       if (data?.votes) setVotes(new Map(data.votes.map((v) => [v.placeId, v])));
     } catch {
-      /* ההצבעה הבאה תנסה שוב */
+      /* the next vote will try again */
     } finally {
       setBusyPlace(null);
     }

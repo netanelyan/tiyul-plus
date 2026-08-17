@@ -1,95 +1,106 @@
 /**
- * ניקוי היסטוריית ההודעות שהלקוח שולח ל-/api/chat.
+ * Sanitizing the message history the client sends to /api/chat.
  *
- * מופרד מ-`api/chat/route.ts` כי ל-route handler של App Router אסור
- * לייצא כל דבר שאינו מתודת HTTP, והלוגיקה הזו חייבת טסטים - היא הפילה
- * שיחות אמיתיות בפרודקשן.
+ * Separated from `api/chat/route.ts` because an App Router route handler may
+ * not export anything that is not an HTTP method, and this logic must have
+ * tests - it took down real conversations in production.
  *
- * ## הבאג שהקובץ הזה נולד ממנו
+ * ## The bug this file was born from
  *
- * מטייל צירף צילום של אישור הזמנת מלון **בלי טקסט**, כך שההודעה נשמרה
- * עם `content: ''` ותמונה. תמונות נשלחות למודל רק בשתי ההודעות
- * האחרונות (הן יקרות, וההיסטוריה כולה נשלחת בכל תור), ולכן אחרי שני
- * תורים נוספים ההודעה הזו נשלחה **בלי תמונה ובלי טקסט**. ה-API של
- * Anthropic דוחה את הבקשה כולה:
+ * A traveler attached a screenshot of a hotel booking confirmation **with no
+ * text**, so the message was stored with `content: ''` and an image. Images
+ * are sent to the model only on the last two messages (they are expensive,
+ * and the whole history is resent every turn), so after two more turns this
+ * message was sent **with no image and no text**. The Anthropic API rejects
+ * the entire request:
  *
  *   400 invalid_request_error - "messages.2: user messages must have
  *   non-empty content"
  *
- * 400 היא שגיאה קבועה ולא חולפת, ולכן כל ניסיון חוזר נכשל באותו אופן -
- * המטייל לחץ על אותו צ׳יפ פעמיים וקיבל "משהו השתבש" פעמיים. זה גם מה
- * שהפיל את התור המקורי שנראה כמו אמנזיה, לפני שהודעת השגיאה תוקנה.
+ * 400 is a permanent error, not a transient one, so every retry failed the
+ * same way - the traveler tapped the same chip twice and got the generic
+ * "something went wrong" message twice. This is also what killed the
+ * original turn that looked like amnesia, before the error message was
+ * fixed.
  *
- * ## מה נבדק מול ה-API האמיתי (ולא הונח)
+ * ## What was tested against the real API (not assumed)
  *
- * - הודעת user ריקה או עם רווחים בלבד → 400. **זה מה שנשבר.**
- * - הודעת assistant ריקה → 200. מותר, אבל אין בה תועלת.
- * - שתי הודעות user רצופות → 200. אין דרישת החלפת תפקידים.
+ * - An empty or whitespace-only user message → 400. **This is what broke.**
+ * - An empty assistant message → 200. Allowed, but useless.
+ * - Two consecutive user messages → 200. There is no role-alternation
+ *   requirement.
  *
- * הבדיקה השלישית היא מה שמאפשר את התיקון: אפשר פשוט **להשמיט** הודעה
- * ריקה בלי לתפור במקומה טקסט מדומה, כי הרצף שנוצר חוקי.
+ * The third check is what enables the fix: an empty message can simply be
+ * **dropped** without stitching fake text in its place, because the
+ * resulting sequence is legal.
  *
- * ## למה השמטה ולא טקסט ממלא
+ * ## Why omission and not filler text
  *
- * אפשר היה לכתוב במקומה "צירפתי תמונה". אבל אחרי שהתמונה כבר לא
- * נשלחת, זו הזמנה למודל להתייחס למסמך שהוא לא רואה ולהמציא ממנו
- * פרטים - בדיוק מה שחוק קשיח 2 אוסר. התשובה של הסוכן מהתור ההוא
- * נשארת בהיסטוריה, כך שמה שהוא באמת קרא מהתמונה משתמר **במילים שלו**
- * ובלי להתחזות לצפייה חוזרת במסמך.
+ * We could have written "I attached an image" in its place. But once the
+ * image is no longer sent, that is an invitation for the model to discuss a
+ * document it cannot see and invent details from it - exactly what hard
+ * rule 2 forbids. The agent's reply from that turn stays in the history, so
+ * whatever it genuinely read off the image is preserved **in its own words**
+ * without pretending to re-view the document.
  */
 
 export interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
-  /** תמונה שהמשתמש צירף (data URL מוקטן) - ראו lib/trip/imageAttach.ts */
+  /** An image the user attached (downscaled data URL) - see lib/trip/imageAttach.ts */
   image?: string;
 }
 
-/** רק פורמטים שהמודל תומך בהם, ורק base64 - לא URL חיצוני */
+/** Only formats the model supports, and only base64 - no external URL */
 export const IMAGE_DATA_URL = /^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/]+={0,2})$/;
-/** אותה תקרה כמו בצד הלקוח - השרת לא סומך על הלקוח */
+/** Same ceiling as on the client side - the server does not trust the client */
 export const MAX_IMAGE_CHARS = 1_400_000;
-/** כמה תמונות מותר בבקשה אחת (ההיסטוריה נשלחת שוב בכל תור) */
+/** How many images are allowed per request (the history is resent every turn) */
 export const MAX_IMAGES_PER_REQUEST = 2;
 
 /**
- * תקציב תווים להיסטוריית השיחה כולה.
+ * A character budget for the entire conversation history.
  *
- * ## למה זה קיים, ומה זה תיקן
+ * ## Why this exists, and what it fixed
  *
- * עד עכשיו ההיסטוריה הוגבלה ב**מספר הודעות** (40) ובאורך הודעה בודדת
- * (8,000 תווים), כלומר עד 320,000 תווים. זה נראה סביר בהנחה האנגלית של
- * ~4 תווים לטוקן. אבל השיחה כאן היא עברית צפופה, **ובעברית טוקן שווה
- * בקירוב תו אחד**.
+ * Until now the history was capped by **message count** (40) and by the
+ * length of a single message (8,000 chars), i.e. up to 320,000 chars. That
+ * looks reasonable under the English assumption of ~4 chars per token. But
+ * the conversation here is dense Hebrew, **and in Hebrew a token is roughly
+ * one character**.
  *
- * המספר הזה לא נוחש - הוא נגזר מלוג פרודקשן אמיתי:
+ * This number is not guessed - it is derived from a real production log:
  *
  *   400 invalid_request_error - "prompt is too long: 408754 tokens
  *   > 200000 maximum"
  *
- * החלקים הקבועים (אינדקס ההשענה ~45k טוקנים, הפרומפט, הפירוט, הטיול)
- * מסבירים כ-70k. כלומר ההיסטוריה לבדה תרמה כ-337k טוקנים על 320,000
- * תווים לכל היותר - יחס של יותר מטוקן לתו.
+ * The constant parts (the grounding index ~45k tokens, the prompt, the
+ * detail block, the trip) explain ~70k. So the history alone contributed
+ * ~337k tokens on at most 320,000 chars - a ratio of more than a token per
+ * character.
  *
- * **וזה כשל מתמשך, לא חד-פעמי:** היסטוריה רק גדלה, ולכן ברגע ששיחה
- * חוצה את התקרה **כל תור נוסף בה נכשל באותה 400 לנצח**. זה מסביר למה
- * מטייל אמיתי ראה את אותה שגיאה שוב ושוב באותו שרשור ארוך, ולמה תיקונים
- * אחרים לא שינו לו כלום.
+ * **And this is a persistent failure, not a one-off:** history only grows,
+ * so the moment a conversation crosses the ceiling **every further turn in
+ * it fails with the identical 400 forever**. That explains why a real
+ * traveler saw the same error over and over in one long thread, and why
+ * other fixes changed nothing for them.
  *
- * 50,000 תווים ≈ 50k טוקנים בעברית. עם כ-88k של חלקים קבועים במקרה
- * הגרוע נשאר מרווח נוח מתחת ל-200k, כולל מקום לפלט.
+ * 50,000 chars ≈ 50k tokens in Hebrew. With ~88k of constant parts in the
+ * worst case that leaves a comfortable margin under 200k, including room
+ * for output.
  */
 const HISTORY_CHAR_BUDGET = 50_000;
 
-/** הודעה שאין בה לא טקסט ולא תמונה לא נושאת שום מידע */
+/** A message with neither text nor image carries no information */
 function carriesNothing(m: ChatMessage): boolean {
   return !m.image && m.content.trim().length === 0;
 }
 
 /**
- * תפקיד וטקסט בלבד, ותמונה רק אם היא data URL תקין בגודל סביר, רק
- * בהודעת משתמש, ורק בשתי ההודעות האחרונות שיש בהן תמונה. הודעות שנשארו
- * בלי תוכן כלל מושמטות - ראו ההסבר בראש הקובץ.
+ * Role and text only, and an image only if it is a valid data URL of a
+ * reasonable size, only on a user message, and only on the last two
+ * messages that carry an image. Messages left with no content at all are
+ * dropped - see the explanation at the top of the file.
  */
 export function sanitizeMessages(raw: unknown): ChatMessage[] {
   if (!Array.isArray(raw)) return [];
@@ -110,15 +121,17 @@ export function sanitizeMessages(raw: unknown): ChatMessage[] {
     if (kept < MAX_IMAGES_PER_REQUEST) kept += 1;
     else msgs[i] = { role: msgs[i].role, content: msgs[i].content };
   }
-  // חייב לרוץ אחרי הסרת התמונות: ההסרה היא בעצמה מה שמרוקן הודעה
-  // שכל תוכנה היה תמונה.
+  // Must run after the image removal: the removal is itself what empties a
+  // message whose entire content was an image.
   const carrying = msgs.filter((m) => !carriesNothing(m));
 
-  // תקציב התווים - מהחדש לישן, כי ההקשר הרלוונטי הוא הסוף של השיחה.
-  // ההודעה האחרונה תמיד נכנסת (היא התור הנוכחי): אם היא לבדה גדולה
-  // מהתקציב היא נחתכת ולא נזרקת, אחרת המטייל שולח משהו ארוך ולא מקבל
-  // תשובה בכלל. חייב לרוץ לפני כלל ה-assistant-הראשון, אחרת החיתוך
-  // עצמו יכול לחשוף assistant בראש המערך.
+  // The character budget - newest to oldest, because the relevant context is
+  // the end of the conversation. The last message always gets in (it is the
+  // current turn): if it alone exceeds the budget it is truncated rather
+  // than dropped, otherwise the traveler sends something long and gets no
+  // answer at all. Must run before the first-assistant rule, otherwise the
+  // truncation itself can expose an assistant message at the head of the
+  // array.
   const budgeted: ChatMessage[] = [];
   let used = 0;
   for (let i = carrying.length - 1; i >= 0; i--) {
@@ -134,17 +147,22 @@ export function sanitizeMessages(raw: unknown): ChatMessage[] {
     used += cost;
   }
 
-  // ההיסטוריה חייבת להיפתח בהודעת user. שתי דרכים להגיע למצב שהיא לא:
+  // The history must open with a user message. Two ways to end up in a state
+  // where it does not:
   //
-  // 1. **רגרסיה שהתיקון שלמעלה יצר.** שיחה שנפתחה בתמונה בלי טקסט -
-  //    ההודעה הראשונה מתרוקנת כשהתמונה יוצאת מהחלון, נזרקת כאן, ומה
-  //    שנשאר ראשון הוא התשובה של הסוכן. ה-API מחזיר על זה 400, כלומר
-  //    התיקון של ה"תוכן הריק" החליף שגיאה אחת באחרת. נמצא בפרודקשן.
-  // 2. **קדם לזה:** `raw.slice(-40)` יכול לפתוח את החלון על הודעת
-  //    assistant בכל שיחה ארוכה מ-40 הודעות, בלי קשר לתמונות.
+  // 1. **A regression created by the fix above.** A conversation that opened
+  //    with an image and no text - the first message becomes empty once the
+  //    image leaves the window, gets dropped here, and what remains first is
+  //    the agent's reply. The API returns 400 for that, meaning the
+  //    "empty content" fix traded one error for another. Found in
+  //    production.
+  // 2. **Predating that:** `raw.slice(-40)` can open the window on an
+  //    assistant message in any conversation longer than 40 messages,
+  //    regardless of images.
   //
-  // הסרה היא הפתרון הנכון ולא רק החוקי: להודעת assistant בתחילת המערך
-  // אין תור user שהיא עונה עליו, אז היא לא נושאת הקשר שימושי בכל מקרה.
+  // Removal is the correct solution, not merely the legal one: an assistant
+  // message at the start of the array has no user turn it is answering, so
+  // it carries no useful context anyway.
   let firstUser = 0;
   while (firstUser < budgeted.length && budgeted[firstUser].role !== 'user') firstUser += 1;
   return firstUser === 0 ? budgeted : budgeted.slice(firstUser);

@@ -8,30 +8,34 @@ import { PLAN_FEATURE_ROWS, PREMIUM_PRICE_ILS } from '@/lib/plans';
 import { PRICE_ILS, priceLabel } from '@/lib/predeparture';
 
 /**
- * עמוד המחירים. **המוצר המוביל הוא הבדיקה החד-פעמית, לא המנוי** -
- * החלטת נתנאל, והחשבון שמאחוריה מוצג בעמוד עצמו בגלוי: מי שנוסע
- * פעם-פעמיים בשנה משלם על שתי בדיקות ~רבע ממחיר שנת מנוי, ויעשה נכון
- * אם יבחר בהן. המנוי הוא אופציה משנית, ממוענת במילים מפורשות למי
- * שמתכנן כל הזמן - משפחות עם כמה טיולים בשנה, מדריכים, מארגני קבוצות.
- * "המסלול המובטח" אמיתי אבל לא מוביל את העמוד: הערך שלו בלתי-נראה עד
- * שיש מספיק תנועה שממצה את התקציב היומי, ולפני השקה זה אף אחד.
+ * The pricing page. **The lead product is the one-off check, not the
+ * subscription** - Netanel's decision, and the arithmetic behind it is shown
+ * openly on the page itself: someone who travels once or twice a year pays about
+ * a quarter of a year's subscription for two checks, and would be right to choose
+ * them. The subscription is a secondary option, addressed in explicit words to
+ * people who plan all the time - families with several trips a year, guides,
+ * group organisers. "The guaranteed lane" is real but does not lead the page: its
+ * value is invisible until there is enough traffic to exhaust the daily budget,
+ * and before launch that is nobody.
  *
- * מאז 2026-08-17 למנוי יש גם **תוכן משלו**, לא רק מכסות: סיפור הטיול
- * (הטיול הופך לעמוד ציבורי עם המסלול והתמונות) וטיול משותף (חברים
- * מצטרפים בקישור, רואים את הטיול חי ומצביעים על עצירות). היצירה
- * פרימיום; הצפייה וההצטרפות חינם בכוונה - הצופים והמצטרפים הם
- * המשתמשים הבאים. שני הפיצ'רים נאכפים בשרת (/api/story, /api/group).
+ * Since 2026-08-17 the subscription also has **content of its own**, not just
+ * quotas: the trip story (the trip becomes a public page with the itinerary and
+ * photos) and the group trip (friends join by link, see the trip live and vote on
+ * stops). Creating is premium; viewing and joining are free on purpose - the
+ * viewers and joiners are the next users. Both features are enforced on the
+ * server (/api/story, /api/group).
  *
- * הצגת החשבון בגלוי היא הפואנטה: מי שיעשה את החשבון לבד יגיע לאותה
- * מסקנה, אז עדיף שנציג אותו אנחנו - זה קורא כהוגן ולא כתרגיל מכירה.
- * המספרים מחושבים מהקבועים האמיתיים, לא מוקלדים - שינוי מחיר מעדכן
- * את החשבון מעצמו.
+ * Showing the arithmetic openly is the point: anyone who works it out themselves
+ * reaches the same conclusion, so it is better that we present it - that reads as
+ * fair rather than as a sales trick. The numbers are computed from the real
+ * constants, not typed in - a price change updates the arithmetic by itself.
  *
- * ## מצב התשלומים, נכון ל-2026-08-16
- * גם הבדיקה החד-פעמית וגם המנוי עוברים דרך PayPal: `/api/billing/checkout`
- * יוצר PayPal Subscription (`server/paypalSubs.ts`) ומחזיר קישור אישור;
- * ההפעלה בפועל קורית רק ב-webhook המאומת. Stripe נשאר בקוד כמסלול
- * ירושה למקרה שיחובר אי פעם - PayPal קודם.
+ * ## Payment status, as of 2026-08-16
+ * Both the one-off check and the subscription go through PayPal:
+ * `/api/billing/checkout` creates a PayPal Subscription (`server/paypalSubs.ts`)
+ * and returns an approval link; activation itself happens only in the verified
+ * webhook. Stripe stays in the code as a legacy path in case it is ever connected
+ * - PayPal comes first.
  */
 export default function PremiumClient() {
   const auth = useAuth();
@@ -40,8 +44,9 @@ export default function PremiumClient() {
   const [notice, setNotice] = useState<string | null>(null);
 
   /*
-    החשבון שקונה עושה בראש, עשוי מהקבועים עצמם: שנת מנוי מול שתי
-    בדיקות, ונקודת האיזון בטיולים-לשנה. toFixed(2) כי אלה שקלים.
+    The arithmetic a buyer does in their head, made from the constants themselves:
+    a year of subscription against two checks, and the break-even in trips per
+    year. toFixed(2) because these are shekels.
   */
   const yearOfPremium = PREMIUM_PRICE_ILS * 12;
   const twoChecks = PRICE_ILS * 2;
@@ -88,7 +93,7 @@ export default function PremiumClient() {
         </p>
       </div>
 
-      {/* ---------- המוצר המוביל: הבדיקה החד-פעמית ---------- */}
+      {/* ---------- The lead product: the one-off check ---------- */}
       <div className="relative mt-8 rounded-3xl bg-night p-6 ring-1 ring-night">
         <span className="absolute -top-3 end-5 rounded-full bg-zest px-3 py-1 text-xs font-black text-night">
           🛫 לרוב המטיילים
@@ -137,7 +142,7 @@ export default function PremiumClient() {
         </p>
       </div>
 
-      {/* ---------- החשבון, בגלוי ---------- */}
+      {/* ---------- The arithmetic, in the open ---------- */}
       <div className="mt-4 rounded-2xl bg-shell p-4 ring-1 ring-night/10">
         <p className="text-sm leading-relaxed text-night/70">
           <b className="text-night">החשבון, בגלוי:</b> נוסעים פעם-פעמיים בשנה? שתי בדיקות עולות{' '}
@@ -149,7 +154,7 @@ export default function PremiumClient() {
         </p>
       </div>
 
-      {/* ---------- המנוי: אופציה משנית, למי שמתכנן כל הזמן ---------- */}
+      {/* ---------- The subscription: a secondary option, for people who plan all the time ---------- */}
       <div className="mt-10 text-center">
         <h2 className="display text-2xl text-night">מתכננים כל הזמן? בשביל זה המנוי</h2>
         <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-night/60">
@@ -159,8 +164,9 @@ export default function PremiumClient() {
       </div>
 
       {/*
-        שלושת הפיצ'רים שקיימים רק במנוי - תוכן, לא מכסות. הצפייה
-        וההצטרפות חינם בכוונה (ערוץ ההפצה); מה שנקנה הוא היצירה.
+        The three features that exist only in the subscription - content, not
+        quotas. Viewing and joining are free on purpose (the distribution channel);
+        what is bought is the creating.
       */}
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         <div className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
@@ -196,7 +202,7 @@ export default function PremiumClient() {
       </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        {/* חינם */}
+        {/* Free */}
         <div className="rounded-3xl bg-shell p-6 ring-1 ring-night/10">
           <h3 className="font-bold text-night">חינם</h3>
           <p className="mt-1 text-2xl font-black text-night">
@@ -219,7 +225,7 @@ export default function PremiumClient() {
           )}
         </div>
 
-        {/* פרימיום */}
+        {/* Premium */}
         <div className="rounded-3xl bg-shell p-6 ring-1 ring-night/15">
           <h3 className="font-bold text-night">★ פרימיום</h3>
           <p className="mt-1 text-2xl font-black text-night">

@@ -19,37 +19,41 @@ export interface TripApi {
   currentId: string | null;
   hydrated: boolean;
   /**
-   * id של טיול שנמחק → מתי. שכבת הסנכרון קוראת מכאן כדי לא להחזיר לחיים
-   * טיול שנמחק (ראו ההסבר ב-`storage.ts`).
+   * id of a deleted trip → when. The sync layer reads from here so it
+   * does not resurrect a deleted trip (see the explanation in
+   * `storage.ts`).
    */
   deleted: Record<string, number>;
   /**
-   * טיולים שהגיעו מהשרת: מוחלים **כפי שהם**, בלי חותמת חדשה ובלי לגעת
-   * בטיול הפתוח. שימוש ב-`upsertTrip` כאן הוא הבאג שהחזיר טיולים מחוקים
-   * לחיים - ראו את ההסבר המלא ליד המימוש.
+   * Trips that came from the server: applied **as they are**, with no
+   * new stamp and without touching the open trip. Using `upsertTrip`
+   * here is the bug that brought deleted trips back to life - see the
+   * full explanation next to the implementation.
    */
   applyRemoteTrips: (trips: Trip[]) => void;
   /**
-   * מצבות שהגיעו מהשרת (מכשיר אחר מחק): מוחק מקומית ורושם את המצבה, אלא
-   * אם הגרסה המקומית נערכה **אחרי** המחיקה - אז העריכה המאוחרת מנצחת,
-   * בדיוק כמו בכל מיזוג אחר.
+   * Tombstones that came from the server (another device deleted):
+   * deletes locally and records the tombstone, unless the local version
+   * was edited **after** the deletion - then the later edit wins,
+   * exactly like in every other merge.
    */
   applyRemoteDeletions: (tombstones: Record<string, number>) => void;
   setCurrentId: (id: string | null) => void;
   /**
-   * **מי הבעלים של האחסון המקומי כרגע** (`null` = אנונימי), ומעבר לחשבון
-   * אחר. ראו את ההסבר המלא ליד המימוש - זה תיקון של מעבר בין אנשים על
-   * מכשיר משותף, לא ניהול מצב.
+   * **Who owns the local storage right now** (`null` = anonymous), and
+   * switching to another account. See the full explanation next to the
+   * implementation - this is a fix for switching between people on a
+   * shared device, not state management.
    */
   accountId: string | null;
   switchAccount: (userId: string | null) => boolean;
   createTrip: (name: string, citySlug?: string) => Trip;
-  createTripFrom: (trip: Trip) => void; // מוסיף טיול מוכן (אשף/תבנית)
-  upsertTrip: (trip: Trip) => void; // מחליף לפי id או מוסיף - עדכונים מהסוכן
+  createTripFrom: (trip: Trip) => void; // adds a ready-made trip (wizard/template)
+  upsertTrip: (trip: Trip) => void; // replaces by id or adds - updates from the agent
   duplicateTrip: (id: string) => void;
   deleteTrip: (id: string) => void;
   renameTrip: (id: string, name: string) => void;
-  /** תאריכי הטיול. `undefined` בשדה = ניקוי אותו קצה. */
+  /** Trip dates. `undefined` in a field = clearing that end. */
   setTripDates: (id: string, dates: { startDate?: string; endDate?: string }) => void;
   addDay: (citySlug: string) => void;
   removeDay: (dayId: string) => void;
@@ -75,18 +79,20 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   const [accountId, setAccountId] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const loaded = useRef(false);
-  // הערך העדכני באופן סינכרוני - נדרש כדי להחליט על currentId בלי להסתמך
-  // על ה-updater של React (אותה מלכודת שתוקנה כבר ב-AuthContext)
+  // The synchronously up-to-date value - needed to decide on currentId without
+  // relying on React's updater (the same trap already fixed in AuthContext)
   const tripsRef = useRef<Trip[]>(trips);
   tripsRef.current = trips;
   /**
-   * מזהי הטיולים שכבר מוכרים לדפדפן הזה - הבסיס למונה "טיולים שנוצרו".
+   * The trip ids already known to this browser - the basis for the
+   * "trips created" counter.
    *
-   * מונה, לא state: הבדיקה חייבת להיות סינכרונית ומחוץ ל-updater של
-   * React (updater חייב להיות טהור, ו-StrictMode מריץ אותו פעמיים).
-   * הכלל: מוטציה מקומית שמוסיפה id לא-מוכר נספרת פעם אחת; מה שמגיע
-   * מהשרת (applyRemoteTrips) או מה-hydration נכנס לסט **בלי** להיספר -
-   * שחזור אינו יצירה.
+   * A ref, not state: the check must be synchronous and outside React's
+   * updater (an updater must be pure, and StrictMode runs it twice).
+   * The rule: a local mutation adding an unknown id is counted once;
+   * whatever comes from the server (applyRemoteTrips) or from hydration
+   * enters the set **without** being counted - a restore is not a
+   * creation.
    */
   const knownIdsRef = useRef<Set<string>>(new Set());
   const noteCreated = useCallback((id: string) => {
@@ -94,10 +100,10 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     knownIdsRef.current.add(id);
     trackTripCreated();
   }, []);
-  /** ה-accountId העדכני סינכרונית - ראו `switchAccount` */
+  /** The synchronously current accountId - see `switchAccount` */
   const accountRef = useRef<string | null>(null);
 
-  // טעינה ראשונית מהדפדפן (אחרי mount, כדי לא לשבור SSR)
+  // Initial load from the browser (after mount, so as not to break SSR)
   useEffect(() => {
     const state = loadTrips();
     setTrips(state.trips);
@@ -105,13 +111,13 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     setDeleted(state.deleted ?? {});
     setAccountId(state.accountId ?? null);
     accountRef.current = state.accountId ?? null;
-    // טיולים שכבר באחסון אינם "נוצרו עכשיו" - נכנסים לסט בלי להיספר
+    // Trips already in storage were not "created now" - they enter the set without being counted
     for (const t of state.trips) knownIdsRef.current.add(t.id);
     loaded.current = true;
     setHydrated(true);
   }, []);
 
-  // שמירה על כל שינוי
+  // Save on every change
   useEffect(() => {
     if (!loaded.current) return;
     saveTrips({ trips, currentId, deleted, accountId });
@@ -120,24 +126,27 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   const currentTrip = trips.find((t) => t.id === currentId) ?? null;
 
   /**
-   * מעבר בין חשבונות על אותו דפדפן.
+   * Switching between accounts on the same browser.
    *
-   * **הבאג שזה סוגר:** יציאה מהחשבון השאירה את הטיולים באחסון המקומי,
-   * ולכן ההתחברות הבאה - של אדם אחר על אותו מחשב - מיזגה אותם. `mergeTrips`
-   * דוחפת לשרת כל טיול מקומי שאינו קיים בחשבון, וזו בדיוק הצורה של טיול
-   * של האדם הקודם. התוצאה: הטיולים שלו נכנסים לחשבון של מישהו אחר.
+   * **The bug this closes:** signing out left the trips in local
+   * storage, so the next login - by a different person on the same
+   * computer - merged them. `mergeTrips` pushes to the server every
+   * local trip that does not exist in the account, and that is exactly
+   * the shape of the previous person's trip. The result: their trips
+   * land in someone else's account.
    *
-   * הכלל כאן פשוט: **טיולים ששייכים לחשבון נעלמים מהמכשיר כשיוצאים ממנו.**
-   * הם לא אבודים - הם בחשבון, וחוזרים בהתחברות הבאה. טיולים אנונימיים
-   * (accountId === null) נשארים, כי אין להם שום מקום אחר לחיות בו, וזו
-   * גם ההגירה בהתחברות ראשונה.
+   * The rule here is simple: **trips that belong to an account vanish
+   * from the device when you sign out of it.** They are not lost - they
+   * are in the account, and come back on the next login. Anonymous
+   * trips (accountId === null) stay, because they have nowhere else to
+   * live, and that is also the first-login migration.
    */
   const switchAccount = useCallback((userId: string | null): boolean => {
     const prev = accountRef.current;
     if (prev === userId) return false;
     accountRef.current = userId;
     setAccountId(userId);
-    // מהחשבון החוצה, או מחשבון אחד לאחר: מה שיש כאן אינו של הנכנס
+    // Out of an account, or from one account to another: what is here does not belong to the person coming in
     const clearing = prev !== null;
     if (clearing) {
       tripsRef.current = [];
@@ -146,17 +155,18 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       setDeleted({});
     }
     /*
-      **מוחזר סינכרונית בכוונה.** `setTrips` לא מתעדכן עד הרינדור הבא,
-      ושכבת הסנכרון ממזגת מיד אחרי הקריאה הזאת - כלומר בלי ערך מוחזר היא
-      הייתה ממזגת את הרשימה של האדם הקודם ודוחפת אותה לחשבון החדש, וזה
-      בדיוק הבאג. `AccountSync` בודקת את הערך הזה.
+      **Returned synchronously on purpose.** `setTrips` does not update
+      until the next render, and the sync layer merges immediately after
+      this call - meaning without a return value it would merge the
+      previous person's list and push it into the new account, which is
+      exactly the bug. `AccountSync` checks this value.
     */
     return clearing;
   }, []);
 
-  // כל מוטציה מקומית מקבלת חותמת updatedAt - שכבת הסנכרון ממזגת לפי
-  // "המאוחר מנצח" בין מכשירים. **מצב שמגיע מהשרת אינו מוטציה** ואסור לו
-  // לקבל חותמת חדשה; הוא עובר דרך `applyRemoteTrips`.
+  // Every local mutation gets an updatedAt stamp - the sync layer merges by
+  // "latest wins" across devices. **State coming from the server is not a
+  // mutation** and must not get a new stamp; it goes through `applyRemoteTrips`.
   const update = useCallback((id: string, fn: (t: Trip) => Trip) => {
     setTrips((prev) => prev.map((t) => (t.id === id ? { ...fn(t), updatedAt: Date.now() } : t)));
   }, []);
@@ -181,7 +191,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     [noteCreated],
   );
 
-  /** הוספה/עדכון מקומיים מפורשים מבטלים מצבה קיימת - מי שיצר מנצח מחיקה ישנה */
+  /** An explicit local add/update cancels an existing tombstone - a creator beats an old deletion */
   const clearTombstone = useCallback((id: string) => {
     setDeleted((prev) => {
       if (!(id in prev)) return prev;
@@ -212,18 +222,18 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       );
       setCurrentId(stamped.id);
       clearTombstone(stamped.id);
-      // נספר רק כשה-id חדש - הסוכן קורא לזה שוב ושוב תוך כדי בנייה
-      // עם אותו טיול, וה-Set הוא מה שהופך את זה לאירוע אחד
+      // Counted only when the id is new - the agent calls this over and over
+      // during a build with the same trip, and the Set is what makes it one event
       noteCreated(stamped.id);
     },
     [clearTombstone, noteCreated],
   );
 
   /*
-    ה-id של העותק נוצר **מחוץ** ל-updater: ה-updater חייב להיות טהור
-    (StrictMode מריץ אותו פעמיים), ו-noteCreated הוא תופעת לוואי.
-    tripsRef נותן את הרשימה העדכנית סינכרונית - אותו דפוס כמו
-    switchAccount שמעליו.
+    The copy's id is created **outside** the updater: the updater must
+    be pure (StrictMode runs it twice), and noteCreated is a side
+    effect. tripsRef gives the current list synchronously - the same
+    pattern as switchAccount above.
   */
   const duplicateTrip = useCallback(
     (id: string) => {
@@ -248,29 +258,36 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   const deleteTrip = useCallback((id: string) => {
     setTrips((prev) => prev.filter((t) => t.id !== id));
     setCurrentId((cur) => (cur === id ? null : cur));
-    // המצבה נרשמת יחד עם המחיקה, לא אחריה: היא מה שמונע החזרה לחיים
-    // ע"י משיכה מהשרת שכבר הייתה באוויר כשהמשתמש לחץ מחיקה.
+    // The tombstone is recorded together with the deletion, not after it: it is
+    // what prevents resurrection by a server pull that was already in flight
+    // when the user clicked delete.
     setDeleted((prev) => ({ ...prev, [id]: Date.now() }));
   }, []);
 
   /**
-   * החלת טיולים שהגיעו מהשרת - **בלי להתחזות לעריכה**.
+   * Applying trips that came from the server - **without impersonating
+   * an edit**.
    *
-   * `upsertTrip` חותם `updatedAt: Date.now()` בכוונה, כי הוא נקרא כשמישהו
-   * באמת שינה משהו. `AccountSync` השתמש בו גם כדי להחיל את תוצאת המשיכה,
-   * ובזה נשבר כל מנגנון המצבות: **עצם ההתחברות במכשיר שני הפכה טיול ישן
-   * ל"נערך עכשיו"**, הדחיפה שאחריה כתבה אותו לשרת עם חותמת מאוחרת מהמחיקה,
-   * והמיזוג - בצדק, לפי הכלל "עריכה מאוחרת מנצחת" - החזיר אותו לחיים בכל
-   * המכשירים. זה מה שנתנאל ראה: מחק שניים, והם חזרו.
+   * `upsertTrip` stamps `updatedAt: Date.now()` on purpose, because it
+   * is called when somebody actually changed something. `AccountSync`
+   * also used it to apply the pull result, and that broke the whole
+   * tombstone mechanism: **merely logging in on a second device turned
+   * an old trip into "edited now"**, the push that followed wrote it to
+   * the server with a stamp later than the deletion, and the merge -
+   * correctly, per the "later edit wins" rule - brought it back to life
+   * on every device. That is what Netanel saw: deleted two, and they
+   * came back.
    *
-   * לכן כאן: החותמת נשמרת כפי שהגיעה, המצבה **לא** נמחקת (רק יצירה או
-   * עריכה מקומית מפורשת מבטלות מצבה), וה-currentId לא נחטף - התחברות לא
-   * אמורה להחליף למשתמש את הטיול הפתוח.
+   * Hence here: the stamp is kept as it arrived, the tombstone is
+   * **not** cleared (only an explicit local creation or edit cancels a
+   * tombstone), and currentId is not hijacked - logging in is not
+   * supposed to swap the user's open trip.
    */
   const applyRemoteTrips = useCallback((incoming: Trip[]) => {
     if (incoming.length === 0) return;
-    // שחזור מהשרת אינו יצירה - המזהים נכנסים לסט המוכרים בלי להיספר,
-    // כדי שעריכה עתידית שלהם (upsertTrip) לא תיספר כ"טיול נוצר"
+    // A restore from the server is not a creation - the ids enter the known set
+    // without being counted, so a future edit of them (upsertTrip) is not
+    // counted as a "trip created"
     for (const t of incoming) knownIdsRef.current.add(t.id);
     setTrips((prev) => {
       const byId = new Map(prev.map((t) => [t.id, t]));
@@ -291,7 +308,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
       prev.filter((t) => {
         const at = tombstones[t.id];
         if (at === undefined) return true;
-        return (t.updatedAt ?? t.createdAt) > at; // נערך אחרי המחיקה - נשאר
+        return (t.updatedAt ?? t.createdAt) > at; // edited after the deletion - stays
       }),
     );
     setCurrentId((cur) => {
@@ -310,9 +327,10 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
   );
 
   /**
-   * תאריכי הטיול. **לא נוגע בימים** בכוונה: אם הטווח ארוך או קצר
-   * ממספר הימים, המסך אומר את זה ומציע פעולה מפורשת - בחירת תאריך
-   * שמוחקת יום עם עצירות היא בדיוק סוג ההפתעה שאסורה כאן.
+   * Trip dates. **Deliberately does not touch the days**: if the range
+   * is longer or shorter than the day count, the screen says so and
+   * offers an explicit action - picking a date that deletes a day full
+   * of stops is exactly the kind of surprise forbidden here.
    */
   const setTripDates = useCallback(
     (id: string, dates: { startDate?: string; endDate?: string }) =>
@@ -360,12 +378,12 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
     [currentId, update],
   );
 
-  /** מוסיף מקום ליום האחרון של העיר; יוצר טיול/יום אם צריך. מחזיר לאיזה יום נכנס. */
+  /** Adds a place to the city's last day; creates a trip/day if needed. Returns which day it went into. */
   const addPlace = useCallback(
     (citySlug: string, placeId: string): { dayIndex: number } => {
       let dayIndex = 0;
       if (!currentId) {
-        // אין טיול פעיל - יוצרים אחד עם יום אחד לעיר הזו
+        // No active trip - create one with a single day for this city
         const trip: Trip = {
           id: newId(),
           name: 'הטיול שלי',

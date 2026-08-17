@@ -21,12 +21,12 @@ import {
 } from '@/lib/trip/bookingStatus';
 
 /**
- * "מה עוד חסר לטיול" - שכבת ההזמנות בתוך תצוגת הטיול.
+ * "What the trip is still missing" - the booking layer inside the trip view.
  *
- * הפאנל הוא הצד ה*דטרמיניסטי* של הפיצ׳ר: הסטטוסים מגיעים מ-
- * `Trip.preferences.booking` (הסוכן שומר אותם, או שהמשתמש לוחץ כאן),
- * והקישורים מורכבים תמיד ב-`src/lib/booking.ts`. שום כתובת לא מגיעה
- * מהמודל, ולכן אי אפשר להמציא קישור, מחיר או זמינות.
+ * The panel is the *deterministic* side of the feature: the statuses come from
+ * `Trip.preferences.booking` (the agent stores them, or the user clicks here),
+ * and the links are always assembled in `src/lib/booking.ts`. No URL ever comes
+ * from the model, so it cannot invent a link, a price or availability.
  */
 
 const STATUS_ORDER: BookingStatus[] = ['have', 'need', 'not_needed'];
@@ -41,21 +41,22 @@ export default function BookingPanel({
   destinations: Destination[];
   onSetPreferences: (patch: Partial<TripPreferences>) => void;
   /**
-   * בלי רשת הפאנל נשאר **קריא** - מה כבר סגור ומה עוד חסר הוא בדיוק
-   * מה שרוצים לראות בשטח - אבל אי אפשר לשנות סטטוס (זו כתיבה לטיול)
-   * ואי אפשר לצאת לאתר של ספק. הקישור לא מוסתר: הוא נראה מושבת ואומר
-   * למה, כדי שלא ייראה כאילו הפיצ׳ר נשבר.
+   * Offline the panel stays **readable** - what is already arranged and what is
+   * still missing is exactly what you want to see on the ground - but a status
+   * cannot be changed (that is a write to the trip) and a provider's site cannot
+   * be opened. The link is not hidden: it looks disabled and says why, so it does
+   * not read as a broken feature.
    */
   offline?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
   /**
-   * ערי הטיול, לפי הסדר. בטיול רב-ערים חיפוש לפי העיר הראשונה בלבד
-   * מחזיר מלונות במקום הלא נכון, ולכן המטייל בוחר כאן לאיזו עיר לחפש.
-   * השם הלטיני מגיע מהדאטה שלנו; nameLocal נכתב לעיתים כ-
-   * "Vienna / Wien" - שולחים רק את החלק הראשון, כי מחרוזת עם לוכסן
-   * מחזירה תוצאות ריקות אצל הספקים.
+   * The trip's cities, in order. On a multi-city trip, searching by the first city
+   * alone returns hotels in the wrong place, so the traveller picks here which city
+   * to search. The Latin name comes from our own data; nameLocal is sometimes
+   * written as "Vienna / Wien" - we send only the first part, because a string with
+   * a slash returns empty results at the providers.
    */
   const cities = useMemo(
     () =>
@@ -74,12 +75,13 @@ export default function BookingPanel({
   );
 
   /**
-   * העיר הנבחרת **לכל סוג בנפרד**, ולא לפאנל כולו.
+   * The selected city **per kind separately**, not for the panel as a whole.
    *
-   * הבורר היה קודם אחד, מעל כל הכרטיסים, והוא הסתיר את הבעיה האמיתית:
-   * הוא החליף רק את *יעד החיפוש*, בזמן שהסטטוס נשמר לטיול כולו - כך
-   * שלחיצה על "כבר סגור" בברטיסלבה סימנה גם את וינה. עכשיו הבורר יושב
-   * בתוך הכרטיס שהוא שייך לו, והוא מחליף גם את החיפוש וגם את הסטטוס.
+   * There used to be a single picker above all the cards, and it hid the real
+   * problem: it switched only the *search target* while the status was stored for
+   * the whole trip - so pressing "already booked" while Bratislava was selected
+   * also marked Vienna. Now the picker lives inside the card it belongs to, and it
+   * switches both the search and the status.
    */
   const [cityByKind, setCityByKind] = useState<Partial<Record<BookingKind, string>>>({});
   const cityFor = (kind: BookingKind) => cityByKind[kind] ?? cities[0]?.slug ?? '';
@@ -121,7 +123,7 @@ export default function BookingPanel({
             const url = buildBookingUrl(p.kind, perCity ? (city?.query ?? '') : '');
             const affiliate = bookingIsAffiliate(p.kind);
             const muted = status === 'not_needed' || status === 'have';
-            // כמה ערים עוד פתוחות בסוג הזה - התשובה ל"מה נשאר" בלי לפתוח כל אחת
+            // How many cities are still open for this kind - the answer to "what is left" without opening each one
             const needing = perCity ? citiesNeeding(trip, p.kind) : [];
             return (
               <article
@@ -137,7 +139,7 @@ export default function BookingPanel({
                   <h3 className="text-sm font-bold text-night">{p.title}</h3>
                   {status && (
                     <span className="ms-auto rounded-full bg-night/[0.06] px-2 py-0.5 text-[11px] font-semibold text-night/60">
-                      {/* הסטטוס שייך לעיר, ולכן הוא נאמר יחד איתה */}
+                      {/* The status belongs to the city, so it is stated together with it */}
                       {perCity && cities.length > 1 && city ? `${city.label}: ` : ''}
                       {BOOKING_STATUS_LABELS[status]}
                     </span>
@@ -146,9 +148,9 @@ export default function BookingPanel({
                 <p className="mt-1 text-xs font-medium leading-relaxed text-night/55">{p.blurb}</p>
 
                 {/*
-                  בורר העיר, בתוך הכרטיס שהוא שייך לו. מוצג רק כשיש יותר
-                  מעיר אחת - בטיול לעיר אחת הוא היה שורה שאומרת את מה
-                  שכבר כתוב בכותרת הטיול.
+                  The city picker, inside the card it belongs to. Shown only when
+                  there is more than one city - on a one-city trip it was a row
+                  restating what the trip title already says.
                 */}
                 {perCity && cities.length > 1 && (
                   <div
@@ -171,9 +173,10 @@ export default function BookingPanel({
                         >
                           {c.label}
                           {/*
-                            נקודה קטנה על עיר שכבר נענתה. בלעדיה הבורר
-                            מסתיר את מה שהוא בא לפתור: אי אפשר לדעת אילו
-                            ערים כבר טופלו בלי ללחוץ על כל אחת.
+                            A small dot on a city that has already been answered.
+                            Without it the picker hides the very thing it exists to
+                            solve: there is no way to tell which cities have been
+                            handled without clicking each one.
                           */}
                           {st && (
                             <span
@@ -193,7 +196,7 @@ export default function BookingPanel({
                   </div>
                 )}
 
-                {/* סימון ידני - אותו שדה בדיוק שהסוכן כותב אליו */}
+                {/* Manual marking - exactly the same field the agent writes to */}
                 <div className="mt-2 flex flex-wrap gap-1">
                   {STATUS_ORDER.map((s) => (
                     <button
@@ -248,11 +251,12 @@ export default function BookingPanel({
         </div>
 
         {/*
-          גילוי נאות. **חובה, לא אופציונלי** - ולכן הוא מוצג תמיד, גם כל
-          עוד אין בסביבה אף מזהה שותפים אמיתי. "עשויים" הוא הנוסח הנכון
-          בשני המצבים. המשפט על אי-השפעה על הדירוג הוא הבטחה שהקוד מקיים:
-          סדר הכרטיסים הוא סדר הקונפיג, שנקבע לפי מה שמטייל צריך, ואינו
-          תלוי בשאלה אם לספק יש מזהה שותפים - יש על זה טסט.
+          Affiliate disclosure. **Mandatory, not optional** - so it is always shown,
+          even while there is not a single real affiliate id in the environment.
+          "May" is the correct wording in both states. The sentence about not
+          affecting the ranking is a promise the code keeps: the card order is the
+          config order, which was set by what a traveller needs, and does not depend
+          on whether a provider has an affiliate id - there is a test for that.
         */}
         <p className="mt-2 px-1 text-[11px] font-medium leading-relaxed text-night/45">
           הקישורים מפנים לאתרי הזמנות חיצוניים, ואנחנו עשויים לקבל עמלה על הזמנה שמתבצעת דרכם. זה לא

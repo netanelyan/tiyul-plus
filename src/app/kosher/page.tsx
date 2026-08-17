@@ -3,12 +3,15 @@ import { isKosher } from '@/lib/categories';
 import KosherSearch, { type KosherCity } from './KosherSearch';
 
 /**
- * חיפוש כשרות עצמאי - נקודת כניסה נפרדת מהפילטר בכל דף יעד: מי שרוצה
- * לדעת "יש כשר בX" בלי לעבור קודם דרך דף היעד המלא. שואב מאותו נתון
- * מתוקף (destinations.ts) - לא ממציא רשומות לערים שלא בקטלוג.
+ * Standalone kosher search - a separate entry point from the filter on each
+ * destination page: for whoever wants to know "is there kosher food in city X"
+ * without going through the full destination page first. Draws from the same
+ * validated data (destinations.ts) - never invents entries for cities that are
+ * not in the catalog.
  *
- * הדף נפתח כספרייה: כל הערים שבאמת יש בהן רשומות כשרות מוצגות ככרטיסים
- * עוד לפני שמקלידים משהו, והחיפוש רק מסנן אותן בזמן אמת.
+ * The page opens as a directory: every city that genuinely has kosher entries
+ * is shown as a card before anything is typed, and the search only filters
+ * them in real time.
  */
 export const metadata = {
   title: 'כשרות | טיול+',

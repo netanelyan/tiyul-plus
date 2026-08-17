@@ -10,19 +10,21 @@ import {
 import { trackEvent } from '@/lib/events';
 
 /**
- * "ניווט ליום N ב-Google Maps" - העצירות של היום, לפי הסדר שבתכנון.
+ * "Navigate day N in Google Maps" - the day's stops, in the planned order.
  *
- * שלוש החלטות שהן כל ההבדל בין הכפתור הזה לקישור שהיה כאן קודם:
+ * Three decisions that are the whole difference between this button and the link that was here before:
  *
- * 1. **הוא אומר מה הוא עושה לפני שלוחצים** - כמה עצירות, ברגל או ברכב.
- *    כפתור שפותח אפליקציה אחרת חייב להיות צפוי.
- * 2. **יום ארוך מפוצל לקטעים, בגלוי.** גוגל מקבלת עד תשע נקודות ביניים,
- *    והגרסה הקודמת פשוט איבדה את העודף בשקט.
- * 3. **נקודת ההתחלה היא הלינה, אם יש** - ככה נראה יום אמיתי, ונאמר
- *    במפורש שהמסלול מתחיל מהמלון כדי שזה לא יהיה שינוי מפתיע.
+ * 1. **It says what it will do before you click** - how many stops, on foot or by car.
+ *    A button that opens another app has to be predictable.
+ * 2. **A long day is split into legs, visibly.** Google accepts at most nine
+ *    waypoints, and the previous version simply lost the excess silently.
+ * 3. **The starting point is the lodging, if there is one** - that is what a real day
+ *    looks like, and it is stated explicitly that the route starts from the hotel so
+ *    it is not a surprising change.
  *
- * מובייל: כפתור מלא ברוחב עם גובה נגיעה אמיתי; ב-iOS ואנדרואיד הקישור
- * נפתח באפליקציית Maps עצמה. RTL רגיל - הטקסט עברי והכתובת בתוך ה-href.
+ * Mobile: a full-width button with a real touch height; on iOS and Android the link
+ * opens in the Maps app itself. Ordinary RTL - the text is Hebrew and the URL is
+ * inside the href.
  */
 export default function DayNavExport({
   dayNumber,
@@ -31,9 +33,9 @@ export default function DayNavExport({
   mode,
 }: {
   dayNumber: number;
-  /** עצירות היום לפי הסדר */
+  /** The day's stops, in order */
   stops: NavPoint[];
-  /** מקום הלינה בעיר הזו, אם יש לו מיקום מאומת */
+  /** The lodging in this city, if it has a verified location */
   start?: NavPoint | null;
   mode: TravelMode;
 }) {
@@ -41,22 +43,22 @@ export default function DayNavExport({
   if (points.length === 0) return null;
 
   /*
-    כמה נקודות באמת ייכנסו לניווט - `googleMapsLegs` מסננת קואורדינטה
-    לא תקינה בשקט (`isValidNavPoint`), וזה בדיוק הבאג הזה בגרסה קטנה
-    יותר: "5 נקודות" בכותרת כשרק 4 באמת נכנסו למסלול. אותה נקודה בדיוק
-    כמו placeMapUrl - קישור/ניווט "עובד" שמשמיט עצירה בשקט גרוע מהודעה
-    שאומרת זאת בגלוי.
+    How many points will actually enter the navigation - `googleMapsLegs` silently
+    filters out an invalid coordinate (`isValidNavPoint`), and that is exactly this bug
+    in a smaller version: "5 points" in the label when only 4 really made it into the
+    route. Precisely the same point as placeMapUrl - a link or route that "works" while
+    silently omitting a stop is worse than a message that says so openly.
   */
   const excluded = points.length - points.filter(isValidNavPoint).length;
   const legs = googleMapsLegs(points, mode);
 
   if (legs.length === 0) {
     /*
-      שני מצבים שונים לגמרי מובילים לאותו legs.length === 0, וצריך
-      להבדיל ביניהם: יום עם עצירה אחת בלבד (excluded === 0) הוא המצב
-      הרגיל ביותר - אין ממה לבנות מסלול, ואין כאן שום דבר לדווח עליו.
-      יום שבו עצירה כלשהי הודחה (excluded > 0) הוא כן פער דאטה שכדאי
-      שיֵראה, לא שיעלם בדיוק כמו הכפתור שהיה נעלם קודם.
+      Two entirely different situations lead to the same legs.length === 0, and they
+      need to be distinguished: a day with only one stop (excluded === 0) is the most
+      ordinary state there is - there is nothing to build a route from, and nothing here
+      to report. A day where some stop was excluded (excluded > 0) is a real data gap
+      that should be seen, not vanish exactly as the button used to vanish.
     */
     if (excluded === 0) return null;
     return (

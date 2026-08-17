@@ -1,15 +1,16 @@
--- טיול+ · שלב 4: קהילת מטיילים - חיפוש משתמשים (פרטיות תחילה)
--- להריץ פעם אחת ב-SQL Editor (אחרי supabase-profiles.sql).
+-- tiyul+ · Phase 4: traveler community - user search (privacy first)
+-- Run once in the SQL Editor (after supabase-profiles.sql).
 --
--- עיקרון: אף אחד לא ניתן לחיפוש עד שהדליק "פרופיל ציבורי" בהגדרות.
--- גם אז נחשפים רק: שם תצוגה, תמונה ודרכון המדינות - לעולם לא מייל,
--- טלפון או טיולים.
+-- Principle: nobody is searchable until they turned on "public profile"
+-- in settings. Even then only these are exposed: display name, avatar and
+-- the countries passport - never email, phone or trips.
 
 alter table public.profiles
   add column if not exists is_public boolean not null default false;
 
--- VIEW בהרשאות בעלים (עוקף RLS) שחושף רק את העמודות הבטוחות ורק
--- לפרופילים שבחרו להיות ציבוריים - הדפוס המקובל ב-Supabase לגילוי.
+-- An owner-rights VIEW (bypasses RLS) that exposes only the safe columns
+-- and only for profiles that chose to be public - the accepted Supabase
+-- pattern for discovery.
 create or replace view public.public_profiles as
   select user_id, display_name, avatar, visited
   from public.profiles
@@ -17,20 +18,22 @@ create or replace view public.public_profiles as
     and display_name is not null
     and length(trim(display_name)) > 0;
 
--- **מחוברים בלבד, ובכוונה.** ה-view עוקף RLS (אין `security_invoker`),
--- וזה נכון: `security_invoker = true` היה מכפיף אותו ל-RLS של
--- `profiles`, שהיא שורה-של-עצמך בלבד, ומשבית את חיפוש המטיילים כליל.
--- מה שכן היה בעייתי הוא ההענקה ל-anon: היא איפשרה למשוך את **כל**
--- הרשימה בבקשה אחת - ספרייה של שמות ותצלומים לגריפה, בלי חשבון.
--- החיפוש ממילא חי מאחורי התחברות, ולכן ההענקה ל-anon לא שירתה אף
--- מסלול אמיתי חוץ מזה. (פרויקט שכבר הריץ את הגרסה הישנה: הקובץ
--- supabase-rls-fix.sql שולל אותה.)
+-- **Authenticated users only, deliberately.** The view bypasses RLS (no
+-- `security_invoker`), and that is correct: `security_invoker = true`
+-- would have subjected it to `profiles`' RLS, which is own-row-only, and
+-- disabled traveler search entirely. What WAS problematic is the grant to
+-- anon: it allowed pulling the **entire** list in one request - a library
+-- of names and photos to scrape, with no account. Search lives behind
+-- sign-in anyway, so the anon grant served no real path other than that
+-- one. (A project that already ran the old version: the file
+-- supabase-rls-fix.sql revokes it.)
 revoke select on public.public_profiles from anon;
 grant select on public.public_profiles to authenticated;
 
--- חיפוש לפי מייל: התאמה מדויקת בלבד (בלי חיפוש חלקי - שלא ניתן יהיה
--- לסרוק כתובות), רק למחוברים, רק פרופילים ציבוריים, והמייל עצמו לא
--- מוחזר לעולם. SECURITY DEFINER כי המיילים חיים ב-auth.users.
+-- Search by email: exact match only (no partial search - so addresses
+-- cannot be scanned), authenticated users only, public profiles only, and
+-- the email itself is never returned. SECURITY DEFINER because the emails
+-- live in auth.users.
 create or replace function public.find_traveler_by_email(p_email text)
 returns table (user_id uuid, display_name text, avatar text, visited jsonb)
 language sql

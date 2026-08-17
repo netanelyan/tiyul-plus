@@ -4,14 +4,15 @@ import { requireRole, denied, ok } from '@/lib/server/admin';
 import { adminSelect, countAuthUsers } from '@/lib/server/supabaseAdmin';
 
 /**
- * לוח המצב: מה הסוכן עולה, ומי נתקע.
+ * The status board: what the agent costs, and who is getting stuck.
  *
- * הכל נגזר מ-`usage_daily` שכבר נאסף בשביל המכסות - אין כאן איסוף חדש
- * ואין מידע אישי חדש. הזהויות שם הן `user:<uuid>` או `ip:<addr>`, ולכן
- * המספרים מבדילים בין מחוברים לאנונימיים בלי לזהות אף אחד.
+ * Everything is derived from `usage_daily`, which is already collected for the
+ * quotas - there is no new collection here and no new personal data. The
+ * identities there are `user:<uuid>` or `ip:<addr>`, so the numbers distinguish
+ * signed-in from anonymous without identifying anyone.
  *
- * "מי קרוב למכסה" הוא הנתון המעשי היחיד כאן: זה מה שמראה מי יקבל הודעת
- * חסימה היום, לפני שהוא פותח פנייה.
+ * "Who is near the quota" is the only actionable datum here: it is what shows
+ * who will get a blocking message today, before they open a support ticket.
  */
 export async function GET(req: Request) {
   const actor = await requireRole(req, 'admin');
@@ -28,15 +29,17 @@ export async function GET(req: Request) {
     'profiles',
     'select=plan,plan_until,role&limit=5000',
   );
-  // **חשבונות נספרים מ-auth.users ולא מ-profiles.** שורת profiles נוצרת רק
-  // כשמישהו שומר פרופיל, ולכן הספירה הקודמת הראתה "1" כשהיו כמה חשבונות
-  // של בני משפחה שפשוט לא נגעו באזור האישי.
+  // **Accounts are counted from auth.users, not from profiles.** A profiles row
+  // is created only when someone saves a profile, so the previous count showed
+  // "1" when there were several family-member accounts that simply never touched
+  // the account area.
   const users = await countAuthUsers();
 
   /*
-    **null אינו אפס.** קריאה שנכשלה (הטבלה לא קיימת, מפתח שגוי) החזירה
-    כאן אפס שנראה בדיוק כמו "אף אחד לא השתמש" - וזה מה שהוצג בלוח בזמן
-    שקריאות באמת נעשו. עכשיו זה נאמר.
+    **null is not zero.** A failed read (table doesn't exist, wrong key) used to
+    return a zero here that looked exactly like "nobody used it" - and that is
+    what the board displayed while calls were actually being made. Now it is
+    stated.
   */
   const tracked = rows !== null;
   const todayRows = (rows ?? []).filter((r) => r.day === today);
@@ -53,9 +56,10 @@ export async function GET(req: Request) {
       identities: todayRows.length,
       loggedIn: todayRows.filter((r) => r.identity.startsWith('user:')).length,
       /*
-        כל מה שאינו `user:` הוא אנונימי. הספירה הקודמת חיפשה `ip:` בלבד,
-        ומאז שהמכסה האנונימית עברה למזהה דפדפן (`anon:<id>`) רוב המבקרים
-        לא נספרו בשום צד - "משתמשים היום" הראה אפס בזמן שהיו כאלה.
+        Anything that is not `user:` is anonymous. The previous count looked for
+        `ip:` only, and since the anonymous quota moved to a browser identifier
+        (`anon:<id>`) most visitors were counted on neither side - "users today"
+        showed zero while there were some.
       */
       anonymous: todayRows.filter((r) => !r.identity.startsWith('user:')).length,
       units: todayRows.reduce((n, r) => n + r.units, 0),
@@ -70,7 +74,7 @@ export async function GET(req: Request) {
     accounts: {
       total: users?.total ?? profiles?.length ?? 0,
       capped: users?.capped ?? false,
-      /** מתוכם שמרו פרופיל - ההפרש הוא מי שנכנס ולא נגע באזור האישי */
+      /** Of those, saved a profile - the difference is who signed in and never touched the account area */
       withProfile: profiles?.length ?? 0,
       premium: (profiles ?? []).filter(
         (p) => p.plan === 'premium' && (!p.plan_until || Date.parse(p.plan_until) > Date.now()),

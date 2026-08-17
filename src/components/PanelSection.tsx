@@ -1,39 +1,41 @@
 import type { ReactNode } from 'react';
 
 /**
- * הכותרת של בלוק בתחתית מסך הטיול - **אובייקט אחד, לא חמישה דומים**.
+ * The header of a block at the bottom of the trip screen - **one object, not five similar ones**.
  *
- * ## למה זה קיים
+ * ## Why this exists
  *
- * חמישה בלוקים יושבים אחד מתחת לשני שם: מה קורה בתאריכים, מה עוד חסר,
- * כמה מוציאים ביום, הסיכות שלכם, וכל הימים. הם נכתבו בחמישה סשנים
- * שונים, וכל אחד המציא לעצמו כותרת - ולכן אחד מהם קיבל אימוג׳י והשאר
- * לא, אחד קיבל רקע אפור בלי מסגרת והשאר לבן עם מסגרת, ואותו חץ ▾ הופיע
- * בשלושה גדלים. בצילום מסך זה נראה כמו שלוש מערכות עיצוב על מסך אחד.
+ * Five blocks sit stacked there: what is happening on your dates, what is still
+ * missing, daily spend, your pins, and all the days. They were written across five
+ * different sessions, and each invented its own header - so one got an emoji and
+ * the rest did not, one got a grey background with no ring and the others white
+ * with a ring, and the same caret glyph appeared in three sizes. In a screenshot
+ * it looked like three design systems on one screen.
  *
- * העיצוב לא היה שגוי באף אחד מהם בנפרד. **ההבדל בין אחים הוא הבאג**,
- * ולכן התיקון הוא לא ליישר את שלושתם ביד - זה מחזיק עד הבלוק הבא
- * שמישהו יוסיף - אלא להוציא את הכותרת לרכיב אחד שאי אפשר לסטות ממנו
- * בלי לערוך אותו.
+ * None of them was wrong on its own. **The difference between siblings is the
+ * bug**, so the fix is not to align the three by hand - that holds until the next
+ * block somebody adds - but to move the header into a single component that cannot
+ * be deviated from without editing it.
  *
- * ## מה קבוע ומה לא
+ * ## What is fixed and what is not
  *
- * **הפס העליון קבוע לחלוטין**: מסגרת, רקע, רדיוס, ריפוד, גודל האייקון,
- * משקל הטקסט וגודל החץ. הוא הדבר שהעין משווה כשהבלוקים סגורים, וזה
- * בדיוק המצב שבו הבעיה נראתה.
+ * **The top bar is entirely fixed**: ring, background, radius, padding, icon size,
+ * text weight and caret size. It is the thing the eye compares when the blocks are
+ * closed, and that is exactly the state in which the problem was visible.
  *
- * **הגוף נשאר של כל בלוק**, ויושב מתחת לפס ולא בתוכו - `bg-shell` על
- * `bg-shell` הוא הבדל של שלושה ערכי צבע ולא נראה בעין, כך שכרטיסים
- * מקוננים היו נמרחים לגוש אחד. `PanelBody` הוא העטיפה לגוף שהוא טקסט
- * רציף; בלוק שהגוף שלו כבר רשימת כרטיסים לא צריך אותה.
+ * **The body stays each block's own**, and sits below the bar rather than inside
+ * it - `bg-shell` on `bg-shell` is a difference of three colour values and is
+ * invisible, so nested cards would smear into one mass. `PanelBody` is the wrapper
+ * for a body that is continuous text; a block whose body is already a list of cards
+ * does not need it.
  *
- * ## אייקון הוא חובה ולא אופציה
+ * ## An icon is required, not optional
  *
- * `icon` הוא פרמטר נדרש בכוונה. אימוג׳י אחד מתוך חמישה הוא בדיוק
- * המצב שנתנאל צילם, ושדה אופציונלי היה מזמין אותו בחזרה.
+ * `icon` is a required prop on purpose. One emoji out of five is exactly the state
+ * Netanel photographed, and an optional field would invite it straight back.
  */
 
-/** מסומן `aria-hidden` - האימוג׳י הוא קישוט, השם הנגיש הוא הכותרת */
+/** Marked `aria-hidden` - the emoji is decoration, the accessible name is the title */
 function Head({
   icon,
   title,
@@ -89,16 +91,16 @@ export default function PanelSection({
   className = '',
   children,
 }: {
-  /** מזהה יציב לבדיקות - מאפשר להשוות אחים בדפדפן ולא במקור */
+  /** A stable id for tests - lets siblings be compared in a browser rather than in the source */
   panelKey: string;
   icon: string;
   title: string;
-  /** שורת משנה שקטה לצד הכותרת (למשל טווח המחירים) */
+  /** A quiet sub-line beside the title (for example the price range) */
   meta?: ReactNode;
-  /** תג קטן אחרי הכותרת (למשל "1 פתוחים") */
+  /** A small badge after the title (for example "1 open") */
   badge?: ReactNode;
   ariaLabel?: string;
-  /** מוגדר = הבלוק מתקפל. לא מוגדר = הגוף תמיד גלוי ואין חץ */
+  /** Set = the block collapses. Unset = the body is always visible and there is no caret */
   open?: boolean;
   onToggle?: () => void;
   className?: string;
@@ -129,7 +131,7 @@ export default function PanelSection({
   );
 }
 
-/** גוף רגיל: כרטיס יחיד מתחת לפס, באותה שפה כמו הפס עצמו */
+/** An ordinary body: a single card below the bar, in the same language as the bar itself */
 export function PanelBody({
   children,
   className = '',

@@ -1,32 +1,33 @@
 -- ============================================================
---  רשימת הדיוור של טיול+
---  להריץ ב-Supabase → SQL Editor. אידמפוטנטי, אפשר להריץ שוב.
+--  tiyul+'s mailing list
+--  Run in Supabase → SQL Editor. Idempotent, safe to run again.
 -- ============================================================
 --
---  איפה נשמרות הכתובות: בטבלה `newsletter_signups` בפרויקט ה-Supabase
---  שכבר משמש את החשבונות ואת קישורי השיתוף. אין ספק חיצוני ואין תלות
---  חדשה - זה אותו מסד נתונים.
+--  Where the addresses are stored: in the `newsletter_signups` table in the
+--  Supabase project already serving the accounts and the share links. No
+--  external provider and no new dependency - it is the same database.
 --
---  **הטבלה סגורה לחלוטין לציבור.** אין policy ל-anon ואין ל-authenticated,
---  כלומר אי אפשר לקרוא ממנה ואי אפשר לכתוב אליה מהדפדפן. ההרשמה עוברת
---  דרך `/api/newsletter` בשרת, עם מפתח ה-service role - כך שאף אחד לא
---  יכול לשלוף את רשימת הכתובות דרך ה-API הציבורי, וזה העיקר בטבלה
---  שמחזיקה כתובות אימייל של אנשים.
+--  **The table is completely closed to the public.** There is no policy for
+--  anon and none for authenticated, meaning it cannot be read from and
+--  cannot be written to from the browser. Signup goes through
+--  `/api/newsletter` on the server, with the service role key - so nobody
+--  can pull the address list through the public API, and that is the whole
+--  point for a table holding people's email addresses.
 
 create table if not exists public.newsletter_signups (
   email       text primary key,
   created_at  timestamptz not null default now(),
-  -- מאיפה נרשמו (footer / עמוד נחיתה עתידי), לצורך הבנה בלבד
+  -- Where they signed up from (footer / a future landing page), for insight only
   source      text,
-  -- ביטול הרשמה בלי למחוק את השורה, כדי שלא נשלח שוב בטעות
+  -- Unsubscribe without deleting the row, so we do not accidentally send again
   unsubscribed_at timestamptz
 );
 
 alter table public.newsletter_signups enable row level security;
 
--- אין policies בכוונה: RLS פעיל בלי policy = אף אחד חוץ מה-service role
--- לא רואה ולא כותב. אם מישהו מוסיף כאן policy ל-anon, הוא פותח את רשימת
--- הכתובות לעולם - לא לעשות את זה.
+-- No policies on purpose: RLS enabled with no policy = nobody but the
+-- service role can see or write. If somebody adds an anon policy here, they
+-- open the address list to the world - do not do that.
 revoke all on public.newsletter_signups from anon, authenticated;
 
 create index if not exists newsletter_signups_created_at_idx

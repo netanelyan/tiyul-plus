@@ -1,19 +1,21 @@
 /**
- * האם כשל של תור הסוכן סביר שיעבור בניסיון נוסף.
+ * Whether an agent-turn failure is likely to pass on a retry.
  *
- * זה חי בקובץ נפרד ולא בתוך `api/chat/route.ts` כי ל-route handler של
- * App Router אסור לייצא כל דבר שאינו מתודת HTTP, ולוגיקה שמחליטה אם
- * לנסות שוב חייבת להיות מכוסה בטסט.
+ * This lives in a separate file rather than inside `api/chat/route.ts`
+ * because an App Router route handler may not export anything that is not
+ * an HTTP method, and logic that decides whether to retry must be covered
+ * by a test.
  *
- * ההיסטוריה שמאחורי הפונקציה: הגרסה הראשונה בדקה `err.status` ואם לא
- * מצאה - חיפשה מילים כמו overloaded/rate limit בטקסט. אבל השגיאה
- * שנזרקה בפועל הייתה `new Error('anthropic 529')`, בלי `status` ובלי
- * אף אחת מהמילים - ולכן עומס אמיתי של ה-API סווג כשגיאה קבועה,
- * הניסיון השני לא רץ, והמטייל קיבל תשובת שגיאה על תור שהיה עובר.
- * לכן קוד סטטוס נקרא עכשיו גם מהאובייקט וגם מהטקסט.
+ * The history behind the function: the first version checked `err.status`
+ * and, failing that, looked for words like overloaded/rate limit in the
+ * text. But the error actually thrown was `new Error('anthropic 529')`,
+ * with no `status` and none of the words - so real API overload was
+ * classified as a permanent error, the second attempt never ran, and the
+ * traveler got an error reply on a turn that would have passed. That is
+ * why a status code is now read both from the object and from the text.
  */
 
-/** 429 = הגבלת קצב, 408 = timeout, 5xx (כולל 529 "overloaded") = צד שרת */
+/** 429 = rate limit, 408 = timeout, 5xx (incl. 529 "overloaded") = server side */
 function statusIsTransient(status: number): boolean {
   return status === 408 || status === 429 || status >= 500;
 }
@@ -24,17 +26,17 @@ const TRANSIENT_TEXT =
 export function isTransient(err: unknown): boolean {
   const e = err as { status?: unknown; name?: unknown; message?: unknown } | null | undefined;
 
-  // 1. קוד סטטוס על האובייקט - המסלול המדויק
+  // 1. A status code on the object - the precise path
   if (typeof e?.status === 'number' && Number.isFinite(e.status)) {
     return statusIsTransient(e.status);
   }
 
-  // 2. AbortSignal.timeout זורק DOMException בשם TimeoutError; ביטול
-  //    כזה הוא תמיד חולף מבחינתנו.
+  // 2. AbortSignal.timeout throws a DOMException named TimeoutError; a
+  //    cancellation like that is always transient as far as we're concerned.
   const name = typeof e?.name === 'string' ? e.name : '';
   if (name === 'TimeoutError' || name === 'AbortError') return true;
 
-  // 3. קוד סטטוס שנשאר רק בתוך הטקסט ("anthropic 529")
+  // 3. A status code that survives only inside the text ("anthropic 529")
   const text = String(e?.message ?? err ?? '').toLowerCase();
   const fromText = text.match(/\b(4\d\d|5\d\d)\b/);
   if (fromText) return statusIsTransient(Number(fromText[1]));

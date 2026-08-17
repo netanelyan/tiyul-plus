@@ -30,21 +30,22 @@ export default function DestinationClient({
   const listRef = useRef<HTMLDivElement>(null);
   const [focusPlaceId, setFocusPlaceId] = useState<string | null>(null);
 
-  // ?place=<id> מגיע מהחיפוש הכלל-אתרי. נקרא מ-window ולא מ-useSearchParams
-  // בכוונה: useSearchParams מוציא את הדף מ-prerender סטטי (או מחייב עטיפת
-  // Suspense), והדף הזה חייב להישאר סטטי.
+  // ?place=<id> comes from the site-wide search. Read from window rather than
+  // from useSearchParams on purpose: useSearchParams opts the page out of
+  // static prerendering (or forces a Suspense wrapper), and this page must
+  // stay static.
   useEffect(() => {
     setFocusPlaceId(new URLSearchParams(window.location.search).get('place'));
   }, []);
 
-  // גוללים אל המקום שנבחר בחיפוש ומדגישים אותו
+  // Scroll to the place picked in search and highlight it
   useEffect(() => {
     if (!focusPlaceId) return;
     if (!dest.places.some((p) => p.id === focusPlaceId)) return;
     setFilter('all');
     setQuery('');
     setHighlightId(focusPlaceId);
-    // ממתינים לרינדור הרשימה לפני הגלילה
+    // Wait for the list to render before scrolling
     const t = setTimeout(() => {
       listRef.current
         ?.querySelector(`[data-place-id="${CSS.escape(focusPlaceId)}"]`)
@@ -67,13 +68,13 @@ export default function DestinationClient({
           : dest.places.filter((p) => p.category === filter);
     const q = query.trim().toLowerCase();
     if (!q) return byFilter;
-    // חיפוש חופשי בתוך העיר: שם בעברית, שם מקומי או התיאור
+    // Free-text search within the city: Hebrew name, local name or the description
     return byFilter.filter((p) =>
       [p.name, p.nameLocal, p.description].some((f) => f?.toLowerCase().includes(q)),
     );
   }, [dest.places, filter, query]);
 
-  // עירוני מהיעד, מדינתי מהמדינה - למשתמש זה כרטיס אחד רציף.
+  // City-level facts from the destination, country-level from the country - to the user it is one continuous card.
   const practicalItems: { title: string; text: string }[] = [
     { title: 'טיסות מנתב"ג', text: dest.practical.flights },
     { title: 'ויזה', text: country.practical.visa },
@@ -135,7 +136,7 @@ export default function DestinationClient({
         </div>
       </div>
 
-      {/* חיפוש בתוך העיר - לצד סינון הקטגוריות */}
+      {/* In-city search - alongside the category filters */}
       <div className="mt-8 max-w-sm">
         <label className="relative block">
           <span className="sr-only">חיפוש מקום ב{dest.name}</span>
@@ -254,9 +255,9 @@ export default function DestinationClient({
                     </a>
                   ) : (
                     /*
-                      אין קואורדינטה אמינה - עדיף שהיעדר הקישור ייראה
-                      במקום שיעלם בשקט. לא מוצג כפתור שמנחית במקום הלא
-                      נכון.
+                      No reliable coordinate - better that the missing link be
+                      visible than disappear silently. We do not show a button
+                      that lands the user in the wrong place.
                     */
                     <span className="text-night/35" title="לא נמצאה עבור המקום הזה קואורדינטה אמינה">
                       מיקום לא אומת

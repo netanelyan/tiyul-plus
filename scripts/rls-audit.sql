@@ -1,15 +1,15 @@
--- טיול+ · ביקורת RLS · לקריאה בלבד
+-- tiyul+ · RLS audit · read-only
 --
--- מריצים ב-SQL Editor. הקובץ **לא משנה כלום** - רק שואל את הקטלוג של
--- Postgres. אפשר להריץ אותו לפני התיקון כדי לראות את החשיפה, ואחריו
--- כדי לראות שהיא נסגרה.
+-- Run in the SQL Editor. The file **changes nothing** - it only asks the
+-- Postgres catalog. It can be run before the fix to see the exposure, and
+-- after it to see that it was closed.
 --
--- שאילתה 1 היא התשובה הישירה לשאלה "מה היה חשוף": היא מונה כל טבלה
--- שיש ל-anon הרשאה עליה, ומראה ליד כל מדיניות את התנאי שלה. מדיניות
--- שהתנאי שלה `true` היא בדיוק "כל השורות".
+-- Query 1 is the direct answer to "what was exposed": it lists every table
+-- anon has a privilege on, and shows next to each policy its condition. A
+-- policy whose condition is `true` is exactly "all rows".
 
 -- ============================================================
--- 1. מה anon יכול לעשות, טבלה-טבלה
+-- 1. What anon can do, table by table
 -- ============================================================
 select
   t.table_name                                        as "טבלה",
@@ -31,18 +31,20 @@ where t.grantee = 'anon'
 group by t.table_name
 order by t.table_name;
 
--- ציפייה אחרי התיקון:
---   shared_trips  - לא מופיעה בכלל.
---   טבלאות הקטלוג (countries / destinations / places) - SELECT בלבד,
---                   ובכוונה: זה תוכן ציבורי שהאתר מגיש לכל מבקר.
---   public_profiles - לא מופיעה.
+-- Expectation after the fix:
+--   shared_trips  - does not appear at all.
+--   The catalog tables (countries / destinations / places) - SELECT only,
+--                   and deliberately: this is public content the site serves
+--                   to every visitor.
+--   public_profiles - does not appear.
 
 -- ============================================================
--- 2. shared_trips - סגורה?
+-- 2. shared_trips - closed?
 -- ============================================================
--- `to_regclass` ולא `::regclass`: הקאסט **זורק שגיאה** על טבלה שאינה
--- קיימת ומפיל את שאר הקובץ, וקובץ אבחון שנופל על המצב שהוא בא לאבחן
--- הוא בזבוז של סיבוב שלם. אותו לקח כמו ב-supabase-check.sql.
+-- `to_regclass` and not `::regclass`: the cast **throws an error** on a table
+-- that does not exist and kills the rest of the file, and a diagnostic file
+-- that falls over on the exact state it came to diagnose is a wasted round
+-- trip. Same lesson as in supabase-check.sql.
 select
   case
     when to_regclass('public.shared_trips') is null
@@ -61,7 +63,7 @@ select
   end as "shared_trips";
 
 -- ============================================================
--- 3. פונקציית הקריאה קיימת ומוגבלת לקוד
+-- 3. The read function exists and is restricted to the code
 -- ============================================================
 select
   case
@@ -79,14 +81,15 @@ select
     else 'OK · security definer + search_path נעול'
   end as "get_shared_trip";
 
--- **בדיקת הקלט הזדוני עצמה גרה ב-supabase-rls-fix.sql ולא כאן**, ולא
--- מטעמי סדר: Postgres מפענח שם של פונקציה בזמן פרסור, ולכן שורה
--- שקוראת ל-get_shared_trip נופלת עם "function does not exist" לפני
--- התיקון - כלומר בדיוק כשמריצים את הקובץ הזה כדי לראות מה שבור. שם,
--- אחרי היצירה, הפונקציה קיימת בוודאות והכישלון הוא בדיוק מה שרוצים
--- ממיגרציה. כאן נשארות רק בדיקות מבנה שלא יכולות ליפול.
+-- **The hostile-input test itself lives in supabase-rls-fix.sql and not
+-- here**, and not for ordering reasons: Postgres resolves a function name at
+-- parse time, so a line that calls get_shared_trip fails with "function does
+-- not exist" before the fix - i.e. exactly when this file is run to see what
+-- is broken. There, after the creation, the function definitely exists and
+-- the failure is exactly what you want from a migration. Only structural
+-- checks that cannot fall over remain here.
 --
--- מי מורשה להריץ אותה:
+-- Who is allowed to execute it:
 select
   coalesce(
     (select string_agg(g, ', ' order by g)
@@ -95,11 +98,12 @@ select
        and has_function_privilege(g, to_regprocedure('public.get_shared_trip(text)'), 'execute')),
     '(הפונקציה לא קיימת)')
   as "מי יכול להריץ את get_shared_trip";
--- ציפייה: anon, authenticated, service_role. `public` ברשימה הזאת
--- אינו אסון (הוא נגזר מהשלושה) אבל מסמן שה-revoke הראשוני לא רץ.
+-- Expectation: anon, authenticated, service_role. `public` in this list is
+-- not a disaster (it is derived from the three) but signals that the initial
+-- revoke did not run.
 
 -- ============================================================
--- 4. public_profiles - מה בדיוק הוא חושף, ולמי
+-- 4. public_profiles - what exactly it exposes, and to whom
 -- ============================================================
 select
   c.column_name                                       as "עמודה",
@@ -107,8 +111,9 @@ select
 from information_schema.columns c
 where c.table_schema = 'public' and c.table_name = 'public_profiles'
 order by c.ordinal_position;
--- ציפייה: בדיוק user_id, display_name, avatar, visited. שום עמודה
--- נוספת. **אם צצה כאן עמודה חדשה - זו חשיפה, לא שיפור.**
+-- Expectation: exactly user_id, display_name, avatar, visited. No extra
+-- column. **If a new column shows up here - that is an exposure, not an
+-- improvement.**
 
 select
   coalesce(string_agg(grantee, ', ' order by grantee), '(אף אחד)')
@@ -117,13 +122,14 @@ from information_schema.table_privileges
 where table_schema = 'public' and table_name = 'public_profiles'
   and privilege_type = 'SELECT'
   and grantee in ('anon', 'authenticated');
--- ציפייה אחרי התיקון: authenticated בלבד.
+-- Expectation after the fix: authenticated only.
 
 -- ============================================================
--- 5. כל טבלה שיש עליה מדיניות ללא תנאי
+-- 5. Every table carrying an unconditional policy
 -- ============================================================
--- זו הבדיקה שהייתה תופסת את הבאג המקורי. `qual` או `with_check` שהם
--- ליטרל `true` פירושם "כל השורות", ולא משנה איך המדיניות נקראת.
+-- This is the check that would have caught the original bug. A `qual` or
+-- `with_check` that is the literal `true` means "all rows", no matter what
+-- the policy is named.
 select
   tablename                                           as "טבלה",
   policyname                                          as "מדיניות",
@@ -136,5 +142,5 @@ where schemaname = 'public'
   and (qual = 'true' or with_check = 'true')
   and (roles && array['anon', 'authenticated', 'public']::name[])
 order by tablename, policyname;
--- ציפייה: רק טבלאות הקטלוג, ורק ב-SELECT. כל שורה כאן שאינה SELECT,
--- או שאינה קטלוג, היא ממצא.
+-- Expectation: only the catalog tables, and only for SELECT. Any row here
+-- that is not SELECT, or not catalog, is a finding.

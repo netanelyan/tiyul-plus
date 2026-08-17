@@ -5,9 +5,10 @@ import { pruneTombstones } from './storage';
 import type { Trip } from './types';
 
 /**
- * הבאג שהטסטים האלה שומרים עליו: מוחקים טיול, מרעננים, והוא חוזר.
- * המחיקה הייתה "היעדר שורה" ולכן כל עותק מרוחק ניצח אותה. עכשיו יש
- * למחיקה חותמת, והיא משתתפת במיזוג כמו כל שינוי אחר.
+ * The bug these tests guard: delete a trip, refresh, and it comes back.
+ * The deletion used to be "the absence of a row", so any remote copy beat
+ * it. Now a deletion carries a timestamp, and it participates in the merge
+ * like any other change.
  */
 
 const T = 1_700_000_000_000;
@@ -84,33 +85,38 @@ test('גזימת מצבות: לפי גיל ולפי תקרה', () => {
 });
 
 /**
- * הבאג שנתנאל דיווח עליו בפעם השנייה: "מחקתי שניים מהם לפני זמן מה, והם חזרו."
+ * The bug Netanel reported the second time: "I deleted two of them a while
+ * ago, and they came back."
  *
- * המצבות עצמן עובדות. מה ששבר אותן הוא **החתמה מחדש**: `upsertTrip` בהקשר
- * חתם `updatedAt: Date.now()` על כל טיול, כולל טיול שהגיע מהשרת בלי שינוי,
- * ו-`AccountSync` השתמש בו כדי להחיל את תוצאת המשיכה. לכן **עצם ההתחברות
- * במכשיר שני הפכה טיול ישן ל"נערך עכשיו"**, והדחיפה שאחריה כתבה אותו לשרת עם
- * חותמת מאוחרת מהמחיקה. מאותו רגע המיזוג עושה בדיוק מה שנתבקש - "עריכה
- * מאוחרת מהמחיקה מנצחת" - ומחזיר את הטיול לחיים בכל המכשירים, והמצבה אבודה.
+ * The tombstones themselves work. What broke them is **restamping**:
+ * `upsertTrip` in the context stamped `updatedAt: Date.now()` on every trip,
+ * including a trip that came from the server unchanged, and `AccountSync`
+ * used it to apply the pull result. Therefore **merely signing in on a
+ * second device turned an old trip into "edited now"**, and the push that
+ * followed wrote it to the server with a timestamp later than the deletion.
+ * From that moment on the merge does exactly what it was asked - "an edit
+ * later than the deletion wins" - and brings the trip back to life on all
+ * devices, and the tombstone is lost.
  *
- * הכלל לא השתנה. מה שהשתנה הוא שהחלת מצב מהשרת מפסיקה להתחזות לעריכה.
+ * The rule did not change. What changed is that applying state from the
+ * server stops impersonating an edit.
  */
 test('a device that only PULLED a trip must not restamp it into an edit that beats a deletion', () => {
-  const T0 = 1_000; // הטיול נוצר ונערך לאחרונה
-  const T1 = 2_000; // מכשיר א׳ מחק אותו
-  const T2 = 3_000; // מכשיר ב׳ התחבר ומשך
+  const T0 = 1_000; // the trip was created and last edited
+  const T1 = 2_000; // device A deleted it
+  const T2 = 3_000; // device B signed in and pulled
 
   const trip = { id: 'a', name: 'וינה', citySlugs: [], days: [], createdAt: T0, updatedAt: T0 };
 
-  // מכשיר ב׳ מושך את הטיול (עדיין בלי לדעת על המחיקה - הוא התחבר לפניה)
+  // Device B pulls the trip (still unaware of the deletion - it signed in before it)
   const pulled = mergeTrips([], [trip], {}, {});
   assert.equal(pulled.applyLocally.length, 1);
 
-  // ההחלה הישנה: החתמה מחדש ל"עכשיו". זה כל ההבדל.
+  // The old application: restamping to "now". That is the whole difference.
   const restamped = { ...pulled.applyLocally[0], updatedAt: T2 };
-  const applied = { ...pulled.applyLocally[0] }; // ההחלה הנכונה: כפי שהגיע
+  const applied = { ...pulled.applyLocally[0] }; // the correct application: as it arrived
 
-  // מכשיר א׳ מושך אחרי שמכשיר ב׳ דחף. המצבה שלו היא T1.
+  // Device A pulls after device B pushed. Its tombstone is T1.
   const withRestamp = mergeTrips([], [restamped], { a: T1 }, { a: T1 });
   const withoutRestamp = mergeTrips([], [applied], { a: T1 }, { a: T1 });
 
@@ -118,20 +124,21 @@ test('a device that only PULLED a trip must not restamp it into an edit that bea
   assert.equal(withoutRestamp.applyLocally.length, 0, 'בלי החתמה מחדש המחיקה מחזיקה');
 });
 
-/** עריכה אמיתית אחרי המחיקה עדיין מנצחת - הכלל לא נחלש, רק הפסיק לירות לבד */
+/** A real edit after the deletion still wins - the rule was not weakened, it just stopped firing on its own */
 test('a REAL edit after the deletion still wins', () => {
   const trip = { id: 'a', name: 'וינה', citySlugs: [], days: [], createdAt: 1_000, updatedAt: 5_000 };
   const merged = mergeTrips([], [trip], { a: 2_000 }, { a: 2_000 });
   assert.equal(merged.applyLocally.length, 1);
 });
 
-/* ---------- מכשיר משותף: מעבר בין חשבונות ---------- */
+/* ---------- A shared device: switching between accounts ---------- */
 
 /**
- * **הבאג שהבדיקות האלה שומרות עליו.** יציאה מהחשבון לא ניקתה את האחסון
- * המקומי, ולכן ההתחברות הבאה על אותו מחשב מיזגה את הטיולים של האדם הקודם.
- * המיזוג עצמו תקין - הוא אמור לדחוף טיול מקומי שאינו בשרת, וזו ההגירה של
- * טיולים אנונימיים. מה שהיה שגוי הוא **מה נחשב "מקומי"** ברגע הזה.
+ * **The bug these tests guard.** Signing out did not clear local storage,
+ * so the next sign-in on the same computer merged the previous person's
+ * trips. The merge itself is correct - it is supposed to push a local trip
+ * that is not on the server, and that is the migration of anonymous trips.
+ * What was wrong is **what counts as "local"** at that moment.
  */
 test('טיול של האדם הקודם היה נדחף לחשבון החדש - זו הצורה של הבאג', () => {
   const previousPersons: Trip[] = [trip('svk', 1000)];
@@ -140,14 +147,14 @@ test('טיול של האדם הקודם היה נדחף לחשבון החדש - 
 });
 
 test('אחרי ניקוי, ההתחברות של האדם החדש לא מעלה כלום שאינו שלו', () => {
-  // זה מה ש-AccountSync מעבירה כשה-switchAccount החזיר "ניקיתי"
+  // This is what AccountSync passes when switchAccount returned "cleared"
   const { pushRemotely, applyLocally } = mergeTrips([], [trip('rome', 500)], {}, {});
   assert.deepEqual(pushRemotely, []);
   assert.equal(applyLocally.length, 1, 'והטיולים שלו כן יורדים אליו');
 });
 
 test('טיול אנונימי אמיתי עדיין מהגר בהתחברות ראשונה', () => {
-  // accountId === null באחסון => לא מנקים => ההגירה נשמרת
+  // accountId === null in storage => no clearing => the migration is preserved
   const { pushRemotely } = mergeTrips([trip('anon', 900)], [], {}, {});
   assert.equal(pushRemotely.length, 1);
 });

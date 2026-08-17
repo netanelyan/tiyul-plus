@@ -4,29 +4,32 @@ import { checkLimit, dayKey } from '@/lib/server/limits';
 import { resolveCaller } from '@/lib/server/identity';
 
 /**
- * POST { email } → { ok } · הרשמה לרשימת הדיוור.
+ * POST { email } → { ok } · newsletter signup.
  *
- * הכתובות נשמרות ב-`newsletter_signups` באותו פרויקט Supabase שכבר
- * מריץ את החשבונות (ראו `supabase-newsletter.sql`). הטבלה סגורה ל-anon
- * ולא ניתנת לקריאה מהדפדפן, ולכן ההוספה נעשית כאן בשרת עם ה-service
- * role - ולא ישירות מהטופס.
+ * The addresses are stored in `newsletter_signups` in the same Supabase
+ * project that already runs the accounts (see `supabase-newsletter.sql`).
+ * The table is closed to anon and unreadable from the browser, so the
+ * insert happens here on the server with the service role - not directly
+ * from the form.
  *
- * שתי החלטות שקשורות זו בזו:
+ * Two decisions that depend on each other:
  *
- * - **התשובה זהה בין "נרשמת" ל"כבר היית רשום".** אחרת הטופס הופך לכלי
- *   שבודק אם כתובת מסוימת נמצאת ברשימה שלנו, וזה דליפה של מידע על
- *   אנשים אחרים. `Prefer: resolution=merge-duplicates` הופך הרשמה
- *   חוזרת ל-no-op שקט.
- * - **בלי המפתח מוגדר מחזירים 503 מפורש** ולא "הצלחה". טופס שמצייר וי
- *   ירוק ולא שומר כלום הוא הדבר הכי גרוע שאפשר לעשות כאן.
+ * - **The response is identical for "you signed up" and "you were already
+ *   signed up".** Otherwise the form becomes a tool for checking whether
+ *   a given address is on our list, which is a leak of information about
+ *   other people. `Prefer: resolution=merge-duplicates` turns a repeat
+ *   signup into a quiet no-op.
+ * - **With no key configured we return an explicit 503**, not "success".
+ *   A form that paints a green checkmark and saves nothing is the worst
+ *   possible thing here.
  */
 
-/** בדיקת צורה בלבד. אימות אמיתי הוא מייל שנשלח, וזה שלב אחר. */
+/** Shape check only. Real verification is a sent email, and that is a different stage. */
 const EMAIL = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
 
 export async function POST(req: Request) {
   const caller = await resolveCaller(req);
-  // טופס פתוח לציבור: שער צר, כי אין כאן שום סיבה לגיטימית לקצב גבוה
+  // A publicly open form: a narrow gate, since there is no legitimate reason for a high rate here
   const burst = checkLimit('newsletter-burst', caller.id, 3, 10 * 60_000);
   const daily = checkLimit('newsletter-day', caller.id, 10, 24 * 60 * 60 * 1000);
   if (!burst.ok || !daily.ok) {
@@ -51,14 +54,18 @@ export async function POST(req: Request) {
   }
 
   /*
-    ignore-duplicates ולא merge: כפילות מוחזרת כמערך ריק, וזה מה
-    שמאפשר לספור לדשבורד רק כתובות **חדשות** - בלי לשנות את התשובה
-    ללקוח, שנשארת זהה לחדש ולכפול (שהטופס לא יהפוך לבודק כתובות).
-    תופעת לוואי רצויה: הרשמה חוזרת לא דורסת את המקור והתאריך המקוריים.
+    ignore-duplicates rather than merge: a duplicate comes back as an
+    empty array, which is what lets the dashboard count only **new**
+    addresses - without changing the client's response, which stays
+    identical for new and duplicate (so the form does not become an
+    address checker). A welcome side effect: a repeat signup does not
+    overwrite the original source and date.
 
-    האירוע נספר **כאן בשרת** ולא בדפדפן, בכוונה כפולה: רק השרת יודע
-    להבדיל חדש מכפול, ונתיב /api/events דוחה את הסוג הזה מלקוחות -
-    אחרת אפשר היה לנפח את המונה בלולאה בלי לרשום אף כתובת.
+    The event is counted **here on the server** and not in the browser,
+    for a double reason: only the server can tell new from duplicate, and
+    the /api/events route rejects this kind from clients - otherwise the
+    counter could be inflated in a loop without registering a single
+    address.
   */
   const saved = await adminInsert('newsletter_signups', { email, source }, { ignoreDuplicates: true });
   if (!saved) {

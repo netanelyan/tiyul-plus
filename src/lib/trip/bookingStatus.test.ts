@@ -1,9 +1,9 @@
 /**
- * מצב ההזמנות לפי עיר.
+ * Booking status per city.
  *
- * הבדיקה החשובה כאן היא **התאימות לאחור**: יש טיולים חיים ב-localStorage
- * ובחשבונות שנושאים `booking.stay` בודד, ואסור שהמעבר יאבד אותו או
- * יגרום ללחיצה להיראות כאילו לא נקלטה.
+ * The important test here is **backward compatibility**: there are live trips
+ * in localStorage and in accounts that carry a single `booking.stay`, and the
+ * migration must not lose it or make a click look as if it did not register.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -36,7 +36,7 @@ const trip = (prefs: Trip['preferences'] = {}): Trip => ({
   preferences: prefs,
 });
 
-/* ---------- החלוקה עצמה ---------- */
+/* ---------- The split itself ---------- */
 
 test('לינה וכרטיסים לפי עיר, השאר לטיול', () => {
   assert.deepEqual(PER_CITY_KINDS, ['stay', 'activities']);
@@ -45,9 +45,10 @@ test('לינה וכרטיסים לפי עיר, השאר לטיול', () => {
 
 test('perCity תואם למי שהחיפוש שלו מקבל יעד', () => {
   /*
-    הדגל מסומן ביד בקונפיג, וזו הבדיקה שמונעת ממנו להיפרד מהמציאות:
-    ספק שמחפש **במקום מסוים** הוא בדיוק ספק ששייך לעיר. אם מישהו יוסיף
-    ספק ויסמן אחרת, זה ייפול כאן ולא במסך של מטייל.
+    The flag is marked by hand in the config, and this is the test that keeps it
+    from drifting apart from reality: a provider that searches **in a specific
+    place** is exactly a provider that belongs to a city. If someone adds a
+    provider and marks it otherwise, it fails here and not on a traveler's screen.
   */
   for (const p of bookingProviders) {
     assert.equal(
@@ -58,7 +59,7 @@ test('perCity תואם למי שהחיפוש שלו מקבל יעד', () => {
   }
 });
 
-/* ---------- קריאה ---------- */
+/* ---------- Reading ---------- */
 
 test('סוג עירוני בלי עיר מחזיר undefined ולא ניחוש', () => {
   const t = trip({ bookingByCity: { stay: { vienna: 'have' } } });
@@ -74,7 +75,7 @@ test('טיול ישן: הערך הבודד נקרא כברירת מחדל לכל
   assert.equal(bookingStatusOf(t.preferences, 'flights'), 'need');
 });
 
-/* ---------- כתיבה ---------- */
+/* ---------- Writing ---------- */
 
 test('הכתיבה הראשונה פורסת את הערך הישן ומוחקת אותו', () => {
   const t = trip({ booking: { stay: 'have', flights: 'need' } });
@@ -82,11 +83,11 @@ test('הכתיבה הראשונה פורסת את הערך הישן ומוחקת
     citySlug: 'vienna',
     citySlugs: t.citySlugs,
   });
-  // ברטיסלבה שמרה על הערך הישן, וינה קיבלה את החדש
+  // Bratislava kept the old value, Vienna got the new one
   assert.deepEqual(patch.bookingByCity?.stay, { bratislava: 'have', vienna: 'need' });
-  // המפתח הישן נעלם, כדי שלא יחזור כברירת מחדל אחרי כיבוי
+  // The old key is gone, so it cannot come back as a default after clearing
   assert.equal(patch.booking?.stay, undefined);
-  // סוג אחר לא נגוע
+  // A different kind is untouched
   assert.equal(patch.booking?.flights, 'need');
 });
 
@@ -96,10 +97,10 @@ test('הבאג שהפריסה מונעת: כיבוי אחרי ערך ישן לא
     citySlug: 'vienna',
     citySlugs: t.citySlugs,
   });
-  // לחיצה על הסטטוס הפעיל מנקה את וינה בלבד
+  // Clicking the active status clears Vienna only
   assert.equal(first.bookingByCity?.stay?.vienna, undefined);
   assert.equal(first.bookingByCity?.stay?.bratislava, 'have');
-  // ובלי המפתח הישן, וינה באמת ריקה ולא נופלת חזרה ל-have
+  // And without the old key, Vienna is truly empty and does not fall back to 'have'
   const after = { ...t.preferences, ...first };
   assert.equal(bookingStatusOf(after, 'stay', 'vienna'), undefined);
 });
@@ -116,8 +117,8 @@ test('עיר אחת לא נוגעת בשנייה', () => {
 
 test('הסוכן קובע ולא מכבה', () => {
   /*
-    "יש לנו מלון בווינה" שנאמר פעמיים חייב להישאר "יש". הכיבוי הוא
-    מחווה של ממשק - לחיצה על מה שכבר פעיל - ולא של שיחה.
+    "We have a hotel in Vienna" said twice must remain "have". The toggle-off is
+    a UI gesture - clicking what is already active - not a conversational one.
   */
   const t = trip({ bookingByCity: { stay: { vienna: 'have' } } });
   const patch = setBookingStatus(t.preferences, 'stay', 'have', {
@@ -127,14 +128,14 @@ test('הסוכן קובע ולא מכבה', () => {
   assert.equal(patch.bookingByCity?.stay?.vienna, 'have');
 });
 
-/* ---------- ספירה ---------- */
+/* ---------- Counting ---------- */
 
 test('כל עיר פתוחה נספרת בנפרד', () => {
   const t = trip({
     booking: { flights: 'need' },
     bookingByCity: { stay: { bratislava: 'need', vienna: 'need' } },
   });
-  // טיסות + שתי ערים בלינה = 3, ולא 2
+  // Flights + two cities in lodging = 3, not 2
   assert.equal(openBookingCount(t), 3);
   assert.deepEqual(citiesNeeding(t, 'stay'), ['bratislava', 'vienna']);
 });
@@ -144,7 +145,7 @@ test('ערך ישן "need" נספר פעם אחת לכל עיר', () => {
   assert.equal(openBookingCount(t), 2);
 });
 
-/* ---------- הסוכן ---------- */
+/* ---------- The agent ---------- */
 
 const run = (t: Trip, input: Record<string, unknown>) =>
   executeAgentTool(t, 'set_booking_status', input, []);
@@ -180,8 +181,9 @@ test('סוג של הטיול כולו עדיין עובד בלי עיר', () => 
 
 test('סיכת מלון מסמנת רק את העיר שלה', () => {
   /*
-    ההערה בקוד אמרה "לעיר" מהיום הראשון, אבל האחסון ידע רק טיול שלם -
-    כך שמלון בווינה סימן גם את ברטיסלבה, והמטייל הפסיק לקבל הצעה לחפש שם.
+    The comment in the code said "for the city" from day one, but the storage
+    only knew a whole trip - so a hotel in Vienna also marked Bratislava, and
+    the traveler stopped getting an offer to search there.
   */
   const t = trip();
   const out = executeAgentTool(

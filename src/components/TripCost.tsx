@@ -9,22 +9,25 @@ import { OFFLINE_HINT } from '@/lib/offline/online';
 import PanelSection, { PanelBody } from '@/components/PanelSection';
 
 /**
- * "כמה מוציאים כאן ביום" - הצד הדטרמיניסטי של העלות.
+ * "How much people spend here per day" - the deterministic side of cost.
  *
- * הרכיב הזה לא יודע להעריך כלום. הוא מקבל נתונים שמורים, קורא ל-
- * `tripCost` שעושה חיבור וכפל, ומצייר את התוצאה. **המודל לא נוגע
- * באף מספר כאן** - לא מייצר, לא מתקן ולא מתאר אותו; אין לו אפילו
- * כלי שמזיז את סגנון הנסיעה (ראו `TripPreferences.travelStyle`).
+ * This component cannot estimate anything. It receives stored data, calls
+ * `tripCost` which does addition and multiplication, and paints the result.
+ * **The model touches no number here** - it does not generate, correct or
+ * describe one; it does not even have a tool that moves the travel style
+ * (see `TripPreferences.travelStyle`).
  *
- * שלוש החלטות תצוגה ששוות אמירה:
- * 1. **בלי סגנון נבחר לא מוצג שום מספר.** ברירת מחדל "ביניים" הייתה
- *    הנחה על התקציב של אדם שלא אמר עליו כלום.
- * 2. **עיר בלי נתון מופיעה בשם ובלי מספר**, והסכום מסומן כחלקי. עיר
- *    שנשמטת בשקט הופכת סכום חלקי לסכום שקרי.
- * 3. הסכומים ב-LTR מבודד. שני מספרים שנפגשים בשורה RTL נדבקים - זה
- *    בדיוק הבאג של "יום 110 באוגוסט" מפיצ׳ר התאריכים.
+ * Three display decisions worth stating:
+ * 1. **With no style selected, no number is shown.** A "mid" default would
+ *    be an assumption about the budget of a person who said nothing about it.
+ * 2. **A city with no data appears by name and with no number**, and the
+ *    total is marked partial. A city dropped silently turns a partial sum
+ *    into a false sum.
+ * 3. The amounts are in isolated LTR. Two numbers meeting on an RTL line
+ *    stick together - exactly the "day 1 / August 10 run together" bug from
+ *    the dates feature.
  */
-/** שם קריא לאתר המקור, מתוך הכתובת עצמה - בלי טבלה שתתיישן */
+/** A readable name for the source site, from the URL itself - no table that goes stale */
 function siteLabel(url: string): string {
   const host = (url.split('/')[2] ?? '').replace(/^www\./, '');
   if (host.includes('budgetyourtrip')) return 'Budget Your Trip';
@@ -42,11 +45,12 @@ export default function TripCost({
   destinations: Destination[];
   onSetPreferences: (patch: Partial<TripPreferences>) => void;
   /**
-   * המספרים עצמם שמורים במכשיר (הם חלק מהבילד), ולכן הם **נקראים
-   * גם בלי רשת** - וזה בדיוק המצב שבו רוצים לדעת כמה עולה יום כאן.
-   * מה שנחסם: בחירת סגנון נסיעה (כתיבה לטיול) והמעבר לאתר המקור.
-   * תאריך הבדיקה מוצג כרגיל - הוא הדבר שהופך מספר שמור למספר ישן
-   * ולא למספר שקרי.
+   * The numbers themselves are stored on the device (they are part of the
+   * build), so they are **readable even without a network** - which is
+   * exactly the situation where you want to know what a day here costs.
+   * What is blocked: choosing a travel style (a write to the trip) and
+   * navigating to the source site. The check date is shown as usual - it
+   * is what turns a stored number into an old number rather than a false one.
    */
   offline?: boolean;
 }) {
@@ -64,10 +68,12 @@ export default function TripCost({
     return map;
   }, [destinations]);
 
-  // מחושב תמיד על 'mid' כשאין בחירה, רק כדי לדעת אם יש בכלל מה להציג.
+  // Always computed on 'mid' when nothing is chosen, only to know whether there
+  // is anything to display at all.
   const result = useMemo(() => tripCost(trip, style ?? 'mid', cities), [trip, style, cities]);
 
-  // אין ולו עיר אחת עם נתון - הרכיב לא מופיע בכלל. עדיף כלום מ"אין מידע".
+  // Not even one city with data - the component does not appear at all.
+  // Nothing beats a "no information" message.
   if (result.lines.length === 0) return null;
 
   const checkedLabel =
@@ -75,9 +81,9 @@ export default function TripCost({
       ? formatHebrewDate(result.checked[0], { year: true })
       : `${formatHebrewDate(result.checked[0])} - ${formatHebrewDate(result.checked[result.checked.length - 1], { year: true })}`;
 
-  // מקור אחד לכל אתר שבשימוש, עם קישור לדף של העיר הראשונה שהגיעה
-  // ממנו. שני מקורות בטיול אחד הוא מצב רגיל כאן, ולכן אסור להציג
-  // קישור אחד כאילו הוא מכסה את כל השורות.
+  // One source per site in use, linking to the page of the first city that
+  // came from it. Two sources in one trip is a normal situation here, so a
+  // single link must not be presented as if it covers all the rows.
   const sources = (() => {
     const out: { url: string; label: string }[] = [];
     for (const line of result.lines) {
@@ -113,7 +119,7 @@ export default function TripCost({
     >
       <PanelBody>
         <div>
-          {/* ---------- סגנון הנסיעה: נבחר פעם אחת, ידנית ---------- */}
+          {/* ---------- Travel style: chosen once, manually ---------- */}
           <div className="flex gap-2">
             {TRAVEL_STYLES.map((s) => {
               const active = style === s.id;
@@ -137,8 +143,9 @@ export default function TripCost({
             })}
           </div>
 
-          {/* ההסבר של הסגנון מופיע רק לזה שנבחר: שלושה הסברים במקביל
-              הפכו את הבלוק השקט הזה לרועש יותר מהמסלול עצמו. */}
+          {/* The style's explanation appears only for the one selected: three
+              explanations side by side made this quiet block noisier than the
+              itinerary itself. */}
           <p className="mt-2 text-xs leading-relaxed text-night/55">
             {style
               ? TRAVEL_STYLES.find((s) => s.id === style)?.hint
@@ -159,8 +166,9 @@ export default function TripCost({
                     <span className="text-xs text-night/40">
                       {line.days === 1 ? 'יום אחד' : `${line.days} ימים`}
                     </span>
-                    {/* נתון ברמת המדינה נאמר בשורה עצמה - הוא גס יותר
-                        מהיעד, ואסור שייקרא כמו מדידה של אותה עיר. */}
+                    {/* Country-level data is stated on the row itself - it is
+                        coarser than the destination, and must not read like a
+                        measurement of that specific city. */}
                     {line.scope === 'country' && (
                       <span className="text-xs text-night/40">נתון ברמת המדינה</span>
                     )}
@@ -174,7 +182,7 @@ export default function TripCost({
                   </li>
                 ))}
 
-                {/* עיר בלי נתון: נאמרת בשם, בלי מספר ובלי הערכה */}
+                {/* A city with no data: named, with no number and no estimate */}
                 {result.missing.map((m) => (
                   <li
                     key={m.citySlug}
@@ -188,7 +196,7 @@ export default function TripCost({
               </ul>
 
               <div className="mt-3 border-t border-night/10 pt-3">
-                {/* תווית אחת, ואחריה סכום לכל מטבע - לא שורה שלמה שחוזרת */}
+                {/* One label, then a total per currency - not a whole repeated row */}
                 <div className="flex flex-wrap items-baseline gap-x-2 text-sm">
                   <span className="font-semibold text-night">
                     {result.complete ? 'לכל הטיול' : 'לערים שיש להן נתון'}
@@ -207,7 +215,8 @@ export default function TripCost({
                     הסכום חלקי: {result.missing.map((m) => m.cityName).join(', ')} לא נכלל בו.
                   </p>
                 )}
-                {/* למה דווקא "בנוח" חסר בהרבה ערים - אחרת זה נראה כמו תקלה */}
+                {/* Why the "comfort" style specifically is missing in many cities -
+                    otherwise it looks like a malfunction */}
                 {style === 'comfort' && result.missing.length > 0 && (
                   <p className="mt-1 text-xs text-night/45">
                     לסגנון "בנוח" יש נתון רק בחלק מהערים: המקור הרחב יותר מפרסם מדרגה עליונה פתוחה,
@@ -219,18 +228,20 @@ export default function TripCost({
               <p className="mt-3 text-xs leading-relaxed text-night/55">
                 כך מוציאים מטיילים בערים האלה בדרך כלל, לאדם ליום. זו לא תחזית להוצאות שלכם.{' '}
                 <span className="font-semibold text-night/70">בלי טיסות ובלי לינה.</span>
-                {/* ההסבר על משמעות הטווח נכון רק לשורות שנבנו מחיבור
-                    שורות הקטגוריות. לשורה שהמקור שלה פרסם טווח מוכן,
-                    המשפט הזה פשוט לא נכון - ולכן הוא מותנה. */}
+                {/* The explanation of what the range means is correct only for
+                    rows built by summing the category rows. For a row whose
+                    source published a ready-made range, that sentence is simply
+                    wrong - hence it is conditional. */}
                 {result.bases.length === 1 && result.bases[0] === 'components'
                   ? ' הקצה התחתון הוא תחבורה מקומית ואוכל; העליון מוסיף גם כניסות ואטרקציות.'
                   : ' הטווח הוא כפי שהמקור מוסר אותו לכל עיר.'}
                 {result.hasUpperBound && ' בעיר אחת לפחות הנתון הוא חסם עליון ("עד"), לא טווח.'}
               </p>
               <p className="mt-1 text-xs text-night/40">
-                נבדק ב־{checkedLabel} · {/* מקור לכל עיר, ולא קישור אחד שמתחזה לכסות את כולן */}
-                {/* בלי רשת המקור נאמר בשם ולא כקישור: קישור שנלחץ ולא
-                    נפתח נראה כמו אתר שבור, ושם המקור הוא המידע החשוב. */}
+                נבדק ב־{checkedLabel} · {/* A source per city, not one link pretending to cover them all */}
+                {/* Offline, the source is named rather than linked: a link that
+                    is clicked and does not open looks like a broken site, and
+                    the source's name is the important information. */}
                 {sources.map((s, i) => (
                   <span key={s.url}>
                     {i > 0 && ' · '}

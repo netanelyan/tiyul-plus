@@ -1,51 +1,57 @@
 /*
- * Service worker של טיול+ - קיים בשביל דבר אחד: שהאפליקציה תיפתח
- * בלי רשת ותצייר את המסלול שכבר נפתח פעם אחת מחוברים.
+ * tiyul+ service worker - exists for one thing: that the app opens
+ * without a network and draws the itinerary that was already opened once
+ * while connected.
  *
- * נכתב ביד ולא דרך ספרייה (workbox / next-pwa) - חוק קשיח 6, בלי
- * תלויות כבדות חדשות. הוא בכוונה קטן ושמרני:
+ * Written by hand and not through a library (workbox / next-pwa) - hard
+ * rule 6, no new heavy dependencies. It is deliberately small and
+ * conservative:
  *
- *  - **שומר רק מה שנצפה.** אין precache של הקטלוג ואין רשימת כתובות
- *    לרוץ עליה בהתקנה. מה שהמשתמש פתח - נשמר; השאר לא.
- *  - **לא נוגע בשום דבר שאינו GET**, ולא בנתיבי ה-AI, החשבון או
- *    התשלומים. תשובה של מודל אינה משהו שמגישים מהמטמון.
- *  - **לא ממציא הצלחה.** בקשה שאין לה תשובה שמורה נכשלת כמו שהיא
- *    נכשלת; ה-UI הוא זה שאומר "אין חיבור", לא ה-SW.
+ *  - **Caches only what was viewed.** No precache of the catalog and no URL
+ *    list to run through on install. What the user opened is kept; the rest
+ *    is not.
+ *  - **Touches nothing that is not GET**, and none of the AI, account or
+ *    billing routes. A model reply is not something to serve from a cache.
+ *  - **Never invents success.** A request with no cached response fails the
+ *    way it fails; the UI is what says "no connection", not the SW.
  */
 
 /**
- * מעלים את המספר הזה **בכל פעם שמשהו במעטפת האתר משתנה ואנשים חייבים
- * לראות אותו** - פוטר, ניווט, טקסט משפטי.
+ * Bump this number **every time something in the site shell changes and
+ * people must see it** - footer, navigation, legal text.
  *
- * למה זה נחוץ: `activate` מוחק כל מטמון `tiyul-*` שאינו נושא את הגרסה
- * הזאת. כל עוד המספר לא זז, ה-HTML של המסכים שכבר נשמרו נשאר במטמון
- * SHELL. ניווט הוא network-first ולכן בדרך כלל מתרענן לבד - אבל
- * "בדרך כלל" הוא לא מספיק כשמדובר בקישור לתנאי שימוש: נתנאל לא ראה את
- * הפוטר החדש אף שהוא כבר היה בפרודקשן, וזו בדיוק התסמונת.
+ * Why this is needed: `activate` deletes every `tiyul-*` cache that does not
+ * carry this version. As long as the number does not move, the HTML of
+ * already-cached screens stays in the SHELL cache. Navigation is
+ * network-first and therefore usually refreshes on its own - but "usually"
+ * is not enough when it comes to a terms-of-use link: Netanel did not see
+ * the new footer even though it was already in production, and that is
+ * exactly the symptom.
  */
 const VERSION = 'v2';
-const SHELL = `tiyul-shell-${VERSION}`; // HTML של מסכים שנצפו
-const ASSETS = `tiyul-assets-${VERSION}`; // _next/static, פונטים, אייקונים
-const PHOTOS = `tiyul-photos-${VERSION}`; // תמונות שכבר נראו
-const DATA = `tiyul-data-${VERSION}`; // /api/cities בלבד
+const SHELL = `tiyul-shell-${VERSION}`; // HTML of screens that were viewed
+const ASSETS = `tiyul-assets-${VERSION}`; // _next/static, fonts, icons
+const PHOTOS = `tiyul-photos-${VERSION}`; // photos already seen
+const DATA = `tiyul-data-${VERSION}`; // /api/cities only
 
-/** תקרה לתמונות: ~300 תמונות בגודל כרטיס הן עשרות מגה, וזה הגבול */
+/** Photo ceiling: ~300 card-sized photos are tens of MB, and that is the limit */
 const MAX_PHOTOS = 300;
 
 /**
- * תקרה לנכסי הבילד. שמותיהם נושאים hash, ולכן נכסים של בילד ישן לא
- * נדרסים לעולם - בלי תקרה, כל deploy שהמשתמש ביקר בו מוסיף שכבה
- * שלמה ולא מפנה כלום. הגיזום הוא לפי סדר הכנסה, כלומר הבילדים הישנים
- * יוצאים ראשונים. **המספר גדול בכוונה:** גיזום אגרסיבי מדי היה יכול
- * למחוק דווקא את ה-chunks של הבילד הנוכחי, ואז האפליקציה לא נפתחת
- * בלי רשת בכלל - כישלון חמור בהרבה מכמה מגה מיותרים.
+ * Ceiling for build assets. Their names carry a hash, so assets of an old
+ * build are never overwritten - without a ceiling, every deploy the user
+ * visited adds a whole layer and frees nothing. Pruning is by insertion
+ * order, i.e. the old builds go out first. **The number is large on
+ * purpose:** overly aggressive pruning could delete precisely the current
+ * build's chunks, and then the app does not open offline at all - a far
+ * worse failure than a few extra MB.
  */
 const MAX_ASSETS = 250;
 
-/** מארחי תמונות שמותר לשמור. רשימה סגורה במכוון. */
+/** Photo hosts allowed to be cached. A deliberately closed list. */
 const PHOTO_HOSTS = ['upload.wikimedia.org', 'images.unsplash.com', 'flagcdn.com'];
 
-/** נתיבים שאסור לגעת בהם - חיים, אישיים או כספיים */
+/** Paths that must never be touched - live, personal or financial */
 const NEVER = [
   '/api/chat',
   '/api/generate-trip',
@@ -59,20 +65,23 @@ const NEVER = [
 ];
 
 self.addEventListener('install', (event) => {
-  // אין precache: אנחנו לא יודעים כאן את שמות ה-chunks של הבילד, וגם
-  // לא רוצים להוריד מסכים שהמשתמש לא ביקש. skipWaiting כדי שגרסה
-  // חדשה תיכנס לתוקף בלי שהמשתמש יצטרך לסגור את כל הטאבים.
+  // No precache: we do not know the build's chunk names here, and we also
+  // do not want to download screens the user did not ask for. skipWaiting
+  // so a new version takes effect without the user having to close all
+  // their tabs.
   event.waitUntil(self.skipWaiting());
 });
 
 /**
- * שלושת המסכים שמהם נפתח טיול. **זה לא precache של הקטלוג** - אלה שלושה
- * מסמכי HTML של כמה עשרות kB, בלי דאטה של ערים ובלי מקומות.
+ * The three screens a trip opens from. **This is not a precache of the
+ * catalog** - these are three HTML documents of a few tens of kB, with no
+ * city data and no places.
  *
- * למה זה הכרחי: ה-SW נרשם בטעינה הראשונה אבל **לא הגיש אותה**, ולכן
- * אחרי ביקור יחיד מטמון המסכים ריק לגמרי - נמדד: 0 מסכים ו-2 נכסים.
- * מי שנכנס פעם אחת ואז יורד לרכבת התחתית היה מקבל את דינוזאור הניתוק
- * של הדפדפן, כלומר בדיוק את הכישלון שהפיצ׳ר הזה בא למנוע.
+ * Why this is essential: the SW registers on the first load but **did not
+ * serve it**, so after a single visit the screen cache is completely empty -
+ * measured: 0 screens and 2 assets. Somebody who visited once and then went
+ * down into the subway would get the browser's offline dinosaur, i.e.
+ * exactly the failure this feature exists to prevent.
  */
 const SHELL_ROUTES = ['/chat', '/planner', '/'];
 
@@ -83,7 +92,7 @@ self.addEventListener('activate', (event) => {
       await Promise.all(
         keys.filter((k) => k.startsWith('tiyul-') && !k.endsWith(VERSION)).map((k) => caches.delete(k)),
       );
-      // best-effort: מסך שלא נענה פשוט לא נשמר, וזה לא מפיל את ההפעלה
+      // best-effort: a screen that does not respond simply is not cached, and that does not fail activation
       const cache = await caches.open(SHELL);
       await Promise.all(
         SHELL_ROUTES.map(async (path) => {
@@ -91,7 +100,7 @@ self.addEventListener('activate', (event) => {
             const res = await fetch(path, { credentials: 'same-origin' });
             if (res && res.status === 200) await cache.put(path, res.clone());
           } catch {
-            /* אין רשת בדיוק עכשיו - יישמר בניווט הבא */
+            /* no network right now - it will be cached on the next navigation */
           }
         }),
       );
@@ -101,11 +110,12 @@ self.addEventListener('activate', (event) => {
 });
 
 /**
- * הדף מדווח אילו נכסי בילד הוא באמת טען. גם כאן הסיבה היא שהטעינה
- * הראשונה לא עברה דרך ה-SW: ה-chunks שלה כבר בזיכרון הדפדפן ולא
- * במטמון שלנו, ובלעדיהם יש HTML שמור בלי JavaScript להפעיל אותו.
- * נשמרים **רק** נתיבי `/_next/static/` מאותו origin - הדף לא יכול
- * לבקש מכאן לשמור שום דבר אחר.
+ * The page reports which build assets it actually loaded. Here too the
+ * reason is that the first load did not pass through the SW: its chunks are
+ * already in the browser's memory and not in our cache, and without them
+ * there is cached HTML with no JavaScript to run it.
+ * **Only** `/_next/static/` paths from the same origin are cached - the
+ * page cannot ask us here to cache anything else.
  */
 self.addEventListener('message', (event) => {
   const data = event.data;
@@ -127,7 +137,7 @@ self.addEventListener('message', (event) => {
           const res = await fetch(url.href);
           if (res && res.status === 200) await cache.put(url.href, res.clone());
         } catch {
-          /* מדלגים - זה חימום, לא נתיב קריטי */
+          /* skip - this is warming, not a critical path */
         }
       }
       await trim(ASSETS, MAX_ASSETS);
@@ -135,7 +145,7 @@ self.addEventListener('message', (event) => {
   );
 });
 
-/** גוזם מטמון לפי סדר הכנסה (הישן ביותר יוצא ראשון) */
+/** Prunes a cache by insertion order (oldest goes out first) */
 async function trim(cacheName, max) {
   const cache = await caches.open(cacheName);
   const keys = await cache.keys();
@@ -148,7 +158,8 @@ async function cacheFirst(request, cacheName, max) {
   const hit = await cache.match(request);
   if (hit) return hit;
   const res = await fetch(request);
-  // רק תשובות תקינות. שמירת 404 או תשובת שגיאה היא הדרך להנציח תקלה.
+  // Only healthy responses. Caching a 404 or an error response is how a
+  // failure gets immortalized.
   if (res && res.status === 200) {
     await cache.put(request, res.clone());
     if (max) await trim(cacheName, max);
@@ -185,7 +196,7 @@ self.addEventListener('fetch', (event) => {
 
   if (sameOrigin && NEVER.some((p) => url.pathname.startsWith(p))) return;
 
-  // תמונות מארחים מוכרים: מה שנראה פעם אחת נשאר זמין בשטח.
+  // Photos from known hosts: what was seen once stays available in the field.
   if (PHOTO_HOSTS.includes(url.hostname)) {
     event.respondWith(cacheFirst(request, PHOTOS, MAX_PHOTOS).catch(() => Response.error()));
     return;
@@ -193,27 +204,29 @@ self.addEventListener('fetch', (event) => {
 
   if (!sameOrigin) return;
 
-  // נכסי בילד: בעלי hash בשם, ולכן immutable - cache-first בלי חשש.
+  // Build assets: hashed names, therefore immutable - cache-first without worry.
   if (url.pathname.startsWith('/_next/static/') || url.pathname.startsWith('/fonts/')) {
     event.respondWith(cacheFirst(request, ASSETS, MAX_ASSETS));
     return;
   }
 
-  // הערים של הטיול. יש גם מטמון ב-localStorage (`cityStore`), וזה
-  // כאן הוא חגורה שנייה: היא מכסה גם את הבקשה הראשונה של טאב חדש.
+  // The trip's cities. There is also a localStorage cache (`cityStore`), and
+  // this one here is a second belt: it also covers a new tab's first request.
   if (url.pathname === '/api/cities') {
     event.respondWith(networkFirst(request, DATA).catch(() => Response.error()));
     return;
   }
 
-  // מסכים: תמיד מנסים רשת קודם (תוכן טרי), ונופלים למסך השמור.
+  // Screens: always try the network first (fresh content), and fall back to
+  // the cached screen.
   if (request.mode === 'navigate') {
     event.respondWith(
       networkFirst(request, SHELL).catch(async () => {
         const cache = await caches.open(SHELL);
-        // אותו נתיב לא נשמר? מנסים את מסך הטיול, שהוא מה שמחפשים
-        // בשטח, ואז את הבית. אם גם הם לא - הדפדפן יציג את מסך
-        // הניתוק שלו, וזה עדיף על עמוד ריק משלנו שמתחזה לאפליקציה.
+        // This exact path was not cached? Try the trip screen, which is what
+        // people look for in the field, then the homepage. If those are
+        // missing too - the browser shows its own offline screen, which
+        // beats a blank page of ours that pretends to be the app.
         return (
           (await cache.match('/planner')) ||
           (await cache.match('/chat')) ||
@@ -225,7 +238,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // ה-RSC payloads של Next (?_rsc=) ושאר ה-GET: רשת קודם, מטמון כגיבוי
+  // Next's RSC payloads (?_rsc=) and the rest of the GETs: network first, cache as fallback
   if (url.pathname.startsWith('/_next/')) {
     event.respondWith(networkFirst(request, ASSETS).catch(() => Response.error()));
   }

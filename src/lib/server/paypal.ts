@@ -1,33 +1,37 @@
 /**
- * שרת בלבד - **PayPal בלי SDK** (חוק ברזל 6: בלי תלות חדשה), באותו סגנון
- * בדיוק כמו `server/billing.ts` (Stripe) ו-`server/viator.ts`: REST ישיר
- * עם `fetch`, מפתחות בסביבת השרת בלבד, ותמיד `AbortSignal.timeout`.
+ * Server-only - **PayPal without an SDK** (hard rule 6: no new dependency), in
+ * exactly the same style as `server/billing.ts` (Stripe) and `server/viator.ts`:
+ * direct REST with `fetch`, keys in the server environment only, and always
+ * `AbortSignal.timeout`.
  *
- * ## שני כללים שהקובץ הזה קיים כדי לאכוף
+ * ## Two rules this file exists to enforce
  *
- * 1. **המחיר לא מגיע מהלקוח.** `createOrder` מקבל `priceILS` כפרמטר -
- *    הקוראים היחידים לו (`/api/checks/create-order`) מעבירים את הקבוע
- *    מ-`lib/predeparture.ts`, אף פעם לא ערך מגוף הבקשה.
- * 2. **אין כאן שום דבר שמעניק גישה.** הקובץ הזה יודע לדבר עם PayPal -
- *    ליצור הזמנה, ללכוד תשלום, ולאמת חתימת webhook. **מה שקורה עם
- *    התוצאה** (מתי `purchases.status` הופך ל-`paid`) הוא ב-`purchases.ts`
- *    ובנתיב ה-webhook בלבד. לכידה מוצלחת כאן היא לא הענקה.
+ * 1. **The price does not come from the client.** `createOrder` receives
+ *    `priceILS` as a parameter - its only callers (`/api/checks/create-order`)
+ *    pass the constant from `lib/predeparture.ts`, never a value from the
+ *    request body.
+ * 2. **Nothing here grants access.** This file knows how to talk to PayPal -
+ *    create an order, capture a payment, and verify a webhook signature. **What
+ *    happens with the result** (when `purchases.status` becomes `paid`) lives in
+ *    `purchases.ts` and the webhook route only. A successful capture here is not
+ *    a grant.
  *
- * ## מצב (sandbox/production), באותה תבנית בדיוק כמו Viator
+ * ## Mode (sandbox/production), in exactly the same pattern as Viator
  *
- * המפתח החי לא נכנס לשימוש עד ש-`PAYPAL_MODE=production` נכתב במפורש,
- * גם אם המפתח כבר מוגדר. `sandboxBlocked` חוסם דומיין חי ממצב sandbox -
- * אותה בדיקה, אותם `PROD_HOSTS`, אותה סיבה: רכישת בדיקה על הדומיין
- * האמיתי היא הדבר שאסור שיקרה אפילו פעם אחת.
+ * The live key does not enter use until `PAYPAL_MODE=production` is written
+ * explicitly, even if the key is already configured. `sandboxBlocked` blocks a
+ * live domain from sandbox mode - same check, same `PROD_HOSTS`, same reason: a
+ * test purchase on the real domain is the thing that must not happen even once.
  */
 
 export type PaypalMode = 'off' | 'sandbox' | 'production';
 
 /**
- * דורשת את שלושת האישורים - כולל `webhookId` - ולא רק client id/secret.
- * בלעדיה מצב יכול "להיראות" מוגדר (`paypalConfigured()` אומר כן) בזמן
- * שאימות ה-webhook נכשל תמיד כי אין webhook id לבדוק מולו - מצב גרוע
- * מ"לא מוגדר": מציג כפתור תשלום שתמיד ייכשל בשקט בסוף.
+ * Requires all three credentials - including `webhookId` - and not just the
+ * client id/secret. Without it a mode can "look" configured
+ * (`paypalConfigured()` says yes) while webhook verification always fails
+ * because there is no webhook id to check against - a state worse than "not
+ * configured": it shows a payment button that always fails silently at the end.
  */
 export function paypalMode(): PaypalMode {
   const raw = (process.env.PAYPAL_MODE ?? '').toLowerCase();
@@ -54,24 +58,26 @@ function credentials(mode: PaypalMode): { clientId: string; secret: string; webh
   return null;
 }
 
-/** ניתן לדריסה מלאה בטסטים/אימות מול שרת מדומה - כמו STRIPE_API_BASE ו-VIATOR_BASE_URL */
+/** Fully overridable in tests/verification against a mock server - like STRIPE_API_BASE and VIATOR_BASE_URL */
 export const paypalApiBase = (mode: PaypalMode) =>
   process.env.PAYPAL_API_BASE ??
   (mode === 'production' ? 'https://api-m.paypal.com' : 'https://api-m.sandbox.paypal.com');
 
-/** דף הכניסה של PayPal עצמו, לבניית קישור אישור כגיבוי אם התשובה לא נשאה `links` */
+/** PayPal's own checkout host, for building an approval link as a fallback if the response carried no `links` */
 const CHECKOUT_HOST = (mode: PaypalMode) =>
   mode === 'production' ? 'https://www.paypal.com' : 'https://www.sandbox.paypal.com';
 
 /**
- * הדומיין החי. במצב sandbox בקשה מהדומיין הזה נדחית באופן גורף - אין
- * דרך שרכישת בדיקה תעניק גישה אמיתית למישהו אמיתי, אפילו לא בטעות
- * תצורה. אותה רשימה בדיוק כמו `server/viator.ts`.
+ * The live domain. In sandbox mode a request from this domain is rejected
+ * outright - there is no way a test purchase grants real access to a real
+ * person, not even by a configuration mistake. Exactly the same list as
+ * `server/viator.ts`.
  *
- * **חריגה מכוונת, לבדיקה זמנית בלבד:** `PAYPAL_ALLOW_SANDBOX_LIVE_DOMAIN=true`
- * מבטל את החסימה הזאת. זה דגל נפרד ומפורש - לא הסרה של הבדיקה - כדי
- * שכיבוי החזרה יהיה הסרת משתנה סביבה אחד ב-Vercel ולא דיפלוי שני של
- * קוד. **למחוק את המשתנה הזה מ-Vercel ברגע שהבדיקה נגמרת.**
+ * **A deliberate exception, for temporary testing only:**
+ * `PAYPAL_ALLOW_SANDBOX_LIVE_DOMAIN=true` disables this block. It is a
+ * separate, explicit flag - not a removal of the check - so turning it back
+ * off is deleting one env var in Vercel and not a second code deploy.
+ * **Delete this variable from Vercel the moment the test is over.**
  */
 const PROD_HOSTS = new Set(['tiyulplus.com', 'www.tiyulplus.com']);
 
@@ -82,7 +88,7 @@ export function sandboxBlocked(host: string | null, mode: PaypalMode): boolean {
   return PROD_HOSTS.has(h);
 }
 
-/* ============ 1. טוקן OAuth, במטמון קצר ============ */
+/* ============ 1. OAuth token, briefly cached ============ */
 
 interface TokenEntry {
   token: string;
@@ -90,7 +96,7 @@ interface TokenEntry {
 }
 const tokenCache = new Map<PaypalMode, TokenEntry>();
 
-/** מיוצא עבור paypalSubs.ts (מנוי הפרימיום) - אותו OAuth, אותו מטמון */
+/** Exported for paypalSubs.ts (the premium subscription) - same OAuth, same cache */
 export async function accessToken(mode: PaypalMode): Promise<string | null> {
   const cached = tokenCache.get(mode);
   if (cached && cached.expiresAt > Date.now() + 30_000) return cached.token;
@@ -119,15 +125,15 @@ export async function accessToken(mode: PaypalMode): Promise<string | null> {
   }
 }
 
-/* ============ 2. יצירת הזמנה ============ */
+/* ============ 2. Order creation ============ */
 
 export interface CreateOrderInput {
-  /** מזהה השורה שלנו ב-purchases - נשלח כ-custom_id/reference_id, ומשמש מפתח אידמפוטנטיות ליצירה עצמה */
+  /** Our row id in purchases - sent as custom_id/reference_id, and used as the idempotency key for the creation itself */
   purchaseId: string;
-  /** ש"ח, שני עמודות עשרוניות - **תמיד מהקבוע ב-lib/predeparture.ts, אף פעם לא מהלקוח** */
+  /** ILS, two decimal places - **always from the constant in lib/predeparture.ts, never from the client** */
   priceILS: number;
   tripName: string;
-  /** לאן PayPal מחזיר את הדפדפן - אנחנו בונים אותו עם purchaseId משלנו, ולא סומכים על שום דבר ש-PayPal יוסיף */
+  /** Where PayPal returns the browser - we build it with our own purchaseId, and trust nothing PayPal appends */
   returnUrl: string;
   cancelUrl: string;
 }
@@ -138,9 +144,10 @@ export interface CreatedOrder {
 }
 
 /**
- * חיובי, ובעל לכל היותר שתי ספרות אחרי הנקודה. בדיקה דרך `toFixed`
- * ולא `n * 100` בכוונה - `29.9 * 100` הוא `2990.0000000000005` בדיוק
- * הצף של JS, וכפל ישיר היה דוחה בטעות את המחיר האמיתי שלנו.
+ * Positive, with at most two digits after the decimal point. Checked via
+ * `toFixed` and not `n * 100` on purpose - `29.9 * 100` is
+ * `2990.0000000000005` in JS float precision, and a direct multiply would have
+ * wrongly rejected our actual price.
  */
 function isFinite2dp(n: number): boolean {
   return Number.isFinite(n) && n > 0 && Number(n.toFixed(2)) === n;
@@ -157,8 +164,8 @@ export async function createOrder(mode: PaypalMode, input: CreateOrderInput): Pr
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
-        // מפתח אידמפוטנטיות של PayPal עצמו: קריאה כפולה עם אותו מזהה
-        // (למשל דאבל-קליק על "תשלום") לא יוצרת שתי הזמנות.
+        // PayPal's own idempotency key: a duplicate call with the same id
+        // (e.g. a double-click on the pay button) does not create two orders.
         'PayPal-Request-Id': `order:${input.purchaseId}`,
       },
       body: JSON.stringify({
@@ -193,7 +200,7 @@ export async function createOrder(mode: PaypalMode, input: CreateOrderInput): Pr
     };
     if (typeof data.id !== 'string') return null;
     const approve = data.links?.find((l) => l.rel === 'approve')?.href;
-    // גיבוי: אם התשובה חריגה ולא נשאה קישור, בונים אותו מהצורה הידועה של PayPal
+    // Fallback: if the response is abnormal and carried no link, build it from PayPal's known URL shape
     const approveUrl = approve ?? `${CHECKOUT_HOST(mode)}/checkoutnow?token=${data.id}`;
     return { orderId: data.id, approveUrl };
   } catch {
@@ -201,16 +208,16 @@ export async function createOrder(mode: PaypalMode, input: CreateOrderInput): Pr
   }
 }
 
-/* ============ 3. לכידה - **לא מעניקה גישה בעצמה** ============ */
+/* ============ 3. Capture - **does not grant access by itself** ============ */
 
 export type CaptureOutcome =
   | { ok: true; captureId: string; status: string; amountValue: string; currencyCode: string; payerEmail: string | null }
   | { ok: false; reason: 'not-configured' | 'network' | 'declined' | 'bad-response' };
 
 /**
- * לוכדת תשלום שכבר אושר ב-PayPal. **התשובה כאן אינה משמשת להענקת
- * גישה** - ראו את הכותרת של הקובץ. תפקידה היחיד הוא לגרום לכסף לזוז;
- * ה-webhook שמגיע בעקבות זה הוא מה שבאמת קובע.
+ * Captures a payment already approved on PayPal. **The response here is not
+ * used to grant access** - see the file header. Its only role is to make the
+ * money move; the webhook that follows is what actually decides.
  */
 export async function captureOrder(mode: PaypalMode, orderId: string): Promise<CaptureOutcome> {
   const token = await accessToken(mode);
@@ -260,7 +267,7 @@ export async function captureOrder(mode: PaypalMode, orderId: string): Promise<C
   }
 }
 
-/* ============ 4. אימות webhook ============ */
+/* ============ 4. Webhook verification ============ */
 
 export interface WebhookHeaders {
   authAlgo: string | null;
@@ -271,10 +278,12 @@ export interface WebhookHeaders {
 }
 
 /**
- * אימות חתימת webhook מול PayPal עצמו (`/v1/notifications/verify-webhook-signature`)
- * - זו הדרך המתועדת והמומלצת של PayPal לאינטגרציה בלי SDK, והיא
- * שקולה במהות ל-HMAC הידני שנעשה עבור Stripe: אימות שרת-לשרת, בלי
- * לקוח באמצע, מול הסוד (`webhook_id`) שהוגדר כאן ולא מה שהגיע בבקשה.
+ * Webhook signature verification against PayPal itself
+ * (`/v1/notifications/verify-webhook-signature`) - this is PayPal's documented
+ * and recommended way for an SDK-less integration, and it is essentially
+ * equivalent to the manual HMAC done for Stripe: server-to-server verification,
+ * no client in the middle, against the secret (`webhook_id`) configured here
+ * and not whatever arrived in the request.
  */
 export async function verifyWebhookSignature(
   mode: PaypalMode,
@@ -287,9 +296,9 @@ export async function verifyWebhookSignature(
     return false;
   }
 
-  // נבדק לפני קריאת הרשת ל-OAuth בכוונה: גוף פגום לא אמור לעלות לנו
-  // קריאה ל-PayPal, ובוודאי לא להיות הסיבה הראשונה שרואים אם הבדיקה
-  // נכשלת - כישלון פרסור הוא זול, ולכן הוא בא ראשון.
+  // Deliberately checked before the OAuth network call: a corrupt body should
+  // not cost us a call to PayPal, and certainly not be the first thing seen when
+  // the check fails - a parse failure is cheap, so it comes first.
   let event: unknown;
   try {
     event = JSON.parse(rawBody);
@@ -323,7 +332,7 @@ export async function verifyWebhookSignature(
   }
 }
 
-/** לבדיקות בלבד */
+/** For tests only */
 export function resetPaypalCacheForTest(): void {
   tokenCache.clear();
 }

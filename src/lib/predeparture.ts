@@ -2,50 +2,56 @@ import { countdown } from '@/lib/trip/dates';
 import type { Trip } from '@/lib/trip/types';
 
 /**
- * "בדיקה לפני הנסיעה" - המוצר הראשון בתשלום באתר.
+ * The "pre-departure check" - the site's first paid product.
  *
- * קובץ משותף (לקוח + שרת), **בלי שום סוד**: מחיר, זיהוי המוצר, חלון
- * ההצעה וצורת הדו"ח. המחיר נקבע **כאן בלבד** ונקרא רק מהשרת בפועל
- * (`server/paypal.ts` בונה את ההזמנה מהקבוע הזה) - הלקוח מציג אותו
- * לצורך תצוגה, ואף בקשה שיוצאת מהדפדפן לא נושאת סכום.
+ * A shared file (client + server), **with no secret in it**: price,
+ * product id, offer window and the report's shape. The price is set
+ * **here only** and is actually read only by the server
+ * (`server/paypal.ts` builds the order from this constant) - the client
+ * shows it for display purposes, and no request leaving the browser
+ * carries an amount.
  *
- * ## למה זה לא tier ולא מנוי
+ * ## Why this is not a tier and not a subscription
  *
- * זו רכישה חד-פעמית **לטיול ספציפי**, לא הרשאה שמשתנה מ-`free` ל-
- * `premium`. אין לזה קשר ל-`Plan`/`Tier` ב-`lib/plans.ts` ואסור שיהיה -
- * שום פיצ'ר קיים לא נבדק מול המוצר הזה.
+ * This is a one-time purchase **for a specific trip**, not a permission
+ * that changes from `free` to `premium`. It has no connection to
+ * `Plan`/`Tier` in `lib/plans.ts` and must never have one - no existing
+ * feature is gated against this product.
  */
 
 export const PRODUCT_ID = 'predeparture-check';
 
-/** ₪29.90, החלטת נתנאל. שתי ספרות אחרי הנקודה - זה מה ש-PayPal מצפה לו ב-ILS. */
+/** 29.90 ILS, Netanel's decision. Two digits after the point - that is what PayPal expects for ILS. */
 export const PRICE_ILS = 29.9;
 export const CURRENCY = 'ILS';
 
-/** לתצוגה בממשק */
+/** For display in the UI */
 export const priceLabel = () => `${PRICE_ILS.toFixed(2)} ₪`;
 
 /**
- * חלון ההצעה: כמה ימים לפני היציאה הבדיקה נחשבת "שווה משהו". מחוץ
- * לחלון הזה (רחוק מדי, כבר באמצע הטיול, או הטיול הסתיים) ההצעה פשוט
- * לא מוצגת - היא לא רלוונטית, לא "עדיין לא זמינה".
+ * The offer window: how many days before departure the check is
+ * considered "worth something". Outside this window (too far out, already
+ * mid-trip, or the trip is over) the offer is simply not shown - it is
+ * irrelevant, not "not yet available".
  *
- * 21 יום נבחר כי זה בערך הרגע שבו מזג האוויר, סגירות ואירועים מתחילים
- * להיות דבר שבאמת שווה לבדוק מחדש - שבועיים-שלושה לפני נסיעה אמיתית,
- * לא שלושה חודשים מראש כשהתוכנית עוד תזוז.
+ * 21 days was chosen because that is roughly the moment when weather,
+ * closures and events start being things genuinely worth re-checking -
+ * two-three weeks before a real trip, not three months out while the plan
+ * will still move.
  */
 export const OFFER_WINDOW_DAYS = 21;
 
 export interface EligibilityResult {
   eligible: boolean;
-  /** למה לא, לצורכי דיבוג/טסטים - לא מוצג למשתמש כמו שהוא */
+  /** Why not, for debugging/tests - never shown to the user as-is */
   reason?: 'no-dates' | 'too-early' | 'in-progress-or-past';
 }
 
 /**
- * האם שווה להציע את הבדיקה לטיול הזה **כרגע**. נבדק תמיד מול תאריך
- * אמיתי שנמסר מבחוץ (`todayISO`) - לא `Date.now()` בפנים - כדי שהתצוגה
- * תהיה דטרמיניסטית בטסטים ולא תלויה בשעון ה-hydration.
+ * Whether it is worth offering the check for this trip **right now**.
+ * Always checked against a real date supplied from outside (`todayISO`) -
+ * not an internal `Date.now()` - so the display is deterministic in tests
+ * and does not depend on the hydration clock.
  */
 export function checkOfferEligibility(trip: Pick<Trip, 'startDate' | 'endDate'>, todayISO: string): EligibilityResult {
   if (!trip.startDate) return { eligible: false, reason: 'no-dates' };
@@ -58,7 +64,7 @@ export function checkOfferEligibility(trip: Pick<Trip, 'startDate' | 'endDate'>,
   return { eligible: false, reason: 'in-progress-or-past' };
 }
 
-/* ============ צורת הדו"ח ============ */
+/* ============ The report's shape ============ */
 
 export interface ReportPlaceFlag {
   dayNumber: number;

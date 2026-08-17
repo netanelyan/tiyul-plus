@@ -6,169 +6,188 @@ import { serviceHeaders } from '@/lib/server/supabaseAdmin';
 import { SUBSCRIBER_MONTHLY_CAP_USD } from '@/lib/plans';
 
 /**
- * שרת בלבד - **תקרת ההוצאה על ה-AI**, בשני ארנקים ועם תקרה אישית.
+ * Server only - **the AI spending ceiling**, with two wallets and a per-caller cap.
  *
- * ## מה השתנה, ולמה זה מבני
+ * ## What changed, and why it is structural
  *
- * הגרסה הראשונה הייתה ארנק אחד. נתנאל הצביע על הפגם: מבקר אנונימי
- * אחד יכול לשרוף חלק גדול מהתקרה, וכמה כאלה מכבים את הסוכן **לכולם**
- * עד חצות. זה הופך בעיית עלות לנפילה, וזה גרוע יותר.
+ * The first version was a single wallet. Netanel pointed out the flaw: one
+ * anonymous visitor can burn a large share of the ceiling, and a handful of
+ * them switch the agent off **for everyone** until midnight. That turns a
+ * cost problem into an outage, which is worse.
  *
- * שתי הגנות, שתיהן:
+ * Two protections, both of them:
  *
- * 1. **שני ארנקים.** לתנועה אנונימית יש תקציב משלה - `anonShare()` מהיום,
- *    מתכוונן בלי דיפלוי מ-/admin (ראו שם). מחוברים מושכים מ"כל מה
- *    שאנונימיים לא הוציאו", ולכן **תמיד** נשאר להם לפחות
- *    `1 - anonShare()` מהיום, ואין דרך שבה אנונימי יכבה אותם - בלי
- *    תלות בערך של anonShare() באותו רגע.
- * 2. **תקרה אישית.** אף זהות - מחוברת או לא - לא יכולה לעבור חלק קטן
- *    מהיום. גם עשרה מנצלים לא מכבים את המוצר, הם רק מכבים את עצמם.
+ * 1. **Two wallets.** Anonymous traffic has its own budget - `anonShare()` of
+ *    the day, tunable without a deploy from /admin (see there). Signed-in
+ *    users draw from "everything anonymous traffic has not spent", so they
+ *    **always** keep at least `1 - anonShare()` of the day, and there is no
+ *    path by which an anonymous caller can switch them off - regardless of
+ *    the value of anonShare() at that moment.
+ * 2. **A per-caller cap.** No identity - signed in or not - can exceed a small
+ *    fraction of the day. Even ten abusers cannot switch off the product,
+ *    they only switch off themselves.
  *
- * ## למה מחוברים לא מקבלים ארנק קשיח משלהם
+ * ## Why signed-in users do not get a hard wallet of their own
  *
- * שני ארנקים קשיחים היו יוצרים את הבעיה ההפוכה: ביום שקט מבחינת
- * אנונימיים, מחוברים היו נחסמים בחלק הקבוע שלהם בזמן שהחלק האנונימי
- * יושב ללא שימוש. הנוסחה כאן נותנת למחוברים את כל מה שלא נוצל, ועדיין
- * מבטיחה להם רצפה - ראו הטסט "ביום שקט מבחינת אנונימיים, מחוברים
- * מקבלים את כל התקציב".
+ * Two hard wallets would create the mirror problem: on a quiet day for
+ * anonymous traffic, signed-in users would be blocked at their fixed share
+ * while the anonymous share sits unused. The formula here gives signed-in
+ * users everything unused, while still guaranteeing them a floor - see the
+ * test "on a quiet day for anonymous traffic, signed-in users get the whole
+ * budget".
  *
- * ## איך נמדדת ההוצאה - וזו שאלה שנתנאל שאל במפורש
+ * ## How spending is measured - a question Netanel asked explicitly
  *
- * **מדיווח אמיתי, לא מהערכה.** המספרים מגיעים מ-`usage` של Anthropic
- * עצמה: `message_start` נושא את הקלט ואת המטמון, `message_delta` את
- * הפלט הסופי. אנחנו לא סופרים טוקנים בעצמנו.
+ * **From real reporting, not from estimation.** The numbers come from
+ * Anthropic's own `usage`: `message_start` carries the input and cache
+ * counts, `message_delta` the final output. We do not count tokens ourselves.
  *
- * שלושה מסלולים שבהם המספר **יכול לסטות כלפי מטה**, וכל אחד מטופל:
+ * Three paths where the number **can drift downward**, each handled:
  *
- * 1. **קריאה שנקטעה באמצע** - `message_delta` לא הגיע, ולכן אין
- *    `output_tokens`. הטוקנים כבר חויבו. `costUsd` מקבל הערכה שמרנית
- *    מאורך הטקסט שכן הוזרם, במקום אפס.
- * 2. **כתיבה לדאטהבייס שנכשלת** - הספירה המקומית עדיין נכונה
- *    ל-instance הזה, והסנכרון הבא מושך את המקסימום.
- * 3. **הדאטהבייס לא נגיש בכלל** - וזה החור האמיתי: בלי סכום משותף
- *    כל instance סופר לעצמו, והתקרה בפועל מוכפלת במספר ה-instances.
- *    **כאן המערכת נכשלת סגור**: אם ההתמדה מוגדרת ולא הצלחנו לקרוא
- *    את הסכום היומי במשך `FAIL_CLOSED_MS`, הסוכן מפסיק לקבל בקשות.
- *    עדיף להיות למטה כמה דקות מאשר להוציא בלי לדעת כמה.
+ * 1. **A call cut off mid-stream** - `message_delta` never arrived, so there
+ *    is no `output_tokens`. Those tokens were already billed. `costUsd` gets
+ *    a conservative estimate from the length of the text that was actually
+ *    streamed, instead of zero.
+ * 2. **A database write that fails** - the local count is still correct for
+ *    this instance, and the next sync pulls the maximum.
+ * 3. **The database being unreachable at all** - and that is the real hole:
+ *    without a shared total each instance counts alone, and the effective
+ *    ceiling multiplies by the number of instances. **Here the system fails
+ *    closed**: if persistence is configured and we could not read the daily
+ *    total for `FAIL_CLOSED_MS`, the agent stops accepting requests. Being
+ *    down for a few minutes beats spending without knowing how much.
  */
 
 /**
- * ברירת המחדל, בדולרים ליום, לכל המשתמשים יחד.
+ * The default, in dollars per day, for all users combined.
  *
- * ## **המספרים כאן נגזרו ממדידה, אחרי שהאומדן הקודם היה שגוי**
+ * ## **These numbers were derived from measurement, after the previous estimate was wrong**
  *
- * הגרסה הראשונה הניחה ש"תור עולה $0.01-$0.13". שתי מדידות אמיתיות
- * (31.7): **קריאה ראשונה בסשן $0.447, קריאה אחריה $0.063.** ההפרש הוא
- * כתיבת המטמון של קידומת הקטלוג (~80 אלף טוקנים). כלומר:
+ * The first version assumed "a turn costs $0.01-$0.13". Two real measurements
+ * (July 31): **first call of a session $0.447, the call after it $0.063.**
+ * The difference is the cache write of the catalog prefix (~80k tokens).
+ * Which means:
  *
- * - **העלות שלנו היא לכל סשן קר, לא לכל הודעה.**
- * - ולכן העלות למבקר **יורדת ככל שהתנועה עולה** - כשהמטמון חם, הקריאה
- *   הראשונה של המבקר הבא היא גם היא קריאה מהמטמון.
+ * - **Our cost is per cold session, not per message.**
+ * - And therefore the cost per visitor **falls as traffic rises** - when the
+ *   cache is warm, the next visitor's first call is a cache read too.
  *
- * סשן תכנון אנונימי מלא (25 הודעות, התקרה של השכבה) עולה לפי המדידות
- * האלה כ-$2.1 טיפוסי, כ-$2.7 בגרוע. **התקרה האישית חייבת לשבת בנוחות
- * מעל המספר הזה**, אחרת בדיוק מה שקרה לנתנאל קורה לכל מבקר: חסימה
- * אחרי ארבע הודעות.
+ * A full anonymous planning session (25 messages, the tier's ceiling) costs,
+ * per these measurements, about $2.1 typically and about $2.7 at worst.
+ * **The per-caller cap must sit comfortably above that number**, otherwise
+ * exactly what happened to Netanel happens to every visitor: blocked after
+ * four messages.
  *
- * ## **התקרה האישית נותקה מהתקרה היומית, וזה מה שהוריד את היום ל-$10**
+ * ## **The per-caller cap was decoupled from the daily ceiling, and that is what brought the day down to $10**
  *
- * הגרסה הקודמת גזרה את התקרה האישית כאחוז מהיום (12%). זה כבל את שני
- * המספרים זה לזה בכיוון הלא נכון: כדי שאדם יקבל $3 - כלומר מספיק כדי
- * להשלים סשן תכנון של כ-$2.1 - **היום היה חייב להיות $25**, שהם $750
- * לחודש של חשיפה במקרה הקיצוני. נתנאל ניסח את זה מדויק: אנחנו לא רוצים
- * חשיפה של $750 בחודש כדי להגן על סשן של $2.
+ * The previous version derived the per-caller cap as a percentage of the day
+ * (12%). That chained the two numbers together in the wrong direction: for a
+ * person to get $3 - i.e. enough to complete a ~$2.1 planning session - **the
+ * day had to be $25**, which is $750/month of exposure in the extreme case.
+ * Netanel phrased it precisely: we do not want $750/month of exposure to
+ * protect a $2 session.
  *
- * עכשיו התקרה האישית היא **מספר מוחלט** (`CALLER_CAP_USD`), והיום הוא
- * מספר נפרד. אפשר להוריד את היום בלי לקצץ באף אחד באמצע התכנון.
+ * Now the per-caller cap is an **absolute number** (`CALLER_CAP_USD`), and
+ * the day is a separate number. The day can be lowered without cutting
+ * anyone off mid-planning.
  *
- * $10 ליום הם **$300 לחודש** במקרה הקיצוני, ובפועל דולרים בודדים.
- * ושדה טקסט אחד ב-/admin משנה את זה בלי דיפלוי, כשהתנועה תצדיק את זה.
+ * $10/day is **$300/month** in the extreme case, and single dollars in
+ * practice. And one text field in /admin changes it without a deploy, once
+ * traffic justifies it.
  */
 export const DEFAULT_DAILY_BUDGET_USD = 10;
 
 /**
- * ברירת המחדל לחלקה של התנועה האנונימית מהתקציב היומי, כשאין דגל
- * ואין משתנה סביבה שקובעים ערך אחר. **קרא `anonShare()` בזמן ריצה -
- * הקבוע הזה הוא רק הנפילה האחורית.**
+ * The default for anonymous traffic's share of the daily budget, when no
+ * flag and no environment variable set a different value. **Read
+ * `anonShare()` at runtime - this constant is only the fallback.**
  *
- * **55%, כלומר יותר מחצי - ולא במקרה.** ערב ההשקה כמעט כל התנועה
- * (אורגנית ופרסומות) מגיעה מנותקים, ומחובר כמעט ואין - ולכן החסימה
- * היקרה היא של אנונימי, לא של מחובר. ב-40% הארנק האנונימי היה $4,
- * כלומר סשן מלא אחד ועוד קצת; ב-55% הוא $5.50 - שני סשנים קרים, ובמטמון
- * חם שלושה עד ארבעה.
+ * **55%, i.e. more than half - and not by accident.** On the eve of launch
+ * almost all traffic (organic and ads) comes from logged-out visitors, and
+ * signed-in users barely exist - so the expensive block is of an anonymous
+ * visitor, not a signed-in one. At 40% the anonymous wallet was $4, i.e. one
+ * full session and a bit; at 55% it is $5.50 - two cold sessions, and with a
+ * warm cache three to four.
  *
- * **זה עדיין רק ברירת מחדל.** נתנאל מכוונן את היחס עצמו מ-/admin בלי
- * דיפלוי (`ai_anon_share`, ראו `anonShare()`) לפי מה שבאמת מגיע בהשקה -
- * ולכן שום מספר כאן, כולל 55%, לא אמור להיחשב "הערך הנכון" קבוע.
- * הרצפה של המחוברים היא `1 - anonShare()`, ובימים שקטים מבחינת
- * אנונימיים הם מקבלים את הכל (ראו `budgetFor`).
+ * **This is still only a default.** Netanel tunes the ratio itself from
+ * /admin without a deploy (`ai_anon_share`, see `anonShare()`) based on what
+ * actually shows up at launch - so no number here, including 55%, should be
+ * treated as the permanently "correct value". The signed-in floor is
+ * `1 - anonShare()`, and on days quiet for anonymous traffic they get
+ * everything (see `budgetFor`).
  */
 export const DEFAULT_ANON_SHARE = 0.55;
 
 /**
- * **התקרה שזהות אחת יכולה להוציא ביום, בדולרים. מספר מוחלט.**
+ * **The ceiling one identity can spend per day, in dollars. An absolute number.**
  *
- * זה המספר שהיה קודם אחוז מהיום, וזו כל הנקודה: הוא נגזר מ**מה שעולה
- * סשן**, ולא ממה שאנחנו מוכנים להוציא בסך הכל. שני הדברים האלה לא
- * קשורים זה לזה, וכל עוד הם היו קשורים היה אי אפשר להוריד את היום בלי
- * לחתוך אנשים באמצע.
+ * This is the number that used to be a percentage of the day, and that is
+ * the whole point: it is derived from **what a session costs**, not from
+ * what we are willing to spend in total. Those two things are unrelated,
+ * and as long as they were tied together, the day could not be lowered
+ * without cutting people off mid-session.
  *
- * מדוד: סשן תכנון מלא הוא כ-$2.1 טיפוסי וכ-$2.7 בגרוע ביותר, על מטמון
- * קר. $3.00 יושב בנוחות מעל שניהם.
+ * Measured: a full planning session is ~$2.1 typical and ~$2.7 at worst, on
+ * a cold cache. $3.00 sits comfortably above both.
  *
- * המשמעות המעשית של הניתוק: אם התקרה היומית תרד ל-$5, אף אחד עדיין לא
- * ייחסם באמצע סשן - פשוט ייכנסו פחות אנשים באותו יום. זו ההתנהגות
- * הנכונה, ובגרסה הקודמת היא הייתה הפוכה.
+ * The practical meaning of the decoupling: if the daily ceiling is lowered
+ * to $5, nobody gets blocked mid-session - fewer people simply get in that
+ * day. That is the correct behavior, and in the previous version it was
+ * inverted.
  */
 export const CALLER_CAP_USD = 3.0;
 
 /**
- * אנונימי ומחובר מקבלים **את אותה תקרה אישית**, וזו הוראה מפורשת
- * מהסשן שבו זה תוקן: קודם היה כאן אחוז מהארנק האנונימי, כלומר $0.225 -
- * פחות מקריאה קרה אחת שנמדדה ב-$0.447 - ומבקר אנונימי נחסם אחרי הודעה
- * או שתיים. זה בדיוק מה שקרה לנתנאל.
+ * Anonymous and signed-in callers get **the same per-caller cap**, and that
+ * is an explicit instruction from the session where this was fixed: this
+ * used to be a percentage of the anonymous wallet, i.e. $0.225 - less than
+ * one cold call measured at $0.447 - and an anonymous visitor was blocked
+ * after a message or two. That is exactly what happened to Netanel.
  *
- * המשמעות עכשיו: אנונימי אחד יכול לקחת עד $3 מתוך ארנק אנונימי שגודלו
- * `budget * anonShare()` (בברירת המחדל, $10 * 55% = $5.50). זו החלפה
- * מודעת - "מבקר אחד שמשלים סשן" עדיף על "שלושה מבקרים שכולם נחסמים
- * באמצע", וכל מי שבאמת מנצל נתקל קודם במכסת ההודעות היומית ובמגבלת
- * הפרץ, הרבה לפני התקרה הכספית.
+ * What it means now: a single anonymous caller can take up to $3 out of an
+ * anonymous wallet sized `budget * anonShare()` (by default, $10 * 55% =
+ * $5.50). This is a deliberate trade - "one visitor who completes a session"
+ * beats "three visitors who all get blocked midway", and anyone genuinely
+ * abusing hits the daily message quota and the burst limit long before the
+ * money cap.
  */
 export const ANON_CALLER_CAP_USD = CALLER_CAP_USD;
 
 /**
- * פי כמה גבוהה תקרת ה-IP מתקרת אדם בודד.
+ * How many times higher the IP cap is than a single person's cap.
  *
- * ה-IP אינו מכסה אלא **רשת ביטחון**: מפעילת סלולר ישראלית מעמידה
- * עשרות אלפי מכשירים מאחורי כתובת אחת, ולכן תקרה צמודה שם חוסמת
- * אנשים שמעולם לא נכנסו לאתר. פי 25 פירושו שכתובת משותפת תיתקל בה
- * רק אם עשרים וחמישה מבקרים שונים מיצו את המכסה האישית שלהם באותו
- * יום מאותה כתובת - ובפועל הארנק האנונימי ייגמר הרבה לפני זה, כך
- * שהרשת הזאת נוגעת רק במכונה אחת שמחליפה מזהים בלולאה.
+ * The IP is not a quota but a **safety net**: an Israeli mobile carrier puts
+ * tens of thousands of devices behind one address, so a tight cap there
+ * blocks people who have never visited the site. 25x means a shared address
+ * only hits it if twenty-five distinct visitors each exhausted their
+ * personal quota on the same day from the same address - and in practice the
+ * anonymous wallet runs out long before that, so this net only touches a
+ * single machine cycling identifiers in a loop.
  */
 export const IP_BACKSTOP_MULTIPLE = 25;
 
-/** מעל האחוז הזה של היום נשלחת התראה כללית, פעם אחת ביום */
+/** Above this fraction of the day a general alert is sent, once per day */
 export const ALERT_AT = 0.9;
 
 /**
- * התראה **מיידית ונפרדת** על מקור בודד.
+ * An **immediate and separate** alert about a single source.
  *
- * נשלחת כשזהות אחת עברה 60% מהתקרה האישית שלה - כלומר **לפני**
- * שהיא נחסמת, שזה הרגע היחיד שבו אפשר לעשות משהו. זו ההתראה שנתנאל
- * ביקש להתעורר בשבילה; הכללית היא רק "היום עמוס".
+ * Sent when one identity has passed 60% of its personal cap - i.e. **before**
+ * it gets blocked, which is the only moment anything can be done about it.
+ * This is the alert Netanel asked to be woken up for; the general one is
+ * just "a busy day".
  */
 export const CALLER_ALERT_AT = 0.6;
 
 /**
- * כמה זמן מותר להיות בלי סכום משותף לפני שנועלים.
+ * How long we may go without a shared total before locking.
  *
- * חמש דקות: מספיק כדי לספוג תקלה רגעית של הדאטהבייס בלי להפיל את
- * המוצר, וקצר מספיק שלא נוציא הרבה בעיוורון.
+ * Five minutes: enough to absorb a momentary database hiccup without taking
+ * the product down, and short enough that we do not spend much blindly.
  */
 const FAIL_CLOSED_MS = 5 * 60_000;
 
-/** עלות שמיוחסת לקריאה שלא דיווחה שום מספר. שמרנית בכוונה. */
+/** The cost attributed to a call that reported no numbers at all. Conservative on purpose. */
 const UNMEASURED_CALL_USD = 0.05;
 
 const supaUrl = () => process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -176,24 +195,25 @@ const serviceKey = () => process.env.SUPABASE_SERVICE_ROLE_KEY;
 const persistent = () => Boolean(supaUrl() && serviceKey());
 
 /*
-  דרך `supabaseAdmin` ולא עותק מקומי: מפתח `sb_secret_` אינו JWT, ו-PostgREST
-  דוחה `Bearer` שאינו JWT. העותק שהיה כאן שלח אותו תמיד, כלומר בפרויקט עם
-  מפתח מהפורמט החדש כל כתיבה מכאן נדחתה - בשקט.
+  Via `supabaseAdmin` and not a local copy: an `sb_secret_` key is not a JWT,
+  and PostgREST rejects a `Bearer` that is not a JWT. The copy that used to
+  live here always sent one, meaning on a project with the new key format
+  every write from here was rejected - silently.
 */
 const headers = () => serviceHeaders();
 
 interface DayState {
   day: string;
-  /** סך הכול היום */
+  /** Total for the day */
   usd: number;
-  /** מתוכו - תנועה אנונימית */
+  /** Of that - anonymous traffic */
   anonUsd: number;
   syncedAt: number;
-  /** מתי הצליח סנכרון בפעם האחרונה - הבסיס לכישלון-סגור */
+  /** When a sync last succeeded - the basis for failing closed */
   lastOk: number;
-  /** הוצאה לפי זהות, היום */
+  /** Spend per identity, today */
   callers: Map<string, number>;
-  /** זהויות שכבר נשלחה עליהן התראה */
+  /** Identities an alert has already been sent about */
   alertedCallers: Set<string>;
   alerted: boolean;
 }
@@ -218,10 +238,10 @@ function today(): DayState {
   return state;
 }
 
-/** האם הזהות היא אנונימית (לפי המפתח שנקבע ב-identity.ts) */
+/** Whether the identity is anonymous (per the key set in identity.ts) */
 export const isAnonIdentity = (id: string): boolean => !id.startsWith('user:');
 
-/* ---------- התקרה ---------- */
+/* ---------- The ceiling ---------- */
 
 async function flagNumber(key: string): Promise<number | null> {
   const flags = await allFlags().catch(() => ({}) as Record<string, unknown>);
@@ -230,7 +250,7 @@ async function flagNumber(key: string): Promise<number | null> {
   return Number.isFinite(n) && n >= 0 ? n : null;
 }
 
-/** התקרה היומית הכוללת */
+/** The total daily ceiling */
 export async function dailyBudgetUsd(): Promise<number> {
   const fromFlag = await flagNumber('ai_daily_budget_usd');
   if (fromFlag !== null) return fromFlag;
@@ -239,16 +259,16 @@ export async function dailyBudgetUsd(): Promise<number> {
   return DEFAULT_DAILY_BUDGET_USD;
 }
 
-/** שבר תקין - 0..1. ערך פגום (למשל דרך שורה שנכתבה ידנית ב-DB) נופל הלאה. */
+/** A valid fraction - 0..1. A corrupt value (e.g. via a hand-written DB row) falls through. */
 const clampShare = (n: number): number | null => (Number.isFinite(n) && n >= 0 && n <= 1 ? n : null);
 
 /**
- * חלקה של התנועה האנונימית מהתקציב היומי - **מתכוונן בזמן ריצה, כמו
- * `dailyBudgetUsd`, ובאותו סדר עדיפויות בדיוק**: דגל (`/admin`, בלי
- * דיפלוי) → משתנה סביבה → `DEFAULT_ANON_SHARE`.
+ * Anonymous traffic's share of the daily budget - **tunable at runtime, like
+ * `dailyBudgetUsd`, in exactly the same priority order**: flag (`/admin`,
+ * no deploy) → environment variable → `DEFAULT_ANON_SHARE`.
  *
- * הרצפה של המחוברים (`1 - anonShare()`) לעולם לא נשחקת ע"י הערך הזה
- * לבדו - ראו את ה-`min` ב-`budgetFor`, שהוא ההגנה בפועל.
+ * The signed-in floor (`1 - anonShare()`) is never eroded by this value
+ * alone - see the `min` in `budgetFor`, which is the actual protection.
  */
 export async function anonShare(): Promise<number> {
   const fromFlag = clampShare((await flagNumber('ai_anon_share')) ?? NaN);
@@ -258,7 +278,7 @@ export async function anonShare(): Promise<number> {
   return DEFAULT_ANON_SHARE;
 }
 
-/* ---------- קריאת המצב ---------- */
+/* ---------- Reading the state ---------- */
 
 async function sync(s: DayState): Promise<void> {
   if (!persistent() || Date.now() - s.syncedAt <= SYNC_MS) return;
@@ -272,20 +292,20 @@ async function sync(s: DayState): Promise<void> {
     const rows = (await res.json()) as { usd?: number | string; anon_usd?: number | string }[];
     const total = Number(rows[0]?.usd ?? 0);
     const anon = Number(rows[0]?.anon_usd ?? 0);
-    // max ולא השמה: כתיבות מהרגע האחרון עוד לא בהכרח שם
+    // max, not assignment: last-moment writes are not necessarily there yet
     if (Number.isFinite(total) && total > s.usd) s.usd = total;
     if (Number.isFinite(anon) && anon > s.anonUsd) s.anonUsd = anon;
     s.lastOk = Date.now();
   } catch {
-    /* נשארים עם הספירה המקומית; אם זה נמשך - נכשלים סגור למטה */
+    /* We keep the local count; if this persists - we fail closed below */
   }
 }
 
-/** הוצאה של זהות אחת היום. ממזג מהאחסון בפעם הראשונה ביום. */
+/** One identity's spend today. Merges from storage the first time each day. */
 async function callerSpend(s: DayState, identity: string): Promise<number> {
   const local = s.callers.get(identity);
   if (local !== undefined || !persistent()) return local ?? 0;
-  s.callers.set(identity, 0); // סימון "כבר ניסינו" - best effort, פעם אחת
+  s.callers.set(identity, 0); // marker for "already tried" - best effort, once
   try {
     const res = await fetch(
       `${supaUrl()}/rest/v1/ai_spend_caller?${pgQuery(eq('day', s.day), eq('identity', identity), pgSelect(['usd']))}`,
@@ -297,7 +317,7 @@ async function callerSpend(s: DayState, identity: string): Promise<number> {
       if (Number.isFinite(remote) && remote > 0) s.callers.set(identity, remote);
     }
   } catch {
-    /* הזיכרון המקומי ממשיך להגן */
+    /* The local memory keeps protecting */
   }
   return s.callers.get(identity) ?? 0;
 }
@@ -305,11 +325,11 @@ async function callerSpend(s: DayState, identity: string): Promise<number> {
 export type BlockReason = 'anon-pool' | 'caller' | 'total' | 'unmeasured' | null;
 
 export interface BudgetState {
-  /** התקרה היומית הכוללת */
+  /** The total daily ceiling */
   budget: number;
   spent: number;
   anonSpent: number;
-  /** התקציב שנותר לקורא הזה, לפי הארנק שלו */
+  /** The budget remaining for this caller, per their wallet */
   poolBudget: number;
   poolSpent: number;
   callerSpent: number;
@@ -317,12 +337,12 @@ export interface BudgetState {
   exceeded: boolean;
   reason: BlockReason;
   ratio: number;
-  /** אחוז מהתקרה האישית - הבסיס להתראה על מקור בודד */
+  /** Fraction of the per-caller cap - the basis for the single-source alert */
   callerRatio: number;
 }
 
 /**
- * המצב עבור קורא מסוים. **זו הפונקציה שהשערים קוראים.**
+ * The state for a specific caller. **This is the function the gates call.**
  */
 export async function budgetFor(identity: string): Promise<BudgetState> {
   const s = today();
@@ -333,30 +353,33 @@ export async function budgetFor(identity: string): Promise<BudgetState> {
   const callerSpent = await callerSpend(s, identity);
 
   /*
-    הארנק של הקורא.
+    The caller's wallet.
 
-    אנונימי: חלק קבוע מהיום (`anonShare()`), ותו לא.
-    מחובר: כל מה שאנונימיים לא הוציאו - כלומר לפחות `1 - anonShare()`
-    ותמיד יותר מזה כשהם שקטים. אין מסלול שבו אנונימי מוריד את הרצפה,
-    **בלי קשר לערך של anonShare() ברגע הזה** - זה מה שה-min שלמטה אוכף.
+    Anonymous: a fixed share of the day (`anonShare()`), and nothing more.
+    Signed-in: everything anonymous traffic did not spend - i.e. at least
+    `1 - anonShare()` and always more when they are quiet. There is no path
+    by which an anonymous caller lowers the floor, **regardless of the value
+    of anonShare() at that moment** - that is what the min below enforces.
   */
   /*
-    ה-`min` אינו קישוט. בדיקת התקרה קורית **לפני** הקריאה, ולכן
-    הקריאה האחרונה של אנונימי יכולה לחצות את הארנק שלו במעט - ובלי
-    ההגבלה הזאת החריגה הייתה נגרעת מהרצפה של המחוברים. הטסט תפס את
-    זה בדיוק: 11 מבקרים הוציאו $1.65 מתוך ארנק של $1.50, והרצפה של
-    המחוברים ירדה מ-$3.50 ל-$3.35. הבטחה שנשחקת היא לא הבטחה.
+    The `min` is not decoration. The cap check happens **before** the call,
+    so an anonymous caller's last call can overshoot their wallet slightly -
+    and without this bound, the overshoot would be subtracted from the
+    signed-in floor. The test caught exactly this: 11 visitors spent $1.65
+    out of a $1.50 wallet, and the signed-in floor dropped from $3.50 to
+    $3.35. A guarantee that erodes is not a guarantee.
   */
   const anonDraw = Math.min(s.anonUsd, budget * share);
   const poolBudget = anon ? budget * share : budget - anonDraw;
   const poolSpent = anon ? s.anonUsd : Math.max(0, s.usd - s.anonUsd);
   /*
-    **מספר מוחלט, לא אחוז מהיום.**
+    **An absolute number, not a percentage of the day.**
 
-    ה-`min` מול היום הוא השומר היחיד שנשאר: אם מישהו יוריד את התקרה
-    היומית ב-/admin ל-$1, תקרה אישית של $3 הייתה גדולה מהיום כולו
-    ומאבדת כל משמעות. מעבר לזה שני המספרים עצמאיים לחלוטין - וזה
-    בדיוק מה שמאפשר להוריד את היום בלי לגעת באף סשן.
+    The `min` against the day is the only guard left: if someone lowers the
+    daily ceiling in /admin to $1, a $3 per-caller cap would be larger than
+    the whole day and lose all meaning. Beyond that the two numbers are
+    fully independent - which is exactly what allows lowering the day
+    without touching any session.
   */
   const callerBudget = Math.min(anon ? ANON_CALLER_CAP_USD : CALLER_CAP_USD, budget);
 
@@ -382,21 +405,24 @@ export async function budgetFor(identity: string): Promise<BudgetState> {
 }
 
 /**
- * מתי לאחרונה נגעה בקידומת קריאה כבדה **אמיתית** - כלומר מתי המטמון
- * רוענן בפעם האחרונה, כולל חימומים (הם נרשמים כמו כל הוצאה אחרת).
+ * When a **real** heavy call last touched the prefix - i.e. when the cache
+ * was last refreshed, including warm-ups (they are recorded like any other
+ * spend).
  *
- * `null` = אי אפשר לדעת (אין התמדה, או קריאה שנכשלה). נתיב החימום מפרש
- * את זה כ"לא מחממים": הכיוון הבטוח בספק הוא לא להוציא כסף.
+ * `null` = impossible to know (no persistence, or a failed read). The
+ * warm-up path interprets that as "do not warm": when in doubt, the safe
+ * direction is to not spend money.
  */
 export const WARM_IDENTITY = 'system:warm';
 
 /**
- * @param realOnly להתעלם מהחימומים שלנו עצמנו ולהסתכל רק על תנועה אנושית.
+ * @param realOnly ignore our own warm-ups and look only at human traffic.
  *
- * **בלי הדגל הזה החימום היה מנציח את עצמו.** הנתיב רושם את ההוצאה שלו
- * כמו כל קריאה אחרת - וזה נכון, היא באמת עולה כסף - אבל אז הרשומה הזאת
- * היא בעצמה "הנגיעה האחרונה", ולכן 40 דקות אחריה הוא מחמם שוב, ושוב.
- * באתר בלי אף מבקר הוא היה מחזיק מטמון חם עבור אף אחד לנצח.
+ * **Without this flag the warm-up would perpetuate itself.** The path
+ * records its own spend like any other call - and that is correct, it
+ * really costs money - but then that record is itself "the last touch", so
+ * 40 minutes later it warms again, and again. On a site with zero visitors
+ * it would keep a warm cache for nobody, forever.
  */
 export async function lastHeavyCallAt(realOnly = false): Promise<number | null> {
   if (!persistent()) return null;
@@ -420,7 +446,7 @@ export async function lastHeavyCallAt(realOnly = false): Promise<number | null> 
   }
 }
 
-/** מצב כללי לתצוגה בלבד (אזור הניהול) - בלי הקשר של קורא */
+/** A general state for display only (the admin area) - no caller context */
 export async function budgetOverview(): Promise<{
   budget: number;
   spent: number;
@@ -442,33 +468,36 @@ export async function budgetOverview(): Promise<{
   };
 }
 
-/* ---------- ארנק פרימיום, מבודד לגמרי מהשניים למעלה ---------- */
+/* ---------- The premium wallet, fully isolated from the two above ---------- */
 
 /**
- * **הארנק השלישי, ולמה הוא לא "עוד חלק" מהנוסחה של `budgetFor`.**
+ * **The third wallet, and why it is not "another part" of the `budgetFor` formula.**
  *
- * אנונימי וחינם-מחובר חולקים תקציב יומי אחד, מחולק לפי `anonShare()`.
- * מנוי פרימיום **לא נכנס לנוסחה הזאת בכלל** - לא כארנק שלישי בתוכה
- * וגם לא כתוספת ל"מחוברים". שתי סיבות, וזו הדרישה המפורשת: תנועה
- * אנונימית שממצה את היום שלה **אסור** שתחסום מנוי משלם (הוא לא בודק
- * מול `budgetFor` בכלל - ראו למטה), ומנוי פרימיום שמנצל לרעה **אסור**
- * שיגרע מהתקציב שהחינמיים חולקים (`recordSpend` מדלג על `bump_ai_spend`
- * עבורו - ראו שם). שני הכיוונים, בו-זמנית, ע"י כך ששני המנגנונים
- * פשוט אף פעם לא נוגעים באותם מספרים.
+ * Anonymous and free-signed-in share one daily budget, split by
+ * `anonShare()`. A premium subscriber **does not enter that formula at
+ * all** - not as a third wallet inside it and not as an addition to
+ * "signed-in". Two reasons, and this is the explicit requirement: anonymous
+ * traffic that exhausts its day **must not** block a paying subscriber
+ * (they never check against `budgetFor` at all - see below), and a premium
+ * subscriber who abuses **must not** subtract from the budget the free
+ * tiers share (`recordSpend` skips `bump_ai_spend` for them - see there).
+ * Both directions, simultaneously, by making the two mechanisms simply
+ * never touch the same numbers.
  *
- * התקרה עצמה **חודשית ואישית**: `SUBSCRIBER_MONTHLY_CAP_USD` (בקובץ
- * המשותף `lib/plans.ts`, כי היא גם מוצגת בעמוד הפרימיום) לכל user_id,
- * נמדדת מ-`subscriber_spend_monthly` (ראו `supabase-premium-budget.sql`) -
- * טבלת צבירה נפרדת, לא סכימה של ai_spend הגולמית לפני כל בקשה, מאותה
- * סיבה בדיוק שקיימת `ai_spend_daily`.
+ * The cap itself is **monthly and personal**: `SUBSCRIBER_MONTHLY_CAP_USD`
+ * (in the shared file `lib/plans.ts`, because it is also displayed on the
+ * premium page) per user_id, measured from `subscriber_spend_monthly` (see
+ * `supabase-premium-budget.sql`) - a separate rollup table, not a sum over
+ * raw ai_spend before every request, for exactly the same reason
+ * `ai_spend_daily` exists.
  */
 
-/** מפתח חודש בזמן UTC - 'YYYY-MM', עקבי בין instances כמו `dayKey`. */
+/** A month key in UTC - 'YYYY-MM', consistent across instances like `dayKey`. */
 export const monthKey = (d = new Date()): string => d.toISOString().slice(0, 7);
 
 interface MonthState {
   month: string;
-  /** הוצאה לפי מנוי, החודש - אותו דפוס בדיוק כמו `DayState.callers` */
+  /** Spend per subscriber, this month - exactly the same pattern as `DayState.callers` */
   subscribers: Map<string, number>;
 }
 
@@ -481,11 +510,11 @@ function thisMonth(): MonthState {
   return monthState;
 }
 
-/** הוצאה של מנוי אחד החודש. ממזג מהאחסון המרוחק בקריאה הראשונה. */
+/** One subscriber's spend this month. Merges from remote storage on the first read. */
 async function subscriberSpend(m: MonthState, userId: string): Promise<number> {
   const local = m.subscribers.get(userId);
   if (local !== undefined || !persistent()) return local ?? 0;
-  m.subscribers.set(userId, 0); // סימון "כבר ניסינו" - best effort, פעם אחת
+  m.subscribers.set(userId, 0); // marker for "already tried" - best effort, once
   try {
     const res = await fetch(
       `${supaUrl()}/rest/v1/subscriber_spend_monthly?${pgQuery(
@@ -501,7 +530,7 @@ async function subscriberSpend(m: MonthState, userId: string): Promise<number> {
       if (Number.isFinite(remote) && remote > 0) m.subscribers.set(userId, remote);
     }
   } catch {
-    /* הזיכרון המקומי ממשיך להגן */
+    /* The local memory keeps protecting */
   }
   return m.subscribers.get(userId) ?? 0;
 }
@@ -514,8 +543,9 @@ export interface PremiumBudgetState {
 }
 
 /**
- * המצב עבור מנוי פרימיום אחד. **זו הפונקציה ש-`/api/chat` קורא לה
- * במקום `budgetFor` כשהקורא הוא פרימיום** - לא בנוסף אליה.
+ * The state for one premium subscriber. **This is the function `/api/chat`
+ * calls instead of `budgetFor` when the caller is premium** - not in
+ * addition to it.
  */
 export async function premiumBudgetFor(userId: string): Promise<PremiumBudgetState> {
   const m = thisMonth();
@@ -530,13 +560,15 @@ export async function premiumBudgetFor(userId: string): Promise<PremiumBudgetSta
 }
 
 /**
- * הכסף האמיתי של המנויים, **לאזור הניהול בלבד** - נתנאל: "בלוח הבקרה
- * אני עדיין רוצה לראות את הכסף האמיתי, לפי מנוי ובסך הכול. זה בשבילי,
- * לא בשבילם." שום חלק מזה לא מגיע לאף משטח משתמש.
+ * The subscribers' real money, **for the admin area only** - Netanel: "on
+ * the dashboard I still want to see the real money, per subscriber and in
+ * total. That's for me, not for them." No part of this reaches any user
+ * surface.
  *
- * קריאה אחת עד 1,000 שורות לחודש הנוכחי (מנויים נספרים בעשרות, לא
- * באלפים - ואם נגיע לאלף מנויים משלמים, truncated יגיד את זה במקום
- * להציג סכום חסר כאילו הוא שלם).
+ * One read of up to 1,000 rows for the current month (subscribers are
+ * counted in dozens, not thousands - and if we reach a thousand paying
+ * subscribers, truncated will say so instead of presenting a partial sum as
+ * if it were complete).
  */
 export interface PremiumSpendOverview {
   month: string;
@@ -545,7 +577,7 @@ export interface PremiumSpendOverview {
   capUsd: number;
   top: { userId: string; usd: number; requests: number }[];
   truncated: boolean;
-  /** false = אין התמדה או שהקריאה נכשלה - שיוצג "לא נאסף", לא אפס */
+  /** false = no persistence or the read failed - display "not collected", not zero */
   stored: boolean;
 }
 
@@ -591,21 +623,22 @@ export async function premiumSpendOverview(topN = 10): Promise<PremiumSpendOverv
   }
 }
 
-/** מעל האחוז הזה מהתקרה החודשית האישית - התראה מיידית, פעם אחת לחודש למנוי */
+/** Above this fraction of the personal monthly cap - an immediate alert, once per month per subscriber */
 export const PREMIUM_ALERT_AT = 0.8;
-const premiumAlerted = new Set<string>(); // 'userId|month', מתאפס לבד כשה-month בשם משתנה
+const premiumAlerted = new Set<string>(); // 'userId|month', resets on its own when the month in the key changes
 
 /**
- * התראה על מנוי שמתקרב לתקרה שלו. **לפני** שהוא נחסם, כמו ההתראה על
- * מקור בודד למעלה - זה הרגע שבו עוד אפשר לבדוק אם זה שימוש אמיתי
- * (שווה לשקול להעלות את התקרה) או ניצול לרעה.
+ * An alert about a subscriber approaching their cap. **Before** they get
+ * blocked, like the single-source alert above - this is the moment when it
+ * is still possible to check whether it is real usage (worth considering
+ * raising the cap) or abuse.
  */
 export function maybeAlertPremium(s: PremiumBudgetState, userId: string, month: string): void {
   if (s.ratio < PREMIUM_ALERT_AT) return;
   const key = `${userId}|${month}`;
   if (premiumAlerted.has(key)) return;
   premiumAlerted.add(key);
-  if (premiumAlerted.size > 20_000) premiumAlerted.clear(); // הגנת זיכרון גסה
+  if (premiumAlerted.size > 20_000) premiumAlerted.clear(); // crude memory protection
   void post(
     `טיול+ · מנוי פרימיום הוציא $${s.spent.toFixed(2)} החודש - ${Math.round(
       s.ratio * 100,
@@ -614,14 +647,15 @@ export function maybeAlertPremium(s: PremiumBudgetState, userId: string, month: 
   );
 }
 
-/* ---------- רישום ---------- */
+/* ---------- Recording ---------- */
 
 /**
- * העלות של קריאה אחת, כולל טיפול בדיווח חסר.
+ * The cost of one call, including handling of missing reporting.
  *
- * `streamedChars` הוא אורך הטקסט שהוזרם בפועל. הוא משמש **רק** כשאין
- * `output_tokens` - כלומר כשהתשובה נקטעה לפני `message_delta` - ואז
- * עדיף אומדן שמרני על פני אפס: הטוקנים האלה כבר חויבו.
+ * `streamedChars` is the length of the text actually streamed. It is used
+ * **only** when there is no `output_tokens` - i.e. when the reply was cut
+ * off before `message_delta` - and then a conservative estimate beats zero:
+ * those tokens were already billed.
  */
 export function measuredCost(model: string, u: TokenUsage, streamedChars = 0): number {
   const reported = costUsd(model, u);
@@ -629,12 +663,13 @@ export function measuredCost(model: string, u: TokenUsage, streamedChars = 0): n
     !u.input_tokens && !u.cache_creation_input_tokens && !u.cache_read_input_tokens;
 
   if (u.output_tokens === undefined && streamedChars > 0) {
-    // עברית היא בערך טוקן לתו-שניים; חצי מהתווים הוא אומדן זהיר ולא נדיב
+    // Hebrew is roughly one token per one-to-two characters; half the
+    // character count is a cautious, not generous, estimate
     const est = { ...u, output_tokens: Math.ceil(streamedChars / 2) };
     return costUsd(model, est);
   }
   if (nothingReported && !u.output_tokens) {
-    // קריאה שלא דיווחה כלום - לא סופרים אותה כחינם
+    // A call that reported nothing - we do not count it as free
     return reported > 0 ? reported : UNMEASURED_CALL_USD;
   }
   return reported;
@@ -647,12 +682,13 @@ export function recordSpend(entry: {
   route: 'chat' | 'generate-trip';
   model: string;
   usage: TokenUsage;
-  /** אורך הטקסט שהוזרם - לאומדן כשהדיווח חסר */
+  /** The length of the streamed text - for the estimate when reporting is missing */
   streamedChars?: number;
   /**
-   * מנוי פרימיום? - קובע לאיזה ארנק ההוצאה הזאת נזקפת. `true` דורש
-   * `userId` (פרימיום הוא תמיד מחובר בהגדרה) - אחרת מטופל כלא-פרימיום,
-   * כי אין למי לזקוף הוצאה חודשית-אישית.
+   * Premium subscriber? - decides which wallet this spend is charged to.
+   * `true` requires `userId` (premium is by definition always signed in) -
+   * otherwise treated as non-premium, because there is nobody to charge a
+   * personal monthly spend to.
    */
   premium?: boolean;
 }): number {
@@ -661,32 +697,33 @@ export function recordSpend(entry: {
   const isPremium = Boolean(entry.premium && entry.userId);
 
   /*
-    **הפיצול קורה כאן, ולא שורה קודם.** שורת ai_spend הגולמית (למטה)
-    נכתבת לכולם בדיוק אותו דבר - היא רק תיעוד. מה שנבדל הוא איזו
-    צבירה מתעדכנת: פרימיום מעדכן רק את `subscriber_spend_monthly`
-    (חודשי, אישי), לא-פרימיום מעדכן רק את `ai_spend_daily`/`ai_spend_caller`
-    (יומי, משותף) - לעולם לא שניהם לאותה הוצאה. זו האכיפה בפועל של
-    "שני הכיוונים": פרימיום לא נספר בתקציב שהחינמיים חולקים, וההפך.
+    **The split happens here, not a line earlier.** The raw ai_spend row
+    (below) is written identically for everyone - it is only bookkeeping.
+    What differs is which rollup gets updated: premium updates only
+    `subscriber_spend_monthly` (monthly, personal), non-premium updates only
+    `ai_spend_daily`/`ai_spend_caller` (daily, shared) - never both for the
+    same spend. This is the actual enforcement of "both directions": premium
+    is not counted against the budget the free tiers share, and vice versa.
   */
   if (isPremium) {
     const m = thisMonth();
     m.subscribers.set(entry.userId!, (m.subscribers.get(entry.userId!) ?? 0) + amount);
-    if (m.subscribers.size > 20_000) m.subscribers.clear(); // הגנת זיכרון גסה
+    if (m.subscribers.size > 20_000) m.subscribers.clear(); // crude memory protection
   } else {
     const s = today();
     const anon = isAnonIdentity(entry.identity);
     s.usd += amount;
     if (anon) s.anonUsd += amount;
     s.callers.set(entry.identity, (s.callers.get(entry.identity) ?? 0) + amount);
-    if (s.callers.size > 20_000) s.callers.clear(); // הגנת זיכרון גסה
+    if (s.callers.size > 20_000) s.callers.clear(); // crude memory protection
   }
 
   if (!persistent()) return amount;
 
   const usdRounded = Number(amount.toFixed(6));
   const day = dayKey();
-  // שורת התיעוד הגולמית - לכולם, כולל פרימיום. שום חסימה לא נשענת
-  // על הטבלה הזאת (ראו ההערה למעלה על ai_spend_daily), רק דוחות.
+  // The raw bookkeeping row - for everyone, premium included. No blocking
+  // relies on this table (see the note above about ai_spend_daily), reports only.
   fetch(`${supaUrl()}/rest/v1/ai_spend`, {
     method: 'POST',
     headers: { ...headers(), Prefer: 'return=minimal' },
@@ -730,25 +767,27 @@ export function recordSpend(entry: {
   return amount;
 }
 
-/* ---------- התראות ---------- */
+/* ---------- Alerts ---------- */
 
 export interface AlertPostResult {
-  /** יש בכלל כתובת מוגדרת */
+  /** Whether any webhook address is configured at all */
   configured: boolean;
-  /** ה-fetch הצליח (סטטוס 2xx) */
+  /** The fetch succeeded (2xx status) */
   ok: boolean;
-  /** למה זה לא הצליח, אם לא הצליח - ל-UI ולללוג */
+  /** Why it failed, if it failed - for the UI and the log */
   error?: string;
 }
 
 /**
- * שולחת בפועל, ו**מחזירה אם זה עבד** - לא רק "יריתי ושכחתי".
+ * Actually sends, and **returns whether it worked** - not just
+ * fire-and-forget.
  *
- * הגרסה הקודמת בלעה כל כישלון: `.catch(() => {})` בלי אפילו לוג. כתובת
- * webhook שגויה או שירות שנופל היו נשארים בלי שום עקבות, וההתראה
- * שאמורה "להעיר את נתנאל" הייתה נעלמת בדיוק ברגע שהיא הכי נחוצה.
- * עכשיו כל כישלון נכתב ל-`console.warn` (נראה בלוגים של Vercel) גם
- * בנתיב הרגיל, ומוחזר במפורש כשמישהו קורא בהמתנה - ראו `sendTestAlert`.
+ * The previous version swallowed every failure: `.catch(() => {})` without
+ * even a log. A wrong webhook URL or a service going down would leave no
+ * trace at all, and the alert that is supposed to "wake Netanel up" would
+ * vanish exactly when it is needed most. Now every failure is written to
+ * `console.warn` (visible in the Vercel logs) even on the regular path, and
+ * returned explicitly when someone awaits it - see `sendTestAlert`.
  */
 async function post(text: string, extra: Record<string, unknown>): Promise<AlertPostResult> {
   console.warn(`[budget] ALERT ${text}`);
@@ -761,7 +800,7 @@ async function post(text: string, extra: Record<string, unknown>): Promise<Alert
     const res = await fetch(hook, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      // `text` לסלאק, `content` לדיסקורד - אותה הודעה, בלי תלות חדשה
+      // `text` for Slack, `content` for Discord - same message, no new dependency
       body: JSON.stringify({ text, content: text, ...extra }),
       signal: AbortSignal.timeout(4000),
     });
@@ -779,21 +818,23 @@ async function post(text: string, extra: Record<string, unknown>): Promise<Alert
 }
 
 /**
- * שתי התראות שונות, וזה כל העניין.
+ * Two different alerts, and that is the whole point.
  *
- * נתנאל: *"תגיד לי באיזה מצב אני - הרבה אנשים רגילים, או מקור אחד
- * שמתנהג מוזר. השני הוא זה שצריך להעיר אותי."*
+ * Netanel: *"Tell me which situation I'm in - lots of ordinary people, or
+ * one source behaving strangely. The second one is what should wake me up."*
  *
- * 1. **מקור בודד** - מיידית, ברגע שזהות אחת עברה 60% מהתקרה שלה,
- *    כלומר **לפני** שהיא נחסמת. פעם אחת לזהות ליום.
- * 2. **היום עמוס** - ב-90% מהתקרה, עם סיווג: כמה זהויות פעילות היום
- *    וכמה מהיום לקח הכבד ביותר. זו האבחנה בין "יום טוב" ל"מישהו
- *    יושב עלינו".
+ * 1. **Single source** - immediate, the moment one identity has passed 60%
+ *    of its own cap, i.e. **before** it gets blocked. Once per identity per
+ *    day.
+ * 2. **A busy day** - at 90% of the ceiling, with a classification: how many
+ *    identities were active today and how much of the day the heaviest one
+ *    took. That is the distinction between "a good day" and "someone is
+ *    sitting on us".
  */
 export async function maybeAlert(s: BudgetState, identity: string): Promise<void> {
   const day = today();
 
-  // ---- 1. מקור בודד, מיידי ----
+  // ---- 1. Single source, immediate ----
   if (s.callerRatio >= CALLER_ALERT_AT && !day.alertedCallers.has(identity)) {
     day.alertedCallers.add(identity);
     const kind = isAnonIdentity(identity) ? 'אנונימי' : 'מחובר';
@@ -805,15 +846,16 @@ export async function maybeAlert(s: BudgetState, identity: string): Promise<void
     );
   }
 
-  // ---- 2. היום מתקרב לתקרה ----
+  // ---- 2. The day approaching the ceiling ----
   if (s.ratio < ALERT_AT || s.budget <= 0 || day.alerted) return;
 
   const callers = [...day.callers.entries()].sort((a, b) => b[1] - a[1]);
   const topShare = day.usd > 0 ? (callers[0]?.[1] ?? 0) / day.usd : 0;
   const active = callers.filter(([, v]) => v > 0).length;
   /*
-    הסיווג. מקור אחד שלקח יותר מרבע מהיום הוא ריכוז; עשרות זהויות עם
-    חלקים קטנים הן פשוט יום עמוס - וזה הדבר שאסור להעיר עליו.
+    The classification. One source that took more than a quarter of the day
+    is concentration; dozens of identities with small shares are simply a
+    busy day - and that is the thing nobody should be woken up for.
   */
   const concentrated = topShare >= 0.25;
 
@@ -825,7 +867,7 @@ export async function maybeAlert(s: BudgetState, identity: string): Promise<void
         body: JSON.stringify({ p_day: day.day }),
         signal: AbortSignal.timeout(3000),
       });
-      if (!res.ok || (await res.json()) !== true) return; // instance אחר כבר התריע
+      if (!res.ok || (await res.json()) !== true) return; // another instance already alerted
     } catch {
       return;
     }
@@ -841,14 +883,15 @@ export async function maybeAlert(s: BudgetState, identity: string): Promise<void
 }
 
 /**
- * שולחת התראת בדיקה **אמיתית** לערוץ המוגדר, וממתינה לתשובה - זה מה
- * שהופך "כנראה מוגדר נכון" ל"בדקתי, וזה עבד". קוראת ל-`post` ישירות
- * ולא דרך `maybeAlert`: אין תלות בהגעה ל-90%/60% אמיתיים, ואין דגימה
- * כפולה (`alertedCallers`/`day.alerted`) שתמנע שליחה חוזרת - בדיקה
- * צריכה לעבוד בכל רגע, לא רק פעם ביום.
+ * Sends a **real** test alert to the configured channel, and waits for the
+ * answer - that is what turns "probably configured correctly" into "I
+ * checked, and it worked". Calls `post` directly and not through
+ * `maybeAlert`: no dependency on actually reaching 90%/60%, and no
+ * dedup (`alertedCallers`/`day.alerted`) that would block a repeat send -
+ * a test needs to work at any moment, not just once a day.
  *
- * נקראת רק מ-`/api/admin/alert-test`, כלומר רק ע"י מי שכבר עבר שער
- * הרשאות admin.
+ * Called only from `/api/admin/alert-test`, i.e. only by someone who has
+ * already passed the admin permission gate.
  */
 export async function sendTestAlert(): Promise<AlertPostResult> {
   return post(
@@ -857,7 +900,7 @@ export async function sendTestAlert(): Promise<AlertPostResult> {
   );
 }
 
-/** לבדיקות בלבד */
+/** For tests only */
 export function resetBudgetForTest(init?: Partial<DayState>): void {
   state = { ...fresh(dayKey()), ...init };
   monthState = freshMonth(monthKey());

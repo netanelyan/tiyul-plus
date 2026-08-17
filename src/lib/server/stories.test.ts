@@ -10,7 +10,7 @@ test('buildSnapshot: שמות ומיקומים מהקטלוג האמיתי, לא
   });
   assert.equal(snap.days.length, 1);
   assert.equal(snap.days[0].cityName, 'וינה');
-  // מזהה לא קיים מדולג בשקט - לא ממציאים עצירה
+  // A nonexistent id is silently skipped - we don't invent a stop
   assert.equal(snap.days[0].stops.length, 1);
   assert.ok(snap.days[0].stops[0].name.length > 0);
   assert.ok(Number.isFinite(snap.days[0].stops[0].lat));
@@ -23,7 +23,7 @@ test('buildSnapshot: שם ארוך נחתך, עיר לא מוכרת מקבלת �
   });
   assert.ok(snap.name.length <= 80);
   assert.equal(snap.days[0].cityName, 'explored-somewhere');
-  assert.equal(snap.days[0].stops.length, 0); // מקומות שנחקרו אינם בקטלוג - לא מומצאים
+  assert.equal(snap.days[0].stops.length, 0); // Explored places are not in the catalog - not invented
 });
 
 test('newStorySlug: צורה יציבה שהעמוד הציבורי מאמת מולה', () => {
@@ -36,9 +36,9 @@ test('parsePhotoDataUrl: מקבל jpeg/png/webp תקינים, דוחה כל הש
   const tiny = Buffer.from([0xff, 0xd8, 0xff]).toString('base64');
   assert.ok(parsePhotoDataUrl(`data:image/jpeg;base64,${tiny}`));
   assert.ok(parsePhotoDataUrl(`data:image/png;base64,${tiny}`));
-  assert.equal(parsePhotoDataUrl(`data:image/svg+xml;base64,${tiny}`), null); // svg = סקריפטים
+  assert.equal(parsePhotoDataUrl(`data:image/svg+xml;base64,${tiny}`), null); // svg = scripts
   assert.equal(parsePhotoDataUrl(`data:text/html;base64,${tiny}`), null);
-  assert.equal(parsePhotoDataUrl('https://example.com/x.jpg'), null); // לא מושכים כתובות
+  assert.equal(parsePhotoDataUrl('https://example.com/x.jpg'), null); // We don't fetch URLs
   assert.equal(parsePhotoDataUrl(`data:image/jpeg;base64,not!!valid`), null);
 });
 

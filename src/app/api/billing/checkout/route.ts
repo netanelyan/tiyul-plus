@@ -6,14 +6,16 @@ import { resolveCaller } from '@/lib/server/identity';
 import { checkLimit } from '@/lib/server/limits';
 
 /**
- * POST → { url } לאישור המנוי, או { url: null, error }.
- * דורש משתמש מחובר (Authorization) - המנוי נקשר לחשבון, לא לדפדפן.
+ * POST → { url } for subscription approval, or { url: null, error }.
+ * Requires a signed-in user (Authorization) - the subscription is tied to the
+ * account, not to the browser.
  *
- * **PayPal קודם, Stripe כירושה.** PayPal הוא המעבד שכבר מריץ כסף אמיתי
- * באתר (הבדיקה לפני הנסיעה); Stripe מעולם לא חובר. המסלול של PayPal
- * יוצר Subscription עם custom_id = ה-uuid המאומת של המשתמש - ההפעלה
- * עצמה קורית רק ב-webhook (BILLING.SUBSCRIPTION.ACTIVATED), לא כאן.
- * אותו שומר sandbox-על-הדומיין-החי כמו ברכישה החד-פעמית.
+ * **PayPal first, Stripe as legacy.** PayPal is the processor already running
+ * real money on the site (the pre-departure check); Stripe was never wired up.
+ * The PayPal path creates a Subscription with custom_id = the user's verified
+ * uuid - the activation itself happens only in the webhook
+ * (BILLING.SUBSCRIPTION.ACTIVATED), not here. Same sandbox-on-the-live-domain
+ * guard as in the one-time purchase.
  */
 export async function POST(request: Request) {
   const caller = await resolveCaller(request);

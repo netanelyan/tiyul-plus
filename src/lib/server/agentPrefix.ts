@@ -2,25 +2,28 @@ import { buildGroundingIndex } from '@/lib/server/grounding';
 import { AGENT_TOOLS } from '@/lib/trip/agent';
 
 /**
- * שרת בלבד - **הקידומת שנשמרת במטמון, במקום אחד.**
+ * Server only - **the cached prefix, in one place.**
  *
- * שלושת הבלוקים הראשונים של כל קריאה כבדה (כלים → פרומפט המערכת →
- * אינדקס הקטלוג) הם בדיוק מה ש-Anthropic שומרת במטמון, וההפרש בין
- * קריאה קרה לחמה הוא כמעט כל העלות שלנו: $0.447 מול $0.063 (נמדד).
+ * The first three blocks of every heavy call (tools → system prompt →
+ * catalog index) are exactly what Anthropic caches, and the gap between a
+ * cold call and a warm one is almost our entire cost: $0.447 vs $0.063
+ * (measured).
  *
- * הקובץ הזה קיים כי **מאז שיש שתי נקודות שמרכיבות את הקידומת - הצ׳אט
- * ונתיב החימום - הן חייבות להיות זהות בייט-בבייט.** קידומת שונה בתו
- * אחד היא מטמון אחר, כלומר חימום שלא מחמם כלום ומשלם על עצמו בשקט.
- * יש טסט שמשווה את השתיים.
+ * This file exists because **now that two places assemble the prefix - the
+ * chat and the warm-up route - they must be byte-for-byte identical.** A
+ * prefix that differs by one character is a different cache, i.e. a warm-up
+ * that warms nothing and quietly pays for itself. There is a test comparing
+ * the two.
  */
 
-/** תוקף המטמון. `ANTHROPIC_CACHE_TTL=5m` מחזיר את ההתנהגות הישנה בלי דיפלוי. */
+/** Cache TTL. `ANTHROPIC_CACHE_TTL=5m` restores the old behavior without a deploy. */
 export const CACHE_TTL: '1h' | null = process.env.ANTHROPIC_CACHE_TTL === '5m' ? null : '1h';
 
 /**
- * בסיס ה-API. קיים כדי שאפשר יהיה להריץ הארנס מול שרת מדומה - בלי זה
- * אין שום דרך לבדוק *מה* נשלח בפועל בקידומת, וזו בדיוק הטענה היקרה
- * כאן. בפרודקשן הוא לא מוגדר ולכן הערך הוא הכתובת האמיתית.
+ * The API base. Exists so the harness can run against a mock server -
+ * without it there is no way to check *what* is actually sent in the
+ * prefix, and that is precisely the expensive claim here. In production it
+ * is unset, so the value is the real address.
  */
 export const anthropicBase = () =>
   process.env.ANTHROPIC_BASE_URL ?? 'https://api.anthropic.com';
@@ -146,9 +149,10 @@ DATA (destinations, places, itineraries, practical info):
 `;
 
 /**
- * שני הבלוקים שמרכיבים את הקידומת הנשמרת, בסדר המדויק שלהם.
- * `ttl` נכתב רק כשהוא קיים - `{type:'ephemeral'}` ו-`{type:'ephemeral',
- * ttl:undefined}` הם JSON שונה, ולכן גם מטמון שונה.
+ * The two blocks that make up the cached prefix, in their exact order.
+ * `ttl` is written only when it exists - `{type:'ephemeral'}` and
+ * `{type:'ephemeral', ttl:undefined}` are different JSON, and therefore
+ * a different cache.
  */
 export function cachedPrefix(kosherOk: boolean): SystemBlock[] {
   return [
@@ -163,22 +167,23 @@ export function cachedPrefix(kosherOk: boolean): SystemBlock[] {
   ];
 }
 
-/** הכלים נשלחים לפני ה-system, ולכן גם הם חלק מהקידומת. */
+/** The tools are sent before the system, so they too are part of the prefix. */
 export const cachedTools = () => AGENT_TOOLS;
 
-/* ---------- מתי מחממים ---------- */
+/* ---------- When to warm ---------- */
 
-/** אין קריאה כבדה בזמן הזה => המטמון לא רוענן ואף אחד לא יעשה זאת */
+/** No heavy call within this window => the cache was not refreshed and nobody will */
 export const WARM_QUIET_MS = 40 * 60_000;
-/** מעבר לזה המטמון כנראה כבר פג, וחימום ישלם כתיבה מלאה עבור אף אחד */
+/** Beyond this the cache has probably already expired, and warming would pay a full write for nobody */
 export const WARM_STALE_MS = 70 * 60_000;
 
 /**
- * כמה זמן אחרי המבקר האמיתי האחרון עוד שווה לגשר.
+ * How long after the last real visitor it is still worth bridging.
  *
- * שלוש שעות. הרעיון הוא לגשר על **פערים בין מבקרים**, לא להחזיק מטמון
- * חם לנצח: אחרי שלוש שעות בלי אף אדם ההימור שמישהו עומד להגיע בדיוק
- * עכשיו כבר לא מחזיר את ההשקעה, והמבקר הבא ישלם ממילא כתיבה אחת.
+ * Three hours. The idea is to bridge **gaps between visitors**, not to keep
+ * a warm cache forever: after three hours with no human, the bet that
+ * somebody is about to arrive right now no longer pays back, and the next
+ * visitor will pay one write anyway.
  */
 export const WARM_MAX_BRIDGE_MS = 3 * 60 * 60_000;
 
@@ -191,28 +196,30 @@ export type WarmDecision =
   | 'nobody_around';
 
 /**
- * **ההחלטה היחידה שיש כאן, ושלוש מתוך ארבע התשובות הן "לא".**
+ * **The only decision here, and three of the four answers are "no".**
  *
- * - תנועה אמיתית ברגע האחרון כבר חיממה את המטמון בחינם, וחימום נוסף הוא
- *   בזבוז נטו. ככל שהאתר עסוק יותר, הפונקציה הזאת מחזירה `warm` פחות,
- *   ובתנועה יציבה היא לא מחזירה אותו בכלל - **הפיצ׳ר מכבה את עצמו
- *   כשמצליחים.**
- * - נגיעה ישנה מדי פירושה מטמון שכבר פג, וחימום היה משלם **כתיבה** מלאה
- *   עבור אף אחד. עדיף להשאיר את זה למבקר האמיתי הבא, שממילא משלם אותה.
- * - בלי תוקף של שעה אין מה לתחזק: חלון של 40-70 דקות לא יכול לתפוס
- *   מטמון בן חמש דקות.
+ * - Real traffic in the last moment already warmed the cache for free, and
+ *   an extra warm-up is a net waste. The busier the site, the less this
+ *   function returns `warm`, and under steady traffic it never returns it
+ *   at all - **the feature switches itself off when it succeeds.**
+ * - A touch that is too old means a cache that has already expired, and
+ *   warming would pay a full **write** for nobody. Better to leave that to
+ *   the next real visitor, who pays it anyway.
+ * - Without a one-hour TTL there is nothing to maintain: a 40-70 minute
+ *   window cannot catch a five-minute cache.
  */
 export function warmDecision(
   lastTouchMs: number | null,
   now: number,
   ttl: '1h' | null = CACHE_TTL,
   /**
-   * מתי עברה קריאה של **אדם** - להבדיל מחימום שלנו.
+   * When a **human** call last went through - as opposed to our own warm-up.
    *
-   * בלי הפרדה בין שני השעונים החימום מנציח את עצמו: הוא רושם הוצאה,
-   * ההוצאה הזאת היא "הנגיעה האחרונה", ו-40 דקות אחר כך הוא מחמם שוב
-   * לנצח - באתר בלי אף מבקר. הפרמטר אופציונלי כדי לא לשבור קורא קיים,
-   * ובהיעדרו ההתנהגות היא כמו קודם.
+   * Without separating the two clocks the warm-up perpetuates itself: it
+   * records a spend, that spend becomes "the last touch", and 40 minutes
+   * later it warms again forever - on a site with no visitors at all. The
+   * parameter is optional so as not to break an existing caller, and in its
+   * absence the behavior is as before.
    */
   lastRealMs: number | null = lastTouchMs,
 ): WarmDecision {
@@ -221,7 +228,7 @@ export function warmDecision(
   const since = now - lastTouchMs;
   if (since < WARM_QUIET_MS) return 'recent_traffic';
   if (since > WARM_STALE_MS) return 'cache_expired';
-  // המטמון חי ואף אחד לא ריענן אותו - אבל האם יש בשביל מי?
+  // The cache is alive and nobody refreshed it - but is there anyone to warm it for?
   if (lastRealMs === null || now - lastRealMs > WARM_MAX_BRIDGE_MS) return 'nobody_around';
   return 'warm';
 }

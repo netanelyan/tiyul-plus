@@ -1,28 +1,32 @@
 /**
- * **המטבע והשפה שאנחנו מבקשים מ-Viator - ומה באמת אפשר לבקש.**
+ * **The currency and language we request from Viator - and what can actually
+ * be requested.**
  *
- * ## המצב לפני השינוי
+ * ## The situation before the change
  *
- * המטבע היה `VIATOR_CURRENCY` יחיד לכל האתר, עם ברירת מחדל `USD`, כך
- * שמחיר של סיור בווינה הוצג בדולרים. השפה הייתה `en-US` קבוע.
+ * The currency was a single site-wide `VIATOR_CURRENCY`, defaulting to `USD`,
+ * so the price of a tour in Vienna was shown in dollars. The language was a
+ * fixed `en-US`.
  *
- * ## מה הם בכלל תומכים בו, ולמה זה מגביל את התשובה
+ * ## What they support at all, and why that constrains the answer
  *
- * התיעוד שלהם מונה **שישה עשר מטבעות בלבד**, והשקל אינו אחד מהם - מה
- * שמסתדר עם ההוראה "בלי המרה לשקלים". מטבעות של יעדים רבים בקטלוג
- * (קרונה צ׳כית, פורינט, באט, דירהם, לארי) פשוט אינם ברשימה.
+ * Their documentation lists **only sixteen currencies**, and the shekel is not
+ * one of them - which fits the "no conversion to shekels" instruction.
+ * Currencies of many catalog destinations (Czech koruna, forint, baht, dirham,
+ * lari) are simply not on the list.
  *
- * לכן הכלל כאן הוא: **המטבע המקומי כשהם תומכים בו, ואחרת נפילה
- * מוגדרת** - ולא ניחוש. בקשת מטבע לא נתמך היא בקשה לא צפויה, ובתשובה
- * לא צפויה אין מה להציג.
+ * So the rule here is: **the local currency when they support it, otherwise a
+ * defined fallback** - and not a guess. Requesting an unsupported currency is
+ * an unexpected request, and there is nothing to display from an unexpected
+ * answer.
  *
- * **התצוגה ממילא לעולם לא ממירה כלום**: `toOffer` קורא את
- * `pricing.currency` מהתשובה שלהם ומציג אותו כפי שהוא. הקובץ הזה משפיע
- * רק על מה ש*מבקשים*, והתצוגה נשארת "מה שהם החזירו".
+ * **The display never converts anything anyway**: `toOffer` reads
+ * `pricing.currency` from their response and shows it as-is. This file only
+ * affects what is *requested*, and the display stays "whatever they returned".
  */
 
 /**
- * המטבעות שהתיעוד של Viator מונה במפורש. שש עשרה.
+ * The currencies Viator's documentation lists explicitly. Sixteen.
  * https://docs.viator.com/partner-api/affiliate/technical/
  */
 export const VIATOR_CURRENCIES = new Set([
@@ -45,17 +49,19 @@ export const VIATOR_CURRENCIES = new Set([
 ]);
 
 /**
- * המטבע המקומי של כל מדינה בקטלוג, **רק כשהוא ברשימה שלמעלה**.
+ * The local currency of every country in the catalog, **only when it is on the
+ * list above**.
  *
- * מדינה שאינה כאן אינה חסרה בטעות - היא מדינה שהמטבע שלה אינו נתמך
- * (צ׳כיה, הונגריה, תאילנד, איחוד האמירויות, גאורגיה, טורקיה, פולין,
- * מרוקו, וכן הלאה). הן נופלות ל-`FALLBACK_CURRENCY`, וזה מכוון: עדיף
- * מחיר בדולר שאפשר להשוות מאשר בקשה שהם לא יודעים לענות עליה.
+ * A country missing here is not missing by mistake - it is a country whose
+ * currency is unsupported (Czechia, Hungary, Thailand, the UAE, Georgia,
+ * Turkey, Poland, Morocco, and so on). They fall to `FALLBACK_CURRENCY`, and
+ * that is intentional: a comparable dollar price beats a request they do not
+ * know how to answer.
  *
- * ארצות הברית, אקוודור ופנמה משתמשות כולן בדולר בפועל.
+ * The USA, Ecuador and Panama all use the dollar in practice.
  */
 const CURRENCY_BY_COUNTRY: Record<string, string> = {
-  // גוש האירו
+  // The eurozone
   austria: 'EUR',
   slovakia: 'EUR',
   italy: 'EUR',
@@ -75,10 +81,10 @@ const CURRENCY_BY_COUNTRY: Record<string, string> = {
   malta: 'EUR',
   belgium: 'EUR',
   finland: 'EUR',
-  // אירו בשימוש בפועל, בלי להיות בגוש
+  // Euro in actual use, without being in the zone
   montenegro: 'EUR',
 
-  // מטבעות משלהן שנתמכים
+  // Their own currencies that are supported
   switzerland: 'CHF',
   japan: 'JPY',
   norway: 'NOK',
@@ -93,18 +99,19 @@ const CURRENCY_BY_COUNTRY: Record<string, string> = {
   singapore: 'SGD',
   'united-kingdom': 'GBP',
 
-  // דולר אמריקאי בפועל
+  // US dollar in actual use
   usa: 'USD',
   ecuador: 'USD',
   panama: 'USD',
 };
 
-/** מה מבקשים כשאין מטבע מקומי נתמך. */
+/** What is requested when there is no supported local currency. */
 export const FALLBACK_CURRENCY = 'USD';
 
 /**
- * המטבע לבקש עבור מדינה. `VIATOR_CURRENCY` דורס הכל - מפסק ידני אחד
- * למקרה שצריך לקבע הכול לערך אחד בלי דיפלוי.
+ * The currency to request for a country. `VIATOR_CURRENCY` overrides
+ * everything - a single manual switch in case everything must be pinned to one
+ * value without a deploy.
  */
 export function currencyForCountry(countrySlug: string | null | undefined): string {
   const forced = process.env.VIATOR_CURRENCY?.toUpperCase();
@@ -114,12 +121,13 @@ export function currencyForCountry(countrySlug: string | null | undefined): stri
 }
 
 /**
- * השפות ש-Viator תומכת בהן. **עברית אינה ביניהן**, ואין דרך לבקש
- * ממנה שמות ותיאורים בעברית.
+ * The languages Viator supports. **Hebrew is not among them**, and there is no
+ * way to request names and descriptions from it in Hebrew.
  *
- * המשמעות המעשית, ואי אפשר לעקוף אותה מהצד שלנו: שמות המוצרים
- * והתיאורים חוזרים באנגלית. לתרגם אותם אצלנו זו בדיוק ההמצאה
- * שהמדור הזה בנוי לא לעשות - "כל מספר וכל שם מגיעים מהתשובה שלהם".
+ * The practical meaning, and it cannot be worked around on our side: product
+ * names and descriptions come back in English. Translating them ourselves is
+ * exactly the invention this section is built not to do - "every number and
+ * every name comes from their response".
  */
 export const VIATOR_LANGUAGES = new Set([
   'en',
@@ -149,9 +157,10 @@ export const VIATOR_LANGUAGES = new Set([
 export const FALLBACK_LANGUAGE = 'en-US';
 
 /**
- * השפה לבקש. ערך לא נתמך ב-`VIATOR_LANGUAGE` **נדחה בשקט לטובת
- * אנגלית** במקום להישלח - `Accept-Language: he-IL` היה מחזיר תשובה לא
- * צפויה, ובמקרה הטוב פשוט מתעלמים ממנו.
+ * The language to request. An unsupported value in `VIATOR_LANGUAGE` is
+ * **quietly rejected in favor of English** rather than sent -
+ * `Accept-Language: he-IL` would return an unexpected response, and at best is
+ * simply ignored.
  */
 export function viatorLanguage(): string {
   const want = process.env.VIATOR_LANGUAGE;

@@ -1,18 +1,20 @@
 /**
- * שרת בלבד - שער ההרשאות של אזור הניהול.
+ * Server only - the admin area's authorization gate.
  *
- * ## הכלל שכל השאר נשען עליו
+ * ## The rule everything else rests on
  *
- * **התפקיד נקרא מהדאטהבייס לפי הטוקן, ולעולם לא מגוף הבקשה.**
- * לקוח יכול לשלוח `{"role":"owner"}` בכל בקשה, ולכן שום נתיב לא מסתכל
- * על מה שנשלח: מאמתים את הטוקן מול GoTrue, מקבלים uuid, וקוראים את
- * `profiles.role` עם ה-service role. אין דרך אחרת פנימה.
+ * **The role is read from the database based on the token, never from the
+ * request body.** A client can send `{"role":"owner"}` in any request, so
+ * no route looks at what was sent: the token is verified against GoTrue,
+ * we get a uuid, and read `profiles.role` with the service role. There is
+ * no other way in.
  *
- * ## למה אין מטמון על התפקיד
+ * ## Why there is no cache on the role
  *
- * `identity.ts` שומר את התוכנית במטמון של 5 דקות, וזה בסדר למכסות. כאן
- * לא: הורדת תפקיד חייבת לחול מיד, ולא להישאר תקפה חמש דקות אחרי שנשללה.
- * פעולות ניהול הן נדירות, אז העלות זניחה.
+ * `identity.ts` caches the plan for 5 minutes, and that is fine for
+ * quotas. Not here: a role demotion must take effect immediately, not
+ * remain valid five minutes after it was revoked. Admin operations are
+ * rare, so the cost is negligible.
  */
 
 import { type Role, isRole, roleAtLeast } from '@/lib/plans';
@@ -34,7 +36,7 @@ function bearer(req: Request): string | null {
   return m ? m[1] : null;
 }
 
-/** מאמת את הטוקן מול GoTrue ומחזיר uuid, או null */
+/** Verifies the token against GoTrue and returns a uuid, or null */
 async function userIdFromToken(token: string): Promise<string | null> {
   if (!supaUrl() || !anonKey()) return null;
   try {
@@ -51,15 +53,17 @@ async function userIdFromToken(token: string): Promise<string | null> {
 }
 
 /**
- * האם אזור הניהול מוגדר בשרת בכלל - כלומר יש URL ויש service role.
- * שימושי כדי להבדיל בין "אין לך הרשאה" לבין "המפתח חסר" (ראו /api/admin/me).
+ * Whether the admin area is configured on the server at all - i.e. there
+ * is a URL and a service role. Useful for distinguishing "you lack
+ * permission" from "the key is missing" (see /api/admin/me).
  */
 export const adminConfigured = () => adminDbEnabled();
 
 /**
- * רק "האם זה מישהו מחובר באמת", בלי ה-service role. מאפשר להחזיר הודעת
- * "לא מוגדר" למשתמש מחובר גם כשאין מפתח - כי בלי המפתח אין שום דרך לקרוא
- * את התפקיד שלו ולכן אין דרך אחרת להבדיל בין המצבים.
+ * Just "is this a genuinely signed-in someone", without the service role.
+ * Lets us return a "not configured" message to a signed-in user even when
+ * the key is missing - because without the key there is no way at all to
+ * read their role, and therefore no other way to tell the states apart.
  */
 export async function signedInUserId(req: Request): Promise<string | null> {
   const token = bearer(req);
@@ -68,9 +72,10 @@ export async function signedInUserId(req: Request): Promise<string | null> {
 
 
 /**
- * מי הקורא. מחזיר null כשאין טוקן תקין, כשה-service role לא מוגדר, או
- * כשעמודת role עוד לא קיימת (ה-SQL לא רץ) - בכל המקרים האלה אין ניהול,
- * וזה המצב הבטוח.
+ * Who the caller is. Returns null when there is no valid token, when the
+ * service role is unconfigured, or when the role column does not exist yet
+ * (the SQL has not run) - in all of these cases there is no admin access,
+ * and that is the safe state.
  */
 export async function actorFrom(req: Request): Promise<Actor | null> {
   if (!adminDbEnabled()) return null;
@@ -88,9 +93,9 @@ export async function actorFrom(req: Request): Promise<Actor | null> {
 }
 
 /**
- * שער: מחזיר את הקורא רק אם יש לו לפחות את התפקיד הנדרש, אחרת null.
- * הנתיבים מחזירים על null את אותה תשובה שהם מחזירים למשתמש לא מחובר -
- * בלי לרמז שהאזור קיים.
+ * Gate: returns the caller only if they hold at least the required role,
+ * otherwise null. On null, the routes return the same response they return
+ * to a signed-out user - without hinting that the area exists.
  */
 export async function requireRole(req: Request, need: Role): Promise<Actor | null> {
   const actor = await actorFrom(req);
@@ -98,7 +103,7 @@ export async function requireRole(req: Request, need: Role): Promise<Actor | nul
   return roleAtLeast(actor.role, need) ? actor : null;
 }
 
-/** תשובה אחידה לחוסר הרשאה. 404 ולא 403 בכוונה - אין מה לאשר לזרים. */
+/** Uniform response for missing permission. 404 and not 403 on purpose - there is nothing to confirm to strangers. */
 export const denied = () =>
   new Response(JSON.stringify({ error: 'not_found' }), {
     status: 404,
@@ -118,8 +123,9 @@ export const ok = (data: unknown) =>
   });
 
 /**
- * יומן ביקורת. נכתב **לפני** שמחזירים תשובה מוצלחת, וכישלון בכתיבתו לא
- * מפיל את הפעולה - אבל כן נרשם בלוג השרת, כי יומן שקט הוא יומן שאין.
+ * Audit log. Written **before** a successful response is returned, and a
+ * failure to write it does not fail the operation - but it is logged on
+ * the server, because a silent log is a log that does not exist.
  */
 export async function audit(
   actor: Actor,

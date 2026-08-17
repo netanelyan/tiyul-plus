@@ -1,23 +1,27 @@
 /**
- * ---------- מה הפוטר מקשר אליו, נגזר מהדאטה ----------
+ * ---------- What the footer links to, derived from the data ----------
  *
- * **שרת בלבד.** הקובץ מייבא את הקטלוג, ולכן אסור שרכיב לקוח ייגע בו -
- * זו בדיוק הדרך שבה 492kB דחוסים נכנסו פעם לכל עמוד באתר דרך `SiteNav`.
- * הפוטר הוא רכיב שרת, וכל מה שיוצא מכאן הוא רשימת קישורים קטנה.
+ * **Server only.** This file imports the catalog, so no client component may
+ * touch it - that is exactly how 492kB compressed once entered every page on
+ * the site through `SiteNav`. The footer is a server component, and all that
+ * leaves here is a small list of links.
  *
- * ## למה נגזר ולא כתוב ביד
+ * ## Why derived and not hand-written
  *
- * רשימת "היעדים הפופולריים" בפוטר היא בדיוק סוג הדבר שנכתב פעם אחת
- * ומזדקן בשקט: סשן הדאטה מוסיף יעדים כל לילה, ורשימה קבועה תמשיך להצביע
- * על אותן שמונה ערים מ-2026 בזמן שהקטלוג הכפיל את עצמו. אותו דבר
- * למספרים - "1,800 מקומות" בפוטר הוא מספר שיהיה שגוי בתוך שבוע.
+ * The footer's "popular destinations" list is exactly the kind of thing that
+ * gets written once and quietly goes stale: the data session adds
+ * destinations every night, and a fixed list would keep pointing at the same
+ * eight cities from 2026 while the catalog doubled itself. Same for the
+ * numbers - "1,800 places" in the footer is a number that will be wrong
+ * within a week.
  *
- * ## איך נבחרים היעדים
+ * ## How the destinations are picked
  *
- * לפי הדירוג העורכי שכבר קיים על כל יעד (`editorialRating.score`), עם
- * שובר-שוויון לפי מספר המקומות. ועוד כלל אחד שחשוב יותר מהדירוג:
- * **לכל היותר שני יעדים לאותה מדינה.** בלעדיו הרשימה מתמלאת באיטליה
- * ויוון ונראית כמו טעות, לא כמו בחירה.
+ * By the editorial rating that already exists on every destination
+ * (`editorialRating.score`), with a tie-breaker by place count. And one more
+ * rule that matters more than the rating: **at most two destinations per
+ * country.** Without it the list fills with Italy and Greece and looks like
+ * a mistake, not a choice.
  */
 
 import { destinations } from '@/data/destinations';
@@ -28,31 +32,34 @@ export interface FooterLink {
   label: string;
 }
 
-/** כמה מכל סוג. שורה של צ׳יפים, לא עמודה - ולכן מספרים קטנים. */
+/** How many of each kind. A row of chips, not a column - hence small numbers. */
 const MAX_DESTINATIONS = 10;
 const MAX_COUNTRIES = 6;
 const MAX_PER_COUNTRY = 2;
 
-/** מעל זה השם כבר לא נכנס לצ׳יפ בלי לשבור את השורה */
+/** Above this the name no longer fits a chip without breaking the row */
 const MAX_NAME_CHARS = 12;
 
 /**
- * שם שמתאים לצ׳יפ.
+ * A name that fits a chip.
  *
- * הדירוג העורכי לבדו העלה לפוטר את "הגרנד קניון ופארקי הדרום-מערב"
- * ו"קווינסטאון והאי הדרומי" - שמות נכונים לגמרי, שבשורת צ׳יפים נראים
- * מרופטים ודוחפים כל שורה לשתיים. שני הפוסלים הם אורך, ו-ו׳ החיבור
- * שמסגירה שם מורכב ("X ו-Y"), ומקף שעושה את אותו הדבר.
+ * The editorial rating alone put the Hebrew names for "the Grand Canyon and
+ * the Southwest parks" and "Queenstown and the South Island" into the
+ * footer - perfectly correct names that look ragged in a chip row and push
+ * every row to two lines. The disqualifiers are length, the Hebrew
+ * conjunctive vav that betrays a compound name ("X and Y"), and a hyphen
+ * that does the same.
  *
- * זה מסנן **מאיזה מאגר בוחרים**, לא מה נכון: היעדים האלה נשארים
- * בקטלוג ובקישור "כל היעדים" שבסוף השורה.
+ * This filters **which pool we pick from**, not what is correct: these
+ * destinations stay in the catalog and in the "all destinations" link at
+ * the end of the row.
  */
 const isChipName = (name: string) =>
   name.length <= MAX_NAME_CHARS && !/\sו/.test(name) && !name.includes('-');
 
 const score = (d: (typeof destinations)[number]) => d.editorialRating?.score ?? 0;
 
-/** היעדים המשמעותיים ביותר, בפיזור סביר בין מדינות */
+/** The most significant destinations, reasonably spread across countries */
 export const footerDestinations: FooterLink[] = (() => {
   const ranked = [...destinations]
     .filter((d) => isChipName(d.name))
@@ -71,7 +78,7 @@ export const footerDestinations: FooterLink[] = (() => {
   return picked;
 })();
 
-/** המדינות שהקטלוג הכי עמוק בהן - לפי מספר היעדים, ואז מקומות */
+/** The countries the catalog is deepest in - by destination count, then places */
 export const footerCountries: FooterLink[] = (() => {
   const byCountry = new Map<string, { dests: number; places: number }>();
   for (const d of destinations) {
@@ -92,8 +99,9 @@ export const footerCountries: FooterLink[] = (() => {
 })();
 
 /**
- * היקף הקטלוג. **אף מספר כאן לא נכתב ביד** - ראו את הטסט שסופר מהדאטה
- * ומשווה, כדי שאי אפשר יהיה להחליף את זה במחרוזת "נוחה" בעתיד.
+ * The catalog's scope. **No number here is hand-written** - see the test
+ * that counts from the data and compares, so this cannot be replaced with a
+ * "convenient" string in the future.
  */
 export const catalogCounts = {
   places: destinations.reduce((n, d) => n + d.places.length, 0),
@@ -101,7 +109,7 @@ export const catalogCounts = {
   countries: countries.filter((c) => destinations.some((d) => d.countrySlug === c.slug)).length,
 };
 
-/** "1,814 מקומות · 166 יעדים · 83 מדינות" - מספרים בפורמט עברי קריא */
+/** The "1,814 places · 166 destinations · 83 countries" line - numbers in readable Hebrew formatting */
 export const coverageCountsLine = (): string =>
   [
     `${catalogCounts.places.toLocaleString('he-IL')} מקומות`,

@@ -6,28 +6,33 @@ import { requestIp } from '@/lib/server/identity';
 import { adminInsert, adminRpc, adminSelect, adminUpdate } from '@/lib/server/supabaseAdmin';
 
 /**
- * פדיון קוד הטבה ע"י המטייל עצמו. **לא** נתיב ניהול - כל משתמש מחובר
- * יכול לקרוא לו - ולכן הוא הנקודה החשופה ביותר בפיצ׳ר הזה, ובנוי בהתאם:
+ * Redemption of a promo code by the traveller themself. **Not** an admin
+ * route - any signed-in user can call it - which makes it the most exposed
+ * point of this feature, and it is built accordingly:
  *
- * - הזהות באה מהטוקן ולא מהגוף. אי אפשר לפדות קוד "בשם" מישהו אחר.
- * - הבדיקה והעדכון קורים ב-RPC אחד אטומי (`redeem_promo`), עם נעילת
- *   שורה. קריאה-ואז-כתיבה מהשרת הייתה מאפשרת לשתי בקשות במקביל לפדות
- *   את המקום האחרון בקוד.
- * - פדיון כפול נחסם ע"י מפתח ראשי כפול בדאטהבייס, לא ע"י תנאי בקוד.
- * - הודעות השגיאה לא מבדילות בין "קוד לא קיים" ל"קוד מלא" - אין סיבה
- *   לעזור למי שמנחש קודים.
- * - **הגבלת קצב על הניחוש עצמו.** בלעדיה כל ההגנות למעלה חסרות משמעות:
- *   קוד הוא 3-24 תווים אלפאנומריים, וחשבון מחובר יחיד היה יכול לסרוק
- *   אלפי קודים בדקה עד שאחד מהם עובד. נספר גם לפי החשבון וגם לפי ה-IP,
- *   כי חשבון חדש הוא בחינם ובמייל אחד - הכתובת היא מה שלא מתחלף בקלות.
+ * - The identity comes from the token, not the body. A code cannot be
+ *   redeemed "on behalf of" somebody else.
+ * - The check and the update happen in one atomic RPC (`redeem_promo`), with
+ *   a row lock. A read-then-write from the server would let two concurrent
+ *   requests both redeem the last slot in a code.
+ * - Double redemption is blocked by a composite primary key in the database,
+ *   not by a condition in code.
+ * - The error messages do not distinguish "code does not exist" from "code
+ *   is full" - there is no reason to help somebody guessing codes.
+ * - **Rate limiting on the guessing itself.** Without it every protection
+ *   above is meaningless: a code is 3-24 alphanumeric characters, and a
+ *   single signed-in account could scan thousands of codes a minute until
+ *   one works. Counted both per account and per IP, because a new account is
+ *   free and one email away - the address is what does not change easily.
  *
- * הענקה דרך קוד **מאריכה** פרימיום קיים ולא מקצרת אותו: מי שיש לו כבר
- * חודש מקבל חודש נוסף, ומי שיש לו מנוי Stripe ללא תאריך לא מאבד אותו.
+ * A grant via a code **extends** existing premium and never shortens it:
+ * somebody who already has a month gets an additional month, and somebody
+ * with a dateless Stripe subscription does not lose it.
  */
 const json = (data: unknown, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json' } });
 
-/** תשובת חסימה אחת לשני המדדים - עם זמן ההמתנה, כדי שה-UI יאמר מספר אמיתי */
+/** One block response for both meters - with the wait time, so the UI states a real number */
 const tooMany = (r: { retryAfterSec: number }) =>
   new Response(JSON.stringify({ ok: false, error: 'too_many_attempts', retryAfterSec: r.retryAfterSec }), {
     status: 429,
@@ -35,10 +40,11 @@ const tooMany = (r: { retryAfterSec: number }) =>
   });
 
 export async function POST(req: Request) {
-  // **ההגבלה לפי כתובת קודמת לאימות בכוונה.** `actorFrom` עושה קריאת
-  // רשת ל-GoTrue ועוד קריאה לדאטהבייס בכל ניסיון; אם החסימה יושבת אחריה,
-  // מי שסורק קודים עדיין מעסיק את שתיהן אלף פעמים בדקה. הזהות שאפשר
-  // לסמוך עליה לפני אימות היא הכתובת, אז היא נבדקת ראשונה.
+  // **The per-address limit deliberately runs before authentication.**
+  // `actorFrom` makes a network call to GoTrue plus a database read on every
+  // attempt; if the block sits after it, somebody scanning codes still
+  // exercises both a thousand times a minute. The identity that can be
+  // trusted before authentication is the address, so it is checked first.
   const ip = `ip:${requestIp(req)}`;
   const ipHour = checkLimit('promo-hour', ip, PROMO_ATTEMPTS_PER_HOUR, 60 * 60_000);
   const ipDay = checkLimit('promo-day', ip, PROMO_ATTEMPTS_PER_DAY, 24 * 60 * 60_000);
@@ -56,7 +62,8 @@ export async function POST(req: Request) {
   const code = typeof body.code === 'string' ? body.code.trim().toUpperCase() : '';
   if (!/^[A-Z0-9]{3,24}$/.test(code)) return json({ ok: false, error: 'bad_code' }, 400);
 
-  // ובנוסף לפי חשבון: מי שמחליף כתובת לא מקבל מכסה חדשה על אותו חשבון.
+  // And additionally per account: switching addresses does not grant a fresh
+  // quota on the same account.
   const userHour = checkLimit('promo-hour', actor.userId, PROMO_ATTEMPTS_PER_HOUR, 60 * 60_000);
   const userDay = checkLimit('promo-day', actor.userId, PROMO_ATTEMPTS_PER_DAY, 24 * 60 * 60_000);
   if (!userHour.ok || !userDay.ok) return tooMany(userHour.ok ? userDay : userHour);
@@ -66,7 +73,7 @@ export async function POST(req: Request) {
   if (days === -1) return json({ ok: false, error: 'already_redeemed' }, 409);
   if (days <= 0) return json({ ok: false, error: 'invalid_code' }, 404);
 
-  // מאריכים מהתאריך הקיים אם הוא בעתיד, אחרת מעכשיו
+  // Extend from the existing date if it is in the future, otherwise from now
   const current = await adminSelect<{ plan?: string; plan_until?: string | null }>(
     'profiles',
     pgQuery(eq('user_id', actor.userId), pgSelect(['plan', 'plan_until']), pgLimit(1)),

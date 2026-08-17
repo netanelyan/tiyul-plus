@@ -9,34 +9,39 @@ import TripWorkspace from '@/components/TripWorkspace';
 import ResumeTrips from '@/components/ResumeTrips';
 
 /**
- * חוויית הסוכן - הכוכב של האתר.
+ * The agent experience - the star of the site.
  *
- * שני מצבים בלבד:
- * 1. landing - שדה קלט אחד גדול במרכז המסך + צ׳יפים של הצעות. מינימליסטי
- *    בכוונה, ועכשיו גם שורת "או ממשיכים טיול קיים".
- * 2. התצוגה המאוחדת (TripWorkspace) - מסך אחד עם המסלול, המפה והשיחה
- *    יחד. אין יותר "טאב צ׳אט" נפרד מ"טאב תוכנית": /planner מרנדר את
- *    אותו רכיב בדיוק, על אותו Trip object.
+ * Two states only:
+ * 1. landing - one big input field centered on the screen + suggestion chips.
+ *    Deliberately minimalist, and now also a "or continue an existing trip"
+ *    row.
+ * 2. The unified view (TripWorkspace) - one screen with the itinerary, the map
+ *    and the conversation together. There is no longer a "chat tab" separate
+ *    from a "plan tab": /planner renders exactly the same component, on the
+ *    same Trip object.
  *
- * ## **הטיול הפתוח יושב בכתובת, לא באחסון**
+ * ## **The open trip lives in the URL, not in storage**
  *
- * זה תיקון של באג שנגע בכל משתמש: `currentId` נשמר ב-localStorage ולא
- * נוקה אף פעם, והמסך נבחר לפיו - כך שכל כניסה ל-/chat, מכל מקום, נפלה
- * לתוך הטיול הקודם. שאלה על נורווגיה נענתה בתוך טיול בסלובקיה, כי הטיול
- * הזה נשלח לשרת כהקשר ועריכות נכתבו לתוכו.
+ * This is a fix for a bug that touched every user: `currentId` was saved in
+ * localStorage and never cleared, and the screen was chosen by it - so every
+ * entry to /chat, from anywhere, fell into the previous trip. A question about
+ * Norway was answered inside a Slovakia trip, because that trip was sent to
+ * the server as context and edits were written into it.
  *
- * הכלל עכשיו: `/chat` נקי הוא **תמיד שיחה חדשה** - ובכניסה כזאת
- * `currentId` מתאפס, כדי ששום דבר לא ייגרר. `/chat?trip=<id>` הוא היחיד
- * שפותח טיול קיים, והפרמטר **נשאר בכתובת**, כך שרענון נשאר באותו מקום.
- * מכאן גם ש"להמשיך" הוא תמיד קישור שמישהו לחץ עליו.
+ * The rule now: a bare `/chat` is **always a new conversation** - and on such
+ * an entry `currentId` is reset, so nothing gets dragged along.
+ * `/chat?trip=<id>` is the only thing that opens an existing trip, and the
+ * parameter **stays in the URL**, so a refresh stays in the same place. It
+ * also follows that "continue" is always a link somebody clicked.
  */
 /**
- * כתיבת הטיול הפתוח לכתובת, דרך ה-History API ולא דרך הראוטר.
+ * Writing the open trip to the URL, via the History API and not the router.
  *
- * `router.replace` הוא ניווט רך: כשקוראים לו כדי רק להוריד פרמטר מאותו
- * עמוד הוא לא עדכן את הכתובת בפועל (נמדד - הפרמטר נשאר). ממילא המסך הזה
- * קורא את הפרמטרים מ-`window.location` ולא מ-`useSearchParams`, ולכן אין
- * כאן מצב ראוטר שיכול לצאת מסנכרון.
+ * `router.replace` is a soft navigation: when called only to drop a parameter
+ * on the same page it did not actually update the URL (measured - the
+ * parameter stayed). This screen reads its params from `window.location` and
+ * not `useSearchParams` anyway, so there is no router state here that can get
+ * out of sync.
  */
 function writeTripParam(id: string | null) {
   if (typeof window === 'undefined') return;
@@ -48,24 +53,26 @@ function writeTripParam(id: string | null) {
 export default function AgentWorkspace() {
   const trip = useTrip();
   const [started, setStarted] = useState(false);
-  // הבקשה הראשונה שממתינה לשליחה בתוך התצוגה המאוחדת (הגעה מדף הבית)
+  // The first request waiting to be sent inside the unified view (arriving from the homepage)
   const [pending, setPending] = useState<{ q?: string; kosher?: boolean }>({});
   const [pendingTripId, setPendingTripId] = useState<string | null>(null);
   const paramsHandled = useRef(false);
-  /** נכנסנו עם ?trip= - כלומר בחירה מפורשת, ולא שיחה חדשה */
+  /** We arrived with ?trip= - i.e. an explicit choice, not a new conversation */
   const resuming = useRef(false);
   /**
-   * הוכרע מה הטיול של הכניסה הזאת (או שאין כזה).
+   * Whether this entry's trip has been decided (or that there is none).
    *
-   * **חייב לחסום את הרינדור של הסדנה, ולא רק להיות דגל.** אפקטים של ילד
-   * רצים לפני אפקטים של הורה, ולכן `TripProvider` טוען מהאחסון רק אחרי
-   * שהמסך הזה כבר עלה - כלומר בלי החסימה הזאת הסדנה הייתה נטענת לרגע עם
-   * הטיול הישן ושולחת איתו את השאלה הראשונה. בדיוק הבאג, בגרסה מהירה.
+   * **This must block the workspace from rendering, not merely be a flag.** Child
+   * effects run before parent effects, so `TripProvider` loads from storage only
+   * after this screen has already mounted - meaning that without this block the
+   * workspace would briefly load with the old trip and send the first question
+   * along with it. Exactly the bug, in a fast version.
    */
   const [entryResolved, setEntryResolved] = useState(false);
 
-  // הגעה מדף הבית / מטאב טיול בניווט: /chat?q=…&kosher=1 או /chat?trip=<id>.
-  // window.location במקום useSearchParams כדי לא לחייב Suspense ב-prerender.
+  // Arriving from the homepage / from a trip tab in the nav: /chat?q=...&kosher=1
+  // or /chat?trip=<id>. window.location rather than useSearchParams, so prerender
+  // does not require a Suspense boundary.
   useEffect(() => {
     if (paramsHandled.current) return;
     paramsHandled.current = true;
@@ -73,7 +80,7 @@ export default function AgentWorkspace() {
     const q = params.get('q');
     const kosher = params.get('kosher') === '1';
     const tripId = params.get('trip');
-    // ?q= ו-?kosher= יורדים מהכתובת; ?trip= נשאר, הוא מה שמחזיק את המסך
+    // ?q= and ?kosher= are dropped from the URL; ?trip= stays, it is what holds the screen
     if (q || kosher) writeTripParam(tripId);
     if (tripId) {
       resuming.current = true;
@@ -89,8 +96,8 @@ export default function AgentWorkspace() {
      
   }, []);
 
-  // ?trip= מוחל רק אחרי ההידרציה של TripProvider - אחרת הטעינה מהאחסון
-  // (שרצה אחרי האפקטים של הילדים) הייתה דורסת את הבחירה.
+  // ?trip= is applied only after TripProvider has hydrated - otherwise the load
+  // from storage (which runs after the children's effects) would overwrite the choice.
   useEffect(() => {
     if (!trip.hydrated) return;
     if (pendingTripId) {
@@ -100,9 +107,10 @@ export default function AgentWorkspace() {
       return;
     }
     /*
-      **כניסה נקייה = שיחה נקייה.** הטיול ששרד באחסון לא נבחר על ידי
-      אף אחד בכניסה הזאת, ולכן הוא לא נפתח ולא נשלח כהקשר. הוא לא אבד -
-      הוא ברשימת "ממשיכים טיול קיים" ובטאבים בניווט.
+      **A clean entry = a clean conversation.** The trip that survived in storage was
+      not chosen by anyone during this entry, so it is neither opened nor sent as
+      context. It is not lost - it is in the "continue an existing trip" list and in
+      the nav tabs.
     */
     if (!resuming.current && trip.currentId) trip.setCurrentId(null);
     setEntryResolved(true);
@@ -110,8 +118,9 @@ export default function AgentWorkspace() {
   }, [trip.hydrated, pendingTripId]);
 
   /*
-    טיול שנוצר תוך כדי השיחה נכנס לכתובת. בלי זה רענון באמצע תכנון היה
-    חוזר למסך הנחיתה - הכתובת היא מה שמחזיק את המסך, אז היא חייבת לדעת.
+    A trip created during the conversation goes into the URL. Without this, a refresh
+    mid-planning would return to the landing screen - the URL is what holds the
+    screen, so it has to know.
   */
   useEffect(() => {
     if (!trip.hydrated || !trip.currentId || pendingTripId) return;
@@ -123,7 +132,7 @@ export default function AgentWorkspace() {
      
   }, [trip.hydrated, trip.currentId, pendingTripId]);
 
-  /** מתחילים שיחה חדשה בלי לנטוש את הטיול הקיים - הוא נשאר כטאב ב-SiteNav */
+  /** Start a new conversation without abandoning the existing trip - it stays as a tab in SiteNav */
   function startNewTrip() {
     resuming.current = false;
     trip.setCurrentId(null);
@@ -133,11 +142,12 @@ export default function AgentWorkspace() {
   }
 
   /*
-    ניווט לאותו ראוט לא ממונטב מחדש: "תכנון טיול" מתוך /chat?trip=X
-    משנה את הכתובת ל-/chat אבל הקומפוננטה נשארת - והמסך היה נשאר בטיול
-    הקודם. SiteNav משדר NEW_CHAT_EVENT בדיוק במקרה הזה; popstate מכסה
-    את אותו פער עבור חזרה/קדימה בדפדפן. הפונקציות נקראות דרך ref כדי
-    שהמאזינים יירשמו פעם אחת ותמיד יראו את ה-state העדכני.
+    Navigating to the same route does not remount: "plan a trip" from within
+    /chat?trip=X changes the URL to /chat but the component stays - and the screen
+    would have remained on the previous trip. SiteNav emits NEW_CHAT_EVENT for
+    exactly this case; popstate covers the same gap for browser back/forward. The
+    functions are called through a ref so the listeners register once and always
+    see the current state.
   */
   const startNewTripRef = useRef(startNewTrip);
   useEffect(() => {
@@ -164,13 +174,13 @@ export default function AgentWorkspace() {
   }, []);
 
   /*
-    **`trip.currentTrip` כבר לא מחליט את המסך.** זה היה הבאג: ערך שנשמר
-    מפעם קודמת קבע לאן נוחתים. עכשיו רק פעולה בכניסה הזאת פותחת מסך -
-    שאלה שנשלחה, או ?trip= שמישהו לחץ עליו.
+    **`trip.currentTrip` no longer decides the screen.** That was the bug: a value
+    saved from a previous time determined where you landed. Now only an action in
+    this entry opens a screen - a question that was sent, or a ?trip= someone clicked.
   */
   const showWorkspace = started;
 
-  // פריים אחד לכל היותר, עד שההידרציה הכריעה מה הטיול של הכניסה הזאת
+  // At most one frame, until hydration has decided what this entry's trip is
   if (showWorkspace && !entryResolved) return null;
 
   if (!showWorkspace) {
@@ -183,7 +193,7 @@ export default function AgentWorkspace() {
           מספרים לי מה מדמיינים - ואני בונה טיול אמיתי, יום-אחרי-יום, על מפה. בעברית.
         </p>
 
-        {/* קלט + צ׳יפים משותפים - צ׳יפ ממלא לעריכה, שליחה מתחילה את השיחה */}
+        {/* Shared input + chips - a chip fills the field for editing, submitting starts the conversation */}
         <HeroPrompt
           onSubmit={(text, kosher) => {
             setPending({ q: text, kosher });

@@ -1,24 +1,28 @@
-// אימות כל כתובות התמונות בדאטה: כל photo חייב להחזיר HTTP 200.
-// מריצים לפני קומיט של תוכן: node scripts/verify-photos.mjs
-// יציאה עם קוד 1 אם תמונה כלשהי נכשלה - מוחקים או מחליפים אותה.
+// Verifies every photo URL in the data: every photo must return HTTP 200.
+// Run before a content commit: node scripts/verify-photos.mjs
+// Exits with code 1 if any photo failed - delete or replace it.
 //
-// מטמון: כתובת שכבר אומתה (200) נשמרת ב-.cache/verified-photos.json, ובריצה
-// הבאה לא נבדקת שוב - כך שרק תמונות חדשות או שהשתנו יוצאות לרשת. זה גם
-// חוסך זמן וגם מוריד עומס מוויקימדיה (שמגבילה קצב). הרצה עם --force
-// (או VERIFY_PHOTOS_FORCE=1) מתעלמת מהמטמון ובודקת הכול מחדש - כדאי מדי
-// פעם, כי כתובת שהייתה תקינה יכולה להישבר בצד השרת.
+// Cache: a URL that has already been verified (200) is stored in
+// .cache/verified-photos.json, and on the next run it is not checked again -
+// so only new or changed photos go out to the network. That both saves time
+// and reduces load on Wikimedia (which rate-limits). Running with --force
+// (or VERIFY_PHOTOS_FORCE=1) ignores the cache and rechecks everything -
+// worth doing occasionally, because a URL that was fine can break
+// server-side.
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { dirname } from 'node:path';
 
 const FILES = ['src/data/destinations.ts', 'src/data/countries.ts'];
-// המניפסט מקומיט לריפו בכוונה. עד עכשיו הוא חי ב-.cache/ שמחוץ ל-git, ולכן
-// הוולידטור האופליני לא יכול היה לדעת אילו כתובות באמת נבדקו מול הרשת. סביבת
-// הכתיבה חסומה לרשת, כך שמי שמוסיף תמונה כאן לא יכול לאמת אותה בעצמו - הדרך
-// היחידה שכתובת שלא נבדקה לא תגיע לפרודקשן היא שהוולידטור ידרוש רשומה במניפסט.
+// The manifest is committed to the repo on purpose. Until now it lived in
+// .cache/, outside git, so the offline validator could not know which URLs
+// were actually checked against the network. The authoring environment is
+// network-blocked, so whoever adds a photo there cannot verify it
+// themselves - the only way an unchecked URL does not reach production is
+// for the validator to require a manifest record.
 const CACHE_FILE = 'scripts/photo-verified.json';
 const LEGACY_CACHE_FILE = '.cache/verified-photos.json';
 const FORCE = process.argv.includes('--force') || process.env.VERIFY_PHOTOS_FORCE === '1';
-// תוקף המטמון: אחרי 30 יום בודקים כתובת מחדש גם אם אומתה בעבר
+// Cache validity: after 30 days a URL is rechecked even if it was verified before
 const MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
 
 const urls = new Map(); // url -> where
@@ -32,7 +36,7 @@ for (const file of FILES) {
   }
 }
 
-/** { [url]: timestamp } - נשמר רק למה שהחזיר 200 */
+/** { [url]: timestamp } - stored only for what returned 200 */
 function readJson(path) {
   if (!existsSync(path)) return {};
   try {
@@ -45,7 +49,7 @@ function readJson(path) {
 
 function loadCache() {
   if (FORCE) return {};
-  // ok:true נשמר עם חתימת זמן; הפורמט הישן היה מספר חשוף. שני הפורמטים נקראים.
+  // ok:true is stored with a timestamp; the old format was a bare number. Both formats are read.
   const merged = { ...readJson(LEGACY_CACHE_FILE), ...readJson(CACHE_FILE) };
   const out = {};
   for (const [url, v] of Object.entries(merged)) {
@@ -67,10 +71,10 @@ console.log(
     (entries.length ? ` · checking ${entries.length}...` : ' · nothing new to check'),
 );
 
-const failed = []; // כשל אמיתי (404/500 קבוע) - מפיל את הבדיקה
-const throttled = []; // 429 שנמשך גם אחרי backoff - לא אומת, אבל גם לא נכשל
+const failed = []; // a real failure (persistent 404/500) - fails the check
+const throttled = []; // a 429 that persists even after backoff - not verified, but not failed either
 const verifiedNow = new Set();
-// פחות מקביליות = פחות 429. עם המטמון ממילא נבדקות מעט כתובות בכל ריצה.
+// Less concurrency = fewer 429s. With the cache, few URLs get checked per run anyway.
 const CONCURRENCY = 4;
 const BACKOFF_MS = [2000, 6000, 15000];
 
@@ -82,7 +86,7 @@ async function check(url, file) {
         headers: { 'User-Agent': 'tiyul-plus-photo-verify/1.0' },
         signal: AbortSignal.timeout(15_000),
       });
-      // לא מורידים את הגוף - רק סטטוס
+      // We do not download the body - status only
       await res.body?.cancel?.();
       if (res.status === 200) {
         verifiedNow.add(url);
@@ -93,8 +97,9 @@ async function check(url, file) {
           await new Promise((r) => setTimeout(r, BACKOFF_MS[attempt]));
           continue;
         }
-        // חשוב: לא לסמן כתקין. עד התיקון הזה 429 חוזר נבלע בשקט
-        // והכתובת נחשבה "עברה" בלי שנבדקה באמת.
+        // Important: do not mark as OK. Until this fix a repeated 429 was
+        // swallowed silently and the URL counted as "passed" without ever
+        // really being checked.
         throttled.push(`${res.status} ${url} (${file})`);
         return;
       }
@@ -113,9 +118,10 @@ for (let i = 0; i < entries.length; i += CONCURRENCY) {
 }
 if (entries.length) console.log('');
 
-// שומרים רק כתובות שעדיין בדאטה - כך שהמטמון לא תופח עם URLs שנמחקו
-// כישלון נרשם במניפסט במפורש, ולא רק מודפס. אחרת ריצה הבאה בסביבה בלי רשת
-// לא יכולה לדעת שהכתובת הזאת כבר נבדקה ונפלה.
+// Only URLs still present in the data are kept - so the cache does not bloat
+// with deleted URLs. A failure is recorded in the manifest explicitly, not
+// just printed. Otherwise the next run in a network-less environment cannot
+// know that this URL was already checked and failed.
 const failedUrls = new Set(failed.map((f) => f.match(/(https:\/\/\S+)/)?.[1]).filter(Boolean));
 const nextCache = {};
 for (const url of urls.keys()) {
@@ -127,7 +133,7 @@ try {
   mkdirSync(dirname(CACHE_FILE), { recursive: true });
   writeFileSync(CACHE_FILE, JSON.stringify(nextCache, null, 0));
 } catch {
-  // מטמון הוא אופטימיזציה בלבד - כישלון כתיבה לא מפיל את הבדיקה
+  // The cache is an optimization only - a write failure does not fail the check
 }
 
 if (failed.length > 0) {
@@ -136,7 +142,7 @@ if (failed.length > 0) {
   process.exit(1);
 }
 if (throttled.length > 0) {
-  // לא נכשלו, אבל גם לא אומתו - לא נכנסות למטמון, ולכן ריצה חוזרת תבדוק רק אותן
+  // Did not fail, but were not verified either - not cached, so a rerun checks only them
   console.warn(
     `\n${throttled.length} URLs could not be verified (rate limited). Not cached - rerun to finish:`,
   );

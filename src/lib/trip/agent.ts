@@ -29,26 +29,28 @@ import type {
 import type { CalendarEntry, Destination } from '@/lib/types';
 
 /**
- * כלי הסוכן: הגדרות ה-tools של Anthropic + מבצע צד-שרת עם ולידציה קשיחה.
- * הסוכן עובד על עותק בזיכרון של הטיול; כל קריאה לא-חוקית מחזירה שגיאה
- * מוסברת (is_error) כדי שהמודל יתקן את עצמו. placeId חייב להתקיים בדאטה
- * של העיר, אינדקסים 1-based כפי שמוצג למשתמש ולמודל.
+ * Agent tools: the Anthropic tool definitions + a server-side executor with
+ * strict validation. The agent works on an in-memory copy of the trip; every
+ * invalid call returns an explained error (is_error) so the model corrects
+ * itself. placeId must exist in the city's DATA, indexes are 1-based exactly
+ * as shown to the user and to the model.
  */
 
 export interface AgentToolResult {
-  trip: Trip | null; // הטיול אחרי הפעולה (או ללא שינוי בכישלון)
+  trip: Trip | null; // the trip after the action (or unchanged on failure)
   ok: boolean;
-  message: string; // תוכן ה-tool_result שהמודל רואה
-  action?: string; // שורת "מה בוצע" בעברית למשתמש
-  quickReplies?: string[]; // תשובות מהירות להצגה כצ׳יפים (suggest_quick_replies)
+  message: string; // the tool_result content the model sees
+  action?: string; // the Hebrew "what was done" line for the user
+  quickReplies?: string[]; // quick answers rendered as chips (suggest_quick_replies)
   /**
-   * כרטיס חיפוש מוכן אצל ספק (booking_search). נבנה כאן ולא במודל, ולכן
-   * הכתובת, התאריכים ומספר האורחים שבו הם דאטה ולא טקסט שנוצר.
+   * A ready-made provider search card (booking_search). Built here and not by
+   * the model, so its URL, dates and guest count are data, not generated text.
    */
   search?: BookingSearchCard;
   /**
-   * שמות הרשומות שהוחזרו מ-`city_date_notes`. נכנסים לרשימה הלבנה של
-   * שומר הטענות, כך שהמודל יכול לדבר על מה שקיבל - ורק עליו.
+   * Names of the entries returned from `city_date_notes`. They go into the
+   * claims guard's whitelist, so the model can talk about what it received -
+   * and only about that.
    */
   eventNames?: string[];
 }
@@ -320,9 +322,10 @@ export const AGENT_TOOLS = [
   },
   {
     /**
-     * אירועים וסגירות. **הכלי הזה הוא המקור היחיד** שממנו מותר לומר
-     * משהו על אירוע: אין בו שדה תאריך, ולכן אין מסלול שבו תאריך שהמודל
-     * "זוכר" נכנס לתשובה. תוצאה ריקה היא תשובה - "אין לנו מידע רשום".
+     * Events and closures. **This tool is the ONLY source** from which
+     * anything may be said about an event: it has no date field, so there is
+     * no path by which a date the model "remembers" enters the answer. An
+     * empty result is an answer - "we have nothing recorded".
      */
     name: 'city_date_notes',
     description:
@@ -337,11 +340,13 @@ export const AGENT_TOOLS = [
   },
   {
     /**
-     * הכלי שמחליף "לספר על מלונות" ב"לפתוח חיפוש אמיתי".
+     * The tool that replaces "talking about hotels" with "opening a real
+     * search".
      *
-     * שימו לב למה שאין כאן: אין פרמטר מחיר, אין תאריך, אין מספר אורחים,
-     * אין שם ואין טקסט חופשי. המודל בוחר סוג ועיר, וזה הכול - כל השאר
-     * נגזר מהטיול בשרת. זו הסיבה שהוא לא יכול להקליד מספר: **אין שדה.**
+     * Note what is NOT here: no price parameter, no date, no guest count, no
+     * name and no free text. The model picks a kind and a city, and that is
+     * all - everything else is derived from the trip on the server. That is
+     * why it cannot type a number: **there is no field.**
      */
     name: 'booking_search',
     description:
@@ -396,13 +401,13 @@ export const AGENT_TOOLS = [
   },
 ];
 
-/* ---------- ביצוע ---------- */
+/* ---------- Execution ---------- */
 
 /**
- * יעדים שנחקרו אוטומטית (AI Explorer) - נקבעים פר-קריאה ע"י route.ts.
- * executeAgentTool סינכרוני, אז אין מרוץ: ההשמה בתחילת כל קריאה תקפה
- * לכל אורך הביצוע. curated תמיד קודם - explored לא יכול להאפיל על עיר
- * אמיתית מהקטלוג.
+ * Auto-explored destinations (AI Explorer) - set per call by route.ts.
+ * executeAgentTool is synchronous, so there is no race: the assignment at the
+ * start of each call holds for the entire execution. Curated always comes
+ * first - explored can never shadow a real city from the catalog.
  */
 let sessionExplored: Destination[] = [];
 
@@ -415,16 +420,18 @@ const validSlugs = () =>
   [...destinations.map((d) => d.slug), ...sessionExplored.map((d) => d.slug)].join(', ');
 
 /**
- * מרחקים אמיתיים מסיכה לעצירות של אותה עיר בטיול.
+ * Real distances from a pin to that city's stops in the trip.
  *
- * למה זה קיים: המודל רוצה לומר משהו מועיל על המלון של המטייל, ובלי
- * נתון אמיתי הוא המציא קרבה ("במרחק הליכה", "צמוד ל-UFO"). איסור בפרומפט
- * נבדק פעמיים בסשן ולא החזיק. יש לנו את הנתון בפועל - לסיכה יש lat/lng
- * ולכל מקום בקטלוג יש lat/lng - אז במקום להיאבק בסימפטום, מוסרים לו את
- * המספר הנכון ומרשים לו לצטט רק אותו.
+ * Why this exists: the model wants to say something useful about the
+ * traveler's hotel, and without a real number it invented proximity ("within
+ * walking distance", "right next to the UFO"). A prompt-level ban was tested
+ * twice in one session and did not hold. We actually have the data - a pin
+ * has lat/lng and every catalog place has lat/lng - so instead of fighting
+ * the symptom, we hand it the correct number and allow it to quote only that.
  *
- * זה מרחק אווירי, לא הליכה: אין לנו נתוני רשת דרכים, ולכן הכתובית
- * אומרת "אווירי" והפרומפט אוסר להמיר את זה לדקות הליכה.
+ * This is air (straight-line) distance, not walking: we have no road-network
+ * data, so the label says "aerial" and the prompt forbids converting it into
+ * walking minutes.
  */
 function airDistanceLabel(km: number): string {
   if (km < 1) return `${Math.round((km * 1000) / 50) * 50} מ׳ אווירי`;
@@ -439,7 +446,7 @@ export function pinDistances(
   const dest = destOf(pin.citySlug);
   if (!dest) return [];
   const at = { lat: pin.lat, lng: pin.lng };
-  // רק העצירות שנמצאות בפועל בטיול לעיר הזו, בלי כפילויות
+  // only the stops actually in the trip for this city, without duplicates
   const ids = new Set(
     trip.days.filter((d) => d.citySlug === pin.citySlug).flatMap((d) => d.placeIds),
   );
@@ -459,27 +466,31 @@ function fail(trip: Trip | null, message: string): AgentToolResult {
 }
 
 /**
- * תזכורת קצרה שנתלית על תוצאות הכלים שמשנים את המסלול.
+ * A short reminder attached to the results of the route-mutating tools.
  *
- * למה כאן ולא רק בפרומפט: הכללים האלה קיימים ב-SYSTEM_PROMPT ונבדקו חי
- * שלוש פעמים - בתור הראשון הם נשמרו, ובתור שמכיל הרבה קריאות כלים המודל
- * חזר להמציא ("הכול במרחק הליכה מהמלון", "לדווין נוסעים באוטובוס 29,
- * כרבע שעה"). תוצאת הכלי היא הטקסט האחרון שהוא קורא לפני שהוא מנסח את
- * התשובה, וזה הרובד שעבד כבר בשכבת ההזמנות. קצר בכוונה - הוא נשלח בכל
- * קריאת כלי.
+ * Why here and not only in the prompt: these rules exist in SYSTEM_PROMPT and
+ * were tested live three times - on the first turn they held, but in a turn
+ * containing many tool calls the model went back to inventing ("everything is
+ * within walking distance of the hotel", "to Devin you take bus 29, about a
+ * quarter of an hour"). The tool result is the last text it reads before it
+ * phrases the answer, and this is the layer that already worked in the
+ * booking layer. Short on purpose - it is sent on every tool call.
  */
 /**
- * מנקה מהערת יום פרט תחבורה עם מספר שלא ניתן לאמת.
+ * Scrubs from a day note any transit detail with a number that cannot be
+ * verified.
  *
- * הבדיקה החיה הראתה שגם כשהתשובה בצ׳אט מתוקנת ("יש אוטובוס או שיט"),
- * המודל עדיין כותב "נוסעים באוטובוס 29" לתוך `notes` - וההערה נשמרת
- * בטיול, מודפסת ב-PDF ונשלחת בשיתוף. הערה היא דאטה של הטיול, ולכן חלה
- * עליה בדיוק אותה דרישת אמת כמו על הקטלוג.
+ * Live testing showed that even when the chat reply is corrected ("there is a
+ * bus or a boat ride"), the model still writes "take bus 29" into `notes` -
+ * and the note is stored on the trip, printed in the PDF and sent when
+ * sharing. A note is trip data, so exactly the same truth requirement applies
+ * to it as to the catalog.
  *
- * לא חוסמים מספרים גורפים: אם אותו מספר מופיע ב-gettingAround של היעד -
- * כלומר מישהו כתב אותו ידנית לתוך הדאטה - הוא נשאר. אחרת מוחלף בנוסח
- * שאומר את האמת בלי להמציא מספר. אותה גישה כמו
- * filterKosherUnlessOptedIn: מתקנים בשקט ומסבירים למודל למה.
+ * We do not block numbers wholesale: if the same number appears in the
+ * destination's gettingAround - i.e. somebody wrote it into the data by
+ * hand - it stays. Otherwise it is replaced with wording that tells the truth
+ * without inventing a number. Same approach as filterKosherUnlessOptedIn:
+ * correct quietly and explain to the model why.
  */
 const TRANSIT_LINE =
   /(?:אוטובוס|קו|טרמוואי|טראם|חשמלית|מטרו|רכבת|רכבל|מעבורת)\s*(?:מספר\s*)?(\d{1,3}[A-Za-z]?)/g;
@@ -497,22 +508,25 @@ export function sanitizeDayNote(
     .toLowerCase();
   let changed = false;
   const cleaned = note.replace(TRANSIT_LINE, (match, num: string) => {
-    // מספר שכבר קיים בדאטה של היעד הוא מאומת - משאירים אותו כמו שהוא
+    // a number already present in the destination's data is verified - keep it as is
     if (practical.includes(String(num).toLowerCase())) return match;
     changed = true;
     const mode = match.split(/\s+/)[0];
     return mode;
   });
   /**
-   * אותו שומר מחירים שרץ על התשובה רץ גם כאן, **בלי רשימה לבנה**.
+   * The same price guard that runs on the reply also runs here, **with no
+   * whitelist**.
    *
-   * הערת יום היא לא פרוזה חולפת: היא נדפסת, נשלחת בשיתוף ונקראת שוב
-   * בשטח חודשיים אחר כך. מחיר בתוכה קורא כמו הבטחה של האתר, ולא כמו
-   * משפט בשיחה. אין כאן רשימה לבנה כי אין כאן הקשר של שיחה - ומספר
-   * שהמטייל אמר יכול פשוט להישאר בשיחה, שם הוא כן מותר.
+   * A day note is not passing prose: it gets printed, sent when sharing, and
+   * read again in the field two months later. A price inside it reads like a
+   * promise made by the site, not like a sentence in a conversation. There is
+   * no whitelist here because there is no conversational context here - and a
+   * number the traveler said can simply stay in the conversation, where it IS
+   * allowed.
    *
-   * `stripClaims` ולא `guardText`: בהערה מסירים את הפסוקית ומשאירים את
-   * המשפט, בלי להשתיל בה נוסח התנצלות.
+   * `stripClaims` and not `guardText`: in a note we remove the clause and keep
+   * the sentence, without planting apology wording into it.
    */
   const guarded = stripClaims(cleaned);
   if (guarded.redactions.length > 0) changed = true;
@@ -521,25 +535,27 @@ export function sanitizeDayNote(
 }
 
 /**
- * סדר הערים נגזר מסדר הימים, ולא נצבר לפי סדר ההוספה.
+ * The city order is derived from the day order, not accumulated by insertion
+ * order.
  *
- * זה נחוץ לכלים שמשנים מבנה (set_day_city / move_day): אחרי שיום עובר
- * עיר או מחליף מקום, `citySlugs` הוא מה שמזין את רגלי המעבר בין ערים,
- * את סיכום המסלול ואת בורר הערים - ואם הוא נשאר בסדר ההוספה המקורי,
- * הטיול יראה נכון בימים אבל שגוי בנתיב.
+ * This is needed for the structure-changing tools (set_day_city / move_day):
+ * after a day changes city or position, `citySlugs` is what feeds the
+ * inter-city travel legs, the route summary and the city picker - and if it
+ * stayed in the original insertion order, the trip would look right in its
+ * days but wrong in its route.
  */
 function citySlugsFromDays(days: TripDay[]): string[] {
   return [...new Set(days.map((d) => d.citySlug))];
 }
 
-/** "יום 1: ברטיסלבה · יום 2: וינה" - כדי שהמודל יראה את המבנה שיצא */
+/** e.g. "Day 1: Bratislava · Day 2: Vienna" - so the model sees the structure that resulted */
 function dayOrderSummary(days: TripDay[]): string {
   return days
     .map((d, i) => `יום ${i + 1}: ${destOf(d.citySlug)?.name ?? d.citySlug}`)
     .join(' · ');
 }
 
-/** הערה שהמודל כתב, מנוקה ומקוצרת - ראו sanitizeDayNote */
+/** A note the model wrote, scrubbed and truncated - see sanitizeDayNote */
 function cleanNote(value: unknown, citySlug: string, max: number): string | undefined {
   if (typeof value !== 'string') return undefined;
   const trimmed = value.trim().slice(0, max);
@@ -551,12 +567,14 @@ const NOTE_CLEANED =
   ' שים לב: הוסר מההערה מספר קו תחבורה שאינו מופיע בדאטה של היעד - אל תכתוב מספרי קווים, זמני נסיעה או מחירי כרטיס שלא מופיעים ב-gettingAround.';
 
 /**
- * ההנחיה הזאת נוסעת על כל תוצאת כלי שמשנה את הטיול, כלומר היא הדבר
- * האחרון שהמודל קורא לפני שהוא כותב את התשובה - העמדה החזקה ביותר
- * שיש. הבלוק על האורך נוסף אחרי בדיקה חיה: הכלל בפרומפט ("משפט אחד")
- * נבלע, והמודל חזר על כל המסלול יום-יום בטקסט אף על פי שהפאנל מציג
- * אותו. הסיבה הייתה התנגשות - כלל אחר בפרומפט מלמד את פורמט "**יום N**"
- * לתשובות המלצה, והמודל החיל אותו גם על תשובה שבה בוצעו כלים.
+ * This instruction rides on every tool result that mutates the trip, i.e. it
+ * is the last thing the model reads before it writes the reply - the
+ * strongest position there is. The block about length was added after live
+ * testing: the prompt rule ("one sentence") got swallowed, and the model
+ * repeated the whole itinerary day-by-day in text even though the panel
+ * displays it. The cause was a conflict - another prompt rule teaches the
+ * "**Day N**" format for recommendation answers, and the model applied it
+ * also to a reply in which tools were executed.
  */
 const PROSE_DISCIPLINE =
   ' בתשובה ובהערות: מספרי קווים, זמני נסיעה ומחירי כרטיס רק אם הם כתובים ב-gettingAround של היעד; בלי "במרחק הליכה"/"ברגל"/"צמוד" - רק המרחקים האוויריים שקיבלת, עם המילה "אווירי".' +
@@ -590,7 +608,7 @@ const PIN_KIND_LABELS: Record<TripPinKind, string> = {
   other: 'סיכה',
 };
 
-/** תקרה שפויה - סיכות נשמרות עם הטיול ב-localStorage ובחשבון */
+/** A sane ceiling - pins are stored with the trip in localStorage and in the account */
 const MAX_PINS = 40;
 
 const PREF_LABELS: Record<keyof TripPreferences, string> = {
@@ -600,8 +618,9 @@ const PREF_LABELS: Record<keyof TripPreferences, string> = {
   kosher: 'כשרות',
   shabbatAware: 'שמירת שבת',
   shopping: 'שופינג',
-  // לא מגיע לכאן דרך set_preferences (אין לו setEnum), אבל הטיפוס דורש
-  // ערך - וזה בדיוק הרצוי: מי שיוסיף לסוכן כתיבה לשדה יצטרך לעבור כאן.
+  // never reaches here via set_preferences (it has no setEnum), but the type
+  // demands a value - and that is exactly what we want: whoever gives the
+  // agent write access to this field will have to pass through here.
   travelStyle: 'סגנון נסיעה',
   interests: 'תחומי עניין',
   booking: 'מה כבר סגור',
@@ -609,11 +628,12 @@ const PREF_LABELS: Record<keyof TripPreferences, string> = {
 };
 
 /**
- * כשרות היא opt-in בלבד (hard rule: "none assumed, all respected when
- * chosen"). בכלים שמשבצים מסלול שלם - create_trip_full ו-set_day_places -
- * מקומות כשרים נזרקים אלא אם ההעדפה כבר נשמרה על הטיול (טוגל ה-UI,
- * השאלון, או אמירה מפורשת של המשתמש שהסוכן שמר ב-set_preferences).
- * add_place הגרנולרי לא מסונן: שם המשתמש ביקש מקום מסוים בשמו.
+ * Kosher is opt-in only (hard rule: "none assumed, all respected when
+ * chosen"). In the tools that place a whole itinerary - create_trip_full and
+ * set_day_places - kosher places are dropped unless the preference is already
+ * stored on the trip (the UI toggle, the quiz, or an explicit user statement
+ * the agent stored via set_preferences). The granular add_place is not
+ * filtered: there the user asked for a specific place by name.
  */
 function filterKosherUnlessOptedIn(
   ids: string[],
@@ -628,8 +648,8 @@ function filterKosherUnlessOptedIn(
   const kept = ids.filter((id) => {
     const place = dest.places.find((p) => p.id === id);
     if (!place) return true;
-    // שמר כשרות: כל מקום שאוכלים בו וסטטוס הכשרות שלו אינו 'kosher'
-    // יורד - כולל 'unknown'. "לא ידוע" אינו "כנראה בסדר".
+    // keeps kosher: every eating place whose kosher status is not 'kosher'
+    // is dropped - including 'unknown'. "Unknown" is not "probably fine".
     if (optedIn) {
       if (isEating(place.category) && kosherStatusOf(place) !== 'kosher') {
         dropped.push(id);
@@ -637,7 +657,7 @@ function filterKosherUnlessOptedIn(
       }
       return true;
     }
-    // לא בחר כשרות: מקומות כשרים לא נדחפים לו מיוזמתנו.
+    // did not opt into kosher: kosher places are not pushed on them at our initiative.
     if (isKosher(place.category)) {
       dropped.push(id);
       return false;
@@ -648,9 +668,11 @@ function filterKosherUnlessOptedIn(
 }
 
 /**
- * ההסבר שחוזר למודל אחרי סינון. שתי הסיבות הפוכות זו לזו ואסור לבלבל
- * ביניהן: "לא בחרת כשרות" מול "בחרת כשרות ולכן מקום לא כשר ירד".
- * הודעה שגויה כאן גורמת למודל לנסות לשבץ שוב את מה שבדיוק הורדנו.
+ * The explanation returned to the model after filtering. The two reasons are
+ * opposites of each other and must not be confused: "you did not opt into
+ * kosher" versus "you opted into kosher, so a non-kosher place was dropped".
+ * A wrong message here makes the model try to re-place exactly what we just
+ * removed.
  */
 function kosherDropNote(dropped: string[], mode: 'not-opted-in' | 'kosher-only'): string {
   if (dropped.length === 0) return '';
@@ -661,14 +683,16 @@ function kosherDropNote(dropped: string[], mode: 'not-opted-in' | 'kosher-only')
 }
 
 /**
- * סיכום מסלול דטרמיניסטי שחוזר למודל אחרי בנייה: רצף הערים בסדר הימים
- * עם מרחק אמיתי (haversine) בין כל שתי ערים עוקבות, ואזהרה מפורשת אם
- * המסלול מזגזג - עיר שחוזרים אליה אחרי שכבר עזבו אותה (חוץ מחזרה לעיר
- * ההגעה ביום/ימים האחרונים, שזה מבנה לגיטימי של לולאה). המודל לא מחשב
- * מרחקים טוב - אנחנו כן, אז אנחנו אומרים לו מה הוא בנה באמת.
+ * A deterministic route summary returned to the model after building: the
+ * sequence of cities in day order with the real (haversine) distance between
+ * every two consecutive cities, and an explicit warning if the route
+ * zigzags - a city revisited after it was already left (except returning to
+ * the arrival city on the last day(s), which is a legitimate loop structure).
+ * The model does not compute distances well - we do, so we tell it what it
+ * actually built.
  */
 function routeSummary(days: TripDay[]): string {
-  // רצף ערים ללא כפילויות עוקבות
+  // city sequence without consecutive duplicates
   const seq: string[] = [];
   for (const d of days) {
     if (seq[seq.length - 1] !== d.citySlug) seq.push(d.citySlug);
@@ -683,8 +707,9 @@ function routeSummary(days: TripDay[]): string {
     return `${name(slug)} ← ${name(seq[i + 1])}${km}`;
   });
 
-  // זגזוג: עיר שמופיעה שוב אחרי שעיר אחרת נכנסה בינתיים.
-  // חריג לגיטימי: הרצף מסתיים בעיר שבה התחיל (לולאה חזרה לעיר ההגעה).
+  // Zigzag: a city that appears again after another city came in between.
+  // Legitimate exception: the sequence ends in the city it started in (a loop
+  // back to the arrival city).
   const revisited = new Set<string>();
   const seen = new Set<string>();
   seq.forEach((slug, i) => {
@@ -706,8 +731,9 @@ function routeSummary(days: TripDay[]): string {
 }
 
 /**
- * מיקום שכבר אותר בשרת עבור add_pin. מגיע כפרמטר נפרד ולא בתוך input
- * במכוון: כך אין שום מסלול שבו המודל יכול להזריק קואורדינטות משלו.
+ * A location already resolved on the server for add_pin. Arrives as a
+ * separate parameter and not inside input, deliberately: this way there is no
+ * path by which the model can inject its own coordinates.
  */
 export interface ResolvedPinLocation {
   lat: number;
@@ -722,12 +748,13 @@ export function executeAgentTool(
   exploredDestinations: Destination[] = [],
   resolved: ResolvedPinLocation | null = null,
   /**
-   * התור הזה מתקן את התור הקודם (ראו `lib/server/correction.ts`).
+   * This turn corrects the previous turn (see `lib/server/correction.ts`).
    *
-   * המשמעות היחידה כרגע: **בנייה מחדש מחליפה את הטיול הפתוח במקום
-   * להעמיד לידו טיול שני.** נתנאל תיקן "ברצלונה, לא ברטיסלבה" וקיבל
-   * טיול ברטיסלבה יתום ברשימה, כי `create_trip_full` מייצר מזהה חדש
-   * תמיד ולכן `upsertTrip` בלקוח מוסיף ולא מחליף.
+   * The only meaning right now: **a rebuild replaces the open trip instead of
+   * standing a second trip next to it.** Netanel corrected "Barcelona, not
+   * Bratislava" and got an orphaned Bratislava trip in the list, because
+   * `create_trip_full` always generates a new id, so `upsertTrip` on the
+   * client adds instead of replacing.
    */
   isCorrection = false,
 ): AgentToolResult {
@@ -775,7 +802,7 @@ export function executeAgentTool(
           return;
         }
         const requested = [...new Set((Array.isArray(dp.placeIds) ? dp.placeIds : []).map(String))];
-        // כשרות רק בבחירה מפורשת - אחרת מסננים כאן, לפני כל שאר הבדיקות
+        // kosher only by explicit choice - otherwise filtered here, before all the other checks
         const gated = filterKosherUnlessOptedIn(requested, dest.slug, trip);
         droppedKosher.push(...gated.dropped);
         dropMode = gated.mode;
@@ -802,12 +829,13 @@ export function executeAgentTool(
         return fail(trip, `הקריאה נדחתה בשלמותה - תקן את השגיאות ונסה שוב:\n${errors.join('\n')}`);
       }
       /*
-        **מזהה הטיול הוא ההבדל בין תיקון לבין טיול יתום.** בתור של
-        תיקון שומרים את המזהה (ואת `createdAt`, ואת ההעדפות והסיכות
-        שהמטייל כבר נתן) - ואז `upsertTrip` בלקוח מחליף את אותה שורה
-        במקום להוסיף אחת. בכל תור אחר ההתנהגות לא משתנה: "תבנה לי גם
-        טיול לרומא" עדיין יוצר טיול נוסף, כי הכיוון ההפוך היה דורס
-        טיול קיים.
+        **The trip id is the difference between a correction and an orphaned
+        trip.** In a correction turn we keep the id (and `createdAt`, and the
+        preferences and pins the traveler already gave) - and then `upsertTrip`
+        on the client replaces that same row instead of adding one. In any
+        other turn the behavior is unchanged: "build me a Rome trip too" still
+        creates an additional trip, because the opposite direction would have
+        clobbered an existing trip.
       */
       const replacing = isCorrection && trip ? trip : null;
       const next: Trip = {
@@ -821,12 +849,14 @@ export function executeAgentTool(
       const totalStops = days.reduce((n, d) => n + d.placeIds.length, 0);
       const kosherNote = kosherDropNote(droppedKosher, dropMode);
       /*
-        יום ריק על המסך הוא בדיוק מה שגורם לאנשים לעזוב (דיווח אמיתי:
-        "יום 2 - אנרגילנדיה" נבנה כיום ריק עם הערת טקסט, כי הפארק לא
-        בקטלוג והמודל לא חקר אותו). הנג׳וד יושב בתוצאת הכלי - המקום
-        שהוכח כציות הגבוה ביותר - ודורש מילוי באותו תור, כולל המסלול
-        הנכון ליום סביב מקום שלא בקטלוג: explore_destination ואז
-        set_day_city + set_day_places עם המקומות שנחקרו.
+        An empty day on screen is exactly what makes people leave (a real
+        report: "day 2 - Energylandia" was built as an empty day with a text
+        note, because the park is not in the catalog and the model did not
+        explore it). The nudge sits in the tool result - the spot proven to
+        get the highest compliance - and demands filling in the same turn,
+        including the correct path for a day built around a place not in the
+        catalog: explore_destination and then set_day_city + set_day_places
+        with the explored places.
       */
       const emptyDays = days
         .map((d, i) => (d.placeIds.length === 0 ? i + 1 : 0))
@@ -855,7 +885,7 @@ export function executeAgentTool(
       const dest = destOf(day.citySlug);
       if (!dest) return fail(trip, `העיר של היום (${day.citySlug}) לא נמצאה בדאטה.`);
       const requestedIds = [...new Set((Array.isArray(input.placeIds) ? input.placeIds : []).map(String))];
-      // כשרות רק בבחירה מפורשת (ראו filterKosherUnlessOptedIn)
+      // kosher only by explicit choice (see filterKosherUnlessOptedIn)
       const gatedDay = filterKosherUnlessOptedIn(requestedIds, dest.slug, trip);
       const ids = gatedDay.ids;
       const bad = ids.filter((id) => !dest.places.some((p) => p.id === id));
@@ -909,11 +939,12 @@ export function executeAgentTool(
       return {
         trip: next,
         ok: true,
-        // היום נולד ריק - הדרישה למלא אותו באותו תור יושבת כאן, בתוצאת
-        // הכלי, מאותה סיבה כמו ב-set_day_city וב-create_trip_full: יום
-        // ריק על המסך הוא מה שגורם לאנשים לעזוב, והמודל הוכח כמי שעוצר
-        // אחרי add_day בלי למלא ("תוסיף יום באושוויץ" -> יום ריק בקרקוב
-        // בזמן שאושוויץ-בירקנאו נמצא בדאטה של קרקוב).
+        // The day is born empty - the demand to fill it in the same turn sits
+        // here, in the tool result, for the same reason as in set_day_city and
+        // create_trip_full: an empty day on screen is what makes people leave,
+        // and the model was proven to stop after add_day without filling
+        // ("add a day at Auschwitz" -> an empty day in Krakow while
+        // Auschwitz-Birkenau is in Krakow's data).
         message: `נוסף יום ${next.days.length} ב${dest.name} - כרגע ריק. חובה למלא אותו עכשיו, באותו תור, עם set_day_places ומקומות אמיתיים מהדאטה של ${dest.name}. אם המשתמש ביקש את היום סביב מקום מסוים - שבץ אותו (ואם הוא לא בדאטה, explore_destination קודם). אסור לסיים תור עם יום ריק. הטיול כולל עכשיו ${next.days.length} ימים.${PROSE_DISCIPLINE}`,
         action: `הוספתי יום ${inHe(dest.name)} (יום ${next.days.length})`,
       };
@@ -940,14 +971,16 @@ export function executeAgentTool(
     }
 
     /**
-     * העברת יום קיים לעיר אחרת.
+     * Moving an existing day to a different city.
      *
-     * הכלי הזה נולד מכשל אמיתי: מטייל הזמין מלון בברטיסלבה וביקש שימים
-     * 1-2 יהיו שם במקום בהרי הטטרה. ימים מקובעים לעיר, ו-set_day_places
-     * דוחה כל מקום שאינו בעיר של אותו יום - ולכן **לא היה שום מסלול חוקי**
-     * לבקשה הזאת חוץ מ-create_trip_full, שמוחק את הטיול ובונה מחדש.
-     * הסוכן אמר בדיוק את זה ("המערכת לא מאפשרת לי"), וזה היה נכון; הדבר
-     * היחיד שהוא כן היה יכול לעשות היה לעדכן הערות, ולכן זה מה שהוא עשה.
+     * This tool was born from a real failure: a traveler booked a hotel in
+     * Bratislava and asked for days 1-2 to be there instead of the High
+     * Tatras. Days are pinned to a city, and set_day_places rejects any place
+     * that is not in that day's city - so **there was no legal path** for
+     * that request other than create_trip_full, which deletes the trip and
+     * rebuilds it. The agent said exactly that ("the system does not allow
+     * me"), and it was true; the only thing it COULD do was update notes, so
+     * that is what it did.
      */
     case 'set_day_city': {
       if (!needTrip(trip)) return fail(trip, 'אין טיול פעיל.');
@@ -961,8 +994,9 @@ export function executeAgentTool(
         return fail(trip, `יום ${n} כבר ב${dest.name} - אין מה לשנות.`);
       }
       const fromName = destOf(day.citySlug)?.name ?? day.citySlug;
-      // העצירות שייכות לעיר הקודמת ולכן נמחקות. שמות מדווחים במפורש
-      // כדי שהסוכן יוכל לומר למטייל מה ירד ולמלא את היום מיד.
+      // The stops belong to the previous city and are therefore deleted. The
+      // names are reported explicitly so the agent can tell the traveler what
+      // was dropped and fill the day immediately.
       const dropped = day.placeIds.map((id) => placeName(day.citySlug, id));
       const days = trip.days.map((d) =>
         d.id === day.id ? { ...d, citySlug: slug, placeIds: [] } : d,
@@ -981,7 +1015,7 @@ export function executeAgentTool(
       };
     }
 
-    /** שינוי סדר הימים. העצירות נעות עם היום - שום דבר לא נמחק. */
+    /** Reordering the days. The stops move with the day - nothing is deleted. */
     case 'move_day': {
       if (!needTrip(trip)) return fail(trip, 'אין טיול פעיל.');
       const total = trip.days.length;
@@ -1171,12 +1205,13 @@ export function executeAgentTool(
       if (endDateRaw && (!isISODate(endDateRaw) || rangeDays(startDate, endDateRaw) === null)) {
         return fail(trip, 'תאריך החזרה אינו תקין או מוקדם מתאריך היציאה.');
       }
-      // קצה אחד מספיק: הסוף מושלם לפי אורך הטיול, בדיוק כמו בממשק
+      // one end is enough: the other is completed from the trip length, exactly as in the UI
       const dates = completeRange(trip.days.length, startDate, endDateRaw || undefined);
       const span = rangeDays(dates.startDate, dates.endDate);
       const gap = span !== null && trip.days.length > 0 ? span - trip.days.length : 0;
-      // הפער נמסר למודל כעובדה, ובמפורש בלי רשות לתקן אותו לבד - הוספה
-      // או מחיקה של ימים בעקבות תאריך היא בדיוק ההפתעה שאסורה כאן.
+      // The gap is handed to the model as a fact, and explicitly without
+      // permission to fix it on its own - adding or deleting days because of
+      // a date is exactly the surprise that is forbidden here.
       const note =
         gap === 0
           ? ''
@@ -1198,10 +1233,11 @@ export function executeAgentTool(
       const kinds: BookingKind[] = ['flights', 'stay', 'activities', 'esim', 'insurance', 'car'];
       const allowed: BookingStatus[] = ['have', 'need', 'not_needed'];
       /*
-        לינה וכרטיסים שייכים לעיר. `citySlug` נדרש עבורם, ונדחה אם הוא
-        לא עיר של הטיול הזה - **אין נפילה לעיר הראשונה**: ניחוש כאן
-        פירושו לרשום "יש מלון" על העיר הלא נכונה, וזה בדיוק סוג השקט
-        שגורם למטייל להגיע בלי מקום לישון בו.
+        Lodging and tickets belong to a city. `citySlug` is required for
+        them, and rejected if it is not a city of this trip - **no fallback to
+        the first city**: guessing here means recording "we have a hotel"
+        against the wrong city, and that is exactly the kind of quiet error
+        that ends with a traveler arriving with nowhere to sleep.
       */
       const rawCity = typeof input.citySlug === 'string' ? input.citySlug.trim() : '';
       const cityOk = rawCity && trip.citySlugs.includes(rawCity);
@@ -1237,20 +1273,22 @@ export function executeAgentTool(
       return {
         trip: { ...trip, preferences: prefs },
         ok: true,
-        // מזכירים למודל שהקישור אינו שלו - הוא כבר מוצג בממשק
+        // remind the model that the link is not its own - it is already shown in the UI
         message: `מצב ההזמנות עודכן: ${JSON.stringify({ booking: prefs.booking, byCity: prefs.bookingByCity })}. לינה וכרטיסים נשמרים לפי עיר. כפתורי ההזמנה מוצגים בממשק אוטומטית - אל תכתוב קישורים, מחירים או זמינות.`,
         action: `סימנתי: ${labels}`,
       };
     }
 
     /**
-     * אירועים וסגירות בתאריכים של המטייל.
+     * Events and closures on the traveler's own dates.
      *
-     * שתי התנהגויות, ושתיהן כנות: כשיש לטיול תאריכים מוחזרות הרשומות
-     * **שחופפות לימים שלו באותה עיר** (ראו `matchTripWindows`); כשאין
-     * תאריכים מוחזר מה ששמור על העיר, עם אמירה מפורשת שזה לא הותאם
-     * לתאריכים. בשני המקרים רשימה ריקה חוזרת כמשפט מפורש - "אין לנו
-     * מידע רשום" - ולא כשגיאה, כי זו לא תקלה.
+     * Two behaviors, both honest: when the trip has dates, the entries
+     * returned are those **overlapping their days in that city** (see
+     * `matchTripWindows`); when there are no dates, whatever is stored for
+     * the city is returned, with an explicit statement that it was not
+     * matched to dates. In both cases an empty list comes back as an explicit
+     * sentence - "we have nothing recorded" - and not as an error, because it
+     * is not a malfunction.
      */
     case 'city_date_notes': {
       const slug = String(input.citySlug ?? '');
@@ -1263,7 +1301,7 @@ export function executeAgentTool(
       const cities = [{ slug, countrySlug: dest.countrySlug }];
       const dated = trip?.startDate ? matchTripCalendar(trip, calendar, cities) : null;
 
-      /** רשומה אחת בצורה שהמודל קורא */
+      /** one entry in the shape the model reads */
       const row = (e: CalendarEntry, extra: Record<string, string> = {}) => ({
         שם: e.name,
         סוג: impactLabel(e),
@@ -1340,14 +1378,16 @@ export function executeAgentTool(
 
 
     /**
-     * חיפוש מוכן אצל ספק. **הכלי היחיד שמחזיר משהו שהמשתמש לוחץ עליו**,
-     * ולכן הוא גם המקום שבו חשוב שלא ייכנס שום דבר מהמודל מלבד שתי
-     * בחירות: סוג ועיר. אין כאן טיפול ב"מה שהמודל ביקש שיהיה כתוב" -
-     * הכרטיס נבנה מהטיול.
+     * A ready-made provider search. **The only tool that returns something
+     * the user clicks on**, so it is also the place where it matters that
+     * nothing from the model gets in besides two choices: kind and city.
+     * There is no handling here of "what the model asked to have written" -
+     * the card is built from the trip.
      *
-     * מכוון: **לא דורש טיול פעיל.** "תמצא לי מלון ברומא" לפני שנבנה
-     * מסלול היא בקשה לגיטימית; פשוט אין ממה לגזור תאריכים, והכרטיס
-     * אומר את זה במקום להמציא אותם.
+     * Deliberate: **does not require an active trip.** "Find me a hotel in
+     * Rome" before an itinerary was built is a legitimate request; there is
+     * simply nothing to derive dates from, and the card says so instead of
+     * inventing them.
      */
     case 'booking_search': {
       const kind = String(input.kind ?? '') as SearchKind;
@@ -1362,8 +1402,9 @@ export function executeAgentTool(
       if (!dest) {
         return fail(trip, `citySlug לא מוכר "${slug}". החוקיים: ${validSlugs()}.`);
       }
-      // אותו כלל כמו ב-BookingPanel: nameLocal נכתב לעיתים
-      // "Vienna / Wien", ומחרוזת עם לוכסן מחזירה תוצאות ריקות אצל הספקים
+      // Same rule as in BookingPanel: nameLocal is sometimes written
+      // "Vienna / Wien", and a string with a slash returns empty results at
+      // the providers
       const cityQuery = (dest.nameLocal || dest.name).split('/')[0].trim();
       const card = buildSearchCard(trip, kind, slug, cityQuery, dest.name, {
         kosher: input.kosher === true || undefined,
@@ -1381,9 +1422,9 @@ export function executeAgentTool(
       return {
         trip,
         ok: true,
-        // התוצאה אומרת למודל **מה הוא לא צריך לכתוב**. זה אותו דפוס של
-        // PROSE_DISCIPLINE: הכלל יושב בתוצאת הכלי, כלומר בדבר האחרון
-        // שהמודל קורא לפני שהוא כותב.
+        // The result tells the model **what it must NOT write**. Same pattern
+        // as PROSE_DISCIPLINE: the rule sits in the tool result, i.e. in the
+        // last thing the model reads before it writes.
         message: `כרטיס חיפוש נוצר והוא מוצג למטייל בממשק, כולל גילוי נאות על עמלה. מה שכבר ממולא בחיפוש: ${card.understood.join(' · ')}.${missing}\nאל תכתוב מחיר, טווח מחירים, "בערך", זמינות, סוג חדר, דירוג כוכבים או שם מלון - אין לך נתונים כאלה והשרת מוריד אותם מהתשובה. אל תכתוב את הקישור: הוא כבר על המסך. אסור לומר "הזול ביותר" או "המחיר הטוב ביותר". תשובה נכונה כאן היא שתי שורות: שאתה לא יכול לבדוק מחירים וזמינות בעצמך, ומה החיפוש כבר כולל.`,
         action: `פתחתי חיפוש ${kind === 'stay' ? 'לינה' : 'חוויות'} ${inHe(dest.name)}`,
         search: card,
@@ -1401,12 +1442,12 @@ export function executeAgentTool(
         return fail(trip, `kind חייב להיות אחד מ: ${PIN_KINDS.join(', ')}.`);
       }
       const kind = kindRaw as TripPinKind;
-      // עיר לא מוכרת לא מפילה את הסיכה - היא פשוט נשמרת בלי שיוך לעיר
+      // an unknown city does not fail the pin - it is simply saved with no city attribution
       const citySlug =
         typeof input.citySlug === 'string' && destOf(input.citySlug) ? input.citySlug : undefined;
 
       const pins = [...(trip.pins ?? [])];
-      // אותו שם באותה עיר = עדכון, לא כפילות
+      // same name in the same city = an update, not a duplicate
       const sameName = (p: TripPin) =>
         p.name.trim().toLowerCase() === pinName.toLowerCase() && p.citySlug === citySlug;
       const pin: TripPin = {
@@ -1428,13 +1469,15 @@ export function executeAgentTool(
       }
 
       /*
-        לינה שנשמרה משנה גם את מצב ההזמנות: אין טעם להציע חיפוש מלון
-        לעיר שכבר יש בה מלון. שאר הסוגים לא נוגעים בזה.
+        A saved lodging pin also changes the booking status: there is no
+        point offering a hotel search for a city that already has a hotel.
+        The other kinds do not touch it.
 
-        **לעיר של הסיכה בלבד.** ההערה הזאת אמרה "לעיר" מהיום הראשון,
-        אבל האחסון ידע רק טיול שלם - כך שסיכת מלון בווינה סימנה גם את
-        ברטיסלבה כסגורה, והמטייל הפסיק לקבל הצעה לחפש שם. סיכה בלי עיר
-        לא משנה כלום: אין למי לזקוף אותה.
+        **For the pin's city only.** This comment said "for the city" from
+        day one, but the storage only knew a whole trip - so a hotel pin in
+        Vienna also marked Bratislava as settled, and the traveler stopped
+        getting an offer to search there. A pin without a city changes
+        nothing: there is nobody to attribute it to.
       */
       const preferences =
         kind === 'stay' && pin.citySlug
@@ -1449,8 +1492,8 @@ export function executeAgentTool(
 
       const label = PIN_KIND_LABELS[kind];
       const updated: Trip = { ...trip, pins, preferences };
-      // מרחקים אמיתיים לעצירות של אותה עיר - כדי שהמודל יצטט מספר נכון
-      // במקום להמציא קרבה. ראו pinDistances.
+      // Real distances to that city's stops - so the model quotes a correct
+      // number instead of inventing proximity. See pinDistances.
       const near = pinDistances(updated, pin);
       const nearLine =
         near.length > 0
@@ -1493,8 +1536,9 @@ export function executeAgentTool(
 }
 
 /**
- * ההעדפות בלי סגנון הנסיעה. ראו את ההערה בנקודת השימוש: הסגנון קיים
- * אך ורק בשביל תצוגת עלות שמחושבת בקוד, ולמודל אין בו שום שימוש.
+ * The preferences without the travel style. See the comment at the point of
+ * use: the style exists solely for a cost display computed in code, and the
+ * model has no use for it.
  */
 export function withoutTravelStyle(prefs: TripPreferences | undefined): TripPreferences {
   if (!prefs) return {};
@@ -1503,31 +1547,35 @@ export function withoutTravelStyle(prefs: TripPreferences | undefined): TripPref
   return rest;
 }
 
-/** מצב הטיול כפי שהמודל רואה אותו - ימים ממוספרים 1-based, מקומות עם שם+מזהה */
+/** The trip state as the model sees it - days numbered 1-based, places with name+id */
 export function serializeTripForModel(trip: Trip | null): string {
   if (!trip) return 'null (אין טיול פעיל - השתמש ב-create_trip כדי להתחיל)';
   return JSON.stringify({
     name: trip.name,
-    // התאריכים כעובדה, כולל התאריך המדויק של כל יום למטה: בלי זה המודל
-    // "מחשב" תאריכים בעצמו, וזה בדיוק סוג המספר שהוא ממציא בביטחון.
+    // The dates as a fact, including the exact date of every day below:
+    // without this the model "computes" dates itself, which is exactly the
+    // kind of number it invents with confidence.
     ...(trip.startDate ? { startDate: trip.startDate, endDate: trip.endDate } : {}),
-    // `travelStyle` מוסר מכאן במכוון. הוא משמש **רק** להצגת הוצאה
-    // יומית מתוך נתונים שמורים, והחשבון עליו נעשה בקוד. אם המודל היה
-    // רואה אותו, הוא היה נוטה להסביר אותו ולנקוב במספר משלו - וזה
-    // בדיוק המספר שאסור שיהיה כאן. מה שהוא לא רואה הוא לא יכול לתאר.
+    // `travelStyle` is removed here deliberately. It is used **only** to show
+    // a daily spend figure from stored data, and its arithmetic is done in
+    // code. If the model saw it, it would tend to explain it and name a
+    // number of its own - which is exactly the number that must not be here.
+    // What it does not see it cannot describe.
     preferences: withoutTravelStyle(trip.preferences),
-    // הסיכות שהמטייל כבר מסר - כדי שהסוכן לא ישאל שוב על עיר שכבר יש
-    // בה לינה, ולא יציע חיפוש למקום ששמור. locatedOnMap=false פירושו
-    // שהמיקום לא אומת והמטייל צריך להניח אותה בעצמו.
+    // The pins the traveler already provided - so the agent does not ask
+    // again about a city that already has lodging, and does not offer a
+    // search for a saved place. locatedOnMap=false means the location was not
+    // verified and the traveler needs to place it themselves.
     pins: (trip.pins ?? []).map((p) => ({
       kind: p.kind,
       name: p.name,
       citySlug: p.citySlug,
       locatedOnMap: typeof p.lat === 'number' && typeof p.lng === 'number',
       note: p.note,
-      // המרחקים נוסעים איתנו בכל תור, לא רק בתור שבו הסיכה נוספה: הבדיקה
-      // החיה הראתה שההמצאה של "במרחק הליכה" קרתה דווקא בתור מאוחר יותר,
-      // בלי קריאה ל-add_pin, כשלמודל לא היה שום מספר אמיתי ביד.
+      // The distances ride along on every turn, not only on the turn the pin
+      // was added: live testing showed the "within walking distance"
+      // invention happened precisely on a later turn, with no add_pin call,
+      // when the model had no real number in hand.
       airDistancesToStops: pinDistances(trip, p).slice(0, 6),
     })),
     days: trip.days.map((d, i) => ({
@@ -1542,8 +1590,9 @@ export function serializeTripForModel(trip: Trip | null): string {
 }
 
 /**
- * סיכות שחוזרות מהלקוח. קואורדינטה נשמרת רק אם היא מספר תקין בטווח -
- * ערך משובש נזרק והסיכה נשארת "לא מאומתת" במקום להיות מצוירת בים.
+ * Pins coming back from the client. A coordinate is kept only if it is a
+ * valid in-range number - a corrupt value is dropped and the pin stays
+ * "unverified" instead of being drawn in the sea.
  */
 function sanitizePins(raw: unknown): TripPin[] | undefined {
   if (!Array.isArray(raw)) return undefined;
@@ -1574,7 +1623,7 @@ function sanitizePins(raw: unknown): TripPin[] | undefined {
   return pins.length > 0 ? pins : undefined;
 }
 
-/** ולידציה קלה של הטיול שהגיע מהלקוח - מבנה בלבד, בלי להמציא תוכן */
+/** Light validation of the trip that arrived from the client - structure only, no content invented */
 export function sanitizeClientTrip(raw: unknown): Trip | null {
   if (!raw || typeof raw !== 'object') return null;
   const t = raw as Record<string, unknown>;
@@ -1601,7 +1650,7 @@ export function sanitizeClientTrip(raw: unknown): Trip | null {
       : [...new Set(days.map((d) => d.citySlug))],
     days,
     createdAt: typeof t.createdAt === 'number' ? t.createdAt : Date.now(),
-    // הלקוח שולח את הטיול שלו; תאריך שאינו YYYY-MM-DD תקין פשוט נופל
+    // the client sends its own trip; a date that is not a valid YYYY-MM-DD simply drops out
     ...safeDates(t as { startDate?: unknown; endDate?: unknown }),
     pins: sanitizePins(t.pins),
     preferences:

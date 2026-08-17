@@ -2,16 +2,17 @@ import { destinations } from '@/data/destinations';
 import { countries } from '@/data/countries';
 
 /**
- * שרת בלבד - **צבירה של שורות טיולים למספרים**, בלי גישה לרשת.
+ * Server only - **aggregating trip rows into numbers**, with no network access.
  *
- * מופרד מהנתיב בכוונה: זה החלק שאפשר לבדוק, ומספר שגוי בלוח מצב הוא
- * החלטה עסקית שגויה. הפונקציות כאן טהורות - נכנסות שורות, יוצאים
- * מספרים.
+ * Deliberately separated from the route: this is the part that can be tested, and a
+ * wrong number on a dashboard is a wrong business decision. The functions here are
+ * pure - rows in, numbers out.
  *
- * **מה הלוח יכול לראות, ומה לא.** רק טיולים של משתמשים **מחוברים**
- * מסונכרנים ל-`user_trips`; טיול של מבקר אנונימי חי ב-localStorage
- * בלבד ואינו קיים בשרת. זו לא השמטה - זו התוצאה של לא לעקוב אחרי מי
- * שלא נרשם, וחשוב שהמספרים ייקראו ככה ולא כ"כל הטיולים בעולם".
+ * **What the dashboard can see, and what it cannot.** Only **signed-in** users'
+ * trips are synced to `user_trips`; an anonymous visitor's trip lives in
+ * localStorage only and does not exist on the server. That is not an omission - it
+ * is the consequence of not tracking people who did not sign up, and it matters
+ * that the numbers are read that way and not as "every trip in the world".
  */
 
 export interface TripRow {
@@ -21,7 +22,7 @@ export interface TripRow {
   data: unknown;
 }
 
-/** הצורה המינימלית שהצבירה מסתמכת עליה. שורה פגומה פשוט לא נספרת. */
+/** The minimal shape the aggregation relies on. A malformed row is simply not counted. */
 interface TripShape {
   name?: unknown;
   citySlugs?: unknown;
@@ -48,12 +49,12 @@ export interface TripSummary {
   updatedAt: string;
 }
 
-/** שורה גולמית → סיכום, או null אם היא לא נראית כמו טיול */
+/** A raw row -> a summary, or null if it does not look like a trip */
 export function summarize(row: TripRow): TripSummary | null {
   const t = (row?.data ?? null) as TripShape | null;
-  // `Array.isArray` אינו קישוט: `typeof [] === 'object'`, ובלעדיו שורה
-  // פגומה שמחזיקה מערך הייתה נספרת כטיול אמיתי עם אפס ימים - כלומר
-  // מזייפת את המונה ואת החציון גם יחד. נתפס בבדיקה.
+  // `Array.isArray` is not decoration: `typeof [] === 'object'`, and without it a
+  // malformed row holding an array would be counted as a real trip with zero days -
+  // i.e. faking the count and the median at the same time. Caught by a test.
   if (!t || typeof t !== 'object' || Array.isArray(t)) return null;
   const days = Array.isArray(t.days) ? t.days : [];
   const citySlugs = Array.isArray(t.citySlugs) ? t.citySlugs.filter((s) => typeof s === 'string') : [];
@@ -79,7 +80,7 @@ export interface Aggregates {
   trips: number;
   travelers: number;
   withStops: number;
-  /** אורך טיול טיפוסי - חציון, כי טיול חריג אחד מזיז ממוצע */
+  /** Typical trip length - a median, because one outlier trip moves a mean */
   medianDays: number;
   medianStops: number;
   perDay: { day: string; trips: number }[];
@@ -102,21 +103,21 @@ export function aggregate(rows: TripSummary[], days = 30): Aggregates {
   const nations = new Map<string, number>();
   const perDay = new Map<string, number>();
 
-  // שלד של כל הימים בטווח, כדי שיום בלי טיולים יוצג כאפס ולא ייעלם
+  // A skeleton of every day in the range, so a day with no trips shows as zero rather than vanishing
   for (let i = days - 1; i >= 0; i--) {
     perDay.set(isoDay(Date.now() - i * 86_400_000), 0);
   }
 
   for (const t of rows) {
     if (perDay.has(t.createdDay)) perDay.set(t.createdDay, (perDay.get(t.createdDay) ?? 0) + 1);
-    // עיר נספרת פעם אחת לטיול, גם אם יש בה חמישה ימים
+    // A city is counted once per trip, even if it has five days
     for (const slug of new Set(t.citySlugs)) {
       cities.set(slug, (cities.get(slug) ?? 0) + 1);
     }
     /*
-      **וגם המדינה פעם אחת לטיול.** טיול רומא+ונציה הוא טיול אחד
-      לאיטליה, לא שניים; ספירה לפי עיר הייתה הופכת את "לאן מתכננים"
-      למדד של כמה ערים יש למדינה בקטלוג. נתפס בבדיקה.
+      **And the country once per trip too.** A Rome+Venice trip is one trip to Italy,
+      not two; counting by city would have turned "where people plan to go" into a
+      measure of how many cities a country has in the catalog. Caught by a test.
     */
     const seenCountries = new Set<string>();
     for (const slug of new Set(t.citySlugs)) {
@@ -139,18 +140,20 @@ export function aggregate(rows: TripSummary[], days = 30): Aggregates {
 }
 
 /* ============================================================
-   תצוגת טיול בודד לאדמין - קריאה בלבד
+   A single trip as the admin sees it - read only
    ============================================================ */
 
 /**
- * הטיול כפי שהאדמין רואה אותו: **שמות, לא מזהים**.
+ * The trip as the admin sees it: **names, not ids**.
  *
- * הפענוח נעשה כאן בשרת ולא בדפדפן, מאותה סיבה שדף הטיול המשותף מקבל
- * את הערים כ-props: הקטלוג הוא ~2MB, ואין שום סיבה שאזור הניהול יגרור
- * אותו לדפדפן כדי להפוך `vie-stephansdom` ל"קתדרלת סנט סטפן".
+ * The decoding happens here on the server and not in the browser, for the same
+ * reason the shared-trip page receives its cities as props: the catalog is ~2MB, and
+ * there is no reason for the admin area to drag it into the browser just to turn
+ * `vie-stephansdom` into a place name.
  *
- * מקום שאינו בקטלוג (עיר שנחקרה אוטומטית, למשל) מוצג לפי המזהה שלו
- * ומסומן `unknown` - זה מה שבאמת שמור, ולהסתיר אותו יהיה שקר קטן.
+ * A place that is not in the catalog (an automatically explored city, for example)
+ * is shown by its id and marked `unknown` - that is what is actually stored, and
+ * hiding it would be a small lie.
  */
 export interface TripViewStop {
   id: string;
@@ -183,7 +186,7 @@ const PLACE_OF = new Map(
   destinations.flatMap((d) => d.places.map((p) => [p.id, p] as const)),
 );
 
-/** רק העדפות שנקבעו בפועל. שדה ריק אינו "לא", הוא "לא נשאל". */
+/** Only preferences that were actually set. An empty field is not "no", it is "not asked". */
 const PREF_LABELS: Record<string, [string, Record<string, string>]> = {
   party: ['מי נוסע', { couple: 'זוג', family: 'משפחה', friends: 'חברים', solo: 'לבד' }],
   pace: ['קצב', { relaxed: 'רגוע', packed: 'עמוס' }],

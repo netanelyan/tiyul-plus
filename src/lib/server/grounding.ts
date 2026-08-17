@@ -6,47 +6,54 @@ import type { Trip } from '@/lib/trip/types';
 import type { ChatMessage } from '@/lib/server/chatMessages';
 
 /**
- * ה-grounding בנוי בשתי שכבות, כי הקטלוג גדל ל-47 ערים ו-500+ מקומות:
+ * The grounding is built in two layers, because the catalog grew to 47 cities
+ * and 500+ places:
  *
- * 1. INDEX - קבוע וזהה בכל קריאה, ולכן נושא את cache_control: כל עיר עם
- *    כל המקומות שלה ברמת id/שם/קטגוריה/תגיות. זה מה שהמודל חייב כדי
- *    לבנות ולתקף מסלול, ולעולם לא להמציא מזהה.
- * 2. DETAIL - רק לערים הרלוונטיות לתור הנוכחי (הערים שבטיול + ערים
- *    שהוזכרו בשיחה): תיאורי מקומות, מסלול אוצר, מידע פרקטי ומידע
- *    המדינה. הבלוק הזה קטן ומשתנה, ולכן יושב אחרי נקודת השבירה של
- *    המטמון.
+ * 1. INDEX - constant and identical on every call, and therefore carries
+ *    cache_control: every city with all of its places at the
+ *    id/name/category/tags level. This is what the model must have to build
+ *    and validate an itinerary, and to never invent an id.
+ * 2. DETAIL - only for the cities relevant to the current turn (the trip's
+ *    cities + cities mentioned in the conversation): place descriptions, the
+ *    curated itinerary, practical info and the country info. This block is
+ *    small and changing, so it sits after the cache breakpoint.
  *
- * לפני הפיצול נשלחו ~118k טוקנים בכל קריאה - ובבניית טיול יש 5 קריאות
- * רצופות, כך שזה היה גורם הזמן הדומיננטי.
+ * Before the split, ~118k tokens were sent on every call - and a trip build
+ * makes 5 sequential calls, so this was the dominant time factor.
  *
- * **הקובץ הזה יושב ב-lib ולא בתוך ה-route** משתי סיבות: route handler
- * לא יכול לייצא עוזרים (Next נופל על טיפוסי הנתיב), ובלי ייצוא אי אפשר
- * לכתוב טסט - וזה בדיוק מה שקרה ל-sanitizeMessages בעבר.
+ * **This file lives in lib and not inside the route** for two reasons: a
+ * route handler cannot export helpers (Next fails on the route types), and
+ * without an export there is no way to write a test - which is exactly what
+ * happened to sanitizeMessages in the past.
  */
 
 /**
- * שער הכשרות.
+ * The kosher gate.
  *
- * "כשרות היא אופציה, לעולם לא הנחה" הוא עיקרון מוצר, אבל עד היום הוא
- * נאכף רק על **הכלים** (`filterKosherUnlessOptedIn` ב-agent.ts) - כלומר
- * על מה שנכנס לטיול. הפרוזה נשארה חשופה, ונתנאל דיווח על בדיוק זה:
- * שאלה תמימה על מסעדה ברומא חזרה כתשובה שלמה על הגטו היהודי, עם שני
- * שמות שהם בדיוק שתי הרשומות הכשרות של רומא בקטלוג.
+ * "Kosher is an option, never an assumption" is a product principle, but
+ * until now it was enforced only on the **tools** (`filterKosherUnlessOptedIn`
+ * in agent.ts) - i.e. on what enters the trip. The prose remained exposed,
+ * and Netanel reported exactly that: an innocent question about a restaurant
+ * in Rome came back as a full answer about the Jewish Ghetto, with two names
+ * that are precisely Rome's two kosher entries in the catalog.
  *
- * שלושה סבבי ניסוח בפרומפט כבר נכשלו בסוג הזה של בעיה (ראו יומן הסשן,
- * ערך (h)), והשיעור שנרשם שם הוא: **לא לכתוב את הכלל חזק יותר - להזיז
- * אותו קרוב יותר לרגע הייצור, או להחליף אותו בעובדה מחושבת.** לכן זה
- * לא כלל נוסף אלא מבנה: כשהכשרות כבויה, הרשומות הכשרות פשוט לא נמצאות
- * בדאטה שהמודל מקבל. אי אפשר להמליץ על מה שלא ראית.
+ * Three rounds of prompt wording have already failed on this kind of problem
+ * (see the session log, entry (h)), and the lesson recorded there is: **do
+ * not write the rule harder - move it closer to the moment of generation, or
+ * replace it with a computed fact.** So this is not another rule but
+ * structure: when kosher is off, the kosher entries simply are not present
+ * in the data the model receives. You cannot recommend what you never saw.
  */
 const KOSHER_ASK =
   /כשר(ו|י|ה|ות)?|מהדרין|גלאט|בד["״'׳]?ץ|הכשר|השגחה|חב["״'׳]?ד|בית חב|kosher|chabad|glatt|hechsher/i;
 
 /**
- * האם משפט בודד נשמע כמו שאלת כשרות - הגרסה המשותפת של `KOSHER_ASK`,
- * לשימוש בכל מקום שצריך להחליט על **הודעה אחת** ולא על חלון שיחה
- * (למשל: האם לתת לסוכן כלי חיפוש חי בתור הזה - ראו `webLookup.ts`).
- * כשרות היא הנושא היחיד שאסור לו לחפש עליו באינטרנט בשום נסיבות.
+ * Whether a single sentence sounds like a kashrut question - the shared
+ * version of `KOSHER_ASK`, for use anywhere a decision must be made about
+ * **one message** rather than a conversation window (e.g.: whether to hand
+ * the agent a live search tool this turn - see `webLookup.ts`).
+ * Kashrut is the one topic it must never search the web for under any
+ * circumstances.
  */
 export function kosherIntentText(text: string): boolean {
   return KOSHER_ASK.test(text ?? '');
@@ -60,9 +67,10 @@ export function kosherAllowed(
   if (kosherHint) return true;
   if (trip?.preferences?.kosher === true) return true;
   if (trip?.preferences?.shabbatAware === true) return true;
-  // **רק הודעות המשתמש.** אם היינו סורקים גם את תשובות הסוכן, די היה
-  // בכך שהוא הזכיר כשרות פעם אחת כדי שהשער יישאר פתוח לנצח - כלומר
-  // המנגנון היה מאשר לעצמו את מה שהוא בדיוק בא למנוע.
+  // **User messages only.** If we scanned the agent's replies too, its
+  // having mentioned kosher once would be enough to keep the gate open
+  // forever - i.e. the mechanism would grant itself exactly what it exists
+  // to prevent.
   const text = messages
     .filter((m) => m.role === 'user')
     .slice(-6)
@@ -72,12 +80,14 @@ export function kosherAllowed(
 }
 
 /**
- * הרשימה הלבנה של `priceGuard.ts` לטענות כשרות: שמות מקומות כשרים
- * ושמות ערים שיש להן `kosherOverview` אמיתי, **רק מבין הערים שבאמת
- * נשלחות בתור הזה** (`citySlugs`). זו לא רשימה של "מה קיים בקטלוג" -
- * זו רשימה של "מה המודל באמת ראה עכשיו", וההבדל הוא בדיוק הפער שגרם
- * לבאג: השער הכללי פתוח (`kosherOk`), אבל העיר הספציפית שנשאלת עליה
- * לא נמצאת בשום מקום בדאטה שנשלחה - ואז כל טענה עליה היא מהזיכרון.
+ * The `priceGuard.ts` allowlist for kashrut claims: names of kosher places
+ * and names of cities that have a real `kosherOverview`, **only among the
+ * cities actually sent this turn** (`citySlugs`). This is not a list of
+ * "what exists in the catalog" - it is a list of "what the model really saw
+ * just now", and the difference is exactly the gap that caused the bug: the
+ * general gate is open (`kosherOk`), but the specific city being asked about
+ * appears nowhere in the data that was sent - and then any claim about it
+ * comes from memory.
  */
 export function kosherAllowedNames(citySlugs: string[], kosherOk: boolean): string[] {
   if (!kosherOk) return [];
@@ -97,7 +107,7 @@ export function kosherAllowedNames(citySlugs: string[], kosherOk: boolean): stri
   return names.filter((n) => n.trim().length > 0);
 }
 
-/** אינדקס גדול (~218k תווים) - נבנה פעם אחת לכל וריאנט ולא בכל קריאת מודל */
+/** Large index (~218k chars) - built once per variant, not on every model call */
 const INDEX_CACHE = new Map<boolean, string>();
 
 export function buildGroundingIndex(kosherOk: boolean): string {
@@ -107,9 +117,10 @@ export function buildGroundingIndex(kosherOk: boolean): string {
     note: kosherOk
       ? 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block.'
       : 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block. Kosher venues are deliberately not listed here - see the kosher policy in the next block.',
-    // המספרים האמיתיים, כי המודל המציא אותם בבדיקה חיה ("50 יעדים ב-40
-    // מדינות" כשבפועל היו 139 ו-74). הוא סופר גרוע על רשימה ארוכה, ואין
-    // סיבה לתת לו לנחש נתון שאפשר פשוט למסור לו.
+    // The real numbers, because the model invented them in live testing
+    // ("50 destinations in 40 countries" when the reality was 139 and 74).
+    // It counts a long list badly, and there is no reason to let it guess a
+    // figure that can simply be handed to it.
     coverage: { cities: destinations.length, countries: countries.length },
     cities: destinations.map((d) => ({
       slug: d.slug,
@@ -133,7 +144,7 @@ export function buildGroundingIndex(kosherOk: boolean): string {
   return json;
 }
 
-/** ערים שהשיחה נוגעת בהן: הטיול הפעיל + אזכור בשם עיר/מדינה/שם מקומי */
+/** Cities the conversation touches: the active trip + a mention by city/country/local name */
 export function relevantCitySlugs(messages: ChatMessage[], trip: Trip | null): string[] {
   const slugs = new Set<string>(trip?.citySlugs ?? []);
   const text = messages
@@ -146,33 +157,37 @@ export function relevantCitySlugs(messages: ChatMessage[], trip: Trip | null): s
     const needles = [d.name, d.nameLocal, d.slug, country?.name].filter(Boolean) as string[];
     if (needles.some((n) => text.includes(n.toLowerCase()))) slugs.add(d.slug);
   }
-  // בלי שום רמז - נותנים פירוט על מדגם קטן כדי שהתשובה הראשונה לא תהיה עקרה
+  // No hint at all - give detail on a small sample so the first answer is not barren
   if (slugs.size === 0) return destinations.slice(0, 6).map((d) => d.slug);
 
-  // תקרה קשיחה על מספר הערים בבלוק הפירוט.
+  // A hard cap on the number of cities in the detail block.
   //
-  // בלי התקרה הזאת הבלוק היה חסר גבול, וזה הכשיל שיחות אמיתיות: הסריקה
-  // מוסיפה כל יעד ששמו, שמו הלטיני, ה-slug **או שם המדינה שלו** מופיע
-  // בשש ההודעות האחרונות - וההודעות של הסוכן עצמו מזכירות הרבה שמות
-  // ערים ומדינות. מדידה על הקטלוג האמיתי: כ-6,500 תווים לעיר, 45% מהם
-  // עברית, כלומר בערך 3,800 טוקנים לעיר. 20 ערים = ~65k טוקנים,
-  // 40 ערים = ~120k, וכל הקטלוג (139 יעדים) = ~370k טוקנים בבלוק אחד.
-  // ביחד עם האינדקס וההיסטוריה זה חרג מחלון ההקשר של 200k.
+  // Without this cap the block was unbounded, and that broke real
+  // conversations: the scan adds every destination whose name, Latin name,
+  // slug **or country name** appears in the last six messages - and the
+  // agent's own messages mention plenty of city and country names.
+  // Measured against the real catalog: ~6,500 chars per city, 45% of it
+  // Hebrew, i.e. roughly 3,800 tokens per city. 20 cities = ~65k tokens,
+  // 40 cities = ~120k, and the whole catalog (139 destinations) = ~370k
+  // tokens in a single block. Together with the index and the history this
+  // exceeded the 200k context window.
   //
-  // הבעיה גם גדלה עם השיחה **ועם הקטלוג**: כל יעד חדש שנוסף מרחיב את
-  // מרחב ההתאמות. לכן תקרה, ולא רק אופטימיזציה.
+  // The problem also grows with the conversation **and with the catalog**:
+  // every new destination added widens the match space. Hence a cap, not
+  // merely an optimization.
   //
-  // סדר העדיפויות: הערים של הטיול עצמו קודם - הן ההקשר שאי אפשר לוותר
-  // עליו - ואחר כן מה שהוזכר בשיחה, עד התקרה. מה שנחתך עדיין נמצא
-  // באינדקס עם כל המזהים והשמות, כך שהמודל יכול לבנות איתו; הוא רק לא
-  // מקבל את הפרוזה.
+  // Priority order: the trip's own cities first - they are the context that
+  // cannot be given up - and then what was mentioned in the conversation,
+  // up to the cap. What gets cut is still in the index with all the ids and
+  // names, so the model can still build with it; it just does not get the
+  // prose.
   const MAX_DETAIL_CITIES = 6;
   const tripFirst = (trip?.citySlugs ?? []).filter((s) => slugs.has(s));
   const rest = [...slugs].filter((s) => !tripFirst.includes(s));
   return [...tripFirst, ...rest].slice(0, MAX_DETAIL_CITIES);
 }
 
-/** בלוק grounding נפרד ליעדים שנחקרו - מסומן חד-משמעית כלא-מאומת */
+/** Separate grounding block for auto-explored destinations - unambiguously marked as unverified */
 export function buildExploredGrounding(explored: Destination[]): string {
   if (explored.length === 0) return '';
   return `\n\nAUTO-EXPLORED (unverified, from public sources - label as such to the user):\n${JSON.stringify(
@@ -186,39 +201,44 @@ export function buildExploredGrounding(explored: Destination[]): string {
 }
 
 /**
- * מדיניות הכשרות נמסרת כ**עובדה בתוך הדאטה** ולא ככלל בפרומפט, ומנוסחת
- * כך שהמודל לא יתקן שקר אחד בשקר אחר: אסור לו להמליץ, וגם אסור לו לומר
- * שאין כשרות בעיר - הוא פשוט לא קיבל את השכבה הזאת.
+ * The kosher policy is delivered as a **fact inside the data**, not as a
+ * rule in the prompt, and is worded so the model does not fix one lie with
+ * another: it may not recommend, and it also may not say the city has no
+ * kosher food - it simply was not given that layer.
  */
 const KOSHER_POLICY_OFF =
   'The traveler has NOT asked for kosher and the kosher preference is OFF, so every kosher restaurant, kosher market and kashrut overview is intentionally omitted from this data. Do not mention, recommend or hint at kosher options in your reply. Do NOT say the city has no kosher food - you were simply not given that layer; if the user asks, say the site has a kosher layer and they can switch on "אוכל כשר" (or just ask), and then you will have it.';
 
 /**
- * הצד השני של אותו שער, ולא פחות חשוב ממנו.
+ * The other side of that same gate, and no less important.
  *
- * מאז שנוספו קטגוריות `food`/`market` יש בקטלוג מקומות אכילה **לא**
- * כשרים (קפה סנטרל, כץ׳ס, לה דה מגו). שכבת הכלים כבר חוסמת אותם ממי
- * שבחר כשרות - אבל הפרוזה, שוב, לא. הפתרון כאן הוא מסירת העובדה
- * המחושבת (`kosherStatus` על כל מקום אכילה) ולא הסתרה: מטייל שומר
- * כשרות שיקרא "כץ׳ס הוא מוסד ניו-יורקי, ואינו כשר" קיבל בדיוק את מה
- * שהוא צריך; מחיקת הרשומה הייתה משאירה אותו בלי האזהרה.
+ * Since the `food`/`market` categories were added, the catalog contains
+ * eating places that are **not** kosher (Café Central, Katz's, Les Deux
+ * Magots). The tool layer already blocks them for whoever chose kosher -
+ * but the prose, again, does not. The solution here is delivering the
+ * computed fact (`kosherStatus` on every eating place) rather than hiding:
+ * a kosher-keeping traveler who reads "Katz's is a New York institution,
+ * and it is not kosher" got exactly what they needed; deleting the entry
+ * would have left them without the warning.
  */
 const KOSHER_POLICY_ON =
   'The traveler keeps kosher. Every eating place carries kosherStatus. Recommend ONLY kosherStatus="kosher". A place marked "not-kosher" or "unknown" may be mentioned only to say plainly that it is not kosher (or that we could not confirm it) - never as a suggestion of where to eat, and never in the plan. "unknown" is not "probably fine". Always add the usual reminder to confirm kashrut and hours with the venue itself.';
 
 /**
- * הביסוס של המסלול הקל - **המינימום המוחלט שעריכה מכנית צריכה**.
+ * The light route's grounding - **the absolute minimum a mechanical edit needs**.
  *
- * מדוד: הפירוט המלא של שתי ערים הוא כ-34 אלף טוקנים, כי הוא נושא
- * תקצירי מדינה, מידע מעשי, המסלול המומלץ ותיאור לכל מקום. עריכה
- * מכנית לא נוגעת באף אחד מהם: היא מזיזה יום, מסירה עצירה, או מוסיפה
- * מקום **מהעיר שכבר בטיול**. מה שנשאר נחוץ הוא זוג `id|name` לכל
- * מקום בערים האלה, ותו לא.
+ * Measured: the full detail for two cities is ~34 thousand tokens, because
+ * it carries country summaries, practical info, the recommended itinerary
+ * and a description for every place. A mechanical edit touches none of
+ * them: it moves a day, removes a stop, or adds a place **from a city
+ * already in the trip**. What remains necessary is an `id|name` pair for
+ * every place in those cities, and nothing more.
  *
- * הפורמט הוא שורות ולא JSON: אותו מידע, בלי המפתחות שחוזרים על עצמם
- * בכל רשומה - אותו שיקול שמתועד בסעיף תקציב האינדקס ב-CLAUDE.md.
+ * The format is lines rather than JSON: the same information, without the
+ * keys repeating on every record - the same consideration documented in the
+ * index-budget section of CLAUDE.md.
  *
- * הכשרות מסוננת בדיוק כמו בפירוט המלא. אין כאן דלת אחורית.
+ * Kosher is filtered exactly as in the full detail. There is no back door here.
  */
 export function buildLightGrounding(citySlugs: string[], kosherOk: boolean): string {
   const cities = destinations.filter((d) => citySlugs.includes(d.slug));
@@ -254,13 +274,13 @@ export function buildGroundingDetail(citySlugs: string[], kosherOk: boolean): st
       slug: d.slug,
       name: d.name,
       summary: d.summary,
-      // טיסות, תחבורה, כשרות - ברמת עיר. `kosherOverview` הוא סקירת
-      // הכשרות של העיר, ולכן הוא יורד יחד עם הרשומות עצמן; שאר השדות
-      // אינם קשורים ונשארים.
-      // (JSON.stringify משמיט undefined, כך שהשדה פשוט לא נשלח)
+      // Flights, transit, kosher - at the city level. `kosherOverview` is
+      // the city's kashrut overview, so it goes down along with the entries
+      // themselves; the other fields are unrelated and stay.
+      // (JSON.stringify omits undefined, so the field is simply not sent)
       practical: kosherOk ? d.practical : { ...d.practical, kosherOverview: undefined },
-      // מסלול האוצר מפנה למזהי מקומות; בלי הסינון הזה מזהה כשר היה
-      // מגיע למודל דרך הדלת האחורית של המסלול.
+      // The curated itinerary refers to place ids; without this filter a
+      // kosher id would reach the model through the itinerary's back door.
       itinerary: kosherOk
         ? d.itinerary
         : d.itinerary.map((day) => ({
@@ -275,13 +295,15 @@ export function buildGroundingDetail(citySlugs: string[], kosherOk: boolean): st
           nameLocal: p.nameLocal,
           category: p.category,
           description: p.description.length > 90 ? `${p.description.slice(0, 90)}…` : p.description,
-          // עובדה מחושבת ולא ניחוש של המודל לפי השם. נשלחת רק כשהכשרות
-          // דלוקה, כי כשהיא כבויה אין לה מה לעשות בתשובה בכלל.
+          // A computed fact, not a model guess based on the name. Sent only
+          // when kosher is on, because when it is off it has no business
+          // being in the reply at all.
           ...(kosherOk && isEating(p.category)
             ? { kosherStatus: kosherStatusOf(p) }
             : {}),
-          // `kosherNote` על מקום **לא** כשר הוא בדרך כלל אזהרה ("המסעדה
-          // המפורסמת הזאת אינה כשרה") - הסתרתה הייתה מזיקה, לא זהירה.
+          // A `kosherNote` on a place that is **not** kosher is usually a
+          // warning (along the lines of "this famous restaurant is not
+          // kosher") - hiding it would be harmful, not cautious.
           kosherNote: p.kosherNote,
         })),
     })),

@@ -6,25 +6,27 @@ import { loadCities } from '@/lib/trip/cityStore';
 import { formatHebrewDate } from '@/lib/trip/dates';
 
 /**
- * שני דברים קטנים שחייבים לחיות ב-layout: רישום ה-service worker,
- * והשורה שאומרת למשתמש איפה הוא עומד.
+ * Two small things that must live in the layout: registering the service
+ * worker, and the line telling the user where they stand.
  *
- * **הפס הוא שורה בזרימת העמוד ולא אלמנט צף.** זה גם שקט יותר (אין
- * חפיפה על תוכן, אין הבהוב) וגם עוקף את המלכודת שכבר תועדה כאן
- * פעמיים: `position: fixed` בתוך ה-header נמדד מול ה-header בגלל
- * ה-backdrop-blur, ולא מול המסך.
+ * **The bar is a row in the page flow, not a floating element.** That is
+ * both quieter (no overlap over content, no flicker) and sidesteps the
+ * trap already documented here twice: `position: fixed` inside the header
+ * is measured against the header because of the backdrop-blur, not against
+ * the screen.
  *
- * הניסוח נבחר כדי לא להיקרא כתקלה של האתר: אין "שגיאה", אין אדום,
- * ויש אמירה חיובית - מה כן עובד עכשיו.
+ * The wording was chosen so it does not read as a site fault: no "error",
+ * no red, and a positive statement - what DOES work right now.
  */
 export default function OfflineNotice() {
   const online = useOnline();
   /**
-   * מתי נשמר התוכן הישן ביותר שיש במכשיר. זה **חייב** להיות על המסך:
-   * תוכן שנשמר לפני שבוע כולל גם מידע כשרות ומחירים, והצגתו בלי תאריך
-   * היא בדיוק הכישלון הגרוע ביותר שהפיצ׳ר הזה יכול לייצר. נקרא רק
-   * כשאין רשת, אחרי הרינדור הראשון, כדי לא לגעת ב-localStorage
-   * בשרת ולא ליצור אי-התאמת hydration.
+   * When the oldest content on the device was saved. This **must** be on
+   * screen: content saved a week ago also includes kosher info and prices,
+   * and showing it without a date is exactly the worst failure this feature
+   * can produce. Read only when offline, after the first render, so we
+   * never touch localStorage on the server and never create a hydration
+   * mismatch.
    */
   const savedAt = useMemo(() => {
     if (online || typeof window === 'undefined') return null;
@@ -34,30 +36,32 @@ export default function OfflineNotice() {
 
   useEffect(() => {
     if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) return;
-    // בפיתוח לא רושמים: ה-HMR של Turbopack וה-SW נלחמים על אותן
-    // בקשות, וזה מייצר "באגים" שאינם קיימים בפרודקשן.
+    // In development we do not register: Turbopack's HMR and the SW fight
+    // over the same requests, producing "bugs" that do not exist in production.
     if (process.env.NODE_ENV !== 'production') return;
     const onLoad = () => {
       navigator.serviceWorker
         .register('/sw.js')
         .then(async () => {
-          // הטעינה הזאת עצמה לא עברה דרך ה-SW, ולכן ה-chunks שלה לא
-          // נשמרו. מוסרים לו את הרשימה כדי שביקור **אחד** יספיק כדי
-          // שהאפליקציה תיפתח בלי רשת - בלי זה צריך שתי כניסות, ומי
-          // שנכנס פעם אחת ואז ירד לרכבת התחתית נשאר בלי כלום.
+          // This load itself did not pass through the SW, so its chunks were
+          // not cached. We hand it the list so that **one** visit is enough
+          // for the app to open without network - otherwise two visits are
+          // needed, and someone who came once and then went down into the
+          // subway is left with nothing.
           const reg = await navigator.serviceWorker.ready;
           const urls = performance
             .getEntriesByType('resource')
             .map((e) => e.name)
             .filter((u) => u.startsWith(location.origin));
-          // מדברים עם ה-worker ה**פעיל** ולא עם `controller`: בטעינה
-          // הראשונה ה-claim עדיין רץ, אז `controller` הוא null והמסר
-          // היה נופל לרצפה בשקט - נמדד: נכס אחד נשמר במקום 17.
+          // Talk to the **active** worker and not to `controller`: on the
+          // first load the claim is still running, so `controller` is null
+          // and the message would have silently dropped on the floor -
+          // measured: one asset cached instead of 17.
           reg.active?.postMessage({ type: 'warm-assets', urls });
         })
         .catch(() => {
-          // דפדפן שחוסם SW (גלישה פרטית בחלק מהדפדפנים) - האתר עובד
-          // בדיוק כמו קודם, פשוט בלי מצב לא-מקוון.
+          // A browser that blocks SW (private browsing in some browsers) -
+          // the site works exactly as before, just without offline mode.
         });
     };
     if (document.readyState === 'complete') onLoad();

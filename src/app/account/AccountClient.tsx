@@ -21,10 +21,12 @@ import ThinkingIndicator from '@/components/ThinkingIndicator';
 import { daysHe } from '@/lib/duration';
 
 /**
- * האזור האישי - הבית של המשתמש המחובר:
- * פרופיל (תמונה, שם, טלפון) · דרכון המדינות ("איפה כבר הייתם" -
- * גיימיפיקציה קלה עם דרגות) · הטיולים המסונכרנים · הגדרות חשבון.
- * כל שינוי נשמר אוטומטית (debounce לשדות טקסט, מיידי לבחירות).
+ * The personal area - the signed-in user's home:
+ * profile (avatar, name, phone) · the countries passport ("where you have
+ * already been" - light gamification with tiers) · the synced trips ·
+ * account settings.
+ * Every change saves automatically (debounce for text fields, immediate for
+ * selections).
  */
 export default function AccountClient({ cityNames }: { cityNames: CityNames }) {
   const auth = useAuth();
@@ -96,7 +98,7 @@ function Shell({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* ============================ כרטיס פרופיל ============================ */
+/* ============================ Profile card ============================ */
 
 function ProfileCard() {
   const auth = useAuth();
@@ -108,7 +110,7 @@ function ProfileCard() {
   const fileRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // שמירה אוטומטית של שדות הטקסט - שנייה אחרי שמפסיקים להקליד
+  // Auto-save of the text fields - one second after typing stops
   function queueSave(nextName: string, nextPhone: string) {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(async () => {
@@ -133,7 +135,7 @@ function ProfileCard() {
 
   return (
     <section className="overflow-hidden rounded-3xl bg-shell ring-1 ring-night/10">
-      {/* פס לילה עם התמונה יושבת עליו */}
+      {/* Night-colored band with the avatar sitting on it */}
       <div className="relative h-20 bg-night">
         <div
           aria-hidden
@@ -227,7 +229,7 @@ function ProfileCard() {
   );
 }
 
-/* ========================== דרכון המדינות ========================== */
+/* ========================== Countries passport ========================== */
 
 function PassportCard() {
   const auth = useAuth();
@@ -237,7 +239,7 @@ function PassportCard() {
 
   const { current, next } = travelerLevel(visited.size);
   const catalogSlugsByCode = useMemo(() => {
-    // מדינות שיש לנו בקטלוג - כדי לקשר "יש לנו מסלולים שם"
+    // Countries we have in the catalog - to link the "we have itineraries there" hint
     const map = new Map<string, string>();
     for (const c of catalogCountries) {
       const code = flagToCode(c.flag);
@@ -275,7 +277,7 @@ function PassportCard() {
         </div>
       </div>
 
-      {/* דרגה + התקדמות */}
+      {/* Tier + progress */}
       <div className="mt-4 rounded-2xl bg-cream p-4 ring-1 ring-night/10">
         <div className="flex items-center justify-between gap-2">
           <p className="font-bold text-night">
@@ -294,7 +296,7 @@ function PassportCard() {
             style={{ width: `${progress}%` }}
           />
         </div>
-        {/* פירוק יבשות - רק כשיש מה להראות */}
+        {/* Per-continent breakdown - only when there is something to show */}
         {visited.size > 0 && (
           <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[11px] font-semibold text-night/55">
             {CONTINENTS.map((cont) => {
@@ -313,7 +315,7 @@ function PassportCard() {
         )}
       </div>
 
-      {/* חיפוש */}
+      {/* Search */}
       <input
         value={query}
         onChange={(e) => setQuery(e.target.value)}
@@ -322,7 +324,7 @@ function PassportCard() {
         className="mt-4 w-full rounded-xl border border-night/15 bg-cream px-4 py-2.5 text-base sm:text-sm text-night outline-none transition placeholder:text-night/35 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
       />
 
-      {/* רשת המדינות */}
+      {/* The countries grid */}
       <div className="mt-3 grid max-h-[430px] grid-cols-2 gap-2 overflow-y-auto pe-1 sm:grid-cols-3">
         {filtered.map((c) => {
           const on = visited.has(c.code);
@@ -360,7 +362,7 @@ function PassportCard() {
         )}
       </div>
 
-      {/* קריאה לפעולה עדינה - החיבור חזרה למוצר */}
+      {/* A gentle call to action - the link back into the product */}
       {visited.size > 0 && (
         <p className="mt-4 rounded-xl bg-night/[0.04] px-4 py-2.5 text-sm text-night/60">
           מחפשים את החותמת הבאה?{' '}
@@ -373,7 +375,7 @@ function PassportCard() {
   );
 }
 
-/** אמוג'י דגל → קוד ISO2 (הקטלוג שומר דגלים כאמוג'י) */
+/** Flag emoji → ISO2 code (the catalog stores flags as emoji) */
 function flagToCode(flag: string): string | null {
   const points = [...flag].map((c) => c.codePointAt(0) ?? 0);
   if (points.length < 2) return null;
@@ -383,7 +385,7 @@ function flagToCode(flag: string): string | null {
   return chars.length === 2 ? chars.join('') : null;
 }
 
-/* ========================== הטיולים שלי ========================== */
+/* ========================== My trips ========================== */
 
 function TripsCard({ onOpen, cityNames }: { onOpen: (id: string) => void; cityNames: CityNames }) {
   const trip = useTrip();
@@ -437,7 +439,7 @@ function TripsCard({ onOpen, cityNames }: { onOpen: (id: string) => void; cityNa
   );
 }
 
-/* ============================ הגדרות ============================ */
+/* ============================ Settings ============================ */
 
 function SettingsCard({ onDeletedAll }: { onDeletedAll: () => void }) {
   const auth = useAuth();
@@ -445,12 +447,12 @@ function SettingsCard({ onDeletedAll }: { onDeletedAll: () => void }) {
   const profile = auth.profile!;
   const kosherDefault = profile.prefs.kosher === true;
 
-  // ברירת המחדל של הכשרות מסונכרנת גם לטוגל של דף הבית (localStorage)
+  // The kosher default is also synced to the homepage toggle (localStorage)
   useEffect(() => {
     try {
       localStorage.setItem('tiyul-plus:kosher-pref', JSON.stringify(kosherDefault));
     } catch {
-      /* לא קריטי */
+      /* not critical */
     }
   }, [kosherDefault]);
 
@@ -466,7 +468,7 @@ function SettingsCard({ onDeletedAll }: { onDeletedAll: () => void }) {
 
       <PromoRedeem />
 
-      {/* תוכנית המנוי - לקריאה בלבד; משתנה דרך תשלום (כרגע: PayPal פעיל, Stripe בקוד אך לא מוגדר), הענקה או קוד הטבה */}
+      {/* The subscription plan - read-only; changes via payment (currently: PayPal live, Stripe in code but unconfigured), a grant or a promo code */}
       <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-cream px-4 py-3 ring-1 ring-night/10">
         <div>
           <p className="text-sm font-bold text-night">התוכנית שלי</p>
@@ -552,7 +554,7 @@ function Toggle({ on, onChange }: { on: boolean; onChange: () => void }) {
   );
 }
 
-/* ======================== קהילת המטיילים ======================== */
+/* ======================== Traveler community ======================== */
 
 function CommunityCard() {
   const [query, setQuery] = useState('');

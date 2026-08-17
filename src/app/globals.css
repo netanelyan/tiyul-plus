@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 @import 'leaflet/dist/leaflet.css';
 
-/* ===== טיול+ design system: calm, credible, warm ===== */
+/* ===== tiyul+ design system: calm, credible, warm ===== */
 @theme {
   --color-night: #241b4d; /* deep plum - text + footer */
   --color-night-soft: #3b2f74;
@@ -11,14 +11,15 @@
   --color-cream: #fdf6ec; /* warm page background */
   --color-shell: #fffdf8; /* card background */
   /*
-     ירוק-ים. **לא צבע חדש** - הוא כבר היה באתר, כתוב ביד כ-#00a896
-     בתשעה מקומות (כשרות, "נשמר", מדינות משותפות, צ׳יפ בעמוד המדינה),
-     ובגוון שלישי לגמרי (#0d9488) בחלונית המפה. הוא לא מתחרה ב-sunset:
-     הוא לא מופיע על אף כפתור ראשי, רק על ציוני מצב וסימוני כשרות.
+     Sea green. **Not a new color** - it was already on the site, hand-written
+     as #00a896 in nine places (kosher, the "saved" state, shared countries,
+     the chip on the country page), and in an entirely third shade (#0d9488)
+     in the map popup. It does not compete with sunset: it appears on no
+     primary button, only on status indicators and kosher markers.
 
-     כטוקן הוא גם זהה בכל מקום וגם **נדרס במצב ניגודיות גבוהה** - צבע
-     קשיח פשוט מתעלם מהמצב הזה, וזו הייתה תקלת נגישות ולא רק חוסר
-     אחידות.
+     As a token it is both identical everywhere and **overridden in
+     high-contrast mode** - a hardcoded color simply ignores that mode, and
+     that was an accessibility defect, not just inconsistency.
   */
   --color-lagoon: #00a896;
   --color-lagoon-deep: #007f76;
@@ -28,11 +29,11 @@
   --shadow-pop: 0 6px 20px -10px rgba(36, 27, 77, 0.18);
 }
 
-/* גודל טקסט הנגישות: משנה את font-size של השורש, וכל היחידות ב-rem
-   (כותרות, כפתורים, טקסט) גדלות/קטנות יחד. ברירת מחדל 1 = "רגיל". */
+/* The accessibility text size: changes the root font-size, and every rem
+   unit (headings, buttons, text) grows/shrinks together. Default 1 = "normal". */
 html {
   font-size: calc(100% * var(--a11y-font-scale, 1));
-  /* מגן נגד גלילה אופקית ברמת ה-viewport (ראו הערה על body) */
+  /* Guard against horizontal scrolling at the viewport level (see the note on body) */
   overflow-x: clip;
 }
 
@@ -50,21 +51,24 @@ body {
     'Segoe UI Symbol',
     'Noto Color Emoji',
     sans-serif;
-  /* מגן קבוע נגד גלילה אופקית: אלמנטים full-bleed שמשתמשים ב-100vw
-     חורגים ברוחב פס-הגלילה כשיש גלילה אנכית. `clip` (ולא `hidden`)
-     חותך את החריגה בלי ליצור scroll-container - ה-sticky של ההדר נשמר. */
+  /* A standing guard against horizontal scrolling: full-bleed elements using
+     100vw overflow by the scrollbar's width whenever there is vertical
+     scrolling. `clip` (and not `hidden`) cuts the overflow without creating a
+     scroll-container - the header's sticky is preserved. */
   overflow-x: clip;
-  /* צבע ברירת המחדל של פקדי טופס (checkbox, radio, סמן טקסט בחלק
-     מהדפדפנים) הוא הכחול של המערכת. הטמעה אחת כאן, ולא utility בכל שדה. */
+  /* The default color of form controls (checkbox, radio, the text caret in
+     some browsers) is the system blue. One declaration here, not a utility
+     on every field. */
   accent-color: var(--color-sunset);
   caret-color: var(--color-sunset);
 }
 
-/* ===== סימון טקסט =====
-   הפס הכחול שנתנאל דיווח עליו בחיפוש הוא **ברירת המחדל של הדפדפן**:
-   בחירת טקסט מסומנת בכחול מערכת, וזה נראה כמו רכיב זר על רקע קרם וקורל -
-   הכי בולט בשדה החיפוש, כי שם בוחרים ומחליפים טקסט כל הזמן.
-   אין כאן שינוי התנהגות: אותה בחירה בדיוק, בצבעי המותג. */
+/* ===== Text selection =====
+   The blue bar Netanel reported in search is **the browser default**: text
+   selection is highlighted in system blue, and that reads as a foreign
+   element on a cream-and-coral background - most visible in the search
+   field, because that is where text gets selected and replaced constantly.
+   No behavior change here: exactly the same selection, in the brand colors. */
 ::selection {
   background: color-mix(in srgb, var(--color-sunset) 26%, transparent);
   color: var(--color-night);
@@ -74,17 +78,17 @@ body {
   color: var(--color-night);
 }
 
-/* הבזק הכחול-אפור של אנדרואיד בכל נגיעה. המצבים הפעילים כבר מסומנים
-   ע"י העיצוב עצמו, ולכן ההבזק הוא רעש בלבד. */
+/* Android's gray-blue flash on every tap. The active states are already
+   marked by the design itself, so the flash is pure noise. */
 * {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ===== מצבי נגישות (ווידג'ט הנגישות) - נדלקים ע"י class על <html> ===== */
+/* ===== Accessibility modes (the accessibility widget) - toggled via a class on <html> ===== */
 
-/* ניגודיות גבוהה: דורסים את טוקני הצבע של Tailwind v4 (שהם משתני CSS
-   על השורש), כך שכל utility שמשתמש בהם עובר לשחור-על-לבן וכפתור
-   בגוון נגיש. */
+/* High contrast: override Tailwind v4's color tokens (which are CSS
+   variables on the root), so every utility that uses them switches to
+   black-on-white and buttons to an accessible shade. */
 html.a11y-contrast {
   --color-night: #000000;
   --color-night-soft: #1a1a1a;
@@ -100,18 +104,18 @@ html.a11y-contrast body {
   background: #ffffff;
 }
 
-/* גווני אפור */
+/* Grayscale */
 html.a11y-grayscale body {
   filter: grayscale(1);
 }
 
-/* קו תחתון לקישורים */
+/* Underline links */
 html.a11y-underline-links a {
   text-decoration: underline !important;
   text-underline-offset: 2px;
 }
 
-/* הדגשת קישורים */
+/* Highlight links */
 html.a11y-highlight-links a {
   outline: 2px solid var(--color-sunset);
   outline-offset: 2px;
@@ -119,7 +123,7 @@ html.a11y-highlight-links a {
   border-radius: 2px;
 }
 
-/* ריווח שורות ואותיות מוגדל */
+/* Increased line and letter spacing */
 html.a11y-spacing p,
 html.a11y-spacing li,
 html.a11y-spacing a,
@@ -133,7 +137,7 @@ html.a11y-spacing button {
   word-spacing: 0.12em !important;
 }
 
-/* סמן עכבר מוגדל */
+/* Enlarged mouse cursor */
 html.a11y-cursor,
 html.a11y-cursor * {
   cursor:
@@ -142,7 +146,7 @@ html.a11y-cursor * {
     auto !important;
 }
 
-/* עצירת אנימציות - משלים את prefers-reduced-motion ומכבד ידנית */
+/* Stop animations - complements prefers-reduced-motion and honors it manually */
 html.a11y-no-motion *,
 html.a11y-no-motion *::before,
 html.a11y-no-motion *::after {
@@ -212,7 +216,7 @@ html.a11y-no-motion *::after {
   box-shadow: var(--shadow-pop);
 }
 
-/* מחוון חושב/טוען: שלוש נקודות קופצות - ThinkingIndicator.tsx */
+/* Thinking/loading indicator: three bouncing dots - ThinkingIndicator.tsx */
 @keyframes thinking-bounce {
   0%,
   80%,
@@ -230,7 +234,7 @@ html.a11y-no-motion *::after {
   animation: thinking-bounce 1s ease-in-out infinite;
 }
 
-/* בלוק שלד בזמן טעינה: צורת התוכן, עם נצנוץ שקט - TripSkeleton ודומיו */
+/* Skeleton block while loading: the shape of the content, with a quiet shimmer - TripSkeleton and friends */
 @keyframes skeleton-shimmer {
   0% {
     background-position: 150% 0;
@@ -271,7 +275,7 @@ html.a11y-no-motion *::after {
   }
 }
 
-/* ===== הדפסה: ייצוא טיול פרימיום (שער ממותג + ימים + פוטר) ===== */
+/* ===== Print: premium trip export (branded cover + days + footer) ===== */
 @media print {
   @page {
     size: A4;
@@ -287,7 +291,7 @@ html.a11y-no-motion *::after {
     padding: 0;
   }
 
-  /* רקעים/צבעים חייבים print-color-adjust, אחרת הדפדפן משמיט אותם */
+  /* Backgrounds/colors require print-color-adjust, otherwise the browser drops them */
   .print-cover,
   .print-leg,
   .print-day,
@@ -296,7 +300,7 @@ html.a11y-no-motion *::after {
     -webkit-print-color-adjust: exact;
   }
 
-  /* עמוד שער: פס קורל עליון, לוגו+מותג, שם ענק, ערים - לבד בעמוד 1 */
+  /* Cover page: coral top rule, logo+brand, huge name, cities - alone on page 1 */
   .print-cover {
     display: flex;
     min-height: 250mm;

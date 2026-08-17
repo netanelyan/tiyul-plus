@@ -1,71 +1,76 @@
-// ---------- חיפוש מוכן אצל ספק (לינה / חוויות) ----------
+// ---------- Prefilled provider search (lodging / experiences) ----------
 //
-// ## הכלל שכל הקובץ הזה קיים בשבילו
+// ## The rule this whole file exists for
 //
-// כשמטייל מבקש עזרה במלון או בכרטיסים, התשובה היא **חיפוש אמיתי אצל
-// ספק אמיתי, עם הפרטים שלו כבר ממולאים** - ולא מספרים, שמות מלונות או
-// טענות זמינות מהמודל. לכן:
+// When a traveler asks for help with a hotel or tickets, the answer is **a
+// real search at a real provider, with their details already filled in** -
+// and not numbers, hotel names or availability claims from the model. Hence:
 //
-// - **אין כאן שום קלט טקסטואלי או מספרי מהמודל.** הכלי `booking_search`
-//   מקבל מהמודל שני דברים בלבד: איזה סוג חיפוש, ואיזו עיר. כל השאר -
-//   תאריכים, מספר אורחים, תקציב, כשרות - נגזר מ-`Trip` (מה שהמטייל
-//   בעצמו אמר או בחר בממשק) ומהדאטה שלנו.
-// - **המודל לא יכול להקליד מספר גם אם ירצה**, כי אין פרמטר מספרי בכלי.
-//   זה לא איסור בפרומפט אלא היעדר שדה.
-// - הכתובת עצמה מורכבת ב-`src/lib/booking.ts`, מהקונפיג, כמו כל קישור
-//   הזמנה אחר באתר.
+// - **There is no textual or numeric input from the model here.** The
+//   `booking_search` tool receives exactly two things from the model: which
+//   kind of search, and which city. Everything else - dates, guest count,
+//   budget, kashrut - is derived from `Trip` (what the traveler themselves
+//   said or chose in the UI) and from our data.
+// - **The model cannot type a number even if it wants to**, because the tool
+//   has no numeric parameter. This is not a prompt prohibition but the
+//   absence of a field.
+// - The URL itself is assembled in `src/lib/booking.ts`, from the config,
+//   like every other booking link on the site.
 //
-// ## מסעדות אינן כאן, בכוונה
+// ## Restaurants are not here, deliberately
 //
-// אוכל נשאר הקטלוג האצור שלנו (עם מידע הכשרות והסתייגויותיו) ובלי שום
-// חיפוש מחירים. `SearchKind` הוא איחוד סגור של שניים, כך שאין ערך
-// שאפשר להעביר בו "מסעדה".
+// Food stays our curated catalog (with its kashrut info and caveats) and
+// with no price search at all. `SearchKind` is a closed union of two, so
+// there is no value through which "restaurant" could be passed.
 //
-// ## מה לא נשלח לספק, ולמה
+// ## What is NOT sent to the provider, and why
 //
-// נשלחים רק פרמטרים שהספקים עצמם מייצרים בכתובות החיפוש הציבוריות
-// שלהם. **פילטר מחיר לא נשלח**: הפורמט שלו אצל Booking אינו מתועד
-// (`nflt=...`), וניחוש פורמט כתובת הוא בדיוק מה שהפרויקט הזה כבר שילם
-// עליו ביוקר. במקום זה התקציב שהמטייל אמר מוצג על הכרטיס כטקסט, עם
-// שורה שאומרת שהסינון נעשה באתר הספק. פרמטר שגוי היה נכשל בשקט
-// (הספק פשוט מתעלם) - ועדיין מציג למטייל "מסונן לפי התקציב שלך",
-// כלומר הבטחה שלא התקיימה.
+// Only parameters the providers themselves generate in their public search
+// URLs are sent. **A price filter is not sent**: its format at Booking is
+// undocumented (`nflt=...`), and guessing a URL format is exactly what this
+// project has already paid dearly for. Instead, the budget the traveler
+// stated is shown on the card as text, with a line saying the filtering is
+// done on the provider's site. A wrong parameter would fail silently (the
+// provider simply ignores it) - while still showing the traveler "filtered
+// by your budget", i.e. a promise that was not kept.
 
 import { buildBookingUrl, bookingIsAffiliate, bookingProvider } from './booking';
 import { addDays, dayDate, formatHebrewRange } from './trip/dates';
 import type { Trip, TripPreferences } from './trip/types';
 
-/** שני סוגי החיפוש שהסוכן יכול לפתוח. מסעדות אינן ברשימה - ראו למעלה. */
+/** The two search kinds the agent can open. Restaurants are not on the list - see above. */
 export type SearchKind = 'stay' | 'activities';
 
 export const SEARCH_KINDS: SearchKind[] = ['stay', 'activities'];
 
 /**
- * מה שהמשתמש רואה. נבנה **כולו בשרת** מהטיול ומהדאטה, ונשלח מוכן
- * ללקוח - כדי שלרינדור לא תהיה שום דרך להוסיף מספר משלו.
+ * What the user sees. Built **entirely on the server** from the trip and
+ * the data, and sent ready-made to the client - so the rendering has no way
+ * to add a number of its own.
  */
 export interface BookingSearchCard {
   kind: SearchKind;
-  /** כותרת הכרטיס בעברית */
+  /** the card title, in Hebrew */
   title: string;
-  /** תווית הכפתור */
+  /** the button label */
   cta: string;
-  /** שם הספק, לתצוגה לצד הכפתור */
+  /** the provider name, shown next to the button */
   provider: string;
   url: string;
-  /** קישור שותפים אמיתי (משפיע על rel ועל נוסח הגילוי הנאות) */
+  /** a genuine affiliate link (affects rel and the disclosure wording) */
   isAffiliate: boolean;
   cityLabel: string;
-  /** "מה הבנתי מהבקשה" - כל צ׳יפ נגזר מהטיול, אף אחד לא מהמודל */
+  /** "what I understood from the request" - every chip is derived from the trip, none from the model */
   understood: string[];
-  /** מה לא נכנס לכתובת ולכן נקבע באתר הספק */
+  /** what did not go into the URL and is therefore set on the provider's site */
   onProvider: string[];
 }
 
 const KIND_COPY: Record<SearchKind, { title: string; cta: string }> = {
-  // אין כאן "הזול ביותר" ואין "המחיר הטוב ביותר": אנחנו לא סורקים את כל
-  // הספקים ולא יכולים לטעון טענה כזאת. ראו הטסט ב-priceGuard.test.ts
-  // שסורק את כל הקוד ומוודא שהנוסח הזה לא חוזר פנימה.
+  // No "the cheapest" and no "the best price" here: we do not scan all
+  // providers and cannot make such a claim. See the test in
+  // priceGuard.test.ts that scans the whole codebase and makes sure that
+  // wording does not creep back in.
   stay: { title: 'חיפוש מלונות ולינה', cta: 'פתיחת החיפוש' },
   activities: { title: 'חיפוש כרטיסים, סיורים וחוויות', cta: 'פתיחת החיפוש' },
 };
@@ -77,15 +82,18 @@ const BUDGET_LABEL: Record<'low' | 'medium' | 'high', string> = {
 };
 
 /**
- * טווח השהייה **בעיר מסוימת**, נגזר מסדר הימים בטיול.
+ * The stay range **in a specific city**, derived from the order of the
+ * trip's days.
  *
- * זה הלב של "כבר ממולא": בטיול רב-ערים, תאריכי הצ׳ק-אין בווינה הם
- * התאריכים של הימים שבאמת בווינה - לא תאריכי הטיול כולו. הגזירה היא
- * מ-`startDate` + מספר היום, בדיוק כמו בכל מקום אחר באתר, ולכן היא לא
- * יכולה לצאת מסנכרון עם סדר הימים.
+ * This is the heart of "already filled in": on a multi-city trip, the
+ * check-in dates in Vienna are the dates of the days actually IN Vienna -
+ * not the dates of the whole trip. The derivation is from `startDate` + the
+ * day number, exactly as everywhere else on the site, so it cannot fall out
+ * of sync with the day order.
  *
- * צ׳ק-אאוט הוא **היום שאחרי** היום האחרון בעיר: מי שישן שם בלילה של
- * יום 8 עוזב ב-9. שלושה ימים בעיר הם שלושה לילות, וזה מה שהספק מצפה לו.
+ * Check-out is **the day after** the last day in the city: whoever sleeps
+ * there on the night of day 8 leaves on the 9th. Three days in a city are
+ * three nights, and that is what the provider expects.
  */
 export function cityStayRange(
   trip: Trip | null,
@@ -104,12 +112,13 @@ export function cityStayRange(
 }
 
 /**
- * מספר המבוגרים, **רק כשהוא חד-משמעי**.
+ * Number of adults, **only when it is unambiguous**.
  *
- * `party` הוא הסימן היחיד שיש לנו, והוא לא תמיד אומר מספר: "חברים" יכול
- * להיות שניים או חמישה, ו"משפחה" לא אומר כמה ילדים. במקרים האלה לא
- * שולחים כלום והכרטיס אומר שמספר האורחים נקבע אצל הספק - עדיף על
- * להמציא למישהו שני ילדים.
+ * `party` is the only signal we have, and it does not always state a number:
+ * "friends" could be two or five, and "family" does not say how many
+ * children. In those cases nothing is sent and the card says the guest
+ * count is set at the provider - better than inventing two children for
+ * somebody.
  */
 export function adultsFromParty(party: TripPreferences['party']): number | null {
   if (party === 'solo') return 1;
@@ -118,20 +127,22 @@ export function adultsFromParty(party: TripPreferences['party']): number | null 
 }
 
 /**
- * הפרמטרים שנשלחים לספק. שמות הפרמטרים הם אלה שהספקים עצמם מייצרים
- * בכתובות החיפוש שלהם, ובכוונה **המינימום**: יעד, תאריכים, אורחים.
+ * The parameters sent to the provider. The parameter names are those the
+ * providers themselves generate in their search URLs, and deliberately
+ * **the minimum**: destination, dates, guests.
  *
- * לא אומת ברשת מהסביבה הזאת (booking.com ו-getyourguide חסומים כאן),
- * ולכן מה שנבחר הוא הסט שנכשל בבטחה: פרמטר שהספק לא מכיר פשוט מתעלמים
- * ממנו והמטייל מקבל חיפוש פחות ממולא - לא טענה שגויה. אימות אמיתי הוא
- * לחיצה אחת על הכפתור מרשת רגילה.
+ * Not verified over the network from this environment (booking.com and
+ * getyourguide are blocked here), so what was chosen is the set that fails
+ * safely: a parameter the provider does not recognize is simply ignored and
+ * the traveler gets a less prefilled search - not a wrong claim. Real
+ * verification is one click on the button from a normal network.
  */
 function providerParams(
   kind: SearchKind,
   range: { checkIn: string; checkOut: string } | null,
   adults: number | null,
 ): Record<string, string> {
-  if (kind !== 'stay') return {}; // ל-GetYourGuide רק `q` מאומת אצלנו
+  if (kind !== 'stay') return {}; // for GetYourGuide only `q` is verified on our side
   const params: Record<string, string> = {};
   if (range) {
     params.checkin = range.checkIn;
@@ -142,11 +153,11 @@ function providerParams(
 }
 
 /**
- * בונה את הכרטיס. דטרמיניסטי לגמרי: אותו טיול + אותה עיר + אותו סוג
- * מחזירים תמיד אותה כתובת ואותם צ׳יפים.
+ * Builds the card. Fully deterministic: the same trip + the same city + the
+ * same kind always return the same URL and the same chips.
  *
- * @param cityQuery השם הלטיני של העיר מהדאטה שלנו (למשל "Rome")
- * @param cityLabel השם בעברית לתצוגה
+ * @param cityQuery the city's Latin name from our data (e.g. "Rome")
+ * @param cityLabel the Hebrew name, for display
  */
 export function buildSearchCard(
   trip: Trip | null,
@@ -157,7 +168,7 @@ export function buildSearchCard(
   extra: { kosher?: boolean; accessible?: boolean } = {},
 ): BookingSearchCard | null {
   const provider = bookingProvider(kind);
-  if (!provider?.provider) return null; // ספק לא נבחר - אין מה להציג
+  if (!provider?.provider) return null; // no provider chosen - nothing to show
 
   const range = cityStayRange(trip, citySlug);
   const prefs = trip?.preferences ?? {};
@@ -175,15 +186,16 @@ export function buildSearchCard(
     else onProvider.push('מספר אורחים');
   }
 
-  // התקציב מוצג כמה שהמטייל אמר, ולא מסונן בכתובת - ראו ההסבר בראש הקובץ
+  // The budget is shown as what the traveler said, and is not filtered in the URL - see the explanation at the top of the file
   const budget = prefs.budget;
   if (budget) {
     understood.push(BUDGET_LABEL[budget]);
     onProvider.push('סינון לפי מחיר');
   }
-  // כשרות ונגישות: אין לספקים פרמטר מתועד שאנחנו מכירים, ולכן הם נאמרים
-  // כאילוץ שהובן - ומסומנים במפורש כמשהו שמסננים באתר. הבטחה שאנחנו לא
-  // יכולים לקיים בכתובת לא תיכתב כאילו קוימה.
+  // Kashrut and accessibility: the providers have no documented parameter we
+  // know of, so they are stated as an understood constraint - and explicitly
+  // marked as something filtered on the provider's site. A promise we cannot
+  // keep in the URL will not be written as if it were kept.
   const kosher = extra.kosher ?? prefs.kosher;
   if (kosher) {
     understood.push('מטבח כשר');
@@ -208,10 +220,11 @@ export function buildSearchCard(
 }
 
 /**
- * הגילוי הנאות. **חובה, לא אופציונלי** - מוצג על כל כרטיס חיפוש.
+ * The disclosure. **Mandatory, not optional** - shown on every search card.
  *
- * הנוסח נכון בשני המצבים: כל עוד אין מזהה שותפים בסביבה הקישור מפנה
- * לאתר הציבורי ואנחנו לא מקבלים כלום, ולכן "עשויים" - ולא "מקבלים".
+ * The wording is correct in both states: as long as no affiliate ID is in
+ * the environment the link points to the public site and we receive
+ * nothing, hence "may" - not "receive".
  */
 export const SEARCH_DISCLOSURE =
   'הקישור מוביל לאתר הזמנות חיצוני, ואנחנו עשויים לקבל עמלה - זה לא משפיע על מה שאנחנו מציעים. המחיר והזמינות נקבעים שם.';

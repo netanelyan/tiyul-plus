@@ -1,64 +1,71 @@
--- טיול+ · סגירת חשיפה ב-RLS · 2026-08-11
+-- tiyul+ · closing an RLS exposure · 2026-08-11
 --
 -- ############################################################
--- להריץ פעם אחת ב-SQL Editor. אידמפוטנטי - בטוח להריץ שוב.
+-- Run once in the SQL Editor. Idempotent - safe to run again.
 -- ############################################################
 --
--- ## מה היה פתוח
+-- ## What was open
 --
--- `shared_trips` נשאה שתי מדיניות ל-anon, ושתיהן ללא תנאי:
+-- `shared_trips` carried two policies for anon, both unconditional:
 --
 --     create policy "anyone can read a share link by code"
 --       on public.shared_trips for select to anon using (true);
 --
--- **השם מתאר כוונה שהתנאי לא מבטא.** `using (true)` אינו "לפי קוד" -
--- הוא "כל שורה". כלומר כל מי שמחזיק את מפתח ה-anon, שנשלח בכל דף
--- שאנחנו מגישים, יכול היה למשוך את *כל* קישורי השיתוף באתר בבקשה אחת,
--- ולא רק לפתוח קוד מסוים.
+-- **The name describes an intent the condition does not express.**
+-- `using (true)` is not "by code" - it is "every row". Meaning anyone
+-- holding the anon key, which is shipped with every page we serve, could
+-- pull *all* of the site's share links in a single request, not just open
+-- a specific code.
 --
--- וה-insert היה גם הוא `with check (true)`, כלומר כתיבה ללא הגבלה
--- ישירות מהדפדפן - שעוקפת את המכסות שב-`/api/share`.
+-- And the insert was likewise `with check (true)`, i.e. unrestricted
+-- writes straight from the browser - bypassing the quotas in `/api/share`.
 --
--- ## למה מדיניות לבדה לא יכולה לתקן את זה
+-- ## Why a policy alone cannot fix this
 --
--- "צריך לדעת את הקוד" אינו תנאי שאפשר לנסח ב-RLS. מדיניות מקבלת את
--- השורה, לא את השאילתה, ולכן היא לא יכולה לדרוש שהקורא ציין `code`.
--- כל ניסוח שמאפשר קריאה של שורה אחת מאפשר קריאה של כולן.
+-- "Must know the code" is not a condition expressible in RLS. A policy
+-- receives the row, not the query, so it cannot require that the caller
+-- specified `code`. Any wording that allows reading one row allows reading
+-- all of them.
 --
--- לכן: **המדיניות מוסרת לגמרי**, ו"לדעת את הקוד" נאכף במקום היחיד
--- שיכול לאכוף אותו - פונקציה שמקבלת קוד ומחזירה שורה אחת.
+-- Therefore: **the policy is removed entirely**, and "knowing the code" is
+-- enforced in the only place that can enforce it - a function that takes a
+-- code and returns a single row.
 --
--- ## מה נשאר אפשרי אחרי הקובץ הזה
+-- ## What remains possible after this file
 --
---   קריאה  - רק דרך `public.get_shared_trip(code)`, שמחזירה payload
---            אחד ותו לא. אין לה גרסה שמחזירה רשימה.
---   כתיבה  - רק דרך השרת שלנו עם ה-service role, כלומר תמיד מאחורי
---            המכסות של `/api/share`.
+--   Read   - only via `public.get_shared_trip(code)`, which returns one
+--            payload and nothing else. It has no list-returning variant.
+--   Write  - only via our server with the service role, i.e. always behind
+--            the quotas of `/api/share`.
 --
--- דורש: SUPABASE_SERVICE_ROLE_KEY ב-Vercel. בלעדיו יצירת קישור קצר
--- כבויה בשקט והלקוח נופל לקישור הארוך, שממשיך לעבוד במלואו.
+-- Requires: SUPABASE_SERVICE_ROLE_KEY in Vercel. Without it, short-link
+-- creation is silently off and the client falls back to the long link,
+-- which keeps working in full.
 
--- ---------- 1. הסרת שתי המדיניות ----------
+-- ---------- 1. Removing the two policies ----------
 
 drop policy if exists "anyone can read a share link by code" on public.shared_trips;
 drop policy if exists "anyone can create share links" on public.shared_trips;
 
--- RLS נשארת דלוקה **וללא אף מדיניות**: זה מצב "אף אחד", לא מצב "כולם".
--- service_role עוקף RLS בהגדרה ולכן השרת שלנו ממשיך לעבוד.
+-- RLS stays enabled **with no policy at all**: that is a "nobody" state,
+-- not an "everybody" state. service_role bypasses RLS by definition, so our
+-- server keeps working.
 alter table public.shared_trips enable row level security;
 
--- ---------- 2. שלילת ההרשאה עצמה, לא רק המדיניות ----------
+-- ---------- 2. Revoking the privilege itself, not just the policy ----------
 
--- RLS מסננת שורות; GRANT מחליט אם בכלל מותר לגעת בטבלה. שלילת ההרשאה
--- היא השכבה שממשיכה להגן גם אם מישהו יוסיף מדיניות רחבה בעתיד.
+-- RLS filters rows; GRANT decides whether the table may be touched at all.
+-- Revoking the privilege is the layer that keeps protecting even if someone
+-- adds a broad policy in the future.
 revoke all on public.shared_trips from anon, authenticated;
 
--- ההרשאה של השרת נאמרת במפורש ולא נשענת על default privileges. היא
--- קיימת ממילא ב-Supabase, אבל "השרת עדיין עובד" הוא בדיוק הדבר שאסור
--- שיהיה תלוי בהנחה - הבדיקה המקומית של הקובץ הזה נכשלה עליו.
+-- The server's privilege is stated explicitly rather than relying on
+-- default privileges. It exists in Supabase anyway, but "the server still
+-- works" is exactly the thing that must not depend on an assumption - this
+-- file's local test failed on it.
 grant select, insert on public.shared_trips to service_role;
 
--- ---------- 3. קריאה לפי קוד, ורק לפי קוד ----------
+-- ---------- 3. Reading by code, and only by code ----------
 
 create or replace function public.get_shared_trip(p_code text)
 returns text
@@ -69,30 +76,32 @@ stable
 as $$
   select payload
   from public.shared_trips
-  -- אותה צורת קוד שהשרת מייצר. קלט שאינו בצורה הזאת לא מגיע לטבלה
-  -- בכלל, כך שאין דרך לנסח כאן דפוס שמחזיר יותר משורה אחת.
+  -- The same code shape the server generates. Input not in this shape never
+  -- reaches the table at all, so there is no way to phrase a pattern here
+  -- that returns more than one row.
   where p_code ~ '^[a-zA-Z0-9]{6,12}$'
     and code = p_code
   limit 1;
 $$;
 
--- `public` כולל כל תפקיד עתידי. ברירת המחדל של Postgres נותנת execute
--- ל-public, ולכן השלילה הזאת חייבת לבוא לפני ההענקה המפורשת.
+-- `public` includes every future role. Postgres's default grants execute to
+-- public, so this revoke must come before the explicit grant.
 revoke all on function public.get_shared_trip(text) from public;
 grant execute on function public.get_shared_trip(text) to anon, authenticated, service_role;
 
--- ---------- 3b. בדיקה עצמית, כאן ולא בקובץ הביקורת ----------
+-- ---------- 3b. Self-test, here and not in the audit file ----------
 --
--- Postgres מפענח שם של פונקציה בזמן פרסור, ולכן שורה שקוראת ל-
--- get_shared_trip נופלת עם "function does not exist" אם היא רצה לפני
--- שהפונקציה נוצרה. המקום היחיד שבו הקריאה בטוחה הוא כאן, מיד אחרי
--- היצירה - ומיגרציה שנופלת על בדיקה עצמית היא בדיוק ההתנהגות הרצויה.
+-- Postgres resolves a function name at parse time, so a line that calls
+-- get_shared_trip fails with "function does not exist" if it runs before
+-- the function was created. The only place the call is safe is here, right
+-- after creation - and a migration that fails on its own self-test is
+-- exactly the desired behavior.
 do $$
 begin
   if public.get_shared_trip('') is not null
-     or public.get_shared_trip('%') is not null      -- תו כללי של LIKE
-     or public.get_shared_trip('_') is not null      -- תו כללי בן-תו
-     or public.get_shared_trip('.*') is not null     -- דפוס regex
+     or public.get_shared_trip('%') is not null      -- LIKE wildcard
+     or public.get_shared_trip('_') is not null      -- single-character wildcard
+     or public.get_shared_trip('.*') is not null     -- regex pattern
      or public.get_shared_trip(repeat('a', 13)) is not null
   then
     raise exception 'get_shared_trip החזירה תוצאה לקלט שאינו קוד';
@@ -100,19 +109,21 @@ begin
 end
 $$;
 
--- ---------- 4. public_profiles: להסיר גישה אנונימית ----------
+-- ---------- 4. public_profiles: removing anonymous access ----------
 --
--- ה-view נוצר בלי `security_invoker`, ולכן הוא עוקף RLS. זה **לא** הבאג
--- וגם לא מה שצריך לשנות: `security_invoker = true` היה מכפיף אותו ל-RLS
--- של `profiles`, שהיא שורה-של-עצמך בלבד, ומשבית את חיפוש המטיילים כליל.
+-- The view was created without `security_invoker`, so it bypasses RLS. That
+-- is **not** the bug, nor what should change: `security_invoker = true`
+-- would subject it to the RLS of `profiles`, which is own-row-only, and
+-- disable traveler search entirely.
 --
--- מה שהוא כן חושף: `user_id`, `display_name`, `avatar`, `visited` של כל
--- מי ש-`is_public = true`. לא מייל, לא טלפון, לא טיולים. הבעיה היא שעם
--- `grant ... to anon` אפשר למשוך את **כל** הרשימה בבקשה אחת - ספרייה
--- של שמות ותצלומים לגריפה. חיפוש מטיילים ממילא חי מאחורי התחברות.
+-- What it does expose: `user_id`, `display_name`, `avatar`, `visited` of
+-- everyone with `is_public = true`. No email, no phone, no trips. The
+-- problem is that with `grant ... to anon` the **entire** list can be
+-- pulled in one request - a library of names and photos ripe for scraping.
+-- Traveler search lives behind login anyway.
 revoke select on public.public_profiles from anon;
 grant select on public.public_profiles to authenticated;
 
--- ---------- 5. אימות ----------
--- להריץ אחרי זה את `scripts/rls-audit.sql`. הוא לקריאה בלבד ומדפיס
--- שורת OK / PROBLEM אחת לכל בדיקה.
+-- ---------- 5. Verification ----------
+-- Afterwards run `scripts/rls-audit.sql`. It is read-only and prints one
+-- OK / PROBLEM line per check.

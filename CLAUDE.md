@@ -2994,6 +2994,14 @@ placeholders in the accessibility statement.
    changed and in which files, (b) product decisions made and why,
    (c) anything left broken or deferred, (d) what the next session
    should know. No exceptions - docs-only sessions included.
+9. **Developer notes are English-only (Netanel, 2026-08-17).** Code
+   comments, SQL comments, script comments, commit messages, and NEW
+   session-log entries are written in English - never Hebrew. Hebrew stays
+   only where it is the product (UI copy, catalog data, test names/strings)
+   or in documents addressed to Netanel himself (NEEDS-YOUR-INPUT.md).
+   Enforced for comments by `src/lib/englishComments.test.ts`; pre-existing
+   Hebrew session-log entries below are historical record and stay as
+   written.
 
 ## Grounding index budget (authoritative - read this before trusting a session log)
 

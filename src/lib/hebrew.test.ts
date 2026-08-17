@@ -1,6 +1,7 @@
 /**
- * שבע ערים בקטלוג מתחילות בוי"ו, ואחת מהן היא וינה. הטסט הזה רץ מול
- * הדאטה האמיתי ולא מול רשימה שכתבתי - עיר חדשה שתיכנס תיבדק מעצמה.
+ * Seven cities in the catalog start with the letter vav, and one of them is
+ * Vienna. This test runs against the real data and not against a list I
+ * wrote - a new city that enters will check itself.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';

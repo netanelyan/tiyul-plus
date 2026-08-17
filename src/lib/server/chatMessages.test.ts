@@ -1,29 +1,31 @@
 /**
- * טסטים ל-sanitizeMessages.
+ * Tests for sanitizeMessages.
  *
- * הטסט הראשון הוא שחזור מדויק של הכשל בפרודקשן: הודעה שכל תוכנה היה
- * תמונה, אחרי שהתמונה יצאה מחלון שתי ההודעות האחרונות. ה-API של
- * Anthropic מחזיר על זה 400 ("user messages must have non-empty
- * content"), 400 היא שגיאה קבועה, וכל ניסיון חוזר נכשל זהה - המטייל
- * קיבל "משהו השתבש" פעמיים על אותה לחיצה.
+ * The first test is an exact reproduction of the production failure: a
+ * message whose entire content was an image, after the image aged out of the
+ * last-two-messages window. Anthropic's API returns 400 on this ("user
+ * messages must have non-empty content"), 400 is a permanent error, and
+ * every retry fails identically - the traveler got the generic "something
+ * went wrong" twice for the same tap.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { sanitizeMessages, MAX_IMAGE_CHARS } from './chatMessages.ts';
 
-/** data URL תקין וזעיר */
+/** A valid, tiny data URL */
 const img = (n = 1) => `data:image/jpeg;base64,${'A'.repeat(n * 8)}`;
 
 test('הרגרסיה: תמונה שיצאה מהחלון לא משאירה הודעת user ריקה', () => {
-  // בדיוק מה שהלקוח שולח: הוא מסנן תמונות **לפי מקום** (שתי ההודעות
-  // האחרונות, ראו useTripChat), ולכן ההודעה שנשאה את אישור ההזמנה
-  // מגיעה לשרת בלי תמונה ובלי טקסט. שימו לב שכלל השרת שונה במקצת -
-  // הוא שומר את שתי ההודעות האחרונות **שיש בהן תמונה** - אבל הלקוח
-  // מסנן קודם, אז זו הצורה שמגיעה בפועל.
+  // Exactly what the client sends: it strips images **by position** (the last
+  // two messages, see useTripChat), so the message that carried the booking
+  // confirmation reaches the server with no image and no text. Note the
+  // server rule differs slightly - it keeps the last two messages **that have
+  // an image** - but the client strips first, so this is the shape that
+  // actually arrives.
   const out = sanitizeMessages([
     { role: 'user', content: 'תבנה את הימים 1, 2 סביב בית המלון' },
     { role: 'assistant', content: 'באיזו עיר הזמנתם מלון?' },
-    { role: 'user', content: '' }, // אישור ההזמנה - התמונה כבר לא נשלחת
+    { role: 'user', content: '' }, // the booking confirmation - the image is no longer sent
     { role: 'assistant', content: 'מעולה! רואה את Hotel Devin בברטיסלבה.' },
     { role: 'user', content: 'כרגע רק המלון הזה, תבנה את התכניות לפיו' },
   ]);
@@ -33,23 +35,25 @@ test('הרגרסיה: תמונה שיצאה מהחלון לא משאירה הו�
       assert.ok(m.content.trim().length > 0 || m.image, 'אין הודעת user בלי תוכן');
     }
   }
-  // התשובה של הסוכן נשארת - מה שהוא קרא מהתמונה משתמר במילים שלו
+  // The agent's reply stays - what it read from the image is preserved in its own words
   assert.ok(out.some((m) => m.content.includes('Hotel Devin')));
 });
 
 /*
- * הקבוצה הזאת היא האילוץ שלא בדקתי מול ה-API לפני שבחרתי את התיקון
- * למעלה - בדקתי תוכן ריק ב-user, תוכן ריק ב-assistant ותפקידים רצופים,
- * ולא בדקתי "ההודעה הראשונה היא assistant". זה בדיוק מה שנשבר
- * בפרודקשן: השמטת ההודעה הריקה הראשונה חשפה את תשובת הסוכן בראש
- * המערך, וה-API דוחה את זה ב-400.
+ * This group is the constraint I did NOT check against the API before
+ * choosing the fix above - I checked empty user content, empty assistant
+ * content and consecutive same-role messages, and did not check "the first
+ * message is an assistant". That is exactly what broke in production:
+ * dropping the first empty message exposed the agent's reply at the head of
+ * the array, and the API rejects that with a 400.
  */
 
 test('הרגרסיה השנייה: השמטת ההודעה הראשונה לא משאירה assistant בראש', () => {
-  // בדיוק מה שהלקוח שולח בשיחה שנפתחה בצילום אישור בלי טקסט, אחרי
-  // שהתמונה יצאה מחלון שתי ההודעות האחרונות
+  // Exactly what the client sends in a conversation opened with a
+  // confirmation screenshot and no text, after the image aged out of the
+  // last-two-messages window
   const out = sanitizeMessages([
-    { role: 'user', content: '' }, // אישור ההזמנה - נזרק
+    { role: 'user', content: '' }, // the booking confirmation - dropped
     { role: 'assistant', content: 'מעולה! רואה את Hotel Devin.' },
     { role: 'user', content: 'תוסיף את המלון למפה' },
   ]);
@@ -59,14 +63,14 @@ test('הרגרסיה השנייה: השמטת ההודעה הראשונה לא �
 });
 
 test('חלון 40 ההודעות שנפתח על assistant - קיים גם בלי תמונות', () => {
-  // 41 הודעות מתחלפות שמתחילות ב-user: החלון חותך ומתחיל על assistant
+  // 41 alternating messages starting with user: the window cuts and opens on an assistant
   const many = Array.from({ length: 41 }, (_, i) => ({
     role: i % 2 === 0 ? 'user' : 'assistant',
     content: `m${i}`,
   }));
   const out = sanitizeMessages(many);
   assert.equal(out[0].role, 'user');
-  // m1 היה ה-assistant שהחלון נפתח עליו - הוא נזרק, m2 הוא ה-user הראשון
+  // m1 was the assistant the window opened on - it is dropped, m2 is the first user
   assert.equal(out[0].content, 'm2');
 });
 
@@ -114,7 +118,7 @@ test('שתי תמונות מותרות, השלישית מהסוף מאבדת א�
     { role: 'user', content: 'עם טקסט', image: img(2) },
     { role: 'user', content: '', image: img(3) },
   ]);
-  // הראשונה איבדה תמונה ולא היה לה טקסט -> נושרת
+  // The first lost its image and had no text -> it drops out
   assert.equal(out.length, 2);
   assert.equal(out[0].content, 'עם טקסט');
   assert.ok(out[0].image);
@@ -153,10 +157,10 @@ test('הודעת assistant ריקה מושמטת גם היא - היא לא נו�
 
 test('תמונה פסולה נדחית, וההודעה נושרת אם לא נשאר בה טקסט', () => {
   for (const bad of [
-    'data:image/gif;base64,AAAA', // פורמט לא נתמך
-    'https://example.com/a.jpg', // לא data URL
-    `data:image/jpeg;base64,${'A'.repeat(MAX_IMAGE_CHARS + 10)}`, // גדולה מדי
-    'data:image/jpeg;base64,!!!!', // base64 לא תקין
+    'data:image/gif;base64,AAAA', // unsupported format
+    'https://example.com/a.jpg', // not a data URL
+    `data:image/jpeg;base64,${'A'.repeat(MAX_IMAGE_CHARS + 10)}`, // too large
+    'data:image/jpeg;base64,!!!!', // invalid base64
   ]) {
     const out = sanitizeMessages([{ role: 'user', content: '', image: bad }]);
     assert.equal(out.length, 0, bad.slice(0, 40));
@@ -164,8 +168,9 @@ test('תמונה פסולה נדחית, וההודעה נושרת אם לא נש
 });
 
 test('תמונה על הודעת assistant לא מתקבלת', () => {
-  // ההיסטוריה נפתחת ב-user בכוונה: הודעת assistant לבדה נזרקת עכשיו
-  // כליל (ראו הקבוצה על ההודעה הראשונה), וזה היה מסתיר את מה שנבדק כאן.
+  // The history opens with a user on purpose: a lone assistant message is now
+  // dropped entirely (see the group about the first message), and that would
+  // have hidden what is being tested here.
   const out = sanitizeMessages([
     { role: 'user', content: 'שלום' },
     { role: 'assistant', content: 'טקסט', image: img() },
@@ -179,7 +184,7 @@ test('קלט זבל לא מפיל כלום', () => {
   assert.deepEqual(sanitizeMessages(null), []);
   assert.deepEqual(sanitizeMessages('שלום'), []);
   assert.deepEqual(sanitizeMessages([null, 7, 'x', {}]), []);
-  // {} -> role=user, content='' -> נושר
+  // {} -> role=user, content='' -> drops out
   assert.deepEqual(sanitizeMessages([{ role: 'user', content: 5 }]), []);
 });
 
@@ -193,18 +198,20 @@ test('תפקיד לא מוכר נחשב user, וטקסט ארוך נחתך', () 
 });
 
 /*
- * תקציב ההיסטוריה. הרקע: לוג פרודקשן אמיתי החזיר
- * "prompt is too long: 408754 tokens > 200000 maximum" - יותר מפי שניים
- * מחלון ההקשר. ההגבלה הקודמת הייתה 40 הודעות x 8,000 תווים = עד 320,000
- * תווים, וזה נראה סביר רק תחת ההנחה האנגלית של ~4 תווים לטוקן. בעברית
- * צפופה טוקן שווה בקירוב תו, ולכן ההיסטוריה לבדה חרגה. וזו שגיאה
- * מתמשכת: היסטוריה רק גדלה, אז שיחה שחצתה את התקרה מתה לתמיד.
+ * The history budget. The background: a real production log returned
+ * "prompt is too long: 408754 tokens > 200000 maximum" - more than double
+ * the context window. The previous limit was 40 messages x 8,000 chars = up
+ * to 320,000 characters, and that looks reasonable only under the English
+ * assumption of ~4 characters per token. In dense Hebrew a token is roughly
+ * one character, so the history alone overflowed. And it is a persistent
+ * error: a history only grows, so a conversation that crossed the ceiling
+ * died forever.
  */
 
 const long = (n: number) => 'א'.repeat(n);
 
 test('הרגרסיה השלישית: היסטוריה ארוכה נחתכת לתקציב', () => {
-  // 20 הודעות של 8,000 תווים = 160,000 - פי שלושה מהתקציב
+  // 20 messages of 8,000 chars = 160,000 - three times the budget
   const many = Array.from({ length: 20 }, (_, i) => ({
     role: i % 2 === 0 ? 'user' : 'assistant',
     content: long(8000),
@@ -227,11 +234,12 @@ test('ההודעות שנשמרות הן החדשות, כי שם ההקשר הר
 });
 
 test('הודעה בודדת ענקית נחתכת ולא נזרקת', () => {
-  // שני חיתוכים שונים פועלים כאן, וחשוב לדעת מי ראשון: תקרת ההודעה
-  // הבודדת (8,000 תווים) חלה בשלב הקריאה, לפני תקציב ההיסטוריה. כלומר
-  // הודעה בודדת לא יכולה לחרוג מהתקציב בכלל, והשמירה על "התור הנוכחי
-  // תמיד שורד" היא ביטוח למקרה שמישהו יעלה בעתיד את תקרת ההודעה מעל
-  // התקציב.
+  // Two different cuts operate here, and it matters which comes first: the
+  // single-message ceiling (8,000 chars) applies at read time, before the
+  // history budget. Meaning a single message cannot exceed the budget at
+  // all, and the "current turn always survives" guarantee is insurance for
+  // the case that somebody raises the single-message ceiling above the
+  // budget in the future.
   const out = sanitizeMessages([{ role: 'user', content: long(120_000) }]);
   assert.equal(out.length, 1, 'התור הנוכחי חייב לשרוד גם כשהוא ענק');
   assert.equal(out[0].content.length, 8000, 'תקרת ההודעה הבודדת חלה קודם');
@@ -247,7 +255,7 @@ test('היסטוריה קצרה עוברת שלמה - התקציב לא מתער
 });
 
 test('החיתוך לא חושף assistant בראש המערך', () => {
-  // אחרי חיתוך התקציב ההודעה הראשונה שנשארת עלולה להיות assistant
+  // After the budget cut, the first remaining message may be an assistant
   const many = Array.from({ length: 30 }, (_, i) => ({
     role: i % 2 === 0 ? 'assistant' : 'user',
     content: long(6000),

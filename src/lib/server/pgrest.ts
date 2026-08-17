@@ -1,31 +1,36 @@
 /**
- * בניית שאילתות PostgREST - **המקום היחיד שמותר לו להרכיב query string**
- * מול Supabase.
+ * PostgREST query building - **the only place allowed to assemble a
+ * query string** against Supabase.
  *
- * ## למה זה קיים
+ * ## Why this exists
  *
- * ביקורת אבטחה על כל נתיב שנוגע בדאטהבייס לא מצאה הזרקה חיה: כל ערך
- * שמגיע ממשתמש הוא או `encodeURIComponent`, או עבר ולידציה של regex,
- * או uuid שהשרת עצמו קיבל מ-Supabase, ובפונקציות ה-SQL אין SQL דינמי
- * בכלל. אבל **הבטיחות נשענה על כך שכל קורא זוכר להצפין**, וחתימת
- * `adminSelect(table, query: string)` ממש מזמינה לבנות מחרוזת ביד:
+ * A security audit of every route touching the database found no live
+ * injection: every user-supplied value is either `encodeURIComponent`d,
+ * regex-validated, or a uuid the server itself received from Supabase,
+ * and the SQL functions contain no dynamic SQL at all. But **the safety
+ * rested on every caller remembering to encode**, and the signature of
+ * `adminSelect(table, query: string)` positively invites hand-building
+ * a string:
  *
- *     adminSelect('profiles', `user_id=eq.${id}`)   // עובד. ובאג ממתין.
+ *     adminSelect('profiles', `user_id=eq.${id}`)   // works. and a bug waits.
  *
- * זה בדיוק סוג הכלל שהיומן הזה מלא בכישלונות שלו: כלל שנשען על זיכרון
- * נשבר ברגע שמישהו ממהר. לכן הערך לא "אמור" להיות מוקדד - הוא **לא
- * יכול** להגיע לשרת בלי קידוד, כי אין דרך אחרת לבנות שאילתה.
+ * That is exactly the kind of rule this log is full of failures of: a
+ * rule that rests on memory breaks the moment somebody is in a hurry.
+ * So the value is not "supposed to" be encoded - it **cannot** reach
+ * the server unencoded, because there is no other way to build a query.
  *
- * ## מה זה מונע בפועל
+ * ## What this actually prevents
  *
- * PostgREST מפרש פסיק, סוגריים ונקודה בתוך ערך של פילטר. ערך לא-מקודד
- * מאפשר להחליף את הפרדיקט - `1&role=eq.owner`, `x,y` בתוך `in.()`, או
- * `or=(...)` - כלומר לקרוא או לעדכן שורות של מישהו אחר. הקידוד הופך
- * את התווים האלה לחלק מהערך, ולעולם לא לתחביר.
+ * PostgREST parses commas, parentheses and dots inside a filter value.
+ * An unencoded value allows swapping the predicate -
+ * `1&role=eq.owner`, `x,y` inside `in.()`, or `or=(...)` - i.e. reading
+ * or updating somebody else's rows. Encoding turns those characters
+ * into part of the value, and never into syntax.
  *
- * שמות עמודות, טבלאות ופונקציות אינם ערכים ולכן אינם מקודדים - הם
- * מאומתים מול regex צר ונדחים אחרת. הם תמיד ליטרלים בקוד; הבדיקה כאן
- * היא כדי שזה יישאר נכון.
+ * Column, table and function names are not values and therefore are
+ * not encoded - they are validated against a narrow regex and rejected
+ * otherwise. They are always literals in code; the check here is so
+ * that stays true.
  */
 
 const IDENT = /^[a-z_][a-z0-9_]*$/;
@@ -37,12 +42,12 @@ function ident(name: string): string {
   return name;
 }
 
-/** שם טבלה/view/פונקציה שנכנס לנתיב ה-URL */
+/** A table/view/function name that goes into the URL path */
 export function pgIdent(name: string): string {
   return ident(name);
 }
 
-/** מזהה uuid שנכנס לנתיב URL (GoTrue admin) - חייב להיות uuid ממש */
+/** A uuid that goes into a URL path (GoTrue admin) - must be an actual uuid */
 export function pgUuid(value: string): string {
   if (!/^[0-9a-fA-F-]{36}$/.test(value)) throw new PgrestError('unsafe uuid');
   return value;
@@ -50,37 +55,39 @@ export function pgUuid(value: string): string {
 
 type Scalar = string | number | boolean;
 
-/** ערך של פילטר. תמיד מקודד - זו כל הפואנטה של הקובץ. */
+/** A filter value. Always encoded - that is the whole point of this file. */
 export function pgValue(value: Scalar): string {
   const s = typeof value === 'string' ? value : String(value);
-  // תווי בקרה לא אמורים להגיע לכאן משום מסלול לגיטימי, ו-encodeURIComponent
-  // דווקא יעביר אותם הלאה מקודדים. עדיף להיכשל רועש.
+  // Control characters should never reach here through any legitimate path,
+  // and encodeURIComponent would actually pass them onward encoded. Better
+  // to fail loudly.
   if (/[\u0000-\u001f\u007f]/.test(s)) throw new PgrestError('control character in filter value');
-  // **encodeURIComponent לבדו לא מספיק כאן, וזה נתפס ע"י הטסט ולא בעין.**
-  // הוא משאיר `!'()*` כמו שהם, ולשלושה מהם יש משמעות ב-PostgREST:
-  // סוגריים סוגרים רשימת `in.(...)` או עץ `or=(...)`, וכוכבית היא
-  // התו-הכללי של `like`/`ilike`. מקודדים גם אותם (הצורה של RFC 3986).
+  // **encodeURIComponent alone is not enough here, and that was caught by
+  // the test, not by eye.** It leaves `!'()*` as they are, and three of
+  // them carry meaning in PostgREST: parentheses close an `in.(...)` list
+  // or an `or=(...)` tree, and the asterisk is the wildcard of
+  // `like`/`ilike`. We encode those too (the RFC 3986 form).
   return encodeURIComponent(s).replace(/[!'()*]/g, (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`);
 }
 
 type Op = 'eq' | 'neq' | 'gt' | 'gte' | 'lt' | 'lte' | 'like' | 'ilike' | 'is';
 
-/** `col=op.value` עם ערך מקודד */
+/** `col=op.value` with an encoded value */
 export function pgFilter(column: string, op: Op, value: Scalar): string {
   return `${ident(column)}=${op}.${pgValue(value)}`;
 }
 
 export const eq = (column: string, value: Scalar) => pgFilter(column, 'eq', value);
 export const gte = (column: string, value: Scalar) => pgFilter(column, 'gte', value);
-/** `col=neq.value` - שלילה. אותו קידוד בדיוק, ולכן אותה בטיחות. */
+/** `col=neq.value` - negation. Exactly the same encoding, hence the same safety. */
 export const neq = (column: string, value: Scalar) => pgFilter(column, 'neq', value);
 
-/** `col=in.(a,b,c)` - כל איבר מקודד בנפרד, כך שפסיק בתוך ערך לא מפצל */
+/** `col=in.(a,b,c)` - each element encoded separately, so a comma inside a value does not split */
 export function pgIn(column: string, values: Scalar[]): string {
   return `${ident(column)}=in.(${values.map((v) => pgValue(v)).join(',')})`;
 }
 
-/** רשימת עמודות להחזרה. ליטרלים בקוד בלבד - לא קלט משתמש. */
+/** The list of columns to return. Code literals only - never user input. */
 export function pgSelect(columns: string[]): string {
   return `select=${columns.map(ident).join(',')}`;
 }
@@ -94,7 +101,7 @@ export function pgLimit(n: number): string {
   return `limit=${n}`;
 }
 
-/** מחבר את החלקים ל-query string אחד */
+/** Joins the parts into one query string */
 export function pgQuery(...parts: string[]): string {
   return parts.filter(Boolean).join('&');
 }

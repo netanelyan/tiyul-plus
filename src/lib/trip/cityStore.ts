@@ -3,30 +3,34 @@
 import type { Destination } from '@/lib/types';
 
 /**
- * הערים של הטיולים השמורים, על הדיסק, כדי שהמסלול ייפתח בלי רשת.
+ * The saved trips' cities, on disk, so the itinerary opens without network.
  *
- * **למה זה קיים בכלל.** `cityData.ts` שמר את הערים במפה ברמת המודול,
- * כלומר בזיכרון הטאב. זה פתר את הרוחב פס, אבל ברגע שהמשתמש סוגר את
- * האפליקציה ופותח אותה בלי רשת, אין לו שמות עצירות, אין תיאורים ואין
- * קואורדינטות - הטיול נשמר, אבל התוכן שהוא מצביע עליו נעלם. מי שעומד
- * ברחוב בעיר זרה בלי דאטה מקבל מסך טעינה שלא ייגמר.
+ * **Why this exists at all.** `cityData.ts` kept the cities in a
+ * module-level map, i.e. in the tab's memory. That solved the bandwidth,
+ * but the moment the user closes the app and opens it without network,
+ * they have no stop names, no descriptions and no coordinates - the trip
+ * is saved, but the content it points at is gone. Someone standing on a
+ * street in a foreign city with no data gets a loading screen that never
+ * ends.
  *
- * **מה נשמר, ובמכוון לא יותר מזה:** רק ערים שטיול שמור באמת נוגע בהן.
- * לא הקטלוג, לא ערים שנצפו בדפדוף, ולא טיולים שנמחקו. `prune()` נקרא
- * עם רשימת ה-slugs החיה ומוחק כל מה שמחוצה לה, כך שהאחסון לא גדל עם
- * הזמן אלא עוקב אחרי מה שיש למשתמש בפועל.
+ * **What is stored, and deliberately no more than that:** only cities a
+ * saved trip actually touches. Not the catalog, not cities viewed while
+ * browsing, and not deleted trips. `prune()` is called with the live slug
+ * list and deletes everything outside it, so storage does not grow over
+ * time but tracks what the user actually has.
  *
- * **`cachedAt` אינו קישוט.** תוכן שנשמר לפני שבוע מוצג למשתמש בלי
- * רשת, וכולל מידע כשרות. המסך חייב לדעת מתי זה נשמר כדי לומר זאת.
+ * **`cachedAt` is not decoration.** Content saved a week ago is shown to
+ * the user without network, and includes kosher info. The screen must
+ * know when it was saved in order to say so.
  */
 
 const KEY = 'tiyul-plus:cities:v1';
-/** תקרה שפויה: טיול נוגע ב-1-6 ערים; 20 מכסה כמה טיולים במקביל */
+/** A sane ceiling: a trip touches 1-6 cities; 20 covers several trips in parallel */
 const MAX_CITIES = 20;
 
 export interface StoredCity {
   city: Destination;
-  /** מתי נשמר (ms) - מוצג למשתמש כשהוא קורא ללא רשת */
+  /** when it was saved (ms) - shown to the user when reading offline */
   cachedAt: number;
 }
 
@@ -42,8 +46,9 @@ function read(): Store {
     const out: Store = {};
     for (const [slug, v] of Object.entries(parsed as Record<string, unknown>)) {
       const e = v as Partial<StoredCity>;
-      // רשומה פגומה נזרקת בשקט ולא מפילה את המסך - היא תיטען שוב
-      // ברגע שתהיה רשת, ובלי רשת העיר הזאת פשוט תיחשב חסרה.
+      // A corrupt entry is dropped silently and does not crash the screen - it
+      // will be loaded again the moment there is network, and offline that
+      // city is simply considered missing.
       if (e && typeof e.cachedAt === 'number' && e.city && typeof e.city === 'object') {
         const city = e.city as Destination;
         if (city.slug === slug && Array.isArray(city.places)) out[slug] = { city, cachedAt: e.cachedAt };
@@ -60,8 +65,8 @@ function write(store: Store): void {
   try {
     window.localStorage.setItem(KEY, JSON.stringify(store));
   } catch {
-    // המכסה מלאה: מוותרים על השמירה ולא על המסך. האפליקציה ממשיכה
-    // לעבוד עם הרשת בדיוק כמו קודם; רק המצב הלא-מקוון נפגע.
+    // Quota is full: we give up the save, not the screen. The app keeps
+    // working with the network exactly as before; only the offline state suffers.
   }
 }
 
@@ -69,21 +74,22 @@ export function loadCities(): Store {
   return read();
 }
 
-/** מחזיר את כל הערים השמורות כמפה של slug → Destination */
+/** Returns all stored cities as a map of slug → Destination */
 export function storedCities(): Record<string, Destination> {
   const out: Record<string, Destination> = {};
   for (const [slug, e] of Object.entries(read())) out[slug] = e.city;
   return out;
 }
 
-/** מתי נשמרה העיר הזאת, או null אם אינה שמורה */
+/** When this city was saved, or null if it is not stored */
 export function cachedAt(slug: string): number | null {
   return read()[slug]?.cachedAt ?? null;
 }
 
 /**
- * התאריך הישן ביותר מבין הערים שנמסרו - זה מה שראוי להציג, כי
- * הוותק של המסך הוא הוותק של הפריט הישן ביותר שמופיע בו.
+ * The oldest date among the given cities - that is what deserves to be
+ * shown, because the staleness of the screen is the staleness of the
+ * oldest item appearing on it.
  */
 export function oldestCachedAt(slugs: string[]): number | null {
   const store = read();
@@ -98,7 +104,7 @@ export function saveCities(cities: Destination[], now = Date.now()): void {
   write(capped(store));
 }
 
-/** הישנות ביותר יוצאות ראשונות כשעוברים את התקרה */
+/** Oldest go out first when the ceiling is exceeded */
 function capped(store: Store): Store {
   const entries = Object.entries(store);
   if (entries.length <= MAX_CITIES) return store;
@@ -107,9 +113,9 @@ function capped(store: Store): Store {
 }
 
 /**
- * משאיר רק ערים שרשימת ה-slugs מכילה. נקרא עם הערים של הטיולים
- * השמורים, כך שמחיקת טיול מפנה גם את התוכן שלו - "לא מטמנים את
- * הקטלוג" הוא כלל שצריך לאכוף, לא רק להצהיר.
+ * Keeps only cities the slug list contains. Called with the saved trips'
+ * cities, so deleting a trip also frees its content - "we do not cache the
+ * catalog" is a rule that must be enforced, not just declared.
  */
 export function pruneCities(keepSlugs: string[]): void {
   const keep = new Set(keepSlugs);
@@ -124,7 +130,7 @@ export function pruneCities(keepSlugs: string[]): void {
   if (changed) write(store);
 }
 
-/** כמה מקום זה תופס בפועל, בבתים (UTF-16 כפי ש-localStorage סופר) */
+/** How much space this actually takes, in bytes (UTF-16, as localStorage counts) */
 export function storageBytes(): number {
   if (typeof window === 'undefined') return 0;
   try {
@@ -134,7 +140,7 @@ export function storageBytes(): number {
   }
 }
 
-/** לטסטים בלבד */
+/** For tests only */
 export function __clearCityStore(): void {
   try {
     window.localStorage.removeItem(KEY);

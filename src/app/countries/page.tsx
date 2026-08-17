@@ -6,16 +6,18 @@ import { buildDestinationCards } from '@/lib/destinationCards';
 export const metadata = { title: 'יעדים | טיול+' };
 
 /**
- * קטלוג היעדים.
+ * The destinations catalog.
  *
- * היה רשת של כרטיסי **מדינות**. נתנאל הראה דפדפן יעדים של מתחרה - טאבי
- * יבשת עם מונים וצ׳יפים של אופי - ואמר שזו פיצ׳ר טובה, וזה נכון: כרטיס
- * מדינה לא יכול להגיד לך שהיא רומנטית או טובה למשפחות, ולכן הוא גרוע
- * לגילוי. עכשיו הרשת היא **יעדים**, והמדינות נשארות במרחק לחיצה מכל
- * כרטיס ומהחיפוש.
+ * Used to be a grid of **country** cards. Netanel showed a competitor's
+ * destination browser - continent tabs with counters and character chips -
+ * and said it's a good feature, and it is: a country card cannot tell you
+ * it is romantic or good for families, so it is bad for discovery. Now the
+ * grid is **destinations**, and the countries stay one click away from
+ * every card and from the search.
  *
- * הפאסטים מחושבים בשרת (`buildDestinationCards` מייבא את כל הקטלוג) ומה
- * שעובר ללקוח הוא מערך שטוח - הקטלוג עצמו לא נכנס ל-bundle.
+ * The facets are computed on the server (`buildDestinationCards` imports
+ * the whole catalog) and what goes to the client is a flat array - the
+ * catalog itself does not enter the bundle.
  */
 export default async function CountriesPage() {
   const provider = getProvider();
@@ -44,10 +46,12 @@ export default async function CountriesPage() {
       </div>
 
       {/*
-        אין כאן שדה חיפוש כלל-אתרי. הוא היה, ויצר שני שדות חיפוש זה מעל
-        זה - בדיוק הכפילות שהוסרה מהניווט. לדפדפן יש סינון משלו שמסנן את
-        הרשת הזו, והחיפוש הכלל-אתרי (שמוצא גם מקומות בתוך ערים) נשאר
-        באייקון בניווט ובקיצור Ctrl+K, בכל עמוד באתר.
+        No site-wide search field here. There was one, and it created two
+        search fields stacked one above the other - exactly the duplication
+        removed from the nav. The browser has its own filtering that narrows
+        this grid, and the site-wide search (which also finds places inside
+        cities) stays on the nav icon and the Ctrl+K shortcut, on every page
+        of the site.
       */}
       <div className="mt-6">
         <DestinationBrowser cards={cards} />

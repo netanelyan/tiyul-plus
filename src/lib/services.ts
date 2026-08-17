@@ -1,12 +1,14 @@
-// ---------- גישה מהירה: שירותי נסיעה ----------
-// כרטיסי השירותים בדף הבית (טיסות / לינה / אטרקציות / רכב).
+// ---------- Quick access: travel services ----------
+// The service cards on the homepage (flights / stay / activities / car).
 //
-// אין כאן קונפיג משלו: הכרטיסים נגזרים מ-`src/lib/booking.ts`, שהוא
-// המקור היחיד לספקים ולקישורים באתר. כך שינוי מזהה שותפים אחד משנה
-// גם את דף הבית וגם את פאנל ההזמנות שבתוך הטיול.
+// There is no config of its own here: the cards are derived from
+// `src/lib/booking.ts`, which is the single source of truth for providers and
+// links across the site. That way changing one affiliate ID updates both the
+// homepage and the booking panel inside the trip.
 //
-// כנות מסחרית: כל עוד אין מזהה שותפים אמיתי, הכפתור מפנה לאתר הציבורי
-// של הספק - בלי פרמטרי מעקב שהומצאו. ספק שעדיין לא נבחר מוצג כ"בקרוב".
+// Commercial honesty: as long as there is no real affiliate ID, the button
+// points to the provider's public site - with no invented tracking parameters.
+// A provider that has not yet been chosen is shown as "coming soon".
 
 import { bookingProvider, buildBookingUrl, bookingIsAffiliate } from './booking';
 import type { BookingKind } from './trip/types';
@@ -14,22 +16,22 @@ import type { BookingKind } from './trip/types';
 export interface QuickService {
   key: BookingKind;
   emoji: string;
-  title: string; // עברית
-  description: string; // עברית, משפט קצר
-  cta: string; // תווית הכפתור
-  provider: string | null; // שם הספק להצגה; null = אין ספק נבחר
-  affiliateUrl: string | null; // קישור שותפים אמיתי - null עד שיוגדר מזהה
-  publicUrl: string | null; // אתר הספק הציבורי; null => "בקרוב"
+  title: string; // Hebrew
+  description: string; // Hebrew, one short sentence
+  cta: string; // button label
+  provider: string | null; // provider display name; null = no provider chosen
+  affiliateUrl: string | null; // real affiliate link - null until an ID is configured
+  publicUrl: string | null; // the provider's public site; null => "coming soon"
 }
 
-// בדף הבית מוצגים ארבעת השירותים הקלאסיים; ביטוח/eSIM נשארים בתוך
-// פאנל ההזמנות של הטיול, שם הם רלוונטיים ליעד מסוים.
+// The homepage shows the four classic services; insurance/eSIM stay inside the
+// trip's booking panel, where they are relevant to a specific destination.
 const HOME_KINDS: BookingKind[] = ['flights', 'stay', 'activities', 'car'];
 
 export const quickServices: QuickService[] = HOME_KINDS.flatMap((kind) => {
   const p = bookingProvider(kind);
   if (!p) return [];
-  const url = buildBookingUrl(kind); // בלי יעד - דף הבית של הספק
+  const url = buildBookingUrl(kind); // no destination - the provider's homepage
   const isAffiliate = bookingIsAffiliate(kind);
   return [
     {

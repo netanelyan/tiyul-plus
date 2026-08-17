@@ -1,11 +1,12 @@
 /**
- * שרת בלבד - התראה חיצונית כללית (Slack/Discord/כל שירות שממיר בקשה
- * למייל), **אותו דפוס בדיוק** כמו `post()` הפרטי ב-`server/budget.ts`
- * - הוצא לכאן כי כעת יש לו שני קוראים משני פיצ'רים שונים.
+ * Server only - a general external alert (Slack/Discord/any
+ * request-to-email service), **exactly the same pattern** as the private
+ * `post()` in `server/budget.ts` - extracted here because it now has two
+ * callers from two different features.
  *
- * `PURCHASE_ALERT_WEBHOOK` קודם, ואם לא הוגדר נופל ל-`AI_BUDGET_ALERT_WEBHOOK`
- * הקיים - כדי שלא יהיה צורך בערוץ חדש אם אחד כבר מוגדר, ועדיין אפשר
- * להפריד אותם אם ירצו.
+ * `PURCHASE_ALERT_WEBHOOK` comes first, and if unset it falls back to the
+ * existing `AI_BUDGET_ALERT_WEBHOOK` - so no new channel is needed if one
+ * is already configured, and they can still be separated if desired.
  */
 export function postAlert(text: string, extra: Record<string, unknown> = {}): void {
   console.warn(`[alert] ${text}`);

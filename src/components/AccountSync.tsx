@@ -7,13 +7,15 @@ import { useTrip } from '@/lib/trip/TripContext';
 import { mergeTrips, pullRemoteTrips, pushTrips, writeTombstones } from '@/lib/trip/sync';
 
 /**
- * רכיב בלתי-נראה שמסנכרן את הטיולים עם החשבון:
- * - בהתחברות: משיכה מהשרת, מיזוג "המאוחר מנצח" מול המקומי (הטיולים
- *   המקומיים הקיימים עולים לחשבון אוטומטית - זו גם ההגירה הראשונית),
- * - בכל שינוי מקומי: דחיפה עם debounce של 1.5ש',
- * - מחיקה מקומית נכתבת כשורת מצבה בשרת (ראו ההסבר ב-`sync.ts`); זו
- *   הפעולה שמונעת מהטיול לחזור לחיים אחרי רענון.
- * יושב בתוך שני הפרוביידרים (layout) ולא נוגע בשום קומפוננטה אחרת.
+ * An invisible component that syncs the trips with the account:
+ * - on sign-in: pull from the server, a "latest wins" merge against local
+ *   (the existing local trips go up to the account automatically - that is
+ *   also the initial migration),
+ * - on every local change: a push with a 1.5s debounce,
+ * - a local deletion is written as a tombstone row on the server (see the
+ *   explanation in `sync.ts`); that is the action that keeps the trip from
+ *   coming back to life after a refresh.
+ * Sits inside the two providers (layout) and touches no other component.
  */
 export default function AccountSync() {
   const { user, ready } = useAuth();
@@ -23,14 +25,14 @@ export default function AccountSync() {
   const pullDone = useRef(false);
   const knownTombstones = useRef<Record<string, number>>({});
   const pushTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // הטיולים שהוחלו עכשיו מהשרת - כדי לא לדחוף אותם מיד בחזרה בסבב הבא
+  // Trips just applied from the server - so we do not immediately push them back next round
   const applyingRef = useRef(false);
   const tripsRef = useRef(trip.trips);
   tripsRef.current = trip.trips;
   const deletedRef = useRef(trip.deleted);
   deletedRef.current = trip.deleted;
 
-  // התחברות/החלפת משתמש: משיכה + מיזוג + הגירת טיולים מקומיים
+  // Sign-in / user switch: pull + merge + migration of local trips
   useEffect(() => {
     const supabase = getSupabase();
     if (!supabase || !ready || !trip.hydrated) return;
@@ -39,38 +41,45 @@ export default function AccountSync() {
       pullDone.current = false;
       knownTombstones.current = {};
       /*
-        **יציאה מהחשבון מנקה את הטיולים של אותו חשבון מהמכשיר.** בלי זה,
-        ההתחברות הבאה על אותו מחשב - של אדם אחר - מיזגה אותם לתוך החשבון
-        שלו, כי מיזוג דוחף כל טיול מקומי שאינו בשרת. הטיולים לא אבודים:
-        הם בחשבון וחוזרים בהתחברות הבאה.
+        **Signing out clears that account's trips from the device.**
+        Without this, the next sign-in on the same computer - by a
+        different person - merged them into THEIR account, because the
+        merge pushes any local trip that is not on the server. The trips
+        are not lost: they live in the account and return on the next
+        sign-in.
       */
       trip.switchAccount(null);
       return;
     }
     if (pulledForUser.current === user.id) return;
     pulledForUser.current = user.id;
-    // חשבון אחר מזה שיושב באחסון? מנקים לפני המשיכה, לא אחריה.
-    // הערך המוחזר סינכרוני - ה-state עוד לא התרנדר, וללא זה המיזוג למטה
-    // היה עדיין רואה את הטיולים של הקודם ודוחף אותם לחשבון הזה.
+    // A different account from the one sitting in storage? Clear before
+    // the pull, not after. The returned value is synchronous - the state
+    // has not re-rendered yet, and without this the merge below would
+    // still see the previous person's trips and push them into this
+    // account.
     const cleared = trip.switchAccount(user.id);
 
     (async () => {
       const pulled = await pullRemoteTrips(supabase);
-      // בין כה ובין כה המשיכה הסתיימה: מכאן והלאה מחיקה חדשה נכתבת מיד
-      // ע"י האפקט השני, ולא מחכה למשיכה שכבר לא תבוא.
+      // Either way the pull is over: from here on a new deletion is
+      // written immediately by the second effect, rather than waiting for
+      // a pull that will no longer come.
       pullDone.current = true;
-      if (pulled === null) return; // שגיאת רשת - ננסה שוב בשינוי הבא
-      // **קוראים את המצבות המקומיות דרך ה-ref ולא מהסגור של האפקט.** בזה
-      // בדיוק היה הבאג: המשיכה יוצאת לדרך, המשתמש מוחק טיול בזמן שהיא
-      // באוויר, והמיזוג חישב מול מצב מלפני המחיקה.
+      if (pulled === null) return; // network error - we will retry on the next change
+      // **The local tombstones are read through the ref, not from the
+      // effect's closure.** That was exactly the bug: the pull takes off,
+      // the user deletes a trip while it is in flight, and the merge
+      // computed against a state from before the deletion.
       const { applyLocally, pushRemotely, writeRemotely, applyDeletions } = mergeTrips(
         cleared ? [] : tripsRef.current,
         pulled.trips,
         cleared ? {} : deletedRef.current,
         pulled.tombstones,
       );
-      // **לא `upsertTrip`.** הוא חותם `updatedAt: Date.now()`, וזה הפך כל
-      // התחברות לעריכה מזויפת שמנצחת מחיקה אמיתית - ראו ההסבר ב-TripContext.
+      // **Not `upsertTrip`.** It stamps `updatedAt: Date.now()`, which
+      // turned every sign-in into a fabricated edit that beat a real
+      // deletion - see the explanation in TripContext.
       applyingRef.current = applyLocally.length > 0;
       trip.applyRemoteTrips(applyLocally);
       if (Object.keys(applyDeletions).length > 0) trip.applyRemoteDeletions(applyDeletions);
@@ -84,14 +93,15 @@ export default function AccountSync() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, ready, trip.hydrated]);
 
-  // כל שינוי מקומי: דחיפה (debounced) + כתיבת מצבות למחיקות חדשות
+  // Every local change: a (debounced) push + tombstone writes for new deletions
   useEffect(() => {
     const supabase = getSupabase();
     if (!supabase || !user || !trip.hydrated) return;
 
-    // מצבה חדשה = מחיקה שהשרת עוד לא יודע עליה. נגזרת מהמצבות עצמן ולא
-    // מהפרש בין שני רנדרים: אחרי רענון אין "רנדר קודם", והגרסה הקודמת
-    // פשוט לא שלחה כלום במצב הזה.
+    // A new tombstone = a deletion the server does not know about yet.
+    // Derived from the tombstones themselves rather than a diff between
+    // two renders: after a refresh there is no "previous render", and the
+    // previous version simply sent nothing in that state.
     const RECENT_MS = 30 * 24 * 60 * 60 * 1000;
     const now = Date.now();
     const fresh = Object.fromEntries(

@@ -5,29 +5,31 @@ import { countries } from '@/data/countries';
 import { buildCityOptions } from '@/lib/citySearch';
 
 /**
- * דאטת הערים לפי דרישה - הנתיב שמחליף את "להוריד את כל הקטלוג".
+ * City data on demand - the route that replaces "download the whole catalog".
  *
- * **למה זה קיים.** מסך הטיול (`TripWorkspace`) מייבא עד היום את
- * `src/data/destinations.ts` כולו: 2MB, 492kB דחוס, כ-60% מכל ה-JS
- * באתר - כדי לצייר טיול שנוגע בעיר אחת עד שש. עכשיו הדפדפן מבקש רק
- * את הערים שבטיול, וזה כ-7kB לעיר.
+ * **Why this exists.** Until now the trip screen (`TripWorkspace`) imported all
+ * of `src/data/destinations.ts`: 2MB, 492kB compressed, ~60% of all the JS on
+ * the site - to draw a trip that touches one to six cities. Now the browser
+ * requests only the cities in the trip, which is ~7kB per city.
  *
- * **הספק נשמר (חוק קשיח 4).** הבקשה עוברת דרך `getProvider()`, כך
- * שספק חיצוני שמעשיר את הדאטה ממשיך להעשיר גם כאן - זה בדיוק המקום
- * שבו ההפשטה אמורה לעבוד.
+ * **The provider is preserved (hard rule 4).** The request goes through
+ * `getProvider()`, so an external provider that enriches the data keeps
+ * enriching it here too - this is exactly the place where the abstraction is
+ * supposed to work.
  *
- * שני מצבים:
- *   `?slugs=rome,venice` → היעדים המלאים.
- *   `?options=1`         → רשימת כל הערים לבורר (slug/שם/מדינה/דגל).
- *                          קטנה, ונטענת רק כשפותחים את הבורר.
+ * Two modes:
+ *   `?slugs=rome,venice` → the full destinations.
+ *   `?options=1`         → the list of all cities for the picker (slug/name/country/flag).
+ *                          Small, and loaded only when the picker is opened.
  *
- * קריאה בלבד על דאטה ציבורית וסטטית, ולכן אין כאן מכסה - אותה החלטה
- * שנרשמה על `/t/<code>` - אבל **יש תקרה על מספר ה-slugs**, כדי
- * שבקשה אחת לא תוכל לבקש את כל הקטלוג ולעקוף את כל הפואנטה.
+ * Read-only over public, static data, so there is no quota here - the same
+ * decision recorded for `/t/<code>` - but **there IS a cap on the number of
+ * slugs**, so one request cannot ask for the entire catalog and defeat the
+ * whole point.
  */
 const MAX_SLUGS = 24;
 
-/** דאטה סטטית לכל deploy: מותר למטמון לשמור אותה בשמחה */
+/** Static data per deploy: caches are welcome to keep it happily */
 const CACHE = 'public, max-age=600, s-maxage=86400, stale-while-revalidate=604800';
 
 export async function GET(req: Request) {
@@ -40,9 +42,10 @@ export async function GET(req: Request) {
     );
   }
 
-  // slug הוא מזהה, לא טקסט חופשי: מסננים לפי צורה במקום לסמוך על כך
-  // שהוא יפגוש רק חיפוש במערך בזיכרון. ספק חיצוני עתידי עלול לשים אותו
-  // ב-URL או בשאילתה, וזו בדיוק הנקודה שבה "זה רק slug" מפסיק להיות נכון.
+  // A slug is an identifier, not free text: we filter by shape instead of trusting
+  // that it will only ever meet an in-memory array lookup. A future external provider
+  // might put it in a URL or a query, and that is exactly the point where
+  // "it's just a slug" stops being true.
   const SLUG_OK = /^[a-z0-9-]{1,60}$/;
   const slugs = (url.searchParams.get('slugs') ?? '')
     .split(',')

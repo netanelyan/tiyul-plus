@@ -1,25 +1,27 @@
 /**
- * ---------- "ברצלונה, לא ברטיסלבה" ----------
+ * ---------- "Barcelona, not Bratislava" ----------
  *
- * נתנאל תיקן את הסוכן, והסוכן **יצר טיול שני** והשאיר את הראשון ברשימה.
- * הכלל שהוא ניסח הוא כללי ולא על ערים: *אם התור הקודם יצר או שינה משהו
- * והתור הזה מתקן אותו - התיקון חל על אותו דבר.*
+ * Netanel corrected the agent, and the agent **created a second trip** and
+ * left the first one in the list. The rule he formulated is general and not
+ * about cities: *if the previous turn created or changed something and this
+ * turn corrects it - the correction applies to that same thing.*
  *
- * ## למה זה קובץ ולא סעיף בפרומפט
+ * ## Why this is a file and not a prompt section
  *
- * הסיבה הישירה לבאג היא שורה אחת ב-`agent.ts`: `create_trip_full` מייצר
- * `id: newId()` תמיד, ולכן `upsertTrip` בלקוח **מוסיף** במקום להחליף.
- * שום ניסוח בפרומפט לא משנה את זה. הזיהוי כאן הוא דטרמיניסטי, נבדק
- * ביחידות, וההשלכה שלו היא מבנית: בתור של תיקון, בנייה מחדש שומרת את
- * מזהה הטיול הפתוח.
+ * The direct cause of the bug is one line in `agent.ts`: `create_trip_full`
+ * always generates `id: newId()`, so `upsertTrip` on the client **adds**
+ * instead of replacing. No prompt wording changes that. The detection here is
+ * deterministic, unit-tested, and its consequence is structural: on a
+ * correction turn, a rebuild keeps the open trip's id.
  *
- * ## הכיוון הבטוח לטעות
+ * ## The safe direction to be wrong
  *
- * הכלל **לא** הפוך: בנייה שאיננה תיקון ממשיכה ליצור טיול חדש, בדיוק
- * כמו היום. זה מכוון. תיקון שנחשב בטעות לבקשה חדשה עולה טיול מיותר
- * שאפשר למחוק; בקשה חדשה שנחשבת בטעות לתיקון **דורסת טיול קיים**, וזה
- * אובדן מידע. לכן הסימנים למטה מפורשים, ושלושת התנאים חייבים להתקיים
- * יחד.
+ * The rule is **not** reversed: a build that is not a correction still creates
+ * a new trip, exactly as today. That is deliberate. A correction mistaken for
+ * a new request costs a redundant trip that can be deleted; a new request
+ * mistaken for a correction **overwrites an existing trip**, and that is data
+ * loss. So the signals below are explicit, and all three conditions must hold
+ * together.
  */
 
 import type { Trip } from '@/lib/trip/types';

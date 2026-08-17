@@ -6,8 +6,8 @@ import type { DestinationSummary } from '@/lib/types';
 import type { Trip, WizardPrefs } from '@/lib/trip/types';
 import { useTrip } from '@/lib/trip/TripContext';
 import { tripFromTemplate } from '@/lib/trip/generate';
-// התבנית מבוססת על המסלול האוצר של עיר אחת - נטענת בלחיצה, כך שהמסך
-// לא נושא את הקטלוג לא כ-HTML ולא כ-JS.
+// The template is based on one city's curated itinerary - loaded on click, so the
+// screen carries the catalog neither as HTML nor as JS.
 import { fetchCities } from '@/lib/trip/cityData';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 import ResumeTrips from '@/components/ResumeTrips';
@@ -18,9 +18,9 @@ import { buildCityOptionsFromSummaries } from '@/lib/citySearch';
 import { authHeader } from '@/lib/auth/client';
 
 /**
- * המתכנן: מסך בניית טיול חדש (כפתורים כממשק ראשי) - וברגע שיש טיול,
- * אותה תצוגה מאוחדת בדיוק של /chat (TripWorkspace): מסלול + מפה + שיחה
- * עם הסוכן במסך אחד, על אותו Trip object.
+ * The planner: the new-trip screen (buttons as the primary interface) - and the
+ * moment a trip exists, exactly the same unified view as /chat (TripWorkspace):
+ * itinerary + map + the agent conversation on one screen, over the same Trip object.
  */
 export default function PlannerClient({
   summaries,
@@ -33,11 +33,12 @@ export default function PlannerClient({
   const [showWizard, setShowWizard] = useState(false);
   const [aiAck, setAiAck] = useState<string | null>(null);
   /**
-   * האם הטיול הפתוח נבחר **בכניסה הזאת**.
+   * Whether the open trip was chosen **during this entry**.
    *
-   * אותו תיקון כמו ב-/chat: `currentTrip` שרד באחסון מפעם קודמת, ולכן
-   * כניסה ל-/planner נחתה בתוך הטיול הישן במקום במסך בניית טיול חדש.
-   * `?trip=<id>` הוא הדרך המפורשת להמשיך, והכתובת היא מה שמחזיק את המסך.
+   * The same fix as in /chat: `currentTrip` survived in storage from a previous
+   * time, so entering /planner landed inside the old trip instead of on the
+   * new-trip screen. `?trip=<id>` is the explicit way to continue, and the URL is
+   * what holds the screen.
    */
   const [openedHere, setOpenedHere] = useState(false);
   const entry = useRef(false);
@@ -70,7 +71,7 @@ export default function PlannerClient({
         onDone={(ack) => {
           setAiAck(ack ?? null);
           setShowWizard(false);
-          // הטיול נבנה עכשיו, כאן - זו הבחירה המפורשת לפתוח אותו
+          // The trip was built just now, here - this is the explicit choice to open it
           setOpenedHere(true);
         }}
         onCancel={openedHere && trip.currentTrip ? () => setShowWizard(false) : undefined}
@@ -80,7 +81,7 @@ export default function PlannerClient({
 
   return (
     <>
-      {/* מה ה-AI הבין מהבקשה - שורה אחת, ניתנת לסגירה */}
+      {/* What the AI understood from the request - one line, dismissible */}
       {aiAck && (
         <div className="rise-in mb-4 flex items-start justify-between gap-3 rounded-xl bg-sunset/10 px-4 py-3 ring-1 ring-sunset/25 print:hidden">
           <p className="whitespace-pre-line text-sm font-semibold leading-relaxed text-night">{aiAck}</p>
@@ -98,10 +99,11 @@ export default function PlannerClient({
   );
 }
 
-/* ================= Onboarding: כפתורים כממשק ראשי + טקסט לדיוק ================= */
+/* ================= Onboarding: buttons as the primary interface + text for precision ================= */
 
-// שלבים אמיתיים של הבקשה, ולא לולאת טקסטים: הם מתקדמים קדימה בלבד
-// ונעצרים על האחרון עד שהתשובה חוזרת - כדי לא "להבטיח" התקדמות שלא קרתה.
+// Real stages of the request, not a loop of strings: they only advance forwards and
+// stop on the last one until the answer comes back - so as not to "promise" progress
+// that did not happen.
 const AI_STATUSES = ['קורא את הבקשה…', 'בוחר מקומות מהקטלוג…', 'מסדר את הימים לפי מיקום…'];
 
 type Party = 'couple' | 'family' | 'friends' | 'solo';
@@ -136,7 +138,7 @@ function Onboarding({
   const [error, setError] = useState<string | null>(null);
   const [statusIdx, setStatusIdx] = useState(0);
 
-  // סטטוס מתקדם בזמן היצירה - שהכפתור לא ירגיש קפוא
+  // The status advances during generation - so the button does not feel frozen
   useEffect(() => {
     if (!loading) return;
     setStatusIdx(0);
@@ -166,8 +168,8 @@ function Onboarding({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // מזהה דפדפן - כדי שמכסת האנונימיים לא תיספר לפי IP משותף
-          // של מפעילת סלולר. ראו lib/clientId.ts.
+          // A browser identifier - so the anonymous quota is not counted against a
+          // mobile carrier's shared IP. See lib/clientId.ts.
           ...clientIdHeader(),
           ...(await authHeader()),
         },
@@ -184,8 +186,9 @@ function Onboarding({
         return;
       }
       trip.createTripFrom(data.trip);
-      // `notice` מגיע כשהמכסה היומית נגמרה והטקסט החופשי לא נקרא - נאמר
-      // באותו באנר, כי טיול שנבנה חלקית בשקט נראה כמו באג
+      // `notice` arrives when the daily quota ran out and the free text was not read -
+      // stated in the same banner, because a trip silently built only in part looks
+      // like a bug
       onDone([data.understood, data.notice].filter(Boolean).join('\n') || null);
     } catch {
       setError('לא הצלחנו להתחבר לשרת - בדקו את החיבור ונסו שוב');
@@ -208,7 +211,7 @@ function Onboarding({
           בוחרים לאן ומה חשוב - ואם רוצים, מוסיפים כמה מילים לדיוק. הכול ניתן לעריכה אחר כך.
         </p>
 
-        {/* ---- 1. לאן? ---- */}
+        {/* ---- 1. Where to? ---- */}
         <div className="mt-6">
           <div className="text-sm font-bold text-night">
             לאן? <span className="font-medium text-night/50">(אפשר כמה ערים)</span>
@@ -227,7 +230,7 @@ function Onboarding({
           )}
         </div>
 
-        {/* ---- 2. הגדרות הליבה - הכול כפתורים ---- */}
+        {/* ---- 2. Core settings - all buttons ---- */}
         <div className="mt-7 grid gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
           <div>
             <div className="text-sm font-semibold text-night/60">כמה ימים?</div>
@@ -322,7 +325,7 @@ function Onboarding({
           </div>
         </div>
 
-        {/* ---- 3. טקסט חופשי - אופציונלי ---- */}
+        {/* ---- 3. Free text - optional ---- */}
         <div className="mt-7">
           <label htmlFor="refine-notes" className="text-sm font-semibold text-night/70">
             רוצים לדייק? ספרו לנו עוד <span className="font-medium text-night/40">(לא חובה)</span>
@@ -347,7 +350,7 @@ function Onboarding({
           </p>
         )}
 
-        {/* ---- 4. ה-CTA היחיד ---- */}
+        {/* ---- 4. The single CTA ---- */}
         <div className="mt-5 flex flex-wrap items-center gap-3">
           <button
             onClick={generate}
@@ -368,11 +371,11 @@ function Onboarding({
           )}
         </div>
 
-        {/* בחירה גלויה להמשיך טיול קיים - לצד הבנייה, אף פעם במקומה */}
+        {/* A visible option to continue an existing trip - beside building, never instead of it */}
         <ResumeTrips className="mx-auto mt-7" />
       </section>
 
-      {/* ---- 3. שלישוני: תבניות מוכנות ---- */}
+      {/* ---- 3. Tertiary: ready-made templates ---- */}
       <section className="mt-8">
         <h2 className="text-sm font-bold text-night/50">או מתחילים ממסלול מוכן</h2>
         <div className="mt-3 flex gap-3 overflow-x-auto pb-2">
@@ -380,7 +383,7 @@ function Onboarding({
             <button
               key={d.slug}
               onClick={async () => {
-                // הכשרות מגיעה מהטוגל שנבחר למעלה - בלי בחירה אין מקומות כשרים
+                // Kashrut comes from the toggle chosen above - with no choice there are no kosher places
                 const [full] = await fetchCities([d.slug]);
                 if (!full) return;
                 trip.createTripFrom(tripFromTemplate(full, { kosher: prefs.kosherOnly }));

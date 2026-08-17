@@ -1,17 +1,17 @@
 /**
- * סיפור הטיול - צד השרת. **היצירה פרימיום, הצפייה חופשית.**
+ * The trip story - the server side. **Creating is premium, viewing is free.**
  *
- * ## שלושה עקרונות
+ * ## Three principles
  *
- * 1. **ה-snapshot נבנה בשרת מהטיול האמיתי**, לא מגוף הבקשה: הטיול
- *    נקרא עם `findOwnTrip` (הפרימיטיב שכל נתיבי הכסף משתמשים בו -
- *    מסונן על user_id) ושמות המקומות מגיעים מהקטלוג. לקוח לא יכול
- *    לפרסם "סיפור" עם תוכן שלא היה בטיול שלו.
- * 2. **עמוד ציבורי קורא רק snapshot.** עריכת הטיול אחרי הפרסום לא
- *    משנה את הסיפור, ומחיקת הטיול לא שוברת אותו.
- * 3. **תמונות עוברות דרך השרת** אחרי ולידציית צורה - אותה בדיקת
- *    data-URL קפדנית כמו תמונות הצ׳אט - ונשמרות ב-storage עם service
- *    role. אין policy כתיבה ציבורית על הדלי בכלל.
+ * 1. **The snapshot is built on the server from the real trip**, not from the request
+ *    body: the trip is read with `findOwnTrip` (the primitive every money-touching
+ *    route uses - filtered on user_id) and the place names come from the catalog. A
+ *    client cannot publish a "story" containing content that was not in their trip.
+ * 2. **A public page reads only a snapshot.** Editing the trip after publishing does
+ *    not change the story, and deleting the trip does not break it.
+ * 3. **Photos go through the server** after shape validation - the same strict
+ *    data-URL check as the chat images - and are stored in storage with the service
+ *    role. There is no public write policy on the bucket at all.
  */
 
 import { destinations } from '@/data/destinations';
@@ -20,10 +20,10 @@ import { adminInsert, adminSelect, adminUpdate } from '@/lib/server/supabaseAdmi
 import { eq, pgQuery, pgSelect } from '@/lib/server/pgrest';
 
 export const MAX_STORY_PHOTOS = 40;
-export const MAX_PHOTO_DATAURL = 1_800_000; // ~1.3MB בפועל אחרי base64
+export const MAX_PHOTO_DATAURL = 1_800_000; // ~1.3MB in practice after base64
 
 export interface StoryStop {
-  /** מזהה הקטלוג - נחוץ להצבעות בטיול המשותף; מידע ציבורי ממילא */
+  /** The catalog id - needed for votes on a group trip; public information anyway */
   id: string;
   name: string;
   lat: number;
@@ -56,7 +56,7 @@ export interface StoryRow {
   created_at: string;
 }
 
-/** slug ציבורי: קצר, אקראי, בלי תווים דו-משמעיים - כמו קודי השיתוף */
+/** A public slug: short, random, with no ambiguous characters - like the share codes */
 const ALPHABET = 'abcdefghjkmnpqrstuvwxyz23456789';
 export function newStorySlug(): string {
   let s = 'st';
@@ -64,7 +64,7 @@ export function newStorySlug(): string {
   return s;
 }
 
-/** בניית ה-snapshot מהטיול השמור בשרת + הקטלוג. מקומות לא מזוהים מדולגים. */
+/** Building the snapshot from the server-stored trip + the catalog. Unrecognised places are skipped. */
 export function buildSnapshot(trip: {
   name: string;
   startDate?: string;
@@ -96,14 +96,15 @@ export async function findStory(userId: string, tripId: string): Promise<StoryRo
 }
 
 /**
- * יצירה/רענון של הסיפור לטיול. ה-snapshot נבנה מחדש מהטיול השמור בכל
- * קריאה - "רענן את הסיפור" אחרי עריכת הטיול הוא אותה פעולה בדיוק.
+ * Creating or refreshing the story for a trip. The snapshot is rebuilt from the
+ * stored trip on every call - "refresh the story" after editing the trip is exactly
+ * the same operation.
  */
 export async function upsertStory(userId: string, tripId: string, title?: string): Promise<StoryRow | null> {
   const trip = await findOwnTrip(userId, tripId);
   if (!trip) return null;
   const snapshot = buildSnapshot(trip);
-  if (snapshot.days.every((d) => d.stops.length === 0)) return null; // סיפור בלי שום עצירה אינו סיפור
+  if (snapshot.days.every((d) => d.stops.length === 0)) return null; // a story with no stops at all is not a story
 
   const existing = await findStory(userId, tripId);
   const cleanTitle = (title ?? existing?.title ?? snapshot.name).trim().slice(0, 80) || snapshot.name;
@@ -140,7 +141,7 @@ export async function setPublished(userId: string, tripId: string, published: bo
   return Boolean(rows && rows.length > 0);
 }
 
-/** אותה ולידציה קפדנית כמו תמונות הצ׳אט - צורת data URL בלבד, לא תוכן חופשי */
+/** The same strict validation as the chat images - data URL shape only, not free content */
 const DATA_URL_RE = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]+=*$/;
 
 export function parsePhotoDataUrl(dataUrl: string): { mime: string; bytes: Buffer } | null {
@@ -154,7 +155,7 @@ export function parsePhotoDataUrl(dataUrl: string): { mime: string; bytes: Buffe
   }
 }
 
-/** העלאת תמונה לדלי + הוספתה לרשימת התמונות של הסיפור */
+/** Uploading a photo to the bucket + adding it to the story's photo list */
 export async function addStoryPhoto(
   userId: string,
   tripId: string,
@@ -200,7 +201,7 @@ export async function addStoryPhoto(
   return rows?.[0] ?? null;
 }
 
-/** כתובת ציבורית לתמונה בדלי (הדלי public לקריאה) */
+/** A public URL for a photo in the bucket (the bucket is public for reads) */
 export function storyPhotoUrl(path: string): string {
   return `${process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL ?? ''}/storage/v1/object/public/story-photos/${path}`;
 }

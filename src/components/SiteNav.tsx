@@ -9,8 +9,8 @@ import SiteSearch from '@/components/SiteSearch';
 import AccountButton from '@/components/AccountButton';
 import { daysHe } from '@/lib/duration';
 
-// כניסה אחת לטיול: /chat הוא גם השיחה וגם התוכנית (תצוגה מאוחדת) -
-// אין יותר טאב צ׳אט נפרד מול טאב מתכנן.
+// One entry point to a trip: /chat is both the conversation and the plan
+// (the unified view) - there is no longer a separate chat tab vs. planner tab.
 const NAV_LINKS = [
   { href: '/countries', label: 'יעדים' },
   { href: '/ask', label: 'שאל את הסוכן' },
@@ -19,10 +19,11 @@ const NAV_LINKS = [
 ];
 
 /**
- * "תכנון טיול" בזמן שכבר נמצאים ב-/chat הוא ניווט לאותו ראוט - Next לא
- * מרנדר מחדש את העמוד, אז AgentWorkspace לעולם לא קורא שוב את הפרמטרים
- * והטיול הקודם נשאר על המסך למרות שהכתובת התנקתה. האירוע הזה אומר לו
- * במפורש "המשתמש ביקש שיחה חדשה" - הוא מאזין לו ומאפס למסך הנחיתה.
+ * Clicking the trip-planning tab while already on /chat is a navigation to
+ * the same route - Next does not re-render the page, so AgentWorkspace never
+ * re-reads the params and the previous trip stays on screen even though the
+ * URL was cleaned. This event tells it explicitly "the user asked for a new
+ * conversation" - it listens for it and resets to the landing screen.
  */
 export const NEW_CHAT_EVENT = 'tiyul:new-chat';
 function notifySameRouteChat(href: string) {
@@ -32,18 +33,19 @@ function notifySameRouteChat(href: string) {
 }
 
 /**
- * ניווט האתר: מ-md ומעלה קישורים בשורה + **פקד אחד** לטיולים; מתחת
- * ל-md המבורגר שפותח תפריט נפתח (כולל רשימת כל הטיולים ואת הקישורים).
- * נסגר בלחיצה על קישור/טאב ובהקשה מחוץ לתפריט. בלי ספריית תפריטים -
- * state + טוקנים בלבד.
+ * The site nav: from md and up, links in a row + **one control** for the
+ * trips; below md, a hamburger that opens a dropdown menu (including the
+ * full trips list and the links). Closes on a link/tab click and on a tap
+ * outside the menu. No menu library - state + tokens only.
  *
- * **למה פקד אחד ולא טאבים.** קודם הוצגו עד שני טיולים כגלולות ישירות
- * בשורה ועוד כפתור "עוד (N)". שלוש בעיות, כולן נראות בצילום מסך אחד:
- * הגלולה של הטיול הפעיל היא קורל מלא ויושבת בדיוק ליד "כשרות", כך
- * שהיא נקראת כפריט ניווט; שני טיולים הם רעש קבוע בשורה שאמורה להיות
- * קישורי האתר; ו-`max-w-24 truncate` חתך שמות ("ברטיסלבה + וינה"
- * נהיה "ברטיסלב…"). עכשיו: כניסה אחת שאומרת כמה טיולים יש, ורשימה
- * מלאה בלי חיתוך. אותן פעולות בדיוק, פחות רעש.
+ * **Why one control and not tabs.** Previously up to two trips were shown
+ * as direct pills in the row plus a "more (N)" button. Three problems, all
+ * visible in a single screenshot: the active trip's pill is solid coral and
+ * sits right next to the kosher tab, so it reads as a nav item; two trips
+ * are constant noise in a row that is supposed to be the site links; and
+ * `max-w-24 truncate` chopped names (a two-city Hebrew name got cut off
+ * mid-word). Now: one entry that says how many trips there are, and a full
+ * list with no truncation. The exact same actions, less noise.
  */
 export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
   const [open, setOpen] = useState(false);
@@ -64,7 +66,7 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
     return () => document.removeEventListener('click', onOutside);
   }, [open, tripsMenuOpen]);
 
-  /** פותח טיול קיים כטאב פעיל: אם כבר ב-/chat זה קורה מיידית, אחרת מנווטים עם ?trip= */
+  /** Opens an existing trip as the active tab: if already on /chat it happens immediately, otherwise navigate with ?trip= */
   const openTrip = (id: string) => {
     setCurrentId(id);
     router.push(`/chat?trip=${id}`);
@@ -76,7 +78,7 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
 
   return (
     <div ref={rootRef} className="relative">
-      {/* md+: קישורים בשורה + טאבי הטיולים הפתוחים */}
+      {/* md+: links in a row + the open trips' tabs */}
       <nav className="hidden items-center gap-2 md:flex">
         <SiteSearch />
         {NAV_LINKS.map((l) => (
@@ -121,7 +123,7 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
                         : 'text-night/80 hover:bg-night/5'
                     }`}
                   >
-                    {/* השם המלא, בלי חיתוך - ארוך נשבר לשתי שורות */}
+                    {/* The full name, no truncation - a long one wraps to two lines */}
                     <span className="block text-sm font-semibold leading-snug">{tripLabel(t, cityNames)}</span>
                     <span className="block text-xs font-medium text-night/40">
                       {t.id === currentId ? 'פתוח עכשיו' : daysHe(t.days.length)}
@@ -135,7 +137,7 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
         <AccountButton />
       </nav>
 
-      {/* מתחת ל-md: כפתור החשבון וההמבורגר יושבים באותה שורה, צמודים */}
+      {/* Below md: the account button and the hamburger sit in the same row, adjacent */}
       <div className="flex items-center gap-1.5 md:hidden">
       <AccountButton />
       <button
@@ -201,7 +203,7 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
                       : 'text-night/80 hover:bg-night/5'
                   }`}
                 >
-                  {/* בלי truncate: שם ארוך נשבר לשתי שורות במקום להיחתך */}
+                  {/* No truncate: a long name wraps to two lines instead of being cut */}
                   <span className="block font-semibold leading-snug">{tripLabel(t, cityNames)}</span>
                   <span className="block text-xs font-medium text-night/40">
                     {t.id === currentId ? 'פתוח עכשיו' : daysHe(t.days.length)}

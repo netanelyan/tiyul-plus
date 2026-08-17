@@ -1,60 +1,67 @@
 /**
- * שרת בלבד - מה קריאת מודל **באמת עלתה**, בדולרים.
+ * Server-only - what a model call **really cost**, in dollars.
  *
- * עד היום נספרו "יחידות AI" (`aiUnits`): מדד פנימי טוב למכסה אישית,
- * אבל אי אפשר להסתכל עליו ולדעת אם החשבון החודשי יהיה 5 דולר או 500.
- * נתנאל ביקש תקרה על **כסף**, ולכסף צריך מחיר.
+ * Until now we counted "AI units" (`aiUnits`): a good internal measure for a
+ * personal quota, but you cannot look at it and know whether the monthly
+ * bill will be 5 dollars or 500. Netanel asked for a ceiling on **money**,
+ * and money needs a price.
  *
- * המחירים נכונים ל-31 ביולי 2026 לפי דף התמחור של Anthropic. הם לא
- * "מגבלה" ולכן הם בקוד ולא בדגל - מגבלה משתנה כשמחליטים, מחיר משתנה
- * כשהספק מחליט, ושינוי מחיר ראוי לקומיט שאפשר לראות.
+ * The prices are current as of July 31, 2026 per Anthropic's pricing page.
+ * They are not a "limit" and therefore live in code and not in a flag - a
+ * limit changes when we decide, a price changes when the vendor decides,
+ * and a price change deserves a commit that can be seen.
  *
- * **דגם לא מוכר לא מוערך.** הוא נופל למחיר השמרני ביותר בטבלה, כי
- * הכיוון הבטוח לטעות בתקרת הוצאה הוא כלפי מעלה: להעריך יקר פירושו
- * לעצור מוקדם מדי, להעריך זול פירושו לגלות בחשבון.
+ * **An unrecognized model is not estimated.** It falls to the most
+ * conservative price in the table, because on a spending ceiling the safe
+ * direction to be wrong is upward: pricing too high means stopping too
+ * early, pricing too low means finding out from the invoice.
  */
 
 export interface ModelPrice {
-  /** דולר למיליון טוקנים */
+  /** Dollars per million tokens */
   input: number;
   output: number;
-  /** כתיבת מטמון בתוקף 5 דקות - פי 1.25 מהקלט */
+  /** Cache write with a 5-minute TTL - 1.25x the input rate */
   cacheWrite: number;
-  /** כתיבת מטמון בתוקף שעה - **פי 2 מהקלט**, וזה מה שאנחנו שולחים בפועל */
+  /** Cache write with a 1-hour TTL - **2x the input rate**, and this is what we actually send */
   cacheWrite1h: number;
   cacheRead: number;
 }
 
 /**
- * דולר למיליון טוקנים, לפי platform.claude.com/docs/en/about-claude/pricing
+ * Dollars per million tokens, per platform.claude.com/docs/en/about-claude/pricing
  *
- * **`cacheWrite1h` נוסף כתיקון של תמחור חסר.** הטבלה תמחרה כל כתיבת
- * מטמון בתעריף של 5 דקות (פי 1.25), בזמן ש-`agentPrefix.ts` שולח
- * `ttl: '1h'` מאז שהמטמון הארוך נכנס - ותוקף של שעה עולה **פי 2**.
- * כלומר כל קריאה קרה תומחרה ב-62.5% מהמחיר האמיתי שלה.
+ * **`cacheWrite1h` was added as a fix for under-pricing.** The table priced
+ * every cache write at the 5-minute rate (1.25x), while `agentPrefix.ts`
+ * has been sending `ttl: '1h'` since the long cache went in - and a
+ * one-hour TTL costs **2x**. In other words every cold call was priced at
+ * 62.5% of its real price.
  *
- * על תקרת הוצאה זו הטעות בכיוון המסוכן: תמחור חסר פירושו לגלות את
- * המספר האמיתי מהחשבונית. הקובץ הזה כבר קובע שדגם לא מזוהה מתומחר
- * בתעריף היקר ביותר מאותה סיבה בדיוק, וזה פשוט לא הוחל על ה-TTL.
+ * On a spending ceiling that is the error in the dangerous direction:
+ * under-pricing means discovering the real number from the invoice. This
+ * file already establishes that an unidentified model is priced at the most
+ * expensive rate for exactly the same reason, and that simply had not been
+ * applied to the TTL.
  */
 export const MODEL_PRICES: Record<string, ModelPrice> = {
   'claude-sonnet-4-5': { input: 3, output: 15, cacheWrite: 3.75, cacheWrite1h: 6, cacheRead: 0.3 },
   'claude-haiku-4-5': { input: 1, output: 5, cacheWrite: 1.25, cacheWrite1h: 2, cacheRead: 0.1 },
 };
 
-/** התעריף היקר ביותר שמוכר לנו - ברירת המחדל לדגם לא מזוהה */
+/** The most expensive rate we know - the default for an unidentified model */
 const FALLBACK: ModelPrice = Object.values(MODEL_PRICES).reduce((a, b) =>
   a.output >= b.output ? a : b,
 );
 
 /**
- * $10 לכל 1,000 חיפושים (מחיר Anthropic ל-`web_search_20260209`), כלומר
- * $0.01 לחיפוש בודד. עלות קבועה, לא תלוית מודל - נספרת בנפרד מהטוקנים.
+ * $10 per 1,000 searches (Anthropic's price for `web_search_20260209`),
+ * i.e. $0.01 per individual search. A fixed, model-independent cost -
+ * counted separately from tokens.
  */
 export const WEB_SEARCH_COST_USD = 0.01;
 
 export function priceFor(model: string): ModelPrice {
-  // התאמה לפי תחילית: "claude-sonnet-4-5-20260101" הוא אותו מחיר
+  // Prefix match: "claude-sonnet-4-5-20260101" is the same price
   for (const [name, price] of Object.entries(MODEL_PRICES)) {
     if (model === name || model.startsWith(`${name}-`)) return price;
   }
@@ -66,26 +73,28 @@ export interface TokenUsage {
   cache_creation_input_tokens?: number;
   cache_read_input_tokens?: number;
   output_tokens?: number;
-  /** כמה חיפושי web_search רצו בקריאה הזאת - ראו webLookup.ts */
+  /** How many web_search searches ran in this call - see webLookup.ts */
   web_search_requests?: number;
 }
 
 /**
- * העלות בדולרים של קריאה אחת.
+ * The dollar cost of a single call.
  *
- * `input_tokens` של Anthropic הוא הקלט **שלא** הגיע מהמטמון - קריאות
- * וכתיבות מטמון מדווחות בשדות נפרדים, ולכן אין כאן ספירה כפולה.
- * חיפושים הם עלות קבועה, נספרת בנפרד מהטוקנים - ראו `WEB_SEARCH_COST_USD`.
+ * Anthropic's `input_tokens` is the input that did **not** come from the
+ * cache - cache reads and writes are reported in separate fields, so there
+ * is no double counting here. Searches are a fixed cost, counted
+ * separately from tokens - see `WEB_SEARCH_COST_USD`.
  */
 export function costUsd(model: string, u: TokenUsage): number {
   const p = priceFor(model);
   return (
     ((u.input_tokens ?? 0) * p.input +
       /*
-        התעריף נבחר לפי ה-TTL שאנחנו **שולחים**, ולא לפי מה שהתשובה
-        מדווחת: `usage` לא מפריד בין שני סוגי הכתיבה בשדה שאנחנו קוראים,
-        וההגדרה שלנו ידועה לנו בוודאות. `ANTHROPIC_CACHE_TTL=5m` מחזיר
-        גם את התמחור לתעריף הקצר, כך שהשניים לא יכולים לצאת מסנכרון.
+        The rate is chosen by the TTL we **send**, not by what the response
+        reports: `usage` does not distinguish the two write kinds in the
+        field we read, and our own setting is known to us with certainty.
+        `ANTHROPIC_CACHE_TTL=5m` also switches the pricing back to the short
+        rate, so the two cannot fall out of sync.
       */
       (u.cache_creation_input_tokens ?? 0) *
         (process.env.ANTHROPIC_CACHE_TTL === '5m' ? p.cacheWrite : p.cacheWrite1h) +
@@ -96,5 +105,5 @@ export function costUsd(model: string, u: TokenUsage): number {
   );
 }
 
-/** תצוגה קצרה בדולרים - ארבע ספרות אחרי הנקודה כי תור בודד עולה אגורות */
+/** Short dollar display - four decimal places because a single turn costs pennies */
 export const usd = (n: number): string => `$${n.toFixed(n < 1 ? 4 : 2)}`;

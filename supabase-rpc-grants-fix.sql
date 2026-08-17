@@ -1,42 +1,47 @@
 -- ============================================================
---  תיקון הרשאות ריצה על שלוש פונקציות
+--  Fixing execute grants on three functions
 --
---  ## מה הבעיה
+--  ## What the problem is
 --
---  ב-PostgreSQL, פונקציה חדשה מקבלת EXECUTE ל-**PUBLIC** אוטומטית.
---  `PUBLIC` הוא לא "אף אחד" ולא "כולם המחוברים" - הוא תפקיד-על שכל
---  תפקיד יורש ממנו, כולל `anon` ו-`authenticated`.
+--  In PostgreSQL, a new function gets EXECUTE for **PUBLIC** automatically.
+--  `PUBLIC` is neither "nobody" nor "all signed-in users" - it is a
+--  super-role that every role inherits from, including `anon` and
+--  `authenticated`.
 --
---  שלוש פונקציות בפרויקט הזה נשללו מ-`anon, authenticated` בלבד:
+--  Three functions in this project were revoked from `anon, authenticated`
+--  only:
 --
 --      revoke all on function public.bump_ai_spend(...) from anon, authenticated;
 --
---  שלילה כזאת מסירה הענקה **ישירה**, והפונקציה נשארת זמינה דרך
---  ההענקה שיורשים מ-PUBLIC. כלומר: כל מי שמחזיק במפתח ה-anon
---  הציבורי (שנמצא בחבילת הדפדפן בכוונה) יכול לקרוא להן.
+--  Such a revoke removes a **direct** grant, and the function remains
+--  available through the grant inherited from PUBLIC. Meaning: anyone
+--  holding the public anon key (which ships in the browser bundle on
+--  purpose) can call them.
 --
---  נמדד על Postgres 16 מקומי, לא הוסק:
+--  Measured on a local Postgres 16, not inferred:
 --
 --      revoke all ... from anon, authenticated   -> has_function_privilege('anon',...,'execute') = t
 --      revoke all ... from public, anon, ...     -> has_function_privilege('anon',...,'execute') = f
 --
---  ובקריאה בפועל: תפקיד `anon` הצליח לכתוב 9999 לטבלה שאין לו עליה
---  שום הרשאה ושה-RLS שלה דלוק בלי אף policy - כי הפונקציה היא
---  `security definer`, וזו כל מטרתה.
+--  And in an actual call: the `anon` role successfully wrote 9999 to a
+--  table it has no privileges on whatsoever and whose RLS is on with no
+--  policy at all - because the function is `security definer`, which is
+--  its entire purpose.
 --
---  שתי הפונקציות שכן נכתבו נכון - `bump_usage` ו-`redeem_promo`,
---  ששתיהן נשללו `from public, anon, authenticated` מהיום הראשון -
---  הן גם ההוכחה שהתיקון הזה בטוח: השרת קורא להן דרך service_role
---  והן עובדות בפרודקשן.
+--  The two functions that WERE written correctly - `bump_usage` and
+--  `redeem_promo`, both revoked `from public, anon, authenticated` from
+--  day one - are also the proof this fix is safe: the server calls them
+--  through service_role and they work in production.
 --
---  ## מה זה לא
+--  ## What this is not
 --
---  אין כאן שינוי קוד. הקובץ הזה עומד בפני עצמו, ואפשר להריץ אותו
---  מיד ובלי שום דיפלוי - בשונה מ-supabase-rls-fix.sql, שחייב היה
---  לנחות יחד עם הקוד.
+--  There is no code change here. This file stands on its own and can be
+--  run immediately with no deploy at all - unlike supabase-rls-fix.sql,
+--  which had to land together with the code.
 --
---  בטוח להרצה גם אם לא הרצת עדיין את supabase-ai-spend.sql או את
---  supabase-admin-dash.sql: פונקציה שלא קיימת פשוט מדולגת.
+--  Safe to run even if you have not yet run supabase-ai-spend.sql or
+--  supabase-admin-dash.sql: a function that does not exist is simply
+--  skipped.
 -- ============================================================
 
 do $$
@@ -54,24 +59,25 @@ begin
       raise notice 'skip (not created yet): %', sig;
       continue;
     end if;
-    -- זו השורה שהייתה חסרה
+    -- This is the line that was missing
     execute format('revoke all on function %s from public', sig);
     execute format('revoke all on function %s from anon, authenticated', sig);
-    -- **מפורש ולא בירושה.** בתיקון של shared_trips הסתמכתי על
-    -- הרשאות ברירת המחדל של service_role והשרת קיבל permission
-    -- denied. אותה טעות לא נעשית פעמיים.
+    -- **Explicit, not inherited.** In the shared_trips fix I relied on
+    -- service_role's default privileges and the server got permission
+    -- denied. The same mistake is not made twice.
     execute format('grant execute on function %s to service_role', sig);
     raise notice 'fixed: %', sig;
   end loop;
 end $$;
 
--- ---------- find_traveler_by_email: מחוברים בלבד, לא אנונימיים ----------
---  נמדד על הדאטהבייס החי: anon_can_call = true. הקובץ המקורי אמנם שולל
---  `from public`, אבל בפועל ההרשאה קיימת - כנראה מריצה של גרסה מוקדמת
---  יותר של supabase-community.sql. כל עוד היא פתוחה, כל מי שמחזיק במפתח
---  ה-anon יכול לבדוק כתובת מייל אחת-אחת ולקבל שם, תמונה ורשימת מדינות של
---  בעליה - בלי חשבון. ההתאמה המדויקת מונעת סריקה עיוורת ולא בדיקה של
---  כתובת שכבר ידועה.
+-- ---------- find_traveler_by_email: signed-in only, not anonymous ----------
+--  Measured on the live database: anon_can_call = true. The original file
+--  does revoke `from public`, but in practice the privilege exists - most
+--  likely from a run of an earlier version of supabase-community.sql. As
+--  long as it is open, anyone holding the anon key can probe email
+--  addresses one by one and get the owner's name, picture and country
+--  list - without an account. The exact-match requirement prevents blind
+--  scanning but not checking an address that is already known.
 do $$
 declare sig text := 'public.find_traveler_by_email(text)';
 begin
@@ -90,7 +96,7 @@ begin
   end if;
 end $$;
 
--- ---------- אימות עצמי: נכשל אם משהו נשאר פתוח ----------
+-- ---------- Self-verification: fails if anything is left open ----------
 do $$
 declare
   sig text;
@@ -117,7 +123,8 @@ begin
   raise notice 'OK - all internal RPCs are service_role only, and the server still has them';
 end $$;
 
--- ---------- מה שאמור להישאר פתוח, ובכוונה ----------
---  get_shared_trip(text)          -> anon+authenticated. פותח קישור /t/<code>.
---  find_traveler_by_email(text)   -> authenticated בלבד. חיפוש מטיילים.
---  שתיהן נשללו `from public` כבר ואז הוענקו במפורש - הדפוס הנכון.
+-- ---------- What should stay open, on purpose ----------
+--  get_shared_trip(text)          -> anon+authenticated. Opens a /t/<code> link.
+--  find_traveler_by_email(text)   -> authenticated only. Traveler search.
+--  Both were already revoked `from public` and then granted explicitly -
+--  the correct pattern.

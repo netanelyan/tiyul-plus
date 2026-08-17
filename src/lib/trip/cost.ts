@@ -2,13 +2,14 @@ import type { DailyBudget, DailyCost, DailyCostTier, PlaceSource } from '@/lib/t
 import type { Trip } from './types';
 
 /**
- * החשבון של עלות הטיול. **כל מה שקורה כאן הוא חיבור וכפל על נתונים
- * שמורים** - אין כאן הערכה, אין תחזית, ואין שום מקום שבו מודל שפה
- * נוגע במספר. הקלט הוא הטבלה שהמקור פרסם (`DailyCost`) ומספר הימים
- * שהטיול מקצה לכל עיר; הפלט הוא בדיוק הסכום של אלה.
+ * The trip-cost calculation. **Everything that happens here is addition and
+ * multiplication over stored data** - there is no estimation, no forecast,
+ * and no place where a language model touches a number. The input is the
+ * table the source published (`DailyCost`) and the number of days the trip
+ * allocates to each city; the output is exactly the sum of those.
  */
 
-/** סגנון הנסיעה שהמטייל בחר. נבחר פעם אחת, ידנית, ולא נגזר משום דבר. */
+/** The travel style the traveler chose. Picked once, manually, derived from nothing. */
 export type TravelStyle = 'budget' | 'mid' | 'comfort';
 
 export const TRAVEL_STYLES: { id: TravelStyle; label: string; hint: string }[] = [
@@ -22,17 +23,20 @@ export function isTravelStyle(v: unknown): v is TravelStyle {
 }
 
 /**
- * מה שצריך לדעת על עיר כדי לחשב. **שני מקורות, בכוונה.**
+ * What we need to know about a city in order to compute. **Two sources, on purpose.**
  *
- * `dailyCost` (src/data/dailyCosts.ts) מחזיק את שלוש שורות הקטגוריות
- * שהמקור מפרסם לכל סגנון, ולכן אפשר לגזור ממנו גם "בנוח" וגם טווח
- * שאפשר להסביר. `dailyBudget` (בתוך הקטלוג) מחזיק טווח מפורסם לשתי
- * מדרגות בלבד ומכסה הרבה יותר יעדים. **הראשון קודם כשהוא קיים**, כי
- * הוא מכסה את שלושת הסגנונות; השני מרחיב את הכיסוי מ-21 ל-71 יעדים.
+ * `dailyCost` (src/data/dailyCosts.ts) holds the three category rows the
+ * source publishes for each style, so both the "comfort" tier and an
+ * explainable range can be derived from it. `dailyBudget` (inside the
+ * catalog) holds a published range for only two tiers but covers many more
+ * destinations. **The first wins when it exists**, because it covers all
+ * three styles; the second expands coverage from 21 to 71 destinations.
  *
- * שניהם עומדים באותה הגדרה - הוצאה על הקרקע, בלי טיסות ובלי לינה -
- * ולכן מותר לסכם אותם יחד. כל מה ש**שונה** ביניהם נשמר בשורה עצמה
- * (`basis`, `scope`, `upperBoundOnly`) ומוצג, במקום להיטשטש בסכום.
+ * Both meet the same definition - on-the-ground spending, no flights and no
+ * lodging - so it is legitimate to sum them together. Everything that
+ * **differs** between them is kept on the row itself
+ * (`basis`, `scope`, `upperBoundOnly`) and displayed, instead of being
+ * blurred away in the total.
  */
 export interface CostCity {
   name: string;
@@ -40,7 +44,7 @@ export interface CostCity {
   dailyBudget?: DailyBudget;
 }
 
-/** 'components' = חיבור שורות הקטגוריות · 'published' = טווח שהמקור פרסם */
+/** 'components' = sum of the category rows · 'published' = a range the source published */
 export type CostBasis = 'components' | 'published';
 
 interface ResolvedDaily {
@@ -58,17 +62,17 @@ export interface CityCostLine {
   cityName: string;
   days: number;
   currency: string;
-  /** ליום, לאדם: המינימום (תחבורה ואוכל) והמקסימום (ועוד כניסות) */
+  /** Per day, per person: the minimum (transport and food) and the maximum (plus admissions) */
   perDayLow: number;
   perDayHigh: number;
-  /** מוכפל במספר הימים של העיר הזאת בטיול */
+  /** Multiplied by the number of days this city has in the trip */
   totalLow: number;
   totalHigh: number;
   source: PlaceSource;
   basis: CostBasis;
-  /** 'country' = המקור מפרסם ברמת המדינה, כלומר גס יותר מהעיר */
+  /** 'country' = the source publishes at country level, i.e. coarser than the city */
   scope: 'city' | 'country';
-  /** הערך הוא חסם עליון ("עד"), לא טווח - ראה DailyBudget */
+  /** The value is an upper bound ("up to"), not a range - see DailyBudget */
   upperBoundOnly: boolean;
 }
 
@@ -80,21 +84,21 @@ export interface CurrencyTotal {
 
 export interface TripCost {
   style: TravelStyle;
-  /** ערים עם נתון, לפי סדר ההופעה הראשונה שלהן בטיול */
+  /** Cities that have data, in order of their first appearance in the trip */
   lines: CityCostLine[];
-  /** ערים בטיול שאין להן נתון - מוצגות בשמן, בלי שום מספר */
+  /** Cities in the trip with no data - shown by name, with no number at all */
   missing: { citySlug: string; cityName: string; days: number }[];
-  /** סכום לכל מטבע. טיול בכמה מטבעות לא מסוכם למספר אחד. */
+  /** A total per currency. A multi-currency trip is never collapsed into one number. */
   totals: CurrencyTotal[];
-  /** false ברגע שיש ולו עיר אחת בלי נתון - הסכום מוצג כחלקי */
+  /** false the moment even one city has no data - the total is shown as partial */
   complete: boolean;
-  /** תאריכי הבדיקה של המקורות שבשימוש, ממוינים */
+  /** The check dates of the sources in use, sorted */
   checked: string[];
-  /** הבסיסים שבשימוש בפועל - קובע איזה הסבר על הטווח מותר להציג */
+  /** The bases actually in use - determines which explanation of the range may be shown */
   bases: CostBasis[];
-  /** יש שורה שהמקור שלה מודד ברמת המדינה ולא ברמת העיר */
+  /** Some row's source measures at country level rather than city level */
   hasCountryScope: boolean;
-  /** יש שורה שהיא חסם עליון ולא טווח - הסכום נקרא "עד" */
+  /** Some row is an upper bound rather than a range - the total reads "up to" */
   hasUpperBound: boolean;
 }
 
@@ -103,10 +107,11 @@ function tierOf(cost: DailyCost, style: TravelStyle): DailyCostTier {
 }
 
 /**
- * הטווח היומי, ושני הקצוות שלו הם עובדה ולא מרווח ביטחון שהמצאנו:
- * התחתון הוא תחבורה ואוכל - מה שמוציאים בכל יום בלי יוצא מן הכלל -
- * והעליון מוסיף את שורת הכניסות והאטרקציות, כלומר יום שיש בו כניסה
- * בתשלום. בפועל טיול הוא תערובת של שני סוגי הימים, ולכן טווח.
+ * The daily range, and both of its ends are fact rather than a safety
+ * margin we invented: the lower end is transport and food - what you spend
+ * every single day without exception - and the upper end adds the
+ * admissions-and-attractions row, i.e. a day that includes a paid entry.
+ * In practice a trip is a mix of both kinds of day, hence a range.
  */
 export function perDayRange(cost: DailyCost, style: TravelStyle): { low: number; high: number } {
   const t = tierOf(cost, style);
@@ -115,13 +120,16 @@ export function perDayRange(cost: DailyCost, style: TravelStyle): { low: number;
 }
 
 /**
- * הנתון של עיר לסגנון מסוים, מאיזה משני המקורות שיש לה - או null.
+ * A city's figure for a given style, from whichever of its two sources it
+ * has - or null.
  *
- * **null הוא תשובה תקינה ושכיחה**, ולא רק כשאין לעיר נתון בכלל:
- * ל-`dailyBudget` אין מדרגת "בנוח" באף יעד (המקור מפרסם מדרגה עליונה
- * פתוחה מלמעלה, ואי אפשר להפחית ממנה לינה), ולכן עיר שנשענת עליו לא
- * מציגה מספר כשנבחר "בנוח". זה בדיוק הכלל של הפיצ׳ר - אין נתון, אין
- * הערכה - רק שהפעם הוא חל על צירוף של עיר וסגנון ולא על עיר שלמה.
+ * **null is a valid and common answer**, and not only when the city has no
+ * data at all: `dailyBudget` has no "comfort" tier in any destination (the
+ * source publishes a top tier that is open-ended upward, and lodging cannot
+ * be subtracted from it), so a city that relies on it shows no number when
+ * "comfort" is selected. That is precisely this feature's rule - no data,
+ * no estimate - only this time it applies to a city+style combination
+ * rather than to a whole city.
  */
 export function resolveDaily(city: CostCity | undefined, style: TravelStyle): ResolvedDaily | null {
   if (city?.dailyCost) {
@@ -153,7 +161,7 @@ export function resolveDaily(city: CostCity | undefined, style: TravelStyle): Re
   };
 }
 
-/** כמה ימים הטיול מקצה לכל עיר, לפי סדר ההופעה הראשונה. */
+/** How many days the trip allocates to each city, in order of first appearance. */
 export function daysPerCity(trip: Pick<Trip, 'days'>): { citySlug: string; days: number }[] {
   const order: string[] = [];
   const count = new Map<string, number>();
@@ -165,12 +173,14 @@ export function daysPerCity(trip: Pick<Trip, 'days'>): { citySlug: string; days:
 }
 
 /**
- * החישוב המלא. `cities` הוא מה שהמסך כבר טען ממילא (`useCityData`),
- * כך שאין כאן שום קריאה לרשת ושום צד-אפקט.
+ * The full computation. `cities` is what the screen has already loaded
+ * anyway (`useCityData`), so there is no network call and no side effect
+ * here.
  *
- * עיר שאין לה נתון **לא נופלת מהסכום בשקט**: היא נכנסת ל-`missing`,
- * `complete` הופך ל-false, והממשק חייב לומר את זה. זה הכלל היחיד כאן
- * שאינו אריתמטיקה, והוא הסיבה שהפונקציה מחזירה גם את מה שחסר.
+ * A city with no data **does not silently fall out of the total**: it goes
+ * into `missing`, `complete` becomes false, and the UI must say so. That is
+ * the only rule here that is not arithmetic, and it is why the function
+ * also returns what is missing.
  */
 export function tripCost(
   trip: Pick<Trip, 'days'>,
@@ -230,13 +240,15 @@ export function tripCost(
 }
 
 /**
- * עיגול לתצוגה. שני שיקולים נגדיים, וזה הפשרה ביניהם: מצד אחד
- * "14,708.32 פורינט" משדר דיוק שלא קיים - הנתון במקור הוא ממוצע של
- * דיווחים. מצד שני **המספר המוצג צריך להישאר ניתן לשחזור ביד** מול
- * הטבלה במקור, אחרת "כל תא הוא ציטוט והסכום הוא חשבון" מפסיק להיות
- * בדיק. לכן מתחת ל-1,000 לא מעגלים בכלל (סכום של שלמים נשאר שלם),
- * ומעל זה העיגול מתגסה. פעולה על התצוגה בלבד - `TripCost` מחזיק את
- * הערך המדויק.
+ * Rounding for display. Two opposing considerations, and this is the
+ * compromise between them: on one hand, a figure like "14,708.32 forint"
+ * signals precision that does not exist - the source's number is an average
+ * of reports. On the other hand, **the displayed number must remain
+ * reproducible by hand** against the source's table, or "every cell is a
+ * quote and the total is arithmetic" stops being checkable. So below 1,000
+ * there is no rounding at all (a sum of integers stays an integer), and
+ * above that the rounding gets coarser. A display-only operation -
+ * `TripCost` keeps the exact value.
  */
 export function roundForDisplay(value: number): number {
   if (!Number.isFinite(value)) return 0;
@@ -245,7 +257,7 @@ export function roundForDisplay(value: number): number {
   return Math.round(value / step) * step;
 }
 
-/** סימן המטבע כפי שהמקור הציג אותו. מטבע לא מוכר מוצג בקוד שלו. */
+/** The currency sign as the source displayed it. An unknown currency is shown by its code. */
 const CURRENCY_LABEL: Record<string, string> = {
   EUR: '€',
   USD: '$',
@@ -265,10 +277,11 @@ export function currencyLabel(code: string): string {
 }
 
 /**
- * מספר אחד עם המטבע. הפורמט מכוון להיקרא בתוך שורה בעברית: הפרדת
- * אלפים בפסיק, והמטבע צמוד למספר - הצמד כולו מוגש ב-LTR מבודד בממשק,
- * אחרת שני מספרים שנפגשים בשורה RTL נדבקים זה לזה (הבאג של "יום 110
- * באוגוסט" מהתאריכים).
+ * One number with its currency. The format is meant to be read inside a
+ * Hebrew line: comma thousands separators, and the currency attached to the
+ * number - the pair is rendered as an isolated LTR run in the UI, otherwise
+ * two numbers meeting in an RTL line stick to each other (the
+ * "day 1 / August 10 merging into one number" bug from the dates feature).
  */
 export function formatAmount(value: number, currency: string): string {
   const label = currencyLabel(currency);
@@ -276,7 +289,7 @@ export function formatAmount(value: number, currency: string): string {
   return label.length === 1 ? `${label}${n}` : `${n} ${label}`;
 }
 
-/** טווח, אחרי עיגול. אם שני הקצוות מתעגלים לאותו מספר - מוצג מספר אחד. */
+/** A range, after rounding. If both ends round to the same number - one number is shown. */
 export function formatRange(low: number, high: number, currency: string): string {
   const a = roundForDisplay(low);
   const b = roundForDisplay(high);

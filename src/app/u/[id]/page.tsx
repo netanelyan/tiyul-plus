@@ -7,9 +7,9 @@ export const metadata: Metadata = {
 };
 
 /**
- * /u/<id> - פרופיל מטייל ציבורי. השליפה בצד הלקוח מול ה-view
- * public_profiles (RLS חושף רק פרופילים שבחרו להיות ציבוריים,
- * ורק שם/תמונה/דרכון - בלי מייל, טלפון או טיולים).
+ * /u/<id> - a public traveler profile. The fetch is client-side against the
+ * public_profiles view (RLS exposes only profiles that chose to be public,
+ * and only name/picture/passport - no email, phone or trips).
  */
 export default async function TravelerPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

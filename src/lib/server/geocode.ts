@@ -1,19 +1,23 @@
 /**
- * חיפוש קואורדינטות לסיכות (מלון, מסעדה, נקודה חופשית) - שרת בלבד.
+ * Coordinate lookup for pins (hotel, restaurant, free-form point) - server only.
  *
- * כלל הברזל כאן, במקביל לזה של `booking.ts`: **המודל לעולם לא מספק
- * קואורדינטות**. הוא מספק רק את מה שהמטייל אמר בפועל ("Hotel Devin,
- * ברטיסלבה"), והמרה לנקודה על המפה נעשית כאן מול OpenStreetMap. אם
- * החיפוש לא מצא, או שהתוצאה חלשה - הסיכה נשמרת בלי מיקום ומסומנת
- * "לא אומת", והמטייל יכול להניח אותה על המפה בעצמו. אנחנו לא מניחים
- * סיכה במרכז העיר כניחוש: מיקום שגוי גרוע ממיקום חסר.
+ * The iron rule here, parallel to the one in `booking.ts`: **the model never
+ * supplies coordinates**. It supplies only what the traveler actually said
+ * ("Hotel Devin, Bratislava"), and the conversion to a point on the map
+ * happens here against OpenStreetMap. If the lookup found nothing, or the
+ * result is weak - the pin is saved without a location and marked
+ * "unverified", and the traveler can place it on the map themselves. We do
+ * not drop a pin at the city center as a guess: a wrong location is worse
+ * than a missing one.
  *
- * ספק: Nominatim (חינמי, בלי מפתח). תנאי השימוש שלו דורשים User-Agent
- * מזהה ולא יותר מבקשה אחת בשנייה - שניהם נאכפים כאן. Photon משמש
- * גיבוי אם Nominatim לא זמין. לבדיקות: GEOCODE_NOMINATIM / GEOCODE_PHOTON
- * דורסים את הכתובות (כמו EXPLORE_WIKI_HE ב-resolver.ts).
+ * Provider: Nominatim (free, no key). Its terms of use require an identifying
+ * User-Agent and no more than one request per second - both are enforced
+ * here. Photon serves as a fallback if Nominatim is unavailable. For tests:
+ * GEOCODE_NOMINATIM / GEOCODE_PHOTON override the URLs (like EXPLORE_WIKI_HE
+ * in resolver.ts).
  *
- * ייחוס: התוצאות מגיעות מ-OpenStreetMap ומוצגות עם הייחוס הנדרש ב-UI.
+ * Attribution: the results come from OpenStreetMap and are shown with the
+ * required attribution in the UI.
  */
 
 const NOMINATIM = process.env.GEOCODE_NOMINATIM ?? 'https://nominatim.openstreetmap.org/search';
@@ -23,15 +27,15 @@ const UA = 'tiyul-plus/1.0 (travel planner; contact via site)';
 export interface GeocodeResult {
   lat: number;
   lng: number;
-  /** הכתובת המלאה כפי שהספק החזיר - לתצוגה, לא לניתוח */
+  /** The full address as the provider returned it - for display, not parsing */
   address: string;
 }
 
-/** מטמון בזיכרון: אותה שאילתה בתוך אותו תהליך לא יוצאת שוב החוצה */
+/** In-memory cache: the same query within the same process never goes out again */
 const cache = new Map<string, GeocodeResult | null>();
 const CACHE_MAX = 500;
 
-/** תור סדרתי + השהיה, כדי לכבד את מגבלת בקשה-בשנייה של Nominatim */
+/** Serial queue + delay, to honor Nominatim's one-request-per-second limit */
 let chain: Promise<unknown> = Promise.resolve();
 let lastCall = 0;
 const MIN_GAP_MS = 1100;
@@ -46,7 +50,7 @@ function throttle<T>(fn: () => Promise<T>): Promise<T> {
       lastCall = Date.now();
     }
   });
-  // התור ממשיך גם אחרי כישלון, אחרת בקשה אחת שנפלה תתקע את הבאות
+  // The queue keeps going even after a failure, otherwise one failed request would stall the next ones
   chain = run.catch(() => undefined);
   return run;
 }
@@ -65,7 +69,7 @@ async function getJson(url: string): Promise<unknown> {
 
 const finite = (n: unknown): n is number => typeof n === 'number' && Number.isFinite(n);
 
-/** קואורדינטות סבירות בלבד - שומר מפני תשובה משובשת */
+/** Plausible coordinates only - guards against a corrupted response */
 function valid(lat: number, lng: number): boolean {
   return lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180 && !(lat === 0 && lng === 0);
 }
@@ -92,7 +96,7 @@ interface PhotonFeature {
   properties?: Record<string, unknown>;
 }
 
-/** Photon מחזיר GeoJSON: coordinates הן [lng, lat] - בסדר הזה */
+/** Photon returns GeoJSON: coordinates are [lng, lat] - in that order */
 async function viaPhoton(query: string): Promise<GeocodeResult | null> {
   const qs = new URLSearchParams({ q: query, limit: '1' });
   const data = (await getJson(`${PHOTON}?${qs}`)) as { features?: PhotonFeature[] };
@@ -109,15 +113,15 @@ async function viaPhoton(query: string): Promise<GeocodeResult | null> {
 }
 
 /**
- * שם מקום (ורצוי גם עיר/מדינה) → נקודה על המפה, או null אם לא נמצא.
- * לעולם לא זורק: כישלון רשת הוא "לא אומת", לא שגיאה למשתמש.
+ * Place name (ideally with city/country too) → a point on the map, or null if not found.
+ * Never throws: a network failure means "unverified", not an error shown to the user.
  */
 export async function geocodePlace(
   name: string,
   context?: string,
 ): Promise<GeocodeResult | null> {
   const query = [name, context].filter(Boolean).join(', ').trim().replace(/\s+/g, ' ');
-  // שאילתה קצרה מדי ("מלון") תחזיר משהו אקראי - עדיף לא לאמת בכלל
+  // A too-short query (e.g. just the Hebrew word for "hotel") would return something random - better not to verify at all
   if (query.length < 3 || query.length > 160) return null;
 
   const key = query.toLowerCase();
@@ -130,7 +134,7 @@ export async function geocodePlace(
       result = await throttle(() => provider(query));
       if (result) break;
     } catch {
-      // ספק שנפל/חסום - מנסים את הבא, ואם גם הוא נפל הסיכה תישמר לא מאומתת
+      // Provider down/blocked - try the next one, and if it fails too the pin is saved unverified
     }
   }
 
@@ -139,7 +143,7 @@ export async function geocodePlace(
   return result;
 }
 
-/** לבדיקות בלבד - מנקה את המטמון בין מקרי בדיקה */
+/** For tests only - clears the cache between test cases */
 export function resetGeocodeCacheForTest(): void {
   cache.clear();
   lastCall = 0;

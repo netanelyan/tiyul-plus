@@ -3,32 +3,37 @@ import { newId } from './types';
 import { safeDates } from './dates';
 
 /**
- * קישור שיתוף לטיול - Phase 4 (viral loop), בלי backend:
- * הטיול מקודד לתוך ה-URL עצמו (/t/<code>) ונפתח לקריאה לכל אחד.
- * מקודדים רק מזהים (citySlug + placeIds) - הדאטה האוצרת כבר נמצאת
- * באתר, אז הקישור קצר והפענוח תמיד מוצג מול מקומות אמיתיים בלבד.
+ * A trip share link - Phase 4 (viral loop), with no backend:
+ * the trip is encoded into the URL itself (/t/<code>) and opens read-only
+ * for anyone. Only ids are encoded (citySlug + placeIds) - the curated
+ * data is already in the app, so the link stays short and decoding is
+ * always rendered against real places only.
  *
- * כשיגיעו חשבונות (backend), אותו מסך /t/<code> יקבל גם קודים קצרים
- * מהשרת - הפורמט כאן הוא v1 ומסומן בגרסה כדי לאפשר את המעבר.
+ * When accounts (backend) arrive, the same /t/<code> screen will also
+ * accept short codes from the server - the format here is v1 and carries
+ * a version marker to make that transition possible.
  *
- * **הפענוח (`decodeTripShare`) יושב ב-`@/lib/server/shareDecode`** ולא
- * כאן, כי הוא מאמת כל מזהה מול הקטלוג - וכל מי שמייבא את הקובץ הזה
- * בצד הלקוח (מסך הטיול, שמייצר קישור) היה גורר את הקטלוג כולו איתו.
- * שני הקוראים של הפענוח הם שרת ממילא: `/api/share` ו-`/t/[code]`.
+ * **Decoding (`decodeTripShare`) lives in `@/lib/server/shareDecode`**,
+ * not here, because it validates every id against the catalog - and
+ * anyone importing this file on the client side (the trip screen, which
+ * generates a link) would have dragged the entire catalog along with it.
+ * Both consumers of decoding are servers anyway: `/api/share` and
+ * `/t/[code]`.
  */
 
 export type ShareDay = [citySlug: string, placeIds: string[], notes?: string];
 /**
- * v1: `[1, name, days]`. v2 מוסיף תאריכים בסוף - `[2, name, days, start?, end?]`.
- * **קישורי v1 ממשיכים להיפתח לנצח**: קוד ששותף בוואטסאפ לפני שנה חייב
- * לעבוד, ולכן הפענוח מקבל את שתי הגרסאות ורק הקידוד עלה גרסה. טיול בלי
- * תאריכים ממשיך להיות מקודד כ-v1, כך שהקישור לא מתארך בלי סיבה.
+ * v1: `[1, name, days]`. v2 adds dates at the end - `[2, name, days, start?, end?]`.
+ * **v1 links keep opening forever**: a code shared on WhatsApp a year ago
+ * must still work, so decoding accepts both versions and only encoding
+ * moved up a version. A trip with no dates is still encoded as v1, so the
+ * link does not grow for no reason.
  */
 type SharePayloadV1 = [version: 1, name: string, days: ShareDay[]];
 type SharePayloadV2 = [version: 2, name: string, days: ShareDay[], startDate?: string, endDate?: string];
 export type SharePayload = SharePayloadV1 | SharePayloadV2;
 
-/* ---------- base64url איזומורפי (דפדפן + Node) ל-UTF-8 ---------- */
+/* ---------- Isomorphic base64url (browser + Node) for UTF-8 ---------- */
 
 function toBase64Url(s: string): string {
   const bytes = new TextEncoder().encode(s);
@@ -48,7 +53,7 @@ export function fromBase64Url(code: string): string | null {
   }
 }
 
-/* ---------- קידוד ---------- */
+/* ---------- Encoding ---------- */
 
 export function encodeTripShare(trip: Trip): string {
   const days = trip.days.map((d): ShareDay => {
@@ -63,18 +68,18 @@ export function encodeTripShare(trip: Trip): string {
   return toBase64Url(JSON.stringify(payload));
 }
 
-/* ---------- פענוח + אימות מול הדאטה האוצרת ---------- */
+/* ---------- Decoding + validation against the curated data ---------- */
 
 export interface SharedTrip {
   name: string;
   days: { citySlug: string; placeIds: string[]; notes?: string }[];
-  /** v2 בלבד; קישור v1 פשוט לא נושא תאריכים */
+  /** v2 only; a v1 link simply carries no dates */
   startDate?: string;
   endDate?: string;
 }
 
 
-/** בונה Trip חדש (ids טריים) מהתוכן המשותף - לייבוא אל "הטיולים שלי" */
+/** Builds a fresh Trip (new ids) from the shared content - for importing into "my trips" */
 export function tripFromShared(shared: SharedTrip): Trip {
   const citySlugs: string[] = [];
   for (const d of shared.days) if (!citySlugs.includes(d.citySlug)) citySlugs.push(d.citySlug);

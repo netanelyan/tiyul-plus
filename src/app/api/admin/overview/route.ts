@@ -5,18 +5,20 @@ import { aggregate, summarize, type TripRow } from '@/lib/server/tripStats';
 import { budgetOverview } from '@/lib/server/budget';
 
 /**
- * התצוגה המצטברת - **המסך הראשי, ובכוונה בלי אף אדם בתוכו**.
+ * The aggregate view - **the main screen, and deliberately with no person
+ * in it**.
  *
- * נתנאל: *"התצוגה הראשית היא מצטברת, לא אישית."* לכן שום שדה כאן לא
- * מזהה מישהו: אין מיילים, אין שמות, אין מזהי טיולים. גם "מטיילים
- * פעילים" הוא ספירה של מזהים ייחודיים ולא רשימה שלהם.
+ * Netanel: *"The main view is aggregate, not personal."* So no field here
+ * identifies anyone: no emails, no names, no trip ids. Even "active
+ * travelers" is a count of unique ids, not a list of them.
  *
- * **מה הלוח לא רואה, ונאמר במפורש בממשק:** טיולים של מבקרים שלא
- * נרשמו. הם חיים ב-localStorage ולא מסונכרנים לשרת - וזו התוצאה
- * הישירה של לא לעקוב אחרי מי שלא נרשם.
+ * **What the dashboard does not see, and states explicitly in the UI:**
+ * trips of visitors who never signed up. They live in localStorage and are
+ * not synced to the server - the direct consequence of not tracking people
+ * who did not sign up.
  */
 
-/** תקרת שורות. מוצגת בממשק כשהיא נוגעת - חיתוך שקט קורא כמו "זה הכול". */
+/** Row ceiling. Shown in the UI when it bites - a silent cutoff reads as "this is everything". */
 const MAX_ROWS = 5000;
 const WINDOW_DAYS = 30;
 
@@ -54,10 +56,10 @@ export async function GET(req: Request) {
   }
 
   /*
-    רק סוגי הייצוא. app_events נושאת מאז 2026-08-13 גם את אירועי
-    הצמיחה (trip_created, return_visit...) - להם יש כרטיס משלהם
-    (/api/admin/growth), ובלי הסינון הזה הם היו מופיעים כאן בתוך
-    "ייצואים" כאילו מישהו הדפיס טיול.
+    Export kinds only. Since 2026-08-13, app_events also carries the growth
+    events (trip_created, return_visit...) - those have their own card
+    (/api/admin/growth), and without this filter they would show up here
+    inside "exports" as if somebody printed a trip.
   */
   const EXPORT_KINDS = new Set(['print', 'pdf', 'whatsapp', 'share', 'maps']);
   const exportsByKind = new Map<string, number>();
@@ -82,12 +84,12 @@ export async function GET(req: Request) {
       shares: shares?.length ?? 0,
       perDay: stats.perDay.map((d) => ({ day: d.day, shares: sharesPerDay.get(d.day) ?? 0 })),
       exports: [...exportsByKind.entries()].map(([kind, count]) => ({ kind, count })),
-      /** null = הטבלה לא קיימת עדיין (ה-SQL לא רץ). לא אפס. */
+      /** null = the table does not exist yet (the SQL was never run). Not zero. */
       exportsTracked: events !== null,
     },
     accounts: { total: users?.total ?? 0, capped: users?.capped ?? false },
     ai: budget,
-    /** בלי זה המספרים נקראים כאילו הם כל העולם, והם לא */
+    /** Without this the numbers read as if they are the whole world, and they are not */
     scope: 'טיולים של משתמשים מחוברים בלבד - טיול של מבקר שלא נרשם נשמר במכשיר שלו ולא אצלנו',
   });
 }

@@ -7,26 +7,30 @@ import { formatDurationHe } from '@/lib/duration';
 import { hePrefix } from '@/lib/hebrew';
 
 /**
- * "פעילויות שאפשר להזמין" - **תוכן של שותף, מסומן ככזה.**
+ * "Bookable activities" - **partner content, marked as such.**
  *
- * ## מה הרכיב הזה לא עושה
+ * ## What this component does NOT do
  *
- * לא ממציא מחיר, לא ממיר מטבע, לא מתרגם כותרת ולא מדרג. כל מספר וכל שם
- * מגיעים מהתשובה של Viator כפי שהיא, והשרת כבר זרק כל מוצר שחסר לו אחד
- * מהם. אין כאן גם שום כתיבה: הפעילויות לא נכנסות לטיול, לא לאחסון
- * המקומי ולא לחשבון - הן חיות ב-state של הרכיב עד שסוגרים את המסך.
+ * It invents no price, converts no currency, translates no title and does
+ * no ranking. Every number and every name comes from Viator's response as
+ * is, and the server has already dropped any product missing one of them.
+ * There is also no writing here: the activities do not enter the trip, the
+ * local storage or the account - they live in the component's state until
+ * the screen is closed.
  *
- * ## המדור נפתח בלחיצה, ולא נטען לבד
+ * ## The section opens on click, not by itself
  *
- * זו לא רק חסכנות בבקשות. מדור מסחרי שנפתח מעצמו בתוך תוכנית טיול הוא
- * פרסומת; מדור שנפתח כשמבקשים אותו הוא כלי. הוא גם מקופל כברירת מחדל
- * כמו שאר הבלוקים באזור הזה.
+ * That is not just request frugality. A commercial section that opens
+ * itself inside a trip plan is an advertisement; a section that opens when
+ * asked is a tool. It is also collapsed by default like the other blocks
+ * in this area.
  *
- * ## הסימון בזמן פיתוח
+ * ## The marking during development
  *
- * במצב sandbox הנתונים של Viator **בדיוניים**. אי אפשר לסמוך על כך
- * שמישהו יזכור את זה, ולכן יש פס אזהרה שאי אפשר לפספס מעל הרשימה **וגם**
- * תג על כל כרטיס בנפרד - וכפתור ההזמנה מנוטרל, כי אין מה להזמין.
+ * In sandbox mode Viator's data is **fictional**. Nobody can be trusted to
+ * remember that, so there is an unmissable warning bar above the list
+ * **and** a tag on each individual card - and the booking button is
+ * disabled, because there is nothing to book.
  */
 
 interface Offer {
@@ -48,32 +52,37 @@ interface Result {
   reason: string;
 }
 
-/** בדיוק מה שהוחזר: המספר והמטבע שלהם, בלי המרה ובלי עיגול */
+/** Exactly what was returned: their number and currency, no conversion and no rounding */
 const price = (n: number | null, cur: string | null) =>
   n === null || !cur ? null : `${cur} ${n % 1 === 0 ? n : n.toFixed(2)}`;
 
 export default function ActivitiesPanel({ citySlug, cityName }: { citySlug: string; cityName: string }) {
   const [open, setOpen] = useState(false);
   /*
-    התוצאה נושאת איתה את העיר שהיא שייכת לה, במקום אפקט שמאפס אותה
-    כשהעיר משתנה. זה גם מונע הבזק של הפעילויות של העיר הקודמת, וגם
-    מוריד אפקט שכל תפקידו היה לנקות state.
+    The result carries with it the city it belongs to, instead of an effect
+    that resets it when the city changes. That both prevents a flash of the
+    previous city's activities, and removes an effect whose entire job was
+    to clean up state.
   */
   const [state, setState] = useState<{ city: string; result: Result } | null>(null);
   const [loading, setLoading] = useState(false);
   const data = state && state.city === citySlug ? state.result : null;
   /*
-    ה-ref הוא מה שמונע בקשה כפולה, ובכוונה לא `loading`.
+    The ref is what prevents a duplicate request, and deliberately not
+    `loading`.
 
-    בגרסה הראשונה `loading` היה גם השומר וגם תלות של האפקט, ולכן
-    `setLoading(true)` שינה תלות, האפקט רץ מחדש, **הניקוי סימן את
-    הבקשה שבדרך כלא-רלוונטית**, והריצה השנייה יצאה מיד בגלל השומר.
-    התוצאה: הבקשה הצליחה, 200 חזר, ואף אחד לא כתב את התשובה - המדור
-    נשאר על "בודק מה יש בעיר" לנצח. ה-API עבד; רק המסך היה תקוע, ולכן
-    שום בדיקת שרת לא יכלה לראות את זה. תפס את זה דפדפן אמיתי.
+    In the first version `loading` was both the guard and a dependency of
+    the effect, so `setLoading(true)` changed a dependency, the effect
+    re-ran, **the cleanup marked the in-flight request as irrelevant**, and
+    the second run bailed out immediately because of the guard. The result:
+    the request succeeded, a 200 came back, and nobody wrote the response -
+    the section stayed on the "checking what's in the city" state forever.
+    The API worked; only the screen was stuck, so no server-side check could
+    ever see it. A real browser caught it.
 
-    ref מתעדכן סינכרונית ואינו תלות, ולכן האפקט רץ בדיוק פעם אחת לכל
-    עיר. בכישלון הוא מתאפס, כדי שפתיחה נוספת תנסה שוב.
+    A ref updates synchronously and is not a dependency, so the effect runs
+    exactly once per city. On failure it resets, so another opening tries
+    again.
   */
   const askedRef = useRef<string | null>(null);
 
@@ -88,7 +97,7 @@ export default function ActivitiesPanel({ citySlug, cityName }: { citySlug: stri
         const json = (await res.json()) as Result;
         if (alive) setState({ city: citySlug, result: json });
       } catch {
-        // כישלון שקט: המדור פשוט אומר שאין כרגע, והמסך ממשיך
+        // Silent failure: the section simply says there is nothing right now, and the screen goes on
         askedRef.current = null;
         if (alive) setState({ city: citySlug, result: { mode: 'off', offers: [], reason: 'unavailable' } });
       } finally {
@@ -104,8 +113,10 @@ export default function ActivitiesPanel({ citySlug, cityName }: { citySlug: stri
   const sandbox = offers.some((o) => o.sandbox);
 
   /*
-    כשאין מה להציג המדור לא נעלם אחרי שנפתח - הוא אומר בפשטות שאין,
-    וזו התשובה הכנה. מה שכן: הוא לא מנסה להסביר למה, ולא מציג שגיאה.
+    When there is nothing to show the section does not vanish after being
+    opened - it simply says there is nothing, and that is the honest
+    answer. What it does not do: it does not try to explain why, and it
+    does not show an error.
   */
   const emptyLine =
     data && offers.length === 0
@@ -124,7 +135,7 @@ export default function ActivitiesPanel({ citySlug, cityName }: { citySlug: stri
     >
       <div className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
         {sandbox && (
-          /* אי אפשר לפספס, וזה הרעיון */
+          /* Impossible to miss, and that is the point */
           <div
             data-sandbox-banner
             className="mb-3 rounded-xl bg-sunset px-3 py-2 text-xs font-black text-cream"
@@ -160,21 +171,24 @@ export default function ActivitiesPanel({ citySlug, cityName }: { citySlug: stri
                   )}
                   <div className="min-w-0 flex-1">
                     {/*
-                      שתי שורות ולא `truncate`: שם המוצר הוא בדיוק מה שאסור
-                      לנו להמציא, ולכן גם אסור לנו לחתוך אותו ל-"Fictional Col…".
-                      ב-390 שורה אחת חתכה כל שם אמיתי באמצע.
+                      Two lines and not `truncate`: the product name is
+                      exactly what we must not invent, so we must not cut it
+                      into "Fictional Col…" either. At 390 a single line cut
+                      every real name mid-word.
                     */}
                     {/*
-                      `bdi` ולא `dir="auto"`: שם באנגלית עם `dir="auto"` הופך
-                      את כל הבלוק ל-LTR, כך שהכותרת נצמדת לשמאל בזמן ששורת
-                      המחיר שמתחתיה נשארת מימין - והכרטיס נראה שבור. `bdi`
-                      מבודד את כיוון הטקסט פנימה ומשאיר את היישור של העמוד.
+                      `bdi` and not `dir="auto"`: an English name with
+                      `dir="auto"` flips the whole block to LTR, so the title
+                      sticks to the left while the price line beneath it
+                      stays on the right - and the card looks broken. `bdi`
+                      isolates the text direction inward and keeps the page's
+                      alignment.
                     */}
                     <div className="line-clamp-2 text-sm font-bold text-night">
                       <bdi>{o.title}</bdi>
                     </div>
                     <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-[11px] font-semibold text-night/50">
-                      {/* רק המספר והמטבע הם LTR; "החל מ-" הוא עברית ונשאר RTL */}
+                      {/* Only the number and currency are LTR; the "starting from" prefix is Hebrew and stays RTL */}
                       {p && (
                         <span>
                           החל מ-
@@ -216,9 +230,10 @@ export default function ActivitiesPanel({ citySlug, cityName }: { citySlug: stri
         )}
 
         {/*
-          הגילוי הנאות, ולא באותיות קטנות: מי הבעלים של התוכן, איפה
-          מזמינים, ושאנחנו מרוויחים מהקישור. גם המחיר מסויג - "החל מ-"
-          הוא מה שהם מחזירים, והמחיר הסופי נקבע אצלם.
+          The disclosure, and not in fine print: who owns the content, where
+          the booking happens, and that we earn from the link. The price is
+          hedged too - "starting from" is what they return, and the final
+          price is set on their side.
         */}
         <p className="mt-3 text-[11px] font-medium leading-relaxed text-night/45">
           הפעילויות, המחירים והדירוגים מוצגים כפי שהתקבלו מ-Viator ועשויים להשתנות. ההזמנה והתשלום

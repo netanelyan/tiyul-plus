@@ -1,14 +1,15 @@
 /**
- * הקידומת הנשמרת, ומתי מותר לחמם אותה.
+ * The cached prefix, and when it may be warmed.
  *
- * שתי טענות נבדקות כאן, ושתיהן על כסף:
+ * Two claims are tested here, and both are about money:
  *
- * 1. **הקידומת נבנית במקום אחד.** קידומת שנבדלת בתו אחד היא מטמון אחר,
- *    כלומר חימום שמשלם על עצמו ולא מחמם כלום - וזה כישלון שקט לחלוטין:
- *    שום דבר לא נשבר, פשוט משלמים פעמיים.
- * 2. **החימום מסרב ברוב המצבים.** שלוש מארבע התשובות של `warmDecision`
- *    הן "לא", וזו ההתנהגות שנתנאל ביקש: הפיצ׳ר מכבה את עצמו כשהאתר
- *    נהיה עסוק.
+ * 1. **The prefix is built in one place.** A prefix that differs by one
+ *    character is a different cache, i.e. a warm-up that pays for itself
+ *    and warms nothing - and that is a completely silent failure: nothing
+ *    breaks, you simply pay twice.
+ * 2. **Warming refuses in most situations.** Three of `warmDecision`'s
+ *    four answers are "no", and that is the behavior Netanel asked for:
+ *    the feature switches itself off as the site gets busy.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -23,7 +24,7 @@ import {
   warmDecision,
 } from './agentPrefix.ts';
 
-/* ---------- הקידומת ---------- */
+/* ---------- The prefix ---------- */
 
 test('הקידומת היא פרומפט המערכת ואז האינדקס, בסדר הזה', () => {
   const p = cachedPrefix(false);
@@ -44,7 +45,7 @@ test('שתי הגרסאות שונות זו מזו - כלומר שני מטמו�
 });
 
 test('פרומפט המערכת קבוע לחלוטין - שום דבר אישי לא נכנס לקידומת', () => {
-  // הזרקה של תאריך, שם או מזהה כאן הייתה מבטלת את המטמון לכל משתמש
+  // Injecting a date, name or identifier here would have invalidated the cache for every user
   assert.ok(!/\$\{/.test(SYSTEM_PROMPT), 'אין אינטרפולציה');
   assert.ok(!/\d{4}-\d{2}-\d{2}/.test(SYSTEM_PROMPT), 'אין תאריך');
 });
@@ -56,9 +57,10 @@ test('ttl נכתב רק כשהוא קיים', () => {
 });
 
 /**
- * **שומר המחלקה.** שני הנתיבים חייבים לבנות את הקידומת מכאן. אם מישהו
- * יחזיר `buildGroundingIndex` עם `cache_control` ישירות לתוך נתיב,
- * החימום ימשיך לרוץ ולשלם - ויחמם קידומת שאף אחד כבר לא שולח.
+ * **The class guard.** Both routes must build the prefix from here. If
+ * somebody reintroduces `buildGroundingIndex` with `cache_control`
+ * directly into a route, warming will keep running and paying - warming a
+ * prefix nobody sends anymore.
  */
 test('אף נתיב לא בונה קידומת משלו', () => {
   for (const file of ['src/app/api/chat/route.ts', 'src/app/api/internal/warm/route.ts']) {
@@ -71,7 +73,7 @@ test('אף נתיב לא בונה קידומת משלו', () => {
   }
 });
 
-/* ---------- החלטת החימום ---------- */
+/* ---------- The warm decision ---------- */
 
 const NOW = 1_800_000_000_000;
 const ago = (ms: number) => NOW - ms;
@@ -91,7 +93,7 @@ test('שקט בתוך תוקף המטמון => מחממים, וזה המקרה �
 test('מטמון שכבר פג => לא מחממים, כי זו כתיבה מלאה עבור אף אחד', () => {
   assert.equal(warmDecision(ago(WARM_STALE_MS + 1), NOW), 'cache_expired');
   assert.equal(warmDecision(ago(24 * 60 * 60_000), NOW), 'cache_expired');
-  // יום שלם בלי אף מבקר לא מייצר אפילו חימום אחד
+  // A whole day without a single visitor produces not even one warm-up
   let warms = 0;
   for (let m = 71; m <= 24 * 60; m++) if (warmDecision(ago(m * 60_000), NOW) === 'warm') warms++;
   assert.equal(warms, 0);
@@ -107,7 +109,7 @@ test('בתוקף של חמש דקות הפיצ׳ר מכבה את עצמו', () =
 });
 
 test('החלון צר - לכל היותר חימום אחד לשעה', () => {
-  // רוחב החלון בדקות הוא מה שקובע את התדירות המרבית
+  // The window's width in minutes is what determines the maximum frequency
   const windowMinutes = (WARM_STALE_MS - WARM_QUIET_MS) / 60_000;
   assert.ok(windowMinutes <= 40, `${windowMinutes} דקות זה חלון רחב מדי`);
   assert.ok(WARM_STALE_MS < 60 * 60_000 * 1.25, 'החלון חייב להסתיים בסביבות תוקף המטמון');

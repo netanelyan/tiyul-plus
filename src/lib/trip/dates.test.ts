@@ -1,10 +1,12 @@
 /**
- * טסטים לתאריכי הטיול.
+ * Tests for trip dates.
  *
- * שני דברים כאן אינם "בדיקת שפיות": הראשון הוא שתאריך נשאר אותו תאריך
- * בכל אזור זמן (הבאג הקלאסי הוא `new Date('2026-08-12')` שנקרא כ-UTC
- * ומוצג כ-11 באוגוסט למי שגולש ממערב לגריניץ׳), והשני הוא שהשלמת
- * הטווח **לא נוגעת בימים של הטיול** - בחירת תאריך לא מוחקת עצירות.
+ * Two things here are not a "sanity check": the first is that a date stays
+ * the same date in every timezone (the classic bug is
+ * `new Date('2026-08-12')` being read as UTC and displayed as August 11 to
+ * anyone browsing west of Greenwich), and the second is that range
+ * completion **does not touch the trip's days** - picking a date does not
+ * delete stops.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -29,8 +31,8 @@ test('ולידציה: תאריך שלא קיים נדחה, לא "מתגלגל" �
 });
 
 test('התאריך לא זז עם אזור הזמן', () => {
-  // חצות UTC של 2026-08-12 היא ה-11 באוגוסט בניו יורק. אם היינו
-  // משתמשים ב-new Date(string), ההצגה שם הייתה יום אחד אחורה.
+  // UTC midnight of 2026-08-12 is August 11 in New York. If we used
+  // new Date(string), the display there would be one day behind.
   const d = parseISODate('2026-08-12')!;
   assert.equal(d.getDate(), 12);
   assert.equal(d.getHours(), 12, 'צהריים מקומיים - שעון קיץ לא יכול לחצות יום');
@@ -41,7 +43,7 @@ test('חיבור ימים חוצה חודש, שנה ומעבר שעון קיץ',
   assert.equal(addDays('2026-08-30', 3), '2026-09-02');
   assert.equal(addDays('2026-12-31', 1), '2027-01-01');
   assert.equal(addDays('2026-03-01', -1), '2026-02-28');
-  // סוף מרץ הוא מעבר שעון הקיץ בישראל ובאירופה
+  // Late March is the daylight-saving switch in Israel and Europe
   assert.equal(addDays('2026-03-27', 1), '2026-03-28');
   assert.equal(addDays('2026-10-24', 1), '2026-10-25');
 });
@@ -99,19 +101,21 @@ test('השלמת טווח: קצה אחד משלים את השני לפי אור�
     startDate: '2026-08-12',
     endDate: '2026-08-16',
   });
-  // טווח הפוך - מתקנים את הסוף במקום לשמור מצב בלתי אפשרי
+  // A reversed range - fix the end rather than store an impossible state
   assert.deepEqual(completeRange(3, '2026-08-12', '2026-08-01'), {
     startDate: '2026-08-12',
     endDate: '2026-08-14',
   });
-  // טווח תקין שאינו תואם לאורך הטיול **נשמר כפי שהוא**: אי-ההתאמה
-  // מוצגת למשתמש והוא מחליט. השלמה שקטה כאן הייתה משנה לו את התוכנית.
+  // A valid range that does not match the trip length **is kept as is**:
+  // the mismatch is shown to the user and they decide. Silent completion
+  // here would change their plan for them.
   assert.deepEqual(completeRange(3, '2026-08-12', '2026-08-20'), {
     startDate: '2026-08-12',
     endDate: '2026-08-20',
   });
-  // בלי שום קצה - שני השדות חוזרים כ-undefined **מפורש**, כי הקורא
-  // עושה `{...trip, ...completeRange(...)}` וזו הצורה שמנקה תאריך קיים
-  // במקום להשאיר אותו תלוי באוויר.
+  // With no endpoint at all - both fields come back as **explicit**
+  // undefined, because the caller does `{...trip, ...completeRange(...)}`
+  // and this is the form that clears an existing date instead of leaving it
+  // hanging in the air.
   assert.deepEqual(completeRange(4), { startDate: undefined, endDate: undefined });
 });

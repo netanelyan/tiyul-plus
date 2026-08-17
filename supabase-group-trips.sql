@@ -1,15 +1,17 @@
 -- ============================================================
---  טיול+ · טיול משותף (פיצ׳ר פרימיום למארגן)
---  להריץ ב-Supabase → SQL Editor. בטוח להריץ פעמיים.
+--  tiyul+ · Shared trip (premium feature for the organizer)
+--  Run in Supabase → SQL Editor. Safe to run twice.
 -- ============================================================
 --
---  המארגן (פרימיום) יוצר קישור הזמנה; חברים מחוברים מצטרפים בחינם,
---  רואים את הטיול חי ומצביעים 👍/👎 על עצירות. המארגן רואה את
---  התוצאות במסך הטיול. הקוד הוא ההרשאה (capability) - מי שמחזיק
---  אותו ומחובר יכול להצטרף; פקיעה אחרי 30 יום מגבילה את חלון החשיפה.
+--  The organizer (premium) creates an invite link; signed-in friends join for
+--  free, see the trip live and vote 👍/👎 on stops. The organizer sees the
+--  results on the trip screen. The code IS the permission (capability) - whoever
+--  holds it and is signed in can join; expiry after 30 days limits the exposure
+--  window.
 --
---  כל הטבלאות service-role בלבד: RLS דלוק בלי policy, וכל אכיפה
---  (פרימיום, תוקף, חברות) בשרת - אותו מבנה כמו trip_stories.
+--  All tables are service-role only: RLS enabled with no policy, and all
+--  enforcement (premium, validity, membership) happens on the server - the same
+--  structure as trip_stories.
 
 create table if not exists public.trip_group_invites (
   code        text primary key,
@@ -17,7 +19,7 @@ create table if not exists public.trip_group_invites (
   trip_id     text not null,
   created_at  timestamptz not null default now(),
   expires_at  timestamptz not null,
-  unique (owner_id, trip_id)          -- קישור פעיל אחד לטיול; יצירה מחדש מחליפה
+  unique (owner_id, trip_id)          -- one active link per trip; re-creating replaces it
 );
 
 create table if not exists public.trip_group_members (

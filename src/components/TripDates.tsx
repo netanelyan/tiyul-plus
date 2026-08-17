@@ -6,29 +6,33 @@ import { completeRange, countdown, formatHebrewRange, rangeDays, todayISO } from
 import { OFFLINE_HINT } from '@/lib/offline/online';
 
 /**
- * תאריכי הטיול: מתי יוצאים ומתי חוזרים.
+ * Trip dates: when you leave and when you return.
  *
- * ## שלוש החלטות שמסבירות את הרכיב
+ * ## Three decisions that explain this component
  *
- * **1. אין פקד חדש במסך.** הגרסה הראשונה הוסיפה גלולה משלה ("הוספת
- * תאריכים") ובכך שורה שלמה מעל המפה - במסך שכבר סבל מ-29 פקדים מעל
- * הקיפול ו-48% מהגובה לפני שרואים משהו מהטיול. נתנאל צילם את זה ואמר
- * "מכוער, לא פשוט". עכשיו התאריכים יושבים **בתוך צ׳יפ הסיכום שכבר
- * קיים** ("8 ימים · 22 עצירות"), שממילא היה חסר-פעולה - אותו מקום,
- * אפס אובייקטים חדשים.
+ * **1. No new control on the screen.** The first version added its own pill
+ * ("add dates") and with it a whole row above the map - on a screen already
+ * suffering from 29 controls above the fold and 48% of the height gone before
+ * anything of the trip is visible. Netanel photographed that and said "ugly,
+ * not simple". Now the dates sit **inside the summary chip that already
+ * exists** (the "8 days · 22 stops" chip), which was inert anyway - same spot,
+ * zero new objects.
  *
- * **2. התאריך לא משנה את התוכנית.** נתנאל בחר טווח ולא תאריך יציאה
- * בודד, ולטווח יש מספר ימים משלו שיכול לא להסכים עם מה שכבר בנוי.
- * הפיתוי הוא לגזור את הימים מהטווח - וזו בדיוק הדרך שבה בחירת תאריך
- * מוחקת יום עם עצירות. הפער מוצג, ההוספה היא כפתור מפורש, ומחיקה
- * לעולם לא קורית מכאן.
+ * **2. The date does not change the plan.** Netanel chose a range rather than
+ * a single departure date, and a range has a day count of its own that can
+ * disagree with what is already built. The temptation is to derive the days
+ * from the range - and that is exactly how picking a date deletes a day full
+ * of stops. The gap is shown, adding is an explicit button, and deletion never
+ * happens from here.
  *
- * **3. קצה אחד מספיק.** מי שממלא רק "יוצאים" מקבל "חוזרים" לפי אורך
- * הטיול, ולהיפך - כך שהמצב הרגיל תמיד עקבי.
+ * **3. One end is enough.** Whoever fills only the departure date gets the
+ * return date from the trip's length, and vice versa - so the normal path is
+ * always consistent.
  *
- * הספירה לאחור מחושבת **אחרי ה-mount** בלבד: השרת והדפדפן יכולים להיות
- * בימים שונים, וטקסט שתלוי בשעון בזמן hydration הוא אי-התאמה מובטחת
- * (אותה מלכודת שכבר תועדה כאן ב-PromptChips וב-TripWorkspace).
+ * The countdown is computed **after mount** only: the server and the browser
+ * can be on different days, and clock-dependent text during hydration is a
+ * guaranteed mismatch (the same trap already documented here in PromptChips
+ * and TripWorkspace).
  */
 export default function TripDates({
   trip,
@@ -38,9 +42,9 @@ export default function TripDates({
   disabled = false,
 }: {
   trip: Trip;
-  /** ללא רשת: הצ׳יפ ממשיך להציג את התאריכים, אבל אי אפשר לערוך */
+  /** Offline: the chip keeps showing the dates, but editing is not possible */
   disabled?: boolean;
-  /** הטקסט שהיה בצ׳יפ הסיכום ממילא - "22 עצירות · 8 ימים" */
+  /** The text that was in the summary chip anyway - the "22 stops · 8 days" line */
   summary: string;
   onSet: (dates: { startDate?: string; endDate?: string }) => void;
   onAddDays: (n: number) => void;
@@ -50,15 +54,17 @@ export default function TripDates({
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   /**
-   * הזזה אופקית שמחזירה את הפאנל לתוך המסך.
+   * A horizontal shift that brings the panel back on screen.
    *
-   * **למה במדידה ולא ב-CSS.** הכפתור יושב באמצע שורת הכותרת, ולכן שום
-   * עיגון קבוע לא עובד: `end-0` הגליש 114px ימינה (זה הצילום השני של
-   * נתנאל - שדה "יוצאים" מחוץ למסך), ו-`start-0` הגליש 64px שמאלה.
-   * `position: fixed` לא בא בחשבון כאן כי לשורש המסך יש `.rise-in`,
-   * שמשאיר transform ולכן הופך ל-containing block - המלכודת שכבר
-   * מתועדת בקובץ הזה ובגוטצ׳ות. מדידה אחרי הפתיחה עובדת בכל רוחב,
-   * בשני כיווני הכתיבה, ובכל מקום שבו הכפתור יימצא בעתיד.
+   * **Why by measurement and not CSS.** The button sits in the middle of the
+   * header row, so no fixed anchor works: `end-0` overflowed 114px to the
+   * right (that is Netanel's second screenshot - the departure-date field off
+   * screen), and `start-0` overflowed 64px to the left. `position: fixed` is
+   * not an option here because the screen root carries `.rise-in`, which
+   * leaves a transform and therefore becomes a containing block - the trap
+   * already documented in this file and in the Gotchas. Measuring after
+   * opening works at every width, in both writing directions, and wherever
+   * the button ends up living in the future.
    */
   const [shift, setShift] = useState(0);
 
@@ -102,7 +108,7 @@ export default function TripDates({
 
   const set = (field: 'startDate' | 'endDate', value: string) => {
     const next = { startDate: trip.startDate, endDate: trip.endDate, [field]: value || undefined };
-    // קצה שנמחק לגמרי מנקה את שניהם - "טיול בלי תאריכים" הוא מצב תקין
+    // An end deleted entirely clears both - "a trip without dates" is a valid state
     if (!next.startDate && !next.endDate) return onSet({});
     onSet(completeRange(dayCount, next.startDate, next.endDate));
   };
@@ -128,11 +134,12 @@ export default function TripDates({
           <span className="text-night/40">· + תאריכים</span>
         )}
         {/*
-          הספירה לאחור **בתוך הצ׳יפ** ולא כשכבה מרחפת מתחתיו. הגרסה
-          הקודמת הייתה `absolute -bottom-4` וריחפה בין הצ׳יפ לשורת
-          הכפתורים, נקראת כשורה תלושה שנכנסת לשטח של פקד אחר (הצילום של
-          נתנאל). כגלולה מלאה בתוך הצ׳יפ היא צמודה למה שהיא מתארת, ואי
-          אפשר שתחפוף כלום.
+          The countdown lives **inside the chip**, not as a layer floating
+          under it. The previous version was `absolute -bottom-4` and floated
+          between the chip and the button row, reading as a stray line
+          intruding on another control's territory (Netanel's screenshot). As
+          a filled pill inside the chip it is attached to what it describes,
+          and cannot overlap anything.
         */}
         {cd && cd.kind !== 'past' && (
           <span className="rounded-full bg-sunset px-1.5 py-0.5 text-[11px] font-bold leading-none text-cream">
@@ -169,7 +176,7 @@ export default function TripDates({
             </p>
           )}
 
-          {/* אי-התאמה: אומרים אותה, ולא מתקנים אותה מאחורי הגב */}
+          {/* A mismatch: state it, don't fix it behind the user's back */}
           {mismatch > 0 && (
             <div className="mt-2.5 rounded-xl bg-sunset/10 p-2.5 ring-1 ring-sunset/25">
               <p className="text-xs font-semibold leading-relaxed text-night">
@@ -208,24 +215,29 @@ export default function TripDates({
 }
 
 /**
- * שדה תאריך שנראה כמו שדה גם כשהוא ריק.
+ * A date field that looks like a field even when empty.
  *
- * **הבאג שנתנאל צילם מהאייפון:** `<input type="date">` ריק ב-iOS Safari
- * מרונדר כקופסה חלקה לגמרי - בלי placeholder, בלי רמז, כלום. שני
- * מלבנים ריקים ומסתוריים בפאנל. כרום בדסקטופ דווקא מצייר שלד
- * "dd/mm/yyyy" משלו, אז אי אפשר סתם להניח טקסט מעל - הוא היה מתנגש.
+ * **The bug Netanel photographed from the iPhone:** an empty
+ * `<input type="date">` in iOS Safari renders as a completely featureless
+ * box - no placeholder, no hint, nothing. Two empty, mysterious rectangles
+ * in the panel. Desktop Chrome, on the other hand, draws its own
+ * "dd/mm/yyyy" skeleton, so we can't just lay text over it - it would
+ * collide.
  *
- * הפתרון: כשהשדה ריק, טקסט הערך של הקלט נצבע שקוף (מעלים גם את השלד
- * של כרום - אין בו מידע ממילא) ומעליו שכבת "בחירת תאריך" משלנו, זהה
- * בכל דפדפן. ברגע שיש ערך - הקלט חוזר לצבוע את עצמו. `appearance-none`
- * + `min-h` כי iOS נוטה לכווץ קלטי תאריך בלי תוכן, ו-`text-start` על
- * ה-pseudo של הערך כי iOS ממרכז אותו.
+ * The fix: when the field is empty, the input's value text is painted
+ * transparent (also hiding Chrome's skeleton - it carries no information
+ * anyway) and our own "pick a date" hint layer sits on top, identical in
+ * every browser. The moment there is a value - the input paints itself
+ * again. `appearance-none` + `min-h` because iOS tends to shrink date
+ * inputs with no content, and `text-start` on the value pseudo because iOS
+ * centers it.
  *
- * הצד השני של אותו תיקון, בדסקטופ: כרום מצייר אינדיקטור לוח-שנה משלו
- * שהתנגש עם שכבת הרמז (יש לנו אייקון משלנו), אז הוא מוסתר - ובתמורה
- * קליק פותח את הלוח דרך `showPicker()`. ובזמן פוקוס הקלט חוזר להיות
- * גלוי (`focus:text-night`) והרמז נעלם, אחרת הקלדה ידנית של תאריך
- * הייתה בלתי נראית - שקוף זה שקוף גם בשביל מי שמקליד.
+ * The other half of the same fix, on desktop: Chrome draws its own calendar
+ * indicator that collided with the hint layer (we have our own icon), so it
+ * is hidden - and in exchange a click opens the calendar via `showPicker()`.
+ * And while focused, the input becomes visible again (`focus:text-night`)
+ * and the hint disappears, otherwise manually typing a date would be
+ * invisible - transparent is transparent for the typist too.
  */
 function DateField({
   label,
@@ -250,11 +262,11 @@ function DateField({
           min={min}
           onChange={(e) => onChange(e.target.value)}
           onClick={(e) => {
-            // בדסקטופ, בלי אינדיקטור, קליק רק ממקד - נפתח את לוח השנה בעצמנו
+            // On desktop, with no indicator, a click only focuses - open the calendar ourselves
             try {
               e.currentTarget.showPicker?.();
             } catch {
-              /* דפדפן בלי showPicker - הקלדה עדיין עובדת */
+              /* browser without showPicker - typing still works */
             }
           }}
           aria-label={ariaLabel}

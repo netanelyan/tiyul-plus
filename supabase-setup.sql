@@ -1,45 +1,48 @@
--- טיול+ · הקמת אחסון קישורי שיתוף קצרים (Supabase)
--- להריץ פעם אחת ב-SQL Editor של פרויקט ה-Supabase, ואז להגדיר
+-- tiyul+ · Setup for short share-link storage (Supabase)
+-- Run once in the Supabase project's SQL Editor, then set
 -- SUPABASE_URL + SUPABASE_ANON_KEY + SUPABASE_SERVICE_ROLE_KEY
--- ב-.env.local / Vercel (ראו .env.example).
+-- in .env.local / Vercel (see .env.example).
 --
--- ## הערה שנכתבה אחרי באג אמיתי (2026-08-11)
+-- ## A note written after a real bug (2026-08-11)
 --
--- הגרסה הראשונה של הקובץ הזה נשאה שתי מדיניות ל-anon ללא תנאי, אחת
--- מהן בשם "anyone can read a share link by code" עם `using (true)` -
--- כלומר **כל** שורה, לא שורה לפי קוד. התוצאה: כל מי שמחזיק את מפתח
--- ה-anon, שנשלח בכל דף שאנחנו מגישים, יכול היה למשוך את כל קישורי
--- השיתוף באתר.
+-- The first version of this file carried two unconditional policies for anon,
+-- one of them named "anyone can read a share link by code" with `using (true)` -
+-- i.e. **every** row, not a row by code. The result: anyone holding the anon
+-- key, which is sent with every page we serve, could pull all the share links
+-- on the site.
 --
--- הלקח, והוא הסיבה שהקובץ הזה נראה עכשיו כך: **"צריך לדעת את הקוד"
--- אינו תנאי שאפשר לנסח ב-RLS.** מדיניות מקבלת שורה, לא שאילתה, ולכן
--- אין לה דרך לדרוש שהקורא ציין `code`. כל ניסוח שמתיר שורה אחת מתיר
--- את כולן. לכן הקריאה עוברת בפונקציה שמקבלת קוד, והכתיבה בשרת שלנו.
+-- The lesson, and the reason this file now looks the way it does: **"you must
+-- know the code" is not a condition RLS can express.** A policy receives a row,
+-- not a query, so it has no way to demand that the reader specified `code`.
+-- Any phrasing that permits one row permits them all. Therefore the read goes
+-- through a function that takes a code, and the write goes through our server.
 --
--- פרויקט קיים שכבר הריץ את הגרסה הישנה: להריץ `supabase-rls-fix.sql`.
--- אימות בשני המקרים: `scripts/rls-audit.sql` (לקריאה בלבד).
+-- An existing project that already ran the old version: run `supabase-rls-fix.sql`.
+-- Verification in both cases: `scripts/rls-audit.sql` (read-only).
 
 create table if not exists public.shared_trips (
   code text primary key,
-  payload text not null,           -- ה-payload המקודד של הקישור (v1 base64url)
+  payload text not null,           -- The link's encoded payload (v1 base64url)
   created_at timestamptz not null default now()
 );
 
--- RLS דלוקה **וללא אף מדיניות**. זה מצב "אף אחד", לא מצב "כולם":
--- service_role עוקף RLS בהגדרה, ולכן השרת שלנו עובד וכל השאר לא.
+-- RLS is on **with no policy at all**. That is a "nobody" state, not an
+-- "everybody" state: service_role bypasses RLS by definition, so our server
+-- works and everyone else does not.
 alter table public.shared_trips enable row level security;
 
 drop policy if exists "anyone can read a share link by code" on public.shared_trips;
 drop policy if exists "anyone can create share links" on public.shared_trips;
 
--- RLS מסננת שורות; GRANT מחליט אם בכלל מותר לגעת בטבלה. השלילה היא
--- השכבה שממשיכה להגן גם אם מישהו יוסיף מדיניות רחבה בעתיד.
+-- RLS filters rows; GRANT decides whether touching the table is allowed at all.
+-- The revoke is the layer that keeps protecting even if someone adds a broad
+-- policy in the future.
 revoke all on public.shared_trips from anon, authenticated;
 
--- ההרשאה של השרת נאמרת במפורש ולא נשענת על default privileges.
+-- The server's permission is stated explicitly and does not rely on default privileges.
 grant select, insert on public.shared_trips to service_role;
 
--- ---------- קריאה: לפי קוד, ורק לפי קוד ----------
+-- ---------- Reading: by code, and only by code ----------
 create or replace function public.get_shared_trip(p_code text)
 returns text
 language sql
@@ -54,15 +57,15 @@ as $$
   limit 1;
 $$;
 
--- ברירת המחדל של Postgres נותנת execute ל-public (כלומר לכל תפקיד,
--- כולל כאלה שייווצרו בעתיד), ולכן השלילה חייבת לקדום להענקה.
+-- Postgres's default gives execute to public (i.e. to every role, including
+-- ones created in the future), so the revoke must precede the grant.
 revoke all on function public.get_shared_trip(text) from public;
 grant execute on function public.get_shared_trip(text) to anon, authenticated, service_role;
 
--- ---------- כתיבה ----------
--- אין מדיניות insert, בכוונה. יצירת קישור עוברת ב-/api/share עם
--- ה-service role, כלומר תמיד מאחורי המכסות. anon insert ללא תנאי היה
--- מאפשר למלא את הטבלה מהדפדפן בלי שום שער.
+-- ---------- Writing ----------
+-- There is no insert policy, deliberately. Link creation goes through /api/share
+-- with the service role, i.e. always behind the quotas. An unconditional anon
+-- insert would allow filling the table from the browser with no gate at all.
 
--- בעתיד (חשבונות): alter table add column user_id uuid references auth.users,
--- ומדיניות שמותירה לבעלים לנהל את הקישורים שלו.
+-- In the future (accounts): alter table add column user_id uuid references auth.users,
+-- and a policy letting the owner manage their own links.

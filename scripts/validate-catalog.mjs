@@ -58,19 +58,22 @@ const PHOTO_HOSTS = [
 // The verification manifest, committed to the repo on purpose. The authoring
 // sandbox has no outbound network, so whoever adds a photo here CANNOT probe it;
 // the only thing standing between an unprobed URL and production is this file.
-// ---------- אוכל, שווקים וקניות ----------
-// קטגוריות שאוכלים בהן. חייבת להישאר תואמת ל-`isEating` ב-src/lib/categories.ts;
-// אם מוסיפים שם קטגוריה, להוסיף גם כאן, אחרת הבדיקה מפסיקה לכסות אותה בשקט.
+// ---------- Food, markets and shopping ----------
+// Categories you eat at. Must stay in sync with `isEating` in src/lib/categories.ts;
+// if a category is added there, add it here too, otherwise the check silently
+// stops covering it.
 const EATING = new Set(['cafe', 'food', 'kosher-food']);
 const KOSHER_STATUS = new Set(['kosher', 'not-kosher', 'unknown']);
-// הקטגוריות שנוספו בפיצ׳ר האוכל והקניות - עליהן הכללים החדשים נאכפים.
+// The categories added in the food-and-shopping feature - the new rules are
+// enforced on these.
 const SOURCED_CATEGORIES = new Set(['food', 'market']);
 const NO_HOURS_CATEGORIES = new Set(['food', 'market', 'cafe', 'shopping']);
 const LINK_BY_COORDS = new Set(['food', 'market']);
-// קטגוריות עירוניות: תמיד בתוך העיר או בפאתיה הקרובים.
+// Urban categories: always inside the city or its close outskirts.
 const URBAN_CATEGORIES = new Set(['food', 'market', 'cafe', 'shopping', 'kosher-food', 'kosher-market']);
-// שעון אמיתי, "שעות פתיחה", או "סגור ביום/בימי X". `1:25` של קנה מידה נופל
-// כאן בכוונה - עדיף אזהרת שווא אחת מאשר שעה שנשמרה בלי שאיש שם לב.
+// A real clock time, an "opening hours" phrase, or "closed on day(s) X". A scale
+// ratio like `1:25` trips this deliberately - one false warning beats a stored
+// hour that nobody noticed.
 const HOURS_RE =
   /(?:\d{1,2}:\d{2})|שעות\s*(?:ה)?פתיחה|סגור(?:ה|ים)?\s*(?:בימי|ביום|בשבת)|פתוח(?:ה|ים)?\s*(?:עד|24\/7)/;
 const PRICE_RE = /₪|\$\d|€\s?\d|\d+\s*(?:יורו|דולר|שקלים|שקל)|עלות\s*הכניסה\s*\d/;
@@ -185,8 +188,9 @@ for (const d of destinations) {
   checkPhoto(d.slug, 'photo', d.photo, true);
   checkPhoto(d.slug, 'iconicLandmark.photo', d.iconicLandmark?.photo, true);
 
-  // הפרישה הגאוגרפית הלגיטימית של היעד, נמדדת מהמקומות הלא-עירוניים
-  // בלבד (אתרים, טבע, מוזיאונים, תצפיות). משמשת כמסגרת ייחוס לבדיקה 3b.
+  // The destination's legitimate geographic spread, measured from the
+  // NON-urban places only (attractions, nature, museums, viewpoints). Used
+  // as the reference frame for check 3b.
   const spread = { lat: 0, lng: 0 };
   if (d.center)
     for (const p of d.places) {
@@ -235,25 +239,29 @@ for (const d of destinations) {
     if (p.rating !== undefined && !(p.rating >= 0 && p.rating <= 5))
       err(`${where}: rating ${p.rating} is outside 0-5`);
 
-    // ---------- אוכל, שווקים וקניות: מקור, כשרות, ובלי שעות ומחירים ----------
+    // ---------- Food, markets and shopping: source, kashrut, and no hours or prices ----------
 
-    // 1. סטטוס כשרות מפורש לכל מקום שאוכלים בו. **ריק אינו מצב חוקי.**
-    // ההשלכה אינה תיוג: `kosherStatusOf` מחזיר 'unknown' כשהשדה חסר,
-    // וההגנה על מטייל שומר כשרות חוסמת 'unknown' בדיוק כמו 'not-kosher' -
-    // כלומר שדה חסר משתיק מקום במקום להסביר אותו. עדיף לומר מה ידוע.
+    // 1. An explicit kashrut status for every place you eat at. **Empty is
+    // not a legal state.** The consequence is not labelling: `kosherStatusOf`
+    // returns 'unknown' when the field is missing, and the protection for a
+    // kosher-keeping traveller blocks 'unknown' exactly like 'not-kosher' -
+    // meaning a missing field silences a place instead of explaining it.
+    // Better to say what is known.
     if (EATING.has(p.category) && !p.category.startsWith('kosher')) {
       if (!p.kosherStatus)
         err(`${where}: category "${p.category}" is a place you eat at and has no kosherStatus - it must say kosher / not-kosher / unknown, never nothing`);
       else if (!KOSHER_STATUS.has(p.kosherStatus))
         err(`${where}: kosherStatus "${p.kosherStatus}" is not one of ${[...KOSHER_STATUS].join(' / ')}`);
     }
-    // רשומת kosher-* גוזרת את הסטטוס שלה מהקטגוריה. שדה מפורש שסותר את
-    // הקטגוריה הוא בדיוק סוג הסתירה שמגיע למטייל כטעות כשרות.
+    // A kosher-* entry derives its status from its category. An explicit
+    // field contradicting the category is exactly the kind of contradiction
+    // that reaches the traveller as a kashrut error.
     if (p.category.startsWith('kosher') && p.kosherStatus && p.kosherStatus !== 'kosher')
       err(`${where}: category "${p.category}" but kosherStatus "${p.kosherStatus}" - contradictory`);
 
-    // 2. מקור ותאריך. חובה על הקטגוריות שנוספו בפיצ׳ר הזה; הקטגוריות
-    // הישנות לא נדרשות רטרואקטיבית, אבל מקור שכן נכתב חייב להיות תקין.
+    // 2. Source and date. Required for the categories added in this feature;
+    // the older categories are not required retroactively, but a source that
+    // WAS written must be well formed.
     if (p.source) {
       if (!/^https:\/\/\S+$/.test(p.source.url || ''))
         err(`${where}: source.url is not an https URL -> ${p.source.url}`);
@@ -264,9 +272,10 @@ for (const d of destinations) {
       err(`${where}: category "${p.category}" requires a source { url, title, checked }`);
     }
 
-    // 3. בלי שעות פתיחה ובלי מחירים - הם מתיישנים בשקט, והמטייל מגלה
-    // את זה מול דלת סגורה. נאכף על הקטגוריות של הפיצ׳ר; לשאר מודפסת
-    // אזהרה בלבד, כי זה תוכן קיים ולא הגיוני לשכתב אותו כאן.
+    // 3. No opening hours and no prices - they go stale silently, and the
+    // traveller finds out at a closed door. Enforced on this feature's
+    // categories; for the rest only a warning is printed, because that is
+    // existing content and rewriting it here makes no sense.
     const hoursHit = HOURS_RE.exec(p.description);
     const priceHit = PRICE_RE.exec(p.description);
     if (hoursHit || priceHit) {
@@ -276,30 +285,36 @@ for (const d of destinations) {
       else warn(`${where}: description states ${what} (legacy entry, outside the food/shopping rule)`);
     }
 
-    // 3b. מקום עירוני רחוק מדי ממרכז היעד. שוק או מסעדה נמצאים כמעט תמיד
-    // בעיר עצמה, ולכן סטייה של מעלה שלמה היא כמעט תמיד שגיאת הקלדה - וזו
-    // בדיוק הטעות שנעשתה כאן (37.38 שנכתב 38.38, מרחק של ~111 ק"מ).
-    // בדיקת ה-externalUrl הקיימת אינה יכולה לתפוס את זה, כי הקישור נגזר
-    // מאותו ערך שגוי. סף האזהרה הכללי (3 מעלות) רחב מדי לקטגוריות האלה.
-    // הסף אינו קבוע: הוא נגזר מהפרישה של היעד עצמו. יעד בקנה מידה של
-    // מדינה שלמה (גרנד קניון, ניו אינגלנד, אנדלוסיה) מחזיק ממילא אתרים
-    // במרחק מעלות מהמרכז, ושם מסעדה בעיר השער היא נתון לגיטימי ולא טעות.
-    // מסגרת הייחוס היא דווקא המקומות הלא-עירוניים - הם אלה שנפרשים
-    // בלגיטימיות, והם אינם מחלקת הבאגים שהבדיקה הזאת שומרת עליה.
+    // 3b. An urban place too far from the destination centre. A market or a
+    // restaurant is almost always in the city itself, so a whole-degree
+    // deviation is almost always a typo - and that is exactly the mistake
+    // made here (37.38 written as 38.38, a distance of ~111 km).
+    // The existing externalUrl check cannot catch this, because the link is
+    // derived from the same wrong value. The general warning threshold
+    // (3 degrees) is too wide for these categories.
+    // The threshold is not fixed: it is derived from the destination's own
+    // spread. A country-scale destination (Grand Canyon, New England,
+    // Andalusia) legitimately holds sites degrees away from the centre, and
+    // there a restaurant in the gateway city is legitimate data, not an
+    // error. The reference frame is specifically the non-urban places - they
+    // are the ones that spread out legitimately, and they are not the bug
+    // class this check guards against.
     if (URBAN_CATEGORIES.has(p.category) && d.center) {
       const dLat = Math.abs(p.lat - d.center.lat);
       const dLng = Math.abs(p.lng - d.center.lng);
-      // 10% מעל הפרישה, לא הפרישה בדיוק: מסעדה באושוואיה נפלה מתחת לסף
-      // ב-0.002 מעלות רק מפני שהעיר עצמה הייתה המקום הרחוק ביותר שהגדיר
-      // אותו. הסף נועד לתפוס טעות של מעלה שלמה, לא של שני אלפיות.
+      // 10% above the spread, not the spread exactly: a restaurant in
+      // Ushuaia failed the threshold by 0.002 degrees only because the city
+      // itself was the farthest place defining it. The threshold is meant to
+      // catch a whole-degree mistake, not a two-thousandths one.
       const tolLat = Math.max(1, spread.lat * 1.1);
       const tolLng = Math.max(1, spread.lng * 1.1);
       if (dLat > tolLat || dLng > tolLng)
         err(`${where}: ${p.category} sits ${dLat.toFixed(2)}/${dLng.toFixed(2)} degrees from the destination centre, past this destination's own spread of ${tolLat.toFixed(2)}/${tolLng.toFixed(2)} - an urban amenity that far out is almost always a typo`);
     }
 
-    // 4. קישור לפי קואורדינטות ולא לפי שם. שם מתחלף ופותר לעיר אחרת -
-    // הקטלוג כבר נשרף על "Cartagena" שפתר לספרד ועל "Deira" לאנגליה.
+    // 4. Link by coordinates, not by name. A name shifts and resolves to a
+    // different city - the catalog has already been burned by "Cartagena"
+    // resolving to Spain and by "Deira" to England.
     if (LINK_BY_COORDS.has(p.category) && p.externalUrl && !/[?&]query=-?\d|[?&]q=-?\d/.test(p.externalUrl))
       err(`${where}: externalUrl links by NAME, not coordinates -> ${p.externalUrl}`);
   }

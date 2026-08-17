@@ -1,8 +1,10 @@
 /**
- * הטסט הזה קיים בגלל ערך (k) ביומן: פעם אחת הוחלף `/500px-` ב-`/960px-`
- * על 170 כתובות בבת אחת, כל אחת מהן מתה בשקט (הדפדפן נופל לגרדיאנט,
- * ולכן 404 ותמונה תקינה נראים אותו דבר בקוד), ולקח שני סשנים לאבחן.
- * הכלל "רק להקטין" הוא היחיד שמונע את זה, ולכן הוא נבדק ולא רק נכתב.
+ * This test exists because of entry (k) in the session log: once, `/500px-`
+ * was swapped for `/960px-` on 170 URLs in one go, every one of them died
+ * silently (the browser falls back to the gradient, so a 404 and a working
+ * image look identical in code), and it took two sessions to diagnose.
+ * The "only shrink, never enlarge" rule is the only thing preventing that,
+ * which is why it is tested rather than merely written down.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -38,7 +40,7 @@ test('srcSet מכיל רק רוחבים קטנים מהמקור, ותמיד את
   assert.ok(s.includes('330px-Wien.jpg 330w'));
   assert.ok(s.includes(`${URL500} 500w`));
   assert.ok(!s.includes('960'));
-  // מקור צר ממש - אין מה להקטין, ולכן אין srcSet בכלל
+  // A really narrow source - nothing to shrink to, so no srcSet at all
   assert.equal(thumbSrcSet(URL250, [250, 330, 500]), undefined);
 });
 
@@ -49,7 +51,7 @@ test('כל כתובת בקטלוג ניתנת לפירוק - כלומר הכלל
   assert.ok(urls.length > 1000, `expected the catalog to carry photos, got ${urls.length}`);
   const unparsed = urls.filter((u) => thumbWidth(u) === null);
   assert.deepEqual(unparsed, [], 'these URLs do not match the thumb pattern');
-  // וההקטנה שומרת על שם הקובץ - רק מקטע הרוחב משתנה
+  // And shrinking preserves the filename - only the width segment changes
   for (const u of urls.slice(0, 50)) {
     const small = thumb(u, 250);
     assert.equal(small.split('/').pop()!.replace(/^\d+px-/, ''), u.split('/').pop()!.replace(/^\d+px-/, ''));

@@ -1,36 +1,41 @@
 /**
- * ---------- מה קורה בתאריכים של המטייל ----------
+ * ---------- What happens on the traveler's dates ----------
  *
- * הדאטה היא `src/data/calendar.ts` (`CalendarEntry`) - לוח האירועים
- * והסגירות של האתר. הקובץ הזה הוא **רק ההתאמה והתצוגה**: מה מהלוח נוגע
- * לטיול הזה, ואיך אומרים את זה בלי להפוך חלון משוער לתאריך.
+ * The data is `src/data/calendar.ts` (`CalendarEntry`) - the site's calendar
+ * of events and closures. This file is **only the matching and the display**:
+ * what from the calendar concerns this trip, and how to say it without
+ * turning an approximate window into a date.
  *
- * ## ההחלטה המרכזית: חפיפה נמדדת מול **הימים בעיר**, לא מול הטיול
+ * ## The central decision: overlap is measured against **the days in the city**, not against the trip
  *
- * טיול של עשרה ימים ברומא ובמינכן שמתחיל ב-15 בספטמבר "חופף" לאוקטוברפסט
- * אם בודקים טווח מול טווח. אבל אם המטייל נמצא במינכן רק ביומיים הראשונים
- * הוא לא יהיה שם כשהפסטיבל נפתח, והכרטיס היה מטעה אותו. לכן הבדיקה היא
- * **יום-יום**: לכל יום יש עיר ותאריך שנגזר מ-`startDate`, ורשומה נחשבת
- * רלוונטית רק אם יש יום אחד לפחות שבו המטייל נמצא בתחום שלה ובתוך החלון.
+ * A ten-day trip to Rome and Munich starting on September 15 "overlaps"
+ * Oktoberfest if you check range against range. But if the traveler is in
+ * Munich only on the first two days they will not be there when the festival
+ * opens, and the card would have misled them. So the check is **day by day**:
+ * every day has a city and a date derived from `startDate`, and an entry is
+ * considered relevant only if there is at least one day on which the traveler
+ * is within its scope and inside the window.
  *
- * רשומה חלה על יום אם היא מכוונת ל**יעד** של אותו יום, או שהיא ברמת
- * **מדינה** (`destinationSlugs` ריק) ומדינת היעד תואמת.
+ * An entry applies to a day if it targets that day's **destination**, or if
+ * it is at the **country** level (`destinationSlugs` empty) and the
+ * destination's country matches.
  *
- * ## שתי רשימות, כי יש שתי דרגות ודאות - ואסור לערבב
+ * ## Two lists, because there are two degrees of certainty - and mixing them is forbidden
  *
- * - `dated`   - `datesConfirmed: true`. יש טווחי תאריכים אמיתיים, והחפיפה
- *               מחושבת עליהם. מוצג כתאריך.
- * - `windows` - `datesConfirmed: false`. **אין תאריכים בכלל בדאטה**, רק
- *               תיאור מילולי. אי אפשר לחשב חפיפה, ולכן הן לא מוצגות
- *               כ"חופף לימים 3-5" אלא כ"החלון האופייני, התאריכים לשנה
- *               הזו לא פורסמו" - וזה בדיוק מה שהן.
+ * - `dated`   - `datesConfirmed: true`. There are real date ranges, and the
+ *               overlap is computed on them. Displayed as a date.
+ * - `windows` - `datesConfirmed: false`. **There are no dates in the data at
+ *               all**, only a verbal description. Overlap cannot be computed,
+ *               so they are not displayed as "overlaps days 3-5" but as "the
+ *               typical window, this year's dates not yet published" - which
+ *               is exactly what they are.
  */
 
 import type { CalendarEntry } from '@/lib/types';
 import type { Trip } from './types';
 import { dayDate, formatHebrewRange } from './dates';
 
-/** מיפוי מינימלי של עיר → מדינה. מגיע מהערים של הטיול, לא מהקטלוג. */
+/** A minimal city → country mapping. Comes from the trip's cities, not from the catalog. */
 export interface CityCountry {
   slug: string;
   countrySlug: string;
@@ -38,15 +43,15 @@ export interface CityCountry {
 
 export interface DatedMatch {
   entry: CalendarEntry;
-  /** מספרי הימים בטיול (1-based) שנופלים בתוך אחד מטווחי הרשומה */
+  /** The day numbers in the trip (1-based) that fall inside one of the entry's ranges */
   dayNumbers: number[];
-  /** הטווח שנפגש בפועל, לתצוגה */
+  /** The range actually met, for display */
   range: { start: string; end: string };
 }
 
 export interface WindowMatch {
   entry: CalendarEntry;
-  /** באיזו עיר בטיול הרשומה נוגעת (לתצוגה) */
+  /** Which city in the trip the entry concerns (for display) */
   cityLabel?: string;
 }
 
@@ -55,7 +60,7 @@ export interface TripCalendar {
   windows: WindowMatch[];
 }
 
-/* ---------- התאמת תחום ---------- */
+/* ---------- Scope matching ---------- */
 
 function appliesTo(entry: CalendarEntry, citySlug: string, countrySlug: string): boolean {
   const scoped = entry.destinationSlugs ?? [];
@@ -63,7 +68,7 @@ function appliesTo(entry: CalendarEntry, citySlug: string, countrySlug: string):
   return entry.countrySlug === countrySlug;
 }
 
-/* ---------- חודשים מתוך תיאור מילולי ---------- */
+/* ---------- Months out of a verbal description ---------- */
 
 const MONTH_WORDS = [
   'ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני',
@@ -71,15 +76,19 @@ const MONTH_WORDS = [
 ];
 
 /**
- * אילו חודשים מוזכרים בתיאור המילולי של חלון לא-מאושר.
+ * Which months are mentioned in the verbal description of an unconfirmed
+ * window.
  *
- * **זו הערכה, והיא משמשת אך ורק כדי להחליט אם להציג את הרשומה** - אף
- * פעם לא כדי להציג תאריך. הטקסט עצמו מוצג מילה במילה כפי שנכתב.
+ * **This is an estimate, and it is used solely to decide whether to show the
+ * entry** - never to display a date. The text itself is displayed word for
+ * word as written.
  *
- * "ינואר עד מרץ" נפרש כשלושה חודשים ולא כשניים: המילה "עד" (או מקף)
- * בין שני חודשים היא טווח, ובלי המילוי הזה פברואר היה נופל בין הכיסאות.
- * כשאי אפשר לזהות שום חודש - הרשומה **לא** מוצגת. עדיף להחמיץ חלון
- * משוער מאשר להראות לכל טיול את כל מה ששמור על המדינה.
+ * "January until March" is interpreted as three months and not two: the
+ * Hebrew word for "until" (or a dash) between two months is a range, and
+ * without this fill February would fall between the cracks. When no month
+ * can be identified - the entry is **not** shown. Better to miss an
+ * approximate window than to show every trip everything stored for the
+ * country.
  */
 export function monthsInWindow(text: string): number[] {
   const found: { month: number; at: number; range: boolean }[] = [];
@@ -100,7 +109,8 @@ export function monthsInWindow(text: string): number[] {
   found.forEach((f, idx) => {
     months.add(f.month);
     if (f.range && idx > 0) {
-      // ממלאים מהחודש הקודם עד זה, כולל מעבר שנה (נובמבר עד ינואר)
+      // Fill from the previous month up to this one, including a year
+      // wrap-around (November until January)
       let m = found[idx - 1].month;
       for (let guard = 0; guard < 12 && m !== f.month; guard++) {
         m = (m % 12) + 1;
@@ -111,7 +121,7 @@ export function monthsInWindow(text: string): number[] {
   return [...months].sort((a, b) => a - b);
 }
 
-/* ---------- ההתאמה ---------- */
+/* ---------- The matching ---------- */
 
 export function matchTripCalendar(
   trip: Trip | null,
@@ -122,7 +132,7 @@ export function matchTripCalendar(
 
   const countryOf = new Map(cities.map((c) => [c.slug, c.countrySlug]));
   const dated = new Map<string, DatedMatch>();
-  /** חודש -> הערים שהמטייל נמצא בהן באותו חודש */
+  /** month -> the cities the traveler is in during that month */
   const monthCities = new Map<number, Set<string>>();
 
   trip.days.forEach((day, index) => {
@@ -145,7 +155,7 @@ export function matchTripCalendar(
     }
   });
 
-  // חלונות לא-מאושרים: אין להם תאריכים, ולכן ההתאמה היא ברמת חודש+עיר
+  // Unconfirmed windows: they have no dates, so the match is at month+city level
   const windows: WindowMatch[] = [];
   const seen = new Set<string>();
   for (const entry of entries) {
@@ -167,20 +177,20 @@ export function matchTripCalendar(
   };
 }
 
-/* ---------- תצוגה ---------- */
+/* ---------- Display ---------- */
 
 /**
- * הנוסח לחלון שהתאריכים שלו לא פורסמו.
+ * The wording for a window whose dates have not been published.
  *
- * **המשפט הכי חשוב בפיצ׳ר הזה.** הוא מופיע במקום שבו אחרת היה תאריך,
- * ולכן הוא לא הערת שוליים ולא כתב קטן.
+ * **The most important sentence in this feature.** It appears where a date
+ * would otherwise be, so it is not a footnote and not small print.
  */
 export const NOT_PUBLISHED = 'התאריכים לשנה הזו עדיין לא פורסמו';
 
-/** התאריכים של רשומה מאושרת, כטווח קריא */
+/** A confirmed entry's dates, as a readable range */
 export const datedLabel = (m: DatedMatch) => formatHebrewRange(m.range.start, m.range.end);
 
-/** "מקור: X · נבדק ב-30 ביולי" */
+/** Hebrew "Source: X · checked on July 30" line */
 export const sourceLabel = (entry: CalendarEntry) =>
   `מקור: ${entry.source.title} · נבדק ב-${hebrewShort(entry.source.checked)}`;
 
@@ -197,10 +207,11 @@ export const impactLabel = (entry: CalendarEntry): string =>
       : 'אירוע';
 
 /**
- * טווח הימים בטיול כטקסט קצר: "יום 5" או "ימים 5-7".
+ * The day range in the trip as short text: Hebrew for "day 5" or "days 5-7".
  *
- * הימים נבדקים על רציפות ולא רק על קצוות: טיול שחוזר לאותה עיר בסוף
- * ייתן [2, 9], ו-"ימים 2-9" היה אומר שמונה ימים שלא היו.
+ * The days are checked for contiguity and not only for endpoints: a trip that
+ * returns to the same city at the end would give [2, 9], and "days 2-9" would
+ * claim eight days that were not there.
  */
 export function dayRangeLabel(days: number[]): string {
   if (days.length === 0) return '';

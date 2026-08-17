@@ -12,20 +12,24 @@ import type { BookingSearchCard } from '@/lib/bookingSearch';
 import { HttpError, failureMessage, type TripChat } from './useTripChat';
 
 /**
- * שיחה חופשית - `/ask`, בלי טיול. אותו סוכן, אותם כללי כנות, אותן
- * מכסות (זהות ל-`/api/chat` בכל הפרמטרים - ראו route.ts, אין שם שום
- * ענף שתלוי בקיום טיול), רק שהיא **לעולם לא שולחת טיול קיים לשרת**:
- * `trip: null` בכל בקשה, לאורך כל השיחה. הסוכן עונה, ממליץ, חוקר -
- * ולא יוצר כלום, עד שהמשתמש מבקש טיול בפירוש או מקבל את ההצעה שלו
- * (ראו SYSTEM_PROMPT, "CREATING THE FIRST TRIP NEEDS A CLEAR YES").
+ * Free conversation - `/ask`, with no trip. The same agent, the same honesty
+ * rules, the same quotas (identical to `/api/chat` in every parameter - see
+ * route.ts, there is no branch there that depends on a trip existing), except
+ * that it **never sends an existing trip to the server**: `trip: null` on
+ * every request, for the whole conversation. The agent answers, recommends,
+ * explores - and creates nothing, until the user asks for a trip explicitly
+ * or accepts its offer (see SYSTEM_PROMPT, "CREATING THE FIRST TRIP NEEDS A
+ * CLEAR YES").
  *
- * **מה קורה כשבכל זאת נוצר טיול, ברגע שהמשתמש מבקש או מאשר.** ה-`trip`
- * event מהשרת נתפס, השיחה השלמה עד כה (כולל התור הזה) נשמרת תחת מזהה
- * הטיול החדש (`chatStorage`, אותו מפתח בדיוק ש-`useTripChat` קורא ממנו
- * ב-/chat) - כך שהשיחה **ממשיכה** ולא מתחילה מאפס - והטיול נכנס ל-
- * `TripContext`. הניווט בפועל ל-`/chat?trip=<id>` הוא לא כאן: `builtTripId`
- * נחשף כ-state, והרכיב שמחזיק את הדף הוא זה שמנווט (הפרדת אחריות בין
- * state לניתוב, כמו בכל שאר האתר).
+ * **What happens when a trip IS created, the moment the user asks or
+ * approves.** The `trip` event from the server is caught, the whole
+ * conversation so far (including this turn) is saved under the new trip's id
+ * (`chatStorage`, the exact same key `useTripChat` reads from on /chat) - so
+ * the conversation **continues** rather than starting from scratch - and the
+ * trip enters `TripContext`. The actual navigation to `/chat?trip=<id>` is
+ * not here: `builtTripId` is exposed as state, and the component holding the
+ * page is the one that navigates (separation of responsibility between state
+ * and routing, like everywhere else on the site).
  */
 
 const ASK_CHAT_ID = 'ask';
@@ -33,7 +37,7 @@ const ASK_CHAT_ID = 'ask';
 export type ChatMessage = StoredChatMessage;
 
 export interface FreeChat extends TripChat {
-  /** id של טיול שנבנה מתוך השיחה הזו - null כל עוד לא נבנה כלום */
+  /** id of a trip built from this conversation - null as long as nothing was built */
   builtTripId: string | null;
 }
 
@@ -48,8 +52,9 @@ export function useFreeChat(): FreeChat {
   const [explored, setExplored] = useState<Destination[]>([]);
   const [builtTripId, setBuiltTripId] = useState<string | null>(null);
 
-  // טעינה ראשונית אחרי mount בלבד (אחסון לא קיים ב-SSR) - שיחה קודמת
-  // שלא הפכה לטיול (למשל אחרי רענון) ממשיכה מאיפה שהיא נעצרה.
+  // Initial load only after mount (storage does not exist in SSR) - a
+  // previous conversation that never became a trip (e.g. after a refresh)
+  // continues from where it stopped.
   const loadedRef = useRef(false);
   useEffect(() => {
     setExplored(loadExplored());
@@ -75,9 +80,10 @@ export function useFreeChat(): FreeChat {
     setLoading(true);
     setStatus(null);
     let appended = false;
-    // נבנה גם כאן, לצד ה-state: הרגע היחיד שצריך את ההודעה הסופית
-    // כאובייקט (לשמירה תחת מזהה הטיול, לא רק לרינדור) הוא אחרי שהזרם
-    // נגמר, ואי אפשר לסמוך על state אסינכרוני לזה.
+    // Built here too, alongside the state: the one moment the final message
+    // is needed as an object (for saving under the trip id, not just for
+    // rendering) is after the stream ends, and async state cannot be relied
+    // on for that.
     let builtMsg: ChatMessage = { role: 'assistant', content: '' };
     const patchLast = (next: ChatMessage) => setMessages((m) => [...m.slice(0, -1), next]);
     let createdTrip: Trip | null = null;
@@ -96,8 +102,9 @@ export function useFreeChat(): FreeChat {
             content,
             ...(image && i >= next.length - 2 ? { image } : {}),
           })),
-          // דף שיחה חופשי: אין ואף פעם לא יהיה טיול קיים בבקשה הזו -
-          // זה מה שמבטיח שהסוכן לא "עורך" משהו שלא ראינו אותו יוצר.
+          // Free conversation page: there is not, and never will be, an
+          // existing trip in this request - that is what guarantees the agent
+          // is not "editing" something we never saw it create.
           trip: null,
           explored: exploredRef.current.length > 0 ? exploredRef.current : undefined,
         }),
@@ -149,8 +156,8 @@ export function useFreeChat(): FreeChat {
             builtMsg = { ...builtMsg, destinationSlug: event.destinationSlug, placeIds: event.placeIds };
             patchLast(builtMsg);
           } else if (event.type === 'trip' && event.trip) {
-            // נשמר לרגע שאחרי סוף הזרם - ראו ההערה למעלה. לא נוגעים
-            // ב-TripContext תוך כדי סטרימינג.
+            // Kept for the moment after the stream ends - see the note above.
+            // TripContext is never touched mid-stream.
             createdTrip = event.trip;
             if (appended && event.actions && event.actions.length > 0) {
               builtMsg = { ...builtMsg, actions: event.actions };
@@ -178,11 +185,14 @@ export function useFreeChat(): FreeChat {
       if (!appended) throw new Error('empty stream');
 
       /*
-        השיחה הזאת הפכה לטיול אמיתי. שלושה דברים, בסדר הזה:
-        1. השיחה השלמה (כולל התור הנוכחי) נשמרת תחת מזהה הטיול, כך
-           שהתצוגה המאוחדת (/chat?trip=<id>) ממשיכה מדויק מכאן.
-        2. הגרסה הזמנית תחת מפתח ה-'ask' מתנקה - היא כבר "עברה דירה".
-        3. upsertTrip קובע גם currentId; הניווט עצמו קורה ברכיב הדף.
+        This conversation became a real trip. Three things, in this order:
+        1. The full conversation (including the current turn) is saved under
+           the trip id, so the unified view (/chat?trip=<id>) continues
+           precisely from here.
+        2. The temporary copy under the 'ask' key is cleaned up - it has
+           already "moved house".
+        3. upsertTrip also sets currentId; the navigation itself happens in
+           the page component.
       */
       if (createdTrip) {
         saveChat(createdTrip.id, [...next, builtMsg]);
@@ -203,8 +213,9 @@ export function useFreeChat(): FreeChat {
     }
   }, [loading, trip]);
 
-  // שמירת השיחה תחת מפתח ה-'ask' - כל עוד לא נבנה ממנה טיול (ואז היא
-  // כבר נשמרה תחת מזהה הטיול עצמו ב-send(), ואין מה להוסיף כאן).
+  // Saving the conversation under the 'ask' key - as long as no trip was
+  // built from it (once one was, it was already saved under the trip's own
+  // id in send(), and there is nothing to add here).
   useEffect(() => {
     if (!loadedRef.current || builtTripId) return;
     saveChat(ASK_CHAT_ID, messages);

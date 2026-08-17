@@ -11,16 +11,18 @@ import BookingSearchCardView from '@/components/BookingSearchCard';
 import { OFFLINE_HINT, useOnline } from '@/lib/offline/online';
 
 /**
- * פאנל השיחה עם הסוכן - תצוגה בלבד. ה-state יושב ב-useTripChat אצל
- * TripWorkspace, כך שאותה שיחה בדיוק מוצגת גם בעמודת הדסקטופ וגם במגירת
- * המובייל: הודעה שנשלחת מכאן מעדכנת את אותו Trip שמצויר במפה ובמסלול.
+ * The agent conversation panel - presentational only. The state lives in
+ * useTripChat inside TripWorkspace, so exactly the same conversation is
+ * rendered both in the desktop column and in the mobile drawer: a message
+ * sent from here updates the same Trip drawn on the map and the itinerary.
  */
 
 /**
- * המפה הקטנה שמתחת להודעה מציירת עיר שהסוכן הזכיר, ולכן היא צריכה את
- * דאטת אותה עיר - אבל **בלי לייבא את הקטלוג**, שזו בדיוק הסיבה
- * ש-`/chat` הוריד 492kB דחוסים. היא לוקחת מהמטמון של `cityData`
- * (הערים של הטיול כבר שם), ואם העיר עוד לא נטענה - היא נטענת לבד.
+ * The small map under a message draws a city the agent mentioned, so it
+ * needs that city's data - but **without importing the catalog**, which is
+ * exactly why `/chat` dropped 492kB compressed. It takes from the
+ * `cityData` cache (the trip's cities are already there), and if the city
+ * has not been loaded yet - it loads itself.
  */
 function useCity(slug: string): Destination | undefined {
   const [, bump] = useState(0);
@@ -36,7 +38,7 @@ function useCity(slug: string): Destination | undefined {
   return cached;
 }
 
-/** מרנדר **מודגש** בסיסי בלי ספריות */
+/** Renders basic **bold** without libraries */
 function renderText(text: string) {
   return text.split('\n').map((line, i) => (
     <p key={i} className="min-h-[0.5em]">
@@ -65,7 +67,7 @@ function MessageMap({ slug, placeIds }: { slug: string; placeIds: string[] }) {
   );
 }
 
-// הצעות פתיחה לשיחה על טיול קיים - כולן פעולות עריכה על התוכנית שמוצגת
+// Conversation starters for an existing trip - all are edit actions on the displayed plan
 const STARTERS = ['תוסיף לי יום', 'תחליף מקום ביום הזה', 'מה כשר באזור?', 'תעשה לי יום רגוע יותר'];
 const DEFAULT_EMPTY_HINT = 'אפשר לערוך את הטיול בשיחה - בלי לעבור מסך.';
 const DEFAULT_CLEAR_CONFIRM = 'לנקות את השיחה? הטיול עצמו יישאר בדיוק כמו שהוא.';
@@ -89,16 +91,17 @@ export default function ChatPanel({
   autoFocus?: boolean;
   onClose?: () => void;
   /**
-   * רמז חד-פעמי מעל שורת הכתיבה. ה-state יושב ב-TripWorkspace ולא כאן,
-   * כי הרכיב הזה מרונדר פעמיים (עמודה בדסקטופ + מגירה במובייל) - מקור
-   * אמת אחד מבטיח שסגירה בצד אחד סוגרת גם בשני.
+   * A one-time hint above the composer. The state lives in TripWorkspace
+   * and not here, because this component renders twice (desktop column +
+   * mobile drawer) - a single source of truth guarantees that dismissing on
+   * one side dismisses on the other too.
    */
   coach?: boolean;
   onDismissCoach?: () => void;
   /**
-   * חמישה טקסטים ניתנים להחלפה - כדי שאותו רכיב ישרת גם את דף השיחה
-   * החופשית (`/ask`, בלי טיול) בלי להעתיק אותו. הכל אופציונלי; ברירת
-   * המחדל היא בדיוק הנוסח הקיים בשיחת הטיול.
+   * Five replaceable texts - so the same component also serves the free
+   * conversation page (`/ask`, no trip) without copying it. All optional;
+   * the default is exactly the existing wording of the trip conversation.
    */
   starters?: string[];
   emptyHint?: string;
@@ -110,7 +113,7 @@ export default function ChatPanel({
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const { messages, loading, streaming, status, input, setInput, send, clearConversation } = chat;
-  // תמונה שמחכה לשליחה (data URL מוקטן) + שגיאת בחירה קצרה
+  // An image waiting to be sent (a downscaled data URL) + a short pick error
   const [pending, setPending] = useState<string | null>(null);
   const [imgError, setImgError] = useState<string | null>(null);
   const [reading, setReading] = useState(false);
@@ -129,9 +132,10 @@ export default function ChatPanel({
   };
 
   /**
-   * הסוכן הוא הדבר היחיד באתר שאי אפשר להגיש מהמטמון: תשובה של מודל
-   * נוצרת בשרת בכל פעם מחדש. אין תור, אין ספינר ואין שגיאה גולמית -
-   * שורת הכתיבה נראית מושבתת ואומרת בעברית שצריך חיבור.
+   * The agent is the only thing on the site that cannot be served from the
+   * cache: a model reply is created on the server fresh every time. No
+   * queue, no spinner and no raw error - the composer looks disabled and
+   * says in Hebrew that a connection is needed.
    */
   const online = useOnline();
   const offline = !online;
@@ -149,14 +153,15 @@ export default function ChatPanel({
   }, [messages, loading]);
 
   return (
-    // מחלקת ה-display מגיעה מהקורא (hidden lg:flex בעמודה, flex במגירה)
+    // The display class comes from the caller (hidden lg:flex in the column, flex in the drawer)
     <section
       className={`min-h-0 flex-col overflow-hidden rounded-2xl bg-shell ring-1 ring-night/10 ${className}`}
       aria-label="שיחה עם הסוכן"
     >
       {/*
-        הכותרת הייתה 12px אפור ליד "הסוכן" - הרכיב שעושה את כל העבודה
-        במוצר היה גם הצר וגם השקט מכל השלושה. עכשיו כותרת אמיתית.
+        The header used to be 12px gray next to the agent label - the
+        component that does all the work in the product was both the
+        narrowest and the quietest of the three. Now a real heading.
       */}
       <header className="flex shrink-0 items-center gap-2 border-b border-night/10 px-4 py-3">
         <span className="badge text-base font-bold text-night">
@@ -165,11 +170,13 @@ export default function ChatPanel({
         <span className="truncate text-xs font-medium text-night/45">{headerHint}</span>
         <div className="ms-auto flex shrink-0 items-center gap-1">
         {/*
-          ניקוי השיחה, בלי לגעת בטיול. נוסף אחרי שמטייל קיבל את ההודעה
-          "השיחה ארוכה מדי" עם עצה לרענן את הדף - ורענון לא ניקה כלום, כי
-          ההיסטוריה נטענת מ-localStorage בכל טעינה. עד כאן לא היה שום
-          כפתור שמנקה שיחה: "טיול חדש" פותח טיול אחר ומאבד את התוכנית,
-          וזה מחיר לא סביר רק כדי להשתחרר משיחה תקועה.
+          Clearing the conversation, without touching the trip. Added after
+          a traveler got the "conversation too long" message with advice to
+          refresh the page - and a refresh cleared nothing, because the
+          history loads from localStorage on every load. Until this point
+          there was no button that clears a conversation: "new trip" opens a
+          different trip and loses the plan, which is an unreasonable price
+          just to break free of a stuck conversation.
         */}
         {messages.length > 0 && (
           <button
@@ -202,9 +209,11 @@ export default function ChatPanel({
       </header>
 
       {/*
-        `justify-center` רק כשאין הודעות: הפאנל התרחב כדי לקדם את הסוכן,
-        ובלי זה ההרחבה ייצרה שטח לבן ריק גדול מעל הקומפוזר - הבעיה
-        שהתחלנו ממנה, בכיוון ההפוך. ברגע שיש שיחה חוזרים לזרימה מלמעלה.
+        `justify-center` only when there are no messages: the panel was
+        widened to promote the agent, and without this the widening created
+        a big empty white area above the composer - the problem we started
+        from, in the opposite direction. Once there is a conversation we go
+        back to top-down flow.
       */}
       <div
         className={`flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-4 ${
@@ -250,7 +259,7 @@ export default function ChatPanel({
                 />
               )}
               {renderText(msg.content)}
-              {/* עדיין מקבלים טקסט מהשרת - בלי זה הודעה שנעצרה נראית גמורה במקרה */}
+              {/* Still receiving text from the server - without this a stalled message accidentally looks finished */}
               {streaming && msg.role === 'assistant' && i === messages.length - 1 && (
                 <ThinkingIndicator className="text-night/40" />
               )}
@@ -270,14 +279,15 @@ export default function ChatPanel({
                 <MessageMap slug={msg.destinationSlug} placeIds={msg.placeIds} />
               )}
               {/*
-                חיפוש מוכן אצל ספק. זו התשובה האמיתית לבקשת לינה/כרטיסים -
-                הסוכן אומר שהוא לא יכול לבדוק מחירים, והכרטיס מראה את
-                האמיתיים. כל תוכנו נבנה בשרת מהטיול, לא מהמודל.
+                A prepared provider search. This is the real answer to a
+                lodging/tickets request - the agent says it cannot check
+                prices, and the card shows the real ones. All of its content
+                is built on the server from the trip, not from the model.
               */}
               {msg.searches?.map((card, k) => (
                 <BookingSearchCardView key={`${card.kind}-${card.cityLabel}-${k}`} card={card} />
               ))}
-              {/* תשובות מהירות - רק בהודעה האחרונה, לשאלות לא-רגישות */}
+              {/* Quick replies - only on the last message, for non-sensitive questions */}
               {msg.role === 'assistant' &&
                 i === messages.length - 1 &&
                 !loading &&
@@ -315,9 +325,10 @@ export default function ChatPanel({
         className="shrink-0 border-t border-night/10 bg-shell p-3"
       >
         {/*
-          כל מה שנשאר מרעיון "מדריך": שורה אחת שאומרת איפה עושים את הדבר
-          המרכזי. מסך הדרכה נדחה כי הוא לא מפחית אף פקד - ראו
-          SIMPLIFY-PROPOSAL.md. נעלם בלחיצה ולא חוזר.
+          All that remains of the "tutorial" idea: one line saying where the
+          central thing is done. A walkthrough screen was rejected because it
+          removes no control - see SIMPLIFY-PROPOSAL.md. Disappears on click
+          and never returns.
         */}
         {coach && (
           <div className="mb-2 flex items-start gap-2 rounded-xl bg-sunset/10 px-3 py-2 ring-1 ring-sunset/25">
@@ -337,7 +348,7 @@ export default function ChatPanel({
             </button>
           </div>
         )}
-        {/* תצוגה מקדימה של התמונה שמחכה לשליחה - עם אפשרות להסיר */}
+        {/* Preview of the image waiting to be sent - with an option to remove */}
         {pending && (
           <div className="mb-2 flex items-center gap-2 rounded-xl bg-cream p-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -357,7 +368,7 @@ export default function ChatPanel({
         )}
         {imgError && <p className="mb-2 text-xs font-semibold text-sunset-deep">{imgError}</p>}
 
-        {/* אמירה אחת, שקטה, במקום קלט שנראה תקין ולא עושה כלום */}
+        {/* One quiet statement, instead of an input that looks fine and does nothing */}
         {offline && (
           <p
             role="status"
@@ -375,7 +386,7 @@ export default function ChatPanel({
             className="hidden"
             onChange={(e) => {
               void pickImage(e.target.files?.[0]);
-              e.target.value = ''; // כדי שבחירה חוזרת באותו קובץ תעבוד
+              e.target.value = ''; // so that re-picking the same file works
             }}
           />
           <button

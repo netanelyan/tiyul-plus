@@ -1,16 +1,18 @@
 import type { Place, PlaceCategory } from '@/lib/types';
 
 /**
- * ה-AI Explorer - שכבת "מחוץ לקטלוג": כשמבקשים יעד שלא קיים בדאטה
- * האוצרת, במקום "לא מכוסה" אנחנו בונים יעד ארעי מנתונים אמיתיים בזמן
- * אמת - חיפוש ויקיפדיה (עברית ואז אנגלית) → קואורדינטות העיר →
- * geosearch לאתרים סביבה → תקצירים + תמונות. אותם מקורות שמזינים את
- * הפייפליין האוצר, רק בלי הקיורציה האנושית - ולכן כל תוצאה מסומנת
- * "נחקר אוטומטית · לא נבדק על ידינו". שום דבר לא מומצא: תיאור = תקציר
- * הערך, תמונה = תמונת הערך, קואורדינטות = מהערך.
+ * The AI Explorer - the "outside the catalog" layer: when a destination that
+ * does not exist in the curated data is requested, instead of "not covered"
+ * we build an ephemeral destination from real data at runtime - a Wikipedia
+ * search (Hebrew, then English) → the city's coordinates → geosearch for
+ * sites around it → extracts + photos. The same sources that feed the curated
+ * pipeline, only without the human curation - which is why every result is
+ * labeled "auto-explored · not reviewed by us". Nothing is invented:
+ * description = the article's extract, photo = the article's image,
+ * coordinates = from the article.
  *
- * שרת בלבד (fetch יוצא + מפתחות עתידיים). ה-route /api/explore עוטף.
- * לבדיקות: EXPLORE_WIKI_HE / EXPLORE_WIKI_EN דורסים את כתובות ה-API.
+ * Server only (outbound fetch + future keys). The /api/explore route wraps it.
+ * For tests: EXPLORE_WIKI_HE / EXPLORE_WIKI_EN override the API URLs.
  */
 
 const HE_API = process.env.EXPLORE_WIKI_HE ?? 'https://he.wikipedia.org/w/api.php';
@@ -18,25 +20,25 @@ const EN_API = process.env.EXPLORE_WIKI_EN ?? 'https://en.wikipedia.org/w/api.ph
 const UA = 'tiyul-plus/1.0 (travel planner; contact via site)';
 
 export interface ExploredDestination {
-  /** slug ארעי, מזהה explored ולא מתנגש עם הקטלוג */
+  /** An ephemeral slug, identifies explored and does not collide with the catalog */
   slug: string;
-  name: string; // שם העיר כפי שנמצא (עברית אם יש)
+  name: string; // the city name as found (Hebrew if available)
   nameLocal: string;
   lat: number;
   lng: number;
   summary: string;
   wikiUrl: string;
   places: Place[];
-  /** הרדיוס שנסרק בפועל, בק"מ - 10 לעיר, יותר כשיש רכב */
+  /** The radius actually scanned, in km - 10 for a city, more when there is a car */
   rangeKm: number;
   source: 'wikipedia';
   exploredAt: number;
 }
 
-/** טווח החיפוש: העיר עצמה, או כל האזור סביבה - למי שיש רכב */
+/** The search scope: the city itself, or the whole area around it - for those with a car */
 export type ExploreScope = 'city' | 'area';
 
-/** ויקיפדיה מגבילה geosearch ל-10 ק"מ; טווח רחב נבנה מכמה מרכזים */
+/** Wikipedia limits geosearch to 10 km; a wide range is built from several centers */
 const WIKI_MAX_RADIUS_KM = 10;
 const AREA_RANGE_KM = 45;
 export const scopeRangeKm = (scope: ExploreScope) =>
@@ -63,7 +65,7 @@ async function wiki(api: string, params: Record<string, string>): Promise<unknow
   return res.json();
 }
 
-/** ניחוש קטגוריה מהכותרת/תקציר - היוריסטיקה שקופה, לא "ידע" */
+/** A category guess from the title/extract - a transparent heuristic, not "knowledge" */
 function guessCategory(title: string, extract: string): PlaceCategory {
   const s = `${title} ${extract}`;
   if (/מוזיאון|museum|galler|גלריה/i.test(s)) return 'museum';
@@ -91,19 +93,19 @@ async function findCityPage(query: string): Promise<{ api: string; page: WikiPag
         colimit: '1',
       })) as { query?: { pages?: Record<string, WikiPage> } };
       const pages = Object.values(data.query?.pages ?? {});
-      // העמוד הראשון עם קואורדינטות שאינו דף פירושונים = העיר
+      // The first page with coordinates that is not a disambiguation page = the city
       const city = pages
         .sort((a, b) => (b.length ?? 0) - (a.length ?? 0))
         .find((p) => p.coordinates?.[0] && p.pageprops?.disambiguation === undefined);
       if (city) return { api, page: city };
     } catch {
-      /* ממשיכים לוויקי הבא */
+      /* move on to the next wiki */
     }
   }
   return null;
 }
 
-/** מרחק אווירי בק"מ (haversine) - לתיוג כן של "כמה רחוק ממרכז העיר" */
+/** Straight-line distance in km (haversine) - for honest labeling of "how far from the city center" */
 function distanceKm(aLat: number, aLng: number, bLat: number, bLng: number): number {
   const rad = Math.PI / 180;
   const dLat = (bLat - aLat) * rad;
@@ -115,9 +117,10 @@ function distanceKm(aLat: number, aLng: number, bLat: number, bLng: number): num
 }
 
 /**
- * מרכזי חיפוש: עיגול אחד עד 10 ק"מ, ומעבר לזה טבעת של 8 נקודות סביב
- * העיר (ויקיפדיה לא מאפשרת רדיוס גדול יותר בקריאה אחת). דגימה, לא
- * כיסוי מושלם - מספיק כדי למצוא את האתרים המשמעותיים באזור.
+ * Search centers: a single circle up to 10 km, and beyond that a ring of 8
+ * points around the city (Wikipedia does not allow a larger radius in one
+ * call). Sampling, not perfect coverage - enough to find the significant
+ * sites in the area.
  */
 function searchCenters(lat: number, lng: number, rangeKm: number): { lat: number; lng: number }[] {
   const centers = [{ lat, lng }];
@@ -160,14 +163,14 @@ async function geosearch(
     })) as { query?: { pages?: Record<string, WikiPage> } };
     return Object.values(geo.query?.pages ?? {});
   } catch {
-    return []; // נקודה אחת שנפלה לא מפילה את כל החקירה
+    return []; // one failed point does not bring down the whole exploration
   }
 }
 
 /**
- * עיר → יעד ארעי עם עד maxPlaces אתרים אמיתיים סביבה.
- * scope='area' סורק גם את האזור שמסביב (עד ~45 ק"מ) - הגיוני למי שיש
- * רכב, ולכן אף פעם לא נכפה על מי שאין לו.
+ * City → an ephemeral destination with up to maxPlaces real sites around it.
+ * scope='area' also scans the surrounding area (up to ~45 km) - sensible for
+ * someone with a car, and therefore never forced on someone without one.
  */
 export async function exploreDestination(
   query: string,
@@ -183,7 +186,7 @@ export async function exploreDestination(
   const { lat, lon: lng } = city.coordinates![0];
   const rangeKm = scopeRangeKm(scope);
 
-  // אתרים בקרבת מרכז העיר (ובטווח נסיעה, אם ביקשו אזור)
+  // Sites near the city center (and within driving range, if an area was requested)
   const centers = searchCenters(lat, lng, rangeKm);
   const pages = await Promise.all(
     centers.map((c, i) => geosearch(api, c, i === 0 ? 50 : 20)),
@@ -205,15 +208,15 @@ export async function exploreDestination(
       km: distanceKm(lat, lng, p.coordinates![0].lat, p.coordinates![0].lon),
     }))
     .filter((c) => c.km <= rangeKm)
-    // איכות בלי דירוג: ערך ארוך יותר + תמונה = אתר משמעותי יותר
+    // Quality without a rating: a longer article + a photo = a more significant site
     .sort(
       (a, b) =>
         (b.page.thumbnail ? 1 : 0) - (a.page.thumbnail ? 1 : 0) ||
         (b.page.length ?? 0) - (a.page.length ?? 0),
     );
 
-  // גם בסריקה רחבה, רוב העצירות נשארות בעיר עצמה - האזור מוסיף
-  // טיולי יום, לא מפזר את כל הטיול על פני 45 ק"מ
+  // Even in a wide scan, most stops stay in the city itself - the area adds
+  // day trips, it does not scatter the whole trip across 45 km
   const nearQuota = Math.ceil(maxPlaces * 0.6);
   const near = usable.filter((c) => c.km <= WIKI_MAX_RADIUS_KM);
   const far = usable.filter((c) => c.km > WIKI_MAX_RADIUS_KM);
@@ -233,7 +236,7 @@ export async function exploreDestination(
 
   const places: Place[] = candidates.map(({ page: p, km }) => {
     const extract = p.extract ?? '';
-    // מרחק מחושב, לא מומצא - מי שבלי רכב צריך לדעת שזו נסיעה
+    // A computed distance, not invented - someone without a car needs to know this is a drive
     const far = km > 12 ? ` · כ-${Math.round(km)} ק"מ ממרכז ${city.title}` : '';
     return {
       id: `xp-${p.pageid}`,

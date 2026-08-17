@@ -1,21 +1,23 @@
 import type { Destination, Place, PlaceCategory } from '@/lib/types';
 
 /**
- * שרת בלבד - ייבוא מפה מ-Google My Maps.
+ * Server only - importing a map from Google My Maps.
  *
- * מפה ששותפה כ"כל מי שיש לו הקישור" ניתנת לייצוא KML ציבורי בכתובת
- * google.com/maps/d/kml?mid=<id>&forcekml=1 - בלי מפתח API. אנחנו
- * מחלצים את ה-mid מהקישור שהמשתמש הדביק, מושכים את ה-KML, ומפרקים את
- * ה-Placemarks (שם, תיאור, נקודה) ליעד בסגנון explored - כך שכל שכבות
- * הטיול (קנבס, מפה, סוכן, הדפסה) עובדות עליו בלי מקרים מיוחדים.
+ * A map shared as "anyone with the link" can be exported as public KML at
+ * google.com/maps/d/kml?mid=<id>&forcekml=1 - no API key. We extract the
+ * mid from the link the user pasted, fetch the KML, and break the
+ * Placemarks (name, description, point) into an explored-style
+ * destination - so all the trip layers (canvas, map, agent, print) work on
+ * it with no special cases.
  *
- * אבטחה: לעולם לא מושכים כתובת שהמשתמש שלח כמו-שהיא. מהקלט מחולץ רק
- * ה-mid (תווים בטוחים בלבד) וכתובת ה-KML נבנית אצלנו. קישורים מקוצרים
- * (maps.app.goo.gl) נפתחים עם redirect: manual - קוראים רק את כותרת
- * Location ומחלצים ממנה mid, בלי לעקוב לכתובת שרירותית.
+ * Security: we never fetch a URL the user sent as-is. Only the mid (safe
+ * characters only) is extracted from the input, and the KML URL is built by
+ * us. Short links (maps.app.goo.gl) are opened with redirect: manual - we
+ * read only the Location header and extract a mid from it, without
+ * following to an arbitrary URL.
  *
- * TripAdvisor: אין לו ייצוא ציבורי של Trips/מפות שמורות (ה-Content API
- * לא חושף אותם) - ולכן אין כאן תמיכה מזויפת בו.
+ * TripAdvisor: it has no public export of Trips/saved maps (the Content
+ * API does not expose them) - so there is no fake support for it here.
  */
 
 export const MYMAPS_MAX_PLACES = 40;
@@ -24,13 +26,13 @@ const KML_BASE = () => process.env.MYMAPS_KML_BASE ?? 'https://www.google.com';
 const SHORTLINK_HOSTS = new Set(['maps.app.goo.gl', 'goo.gl']);
 const MID_RE = /[?&]mid=([A-Za-z0-9_-]{10,80})/;
 
-/** חילוץ mid מקישור My Maps מלא; null כשאין */
+/** Extracts a mid from a full My Maps link; null when there is none */
 export function extractMid(input: string): string | null {
   const m = input.match(MID_RE);
   return m ? m[1] : null;
 }
 
-/** האם זה קישור מקוצר של גוגל מפות שצריך פתיחה אחת כדי לקבל mid */
+/** Whether this is a Google Maps short link that needs one resolution to get a mid */
 export function isShortLink(input: string): boolean {
   try {
     const u = new URL(input.trim());
@@ -40,7 +42,7 @@ export function isShortLink(input: string): boolean {
   }
 }
 
-/** פתיחת קישור מקוצר: קוראים רק את ה-Location של ההפניה, לא עוקבים */
+/** Resolving a short link: we read only the redirect's Location, never follow it */
 export async function resolveShortLink(input: string): Promise<string | null> {
   try {
     const u = new URL(input.trim());
@@ -66,7 +68,7 @@ export interface ParsedKmlPlace {
 export interface ParsedKml {
   name: string;
   places: ParsedKmlPlace[];
-  /** כמה Placemarks נחתכו בגלל תקרת הגודל */
+  /** How many Placemarks were cut off due to the size cap */
   truncated: number;
 }
 
@@ -78,21 +80,22 @@ const decodeEntities = (s: string) =>
     .replace(/&#39;|&apos;/g, "'")
     .replace(/&amp;/g, '&');
 
-/** טקסט מתוך תג: תומך גם ב-CDATA, מנקה HTML פנימי (תיאורי My Maps) */
+/** Text from a tag: also supports CDATA, strips inner HTML (My Maps descriptions) */
 function tagText(block: string, tag: string): string {
   const m = block.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`, 'i'));
   if (!m) return '';
   let text = m[1].trim();
   const cdata = text.match(/^<!\[CDATA\[([\s\S]*?)\]\]>$/);
   if (cdata) text = cdata[1];
-  // תיאורי My Maps מגיעים כ-HTML - משאירים טקסט בלבד
+  // My Maps descriptions arrive as HTML - keep text only
   text = text.replace(/<br\s*\/?>/gi, ' · ').replace(/<[^>]+>/g, '');
   return decodeEntities(text).replace(/\s+/g, ' ').trim();
 }
 
 /**
- * פירוק KML של My Maps: רק Placemarks עם <Point> (עצירות). קווים
- * ופוליגונים (מסלולי הליכה, אזורים) מדולגים - אין להם "מקום" אחד כן.
+ * Parsing My Maps KML: only Placemarks with a <Point> (stops). Lines and
+ * polygons (walking routes, areas) are skipped - they have no single honest
+ * "place".
  */
 export function parseKml(xml: string): ParsedKml | null {
   if (!xml.includes('<kml') && !xml.includes('<Placemark')) return null;
@@ -105,7 +108,7 @@ export function parseKml(xml: string): ParsedKml | null {
   const places: ParsedKmlPlace[] = [];
   let truncated = 0;
   for (const block of blocks) {
-    // נקודה בלבד - הקואורדינטות חייבות לבוא מתוך <Point>, לא מקו
+    // Point only - the coordinates must come from inside <Point>, not from a line
     const point = block.match(/<Point[^>]*>([\s\S]*?)<\/Point>/i);
     if (!point) continue;
     const coords = point[1].match(/<coordinates[^>]*>([\s\S]*?)<\/coordinates>/i);
@@ -132,7 +135,7 @@ export function parseKml(xml: string): ParsedKml | null {
   return { name: docName.slice(0, 80), places, truncated };
 }
 
-/** משיכת ה-KML של מפה לפי mid. null בכשל (פרטית / לא קיימת / רשת). */
+/** Fetches a map's KML by mid. null on failure (private / nonexistent / network). */
 export async function fetchKmlByMid(mid: string): Promise<string | null> {
   if (!/^[A-Za-z0-9_-]{10,80}$/.test(mid)) return null;
   try {
@@ -142,7 +145,7 @@ export async function fetchKmlByMid(mid: string): Promise<string | null> {
     });
     if (!res.ok) return null;
     const text = await res.text();
-    // תקרת גודל הוגנת - KML של מפה אישית; 4MB זה כבר לא זה
+    // A fair size cap - this is a personal map's KML; 4MB is no longer that
     if (text.length > 4_000_000) return null;
     return text;
   } catch {
@@ -150,7 +153,7 @@ export async function fetchKmlByMid(mid: string): Promise<string | null> {
   }
 }
 
-/** ניחוש קטגוריה שקוף משם המקום - ברירת מחדל attraction, בלי המצאות */
+/** Transparent category guess from the place name - default attraction, no inventions */
 function guessCategory(name: string): PlaceCategory {
   const n = name.toLowerCase();
   if (/מוזיאון|museum|galer|גלרי/.test(n)) return 'museum';
@@ -161,7 +164,7 @@ function guessCategory(name: string): PlaceCategory {
   return 'attraction';
 }
 
-/** hash קצר ויציב לשם slug - אותה מפה תקבל את אותו יעד בכל ייבוא */
+/** Short, stable hash for the slug - the same map gets the same destination on every import */
 function slugHash(s: string): string {
   let h = 5381;
   for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
@@ -169,9 +172,10 @@ function slugHash(s: string): string {
 }
 
 /**
- * ההמרה ליעד בסגנון explored: slug בקידומת explored- ומזהי xp-N, כדי
- * שהיעד יעבור את sanitizeExploredDestinations בסבבי הצ׳אט הבאים ויעבוד
- * בכל שכבות הטיול כמו יעד שנחקר.
+ * The conversion to an explored-style destination: an explored- prefixed
+ * slug and xp-N ids, so the destination passes sanitizeExploredDestinations
+ * on subsequent chat turns and works in every trip layer like an explored
+ * destination.
  */
 export function kmlToDestination(parsed: ParsedKml, mid: string): Destination {
   const places: Place[] = parsed.places.map((p, i) => ({
