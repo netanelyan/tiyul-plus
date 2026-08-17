@@ -21,10 +21,11 @@ const HEBREW = /[֐-׿]/;
 const ROOT = join(import.meta.dirname, '..', '..');
 
 // Walks the whole repo rather than a list of subdirectories. The first version
-// scanned only src/scripts/public/supabase, and the 21 `supabase-*.sql` files
-// live at the REPO ROOT - so every SQL comment in them was outside the guard
-// and stayed Hebrew while the test passed. A denylist of build output cannot
-// miss a new directory the way an allowlist of source directories did.
+// scanned only src/scripts/public/supabase, and the supabase SQL files were in
+// none of those - so every SQL comment in them stayed Hebrew while the test
+// passed. They now live in sql/, which this walk covers without being told
+// about it: a denylist of build output cannot miss a new directory the way an
+// allowlist of source directories did.
 const SKIP_DIRS = new Set(['node_modules', 'dist', 'build', 'coverage']);
 const EXTS = new Set(['.ts', '.tsx', '.js', '.mjs', '.cjs', '.sql', '.css']);
 

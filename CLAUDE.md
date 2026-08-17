@@ -9697,3 +9697,44 @@ but the question "is this worth paying for" would have been cheaper to ask befor
 polishing it than after. When the founder says a feature is not worth money, the
 useful first move is to compare it against the free thing next to it, not to
 improve it.
+
+### 2026-08-17 (g) - The SQL files get a folder
+
+Netanel: *"make sure all sql files are foldered, remove any unnecessary .md and
+other files."*
+
+**22 `supabase-*.sql` files moved from the repo root into `sql/`.** Moved with
+`git mv` so the history follows them, and the **filenames were deliberately not
+changed**: 197 references to them exist across 34 files, most of them prose
+("run supabase-admin.sql") in code comments, `NEEDS-YOUR-INPUT.md`, `TODO.md` and
+this log's own history. Renaming would have meant either a mass edit through
+Hebrew prose or leaving stale names everywhere, and `sql/supabase-admin.sql`
+being mildly redundant is cheaper than either. The folder is `sql/` and not
+`supabase/` because the Supabase CLI reserves that directory name, and adopting
+the CLI later should not collide with this.
+
+**One test caught the move, which is exactly why it exists.**
+`shareStore.test.ts` reads `supabase-setup.sql` off disk to assert the removed
+`anon` policy has not crept back in - it went red with ENOENT the moment the file
+moved. Fixed to the new path. It was the only path-based read in the codebase;
+everything else refers to these files by name in prose, which is still accurate.
+
+**The `.env.example` setup line** now points at `sql/supabase-setup.sql`, and the
+comment in `englishComments.test.ts` explaining why the guard walks the whole repo
+was updated - it cited "the repo root" as where the SQL lives, which is no longer
+true. The two mentions in older session-log entries were left alone: those are a
+record of what was true then.
+
+**Verified the guard still covers them in their new home** rather than assuming
+it: a Hebrew comment injected into `sql/supabase-check.sql` fails the test and
+names `sql\supabase-check.sql:141`. Restored afterwards.
+
+**Nothing was deleted, and that is a decision rather than an oversight.** The root
+has exactly four `.md` files and all four are load-bearing: `CLAUDE.md` (these
+instructions and the log), `README.md`, `TODO.md` (the deferred data work, and the
+coordinate-sourcing playbook that stops a future session re-deriving which sources
+are reachable), and `NEEDS-YOUR-INPUT.md` (a live form Netanel fills in - deleting
+it would destroy work waiting on him). There are no stray patches, logs or scratch
+files tracked at the root to remove.
+
+627 tests, tsc, build and lint clean.

@@ -170,7 +170,9 @@ test('אין מדיניות anon ללא תנאי מחוץ לטבלאות הקט�
 
 test('קובץ ההקמה לא מחזיר את המדיניות שהוסרה', () => {
   const root = join(import.meta.dirname, '../../..');
-  const setup = readFileSync(join(root, 'supabase-setup.sql'), 'utf8');
+  // The SQL files moved from the repo root into sql/ on 2026-08-17. This test
+  // reading one by path is what caught the move - which is the point of it.
+  const setup = readFileSync(join(root, 'sql', 'supabase-setup.sql'), 'utf8');
   // The function is the only way to read, so it must be there
   assert.match(setup, /create or replace function public\.get_shared_trip/);
   assert.match(setup, /revoke all on public\.shared_trips from anon, authenticated/);
