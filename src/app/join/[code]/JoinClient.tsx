@@ -4,8 +4,27 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth/AuthContext';
 import { authHeader } from '@/lib/auth/client';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
-import type { StorySnapshot } from '@/lib/server/stories';
+import PlaceThumb from '@/components/PlaceThumb';
+import { categoryMeta } from '@/lib/categories';
+import type { EnrichedSnapshot, EnrichedStop } from '@/lib/server/stories';
 import type { VoteTally } from '@/lib/server/groupTrips';
+import { applyVote, nextVote } from '@/lib/trip/voteTally';
+import type { Place } from '@/lib/types';
+
+/** The shape PlaceThumb needs, from a snapshot stop (photo/category resolved on the server). */
+function asPlace(s: EnrichedStop): Place {
+  return {
+    id: s.id,
+    name: s.name,
+    nameLocal: s.name,
+    category: s.category,
+    lat: s.lat,
+    lng: s.lng,
+    description: s.description ?? '',
+    ...(s.photo ? { photo: s.photo } : {}),
+  };
+}
+
 
 /**
  * The friend's side: joining by code, live viewing of the trip, voting on
@@ -16,9 +35,15 @@ export default function JoinClient({ code }: { code: string }) {
   const auth = useAuth();
   const [phase, setPhase] = useState<'loading' | 'error' | 'ready'>('loading');
   const [errorMsg, setErrorMsg] = useState('');
-  const [trip, setTrip] = useState<StorySnapshot | null>(null);
+  const [trip, setTrip] = useState<EnrichedSnapshot | null>(null);
   const [votes, setVotes] = useState<Map<string, VoteTally>>(new Map());
-  const [busyPlace, setBusyPlace] = useState<string | null>(null);
+  /**
+   * Which places have a vote in flight. A Set and not a single id: blocking
+   * every button while one request runs made voting down a list feel like the
+   * page had frozen. Only the place being voted on is guarded, and only to keep
+   * two requests for the SAME place from racing each other.
+   */
+  const [inFlight, setInFlight] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     // The "must sign in" state is derived at render (auth.ready && !auth.user) - not state
@@ -48,7 +73,7 @@ export default function JoinClient({ code }: { code: string }) {
         }
         const res = await fetch(`/api/group?code=${encodeURIComponent(code)}`, { headers });
         const data = (await res.json().catch(() => null)) as
-          | { trip?: StorySnapshot; votes?: VoteTally[] }
+          | { trip?: EnrichedSnapshot; votes?: VoteTally[] }
           | null;
         if (!alive) return;
         if (!data?.trip) {
@@ -72,22 +97,45 @@ export default function JoinClient({ code }: { code: string }) {
   }, [auth.ready, auth.user, code]);
 
   async function vote(placeId: string, dir: 1 | -1) {
-    if (busyPlace) return;
-    setBusyPlace(placeId);
+    if (inFlight.has(placeId)) return;
+
+    const before = votes;
+    const current = votes.get(placeId)?.mine;
+    const next = nextVote(current, dir);
+
+    // Paint first, ask the server second.
+    const optimistic = new Map(before);
+    optimistic.set(placeId, applyVote(before.get(placeId), placeId, next));
+    setVotes(optimistic);
+    setInFlight((s) => new Set(s).add(placeId));
+
     try {
-      const current = votes.get(placeId)?.mine;
-      const next = current === dir ? 0 : dir; // clicking again removes
       const res = await fetch('/api/group', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(await authHeader()) },
         body: JSON.stringify({ action: 'vote', code, placeId, vote: next }),
       });
       const data = (await res.json().catch(() => null)) as { votes?: VoteTally[] } | null;
+      // The server's tallies include everyone else's votes, so they replace the
+      // guess rather than merely confirming it.
       if (data?.votes) setVotes(new Map(data.votes.map((v) => [v.placeId, v])));
+      else throw new Error('no tallies');
     } catch {
-      /* the next vote will try again */
+      // Roll back just this place - keeping the optimistic number would be a
+      // lie, and this is the one case where the count on screen is not real.
+      setVotes((cur) => {
+        const m = new Map(cur);
+        const prev = before.get(placeId);
+        if (prev) m.set(placeId, prev);
+        else m.delete(placeId);
+        return m;
+      });
     } finally {
-      setBusyPlace(null);
+      setInFlight((s) => {
+        const m = new Set(s);
+        m.delete(placeId);
+        return m;
+      });
     }
   }
 
@@ -136,39 +184,58 @@ export default function JoinClient({ code }: { code: string }) {
             <h2 className="text-sm font-bold text-night">
               יום {d.dayNumber} · {d.cityName}
             </h2>
-            <ul className="mt-2 space-y-2">
+            <ul className="mt-3 space-y-3">
               {d.stops.map((s) => {
                 const t = votes.get(s.id);
                 return (
-                  <li key={s.id} className="flex items-center gap-2">
-                    <span className="min-w-0 flex-1 truncate text-sm text-night/80">
-                      {s.name}
-                      {s.mustSee && <span className="text-zest"> ★</span>}
-                    </span>
-                    <button
-                      onClick={() => void vote(s.id, 1)}
-                      disabled={busyPlace === s.id}
-                      aria-pressed={t?.mine === 1}
-                      className={`rounded-full px-2.5 py-1 text-xs font-bold ring-1 transition ${
-                        t?.mine === 1
-                          ? 'bg-sunset text-cream ring-sunset'
-                          : 'bg-cream text-night/60 ring-night/15 hover:bg-sunset/10'
-                      }`}
-                    >
-                      👍 {t?.up ?? 0}
-                    </button>
-                    <button
-                      onClick={() => void vote(s.id, -1)}
-                      disabled={busyPlace === s.id}
-                      aria-pressed={t?.mine === -1}
-                      className={`rounded-full px-2.5 py-1 text-xs font-bold ring-1 transition ${
-                        t?.mine === -1
-                          ? 'bg-night text-cream ring-night'
-                          : 'bg-cream text-night/60 ring-night/15 hover:bg-night/5'
-                      }`}
-                    >
-                      👎 {t?.down ?? 0}
-                    </button>
+                  <li key={s.id} className="flex items-start gap-3">
+                    <PlaceThumb place={asPlace(s)} className="h-16 w-16 shrink-0 sm:h-20 sm:w-20" />
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold text-night">
+                        {s.name}
+                        {s.mustSee && (
+                          <span className="ms-1.5 text-sm text-zest" title="חובה לראות">
+                            ★
+                          </span>
+                        )}
+                        <span className="ms-2 whitespace-nowrap text-xs font-medium text-night/45">
+                          {categoryMeta[s.category].label}
+                        </span>
+                      </p>
+                      {s.description && (
+                        <p className="mt-0.5 line-clamp-3 text-sm leading-relaxed text-night/65">
+                          {s.description}
+                        </p>
+                      )}
+                      {/* The buttons sit under the text so a long description does not
+                          squeeze them, and they stay reachable at 390px. */}
+                      <div className="mt-2 flex items-center gap-2">
+                        <button
+                          onClick={() => void vote(s.id, 1)}
+                          aria-pressed={t?.mine === 1}
+                          aria-label={`אהבתי - ${s.name}`}
+                          className={`rounded-full px-3 py-1.5 text-xs font-bold ring-1 transition active:scale-95 ${
+                            t?.mine === 1
+                              ? 'bg-sunset text-cream ring-sunset'
+                              : 'bg-cream text-night/60 ring-night/15 hover:bg-sunset/10'
+                          }`}
+                        >
+                          👍 {t?.up ?? 0}
+                        </button>
+                        <button
+                          onClick={() => void vote(s.id, -1)}
+                          aria-pressed={t?.mine === -1}
+                          aria-label={`פחות בשבילי - ${s.name}`}
+                          className={`rounded-full px-3 py-1.5 text-xs font-bold ring-1 transition active:scale-95 ${
+                            t?.mine === -1
+                              ? 'bg-night text-cream ring-night'
+                              : 'bg-cream text-night/60 ring-night/15 hover:bg-night/5'
+                          }`}
+                        >
+                          👎 {t?.down ?? 0}
+                        </button>
+                      </div>
+                    </div>
                   </li>
                 );
               })}

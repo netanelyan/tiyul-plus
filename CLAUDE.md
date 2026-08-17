@@ -9486,3 +9486,75 @@ every row, zero horizontal overflow, RTL intact, no console errors. The story wa
 checked end to end through the real page, by publishing a temporary row to
 `trip_stories` with the service role and deleting it afterwards (confirmed gone).
 `supabase-stories.sql` has been run since the last session - the table exists now.
+
+### 2026-08-17 (d) - The third surface, and a vote that waited for the network before moving
+
+Netanel, with a screenshot: *"still, no description and images, and also - when
+pressing a thumbs up/down it takes a few seconds to show, which feels laggy."*
+
+**The screenshot was `/join/<code>`, not the two pages entry (c) changed.** There
+are three read-only trip surfaces, not two - the shared link, the story, and the
+group-trip page a friend opens from an invite. Entry (c) did the first two and I
+reported it as done; the one he was actually looking at still rendered its stops
+as a bare list of names. Worth naming plainly: "add it to the shared trip and the
+story" had a third member I did not enumerate before declaring the work finished.
+
+**The fix reuses the same server-side enrichment.** `groupTripSnapshot` already
+returned the same snapshot shape the story uses, so it now returns
+`enrichSnapshot(buildSnapshot(trip))` and the friend sees a photo, a description
+and a category per stop. Same reasoning as the story: resolved on the server, so
+the catalog never ships to the browser - here that matters more than anywhere
+else, since the whole point of an invite is that lots of people open it.
+
+---
+
+**The lag was real and it was not the network.** `vote()` awaited the POST before
+touching any state, so nothing on screen moved until the round trip finished -
+and the POST does two sequential Supabase calls (write the vote, then re-tally).
+On top of that a single `busyPlace` disabled **every** button on the page while
+one request was in flight, so voting down a list felt like the page had frozen.
+
+Now the count is painted from local arithmetic on the click and the server's
+reply replaces it when it lands. **Measured in a real browser: 5ms at 1400 and
+11ms at 390**, against "a few seconds" before. The guard became a per-place `Set`,
+so voting on one stop no longer blocks the other five.
+
+**The arithmetic is a tested module rather than three lines in the component**
+(`lib/trip/voteTally.ts`), because an optimistic number that drifts from the
+server is worse than the lag it replaced: the count is the entire content of that
+page. Seven tests pin it to the same rules `castVote` applies - same side twice
+removes, opposite side moves rather than adds two, other people's votes untouched,
+never negative, and a full up-down-undo round trip landing exactly back where it
+started. A failed request rolls that one place back, because keeping the optimistic
+number would be the one case where the screen shows a vote that does not exist.
+
+---
+
+**Verified end to end on the real page, not by reasoning.** Voting needs a signed-in
+user, so the harness created a throwaway confirmed user through the GoTrue admin
+API, gave them a trip and an invite, took a session via the password grant, and
+seeded it into `localStorage` with `Page.addScriptToEvaluateOnNewDocument` so the
+app booted signed in. **18/18 at 1400 and 390**: six stop rows, four photos that
+decode plus two category tiles, a description on every row, twelve vote buttons,
+the click-to-paint latency above, zero horizontal overflow, RTL intact. Everything
+created was deleted afterwards and the deletion was confirmed by re-querying.
+
+**One harness bug worth recording, the same species as always.** The first run
+failed one check: at 390 the vote registered as *not* mine. The cause was that the
+desktop pass had left a vote in the database, so the phone pass's click removed one
+instead of adding one. State leaking between viewports, not a product fault - the
+harness now clears the votes table before each pass. A failing assertion that looks
+like a product bug is worth one minute of suspicion first.
+
+**Also confirmed while there, since he asked separately:** of the 18 `supabase-*.sql`
+files, seventeen have been run. **`supabase-consent.sql` has not** - `profiles.
+terms_accepted_at` and `terms_version` do not exist, so the clickwrap line under the
+login field promises an agreement that is currently recorded nowhere. Nothing breaks
+(the write is wrapped so a missing migration can never block a login), but it is the
+one file still outstanding. Checking that needed a correction of my own first: my
+initial probe called each RPC with no arguments and read PostgREST's `PGRST202` as
+"missing", which wrongly condemned six files including `get_trip_story` - a function
+I had used successfully minutes earlier. The reliable read is the OpenAPI schema at
+`/rest/v1/`, which lists every exposed function and cannot be fooled by argument names.
+
+**Verified:** 630 unit tests (7 new), tsc, build and lint clean.

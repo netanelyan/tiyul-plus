@@ -19,7 +19,7 @@
  * not edit.
  */
 
-import { buildSnapshot, type StorySnapshot } from '@/lib/server/stories';
+import { buildSnapshot, enrichSnapshot, type EnrichedSnapshot } from '@/lib/server/stories';
 import { findOwnTrip } from '@/lib/server/userTrips';
 import { adminDelete, adminInsert, adminSelect, adminUpdate } from '@/lib/server/supabaseAdmin';
 import { eq, pgQuery, pgSelect } from '@/lib/server/pgrest';
@@ -110,10 +110,17 @@ export async function isMember(code: string, memberId: string): Promise<InviteRo
   return rows && rows.length > 0 ? invite : null;
 }
 
-/** The live snapshot of the trip for a member - rebuilt on every read, edits are visible */
-export async function groupTripSnapshot(invite: InviteRow): Promise<StorySnapshot | null> {
+/**
+ * The live snapshot of the trip for a member - rebuilt on every read, edits are visible.
+ *
+ * Enriched with the catalog photo and description here, on the server, for the same
+ * reason the story page does it: the friend voting on stops should see what each place
+ * IS, and the alternative - letting the client resolve it - would ship the whole catalog
+ * to every invited friend.
+ */
+export async function groupTripSnapshot(invite: InviteRow): Promise<EnrichedSnapshot | null> {
   const trip = await findOwnTrip(invite.owner_id, invite.trip_id);
-  return trip ? buildSnapshot(trip) : null;
+  return trip ? enrichSnapshot(buildSnapshot(trip)) : null;
 }
 
 export interface VoteTally {
