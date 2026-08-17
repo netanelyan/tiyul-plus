@@ -35,7 +35,7 @@ import {
   todayIso,
 } from '@/lib/server/webLookup';
 
-/** תקרת גוף הבקשה - לפני JSON.parse, כדי שגוף ענק לא יפיל את הפונקציה */
+/** Request-body cap - before JSON.parse, so a huge body cannot bring down the function */
 const MAX_BODY_CHARS = 6_000_000;
 import type { Trip } from '@/lib/trip/types';
 import type { Destination } from '@/lib/types';
@@ -86,21 +86,22 @@ import { CORRECTION_INSTRUCTION, detectCorrection } from '@/lib/server/correctio
 import { fallbackUncoveredQuickReplies } from '@/lib/server/uncoveredReplies';
 
 /**
- * צ׳אט הטיולים - סוכן אמיתי מעל הטיול של המשתמש.
+ * The travel chat - a real agent over the user's trip.
  *
- * שני מצבים:
- * 1. בלי מפתח API - עונה מבוסס-חוקים מעל הדאטה (עובד מיד, בלי לולאת כלים).
- * 2. עם ANTHROPIC_API_KEY - לולאת tool-use צד-שרת: הלקוח שולח את הטיול
- *    הנוכחי, המודל מקבל אותו + grounding + כלים, ומריץ פעולות (create_trip,
- *    add_day, add_place...) על עותק בזיכרון עם ולידציה קשיחה (agent.ts).
- *    קריאה לא-חוקית מחזירה tool_result עם is_error והמודל מתקן. עד 8
- *    איטרציות, ואז תשובת טקסט סופית.
+ * Two modes:
+ * 1. Without an API key - a rule-based responder over the data (works
+ *    immediately, no tool loop).
+ * 2. With ANTHROPIC_API_KEY - a server-side tool-use loop: the client sends the
+ *    current trip, the model gets it + grounding + tools, and runs actions
+ *    (create_trip, add_day, add_place...) on an in-memory copy with strict
+ *    validation (agent.ts). An invalid call returns a tool_result with is_error
+ *    and the model corrects itself. Up to 8 iterations, then a final text answer.
  *
- * התשובה היא תמיד text/event-stream של אירועי JSON:
- *   {type:'text', text}                        - מקטע טקסט מוזרם
- *   {type:'meta', destinationSlug?, placeIds?} - בסוף, כדי שהלקוח יציג מפה
- *   {type:'trip', trip, actions}               - הטיול המעודכן + "מה בוצע" בעברית
- *   {type:'done'}                              - סיום
+ * The response is always a text/event-stream of JSON events:
+ *   {type:'text', text}                        - a streamed text chunk
+ *   {type:'meta', destinationSlug?, placeIds?} - at the end, so the client can show a map
+ *   {type:'trip', trip, actions}               - the updated trip + a Hebrew "what was done"
+ *   {type:'done'}                              - end
  */
 
 export const maxDuration = 60;
@@ -112,12 +113,13 @@ interface ChatReply {
 }
 
 /**
- * ה-slugים שקריאת הכלי הזאת עומדת לכתוב, אם היא בוחרת עיר בכלל.
+ * The slugs this tool call is about to write, if it picks a city at all.
  *
- * הרשימה מכוונת: אלה הכלים שבהם **המודל בוחר איזו עיר**, כלומר המקומות
- * שבהם שם שהמטייל הקליד מתורגם ל-slug. כלים שפועלים על עיר שכבר בטיול
- * (`add_place`, `move_place`, `set_day_notes`) לא נכללים - אין בהם מה
- * לפרש, וחסימה שלהם הייתה שוברת עריכות תקינות.
+ * The list is deliberate: these are the tools where **the model chooses which
+ * city**, i.e. the places where a name the traveler typed is translated into a
+ * slug. Tools that act on a city already in the trip (`add_place`,
+ * `move_place`, `set_day_notes`) are not included - there is nothing to
+ * interpret in them, and blocking them would break valid edits.
  */
 function citySlugsOf(name: string, input: Record<string, unknown>): string[] {
   const one = (v: unknown) => (typeof v === 'string' && v ? [v] : []);
@@ -140,7 +142,7 @@ function findDestination(text: string) {
   const lower = text.toLowerCase();
   const direct = destinations.find((d) => text.includes(d.name) || lower.includes(d.slug));
   if (direct) return direct;
-  // "צריך ויזה לאיטליה?" - שאלה ברמת מדינה מובילה לעיר שלה
+  // A country-level question ("do I need a visa for Italy?") leads to one of its cities
   const country = countries.find((c) => text.includes(c.name) || lower.includes(c.slug));
   return country ? destinations.find((d) => d.countrySlug === country.slug) : undefined;
 }
@@ -153,7 +155,7 @@ function ruleBasedReply(text: string): ChatReply {
   const wantsItinerary = /מסלול|ימים|יום|תכנון|תוכנית|לתכנן/.test(text);
 
   if (!dest) {
-    // מספר + כמה דוגמאות, לא כל הקטלוג - ראו lib/server/catalogSummary.ts
+    // A count + a few examples, not the whole catalog - see lib/server/catalogSummary.ts
     const coverage = coverageLine(
       countries.map((c) => c.name),
       Object.fromEntries(countries.map((c) => [c.slug, c.name])),
@@ -221,8 +223,9 @@ function ruleBasedReply(text: string): ChatReply {
 
 
 /**
- * הכללים הקשים על אורך התשובה, בבלוק נפרד שנשלח **אחרון** במערך ה-system.
- * ראו ההסבר בנקודת השימוש: אותם כללים בתוך SYSTEM_PROMPT לא החזיקו.
+ * The hard rules on answer length, in a separate block sent **last** in the
+ * system array. See the explanation at the point of use: the same rules inside
+ * SYSTEM_PROMPT did not hold.
  */
 const OUTPUT_DISCIPLINE = `OUTPUT DISCIPLINE - re-read this before every reply, it overrides any urge to be thorough:
 1. SHORT BY DEFAULT. Two to four sentences. A factual question gets one or two. Long is a defect here, not generosity.
@@ -232,7 +235,7 @@ const OUTPUT_DISCIPLINE = `OUTPUT DISCIPLINE - re-read this before every reply, 
 5. EVERY CLOSED-SET QUESTION GETS BUTTONS. If your reply ends with a question that has a short, nameable set of likely answers - how many days, which city, yes/no, pick one of a few options you just listed - call suggest_quick_replies with those exact options as short Hebrew chips, in the SAME turn. This is not optional and not just for one scenario: an open-ended question ("מה דעתך על המסלול?") stays free text, but a question you could answer yourself with a short list doesn't get left as typing-only.`;
 
 
-/** טקסט התקדמות אמיתי לפי הכלי שרץ עכשיו - לא הודעות דמה מתחלפות */
+/** Real progress text based on the tool running right now - not rotating dummy messages */
 function toolStatusText(name: string, input: Record<string, unknown>): string {
   const day = typeof input.dayNumber === 'number' ? ` ${input.dayNumber}` : '';
   switch (name) {
@@ -288,14 +291,14 @@ function toolStatusText(name: string, input: Record<string, unknown>): string {
 
 type StreamEvent =
   | { type: 'text'; text: string }
-  // התקדמות אמיתית מלולאת הכלים - כדי שהמתנה ארוכה לא תיראה תקועה
+  // Real progress from the tool loop - so a long wait does not look stuck
   | { type: 'status'; text: string }
   | { type: 'meta'; destinationSlug?: string; placeIds?: string[] }
   | { type: 'trip'; trip: Trip; actions: string[] }
   | { type: 'quickReplies'; replies: string[] }
-  // יעד שנחקר אוטומטית בתור הזה - הלקוח שומר אותו ומרנדר איתו את הקנבס
+  // A destination auto-explored this turn - the client stores it and renders the canvas with it
   | { type: 'explored'; destination: Destination }
-  // כרטיס חיפוש מוכן אצל ספק - נבנה בשרת, הלקוח רק מרנדר אותו
+  // A ready provider search card - built on the server, the client only renders it
   | { type: 'search'; search: BookingSearchCard }
   | { type: 'done' };
 
@@ -306,7 +309,7 @@ interface AnthropicUsage {
   cache_read_input_tokens?: number;
   cache_creation_input_tokens?: number;
   output_tokens?: number;
-  /** כמה קריאות web_search רצו בקריאה הזאת - ראו webLookup.ts */
+  /** How many web_search calls ran in this request - see webLookup.ts */
   server_tool_use?: { web_search_requests?: number };
 }
 
@@ -315,7 +318,7 @@ interface AnthropicSSE {
   index?: number;
   content_block?: { type: string; id?: string; name?: string };
   delta?: { type: string; text?: string; partial_json?: string; stop_reason?: string };
-  usage?: AnthropicUsage; // על message_delta - output_tokens סופי
+  usage?: AnthropicUsage; // On message_delta - the final output_tokens
   message?: { usage?: AnthropicUsage };
 }
 
@@ -335,18 +338,21 @@ interface ApiMessage {
 }
 
 /**
- * כשל HTTP מול Anthropic. הקוד חייב לשרוד כאובייקט ולא רק כטקסט בהודעה:
- * `isTransient` מחליטה לפי `status` אם לנסות שוב, ו-`new Error('anthropic 529')`
- * החזיק את הקוד רק בתוך המחרוזת - כך ש-529/429/500 סווגו כשגיאה קבועה
- * והניסיון השני לא רץ אף פעם. זה בדיוק המסלול שהפיל תור אמיתי בפרודקשן.
+ * An HTTP failure against Anthropic. The status code must survive as an object
+ * property and not only as text in the message: `isTransient` decides by
+ * `status` whether to retry, and `new Error('anthropic 529')` kept the code
+ * only inside the string - so 529/429/500 were classified as a permanent error
+ * and the second attempt never ran. This is exactly the path that killed a real
+ * turn in production.
  */
 class AnthropicHttpError extends Error {
   readonly status: number;
   constructor(status: number, detail = '') {
-    // גוף התשובה נכנס להודעה בכוונה: `anthropic 400` לבד לא אומר כלום,
-    // ו-400 אמיתי בפרודקשן עלה בסיבוב שלם של דיאגנוסטיקה כי לא היה כתוב
-    // איזה שדה נפסל. Anthropic מחזיר שם נתיב שדה ("messages.2: ...") ולא
-    // תוכן של המשתמש, ובכל זאת חותכים - לוג הוא לא מקום לגוף תשובה מלא.
+    // The response body goes into the message deliberately: `anthropic 400`
+    // alone says nothing, and a real 400 in production cost a full round of
+    // diagnostics because it did not say which field was rejected. Anthropic
+    // returns a field path ("messages.2: ...") and not user content, yet we
+    // still truncate - a log is no place for a full response body.
     super(detail ? `anthropic ${status}: ${detail.slice(0, 400)}` : `anthropic ${status}`);
     this.name = 'AnthropicHttpError';
     this.status = status;
@@ -354,18 +360,20 @@ class AnthropicHttpError extends Error {
 }
 
 /**
- * איטרציה אחת מול Claude בסטרימינג: טקסט מוזרם ללקוח מיד; בלוקים של
- * tool_use נצברים (partial_json) ומוחזרים לביצוע. needSeparator מוסיף
- * שורה ריקה לפני הטקסט הראשון כשכבר הוזרם טקסט מאיטרציה קודמת.
+ * One iteration against Claude, streaming: text is streamed to the client
+ * immediately; tool_use blocks are accumulated (partial_json) and returned for
+ * execution. needSeparator adds a blank line before the first text when text
+ * was already streamed from a previous iteration.
  */
 /**
- * ההנחיה היחידה שנוספת במסלול הקל.
+ * The only instruction added on the light path.
  *
- * היא לא מנסה למנוע מהמודל לעשות דברים - הכלים כבר עושים את זה. היא
- * אומרת לו מה כן לעשות כשהוא **לא** יכול: לומר זאת במשפט אחד ולעצור.
- * תשובה בלי קריאת כלי היא בדיוק מה ש-`shouldEscalate` מחפש, ולכן
- * "אני לא יכול" הופך אוטומטית לתור מחדש על המודל החזק - בלי שהמודל
- * הזול יידע שקיים מודל אחר, ובלי מילת קסם שאפשר לשכוח.
+ * It does not try to stop the model from doing things - the tools already do
+ * that. It tells it what to do when it **cannot**: say so in one sentence and
+ * stop. A reply with no tool call is exactly what `shouldEscalate` looks for,
+ * so "I can't" automatically becomes a re-run on the strong model - without the
+ * cheap model knowing another model exists, and without a magic word that can
+ * be forgotten.
  */
 const LIGHT_TURN_NOTE = [
   'QUICK EDIT TURN. Your ONLY job is the tool call.',
@@ -388,37 +396,40 @@ async function runClaudeTurn(
   kosherHint: boolean,
   groundingDetail: string,
   kosherOk: boolean,
-  /** מה שהמטייל עצמו אמר - הרשימה הלבנה של שומר המחירים */
+  /** What the traveler themselves said - the price guard's whitelist */
   guardAllow: GuardAllowlist,
-  /** האם הוצג כבר כרטיס חיפוש בתור הזה (משנה רק את נוסח ההחלפה) */
+  /** Whether a search card was already shown this turn (only changes the replacement wording) */
   searchShown: boolean,
   /**
-   * המסלול הקל: מודל זול, כלים מוגבלים, **ובלי אינדקס הקטלוג**.
-   * ראו `src/lib/server/modelRoute.ts` - הכלים המוגבלים הם מה שמאפשר
-   * להשמיט את האינדקס, לא להפך.
+   * The light path: a cheap model, restricted tools, **and no catalog index**.
+   * See `src/lib/server/modelRoute.ts` - the restricted tools are what makes
+   * omitting the index possible, not the other way around.
    */
   light: boolean,
   /**
-   * האם לצרף את `LOOKUP_TOOL` לקריאה הזאת. **הערובה המבנית** נגד חיפוש
-   * על כשרות: תור שנשאל על כשרות מגיע לכאן עם `false`, ולכן הכלי פשוט
-   * לא קיים בשביל המודל - לא הנחיה, עובדה. ראו webLookup.ts.
+   * Whether to attach `LOOKUP_TOOL` to this call. **The structural guarantee**
+   * against searching about kashrut: a turn that asks about kashrut arrives
+   * here with `false`, so the tool simply does not exist for the model - not an
+   * instruction, a fact. See webLookup.ts.
    */
   allowLookup: boolean,
-  /** תאריך היום, או תשובה קודמת ממטמון - בלוק system נפרד ומשתנה */
+  /** Today's date, or a previous cached answer - a separate, variable system block */
   lookupNote: string,
   /**
-   * הכרעות שהשרת חישב על ההודעה הזאת ושאסור למודל לסתור: פרשנות שם
-   * מקום (`placeResolve.ts`) והאם זה תור של תיקון (`correction.ts`).
+   * Verdicts the server computed about this message that the model must not
+   * contradict: place-name interpretation (`placeResolve.ts`) and whether this
+   * is a correction turn (`correction.ts`).
    *
-   * נשלח **אחרי** `OUTPUT_DISCIPLINE`, כלומר אחרון. היומן של הפרויקט
-   * מתעד פעמיים שכלל בראש פרומפט ארוך נבלע ושאותו כלל בסוף עובד.
+   * Sent **after** `OUTPUT_DISCIPLINE`, i.e. last. The project's log records
+   * twice that a rule at the top of a long prompt got swallowed and the same
+   * rule at the end works.
    */
   serverVerdicts: string,
 ): Promise<{ blocks: AccBlock[]; stopReason: string; text: string; usage: AnthropicUsage; model: string }> {
   const model = light
     ? (process.env.ANTHROPIC_MODEL_FAST ?? 'claude-haiku-4-5')
     : (process.env.ANTHROPIC_MODEL_AGENT ?? 'claude-sonnet-4-5');
-  // טוגל כשרות מה-UI לפני שקיים טיול: מוסרים לסוכן בשקט דרך בלוק המצב
+  // Kosher toggle from the UI before any trip exists: passed to the agent quietly via the state block
   const kosherNote =
     kosherHint && !trip
       ? '\n\nUI PREFERENCE TOGGLE: the user switched ON "אוכל כשר" in the interface before any trip exists. Treat kosher=true from your first plan (include a kosher-food place per day where the city has one, with the usual verify-before-visiting reminder), and call set_preferences {kosher: true} immediately after creating a trip. Never ask about it.'
@@ -436,28 +447,34 @@ async function runClaudeTurn(
       model,
       max_tokens: maxTokens,
       stream: true,
-      // כלי שלא נשלח לא קיים בשביל המודל. זו הערובה, ולא הנחיה בפרומפט -
-      // ובאותו עיקרון בדיוק, `allowLookup=false` (כל תור שנשמע כמו שאלת
-      // כשרות) פירושו ש-LOOKUP_TOOL פשוט לא במערך, בלי קשר למה שכתוב לו.
+      // A tool that is not sent does not exist as far as the model is concerned.
+      // That is the guarantee, not a line in the prompt - and by exactly the same
+      // principle, `allowLookup=false` (any turn that sounds like a kashrut
+      // question) means LOOKUP_TOOL is simply absent from the array, regardless
+      // of what the prompt says.
       tools: light
         ? AGENT_TOOLS.filter((t) => isLightTool(t.name))
         : allowLookup
           ? [...AGENT_TOOLS, LOOKUP_TOOL]
           : AGENT_TOOLS,
-      // סדר הרינדור: tools (סטטי) → system. ה-grounding הוא הבלוק עם
-      // cache_control - כל הקידומת הקבועה נכנסת ל-prompt cache; מצב הטיול
-      // המשתנה יושב אחרי נקודת השבירה ולא פוגע בקריאות מהמטמון.
+      // Render order: tools (static) -> system. The grounding block is the one
+      // carrying cache_control - the whole fixed prefix goes into the prompt
+      // cache; the changing trip state sits after the breakpoint, so it does not
+      // spoil cache reads.
       system: [
         /*
-          **הקידומת הנשמרת נבנית במקום אחד** (`agentPrefix.ts`), כי גם
-          נתיב החימום בונה אותה - וקידומת שנבדלת בתו אחד היא מטמון אחר,
-          כלומר חימום שמשלם על עצמו ולא מחמם כלום.
+          **The cached prefix is built in exactly one place** (`agentPrefix.ts`),
+          because the warm-up path builds it too - and a prefix that differs by a
+          single character is a different cache entry, i.e. a warm-up that pays
+          for itself and warms nothing.
 
-          **ההשמטה במסלול הקל היא החיסכון הגדול, לא המודל.** האינדקס הוא
-          כ-240 אלף תווים (~80 אלף טוקנים) של כל הקטלוג, ונשלח כדי שהמודל
-          יוכל למצוא מקום חדש. עריכה מכנית פועלת על מה שכבר בטיול, ולכן
-          אין בו מה לחפש. אינדקס בלי המסלול הקל = תור זול שעולה יותר מזה
-          שהוא החליף, כי כתיבת מטמון על מודל שני יקרה מקריאה ממטמון חם.
+          **On the light route the omission is the big saving, not the model.**
+          The index is ~240k characters (~80k tokens) of the entire catalog, sent
+          so the model can find a place it does not already have. A mechanical
+          edit operates on what is already in the trip, so there is nothing in it
+          to search. The index on the light route = a cheap turn that costs more
+          than the one it replaced, because a cache write on a second model is
+          dearer than a read from a warm cache.
         */
         ...(light
           ? [{ type: 'text' as const, text: SYSTEM_PROMPT }]
@@ -466,18 +483,19 @@ async function runClaudeTurn(
                 ? { ...b, cache_control: { type: 'ephemeral' as const } }
                 : b,
             )),
-        // הפירוט משתנה לפי השיחה -> אחרי נקודת השבירה, בלי cache_control
+        // The detail block varies with the conversation -> after the breakpoint, no cache_control
         { type: 'text', text: groundingDetail },
         ...(light ? [{ type: 'text' as const, text: LIGHT_TURN_NOTE }] : []),
-        // תאריך היום/תשובת מטמון לחיפוש - נגזר מהשעון בזמן הבקשה, ולכן
-        // חייב לשבת כאן ולא בקידומת השמורה (ראו webLookup.ts, todayIso).
+        // Today's date / cached lookup answer - derived from the clock at request
+        // time, so it must sit here and not in the cached prefix (see webLookup.ts, todayIso).
         ...(lookupNote ? [{ type: 'text' as const, text: lookupNote }] : []),
         { type: 'text', text: `CURRENT TRIP (the user's active trip right now):\n${serializeTripForModel(trip)}${kosherNote}` },
-        // האחרון בכוונה. הכללים האלה קיימים למעלה ב-LANGUAGE & VOICE
-        // ונבלעו בבדיקה חיה: הפרומפט ארוך, והמודל הפיק פירוק לפי יבשות
-        // עם עשרות שמות ערים אף על פי ששני סעיפים אסרו את זה במפורש.
-        // כאן הם הדבר האחרון שנקרא לפני השיחה - אותו עיקרון שגרם
-        // ל-PROSE_DISCIPLINE לעבוד מתוך תוצאת הכלי.
+        // Last on purpose. These rules also appear above under LANGUAGE & VOICE
+        // and were swallowed in live testing: the prompt is long, and the model
+        // produced a continent-by-continent breakdown naming dozens of cities
+        // even though two separate sections forbade exactly that. Here they are
+        // the last thing read before the conversation - the same principle that
+        // made PROSE_DISCIPLINE work from inside the tool result.
         { type: 'text', text: OUTPUT_DISCIPLINE },
         ...(serverVerdicts ? [{ type: 'text' as const, text: serverVerdicts }] : []),
       ],
@@ -486,10 +504,10 @@ async function runClaudeTurn(
   });
 
   /*
-    **נסיגה אם ה-API לא מכיר את `ttl`.** לא ניתן היה לבדוק את זה חי
-    בסביבה הזאת, ובקשה שנדחית פירושה סוכן מת - לא תור יקר. אז 400
-    שמזכיר את השדה מנסה שוב בלעדיו, פעם אחת. אם השדה תקין, השורה הזאת
-    לא תרוץ אף פעם.
+    **Fallback if the API does not recognise `ttl`.** This could not be verified
+    live in this environment, and a rejected request means a dead agent - not an
+    expensive turn. So a 400 that mentions the field retries once without it. If
+    the field is valid, this line never runs.
   */
   let res = await callApi(CACHE_TTL);
   if (!res.ok && res.status === 400 && CACHE_TTL) {
@@ -501,7 +519,7 @@ async function runClaudeTurn(
   }
 
   if (!res.ok || !res.body) {
-    // קריאת הגוף לא יכולה להפיל את הטיפול בשגיאה עצמו
+    // Reading the body must not be able to break the error handling itself
     const detail = await res.text().catch(() => '');
     throw new AnthropicHttpError(res.status, detail);
   }
@@ -517,13 +535,14 @@ async function runClaudeTurn(
   const usage: AnthropicUsage = {};
 
   /**
-   * שומר המחירים, על הזרם.
+   * The price guard, on the stream.
    *
-   * הטקסט לא נשלח יותר delta-אחר-delta: הוא עובר דרך `GuardedTextStream`,
-   * שמשחרר **רק משפטים שלמים**. בלי זה אין שום דרך לסנן טענת מחיר - מה
-   * שנשלח נשלח, ו-"400" ו-"ש״ח ללילה" יכולים להגיע בשני delta נפרדים
-   * ולעבור כל בדיקה שרצה על אחד מהם. המחיר הוא השהיה של משפט אחד; מצב
-   * הטיול ממשיך להישלח מיד כמו קודם, ולכן הקנבס לא מחכה.
+   * Text is no longer sent delta-by-delta: it goes through `GuardedTextStream`,
+   * which releases **only complete sentences**. Without that there is no way to
+   * filter a price claim - what is sent is sent, and "400" and "ILS per night"
+   * can arrive in two separate deltas and pass any check that runs on either of
+   * them. The cost is one sentence of latency; trip state is still sent
+   * immediately as before, so the canvas does not wait.
    */
   const guardStream = new GuardedTextStream(guardAllow, {
     price: searchShown ? NO_PRICE_LINE : NO_PRICE_LINE_BARE,
@@ -562,10 +581,12 @@ async function runClaudeTurn(
             name,
             json: '',
           });
-          // שם הכלי ידוע כבר כאן, לפני שה-JSON של הקלט מוזרם (החלק הארוך) -
-          // אז אפשר לומר למשתמש מה עומד לקרות במקום להשאיר "חושב" 10 שניות.
-          // רק לכלי הראשון בתור: המודל פותח את כל בלוקי הכלים ברצף, וכיווץ
-          // כולם לכאן היה מקדים סטטוסים לפני שהפעולה שלפניהם בכלל רצה.
+          // The tool name is already known here, before its input JSON streams
+          // (the long part) - so we can tell the user what is about to happen
+          // instead of leaving "thinking" on screen for 10 seconds. Only for the
+          // first tool of the turn: the model opens all tool blocks in sequence,
+          // and collapsing them all here would announce statuses before the
+          // action preceding them had even run.
           if (name && !announcedTool) {
             announcedTool = true;
             send({ type: 'status', text: toolStatusText(name, {}) });
@@ -576,8 +597,8 @@ async function runClaudeTurn(
       } else if (event.type === 'content_block_delta' && event.index !== undefined && event.delta) {
         const block = byIndex.get(event.index);
         if (event.delta.type === 'text_delta' && event.delta.text) {
-          // הבלוק שומר את הטקסט הגולמי - הוא חוזר להיסטוריה של המודל.
-          // המשתמש מקבל את מה שיוצא מהשומר.
+          // The block keeps the raw text - that is what goes back into the
+          // model's history. The user gets whatever comes out of the guard.
           if (block?.type === 'text') block.text += event.delta.text;
           emit(guardStream.push(event.delta.text));
         } else if (event.delta.type === 'input_json_delta' && event.delta.partial_json) {
@@ -586,8 +607,9 @@ async function runClaudeTurn(
       } else if (event.type === 'message_delta') {
         if (event.delta?.stop_reason) stopReason = event.delta.stop_reason;
         if (event.usage?.output_tokens !== undefined) usage.output_tokens = event.usage.output_tokens;
-        // מספר החיפושים ידוע רק אחרי שהם רצו - כלומר בסוף, ב-message_delta,
-        // לא בתחילת הקריאה. בלי זה חיפוש עולה כסף בלי שהוא נרשם בשום מקום.
+        // The number of searches is only known after they have run - i.e. at the
+        // end, in message_delta, not at the start of the call. Without this a
+        // search costs money without being recorded anywhere.
         if (event.usage?.server_tool_use) usage.server_tool_use = event.usage.server_tool_use;
       } else if (event.type === 'message_start' && event.message?.usage) {
         Object.assign(usage, event.message.usage);
@@ -595,21 +617,22 @@ async function runClaudeTurn(
     }
   }
 
-  // מה שנשאר בחוצץ בסוף הזרם (המשפט האחרון, שאין אחריו פיסוק)
+  // Whatever is left in the buffer at the end of the stream (the last sentence, with no punctuation after it)
   emit(guardStream.end());
 
-  // חתיכה שנחתכה היא מידע תפעולי אמיתי: היא אומרת שהמודל ניסה לנקוב
-  // במספר. נרשם בכל הסביבות ולא רק בפיתוח - זה הסימן שכדאי לבדוק פרומפט.
+  // A stripped chunk is real operational information: it says the model tried to
+  // quote a number. Logged in every environment, not just development - this is
+  // the signal that a prompt is worth looking at.
   if (guardStream.redactions.length > 0) {
     console.warn(`[chat] price guard redacted: ${guardStream.redactions.join(', ')}`);
   }
 
-  // ניטור עלויות בפיתוח: cached > 0 מאיטרציה 2 ומטור 2 = ה-prompt cache עובד
+  // Cost monitoring in dev: cached > 0 from iteration 2 and turn 2 = the prompt cache is working
   /*
-    שורת השימוש. הייתה עד היום ב-development בלבד, וזה בדיוק המצב שבו
-    אי אפשר לדעת כמה הניתוב חוסך בפועל: הפרודקשן הוא המקום שבו יש
-    תעבורה אמיתית ומטמון חם. היא לא מכילה שום דבר של המשתמש - שם מודל
-    ומספרים.
+    The usage line. Until now it was development-only, which is exactly the
+    situation where you cannot tell how much the routing actually saves:
+    production is where the real traffic and the warm cache are. It contains
+    nothing belonging to the user - a model name and numbers.
   */
   if (process.env.NODE_ENV === 'development' || process.env.CHAT_USAGE_LOG === 'on') {
     console.log(
@@ -621,7 +644,7 @@ async function runClaudeTurn(
   return { blocks, stopReason, text, usage, model };
 }
 
-/** לולאת הסוכן: קריאות מודל ↔ ביצוע כלים על עותק הטיול, עד תשובת טקסט */
+/** The agent loop: model calls <-> tool execution on a copy of the trip, until a text reply */
 async function runAgent(
   messages: ChatMessage[],
   clientTrip: Trip | null,
@@ -633,30 +656,34 @@ async function runAgent(
 ): Promise<void> {
   let working = clientTrip;
   /**
-   * שני הכלים היחידים שיוצאים לשירות חיצוני בחינם (ויקיפדיה, OpenStreetMap),
-   * ולכן שני הכלים היחידים שאפשר להפעיל דרכם עומס על מישהו אחר. מכסה יומית
-   * לאדם, **ותקרה נוספת לתור אחד** - תור אחד יכול להריץ עד 16 איטרציות, ואין
-   * שום בקשה אמיתית שצריכה בתוכה יותר משלוש חקירות או שישה איתורים.
+   * The only two tools that reach a free external service (Wikipedia,
+   * OpenStreetMap), and therefore the only two through which someone else's
+   * service can be put under load. A daily per-person quota, **plus a ceiling
+   * for a single turn** - one turn can run up to 16 iterations, and no real
+   * request needs more than three explores or six geocodes inside it.
    */
   const perTurn = { explores: 0, geocodes: 0 };
   const MAX_EXPLORES_PER_TURN = 3;
   const MAX_GEOCODES_PER_TURN = 6;
   /**
-   * כרטיסי חיפוש בתור אחד.
+   * search cards in a single turn.
    *
-   * המכסות הקיימות של הצ׳אט (פרץ לדקה, בקשות ליום, תקציב יחידות AI)
-   * מכסות את המסלול הזה במלואו - הכלי רץ **רק** בתוך `/api/chat`, אחרי
-   * שכל השערים האלה נבדקו, ואין דרך אחרת להגיע אליו. מכסה יומית נפרדת
-   * לא נוספה בכוונה: בשונה מחקירת יעד או איתור מיקום, הכלי הזה לא יוצא
-   * לשום שירות חיצוני - הוא מרכיב מחרוזת מקומית, בלי עלות ובלי עומס על
-   * אף אחד. מה שכן צריך גבול הוא **חוויית המשתמש**: תור שמדביק ארבעה
-   * כרטיסי אפיליאייט קורא כמו מכירה, וזה לא המוצר.
+   * The chat's existing quotas (per-minute burst, requests per day, AI unit
+   * budget) cover this path completely - the tool runs **only** inside
+   * `/api/chat`, after all of those gates have been checked, and there is no
+   * other way to reach it. A separate daily quota was deliberately not added:
+   * unlike exploring a destination or geocoding a location, this tool does not
+   * reach any external service - it assembles a local string, at no cost and
+   * with no load on anyone. What does need a bound is the **user experience**:
+   * a turn that pastes four affiliate cards reads like a sales pitch, and that
+   * is not the product.
    */
   let searchesShown = 0;
   const MAX_SEARCHES_PER_TURN = 2;
   /**
-   * הרשימה הלבנה של שומר המחירים: מה שהמטייל עצמו כתב, ושמות הסיכות
-   * שהוא כבר נתן. **רק מהן** יכולים לצאת מספר או שם מלון בתשובה.
+   * The price guard's allowlist: what the traveller themselves wrote, plus the
+   * names of pins they have already given. **Only from these** may a number or
+   * a hotel name appear in the reply.
    */
   const guardAllow: GuardAllowlist = {
     userText: messages
@@ -670,8 +697,8 @@ async function runAgent(
   let touched = false;
   let full = '';
   let quickReplies: string[] | null = null;
-  // הודעה עם תמונה נשלחת כמערך בלוקים (תמונה ואז טקסט); בלי תמונה
-  // נשארת מחרוזת פשוטה, בדיוק כמו קודם.
+  // A message carrying an image is sent as an array of blocks (image then text);
+  // without an image it stays a plain string, exactly as before.
   const apiMessages: ApiMessage[] = messages.map((m) => {
     const match = m.image?.match(IMAGE_DATA_URL);
     if (!match) return { role: m.role, content: m.content };
@@ -679,60 +706,68 @@ async function runAgent(
       role: m.role,
       content: [
         { type: 'image', source: { type: 'base64', media_type: `image/${match[1]}`, data: match[2] } },
-        // הודעה ריקה מטקסט אינה חוקית מול ה-API, ובכל מקרה כדאי שהמודל
-        // יידע במפורש שהמשתמש צירף תמונה ולא כתב כלום.
+        // A message with no text is invalid against the API, and in any case the
+        // model should be told explicitly that the user attached an image and
+        // wrote nothing.
         { type: 'text', text: m.content || 'צירפתי תמונה - תסתכל עליה.' },
       ],
     };
   });
 
-  // טוגל הכשרות מה-UI: כשיש טיול - מטמיעים ישירות ב-preferences (העדפות
-  // רגישות הן כפתורים; הסוכן קורא אותן בשקט ולעולם לא שואל)
+  // The kosher toggle from the UI: when a trip exists, merge it straight into
+  // preferences (sensitive preferences are buttons; the agent reads them
+  // silently and never asks)
   if (kosherHint && working && working.preferences?.kosher !== true) {
     working = { ...working, preferences: { ...working.preferences, kosher: true } };
-    touched = true; // כדי שהטיול המעודכן יחזור ללקוח ויישמר
+    touched = true; // so the updated trip goes back to the client and is saved
   }
 
-  // משמעת פלט: תשובת טקסט רגילה מוגבלת ל-1024; איטרציות עם כלים (זיהוי
-  // כוונת עריכה, או המשך לולאה אחרי tool_results) מקבלות 2048 בשביל JSON.
+  // Output discipline: an ordinary text reply is capped at 1024; iterations with
+  // tools (edit-intent detection, or continuing the loop after tool_results) get
+  // 2048 for the JSON.
   const lastUser = messages[messages.length - 1]?.content ?? '';
   const hasVerbIntent =
     /תבנה|בנה לי|תבני|תכינו|תכין|תכנן|תכנון|תוסיף|תוסיפי|תוריד|תורידי|תחליף|תזיז|תמלא|תעדכן|תסדר|צור טיול|תקצר|תאריך/.test(
       lastUser,
     );
   /*
-    קבלת ההצעה לבנות טיול (ראו SYSTEM_PROMPT, "CREATING THE FIRST TRIP
-    NEEDS A CLEAR YES"): הודעה שהיא **כולה** אישור קצר - הצ׳יפ המומלץ
-    ("כן, בנה לי את זה") כבר תואם hasVerbIntent דרך "בנה לי", וזה כאן
-    בשביל "כן" חופשי שהמטייל הקליד בעצמו. `^...$` בכוונה: "כן אבל ספר
-    לי גם על..." ממשיך למשהו אחר ולא ייחשב אישור מלא.
+    Accepting the offer to build a trip (see SYSTEM_PROMPT, "CREATING THE FIRST
+    TRIP NEEDS A CLEAR YES"): a message that is **entirely** a short
+    confirmation - the recommended chip ("yes, build it for me") already matches
+    hasVerbIntent via its verb, and this is here for a free-form "yes" the
+    traveller typed themselves. `^...$` on purpose: "yes but tell me also
+    about..." is going somewhere else and does not count as a plain acceptance.
   */
   const acceptsOffer = /^(כן|בטח|סבבה|קדימה|מעולה|אחלה|בשמחה|לגמרי|יאללה|נשמע טוב)[\s,.!]*$/.test(
     lastUser.trim(),
   );
-  // בקשה כמו "טיול של 8 ימים בברטיסלבה ווינה" לא כוללת אף פועל מהרשימה
-  // למעלה אבל היא בבירור בקשת בנייה - מספר ימים + יעד מוכר מהדאטה. היא
-  // *לא* חלק מ-buildAskIntent (למטה) כי היא נכונה גם על שאלה בסגנון
-  // "5 ימים באיטליה, מה כדאי לראות" - ושם היא לא בקשת בנייה בכלל.
+  // A request like "an 8-day trip to Bratislava and Vienna" contains none of the
+  // verbs listed above but is plainly a build request - a day count plus a
+  // destination known from the data. It is deliberately *not* part of
+  // buildAskIntent (below), because it is equally true of a question shaped like
+  // "5 days in Italy, what is worth seeing" - and there it is not a build
+  // request at all.
   const mentionsDaysAndDest = /\d+\s*ימים?/.test(lastUser) && Boolean(findDestination(lastUser));
   /*
-    בקשת בנייה/עריכה מפורשת בפועל - פועל אמיתי, או קבלת ההצעה. זה מה
-    שמכריע אם תשובת פרוזה (**יום N**) בלי קריאת כלי נדחפת בחזרה לבנייה
-    בפועל (describedInsteadOfBuilding למטה), ולכן הוא חייב להישאר צר -
-    שאלה שרק מזכירה ימים ויעד אינה בקשת בנייה, גם אם `editIntent`
-    הרחב יותר (למטה, לתקצוב הטוקנים בלבד) כן סופר אותה.
+    An explicit build/edit request in practice - a real verb, or acceptance of
+    the offer. This is what decides whether a prose reply (**Day N**) with no
+    tool call is pushed back into an actual build (describedInsteadOfBuilding,
+    below), and it therefore has to stay narrow - a question that merely
+    mentions days and a destination is not a build request, even though the
+    broader `editIntent` (below, for token budgeting only) does count it.
   */
   const buildAskIntent = hasVerbIntent || acceptsOffer;
   const editIntent = buildAskIntent || mentionsDaysAndDest;
 
   /*
-    ---------- חיפוש חי: שעות/מחיר-כניסה/קיום ----------
+    ---------- Live lookups: hours / admission price / existence ----------
 
-    `kosherAsk` בודק את ההודעה **הזאת בלבד**, ולא את חלון שש ההודעות
-    שהשער הכללי של הכשרות משתמש בו - שאלה עובדתית לא-קשורה בהמשך שיחה
-    שהזכירה כשרות פעם אחת לא צריכה להיחסם. אבל כשההודעה **הזאת** נשמעת
-    כמו שאלת כשרות, זה מנצח הכול: `allowLookup` יורד ל-false בלי קשר
-    למה ש-`lookupEligible` היה אומר, ו-LOOKUP_TOOL פשוט לא נכנס לקריאה.
+    `kosherAsk` inspects **this message only**, not the six-message window the
+    general kashrut gate uses - an unrelated factual question later in a
+    conversation that mentioned kashrut once should not be blocked. But when
+    **this** message sounds like a kashrut question, that beats everything:
+    `allowLookup` drops to false regardless of what `lookupEligible` would have
+    said, and LOOKUP_TOOL simply never enters the call.
   */
   const kosherAsk = kosherIntentText(lastUser);
   const lookupQuotaOk =
@@ -740,7 +775,7 @@ async function runAgent(
     checkLimit('lookup-day', caller.id, planLimits.lookupsPerDay, periodMsFor(caller.tier)).ok;
   const lookupWanted = !kosherAsk && lookupQuotaOk && lookupEligible(lastUser) && lookupBudgetLeft(messages);
   const cachedLookup = lookupWanted ? getCachedLookup(lastUser) : null;
-  /** האם לצרף בפועל את `LOOKUP_TOOL` - לא כשיש כבר תשובה במטמון */
+  /** Whether to actually attach `LOOKUP_TOOL` - not when an answer is already cached */
   const allowLookup = lookupWanted && !cachedLookup;
   const lookupNote = cachedLookup
     ? `A fresh, still-valid answer to this exact question was already looked up earlier - reuse it instead of searching again, with its citation:\n"""\n${cachedLookup}\n"""`
@@ -748,19 +783,22 @@ async function runAgent(
       ? `TODAY'S DATE, for citing when you checked something (never compute or guess this yourself): ${todayIso()}.`
       : '';
 
-  // האם קריאת כלי כלשהי בפועל שינתה את הטיול בסיבוב הזה - נבדל מ-touched
-  // (ששיקוף מהצד גם רמז כשרות שדורש להחזיר את הטיול ללקוח, גם בלי כלי).
+  // Whether any tool call actually changed the trip this round - distinct from
+  // touched (which also reflects a kashrut hint that requires returning the trip
+  // to the client, even with no tool).
   let toolBuiltSomething = false;
   let forcedBuildRetry = false;
-  // האם התור כבר נקטע פעם אחת בגלל max_tokens (מרחיב את התקרה ומנחה
-  // לקריאות קטנות יותר, פעם אחת בלבד - כדי שלא ייווצר לופ)
+  // Whether the turn has already been truncated once by max_tokens (raises the
+  // ceiling and asks for smaller calls, once only - so no loop can form)
   let truncatedRetry = false;
-  // פירוט רק לערים שהשיחה נוגעת בהן (ראו buildGroundingDetail); היעדים
-  // שנחקרו מצורפים בכל איטרציה מחדש - חקירה באיטרציה N זמינה ב-N+1
+  // Detail only for the cities the conversation touches (see buildGroundingDetail);
+  // explored destinations are re-attached on every iteration - an explore in
+  // iteration N is groundable in N+1
   const relevant = relevantCitySlugs(messages, clientTrip);
-  // שני וריאנטים לכל היותר לכל בקשה (עם כשרות/בלי), נבנים לפי דרישה:
-  // המודל יכול להדליק את ההעדפה באמצע התור עם set_preferences, ואז
-  // האיטרציה הבאה חייבת לקבל את שכבת הכשרות באמת ולא רק את ההרשאה.
+  // At most two variants per request (with kashrut / without), built on demand:
+  // the model can turn the preference on mid-turn with set_preferences, and the
+  // next iteration must then genuinely receive the kashrut layer, not just the
+  // permission.
   const detailCache = new Map<boolean, string>();
   const detailFor = (ok: boolean) => {
     const hit = detailCache.get(ok);
@@ -771,17 +809,17 @@ async function runAgent(
   };
 
   /*
-    ---------- ניתוב המודל ----------
+    ---------- Model routing ----------
 
-    ההחלטה מתקבלת פעם אחת, לפני הלולאה, מהטקסט ומהטיול - ולא מהמודל.
-    `light` פירושו: מודל זול, כלים מוגבלים לרשימה הלבנה, ובלי אינדקס
-    הקטלוג. ראו `src/lib/server/modelRoute.ts`.
+    The decision is made once, before the loop, from the text and the trip - not
+    by the model. `light` means: cheap model, tools limited to an allowlist, and
+    no catalog index. See `src/lib/server/modelRoute.ts`.
   */
   const lastMsg = messages[messages.length - 1];
   /*
-    מפסק. ברירת המחדל דלוקה, אבל `CHAT_MODEL_ROUTING=off` מחזיר את
-    ההתנהגות הקודמת בדיוק בלי דיפלוי של קוד - וזה גם מה שמאפשר למדוד
-    את שני המסלולים על אותה בקשה בדיוק.
+    A kill switch. The default is on, but `CHAT_MODEL_ROUTING=off` restores the
+    previous behaviour exactly with no code deploy - and that is also what makes
+    it possible to measure both routes against the very same request.
   */
   const routingOn = process.env.CHAT_MODEL_ROUTING !== 'off';
   const route = routingOn
@@ -789,14 +827,15 @@ async function runAgent(
     : { light: false, reason: 'ניתוב כבוי' };
 
   /*
-    ---------- שתי הכרעות שהשרת מחשב, לא המודל ----------
+    ---------- Two decisions the server computes, not the model ----------
 
-    1. **פרשנות שם מקום.** `ברסלוונה` הפכה בשקט לברטיסלבה, ואף שורת קוד
-       לא הייתה מעורבת: `findDestination` דורש התאמה מדויקת ולכן לא זיהה
-       כלום, וההחלטה נפלה כולה בתוך המודל. עכשיו היא נמדדת ב-
-       `placeResolve.ts`, נמסרת למודל כעובדה, **ונאכפת ברמת הכלי**.
-    2. **האם זה תיקון.** אם כן, בנייה מחדש מחליפה את הטיול הפתוח במקום
-       להעמיד שני לידו. ראו `correction.ts`.
+    1. **Interpreting a place name.** A misspelling silently became Bratislava,
+       and no line of code was involved: `findDestination` requires an exact
+       match and so recognised nothing, and the decision fell entirely inside
+       the model. Now it is measured in `placeResolve.ts`, handed to the model
+       as a fact, **and enforced at the tool level**.
+    2. **Whether this is a correction.** If so, rebuilding replaces the open
+       trip instead of standing a second one beside it. See `correction.ts`.
   */
   const nameVerdicts = resolveMessage(lastUser);
   const correction = detectCorrection(messages, clientTrip);
@@ -813,12 +852,13 @@ async function runAgent(
   }
 
   /*
-    במסלול הקל **שום דבר לא נשלח ללקוח עד שהתור הוכיח את עצמו**.
+    On the light route **nothing is sent to the client until the turn has proved itself**.
 
-    זה לא זהירות יתר: אם התור מוסלם, המודל החזק מריץ הכול מחדש מאפס,
-    וטקסט או מצב-טיול שכבר הגיעו למסך היו הופכים להבהוב של עריכה שלא
-    קרתה. תור קל הוא ממילא משפט אחד, אז ההשהיה זניחה. `status` כן עובר
-    - הוא רק אומר "עובד על זה", ואין בו מה לבטל.
+    This is not over-caution: if the turn escalates, the strong model reruns
+    everything from scratch, and text or trip state already on screen would
+    become a flicker of an edit that never happened. A light turn is one sentence
+    anyway, so the delay is negligible. `status` does pass through - it only says
+    "working on it", and there is nothing in it to undo.
   */
   const buffered: StreamEvent[] = [];
   let capturing = false;
@@ -827,8 +867,9 @@ async function runAgent(
     else send(e);
   };
 
-  /** מצב שצריך לחזור לאחור בהסלמה. מה שאינו כאן לא יכול להשתנות במסלול
-   *  הקל, כי הכלים שנוגעים בו פשוט לא נשלחו (חקירה, כרטיס חיפוש, סיכות). */
+  /** State that must be rolled back on escalation. Anything not here cannot change
+   *  on the light route, because the tools that touch it were simply not sent
+   *  (explore, search card, pins). */
   const snapshot = () => ({
     working,
     full,
@@ -848,7 +889,7 @@ async function runAgent(
     quickReplies = s.quickReplies;
     apiMessages.length = s.apiMessages;
     buffered.length = 0;
-    // דגלי הניסיון-החד-פעמי שייכים לניסיון שנזרק, לא לזה שמתחיל עכשיו
+    // The one-shot flags belong to the attempt being discarded, not the one starting now
     truncatedRetry = false;
     forcedBuildRetry = false;
   };
@@ -870,26 +911,28 @@ async function runAgent(
   }
 
   /**
-   * גוף הלולאה, כפונקציה, כדי שאפשר יהיה להריץ אותו **פעמיים**:
-   * פעם קלה, ואם היא לא הצליחה - פעם כבדה על מצב משוחזר.
+   * The body of the loop, as a function, so it can be run **twice**: once light,
+   * and if that did not succeed, once heavy on restored state.
    */
   const runLoop = async () => {
   for (let iter = 0; iter < 16; iter++) {
-    // נקרא מחדש בכל איטרציה: `working` משתנה תוך כדי התור.
+    // Re-read on every iteration: `working` changes during the turn.
     const kosherOk = kosherAllowed(working, messages, kosherHint);
-    // אותו עיקרון: `set_preferences` יכול להדליק כשרות באמצע תור, אז
-    // הרשימה הלבנה של שומר המחירים (`kosher-claim`) נבנית כאן מחדש בכל
-    // איטרציה ולא פעם אחת בתחילת runAgent - ראו kosherAllowedNames.
+    // Same principle: `set_preferences` can turn kashrut on mid-turn, so the
+    // price guard's allowlist (`kosher-claim`) is rebuilt here on every
+    // iteration rather than once at the start of runAgent - see kosherAllowedNames.
     guardAllow.kosherNames = kosherAllowedNames(
       light ? (clientTrip?.citySlugs ?? []) : Array.from(new Set([...relevant, ...(clientTrip?.citySlugs ?? [])])),
       kosherOk,
     );
-    // אחרי קטיעה נותנים תקרה גבוהה יותר: ההנחיה לקריאות קטנות היא העיקר,
-    // אבל אין סיבה להיחתך שוב על אותה מגבלה בזמן שמתקנים.
+    // After a truncation we allow a higher ceiling: the instruction to make
+    // smaller calls is the main thing, but there is no reason to be cut off
+    // again by the same limit while fixing it.
     /*
-      תקרה קטנה למסלול הקל. הוא מפיק קריאת כלי אחת ומשפט קצר, והתקרה
-      הנמוכה היא גם מגן: קריאה שנקטעת היא `max_tokens`, וזה כבר טריגר
-      להסלמה. 512 מספיקים בנוחות לכל אחד מהכלים ברשימה הלבנה.
+      A small ceiling for the light route. It produces one tool call and a short
+      sentence, and the low ceiling is also a guard: a call that gets truncated
+      is `max_tokens`, which is itself an escalation trigger. 512 is comfortably
+      enough for every tool on the allowlist.
     */
     const maxTokens = Math.min(
       MAX_OUTPUT_TOKENS,
@@ -911,16 +954,18 @@ async function runAgent(
       guardAllow,
       searchesShown > 0,
       light,
-      // המסלול הקל לא מקבל חיפוש בשום מקרה - הוא כבר מוגבל לרשימה
-      // לבנה של כלים שלא כוללת אותו, וזה כאן רק כדי שהכוונה תהיה מפורשת.
+      // The light route never gets search under any circumstances - it is
+      // already limited to a tool allowlist that excludes it, and this is here
+      // only to make the intent explicit.
       !light && allowLookup,
       light ? '' : lookupNote,
       serverVerdicts,
     );
     /*
-      חיפוש נודע רק בדיעבד (server_tool_use ב-usage, ראו runClaudeTurn),
-      ולכן משוטח כאן פעם אחת לפני שהוא נכנס גם ליחידות וגם לדולרים - שני
-      השערים היחידים שקיימים על ההוצאה הזאת, ראו webLookup.ts.
+      A search is only known after the fact (server_tool_use in usage, see
+      runClaudeTurn), so it is flattened here once before it feeds both the units
+      and the dollars - the only two gates that exist on this spend, see
+      webLookup.ts.
     */
     const usageFlat = {
       ...turn.usage,
@@ -928,8 +973,9 @@ async function runAgent(
     };
     meter.units += aiUnits(usageFlat);
     /*
-      העלות האמיתית, לצד היחידות. היחידות הן מכסה אישית; הדולרים הם
-      התקרה הגלובלית ומה שנתנאל יראה באזור הניהול - כמה עולה טיול.
+      The real cost, alongside the units. Units are a personal quota; the dollars
+      are the global ceiling and what the owner sees in the admin area - what a
+      trip actually costs.
     */
     meter.usd += recordSpend({
       identity: caller.id,
@@ -938,19 +984,20 @@ async function runAgent(
       route: 'chat',
       model: turn.model,
       usage: usageFlat,
-      // אם התשובה נקטעה לפני message_delta אין output_tokens, והטקסט
-      // שכן הוזרם הוא הבסיס לאומדן שמרני במקום אפס
+      // If the reply was cut off before message_delta there are no output_tokens,
+      // and the text that did stream is the basis for a conservative estimate
+      // rather than zero
       streamedChars: turn.text.length,
-      // מזקיף את ההוצאה לארנק הנכון - ראו ההסבר המלא ב-budget.ts
+      // Charges the spend to the right wallet - see the full explanation in budget.ts
       premium: caller.plan === 'premium' && Boolean(caller.userId),
     });
     full += turn.text;
 
     /*
-      תקרת עלות לתור בודד. הסכנה איננה תשובה ארוכה אלא **לולאה**: 16
-      איטרציות שכל אחת שולחת את הקידומת מחדש. תור אמיתי עולה
-      $0.01-$0.13, ולכן התקרה רחוקה מכל שימוש אמיתי - היא קיימת כדי
-      שבאג לא ישרוף את התקציב היומי בבקשה אחת.
+      A cost ceiling for a single turn. The danger is not a long answer but a
+      **loop**: 16 iterations each resending the prefix. A real turn costs
+      $0.01-$0.13, so the ceiling is far from any genuine use - it exists so that
+      a bug cannot burn the daily budget in one request.
     */
     if (meter.usd > MAX_TURN_USD) {
       console.warn(`[budget] turn aborted at $${meter.usd.toFixed(3)} (iter ${iter})`);
@@ -962,10 +1009,10 @@ async function runAgent(
     }
 
     if (turn.stopReason !== 'tool_use') {
-      // max_tokens אינו tool_use, ולכן עד עכשיו הוא פשוט שבר את הלולאה:
-      // קריאת כלי שנקטעה באמצע ה-JSON נזרקה בשקט, בלי שגיאה ובלי ניסיון
-      // נוסף, והמטייל קיבל כלום. זה פוגע דווקא בבנייה מחדש של טיול שלם -
-      // ה-JSON הגדול ביותר שהמודל מפיק, ובעברית שהיא יקרה בטוקנים.
+      // max_tokens is not tool_use, so until now it simply broke the loop: a tool
+      // call truncated mid-JSON was dropped silently, with no error and no retry,
+      // and the traveller got nothing. That hurts a full trip rebuild most - the
+      // largest JSON the model produces, and in Hebrew, which is token-expensive.
       if (turn.stopReason === 'max_tokens' && !truncatedRetry) {
         truncatedRetry = true;
         if (turn.text) apiMessages.push({ role: 'assistant', content: turn.text });
@@ -976,21 +1023,24 @@ async function runAgent(
         });
         continue;
       }
-      // הדפוס הזה קורה בפועל: המודל מתאר מסלול יום-אחר-יום בטקסט (בפורמט
-      // **יום N** שהפרומפט מלמד לתשובות המלצה) אבל שוכח לקרוא בפועל לכלי
-      // שבונה את הטיול, **אחרי שכבר קיבל בקשה מפורשת לבנות** (`buildAskIntent`)
-      // - הצ׳אט "מבטיח" תוכנית, אבל הפאנל/המפה נשארים ריקים כי אף tool_use
-      // לא בוצע. במקום לנחש מה תואר ולהמציא טיול מהטקסט, דוחפים תזכורת
-      // חד-פעמית שמכריחה את המודל לבצע את הקריאה בעצמו על הדאטה האמיתית -
-      // ואז ממשיכים את אותה לולאת ה-tool_use הרגילה.
+      // This pattern happens in practice: the model describes a day-by-day
+      // itinerary in text (in the **Day N** format the prompt teaches for
+      // recommendation answers) but forgets to actually call the tool that builds
+      // the trip, **after already receiving an explicit request to build**
+      // (`buildAskIntent`) - the chat "promises" a plan while the panel and map
+      // stay empty, because no tool_use ran. Rather than guessing what was
+      // described and inventing a trip from the text, we push a one-time reminder
+      // that forces the model to make the call itself against the real data - and
+      // then continue the ordinary tool_use loop.
       //
-      // בכוונה `buildAskIntent` ולא `editIntent` הרחב: שאלה שרק מזכירה
-      // ימים ויעד ("5 ימים באיטליה, מה כדאי לראות") עשויה להיענות באותו
-      // פורמט **יום N** כהמלצה גרידא - וזה בדיוק המקרה החוקי שאסור לדחוף
-      // לבנייה בפועל, ראו SYSTEM_PROMPT "CREATING THE FIRST TRIP NEEDS A
-      // CLEAR YES". `!quickReplies` נשאר: תשובה עם הצעה מצורפת (הצ׳יפים
-      // "כן, בנה לי את זה" / "לא, רק בירור") היא בדיוק המקרה שבו המודל
-      // *בחר* שלא לבנות עדיין, ולא שכח.
+      // Deliberately `buildAskIntent` and not the broader `editIntent`: a question
+      // that merely mentions days and a destination ("5 days in Italy, what is
+      // worth seeing") may legitimately be answered in that same **Day N** format
+      // as a pure recommendation - and that is exactly the legal case that must
+      // not be pushed into an actual build, see SYSTEM_PROMPT "CREATING THE FIRST
+      // TRIP NEEDS A CLEAR YES". `!quickReplies` stays: a reply with an offer
+      // attached (the "yes, build it" / "no, just asking" chips) is precisely the
+      // case where the model *chose* not to build yet, rather than forgot.
       const describedInsteadOfBuilding =
         buildAskIntent &&
         !toolBuiltSomething &&
@@ -1030,8 +1080,8 @@ async function runAgent(
       if (!parseOk) {
         out = { trip: working, ok: false, message: 'קלט הכלי לא היה JSON תקין - נסה שוב.', action: undefined, quickReplies: undefined };
       } else if (block.name === 'explore_destination') {
-        // הכלי היחיד שהוא אסינכרוני - רץ כאן ולא ב-executeAgentTool.
-        // curated תמיד גובר: אם השאילתה היא בעצם עיר מהקטלוג, מחזירים אותה.
+        // The only asynchronous tool - it runs here and not in executeAgentTool.
+        // Curated always wins: if the query is really a city from the catalog, we return that.
         const query = typeof input.query === 'string' ? input.query.trim() : '';
         const curated = findDestination(query);
         if (curated) {
@@ -1046,10 +1096,11 @@ async function runAgent(
           perTurn.explores >= MAX_EXPLORES_PER_TURN ||
           !checkLimit('explore-day', caller.id, planLimits.exploresPerDay, periodMsFor(caller.tier)).ok
         ) {
-          // המכסה נאמרת למודל כתוצאת כלי, והוא זה שמסביר אותה למטייל בשיחה -
-          // זה הרבה יותר טוב מהודעת שגיאה, כי הוא יכול להציע במקום זה יעדים
-          // מהקטלוג. חשוב שיהיה כתוב במפורש שזו מכסה ולא תקלה, אחרת הוא
-          // ינסה שוב באיטרציה הבאה.
+          // The quota is told to the model as a tool result, and the model is the
+          // one that explains it to the traveller in conversation - far better
+          // than an error box, because it can offer catalog destinations instead.
+          // It must say explicitly that this is a quota and not a failure,
+          // otherwise the model retries on the next iteration.
           out = {
             trip: working,
             ok: false,
@@ -1060,8 +1111,9 @@ async function runAgent(
           };
         } else {
           perTurn.explores += 1;
-          // טווח החקירה: מי שיש לו (או רוצה) רכב לא מוגבל לרדיוס העיר.
-          // המודל יכול לדרוס במפורש, וברירת המחדל נגזרת ממצב ההזמנות.
+          // Explore radius: someone who has (or wants) a car is not limited to the
+          // city radius. The model may override explicitly, and the default is
+          // derived from the booking state.
           const car = working?.preferences?.booking?.car;
           const scope: ExploreScope =
             input.scope === 'area' || input.scope === 'city'
@@ -1077,7 +1129,7 @@ async function runAgent(
             exploredDest = null;
           }
           if (exploredDest) {
-            // אותו slug שכבר נחקר - מחליפים, לא מכפילים
+            // Same slug already explored - replace, do not duplicate
             const idx = explored.findIndex((d) => d.slug === exploredDest!.slug);
             if (idx >= 0) explored[idx] = exploredDest;
             else explored.push(exploredDest);
@@ -1104,21 +1156,23 @@ async function runAgent(
           }
         }
       } else if (block.name === 'add_pin') {
-        // הכלי האסינכרוני השני: איתור המיקום נעשה כאן, מול OpenStreetMap,
-        // ועובר ל-executeAgentTool כפרמטר נפרד. המודל מספק שם בלבד -
-        // אין שום מסלול שבו הוא מזריק קואורדינטות משלו. כישלון איתור
-        // אינו כישלון של הכלי: הסיכה נשמרת ומסומנת "לא אומת".
+        // The second asynchronous tool: geocoding happens here, against
+        // OpenStreetMap, and is passed to executeAgentTool as a separate
+        // parameter. The model supplies a name only - there is no path by which
+        // it can inject coordinates of its own. A failed lookup is not a failed
+        // tool: the pin is saved and marked "location not verified".
         const pinName = typeof input.name === 'string' ? input.name.trim() : '';
-        // slug מדויק, לא ההתאמה הרכה של findDestination: כאן זה מזהה
-        // ולא טקסט חופשי. ההקשר נבנה בשמות הלטיניים, שהם מה שהמפות מכירות.
+        // An exact slug, not findDestination's soft matching: here it is an
+        // identifier, not free text. The context is built from the Latin names,
+        // which are what maps recognise.
         const city = destinations.find((d) => d.slug === input.citySlug);
         const country = city ? countries.find((c) => c.slug === city.countrySlug) : undefined;
         const context = city
           ? [city.nameLocal || city.name, country?.nameLocal].filter(Boolean).join(', ')
           : undefined;
-        // מעל המכסה הסיכה עדיין נשמרת - פשוט בלי מיקום, ומסומנת "לא אומת",
-        // בדיוק כמו כישלון איתור. אין שום סיבה שמכסה תמנע מהמטייל לרשום
-        // שהוא הזמין מלון.
+        // Over quota the pin is still saved - just without a location, and marked
+        // "not verified", exactly like a failed lookup. There is no reason a quota
+        // should stop a traveller recording that they booked a hotel.
         const geoAllowed =
           perTurn.geocodes < MAX_GEOCODES_PER_TURN &&
           checkLimit('geocode-day', caller.id, planLimits.geocodesPerDay, periodMsFor(caller.tier)).ok;
@@ -1147,10 +1201,11 @@ async function runAgent(
         peekUsed('trip-builds-month', caller.id) >= PREMIUM_TRIP_BUILDS_PER_MONTH
       ) {
         /*
-          מכסת הבניות המלאות של המנוי. `peekUsed` ולא `checkLimit` - הצריכה
-          בפועל קורית רק אחרי בנייה **שהצליחה** (למטה), כדי שניסיון שנפל
-          בוולידציה לא ישרוף אחת משתי הבניות של החודש. ההודעה היא תוצאת
-          כלי - המודל מסביר אותה למטייל בשיחה, בלי לנקוב באף מספר כספי.
+          The subscriber's full-build quota. `peekUsed` rather than `checkLimit` -
+          the consumption itself happens only after a build that **succeeded**
+          (below), so an attempt that failed validation does not burn one of the
+          month's two builds. The message is a tool result - the model explains it
+          to the traveller in conversation, without naming any monetary figure.
         */
         out = {
           trip: working,
@@ -1162,16 +1217,19 @@ async function runAgent(
         };
       } else {
         /*
-          ---------- שער השמות, ברמת הכלי ----------
+          ---------- The names gate, at the tool level ----------
 
-          הבלוק שנשלח למודל הוא הנחיה, והיומן כאן מתעד שוב ושוב שהנחיה
-          נבלעת. לכן הבחירה נמדדת שוב **ברגע שהיא נכתבת**: כלי שבוחר עיר
-          נבדק מול מה שהמטייל הקליד בפועל, ובמצב "כמה סבירות" הוא נכשל
-          ומחזיר למודל את האפשרויות. כלי שלא בוצע לא יכול ליצור טיול
-          שגוי - זה אותו דפוס של `filterKosherUnlessOptedIn`.
+          The block sent to the model is guidance, and this log records again and
+          again that guidance gets swallowed. So the choice is measured a second
+          time **at the moment it is written**: a tool that picks a city is checked
+          against what the traveller actually typed, and in the "several plausible"
+          case it fails and hands the options back to the model. A tool that did
+          not run cannot create a wrong trip - the same pattern as
+          `filterKosherUnlessOptedIn`.
 
-          הבדיקה חלה רק על הכלים שבוחרים עיר. `add_place`/`move_place`
-          פועלים על העיר שכבר בטיול, ואין בהם שם לפרש.
+          The check applies only to the tools that pick a city. `add_place` /
+          `move_place` operate on a city already in the trip, and carry no name
+          to interpret.
         */
         const chosen = citySlugsOf(block.name, input);
         const gate = chosen.length > 0 ? cityGate(lastUser, chosen) : { ok: true as const, note: '' };
@@ -1180,35 +1238,38 @@ async function runAgent(
           out = { trip: working, ok: false, message: gate.message, action: undefined, quickReplies: undefined };
         } else {
           out = executeAgentTool(working, block.name, input, explored, null, correction.correction);
-          // הפרשנות נמסרת למודל יחד עם ההצלחה, כדי שיאמר אותה למטייל
+          // The interpretation is handed to the model along with the success, so it can state it to the traveller
           if (out.ok && gate.note) out = { ...out, message: out.message + gate.note };
         }
       }
       if (out.ok && out.trip !== working) {
-        touched = true; // suggest_quick_replies לא נוגע בטיול
+        touched = true; // suggest_quick_replies does not touch the trip
         toolBuiltSomething = true;
       }
-      // צריכת מכסת הבניות המלאות של המנוי - רק על בנייה שהצליחה בפועל
-      // (ראו peekUsed בשער למעלה). ה-checkLimit כאן הוא הרישום עצמו.
+      // Consuming the subscriber's full-build quota - only on a build that actually
+      // succeeded (see peekUsed at the gate above). The checkLimit here is the record itself.
       if (out.ok && block.name === 'create_trip_full' && caller.plan === 'premium') {
         checkLimit('trip-builds-month', caller.id, PREMIUM_TRIP_BUILDS_PER_MONTH, periodMsFor('premium'));
       }
       working = out.trip;
-      // משדרים את הטיול מיד אחרי כל כלי שמשנה אותו, ולא רק בסוף התור:
-      // הקנבס מתמלא תוך כדי הבנייה במקום להישאר ריק עשרות שניות.
+      // We stream the trip immediately after every tool that changes it, not only
+      // at the end of the turn: the canvas fills during the build instead of
+      // staying empty for tens of seconds.
       if (out.ok && toolBuiltSomething && working) {
         outSend({ type: 'trip', trip: working, actions: [...actions] });
       }
-      // רשומות שהוחזרו מהדאטה נכנסות לרשימה הלבנה של שומר הטענות: מרגע
-      // זה המודל רשאי לדבר על **אותן** רשומות בשמן, ורק עליהן. מוסיפים
-      // לאותו אובייקט שהאיטרציה הבאה תקרא, ולא יוצרים חדש.
+      // Records returned from the data enter the claim guard's allowlist: from
+      // this point the model may talk about **those** records by name, and only
+      // those. We add to the same object the next iteration will read, rather
+      // than creating a new one.
       if (out.ok && out.eventNames?.length) {
         guardAllow.eventNames = [...(guardAllow.eventNames ?? []), ...out.eventNames.filter(Boolean)];
       }
       if (out.ok && out.action) actions.push(out.action);
       if (out.ok && out.quickReplies) quickReplies = out.quickReplies;
-      // הכרטיס נשלח מיד: הוא התשובה האמיתית לבקשה, ואין סיבה שיחכה לסוף
-      // הפרוזה. הוא נבנה כולו בשרת מהטיול - ראו bookingSearch.ts.
+      // The card is sent immediately: it is the real answer to the request, and
+      // there is no reason for it to wait for the prose to finish. It is built
+      // entirely on the server from the trip - see bookingSearch.ts.
       if (out.ok && out.search) {
         searchesShown += 1;
         send({ type: 'search', search: out.search });
@@ -1226,18 +1287,20 @@ async function runAgent(
     apiMessages.push({ role: 'user', content: results });
 
     /*
-      תקרת איטרציות למסלול הקל. לא break אלא יציאה שמובילה להסלמה:
-      מודל שמגשש כבר בסיבוב הרביעי הוא בדיוק המקרה שהמסלול הקל לא
-      אמור לטפל בו.
+      An iteration ceiling for the light route. Not a break but an exit that leads
+      to escalation: a model still groping around on the fourth round is exactly
+      the case the light route is not meant to handle.
     */
     /*
-      **תור קל = קריאת מודל אחת.** אחרי שהכלי בוצע אין למודל מה להוסיף:
-      המשפט למטייל נבנה מהפעולה עצמה ולא ממנו, וסיבוב שני היה שולח את
-      כל הקידומת פעם נוספת רק כדי לקבל טקסט שנזרק ממילא. במדידה הראשונה
-      זה היה חצי מעלות התור.
+      **A light turn = one model call.** Once the tool has run there is nothing
+      left for the model to add: the sentence shown to the traveller is built from
+      the action itself and not by the model, and a second round would resend the
+      whole prefix just to get text that is discarded anyway. In the first
+      measurement that was half the cost of the turn.
 
-      כל הכלים ברשימה הלבנה הם פעולה אחת שלמה, ולכן אין כאן מקרה שנחתך
-      באמצע - בשונה מהמסלול הכבד, שבו set_day_city גורר set_day_places.
+      Every tool on the allowlist is one complete action, so there is no case here
+      of being cut off halfway - unlike the heavy route, where set_day_city drags
+      set_day_places along with it.
     */
     if (light && toolBuiltSomething) break;
     if (light && iter + 1 >= MAX_LIGHT_ITERATIONS) break;
@@ -1247,14 +1310,16 @@ async function runAgent(
   await runLoop();
 
   /*
-    ---------- ההסלמה ----------
+    ---------- Escalation ----------
 
-    כל דבר שאינו הצלחה נקייה חוזר למודל החזק, והתור מורץ **מאפס**:
-    ההיסטוריה, הטיול והטקסט משוחזרים למצב שלפני הניסיון הקל, כך שהמודל
-    החזק לא יורש חצי עריכה ולא צריך להבין מה קרה לפניו.
+    Anything that is not a clean success goes back to the strong model, and the
+    turn is run **from scratch**: history, trip and text are restored to the state
+    before the light attempt, so the strong model never inherits half an edit and
+    does not have to work out what happened before it.
 
-    התור הזול לא מוחזר למונה: הטוקנים באמת נשרפו, וספירה שמעגלת אותם
-    למטה תגרום למדידה הבאה להיראות טובה משהיא.
+    The cheap turn is not refunded to the counter: those tokens really were burnt,
+    and a count that rounds them away would make the next measurement look better
+    than it is.
   */
   if (light) {
     const why = shouldEscalate({
@@ -1273,21 +1338,23 @@ async function runAgent(
       await runLoop();
     } else {
       /*
-        ---------- הפרוזה של המסלול הקל נזרקת ----------
+        ---------- The light route's prose is discarded ----------
 
-        נמדד חי על שישה תרחישים: **כל שש העריכות בוצעו נכון**, ושלושה
-        מהמשפטים שנכתבו עליהן היו שגויים - "השם כבר איטליה ואוסטריה"
-        אחרי ששינה אותו, "ההערה כבר קיימת" אחרי שהוסיף אותה, ו"לא
-        אוכל להוסיף" אחרי שהוסיף. המטייל קורא את המשפט.
+        Measured live over six scenarios: **all six edits were performed
+        correctly**, and three of the sentences written about them were wrong -
+        "the name is already X" after changing it, "that note already exists"
+        after adding it, and "I cannot add it" after adding it. The traveller
+        reads the sentence.
 
-        המסקנה היא לא "המודל הזול לא מתאים" אלא **לא לתת לו לכתוב**:
-        קריאת הכלי היא מה שהוא עושה היטב, והמשפט כבר קיים בקוד -
-        `out.action` נבנה בשרת מהעריכה שבוצעה בפועל ("הזזתי את רומא
-        מיום 5 ליום 1"). זה אותו דפוס של `pinDistances` ו-`priceGuard`:
-        למסור עובדה מחושבת במקום לבקש מהמודל לא לטעות.
+        The conclusion is not "the cheap model is unsuitable" but **do not let it
+        write**: calling the tool is what it does well, and the sentence already
+        exists in the code - `out.action` is built on the server from the edit
+        that actually executed ("moved Rome from day 5 to day 1"). This is the
+        same pattern as `pinDistances` and `priceGuard`: hand over a computed
+        fact instead of asking the model not to get it wrong.
 
-        השבבים מושתקים בתור כזה כדי שהמשפט לא יופיע פעמיים - כאן הם
-        *הם* המשפט.
+        The chips are suppressed on such a turn so the sentence does not appear
+        twice - here they *are* the sentence.
       */
       capturing = false;
       const textEvents = buffered.filter((e) => e.type === 'text');
@@ -1302,33 +1369,37 @@ async function runAgent(
         lightProseDropped = textEvents.length > 0;
         suppressActions = true;
       } else {
-        // אין פעולות אבל גם לא הסלמנו - מצב שאמור להיות בלתי אפשרי
-        // (`shouldEscalate` תופס `toolRan: false`). נשמר כרשת ביטחון.
+        // No actions but we did not escalate either - a state that should be
+        // impossible (`shouldEscalate` catches `toolRan: false`). Kept as a safety net.
         for (const e of textEvents) send(e);
       }
     }
   }
 
   /*
-    ---------- תשובה שנגמרה באמצע משפט ----------
+    ---------- A reply that ended mid-sentence ----------
 
-    נתנאל קיבל בדיוק את זה: **"סידרתי לך סופ״ש בברצלונה:" ואחריו כלום.**
+    Netanel got exactly this: **"I have arranged a weekend in Barcelona for you:" and then nothing.**
 
-    השחזור (מול שרת Anthropic מדומה, על בילד פרודקשן) הראה תור בן שתי
-    קריאות מודל: בקריאה הראשונה המודל כתב משפט פתיחה **ואת קריאת
-    `create_trip_full` יחד**, המשפט הוזרם מיד (שומר המחירים משחרר על
-    `:`, ולכן העצירה בדיוק שם), ובקריאה השנייה - זו שהייתה אמורה לשאת
-    את התוכן - הוא לא כתב כלום. בדקתי את החלופות באותו הארנס: משפט
-    רגיל, רשימת **יום N** וגם רווחים בלבד - כולם מגיעים ללקוח שלמים.
-    כלומר שום דבר בשרת לא בלע טקסט; פשוט לא נכתב טקסט.
+    The reproduction (against a mock Anthropic server, on a production build)
+    showed a turn of two model calls: in the first, the model wrote an opening
+    sentence **together with the `create_trip_full` call**, the sentence streamed
+    immediately (the price guard releases on `:`, which is why it stopped exactly
+    there), and in the second call - the one that was supposed to carry the
+    content - it wrote nothing at all. I checked the alternatives in the same
+    harness: an ordinary sentence, a **Day N** list, and whitespace only - all of
+    them reach the client intact. So nothing on the server swallowed text; text
+    simply was never written.
 
-    **החלק שהוא שלנו הוא שאף אחד לא בדק.** רשת הביטחון שהייתה כאן
-    תופסת רק תשובה **ריקה לגמרי**. משפט שנגמר בנקודתיים הוא, מבחינת
-    הקוד, תשובה תקינה לחלוטין - ולכן הוא עבר.
+    **The part that is ours is that nobody checked.** The safety net that used to
+    be here catches only a **completely empty** reply. A sentence ending in a
+    colon is, as far as the code is concerned, a perfectly valid reply - and so
+    it passed.
 
-    התיקון הוא אותו דפוס של המסלול הקל: יש כבר משפט אמיתי שנבנה בשרת
-    מהעריכה שבוצעה בפועל (`out.action`), והוא מוצמד לזנב הפתוח. המטייל
-    לא מקבל יותר הבטחה בלי המשך.
+    The fix is the same pattern as the light route: a real sentence already exists,
+    built on the server from the edit that actually executed (`out.action`), and it
+    is appended to the open tail. The traveller no longer gets a promise with
+    nothing after it.
   */
   const trimmedFull = full.trim();
   const dangling = trimmedFull.length === 0 || /[:\-–—]$/.test(trimmedFull);
@@ -1342,16 +1413,17 @@ async function runAgent(
     const text = trimmedFull.length === 0 ? tail : `\n${tail}`;
     send({ type: 'text', text });
     full += text;
-    // השבבים מושתקים כשהם *הם* המשפט, בדיוק כמו במסלול הקל - אחרת
-    // אותה שורה מופיעה פעמיים, פעם כטקסט ופעם כצ׳יפ מתחתיו.
+    // The chips are suppressed when they *are* the sentence, exactly as on the
+    // light route - otherwise the same line appears twice, once as text and once
+    // as a chip beneath it.
     if (actions.length > 0) suppressActions = true;
     if (trimmedFull.length > 0) console.log('[chat] dangling reply completed from actions');
   }
 
-  // רשת ביטחון: הלולאה הסתיימה עם יום ריק - אומרים זאת ביושר, בלי
-  // למלא אוטומטית מאחורי הגב. עד 2026-08-16 הבדיקה דרשה שכל הימים
-  // יהיו ריקים, ולכן "יום 2 - אנרגילנדיה" שנבנה ריק לצד יום 1 מלא עבר
-  // בשקט - וזה בדיוק המסך שגורם לאנשים לעזוב.
+  // Safety net: the loop ended with an empty day - we say so honestly, without
+  // auto-filling behind the traveller's back. Until 2026-08-16 the check required
+  // that ALL days be empty, so a "Day 2 - Energylandia" built empty next to a full
+  // day 1 passed silently - and that is exactly the screen that makes people leave.
   if (touched && working && working.days.length > 0) {
     const emptyDayNums = working.days
       .map((d, i) => (d.placeIds.length === 0 ? i + 1 : 0))
@@ -1367,26 +1439,29 @@ async function runAgent(
     }
   }
 
-  // רשת ביטחון דטרמיניסטית: אם הטוגל דלוק והסוכן לא קרא ל-set_preferences,
-  // מטמיעים את הכשרות בטיול בכל מקרה - ההעדפה חייבת להישמר על האובייקט.
+  // Deterministic safety net: if the toggle is on and the agent did not call
+  // set_preferences, we merge kashrut into the trip anyway - the preference must
+  // be persisted on the object.
   if (kosherHint && working && working.preferences?.kosher !== true) {
     working = { ...working, preferences: { ...working.preferences, kosher: true } };
     touched = true;
   }
 
   /*
-    שורה אחת שמאפשרת למדוד את הניתוב בפרודקשן בלי הארנס: כמה תורים
-    ירדו למסלול הקל, וכמה מהם הוסלמו בחזרה. יחס הסלמה גבוה פירושו
-    שהמסווג רחב מדי - וזה הנתון שיגיד את זה, לא תחושה.
+    One line that makes the routing measurable in production without a harness:
+    how many turns went down the light route, and how many of those escalated
+    back. A high escalation ratio means the classifier is too wide - and this is
+    the figure that will say so, not a hunch.
   */
   console.log(
     `[chat] turn route=${route.light ? 'light' : 'heavy'} escalated=${escalated} proseDropped=${lightProseDropped} reason=${route.reason}`,
   );
 
   /*
-    שמירה במטמון - רק אם באמת הצענו את הכלי (`allowLookup`) ורק אם מה
-    שיצא באמת נושא ציטוט אמיתי (שרד את שומר המחירים). תשובה שנחתכה
-    לגמרי לא נשמרת - אין מה לתת בחזרה לשאלה הבאה.
+    Caching - only if we actually offered the tool (`allowLookup`) and only if what
+    came out genuinely carries a real citation (i.e. survived the price guard). A
+    reply that was cut off entirely is not cached - there is nothing to hand back
+    to the next question.
   */
   if (allowLookup && LOOKUP_ANCHOR.test(full)) {
     rememberLookup(lastUser, full);
@@ -1395,9 +1470,9 @@ async function runAgent(
   const dest = findDestination(full);
   send({ type: 'meta', destinationSlug: dest?.slug });
   if (touched && working) send({ type: 'trip', trip: working, actions: suppressActions ? [] : actions });
-  // רשת ביטחון: הפרומפט מבקש כפתורים כשמציעים לחקור יעד לא מכוסה, אבל
-  // זה לא נאכף באמינות (ראו uncoveredReplies.ts) - כשהמודל לא צירף
-  // כלום בעצמו, זו תוספת בלבד ולא דריסה.
+  // Safety net: the prompt asks for buttons when offering to explore an uncovered
+  // destination, but that is not reliably obeyed (see uncoveredReplies.ts) - when
+  // the model attached nothing itself, this is an addition only, never an override.
   const effectiveQuickReplies = quickReplies ?? fallbackUncoveredQuickReplies(full);
   if (effectiveQuickReplies) send({ type: 'quickReplies', replies: effectiveQuickReplies });
 }
@@ -1408,7 +1483,7 @@ function sendRuleBased(lastUserText: string, send: Send) {
   send({ type: 'meta', destinationSlug: r.destinationSlug, placeIds: r.placeIds });
 }
 
-/** תשובת סטרים של הודעה אחת - להודעות מכסה (חוויית צ׳אט, לא שגיאת HTTP) */
+/** A single-message stream reply - for quota messages (a chat experience, not an HTTP error) */
 function singleMessageStream(text: string): Response {
   const encoder = new TextEncoder();
   const stream = new ReadableStream<Uint8Array>({
@@ -1427,37 +1502,42 @@ function singleMessageStream(text: string): Response {
 }
 
 /**
- * תקלה בתור של הסוכן. חשוב שההודעה תגיד שהטיול עצמו לא נפגע: הטיול חי
- * ב-localStorage אצל הלקוח ולא נשלח לשום מקום בתור שנכשל, אז אין מה לאבד.
+ * A failure in the agent's turn. The message must say that the trip itself is
+ * unharmed: the trip lives in localStorage on the client and was not sent
+ * anywhere by a failed turn, so there is nothing to lose.
  */
 const AGENT_ERROR_MESSAGE =
   'משהו השתבש אצלי באמצע התשובה 🙏\n\n' +
   'הטיול שלכם לא נפגע - הוא שמור כמו שהיה. אפשר לנסות לשלוח את אותה הודעה שוב.';
 
 /**
- * כשהתור נפל *אחרי* שכבר הוזרם טקסט אין מה לנסות שוב (חלק מהתשובה כבר
- * על המסך), אבל גם אסור לשתוק: עד עכשיו התשובה פשוט נעצרה באמצע משפט
- * והמטייל לא ידע אם זה הסוף, אם הטיול השתנה, או אם כדאי לשאול שוב.
+ * When the turn failed *after* text had already streamed there is nothing to
+ * retry (part of the answer is already on screen), but staying silent is not an
+ * option either: until now the reply simply stopped mid-sentence and the
+ * traveller could not tell whether that was the end, whether the trip had
+ * changed, or whether to ask again.
  */
 /**
- * חריגה מחלון ההקשר. ההיסטוריה רק גדלה, ולכן זו שגיאה **קבועה לשיחה
- * הזאת**: כל תור נוסף בה ייכשל באותו אופן. "משהו השתבש, נסו שוב" מזמין
- * בדיוק את הדבר היחיד שלא יעבוד, ולכן ההודעה כאן אומרת את האמת ונותנת
- * את הפעולה שכן פותרת. תקציב ההיסטוריה ב-chatMessages.ts אמור למנוע את
- * זה מראש; זו רשת הביטחון.
+ * Exceeding the context window. History only grows, so this is an error that is
+ * **permanent for this conversation**: every further turn in it will fail the
+ * same way. "Something went wrong, try again" invites precisely the one thing
+ * that cannot work, so the message here tells the truth and gives the action
+ * that does resolve it. The history budget in chatMessages.ts should prevent
+ * this in the first place; this is the safety net.
  */
 /*
- * הנוסח הקודם הציע "רעננו את הדף", ומטייל ענה מיד: "כשאני מרענן, הצ׳אט
- * נשאר". הוא צדק - ההיסטוריה נטענת מ-localStorage בכל טעינה, ולכן רענון
- * לא מנקה כלום. גם "טיול חדש" הייתה עצה גרועה: הוא פותח טיול אחר ומאבד
- * את התוכנית. עצה שלא עובדת גרועה מאין עצה, ולכן נוסף כפתור "ניקוי"
- * בכותרת השיחה וההודעה מפנה אליו.
+ * The previous wording suggested "refresh the page", and a traveller replied
+ * immediately: "when I refresh, the chat stays". They were right - history is
+ * loaded from localStorage on every load, so a refresh clears nothing. "New
+ * trip" was bad advice too: it opens a different trip and loses the plan. Advice
+ * that does not work is worse than no advice, so a "clear" button was added to
+ * the conversation header and the message points at it.
  */
 const CONTEXT_TOO_LONG_MESSAGE =
   'השיחה הזאת נעשתה ארוכה מדי בשבילי 🙏\n\n' +
   'הטיול שלכם שמור ולא נפגע. לחצו על "ניקוי" בראש חלון השיחה - זה מוחק את ההתכתבות בלבד, והתוכנית, המפה והסיכות נשארות בדיוק כמו שהן.';
 
-/** מזהה את השגיאה לפי גוף התשובה של Anthropic, שנשמר בהודעת השגיאה */
+/** Identifies the error from Anthropic's response body, which is kept in the error message */
 function isContextTooLong(err: unknown): boolean {
   return /prompt is too long|context.{0,20}too long|maximum context/i.test(
     String((err as { message?: string })?.message ?? ''),
@@ -1470,17 +1550,18 @@ const AGENT_TRUNCATED_MESSAGE =
 const QUOTA_MESSAGE =
   'הגעתם למכסת השימוש היומית בסוכן החכם של התוכנית החינמית 🙏\n\n' +
   'המכסה מתאפסת פעם ביום. בינתיים אפשר להמשיך לערוך את הטיול ידנית במתכנן - להוסיף ימים, להזיז עצירות ולפתוח ניווט.\n\n' +
-  // בלי "מכסה גדולה יותר" - מאז שהמכסות של פרימיום נגזרות מהעלות
-  // האמיתית, ההבטחה הזאת פשוט לא נכונה. וגם בלי להוביל עם "המסלול
-  // המובטח" - הפריים שנתנאל קבע הוא קהל, לא מנגנון: המנוי הוא למי
-  // שמתכנן כל הזמן, והבדיקה החד-פעמית היא המוצר לרוב המטיילים.
+  // No "a bigger quota" - since premium quotas are derived from the real cost,
+  // that promise is simply untrue. And no leading with "the guaranteed lane"
+  // either - the framing Netanel set is audience, not mechanism: the subscription
+  // is for people who plan all the time, and the one-off check is the product for
+  // most travellers.
   'ואם אתם מתכננים כל הזמן - למדריכים, מארגנים ומשפחות עם כמה טיולים בשנה יש את טיול+ פרימיום. כל המחירים בעמוד tiyulplus.com/premium.';
 
 /**
- * הגעה למכסת ה**ספירה** החודשית (הודעות/יחידות) - נדיר, כי התקרה
- * בדולרים (`PREMIUM_BUDGET_MESSAGE` ב-chatGuards.ts) אמורה להיתקל
- * קודם אצל כל שימוש אמיתי. הודעה נפרדת מ-`QUOTA_MESSAGE` כי הטקסט
- * ההוא מציע לשדרג לפרימיום - חסר טעם למי שכבר שם.
+ * Reaching the monthly **count** quota (messages / units) - rare, because the
+ * dollar ceiling (`PREMIUM_BUDGET_MESSAGE` in chatGuards.ts) should be hit first
+ * by any real usage. A separate message from `QUOTA_MESSAGE` because that text
+ * offers an upgrade to premium - pointless for someone already there.
  */
 const PREMIUM_QUOTA_MESSAGE =
   'הגעתם למכסת השימוש החודשית בתוכנית הפרימיום 🙏\n\n' +
@@ -1488,11 +1569,11 @@ const PREMIUM_QUOTA_MESSAGE =
 
 const IMAGE_QUOTA_MESSAGE =
   `הגעתם למכסת התמונות היומית (${PLAN_LIMITS.free.imagesPerDay} תמונות ביום בתוכנית החינמית) 📷\n\n` +
-  // בלי הבטחת "מכסה גדולה בהרבה" בפרימיום - היא כבר לא נכונה (ראו
-  // QUOTA_MESSAGE). הטקסט פשוט אומר מה אפשר לעשות במקום.
+  // No "a much bigger quota" promise for premium - it is no longer true (see
+  // QUOTA_MESSAGE). The text simply says what can be done instead.
   'קריאת תמונה יקרה הרבה יותר מקריאת טקסט, ולכן המכסה נמוכה. המכסה מתאפסת פעם ביום, ובינתיים אפשר פשוט לכתוב לי את הפרטים - שם המלון, התאריכים והעיר - ואטפל בזה בדיוק אותו דבר.';
 
-/** אותו מצב, למנוי פרימיום - בלי הצעת שדרוג, ועם היחידה הנכונה (חודש) */
+/** The same situation, for a premium subscriber - no upgrade offer, and with the right unit (a month) */
 const PREMIUM_IMAGE_QUOTA_MESSAGE =
   `הגעתם למכסת התמונות החודשית של תוכנית הפרימיום (${PLAN_LIMITS.premium.imagesPerDay} תמונות בחודש) 📷\n\n` +
   'קריאת תמונה יקרה הרבה יותר מקריאת טקסט, ולכן יש מכסה גם כאן. המכסה מתאפסת עם החיוב הבא, ובינתיים אפשר פשוט לכתוב לי את הפרטים - שם המלון, התאריכים והעיר - ואטפל בזה בדיוק אותו דבר.';
@@ -1505,16 +1586,17 @@ const IMAGE_TOO_BIG_MESSAGE =
 
 export async function POST(request: Request) {
   /*
-    ---------- השערים, מהזול ליקר ----------
+    ---------- The gates, cheapest to dearest ----------
 
-    כל מה שכאן רץ **לפני** שנשלח משהו ל-API, ולכן עולה אפס. הסדר הוא
-    לפי עלות הבדיקה: כותרת, זהות, מכסות בזיכרון, גוף, ורק בסוף התקרה
-    הגלובלית שדורשת אולי קריאת דאטהבייס.
+    Everything here runs **before** anything is sent to the API, and therefore
+    costs nothing. The order follows the cost of the check: header, identity,
+    in-memory quotas, body, and only at the end the global ceiling, which may
+    require a database read.
 
-    אף אחד מהם לא נראה למטייל אמיתי. זה לא מקרי - זו הדרישה.
+    None of them is visible to a real traveller. That is not incidental - it is the requirement.
   */
 
-  // בוט שפונה ישירות לנתיב, לפני הכול. דפדפן שולח Origin בכל POST.
+  // A bot hitting the route directly, before anything else. A browser sends Origin on every POST.
   if (!sameOriginOk(request)) {
     return new Response(JSON.stringify({ error: 'forbidden' }), {
       status: 403,
@@ -1522,8 +1604,8 @@ export async function POST(request: Request) {
     });
   }
 
-  // זיהוי הקורא (משתמש מחובר או IP) - לפני קריאת הגוף, כדי שגוף עצום
-  // לא יעקוף את המכסות. ואז שערי המכסה, מהזול ליקר.
+  // Identify the caller (signed-in user or IP) - before reading the body, so a
+  // huge body cannot bypass the quotas. Then the quota gates, cheapest to dearest.
   const caller = await resolveCaller(request);
   const limits = PLAN_LIMITS[caller.tier];
 
@@ -1545,11 +1627,12 @@ export async function POST(request: Request) {
 
     if (isPremium) {
       /*
-        **מנוי פרימיום לא נכנס ל-budgetFor בכלל.** זו הדרישה: תנועה
-        אנונימית/חינמית שממצה את התקציב היומי המשותף אסור שתחסום מנוי
-        משלם, ולכן הוא פשוט לא בודק מולו - התקרה שלו היא אך ורק
-        `premiumBudgetFor`, חודשית ואישית, מטבלה נפרדת לגמרי. ראו
-        ההסבר המלא ב-budget.ts.
+        **A premium subscriber never enters budgetFor at all.** That is the
+        requirement: anonymous/free traffic exhausting the shared daily budget
+        must not be able to block a paying subscriber, so it simply is not checked
+        against it - their ceiling is exclusively `premiumBudgetFor`, monthly and
+        personal, from an entirely separate table. See the full explanation in
+        budget.ts.
       */
       const premiumBudget = await premiumBudgetFor(caller.userId!);
       if (premiumBudget.exceeded) {
@@ -1561,20 +1644,22 @@ export async function POST(request: Request) {
       maybeAlertPremium(premiumBudget, caller.userId!, monthKey());
     } else {
       /*
-        **תקרת ההוצאה, בשני ארנקים.** המכסות שמעל מגינות מפני משתמש אחד;
-        זו מגינה מפני אלף - ובלי לתת לאף אחד מהם לכבות את המוצר לאחרים:
-        לתנועה אנונימית יש ארנק משלה, ולאף זהות אין יותר מחלק קטן מהיום.
-        ראו lib/server/budget.ts.
+        **The spend ceiling, in two wallets.** The quotas above protect against one
+        user; this protects against a thousand - and without letting any of them
+        switch the product off for everyone else: anonymous traffic has a wallet of
+        its own, and no single identity gets more than a small fraction of the day.
+        See lib/server/budget.ts.
       */
       const budget = await budgetFor(caller.id);
       /*
-        רשת ביטחון על ה-IP, **רחבה בכוונה**.
+        An IP backstop, **deliberately wide**.
 
-        המכסה האמיתית היא לפי דפדפן, כי IP משותף במפעילת סלולר הוא
-        עשרות אלפי אנשים. ה-IP קיים רק כדי לתפוס מכונה אחת שמחליפה מזהי
-        דפדפן בלולאה, ולכן התקרה שלו היא פי `IP_BACKSTOP_MULTIPLE`
-        מהתקרה של אדם בודד. **כששני המדדים חלוקים - הדפדפן מנצח**, בדיוק
-        כפי שנתנאל ביקש: לחסום אדם אמיתי יקר לנו יותר מבקשה מיותרת אחת.
+        The real quota keys on the browser, because a shared IP at a mobile carrier
+        is tens of thousands of people. The IP exists only to catch a single machine
+        cycling browser identifiers in a loop, so its ceiling is
+        `IP_BACKSTOP_MULTIPLE` times a single person's. **When the two disagree, the
+        browser wins** - exactly as Netanel asked: blocking a real person costs us
+        more than one unnecessary request.
       */
       let ipBlocked = false;
       if (caller.ip && caller.id !== caller.ip) {
@@ -1595,7 +1680,7 @@ export async function POST(request: Request) {
     }
   }
 
-  // קוראים כטקסט קודם: גוף ענק נעצר לפני JSON.parse
+  // Read as text first: a huge body is stopped before JSON.parse
   const rawBody = await request.text();
   if (rawBody.length > MAX_BODY_CHARS) return singleMessageStream(IMAGE_TOO_BIG_MESSAGE);
   let body: { messages?: unknown; trip?: unknown; kosher?: unknown; explored?: unknown };
@@ -1608,11 +1693,12 @@ export async function POST(request: Request) {
     });
   }
   /*
-    שני השערים האלה חייבים לרוץ על **הגוף הגולמי**, לפני הניקוי.
-    `sanitizeMessages` חותך כל הודעה ל-8,000 תווים ולוקח רק את 40
-    ההודעות האחרונות - כלומר אחריו ההודעה הענקית כבר קטנה והשיחה
-    האינסופית כבר קצרה, ואין מה לתפוס. זה נתפס בהארנס: שתי הבדיקות
-    עברו ירוקות בזמן שהן בדקו את התוצאה של החיתוך במקום את הקלט.
+    These two gates must run on the **raw body**, before sanitizing.
+    `sanitizeMessages` truncates each message to 8,000 characters and keeps only
+    the last 40 messages - so after it, the enormous message is already small and
+    the endless conversation already short, and there is nothing left to catch.
+    This was caught in the harness: both checks passed green while they were
+    measuring the output of the truncation instead of the input.
   */
   const rawMessages = Array.isArray(body.messages) ? body.messages : [];
   const rawLongest = Math.max(
@@ -1631,13 +1717,13 @@ export async function POST(request: Request) {
   if (rawUserTurns > MAX_USER_MESSAGES) return singleMessageStream(TOO_MANY_TURNS_MESSAGE);
 
   const messages = sanitizeMessages(body.messages);
-  // אחרי הניקוי אפשר להישאר בלי כלום (הודעה ריקה, או תמונה שנפסלה על
-  // גודל/פורמט). שליחת מערך ריק ל-API היא 400 מובטחת, אז עוצרים כאן
-  // ואומרים את זה בעברית במקום להפיל את התור.
+  // After sanitizing we can be left with nothing (an empty message, or an image
+  // rejected on size/format). Sending an empty array to the API is a guaranteed
+  // 400, so we stop here and say so in Hebrew rather than failing the turn.
   if (messages.length === 0) return singleMessageStream(EMPTY_REQUEST_MESSAGE);
 
-  // מכסת התמונות: נספרת רק על התמונה שצורפה עכשיו (ההודעה האחרונה),
-  // כדי ששליחה חוזרת של ההיסטוריה לא תבזבז את המכסה.
+  // The image quota: counted only for the image attached now (the last message),
+  // so resending the history does not spend the quota.
   const freshImage = Boolean(messages[messages.length - 1]?.image);
   if (freshImage && process.env.ANTHROPIC_API_KEY) {
     const imgLimit = checkLimit('chat-images', caller.id, limits.imagesPerDay, periodMsFor(caller.tier));
@@ -1650,9 +1736,10 @@ export async function POST(request: Request) {
   const kosherHint = body.kosher === true;
 
   /*
-    שער הנושא. מסרב **רק** כשיש סימן מובהק לנושא אחר, אין שום סימן
-    לנסיעות, ואין טיול פעיל - ראו topicOk. הסירוב עולה אפס, וזו כל
-    הנקודה: לא לשרוף קריאת מודל כדי להחליט שלא לענות.
+    The topic gate. Refuses **only** when there is a clear signal of another
+    subject, no travel signal at all, and no active trip - see topicOk. The refusal
+    costs nothing, and that is the whole point: do not burn a model call to decide
+    not to answer.
   */
   if (process.env.ANTHROPIC_API_KEY) {
     const topic = topicOk(
@@ -1664,7 +1751,7 @@ export async function POST(request: Request) {
       return singleMessageStream(OFF_TOPIC_MESSAGE);
     }
   }
-  // יעדים שנחקרו בתורים קודמים - הלקוח מחזיר אותם, השרת לא סומך על הצורה
+  // Destinations explored in previous turns - the client sends them back, the server does not trust the shape
   const explored = sanitizeExploredDestinations(body.explored);
   const last = messages[messages.length - 1]?.content ?? '';
   const encoder = new TextEncoder();
@@ -1677,19 +1764,19 @@ export async function POST(request: Request) {
         controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
       };
 
-      // מפסק החירום: כשהדגל agent_enabled כבוי, נופלים לתשובות מבוססות
-      // הכללים בדיוק כמו במצב ללא מפתח - האתר עובד, ההוצאה על המודל
-      // נעצרת מיד ובלי דיפלוי. ראו lib/server/flags.ts ו-/admin.
+      // The kill switch: when the agent_enabled flag is off we fall back to the
+      // rule-based replies exactly as in the keyless mode - the site works, model
+      // spend stops immediately and with no deploy. See lib/server/flags.ts and /admin.
       if (process.env.ANTHROPIC_API_KEY && (await agentEnabled())) {
         const meter = { units: 0, usd: 0 };
         try {
           await runAgent(messages, clientTrip, send, kosherHint, explored, meter, caller);
         } catch (err) {
-          // אסור להשתיק: בלי הלוג הזה אי אפשר לדעת מה נפל בפרודקשן
+          // Must not be silenced: without this log there is no way to know what failed in production
           console.error('[chat] agent turn failed', err);
 
-          // ניסיון שני, רק אם עוד לא הוזרם טקסט: רוב הכשלים כאן הם
-          // עומס או שגיאה חולפת של ה-API, ולמטייל אין שום דרך לדעת זאת.
+          // A second attempt, only if no text has streamed yet: most failures here
+          // are overload or a transient API error, and the traveller has no way to know that.
           let recovered = false;
           if (!emitted && isTransient(err)) {
             try {
@@ -1700,15 +1787,17 @@ export async function POST(request: Request) {
             }
           }
 
-          // אם גם זה נכשל: אומרים את האמת. במפורש לא נופלים כאן למנוע
-          // החוקים - הענף שלו ל"לא זוהה יעד" הוא ברכת פתיחה שמונה את כל
-          // המדינות, ובאמצע שיחה היא נקראת כאילו הסוכן שכח את כל ההקשר
-          // (וזה בדיוק מה שקרה למטייל שביקש לערוך את הטיול לפי המלון).
+          // If that fails too: tell the truth. We deliberately do NOT fall back to
+          // the rule engine here - its "destination not recognised" branch is an
+          // opening greeting that lists every country, and mid-conversation that
+          // reads as if the agent had forgotten all context (which is exactly what
+          // happened to the traveller who asked to edit the trip around their hotel).
           if (!recovered) {
-            // שלושה מצבים שונים: חריגה מחלון ההקשר היא שגיאה קבועה
-            // לשיחה הזאת וצריכה הוראה אחרת לגמרי; תור שנקטע באמצע מקבל
-            // סיומת קצרה (אחרת ההודעה הארוכה נקראת כאילו כל התשובה
-            // שמעליה בוטלה); וכל השאר מקבל את ההסבר המלא.
+            // Three different situations: exceeding the context window is a
+            // permanent error for this conversation and needs entirely different
+            // instructions; a turn cut off mid-reply gets a short tail (otherwise
+            // the long message reads as if the whole answer above it had been
+            // cancelled); and everything else gets the full explanation.
             const text = isContextTooLong(err)
               ? CONTEXT_TOO_LONG_MESSAGE
               : emitted
@@ -1717,11 +1806,11 @@ export async function POST(request: Request) {
             send({ type: 'text', text });
           }
         } finally {
-          // הרישום קורה גם כשהתור נכשל באמצע - הטוקנים כבר נצרכו
+          // Recorded even when the turn failed partway - the tokens were already spent
           recordAiUnits(caller.id, meter.units);
         }
       } else {
-        // המצב חסר המפתח: כאן ברכת הפתיחה של מנוע החוקים במקומה
+        // The keyless mode: here the rule engine's opening greeting is in its right place
         sendRuleBased(last, send);
       }
       send({ type: 'done' });

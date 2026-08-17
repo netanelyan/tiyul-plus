@@ -42,17 +42,18 @@ import { cachedAt, pruneCities } from '@/lib/trip/cityStore';
 import { daysHe } from '@/lib/duration';
 
 /**
- * התצוגה המאוחדת של הטיול - מסך אחד לכל מה שקשור לטיול הפעיל:
- * מסלול היום (עריכה ידנית מלאה) + מפה + שיחה עם הסוכן, יחד.
- * אין יותר "טאב צ׳אט" נפרד מול "טאב תוכנית": גם /chat וגם /planner
- * מרנדרים את הרכיב הזה, ושניהם עובדים על אותו Trip object (TripContext)
- * - בקשה בשיחה ("תוסיף יום") מעדכנת את אותו טיול שמצויר כאן, בלי עותק.
+ * The unified trip view - one screen for everything about the active trip:
+ * the day's itinerary (fully editable by hand) + map + the agent conversation,
+ * together. There is no separate "chat tab" versus "plan tab" any more: both
+ * /chat and /planner render this component, and both work on the same Trip
+ * object (TripContext) - a request in the conversation ("add a day") updates
+ * the very trip drawn here, with no copy.
  *
- * פריסה:
- * - xl: שלוש עמודות - מסלול (ימין), מפה (אמצע), שיחה (שמאל).
- * - lg: מסלול + מפה זה לצד זה, השיחה כפאנל רוחב מלא מתחתיהם.
- * - מובייל (~390px): הכול נערם - מפה, כרטיס היום, עצירות, סקירת הימים -
- *   והשיחה יושבת בסרגל דביק בתחתית שנפתח למגירה מלאה.
+ * Layout:
+ * - xl: three columns - itinerary (right), map (middle), conversation (left).
+ * - lg: itinerary + map side by side, the conversation a full-width panel below.
+ * - mobile (~390px): everything stacks - map, day card, stops, all-days overview -
+ *   with the conversation in a sticky bottom bar that opens into a full drawer.
  */
 
 export default function TripWorkspace({
@@ -67,43 +68,44 @@ export default function TripWorkspace({
   const online = useOnline();
   const offline = !online;
   /**
-   * ללא רשת הטיול נקרא ולא נערך - ראו ההנמקה ב-`lib/trip/readOnly.ts`.
-   * העטיפה כאן מחליפה את ה-API כולו, כך שכל קריאה במסך הזה עוברת דרכה
-   * ואי אפשר לפספס פקד. הפקדים עצמם מכובים בנפרד, כדי שזה ייראה מכובה
-   * ולא שבור.
+   * Offline the trip is read-only - see the reasoning in `lib/trip/readOnly.ts`.
+   * The wrapper here replaces the whole API, so every call on this screen goes
+   * through it and no control can be missed. The controls themselves are disabled
+   * separately, so it looks switched off rather than broken.
    */
   const trip = readOnlyIfOffline(useTrip(), offline);
   const chat = useTripChat({ initialQuery, initialKosher });
   const [selectedDayId, setSelectedDayId] = useState<string | null>(null);
-  /** 'day' = המפה של היום הנבחר · 'trip' = כל העצירות של כל הימים יחד */
+  /** 'day' = the selected day's map - 'trip' = every stop of every day together */
   const [mapMode, setMapMode] = useState<'day' | 'trip'>('day');
   const [chatOpen, setChatOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const [allDaysOpen, setAllDaysOpen] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
-  /** מזהה היום שעבורו נפתח שדה ההערות (יום בלי הערה מציג כפתור בלבד) */
+  /** Id of the day whose notes field is open (a day with no note shows only a button) */
   const [noteOpenFor, setNoteOpenFor] = useState<string | null>(null);
   /**
-   * רמז חד-פעמי שמצביע על שורת הכתיבה לסוכן.
+   * A one-off hint pointing at the composer line for the agent.
    *
-   * זה כל מה שנשאר מרעיון ה"מדריך": הצעה למסך הדרכה נדחתה כי היא לא
-   * מפחיתה אף פקד ואף מוסיפה, ומלמדת אנשים לסבול מסך עמוס במקום לפרוק
-   * אותו. שורה אחת שמסבירה איפה עושים את הדבר המרכזי כן שווה את המקום.
+   * This is all that remains of the "tutorial" idea: a walkthrough screen was
+   * rejected because it removes no control and in fact adds some, and teaches
+   * people to tolerate a crowded screen instead of uncrowding it. One line
+   * explaining where the main thing is done is worth the space.
    *
-   * מאותחל ל-false ונקרא מ-localStorage רק אחרי ה-mount, כדי שהשרת
-   * והלקוח יסכימו בצביעה הראשונה (אותה מלכודת hydration שנפתרה כך
-   * ב-PromptChips). מוצג פעם אחת לדפדפן ולא חוזר.
+   * Initialised to false and read from localStorage only after mount, so the
+   * server and the client agree on the first paint (the same hydration trap
+   * solved this way in PromptChips). Shown once per browser and never again.
    */
   const [coach, setCoach] = useState(false);
   useEffect(() => {
     try {
-      // localStorage לא קיים בשרת, ולכן הקריאה חייבת לקרות אחרי ה-mount:
-      // אתחול ישיר ממנו היה יוצר אי-התאמת hydration. אותו דפוס בדיוק כמו
-      // PromptChips ו-AccessibilityWidget בפרויקט הזה.
+      // localStorage does not exist on the server, so the read must happen after
+      // mount: initialising directly from it would create a hydration mismatch.
+      // Exactly the same pattern as PromptChips and AccessibilityWidget here.
       // eslint-disable-next-line react-hooks/set-state-in-effect
       if (!window.localStorage.getItem(COACH_KEY)) setCoach(true);
     } catch {
-      /* אחסון חסום - פשוט לא מציגים */
+      /* storage blocked - simply do not show it */
     }
   }, []);
   const dismissCoach = () => {
@@ -111,30 +113,32 @@ export default function TripWorkspace({
     try {
       window.localStorage.setItem(COACH_KEY, '1');
     } catch {
-      /* אחסון חסום - הרמז נעלם לסשן הזה ודי */
+      /* storage blocked - the hint just disappears for this session, and that is fine */
     }
   };
   const [linkCopied, setLinkCopied] = useState(false);
   /**
-   * קישור השיתוף: מנסים קוד קצר דרך /api/share (Supabase); בלי backend
-   * מוגדר - נופלים בשקט לקישור ה-inline הארוך (v1), שעובד תמיד.
-   * התוצאה נשמרת ב-ref לפי תוכן הטיול כדי לא לייצר קוד חדש בכל קליק.
+   * The share link: we try for a short code via /api/share (Supabase); with no
+   * backend configured we fall back silently to the long inline link (v1), which
+   * always works. The result is kept in a ref keyed by trip content so a new code
+   * is not minted on every click.
    *
-   * **ה-ref הזה חייב לשבת כאן, מעל ה-`return` המוקדם של מצב הטעינה.**
-   * הוא ישב מתחתיו, וזו הפרה של כללי ה-hooks שפשוט לא התפוצצה: המצב
-   * המוקדם היחיד היה `!trip.hydrated`, שלא נצבע בפועל. ברגע שנוסף מצב
-   * טעינה אמיתי (הערים), הרינדור הבא הריץ hook נוסף - React #310,
-   * ומסך הטיול נפל כולו. hook אחרי `return` מותנה הוא פצצת זמן.
+   * **This ref must sit here, above the loading state's early `return`.**
+   * It used to sit below it, which is a hooks-rule violation that simply never
+   * blew up: the only early state was `!trip.hydrated`, which never actually
+   * painted. The moment a real loading state was added (the cities), the next
+   * render ran one more hook - React #310, and the whole trip screen went down.
+   * A hook after a conditional `return` is a time bomb.
    */
   const shareUrlCache = useRef<{ sig: string; url: string } | null>(null);
-  /** סיכה שהמטייל בחר להניח ידנית: הלחיצה הבאה על המפה תקבע את מיקומה */
+  /** A pin the traveller chose to place by hand: the next click on the map sets its location */
   const [placingPinId, setPlacingPinId] = useState<string | null>(null);
 
   const t = trip.currentTrip;
-  // **רק הערים של הטיול הזה נטענות**, מ-`/api/cities`, במקום לייבא את
-  // הקטלוג כולו אל ה-bundle של המסך (492kB דחוסים לטיול של עיר אחת).
-  // הן נשמרות במטמון ברמת המודול, כך שמעבר בין טיולים או בין /chat
-  // ל-/planner לא מבקש כלום שוב.
+  // **Only this trip's cities are loaded**, from `/api/cities`, instead of
+  // importing the whole catalog into this screen's bundle (492kB compressed for
+  // a one-city trip). They are cached at module level, so switching between
+  // trips or between /chat and /planner asks for nothing again.
   const tripCitySlugs = useMemo(
     () => [...new Set([...(t?.citySlugs ?? []), ...(t?.days ?? []).map((d) => d.citySlug)])],
     [t],
@@ -142,10 +146,10 @@ export default function TripWorkspace({
   const { cities, loading: citiesLoading } = useCityData(tripCitySlugs);
 
   /**
-   * "לא מטמנים את הקטלוג" הוא כלל שצריך לאכוף ולא רק להצהיר: כאן
-   * נמחק מהמכשיר כל מה שאף טיול שמור כבר לא נוגע בו - מחיקת טיול
-   * מפנה גם את התוכן שלו. רץ רק אחרי ההידרציה, אחרת מערך טיולים ריק
-   * לרגע היה מוחק את כל מה שנשמר.
+   * "Do not cache the catalog" is a rule that has to be enforced, not merely
+   * stated: here everything no saved trip touches any more is deleted from the
+   * device - deleting a trip frees its content too. Runs only after hydration,
+   * otherwise a momentarily empty trips array would wipe everything stored.
    */
   useEffect(() => {
     if (!trip.hydrated) return;
@@ -157,15 +161,16 @@ export default function TripWorkspace({
     pruneCities([...keep]);
   }, [trip.hydrated, trip.trips]);
   const destinations = useMemo(() => Object.values(cities), [cities]);
-  // curated קודם; יעדים שנחקרו אוטומטית (AI Explorer) כ-fallback, כדי
-  // שטיול שנבנה ביעד נחקר יתרנדר כרגיל בקנבס/מפה/הדפסה.
+  // Curated first; automatically explored destinations (AI Explorer) as a
+  // fallback, so a trip built on an explored destination still renders normally
+  // on the canvas, the map and in print.
   const destOf = (slug: string) =>
     cities[slug] ?? chat.explored.find((d) => d.slug === slug);
   const placeOf = (slug: string, id: string): Place | undefined =>
     destOf(slug)?.places.find((p) => p.id === id);
 
-  // מעבר בין ערים: מחושב מהקואורדינטות האמיתיות, ומודע לרכב - כדי
-  // שלא נכריז "טיסה" על נסיעה של שעתיים באותה מדינה.
+  // Inter-city travel: computed from the real coordinates, and car-aware - so we
+  // do not announce a "flight" for a two-hour drive inside one country.
   const carStatus = t?.preferences?.booking?.car;
   const hasCar = carStatus === 'have' || carStatus === 'need';
   const legOf = (fromSlug: string, toSlug: string) =>
@@ -176,10 +181,11 @@ export default function TripWorkspace({
     });
 
   /**
-   * מתי נשמרה במכשיר העיר של היום שמוצג. מוצג **רק** ליד מידע כשרות
-   * ורק כשאין רשת: תג השגחה שנשמר לפני שבוע ומוצג כאילו נבדק עכשיו
-   * הוא הכישלון החמור ביותר שהמצב הלא-מקוון יכול לייצר. נקרא רק כשאין
-   * רשת, כדי לא לגעת ב-localStorage בכל רינדור רגיל.
+   * When the city of the displayed day was last saved to the device. Shown **only**
+   * beside kashrut information and only when offline: a supervision badge cached a
+   * week ago and presented as if checked now is the worst failure the offline mode
+   * can produce. Read only when offline, to avoid touching localStorage on every
+   * ordinary render.
    */
   const day = t ? (t.days.find((d) => d.id === selectedDayId) ?? t.days[0] ?? null) : null;
   const dayCachedAt = useMemo(
@@ -195,7 +201,7 @@ export default function TripWorkspace({
     [day, dayDest, t],
   );
 
-  // תצוגת כל הטיול: כל יום כקבוצה - צבע משלו ומספר היום בסיכה.
+  // Whole-trip view: each day as a group - its own colour and the day number in the pin.
   const tripGroups: MapGroup[] = useMemo(
     () =>
       (t?.days ?? [])
@@ -210,9 +216,9 @@ export default function TripWorkspace({
   );
 
   /**
-   * "היום" של הטיול: האינדקס של היום שתאריכו הוא היום בפועל - null
-   * כשאין תאריכים או כשהטיול לא בעיצומו. זה מה שמפעיל את מצב הליווי:
-   * פתיחה אוטומטית על היום הנכון + פס "היום" מעל בורר הימים.
+   * The trip's "today": the index of the day whose date is actually today - null
+   * when there are no dates or the trip is not under way. This is what turns on
+   * companion mode: auto-opening the right day + a "today" bar above the day picker.
    */
   const todayIdx = useMemo(() => {
     if (!t?.startDate || t.days.length === 0) return null;
@@ -222,9 +228,9 @@ export default function TripWorkspace({
   }, [t]);
 
   /*
-    פתיחה אוטומטית על היום של היום - פעם אחת לכל טיול, כדי לא להילחם
-    במשתמש שבחר יום אחר בכוונה. באמצע טיול אמיתי, לפתוח על יום 1 זה
-    להגיש למטייל מסך שהוא כבר סיים איתו.
+    Auto-open on today's day - once per trip, so we do not fight a user who chose
+    a different day deliberately. Mid-trip, opening on day 1 hands the traveller a
+    screen they are already done with.
   */
   const autoOpenedFor = useRef<string | null>(null);
   useEffect(() => {
@@ -235,10 +241,10 @@ export default function TripWorkspace({
   }, [t, todayIdx]);
 
   /**
-   * הסיכות של המטייל על המפה. רק כאלה שיש להן מיקום ממשי - סיכה
-   * בלי קואורדינטות לא מצוירת בשום מקום, כי מיקום מנוחש גרוע
-   * ממיקום חסר. הזיהוי נשאר יציב (useMemo) כדי שהמפה לא תקפוץ
-   * בכל render, בדיוק כמו flat ב-MapInner.
+   * The traveller's pins on the map. Only those with a real location - a pin with
+   * no coordinates is not drawn anywhere, because a guessed location is worse than
+   * a missing one. The identity stays stable (useMemo) so the map does not jump on
+   * every render, exactly like flat in MapInner.
    */
   const allPins: MapPin[] = useMemo(
     () =>
@@ -258,7 +264,7 @@ export default function TripWorkspace({
     [t?.pins],
   );
 
-  /** במפת היום מציגים רק את הסיכות של אותה עיר, ואת אלה בלי עיר. */
+  /** On the day map we show only that city's pins, plus those with no city. */
   const dayPins: MapPin[] = useMemo(() => {
     const citySlug = day?.citySlug;
     const byId = new Map((t?.pins ?? []).map((p) => [p.id, p]));
@@ -268,22 +274,25 @@ export default function TripWorkspace({
     });
   }, [allPins, day?.citySlug, t?.pins]);
 
-  // **גם המתנה לערים, ובכוונה.** בלי זה המסך היה מצייר לרגע טיול אמיתי
-  // עם ימים ריקים ומפה ריקה - כי כל שם, קואורדינטה ותיאור מגיעים מדאטת
-  // העיר. מסך טעינה כן עדיף על מסך שנראה כמו טיול שנמחק. זה רק בהמתנה
-  // הראשונה: ברגע שיש עיר אחת ביד ממשיכים לצייר (ראו useCityData).
+  // **Waiting on the cities too, deliberately.** Without this the screen would
+  // briefly draw a real trip with empty days and an empty map - because every
+  // name, coordinate and description comes from the city data. A loading screen
+  // beats a screen that looks like a deleted trip. This applies only to the first
+  // wait: once one city is in hand we keep drawing (see useCityData).
   if (!trip.hydrated || (citiesLoading && (t?.days.length ?? 0) > 0)) {
-    // שלד בצורת המסך במקום קופסת "טוען" בודדת - המבנה מופיע מיד
-    // והתוכן מתמלא לתוכו, בלי קפיצה מכלום-להכול (ראו TripSkeleton).
+    // A skeleton in the shape of the screen rather than a single "loading" box -
+    // the structure appears immediately and the content fills into it, with no
+    // jump from nothing to everything (see TripSkeleton).
     return <TripSkeleton />;
   }
 
   const totalStops = t?.days.reduce((n, d) => n + d.placeIds.length, 0) ?? 0;
 
   /**
-   * נקודת הפתיחה של הניווט: מקום הלינה בעיר של היום, אם המטייל רשם אותו
-   * **והמיקום אומת**. סיכה בלי קואורדינטות לא נכנסת - ניווט לנקודה מנוחשת
-   * הוא בדיוק סוג הטעות שהאתר הזה נמנע ממנה בכל מקום אחר.
+   * The navigation start point: the lodging in the day's city, if the traveller
+   * recorded it **and the location was verified**. A pin with no coordinates does
+   * not qualify - navigating to a guessed point is exactly the kind of mistake
+   * this site avoids everywhere else.
    */
   const dayStart = (() => {
     const stay = (t?.pins ?? []).find(
@@ -302,8 +311,9 @@ export default function TripWorkspace({
   };
 
   /**
-   * המטייל הניח את הסיכה בעצמו - בלחיצה על המפה או בגרירה שלה.
-   * זה המקור הכי אמין שיש, ולכן source נהיה 'manual' ומצב ההנחה נסגר.
+   * The traveller placed the pin themselves - by clicking the map or dragging it.
+   * That is the most reliable source there is, so source becomes 'manual' and
+   * placement mode closes.
    */
   const movePin = (id: string, lat: number, lng: number) => {
     if (!t) return;
@@ -328,8 +338,8 @@ export default function TripWorkspace({
     if (shareUrlCache.current?.sig === sig) return shareUrlCache.current.url;
     const longToken = encodeTripShare(t);
     let url = `${window.location.origin}/t/${longToken}`;
-    // שני הטוקנים נרשמים כ"שלי": מונה "פתיחות של קישור משותף" לא אמור
-    // לספור את הבעלים שפותח את הקישור של עצמו - ראו lib/events.ts
+    // Both tokens are recorded as "mine": a "shared link opens" counter should not
+    // count the owner opening their own link - see lib/events.ts
     rememberOwnShare(longToken);
     try {
       const res = await fetch('/api/share', {
@@ -343,7 +353,7 @@ export default function TripWorkspace({
         rememberOwnShare(data.code);
       }
     } catch {
-      /* נשארים עם הקישור הארוך */
+      /* stay with the long link */
     }
     shareUrlCache.current = { sig, url };
     return url;
@@ -362,11 +372,12 @@ export default function TripWorkspace({
   function shareWhatsApp() {
     if (!t) return;
     trackEvent('whatsapp');
-    // פותחים חלון סינכרונית (שורד חוסמי פופאפ) ומנווטים כשהקישור מוכן
+    // Open the window synchronously (survives popup blockers) and navigate once the link is ready
     const win = window.open('', '_blank');
     void getShareUrl().then((url) => {
-      // 🧳 ולא ✈️: המטוס הוא תו Unicode ישן (U+2708+VS16) שחלק מהפלטפורמות
-      // מציגות כ-� - המזוודה היא קודפוינט מודרני יחיד שמרונדר בכל מקום
+      // A suitcase and not an aeroplane: the plane is an old Unicode character
+      // (U+2708+VS16) that some platforms render as a replacement glyph - the
+      // suitcase is a single modern codepoint that renders everywhere
       const when = formatHebrewRange(t.startDate, t.endDate);
       const text = `שיתפתי איתך את הטיול "${t.name}"${when ? ` · ${when}` : ''} שבניתי בטיול+ 🧳\n${url}`;
       const wa = `https://wa.me/?text=${encodeURIComponent(text)}`;
@@ -375,13 +386,15 @@ export default function TripWorkspace({
     });
   }
 
-  // קישורי שיתוף מאומתים מול הקטלוג האוצר בלבד - טיול עם יעד שנחקר
-  // אוטומטית עדיין לא ניתן לשיתוף (שלב הבא: payload v2 עם המקומות עצמם)
+  // Share links are validated against the curated catalog only - a trip with an
+  // automatically explored destination is not shareable yet (next step: a v2
+  // payload carrying the places themselves)
   const hasExploredCity = Boolean(t?.days.some((d) => d.citySlug.startsWith('explored-')));
 
   /**
-   * העדפות שהוגדרו בפועל, כטקסט - כדי שהקיפול לא יסתיר מידע. הצ׳יפים
-   * עצמם נפתחים בלחיצה; מה שכבר נבחר נשאר קריא גם כשהם מקופלים.
+   * The preferences actually set, as text - so collapsing them hides no
+   * information. The chips themselves open on click; what is already chosen stays
+   * readable even when they are collapsed.
    */
   const prefSummary = t
     ? [
@@ -405,12 +418,12 @@ export default function TripWorkspace({
     : '';
 
   return (
-    // הסרגל הדביק והמגירה חייבים לשבת מחוץ ל-.rise-in: אנימציה עם
-    // fill-mode both משאירה transform על האלמנט, וזה יוצר containing block
-    // ש"שובר" position:fixed של צאצאים.
+    // The sticky bar and the drawer must sit outside .rise-in: an animation with
+    // fill-mode both leaves a transform on the element, and that creates a
+    // containing block which "breaks" position:fixed for descendants.
     <>
     <div className="rise-in pb-24 lg:pb-0">
-      {/* ---------- כותרת הטיול ---------- */}
+      {/* ---------- Trip header ---------- */}
       <div className="flex flex-wrap items-center justify-between gap-3 print:hidden">
         <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
           {t ? (
@@ -432,7 +445,7 @@ export default function TripWorkspace({
               summary={`${totalStops} עצירות · ${daysHe(t.days.length)}`}
               onSet={(dates) => trip.setTripDates(t.id, dates)}
               onAddDays={(n) => {
-                // מוסיפים בעיר האחרונה של הטיול - ההמשך הטבעי של המסלול
+                // Add in the trip's last city - the natural continuation of the route
                 const slug = t.days[t.days.length - 1]?.citySlug ?? t.citySlugs[0];
                 if (slug) for (let i = 0; i < n; i++) trip.addDay(slug);
               }}
@@ -444,9 +457,10 @@ export default function TripWorkspace({
           )}
         </div>
         {/*
-          שלושה פקדים במקום שבעה. הכל נשאר בהישג יד - שיתוף בתפריט אחד,
-          השאר בתפריט "עוד", והמחיקה בתחתיתו ומופרדת בקו: פעולה הרסנית
-          לא אמורה לשבת במסך הראשון באותו משקל חזותי כמו שיתוף.
+          Three controls instead of seven. Everything stays within reach - sharing
+          in one menu, the rest under a "more" menu, and delete at its bottom
+          separated by a rule: a destructive action should not sit on the first
+          screen at the same visual weight as sharing.
         */}
         <div className="flex flex-wrap items-center gap-2 text-sm">
           <Btn onClick={onNewTrip} disabled={offline} title={offline ? OFFLINE_HINT : undefined}>+ טיול חדש</Btn>
@@ -486,7 +500,7 @@ export default function TripWorkspace({
                 {
                   label: 'הדפסה / PDF',
                   onClick: () => {
-                    // נשלח לפני print, כי print חוסם את החוט. keepalive עושה את השאר.
+                    // Sent before print, because print blocks the thread. keepalive does the rest.
                     trackEvent('print');
                     window.print();
                   },
@@ -509,9 +523,10 @@ export default function TripWorkspace({
             />
           )}
           {/*
-            העדפות יושבות בשורת הפעולות ולא בשורה משלהן: שורה שלמה
-            לפקד אחד מקופל היא בדיוק סוג הבזבוז שדחף את המפה למחצית
-            התחתונה של המסך בצילום שנתנאל שלח.
+            Preferences sit in the actions row rather than a row of their own: a
+            whole row for one collapsed control is exactly the kind of waste that
+            pushed the map into the bottom half of the screen in the screenshot
+            Netanel sent.
           */}
           {t && (
             <button
@@ -537,12 +552,12 @@ export default function TripWorkspace({
             onClick={() => setPrefs({ kosher: t.preferences?.kosher === true ? undefined : true })}
           />
           {/*
-            העדפה נבחרת מרשימה, לא מחזורית.
-            קודם כל צ׳יפ כאן היה כפתור שמחליף ערך בכל לחיצה: כדי להגיע
-            ל"שופינג: פחות" היה צריך ללחוץ ארבע פעמים דרך שני ערכים
-            שגויים - **וכל לחיצה נכתבת לטיול ומסונכרנת לחשבון** - בלי
-            שום דרך לדעת מה הסדר או מה האפשרויות. עכשיו לוחצים ורואים
-            את שלוש האפשרויות עם סימון על הנוכחית.
+            A preference is picked from a list, not cycled.
+            Every chip here used to be a button that advanced to the next value on
+            each click: reaching "shopping: less" took four clicks through two
+            wrong values - **and every click writes to the trip and syncs to the
+            account** - with no way to see the order or the options. Now you click
+            and see all three options with the current one ticked.
           */}
           <PrefSelect
             disabled={offline}
@@ -590,7 +605,7 @@ export default function TripWorkspace({
         </div>
       )}
 
-      {/* ---------- "היום": מצב ליווי כשהטיול בעיצומו ---------- */}
+      {/* ---------- "Today": companion mode while the trip is under way ---------- */}
       {t && todayIdx !== null && (() => {
         const todayDay = t.days[todayIdx];
         const dst = destOf(todayDay.citySlug);
@@ -619,19 +634,21 @@ export default function TripWorkspace({
         );
       })()}
 
-      {/* ---------- בורר הימים: כרטיס לכל עיר, ימים כמספרים בתוכו ---------- */}
+      {/* ---------- The day picker: a card per city, days as numbers inside it ---------- */}
       {t && t.days.length > 0 && (() => {
         /*
-          הגלגול השלישי של הפקד הזה, והצורה נבחרה סוף סוף לפי מה שהוא
-          מייצג. גלולות "🇸🇰 יום N" לכל יום היו שלוש שורות של אותו דגל
-          שמונה פעמים; צ׳יפים מספריים חשופים נראו כמו מחשבון, והאימוג׳י
-          של הרכבת ריחף בין הריבועים כמו שארית. נתנאל צילם את שניהם.
+          The third iteration of this control, and the shape was finally chosen
+          from what it represents. "Flag + day N" pills for every day were three
+          rows of the same flag eight times over; bare number chips read like a
+          calculator, and the transition emoji floated between the squares like a
+          leftover. Netanel photographed both.
 
-          לטיול יש מבנה אמיתי - רצפים של ימים באותה עיר - אז הפקד מצייר
-          בדיוק אותו: כרטיס לכל עיר עם שם ודגל פעם אחת, והימים כמספרים
-          בתוכו. השבירה בין שורות קורית בין כרטיסים (או בתוך כרטיס, כמו
-          לוח שנה קטן) - כלומר בגבול משמעותי, לא באמצע רצועה. אימוג׳י
-          המעבר ירד: הרווח בין הכרטיסים כבר אומר "כאן מחליפים עיר".
+          A trip has real structure - runs of days in the same city - so the control
+          finally draws exactly that: a card per city carrying the name and flag
+          once, with the days as numbers inside it. The line break falls between
+          cards (or inside a card, like a small calendar) - i.e. at a meaningful
+          boundary, not mid-strip. The transition emoji is gone: the gap between
+          cards already says "the city changes here".
         */
         const segments: { citySlug: string; days: { id: string; index: number }[] }[] = [];
         for (const [i, d] of t.days.entries()) {
@@ -687,13 +704,14 @@ export default function TripWorkspace({
         );
       })()}
 
-      {/* ---------- המסך המאוחד: מסלול · מפה · שיחה ---------- */}
+      {/* ---------- The unified screen: itinerary - map - conversation ---------- */}
       {/*
-        הסוכן הוא המוצר, והוא היה העמודה הצרה והשקטה ביותר (22rem מול 20
-        למסלול). הוא מקבל עכשיו את העמודה הרחבה מהשתיים שלצדי המפה.
+        The agent is the product, and it was the narrowest and quietest column
+        (22rem against 20 for the itinerary). It now gets the wider of the two
+        columns flanking the map.
       */}
       <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)_minmax(0,21rem)] xl:grid-cols-[minmax(0,18rem)_minmax(0,1fr)_minmax(0,25rem)] print:hidden">
-        {/* מפה - ראשונה במובייל, עמודה אמצעית מ-lg */}
+        {/* Map - first on mobile, middle column from lg */}
         <div className="order-first lg:order-none lg:col-start-2 lg:row-start-1">
           <div className="lg:sticky lg:top-20">
 
@@ -701,12 +719,13 @@ export default function TripWorkspace({
               <>
                 <div className="relative isolate h-64 overflow-hidden rounded-2xl ring-1 ring-night/10 sm:h-80 lg:h-[30rem]">
                 {/*
-                  מתג התצוגה יושב על המפה ולא בשורה משלו מעליה. הוא פקד
-                  של המפה, וכשורה נפרדת הוא עלה ~60px מגובה המסך שבו
-                  צריך לראות את הטיול - במסך שנתנאל צילם, כמעט חצי
-                  הגובה היה פקדים לפני שהמפה מתחילה. `right`/`left`
-                  פיזיים בכוונה: מיכל Leaflet הוא LTR ופקדי הזום יושבים
-                  בשמאל הפיזי, אז המתג הולך לימין הפיזי.
+                  The view switch sits on the map, not in a row of its own above
+                  it. It is a control of the map, and as a separate row it cost
+                  ~60px of the screen height where the trip needs to be visible -
+                  in the screen Netanel photographed, almost half the height was
+                  controls before the map even started. Physical `right`/`left` on
+                  purpose: the Leaflet container is LTR and the zoom controls sit
+                  at physical left, so the switch goes to physical right.
                 */}
                 {t && t.days.length > 1 && tripGroups.length > 0 && (
                   <MapModeSwitch
@@ -728,7 +747,7 @@ export default function TripWorkspace({
                     placingPinId={placingPinId}
                   />
                 </div>
-                {/* מקרא הימים - לחיצה קופצת ליום */}
+                {/* Day legend - clicking jumps to that day */}
                 <div className="mt-2 flex flex-wrap justify-center gap-1.5 print:hidden">
                   {t!.days.map((d, i) => {
                     const g = tripGroups.find((gr) => gr.badge === String(i + 1));
@@ -763,12 +782,13 @@ export default function TripWorkspace({
             ) : dayDest && places.length > 0 ? (
               <div className="relative isolate h-64 overflow-hidden rounded-2xl ring-1 ring-night/10 sm:h-80 lg:h-[34rem]">
               {/*
-                מתג התצוגה יושב על המפה ולא בשורה משלו מעליה. הוא פקד
-                של המפה, וכשורה נפרדת הוא עלה ~60px מגובה המסך שבו
-                צריך לראות את הטיול - במסך שנתנאל צילם, כמעט חצי
-                הגובה היה פקדים לפני שהמפה מתחילה. `right`/`left`
-                פיזיים בכוונה: מיכל Leaflet הוא LTR ופקדי הזום יושבים
-                בשמאל הפיזי, אז המתג הולך לימין הפיזי.
+                The view switch sits on the map, not in a row of its own above it.
+                It is a control of the map, and as a separate row it cost ~60px of
+                the screen height where the trip needs to be visible - in the
+                screen Netanel photographed, almost half the height was controls
+                before the map even started. Physical `right`/`left` on purpose:
+                the Leaflet container is LTR and the zoom controls sit at physical
+                left, so the switch goes to physical right.
               */}
               {t && t.days.length > 1 && tripGroups.length > 0 && (
                 <MapModeSwitch
@@ -796,9 +816,10 @@ export default function TripWorkspace({
               </div>
             )}
             {/*
-              הסיכות, הסדר וקו המסלול מצוירים מהמידע השמור ועובדים בלי
-              רשת - אריחי הרקע מגיעים משרת חיצוני ולא. בלי המשפט הזה,
-              מפה אפורה עם סיכות צפות נקראת בדיוק כמו תקלה.
+              The pins, the order and the route line are drawn from stored data and
+              work with no network - the background tiles come from an external
+              server and do not. Without this sentence, a grey map with floating
+              pins reads exactly like a failure.
             */}
             {offline && (places.length > 0 || tripGroups.length > 0) && (
               <p className="mt-2 text-center text-xs font-medium text-night/45 print:hidden">
@@ -808,11 +829,11 @@ export default function TripWorkspace({
           </div>
         </div>
 
-        {/* מסלול היום */}
+        {/* The day's itinerary */}
         <div className="min-w-0 space-y-3 lg:col-start-1 lg:row-start-1">
           {t && day && dayDest ? (
             <>
-              {/* מעבר בין ערים */}
+              {/* Inter-city travel */}
               {(() => {
                 const prev = dayIndex > 0 ? t.days[dayIndex - 1] : null;
                 if (prev && prev.citySlug !== day.citySlug) {
@@ -861,15 +882,16 @@ export default function TripWorkspace({
                     />
                   )}
                 </div>
-                {/* תיאור היום - נגזר מהעצירות האמיתיות שבו בלבד */}
+                {/* The day description - derived only from the real stops in it */}
                 <p className="mt-1 text-sm font-medium leading-relaxed text-night/55">
                   {dayDescription(day, dayDest)}
                 </p>
                 {/*
-                  שדה הערות ריק קורא כמו טופס שלא מולא. הוא נפתח בלחיצה -
-                  **ותמיד פתוח כשיש בו תוכן**, אחרת מטייל שכתב הערה יחשוב
-                  שהיא נמחקה. `noteOpen` מאותחל לפי day.id כדי שהפתיחה לא
-                  תיגרר מיום אחד לאחר.
+                  An empty notes field reads like a form left unfilled. It opens on
+                  click - **and is always open when it has content**, otherwise a
+                  traveller who wrote a note would think it had been deleted.
+                  `noteOpen` is keyed by day.id so an open field is not dragged
+                  from one day to another.
                 */}
                 {day.notes || noteOpenFor === day.id ? (
                   <textarea
@@ -891,11 +913,12 @@ export default function TripWorkspace({
                   </button>
                 )}
                 {/*
-                  ניווט היום. היה כאן הכפתור הקורל המלא - ולכן הדבר הבולט
-                  ביותר במסך; זו פעולה של יום הנסיעה עצמו ולא של מי שמתכנן
-                  מהספה, אז הוא נשאר במקומו ובעוצמה הזאת. הבנייה עצמה עברה
-                  ל-`lib/trip/mapsExport.ts` - ראו שם למה שרשור קואורדינטות
-                  לא הספיק.
+                  The day's navigation. This used to be the full coral button - and
+                  therefore the loudest thing on the screen; it is an action for the
+                  travel day itself rather than for someone planning from the sofa,
+                  so it stays where it is and at this weight. The building of it
+                  moved to `lib/trip/mapsExport.ts` - see there for why concatenating
+                  coordinates was not enough.
                 */}
                 <DayNavExport
                   dayNumber={dayIndex + 1}
@@ -905,7 +928,7 @@ export default function TripWorkspace({
                 />
               </div>
 
-              {/* עצירות */}
+              {/* Stops */}
               <ol className="space-y-2">
                 {places.map((place, i) => {
                   const meta = categoryMeta[place.category];
@@ -930,12 +953,12 @@ export default function TripWorkspace({
                             </span>
                           </div>
                           {/*
-                            ארבעה פקדים לכל עצירה (הסרה, למעלה, למטה, העברה
-                            ליום) היו גלויים תמיד - בטיול של ארבע עצירות זה
-                            16 פקדים זעירים שמתחרים בשמות המקומות, שהם התוכן
-                            שבאו לקרוא. עכשיו כפתור אחד. הפעולות שאינן
-                            רלוונטיות (למעלה בעצירה הראשונה) לא מוצגות בכלל
-                            במקום להיות מוצגות ומושבתות.
+                            Four controls per stop (remove, up, down, move to day)
+                            were permanently visible - on a four-stop trip that is
+                            16 tiny controls competing with the place names, which
+                            are the content people came to read. Now there is one
+                            button. Actions that are not relevant (up, on the first
+                            stop) are not shown at all rather than shown disabled.
                           */}
                           <Menu
                             compact
@@ -973,10 +996,10 @@ export default function TripWorkspace({
                           {place.description}
                         </p>
                         {/*
-                          כשרות + ללא רשת = התאריך חייב להיות על המסך.
-                          מוצג רק על עצירות כשרות, ורק במצב לא-מקוון: זו
-                          לא הערה כללית אלא אזהרה מדויקת על הפריט היחיד
-                          שבו "ישן" יכול להיות מסוכן ולא רק לא-מעודכן.
+                          Kashrut + offline = the date must be on screen. Shown
+                          only on kosher stops, and only offline: this is not a
+                          general note but a precise warning about the one item
+                          where "stale" can be unsafe and not merely out of date.
                         */}
                         {offline && place.category.startsWith('kosher') && dayCachedAt !== null && (
                           <p className="mt-1.5 rounded-lg bg-night/5 px-2.5 py-1.5 text-xs font-semibold text-night/60">
@@ -992,8 +1015,9 @@ export default function TripWorkspace({
                 })}
               </ol>
 
-              {/* הוספת עצירה נעשית בשיחה עם הסוכן (או מדף היעד) - לא ברשימת
-                  קטלוג גולמית. זו רק תזכורת קצרה, לא פקד. */}
+              {/* Adding a stop is done in the conversation with the agent (or from
+                  the destination page) - not from a raw catalog list. This is just
+                  a short reminder, not a control. */}
               <p className="rounded-xl bg-night/[0.03] px-4 py-3 text-sm leading-relaxed text-night/55">
                 רוצים להוסיף עצירה? פשוט בקשו מהסוכן - למשל
                 <span className="font-semibold text-night/75"> &quot;תוסיף לי את השוק הישן ליום {dayIndex + 1}&quot;</span> -
@@ -1015,8 +1039,9 @@ export default function TripWorkspace({
           )}
         </div>
 
-        {/* שיחה: עמודה שלישית לצד המפה מ-lg ומעלה - הסוכן תמיד בצד, לא
-            מתחת למפה, גם בלפטופים קטנים. במובייל - מגירה למטה. */}
+        {/* Conversation: a third column beside the map from lg upwards - the agent
+            is always to the side, never below the map, even on small laptops.
+            On mobile - a drawer at the bottom. */}
         <ChatPanel
           chat={chat}
           coach={coach && online}
@@ -1026,59 +1051,62 @@ export default function TripWorkspace({
       </div>
 
       {/*
-        ---------- מה קורה בתאריכים שלכם ----------
-        ממוקם ראשון מבין הפאנלים המשניים, כי הוא היחיד שבו הזמן קובע:
-        סגירה בתאריך שכבר נבחר היא מידע שמשפיע על התוכנית עצמה, ולא על
-        מה שקונים אחריה. הוא לא מרנדר כלום כשאין מה לדווח - כולל בטיול
-        בלי תאריכים, שאין ממנו מה לחשב.
+        ---------- What is happening on your dates ----------
+        Placed first among the secondary panels, because it is the only one where
+        timing decides: a closure on a date already chosen is information that
+        affects the plan itself, not what gets bought afterwards. It renders
+        nothing when there is nothing to report - including for a trip with no
+        dates, from which there is nothing to compute.
       */}
       {t && t.days.length > 0 && <TripDateNotes trip={t} destinations={destinations} />}
 
       {/*
-        ---------- שבת וכשרות בטיול ----------
-        מרונדר רק כשהעדפת הכשרות דלוקה (opt-in, אף פעם לא הנחה) ורק
-        כשיש לו תוכן אמיתי - זמני שבת מחושבים לתאריכי הטיול או דאטת
-        כשרות לערי הטיול. הכללים המלאים בראש הקומפוננטה.
+        ---------- Shabbat and kashrut on the trip ----------
+        Rendered only when the kashrut preference is on (opt-in, never assumed) and
+        only when it has real content - Shabbat times computed for the trip's dates,
+        or kashrut data for the trip's cities. The full rules are at the top of the
+        component.
       */}
       {t && t.days.length > 0 && <ShabbatKosherPanel trip={t} destOf={destOf} />}
 
-      {/* ---------- סיפור הטיול (פרימיום): הטיול הופך לעמוד לשיתוף ---------- */}
-      {/* ---------- טיול משותף (פרימיום): חברים רואים ומצביעים ---------- */}
+      {/* ---------- Trip story (premium): the trip becomes a page to share ---------- */}
+      {/* ---------- Group trip (premium): friends view it and vote ---------- */}
       {t && t.days.length > 0 && <TripGroupPanel trip={t} destOf={destOf} />}
 
       {t && t.days.length > 0 && <TripStoryPanel trip={t} />}
 
       {/*
-        ---------- בדיקה לפני הנסיעה ----------
-        מוצר בתשלום, לא מונע כלום קיים. יושב מיד אחרי "מה קורה
-        בתאריכים שלכם" מאותה סיבה בדיוק - שניהם תלויים בזמן, ושניהם לא
-        מרנדרים כלום כשאין להם מה לומר (בלי תאריכים, רחוק מדי מהיציאה,
-        או שכבר נרכש - אז מוצגת התוצאה בפנים).
+        ---------- Pre-departure check ----------
+        A paid product; it gates nothing that already exists. It sits immediately
+        after "what is happening on your dates" for exactly the same reason - both
+        depend on time, and both render nothing when they have nothing to say (no
+        dates, too far from departure, or already purchased - in which case the
+        result is shown inside).
       */}
       {t && <PreDepartureCheck trip={t} offline={offline} />}
 
-      {/* ---------- שכבת ההזמנות: מה עוד חסר לטיול ---------- */}
+      {/* ---------- The booking layer: what the trip is still missing ---------- */}
       {t && t.days.length > 0 && (
         <BookingPanel trip={t} destinations={destinations} onSetPreferences={setPrefs} offline={offline} />
       )}
 
-      {/* ---------- כמה מוציאים ביום: מספרים שמורים, חשבון בקוד ---------- */}
+      {/* ---------- Daily spend: stored figures, the arithmetic in code ---------- */}
       {t && t.days.length > 0 && (
         <TripCost trip={t} destinations={destinations} onSetPreferences={setPrefs} offline={offline} />
       )}
 
       {/*
-        ---------- פעילויות להזמנה בעיר של היום הנוכחי ----------
-        **תוכן של שותף, ולכן הוא יושב כאן ולא בתוך התוכנית.** הוא מקופל
-        כברירת מחדל, נטען רק בלחיצה, ולעולם לא נכנס לטיול עצמו - אין שום
-        מסלול שבו פעילות מ-Viator הופכת לעצירה. כשהמכשיר לא מקוון אין לו
-        מה לעשות בכלל.
+        ---------- Bookable activities in the current day's city ----------
+        **Partner content, which is why it sits here and not inside the plan.** It
+        is collapsed by default, loads only on click, and never enters the trip
+        itself - there is no path by which a Viator activity becomes a stop. When
+        the device is offline it has nothing to do at all.
       */}
       {t && day && dayDest && !offline && (
         <ActivitiesPanel citySlug={dayDest.slug} cityName={dayDest.name} />
       )}
 
-      {/* ---------- הסיכות של המטייל: מה הוא כבר סגר בעצמו ---------- */}
+      {/* ---------- The traveller's pins: what they have already arranged themselves ---------- */}
       {t && (
         <PinsPanel
           trip={t}
@@ -1090,10 +1118,10 @@ export default function TripWorkspace({
       )}
 
       {/*
-        ---------- סקירת כל הימים (עם תיאור לכל יום) ----------
-        היה פתוח תמיד מ-lg ומעלה. הוא חוזר על טאבי הימים ועל כרטיס
-        היום שכבר מוצגים למעלה, ולכן במסך הראשון הוא נטו רעש -
-        מקופל עכשיו בכל רוחב, במרחק לחיצה אחת.
+        ---------- All-days overview (with a description per day) ----------
+        This used to be permanently open from lg upwards. It repeats the day tabs
+        and the day card already shown above, so on the first screen it is pure
+        noise - now collapsed at every width, one click away.
       */}
       {t && t.days.length > 0 && (
         <PanelSection
@@ -1128,7 +1156,7 @@ export default function TripWorkspace({
                           {d.placeIds.length} עצירות
                         </span>
                       </div>
-                      {/* תיאור היום - סיכום כן של מה שיש בו בפועל */}
+                      {/* The day description - an honest summary of what is actually in it */}
                       <div className="mt-1 line-clamp-2 text-xs font-medium leading-relaxed text-night/55">
                         {dayDescription(d, dst)}
                       </div>
@@ -1141,10 +1169,10 @@ export default function TripWorkspace({
         </PanelSection>
       )}
 
-      {/* ---------- ייצוא להדפסה/PDF: שער ממותג + ימים + פוטר ---------- */}
+      {/* ---------- Print / PDF export: branded cover + days + footer ---------- */}
       {t && (
         <div className="hidden print:block">
-          {/* עמוד שער */}
+          {/* Cover page */}
           <div className="print-cover">
             <div className="print-cover-rule" aria-hidden />
             <div className="print-cover-center">
@@ -1175,7 +1203,7 @@ export default function TripWorkspace({
             </p>
           </div>
 
-          {/* הימים */}
+          {/* The days */}
           {t.days.map((d, i) => {
             const dst = destOf(d.citySlug);
             const prev = i > 0 ? t.days[i - 1] : null;
@@ -1239,7 +1267,7 @@ export default function TripWorkspace({
             );
           })}
 
-          {/* נספח שבת: אותו חישוב בדיוק כמו הפאנל (shabbatRows.ts) */}
+          {/* Shabbat annex: exactly the same computation as the panel (shabbatRows.ts) */}
           {(() => {
             const rows = shabbatRowsFor(t, destOf);
             if (rows.length === 0) return null;
@@ -1266,7 +1294,7 @@ export default function TripWorkspace({
             );
           })()}
 
-          {/* נספח כשרות: רק כשההעדפה דלוקה - אותו כלל opt-in כמו הפאנל */}
+          {/* Kashrut annex: only when the preference is on - the same opt-in rule as the panel */}
           {t.preferences?.kosher === true &&
             (() => {
               const cities = Array.from(new Set(t.days.map((d) => d.citySlug)))
@@ -1303,7 +1331,7 @@ export default function TripWorkspace({
               );
             })()}
 
-          {/* פוטר: דיסקליימר + חתימת BlackZ */}
+          {/* Footer: disclaimer + BlackZ signature */}
           <div className="print-footer">
             <p className="print-disclaimer">
               הטיול תוכנן בעזרת AI · לוודא כשרות, שעות ומחירים מול המקומות עצמם לפני הנסיעה
@@ -1318,14 +1346,15 @@ export default function TripWorkspace({
       )}
     </div>
 
-      {/* ---------- מובייל: סרגל שיחה דביק + מגירה ---------- */}
+      {/* ---------- Mobile: sticky conversation bar + drawer ---------- */}
       <button
         onClick={() => setChatOpen(true)}
         className="fixed bottom-3 end-3 start-20 z-40 flex items-center gap-2 rounded-2xl bg-shell px-4 py-3 text-start shadow-[0_10px_30px_-12px_rgba(36,27,77,0.5)] ring-1 ring-night/15 lg:hidden print:hidden"
       >
-        {/* הסרגל נשאר לחיץ גם בלי רשת - השיחה השמורה היא תוכן שראוי
-            לקרוא. מה שמשתנה הוא ההזמנה: הוא מפסיק להציע לכתוב, והעיגול
-            מאבד את צבע הפעולה כדי לא להיראות ככפתור פעיל. */}
+        {/* The bar stays clickable offline too - the saved conversation is content
+            worth reading. What changes is the invitation: it stops offering to
+            write, and the circle loses its action colour so it does not look like
+            an active button. */}
         <span className="truncate text-sm font-medium text-night/50">
           {chat.loading
             ? 'הסוכן עונה…'
@@ -1362,7 +1391,7 @@ export default function TripWorkspace({
         </div>
       )}
 
-      {/* ייבוא מפה מ-Google My Maps → נשמר כיעד explored + טיול חדש */}
+      {/* Import a map from Google My Maps -> saved as an explored destination + a new trip */}
       <ImportMapModal
         open={importOpen}
         onClose={() => setImportOpen(false)}
@@ -1378,7 +1407,7 @@ export default function TripWorkspace({
   );
 }
 
-/* אייקוני הפעולות - קווי, ירושת currentColor, בסגנון lucide. אין תלות. */
+/* Action icons - line style, inheriting currentColor, lucide-like. No dependency. */
 const iconSvg = (paths: React.ReactNode) => (
   <svg
     viewBox="0 0 24 24"
@@ -1464,19 +1493,21 @@ function Btn({
   );
 }
 
-/** רמז הפתיחה מוצג פעם אחת לדפדפן */
+/** The opening hint is shown once per browser */
 const COACH_KEY = 'tiyul-plus:coach:agent';
 
 /**
- * תפריט קטן: כפתור אחד שפותח רשימת פעולות.
+ * A small menu: one button that opens a list of actions.
  *
- * נבנה כדי לצמצם את מסך הטיול. המדידה שהובילה לזה: 54 פקדים לחיצים
- * במסך הראשון ב-1440 ו-32 ב-390, בלי שום דירוג ביניהם - וזה מה שגרם
- * למייסד לתאר את המסך כ"הטיסת מטוס". התפריט מחזיק את הפעולות שמטייל
- * בפעם הראשונה לא צריך, בלי להסיר אותן.
+ * Built to shrink the trip screen. The measurement that led to it: 54 clickable
+ * controls on the first screen at 1440 and 32 at 390, with no ranking between
+ * them - which is what made the founder describe the screen as "flying an
+ * aeroplane". The menu holds the actions a first-time traveller does not need,
+ * without removing them.
  *
- * כפתור אמיתי ולא hover: ריחוף לא קיים במגע, וגלישה במקלדת חייבת להגיע
- * לכל פעולה. בלי תלות חדשה - אותה גישה כמו הדרופדאון ב-PromptChips.
+ * A real button and not hover: hover does not exist on touch, and keyboard
+ * navigation must reach every action. No new dependency - the same approach as
+ * the dropdown in PromptChips.
  */
 function Menu({
   label,
@@ -1491,7 +1522,7 @@ function Menu({
   ariaLabel: string;
   icon?: React.ReactNode;
   compact?: boolean;
-  /** מראה של צ׳יפ העדפה במקום כפתור פעולה */
+  /** Looks like a preference chip rather than an action button */
   chip?: boolean;
   chipActive?: boolean;
   items: {
@@ -1500,9 +1531,9 @@ function Menu({
     icon?: React.ReactNode;
     danger?: boolean;
     disabled?: boolean;
-    /** מסומן כערך הנוכחי */
+    /** Ticked as the current value */
     selected?: boolean;
-    /** קו מפריד מעליו - לפעולות הרסניות */
+    /** A separator rule above it - for destructive actions */
     separated?: boolean;
   }[];
 }) {
@@ -1590,9 +1621,10 @@ function Menu({
 }
 
 /**
- * צ׳יפ העדפה שנפתח לרשימת ערכים. `undefined` מנקה את ההעדפה - שורה
- * מפורשת ("בלי העדפה") ולא סיבוב נוסף במעגל, כי "לא בחרתי" הוא מצב
- * אמיתי שהסוכן קורא ולא סתם היעדר.
+ * A preference chip that opens into a list of values. `undefined` clears the
+ * preference - an explicit row ("no preference") rather than another step around
+ * a cycle, because "I did not choose" is a real state the agent reads and not
+ * merely an absence.
  */
 function PrefSelect<T extends string>({
   label,
@@ -1664,8 +1696,9 @@ function ToggleChip({
 }
 
 /**
- * מתג "היום הזה / כל הטיול" - צף על המפה בפינה, כי הוא פקד של המפה.
- * מוצג רק כשיש בכלל יותר מיום אחד לצייר (הרכיב האב מחליט).
+ * The "this day / whole trip" switch - floating on the map in the corner,
+ * because it is a control of the map. Rendered only when there is more than one
+ * day to draw at all (the parent decides).
  */
 function MapModeSwitch({
   mode,
