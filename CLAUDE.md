@@ -9558,3 +9558,74 @@ I had used successfully minutes earlier. The reliable read is the OpenAPI schema
 `/rest/v1/`, which lists every exposed function and cannot be fooled by argument names.
 
 **Verified:** 630 unit tests (7 new), tsc, build and lint clean.
+
+### 2026-08-17 (e) - The vote that dropped taps, a 26px target, and zoom
+
+Netanel: *"voting mechanism still feels laggy, sometime does not click"* - after
+entry (d) had already made it optimistic and measured 5-11ms - plus *"add a way to
+zoom into pictures"* and, mid-session, *"describe the premium features better
+(cant understand what a 'story' is)"*.
+
+**The 5-11ms measurement was true and it measured the wrong thing.** It timed one
+click on an idle page over localhost. Both remaining symptoms lived in what
+happens around a click, not in the first paint, and both were mine from entry (d):
+
+1. **`if (inFlight.has(placeId)) return` discarded taps.** One in-flight request
+   was treated as a lock, and that window is a few hundred milliseconds on a real
+   connection (the route reads the trip, writes the vote, then re-tallies). A tap
+   inside it did *nothing at all* - literally "sometimes does not click".
+2. **A reply replaced the WHOLE tally map.** Vote on one stop, then quickly on
+   another, and the first reply overwrote the second stop's optimistic paint until
+   its own reply arrived. The click visibly un-happened, which reads as lag.
+3. **The buttons were about 26px tall** (`py-1.5 text-xs`) - well under the 44px
+   touch target this project applies everywhere else. Some taps simply missed.
+
+Now: every tap paints, none is dropped; a per-place sequence number means a reply
+a newer tap superseded is ignored rather than allowed to overwrite it; a reply
+merges, keeping the local value for any place whose own write is still open; and
+rollback goes to the last thing the SERVER said about that place, not to a guess.
+Refs rather than state, because a fast second tap has to read what the first one
+just painted rather than the previous render.
+
+**Measured under 400ms of emulated latency**, which is the condition the bug needed
+and which localhost had been hiding: three fast taps on one stop all register
+(0 -> 1 -> 0 -> 1, settling on 1 with the server agreeing), and a vote on one stop
+survives another stop's reply. Buttons measure 44x64.
+
+---
+
+**Zoom: `PhotoLightbox`, portalled to `document.body`, and that is not optional.**
+All three pages wrap their content in `.rise-in`, whose animation keeps its final
+transform - and a transform creates a containing block, so a `fixed` overlay inside
+it is measured against that element instead of the screen. Exactly the trap already
+recorded here for the header's backdrop-blur and the mobile chat bar. Verified in
+the browser rather than assumed: the overlay's parent is `<body>` and its width
+equals the viewport.
+
+**The enlarged image deliberately keeps its existing URL.** Swapping the Wikimedia
+width up to 960 for a "real" zoom is precisely the bug that killed 170 photo URLs
+in entries (k) and (q) - a thumbnail wider than the source 404s. So it is the
+verified URL laid out large: 64px -> 358px on a phone, 80px -> 500px on desktop.
+Honest limit: on a wide desktop a 500px source is shown at 500px, not upscaled.
+
+The travellers' own uploaded story photos are full-size, so those zoom properly.
+
+---
+
+**"Cannot understand what a story is" was a collapsed-state problem.** Opened, the
+panel explains itself well. Collapsed it read `📖 סיפור הטיול [פרימיום ★] ▾` - a
+product name for a thing nobody has seen before. Both premium panels now carry a
+`meta` line naming the OUTPUT rather than the feature.
+
+**And the first wording of it was too long, which the browser said and I would not
+have.** `meta` is a single truncating line: the fuller sentences measured 177px and
+236px against the 123px available at 390 - so half of the explanation was cut off on
+the device that needs it most. Shortened until it fits (`clipped: false` at both
+widths). Making those two bars taller instead was rejected: `PanelSection` exists
+precisely so five sibling bars cannot drift apart, and two of them growing a second
+line is that drift.
+
+**Verified:** 630 tests, tsc, build, lint clean. 18/18 in a real browser at 1400 and
+390 on the throttled join page, 16/16 re-run on the shared trip to confirm the
+zoom wrapper changed nothing there, and the panel measurement above. The throwaway
+user, trip, invite and votes were deleted and the deletion confirmed by re-query.

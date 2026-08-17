@@ -100,7 +100,9 @@ export default function TripGroupPanel({
       panelKey="trip-group"
       icon="🤝"
       title="טיול משותף"
-      ariaLabel="טיול משותף"
+      // Same reason as the story panel, and the same length limit - see there.
+      meta="הצבעות של חברים"
+      ariaLabel="טיול משותף - חברים מצטרפים בקישור ומצביעים על העצירות"
       badge={
         members !== null && members > 0 ? (
           <span className="rounded-full bg-lagoon/15 px-2 py-0.5 text-[11px] font-bold text-lagoon">

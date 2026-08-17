@@ -2,7 +2,7 @@
 
 import type { EnrichedSnapshot, EnrichedStop } from '@/lib/server/stories';
 import PlacesMap from '@/components/PlacesMap';
-import PlaceThumb from '@/components/PlaceThumb';
+import { ZoomableImage, ZoomablePhoto } from '@/components/PhotoLightbox';
 import { categoryMeta } from '@/lib/categories';
 import type { Place } from '@/lib/types';
 
@@ -98,7 +98,7 @@ export default function StoryView({
                     <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-night/5 text-xs font-bold text-night/70">
                       {i + 1}
                     </span>
-                    <PlaceThumb
+                    <ZoomablePhoto
                       place={asPlace(s, `d${d.dayNumber}-${i}`)}
                       className="h-16 w-16 shrink-0 sm:h-20 sm:w-20"
                     />
@@ -137,13 +137,12 @@ export default function StoryView({
           <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {photos.map((p, i) => (
               <figure key={i} className="overflow-hidden rounded-2xl ring-1 ring-night/10">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                {/* The travellers' own photos are full-size uploads, so enlarging
+                    them is a genuine zoom rather than a bigger thumbnail. */}
+                <ZoomableImage
                   src={p.url}
                   alt={p.caption ?? `תמונה ${i + 1} מהטיול`}
-                  loading="lazy"
-                  decoding="async"
-                  className="aspect-square w-full object-cover"
+                  caption={p.caption ?? undefined}
                 />
                 {p.caption && (
                   <figcaption className="bg-shell px-3 py-2 text-xs font-semibold text-night/70">

@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/lib/auth/AuthContext';
 import { authHeader } from '@/lib/auth/client';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
-import PlaceThumb from '@/components/PlaceThumb';
+import { ZoomablePhoto } from '@/components/PhotoLightbox';
 import { categoryMeta } from '@/lib/categories';
 import type { EnrichedSnapshot, EnrichedStop } from '@/lib/server/stories';
 import type { VoteTally } from '@/lib/server/groupTrips';
@@ -37,13 +37,14 @@ export default function JoinClient({ code }: { code: string }) {
   const [errorMsg, setErrorMsg] = useState('');
   const [trip, setTrip] = useState<EnrichedSnapshot | null>(null);
   const [votes, setVotes] = useState<Map<string, VoteTally>>(new Map());
-  /**
-   * Which places have a vote in flight. A Set and not a single id: blocking
-   * every button while one request runs made voting down a list feel like the
-   * page had frozen. Only the place being voted on is guarded, and only to keep
-   * two requests for the SAME place from racing each other.
-   */
-  const [inFlight, setInFlight] = useState<Set<string>>(new Set());
+  /** What is on screen right now - read synchronously so a fast second tap builds on the first. */
+  const votesRef = useRef<Map<string, VoteTally>>(new Map());
+  /** The last tally the SERVER gave for a place - the only honest thing to roll back to. */
+  const serverRef = useRef<Map<string, VoteTally>>(new Map());
+  /** Per-place click counter, so a reply that a newer tap superseded is ignored. */
+  const seqRef = useRef<Map<string, number>>(new Map());
+  /** Places whose write has not come back yet - their local number survives a merge. */
+  const pendingRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     // The "must sign in" state is derived at render (auth.ready && !auth.user) - not state
@@ -82,7 +83,10 @@ export default function JoinClient({ code }: { code: string }) {
           return;
         }
         setTrip(data.trip);
-        setVotes(new Map((data.votes ?? []).map((v) => [v.placeId, v])));
+        const initial = new Map((data.votes ?? []).map((v) => [v.placeId, v] as const));
+        votesRef.current = initial;
+        serverRef.current = new Map(initial);
+        setVotes(initial);
         setPhase('ready');
       } catch {
         if (alive) {
@@ -96,18 +100,37 @@ export default function JoinClient({ code }: { code: string }) {
     };
   }, [auth.ready, auth.user, code]);
 
+  /**
+   * Voting. **No click is ever dropped, and no response may undo one.**
+   *
+   * The first optimistic version still felt laggy and sometimes ignored a tap,
+   * and both had the same root: it treated one in-flight request as a lock.
+   *
+   * 1. `if (inFlight.has(placeId)) return` **discarded** any click made while a
+   *    request was open. That window is a few hundred ms on a real network (the
+   *    route reads the trip, writes the vote, then re-tallies), so a second tap
+   *    in that window simply did nothing.
+   * 2. A reply replaced the WHOLE tally map. Voting on one stop and then quickly
+   *    on another meant the first reply overwrote the second stop's optimistic
+   *    paint until its own reply arrived - the click visibly un-happened.
+   *
+   * So: every click paints immediately; a per-place sequence number means a
+   * superseded reply is ignored instead of overwriting a newer intent; and a
+   * reply merges, keeping the local value for any place whose write is still
+   * open. Refs rather than state because a rapid second tap must read what the
+   * first one just painted, not the previous render's value.
+   */
   async function vote(placeId: string, dir: 1 | -1) {
-    if (inFlight.has(placeId)) return;
+    const next = nextVote(votesRef.current.get(placeId)?.mine, dir);
 
-    const before = votes;
-    const current = votes.get(placeId)?.mine;
-    const next = nextVote(current, dir);
+    const painted = new Map(votesRef.current);
+    painted.set(placeId, applyVote(votesRef.current.get(placeId), placeId, next));
+    votesRef.current = painted;
+    setVotes(painted);
 
-    // Paint first, ask the server second.
-    const optimistic = new Map(before);
-    optimistic.set(placeId, applyVote(before.get(placeId), placeId, next));
-    setVotes(optimistic);
-    setInFlight((s) => new Set(s).add(placeId));
+    const seq = (seqRef.current.get(placeId) ?? 0) + 1;
+    seqRef.current.set(placeId, seq);
+    pendingRef.current.add(placeId);
 
     try {
       const res = await fetch('/api/group', {
@@ -116,26 +139,34 @@ export default function JoinClient({ code }: { code: string }) {
         body: JSON.stringify({ action: 'vote', code, placeId, vote: next }),
       });
       const data = (await res.json().catch(() => null)) as { votes?: VoteTally[] } | null;
-      // The server's tallies include everyone else's votes, so they replace the
-      // guess rather than merely confirming it.
-      if (data?.votes) setVotes(new Map(data.votes.map((v) => [v.placeId, v])));
-      else throw new Error('no tallies');
+      if (seqRef.current.get(placeId) !== seq) return; // a newer tap already won
+      if (!data?.votes) throw new Error('no tallies');
+
+      for (const v of data.votes) serverRef.current.set(v.placeId, v);
+      pendingRef.current.delete(placeId);
+
+      // The reply carries everyone's votes, so it is the truth for every place
+      // EXCEPT those whose own write has not come back yet - those keep the
+      // number the traveller just saw appear.
+      const merged = new Map(data.votes.map((v) => [v.placeId, v] as const));
+      for (const id of pendingRef.current) {
+        const local = votesRef.current.get(id);
+        if (local) merged.set(id, local);
+      }
+      votesRef.current = merged;
+      setVotes(merged);
     } catch {
-      // Roll back just this place - keeping the optimistic number would be a
-      // lie, and this is the one case where the count on screen is not real.
-      setVotes((cur) => {
-        const m = new Map(cur);
-        const prev = before.get(placeId);
-        if (prev) m.set(placeId, prev);
-        else m.delete(placeId);
-        return m;
-      });
-    } finally {
-      setInFlight((s) => {
-        const m = new Set(s);
-        m.delete(placeId);
-        return m;
-      });
+      if (seqRef.current.get(placeId) !== seq) return;
+      pendingRef.current.delete(placeId);
+      // Fall back to the last thing the server actually said about this place.
+      // Keeping the optimistic number would leave a vote on screen that does
+      // not exist anywhere else.
+      const truth = serverRef.current.get(placeId);
+      const rolled = new Map(votesRef.current);
+      if (truth) rolled.set(placeId, truth);
+      else rolled.delete(placeId);
+      votesRef.current = rolled;
+      setVotes(rolled);
     }
   }
 
@@ -189,7 +220,7 @@ export default function JoinClient({ code }: { code: string }) {
                 const t = votes.get(s.id);
                 return (
                   <li key={s.id} className="flex items-start gap-3">
-                    <PlaceThumb place={asPlace(s)} className="h-16 w-16 shrink-0 sm:h-20 sm:w-20" />
+                    <ZoomablePhoto place={asPlace(s)} className="h-16 w-16 shrink-0 sm:h-20 sm:w-20" />
                     <div className="min-w-0 flex-1">
                       <p className="font-semibold text-night">
                         {s.name}
@@ -207,14 +238,16 @@ export default function JoinClient({ code }: { code: string }) {
                           {s.description}
                         </p>
                       )}
-                      {/* The buttons sit under the text so a long description does not
-                          squeeze them, and they stay reachable at 390px. */}
+                      {/* The buttons sit under the text so a long description does not squeeze
+                          them. 44px minimum: at py-1.5/text-xs they measured about 26px tall,
+                          which is below the touch target this project uses everywhere else and
+                          is why taps were being missed on a phone. */}
                       <div className="mt-2 flex items-center gap-2">
                         <button
                           onClick={() => void vote(s.id, 1)}
                           aria-pressed={t?.mine === 1}
                           aria-label={`אהבתי - ${s.name}`}
-                          className={`rounded-full px-3 py-1.5 text-xs font-bold ring-1 transition active:scale-95 ${
+                          className={`flex min-h-[44px] min-w-[64px] touch-manipulation items-center justify-center gap-1 rounded-full px-4 text-sm font-bold ring-1 transition active:scale-95 ${
                             t?.mine === 1
                               ? 'bg-sunset text-cream ring-sunset'
                               : 'bg-cream text-night/60 ring-night/15 hover:bg-sunset/10'
@@ -226,7 +259,7 @@ export default function JoinClient({ code }: { code: string }) {
                           onClick={() => void vote(s.id, -1)}
                           aria-pressed={t?.mine === -1}
                           aria-label={`פחות בשבילי - ${s.name}`}
-                          className={`rounded-full px-3 py-1.5 text-xs font-bold ring-1 transition active:scale-95 ${
+                          className={`flex min-h-[44px] min-w-[64px] touch-manipulation items-center justify-center gap-1 rounded-full px-4 text-sm font-bold ring-1 transition active:scale-95 ${
                             t?.mine === -1
                               ? 'bg-night text-cream ring-night'
                               : 'bg-cream text-night/60 ring-night/15 hover:bg-night/5'

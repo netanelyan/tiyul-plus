@@ -12,7 +12,7 @@ import { formatHebrewRange } from '@/lib/trip/dates';
 import type { SharedTrip } from '@/lib/trip/share';
 import { tripFromShared } from '@/lib/trip/share';
 import PlacesMap from '@/components/PlacesMap';
-import PlaceThumb from '@/components/PlaceThumb';
+import { ZoomablePhoto } from '@/components/PhotoLightbox';
 import Flag from '@/components/Flag';
 import { daysHe } from '@/lib/duration';
 
@@ -179,7 +179,7 @@ export default function SharedTripView({
                         {/* The cities already arrive as full Destination props, so the
                             photo costs nothing extra here - and PlaceThumb falls back to
                             the category tile for the places that have none. */}
-                        <PlaceThumb place={p} className="h-16 w-16 shrink-0 sm:h-20 sm:w-20" />
+                        <ZoomablePhoto place={p} className="h-16 w-16 shrink-0 sm:h-20 sm:w-20" />
                         <div className="min-w-0">
                           <p className="font-semibold text-night">
                             {p.name}

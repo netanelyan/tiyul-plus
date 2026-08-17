@@ -105,7 +105,11 @@ export default function TripStoryPanel({ trip }: { trip: Trip }) {
       panelKey="trip-story"
       icon="📖"
       title="סיפור הטיול"
-      ariaLabel="סיפור הטיול"
+      // Collapsed, the name alone says nothing - "story" is not a thing anyone
+      // has seen before. The bar has to answer "what IS this" without being
+      // opened, so it names the OUTPUT rather than the feature.
+      meta="עמוד לשיתוף"
+      ariaLabel="סיפור הטיול - עמוד לשיתוף עם המסלול והתמונות"
       badge={
         story?.published ? (
           <span className="rounded-full bg-lagoon/15 px-2 py-0.5 text-[11px] font-bold text-lagoon">
