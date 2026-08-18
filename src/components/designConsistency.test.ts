@@ -64,6 +64,16 @@ test('חץ הפתיחה נוצר רק במקומות שהוסכם עליהם', (
     join('src', 'components', 'PromptChips.tsx'),
     join('src', 'components', 'SiteNav.tsx'),
     join('src', 'components', 'TripWorkspace.tsx'),
+    /*
+      PaidTools is the fourth exception and it is a deliberate one. It is not a
+      panel - it is a night bar, on purpose, so it is not mistaken for one more
+      free block - so it cannot go through PanelSection. But it opens, and the
+      glyph that says "this opens" must be the same one and the same size as the
+      panels directly beneath it. The rule this file protects is one caret
+      language, not one component; a different surface with a different arrow
+      would be exactly the drift it exists to catch.
+    */
+    join('src', 'components', 'PaidTools.tsx'),
   ]);
   const hits = FILES.filter(
     (f) => !ALLOWED.has(f) && stripComments(readFileSync(f, 'utf8')).includes('▾'),

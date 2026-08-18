@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useAuth } from '@/lib/auth/AuthContext';
 
 /**
@@ -14,14 +14,21 @@ import { useAuth } from '@/lib/auth/AuthContext';
  * He is describing what the stack actually looked like. Nine blocks sat under
  * the plan, and the paid ones were sitting at positions three and four - a
  * locked "shared trip" panel wedged between the Shabbat times and the booking
- * layer, with a padlock's worth of copy inside it. So a traveller scrolling
- * their own free trip screen met an advertisement halfway down, and the free
- * tools around it read as the free tier of something rather than as the
- * product.
+ * layer. So a traveller scrolling their own free trip screen met an
+ * advertisement halfway down, and the free tools around it read as the free
+ * tier of something rather than as the product.
  *
- * The fix is placement, not wording. Everything above this section is free and
- * uninterrupted; everything that costs money is here, once, below it, on its
- * own ground.
+ * ## Why it is at the top, collapsed
+ *
+ * It first went to the bottom, which fixed the interleaving and created a new
+ * problem: *"instead of it being under everything, where people are less likely
+ * to scroll, have a collapsed section in the top?"* - a thing nobody scrolls to
+ * is not placed, it is buried.
+ *
+ * Collapsed is what makes the top position honest. One bar costs one row, so
+ * the free tools underneath are not pushed down by something the traveller did
+ * not ask for, and it is still the first thing they can choose to open.
+ * Open-by-default here would be the original complaint again in a new position.
  *
  * ## The name of this file is not the name on the screen
  *
@@ -35,76 +42,71 @@ import { useAuth } from '@/lib/auth/AuthContext';
  * dark pattern. Nobody here can spend money, or put work into a feature, before
  * seeing what it costs.
  *
- * ## Same place for a subscriber
+ * ## Same bar for a subscriber
  *
- * A premium traveller sees the identical section in the identical position -
- * only the subtitle changes, from a price statement to "included in your
- * subscription". A block that moves depending on who is looking is a block
- * nobody can learn, and the tools in here (create an invite link, run the
- * pre-departure check) are once-per-trip actions, not things you reach for
- * while arranging a day.
+ * A premium traveller sees the identical bar in the identical position - only
+ * the sub-line changes. A block that moves depending on who is looking is a
+ * block nobody can learn.
  */
 export default function PaidTools({ children }: { children: ReactNode }) {
   const auth = useAuth();
   const isPremium = auth.profile?.plan === 'premium';
+  const [open, setOpen] = useState(false);
 
   return (
-    <section
-      aria-labelledby="paid-tools-heading"
-      /*
-        A night band, not a grey box - and the first version got this backwards.
-        It used a 3% night tint, which separated the section from the free stack
+    <section aria-labelledby="paid-tools-heading" className="mt-4">
+      {/*
+        A night bar, not a grey box - the first version got this backwards. It
+        used a 3% night tint, which separated the section from the free stack
         correctly and then read as *duller* than everything above it. Netanel:
-        "still, those are premium. also the gray feel is not it". He is right:
-        making the paid tools the quietest thing on the screen says they matter
-        least, which is the opposite of what they are.
+        "still, those are premium. also the gray feel is not it". Making the
+        paid tools the quietest thing on the screen says they matter least,
+        which is the opposite of what they are.
 
         Night + cream is the treatment this site already uses for its own good
         moments - the destinations band on the homepage, the closing card on a
-        shared trip, the star card on /premium. The panel bars inside are
-        `bg-shell`, so on night they lift off the page instead of smearing into
-        it, exactly as those homepage cards do.
+        shared trip, the star card on /premium - and it is deliberately NOT the
+        shell bar the free panels use, because this is a different kind of
+        object and should not be mistaken for one more panel.
 
-        NOT `print:hidden`, deliberately: the pre-departure check prints once it
-        has a real result, because a report somebody paid for belongs in the PDF
-        they hand around. So the band stays in the flow and drops its own paint
-        for print - a dark rectangle across an A4 page would be worse than the
-        problem it solves.
-      */
-      className="mt-6 rounded-3xl bg-night p-5 text-cream ring-1 ring-night print:mt-0 print:bg-transparent print:p-0 print:text-night print:ring-0"
-    >
-      {/*
-        The heading names what these DO, not what they cost - and that was a
-        correction. The first version led with "the only two things here that
-        cost money", which is honest and, as Netanel put it, "if it already is
-        labeled as a paid feature, most might skip it": a price tag on the
-        outside is a reason to scroll past before ever seeing what the thing is.
-
-        Where the line sits, because there is one. Not leading with the price is
-        ordinary product marketing; hiding it until someone has committed is a
-        dark pattern, and this does not do that. Each tool explains itself, and
-        the **price is on the button that acts** - the check's button carries its
-        price, the shared trip's carries the subscription. Nobody can spend
-        money, or invest work into a feature, without having seen the cost
-        first. The section label is the shop window, not the receipt.
-
-        It is also print-hidden: a shop window has no business in a printed
-        itinerary.
+        The caret is the same glyph and size as those panels on purpose: the
+        surface differs, the "this opens" language must not.
       */}
-      <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 print:hidden">
-        <h2 id="paid-tools-heading" className="text-base font-black text-cream">
-          <span aria-hidden className="me-1.5 text-zest">
-            ★
-          </span>
+      <button
+        type="button"
+        data-paid-head
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center gap-2 rounded-2xl bg-night px-4 py-3 text-start text-cream ring-1 ring-night transition hover:bg-night/90 print:hidden"
+      >
+        <span aria-hidden className="text-base leading-none text-zest">
+          ★
+        </span>
+        <span id="paid-tools-heading" className="shrink-0 text-sm font-bold text-cream">
           כלים מתקדמים
-        </h2>
-        <p className="text-xs font-medium text-cream/60">
-          {isPremium
-            ? 'כלולים במנוי שלכם'
-            : 'לתכנן ביחד עם אחרים, ולצאת לדרך בראש שקט'}
-        </p>
-      </div>
-      <div className="space-y-2">{children}</div>
+        </span>
+        {/*
+          One truncating line, so it has to FIT at 390 rather than be cut there -
+          the same lesson as the two panel meta lines, where the fuller sentence
+          lost half of itself on exactly the device that needed it most. Measured
+          on the narrow width, not judged on the wide one.
+        */}
+        <span data-paid-sub className="min-w-0 flex-1 truncate text-xs font-medium text-cream/55">
+          {isPremium ? 'כלולים במנוי שלכם' : 'לתכנן ביחד ולצאת רגועים'}
+        </span>
+        <span aria-hidden className={`text-xs text-cream/70 transition ${open ? 'rotate-180' : ''}`}>
+          ▾
+        </span>
+      </button>
+
+      {/*
+        `hidden print:block` rather than a conditional render, and the
+        distinction is load-bearing: the pre-departure check's printable report
+        lives in here, and a collapsed section that removed its children from
+        the DOM would silently drop a report the traveller paid for out of their
+        PDF. Collapsed hides it on screen only.
+      */}
+      <div className={open ? 'mt-2 space-y-2' : 'hidden print:block'}>{children}</div>
     </section>
   );
 }
