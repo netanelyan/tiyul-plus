@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import Flag from '@/components/Flag';
+import { Skeleton } from '@/components/Skeleton';
 import type { SearchHits, SearchKind, SearchResult } from '@/lib/siteSearch';
 import { OFFLINE_HINT, useOnline } from '@/lib/offline/online';
 
@@ -257,10 +258,10 @@ export default function SiteSearch({
                       ))}
                     </>
                   ) : (
-                    <p className="px-3 py-4 text-sm font-medium text-night/45">טוען את הקטלוג…</p>
+                    <CatalogRowsSkeleton />
                   )
                 ) : !search ? (
-                  <p className="px-3 py-4 text-sm font-medium text-night/45">טוען את הקטלוג…</p>
+                  <CatalogRowsSkeleton />
                 ) : results.length === 0 ? (
                   <div className="px-3 py-4">
                     {/* An honest empty state: no invented results - we offer to ask the agent */}
@@ -338,6 +339,26 @@ export default function SiteSearch({
  * serves both the starter destinations and the search results - the two
  * copies used to be separate in their keyboard behavior.
  */
+/**
+ * The rows the catalog will fill in. The catalog module is imported
+ * dynamically on first open (it is ~2MB and must never sit in the nav's
+ * bundle), so this is a real wait on a slow connection - and the panel used
+ * to be one grey line of text that then jumped to a full list.
+ */
+function CatalogRowsSkeleton() {
+  return (
+    <div role="status" aria-busy="true" aria-label="טוענים את הקטלוג" className="py-1">
+      {[0, 1, 2, 3, 4].map((i) => (
+        <div key={i} className="flex w-full items-center gap-2.5 px-3 py-2.5" aria-hidden>
+          <Skeleton className="h-4 w-6 shrink-0 rounded" />
+          <Skeleton className="h-4 w-32 rounded-full" />
+          <Skeleton className="h-3 w-20 rounded-full" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function Row({
   r,
   activeRow,

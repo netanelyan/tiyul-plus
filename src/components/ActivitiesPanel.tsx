@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import PanelSection from '@/components/PanelSection';
-import ThinkingIndicator from '@/components/ThinkingIndicator';
+import { Skeleton } from '@/components/Skeleton';
 import { formatDurationHe } from '@/lib/duration';
 import { hePrefix } from '@/lib/hebrew';
 
@@ -144,7 +144,22 @@ export default function ActivitiesPanel({ citySlug, cityName }: { citySlug: stri
           </div>
         )}
 
-        {loading && <ThinkingIndicator label="בודק מה יש בעיר" />}
+        {loading && (
+          /* The shape of the offer rows below - photo, name over two lines,
+             price - so the card does not jump in height when they land */
+          <div role="status" aria-busy="true" aria-label="בודקים מה יש בעיר" className="space-y-2">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="flex items-center gap-3 rounded-xl bg-cream p-2.5" aria-hidden>
+                <Skeleton className="h-14 w-16 shrink-0 rounded-lg" />
+                <div className="min-w-0 flex-1 space-y-2">
+                  <Skeleton className="h-3.5 w-full rounded-full" />
+                  <Skeleton className="h-3.5 w-2/3 rounded-full" />
+                </div>
+                <Skeleton className="h-4 w-14 shrink-0 rounded-full" />
+              </div>
+            ))}
+          </div>
+        )}
 
         {emptyLine && <p className="text-sm font-medium text-night/55">{emptyLine}</p>}
 

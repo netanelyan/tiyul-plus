@@ -12,7 +12,7 @@ import {
   travelerLevel,
 } from '@/data/worldCountries';
 import Flag from '@/components/Flag';
-import ThinkingIndicator from '@/components/ThinkingIndicator';
+import TravelerSkeleton from './TravelerSkeleton';
 
 /** A public traveller profile: the passport only, read-only - with "countries in common" when signed in */
 export default function TravelerClient({ userId }: { userId: string }) {
@@ -33,6 +33,13 @@ export default function TravelerClient({ userId }: { userId: string }) {
       empty answer here, so **we tell them the truth** instead of showing "this profile is
       private or does not exist", which is simply not true in that case.
     */
+    /*
+      Wait for the session before deciding. `auth.user` is null while it is
+      still resolving, so acting on it immediately showed a signed-in visitor
+      the "signed in only" screen for a moment and then swapped it for the
+      profile - the wrong screen, not merely a slow one.
+    */
+    if (!auth.ready) return;
     if (!auth.user) {
       setState('signedout');
       return;
@@ -49,7 +56,7 @@ export default function TravelerClient({ userId }: { userId: string }) {
     return () => {
       cancelled = true;
     };
-  }, [userId, auth.user]);
+  }, [userId, auth.user, auth.ready]);
 
   const visited = useMemo(() => new Set(traveler?.visited ?? []), [traveler]);
   const myVisited = useMemo(() => new Set(auth.profile?.visited ?? []), [auth.profile]);
@@ -63,11 +70,7 @@ export default function TravelerClient({ userId }: { userId: string }) {
   );
 
   if (state === 'loading') {
-    return (
-      <div className="rounded-2xl bg-shell p-10 text-center ring-1 ring-night/10">
-        <ThinkingIndicator label="טוען פרופיל מטייל" className="justify-center" />
-      </div>
-    );
+    return <TravelerSkeleton />;
   }
 
   if (state === 'signedout') {

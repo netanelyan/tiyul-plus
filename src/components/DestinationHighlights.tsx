@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import CardPhoto from '@/components/CardPhoto';
+import { Skeleton } from '@/components/Skeleton';
 
 export interface HighlightCard {
   slug: string;
@@ -40,12 +41,16 @@ export default function DestinationHighlights({ cards }: { cards: HighlightCard[
 
   if (!picked) {
     return (
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+      <div
+        role="status"
+        aria-busy="true"
+        aria-label="טוענים יעדים"
+        className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4"
+      >
         {Array.from({ length: Math.min(GRID_SIZE, cards.length) }).map((_, i) => (
-          <div
-            key={i}
-            className="h-44 animate-pulse rounded-2xl bg-cream/10 ring-1 ring-cream/10 sm:h-56"
-          />
+          /* The shared skeleton rather than a hand-rolled pulse: this sits on
+             the night band, so it is the inverted (cream) variant. */
+          <Skeleton key={i} invert className="h-44 rounded-2xl ring-1 ring-cream/10 sm:h-56" />
         ))}
       </div>
     );

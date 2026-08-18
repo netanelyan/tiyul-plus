@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useCityData } from '@/lib/trip/cityData';
 import PlaceThumb from '@/components/PlaceThumb';
+import { Skeleton } from '@/components/Skeleton';
 import { categoryMeta } from '@/lib/categories';
 import type { Place } from '@/lib/types';
 
@@ -138,7 +139,19 @@ export default function SuggestPlace({
             placeholder="חיפוש מקום בערים של הטיול…"
             className="mt-3 min-h-[44px] w-full rounded-lg border border-night/15 bg-cream px-3 text-base text-night outline-none placeholder:text-night/35 focus:ring-4 focus:ring-sunset/15 sm:text-sm"
           />
-          {cities.loading && <p className="mt-2 text-xs text-night/45">טוען מקומות…</p>}
+          {cities.loading && (
+            <div role="status" aria-busy="true" aria-label="טוענים את המקומות" className="mt-2 space-y-1.5">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="flex items-start gap-2.5 p-1.5" aria-hidden>
+                  <Skeleton className="h-11 w-11 shrink-0 rounded-xl" />
+                  <div className="min-w-0 flex-1 space-y-1.5">
+                    <Skeleton className="h-3.5 w-40 max-w-full rounded-full" />
+                    <Skeleton className="h-3 w-24 rounded-full" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
           <ul className="mt-2 max-h-72 space-y-1.5 overflow-y-auto">
             {candidates.map((c) => (
               <li key={c.place.id}>

@@ -18,6 +18,7 @@ import {
 import { countries as catalogCountries } from '@/data/countries';
 import Flag from '@/components/Flag';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
+import AccountSkeleton from './AccountSkeleton';
 import { daysHe } from '@/lib/duration';
 
 /**
@@ -40,12 +41,25 @@ export default function AccountClient({ cityNames }: { cityNames: CityNames }) {
       </Shell>
     );
   }
-  if (!auth.ready || (auth.user && !auth.profile)) {
+  /*
+    Two different waits. While the session is still resolving, this screen may
+    still turn out to be the "sign in" invitation, so nothing is promised. Once
+    the visitor is known to be signed in, the personal area IS what is coming,
+    and it can be drawn in advance.
+  */
+  if (!auth.ready) {
     return (
       <Shell>
         <div className="rounded-2xl bg-shell p-10 text-center ring-1 ring-night/10">
-          <ThinkingIndicator label="טוען את האזור האישי" className="justify-center" />
+          <ThinkingIndicator label="רגע" className="justify-center text-night/45" />
         </div>
+      </Shell>
+    );
+  }
+  if (auth.user && !auth.profile) {
+    return (
+      <Shell>
+        <AccountSkeleton />
       </Shell>
     );
   }

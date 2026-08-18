@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { authHeader } from '@/lib/auth/client';
 import type { Role } from '@/lib/plans';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
+import { Skeleton } from '@/components/Skeleton';
 import { daysHe } from '@/lib/duration';
 import { markInternalBrowser } from '@/lib/events';
 import {
@@ -473,9 +474,30 @@ function StatsCard({
 
   if (err) return null;
   if (!s) {
+    /*
+      The shape of the card below - heading, the summary line, and the week's
+      bars - so the dashboard does not grow under the reader while the cards
+      answer one by one. Safe to draw here because the failure case is handled
+      separately above (`err` hides the card entirely); the cards that fold
+      loading and failure into one `!d` check deliberately keep returning null,
+      since a skeleton there would spin forever on an error.
+    */
     return (
-      <section className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
-        <ThinkingIndicator label="טוען נתוני שימוש" />
+      <section
+        role="status"
+        aria-busy="true"
+        aria-label="טוען נתוני שימוש"
+        className="rounded-2xl bg-shell p-5 ring-1 ring-night/10"
+      >
+        <div aria-hidden>
+          <Skeleton className="h-5 w-40 rounded-lg" />
+          <Skeleton className="mt-2 h-3 w-72 max-w-full rounded-full" />
+          <div className="mt-4 flex items-end gap-2">
+            {['h-10', 'h-16', 'h-8', 'h-20', 'h-14', 'h-16', 'h-12'].map((h, i) => (
+              <Skeleton key={i} className={`w-full rounded-t-lg ${h}`} />
+            ))}
+          </div>
+        </div>
       </section>
     );
   }

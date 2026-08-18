@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@/lib/auth/AuthContext';
 import { authHeader } from '@/lib/auth/client';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
+import JoinSkeleton from './JoinSkeleton';
 import { ZoomablePhoto } from '@/components/PhotoLightbox';
 import GroupComments from '@/components/group/GroupComments';
 import GroupDates from '@/components/group/GroupDates';
@@ -258,7 +259,22 @@ export default function JoinClient({ code }: { code: string }) {
   const pendingSuggestions = planning.suggestions.filter((s) => s.status === 'pending');
   const generalCount = commentsFor(planning.comments, null).length;
 
-  if (auth.ready && !auth.user) {
+  /*
+    Three different waits, and they are not interchangeable. While the session
+    is still resolving we do not yet know whether this ends on the trip or on
+    "please sign in", so nothing is promised - just the dots. Once the visitor
+    is known to be signed in, the trip IS what is coming, and the skeleton can
+    draw it.
+  */
+  if (!auth.ready) {
+    return (
+      <div className="py-20 text-center">
+        <ThinkingIndicator label="רגע" className="justify-center text-night/45" />
+      </div>
+    );
+  }
+
+  if (!auth.user) {
     return (
       <div className="mx-auto max-w-lg py-20 text-center">
         <h1 className="display text-3xl text-night">הוזמנתם לטיול משותף 🎉</h1>
@@ -271,11 +287,7 @@ export default function JoinClient({ code }: { code: string }) {
   }
 
   if (phase === 'loading') {
-    return (
-      <div className="py-20 text-center">
-        <ThinkingIndicator label="מצטרפים לטיול" className="justify-center" />
-      </div>
-    );
+    return <JoinSkeleton />;
   }
 
   if (phase === 'error' || !trip) {

@@ -255,6 +255,22 @@ html.a11y-no-motion *::after {
   animation: skeleton-shimmer 1.6s ease-in-out infinite;
 }
 
+/*
+  The same shape on a dark surface. A night-tinted gradient is invisible on
+  the night band, so the inverse is a cream tint - one class, rather than
+  every dark section inventing its own `animate-pulse bg-cream/10`.
+*/
+.skeleton-block-invert {
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--color-cream) 8%, transparent) 40%,
+    color-mix(in srgb, var(--color-cream) 17%, transparent) 50%,
+    color-mix(in srgb, var(--color-cream) 8%, transparent) 60%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rise-in,
   .rise-in-late {
@@ -272,6 +288,10 @@ html.a11y-no-motion *::after {
   .skeleton-block {
     animation: none;
     background: color-mix(in srgb, var(--color-night) 8%, transparent);
+  }
+  .skeleton-block-invert {
+    animation: none;
+    background: color-mix(in srgb, var(--color-cream) 12%, transparent);
   }
 }
 
