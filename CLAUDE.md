@@ -2997,8 +2997,7 @@ placeholders in the accessibility statement.
 9. **Developer notes are English-only (Netanel, 2026-08-17).** Code
    comments, SQL comments, script comments, commit messages, and NEW
    session-log entries are written in English - never Hebrew. Hebrew stays
-   only where it is the product (UI copy, catalog data, test names/strings)
-   or in documents addressed to Netanel himself (NEEDS-YOUR-INPUT.md).
+   only where it is the product (UI copy, catalog data, test names/strings).
    Enforced for comments by `src/lib/englishComments.test.ts`; pre-existing
    Hebrew session-log entries below are historical record and stay as
    written.
@@ -10195,3 +10194,278 @@ one-off price), 638 tests, tsc, build and lint clean. The rendered page was look
 at, at 1100px, which is how the first screenshot attempt was caught: the clip fell
 outside the emulated viewport and showed an empty band where the cards are, and
 the cards were in the DOM the whole time.
+
+### 2026-08-18 - Skeleton loaders, and the wait that mattered most was the shared link
+
+Netanel: add skeleton loaders, "and don't forget trip sharing".
+
+**The shared link is the right thing to name first, and it turned out to be the
+only page on the site that genuinely waits on the network before it can render
+anything.** `/t/<code>` resolves a short code into a Supabase row on the server,
+and until that answers Next has nothing to stream. It is also the page opened
+cold, from WhatsApp, by somebody who has never seen this site, usually on a
+phone on mobile data - and a blank screen there reads as a broken link, at
+exactly the moment we cannot afford to look broken. It now has a route-level
+`loading.tsx` drawn as the page that is coming: header card, map rectangle, day
+cards with numbered stops and their thumbnails.
+
+**Measured rather than assumed.** With a 3-second server wait injected into the
+page (and removed afterwards), the streamed HTML carries the skeleton at
+**154ms** and the resolved content at **3,090ms** - so the shape is on screen
+almost three seconds before the trip is. In a real browser at 390px mid-wait:
+43 shapes, zero horizontal overflow, and it is replaced by the resolved page
+when the server answers.
+
+---
+
+**The other surfaces, and the rule that decided which ones got one.**
+`src/components/Skeleton.tsx` is now the only place a loading shape is drawn -
+`Skeleton`, `SkeletonScreen`, `SkeletonRows` - and it carries the three rules in
+its own header. The one worth repeating here is the third: **skeleton the
+screen, never the count, and never a wait that could end on a different
+screen.**
+
+That is not a style preference, it changed the code. `/join/<code>` and
+`/account` each had ONE loading branch covering two different waits: the session
+resolving (which can still end on "please sign in") and the fetch that follows
+(which can only end on the real screen). Both were split. Before the session
+resolves they show the dots and promise nothing; once the visitor is known to be
+signed in, the screen they are getting is drawn in advance. The planner's
+pre-hydration gate keeps its dots for the same reason - after hydration it is
+either the onboarding form or the trip workspace, it is one frame long, and a
+skeleton of the wrong screen flashing for one frame is worse than no skeleton.
+
+Also converted: the traveller profile, the map placeholder (which also drops the
+last hardcoded `bg-slate-100` on that screen - a hex ignores high-contrast mode,
+a token does not), the site-search catalog rows, the Viator activity rows, the
+group suggest-a-place list, and the admin usage card. The admin cards that fold
+loading and failure into one `!d` check deliberately keep returning null: a
+skeleton there would spin forever on an error.
+
+**A real bug found on the way, in the traveller profile.** The effect decided on
+`auth.user`, which is null while the session is still resolving - so a signed-in
+visitor was shown the "signed in only" screen and then had it swapped for the
+profile. Not a slow screen, the *wrong* screen. It now waits for `auth.ready`.
+
+---
+
+**The pattern is guarded, not just applied.** `TripSkeleton` wrote
+`skeleton-block` by hand while the homepage band wrote `animate-pulse
+bg-cream/10` - two different shimmers for the same idea, neither fixable in one
+place. Both now go through `Skeleton`, and a new test in
+`designConsistency.test.ts` fails on any `skeleton-block` / `animate-pulse`
+written outside it. **Verified by reintroducing one**: the test fails and names
+the file and the class. Same shape as the caret and hardcoded-colour guards
+already in that file.
+
+`.skeleton-block-invert` is new in globals.css because the night-tinted shimmer
+is invisible on the night bands, and both variants freeze to a static tint under
+prefers-reduced-motion.
+
+---
+
+**Verified.** 639 unit tests (1 new), tsc and build clean, and lint measured A/B
+on the exact changed-file set - **5 errors before, 5 after**, all the
+pre-existing `react-hooks/set-state-in-effect` baseline, none introduced.
+35/35 in a real browser at 1400 and 390 over every skeleton screen: RTL, zero
+horizontal overflow, nothing past the viewport edge, one labelled `role=status`
+per screen with the shapes hidden from assistive tech, the inverted variant
+actually painting on the dark bands, and the shimmer frozen to a visible tint
+under reduced motion. Plus 6/6 on two waits driven **for real** under 60kB/s
+throttling rather than as static shapes: the map placeholder fills the real
+664x560 map rectangle while Leaflet loads, and the search panel shows catalog
+rows that then give way to real results.
+
+One assertion of mine was written so it could not fail (a reduced-motion check
+with an `|| true` shape to it) and was rewritten to read the computed
+background alpha instead. An assertion that cannot fail is worse than no
+assertion, and this file has said so before.
+
+**Not committed** - the working tree holds the change for review.
+
+### 2026-08-18 (b) - "The AI assumes 4 days" - and the sentence that went past the day count
+
+Netanel: *"AI assumes 4 days when no days are written (he should ask for things -
+even if i ask him to do a trip, he should not assume, but ask for personality
+etc)."*
+
+**Where the four came from: nowhere.** There is no 4 in the agent path - the
+model picked a number that looked reasonable, because the prompt told it to.
+Rule 1 of "CREATING THE FIRST TRIP NEEDS A CLEAR YES" said to *"build
+immediately... with sensible defaults for whatever is still missing"*, while
+HOW YOU WORK two paragraphs later said to ask when key details are missing. Two
+rules in one prompt saying opposite things, and the specific one won.
+
+**A length is not a detail you may default.** It decides how many cities fit,
+how the days split and what the whole plan looks like. A confident value where
+there is no fact is the same species as an invented price - which this codebase
+already refuses in `priceGuard`.
+
+---
+
+**Two gates, in code, because the prompt is the half that gets swallowed.**
+New `lib/server/tripBrief.ts`, wired into the tool dispatch in `/api/chat` next
+to the city gate and the kashrut guard - `create_trip` / `create_trip_full`
+**fail** rather than build, and the tool result tells the model what to ask.
+
+1. **No length stated anywhere → refuse.** Detected from the traveller's own
+   messages only: digits + days/nights, Hebrew count words, "yomayim",
+   "shavua", "sof shavua", a date range, the English forms, and a message that
+   is *only* a number (the typed answer to "how many days?"). Three other ways
+   it counts as known, none of them a guess: real dates on the trip, or a trip
+   that already has days - so this touches new trips only, never an edit.
+2. **Length given but nothing about the people → refuse once.** "תבנה לי טיול
+   6 ימים בוינה" says how long and nothing about who, and a family with small
+   children and two friends get genuinely different itineraries. This one has
+   an explicit way out, because a traveller is allowed not to care: it fires
+   only while the agent has not yet asked anything (`agentAlreadyAsked` - any
+   question mark in any assistant message), so it costs exactly one question
+   and "לא משנה, תבנה כבר" then builds.
+
+**The assistant's own words never count as the traveller's.** Same rule as the
+kashrut gate and for the same reason: the model answering "here's a 4-day
+suggestion" must not read its own sentence back one turn later as if it had
+been asked for. There is a test named after exactly that.
+
+**The two refusal messages are deliberately different**, and there is a reason
+this file has flagged before: telling the model "no length was given" when the
+length *is* given sends it to ask the one thing it already knows, and a guard
+that nags is a guard someone removes.
+
+---
+
+**Three bugs of mine, each caught by a test rather than by reading.**
+
+- A pattern assembled with `new RegExp` from a template string - **`\s` inside
+  a template literal is not an escape at all**, so it silently became `...)s+(?:`
+  and matched nothing. It passed tsc and lint. (The backslash was eaten by a bash heredoc -
+  the trap already recorded in this file; the fix was written with the editor,
+  and the pattern is now one literal regex with no assembly.)
+- The negative lookahead meant to exclude "ba-shavua ha-ba" (next week, a
+  *date*) also **rejected "shavua be-Italia"** (a week in Italy, a *length*),
+  because the word for "in Italy" opens with the same two letters as the word
+  for "next". JavaScript's `` only knows ASCII, so the boundary had to be
+  spelled out as a Hebrew letter range.
+- The interests list contained a bare two-letter token for "sea" - and the
+  Hebrew word for "days" **ends with exactly those two letters**, so a message
+  that said only the length read as a stated interest and the second gate never
+  fired at all.
+
+All three are the same shape: Hebrew has no word boundary a regex can lean on,
+so short tokens must be spelled out long.
+
+---
+
+**Verified live against the real model** (production build, real key), four
+scenarios, **10/10**:
+
+| asked | before | now |
+|---|---|---|
+| "תבנה לי טיול לוינה" | a 4-day trip nobody asked for | no trip; asks how long + who + what interests, with day chips |
+| then "5 ימים, זוג, אוכל ואמנות" | - | builds **5** days, art and food |
+| "תבנה לי טיול 6 ימים בוינה" | built on assumptions about the people | asks who/what **once**, then builds 6 |
+| a full brief in one message | - | builds immediately, no interrogation |
+| "לא משנה, תבנה כבר" | - | builds - the loop breaker holds |
+
+One assertion in the first live run was **my** expectation, not his: I had
+asserted that a stated length should build immediately with no further
+question. Re-reading the request - *"even if i ask him to do a trip"* - that is
+exactly the case he was complaining about, so the assertion was wrong and the
+behaviour was changed instead.
+
+648 unit tests (9 new), tsc, build and lint clean on every touched file (zero
+problems before and after).
+
+**One judgement recorded rather than smoothed over:** the length gate is hard
+and has no escape hatch, while the who/what gate yields after one question.
+That asymmetry is deliberate - a trip has to have *some* length, so there is no
+honest way to proceed without one, whereas "I don't care who's asking, just
+build it" is a real answer that deserves to be taken at face value.
+
+### 2026-08-18 (c) - Premium stops sitting on top of free, and moves somewhere else
+
+Netanel: *"design premium/normal features in a smart way. i dont think that the
+premium features should be on top of the free ones (which are very important).
+they should just be in a different place."*
+
+**This could have meant two surfaces and they are different jobs**, so it was
+asked rather than guessed: the /premium page, where free and premium are one
+table of identical rows with bigger numbers, or the app itself. He chose the
+app.
+
+**What the trip screen actually looked like.** Nine blocks under the plan, and
+the two that cost money were at **positions three and four**:
+
+    1 מה קורה בתאריכים   free
+    2 שבת וכשרות          free
+    3 טיול משותף ★        LOCKED    <- an advert, mid-scroll
+    4 בדיקה לפני הנסיעה   ₪29.90    <- a second one
+    5 מה עוד חסר          free
+    ...
+
+So a traveller scrolling their own free trip met a padlock halfway down, and
+the working tools around it read as the free tier of something rather than as
+the product. The fix is placement, not wording: everything above is free and
+uninterrupted, and everything that costs money is in one section, below all of
+it, on its own ground (`PaidTools`).
+
+**The label does the more useful half of the job.** It says "כלים בתשלום" and
+then, to a free traveller, **"רק אלה. כל שאר הכלים במסך הזה חינם."** That
+sentence is only true because of where the section sits - the layout is the
+claim and the copy just reads it out. It is scoped to *this screen* on purpose:
+the free tier has daily quotas, so "everything else is free" would have
+overshot by exactly one word.
+
+**A subscriber sees the same section in the same place**, with the subtitle
+changed to "כלולים במנוי שלכם". A block that moves depending on who is looking
+is a block nobody can learn, and these are once-per-trip actions (create an
+invite link, run the check), not things you reach for while arranging a day.
+
+**The ★ badge is gone from the group panel.** It only ever appeared as a
+fallback when there was nothing real to show, i.e. the panel announcing its own
+price from inside the free stack it was sitting in. The section says it once,
+at the top; the bar now carries only real state (new suggestions, how many
+friends joined).
+
+---
+
+**The judgement worth recording: the pre-departure check moved too**, although
+it is a one-off purchase and not a subscription. Same category - it costs money
+- and leaving one paid product in the free stack would have kept the reported
+problem at half size. The cost is real and stated in the code: the check is
+time-sensitive (it only appears near departure) and used to sit high, beside
+the other date-driven block. If that turns out to hurt how many people run it,
+moving that one component back is a one-line change.
+
+**A regression caught before it shipped, and only by reading the component it
+was wrapping.** The obvious `print:hidden` on the new section would have been
+wrong: `PreDepartureCheck` deliberately *prints* once it has a real result,
+because a report somebody paid for belongs in the PDF they hand around. The
+section therefore stays printable and loses only its own chrome - the label is
+print-hidden, the tint and padding are stripped - while each child keeps
+deciding for itself. This is the kind of defect that is invisible on screen and
+only findable in an export.
+
+**A mistake of mine worth writing down.** Proving the new guard actually fails,
+I injected a bad render into `TripWorkspace.tsx` and then reverted with
+`git checkout --` - which restores from **HEAD**, not from the pre-injection
+state, so it silently wiped that file's uncommitted work along with the
+injection. The whole edit had to be redone. Save a copy first; `git checkout`
+is not an undo when the file has changes that are not committed.
+
+---
+
+**Verified.** 649 unit tests (1 new: a placement guard asserting every paid
+component sits between `<PaidTools>` and `</PaidTools>` in TripWorkspace -
+**proven to fail** by putting the group panel back in the free stack, where it
+names the offender). 16/16 in a real browser at 1400 and 390 on a seeded
+two-city trip: the section exists and is labelled, the paid tools are inside
+it, **every free panel measures above it**, no "פרימיום ★" anywhere on the
+screen, RTL, zero horizontal overflow. Plus 4/4 on print emulation - label
+gone, chrome stripped, section not removed. tsc, build and lint clean on every
+touched file.
+
+One assertion failed first and it was the harness, not the product: Leaflet
+tiles legitimately extend past the viewport (their container clips them, and
+page-level overflow measured 0 throughout) - the documented case from entry
+(kk), now excluded by container rather than by silencing the check.
