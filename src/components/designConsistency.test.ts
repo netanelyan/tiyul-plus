@@ -93,3 +93,61 @@ test('הערת כשרות וסטטוס השגחה מרונדרים כל אחד �
   );
   assert.deepEqual(hits, [], `רינדור כשרות ידני:\n${hits.join('\n')}`);
 });
+
+test('שלד טעינה נבנה רק מהרכיב המשותף', () => {
+  /*
+    The same species as the panel headers: five blocks each inventing its own
+    header became five headers that did not match. Loading was heading the
+    same way - TripSkeleton wrote `skeleton-block` by hand while the homepage
+    band wrote `animate-pulse bg-cream/10`, i.e. two different shimmers for
+    the same idea, and neither could be fixed in one place.
+
+    So the shimmer classes live in exactly one component. `Skeleton` is where
+    a new loading shape comes from; globals.css is where the animation and its
+    prefers-reduced-motion fallback are defined. Anything else drawing its own
+    is the drift this test exists to stop.
+  */
+  const ALLOWED = new Set([join('src', 'components', 'Skeleton.tsx')]);
+  const hits: string[] = [];
+  for (const file of FILES) {
+    if (ALLOWED.has(file)) continue;
+    const src = stripComments(readFileSync(file, 'utf8'));
+    for (const m of src.matchAll(/\b(?:skeleton-block(?:-invert)?|animate-pulse)\b/g)) {
+      hits.push(`${file}: ${m[0]}`);
+    }
+  }
+  assert.deepEqual(
+    hits,
+    [],
+    `שלד טעינה שנכתב ביד - להשתמש ב-Skeleton/SkeletonScreen:\n${hits.join('\n')}`,
+  );
+});
+
+test('מה שעולה כסף יושב רק בתוך האזור בתשלום', () => {
+  /*
+    Netanel: the premium features must not sit on top of the free ones, they
+    belong somewhere else. That was a placement bug - a locked panel wedged
+    between two working free ones - and placement is exactly the kind of thing
+    that creeps back one component at a time.
+
+    So the rule is checked where it is decided: inside TripWorkspace, every paid
+    component must appear between <PaidTools> and </PaidTools>. Anything
+    rendered outside that range is back in the free stack.
+  */
+  const file = join('src', 'components', 'TripWorkspace.tsx');
+  const src = stripComments(readFileSync(file, 'utf8'));
+  const open = src.indexOf('<PaidTools>');
+  const close = src.indexOf('</PaidTools>');
+  assert.ok(open !== -1 && close > open, 'PaidTools לא מרונדר ב-TripWorkspace');
+
+  for (const paid of ['<TripGroupPanel', '<PreDepartureCheck']) {
+    const at = src.indexOf(paid);
+    assert.notEqual(at, -1, `${paid} לא נמצא בכלל`);
+    assert.ok(
+      at > open && at < close,
+      `${paid} מרונדר מחוץ ל-PaidTools - כלי בתשלום חזר לתוך ערימת הפאנלים החינמיים`,
+    );
+    // and only once - a second copy outside the region would pass the check above
+    assert.equal(src.indexOf(paid, at + 1), -1, `${paid} מרונדר יותר מפעם אחת`);
+  }
+});

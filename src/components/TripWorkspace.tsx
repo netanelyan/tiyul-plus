@@ -29,6 +29,7 @@ import { shabbatRowsFor } from '@/lib/trip/shabbatRows';
 import TripGroupPanel from '@/components/TripGroupPanel';
 import PreDepartureCheck from '@/components/PreDepartureCheck';
 import PanelSection from '@/components/PanelSection';
+import PaidTools from '@/components/PaidTools';
 import ChatPanel from '@/components/ChatPanel';
 import Flag from '@/components/Flag';
 import Logo from '@/components/Logo';
@@ -1068,19 +1069,6 @@ export default function TripWorkspace({
       */}
       {t && t.days.length > 0 && <ShabbatKosherPanel trip={t} destOf={destOf} />}
 
-      {/* ---------- Group trip (premium): friends view it and vote ---------- */}
-      {t && t.days.length > 0 && <TripGroupPanel trip={t} destOf={destOf} />}
-
-      {/*
-        ---------- Pre-departure check ----------
-        A paid product; it gates nothing that already exists. It sits immediately
-        after "what is happening on your dates" for exactly the same reason - both
-        depend on time, and both render nothing when they have nothing to say (no
-        dates, too far from departure, or already purchased - in which case the
-        result is shown inside).
-      */}
-      {t && <PreDepartureCheck trip={t} offline={offline} />}
-
       {/* ---------- The booking layer: what the trip is still missing ---------- */}
       {t && t.days.length > 0 && (
         <BookingPanel trip={t} destinations={destinations} onSetPreferences={setPrefs} offline={offline} />
@@ -1163,6 +1151,31 @@ export default function TripWorkspace({
               })}
             </ol>
         </PanelSection>
+      )}
+
+      {/*
+        ---------- The paid section, and it is the LAST thing on the screen ----------
+
+        Everything above this line is free and uninterrupted. The two things that
+        cost money - the shared trip and the pre-departure check - used to sit at
+        positions three and four of that stack, so a traveller scrolling their own
+        plan met a locked panel halfway down. Netanel's instruction was placement,
+        not wording: "they should just be in a different place".
+
+        The pre-departure check moved here too, even though it is a one-off
+        purchase rather than a subscription. It is the same category - it costs
+        money - and leaving one paid product inside the free stack would have kept
+        the reported problem at half size. The cost of the move is real and worth
+        naming: the check is time-sensitive (it only appears near departure) and it
+        used to sit high, next to the other date-driven block. If that turns out to
+        matter for how many people run it, moving this one component back is a
+        one-line change - the section does not depend on what is inside it.
+      */}
+      {t && t.days.length > 0 && (
+        <PaidTools>
+          <TripGroupPanel trip={t} destOf={destOf} />
+          <PreDepartureCheck trip={t} offline={offline} />
+        </PaidTools>
       )}
 
       {/* ---------- Print / PDF export: branded cover + days + footer ---------- */}

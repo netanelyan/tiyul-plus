@@ -135,6 +135,15 @@ export default function TripGroupPanel({
       // Same reason as the story panel, and the same length limit - see there.
       meta="תכנון עם חברים"
       ariaLabel="טיול משותף - חברים מצטרפים בקישור, מצביעים, מגיבים ומציעים מקומות"
+      /*
+        The badge carries only real state now - new suggestions, or how many
+        friends joined. It used to fall back to a "premium star" chip, which was
+        the panel announcing its price from inside the free stack it was sitting
+        in. It lives in the paid section now (see PaidTools), and that section
+        says once, at the top, that these cost money - so repeating it on the bar
+        is noise, and a lock badge on a screen full of working tools is exactly
+        what made premium feel bolted on top of the free product.
+      */
       badge={
         pending.length > 0 ? (
           <span className="rounded-full bg-zest/25 px-2 py-0.5 text-[11px] font-bold text-night">
@@ -144,11 +153,7 @@ export default function TripGroupPanel({
           <span className="rounded-full bg-lagoon/15 px-2 py-0.5 text-[11px] font-bold text-lagoon">
             {members} חברים
           </span>
-        ) : (
-          <span className="rounded-full bg-sunset/15 px-2 py-0.5 text-[11px] font-bold text-sunset-deep">
-            פרימיום ★
-          </span>
-        )
+        ) : undefined
       }
       open={open}
       onToggle={() => setOpen((v) => !v)}
