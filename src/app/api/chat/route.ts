@@ -18,6 +18,11 @@ import {
   type ChatMessage,
 } from '@/lib/server/chatMessages';
 import {
+  agentAlreadyAsked,
+  conversationStatesBrief,
+  conversationStatesLength,
+} from '@/lib/server/tripBrief';
+import {
   buildLightGrounding,
   buildExploredGrounding,
   buildGroundingDetail,
@@ -760,6 +765,49 @@ async function runAgent(
   const editIntent = buildAskIntent || mentionsDaysAndDest;
 
   /*
+    ---------- The length gate ----------
+
+    Netanel: asked for a trip without saying how long, and got four days.
+    Nobody chose four. A length is not a detail to fill in with a sensible
+    default - it decides how many cities fit and how the days split - so a
+    guessed one is an invented fact, the same species as an invented price.
+
+    The prompt now says to ask. This is the half that does not rely on the
+    model reading it: with no length anywhere in the conversation,
+    `create_trip*` FAILS at dispatch and hands back an instruction to ask.
+    Same shape as the kashrut guard and the city gate - a tool call that does
+    not run cannot produce a made-up trip.
+
+    Three ways a length counts as known, and none of them is the model's own
+    suggestion: the traveller said it (user messages only), the trip carries
+    real dates, or a trip with days already exists - which is every edit, so
+    this gate touches new trips only.
+  */
+  const lengthKnown =
+    (working?.days.length ?? 0) > 0 ||
+    Boolean(working?.startDate && working?.endDate) ||
+    conversationStatesLength(messages);
+
+  /*
+    The second half of the same instruction: "even if I ask him to do a trip,
+    he should not assume, but ask for personality". A length alone is not a
+    brief - a family with small children and two friends in their twenties get
+    genuinely different itineraries out of the same six days in Vienna.
+
+    Unlike the length this one has a way out, because a traveller is allowed
+    not to care: it fires only on a FIRST build where the agent has not yet
+    asked anything (`agentAlreadyAsked`). So it costs exactly one question, and
+    a "never mind, just build it" then builds - what it prevents is an itinerary
+    shaped around an assumption about the people that nobody ever said aloud.
+  */
+  const briefKnown =
+    (working?.days.length ?? 0) > 0 ||
+    Boolean(working?.preferences?.party) ||
+    (working?.preferences?.interests?.length ?? 0) > 0 ||
+    conversationStatesBrief(messages) ||
+    agentAlreadyAsked(messages);
+
+  /*
     ---------- Live lookups: hours / admission price / existence ----------
 
     `kosherAsk` inspects **this message only**, not the six-message window the
@@ -1192,6 +1240,36 @@ async function runAgent(
           ok: false,
           message:
             'הצגת כבר את מספר כרטיסי החיפוש המותר בתור הזה. זו מכסה ולא תקלה - אל תנסה שוב עכשיו. אם המטייל צריך עוד חיפוש, בקש ממנו לומר לאיזו עיר בתור הבא.',
+          action: undefined,
+          quickReplies: undefined,
+        };
+      } else if (
+        (block.name === 'create_trip_full' || block.name === 'create_trip') &&
+        lengthKnown &&
+        !briefKnown
+      ) {
+        // Length given, nothing about the people. One question, then it builds -
+        // see `briefKnown`. Two separate messages on purpose: telling the model
+        // "no length was given" when the length IS given sends it to ask the one
+        // thing it already knows, which is how a guard becomes a nuisance.
+        console.log(`[chat] brief gate blocked ${block.name}`);
+        out = {
+          trip: working,
+          ok: false,
+          message:
+            'המטייל אמר לכמה ימים אבל לא אמר מי נוסע ומה מעניין אותו, ואסור לך להניח את זה - משפחה עם ילדים וזוג חברים מקבלים מסלול אחר לגמרי. אל תנסה שוב בתור הזה. שאל אותו בהודעה קצרה אחת בעברית: מי נוסע (זוג / משפחה עם ילדים / חברים / לבד) ומה הכי מעניין אותו בטיול הזה, והוסף suggest_quick_replies עם 3-4 אפשרויות קצרות למי נוסע. אל תשאל שוב על מספר הימים - הוא כבר נאמר. ברגע שהוא יענה, או אם יאמר שלא משנה לו, בנה מיד את הטיול המלא.',
+          action: undefined,
+          quickReplies: undefined,
+        };
+      } else if ((block.name === 'create_trip_full' || block.name === 'create_trip') && !lengthKnown) {
+        // See `lengthKnown` above. The message is a tool result: the model turns
+        // it into one short question, it is never shown to the traveller as-is.
+        console.log(`[chat] length gate blocked ${block.name}`);
+        out = {
+          trip: working,
+          ok: false,
+          message:
+            'המטייל עוד לא אמר לכמה ימים הטיול, ואסור לך להמציא מספר ימים - אורך הטיול קובע כמה ערים נכנסות ואיך מתחלקים הימים. אל תנסה שוב בתור הזה. במקום זה שאל אותו בהודעה קצרה אחת בעברית: לכמה ימים, מי נוסע (זוג / משפחה עם ילדים / חברים / לבד) ומה מעניין אותו בטיול - והוסף suggest_quick_replies עם 3-4 אפשרויות קצרות למספר הימים. ברגע שהוא יענה, בנה את הטיול המלא.',
           action: undefined,
           quickReplies: undefined,
         };
