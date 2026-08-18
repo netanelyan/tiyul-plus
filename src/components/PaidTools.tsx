@@ -23,17 +23,17 @@ import { useAuth } from '@/lib/auth/AuthContext';
  * uninterrupted; everything that costs money is here, once, below it, on its
  * own ground.
  *
- * ## Why it is labelled rather than hidden
+ * ## The name of this file is not the name on the screen
  *
- * The honest version of "these cost money" is to say so, and the subtitle does
- * the more useful half of the job: **it tells a free traveller that nothing
- * else on the screen costs anything.** That sentence is only true because of
- * where this section sits, which is the point - the layout is the claim, and
- * the copy just reads it out.
+ * Internally this is the paid section, and it is called that so nobody editing
+ * it is in any doubt about what lives here. On screen it is headed by what the
+ * tools DO, because a price on the outside of a box is a reason to scroll past
+ * it before ever finding out what is inside.
  *
- * The claim is scoped to this screen on purpose. It does NOT say "everything
- * else on the site is free" - the free tier has daily quotas, and a sentence
- * that overshoots by one word is the kind this project keeps having to correct.
+ * The line that is not crossed: **the price is on the button that acts.** Not
+ * leading with it is marketing; hiding it until somebody has committed is a
+ * dark pattern. Nobody here can spend money, or put work into a feature, before
+ * seeing what it costs.
  *
  * ## Same place for a subscriber
  *
@@ -52,33 +52,56 @@ export default function PaidTools({ children }: { children: ReactNode }) {
     <section
       aria-labelledby="paid-tools-heading"
       /*
-        A ground of its own, and a quiet one. `bg-shell` was not an option: the
-        panel bars inside are themselves bg-shell on a cream page - three colour
-        values apart - so a shell container would have smeared into one mass,
-        exactly as recorded when PanelSection was built. A night tint at 3% is
-        the smallest step that still reads as "a different surface".
+        A night band, not a grey box - and the first version got this backwards.
+        It used a 3% night tint, which separated the section from the free stack
+        correctly and then read as *duller* than everything above it. Netanel:
+        "still, those are premium. also the gray feel is not it". He is right:
+        making the paid tools the quietest thing on the screen says they matter
+        least, which is the opposite of what they are.
+
+        Night + cream is the treatment this site already uses for its own good
+        moments - the destinations band on the homepage, the closing card on a
+        shared trip, the star card on /premium. The panel bars inside are
+        `bg-shell`, so on night they lift off the page instead of smearing into
+        it, exactly as those homepage cards do.
+
+        NOT `print:hidden`, deliberately: the pre-departure check prints once it
+        has a real result, because a report somebody paid for belongs in the PDF
+        they hand around. So the band stays in the flow and drops its own paint
+        for print - a dark rectangle across an A4 page would be worse than the
+        problem it solves.
       */
-      /*
-        NOT `print:hidden` on the section, and that is deliberate: the
-        pre-departure check deliberately prints once it has a real result
-        (`phase.kind === 'result'`), because a report somebody paid for belongs
-        in the PDF they hand around. Hiding the whole section would have taken
-        that with it - a regression invisible on screen and only findable in an
-        export. So the section stays printable and only loses its own chrome,
-        while each child keeps deciding for itself (the group panel is
-        print:hidden on its own).
-      */
-      className="mt-6 rounded-2xl bg-night/[0.03] p-4 ring-1 ring-night/10 print:mt-0 print:bg-transparent print:p-0 print:ring-0"
+      className="mt-6 rounded-3xl bg-night p-5 text-cream ring-1 ring-night print:mt-0 print:bg-transparent print:p-0 print:text-night print:ring-0"
     >
-      {/* The label is a shop sign - it has no business in a printed itinerary */}
+      {/*
+        The heading names what these DO, not what they cost - and that was a
+        correction. The first version led with "the only two things here that
+        cost money", which is honest and, as Netanel put it, "if it already is
+        labeled as a paid feature, most might skip it": a price tag on the
+        outside is a reason to scroll past before ever seeing what the thing is.
+
+        Where the line sits, because there is one. Not leading with the price is
+        ordinary product marketing; hiding it until someone has committed is a
+        dark pattern, and this does not do that. Each tool explains itself, and
+        the **price is on the button that acts** - the check's button carries its
+        price, the shared trip's carries the subscription. Nobody can spend
+        money, or invest work into a feature, without having seen the cost
+        first. The section label is the shop window, not the receipt.
+
+        It is also print-hidden: a shop window has no business in a printed
+        itinerary.
+      */}
       <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 print:hidden">
-        <h2 id="paid-tools-heading" className="text-sm font-bold text-night">
-          כלים בתשלום
+        <h2 id="paid-tools-heading" className="text-base font-black text-cream">
+          <span aria-hidden className="me-1.5 text-zest">
+            ★
+          </span>
+          כלים מתקדמים
         </h2>
-        <p className="text-xs font-medium text-night/50">
+        <p className="text-xs font-medium text-cream/60">
           {isPremium
-            ? 'כלולים במנוי שלכם - בלי תשלום נוסף'
-            : 'רק אלה. כל שאר הכלים במסך הזה חינם.'}
+            ? 'כלולים במנוי שלכם'
+            : 'לתכנן ביחד עם אחרים, ולצאת לדרך בראש שקט'}
         </p>
       </div>
       <div className="space-y-2">{children}</div>

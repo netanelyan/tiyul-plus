@@ -271,13 +271,25 @@ export default function PreDepartureCheck({
   if (phase.kind === 'hidden' || phase.kind === 'loading') return null;
 
   return (
+    <>
     <PanelSection
       panelKey="predeparture"
       icon="🛫"
       title="בדיקה לפני הנסיעה"
       ariaLabel="בדיקה לפני הנסיעה"
-      // Only a real result is worth printing - an offer/processing/notice is a screen, not a document
-      className={phase.kind === 'result' ? '' : 'print:hidden'}
+      /*
+        The panel NEVER prints. It used to print when it held a result, which
+        put the on-screen card - rounded corners, ring, status line, buttons -
+        into the PDF next to the report's own print version. Netanel photographed
+        the result: two renderings of the same thing, the screen one clipped at
+        the page edge, because a card laid out for a column is not laid out for
+        A4.
+
+        The printable version is now a sibling of this panel (below), not a child
+        of it, so "what prints" is a separate object from "what is on screen"
+        rather than the same markup asked to be both.
+      */
+      className="print:hidden"
     >
       {mode === 'sandbox' && (
         <div
@@ -342,6 +354,40 @@ export default function PreDepartureCheck({
         </div>
       )}
     </PanelSection>
+    {/* The document. Deliberately outside the panel - see the comment there. */}
+    {phase.kind === 'result' && <PrintReport report={phase.report} />}
+    </>
+  );
+}
+
+/**
+ * What actually goes into the PDF: the route that was checked, with no buttons
+ * and no emotional state. Plain block flow, so it lays out on a page instead of
+ * inside a column.
+ */
+function PrintReport({ report }: { report: PreDepartureReport }) {
+  return (
+    <div className="hidden print:block">
+      <h2 className="text-lg font-bold text-night">בדיקה לפני הנסיעה - {report.tripName}</h2>
+      <p className="text-xs text-night/60">נבדק ב-{report.generatedAt.slice(0, 10)}</p>
+      {report.itinerary.map((day) => (
+        <div key={day.dayNumber} className="mt-3">
+          <h3 className="text-sm font-bold text-night">
+            יום {day.dayNumber} · {day.cityName}
+            {day.date ? ` · ${day.date}` : ''}
+          </h3>
+          <ol className="mt-1 space-y-0.5 text-xs text-night/75">
+            {day.stops.map((s, i) => (
+              <li key={i}>
+                {i + 1}. {s.name}
+                {s.mustSee ? ' ★' : ''}
+                {s.unknown ? ' (לא בקטלוג יותר)' : ''}
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -426,28 +472,6 @@ function ResultView({ report, paidAt }: { report: PreDepartureReport; paidAt: st
         </button>
       </div>
 
-      {/* The print version: the clean route that was checked, with no buttons and no emotional state */}
-      <div className="hidden print:block">
-        <h2 className="text-lg font-bold text-night">בדיקה לפני הנסיעה - {report.tripName}</h2>
-        <p className="text-xs text-night/60">נבדק ב-{report.generatedAt.slice(0, 10)}</p>
-        {report.itinerary.map((day) => (
-          <div key={day.dayNumber} className="mt-3">
-            <h3 className="text-sm font-bold text-night">
-              יום {day.dayNumber} · {day.cityName}
-              {day.date ? ` · ${day.date}` : ''}
-            </h3>
-            <ol className="mt-1 space-y-0.5 text-xs text-night/75">
-              {day.stops.map((s, i) => (
-                <li key={i}>
-                  {i + 1}. {s.name}
-                  {s.mustSee ? ' ★' : ''}
-                  {s.unknown ? ' (לא בקטלוג יותר)' : ''}
-                </li>
-              ))}
-            </ol>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }

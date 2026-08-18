@@ -151,3 +151,31 @@ test('מה שעולה כסף יושב רק בתוך האזור בתשלום', ()
     assert.equal(src.indexOf(paid, at + 1), -1, `${paid} מרונדר יותר מפעם אחת`);
   }
 });
+
+test('מה שנכנס ל-PDF הוא אובייקט נפרד מהמסך', () => {
+  /*
+    Netanel photographed a PDF export with the pre-departure check's on-screen
+    card in it, clipped at the page edge - the same markup was being asked to be
+    both a screen and a document, and a card laid out for a column does not lay
+    out on A4.
+
+    The rule that fixes it: the panel never prints, and the printable report is
+    a SIBLING of the panel rather than a child. Nesting it back inside would
+    hide it (a print-hidden parent wins over a print-visible child) or bring the
+    card back into the PDF - both regressions, both invisible on screen.
+  */
+  const file = join('src', 'components', 'PreDepartureCheck.tsx');
+  const src = stripComments(readFileSync(file, 'utf8'));
+
+  const closePanel = src.indexOf('</PanelSection>');
+  const printReport = src.indexOf('<PrintReport');
+  assert.notEqual(closePanel, -1, 'PanelSection לא נמצא');
+  assert.notEqual(printReport, -1, 'PrintReport לא מרונדר');
+  assert.ok(printReport > closePanel, 'PrintReport חייב להיות אח של הפאנל, לא ילד שלו');
+
+  // and the panel itself must be unconditionally print-hidden
+  assert.ok(
+    /className="print:hidden"/.test(src),
+    'הפאנל של הבדיקה חייב להיות print:hidden תמיד - אחרת כרטיס המסך נכנס ל-PDF',
+  );
+});
