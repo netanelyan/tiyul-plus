@@ -1,6 +1,7 @@
 import { destinations } from '@/data/destinations';
 import { countries } from '@/data/countries';
 import { isEating, isKosher, kosherStatusOf } from '@/lib/categories';
+import { certificationNames, kashrutForModel } from '@/lib/kashrut';
 import type { Destination } from '@/lib/types';
 import type { Trip } from '@/lib/trip/types';
 import type { ChatMessage } from '@/lib/server/chatMessages';
@@ -99,6 +100,17 @@ export function kosherAllowedNames(citySlugs: string[], kosherOk: boolean): stri
       if (d.nameLocal) names.push(d.nameLocal);
     }
     for (const p of d.places) {
+      // A certifying body named in the data may be named in the reply, for
+      // any place that was sent - including a NON-kosher place whose record
+      // says so. Without this the guard would strip the very sentence the
+      // richer model exists to enable ("Shalom is under the Chief Rabbinate
+      // of Prague"), because the body name is not a place name and the
+      // sentence would look like an unbacked kashrut claim.
+      //
+      // This widens what may be SAID, not what may be recommended: the tool
+      // layer still decides what can enter a trip, and `mayNotJudge` still
+      // forbids ruling on any of these names.
+      for (const n of certificationNames(p.kashrut)) names.push(n);
       if (!isKosher(p.category)) continue;
       if (p.name) names.push(p.name);
       if (p.nameLocal) names.push(p.nameLocal);
@@ -222,7 +234,14 @@ const KOSHER_POLICY_OFF =
  * would have left them without the warning.
  */
 const KOSHER_POLICY_ON =
-  'The traveler keeps kosher. Every eating place carries kosherStatus. Recommend ONLY kosherStatus="kosher". A place marked "not-kosher" or "unknown" may be mentioned only to say plainly that it is not kosher (or that we could not confirm it) - never as a suggestion of where to eat, and never in the plan. "unknown" is not "probably fine". Always add the usual reminder to confirm kashrut and hours with the venue itself.';
+  'The traveler keeps kosher. Every eating place carries kosherStatus. Recommend ONLY kosherStatus="kosher". A place marked "not-kosher" or "unknown" may be mentioned only to say plainly that it is not kosher (or that we could not confirm it) - never as a suggestion of where to eat, and never in the plan. "unknown" is not "probably fine". Always add the usual reminder to confirm kashrut and hours with the venue itself. ' +
+  // The half that is new, and it is the point of the richer model: the
+  // traveler decides, so they need the NAME and we must not pre-empt them.
+  'Many places also carry a `kashrut` object. When you mention such a place, NAME the certifying body from kashrut.certifications[].body, and state kashrut.checked as the date we read the source (or say plainly that we have no check date when it is null). ' +
+  'You must NEVER characterise a certification as sufficient, reliable, strict, lenient, "good enough", better or worse than another, and never rank two places by their supervision. Israeli travelers hold genuinely different standards and that judgement is theirs and their rabbi\'s, not ours. Report the name; let them decide. ' +
+  'kashrut.knowledge distinguishes three states and they are NOT interchangeable: "certified" (there is supervision), "none-found" (we looked and found none) and "unknown" (we have not established it). Never present "unknown" as "none-found" or the reverse. ' +
+  'If certifications is empty on a "certified" record, the source lists the place as kosher WITHOUT naming the supervising body - say exactly that, and do not fill in a body name. ' +
+  'Where kashrut.diet is present, mention it (meat / dairy / parve): it changes what the traveler can do for the rest of the day.';
 
 /**
  * The light route's grounding - **the absolute minimum a mechanical edit needs**.
@@ -301,6 +320,19 @@ export function buildGroundingDetail(citySlugs: string[], kosherOk: boolean): st
           ...(kosherOk && isEating(p.category)
             ? { kosherStatus: kosherStatusOf(p) }
             : {}),
+          // The structured record, so the model can tell a traveller WHICH
+          // supervision a place is under and let them judge. Before this it
+          // received only the three-value status plus a prose note, so it
+          // could not say "this one is KLBD, that one is a local rabbinate"
+          // even when the catalog knew - the information existed but only
+          // inside a string it is forbidden to assert from.
+          //
+          // `kashrutForModel` carries its own `mayNotJudge` line with every
+          // record: report the body, never rule on whether it is sufficient.
+          // Attaching that to the data rather than to the system prompt is
+          // the same "give it the fact instead of the rule" pattern that
+          // fixed the invented walking distances.
+          ...(kosherOk && p.kashrut ? { kashrut: kashrutForModel(p.kashrut) } : {}),
           // A `kosherNote` on a place that is **not** kosher is usually a
           // warning (along the lines of "this famous restaurant is not
           // kosher") - hiding it would be harmful, not cautious.

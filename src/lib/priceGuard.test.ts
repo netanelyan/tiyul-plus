@@ -17,6 +17,7 @@ import {
   GuardedTextStream,
   LOOKUP_ANCHOR,
   NO_EVENT_LINE,
+  NO_KASHRUT_VERDICT_LINE,
   NO_KOSHER_LINE,
   NO_LOOKUP_LINE,
   NO_PRICE_LINE,
@@ -377,4 +378,73 @@ test('מחיר כניסה מצוטט עובר, אבל רק הוא - מחיר ל�
 test('החלפה של טענת חיפוש היא הנוסח הכנה שלה, לא של מחיר/אירוע/כשרות', () => {
   const r = guardText('הקולוסיאום פתוח בין 9:00 ל-19:00.');
   assert.ok(r.text.includes(NO_LOOKUP_LINE));
+});
+
+/* ------------------------------------------------------------------
+   Ruling on a kashrut standard.
+
+   Naming a certifying body is the point of the structured kashrut model and
+   must survive. Grading one is never allowed, however well grounded the
+   sentence is - which is why these cases pass a FULL allowlist and are still
+   expected to be cut.
+   ------------------------------------------------------------------ */
+
+const kashrutAllow = {
+  kosherNames: ['שלום', 'רבנות פראג', 'KLBD', 'בית הדין של לונדון', 'פראג', 'לונדון'],
+};
+
+test('naming the certifying body is allowed - that is what the traveller decides on', () => {
+  const ok = [
+    'מסעדת שלום בפראג היא בהשגחת רבנות פראג, נבדק ב-2026-08-19.',
+    'החנות בלונדון היא בהשגחת בית הדין של לונדון (KLBD).',
+    'ההשגחה היא של רבנות פראג, ואין לנו תאריך בדיקה עדכני.',
+  ];
+  for (const s of ok) {
+    assert.equal(violationOf(s, kashrutAllow), null, `wrongly cut: ${s}`);
+  }
+});
+
+test('grading a hechsher is cut even when the body name is fully allowed', () => {
+  const verdicts = [
+    'ההשגחה של רבנות פראג מספיקה לרוב האנשים.',
+    'KLBD הוא הכשר אמין מאוד.',
+    'בית הדין של לונדון מחמיר יותר מרבנות פראג.',
+    'זו השגחה ברמה גבוהה, אפשר לסמוך עליה.',
+    'ההשגחה שם פחות טובה, לא הייתי סומך עליה.',
+  ];
+  for (const s of verdicts) {
+    assert.equal(
+      violationOf(s, kashrutAllow),
+      'kashrut-verdict',
+      `a verdict was allowed through: ${s}`,
+    );
+  }
+});
+
+test('the verdict guard does not swallow ordinary kashrut prose', () => {
+  const fine = [
+    'יש בעיר כמה מסעדות כשרות, כולן ברובע השני.',
+    'מסעדת שלום היא בשרית ופרווה.',
+    'לוודא את התעודה בכניסה - השגחה יכולה להשתנות.',
+  ];
+  for (const s of fine) {
+    assert.notEqual(violationOf(s, kashrutAllow), 'kashrut-verdict', `wrongly cut: ${s}`);
+  }
+});
+
+test('the kashrut-verdict replacement line passes the filter itself', () => {
+  // The same rule every other replacement line follows: a line that is itself
+  // a violation would be replaced by itself forever.
+  assert.equal(violationOf(NO_KASHRUT_VERDICT_LINE, kashrutAllow), null);
+});
+
+test('a verdict is replaced with the hand-back line, not with "I have no data"', () => {
+  // We usually DO have the data here - the problem is the judgement. Saying
+  // "I have no information" would be false and would lose the traveller the
+  // certification name they actually need.
+  const r = guardText('KLBD הוא הכשר אמין מאוד.', kashrutAllow);
+  assert.match(r.text, /ההחלטה אם להסתמך על השגחה מסוימת היא אישית/);
+  assert.doesNotMatch(r.text, /אין לי נתון כזה/);
+  // It also offers what we CAN say, so the traveller is not left with nothing.
+  assert.match(r.text, /מה רשום אצלנו ומאיזה מקור/);
 });

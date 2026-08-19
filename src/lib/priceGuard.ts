@@ -69,8 +69,46 @@ export const NO_KOSHER_LINE =
 export const NO_LOOKUP_LINE =
   'לא בדקתי את זה בפועל בתור הזה, ולכן לא אכתוב שעות, מחיר כניסה או אם המקום עדיין קיים מהזיכרון שלי - אפשר לבקש שאבדוק את זה עכשיו.';
 
+/**
+ * The replacement when the model rules on a kashrut standard.
+ *
+ * Deliberately NOT the "I have no data" line: here we usually DO have the
+ * data, and the problem is the verdict rather than the fact. Saying "I have no
+ * information" would be false, and replacing a real certification name with a
+ * refusal would lose the traveler the one thing they need. So this line hands
+ * the decision back and points at what we can say.
+ */
+export const NO_KASHRUT_VERDICT_LINE =
+  'אני מדווח מי הגוף המשגיח ומתי בדקנו, אבל ההחלטה אם להסתמך על השגחה מסוימת היא אישית ותלויה במנהג שלכם - אשמח לומר בדיוק מה רשום אצלנו ומאיזה מקור.';
+
+/**
+ * The replacement categories. `kashrut-verdict` is its own category rather
+ * than folding into `kosher`, because the two say opposite things: the kosher
+ * line says we have no verified data, while this one says we DO have the data
+ * and it is not our place to grade it.
+ */
+export type GuardCategory = 'price' | 'event' | 'kosher' | 'lookup' | 'kashrut-verdict';
+
+/**
+ * Words that put a sentence in kashrut territory for the purposes of the
+ * verdict rule.
+ *
+ * Wider than `KOSHER_WORD` on purpose. The sentence that got through the first
+ * version was a comparison between two named bodies - one beth din said to be
+ * stricter than a rabbinate - and it contains no word for "kosher" at all. The
+ * body words themselves are the context, so they are matched here.
+ */
+const KASHRUT_BODY_WORD = /(רבנות|בית הדין|בית דין|בד["״'׳]?ץ|הכשר|כשרות|השגחה)/;
+
+/**
+ * Ruling on a kashrut standard. Comparatives and sufficiency judgements only -
+ * naming a body is fine and is the point.
+ */
+const KASHRUT_VERDICT =
+  /(מספיק(ה)?|לא מספיק(ה)?|אמין(ה)?|לא אמין(ה)?|מחמיר(ה)?\s*(יותר|פחות)?|קפדנ(י|ית)|מקל(ה)?|רמת\s*הכשרות|רמה\s*גבוהה|רמה\s*נמוכה|עדיף(ה)?|טוב(ה)?\s*יותר|פחות\s*טוב(ה)?|הכי\s*(טוב|מחמיר|אמין)|סומכים\s*עליו|אפשר\s*לסמוך|לא\s*הייתי\s*סומך|ברמה\s*של|נחשב(ת)?\s*ל?(מחמיר|אמין|טוב))/;
+
 /** Which replacement line each rule belongs to */
-const CATEGORY: Record<string, 'price' | 'event' | 'kosher' | 'lookup'> = {
+const CATEGORY: Record<string, GuardCategory> = {
   superlative: 'price',
   availability: 'price',
   'room-type': 'price',
@@ -82,6 +120,7 @@ const CATEGORY: Record<string, 'price' | 'event' | 'kosher' | 'lookup'> = {
   'event-claim': 'event',
   'closure-claim': 'event',
   'kosher-claim': 'kosher',
+  'kashrut-verdict': 'kashrut-verdict',
   'hours-claim': 'lookup',
   'existence-claim': 'lookup',
 };
@@ -91,6 +130,7 @@ export interface GuardReplacements {
   event?: string;
   kosher?: string;
   lookup?: string;
+  'kashrut-verdict'?: string;
 }
 
 /** Currencies. On their own they are entirely legitimate ("the currency is the euro") - a number next to them is not. */
@@ -248,7 +288,7 @@ export interface GuardResult {
   /** What was cut, for logging and tests. Empty = nothing was cut. */
   redactions: string[];
   /** Which replacement lines were injected in this call (see `alreadyReplaced`) */
-  replaced: Set<'price' | 'event' | 'kosher' | 'lookup'>;
+  replaced: Set<GuardCategory>;
 }
 
 /** Every digit run in the text */
@@ -320,6 +360,31 @@ export function violationOf(sentence: string, allow: GuardAllowlist = {}): strin
   */
   if (KOSHER_WORD.test(sentence) && KOSHER_ASSERTION.test(sentence) && !namesAllowedKosher(sentence, allow)) {
     return 'kosher-claim';
+  }
+
+  /*
+    Ruling on somebody's kashrut standard.
+
+    Naming a certifying body is now allowed and is the whole point of the
+    structured model - a traveler decides by the name. What is never allowed
+    is us deciding FOR them: "that hechsher is reliable enough", "the local
+    rabbinate is not strict enough", "better supervision than the other one".
+    Israeli travelers hold genuinely different standards, and a travel site
+    grading a hechsher is both outside its competence and the fastest way to
+    lose half its audience.
+
+    This is deliberately independent of the allowlist above. A sentence can be
+    perfectly well grounded - naming a real body from this turn's data - and
+    still be a verdict, which is precisely the case the prompt alone would
+    miss. It is checked BEFORE the allowlist can wave it through.
+  */
+  if (
+    (KOSHER_WORD.test(sentence) ||
+      KASHRUT_BODY_WORD.test(sentence) ||
+      namesAllowedKosher(sentence, allow)) &&
+    KASHRUT_VERDICT.test(sentence)
+  ) {
+    return 'kashrut-verdict';
   }
 
   if (SUPERLATIVE.test(sentence)) return 'superlative';
@@ -426,16 +491,17 @@ export function guardText(
    * got the same apology sentence twice in a row. The count is per category,
    * so a reply that touched both a price and an event explains both.
    */
-  alreadyReplaced: Set<'price' | 'event' | 'kosher' | 'lookup'> = new Set(),
+  alreadyReplaced: Set<GuardCategory> = new Set(),
 ): GuardResult {
   const line = {
     price: replacements.price ?? NO_PRICE_LINE_BARE,
     event: replacements.event ?? NO_EVENT_LINE,
     kosher: replacements.kosher ?? NO_KOSHER_LINE,
     lookup: replacements.lookup ?? NO_LOOKUP_LINE,
+    'kashrut-verdict': replacements['kashrut-verdict'] ?? NO_KASHRUT_VERDICT_LINE,
   };
   const redactions: string[] = [];
-  const replacedHere = new Set<'price' | 'event' | 'kosher' | 'lookup'>();
+  const replacedHere = new Set<GuardCategory>();
   const out = splitSentences(text).map((sentence) => {
     if (!sentence.trim()) return sentence;
     const bad = violationOf(sentence, allow);
@@ -510,7 +576,7 @@ export class GuardedTextStream {
   private readonly allow: GuardAllowlist;
   private readonly replacements: GuardReplacements;
   /** Each honest line is said once per reply, even when it consists of several flushes */
-  private readonly replacedOnce = new Set<'price' | 'event' | 'kosher' | 'lookup'>();
+  private readonly replacedOnce = new Set<GuardCategory>();
 
   readonly redactions: string[] = [];
 

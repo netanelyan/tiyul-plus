@@ -9,6 +9,7 @@ import PlacesMap from '@/components/PlacesMap';
 import Flag from '@/components/Flag';
 import CardPhoto from '@/components/CardPhoto';
 import KosherBadge from '@/components/KosherBadge';
+import { kashrutIsShippable } from '@/lib/kashrut';
 import KosherNote from '@/components/KosherNote';
 
 export interface KosherCity {
@@ -70,8 +71,15 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
 
   const stats = useMemo(() => {
     const all = covered.flatMap((c) => c.kosherPlaces);
+    // How many records carry a source AND a check date, i.e. how much of this
+    // is verified rather than reported. Shown because the difference between
+    // "57 kosher places" and "57 kosher places, 12 of them checked against a
+    // source we can name" is the whole credibility of the layer, and hiding
+    // the second number would make the first read as stronger than it is.
+    const verified = all.filter((p) => kashrutIsShippable(p.kashrut)).length;
     return {
       places: all.length,
+      verified,
       cities: covered.length,
       citiesWithout: cities.length - covered.length,
     };
@@ -101,10 +109,24 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
         <span className="badge rounded-full bg-night/5 px-3.5 py-1.5 text-sm font-bold text-night/70">
           🌍 {stats.cities} ערים בקטלוג
         </span>
+        {/*
+          The honest denominator. A filter that shows only what it has, without
+          saying what it does not have, reads as coverage rather than as a
+          sample - and this layer's whole value is that its numbers can be
+          trusted.
+        */}
+        <span className="badge rounded-full bg-night/5 px-3.5 py-1.5 text-sm font-bold text-night/70">
+          ✅ {stats.verified} מתוכם נבדקו מול מקור עם תאריך
+        </span>
         <span className="badge rounded-full bg-night/5 px-3.5 py-1.5 text-sm font-medium text-night/60">
           המידע נאסף ממקורות ציבוריים · לוודא מול המקום
         </span>
       </div>
+      <p className="mt-2 text-xs font-medium leading-relaxed text-night/50">
+        הרשימה מציגה רק מקומות שיש עליהם מידע בקטלוג שלנו. {stats.places - stats.verified} מהרשומות
+        מדווחות ממקורות ציבוריים בלי תאריך בדיקה שלנו, והן מסומנות ככאלה בכל כרטיס. היעדר מקום
+        מהרשימה לא אומר שהוא לא כשר - רק שאין לנו עליו מידע.
+      </p>
 
       {/* ---- Search ---- */}
       <form
