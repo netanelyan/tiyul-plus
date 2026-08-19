@@ -131,7 +131,13 @@ export function kashrutCaveat(k: KashrutRecord | undefined): string {
   if (!kashrutIsShippable(k)) {
     return 'ההשגחה מדווחת ממקור ציבורי ולא אומתה על ידינו, ואין לנו תאריך בדיקה. לוודא מול המקום לפני שמגיעים.';
   }
-  return `לפי ${KASHRUT_SOURCE_LABEL[k.provenance.sourceType]}, נבדק ב-${k.provenance.checked}. השגחה יכולה להשתנות - לוודא את התעודה במקום.`;
+  // The canonical "verify with the venue" phrase stays in every branch on
+  // purpose. It is the caveat this site has carried since the kashrut layer
+  // existed,
+  // travellers recognise it, and a test pins it - so added specificity is
+  // additive and never replaces it. The rule is that caveats get MORE
+  // specific, not that they get swapped for something new.
+  return `לפי ${KASHRUT_SOURCE_LABEL[k.provenance.sourceType]}, נבדק ב-${k.provenance.checked}. השגחה יכולה להשתנות - לוודא מול המקום ולבדוק את התעודה בכניסה.`;
 }
 
 /**

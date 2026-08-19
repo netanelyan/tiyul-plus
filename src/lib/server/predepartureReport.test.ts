@@ -39,17 +39,24 @@ test('כשרות נקראת מחדש עבור מקום כשר, עם הכיסוי
   assert.equal(r.kosherChecked, 1);
   const note = r.kosherNotes[0];
   assert.equal(note.status, 'kosher');
-  // The certifying body by NAME. The Latin form (IKG) now lives in its own
-  // field rather than being glued into the display string.
-  assert.equal(note.supervision, 'הקהילה היהודית של וינה');
   assert.match(note.note, /לוודא מול המקום/);
   assert.doesNotMatch(note.note, /התקשרנו|אימתנו טלפונית/);
-  // This record was migrated from the old model, which never recorded a date.
-  // The report must say so rather than print a date-shaped placeholder - the
-  // whole point of the new provenance field is that "we do not know when"
-  // is expressible.
-  assert.equal(note.lastChecked, null);
-  assert.match(note.note, /אין לנו תאריך בדיקה|לא אומתה על ידינו/);
+
+  /*
+    This record was verified against the IKG's own kosher list on 2026-08-19,
+    so it now carries a real check date - which is what the provenance field
+    exists for.
+
+    It names NO certifying body, and that is the correct answer rather than a
+    gap: the IKG rabbinate states outright that it makes no recommendation and
+    that each business is supervised by "the Rabbinate for the Hashgacha in
+    question". The catalog used to record "the Jewish Community of Vienna
+    (IKG)" as the supervising body here, which the source does not support.
+    This assertion pins the correction so it cannot drift back.
+  */
+  assert.equal(note.lastChecked, '2026-08-19');
+  assert.equal(note.supervision, undefined, 'a body was attributed that the source does not name');
+  assert.match(note.note, /2026-08-19/);
   assert.doesNotMatch(note.note, /pending-review/);
 });
 

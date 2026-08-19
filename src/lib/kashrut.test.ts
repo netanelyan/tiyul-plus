@@ -137,10 +137,17 @@ test('every record migrated from the old supervision string kept it verbatim', (
   // quarter, Maghain Aboth) never had one - they carried no verification
   // record at all, because the old model could not express "an area where
   // several bodies operate" - so there is nothing for them to preserve.
+  // A ratchet, not a fixed count: 53 records were migrated, and each coverage
+  // pass that verifies one against a real source moves it OFF this list. The
+  // number may only ever go DOWN, and every record still on it must still
+  // carry its original string.
   const migrated = destinations
     .flatMap((d) => d.places)
     .filter((p) => p.kashrut?.provenance.source === 'קטלוג טיול+ (דיווח קודם)');
-  assert.equal(migrated.length, 53, 'expected all 53 migrated records');
+  assert.ok(
+    migrated.length <= 53,
+    `more legacy records than the 53 that were migrated: ${migrated.length}`,
+  );
   for (const p of migrated) {
     assert.ok(
       p.kashrut?.legacySupervision,

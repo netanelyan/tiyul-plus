@@ -50,7 +50,10 @@ function kosherNoteFor(place: Place): string {
       : 'מסומן ככשר בקטלוג שלנו, בלי שם גוף משגיח רשום';
     const diet = k?.diet ? ` · ${KASHRUT_DIET_LABEL[k.diet]}` : '';
     const arrangement = k?.arrangement ? ` · ${k.arrangement}` : '';
-    return `${head}${diet}${arrangement}. ${kashrutCaveat(k)}`;
+    // The arrangement text may already end in a full stop, so joining with
+    // another one produced ".." on screen.
+    const body = `${head}${diet}${arrangement}`.replace(/\.\s*$/, '');
+    return `${body}. ${kashrutCaveat(k)}`;
   }
   if (status === 'not-kosher') {
     return `המקום מסומן אצלנו כלא כשר.${place.kosherNote ? ` ${place.kosherNote}` : ''}`;
