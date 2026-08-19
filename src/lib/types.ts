@@ -126,6 +126,35 @@ export interface KashrutProvenance {
   checked: string | null;
 }
 
+/**
+ * Shabbat features of a place to stay - the things people actually search for
+ * before booking.
+ *
+ * **Every field is a tri-state on purpose, and `undefined` means "we have not
+ * established it".** A hotel without a Shabbat lift and a hotel we simply have
+ * not asked are completely different to somebody deciding where to sleep, and
+ * a boolean would merge them into "no". Same reasoning as `KashrutKnowledge`.
+ *
+ * Recorded only where sourced. There is no inference here: a large hotel in a
+ * city with a Jewish community is not evidence of a Shabbat lift, and "it
+ * probably has one" is exactly the sentence that gets somebody stuck on the
+ * fourteenth floor.
+ */
+export interface ShabbatFeatures {
+  /** A lift that stops on every floor without a button being pressed. */
+  shabbatElevator?: boolean;
+  /** A non-electric way into the room - a physical key or a mechanical lock. */
+  nonElectricEntry?: boolean;
+  /** A hotplate, urn, or an arrangement for warm food over Shabbat. */
+  warmFood?: boolean;
+  /** Shabbat meals available, usually by advance arrangement. */
+  shabbatMeals?: boolean;
+  /** Free text for what the fields cannot hold - always the source's words. */
+  note?: string;
+  /** Required whenever any field above is set. Same rule as kashrut. */
+  provenance: KashrutProvenance;
+}
+
 export interface KashrutRecord {
   knowledge: KashrutKnowledge;
   // Present only when knowledge === 'certified'.
@@ -153,6 +182,7 @@ export interface Place {
   durationMin?: number; // typical visit length
   kosherNote?: string; // hechsher / kashrut details, Hebrew
   kashrut?: KashrutRecord; // structured kashrut - replaces the old kosherVerification
+  shabbat?: ShabbatFeatures; // Shabbat features of a place to stay, where sourced
   kosherStatus?: KosherStatus; // required for every category you eat at - see kosherStatusOf
   source?: PlaceSource; // where this came from and when it was checked
   externalUrl?: string; // deep link to Google Maps / TripAdvisor page
