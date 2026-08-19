@@ -73,7 +73,7 @@ export function placeToRow(p, destinationSlug, position) {
     rating: opt(p.rating),
     duration_min: opt(p.durationMin),
     kosher_note: opt(p.kosherNote),
-    kosher_verification: opt(p.kosherVerification),
+    kashrut: opt(p.kashrut),
     external_url: opt(p.externalUrl),
     photo: opt(p.photo),
     price_level: opt(p.priceLevel),
@@ -115,7 +115,7 @@ export function rowToPlace(r) {
   put(p, 'rating', r.rating);
   put(p, 'durationMin', r.duration_min);
   put(p, 'kosherNote', r.kosher_note);
-  put(p, 'kosherVerification', r.kosher_verification);
+  put(p, 'kashrut', r.kashrut);
   put(p, 'externalUrl', r.external_url);
   put(p, 'photo', r.photo);
   put(p, 'priceLevel', r.price_level);

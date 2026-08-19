@@ -24,6 +24,7 @@ import type { Trip } from '@/lib/trip/types';
 import { dayDate } from '@/lib/trip/dates';
 import { datedLabel, dayRangeLabel, impactLabel, matchTripCalendar } from '@/lib/trip/dateWindows';
 import { isEating, isKosher, kosherStatusOf } from '@/lib/categories';
+import { KASHRUT_DIET_LABEL, describeCertifications, kashrutCaveat } from '@/lib/kashrut';
 import type {
   PreDepartureReport,
   ReportCalendarFinding,
@@ -37,12 +38,19 @@ const DEST_OF = new Map(destinations.map((d) => [d.slug, d]));
 
 function kosherNoteFor(place: Place): string {
   const status = kosherStatusOf(place);
-  const v = place.kosherVerification;
+  const k = place.kashrut;
   if (status === 'kosher') {
-    const supervision = v?.supervision;
-    const checked = v?.lastChecked && v.lastChecked !== 'pending-review' ? v.lastChecked : null;
-    if (!supervision) return 'מסומן ככשר בקטלוג שלנו, בלי פרטי השגחה רשומים. לוודא מול המקום.';
-    return `השגחה כפי שדווחה: ${supervision}${checked ? ` · נרשם לאחרונה ב-${checked}` : ''}. הנתון מבוסס על דיווח ולא על אימות טלפוני שלנו - תמיד לוודא מול המקום לפני ההגעה.`;
+    // The report names the body and carries the record's own caveat, which is
+    // specific to what we actually know rather than one generic sentence for
+    // every place. `kashrutCaveat` never returns empty, so the fact can never
+    // be printed bare.
+    const bodies = describeCertifications(k);
+    const head = bodies
+      ? `השגחה כפי שדווחה: ${bodies}`
+      : 'מסומן ככשר בקטלוג שלנו, בלי שם גוף משגיח רשום';
+    const diet = k?.diet ? ` · ${KASHRUT_DIET_LABEL[k.diet]}` : '';
+    const arrangement = k?.arrangement ? ` · ${k.arrangement}` : '';
+    return `${head}${diet}${arrangement}. ${kashrutCaveat(k)}`;
   }
   if (status === 'not-kosher') {
     return `המקום מסומן אצלנו כלא כשר.${place.kosherNote ? ` ${place.kosherNote}` : ''}`;
@@ -106,8 +114,8 @@ export function buildPreDepartureReport(trip: Trip): PreDepartureReport {
           placeId,
           name: place.name,
           status: kosherStatusOf(place),
-          supervision: place.kosherVerification?.supervision,
-          lastChecked: place.kosherVerification?.lastChecked,
+          supervision: describeCertifications(place.kashrut) || undefined,
+          lastChecked: place.kashrut?.provenance.checked ?? null,
           note: kosherNoteFor(place),
         });
       }

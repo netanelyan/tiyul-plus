@@ -228,7 +228,7 @@ function PlacePopup({ place, prefix = '' }: { place: Place; prefix?: string }) {
         popup than in the card beside it. Now it is the same component.
       */}
       <KosherNote note={place.kosherNote} className="mt-1" />
-      {place.kosherVerification && (
+      {place.kashrut && (
         /*
           The badge itself, not a copy of it. The wording and the
           "verify with the venue" caveat must be identical everywhere
@@ -236,7 +236,7 @@ function PlacePopup({ place, prefix = '' }: { place: Place; prefix?: string }) {
           the moment somebody changed the policy in one place.
         */
         <div style={{ marginTop: 4 }}>
-          <KosherBadge verification={place.kosherVerification} />
+          <KosherBadge kashrut={place.kashrut} />
         </div>
       )}
       {/*

@@ -77,8 +77,15 @@ export interface ReportKosherNote {
   placeId: string;
   name: string;
   status: 'kosher' | 'not-kosher' | 'unknown';
+  /** The certifying bodies by name, joined. Empty when none is recorded. */
   supervision?: string;
-  lastChecked?: string;
+  /**
+   * The day we read the source, or **null** when we have no check date - which
+   * is the case for every record migrated from the pre-2026-08 model. Null is
+   * carried through rather than omitted so the report can say "no check date"
+   * instead of silently printing nothing where a date belongs.
+   */
+  lastChecked?: string | null;
   note: string;
 }
 

@@ -64,6 +64,16 @@ const PHOTO_HOSTS = [
 // stops covering it.
 const EATING = new Set(['cafe', 'food', 'kosher-food']);
 const KOSHER_STATUS = new Set(['kosher', 'not-kosher', 'unknown']);
+const KASHRUT_KNOWLEDGE = new Set(['certified', 'none-found', 'unknown']);
+const KASHRUT_DIET = new Set(['meat', 'dairy', 'parve', 'meat-and-dairy']);
+const KASHRUT_SOURCE_TYPE = new Set([
+  'certifier',
+  'venue',
+  'community',
+  'directory',
+  'legacy-unverified',
+]);
+const TODAY = new Date().toISOString().slice(0, 10);
 // The categories added in the food-and-shopping feature - the new rules are
 // enforced on these.
 const SOURCED_CATEGORIES = new Set(['food', 'market']);
@@ -258,6 +268,57 @@ for (const d of destinations) {
     // that reaches the traveller as a kashrut error.
     if (p.category.startsWith('kosher') && p.kosherStatus && p.kosherStatus !== 'kosher')
       err(`${where}: category "${p.category}" but kosherStatus "${p.kosherStatus}" - contradictory`);
+
+    // 1b. The structured kashrut record. These rules exist because the model
+    // it replaced decayed into free text: two of its three fields carried the
+    // same literal value in 53 of 53 records, and the third held four
+    // different kinds of thing at once. A rule that is only a convention is
+    // the state that produced that.
+    if (p.category.startsWith('kosher') && !p.kashrut)
+      err(`${where}: category "${p.category}" with no kashrut record - a kosher entry must say what the supervision is, or say that we do not know`);
+
+    if (p.kashrut) {
+      const k = p.kashrut;
+      if (!KASHRUT_KNOWLEDGE.has(k.knowledge))
+        err(`${where}: kashrut.knowledge "${k.knowledge}" is not one of ${[...KASHRUT_KNOWLEDGE].join(' / ')}`);
+
+      if (!k.provenance) {
+        err(`${where}: kashrut record with no provenance - what it is, where it came from and when it was read are all required`);
+      } else {
+        if (!k.provenance.source)
+          err(`${where}: kashrut.provenance.source is empty - a kashrut fact with no source is not shippable`);
+        if (!KASHRUT_SOURCE_TYPE.has(k.provenance.sourceType))
+          err(`${where}: kashrut.provenance.sourceType "${k.provenance.sourceType}" is not one of ${[...KASHRUT_SOURCE_TYPE].join(' / ')}`);
+        // `checked` is either a real ISO date or an explicit null. A
+        // placeholder string is exactly what the old model did, and it is
+        // what made 53 records look checked when none of them was.
+        const c = k.provenance.checked;
+        if (c !== null && c !== undefined && !/^\d{4}-\d{2}-\d{2}$/.test(c))
+          err(`${where}: kashrut.provenance.checked "${c}" is neither an ISO date nor null - never a placeholder`);
+        if (c && Number.isNaN(Date.parse(c)))
+          err(`${where}: kashrut.provenance.checked "${c}" is not a real calendar date`);
+        if (c && c > TODAY)
+          err(`${where}: kashrut.provenance.checked "${c}" is in the future`);
+      }
+
+      // Only a 'certified' record may name a body. Naming one on a
+      // 'none-found' or 'unknown' record would put a certification where we
+      // have just said there is none, or none that we know of.
+      if (k.knowledge !== 'certified' && (k.certifications ?? []).length)
+        err(`${where}: kashrut.knowledge is "${k.knowledge}" but certifications are listed - contradictory`);
+
+      for (const cert of k.certifications ?? []) {
+        if (!cert.body || !String(cert.body).trim())
+          err(`${where}: a certification with an empty body name - the traveller decides by the name, so it cannot be blank`);
+        // The catch-all that would undo the whole model: a body name that is
+        // really a caveat, a diet or logistics. Those have their own fields.
+        if (/כפי שדווח|לוודא מול|^חלבי$|^בשרי$|ארוחות/.test(String(cert.body)))
+          err(`${where}: certification body "${cert.body}" is a caveat, a diet or logistics, not a certifying body - use provenance / diet / arrangement`);
+      }
+
+      if (k.diet && !KASHRUT_DIET.has(k.diet))
+        err(`${where}: kashrut.diet "${k.diet}" is not one of ${[...KASHRUT_DIET].join(' / ')}`);
+    }
 
     // 2. Source and date. Required for the categories added in this feature;
     // the older categories are not required retroactively, but a source that

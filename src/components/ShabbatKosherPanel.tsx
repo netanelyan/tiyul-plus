@@ -132,7 +132,7 @@ export default function ShabbatKosherPanel({
                         {p.description}
                       </p>
                     )}
-                    <KosherBadge verification={p.kosherVerification} className="mt-1.5" />
+                    <KosherBadge kashrut={p.kashrut} className="mt-1.5" />
                   </li>
                 ))}
               </ul>

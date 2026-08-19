@@ -39,9 +39,18 @@ test('כשרות נקראת מחדש עבור מקום כשר, עם הכיסוי
   assert.equal(r.kosherChecked, 1);
   const note = r.kosherNotes[0];
   assert.equal(note.status, 'kosher');
-  assert.equal(note.supervision, 'הקהילה היהודית של וינה (IKG)');
+  // The certifying body by NAME. The Latin form (IKG) now lives in its own
+  // field rather than being glued into the display string.
+  assert.equal(note.supervision, 'הקהילה היהודית של וינה');
   assert.match(note.note, /לוודא מול המקום/);
   assert.doesNotMatch(note.note, /התקשרנו|אימתנו טלפונית/);
+  // This record was migrated from the old model, which never recorded a date.
+  // The report must say so rather than print a date-shaped placeholder - the
+  // whole point of the new provenance field is that "we do not know when"
+  // is expressible.
+  assert.equal(note.lastChecked, null);
+  assert.match(note.note, /אין לנו תאריך בדיקה|לא אומתה על ידינו/);
+  assert.doesNotMatch(note.note, /pending-review/);
 });
 
 test('כשרות: מקום שמסומן לא-כשר אומר זאת בפירוש, לא בשתיקה', () => {

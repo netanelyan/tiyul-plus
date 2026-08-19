@@ -233,7 +233,7 @@ export default function DestinationClient({
                   </div>
                 </div>
                 <KosherNote note={place.kosherNote} className="mt-2" />
-                <KosherBadge verification={place.kosherVerification} className="mt-1.5" />
+                <KosherBadge kashrut={place.kashrut} className="mt-1.5" />
                 <div className="mt-3 flex flex-wrap items-center gap-3 text-xs font-semibold text-night/50">
                   <AddToTripButton citySlug={dest.slug} placeId={place.id} />
                   {place.rating && <span>⭐ {place.rating.toFixed(1)}</span>}

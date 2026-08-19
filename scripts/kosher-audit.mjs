@@ -36,12 +36,12 @@ const report = {};
 // ---------------------------------------------------------------- 1. scope
 const kosherCat = all.filter((p) => KOSHER_CAT(p.category));
 const withNote = all.filter((p) => p.kosherNote);
-const withVerification = all.filter((p) => p.kosherVerification);
+const withVerification = all.filter((p) => p.kashrut);
 const withStatusField = all.filter((p) => p.kosherStatus);
 // "carries any kosher information" = anything at all that speaks to kashrut
 const anyKosherInfo = all.filter(
   (p) =>
-    KOSHER_CAT(p.category) || p.kosherNote || p.kosherVerification || p.kosherStatus,
+    KOSHER_CAT(p.category) || p.kosherNote || p.kashrut || p.kosherStatus,
 );
 
 report.totals = {
@@ -58,11 +58,17 @@ report.totals = {
 const lastCheckedValues = {};
 const sourceValues = {};
 const supervisionValues = {};
+const knowledgeValues = {};
+const dietValues = {};
 for (const p of withVerification) {
-  const v = p.kosherVerification;
-  lastCheckedValues[v.lastChecked] = (lastCheckedValues[v.lastChecked] ?? 0) + 1;
-  sourceValues[v.source] = (sourceValues[v.source] ?? 0) + 1;
-  supervisionValues[v.supervision] = (supervisionValues[v.supervision] ?? 0) + 1;
+  const v = p.kashrut;
+  const key = String(v.provenance.checked);
+  lastCheckedValues[key] = (lastCheckedValues[key] ?? 0) + 1;
+  sourceValues[v.provenance.sourceType] = (sourceValues[v.provenance.sourceType] ?? 0) + 1;
+  for (const c of v.certifications ?? [])
+    supervisionValues[c.body] = (supervisionValues[c.body] ?? 0) + 1;
+  knowledgeValues[v.knowledge] = (knowledgeValues[v.knowledge] ?? 0) + 1;
+  if (v.diet) dietValues[v.diet] = (dietValues[v.diet] ?? 0) + 1;
 }
 report.verification = {
   count: withVerification.length,
@@ -71,10 +77,11 @@ report.verification = {
   distinctSupervisionStrings: Object.keys(supervisionValues).length,
   supervisionValues,
   // a real date is one that parses AND is not the placeholder
-  withRealDate: withVerification.filter(
-    (p) =>
-      p.kosherVerification.lastChecked !== 'pending-review' &&
-      !Number.isNaN(Date.parse(p.kosherVerification.lastChecked)),
+  knowledgeValues,
+  dietValues,
+  withRealDate: withVerification.filter((p) => p.kashrut.provenance.checked).length,
+  shippable: withVerification.filter(
+    (p) => p.kashrut.provenance.checked && p.kashrut.provenance.sourceType !== 'legacy-unverified',
   ).length,
 };
 
@@ -101,7 +108,7 @@ for (const c of RELEVANT) {
     withStatusOrDerived: inCat.filter((p) => KOSHER_CAT(p.category) || p.kosherStatus)
       .length,
     withNote: inCat.filter((p) => p.kosherNote).length,
-    withVerification: inCat.filter((p) => p.kosherVerification).length,
+    withVerification: inCat.filter((p) => p.kashrut).length,
   };
 }
 
@@ -117,7 +124,7 @@ report.fieldValues = {
     .filter((p) => p.kosherStatus)
     .map((p) => ({ id: p.id, status: p.kosherStatus })),
   kosherCategoryWithoutVerification: kosherCat
-    .filter((p) => !p.kosherVerification)
+    .filter((p) => !p.kashrut)
     .map((p) => ({ id: p.id, dest: p._dest, name: p.name })),
   kosherCategoryWithoutNote: kosherCat.filter((p) => !p.kosherNote).length,
   // a non-kosher place carrying a kosherNote is a WARNING to the traveller,
@@ -180,20 +187,23 @@ if (JSON_OUT) {
   line(`   catalog: ${report.totals.places} places / ${report.totals.destinations} destinations`);
   line(`   kosher-* category places:        ${report.totals.kosherCategoryPlaces}`);
   line(`   carry a kosherNote:              ${report.totals.withKosherNote}`);
-  line(`   carry a kosherVerification:      ${report.totals.withVerification}`);
+  line(`   carry a kashrut record:          ${report.totals.withVerification}`);
   line(`   carry an explicit kosherStatus:  ${report.totals.withKosherStatusField}`);
   line(`   ANY kosher information at all:   ${report.totals.anyKosherInformation}`);
   line();
   line('2. THE VERIFICATION RECORD');
   line(`   records: ${report.verification.count}`);
-  line(`   with a real (parseable, non-placeholder) date: ${report.verification.withRealDate}`);
-  line('   lastChecked values:');
+  line(`   with a real check date:      ${report.verification.withRealDate}`);
+  line(`   SHIPPABLE (source+type+date): ${report.verification.shippable}`);
+  line(`   knowledge: ${JSON.stringify(report.verification.knowledgeValues)}`);
+  line(`   diet:      ${JSON.stringify(report.verification.dietValues)}`);
+  line('   checked values:');
   for (const [k, v] of Object.entries(report.verification.lastCheckedValues))
     line(`      ${JSON.stringify(k)}: ${v}`);
-  line('   source values:');
+  line('   sourceType values:');
   for (const [k, v] of Object.entries(report.verification.sourceValues))
     line(`      ${JSON.stringify(k)}: ${v}`);
-  line(`   distinct supervision strings: ${report.verification.distinctSupervisionStrings}`);
+  line(`   distinct certifying bodies: ${report.verification.distinctSupervisionStrings}`);
   line();
   line('3. GAPS IN KOSHER-RELEVANT CATEGORIES');
   line(`   relevant-category places: ${report.gaps.relevantCategoryPlaces}`);

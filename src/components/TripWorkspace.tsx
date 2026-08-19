@@ -23,6 +23,7 @@ import TripCost from '@/components/TripCost';
 import PinsPanel from '@/components/PinsPanel';
 import ActivitiesPanel from '@/components/ActivitiesPanel';
 import TripDateNotes from '@/components/TripDateNotes';
+import { kashrutCaveat, kashrutSummary } from '@/lib/kashrut';
 import ShabbatKosherPanel from '@/components/ShabbatKosherPanel';
 import TripSkeleton from '@/components/TripSkeleton';
 import { shabbatRowsFor } from '@/lib/trip/shabbatRows';
@@ -1328,9 +1329,15 @@ export default function TripWorkspace({
                           {places.map((p) => (
                             <li key={p.id}>
                               <strong>{p.name}</strong>
-                              {p.kosherVerification?.supervision
-                                ? ` — השגחה: ${p.kosherVerification.supervision} · לוודא מול המקום`
-                                : ' — לוודא מול המקום'}
+                              {/*
+                                The printed annex carries the same three things
+                                the badge does - what the supervision is, when
+                                we read it, and the caveat - because a printed
+                                page is the copy somebody actually carries to
+                                the restaurant, and it is the one place they
+                                cannot tap through for detail.
+                              */}
+                              {` — ${kashrutSummary(p.kashrut)} · ${kashrutCaveat(p.kashrut)}`}
                             </li>
                           ))}
                         </ul>

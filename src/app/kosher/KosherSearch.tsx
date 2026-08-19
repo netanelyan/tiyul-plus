@@ -167,7 +167,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
                   <div className="text-xs font-medium text-night/40">{place.nameLocal}</div>
                   <p className="mt-2 text-sm leading-relaxed text-night/70">{place.description}</p>
                   <KosherNote note={place.kosherNote} className="mt-2" />
-                  <KosherBadge verification={place.kosherVerification} className="mt-1.5" />
+                  <KosherBadge kashrut={place.kashrut} className="mt-1.5" />
                   {placeMapUrl(place) ? (
                     <a
                       href={placeMapUrl(place)!}

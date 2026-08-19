@@ -45,17 +45,100 @@ export type PlaceTag =
   | 'foodie'
   | 'outdoors';
 
-// Kashrut details as reported by the source (Chabad house / the certifying
-// body). Policy 2026-07-25: no per-entry verification system in the UI - the
-// supervision is shown as a report (the "supervision: ..." line) alongside a
-// general "verify with the venue" disclaimer. The lastChecked field stays in
-// the data for compatibility and future use, but is not rendered and produces
-// no warning badges. The only place that renders the status:
-// src/components/KosherBadge.tsx.
-export interface KosherVerification {
-  source: string; // who determined it (curated / community / official)
-  lastChecked: string; // ISO date or "pending-review"
-  supervision: string; // the certifying body, in Hebrew
+// ---------- Kashrut ----------
+//
+// The old shape was `KosherVerification { source, lastChecked, supervision }`.
+// Measured before replacing it (scripts/kosher-audit.mjs): `source` was the
+// literal string "curated" in 53 of 53 records and `lastChecked` was
+// "pending-review" in 53 of 53, so two of its three fields never carried any
+// information at all. The third, `supervision`, carried FOUR different kinds
+// of thing in one free-text string - the certifying body (e.g. "the Prague
+// rabbinate"), a caveat ("as reported"), meal logistics ("Shabbat meals by
+// registration") and meat/dairy ("local supervision - dairy") - and in one
+// record it encoded the ABSENCE of certification ("no supervision is published
+// in the community lists"). 46 distinct strings across 53 records. Nothing
+// downstream could tell a certification from a disclaimer.
+//
+// The replacement below separates those into fields. The old string is kept
+// verbatim in `legacySupervision` so the migration destroys nothing.
+
+// What we actually know. Three states, always distinguishable - a blank field
+// used to mean "unknown", "not checked" and "not applicable" at the same time,
+// which is worse than useless to somebody who keeps kosher.
+//
+//   'certified'  - we have information and there IS supervision, named below.
+//   'none-found' - we looked and found NO kashrut supervision. A real finding,
+//                  not an absence of data: "Santorini has no kosher restaurant"
+//                  is useful, and it is not the same as "we have not checked".
+//   'unknown'    - we have not established it. Said plainly, never implied.
+export type KashrutKnowledge = 'certified' | 'none-found' | 'unknown';
+
+// Meat / dairy / parve, where the source states it. It changes what a traveler
+// can do with the rest of the day, which is why it deserves a field instead of
+// being buried in prose (it was mentioned in 18 notes and 2 supervision
+// strings, unqueryable in all 20). 'meat-and-dairy' is for a complex that runs
+// separate certified meat and dairy operations - Chabad Cusco does exactly
+// this - and never means one kitchen serving both.
+export type KashrutDiet = 'meat' | 'dairy' | 'parve' | 'meat-and-dairy';
+
+// Where a kashrut fact came from, so a traveler can weigh it themselves. This
+// is a description of the SOURCE, never a grading of the certification.
+//   'certifier' - the certifying body's own published list
+//   'venue'     - the venue's own site
+//   'community' - a community / rabbinate list
+//   'directory' - a kashrut directory or aggregator
+//   'legacy-unverified' - collected before this model existed, with no date
+//                  recorded. Shown to the user as a report we have not
+//                  confirmed, which is what the UI already said in prose.
+export type KashrutSourceType =
+  | 'certifier'
+  | 'venue'
+  | 'community'
+  | 'directory'
+  | 'legacy-unverified';
+
+// One certification. A place can carry more than one, and a DISTRICT can carry
+// several different ones across its businesses - rue des Rosiers, Golders
+// Green and the Antwerp diamond quarter are all in the catalog and all had to
+// be filed as single restaurants because the old model could not say this.
+export interface KashrutCertification {
+  // The body, named as the source names it. Never our paraphrase and never
+  // our shorthand - a traveler decides by the name, so the name must be exact.
+  body: string;
+  // The same body in Latin script where it has one, so it can be searched for.
+  bodyLatin?: string;
+  // Descriptors the certificate itself carries - glatt, mehadrin, chalav
+  // yisrael. These are REPORTED, never our assessment: we do not rule on
+  // whether a standard is sufficient, and neither may the agent.
+  descriptors?: string[];
+}
+
+// What it is, where it came from, and when it was read. All three, or the
+// record is not shippable - see `kashrutIsShippable` in src/lib/kashrut.ts.
+export interface KashrutProvenance {
+  source: string; // a URL, or the named list that was read
+  sourceType: KashrutSourceType;
+  // The day the source was actually read. ISO YYYY-MM-DD, or **null** when it
+  // genuinely is not known. Null is deliberate and is never filled with a
+  // plausible date: the 53 migrated records have no date because none was ever
+  // recorded, and inventing one would be exactly the fabrication this
+  // project's hard rule 2 forbids.
+  checked: string | null;
+}
+
+export interface KashrutRecord {
+  knowledge: KashrutKnowledge;
+  // Present only when knowledge === 'certified'.
+  certifications?: KashrutCertification[];
+  diet?: KashrutDiet;
+  // Operational reality that decides whether a traveler can actually eat here:
+  // advance booking, Shabbat meals by registration, passport at the door.
+  // Free text, but now its own field rather than glued onto the body name.
+  arrangement?: string;
+  provenance: KashrutProvenance;
+  // The pre-migration `supervision` string, verbatim. Kept so the migration
+  // loses nothing and can be re-read; not rendered.
+  legacySupervision?: string;
 }
 
 export interface Place {
@@ -69,7 +152,7 @@ export interface Place {
   rating?: number; // 0-5, from provider (sample data = editorial estimate)
   durationMin?: number; // typical visit length
   kosherNote?: string; // hechsher / kashrut details, Hebrew
-  kosherVerification?: KosherVerification; // the trust badge of kosher entries
+  kashrut?: KashrutRecord; // structured kashrut - replaces the old kosherVerification
   kosherStatus?: KosherStatus; // required for every category you eat at - see kosherStatusOf
   source?: PlaceSource; // where this came from and when it was checked
   externalUrl?: string; // deep link to Google Maps / TripAdvisor page
