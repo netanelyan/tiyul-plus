@@ -9,6 +9,7 @@ import { OFFLINE_HINT } from '@/lib/offline/online';
 import { checkOfferEligibility, priceLabel, type PreDepartureReport } from '@/lib/predeparture';
 import { todayISO } from '@/lib/trip/dates';
 import type { Trip } from '@/lib/trip/types';
+import { planAtLeast } from '@/lib/plans';
 
 /**
  * "Pre-departure check" - the first paid product on the site. Always sits as one
@@ -214,7 +215,8 @@ export default function PreDepartureCheck({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth.ready, auth.user?.id, trip.id, trip.startDate, trip.endDate]);
 
-  const isPremium = auth.profile?.plan === 'premium';
+  // Ordinal: every paid plan gets the paid tools, not only the one named 'premium'
+  const isPremium = planAtLeast(auth.profile?.plan ?? 'free', 'premium');
 
   const buy = async () => {
     setBusy(true);

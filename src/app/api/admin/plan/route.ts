@@ -1,6 +1,7 @@
 import { requireRole, denied, badRequest, ok, audit } from '@/lib/server/admin';
 import { adminInsert, adminUpdate, userByEmail } from '@/lib/server/supabaseAdmin';
 import { eq } from '@/lib/server/pgrest';
+import type { PaidPlan } from '@/lib/plans';
 
 /**
  * Granting or revoking premium.
@@ -20,7 +21,7 @@ export async function POST(req: Request) {
   const actor = await requireRole(req, 'admin');
   if (!actor) return denied();
 
-  let body: { email?: unknown; action?: unknown; days?: unknown; note?: unknown };
+  let body: { email?: unknown; action?: unknown; days?: unknown; note?: unknown; plan?: unknown };
   try {
     body = (await req.json()) as typeof body;
   } catch {
@@ -32,6 +33,12 @@ export async function POST(req: Request) {
   const rawDays = Number(body.days);
   const days = Number.isFinite(rawDays) ? Math.max(0, Math.min(3650, Math.floor(rawDays))) : 30;
   const note = typeof body.note === 'string' ? body.note.slice(0, 200) : '';
+  /*
+    Which plan to grant. Closed list, defaulting to premium - an admin granting
+    support access should get the cheaper plan unless they deliberately ask for
+    the other one, and an unrecognised string must never widen a grant.
+  */
+  const grantPlan: PaidPlan = body.plan === 'pro' ? 'pro' : 'premium';
 
   if (!email || !email.includes('@')) return badRequest('bad_email');
 
@@ -44,7 +51,7 @@ export async function POST(req: Request) {
 
   const patch =
     action === 'grant'
-      ? { plan: 'premium', plan_until: until, plan_source: 'grant', updated_at: new Date().toISOString() }
+      ? { plan: grantPlan, plan_until: until, plan_source: 'grant', updated_at: new Date().toISOString() }
       : { plan: 'free', plan_until: null, plan_source: null, updated_at: new Date().toISOString() };
 
   let rows = await adminUpdate<{ user_id: string }>('profiles', eq('user_id', user.id), patch);
@@ -55,10 +62,11 @@ export async function POST(req: Request) {
   if (!rows) return badRequest('db_unavailable');
 
   await audit(actor, action === 'grant' ? 'grant_premium' : 'revoke_premium', user, {
+    plan: action === 'grant' ? grantPlan : undefined,
     days: action === 'grant' ? days : undefined,
     until,
     note: note || undefined,
   });
 
-  return ok({ found: true, email: user.email, plan: action === 'grant' ? 'premium' : 'free', until });
+  return ok({ found: true, email: user.email, plan: action === 'grant' ? grantPlan : 'free', until });
 }

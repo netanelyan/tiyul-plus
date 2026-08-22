@@ -1,4 +1,10 @@
-import { PROMO_ATTEMPTS_PER_DAY, PROMO_ATTEMPTS_PER_HOUR } from '@/lib/plans';
+import {
+  PROMO_ATTEMPTS_PER_DAY,
+  PROMO_ATTEMPTS_PER_HOUR,
+  effectivePlan,
+  planAtLeast,
+  type PaidPlan,
+} from '@/lib/plans';
 import { eq, pgLimit, pgQuery, pgSelect } from '@/lib/server/pgrest';
 import { actorFrom } from '@/lib/server/admin';
 import { checkLimit } from '@/lib/server/limits';
@@ -79,7 +85,16 @@ export async function POST(req: Request) {
     pgQuery(eq('user_id', actor.userId), pgSelect(['plan', 'plan_until']), pgLimit(1)),
   );
   const row = current?.[0];
-  const stripeForever = row?.plan === 'premium' && !row.plan_until;
+  const currentPlan = effectivePlan(row ?? null);
+  const stripeForever = planAtLeast(currentPlan, 'premium') && !row?.plan_until;
+  /*
+    **A promo may extend a plan, never demote one.** Written as a flat
+    `plan: 'premium'`, redeeming a promo code while holding an active pro
+    subscription would have quietly moved that subscriber down to premium -
+    and they would have been the ones to discover it, having just been handed
+    what looked like a gift.
+  */
+  const grantedPlan: PaidPlan = planAtLeast(currentPlan, 'pro') ? 'pro' : 'premium';
   const base =
     row?.plan_until && Date.parse(row.plan_until) > Date.now()
       ? Date.parse(row.plan_until)
@@ -87,7 +102,7 @@ export async function POST(req: Request) {
   const until = stripeForever ? null : new Date(base + days * 86_400_000).toISOString();
 
   const patch = {
-    plan: 'premium',
+    plan: grantedPlan,
     plan_until: until,
     plan_source: stripeForever ? 'stripe' : 'promo',
     updated_at: new Date().toISOString(),

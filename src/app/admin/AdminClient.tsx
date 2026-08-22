@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { authHeader } from '@/lib/auth/client';
-import type { Role } from '@/lib/plans';
+import type { Plan, Role } from '@/lib/plans';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 import { Skeleton } from '@/components/Skeleton';
 import { daysHe } from '@/lib/duration';
@@ -36,7 +36,7 @@ interface UserInfo {
   email?: string;
   displayName?: string | null;
   role?: Role;
-  plan?: 'free' | 'premium';
+  plan?: Plan;
   planUntil?: string | null;
   planSource?: string | null;
   trips?: number;
@@ -60,7 +60,16 @@ interface Stats {
     top: { kind: string; units: number }[];
   };
   week: { day: string; units: number }[];
-  accounts: { total: number; capped?: boolean; withProfile?: number; premium: number; admins: number };
+  accounts: {
+    total: number;
+    capped?: boolean;
+    withProfile?: number;
+    /** Every paying plan */
+    premium: number;
+    /** Of those, on the 89 plan */
+    pro: number;
+    admins: number;
+  };
   freeCap: number;
 }
 
@@ -85,6 +94,9 @@ interface PromoCode {
   active: boolean;
   note: string | null;
 }
+
+/** The plan a traveller actually holds, for display. Equality is correct here. */
+const PLAN_LABEL_HE: Record<Plan, string> = { free: 'חינם', premium: 'פרימיום', pro: 'פרו' };
 
 const hebrewDate = (iso: string | null | undefined) =>
   iso ? new Date(iso).toLocaleDateString('he-IL', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
@@ -211,6 +223,9 @@ export default function AdminClient() {
       <GrowthCard api={api} />
       <TripLookupCard api={api} />
       <UserCard api={api} role={me.role} />
+      {/* High up on purpose: a business waiting for an answer is the most
+          perishable item on this screen. */}
+      <AgentLeadsCard api={api} />
       <SpendCard api={api} />
       <PurchasesCard api={api} />
       <StatsCard api={api} />
@@ -337,10 +352,14 @@ function UserCard({
             {info.displayName && <span className="text-night/55">· {info.displayName}</span>}
             <span
               className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
-                info.plan === 'premium' ? 'bg-sunset text-cream' : 'bg-night/10 text-night/60'
+                info.plan === 'pro'
+                  ? 'bg-night text-cream'
+                  : info.plan === 'premium'
+                    ? 'bg-sunset text-cream'
+                    : 'bg-night/10 text-night/60'
               }`}
             >
-              {info.plan === 'premium' ? 'פרימיום' : 'חינם'}
+              {PLAN_LABEL_HE[info.plan ?? 'free']}
             </span>
             {info.role !== 'user' && (
               <span className="rounded-full bg-night px-2.5 py-0.5 text-xs font-bold text-cream">
@@ -527,7 +546,7 @@ function StatsCard({
             'חשבונות',
             `${s.accounts.total.toLocaleString('he-IL')}${s.accounts.capped ? '+' : ''}`,
           ],
-          ['פרימיום פעיל', String(s.accounts.premium)],
+          ['מנויים פעילים', `${s.accounts.premium}${s.accounts.pro ? ` (מהם ${s.accounts.pro} פרו)` : ''}`],
           ['אדמינים', String(s.accounts.admins)],
           ['מחוברים / אנונימיים', `${s.today.loggedIn} / ${s.today.anonymous}`],
         ].map(([label, value]) => (
@@ -805,6 +824,8 @@ interface Spend {
     totalUsd: number;
     subscribers: number;
     capUsd: number;
+    /** Per-plan personal ceilings - one number cannot describe two plans */
+    caps: { premium: number; pro: number };
     top: { userId: string; usd: number; requests: number; email: string | null }[];
     truncated: boolean;
     stored: boolean;
@@ -1139,7 +1160,7 @@ function SpendCard({
       {/* ---------- The subscribers' wallet: the real money, here only ---------- */}
       <div className="mt-4 rounded-xl bg-cream p-3">
         <div className="flex flex-wrap items-baseline gap-2">
-          <span className="text-xs font-bold text-night/55">מנויי פרימיום החודש ({d.premium.month})</span>
+          <span className="text-xs font-bold text-night/55">מנויים בתשלום החודש ({d.premium.month})</span>
           {d.premium.stored ? (
             <span className="text-sm font-black text-night" dir="ltr">
               {money(d.premium.totalUsd)}
@@ -1151,7 +1172,8 @@ function SpendCard({
           )}
           {d.premium.stored && (
             <span className="text-[11px] font-semibold text-night/40">
-              {d.premium.subscribers} מנויים פעילים · תקרה אישית {money(d.premium.capUsd)} לחודש
+              {d.premium.subscribers} מנויים פעילים · תקרה אישית {money(d.premium.caps.premium)}{' '}
+              לפרימיום, {money(d.premium.caps.pro)} לפרו
               {d.premium.truncated && ' · הגענו לתקרת השורות, הסכום חלקי'}
             </span>
           )}
@@ -1322,6 +1344,144 @@ function PurchasesCard({
             ))}
           </ul>
         </div>
+      )}
+    </section>
+  );
+}
+
+/* ============================================================
+   Travel-agent enquiries - from the agents card on the pricing page
+   ============================================================ */
+
+interface AgentLead {
+  id: string;
+  createdAt: string;
+  name: string;
+  business: string;
+  contact: string;
+  contactKind: 'email' | 'phone';
+  tripsPerYear: string | null;
+  needs: string | null;
+  handledAt: string | null;
+}
+
+interface AgentLeadsData {
+  stored: boolean;
+  leads: AgentLead[];
+  open: number;
+  truncated: boolean;
+}
+
+/**
+ * Inbound enquiries from travel agents and trip organisers, newest first.
+ *
+ * **The card is loud when something is waiting and quiet otherwise** - an
+ * unanswered enquiry from somebody running a business is the most perishable
+ * thing on this dashboard, so an open one tints the whole section rather than
+ * sitting as a number in a row of numbers.
+ *
+ * Only two states are rendered as "nothing here": `stored: false` says the SQL
+ * has not been run, and an empty list says there are genuinely no enquiries.
+ * Collapsing those two into one empty state would turn a missing table into
+ * "nobody has written", which is the one wrong answer that looks right.
+ */
+function AgentLeadsCard({
+  api,
+}: {
+  api: (p: string, i?: RequestInit) => Promise<{ ok: boolean; status: number; data: unknown }>;
+}) {
+  const [d, setD] = useState<AgentLeadsData | null>(null);
+  const [busy, setBusy] = useState<string | null>(null);
+
+  // The same inline-IIFE shape every other card in this file uses. A useCallback
+  // that the effect then calls is traceable by react-hooks/set-state-in-effect
+  // and gets flagged; the house pattern is not, and consistency here is free.
+  useEffect(() => {
+    void (async () => {
+      const { ok, data } = await api('/api/admin/agent-leads');
+      if (ok) setD(data as AgentLeadsData);
+    })();
+  }, [api]);
+
+  async function mark(id: string, handled: boolean) {
+    setBusy(id);
+    await api('/api/admin/agent-leads', { method: 'POST', body: JSON.stringify({ id, handled }) });
+    const { ok, data } = await api('/api/admin/agent-leads');
+    if (ok) setD(data as AgentLeadsData);
+    setBusy(null);
+  }
+
+  if (!d) return null;
+
+  return (
+    <section
+      className={`rounded-2xl p-5 ring-1 ${
+        d.open > 0 ? 'bg-sunset/10 ring-sunset/40' : 'bg-shell ring-night/10'
+      }`}
+    >
+      <h2 className="text-lg font-bold text-night">
+        🧳 פניות מסוכני נסיעות{d.open > 0 ? ` · ${d.open} ממתינות` : ''}
+      </h2>
+      <p className="mt-1 text-sm font-medium text-night/55">
+        מגיעות מהכרטיס &quot;סוכני נסיעות&quot; בעמוד המחירים. אין כאן מחיר קבוע - חוזרים אליהם
+        ומתמחרים לפי העסק.
+      </p>
+
+      {!d.stored ? (
+        <p className="mt-3 rounded-xl bg-cream px-3 py-2 text-sm font-semibold text-night/55">
+          לא נאסף - צריך להריץ את <code dir="ltr">sql/supabase-agent-leads.sql</code>. זה לא אומר
+          שאין פניות, אלא שאי אפשר לקרוא אותן.
+        </p>
+      ) : d.leads.length === 0 ? (
+        <p className="mt-3 text-sm font-medium text-night/45">עדיין לא הגיעו פניות.</p>
+      ) : (
+        <ul className="mt-3 space-y-2">
+          {d.leads.map((l) => (
+            <li
+              key={l.id}
+              className={`rounded-xl p-3 ring-1 ${
+                l.handledAt ? 'bg-cream/60 ring-night/5' : 'bg-cream ring-night/10'
+              }`}
+            >
+              <div className="flex flex-wrap items-baseline gap-2">
+                <span className="text-sm font-black text-night">{l.business}</span>
+                <span className="text-sm font-semibold text-night/60">{l.name}</span>
+                <a
+                  href={l.contactKind === 'email' ? `mailto:${l.contact}` : `tel:${l.contact}`}
+                  className="text-xs font-bold text-sunset-deep underline"
+                  dir="ltr"
+                >
+                  {l.contact}
+                </a>
+                {l.tripsPerYear && (
+                  <span className="rounded-full bg-night/10 px-2 py-0.5 text-[11px] font-bold text-night/60">
+                    {l.tripsPerYear} טיולים בשנה
+                  </span>
+                )}
+                <span className="ms-auto text-[11px] font-semibold text-night/40">
+                  {hebrewDate(l.createdAt)}
+                </span>
+              </div>
+              {l.needs && (
+                <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-night/70">
+                  {l.needs}
+                </p>
+              )}
+              <button
+                onClick={() => void mark(l.id, !l.handledAt)}
+                disabled={busy === l.id}
+                className="mt-2 rounded-lg bg-night/10 px-3 py-1 text-xs font-bold text-night/65 transition hover:bg-night/15 disabled:opacity-50"
+              >
+                {l.handledAt ? `טופל ${hebrewDate(l.handledAt)} · לפתוח מחדש` : 'סימון כטופל'}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {d.truncated && (
+        <p className="mt-2 text-[11px] font-medium text-night/40">
+          מוצגות 100 הפניות האחרונות בלבד.
+        </p>
       )}
     </section>
   );

@@ -2,6 +2,7 @@
 
 import { useState, type ReactNode } from 'react';
 import { useAuth } from '@/lib/auth/AuthContext';
+import { planAtLeast } from '@/lib/plans';
 
 /**
  * The one place on the trip screen where things cost money.
@@ -50,7 +51,8 @@ import { useAuth } from '@/lib/auth/AuthContext';
  */
 export default function PaidTools({ children }: { children: ReactNode }) {
   const auth = useAuth();
-  const isPremium = auth.profile?.plan === 'premium';
+  // Ordinal: every paid plan gets the paid tools, not only the one named 'premium'
+  const isPremium = planAtLeast(auth.profile?.plan ?? 'free', 'premium');
   const [open, setOpen] = useState(false);
 
   return (

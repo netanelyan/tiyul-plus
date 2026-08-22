@@ -2,6 +2,7 @@ import { activitiesForCity } from '@/lib/server/viator';
 import { browserGetOk } from '@/lib/server/chatGuards';
 import { checkLimit } from '@/lib/server/limits';
 import { resolveCaller } from '@/lib/server/identity';
+import { planAtLeast } from '@/lib/plans';
 
 /**
  * Bookable activities in the trip's city, from a live query against Viator.
@@ -45,7 +46,7 @@ export async function GET(req: Request) {
     route costs us nothing (Viator, with no AI call), so there is no economic reason
     for a complicated ceiling - generous and fixed for everyone, a little more for premium.
   */
-  const perDay = caller.plan === 'premium' ? 120 : 60;
+  const perDay = planAtLeast(caller.plan, 'premium') ? 120 : 60;
   if (!checkLimit('activities', caller.id, perDay, 24 * 60 * 60_000).ok) return empty('quota');
   if (!checkLimit('activities-burst', caller.id, 10, 60_000).ok) return empty('quota');
 

@@ -13,6 +13,7 @@ import { useTrip } from '@/lib/trip/TripContext';
 import { todayISO } from '@/lib/trip/dates';
 import type { Destination } from '@/lib/types';
 import type { Trip } from '@/lib/trip/types';
+import { planAtLeast } from '@/lib/plans';
 
 /**
  * The organizer's side of a group trip: the invitation link (premium), and then
@@ -41,7 +42,8 @@ export default function TripGroupPanel({
   const [error, setError] = useState<string | null>(null);
   const [newDay, setNewDay] = useState('');
 
-  const isPremium = auth.profile?.plan === 'premium';
+  // Ordinal: every paid plan gets the paid tools, not only the one named 'premium'
+  const isPremium = planAtLeast(auth.profile?.plan ?? 'free', 'premium');
   const group = useGroup({ tripId: trip.id }, open && !!auth.user);
   const myId = auth.user?.id ?? null;
 

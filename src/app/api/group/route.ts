@@ -31,6 +31,7 @@ import {
   type RsvpStatus,
 } from '@/lib/server/groupPlanning';
 import { notifyOrganiser } from '@/lib/server/groupNotify';
+import { planAtLeast } from '@/lib/plans';
 
 /**
  * Shared trip. **The organizer is premium; joining, voting, commenting,
@@ -132,7 +133,7 @@ export async function POST(request: Request) {
   const str = (v: unknown, max: number) => (typeof v === 'string' ? v.slice(0, max) : '');
 
   if (action === 'invite') {
-    if (caller.plan !== 'premium') {
+    if (!planAtLeast(caller.plan, 'premium')) {
       return NextResponse.json({ error: 'premium-required' }, { status: 403 });
     }
     const tripId = str(body.tripId, 100).trim();

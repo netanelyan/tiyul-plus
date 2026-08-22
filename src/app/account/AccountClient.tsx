@@ -20,6 +20,7 @@ import Flag from '@/components/Flag';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 import AccountSkeleton from './AccountSkeleton';
 import { daysHe } from '@/lib/duration';
+import { PRO_TRIPS_PER_MONTH } from '@/lib/plans';
 
 /**
  * The personal area - the signed-in user's home:
@@ -487,12 +488,18 @@ function SettingsCard({ onDeletedAll }: { onDeletedAll: () => void }) {
         <div>
           <p className="text-sm font-bold text-night">התוכנית שלי</p>
           <p className="text-xs text-night/50">
-            {profile.plan === 'premium'
-              ? 'טיול+ פרימיום - מסלול אישי מובטח ובדיקה לפני הנסיעה כלולה'
-              : 'תוכנית חינם - מספיקה לטיול מלא ועשרות עריכות ביום'}
+            {profile.plan === 'pro'
+              ? `טיול+ פרו - עד ${PRO_TRIPS_PER_MONTH} טיולים מלאים בחודש, ובדיקה לפני הנסיעה כלולה`
+              : profile.plan === 'premium'
+                ? 'טיול+ פרימיום - מסלול אישי מובטח ובדיקה לפני הנסיעה כלולה'
+                : 'תוכנית חינם - מספיקה לטיול מלא ועשרות עריכות ביום'}
           </p>
         </div>
-        {profile.plan === 'premium' ? (
+        {/* Display, so equality is right here - the badge has to name the plan
+            they actually hold, not "at least premium". */}
+        {profile.plan === 'pro' ? (
+          <span className="shrink-0 rounded-full bg-night px-3 py-1 text-xs font-black text-cream">★ פרו</span>
+        ) : profile.plan === 'premium' ? (
           <span className="shrink-0 rounded-full bg-zest px-3 py-1 text-xs font-black text-night">★ פרימיום</span>
         ) : (
           <a

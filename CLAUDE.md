@@ -10469,3 +10469,206 @@ One assertion failed first and it was the harness, not the product: Leaflet
 tiles legitimately extend past the viewport (their container clips them, and
 page-level overflow measured 0 throughout) - the documented case from entry
 (kk), now excluded by container rather than by silencing the check.
+
+### 2026-08-22 - Four options instead of two, a ₪89 tier that had to justify itself, and the ordinal gate that made it safe
+
+Netanel: rework the pricing page into four options - free as it is, ₪19.90 as it
+is and marked recommended, a new ₪89 heavy plan whose arithmetic he wanted shown
+the same way the ₪19.90 tier's was, and a travel-agent card with no price and a
+contact form. Plus: keep the one-off check prominent rather than burying it, and
+work out how four options read at 390px **before** building.
+
+---
+
+**The ₪89 tier, and the answer to "tell me rather than inventing filler".**
+
+Net revenue, by the exact method that produced the existing ₪19.90 figures (it
+reproduces them to the agora, which is why it is trusted):
+
+| | ₪19.90 | ₪89 |
+|---|---|---|
+| gross | 19.90 | 89.00 |
+| less VAT 18% | 16.86 | 75.42 |
+| less PayPal 3.4% + ₪1.20 | 14.98 | 71.19 |
+| net at ₪3.75/$ | **$4.00** | **$19.00** |
+
+Cost, at the measured prices already in the test file (`COLD_TRIP_USD` $0.53 for
+a full build including the cold cache write, `HEAVY_TURN_USD` $0.063 for a warm
+turn): a typical planning session is 1 build + 15 turns = **$1.475**, a long one
+is 1 build + 24 turns = **$2.040**.
+
+The cap is **$12.00 - 63% of net, a 37% gross margin** where premium keeps 50%.
+That difference is deliberate: at ₪19.90 the fixed ₪1.20 payment fee alone is
+9.4% of gross and the entire subscriber is worth $2.00 of margin, so prudence is
+cheap; at ₪89 the same fee is 4.8% and 37% of $19 is **$7.00 of margin per
+subscriber - three and a half times what a premium subscriber yields in total**.
+
+**And the rule he stated is enforced strictly this time.** The visible promise is
+`PRO_TRIPS_PER_MONTH = 5`, not a daily quota, and it is sized against the cap
+directly: five *typical* plannings cost $7.38 (61% of the cap), five *long* ones
+$10.20 (85%). So the person who reads "five trips a month" and then edits
+obsessively still does not meet the ceiling first. Six would be $12.24 - over -
+and that is exactly the broken promise the number exists to avoid. **The test
+fails in both directions**, verified by injection: at 7 it says the promise
+exceeds the cap, at 3 it says the promise is too timid.
+
+**What the tier contains is volume and nothing else, and the card says so in
+those words.** No feature premium does not have. That is not a gap left for
+filler - it is what the product honestly has, and for the person it is aimed at
+volume IS what they are short of: at premium's $2.00 cap a subscriber gets about
+**one** full planning session a month, and there is nothing else on the site they
+can buy to move it. **4.47x the price buys 6x the capacity**, and a test asserts
+that ratio stays the right way round, because a tier that costs more per unit of
+capacity is a tier nobody could sensibly choose.
+
+**One thing he asked for that is already true and therefore is not a
+differentiator: pre-departure checks are included, unlimited, in the ₪19.90 plan
+today.** Reported rather than quietly re-sold.
+
+---
+
+**The change that made all of this safe, and it is the reason the diff is bigger
+than a page rewrite.** Every feature gate in the codebase was written
+`caller.plan === 'premium'`, which silently means "premium and nobody above it".
+The moment a third paid tier exists, each of those becomes a bug that **removes**
+a feature from the more expensive plan - and it fails silently, because nothing
+throws when a paying subscriber is told they need to subscribe.
+
+So plans are now **ordinal**, exactly like the `ROLE_RANK` pattern this codebase
+already had: `PLAN_RANK`, `planAtLeast(plan, 'premium')` for every gate,
+`paidPlanOf(caller)` where a wallet is involved, and equality kept only for
+**display** ("you are on the pro plan"). Fourteen call sites converted across the
+chat loop, generate-trip, the group invite, the pre-departure check, activities,
+identity, the account screen and the admin badge.
+
+**Three real bugs that only existed because of the new tier, all found by walking
+the gates rather than by a type error** (TypeScript sees none of these):
+
+- **The full-build quota skipped pro entirely.** `create_trip_full` was capped
+  only when `plan === 'premium'`, so the tier with the largest allowance had
+  *no* cap on the single most expensive tool we have. It now reads the caller's
+  own limit.
+- **A promo code would have demoted a pro subscriber.** Redemption wrote a flat
+  `plan: 'premium'`, so somebody holding an active pro subscription who redeemed
+  a code would have been moved *down* - and would have discovered it themselves,
+  having just been handed what looked like a gift. It now extends, never demotes.
+- **The identity fallback dropped pro to free.** The second read that runs when
+  `plan_until` does not exist as a column matched only the literal `'premium'`.
+
+---
+
+**A double charge caught by looking at the upgrade path.** With the gate made
+ordinal, a premium subscriber clicking "pro" would have created a *second* PayPal
+subscription - PayPal does not replace the first, so both bill, on the one path
+where a customer is actively trying to give us more money. Doing it properly is
+PayPal's `revise` call on the `paypal_subscription_id` we already store, which is
+a separate integration that cannot be verified from here. So the switch is
+**refused** (`switch-requires-support`) and the page says plainly that we move
+people by hand so they are not charged twice. Selling a second subscription and
+letting them find the duplicate on their statement was the alternative.
+
+**PayPal back-compat is carried in `custom_id`, and that is the one thing here
+that can break a live paying subscriber.** The tier travels as `<uuid>|pro`;
+premium keeps the bare uuid and its existing unsuffixed `paypal_plan_id_<mode>`
+flag, so existing subscriptions - whose custom_id PayPal will echo back on every
+renewal and cancellation for the rest of their life - keep activating and
+downgrading correctly. `parseSubscriptionCustomId` has its own test file for
+exactly that reason, including an unrecognised suffix resolving to the *cheaper*
+plan rather than the one it claims.
+
+---
+
+**The page: four options at 390px, worked out before building.**
+
+Five things to buy (three plans, the check, the agent card) is a page nobody
+reaches the bottom of as full-width slabs. So: a **"which one is you" strip** of
+four one-line anchor rows at the very top, each carrying its own price - one
+screen that lets somebody skip the two plans they were never going to buy, and
+also the fastest honest answer to "what does this cost". Then the three consumer
+plans as one grid, with **the recommended one ordered first on a phone**
+(`order-first sm:order-none`) - on desktop the middle column is the privileged
+position, on a phone "middle" means nothing and first means everything. The agent
+card is its own section below, because it is not a fourth column: no price, no
+button that charges anything, a different reader. The row-by-row comparison is a
+`<details>`, since each card already carries what distinguishes it and ten rows
+across three columns is about a thousand pixels of supplement on a phone.
+
+Measured: the plans start at y=590 of a 390px screen, the check at y=2055 of
+5269, zero horizontal overflow at both widths, nothing past either viewport edge.
+
+**The check is not buried, and the arithmetic argues against us in public.** It
+keeps a full-width card with the same weight as a plan, and the open-arithmetic
+box states which option wins at which travel frequency - including that **a month
+of premium costs less than one check and contains it**, so somebody who wants
+only a check should subscribe for a month and cancel. Every figure renders from
+`PREMIUM_PRICE_ILS` / `PRO_PRICE_ILS` / `PRICE_ILS`, and the comparison that
+depends on their ordering renders conditionally, so a price change cannot leave a
+false sentence behind.
+
+**The agent card claims only what exists today** - the kosher layer with
+supervision as reported, computed Shabbat times per city per day including the
+print annex, several client trips side by side with their own chats, and the
+print/PDF book, the live share link and the invite-with-votes for collecting
+participant preferences. What is absent is named as absent: no branding on the
+export, no multi-user account, no integrations - "built to fit, priced per
+business", with no screenshots of screens that do not exist.
+
+---
+
+**Where the enquiries land: `agent_leads` in the same Supabase project as
+everything else** (`sql/supabase-agent-leads.sql`), RLS on with **no policy** and
+both browser roles revoked - the same shape as `newsletter_signups` and for a
+stronger reason, since these rows carry a name, a business and a phone number.
+Write through `/api/agent-enquiry` (rate limited 3/hour, 6/day), read through
+`/api/admin/agent-leads`, rendered in a new admin card placed high because a
+business waiting for an answer is the most perishable thing on that screen.
+**There is no delete and no edit** - `handled_at` is enough, and a dashboard that
+can erase inbound leads is one that will.
+
+---
+
+**Verified.** 700 unit tests (11 new: the ordering guard extended to pro, the
+promise-fits-the-cap arithmetic in both directions, the price/capacity ratio,
+`paidPlanOf` requiring a user id, pro expiry falling to free rather than premium,
+and the four `custom_id` back-compat cases). `tsc` clean, `npm run build` clean,
+and lint measured A/B on the touched files - **HEAD was clean on them and so is
+this**; the three errors my first version introduced were fixed rather than
+suppressed (`window.location.assign` instead of writing `location.href`, and the
+admin card matched to the file's existing effect pattern).
+
+**35/35 in a real browser at 390px (DPR 3) and 1400px** against a production
+build: four options present, the recommended badge, every price rendered, no
+dollar figure anywhere, the recommended plan first on a phone and raised on
+desktop, the check above the agent card at both widths, the enquiry form opening
+with three inputs none under 16px (iOS zoom), no overflow with the form open, and
+a submit that gives an honest answer rather than a silent success.
+
+**And the enquiry write path verified against a PostgREST stand-in that parses
+the column list out of the SQL file itself** - because a column typo would ship
+silently and only surface after Netanel runs the migration. Submitted through the
+real form in the browser: `unknown columns: 0`, Hebrew intact, and a phone number
+correctly classified as `phone` rather than `email`.
+
+**A harness artifact worth recording, since it looked exactly like data
+corruption.** The same submission sent with `curl` from git-bash stored mojibake;
+the same fields sent from the browser stored perfect Hebrew. The shell's codepage
+was mangling the payload before it left, not the route. **The browser is the real
+path - check there before believing an encoding bug.** Also: the first run of the
+form check read `stub-seen.json[0]` and got the *previous* curl submission, since
+the stub rewrites the whole array. A surprising reading is the harness first.
+
+**Not verified, stated plainly.** The admin card was not driven in a browser -
+signing in needs an OTP emailed to a real address, which this environment has no
+access to; it follows the identical `requireRole` + `adminSelect` pattern as
+every existing card, and an unauthenticated caller getting 404 **was** verified.
+The service role key in `.env.local` is present but rejected by Supabase (401),
+so nothing was checked against the live database. And the PayPal side - a real
+pro subscription, its activation webhook and its cancellation - is unverified
+live, like every payment change in this log.
+
+**One judgement recorded rather than smoothed over.** Premium's real monthly
+capacity is about one full planning session, and the pro card states its capacity
+while premium's cell in the comparison table deliberately does not. Stating it
+would be more honest and it would make pro's step up obvious - but it is
+repositioning an existing product inside a task that said to leave ₪19.90 as it
+is. It is in the summary and in TODO.md for Netanel to decide, not decided here.

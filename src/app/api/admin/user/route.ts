@@ -1,4 +1,4 @@
-import { effectivePlan, isRole } from '@/lib/plans';
+import { effectivePlan, isRole, paidPlanOf } from '@/lib/plans';
 import { eq, pgLimit, pgQuery, pgSelect } from '@/lib/server/pgrest';
 import { requireRole, denied, badRequest, ok, audit } from '@/lib/server/admin';
 import { adminSelect, userByEmail } from '@/lib/server/supabaseAdmin';
@@ -63,7 +63,10 @@ export async function POST(req: Request) {
   const plan = effectivePlan(p ?? null);
   // The subscriber's real money this month - for the admin only. It is never shown to the
   // user themselves in dollars, only as counts (see plans.ts).
-  const premiumSpend = plan === 'premium' ? await premiumBudgetFor(user.id) : null;
+  // Ordinal and plan-aware: a pro subscriber has a different cap, so passing the
+  // plan is what makes the /cap figure on the card true rather than premium's.
+  const paidPlan = paidPlanOf({ plan, userId: user.id });
+  const premiumSpend = paidPlan ? await premiumBudgetFor(user.id, paidPlan) : null;
 
   return ok({
     found: true,

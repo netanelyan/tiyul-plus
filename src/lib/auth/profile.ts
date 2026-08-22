@@ -1,6 +1,6 @@
 'use client';
 
-import { effectivePlan, isRole, type Role } from '@/lib/plans';
+import { effectivePlan, isRole, type Plan, type Role } from '@/lib/plans';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 /**
@@ -23,7 +23,7 @@ export interface UserProfile {
    * written exclusively by the Stripe webhook via the service role (see
    * supabase-premium.sql).
    */
-  plan: 'free' | 'premium';
+  plan: Plan;
   /**
    * The role. Written exclusively by the service role (see
    * supabase-admin.sql), so from the client's perspective this is a

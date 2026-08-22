@@ -16,7 +16,11 @@
  */
 
 import { paypalConfigured, paypalMode, verifyWebhookSignature, type WebhookHeaders } from '@/lib/server/paypal';
-import { activatePaypalPremium, cancelPaypalPremium } from '@/lib/server/paypalSubs';
+import {
+  activatePaypalPremium,
+  cancelPaypalPremium,
+  parseSubscriptionCustomId,
+} from '@/lib/server/paypalSubs';
 import { findByOrderId, findById, markFailed, markPaid } from '@/lib/server/purchases';
 import { buildPreDepartureReport } from '@/lib/server/predepartureReport';
 import { findOwnTrip } from '@/lib/server/userTrips';
@@ -72,19 +76,25 @@ export async function processCheckWebhook(rawBody: string, headers: WebhookHeade
     can forge.
   */
   const subUserId = event.resource?.custom_id;
-  if (event.event_type === 'BILLING.SUBSCRIPTION.ACTIVATED' && subUserId) {
+  /*
+    custom_id carries the tier as well since the pro plan was added
+    (`<uuid>|pro`), so the same signed event says both who and what. A bare
+    uuid - every subscription created before that - parses as premium.
+  */
+  const sub = subUserId ? parseSubscriptionCustomId(subUserId) : null;
+  if (event.event_type === 'BILLING.SUBSCRIPTION.ACTIVATED' && sub) {
     const subId = (event.resource as { id?: string } | undefined)?.id ?? '';
-    const done = await activatePaypalPremium(subUserId, subId);
-    if (!done) console.warn('[checks webhook] premium activation failed', { subUserId });
+    const done = await activatePaypalPremium(sub.userId, subId, sub.plan);
+    if (!done) console.warn('[checks webhook] premium activation failed', { userId: sub.userId });
     return ok({ received: true, premium: done });
   }
   if (
     (event.event_type === 'BILLING.SUBSCRIPTION.CANCELLED' ||
       event.event_type === 'BILLING.SUBSCRIPTION.SUSPENDED' ||
       event.event_type === 'BILLING.SUBSCRIPTION.EXPIRED') &&
-    subUserId
+    sub
   ) {
-    const done = await cancelPaypalPremium(subUserId);
+    const done = await cancelPaypalPremium(sub.userId);
     return ok({ received: true, downgraded: done });
   }
 

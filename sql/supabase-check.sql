@@ -82,6 +82,9 @@ with expected(file, kind, obj) as (
     -- supabase-newsletter.sql (mailing list signups)
     ('supabase-newsletter.sql','table',  'public.newsletter_signups'),
 
+    -- supabase-agent-leads.sql (travel-agent enquiries from the pricing page)
+    ('supabase-agent-leads.sql','table', 'public.agent_leads'),
+
     -- supabase-purchases.sql (pre-departure check purchases via PayPal)
     ('supabase-purchases.sql', 'table',  'public.purchases'),
 

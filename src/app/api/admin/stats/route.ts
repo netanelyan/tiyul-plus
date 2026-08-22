@@ -1,4 +1,4 @@
-import { PLAN_LIMITS } from '@/lib/plans';
+import { PLAN_LIMITS, effectivePlan } from '@/lib/plans';
 import { gte, pgLimit, pgOrder, pgQuery, pgSelect } from '@/lib/server/pgrest';
 import { requireRole, denied, ok } from '@/lib/server/admin';
 import { adminSelect, countAuthUsers } from '@/lib/server/supabaseAdmin';
@@ -76,9 +76,11 @@ export async function GET(req: Request) {
       capped: users?.capped ?? false,
       /** Of those, saved a profile - the difference is who signed in and never touched the account area */
       withProfile: profiles?.length ?? 0,
-      premium: (profiles ?? []).filter(
-        (p) => p.plan === 'premium' && (!p.plan_until || Date.parse(p.plan_until) > Date.now()),
-      ).length,
+      // Every paying plan, counted through effectivePlan so an expired grant does
+      // not inflate the number - and split, because "how many subscribers" and
+      // "how many of them pay 89" are two different questions.
+      premium: (profiles ?? []).filter((p) => effectivePlan(p) !== 'free').length,
+      pro: (profiles ?? []).filter((p) => effectivePlan(p) === 'pro').length,
       admins: (profiles ?? []).filter((p) => p.role === 'admin' || p.role === 'owner').length,
     },
     freeCap,

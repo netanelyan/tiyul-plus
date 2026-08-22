@@ -12,12 +12,20 @@ import assert from 'node:assert/strict';
 import {
   PLAN_FEATURE_ROWS,
   PLAN_LIMITS,
+  PLAN_RANK,
+  PREMIUM_PRICE_ILS,
   PREMIUM_TRIP_BUILDS_PER_DAY,
+  PRO_PRICE_ILS,
+  PRO_TRIPS_PER_MONTH,
   ROLE_RANK,
+  SUBSCRIBER_CAP_USD,
   SUBSCRIBER_MONTHLY_CAP_USD,
+  TRIP_BUILDS_PER_DAY,
   effectivePlan,
   isRole,
+  paidPlanOf,
   periodMsFor,
+  planAtLeast,
   roleAtLeast,
 } from './plans.ts';
 import { BUDGET_MESSAGE, PREMIUM_BUDGET_MESSAGE } from './server/chatGuards.ts';
@@ -112,6 +120,37 @@ const HEAVY_TURN_USD = 0.063; // a Sonnet turn from a warm cache
   than the free one on every row. Everything else here checked one column
   against a cost model; nothing checked the two columns against EACH OTHER.
 */
+test('הדירוג בין התוכניות סידורי, ו-planAtLeast הוא שער ולא השוואה', () => {
+  assert.ok(PLAN_RANK.free < PLAN_RANK.premium);
+  assert.ok(PLAN_RANK.premium < PLAN_RANK.pro);
+  // The whole reason planAtLeast exists: a pro subscriber must pass every gate
+  // that was written for premium. This is the assertion that would have failed
+  // on every `=== 'premium'` in the codebase.
+  assert.equal(planAtLeast('pro', 'premium'), true, 'פרו חייב לעבור כל שער של פרימיום');
+  assert.equal(planAtLeast('premium', 'pro'), false);
+  assert.equal(planAtLeast('free', 'premium'), false);
+  assert.equal(planAtLeast('pro', 'pro'), true);
+});
+
+test('פרו הוא תוכנית בתוקף, ופג תוקף מחזיר לחינם - לא לפרימיום', () => {
+  assert.equal(effectivePlan({ plan: 'pro', plan_until: null }, NOW), 'pro');
+  assert.equal(effectivePlan({ plan: 'pro', plan_until: iso(1) }, NOW), 'pro');
+  // A lapsed pro grant falls to free. Falling to premium would be a paid plan
+  // nobody is paying for, which is the generous-looking bug effectivePlan exists for.
+  assert.equal(effectivePlan({ plan: 'pro', plan_until: iso(-1) }, NOW), 'free');
+  assert.equal(effectivePlan({ plan: 'Pro' }, NOW), 'free', 'ערך לא מוכר לא מעניק כלום');
+});
+
+test('paidPlanOf דורש משתמש מחובר - ארנק אישי בלי בעלים אינו ארנק', () => {
+  assert.equal(paidPlanOf({ plan: 'pro', userId: 'u1' }), 'pro');
+  assert.equal(paidPlanOf({ plan: 'premium', userId: 'u1' }), 'premium');
+  assert.equal(paidPlanOf({ plan: 'free', userId: 'u1' }), null);
+  // A paid plan with no user id must be treated as free: there is nobody to
+  // charge the personal monthly wallet to.
+  assert.equal(paidPlanOf({ plan: 'pro', userId: null }), null);
+  assert.equal(paidPlanOf({ plan: 'premium' }), null);
+});
+
 test('פרימיום לעולם לא גרוע מחינם, וחינם לעולם לא גרוע מאנונימי - בכל מכסה נספרת', () => {
   const counted: (keyof typeof PLAN_LIMITS.free)[] = [
     'chatPerDay',
@@ -134,7 +173,88 @@ test('פרימיום לעולם לא גרוע מחינם, וחינם לעולם 
       PLAN_LIMITS.free[field] >= PLAN_LIMITS.anon[field],
       `חינם גרוע מאנונימי ב-${field}: ${PLAN_LIMITS.free[field]} מול ${PLAN_LIMITS.anon[field]}`,
     );
+    /*
+      And the same rule one tier up. This is the entire lesson of the previous
+      inversion, applied before it can happen again rather than after: the more
+      expensive plan is never smaller on any countable row.
+    */
+    assert.ok(
+      PLAN_LIMITS.pro[field] >= PLAN_LIMITS.premium[field],
+      `פרו גרוע מפרימיום ב-${field}: ${PLAN_LIMITS.pro[field]} מול ${PLAN_LIMITS.premium[field]}`,
+    );
   }
+  assert.ok(
+    TRIP_BUILDS_PER_DAY.pro >= TRIP_BUILDS_PER_DAY.premium,
+    'תקרת בניות של פרו נמוכה מזו של פרימיום',
+  );
+});
+
+/*
+  ============================================================
+  The pro tier: Netanel's rule, applied strictly this time
+  ============================================================
+
+  "A money cap per subscriber, invisible to the user, with the visible allowance
+  conservative enough that nobody hits the cap first."
+
+  For premium that rule is currently inverted and the code says so out loud (see
+  PLAN_LIMITS.premium): daily quotas cannot fit a monthly cap. For pro it holds,
+  because the visible promise is not a daily quota - it is PRO_TRIPS_PER_MONTH,
+  a monthly number, and it is sized against the monthly cap directly.
+*/
+test('הבטחת הנפח של פרו נכנסת מתחת לתקרה הפנימית - גם בתרחיש הגרוע', () => {
+  const cap = SUBSCRIBER_CAP_USD.pro;
+  const typicalSession = COLD_TRIP_USD + 15 * HEAVY_TURN_USD; // $1.475
+  const longSession = COLD_TRIP_USD + 24 * HEAVY_TURN_USD; // $2.040
+
+  const promisedTypical = PRO_TRIPS_PER_MONTH * typicalSession;
+  const promisedWorst = PRO_TRIPS_PER_MONTH * longSession;
+
+  /*
+    The worst case is what the rule is actually about. Somebody who reads "five
+    trips a month" and then edits every one of them obsessively must still not
+    meet the money ceiling before the number they were shown - otherwise the
+    page made a promise the server breaks, which is a refund.
+  */
+  assert.ok(
+    promisedWorst <= cap,
+    `${PRO_TRIPS_PER_MONTH} תכנונים ארוכים עולים $${promisedWorst.toFixed(2)} מול תקרה של $${cap} - ` +
+      'ההבטחה בעמוד גדולה מהתקרה, וזו הבטחה שבורה',
+  );
+  // And with real headroom, not by a hair - 90% would be a rounding error away
+  // from the same bug.
+  assert.ok(
+    promisedWorst <= cap * 0.9,
+    `אין מרווח: ${(promisedWorst / cap) * 100}% מהתקרה בתרחיש הגרוע`,
+  );
+  assert.ok(promisedTypical <= cap * 0.7, 'שימוש טיפוסי צריך להיות רחוק מהתקרה, לא צמוד לה');
+
+  /*
+    The other half: the promise must not be so timid that the cap is money we
+    charge for and never let anyone use. One more trip than promised should be
+    what starts pressing on the ceiling.
+  */
+  const oneMore = (PRO_TRIPS_PER_MONTH + 1) * longSession;
+  assert.ok(
+    oneMore > cap * 0.9,
+    `אפשר להבטיח יותר מ-${PRO_TRIPS_PER_MONTH} טיולים בלי לגעת בתקרה - ההבטחה קמצנית מדי`,
+  );
+});
+
+test('פרו יקר יותר מפרימיום, ונותן יותר תקרה לשקל - אחרת אין סיבה לקנות אותו', () => {
+  assert.ok(PRO_PRICE_ILS > PREMIUM_PRICE_ILS);
+  const priceRatio = PRO_PRICE_ILS / PREMIUM_PRICE_ILS;
+  const capRatio = SUBSCRIBER_CAP_USD.pro / SUBSCRIBER_CAP_USD.premium;
+  /*
+    The tier is volume and nothing else, so if a shekel does not buy more
+    capacity here than it does in premium, there is no honest reason for anybody
+    to choose it - and a tier nobody could want is exactly what Netanel said not
+    to build.
+  */
+  assert.ok(
+    capRatio > priceRatio,
+    `פרו יקר פי ${priceRatio.toFixed(2)} ונותן פי ${capRatio.toFixed(2)} בלבד - שדרוג שלא משתלם`,
+  );
 });
 
 /*
@@ -208,7 +328,7 @@ test('שורת בניית הטיולים בטבלה נושאת את המספר �
 
 test('אף דולר בשורות ההשוואה של עמוד הפרימיום - רק ספירות ושקלים', () => {
   for (const row of PLAN_FEATURE_ROWS) {
-    for (const text of [row.label, row.free, row.premium]) {
+    for (const text of [row.label, row.free, row.premium, row.pro]) {
       assert.ok(!text.includes('$'), `דולר בשורת השוואה: "${text}"`);
       assert.ok(!/USD|דולר/i.test(text), `אזכור דולר בשורת השוואה: "${text}"`);
     }

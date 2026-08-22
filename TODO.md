@@ -309,6 +309,29 @@ GeoNames). Lower priority than net-new destinations.
 - [ ] אפשר להתחיל מהיעדים שבהם העונה קריטית באמת: לפלנד, איסלנד,
       פטגוניה, ניו זילנד, ספארי בטנזניה, האלפים.
 
+## Waiting on Netanel - the four-tier pricing page (added 2026-08-22)
+
+1. **Run `sql/supabase-agent-leads.sql`** in the Supabase SQL Editor. Until it
+   runs, the travel-agent enquiry form on `/premium` answers honestly that it
+   could not save (never a false "thanks"), and the admin card says the table
+   is missing rather than showing an empty inbox. `sql/supabase-check.sql`
+   reports it.
+2. **Create the PayPal plan for `pro` (89 ILS).** Nothing manual is needed -
+   the first `/api/billing/checkout` with `{"plan":"pro"}` creates the Product
+   and Plan and stores the id under `paypal_plan_id_<mode>_pro`. The premium
+   plan keeps its existing unsuffixed key and its existing subscribers.
+3. **Decide on the plan-switch flow.** Moving an existing subscriber from
+   premium to pro is currently refused in `/api/billing/checkout`
+   (`switch-requires-support`) and handled by hand, because creating a second
+   PayPal subscription charges them twice. The proper fix is PayPal's
+   `revise` call on the stored `paypal_subscription_id`; it is a separate
+   integration and could not be verified from the authoring sandbox.
+4. **Decide whether premium's real monthly capacity should be stated publicly.**
+   At its $2.00 cap it is about one full planning session a month. The pro card
+   states its own capacity (5 trips); premium's cell in the comparison table
+   deliberately does not, because changing how an existing product is sold was
+   outside this task.
+
 ## להפעלת אזור הניהול (נוסף 2026-07-27)
 - [ ] להריץ את `supabase-admin.sql` ב-SQL Editor. הוא מוסיף role/plan_until/
       plan_source, יומן ביקורת, קודי הטבה, דגלי מערכת - **וזורע את

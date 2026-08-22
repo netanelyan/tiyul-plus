@@ -3,7 +3,7 @@ import { eq, neq, pgLimit, pgOrder, pgQuery, pgSelect } from '@/lib/server/pgres
 import { allFlags } from '@/lib/server/flags';
 import { costUsd, type TokenUsage } from '@/lib/server/aiCost';
 import { serviceHeaders } from '@/lib/server/supabaseAdmin';
-import { SUBSCRIBER_MONTHLY_CAP_USD } from '@/lib/plans';
+import { SUBSCRIBER_CAP_USD, SUBSCRIBER_MONTHLY_CAP_USD, type PaidPlan } from '@/lib/plans';
 
 /**
  * Server only - **the AI spending ceiling**, with two wallets and a per-caller cap.
@@ -547,10 +547,20 @@ export interface PremiumBudgetState {
  * calls instead of `budgetFor` when the caller is premium** - not in
  * addition to it.
  */
-export async function premiumBudgetFor(userId: string): Promise<PremiumBudgetState> {
+export async function premiumBudgetFor(
+  userId: string,
+  plan: PaidPlan = 'premium',
+): Promise<PremiumBudgetState> {
   const m = thisMonth();
   const spent = await subscriberSpend(m, userId);
-  const budget = SUBSCRIBER_MONTHLY_CAP_USD;
+  /*
+    The cap is **per plan**, and the caller has to say which - the spend rollup
+    is keyed on user_id alone and knows nothing about what anyone pays. The
+    default is the cheaper cap on purpose: if a call site is ever added that
+    forgets to pass the plan, it under-serves a subscriber (visible, they
+    complain) rather than over-spending against a cap they never bought.
+  */
+  const budget = SUBSCRIBER_CAP_USD[plan];
   return {
     budget,
     spent,
@@ -574,7 +584,17 @@ export interface PremiumSpendOverview {
   month: string;
   totalUsd: number;
   subscribers: number;
+  /**
+   * Premium's personal cap, under its old name.
+   *
+   * **It is not "the" cap any more and the admin card must not print it as
+   * one** - the rollup table is keyed on user_id and carries no plan, so a row
+   * here cannot be compared to a single ceiling. `caps` carries both and the
+   * card shows both; this field stays only so an older reader of the endpoint
+   * does not break.
+   */
   capUsd: number;
+  caps: Record<PaidPlan, number>;
   top: { userId: string; usd: number; requests: number }[];
   truncated: boolean;
   /** false = no persistence or the read failed - display "not collected", not zero */
@@ -588,6 +608,7 @@ export async function premiumSpendOverview(topN = 10): Promise<PremiumSpendOverv
     totalUsd: 0,
     subscribers: 0,
     capUsd: SUBSCRIBER_MONTHLY_CAP_USD,
+    caps: SUBSCRIBER_CAP_USD,
     top: [],
     truncated: false,
     stored: false,
@@ -614,6 +635,7 @@ export async function premiumSpendOverview(topN = 10): Promise<PremiumSpendOverv
       totalUsd: parsed.reduce((n, r) => n + r.usd, 0),
       subscribers: parsed.length,
       capUsd: SUBSCRIBER_MONTHLY_CAP_USD,
+    caps: SUBSCRIBER_CAP_USD,
       top: parsed.slice(0, topN),
       truncated: rows.length >= MAX_ROWS,
       stored: true,

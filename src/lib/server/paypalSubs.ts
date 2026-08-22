@@ -30,24 +30,40 @@
  * that we set at creation.
  */
 
-import { PREMIUM_PRICE_ILS } from '@/lib/plans';
+import { PREMIUM_PRICE_ILS, PRO_PRICE_ILS, type PaidPlan } from '@/lib/plans';
 import { accessToken, paypalApiBase, type PaypalMode } from '@/lib/server/paypal';
 import { adminInsert, adminSelect, adminUpdate } from '@/lib/server/supabaseAdmin';
 import { eq, pgQuery, pgSelect } from '@/lib/server/pgrest';
 
-const PLAN_FLAG = (mode: PaypalMode) => `paypal_plan_id_${mode}`;
+/** Everything that differs between the two subscription plans, in one place. */
+const PLAN_SPEC: Record<PaidPlan, { priceILS: number; label: string; slug: string }> = {
+  premium: { priceILS: PREMIUM_PRICE_ILS, label: 'tiyul+ premium', slug: 'premium' },
+  pro: { priceILS: PRO_PRICE_ILS, label: 'tiyul+ pro', slug: 'pro' },
+};
 
-async function storedPlanId(mode: PaypalMode): Promise<string | null> {
+/**
+ * The app_flags key holding the PayPal billing-plan id.
+ *
+ * **Premium keeps the unsuffixed key it has always had.** A subscription plan
+ * already exists in PayPal under that key with real subscribers attached to
+ * it; renaming the key would make `storedPlanId` miss it, create a *second*
+ * PayPal plan for the same product, and split the subscriber base across two
+ * plan ids for no reason at all.
+ */
+const PLAN_FLAG = (mode: PaypalMode, plan: PaidPlan) =>
+  plan === 'premium' ? `paypal_plan_id_${mode}` : `paypal_plan_id_${mode}_${plan}`;
+
+async function storedPlanId(mode: PaypalMode, plan: PaidPlan): Promise<string | null> {
   const rows = await adminSelect<{ value: unknown }>(
     'app_flags',
-    pgQuery(eq('key', PLAN_FLAG(mode)), pgSelect(['value'])),
+    pgQuery(eq('key', PLAN_FLAG(mode, plan)), pgSelect(['value'])),
   );
   const v = rows?.[0]?.value;
   return typeof v === 'string' && v.length > 0 ? v : null;
 }
 
-async function storePlanId(mode: PaypalMode, planId: string): Promise<void> {
-  await adminInsert('app_flags', { key: PLAN_FLAG(mode), value: planId }, { upsert: true });
+async function storePlanId(mode: PaypalMode, plan: PaidPlan, planId: string): Promise<void> {
+  await adminInsert('app_flags', { key: PLAN_FLAG(mode, plan), value: planId }, { upsert: true });
 }
 
 /**
@@ -55,8 +71,12 @@ async function storePlanId(mode: PaypalMode, planId: string): Promise<void> {
  * then Plan) and stored. A failure at any step returns null and the caller
  * answers "not available right now" - never an invented plan.
  */
-export async function ensureSubscriptionPlan(mode: PaypalMode): Promise<string | null> {
-  const existing = await storedPlanId(mode);
+export async function ensureSubscriptionPlan(
+  mode: PaypalMode,
+  plan: PaidPlan = 'premium',
+): Promise<string | null> {
+  const spec = PLAN_SPEC[plan];
+  const existing = await storedPlanId(mode, plan);
   if (existing) return existing;
 
   const token = await accessToken(mode);
@@ -67,9 +87,9 @@ export async function ensureSubscriptionPlan(mode: PaypalMode): Promise<string |
   try {
     const productRes = await fetch(`${base}/v1/catalogs/products`, {
       method: 'POST',
-      headers: { ...auth, 'PayPal-Request-Id': `product:tiyul-premium:${mode}` },
+      headers: { ...auth, 'PayPal-Request-Id': `product:tiyul-${spec.slug}:${mode}` },
       body: JSON.stringify({
-        name: 'tiyul+ premium',
+        name: spec.label,
         description: 'מנוי חודשי לטיול+',
         type: 'SERVICE',
         category: 'TRAVEL',
@@ -85,10 +105,10 @@ export async function ensureSubscriptionPlan(mode: PaypalMode): Promise<string |
 
     const planRes = await fetch(`${base}/v1/billing/plans`, {
       method: 'POST',
-      headers: { ...auth, 'PayPal-Request-Id': `plan:tiyul-premium:${mode}` },
+      headers: { ...auth, 'PayPal-Request-Id': `plan:tiyul-${spec.slug}:${mode}` },
       body: JSON.stringify({
         product_id: product.id,
-        name: 'tiyul+ premium חודשי',
+        name: `${spec.label} חודשי`,
         status: 'ACTIVE',
         billing_cycles: [
           {
@@ -97,7 +117,7 @@ export async function ensureSubscriptionPlan(mode: PaypalMode): Promise<string |
             sequence: 1,
             total_cycles: 0, // Until cancelled
             pricing_scheme: {
-              fixed_price: { value: PREMIUM_PRICE_ILS.toFixed(2), currency_code: 'ILS' },
+              fixed_price: { value: spec.priceILS.toFixed(2), currency_code: 'ILS' },
             },
           },
         ],
@@ -112,11 +132,12 @@ export async function ensureSubscriptionPlan(mode: PaypalMode): Promise<string |
       console.warn('[paypal subs] create plan', planRes.status);
       return null;
     }
-    const plan = (await planRes.json()) as { id?: string };
-    if (typeof plan.id !== 'string') return null;
+    // `created`, not `plan` - `plan` is now the parameter naming which tier this is
+    const created = (await planRes.json()) as { id?: string };
+    if (typeof created.id !== 'string') return null;
 
-    await storePlanId(mode, plan.id);
-    return plan.id;
+    await storePlanId(mode, plan, created.id);
+    return created.id;
   } catch {
     return null;
   }
@@ -130,9 +151,10 @@ export interface CreatedSubscription {
 /** Creates a subscription for the user to approve. Grants nothing - only returns where to send them. */
 export async function createSubscription(
   mode: PaypalMode,
-  input: { userId: string; returnUrl: string; cancelUrl: string },
+  input: { userId: string; plan?: PaidPlan; returnUrl: string; cancelUrl: string },
 ): Promise<CreatedSubscription | null> {
-  const planId = await ensureSubscriptionPlan(mode);
+  const plan = input.plan ?? 'premium';
+  const planId = await ensureSubscriptionPlan(mode, plan);
   if (!planId) return null;
   const token = await accessToken(mode);
   if (!token) return null;
@@ -143,12 +165,27 @@ export async function createSubscription(
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
-        // A double-click on the subscribe button does not create two subscriptions
+        // A double-click on the subscribe button does not create two subscriptions.
+        // planId is in the key, so upgrading from premium to pro is still a NEW
+        // subscription rather than a replayed idempotent one.
         'PayPal-Request-Id': `sub:${input.userId}:${planId}`,
       },
       body: JSON.stringify({
         plan_id: planId,
-        custom_id: input.userId,
+        /*
+          **The tier travels inside custom_id**, as `<uuid>|<plan>`.
+
+          PayPal echoes custom_id back on every signed webhook event for this
+          subscription, so activation knows which plan to grant without a
+          second lookup and without trusting anything the browser sends. The
+          alternative - mapping `resource.plan_id` back through app_flags -
+          costs a database read on the one path that must not fail, and gets
+          the answer wrong if the flag was ever rewritten.
+
+          A bare uuid (every subscription created before this existed) parses
+          as premium, so old subscriptions keep renewing correctly.
+        */
+        custom_id: plan === 'premium' ? input.userId : `${input.userId}|${plan}`,
         application_context: {
           brand_name: 'tiyul+',
           locale: 'he-IL',
@@ -179,16 +216,35 @@ export async function createSubscription(
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /**
+ * Splits the `<uuid>` / `<uuid>|<plan>` custom_id back apart.
+ *
+ * An unrecognised suffix resolves to **premium, not to the value it claims** -
+ * the string arrives through a verified webhook so it should always be one we
+ * wrote, and if it somehow is not, the safe direction is the cheaper plan.
+ */
+export function parseSubscriptionCustomId(
+  raw: string,
+): { userId: string; plan: PaidPlan } | null {
+  const [id, suffix] = raw.split('|');
+  if (!UUID_RE.test(id ?? '')) return null;
+  return { userId: id, plan: suffix === 'pro' ? 'pro' : 'premium' };
+}
+
+/**
  * Activating premium from an approved PayPal subscription. Called **only** from
  * processCheckWebhook after signature verification - custom_id is the uuid we
  * set at creation, and the check here is shape protection only (an event with a
  * non-uuid custom_id was never created by us, so it is swallowed without
  * touching anything).
  */
-export async function activatePaypalPremium(userId: string, subscriptionId: string): Promise<boolean> {
+export async function activatePaypalPremium(
+  userId: string,
+  subscriptionId: string,
+  plan: PaidPlan = 'premium',
+): Promise<boolean> {
   if (!UUID_RE.test(userId)) return false;
   const patch = {
-    plan: 'premium',
+    plan,
     plan_until: null,
     plan_source: 'paypal',
     paypal_subscription_id: subscriptionId.slice(0, 60),

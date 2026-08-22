@@ -120,7 +120,11 @@ async function fetchPlan(userId: string, token: string): Promise<Plan> {
       );
       if (res.ok) {
         const rows = (await res.json()) as { plan?: string }[];
-        if (rows[0]?.plan === 'premium') plan = 'premium';
+        // Every paid plan, not just the one named 'premium' - this fallback runs
+        // when plan_until does not exist as a column, and silently dropping a pro
+        // subscriber to free there would be indistinguishable from a lapsed grant.
+        const raw = rows[0]?.plan;
+        if (raw === 'premium' || raw === 'pro') plan = raw;
       }
     } catch {
       /* stay on free */

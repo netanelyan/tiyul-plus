@@ -11,7 +11,41 @@
 
 import { priceLabel as predepartureCheckPriceLabel } from '@/lib/predeparture';
 
-export type Plan = 'free' | 'premium';
+export type Plan = 'free' | 'premium' | 'pro';
+
+/** The paid plans, i.e. everything that carries a price and a personal money cap. */
+export type PaidPlan = Exclude<Plan, 'free'>;
+
+/**
+ * Plans are **ordinal**, exactly like `ROLE_RANK` below, and for the same
+ * reason: every feature gate in the codebase used to be written
+ * `caller.plan === 'premium'`, which silently means "premium and nobody
+ * above it". The moment a third paid tier exists, every one of those
+ * equality checks becomes a bug that **removes** a feature from the more
+ * expensive plan - and it fails silently, because nothing throws when a
+ * paying subscriber is quietly told they need to subscribe.
+ *
+ * So gates go through `planAtLeast(plan, 'premium')` and never through
+ * equality. Equality is still correct for **display** ("you are on the pro
+ * plan"), which is why both exist.
+ */
+export const PLAN_RANK: Record<Plan, number> = { free: 0, premium: 1, pro: 2 };
+
+export const isPlan = (v: unknown): v is Plan => v === 'free' || v === 'premium' || v === 'pro';
+
+/** Does `plan` include at least everything `need` includes? */
+export const planAtLeast = (plan: Plan, need: Plan) => PLAN_RANK[plan] >= PLAN_RANK[need];
+
+/**
+ * The paying plan of a caller, or null. **Requires a userId**: a paid plan is
+ * by definition signed in, and the personal money wallet is keyed on the user
+ * id - so a plan with nobody to charge it to must be treated as free rather
+ * than silently drawing from a wallet that belongs to no one.
+ */
+export const paidPlanOf = (
+  caller: { plan: Plan; userId?: string | null },
+): PaidPlan | null =>
+  caller.userId && planAtLeast(caller.plan, 'premium') ? (caller.plan as PaidPlan) : null;
 
 /**
  * The quota tier. Deliberately separate from `Plan`: `Plan` is a
@@ -57,11 +91,17 @@ export function effectivePlan(
   row: { plan?: string | null; plan_until?: string | null } | null | undefined,
   now: number = Date.now(),
 ): Plan {
-  if (!row || row.plan !== 'premium') return 'free';
-  if (!row.plan_until) return 'premium';
+  /*
+    Anything that is not one of the paid plan strings is free - including
+    'PREMIUM', 'Pro' and any future value written into the column by hand.
+    The bias is deliberate: an unrecognised value must not grant anything.
+  */
+  const plan = row?.plan;
+  if (plan !== 'premium' && plan !== 'pro') return 'free';
+  if (!row?.plan_until) return plan;
   const until = Date.parse(row.plan_until);
-  if (Number.isNaN(until)) return 'premium'; // a corrupt date must not revoke a subscription already paid for
-  return until > now ? 'premium' : 'free';
+  if (Number.isNaN(until)) return plan; // a corrupt date must not revoke a subscription already paid for
+  return until > now ? plan : 'free';
 }
 
 /**
@@ -274,6 +314,36 @@ export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
     geocodesPerDay: 200,
     lookupsPerDay: 40,
   },
+  /*
+    Pro (₪89/month). **The tier is volume, and volume only** - it carries no
+    feature premium does not have, and the card says so in those words. That is
+    not a gap waiting to be filled with something invented; it is what the
+    product honestly has today, and for the person it is aimed at, volume IS
+    the thing they are short of.
+
+    The daily numbers below are ~3x premium's and, exactly like premium's, they
+    are **anti-abuse belts and not the promise**. The promise is the monthly
+    planning capacity in PRO_TRIPS_PER_MONTH, and that is the number sized to
+    fit under the money cap - see SUBSCRIBER_CAP_USD for the whole arithmetic.
+
+    exploresPerDay/geocodesPerDay grow by less than the rest (2x, not 3x) on
+    purpose: those two spend **somebody else's** free service, and Nominatim's
+    throttle is serial and global, so one heavy account there degrades everyone
+    else's geocoding. Paying more does not buy the right to lean harder on
+    OpenStreetMap.
+  */
+  pro: {
+    chatPerDay: 600,
+    chatBurstPerMin: 30,
+    aiUnitsPerDay: 20_000_000,
+    generatePerDay: 120,
+    sharesPerDay: 200,
+    importsPerDay: 100,
+    imagesPerDay: 60,
+    exploresPerDay: 300,
+    geocodesPerDay: 400,
+    lookupsPerDay: 120,
+  },
 };
 
 /**
@@ -290,7 +360,10 @@ export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
  * - the previous value, 2 per MONTH, was less than a free user could do in an
  * afternoon, which is the bug this whole block was rewritten for.
  */
-export const PREMIUM_TRIP_BUILDS_PER_DAY = 5;
+export const TRIP_BUILDS_PER_DAY: Record<PaidPlan, number> = { premium: 5, pro: 15 };
+
+/** Kept as a name because the premium row of the comparison table reads it directly. */
+export const PREMIUM_TRIP_BUILDS_PER_DAY = TRIP_BUILDS_PER_DAY.premium;
 
 /**
  * The AI-units equivalent of one search: $0.01 (`WEB_SEARCH_COST_USD`)
@@ -331,6 +404,35 @@ export function aiUnits(usage: {
 export const PREMIUM_PRICE_ILS = 19.9;
 
 /**
+ * The heavy plan, ₪89/month. Same product as premium - **no feature premium
+ * does not have** - with roughly six times the planning capacity.
+ *
+ * Why a tier that is only volume is not filler: at the premium cap ($2.00) a
+ * subscriber gets about **one** full planning session a month before the money
+ * ceiling starts biting (the arithmetic is in the test, and in the comment on
+ * `PLAN_LIMITS.premium`). For somebody who plans constantly that is the actual
+ * wall they hit, and there is nothing else on the site they can buy to move it.
+ * This moves it, and it moves it by more than the price ratio: **4.47x the
+ * price buys 6x the capacity**, which is what makes it a sensible purchase
+ * rather than "four subscriptions in a trench coat".
+ */
+export const PRO_PRICE_ILS = 89;
+
+/**
+ * **The capacity promise on the pro card, and the only number there that is a
+ * promise at all** - the daily quotas in `PLAN_LIMITS.pro` are anti-abuse
+ * belts, exactly as they are for premium.
+ *
+ * Five, and deliberately not six or eight: at the measured worst-case prices
+ * five *long* plannings cost $10.20 against a $12.00 cap (85%), and five
+ * typical ones cost $7.38 (61%). So the person who reads "five trips a month"
+ * and then edits obsessively still does not meet the ceiling first. Six would
+ * have been $12.24 at the worst case - over - and that is precisely the broken
+ * promise this number exists to avoid. Locked by a test.
+ */
+export const PRO_TRIPS_PER_MONTH = 5;
+
+/**
  * Promo-code redemption attempts. **Deliberately not plan-based** - this
  * is protection against code guessing, not a usage quota, and premium
  * should not buy the right to guess faster.
@@ -365,7 +467,49 @@ export const PROMO_ATTEMPTS_PER_DAY = 20;
  * payment fees ≈ $4. $2.00 is 50% of that - even a subscriber who maxes
  * everything out still leaves a 50% gross margin on themselves.
  */
-export const SUBSCRIBER_MONTHLY_CAP_USD = 2.0;
+export const SUBSCRIBER_CAP_USD: Record<PaidPlan, number> = {
+  premium: 2.0,
+  /*
+    ## ₪89 → $12.00, and where every step of that comes from
+
+    The revenue side, using exactly the method that produced the ₪19.90 figures
+    above (it reproduces them to the agora, which is why it is trusted here):
+
+      gross                     ₪89.00      ₪19.90
+      less VAT (18%)            ₪75.42      ₪16.86
+      less PayPal 3.4% + ₪1.20  ₪71.19      ₪14.98
+      net, at ₪3.75/$           $19.00      $4.00
+
+    The cost side, at the measured prices (COLD_TRIP_USD $0.53 for a full build
+    including the cold cache write, HEAVY_TURN_USD $0.063 for a warm turn):
+
+      a typical planning session = 1 build + 15 turns = $1.475
+      a long one                 = 1 build + 24 turns = $2.040
+      five typical                                      $7.38   61% of the cap
+      five long                                         $10.20  85% of the cap
+      eight typical                                     $11.80  98% - the real ceiling
+
+    So $12.00 is 63% of net, i.e. **a 37% gross margin** where premium keeps
+    50%. That is a deliberate difference and not an oversight: at ₪19.90 the
+    fixed ₪1.20 payment fee alone is 9.4% of gross and the whole subscriber is
+    worth $2.00 of margin, so prudence is cheap. At ₪89 the same fee is 4.8%,
+    and 37% of $19 is **$7.00 of margin per subscriber - three and a half times
+    what a premium subscriber yields in total.** A lower percentage on a much
+    larger absolute number is the better business, and pretending otherwise
+    would have meant selling a plan too thin for the person it is aimed at.
+
+    Invisible to the user, like premium's. What the pro card promises is
+    PRO_TRIPS_PER_MONTH, and that promise is sized to land at 85% of this
+    number in the worst case - see the test.
+  */
+  pro: 12.0,
+};
+
+/**
+ * Premium's cap under its historical name - `budget.ts` and the margin tests
+ * read it, and it is the number the whole comment above compares against.
+ */
+export const SUBSCRIBER_MONTHLY_CAP_USD = SUBSCRIBER_CAP_USD.premium;
 
 /**
  * The comparison rows on the premium page - derived from the real
@@ -376,10 +520,10 @@ export const SUBSCRIBER_MONTHLY_CAP_USD = 2.0;
  * product price (the check) is allowed - that is a price, not a cost
  * cap.
  *
- * **The unit is written in each cell separately ("per day"/"per
- * month")**, because since premium moved to a monthly window
- * (`periodMsFor`) the two sides of the same row no longer share a
- * period.
+ * **The unit is written in each cell separately ("per day")** rather than
+ * once in the label. It looks redundant while all three columns share the
+ * daily window, and it is what stopped the columns being comparable the
+ * last time they did not - see `periodMsFor`.
  *
  * The first two rows (the check, the shared trip) and the availability
  * row are not quotas - they are **the features** premium gives in the
@@ -391,11 +535,12 @@ export const SUBSCRIBER_MONTHLY_CAP_USD = 2.0;
  * A third feature row, the trip story, was removed on 2026-08-17 when
  * that feature was retired - see the session log for why.
  */
-export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string }[] = [
+export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string; pro: string }[] = [
   {
     label: 'בדיקה לפני הנסיעה',
     free: `${predepartureCheckPriceLabel()} לטיול`,
     premium: 'כלולה, בלי הגבלה',
+    pro: 'כלולה, בלי הגבלה',
   },
   {
     // Named by what it does, not by what it is called: "shared trip" alone means
@@ -404,11 +549,27 @@ export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string }
     label: 'טיול משותף - הצבעות, תגובות, הצעות מקומות ותאריכים',
     free: 'הצטרפות והשתתפות מלאה - בחינם',
     premium: 'יצירת קישור הזמנה לחברים',
+    pro: 'יצירת קישור הזמנה לחברים',
   },
   {
     label: 'זמינות הסוכן החכם',
     free: 'משותפת - תלויה בעומס היומי באתר',
     premium: 'מסלול אישי מובטח - לא תלוי באף אחד אחר',
+    pro: 'מסלול אישי מובטח - לא תלוי באף אחד אחר',
+  },
+  /*
+    The capacity row - the honest headline of the pro tier, and the only row
+    where the two paid plans genuinely differ. Premium's cell deliberately does
+    not state a number: its real monthly capacity is about one full planning
+    session, that has never been stated on the page, and quietly adding it here
+    would be repositioning an existing product inside a task that was told to
+    leave it as it is. Netanel has the number in the summary and can decide.
+  */
+  {
+    label: 'כמה אפשר לתכנן בחודש',
+    free: 'מכסות יומיות משותפות',
+    premium: 'מכסות יומיות אישיות',
+    pro: `${PRO_TRIPS_PER_MONTH} טיולים מלאים בחודש, עם כל העריכות סביבם`,
   },
   /*
     Every row below is a count, and every count is now in the SAME unit on both
@@ -421,35 +582,43 @@ export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string }
     label: 'שיחות עם הסוכן',
     free: `${PLAN_LIMITS.free.chatPerDay} ביום`,
     premium: `${PLAN_LIMITS.premium.chatPerDay} ביום`,
+    pro: `${PLAN_LIMITS.pro.chatPerDay} ביום`,
   },
   {
     label: 'בניית טיול מלא בשיחה',
     free: 'במסגרת המכסה היומית',
-    premium: `עד ${PREMIUM_TRIP_BUILDS_PER_DAY} טיולים מלאים ביום`,
+    premium: `עד ${TRIP_BUILDS_PER_DAY.premium} טיולים מלאים ביום`,
+    pro: `עד ${TRIP_BUILDS_PER_DAY.pro} טיולים מלאים ביום`,
   },
   {
     label: 'בניות מסלול מהירות (שאלון/מתכנן)',
     free: `${PLAN_LIMITS.free.generatePerDay} ביום`,
     premium: `${PLAN_LIMITS.premium.generatePerDay} ביום`,
+    pro: `${PLAN_LIMITS.pro.generatePerDay} ביום`,
   },
   {
     label: 'צירוף תמונות לשיחה (אישור הזמנה, כרטיס)',
     free: `${PLAN_LIMITS.free.imagesPerDay} ביום`,
     premium: `${PLAN_LIMITS.premium.imagesPerDay} ביום`,
+    pro: `${PLAN_LIMITS.pro.imagesPerDay} ביום`,
   },
   {
     label: 'בדיקות חיות (שעות פתיחה, מחיר כניסה)',
     free: `${PLAN_LIMITS.free.lookupsPerDay} ביום`,
     premium: `${PLAN_LIMITS.premium.lookupsPerDay} ביום`,
+    pro: `${PLAN_LIMITS.pro.lookupsPerDay} ביום`,
   },
   {
     label: 'ייבוא מפות מ-Google My Maps',
     free: `${PLAN_LIMITS.free.importsPerDay} ביום`,
     premium: `${PLAN_LIMITS.premium.importsPerDay} ביום`,
+    pro: `${PLAN_LIMITS.pro.importsPerDay} ביום`,
   },
   {
     label: 'קישורי שיתוף קצרים',
     free: `${PLAN_LIMITS.free.sharesPerDay} ביום`,
     premium: `${PLAN_LIMITS.premium.sharesPerDay} ביום`,
+    pro: `${PLAN_LIMITS.pro.sharesPerDay} ביום`,
   },
 ];
+

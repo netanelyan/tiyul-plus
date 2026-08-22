@@ -76,7 +76,7 @@ import {
   shouldEscalate,
 } from '@/lib/server/modelRoute';
 import { resolveCaller, type Caller } from '@/lib/server/identity';
-import { PLAN_LIMITS, PREMIUM_TRIP_BUILDS_PER_DAY, aiUnits, periodMsFor } from '@/lib/plans';
+import { PLAN_LIMITS, TRIP_BUILDS_PER_DAY, aiUnits, paidPlanOf, periodMsFor } from '@/lib/plans';
 import type { BookingSearchCard } from '@/lib/bookingSearch';
 import {
   GuardedTextStream,
@@ -661,6 +661,15 @@ async function runAgent(
 ): Promise<void> {
   let working = clientTrip;
   /**
+   * How many full trip builds this caller may run today, or null for a caller
+   * who has no subscriber build cap at all (free and anonymous - they are
+   * bounded by the shared daily budget instead).
+   */
+  const callerBuildLimit: number | null = (() => {
+    const paid = paidPlanOf(caller);
+    return paid ? TRIP_BUILDS_PER_DAY[paid] : null;
+  })();
+  /**
    * The only two tools that reach a free external service (Wikipedia,
    * OpenStreetMap), and therefore the only two through which someone else's
    * service can be put under load. A daily per-person quota, **plus a ceiling
@@ -1037,7 +1046,7 @@ async function runAgent(
       // rather than zero
       streamedChars: turn.text.length,
       // Charges the spend to the right wallet - see the full explanation in budget.ts
-      premium: caller.plan === 'premium' && Boolean(caller.userId),
+      premium: paidPlanOf(caller) !== null,
     });
     full += turn.text;
 
@@ -1275,21 +1284,26 @@ async function runAgent(
         };
       } else if (
         block.name === 'create_trip_full' &&
-        caller.plan === 'premium' &&
-        peekUsed('trip-builds-day', caller.id) >= PREMIUM_TRIP_BUILDS_PER_DAY
+        callerBuildLimit !== null &&
+        peekUsed('trip-builds-day', caller.id) >= callerBuildLimit
       ) {
         /*
-          The subscriber's full-build quota. `peekUsed` rather than `checkLimit` -
-          the consumption itself happens only after a build that **succeeded**
-          (below), so an attempt that failed validation does not burn one of the
-          month's two builds. The message is a tool result - the model explains it
-          to the traveller in conversation, without naming any monetary figure.
+          The subscriber's full-build quota - **read from the caller's own plan**,
+          not from a premium constant. Written as `plan === 'premium'` this gate
+          would have skipped the pro tier entirely, which reads as generosity and
+          is actually an uncapped build loop on the most expensive tool we have.
+
+          `peekUsed` rather than `checkLimit` - the consumption itself happens only
+          after a build that **succeeded** (below), so an attempt that failed
+          validation does not burn one of the day's builds. The message is a tool
+          result - the model explains it to the traveller in conversation, without
+          naming any monetary figure.
         */
         out = {
           trip: working,
           ok: false,
           message:
-            `מכסת בניית הטיולים המלאים היומית של המנוי (${PREMIUM_TRIP_BUILDS_PER_DAY} ביום) נוצלה. זו מכסה ולא תקלה - אל תנסה שוב בתור הזה. אמור למטייל בעברית ובנימוס שמכסת הבניות המלאות להיום נוצלה ושהיא מתחדשת מחר, ושבינתיים אפשר להמשיך לערוך את הטיולים הקיימים בלי הגבלה כזאת, או לבנות טיול במתכנן המהיר.`,
+            `מכסת בניית הטיולים המלאים היומית של המנוי (${callerBuildLimit} ביום) נוצלה. זו מכסה ולא תקלה - אל תנסה שוב בתור הזה. אמור למטייל בעברית ובנימוס שמכסת הבניות המלאות להיום נוצלה ושהיא מתחדשת מחר, ושבינתיים אפשר להמשיך לערוך את הטיולים הקיימים בלי הגבלה כזאת, או לבנות טיול במתכנן המהיר.`,
           action: undefined,
           quickReplies: undefined,
         };
@@ -1326,8 +1340,8 @@ async function runAgent(
       }
       // Consuming the subscriber's full-build quota - only on a build that actually
       // succeeded (see peekUsed at the gate above). The checkLimit here is the record itself.
-      if (out.ok && block.name === 'create_trip_full' && caller.plan === 'premium') {
-        checkLimit('trip-builds-day', caller.id, PREMIUM_TRIP_BUILDS_PER_DAY, periodMsFor());
+      if (out.ok && block.name === 'create_trip_full' && callerBuildLimit !== null) {
+        checkLimit('trip-builds-day', caller.id, callerBuildLimit, periodMsFor());
       }
       working = out.trip;
       // We stream the trip immediately after every tool that changes it, not only
@@ -1694,7 +1708,14 @@ export async function POST(request: Request) {
       headers: { 'Content-Type': 'application/json', 'Retry-After': String(burst.retryAfterSec) },
     });
   }
-  const isPremium = caller.plan === 'premium' && Boolean(caller.userId);
+  /*
+    `paidPlan` rather than `plan === 'premium'`: every paying tier draws from
+    its own personal wallet, and an equality check here would have quietly put
+    a pro subscriber back into the shared anonymous/free budget - i.e. the one
+    thing paying is supposed to buy protection from.
+  */
+  const paidPlan = paidPlanOf(caller);
+  const isPremium = paidPlan !== null;
   const daily = checkLimit('chat-day', caller.id, limits.chatPerDay, periodMsFor());
   if (!daily.ok) return singleMessageStream(isPremium ? PREMIUM_QUOTA_MESSAGE : QUOTA_MESSAGE);
   if (process.env.ANTHROPIC_API_KEY) {
@@ -1712,7 +1733,7 @@ export async function POST(request: Request) {
         personal, from an entirely separate table. See the full explanation in
         budget.ts.
       */
-      const premiumBudget = await premiumBudgetFor(caller.userId!);
+      const premiumBudget = await premiumBudgetFor(caller.userId!, paidPlan);
       if (premiumBudget.exceeded) {
         console.warn(
           `[budget] premium blocked user=${caller.userId} $${premiumBudget.spent.toFixed(2)}/$${premiumBudget.budget.toFixed(2)}`,

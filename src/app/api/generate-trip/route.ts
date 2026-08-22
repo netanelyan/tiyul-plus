@@ -6,7 +6,7 @@ import { newId } from '@/lib/trip/types';
 import type { Trip, TripDay, TripPreferences, WizardPrefs } from '@/lib/trip/types';
 import { checkLimit, aiUnitsUsedToday, recordAiUnits } from '@/lib/server/limits';
 import { resolveCaller } from '@/lib/server/identity';
-import { PLAN_LIMITS, aiUnits, periodMsFor } from '@/lib/plans';
+import { PLAN_LIMITS, aiUnits, paidPlanOf, periodMsFor } from '@/lib/plans';
 import { budgetFor, maybeAlert, maybeAlertPremium, monthKey, premiumBudgetFor, recordSpend } from '@/lib/server/budget';
 import { sameOriginOk } from '@/lib/server/chatGuards';
 
@@ -306,7 +306,10 @@ export async function POST(request: Request) {
       { status: 429, headers: { 'Retry-After': String(burst.retryAfterSec) } },
     );
   }
-  const isPremium = caller.plan === 'premium' && Boolean(caller.userId);
+  // Ordinal, not equality - see paidPlanOf. An `=== 'premium'` here would have
+  // pushed a pro subscriber back into the shared anonymous/free daily budget.
+  const paidPlan = paidPlanOf(caller);
+  const isPremium = paidPlan !== null;
   const daily = checkLimit('generate-day', caller.id, limits.generatePerDay, periodMsFor());
   const unitsUsed = process.env.ANTHROPIC_API_KEY ? await aiUnitsUsedToday(caller.id) : 0;
   /*
@@ -322,7 +325,7 @@ export async function POST(request: Request) {
   let budgetExceeded = false;
   if (process.env.ANTHROPIC_API_KEY) {
     if (isPremium) {
-      const premiumBudget = await premiumBudgetFor(caller.userId!);
+      const premiumBudget = await premiumBudgetFor(caller.userId!, paidPlan!);
       budgetExceeded = premiumBudget.exceeded;
       maybeAlertPremium(premiumBudget, caller.userId!, monthKey());
     } else {

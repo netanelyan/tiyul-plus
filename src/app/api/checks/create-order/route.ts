@@ -12,6 +12,7 @@ import { findOwnTrip } from '@/lib/server/userTrips';
 import { buildPreDepartureReport } from '@/lib/server/predepartureReport';
 import { checkOfferEligibility, CURRENCY, PRICE_ILS } from '@/lib/predeparture';
 import { todayISO } from '@/lib/trip/dates';
+import { planAtLeast } from '@/lib/plans';
 
 /**
  * POST -> { url } to pay at PayPal, or `{ url: null, included: true }` if it is already
@@ -67,8 +68,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ url: null, error: 'not-eligible' }, { status: 400 });
   }
 
-  // ---------- Premium: included, with no PayPal at all ----------
-  if (caller.plan === 'premium') {
+  // ---------- A paid plan: included, with no PayPal at all ----------
+  if (planAtLeast(caller.plan, 'premium')) {
     const report = buildPreDepartureReport(trip);
     const granted = await grantPremiumIncluded({ userId: caller.userId, tripId, report });
     if (!granted) {
