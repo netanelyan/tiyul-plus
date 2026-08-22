@@ -22,6 +22,7 @@ import {
   SUBSCRIBER_CAP_USD,
   TRIP_BUILDS_PER_DAY,
   effectivePlan,
+  grantedPlanFor,
   isRole,
   paidPlanOf,
   periodMsFor,
@@ -359,3 +360,23 @@ test('אף דולר בהודעות החסימה שהמשתמש רואה', () => 
   }
 });
 
+/*
+  The grant rule, and it is a money rule rather than a display one: a promo code
+  or an admin grant that DEMOTES somebody is a downgrade they never asked for,
+  handed to them in the shape of a gift. They would be the ones to discover it.
+*/
+test('הענקה משדרגת ולעולם לא מורידה', () => {
+  // The ordinary cases: somebody gets what the code or the admin offered
+  assert.equal(grantedPlanFor('free', 'premium'), 'premium');
+  assert.equal(grantedPlanFor('free', 'pro'), 'pro');
+  assert.equal(grantedPlanFor('premium', 'pro'), 'pro', 'קוד פרו למנוי פרימיום - משדרג');
+  assert.equal(grantedPlanFor('premium', 'premium'), 'premium');
+  assert.equal(grantedPlanFor('pro', 'pro'), 'pro');
+
+  // THE case: a premium code redeemed by somebody already on pro
+  assert.equal(
+    grantedPlanFor('pro', 'premium'),
+    'pro',
+    'קוד פרימיום הוריד מנוי פרו - זו הורדה שהמשתמש לא ביקש, במסווה של מתנה',
+  );
+});

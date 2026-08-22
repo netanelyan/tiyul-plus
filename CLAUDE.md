@@ -11000,3 +11000,61 @@ records that trap once; recording it again because it cost a second look.
 390px and 1400px on the rebuilt page. The chooser assertion now counts **visible**
 rows rather than DOM nodes - with `sm:hidden` the old check would have kept
 passing while the user saw nothing - so it asserts four at 390 and zero at 1400.
+
+### 2026-08-22 (e) - "Is there an option for me to give out premium and pro?" - the API said yes, the dashboard said no
+
+Netanel asked. The honest answer was **half** - and the half that was missing is
+the half he would actually use.
+
+`/api/admin/plan` has accepted `plan: 'pro'` since the tier was built. **The
+admin UI never sent it**, so every grant silently became premium and pro was
+unreachable from the screen where grants are made. A capability that exists and
+cannot be reached is the same as one that does not exist, and this one was mine:
+I added the parameter and never wired the control.
+
+Promo codes were worse - not a wiring gap but a missing column. `promo_codes`
+had nowhere to record which plan a code hands out, so the route hardcoded
+premium. A code could never grant pro at all.
+
+---
+
+**What changed.**
+
+- **The traveller card** gains a plan selector beside the days field. The button
+  relabels with it (`פרו ל-30 ימים`), and the confirmation message names the
+  plan **from the server's response** rather than from the local toggle - the
+  message has to describe what was written, not what was requested.
+- **`sql/supabase-promo-plan.sql`** adds `plan` to `promo_codes`, defaulting to
+  premium with a check constraint pinning it to the two known values. Every code
+  that already exists keeps granting exactly what it granted yesterday.
+- **`redeem_promo` is deliberately untouched.** It is the security-definer
+  function doing the atomic part - the row lock, the redemption count, the
+  double-redeem primary key - and it returns days. The plan is read separately
+  from the same row afterwards, so the thing that must be atomic stays exactly
+  as atomic as it was, and nothing that already redeems can break.
+- **A missing column falls back to premium**, so the feature degrades to
+  yesterday's behaviour rather than failing, on the same ladder `fetchProfile`
+  already uses for `plan`/`role`.
+- The promo card gains the same selector and each listed code now shows which
+  plan it hands out.
+
+---
+
+**The rule worth extracting, because it is about money and not display.**
+
+`grantedPlanFor(current, offered)` returns the **better** of the two. A premium
+promo code redeemed by an active pro subscriber must not move them down - they
+would be the ones to discover it, having just been handed what looked like a
+gift. Same for an admin granting premium to somebody already on pro.
+
+It replaces a condition that was already in the redeem route but expressed as a
+one-off `planAtLeast(currentPlan, 'pro') ? 'pro' : 'premium'`, which happened to
+be correct for two tiers and would quietly stop being correct at three. Now it
+is one function with a test, **proven to fire** by replacing its body with
+`offered` - the named case fails immediately.
+
+**Verified:** 708 tests (1 new), tsc, build and lint clean on every touched file.
+**Not verified live** - the admin screen still needs an OTP login this
+environment cannot receive, and the promo column does not exist in the database
+until the SQL is run. What the fallback guarantees is that until then, promo
+codes behave exactly as they did before.

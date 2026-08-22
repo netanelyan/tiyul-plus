@@ -316,11 +316,16 @@ GeoNames). Lower priority than net-new destinations.
    could not save (never a false "thanks"), and the admin card says the table
    is missing rather than showing an empty inbox. `sql/supabase-check.sql`
    reports it.
-2. **Create the PayPal plan for `pro` (89 ILS).** Nothing manual is needed -
+2. **Run `sql/supabase-promo-plan.sql`** if you want promo codes that hand out
+   pro. Without it every code still grants premium exactly as before - the
+   redeem route falls back to premium when the column is missing, so nothing
+   breaks, it just cannot offer pro.
+
+3. **Create the PayPal plan for `pro` (89.90 ILS).** Nothing manual is needed -
    the first `/api/billing/checkout` with `{"plan":"pro"}` creates the Product
    and Plan and stores the id under `paypal_plan_id_<mode>_pro`. The premium
    plan keeps its existing unsuffixed key and its existing subscribers.
-3. **Test the upgrade flow in the PayPal sandbox.** Premium -> pro now goes
+4. **Test the upgrade flow in the PayPal sandbox.** Premium -> pro now goes
    through PayPal's `revise` on the stored `paypal_subscription_id`, so there
    is only ever one subscription and nobody is billed twice. Built and unit
    tested against a mock; **never run against real PayPal**. What to check:
@@ -331,7 +336,7 @@ GeoNames). Lower priority than net-new destinations.
    **Downgrades (pro -> premium) are still manual, deliberately** - proration
    and refunds for the unused remainder are a money decision, not a coding
    one.
-4. **Decided, not pending** (2026-08-22, second pass - Netanel: "just make up
+5. **Decided, not pending** (2026-08-22, second pass - Netanel: "just make up
    something reasonable"): premium's cap moved 2.00 -> 2.50 USD so the card can
    honestly say "a full trip a month, however much you edit it" - at 2.00 a long
    single session was 102% of the cap. Both paid tiers now sit at ~37% gross

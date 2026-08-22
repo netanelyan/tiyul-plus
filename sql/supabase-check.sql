@@ -85,6 +85,9 @@ with expected(file, kind, obj) as (
     -- supabase-agent-leads.sql (travel-agent enquiries from the pricing page)
     ('supabase-agent-leads.sql','table', 'public.agent_leads'),
 
+    -- supabase-promo-plan.sql (a promo code can hand out pro, not only premium)
+    ('supabase-promo-plan.sql','column', 'public.promo_codes.plan'),
+
     -- supabase-purchases.sql (pre-departure check purchases via PayPal)
     ('supabase-purchases.sql', 'table',  'public.purchases'),
 

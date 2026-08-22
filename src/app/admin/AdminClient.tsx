@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { authHeader } from '@/lib/auth/client';
-import type { Plan, Role } from '@/lib/plans';
+import type { PaidPlan, Plan, Role } from '@/lib/plans';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 import { Skeleton } from '@/components/Skeleton';
 import { daysHe } from '@/lib/duration';
@@ -88,6 +88,8 @@ interface PurchaseInfo {
 interface PromoCode {
   code: string;
   days: number;
+  /** Which plan the code hands out. Absent on rows created before supabase-promo-plan.sql. */
+  plan?: Plan;
   max_redemptions: number;
   redeemed: number;
   expires_at: string | null;
@@ -253,6 +255,13 @@ function UserCard({
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [days, setDays] = useState('30');
+  /*
+    Which plan a grant hands out. The API has accepted this from the start and
+    the UI never sent it, so every grant silently became premium and pro was
+    unreachable from the dashboard - a capability that exists and cannot be
+    used is the same as one that does not.
+  */
+  const [grantPlan, setGrantPlan] = useState<PaidPlan>('premium');
   const [note, setNote] = useState('');
 
   const lookup = async () => {
@@ -275,17 +284,20 @@ function UserCard({
     const n = days.trim() === '' ? 30 : Number(days);
     const { ok, data } = await api('/api/admin/plan', {
       method: 'POST',
-      body: JSON.stringify({ email: info?.email ?? email, action, days: n, note }),
+      body: JSON.stringify({ email: info?.email ?? email, action, days: n, note, plan: grantPlan }),
     });
     setBusy(false);
     if (!ok) return setMsg('הפעולה נכשלה.');
-    const d = data as { until: string | null };
+    // The plan named here comes from the server's response, not from the local
+    // toggle - the message has to describe what was actually written.
+    const d = data as { until: string | null; plan?: Plan };
+    const granted = PLAN_LABEL_HE[d.plan ?? 'premium'];
     setMsg(
       action === 'revoke'
-        ? 'הפרימיום נשלל.'
+        ? 'המנוי נשלל.'
         : d.until
-          ? `פרימיום עד ${hebrewDate(d.until)}.`
-          : 'פרימיום ללא תאריך סיום.',
+          ? `${granted} עד ${hebrewDate(d.until)}.`
+          : `${granted} ללא תאריך סיום.`,
     );
     void lookup();
   };
@@ -408,6 +420,18 @@ function UserCard({
 
           <div className="flex flex-wrap items-end gap-2 border-t border-night/10 pt-3">
             <label className="text-xs font-bold text-night/50">
+              תוכנית
+              <select
+                value={grantPlan}
+                onChange={(e) => setGrantPlan(e.target.value as PaidPlan)}
+                aria-label="איזו תוכנית להעניק"
+                className="mt-1 block rounded-lg bg-shell px-2.5 py-1.5 text-base sm:text-sm font-semibold text-night ring-1 ring-night/10"
+              >
+                <option value="premium">{PLAN_LABEL_HE.premium}</option>
+                <option value="pro">{PLAN_LABEL_HE.pro}</option>
+              </select>
+            </label>
+            <label className="text-xs font-bold text-night/50">
               ימים
               <input
                 value={days}
@@ -431,7 +455,9 @@ function UserCard({
               disabled={busy}
               className="rounded-xl bg-night px-3.5 py-2 text-sm font-bold text-cream transition hover:bg-night-soft disabled:opacity-50"
             >
-              {days === '0' ? 'פרימיום לתמיד' : `פרימיום ל-${days || 30} ימים`}
+              {days === '0'
+                ? `${PLAN_LABEL_HE[grantPlan]} לתמיד`
+                : `${PLAN_LABEL_HE[grantPlan]} ל-${days || 30} ימים`}
             </button>
             <button
               onClick={() => void setPlan('revoke')}
@@ -609,6 +635,7 @@ function PromoCard({
   const [days, setDays] = useState('30');
   const [max, setMax] = useState('50');
   const [note, setNote] = useState('');
+  const [plan, setPlan] = useState<PaidPlan>('premium');
   const [msg, setMsg] = useState<string | null>(null);
 
   const load = useCallback(async () => {
@@ -629,7 +656,7 @@ function PromoCard({
     setMsg(null);
     const { ok, data } = await api('/api/admin/promo', {
       method: 'POST',
-      body: JSON.stringify({ code, days: Number(days), max: Number(max), note }),
+      body: JSON.stringify({ code, days: Number(days), max: Number(max), note, plan }),
     });
     if (!ok) {
       setMsg((data as { error?: string })?.error === 'bad_code' ? 'קוד חייב להיות 3-24 אותיות באנגלית וספרות.' : 'הקוד תפוס או שהיצירה נכשלה.');
@@ -690,6 +717,18 @@ function PromoCard({
             className="mt-1 block w-full rounded-lg bg-cream px-2.5 py-1.5 text-base sm:text-sm text-night ring-1 ring-night/10"
           />
         </label>
+        <label className="text-xs font-bold text-night/50">
+          תוכנית
+          <select
+            value={plan}
+            onChange={(e) => setPlan(e.target.value as PaidPlan)}
+            aria-label="איזו תוכנית הקוד מעניק"
+            className="mt-1 block rounded-lg bg-shell px-2.5 py-1.5 text-base sm:text-sm font-semibold text-night ring-1 ring-night/10"
+          >
+            <option value="premium">{PLAN_LABEL_HE.premium}</option>
+            <option value="pro">{PLAN_LABEL_HE.pro}</option>
+          </select>
+        </label>
         <button
           onClick={() => void create()}
           disabled={code.length < 3}
@@ -708,7 +747,8 @@ function PromoCard({
                 {c.code}
               </span>
               <span className="text-night/55">
-                {c.days} ימים · {c.redeemed}/{c.max_redemptions} נפדו
+                {PLAN_LABEL_HE[c.plan ?? 'premium']} · {c.days} ימים · {c.redeemed}/
+                {c.max_redemptions} נפדו
               </span>
               {c.note && <span className="text-xs text-night/40">· {c.note}</span>}
               <button

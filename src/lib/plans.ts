@@ -37,6 +37,19 @@ export const isPlan = (v: unknown): v is Plan => v === 'free' || v === 'premium'
 export const planAtLeast = (plan: Plan, need: Plan) => PLAN_RANK[plan] >= PLAN_RANK[need];
 
 /**
+ * What a grant should actually set, given what somebody already has.
+ *
+ * **A grant may upgrade, never demote.** A promo code for premium redeemed by
+ * an active pro subscriber must not move them down - they would be the ones to
+ * discover it, having just been handed what looked like a gift. The same holds
+ * for an admin granting premium to somebody already on pro.
+ *
+ * So: the better of the two, always.
+ */
+export const grantedPlanFor = (current: Plan, offered: PaidPlan): PaidPlan =>
+  planAtLeast(current, offered) && current !== 'free' ? (current as PaidPlan) : offered;
+
+/**
  * The paying plan of a caller, or null. **Requires a userId**: a paid plan is
  * by definition signed in, and the personal money wallet is keyed on the user
  * id - so a plan with nobody to charge it to must be treated as free rather

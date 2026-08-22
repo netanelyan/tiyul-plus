@@ -1,6 +1,7 @@
 import { requireRole, denied, badRequest, ok, audit } from '@/lib/server/admin';
 import { eq } from '@/lib/server/pgrest';
 import { adminInsert, adminSelect, adminUpdate } from '@/lib/server/supabaseAdmin';
+import type { PaidPlan } from '@/lib/plans';
 
 /** Letters and digits only, in Latin script - a code that can be dictated over the phone */
 const CODE_OK = /^[A-Z0-9]{3,24}$/;
@@ -11,7 +12,7 @@ export async function GET(req: Request) {
   if (!actor) return denied();
   const rows = await adminSelect<Record<string, unknown>>(
     'promo_codes',
-    'select=code,days,max_redemptions,redeemed,expires_at,active,note,created_at&order=created_at.desc&limit=100',
+    'select=code,days,plan,max_redemptions,redeemed,expires_at,active,note,created_at&order=created_at.desc&limit=100',
   );
   return ok({ codes: rows ?? [] });
 }
@@ -20,7 +21,7 @@ export async function POST(req: Request) {
   const actor = await requireRole(req, 'admin');
   if (!actor) return denied();
 
-  let body: { code?: unknown; days?: unknown; max?: unknown; note?: unknown; expiresInDays?: unknown };
+  let body: { code?: unknown; days?: unknown; max?: unknown; note?: unknown; expiresInDays?: unknown; plan?: unknown };
   try {
     body = (await req.json()) as typeof body;
   } catch {
@@ -33,6 +34,9 @@ export async function POST(req: Request) {
   const days = Math.max(1, Math.min(3650, Math.floor(Number(body.days) || 30)));
   const max = Math.max(1, Math.min(100_000, Math.floor(Number(body.max) || 1)));
   const note = typeof body.note === 'string' ? body.note.slice(0, 200) : null;
+  // Closed list, defaulting to the cheaper plan - an unrecognised value must
+  // never be the one that widens a grant.
+  const plan: PaidPlan = body.plan === 'pro' ? 'pro' : 'premium';
   const expiresInDays = Math.floor(Number(body.expiresInDays) || 0);
   const expires_at =
     expiresInDays > 0 ? new Date(Date.now() + expiresInDays * 86_400_000).toISOString() : null;
@@ -40,6 +44,7 @@ export async function POST(req: Request) {
   const rows = await adminInsert<{ code: string }>('promo_codes', {
     code,
     days,
+    plan,
     max_redemptions: max,
     note,
     expires_at,
@@ -49,8 +54,8 @@ export async function POST(req: Request) {
   // existing code that may already have been handed out to people.
   if (!rows) return badRequest('code_taken_or_db_unavailable');
 
-  await audit(actor, 'create_promo', {}, { code, days, max, expires_at, note: note ?? undefined });
-  return ok({ code, days, max, expires_at });
+  await audit(actor, 'create_promo', {}, { code, days, plan, max, expires_at, note: note ?? undefined });
+  return ok({ code, days, plan, max, expires_at });
 }
 
 export async function PATCH(req: Request) {

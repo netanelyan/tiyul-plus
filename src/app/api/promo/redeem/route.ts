@@ -2,6 +2,7 @@ import {
   PROMO_ATTEMPTS_PER_DAY,
   PROMO_ATTEMPTS_PER_HOUR,
   effectivePlan,
+  grantedPlanFor,
   planAtLeast,
   type PaidPlan,
 } from '@/lib/plans';
@@ -87,14 +88,35 @@ export async function POST(req: Request) {
   const row = current?.[0];
   const currentPlan = effectivePlan(row ?? null);
   const stripeForever = planAtLeast(currentPlan, 'premium') && !row?.plan_until;
+
   /*
-    **A promo may extend a plan, never demote one.** Written as a flat
-    `plan: 'premium'`, redeeming a promo code while holding an active pro
-    subscription would have quietly moved that subscriber down to premium -
-    and they would have been the ones to discover it, having just been handed
-    what looked like a gift.
+    Which plan this code hands out. Read AFTER the RPC and from the same row -
+    the atomic part (may this code still be redeemed) is `redeem_promo`'s job
+    and is untouched; this is only asking what was on the code.
+
+    Falls back to premium when the column does not exist yet (the SQL has not
+    been run) or the read fails, which is both the safe direction and exactly
+    what every existing code granted before the column was added.
   */
-  const grantedPlan: PaidPlan = planAtLeast(currentPlan, 'pro') ? 'pro' : 'premium';
+  let codePlan: PaidPlan = 'premium';
+  try {
+    const codeRows = await adminSelect<{ plan?: string }>(
+      'promo_codes',
+      pgQuery(eq('code', code), pgSelect(['plan']), pgLimit(1)),
+    );
+    if (codeRows?.[0]?.plan === 'pro') codePlan = 'pro';
+  } catch {
+    /* stay on premium */
+  }
+
+  /*
+    **A promo may upgrade a plan, never demote one.** Written as a flat
+    `plan: 'premium'`, redeeming a code while holding an active pro subscription
+    would have quietly moved that subscriber down - and they would have been the
+    ones to discover it, having just been handed what looked like a gift. So the
+    result is the better of what they have and what the code gives.
+  */
+  const grantedPlan = grantedPlanFor(currentPlan, codePlan);
   const base =
     row?.plan_until && Date.parse(row.plan_until) > Date.now()
       ? Date.parse(row.plan_until)
@@ -119,8 +141,8 @@ export async function POST(req: Request) {
     action: 'redeem_promo',
     target_user_id: actor.userId,
     target_email: actor.email,
-    detail: { code, days, until },
+    detail: { code, days, until, plan: grantedPlan },
   });
 
-  return json({ ok: true, days, until });
+  return json({ ok: true, days, until, plan: grantedPlan });
 }
