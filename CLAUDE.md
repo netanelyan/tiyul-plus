@@ -10470,6 +10470,108 @@ tiles legitimately extend past the viewport (their container clips them, and
 page-level overflow measured 0 throughout) - the documented case from entry
 (kk), now excluded by container rather than by silencing the check.
 
+### 2026-08-19/22 - The kashrut model, and Shabbat as arithmetic (reconstructed from the commits)
+
+**Written retroactively, and by a different session than the one that did the
+work** - hard rule 8 was owed and never paid. Five commits sat on
+`feat/kosher-shabbat-real` with no log entry; the pricing session found them
+when it branched off that head and had to merge them to main. What follows is
+summarised **from the commit messages**, not from having done it: the numbers,
+claims and verification below are theirs, and anything the commits did not state
+is not stated here.
+
+---
+
+**The old `KosherVerification` had three fields and two of them carried nothing.**
+`source` was `'curated'` in 53 of 53 records and `lastChecked` was
+`'pending-review'` in 53 of 53. The third, `supervision`, was free text holding
+four different kinds of thing at once - the certifying body, a caveat, meal
+logistics, meat/dairy - and in one record the *absence* of certification. 46
+distinct strings across 53 records, and nothing downstream could tell a
+certification from a disclaimer.
+
+`KashrutRecord` replaces it. `knowledge` is certified / none-found / unknown -
+three states always distinguishable, where a blank field used to mean all three
+at once. `certifications[]` names the body, with a Latin form to search for.
+`diet` was prose in 20 records and unqueryable in all of them. `provenance`
+carries source, sourceType and a real ISO `checked` date **or an explicit null,
+never a placeholder** - all 53 migrated records carry null, because no date was
+ever recorded and inventing one is fabrication. `legacySupervision` keeps the
+original string verbatim so nothing is lost.
+
+**The bodies are reported, never graded.** A local rabbinate and a Badatz render
+identically, and a new deterministic guard (`kashrut-verdict`) strips any
+sentence that grades one - checked **before** the allowlist, because a sentence
+can be perfectly well grounded, naming a real body from that turn's data, and
+still be a verdict. Two defects their own tests caught in that guard: "the London
+beth din is stricter than the Prague rabbinate" was not caught because it
+contains no word for kosher at all, and the replacement line tripped its own
+filter (the classic self-match).
+
+**First 12 records with real provenance** - Vienna, Prague, Budapest, read from
+the communities' own sources on 2026-08-19. Three findings worth more than the
+row count: Vienna's entries were **over-attributed** (the IKG's rabbinate page
+says in as many words that it makes no recommendation and each business is the
+responsibility of its own hashgacha, so appearing on the IKG list is not IKG
+supervision); three IKG-listed venues geocode to addresses where OpenStreetMap
+names a different business, and all three were **left out rather than pinned**;
+and Budapest's Hanna is recorded verbatim as its own page writes it rather than
+expanded, since the initials are shared by more than one body and expanding them
+would be our interpretation. Koscherland is recorded as `unknown` with the date
+we looked, explicitly not as a claim that it closed.
+
+**`/kosher` now states its own denominator** - 65 places, 12 verified against a
+source with a date - and says outright that a place missing from the list is not
+a claim it is not kosher, only that we have no information. A filter that shows
+what it has without saying what it lacks reads as coverage rather than a sample.
+
+---
+
+**The Shabbat layer is computed, which is why it carries no fabrication risk** -
+the same argument `zmanim.ts` already makes for sunset. `hebrewCalendar.ts` is
+the Hebrew calendar as arithmetic (molad of Tishrei, the four dechiyot, month
+lengths from the year length), zero dependencies and **deliberately not `Intl` at
+runtime**, because the output would then depend on whether a deployed runtime
+shipped full ICU data - and a candle-lighting date that moves with a Node build
+is not something to leave to chance.
+
+It is validated against ICU as an **independent** implementation: agreement on
+the Hebrew year for every month from 1900 to 2100 (2,412 comparisons) and on the
+day-of-month for 1,460 consecutive days, crossing leap years, both Adars and all
+six legal year lengths. That is what makes `EPOCH_OFFSET` a calibrated constant
+rather than a guess.
+
+**Both days of every second-day yom tov are returned, flagged `diasporaOnly`** -
+whether an Israeli abroad keeps the second is a real dispute, and this reports it
+rather than settling it. The same rule that stops us grading a hechsher.
+
+**Walking distances use the lodging pin of that city**, and refuse a city-less
+pin on a multi-city trip - measuring a Bratislava day against a Vienna hotel
+would have produced a confident number ~55km wrong. An unlocated pin is ignored
+rather than guessed at.
+
+**And the panel now opens on either preference.** It used to require
+`kosher === true`, so a Shabbat-observant traveller who had not ticked the kosher
+box was shown nothing at all - not even that day 4 is Yom Kippur. Kashrut content
+still stays behind the kosher preference; nothing is on by default.
+
+`ZMANIM_METHOD_HE` states the method wherever a time appears (18 minutes, 8.5
+degrees) and says outright that these are common customs and not the only ones.
+
+---
+
+**Verified, as reported by those commits:** 691 tests, tsc, build and lint clean
+on every touched file; the served HTML of a production build carrying the new
+places, the check date, the "body not named" wording and the canonical caveat;
+6/6 in a real browser at 1400 and 390 with RTL intact and zero overflow. The
+validator stayed at its pre-existing baseline of 1 error / 55 warnings.
+
+**Confirmed independently when this was merged to main:** the catalog validator
+reports the identical 1 error / 55 warnings on `origin/main` and on this stack,
+with the catalog at 1,822 places against main's 1,814 - eight added, no new error
+and no new warning. Zero photo URLs changed anywhere in the batch.
+
+
 ### 2026-08-22 - Four options instead of two, a ₪89 tier that had to justify itself, and the ordinal gate that made it safe
 
 Netanel: rework the pricing page into four options - free as it is, ₪19.90 as it
