@@ -16,10 +16,10 @@ import {
   PREMIUM_PRICE_ILS,
   PREMIUM_TRIP_BUILDS_PER_DAY,
   PRO_PRICE_ILS,
+  PREMIUM_TRIPS_PER_MONTH,
   PRO_TRIPS_PER_MONTH,
   ROLE_RANK,
   SUBSCRIBER_CAP_USD,
-  SUBSCRIBER_MONTHLY_CAP_USD,
   TRIP_BUILDS_PER_DAY,
   effectivePlan,
   isRole,
@@ -272,41 +272,58 @@ test('חלון המכסה הוא יממה, בלי תלות בדרגה', () => {
 });
 
 /*
-  What the internal cap actually buys, stated as a test so it cannot quietly
-  drift. This is NOT the old "everything visible fits under the cap" assertion -
-  with daily quotas that is no longer true and is not meant to be (see the
-  comment on PLAN_LIMITS.premium). What matters is that ONE ordinary planning
-  session in a month is covered, because that is what the pricing page promises.
+  What premium's cap actually buys, as a test, because the card now STATES it.
+
+  This used to assert the opposite - that a long session did NOT fit - and it
+  fired the moment the cap moved, with a message saying to come and update this
+  comment. That is the test working: the claim on the page and the number in the
+  code are not allowed to drift apart.
 */
-test('התקרה הפנימית מכסה מפגש תכנון טיפוסי - ומסמנת איפה היא נגמרת', () => {
+test('הבטחת הנפח של פרימיום נכנסת מתחת לתקרה - גם בתרחיש הגרוע', () => {
+  const cap = SUBSCRIBER_CAP_USD.premium;
+  const typicalSession = COLD_TRIP_USD + 15 * HEAVY_TURN_USD; // $1.475
+  const longSession = COLD_TRIP_USD + 24 * HEAVY_TURN_USD; // $2.040
+
   /*
-    A planning session in this codebase is 10-25 turns (measured, see the (vv)
-    entry). At the worst-case prices that is:
-
-      10 turns  $1.16   fits
-      15 turns  $1.48   fits   <- typical
-      20 turns  $1.79   fits
-      24 turns  $2.04   OVER
-      two 15-turn sessions      $2.95   OVER
-
-    So $2.00 covers a typical session with room, and runs out inside a long one
-    or a second one. That is recorded here deliberately rather than smoothed
-    over by choosing a friendlier number: it is the pricing decision written up
-    next to PLAN_LIMITS.premium, and if the cap is raised this test is where it
-    shows.
+    The card says "a full trip a month, however much you edit it". The second
+    half of that sentence is the whole reason this asserts the LONG session:
+    somebody who plans one trip and then keeps fiddling must not be cut off.
   */
-  const typicalSession = COLD_TRIP_USD + 15 * HEAVY_TURN_USD;
+  const promisedWorst = PREMIUM_TRIPS_PER_MONTH * longSession;
   assert.ok(
-    typicalSession <= SUBSCRIBER_MONTHLY_CAP_USD,
-    `מפגש תכנון טיפוסי עולה $${typicalSession.toFixed(2)} מול תקרה של $${SUBSCRIBER_MONTHLY_CAP_USD} - ` +
-      'מנוי שמתכנן טיול אחד בחודש ייחסם, וזו הבטחה שבורה',
+    promisedWorst <= cap,
+    `${PREMIUM_TRIPS_PER_MONTH} תכנון ארוך עולה $${promisedWorst.toFixed(2)} מול תקרה של $${cap} - ` +
+      'הכרטיס מבטיח יותר ממה שהתקרה נותנת',
   );
+  assert.ok(promisedWorst <= cap * 0.9, `אין מרווח: ${Math.round((promisedWorst / cap) * 100)}% מהתקרה`);
 
-  const longSession = COLD_TRIP_USD + 24 * HEAVY_TURN_USD;
-  const twoTypical = 2 * typicalSession;
+  /*
+    And the promise is ONE trip and not two - if two typical sessions started
+    fitting, the card is understating what it gives and should say so.
+  */
   assert.ok(
-    longSession > SUBSCRIBER_MONTHLY_CAP_USD && twoTypical > SUBSCRIBER_MONTHLY_CAP_USD,
-    'אם אלה כבר נכנסים - התקרה הועלתה, וצריך לעדכן את ההערה שאומרת שהיא מכסה מפגש אחד בלבד',
+    2 * typicalSession > cap,
+    'שני מפגשים טיפוסיים נכנסים בתקרה - אפשר להבטיח יותר מטיול אחד בחודש',
+  );
+});
+
+/*
+  The two paid tiers are priced on the same structure, and that is deliberate
+  rather than a coincidence worth losing. If one drifts, the pricing page's
+  "here is the honest arithmetic" section stops being one argument and becomes
+  two unrelated numbers.
+*/
+test('שתי התוכניות בתשלום רצות על אותו מבנה רווחיות', () => {
+  const netUsd = (gross: number) => (0.8135 * gross - 1.2) / 3.75; // VAT 18%, PayPal 3.4%+1.20, 3.75 ILS/$
+  const margin = (gross: number, cap: number) => 1 - cap / netUsd(gross);
+  const premium = margin(PREMIUM_PRICE_ILS, SUBSCRIBER_CAP_USD.premium);
+  const pro = margin(PRO_PRICE_ILS, SUBSCRIBER_CAP_USD.pro);
+  for (const [name, m] of [['premium', premium], ['pro', pro]] as const) {
+    assert.ok(m > 0.3, `${name} ברווחיות ${Math.round(m * 100)}% - דק מדי לתקרה שנמכרת`);
+  }
+  assert.ok(
+    Math.abs(premium - pro) < 0.08,
+    `המבנה התפצל: פרימיום ${Math.round(premium * 100)}% מול פרו ${Math.round(pro * 100)}%`,
   );
 });
 

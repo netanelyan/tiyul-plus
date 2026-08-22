@@ -10844,3 +10844,96 @@ quietly breaks.
 **Not verified against real PayPal** - no sandbox credentials here, so the revise
 call itself, its approval redirect and the UPDATED webhook are unexercised
 outside the mock. That is the one thing Netanel has to run before trusting it.
+
+### 2026-08-22 (c) - The four open decisions, decided - and one of them moved a cap
+
+Netanel: "just make up something reasonable. think well before doing so." The
+four items left open by the pricing rework, closed here.
+
+---
+
+**The two that turned out to be one decision.** Whether to state premium's
+capacity on the card, and whether its cap should move, looked independent and
+were not. The rule this project already applies to pro is that **a stated
+promise must hold at the WORST case, not the typical one** - and measured
+against a $2.00 cap:
+
+| | cost | of a $2.00 cap |
+|---|---|---|
+| typical session (1 build + 15 turns) | $1.475 | 74% |
+| **long session (1 build + 24 turns)** | **$2.040** | **102%** |
+
+So the moment the card says "a full trip a month", a subscriber who plans that
+one trip and then keeps editing it gets cut off - having used the plan exactly
+as intended. That is the broken-promise-and-a-refund case, and it is why
+premium's capacity had never been stated: at $2.00 there was no true sentence
+to write.
+
+**So the cap moved to $2.50** and the sentence is now true: a long single
+session is 82% of it, and two typical sessions ($2.95) still do not fit - which
+makes "one trip a month, however much you edit it" exactly right rather than
+approximately right.
+
+**What it costs, and why it is smaller than it looks.** Gross margin 50% → 37%.
+But this is a **ceiling, not an expectation**: nearly every subscriber plans one
+trip from a warm cache and costs a small fraction of it, so blended margin
+barely moves. The cap binds only on the heaviest user - who is precisely the
+person we would rather serve than block.
+
+**And it made the two paid tiers one structure instead of two numbers.** Pro is
+37% at a $12.00 cap; premium is now 37% at $2.50. That is worth having as a
+property rather than a coincidence, so there is a test asserting both stay above
+30% and within 8 points of each other. If a future price change splits them, the
+pricing page's "here is the honest arithmetic" section stops being one argument.
+
+**The old test fired and told me what to fix, which is the whole point of having
+written it that way.** It asserted the opposite - that a long session did *not*
+fit - with the message "if these now fit, the cap was raised and you need to
+update the comment that says it covers one session only". It failed on the first
+run after the change, named itself, and was rewritten to the new claim.
+
+---
+
+**Pro's $12.00 cap: unchanged.** $7.00 of absolute margin per subscriber is 3.5x
+what a premium subscriber yields in total; there was nothing to fix.
+
+---
+
+**Agent pricing: ~₪15 per planned trip, floor ₪249/month.**
+
+The unit is per-trip because that is **what actually drives our cost** (a full
+trip is ~$1.5 typical, $2.04 worst) and because it is the unit an agent already
+thinks in - they price their own work per trip. Per-seat would be the other
+obvious axis and we cannot honestly bill on it: there is no multi-user account.
+
+Bands, each checked against the **worst** case rather than the average, leaving
+~35%+ margin:
+
+| trips/month | price | ≈ per trip |
+|---|---|---|
+| up to 15 | ₪249 | ₪16.6 |
+| up to 40 | ₪599 | ₪15.0 |
+| up to 80 | ₪1,190 | ₪14.9 |
+
+The floor matters more than the ceiling: below ₪249 a single business customer
+does not repay the support cost of having one.
+
+**And the recommendation that is not a number: give the first three a pilot** -
+₪149/month for three months against feedback and a quotable line. There is not
+one agent-specific feature in the product; charging ₪599 on day one and then
+discovering they needed multi-seat is a worse trade than a few hundred shekels a
+month. Finding out what they actually lack is the thing being bought here.
+
+**It lives in the /admin leads card, not in a document.** Admin-only, so an
+internal number is fine there - and it is read at the moment a lead is being
+answered rather than in a file nobody opens with the phone in hand.
+
+---
+
+**Also:** "כתבו לנו" appeared twice on the pricing page and linked nowhere,
+while `/contact` exists with a real address on it. Both now link.
+
+**Verified:** 707 tests (1 new - the margin-structure guard; the capacity test
+rewritten rather than added), tsc, build and lint clean on every touched file,
+and 35/35 in the browser at 390px and 1400px re-run against the rebuilt page
+with the new premium line rendering.

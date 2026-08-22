@@ -1423,9 +1423,43 @@ function AgentLeadsCard({
         🧳 פניות מסוכני נסיעות{d.open > 0 ? ` · ${d.open} ממתינות` : ''}
       </h2>
       <p className="mt-1 text-sm font-medium text-night/55">
-        מגיעות מהכרטיס &quot;סוכני נסיעות&quot; בעמוד המחירים. אין כאן מחיר קבוע - חוזרים אליהם
-        ומתמחרים לפי העסק.
+        מגיעות מהכרטיס &quot;סוכני נסיעות&quot; בעמוד המחירים. אין מחיר פומבי - מתמחרים לפי העסק.
       </p>
+
+      {/*
+        The pricing guidance sits here, at the moment a lead is actually being
+        answered, rather than in a document nobody opens with the phone in hand.
+        Admin-only surface, so an internal number is fine here and only here.
+      */}
+      <details className="mt-3 rounded-xl bg-cream p-3">
+        <summary className="cursor-pointer text-xs font-bold text-night/70">
+          איך לתמחר פנייה (הצעה פנימית)
+        </summary>
+        <div className="mt-2 space-y-2 text-xs leading-relaxed text-night/65">
+          <p>
+            <b className="text-night">הבסיס: כ-15 ₪ לטיול מתוכנן.</b> זה מה שמניע את העלות אצלנו
+            (טיול מלא עולה לנו כ-1.5$ בממוצע), וזה מספר שסוכן מבין מיד - הוא מתמחר את העבודה שלו
+            לפי טיול.
+          </p>
+          <ul className="space-y-1">
+            <li>• עד 15 טיולים בחודש — <b className="text-night">249 ₪</b></li>
+            <li>• עד 40 טיולים בחודש — <b className="text-night">599 ₪</b></li>
+            <li>• עד 80 טיולים בחודש — <b className="text-night">1,190 ₪</b></li>
+            <li>• מעל — לתמחר לפי אותו יחס, ולבדוק שהמרווח מחזיק</li>
+          </ul>
+          <p>
+            כל מדרגה נבדקה מול <b className="text-night">התרחיש הגרוע</b> (2.04$ לטיול, לא הממוצע)
+            ומשאירה מרווח של כ-35% ומעלה. אל תרדו מ-249 ₪ לחודש - מתחת לזה העלות התפעולית של לקוח
+            עסקי אחד לא מוחזרת.
+          </p>
+          <p className="rounded-lg bg-sunset/10 px-2.5 py-2 text-night/75">
+            <b className="text-night">לשלושת הראשונים - שקלו פיילוט:</b> 149 ₪ לחודש לשלושה חודשים,
+            בתמורה למשוב ולציטוט שאפשר לפרסם. אין לנו עדיין שום פיצ׳ר ייעודי לסוכנים (בלי מיתוג
+            משלהם, בלי כמה משתמשים), ולגלות מה באמת חסר להם שווה יותר מהפרש של כמה מאות שקלים
+            בחודשים הראשונים.
+          </p>
+        </div>
+      </details>
 
       {!d.stored ? (
         <p className="mt-3 rounded-xl bg-cream px-3 py-2 text-sm font-semibold text-night/55">

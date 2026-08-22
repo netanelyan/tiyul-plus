@@ -114,7 +114,7 @@ export default function PremiumClient() {
         // would charge them twice, so the switch is done by hand until the
         // revise flow exists. Saying that is better than taking the money.
         setNotice(
-          'מעבר בין מנוי קיים למנוי אחר אנחנו עושים ידנית, כדי שלא תחויבו פעמיים בטעות. כתבו לנו ונעביר אתכם - בלי חיוב כפול ובלי לאבד ימים ששילמתם עליהם.',
+          'מעבר בין מנוי קיים למנוי אחר אנחנו עושים ידנית, כדי שלא תחויבו פעמיים בטעות. כתבו לנו בדף יצירת הקשר ונעביר אתכם - בלי חיוב כפול ובלי לאבד ימים ששילמתם עליהם.',
         );
       else if (data.error === 'sandbox-blocked')
         setNotice('ההרשמה כבויה כרגע באתר החי (מצב בדיקה) - ממש בקרוב.');
@@ -295,6 +295,7 @@ export default function PremiumClient() {
           </p>
           <p className="mt-2 text-sm leading-relaxed text-cream/75">
             כל מה שבחינם, ועוד הדבר האחד שאי אפשר לעשות לבד: לתכנן את הטיול עם כל מי שנוסע איתכם.
+            מספיק לתכנן <b className="text-cream">טיול מלא בחודש</b>, כמה שתערכו ותשנו אותו.
           </p>
           <ul className="mt-4 space-y-2.5">
             <li className="rounded-xl bg-cream/10 p-3">
@@ -615,7 +616,11 @@ export default function PremiumClient() {
             <p className="mt-2 text-sm leading-relaxed text-night/65">
               המכסות של המנויים הן יומיות, כמו בחינם - פשוט גדולות בהרבה, ומובטחות לכם בלי תלות
               בעומס באתר. הן קיימות כדי למנוע שימוש לרעה, לא כדי לעצור מישהו באמצע תכנון - ואם
-              נתקלתם בקיר בתכנון אמיתי, כתבו לנו וזה ייפתר.
+              נתקלתם בקיר בתכנון אמיתי,{' '}
+              <Link href="/contact" className="font-bold text-sunset-deep underline">
+                כתבו לנו
+              </Link>{' '}
+              וזה ייפתר.
             </p>
           </details>
         </div>

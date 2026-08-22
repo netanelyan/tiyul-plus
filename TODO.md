@@ -331,11 +331,15 @@ GeoNames). Lower priority than net-new destinations.
    **Downgrades (pro -> premium) are still manual, deliberately** - proration
    and refunds for the unused remainder are a money decision, not a coding
    one.
-4. **Decide whether premium's real monthly capacity should be stated publicly.**
-   At its $2.00 cap it is about one full planning session a month. The pro card
-   states its own capacity (5 trips); premium's cell in the comparison table
-   deliberately does not, because changing how an existing product is sold was
-   outside this task.
+4. **Decided, not pending** (2026-08-22, second pass - Netanel: "just make up
+   something reasonable"): premium's cap moved 2.00 -> 2.50 USD so the card can
+   honestly say "a full trip a month, however much you edit it" - at 2.00 a long
+   single session was 102% of the cap. Both paid tiers now sit at ~37% gross
+   margin, which is one structure rather than two numbers, and a test enforces
+   that they do not drift apart. Pro's cap stays at 12.00.
+   Agent pricing is ~15 ILS per planned trip with a 249 ILS/month floor - the
+   bands and the pilot suggestion are in the /admin leads card, where they are
+   read at the moment a lead is answered.
 
 ## להפעלת אזור הניהול (נוסף 2026-07-27)
 - [ ] להריץ את `supabase-admin.sql` ב-SQL Editor. הוא מוסיף role/plan_until/

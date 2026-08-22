@@ -433,6 +433,20 @@ export const PRO_PRICE_ILS = 89;
 export const PRO_TRIPS_PER_MONTH = 5;
 
 /**
+ * The same promise for premium, and it is **one**.
+ *
+ * Stated on the card since 2026-08-22. It had never been stated before, which
+ * let the plan read as unbounded and made pro's five look like an arbitrary
+ * upsell rather than a real step. One is the honest number: a long single
+ * planning session is 82% of premium's cap and two typical ones do not fit.
+ *
+ * For the traveller premium is aimed at - one or two trips a **year** - this
+ * reads as plenty, which is the point. Somebody who genuinely needs more has
+ * pro, and somebody who hits it once has the FAQ's standing offer to write in.
+ */
+export const PREMIUM_TRIPS_PER_MONTH = 1;
+
+/**
  * Promo-code redemption attempts. **Deliberately not plan-based** - this
  * is protection against code guessing, not a usage quota, and premium
  * should not buy the right to guess faster.
@@ -468,7 +482,32 @@ export const PROMO_ATTEMPTS_PER_DAY = 20;
  * everything out still leaves a 50% gross margin on themselves.
  */
 export const SUBSCRIBER_CAP_USD: Record<PaidPlan, number> = {
-  premium: 2.0,
+  /*
+    ## Why this is 2.50 and not 2.00
+
+    It was 2.00, and at 2.00 the page could not honestly say what premium buys.
+    A typical planning session is $1.475 (74% of the cap, fine) but a **long**
+    one - the same trip with 24 turns of editing rather than 15 - is $2.04,
+    which is 102% of a $2.00 cap. So a subscriber who plans their one trip and
+    then keeps fiddling with it gets cut off, in the same month, having used the
+    plan exactly as intended.
+
+    That is the "broken promise and a refund" case, and the moment
+    PREMIUM_TRIPS_PER_MONTH started being **stated on the card** it stopped
+    being theoretical. The rule applied to pro applies here: the promise has to
+    hold at the worst case, not the typical one.
+
+    At $2.50 a long single session is 82% of the cap and two typical sessions
+    ($2.95) still do not fit - so "one full trip a month, however much you edit
+    it" is exactly the true claim, which is what the card says.
+
+    **The margin cost is smaller than it looks.** 37% gross against 50% before,
+    the same structure as pro - but this is a **ceiling, not an expectation**.
+    Almost every subscriber plans one trip from a warm cache and costs a small
+    fraction of it; the cap only ever binds on the heaviest, which is precisely
+    who we would rather serve than block.
+  */
+  premium: 2.5,
   /*
     ## ₪89 → $12.00, and where every step of that comes from
 
@@ -558,18 +597,16 @@ export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string; 
     pro: 'מסלול אישי מובטח - לא תלוי באף אחד אחר',
   },
   /*
-    The capacity row - the honest headline of the pro tier, and the only row
-    where the two paid plans genuinely differ. Premium's cell deliberately does
-    not state a number: its real monthly capacity is about one full planning
-    session, that has never been stated on the page, and quietly adding it here
-    would be repositioning an existing product inside a task that was told to
-    leave it as it is. Netanel has the number in the summary and can decide.
+    The capacity row - the honest headline of both paid tiers, and the row where
+    they genuinely differ. Both cells now state a real number, sized so it holds
+    at the WORST case rather than the typical one (see SUBSCRIBER_CAP_USD, and
+    the tests that lock both).
   */
   {
     label: 'כמה אפשר לתכנן בחודש',
-    free: 'מכסות יומיות משותפות',
-    premium: 'מכסות יומיות אישיות',
-    pro: `${PRO_TRIPS_PER_MONTH} טיולים מלאים בחודש, עם כל העריכות סביבם`,
+    free: 'מכסות יומיות משותפות עם כל המבקרים',
+    premium: 'טיול מלא בחודש, כמה שתערכו אותו',
+    pro: `עד ${PRO_TRIPS_PER_MONTH} טיולים מלאים בחודש, עם כל העריכות סביבם`,
   },
   /*
     Every row below is a count, and every count is now in the SAME unit on both
