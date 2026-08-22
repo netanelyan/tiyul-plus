@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { billingConfigured, createCheckoutSession } from '@/lib/server/billing';
 import { paypalConfigured, paypalMode, sandboxBlocked } from '@/lib/server/paypal';
-import { createSubscription } from '@/lib/server/paypalSubs';
+import { createSubscription, existingSubscription, reviseSubscription } from '@/lib/server/paypalSubs';
 import { resolveCaller } from '@/lib/server/identity';
 import { checkLimit } from '@/lib/server/limits';
 import { planAtLeast, type PaidPlan } from '@/lib/plans';
@@ -17,6 +17,12 @@ import { planAtLeast, type PaidPlan } from '@/lib/plans';
  * uuid - the activation itself happens only in the webhook
  * (BILLING.SUBSCRIPTION.ACTIVATED), not here. Same sandbox-on-the-live-domain
  * guard as in the one-time purchase.
+ *
+ * **A caller who already subscribes is REVISED, not sold a second
+ * subscription** - see the block below. That path grants nothing either; the
+ * change lands only on the verified BILLING.SUBSCRIPTION.UPDATED webhook, and
+ * there the new plan is read from `plan_id` rather than from custom_id, which
+ * still names the plan they originally bought.
  */
 export async function POST(request: Request) {
   const caller = await resolveCaller(request);
@@ -47,43 +53,81 @@ export async function POST(request: Request) {
     return NextResponse.json({ url: null, error: 'already-premium' });
   }
   /*
-    **Upgrading from one paid plan to another is refused here, deliberately.**
+    **Already on a paid plan and moving to a dearer one: revise, never sell a
+    second subscription.**
 
-    Creating a second PayPal subscription does not replace the first one - it
-    runs alongside it, and the subscriber is charged for both until somebody
-    notices. That is a real double charge, caused by us, on the one path where
-    a customer is actively trying to give us more money.
+    Creating a second PayPal subscription does not replace the first - it runs
+    alongside it and the subscriber is billed twice, discovered by the customer
+    on the one path where they were actively trying to give us more money.
+    `revise` changes the plan on the subscription that already exists, so there
+    is only ever one.
 
-    Doing it properly means PayPal's `revise` flow on the existing subscription
-    id (which we do store), and that is a separate integration that cannot be
-    verified from here. Until it exists, the honest answer is to say so and
-    handle the switch by hand rather than to sell a second subscription and let
-    the traveller discover the duplicate on their statement.
+    Three ways this legitimately cannot proceed, and each falls back to the
+    manual path rather than to a second subscription:
+      - the current plan did not come from PayPal (an admin grant or a promo
+        code has no subscription to revise);
+      - we hold no subscription id for them;
+      - PayPal declines the revise, or returns no approval link.
+
+    **Downgrades are deliberately not offered here.** `revise` can do them, but
+    the money question - proration, a credit, a refund for the remainder - is
+    one I cannot answer or test from here, and getting it wrong takes money
+    from somebody. A downgrade stays manual until that is decided.
   */
-  if (planAtLeast(caller.plan, 'premium')) {
+  const switching = planAtLeast(caller.plan, 'premium');
+  const existing = switching ? await existingSubscription(caller.userId) : null;
+  if (switching && (!existing || existing.source !== 'paypal')) {
     return NextResponse.json({ url: null, error: 'switch-requires-support' });
   }
+
   const origin =
     process.env.NEXT_PUBLIC_SITE_URL ??
     request.headers.get('origin') ??
     'https://tiyulplus.com';
+  const returnUrl = `${origin}/account?subReturn=1`;
+  const cancelUrl = `${origin}/premium?subCancel=1`;
 
   if (paypalConfigured()) {
     const mode = paypalMode();
     if (sandboxBlocked(request.headers.get('host'), mode)) {
       return NextResponse.json({ url: null, error: 'sandbox-blocked' }, { status: 503 });
     }
+
+    if (existing) {
+      const revised = await reviseSubscription(mode, {
+        subscriptionId: existing.subscriptionId,
+        plan: wanted,
+        returnUrl,
+        cancelUrl,
+      });
+      /*
+        A failed revise falls back to the manual path and NOT to
+        createSubscription - the fallback that looks helpful is exactly the
+        double charge this branch exists to prevent.
+      */
+      return NextResponse.json(
+        revised
+          ? { url: revised.approveUrl, mode, switched: true }
+          : { url: null, error: 'switch-requires-support' },
+      );
+    }
+
     const sub = await createSubscription(mode, {
       userId: caller.userId,
       plan: wanted,
-      returnUrl: `${origin}/account?subReturn=1`,
-      cancelUrl: `${origin}/premium?subCancel=1`,
+      returnUrl,
+      cancelUrl,
     });
     return NextResponse.json(sub ? { url: sub.approveUrl, mode } : { url: null, error: 'paypal-failed' });
   }
 
   if (!billingConfigured()) {
     return NextResponse.json({ url: null, error: 'not-configured' });
+  }
+  // The legacy Stripe path never handled plan switching and never will - it has
+  // no subscription of ours to revise.
+  if (switching) {
+    return NextResponse.json({ url: null, error: 'switch-requires-support' });
   }
   const url = await createCheckoutSession(caller.userId, origin);
   return NextResponse.json(url ? { url } : { url: null, error: 'stripe-failed' });

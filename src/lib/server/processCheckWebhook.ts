@@ -20,6 +20,7 @@ import {
   activatePaypalPremium,
   cancelPaypalPremium,
   parseSubscriptionCustomId,
+  planIdToPlan,
 } from '@/lib/server/paypalSubs';
 import { findByOrderId, findById, markFailed, markPaid } from '@/lib/server/purchases';
 import { buildPreDepartureReport } from '@/lib/server/predepartureReport';
@@ -29,6 +30,8 @@ import type { PreDepartureReport } from '@/lib/predeparture';
 
 interface PaypalCapture {
   id?: string;
+  /** Subscription events only: which billing plan the subscription is on NOW */
+  plan_id?: string;
   status?: string;
   amount?: { value?: string; currency_code?: string };
   custom_id?: string;
@@ -82,11 +85,44 @@ export async function processCheckWebhook(rawBody: string, headers: WebhookHeade
     uuid - every subscription created before that - parses as premium.
   */
   const sub = subUserId ? parseSubscriptionCustomId(subUserId) : null;
-  if (event.event_type === 'BILLING.SUBSCRIPTION.ACTIVATED' && sub) {
-    const subId = (event.resource as { id?: string } | undefined)?.id ?? '';
-    const done = await activatePaypalPremium(sub.userId, subId, sub.plan);
+
+  if (
+    (event.event_type === 'BILLING.SUBSCRIPTION.ACTIVATED' ||
+      event.event_type === 'BILLING.SUBSCRIPTION.UPDATED') &&
+    sub
+  ) {
+    const subResource = event.resource;
+    const subId = subResource?.id ?? '';
+
+    /*
+      **Which plan, and why plan_id comes first.**
+
+      custom_id is fixed at creation and PayPal echoes it forever, so after a
+      premium subscriber revises UP to pro it still says premium. Trusting it on
+      an UPDATED event would demote the person on the very webhook confirming
+      they now pay more. `plan_id` is the only field that reflects the change.
+
+      The fallback to custom_id covers a subscription created before the pro
+      plan existed, or an app_flags read that failed. It resolves to premium,
+      which is the **cheaper** plan - so a failed lookup under-grants (visible,
+      they tell us) rather than over-grants (invisible, we pay).
+
+      An UPDATED event carrying a plan we cannot identify changes nothing at
+      all: on this path "I do not know" must never mean "assume the old value
+      is still right", because the event exists precisely because it changed.
+    */
+    const fromPlanId = subResource?.plan_id ? await planIdToPlan(mode, subResource.plan_id) : null;
+    if (event.event_type === 'BILLING.SUBSCRIPTION.UPDATED' && !fromPlanId) {
+      console.warn('[checks webhook] subscription updated with an unknown plan_id - ignored', {
+        planId: subResource?.plan_id,
+      });
+      return ok({ received: true, premium: false, reason: 'unknown-plan' });
+    }
+    const plan = fromPlanId ?? sub.plan;
+
+    const done = await activatePaypalPremium(sub.userId, subId, plan);
     if (!done) console.warn('[checks webhook] premium activation failed', { userId: sub.userId });
-    return ok({ received: true, premium: done });
+    return ok({ received: true, premium: done, plan });
   }
   if (
     (event.event_type === 'BILLING.SUBSCRIPTION.CANCELLED' ||

@@ -320,12 +320,17 @@ GeoNames). Lower priority than net-new destinations.
    the first `/api/billing/checkout` with `{"plan":"pro"}` creates the Product
    and Plan and stores the id under `paypal_plan_id_<mode>_pro`. The premium
    plan keeps its existing unsuffixed key and its existing subscribers.
-3. **Decide on the plan-switch flow.** Moving an existing subscriber from
-   premium to pro is currently refused in `/api/billing/checkout`
-   (`switch-requires-support`) and handled by hand, because creating a second
-   PayPal subscription charges them twice. The proper fix is PayPal's
-   `revise` call on the stored `paypal_subscription_id`; it is a separate
-   integration and could not be verified from the authoring sandbox.
+3. **Test the upgrade flow in the PayPal sandbox.** Premium -> pro now goes
+   through PayPal's `revise` on the stored `paypal_subscription_id`, so there
+   is only ever one subscription and nobody is billed twice. Built and unit
+   tested against a mock; **never run against real PayPal**. What to check:
+   subscribe to premium, upgrade to pro, confirm PayPal shows ONE subscription
+   at 89, and confirm the account shows pro (that last step depends on the
+   BILLING.SUBSCRIPTION.UPDATED webhook arriving - the same www-vs-non-www
+   trap as every other webhook here).
+   **Downgrades (pro -> premium) are still manual, deliberately** - proration
+   and refunds for the unused remainder are a money decision, not a coding
+   one.
 4. **Decide whether premium's real monthly capacity should be stated publicly.**
    At its $2.00 cap it is about one full planning session a month. The pro card
    states its own capacity (5 trips); premium's cell in the comparison table

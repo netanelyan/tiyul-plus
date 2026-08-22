@@ -36,6 +36,11 @@ let trip: unknown;
 let verifySignature: boolean;
 /** A profiles row for the mock - the subscription events read from and write to it */
 let profile: { user_id: string; plan: string; plan_source: string | null } | null;
+/**
+ * The stored PayPal billing-plan ids, i.e. what `planIdToPlan` reads. Kept
+ * mutable so a test can empty it and prove what happens when the lookup fails.
+ */
+let planFlags: Record<string, string>;
 
 beforeEach(() => {
   for (const k of ENV) saved[k] = process.env[k];
@@ -49,6 +54,10 @@ beforeEach(() => {
 
   verifySignature = true;
   profile = null;
+  planFlags = {
+    paypal_plan_id_sandbox: 'P-PREMIUM',
+    paypal_plan_id_sandbox_pro: 'P-PRO',
+  };
   purchase = {
     id: 'purch-1',
     user_id: 'user-1',
@@ -100,6 +109,13 @@ beforeEach(() => {
     }
     if (url.includes('/rest/v1/user_trips')) {
       return new Response(JSON.stringify(trip ? [{ data: trip }] : []), { status: 200 });
+    }
+    if (url.includes('/rest/v1/app_flags')) {
+      // Only GET matters here; the reverse plan lookup never writes.
+      return new Response(
+        JSON.stringify(Object.entries(planFlags).map(([key, value]) => ({ key, value }))),
+        { status: 200 },
+      );
     }
     if (url.includes('/rest/v1/profiles')) {
       if (init.method === 'PATCH') {
@@ -272,4 +288,93 @@ test('אירוע מנוי עם חתימה לא תקפה - 400, שום דבר ל�
   const res = await processCheckWebhook(subEvent('BILLING.SUBSCRIPTION.ACTIVATED'), HEADERS);
   assert.equal(res.status, 400);
   assert.equal(profile.plan, 'free');
+});
+
+/* ---------- Switching plans: revise, and the field that must decide it ---------- */
+
+/** A subscription event that also carries which billing plan it is on NOW. */
+function subEventOnPlan(type: string, planId: string, customId: string = SUB_USER): string {
+  return JSON.stringify({
+    event_type: type,
+    resource: { id: 'I-SUB123', custom_id: customId, status: 'ACTIVE', plan_id: planId },
+  });
+}
+
+test('**שדרוג ב-revise: התוכנית נקבעת מ-plan_id, לא מ-custom_id שנשאר פרימיום לנצח**', async () => {
+  /*
+    THE test of the whole revise flow. The subscriber signed up for premium, so
+    their custom_id is a bare uuid and will say premium forever - PayPal echoes
+    the string set at creation. Reading the plan from it here would demote the
+    person on the very webhook confirming they now pay MORE.
+  */
+  profile = { user_id: SUB_USER, plan: 'premium', plan_source: 'paypal' };
+  const { processCheckWebhook } = await load();
+  const res = await processCheckWebhook(
+    subEventOnPlan('BILLING.SUBSCRIPTION.UPDATED', 'P-PRO'),
+    HEADERS,
+  );
+  assert.equal(res.status, 200);
+  assert.equal(res.body.plan, 'pro');
+  assert.equal(profile.plan, 'pro', 'custom_id אמר פרימיום - plan_id הוא שקובע');
+  assert.equal(profile.plan_source, 'paypal');
+});
+
+test('UPDATED עם plan_id שאיננו מכירים - שום דבר לא משתנה', async () => {
+  /*
+    An UPDATED event exists precisely because something changed, so "I cannot
+    identify the plan" must never resolve to "assume the old value still holds".
+    Fail closed and leave it to a human.
+  */
+  profile = { user_id: SUB_USER, plan: 'premium', plan_source: 'paypal' };
+  const { processCheckWebhook } = await load();
+  const res = await processCheckWebhook(
+    subEventOnPlan('BILLING.SUBSCRIPTION.UPDATED', 'P-SOMETHING-ELSE'),
+    HEADERS,
+  );
+  assert.equal(res.status, 200);
+  assert.equal(res.body.reason, 'unknown-plan');
+  assert.equal(profile.plan, 'premium', 'לא הועלה ולא הורד');
+});
+
+test('UPDATED כשקריאת הדגלים נכשלת - גם אז לא נוגעים בתוכנית', async () => {
+  planFlags = {};
+  profile = { user_id: SUB_USER, plan: 'premium', plan_source: 'paypal' };
+  const { processCheckWebhook } = await load();
+  const res = await processCheckWebhook(
+    subEventOnPlan('BILLING.SUBSCRIPTION.UPDATED', 'P-PRO'),
+    HEADERS,
+  );
+  assert.equal(res.body.reason, 'unknown-plan');
+  assert.equal(profile.plan, 'premium');
+});
+
+test('ACTIVATED עם plan_id של פרו מדליק פרו - גם כשה-custom_id הוא uuid חשוף', async () => {
+  profile = { user_id: SUB_USER, plan: 'free', plan_source: null };
+  const { processCheckWebhook } = await load();
+  await processCheckWebhook(subEventOnPlan('BILLING.SUBSCRIPTION.ACTIVATED', 'P-PRO'), HEADERS);
+  assert.equal(profile.plan, 'pro');
+});
+
+test('ACTIVATED בלי plan_id בכלל - נופל ל-custom_id, וזו התאימות לאחור', async () => {
+  // Every subscription created before the pro plan existed looks exactly like this.
+  profile = { user_id: SUB_USER, plan: 'free', plan_source: null };
+  const { processCheckWebhook } = await load();
+  await processCheckWebhook(subEvent('BILLING.SUBSCRIPTION.ACTIVATED'), HEADERS);
+  assert.equal(profile.plan, 'premium');
+
+  profile = { user_id: SUB_USER, plan: 'free', plan_source: null };
+  const { processCheckWebhook: run2 } = await load();
+  await run2(subEvent('BILLING.SUBSCRIPTION.ACTIVATED', `${SUB_USER}|pro`), HEADERS);
+  assert.equal(profile.plan, 'pro');
+});
+
+test('ביטול אחרי שדרוג עדיין מוריד לחינם - revise לא שינה את plan_source', async () => {
+  profile = { user_id: SUB_USER, plan: 'premium', plan_source: 'paypal' };
+  const { processCheckWebhook } = await load();
+  await processCheckWebhook(subEventOnPlan('BILLING.SUBSCRIPTION.UPDATED', 'P-PRO'), HEADERS);
+  assert.equal(profile.plan, 'pro');
+
+  const { processCheckWebhook: run2 } = await load();
+  await run2(subEvent('BILLING.SUBSCRIPTION.CANCELLED'), HEADERS);
+  assert.equal(profile.plan, 'free', 'מנוי פרו שבוטל חוזר לחינם כמו כל מנוי');
 });

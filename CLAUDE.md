@@ -10774,3 +10774,73 @@ while premium's cell in the comparison table deliberately does not. Stating it
 would be more honest and it would make pro's step up obvious - but it is
 repositioning an existing product inside a task that said to leave ₪19.90 as it
 is. It is in the summary and in TODO.md for Netanel to decide, not decided here.
+
+### 2026-08-22 (b) - PayPal revise: one subscription instead of two, and the field that must decide the plan
+
+Netanel: build it. The previous entry left the premium-to-pro switch refused
+(`switch-requires-support`) because creating a second PayPal subscription does
+not replace the first - PayPal bills both, and the customer discovers it on the
+one path where they were actively trying to give us more money.
+
+**`revise` changes the plan on the subscription that already exists**, so there
+is only ever one. `reviseSubscription()` POSTs to
+`/v1/billing/subscriptions/{id}/revise` and returns the approval link; like
+`createSubscription` it **grants nothing** - `plan='pro'` is written only by the
+verified webhook.
+
+---
+
+**The bug this whole design is arranged around, and it is not obvious.**
+
+`custom_id` is fixed when a subscription is created and PayPal echoes that exact
+string back forever. It carries the tier (`<uuid>|pro`) since the pro plan
+existed - which is correct for a *new* subscription and **wrong for a revised
+one**. A premium subscriber who upgrades still carries a custom_id saying
+premium, so reading the plan from it on the UPDATED event would **demote the
+person on the very webhook confirming they now pay more**.
+
+So `planIdToPlan()` reverses the app_flags lookup - `plan_id` is the only field
+on that event that reflects the change - and the webhook reads it first.
+custom_id survives only as the fallback for a subscription created before the
+pro plan existed, and it resolves to **premium, the cheaper plan**, so a failed
+lookup under-grants (visible, they tell us) rather than over-grants (invisible,
+we pay).
+
+**And an UPDATED event whose plan we cannot identify changes nothing at all.**
+On this path "I do not know" must never mean "assume the old value still holds",
+because the event exists precisely because something changed. Fail closed, log
+it, leave it to a human.
+
+**Three tests, and the first one is the point.** Proven to guard by injecting the
+exact bug - replacing `fromPlanId ?? sub.plan` with `sub.plan` - which fails the
+named test *and* the pro-activation test, while the back-compat test still
+passes, confirming that one really does exercise the fallback rather than the
+primary path.
+
+---
+
+**Three ways the switch legitimately cannot proceed**, and each falls back to the
+manual path **and never to `createSubscription`** - the fallback that looks
+helpful is exactly the double charge this branch exists to prevent:
+
+- the current plan did not come from PayPal (an admin grant or a promo code has
+  no subscription to revise) - the same `plan_source === 'paypal'` guard
+  `cancelPaypalPremium` already uses;
+- we hold no `paypal_subscription_id` for them;
+- PayPal declines, or returns no approval link. A missing link is a failure and
+  not a silent success, because "we changed your plan" is not something to
+  assume.
+
+**Downgrades are deliberately still manual.** `revise` can do them, but
+proration, credit and a refund for the unused remainder are a money decision I
+cannot answer or test from here, and getting it wrong takes money from somebody.
+
+**Cancellation after an upgrade still works** - `revise` does not touch
+`plan_source`, so a cancelled pro subscription falls to free like any other.
+There is a test for that, because it is the kind of thing an upgrade path
+quietly breaks.
+
+**Verified:** 706 tests (6 new), tsc, build and lint clean on every touched file.
+**Not verified against real PayPal** - no sandbox credentials here, so the revise
+call itself, its approval redirect and the UPDATED webhook are unexercised
+outside the mock. That is the one thing Netanel has to run before trusting it.

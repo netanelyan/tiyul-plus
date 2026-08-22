@@ -28,12 +28,20 @@
  * that subscription - including cancellation. So activation and downgrade
  * depend on no new column: the verified event itself carries the user identity
  * that we set at creation.
+ *
+ * ## custom_id says WHO forever, and WHAT only at creation
+ *
+ * Since the pro plan exists, custom_id also carries the tier (`<uuid>|pro`).
+ * That is correct for a new subscription and **wrong for a revised one**: the
+ * string is fixed when the subscription is created, so a premium subscriber who
+ * upgrades still carries a custom_id saying premium. `planIdToPlan` exists for
+ * exactly that, and the UPDATED webhook must use it.
  */
 
 import { PREMIUM_PRICE_ILS, PRO_PRICE_ILS, type PaidPlan } from '@/lib/plans';
 import { accessToken, paypalApiBase, type PaypalMode } from '@/lib/server/paypal';
 import { adminInsert, adminSelect, adminUpdate } from '@/lib/server/supabaseAdmin';
-import { eq, pgQuery, pgSelect } from '@/lib/server/pgrest';
+import { eq, pgIn, pgQuery, pgSelect } from '@/lib/server/pgrest';
 
 /** Everything that differs between the two subscription plans, in one place. */
 const PLAN_SPEC: Record<PaidPlan, { priceILS: number; label: string; slug: string }> = {
@@ -143,6 +151,37 @@ export async function ensureSubscriptionPlan(
   }
 }
 
+/**
+ * The reverse of `storedPlanId`: which of our plans is this PayPal billing-plan
+ * id? **Required by the revise flow and by nothing else**, for a reason worth
+ * stating precisely.
+ *
+ * A subscription's `custom_id` is fixed when it is created and PayPal echoes
+ * that same string forever. So after a premium subscriber revises up to pro,
+ * their custom_id **still says premium** - reading the plan from it would
+ * downgrade the person who just paid more, on the webhook that confirms they
+ * paid more. The only field on an UPDATED event that reflects the new reality
+ * is `plan_id`, and this is how it is read.
+ *
+ * Returns null for anything unrecognised, and the caller must treat that as
+ * "change nothing" rather than as a default.
+ */
+export async function planIdToPlan(mode: PaypalMode, planId: string): Promise<PaidPlan | null> {
+  if (!planId) return null;
+  const keys = (Object.keys(PLAN_SPEC) as PaidPlan[]).map((p) => PLAN_FLAG(mode, p));
+  const rows = await adminSelect<{ key: string; value: unknown }>(
+    'app_flags',
+    pgQuery(pgIn('key', keys), pgSelect(['key', 'value'])),
+  );
+  if (!rows) return null;
+  for (const plan of Object.keys(PLAN_SPEC) as PaidPlan[]) {
+    const want = PLAN_FLAG(mode, plan);
+    const hit = rows.find((r) => r.key === want);
+    if (hit && typeof hit.value === 'string' && hit.value === planId) return plan;
+  }
+  return null;
+}
+
 export interface CreatedSubscription {
   subscriptionId: string;
   approveUrl: string;
@@ -206,6 +245,92 @@ export async function createSubscription(
     const approve = data.links?.find((l) => l.rel === 'approve')?.href;
     if (!approve) return null;
     return { subscriptionId: data.id, approveUrl: approve };
+  } catch {
+    return null;
+  }
+}
+
+/* ============ Switching an existing subscription to another plan ============ */
+
+/** What we need to know about a subscriber's existing PayPal subscription. */
+export interface ExistingSubscription {
+  subscriptionId: string;
+  /** Where the current plan came from. Only 'paypal' can be revised. */
+  source: string | null;
+}
+
+export async function existingSubscription(userId: string): Promise<ExistingSubscription | null> {
+  if (!UUID_RE.test(userId)) return null;
+  const rows = await adminSelect<{ paypal_subscription_id: string | null; plan_source: string | null }>(
+    'profiles',
+    pgQuery(eq('user_id', userId), pgSelect(['paypal_subscription_id', 'plan_source'])),
+  );
+  const row = rows?.[0];
+  if (!row?.paypal_subscription_id) return null;
+  return { subscriptionId: row.paypal_subscription_id, source: row.plan_source ?? null };
+}
+
+/**
+ * Move an existing subscription onto a different billing plan, **instead of
+ * selling a second one**.
+ *
+ * This is the whole reason the function exists. Creating a second subscription
+ * does not replace the first: PayPal bills both, and the person who discovers
+ * it is the customer who was actively trying to give us more money. `revise`
+ * changes the plan on the subscription that already exists, so there is only
+ * ever one.
+ *
+ * **It grants nothing**, exactly like `createSubscription`. It returns where to
+ * send the user to approve the change; `plan='pro'` is written only by the
+ * verified BILLING.SUBSCRIPTION.UPDATED webhook.
+ *
+ * PayPal may or may not require approval depending on the price direction. When
+ * it does, the response carries an `approve` link and the user must go there -
+ * so a missing link is treated as a failure rather than as silent success,
+ * because "we changed your plan" is not something to assume.
+ */
+export async function reviseSubscription(
+  mode: PaypalMode,
+  input: { subscriptionId: string; plan: PaidPlan; returnUrl: string; cancelUrl: string },
+): Promise<{ approveUrl: string } | null> {
+  const planId = await ensureSubscriptionPlan(mode, input.plan);
+  if (!planId) return null;
+  const token = await accessToken(mode);
+  if (!token) return null;
+
+  try {
+    const res = await fetch(
+      `${paypalApiBase(mode)}/v1/billing/subscriptions/${encodeURIComponent(input.subscriptionId)}/revise`,
+      {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plan_id: planId,
+          application_context: {
+            brand_name: 'tiyul+',
+            locale: 'he-IL',
+            user_action: 'SUBSCRIBE_NOW',
+            shipping_preference: 'NO_SHIPPING',
+            return_url: input.returnUrl,
+            cancel_url: input.cancelUrl,
+          },
+        }),
+        signal: AbortSignal.timeout(15_000),
+      },
+    );
+    if (!res.ok) {
+      console.warn('[paypal subs] revise', res.status);
+      return null;
+    }
+    const data = (await res.json()) as { links?: { rel?: string; href?: string }[] };
+    const approve = data.links?.find((l) => l.rel === 'approve')?.href;
+    if (!approve) {
+      // No approval link means we cannot show the user where to confirm, and we
+      // must not tell them it is done - the webhook is the only thing that knows.
+      console.warn('[paypal subs] revise returned no approve link');
+      return null;
+    }
+    return { approveUrl: approve };
   } catch {
     return null;
   }
