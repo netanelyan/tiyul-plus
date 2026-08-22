@@ -11058,3 +11058,30 @@ is one function with a test, **proven to fire** by replacing its body with
 environment cannot receive, and the promo column does not exist in the database
 until the SQL is run. What the fallback guarantees is that until then, promo
 codes behave exactly as they did before.
+
+### 2026-08-22 (f) - The one catalog error left, closed the honest way
+
+Netanel: "any fix i must do?" - so I went looking for what is actually broken
+rather than listing chores.
+
+The catalog validator had been sitting at **1 error** for a while, and it was a
+real one: `northern-bulgaria`'s hero photo was **960px wide and had never been
+HTTP-verified** - the exact class that produced 170 dead URLs in entry (k), since
+Wikimedia 404s a thumbnail wider than its source. Worse, its filename is
+`Обл_Видин`, which entry (s) already names among the eighteen known-dead
+truncated filenames. Two independent reasons to believe it was serving nothing.
+
+**Removed rather than repaired.** The correct filename is presumably
+`Област_Видин`, and writing that would be a guess I cannot probe from here -
+which is precisely how the 151 dead links came to exist. `Destination.photo` is
+optional and the UI falls back to a gradient, so the page degrades exactly as
+designed. The card is not blank either: this destination's `iconicLandmark`
+carries a separate photo that **is** recorded `ok:true`, so the homepage and
+country-page cards are unaffected.
+
+**Validator: 1 error → 0, and 55 warnings both before and after** - checked, so
+the fix removed an error rather than trading it for noise.
+
+Five photo URLs remain recorded as not serving. They render the category-tile
+fallback, they are the known backlog needing a human to choose replacements, and
+they are not errors. 708 tests, tsc, build clean.

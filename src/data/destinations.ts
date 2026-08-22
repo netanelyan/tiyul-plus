@@ -30197,8 +30197,6 @@ export const destinations: Destination[] = [
       score: 4.0,
       verdict: 'זה טיול לחובבי היסטוריה ונופים, לא לחופשה נוחה. המרחקים בצפון בולגריה גדולים והכבישים בין האתרים לא תמיד במצב טוב, כולל קטעים עם בורות ממשיים. בלוגראדצ׳יק, האתר היפה באזור, נמצאת בקצה המערבי הרחוק ודורשת יום נסיעה בפני עצמה. אנדרטת בוזלודז׳ה סגורה רשמית לכניסה והמבנה מתפורר, כך שרואים אותה רק מבחוץ. פסל הרוכב ממדארה קטן ורחוק מהצופה, ורבים יוצאים ממנו מאוכזבים. השילוט באנגלית חלקי, ובכפרים רבים כמעט אין דוברי אנגלית. בחורף חלק ממעברי ההרים נסגרים לגמרי. מצד שני, המחירים כאן מהנמוכים באירופה, וכמעט אין תיירים.',
     },
-    photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/%D0%9E%D0%B1%D0%BB_%D0%92%D0%B8%D0%B4%D0%B8%D0%BD_-_%D0%91%D0%B5%D0%BB%D0%BE%D0%B3%D1%80%D0%B0%D0%B4%D1%87%D0%B8%D0%BA_-_%D0%91%D0%B5%D0%BB%D0%BE%D0%B3%D1%80%D0%B0%D0%B4%D1%87%D0%B8%D1%88%D0%BA%D0%B8_%D1%81%D0%BA%D0%B0%D0%BB%D0%B8_-_%2812%29.jpg/960px-%D0%9E%D0%B1%D0%BB_%D0%92%D0%B8%D0%B4%D0%B8%D0%BD_-_%D0%91%D0%B5%D0%BB%D0%BE%D0%B3%D1%80%D0%B0%D0%B4%D1%87%D0%B8%D0%BA_-_%D0%91%D0%B5%D0%BB%D0%BE%D0%B3%D1%80%D0%B0%D0%B4%D1%87%D0%B8%D1%88%D0%BA%D0%B8_%D1%81%D0%BA%D0%B0%D0%BB%D0%B8_-_%2812%29.jpg',
     iconicLandmark: {
       // This used to be the Belogradchik Rocks with a dead photo URL (one of the 18 known
       // ones, a truncated filename on Commons). **It was not only the photo that was
