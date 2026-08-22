@@ -315,7 +315,7 @@ export const PLAN_LIMITS: Record<Tier, PlanLimits> = {
     lookupsPerDay: 40,
   },
   /*
-    Pro (₪89/month). **The tier is volume, and volume only** - it carries no
+    Pro (₪89.90/month). **The tier is volume, and volume only** - it carries no
     feature premium does not have, and the card says so in those words. That is
     not a gap waiting to be filled with something invented; it is what the
     product honestly has today, and for the person it is aimed at, volume IS
@@ -404,7 +404,7 @@ export function aiUnits(usage: {
 export const PREMIUM_PRICE_ILS = 19.9;
 
 /**
- * The heavy plan, ₪89/month. Same product as premium - **no feature premium
+ * The heavy plan, ₪89.90/month. Same product as premium - **no feature premium
  * does not have** - with roughly six times the planning capacity.
  *
  * Why a tier that is only volume is not filler: at the premium cap ($2.00) a
@@ -414,9 +414,9 @@ export const PREMIUM_PRICE_ILS = 19.9;
  * wall they hit, and there is nothing else on the site they can buy to move it.
  * This moves it, and it moves it by more than the price ratio: **4.47x the
  * price buys 6x the capacity**, which is what makes it a sensible purchase
- * rather than "four subscriptions in a trench coat".
+ * rather than "four and a half subscriptions in a trench coat".
  */
-export const PRO_PRICE_ILS = 89;
+export const PRO_PRICE_ILS = 89.9;
 
 /**
  * **The capacity promise on the pro card, and the only number there that is a
@@ -509,15 +509,15 @@ export const SUBSCRIBER_CAP_USD: Record<PaidPlan, number> = {
   */
   premium: 2.5,
   /*
-    ## ₪89 → $12.00, and where every step of that comes from
+    ## ₪89.90 → $12.00, and where every step of that comes from
 
     The revenue side, using exactly the method that produced the ₪19.90 figures
     above (it reproduces them to the agora, which is why it is trusted here):
 
-      gross                     ₪89.00      ₪19.90
-      less VAT (18%)            ₪75.42      ₪16.86
-      less PayPal 3.4% + ₪1.20  ₪71.19      ₪14.98
-      net, at ₪3.75/$           $19.00      $4.00
+      gross                     ₪89.90      ₪19.90
+      less VAT (18%)            ₪76.19      ₪16.86
+      less PayPal 3.4% + ₪1.20  ₪71.93      ₪14.98
+      net, at ₪3.75/$           $19.18      $4.00
 
     The cost side, at the measured prices (COLD_TRIP_USD $0.53 for a full build
     including the cold cache write, HEAVY_TURN_USD $0.063 for a warm turn):
@@ -528,12 +528,12 @@ export const SUBSCRIBER_CAP_USD: Record<PaidPlan, number> = {
       five long                                         $10.20  85% of the cap
       eight typical                                     $11.80  98% - the real ceiling
 
-    So $12.00 is 63% of net, i.e. **a 37% gross margin** where premium keeps
-    50%. That is a deliberate difference and not an oversight: at ₪19.90 the
+    So $12.00 is 63% of net, i.e. **a 37% gross margin**, the same structure
+    premium now runs on. That is a deliberate difference and not an oversight: at ₪19.90 the
     fixed ₪1.20 payment fee alone is 9.4% of gross and the whole subscriber is
-    worth $2.00 of margin, so prudence is cheap. At ₪89 the same fee is 4.8%,
-    and 37% of $19 is **$7.00 of margin per subscriber - three and a half times
-    what a premium subscriber yields in total.** A lower percentage on a much
+    worth $2.00 of margin, so prudence is cheap. At ₪89.90 the same fee is 4.7%,
+    and 37% of $19.18 is **$7.18 of margin per subscriber - nearly five times
+    what a premium subscriber's $1.50 yields.** A lower percentage on a much
     larger absolute number is the better business, and pretending otherwise
     would have meant selling a plan too thin for the person it is aimed at.
 

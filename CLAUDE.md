@@ -10937,3 +10937,66 @@ while `/contact` exists with a real address on it. Both now link.
 rewritten rather than added), tsc, build and lint clean on every touched file,
 and 35/35 in the browser at 390px and 1400px re-run against the rebuilt page
 with the new premium line rendering.
+
+### 2026-08-22 (d) - "Looks too detaily" - the same four things, read twice; and pro becomes ₪89.90
+
+Netanel, on the rebuilt pricing page: *"everything is good, but i dont like this
+design much - looks to detaily."* Content fine, density not.
+
+**Two causes, and both were duplication rather than volume of information.**
+
+**1. The chooser strip was a phone affordance rendered at every width.** Four
+rows of emoji + name + who-it-is-for + price, sitting directly above three cards
+carrying the same names, the same audiences and the same prices. On a phone it
+earns its place - it lets somebody skip the two plans they were never going to
+buy. **At desktop width the three cards are already side by side**, so the strip
+stopped being a shortcut and became sixteen fragments to read before reaching a
+plan. It is `sm:hidden` now, and on the phone it lost its subtitle line: emoji,
+name, price, one line each.
+
+**2. The premium card had boxes nested inside a box while its neighbours used
+plain lists.** Three tinted sub-cards, each a heading plus a paragraph. Nested
+cards are the classic over-detailed signal, and worse here, they broke the one
+job a pricing grid has: **all three columns must have the same shape so a reader
+can compare by scanning across rather than reading each one.** Flattened to
+check-lines matching the other two, and the pro card's grey "who is this for" box
+went the same way - a quiet line above a hairline rule instead of a fourth box.
+
+Also: the intro was an inventory of seven free things followed by an explanation
+of what costs money. It is one sentence now.
+
+**Result at 390px: 5,269px of page down to 5,092**, and at 1400px the entire
+three-plan comparison plus the check card now fits without scrolling. The
+reduction is not the point - the point is that the three cards read as one
+system.
+
+---
+
+**Mid-session, from Netanel: pro is ₪89.90, not ₪89.**
+
+Re-ran the arithmetic rather than just changing the constant: net moves $18.99 →
+**$19.18**, so the $12.00 cap is still 37% margin and the price ratio against
+premium is 4.5x rather than 4.47x. Every quoted figure in the `SUBSCRIBER_CAP_USD`
+comment was updated with it - the table, the fee percentage, the margin
+comparison - because a comment that carries arithmetic is wrong the moment one
+input moves.
+
+**Two formatting bugs the change created, both caught by looking:**
+
+- `ils()` existed because `89` rendered as "89" in a heading and "89.00" on the
+  button beneath it. With 89.90 both prices now carry agorot, so the helper is
+  temporarily indistinguishable from `toFixed(2)` - its comment says so, and it
+  stays for the derived figures and for the next round price.
+- A year of pro rendered **"1,078.8"** - `toLocaleString('he-IL')` with no
+  options drops the trailing zero. New `ilsBig()` pins two decimals.
+
+**One grep that lied, and it is the same trap as before.** Checking the served
+HTML for `1,078.80 ₪` found nothing, because **React splits a JSX interpolation
+with `<!-- -->` comment nodes** - the string in the markup is
+`1,078.80<!-- --> ₪`. The value was correct the whole time. This log already
+records that trap once; recording it again because it cost a second look.
+
+**Verified:** 707 tests, tsc, build and lint clean, 35/35 in a real browser at
+390px and 1400px on the rebuilt page. The chooser assertion now counts **visible**
+rows rather than DOM nodes - with `sm:hidden` the old check would have kept
+passing while the user saw nothing - so it asserts four at 390 and zero at 1400.

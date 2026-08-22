@@ -17,11 +17,17 @@ import { PRICE_ILS, priceLabel } from '@/lib/predeparture';
 import AgentEnquiryForm from './AgentEnquiryForm';
 
 /**
- * Shekels, printed the way people write them: 19.90 keeps its agorot, 89 does
- * not grow a ".00". Without this the pro card headed "89 ₪" carried a button
- * saying "89.00 ₪" - the same price in two shapes, three centimetres apart.
+ * Shekels, printed the way people write them: 19.90 keeps its agorot, a round
+ * price does not grow a ".00". Both current prices happen to carry agorot, so
+ * today this behaves like toFixed(2) - it exists for the derived figures (a
+ * year of a plan, two checks) and so that a future round price cannot end up
+ * rendered two different ways in two places on the same card.
  */
 const ils = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(2));
+
+/** Thousands separator, with the agorot kept - a year of pro is 1,078.80 and not 1,078.8 */
+const ilsBig = (n: number) =>
+  n.toLocaleString('he-IL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 /**
  * The pricing page. **Four options**, and the layout is the argument.
@@ -32,11 +38,13 @@ const ils = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(2));
  * things to buy, and at 390px five full-width slabs is a page nobody reaches
  * the bottom of. So:
  *
- * 1. **A "which one is you" strip at the very top** - four one-line rows, each
- *    an anchor into its own section. On a phone that is one screen that lets
- *    somebody skip the two plans they were never going to buy. It is not a
- *    summary; every row states the price it links to, so it is also the
- *    fastest honest answer to "what does this cost".
+ * 1. **A "which one is you" strip, on the phone only** - four one-line rows,
+ *    each an anchor into its own section, so somebody can skip the two plans
+ *    they were never going to buy. **`sm:hidden` is the point**: at desktop
+ *    width the three cards are already side by side, so the strip stopped being
+ *    a shortcut and became the same four names and prices read twice before
+ *    reaching a plan. That duplication was most of what made the page feel
+ *    over-detailed.
  * 2. **The three consumer plans in one grid**, and on a phone the recommended
  *    one is ordered FIRST (`order-first sm:order-none`). On desktop the middle
  *    column is the privileged position; on a phone "middle" means nothing and
@@ -181,9 +189,9 @@ export default function PremiumClient() {
         <h1 className="display mt-1 text-3xl text-night sm:text-4xl">
           התכנון חינם. משלמים רק על מה שבאמת צריך.
         </h1>
-        <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-night/60">
-          הסוכן, המסלול, המפה, הקטלוג, השיתוף לצפייה, ההדפסה והניווט - חינם, בלי כרטיס אשראי. מה
-          שכן עולה כסף: לתכנן ביחד עם כל מי שנוסע איתכם, ובדיקה של הטיול לפני היציאה.
+        <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-night/60">
+          כל התכנון חינם, בלי כרטיס אשראי. משלמים רק כדי לתכנן ביחד עם מי שנוסע איתכם, או כדי לבדוק
+          את הטיול לפני היציאה.
         </p>
       </div>
 
@@ -192,7 +200,7 @@ export default function PremiumClient() {
           scrolling before you know which one is yours, and every row here
           carries its own price so the strip also answers "what does it cost"
           without anybody scrolling at all. */}
-      <nav aria-label="בחירה מהירה" className="mt-7 grid gap-2 sm:grid-cols-2">
+      <nav aria-label="בחירה מהירה" className="mt-7 grid gap-2 sm:hidden">
         {[
           {
             href: '#plan-free',
@@ -227,19 +235,14 @@ export default function PremiumClient() {
           <a
             key={r.href}
             href={r.href}
-            className={`flex items-center gap-3 rounded-2xl px-4 py-3 ring-1 transition ${
+            className={`flex items-center gap-3 rounded-xl px-4 py-2.5 ring-1 transition ${
               r.highlight
                 ? 'bg-sunset/10 ring-sunset/40 hover:bg-sunset/15'
                 : 'bg-shell ring-night/10 hover:bg-cream'
             }`}
           >
-            <span aria-hidden className="text-xl">
-              {r.emoji}
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-sm font-black text-night">{r.title}</span>
-              <span className="block text-xs font-medium text-night/55">{r.who}</span>
-            </span>
+            <span aria-hidden>{r.emoji}</span>
+            <span className="min-w-0 flex-1 truncate text-sm font-bold text-night">{r.title}</span>
             <span className="shrink-0 text-xs font-black text-sunset-deep">{r.price}</span>
           </a>
         ))}
@@ -297,25 +300,33 @@ export default function PremiumClient() {
             כל מה שבחינם, ועוד הדבר האחד שאי אפשר לעשות לבד: לתכנן את הטיול עם כל מי שנוסע איתכם.
             מספיק לתכנן <b className="text-cream">טיול מלא בחודש</b>, כמה שתערכו ותשנו אותו.
           </p>
-          <ul className="mt-4 space-y-2.5">
-            <li className="rounded-xl bg-cream/10 p-3">
-              <p className="text-sm font-bold text-cream">🤝 טיול משותף - קישור אחד</p>
-              <p className="mt-0.5 text-xs leading-relaxed text-cream/65">
-                מצביעים על כל עצירה, כותבים למה, מציעים מקומות מהקטלוג, ומסכמים תאריכים ומי מגיע.
-                לחברים זה חינם לגמרי - הם לא משלמים ולא נרשמים למנוי.
-              </p>
+          {/*
+            Plain check-lines, not boxes inside a box. All three plan cards now
+            have the identical shape - name, price, one line, a list - which is
+            what lets a reader compare them by scanning across instead of
+            reading each one. The nested cards here were the single busiest
+            thing on the page and said nothing the list does not.
+          */}
+          <ul className="mt-4 space-y-2.5 text-sm text-cream/80">
+            <li className="flex items-start gap-2">
+              <span className="mt-0.5 text-zest">✓</span>
+              <span>
+                <b className="text-cream">טיול משותף</b> - קישור אחד, וכולם מצביעים, מגיבים, מציעים
+                מקומות ומסמנים תאריכים. לחברים זה חינם לגמרי.
+              </span>
             </li>
-            <li className="rounded-xl bg-cream/10 p-3">
-              <p className="text-sm font-bold text-cream">🛫 הבדיקה לפני הנסיעה כלולה</p>
-              <p className="mt-0.5 text-xs leading-relaxed text-cream/65">
-                לכל טיול, בלי הגבלה - {priceLabel()} לטיול לכל מי שלא במנוי.
-              </p>
+            <li className="flex items-start gap-2">
+              <span className="mt-0.5 text-zest">✓</span>
+              <span>
+                <b className="text-cream">הבדיקה לפני הנסיעה כלולה</b> - לכל טיול, בלי הגבלה
+                ({priceLabel()} לטיול בלי מנוי).
+              </span>
             </li>
-            <li className="rounded-xl bg-cream/10 p-3">
-              <p className="text-sm font-bold text-cream">⚡ מסלול אישי מובטח לסוכן</p>
-              <p className="mt-0.5 text-xs leading-relaxed text-cream/65">
-                מכסות יומיות גדולות בהרבה מהחינמיות, ובלי תלות בעומס של אף אחד אחר באתר.
-              </p>
+            <li className="flex items-start gap-2">
+              <span className="mt-0.5 text-zest">✓</span>
+              <span>
+                <b className="text-cream">מסלול אישי מובטח לסוכן</b> - בלי תלות בעומס באתר.
+              </span>
             </li>
           </ul>
           {cta('premium', 'mt-5')}
@@ -355,9 +366,11 @@ export default function PremiumClient() {
               <span>הטיול המשותף והבדיקה לפני הנסיעה - כלולים, כמו בפרימיום</span>
             </li>
           </ul>
-          <p className="mt-3 rounded-xl bg-night/[0.04] px-3 py-2 text-xs leading-relaxed text-night/60">
-            מי זה: מי שמארגן טיולים למשפחה ולחברים כל הזמן, מי שמתכנן מסע ארוך על פני כמה חודשים,
-            או מי שפשוט נתקל בקיר בפרימיום. <b className="text-night/75">אם לא נתקלתם - אל תשדרגו.</b>
+          {/* A quiet line, not a box - the last nested card in this grid, and the
+              three columns only read as one system while none of them has one. */}
+          <p className="mt-3 border-t border-night/10 pt-3 text-xs leading-relaxed text-night/55">
+            למי שמארגן טיולים למשפחה ולחברים כל הזמן, או מתכנן מסע ארוך על פני כמה חודשים.{' '}
+            <b className="text-night/75">לא נתקלתם בקיר בפרימיום? אל תשדרגו.</b>
           </p>
           {cta('pro', 'mt-4')}
         </section>
@@ -454,7 +467,7 @@ export default function PremiumClient() {
           <li className="flex items-start gap-2">
             <span className="mt-0.5 text-night/35">•</span>
             <span>
-              <b className="text-night">מתכננים כל הזמן:</b> פרו הוא {yearOfPro.toLocaleString('he-IL')} ₪
+              <b className="text-night">מתכננים כל הזמן:</b> פרו הוא {ilsBig(yearOfPro)} ₪
               בשנה, כלומר כ-{proPerTrip.toFixed(0)} ₪ לטיול מלא אם אתם באמת מנצלים אותו.{' '}
               <b className="text-night">אם אתם לא - פרימיום עדיף, והוא פי {(PRO_PRICE_ILS / PREMIUM_PRICE_ILS).toFixed(1)} יותר זול.</b>
             </span>
