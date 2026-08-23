@@ -5,6 +5,7 @@
  */
 
 import type { BookingSearchCard } from '@/lib/bookingSearch';
+import type { ReplyPhoto } from '@/lib/types';
 
 export interface StoredChatMessage {
   role: 'user' | 'assistant';
@@ -13,6 +14,12 @@ export interface StoredChatMessage {
   placeIds?: string[];
   actions?: string[];
   quickReplies?: string[];
+  /**
+   * Photographs of places this reply named, resolved from the catalog on the
+   * server. Stored like the search cards: a few short strings, and a traveller
+   * who reopens the tab expects the answer to look the way it looked.
+   */
+  photos?: ReplyPhoto[];
   /**
    * Search cards the agent opened in this message. Stored so they are still there
    * after a refresh - a traveller who closed the tab and reopened it expects to find

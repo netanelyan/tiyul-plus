@@ -32,6 +32,7 @@
  * real search card the traveler clicks.
  */
 
+import { heWord } from './hebrewMatch';
 import { PREMIUM_PRICE_ILS } from './plans';
 
 /** The wording that replaces a cut claim. Must pass the filter itself - there's a test. */
@@ -98,14 +99,26 @@ export type GuardCategory = 'price' | 'event' | 'kosher' | 'lookup' | 'kashrut-v
  * stricter than a rabbinate - and it contains no word for "kosher" at all. The
  * body words themselves are the context, so they are matched here.
  */
-const KASHRUT_BODY_WORD = /(רבנות|בית הדין|בית דין|בד["״'׳]?ץ|הכשר|כשרות|השגחה)/;
+const KASHRUT_BODY_WORD = new RegExp(
+  heWord('רבנות', 'בית הדין', 'בית דין', 'בד["״\'׳]?ץ', 'הכשר', 'כשרות', 'השגחה'),
+);
 
 /**
- * Ruling on a kashrut standard. Comparatives and sufficiency judgements only -
- * naming a body is fine and is the point.
+ * Ruling on a kashrut standard - the wording that is **unmistakably** about
+ * supervision and cannot mean anything else. This half fires on a certifying
+ * body named in this turn's data even with no Hebrew kashrut word beside it.
  */
-const KASHRUT_VERDICT =
-  /(מספיק(ה)?|לא מספיק(ה)?|אמין(ה)?|לא אמין(ה)?|מחמיר(ה)?\s*(יותר|פחות)?|קפדנ(י|ית)|מקל(ה)?|רמת\s*הכשרות|רמה\s*גבוהה|רמה\s*נמוכה|עדיף(ה)?|טוב(ה)?\s*יותר|פחות\s*טוב(ה)?|הכי\s*(טוב|מחמיר|אמין)|סומכים\s*עליו|אפשר\s*לסמוך|לא\s*הייתי\s*סומך|ברמה\s*של|נחשב(ת)?\s*ל?(מחמיר|אמין|טוב))/;
+const KASHRUT_VERDICT_SPECIFIC =
+  /(מחמיר(ה)?\s*(יותר|פחות)?|מקל(ה)?|רמת\s*הכשרות|סומכים\s*עליו|אפשר\s*לסמוך|לא\s*הייתי\s*סומך|נחשב(ת)?\s*ל?(מחמיר|אמין))/;
+
+/**
+ * Ruling in words that are **also ordinary Hebrew**. "There is enough time in
+ * Vienna" is not a kashrut verdict, and `kosherNames` carries city names - so
+ * this half is allowed to fire only when the sentence actually carries kashrut
+ * vocabulary, never on a bare name from the allowlist.
+ */
+const KASHRUT_VERDICT_GENERIC =
+  /(מספיק(ה)?|אמין(ה)?|קפדנ(י|ית)|רמה\s*(גבוהה|נמוכה)|עדיף(ה)?|טוב(ה)?\s*יותר|פחות\s*טוב(ה)?|הכי\s*(טוב|מחמיר|אמין)|ברמה\s*של)/;
 
 /** Which replacement line each rule belongs to */
 const CATEGORY: Record<string, GuardCategory> = {
@@ -133,12 +146,50 @@ export interface GuardReplacements {
   'kashrut-verdict'?: string;
 }
 
-/** Currencies. On their own they are entirely legitimate ("the currency is the euro") - a number next to them is not. */
-const CURRENCY =
-  /(₪|€|\$|£|\bILS\b|\bEUR\b|\bUSD\b|שקלים|שקל|ש"ח|ש״ח|אירו|יורו|דולרים|דולר)/;
+/**
+ * Currencies. On their own they are entirely legitimate ("the currency is the
+ * euro") - a number next to them is not.
+ *
+ * The Hebrew half goes through `heWord`, which is what stops the word for
+ * Europe (it opens with the word for euro) and the word for weight (it contains
+ * the word for shekel) from reading as currency. That was the reported bug.
+ */
+const CURRENCY = new RegExp(
+  `(₪|€|\\$|£|\\bILS\\b|\\bEUR\\b|\\bUSD\\b|${heWord(
+    'שקלים',
+    'שקל',
+    'ש["״]ח',
+    'אירו',
+    'יורו',
+    'דולרים',
+    'דולר',
+  )})`,
+);
 
-/** Strong price words. The Hebrew verb for "costs" is deliberately excluded - it also means "climbs" ("the trail climbs 300 meters"). */
-const MONEY_WORD = /(מחיר|מחירים|עלות|עלויות|תעריף|תעריפים|דמי כניסה|כמה עולה|יעלה לכם|בתקציב של)/;
+/**
+ * Strong price words. The Hebrew verb for "costs" is deliberately excluded - it
+ * also means "climbs" ("the trail climbs 300 meters"), and for the same reason
+ * the word for "cost" is bounded: without that, "35 degrees in August" reads as
+ * a price claim, because the Hebrew for degrees contains the Hebrew for cost.
+ */
+const MONEY_WORD = new RegExp(
+  heWord(
+    // Hebrew construct forms ("prices of the hotels") end in a letter the
+    // boundary would otherwise cut against, so each one is listed.
+    'מחירים',
+    'מחירי',
+    'מחיר',
+    'עלויות',
+    'עלות',
+    'תעריפים',
+    'תעריפי',
+    'תעריף',
+    'דמי ה?כניסה',
+    'כמה עולה',
+    'יעלה לכם',
+    'בתקציב של',
+  ),
+);
 
 /** A number attached to a pricing unit. Catches "400 per night" and not "3 nights". */
 const PER_UNIT =
@@ -155,9 +206,15 @@ const ROOM_TYPE =
  * Availability. **Deliberately phrased narrowly**: "a free day" in a plan is a
  * valid and common sentence, so the matcher requires the word room/place/
  * booking next to it.
+ *
+ * "Sold out" used to sit here as a bare word, and the bare word is exactly how
+ * Basel is spelled in Hebrew - so a sentence about the city was answered with
+ * "I can't check prices or availability". A prefix boundary cannot fix that one
+ * (the city really is the preposition plus the word), so it now requires the
+ * thing that ran out to be named.
  */
 const AVAILABILITY =
-  /(חדרים פנויים|חדר פנוי|יש זמינות|אין זמינות|נותרו \d|נותר חדר|מקומות אחרונים|אזל|אזלו|חדרים אחרונים|זמין להזמנה|תפוס בתאריכים)/;
+  /(חדרים פנויים|חדר פנוי|יש זמינות|אין זמינות|נותרו \d|נותר חדר|מקומות אחרונים|חדרים אחרונים|זמין להזמנה|תפוס בתאריכים|אזל(ו|ה)?\s+(ה)?(מלאי|כרטיסים|מקומות|חדרים|כרטיס))/;
 
 /**
  * "The cheapest" and its friends. Forbidden **always** and with no whitelist:
@@ -170,12 +227,65 @@ const SUPERLATIVE =
 
 /* ---------- Events and dates ---------- */
 
-/** Words that signal an event is being discussed */
-const EVENT_WORD =
-  /(פסטיבל|קרנבל|ביאנלה|אוקטוברפסט|מצעד|תהלוכה|יריד|קונצרט|הופעה|הופעות|מופע|מופעים|תערוכה|מרתון|חגיגות|טקס|אירוע|אירועים)/;
+/**
+ * Words that signal an event is being discussed. Bounded, because unbounded
+ * they reach into unrelated words: the Hebrew for "fair" opens the Hebrew for
+ * "a drop (in prices)", and the Hebrew for "ceremony" opens the word for
+ * "text".
+ */
+const EVENT_WORD = new RegExp(
+  heWord(
+    'פסטיבלים',
+    'פסטיבל',
+    'קרנבלים',
+    'קרנבל',
+    'ביאנלה',
+    'אוקטוברפסט',
+    'מצעדים',
+    'מצעד',
+    'תהלוכות',
+    'תהלוכה',
+    'ירידים',
+    'יריד',
+    'קונצרטים',
+    'קונצרט',
+    'הופעות',
+    'הופעה',
+    'מופעים',
+    'מופע',
+    'תערוכות',
+    'תערוכה',
+    'מרתון',
+    'חגיגות',
+    'טקסים',
+    'טקס',
+    'אירועים',
+    'אירוע',
+  ),
+);
 
-/** Words that signal a closure claim */
-const CLOSURE_WORD = /(סגור|סגורה|סגורים|סגורות|סגירה|סגירות|ייסגר|תיסגר|נסגר|שובת|שביתה)/;
+/**
+ * Words that signal a closure claim. Bounded for the same reason: the Hebrew
+ * for "on strike" sits inside the word for "the answer of".
+ */
+const CLOSURE_WORD = new RegExp(
+  heWord(
+    'סגורות',
+    'סגורים',
+    'סגורה',
+    'סגור',
+    'סגירות',
+    'סגירה',
+    'ייסגר',
+    'תיסגר',
+    'נסגרים',
+    'נסגרת',
+    'נסגר',
+    'שובתים',
+    'שובת',
+    'שביתה',
+  ),
+);
 
 /**
  * A **specific** date: a month name, a year, or a numeric date.
@@ -184,9 +294,29 @@ const CLOSURE_WORD = /(סגור|סגורה|סגורים|סגורות|סגירה|
  * has many events throughout the year" is a perfectly valid sentence, and
  * blocking it would turn the guard into noise somebody would switch off within
  * a week. "This year" only counts when attached to an occurrence verb.
+ *
+ * Month names are bounded, which is what stops "from Italy" from reading as
+ * "May" - the two share their first three letters. One ambiguity survives the
+ * boundary and is accepted knowingly: with the "in" prefix, "in May" and "film
+ * director" are the same word in Hebrew, so a sentence naming a director next
+ * to a festival can still be cut. Rare, and the safe direction.
  */
-const SPECIFIC_TIME =
-  /(בינואר|בפברואר|במרץ|באפריל|במאי|ביוני|ביולי|באוגוסט|בספטמבר|באוקטובר|בנובמבר|בדצמבר|ינואר|פברואר|מרץ|אפריל|מאי|יוני|יולי|אוגוסט|ספטמבר|אוקטובר|נובמבר|דצמבר|20\d{2}|\d{1,2}[./]\d{1,2})/;
+const SPECIFIC_TIME = new RegExp(
+  `(${heWord(
+    'ינואר',
+    'פברואר',
+    'מרץ',
+    'אפריל',
+    'מאי',
+    'יוני',
+    'יולי',
+    'אוגוסט',
+    'ספטמבר',
+    'אוקטובר',
+    'נובמבר',
+    'דצמבר',
+  )}|20\\d{2}|\\d{1,2}[./]\\d{1,2})`,
+);
 
 /** "Takes place this year" / "will be held on" - a claim about the occurrence itself */
 const HAPPENING =
@@ -210,10 +340,30 @@ const NAMED_STAY = new RegExp(
  * Kashrut words. **The same list** as `KOSHER_ASK` in `grounding.ts` - see
  * `kosherIntentText` there, which is the shared version. Defined here again
  * rather than imported, in the same style in which this file already defines
- * all of its patterns locally.
+ * all of its patterns locally; the Hebrew half is bounded here, which the
+ * shared one is not, because the Hebrew for "kosher" opens the word for
+ * "talent" and an unbounded match turned "there is real local talent" into a
+ * kashrut claim.
  */
-const KOSHER_WORD =
-  /כשר(ו|י|ה|ות)?|מהדרין|גלאט|בד["״'׳]?ץ|הכשר|השגחה|חב["״'׳]?ד|בית חב|kosher|chabad|glatt|hechsher/i;
+const KOSHER_WORD = new RegExp(
+  `(${heWord(
+    'כשרויות',
+    'כשרות',
+    'כשרים',
+    'כשרה',
+    'כשרי',
+    'כשר',
+    'מהדרין',
+    'גלאט',
+    'בד["״\'׳]?ץ',
+    'הכשרים',
+    'הכשר',
+    'השגחה',
+    'חב["״\'׳]?ד',
+    'בית חב',
+  )}|kosher|chabad|glatt|hechsher)`,
+  'i',
+);
 
 /**
  * **Assertion** words - not every sentence that mentions kashrut is a claim
@@ -377,12 +527,19 @@ export function violationOf(sentence: string, allow: GuardAllowlist = {}): strin
     perfectly well grounded - naming a real body from this turn's data - and
     still be a verdict, which is precisely the case the prompt alone would
     miss. It is checked BEFORE the allowlist can wave it through.
+
+    But the verdict wording splits in two, because `kosherNames` carries city
+    names as well as bodies: judging on a bare name from that list turned "there
+    is enough time in Vienna" into a kashrut verdict whenever the kosher gate
+    happened to be open. Wording that can only be about supervision still fires
+    on a name alone; wording that is also ordinary Hebrew needs actual kashrut
+    vocabulary in the sentence.
   */
+  const kashrutContext = KOSHER_WORD.test(sentence) || KASHRUT_BODY_WORD.test(sentence);
   if (
-    (KOSHER_WORD.test(sentence) ||
-      KASHRUT_BODY_WORD.test(sentence) ||
-      namesAllowedKosher(sentence, allow)) &&
-    KASHRUT_VERDICT.test(sentence)
+    (kashrutContext && KASHRUT_VERDICT_GENERIC.test(sentence)) ||
+    ((kashrutContext || namesAllowedKosher(sentence, allow)) &&
+      KASHRUT_VERDICT_SPECIFIC.test(sentence))
   ) {
     return 'kashrut-verdict';
   }

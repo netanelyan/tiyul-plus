@@ -227,6 +227,22 @@ export interface CityPractical {
   kosherOverview: string; // state of kosher food in the city
 }
 
+/**
+ * A photograph attached to an agent reply, for a place the reply actually
+ * named. Built entirely on the server (`lib/server/replyPhotos.ts`) from the
+ * catalog - the model never supplies or picks a photo - and the client only
+ * renders it. Lives here so the chat components can hold the type without
+ * importing anything that drags the catalog into the browser bundle.
+ */
+export interface ReplyPhoto {
+  /** A place id, or `city:<slug>` when the card is a whole destination */
+  id: string;
+  name: string; // Hebrew
+  cityName: string; // Hebrew, for the caption under the name
+  photo: string;
+  href: string;
+}
+
 // The city's iconic wonder - shown on the first introduction card (homepage).
 // Must point at a real, verified place; if there is none yet, leave a TODO
 // rather than inventing a place that looks real (the project's iron rule).

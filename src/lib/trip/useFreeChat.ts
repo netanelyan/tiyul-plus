@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { clientIdHeader } from '@/lib/clientId';
 import type { Trip } from './types';
-import type { Destination } from '@/lib/types';
+import type { Destination, ReplyPhoto } from '@/lib/types';
 import { useTrip } from './TripContext';
 import { clearChat, loadChat, saveChat, type StoredChatMessage } from './chatStorage';
 import { loadExplored, saveExplored } from '@/lib/explore/storage';
@@ -134,6 +134,7 @@ export function useFreeChat(): FreeChat {
             replies?: string[];
             destination?: Destination;
             search?: BookingSearchCard;
+            photos?: ReplyPhoto[];
           };
           try {
             event = JSON.parse(line.slice(5));
@@ -154,6 +155,9 @@ export function useFreeChat(): FreeChat {
             }
           } else if (event.type === 'meta' && appended) {
             builtMsg = { ...builtMsg, destinationSlug: event.destinationSlug, placeIds: event.placeIds };
+            patchLast(builtMsg);
+          } else if (event.type === 'photos' && appended && event.photos?.length) {
+            builtMsg = { ...builtMsg, photos: event.photos };
             patchLast(builtMsg);
           } else if (event.type === 'trip' && event.trip) {
             // Kept for the moment after the stream ends - see the note above.

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import type { Destination, Place } from '@/lib/types';
+import type { Destination, Place, ReplyPhoto } from '@/lib/types';
 import type { TripChat } from '@/lib/trip/useTripChat';
 import { fileToChatImage, IMAGE_ACCEPT } from '@/lib/trip/imageAttach';
 import { cachedCity, fetchCities } from '@/lib/trip/cityData';
@@ -52,6 +52,49 @@ function renderText(text: string) {
       )}
     </p>
   ));
+}
+
+/**
+ * The photographs of places a reply named. Everything here is built on the
+ * server (`lib/server/replyPhotos.ts`) - name, city, photo URL and link - so
+ * this renders and does not resolve: no catalog import, no extra fetch.
+ *
+ * A card whose photo fails to load removes itself. Five URLs in the catalog are
+ * known dead and a broken-image icon beside a recommendation looks like a
+ * broken product, so the honest fallback here is one card fewer.
+ */
+function ReplyPhotos({ photos }: { photos: ReplyPhoto[] }) {
+  const [broken, setBroken] = useState<string[]>([]);
+  const shown = photos.filter((p) => !broken.includes(p.id));
+  if (shown.length === 0) return null;
+  return (
+    <ul className="mt-3 flex flex-wrap gap-2">
+      {shown.map((p) => (
+        <li key={p.id} className="min-w-[7.5rem] flex-1 basis-32">
+          <a
+            href={p.href}
+            className="group block overflow-hidden rounded-xl bg-shell ring-1 ring-night/10 transition hover:ring-sunset/40"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={p.photo}
+              alt={p.name}
+              loading="lazy"
+              decoding="async"
+              onError={() => setBroken((b) => (b.includes(p.id) ? b : [...b, p.id]))}
+              className="h-20 w-full object-cover transition group-hover:scale-[1.03]"
+            />
+            <span className="block px-2 py-1.5">
+              <span className="block truncate text-xs font-bold text-night">{p.name}</span>
+              <span className="block truncate text-[0.7rem] font-semibold text-night/45">
+                {p.cityName}
+              </span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 function MessageMap({ slug, placeIds }: { slug: string; placeIds: string[] }) {
@@ -276,6 +319,7 @@ export default function ChatPanel({
                   ))}
                 </div>
               )}
+              {msg.photos && msg.photos.length > 0 && <ReplyPhotos photos={msg.photos} />}
               {msg.destinationSlug && msg.placeIds && msg.placeIds.length > 0 && (
                 <MessageMap slug={msg.destinationSlug} placeIds={msg.placeIds} />
               )}

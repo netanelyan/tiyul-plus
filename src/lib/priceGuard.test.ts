@@ -448,3 +448,66 @@ test('a verdict is replaced with the hand-back line, not with "I have no data"',
   // It also offers what we CAN say, so the traveller is not left with nothing.
   assert.match(r.text, /מה רשום אצלנו ומאיזה מקור/);
 });
+
+/* ---------- Hebrew word boundaries: the words that only LOOK like claims ---------- */
+
+/**
+ * Every row here was a live false positive, and the first one is the reported
+ * bug: a traveller asked which is the largest lake in Europe and the answer was
+ * replaced with "I can't check prices or availability" - because the Hebrew for
+ * "Europe" opens with the Hebrew for "euro" and the sentence carried a number.
+ *
+ * `\b` cannot help in Hebrew, so each of these is a short matcher token sitting
+ * inside an ordinary, unrelated word. See `hebrewMatch.ts`.
+ */
+test('a Hebrew word that merely CONTAINS a matcher token is not a claim', () => {
+  const innocent: [string, string][] = [
+    ['euro inside Europe - the reported bug', 'האגם הגדול ביותר באירופה הוא לאדוגה, בשטח של כ-17,700 קמ״ר.'],
+    ['euro inside Europe, again', 'יש 15 אגמים יפים באירופה שכדאי לראות.'],
+    ['shekel inside weight', 'התיק שלכם צריך להיות במשקל של עד 8 קילו.'],
+    ['cost inside degrees', 'באוגוסט הטמפרטורה מגיעה ל-35 מעלות.'],
+    ['sold-out is how Basel is spelled', 'באזל היא עיר יפה על הריין, ויש בה 3 מוזיאונים גדולים.'],
+    ['fair inside a drop', 'בחודש מרץ יש ירידה במחירים.'],
+    ['May inside "from Italy"', 'הטיסה מאיטליה חוזרת בערב, ויש פסטיבל בעיר.'],
+    ['kosher inside talent', 'יש שם כשרון מקומי מרשים ומסעדות טובות.'],
+    ['on-strike inside "the answer of"', 'תשובת המשרד תגיע במרץ.'],
+  ];
+  for (const [why, sentence] of innocent) {
+    assert.equal(violationOf(sentence), null, `wrongly cut (${why}): ${sentence}`);
+  }
+});
+
+/**
+ * The other direction, in the same test file, on purpose: a boundary that is
+ * too eager would quietly switch the guard off. Each of these is the real claim
+ * whose token the row above only resembled.
+ */
+test('the same tokens as REAL words are still caught', () => {
+  assert.equal(violationOf('הלינה יוצאת בערך 90 אירו ללילה.'), 'per-unit-price');
+  assert.equal(violationOf('זה עולה בסביבות 300 שקלים.'), 'currency-amount');
+  assert.equal(violationOf('המחירים שם מתחילים ב-200.'), 'price-claim');
+  assert.equal(violationOf('מחירי המלונות בעיר גבוהים, בערך 600 ש״ח.'), 'currency-amount');
+  assert.equal(violationOf('העלות של הכניסה היא 25 יורו.'), 'currency-amount');
+  assert.equal(violationOf('אזלו הכרטיסים למופע.'), 'availability');
+  assert.equal(violationOf('הפסטיבל מתקיים באוגוסט.'), 'event-claim');
+  assert.equal(violationOf('המוזיאון סגור בינואר.'), 'closure-claim');
+  // Hebrew prefixes still attach to a real currency word
+  assert.equal(violationOf('שילמנו כ-40 באירו על הכניסה.'), 'currency-amount');
+});
+
+/**
+ * `kosherNames` carries CITY names, not only certifying bodies - so judging on
+ * a bare name from that list read "there is enough time in Vienna" as a ruling
+ * on somebody's kashrut standard whenever the kosher gate happened to be open.
+ * Wording that can only be about supervision still fires on a name alone.
+ */
+test('an ordinary sentence naming an allowlisted city is not a kashrut verdict', () => {
+  const allow = { kosherNames: ['פראג', 'לונדון', 'רבנות פראג', 'KLBD'] };
+  assert.equal(violationOf('בפראג יש מספיק זמן ליומיים.', allow), null);
+  assert.equal(violationOf('לונדון עדיפה לזוג צעיר.', allow), null);
+  // ...and the supervision wording still is one, on a body name alone.
+  assert.equal(violationOf('KLBD מחמיר יותר.', allow), 'kashrut-verdict');
+  assert.equal(violationOf('על רבנות פראג אפשר לסמוך.', allow), 'kashrut-verdict');
+  // Generic wording still is one when the sentence really is about kashrut.
+  assert.equal(violationOf('ההשגחה שם מספיקה.', allow), 'kashrut-verdict');
+});

@@ -9,6 +9,7 @@ import { clearChat, loadChat, saveChat, type StoredChatMessage } from './chatSto
 import { loadExplored, saveExplored } from '@/lib/explore/storage';
 import { authHeader } from '@/lib/auth/client';
 import type { BookingSearchCard } from '@/lib/bookingSearch';
+import type { ReplyPhoto } from '@/lib/types';
 
 /**
  * The conversation state with the agent - extracted out of AgentWorkspace so the
@@ -207,6 +208,7 @@ export function useTripChat(options?: {
             replies?: string[];
             destination?: Destination;
             search?: BookingSearchCard;
+            photos?: ReplyPhoto[];
           };
           try {
             event = JSON.parse(line.slice(5));
@@ -231,6 +233,9 @@ export function useTripChat(options?: {
               destinationSlug: event.destinationSlug,
               placeIds: event.placeIds,
             }));
+          } else if (event.type === 'photos' && appended && event.photos?.length) {
+            const photos = event.photos;
+            patchLast((msg) => ({ ...msg, photos }));
           } else if (event.type === 'trip' && event.trip) {
             // The trip was created/updated from within this conversation - when
             // currentId changes as a result, do not reload from storage (that

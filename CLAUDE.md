@@ -11204,3 +11204,104 @@ drawer, one of them `display:none` - and the query took the hidden copy.
 **One caveat worth stating:** the CSS comment explaining the bidi trap was
 written with the Hebrew example in it and the `englishComments` guard caught it
 immediately. Rule 9 works; the example is transliterated now.
+
+### 2026-08-23 (b) - "The first sentence should not appear, not once in a million years" - the Hebrew word for Europe contains the Hebrew word for euro
+
+Netanel, with a screenshot of `/ask`. He asked which is the largest lake in
+Europe, and the answer opened with **"I can't check prices or availability, so I
+won't quote numbers"** - the price guard's canned line, on a question that has
+nothing to do with money. Second item, same message: pictures would be nice.
+
+---
+
+**The cause is one line of regex and it is a whole class, not one bug.**
+`CURRENCY` matched the bare Hebrew word for euro, and the Hebrew word for
+**Europe opens with exactly those four letters**. Any sentence carrying a number
+and the word Europe was therefore a price claim. `\b` only knows ASCII, so there
+was nothing to stop it.
+
+Once measured rather than guessed, the same shape turned up **nine times**, each
+verified as a live false positive before the fix and clean after:
+
+| the matcher | means | but also sits inside | what the traveller got |
+|---|---|---|---|
+| `airo` | euro | `airopa` - Europe | "I can't check prices" |
+| `shekel` | shekel | `mishkal` - weight | same, on "a bag up to 8 kg" |
+| `alut` | cost | `maalot` - degrees | same, on "35 degrees in August" |
+| `azal` | sold out | `Bazel` - **Basel** | same, on a Swiss city |
+| `yarid` | fair | `yerida` - a drop | "I have no record of events" |
+| `mai` | May | `me-Italia` - from Italy | same |
+| `shovet` | on strike | `tshuvat` - the answer of | "I have no record of closures" |
+| `kasher` | kosher | `kishron` - talent | "I can only speak about verified places" |
+| a city name in the kosher allowlist | - | - | "judging a hechsher is personal" on *"there is enough time in Vienna"* |
+
+New `src/lib/hebrewMatch.ts` is the only place that decides what a Hebrew word
+boundary is: no Hebrew letter after the token, and at most two attached prefix
+letters in front. **The "from" prefix is deliberately excluded** - allowing it
+would let the word for weight read as "from"+"shekel" and reopen two of the rows
+above, and in real prose that prefix attaches to the number, not to the currency.
+
+**Two rows could not be fixed by a boundary and needed a different answer.**
+Basel really *is* the preposition plus the word for "sold out", so that matcher
+now requires the thing that ran out to be named. And the kashrut-verdict rule
+split in two: `kosherNames` carries **city** names as well as certifying bodies,
+so wording that is also ordinary Hebrew ("enough", "better", "reliable") now
+needs real kashrut vocabulary in the sentence, while wording that can only be
+about supervision ("stricter", "you can rely on it") still fires on a body name
+alone. Nothing was weakened - the documented failing example from the entry that
+created that rule is still caught, by the body words it contains.
+
+One ambiguity survives the boundary and is accepted knowingly, in a comment: with
+the "in" prefix, **"in May" and "film director" are the same word in Hebrew**, so
+a sentence naming a director beside a festival can still be cut. Rare, and the
+safe direction.
+
+---
+
+**Photographs: resolved from the catalog on the server, never chosen by the
+model.** The model is not given photo URLs at all, so there is nothing to invent;
+`lib/server/replyPhotos.ts` matches the names it actually wrote against the
+catalog and streams ready cards on a new `{type:'photos'}` event. The client only
+renders - no catalog import, no extra fetch, same pattern as the booking card.
+
+**Two design corrections, both found by running it rather than by reading it:**
+
+1. A sentence about Bratislava came back with a photograph of **Warsaw's old
+   town** - Warsaw happens to be the only destination with a place under that
+   name, so "unique in our catalog" passed for "unique in the world". A card is
+   now emitted only when the reply **also names the place's destination**. That
+   is what turns "a name we recognise" into "the place this sentence is about".
+2. Anchoring on the **country** was the obvious next draft and leaked worse: "the
+   Spanish Steps" - a Rome landmark whose Hebrew name contains "Spain" - pulled
+   Madrid and Barcelona photographs into an answer about Rome. Cities only.
+
+The cost is stated rather than hidden: a place named with no city around it gets
+no picture. That is the side to be wrong on.
+
+**A finding the feature surfaced on its own, worth a decision:** the screenshot's
+reply says *"my catalog has ... **Lake Garda** in Italy"*. **Lake Garda is not in
+the catalog** - zero occurrences. The photo layer simply produced no card for it,
+which is the honest outcome, but the sentence is a hard-rule-2 violation and it
+was not touched here.
+
+---
+
+**Verified.** 722 unit tests (14 new: the nine collisions asserted clean, the
+same nine tokens as *real* claims still caught, the city-name/verdict split, and
+the photo resolver against the real catalog including both wrong-city cases).
+tsc, build and lint clean on every touched file. Live against the real model on a
+production build: the reported question now answers correctly with the number and
+the word Europe intact and no disclaimer, and a Rome question returns four
+correct Rome photographs in reading order. **22/22 in a real browser** at 1400
+and 390 (DPR 3) driving the actual page: four cards, every photo decoding, Hebrew
+alt text, name + city caption, RTL, zero horizontal overflow, nothing past either
+viewport edge, and no price disclaimer on screen.
+
+**Two harness notes.** The blocked image hosts are stubbed with a real 1x1 PNG,
+because a card whose photo fails to load removes itself by design and a blocked
+host would look exactly like the feature not working - entry (z)'s trap, applied
+in advance this time. And the first decode assertion reported 0/4: the cards are
+`loading="lazy"` and below the fold, so it was measuring the scroll position, not
+the product. Scroll first, then assert.
+
+**Not committed** - the working tree holds the change for review.

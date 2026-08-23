@@ -43,7 +43,8 @@ import {
 /** Request-body cap - before JSON.parse, so a huge body cannot bring down the function */
 const MAX_BODY_CHARS = 6_000_000;
 import type { Trip } from '@/lib/trip/types';
-import type { Destination } from '@/lib/types';
+import type { Destination, ReplyPhoto } from '@/lib/types';
+import { photoCardsForReply } from '@/lib/server/replyPhotos';
 import { exploreDestination, type ExploreScope } from '@/lib/explore/resolver';
 import { exploredToDestination, sanitizeExploredDestinations } from '@/lib/explore/adapter';
 import { checkLimit, peekUsed, aiUnitsUsedToday, recordAiUnits } from '@/lib/server/limits';
@@ -299,6 +300,8 @@ type StreamEvent =
   // Real progress from the tool loop - so a long wait does not look stuck
   | { type: 'status'; text: string }
   | { type: 'meta'; destinationSlug?: string; placeIds?: string[] }
+  // Photographs of places the reply named - resolved from the catalog, not by the model
+  | { type: 'photos'; photos: ReplyPhoto[] }
   | { type: 'trip'; trip: Trip; actions: string[] }
   | { type: 'quickReplies'; replies: string[] }
   // A destination auto-explored this turn - the client stores it and renders the canvas with it
@@ -1561,6 +1564,13 @@ async function runAgent(
 
   const dest = findDestination(full);
   send({ type: 'meta', destinationSlug: dest?.slug });
+  /*
+    Photographs of the places this reply actually named. Resolved from the
+    catalog on the reply text the traveller is reading - the model is never
+    given a photo URL and never picks one. See replyPhotos.ts.
+  */
+  const photos = photoCardsForReply(full);
+  if (photos.length > 0) send({ type: 'photos', photos });
   if (touched && working) send({ type: 'trip', trip: working, actions: suppressActions ? [] : actions });
   // Safety net: the prompt asks for buttons when offering to explore an uncovered
   // destination, but that is not reliably obeyed (see uncoveredReplies.ts) - when
@@ -1573,6 +1583,8 @@ function sendRuleBased(lastUserText: string, send: Send) {
   const r = ruleBasedReply(lastUserText);
   send({ type: 'text', text: r.reply });
   send({ type: 'meta', destinationSlug: r.destinationSlug, placeIds: r.placeIds });
+  const photos = photoCardsForReply(r.reply);
+  if (photos.length > 0) send({ type: 'photos', photos });
 }
 
 /** A single-message stream reply - for quota messages (a chat experience, not an HTTP error) */
