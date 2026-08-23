@@ -234,6 +234,104 @@ html.a11y-no-motion *::after {
   animation: thinking-bounce 1s ease-in-out infinite;
 }
 
+/*
+  A wave of light travelling through text, letter by letter - TextShimmerWave.tsx.
+  Used while the agent is working, where a label ("building the route...") says
+  more than three dots do.
+
+  Only opacity is animated, and that is a correctness requirement rather than a
+  performance one: a transform does not apply to a non-replaced inline element,
+  so a moving variant would need `display: inline-block` on every character -
+  which turns each one into an atomic box for the bidi algorithm. Consecutive
+  digits would then be ordered right-to-left inside an RTL line, so a status
+  reading "10 days" would print its number as "01". Plain inline spans keep the
+  whole string in one bidi run, exactly as if it had never been split.
+*/
+@keyframes shimmer-wave {
+  0%,
+  55%,
+  100% {
+    opacity: 0.4;
+  }
+  22% {
+    opacity: 1;
+  }
+}
+
+.shimmer-wave-char {
+  animation: shimmer-wave var(--shimmer-duration, 1.4s) ease-in-out infinite;
+  animation-delay: var(--shimmer-delay, 0s);
+}
+
+/*
+  Reveal on scroll - InView.tsx. The hidden state lives in CSS so the element
+  starts hidden in the very first painted frame; without that the content
+  flashes at full opacity before the observer's first callback lands.
+*/
+.in-view {
+  opacity: 0;
+  transform: translateY(24px);
+  filter: blur(4px);
+  transition:
+    opacity 0.45s ease-out,
+    transform 0.45s cubic-bezier(0.2, 0.7, 0.3, 1),
+    filter 0.45s ease-out;
+  transition-delay: var(--in-view-delay, 0s);
+}
+
+.in-view-visible {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/*
+  A stepped panel - TransitionPanel.tsx. The offset is physical (a transform is
+  never mirrored by `dir`), so the sign is chosen by the component: moving
+  forward in an RTL flow, the next step arrives from the left and the previous
+  one leaves to the right.
+*/
+.panel-box {
+  position: relative;
+  overflow: hidden;
+  transition: height 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.panel-enter {
+  animation: panel-enter 0.32s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+@keyframes panel-enter {
+  from {
+    opacity: 0;
+    transform: translateX(var(--panel-from, 0));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/*
+  Faster than the enter on purpose. The two panels overlap while both are on
+  screen, and text over text is unreadable - so the outgoing one gets out of the
+  way quickly and the incoming one takes its time arriving.
+*/
+.panel-leave {
+  animation: panel-leave 0.16s ease-in both;
+}
+
+@keyframes panel-leave {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(var(--panel-to, 0));
+  }
+}
+
 /* Skeleton block while loading: the shape of the content, with a quiet shimmer - TripSkeleton and friends */
 @keyframes skeleton-shimmer {
   0% {
@@ -284,6 +382,30 @@ html.a11y-no-motion *::after {
   .thinking-dot {
     animation: none;
     opacity: 0.6;
+  }
+  .shimmer-wave-char {
+    animation: none;
+    opacity: 0.75;
+  }
+  /*
+    The reveal must land on VISIBLE, not on the hidden half of it - freezing this
+    one the way the others freeze would leave the content permanently invisible.
+  */
+  .in-view {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+  .panel-enter,
+  .panel-leave {
+    animation: none;
+  }
+  .panel-leave {
+    display: none;
+  }
+  .panel-box {
+    transition: none;
   }
   .skeleton-block {
     animation: none;

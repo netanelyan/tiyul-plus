@@ -14,6 +14,7 @@ import {
   type Plan,
 } from '@/lib/plans';
 import { PRICE_ILS, priceLabel } from '@/lib/predeparture';
+import InView from '@/components/InView';
 import AgentEnquiryForm from './AgentEnquiryForm';
 
 /**
@@ -248,7 +249,11 @@ export default function PremiumClient() {
         ))}
       </nav>
 
-      {/* ---------- The three consumer plans ---------- */}
+      {/* ---------- The three consumer plans ----------
+          Wrapped as one block rather than three: the cards carry `order-*` so the
+          recommended one comes first on a phone, and a wrapper per card would
+          become the grid item and take that ordering with it. */}
+      <InView>
       <div className="mt-8 grid items-start gap-4 sm:grid-cols-3">
         {/* Free */}
         <section
@@ -375,6 +380,7 @@ export default function PremiumClient() {
           {cta('pro', 'mt-4')}
         </section>
       </div>
+      </InView>
 
       {notice && (
         <p className="mt-4 rounded-xl bg-zest/15 px-4 py-3 text-center text-sm font-semibold text-night">
@@ -382,6 +388,9 @@ export default function PremiumClient() {
         </p>
       )}
 
+      {/* The check and the arithmetic that follows it read as one argument, so
+          they arrive together rather than as two separate reveals. */}
+      <InView>
       {/* ---------- The one-off check, kept prominent ---------- */}
       <section id="check" className="mt-10 scroll-mt-24 rounded-3xl bg-shell p-5 ring-2 ring-night/20 sm:p-6">
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -474,8 +483,10 @@ export default function PremiumClient() {
           </li>
         </ul>
       </div>
+      </InView>
 
       {/* ---------- Travel agents: no price, a form ---------- */}
+      <InView>
       <section
         id="agents"
         className="mt-10 scroll-mt-24 overflow-hidden rounded-3xl bg-night p-5 ring-1 ring-night sm:p-7"
@@ -535,6 +546,7 @@ export default function PremiumClient() {
           </button>
         )}
       </section>
+      </InView>
 
       {/* ---------- The full comparison, one tap away ----------
           A `details` and not an open grid: each plan card above already carries

@@ -11085,3 +11085,122 @@ the fix removed an error rather than trading it for noise.
 Five photo URLs remain recorded as not serving. They render the category-tile
 fallback, they are the known backlog needing a human to choose replacements, and
 they are not errors. 708 tests, tsc, build clean.
+
+### 2026-08-23 - Three motion-primitives effects, rebuilt in CSS - and the split that would have reversed a number
+
+Netanel sent three components from motion-primitives - `TextShimmerWave` ("this
+can be used for the animation of when the AI is thinking"), `TransitionPanel`
+and `InView` - each with "use this where it can be used".
+
+**All three ship as the effect, none as the library, and that is a decision
+rather than a shortcut.** Every one of them imports `motion/react`, plus
+`react-use-measure` for the panel. This project has zero animation dependencies
+by long practice - the dropdown, the menu, the icons and every keyframe in
+`globals.css` were all hand-built with "no new dependency" written into their
+session-log entries - hard rule 6 asks for approval before a heavy one, and the
+2.5MB client bundle is a standing open item in this file. The three effects are
+~60 lines of CSS and ~150 of component between them. **If the real library is
+wanted, say so and it is a small swap** - the call sites take the same shape.
+
+---
+
+**The interesting half is `TextShimmerWave`, because the obvious implementation
+is wrong in Hebrew and nothing would have caught it.**
+
+A per-character wave wants each character to move, and **a transform does not
+apply to a non-replaced inline element** - so every implementation of this
+effect sets `display: inline-block` on the character spans. That turns each one
+into an atomic box for the bidi algorithm, which orders atomic boxes by the
+paragraph direction. Two adjacent digits then swap: a status reading "10 days"
+prints its number as **"01"**.
+
+This is the same species as `כ-1 שעות` from entry (kk) and `בוינה` from entry
+(uu) - the value is right and the Hebrew is wrong - and it would have appeared
+only on the statuses that carry a two-digit number, i.e. exactly the long trips.
+
+So nothing moves. Plain inline spans keep the whole string in one bidi run, and
+the wave is carried by opacity alone, which inline elements honour. Measured in
+a real browser rather than reasoned about: the "1" of "10" renders at x=243 and
+the "0" at x=251, **the same order as the identical string rendered unsplit** in
+the same RTL context (253 / 262). There is a check on `display: inline` too,
+because that property is the one the digit order depends on.
+
+The split characters are `aria-hidden` with the whole sentence exposed once in
+an `sr-only` span - a screen reader should say the status, not spell it.
+
+**Where it is used: the agent's status line, and nowhere else.** The other seven
+`ThinkingIndicator` sites are ordinary loading (checking permissions, loading
+trips) and keep the dots, as does the mid-stream indicator, which has no text to
+shimmer. The status line earns it because every line in it is real - each one
+comes from a tool that actually ran - so it deserves to be the thing being read
+rather than static text beside three dots.
+
+---
+
+**`TransitionPanel` drives the five steps of the /start questionnaire.**
+
+Two things it does differently from the pasted version, both to remove a way for
+a caller to be wrong. **The direction is derived from the index** instead of
+being passed in, so nobody can forget to update it and animate backwards through
+a "next" button. And the state is adjusted **during render** rather than in an
+effect - the outgoing panel has to exist in the same commit as the incoming one
+or it is never painted at all, and going through an effect would also have added
+a `set-state-in-effect` lint error to a file that had none.
+
+**The offsets are physical.** A transform is never mirrored by `dir`, so the
+signs are chosen for the RTL flow this site is: forward, the next step arrives
+from the left and the previous one leaves to the right.
+
+**`pointer-events-none` on the outgoing panel** is not cosmetic - it sits on top
+of the incoming one for a moment, and without it the first click on the new step
+hits a ghost.
+
+**And a tuning fix that came from looking at the screen rather than from an
+assertion.** The first version had the outgoing step fading for 0.24s against a
+0.32s enter, and a screenshot caught mid-transition showed text over text -
+legible in motion, muddy in a frame. The leave is 0.16s now: the old step gets
+out of the way quickly, the new one takes its time arriving.
+
+---
+
+**`InView` reveals the three below-the-fold blocks on /premium**, which is over
+5,000px on a phone. Deliberately not on anything above the fold, which should
+simply be there.
+
+**It fails OPEN in both directions, because the failure mode of a reveal is
+content nobody can read.** A browser with no `IntersectionObserver` resolves to
+visible in the initial state (guarded on `window`, so the server renders the
+same hidden markup the client hydrates into). And under
+`prefers-reduced-motion` the hidden state is made **visible** rather than
+frozen - freezing it the way the dots and the shimmer freeze would hide the
+page's content for exactly the readers who asked for less movement. That one has
+its own browser check, and it asserts the prices are on the page.
+
+**The three plan cards are wrapped as one block, not three.** They carry
+`order-*` so the recommended one comes first on a phone, and a wrapper per card
+would become the grid item and take that ordering with it.
+
+---
+
+**Verified: 44/44 in a real browser at 1400 and 390 (DPR 3)** against a
+production build - the digit-order measurement above, the staggered delays, the
+screen-reader text, the reveal blocks hidden then revealed, the anchor jump
+still landing on a revealed target, the plan order intact at both widths, the
+step transition with its ghost un-clickable and gone afterwards, the box
+following its content's height (240 -> 252 with the style attribute actually
+set), answers surviving a trip forward and back, RTL and zero horizontal
+overflow throughout, plus the four reduced-motion checks. 708 unit tests, tsc,
+build and lint clean on every touched file.
+
+**Three assertions failed first and all three were mine, which is the standing
+lesson in this file and cost three re-runs.** (1) `scrollTo(0, scrollHeight)`
+jumps past the blocks it skips, so they never intersect - a reader scrolls in
+steps, and the harness now does too. (2) Plan order was read by vertical
+position, which at desktop reports the deliberately raised premium card first;
+side by side in RTL, "first" is the **rightmost**. (3) The digit rects measured
+0x0 at 390 because `ChatPanel` renders twice - a desktop column and a mobile
+drawer, one of them `display:none` - and the query took the hidden copy.
+
+**One caveat worth stating:** the CSS comment explaining the bidi trap was
+written with the Hebrew example in it and the `englishComments` guard caught it
+immediately. Rule 9 works; the example is transliterated now.

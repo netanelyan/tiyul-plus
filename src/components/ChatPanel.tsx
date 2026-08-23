@@ -7,6 +7,7 @@ import { fileToChatImage, IMAGE_ACCEPT } from '@/lib/trip/imageAttach';
 import { cachedCity, fetchCities } from '@/lib/trip/cityData';
 import PlacesMap from '@/components/PlacesMap';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
+import TextShimmerWave from '@/components/TextShimmerWave';
 import BookingSearchCardView from '@/components/BookingSearchCard';
 import { OFFLINE_HINT, useOnline } from '@/lib/offline/online';
 
@@ -310,8 +311,14 @@ export default function ChatPanel({
           </div>
         ))}
         {loading && (
-          <div className="w-fit rounded-2xl bg-cream px-4 py-3 text-sm font-medium text-night/40">
-            <ThinkingIndicator label={status ?? 'חושב'} />
+          <div className="w-fit rounded-2xl bg-cream px-4 py-3 text-sm font-medium text-night">
+            {/*
+              The status text itself carries the animation here, rather than
+              standing still next to three dots. It is real progress - every
+              line comes from a tool that actually ran - so it deserves to be
+              the thing being read.
+            */}
+            <TextShimmerWave>{status ?? 'חושב'}</TextShimmerWave>
           </div>
         )}
         <div ref={bottomRef} />

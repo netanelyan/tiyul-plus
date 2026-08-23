@@ -8,6 +8,7 @@ import { generateTrip } from '@/lib/trip/generate';
 import type { TripPreferences, WizardPrefs } from '@/lib/trip/types';
 import type { CityOption } from '@/lib/citySearch';
 import CityCombobox from '@/components/CityCombobox';
+import TransitionPanel from '@/components/TransitionPanel';
 
 /**
  * A guided structured questionnaire: a few simple steps that collect the trip's
@@ -177,19 +178,21 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
         ))}
       </div>
 
-      <div className="min-h-[15rem]">
-        {step === 0 && (
-          <Field label="לאן טסים? (אפשר לבחור כמה ערים)">
-            <CityCombobox options={cities} citySlugs={citySlugs} onToggle={toggleCity} autoFocus />
-            <p className="mt-2 text-xs leading-relaxed text-night/45">
-              מקלידים שם עיר או מדינה - או פותחים את השדה ובוחרים מתוך {cities.length} הערים
-              בקטלוג. אפשר לבחור כמה, והימים יתחלקו ביניהן.
-            </p>
-          </Field>
-        )}
+      {/*
+        One step at a time, sliding in the direction of travel. The panel keeps
+        its own minimum height so the navigation buttons below do not jump
+        between a short step and a tall one.
+      */}
+      <TransitionPanel activeIndex={step} className="min-h-[15rem]">
+        <Field label="לאן טסים? (אפשר לבחור כמה ערים)">
+          <CityCombobox options={cities} citySlugs={citySlugs} onToggle={toggleCity} autoFocus />
+          <p className="mt-2 text-xs leading-relaxed text-night/45">
+            מקלידים שם עיר או מדינה - או פותחים את השדה ובוחרים מתוך {cities.length} הערים בקטלוג.
+            אפשר לבחור כמה, והימים יתחלקו ביניהן.
+          </p>
+        </Field>
 
-        {step === 1 && (
-          <div className="space-y-6">
+        <div className="space-y-6">
             <Field label="כמה ימים?">
               <div className="flex items-center gap-3">
                 <button
@@ -225,11 +228,9 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
                 ))}
               </div>
             </Field>
-          </div>
-        )}
+        </div>
 
-        {step === 2 && (
-          <div className="space-y-6">
+        <div className="space-y-6">
             <Field label="איזה טיול בא לכם?">
               <div className="grid grid-cols-3 gap-2">
                 {VIBE.map((o) => (
@@ -250,11 +251,9 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
                 ))}
               </div>
             </Field>
-          </div>
-        )}
+        </div>
 
-        {step === 3 && (
-          <div className="space-y-6">
+        <div className="space-y-6">
             <Field label="תקציב">
               <div className="flex flex-wrap gap-2">
                 {BUDGET.map((o) => (
@@ -286,11 +285,9 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
                 ))}
               </div>
             </Field>
-          </div>
-        )}
+        </div>
 
-        {step === 4 && (
-          <div className="space-y-6">
+        <div className="space-y-6">
             <Field label="העדפות (אופציונלי)">
               <div className="flex flex-wrap gap-2">
                 <Choice label="אוכל כשר" active={kosher} onClick={() => setKosher((v) => !v)} />
@@ -310,9 +307,8 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
               )}
               , ותיפול ישר לתצוגת המתכנן - הכול ניתן לעריכה אחר כך.
             </div>
-          </div>
-        )}
-      </div>
+        </div>
+      </TransitionPanel>
 
       {/* Navigation */}
       <div className="mt-6 flex items-center justify-between gap-3">
