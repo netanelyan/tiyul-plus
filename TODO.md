@@ -8,6 +8,22 @@ kosher only where it genuinely exists (else say so honestly); `npm run build`
 + `node scripts/verify-photos.mjs` must pass; commit + push per city; update
 the CLAUDE.md session log.
 
+## Current state (updated 2026-08-29)
+
+**Monetization is LIVE.** `/premium` sells Free, Premium (19.90 ILS/mo), Pro
+(89.90 ILS/mo) and the a-la-carte pre-departure check (29.90 ILS/trip), all
+through **PayPal Subscriptions**. Stripe is a legacy code path only - no
+subscription was ever charged through it, and the Stripe items further down
+this file are SUPERSEDED, not pending. The travel-agent enquiry section is
+also live on `/premium`.
+
+`SUPABASE_SERVICE_ROLE_KEY` is set locally; the admin zone items below are
+done. **Affiliates are deferred by decision** - not blocked on code. The
+booking layer stays as built: real links to the providers' public sites with
+no invented tracking params.
+
+Anything below this block predates it. Where the two disagree, this block wins.
+
 ## Sourcing coordinates from this sandbox
 
 **READ THIS BEFORE DECLARING A PLACE BLOCKED.** Three sources work through
@@ -247,7 +263,7 @@ GeoNames). Lower priority than net-new destinations.
 
 ## Product / features (from earlier scoping — need Netanel's input)
 
-- [ ] **Affiliate IDs (the booking layer is built and waiting on these):** the
+- [~] **Affiliate IDs - DEFERRED (2026-08-29), not being pursued for now.** The
   config is `src/lib/booking.ts` - one source of truth for the homepage
   services grid AND the "מה עוד חסר לטיול" panel inside a trip. To wire a
   real partner: fill `affiliate: { template, idKey }` for that provider and
@@ -255,7 +271,7 @@ GeoNames). Lower priority than net-new destinations.
   changes. Current state: Skyscanner / Booking.com / GetYourGuide / Airalo
   link to their PUBLIC sites with no tracking params; insurance and car
   rental have no provider chosen at all and render as "בקרוב".
-- [ ] **Affiliate wiring:** the homepage services grid
+- [~] **Affiliate wiring - DEFERRED (2026-08-29).** The homepage services grid
       (`src/lib/services.ts`) has NO real affiliate links — all
       `affiliateUrl: null`, falling back to public provider sites (car =
       "בקרוב"). Drop real affiliate IDs/links into that config when available.
@@ -309,7 +325,7 @@ GeoNames). Lower priority than net-new destinations.
 - [ ] אפשר להתחיל מהיעדים שבהם העונה קריטית באמת: לפלנד, איסלנד,
       פטגוניה, ניו זילנד, ספארי בטנזניה, האלפים.
 
-## Waiting on Netanel - the four-tier pricing page (added 2026-08-22)
+## Waiting on Netanel - the four-tier pricing page (added 2026-08-22; the page itself is LIVE, see Current state)
 
 1. **Run `sql/supabase-agent-leads.sql`** in the Supabase SQL Editor. Until it
    runs, the travel-agent enquiry form on `/premium` answers honestly that it
@@ -352,19 +368,19 @@ GeoNames). Lower priority than net-new destinations.
       natikyan153@gmail.com כ-owner**. אם עוד לא התחברת לאתר אף פעם עם
       המייל הזה, הקובץ יגיד זאת בהודעה וצריך להריץ אותו שוב אחרי
       ההתחברות הראשונה (הוא אידמפוטנטי).
-- [ ] להוסיף `SUPABASE_SERVICE_ROLE_KEY` ל-.env.local ול-Vercel. **בלי
+- [x] (2026-08-29) להוסיף `SUPABASE_SERVICE_ROLE_KEY` ל-.env.local ול-Vercel. **בלי
       המפתח הזה אזור הניהול כבוי לגמרי** - וזה מצב מכוון ובטוח: הנתיבים
       מחזירים 404 והאתר עובד כרגיל.
 - [ ] בדיקה חיה: להתחבר, לפתוח את "אזור הניהול" מתפריט החשבון, לחפש את
       המייל של עצמך ולראות פרימיום/תפקיד.
 
-## להפעלת המכסות המלאות והפרימיום (נוסף 2026-07-25, סשן המכסות)
+## להפעלת המכסות המלאות והפרימיום (נוסף 2026-07-25) - ברובו לא רלוונטי, ראו Current state
 - [ ] להריץ את `supabase-premium.sql` ב-SQL Editor (עמודת plan מוקשחת +
       טבלת usage_daily). בלי זה: המכסות עובדות בזיכרון בלבד והפרימיום
       לא נשמר.
-- [ ] להוסיף `SUPABASE_SERVICE_ROLE_KEY` ל-.env.local ול-Vercel (סוד
+- [x] (2026-08-29) להוסיף `SUPABASE_SERVICE_ROLE_KEY` ל-.env.local ול-Vercel (סוד
       שרת בלבד! Settings → API → service_role).
-- [ ] Stripe: ליצור מוצר "טיול+ פרימיום" עם Price חודשי, ולמלא
+- [~] SUPERSEDED (2026-08-29) - החיוב עובר ב-PayPal, לא ב-Stripe. Stripe: ליצור מוצר "טיול+ פרימיום" עם Price חודשי, ולמלא
       `STRIPE_SECRET_KEY`, `STRIPE_PRICE_ID`, `STRIPE_WEBHOOK_SECRET`
       (endpoint: /api/billing/webhook; אירועים: checkout.session.completed,
       customer.subscription.deleted, customer.subscription.updated).
