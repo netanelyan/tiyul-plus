@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { getProvider } from '@/lib/providers';
 import { canonical } from '@/lib/seo/site';
 import { SEO_DESTINATION_SLUGS, isSeoDestination, seoCountrySlugs } from '@/lib/seo/selection';
+import { HUBS } from '@/lib/seo/hubs';
 
 /**
  * Emitted as a static /sitemap.xml at build time.
@@ -47,9 +48,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: canonical('/'), priority: 1 },
     { url: canonical('/countries'), priority: 0.8 },
     { url: canonical('/kosher'), priority: 0.8 },
+    { url: canonical('/collections'), priority: 0.8 },
     { url: canonical('/about'), priority: 0.4 },
     { url: canonical('/contact'), priority: 0.3 },
   ];
+
+  const hubEntries: MetadataRoute.Sitemap = HUBS.map((h) => ({
+    url: canonical(`/collections/${h.slug}`),
+    priority: 0.7,
+  }));
 
   const destinationEntries: MetadataRoute.Sitemap = allDestinations
     .filter((d) => isSeoDestination(d.slug))
@@ -71,5 +78,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     );
   }
 
-  return [...core, ...destinationEntries, ...countryEntries];
+  return [...core, ...hubEntries, ...destinationEntries, ...countryEntries];
 }

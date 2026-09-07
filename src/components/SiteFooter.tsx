@@ -94,6 +94,10 @@ function ChipRow({
 const SITE: FooterLink[] = [
   { href: '/chat', label: 'תכנון טיול' },
   { href: '/countries', label: 'קטלוג היעדים' },
+  // The hub index. It is linked from here rather than from the nav so that the
+  // twelve collection pages are reachable from every page on the site without
+  // adding an item to a nav row that is already tight at 390px.
+  { href: '/collections', label: 'אוספי יעדים' },
   { href: '/kosher', label: 'כשרות' },
   { href: '/about', label: 'אודות' },
   { href: '/contact', label: 'יצירת קשר' },

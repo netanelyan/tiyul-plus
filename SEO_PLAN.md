@@ -262,6 +262,58 @@ Supervision is shown **as reported and never graded**, through the existing
 
 ---
 
+## Phase 3 outcome - the twelve hubs, and the two that could not be built
+
+Built at `/collections/<slug>`, membership computed from catalog attributes
+(continent and vibe tags from `buildDestinationCards`, itinerary length, place
+counts). Each lists only the promoted 30, so internal links concentrate on the
+pages we are actually asking Google to rank.
+
+| hub | members |
+|---|---|
+| `kosher` יעדים עם אוכל כשר | 22 |
+| `family` יעדים לטיול משפחתי | 21 |
+| `europe` יעדים באירופה | 18 |
+| `art` אמנות ומוזיאונים | 13 |
+| `long-trips` שישה ימים ומעלה | 12 |
+| `history` יעדים היסטוריים | 11 |
+| `romantic` יעדים רומנטיים | 11 |
+| `food` חובבי אוכל | 8 |
+| `short-breaks` עד ארבעה ימים | 8 |
+| `nature` טבע וטיולים בחוץ | 7 |
+| `asia` יעדים באסיה | 5 |
+| `americas` יעדים באמריקה | 4 |
+
+Linking is bidirectional and tested as such: a hub lists a destination only if
+that destination's guide links back to the hub, because both read one predicate.
+Every promoted destination belongs to at least one hub, so none is left with the
+sitemap as its only inbound link.
+
+### The two hubs from the brief's examples that were NOT built
+
+`יעדים לפסח` and `יעדים לחורף` are the two most valuable Hebrew search terms in
+the set, so this is stated rather than quietly skipped.
+
+Both need months. `bestMonths` is populated on **0 of 166**. The prose
+`bestSeason` is populated on all 166 - but it **cannot be parsed into months
+safely, and that was measured, not assumed**: of the 30 promoted destinations,
+**20 name months in `bestSeason` that are warnings rather than
+recommendations.**
+
+> Athens: *"March-June, September-November (July-August very hot)"*
+> Madrid: *"April to June and September to November. July-August very hot and
+> dry and the city empties out..."*
+
+A month-name parser files July and August under "summer" for both and
+recommends Athens in August. That is a confident wrong answer about when to
+travel - precisely the class of error hard rule 2 exists to prevent, and the
+same shape as the `כ-1 שעות` and `בוינה` bugs this project has shipped before.
+
+**Unblocking them is a data task, not a code task:** populate `bestMonths`
+(already an open item in TODO.md, recorded there as the highest-value data work
+for the destination browser's season filter). The moment it has values, a
+seasonal hub is a four-line addition to `HUBS`.
+
 ## Phase plan
 
 - **Phase 1** - `app/robots.ts`, `app/sitemap.ts` (both reading the same module

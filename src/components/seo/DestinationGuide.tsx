@@ -15,6 +15,8 @@ import {
   kosherPlaces,
   plannerHref,
 } from '@/lib/seo/guide';
+import { hubsForDestination } from '@/lib/seo/hubs';
+import { promotedMembers } from '@/lib/seo/hubData';
 
 /**
  * The long-form, statically rendered guide under a destination's catalog page.
@@ -60,6 +62,10 @@ export default function DestinationGuide({
   const days = itineraryDays(dest);
   const events = calendarForDestination(dest);
   const cost = dest.dailyCost;
+  // The card carries the derived attributes (continent, vibes) the hub
+  // predicates read; `promotedMembers` is the same source the hub pages use.
+  const card = promotedMembers().find((m) => m.card.slug === dest.slug)?.card;
+  const hubs = card ? hubsForDestination(card, dest) : [];
 
   return (
     <section
@@ -305,6 +311,33 @@ export default function DestinationGuide({
           לתכנון טיול {toCity} עם הסוכן
         </Link>
       </div>
+
+      {/*
+        Back-links to the hubs this destination belongs to. This is the half of
+        the internal linking that is easy to skip: hubs link down to
+        destinations naturally, and without this the graph is a one-way fan-out.
+        Membership is computed from the same predicates the hub pages use, so a
+        destination can never appear on a hub that does not link back to it.
+      */}
+      {hubs.length > 0 && (
+        <div className="mt-10 border-t border-night/10 pt-6">
+          <h3 className="text-sm font-bold text-night/70">
+            {dest.name} נמצאת גם באוספים האלה
+          </h3>
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {hubs.map((h) => (
+              <li key={h.slug}>
+                <Link
+                  href={`/collections/${h.slug}`}
+                  className="inline-block rounded-full bg-shell px-4 py-2 text-sm text-night/80 ring-1 ring-night/10 transition hover:ring-night/30"
+                >
+                  <span aria-hidden="true">{h.emoji}</span> {h.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <p className="mt-6 text-xs leading-relaxed text-night/50">
         המידע בעמוד נאסף ונערך על ידי צוות טיול+. שעות פתיחה, מחירים וכשרות משתנים -
