@@ -11305,3 +11305,124 @@ in advance this time. And the first decode assertion reported 0/4: the cards are
 the product. Scroll first, then assert.
 
 **Not committed** - the working tree holds the change for review.
+
+### 2026-09-07 - A static SEO layer, and the 166 pages that all had the same title
+
+The ask was an indexable Hebrew content layer, on the premise that the planner is
+the only entry point and there are no crawlable content pages. **Two halves of
+that premise were wrong, and finding out changed the shape of the work.**
+
+**The catalog is not in a database at runtime.** The brief asked for tables,
+columns and row counts; there are none. `src/data/destinations.ts` is 44,449
+lines of TypeScript compiled into the build, and the Supabase catalog tables are
+an authoring mirror the site never reads (entry 2026-07-28 (w) records why). That
+is good news here: pages and sitemap share one import, so they cannot drift, and
+there is no per-page-view cost to any of this.
+
+**And there ARE crawlable pages - 166 of them, rendering real HTML.** Fetched the
+deployed `/destinations/vienna`: 200, 155KB, real Hebrew place names in the
+markup. Not a client shell, so the brief's stop-and-ask trigger did not fire.
+
+**The actual defect was different and worse than a missing page.**
+`/destinations/[slug]` had **no `generateMetadata` at all**, so all 166 served the
+root layout's title and description verbatim - 166 near-duplicates competing with
+each other - and there was **no canonical tag anywhere on the site**. No robots,
+no sitemap, no structured data. A page that exists and is indistinguishable from
+165 others is worth about as much as one that does not exist.
+
+---
+
+**The decision that mattered most: one URL per city.** The tempting build was a
+fresh, light `/guides/<slug>` route separate from the heavy interactive catalog
+page. It was rejected - a second page per city puts two URLs in competition for
+the same Hebrew query on a domain with no authority, and duplicates content that
+already exists. The guide is a server component **appended below**
+`DestinationClient`, which is untouched, so the app experience above it is
+unchanged and the other 136 destinations render exactly as before.
+
+**30 pages, not 166, and that is the main risk being managed.** Chosen by a
+data-completeness score (places, photos, mustSee, itinerary days, kosher places, a
+sourced cost record, calendar entries, description length); all 30 clear >= 13
+places and >= 3 itinerary days, and they span 22 countries so the set does not
+read as a doorway farm. The list is **pinned rather than computed live**: a live
+score means a routine data session silently drops a city out of the sitemap after
+Google indexed it.
+
+---
+
+**Three things the data would not support, each stated rather than worked
+around.**
+
+**Seasonal hubs cannot be built, and it is not a coding problem.** `bestMonths` is
+empty 166/166. `bestSeason` is full 166/166 - and cannot be parsed: **20 of the 30
+promoted destinations name months in it that are warnings, not
+recommendations.** Athens reads "March-June, September-November (July-August very
+hot)". A month-name parser recommends Athens in August. That is the `כ-1 שעות`
+species again - a correct-looking value that is wrong - and it is why the two most
+valuable Hebrew terms in the brief (`יעדים לפסח`, `יעדים לחורף`) were not built.
+Populating `bestMonths` unblocks them in four lines.
+
+**Candle-lighting times are absent from the guides on purpose.** They change
+weekly and the page is built once, so a static page serves a stale halachic time
+from the day after the build. The page says so and points at the planner.
+
+**No `aggregateRating` in the JSON-LD**, although every destination has an
+`editorialRating` and it would light up review stars. Google limits that property
+to user-collected ratings, and the page itself renders the score under "not an
+average of user reviews" - marking it up as an aggregate would contradict our own
+disclaimer in the one form only machines read. There is a test asserting it never
+appears.
+
+---
+
+**Two cost controls that are easy to miss.** `robots.txt` disallows `/chat` and
+`/ask`, and the guide's planner CTA carries `rel="nofollow"` - because
+`AgentWorkspace` auto-sends `?q=` on mount and **Googlebot executes JavaScript**,
+so a followed CTA is a paid Anthropic call once per crawl. Two layers, because
+one of them is a file a future edit could rewrite.
+
+**The FAQ block is rendered from the same function that builds the FAQ markup.**
+Structured data must describe visible content; two sources would drift into
+markup describing answers no reader can see. Verified in a browser that all six
+questions and all six answers are visible text.
+
+---
+
+**Three guards in this repo caught my own work, which is the argument for having
+them.** The English-comments rule caught Hebrew I had quoted as evidence in two
+doc comments. `designConsistency` caught my kosher hub using the Star of David -
+a glyph reserved for `KosherBadge`/`KosherNote` so a kashrut status has exactly
+one renderer - and the right fix was a different emoji, not an allowlist entry.
+And `hePrefix` was needed in every heading: Vienna, Venice and Warsaw are all in
+the promoted set, and naive concatenation renders the wrong unpointed spelling.
+
+**One test of mine was wrong and the data was right.** A 25-character floor on FAQ
+answers failed on Barcelona, whose entire `bestSeason` is a 24-character month
+range; the shortest in the set is Berlin's at 10. Those are complete answers, not
+thin ones. The floor now guards emptiness, with the reasoning recorded beside it.
+
+---
+
+**Verified:** 808 unit tests (46 new), tsc, build and lint clean at the
+pre-existing baseline. In a real browser at 1400 and 390 against a production
+build: 25/25 on a guide page, 26/26 across the hub index and a hub, 8/8 on the
+JSON-LD - RTL intact, zero horizontal overflow, nothing past either viewport
+edge, and the non-promoted pages confirmed untouched. Every emitted JSON-LD block
+parsed and checked. Sitemap: 70 URLs (6 core, 12 hubs, 30 destinations, 22
+countries).
+
+**Nothing is deployed and nothing was verified live** - `robots.txt` and
+`sitemap.xml` do not exist on the production site until this ships.
+`SEO_NEXT_STEPS.md` is the handoff: Search Console via a **Domain property with
+DNS**, because `tiyulplus.com` 308-redirects to `www` and a URL-prefix property
+would cover one hostname and show a fraction of the data. It also says plainly
+that FAQ rich results are restricted to government and health sites, so a travel
+site should not expect them - the markup is still worth having for AI answers.
+
+**What the next session should know.** (1) Expansion past 30 is one edit to
+`SEO_DESTINATION_SLUGS`; everything else follows. The gates and the next ten
+candidates are in the handoff. (2) `bestMonths` is now the highest-value data task
+- it unblocks both the seasonal hubs and the catalog's own season filter, which
+has been waiting on it since entry (q). (3) `CLAUDE.md` was left uncommitted:
+another session's 127 uncommitted lines were already in it, and sweeping them into
+an SEO commit would have misattributed them.
