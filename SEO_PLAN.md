@@ -55,7 +55,8 @@ destinations 166      countries 83      places 1,822
 | `itinerary` | 166 / 166 (163 have >= 3 days) | yes - answers "how many days" |
 | `practical.flights` / `.gettingAround` / `.kosherOverview` | 166 / 166 each | yes |
 | `photo` | 165 / 166 | yes |
-| **`bestMonths`** | **0 / 166** | **no - the field does not exist in the data** |
+| **`bestSeason`** (Hebrew prose) | **166 / 166**, 164 distinct, avg 147 chars | **yes - this is the "when to go" source** |
+| **`bestMonths`** (numeric array) | **0 / 166** | **no - never populated** |
 
 Per place (1,822 total):
 
@@ -83,17 +84,24 @@ Places per destination: min 3, median 9, p75 13, max 34.
   window in words, because the dates for the coming year were never officially
   published. Those render as prose, never as a date.
 
-### "When to go" - what I can honestly say
+### "When to go" - corrected after a closer look at the data
 
-`bestMonths` is empty, so there is no seasonal field to render. Inventing a
-seasonal opinion from a date is exactly what hard rule 2 forbids, and the session
-log records a previous session deliberately shipping a season filter as a
-mechanism with nothing behind it for this reason.
+My first pass through the schema checked `bestMonths` (the numeric array behind
+the catalog's season *filter*) and found it empty 166/166, and I wrote this
+section saying there was no seasonal field. That was wrong: **`bestSeason` is a
+separate field, it is populated 166/166 with real curated Hebrew prose** - 164
+distinct values, averaging 147 characters, e.g. for Rome *"מרץ-מאי, ספטמבר-נובמבר
+(הקיץ חם ועמוס)"*. It carries the caveat as well as the months.
 
-**So "when to go" on these pages is built from `calendar.ts`** - the real,
-sourced events and closures that affect a trip, with confirmed dates shown as
-dates and unconfirmed ones shown as the curator's own words. Where a destination
-has no calendar entry, the section does not render. No filler.
+So "when to go" is **`bestSeason` as the primary source**, with `calendar.ts`
+entries underneath it for the events and closures that reshape a trip -
+confirmed dates shown as dates, unconfirmed ones shown as the curator's own
+words. Where a destination has no calendar entry that part does not render, but
+the season line always does.
+
+The empty `bestMonths` still matters: it means there is no month-by-month
+filtering to build a hub like "best in August" on, so Phase 3 does not attempt
+one.
 
 ### Does the site render HTML or a client shell?
 
@@ -228,7 +236,7 @@ data is absent **does not render**.
 | family | `טיול משפחתי ל...` | places tagged `families` | >= 3 such places |
 | route | `מסלול ל...` | `itinerary` days with their real stops | always |
 | kosher / Shabbat | `אוכל כשר ושבת ב...` | `practical.kosherOverview`, kosher places, `kashrut` records via `KosherBadge` | always (overview is 166/166) |
-| when to go | `מתי כדאי לנסוע ל...` | `calendar.ts` entries for that destination | >= 1 entry |
+| when to go | `מתי כדאי לנסוע ל...` | `bestSeason` (166/166), plus `calendar.ts` entries | always; calendar part only when >= 1 entry |
 | costs | `כמה זה עולה` | `dailyCosts.ts` | record exists (19 of 30) |
 | getting there | `איך מגיעים` | `practical.flights`, `.gettingAround`, country visa/currency/sim | always |
 | planner CTA | - | link to `/chat?q=<prefilled Hebrew request>` | always |

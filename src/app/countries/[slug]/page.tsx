@@ -1,5 +1,7 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { canonical, metaDescription } from '@/lib/seo/site';
 import { getProvider } from '@/lib/providers';
 import Flag from '@/components/Flag';
 import CardPhoto from '@/components/CardPhoto';
@@ -9,10 +11,49 @@ export function generateStaticParams() {
   return countries.map((c) => ({ slug: c.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+/**
+ * This page already set a title. It had no description, no canonical and no
+ * per-country Open Graph, so a shared link showed the site-wide card and the
+ * search snippet fell back to whatever Google chose to scrape.
+ *
+ * The description is built from the country's curated `tagline` and `summary`;
+ * nothing here is written or generated.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const country = countries.find((c) => c.slug === slug);
-  return { title: country ? `${country.name} | טיול+` : 'טיול+' };
+  if (!country) return {};
+
+  const title = `טיול ל${country.name}: יעדים, ויזה ומידע למטייל הישראלי | טיול+`;
+  const description = metaDescription(country.tagline, country.summary);
+  const url = canonical(`/countries/${country.slug}`);
+
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'article',
+      locale: 'he_IL',
+      siteName: 'טיול+',
+      url,
+      title,
+      description,
+      ...(country.photo
+        ? { images: [{ url: country.photo, alt: `${country.name} - ${country.tagline}` }] }
+        : {}),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      ...(country.photo ? { images: [country.photo] } : {}),
+    },
+  };
 }
 
 export default async function CountryPage({

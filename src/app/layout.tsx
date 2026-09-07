@@ -96,6 +96,33 @@ export const metadata: Metadata = {
     'apple-mobile-web-app-capable': 'yes',
     'impact-site-verification': '69f26c97-ed70-44c2-913f-3376cc0b34f2',
   },
+  /**
+   * Canonical for the homepage. Child routes override this with their own; the
+   * point of having it here is that the site had **no canonical tag anywhere**,
+   * so any URL that picked up a tracking parameter was a separate page as far
+   * as a crawler was concerned.
+   */
+  alternates: { canonical: SITE_URL },
+  /**
+   * Google Search Console site verification.
+   *
+   * The value is read from an env var so it can be filled in without a code
+   * change - paste the content string (the bare token, not the whole tag) into
+   * `NEXT_PUBLIC_GSC_VERIFICATION` in the Vercel project settings and redeploy.
+   * When it is unset the key is omitted entirely rather than emitted empty: an
+   * empty verification tag is not neutral, it is a tag Google reads and
+   * rejects.
+   *
+   * `NEXT_PUBLIC_` is required because this is inlined at build time. The token
+   * is not a secret - it ends up in the served HTML by design.
+   *
+   * Note this is only needed for the HTML-tag verification method. If the
+   * domain is verified by DNS instead, leave it unset - see SEO_NEXT_STEPS.md,
+   * which recommends DNS for this setup.
+   */
+  ...(process.env.NEXT_PUBLIC_GSC_VERIFICATION
+    ? { verification: { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION } }
+    : {}),
 };
 
 export default function RootLayout({
