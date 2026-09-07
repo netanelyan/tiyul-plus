@@ -4,6 +4,8 @@ import { getProvider } from '@/lib/providers';
 import { destinations } from '@/data/destinations';
 import { countries } from '@/data/countries';
 import { canonical, metaDescription } from '@/lib/seo/site';
+import { isSeoDestination } from '@/lib/seo/selection';
+import DestinationGuide from '@/components/seo/DestinationGuide';
 import DestinationClient from './DestinationClient';
 
 export function generateStaticParams() {
@@ -84,5 +86,21 @@ export default async function DestinationPage({
   if (!dest) notFound();
   const country = await provider.getCountry(dest.countrySlug);
   if (!country) notFound();
-  return <DestinationClient dest={dest} country={country} />;
+  return (
+    <>
+      <DestinationClient dest={dest} country={country} />
+      {/*
+        The guide is appended below the interactive catalog UI, and only for the
+        promoted destinations. Two deliberate choices:
+
+        - **Below, not above.** The interactive map and filters are what a
+          returning user came for; burying them under a wall of text to serve a
+          crawler would trade a real user's experience for a ranking signal that
+          does not depend on position anyway.
+        - **Only the promoted 30.** The other 136 render exactly as before. See
+          `@/lib/seo/selection` for why the set is small and pinned.
+      */}
+      {isSeoDestination(dest.slug) && <DestinationGuide dest={dest} country={country} />}
+    </>
+  );
 }
