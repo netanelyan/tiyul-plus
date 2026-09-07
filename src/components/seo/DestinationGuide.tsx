@@ -15,6 +15,7 @@ import {
   kosherPlaces,
   plannerHref,
 } from '@/lib/seo/guide';
+import { faqPairs } from '@/lib/seo/jsonLd';
 import { hubsForDestination } from '@/lib/seo/hubs';
 import { promotedMembers } from '@/lib/seo/hubData';
 
@@ -66,6 +67,7 @@ export default function DestinationGuide({
   // predicates read; `promotedMembers` is the same source the hub pages use.
   const card = promotedMembers().find((m) => m.card.slug === dest.slug)?.card;
   const hubs = card ? hubsForDestination(card, dest) : [];
+  const faq = faqPairs(dest, country);
 
   return (
     <section
@@ -289,6 +291,26 @@ export default function DestinationGuide({
           <Fact title="תשלומים" text={country.practical.payments} />
         </dl>
       </div>
+
+      {/* ---- FAQ ----
+          Rendered from `faqPairs`, which is the SAME function that builds the
+          FAQPage JSON-LD on this route. That is not a tidiness preference:
+          structured data must describe content the page actually shows, and two
+          separate sources would drift into markup describing answers no reader
+          can see. One function, so they cannot. */}
+      {faq.length >= 2 && (
+        <div className="mt-10">
+          <h3 className="display text-xl text-night">שאלות נפוצות על {toCity}</h3>
+          <dl className="mt-4 space-y-4">
+            {faq.map((qa) => (
+              <div key={qa.question} className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
+                <dt className="font-bold text-night">{qa.question}</dt>
+                <dd className="mt-2 text-sm leading-relaxed text-night/75">{qa.answer}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      )}
 
       {/* ---- Into the planner ----
           rel="nofollow" is not decoration. AgentWorkspace auto-sends a ?q= on

@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { canonical, metaDescription } from '@/lib/seo/site';
+import { breadcrumbLd, countryLd } from '@/lib/seo/jsonLd';
+import JsonLd from '@/components/seo/JsonLd';
 import { getProvider } from '@/lib/providers';
 import Flag from '@/components/Flag';
 import CardPhoto from '@/components/CardPhoto';
@@ -76,6 +78,16 @@ export default async function CountryPage({
 
   return (
     <div>
+      <JsonLd
+        data={[
+          breadcrumbLd([
+            { name: 'טיול+', path: '/' },
+            { name: 'יעדים', path: '/countries' },
+            { name: country.name, path: `/countries/${country.slug}` },
+          ]),
+          countryLd(country, cities.length),
+        ]}
+      />
       {/* Country hero */}
       <div
         className="photo-bg relative overflow-hidden rounded-2xl px-6 py-10 sm:px-10"

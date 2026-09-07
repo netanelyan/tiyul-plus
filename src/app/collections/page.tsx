@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { canonical } from '@/lib/seo/site';
+import { breadcrumbLd } from '@/lib/seo/jsonLd';
+import JsonLd from '@/components/seo/JsonLd';
 import { HUBS, hubMembers } from '@/lib/seo/hubs';
 import { promotedMembers } from '@/lib/seo/hubData';
 
@@ -35,6 +37,12 @@ export default function CollectionsIndex() {
 
   return (
     <div className="mx-auto max-w-5xl">
+      <JsonLd
+        data={breadcrumbLd([
+          { name: 'טיול+', path: '/' },
+          { name: 'אוספי יעדים', path: '/collections' },
+        ])}
+      />
       <nav aria-label="מיקום באתר" className="text-sm text-night/55">
         <Link href="/" className="transition hover:text-night">
           טיול+

@@ -5,6 +5,8 @@ import { destinations } from '@/data/destinations';
 import { countries } from '@/data/countries';
 import { canonical, metaDescription } from '@/lib/seo/site';
 import { isSeoDestination } from '@/lib/seo/selection';
+import { breadcrumbLd, faqLd, faqPairs, touristDestinationLd } from '@/lib/seo/jsonLd';
+import JsonLd from '@/components/seo/JsonLd';
 import DestinationGuide from '@/components/seo/DestinationGuide';
 import DestinationClient from './DestinationClient';
 
@@ -86,8 +88,32 @@ export default async function DestinationPage({
   if (!dest) notFound();
   const country = await provider.getCountry(dest.countrySlug);
   if (!country) notFound();
+  const promoted = isSeoDestination(dest.slug);
+  /*
+    Breadcrumb and TouristDestination go on all 166 - every one of them is a
+    real place with a curated description and verified coordinates, and the
+    markup describes what the catalog page renders.
+
+    FAQPage goes only on the promoted 30, and that is a correctness constraint
+    rather than caution: structured data must describe what is on the page, and
+    the answers it declares are the guide's own prose. On the other 136 that
+    prose is not rendered, so the markup would be describing a page that does
+    not exist.
+  */
+  const ld = [
+    breadcrumbLd([
+      { name: 'טיול+', path: '/' },
+      { name: 'יעדים', path: '/countries' },
+      { name: country.name, path: `/countries/${country.slug}` },
+      { name: dest.name, path: `/destinations/${dest.slug}` },
+    ]),
+    touristDestinationLd(dest, country),
+    ...(promoted ? [faqLd(faqPairs(dest, country))] : []),
+  ].filter((n): n is NonNullable<typeof n> => Boolean(n));
+
   return (
     <>
+      <JsonLd data={ld} />
       <DestinationClient dest={dest} country={country} />
       {/*
         The guide is appended below the interactive catalog UI, and only for the
@@ -100,7 +126,7 @@ export default async function DestinationPage({
         - **Only the promoted 30.** The other 136 render exactly as before. See
           `@/lib/seo/selection` for why the set is small and pinned.
       */}
-      {isSeoDestination(dest.slug) && <DestinationGuide dest={dest} country={country} />}
+      {promoted && <DestinationGuide dest={dest} country={country} />}
     </>
   );
 }

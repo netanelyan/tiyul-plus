@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import Flag from '@/components/Flag';
 import CardPhoto from '@/components/CardPhoto';
 import { canonical, metaDescription } from '@/lib/seo/site';
+import { breadcrumbLd, collectionLd } from '@/lib/seo/jsonLd';
+import JsonLd from '@/components/seo/JsonLd';
 import { HUBS, hubBySlug, hubMembers } from '@/lib/seo/hubs';
 import { promotedMembers } from '@/lib/seo/hubData';
 import { daysHe } from '@/lib/duration';
@@ -48,6 +50,20 @@ export default async function CollectionPage({
 
   return (
     <div className="mx-auto max-w-5xl">
+      <JsonLd
+        data={[
+          breadcrumbLd([
+            { name: 'טיול+', path: '/' },
+            { name: 'אוספי יעדים', path: '/collections' },
+            { name: hub.title, path: `/collections/${hub.slug}` },
+          ]),
+          collectionLd(
+            hub.title,
+            `/collections/${hub.slug}`,
+            members.map((m) => ({ name: m.card.name, slug: m.card.slug })),
+          ),
+        ]}
+      />
       <nav aria-label="מיקום באתר" className="text-sm text-night/55">
         <Link href="/" className="transition hover:text-night">
           טיול+
