@@ -87,9 +87,18 @@ async function commonsInfo(file) {
 }
 
 async function probe(url) {
-  const res = await fetch(url, { method: 'GET', headers: { 'User-Agent': UA } });
-  const ct = res.headers.get('content-type') ?? '';
-  return res.ok && ct.startsWith('image/');
+  // upload.wikimedia.org rate-limits bursts with 429, and a 429 is not "no photo":
+  // the first run of batch 2 lost every Slovenian photo to exactly that.
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const res = await fetch(url, { method: 'GET', headers: { 'User-Agent': UA } });
+    if (res.status === 429) {
+      await sleep(4000 * (attempt + 1));
+      continue;
+    }
+    const ct = res.headers.get('content-type') ?? '';
+    return res.ok && ct.startsWith('image/');
+  }
+  throw new Error(`rate limited on upload: ${url}`);
 }
 
 const NON_PHOTO = /(montage|collage|panorama_montage|banner|sign|schild|logo|karte|map|wappen|coat|flag|locator|icon|diagram|\.svg)/i;
@@ -193,7 +202,7 @@ for (const c of candidates) {
   const tol = { lat: Math.max(spread.lat * 1.1, 0.35), lng: Math.max(spread.lng * 1.1, 0.35) };
   const dLat = Math.abs(lat - dest.center.lat);
   const dLng = Math.abs(lng - dest.center.lng);
-  if (dLat > tol.lat || dLng > tol.lng) {
+  if ((dLat > tol.lat || dLng > tol.lng) && !c.allowFar) {
     reject(
       `outside the destination's spread: Δ${dLat.toFixed(2)}/${dLng.toFixed(2)} vs tolerance ${tol.lat.toFixed(2)}/${tol.lng.toFixed(2)} (${lat},${lng})`,
     );
@@ -224,6 +233,7 @@ for (const c of candidates) {
       const width = info.width >= 500 ? 500 : info.width >= 330 ? 330 : info.width >= 250 ? 250 : null;
       if (width) {
         const url = commonsThumb(info.file, width);
+        await sleep(400);
         if (url && !usedPhotos.has(url) && (await probe(url))) {
           photo = url;
           photoFile = info.file;
