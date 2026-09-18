@@ -181,8 +181,44 @@ for (const c of candidates) {
       console.log(`  osm    ${tag}: ${ok.category}/${ok.type} ${ok.display_name.slice(0, 80)}`);
     }
   }
+  // Third source: Wikidata. Many articles carry a coordinate on the item
+  // (P625) that the Wikipedia coordinates API never indexes, and the item
+  // often has an image (P18) too. `wd` is a label to search; the first item
+  // with a coordinate inside the destination's spread wins - the spread is
+  // what stops "Juta" from resolving to a village in Hungary.
+  if ((!hit || !Number.isFinite(hit.lat)) && c.wd) {
+    const search = await getJson(
+      `https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=${c.wdLang ?? 'en'}&limit=7&search=${encodeURIComponent(c.wd)}`,
+    );
+    await sleep(200);
+    const ids = (search.search ?? []).map((s) => s.id);
+    if (ids.length) {
+      const ents = await getJson(
+        `https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&props=claims|labels&ids=${ids.join('|')}`,
+      );
+      await sleep(200);
+      for (const id of ids) {
+        const e = ents.entities?.[id];
+        const co = e?.claims?.P625?.[0]?.mainsnak?.datavalue?.value;
+        if (!co) continue;
+        const dl = Math.abs(co.latitude - dest.center.lat);
+        const dg = Math.abs(co.longitude - dest.center.lng);
+        if (dl > 3 || dg > 3) continue; // a different place with the same name
+        const img = e.claims?.P18?.[0]?.mainsnak?.datavalue?.value ?? null;
+        hit = {
+          ...(hit ?? {}),
+          title: `wd:${id} ${e.labels?.en?.value ?? ''}`,
+          lat: co.latitude,
+          lon: co.longitude,
+          image: hit?.image ?? img,
+        };
+        console.log(`  wd     ${tag}: ${id} ${e.labels?.en?.value ?? ''} ${img ? 'P18:' + img : ''}`);
+        break;
+      }
+    }
+  }
   if (!hit || !Number.isFinite(hit.lat)) {
-    reject('no coordinates on any Wikipedia article given (and no OSM match)');
+    reject('no coordinates on any Wikipedia article given (and no OSM or Wikidata match)');
     continue;
   }
   const lat = +hit.lat.toFixed(5);

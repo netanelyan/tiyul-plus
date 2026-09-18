@@ -9551,6 +9551,22 @@ export const destinations: Destination[] = [
         durationMin: 45,
         externalUrl: 'https://maps.google.com/?q=42.16981,44.79411',
       },
+      {
+        id: 'geo-gveleti',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Gveleti.JPG/500px-Gveleti.JPG',
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        name: 'מפלי גוולטי',
+        nameLocal: 'Gveleti Waterfalls',
+        category: 'nature',
+        lat: 42.71139,
+        lng: 44.62417,
+        description:
+          'שני מפלים בקניון צר צפונית לסטפנצמינדה, כמעט על גבול רוסיה - שביל של כעשרים דקות מהכביש הצבאי הגאורגי, לאורך נחל, אל מפל של כ-25 מ׳. עצירה קצרה ומרעננת בדרך לערוץ דריאלי.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=42.71139,44.62417',
+      },
     ],
     itinerary: [
       {
@@ -17463,6 +17479,22 @@ export const destinations: Destination[] = [
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=64.769,-23.624',
       },
+      {
+        id: 'isl-reykjadalur',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Bathing_in_hot_mountain_river_%C3%96lfusdalur_%2814602797348%29.jpg/500px-Bathing_in_hot_mountain_river_%C3%96lfusdalur_%2814602797348%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'רייקיאדלור - הנהר החם',
+        nameLocal: 'Reykjadalur',
+        category: 'nature',
+        lat: 64.04082,
+        lng: -21.21859,
+        description:
+          'עמק מעשן ליד הוורגרדי, ארבעים דקות מרייקיאוויק - הליכה של כשעה במעלה בין פומרולות ובריכות בוץ, אל נחל שהמים בו חמים מספיק לטבילה, עם מסכי עץ להחלפת בגדים. הספא הטבעי החינמי של דרום איסלנד.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=64.04082,-21.21859',
+      },
     ],
     itinerary: [
       {
@@ -18350,6 +18382,22 @@ export const destinations: Destination[] = [
           'נהר ירוק שחוצה קניון קרסטי בין קירות של מאות מטרים בדרך לים ליד זאדר - רפטינג וקיאקים בקיץ, ותצפית מפורסמת מהצוק בכפר פירובאץ׳. ואם הנוף מוכר: כאן צולמו סרטי וינטו.',
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=44.2017,15.5883',
+      },
+      {
+        id: 'hrv-biokovo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Biokovo_and_Makarska_in_Croatia_2018.jpg/500px-Biokovo_and_Makarska_in_Croatia_2018.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'ביוקובו וטיילת השמיים',
+        nameLocal: 'Biokovo Nature Park / Skywalk',
+        category: 'nature',
+        lat: 43.34516,
+        lng: 17.00477,
+        description:
+          'רכס שניצב ישר מעל הריביירה של מאקארסקה - כביש הרים מפותל עולה לסקייווק, מרפסת זכוכית בצורת פרסה 1,200 מ׳ מעל הים, וממשיך לפסגת סוטי סבטי יורה. מלמעלה רואים את האיים ואת איטליה בימים בהירים.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=43.34516,17.00477',
       },
     ],
     itinerary: [
@@ -19296,6 +19344,36 @@ export const destinations: Destination[] = [
           'אי דייגים קטן כשעה מטרומסה, מחובר בגשר, עם חופים לבנים ומים טורקיז שנראים קריביים - וקיץ שבו השמש לא שוקעת. שבילים קצרים בין החופים, ומקום מפורסם לצפייה בזוהר הצפוני בחורף.',
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=69.6336,18.0073',
+      },
+      {
+        id: 'lof-kvalvika',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'חוף קוואלוויקה',
+        nameLocal: 'Kvalvika Beach',
+        category: 'nature',
+        lat: 67.30333,
+        lng: 14.39894,
+        description:
+          'חוף חולי מבודד בין הרים, מול הים הפתוח, שמגיעים אליו רק ברגל - כשעה של הליכה מהכביש דרך מעבר בהרים. מי שממשיך לפסגת ריטן מקבל את החוף מלמעלה, בצבעים שלא מאמינים שהם בחוג הארקטי.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=67.30333,14.39894',
+      },
+      {
+        id: 'lof-haukland',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Hauklandstranda_2.png/500px-Hauklandstranda_2.png',
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        name: 'חוף האוקלנד',
+        nameLocal: 'Haukland Beach',
+        category: 'nature',
+        lat: 68.1998,
+        lng: 13.5394,
+        description:
+          'חוף לבן עם מים טורקיז שנבחר שוב ושוב ליפה בנורווגיה - ליד הכביש, עם שירותים וקפה קטן, ומכאן שביל חוף קל של כשעה סביב ההר לחוף אוטקלייב. שחייה למי שמסוגל; המים קרים גם ביולי.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=68.1998,13.5394',
       },
     ],
     itinerary: [
@@ -24478,6 +24556,22 @@ export const destinations: Destination[] = [
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=38.26111,34.29222',
       },
+      {
+        id: 'cap-soganli',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/SoganliNord.JPG/500px-SoganliNord.JPG',
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
+        name: 'עמק סוגאנלי',
+        nameLocal: 'Soğanlı Valley',
+        category: 'nature',
+        lat: 38.345,
+        lng: 34.968,
+        description:
+          'שני עמקים שקטים בדרום קפדוקיה עם כנסיות חצובות מעוטרות ציורי קיר ומבנה בצורת כיפה חצוב מהסלע - בלי ההמונים של גורמה. הכפר ידוע בבובות הסמרטוטים שנשים מקומיות מוכרות. כשעה מאורגופ; דרוש רכב.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=38.345,34.968',
+      },
     ],
     itinerary: [
       {
@@ -25473,6 +25567,22 @@ export const destinations: Destination[] = [
           'עמודי חול אדמדמים עם כובעי אבן, שנוצרו משחיקה במורד מערב רילה ליד הכפר סטוב - שביל קצר ותלול של כחצי שעה מהכפר עד תצפית ביניהם. עצירה טובה בדרך למנזר רילה, במיוחד באור בוקר או ערב.',
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=42.09214,23.12136',
+      },
+      {
+        id: 'bg-malyovitsa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Malyovitsa-winter-ifb.JPG/500px-Malyovitsa-winter-ifb.JPG',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'מליוביצה',
+        nameLocal: 'Malyovitsa',
+        category: 'nature',
+        lat: 42.17386,
+        lng: 23.36308,
+        description:
+          'פסגה מחודדת בצפון-מערב רילה, ערש הטיפוס הבולגרי - עמק ירוק עם נחל ובקתת הרים, ומעליו קירות סלע וסולם של אגמים. מסלול היום הפופולרי ביותר בבולגריה, ואפשר גם רק עד הבקתה. סמוך למנזר רילה.',
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=42.17386,23.36308',
       },
     ],
     itinerary: [
@@ -30144,6 +30254,22 @@ export const destinations: Destination[] = [
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=36.49747,29.12717',
       },
+      {
+        id: 'lyc-kaputas',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Turkiye_Antalya_Kaputa%C5%9F_Plaj%C4%B1.jpg/500px-Turkiye_Antalya_Kaputa%C5%9F_Plaj%C4%B1.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        name: 'חוף קאפוטאש',
+        nameLocal: 'Kaputaş Beach',
+        category: 'nature',
+        lat: 36.2292,
+        lng: 29.4492,
+        description:
+          'מפרצון בין צוקים בקצה קניון, עם מים בצבע טורקיז שנראה מזויף - החוף המצולם ביותר בחוף הליקי, בין קאש לקאלקן. יורדים במאתיים מדרגות מהכביש; חול וחלוקים דקים, וגלים לפעמים. מלא בצהריים, ריק בבוקר.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=36.2292,29.4492',
+      },
     ],
     itinerary: [
       {
@@ -30916,6 +31042,22 @@ export const destinations: Destination[] = [
           'בירת הצפון, עיירה של פחות מעשרים אלף תושבים בקצה פיורד ארוך - כנסייה על גבעה, גן בוטני ארקטי, רמזורים בצורת לב ובריכות מים חמים. הבסיס לטיולים למיוואטן ולגודאפוס, וללווייתנים בפיורד.',
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=65.6839,-18.11218',
+      },
+      {
+        id: 'is-hljodaklettar',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Hlj%C3%B3daklettar_in_summer_2009_%281%29.jpg/500px-Hlj%C3%B3daklettar_in_summer_2009_%281%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'הליודקלטאר - צוקי ההד',
+        nameLocal: 'Hljóðaklettar (Vesturdalur)',
+        category: 'nature',
+        lat: 65.94431,
+        lng: -16.53282,
+        description:
+          'צוקי בזלת מעוותים בצורות מסוחררות בעמק וסטורדלור, בקניון יוקולסאו לצד דטיפוס - ההד בין הסלעים נתן להם את שמם. מסלול מעגלי של כשעתיים בין מבצרים טבעיים ומערות; דרך עפר מהכביש.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=65.94431,-16.53282',
       },
     ],
     itinerary: [
@@ -37123,6 +37265,22 @@ export const destinations: Destination[] = [
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=36.79056,15.09083',
       },
+      {
+        id: 'it-cava-grande',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Cavagrande%2C_Cassibile%2C_Avola%2C_SR.jpg/500px-Cavagrande%2C_Cassibile%2C_Avola%2C_SR.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'קניון קאווה גרנדה',
+        nameLocal: 'Cava Grande del Cassibile',
+        category: 'nature',
+        lat: 36.95154,
+        lng: 15.18695,
+        description:
+          'קניון עמוק בהרי איבלה ליד אבולה, עם שרשרת בריכות טבעיות ומפלים קטנים בנחל קסיביל בתחתיתו - ירידה תלולה של כשעה מהתצפית, שחייה, ועלייה מפרכת חזרה. מהמסלולים היפים בסיציליה; נסגר בקיץ בימי חום קיצוני.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=36.95154,15.18695',
+      },
     ],
     itinerary: [
       {
@@ -37688,6 +37846,22 @@ export const destinations: Destination[] = [
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=39.23611,20.47611',
       },
+      {
+        id: 'gr-perama-cave',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/07Joannina_Hoehle18.jpg/500px-07Joannina_Hoehle18.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 2,
+        name: 'מערת פראמה',
+        nameLocal: 'Perama Cave',
+        category: 'nature',
+        lat: 39.69491,
+        lng: 20.84623,
+        description:
+          'אחת ממערות הנטיפים הגדולות ביוון, בפאתי יואנינה, שהתגלתה כשחיפשו מקלט מהפצצות במלחמת העולם השנייה - כקילומטר של אולמות מוארים עם נטיפים בנוסח שאין דומה לו. סיור מודרך של כשעה; מתאים לילדים וליום גשם.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=39.69491,20.84623',
+      },
     ],
     itinerary: [
       {
@@ -37988,6 +38162,22 @@ export const destinations: Destination[] = [
           'אנדרטת גרמניה הענקית מעל רידסהיים, שמגיעים אליה ברכבל כיסאות מעל הכרמים - נוף על עיקול הריין, בינגן והאיים. משם שביל יער לאסמנסהאוזן ורכבל שני למטה, וספינה חזרה. הכניסה לקטע היפה של הריין.',
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=49.98083,7.89972',
+      },
+      {
+        id: 'de-calmont',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Bremm_und_Calmont_0016.jpg/500px-Bremm_und_Calmont_0016.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'קלמונט - הכרם התלול באירופה',
+        nameLocal: 'Calmont Klettersteig',
+        category: 'nature',
+        lat: 50.1092,
+        lng: 7.12611,
+        description:
+          'הכרם התלול ביותר באירופה, שיפוע של כ-65 מעלות מעל עיקול המוזל ליד ברם - ובתוכו מסלול ויה פראטה עם סולמות, שרשראות ומדרגות בין הגפנים. נוף על העיקול הגדול ביותר בנהר. לא לפוחדי גבהים, ורק בנעליים סגורות.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=50.1092,7.12611',
       },
     ],
     itinerary: [
@@ -39095,6 +39285,22 @@ export const destinations: Destination[] = [
           'ההר של סנקט גילגן, עם רכבל שיוצא מהעיירה ישר אל הפסגה - נוף על וולפגנגזה, מונדזה והאלפים, ומסלולי הליכה נוחים לאורך הרכס. לרוב פחות עמוס משאפברג ממול.',
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=47.74255,13.35153',
+      },
+      {
+        id: 'at-5fingers',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/5_fingers.jpg/500px-5_fingers.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 3,
+        name: 'חמש האצבעות',
+        nameLocal: '5fingers (Krippenstein)',
+        category: 'viewpoint',
+        lat: 47.52864,
+        lng: 13.69204,
+        description:
+          'מרפסת תצפית בצורת כף יד עם חמש זרועות פלדה שבולטות מצוק בקריפנשטיין, 400 מ׳ מעל אגם הלשטאט - אחת עם רצפת זכוכית, אחת עם מסגרת תמונה. עולים ברכבל הדכשטיין מאוברטראון; קצת הליכה מהתחנה.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=47.52864,13.69204',
       },
     ],
     itinerary: [
