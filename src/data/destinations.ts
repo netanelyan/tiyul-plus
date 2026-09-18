@@ -34477,6 +34477,52 @@ export const destinations: Destination[] = [
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=40.51722,19.4025',
       },
+      {
+        id: 'alb-vlore',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Qyteti_I_Vlores_Naten_%28Albania%29.jpg/500px-Qyteti_I_Vlores_Naten_%28Albania%29.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'ולורה',
+        nameLocal: 'Vlorë',
+        category: 'attraction',
+        lat: 40.46667,
+        lng: 19.48333,
+        description:
+          'עיר נמל בנקודה שבה נפגשים הים האדריאטי והיוני, ובה הוכרזה עצמאות אלבניה ב-1912. משם מתחיל כביש החוף שעולה אל מעבר לוגרה.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=40.46667,19.48333',
+      },
+      {
+        id: 'alb-permet',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/P%C3%ABrmet_%E2%80%93_Gur_i_Qytetit%2C_mosque_i_Vjosa_zoom_01.jpg/500px-P%C3%ABrmet_%E2%80%93_Gur_i_Qytetit%2C_mosque_i_Vjosa_zoom_01.jpg',
+        tags: ['outdoors', 'foodie'],
+        priceLevel: 0,
+        name: 'פרמט',
+        nameLocal: 'Përmet',
+        category: 'attraction',
+        lat: 40.233256,
+        lng: 20.353362,
+        description:
+          'עיירה על נהר הוויוסה בדרום אלבניה, מוקפת הרים. היא מוכרת בגבינות ובריבות שלה ומשמשת בסיס למעיינות החמים שבסביבה.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=40.233256,20.353362',
+      },
+      {
+        id: 'alb-benje',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'מעיינות בנייה',
+        nameLocal: 'Bënjë',
+        category: 'nature',
+        lat: 40.2,
+        lng: 20.4,
+        description:
+          'בריכות מים חמים על גדת נהר הלנגריצה ליד פרמט, לצד גשר אבן עות׳מאני. המים גופריתיים והבריכות פתוחות לכל.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=40.2,20.4',
+      },
     ],
     itinerary: [
       {
@@ -40429,6 +40475,38 @@ export const destinations: Destination[] = [
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=47.73056,23.94444',
       },
+      {
+        id: 'ro-baia-mare',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Centrul_Vechi_Baia_Mare.jpg/500px-Centrul_Vechi_Baia_Mare.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'באיה מארה',
+        nameLocal: 'Baia Mare',
+        category: 'attraction',
+        lat: 47.65667,
+        lng: 23.57194,
+        description:
+          'העיר הגדולה במרמורש, עיר מכרות ותיקה עם כיכר עתיקה ומגדל שטפן מהמאה ה-15. היא שער הכניסה לכפרי העץ של האזור.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=47.65667,23.57194',
+      },
+      {
+        id: 'ro-ieud',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Ieud_deal.jpg/500px-Ieud_deal.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'ייאוד',
+        nameLocal: 'Ieud',
+        category: 'historic',
+        lat: 47.67778,
+        lng: 24.23361,
+        description:
+          'כפר במרמורש ובו שתי כנסיות עץ, שאחת מהן נחשבת מהוותיקות באזור ונכללת באתר המורשת העולמית של כנסיות העץ.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=47.67778,24.23361',
+      },
     ],
     itinerary: [
       {
@@ -44040,6 +44118,34 @@ export const destinations: Destination[] = [
         durationMin: 360,
         externalUrl: 'https://maps.google.com/?q=59,23.21667',
       },
+      {
+        id: 'ee-kihnu',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'קיהנו',
+        nameLocal: 'Kihnu',
+        category: 'historic',
+        lat: 58.126136,
+        lng: 23.985261,
+        description:
+          'אי קטן במפרץ ריגה שתרבותו מוכרת כמורשת בלתי מוחשית של אונסק״ו. הנשים בו עדיין לובשות חצאיות פסים ארוגות, והתחבורה העיקרית היא אופנוע עם סירה.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=58.126136,23.985261',
+      },
+      {
+        id: 'ee-saaremaa',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'סארמה',
+        nameLocal: 'Saaremaa',
+        category: 'nature',
+        lat: 58.41667,
+        lng: 22.5,
+        description:
+          'האי הגדול באסטוניה, שטוח ומיוער עם חופי אבן וטחנות רוח. הוא נגיש במעבורת ומשמר אופי כפרי שונה מהיבשת.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=58.41667,22.5',
+      },
     ],
     itinerary: [
       {
@@ -45097,6 +45203,20 @@ export const destinations: Destination[] = [
           'כפר סוחרים עשיר מהמאה ה-17 על רמה מעל וליקו טרנובו - בתים כמו מבצרים עם חומות אבן ותקרות עץ מגולפות (בית קונסטנצליב), וכנסיית המולד עם 3,500 דמויות מצוירות על כל סנטימטר. חמש דקות מהעיר; מסעדות עם גריל, וסופי שבוע של בולגרים.',
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=43.09854,25.66596',
+      },
+      {
+        id: 'bg-gabrovo',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'גברובו',
+        nameLocal: 'Gabrovo',
+        category: 'attraction',
+        lat: 42.86667,
+        lng: 25.33333,
+        description:
+          'עיר בלב הבלקן הבולגרי, ידועה בהומור העצמי של תושביה ובמוזיאון ההומור שבה. היא הבסיס לאתר אתר ולמעבר שיפקה.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=42.86667,25.33333',
       },
     ],
     itinerary: [
@@ -58693,6 +58813,22 @@ export const destinations: Destination[] = [
         durationMin: 480,
         externalUrl: 'https://maps.google.com/?q=31.35184,78.43683',
       },
+      {
+        id: 'ind-dharamshala',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Dharamshala_03_%28Cropped%29.jpg/500px-Dharamshala_03_%28Cropped%29.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'דרמסלה',
+        nameLocal: 'Dharamshala',
+        category: 'attraction',
+        lat: 32.21528,
+        lng: 76.31861,
+        description:
+          'עיר במדרונות הדאולאדאר, שברובע העליון שלה מקלאוד גאנג׳ יושבת הממשלה הטיבטית בגלות ומתגורר הדלאי לאמה. סביבה מנזרים ומסלולי הליכה.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=32.21528,76.31861',
+      },
     ],
     itinerary: [
       {
@@ -65374,6 +65510,36 @@ export const destinations: Destination[] = [
           'בירת הקקצ׳יקל שנוסדה ב-1470 ונפלה לספרדים ב-1524, שהפכו אותה לבירה הראשונה של גואטמלה - פירמידות, מגרשי כדור ומקדשים על רכס בין קניונים, ומזבח שמאיה עדיין מבצעים בו טקסים עם נרות ואלכוהול. שעה מאנטיגואה, בדרך לאטיטלן; עצירה של שעה של מאיה חיה.',
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=14.7358,-90.9962',
+      },
+      {
+        id: 'gt-panajachel',
+        tags: ['foodie', 'outdoors'],
+        priceLevel: 1,
+        name: 'פנחצ׳ל',
+        nameLocal: 'Panajachel',
+        category: 'attraction',
+        lat: 14.74061,
+        lng: -91.15942,
+        description:
+          'העיירה הראשית על שפת אגם אטיטלן, ונקודת היציאה בסירה אל הכפרים שמסביבו. הרחוב המרכזי שלה מלא דוכני אריגים.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=14.74061,-91.15942',
+      },
+      {
+        id: 'gt-monterrico',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Black-sand-beach.jpg/500px-Black-sand-beach.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'מונטריקו',
+        nameLocal: 'Monterrico',
+        category: 'nature',
+        lat: 13.8928,
+        lng: -90.48125,
+        description:
+          'חוף חול שחור על האוקיינוס השקט עם שמורת מנגרובים מאחוריו. באזור פועלים מרכזי שחרור צבי ים.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=13.8928,-90.48125',
       },
     ],
     itinerary: [
