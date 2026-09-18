@@ -25572,6 +25572,52 @@ export const destinations: Destination[] = [
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=-34.08114,23.05954',
       },
+      {
+        id: 'zaf-george',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'ג׳ורג׳',
+        nameLocal: 'George',
+        category: 'attraction',
+        lat: -33.960826,
+        lng: 22.455924,
+        description:
+          'העיר הגדולה בגארדן ראוט, בין הרי האוטניקווה לים. היא משמשת בעיקר כבסיס ונקודת כניסה לאזור, ובה שדה התעופה שממנו מתחילים רוב הטיולים.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=-33.960826,22.455924',
+      },
+      {
+        id: 'zaf-outeniqua-pass',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Outeniqua_Pass01.jpg/500px-Outeniqua_Pass01.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'מעלה אוטניקווה',
+        nameLocal: 'Outeniqua Pass',
+        category: 'viewpoint',
+        lat: -33.8864,
+        lng: 22.3991,
+        description:
+          'מעבר הרים בין ג׳ורג׳ לקארו הקטן, שעולה במדרון תלול עם תצפיות חוזרות אל מישור החוף. בחלק מהימים הפסגה בתוך ענן והמישור למטה בשמש.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=-33.8864,22.3991',
+      },
+      {
+        id: 'zaf-victoria-bay',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/VictoriaBay.JPG/500px-VictoriaBay.JPG',
+        tags: ['families', 'outdoors'],
+        priceLevel: 0,
+        name: 'מפרץ ויקטוריה',
+        nameLocal: 'Victoria Bay',
+        category: 'nature',
+        lat: -34,
+        lng: 22.55,
+        description:
+          'מפרץ קטן ומוגן בין צוקים ליד ג׳ורג׳, עם שורת בתים אחת מול הים. הוא מוכר בעיקר בקרב גולשים בשל הגלים הימניים שנשברים לאורך המפרץ.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=-34,22.55',
+      },
     ],
     itinerary: [
       {
@@ -31732,6 +31778,38 @@ export const destinations: Destination[] = [
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=41.68333,23.83333',
       },
+      {
+        id: 'bg-blagoevgrad',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Blagoevgrad.Downtown.jpg/500px-Blagoevgrad.Downtown.jpg',
+        tags: ['foodie', 'nightlife'],
+        priceLevel: 1,
+        name: 'בלגויבגראד',
+        nameLocal: 'Blagoevgrad',
+        category: 'attraction',
+        lat: 42.01194,
+        lng: 23.08972,
+        description:
+          'עיר אוניברסיטה בין רילה לפירין, עם רובע ורושה ההיסטורי ובתי המאה ה-19 שלו. היא הבסיס הנוח לשני רכסי ההרים.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=42.01194,23.08972',
+      },
+      {
+        id: 'bg-leshten',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/LeshtenHouses.jpg/500px-LeshtenHouses.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'לשטן',
+        nameLocal: 'Leshten',
+        category: 'historic',
+        lat: 41.63333,
+        lng: 23.83333,
+        description:
+          'כפר אבן קטן במדרונות הרודופה, סמוך לקובצ׳ביצה, שרוב בתיו שוחזרו בסגנון המקורי. בכפר עצמו כמעט אין תושבי קבע.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=41.63333,23.83333',
+      },
     ],
     itinerary: [
       {
@@ -35994,6 +36072,52 @@ export const destinations: Destination[] = [
         durationMin: 480,
         externalUrl: 'https://maps.google.com/?q=-41.41667,145.13333',
       },
+      {
+        id: 'au-launceston',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Launie_%28cropped%29_b.jpg/500px-Launie_%28cropped%29_b.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'לונססטון',
+        nameLocal: 'Launceston',
+        category: 'attraction',
+        lat: -41.44194,
+        lng: 147.145,
+        description:
+          'העיר השנייה בטסמניה, בצפון האי, ומהערים שנשמרה בהן ארכיטקטורה ויקטוריאנית וג׳ורג׳יאנית רבה. היא הבסיס לעמק הטאמאר ולכרמים שסביבו.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=-41.44194,147.145',
+      },
+      {
+        id: 'au-cataract-gorge',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Alexandra_Suspension_bridge_-_launceston_tasmania.jpg/500px-Alexandra_Suspension_bridge_-_launceston_tasmania.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 0,
+        name: 'נקיק קטרקט',
+        nameLocal: 'Cataract Gorge',
+        category: 'nature',
+        lat: -41.44611,
+        lng: 147.11944,
+        description:
+          'נקיק של נהר בסמוך למרכז לונססטון, עם שבילי הליכה משני עבריו וגשר תלוי. מעליו עוברת רכבלית שמחברת בין שתי הגדות.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=-41.44611,147.11944',
+      },
+      {
+        id: 'au-richmond-tas',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'ריצ׳מונד',
+        nameLocal: 'Richmond',
+        category: 'historic',
+        lat: -42.73333,
+        lng: 147.43333,
+        description:
+          'כפר קולוניאלי שנשמר כמעט בשלמותו, ובו גשר האבן הוותיק באוסטרליה שנבנה בידי אסירים. הרחוב הראשי מלא בתי אבן מהמחצית הראשונה של המאה ה-19.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=-42.73333,147.43333',
+      },
     ],
     itinerary: [
       {
@@ -38852,6 +38976,68 @@ export const destinations: Destination[] = [
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=45.3109,-63.80747',
       },
+      {
+        id: 'ca-halifax',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Halifax_Harbour_Sunset_Skyline%2C_Nova_Scotia_%2824237034620%29.jpg/500px-Halifax_Harbour_Sunset_Skyline%2C_Nova_Scotia_%2824237034620%29.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'הליפקס',
+        nameLocal: 'Halifax',
+        category: 'attraction',
+        lat: 44.6475,
+        lng: -63.59056,
+        description:
+          'בירת נובה סקוטיה ועיר נמל, עם טיילת עץ ארוכה לאורך המים. מהנמל הזה יצאו ואליו הגיעו גלי הגירה שלמים, והוא גם הנמל שאליו הובאו נספי הטיטניק.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=44.6475,-63.59056',
+      },
+      {
+        id: 'ca-citadel',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Citadel_hill.jpg/500px-Citadel_hill.jpg',
+        tags: ['history', 'families'],
+        priceLevel: 1,
+        name: 'מצודת הליפקס',
+        nameLocal: 'Halifax Citadel',
+        category: 'historic',
+        lat: 44.6475,
+        lng: -63.58028,
+        description:
+          'מצודה בצורת כוכב על הגבעה שמעל העיר, שנבנתה במאה ה-19 להגנת הנמל. מהחומות נשקפים הנמל והעיר, ובצהריים נורה תותח.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=44.6475,-63.58028',
+      },
+      {
+        id: 'ca-maritime-museum',
+        tags: ['history', 'families'],
+        priceLevel: 1,
+        name: 'המוזיאון הימי של האטלנטי',
+        nameLocal: 'Maritime Museum of the Atlantic',
+        category: 'museum',
+        lat: 44.64769,
+        lng: -63.57106,
+        description:
+          'מוזיאון על הטיילת שעוסק בהיסטוריה הימית של האזור, ובו אוסף גדול של חפצים מהטיטניק ותצוגה על הפיצוץ הגדול בהליפקס ב-1917.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=44.64769,-63.57106',
+      },
+      {
+        id: 'ca-digby',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Digby.jpg/500px-Digby.jpg',
+        tags: ['foodie', 'outdoors'],
+        priceLevel: 1,
+        name: 'דיגבי',
+        nameLocal: 'Digby',
+        category: 'attraction',
+        lat: 44.62222,
+        lng: -65.76056,
+        description:
+          'עיירת נמל על מפרץ פאנדי, מוכרת בציי סירות הצדפות שלה. מכאן יוצאת המעבורת אל ניו ברונסוויק שמעבר למפרץ.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=44.62222,-65.76056',
+      },
     ],
     itinerary: [
       {
@@ -41413,6 +41599,38 @@ export const destinations: Destination[] = [
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=45.24028,13.93667',
       },
+      {
+        id: 'hr-novigrad',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Novigrad_%28Istria%29.jpg/500px-Novigrad_%28Istria%29.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'נוביגראד',
+        nameLocal: 'Novigrad',
+        category: 'historic',
+        lat: 45.325051,
+        lng: 13.564536,
+        description:
+          'עיירה מוקפת חומה על לשון יבשה בחוף המערבי, עם נמל דייגים ורחובות צרים. שרידי החומות הוונציאניות עדיין עומדים לאורך הים.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=45.325051,13.564536',
+      },
+      {
+        id: 'hr-umag',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Umago%2C_chiesa_di_santa_maria_maggiore%2C_01.jpg/500px-Umago%2C_chiesa_di_santa_maria_maggiore%2C_01.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 1,
+        name: 'אומאג',
+        nameLocal: 'Umag',
+        category: 'attraction',
+        lat: 45.43333,
+        lng: 13.51667,
+        description:
+          'העיר הצפונית ביותר בחוף הקרואטי, קרובה לגבול הסלובני. בעיר העתיקה שלה סמטאות ונציאניות, וסביבה חופים וכרמים.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=45.43333,13.51667',
+      },
     ],
     itinerary: [
       {
@@ -42459,6 +42677,54 @@ export const destinations: Destination[] = [
           'הקצה הצפוני של ניו זילנד, שבו ים טסמן והאוקיינוס השקט מתנגשים בגלים לבנים מול המגדלור - ועץ הפוהוטוקאווה שממנו, לפי המאורים, נשמות המתים קופצות לים בדרך להוואיקי. דיונות ענק בטה פאקי לגלישת חול, וחוף תשעים המייל. חמש שעות מאוקלנד; יום ארוך או לילה בקאיטאיה.',
         durationMin: 480,
         externalUrl: 'https://maps.google.com/?q=-34.4214,172.6797',
+      },
+      {
+        id: 'nz-taupo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Lake_Taupo.jpg/500px-Lake_Taupo.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        name: 'אגם טאופו',
+        nameLocal: 'Lake Taupo',
+        category: 'nature',
+        lat: -38.80694,
+        lng: 175.90778,
+        description:
+          'האגם הגדול בניו זילנד, שנוצר בלוע של התפרצות-על. מחופו נשקפים הרי טונגרירו, ובקצהו הצפוני יוצא נהר הוואיקאטו.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=-38.80694,175.90778',
+      },
+      {
+        id: 'nz-wellington',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Seddon_Statue_in_Parliament_Grounds.jpg/500px-Seddon_Statue_in_Parliament_Grounds.jpg',
+        tags: ['foodie', 'art', 'history'],
+        priceLevel: 1,
+        name: 'וולינגטון',
+        nameLocal: 'Wellington',
+        category: 'attraction',
+        lat: -41.28889,
+        lng: 174.77722,
+        description:
+          'בירת ניו זילנד, בנויה על גבעות סביב מפרץ. מרכזה קומפקטי, ומעליו עולה רכבל היסטורי אל הגן הבוטני.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=-41.28889,174.77722',
+      },
+      {
+        id: 'nz-bay-of-islands',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/00_4801_Dolphins_-_Bay_of_Islands.jpg/500px-00_4801_Dolphins_-_Bay_of_Islands.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'מפרץ האיים',
+        nameLocal: 'Bay of Islands',
+        category: 'nature',
+        lat: -35.2,
+        lng: 174.16667,
+        description:
+          'מפרץ בצפון האי עם עשרות איים קטנים, מוקד לשיט ולצפייה בדולפינים. באזורו נמצאים גם אתרי ההתיישבות האירופית המוקדמת ביותר בניו זילנד.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=-35.2,174.16667',
       },
     ],
     itinerary: [
@@ -45166,6 +45432,55 @@ export const destinations: Destination[] = [
           'הגבעה מעל מרכז אואחקה, עם האודיטוריום הפתוח שבו נערך הגלגצה ביולי - הפסטיבל של ריקודי שבע אזורי המדינה - ומצפה כוכבים, מדרגות מהעיר, ותצפית על העמק וההרים. שקיעה מהמרפסת; בבוקר רצים ומקומיים. הזווית מלמעלה על העיר הצבעונית.',
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=17.07667,-96.73389',
+      },
+      {
+        id: 'mx-santo-domingo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/SantoDomingo12-05Oaxaca109.jpg/500px-SantoDomingo12-05Oaxaca109.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'כנסיית סנטו דומינגו',
+        nameLocal: 'Santo Domingo de Guzmán',
+        category: 'historic',
+        lat: 17.06556,
+        lng: -96.72306,
+        description:
+          'כנסייה ומנזר דומיניקני מהמאה ה-16 במרכז אואחקה, שתקרתה מכוסה עיטורי גבס מוזהבים. במנזר הצמוד נמצא המוזיאון של תרבויות אואחקה עם ממצאי מונטה אלבן.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=17.06556,-96.72306',
+      },
+      {
+        id: 'mx-zipolite',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/ZipoliteFromAmor.JPG/500px-ZipoliteFromAmor.JPG',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'זיפוליטה',
+        nameLocal: 'Zipolite',
+        category: 'nature',
+        lat: 15.6621,
+        lng: -96.51175,
+        description:
+          'חוף ארוך בחוף האוקיינוס השקט של אואחקה, שקט ובלי מלונות גבוהים. הזרמים בו חזקים והרחצה בו דורשת זהירות.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=15.6621,-96.51175',
+      },
+      {
+        id: 'mx-tlacolula',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Tlacolula_Market_230122_62.jpg/500px-Tlacolula_Market_230122_62.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 0,
+        name: 'טלקולולה',
+        nameLocal: 'Tlacolula',
+        category: 'historic',
+        lat: 16.95417,
+        lng: -96.47917,
+        description:
+          'עיירה בעמק אואחקה עם שוק אזורי ותיק שאליו מגיעים מכפרי הסביבה, ועם כנסייה שבה קפלה מעוטרת בגבס מוזהב.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=16.95417,-96.47917',
       },
     ],
     itinerary: [
@@ -48535,6 +48850,22 @@ export const destinations: Destination[] = [
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=-23.4475,134.7172',
       },
+      {
+        id: 'au-serpentine-gorge',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/SerpentineGorgeSideWall.jpg/500px-SerpentineGorgeSideWall.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'נקיק סרפנטיין',
+        nameLocal: 'Serpentine Gorge',
+        category: 'nature',
+        lat: -23.75,
+        lng: 132.9667,
+        description:
+          'נקיק צר ברכס מקדונל המערבי עם בריכת מים קבועה בפתחו. שביל קצר מטפס לתצפית שממנה רואים את החתך בסלע.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=-23.75,132.9667',
+      },
     ],
     itinerary: [
       {
@@ -50855,6 +51186,38 @@ export const destinations: Destination[] = [
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=36.74278,138.08528',
       },
+      {
+        id: 'jp-kanazawa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/%E6%9C%9B%E6%B9%96%E5%8F%B0%EF%BC%92.jpg/500px-%E6%9C%9B%E6%B9%96%E5%8F%B0%EF%BC%92.jpg',
+        tags: ['history', 'art', 'foodie'],
+        priceLevel: 1,
+        name: 'קאנאזאווה',
+        nameLocal: 'Kanazawa',
+        category: 'attraction',
+        lat: 36.56106,
+        lng: 136.65642,
+        description:
+          'עיר טירה על חוף הים היפני שלא הופצצה במלחמה, ולכן נשארו בה רובעי גיישות ורובע סמוראים שלמים. בה נמצא גם גן קנרוקואן.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=36.56106,136.65642',
+      },
+      {
+        id: 'jp-gero',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/260125_Gero_Onsen_Gero_Gifu_pref_Japan02s3.jpg/500px-260125_Gero_Onsen_Gero_Gifu_pref_Japan02s3.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'גרו אונסן',
+        nameLocal: 'Gero Onsen',
+        category: 'attraction',
+        lat: 35.80589,
+        lng: 137.24414,
+        description:
+          'עיירת מעיינות חמים על נהר בהרי גיפו, מהוותיקות ביפן. בתי המרחץ פרושים לאורך שני עברי הנהר ויש בה גם בריכות ציבוריות.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=35.80589,137.24414',
+      },
     ],
     itinerary: [
       {
@@ -52365,6 +52728,38 @@ export const destinations: Destination[] = [
           'מערת ים באי קטן ליד ויס, שבשעות הבוקר אור השמש נכנס מפתח תת-ימי וצובע את המים בכחול זוהר - סירות קטנות בכניסה צרה, חמש דקות בפנים. המערה הכחולה של קרואטיה; מקומיז׳ה בוויס או סיור יום מספליט לחמישה איים. בים שקט בלבד.',
         durationMin: 300,
         externalUrl: 'https://maps.google.com/?q=42.96667,16',
+      },
+      {
+        id: 'hr-primosten',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Aerial_image_of_Primo%C5%A1ten_%28view_from_the_southeast%29.jpg/500px-Aerial_image_of_Primo%C5%A1ten_%28view_from_the_southeast%29.jpg',
+        tags: ['romantic', 'outdoors'],
+        priceLevel: 1,
+        name: 'פרימושטן',
+        nameLocal: 'Primošten',
+        category: 'historic',
+        lat: 43.5875,
+        lng: 15.92639,
+        description:
+          'עיירה על אי קטן שחובר ליבשת, שבתיה מטפסים סביב כנסייה בפסגה. סביבה כרמים על מדרונות אבן שנבנו כמקטעים מגודרים.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=43.5875,15.92639',
+      },
+      {
+        id: 'hr-cetina',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cetina_river.jpg/500px-Cetina_river.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'נהר צטינה',
+        nameLocal: 'Cetina',
+        category: 'nature',
+        lat: 43.4398,
+        lng: 16.6864,
+        description:
+          'נהר שזורם מהרי הדינרה אל הים באומיש, ובדרכו נקיקים ומפלים. בקטעים שלו עושים רפטינג ושיט קיאקים.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=43.4398,16.6864',
       },
     ],
     itinerary: [
@@ -54438,6 +54833,38 @@ export const destinations: Destination[] = [
           '200 ק״מ של נווה מדבר לאורך הנהר הארוך במרוקו, מאורזאזאת דרומה - מיליון דקלים, קסבאות בוץ בכל כפר, וזאגורה עם השלט המזויף ״טימבוקטו 52 ימים״. הדרך השנייה לסהרה, לדיונות ארג שגאגה הפראיות. יום ארוך של נסיעה, או לילה בקסבה בין הדקלים.',
         durationMin: 300,
         externalUrl: 'https://maps.google.com/?q=30.33056,-5.83806',
+      },
+      {
+        id: 'ma-merzouga',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Merzouga%2C_Morocco.jpg/500px-Merzouga%2C_Morocco.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'מרזוגה',
+        nameLocal: 'Merzouga',
+        category: 'attraction',
+        lat: 31.09917,
+        lng: -4.01167,
+        description:
+          'הכפר שבשוליו מתחילות דיונות ארג שבי, ונקודת היציאה לרוב הלינות במדבר. משם יוצאים לגמלים או לרכבי שטח אל הדיונות.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=31.09917,-4.01167',
+      },
+      {
+        id: 'ma-amridil',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Morocco%2C_Souss-Massa-Draa_Region%2C_Ouarzazate_Province%2C_Skoura%2C_Kasbah_Amerhidil_%283%29.JPG/500px-Morocco%2C_Souss-Massa-Draa_Region%2C_Ouarzazate_Province%2C_Skoura%2C_Kasbah_Amerhidil_%283%29.JPG',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'קסבת אמרידיל',
+        nameLocal: 'Kasbah Amridil',
+        category: 'historic',
+        lat: 31.04636,
+        lng: -6.58125,
+        description:
+          'קסבה מבוצרת מחומר בנווה המדבר סקורה, מהשמורות ביותר באזור. חלקה עדיין בבעלות המשפחה שבנתה אותה, וחלקה פתוח למבקרים.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=31.04636,-6.58125',
       },
     ],
     itinerary: [
