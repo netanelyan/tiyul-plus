@@ -20,12 +20,16 @@ favor user trust and repeat usage over tech impressiveness.
 
 ## Site walkthrough (as built)
 
-- **`/` - a light landing portal.** Server component + two small client
+- **`/` - the storefront homepage.** Server component + two small client
   islands: `HomeHero` (the big centered input + prompt chips - submitting
   NAVIGATES to `/chat?q=...`, no conversation state or Leaflet on the
   homepage) and `MyTripCard` (shown only when a trip exists). Below the
-  hero: quiet portal cards to מתכנן המסלולים, קטלוג היעדים and the
-  current trip.
+  hero, eight sections in a light/dark rhythm (`src/components/home/*`,
+  data from `src/lib/server/homeSections.ts` - every count is computed
+  from the catalog, never typed): the eight pinned flagship cities with
+  place/route/kosher counts (`FLAGSHIP_SLUGS`), popular countries as flag
+  tiles, the shared-trip feature block, a dark CTA band, the collection
+  hubs, the service cards, how-it-works, and the current trip.
 - **`/chat` - the agent, the star.** Renders
   `src/components/AgentWorkspace.tsx`. On mount it auto-sends a `?q=`
   param once (then cleans the URL with `router.replace`); direct visits
@@ -11470,3 +11474,78 @@ verified through PostgREST at all; and the Supabase catalog mirror tables hold
 site reads the TS files by decision.
 
 No code changed. Docs-only session.
+
+### 2026-09-18 (b) - "It feels thin": the homepage becomes a storefront, and the type gets a step heavier
+
+Netanel, after the admin audit: the site is good but feels thin - in content
+depth (places per city, cities per country) and in design. Asked for a
+reference, he gave his other site, hashofet.com, a Shopify storefront. Asked
+which page, the homepage.
+
+**Measured before touching anything.** hashofet's homepage is ~9 sections in a
+rhythm - dark hero, trust bar, customer-photo strip, hot-items grid with a
+number on every tile, a feature block, a dark CTA band, popular-teams tiles
+with counts, and every section ending in "see all" - about 4,200px that keeps
+giving something new on every scroll. tiyul+ was three sections and a footer:
+hero, one band of eight *random* destination cards, four service cards, ~1,000px
+of content, and at a tall viewport ~1,500px of empty cream before the footer.
+The palettes are near-identical (cream, near-black, one hot accent); what
+differed was density, imagery and proof, not brand.
+
+**He chose sections 4-9 of the nine I mapped** (not the hero rework, not a
+trust bar, not a photo strip) plus "fonts a bit bolder". Built:
+
+| # | section | what it is made of |
+|---|---|---|
+| 4 | היעדים החמים | 8 **pinned** flagship cities on the night band, each tile with places / route length / kosher count and the editorial score |
+| 7 | מדינות פופולריות | 10 countries as flag tiles with "N destinations · M places", ranked by places |
+| 5 | טיול משותף | feature block: a CSS mock of the vote screen over a verified Rome photo, the pitch, "friends pay nothing", price from `PREMIUM_PRICE_ILS` |
+| 6 | CTA band | dark, the product's own sentence, two buttons (chat / planner) |
+| 8 | לפי סוג הטיול | the 12 collection hubs as tiles - they had **no inbound link from the homepage at all** |
+| 9 | איך זה עובד | four steps, each describing something the product does today |
+
+Desktop content went **~1,000px -> 4,301px**; phone 7,045px. Every number on
+the page is computed in `lib/server/homeSections.ts` from the catalog, and a
+test asserts each one against the data it claims to describe - a flagship
+whose slug is renamed fails by name rather than vanishing from the band.
+
+**Two decisions made and stated rather than asked, because he had said "do
+it":** the flagship grid is **curated, not random**. The shuffle from entry
+2026-07-24 (e) gave a Finnish road and a Vilnius cathedral the hero band as
+often as Rome; a storefront's hot grid is picked. And the eight are Vienna,
+Rome, Prague, Budapest, Athens, Bangkok, Dubai, New York - the flight-frequency
+list from this log. `FLAGSHIP_SLUGS` is one line to change. The
+`DestinationHighlights` shuffle component is deleted.
+
+**The mock in the feature block uses only real catalog place names** (the
+Colosseum, Campo de' Fiori, Galleria Borghese - checked by grep against
+`destinations.ts`, two of my first three spellings were not the catalog's and
+were corrected), carries no faces and no avatars, and the doc comment says it
+is an illustration of the UI and not a screenshot of a real group. Hard rule 2
+applies to marketing copy too.
+
+**Type: body 400 -> 500, `.display` 700 -> 800.** Heebo regular reads light on
+cream; one step keeps every explicit `font-semibold`/`font-bold` still visibly
+heavier than the body. Verified the computed weights in the browser rather than
+trusting the CSS was picked up.
+
+**Verified:** `tsc` clean, 786/786 tests (4 new), `npm run build` clean with
+`/` still static, `eslint` clean on every new file. Headless Edge over CDP at
+1400 and 390 (DPR 3) against the production build: `dir=rtl`, zero horizontal
+overflow, no element past either viewport edge, eight section headings in the
+intended order, 18 flagship links / 16 country links / 12 collection links,
+all eight kosher pills, and the two weights reading 500/800 from
+`getComputedStyle`. The rendered page was looked at at both widths, and the
+phone flagship band at readable scale.
+
+**Harness note:** `node_modules` was absent in this checkout (`npx tsc`
+printed npm's "install typescript" help and exited 0 - **an exit code of 0
+from a tool that is not installed is not a pass**). Installed, re-ran.
+
+**Not built, by his choice, and worth revisiting:** sections 1-3 - the hero as
+a dark banner with an offer, a trust bar with real numbers, and a strip of
+large photographs. And the depth half of "thin" is untouched: the flagship
+tiles now say "26 places" for Rome, which is the honest number and is also the
+ceiling a six-day trip runs into. Going deep on those eight cities - 40-60
+places each, real editorial text, a neighbourhood structure - is the content
+work that would make a richer page mean something.

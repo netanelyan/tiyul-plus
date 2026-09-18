@@ -40,6 +40,10 @@ html {
 body {
   background: var(--color-cream);
   color: var(--color-night);
+  /* 500 rather than the browser's 400: Heebo's regular reads light on cream,
+     and the founder's word for the result was "thin". One step up on the body
+     keeps every explicit font-semibold/bold above it still visibly heavier. */
+  font-weight: 500;
   font-family:
     'Heebo',
     'Rubik',
@@ -156,9 +160,9 @@ html.a11y-no-motion *::after {
   scroll-behavior: auto !important;
 }
 
-/* Display headlines: precise, not shouty */
+/* Display headlines: heavy enough to anchor a section, not shouty */
 .display {
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.01em;
 }

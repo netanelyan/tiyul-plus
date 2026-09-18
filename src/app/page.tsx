@@ -1,78 +1,65 @@
-import Link from 'next/link';
-import { getProvider } from '@/lib/providers';
-import { destinations } from '@/data/destinations';
 import HomeHero from '@/components/HomeHero';
 import MyTripCard from '@/components/MyTripCard';
-import DestinationHighlights from '@/components/DestinationHighlights';
 import QuickServices from '@/components/QuickServices';
+import Flagships from '@/components/home/Flagships';
+import PopularCountries from '@/components/home/PopularCountries';
+import SharedTripFeature from '@/components/home/SharedTripFeature';
+import CtaBand from '@/components/home/CtaBand';
+import Collections from '@/components/home/Collections';
+import HowItWorks from '@/components/home/HowItWorks';
+import { collectionTiles, flagshipCards, popularCountries } from '@/lib/server/homeSections';
 
 /**
- * The homepage - a landing portal with real colour: hero -> chips -> a live grid of wonders
- * (the verified destination photos are the page's colour, on a night band that sets them off)
- * -> a slim secondary row of entries (planner/catalog + the current-trip bar). No empty
- * decoration and no dead expanses of cream.
+ * The homepage.
+ *
+ * Until 2026-09-18 this was three sections - hero, one band of eight random
+ * destination cards, four service cards - and then the footer, about 1,000px
+ * of content on a page whose only job is to make somebody want to plan a trip.
+ * Netanel's word for it was "thin". The reference he gave was his own
+ * storefront: a page that keeps giving something new on every scroll,
+ * alternating dark and light, grids and feature blocks, with a number on
+ * every tile and a "see all" at the end of every section.
+ *
+ * This is that structure, built from content that already existed and was
+ * simply not on the homepage: the flagship cities with their real counts, the
+ * shared-trip feature, the countries with their counts, the twelve collection
+ * hubs (which had no inbound link from here at all), and a how-it-works.
+ * Every number on the page is counted from the catalog on the server
+ * (`lib/server/homeSections.ts`); nothing is typed by hand.
+ *
+ * Rhythm: light hero -> dark flagships -> light countries -> light feature
+ * block (on a shell card, so it reads as a different object) -> dark CTA ->
+ * light collections -> light services -> light how-it-works.
  */
-
-export default async function Home() {
-  const provider = getProvider();
-  const dests = await provider.getDestinations();
-  const cards = dests.map((d) => {
-    const dest = destinations.find((x) => x.slug === d.slug);
-    const landmark = dest?.iconicLandmark;
-    return {
-      slug: d.slug,
-      heroName: landmark?.name ?? d.name,
-      heroPhoto: landmark?.photo ?? d.photo,
-      name: d.name,
-      country: d.country,
-      days: d.days,
-    };
-  });
+export default function Home() {
+  const flagships = flagshipCards();
+  const countryTiles = popularCountries();
+  const hubs = collectionTiles();
+  // The feature block's backdrop: the first flagship's landmark photo, i.e. a
+  // verified photograph already used elsewhere on this page - no new URL.
+  const featurePhoto = flagships.find((f) => f.slug === 'rome')?.photo ?? flagships[0]?.photo;
 
   return (
     <div>
       <HomeHero />
 
-      {/* Wonders waiting for you - the emotional heart of the page: a night band with wonder cards */}
-      <section className="rounded-3xl bg-night px-4 py-8 sm:px-8 sm:py-10">
-        <div className="flex items-end justify-between gap-3">
-          <div>
-            <h2 className="display text-2xl text-cream sm:text-3xl">פלאים שמחכים לכם</h2>
-            <p className="mt-1.5 text-sm text-cream/60">
-              לכל פלא יש מסלול מוכן, מפה ושכבת כשרות. לוחצים ונכנסים.
-            </p>
-          </div>
-          <Link
-            href="/countries"
-            className="shrink-0 text-sm font-bold text-zest transition hover:text-cream"
-          >
-            כל הקטלוג ←
-          </Link>
-        </div>
+      <Flagships cards={flagships} />
 
-        <DestinationHighlights cards={cards} />
-      </section>
+      <PopularCountries tiles={countryTiles} />
 
-      {/* Quick access: travel services (flights/lodging/attractions/car) */}
+      <SharedTripFeature photo={featurePhoto} />
+
+      <CtaBand />
+
+      <Collections tiles={hubs} />
+
       <QuickServices />
 
-      {/* Secondary entries - slim and centred, not large cards */}
-      <section className="mx-auto max-w-3xl py-10">
+      <HowItWorks />
+
+      {/* The most recently touched trip, when one exists - a quiet last row */}
+      <section className="mx-auto max-w-3xl pb-6">
         <MyTripCard />
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          <Link
-            href="/planner"
-            className="badge rounded-full bg-shell px-5 py-2.5 font-semibold text-night/75 ring-1 ring-night/10 transition hover:text-night hover:ring-night/25"
-          >
-            🗺️ מתכנן המסלולים
-          </Link>
-          <Link
-            href="/countries"
-            className="badge rounded-full bg-shell px-5 py-2.5 font-semibold text-night/75 ring-1 ring-night/10 transition hover:text-night hover:ring-night/25"
-          >
-            🌍 קטלוג היעדים
-          </Link>
-        </div>
       </section>
     </div>
   );
