@@ -128,7 +128,7 @@ npm run lint
   country-level practical facts (visa, currency, sim, payments) shared by
   all its cities.
 - `src/data/destinations.ts` - curated content: 166 destinations across
-  83 countries, ~2,086 places (Hebrew), each referencing its country via
+  83 countries, ~3,060 places (Hebrew), each referencing its country via
   `countrySlug`. Re-count with a grep before quoting these numbers.
   Places carry `photo` (verified URLs - run `node
   scripts/verify-photos.mjs` after any photo change; Wikimedia thumbs
@@ -3066,6 +3066,8 @@ at 2,086 places, the tuple index 158,055 - a 43% saving, lossless by test
 form**, i.e. roughly 3,700 places. What was NOT verified is the model reading the
 tuple layout live; the first real chat after deploy is that check, and the env
 switch is the answer if it fails. Itinerary days and photos stay outside the index.
+Measured 2026-09-18 evening at 3,060 places: **232,022 chars (kosher on), 227,086
+(off) - headroom ~48,000, about 600 places at the measured ~78 chars per tuple.**
 
 The index does NOT serialize photo URLs, so **photo work costs zero budget**. Verify
 with `/tmp/measure.mjs`-style measurement before quoting any new figure.
@@ -11692,3 +11694,99 @@ sentences; the 164 done are the ones a visitor and Google read first, and
 the next tranche is the must-sees of the other 136 destinations. Three
 places are still unpinned by any source (Vai beach, Hverir, Devrent valley).
 And the index is full: no more places without the format compaction.
+
+### 2026-09-18 (e) - "Populate the database, at least for a few hours": 3,060 places, and the ceiling that had to move first
+
+Netanel: *"do more places, populate the database, at least for a few hours."*
+Entry (d) had ended on a full index - 2,086 places against a 280,000-char
+ceiling with nothing to spare - so the first thing this session did was the
+structural move the budget section had been recommending since July.
+
+**The compaction shipped: the index as tuples under a legend, 43% smaller,
+lossless by test.** `buildGroundingIndex()` used to serialize every place as a
+JSON object, so `"id":"name":"category":...` repeated two thousand times. It now
+writes `[id, name, category, tags, priceLevel, mustSee, durationMin]` per place
+and `[slug, name, countrySlug, places]` per city, with a one-line legend in the
+note; `PLACE_TUPLE_FIELDS` is the single source of the order, and
+`groundingIndexFormat.test.ts` decodes every tuple back through that order and
+deep-equals it to the object form, for both kosher variants. 278,944 -> 158,055
+chars at 2,086 places. `GROUNDING_INDEX_FORMAT=json` is the rollback - the one
+thing not verifiable here is the model *reading* the new layout, and the first
+live chat after deploy is that check.
+
+**Then seven batches, 708 places, across 156 destinations** - every one through
+the same pipeline entry (c) built: Wikipedia coordinates in the local language
+first, then OpenStreetMap filtered on *type* rather than name, then Wikidata
+P625, a distance guard keyed to the destination's own spread, catalog-wide
+dedup by name and by 250 m, a licence and width check on the photo, a live
+probe of the derived thumbnail, and a contact sheet rendered in headless Edge
+and looked at. Batch by batch: the 32 mid-sized destinations (118), a second
+pass on the thin ones (90), day trips for 28 flagships (117), day trips around
+the 16 largest (73), then three more passes on what was still under fifteen
+(116, 115, 79). 2,352 -> **3,060 places**; the 98 destinations that sat at ten
+to fourteen are down to a handful.
+
+**What the machinery rejected, because that is the deliverable as much as the
+rows.** Roughly 40% of first-pass candidates fail and about two-thirds of those
+are recovered by OSM-by-type or Wikidata; the rest are real findings:
+
+- **Wrong place, same name**, every batch: Juta resolved to Hungary *again*
+  (the Georgian village needed OSM in Georgian); Dois Irmãos to a peak in Magé;
+  Butakovka to a suburb; Tsenkher to a different hot spring 40 km off; Lake St
+  Clair to Ontario; the Elbe to its North Sea mouth; a Kokand mosque to a
+  different mosque. The guard caught the far ones, the sheet the near ones,
+  and a couple only by reading the display name.
+- **Already in the catalog under a neighbouring destination** - Königssee and
+  the Eagle's Nest (Munich), Rila and the Seven Lakes (rila-pirin), Škocjan and
+  Logar (slovenia-karst-east), Aït Benhaddou (atlas-sahara), Kykkos (larnaca),
+  Vidova Gora, Belogradchik. Twelve in one batch. The catalog-wide dedup is
+  what stops "one place in two destinations", which entry (ii) already refused.
+- **Photos that passed every filter and failed the eye** - about one in eight:
+  three maps, four satellite images, a 1952 signed print for Fitz Roy, a stamp
+  sheet for a nature reserve, a museum model for the Ulugh Beg observatory, a
+  railway station for a beach, a hotel for a plateau, a cruise ship for a
+  mountain viewpoint, two 1930s-40s camp photographs that would have stood in
+  for the Dachau and Sachsenhausen memorials, and a nautical chart. `BAD_FILE`
+  now also drops `loqosu` (an Azerbaijani logo slipped through in Latin
+  script).
+
+**The precision ratchet fired on every single batch - 45 places in all - and
+was never widened.** Wikipedia's coordinate for a town is often two decimals;
+each one was re-geocoded to the OSM node of the actual thing (the monastery,
+the cathedral, the fort, the beach) before the commit. Two lessons the test
+made concrete: an OSM `boundary/administrative` centroid is fine for a town but
+not for a viewpoint, and a Wikidata P625 can be just as coarse as the article
+(Pella was 32.45/35.6167 on both; the archaeological site is at 32.4488/35.6165
+in OSM).
+
+**Two pipeline fixes worth knowing.** `apply-places.mjs` did not write
+`kosherStatus` or `source`, so a `market` entry would have failed the food rule
+from entry (bb) - it does now, and the three markets added this session carry
+both. And the Windows `file://` URL for headless Edge has to be the
+`C:/...` form; the git-bash `/c/...` path renders a "file not found" page that
+looks exactly like an empty contact sheet.
+
+**Also fixed on the way:** Patan Durbar Square was blocked by the 250 m dedup
+against a *restaurant* in Patan (Honacha), which is the one case where the
+guard is wrong - it went in by hand from the Wikipedia coordinate.
+
+**Verified:** validator 0 errors / 92 warnings (the new warnings are all "far
+from the destination centre" on deliberate `allowFar` day trips - Toledo from
+Madrid, Königssee-adjacent things, the Catlins); 790 tests; tsc; `npm run
+build` clean at 319 pages; lint at exactly the pre-existing 34 on `src/` and
+`scripts/` (the repo-wide count is the `.claude/worktrees` build noise entry
+(zz) recorded). Photo manifest 2,746 URLs, 17 dead - the standing backlog,
+unchanged. Index **232,022 chars at 3,060 places - headroom ~48,000, about 600
+more places** before the ceiling is real again. Pushed to main.
+
+**What the next session should know.** (1) Headroom is ~600 places; after
+that the next lever is trimming `tags` or `durationMin` from the tuple, not
+the ceiling. (2) ~290 of the new places have no photo - `photo-geosearch.mjs`
+against the new gaps is the cheap next pass, and costs zero budget. (3) The
+new places have descriptions of two to four sentences; the itinerary days for
+the deepened destinations were NOT extended this session - `apply-days.mjs`
+is ready for it. (4) Still unpinnable by any source, and left out on purpose:
+Vai beach's article, Hverir, Devrent valley, Yeddi Gümbəz, the Victoria Lines,
+Lisbon Falls (SA), Anse Major, Lara beach, the Mulu Pinnacles, Machuca's photo,
+and every entry of the shape "the trail" (Larapinta, Kungsleden, the Lycian
+Way) - a line has no honest point to pin.
