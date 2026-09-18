@@ -112,7 +112,7 @@ export default function Page() {
           items={[
             <>גופנים מ-Google Fonts.</>,
             <>תמונות מוויקישיתוף, מ-Unsplash ודגלים מ-flagcdn.</>,
-            <>אריחי מפה מ-CARTO, מבוססי OpenStreetMap.</>,
+            <>אריחי מפה מ-OpenStreetMap.</>,
           ]}
         />
         <p className="text-sm text-night/60">

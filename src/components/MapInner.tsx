@@ -304,11 +304,16 @@ export default function MapInner({
       scrollWheelZoom
       className={`h-full w-full ${className}`}
     >
+      {/* OpenStreetMap standard tiles. CARTO Voyager was the basemap from 2026-07
+          until 2026-09-18, when CARTO put its free basemaps behind an API key and
+          started stamping "API KEY REQUIRED" across the tiles - measured on
+          production, deterministic on every fetch. OSM standard tiles are keyless
+          and permit this scale of use with attribution; no detectRetina, because
+          OSM serves no @2x tiles and the flag would only double the requests. */}
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-        subdomains="abcd"
-        detectRetina
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        maxZoom={19}
       />
       <FitBounds places={bounds} />
       <ZoomTracker onZoom={setZoomLevel} />

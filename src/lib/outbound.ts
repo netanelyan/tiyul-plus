@@ -42,7 +42,7 @@ import type { BookingKind } from '@/lib/trip/types';
  *
  * ## What is left out, deliberately
  *
- * The OpenStreetMap and CARTO attribution links are a license requirement,
+ * The OpenStreetMap attribution link is a license requirement,
  * not a commercial link. They do not pass through here and will never receive
  * parameters.
  */

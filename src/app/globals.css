@@ -722,15 +722,15 @@ html.a11y-no-motion *::after {
   z-index: 0;
 }
 
-/* Softens CARTO Positron's cool tones slightly towards the site's warm palette -
-   on the tile layer only, so the colourful pins and popups are untouched. */
-/* The basemap: CARTO Voyager - clean and modern but with real definition (bluish
-   water, green parks, clear roads), unlike the pale Positron. The tuning here is
-   deliberately small: a little contrast and warmth so it sits on the site's cream,
-   without hurting label legibility. It applies only to the tile layer - the pins
-   and popups live in other panes and are unaffected. */
+/* The basemap tint - on the tile layer only, so the colourful pins and popups
+   are untouched (they live in other panes). The history: OSM standard, then
+   CARTO Positron (too pale), then CARTO Voyager, and back to OSM standard on
+   2026-09-18 when CARTO went key-only. The tuning is deliberately small. */
 .leaflet-tile-pane {
-  filter: saturate(1.04) contrast(1.06) brightness(0.99) sepia(0.05);
+  /* OSM standard tiles (since 2026-09-18, after CARTO went key-only) are already
+     saturated: tone them down a little and warm them toward the cream - the
+     inverse of the lift Voyager needed. */
+  filter: saturate(0.82) contrast(1.02) brightness(1.01) sepia(0.08);
 }
 
 .leaflet-control-zoom {
