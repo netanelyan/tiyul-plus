@@ -45,9 +45,23 @@ const NON_PHOTO =
 
 const used = new Set(destinations.flatMap((d) => d.places.map((p) => p.photo)).filter(Boolean));
 const out = [];
+
+/*
+  One place's failure must not discard the run. `getJson` throws on any non-ok
+  response, and with 200 places in a batch a single transient 500 used to kill
+  the whole pass and lose every candidate found so far - measured, on a 203-place
+  run that ended with an empty output file. The same lesson the repair script
+  learned about batches: a throttle should cost one row, not the afternoon.
+
+  So: per-place try/catch, and the candidates file is written as it goes, so a
+  crash or a kill leaves the work done so far on disk.
+*/
+const flush = () => writeFileSync(`${outBase}.candidates.json`, JSON.stringify(out, null, 1));
+let failed = 0;
 for (const d of destinations)
   for (const p of d.places) {
     if (!wanted.has(p.id) || p.photo) continue;
+    try {
     const url =
       `https://commons.wikimedia.org/w/api.php?action=query&format=json&list=geosearch&gsnamespace=6` +
       `&gscoord=${p.lat}|${p.lng}&gsradius=600&gslimit=25`;
@@ -72,8 +86,14 @@ for (const d of destinations)
     }
     out.push({ dest: d.slug, id: p.id, name: p.name, nameLocal: p.nameLocal, lat: p.lat, lng: p.lng, picks });
     console.log(`${d.slug}/${p.id}: ${picks.length} candidates`);
+    flush();
+    } catch (err) {
+      failed++;
+      console.log(`${d.slug}/${p.id}: FAILED ${err.message}`);
+    }
   }
-writeFileSync(`${outBase}.candidates.json`, JSON.stringify(out, null, 1));
+flush();
+if (failed) console.log(`\n${failed} places failed and can be re-run - the rest is on disk`);
 const cells = out
   .flatMap((o) =>
     o.picks.map(
