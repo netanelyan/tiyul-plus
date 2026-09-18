@@ -128,7 +128,7 @@ npm run lint
   country-level practical facts (visa, currency, sim, payments) shared by
   all its cities.
 - `src/data/destinations.ts` - curated content: 166 destinations across
-  83 countries, ~2,073 places (Hebrew), each referencing its country via
+  83 countries, ~2,086 places (Hebrew), each referencing its country via
   `countrySlug`. Re-count with a grep before quoting these numbers.
   Places carry `photo` (verified URLs - run `node
   scripts/verify-photos.mjs` after any photo change; Wikimedia thumbs
@@ -3059,7 +3059,7 @@ that no information is lost (assert every id and name survives); what cannot be
 proven from here is the model's behaviour. **Whoever has a live key should do this
 before raising the ceiling again.**
 
-**Measured 2026-09-18: 277,314 chars at 2,073 places - 2,686 under the ceiling.**
+**Measured 2026-09-18: 278,944 chars at 2,086 places - 1,056 under the ceiling.**
 The catalog cannot take a meaningful number of new places until the index format
 is compacted (above). Itinerary days and photos are outside the index and stay free.
 
@@ -11638,3 +11638,53 @@ or two sentences per place. Richer text per place is now blocked by the same
 index ceiling as new places - `buildGroundingIndex` carries no descriptions, so
 it would actually be free, but the per-city detail block does, and that is the
 next thing to measure before writing it.
+
+### 2026-09-18 (d) - "Go on": the last 13 pins, 57 days, and the text finally gets long
+
+Netanel: continue. The index was already at the ceiling, so the continuation
+had to be the depth that costs the agent nothing - and a measurement decided
+which: `buildGroundingDetail` truncates every description at **90 characters**,
+so a description can be as long as the page wants and the prompt never sees
+the difference. That is the free lever, and most of this entry is spending it.
+
+**First the mechanical remainders.** 26 more itinerary days for the
+destinations that got places in the morning and no route using them (57 new
+days today in total). And the 12 places that no source could pin: Wikidata as
+a third source in `research-places.mjs` (P625 for the coordinate, P18 for a
+photo) pinned 13 - and matched two more to the wrong place with the right
+name, **Paşabağı in Karaman province and Babadağ the district of Denizli**, the
+second announcing itself with a photo file called `Denizli districts.png`. Both
+dropped by hand. The index ends at 278,944 - 1,056 chars of room, i.e. none.
+
+**Then the text.** The 30 promoted (SEO) destinations hold 164 must-see places,
+and 128 of them had under 160 characters - the Colosseum had two sentences. All
+164 are now four or five: what it is, why it matters, what to expect, one
+practical note. Written under `scripts/apply-prose.mjs`, which refuses a clock
+time, a currency amount, a weekly schedule or markup - and it fired twice, on
+"closed Sundays and Mondays" at the Rialto market and "closed Mondays" at
+Delos, which are exactly the sentences that go stale. Three clock times in the
+*old* texts went with the rewrite, and the validator's warning count fell
+72 -> 69 for it.
+
+**Ten factual slips in my own drafts were caught on re-read before writing,
+and they are the reason to re-read:** Retiro and Łazienki written in dunams
+where the source number was hectares (off by ten); the Dohány "Emanuel" - it
+is the memorial tree, funded by Tony Curtis for his father, not the small
+synagogue, which is the Heroes' Temple; Wat Arun's prang written as eighty
+metres when sources put it nearer seventy; Chatuchak's 35 acres as thirty
+dunams (it is ~140); "the first day of the month" for the Uffizi's free entry,
+which is the first *Sunday*; a Giacometti placed at the Louvre Abu Dhabi's
+entrance that I could not stand behind, removed. Long text carries more facts,
+and each one is a place to be wrong.
+
+**Verified:** validator 0 errors / 69 warnings, 786 tests, tsc, build clean;
+Florence and Rome in a real browser at 1400 and 390, RTL, zero overflow, the
+long text sitting in the cards. The CDP harness now selects the debug target
+by `type === 'page'` - the first target on this profile is an extension's
+background page, which read three real pages as empty documents.
+
+**What is left, plainly.** The remaining ~1,900 places still have one or two
+sentences; the 164 done are the ones a visitor and Google read first, and
+the next tranche is the must-sees of the other 136 destinations. Three
+places are still unpinned by any source (Vai beach, Hverir, Devrent valley).
+And the index is full: no more places without the format compaction.
