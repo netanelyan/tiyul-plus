@@ -12060,3 +12060,137 @@ next live session should re-run a "nature somewhere less touristy" request.
 
 **Both stashes are now redundant** - `stash@{0}`'s content is on the branch and
 `stash@{1}`'s only real file is recovered.
+
+### 2026-09-19 (b) - "Populate the database for a few hours": 124 places, 61 photos, and the rule a data pass had quietly broken
+
+Netanel, after the stash work: *"read claude.md and continue populating the
+database, at least for a few hours."* Six place batches and two photo passes.
+**3,116 -> 3,240 places, and the destinations holding fewer than sixteen fall
+from ten to six.**
+
+**This environment has direct network access**, which most previous data
+sessions did not - Wikipedia, Commons, Nominatim and Wikidata all answer without
+the Chrome extension. That is worth knowing at the top of a data session,
+because several standing items were parked as "blocked on geocoding" under the
+opposite assumption.
+
+---
+
+**The 17 photo URLs carried for months as "no passing evidence" are all dead.**
+Probed directly rather than re-running `--force` over all 2,891 (which needs
+longer than a 15-minute budget and re-probes 2,874 rows that are already known
+good). All 17 dead, confirmed rather than assumed.
+
+Their `photo` fields are **removed, not repaired**. A dead URL buys nothing -
+`PlaceThumb` already falls back to a category tile - and guessing a corrected
+filename is what produced 151 dead links in entry (s). Removing them also
+unblocked geosearch, which skips any place that already has a photo: five of the
+seventeen got a real replacement that way (Otrar, Kayangan, Buddha Dordenma,
+Puerto Escondido, Quva).
+
+---
+
+**Photos: 344 candidates over 203 places, 55 accepted - 16%.** The handoff from
+entry (e) recorded that the sheet rendered 30 tiles per page into a 1400x850
+shot, so **the fifth row of every page was never actually looked at**. At 24 per
+page nothing goes unreviewed.
+
+What the eye caught that every filter passed, and this is the argument for the
+check rather than a decoration on it: a tram, a postbox, an information board
+and a ticket hut; **two portraits of the same man**, offered three times; lionfish
+for a Cretan village; a **Mercedes truck** for the Petra Museum; ISS photographs
+of Earth for the Catlins and for a Moldovan wine cellar; three lunar eclipses; a
+1920s hurling team for Waterford; anime merchandise for Warsaw's Praga; hotel
+pools; and the **Romanian Athenaeum twice for the National Art Museum** across
+the square - the wrong-neighbour class, metres away and a different building.
+
+The 70 places whose candidates were all rejected are recorded in
+`photo-exhausted.json`, so the worklist stops re-offering work that has been
+looked at. Open Tier A+B work 186 -> 100 (the rise from 78 is the new places).
+
+**`photo-geosearch.mjs` now catches per place and flushes as it goes.**
+`getJson` throws on any non-ok response and the loop had no handler, so one
+transient failure discarded a whole run - measured, on a 203-place pass that
+ended with an empty output file and no indication why.
+
+---
+
+**Places: 124 written, 103 rejected.** Every one through the existing pipeline;
+the rejections are the deliverable as much as the rows.
+
+**Wrong place, same name, three times:** "Mount Aaron" resolved to a peak in
+**Antarctica** at -74.75; Ortahisar to the district of that name in **Trabzon**,
+500km from Cappadocia; Chor Minor to **Azerbaijan** rather than Bukhara. All
+three were caught by the distance guard, which is exactly what it is for.
+
+**Already in the catalog, repeatedly:** Chitwan under `kathmandu`, Ourika under
+`marrakesh`, and Burana, Valle de la Luna and El Tatio under their own ids
+already. Plus the 250m rule catching a city entry against a market inside it -
+Phnom Penh, Hobart, Valletta, Tallinn, Te Papa, Aapravasi Ghat.
+
+**Amsterdam's Royal Palace collided by NAME with Madrid's.** Entry (yy) already
+records that pair as a live ambiguity; a third would have compounded it, so it
+stays out rather than being disambiguated into the catalog.
+
+**The precision ratchet fired on every single batch - eleven places in all - and
+was never widened.** Wikipedia gives a town two decimals, which is about 1.1km:
+fine for a region, a miss for a building. Each was re-read from the OSM node of
+the thing itself, filtered on type and not on name, and three of those lookups
+were themselves wrong on the first try:
+
+- the first **Rijksmuseum** match was the museum's **cafe**;
+- a Latin search for **Akyrtas** returned streets named after it in Astana and
+  Taraz, and the Kazakh spelling found the archaeological site;
+- the second **Kretinga** hit was a neighbourhood of Klaipeda 20km away.
+
+**Akyrtas needed a third source and moved 45km.** OSM's `archaeological_site`
+and Wikidata Q4060347 agree to within 30 metres at 42.9533,71.8027; the coarse
+value comes from a **duplicate Wikidata item** rounded to 71.25, which would put
+the site west of Taraz when it is east of it. Two independent sources beat one
+rounded one.
+
+---
+
+**Nine photos were dropped and their places kept**, which is the same rule as
+always - omission beats a misleading picture:
+
+- **Kihnu's is a grey location map** as a `.PNG`, through every filter intact;
+- **Saaremaa's is Kuressaare Castle** and **Thimphu's is the Tashichho Dzong** -
+  each already its own entry in the same destination, so the city card and the
+  landmark card would have shown one building;
+- George's is an Anglican cathedral standing in for a town, Sandakan's and
+  Gabrovo's are municipal office blocks, the Maritime Museum's is a rooftop
+  aerial, Velipoje's is a paved promenade where the entry describes sand, and
+  Benje's is filed under a neighbouring village.
+
+A file called **"Panama Papers"** was checked rather than assumed: it is simply
+the Panama City skyline under an uploader's title, and it stays.
+
+---
+
+**Verified:** 3,240 places, **90% of them with a photo**, 0 validator errors, 82
+warnings, 817 tests, tsc and build clean on every commit, and every new photo URL
+probed and recorded - the re-probe list is now **zero** for the first time in this
+log's history. Index **249,787 of the 280,000 ceiling**, headroom about 390
+places.
+
+**What the next session should know.** (1) The six destinations still under
+sixteen - Fergana, Lumbini, northern Albania, Turkestan, Uyuni, Palawan - are
+limited by **sources, not effort**: every remaining candidate for them resolves
+to nothing in Wikipedia, OSM and Wikidata alike, and that is a finding rather
+than a queue. (2) Headroom is ~390 places; after that the lever is trimming a
+field from the tuple, not raising the ceiling - and note `GROUNDING_INDEX_FORMAT=json`
+is no longer a usable rollback, it now exceeds the ceiling on its own. (3) 100
+Tier A+B photo gaps remain and the 175 exhausted ones should not be re-offered.
+(4) The Vienna guide page is the open UI item - see the note below.
+
+**Reported and not acted on, because it is a UI decision rather than data:**
+Netanel opened `/destinations/vienna` and said the SEO guide section below the
+interactive page "looks too raw - no images, no colors, no titles, lots of
+reading blocks". Measured in `DestinationGuide.tsx`: **zero image renders in 437
+lines, two accent-colour usages, nine `<h3>` with the identical class, and seven
+repeats of one card shell**. So a day card, a place card and a kosher card are
+the same grey box and nine sibling headings are the same size. The fix needs no
+new data or dependency - `PlaceThumb` already handles the missing-photo case and
+`categories.ts` already carries an emoji and colour per category; the guide
+simply never calls either.
