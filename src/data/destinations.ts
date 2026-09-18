@@ -6018,6 +6018,52 @@ export const destinations: Destination[] = [
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=7.9251,99.26819',
       },
+      {
+        id: 'th-klong-thom-hot',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'מפל המים החמים - קלונג ת׳ום',
+        nameLocal: 'Klong Thom Hot Spring Waterfall',
+        category: 'nature',
+        lat: 7.95333,
+        lng: 99.145,
+        description:
+          'מעיין חם שיוצר מדרגות של בריכות טבעיות ב-40 מעלות ביער, ונופל לנחל קר - יושבים בבריכה חמה עם הרגליים בנחל. ליד הבריכה האזמרגדית; שילוב של שניהם לבוקר. שעה מקראבי; בשמונה הבריכות ריקות, בעשר מלאות.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=7.95333,99.145',
+      },
+      {
+        id: 'th-ayutthaya-bike-x',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Wat_Phanan_Choeng_2019-01-15.jpg/500px-Wat_Phanan_Choeng_2019-01-15.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'ואט פאנאן צ׳ונג',
+        nameLocal: 'Wat Phanan Choeng',
+        category: 'historic',
+        lat: 14.34417,
+        lng: 100.57889,
+        description:
+          'מקדש פעיל על מפגש הנהרות באיוטהאיה, ותיק מהעיר עצמה (1324) - בודהה יושב בגובה 19 מ׳ שממלא את האולם עד התקרה, ושסוחרים סינים מתפללים אליו מאות שנים; קטורת, נזירים, ושוק. הצד החי של איוטהאיה בין החורבות; אחר צהריים, ואחריו סירה בנהר.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=14.34417,100.57889',
+      },
+      {
+        id: 'th-hong-krabi-x',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Streams%2C_rivers_and_mangrove_forests_of_Than_Bok_Khorani%2C_Thailand.jpg/500px-Streams%2C_rivers_and_mangrove_forests_of_Than_Bok_Khorani%2C_Thailand.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'הפארק הלאומי ת׳אן בוק ח׳ורני',
+        nameLocal: 'Than Bok Khorani National Park',
+        category: 'nature',
+        lat: 8.39,
+        lng: 98.74,
+        description:
+          'פארק של גיר במפרץ פנג נגה בצד של קראבי - בריכות אזמרגד ביער ליד הכביש, מערות עם ציורים פרהיסטוריים, וקיאקים במנגרובים בין צוקים ומערות ים. הבסיס לסיורי קיאק בבור ת׳ור ואו לוק. חצי שעה מקראבי; חלופה ירוקה ליום סירה.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=8.39,98.74',
+      },
     ],
     itinerary: [
       {
@@ -9654,6 +9700,38 @@ export const destinations: Destination[] = [
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=42.37401,18.59599',
       },
+      {
+        id: 'mne-risan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Risan%2C_Bah%C3%ADa_de_Kotor%2C_Montenegro%2C_2014-04-19%2C_DD_05.JPG/500px-Risan%2C_Bah%C3%ADa_de_Kotor%2C_Montenegro%2C_2014-04-19%2C_DD_05.JPG',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'ריסאן - הפסיפסים הרומיים',
+        nameLocal: 'Risan',
+        category: 'historic',
+        lat: 42.51472,
+        lng: 18.695,
+        description:
+          'היישוב הוותיק במפרץ - עיר אילירית ואז רומית - עם פסיפסים מהמאה ה-2 בווילה, כולל היפנוס אל השינה, היחיד מסוגו. עיירה שקטה על המים בין פרסט לחרצג נובי, בלי הקהל של קוטור. עצירה של שעה בדרך סביב המפרץ; ואחריה מפרץ מורינה עם המעיינות.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=42.51472,18.695',
+      },
+      {
+        id: 'mne-orjen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Orjen.jpg/500px-Orjen.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'אורין - ההר מעל המפרץ',
+        nameLocal: 'Orjen',
+        category: 'nature',
+        lat: 42.56889,
+        lng: 18.54889,
+        description:
+          'הרכס הגבוה של החוף הדינרי, 1,894 מ׳, מעל חרצג נובי - המקום הגשום באירופה, ולכן יער ואחו ובורות קארסט, ובקתה של הרים. יום של עלייה מהמעבר של קרסטאץ, או שביל ״הרוכבים״ מהמפרץ. הצד האלפיני של מפרץ קוטור, כמעט בלי תיירים; ובחורף שלג מול ים.',
+        durationMin: 420,
+        externalUrl: 'https://maps.google.com/?q=42.56889,18.54889',
+      },
     ],
     itinerary: [
       {
@@ -10306,6 +10384,22 @@ export const destinations: Destination[] = [
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=30.32536,35.46789',
       },
+      {
+        id: 'jor-shobak-x',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Shoubak2.jpg/500px-Shoubak2.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'שובק - העיירה והמבצר',
+        nameLocal: 'Shoubak',
+        category: 'historic',
+        lat: 30.51889,
+        lng: 35.55778,
+        description:
+          'העיירה על דרך המלך שמעליה מבצר מונטריאל הצלבני - ואם המבצר לא נמצא במפה (וזה קורה), העיירה עצמה: שוק, מטעי תפוחים בגובה 1,300 מ׳, ומחילת מדרגות במבצר שיורדת למעיין. חצי שעה מפטרה צפונה; עצירה של הרים ותפוחים.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=30.51889,35.55778',
+      },
     ],
     itinerary: [
       {
@@ -10937,6 +11031,36 @@ export const destinations: Destination[] = [
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=34.9838,34.0696',
       },
+      {
+        id: 'cyp-choirokoitia-x',
+        tags: ['history', 'romantic', 'foodie'],
+        priceLevel: 0,
+        name: 'טוכני - הכפר בהרים',
+        nameLocal: 'Tochni',
+        category: 'historic',
+        lat: 34.78056,
+        lng: 33.32333,
+        description:
+          'כפר אבן בין לרנקה ללימסול על שני צדי נחל, עם כנסייה שנבנתה על גשר (הראשונה בקפריסין, לפי המסורת, שהלנה בנתה) ובתים ששוחזרו לאגרו-תיירות - וטברנות עם מזה. הבסיס לכפרי הדרום; ליד חירוקיטיה. ערב של כפר יווני-קפריסאי ורוגע.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=34.78056,33.32333',
+      },
+      {
+        id: 'cyp-liopetri',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cyprus_Potamos_Liopetri_Fish_Tavern_Traditional.jpg/500px-Cyprus_Potamos_Liopetri_Fish_Tavern_Traditional.jpg',
+        tags: ['outdoors', 'foodie'],
+        priceLevel: 0,
+        name: 'נהר ליופטרי - הסירות',
+        nameLocal: 'Liopetri River',
+        category: 'nature',
+        lat: 35.00944,
+        lng: 33.89278,
+        description:
+          'נמל דייגים בשפך צר בין איה נאפה לפרוטראס - סירות צבעוניות קשורות לאורך תעלה בין קנים, מסעדות של דגים בהמשך, ושקיעה. תמונת הגלויה של הדייגים בצד המזרחי. עשר דקות מאיה נאפה; ערב של מסעדה על המים, בלי הרעש של העיר.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=35.00944,33.89278',
+      },
     ],
     itinerary: [
       {
@@ -11253,6 +11377,38 @@ export const destinations: Destination[] = [
           'אחד הכפרים הגבוהים באירופה, בקצה כביש עפר מסנו - ומעליו עמק אלפיני עם אגם ירוק וקיר הגרניט של צ׳אוחי, ״הדולומיטים של גאורגיה״. שעתיים הליכה מהכפר לאגם, בקתות עם קפה בדרך, ומעבר של יום מלא לרוששקה. הטרק הקל והיפה של האזור.',
         durationMin: 360,
         externalUrl: 'https://maps.google.com/?q=42.5795,44.74476',
+      },
+      {
+        id: 'geo-gudauri-x',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/The_massive_Gergeti_glacier_next_to_Mt._Kazbek_%284%29.jpg/500px-The_massive_Gergeti_glacier_next_to_Mt._Kazbek_%284%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'קרחון גרגטי - השביל מעל הכנסייה',
+        nameLocal: 'Gergeti Glacier Trail',
+        category: 'nature',
+        lat: 42.68389,
+        lng: 44.50278,
+        description:
+          'ההמשך הרציני מכנסיית גרגטי - שביל של ארבע-חמש שעות בעלייה על הרכס לתחנה המטאורולוגית (3,650 מ׳) לרגלי קרחון גרגטי וקזבק, בין אבנים ורוח. חוזרים באותו יום או ישנים בתחנה למי שעולה להר. ההליכה של קזבגי למי שהכנסייה לא מספיקה; קר, ומים.',
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=42.68389,44.50278',
+      },
+      {
+        id: 'geo-stepantsminda-x',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/View_of_Stepantsminda_09.23.jpg/500px-View_of_Stepantsminda_09.23.jpg',
+        tags: ['outdoors', 'foodie'],
+        priceLevel: 0,
+        name: 'סטפאנצמינדה (קזבגי) - העיירה',
+        nameLocal: 'Stepantsminda',
+        category: 'attraction',
+        lat: 42.6575,
+        lng: 44.64528,
+        description:
+          'העיירה שכולם קוראים לה קזבגי - כיכר עם מרשרוטקות, בתי הארחה של משפחות, מוזיאון של אלכסנדר קזבגי הסופר, מלון רומס עם המרפסת המפורסמת מול ההר, וחינקאלי בכל מסעדה. הבסיס לכל העמקים; לילה אחד לפחות, ובוקר עם ההר מהחלון.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=42.6575,44.64528',
       },
     ],
     itinerary: [
@@ -19857,6 +20013,36 @@ export const destinations: Destination[] = [
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=50.73583,14.58083',
       },
+      {
+        id: 'cze-decin-x',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/2020-07-18_Cottaer_Spitzberg_13.jpg/500px-2020-07-18_Cottaer_Spitzberg_13.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        name: 'דצ׳ינסקי סניז׳ניק',
+        nameLocal: 'Děčínský Sněžník',
+        category: 'viewpoint',
+        lat: 50.79306,
+        lng: 14.10861,
+        description:
+          'ההר השטוח הגבוה בהרי אבן החול של האלבה, 723 מ׳ - מגדל תצפית אבן מ-1864 על הרמה, עם נוף לצ׳כיה ולגרמניה ועד הרי הענקים ביום בהיר. שביל של שעה מהחניה ביער, או מהכפר סניז׳ניק. הצד המערבי של הפארק, ליד סלעי טיסה; חצי יום עם תצפית של מאה קילומטר.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=50.79306,14.10861',
+      },
+      {
+        id: 'cze-mezna',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'מזנה - הכפר על הרמה',
+        nameLocal: 'Mezná',
+        category: 'attraction',
+        lat: 50.86859,
+        lng: 14.29713,
+        description:
+          'כפר קטן על הרמה מעל קניון קמניצה - בתי עץ, פונדק, ומדרגות שיורדות מהכפר לסירה של הקניון (300 מדרגות, ״מזני מוסטק״). הסוף או ההתחלה של הליכת הקניון; הפסקה של בירה אחרי הסירה. שקט של רמה מיוערת בין שני העמקים.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=50.86859,14.29713',
+      },
     ],
     itinerary: [
       {
@@ -20181,6 +20367,66 @@ export const destinations: Destination[] = [
           'בירת הקיץ של החוף הדרומי - חופים רדודים וחמים לילדים, מגדל מים עם תצפית, נמל, ומועדוני החוף ה״פטופיה״ עם המסיבות של הונגריה הצעירה. שעה מבודפשט ברכבת; הצד הרועש והמסחרי של האגם, מול הצפון הכפרי. ילדים ביום, צעירים בלילה.',
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=46.92393,18.09012',
+      },
+      {
+        id: 'hu-keszthely-x',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Kis-Balaton_from_the_K%C3%A1nyav%C3%A1ri_sziget_island.jpg/500px-Kis-Balaton_from_the_K%C3%A1nyav%C3%A1ri_sziget_island.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'קיש-בלטון - הביצה',
+        nameLocal: 'Kis-Balaton',
+        category: 'nature',
+        lat: 46.63139,
+        lng: 17.14694,
+        description:
+          '״הבלטון הקטן״ - ביצת קנים של 80 קמ״ר שמסננת את הזאלה לפני האגם, שמורת ציפורים עם 250 מינים, תאואים במים, ואי קאניאווארי עם שביל עץ ומגדל תצפית. חצי שעה מקסטהיי; בוקר עם משקפת בין הקנים. הצד הפראי של האגם המתורבת.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=46.63139,17.14694',
+      },
+      {
+        id: 'hu-sumeg',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/2017-08-04_-_Burg_S%C3%BCmeg_Ungarn_-_2403.jpg/500px-2017-08-04_-_Burg_S%C3%BCmeg_Ungarn_-_2403.jpg',
+        tags: ['history', 'families'],
+        priceLevel: 2,
+        name: 'טירת שומג',
+        nameLocal: 'Sümeg Castle',
+        category: 'historic',
+        lat: 46.9825,
+        lng: 17.2825,
+        description:
+          'טירה מהמאה ה-13 על גבעת גיר בודדת מעל העיירה, מהשמורות בהונגריה - מופעי אבירים עם סוסים בקיץ, סעודות ימי-ביניימיות, וחומות שלמות. כנסייה עם פרסקאות של מאולברטש בעיירה. חצי שעה מטאפולצה; ילדים, סוסים, וטירה שנראית כמו טירה.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=46.9825,17.2825',
+      },
+      {
+        id: 'hu-orvenyes',
+        tags: ['history', 'families'],
+        priceLevel: 1,
+        name: 'טחנת המים של אורוונייש',
+        nameLocal: 'Örvényes Water Mill',
+        category: 'historic',
+        lat: 46.91455,
+        lng: 17.81997,
+        description:
+          'טחנת המים היחידה שעדיין פועלת סביב הבלטון, מהמאה ה-18, בכפר קטן בין טיהאני לבלטונפירד - גלגל, אבני ריחיים, ומוזיאון קטן של כלי טחנה. גשר רומי מהמאה ה-3 בכפר. עצירה של חצי שעה בכביש הצפוני; ואופניים בשביל האגם.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=46.91455,17.81997',
+      },
+      {
+        id: 'hu-szent-gyorgy',
+        tags: ['outdoors', 'foodie'],
+        priceLevel: 0,
+        name: 'הר סנט ג׳רג׳ - עמודי הבזלת',
+        nameLocal: 'Szent György-hegy',
+        category: 'nature',
+        lat: 46.84167,
+        lng: 17.44806,
+        description:
+          'הר שולחן געשי ליד בדאצ׳וני עם ״עוגבי הבזלת״ - עמודים משושים של 30 מ׳ בצלע - ומרתפי יין ובתי עיתונות ישנים בין הכרמים למטה. שביל של שעתיים סביב הפסגה, ותצפית על האגם. פחות תיירים מבדאצ׳וני, אותו יין. אחר צהריים של בזלת ואולסריזלינג.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=46.84167,17.44806',
       },
     ],
     itinerary: [
@@ -23964,6 +24210,52 @@ export const destinations: Destination[] = [
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=-24.56139,30.60361',
       },
+      {
+        id: 'zaf-hazyview',
+        tags: ['families'],
+        priceLevel: 1,
+        name: 'הייזיוויו - שער קרוגר',
+        nameLocal: 'Hazyview',
+        category: 'attraction',
+        lat: -25.04306,
+        lng: 31.12917,
+        description:
+          'העיירה החמה בין נתיב הפנורמה לשערי קרוגר (פאבורוואה ונומבי, חצי שעה כל אחד) - מטעי בננה, לודג׳ים על נהר סאבי, ופעילויות של ילדים: פילים, קופים, רפטינג. הבסיס למי שרוצה ספארי בבוקר ופנורמה אחר הצהריים. שעה מגראסקופ; חם מהרמה בעשר מעלות.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=-25.04306,31.12917',
+      },
+      {
+        id: 'zaf-sudwala',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Screaming_monster_main_cavern.jpg/500px-Screaming_monster_main_cavern.jpg',
+        tags: ['families', 'history'],
+        priceLevel: 2,
+        name: 'מערות סודוואלה',
+        nameLocal: 'Sudwala Caves',
+        category: 'nature',
+        lat: -25.36972,
+        lng: 30.70019,
+        description:
+          'מערות מהוותיקות בעולם - 240 מיליון שנה של דולומיט, אולם ״האמפיתיאטרון״ שעורכים בו קונצרטים, נטיפים, ומאובנים של אצות בנות 2 מיליארד שנה. סיור של שעה מואר, וסיור זחילה לחובבים. שעה מנלספרויט; פארק דינוזאורים לילדים ליד. בדרך מיוהנסבורג לקרוגר.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=-25.36972,30.70019',
+      },
+      {
+        id: 'zaf-lowveld-garden',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Lowveld_National_Botanical_Garden_1.jpg/500px-Lowveld_National_Botanical_Garden_1.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'הגן הבוטני של הלואוולד',
+        nameLocal: 'Lowveld National Botanical Garden',
+        category: 'nature',
+        lat: -25.44444,
+        lng: 30.96611,
+        description:
+          'גן בוטני על מפגש שני נהרות בנלספרויט, עם מפלים בתוך הגן, יער גשם אפריקאי משוחזר, ואוסף הצמחים הגדול של ציקדות בעולם. ציפורים, קופים, ושבילים מוצלים. הפסקה בעיר בדרך לקרוגר; שעתיים ירוקות, ואחרי הספארי - צל.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=-25.44444,30.96611',
+      },
     ],
     itinerary: [
       {
@@ -27348,6 +27640,22 @@ export const destinations: Destination[] = [
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=35.03333,32.43333',
       },
+      {
+        id: 'cyp-lofou-x',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/View_of_Lofou_10.jpg/500px-View_of_Lofou_10.jpg',
+        tags: ['history', 'foodie', 'romantic'],
+        priceLevel: 0,
+        name: 'לופו - הכפר האבן',
+        nameLocal: 'Lofou',
+        category: 'historic',
+        lat: 34.81583,
+        lng: 32.87528,
+        description:
+          'כפר אבן על גבעה בין הכרמים של לימסול, שהתרוקן ושוחזר - סמטאות מרוצפות, בתים עם דלתות כחולות, כנסייה, וטברנה על הכיכר עם מזה של 30 מנות. יין קומנדריה מהכפרים סביב. שעה מפאפוס; ערב של כפר יווני-קפריסאי, בלי הים.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=34.81583,32.87528',
+      },
     ],
     itinerary: [
       {
@@ -30661,6 +30969,38 @@ export const destinations: Destination[] = [
           'העמק שבו גדל רוב שמן הוורדים בעולם, בין הבלקן לרודופים - במאי-יוני שדות ורודים, קטיף בבוקר, ופסטיבל ורדים בקאזאנלאק. גם קבר תראקי מצויר מהמאה ה-4 לפנה״ס (אתר מורשת עולמית) ומוזיאון הוורד. שעה וחצי מפלובדיב.',
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=42.61667,25.4',
+      },
+      {
+        id: 'bg-hisarya',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/DJI_VP2.jpg/500px-DJI_VP2.jpg',
+        tags: ['history', 'families'],
+        priceLevel: 0,
+        name: 'חיסריה - המרחצאות והחומות הרומיות',
+        nameLocal: 'Hisarya',
+        category: 'historic',
+        lat: 42.50247,
+        lng: 24.70327,
+        description:
+          'עיר ספא רומית שחומותיה מהמאה ה-4 שלמות ברובן, עם השער הדרומי ״הגמלים״ - ו-22 מעיינות מינרליים בטמפרטורות שונות, פארקים, ומרחצאות. ההפסקה החמה של בולגרים בחורף. ארבעים דקות מפלובדיב צפונה; בין הכרמים של סטאריה ורומא.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=42.50247,24.70327',
+      },
+      {
+        id: 'bg-starosel',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Starosel.jpg/500px-Starosel.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'סטארוסל - המקדש התראקי',
+        nameLocal: 'Starosel Thracian Temple',
+        category: 'historic',
+        lat: 42.48783,
+        lng: 24.56527,
+        description:
+          'מתחם מקדשים תראקיים מהמאה ה-5 לפנה״ס מתחת לתל, שנחפר ב-2000 - אולם עגול עם עמודים וקיר תומך של 240 מ׳ סביב התל, מהגדולים בבלקן. ליד יקב סטארוסל עם מרתף בסגנון תראקי ומרחצאות יין. שעה מפלובדיב; היסטוריה ויין ביום אחד בין הרי סרדנה גורה.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=42.48783,24.56527',
       },
     ],
     itinerary: [
@@ -36242,6 +36582,38 @@ export const destinations: Destination[] = [
         durationMin: 45,
         externalUrl: 'https://maps.google.com/?q=41.20046,-7.53376',
       },
+      {
+        id: 'pt-favaios',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Favaios.jpg/500px-Favaios.jpg',
+        tags: ['foodie', 'history'],
+        priceLevel: 0,
+        name: 'פאבאיוש - המוסקטל והלחם',
+        nameLocal: 'Favaios',
+        category: 'attraction',
+        lat: 41.267,
+        lng: -7.499,
+        description:
+          'כפר על רמה מעל פינהאו שכולו מוסקטל - יין מתוק מזן ענבים אחד, ביקב הקואופרטיבי מ-1952 שרואים בו את הבציר - ולחם ״ארבע פינות״ מתנור עצים שנשים אופות מאז ומתמיד. מוזיאון הלחם והיין. עשרים דקות מפינהאו; טעימה וכפר בלי הטרסות.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=41.267,-7.499',
+      },
+      {
+        id: 'pt-sao-joao-x',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Pa%C3%A7os_do_Concelho_Mirandela.jpg/500px-Pa%C3%A7os_do_Concelho_Mirandela.jpg',
+        tags: ['foodie', 'history'],
+        priceLevel: 0,
+        name: 'מירנדלה - האלירה',
+        nameLocal: 'Mirandela',
+        category: 'attraction',
+        lat: 41.48528,
+        lng: -7.18167,
+        description:
+          'עיירה על נהר טואה מעבר לעמק, בירת האלירה - נקניק חזיר מעושן שמכל שאר הנקניקים מעדיפים לספר סיפור יהודי: יהודים אנוסים המציאו גרסה מעוף ולחם כדי להיראות נוצרים. גשר רומי-ימי-ביניימי של 20 קשתות, ארמון, ובוקר של שוק. שעה מפינהאו; טראס-אוס-מונטס במנה.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=41.48528,-7.18167',
+      },
     ],
     itinerary: [
       {
@@ -37637,6 +38009,70 @@ export const destinations: Destination[] = [
           'עיירה על נהר בין אגם קויג׳ז לים - קברי מלכים ליקיים חצובים בצוק מול העיירה, סירות בנהר בין הקנים לחוף איזטוזו, שצבי ים לוגרהד מטילים בו (ולכן סגור בלילה), אמבטיות בוץ, והעיר העתיקה קאונוס. שעה מפטייה מערבה; שוק שבת, ויום על המים.',
         durationMin: 360,
         externalUrl: 'https://maps.google.com/?q=36.83417,28.6425',
+      },
+      {
+        id: 'tur-kalkan',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Kalkan_01.jpg/500px-Kalkan_01.jpg',
+        tags: ['romantic', 'foodie'],
+        priceLevel: 2,
+        name: 'קלקאן',
+        nameLocal: 'Kalkan',
+        category: 'attraction',
+        lat: 36.26667,
+        lng: 29.41111,
+        description:
+          'כפר דייגים לבן שהפך למקום של הבריטים - וילות עם בריכות על המדרון, מסעדות על הגגות מעל הנמל, ובוטיקים בסמטאות. יקר ומטופח; חוף קאפוטאש ופטארה בכל צד. אחר צהריים ושקיעה מגג; חצי שעה מקאש, ופחות ״תרמילאי״ ממנו.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=36.26667,29.41111',
+      },
+      {
+        id: 'tur-pinara',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Theater_Pinara_T%C3%BCrkei.JPG/500px-Theater_Pinara_T%C3%BCrkei.JPG',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'פינארה - קברי הסלע',
+        nameLocal: 'Pinara',
+        category: 'historic',
+        lat: 36.48861,
+        lng: 29.25194,
+        description:
+          'עיר ליקית על צוק עגול שכולו מנוקב במאות קברים מלבניים - כמו כוורת - ולרגליו תיאטרון, קברים עם תבליטים של ערים ליקיות, ושרידים ביער אורנים. כמעט בלי מבקרים. עשר קילומטרים מהכביש הראשי ליד אשן; חצי יום של ליקיה שקטה, אחרי קסנתוס.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=36.48861,29.25194',
+      },
+      {
+        id: 'tur-oludeniz-lagoon-x',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Gemiler_Adas%C4%B1_kal%C4%B1nt%C4%B1lar%C4%B1.jpg/500px-Gemiler_Adas%C4%B1_kal%C4%B1nt%C4%B1lar%C4%B1.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'אי גמילר - סנטה קלאוס',
+        nameLocal: 'Gemiler Island (St Nicholas Island)',
+        category: 'historic',
+        lat: 36.55345,
+        lng: 29.06935,
+        description:
+          'אי מול קאיאקוי שכולו כנסיות ביזנטיות מהמאה ה-5, שלפי המסורת קברו של ניקולאוס הקדוש - סנטה קלאוס - היה בו עד שהועבר למירה. מדרגות מקורות בין הכנסיות, פסיפסים, ושחייה מהסירה. סירה מאולודניז או מקאיאקוי; חצי יום של שקיעה על חורבות בים.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=36.55345,29.06935',
+      },
+      {
+        id: 'tur-letoon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Leotoon_Hellenistic_Theatre_5304.jpg/500px-Leotoon_Hellenistic_Theatre_5304.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'לטואון - המקדש של לטו',
+        nameLocal: 'Letoon',
+        category: 'historic',
+        lat: 36.33194,
+        lng: 29.28972,
+        description:
+          'המקדש המרכזי של הליגה הליקית לאלה לטו ולילדיה אפולו וארטמיס - שלושה מקדשים, מעיין שצפרדעים שרות בו (הכפריים שהפכו לצפרדעים, לפי אובידיוס), וכתובת בשלוש שפות שפענחה את הליקית. אתר מורשת עולמית עם קסנתוס, חמש דקות ממנו; שקט ומים.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=36.33194,29.28972',
       },
     ],
     itinerary: [
@@ -41846,6 +42282,68 @@ export const destinations: Destination[] = [
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=46.41944,15.86944',
       },
+      {
+        id: 'slo-maribor-x',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Mariborski_Glavni_trg.jpg/500px-Mariborski_Glavni_trg.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 0,
+        name: 'מריבור - הגפן העתיקה',
+        nameLocal: 'Maribor',
+        category: 'historic',
+        lat: 46.5575,
+        lng: 15.64556,
+        description:
+          'העיר השנייה של סלובניה, על הדראבה - הגפן העתיקה בעולם (400 שנה, עדיין נותנת יין) על חזית בית בלנט, רובע הנמל הישן, כיכר עם עמוד מגפה, ופוהוריה עם רכבל מעל העיר. שעה מליובליאנה ברכבת; בירת היין של המזרח, ופחות תיירים מכל עיר בקטלוג.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=46.5575,15.64556',
+      },
+      {
+        id: 'slo-predjama-x',
+        tags: ['foodie', 'outdoors', 'romantic'],
+        priceLevel: 0,
+        name: 'עמק ויפאבה - היין והבורה',
+        nameLocal: 'Vipava Valley',
+        category: 'nature',
+        lat: 45.875,
+        lng: 13.9,
+        description:
+          'עמק יין בין הקארסט לאלפים, שרוח הבורה יורדת אליו ב-200 קמ״ש - יקבים קטנים של זלן ופינלה בכפרים של אבן, ויפאבה עם מעיינות הנהר במרכז העיירה, טירות, ושבילים. חצי שעה מפוסטוינה; יום של יין בלי הקהל של בלד. הטוסקנה של סלובניה, בלי הביטוי.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=45.875,13.9',
+      },
+      {
+        id: 'slo-stanjel',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/%C5%A0tanjel_view_at_village_06072008_00.jpg/500px-%C5%A0tanjel_view_at_village_06072008_00.jpg',
+        tags: ['history', 'romantic'],
+        priceLevel: 0,
+        name: 'שטאניל - הכפר והגן',
+        nameLocal: 'Štanjel',
+        category: 'historic',
+        lat: 45.8233,
+        lng: 13.84402,
+        description:
+          'כפר אבן על גבעה בקארסט, עם חומות, טירה, ומגדל, ובצלעו גן פרארי - גן ארכיטקטוני מ-1930 עם בריכה, גשר וטרסות מאבן קארסט, של האדריכל מקס פאביאני. פסטיבל, גלריות, ופרשוט (חזיר מיובש) של הקארסט בכפר. חצי שעה מליפיצה; אחר צהריים של אבן וטרסות.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=45.8233,13.84402',
+      },
+      {
+        id: 'slo-planina-cave',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/PlaninskaJama.jpg/500px-PlaninskaJama.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'מערת פלנינה',
+        nameLocal: 'Planina Cave',
+        category: 'nature',
+        lat: 45.82081,
+        lng: 14.24649,
+        description:
+          'המערה שבה שני נהרות תת-קרקעיים - פיווקה ורק - נפגשים בחושך ויוצאים כנהר אוניצה - הגדולה במערות המים בסלובניה, שרואים בסירה או ברגל עם פנס, בלי חשמל ובלי רכבת. הצד הפראי של המערכת של פוסטוינה, עשר דקות ממנה; אולם הכניסה בגובה 60 מ׳ אפילו בלי לנסות.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=45.82081,14.24649',
+      },
     ],
     itinerary: [
       {
@@ -42126,6 +42624,36 @@ export const destinations: Destination[] = [
           'מגדל תצפית על גבעה מיוערת מעל קואופיו, עם מסעדה מסתובבת ונוף על אגם קאלאבסי ואלפי האיים שלו - הצילום המזוהה של אזור האגמים. מקפצות סקי ומסלולי טבע ביער; קואופיו עצמה עם השוק וכיכר העיר למטה.',
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=62.90944,27.65583',
+      },
+      {
+        id: 'fin-jyvaskyla-x',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pet%C3%A4j%C3%A4vesi_Old_Church_2018.jpg/500px-Pet%C3%A4j%C3%A4vesi_Old_Church_2018.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        name: 'כנסיית העץ של פטיאווסי',
+        nameLocal: 'Petäjävesi Old Church',
+        category: 'historic',
+        lat: 62.25014,
+        lng: 25.18393,
+        description:
+          'כנסיית עץ מ-1765 שאיכרים בנו בלי אדריכל, אתר מורשת עולמית - צלב יווני מגזעי אורן, כיפה, ודמויות מגולפות של איכר סקנדינבי. על שפת אגם, שעה מיוויסקילה; הכנסייה שמסבירה את פינלנד של הכפר. משתלב עם ורלה ליום של אונסקו בעץ.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=62.25014,25.18393',
+      },
+      {
+        id: 'fin-oravi',
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        name: 'סאימאה - כלב הים של האגם',
+        nameLocal: 'Lake Saimaa (ringed seal)',
+        category: 'nature',
+        lat: 61.25,
+        lng: 28.25,
+        description:
+          'האגם הגדול בפינלנד, ובו כלב ים טבעתי שנלכד באגם אחרי עידן הקרח וקיים רק כאן - כ-400 פרטים, שרואים מסירה או מקיאק בשמורות לינאנסארי וקולובסי במאי-יוני כשהם על הסלעים. סיורים מאוראבי ומסבונלינה; יום על המים עם משקפת, ושקיעה בעשר.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=61.25,28.25',
       },
     ],
     itinerary: [
@@ -43753,6 +44281,54 @@ export const destinations: Destination[] = [
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=40.72,45.01618',
       },
+      {
+        id: 'arm-dsegh',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Dsegh_village%2C_Lori_Province%2C_Armenia_04.jpg/500px-Dsegh_village%2C_Lori_Province%2C_Armenia_04.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        name: 'דסך - כפר טומניאן',
+        nameLocal: 'Dsegh',
+        category: 'historic',
+        lat: 40.96333,
+        lng: 44.65167,
+        description:
+          'כפר על רמה מעל קניון הדבד, מקום הולדתו של הובאנס טומניאן, המשורר הלאומי - בית המשפחה כמוזיאון, כנסייה מהמאה ה-7, ושביל למנזר בארדזרקש ביער ולתצפית על הקניון. ליד אלאוורדי; חצי יום של שירה וקניון, בלי תיירים.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=40.96333,44.65167',
+      },
+      {
+        id: 'arm-vanadzor',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Hayq_Square%2C_Vanadzor.jpg/500px-Hayq_Square%2C_Vanadzor.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'ואנאדזור',
+        nameLocal: 'Vanadzor',
+        category: 'attraction',
+        lat: 40.81278,
+        lng: 44.48833,
+        description:
+          'העיר השלישית של ארמניה, קירובאקאן הסובייטית, שרעידת האדמה של 1988 פגעה בה קשה - שדרות, פארק, בניינים בטוף ורוד-שחור, ומחנות הפיוניאירים ביערות סביב. הפסקה בדרך מירוואן ללורי, ובסיס זול לדיליג׳אן והאגפאט. עיר סובייטית שמנסה, בין הרים ירוקים.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=40.81278,44.48833',
+      },
+      {
+        id: 'arm-parz-x',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/2014_Prowincja_Tawusz%2C_Klasztor_Jukhtakwank_%2811%29.jpg/500px-2014_Prowincja_Tawusz%2C_Klasztor_Jukhtakwank_%2811%29.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        name: 'ג׳וחטאק ואנק - המנזר ביער',
+        nameLocal: 'Jukhtak Vank',
+        category: 'historic',
+        lat: 40.7583,
+        lng: 44.8183,
+        description:
+          'שתי כנסיות קטנות מהמאה ה-12 ביער אשור מעל דיליג׳אן, שעה של הליכה מהעיירה בשביל של הפארק - ומנזר מאטוסאוואנק ממול, שגם הוא ביער. השבילים הקצרים והשקטים של דיליג׳אן, לפני האגפאט הגדול; טחב, אבן, ושקט.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=40.7583,44.8183',
+      },
     ],
     itinerary: [
       {
@@ -44337,6 +44913,34 @@ export const destinations: Destination[] = [
         durationMin: 300,
         externalUrl: 'https://maps.google.com/?q=39.98333,71.8',
       },
+      {
+        id: 'uzb-chodak',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'צ׳ודאק - הכפר בהרים',
+        nameLocal: 'Chodak',
+        category: 'nature',
+        lat: 41,
+        lng: 71.2333,
+        description:
+          'כפר בעמק צר ברכס קוראמה מעל צ׳וסט, שמגדל אגוזי מלך ותפוחים בטרסות - נחל, טחנות, מסעדות של פילאף על מזרנים לאורך המים, וקרירות של הרים. הבריחה של תושבי העמק בקיץ; שעה מנמנגאן. הפרגנה הירוקה שמחוץ לערים.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=41,71.2333',
+      },
+      {
+        id: 'uzb-akhsikent',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'אחסיקנט - בירת בבור',
+        nameLocal: 'Akhsikent',
+        category: 'historic',
+        lat: 40.88656,
+        lng: 71.45051,
+        description:
+          'שרידי הבירה העתיקה של פרגנה על גדת הסיר-דריה, ליד נמנגאן - העיר שבבור, מייסד שושלת המוגולים, נולד בה ב-1483 ושלט ממנה בגיל 12, עד שרעידת אדמה ב-1620 חיסלה אותה. תלים, חומות, ומוזיאון קטן. חצי שעה מנמנגאן; שעה של סיפור גדול על חורבה קטנה.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=40.88656,71.45051',
+      },
     ],
     itinerary: [
       {
@@ -44587,6 +45191,36 @@ export const destinations: Destination[] = [
           'שדרה של קילומטרים שלאורכה כל מדינה בודהיסטית בנתה מנזר בסגנונה - הפגודה הבורמזית הזהובה, מקדש סיני עם חצרות, מנזר גרמני עם ציורי קיר, הטיבטי, התאילנדי הלבן, והפגודה של השלום העולמי היפנית בסוף. אופניים או ריקשה; אדריכלות אסיה בשעתיים.',
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=27.49891,83.27626',
+      },
+      {
+        id: 'np-chitwan-sauraha',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/2009-03_Sauraha_07.jpg/500px-2009-03_Sauraha_07.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 1,
+        name: 'סאוראהה - הכפר בשער צ׳יטוואן',
+        nameLocal: 'Sauraha',
+        category: 'attraction',
+        lat: 27.57472,
+        lng: 84.49361,
+        description:
+          'הכפר התיירותי בקצה הפארק הלאומי צ׳יטוואן, על נהר ראפטי - קרנפים שנכנסים לשדות בערב, קאנו על הנהר עם תנינים, ריקודי ת׳ארו, ושקיעה על גדת הנהר עם בירה. הבסיס לספארי בג׳יפ או ברגל; חמש שעות מקטמנדו. לשלושה לילות בין ההרים למישור.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=27.57472,84.49361',
+      },
+      {
+        id: 'np-bandipur-x',
+        tags: ['families'],
+        priceLevel: 0,
+        name: 'בהאיראהאווה - שער לומביני',
+        nameLocal: 'Bhairahawa (Siddharthanagar)',
+        category: 'attraction',
+        lat: 27.51164,
+        lng: 83.45288,
+        description:
+          'עיר הגבול והשער ללומביני - שדה תעופה בינלאומי חדש (2022) שאמור להביא עולי רגל ישר מאסיה, שוק, ומעבר סונאולי להודו. לא יעד, אבל הבסיס הנוח לפגודות: חצי שעה מלומביני, מלונות, ורכבת מהודו במרחק. תחנת המעבר של הטראי.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=27.51164,83.45288',
       },
     ],
     itinerary: [
@@ -45932,6 +46566,22 @@ export const destinations: Destination[] = [
           'התצפית של פארק טארה - צוק מעל אגם פרוצ׳אץ ונהר הדרינה, שמעברם בוסניה, עם קניון וטורקיז למטה. שביל של חצי שעה ביער אורנים מהחניה בכפר מיטרובאץ, וספסל עץ בקצה. יער האשוח הסרבי הנדיר בדרך.',
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=43.95278,19.39944',
+      },
+      {
+        id: 'srb-kraljevo-x',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Manastir_%C5%BDi%C4%8Da.jpg/500px-Manastir_%C5%BDi%C4%8Da.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'מנזר ז׳יצ׳ה',
+        nameLocal: 'Žiča Monastery',
+        category: 'historic',
+        lat: 43.6963,
+        lng: 20.64574,
+        description:
+          'המנזר האדום - מקום הכתרת שבעת מלכי סרביה במאה ה-13, שנצבע באדום כמו ההר אתוס - כנסייה עם פרסקאות, מגדל, ומנזר נשים פעיל. ליד קרליובו בעמק איבר; חצי שעה מסטודניצה. עצירה בין מנזרי המורשת של רשקה; אדום בין ירוק.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=43.6963,20.64574',
       },
     ],
     itinerary: [
@@ -47500,6 +48150,36 @@ export const destinations: Destination[] = [
           'אחד היישובים העתיקים בקזחסטן, פרבר של שימקנט - איספיג׳אב של דרך המשי, עם מאוזוליאומים של הורי חוג׳ה אחמד יסאווי, מינרט מהמאה ה-15 ותל של העיר הקדומה. כפר אוזבקי בעצם, עם בזאר ושפה משלו; חצי יום עם שימקנט.',
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=42.3005,69.75997',
+      },
+      {
+        id: 'kaz-shymkent-x2',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/%D0%A5%D1%80%D0%B5%D0%B1%D0%B5%D1%82_%D0%9A%D0%B0%D0%B7%D1%8B%D0%B3%D1%83%D1%80%D1%82.jpg/500px-%D0%A5%D1%80%D0%B5%D0%B1%D0%B5%D1%82_%D0%9A%D0%B0%D0%B7%D1%8B%D0%B3%D1%83%D1%80%D1%82.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 0,
+        name: 'הר קזיגורט - התיבה של נח',
+        nameLocal: 'Kazygurt Mountain',
+        category: 'nature',
+        lat: 42.03833,
+        lng: 69.65917,
+        description:
+          'הר בודד בגובה 1,768 מ׳ בין שימקנט לגבול אוזבקיסטן, שלפי המסורת המקומית תיבת נח נחתה עליו - פסל ענק של התיבה בפסגה, ושביל של שעתיים. שדות של טוליפים באפריל על המדרונות. שעה משימקנט; חצי יום של הליכה ואגדה על ערבה ריקה.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=42.03833,69.65917',
+      },
+      {
+        id: 'kaz-turkestan-hilvet',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'חילבט - המסגד התת-קרקעי',
+        nameLocal: 'Hilvet Underground Mosque',
+        category: 'historic',
+        lat: 43.30194,
+        lng: 68.26917,
+        description:
+          'מסגד תת-קרקעי מהמאה ה-12 ליד המאוזוליאום, שבו לפי המסורת חוג׳ה אחמד יסאווי חי בבידוד מגיל 63 - הגיל שבו הנביא מת - עד מותו. תאים חצובים, ואולם קטן. חלק ממתחם אזרט-סולטן; עשר דקות שמסבירות את הקדוש, לפני הכיפה הגדולה.',
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=43.30194,68.26917',
       },
     ],
     itinerary: [
@@ -54591,6 +55271,52 @@ export const destinations: Destination[] = [
           'חמישה מפלים ביער עננים עם שבילים מרוצפים ביניהם, ומקלט חיות - הכי הרבה טוקנים, פומות, יגוארים, צפרדעים, פרפרים וקוליברי במקום אחד, בשבי מוצדק (חיות שנפצעו). יקר, מסודר, ומושלם למשפחות ביום הראשון. שעה מסן חוסה, ליד הר הגעש פואס; משתלב איתו לבוקר.',
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=10.2041,-84.16237',
+      },
+      {
+        id: 'cri-sarapiqui',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'סאראפיקי - הנהר והיער',
+        nameLocal: 'Sarapiquí',
+        category: 'nature',
+        lat: 10.57372,
+        lng: -83.95479,
+        description:
+          'אזור של יער גשם בשפלה הצפונית - רפטינג בנהר סאראפיקי, תחנת המחקר לה סלבה עם שבילים ביער ראשוני, מטעי אננס, שוקולד בחווה, ושיט בנהר עם תנינים וקופים. שעתיים מסן חוסה, בין פואס לקריביים; פחות תיירותי מלה פורטונה, יותר ירוק.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=10.57372,-83.95479',
+      },
+      {
+        id: 'cri-montezuma',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Waterfall_near_Montezuma%2C_Costa_Rica.jpg/500px-Waterfall_near_Montezuma%2C_Costa_Rica.jpg',
+        tags: ['outdoors', 'nightlife'],
+        priceLevel: 1,
+        name: 'מונטסומה',
+        nameLocal: 'Montezuma',
+        category: 'nature',
+        lat: 9.65,
+        lng: -85.06667,
+        description:
+          'כפר החוף הבוהמי בקצה ניקויה, ליד סנטה טרזה - מפל של שלוש קומות במרחק הליכה מהכפר, חופים עם קופים, שמורת קאבו בלנקו הראשונה במדינה, ואומנים שמוכרים ברחוב. תרמילאים משנות השמונים שנשארו. מעבורת מפונטארנאס; לילות אחרי הפוליציה של הגלישה.',
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=9.65,-85.06667',
+      },
+      {
+        id: 'cri-irazu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Irazu_Volcano.JPG/500px-Irazu_Volcano.JPG',
+        tags: ['outdoors', 'families'],
+        priceLevel: 2,
+        name: 'הר הגעש איראסו',
+        nameLocal: 'Irazú Volcano',
+        category: 'nature',
+        lat: 9.97917,
+        lng: -83.8525,
+        description:
+          'הר הגעש הגבוה בקוסטה ריקה, 3,432 מ׳, שכביש מגיע עד שפת המכתש - אגם ירוק במכתש, נוף ירחי, ובבוקר בהיר שני האוקיינוסים. קר בעשר מעלות מהעמק. שעה מסן חוסה דרך קרטאגו, עם הבזיליקה של המלאכים ואורוסי בדרך; לצאת מוקדם, לפני העננים.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=9.97917,-83.8525',
       },
     ],
     itinerary: [
@@ -62858,6 +63584,54 @@ export const destinations: Destination[] = [
         durationMin: 720,
         externalUrl: 'https://maps.google.com/?q=17.755,-89.92056',
       },
+      {
+        id: 'gtm-quetzaltenango',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Palacio_Municipal_de_Quetzaltenango.jpg/500px-Palacio_Municipal_de_Quetzaltenango.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        name: 'קצאלטננגו (שלה)',
+        nameLocal: 'Quetzaltenango (Xela)',
+        category: 'historic',
+        lat: 14.83333,
+        lng: -91.51667,
+        description:
+          'העיר השנייה של גואטמלה, ב-2,300 מ׳ בין הרי געש - כיכר עם בניינים ניאו-קלאסיים מתקופת הקפה, בתי ספר לספרדית שהישראלים מגיעים אליהם לשבועות, פוחל הפעיל שרואים ממנו את סנטיאגיטו מתפרץ, ומעיינות פואנטס חורחינאס ביער. ארבע שעות מאנטיגואה; המערב הגבוה של המאיה.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=14.83333,-91.51667',
+      },
+      {
+        id: 'gtm-livingston',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Livingston%2C_Izabal_-_Guatemala.jpg/500px-Livingston%2C_Izabal_-_Guatemala.jpg',
+        tags: ['outdoors', 'foodie'],
+        priceLevel: 1,
+        name: 'ליווינגסטון - הגריפונה והריו דולסה',
+        nameLocal: 'Lívingston / Río Dulce',
+        category: 'nature',
+        lat: 15.83,
+        lng: -88.75,
+        description:
+          'העיירה הקריבית שמגיעים אליה רק בסירה - גריפונה, אפרו-קריביים עם שפה ותופים משלהם, טאפאדו (מרק פירות ים בקוקוס), וקניון ריו דולסה: שיט של שעה בין קירות ג׳ונגל של 100 מ׳ עם ציפורים, לאגם איסבאל ומבצר סן פליפה. יום ארוך מפלורס או מאנטיגואה; הגואטמלה השלישית.',
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=15.83,-88.75',
+      },
+      {
+        id: 'gtm-iximche',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Sitio-arqueol%C3%B3gico-Iximch%C3%A9-en-Tecp%C3%A1n-Chimaltenango-01.jpg/500px-Sitio-arqueol%C3%B3gico-Iximch%C3%A9-en-Tecp%C3%A1n-Chimaltenango-01.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'אישימצ׳ה',
+        nameLocal: 'Iximche',
+        category: 'historic',
+        lat: 14.7358,
+        lng: -90.9962,
+        description:
+          'בירת הקקצ׳יקל שנוסדה ב-1470 ונפלה לספרדים ב-1524, שהפכו אותה לבירה הראשונה של גואטמלה - פירמידות, מגרשי כדור ומקדשים על רכס בין קניונים, ומזבח שמאיה עדיין מבצעים בו טקסים עם נרות ואלכוהול. שעה מאנטיגואה, בדרך לאטיטלן; עצירה של שעה של מאיה חיה.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=14.7358,-90.9962',
+      },
     ],
     itinerary: [
       {
@@ -63788,6 +64562,51 @@ export const destinations: Destination[] = [
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=-0.20272,-78.47822',
       },
+      {
+        id: 'ecu-cuenca',
+        tags: ['history', 'art', 'foodie'],
+        priceLevel: 0,
+        mustSee: true,
+        name: 'קואנקה',
+        nameLocal: 'Cuenca',
+        category: 'historic',
+        lat: -2.89741,
+        lng: -79.00448,
+        description:
+          'העיר הקולוניאלית היפה באקוודור, אתר מורשת עולמית - קתדרלה עם שלוש כיפות כחולות, בתים עם מרפסות על נהר טומבמבה, סדנאות כובעי פנמה (שהומצאו כאן, לא בפנמה), ושוק פרחים. חוף פארק אל קחאס ליד. שעה בטיסה מקיטו או תשע באוטובוס; יומיים.',
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=-2.89741,-79.00448',
+      },
+      {
+        id: 'ecu-otavalo-x',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Cuicocha%2C_Ecuador.jpg/500px-Cuicocha%2C_Ecuador.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        name: 'לגונה קויקוצ׳ה',
+        nameLocal: 'Laguna Cuicocha',
+        category: 'nature',
+        lat: 0.3,
+        lng: -78.35,
+        description:
+          'אגם מכתש כחול עם שני איים מיוערים במרכזו, לרגלי הר הגעש קוטקאצ׳י - שביל של ארבע שעות סביב השפה ב-3,200 מ׳ עם פרחים ונוף לאימבבורה, או סירה סביב האיים. עשרים דקות מאוטבאלו; אחרי השוק, לפני הצהריים. ״אגם שרקן הים״ בקצ׳ואה.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=0.3,-78.35',
+      },
+      {
+        id: 'ecu-quilotoa-loop-x',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'לטקונגה - שער קילוטואה',
+        nameLocal: 'Latacunga',
+        category: 'attraction',
+        lat: -0.93194,
+        lng: -78.61608,
+        description:
+          'עיר בין קוטופחשי לקילוטואה שנהרסה ונבנתה מחדש ארבע פעמים בהתפרצויות - מרכז קולוניאלי מאבן געשית אפורה, שוק, ופסטיבל ״מאמה נגרה״ בספטמבר עם תחפושות. הבסיס ללולאה ולפארק; שעתיים מקיטו. לא יעד, אבל האוטובוסים יוצאים מכאן ובחורף לינה.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=-0.93194,-78.61608',
+      },
     ],
     itinerary: [
       {
@@ -64109,6 +64928,22 @@ export const destinations: Destination[] = [
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=-20.50262,57.51695',
       },
+      {
+        id: 'mus-trou-aux-cerfs',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Mauritius_trou_aux_cerfs_volcano.jpg/500px-Mauritius_trou_aux_cerfs_volcano.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        name: 'טרו או סרף - מכתש קורפיפ',
+        nameLocal: 'Trou aux Cerfs',
+        category: 'viewpoint',
+        lat: -20.315,
+        lng: 57.505,
+        description:
+          'מכתש געשי רדום בלב קורפיפ, עם כביש סביב השפה ותצפית על כל מרכז האי ועד הים משני הצדדים - יער במכתש ואגם קטן בתחתית. הליכת בוקר של תושבי העיר. עשר דקות מהמרכז; חצי שעה של כל האי בבת אחת, ומזג אוויר קריר של הרמה.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=-20.315,57.505',
+      },
     ],
     itinerary: [
       {
@@ -64420,6 +65255,36 @@ export const destinations: Destination[] = [
           'שמורת הציפורים החשובה באוקיינוס ההודי - מיליון ציפורי ים על אי גרניט אחד, שחפיות, פרגטות, ציפורי טרופיק לבנות עם זנב ארוך, ו״זנבות הרוח״. שמורה מוחלטת עם רייינג׳רים, סירה מפרלין בימים מסוימים בלבד ולפי הים, שנורקל בשונית. חצי יום של טבע שאין בחופים.',
         durationMin: 300,
         externalUrl: 'https://maps.google.com/?q=-4.21333,55.68',
+      },
+      {
+        id: 'syc-anse-royale',
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        name: 'אנס רויאל',
+        nameLocal: 'Anse Royale',
+        category: 'nature',
+        lat: -4.73333,
+        lng: 55.51667,
+        description:
+          'חוף ארוך בדרום-מזרח מאהה, מוגן בשונית ולכן רגוע לילדים, עם אי קטן לשנורקל במרחק שחייה ובתי דגים. כפר של מקומיים, לא של מלונות; שוק ומאפיות. הצד השני של האי מבו ואלון, חצי שעה מוויקטוריה; אחר צהריים של חוף בלי ריזורט.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=-4.73333,55.51667',
+      },
+      {
+        id: 'syc-tea-factory',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Seychelles_003.JPG/500px-Seychelles_003.JPG',
+        tags: ['families', 'outdoors'],
+        priceLevel: 1,
+        name: 'מפעל התה של מאהה',
+        nameLocal: 'Seychelles Tea Factory (Morne Blanc)',
+        category: 'attraction',
+        lat: -4.66323,
+        lng: 55.43806,
+        description:
+          'מטע ומפעל תה קטן על כביש סאן סוסי, בגובה 500 מ׳ ביער ערפילי - סיור בייבוש ובאריזה, תה בטעם וניל בבית קפה עם נוף על החוף המערבי, ותחילת השביל למורן בלאן. עצירה בדרך הרים בין ויקטוריה לחוף המערבי; חצי שעה, וכוס תה מול הים.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=-4.66323,55.43806',
       },
     ],
     itinerary: [

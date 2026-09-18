@@ -128,7 +128,7 @@ npm run lint
   country-level practical facts (visa, currency, sim, payments) shared by
   all its cities.
 - `src/data/destinations.ts` - curated content: 166 destinations across
-  83 countries, ~3,060 places (Hebrew), each referencing its country via
+  83 countries, ~3,116 places (Hebrew), each referencing its country via
   `countrySlug`. Re-count with a grep before quoting these numbers.
   Places carry `photo` (verified URLs - run `node
   scripts/verify-photos.mjs` after any photo change; Wikimedia thumbs
@@ -3066,8 +3066,8 @@ at 2,086 places, the tuple index 158,055 - a 43% saving, lossless by test
 form**, i.e. roughly 3,700 places. What was NOT verified is the model reading the
 tuple layout live; the first real chat after deploy is that check, and the env
 switch is the answer if it fails. Itinerary days and photos stay outside the index.
-Measured 2026-09-18 evening at 3,060 places: **232,022 chars (kosher on), 227,086
-(off) - headroom ~48,000, about 600 places at the measured ~78 chars per tuple.**
+Measured 2026-09-18 at close, 3,116 places: **236,463 chars (kosher on) - headroom
+~44,000, about 550 places at the measured ~78 chars per tuple.**
 
 The index does NOT serialize photo URLs, so **photo work costs zero budget**. Verify
 with `/tmp/measure.mjs`-style measurement before quoting any new figure.
@@ -11790,3 +11790,20 @@ Vai beach's article, Hverir, Devrent valley, Yeddi Gümbəz, the Victoria Lines,
 Lisbon Falls (SA), Anse Major, Lara beach, the Mulu Pinnacles, Machuca's photo,
 and every entry of the shape "the trail" (Larapinta, Kungsleden, the Lycian
 Way) - a line has no honest point to pin.
+
+**Closing addendum, same day.** Two more passes landed before the session ended
+on Netanel's "wrap up for today": a Commons geosearch over the ~290 new photo
+gaps (445 candidates on the sheet, **105 chosen** - the rejects were the usual
+eclipse, postcard, protest march, sea slug and hotel pool), and an eighth
+place batch for the 45 destinations still at fifteen or fewer (**56 places** -
+Than Bok Khorani, Sudwala, Hisarya and Starosel, Maribor, Stanjel and the
+Planina cave, Petajavesi, Zica, Kazygurt, Xela, Livingston and Iximche,
+Shobak, Lofou, Favaios and Mirandela, Kalkan, Pinara, Gemiler and Letoon,
+Dsegh, Montezuma and Irazu, Cuenca and Cuicocha, Trou aux Cerfs, Risan and
+Orjen, Liopetri and Tochni, the Gergeti glacier trail, Sumeg, Kis-Balaton).
+Final state: **3,116 places, 2,891 photo URLs (17 dead, the standing backlog),
+0 validator errors, 790 tests, tsc and build clean, everything pushed.** The
+photo-geosearch sheet renders 30 tiles per page but a 1400x850 screenshot
+shows only 24 - the fifth row of each page went unreviewed, so a re-run over
+the same candidates with 24 per page would recover a few dozen more photos
+for free.
