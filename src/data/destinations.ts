@@ -9414,6 +9414,38 @@ export const destinations: Destination[] = [
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=43.80333,75.535',
       },
+      {
+        id: 'ala-central-museum',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Kazakhstan_State_Museum.jpg/500px-Kazakhstan_State_Museum.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'המוזיאון הממלכתי המרכזי',
+        nameLocal: 'Central State Museum of Kazakhstan',
+        category: 'museum',
+        lat: 43.23583,
+        lng: 76.95083,
+        description:
+          'המוזיאון הגדול בקזחסטן, בבניין בעל כיפה כחולה. התצוגה עוברת מהפרהיסטוריה ומתרבות הסקיתים ועד המאה ה-20, ובה העתק של לוחם הזהב.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=43.23583,76.95083',
+      },
+      {
+        id: 'ala-issyk',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/%D0%9E%D0%B7%D0%B5%D1%80%D0%BE_%D0%98%D1%81%D1%81%D1%8B%D0%BA.jpg/500px-%D0%9E%D0%B7%D0%B5%D1%80%D0%BE_%D0%98%D1%81%D1%81%D1%8B%D0%BA.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'אגם איסיק',
+        nameLocal: 'Issyk Lake',
+        category: 'nature',
+        lat: 43.2531,
+        lng: 77.4847,
+        description:
+          'אגם הרים מזרחית לאלמטי, שנסחף כמעט כולו במפולת בוץ ב-1963 ומאז התמלא מחדש בחלקו. סביבו יער אשוחים ומדרונות תלולים.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=43.2531,77.4847',
+      },
     ],
     itinerary: [
       {
@@ -22856,6 +22888,55 @@ export const destinations: Destination[] = [
         durationMin: 300,
         externalUrl: 'https://maps.google.com/?q=20.31667,105.60833',
       },
+      {
+        id: 'vnm-temple-literature',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Hanoi_Temple_of_Literature_%28cropped%29.jpg/500px-Hanoi_Temple_of_Literature_%28cropped%29.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'מקדש הספרות',
+        nameLocal: 'Temple of Literature',
+        category: 'historic',
+        lat: 21.02861,
+        lng: 105.83556,
+        description:
+          'מכלול חצרות ובריכות מהמאה ה-11 שהיה האוניברסיטה הראשונה של וייטנאם. בחצר הפנימית עומדות מצבות אבן על גב צבים ועליהן שמות בוגרי הבחינות הקיסריות.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=21.02861,105.83556',
+      },
+      {
+        id: 'vnm-hcm-mausoleum',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/L%C4%83ng_B%C3%A1c_-_NKS.jpg/500px-L%C4%83ng_B%C3%A1c_-_NKS.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'המאוזוליאום של הו צ׳י מין',
+        nameLocal: 'Ho Chi Minh Mausoleum',
+        category: 'historic',
+        lat: 21.03667,
+        lng: 105.83472,
+        description:
+          'מבנה אבן אפור בכיכר בא דין בהאנוי, שבו מוצגת גופתו החנוטה של הו צ׳י מין. הכניסה מחייבת לבוש צנוע והביקור נעשה בתור מסודר.',
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=21.03667,105.83472',
+      },
+      {
+        id: 'vnm-bai-dinh',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/M%E1%BB%98T_G%C3%93C_CH%C3%99A_B%C3%81I_%C4%90%C3%8DNH_-_panoramio.jpg/500px-M%E1%BB%98T_G%C3%93C_CH%C3%99A_B%C3%81I_%C4%90%C3%8DNH_-_panoramio.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'מקדש באי דין',
+        nameLocal: 'Bái Đính Temple',
+        category: 'historic',
+        lat: 20.27694,
+        lng: 105.86278,
+        description:
+          'מכלול מקדשים גדול ליד נין בין, שרובו נבנה בעשורים האחרונים לצד מערות מקדש ותיקות במעלה הגבעה. המסדרונות הארוכים שבו מלאים פסלי ארהאט.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=20.27694,105.86278',
+      },
     ],
     itinerary: [
       {
@@ -29338,6 +29419,52 @@ export const destinations: Destination[] = [
           'המסגד העתיק באמירויות, מהמאה ה-15 - מבנה בוץ ואבן זעיר עם ארבע כיפות על עמוד אחד במרכז, בלי מינרט, שעדיין פעיל - בין הכביש לחוף המזרחי, מצפון לפוג׳יירה. שני מגדלי שמירה על הגבעה מאחור. כמה דקות עם לבוש צנוע, בדרך לדיבא.',
         durationMin: 45,
         externalUrl: 'https://maps.google.com/?q=25.43907,56.35391',
+      },
+      {
+        id: 'uae-muwaiji',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Qasr_Al_Muwaiji9283.jpg/500px-Qasr_Al_Muwaiji9283.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'קסר אל מוואיג׳י',
+        nameLocal: 'Qasr Al Muwaiji',
+        category: 'historic',
+        lat: 24.225,
+        lng: 55.72694,
+        description:
+          'מבצר חומר בעין, שבו נולד השיח׳ ח׳ליפה. בתוך החצר נבנה מרכז מבקרים מודרני שמספר את תולדות המשפחה השלטת ואת חיי הנווה.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=24.225,55.72694',
+      },
+      {
+        id: 'uae-alain-museum',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'המוזיאון הלאומי של אל עין',
+        nameLocal: 'Al Ain National Museum',
+        category: 'museum',
+        lat: 24.21611,
+        lng: 55.77389,
+        description:
+          'המוזיאון הוותיק באיחוד האמירויות, צמוד למבצר סולטאן. בו ממצאים ארכיאולוגיים מאזור אל עין ותצוגה על חיי הבדואים לפני הנפט.',
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=24.21611,55.77389',
+      },
+      {
+        id: 'uae-hili',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Hili_Achaelogical_Park%2C_Al-Ain_-_panoramio_%281%29.jpg/500px-Hili_Achaelogical_Park%2C_Al-Ain_-_panoramio_%281%29.jpg',
+        tags: ['history', 'families'],
+        priceLevel: 0,
+        name: 'הפארק הארכיאולוגי חילי',
+        nameLocal: 'Hili Archaeological Park',
+        category: 'historic',
+        lat: 24.29288,
+        lng: 55.78991,
+        description:
+          'אתר מתקופת אום אל-נאר, מהמאה השלישית לפני הספירה, ובו קבר עגול משוחזר עם תבליטים. האתר נמצא בתוך גן ציבורי ומהווה חלק מאתר המורשת העולמית של אל עין.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=24.29288,55.78991',
       },
     ],
     itinerary: [
@@ -44091,6 +44218,54 @@ export const destinations: Destination[] = [
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=57.09194,21.89444',
       },
+      {
+        id: 'lv-talsi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Talsi_panorama.jpg/500px-Talsi_panorama.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'טאלסי',
+        nameLocal: 'Talsi',
+        category: 'historic',
+        lat: 57.24444,
+        lng: 22.58667,
+        description:
+          'עיירה בקורזמה הבנויה על תשע גבעות סביב שני אגמים. במרכזה בתי עץ ואבן מהמאה ה-19 ותצפיות קצרות מהגבעות אל הגגות.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=57.24444,22.58667',
+      },
+      {
+        id: 'lv-pavilosta',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Dzintaru_iela_%28P%C4%81vilosta%29_%282%29.jpg/500px-Dzintaru_iela_%28P%C4%81vilosta%29_%282%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'פאווילוסטה',
+        nameLocal: 'Pāvilosta',
+        category: 'attraction',
+        lat: 56.88333,
+        lng: 21.16667,
+        description:
+          'עיירת נמל קטנה על חוף הים הבלטי בשפך נהר הסאקה, מוכרת בקרב גולשים בשל הרוחות. החוף שלה ארוך וכמעט ריק.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=56.88333,21.16667',
+      },
+      {
+        id: 'lv-engure',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Engures_ezers_pie_Dzedriem.jpg/500px-Engures_ezers_pie_Dzedriem.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'אגם אנגורה',
+        nameLocal: 'Lake Engure',
+        category: 'nature',
+        lat: 57.26667,
+        lng: 23.1,
+        description:
+          'אגם רדוד ליד החוף הבלטי, שמורת ציפורים ואתר ראמסר. סביבו שבילים ומגדל תצפית, ובעונות המעבר עוברות בו ציפורים נודדות רבות.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=57.26667,23.1',
+      },
     ],
     itinerary: [
       {
@@ -44407,6 +44582,36 @@ export const destinations: Destination[] = [
           'צוק חול של 24 מ׳ ביער על החוף צפונית לקלייפדה, הגבוה בחוף ליטא - שביל עץ בין אורנים לתצפית על הים, מדרגות לחוף ריק, ושקיעה. חלק מהפארק האזורי של חוף הים; רבע שעה מהעיר, ובקיץ אופניים משם לפלנגה לאורך החוף.',
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=55.79667,21.06722',
+      },
+      {
+        id: 'lt-siauliai',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'שיאוליאי',
+        nameLocal: 'Šiauliai',
+        category: 'attraction',
+        lat: 55.93333,
+        lng: 23.31667,
+        description:
+          'העיר הרביעית בליטא, והבסיס הקרוב לגבעת הצלבים שמצפון לה. במרכזה כנסיית פטרוס ופאולוס עם מגדל שעון גבוה.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=55.93333,23.31667',
+      },
+      {
+        id: 'lt-kretinga',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Kretinga_Bernardine_Monastery_and_the_Lord%E2%80%99s_Revelation_to_Virgin_Mary_Church_building_complex_Nuotrauka_6.jpg/500px-Kretinga_Bernardine_Monastery_and_the_Lord%E2%80%99s_Revelation_to_Virgin_Mary_Church_building_complex_Nuotrauka_6.jpg',
+        tags: ['history', 'families'],
+        priceLevel: 1,
+        name: 'קרטינגה',
+        nameLocal: 'Kretinga',
+        category: 'attraction',
+        lat: 55.890058,
+        lng: 21.242411,
+        description:
+          'עיירה בין פלנגה לקלייפדה, ובה אחוזת טישקביץ׳ עם חממה זכוכית גדולה ומוזיאון. הפארק סביב האחוזה פתוח להליכה.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=55.890058,21.242411',
       },
     ],
     itinerary: [
@@ -46785,6 +46990,52 @@ export const destinations: Destination[] = [
           '״מוזיאון חי״ לרגלי הר סאנטובונג - בתי אורך של שבעת העמים של סאראוואק (איבאן, בידאיו, אורנג אולו, מלאנאו, מלאים, סינים, פנאן) עם אנשים שמדגימים נשיפת חצים, אריגה ובישול, ומופע ריקודים. תיירותי ומושקע; חצי שעה מקוצ׳ינג, ליד חופי דאמאי. פסטיבל המוזיקה של יער הגשם ביולי.',
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=1.74979,110.31681',
+      },
+      {
+        id: 'my-kota-kinabalu',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Panoramic_view_of_Kota_Kinabalu_City.jpg/500px-Panoramic_view_of_Kota_Kinabalu_City.jpg',
+        tags: ['foodie', 'outdoors'],
+        priceLevel: 1,
+        name: 'קוטה קינבאלו',
+        nameLocal: 'Kota Kinabalu',
+        category: 'attraction',
+        lat: 5.975,
+        lng: 116.0725,
+        description:
+          'בירת סאבה ושער הכניסה לצפון בורנאו. לאורך החוף שלה שווקי לילה ומזח שממנו יוצאות סירות אל איי הפארק הימי הסמוך.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=5.975,116.0725',
+      },
+      {
+        id: 'my-kuching',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Kuching_Skyline.jpg/330px-Kuching_Skyline.jpg',
+        tags: ['foodie', 'history'],
+        priceLevel: 1,
+        name: 'קוצ׳ינג',
+        nameLocal: 'Kuching',
+        category: 'attraction',
+        lat: 1.5575,
+        lng: 110.34389,
+        description:
+          'בירת סאראוואק על גדות נהר, עם טיילת ארוכה ובתי חנות סיניים ישנים. משם יוצאים לבאקו ולכפר התרבות של סאראוואק.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=1.5575,110.34389',
+      },
+      {
+        id: 'my-sandakan',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'סנדקאן',
+        nameLocal: 'Sandakan',
+        category: 'attraction',
+        lat: 5.83333,
+        lng: 118.11667,
+        description:
+          'עיר נמל במזרח סאבה, הבסיס לסאפילוק ולנהר הקינבטנגן. בעיר גם אתר זיכרון לצעדות המוות של שבויי המלחמה בתקופת הכיבוש היפני.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=5.83333,118.11667',
       },
     ],
     itinerary: [
@@ -53470,6 +53721,54 @@ export const destinations: Destination[] = [
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=6.78066,81.01551',
       },
+      {
+        id: 'lk-unawatuna',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Unawatuna.jpg/500px-Unawatuna.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 1,
+        name: 'אונוואטונה',
+        nameLocal: 'Unawatuna',
+        category: 'nature',
+        lat: 6.01833,
+        lng: 80.2525,
+        description:
+          'מפרץ חול מוגן מזרחית לגאל, מהחופים השקטים בדרום האי. בקצהו שונית ומעליו מקדש קטן על ראש הגבעה.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=6.01833,80.2525',
+      },
+      {
+        id: 'lk-weligama',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Weligama_Beach_in_Sri_Lanka.jpg/500px-Weligama_Beach_in_Sri_Lanka.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'וליגאמה',
+        nameLocal: 'Weligama',
+        category: 'nature',
+        lat: 5.97389,
+        lng: 80.42944,
+        description:
+          'מפרץ רחב עם גלים נמוכים, המקום שבו רוב המטיילים לומדים לגלוש בסרי לנקה. בסביבתו נראים לעתים הדייגים על כלונסאות.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=5.97389,80.42944',
+      },
+      {
+        id: 'lk-haputale',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Haputale_town_01_640.jpg/500px-Haputale_town_01_640.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'האפוטלה',
+        nameLocal: 'Haputale',
+        category: 'attraction',
+        lat: 6.76778,
+        lng: 80.95861,
+        description:
+          'עיירה על רכס צר בהר התה, שממנה נשקפים בבוקר בהיר מישורי הדרום ועד הים. היא נקודת המוצא לתצפית ליפטון.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=6.76778,80.95861',
+      },
     ],
     itinerary: [
       {
@@ -54175,6 +54474,38 @@ export const destinations: Destination[] = [
           'אי במקונג רבע שעה במעבורת מפנום פן, שכל הכפר בו אורג משי - נולים מתחת לבתים על כלונסאות, פקעות, וסדנאות שמראות את התהליך. אופניים בשבילי הכפר, מקדשים, וחוף נהר עם בקתות. הקמבודיה הכפרית בלי לצאת מהעיר; טוק-טוק ומעבורת.',
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=11.66815,104.93721',
+      },
+      {
+        id: 'kh-national-museum',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Entrance_of_the_National_Museum_of_Cambodia.jpg/500px-Entrance_of_the_National_Museum_of_Cambodia.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        name: 'המוזיאון הלאומי של קמבודיה',
+        nameLocal: 'National Museum of Cambodia',
+        category: 'museum',
+        lat: 11.5658,
+        lng: 104.929,
+        description:
+          'מוזיאון בבניין אדום בסגנון חמרי בפנום פן, ובו אוסף הפיסול החמרי הגדול בעולם. הפסלים הובאו בעיקר מאנגקור ומאתרים אחרים בקמבודיה.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=11.5658,104.929',
+      },
+      {
+        id: 'kh-sihanoukville',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Aerial_View_of_Golden_Lions_Roundabout.jpg/500px-Aerial_View_of_Golden_Lions_Roundabout.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'סיהאנוקוויל',
+        nameLocal: 'Sihanoukville',
+        category: 'attraction',
+        lat: 10.625,
+        lng: 103.51861,
+        description:
+          'עיר הנמל הראשית בחוף הדרומי, ונקודת היציאה במעבורת אל קו רונג ולקו רונג סנלואם. העיר עצמה השתנתה מאוד בשנים האחרונות בעקבות בנייה מואצת.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=10.625,103.51861',
       },
     ],
     itinerary: [
@@ -63813,6 +64144,36 @@ export const destinations: Destination[] = [
         durationMin: 480,
         externalUrl: 'https://maps.google.com/?q=27.54964,90.75274',
       },
+      {
+        id: 'bt-thimphu',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'טהימפו',
+        nameLocal: 'Thimphu',
+        category: 'attraction',
+        lat: 27.47222,
+        lng: 89.63611,
+        description:
+          'בירת בהוטן והעיר הגדולה במדינה, בעמק הרים. אין בה רמזורים, והתנועה במרכז מנוהלת בידי שוטר שעומד בתוך ביתן.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=27.47222,89.63611',
+      },
+      {
+        id: 'bt-simtokha',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Simtokha_Dzong%2C_Bhutan_01.jpg/500px-Simtokha_Dzong%2C_Bhutan_01.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'מנזר סימטוקה',
+        nameLocal: 'Simtokha Dzong',
+        category: 'historic',
+        lat: 27.43806,
+        lng: 89.66944,
+        description:
+          'הדזונג הוותיק ביותר בבהוטן שנשמר בצורתו המקורית, מהמאה ה-17, בכניסה הדרומית לעמק טהימפו. כיום פועל בו בית ספר ללימודי דזונגקה.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=27.43806,89.66944',
+      },
     ],
     itinerary: [
       {
@@ -65449,6 +65810,38 @@ export const destinations: Destination[] = [
         durationMin: 480,
         externalUrl: 'https://maps.google.com/?q=7.6342,-81.25461',
       },
+      {
+        id: 'pa-panama-city',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Panama_Papers_%28148830809%29.jpeg/500px-Panama_Papers_%28148830809%29.jpeg',
+        tags: ['foodie', 'history', 'nightlife'],
+        priceLevel: 2,
+        name: 'פנמה סיטי',
+        nameLocal: 'Panama City',
+        category: 'attraction',
+        lat: 8.9711,
+        lng: -79.5347,
+        description:
+          'בירת פנמה, שבה קו רקיע של מגדלים מול העיר הקולוניאלית. מהטיילת שלאורך המפרץ רואים את הספינות הממתינות לתעלה.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=8.9711,-79.5347',
+      },
+      {
+        id: 'pa-soberania',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flickr_-_ggallice_-_Rainforest_%281%29.jpg/500px-Flickr_-_ggallice_-_Rainforest_%281%29.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 1,
+        name: 'הפארק הלאומי סוברניה',
+        nameLocal: 'Soberanía National Park',
+        category: 'nature',
+        lat: 9.0743,
+        lng: -79.65981,
+        description:
+          'יער גשם לאורך תעלת פנמה, קרוב מאוד לבירה. דרך פייפליין שבתוכו נחשבת מהמקומות הטובים בעולם לצפייה בציפורים.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=9.0743,-79.65981',
+      },
     ],
     itinerary: [
       {
@@ -66152,6 +66545,38 @@ export const destinations: Destination[] = [
           'מכתש געשי רדום בלב קורפיפ, עם כביש סביב השפה ותצפית על כל מרכז האי ועד הים משני הצדדים - יער במכתש ואגם קטן בתחתית. הליכת בוקר של תושבי העיר. עשר דקות מהמרכז; חצי שעה של כל האי בבת אחת, ומזג אוויר קריר של הרמה.',
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=-20.315,57.505',
+      },
+      {
+        id: 'mu-mahebourg',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Esplanade%2C_Mahebourg%2C_Mauritius.JPG/500px-Esplanade%2C_Mahebourg%2C_Mauritius.JPG',
+        tags: ['history', 'foodie'],
+        priceLevel: 0,
+        name: 'מהבור',
+        nameLocal: 'Mahébourg',
+        category: 'historic',
+        lat: -20.411104,
+        lng: 57.706062,
+        description:
+          'עיירה בדרום-מזרח האי על מפרץ גדול, עם שוק שבועי ומוזיאון ימי. מכאן נשקפת האי אוקס אגרט שממול.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=-20.411104,57.706062',
+      },
+      {
+        id: 'mu-flic-en-flac',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Mauritius_flic_en_flac_beach.jpg/500px-Mauritius_flic_en_flac_beach.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 1,
+        name: 'פליק אן פלאק',
+        nameLocal: 'Flic-en-Flac',
+        category: 'nature',
+        lat: -20.27978,
+        lng: 57.36645,
+        description:
+          'רצועת חוף ארוכה במערב האי, מוגנת בשונית ולכן רדודה ושקטה. מכאן יוצאים רבים מהשיטים לצפייה בדולפינים בבוקר.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=-20.27978,57.36645',
       },
     ],
     itinerary: [
