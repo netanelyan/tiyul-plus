@@ -127,8 +127,8 @@ npm run lint
   country ("טסים לאיטליה"), plan by city. Each `Country` carries the
   country-level practical facts (visa, currency, sim, payments) shared by
   all its cities.
-- `src/data/destinations.ts` - curated content: 150 destinations across
-  83 countries, ~1,313 places (Hebrew), each referencing its country via
+- `src/data/destinations.ts` - curated content: 166 destinations across
+  83 countries, ~2,073 places (Hebrew), each referencing its country via
   `countrySlug`. Re-count with a grep before quoting these numbers.
   Places carry `photo` (verified URLs - run `node
   scripts/verify-photos.mjs` after any photo change; Wikimedia thumbs
@@ -3058,6 +3058,10 @@ correctly. Losing that would break the core product silently. It is offline-prov
 that no information is lost (assert every id and name survives); what cannot be
 proven from here is the model's behaviour. **Whoever has a live key should do this
 before raising the ceiling again.**
+
+**Measured 2026-09-18: 277,314 chars at 2,073 places - 2,686 under the ceiling.**
+The catalog cannot take a meaningful number of new places until the index format
+is compacted (above). Itinerary days and photos are outside the index and stay free.
 
 The index does NOT serialize photo URLs, so **photo work costs zero budget**. Verify
 with `/tmp/measure.mjs`-style measurement before quoting any new figure.
@@ -11549,3 +11553,88 @@ tiles now say "26 places" for Rome, which is the honest number and is also the
 ceiling a six-day trip runs into. Going deep on those eight cities - 40-60
 places each, real editorial text, a neighbourhood structure - is the content
 work that would make a richer page mean something.
+
+### 2026-09-18 (c) - "Deepen the database": 251 nature places, 31 days, and the ceiling reached
+
+Netanel: deepen the database - more nature, tracks - and take a long session.
+Three constraints decided the shape before a single place was written.
+
+**The budget was the first measurement, and it set the scope.** The grounding
+index stood at 244,910 of the 280,000 ceiling: room for about 260 places at the
+measured 134 chars each, and not one more without the format compaction that
+still needs a live model to verify. So the session was sized at ~250 places,
+and it ends at 277,314 - 2,686 under the line. **The catalog is full** in the
+only sense that matters to the agent; the next session that wants to add
+places has to compact the index first.
+
+**The second: this machine reaches Wikipedia, Nominatim and Commons.** No
+sandbox session in this log ever had all three. That made a real pipeline
+possible instead of the WebFetch-and-hope of the summer.
+
+**The pipeline (`scripts/research-places.mjs`) proves a candidate or refuses
+it, in order:** coordinates from the Wikipedia coordinates API (or OpenStreetMap
+filtered on OSM *type*, never on name - the Green Bazaar lesson), the lead photo
+checked on Commons for licence, real width and a non-photo filename, the derived
+thumbnail URL probed, the coordinate inside the destination's own spread, and no
+existing place anywhere in the catalog with the same name or within 250m. Then a
+contact sheet, because the fourth check is the only one that catches a wrong
+subject. `scripts/apply-places.mjs` and `scripts/apply-days.mjs` write in house
+style so no formatter runs on the 44,000-line file.
+
+**What went in, 251 places over three batches:**
+
+| batch | where | places |
+|---|---|---|
+| 1 | nature and day trips around the eight flagship cities | 50 |
+| 2 | Dolomites, Jungfrau, Zermatt, Bled/Soča, Tatras, Bavaria, Salzburg, Crete, Kazbegi, Dalmatia, fjords, Lofoten, Iceland, Mallorca | 131 |
+| 3 | destinations with almost no nature: Sicily (had zero), Epirus, Cappadocia, Rila-Pirin, Vitosha, Paris forests, Stockholm, Rhine, northern Thailand, Trakai, Baltic coast, Seoul, Busan, Bosnia, Lycia, Atlas, Angkor | 70 |
+
+Plus **31 itinerary days** so the new places sit in a ready route rather than
+only in the list, and **200 verified photos** - 21 of them by Commons geosearch
+for the places whose article had none.
+
+**The guards caught things, which is the reason to have them.** The distance
+guard threw out "Juta" - the English article is a village in Hungary, Δ27° from
+Kazbegi. The precision ratchet (2026-08-12 (yy)) failed the build on four
+point-category places carrying Wikipedia's two-decimal town coordinates; all
+four were re-geocoded via OSM rather than the test being widened. And the
+contact sheets rejected **24 of 224** article lead images that every automated
+filter had passed: three satellite images, a satellite *map*, an 1895 map of
+Fontainebleau, a black-and-white archival print of Låtefossen, a hotel roof for
+Dobogó-kő, a hide box for Ras Al Khor, a quarry for the Koněprusy caves, a
+sign for Seoul Forest, and five buildings and gates standing in for gardens.
+Ten percent, on the *good* source. Geosearch was worse, as entry (jj) predicted:
+21 usable out of 36, the rest a tram, a mailbox and a fish.
+
+**Two harness bugs, both the standing species.** A burst of 429s from
+`upload.wikimedia.org` read as "no photo" for every Slovenian place in batch 2
+until the probe learned to back off - a rate limit is not an absence. And the
+CDP harness picked the first debug target, which on this profile is an
+extension's background page, so three pages measured as empty documents; the
+earlier homepage check had simply got lucky. Select by `type === 'page'`.
+
+**A live defect found on the way and fixed in its own commit: CARTO put its
+free basemaps behind an API key**, and every tile on production now carries an
+"API KEY REQUIRED" stamp - deterministic on every fetch, confirmed on
+tiyulplus.com, not caused by anything here. The map is back on OpenStreetMap
+standard tiles (keyless, no `detectRetina` since OSM serves no @2x), the
+tile-pane tint retuned for the more saturated source, and the privacy and
+cookies pages no longer name CARTO as a party the browser contacts.
+
+**Verified:** catalog validator 0 errors / 72 warnings (the 17 new ones are
+all the ">3° from centre" kind that country-scale destinations already carry),
+786 tests, tsc, build, lint clean on every touched file, photo manifest 2,020
+URLs with 2,003 alive and the same 17 dead as before. Sicily, the Dolomites
+and Vienna checked in a real browser at 1400 and 390: RTL, zero horizontal
+overflow, the new places and day counts rendering, the map clean.
+
+**Not done, stated plainly.** 12 candidates could not be pinned by any method
+(Kaputaş beach, Babadağ, Biokovo skywalk, Hverir, Reykjadalur, Kvalvika,
+Haukland, Vai, Perama cave, Cava Grande, Malyovitsa, Calmont) - real places,
+no indexed coordinate; they wait for a hand-placed pin. Fifteen of today's
+places still have no photo. And the depth question Netanel actually asked has
+a second half this session could not touch: the catalog's *prose* is still one
+or two sentences per place. Richer text per place is now blocked by the same
+index ceiling as new places - `buildGroundingIndex` carries no descriptions, so
+it would actually be free, but the per-city detail block does, and that is the
+next thing to measure before writing it.
