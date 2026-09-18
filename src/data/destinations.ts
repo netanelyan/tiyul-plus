@@ -6068,6 +6068,38 @@ export const destinations: Destination[] = [
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=8.39,98.74',
       },
+      {
+        id: 'ayu-lokayasutharam',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Wat_Lokaya_Suttha_in_Ayutthaya_Thailand_001.jpg/500px-Wat_Lokaya_Suttha_in_Ayutthaya_Thailand_001.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'ואט לוקאיאסותאראם',
+        nameLocal: 'Wat Lokayasutharam',
+        category: 'historic',
+        lat: 14.35556,
+        lng: 100.5525,
+        description:
+          'פסל בודהה שוכב באורך עשרות מטרים, בשטח פתוח שבו נשארו רק יסודות המקדש שסביבו. הפסל מכוסה בגלימה כתומה שמחליפים מדי פעם.',
+        durationMin: 30,
+        externalUrl: 'https://maps.google.com/?q=14.35556,100.5525',
+      },
+      {
+        id: 'ayu-na-phra-men',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%AD%E0%B8%B8%E0%B9%82%E0%B8%9A%E0%B8%AA%E0%B8%96%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%A1%E0%B8%A3%E0%B8%B8.jpg/500px-%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%AD%E0%B8%B8%E0%B9%82%E0%B8%9A%E0%B8%AA%E0%B8%96%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%A1%E0%B8%A3%E0%B8%B8.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'ואט נא פרה מן',
+        nameLocal: 'Wat Na Phra Men',
+        category: 'historic',
+        lat: 14.36611,
+        lng: 100.56167,
+        description:
+          'אחד המקדשים היחידים באיותאיה ששרד את חורבן העיר ב-1767 כמעט שלם. בפנים פסל בודהה יושב גדול ותקרת עץ מקורית.',
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=14.36611,100.56167',
+      },
     ],
     itinerary: [
       {
@@ -10412,6 +10444,22 @@ export const destinations: Destination[] = [
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=30.51889,35.55778',
       },
+      {
+        id: 'pet-qasr-al-bint',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Qasr_al-Bint_03.jpg/500px-Qasr_al-Bint_03.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'קצר אל-בינת',
+        nameLocal: 'Qasr al-Bint',
+        category: 'historic',
+        lat: 30.3295,
+        lng: 35.4401,
+        description:
+          'המקדש הנבטי המרכזי של פטרה, בקצה רחוב העמודים. זה אחד המבנים הבודדים בעיר שנבנו מאבן ולא נחצבו בסלע, וחלק מקירותיו עומדים לגובה ניכר.',
+        durationMin: 30,
+        externalUrl: 'https://maps.google.com/?q=30.3295,35.4401',
+      },
     ],
     itinerary: [
       {
@@ -10737,6 +10785,36 @@ export const destinations: Destination[] = [
           'טירה שמטפסת על פסגות סלע ב-730 מ׳ מעל קירניה בשלושה מפלסים - מהמאה ה-11, בירת הקיץ של הלוזיניאנים, וההשראה (אומרים) לטירת המלכה הרעה בשלגייה של דיסני. מדרגות בין המפלסים, ונוף על קירניה והחוף כולו. השמורה מבין מבצרי הרכס; חצי שעה מניקוסיה.',
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=35.31214,33.28108',
+      },
+      {
+        id: 'nic-leventis',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/NICOSIA%2C_11_AUGUST%2C_2011_140.jpg/500px-NICOSIA%2C_11_AUGUST%2C_2011_140.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'מוזיאון לוונטיס העירוני',
+        nameLocal: 'Leventis Municipal Museum',
+        category: 'museum',
+        lat: 35.1706,
+        lng: 33.3617,
+        description:
+          'מוזיאון שמספר את תולדות ניקוסיה עצמה, מהתקופה הצלבנית והוונציאנית ועד המאה ה-20. התצוגה כרונולוגית ומתמקדת בעיר ולא באי כולו.',
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=35.1706,33.3617',
+      },
+      {
+        id: 'cy-tamassos',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'תמאסוס',
+        nameLocal: 'Tamassos',
+        category: 'historic',
+        lat: 35.029739,
+        lng: 33.24432,
+        description:
+          'עיר ממלכה קפריסאית עתיקה שהתפרנסה מנחושת, ובה קברים מלכותיים חצובים מהמאה השישית לפני הספירה. הקברים מחקים בניית אבן בעץ.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=35.029739,33.24432',
       },
     ],
     itinerary: [
@@ -23993,6 +24071,66 @@ export const destinations: Destination[] = [
         durationMin: 300,
         externalUrl: 'https://maps.google.com/?q=-33.91667,19.13333',
       },
+      {
+        id: 'zaf-waterfront',
+        tags: ['families', 'foodie'],
+        priceLevel: 2,
+        name: 'הוויקטוריה אנד אלפרד ווטרפרונט',
+        nameLocal: 'V&A Waterfront',
+        category: 'attraction',
+        lat: -33.90306,
+        lng: 18.42278,
+        description:
+          'נמל עובד שהוסב למרכז מבקרים, עם מסעדות, חנויות ואקווריום, ועדיין נכנסות אליו ספינות. מכאן יוצאות הסירות לאי רובן, ומעליו נשקף הר השולחן.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=-33.90306,18.42278',
+      },
+      {
+        id: 'zaf-district-six',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/District_Six_Museum_looking_west_jeh.jpg/500px-District_Six_Museum_looking_west_jeh.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'מוזיאון דיסטריקט שש',
+        nameLocal: 'District Six Museum',
+        category: 'museum',
+        lat: -33.92772,
+        lng: 18.42367,
+        description:
+          'מוזיאון על השכונה שתושביה גורשו בתקופת האפרטהייד והבתים נהרסו. התצוגה בנויה מחפצים וזיכרונות של המגורשים עצמם, כולל מפת רצפה שהם סימנו בה את בתיהם.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=-33.92772,18.42367',
+      },
+      {
+        id: 'zaf-signal-hill',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 0,
+        name: 'סיגנל היל',
+        nameLocal: 'Signal Hill',
+        category: 'viewpoint',
+        lat: -33.91778,
+        lng: 18.40278,
+        description:
+          'רכס שטוח לצד ראש האריה, שאליו אפשר להגיע בכביש עד למעלה. זו התצפית הנוחה על העיר ועל המפרץ, ובצהריים נורה ממנו תותח הצהריים ההיסטורי.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=-33.91778,18.40278',
+      },
+      {
+        id: 'zaf-camps-bay',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/View_of_Camps_Bay.jpg/500px-View_of_Camps_Bay.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 2,
+        name: 'קמפס ביי',
+        nameLocal: 'Camps Bay',
+        category: 'nature',
+        lat: -33.95,
+        lng: 18.38333,
+        description:
+          'חוף חול לבן מתחת לרכס שנים-עשר השליחים, עם טיילת מסעדות ממול. המים של האוקיינוס האטלנטי כאן קרים מאוד גם בקיץ.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=-33.95,18.38333',
+      },
     ],
     itinerary: [
       {
@@ -24283,6 +24421,52 @@ export const destinations: Destination[] = [
           'גן בוטני על מפגש שני נהרות בנלספרויט, עם מפלים בתוך הגן, יער גשם אפריקאי משוחזר, ואוסף הצמחים הגדול של ציקדות בעולם. ציפורים, קופים, ושבילים מוצלים. הפסקה בעיר בדרך לקרוגר; שעתיים ירוקות, ואחרי הספארי - צל.',
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=-25.44444,30.96611',
+      },
+      {
+        id: 'zaf-skukuza',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Skukuza_Camp_Kruger_NP.JPG/500px-Skukuza_Camp_Kruger_NP.JPG',
+        tags: ['families', 'outdoors'],
+        priceLevel: 1,
+        name: 'סקוקוזה',
+        nameLocal: 'Skukuza',
+        category: 'attraction',
+        lat: -24.99583,
+        lng: 31.59194,
+        description:
+          'מחנה השער הראשי של פארק קרוגר, על גדת נהר הסאבי. יש בו מרכז מבקרים, מוזיאון קטן ונקודת תצפית אל הנהר, והוא הבסיס שממנו יוצאים רוב הספארי בחלק הדרומי.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=-24.99583,31.59194',
+      },
+      {
+        id: 'zaf-timbavati',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        name: 'שמורת טימבוואטי',
+        nameLocal: 'Timbavati Private Nature Reserve',
+        category: 'nature',
+        lat: -24.33528,
+        lng: 31.34389,
+        description:
+          'שמורה פרטית שגובלת בפארק קרוגר ללא גדר ביניהם, כך שחיות עוברות בחופשיות. השמורה מוכרת בזכות אריות לבנים שנצפו בה.',
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=-24.33528,31.34389',
+      },
+      {
+        id: 'zaf-long-tom',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/R37-Long_Tom_Pass-001.jpg/500px-R37-Long_Tom_Pass-001.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 0,
+        name: 'מעלה לונג טום',
+        nameLocal: 'Long Tom Pass',
+        category: 'viewpoint',
+        lat: -25.14125,
+        lng: 30.60494,
+        description:
+          'מעבר הרים גבוה בין ליידנבורג לסאבי, שנקרא על שם תותח מתקופת מלחמת הבורים השנייה. הכביש עולה לרמות פתוחות ויש בו תצפיות אל השפלה.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=-25.14125,30.60494',
       },
     ],
     itinerary: [
@@ -24998,6 +25182,55 @@ export const destinations: Destination[] = [
           'שרידי המצפה שבנה נכדו של טימור ב-1420 - מלך אסטרונום שמדד את אורך השנה בדיוק של שניות בלי טלסקופ. מה שנותר תת-קרקעי: קשת השיש הענקית של הסקסטנט, בקצה מוזיאון קטן על גבעה בפאתי סמרקנד. עשר דקות מהרגיסטן.',
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=39.675,67.005',
+      },
+      {
+        id: 'uzb-bibi-khanym',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/%D0%9C%D0%B5%D1%87%D0%B5%D1%82%D1%8C_%D0%91%D0%B8%D0%B1%D0%B8_%D0%A5%D0%B0%D0%BD%D1%83%D0%BC._%D0%A1%D0%B0%D0%BC%D0%B0%D1%80%D0%BA%D0%B0%D0%BD%D0%B4.jpg/500px-%D0%9C%D0%B5%D1%87%D0%B5%D1%82%D1%8C_%D0%91%D0%B8%D0%B1%D0%B8_%D0%A5%D0%B0%D0%BD%D1%83%D0%BC._%D0%A1%D0%B0%D0%BC%D0%B0%D1%80%D0%BA%D0%B0%D0%BD%D0%B4.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'מסגד ביבי חאנום',
+        nameLocal: 'Bibi-Khanym Mosque',
+        category: 'historic',
+        lat: 39.66056,
+        lng: 66.97917,
+        description:
+          'המסגד שהקים תימור בשיא כוחו, ובזמנו מהגדולים בעולם האסלאמי. הוא נפגע ברעידות אדמה ושוחזר בחלקו, והשער והכיפות עומדים לגובה עשרות מטרים.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=39.66056,66.97917',
+      },
+      {
+        id: 'uzb-ark-bukhara',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Ark_of_Bukhara_2023.9.jpg/500px-Ark_of_Bukhara_2023.9.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'מצודת הארק',
+        nameLocal: 'Ark of Bukhara',
+        category: 'historic',
+        lat: 39.77778,
+        lng: 64.41028,
+        description:
+          'המצודה שהייתה מושב שליטי בוכרה, על תל מלאכותי בלב העיר. חלקה נהרס בתחילת המאה ה-20, ובחלק שנשאר אולמות קבלה, מסגד ומוזיאונים קטנים.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=39.77778,64.41028',
+      },
+      {
+        id: 'uzb-samanid',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/UZ_Bukhara_Samanid-mausoleum.jpg/500px-UZ_Bukhara_Samanid-mausoleum.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 0,
+        name: 'מאוזוליאום הסמאנים',
+        nameLocal: 'Samanid Mausoleum',
+        category: 'historic',
+        lat: 39.77694,
+        lng: 64.40056,
+        description:
+          'מבנה קבורה מלבני חרס מהמאה העשירית בבוכרה, מהמבנים האסלאמיים הקדומים שנשמרו באסיה המרכזית. כל העיטור עשוי מסידור הלבנים עצמו ולא מאריחים.',
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=39.77694,64.40056',
       },
     ],
     itinerary: [
@@ -28020,6 +28253,38 @@ export const destinations: Destination[] = [
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=52.3343,5.0714',
       },
+      {
+        id: 'ams-rijksmuseum',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/South_facade_of_the_Rijksmuseum_Amsterdam_%28DSCF0528%29.jpg/500px-South_facade_of_the_Rijksmuseum_Amsterdam_%28DSCF0528%29.jpg',
+        tags: ['art', 'history'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'הרייקסמוזיאום',
+        nameLocal: 'Rijksmuseum',
+        category: 'museum',
+        lat: 52.359843,
+        lng: 4.88504,
+        description:
+          'המוזיאון הלאומי של הולנד, ובו אוסף תור הזהב ההולנדי - רמברנדט, ורמיר, האלס ורויסדאל. אולם הכבוד מוביל אל משמר הלילה של רמברנדט, והבניין עצמו מסוף המאה ה-19 הוא חלק מהביקור.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=52.359843,4.88504',
+      },
+      {
+        id: 'ams-van-gogh',
+        tags: ['art'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'מוזיאון ואן גוך',
+        nameLocal: 'Van Gogh Museum',
+        category: 'museum',
+        lat: 52.3583,
+        lng: 4.8811,
+        description:
+          'האוסף הגדול בעולם של יצירות ואן גוך, מאות ציורים ורישומים וגם מכתביו. התצוגה מסודרת לפי תקופות חייו, כך שרואים את השינוי בצבע ובקו משנה לשנה.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=52.3583,4.8811',
+      },
     ],
     itinerary: [
       {
@@ -28355,6 +28620,22 @@ export const destinations: Destination[] = [
           'הנקודה הנמוכה על פני כדור הארץ, מהצד שרואים ממנו את יהודה - רצועת מלונות עם חופים בסוויימה, וחוף ציבורי אחד. אותם מים, אותה ציפה, אותו בוץ; מי שמכיר מהצד הישראלי יבוא בעיקר בשביל הזווית. שעה מעמאן; אין צל ואין ערים.',
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=31.76589,35.59844',
+      },
+      {
+        id: 'amn-abdullah-mosque',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/King_Abdullah_I_mosque_in_Amman%2C_2024.jpg/500px-King_Abdullah_I_mosque_in_Amman%2C_2024.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'מסגד המלך עבדאללה הראשון',
+        nameLocal: 'King Abdullah I Mosque',
+        category: 'historic',
+        lat: 31.9616,
+        lng: 35.9131,
+        description:
+          'מסגד עם כיפה כחולה גדולה במרכז עמאן, שנבנה במחצית השנייה של המאה ה-20. הוא מהמסגדים המעטים בעיר שפתוחים למבקרים שאינם מוסלמים.',
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=31.9616,35.9131',
       },
     ],
     itinerary: [
@@ -29691,6 +29972,38 @@ export const destinations: Destination[] = [
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=46.06751,23.57124',
       },
+      {
+        id: 'trn-prejmer',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Biserica_fortificat%C4%83_din_Prejmer_-_vedere_de_ansamblu.jpg/500px-Biserica_fortificat%C4%83_din_Prejmer_-_vedere_de_ansamblu.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'הכנסייה המבוצרת בפרז׳מר',
+        nameLocal: 'Prejmer fortified church',
+        category: 'historic',
+        lat: 45.72208,
+        lng: 25.77346,
+        description:
+          'הכנסייה המבוצרת הגדולה בטרנסילבניה ואתר מורשת עולמית, עם חומה עבה וטבעת חדרי מחסן בפנים. כל משפחה בכפר החזיקה חדר משלה למצור.',
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=45.72208,25.77346',
+      },
+      {
+        id: 'trn-sarmizegetusa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Sarmisegetusa_Regia_-_Templele_patrulatere_mici_-_Zona_sacra_%E2%80%93_Gradistea_Muntelui%2C_Muntii_Sureanu%2C_Hunedoara%2C_Romania_19.JPG/500px-Sarmisegetusa_Regia_-_Templele_patrulatere_mici_-_Zona_sacra_%E2%80%93_Gradistea_Muntelui%2C_Muntii_Sureanu%2C_Hunedoara%2C_Romania_19.JPG',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'סרמיזגטוסה רג׳יה',
+        nameLocal: 'Sarmizegetusa Regia',
+        category: 'historic',
+        lat: 45.6219,
+        lng: 23.3093,
+        description:
+          'בירת הדאקים בהרי אורשטיה, אתר מורשת עולמית. במקום שרידי חומות, מקדשים עגולים ולוח שמש מאבן, ביער גבוה מעל העמק.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=45.6219,23.3093',
+      },
     ],
     itinerary: [
       {
@@ -30005,6 +30318,22 @@ export const destinations: Destination[] = [
           'כפר יווני עד חילופי האוכלוסין של 1923 - סינאסוס - עם אחוזות אבן מגולפות של סוחרי הקוויאר של איסטנבול, כנסיות עם פרסקאות, וכפר שנשאר כפי שהיה. כמה מהאחוזות הפכו לבתי הארחה; שקט לגמרי. רבע שעה מאורגופ; הקפדוקיה שלא בבלון.',
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=38.5834,34.89692',
+      },
+      {
+        id: 'cpd-ozkonak',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/%C3%96zkonak_Underground_City.jpg/500px-%C3%96zkonak_Underground_City.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'העיר התת-קרקעית אוזקונאק',
+        nameLocal: 'Özkonak Underground City',
+        category: 'historic',
+        lat: 38.81306,
+        lng: 34.83944,
+        description:
+          'עיר תת-קרקעית קטנה וקרירה מצפון לאוונוס, עם אבני גלילה לחסימת מסדרונות. היא פחות מוכרת מדרינקויו ומקאימאקלי ולכן שקטה בהרבה.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=38.81306,34.83944',
       },
     ],
     itinerary: [
@@ -31039,6 +31368,55 @@ export const destinations: Destination[] = [
           'מתחם מקדשים תראקיים מהמאה ה-5 לפנה״ס מתחת לתל, שנחפר ב-2000 - אולם עגול עם עמודים וקיר תומך של 240 מ׳ סביב התל, מהגדולים בבלקן. ליד יקב סטארוסל עם מרתף בסגנון תראקי ומרחצאות יין. שעה מפלובדיב; היסטוריה ויין ביום אחד בין הרי סרדנה גורה.',
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=42.48783,24.56527',
+      },
+      {
+        id: 'bg-trigrad',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Trigrad_gorge.jpg/500px-Trigrad_gorge.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'נקיק טריגרד',
+        nameLocal: 'Trigrad Gorge',
+        category: 'nature',
+        lat: 41.61667,
+        lng: 24.37917,
+        description:
+          'נקיק צר בהרי הרודופה שדפנותיו מתקרבות זו לזו למעבר של מטרים בודדים, והכביש עובר בתוכו. בקצהו נמצאת מערה גדולה שהנחל נעלם אליה.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=41.61667,24.37917',
+      },
+      {
+        id: 'bg-devils-throat',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/La_chute_d%27entr%C3%A9e_de_la_Gorge_du_Diable.jpg/500px-La_chute_d%27entr%C3%A9e_de_la_Gorge_du_Diable.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'מערת גרון השדים',
+        nameLocal: "Devil's Throat Cave",
+        category: 'nature',
+        lat: 41.61,
+        lng: 24.38,
+        description:
+          'מערה בנקיק טריגרד שנחל נכנס אליה ויוצר מפל תת-קרקעי. היציאה היא במדרגות תלולות במעלה מנהרה, והמערה קרה ורטובה כל השנה.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=41.61,24.38',
+      },
+      {
+        id: 'plo-roman-theatre',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Roman_Theatre_Plovdiv_3.jpg/500px-Roman_Theatre_Plovdiv_3.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'התיאטרון הרומי של פיליפופוליס',
+        nameLocal: 'Roman theatre of Philippopolis',
+        category: 'historic',
+        lat: 42.14684,
+        lng: 24.75101,
+        description:
+          'תיאטרון רומי מהמאה הראשונה לספירה, חצוב במורד גבעה בלב העיר העתיקה ומשמש עד היום להופעות. מדרגות הישיבה נשמרו כמעט במלואן ומעליהן נשקפים גגות הרעפים של פלובדיב וההרים מסביב.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=42.14684,24.75101',
       },
     ],
     itinerary: [
@@ -33151,6 +33529,36 @@ export const destinations: Destination[] = [
           'חורבת מצודת מסדר האבירים מהמאה ה-13, שהפכה לפארק נושא ימי-ביניימי לילדים - סדנת נפח, קליעה בקשת, גיהינום עם שדים, ומכשפים. פסל שור ענק על הגבעה מול, ועיירה שקטה. שעה מטאלין ברכבת; משתלב עם להמאה ליום מזרחה.',
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=59.34778,26.35222',
+      },
+      {
+        id: 'tln-open-air',
+        tags: ['families', 'history'],
+        priceLevel: 1,
+        name: 'מוזיאון הכפר האסטוני',
+        nameLocal: 'Estonian Open Air Museum',
+        category: 'museum',
+        lat: 59.43139,
+        lng: 24.63806,
+        description:
+          'כפר שחזור ביערות רוקה אל מארה, ובו עשרות בתי חווה, טחנות רוח וכנסיית עץ שהועברו מכל אסטוניה. הבתים ערוכים לפי תקופות, ורואים בהם איך נראו חיי הכפר לפני החשמל.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=59.43139,24.63806',
+      },
+      {
+        id: 'tln-lennusadam',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Tallinna_vesilennukite_angaarid..jpg/500px-Tallinna_vesilennukite_angaarid..jpg',
+        tags: ['families', 'history'],
+        priceLevel: 1,
+        name: 'נמל המטוסים הימיים',
+        nameLocal: 'Lennusadam',
+        category: 'museum',
+        lat: 59.45043,
+        lng: 24.73831,
+        description:
+          'מוזיאון ימי בתוך מנגרי בטון ענקיים שנבנו למטוסים ימיים בתקופה הצארית. בתוכם צוללת מלחמה מהמאה ה-20 שאפשר להיכנס אליה, וכן סירות ומנועים.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=59.45043,24.73831',
       },
     ],
     itinerary: [
@@ -42707,6 +43115,54 @@ export const destinations: Destination[] = [
         durationMin: 300,
         externalUrl: 'https://maps.google.com/?q=61.25,28.25',
       },
+      {
+        id: 'fi-valamo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Valamo_Monastery_Main_Church%2C_May_2018.jpg/500px-Valamo_Monastery_Main_Church%2C_May_2018.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'מנזר ולאמו החדש',
+        nameLocal: 'New Valamo',
+        category: 'historic',
+        lat: 62.56306,
+        lng: 28.79056,
+        description:
+          'מנזר אורתודוקסי בהיינאווסי, שהוקם כשהנזירים מוואלאם שבקרליה נאלצו לעזוב את המנזר שלהם בעקבות מלחמת החורף. בו נמצאים חלק מהאיקונות והספרייה שהובאו משם.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=62.56306,28.79056',
+      },
+      {
+        id: 'fi-imatra',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Imatrankoski_Valtionhotelli_ilma.jpg/500px-Imatrankoski_Valtionhotelli_ilma.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'אימאטרה',
+        nameLocal: 'Imatra',
+        category: 'nature',
+        lat: 61.18333,
+        lng: 28.76667,
+        description:
+          'עיר על נהר הווּאוֹקסי שמפורסמת באשד האימאטראנקוסקי - אתר התיירות הראשון של פינלנד. האשד עצמו נשלט על ידי סכר, ובקיץ פותחים אותו במועדים מוגדרים.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=61.18333,28.76667',
+      },
+      {
+        id: 'fi-lappeenranta',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Lappeenranta_Landscape.jpg/500px-Lappeenranta_Landscape.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'לאפנראנטה',
+        nameLocal: 'Lappeenranta',
+        category: 'attraction',
+        lat: 61.06667,
+        lng: 28.18333,
+        description:
+          'עיר בקצה הדרומי של אגם סאימה, ובה מבצר מהמאה ה-18 עם חומות עפר ורובע עתיק. הנמל הפנימי הוא נקודת המוצא לשיט בתעלת סאימה.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=61.06667,28.18333',
+      },
     ],
     itinerary: [
       {
@@ -44995,6 +45451,23 @@ export const destinations: Destination[] = [
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=40.88656,71.45051',
       },
+      {
+        id: 'uz-khudayar',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Palace_of_Khudayar_Khan.jpg/500px-Palace_of_Khudayar_Khan.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'ארמון חודאיאר חאן',
+        nameLocal: 'Palace of Khudayar Khan',
+        category: 'historic',
+        lat: 40.53861,
+        lng: 70.93778,
+        description:
+          'ארמונו של שליט קוקנד האחרון, מהמחצית השנייה של המאה ה-19. החזית מחופה אריחים צבעוניים לאורך עשרות מטרים, ובתוכו נשארו חדרים עם תקרות עץ מעוטרות.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=40.53861,70.93778',
+      },
     ],
     itinerary: [
       {
@@ -45275,6 +45748,22 @@ export const destinations: Destination[] = [
           'עיר הגבול והשער ללומביני - שדה תעופה בינלאומי חדש (2022) שאמור להביא עולי רגל ישר מאסיה, שוק, ומעבר סונאולי להודו. לא יעד, אבל הבסיס הנוח לפגודות: חצי שעה מלומביני, מלונות, ורכבת מהודו במרחק. תחנת המעבר של הטראי.',
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=27.51164,83.45288',
+      },
+      {
+        id: 'np-parsa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Indian_pitta_at_Parsa_National_Park.jpg/500px-Indian_pitta_at_Parsa_National_Park.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'הפארק הלאומי פארסה',
+        nameLocal: 'Parsa National Park',
+        category: 'nature',
+        lat: 27.31889,
+        lng: 84.9125,
+        description:
+          'שמורה צמודה לצ׳יטוואן ממזרח, ביערות של גבעות הצ׳וריה. היא שקטה בהרבה מצ׳יטוואן ומוכרת בעיקר בפילים הפראיים שחיים בה.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=27.31889,84.9125',
       },
     ],
     itinerary: [
@@ -46643,6 +47132,68 @@ export const destinations: Destination[] = [
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=43.6963,20.64574',
       },
+      {
+        id: 'rs-sargan',
+        tags: ['families', 'history'],
+        priceLevel: 1,
+        name: 'רכבת שרגן שמונה',
+        nameLocal: 'Šargan Eight',
+        category: 'attraction',
+        lat: 43.799363,
+        lng: 19.520837,
+        description:
+          'מסילה צרה היסטורית שמטפסת במדרון בצורת ספרה שמונה כדי להתגבר על הפרש הגובה, בין מוקרה גורה לשרגן ויטאסי. הנסיעה עוברת מנהרות וגשרים וחוזרת לאותה תחנה.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=43.799363,19.520837',
+      },
+      {
+        id: 'rs-drvengrad',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Drvengrad.jpg/500px-Drvengrad.jpg',
+        tags: ['families', 'art'],
+        priceLevel: 1,
+        name: 'דרוונגראד',
+        nameLocal: 'Drvengrad',
+        category: 'attraction',
+        lat: 43.79563,
+        lng: 19.50809,
+        description:
+          'כפר עץ שבנה הבמאי אמיר קוסטוריצה על גבעה מעל מוקרה גורה, במקור כתפאורה לסרט. יש בו בתי עץ מסורתיים שהועברו לשם, כנסייה קטנה ואולם קולנוע.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=43.79563,19.50809',
+      },
+      {
+        id: 'rs-mileseva',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/%D0%9C%D0%90%D0%9D%D0%90%D0%A1%D0%A2%D0%98%D0%A0_%D0%9C%D0%98%D0%9B%D0%95%D0%A8%D0%95%D0%92%D0%90%2C%D0%9F%D0%A0%D0%98%D0%88%D0%95%D0%9F%D0%9E%D0%89%D0%95%2C%D0%A1%D0%A0%D0%91%D0%98%D0%88%D0%90.........jpg/500px-%D0%9C%D0%90%D0%9D%D0%90%D0%A1%D0%A2%D0%98%D0%A0_%D0%9C%D0%98%D0%9B%D0%95%D0%A8%D0%95%D0%92%D0%90%2C%D0%9F%D0%A0%D0%98%D0%88%D0%95%D0%9F%D0%9E%D0%89%D0%95%2C%D0%A1%D0%A0%D0%91%D0%98%D0%88%D0%90.........jpg',
+        tags: ['history', 'art'],
+        priceLevel: 0,
+        name: 'מנזר מילשווה',
+        nameLocal: 'Mileševa Monastery',
+        category: 'historic',
+        lat: 43.371832,
+        lng: 19.709469,
+        description:
+          'מנזר סרבי מהמאה ה-13 ליד פריפוליה, ובו הפרסקו המכונה המלאך הלבן - מהציורים המוכרים ביותר של האמנות הסרבית מימי הביניים.',
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=43.371832,19.709469',
+      },
+      {
+        id: 'rs-djurdjevi-stupovi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Manastir_%C4%90ur%C4%91evi_Stupovi.jpg/500px-Manastir_%C4%90ur%C4%91evi_Stupovi.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        name: 'ג׳ורג׳יבי סטופובי',
+        nameLocal: 'Đurđevi Stupovi',
+        category: 'historic',
+        lat: 43.16556,
+        lng: 20.49667,
+        description:
+          'מנזר מהמאה ה-12 על גבעה מעל נובי פאזאר, מהמנזרים הסרביים הקדומים. הוא נהרס ונבנה כמה פעמים, ומהמקום נשקפת הסביבה כולה.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=43.16556,20.49667',
+      },
     ],
     itinerary: [
       {
@@ -47232,6 +47783,52 @@ export const destinations: Destination[] = [
           'בריכה עגולה של מים כחולים-קפואים בקצה שביל של שעתיים מתת׳ דרך הכפר נדרלישה - מעיין מלמטה, מפלים קטנים לאורך הדרך, וקפיצה למים למי שמסוגל לעמוד בקור. ההליכה השנייה של תת׳ אחרי מפל גרונאס.',
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=42.36437,19.74626',
+      },
+      {
+        id: 'al-marubi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Muzeu_Marubi.jpg/500px-Muzeu_Marubi.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        name: 'מוזיאון הצילום מארובי',
+        nameLocal: 'Marubi National Museum of Photography',
+        category: 'museum',
+        lat: 42.06859,
+        lng: 19.51558,
+        description:
+          'ארכיון הצילום של שושלת מארובי, שצילמה את שקודרה ואת צפון אלבניה מאמצע המאה ה-19 והלאה. התצלומים הם התיעוד החזותי המרכזי של האזור לפני המשטר הקומוניסטי, ובהם דיוקנאות, לבוש מסורתי ומראות עיר שנעלמו.',
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=42.06859,19.51558',
+      },
+      {
+        id: 'al-drisht',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Kalaja_e_Drishtit.jpg/500px-Kalaja_e_Drishtit.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        name: 'דרישט',
+        nameLocal: 'Drisht',
+        category: 'historic',
+        lat: 42.12306,
+        lng: 19.59139,
+        description:
+          'כפר וטירה מימי הביניים על גבעה מעל עמק הקיר, לא רחוק משקודרה. מהחומות נשקפת נקודת מבט על ההרים ועל העמק, והכפר עצמו קטן ושקט.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=42.12306,19.59139',
+      },
+      {
+        id: 'al-velipoje',
+        tags: ['families', 'outdoors'],
+        priceLevel: 0,
+        name: 'ולִיפּוֹיֶה',
+        nameLocal: 'Velipojë',
+        category: 'nature',
+        lat: 41.86472,
+        lng: 19.43,
+        description:
+          'רצועת חוף חולית בשפך נהר הבּוּנה, עם שמורת טבע ולגונה בסביבה. זה חוף הים הקרוב ביותר לשקודרה ובקיץ הוא מקומי ועמוס.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=41.86472,19.43',
       },
     ],
     itinerary: [
@@ -48244,6 +48841,20 @@ export const destinations: Destination[] = [
           'מסגד תת-קרקעי מהמאה ה-12 ליד המאוזוליאום, שבו לפי המסורת חוג׳ה אחמד יסאווי חי בבידוד מגיל 63 - הגיל שבו הנביא מת - עד מותו. תאים חצובים, ואולם קטן. חלק ממתחם אזרט-סולטן; עשר דקות שמסבירות את הקדוש, לפני הכיפה הגדולה.',
         durationMin: 45,
         externalUrl: 'https://maps.google.com/?q=43.30194,68.26917',
+      },
+      {
+        id: 'kz-akyrtas',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'אקירטאס',
+        nameLocal: 'Akyrtas',
+        category: 'historic',
+        lat: 42.953548,
+        lng: 71.80278,
+        description:
+          'מכלול ארמון לא גמור מאבן אדומה בערבה שליד טאראז, מהמאה השמינית בקירוב. היסודות והעמודים העצומים נשארו על פני השטח, ואין הסכמה למי הוא נבנה.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=42.953548,71.80278',
       },
     ],
     itinerary: [
@@ -60576,6 +61187,38 @@ export const destinations: Destination[] = [
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=35.86917,14.51194',
       },
+      {
+        id: 'mt-mnajdra',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Sudika_Mnajdra_porthole.jpg/500px-Sudika_Mnajdra_porthole.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'מנאידרה',
+        nameLocal: 'Mnajdra',
+        category: 'historic',
+        lat: 35.82667,
+        lng: 14.43639,
+        description:
+          'מכלול מקדשים מגליתיים על מדרון מעל הים, סמוך לחאג׳ר קים. אחד המקדשים בנוי כך שקרני השמש בשוויון היום והלילה נכנסות בצירו.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=35.82667,14.43639',
+      },
+      {
+        id: 'mt-mosta',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Malta_-_Mosta_-_Triq_il-Kbira_%2B_Rotunda_01_ies.jpg/500px-Malta_-_Mosta_-_Triq_il-Kbira_%2B_Rotunda_01_ies.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'הרוטונדה של מוסטה',
+        nameLocal: 'Rotunda of Mosta',
+        category: 'historic',
+        lat: 35.91008,
+        lng: 14.42589,
+        description:
+          'כנסייה מהמאה ה-19 עם אחת הכיפות הגדולות באירופה. במלחמת העולם השנייה נפלה פצצה דרך הכיפה בשעת תפילה ולא התפוצצה, והעתק שלה מוצג במקום.',
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=35.91008,14.42589',
+      },
     ],
     itinerary: [
       {
@@ -60916,6 +61559,69 @@ export const destinations: Destination[] = [
           'עיירה מימי הביניים שהייתה נמל ברוז׳ עד שהתעלה נסתמה - טחנת רוח, בית עירייה גותי, כנסייה חצי הרוסה, וסירת נהר איטית או שביל אופניים לאורך תעלת דאמה בין צפצפות מברוז׳. עשרים דקות באופניים; הטיול הקלאסי ביום השני בברוז׳.',
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=51.2515,3.28148',
+      },
+      {
+        id: 'be-st-bavo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Gent-Sint-Baafskathedraal_vom_Belfried_aus_gesehen.jpg/500px-Gent-Sint-Baafskathedraal_vom_Belfried_aus_gesehen.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'קתדרלת סנט באבו',
+        nameLocal: 'Sint-Baafskathedraal',
+        category: 'historic',
+        lat: 51.053,
+        lng: 3.727,
+        description:
+          'הקתדרלה של חנט, ובה מזבח חנט של האחים ואן אייק - מיצירות המפתח של הציור הפלמי המוקדם. הכנסייה עצמה משלבת גותיקה ורומנסק וכוללת גם קריפטה.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=51.053,3.727',
+      },
+      {
+        id: 'be-fine-arts',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Mus%C3%A9es_Royaux_des_Beaux-Arts_Belgique_1101.jpg/500px-Mus%C3%A9es_Royaux_des_Beaux-Arts_Belgique_1101.jpg',
+        tags: ['art', 'history'],
+        priceLevel: 2,
+        name: 'המוזיאונים המלכותיים לאמנויות יפות',
+        nameLocal: 'Royal Museums of Fine Arts of Belgium',
+        category: 'museum',
+        lat: 50.84168,
+        lng: 4.35824,
+        description:
+          'מכלול מוזיאונים במרכז בריסל שמכסה את הציור הפלמי לדורותיו, מברויגל ועד המודרניסטים. באחד האגפים אוסף מגריט הגדול בעולם.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=50.84168,4.35824',
+      },
+      {
+        id: 'be-horta',
+        tags: ['art', 'history'],
+        priceLevel: 1,
+        name: 'בית ויקטור הורטה',
+        nameLocal: 'Horta Museum',
+        category: 'museum',
+        lat: 50.82417,
+        lng: 4.35472,
+        description:
+          'ביתו וסטודיו של האדריכל ויקטור הורטה, מאבות האר נובו, ואתר מורשת עולמית. המדרגות, הוויטראז׳ים ומעקות המתכת הם הדבר עצמו ולא שחזור.',
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=50.82417,4.35472',
+      },
+      {
+        id: 'be-leuven-hall',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/42150_-_Belgi%C3%AB_-_Leuven_-_Stadhuis_-_00.jpg/500px-42150_-_Belgi%C3%AB_-_Leuven_-_Stadhuis_-_00.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'בית העירייה של לוון',
+        nameLocal: 'Leuven Town Hall',
+        category: 'historic',
+        lat: 50.87889,
+        lng: 4.70111,
+        description:
+          'בית עירייה גותי מהמאה ה-15 שחזיתו מכוסה מאות פסלונים בשלוש קומות של גמלונים. הוא עומד בכיכר שממול לכנסיית סנט פטרוס.',
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=50.87889,4.70111',
       },
     ],
     itinerary: [
