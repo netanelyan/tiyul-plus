@@ -28052,6 +28052,38 @@ export const destinations: Destination[] = [
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=34.81583,32.87528',
       },
+      {
+        id: 'cy-pissouri',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/View_of_Pissouri_03.jpg/500px-View_of_Pissouri_03.jpg',
+        tags: ['outdoors', 'romantic'],
+        priceLevel: 1,
+        name: 'פיסורי',
+        nameLocal: 'Pissouri',
+        category: 'nature',
+        lat: 34.66667,
+        lng: 32.7,
+        description:
+          'כפר על גבעה בין פאפוס ללימסול, ומתחתיו מפרץ חול וחלוקים בין צוקים. הכפר עצמו שמר על כיכר מסורתית עם טברנות.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=34.66667,32.7',
+      },
+      {
+        id: 'cy-chrysorrogiatissa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/A%40a_chrysorogiatissa_monastery_paphos_-_panoramio_%281%29.jpg/500px-A%40a_chrysorogiatissa_monastery_paphos_-_panoramio_%281%29.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'מנזר כריסורויאטיסה',
+        nameLocal: 'Chrysorrogiatissa Monastery',
+        category: 'historic',
+        lat: 34.9101,
+        lng: 32.6186,
+        description:
+          'מנזר אורתודוקסי במדרונות הטרודוס מעל פאפוס, שנוסד במאה ה-12. במנזר יקב ותיק ומרפסת שממנה נשקפים העמקים עד הים.',
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=34.9101,32.6186',
+      },
     ],
     itinerary: [
       {
@@ -35853,6 +35885,54 @@ export const destinations: Destination[] = [
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=35.13211,129.12047',
       },
+      {
+        id: 'kr-beomeosa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/298-1_%EC%B5%9C%EC%88%98%EC%A7%84_%EB%B2%94%EC%96%B4%EC%82%AC%EC%9D%98_%EA%B0%80%EC%9D%84.jpg/500px-298-1_%EC%B5%9C%EC%88%98%EC%A7%84_%EB%B2%94%EC%96%B4%EC%82%AC%EC%9D%98_%EA%B0%80%EC%9D%84.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'מקדש בומאוסה',
+        nameLocal: 'Beomeosa',
+        category: 'historic',
+        lat: 35.28389,
+        lng: 129.06806,
+        description:
+          'מקדש בודהיסטי במדרונות הר גומג׳ונג בצפון בוסאן, שנוסד במאה השביעית. השער והאולמות שרדו שריפות וחורבן וחלקם מהמאה ה-17.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=35.28389,129.06806',
+      },
+      {
+        id: 'kr-cheomseongdae',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Cheomseongdae_Observatory_under_blue_sky_in_Gyeongju_South_Korea.jpg/500px-Cheomseongdae_Observatory_under_blue_sky_in_Gyeongju_South_Korea.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'צ׳ומסונגדה',
+        nameLocal: 'Cheomseongdae',
+        category: 'historic',
+        lat: 35.83472,
+        lng: 129.219,
+        description:
+          'מגדל אבן מהמאה השביעית בגיאונגג׳ו, שנחשב למצפה הכוכבים השמור הוותיק במזרח אסיה. הוא בנוי מ-362 אבנים בצורת בקבוק.',
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=35.83472,129.219',
+      },
+      {
+        id: 'kr-gwangalli',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Gwangalli_Beach.jpg/500px-Gwangalli_Beach.jpg',
+        tags: ['nightlife', 'families'],
+        priceLevel: 0,
+        name: 'חוף גוואנגאלי',
+        nameLocal: 'Gwangalli Beach',
+        category: 'nature',
+        lat: 35.15417,
+        lng: 129.12056,
+        description:
+          'חוף עירוני בבוסאן שממנו נשקף גשר גוואנגאן. בערב הגשר מואר, והטיילת שמאחורי החוף מלאה בתי קפה ומסעדות.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=35.15417,129.12056',
+      },
     ],
     itinerary: [
       {
@@ -36977,6 +37057,38 @@ export const destinations: Destination[] = [
           'כפרים על כלונסאות מעל הים, שבנו סבלים סינים במאה ה-19 לפי שם משפחה - מזח צ׳ו, מזח לים, מזח טאן - ועדיין חיים בהם. שבילי עץ בין בתים, מקדשים קטנים, ומכולות. אתר המורשת של ג׳ורג׳ טאון; מזח צ׳ו הוא התיירותי, האחרים שקטים. שקיעה מהקצה.',
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=5.41197,100.34003',
+      },
+      {
+        id: 'my-khoo-kongsi',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Khoo_Kongsi_%28I%29.jpg/500px-Khoo_Kongsi_%28I%29.jpg',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        name: 'קו קונגסי',
+        nameLocal: 'Khoo Kongsi',
+        category: 'historic',
+        lat: 5.41503,
+        lng: 100.33712,
+        description:
+          'בית אבות של שבט קו בג׳ורג׳טאון, מהמפוארים בבתי השבטים הסיניים מחוץ לסין. הגג והעמודים מכוסים גילופי עץ ואבן צבעוניים.',
+        durationMin: 75,
+        externalUrl: 'https://maps.google.com/?q=5.41503,100.33712',
+      },
+      {
+        id: 'my-sam-poh-tong',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Sam_Poh_Tong_Temple.jpg/500px-Sam_Poh_Tong_Temple.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'מקדש סאם פו טונג',
+        nameLocal: 'Sam Poh Tong',
+        category: 'historic',
+        lat: 4.56373,
+        lng: 101.11541,
+        description:
+          'מקדש בתוך מערת גיר בפאתי איפו, עם פסלי בודהה בין הנטיפים וגן מטופח בכניסה. מערות המקדש באזור הן סימן ההיכר של עמק קינטה.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=4.56373,101.11541',
       },
     ],
     itinerary: [
@@ -38403,6 +38515,39 @@ export const destinations: Destination[] = [
           'כפר שמגדל את עשבי התיבול של המטבח של הוי אן - בזיליקום, נענע, כוסברה ווייטנאמית - בערוגות מסודרות עם דשן מאצות האגם, כבר 400 שנה. סיורים שבהם עודרים, משקים בזוג מיכלים על מוט, ומבשלים. שלושה קילומטרים מהעיר באופניים; בוקר ירוק וקצת מבוים, וטוב.',
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=15.90271,108.33602',
+      },
+      {
+        id: 'vn-hue-citadel',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/%C4%90%E1%BA%A1i_n%E1%BB%99i.jpg/500px-%C4%90%E1%BA%A1i_n%E1%BB%99i.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'העיר האסורה של הואה',
+        nameLocal: 'Imperial City, Huế',
+        category: 'historic',
+        lat: 16.46972,
+        lng: 107.57778,
+        description:
+          'מתחם הארמונות המוקף חומה של שושלת נגוין, אתר מורשת עולמית על גדת הנהר הבושמי. חלקים ממנו נהרסו בקרב הואה ב-1968 ומשוחזרים בהדרגה.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=16.46972,107.57778',
+      },
+      {
+        id: 'vn-japanese-bridge',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/2024_H%E1%BB%99i_An_-_Japanese_Covered_Bridge_%28Ch%C3%B9a_C%E1%BA%A7u%29_after_renovation_-_img_11.jpg/500px-2024_H%E1%BB%99i_An_-_Japanese_Covered_Bridge_%28Ch%C3%B9a_C%E1%BA%A7u%29_after_renovation_-_img_11.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'הגשר היפני',
+        nameLocal: 'Chùa Cầu',
+        category: 'historic',
+        lat: 15.87707,
+        lng: 108.32601,
+        description:
+          'גשר מקורה מהמאה ה-16 או ה-17 בלב העיר העתיקה של הוי אן, שנבנה בידי הקהילה היפנית. בתוכו מקדש קטן, והוא סמל העיר.',
+        durationMin: 30,
+        externalUrl: 'https://maps.google.com/?q=15.87707,108.32601',
       },
     ],
     itinerary: [
@@ -48395,6 +48540,22 @@ export const destinations: Destination[] = [
           'רצועת חוף חולית בשפך נהר הבּוּנה, עם שמורת טבע ולגונה בסביבה. זה חוף הים הקרוב ביותר לשקודרה ובקיץ הוא מקומי ועמוס.',
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=41.86472,19.43',
+      },
+      {
+        id: 'al-lezhe',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Lezh%C3%AB%2C_Albania_%E2%80%93_Skanderbeg_Memorial_2016_02.jpg/500px-Lezh%C3%AB%2C_Albania_%E2%80%93_Skanderbeg_Memorial_2016_02.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'לֶזָ׳ה',
+        nameLocal: 'Lezhë',
+        category: 'historic',
+        lat: 41.78194,
+        lng: 19.64444,
+        description:
+          'עיר בין שקודרה לים, שבה נמצא קברו של סקנדרבג בשרידי כנסיית ניקולאס הקדוש. מעליה טירה על גבעה עם תצפית אל המישור.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=41.78194,19.64444',
       },
     ],
     itinerary: [
@@ -63457,6 +63618,22 @@ export const destinations: Destination[] = [
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=42.263,21.954',
       },
+      {
+        id: 'mk-plaosnik',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Plao%C5%A1nik_01.jpg/500px-Plao%C5%A1nik_01.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'פלאושניק',
+        nameLocal: 'Plaošnik',
+        category: 'historic',
+        lat: 41.11274,
+        lng: 20.79124,
+        description:
+          'אתר ארכיאולוגי ומנזר משוחזר על המדרון מתחת למצודה באוחריד, במקום שבו פעל קלימנט מאוחריד. סביבו רצפות פסיפס מבזיליקה קדומה.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=41.11274,20.79124',
+      },
     ],
     itinerary: [
       {
@@ -65482,6 +65659,54 @@ export const destinations: Destination[] = [
           'הלגונה הגדולה של אל נידו - קיאק בין קירות גיר של מאות מטרים על מים בצבע שמשתנה מירוק לכחול, בתוך אי מיניילוק. הכניסה בקיאק בלבד (סירות נשארות בחוץ), עם מכסה יומית ושעה מוקצבת. התחנה של סיור A, ומה שאל נידו נראית כמו על הכרזות.',
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=11.15474,119.32087',
+      },
+      {
+        id: 'ph-culion',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Municipality_of_Culion_outlook_from_local_hillside.jpg/500px-Municipality_of_Culion_outlook_from_local_hillside.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'קוליון',
+        nameLocal: 'Culion',
+        category: 'historic',
+        lat: 11.890532,
+        lng: 120.022097,
+        description:
+          'אי בקאלאמיאן שהיה במשך עשורים מושבת מצורעים של הפיליפינים, והיום יש בו מוזיאון וכנסייה מהתקופה הספרדית. הוא נגיש בסירה מקורון.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=11.890532,120.022097',
+      },
+      {
+        id: 'ph-busuanga',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Cambaya_Beach%2C_Busuanga.jpg/500px-Cambaya_Beach%2C_Busuanga.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'בוסואנגה',
+        nameLocal: 'Busuanga',
+        category: 'nature',
+        lat: 12.132,
+        lng: 119.937,
+        description:
+          'האי הגדול בקבוצת קאלאמיאן, שבו נמצא שדה התעופה שמשרת את קורון. חלקו הצפוני כפרי ופתוח, ובו חוות וחופים שקטים.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=12.132,119.937',
+      },
+      {
+        id: 'ph-taytay',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Village_in_Taytay.JPG/500px-Village_in_Taytay.JPG',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'טאיטאי',
+        nameLocal: 'Taytay',
+        category: 'historic',
+        lat: 10.825019,
+        lng: 119.517877,
+        description:
+          'עיירה בחוף המזרחי שהייתה בירת פלאוואן בתקופה הספרדית, ובה מבצר סנטה איזבל מהמאה ה-17 על שפת הים. היא בדרך בין פוארטו פרינססה לאל נידו.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=10.825019,119.517877',
       },
     ],
     itinerary: [
