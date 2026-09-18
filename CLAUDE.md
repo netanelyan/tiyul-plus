@@ -3059,9 +3059,13 @@ that no information is lost (assert every id and name survives); what cannot be
 proven from here is the model's behaviour. **Whoever has a live key should do this
 before raising the ceiling again.**
 
-**Measured 2026-09-18: 278,944 chars at 2,086 places - 1,056 under the ceiling.**
-The catalog cannot take a meaningful number of new places until the index format
-is compacted (above). Itinerary days and photos are outside the index and stay free.
+**The compaction SHIPPED on 2026-09-18** (`buildGroundingIndex`, format `tuple`,
+rollback `GROUNDING_INDEX_FORMAT=json`): the object index measured 278,944 chars
+at 2,086 places, the tuple index 158,055 - a 43% saving, lossless by test
+(`groundingIndexFormat.test.ts`). The ceiling stays 280,000 chars **of the tuple
+form**, i.e. roughly 3,700 places. What was NOT verified is the model reading the
+tuple layout live; the first real chat after deploy is that check, and the env
+switch is the answer if it fails. Itinerary days and photos stay outside the index.
 
 The index does NOT serialize photo URLs, so **photo work costs zero budget**. Verify
 with `/tmp/measure.mjs`-style measurement before quoting any new figure.

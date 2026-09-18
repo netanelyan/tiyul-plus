@@ -119,13 +119,77 @@ export function kosherAllowedNames(citySlugs: string[], kosherOk: boolean): stri
   return names.filter((n) => n.trim().length > 0);
 }
 
-/** Large index (~218k chars) - built once per variant, not on every model call */
-const INDEX_CACHE = new Map<boolean, string>();
+/** Large index - built once per variant and format, not on every model call */
+const INDEX_CACHE = new Map<string, string>();
 
-export function buildGroundingIndex(kosherOk: boolean): string {
-  const cached = INDEX_CACHE.get(kosherOk);
+/**
+ * The index format. `tuple` (the default since 2026-09-18) writes each place
+ * as a positional array under a one-line legend; `json` is the original
+ * object-per-place form, kept as a one-variable rollback
+ * (`GROUNDING_INDEX_FORMAT=json`).
+ *
+ * Why: the object form repeats `"id":"name":"category":"tags":"priceLevel":
+ * "mustSee":"durationMin":` once per place - a few thousand times - and at
+ * 2,086 places the index had reached its 280,000-char ceiling with the same
+ * information the tuple form carries in ~55% of the space. The information is
+ * identical (there is a test that decodes the tuples and compares them to the
+ * objects, field by field); what changes is only how the model reads it.
+ * That is the one thing not provable offline, hence the switch.
+ */
+export type IndexFormat = 'tuple' | 'json';
+export function indexFormat(): IndexFormat {
+  return process.env.GROUNDING_INDEX_FORMAT === 'json' ? 'json' : 'tuple';
+}
+
+/** The order of the fields in a place tuple - the legend says the same thing to the model */
+export const PLACE_TUPLE_FIELDS = [
+  'id',
+  'name',
+  'category',
+  'tags',
+  'priceLevel',
+  'mustSee',
+  'durationMin',
+] as const;
+
+export function buildGroundingIndex(kosherOk: boolean, format: IndexFormat = indexFormat()): string {
+  const key = `${format}:${kosherOk}`;
+  const cached = INDEX_CACHE.get(key);
   if (cached) return cached;
-  const json = JSON.stringify({
+  const json = format === 'tuple' ? buildTupleIndex(kosherOk) : buildJsonIndex(kosherOk);
+  INDEX_CACHE.set(key, json);
+  return json;
+}
+
+function buildTupleIndex(kosherOk: boolean): string {
+  const base = kosherOk
+    ? 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block.'
+    : 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block. Kosher venues are deliberately not listed here - see the kosher policy in the next block.';
+  return JSON.stringify({
+    note: `${base} FORMAT: each city is [slug, name, countrySlug, places]; each place is [${PLACE_TUPLE_FIELDS.join(', ')}] where tags is a list, priceLevel is 0-3, mustSee is 1 or 0, and null means unknown. countries are [slug, name].`,
+    coverage: { cities: destinations.length, countries: countries.length },
+    cities: destinations.map((d) => [
+      d.slug,
+      d.name,
+      d.countrySlug,
+      d.places
+        .filter((p) => kosherOk || !isKosher(p.category))
+        .map((p) => [
+          p.id,
+          p.name,
+          p.category,
+          p.tags?.length ? p.tags : null,
+          p.priceLevel !== undefined ? p.priceLevel : null,
+          p.mustSee ? 1 : 0,
+          p.durationMin ? p.durationMin : null,
+        ]),
+    ]),
+    countries: countries.map((c) => [c.slug, c.name]),
+  });
+}
+
+function buildJsonIndex(kosherOk: boolean): string {
+  return JSON.stringify({
     note: kosherOk
       ? 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block.'
       : 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block. Kosher venues are deliberately not listed here - see the kosher policy in the next block.',
@@ -152,8 +216,6 @@ export function buildGroundingIndex(kosherOk: boolean): string {
     })),
     countries: countries.map((c) => ({ slug: c.slug, name: c.name })),
   });
-  INDEX_CACHE.set(kosherOk, json);
-  return json;
 }
 
 /** Cities the conversation touches: the active trip + a mention by city/country/local name */
