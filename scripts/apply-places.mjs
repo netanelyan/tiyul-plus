@@ -61,6 +61,13 @@ function entry(p) {
   lines.push(`        description:`);
   lines.push(`          ${q(p.description)},`);
   if (p.rating !== undefined) lines.push(`        rating: ${p.rating},`);
+  // Eating places and markets carry the kashrut status and the source the
+  // validator requires (entry 2026-07-28 (bb)); other categories never do.
+  if (p.kosherStatus) lines.push(`        kosherStatus: ${q(p.kosherStatus)},`);
+  if (p.source)
+    lines.push(
+      `        source: { url: ${q(p.source.url)}, title: ${q(p.source.title)}, checked: ${q(p.source.checked)} },`,
+    );
   lines.push(`        durationMin: ${p.durationMin},`);
   // Coordinates, never a name: the name form resolved "Cartagena" to Spain.
   lines.push(`        externalUrl: ${q(`https://maps.google.com/?q=${p.lat},${p.lng}`)},`);
