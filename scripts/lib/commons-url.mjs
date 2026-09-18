@@ -33,4 +33,7 @@ export function commonsThumb(file, width = 500) {
 }
 
 /** Filenames that are almost never a photo of the place itself */
-export const BAD_FILE = /(flag|coat[_ ]of[_ ]arms|logo|map[_ ]of|locator|seal|emblem|blank|wappen|\bmap\b|diagram|plan[_ ]of)/i;
+// "Grb" (Croatian/Serbian), "Herb" (Polish/Czech), "Stemma" (Italian) and "Escudo"
+// (Spanish/Portuguese) all mean coat of arms - Labin's got through on 2026-09-18.
+export const BAD_FILE =
+  /(flag|coat[_ ]of[_ ]arms|(?:^|[_ ])grb(?:[_ ]|$)|(?:^|[_ ])herb(?:[_ ]|$)|stemma|escudo|logo|map[_ ]of|locator|seal|emblem|blank|wappen|map|diagram|plan[_ ]of)/i;
