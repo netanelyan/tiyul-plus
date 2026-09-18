@@ -134,3 +134,76 @@ test('a city named on its own gets its own photograph', () => {
     assert.ok(cards[0].href === `/destinations/${slug}`);
   }
 });
+
+/* ---------- and it must answer what the traveller asked for ---------- */
+
+/**
+ * The reported reply, near enough: a nature request answered with a route that
+ * legitimately names the arrival city and a base town on the way. Every card
+ * below is correctly resolved and correctly placed - the question is which four
+ * of them a person who said "no cities at all" should be looking at.
+ */
+const NATURE_ROUTE =
+  'מצוין - מסלול טבע קלאסי. נוחתים בוונציה (טיסה ישירה מתל אביב, ואפשר לילה אחד ליד בזיליקת סן מרקו), ' +
+  'משם שעתיים נסיעה אל אגם בלד והאלפים היוליים - ליובליאנה היא בסיס נוח ליום הראשון - ואז מזרחה אל ' +
+  'הדולומיטים למסלול שלוש הפסגות (טרה צ׳ימה) ולאגם בראייס.';
+
+test('a nature request gets no city skyline and no basilica - the reported bug', () => {
+  const before = photoCardsForReply(NATURE_ROUTE).map((c) => c.id);
+  // What shipped: the first four names in the sentence, two of them cities.
+  assert.ok(before.includes('ven-basilica'), `precondition: ${before}`);
+  assert.ok(before.includes('svn-ljubljana'), `precondition: ${before}`);
+
+  const after = photoCardsForReply(NATURE_ROUTE, { interests: ['outdoors'] }).map((c) => c.id);
+  assert.ok(!after.includes('ven-basilica'), after.join(','));
+  assert.ok(!after.includes('svn-ljubljana'), after.join(','));
+  assert.ok(after.length > 0, 'fewer cards, not none');
+});
+
+test('every card under a stated interest actually answers it', () => {
+  const cards = photoCardsForReply(NATURE_ROUTE, { interests: ['outdoors'] });
+  const byId = new Map(destinations.flatMap((d) => d.places.map((p) => [p.id, p] as const)));
+  for (const c of cards) {
+    const p = byId.get(c.id);
+    assert.ok(p, `${c.id} is a real place`);
+    assert.ok(
+      p.category === 'nature' || (p.tags ?? []).includes('outdoors'),
+      `${c.name} (${p.category}) is not an answer to a nature request`,
+    );
+  }
+});
+
+test('no stated interest leaves the behaviour exactly as it was', () => {
+  assert.deepEqual(
+    photoCardsForReply(NATURE_ROUTE, { interests: [] }).map((c) => c.id),
+    photoCardsForReply(NATURE_ROUTE).map((c) => c.id),
+  );
+});
+
+test('an interest nothing answers stands down rather than going silent', () => {
+  /*
+    A reply genuinely about Venice should still be able to show Venice. The
+    filter exists to choose between cards, not to delete the feature on a turn
+    that changed the subject.
+  */
+  const reply = 'בוונציה כדאי לראות את בזיליקת סן מרקו.';
+  const cards = photoCardsForReply(reply, { interests: ['outdoors'] });
+  assert.deepEqual(cards.map((c) => c.id), photoCardsForReply(reply).map((c) => c.id));
+  assert.ok(cards.length > 0);
+});
+
+test('a city card is judged by what that destination is made of', () => {
+  // The Dolomites as a whole answer a nature request; Venice as a whole does not.
+  const reply = 'אפשר לשלב את הדולומיטים עם ונציה.';
+  const ids = photoCardsForReply(reply, { interests: ['outdoors'] }).map((c) => c.id);
+  assert.ok(ids.includes('city:dolomites'), ids.join(','));
+  assert.ok(!ids.includes('city:venice'), ids.join(','));
+});
+
+test('a named place still outranks a whole city when slots are scarce', () => {
+  // The relevance filter must not quietly reorder the two - the specific answer
+  // stays the better one.
+  const reply = 'ברומא כדאי לראות את הקולוסיאום. בוונציה - בזיליקת סן מרקו.';
+  const ids = photoCardsForReply(reply, { limit: 2 }).map((c) => c.id);
+  assert.deepEqual(ids, ['rom-colosseum', 'ven-basilica']);
+});

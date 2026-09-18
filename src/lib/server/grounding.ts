@@ -2,6 +2,8 @@ import { destinations } from '@/data/destinations';
 import { countries } from '@/data/countries';
 import { isEating, isKosher, kosherStatusOf } from '@/lib/categories';
 import { certificationNames, kashrutForModel } from '@/lib/kashrut';
+import { destinationCharacters, type Interest } from '@/lib/interests';
+import { buildDestinationCards } from '@/lib/destinationCards';
 import type { Destination } from '@/lib/types';
 import type { Trip } from '@/lib/trip/types';
 import type { ChatMessage } from '@/lib/server/chatMessages';
@@ -123,6 +125,66 @@ export function kosherAllowedNames(citySlugs: string[], kosherOk: boolean): stri
 const INDEX_CACHE = new Map<string, string>();
 
 /**
+ * ---------- Which of our destinations answer which kind of request ----------
+ *
+ * A directory: continent -> character -> the destinations that have it. It is
+ * the index's answer to the question travellers actually ask, and it is
+ * organised **by that question** rather than by the row.
+ *
+ * ## Why it is not a field on each city, which is where it started
+ *
+ * The first version put `character: ["outdoors"]` on each of the city rows. It
+ * worked - the model read it and its suggestions improved - and it produced a
+ * new defect on the very first live run: it opened with **"we have 84 nature
+ * destinations in Europe"**. 84 was the worldwide figure, Europe was 32, and it
+ * had counted the field itself across the whole index.
+ *
+ * Two attempts to close that with wording failed, which is what this project's
+ * log predicts for prompt rules. Handing it the real per-continent totals
+ * instead did not help either: it still answered 84.
+ *
+ * Grouping is what actually fixes it, and not by forbidding anything. Under
+ * Europe -> outdoors the entries are Europe's alone, so counting the list -
+ * which the model is going to do - now produces the right number with the right
+ * label. **The shape of the data decides what an obvious reading of it says.**
+ *
+ * It is also the better shape for choosing: "which of ours are nature" is a
+ * lookup here and was a scan of every row before, which is what makes "name one
+ * they would not have thought of" a possible instruction rather than a hope.
+ *
+ * Slugs rather than names, because a slug is the id used everywhere else and
+ * the city rows below carry the Hebrew name for every one of them.
+ */
+function destinationsByCharacter(): Record<string, Partial<Record<Interest, string[]>>> {
+  const continentOf = new Map(buildDestinationCards().map((c) => [c.slug, c.continent]));
+  const character = destinationCharacters(destinations);
+  const out: Record<string, Partial<Record<Interest, string[]>>> = {};
+  for (const d of destinations) {
+    const region = continentOf.get(d.slug) ?? 'אחר';
+    const row = (out[region] ??= {});
+    for (const trait of character.get(d.slug) ?? []) (row[trait] ??= []).push(d.slug);
+  }
+  return out;
+}
+
+/*
+  What the directory means, said once rather than repeated on every row. It is
+  the answer to "which of OUR destinations suit what this traveller asked for" -
+  the question the index could not answer at all before, and the one the model
+  was answering from memory instead.
+
+  Shared by both index formats deliberately: the `json` form is a rollback of
+  how places are ENCODED, and it must not also quietly roll back what the index
+  knows. A test asserts the directory is present in both.
+*/
+const BY_CHARACTER_LEGEND =
+  'byCharacter = continent (Hebrew) -> character -> the slugs of OUR destinations that have it, computed from the places each one actually holds. ' +
+  'Characters: outdoors (nature, lakes, mountains, trails), history, art (museums and galleries), foodie, shopping. ' +
+  "When the traveller says what kind of trip they want, choose what you suggest FROM THIS LIST - it is the catalog's own answer and it covers destinations you would not think of first. Look the slug up in \"cities\" below for the Hebrew name. " +
+  'A destination missing from every list is an all-rounder whose places spread evenly across categories; that is not a reason to leave it out. ' +
+  'If you state how many there are, count the list for the continent you are actually talking about and no other.';
+
+/**
  * The index format. `tuple` (the default since 2026-09-18) writes each place
  * as a positional array under a one-line legend; `json` is the original
  * object-per-place form, kept as a one-variable rollback
@@ -135,6 +197,14 @@ const INDEX_CACHE = new Map<string, string>();
  * identical (there is a test that decodes the tuples and compares them to the
  * objects, field by field); what changes is only how the model reads it.
  * That is the one thing not provable offline, hence the switch.
+ *
+ * **The rollback is no longer free, measured 2026-09-19.** At 3,116 places the
+ * `json` form is 421,000 chars against a 280,000 ceiling, while `tuple` is
+ * 241,000. So `GROUNDING_INDEX_FORMAT=json` now buys a prompt that is over
+ * budget rather than a safe fallback - it is a diagnostic for comparing the two
+ * encodings on a small catalog, not something to switch on in production. If
+ * the tuple form ever has to be abandoned, the index has to get smaller some
+ * other way at the same time.
  */
 export type IndexFormat = 'tuple' | 'json';
 export function indexFormat(): IndexFormat {
@@ -167,7 +237,9 @@ function buildTupleIndex(kosherOk: boolean): string {
     : 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block. Kosher venues are deliberately not listed here - see the kosher policy in the next block.';
   return JSON.stringify({
     note: `${base} FORMAT: each city is [slug, name, countrySlug, places]; each place is [${PLACE_TUPLE_FIELDS.join(', ')}] where tags is a list, priceLevel is 0-3, mustSee is 1 or 0, and null means unknown. countries are [slug, name].`,
+    byCharacterLegend: BY_CHARACTER_LEGEND,
     coverage: { cities: destinations.length, countries: countries.length },
+    byCharacter: destinationsByCharacter(),
     cities: destinations.map((d) => [
       d.slug,
       d.name,
@@ -193,11 +265,13 @@ function buildJsonIndex(kosherOk: boolean): string {
     note: kosherOk
       ? 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block.'
       : 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block. Kosher venues are deliberately not listed here - see the kosher policy in the next block.',
+    byCharacterLegend: BY_CHARACTER_LEGEND,
     // The real numbers, because the model invented them in live testing
     // ("50 destinations in 40 countries" when the reality was 139 and 74).
     // It counts a long list badly, and there is no reason to let it guess a
     // figure that can simply be handed to it.
     coverage: { cities: destinations.length, countries: countries.length },
+    byCharacter: destinationsByCharacter(),
     cities: destinations.map((d) => ({
       slug: d.slug,
       name: d.name,

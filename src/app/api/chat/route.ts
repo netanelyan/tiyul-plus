@@ -45,6 +45,7 @@ const MAX_BODY_CHARS = 6_000_000;
 import type { Trip } from '@/lib/trip/types';
 import type { Destination, ReplyPhoto } from '@/lib/types';
 import { photoCardsForReply } from '@/lib/server/replyPhotos';
+import { interestsOfConversation } from '@/lib/interests';
 import { exploreDestination, type ExploreScope } from '@/lib/explore/resolver';
 import { exploredToDestination, sanitizeExploredDestinations } from '@/lib/explore/adapter';
 import { checkLimit, peekUsed, aiUnitsUsedToday, recordAiUnits } from '@/lib/server/limits';
@@ -743,6 +744,15 @@ async function runAgent(
   // tools (edit-intent detection, or continuing the loop after tool_results) get
   // 2048 for the JSON.
   const lastUser = messages[messages.length - 1]?.content ?? '';
+  /*
+    What the traveller is actually after, from their own words - never the
+    agent's, for the same reason the kosher gate reads only user messages: one
+    mention by the agent would otherwise keep an interest alive by itself. Used
+    to decide which photographs go under the reply; see replyPhotos.ts.
+  */
+  const travellerInterests = interestsOfConversation(
+    messages.filter((m) => m.role === 'user').map((m) => m.content),
+  );
   const hasVerbIntent =
     /תבנה|בנה לי|תבני|תכינו|תכין|תכנן|תכנון|תוסיף|תוסיפי|תוריד|תורידי|תחליף|תזיז|תמלא|תעדכן|תסדר|צור טיול|תקצר|תאריך/.test(
       lastUser,
@@ -1569,7 +1579,7 @@ async function runAgent(
     catalog on the reply text the traveller is reading - the model is never
     given a photo URL and never picks one. See replyPhotos.ts.
   */
-  const photos = photoCardsForReply(full);
+  const photos = photoCardsForReply(full, { interests: travellerInterests });
   if (photos.length > 0) send({ type: 'photos', photos });
   if (touched && working) send({ type: 'trip', trip: working, actions: suppressActions ? [] : actions });
   // Safety net: the prompt asks for buttons when offering to explore an uncovered

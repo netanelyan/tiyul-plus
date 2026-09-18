@@ -29,10 +29,28 @@
  * catalog follows: a wrong-city photograph is worse than no photograph. The
  * price is that a place named with no city around it gets no picture, which is
  * the side to be wrong on.
+ *
+ * ## And it must be a photo of the thing they ASKED for
+ *
+ * Reported: a traveller asked for nature - mountains, lakes and trails, "no
+ * cities at all" - and two of the four pictures under the answer were a city
+ * skyline and a basilica. Nothing here had gone wrong by its own lights. The
+ * reply legitimately named Venice as the arrival airport and Ljubljana as a
+ * base, both were correctly resolved and correctly placed, and the four slots
+ * were filled in the order the names appeared in the sentence.
+ *
+ * Order of mention is the wrong ranking, because it is a fact about our
+ * sentence and the traveller is looking at their own request. So when the
+ * conversation says what they are after (`interests.ts` reads it from their own
+ * words), a card that answers it outranks one that does not - and once any card
+ * answers it, the ones that do not are dropped rather than left to fill the
+ * remaining slots. Two relevant photographs beat four of which two are beside
+ * the point.
  */
 
 import { destinations } from '@/data/destinations';
 import { HE_LETTER } from '@/lib/hebrewMatch';
+import { destinationCharacters, interestsOfPlace, type Interest } from '@/lib/interests';
 import type { ReplyPhoto } from '@/lib/types';
 
 /** How many cards a reply may carry. Above this it stops being an answer and becomes a gallery. */
@@ -57,6 +75,8 @@ interface Candidate {
   name: string;
   slug: string;
   card: ReplyPhoto;
+  /** What this card answers - a place's own interests, or a destination's character */
+  offers: Interest[];
 }
 
 interface Index {
@@ -126,6 +146,9 @@ function buildIndex(): Index {
   const byName = new Map<string, Candidate[]>();
   const cities: Candidate[] = [];
   const anchors = new Map<string, { he: string[]; latin: string[] }>();
+  // Catalog-wide and computed once: the character rule ranks each destination
+  // against the others, so it cannot be asked about one in isolation.
+  const character = destinationCharacters(destinations);
 
   for (const d of destinations) {
     /*
@@ -149,6 +172,9 @@ function buildIndex(): Index {
       cities.push({
         name: d.name,
         slug: d.slug,
+        // A whole destination answers whatever it is mostly made of - the same
+        // computed character the grounding index carries.
+        offers: character.get(d.slug) ?? [],
         card: {
           id: `city:${d.slug}`,
           name: d.iconicLandmark?.name ?? d.name,
@@ -164,6 +190,7 @@ function buildIndex(): Index {
       const entry: Candidate = {
         name: p.name,
         slug: d.slug,
+        offers: interestsOfPlace(p),
         card: {
           id: p.id,
           name: p.name,
@@ -186,23 +213,36 @@ function index(): Index {
   return cached;
 }
 
+export interface PhotoOptions {
+  /**
+   * What the traveller asked for, from their own messages
+   * (`interestsOfConversation`). Empty or omitted means they have not said, and
+   * then the order of mention is all there is to go on - which is exactly the
+   * behaviour this had before.
+   */
+  interests?: readonly Interest[];
+  limit?: number;
+}
+
 /**
- * The photographs for one reply, in the order the places are named in it.
+ * The photographs for one reply, in the order the places are named in it -
+ * filtered first to the ones that answer what the traveller asked for.
  *
  * Bold markers are stripped first: the agent writes place names in `**bold**`,
  * and the marks sit between the prefix letter and the name.
  */
-export function photoCardsForReply(reply: string, limit = MAX_PHOTOS): ReplyPhoto[] {
+export function photoCardsForReply(reply: string, opts: PhotoOptions = {}): ReplyPhoto[] {
+  const limit = opts.limit ?? MAX_PHOTOS;
   const text = (reply ?? '').replace(/\*\*/g, '');
   if (text.length < MIN_NAME) return [];
   const idx = index();
 
-  const hits: { at: number; card: ReplyPhoto }[] = [];
+  const hits: { at: number; card: ReplyPhoto; offers: Interest[] }[] = [];
   const seen = new Set<string>();
-  const add = (at: number, card: ReplyPhoto) => {
-    if (at < 0 || seen.has(card.id)) return;
-    seen.add(card.id);
-    hits.push({ at, card });
+  const add = (at: number, c: Candidate) => {
+    if (at < 0 || seen.has(c.card.id)) return;
+    seen.add(c.card.id);
+    hits.push({ at, card: c.card, offers: c.offers });
   };
 
   /*
@@ -227,25 +267,54 @@ export function photoCardsForReply(reply: string, limit = MAX_PHOTOS): ReplyPhot
     if (at < 0) continue;
     const owners = list.filter((c) => anchored.has(c.slug));
     // Exactly one placed destination owns this name - anything else is a guess
-    if (owners.length === 1) add(at, owners[0].card);
+    if (owners.length === 1) add(at, owners[0]);
+  }
+
+  const placeCount = hits.length;
+  /*
+    A city can also be a card of its own, but only for a destination no named
+    place already represents: two cards of the same subject are a repetition
+    rather than more information. They are collected unconditionally and ranked
+    below the places further down - collecting them only when there was spare
+    room would decide that room before the relevance filter has run, and then a
+    place card that is about to be dropped would keep out the city card that
+    actually answers the question.
+  */
+  for (const c of idx.cities) {
+    if (!anchored.has(c.slug)) continue;
+    if (hits.slice(0, placeCount).some((h) => h.card.href.startsWith(`/destinations/${c.slug}`))) {
+      continue;
+    }
+    const at = idx.anchors.get(c.slug)?.he.map((n) => firstMention(text, n)).find((i) => i >= 0);
+    if (at !== undefined) add(at, c);
   }
 
   /*
-    Cities come last on purpose. A named place is the more specific answer, and
-    when a reply names both a city and a place inside it, two cards of the same
-    subject would be a repetition rather than more information.
-  */
-  if (hits.length < limit) {
-    for (const c of idx.cities) {
-      if (!anchored.has(c.slug)) continue;
-      if (hits.some((h) => h.card.href.startsWith(`/destinations/${c.slug}`))) continue;
-      const at = idx.anchors.get(c.slug)?.he.map((n) => firstMention(text, n)).find((i) => i >= 0);
-      if (at !== undefined) add(at, c.card);
-    }
-  }
+    The relevance filter, and it is all-or-nothing on purpose.
 
-  return hits
-    .sort((a, b) => a.at - b.at)
-    .slice(0, limit)
-    .map((h) => h.card);
+    Once ANY card answers what the traveller asked for, the ones that do not are
+    dropped rather than left to fill the remaining slots - showing two nature
+    photographs is a better answer to a nature request than showing four of
+    which two are a basilica and a skyline. When NOTHING answers it, the filter
+    stands down and the order of mention decides as before: a reply that is
+    genuinely about Venice should still be able to show Venice, and a feature
+    that silently disappears is worse than one that is occasionally broad.
+  */
+  const wanted = opts.interests ?? [];
+  const relevant =
+    wanted.length > 0 ? hits.filter((h) => h.offers.some((o) => wanted.includes(o))) : [];
+  const pool = relevant.length > 0 ? relevant : hits;
+
+  return (
+    pool
+      // Which cards make the cut: a named place before a whole city, then the
+      // order of mention.
+      .slice()
+      .sort((a, b) => Number(a.card.id.startsWith('city:')) - Number(b.card.id.startsWith('city:')) || a.at - b.at)
+      .slice(0, limit)
+      // How they are shown: in the order the reply names them, so the strip
+      // reads alongside the sentence.
+      .sort((a, b) => a.at - b.at)
+      .map((h) => h.card)
+  );
 }

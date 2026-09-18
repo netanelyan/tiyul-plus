@@ -3027,6 +3027,11 @@ What the number actually is, measured rather than assumed:
 - Cost per place is **~144 chars catalog-wide**, but only **110 chars** for a
   food/market/shopping entry, which carries no description - see entry (dd).
 
+**Latest measurement: 249,420 chars (2026-08-24)**, of which ~3,400 is the
+`byCharacter` directory added that day - the answer to "which of our destinations
+are nature/food/history", grouped by continent. Re-measure before quoting a figure;
+the numbers below are from 2026-07-29 and the arithmetic still holds at the new size.
+
 **280,000 is close to the real limit, and the arithmetic is why.** Measured
 2026-07-29 at 241,002 chars, the index is ~78k-89k tokens. Adding the other blocks at
 their own worst case - detail ~28k, history ~45k, trip ~6k, system and tools ~6k -
@@ -11320,6 +11325,128 @@ the product. Scroll first, then assert.
 
 **Not committed** - the working tree holds the change for review.
 
+### 2026-08-24 - "Asked for nature, got a city" - and the shape of the data decided the answer
+
+Netanel, with a screenshot of the agent: he had asked for a nature trip and two of
+the four photographs under the reply were **a city skyline and a basilica**. His
+instruction with it: *"make sure the AI is good. AI first, our data second."*
+
+**Reproduced exactly before touching anything.** Running the reported kind of reply
+through `photoCardsForReply` returned the same four cards as the screenshot: San
+Marco, Lake Bled, Ljubljana, Tre Cime. Nothing had gone wrong by the code's own
+lights - the reply legitimately named Venice as the arrival airport and Ljubljana as
+a base, both were correctly resolved and correctly placed, and the four slots were
+filled in the order the names appeared in the sentence.
+
+**Order of mention is the wrong ranking, and that is the whole bug.** It is a fact
+about our sentence; the traveller is looking at their own request. New
+`src/lib/interests.ts` reads what they actually asked for from their own words, and
+a card that answers it now outranks one that does not - **and once any card answers
+it, the ones that do not are dropped rather than left to fill the slots.** Two
+relevant photographs beat four of which two are beside the point. When nothing
+answers it the filter stands down, because a reply genuinely about Venice should
+still be able to show Venice.
+
+Same conversation after the change, through the real model end to end: four cards,
+all of them lakes and mountains, and Ljubljana - named in day 1 of the route it
+proposed - correctly got none.
+
+---
+
+**A defect the fix walked into on its second run, worth more than the fix.** The
+interest came back as `romantic`, from the word for "couple" in *"8 days, a couple,
+with a car"* - and it had **replaced** the nature request made one turn earlier. Who
+is travelling is not what they want to see, and on this site it comes up in almost
+every planning turn because the agent is required to ask it before the first build.
+`families` and `romantic` are therefore not readable from a request at all. They
+stay on the place side, because the catalog genuinely annotates places that way: a
+place can OFFER them, a request just cannot ask for them in words that also mean
+something else.
+
+The Hebrew matchers all go through `heWord`, and the words that point two ways are
+simply absent rather than written cleverly - `kanyon` is a canyon **and** a shopping
+mall, `bira` is beer **and** a capital city, `alafim` is the Alps **and** thousands,
+`layla` is a night out **and** one night's lodging. Same discipline as the nine live
+false positives recorded in `hebrewMatch.ts`.
+
+---
+
+**The other half: 84 of our 166 destinations are nature-led and the answer named
+four of them, all four famous.** That is "our data second" measured. The index
+carried every city's name and place list and **nothing about what any city is**, so
+"nature in Europe" could only be answered from what the model happens to recognise.
+
+`destinationCharacter` computes it from each destination's own places. Two tunings
+were needed and both came from looking at the output rather than reasoning about it:
+
+- **Tags dilute.** Scored on tags as well as categories, **131 of 166** destinations
+  came out "outdoors" - `outdoors` sits on 37 of the 89 shopping places. A trait
+  four destinations in five share separates nothing. Categories only: 84.
+- **`viewpoint` says two different things.** A mountain lookout in the Dolomites and
+  an observation deck on a tower in Bangkok are the same category, and reading it as
+  nature is what put **New York and Barcelona** in the outdoors list. The catalog
+  already separates them properly - 101 of the 136 viewpoints carry the `outdoors`
+  tag - so a viewpoint is scored on its tags, where the difference is recorded.
+
+---
+
+**And then the field caused a new defect, which took three attempts to close.**
+
+With `character: ["outdoors"]` on each city row, the first live run opened with
+**"we have 84 nature destinations in Europe"**. 84 is the worldwide figure; Europe is
+32. It had counted the field itself across the index.
+
+1. A legend line saying never to count it - **no change**, still 84.
+2. Handing it the real per-continent totals **and** removing the worldwide one, so
+   the number that could be mislabelled was not in the data - **no change**, still 84.
+3. **Grouping.** `byCharacter` is now a directory: continent to character to the
+   destinations that have it. Under Europe/outdoors there are 32 entries, so counting
+   the list - which the model is going to do - produces the right number with the
+   right label. The per-city field is gone; there is one representation, not two.
+   Live after: *"166 destinations in 83 countries, and in Europe several dozen nature
+   spots"* - the real headline figures and an honest hedge, no invented count.
+
+**The lesson is not "prompts do not work", which this file has recorded five times
+already. It is that the shape of the data decides what an obvious reading of it
+says.** Forbidding the wrong reading failed twice; making the right one the easy one
+worked immediately. Grouping is also the better shape for the actual job - "which of
+ours are nature" is a lookup now and was a scan of 166 rows before, which is what
+makes *"prefer one they would not have thought of"* a possible instruction rather
+than a hope. Asked for nature "somewhere less touristy", it came back with Lofoten,
+the High Tatras, the Julian Alps, **Swedish Lapland**, the Armenian mountains and
+Tian Shan - every one a real destination in the catalog, and most of them ones it
+was not offering the day before.
+
+**Cost: the index went 244,910 to 249,420 chars** against the 280,000 ceiling. The
+authoritative budget section above now carries the new figure.
+
+---
+
+**Verified.** 748 unit tests (26 new), tsc, build and lint clean on every touched
+file, catalog validator unchanged at 0 errors / 55 warnings (no data file was
+touched). Live against the real model on a production build: the reported
+conversation end to end, a food request (market and neighbourhood cards, no
+landmarks), a request with no stated interest (unchanged - four Venice cards), and
+the off-the-beaten-track case above.
+
+Two tests earned their place immediately by failing on my own fixtures: one carried
+two Hebrew traps in one sentence where the second was a real match, and one asserted
+place ids I had guessed rather than read. The English-comments guard from rule 9
+also caught Hebrew in a comment I had just written.
+
+**Three things seen and deliberately not fixed.** (1) A photo card needs the name
+spelled as the catalog spells it, so "Interlaken" written with a different Hebrew
+letter, or "the Tatras" without "High", gets no picture - the omission side of the
+wrong-photo rule, and widening it is a different job. (2) In one run of five the
+agent announced *"the route was built on the map"* after the traveller had said "do
+not build yet"; it did not reproduce on the identical rerun, so it is recorded as
+seen once rather than diagnosed. (3) The mislabelled-coverage habit **predates this
+work** - the very first pre-change run said *"in Europe I cover 166 cities in 83
+countries"*, which is the worldwide figure with a regional label. `byCharacter`
+closes the version of it this change could have made worse; the general case would
+need a deterministic guard like `priceGuard`, and that is a decision rather than a
+task.
+
 ### 2026-09-07 - A static SEO layer, and the 166 pages that all had the same title
 
 The ask was an indexable Hebrew content layer, on the premise that the planner is
@@ -11807,3 +11934,129 @@ photo-geosearch sheet renders 30 tiles per page but a 1400x850 screenshot
 shows only 24 - the fifth row of each page went unreviewed, so a re-run over
 the same candidates with 24 per page would recover a few dozen more photos
 for free.
+
+### 2026-09-19 - Two stashes, and a feature whose tuning had rotted while it sat in one
+
+Netanel: *"resolve any git issues (stash)."* Two stashes, and they turned out to
+be completely different problems.
+
+**`stash@{1}` had no tracked changes at all** - only untracked files, which is why
+`git stash show --stat` printed nothing and looked empty. Its contents were
+debris: git lock leftovers under `_to_delete/`, the five create-next-app SVGs that
+entry (i) deliberately deleted, and three `.patch` files from sessions that had no
+push credentials whose branches have all since merged. One thing in it was real -
+**`MARKETING.md`, 244 lines of positioning, Hebrew one-liners and pitch, which
+exists nowhere on main.** Recovered before the stash was written off.
+
+**`stash@{0}` was the dangerous one, and the danger was the shape rather than the
+content.** It held the interests/photo-relevance work from entry 2026-08-24 -
+430 lines across 7 files - and **none of it was on main.** It had been made with
+a plain `git stash`, which does not take untracked files, so `src/lib/interests.ts`
+and its test were left loose in the working tree while every caller of them sat in
+the stash. One feature in two places, each half looking like unrelated leftovers.
+Nothing imported `interests.ts` except its own test.
+
+**And main had moved underneath it.** `14fe5f4` shipped the tuple compaction that
+the budget section of this file said was NOT shipped, splitting
+`buildGroundingIndex` into `buildTupleIndex` and `buildJsonIndex`. So the one
+conflicting file was the one that matters most. Resolved by taking upstream whole
+and re-applying the directory onto it, into **both** builders - `json` is a
+rollback of how a *place* is encoded and must not also silently roll back what the
+index knows about our destinations.
+
+---
+
+**A stale test that would have passed while checking nothing.** The stashed test
+read `idx.cities.map((c) => c.slug)` - correct against the object form it was
+written for, and `undefined` for every row against the tuple form that is now the
+default. The cross-check "every slug in the directory is a real city" would have
+compared a set of `undefined` to nothing and gone green. It reads position 0 now,
+with an assertion that the row parse itself worked, so the check cannot silently
+evaporate again.
+
+---
+
+**The real find: the feature no longer worked, and nothing was broken to make that
+happen.** `destinationCharacter` scored a trait at `>= 25% of a destination's
+places`. That measured well at ~11 places per destination. The catalog has since
+reached **3,116 places across the same 166 destinations - 18.8 each** - filled in
+by passes that added nature, food and market places in bulk, and the fixed
+threshold had failed in **both** directions at once:
+
+| trait | destinations | |
+|---|---|---|
+| outdoors | 124/166 (75%) | describes three quarters of the catalog |
+| history | 98/166 (59%) | separates nothing |
+| art | 1/166 | |
+| foodie | 2/166 | |
+| shopping | **0/166** | "which of ours are shopping destinations" had no answer |
+
+Two traits described most of the catalog and three described nothing. The second
+half is the one a bound on `outdoors` could never have caught: the directory
+looked populated because the two big traits filled it.
+
+**No threshold fixes that, and that is the point rather than a tuning miss.**
+Raising it prunes the common traits and leaves the rare ones at zero forever,
+because museums, food and shops are a minority of *every* city's places.
+
+**This repo had already solved it once.** `VIBE_TOP_SHARE` in
+`destinationFacets.ts` reached a self-normalising rule by rejecting exactly the
+two approaches that just failed here - an absolute count (139 of 150 "nature") and
+a fixed 25% ratio (nature 128, history 113, nightlife zero). Those numbers are
+almost the ones measured above. So: among destinations that have a trait at all,
+the top 40% by share carry it. Deliberately a **separate constant** from the UI
+one - that scores filter chips from place *tags*, this scores the model's
+directory from *categories*, and sharing it would let a chip tweak rewrite what
+the agent is told the catalog contains.
+
+Result: outdoors 68, history 68, art 25, foodie 64, shopping 47 of 166. Every
+trait answerable, none dominant.
+
+---
+
+**Two things measured rather than reasoned, each of which changed the answer.**
+
+**The denominator was wrong, and it penalised exactly the destinations that
+mattered.** `attraction` and `viewpoint` map to no character on purpose, but they
+were still counted in the total - so every trait of every destination with many of
+them was deflated. **Lofoten is 7 nature places of 18 (39%) and missed the bar,
+while 7 of its 18 say nothing at all; of the 11 that do, 7 are nature - 64%.** A
+wild destination's scenery is often filed as `attraction`, so the deflation hit
+nature destinations hardest. The share is now of *classified* places: "of what we
+can read, how much is X".
+
+**A depth path, tried and rejected, because it undid the reported bug.** Share
+alone leaves Rome without `history` (38% against a 40% cutoff), and the obvious
+repair is to also take the top 40% by raw *count* so depth qualifies. It does fix
+Rome - and it puts **New York, Barcelona, Prague and Vienna back under
+`outdoors`**, on the strength of having eight or more nature places by being
+large. Proportion is the only thing that separates "has many parks because it is a
+big city" from "is a nature destination". So Rome carries few traits, which is the
+honest reading of a city whose places genuinely spread evenly, and the index legend
+already tells the model that absence is not a reason to leave a destination out.
+
+**An assertion whose meaning drifted, not a failure.** A test required New York to
+appear under no character anywhere. That was equivalent to "not outdoors" when
+`art` and `foodie` fired for one or two destinations each; now they work and New
+York belongs under both. Narrowed to the claim actually being made - not under
+nature - per trait and for four big cities rather than one.
+
+A new test asserts **both** ends for every trait (>= 8 destinations and <= 60%),
+because the dead-trait half of this failure was invisible to the old bound.
+
+---
+
+**Also found, pre-existing and worth a decision:** `GROUNDING_INDEX_FORMAT=json`
+is documented as a one-variable rollback, and at 3,116 places it now produces
+**421,000 chars against the 280,000 ceiling** (tuple is 241,000). It is a
+diagnostic for comparing encodings, not something that can be switched on in
+production - recorded next to the flag.
+
+**Verified:** 817 tests (tests were 748 when this work was stashed), tsc clean,
+`npm run build` clean, `npx eslint` clean on all eight touched files. Index
+241,357 chars, under the ceiling. Not re-verified live against the model - the
+directory's wording is unchanged, but the *membership* of every list moved, so the
+next live session should re-run a "nature somewhere less touristy" request.
+
+**Both stashes are now redundant** - `stash@{0}`'s content is on the branch and
+`stash@{1}`'s only real file is recovered.
