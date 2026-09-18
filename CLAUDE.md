@@ -11426,3 +11426,47 @@ candidates are in the handoff. (2) `bestMonths` is now the highest-value data ta
 has been waiting on it since entry (q). (3) `CLAUDE.md` was left uncommitted:
 another session's 127 uncommitted lines were already in it, and sweeping them into
 an SEO commit would have misattributed them.
+
+### 2026-09-18 - "What did I, as admin, not do?" - the answer measured against the live project, not the log
+
+Netanel asked for a list of admin actions he had not done. The session log
+carries dozens of "waiting on Netanel" items across two months, most of them
+long since done and never ticked - so the useful answer could not come from
+reading the log. It came from probing what is actually live.
+
+**Method, worth reusing.** No `.env.local` in this checkout, but the Supabase
+URL and publishable key are public by design (in the client bundle), and
+PostgREST distinguishes "table does not exist" (`PGRST205`) from "exists but
+you may not read it" (`42501`) - and a missing column returns `42703` even on a
+table the anon role cannot read. That is enough to tell which of the 22 SQL
+files have run without any secret. Functions need their real argument names:
+called with `{}`, every RPC answers `PGRST202` whether it exists or not - the
+trap entry 2026-08-17 (d) already recorded, walked into again before the
+signatures were read out of the SQL.
+
+**Found not done, now all done and re-verified live:** `supabase-group-planning.sql`
+(the four tables the premium page sells were missing - a subscriber creating an
+invite got the panel's error state), `supabase-consent.sql` (the clickwrap line
+under the login promised a record nowhere to write it), Google Search Console
+(no verification anywhere; DNS TXT now live, sitemap submitted, 70 URLs), the
+three alert webhooks (`AI_BUDGET_ALERT_WEBHOOK` proven by the admin test
+button landing in Discord), `supabase-retire-stories.sql`, and `tiyul-social/`
+- a separate project with its own `node_modules` sitting untracked inside this
+repo, one `git add .` away from being committed.
+
+**Found already done, so nobody chases them again:** all eight RPCs exist and
+are revoked from anon; every other migration has run; PayPal is in production
+mode; `CRON_SECRET` has been set since Aug 1 (the 404 from `/api/internal/warm`
+is the route refusing an unauthenticated call, as designed); zero
+accessibility placeholders remain; the SEO layer is deployed.
+
+**Still open after this session:** the GitLab mirror workflow (`f4332fd`) failed
+on its only run - `GITLAB_TOKEN` was added afterwards and this push is its
+first test; `PAYPAL_ALLOW_SANDBOX_LIVE_DOMAIN` should be deleted from Vercel
+(inert while mode is production, but it is the flag that lets sandbox payments
+through if mode ever flips back); `supabase-perf-indexes.sql` cannot be
+verified through PostgREST at all; and the Supabase catalog mirror tables hold
+0 rows - `catalog-push.mjs` was never run, which costs nothing because the
+site reads the TS files by decision.
+
+No code changed. Docs-only session.
