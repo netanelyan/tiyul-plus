@@ -601,6 +601,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vie-lobau',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Wien%2C_Lobau%2C_Donau-Oder-Kanal_01.jpg/500px-Wien%2C_Lobau%2C_Donau-Oder-Kanal_01.jpg',
         tags: ['outdoors'],
         priceLevel: 0,
         name: 'לובאו - הפארק הלאומי דונאו-אואן',
@@ -631,6 +633,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'vie-seegrotte',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/A_cave_inside_Seegrotte_2.jpg/500px-A_cave_inside_Seegrotte_2.jpg',
         tags: ['families', 'outdoors'],
         priceLevel: 2,
         name: 'זיגרוטה - האגם התת-קרקעי',
@@ -2324,6 +2328,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-ram-szakadek',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Leiter_und_Wasserfall%2C_R%C3%A1m-Schlucht%2C_2024_D%C3%B6m%C3%B6s.jpg/500px-Leiter_und_Wasserfall%2C_R%C3%A1m-Schlucht%2C_2024_D%C3%B6m%C3%B6s.jpg',
         tags: ['outdoors'],
         priceLevel: 0,
         name: 'נקיק רם',
@@ -2338,6 +2344,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'bud-childrens-railway',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/A_fogaskere%C5%B1_vas%C3%BAt_Sz%C3%A9chenyi_hegyi_v%C3%A9g%C3%A1llom%C3%A1sa.jpg/500px-A_fogaskere%C5%B1_vas%C3%BAt_Sz%C3%A9chenyi_hegyi_v%C3%A9g%C3%A1llom%C3%A1sa.jpg',
         tags: ['families', 'outdoors'],
         priceLevel: 1,
         name: 'רכבת הילדים',
@@ -2965,6 +2973,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rom-monte-mario',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Panorama_di_Roma_da_Monte_Mario_-_panoramio.jpg/500px-Panorama_di_Roma_da_Monte_Mario_-_panoramio.jpg',
         tags: ['outdoors'],
         priceLevel: 0,
         name: 'מונטה מריו',
@@ -2995,6 +3005,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'rom-caffarella',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Park_of_the_Caffarella_in_2020.04.jpg/500px-Park_of_the_Caffarella_in_2020.04.jpg',
         tags: ['outdoors', 'history'],
         priceLevel: 0,
         name: 'פארק קפארלה',
@@ -6310,6 +6322,8 @@ export const destinations: Destination[] = [
       
       {
         id: 'dxb-ras-al-khor',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Flamingos_Near_And_Far.jpg/500px-Flamingos_Near_And_Far.jpg',
         tags: ['outdoors', 'families'],
         priceLevel: 0,
         name: 'שמורת ראס אל-חור',
@@ -6356,6 +6370,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'dxb-creek-park',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/CREEK_PARK_DUBAI.jpg/500px-CREEK_PARK_DUBAI.jpg',
         tags: ['families', 'outdoors'],
         priceLevel: 1,
         name: 'פארק הנחל',
@@ -10401,6 +10417,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'her-imbros',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Crete_Imbros2_tango7174.jpg/500px-Crete_Imbros2_tango7174.jpg',
         tags: ['outdoors', 'families'],
         priceLevel: 1,
         name: 'קניון אימברוס',
@@ -15480,6 +15498,8 @@ export const destinations: Destination[] = [
       
       {
         id: 'nyc-fort-tryon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/The_Cloisters_View_from_a_Terrace.jpg/500px-The_Cloisters_View_from_a_Terrace.jpg',
         tags: ['outdoors', 'romantic'],
         priceLevel: 0,
         name: 'פארק פורט טריון',
@@ -15540,6 +15560,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nyc-nybg',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/New_York_Botanical_Garden_October_2016_016.jpg/500px-New_York_Botanical_Garden_October_2016_016.jpg',
         tags: ['outdoors', 'families'],
         priceLevel: 2,
         name: 'הגן הבוטני של ניו יורק',
@@ -15554,6 +15576,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nyc-brooklyn-botanic',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Panor%C3%A0mica_del_Brooklyn_Bot%C3%A0nic_Garden.jpg/500px-Panor%C3%A0mica_del_Brooklyn_Bot%C3%A0nic_Garden.jpg',
         tags: ['outdoors', 'romantic'],
         priceLevel: 2,
         name: 'הגן הבוטני של ברוקלין',
@@ -16290,6 +16314,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'tat-zelene-pleso',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Zelen%C3%A9_pleso_-_panoramio.jpg/500px-Zelen%C3%A9_pleso_-_panoramio.jpg',
         tags: ['outdoors'],
         priceLevel: 0,
         mustSee: true,
@@ -17290,6 +17316,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'isl-diamond-beach',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Phoques_communs_sur_le_Jokulsarlon_en_Islande.jpg/500px-Phoques_communs_sur_le_Jokulsarlon_en_Islande.jpg',
         tags: ['outdoors', 'romantic'],
         priceLevel: 0,
         name: 'חוף היהלומים',
@@ -18208,6 +18236,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'hrv-cetina-spring',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Cetina_river_source.jpg/500px-Cetina_river_source.jpg',
         tags: ['outdoors'],
         priceLevel: 0,
         name: 'עין הצטינה - עין הארץ',
@@ -19209,6 +19239,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'lof-segla',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/View_down_to_%C3%98rnfjorden_and_Grytetippen_from_hillside_of_Seggelskaret_in_Senja%2C_Troms_og_Finnmark%2C_Norway%2C_2022_August.jpg/500px-View_down_to_%C3%98rnfjorden_and_Grytetippen_from_hillside_of_Seggelskaret_in_Senja%2C_Troms_og_Finnmark%2C_Norway%2C_2022_August.jpg',
         tags: ['outdoors'],
         priceLevel: 0,
         name: 'סגלה - סניה',
@@ -19606,6 +19638,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'nor-latefossen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Latefoss_-_panoramio.jpg/500px-Latefoss_-_panoramio.jpg',
         tags: ['outdoors', 'families'],
         priceLevel: 0,
         name: 'מפל לוטפוסן',
@@ -29269,6 +29303,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'pl-slowinski',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Dune_Slowinski_National_Park.jpg/500px-Dune_Slowinski_National_Park.jpg',
         tags: ['outdoors', 'families'],
         priceLevel: 1,
         name: 'הפארק הלאומי סלובינסקי - הדיונות הנודדות',
@@ -36165,6 +36201,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'kor-seoul-forest',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Seoul_Forest_boardwalk_with_tables.jpg/500px-Seoul_Forest_boardwalk_with_tables.jpg',
         tags: ['outdoors', 'families'],
         priceLevel: 0,
         name: 'יער סיאול',
@@ -38342,6 +38380,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'th-tham-lod',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/%E0%B8%96%E0%B9%89%E0%B8%B3%E0%B8%A5%E0%B8%AD%E0%B8%943_-_panoramio.jpg/500px-%E0%B8%96%E0%B9%89%E0%B8%B3%E0%B8%A5%E0%B8%AD%E0%B8%943_-_panoramio.jpg',
         tags: ['outdoors', 'families'],
         priceLevel: 1,
         name: 'מערת תאם לוד',
@@ -38356,6 +38396,8 @@ export const destinations: Destination[] = [
       },
       {
         id: 'th-pai-canyon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Pai_Canyon_1.jpg/500px-Pai_Canyon_1.jpg',
         tags: ['outdoors'],
         priceLevel: 0,
         name: 'קניון פאי',
