@@ -16,20 +16,25 @@
  * search terms in the set, so this is worth stating precisely rather than
  * quietly skipping.
  *
- * A seasonal hub needs months. The numeric `bestMonths` field exists in the
- * schema and is populated on **0 of 166** destinations. The prose `bestSeason`
- * field is populated on all 166 - but it cannot be parsed into months safely,
- * and that was measured rather than assumed: **20 of the 30 promoted
- * destinations name months in it that are warnings rather than
- * recommendations.** Athens reads "March-June, September-November (July-August
- * very hot)"; Madrid names July and August only to say the city empties out.
- * A month-name parser would file both under summer and recommend Athens in
- * August - a confident wrong answer, which is the one kind of error this
- * catalog refuses to ship.
+ * **They exist now, and the paragraph that used to sit here explaining why they
+ * could not is kept in spirit because its warning is still the load-bearing
+ * part.** It said: `bestMonths` is empty on 166 of 166, the prose `bestSeason`
+ * is on all 166 but cannot be parsed safely, and that was measured rather than
+ * assumed - **20 of the 30 promoted destinations name months in it that are
+ * warnings rather than recommendations.** Athens reads "March-June,
+ * September-November (July-August very hot)"; Madrid names July and August only
+ * to say the city empties out. A month-name parser would file both under summer
+ * and recommend Athens in August.
  *
- * So the seasonal hubs wait for `bestMonths` to be populated. That is a data
- * task, it is already on the project's TODO, and it is recorded in
- * SEO_NEXT_STEPS.md.
+ * What changed is not the risk but the parser. `seasonMonths.ts` reads only the
+ * part of the sentence that recommends - everything from the first parenthesis,
+ * full stop or free-standing dash onward is discarded, because the cautions
+ * always follow. Athens comes back March-June and September-November with July
+ * and August excluded, and there is a test named after that exact case.
+ *
+ * The hubs match on **months rather than season bands**: Passover is March or
+ * April, and a May-only destination is "spring" without being a Pesach
+ * destination.
  *
  * ## Why hubs list only the promoted 30
  *
@@ -58,7 +63,41 @@ export interface Hub {
   match: (card: DestinationCard, dest: Destination) => boolean;
 }
 
+/*
+  Passover falls in March or April, and the northern winter is December through
+  February. These are months, not the coarse season bands: a destination whose
+  only good month is May is "spring" without being anywhere you would go for
+  Pesach, and a band predicate would put it on the page.
+*/
+const PESACH_MONTHS = [3, 4];
+const WINTER_MONTHS = [12, 1, 2];
+
+/*
+  Measured on the promoted thirty: Pesach returns 18 and winter returns exactly
+  4 - the floor. That is honest rather than comfortable: the promoted set is
+  mostly European city breaks whose good months are spring and autumn, so few of
+  them are genuinely winter destinations. Widening WINTER_MONTHS to pull in
+  November would fix the number by making the page less true, which is the wrong
+  trade. If the count dips below the floor the hubs test fails and names it.
+*/
+
 export const HUBS: Hub[] = [
+  {
+    slug: 'pesach',
+    title: 'יעדים לחופשת פסח',
+    intro:
+      'היעדים שהחודשים המומלצים בהם נופלים על מרץ-אפריל - כלומר מזג האוויר עובד לטובתכם בדיוק בחופשה הגדולה של האביב.',
+    emoji: '🌷',
+    match: (c) => c.months.some((m) => PESACH_MONTHS.includes(m)),
+  },
+  {
+    slug: 'winter',
+    title: 'יעדים לחופשת חורף',
+    intro:
+      'יעדים שדצמבר עד פברואר הוא זמן טוב לבקר בהם - חלקם בגלל הקור עצמו, וחלקם דווקא כי זו העונה היבשה או הנעימה שלהם.',
+    emoji: '❄️',
+    match: (c) => c.months.some((m) => WINTER_MONTHS.includes(m)),
+  },
   {
     slug: 'kosher',
     title: 'יעדים עם אוכל כשר',

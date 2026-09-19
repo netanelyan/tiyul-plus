@@ -12367,3 +12367,100 @@ under eighteen to 41. The six that are genuinely source-limited rather than
 unvisited are unchanged: Fergana, Lumbini, northern Albania, Turkestan, Uyuni
 and Palawan - every remaining candidate for them resolves to nothing in
 Wikipedia, OSM and Wikidata alike.
+
+### 2026-09-19 (e) - "Is the database enough?" - yes on breadth, and the two things it was actually missing
+
+Netanel asked whether the catalog was enough, then: *"fix that."* The honest
+answer was **yes on breadth, no on shape** - all 17 countries Israelis fly to
+hold 42-133 places, and the index sits at 91% of its ceiling, so adding volume
+now spends the scarce thing on the plentiful one. What was missing was two
+specific gaps, both of which turned out to be fixable without a single new
+research pass.
+
+---
+
+**1. Half the research was not in any route. 1,706 of 3,309 places appeared in
+no itinerary day**, and 63 destinations had 60% or more of their places outside
+the ready-made route. Nicosia held eighteen places behind a one-day itinerary.
+
+That is not cosmetic: `placeIds` is what `tripFromTemplate` copies, what draws
+the map pins and what a built trip contains. A place outside every day is
+invisible to anyone who takes the route. **And it was self-inflicted** - six
+deepening passes added places without extending days, the same gap this log
+recorded once for Bratislava and Athens, now at scale.
+
+`scripts/assign-orphan-places.mjs` puts each orphan into the day whose stops it
+already sits among. **No prose is written**: a new day needs a title and a real
+`notes` line, and inventing travel advice for 63 destinations is what hard rule
+2 forbids, while assigning a place to a day invents nothing - the day exists,
+the place exists, and the only new information is the distance, which is
+computed. Each day keeps the curator's opening stop and the rest are re-ordered
+nearest-neighbour from it.
+
+**The first version was wrong, and the measurement caught it.** A per-place
+reach of up to 120km says nothing about the day as a whole: five stops each
+within 120km of the last produced a **724km Grand Canyon "day"**, and took days
+over 300km from three to eight. There is now a budget on the day's own path, set
+to whatever the day already was if that is longer - so the long days a curator
+chose deliberately are preserved rather than "corrected".
+
+Result: places in no route day **1,706 -> 303**, destinations with 60%+ outside
+the route **63 -> 1**, 66 destinations at zero, and days over 300km **3 -> 2** -
+better than the starting point, because the reordering shortened one that was
+already long.
+
+---
+
+**2. `bestMonths` was empty on 166 of 166**, which kept three finished features
+dark: the season filter on the catalog, the seasonal hubs, and any answer to
+"where should I go in March".
+
+**It is now derived rather than authored.** The months are already written down
+in `bestSeason`; a second hand-typed copy as arrays would drift from the
+sentence beside it the first time a data session edited one - the same failure
+`/about` had, quoting catalog numbers from memory.
+
+**The danger this file was built around, and why nobody had done it before:** a
+month named in `bestSeason` is often a *warning*. 97 of the 166 sentences carry
+a caution and the caution names months. Athens reads "March-June,
+September-November (July-August very hot)" - a naive parser recommends exactly
+the two months the sentence warns about.
+
+The saving structure is that the sentences are all written the same way: the
+recommendation comes first and every caution follows, in a parenthesis, after a
+dash or in a second sentence. `seasonMonths.ts` reads only the leading segment.
+Athens comes back March-June and September-November with **July and August
+excluded**, Dubai wraps the year to November-March, Bangkok excludes the
+monsoon. 161 of 166 parse; the other five say nothing parseable and return
+empty rather than a guess.
+
+**What it deliberately gives up:** Vienna's sentence ends with a parenthesis
+naming December for the Christmas markets - a parenthesis that ADDS a
+recommendation. December is dropped. A missing month costs a filter hit; a wrong
+month sends somebody to Athens in August.
+
+**The filter needed no UI change at all** - `DestinationBrowser` already gated
+it on `cards.some(c => c.seasons.length > 0)`, exactly as its author intended,
+and the chips simply appeared. The test that asserted the opposite said in its
+own comment that failing would be "good news"; it now asserts the new truth,
+with the same both-ends bar the vibe chips have to clear.
+
+**Two seasonal hubs exist now** - Pesach and winter, 14 hubs where there were
+12, and the sitemap is 70 -> 72 URLs. They match on **months, not season
+bands**: Passover is March or April, and a May-only destination is "spring"
+without being anywhere you would go for Pesach. Pesach returns 18 destinations
+and **winter returns exactly 4 - the floor**, which is recorded in the code
+rather than fixed by widening the month set, because that would improve the
+number by making the page less true.
+
+---
+
+**Verified:** 826 tests (9 new), tsc, build and lint clean, both hub pages
+returning 200 with their entries in the sitemap, and all four season chips
+rendering on `/countries` in a real browser.
+
+**What is left, stated plainly.** 303 places are still in no route day, and
+they are the ones no existing day can reach - Nicosia is the clearest case, an
+eighteen-place destination with one day, which needs **more days** and therefore
+real prose rather than assignment. That is an editorial task, not a mechanical
+one.

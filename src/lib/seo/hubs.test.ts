@@ -26,9 +26,11 @@ describe('hubs', () => {
     for (const m of members) assert.equal(m.card.slug, m.dest.slug);
   });
 
-  it('has twelve hubs with unique slugs', () => {
-    assert.equal(HUBS.length, 12);
-    assert.equal(new Set(HUBS.map((h) => h.slug)).size, 12);
+  it('has fourteen hubs with unique slugs', () => {
+    // Twelve until the two seasonal hubs (Pesach, winter) became possible - see
+    // the note at the top of hubs.ts for why they could not exist before.
+    assert.equal(HUBS.length, 14);
+    assert.equal(new Set(HUBS.map((h) => h.slug)).size, 14);
   });
 
   it('uses url-safe ascii slugs', () => {

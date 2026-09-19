@@ -1,3 +1,4 @@
+import { bestMonthsOf } from '@/lib/seasonMonths';
 import { destinations } from '@/data/destinations';
 import { countries } from '@/data/countries';
 import { WORLD_COUNTRIES, type Continent } from '@/data/worldCountries';
@@ -70,7 +71,16 @@ export function buildDestinationCards(): DestinationCard[] {
     const levels: number[] = [];
     for (const p of d.places) if (typeof p.priceLevel === 'number') levels.push(p.priceLevel);
 
-    const months = (d as { bestMonths?: number[] }).bestMonths ?? [];
+    /*
+      Months come from the curator's own `bestSeason` sentence rather than a
+      second hand-typed `bestMonths` array, so the two can never disagree. The
+      parse reads only the recommending part of the sentence - see
+      `seasonMonths.ts`, and note that a month named in a caution ("July-August
+      very hot") must never become a recommendation.
+
+      An explicit `bestMonths` still wins if a data session ever adds one.
+    */
+    const months = (d as { bestMonths?: number[] }).bestMonths ?? bestMonthsOf(d.bestSeason);
     const seasons = SEASONS.filter((s) => s.months.some((m) => months.includes(m))).map((s) => s.key);
 
     return {
@@ -91,6 +101,7 @@ export function buildDestinationCards(): DestinationCard[] {
       vibes: [] as PlaceTag[], // filled in a second pass, once every destination is known
       price: priceBand(levels),
       seasons,
+      months,
       haystack: [d.name, d.nameLocal, d.slug, country?.name ?? '', country?.nameLocal ?? '']
         .join(' | ')
         .toLowerCase(),

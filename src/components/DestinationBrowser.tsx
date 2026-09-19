@@ -41,9 +41,11 @@ export default function DestinationBrowser({ cards }: { cards: DestinationCard[]
 
   const results = useMemo(() => filterDestinations(cards, f), [cards, f]);
   const counts = useMemo(() => continentCounts(cards, f), [cards, f]);
-  // The season filter appears only if there is any season data at all - today there
-  // is none, see the explanation in destinationFacets.ts. We do not show a filter
-  // that filters everything away.
+  // The season filter appears only if there is any season data at all. It was
+  // dark from the day it was written, and this condition is why turning it on
+  // needed no UI change: the months are now derived from each destination's own
+  // `bestSeason` sentence (see seasonMonths.ts) and the chips simply appeared.
+  // We still do not show a filter that would filter everything away.
   const seasonAvailable = useMemo(() => cards.some((c) => c.seasons.length > 0), [cards]);
   // Same principle as the season: show only chips that have destinations behind them
   const vibes = useMemo(() => {

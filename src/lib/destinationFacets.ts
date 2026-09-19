@@ -140,6 +140,15 @@ export interface DestinationCard {
   vibes: PlaceTag[];
   price: PriceBand | null;
   seasons: string[];
+  /**
+   * The recommended months themselves (1-12), not just the season band.
+   *
+   * The bands are too coarse for anything that asks about a specific time:
+   * Passover falls in March or April, and a destination whose only good month
+   * is May is "spring" without being a Pesach destination. The seasonal hubs
+   * read these rather than `seasons` for exactly that reason.
+   */
+  months: number[];
   /** For free-text search: name, local name, slug, country */
   haystack: string;
 }
