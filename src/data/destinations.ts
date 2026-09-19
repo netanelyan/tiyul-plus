@@ -9804,6 +9804,22 @@ export const destinations: Destination[] = [
         durationMin: 420,
         externalUrl: 'https://maps.google.com/?q=42.56889,18.54889',
       },
+      {
+        id: 'mne-tivat',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Tivat_Sv._Marko_Gospa_od_Milosti.jpg/500px-Tivat_Sv._Marko_Gospa_od_Milosti.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'טיבאט',
+        nameLocal: 'Tivat',
+        category: 'attraction',
+        lat: 42.430376,
+        lng: 18.69881,
+        description:
+          'עיירה במפרץ קוטור שבה שופץ בסיס ימי ישן למרינה גדולה. בה גם שדה התעופה הקרוב ביותר למפרץ.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=42.430376,18.69881',
+      },
     ],
     itinerary: [
       {
@@ -11183,6 +11199,54 @@ export const destinations: Destination[] = [
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=35.00944,33.89278',
       },
+      {
+        id: 'cyp-ayia-napa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/View_of_Agia_Napa_beach_located_in_vicinity_of_Nelia_Beach_Hotel.jpg/500px-View_of_Agia_Napa_beach_located_in_vicinity_of_Nelia_Beach_Hotel.jpg',
+        tags: ['nightlife', 'families', 'outdoors'],
+        priceLevel: 2,
+        name: 'איה נאפה',
+        nameLocal: 'Ayia Napa',
+        category: 'attraction',
+        lat: 34.989322,
+        lng: 33.996204,
+        description:
+          'עיירת נופש בקצה המזרחי של קפריסין, מוכרת בחופי החול ובחיי הלילה. במרכזה מנזר מהמאה ה-16 שנשאר בין הברים.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=34.989322,33.996204',
+      },
+      {
+        id: 'cyp-protaras',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Protaras_beach%2C_Protaras%2C_Paralimni%2C_Cyprus_%28July_2026%29.jpg/500px-Protaras_beach%2C_Protaras%2C_Paralimni%2C_Cyprus_%28July_2026%29.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 2,
+        name: 'פרוטאראס',
+        nameLocal: 'Protaras',
+        category: 'nature',
+        lat: 35.015,
+        lng: 34.05417,
+        description:
+          'אזור נופש שקט יותר מאיה נאפה, עם מפרצי חול ומים רדודים. מעליו עומדת כנסיית פרופיטיס איליאס על צוק עם מדרגות.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=35.015,34.05417',
+      },
+      {
+        id: 'cyp-limassol',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Skyscrapers_in_Limassol.jpg/500px-Skyscrapers_in_Limassol.jpg',
+        tags: ['foodie', 'nightlife', 'history'],
+        priceLevel: 1,
+        name: 'לימסול',
+        nameLocal: 'Limassol',
+        category: 'attraction',
+        lat: 34.67472,
+        lng: 33.04417,
+        description:
+          'העיר השנייה בקפריסין ונמלה הראשי, עם טיילת ארוכה וטירה מימי הביניים במרכז העיר העתיקה. היא הבסיס הנוח לכורי ולטרודוס.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=34.67472,33.04417',
+      },
     ],
     itinerary: [
       {
@@ -11878,6 +11942,20 @@ export const destinations: Destination[] = [
           'החוף לרגלי ההרים ליד גבול טורקיה, קילומטרים ספורים מגוניו - חלוקים, מים צלולים יותר מבאטומי, מועדון צלילה, ומסעדות של דגים על החוף. הכפר בין הכביש להר; הבריחה של הבאטומים בקיץ. חצי שעה מהעיר במרשרוטקה; שקיעה מול טורקיה.',
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=41.54528,41.56361',
+      },
+      {
+        id: 'geo-alphabet-tower',
+        tags: ['art'],
+        priceLevel: 1,
+        name: 'מגדל האלפבית',
+        nameLocal: 'Alphabetic Tower',
+        category: 'viewpoint',
+        lat: 41.65594,
+        lng: 41.63944,
+        description:
+          'מגדל בטיילת באטומי שסרט הספירלה שעליו נושא את אותיות האלפבית הגאורגי. בראשו כדור זכוכית עם תצפית אל הים ואל העיר.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=41.65594,41.63944',
       },
     ],
     itinerary: [
@@ -17134,6 +17212,34 @@ export const destinations: Destination[] = [
           'הכפר בשער הדרומי של קילימנג׳רו, ב-1,400 מ׳ בין מטעי קפה ובננה - מפלים, מערות שהצ׳אגה הסתתרו בהן מהמסאים, בית מסורתי, ותה בבית מלון קולוניאלי. ההתחלה של מסלול ״קוקה קולה״ להר; מי שלא מטפס, יום של הליכה בירוק לרגליו.',
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=-3.35472,37.52194',
+      },
+      {
+        id: 'tza-moshi',
+        tags: ['outdoors', 'foodie'],
+        priceLevel: 1,
+        name: 'מושי',
+        nameLocal: 'Moshi',
+        category: 'attraction',
+        lat: -3.33488,
+        lng: 37.34038,
+        description:
+          'עיירה למרגלות הקילימנג׳רו והבסיס העיקרי לטיפוס אליו. סביבה מטעי קפה של שבט הצ׳אגה, ובימים בהירים ההר נראה מעליה במלואו.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=-3.33488,37.34038',
+      },
+      {
+        id: 'tza-kilimanjaro-np',
+        tags: ['outdoors'],
+        priceLevel: 3,
+        name: 'הפארק הלאומי קילימנג׳רו',
+        nameLocal: 'Kilimanjaro National Park',
+        category: 'nature',
+        lat: -3.06667,
+        lng: 37.36667,
+        description:
+          'הפארק שמקיף את ההר ואתר מורשת עולמית, שעולים בו בכמה מסלולים מרובי ימים. הוא עובר מיער גשם דרך ערבה גבוהה ועד מדבר קרחוני בפסגה.',
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=-3.06667,37.36667',
       },
     ],
     itinerary: [
@@ -24908,6 +25014,38 @@ export const destinations: Destination[] = [
           'אגם סכר טורקיז בין גבעות חשופות ליד גרני, שהפך לתצפית פופולרית - כביש עובר מעל המים, וסירות בקיץ. לא אתר גדול, אבל עשר דקות מהמקדש ופינה שקטה לשקיעה בדרך חזרה לירוואן.',
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=40.15889,44.79667',
+      },
+      {
+        id: 'arm-tsitsernakaberd',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Armenian_Genocide_Memorial_and_traiditional_red_tulipss_of_alley_2023_2.jpg/500px-Armenian_Genocide_Memorial_and_traiditional_red_tulipss_of_alley_2023_2.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'צִיצֶרנָקַבֶּרד - אנדרטת רצח העם',
+        nameLocal: 'Tsitsernakaberd',
+        category: 'historic',
+        lat: 40.18583,
+        lng: 44.49056,
+        description:
+          'אתר ההנצחה לרצח העם הארמני, על גבעה מעל העיר: שנים-עשר לוחות אבן נוטים סביב אש תמיד, ולצדם מצבה מפוצלת. בצדו מוזיאון תת-קרקעי.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=40.18583,44.49056',
+      },
+      {
+        id: 'arm-echmiadzin',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Etchmiadzin_2025-3.jpg/500px-Etchmiadzin_2025-3.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'קתדרלת אצ׳מיאדזין',
+        nameLocal: 'Etchmiadzin Cathedral',
+        category: 'historic',
+        lat: 40.16186,
+        lng: 44.291,
+        description:
+          'המרכז הרוחני של הכנסייה הארמנית ואתר מורשת עולמית, שנחשב לאחת הקתדרלות הוותיקות בעולם. סביבו מתחם של כנסיות ובית הקתוליקוס.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=40.16186,44.291',
       },
     ],
     itinerary: [
@@ -35365,6 +35503,22 @@ export const destinations: Destination[] = [
           'בירת הבנאט, על נהר בגיי - כיכר עם בית עירייה ניאו-בארוקי מ-1820, קתדרלה, בית משפט של 200 חדרים, ומגדל של בית כנסת שנהרס. גשר ״יבש״ ללא נהר מתחתיו (הנהר הוסט). עיירה סרבית-הונגרית-גרמנית-רומנית שהכל בה עדיין מעורב; שעה מנובי סאד.',
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=45.3825,20.39167',
+      },
+      {
+        id: 'rs-deliblato',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Deliblato_Sands%2C_Foggy_morning.jpg/500px-Deliblato_Sands%2C_Foggy_morning.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'חולות דליבלטו',
+        nameLocal: 'Deliblato Sands',
+        category: 'nature',
+        lat: 44.88361,
+        lng: 21.0925,
+        description:
+          'שטח דיונות חול מיוצבות בדרום מזרח וויוודינה, שמכונה לעתים המדבר האירופי. הוא שמורת טבע עם צמחייה ובעלי חיים שאינם נפוצים באזור.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=44.88361,21.0925',
       },
     ],
     itinerary: [
@@ -45853,6 +46007,20 @@ export const destinations: Destination[] = [
           'שתי כנסיות קטנות מהמאה ה-12 ביער אשור מעל דיליג׳אן, שעה של הליכה מהעיירה בשביל של הפארק - ומנזר מאטוסאוואנק ממול, שגם הוא ביער. השבילים הקצרים והשקטים של דיליג׳אן, לפני האגפאט הגדול; טחב, אבן, ושקט.',
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=40.7583,44.8183',
+      },
+      {
+        id: 'am-alaverdi',
+        tags: ['history', 'outdoors'],
+        priceLevel: 0,
+        name: 'אלאוורדי',
+        nameLocal: 'Alaverdi',
+        category: 'attraction',
+        lat: 41.098144,
+        lng: 44.646091,
+        description:
+          'עיירת מכרות נחושת בעומק נקיק הדבד, מחולקת בין גדת הנהר לרמה שמעליה ומחוברת ברכבל. ממנה עולים אל מנזרי הגפאט וסנהין.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=41.098144,44.646091',
       },
     ],
     itinerary: [
@@ -65477,6 +65645,22 @@ export const destinations: Destination[] = [
           'היער העתיק של מולדובה - שמורה ראשונה מ-1971 של אלונים ואשור בגבעות המרכז, עם מוזיאון טבע, שבילים, ועדרי איילים. הנוף שהיה כאן לפני החקלאות. שעה מקישינב; אחר צהריים ירוק בין יקבים, וקרוב למנזר קפריאנה.',
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=47.04392,28.61545',
+      },
+      {
+        id: 'md-chisinau',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Consiliul_Municipal_Chi%C8%99in%C4%83u_%28cropped%29.jpg/500px-Consiliul_Municipal_Chi%C8%99in%C4%83u_%28cropped%29.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'קישינב',
+        nameLocal: 'Chișinău',
+        category: 'attraction',
+        lat: 47.02278,
+        lng: 28.83528,
+        description:
+          'בירת מולדובה, עיר ירוקה עם שדרות רחבות ובנייה סובייטית לצד מבנים מהמאה ה-19. בה גם אנדרטה ובית קברות יהודיים לזכר הפוגרום של 1903.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=47.02278,28.83528',
       },
     ],
     itinerary: [
