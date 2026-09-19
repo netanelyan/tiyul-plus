@@ -24,8 +24,10 @@
  * a mistake, not a choice.
  */
 
+import { isKosher } from '@/lib/categories';
 import { destinations } from '@/data/destinations';
 import { countries } from '@/data/countries';
+import { calendar } from '@/data/calendar';
 
 export interface FooterLink {
   href: string;
@@ -107,6 +109,23 @@ export const catalogCounts = {
   places: destinations.reduce((n, d) => n + d.places.length, 0),
   destinations: destinations.length,
   countries: countries.filter((c) => destinations.some((d) => d.countrySlug === c.slug)).length,
+  /*
+    The kosher layer, counted the same way and for the same reason: /about was
+    quoting it as a hand-written "57 entries in 35 cities" and had drifted, as
+    the places figure beside it had drifted by 1,426. A number that describes
+    the catalog belongs here, where a test counts it.
+  */
+  kosherPlaces: destinations.reduce(
+    (n, d) => n + d.places.filter((p) => isKosher(p.category)).length,
+    0,
+  ),
+  kosherCities: destinations.filter((d) => d.places.some((p) => isKosher(p.category))).length,
+  /*
+    Still accurate at the time of writing, unlike the two above - which is the
+    point: it is the same hand-written shape and it would have gone the same
+    way on the next calendar pass.
+  */
+  calendarEntries: calendar.length,
 };
 
 /** The "1,814 places · 166 destinations · 83 countries" line - numbers in readable Hebrew formatting */

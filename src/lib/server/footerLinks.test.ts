@@ -12,6 +12,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { destinations } from '@/data/destinations';
 import { countries } from '@/data/countries';
+import { calendar } from '@/data/calendar';
+import { isKosher } from '@/lib/categories';
 import {
   catalogCounts,
   coverageCountsLine,
@@ -89,5 +91,50 @@ test('אין כפילויות ואין קישור ריק', () => {
   for (const l of all) {
     assert.ok(l.href.startsWith('/'), l.href);
     assert.ok(l.label.trim().length > 0);
+  }
+});
+
+test('ספירות הכשרות והלוח נספרות מהדאטה ולא נכתבות ביד', () => {
+  assert.equal(
+    catalogCounts.kosherPlaces,
+    destinations.reduce((n, d) => n + d.places.filter((p) => isKosher(p.category)).length, 0),
+  );
+  assert.equal(
+    catalogCounts.kosherCities,
+    destinations.filter((d) => d.places.some((p) => isKosher(p.category))).length,
+  );
+  assert.equal(catalogCounts.calendarEntries, calendar.length);
+  assert.ok(catalogCounts.kosherCities <= catalogCounts.destinations);
+});
+
+/*
+  The class guard, not the instance. /about is a marketing page that quotes the
+  catalog's scope, and its numbers were written by hand: it claimed 1,814 places
+  when there were 3,240, and 57 kosher entries when there were more. A page that
+  states a figure about the data has to read it from the data.
+
+  Deliberately a source scan rather than a render check - a number typed into
+  JSX is the thing being banned, and it is visible without a browser.
+*/
+test('עמודי השיווק לא מקודדים מספרי קטלוג בקשיחות', () => {
+  const suspicious = [
+    catalogCounts.places,
+    catalogCounts.destinations,
+    catalogCounts.countries,
+    catalogCounts.kosherPlaces,
+    catalogCounts.calendarEntries,
+  ];
+  for (const file of ['src/app/about/page.tsx']) {
+    const src = readFileSync(file, 'utf8');
+    // Strip comments: prose about a past number is history, not a claim.
+    const code = src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
+    for (const n of suspicious) {
+      for (const form of [String(n), n.toLocaleString('he-IL')]) {
+        assert.ok(
+          !new RegExp(`(^|[^\d.,])${form.replace('.', '\.')}([^\d.,]|$)`).test(code),
+          `${file} hard-codes ${form}; read it from catalogCounts instead`,
+        );
+      }
+    }
   }
 });

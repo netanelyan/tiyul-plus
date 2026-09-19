@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import PageShell from '@/components/PageShell';
 import { List, Section, Updated } from '@/components/PolicySection';
+import { catalogCounts } from '@/lib/server/footerLinks';
 
 export const metadata = {
   title: 'אודות | טיול+',
@@ -32,14 +33,22 @@ export default function Page() {
         <List
           items={[
             <>
-              קטלוג שנבנה ידנית: <strong>166 יעדים ב-83 מדינות, 1,814 מקומות</strong>, כל אחד עם
-              קואורדינטה שאומתה מול מקור.
+              קטלוג שנבנה ידנית:{' '}
+              <strong>
+                {catalogCounts.destinations} יעדים ב-{catalogCounts.countries} מדינות,{' '}
+                {catalogCounts.places.toLocaleString('he-IL')} מקומות
+              </strong>
+              , כל אחד עם קואורדינטה שאומתה מול מקור.
             </>,
             <>
-              שכבת כשרות: <strong>57 רשומות ב-35 ערים</strong> - מסעדות, חנויות ובתי חב״ד.
+              שכבת כשרות:{' '}
+              <strong>
+                {catalogCounts.kosherPlaces} רשומות ב-{catalogCounts.kosherCities} ערים
+              </strong>{' '}
+              - מסעדות, חנויות ובתי חב״ד.
             </>,
             <>
-              לוח אירועים וסגירות: <strong>161 רשומות</strong> - דברים שמשנים טיול, כמו פסטיבל
+              לוח אירועים וסגירות: <strong>{catalogCounts.calendarEntries} רשומות</strong> - דברים שמשנים טיול, כמו פסטיבל
               שמשתלט על עיר או תקופה שבה אתר סגור.
             </>,
             <>מפה אינטראקטיבית, מסלול יום-יום, הערות, הדפסה, שיתוף וניווט.</>,
