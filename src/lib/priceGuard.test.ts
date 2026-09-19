@@ -511,3 +511,26 @@ test('an ordinary sentence naming an allowlisted city is not a kashrut verdict',
   // Generic wording still is one when the sentence really is about kashrut.
   assert.equal(violationOf('ההשגחה שם מספיקה.', allow), 'kashrut-verdict');
 });
+
+test('a cut sentence ending in a colon takes its list with it', () => {
+  /*
+    From a live reply. The kashrut claim was replaced correctly and its list
+    survived on its own, so the answer ended with four bare city names and no
+    sentence introducing them - which reads as a glitch rather than as the
+    honest refusal it is.
+  */
+  const text =
+    'אם אתם מחפשים אלטרנטיבה - יש לי בקטלוג יעדים במזרח אירופה עם תשתית כשרות מאומתת: ' +
+    'וורשה, בודפשט, פראג וברטיסלבה. רוצים שאחקור עיר אחרת?';
+  const out = guardText(text, {});
+  assert.ok(out.redactions.length > 0, 'the claim should have been cut at all');
+  assert.ok(!out.text.includes('וורשה'), `the orphan list survived: ${out.text}`);
+  // The sentence after the list is unrelated and must not be swallowed too.
+  assert.ok(out.text.includes('רוצים שאחקור עיר אחרת?'), `too much was cut: ${out.text}`);
+});
+
+test('a clean sentence ending in a colon keeps its list', () => {
+  const text = 'הנה הערים בקטלוג שלנו: רומא, פירנצה וונציה. איזו מהן מעניינת אתכם?';
+  const out = guardText(text, {});
+  assert.equal(out.text, text);
+});

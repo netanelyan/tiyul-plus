@@ -864,10 +864,29 @@ export function guardText(
   };
   const redactions: string[] = [];
   const replacedHere = new Set<GuardCategory>();
+  /*
+    A sentence ending in a colon introduces the one after it, and cutting only
+    the introduction leaves the rest stranded. Seen live: a kashrut claim ending
+    "…cities in eastern Europe with verified kosher infrastructure:" was replaced
+    correctly, and the list that followed survived as its own sentence - so the
+    reply ended "…or ask about another city we do cover. Warsaw, Budapest,
+    Prague and Bratislava." A bare list with nothing introducing it reads as a
+    glitch, which undoes the point of replacing the sentence honestly.
+
+    So a cut colon-sentence takes its continuation with it. Dropping rather than
+    replacing, because the replacement line has already been said for this
+    category one sentence earlier.
+  */
+  let dropContinuation = false;
   const out = splitSentences(text).map((sentence) => {
     if (!sentence.trim()) return sentence;
+    if (dropContinuation) {
+      dropContinuation = false;
+      return sentence.match(/\n+$/)?.[0] ?? '';
+    }
     const bad = violationOf(sentence, allow);
     if (!bad) return sentence;
+    dropContinuation = /:\s*$/.test(sentence);
     redactions.push(bad);
     /*
       What was cut, not just which rule cut it. Added after an afternoon spent
