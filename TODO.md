@@ -202,14 +202,14 @@ Hungary→Lake Balaton, Slovakia→High Tatras.
 - [x] **Re-try the whole blocked list against GeoNames.** Paris, London,
       Kolsai/Kaindy and Delphi all shipped. None of them were hard; they were
       only unreachable from the one source that was being used.
-- [ ] **Countries with no destination at all** (candidates, in rough order of
-      how much an Israeli traveller would want them): Egypt, Oman, Mongolia,
-      Bhutan, North Macedonia, Ukraine, Moldova. India has one entry
-      (Himachal) and Rajasthan is the obvious second. **Done since this list
-      was written:** Colombia, Singapore, Malta, Belgium, France, UK.
-      Grounding-index headroom is now about 11 destinations (see the scale
-      note above), so this list is over budget - pick deliberately.
-- [ ] **78 of 1,216 places carry no `photo`.** Down from 121. Roughly 60 of
+- [x] **Countries with no destination at all** - RESOLVED. Measured
+      2026-09-19: **83 of 83 countries have at least one destination.** Every
+      name on the old list here (Egypt, Oman, Mongolia, Bhutan, North
+      Macedonia, Moldova, and the rest) has since shipped. Ukraine is the one
+      that did not, and it was dropped deliberately rather than missed.
+- [ ] **352 of 3,309 places carry no `photo`** (89% coverage, measured
+      2026-09-19; the "78 of 1,216" that stood here was four catalog sizes ago).
+      Roughly 60 of
       the remainder are Chabad houses and kosher restaurants with no freely
       licensed image anywhere - treat those as permanently blank, do not keep
       re-raising them. The tractable remainder: Cartagena (7, but dbpedia
@@ -221,7 +221,8 @@ Hungary→Lake Balaton, Slovakia→High Tatras.
       Castle, St John's Co-Cathedral, the Antwerp Jewish quarter, Lake Kaindy.
       **Get the current list with `node /tmp/photoless.mjs`** rather than
       trusting any hardcoded list in this file.
-- [ ] **103 of 137 destinations contain no kosher place.** Some of that is
+- [ ] **131 of 166 destinations contain no kosher place** (35 do; measured
+      2026-09-19, was "103 of 137"). Some of that is
       honest (there is no kosher food in Torres del Paine) and the copy should
       say so; some of it is just unresearched. Worth a pass that separates the
       two rather than treating every blank the same.
@@ -315,15 +316,29 @@ GeoNames). Lower priority than net-new destinations.
       Stefan, Budva old town coordinates) — same real sites in two hubs.
       Fine today; worth deduping if a "seen this already" view is built.
 
-## דאטה: חודשים מומלצים לכל יעד (נוסף 2026-07-27)
-- [ ] להוסיף `bestMonths?: number[]` (מספרי חודשים 1-12) ל-`Destination`
-      ולמלא אותו ליעדים. **הפילטר לפי עונה בדפדפן היעדים כבר בנוי
-      ומחכה לשדה הזה** - הוא פשוט לא מוצג כל עוד אין ולו יעד אחד עם
-      השדה, ויידלק לבד ברגע שיהיה. יש טסט
-      (`destinationFacets.test.ts`) שמוודא שהיום אין דאטה כזו; כשהוא
-      ייפול זה הסימן להסיר את ההסתרה ולעדכן אותו.
-- [ ] אפשר להתחיל מהיעדים שבהם העונה קריטית באמת: לפלנד, איסלנד,
-      פטגוניה, ניו זילנד, ספארי בטנזניה, האלפים.
+## ✅ RESOLVED 2026-09-19: חודשים מומלצים לכל יעד
+
+The season filter, the seasonal hubs and "where should I go in March" were all
+waiting on `bestMonths`, which was empty on 166 of 166. It is now **derived**
+rather than authored: `src/lib/seasonMonths.ts` reads the months out of each
+destination's own `bestSeason` sentence, so the two can never disagree.
+
+The trap this had to avoid, which is why it had sat open: **a month named in
+`bestSeason` is often a warning**, in 97 of the 166 sentences. Athens reads
+"March-June, September-November (July-August very hot)". Only the leading,
+recommending part of the sentence is read; everything from the first
+parenthesis, full stop or free-standing dash onward is discarded. 161 of 166
+parse, the rest return empty rather than a guess.
+
+The season filter needed no UI change (it was already gated on the data), and
+the two seasonal hubs - `/collections/pesach` and `/collections/winter` - now
+exist, matched on months rather than season bands.
+
+An explicit `bestMonths` array on a `Destination` still wins if a data session
+ever adds one, so hand-authoring specific destinations remains possible and is
+worth it where the prose is vague - the five that parse to nothing, and the
+places where the season is genuinely critical (Lapland, Iceland, Patagonia,
+New Zealand, the Tanzania safari, the Alps).
 
 ## Waiting on Netanel - the four-tier pricing page (added 2026-08-22; the page itself is LIVE, see Current state)
 
