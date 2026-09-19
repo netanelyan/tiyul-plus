@@ -5,6 +5,7 @@ import { breadcrumbLd } from '@/lib/seo/jsonLd';
 import JsonLd from '@/components/seo/JsonLd';
 import { HUBS, hubMembers } from '@/lib/seo/hubs';
 import { promotedMembers } from '@/lib/seo/hubData';
+import { leadPhotos } from '@/lib/seo/hubLead';
 import CardPhoto from '@/components/CardPhoto';
 
 const TITLE = 'אוספי יעדים - לפי אופי הטיול | טיול+';
@@ -25,34 +26,6 @@ export const metadata: Metadata = {
   },
   twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION },
 };
-
-/**
- * One lead photograph per collection, and a DIFFERENT one for each.
- *
- * Taking each hub's first member with a photo is the obvious implementation and
- * it looks broken: Vienna is the first member of most hubs, so eight of the
- * twelve cards came back with the same cathedral. The page passed a count of
- * "twelve pictures" while showing three.
- *
- * So a photo already used by an earlier hub is skipped. `HUBS` has a fixed
- * order and `hubMembers` is deterministic, so the assignment is stable between
- * builds rather than shuffling on each deploy. If a hub's members are all
- * spoken for it falls back to its own first - a repeat beats an empty card, and
- * with twelve hubs over thirty promoted destinations it does not arise.
- */
-function leadPhotos(members: ReturnType<typeof promotedMembers>) {
-  const used = new Set<string>();
-  const lead = new Map<string, string | undefined>();
-  for (const hub of HUBS) {
-    const inHub = hubMembers(hub, members);
-    const fresh = inHub.find((m) => m.card.photo && !used.has(m.card.photo));
-    const any = inHub.find((m) => m.card.photo);
-    const photo = (fresh ?? any)?.card.photo;
-    if (photo) used.add(photo);
-    lead.set(hub.slug, photo);
-  }
-  return lead;
-}
 
 /**
  * The hub index.

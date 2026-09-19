@@ -1,7 +1,27 @@
 /**
- * Measures real pages over CDP. Launches its own Chrome and refuses to report a
- * number until the stylesheet has loaded - the guard this repo's log asks for,
- * after a run where an unstyled page reported 195px of fictional overflow.
+ * Measures real pages over CDP, at real viewport widths.
+ *
+ * Committed because this file's session log records rebuilding the same harness
+ * from scratch in at least four different sessions, each time relearning the
+ * same two lessons the hard way. Both are baked in here:
+ *
+ * 1. **It refuses to report a number until the stylesheet has actually loaded**
+ *    and the body has its cream background. An unstyled page once reported 195px
+ *    of horizontal overflow and named four elements as clipped - all of it
+ *    fiction. The rule from that day: when a measurement is surprising, suspect
+ *    the fixture before the code.
+ * 2. **A fresh browser per width**, with `Emulation.setDeviceMetricsOverride`
+ *    rather than `--window-size` alone. The window flag does not set a device
+ *    viewport, so an RTL page renders at desktop width and is merely cropped -
+ *    which looks exactly like a mobile layout bug and is not one.
+ *
+ * Run against a PRODUCTION build (`npm run build && npx next start`). `next dev`
+ * does not hydrate in headless Edge here, so a real trip screen never renders.
+ *
+ * Usage:
+ *   node scripts/measure-page.mjs '<targets json>' '<widths json>'
+ * where targets is [{url, expr}] and expr is an expression evaluated in the page.
+ * CHROME_PATH overrides the browser binary.
  */
 import { spawn } from 'node:child_process';
 import { mkdtempSync } from 'node:fs';
