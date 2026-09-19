@@ -12184,7 +12184,7 @@ is no longer a usable rollback, it now exceeds the ceiling on its own. (3) 100
 Tier A+B photo gaps remain and the 175 exhausted ones should not be re-offered.
 (4) The Vienna guide page is the open UI item - see the note below.
 
-**Reported and not acted on, because it is a UI decision rather than data:**
+**Reported, and acted on the next day - see entry (c) below, which supersedes this paragraph:**
 Netanel opened `/destinations/vienna` and said the SEO guide section below the
 interactive page "looks too raw - no images, no colors, no titles, lots of
 reading blocks". Measured in `DestinationGuide.tsx`: **zero image renders in 437
@@ -12194,3 +12194,108 @@ the same grey box and nine sibling headings are the same size. The fix needs no
 new data or dependency - `PlaceThumb` already handles the missing-photo case and
 `categories.ts` already carries an emoji and colour per category; the guide
 simply never calls either.
+
+### 2026-09-19 (c) - "Too much like a book, not a website" - measured across the site, and it was three problems
+
+Netanel, on the Vienna page first and then: *"I am not talking only about vienna,
+but about all of the pages that feel too much like a book instead of a website."*
+
+**Measured before touching anything, across fourteen routes**, because "all of
+the pages" needed a list and not an impression. The useful metric is not word
+count - a long page is fine if it is broken up - it is **how far a reader goes
+between one picture and the next**, and how many paragraphs sit in a row with
+nothing structural between them.
+
+| | text between pictures | worst prose run |
+|---|---|---|
+| `/destinations/vienna` | **21,587** | 5,319 (55 paragraphs in a row) |
+| `/destinations/rome` | 16,655 | 3,082 |
+| `/collections` | **no pictures at all** | - |
+| `/countries`, `/kosher`, `/` | 650-2,577 | 480-739 |
+
+So it was never a site-wide design failure. **The catalog pages already do this
+well**; the book-like pages are the ones that were authored as documents and
+never given the site's own vocabulary. Three distinct problems, not one.
+
+---
+
+**1. The destination guide, which is an order of magnitude worse than anything
+else and covers exactly the 30 promoted destinations.** The absurd part is that
+it re-lists the places shown WITH photographs in the app section directly above
+it, and rendered them without. `/destinations/bratislava`, which is not promoted
+and therefore has no guide, measures 3,456 - so the guide was the whole problem.
+
+`GuideThumb` puts the photo on every card. **Deliberately not `PlaceThumb`**,
+which carries `useState` to catch a broken image and is therefore a client
+component: this guide is the one part of the destination page that ships no
+client JS at all, and a client island per place would undo that on a page whose
+whole purpose is being static. The fallback is CSS instead - the category tile
+is the container's background and the photo sits on top, so a failed load
+reveals the tile, which is where `PlaceThumb` arrives via state. `alt=""` on
+purpose twice over: the name is the adjacent heading, and an alt string is
+exactly what a browser paints over the tile when an image 404s.
+
+Also: one `PlaceCard` replacing the same card written out three times - which is
+how the picture came to be missing from all three lists at once - a marker and a
+rule on each of the nine `<h3>` that shared one class, and the category colours
+that already exist in `categoryMeta` on the group headers. Vienna: **44 visual
+anchors to 156**. Rome's worst prose run 3,082 to 972.
+
+**2. `/collections` had no pictures at all**, on a travel site, linking to
+collection pages that carry 38 photographs each.
+
+**And the first fix passed the metric while looking broken**, which is the entry
+worth keeping. Taking each hub's first member with a photo gave **eight of the
+twelve cards the same Vienna cathedral**, because Vienna leads most hubs: the
+page satisfied a count of "twelve pictures" while showing three. Only looking at
+it caught that. A photo claimed by an earlier hub is now skipped, and `HUBS` is a
+fixed order so the assignment is stable between builds rather than shuffling per
+deploy. Verified 12 photos, 12 distinct, from the rendered DOM.
+
+**3. `/about` was factually wrong, which matters more than its layout.** It is a
+brand page built with the legal-document toolkit, and it quotes the catalog's
+scope in hand-written numbers: **1,814 places when the catalog holds 3,240** -
+drifted by 1,426 - and 57 kosher entries when there are more. The calendar's 161
+was still right, which is the point: same shape, and it would have gone the same
+way on the next calendar pass.
+
+`catalogCounts` already existed for exactly this and its own comment says no
+number in it is hand-written; /about simply never used it. It gained
+`kosherPlaces`, `kosherCities` and `calendarEntries`, and the guard is the class
+rather than the instance - a test scans the marketing pages' source for any of
+those figures typed as a literal, stripping comments first because prose about a
+past number is history and not a claim. **Proven by putting `161` back**: it
+fails naming `src/app/about/page.tsx hard-codes 161`.
+
+---
+
+**Deliberately not changed, and each is a decision rather than a miss.**
+
+`/terms`, `/privacy` and `/accessibility` have no pictures and long prose, and
+that is correct - a privacy policy should read like a document, and making it
+feel like a website would be worse.
+
+`/premium` is the one real remaining candidate: 7,395 characters and no images.
+Left alone because its structure is already cards, a comparison table and an FAQ
+rather than prose, and because "put photographs on the pricing page" is a
+judgement on a page Netanel has iterated on repeatedly - it belongs to him, not
+to a cleanup pass.
+
+The lead photo on a collection card is the first *unused* member, not a
+thematically chosen one, so a few pairings are loose - Sagrada Familia fronts the
+food collection. Every photo is a real member of the collection it fronts, so
+nothing misleads; choosing the best of each is editorial work.
+
+---
+
+**Two harness notes, both the recurring species.** A bash heredoc ate the `\b`
+in the first measuring script, which then reported **zero headings on every
+page** - the same trap this file records twice; the rewrite went through the
+editor. And the 390px screenshot of Vienna looked badly clipped: `--window-size`
+does not set a device viewport, so an RTL page renders at desktop width and gets
+cropped. Measured over CDP instead, `scrollWidth === clientWidth` at both 390 and
+1280 with zero offenders.
+
+**Verified:** 819 tests (2 new), tsc, build and lint clean, and the before/after
+numbers above taken from the rendered DOM of a production build rather than from
+the source.
