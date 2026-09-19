@@ -4,6 +4,7 @@ import { isEating, isKosher, kosherStatusOf } from '@/lib/categories';
 import { certificationNames, kashrutForModel } from '@/lib/kashrut';
 import { destinationCharacters, type Interest } from '@/lib/interests';
 import { buildDestinationCards } from '@/lib/destinationCards';
+import { coverageCounts, destinationsPerCountry } from '@/lib/server/coverageFacts';
 import type { Destination } from '@/lib/types';
 import type { Trip } from '@/lib/trip/types';
 import type { ChatMessage } from '@/lib/server/chatMessages';
@@ -182,7 +183,8 @@ const BY_CHARACTER_LEGEND =
   'Characters: outdoors (nature, lakes, mountains, trails), history, art (museums and galleries), foodie, shopping. ' +
   "When the traveller says what kind of trip they want, choose what you suggest FROM THIS LIST - it is the catalog's own answer and it covers destinations you would not think of first. Look the slug up in \"cities\" below for the Hebrew name. " +
   'A destination missing from every list is an all-rounder whose places spread evenly across categories; that is not a reason to leave it out. ' +
-  'If you state how many there are, count the list for the continent you are actually talking about and no other.';
+  'NEVER count these lists yourself. "byCharacterCounts" holds the count for every continent and character, plus "total" = that continent\'s destination count. ' +
+  'If you state a number, read it from there and say which continent and character it belongs to. There is no number for "several continents together" - do not add them up.';
 
 /**
  * The index format. `tuple` (the default since 2026-09-18) writes each place
@@ -235,11 +237,13 @@ function buildTupleIndex(kosherOk: boolean): string {
   const base = kosherOk
     ? 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block.'
     : 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block. Kosher venues are deliberately not listed here - see the kosher policy in the next block.';
+  const perCountry = destinationsPerCountry();
   return JSON.stringify({
-    note: `${base} FORMAT: each city is [slug, name, countrySlug, places]; each place is [${PLACE_TUPLE_FIELDS.join(', ')}] where tags is a list, priceLevel is 0-3, mustSee is 1 or 0, and null means unknown. countries are [slug, name].`,
+    note: `${base} FORMAT: each city is [slug, name, countrySlug, places]; each place is [${PLACE_TUPLE_FIELDS.join(', ')}] where tags is a list, priceLevel is 0-3, mustSee is 1 or 0, and null means unknown. countries are [slug, name, howManyOfOurDestinationsAreInIt] - use that third number rather than counting cities, and never attach a bigger figure to one country.`,
     byCharacterLegend: BY_CHARACTER_LEGEND,
     coverage: { cities: destinations.length, countries: countries.length },
     byCharacter: destinationsByCharacter(),
+    byCharacterCounts: coverageCounts(),
     cities: destinations.map((d) => [
       d.slug,
       d.name,
@@ -256,11 +260,12 @@ function buildTupleIndex(kosherOk: boolean): string {
           p.durationMin ? p.durationMin : null,
         ]),
     ]),
-    countries: countries.map((c) => [c.slug, c.name]),
+    countries: countries.map((c) => [c.slug, c.name, perCountry[c.slug] ?? 0]),
   });
 }
 
 function buildJsonIndex(kosherOk: boolean): string {
+  const perCountry = destinationsPerCountry();
   return JSON.stringify({
     note: kosherOk
       ? 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block.'
@@ -272,6 +277,7 @@ function buildJsonIndex(kosherOk: boolean): string {
     // figure that can simply be handed to it.
     coverage: { cities: destinations.length, countries: countries.length },
     byCharacter: destinationsByCharacter(),
+    byCharacterCounts: coverageCounts(),
     cities: destinations.map((d) => ({
       slug: d.slug,
       name: d.name,
@@ -288,7 +294,11 @@ function buildJsonIndex(kosherOk: boolean): string {
           ...(p.durationMin ? { durationMin: p.durationMin } : {}),
         })),
     })),
-    countries: countries.map((c) => ({ slug: c.slug, name: c.name })),
+    countries: countries.map((c) => ({
+      slug: c.slug,
+      name: c.name,
+      destinations: perCountry[c.slug] ?? 0,
+    })),
   });
 }
 

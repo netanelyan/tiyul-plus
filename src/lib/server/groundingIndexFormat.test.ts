@@ -36,10 +36,19 @@ for (const kosherOk of [true, false]) {
     const tup = JSON.parse(buildGroundingIndex(kosherOk, 'tuple'));
 
     assert.deepEqual(tup.coverage, obj.coverage);
+    // The third element is how many of our destinations that country holds -
+    // handed over so the model never counts cities to answer "how many do you
+    // have in Italy", which it got wrong live. Both formats must carry it.
     assert.deepEqual(
-      tup.countries.map(([slug, name]: [string, string]) => ({ slug, name })),
+      tup.countries.map(([slug, name, destinations]: [string, string, number]) => ({
+        slug,
+        name,
+        destinations,
+      })),
       obj.countries,
     );
+    assert.deepEqual(tup.byCharacter, obj.byCharacter);
+    assert.deepEqual(tup.byCharacterCounts, obj.byCharacterCounts);
     assert.equal(tup.cities.length, obj.cities.length);
     const decoded: ObjCity[] = tup.cities.map(([slug, name, countrySlug, places]: TupCity) => ({
       slug,

@@ -31,6 +31,7 @@ import {
   kosherIntentText,
   relevantCitySlugs,
 } from '@/lib/server/grounding';
+import { coverageByScope, coverageNumbers } from '@/lib/server/coverageFacts';
 import {
   LOOKUP_TOOL,
   getCachedLookup,
@@ -709,6 +710,11 @@ async function runAgent(
       .map((m) => m.content)
       .join(' \n '),
     pinNames: (clientTrip?.pins ?? []).map((p) => p.name),
+    // Counted from the catalog, not stored - so a data session that adds a
+    // destination moves this with it. See coverageFacts.ts for the reply that
+    // made it necessary.
+    coverageNumbers: coverageNumbers(),
+    coverageByScope: coverageByScope(),
   };
   const planLimits = PLAN_LIMITS[caller.plan];
   const actions: string[] = [];

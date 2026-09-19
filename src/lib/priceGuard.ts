@@ -32,7 +32,7 @@
  * real search card the traveler clicks.
  */
 
-import { heWord } from './hebrewMatch';
+import { HE_LETTER, heWord } from './hebrewMatch';
 import { PREMIUM_PRICE_ILS } from './plans';
 
 /** The wording that replaces a cut claim. Must pass the filter itself - there's a test. */
@@ -83,12 +83,25 @@ export const NO_KASHRUT_VERDICT_LINE =
   'אני מדווח מי הגוף המשגיח ומתי בדקנו, אבל ההחלטה אם להסתמך על השגחה מסוימת היא אישית ותלויה במנהג שלכם - אשמח לומר בדיוק מה רשום אצלנו ומאיזה מקור.';
 
 /**
+ * The replacement when the agent states how much of the world we cover and the
+ * number is not one we can actually count to.
+ *
+ * Deliberately carries **no number of its own.** The obvious wording quotes the
+ * two global totals as consolation, and that sentence would then have to be
+ * exempted from the very rule it is replacing - a filter whose replacement text
+ * needs a special case is one nobody can reason about. There is a test that
+ * every replacement line here survives its own filter.
+ */
+export const NO_COVERAGE_LINE =
+  'אני לא רוצה לנקוב במספר שלא ספרתי בפועל - אם תשאלו על יבשת או על סוג טיול מסוים, אגיד בדיוק מה רשום בקטלוג שלנו.';
+
+/**
  * The replacement categories. `kashrut-verdict` is its own category rather
  * than folding into `kosher`, because the two say opposite things: the kosher
  * line says we have no verified data, while this one says we DO have the data
  * and it is not our place to grade it.
  */
-export type GuardCategory = 'price' | 'event' | 'kosher' | 'lookup' | 'kashrut-verdict';
+export type GuardCategory = 'price' | 'event' | 'kosher' | 'lookup' | 'kashrut-verdict' | 'coverage';
 
 /**
  * Words that put a sentence in kashrut territory for the purposes of the
@@ -136,6 +149,7 @@ const CATEGORY: Record<string, GuardCategory> = {
   'kashrut-verdict': 'kashrut-verdict',
   'hours-claim': 'lookup',
   'existence-claim': 'lookup',
+  'coverage-count': 'coverage',
 };
 
 export interface GuardReplacements {
@@ -144,6 +158,7 @@ export interface GuardReplacements {
   kosher?: string;
   lookup?: string;
   'kashrut-verdict'?: string;
+  coverage?: string;
 }
 
 /**
@@ -405,6 +420,94 @@ const EXISTENCE_CLAIM =
 const TICKET_CONTEXT =
   /(דמי\s*ה?כניסה|כרטיס\s*ה?כניסה|מחיר\s*ה?כניסה|עלות\s*ה?כניסה|entrance fee|admission (fee|price)|ticket price)/i;
 
+/**
+ * ---------- How many destinations we cover ----------
+ *
+ * The reported failure: asked how many nature destinations we have in Europe,
+ * the agent answered "66 destinations in Europe characterised by nature", in
+ * bold. Europe holds 84 and 30 of them are nature; 66 is the sum of Asia's
+ * lists. See the long note in `server/coverageFacts.ts` for why a prompt rule
+ * is not the fix.
+ *
+ * ## Only a number that is quantifying a coverage noun is checked
+ *
+ * The first version checked every digit run in the sentence, and that is wrong
+ * in a way worth recording: "I have 166 destinations, and a 7-day route in
+ * Vienna" would have been cut over the **7**, which quantifies days and has
+ * nothing to do with coverage. So the pattern captures the number together with
+ * the noun it counts, and days, stops and hours never reach the comparison.
+ *
+ * Hebrew puts the numeral before the noun, and the noun frequently carries the
+ * definite article or a preposition-with-dash in front of the numeral
+ * ("in-83 countries", "166 the-destinations"), so both are allowed for.
+ */
+const COVERAGE_NOUN = '(?:יעדים|יעדי|יעד|ערים|עיר|מדינות|מדינה)';
+
+const COVERAGE_QUANT = new RegExp(
+  `(\\d[\\d,]*)\\s*(?:-\\s*)?(?:ה)?${COVERAGE_NOUN}(?![${HE_LETTER}])`,
+  'g',
+);
+
+/**
+ * How far past "N destinations" we still consider a scope name to be attached to
+ * that number, and what ends the window.
+ *
+ * **The comma is the whole safety of this.** Without it, "I have 166
+ * destinations, and I recommend Italy" reads as a claim that Italy has 166 and a
+ * good sentence gets cut. With it, only an uninterrupted phrase counts - which
+ * is exactly the phrase that is unambiguous in Hebrew, because the preposition
+ * binds the number to the scope. A scope appearing BEFORE the number is
+ * deliberately not matched; see the note on `coverageByScope`.
+ */
+const SCOPE_WINDOW = 28;
+/**
+ * A dash ends the window as firmly as a comma does, because in Hebrew prose it
+ * introduces the apposition that follows: "25 countries in Europe - Austria,
+ * Slovakia, Czechia…". Without it the window reached into the list, and the
+ * first item of the list got read as the scope. See `scopeAfter`.
+ */
+const SCOPE_WINDOW_END = /[.,!?:;()\n\-–—]/;
+
+/**
+ * What makes a count a claim about **us** rather than about the world.
+ *
+ * This condition is why "there are 44 countries in Europe" is not touched. That
+ * is a general-knowledge answer with a real answer of its own, and a guard
+ * built from our catalog has no business ruling on it - cutting it would be the
+ * `airopa`/euro false positive all over again, just one level up.
+ *
+ * A character word counts as ownership on its own: in this product "nature
+ * destinations" with a number in front is a statement about the catalog,
+ * whoever phrased it.
+ */
+const COVERAGE_OWNED = new RegExp(
+  `(${heWord(
+    'יש לי',
+    'יש לנו',
+    'שלי',
+    'שלנו',
+    'אצלנו',
+    'בקטלוג',
+    'הקטלוג',
+    'מכסה',
+    'מכסים',
+    'מכוסים',
+    'מכוסות',
+  )}|${heWord(
+    'טבע',
+    'היסטוריים',
+    'היסטוריות',
+    'היסטורי',
+    'היסטוריה',
+    'אמנות',
+    'מוזיאונים',
+    'קולינרי',
+    'קולינריים',
+    'שופינג',
+    'קניות',
+  )})`,
+);
+
 export interface GuardAllowlist {
   /** Texts the traveler themselves wrote in the conversation (including descriptions of images they attached) */
   userText?: string;
@@ -431,6 +534,32 @@ export interface GuardAllowlist {
    * kashrut claim passes, even if the general gate is open.
    */
   kosherNames?: string[];
+  /**
+   * Every number a claim about how many destinations we cover may contain -
+   * `coverageNumbers()` in `server/coverageFacts.ts`, which counts them from the
+   * catalog. A closed set of true numbers, not a plausibility range: 66 is a
+   * perfectly plausible figure for this catalog and is simply not the answer to
+   * the question that was asked.
+   *
+   * **Absent means the rule does not run**, which is the opposite of how
+   * `kosherNames` behaves and is a deliberate difference. An empty kosher list
+   * means we hold no verified data and a claim must not pass; an absent number
+   * set means the caller never wired the facts, and these facts are always
+   * computable. Firing then would strip legitimate text from callers that have
+   * nothing to do with coverage - `stripClaims` on a day note, for one. A test
+   * asserts the chat route really does wire it, so "never wired" cannot happen
+   * quietly in the place that matters.
+   */
+  coverageNumbers?: number[];
+  /**
+   * Scope name -> the numbers that scope may legitimately be said to have, from
+   * `coverageByScope()`. Catches a **true** number wearing the wrong label,
+   * which the flat set above cannot: 166 is our worldwide total, so "166
+   * destinations in Italy" passes the set and is still false. Only the
+   * "N destinations in <scope>" form is checked against this - see
+   * `SCOPE_WINDOW`.
+   */
+  coverageByScope?: Record<string, number[]>;
 }
 
 export interface GuardResult {
@@ -601,7 +730,82 @@ export function violationOf(sentence: string, allow: GuardAllowlist = {}): strin
   if (HOURS_CLAIM.test(sentence) && !LOOKUP_ANCHOR.test(sentence)) return 'hours-claim';
   if (EXISTENCE_CLAIM.test(sentence) && !LOOKUP_ANCHOR.test(sentence)) return 'existence-claim';
 
+  if (coverageViolation(sentence, allow)) return 'coverage-count';
+
   return null;
+}
+
+/**
+ * Whether the sentence quantifies our own coverage with a number we cannot
+ * count to. See `COVERAGE_QUANT` and `COVERAGE_OWNED`.
+ */
+function coverageViolation(sentence: string, allow: GuardAllowlist): boolean {
+  const facts = allow.coverageNumbers;
+  const scopes = allow.coverageByScope;
+  const haveFacts = !!facts && facts.length > 0;
+  const haveScopes = !!scopes && Object.keys(scopes).length > 0;
+  if (!haveFacts && !haveScopes) return false;
+  if (!COVERAGE_OWNED.test(sentence)) return false;
+  const allowedHere = new Set(facts ?? []);
+  // A number the traveller themselves put in the conversation is theirs to
+  // quote back: "you said you have 40 destinations in Europe - is that still
+  // right?" must be answerable without the answer being cut.
+  const own = allowedNumbers(allow);
+
+  for (const m of sentence.matchAll(COVERAGE_QUANT)) {
+    const raw = m[1].replace(/,/g, '');
+    const n = Number(raw);
+    if (!Number.isFinite(n) || n <= 1) continue; // "one destination" quantifies nothing checkable
+    if (own.has(raw) || own.has(m[1])) continue;
+
+    /*
+      The scope check first, and it is allowed to reject a number that the
+      global set accepts. That is the entire point: "166 destinations in Italy"
+      is built from a real figure and is still false, and it is the form the
+      agent actually produced once the invented figures stopped.
+    */
+    const scope = scopeAfter(sentence, m.index + m[0].length, scopes);
+    if (scope) {
+      if (!scope.allowed.includes(n)) return true;
+      continue;
+    }
+
+    if (haveFacts && !allowedHere.has(n)) return true;
+  }
+  return false;
+}
+
+/**
+ * The scope named immediately after a count, if any - "…destinations in Italy".
+ *
+ * **The nearest name wins, not the longest, and that distinction was a live
+ * bug.** The first version took the longest match so that a country whose name
+ * contains another's could not be mis-attributed, and then cut this true
+ * sentence: "I cover 25 countries in Europe - Austria, Slovakia, Czechia…". The
+ * window reached past the dash into the list, and `Austria` is one letter longer
+ * than `Europe`, so 25 was checked against Austria's counts and failed. The
+ * preposition binds the number to whichever scope comes first; length is only a
+ * tie-break for two names starting at the same position.
+ */
+function scopeAfter(
+  sentence: string,
+  from: number,
+  scopes: Record<string, number[]> | undefined,
+): { name: string; allowed: number[] } | null {
+  if (!scopes) return null;
+  let window = sentence.slice(from, from + SCOPE_WINDOW);
+  const stop = window.search(SCOPE_WINDOW_END);
+  if (stop >= 0) window = window.slice(0, stop);
+  if (!window.trim()) return null;
+  let best: { name: string; at: number } | null = null;
+  for (const name of Object.keys(scopes)) {
+    const at = window.indexOf(name);
+    if (at < 0) continue;
+    if (!best || at < best.at || (at === best.at && name.length > best.name.length)) {
+      best = { name, at };
+    }
+  }
+  return best ? { name: best.name, allowed: scopes[best.name] } : null;
 }
 
 /** Whether the sentence names a record that was returned from the data in this turn */
@@ -656,6 +860,7 @@ export function guardText(
     kosher: replacements.kosher ?? NO_KOSHER_LINE,
     lookup: replacements.lookup ?? NO_LOOKUP_LINE,
     'kashrut-verdict': replacements['kashrut-verdict'] ?? NO_KASHRUT_VERDICT_LINE,
+    coverage: replacements.coverage ?? NO_COVERAGE_LINE,
   };
   const redactions: string[] = [];
   const replacedHere = new Set<GuardCategory>();
@@ -664,6 +869,17 @@ export function guardText(
     const bad = violationOf(sentence, allow);
     if (!bad) return sentence;
     redactions.push(bad);
+    /*
+      What was cut, not just which rule cut it. Added after an afternoon spent
+      guessing at a false positive from the rule name alone: the log said
+      `coverage-count` and nothing about the sentence, and ten candidate
+      reconstructions all passed. Off by default because this is model output
+      and can quote a traveller back to themselves - same footing as
+      CHAT_USAGE_LOG.
+    */
+    if (process.env.GUARD_DEBUG === 'on') {
+      console.warn(`[guard] ${bad} cut: ${sentence.trim().slice(0, 240)}`);
+    }
     const cat = CATEGORY[bad] ?? 'price';
     if (alreadyReplaced.has(cat) || replacedHere.has(cat)) {
       return sentence.match(/\n+$/)?.[0] ?? '';
