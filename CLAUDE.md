@@ -12299,3 +12299,71 @@ cropped. Measured over CDP instead, `scrollWidth === clientWidth` at both 390 an
 **Verified:** 819 tests (2 new), tsc, build and lint clean, and the before/after
 numbers above taken from the rendered DOM of a production build rather than from
 the source.
+
+### 2026-09-19 (d) - "Nature, cities": 88 places, and the landmarks that were missing from their own destinations
+
+Netanel: *"continue populating the database with nice places. nature, cities.."*
+Four batches, 121 candidates, **88 written and 33 rejected. 3,240 -> 3,309
+places.**
+
+**The recurring find is not a thin destination - it is a missing centrepiece.**
+Over and over the catalog held a destination's supporting cast and not its lead:
+
+- **Angkor Wat was not in the Angkor destination.** Bayon, Ta Prohm, Banteay
+  Srei and thirteen more were; the temple on the national flag was not.
+- **Ubud** was missing from Bali, **Gyeongbokgung** from Seoul, **Sarajevo** from
+  the Mostar-Sarajevo destination, **Ulaanbaatar** from Mongolia, **Bishkek**
+  from Tian Shan, **Arequipa** from the Colca destination whose own market,
+  monastery and mirador all sit inside that city, and **Rotterdam**, **Aarhus**
+  and **Chisinau** from destinations built around them.
+
+That is a specific kind of blind spot and worth stating for the next data pass:
+a destination gets deepened by adding the next thing, and the obvious thing is
+assumed to be there already. **Reading the place list before adding to it is how
+these surfaced, and it took one script.**
+
+---
+
+**What the guards caught, which stays the more interesting half.**
+
+**A name collision across two continents: Cobá (Mexico) was rejected as a
+duplicate of Quva (Uzbekistan)** - both transliterate to the same Hebrew, and
+the catalog-wide dedup found it. Same class as the Royal Palace pair the log
+already records. Lake Titicaca was already in under `cusco`; Novi Sad collided
+with its own synagogue, Luang Prabang with Mount Phousi inside it, Kazbegi
+National Park with the Georgian Military Road, La Digue with Anse Cocos, and
+Baku's carpet museum with Deniz Mall - all inside 250 metres.
+
+**Ayia Napa came back at 34.98,34.00** - the exact rounded pair entry (u)
+rejected on sight, a whole number of longitude being kilometres of error. The
+ratchet caught it this time instead of a reader.
+
+**Fifteen coordinates were re-read from OSM** after the ratchet fired, every one
+a town or a building that Wikipedia gives two decimals. Two lessons repeated:
+filter on type, not name - San José's second OSM hit is a different San José
+canton 30km south, and Kretinga's a neighbourhood of Klaipeda - and **use the
+local script when the Latin query fails**: Amarbayasgalant returned nothing as
+`Amarbayasgalant monastery` and resolved to a six-decimal
+`amenity/place_of_worship` as `Амарбаясгалант хийд`. Wikidata carried the same
+rounded figure as Wikipedia, so OSM in Cyrillic was the only precise source.
+
+**Nine photos dropped, places kept.** The visual check earned its place again:
+a **satellite image with a label burned into it** for Muddus, a **four-panel
+montage** for San José and another for Alaverdi, and **an administrative map of
+Greece** for Konitsa. Each passed the licence, width and filename filters
+intact. The rest were bland rather than wrong - municipal office blocks for
+Sandakan and Gabrovo, a rooftop aerial for a museum, a forecourt for Ivalo.
+
+---
+
+**Verified:** 3,309 places, 89% with a photo, 0 validator errors, 83 warnings,
+819 tests, tsc and build clean on every commit, and every new photo URL probed
+and recorded before it was written.
+
+**State for the next pass.** Index **254,574 of 280,000 - about 330 places of
+headroom**, and note `GROUNDING_INDEX_FORMAT=json` is no longer a usable
+rollback at this size. Destinations under seventeen places are down to 13 and
+under eighteen to 41. The six that are genuinely source-limited rather than
+unvisited are unchanged: Fergana, Lumbini, northern Albania, Turkestan, Uyuni
+and Palawan - every remaining candidate for them resolves to nothing in
+Wikipedia, OSM and Wikidata alike.

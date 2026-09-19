@@ -33266,6 +33266,20 @@ export const destinations: Destination[] = [
         durationMin: 300,
         externalUrl: 'https://maps.google.com/?q=69.04361,20.85611',
       },
+      {
+        id: 'fin-ivalo',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'איוואלו',
+        nameLocal: 'Ivalo',
+        category: 'attraction',
+        lat: 68.654085,
+        lng: 27.541744,
+        description:
+          'היישוב הגדול בצפון לפלנד, על נהר איוואלו ובו שדה התעופה הצפוני של פינלנד. הוא הבסיס לסאריסלקה ולאינארי.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=68.654085,27.541744',
+      },
     ],
     itinerary: [
       {
@@ -35132,6 +35146,53 @@ export const destinations: Destination[] = [
           'הנהר הירוק-קר של הרצגובינה בקניון בין קוניץ לגלבוצ׳יצה - יום של רפטינג של 20 ק״מ במים בדרגה 2-3, עם הפסקות לשחייה במים של 10 מעלות ומפלים בצד. מסעדה על הנהר בסוף. מפעילים בקוניץ; מאי-אוקטובר, ואחר כך ההמשך של הנהר עד מוסטר.',
         durationMin: 300,
         externalUrl: 'https://maps.google.com/?q=43.01972,17.445',
+      },
+      {
+        id: 'bih-sarajevo',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Sarajevo_City_Panorama.JPG/500px-Sarajevo_City_Panorama.JPG',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'סרייבו',
+        nameLocal: 'Sarajevo',
+        category: 'attraction',
+        lat: 43.85639,
+        lng: 18.41306,
+        description:
+          'בירת בוסניה, בעמק צר בין הרים, ובה נפגשים מסגדים, כנסיות ובית כנסת במרחק קצר זה מזה. סימני המצור של שנות התשעים עדיין נראים בחלק מהבניינים.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=43.85639,18.41306',
+      },
+      {
+        id: 'bih-sutjeska',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/NP001_nacionalni_park_sutjeska_perucica.jpg/500px-NP001_nacionalni_park_sutjeska_perucica.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'הפארק הלאומי סוטייסקה',
+        nameLocal: 'Sutjeska National Park',
+        category: 'nature',
+        lat: 43.33333,
+        lng: 18.68333,
+        description:
+          'הפארק הלאומי הוותיק בבוסניה, ובו יער פרימבה - אחד מיערות הבראשית האחרונים באירופה - וההר הגבוה במדינה. במרכזו אנדרטת קרב סוטייסקה.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=43.33333,18.68333',
+      },
+      {
+        id: 'bih-stolac',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'סטולאץ',
+        nameLocal: 'Stolac',
+        category: 'historic',
+        lat: 43.0825,
+        lng: 17.95583,
+        description:
+          'עיירה על נהר הבְּרֶגָבָה עם בתי אבן עות׳מאניים ומצודה מעליה. לידה שדה המצבות של רדימליה, אתר מורשת עולמית של מצבות סטצ׳אק מימי הביניים.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=43.0825,17.95583',
       },
     ],
     itinerary: [
@@ -43855,6 +43916,38 @@ export const destinations: Destination[] = [
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=45.82081,14.24649',
       },
+      {
+        id: 'si-celje',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Celjski_dom_in_Celje.jpg/500px-Celjski_dom_in_Celje.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'צלייה',
+        nameLocal: 'Celje',
+        category: 'historic',
+        lat: 46.23583,
+        lng: 15.2675,
+        description:
+          'העיר השלישית בסלובניה, שמעליה עומדת הטירה הגדולה במדינה - מושב רוזני צלייה שכוכביהם מופיעים בסמל הלאומי. בעיר גם שרידים רומיים מתחת לרחובות.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=46.23583,15.2675',
+      },
+      {
+        id: 'si-pohorje',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Mariborsko_pohorje_panorama.jpg/500px-Mariborsko_pohorje_panorama.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'פוהורייה',
+        nameLocal: 'Pohorje',
+        category: 'nature',
+        lat: 46.53333,
+        lng: 15.46667,
+        description:
+          'רכס מיוער ומעוגל מדרום למריבור, עם ביצות כבול, אגמים קטנים ומפלים. בחורף הוא אתר סקי ובקיץ אזור הליכה ואופניים.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=46.53333,15.46667',
+      },
     ],
     itinerary: [
       {
@@ -51515,6 +51608,20 @@ export const destinations: Destination[] = [
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=39.2362,20.5345',
       },
+      {
+        id: 'gr-konitsa',
+        tags: ['outdoors', 'history'],
+        priceLevel: 0,
+        name: 'קוניצה',
+        nameLocal: 'Konitsa',
+        category: 'attraction',
+        lat: 40.044295,
+        lng: 20.743281,
+        description:
+          'עיירה על מדרון מעל עמק האואוס בצפון אפירוס, סמוך לגבול אלבניה. מתחתיה גשר אבן מקושת גדול מהמאה ה-19.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=40.044295,20.743281',
+      },
     ],
     itinerary: [
       {
@@ -56430,6 +56537,22 @@ export const destinations: Destination[] = [
         durationMin: 720,
         externalUrl: 'https://maps.google.com/?q=40.63889,76.40556',
       },
+      {
+        id: 'kg-bishkek',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Bishkek_City%27s_business_center.jpg/500px-Bishkek_City%27s_business_center.jpg',
+        tags: ['foodie', 'history'],
+        priceLevel: 1,
+        name: 'בישקק',
+        nameLocal: 'Bishkek',
+        category: 'attraction',
+        lat: 42.87472,
+        lng: 74.61222,
+        description:
+          'בירת קירגיזסטן, עיר סובייטית מתוכננת עם שדרות רחבות ועצי צפצפה. היא נקודת המוצא לרוב הטיולים בהרים, ובה שוק אושסקי הגדול.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=42.87472,74.61222',
+      },
     ],
     itinerary: [
       {
@@ -58463,6 +58586,22 @@ export const destinations: Destination[] = [
           'כפר של עשרים בתי אבן עם גגות קש ב-4,000 מ׳, בדרך חזרה מהגייזרים - כנסייה לבנה עם צריח כחול, נשים שמוכרות שיפודי לאמה ואמפנדות מהתנור, ופלמינגו בביצה ליד. תחנת העצירה של סיורי אל טאטיו; רבע שעה של כפר אנדי אמיתי.',
         durationMin: 60,
         externalUrl: 'https://maps.google.com/?q=-22.59795,-68.0642',
+      },
+      {
+        id: 'cl-chuquicamata',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Mina_de_Chuquicamata%2C_Calama%2C_Chile%2C_2016-02-01%2C_DD_110-112_PAN.JPG/500px-Mina_de_Chuquicamata%2C_Calama%2C_Chile%2C_2016-02-01%2C_DD_110-112_PAN.JPG',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'צ׳וקיקמטה',
+        nameLocal: 'Chuquicamata',
+        category: 'attraction',
+        lat: -22.30546,
+        lng: -68.90224,
+        description:
+          'מהמכרות הפתוחים הגדולים בעולם בנפח, צפונית לקלמה. הבור עמוק מאות מטרים ורוחבו קילומטרים, ויישוב העובדים שלידו פונה בשל האבק.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=-22.30546,-68.90224',
       },
     ],
     itinerary: [
@@ -64918,6 +65057,38 @@ export const destinations: Destination[] = [
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=46.20056,105.995',
       },
+      {
+        id: 'mn-ulaanbaatar',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/UB_downtown.jpg/500px-UB_downtown.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'אולן באטור',
+        nameLocal: 'Ulaanbaatar',
+        category: 'attraction',
+        lat: 47.92194,
+        lng: 106.91528,
+        description:
+          'בירת מונגוליה, שבה חיה כמחצית מאוכלוסיית המדינה. היא הבירה הקרה בעולם בממוצע השנתי, ובשוליה שכונות של אוהלי גר לצד מגדלי מגורים.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=47.92194,106.91528',
+      },
+      {
+        id: 'mn-amarbayasgalant',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Amarbayasgalant_monastery_temple_01.JPG/500px-Amarbayasgalant_monastery_temple_01.JPG',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'מנזר אמרבאיאסגלנט',
+        nameLocal: 'Amarbayasgalant Monastery',
+        category: 'historic',
+        lat: 49.480094,
+        lng: 105.085216,
+        description:
+          'מהמנזרים הבודהיסטיים הגדולים ששרדו את שנות השלושים, בעמק פתוח בצפון המדינה. הוא בנוי בסגנון סיני סימטרי ושוחזר בחלקו.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=49.480094,105.085216',
+      },
     ],
     itinerary: [
       {
@@ -67813,6 +67984,38 @@ export const destinations: Destination[] = [
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=-20.27978,57.36645',
       },
+      {
+        id: 'mu-le-pouce',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Le_Pouce2.jpg/500px-Le_Pouce2.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'לה פוס',
+        nameLocal: 'Le Pouce',
+        category: 'viewpoint',
+        lat: -20.19722,
+        lng: 57.5285,
+        description:
+          'פסגה בצורת אגודל מעל פורט לואי, השלישית בגובהה באי. העלייה אליה קצרה יחסית ומהפסגה נשקפים הבירה והמפרץ.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=-20.19722,57.5285',
+      },
+      {
+        id: 'mu-curepipe',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Mauritius_curepipe.jpg/500px-Mauritius_curepipe.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'קירפיפ',
+        nameLocal: 'Curepipe',
+        category: 'attraction',
+        lat: -20.31877,
+        lng: 57.52629,
+        description:
+          'עיר ברמה המרכזית של האי, גבוהה וקרירה וגשומה יותר מהחוף. היא נבנתה כשתושבי פורט לואי ברחו ממגפת המלריה, ובה מבני עץ קולוניאליים.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=-20.31877,57.52629',
+      },
     ],
     itinerary: [
       {
@@ -68154,6 +68357,36 @@ export const destinations: Destination[] = [
           'מטע ומפעל תה קטן על כביש סאן סוסי, בגובה 500 מ׳ ביער ערפילי - סיור בייבוש ובאריזה, תה בטעם וניל בבית קפה עם נוף על החוף המערבי, ותחילת השביל למורן בלאן. עצירה בדרך הרים בין ויקטוריה לחוף המערבי; חצי שעה, וכוס תה מול הים.',
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=-4.66323,55.43806',
+      },
+      {
+        id: 'sc-praslin',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Insel_Praslin%2C_Seychellen_%2838908943104%29.jpg/500px-Insel_Praslin%2C_Seychellen_%2838908943104%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'פרסלן',
+        nameLocal: 'Praslin',
+        category: 'nature',
+        lat: -4.33,
+        lng: 55.74667,
+        description:
+          'האי השני בגודלו, ובלבו יער הקוקו דה מר של ואלה דה מה. חופיו רחבים ורדודים, והוא מחובר במעבורת למאהה וללה דיג.',
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=-4.33,55.74667',
+      },
+      {
+        id: 'sc-mahe',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'מאהה',
+        nameLocal: 'Mahé',
+        category: 'nature',
+        lat: -4.68,
+        lng: 55.48,
+        description:
+          'האי הגדול בסיישל, שבו הבירה ויקטוריה ושדה התעופה הבינלאומי. הוא הררי ומיוער, ולאורך חופיו עשרות מפרצים קטנים.',
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=-4.68,55.48',
       },
     ],
     itinerary: [
