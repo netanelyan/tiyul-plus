@@ -39,7 +39,10 @@ import { buildDestinationCards } from '@/lib/destinationCards';
 import { destinationCharacters, type Interest } from '@/lib/interests';
 
 /** continent -> character -> how many of our destinations are that */
-export type CoverageCounts = Record<string, Partial<Record<Interest | 'total', number>>>;
+export type CoverageCounts = Record<
+  string,
+  Partial<Record<Interest | 'total' | 'countries', number>>
+>;
 
 /**
  * The counts, grouped exactly like `byCharacter` is grouped - so the number and
@@ -49,7 +52,8 @@ export type CoverageCounts = Record<string, Partial<Record<Interest | 'total', n
  * model reaches for and got wrong in the same breath.
  */
 export function coverageCounts(): CoverageCounts {
-  const continentOf = new Map(buildDestinationCards().map((c) => [c.slug, c.continent]));
+  const cards = buildDestinationCards();
+  const continentOf = new Map(cards.map((c) => [c.slug, c.continent]));
   const character = destinationCharacters(destinations);
   const out: CoverageCounts = {};
   for (const d of destinations) {
@@ -57,6 +61,22 @@ export function coverageCounts(): CoverageCounts {
     const row = (out[region] ??= {});
     row.total = (row.total ?? 0) + 1;
     for (const trait of character.get(d.slug) ?? []) row[trait] = (row[trait] ?? 0) + 1;
+  }
+  /*
+    How many COUNTRIES each continent holds, which is a different question from
+    how many destinations and was answered with the worldwide figure in live
+    testing: "there are 83 countries in Europe in my database", where 83 is the
+    whole catalog and Europe holds 25. The guard cuts that sentence; this is what
+    lets the model write the true one instead of being silenced.
+  */
+  const countriesIn = new Map<string, Set<string>>();
+  for (const c of cards) {
+    const region = c.continent ?? 'אחר';
+    const set = countriesIn.get(region) ?? countriesIn.set(region, new Set()).get(region)!;
+    set.add(c.countrySlug);
+  }
+  for (const [region, set] of countriesIn) {
+    (out[region] ??= {}).countries = set.size;
   }
   return out;
 }

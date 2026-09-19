@@ -316,6 +316,69 @@ GeoNames). Lower priority than net-new destinations.
       Stefan, Budva old town coordinates) — same real sites in two hubs.
       Fine today; worth deduping if a "seen this already" view is built.
 
+## ✅ RESOLVED 2026-09-20: routes that were shorter than their own content
+
+Eleven destinations advertised a route far shorter than the places behind it -
+Nicosia offered "a ready route for 1 day" over 18 places and used five; Kruger
+had 3 days over 17, Plovdiv 2 over 16. All eleven under 70% coverage were
+rebuilt from their own geography and now sit at 72% or above.
+
+**Deliberately NOT framed as "303 orphan places", and that matters for whoever
+picks this up next.** The catalog validator's own comment says places outside
+the route are by design - "the places list is meant to be broader than the
+suggested route" - and it is right. A route is a recommendation, not an index.
+So the remaining 228 orphans are **not a backlog**; they are alternates. The
+thing worth watching is the ratio, not the count.
+
+Two pre-existing errors surfaced while regrouping: a Kampot pepper farm sat in a
+Phnom Penh city day 130km away, and a Tallinn day ran Kadriorg to Paldiski,
+110km east to west.
+
+`scripts/apply-itineraries.mjs` + `scripts/itinerary-plan.json` are the tooling.
+The script validates every place id against the catalog before writing anything
+and refuses the whole run on one bad id, which is what makes hand-typed ids safe.
+
+## ✅ RESOLVED 2026-09-20: the agent inventing numbers about our own coverage
+
+Asked how many nature destinations we have in Europe, it answered "66" in bold.
+Europe holds 84 and 30 are nature; 66 is the sum of Asia's lists. Two layers now:
+the counts are handed over in the index (`byCharacterCounts`, and a per-country
+count on every country row), and `priceGuard` gained a `coverage` category backed
+by `coverageFacts.ts` - a closed set of numbers we can actually count to, plus a
+scope check for "N destinations in X" that catches a true number wearing the
+wrong label.
+
+## ⚠️ The prompt sits at 91% of the context window (measured 2026-09-20)
+
+Not a task, a standing constraint that should be re-measured rather than assumed.
+
+The worst case - the six cities with the largest detail blocks, a history at its
+full 50,000-char budget, kosher on - was **207,822 tokens against a 200,000
+window**, i.e. already over, and was fixed to **181,967 (91.0%)** by capping the
+detail block by characters instead of by city count. Measured with Anthropic's
+own tokenizer, not a chars-to-tokens estimate.
+
+**What this means for data work:** the index grows with the catalog, and at 91%
+there is roughly 18,000 tokens of slack for everything. `groundingBudget.test.ts`
+fails if the sum crosses the ceiling, and the right response to that failure is to
+lower `MAX_DETAIL_CHARS` or shrink the index - **not** to raise the number in the
+test. The index compaction lever (tuple format) has already been spent.
+
+## Deferred by decision, not blocked - `/premium` visual redesign
+
+Investigated 2026-09-20 and **closed without changes.** It had been carried as
+"the last page that reads like a book - 7,395 chars, zero images". Measured
+properly it has 52 visible text blocks and three over 140 characters, against
+/countries' zero - and the eleven "long paragraphs" an earlier count reported
+were answers inside collapsed `details` elements that no reader sees. Looked at
+in a browser at 1400 and 390 it is three priced cards, a chooser strip, a
+comparison table and a FAQ.
+
+Characters and image count were a proxy for structure and measured the wrong
+thing. If it is revisited, the open question is **height** (5,092px at 390px),
+not prose density - and a pricing page having no photographs is a normal choice,
+not a defect.
+
 ## ✅ RESOLVED 2026-09-19: חודשים מומלצים לכל יעד
 
 The season filter, the seasonal hubs and "where should I go in March" were all

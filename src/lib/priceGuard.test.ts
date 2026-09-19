@@ -534,3 +534,23 @@ test('a clean sentence ending in a colon keeps its list', () => {
   const out = guardText(text, {});
   assert.equal(out.text, text);
 });
+
+test('the colon rule survives a flush boundary, which is where it actually has to work', () => {
+  /*
+    The bug live testing found in the first version of this fix: `guardText` runs
+    once per stream flush, and streaming flushes AT sentence boundaries - so the
+    cut colon-sentence is usually the last sentence of one flush and its list the
+    first of the next. A flag local to one call therefore passes its unit test and
+    does nothing in production, which is exactly what happened: the orphan list
+    still reached the screen.
+  */
+  const stream = new GuardedTextStream({});
+  let out = '';
+  out += stream.push('אם אתם מחפשים אלטרנטיבה - יש לי בקטלוג יעדים עם תשתית כשרות מאומתת: ');
+  out += stream.push('וורשה, בודפשט, פראג וברטיסלבה. ');
+  out += stream.push('רוצים שאחקור עיר אחרת?');
+  out += stream.end();
+  assert.ok(stream.redactions.length > 0, 'the claim should have been cut');
+  assert.ok(!out.includes('וורשה'), `the orphan list crossed the flush boundary: ${out}`);
+  assert.ok(out.includes('רוצים שאחקור עיר אחרת?'), `too much was cut: ${out}`);
+});

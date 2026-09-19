@@ -3020,22 +3020,52 @@ What the number actually is, measured rather than assumed:
 - The ceiling is a **self-imposed guardrail. It appears nowhere in the code** - grep
   for it and you will find nothing. There is no API limit at this value.
 - The real constraint is the 200k context window, shared by the grounding index +
-  the detail block (capped at 6 cities, ~39,000 chars worst case) + the history budget
-  (50,000 chars, see entry 2026-07-27 (e)) + system prompt and tools.
+  the detail block + the history budget (50,000 chars, see entry 2026-07-27 (e)) +
+  system prompt and tools.
+- **The detail block is capped at 45,000 CHARS (`MAX_DETAIL_CHARS`), not at six
+  cities.** This line used to say "capped at 6 cities, ~39,000 chars worst case",
+  which was true when written and then silently stopped being true: the catalog
+  roughly doubled and a city is not a fixed amount of text. Measured 2026-09-20,
+  Vienna alone is 20,126 chars and the six largest together were **86,633**.
 - Measured 2026-07-27: index 191,951 chars at 1,336 places, **90% ASCII / 10% Hebrew**,
   which is roughly 61k-67k tokens. An earlier entry's "~45k tokens" understates it.
 - Cost per place is **~144 chars catalog-wide**, but only **110 chars** for a
   food/market/shopping entry, which carries no description - see entry (dd).
 
-**Latest measurement: 249,420 chars (2026-08-24)**, of which ~3,400 is the
-`byCharacter` directory added that day - the answer to "which of our destinations
-are nature/food/history", grouped by continent. Re-measure before quoting a figure;
-the numbers below are from 2026-07-29 and the arithmetic still holds at the new size.
+**Latest measurement: 255,516 chars (2026-09-20)**, which includes the
+`byCharacter` directory and the per-continent/per-character and per-country counts
+handed to the model so it stops inventing figures about our own coverage.
 
-**280,000 is close to the real limit, and the arithmetic is why.** Measured
-2026-07-29 at 241,002 chars, the index is ~78k-89k tokens. Adding the other blocks at
-their own worst case - detail ~28k, history ~45k, trip ~6k, system and tools ~6k -
-puts a worst-case request at roughly **165k-177k of the 200k window**. Scaling that:
+**Read this before trusting the chars-to-tokens arithmetic below.** On
+2026-09-20 the whole worst-case prompt was counted with **Anthropic's own
+tokenizer** (`/v1/messages/count_tokens`) rather than estimated, and the estimate
+was optimistic by a wide margin:
+
+| | chars | real tokens |
+|---|---|---|
+| index (kosher on) | 255,516 | ~124,000 |
+| detail block, before the char cap | 86,633 | ~42,000 |
+| **whole worst-case prompt, before** | 430,510 | **207,822 - OVER the 200k window** |
+| **whole worst-case prompt, after** | 381,128 | **181,967 (91.0%)** |
+
+Measured ratio on the real mix: **0.48 tokens/char**, not the ~0.35 the older
+arithmetic assumes. So the index at 255,516 chars is ~124k tokens on its own,
+where the table below would predict ~85k.
+
+**The practical consequence: there is about 18,000 tokens of slack in total, and
+the ceiling that matters is no longer the 280,000-char guardrail but the window.**
+`src/lib/server/groundingBudget.test.ts` asserts the sum and fails if it is
+crossed; when it fails, lower `MAX_DETAIL_CHARS` or shrink the index - **do not
+raise the number in the test.** The index-format lever below has already been
+spent (the tuple form shipped 2026-09-18).
+
+**280,000 is close to the real limit, and the arithmetic is why.** The table below
+is the 2026-07-29 estimate and is kept because its conclusion still holds - but it
+under-counts, per the measured figures above. Treat it as the shape of the argument
+and `groundingBudget.test.ts` as the number. Measured 2026-07-29 at 241,002 chars,
+the index is ~78k-89k tokens. Adding the other blocks at their own worst case -
+detail ~28k, history ~45k, trip ~6k, system and tools ~6k - puts a worst-case
+request at roughly **165k-177k of the 200k window**. Scaling that:
 
 | ceiling | worst-case prompt | headroom |
 |---|---|---|
@@ -12464,3 +12494,205 @@ they are the ones no existing day can reach - Nicosia is the clearest case, an
 eighteen-place destination with one day, which needs **more days** and therefore
 real prose rather than assignment. That is an editorial task, not a mechanical
 one.
+
+### 2026-09-20 - The numbers about ourselves, and a prompt that was already over the window
+
+Netanel, going to sleep: do everything that is left, and my decision is his. The
+list I had was four items. Two of them were right, one was right for a reason I
+had not understood, and one rested on a measurement I had taken badly.
+
+---
+
+**The agent was inventing statistics about our own catalog.** Asked how many
+nature destinations we have in Europe it answered **"66 יעדים באירופה
+שמתאפיינים בטבע"**, in bold. Europe holds 84 and 30 of them are nature; 66 is
+the sum of Asia's lists. A confident, specific, bolded figure about the one
+subject a traveller has no way to check us on.
+
+This was the habit the previous entry flagged as pre-existing and left alone
+("would need a deterministic guard like `priceGuard` - a decision rather than a
+task"). It is now built, in the two layers this codebase keeps arriving at.
+
+**Hand over the counts** - `byCharacterCounts` sits beside the list it counts and
+each country row carries how many of our destinations are in it. That alone moved
+the answer to 30. **Then guard the output** - `coverageFacts.ts` counts every
+number we can legitimately claim and `priceGuard` gains a `coverage` category. A
+closed set of true numbers, deliberately not a plausibility range: 66 is entirely
+plausible for this catalog and is simply not the answer to the question asked.
+
+**And the second layer caught what the first could not.** With real figures in
+hand the model stopped inventing them and instead wrote *"איטליה מתפשטת על 166
+יעדים במערכת"* - every digit true, the sentence false, because 166 is the
+worldwide total and Italy has five. So a scope check for the one form where the
+preposition binds a number to a place ("N destinations in X"), and per-country
+counts handed over so it need not reach for the nearest number.
+
+**Two false positives of my own, both found live rather than by reading.**
+Checking every digit in the sentence would have cut "166 destinations, and a
+7-day route in Vienna" over the **7**; only a number quantifying a coverage noun
+is compared now. And taking the **longest** scope name in the window cut a true
+sentence - *"אני מכסה 25 מדינות באירופה - אוסטריה, סלובקיה…"* - because the
+window reached past the dash into the list and Austria is one letter longer than
+Europe. The nearest name wins now, and a dash ends the window like a comma.
+
+**General knowledge stays out of scope.** "There are 44 countries in Europe" is a
+real answer to a real question, and a guard assembled from our catalog has no
+business ruling on it - that is the euro/Europe false positive one level up.
+
+**`GUARD_DEBUG=on` now logs the sentence that was cut**, not only the rule name.
+Added after an afternoon spent reconstructing a false positive from the rule name
+alone, with ten candidate sentences all passing.
+
+---
+
+**The 303 routeless places were not the defect, and the validator says so.** Its
+own comment reads: places that no day references are deliberately not checked -
+"the places list is meant to be broader than the suggested route". That is right,
+and "assign all 303" would have fought a decision somebody had already made
+properly.
+
+The real defect is narrower: **a route disproportionate to its own content**,
+which is what the card's day count then advertises. Nicosia offered "a ready
+route for 1 day" over 18 places and used five. So the eleven destinations under
+70% coverage were rebuilt from their own geography and the rest left alone.
+Coverage floor 28% to 72%; orphans 303 to 228, with nothing above ten.
+
+Two existing days turned out to be wrong on inspection: a Kampot pepper farm sat
+in a Phnom Penh city day 130km away, and a Tallinn day ran Kadriorg to Paldiski,
+110km east to west. Both now sit where they belong.
+
+`scripts/apply-itineraries.mjs` validates all 90 hand-typed place ids against the
+catalog **before writing anything** and refuses the whole run on one bad id.
+
+---
+
+**Measuring the effect of that on the grounding block turned up the worst thing
+in the session, and it was nobody's change.** Counted with Anthropic's own
+tokenizer rather than a chars-to-tokens estimate, the real worst case - the six
+cities with the largest detail blocks, a history at its full 50,000-char budget,
+kosher on - came to **207,822 input tokens against a 200,000 window.** Over,
+before a single output token.
+
+That is entry (e)'s failure and its shape is the nastiest available: history only
+grows, so the first turn that crosses the line makes every later turn in that
+conversation fail identically and forever. It is reachable - Vienna, Prague, Rome
+and Paris is an ordinary European trip.
+
+**The cause is a cap in the wrong unit.** The detail block has been capped at six
+CITIES since it was found unbounded, calibrated in its own comment at "~6,500
+chars per city". True when written; the catalog then roughly doubled, and a city
+is not a fixed amount of text. **Vienna alone is 20,126 chars** and the six
+largest are 86,633.
+
+So the cap moved to characters, and moved **inside** `buildGroundingDetail` where
+the text is produced rather than in the caller that picks the slugs - so no
+future caller can bypass it. Measured after: **181,967 tokens, 91.0%, 18,033 to
+spare.** Verified live that the trimming costs nothing: a four-city trip still
+answered with the right specifics for each city.
+
+A bug of my own on the way: the first version budgeted city entries only and
+overshot, because the `countries` array grows with them. **A budget that does not
+count part of its own output is not a budget**, and the test asking for all 166
+destinations at once is what caught it.
+
+**Two stale comments corrected rather than left standing**, both load-bearing for
+decisions: the six-city cap's "~6,500 chars per city", and the history budget's
+claim of "~88k of constant parts" leaving "a comfortable margin" - the index
+alone is ~124k tokens now. `groundingBudget.test.ts` asserts the sum, so the next
+person does not have to trust a comment.
+
+---
+
+**The collection cards were fronted by whatever photo came first**, which meant
+the food collection wore the Sagrada Família and - with the theme logic disabled,
+which is how the test proves itself - the kosher collection wears St Stephen's
+Cathedral. A destination's hero photo is a cityscape, so no choice among hero
+photos could ever look like food; the lead now comes from a **place** inside a
+member: a market for food, a lake for nature, a museum for art.
+
+Ordering was load-bearing there too. In plain `HUBS` order the generic hubs - a
+season, a continent, a trip length - consumed photos a themed hub needed, and
+nature ended up on a hero while an earlier card held the lake. A hub with no
+theme can use any photograph; one with a theme cannot, so the constrained ones
+pick first.
+
+---
+
+**And the item I did not do, because the premise was mine and it was wrong.**
+`/premium` was on my list as "the last page that reads like a book - 7,395 chars,
+zero images". Measured properly it has **52 visible blocks and three over 140
+characters**; the eleven I had counted included answers inside collapsed
+`details` elements that no reader sees. Then I looked at it, at both widths:
+three priced cards, a chooser strip, a comparison table and a FAQ. The 2026-08-22
+sessions already rebuilt it and it works. Counting characters and images was a
+proxy for structure, and it measured the wrong thing. **Nothing was changed.**
+
+That time went instead to a real defect seen in live output: the guard cut a
+sentence ending in a colon and left its list stranded, so a reply ended
+*"…או לשאול על עיר אחרת שכן מכוסה אצלנו. וורשה, בודפשט, פראג וברטיסלבה."* A cut
+colon-sentence now takes its continuation with it - and a test asserts the
+unrelated sentence after the list is NOT swallowed, which the obvious over-broad
+fix would have done.
+
+---
+
+**Verified.** 857 unit tests (31 new), tsc, build and lint clean; catalog
+validator 0 errors and the same 83 warnings as before the data change. Every new
+guard was proven to guard by reintroducing the bug and watching the named test
+fail. Live against the real model across two rounds of scenarios: the coverage
+numbers, the per-country count, the two false positives, general geography left
+alone, kashrut for an uncatalogued city still declined, a build request still
+building, and a four-city trip after the detail cap. Twelve pages swept in a real
+browser at 390px - zero overflow, nothing past the edge, RTL intact, no broken
+images.
+
+**`scripts/measure-page.mjs` is now committed** rather than rebuilt a sixth time.
+It carries the two lessons this log keeps relearning: it refuses to report a
+number until the stylesheet has actually loaded, and it sets a real device
+viewport instead of relying on `--window-size`, which only crops.
+
+**Still only Netanel's to do:** `sql/supabase-consent.sql` has never been run, so
+the clickwrap line under the login field promises an agreement recorded nowhere.
+Nothing breaks without it - the write is wrapped - but it is the one outstanding
+migration.
+
+**Addendum, from the final live run - two more of my own bugs, both only findable
+by running it.**
+
+**The scope check was looking in the wrong direction for Hebrew.** It handled
+"N destinations in X" and Hebrew puts the scope first far more naturally: asked
+how many countries there are in Europe, the agent answered "in-Europe there are
+**83** countries in my database". 83 is the worldwide total, Europe holds 36.
+Real digits, false sentence, in the word order the model actually prefers.
+
+So a sentence that **opens** with a scope is now checked against it - and only
+when it literally opens with it, at position zero after at most a markdown marker
+and the prepositional prefix. A scope merely earlier in the sentence still does
+not own the number, because "we travelled in Italy and I have 166 destinations in
+the catalog" is a good sentence. The first version of that rule then cut
+*"Italy is a huge catalog - 166 destinations in 83 countries in the system"*,
+which it should not have: the dash starts a new clause and those figures are
+global. A dash or comma between the opening scope and the number now blocks the
+rule, exactly as it already did on the postfix side.
+
+Per-continent COUNTRY counts went into the index alongside the rest, so the model
+can write the true sentence rather than merely be stopped from writing a false
+one. Final run: "36 countries in Europe", correct.
+
+**And the colon fix did not work where it had to.** `guardText` runs once per
+stream flush and streaming flushes AT sentence boundaries - so the cut
+colon-sentence is nearly always the last sentence of one flush and its list the
+first of the next. The flag was local to one call, so it passed its unit test and
+would have done nothing in production. It is carried on the stream now, like the
+replaced-once set, with a test that drives three separate `push` calls.
+
+**A flaky test fixed rather than flagged a third time.** `limits.test.ts`'s
+window-reset case failed about one run in three and has been recorded as a known
+flake twice. The race was not where the comment assumed: with a 1ms window the
+**first two** calls are the problem, because a single clock tick between them
+expires the window and the call that is supposed to be blocked succeeds.
+`checkLimit` reads the clock itself, so the only lever is the window - 50ms, which
+two adjacent calls cannot span. Twelve consecutive runs clean.
+
+**Final:** 861 tests, tsc, build, lint at the pre-existing 34, catalog validator 0
+errors / 83 warnings.

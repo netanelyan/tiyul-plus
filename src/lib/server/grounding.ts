@@ -183,7 +183,7 @@ const BY_CHARACTER_LEGEND =
   'Characters: outdoors (nature, lakes, mountains, trails), history, art (museums and galleries), foodie, shopping. ' +
   "When the traveller says what kind of trip they want, choose what you suggest FROM THIS LIST - it is the catalog's own answer and it covers destinations you would not think of first. Look the slug up in \"cities\" below for the Hebrew name. " +
   'A destination missing from every list is an all-rounder whose places spread evenly across categories; that is not a reason to leave it out. ' +
-  'NEVER count these lists yourself. "byCharacterCounts" holds the count for every continent and character, plus "total" = that continent\'s destination count. ' +
+  'NEVER count these lists yourself. "byCharacterCounts" holds the count for every continent and character, plus "total" = that continent\'s destination count and "countries" = how many countries it holds. ' +
   'If you state a number, read it from there and say which continent and character it belongs to. There is no number for "several continents together" - do not add them up.';
 
 /**

@@ -183,6 +183,38 @@ test("Europe's own country count is a number it is allowed to claim", () => {
   );
 });
 
+test('a sentence that OPENS with a scope is checked against that scope', () => {
+  /*
+    Straight from a live run, and the word order Hebrew actually prefers: asked
+    how many countries there are in Europe, the agent answered "there are 83
+    countries in Europe in my database". 83 is our worldwide total and Europe
+    holds 25 - every digit real, the sentence false. The postfix rule could not
+    see it because the scope comes first.
+  */
+  assert.equal(violationOf('באירופה יש 83 מדינות במסד הנתונים שלי.', allow), 'coverage-count');
+});
+
+test("and the same opening with that scope's real number passes", () => {
+  const europeCountries = new Set(
+    buildCards()
+      .filter((c) => c.continent === 'אירופה')
+      .map((c) => c.countrySlug),
+  ).size;
+  assert.equal(violationOf(`באירופה יש לנו ${europeCountries} מדינות.`, allow), null);
+});
+
+test('a dash after the opening scope starts a new clause', () => {
+  /*
+    Cut from a live run by the first version of the opening-scope rule, and it
+    should not have been: "Italy is a huge catalog - 166 destinations in 83
+    countries in the system, and in Italy itself 5 cities are covered". Both
+    figures are real and global; the opening names Italy; only the dash tells
+    you they are not Italy's. Same rule as the postfix window, same reason.
+  */
+  const s = 'איטליה היא קטלוג ענק - יש לנו 166 יעדים במערכת.';
+  assert.equal(violationOf(s, allow), null, s);
+});
+
 test('a scope before the number is never treated as owning it', () => {
   // "we visited Italy, and I have 166 destinations in the catalog" is fine.
   assert.equal(violationOf('טיילנו באיטליה ויש לנו 166 יעדים בקטלוג.', allow), null);

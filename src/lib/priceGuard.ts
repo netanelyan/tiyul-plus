@@ -736,6 +736,54 @@ export function violationOf(sentence: string, allow: GuardAllowlist = {}): strin
 }
 
 /**
+ * The scope a sentence OPENS with - "in Europe we have 83 countries".
+ *
+ * Hebrew puts this first far more naturally than last, and the postfix rule
+ * alone missed it in live testing: asked how many countries there are in Europe,
+ * the agent answered, in this word order, **"in-Europe there are 83 countries in
+ * my database"**. 83 is our worldwide total and Europe holds 25, so every digit
+ * was real and the sentence was false - the same shape as "166 destinations in
+ * Italy", in the word order the model actually prefers.
+ *
+ * **It has to BEGIN with the scope, and that is the whole safety of it.** A
+ * scope merely somewhere earlier in the sentence does not own the number: "we
+ * travelled in Italy and I have 166 destinations in the catalog" is a good
+ * sentence, and a proximity rule would cut it. Requiring position zero - after
+ * at most a markdown marker and the Hebrew prepositional prefix - separates the
+ * two cleanly, at the cost of missing a longer opening like "on the continent of
+ * Europe there are…". A miss, never a false cut.
+ */
+function scopeOpening(
+  sentence: string,
+  numberAt: number,
+  scopes: Record<string, number[]> | undefined,
+): { name: string; allowed: number[] } | null {
+  if (!scopes) return null;
+  const head = sentence.replace(/^[\s*_#>-]+/, '');
+  const lead = sentence.length - head.length;
+  // The number must follow closely; further than this and it belongs to a
+  // different clause of the same sentence.
+  if (numberAt - lead > 40) return null;
+  for (const name of Object.keys(scopes).sort((a, b) => b.length - a.length)) {
+    const at = head.indexOf(name);
+    // Up to two Hebrew prefix letters may attach in front ("in-Europe").
+    if (at < 0 || at > 2) continue;
+    /*
+      Nothing may separate the opening scope from the number but plain words.
+      A dash or a comma starts a new clause, and the sentence that made this
+      necessary is "Italy is a huge catalog - 166 destinations in 83 countries
+      in the system": those two figures are real and global, the opening names
+      Italy, and only the dash tells you they are not Italy's. Same rule as
+      SCOPE_WINDOW_END on the postfix side, for the same reason.
+    */
+    const between = head.slice(at + name.length, numberAt - lead);
+    if (SCOPE_WINDOW_END.test(between)) return null;
+    return { name, allowed: scopes[name] };
+  }
+  return null;
+}
+
+/**
  * Whether the sentence quantifies our own coverage with a number we cannot
  * count to. See `COVERAGE_QUANT` and `COVERAGE_OWNED`.
  */
@@ -764,7 +812,8 @@ function coverageViolation(sentence: string, allow: GuardAllowlist): boolean {
       is built from a real figure and is still false, and it is the form the
       agent actually produced once the invented figures stopped.
     */
-    const scope = scopeAfter(sentence, m.index + m[0].length, scopes);
+    const scope = scopeAfter(sentence, m.index + m[0].length, scopes)
+      ?? scopeOpening(sentence, m.index, scopes);
     if (scope) {
       if (!scope.allowed.includes(n)) return true;
       continue;
@@ -853,6 +902,16 @@ export function guardText(
    * so a reply that touched both a price and an event explains both.
    */
   alreadyReplaced: Set<GuardCategory> = new Set(),
+  /**
+   * Carried across calls, for the same reason `alreadyReplaced` is.
+   *
+   * Streaming flushes at sentence boundaries, so a cut sentence ending in a
+   * colon is very often the LAST sentence of its flush and its list arrives in
+   * the next one. A flag local to one call is therefore a fix that works in a
+   * unit test and almost never in production - which is exactly what live
+   * testing showed, with the orphan list surviving anyway.
+   */
+  carry: { dropNext: boolean } = { dropNext: false },
 ): GuardResult {
   const line = {
     price: replacements.price ?? NO_PRICE_LINE_BARE,
@@ -877,7 +936,7 @@ export function guardText(
     replacing, because the replacement line has already been said for this
     category one sentence earlier.
   */
-  let dropContinuation = false;
+  let dropContinuation = carry.dropNext;
   const out = splitSentences(text).map((sentence) => {
     if (!sentence.trim()) return sentence;
     if (dropContinuation) {
@@ -910,6 +969,7 @@ export function guardText(
     const tail = sentence.match(/\s+$/)?.[0] ?? '';
     return line[cat] + tail;
   });
+  carry.dropNext = dropContinuation;
   return { text: out.join(''), redactions, replaced: replacedHere };
 }
 
@@ -969,6 +1029,13 @@ export class GuardedTextStream {
   private readonly replacements: GuardReplacements;
   /** Each honest line is said once per reply, even when it consists of several flushes */
   private readonly replacedOnce = new Set<GuardCategory>();
+  /**
+   * Whether the previous flush ended on a cut colon-sentence whose continuation
+   * still has to be dropped. Held here rather than inside `guardText` because
+   * the two halves usually arrive in different flushes - see the note on the
+   * `carry` parameter.
+   */
+  private readonly carry = { dropNext: false };
 
   readonly redactions: string[] = [];
 
@@ -1013,7 +1080,7 @@ export class GuardedTextStream {
     const chunk = this.acc.slice(this.emitted, to);
     this.emitted = to;
     if (!chunk) return '';
-    const res = guardText(chunk, this.allow, this.replacements, this.replacedOnce);
+    const res = guardText(chunk, this.allow, this.replacements, this.replacedOnce, this.carry);
     for (const cat of res.replaced) this.replacedOnce.add(cat);
     this.redactions.push(...res.redactions);
     return res.text;
