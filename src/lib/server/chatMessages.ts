@@ -85,11 +85,22 @@ export const MAX_IMAGES_PER_REQUEST = 2;
  * traveler saw the same error over and over in one long thread, and why
  * other fixes changed nothing for them.
  *
- * 50,000 chars ≈ 50k tokens in Hebrew. With ~88k of constant parts in the
- * worst case that leaves a comfortable margin under 200k, including room
- * for output.
+ * 50,000 chars ≈ 50k tokens in Hebrew.
+ *
+ * **The "comfortable margin" this comment used to claim is gone, and the number
+ * it was based on was stale.** It said ~88k tokens of constant parts; measured
+ * 2026-09-20 with Anthropic's tokenizer the index alone is ~124k, because the
+ * catalog roughly doubled since. The full worst case came to 207,822 tokens
+ * against a 200,000 window - over. The detail block now carries a size budget
+ * (`MAX_DETAIL_CHARS`) which brings it back to ~182k, and
+ * `groundingBudget.test.ts` asserts the whole sum rather than trusting a comment.
+ *
+ * This budget is exported for that test: the history and the detail block are
+ * the two variable parts competing for one window, so the arithmetic has to be
+ * able to see both.
  */
-const HISTORY_CHAR_BUDGET = 50_000;
+export const MAX_HISTORY_CHARS = 50_000;
+const HISTORY_CHAR_BUDGET = MAX_HISTORY_CHARS;
 
 /** A message with neither text nor image carries no information */
 function carriesNothing(m: ChatMessage): boolean {

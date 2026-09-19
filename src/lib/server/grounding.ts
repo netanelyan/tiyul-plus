@@ -423,36 +423,122 @@ export function buildLightGrounding(citySlugs: string[], kosherOk: boolean): str
   ].join('\n');
 }
 
+/**
+ * The size ceiling on the detail block, in characters of rendered JSON.
+ *
+ * ## Why a size and not a number of cities
+ *
+ * `relevantCitySlugs` has capped this at six CITIES since the block was first
+ * found to be unbounded, and the comment there records the calibration:
+ * "~6,500 chars per city", i.e. about 39,000 chars at six. That number was true
+ * when it was written. The catalog then roughly doubled, and a city is not a
+ * fixed amount of text - **Vienna alone is now 20,126 chars**, and the six
+ * largest together are 86,633.
+ *
+ * Measured 2026-09-20 with Anthropic's own tokenizer rather than a chars-to-
+ * tokens estimate, on the real worst case (the six largest detail cities, a
+ * history at its full 50,000-char budget, kosher on): **207,822 input tokens
+ * against a 200,000 window.** Already over, before a single output token.
+ *
+ * That failure is the one entry (e) of the session log describes and it is the
+ * nastiest shape a bug can have here: history only grows, so the first turn that
+ * crosses the line makes every later turn in that conversation fail identically,
+ * forever.
+ *
+ * So the cap moves into the unit that actually matters. Measured at this budget
+ * the same worst case is 181,959 tokens (91.0%), which leaves room for the
+ * 4,096-token reply and a real margin on top.
+ *
+ * The city cap stays as a second, cheaper bound - it stops the loop early in the
+ * common case - but this is the one that holds as the catalog grows.
+ */
+export const MAX_DETAIL_CHARS = 45_000;
+
 export function buildGroundingDetail(citySlugs: string[], kosherOk: boolean): string {
-  const cities = destinations.filter((d) => citySlugs.includes(d.slug));
-  const countrySlugs = new Set(cities.map((d) => d.countrySlug));
-  const kosherIds = new Set(
-    cities.flatMap((d) => d.places.filter((p) => isKosher(p.category)).map((p) => p.id)),
-  );
+  /*
+    Trim to the size budget before rendering, keeping the caller's order - which
+    `relevantCitySlugs` has already sorted with the trip's own cities first, so
+    what gets dropped is a city merely mentioned in passing and never the one
+    being planned. The first city is always kept even if it alone is over budget:
+    a detail block about nothing would be worse than a large one, and the index
+    still carries every id and name so the model can work with what was cut.
+  */
+  const ordered = citySlugs
+    .map((slug) => destinations.find((d) => d.slug === slug))
+    .filter((d): d is Destination => !!d);
+
+  const note =
+    'DETAIL for the cities this conversation touches. Other cities: use the INDEX above, and say plainly if you need specifics we did not load.';
+  const kosherPolicy = kosherOk ? KOSHER_POLICY_ON : KOSHER_POLICY_OFF;
+  const countryEntry = (slug: string) => {
+    const c = countries.find((x) => x.slug === slug);
+    return c ? { slug: c.slug, name: c.name, summary: c.summary, practical: c.practical } : null;
+  };
+
+  /*
+    Everything the block will contain is counted, not just the cities. The first
+    version budgeted city entries alone and overshot by 1,064 chars, because the
+    `countries` array grows with them - each new country drags in its summary and
+    its whole practical block. A budget that does not count part of its own
+    output is not a budget, and the test asking for all 166 destinations is what
+    caught it.
+  */
+  let size = JSON.stringify({ note, kosherPolicy, countries: [], cities: [] }).length;
+  const kept: Destination[] = [];
+  const keptCountries = new Set<string>();
+  for (const d of ordered) {
+    let cost = detailCostOf(d, kosherOk) + 1; // +1 for the joining comma
+    if (!keptCountries.has(d.countrySlug)) {
+      const entry = countryEntry(d.countrySlug);
+      if (entry) cost += JSON.stringify(entry).length + 1;
+    }
+    if (kept.length > 0 && size + cost > MAX_DETAIL_CHARS) continue;
+    kept.push(d);
+    keptCountries.add(d.countrySlug);
+    size += cost;
+  }
+
   return JSON.stringify({
-    note: 'DETAIL for the cities this conversation touches. Other cities: use the INDEX above, and say plainly if you need specifics we did not load.',
-    kosherPolicy: kosherOk ? KOSHER_POLICY_ON : KOSHER_POLICY_OFF,
-    countries: countries
-      .filter((c) => countrySlugs.has(c.slug))
-      .map((c) => ({ slug: c.slug, name: c.name, summary: c.summary, practical: c.practical })),
-    cities: cities.map((d) => ({
-      slug: d.slug,
-      name: d.name,
-      summary: d.summary,
-      // Flights, transit, kosher - at the city level. `kosherOverview` is
-      // the city's kashrut overview, so it goes down along with the entries
-      // themselves; the other fields are unrelated and stay.
-      // (JSON.stringify omits undefined, so the field is simply not sent)
-      practical: kosherOk ? d.practical : { ...d.practical, kosherOverview: undefined },
-      // The curated itinerary refers to place ids; without this filter a
-      // kosher id would reach the model through the itinerary's back door.
-      itinerary: kosherOk
-        ? d.itinerary
-        : d.itinerary.map((day) => ({
-            ...day,
-            placeIds: day.placeIds.filter((id) => !kosherIds.has(id)),
-          })),
-      places: d.places
+    note,
+    kosherPolicy,
+    // Catalog order, as before - the set is the same either way, and a stable
+    // order keeps the block byte-identical for the same conversation.
+    countries: countries.filter((c) => keptCountries.has(c.slug)).map((c) => countryEntry(c.slug)),
+    cities: kept.map((d) => cityDetail(d, kosherOk)),
+  });
+}
+
+/**
+ * What one city contributes to the detail block. Extracted so that the size
+ * budget above is measured on **exactly** the text that will be sent, rather
+ * than on an estimate that can drift away from it - which is the mistake the
+ * six-city cap made.
+ */
+function cityDetail(d: Destination, kosherOk: boolean) {
+  // Scoped to this city's own places, which is equivalent to the set-wide list
+  // it replaced: a day of an itinerary can only reference place ids belonging to
+  // its own destination, and the catalog validator errors on anything else.
+  const kosherIds = new Set(
+    d.places.filter((p) => isKosher(p.category)).map((p) => p.id),
+  );
+  return {
+    slug: d.slug,
+    name: d.name,
+    summary: d.summary,
+    // Flights, transit, kosher - at the city level. `kosherOverview` is
+    // the city's kashrut overview, so it goes down along with the entries
+    // themselves; the other fields are unrelated and stay.
+    // (JSON.stringify omits undefined, so the field is simply not sent)
+    practical: kosherOk ? d.practical : { ...d.practical, kosherOverview: undefined },
+    // The curated itinerary refers to place ids; without this filter a
+    // kosher id would reach the model through the itinerary's back door.
+    itinerary: kosherOk
+      ? d.itinerary
+      : d.itinerary.map((day) => ({
+          ...day,
+          placeIds: day.placeIds.filter((id) => !kosherIds.has(id)),
+        })),
+    places: d.places
         .filter((p) => kosherOk || !isKosher(p.category))
         .map((p) => ({
           id: p.id,
@@ -484,6 +570,10 @@ export function buildGroundingDetail(citySlugs: string[], kosherOk: boolean): st
           // kosher") - hiding it would be harmful, not cautious.
           kosherNote: p.kosherNote,
         })),
-    })),
-  });
+  };
+}
+
+/** The rendered size of one city's entry, used by the size budget above. */
+function detailCostOf(d: Destination, kosherOk: boolean): number {
+  return JSON.stringify(cityDetail(d, kosherOk)).length;
 }
