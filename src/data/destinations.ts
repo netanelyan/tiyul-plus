@@ -759,42 +759,42 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'שנברון, נאשמרקט ובלוודר',
-        placeIds: ['vie-schonbrunn', 'vie-naschmarkt', 'vie-belvedere'],
+        placeIds: ['vie-schonbrunn', 'vie-naschmarkt', 'vie-belvedere', 'vie-kosher-deli', 'vie-milano-cafe'],
         notes:
           'לשנברון כדאי להגיע עם הפתיחה. בבלוודר נמצא "הנשיקה" של קלימט.',
       },
       {
         day: 3,
         title: 'מוזיאונים, האופרה והרטהאוס',
-        placeIds: ['vie-kunsthistorisches', 'vie-albertina', 'vie-opera', 'vie-rathaus'],
+        placeIds: ['vie-kunsthistorisches', 'vie-albertina', 'vie-opera', 'vie-rathaus', 'vie-lamehadrin'],
         notes:
           'לאופרה הממלכתית יש סיורים מודרכים ביום, וגם כרטיסי עמידה זולים מאוד להופעות בערב.',
       },
       {
         day: 4,
         title: 'הרובע השני, פראטר והדנובה',
-        placeIds: ['vie-koscherland', 'vie-bahur-tov', 'vie-prater', 'vie-donauinsel'],
+        placeIds: ['vie-koscherland', 'vie-bahur-tov', 'vie-mea-shearim', 'vie-prater', 'vie-donauinsel'],
         notes:
           'הרובע השני (לאופולדשטאדט) הוא מרכז הכשרות של וינה, וממנו קצרה הדרך לפראטר.',
       },
       {
         day: 5,
         title: 'וינה האחרת: הונדרטוואסר, שטאדטפארק ומריאהילפר',
-        placeIds: ['vie-hundertwasser', 'vie-stadtpark', 'vie-mariahilfer'],
+        placeIds: ['vie-hundertwasser', 'vie-stadtpark', 'vie-ohel-moshe', 'vie-novellino', 'vie-mariahilfer'],
         notes:
           'יום קליל ועירוני, טוב גם למזג אוויר לא מושלם.',
       },
       {
         day: 6,
         title: 'יער וינה, הכרמים והוואכאו',
-        placeIds: ['vie-kahlenberg', 'vie-melk', 'vie-durnstein'],
+        placeIds: ['vie-kahlenberg', 'vie-hawelka', 'vie-sacher', 'vie-durnstein', 'vie-melk'],
         notes:
           'קאהלנברג צמוד לעיר. מלק ודירנשטיין הם עמק הוואכאו, כשעה וחצי מערבה, ומתאימים ליום עם רכב או שיט.',
       },
       {
         day: 7,
         title: 'יער וינה - גבעות ודנובה',
-        placeIds: ['vie-kahlenberg', 'vie-hermannskogel', 'vie-alte-donau'],
+        placeIds: ['vie-kahlenberg', 'vie-hermannskogel', 'vie-prego', 'vie-demel', 'vie-alte-donau'],
         notes:
           'בוקר של הליכה ביער וינה: מקאלנברג לאורך הרכס להרמנסקוגל ומגדל התצפית, וירידה ביער. אחר הצהריים סירה או רחצה בדנובה הישנה. יום בלי מוזיאונים, בתחבורה ציבורית בלבד.',
       },
@@ -1275,20 +1275,20 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'העיר העתיקה והטירה',
-        placeIds: ['bts-oldtown', 'bts-blue-church', 'bts-castle', 'bts-ufo'],
+        placeIds: ['bts-oldtown', 'bts-hviezdoslav', 'bts-ufo', 'bts-castle', 'bts-blue-church'],
         notes: 'יום רגלי קלאסי. מסיימים בשקיעה במגדל ה-UFO.',
       },
       {
         day: 2,
         title: 'מורשת יהודית',
-        placeIds: ['bts-chatam-sofer', 'bts-synagogue', 'bts-jewish-museum', 'bts-chabad'],
+        placeIds: ['bts-chatam-sofer', 'bts-jewish-museum', 'bts-chabad', 'bts-synagogue', 'bts-slavin'],
         notes:
             'את אתר החת"ם סופר מתאמים מראש - הוא נעול רוב הזמן. בית הכנסת ברחוב היידוקובה והמוזיאון לתרבות יהודית נמצאים במרחק הליכה זה מזה, והם מה שנשאר מפרסבורג היהודית אחרי שהעיר העתיקה היהודית נהרסה בשנות השישים.',
       },
       {
         day: 3,
         title: 'דווין והדנובה',
-        placeIds: ['bts-devin', 'bts-janka-krala', 'bts-eurovea'],
+        placeIds: ['bts-devin', 'bts-zelezna', 'bts-nedbalka', 'bts-eurovea', 'bts-janka-krala'],
         notes:
             'לדווין נוסעים באוטובוס 29 או בשיט על הדנובה - השיט יקר יותר ושווה את זה. בחזרה חוצים לגדה השנייה לפארק יאנקו קראל, ומסיימים בטיילת של יורוביאה.',
       },
@@ -2004,14 +2004,14 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'פארקים ותצפיות',
-        placeIds: ['prg-petrin', 'prg-kampa', 'prg-letna', 'prg-zizkov'],
+        placeIds: ['prg-petrin', 'prg-kampa', 'prg-shalom', 'prg-letna', 'prg-zizkov'],
         notes:
           'הרכבל לפטרשין חוסך את העלייה. פארק לטנה נותן את הנוף הקלאסי על הגשרים ועל הנהר.',
       },
       {
         day: 5,
         title: 'וישהראד וטירת קרלשטיין',
-        placeIds: ['prg-vysehrad', 'prg-karlstejn'],
+        placeIds: ['prg-vysehrad', 'prg-u-fleku', 'prg-slavia', 'prg-prokopske', 'prg-karlstejn'],
         notes:
           'קרלשטיין היא נסיעת רכבת של כשעה מפראג, ומשם עוד כחצי שעה הליכה בעלייה אל הטירה.',
       },
@@ -2025,7 +2025,7 @@ export const destinations: Destination[] = [
       {
         day: 7,
         title: 'פראג הירוקה - שארקה וטרויה',
-        placeIds: ['prg-divoka-sarka', 'prg-stromovka', 'prg-botanical'],
+        placeIds: ['prg-divoka-sarka', 'prg-botanical', 'prg-stromovka', 'prg-grebovka', 'prg-koneprusy'],
         notes:
           'בוקר בקניון דיבוקה שארקה (חשמלית עד הסוף), ואחר הצהריים סטרומובקה והגן הבוטני בטרויה - הכול בתחבורה ציבורית. יום מנוחה מהעיר העתיקה, טוב במיוחד בקיץ.',
       },
@@ -2669,7 +2669,7 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'שדרת אנדראשי, כיכר הגיבורים ופארק העיר',
-        placeIds: ['bud-andrassy', 'bud-heroes', 'bud-citypark', 'bud-szechenyi'],
+        placeIds: ['bud-andrassy', 'bud-heroes', 'bud-citypark', 'bud-szechenyi', 'bud-godollo'],
         notes:
           'אפשר לעשות את כל הציר ברכבת התחתית הצהובה, הקו ההיסטורי מ-1896. המרחצאות בפארק פתוחים עד הערב.',
       },
@@ -2683,21 +2683,21 @@ export const destinations: Destination[] = [
       {
         day: 5,
         title: 'מים: מרחצאות גלרט ואי מרגרט',
-        placeIds: ['bud-gellert-baths', 'bud-margaret'],
+        placeIds: ['bud-gellert-baths', 'bud-margaret', 'bud-memento-park'],
         notes:
           'אי מרגרט הוא פארק ארוך באמצע הדנובה, נעים להליכה או לאופניים אחרי המרחצאות.',
       },
       {
         day: 6,
         title: 'טיול יום: סנטנדרה ווישגרד',
-        placeIds: ['bud-szentendre', 'bud-visegrad'],
+        placeIds: ['bud-szentendre', 'bud-visegrad', 'bud-ram-szakadek', 'bud-dobogoko', 'bud-esztergom'],
         notes:
           'סנטנדרה כארבעים דקות מבודפשט ברכבת הפרברים. וישגרד ממשיכה צפונה ומשקיפה על קשת הדנובה.',
       },
       {
         day: 7,
         title: 'גבעות בודה - רכבת הילדים ותצפיות',
-        placeIds: ['bud-childrens-railway', 'bud-normafa', 'bud-janos-hegy', 'bud-palvolgyi'],
+        placeIds: ['bud-childrens-railway', 'bud-normafa', 'bud-janos-hegy', 'bud-palvolgyi', 'bud-premier-outlet'],
         notes:
           'רכבת השיניים לסצ׳ני-הג׳ ורכבת הילדים ביער, ירידה בנורמפה ועלייה ברגל למצפה אליזבת. בדרך חזרה מערת פאל-וולג׳י (סיור מודרך, קר בפנים). יום למשפחות, כולו בגבעות.',
       },
@@ -3407,7 +3407,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'רומא העתיקה',
-        placeIds: ['rom-colosseum', 'rom-forum', 'rom-mouth', 'rom-baghetto'],
+        placeIds: ['rom-colosseum', 'rom-forum', 'rom-mouth', 'rom-baghetto', 'rom-caffarella'],
         notes:
           'כרטיס משולב לקולוסיאום ולפורום. להגיע מוקדם, הצל בשטח החפירות כמעט ואינו קיים.',
       },
@@ -3428,21 +3428,21 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'הוותיקן וקסטל סנט אנג׳לו',
-        placeIds: ['rom-peter-square', 'rom-vatican', 'rom-castel'],
+        placeIds: ['rom-peter-square', 'rom-vatican', 'rom-castel', 'rom-giolitti', 'rom-monte-mario'],
         notes:
           'למוזיאוני הוותיקן חובה להזמין כרטיס לשעה מראש. לבוש צנוע נדרש בבזיליקה.',
       },
       {
         day: 4,
         title: 'הצפון: המדרגות הספרדיות, פופולו והקורסו',
-        placeIds: ['rom-spanish-steps', 'rom-popolo', 'rom-corso', 'rom-borghese'],
+        placeIds: ['rom-spanish-steps', 'rom-caffe-greco', 'rom-corso', 'rom-popolo', 'rom-borghese'],
         notes:
           'לגלריה בורגזה יש כניסה בחלונות זמן קבועים ומספר מבקרים מוגבל, אז מזמינים מראש.',
       },
       {
         day: 5,
         title: 'טראסטוורה, ג׳ניקולו והדרך האפּיה',
-        placeIds: ['rom-trastevere', 'rom-gianicolo', 'rom-appia'],
+        placeIds: ['rom-trastevere', 'rom-porta-portese', 'rom-gianicolo', 'rom-appia', 'rom-castel-romano'],
         notes:
           'טראסטוורה נעימה במיוחד לקראת הערב. הדרך האפּיה סגורה לתנועה בימי ראשון וטובה לאופניים.',
       },
@@ -3456,7 +3456,7 @@ export const destinations: Destination[] = [
       {
         day: 7,
         title: 'הרי האלבנים - אגמים וולקניים',
-        placeIds: ['rom-acquedotti', 'rom-lago-albano', 'rom-lago-nemi'],
+        placeIds: ['rom-acquedotti', 'rom-pamphili', 'rom-ostia', 'rom-lago-albano', 'rom-lago-nemi'],
         notes:
           'רכבת פרברית לקסטל גנדולפו ושביל סביב אגם אלבנו; המשך לנמי, תותי יער ותצפית. בדרך חזרה, אם נשאר אור - פארק האקוודוקטים בשקיעה. יום שקט מחוץ לעיר, בלי רכב.',
       },
@@ -4091,13 +4091,13 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'האקרופוליס ופלאקה',
-        placeIds: ['ath-acropolis', 'ath-acropolis-museum', 'ath-plaka', 'ath-gostijo'],
+        placeIds: ['ath-acropolis', 'ath-plaka', 'ath-acropolis-museum', 'ath-gostijo', 'ath-parnitha'],
         notes: 'אקרופוליס על הבוקר, מוזיאון בצהריים הממוזגים, פלאקה אחר הצהריים וערב כשר בפסירי.',
       },
       {
         day: 2,
         title: 'שווקים ושקיעה',
-        placeIds: ['ath-monastiraki', 'ath-agora', 'ath-psiri', 'ath-lycabettus'],
+        placeIds: ['ath-monastiraki', 'ath-psiri', 'ath-varvakeios', 'ath-agora', 'ath-lycabettus'],
         notes:
             'בוקר בשוק הפשפשים של מונסטיראקי, משם רגלית לאגורה העתיקה, פסירי אחר הצהריים, ושקיעה מליקבטוס - להביא מים, העלייה חשופה.',
       },
@@ -4111,14 +4111,14 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'מוזיאונים ומורשת יהודית',
-        placeIds: ['ath-archaeological', 'ath-jewish-museum', 'ath-benaki', 'ath-chabad'],
+        placeIds: ['ath-archaeological', 'ath-chabad', 'ath-jewish-museum', 'ath-benaki', 'ath-kolonaki'],
         notes:
             'המוזיאון הארכיאולוגי הלאומי הוא האוסף החשוב בעיר וקל לבלות בו חצי יום. המוזיאון היהודי של יוון מספר את סיפור קהילות רומניוטים וסלוניקי.',
       },
       {
         day: 5,
         title: 'הרחבה: סוניון',
-        placeIds: ['ath-sounion', 'ath-anafiotika', 'ath-philopappos'],
+        placeIds: ['ath-sounion', 'ath-anafiotika', 'ath-philopappos', 'ath-epidaurus', 'ath-mycenae'],
         notes:
             'יציאה לכף סוניון (כשעה וחצי באוטובוס KTEL מהמרכז) למקדש פוסידון. מי שנשאר בעיר: אנפיוטיקה הקיקלדית וגבעת פילופאפוס מול האקרופוליס.',
       },
@@ -4132,7 +4132,7 @@ export const destinations: Destination[] = [
       {
         day: 7,
         title: 'הימטוס והריביירה',
-        placeIds: ['ath-kaisariani', 'ath-hymettus', 'ath-vouliagmeni-lake'],
+        placeIds: ['ath-kaisariani', 'ath-hymettus', 'ath-designer-outlet', 'ath-marathon-lake', 'ath-vouliagmeni-lake'],
         notes:
           'בוקר במנזר קייסריאני ושביל בהר הימטוס לתצפית על העיר (להתחיל מוקדם, אין צל). אחר הצהריים ירידה לריביירה ורחצה באגם ווליאגמני. שילוב של טבע, היסטוריה וים ביום אחד.',
       },
@@ -4516,7 +4516,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'משולש הזהב: פראדו, ריינה סופיה ותיסן',
-        placeIds: ['mad-prado', 'mad-thyssen', 'mad-reina-sofia'],
+        placeIds: ['mad-prado', 'mad-thyssen', 'mad-san-anton', 'mad-san-gines', 'mad-reina-sofia'],
         notes:
           'שלושתם על ציר אחד. לכל אחד יש שעות כניסה חופשית בערב, וזה גם הזמן העמוס ביותר.',
       },
@@ -4530,7 +4530,7 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'פארקים ושקיעה',
-        placeIds: ['mad-retiro', 'mad-debod'],
+        placeIds: ['mad-retiro', 'mad-debod', 'mad-las-rozas', 'mad-el-escorial'],
         notes:
           'רטירו בשעות אחר הצהריים, ומקדש דבוד לשקיעה. שניהם חופשיים לכניסה.',
       },
@@ -5170,7 +5170,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'גאודי הגדול',
-        placeIds: ['bcn-sagrada', 'bcn-guell', 'bcn-sant-pau', 'bcn-maccabi'],
+        placeIds: ['bcn-sagrada', 'bcn-sant-pau', 'bcn-guell', 'bcn-maccabi', 'bcn-la-roca'],
         notes:
           'כרטיסים לסגרדה פמיליה ולפארק גואל נמכרים לפי שעת כניסה וכדאי להזמין מראש. מתחם סנט פאו נמצא ממש מולה.',
       },
@@ -5184,28 +5184,28 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'מודרניזם ואיישמפלה',
-        placeIds: ['bcn-batllo', 'bcn-casa-mila', 'bcn-gracia', 'bcn-chabad'],
+        placeIds: ['bcn-batllo', 'bcn-gracia', 'bcn-casa-mila', 'bcn-quatre-gats', 'bcn-chabad'],
         notes:
           'פאסג׳ דה גרסיה מרכז את בתי המודרניזם ואת החנויות, והכול על ציר אחד.',
       },
       {
         day: 4,
         title: 'ים, פארק וקאמפ נואו',
-        placeIds: ['bcn-barceloneta', 'bcn-ciutadella', 'bcn-camp-nou'],
+        placeIds: ['bcn-barceloneta', 'bcn-gispert', 'bcn-santa-caterina', 'bcn-ciutadella', 'bcn-camp-nou'],
         notes:
           'יום קליל. הביקור בקאמפ נואו דורש בדיקה מראש בגלל עבודות השיפוץ במתחם.',
       },
       {
         day: 5,
         title: 'מונז׳ואיק והתצפיות',
-        placeIds: ['bcn-montjuic', 'bcn-mnac', 'bcn-bunkers', 'bcn-tibidabo'],
+        placeIds: ['bcn-montjuic', 'bcn-mnac', 'bcn-sant-antoni', 'bcn-bunkers', 'bcn-tibidabo'],
         notes:
           'הרכבל למונז׳ואיק נוח. בונקרס דל כרמל הוא נקודת השקיעה המפורסמת של העיר, ופשוט מאוד להגיע אליו באוטובוס.',
       },
       {
         day: 6,
         title: 'טיולי יום: מונסראט והקוסטה בראווה',
-        placeIds: ['bcn-montserrat', 'bcn-tossa', 'bcn-cadaques'],
+        placeIds: ['bcn-montserrat', 'bcn-tossa', 'bcn-girona', 'bcn-figueres', 'bcn-cadaques'],
         notes:
           'מונסראט היא נסיעת רכבת ורכבל של כשעה וחצי. טוסה וקדאקס רחוקות יותר ומתאימות ליום עם רכב שכור.',
       },
@@ -5765,35 +5765,35 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'הציר ההיסטורי: שער ברנדנבורג, הרייכסטאג והאנדרטה',
-        placeIds: ['ber-brandenburg', 'ber-reichstag', 'ber-memorial', 'ber-potsdamer'],
+        placeIds: ['ber-brandenburg', 'ber-reichstag', 'ber-memorial', 'ber-potsdamer', 'ber-wannsee'],
         notes:
           'הביקור בכיפת הרייכסטאג הוא בחינם אבל דורש הרשמה מראש באינטרנט.',
       },
       {
         day: 2,
         title: 'אי המוזיאונים והרובע היהודי',
-        placeIds: ['ber-museum-island', 'ber-neue-synagoge', 'ber-hackesche', 'ber-tv-tower'],
+        placeIds: ['ber-museum-island', 'ber-tv-tower', 'ber-hackesche', 'ber-neue-synagoge', 'ber-teufelsberg'],
         notes:
           'כרטיס יומי לאי המוזיאונים משתלם אם נכנסים ליותר ממוזיאון אחד.',
       },
       {
         day: 3,
         title: 'החומה והזיכרון',
-        placeIds: ['ber-eastside', 'ber-checkpoint', 'ber-topography', 'ber-jewish-museum'],
+        placeIds: ['ber-eastside', 'ber-jewish-museum', 'ber-checkpoint', 'ber-topography', 'ber-curry36'],
         notes:
           'טופוגרפיה של הטרור היא כניסה חופשית ונמצאת על קטע חומה מקורי, ליד צ׳קפוינט צ׳רלי.',
       },
       {
         day: 4,
         title: 'מערב ברלין: קודאם, שרלוטנבורג וטירגארטן',
-        placeIds: ['ber-kudamm', 'ber-charlottenburg', 'ber-tiergarten', 'ber-bleibergs'],
+        placeIds: ['ber-kudamm', 'ber-kranzler', 'ber-bleibergs', 'ber-tiergarten', 'ber-charlottenburg'],
         notes:
           'הצד המערבי של העיר, שקט ומרווח יותר. טירגארטן הוא הריאה הירוקה שבין השניים.',
       },
       {
         day: 5,
         title: 'ברלין הצעירה: מאוארפארק, טמפלהוף וז׳נדרמנמרקט',
-        placeIds: ['ber-mauerpark', 'ber-tempelhof', 'ber-gendarmenmarkt', 'ber-chabad'],
+        placeIds: ['ber-mauerpark', 'ber-konnopke', 'ber-gendarmenmarkt', 'ber-tempelhof', 'ber-chabad'],
         notes:
           'שוק הפשפשים במאוארפארק והקריוקי שלו הם של יום ראשון. טמפלהוף הוא שדה תעופה נטוש שהפך לפארק ענק.',
       },
@@ -6105,21 +6105,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'איוטהאיה: המקדשים המרכזיים',
-        placeIds: ['ayu-wat-mahathat', 'ayu-si-sanphet', 'ayu-chaiwatthanaram'],
+        placeIds: ['ayu-wat-mahathat', 'ayu-si-sanphet', 'ayu-chaiwatthanaram', 'th-chao-phrom', 'th-ayutthaya-yai-chai'],
         notes:
           'להתחיל מוקדם בגלל החום. צ׳אייוואטנאראם לשקיעה. אפשר להשכיר אופניים בין המקדשים.',
       },
       {
         day: 2,
         title: 'בנג פה-אין בדרך חזרה',
-        placeIds: ['ayu-bang-pa-in'],
+        placeIds: ['ayu-bang-pa-in', 'th-ayutthaya-bike-x', 'ayu-na-phra-men', 'ayu-lokayasutharam'],
         notes:
           'הארמון נמצא בין איוטהאיה לבנגקוק ומשתלב בדרך חזרה.',
       },
       {
         day: 3,
         title: 'קראבי: ריילאי',
-        placeIds: ['ayu-railay'],
+        placeIds: ['ayu-railay', 'th-phra-nang', 'th-chaofa-night', 'th-tiger-cave', 'th-thung-teao'],
         notes:
           'לריילאי מגיעים רק בסירת זנב ארוך מאו נאנג או מקראבי טאון. שווה לינה ולא רק יום.',
       },
@@ -6685,34 +6685,34 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'רטנקוסין - העיר העתיקה',
-        placeIds: ['bkk-grandpalace', 'bkk-watpho', 'bkk-riverboat', 'bkk-watarun'],
+        placeIds: ['bkk-grandpalace', 'bkk-watpho', 'bkk-riverboat', 'bkk-pak-khlong', 'bkk-watarun'],
         notes:
           'מתחילים מוקדם, לפני החום והקהל, בארמון המלכותי. חוצים ברגל לוואט פו, ואז בסירה לוואט ארון בצד השני של הנהר. כתפיים וברכיים מכוסות בכל המקדשים.',
       },
       {
         day: 2,
         title: 'הרובע הסיני ושוק הענק',
-        placeIds: ['bkk-onlokyun', 'bkk-wattraimit', 'bkk-yaowarat', 'bkk-chatuchak'],
+        placeIds: ['bkk-onlokyun', 'bkk-jayfai', 'bkk-yaowarat', 'bkk-wattraimit', 'bkk-chatuchak'],
         notes:
           'בוקר על טוסט וביצים באון לוק יון, אחר כך הבודהה מזהב ויאווארט. צ׳טוצ׳ק פתוח שבת-ראשון בלבד - באמצע השבוע מחליפים ביום קניות באייקונסיאם.',
       },
       {
         day: 3,
         title: 'בנגקוק המודרנית',
-        placeIds: ['bkk-jimthompson', 'bkk-erawan', 'bkk-mahanakhon', 'bkk-iconsiam'],
+        placeIds: ['bkk-jimthompson', 'bkk-erawan', 'bkk-mahanakhon', 'bkk-talat-noi', 'bkk-iconsiam'],
         notes: 'יום ממוזג יותר: בית ג׳ים תומפסון בבוקר, ואז מקדש אראוואן, ותצפית ממהאנקהון לקראת השקיעה.',
       },
       {
         day: 4,
         title: 'חב"ד, פארק ולילה על הנהר',
-        placeIds: ['bkk-lumphini', 'bkk-chabad', 'bkk-khaosan', 'bkk-asiatique'],
+        placeIds: ['bkk-lumphini', 'bkk-siam-paragon', 'bkk-khaosan', 'bkk-chabad', 'bkk-asiatique'],
         notes:
           'בוקר רגוע בלומפיני. בשישי - ארוחת שבת בבית חב"ד (בתיאום מראש). בערב, חאו סאן או שוק הלילה באסיאטיק, לפי מצב הרוח.',
       },
       {
         day: 5,
         title: 'הריאה הירוקה של בנגקוק',
-        placeIds: ['bkk-bang-krachao', 'bkk-benjakitti'],
+        placeIds: ['bkk-bang-krachao', 'bkk-benjakitti', 'bkk-jcafe', 'bkk-rot-fai-park', 'bkk-ancient-city'],
         notes:
           'מעבורת קצרה לבאנג קרצ׳או ואופניים בין השבילים המוגבהים ביער (בסופי שבוע - השוק הצף הקטן). בערב פארק בנג׳אקיטי, כשקו הרקיע נדלק. יום ירוק לגמרי בעיר שאין בה ירוק.',
       },
@@ -7342,7 +7342,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'דובאי ההיסטורית: הקריק, אל פאהידי והשוקים',
-        placeIds: ['dxb-bastakiya', 'dxb-museum', 'dxb-creek', 'dxb-gold-souk'],
+        placeIds: ['dxb-bastakiya', 'dxb-museum', 'dxb-gold-souk', 'dxb-creek', 'dxb-frame'],
         notes:
           'להתחיל בבוקר לפני החום. חציית הקריק באברה עולה מטבעות בודדים ולוקחת כמה דקות.',
       },
@@ -7356,13 +7356,13 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'החוף והמרינה',
-        placeIds: ['dxb-jbr-beach', 'dxb-marina', 'dxb-ain-dubai', 'dxb-palm'],
+        placeIds: ['dxb-jbr-beach', 'dxb-rimon-market', 'dxb-palm', 'dxb-marina', 'dxb-ain-dubai'],
         notes: 'יום רגוע יותר. המונורייל של דקל ג׳ומיירה מגיע עד אטלנטיס בקצה האי.',
       },
       {
         day: 4,
         title: 'מדבר וגנים',
-        placeIds: ['dxb-desert-reserve', 'dxb-miracle-garden', 'dxb-butterfly-garden'],
+        placeIds: ['dxb-desert-reserve', 'dxb-butterfly-garden', 'dxb-miracle-garden', 'dxb-mall-emirates', 'dxb-al-ustad'],
         notes:
           'ספארי המדבר יוצא בדרך כלל אחר הצהריים וחוזר בלילה. הגנים פתוחים בעונה הקרירה בלבד.',
       },
@@ -7375,13 +7375,13 @@ export const destinations: Destination[] = [
       {
         day: 6,
         title: 'הכפר הגלובלי',
-        placeIds: ['dxb-global-village'],
+        placeIds: ['dxb-global-village', 'dxb-jumeirah-beach-x', 'dxb-al-shindagha', 'dxb-creek-park', 'dxb-mushrif-park'],
         notes: 'ערב שלם, ורק בעונה (בערך אוקטובר עד אפריל).',
       },
       {
         day: 7,
         title: 'דובאי הטבעית - פלמינגו ומדבר',
-        placeIds: ['dxb-ras-al-khor', 'dxb-al-qudra', 'dxb-desert-reserve'],
+        placeIds: ['dxb-ras-al-khor', 'dxb-kikkos', 'dxb-mosaica', 'dxb-al-qudra', 'dxb-desert-reserve'],
         notes:
           'בוקר בעמדות התצפית של ראס אל-חור (פלמינגו על רקע גורדי שחקים), ואחר הצהריים דרומה לאגמי אל-קודרה לשקיעה ולכוכבים. מי שממשיך - לילה בשמורת המדבר. רכב חובה.',
       },
@@ -7826,14 +7826,14 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'אי סעדיאת - אמנות ואמונה',
-        placeIds: ['auh-louvre', 'auh-abrahamichouse', 'auh-saadiyatbeach', 'auh-jubail'],
+        placeIds: ['auh-louvre', 'auh-abrahamichouse', 'auh-mina-produce', 'auh-saadiyatbeach', 'auh-jubail'],
         notes:
           'כל האתרים באזור אחד, סעדיאת וג׳ובייל - הלובר בבוקר (ממוזג, טוב לשעות החמות), בית המשפחה האברהמית אחר כך (לתאם ביקור מראש), ולסיים בחוף או בקיאק בין המנגרובים.',
       },
       {
         day: 3,
         title: 'אי יאס - אדרנלין',
-        placeIds: ['auh-ferrariworld', 'auh-warnerbros', 'auh-yaswaterworld'],
+        placeIds: ['auh-ferrariworld', 'auh-yas-mall', 'auh-yaswaterworld', 'auh-warnerbros', 'auh-eastern-mangroves'],
         notes:
           'שלושת הפארקים על אי יאס - כל אחד שווה יום שלם, ורוב המבקרים בוחרים אחד או שניים ולא את כולם. פרארי וורלד לחובבי מהירות, וורנר ברדרס למשפחות עם ילדים קטנים, יאס ווטרוורלד לימים החמים ביותר.',
       },
@@ -8715,7 +8715,7 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'פאטונג - חוף, כשר ובילוי',
-        placeIds: ['hkt-karon', 'hkt-patong', 'hkt-chabad', 'hkt-bangla'],
+        placeIds: ['hkt-karon', 'hkt-banzaan', 'hkt-patong', 'hkt-bangla', 'hkt-chabad'],
         notes:
           'בוקר רגוע על חוף קארון, צהריים בפאטונג, וארוחה כשרה בבית חב"ד. בערב - כביש בנגלה למי שרוצה את צד הבילוי הרועש של האי.',
       },
@@ -8729,7 +8729,7 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'מפרץ פאנג נגה והעיר העתיקה',
-        placeIds: ['hkt-jamesbond', 'hkt-oldtown'],
+        placeIds: ['hkt-jamesbond', 'hkt-koh-yao-noi', 'hkt-sirinat', 'hkt-oldtown', 'hkt-mee-ton-poe'],
         notes:
           'יום שני של איים - מפרץ פאנג נגה ואי ג׳יימס בונד בקאנו ובסירה בין צוקי הגיר. בערב, סיבוב בעיר העתיקה של פוקט (בראשון - שוק ההליכה).',
       },
@@ -9084,14 +9084,14 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'ארץ האש - אש, בוץ וסלע',
-        placeIds: ['gyd-gobustan', 'gyd-ateshgah', 'gyd-yanardag'],
+        placeIds: ['gyd-gobustan', 'aze-mud-volcanoes', 'aze-bibi-heybat', 'gyd-ateshgah', 'gyd-yanardag'],
         notes:
           'יום טבע עם נהג/טיול מאורגן: דרומה לגובוסטן (ציורי סלע והרי בוץ), ואז מזרחה למקדש האש אטשגה ולהר הבוער יאנאר דאג - הכי מרשים לקראת החשכה. האתרים מפוזרים, ורכב הכרחי.',
       },
       {
         day: 3,
         title: 'אדריכלות ומורשת יהודית',
-        placeIds: ['gyd-heydar', 'gyd-redvillage', 'gyd-chabad'],
+        placeIds: ['gyd-heydar', 'aze-green-bazaar', 'gyd-chabad', 'aze-deniz-mall', 'gyd-redvillage'],
         notes:
           'בוקר במרכז היידר אלייב (זהא חדיד). מי שרוצה יום שלם של מורשת יהודית - נסיעה צפונה לכפר האדום ליד קובה (כ-2.5 שעות). לארוחה כשרה מתאמים מראש עם בית חב"ד.',
       },
@@ -9465,14 +9465,14 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'קניון צ׳ארין',
-        placeIds: ['ala-charyn', 'ala-chabad'],
+        placeIds: ['ala-charyn', 'ala-alasha', 'ala-central-museum', 'ala-green-bazaar', 'ala-chabad'],
         notes:
           'טיול יום מלא מזרחה לקניון צ׳ארין (כ-200 ק"מ, נהג או טיול מאורגן) - הליכה בעמק הטירות בין עמודי הסלע האדומים. לתאם ארוחות כשרות מראש עם בית חב"ד.',
       },
       {
         day: 4,
         title: 'אגמי קולסאי',
-        placeIds: ['ala-kolsai'],
+        placeIds: ['ala-kolsai', 'ala-issyk', 'ala-turgen'],
         notes:
           'יום ארוך מאוד ביציאה והחזרה באותו יום, כארבע וחצי שעות לכל כיוון בדרך הררית. מי שיכול לינה אחת בכפר סאטי מרוויח בוקר שקט על האגם. יוצאים לפנות בוקר, ובחורף הדרך עלולה להיסגר.',
       },
@@ -9825,14 +9825,14 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'מפרץ בוקה - קוטור ופראסט',
-        placeIds: ['kot-oldtown', 'kot-walls', 'kot-perast', 'kot-ourlady'],
+        placeIds: ['kot-oldtown', 'mne-kotor-market', 'kot-walls', 'kot-perast', 'kot-ourlady'],
         notes:
           'בוקר בעיר העתיקה של קוטור וטיפוס על החומות למצודת סן ג׳ובאני (מים ונעליים טובות!). אחר הצהריים נסיעה יפהפייה לאורך המפרץ לפראסט, ומשם בסירה לכנסיית גבירתנו של הסלעים.',
       },
       {
         day: 2,
         title: 'החוף - בודווה, סווטי סטפן ולובצ׳ן',
-        placeIds: ['kot-budva', 'kot-svetistefan', 'kot-lovcen'],
+        placeIds: ['kot-budva', 'kot-svetistefan', 'kot-lovcen', 'mne-kotor-ladder', 'mne-herceg-novi'],
         notes:
           'העיר העתיקה של בודווה והחופים בבוקר, תצפית על סווטי סטפן, ולסיום עלייה בדרך המפותלת אל הפארק הלאומי לובצ׳ן ולמאוזוליאום נייגוש - תצפית על חצי מונטנגרו.',
       },
@@ -10178,28 +10178,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'העיר העתיקה והחופים',
-        placeIds: ['bud-oldtown', 'bud-citadela', 'bud-mogren', 'bud-slovenska'],
+        placeIds: ['bud-oldtown', 'bud-citadela', 'bud-mogren', 'bud-slovenska', 'mne-buljarica-x'],
         notes:
           'בוקר בעיר העתיקה ובמצודה (תצפית על הים), טיול על שביל החוף אל חוף מוגרן, ואחר צהריים רגוע על חוף סלובנסקה הצמוד. בערב - הסמטאות והבילוי בעיר העתיקה.',
       },
       {
         day: 2,
         title: 'חופי הדרום ואי הצבאים',
-        placeIds: ['bud-svetistefan', 'bud-becici', 'bud-svnikola'],
+        placeIds: ['bud-svetistefan', 'bud-becici', 'bud-svnikola', 'bud-petrovac', 'bud-stari-bar'],
         notes:
           'תצפית על סווטי סטפן, חוף רגוע בבצ׳יצ׳י, וסירת טקסי אל האי סווטי ניקולה לשחייה ולשקט - יום ים קלאסי סביב בודווה.',
       },
       {
         day: 3,
         title: 'אגם סקאדאר',
-        placeIds: ['bud-skadar'],
+        placeIds: ['bud-skadar', 'bud-rijeka-crnojevica'],
         notes:
           'טיול יום אל הפארק הלאומי אגם סקאדאר: תצפית הפיתול בפאבלובה סטראנה, ושיט שקט מווירפזאר בין ציפורים וחבצלות מים. ניגוד מרענן לחוף.',
       },
       {
         day: 4,
         title: 'ההר - לובצ׳ן',
-        placeIds: ['bud-lovcen'],
+        placeIds: ['bud-lovcen', 'bud-njegusi', 'mne-lovcen-x', 'mne-jaz'],
         notes:
           'יום הרים: הדרך המפותלת אל הפארק הלאומי לובצ׳ן ולמאוזוליאום נייגוש, עם התצפית המעגלית המפורסמת על חצי מונטנגרו. שווה לשלב עם ירידה לצד קוטור.',
       },
@@ -10513,21 +10513,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'פטרה - הסיק, האוצר והמנזר',
-        placeIds: ['pet-treasury', 'pet-highplace', 'pet-monastery'],
+        placeIds: ['pet-treasury', 'pet-bynight', 'pet-highplace', 'pet-qasr-al-bint', 'pet-monastery'],
         notes:
           'יום פטרה מלא: להיכנס מוקדם דרך הסיק אל הח׳זנה, לטפס לבמת ההקרבה לתצפית, ולסיים בטיפוס למנזר (800 מדרגות - מים והתחלה מוקדמת חובה). Jordan Pass כולל את הכניסה.',
       },
       {
         day: 2,
         title: 'פטרה הקטנה ומדבר ואדי ראם',
-        placeIds: ['pet-littlepetra', 'pet-wadirum'],
+        placeIds: ['pet-littlepetra', 'jor-wadi-mujib-x', 'jor-shobak-x', 'pet-wadirum', 'jor-wadi-rum-red-dune'],
         notes:
           'בוקר קצר בפטרה הקטנה, ואז דרומה לוואדי ראם: סיור ג׳יפ בדואי בין צוקי החול האדומים, ולינה באוהל מדברי מתחת לכוכבים - החלק הבלתי נשכח של הטיול.',
       },
       {
         day: 3,
         title: 'אקבה והים האדום',
-        placeIds: ['pet-aqaba', 'pet-wadimusa'],
+        placeIds: ['pet-aqaba', 'pet-red-sea-reef', 'pet-wadimusa', 'jor-petra-museum'],
         notes:
           'רגיעה באקבה על הים האדום - חוף, שנורקלינג או צלילה - בדרך חזרה אל מעבר ערבה. מי שמעדיף עוד פטרה יכול להחליף בבוקר נוסף באתר.',
       },
@@ -11252,28 +11252,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'לרנקה - עיר, אגם וכשרות',
-        placeIds: ['lca-finikoudes', 'lca-saltlake', 'lca-chabad'],
+        placeIds: ['lca-finikoudes', 'lca-chabad', 'lca-pierides', 'lca-hala-sultan', 'lca-saltlake'],
         notes:
           'יום רגוע בלרנקה: טיילת פיניקודס וכנסיית סנט לזרוס, סיבוב באגם המלח (פלמינגו בחורף-אביב), וארוחה כשרה בקפיטריית "שמיים" של בית חב"ד.',
       },
       {
         day: 2,
         title: 'המזרח - כף גרקו וחופי איה נאפה',
-        placeIds: ['lca-capegreco', 'lca-nissi'],
+        placeIds: ['lca-capegreco', 'cyp-ayia-napa', 'lca-nissi', 'cyp-liopetri', 'lca-konnos'],
         notes:
           'בוקר בכף גרקו - מערות ים, גשר סלע ומסלולי צוקים - ואחר צהריים על חוף ניסי באיה נאפה. שילוב מושלם של טבע וחוף.',
       },
       {
         day: 3,
         title: 'הרי טרודוס',
-        placeIds: ['lca-troodos', 'lca-kykkos'],
+        placeIds: ['lca-troodos', 'lca-kykkos', 'cyp-limassol', 'cyp-choirokoitia-x'],
         notes:
           'יום בהרים הקרירים: מסלולי יער ומפלים בטרודוס, כנסיות מצוירות וכפרי אבן, וביקור במנזר קיקוס המפואר. רכב מומלץ - הכבישים מפותלים.',
       },
       {
         day: 4,
         title: 'המערב - אפרודיטה וקוריון',
-        placeIds: ['lca-aphrodite', 'lca-kourion'],
+        placeIds: ['lca-aphrodite', 'lca-kourion', 'lca-khirokitia', 'lca-lefkara-x', 'lca-municipal-market'],
         notes:
           'נסיעה מערבה אל סלע אפרודיטה על החוף, ואל קוריון העתיקה - תיאטרון רומי על צוק מעל הים. אפשר להאריך ליום שלם עם פאפוס.',
       },
@@ -11601,21 +11601,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'מצחטה: הבירה העתיקה',
-        placeIds: ['geo-mtskheta', 'geo-jvari'],
+        placeIds: ['geo-mtskheta', 'geo-jvari', 'ge-salobie', 'geo-shio-mgvime'],
         notes:
           'כעשרים דקות מטביליסי. לעלות לג׳ווארי בשביל הנוף על מפגש הנהרות.',
       },
       {
         day: 2,
         title: 'הדרך הצבאית וקזבגי',
-        placeIds: ['geo-ananuri', 'geo-gergeti'],
+        placeIds: ['geo-ananuri', 'geo-zhinvali', 'geo-shatili-x', 'geo-gergeti', 'geo-kazbek'],
         notes:
           'לאנאנורי עוצרים בדרך. לגרגטי עולים ברכב שטח או ברגל בכשעה וחצי; הכנסייה פעילה ולבוש צנוע נדרש.',
       },
       {
         day: 3,
         title: 'עמק טרוסו וערוץ דריאלי',
-        placeIds: ['geo-truso', 'geo-dariali'],
+        placeIds: ['geo-truso', 'geo-military-highway', 'geo-gudauri', 'geo-gveleti', 'geo-dariali'],
         notes:
           'הליכה שטוחה של כמה שעות בעמק טרוסו בין מעיינות מינרליים וכפרים נטושים (אזור גבול - דרכון), ואחר הצהריים נסיעה צפונה עד ערוץ דריאלי והמנזר בקצה הכביש הצבאי. רכב שטח או נהג מקומי.',
       },
@@ -11962,28 +11962,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'העיר והטיילת',
-        placeIds: ['bus-piazza', 'bus-boulevard', 'bus-mendis'],
+        placeIds: ['bus-piazza', 'bus-boulevard', 'bus-mendis', 'bus-khachapuri-house', 'bus-central-market'],
         notes:
           'בוקר בעיר העתיקה ובכיכר פיאצה, אחר צהריים על טיילת הים (עלי ונינו, מגדל האלפבית, שקיעה), וארוחה כשרה במנדי׳ס של בית חב"ד.',
       },
       {
         day: 2,
         title: 'הגן הבוטני והחוף',
-        placeIds: ['bus-botanical'],
+        placeIds: ['bus-botanical', 'geo-alphabet-tower', 'geo-batumi-cable', 'bus-petra-fortress', 'bus-kobuleti'],
         notes:
           'יום ירוק בגן הבוטני הענק על הצוק מעל הים - שבילים, צמחייה סובטרופית ותצפיות. אפשר להשלים בחוף ובטיילת לקראת הערב.',
       },
       {
         day: 3,
         title: 'יער הגשם מטיראלה',
-        placeIds: ['bus-mtirala'],
+        placeIds: ['bus-mtirala', 'geo-kintrishi'],
         notes:
           'טיול יום בפארק הלאומי מטיראלה - יער גשם, גשר תלוי, ומפל שאפשר לשחות בו. נעליים טובות ובגד ים; רכב או טיול מאורגן מהעיר.',
       },
       {
         day: 4,
         title: 'כפרי אדג׳ריה - מפל ומבצר',
-        placeIds: ['bus-makhuntseti', 'bus-gonio'],
+        placeIds: ['bus-makhuntseti', 'bus-machakhela', 'geo-chakvi-x', 'bus-sarpi', 'bus-gonio'],
         notes:
           'יום בכפרי אדג׳ריה: מפל מאחונצטי וגשר המלכה תמר עם טעימות יין ודבש, ובחזרה מבצר גוניו העתיק סמוך לחוף.',
       },
@@ -12361,7 +12361,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'סנטוריני: פירה והקלדרה',
-        placeIds: ['cyc-fira', 'cyc-thera-museum', 'cyc-imerovigli'],
+        placeIds: ['cyc-fira', 'cyc-thera-museum', 'gr-fira-oia-trail', 'cyc-imerovigli'],
         notes:
           'פירה היא צומת האוטובוסים של האי. השביל שבין פירה לאימרוביגלי הוא הליכה יפה על שפת הקלדרה.',
       },
@@ -12382,20 +12382,20 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'תרה העתיקה וחוף קמארי',
-        placeIds: ['cyc-ancient-thera', 'cyc-kamari'],
+        placeIds: ['cyc-ancient-thera', 'cyc-kamari', 'gr-metaxi-mas'],
         notes: 'לעלות לתרה העתיקה בבוקר, ולרדת לקמארי לשארית היום.',
       },
       {
         day: 5,
         title: 'מעבר למיקונוס: חורה וטחנות הרוח',
-        placeIds: ['cyc-mykonos-windmills', 'cyc-paraportiani', 'cyc-mykonos-museum'],
+        placeIds: ['cyc-mykonos-windmills', 'cyc-paraportiani', 'cyc-mykonos-museum', 'gr-kikis-tavern', 'gr-ano-mera'],
         notes:
           'המעבורת המהירה בין האיים לוקחת כשעתיים עד שלוש, תלוי בקו. חורה סגורה לרכבים ומסתובבים בה ברגל.',
       },
       {
         day: 6,
         title: 'דלוס',
-        placeIds: ['cyc-delos'],
+        placeIds: ['cyc-delos', 'gr-naxos', 'gr-paros'],
         notes:
           'הסירות יוצאות מהנמל הישן של מיקונוס בבוקר וחוזרות אחר הצהריים. אין צל כמעט באתר, וצריך כובע ומים.',
       },
@@ -12888,35 +12888,35 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'המערב - חאניה ולגונת באלוס',
-        placeIds: ['her-chania', 'her-balos'],
+        placeIds: ['her-chania', 'her-chania-agora', 'her-dounias', 'her-balos', 'her-elafonisi'],
         notes:
           'בוקר בעיר העתיקה של חאניה ובנמל הוונציאני, ושיט/נסיעה אל לגונת באלוס הטורקיז - יום מערב קלאסי. אפשר להחליף את באלוס באלפוניסי לפי מזג הים.',
       },
       {
         day: 2,
         title: 'נקיק סמריה',
-        placeIds: ['her-samaria'],
+        placeIds: ['her-samaria', 'cre-aradena', 'her-falasarna'],
         notes:
           'יום שלם בנקיק סמריה: ירידה של כ-16 ק"מ בין קירות הסלע עד לחוף הדרומי, וחזרה בסירה ואוטובוס. נעליים טובות, כובע והרבה מים; מתאים למי שכשיר להליכה ארוכה.',
       },
       {
         day: 3,
         title: 'המרכז - רתימנו, אגם וחוף דקלים',
-        placeIds: ['her-rethymno', 'her-kournas', 'her-preveli'],
+        placeIds: ['her-rethymno', 'her-kournas', 'her-seitan-limania', 'her-preveli', 'her-psiloritis'],
         notes:
           'העיר העתיקה של רתימנו, עצירה רגועה באגם קורנאס, ובדרום חוף הדקלים של פרוולי. יום מגוון של עיר, אגם וחוף פראי.',
       },
       {
         day: 4,
         title: 'המרכז-מזרח - קנוסוס והרקליון',
-        placeIds: ['her-knossos', 'her-spinalonga'],
+        placeIds: ['her-knossos', 'her-peskesi', 'her-matala', 'her-spinalonga', 'her-richtis'],
         notes:
           'הארמון המינואי קנוסוס והמוזיאון הארכיאולוגי בהרקליון. מי שממשיך מזרחה יכול להוסיף שיט אל האי-מבצר ספינלונגה במפרץ אלונדה.',
       },
       {
         day: 5,
         title: 'הדרום הפראי - אימברוס ולוטרו',
-        placeIds: ['her-imbros', 'her-loutro'],
+        placeIds: ['her-imbros', 'her-loutro', 'cre-arkadi', 'her-agiofarago', 'her-lasithi'],
         notes:
           'ירידה בקניון אימברוס בבוקר (שעתיים-שלוש, מתאים למשפחות), הסעה לחורה ספאקיון וסירה ללוטרו - כפר בלי כביש, לשחייה ולטברנה על המים. סירה חזרה אחר הצהריים. החלופה הרגועה לסמריה.',
       },
@@ -13451,35 +13451,35 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'מינכן - העיר',
-        placeIds: ['muc-marienplatz', 'muc-engarten', 'muc-nymphenburg', 'muc-einstein'],
+        placeIds: ['muc-marienplatz', 'muc-viktualienmarkt', 'muc-einstein', 'muc-engarten', 'muc-nymphenburg'],
         notes:
           'יום עירוני: מריאנפלאץ והגלוקנשפיל, שוק ויקטואלין, הגן האנגלי (גולשי הגל!) וארמון נימפנבורג. ארוחה כשרה במסעדת איינשטיין במרכז הקהילתי.',
       },
       {
         day: 2,
         title: 'טירת נוישוונשטיין ונקיק פרטנאך',
-        placeIds: ['muc-neuschwanstein', 'muc-partnach'],
+        placeIds: ['muc-neuschwanstein', 'muc-garmisch', 'muc-partnach', 'muc-andechs', 'muc-schliersee'],
         notes:
           'בוקר בטירת נוישוונשטיין (כרטיסים מראש, תצפית מגשר מרי), ובדרך חזרה דרך גרמיש - נקיק פרטנאך הדרמטי. יום אלפיני קלאסי, רכב מומלץ.',
       },
       {
         day: 3,
         title: 'צוגשפיצה ואגם אייבזה',
-        placeIds: ['muc-zugspitze'],
+        placeIds: ['muc-zugspitze', 'muc-hoellentalklamm', 'muc-alpspix', 'muc-linderhof', 'muc-starnberg'],
         notes:
           'עולים ברכבת השיניים/רכבל אל פסגת צוגשפיצה, הגבוהה בגרמניה - נוף אלפים ושלג גם בקיץ - ולמטה הקפת אגם אייבזה הטורקיז. בגדים חמים גם בקיץ.',
       },
       {
         day: 4,
         title: 'אגם קניגסזה - ברכטסגאדן',
-        placeIds: ['muc-konigssee'],
+        placeIds: ['muc-konigssee', 'muc-wimbachklamm', 'muc-kehlsteinhaus', 'muc-chiemsee', 'muc-wendelstein'],
         notes:
           'טיול יום דרום-מזרחה אל אגם קניגסזה: שיט שקט בין הצוקים אל כנסיית סנט ברתולומיאו, ומסלולי הליכה סביב. אפשר לשלב עם ברכטסגאדן והסביבה.',
       },
       {
         day: 5,
         title: 'האגמים הבוואריים',
-        placeIds: ['muc-tegernsee', 'muc-walchensee', 'muc-herzogstand'],
+        placeIds: ['muc-tegernsee', 'muc-walchensee', 'muc-herzogstand', 'muc-hofbrauhaus', 'muc-dallmayr'],
         notes:
           'רכבת לטגרנזה ושביל לאורך האגם בבוקר, ואז נסיעה לוולכנזה: רכבל להרצוגשטנד לתצפית על שני האגמים, ורחצה בוולכנזה אחר הצהריים. יום שמראה למה מינכן נחשבת עיר של אגמים.',
       },
@@ -13924,35 +13924,35 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'סן מרקו: הבזיליקה, הארמון והקמפנילה',
-        placeIds: ['ven-san-marco', 'ven-basilica', 'ven-doge', 'ven-campanile'],
+        placeIds: ['ven-san-marco', 'ven-florian', 'ven-campanile', 'ven-basilica', 'ven-doge'],
         notes:
           'להזמין כרטיסים מראש לבזיליקה ולארמון הדוג׳ה. הכיכר שקטה מאוד מוקדם בבוקר.',
       },
       {
         day: 2,
         title: 'ריאלטו, הגטו והתעלה הגדולה',
-        placeIds: ['ven-rialto', 'ven-ghetto', 'ven-fenice'],
+        placeIds: ['ven-rialto', 'ven-rialto-market', 'ven-fenice', 'ven-ghetto', 'ven-san-michele'],
         notes:
           'שוק ריאלטו פעיל בבוקר בלבד. מהגטו בקנאריג׳ו חוזרים ברגל או בוואפורטו לאורך התעלה.',
       },
       {
         day: 3,
         title: 'דורסודורו: אמנות וכנסיות',
-        placeIds: ['ven-accademia', 'ven-guggenheim', 'ven-salute'],
+        placeIds: ['ven-accademia', 'ven-guggenheim', 'ven-salute', 'ven-harrys-bar'],
         notes:
           'שלושתם ברצף הליכה אחד על הגדה הדרומית, ורגועים בהרבה מסן מרקו.',
       },
       {
         day: 4,
         title: 'הלגונה: מוראנו ובוראנו',
-        placeIds: ['ven-murano', 'ven-burano'],
+        placeIds: ['ven-murano', 'ven-burano', 'ven-torcello', 'ven-noventa', 'ven-treviso'],
         notes:
           'יום שלם. הוואפורטו יוצא מפונדמנטה נובה; כרטיס יומי משתלם.',
       },
       {
         day: 5,
         title: 'הלגונה - סן ג׳ורג׳ו והלידו',
-        placeIds: ['ven-san-giorgio', 'ven-lido'],
+        placeIds: ['ven-san-giorgio', 'ven-lido', 'ven-lagoon-x'],
         notes:
           'ואפורטו לסן ג׳ורג׳ו מג׳ורה ומעלית למגדל (התצפית הטובה על סן מרקו, בלי התור), ואז המשך ללידו: אופניים לאורך האי ושעה על החוף. ונציה מהמים, ביום שהעיר עצמה עמוסה מדי.',
       },
@@ -14406,28 +14406,28 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'אמנות: אופיצי והדוד',
-        placeIds: ['flo-uffizi', 'flo-david', 'flo-bargello'],
+        placeIds: ['flo-uffizi', 'flo-bargello', 'flo-david', 'flo-trattoria-mario'],
         notes:
           'האופיצי בבוקר עם הפתיחה, והאקדמיה אחר הצהריים. שניהם בהזמנה מראש.',
       },
       {
         day: 3,
         title: 'מעבר לנהר: פיטי, בובולי ומיכלאנג׳לו',
-        placeIds: ['flo-pitti', 'flo-boboli', 'flo-michelangelo'],
+        placeIds: ['flo-pitti', 'flo-boboli', 'flo-michelangelo', 'flo-the-mall', 'flo-chianti'],
         notes:
           'לסיים בפיאצאלה מיכלאנג׳לו לקראת השקיעה. העלייה ברגל תלולה אך קצרה.',
       },
       {
         day: 4,
         title: 'כנסיות, שווקים והרובע היהודי',
-        placeIds: ['flo-san-lorenzo', 'flo-santa-croce', 'flo-synagogue'],
+        placeIds: ['flo-san-lorenzo', 'flo-mercato-centrale', 'flo-synagogue', 'flo-santambrogio', 'flo-santa-croce'],
         notes:
           'שוק סן לורנצו והשוק המרכזי המקורה נמצאים ליד הבזיליקה.',
       },
       {
         day: 5,
         title: 'טוסקנה מעל העיר: פייזולה',
-        placeIds: ['flo-fiesole'],
+        placeIds: ['flo-fiesole', 'flo-vallombrosa'],
         notes:
           'אוטובוס 7 מכיכר סן מרקו, כעשרים דקות. חצי יום נעים במיוחד לקראת הערב.',
       },
@@ -14889,28 +14889,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'הצפון - בראייס ושלוש הפסגות',
-        placeIds: ['dol-braies', 'dol-trecime'],
+        placeIds: ['dol-braies', 'dol-dobbiaco', 'dol-val-gardena-x', 'dol-monte-piana', 'dol-trecime'],
         notes:
           'בוקר מוקדם באגם בראייס (לפני הקהל), ואחר צהריים מסלול ההיקף סביב שלוש הפסגות - שני האייקונים של הדולומיטים ביום אחד. נעליים טובות ובגדים לשכבות.',
       },
       {
         day: 2,
         title: 'ואל גרדנה - אחו ופסגות',
-        placeIds: ['dol-seiseralm', 'dol-funes'],
+        placeIds: ['dol-seiseralm', 'dol-sass-pordoi', 'dol-marmolada', 'dol-funes'],
         notes:
           'האחו האלפיני אלפה די סיוזי (רכבל למעלה, הליכות קלות), ובהמשך עמק פונס וכנסיית סנטה מדלנה על רקע רכס האודלה - יום נופים רך ומתגמל.',
       },
       {
         day: 3,
         title: 'אמפצו - אגם סוראפיס',
-        placeIds: ['dol-sorapis', 'dol-cortina'],
+        placeIds: ['dol-sorapis', 'dol-cortina', 'dol-lago-federa', 'dol-lago-di-braies-x'],
         notes:
           'מסלול ההליכה אל אגם סוראפיס הטורקיז (מאתגר, כ-6 שעות הלוך-חזור), וארוחה/מנוחה בקורטינה ד׳אמפצו. למי שמעדיף קל יותר - מסלולים סביב קורטינה.',
       },
       {
         day: 4,
         title: 'הדרום - אגם קרצה ובולצאנו',
-        placeIds: ['dol-carezza', 'dol-bolzano'],
+        placeIds: ['dol-carezza', 'dol-lago-antorno-x', 'it-bolzano-obstplatz', 'dol-bolzano'],
         notes:
           'עצירה באגם קרצה הצבעוני, וסיום בבולצאנו - העיר, השוק ומוזיאון אצי (איש הקרח). נוח לשלב בדרך חזרה דרומה אל ורונה/ונציה.',
       },
@@ -14924,7 +14924,7 @@ export const destinations: Destination[] = [
       {
         day: 6,
         title: 'מיסורינה, קאדיני וחמשת המגדלים',
-        placeIds: ['dol-misurina', 'dol-cadini', 'dol-cinque-torri', 'dol-passo-giau'],
+        placeIds: ['dol-misurina', 'dol-cadini', 'dol-cinque-torri', 'dol-passo-giau', 'it-lagazuoi'],
         notes:
           'בוקר באגם מיסורינה ושביל קצר לתצפית קאדיני (חשוף - לא לפוחדי גבהים). צהריים ברכבל לחמשת המגדלים והחפירות ממלחמת העולם הראשונה, וסיום בנסיעה דרך מעבר ג׳יאו לשקיעה.',
       },
@@ -15274,35 +15274,35 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'זלצבורג - העיר',
-        placeIds: ['szg-oldtown', 'szg-fortress', 'szg-mirabell'],
+        placeIds: ['szg-oldtown', 'aut-balkan-grill', 'szg-mirabell', 'szg-fortress', 'szg-gaisberg'],
         notes:
           'יום בעיר: העיר העתיקה ורחוב גטריידה גאסה, בית מוצרט, עלייה ברכבל למבצר הוהנזלצבורג לתצפית, וגני מירבל. הכול במרחק הליכה.',
       },
       {
         day: 2,
         title: 'זלצקמרגוט - הלשטאט וגוזאו',
-        placeIds: ['szg-hallstatt', 'szg-gosausee'],
+        placeIds: ['szg-hallstatt', 'sbg-hallstatt-skywalk', 'szg-gosausee'],
         notes:
           'בוקר מוקדם בהלשטאט (לפני הקהל), ואחר צהריים הקפת אגם גוזאו השקט מול הדכשטיין - יום אגמים קלאסי בלב אזור האגמים.',
       },
       {
         day: 3,
         title: 'אגם וולפגנג ושאפברג',
-        placeIds: ['szg-wolfgangsee'],
+        placeIds: ['szg-wolfgangsee', 'szg-fuschlsee'],
         notes:
           'יום רגוע סביב אגם וולפגנג: הכפרים סנט וולפגנג וסנט גילגן, שיט על האגם, ורכבת שיניים אל פסגת שאפברג לתצפית על שרשרת האגמים.',
       },
       {
         day: 4,
         title: 'הוהה טאוארן - מפלי קרימל וצל אם זה',
-        placeIds: ['szg-krimml', 'szg-zell'],
+        placeIds: ['szg-krimml', 'szg-zell', 'sbg-grossglockner'],
         notes:
           'שביל מפלי קרימל האדירים בפארק הלאומי, ומנוחה על אגם צל אם זה עם רכבל לתצפית. יום הרים ומים בדרום המחוז.',
       },
       {
         day: 5,
         title: 'אונטרסברג, נקיק ליכטנשטיין והוהנורפן',
-        placeIds: ['szg-untersberg', 'szg-liechtensteinklamm', 'szg-hohenwerfen'],
+        placeIds: ['szg-untersberg', 'szg-moenchsberg', 'szg-eisriesenwelt', 'szg-hohenwerfen', 'szg-liechtensteinklamm'],
         notes:
           'רכבל לאונטרסברג בבוקר (רכס, נוף עד הדכשטיין), ואז דרומה: נקיק ליכטנשטיין ומצודת הוהנורפן עם מופע ציפורי הטרף. שלושתם על ציר אחד; רכב או רכבת ואוטובוס.',
       },
@@ -15757,35 +15757,35 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'פלמה - הבירה',
-        placeIds: ['pmi-palma'],
+        placeIds: ['pmi-palma', 'pmi-can-joan-saigo', 'pmi-olivar', 'pmi-santa-catalina', 'pmi-fashion-outlet'],
         notes:
           'יום בפלמה: קתדרלת לה סאו על הים, העיר העתיקה, המצודה והשוק. נעים לסיים בארוחה ובטיילת. בסיס נוח להמשך הטיול באי.',
       },
       {
         day: 2,
         title: 'טרמונטנה - כפרים והרים',
-        placeIds: ['pmi-valldemossa', 'pmi-soller', 'pmi-tramuntana'],
+        placeIds: ['pmi-valldemossa', 'mlc-deia', 'pmi-tramuntana', 'pmi-soller', 'pmi-dragonera'],
         notes:
           'יום בהרי טרמונטנה: הכפר ואלדמוסה, סולר עם החשמלית והרכבת העתיקה, ומסלול הליכה קצר עם תצפית ים. נופים וכפרי אבן לאורך כל הדרך.',
       },
       {
         day: 3,
         title: 'הצפון - סה קלוברה וכף פורמנטור',
-        placeIds: ['pmi-sacalobra', 'pmi-formentor'],
+        placeIds: ['pmi-sacalobra', 'mlc-cap-formentor-x', 'pmi-alcudia', 'pmi-formentor'],
         notes:
           'מפרץ סה קלוברה הטורקיז (כביש מפותל או שיט), וצוקי כף פורמנטור בקצה הצפוני עם המגדלור. יום נופי מים וסלע מרהיב.',
       },
       {
         day: 4,
         title: 'המזרח - מערות הדרקון',
-        placeIds: ['pmi-drac'],
+        placeIds: ['pmi-drac', 'mlc-arta-x', 'pmi-mondrago', 'mlc-torrent-x', 'pmi-calo-des-moro'],
         notes:
           'טיול במערות הדרקון עם האגם התת-קרקעי ומופע המוזיקה, ומפרצים וחופים באזור המזרחי בהמשך היום. סיום רגוע לפני החזרה.',
       },
       {
         day: 5,
         title: 'הטרמונטנה - קובר, לוק ומסנייה',
-        placeIds: ['pmi-cuber', 'pmi-lluc', 'pmi-massanella'],
+        placeIds: ['pmi-cuber', 'mlc-cuber-x', 'pmi-massanella', 'pmi-lluc'],
         notes:
           'שביל שטוח סביב מאגר קובר בבוקר (נשרים), מנזר לוק לצהריים, ולמי שמתחיל מוקדם ובכושר - פוץ׳ דה מסנייה במקום השביל הקל. רכב, או אוטובוס מסוליר לקובר.',
       },
@@ -16316,42 +16316,42 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'האגמים ותצפית הבית',
-        placeIds: ['int-hoheweg', 'int-harder', 'int-brienz'],
+        placeIds: ['int-hoheweg', 'int-harder', 'int-brienz', 'int-giessbach', 'int-thunersee'],
         notes:
           'יום נחיתה רגוע: הליכה בהווג, פוניקולר להרדר קולם לתצפית על שני האגמים, ולקראת הערב שיט או טיול לאורך אגם בריינץ.',
       },
       {
         day: 2,
         title: 'עמק לאוטרברונן והמפלים',
-        placeIds: ['int-lauterbrunnen', 'int-staubbach', 'int-trummelbach', 'int-murren'],
+        placeIds: ['int-lauterbrunnen', 'int-staubbach', 'int-trummelbach', 'int-murren', 'int-niederhorn'],
         notes:
           'יום המפלים: שביל העמק בין קירות הסלע, שטאובבאך שנופל מעל הכפר, מפלי טרימלבאך שבתוך ההר - ועלייה במסלול לכפר מירן חסר המכוניות.',
       },
       {
         day: 3,
         title: 'גג אירופה',
-        placeIds: ['int-jungfraujoch', 'int-grindelwald'],
+        placeIds: ['int-jungfraujoch', 'int-wengen', 'int-grindelwald', 'int-grindelwald-glacier-canyon', 'int-ballenberg'],
         notes:
           'יום שלם ליונגפראויוך - לצאת מוקדם ולבדוק תחזית לפני שקונים כרטיס. בחזרה עצירה בגרינדלוואלד למרגלות קיר האייגר.',
       },
       {
         day: 4,
         title: 'אגם באכאלפזה או שילטהורן',
-        placeIds: ['int-bachalpsee', 'int-schilthorn', 'int-aare'],
+        placeIds: ['int-bachalpsee', 'int-iseltwald', 'int-reichenbach', 'int-aare', 'int-schilthorn'],
         notes:
           'בוחרים תצפית אחת: הליכה קלה לאגם באכאלפזה מפירסט, או רכבל לשילטהורן. מי שנשאר עם זמן - נקיק האארה במיירינגן בדרך חזרה.',
       },
       {
         day: 5,
         title: 'אגם אושינן והאגם הכחול',
-        placeIds: ['int-blausee', 'int-oeschinensee'],
+        placeIds: ['int-blausee', 'int-oeschinensee', 'int-stockhorn'],
         notes:
           'רכבת לקנדרשטג, עצירה קצרה באגם הכחול, ואז רכבל לאגם אושינן: שביל הפנורמה מעל המים, סירת משוטים ומגלשת הקיץ בירידה. היום היפה ביותר מחוץ לעמק לאוטרברונן.',
       },
       {
         day: 6,
         title: 'פירסט, מנליכן וקליינה שיידג',
-        placeIds: ['int-first', 'int-maennlichen', 'int-kleine-scheidegg'],
+        placeIds: ['int-first', 'int-maennlichen', 'int-kleine-scheidegg', 'int-schynige-platte', 'int-rothorn'],
         notes:
           'רכבל מגרינדלוואלד לפירסט והליכת הצוק, ואז שביל לבאכאלפזה (או רכבל שכיבה בירידה). אחר הצהריים רכבל למנליכן ושביל הפנורמה השטוח לקליינה שיידג מול הקיר הצפוני של האייגר, ורכבת חזרה.',
       },
@@ -16850,35 +16850,35 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'טוקיו הישנה - אסקוסה וסומידה',
-        placeIds: ['jpn-sensoji', 'jpn-skytree', 'jpn-ueno'],
+        placeIds: ['jpn-sensoji', 'jpn-kappabashi', 'jpn-ueno', 'jpn-skytree', 'jpn-toyosu'],
         notes:
           'יום ראשון רגוע אחרי הטיסה הארוכה: מקדש סנסו-ג׳י וסמטת נקאמיסה, מגדל סקייטרי מעבר לנהר, וסיום בפארק אואנו.',
       },
       {
         day: 2,
         title: 'טוקיו המודרנית',
-        placeIds: ['jpn-meiji', 'jpn-shibuya', 'jpn-gyoen', 'jpn-chabad'],
+        placeIds: ['jpn-meiji', 'jpn-gyoen', 'jpn-shibuya', 'jpn-chabad', 'jpn-tsukiji'],
         notes:
           'יער המקדש של מייג׳י, ומשם ברגל לצומת שיבויה ולרחובות הקניות. אחר הצהריים גן שינג׳וקו גיואן, וארוחת ערב כשרה בטקאנאווה (בהזמנה מראש).',
       },
       {
         day: 3,
         title: 'הר פוג׳י והאגמים',
-        placeIds: ['jpn-fuji', 'jpn-kawaguchi', 'jpn-chureito'],
+        placeIds: ['jpn-fuji', 'tok-oshino-hakkai', 'jpn-chureito', 'jpn-kawaguchi', 'tok-takao'],
         notes:
           'יוצאים מוקדם לאזור האגמים: תצפיות על פוג׳י מגדות קוואגוצ׳י ומפגודת צ׳ורייטו. לבדוק תחזית - ההר מתחבא בעננים לעתים קרובות.',
       },
       {
         day: 4,
         title: 'האקונה - געש ומעיינות חמים',
-        placeIds: ['jpn-hakone', 'jpn-owakudani', 'jpn-ashi'],
+        placeIds: ['jpn-hakone', 'jpn-ashi', 'jpn-owakudani', 'jpn-gotemba'],
         notes:
           'המסלול המעגלי של האקונה: רכבת הרים ורכבל אל עמק אווקודאני הגופריתי, ואונייה על אגם אשי אל שער הטורי שבמים.',
       },
       {
         day: 5,
         title: 'קמאקורה או ניקו',
-        placeIds: ['jpn-kamakura', 'jpn-daibutsu', 'jpn-kegon'],
+        placeIds: ['jpn-kamakura', 'jpn-daibutsu', 'tok-enoshima', 'jpn-kegon', 'tok-nikko'],
         notes:
           'בוחרים כיוון: דרומה לקמאקורה (מקדשים, הבודהה הגדול וחוף) או צפונה לניקו (מקדשי המורשת ומפל קגון). שניהם טיולי יום ברכבת מטוקיו.',
       },
@@ -17246,7 +17246,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'נחיתה בארושה והתאקלמות',
-        placeIds: ['tza-arusha', 'tza-arushanp', 'tza-chabad'],
+        placeIds: ['tza-arusha', 'tza-chabad', 'tza-arusha-market', 'tza-arushanp', 'tza-kilimanjaro-np'],
         notes:
           'מגיעים לארושה, מסדרים ציוד וסוכנות ספארי, ויוצאים לחצי יום בפארק ארושה - ספארי רגלי ואגמי מומלה. ארוחת ערב כשרה בבית חב"ד (בהזמנה מראש).',
       },
@@ -17260,14 +17260,14 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'אגם מניארה ונקיק אולדובאי',
-        placeIds: ['tza-manyara', 'tza-olduvai'],
+        placeIds: ['tza-manyara', 'tza-mto-wa-mbu', 'tza-olduvai', 'tza-lake-natron'],
         notes:
           'בוקר במניארה - יער עד, בבונים ופלמינגו על האגם. אחר הצהריים עלייה לרמת נגורונגורו עם עצירה בנקיק אולדובאי.',
       },
       {
         day: 4,
         title: 'מכתש נגורונגורו',
-        placeIds: ['tza-ngorongoro'],
+        placeIds: ['tza-ngorongoro', 'tza-empakaai', 'tza-lake-eyasi'],
         notes:
           'יורדים לרצפת המכתש עם אור ראשון - הצפיפות הגבוהה ביותר של חיות בר בטנזניה, כולל סיכוי לקרנף שחור. לצאת מוקדם, המכתש מתחמם ומתמלא בצהריים.',
       },
@@ -17281,7 +17281,7 @@ export const destinations: Destination[] = [
       {
         day: 6,
         title: 'קילימנג׳רו - תצפית או טיפוס',
-        placeIds: ['tza-kilimanjaro'],
+        placeIds: ['tza-kilimanjaro', 'tza-materuni', 'tza-moshi', 'tza-marangu', 'tza-moshi-x'],
         notes:
           'למי שרק צופה: יום באזור מושי עם נוף להר. למי שמטפס: זו נקודת הפתיחה למסלול של 5-9 ימים, שמתוכננים בנפרד מהספארי ודורשים חברה מורשית.',
       },
@@ -17640,21 +17640,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'קוסקו - התאקלמות לגובה',
-        placeIds: ['per-cusco', 'per-chabad'],
+        placeIds: ['per-cusco', 'per-chabad', 'per-chicha', 'per-san-pedro'],
         notes:
           'יום ראשון קליל בכוונה: הליכה בפלאזה דה ארמס וברובע סן בלאס, הרבה מים ומנוחה. קוסקו בגובה 3,400 מ׳ - לא לתכנן מאמץ ביום הראשון.',
       },
       {
         day: 2,
         title: 'סקסייוואמן והעמק הקדוש',
-        placeIds: ['per-sacsayhuaman', 'per-pisac', 'per-sacredvalley'],
+        placeIds: ['per-sacsayhuaman', 'per-huchuy-qosqo', 'per-pisac', 'per-tipon', 'per-sacredvalley'],
         notes:
           'עולים למצודת סקסייוואמן, ומשם יורדים אל העמק הקדוש - שוק פיסק ומתחם המדרגות שמעליו. העמק נמוך מקוסקו וקל יותר לנשימה.',
       },
       {
         day: 3,
         title: 'מוראי, מאראס ואולנטייטמבו',
-        placeIds: ['per-moray', 'per-maras', 'per-ollantaytambo'],
+        placeIds: ['per-moray', 'per-maras', 'per-ollantaytambo', 'per-lares'],
         notes:
           'מדרגות מוראי המעגליות ובריכות המלח של מאראס, ולינה באולנטייטמבו - משם יוצאת הרכבת המוקדמת למאצ׳ו פיצ׳ו.',
       },
@@ -17668,7 +17668,7 @@ export const destinations: Destination[] = [
       {
         day: 5,
         title: 'אגם הומנטאי או הר הקשת',
-        placeIds: ['per-humantay', 'per-vinicunca'],
+        placeIds: ['per-humantay', 'per-choquequirao', 'per-vinicunca'],
         notes:
           'יום הליכה בגובה - בוחרים אחד: אגם הומנטאי הקרחוני, או ויניקונקה בצבעי הקשת. שניהם יוצאים לפנות בוקר ודורשים התאקלמות מוקדמת.',
       },
@@ -18066,7 +18066,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'קווינסטאון והאגם',
-        placeIds: ['nzl-queenstown', 'nzl-wakatipu', 'nzl-chabad'],
+        placeIds: ['nzl-queenstown', 'nzl-chabad', 'nzl-fergburger', 'nzl-remarkables-market', 'nzl-wakatipu'],
         notes:
           'יום התאוששות מהטיסה הארוכה: טיילת קווינסטאון, רכבל לתצפית בוב׳ס פיק ונסיעה קצרה לגלנורקי. ארוחת ערב כשרה בתיאום מראש.',
       },
@@ -18080,14 +18080,14 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'הליכה בפיורדלנד',
-        placeIds: ['nzl-routeburn', 'nzl-doubtful'],
+        placeIds: ['nzl-routeburn', 'nzl-glenorchy', 'nzl-ben-lomond', 'nzl-arrowtown', 'nzl-doubtful'],
         notes:
           'בוחרים: הליכת יום בקטע קי סאמיט של מסלול רוטבורן, או יום שלם בדאוטפול סאונד השקט. שניהם דורשים הזמנה מראש בעונה.',
       },
       {
         day: 4,
         title: 'ואנאקה ומאונט אספיירינג',
-        placeIds: ['nzl-wanaka', 'nzl-aspiring'],
+        placeIds: ['nzl-wanaka', 'nzl-rob-roy', 'nzl-aspiring'],
         notes:
           'נסיעה נופית לוואנאקה, טיפוס לרוי׳ס פיק למי שכשיר, ואחר הצהריים עמק מטוקיטוקי בפארק מאונט אספיירינג.',
       },
@@ -18992,7 +18992,7 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'סנטרל פארק והמוזיאונים',
-        placeIds: ['nyc-central-park', 'nyc-met', 'nyc-guggenheim', 'nyc-amnh'],
+        placeIds: ['nyc-central-park', 'nyc-met', 'nyc-guggenheim', 'nyc-noi-due', 'nyc-amnh'],
         notes:
           'המטרופוליטן והגוגנהיים על הצד המזרחי של הפארק, מוזיאון הטבע על המערבי. לבחור אחד או שניים, לא את כולם.',
       },
@@ -19006,41 +19006,41 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'ברוקלין: הגשר, דמבו ווויליאמסבורג',
-        placeIds: ['nyc-brooklyn-bridge', 'nyc-dumbo', 'nyc-brooklyn-bridge-park', 'nyc-williamsburg'],
+        placeIds: ['nyc-brooklyn-bridge', 'nyc-dumbo', 'nyc-brooklyn-bridge-park', 'nyc-russ-daughters', 'nyc-williamsburg'],
         notes:
           'לחצות את הגשר ברגל ממנהטן לכיוון ברוקלין, ולחזור ברכבת התחתית. הנוף לכיוון מנהטן הוא הצד היפה.',
       },
       {
         day: 5,
         title: 'צ׳לסי, הכפר וכיכר וושינגטון',
-        placeIds: ['nyc-chelsea-market', 'nyc-washington-sq', 'nyc-flatiron', 'nyc-katz'],
+        placeIds: ['nyc-chelsea-market', 'nyc-flatiron', 'nyc-washington-sq', 'nyc-katz', 'nyc-kosher-marketplace'],
         notes:
           'יום עירוני ורגוע. שימו לב שכץ אינו כשר; מי שמקפיד ימצא חלופות כשרות רבות במידטאון ובאפר ווסט סייד.',
       },
       {
         day: 6,
         title: 'רוקפלר, רדיו סיטי וברודוויי',
-        placeIds: ['nyc-rockefeller', 'nyc-radio-city'],
+        placeIds: ['nyc-rockefeller', 'nyc-radio-city', 'nyc-moma', 'nyc-reserve-cut', 'nyc-barnea'],
         notes:
           'טופ אוף דה רוק היא התצפית שממנה רואים את האמפייר סטייט בתוך הנוף. כרטיסים למחזות זמר נמכרים גם בהנחה ביום ההצגה.',
       },
       {
         day: 7,
         title: 'ברוקלין הירוקה וקוני איילנד',
-        placeIds: ['nyc-prospect', 'nyc-coney'],
+        placeIds: ['nyc-prospect', 'nyc-coney', 'nyc-jamaica-bay', 'nyc-hudson-river-park', 'nyc-cloisters'],
         notes: 'קוני איילנד בסוף קו הרכבת התחתית, כשעה ממנהטן. מתאים ליום קיץ.',
       },
       {
         day: 8,
         title: 'צפון מנהטן - פורט טריון ואינווד',
-        placeIds: ['nyc-fort-tryon', 'nyc-inwood', 'nyc-wave-hill'],
+        placeIds: ['nyc-fort-tryon', 'nyc-inwood', 'nyc-wave-hill', 'nyc-nybg', 'nyc-roosevelt-island'],
         notes:
           'רכבת A לקצה הצפוני: גני פורט טריון והקלויסטרס בבוקר, היער של אינווד היל אחר הצהריים, ולמי שנשאר כוח - רכבת מטרו-נורת׳ לווייב היל בשקיעה. מנהטן שאף אחד לא מכיר.',
       },
       {
         day: 9,
         title: 'ברוקלין הירוקה והחוף',
-        placeIds: ['nyc-brooklyn-botanic', 'nyc-green-wood', 'nyc-rockaway'],
+        placeIds: ['nyc-brooklyn-botanic', 'nyc-green-wood', 'nyc-governors-island', 'nyc-macys', 'nyc-rockaway'],
         notes:
           'הגן הבוטני של ברוקלין בבוקר (באפריל - פריחת הדובדבן), הליכה בגרין-ווד עם התצפית על הנמל, ומעבורת או רכבת לחוף רוקאוויי לשעות אחר הצהריים על האוקיינוס.',
       },
@@ -19429,7 +19429,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'לאס וגאס - נחיתה והצטיידות',
-        placeIds: ['usa-lasvegas', 'usa-kosher-market'],
+        placeIds: ['usa-lasvegas', 'usa-lv-outlets', 'usa-lotus-siam', 'usa-kosher-market', 'usa-valley-of-fire'],
         notes:
           'לוקחים רכב, ישנים בווגאס ומצטיידים לדרך - כולל קניות במרכול הכשר במערב העיר. בפארקים עצמם אין כשרות ולעתים גם אין חנויות.',
       },
@@ -19450,7 +19450,7 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'פייג׳ - אנטלופה, הורסשו ואגם פאוול',
-        placeIds: ['usa-antelope', 'usa-horseshoe', 'usa-powell'],
+        placeIds: ['usa-antelope', 'usa-horseshoe', 'usa-powell', 'usa-bright-angel'],
         notes:
           'סיור מודרך בקניון האנטלופה (חובה להזמין מראש), תצפית הורסשו בנד, ואחר הצהריים על אגם פאוול.',
       },
@@ -19916,21 +19916,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'הגעה ואגם שטרבסקה פלסו',
-        placeIds: ['tat-poprad', 'tat-strbske'],
+        placeIds: ['tat-poprad', 'svk-vrbov', 'svk-strbske-x', 'tat-strbske'],
         notes:
           'מגיעים לאזור פופרד, ועולים לשטרבסקה פלסו לסיבוב קל סביב האגם והתאקלמות לגובה ולמזג האוויר ההררי.',
       },
       {
         day: 2,
         title: 'עמקים ואגמים',
-        placeIds: ['tat-popradske', 'tat-tatry'],
+        placeIds: ['tat-popradske', 'tat-rysy', 'tat-hincovo', 'tat-krivan', 'tat-tatry'],
         notes:
           'הליכה אל אגם פופרדסקה פלסו ובחזרה, ולמי שכשיר - המשך אל אחד העמקים הגבוהים. לבדוק תחזית בבוקר.',
       },
       {
         day: 3,
         title: 'רכבלים ומפלים',
-        placeIds: ['tat-lomnicky', 'tat-hrebienok', 'tat-tatranska'],
+        placeIds: ['tat-lomnicky', 'tat-skalnate-pleso', 'tat-hrebienok', 'tat-tatranska', 'tat-belianska'],
         notes:
           'רכבל אל פסגת לומניצקי שטיט (כרטיס מראש), ואחר הצהריים פוניקולר להרביינוק ושביל המפלים הקל.',
       },
@@ -19951,14 +19951,14 @@ export const destinations: Destination[] = [
       {
         day: 6,
         title: 'האגם הירוק',
-        placeIds: ['tat-zelene-pleso'],
+        placeIds: ['tat-zelene-pleso', 'tat-zdiar', 'tat-bachledka', 'svk-pieniny'],
         notes:
           'מסלול היום הקלאסי של הטטרה: מטטרנסקה לומניצה או מבייליה ווהדה, שלוש שעות עלייה ביער ובעמק הסלע עד האגם הירוק ובקתת בריני, וחזרה באותה דרך. להתחיל מוקדם, ולקחת בגד חם גם בקיץ.',
       },
       {
         day: 7,
         title: 'גן עדן הסלובקי',
-        placeIds: ['tat-sucha-bela', 'tat-tomasovsky'],
+        placeIds: ['tat-sucha-bela', 'tat-tomasovsky', 'svk-strbske-x2'],
         notes:
           'יום דרומה מהטטרה: נקיק סוחה בלה עם הסולמות והשרשראות (חד-כיווני, כשלוש שעות), ובדרך חזרה תצפית טומאשובסקי מעל קניון הורנד. לא אחרי גשם; מי שלא רוצה סולמות עושה רק את התצפית.',
       },
@@ -20288,21 +20288,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'שער הסלע והנקיקים',
-        placeIds: ['cbs-hrensko', 'cbs-pravcicka', 'cbs-kamenice'],
+        placeIds: ['cbs-hrensko', 'cbs-kamenice', 'cbs-pravcicka', 'cbs-kyjov-valley', 'cze-panska-skala'],
         notes:
           'מגיעים להז׳נסקו, עולים לשער פראבצ׳יצה ויורדים לנקיקי קמניצה כולל קטע השיט. יום הליכה מלא - נעליים טובות ומים.',
       },
       {
         day: 2,
         title: 'תצפיות הסלע של ייטז׳יחוביצה',
-        placeIds: ['cbs-jetrichovice', 'cbs-park'],
+        placeIds: ['cbs-jetrichovice', 'cbs-mariina-vyhlidka', 'cbs-dolsky-mlyn', 'cbs-ruzovsky-vrch', 'cbs-park'],
         notes:
           'מסלול מעגלי בין תצפיות מריה, וילהלמינה ורודולף, ואחר הצהריים שביל נוסף בפארק לפי מצב השבילים המעודכן.',
       },
       {
         day: 3,
         title: 'טיסא ודצ׳ין',
-        placeIds: ['cbs-tisa', 'cbs-decin'],
+        placeIds: ['cbs-tisa', 'cze-decin-x', 'cbs-decin', 'cze-mezna'],
         notes:
           'בוקר במבוך הסלעים של טיסא (קל ומתאים למשפחות), ואחר הצהריים ארמון דצ׳ין וגן הוורדים לפני החזרה לפראג.',
       },
@@ -20675,28 +20675,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'הגדה הצפונית - בלטונפירד',
-        placeIds: ['blt-balatonfured', 'blt-balaton'],
+        placeIds: ['blt-balatonfured', 'blt-balaton', 'hu-hegyestu', 'hu-kali-basin', 'hu-tihany-lavender-x'],
         notes:
           'מגיעים מבודפשט (כשעה וחצי), מתמקמים בבלטונפירד ומבלים אחר צהריים על הטיילת ובחוף. ערב נינוח במרינה.',
       },
       {
         day: 2,
         title: 'טיהאני',
-        placeIds: ['blt-tihany', 'blt-uplands'],
+        placeIds: ['blt-tihany', 'hu-orvenyes', 'blt-uplands', 'hu-siofok'],
         notes:
           'יום בחצי האי: המנזר והתצפית, שדות הלבנדר והאגם הפנימי, ואחר הצהריים שביל בפארק הרמות.',
       },
       {
         day: 3,
         title: 'הרי הבזלת והמצודה',
-        placeIds: ['blt-badacsony', 'blt-szigliget', 'blt-tapolca'],
+        placeIds: ['blt-badacsony', 'hu-kisfaludy-haz', 'blt-szigliget', 'hu-szigliget-x', 'blt-tapolca'],
         notes:
           'עלייה לתצפיות בדצ׳וני בין הכרמים, חורבות מצודת סיגליגט, וסיום בשיט בסירה במערת האגם של טפולצה.',
       },
       {
         day: 4,
         title: 'המערב - הביז וקסטהיי',
-        placeIds: ['blt-heviz', 'blt-keszthely'],
+        placeIds: ['blt-heviz', 'blt-keszthely', 'hu-keszthely-x', 'hu-szent-gyorgy', 'hu-sumeg'],
         notes:
           'בוקר רחצה באגם התרמי של הביז (גם בחורף), ואחר הצהריים ארמון פשטטיץ׳ בקסטהיי לפני החזרה.',
       },
@@ -21265,42 +21265,42 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'ריקיאוויק והלגונה הכחולה',
-        placeIds: ['isl-reykjavik', 'isl-bluelagoon', 'isl-chabad'],
+        placeIds: ['isl-reykjavik', 'isl-chabad', 'isl-baejarins', 'isl-kolaportid', 'isl-bluelagoon'],
         notes:
           'נוחתים בקפלאוויק, ומתחילים בלגונה הכחולה שבדרך לעיר (הזמנה מראש). אחר הצהריים ריקיאוויק, והצטיידות בחנות הכשרה למי שמקפיד.',
       },
       {
         day: 2,
         title: 'מעגל הזהב',
-        placeIds: ['isl-thingvellir', 'isl-geysir', 'isl-gullfoss'],
+        placeIds: ['isl-thingvellir', 'isl-glymur', 'isl-kerid', 'isl-geysir', 'isl-gullfoss'],
         notes:
           'המסלול הקלאסי: בקע תינגוודליר, שדה הגייזרים ומפל גולפוס - הכול בטווח נסיעה קצר מהעיר.',
       },
       {
         day: 3,
         title: 'החוף הדרומי והמפלים',
-        placeIds: ['isl-seljalandsfoss', 'isl-skogafoss', 'isl-reynisfjara'],
+        placeIds: ['isl-seljalandsfoss', 'isl-skogafoss', 'isl-solheimajokull', 'isl-dyrholaey', 'isl-reynisfjara'],
         notes:
           'נוסעים מזרחה: מפל שאפשר לעבור מאחוריו, מפל שאפשר לטפס מעליו, וסיום בחוף השחור ליד ויק - זהירות מהגלים.',
       },
       {
         day: 4,
         title: 'הקרחון והלגונה',
-        placeIds: ['isl-vatnajokull', 'isl-jokulsarlon'],
+        placeIds: ['isl-vatnajokull', 'isl-jokulsarlon', 'isl-diamond-beach', 'isl-stokksnes'],
         notes:
           'ממשיכים מזרחה אל ואטנאייקול - טיול קרחון מודרך או מערת קרח בעונה - ולגונת יוקולסארלון וחוף היהלומים.',
       },
       {
         day: 5,
         title: 'חצי האי סניפלסנס',
-        placeIds: ['isl-kirkjufell'],
+        placeIds: ['isl-kirkjufell', 'isl-arnarstapi', 'isl-snaefellsjokull', 'isl-reykjanes-x'],
         notes:
           'הרחבה צפונית-מערבית: הר קירקיופל, כפרי דייגים, מצוקים ושדות לבה - "איסלנד בזעיר אנפין".',
       },
       {
         day: 6,
         title: 'החוף הדרומי הרחוק - קניון וקרחון',
-        placeIds: ['isl-fjadrargljufur', 'isl-svartifoss'],
+        placeIds: ['isl-fjadrargljufur', 'isl-landmannalaugar', 'isl-thorsmork', 'isl-seljavallalaug', 'isl-svartifoss'],
         notes:
           'יום ארוך מזרחה: קניון פיאדראגליופור בבוקר, סקפטאפל והליכה למפל סוורטיפוס אחר הצהריים, וסיום בלגונת הקרחון. לינה בסביבת ואטנאיוקול; לא לחזור לרייקיאוויק באותו יום.',
       },
@@ -21724,7 +21724,7 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'בלד והנקיק',
-        placeIds: ['svn-bled', 'svn-vintgar'],
+        placeIds: ['svn-bled', 'svn-bled-castle', 'svn-zima', 'svn-vintgar', 'svn-pokljuka'],
         notes:
           'בוקר בנקיק וינטגר (כניסה מוזמנת מראש), אחר הצהריים הקפת אגם בלד, סירה לאי ותצפית מהטירה או ממאלה אוסויניצה.',
       },
@@ -21745,14 +21745,14 @@ export const destinations: Destination[] = [
       {
         day: 5,
         title: 'מערות, טירה וים',
-        placeIds: ['svn-postojna', 'svn-predjama', 'svn-piran'],
+        placeIds: ['svn-postojna', 'svn-predjama', 'slo-ptuj-x', 'svn-piran'],
         notes:
           'דרומה: מערות פוסטויינה וטירת פרדיאמה שבצוק, וסיום בפיראן על הים לפני החזרה.',
       },
       {
         day: 6,
         title: 'עמק הסוצ׳ה - מעבר ורשיץ׳ ומפלים',
-        placeIds: ['svn-zelenci', 'svn-vrsic', 'svn-kozjak', 'svn-tolmin-gorges'],
+        placeIds: ['svn-zelenci', 'svn-vrsic', 'svn-kozjak', 'svn-tolmin-gorges', 'svn-pericnik'],
         notes:
           'עצירה בזלנצי בבוקר, חמישים הסיבובים של מעבר ורשיץ׳ (קפלה רוסית בדרך), וירידה לעמק הסוצ׳ה: מפל קוזיאק ליד קובאריד וקניוני טולמין אחר הצהריים. יום נסיעה ארוך ויפה; רכב חובה.',
       },
@@ -22215,7 +22215,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'זאגרב',
-        placeIds: ['hrv-zagreb', 'hrv-chabad'],
+        placeIds: ['hrv-zagreb', 'hrv-chabad', 'hrv-dolac', 'hrv-la-struk', 'hrv-designer-outlet'],
         notes:
           'נחיתה בזאגרב, סיור בעיר העליונה ובשוק דולאץ. מי שמקפיד על כשרות - לתאם מראש עם בית חב"ד לאוכל להמשך הדרך.',
       },
@@ -22229,21 +22229,21 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'הרכס והים - פאקלניצה וזאדאר',
-        placeIds: ['hrv-paklenica', 'hrv-zadar'],
+        placeIds: ['hrv-paklenica', 'hrv-zrmanja', 'hrv-zadar', 'hrv-velebit'],
         notes:
           'בוקר בקניון פאקלניצה, ואחר הצהריים זאדאר - הפורום, עוגב הים ושקיעה על הטיילת.',
       },
       {
         day: 4,
         title: 'קרקה והאיים',
-        placeIds: ['hrv-krka', 'hrv-kornati'],
+        placeIds: ['hrv-krka', 'hrv-cetina-spring', 'hrv-kornati', 'hrv-telascica'],
         notes:
           'מפלי קרקה בבוקר, ולמי שיש יום נוסף - שיט אל איי קורנאטי הקרסטיים.',
       },
       {
         day: 5,
         title: 'ספליט',
-        placeIds: ['hrv-split', 'hrv-diocletian'],
+        placeIds: ['hrv-split', 'hrv-diocletian', 'hrv-vidova-gora', 'hrv-biokovo'],
         notes:
           'יום בעיר העתיקה שבתוך ארמון דיוקלטיאנוס, טיילת ריווה, ואפשר מעבורת קצרה לאי סמוך.',
       },
@@ -22257,7 +22257,7 @@ export const destinations: Destination[] = [
       {
         day: 7,
         title: 'האיים מדוברובניק - לוקרום ומליט',
-        placeIds: ['hrv-lokrum', 'hrv-mljet'],
+        placeIds: ['hrv-lokrum', 'hr-cavtat', 'hr-ston', 'hrv-mljet'],
         notes:
           'יום ים מדוברובניק: בוקר ורחצה בלוקרום (עשר דקות בסירה), או, למי שיש יום שלם, קטמרן למליט ואופניים סביב האגמים המלוחים והמנזר על האי. שניהם ביום אחד לא מסתדר.',
       },
@@ -22638,14 +22638,14 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'קטמנדו - התאקלמות',
-        placeIds: ['npl-kathmandu', 'npl-chabad'],
+        placeIds: ['npl-kathmandu', 'npl-asan', 'npl-chabad', 'npl-honacha', 'np-patan'],
         notes:
           'נחיתה, מנוחה מהטיסה הארוכה וסיבוב בכיכר הדורבר ובתאמל. ארוחת ערב כשרה בבית חב"ד, וסידור אישורי טרק (TIMS/היתרי פארק) לפי המסלול.',
       },
       {
         day: 2,
         title: 'הסטופות והעיר העתיקה',
-        placeIds: ['npl-boudha', 'npl-swayambhu', 'npl-bhaktapur'],
+        placeIds: ['npl-boudha', 'np-changu-narayan', 'npl-bhaktapur', 'np-shivapuri', 'npl-swayambhu'],
         notes:
           'בוקר בבודהנאת, צהריים בסוואיאמבונאת עם נוף לעמק, ואחר הצהריים בהקטפור השמורה.',
       },
@@ -22659,7 +22659,7 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'פוקהרה והאגם',
-        placeIds: ['npl-pokhara', 'npl-phewa'],
+        placeIds: ['npl-pokhara', 'npl-phewa', 'np-sarangkot'],
         notes:
           'טיסה קצרה או נסיעה ארוכה לפוקהרה, שיט באגם פאווה ופגודת השלום. כאן גם סוגרים את פרטי הטרק.',
       },
@@ -23048,28 +23048,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'האנוי',
-        placeIds: ['vnm-hanoi', 'vnm-hoankiem', 'vnm-chabad'],
+        placeIds: ['vnm-hanoi', 'vnm-chabad', 'vnm-hoankiem', 'vnm-old-quarter', 'vnm-dong-xuan'],
         notes:
           'יום התאקלמות: רובע 36 הרחובות, אגם הואן קיים ואוכל רחוב. למי שמקפיד - ארוחה כשרה בבית חב"ד (בימים א-ה).',
       },
       {
         day: 2,
         title: 'מפרץ הא לונג',
-        placeIds: ['vnm-halong', 'vnm-catba'],
+        placeIds: ['vnm-halong', 'vnm-catba', 'vnm-bai-tu-long'],
         notes:
           'שיט במפרץ - יום או לינה על סירה. שווה לבדוק מסלול שכולל את מפרץ לאן הא ואת קאט בא, שם פחות עמוס.',
       },
       {
         day: 3,
         title: 'נין בין',
-        placeIds: ['vnm-ninhbinh'],
+        placeIds: ['vnm-ninhbinh', 'vnm-bai-dinh', 'vnm-cuc-phuong', 'vnm-temple-literature', 'vnm-hcm-mausoleum'],
         notes:
           'סירת משוטים בין צוקי הגיר בטראנג אן או תאם קוק, אופניים בין שדות האורז וטיפוס לתצפית מוא קייב.',
       },
       {
         day: 4,
         title: 'סאפה והרי הצפון',
-        placeIds: ['vnm-sapa', 'vnm-fansipan'],
+        placeIds: ['vnm-sapa', 'vnm-fansipan', 'vnm-mu-cang-chai'],
         notes:
           'רכבת לילה או אוטובוס לסאפה, הליכה בין כפרי המדרגות, ולמי שרוצה - רכבל לפסגת פאנסיפן.',
       },
@@ -23434,21 +23434,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'לופוטן - הכניסה לאיים',
-        placeIds: ['nor-lofoten'],
+        placeIds: ['nor-lofoten', 'nor-svolvaer', 'nor-lofotr', 'nor-unstad'],
         notes:
           'טסים לבודו או לסווולוואר ונכנסים לאיים בכביש E10 או במעבורת. יום ראשון של נסיעה נופית בין המפרצים והכפרים.',
       },
       {
         day: 2,
         title: 'ריינה והמפרצים',
-        placeIds: ['nor-reine', 'nor-lofoten'],
+        placeIds: ['nor-reine', 'nor-reinebringen', 'lof-anitas', 'nor-lofoten'],
         notes:
           'בוקר בריינה - בקתות רורבו אדומות מול הפסגות - ולמי שכשיר, מסלול המדרגות התלול לריינברינגן. אחר הצהריים חופים לבנים כמו קוואלוויקה או האוקלנד.',
       },
       {
         day: 3,
         title: 'טרומסו',
-        placeIds: ['nor-tromso'],
+        placeIds: ['nor-tromso', 'lof-fiskekompaniet', 'lof-fjellheisen', 'lof-sommaroy', 'lof-segla'],
         notes:
           'מעבר צפונה-מזרחה (טיסה קצרה או נסיעה ארוכה): קתדרלת הארקטי, רכבל פיילהיים, ובעונה - יציאת ציד זוהר צפוני בלילה.',
       },
@@ -23462,7 +23462,7 @@ export const destinations: Destination[] = [
       {
         day: 5,
         title: 'מערב לופוטן - נוספיורד, הנינגסוור ואו',
-        placeIds: ['lof-henningsvaer', 'lof-nusfjord', 'lof-a'],
+        placeIds: ['lof-henningsvaer', 'lof-haukland', 'lof-nusfjord', 'lof-a', 'lof-kvalvika'],
         notes:
           'נסיעה איטית מערבה לאורך הכביש הראשי: הנינגסוור ומגרש הכדורגל על הסלע, כפר הדייגים המשומר נוספיורד, ועד קצה הדרך בכפר או. שקיעה (או שמש חצות) מהמזח.',
       },
@@ -23913,28 +23913,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'אוסלו',
-        placeIds: ['nor-oslo'],
+        placeIds: ['nor-oslo', 'nor-mathallen'],
         notes:
           'נחיתה בבירה (עם החלפה מאירופה): בית האופרה שאפשר לטפס על גגו, פארק ויגלנד ומוזיאון הוויקינגים.',
       },
       {
         day: 2,
         title: 'רכבת נופית וברגן',
-        placeIds: ['nor-bergen', 'nor-naeroy'],
+        placeIds: ['nor-bergen', 'nor-fisketorget', 'nor-naeroy'],
         notes:
           'רכבת אוסלו-ברגן או טיסה קצרה, סיור ברציף בריגן ובשוק הדגים, ומשם שיט בנרוי-פיורד בשילוב רכבת פלאם.',
       },
       {
         day: 3,
         title: 'גיירנגר',
-        placeIds: ['nor-geiranger'],
+        placeIds: ['nor-geiranger', 'nor-dalsnibba', 'nor-trollstigen', 'nor-runde'],
         notes:
           'שיט בגיירנגר-פיורד מול מפלי שבע האחיות, ותצפיות דלסניבה וכביש הנשרים מלמעלה.',
       },
       {
         day: 4,
         title: 'צוקים - פרייקסטולן או טרולטונגה',
-        placeIds: ['nor-preikestolen', 'nor-trolltunga'],
+        placeIds: ['nor-preikestolen', 'nor-kjeragbolten', 'nor-latefossen', 'nor-trolltunga', 'nor-voringsfossen'],
         notes:
           'בוחרים לפי כושר ומזג אוויר: פרייקסטולן (כ-8 ק"מ, 3-4 שעות) או טרולטונגה (יום שלם ותובעני). לצאת מוקדם ולבדוק תחזית.',
       },
@@ -23948,14 +23948,14 @@ export const destinations: Destination[] = [
       {
         day: 6,
         title: 'פלום - רכבת ותצפית',
-        placeIds: ['nor-flamsbana', 'nor-stegastein'],
+        placeIds: ['nor-flamsbana', 'nor-stegastein', 'nor-borgund', 'nor-hardangervidda'],
         notes:
           'רכבת פלום למירדל וחזרה (או ירידה באופניים בעמק), ואחר הצהריים נסיעה למרפסת סטגסטיין מעל הפיורד. אפשר להגיע לפלום ברכבת מברגן ולישון בכפר.',
       },
       {
         day: 7,
         title: 'ברגן מלמעלה',
-        placeIds: ['nor-floyen', 'nor-ulriken'],
+        placeIds: ['nor-floyen', 'nor-ulriken', 'nor-lofthus-x', 'nor-folgefonna', 'nor-utne-x'],
         notes:
           'רכבל לאולריקן בבוקר ומסלול הרכס וידן (כארבע שעות) עד פלויין, וירידה בפוניקולר למרכז. מי שמעדיף קל - פלויין בלבד, עם השבילים ואגם הטרולים למעלה.',
       },
@@ -24323,28 +24323,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'העיר וההר',
-        placeIds: ['zaf-capetown', 'zaf-table', 'zaf-seapoint'],
+        placeIds: ['zaf-capetown', 'zaf-biesmiellah', 'zaf-seapoint', 'zaf-table', 'zaf-biscuit-mill'],
         notes:
           'רכבל להר השולחן בבוקר (לפני שהרוח מתחזקת), אחר הצהריים הוואטרפרונט ובו-קאאפ, וארוחה כשרה בסי פוינט.',
       },
       {
         day: 2,
         title: 'חצי האי',
-        placeIds: ['zaf-chapmans', 'zaf-boulders', 'zaf-capepoint'],
+        placeIds: ['zaf-chapmans', 'zaf-cape-point-x', 'zaf-muizenberg', 'zaf-boulders', 'zaf-capepoint'],
         notes:
           'יום נסיעה נופי: כביש צ\'פמנס פיק, מושבת הפינגווינים בבולדרס, וכף התקווה הטובה בקצה השמורה.',
       },
       {
         day: 3,
         title: 'גנים ואי רובן',
-        placeIds: ['zaf-kirstenbosch', 'zaf-robben'],
+        placeIds: ['zaf-kirstenbosch', 'zaf-district-six', 'zaf-waterfront', 'zaf-lions-head', 'zaf-robben'],
         notes:
           'בוקר בגן הבוטני קירסטנבוש עם שביל החופה, ואחר הצהריים מעבורת לאי רובן (להזמין מראש - התלוי במזג אוויר).',
       },
       {
         day: 4,
         title: 'עמק היין',
-        placeIds: ['zaf-stellenbosch'],
+        placeIds: ['zaf-stellenbosch', 'zaf-franschhoek'],
         notes:
           'יום ביקבי סטלנבוש ובעיירה ההולנדית-קייפית - כשעה נסיעה מהעיר. לתכנן נהג, לא לשתות ולנהוג.',
       },
@@ -24660,14 +24660,14 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'מסלול הפנורמה',
-        placeIds: ['zaf-blyde'],
+        placeIds: ['zaf-blyde', 'zaf-panorama-route', 'zaf-bourkes-luck', 'zaf-pilgrims-rest', 'zaf-harries'],
         notes:
           'נוחתים בנלספרויט (או נוסעים מיוהנסבורג) ועולים למסלול הפנורמה: שלושת הרונדוואלים, בורות בורקס לאק וחלון האלוהים.',
       },
       {
         day: 2,
         title: 'קרוגר - יום ספארי',
-        placeIds: ['zaf-kruger'],
+        placeIds: ['zaf-kruger', 'zaf-timbavati'],
         notes:
           'נכנסים לפארק עם פתיחת השערים: יציאה מוקדמת ואחר צהריים מאוחר הן שעות הפעילות של החיות. לנהוג לאט, לא לצאת מהרכב.',
       },
@@ -25052,28 +25052,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'ירוואן',
-        placeIds: ['arm-yerevan'],
+        placeIds: ['arm-yerevan', 'arm-vernissage', 'arm-gum-market', 'arm-tsitsernakaberd', 'arm-echmiadzin'],
         notes:
           'התמקמות בבירה: כיכר הרפובליקה, הקסקאד, שוק ורניסאז׳ וערב במסעדה מקומית. הכול בהליכה או במונית זולה.',
       },
       {
         day: 2,
         title: 'גרני, גגהארד וחור וירפ',
-        placeIds: ['arm-garni', 'arm-geghard', 'arm-khorvirap'],
+        placeIds: ['arm-garni', 'arm-symphony-stones', 'arm-azat-reservoir', 'arm-geghard', 'arm-khorvirap'],
         notes:
           'הקלאסיקה של האזור: מקדש גרני והסימפוניה של האבנים, מנזר גגהארד החצוב, ולקראת ערב חור וירפ מול אררט.',
       },
       {
         day: 3,
         title: 'אגם סוואן ודיליז׳אן',
-        placeIds: ['arm-sevan', 'arm-sevanavank', 'arm-dilijan'],
+        placeIds: ['arm-sevan', 'arm-sevanavank', 'arm-dilijan', 'arm-tsaghkadzor'],
         notes:
           'צפונה לאגם ההררי ולמנזר שעל הצוק, ואחר הצהריים יערות דיליז׳אן - מסלול הליכה קצר בין המנזרים.',
       },
       {
         day: 4,
         title: 'דרומה - נורוואנק וטאטב',
-        placeIds: ['arm-noravank', 'arm-jermuk', 'arm-tatev'],
+        placeIds: ['arm-noravank', 'arm-areni-cave', 'arm-jermuk', 'arm-tatev'],
         notes:
           'יום נסיעה ארוך דרומה: קניון נורוואנק, עצירה בג׳רמוק, ורכבל כנפי טאטב אל המנזר שעל הצוק. אפשר ללון בגוריס.',
       },
@@ -25463,14 +25463,14 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'סמרקנד',
-        placeIds: ['uzb-registan', 'uzb-shahizinda', 'uzb-guremir', 'uzb-samarkand'],
+        placeIds: ['uzb-registan', 'uzb-guremir', 'uzb-samarkand', 'uzb-siyob', 'uzb-shahizinda'],
         notes:
           'יום מלא בעיר: רגיסטן בבוקר, שאה-אי-זינדה, גור-אמיר, ולקראת ערב שוק סיאב וחזרה לרגיסטן בתאורה.',
       },
       {
         day: 3,
         title: 'בוכרה',
-        placeIds: ['uzb-bukhara', 'uzb-poikalyan'],
+        placeIds: ['uzb-bukhara', 'uzb-toki-zargaron', 'uzb-poikalyan', 'uzb-ark-bukhara', 'uzb-samanid'],
         notes:
           'רכבת לבוכרה, והליכה איטית במרכז ההיסטורי: פוי-קליאן, השווקים המקורים, לאבי-האוז והרובע היהודי.',
       },
@@ -25842,21 +25842,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'מערב הכביש - מוסל ביי ווילדרנס',
-        placeIds: ['zaf-mosselbay', 'zaf-wilderness'],
+        placeIds: ['zaf-mosselbay', 'zaf-george', 'zaf-victoria-bay', 'zaf-outeniqua-pass', 'zaf-wilderness'],
         notes:
           'יוצאים מקייפטאון (כ-4 שעות) או נוחתים בג׳ורג׳: מפרץ מוסל ביי, ואחר הצהריים אגמי וילדרנס ומסלול קצר למפל.',
       },
       {
         day: 2,
         title: 'קניסנה והלגונה',
-        placeIds: ['zaf-knysna'],
+        placeIds: ['zaf-knysna', 'zaf-ile-de-pain', 'zaf-knysna-heads'],
         notes:
           'יום בקניסנה: שיט או נסיעה לראשי קניסנה, טיילת המים, ויער נודס באזור. מקום טוב ללון בו יומיים.',
       },
       {
         day: 3,
         title: 'פנים הארץ - מערות ויענים',
-        placeIds: ['zaf-cango', 'zaf-oudtshoorn'],
+        placeIds: ['zaf-cango', 'zaf-swartberg', 'zaf-oudtshoorn'],
         notes:
           'חוצים את ההרים לעמק הקארו: מערות קנגו בבוקר (סיור בהזמנה) וחוות היענים של אוסטרוחוורן אחר הצהריים.',
       },
@@ -25870,7 +25870,7 @@ export const destinations: Destination[] = [
       {
         day: 5,
         title: 'ציציקאמה והגשר',
-        placeIds: ['zaf-tsitsikamma', 'zaf-bloukrans'],
+        placeIds: ['zaf-tsitsikamma', 'zaf-storms-river-mouth', 'zaf-bloukrans', 'zaf-monkeyland-x'],
         notes:
           'הגשרים התלויים מעל שפך הסטורמס ומסלולי החוף ביער העד, ובדרך גשר בלוקראנס עם קפיצת הבנג׳י.',
       },
@@ -26262,21 +26262,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'מזרח קיוטו',
-        placeIds: ['kyo-kiyomizu', 'kyo-ginkakuji', 'kyo-kyoto'],
+        placeIds: ['kyo-kiyomizu', 'kyo-nishiki', 'kyo-kyoto', 'kyo-ginkakuji'],
         notes:
           'בוקר בקיומיזו-דרה ובסמטאות היגאשייאמה, אחר הצהריים גינקאקו-ג׳י ושביל הפילוסוף, וערב בגיון ובשוק נישיקי.',
       },
       {
         day: 2,
         title: 'שערי הטורי',
-        placeIds: ['kyo-fushimi', 'kyo-chabad'],
+        placeIds: ['kyo-fushimi', 'kyo-chabad', 'kyo-uji'],
         notes:
           'לצאת מוקדם לפושימי אינארי ולעלות בשביל ההר עד למעלה. ארוחה כשרה בבית חב"ד - להזמין כמה ימים מראש.',
       },
       {
         day: 3,
         title: 'אראשייאמה והביתן הזהב',
-        placeIds: ['kyo-arashiyama', 'kyo-kinkakuji'],
+        placeIds: ['kyo-arashiyama', 'kyo-kinkakuji', 'kyo-kurama-x', 'kyo-ohara'],
         notes:
           'חורשת הבמבוק בשעת בוקר מוקדמת, טנריו-ג׳י והנהר, ואחר הצהריים קינקאקו-ג׳י המוזהב.',
       },
@@ -26660,7 +26660,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'קלגרי ובאנף',
-        placeIds: ['can-calgary', 'can-banff'],
+        placeIds: ['can-calgary', 'can-calgary-farmers', 'can-crossiron', 'can-banff'],
         notes:
           'נוחתים בקלגרי, לוקחים רכב ונוסעים כשעה וחצי לבאנף. אחר צהריים קל בעיירה ובסביבתה - מעיינות חמים או רכבל הגופרית.',
       },
@@ -26674,21 +26674,21 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'יוהו והנקיק',
-        placeIds: ['can-yoho', 'can-emerald', 'can-johnston'],
+        placeIds: ['can-yoho', 'can-emerald', 'can-johnston', 'can-sulphur-mountain', 'can-lake-minnewanka'],
         notes:
           'חוצים לקולומביה הבריטית: מפלי טאקאקאו ואגם אמרלד, ובדרך חזרה מסלול המפלים בנקיק ג׳ונסטון.',
       },
       {
         day: 4,
         title: 'כביש שדות הקרח',
-        placeIds: ['can-peyto', 'can-icefields', 'can-athabasca'],
+        placeIds: ['can-peyto', 'can-bow-lake', 'can-icefields', 'can-athabasca'],
         notes:
           'נסיעה צפונה בכביש הנופי עם עצירות בתצפית פייטו, אגמים ומפלים, וטיול על קרחון אתבסקה. לתדלק ולהצטייד לפני היציאה.',
       },
       {
         day: 5,
         title: 'יאספר',
-        placeIds: ['can-jasper', 'can-maligne'],
+        placeIds: ['can-jasper', 'can-mount-edith-cavell', 'can-maligne'],
         notes:
           'קניון מאלין ואגם מאלין עם השיט לספיריט איילנד, ולסיום שמיים כהים בלילה. משם חוזרים דרומה או ממשיכים לאדמונטון.',
       },
@@ -27074,14 +27074,14 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'בלם ופארק האומות',
-        placeIds: ['lis-jeronimos', 'lis-belem-tower', 'lis-oceanario'],
+        placeIds: ['lis-jeronimos', 'lis-pasteis-belem', 'lis-belem-tower', 'lis-time-out', 'lis-oceanario'],
         notes:
           'בוקר בבלם (המנזר קודם, לפני התורים), ואחר הצהריים רכבת/מטרו לפארק האומות לאוקיאנריום. עם ילדים - להפוך את הסדר ולהגיע לאוקיאנריום בפתיחה.',
       },
       {
         day: 3,
         title: 'סינטרה והאוקיינוס',
-        placeIds: ['lis-pena', 'lis-mouros', 'lis-cabo-roca'],
+        placeIds: ['lis-pena', 'lis-mouros', 'lis-cabo-roca', 'lis-ericeira', 'lis-mafra'],
         notes:
           'יוצאים מוקדם ברכבת לסינטרה (כ-40 דקות מרוסיו) או ברכב. ארמון פנה בכרטיס מוזמן מראש, טירת המורים ברגל מולו, ולסיום כף רוקה לשקיעה. בסינטרה החניה בעייתית מאוד - עדיף רכבת ואוטובוס מקומי.',
       },
@@ -27465,28 +27465,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'העיר העתיקה והטירה',
-        placeIds: ['war-old-town', 'war-royal-castle', 'war-barbican'],
+        placeIds: ['war-old-town', 'war-barbican', 'war-royal-castle', 'war-national-museum', 'waw-praga'],
         notes:
           'העיר העתיקה קטנה ואפשר לכסות אותה בבוקר. שימו לב שכל מה שנראה עתיק נבנה מחדש אחרי 1945.',
       },
       {
         day: 2,
         title: 'מוזיאון פולין וההיסטוריה היהודית',
-        placeIds: ['war-polin'],
+        placeIds: ['war-polin', 'waw-jewish-cemetery'],
         notes:
           'להקדיש לו לפחות שלוש שעות. כדאי להזמין כרטיס מראש ולשקול מדריך אודיו.',
       },
       {
         day: 3,
         title: 'מרד ורשה וארמון התרבות',
-        placeIds: ['war-uprising-museum', 'war-palace-culture'],
+        placeIds: ['war-uprising-museum', 'war-hale-mirowskie', 'war-saxon-garden', 'war-palace-culture', 'war-hala-koszyki'],
         notes:
           'שני אתרים שמספרים את המאה העשרים של העיר משני צדדים שונים.',
       },
       {
         day: 4,
         title: 'פארקים וארמונות',
-        placeIds: ['war-lazienki', 'war-wilanow', 'war-copernicus'],
+        placeIds: ['war-lazienki', 'war-bar-prasowy', 'war-copernicus', 'war-wilanow', 'war-designer-outlet'],
         notes:
           'בקיץ יש קונצרטי שופן חופשיים בלאז׳נקי בימי ראשון. וילאנוב דורש נסיעה קצרה דרומה.',
       },
@@ -27886,14 +27886,14 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'העיר העתיקה וואוול',
-        placeIds: ['kra-rynek', 'kra-mariacki', 'kra-wawel'],
+        placeIds: ['kra-rynek', 'kra-mariacki', 'kra-jama-michalika', 'kra-wawel', 'kra-kosciuszko'],
         notes:
           'מתחילים בכיכר מוקדם, לפני שהיא מתמלאת, ממשיכים לכנסיית מריה, ואחר הצהריים עולים לגבעת ואוול. הכול במרחק הליכה - קרקוב היא עיר קומפקטית להפליא.',
       },
       {
         day: 2,
         title: 'קרקוב היהודית',
-        placeIds: ['kra-kazimierz', 'kra-schindler'],
+        placeIds: ['kra-kazimierz', 'kra-plac-nowy', 'kra-wierzynek', 'kra-stary-kleparz', 'kra-schindler'],
         notes:
           'בוקר בקז׳ימייז׳ כשבתי הכנסת ובתי העלמין פתוחים, ואחר הצהריים חוצים את הנהר למפעל שינדלר ולגטו פודגוז׳ה. כרטיסים למפעל להזמין מראש - הם נגמרים.',
       },
@@ -27907,14 +27907,14 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'מכרה המלח ואויצוב',
-        placeIds: ['kra-wieliczka', 'kra-ojcow'],
+        placeIds: ['kra-wieliczka', 'krk-tyniec', 'kra-factory', 'kra-ojcow', 'krk-bochnia'],
         notes:
           'בוקר בוויליצ׳קה (סיור מודרך של כשלוש שעות, מאות מדרגות), ואחר הצהריים אוויר פתוח באויצוב. עם ילדים - אפשר להחליף את אויצוב בתל קושצ׳ושקו, שהוא קרוב וקצר יותר.',
       },
       {
         day: 5,
         title: 'הרי הטטרה',
-        placeIds: ['kra-zakopane'],
+        placeIds: ['kra-zakopane', 'krk-morskie-oko', 'krk-pieniny'],
         notes:
           'יום מלא בזקופנה ובטטרה. הנסיעה היא כשעתיים לכל כיוון, ולכן לינה של לילה אחת בזקופנה עדיפה בהרבה על טיול יום - במיוחד אם רוצים להגיע למורסקייה אוקו.',
       },
@@ -28259,21 +28259,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'פאפוס העתיקה והנמל',
-        placeIds: ['paf-archaeological', 'paf-tombs', 'paf-castle'],
+        placeIds: ['paf-archaeological', 'paf-castle', 'paf-tombs', 'pfo-municipal-market', 'cy-chrysorrogiatissa'],
         notes:
           'בוקר בפארק הארכיאולוגי לפני החום, אחר הצהריים בקברי המלכים, וסיום בנמל לשקיעה ולארוחה. שני האתרים פתוחים ובלי צל - כובע ומים.',
       },
       {
         day: 2,
         title: 'אקמס והחופים',
-        placeIds: ['paf-akamas', 'paf-coral-bay'],
+        placeIds: ['paf-akamas', 'cy-aphrodite-baths', 'cyp-polis', 'cy-avakas', 'paf-coral-bay'],
         notes:
           'יום שלם בצפון: אקמס בבוקר (רכב גבוה או סיור מאורגן לדרכי העפר), ואחר הצהריים רגיעה בקורל ביי. בלי רכב שכור היום הזה כמעט בלתי אפשרי.',
       },
       {
         day: 3,
         title: 'טרודוס וסלע אפרודיטה',
-        placeIds: ['paf-troodos', 'paf-kykkos', 'paf-romiou'],
+        placeIds: ['paf-troodos', 'cy-omodos', 'paf-kykkos', 'cyp-agios-neophytos', 'paf-romiou'],
         notes:
           'עולים להרים בבוקר, מנזר קיקוס והכפרים, ויורדים חזרה לאורך החוף עם עצירה בסלע אפרודיטה לשקיעה. הכבישים בטרודוס מפותלים - מי שסובל ממחלת נסיעה שיישב מקדימה.',
       },
@@ -28619,28 +28619,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'מרכז העיר והתעלות',
-        placeIds: ['ams-anne-frank', 'ams-begijnhof', 'ams-vondelpark'],
+        placeIds: ['ams-anne-frank', 'ams-begijnhof', 'ams-stubbe-haring', 'ams-van-gogh', 'ams-vondelpark'],
         notes:
           'בית אנה פראנק בשעה שהזמנתם מראש (חובה), ומשם ברגל דרומה דרך טבעות התעלות. סיום רגוע בוונדלפארק.',
       },
       {
         day: 2,
         title: 'הרובע היהודי',
-        placeIds: ['ams-portuguese-synagogue', 'ams-rembrandt-house'],
+        placeIds: ['ams-portuguese-synagogue', 'ams-rembrandt-house', 'ams-rijksmuseum', 'ams-albert-cuyp', 'ams-muiderslot'],
         notes:
           'יום מזרחית למרכז: בית הכנסת הפורטוגזי ומתחם המוזיאון היהודי, ואחר הצהריים בית רמברנדט שנמצא באותו רובע. שניהם סגורים או בשעות מצומצמות בשבת ובחגים.',
       },
       {
         day: 3,
         title: 'טחנות רוח וכפרי דייגים',
-        placeIds: ['ams-zaanse-schans', 'ams-volendam'],
+        placeIds: ['ams-zaanse-schans', 'ams-waterland', 'ams-volendam', 'ams-batavia-stad'],
         notes:
           'יום מחוץ לעיר בתחבורה ציבורית: רכבת בוקר לזאנסה סכאנס לפני ההמונים, ואוטובוס אחר הצהריים לוולנדאם.',
       },
       {
         day: 4,
         title: 'פרחים או דרום המדינה',
-        placeIds: ['ams-keukenhof', 'ams-kinderdijk'],
+        placeIds: ['ams-keukenhof', 'ams-haarlem', 'ams-kinderdijk'],
         notes:
           'שני האתרים האלה הם בכיוונים שונים ובדרך כלל לא משלבים אותם באותו יום: קויקנהוף בעונת הפריחה בלבד, וקינדרדייק כיום מלא דרומה (עדיף ברכב שכור). לבחור לפי העונה.',
       },
@@ -28971,21 +28971,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'עמאן',
-        placeIds: ['amn-citadel', 'amn-roman-theatre'],
+        placeIds: ['amn-citadel', 'jor-habibah', 'jor-souq-khodra', 'amn-roman-theatre', 'jor-as-salt'],
         notes:
           'יום קצר בעיר: המצדה לתצפית והתאטרון מתחתיו, שניהם במרחק הליכה זה מזה אבל המדרון תלול.',
       },
       {
         day: 2,
         title: 'הצפון: גרש, עגלון ואום קיס',
-        placeIds: ['amn-jerash', 'amn-ajloun', 'amn-umm-qais'],
+        placeIds: ['amn-jerash', 'amn-ajloun', 'jor-pella', 'amn-umm-qais', 'amn-abdullah-mosque'],
         notes:
           'יום ארוך צפונה עם נהג או רכב שכור. גרש בבוקר לפני החום ולפני קבוצות הסיורים. מי שאין לו יום שלם שיוותר על אום קיס.',
       },
       {
         day: 3,
         title: 'הר נבו, מדבא והירידה לים המלח',
-        placeIds: ['amn-nebo', 'amn-madaba', 'amn-maghtas', 'amn-mujib'],
+        placeIds: ['amn-nebo', 'amn-madaba', 'jor-iraq-al-amir', 'amn-maghtas', 'amn-mujib'],
         notes:
           'יורדים דרומה-מערבה לאורך דרך המלך: הר נבו ומדבא בבוקר, ואחר הצהריים לבקעה. ואדי מוג׳יב דורש חצי יום בפני עצמו ופתוח בעונה בלבד - מי שמעוניין בו שיפצל אותו ליום נפרד.',
       },
@@ -29318,21 +29318,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'מבאקו מערבה: שמאחי וקבלה',
-        placeIds: ['she-shamakhi', 'she-qabala'],
+        placeIds: ['she-shamakhi', 'aze-lahij', 'aze-yeddi-gozel', 'aze-nohur', 'she-qabala'],
         notes:
           'יוצאים מבאקו בבוקר, עוצרים בשמאחי לשעה, ולנים בקבלה. הנסיעה עצמה ארוכה - עדיף נהג ולא נהיגה עצמית ביום הראשון.',
       },
       {
         day: 2,
         title: 'שקי',
-        placeIds: ['she-palace', 'she-old-town'],
+        placeIds: ['she-palace', 'aze-taza-bazar', 'she-old-town', 'aze-kish', 'aze-ilisu'],
         notes:
           'ארמון החאנים בבוקר (הכניסה בסיורים בשעות קבועות), ואחר הצהריים הליכה בעיר העתיקה ובקרוואנסראי.',
       },
       {
         day: 3,
         title: 'קובה, הכפר האדום וחינאלוג',
-        placeIds: ['she-qirmizi', 'she-khinalug'],
+        placeIds: ['she-qirmizi', 'she-khinalug', 'aze-gabala-x'],
         notes:
           'יום ארוך במיוחד בצפון-מזרח: הכפר האדום בבוקר, ואחר כך עלייה לחינאלוג ברכב גבוה או ג׳יפ מקומי. מי שאין לו יום שלם שיוותר על חינאלוג ולא על הכפר האדום.',
       },
@@ -29673,14 +29673,14 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'אל עין וג׳בל חפית',
-        placeIds: ['uae-jahili', 'uae-jebel-hafeet'],
+        placeIds: ['uae-jahili', 'uae-al-ain-oasis', 'uae-muwaiji', 'uae-jebel-hafeet', 'uae-jebel-hafeet-tombs'],
         notes:
           'אל עין בבוקר כשעדיין נסבל בחוץ, ועלייה לג׳בל חפית לקראת שקיעה. כשעה וחצי נסיעה מאבו דאבי או מדובאי.',
       },
       {
         day: 2,
         title: 'חטא והרי חג׳אר',
-        placeIds: ['uae-hatta'],
+        placeIds: ['uae-hatta', 'uae-wadi-shawka', 'uae-fujairah-fort', 'uae-wadi-wurayah', 'uae-snoopy-island'],
         notes:
           'יום שלם בהרים: מאגר המים בבוקר, כפר המורשת אחר הצהריים. לוודא שהמסלול בוויז לא חוצה לעומאן, ולקחת מים בשפע.',
       },
@@ -30012,28 +30012,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'המרכז ההיסטורי והמורשת היהודית',
-        placeIds: ['buc-lipscani', 'buc-stavropoleos', 'buc-curtea-veche', 'buc-choral-temple'],
+        placeIds: ['buc-lipscani', 'buc-curtea-veche', 'buc-stavropoleos', 'buc-caru-cu-bere', 'buc-choral-temple'],
         notes:
           'המקדש הכוראלי והמוזיאון היהודי דורשים תיאום מראש ודרכון בכניסה.',
       },
       {
         day: 2,
         title: 'הכיכר המלכותית והאתנאום',
-        placeIds: ['buc-atheneum', 'buc-art-museum', 'buc-cismigiu'],
+        placeIds: ['buc-atheneum', 'buc-art-museum', 'buc-cismigiu', 'buc-obor'],
         notes:
           'הכול במרחק הליכה. באתנאום יש סיורים קצרים גם בלי הופעה.',
       },
       {
         day: 3,
         title: 'ארמון הפרלמנט',
-        placeIds: ['buc-parliament'],
+        placeIds: ['buc-parliament', 'buc-vacaresti'],
         notes:
           'סיור בהזמנה מראש ועם דרכון. הבניין ענק והסיור מכסה חלק קטן ממנו בלבד.',
       },
       {
         day: 4,
         title: 'הצפון: מוזיאון הכפר, הפארק ושער הניצחון',
-        placeIds: ['buc-village-museum', 'buc-herastrau', 'buc-arcul'],
+        placeIds: ['buc-village-museum', 'buc-herastrau', 'buc-arcul', 'buc-mogosoaia'],
         notes:
           'שלושתם צמודים זה לזה בצפון העיר, ואפשר לשלב אותם ביום אחד רגוע.',
       },
@@ -30384,21 +30384,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'סינאיה ובראן',
-        placeIds: ['trn-peles', 'trn-bran'],
+        placeIds: ['trn-peles', 'trn-bran', 'trn-rasnov', 'trn-brasov', 'trn-piatra-craiului'],
         notes:
           'פלש בבוקר (לבדוק שהיא פתוחה - סגורה בחלק מימות השבוע), ובראן אחר הצהריים. כשעה נסיעה ביניהן.',
       },
       {
         day: 2,
         title: 'סיגישוארה',
-        placeIds: ['trn-sighisoara'],
+        placeIds: ['trn-sighisoara', 'rou-biertan', 'trn-viscri'],
         notes:
           'יום רגוע בעיירה המוקפת חומה, כשעתיים וחצי מבראשוב. אפשר לשלב עם כפרי הכנסיות המבוצרות בדרך.',
       },
       {
         day: 3,
         title: 'הקרפטים: טרנספגרשן',
-        placeIds: ['trn-transfagarasan', 'trn-balea'],
+        placeIds: ['trn-transfagarasan', 'trn-balea', 'rou-sibiu', 'ro-piata-cibin', 'rou-alba-iulia'],
         notes:
           'יום שלם על ההגה. לצאת מוקדם, לוודא שהכביש פתוח, ולתדלק לפני העלייה - אין תחנות בקטע ההררי.',
       },
@@ -30715,21 +30715,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'גורמה והעמקים',
-        placeIds: ['cpd-goreme', 'cpd-uchisar'],
+        placeIds: ['cpd-goreme', 'cap-dibek', 'cpd-uchisar'],
         notes:
           'יום היכרות: בוקר בגורמה ובמוזיאון הפתוח, אחר הצהריים הליכה באחד העמקים, ושקיעה מאוצ׳יסאר. לישון מוקדם - טיסת הכדור יוצאת לפני הזריחה.',
       },
       {
         day: 2,
         title: 'כדור פורח והעיר התת-קרקעית',
-        placeIds: ['cpd-derinkuyu', 'cpd-avanos'],
+        placeIds: ['cpd-derinkuyu', 'cap-soganli', 'cpd-avanos', 'cpd-ozkonak'],
         notes:
           'איסוף לכדור הפורח בסביבות 04:30 (אם לא בוטל בגלל רוח), חזרה לישון קצת, ואז נסיעה דרומה לדרינקויו ובדרך חזרה עצירה באוואנוס. להזמין את הכדור ליום הראשון האפשרי כדי להשאיר יום חלופי.',
       },
       {
         day: 3,
         title: 'אורגופ, יין וחזרה',
-        placeIds: ['cpd-urgup', 'cpd-nevsehir'],
+        placeIds: ['cpd-urgup', 'tur-mustafapasa', 'cpd-nevsehir'],
         notes:
           'בוקר רגוע באורגופ ובשוק, ואז נסיעה לשדה התעופה בנבשהיר או בקייסרי. אם טיסת הכדור בוטלה אתמול - זה היום השני לנסות.',
       },
@@ -30743,7 +30743,7 @@ export const destinations: Destination[] = [
       {
         day: 5,
         title: 'זלווה, צ׳אבושין ועמק הוורדים',
-        placeIds: ['cap-zelve', 'cap-cavusin'],
+        placeIds: ['cap-zelve', 'cap-cavusin', 'tur-love-valley'],
         notes:
           'בוקר בעיר המערות הנטושה של זלווה, צהריים בצ׳אבושין, ומשם שביל עמק הוורדים והעמק האדום לשקיעה - ההליכה היפה בקפדוקיה. נעליים סגורות ומים.',
       },
@@ -31111,28 +31111,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'גאלוויי והרובע הלטיני',
-        placeIds: ['irw-galway'],
+        placeIds: ['irw-galway', 'irl-mcdonaghs', 'irl-galway-market', 'irl-morans'],
         notes:
           'יום רגוע להסתגלות: הליכה בעיר, שוק גאלוויי, וערב בפאב עם מוזיקה מסורתית. אין צורך ברכב היום, ועדיף לאסוף אותו רק למחרת בבוקר.',
       },
       {
         day: 2,
         title: 'הבורן ומצוקי מוהר',
-        placeIds: ['irw-poulnabrone', 'irw-moher'],
+        placeIds: ['irw-poulnabrone', 'irw-burren', 'irw-doolin', 'irw-moher', 'irw-inisheer'],
         notes:
           'נסיעה דרומה דרך נוף הקארסט של הבורן עם עצירה בדולמן, והמשך למצוקי מוהר. להגיע למצוקים מוקדם בבוקר או אחרי 16:00 - באמצע היום החניונים מלאים והשביל צפוף.',
       },
       {
         day: 3,
         title: 'קונמארה',
-        placeIds: ['irw-connemara', 'irw-kylemore'],
+        placeIds: ['irw-connemara', 'irw-kylemore', 'irl-inishmore-x', 'irw-killary', 'irw-sky-road'],
         notes:
           'צפונה לקונמארה: עלייה לדיאמונד היל בבוקר, ואחר הצהריים מנזר קיילמור והגן. הכבישים כאן צרים במיוחד - להשאיר יותר זמן נסיעה ממה שהניווט מציע.',
       },
       {
         day: 4,
         title: 'איי אראן',
-        placeIds: ['irw-dun-aonghasa'],
+        placeIds: ['irw-dun-aonghasa', 'irw-inishmore'],
         notes:
           'יום שלם באינישמור: מעבורת בבוקר מרוסאוויל, אופניים או כרכרה עד דון אנגוסה, וחזרה אחר הצהריים. לבדוק את לוח המעבורות ואת תחזית הים יום מראש - הפלגות מבוטלות בים סוער.',
       },
@@ -31493,21 +31493,21 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'שווקים, שדרות ותרבות',
-        placeIds: ['sof-market-hall', 'sof-vitosha-blvd', 'sof-ivan-vazov', 'sof-ndk'],
+        placeIds: ['sof-market-hall', 'sof-mineral-baths', 'sof-ivan-vazov', 'sof-vitosha-blvd', 'sof-ndk'],
         notes:
           'יום עירוני קליל, הכול על ציר אחד מהשוק ועד ארמון התרבות.',
       },
       {
         day: 3,
         title: 'בויאנה וויטושה',
-        placeIds: ['sof-boyana', 'sof-vitosha'],
+        placeIds: ['sof-boyana', 'sof-boyana-waterfall', 'sof-vitosha', 'sof-pancharevo', 'sof-zhenski-pazar'],
         notes:
           'לכנסיית בויאנה מגיעים באוטובוס 64 או 107, וממנה ממשיכים במעלה ההר. הכניסה לכנסייה מוגבלת לרבע שעה בקבוצות קטנות.',
       },
       {
         day: 4,
         title: 'ויטושה - ההר בחצר של סופיה',
-        placeIds: ['sof-zlatni-mostove', 'sof-cherni-vrah'],
+        placeIds: ['sof-zlatni-mostove', 'sof-dragalevtsi', 'sof-cherni-vrah'],
         notes:
           'אוטובוס לזלטני מוסטובה (נהר האבנים) ומשם שביל לפסגה צ׳רני ורח, או רכבל מסימאונובו ושעה הליכה. תה בבקתה בפסגה, וירידה לבויאנה - לכנסייה ולמפל אם יש כוח.',
       },
@@ -31828,14 +31828,14 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'העיר העתיקה והשכבות הרומיות',
-        placeIds: ['plo-old-town', 'plo-stadium', 'plo-nebet-tepe'],
+        placeIds: ['plo-old-town', 'bg-kapana', 'plo-stadium', 'plo-roman-theatre', 'plo-nebet-tepe'],
         notes:
           'העיר העתיקה כולה מרוצפת אבן ותלולה. נבט טפה בשקיעה.',
       },
       {
         day: 2,
         title: 'מנזר בצ׳קובו',
-        placeIds: ['plo-bachkovo'],
+        placeIds: ['plo-bachkovo', 'bg-asen-fortress', 'bg-belintash'],
         notes:
           'כשלושים קילומטר דרומה, נסיעה של כחצי שעה. אפשר לשלב עם עצירה בהרי רודופי.',
       },
@@ -32174,7 +32174,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'מנזר רילה',
-        placeIds: ['rlp-rila'],
+        placeIds: ['rlp-rila', 'bg-malyovitsa', 'bg-stob', 'bg-blagoevgrad'],
         notes:
           'יציאה מוקדמת מסופיה, כשעה וחצי עד שעתיים נסיעה, וביקור במנזר לפני שהקבוצות מגיעות. בדרך חזרה או בהמשך אפשר להתקדם דרומה לכיוון בנסקו וללון שם.',
       },
@@ -32188,14 +32188,14 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'בנסקו, מלניק ויין',
-        placeIds: ['rlp-bansko', 'rlp-melnik', 'rlp-sandanski'],
+        placeIds: ['rlp-bansko', 'bg-rozhen', 'rlp-melnik', 'bg-villa-melnik', 'rlp-sandanski'],
         notes:
           'בוקר בעיר העתיקה של בנסקו, ואז דרומה למלניק לפירמידות ולמרתפי היין, עם עצירה בסנדנסקי. מי שטועם יין - לתכנן נהג תורן.',
       },
       {
         day: 4,
         title: 'פירין - ויחרן ובנסקו',
-        placeIds: ['bg-pirin-np', 'bg-vihren'],
+        placeIds: ['bg-pirin-np', 'bg-vihren', 'bg-dobarsko', 'bg-dancing-bears', 'bg-kovachevitsa'],
         notes:
           'מבנסקו לבקתת ויחרן (רכב עד הבקתה, אורן ביקושב בדרך), ומשם העלייה לפסגה - כשש-שבע שעות הלוך ושוב, רק בקיץ ובמזג אוויר יציב. מי שלא עולה - שביל האגמים מהבקתה.',
       },
@@ -32560,21 +32560,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'העיר העתיקה והארמון',
-        placeIds: ['sth-gamla-stan', 'sth-palace', 'sth-city-hall'],
+        placeIds: ['sth-gamla-stan', 'sth-palace', 'sth-city-hall', 'swe-hotorgshallen', 'swe-ostermalms'],
         notes:
           'בוקר בגמלה סטאן לפני העומס, חילוף משמר בארמון בצהריים, ואחר הצהריים סיור בבית העירייה. הכל בהליכה, ומרחקים קצרים.',
       },
       {
         day: 2,
         title: 'יורגורדן והמוזיאונים',
-        placeIds: ['sth-vasa', 'sth-skansen', 'sth-djurgarden'],
+        placeIds: ['sth-vasa', 'sth-skansen', 'sth-djurgarden', 'swe-nk', 'sth-tyresta'],
         notes:
           'להגיע במעבורת מסלוסן. ווסה בפתיחה, סקנסן אחר הצהריים, וסיום בהליכה על קו המים. לקנות כרטיסים לווסה מראש בעונה.',
       },
       {
         day: 3,
         title: 'שדרמלם ודרוטנינגהולם',
-        placeIds: ['sth-drottningholm', 'sth-fotografiska'],
+        placeIds: ['sth-drottningholm', 'sth-fotografiska', 'swe-fjaderholmarna', 'swe-birka'],
         notes:
           'בוקר בשיט לדרוטנינגהולם וחזרה, ואחר הצהריים והערב בשדרמלם - פוטוגרפיסקה פתוח מאוחר. השיט פועל בעיקר בעונה החמה.',
       },
@@ -32945,21 +32945,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'הטירות של הצפון',
-        placeIds: ['nzl-frederiksborg', 'nzl-fredensborg'],
+        placeIds: ['nzl-frederiksborg', 'nzl-fredensborg', 'dnk-esrum', 'dnk-kronborg', 'dnk-dyrehaven'],
         notes:
           'רכבת מקופנהגן להילרוד, בוקר שלם בפרדריקסבורג כולל הגנים, ואחר הצהריים המשך קצר לגני פרדנסבורג. שני האתרים על אותו ציר רכבת.',
       },
       {
         day: 2,
         title: 'אמנות על הים ויער הצבאים',
-        placeIds: ['nzl-louisiana', 'nzl-bakken', 'nzl-frilandsmuseet'],
+        placeIds: ['nzl-louisiana', 'nzl-frilandsmuseet', 'nzl-bakken', 'dnk-reffen', 'dnk-torvehallerne'],
         notes:
           'לואיזיאנה בבוקר כשהגן ריק, ובדרך חזרה לעצור בדירהאוון - באקן ופרילנדסמוזאה קרובים זה לזה. בחורף באקן והמוזיאון הפתוח עשויים להיות סגורים.',
       },
       {
         day: 3,
         title: 'רוסקילדה',
-        placeIds: ['nzl-roskilde-cathedral', 'nzl-viking-ships'],
+        placeIds: ['nzl-roskilde-cathedral', 'nzl-viking-ships', 'dnk-koge'],
         notes:
           'חצי שעה ברכבת מערבה. קתדרלה בבוקר, ספינות הוויקינגים אחר הצהריים, והליכה קצרה בין השניים לאורך הפיורד. בקיץ להזמין מראש הפלגה בספינה משוחזרת.',
       },
@@ -33285,7 +33285,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'רובניימי והחוג הארקטי',
-        placeIds: ['fla-rovaniemi', 'fla-ranua'],
+        placeIds: ['fla-rovaniemi', 'fla-ranua', 'fla-korouoma', 'fla-riisitunturi', 'fla-oulanka'],
         notes:
           'יום נחיתה והתאקלמות: להצטייד בביגוד תרמי, לסדר רכב או טרנספרים, ולשלב את גן החיות הארקטי בראנואה כפעילות ראשונה. לא לתכנן יותר מדי ליום הראשון - האור קצר מאוד בחורף.',
       },
@@ -33299,14 +33299,14 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'פארק לאומי ומסלולי שלג',
-        placeIds: ['fla-pyha-luosto'],
+        placeIds: ['fla-pyha-luosto', 'fin-santa-village', 'fin-ounasvaara'],
         notes:
           'נסיעה של כשעה וחצי מרובניימי, מסלול הליכת שלג או סקי חתירה, וסאונה בסוף היום. לצאת מוקדם כדי לנצל את שעות האור.',
       },
       {
         day: 4,
         title: 'צפונה ללוי או לסארישלקה',
-        placeIds: ['fla-levi', 'fla-saariselka'],
+        placeIds: ['fla-levi', 'fla-pallas', 'fin-lemmenjoki', 'fla-saariselka', 'fin-ivalo'],
         notes:
           'יום מעבר צפונה. לוי מתאים למי שרוצה סקי ותשתית מלאה, סארישלקה למי שמחפש שקט וסיכוי טוב יותר לזוהר צפוני. לא לנסות לעשות את שניהם באותו יום.',
       },
@@ -33696,28 +33696,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'העיר העתיקה',
-        placeIds: ['vln-cathedral', 'vln-st-anne', 'vln-gate-of-dawn', 'vln-gediminas'],
+        placeIds: ['vln-cathedral', 'vln-gediminas', 'vln-st-anne', 'vln-gate-of-dawn', 'ltu-hales'],
         notes:
           'יום הליכה אחד רצוף: מהכיכר והקתדרלה דרומה בסמטאות עד שער השחר, וחזרה במעלה גבעת גדימינאס לשקיעה. הכל במרחק הליכה, ורצפת אבן - נעליים נוחות.',
       },
       {
         day: 2,
         title: 'פונאר וזיכרון',
-        placeIds: ['vln-paneriai'],
+        placeIds: ['vln-paneriai', 'ltu-trakai-karaim-x', 'vln-peter-paul', 'ltu-verkiai', 'ltu-europos-parkas'],
         notes:
           'להקדיש לזה יום או חצי יום שלם ולא לדחוס אחריו כלום. רכבת פרברית קצרה מוילנה או מונית. מומלץ לתאם מדריך דובר עברית או אנגלית מראש.',
       },
       {
         day: 3,
         title: 'טראקאי ואוז׳ופיס',
-        placeIds: ['vln-trakai', 'vln-uzupis'],
+        placeIds: ['vln-trakai', 'ltu-vilnius-outlet', 'vln-vingis', 'ltu-kalvariju', 'vln-uzupis'],
         notes:
           'בוקר בטירה על האגם, חזרה לעיר אחר הצהריים וסיבוב באוז׳ופיס לקראת ערב. בקיץ להזמין כרטיס לטירה מראש כדי לא לעמוד בתור.',
       },
       {
         day: 4,
         title: 'טרקאי ואגם גאלווה',
-        placeIds: ['vln-galve'],
+        placeIds: ['vln-galve', 'vln-university', 'vln-three-crosses'],
         notes:
           'רכבת או אוטובוס לטרקאי (חצי שעה): הטירה על האי, סירה או קטמרן על אגם גאלווה, וקיביני של הקראים לצהריים. אחר הצהריים חזרה לווילנה - או המשך לקרנבה למי שיש רכב.',
       },
@@ -34062,21 +34062,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'העיר העתיקה',
-        placeIds: ['tln-toompea', 'tln-nevsky', 'tln-st-olaf'],
+        placeIds: ['tln-toompea', 'tln-nevsky', 'est-maiasmokk', 'tln-st-olaf', 'est-balti-jaama'],
         notes:
           'בוקר על גבעת טומפאה לפני שהקבוצות מגיעות, ואחר הצהריים בעיר התחתונה עם טיפוס למגדל אולאף לשקיעה. הכל בהליכה. לבדוק אם יש ספינת תענוגות בנמל - ביום כזה כדאי להקדים.',
       },
       {
         day: 2,
         title: 'קדריורג ואמנות',
-        placeIds: ['tln-kadriorg', 'tln-kumu'],
+        placeIds: ['tln-kadriorg', 'tln-kumu', 'tln-jagala', 'tln-keila', 'est-paldiski'],
         notes:
           'טראם קצר מזרחה, בוקר בארמון ובגנים ואחר הצהריים בקומו. יום טוב במיוחד למזג אוויר גרוע, כי רוב הזמן בפנים.',
       },
       {
         day: 3,
         title: 'להאמאה',
-        placeIds: ['tln-lahemaa'],
+        placeIds: ['tln-lahemaa', 'tln-viru-bog'],
         notes:
           'יום שלם עם רכב שכור. שביל הקרשים בביצה בבוקר, כפר דייגים וחוף בצהריים, ואחוזה אחת לסיום. להצטייד באוכל - האפשרויות בתוך הפארק מעטות ועונתיות.',
       },
@@ -34443,21 +34443,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'העיר העתיקה',
-        placeIds: ['rga-blackheads', 'rga-cathedral', 'rga-st-peters'],
+        placeIds: ['rga-blackheads', 'rga-st-peters', 'rga-cathedral', 'lva-central-market', 'lva-agenskalna'],
         notes:
           'הליכה אחת רצופה בין הכיכר, הקתדרלה והמגדל, עם עלייה לתצפית לקראת שקיעה. הכל בטווח של כמה מאות מטרים.',
       },
       {
         day: 2,
         title: 'אנדרטת החירות והארט נובו',
-        placeIds: ['rga-freedom-monument'],
+        placeIds: ['rga-freedom-monument', 'lva-mezaparks', 'rga-jurmala', 'rga-kemeri', 'lva-saulkrasti'],
         notes:
           'מהאנדרטה צפונה, הליכה איטית ברחובות רובע הארט נובו והסתכלות למעלה על החזיתות. אפשר לשלב עם השוק המרכזי בבוקר ועם פארק העיר.',
       },
       {
         day: 3,
         title: 'עמק גאויה',
-        placeIds: ['rga-sigulda', 'rga-turaida', 'rga-gauja'],
+        placeIds: ['rga-sigulda', 'rga-gutmanis', 'rga-turaida', 'rga-cesis', 'rga-gauja'],
         notes:
           'רכבת בוקר לסיגולדה, רכבל אל טוראידה, ומסלול קצר ביער לפני החזרה. עם רכב אפשר להעמיק לתוך הפארק. יום שלם, לא לדחוס אליו את ריגה.',
       },
@@ -34818,21 +34818,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'ירידה במעבר לוגרה אל הריביירה',
-        placeIds: ['alb-llogara', 'alb-porto-palermo'],
+        placeIds: ['alb-llogara', 'alb-dhermi', 'al-gjipe', 'alb-himare', 'alb-porto-palermo'],
         notes:
           'יום נסיעה. לעצור בתצפיות של המעבר, לרדת לחוף, ולסיים במפרץ של פורטו פאלרמו. הנסיעה איטית ומפותלת - לא לתכנן יעד נוסף.',
       },
       {
         day: 2,
         title: 'בוטרינט וקסמיל',
-        placeIds: ['alb-butrint', 'alb-ksamil'],
+        placeIds: ['alb-butrint', 'alb-ksamil', 'al-lekursi'],
         notes:
           'בוטרינט בפתיחה, לפני החום ולפני האוטובוסים, ואחר הצהריים ים בקסמיל שנמצא ממש בדרך חזרה. שני האתרים במרחק דקות זה מזה.',
       },
       {
         day: 3,
         title: 'סרנדה ובראט',
-        placeIds: ['alb-saranda', 'alb-berat'],
+        placeIds: ['alb-saranda', 'alb-blue-eye', 'alb-gjirokaster', 'alb-kujtimi', 'alb-berat'],
         notes:
           'בוקר רגוע בסרנדה, ואחר הצהריים נסיעה צפונה לבראט ללינה. הנסיעה כשעתיים וחצי עד שלוש - לצאת מוקדם ולא לנהוג בחושך על כבישים הרריים.',
       },
@@ -35206,14 +35206,14 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'בלגאי ומפלי קרביצה',
-        placeIds: ['bih-blagaj', 'bih-kravica'],
+        placeIds: ['bih-blagaj', 'bih-medjugorje', 'bih-kravica', 'bih-neretva-rafting', 'bih-stolac'],
         notes:
           'שני האתרים בכיוונים שונים ממוסטר אבל שניהם קרובים. בלגאי בבוקר, קרביצה אחר הצהריים לשחייה בקיץ. רכב שכור מקל מאוד על היום הזה.',
       },
       {
         day: 3,
         title: 'מעבר לסרייבו',
-        placeIds: ['bih-bascarsija'],
+        placeIds: ['bih-bascarsija', 'bih-zeljo', 'bih-markale', 'bih-sarajevo'],
         notes:
           'נסיעה של כשלוש שעות צפונה, לאורך קניון נרטבה - נסיעה יפה בפני עצמה, וגם ברכבת. ערב ראשון בבזאר ובעיר העתיקה.',
       },
@@ -35227,7 +35227,7 @@ export const destinations: Destination[] = [
       {
         day: 5,
         title: 'הרצגובינה - פוצ׳יטלי ואגם בורצ׳קו',
-        placeIds: ['bih-pocitelj', 'bih-boracko'],
+        placeIds: ['bih-pocitelj', 'bih-boracko', 'bih-jajce-x', 'bih-lukomir', 'bih-bjelasnica'],
         notes:
           'בדרך בין מוסטר לסרייבו: פוצ׳יטלי בבוקר (המצודה, שקט), והמשך צפונה לאגם בורצ׳קו - רחצה, או רפטינג בקניון נרטבה למי שהזמין מראש. לינה בסביבת קוניץ או המשך לסרייבו.',
       },
@@ -35588,28 +35588,28 @@ export const destinations: Destination[] = [
         title: 'נובי סאד והמבצר',
         notes:
             'יום רגלי בעיר המרכזית. בוקר במרכז העיר ובבית הכנסת, ואחר הצהריים מעבר לגשר אל המבצר, עדיף לקראת שקיעה.',
-        placeIds: ['rs-synagogue', 'rs-petrovaradin'],
+        placeIds: ['rs-synagogue', 'srb-futoska', 'srb-riblja-pijaca', 'rs-petrovaradin', 'srb-kovilj'],
       },
       {
         day: 2,
         title: 'יקבים ומנזרים',
         notes:
             'נסיעה קצרה לסרמסקי קרלובצי ומשם לרכס פרושקה גורה. אם אתם ללא רכב, קחו רק את קרלובצי וותרו על ההר.',
-        placeIds: ['rs-karlovci', 'rs-fruska-gora'],
+        placeIds: ['rs-karlovci', 'rs-krusedol', 'rs-fruska-gora', 'rs-zasavica', 'rs-carska-bara'],
       },
       {
         day: 3,
         title: 'צפונה, לעבר הגבול ההונגרי',
         notes:
             'יום רכב ארוך יחסית צפונה: סומבור בבוקר, אגם פאליץ לקראת אחר הצהריים.',
-        placeIds: ['rs-sombor', 'rs-palic'],
+        placeIds: ['rs-sombor', 'rs-zobnatica', 'srb-subotica', 'rs-palic'],
       },
       {
         day: 4,
         title: 'מזרחה, אם נשאר זמן',
         notes:
             'ורשאץ רחוקה ומחייבת יום שלם. זו תוספת למי שנשאר לילה נוסף ולא למי שמנסה לדחוס הכל לשלושה ימים.',
-        placeIds: ['rs-vrsac'],
+        placeIds: ['rs-vrsac', 'rs-deliblato', 'srb-titel', 'srb-sremski-x'],
       },
     ],
     practical: {
@@ -35946,28 +35946,28 @@ export const destinations: Destination[] = [
         title: 'מרידה, התאקלמות',
         notes:
             'אחרי טיסה ארוכה מאוד אל תתכננו יום כבד. סיבוב רגלי במרכז מרידה, ארוחה בשוק, ולישון מוקדם.',
-        placeIds: ['mx-merida'],
+        placeIds: ['mx-merida', 'mex-lucas-galvez', 'mex-dzibilchaltun', 'mex-progreso'],
       },
       {
         day: 2,
         title: 'אושמל',
         notes:
             'לצאת ממרידה בשש וחצי בבוקר ולהגיע לאושמל עם הפתיחה. בצהריים חוזרים למרידה, כי בשעות האלה אין מה לעשות בחוץ.',
-        placeIds: ['mx-uxmal'],
+        placeIds: ['mx-uxmal', 'mex-uxmal-x', 'mex-loltun'],
       },
       {
         day: 3,
         title: 'מזרחה דרך איסמל לוויאדוליד',
         notes:
             'עוצרים באיסמל לשעתיים ולנים בוויאדוליד. זה מה שמאפשר להגיע לצ׳יצ׳ן איצה למחרת בשעת הפתיחה בלי לנסוע שעתיים בחשכה.',
-        placeIds: ['mx-izamal', 'mx-valladolid'],
+        placeIds: ['mx-izamal', 'mx-valladolid', 'mex-valladolid-market', 'mex-cenote-suytun', 'mex-ek-balam'],
       },
       {
         day: 4,
         title: 'צ׳יצ׳ן איצה מוקדם בבוקר',
         notes:
             'להיות בשער בשמונה. לצאת עד אחת עשרה, כשמתחילים להגיע האוטובוסים. אחר הצהריים למנוחה.',
-        placeIds: ['mx-chichen-itza'],
+        placeIds: ['mx-chichen-itza', 'mex-cenote-ikkil'],
       },
       {
         day: 5,
@@ -36339,7 +36339,7 @@ export const destinations: Destination[] = [
         title: 'גיונגג׳ו, מרכז העיר',
         notes:
             'להשכיר אופניים ולעשות את התלים, האגם והמרכז ההיסטורי. שטוח לגמרי, ולכן זו הדרך היעילה ביותר לכסות את השטח.',
-        placeIds: ['kr-gyeongju'],
+        placeIds: ['kr-gyeongju', 'kr-cheomseongdae', 'kor-yangdong'],
       },
       {
         day: 2,
@@ -36360,26 +36360,26 @@ export const destinations: Destination[] = [
         title: 'מעבר לבוסן והחוף',
         notes:
             'רכבת קצרה דרומה לבוסן. אחר הצהריים למקדש שעל הסלעים בצפון-מזרח העיר, ולא בסוף שבוע אם אפשר.',
-        placeIds: ['kr-yonggungsa'],
+        placeIds: ['kr-yonggungsa', 'kor-lotte-outlet'],
       },
       {
         day: 5,
         title: 'בוסן העירונית',
         notes:
             'בוקר בשכונת הגבעה הצבעונית, צהריים בשוק. הרבה מדרגות היום, נעליים נוחות.',
-        placeIds: ['kr-gamcheon', 'kr-jagalchi'],
+        placeIds: ['kr-gamcheon', 'kor-gukje', 'kr-jagalchi', 'kor-oedo'],
       },
       {
         day: 6,
         title: 'בוסאן והים - האונדה וטאג׳ונגדה',
-        placeIds: ['kr-haeundae', 'kr-taejongdae'],
+        placeIds: ['kr-haeundae', 'kr-gwangalli', 'kor-igidae', 'kr-taejongdae', 'kr-beomeosa'],
         notes:
           'בוקר בחוף האונדה ושביל הסלעים של דונגבק, ואחר הצהריים דרומה לטאג׳ונגדה: הרכבת סביב הפארק, המגדלור ופירות ים על הסלעים. מטרו ואוטובוס; בוסאן היא עיר של חופים.',
       },
       {
         day: 7,
         title: 'הר נאמסאן של גיונגג׳ו - המוזיאון הפתוח',
-        placeIds: ['kr-gyeongju-namsan'],
+        placeIds: ['kr-gyeongju-namsan', 'kor-tongdosa'],
         notes:
           'מסלול של כמה שעות בהר בין פסלי הבודהה, הפגודות והתבליטים של סילה - עמק סמנול הוא הכניסה הנוחה. יום שמשלים את בולגוקסה: שם הבודהיזם במקדש, כאן הוא מפוזר ביער.',
       },
@@ -36731,28 +36731,28 @@ export const destinations: Destination[] = [
         title: 'הובארט, התאקלמות',
         notes:
             'אחרי הטיסה הארוכה מישראל ועוד טיסה פנימית, יום קל. סיבוב בנמל ובמרכז, ולעלות להר לקראת שקיעה אם השמיים בהירים.',
-        placeIds: ['au-kunanyi'],
+        placeIds: ['au-kunanyi', 'aus-farm-gate', 'aus-salamanca'],
       },
       {
         day: 2,
         title: 'מוזיאון מונה',
         notes:
             'להגיע במעבורת מהמרכז ולהקדיש למוזיאון חצי יום לפחות. שימו לב שהתכנים לא מתאימים לילדים.',
-        placeIds: ['au-mona'],
+        placeIds: ['au-mona', 'au-richmond-tas', 'aus-russell-falls'],
       },
       {
         day: 3,
         title: 'פורט ארתור',
         notes:
             'יום כבד רגשית. לצאת מוקדם, ולתכנן משהו קל אחריו ולא עוד אתר.',
-        placeIds: ['au-port-arthur'],
+        placeIds: ['au-port-arthur', 'aus-tasman-np', 'aus-maria-island'],
       },
       {
         day: 4,
         title: 'אי ברוני',
         notes:
             'יום שלם. לבדוק את לוח הזמנים של המעבורת מראש, בעונה יש תורים ארוכים בבוקר.',
-        placeIds: ['au-bruny'],
+        placeIds: ['au-bruny', 'aus-hastings-caves'],
       },
       {
         day: 5,
@@ -36766,14 +36766,14 @@ export const destinations: Destination[] = [
         title: 'מפרץ האש',
         notes:
             'המשך צפונה לאורך החוף. יום רגוע של חופים ריקים, בלי מסלול תובעני.',
-        placeIds: ['au-bay-of-fires'],
+        placeIds: ['au-bay-of-fires', 'au-launceston', 'au-cataract-gorge'],
       },
       {
         day: 7,
         title: 'מערבה להר קרייל',
         notes:
             'נסיעה ארוכה חוצה אי. אם התחזית גרועה שקלו להחליף את סדר הימים, כי בערפל אין מה לראות שם.',
-        placeIds: ['au-cradle-mountain'],
+        placeIds: ['au-cradle-mountain', 'aus-mount-field-x', 'aus-tarkine'],
       },
     ],
     practical: {
@@ -37123,42 +37123,42 @@ export const destinations: Destination[] = [
         title: 'יוגיאקרטה',
         notes:
             'יום התאקלמות אחרי טיסה ארוכה מאוד. ארמון הסולטן בבוקר, כי הוא סוגר מוקדם, ואחר הצהריים מנוחה.',
-        placeIds: ['id-kraton'],
+        placeIds: ['id-kraton', 'idn-gudeg-yu-djum'],
       },
       {
         day: 2,
         title: 'בורובודור',
         notes:
             'לצאת מוקדם מאוד. בדקו מראש איזה כרטיס נדרש לעלייה על המקדש עצמו, כי המדיניות משתנה והמכסה מוגבלת.',
-        placeIds: ['id-borobudur'],
+        placeIds: ['id-borobudur', 'idn-jomblang-x', 'idn-dieng'],
       },
       {
         day: 3,
         title: 'פרמבנן ומראפי',
         notes:
             'שניהם צפונית-מזרחית לעיר ומסתדרים ביום אחד. אם יש פעילות געשית, מראפי יבוטל ואין מה לעשות בנידון.',
-        placeIds: ['id-prambanan', 'id-merapi'],
+        placeIds: ['id-prambanan', 'idn-ratu-boko', 'id-merapi', 'idn-solo'],
       },
       {
         day: 4,
         title: 'החוף הדרומי',
         notes:
             'יום קל לפני הנסיעה מזרחה. לא נכנסים למים, גם אם רואים מקומיים בקצה הגלים.',
-        placeIds: ['id-parangtritis'],
+        placeIds: ['id-parangtritis', 'idn-timang'],
       },
       {
         day: 5,
         title: 'מעבר מזרחה וזריחה בברומו',
         notes:
             'יום נסיעה ארוך ברכבת או ברכב, לינה בכפר בשפת הקלדרה, ויציאה בשתיים בלילה לזריחה. להביא מעיל, קר באמת.',
-        placeIds: ['id-bromo'],
+        placeIds: ['id-bromo', 'id-malang', 'idn-tumpak-sewu'],
       },
       {
         day: 6,
         title: 'איג׳ן',
         notes:
             'עוד לילה קצר. לוודא שהמארגן מספק מסכות אמיתיות ולא בד. מי שלא בטוח בכושר או בנשימה שיוותר, זו לא הליכה קלה.',
-        placeIds: ['id-ijen'],
+        placeIds: ['id-ijen', 'idn-baluran'],
       },
     ],
     practical: {
@@ -37512,28 +37512,28 @@ export const destinations: Destination[] = [
         title: 'ג׳ורג׳טאון, העיר העתיקה',
         notes:
             'יום רגלי במרכז. לצאת מוקדם בבוקר ולחזור למנוחה בין אחת לארבע, כי בשעות האלה הלחות באמת מגבילה.',
-        placeIds: ['my-fort-cornwallis'],
+        placeIds: ['my-fort-cornwallis', 'my-khoo-kongsi', 'mys-clan-jetties', 'mys-chowrasta', 'mys-design-village'],
       },
       {
         day: 2,
         title: 'המקדש והגבעה',
         notes:
             'שניהם באותו צד של האי ומסתדרים ביום אחד. מקדש בבוקר, רכבל אחר הצהריים, ולא בסוף שבוע.',
-        placeIds: ['my-kek-lok-si', 'my-penang-hill'],
+        placeIds: ['my-kek-lok-si', 'my-penang-hill', 'mys-batu-ferringhi', 'mys-penang-np'],
       },
       {
         day: 3,
         title: 'דרומה לטאיפינג',
         notes:
             'נסיעה של כשעה וחצי מהאי. יום איטי בגנים ובאגמים, עם מטרייה ביד.',
-        placeIds: ['my-taiping'],
+        placeIds: ['my-taiping', 'mys-ipoh-x', 'my-sam-poh-tong'],
       },
       {
         day: 4,
         title: 'עלייה לרמות',
         notes:
             'עוצרים בטירה בדרך ואז עולים בכביש המפותל. מי שסובל ממחלת נסיעה שייקח תרופה לפני, זו עלייה ארוכה ומתפתלת.',
-        placeIds: ['my-kellies-castle', 'my-cameron-highlands'],
+        placeIds: ['my-kellies-castle', 'mys-gua-tempurung', 'mys-sin-yoon-loong', 'my-cameron-highlands', 'mys-pangkor'],
       },
     ],
     practical: {
@@ -37845,21 +37845,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'מפורטו פנימה לעמק',
-        placeIds: ['pt-amarante', 'pt-mesao-frio', 'pt-peso-da-regua'],
+        placeIds: ['pt-amarante', 'pt-mesao-frio', 'pt-peso-da-regua', 'pt-sao-leonardo', 'pt-casal-de-loivos'],
         notes:
           'לצאת מפורטו בבוקר, לעצור באמרנטה לקפה ולהמשיך אנה. הקטע האחרון צר מאוד, לא לנסות לעשות אותו אחרי רדת החושך.',
       },
       {
         day: 2,
         title: 'למגו והגדה הדרומית',
-        placeIds: ['pt-lamego', 'pt-mateus-palace'],
+        placeIds: ['pt-lamego', 'pt-torre-moncorvo-x', 'pt-mateus-palace', 'pt-favaios'],
         notes:
           'בוקר בלמגו לפני שהחום מכביד, אחר הצהריים נסיעה צפונה לארמון. לוודא שעות פתיחה לפני שיוצאים.',
       },
       {
         day: 3,
         title: 'מזרחה, לעבר אמנות הסלע',
-        placeIds: ['pt-alijo', 'pt-foz-coa'],
+        placeIds: ['pt-alijo', 'pt-provesende', 'pt-pinhao', 'pt-quinta-seixo', 'pt-foz-coa'],
         notes:
           'יום נהיגה ארוך יחסית. את הסיור באתרי החריתות חובה להזמין מראש, והמקומות מוגבלים.',
       },
@@ -38226,14 +38226,14 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'גדנסק, המאה העשרים',
-        placeIds: ['pl-solidarity-centre', 'pl-westerplatte', 'pl-oliwa-cathedral'],
+        placeIds: ['pl-solidarity-centre', 'pl-pierogarnia-mandu', 'pl-hala-targowa', 'pl-westerplatte', 'pl-oliwa-cathedral'],
         notes:
           'להתחיל במרכז סולידריות בבוקר כשהוא ריק יחסית. השייט לווסטרפלטה תלוי במזג האוויר, אז שווה לבדוק בבוקר לפני שקובעים.',
       },
       {
         day: 2,
         title: 'דרומה למצודה',
-        placeIds: ['pl-malbork'],
+        placeIds: ['pl-malbork', 'pol-gdansk-shipyard-x'],
         notes:
           'יום שלם. יש רכבת ישירה מגדנסק שחוסכת נהיגה וחניה. המצודה גדולה מאוד, לא לנסות לדחוס עוד אתר אחריה.',
       },
@@ -38247,21 +38247,21 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'הים הבלטי',
-        placeIds: ['pl-hel'],
+        placeIds: ['pl-hel', 'pol-jastarnia-x'],
         notes:
           'לצאת מוקדם מאוד, הכביש היחיד ללשון היבשה נחסם בפקקים בשעות הבוקר המאוחרות בקיץ. המים קרים גם באוגוסט.',
       },
       {
         day: 5,
         title: 'שלוש הערים מהים - סופוט וגדיניה',
-        placeIds: ['pl-sopot-pier', 'pl-orlowo'],
+        placeIds: ['pl-sopot-pier', 'pl-bar-przystan', 'pl-orlowo', 'pol-gdynia-x', 'pl-designer-outlet-gdansk'],
         notes:
           'רכבת פרברית לסופוט: המזח, החוף ושדרת מונטה קסינו. המשך תחנה אחת לגדיניה-אורלובו ושביל היער על הצוק לשקיעה. יום חוף שקט אחרי גדנסק, הכול בתחבורה ציבורית.',
       },
       {
         day: 6,
         title: 'הדיונות הנודדות - סלובינסקי',
-        placeIds: ['pl-slowinski'],
+        placeIds: ['pl-slowinski', 'pol-kashubia'],
         notes:
           'כשעתיים מגדנסק ללבה, ומשם הליכה (או רכב חשמלי) לדיונת לונצקה ולחוף הריק שמאחוריה. יום שלם; להביא מים ואוכל, אין הרבה בדרך. ביום סוער - החול עף, וזה חלק מהעניין.',
       },
@@ -38615,28 +38615,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'התאקלמות באראקיפה',
-        placeIds: ['pe-misti'],
+        placeIds: ['pe-misti', 'per-nueva-palomino', 'per-yanahuara', 'per-santa-catalina', 'per-san-camilo'],
         notes:
           'לא לתכנן כלום תובעני ביום הראשון. שתייה מרובה, הליכה איטית, ולישון בגובה נמוך יחסית לפני שעולים לקולקה.',
       },
       {
         day: 2,
         title: 'דרך הרמה הגבוהה לקולקה',
-        placeIds: ['pe-salinas-reserve', 'pe-chivay'],
+        placeIds: ['pe-salinas-reserve', 'pe-arequipa', 'pe-chivay'],
         notes:
           'הכביש עובר בנקודות גבוהות מאוד. לעצור לעתים קרובות ולא להישאר זמן רב בנקודה הגבוהה ביותר.',
       },
       {
         day: 3,
         title: 'הקניון',
-        placeIds: ['pe-colca-canyon'],
+        placeIds: ['pe-colca-canyon', 'per-cruz-del-condor', 'per-cabanaconde'],
         notes:
           'לצאת מוקדם מאוד, התצפיות מתמלאות באוטובוסים לפני שמונה בבוקר. הראייה של קונדורים אינה מובטחת ותלויה בזרמי אוויר.',
       },
       {
         day: 4,
         title: 'מזרחה לאגם',
-        placeIds: ['pe-sillustani', 'pe-puno'],
+        placeIds: ['pe-sillustani', 'pe-puno', 'per-uros', 'per-amantani', 'per-taquile'],
         notes:
           'יום נסיעה ארוך. את השייט לאיים כדאי להזמין רק אחרי שמגיעים ומבינים איך מרגישים בגובה.',
       },
@@ -38986,21 +38986,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'העיר העתיקה',
-        placeIds: ['vn-hoi-an'],
+        placeIds: ['vn-hoi-an', 'vnm-hoian-market', 'vnm-marble-mountains', 'vnm-son-tra', 'vnm-cham-islands'],
         notes:
           'בוקר מוקדם ברחובות לפני שהקבוצות מגיעות, הפסקה ארוכה בשעות החום, וחזרה לפנות ערב. לא לנסות ללכת בצהריים.',
       },
       {
         day: 2,
         title: 'ממלכת צ׳אם',
-        placeIds: ['vn-my-son', 'vn-ba-na-hills'],
+        placeIds: ['vn-my-son', 'vn-japanese-bridge', 'vnm-tra-que', 'vnm-an-bang', 'vn-ba-na-hills'],
         notes:
           'למי סון להגיע עם הפתיחה, אין שם צל כמעט. את בא נא אפשר לוותר בקלות אם לא נוסעים עם ילדים.',
       },
       {
         day: 3,
         title: 'צפונה מעל הים',
-        placeIds: ['vn-hai-van', 'vn-lang-co', 'vn-thien-mu'],
+        placeIds: ['vn-hai-van', 'vn-lang-co', 'vnm-bach-ma', 'vnm-dong-ba', 'vn-thien-mu'],
         notes:
           'לבדוק תחזית לפני שיוצאים למעבר, בערפל אין מה לראות. הנסיעה כולה יום שלם, לא לדחוס אליה עוד אתרים.',
       },
@@ -39361,14 +39361,14 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'פתייה והלגונה',
-        placeIds: ['tr-fethiye', 'tr-oludeniz'],
+        placeIds: ['tr-fethiye', 'lyc-fethiye-fish', 'tur-kayakoy', 'tr-oludeniz', 'lyc-butterfly-valley'],
         notes:
           'להגיע ללגונה מוקדם בבוקר או אחרי ארבע, בין לבין החוף עמוס והשמש קשה.',
       },
       {
         day: 2,
         title: 'הערים הליקיות',
-        placeIds: ['tr-xanthos', 'tr-patara'],
+        placeIds: ['tr-xanthos', 'tur-letoon', 'tr-patara', 'tur-kalkan', 'lyc-kaputas'],
         notes:
           'אין צל כמעט באף אחד משני האתרים. כובע, מים והרבה, ולא להגיע בין אחת עשרה לארבע.',
       },
@@ -39389,7 +39389,7 @@ export const destinations: Destination[] = [
       {
         day: 5,
         title: 'טלוס וקניון סאקליקנט',
-        placeIds: ['lyc-tlos', 'lyc-saklikent'],
+        placeIds: ['lyc-tlos', 'lyc-saklikent', 'tur-pinara', 'tur-oludeniz-lagoon-x'],
         notes:
           'בוקר בעיר הליקית טלוס על הגבעה, ואז הצינון של סאקליקנט: הליכה בתוך המים בקניון, וצהריים על מרפסת מעל הנחל. חצי שעה נסיעה ביניהם; יום נוח מפטייה גם עם ילדים.',
       },
@@ -39747,14 +39747,14 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'עמק אנפוליס',
-        placeIds: ['ca-grand-pre', 'ca-annapolis-royal'],
+        placeIds: ['ca-grand-pre', 'can-peggys-cove', 'can-halifax-seaport', 'can-lunenburg', 'ca-annapolis-royal'],
         notes:
           'יום נינוח מהליפקס מערבה. שווה לבדוק מראש את לוח הגאות אם רוצים לראות את ההפרש במפרץ.',
       },
       {
         day: 2,
         title: 'יערות ואגמים',
-        placeIds: ['ca-kejimkujik'],
+        placeIds: ['ca-kejimkujik', 'ca-digby', 'can-bay-of-fundy', 'can-cape-split', 'can-mahone-bay'],
         notes:
           'להביא דוחה חרקים בעוצמה גבוהה. את הקאנו כדאי להזמין מראש בעונה.',
       },
@@ -39768,7 +39768,7 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'הכביש הנופי',
-        placeIds: ['ca-cabot-trail', 'ca-cape-breton-park'],
+        placeIds: ['ca-cabot-trail', 'ca-cape-breton-park', 'can-skyline-trail', 'can-ingonish'],
         notes:
           'לא לנסות לעשות את הטבעת בחצי יום. לבדוק תחזית בבוקר, בערפל אין טעם לעלות לתצפיות.',
       },
@@ -40156,21 +40156,21 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'ההרים הלבנים',
-        placeIds: ['us-franconia-notch'],
+        placeIds: ['us-franconia-notch', 'usa-flume', 'usa-kancamagus', 'usa-white-mountains', 'usa-portland-head'],
         notes:
           'החניונים במעבר מתמלאים לפני תשע בבוקר בעונה. אם מגיעים מאוחר, אין כמעט סיכוי למקום.',
       },
       {
         day: 4,
         title: 'חוף מיין',
-        placeIds: ['us-acadia'],
+        placeIds: ['us-acadia', 'usa-mount-desert-x'],
         notes:
           'לבדוק מראש אם נדרשת הזמנת כניסה לכביש הפסגה בתאריכים שלכם. יום שלם בפארק, לא פחות.',
       },
       {
         day: 5,
         title: 'דרומה לאוקיינוס',
-        placeIds: ['us-cape-cod'],
+        placeIds: ['us-cape-cod', 'us-mikes-pastry', 'us-union-oyster', 'usa-salem', 'us-wrentham'],
         notes:
           'נסיעה ארוכה. בקיץ הפקקים בכניסה לזרוע היבשה קשים בסופי שבוע, עדיף באמצע השבוע.',
       },
@@ -40526,35 +40526,35 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'מפלים ואגם',
-        placeIds: ['is-godafoss', 'is-myvatn', 'is-dimmuborgir'],
+        placeIds: ['is-godafoss', 'isl-brynja', 'is-aldeyjarfoss', 'is-myvatn', 'is-dimmuborgir'],
         notes:
           'בקיץ לקחת רשת פנים לאזור האגם, הזבובונים באמת מטרידים. ריח הגופרית בבריכות חזק, לא להיבהל.',
       },
       {
         day: 2,
         title: 'הצפון הרחוק',
-        placeIds: ['is-dettifoss', 'is-asbyrgi'],
+        placeIds: ['is-dettifoss', 'is-hljodaklettar', 'is-asbyrgi'],
         notes:
           'לבדוק את מצב הדרכים באתר הרשמי לפני שיוצאים. חלק מהגישה בדרכי חצץ שלא תמיד פתוחות.',
       },
       {
         day: 3,
         title: 'לווייתנים',
-        placeIds: ['is-husavik'],
+        placeIds: ['is-husavik', 'is-akureyri', 'isl-hvitserkur-x', 'isl-siglufjordur', 'isl-hofsos-pool'],
         notes:
           'השייט קר מאוד גם בקיץ, להתלבש בשכבות ולקחת כובע וכפפות. להזמין מראש בעונה.',
       },
       {
         day: 4,
         title: 'מזרחה לפיורדים',
-        placeIds: ['is-seydisfjordur'],
+        placeIds: ['is-seydisfjordur', 'is-studlagil'],
         notes:
           'יום נסיעה ארוך במעברי הרים. אם התחזית קשה, עדיף לוותר ולא להסתכן במעבר.',
       },
       {
         day: 5,
         title: 'מיוואטן הגעשית - גריוטגיאו וקראפלה',
-        placeIds: ['is-grjotagja', 'is-krafla-viti'],
+        placeIds: ['is-grjotagja', 'is-krafla-viti', 'isl-laufas'],
         notes:
           'מעגל סביב מיוואטן: סדק גריוטגיאו, שדה הפומרולות הוורייר (לא לרדת מהשביל), ומכתש ויטי ושדות הלבה של קראפלה. אחר הצהריים אמבטיות מיוואטן. יום של גופרית ואדים; בגדים שלא אכפת מהם.',
       },
@@ -40898,28 +40898,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'המנזרים המצוירים',
-        placeIds: ['ro-voronet', 'ro-humor'],
+        placeIds: ['ro-voronet', 'ro-humor', 'rou-vatra-dornei-x'],
         notes:
           'להגיע לוורונץ עם הפתיחה, אחר כך הומור שהוא שקט הרבה יותר. לבוש צנוע נדרש בשניהם.',
       },
       {
         day: 2,
         title: 'צפונה בבוקובינה',
-        placeIds: ['ro-moldovita', 'ro-sucevita'],
+        placeIds: ['ro-moldovita', 'ro-sucevita', 'rou-bicaz-x', 'ro-putna', 'ro-rarau'],
         notes:
           'הכביש בין השניים עובר במעבר הרים יפה אבל איטי. לא לתכנן עליו לוח זמנים צפוף.',
       },
       {
         day: 3,
         title: 'מערבה למרמורש',
-        placeIds: ['ro-barsana', 'ro-merry-cemetery'],
+        placeIds: ['ro-barsana', 'ro-breb', 'ro-merry-cemetery', 'ro-sapanta-peri', 'ro-mocanita'],
         notes:
           'יום נסיעה ארוך בין שני האזורים. הכבישים איטיים בהרבה ממה שנראה במפה.',
       },
       {
         day: 4,
         title: 'סיגט',
-        placeIds: ['ro-sighet'],
+        placeIds: ['ro-sighet', 'rou-budesti', 'ro-ieud', 'rou-rodna', 'ro-baia-mare'],
         notes:
           'יום כבד רגשית. לוודא מראש את שעות הפתיחה של האתרים, הן משתנות ולעתים סוגרים באמצע השבוע.',
       },
@@ -41287,25 +41287,25 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'האג: אמנות ומוסדות',
-        placeIds: ['nl-mauritshuis', 'nl-binnenhof'],
+        placeIds: ['nl-mauritshuis', 'nl-binnenhof', 'nld-panorama-mesdag', 'nld-haagse-markt', 'nld-keukenhof-x'],
         notes: 'שני האתרים במרחק דקות הליכה. אחר הצהריים אפשר להמשיך ברגל למרכז האג או לקחת חשמלית לחוף.',
       },
       {
         day: 2,
         title: 'משפחות ודלפט',
-        placeIds: ['nl-madurodam', 'nl-nieuwe-kerk-delft'],
+        placeIds: ['nl-madurodam', 'nl-scheveningen', 'nld-hoek-dunes', 'nl-leiden', 'nl-nieuwe-kerk-delft'],
         notes: 'מדורודאם בבוקר עם ילדים, ואז רכבת קצרה לדלפט. בלי ילדים אפשר לוותר על מדורודאם ולהקדיש את כל היום לדלפט.',
       },
       {
         day: 3,
         title: 'רוטרדם המודרנית',
-        placeIds: ['nl-euromast', 'nl-cube-houses'],
+        placeIds: ['nl-euromast', 'nld-kaag-x', 'nld-markthal', 'nl-cube-houses', 'nld-naaldwijk-x'],
         notes: 'שני האתרים בקצוות שונים של מרכז רוטרדם, המטרו ביניהם לוקח כרבע שעה.',
       },
       {
         day: 4,
         title: 'חאודה ועיירות קטנות',
-        placeIds: ['nl-gouda'],
+        placeIds: ['nl-gouda', 'nld-westland-x', 'nl-biesbosch', 'nl-rotterdam'],
         notes: 'יום קליל לסיום. חאודה במרחק כחצי שעה ברכבת מרוטרדם.',
       },
     ],
@@ -41703,25 +41703,25 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'קרחון אלץ',
-        placeIds: ['ch-aletsch'],
+        placeIds: ['ch-aletsch', 'che-eggishorn', 'che-aletsch-arena-x'],
         notes: 'יום ארוך. מגיעים לאחד הכפרים בצד הצפוני של העמק ועולים ברכבל לנקודת התצפית.',
       },
       {
         day: 5,
         title: 'מרחצאות ותצפית',
-        placeIds: ['ch-leukerbad', 'ch-crans-montana'],
+        placeIds: ['ch-leukerbad', 'che-chateau-villa', 'ch-crans-montana', 'che-sion', 'che-gorges-du-trient'],
         notes: 'יום מנוחה מההרים הגבוהים. שני המקומות בצד הצפוני של העמק, כשעה נסיעה ביניהם.',
       },
       {
         day: 6,
         title: 'עמק אניביה',
-        placeIds: ['ch-zinal'],
+        placeIds: ['ch-zinal', 'che-moiry', 'che-grande-dixence', 'che-lac-bleu'],
         notes: 'סיום שקט בעמק צדדי. כביש הררי מפותל, לא לנהגים מתוחים.',
       },
       {
         day: 7,
         title: 'מסלול חמשת האגמים',
-        placeIds: ['che-matterhorn', 'che-stellisee', 'che-riffelsee'],
+        placeIds: ['che-matterhorn', 'che-klein-matterhorn', 'che-riffelsee', 'che-stellisee', 'che-kuonen-bridge'],
         notes:
           'פוניקולר לסונגה ורכבל לבלאוהרד, ומשם שביל חמשת האגמים - שטליזה עם ההשתקפות היא הראשון; להגיע לפני עשר בבוקר לרוח שקטה. סיום ברכבת גורנרגראט וירידה דרך ריפלזה. יום שלם עם המטרהורן בכל פריים.',
       },
@@ -42084,37 +42084,37 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'נחיתה בקירונה',
-        placeIds: ['se-kiruna'],
+        placeIds: ['se-kiruna', 'swe-esrange-x', 'swe-lkab-mine', 'se-muddus'],
         notes: 'יום התאקלמות. משיגים ציוד חורף חסר ומוודאים שהרכב השכור מצויד לשלג.',
       },
       {
         day: 2,
         title: 'מלון הקרח',
-        placeIds: ['se-jukkasjarvi'],
+        placeIds: ['se-jukkasjarvi', 'se-icehotel'],
         notes: 'כרבע שעה נסיעה מקירונה. אפשר לשלב עם פעילות כלבי מזחלות באזור.',
       },
       {
         day: 3,
         title: 'אביסקו וזוהר צפוני',
-        placeIds: ['se-abisko'],
+        placeIds: ['se-abisko', 'se-aurora-sky-station', 'swe-tornetrask', 'se-riksgransen'],
         notes: 'נוסעים מערבה ולנים באזור כדי לתת לעצמכם כמה לילות הזדמנות לזוהר.',
       },
       {
         day: 4,
         title: 'עמק קבנקאיסה',
-        placeIds: ['se-kebnekaise'],
+        placeIds: ['se-kebnekaise', 'swe-nikkaluokta', 'se-padjelanta'],
         notes: 'בקיץ בלבד. בחורף מחליפים בפעילות שלג מאורגנת מאביסקו.',
       },
       {
         day: 5,
         title: 'דרומה לתרבות הסאמי',
-        placeIds: ['se-jokkmokk', 'se-sarek'],
+        placeIds: ['se-jokkmokk', 'swe-jokkmokk-x', 'swe-stora-sjofallet', 'se-sarek', 'swe-laponia'],
         notes: 'יום נסיעה ארוך. סארק נצפה מהמרחק אלא אם תכננתם טיול שטח עצמאי.',
       },
       {
         day: 6,
         title: 'החוף המזרחי',
-        placeIds: ['se-gammelstad'],
+        placeIds: ['se-gammelstad', 'se-lulea'],
         notes: 'סיום ליד לולאה, שממנה יש טיסות פנים חזרה לשטוקהולם.',
       },
     ],
@@ -42450,31 +42450,31 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'פולה והדרום',
-        placeIds: ['hr-pula-arena', 'hr-brijuni'],
+        placeIds: ['hr-pula-arena', 'hrv-trznica-pula', 'hr-brijuni'],
         notes: 'האמפיתיאטרון בבוקר לפני החום, ואז מעבורת לבריוני. הזמינו את המעבורת מראש בקיץ.',
       },
       {
         day: 2,
         title: 'רוביניי',
-        placeIds: ['hr-rovinj'],
+        placeIds: ['hr-rovinj', 'hr-lim-bay', 'hr-vrsar'],
         notes: 'יום שלם בעיירה ובחופים הסלעיים שמסביבה. חונים מחוץ למרכז וממשיכים ברגל.',
       },
       {
         day: 3,
         title: 'כפרי הגבעה',
-        placeIds: ['hr-motovun', 'hr-groznjan'],
+        placeIds: ['hr-motovun', 'hrv-zigante', 'hr-groznjan', 'hr-hum', 'hr-labin'],
         notes: 'שני הכפרים כחצי שעה זה מזה בכבישים צרים ומפותלים. יום טוב לארוחת צהריים ארוכה.',
       },
       {
         day: 4,
         title: 'החוף המערבי',
-        placeIds: ['hr-euphrasian'],
+        placeIds: ['hr-euphrasian', 'hr-baredine', 'hr-novigrad', 'hr-umag'],
         notes: 'פורץ בבוקר, ואחר הצהריים חופשי לחוף או לשוק המקומי.',
       },
       {
         day: 5,
         title: 'מפרץ קוורנר',
-        placeIds: ['hr-opatija'],
+        placeIds: ['hr-opatija', 'hr-buzet', 'hr-pazin'],
         notes: 'מזרחה לכיוון ריאקה, ממנה יש טיסות. הטיילת נעימה במיוחד לפנות ערב.',
       },
     ],
@@ -42816,31 +42816,31 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'עמק הבוין',
-        placeIds: ['ie-newgrange'],
+        placeIds: ['ie-newgrange', 'irl-brú-x', 'irl-brú-na-bóinne-x', 'irl-howth'],
         notes: 'כשעה צפונית לדבלין. הזמינו כרטיס לסיור מראש, זה האתר שהכי מהר נגמר.',
       },
       {
         day: 2,
         title: 'הרי ויקלו',
-        placeIds: ['ie-powerscourt', 'ie-glendalough'],
+        placeIds: ['ie-powerscourt', 'irl-guinness', 'irl-moore-street', 'ie-glendalough', 'irl-kildare-village'],
         notes: 'שניהם דרומית לדבלין. יוצאים מוקדם כדי לתפוס חניה בגלנדלוך.',
       },
       {
         day: 3,
         title: 'קילקני',
-        placeIds: ['ie-kilkenny-castle'],
+        placeIds: ['ie-kilkenny-castle', 'irl-rock-of-cashel', 'irl-wicklow-way', 'irl-glendalough-x'],
         notes: 'עיירה קטנה שנוח ללון בה. אחר הצהריים חופשי ברחוב הראשי.',
       },
       {
         day: 4,
         title: 'החוף הדרום-מזרחי',
-        placeIds: ['ie-hook-lighthouse'],
+        placeIds: ['ie-hook-lighthouse', 'irl-waterford'],
         notes: 'נסיעה של כשעה וחצי בכבישים משניים צרים. בדקו תחזית רוח.',
       },
       {
         day: 5,
         title: 'מפרץ קורק',
-        placeIds: ['ie-cobh', 'ie-blarney-castle'],
+        placeIds: ['ie-cobh', 'ie-blarney-castle', 'irl-kinsale'],
         notes: 'קוב בבוקר ובלארני אחר הצהריים, כחצי שעה ביניהם. אפשר ללון בקורק.',
       },
     ],
@@ -43188,13 +43188,13 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'אורהוס',
-        placeIds: ['dk-aros', 'dk-den-gamle-by'],
+        placeIds: ['dk-aros', 'dnk-aarhus-streetfood', 'dk-den-gamle-by', 'dk-moesgaard', 'dk-mols-bjerge'],
         notes: 'שני האתרים במרחק הליכה זה מזה במרכז אורהוס. יום שלם בעיר.',
       },
       {
         day: 2,
         title: 'הוויקינגים ולגו',
-        placeIds: ['dk-jelling', 'dk-legoland'],
+        placeIds: ['dk-jelling', 'dk-legoland', 'dnk-himmelbjerget', 'dnk-ebeltoft', 'dnk-mons-klint-x'],
         notes: 'כשעה נסיעה מאורהוס. בלי ילדים אפשר לוותר על לגולנד ולהמשיך ישר מערבה.',
       },
       {
@@ -43206,13 +43206,13 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'צפונה לדיונות',
-        placeIds: ['dk-rabjerg-mile'],
+        placeIds: ['dk-rabjerg-mile', 'dnk-hirtshals-x', 'dk-lindholm-hoje', 'dk-bulbjerg', 'dk-aarhus'],
         notes: 'יום נסיעה ארוך, כשלוש שעות וחצי צפונה. לנים באזור סקאגן.',
       },
       {
         day: 5,
         title: 'קצה דנמרק',
-        placeIds: ['dk-grenen'],
+        placeIds: ['dk-grenen', 'dk-skagen', 'dk-aalborg'],
         notes: 'בוקר בגרנן ואז חזרה דרומה או מעבורת. בדקו שעות הטרקטור לפני שיוצאים.',
       },
     ],
@@ -43577,25 +43577,25 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'הצפון הרחוק',
-        placeIds: ['nz-waitangi'],
+        placeIds: ['nz-waitangi', 'nz-bay-of-islands'],
         notes: 'כשלוש שעות צפונית לאוקלנד. אפשר להוסיף שיט במפרץ האיים אחר הצהריים.',
       },
       {
         day: 2,
         title: 'ארץ ההוביטים',
-        placeIds: ['nz-hobbiton'],
+        placeIds: ['nz-hobbiton', 'nzl-waitomo', 'nzl-hot-water-beach', 'nzl-cathedral-cove'],
         notes: 'בדרך דרומה מאוקלנד. הזמינו את הסיור מראש, המקומות נגמרים בעונה.',
       },
       {
         day: 3,
         title: 'רוטורואה הגעשית',
-        placeIds: ['nz-whakarewarewa'],
+        placeIds: ['nz-whakarewarewa', 'nzl-rotorua-x', 'nzl-wai-o-tapu', 'nzl-white-island-x'],
         notes: 'יום שלם באזור הגיאותרמי. הריח מורגש בכל העיר, זה חלק מהחוויה.',
       },
       {
         day: 4,
         title: 'טאופו',
-        placeIds: ['nz-huka-falls'],
+        placeIds: ['nz-huka-falls', 'nz-taupo', 'nzl-napier'],
         notes: 'עצירה קצרה במפלים ואז יום חופשי על שפת האגם, שהוא לוע געש ענק.',
       },
       {
@@ -43953,25 +43953,25 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'הקארסט',
-        placeIds: ['si-skocjan'],
+        placeIds: ['si-skocjan', 'si-lipica'],
         notes: 'שעה מליובליאנה. הסיורים יוצאים בשעות קבועות, בדקו את הלוח לפני שיוצאים לדרך.',
       },
       {
         day: 2,
         title: 'האגם הנעלם',
-        placeIds: ['si-cerknica', 'si-sneznik-castle'],
+        placeIds: ['si-cerknica', 'si-krizna-jama', 'si-sneznik-castle', 'si-rakov-skocjan', 'slo-planina-cave'],
         notes: 'שני האתרים כחצי שעה זה מזה. בדקו מראש אם באגם יש מים.',
       },
       {
         day: 3,
         title: 'עיירת המכרות',
-        placeIds: ['si-idrija'],
+        placeIds: ['si-idrija', 'slo-predjama-x', 'slo-stanjel'],
         notes: 'הסיור במכרה הוא העיקר. שריינו זמן גם לארוחה מקומית בעיירה.',
       },
       {
         day: 4,
         title: 'רמות הרועים',
-        placeIds: ['si-velika-planina'],
+        placeIds: ['si-velika-planina', 'svn-vodnikov-trg'],
         notes: 'בדקו תחזית ראות. הרכבל לא פועל בכל מזג אוויר ולפעמים סוגרים בלי הודעה.',
       },
       {
@@ -43983,7 +43983,7 @@ export const destinations: Destination[] = [
       {
         day: 6,
         title: 'מזרחה',
-        placeIds: ['si-ptujska-gora'],
+        placeIds: ['si-ptujska-gora', 'si-ptuj', 'slo-maribor-x', 'si-pohorje', 'si-celje'],
         notes: 'עצירה קצרה בדרך לגבול ההונגרי או חזרה למאריבור לטיסה.',
       },
     ],
@@ -44318,13 +44318,13 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'רכס פונקהאריו',
-        placeIds: ['fi-punkaharju'],
+        placeIds: ['fi-punkaharju', 'fi-kerimaki'],
         notes: 'נסיעה איטית לאורך הרכס עם עצירות במפרצי תצפית.',
       },
       {
         day: 3,
         title: 'לינאנסארי בקיאק',
-        placeIds: ['fi-linnansaari'],
+        placeIds: ['fi-linnansaari', 'fi-kolovesi', 'fi-valamo', 'fin-kuopio-hall', 'fi-kuopio-puijo'],
         notes: 'הפלגות לאי יוצאות מראנטסלמי והן עונתיות לגמרי.',
       },
       {
@@ -44336,7 +44336,7 @@ export const destinations: Destination[] = [
       {
         day: 5,
         title: 'רפווסי',
-        placeIds: ['fi-repovesi'],
+        placeIds: ['fi-repovesi', 'fi-astuvansalmi', 'fin-oravi', 'fi-lappeenranta', 'fi-imatra'],
         notes: 'בדרך חזרה דרומה; המסלול לגשר התלוי לוקח כשעתיים הלוך וחזור.',
       },
       {
@@ -44679,25 +44679,25 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'האפסאלו והחוף',
-        placeIds: ['ee-haapsalu'],
+        placeIds: ['ee-haapsalu', 'ee-haapsalu-castle', 'est-vormsi'],
         notes: 'נקודת עצירה טבעית בדרך מטאלין מערבה.',
       },
       {
         day: 2,
         title: 'מאטסאלו',
-        placeIds: ['ee-matsalu'],
+        placeIds: ['ee-matsalu', 'est-muhu'],
         notes: 'מגדלי הצפייה פזורים לאורך המפרץ; משקפת חיונית.',
       },
       {
         day: 3,
         title: 'מעבורת לסארמה',
-        placeIds: ['ee-kuressaare', 'ee-kaali'],
+        placeIds: ['ee-kuressaare', 'est-kuressaare-turg', 'ee-sorve', 'ee-kaali', 'ee-angla'],
         notes: 'הזמינו את המעבורת לרכב מראש; בקיץ היא מלאה ימים מראש.',
       },
       {
         day: 4,
         title: 'צפון סארמה',
-        placeIds: ['ee-panga'],
+        placeIds: ['ee-panga', 'ee-saaremaa', 'ee-hiiumaa'],
         notes: 'יום נהיגה כפרי איטי עם עצירות בטחנות רוח ובכנסיות כפר.',
       },
       {
@@ -44709,7 +44709,7 @@ export const destinations: Destination[] = [
       {
         day: 6,
         title: 'סומאה בדרך חזרה',
-        placeIds: ['ee-soomaa'],
+        placeIds: ['ee-soomaa', 'est-parnu-turg', 'est-parnu-beach', 'ee-kihnu'],
         notes: 'בעונת ההצפה חלק מהדרכים חסומות לחלוטין.',
       },
     ],
@@ -45050,13 +45050,13 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'רונדאלה ובאוסקה',
-        placeIds: ['lv-rundale', 'lv-bauska'],
+        placeIds: ['lv-rundale', 'lv-bauska', 'lv-jelgava', 'lv-tervete'],
         notes: 'שניהם דרומית לריגה וקרובים זה לזה; אפשר יום אחד מריגה וחזרה.',
       },
       {
         day: 2,
         title: 'קולדיגה',
-        placeIds: ['lv-kuldiga'],
+        placeIds: ['lv-kuldiga', 'lva-ventas-rumba', 'lva-abava', 'lva-jurkalne', 'lv-sabile'],
         notes: 'המפל מרשים יותר באביב כשהנהר מלא; בקיץ יבש הוא כמעט לא נראה.',
       },
       {
@@ -45068,13 +45068,13 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'סליטרה וכף קולקה',
-        placeIds: ['lv-slitere', 'lv-kolka'],
+        placeIds: ['lv-slitere', 'lv-kolka', 'lv-talsi', 'lv-engure'],
         notes: 'חלק מדרכי החוף באזור הן חצץ; רכב נמוך יתקשה אחרי גשם.',
       },
       {
         day: 5,
         title: 'דרומה לליאפיה',
-        placeIds: ['lv-liepaja'],
+        placeIds: ['lv-liepaja', 'lva-karosta', 'lv-pavilosta', 'lv-pape'],
         notes: 'נסיעה ארוכה לאורך החוף; קרוסטה שווה כמה שעות בפני עצמה.',
       },
     ],
@@ -45397,31 +45397,31 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'גבעת הצלבים',
-        placeIds: ['lt-hill-of-crosses'],
+        placeIds: ['lt-hill-of-crosses', 'lt-siauliai'],
         notes: 'נמצאת בצפון פנים הארץ; עצירה נוחה בדרך מווילנה או מריגה מערבה.',
       },
       {
         day: 2,
         title: 'ז׳מייטיה ואגם פלאטליי',
-        placeIds: ['lt-zemaitija'],
+        placeIds: ['lt-zemaitija', 'lt-plateliai'],
         notes: 'הביקור בבסיס הטילים רק בסיור מודרך ובשעות קבועות.',
       },
       {
         day: 3,
         title: 'פאלנגה והחוף',
-        placeIds: ['lt-palanga'],
+        placeIds: ['lt-palanga', 'lt-kretinga', 'ltu-dutchmans-cap'],
         notes: 'בקיץ העיר עמוסה מאוד וקשה למצוא חניה קרוב לחוף.',
       },
       {
         day: 4,
         title: 'מעבורת ללשון הקורונית',
-        placeIds: ['lt-curonian-spit', 'lt-nida'],
+        placeIds: ['lt-curonian-spit', 'lt-parnidis', 'lt-nida', 'lt-juodkrante', 'lt-klaipeda'],
         notes: 'הכניסה לנרינגה ברכב כרוכה באגרה; בקיץ צאו מוקדם בגלל התור למעבורת.',
       },
       {
         day: 5,
         title: 'דלתת נמונאס',
-        placeIds: ['lt-nemunas-delta'],
+        placeIds: ['lt-nemunas-delta', 'ltu-ventes-ragas', 'ltu-dead-dunes', 'ltu-hill-of-witches'],
         notes: 'מגדלי תצפית לצפרות פזורים בדלתא; משקפת חיונית.',
       },
       {
@@ -45751,19 +45751,19 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'בלוגראדצ׳יק',
-        placeIds: ['bg-belogradchik'],
+        placeIds: ['bg-belogradchik', 'bg-magura'],
         notes: 'נמצאת בקצה הצפון-מערבי; מסופיה זו נסיעה של כשלוש שעות בכל כיוון.',
       },
       {
         day: 2,
         title: 'מערת דבטשקה',
-        placeIds: ['bg-devetashka'],
+        placeIds: ['bg-devetashka', 'bg-krushuna', 'bg-prohodna', 'bg-vratsa', 'bg-cherepish'],
         notes: 'עצירה בדרך מזרחה; בעונת קינון העטלפים הגישה מוגבלת.',
       },
       {
         day: 3,
         title: 'איבאנובו וקניון לום',
-        placeIds: ['bg-ivanovo'],
+        placeIds: ['bg-ivanovo', 'bg-ruse'],
         notes: 'מהחניון יש עלייה רגלית קצרה אך תלולה אל הכנסיות.',
       },
       {
@@ -45775,13 +45775,13 @@ export const destinations: Destination[] = [
       {
         day: 5,
         title: 'שיפקה ובוזלודז׳ה',
-        placeIds: ['bg-shipka', 'bg-buzludzha'],
+        placeIds: ['bg-shipka', 'bg-buzludzha', 'bg-etar', 'bg-gabrovo'],
         notes: 'הכביש לבוזלודז׳ה עלול להיות חסום בשלג מנובמבר עד אפריל.',
       },
       {
         day: 6,
         title: 'טריאבנה',
-        placeIds: ['bg-tryavna'],
+        placeIds: ['bg-tryavna', 'bg-veliko-tarnovo', 'bg-arbanasi'],
         notes: 'סיום רגוע לפני החזרה דרומה לסופיה או לפלובדיב.',
       },
     ],
@@ -46120,31 +46120,31 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'קניון דבד',
-        placeIds: ['am-kobayr', 'am-odzun'],
+        placeIds: ['am-kobayr', 'arm-dsegh', 'am-odzun', 'arm-lori-berd', 'arm-alaverdi-x'],
         notes: 'העלייה לקובאיר תלולה ולא מסומנת היטב; נעלי הליכה הכרחיות.',
       },
       {
         day: 2,
         title: 'הגפטאט וסנהין',
-        placeIds: ['am-haghpat', 'am-sanahin'],
+        placeIds: ['am-haghpat', 'am-sanahin', 'am-alaverdi'],
         notes: 'שני האתרים במרחק עשרים דקות נסיעה זה מזה, אפשר בקלות ביום אחד.',
       },
       {
         day: 3,
         title: 'אחטלה',
-        placeIds: ['am-akhtala'],
+        placeIds: ['am-akhtala', 'arm-debed'],
         notes: 'הכנסייה נעולה לעיתים; שואלים את שומר האתר בכפר על המפתח.',
       },
       {
         day: 4,
         title: 'דרומה לדיליז׳אן',
-        placeIds: ['am-haghartsin'],
+        placeIds: ['am-haghartsin', 'arm-parz-x'],
         notes: 'הכביש מהקניון דרומה עובר במנהרה ארוכה ובמעבר הרים.',
       },
       {
         day: 5,
         title: 'גושוואנק',
-        placeIds: ['am-goshavank'],
+        placeIds: ['am-goshavank', 'arm-lake-gosh', 'am-lake-parz', 'arm-ijevan', 'arm-yenokavan'],
         notes: 'קרוב לאגם פרז; אפשר לשלב הליכה קצרה ביער.',
       },
     ],
@@ -46499,7 +46499,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'העיר אואחקה',
-        placeIds: ['mx-oaxaca-city'],
+        placeIds: ['mx-oaxaca-city', 'mex-benito-juarez', 'mex-20-noviembre', 'mx-santo-domingo', 'mex-guelaguetza-x'],
         notes: 'יום ראשון בגובה, קחו בקצב איטי ושתו הרבה מים.',
       },
       {
@@ -46511,19 +46511,19 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'עמק טלאקולולה',
-        placeIds: ['mx-tule', 'mx-mitla'],
+        placeIds: ['mx-tule', 'mex-coyotepec', 'mex-hierve-x', 'mx-mitla'],
         notes: 'בדרך יש כפרי אומנים; יום שוק בטלאקולולה שווה תכנון מראש.',
       },
       {
         day: 4,
         title: 'יאגול ואירבה אל אגואה',
-        placeIds: ['mx-yagul', 'mx-hierve-el-agua'],
+        placeIds: ['mx-yagul', 'mx-tlacolula', 'mex-teotitlan', 'mx-hierve-el-agua'],
         notes: 'בררו באותו בוקר אם הדרך לאירבה אל אגואה פתוחה; היא נסגרת לפעמים בהתראה קצרה.',
       },
       {
         day: 5,
         title: 'ירידה לחוף',
-        placeIds: ['mx-puerto-escondido'],
+        placeIds: ['mx-puerto-escondido', 'mex-mazunte', 'mx-zipolite', 'mex-huatulco', 'mex-san-jose-del-pacifico'],
         notes: 'טיסה פנימית קצרה עדיפה בהרבה על שש שעות פיתולים בהרים.',
       },
     ],
@@ -46800,19 +46800,19 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'מטשקנט לקוקנד',
-        placeIds: ['uz-kokand'],
+        placeIds: ['uz-kokand', 'uz-khudayar'],
         notes: 'הנסיעה עוברת במעבר קמצ׳יק; בחורף בדקו שהמעבר פתוח לפני שיוצאים.',
       },
       {
         day: 2,
         title: 'מרגילן והמשי',
-        placeIds: ['uz-margilan'],
+        placeIds: ['uz-margilan', 'uzb-yodgorlik', 'uzb-kumtepa', 'uzb-rishtan'],
         notes: 'בתי המלאכה עובדים בשעות הבוקר; אחר הצהריים חלקם סגורים.',
       },
       {
         day: 3,
         title: 'פרגנה וקובה',
-        placeIds: ['uz-fergana', 'uz-quva'],
+        placeIds: ['uz-fergana', 'uz-quva', 'uzb-shakhimardan'],
         notes: 'פרגנה נוחה כבסיס לינה לכל האזור המרכזי של העמק.',
       },
       {
@@ -46824,7 +46824,7 @@ export const destinations: Destination[] = [
       {
         day: 5,
         title: 'נמנגן וצ׳וסט',
-        placeIds: ['uz-namangan', 'uz-chust'],
+        placeIds: ['uz-namangan', 'uzb-akhsikent', 'uz-chust', 'uzb-chodak'],
         notes: 'צ׳וסט קטנה ואפשר לסיים בה לפני החזרה מערבה.',
       },
     ],
@@ -47097,13 +47097,13 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'לומביני ואתרי הבודהה',
-        placeIds: ['np-lumbini', 'np-tilaurakot'],
+        placeIds: ['np-lumbini', 'np-maya-devi', 'np-lumbini-monasteries', 'np-tilaurakot', 'npl-ramgram'],
         notes: 'להתחיל מוקדם בבוקר לפני החום. אופניים או ריקשה חיוניים בתוך האזור המנזרי הענק.',
       },
       {
         day: 2,
         title: 'צפונה לגבעות טנסן',
-        placeIds: ['np-tansen'],
+        placeIds: ['np-tansen', 'np-bandipur-x', 'npl-devghat', 'np-chitwan-sauraha', 'np-parsa'],
         notes: 'כשעתיים נסיעה מלומביני, עם ירידה משמעותית בטמפרטורה. לינה בעיירה.',
       },
       {
@@ -47471,19 +47471,19 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'סטון טאון',
-        placeIds: ['tz-stone-town'],
+        placeIds: ['tz-stone-town', 'tza-darajani', 'tza-forodhani', 'tza-cheetahs-rock-x', 'tza-jambiani'],
         notes: 'סיור רגלי עם מדריך מקומי בבוקר, שוק פורודהאני בערב. לבוש צנוע מחוץ למלון.',
       },
       {
         day: 2,
         title: 'צבים ויער',
-        placeIds: ['tz-changuu', 'tz-jozani'],
+        placeIds: ['tz-changuu', 'tz-jozani', 'tza-paje-x', 'tza-mtoni-x', 'tza-kizimkazi'],
         notes: 'סירה לצ׳אנגו בבוקר המוקדם, יוזאני אחר הצהריים בדרך מזרחה.',
       },
       {
         day: 3,
         title: 'צפון האי',
-        placeIds: ['tz-nungwi'],
+        placeIds: ['tz-nungwi', 'tza-prison-x', 'tza-mnemba', 'tza-kiwengwa'],
         notes: 'החוף היחיד שבו אפשר לשחות בכל שעה. שקיעה מהחוף המערבי של הכפר.',
       },
       {
@@ -47495,7 +47495,7 @@ export const destinations: Destination[] = [
       {
         day: 5,
         title: 'חזרה ליבשת: בגמויו',
-        placeIds: ['tz-bagamoyo'],
+        placeIds: ['tz-bagamoyo', 'tza-chumbe'],
         notes: 'מעבורת או טיסה לדאר א-סלאם ואז כשעה וחצי צפונה.',
       },
       {
@@ -47849,13 +47849,13 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'סבאח: הר קינבלו',
-        placeIds: ['my-kinabalu-park'],
+        placeIds: ['my-kinabalu-park', 'mys-poring', 'mys-gaya-street', 'my-kota-kinabalu', 'mys-tunku-abdul-rahman'],
         notes: 'כשעתיים נסיעה מקוטה קינבלו. מי שמטפס לפסגה צריך להקצות יומיים ואישור מראש.',
       },
       {
         day: 2,
         title: 'ספילוק',
-        placeIds: ['my-sepilok'],
+        placeIds: ['my-sepilok', 'my-sandakan', 'mys-danum'],
         notes: 'טיסה קצרה לסנדקאן. להגיע להאכלה של 10:00 ולשלב את מרכז דוב השמש.',
       },
       {
@@ -47867,19 +47867,19 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'צלילה בסיפאדן',
-        placeIds: ['my-sipadan'],
+        placeIds: ['my-sipadan', 'mys-mabul', 'mys-semporna'],
         notes: 'לינה בסמפורנה או במאבול. אישור הכניסה מוגבל ומחולק רק דרך אתרי הצלילה.',
       },
       {
         day: 5,
         title: 'סראוואק: מערות מולו',
-        placeIds: ['my-mulu'],
+        placeIds: ['my-mulu', 'mys-niah'],
         notes: 'טיסה דרך קוטה קינבלו או מירי. יציאת העטלפים בשעת בין הערביים היא השיא.',
       },
       {
         day: 6,
         title: 'באקו',
-        placeIds: ['my-bako'],
+        placeIds: ['my-bako', 'mys-sarawak-cultural-village', 'my-kuching', 'mys-satok'],
         notes: 'טיסה לקוצ׳ינג ואז סירה. הסירות תלויות בגאות, ויש לצאת מוקדם.',
       },
     ],
@@ -48242,25 +48242,25 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'דרום באלי והמקדשים שעל הים',
-        placeIds: ['id-uluwatu', 'id-tanah-lot'],
+        placeIds: ['id-uluwatu', 'id-tanah-lot', 'idn-jatiluwih', 'id-tirta-gangga', 'idn-amed'],
         notes: 'אולוואטו בבוקר, טאנה לוט לקראת שקיעה. לחשב זמן נסיעה כפול בגלל פקקים.',
       },
       {
         day: 2,
         title: 'הלב הפנימי סביב אובוד',
-        placeIds: ['id-goa-gajah'],
+        placeIds: ['id-goa-gajah', 'idn-ibu-oka', 'idn-senggol-gianyar', 'idn-tirta-empul', 'idn-nusa-penida'],
         notes: 'בוקר באתר ואחר הצהריים במדרגות האורז ובשווקים. לינה באזור אובוד.',
       },
       {
         day: 3,
         title: 'זריחה על באטור',
-        placeIds: ['id-batur', 'id-besakih'],
+        placeIds: ['id-batur', 'id-besakih', 'idn-tegallalang', 'idn-sekumpul', 'idn-munduk'],
         notes: 'יציאה בשתיים בלילה עם מדריך, ובדרך חזרה עצירה בבסאקי. יום ארוך מאוד.',
       },
       {
         day: 4,
         title: 'מעבר ללומבוק',
-        placeIds: ['id-rinjani'],
+        placeIds: ['id-rinjani', 'id-gili'],
         notes: 'מעבורת מהירה או טיסה קצרה. טרק רינג׳אני דורש עוד שניים עד ארבעה ימים ותכנון נפרד.',
       },
       {
@@ -48602,25 +48602,25 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'הרכבת הצרה וכפר העץ',
-        placeIds: ['rs-mokra-gora'],
+        placeIds: ['rs-mokra-gora', 'rs-sargan', 'rs-tara-np', 'srb-mount-tara-banjska', 'rs-drina-house'],
         notes: 'לבדוק מראש את שעות היציאה של רכבת שארגן, הן משתנות לפי עונה ומתמלאות בקיץ.',
       },
       {
         day: 2,
         title: 'רמת זלאטיבור',
-        placeIds: ['rs-zlatibor', 'rs-sirogojno'],
+        placeIds: ['rs-zlatibor', 'rs-stopica', 'rs-sirogojno', 'srb-guca', 'rs-drvengrad'],
         notes: 'בוקר בשבילים או ברכבל, אחר הצהריים במוזיאון הכפר. כחצי שעה נסיעה ביניהם.',
       },
       {
         day: 3,
         title: 'פיתולי אובאץ',
-        placeIds: ['rs-uvac'],
+        placeIds: ['rs-uvac', 'rs-zlatar', 'rs-mileseva'],
         notes: 'לתאם סירה מראש מול מפעיל מקומי. הטיפוס למצפה תלול ודורש נעליים מתאימות.',
       },
       {
         day: 4,
         title: 'עמק ראשקה והמנזרים',
-        placeIds: ['rs-studenica', 'rs-sopocani'],
+        placeIds: ['rs-studenica', 'srb-kraljevo-x', 'rs-djurdjevi-stupovi', 'rs-sopocani'],
         notes: 'יום נסיעה ארוך על כבישים הרריים. לבוש צנוע חובה בשני המנזרים.',
       },
     ],
@@ -48930,25 +48930,25 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'נהר אונה',
-        placeIds: ['ba-una-park', 'ba-bosanska-krupa'],
+        placeIds: ['ba-una-park', 'ba-martin-brod', 'bih-una-strbacki-x', 'ba-strbacki-buk', 'ba-bosanska-krupa'],
         notes: 'רפטינג בבוקר עם מפעיל מקומי, אחר הצהריים בעיירה על הנהר. לתאם את הרפטינג מראש.',
       },
       {
         day: 2,
         title: 'מצודות מעל הנהר',
-        placeIds: ['ba-ostrozac'],
+        placeIds: ['ba-ostrozac', 'ba-bihac'],
         notes: 'ביקור בבוקר, ואפשר להמשיך לאורך העמק צפונה. הגישה בדרך צרה.',
       },
       {
         day: 3,
         title: 'יערות קוזארה',
-        placeIds: ['ba-kozara', 'ba-prijedor'],
+        placeIds: ['ba-kozara', 'bih-kravica-x', 'ba-prijedor', 'ba-banja-luka'],
         notes: 'הליכה בפארק ואז ירידה לעיר. לא לצאת משבילים מסומנים בשל אזורי מוקשים.',
       },
       {
         day: 4,
         title: 'מזרחה לטרווניק',
-        placeIds: ['ba-travnik'],
+        placeIds: ['ba-travnik', 'ba-jajce', 'bih-pliva-lakes', 'bih-tesanj', 'bih-blidinje'],
         notes: 'כשלוש שעות נסיעה. משם קרוב יחסית להמשיך לסרייבו.',
       },
     ],
@@ -49254,19 +49254,19 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'שקודרה והמצודה',
-        placeIds: ['al-rozafa'],
+        placeIds: ['al-rozafa', 'alb-tradita', 'al-marubi', 'alb-shkoder', 'al-shkoder-lake-x'],
         notes: 'סיור בעיר בבוקר, מצודה לקראת שקיעה. לינה בשקודרה לפני העלייה להרים.',
       },
       {
         day: 2,
         title: 'אגם שקודר',
-        placeIds: ['al-lake-skadar'],
+        placeIds: ['al-lake-skadar', 'al-drisht', 'al-velipoje', 'al-lezhe'],
         notes: 'סירה או אופניים לאורך החוף האלבני. אפשר לשלב מעבר למונטנגרו.',
       },
       {
         day: 3,
         title: 'לעמק ואלבונה',
-        placeIds: ['al-valbone'],
+        placeIds: ['al-valbone', 'alb-theth', 'al-blue-eye-theth', 'al-shala-river', 'alb-koman'],
         notes: 'יציאה מוקדמת למעבורת קומן, שיוצאת בדרך כלל בבוקר בלבד. לוודא כרטיס מראש.',
       },
       {
@@ -49667,13 +49667,13 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'ארמונות ומקדש',
-        placeIds: ['kr-changdeokgung', 'kr-jongmyo'],
+        placeIds: ['kr-changdeokgung', 'kr-jongmyo', 'kr-insadong', 'kr-myeongdong'],
         notes: 'להזמין מראש סיור לגן הסודי. שני האתרים צמודים וניתן לשלב אותם ברגל.',
       },
       {
         day: 2,
         title: 'בתי האנוק ואוכל רחוב',
-        placeIds: ['kr-bukchon', 'kr-gwangjang'],
+        placeIds: ['kr-bukchon', 'kr-gyeongbokgung', 'kor-gyeongbokgung-x', 'kr-gwangjang', 'kor-seoul-forest'],
         notes: 'בוקצ׳ון בבוקר לפני העומס, שוק גוואנגג׳אנג לקראת ערב. לשמור על שקט בשכונת המגורים.',
       },
       {
@@ -49697,7 +49697,7 @@ export const destinations: Destination[] = [
       {
         day: 6,
         title: 'ההרים של סיאול - אינוואנגסאן ונאמסאן',
-        placeIds: ['kor-inwangsan', 'kor-namsan'],
+        placeIds: ['kor-inwangsan', 'kor-namdaemun', 'kor-namsan', 'kor-noryangjin', 'kor-lotte-world-mall'],
         notes:
           'בוקר בעלייה על אינוואנגסאן לאורך חומת העיר (שעה, מדרגות), עם הארמונות מלמטה. אחר הצהריים נאמסאן: הליכה או רכבל למגדל, וסיאול בלילה מלמעלה. שני הרים ביום אחד, שניהם בתוך העיר.',
       },
@@ -50024,7 +50024,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'אליס ספרינגס ורכסי מקדונל',
-        placeIds: ['au-alice-springs', 'au-simpsons-gap', 'au-standley-chasm'],
+        placeIds: ['au-alice-springs', 'au-simpsons-gap', 'au-standley-chasm', 'au-ormiston-gorge', 'au-rainbow-valley'],
         notes: 'תזמנו את סטנדלי צ׳זם לצהריים בדיוק, אחרת הנקיק בצל. סימפסונס גאפ עדיף מוקדם בבוקר בשביל הוולביי.',
       },
       {
@@ -50345,7 +50345,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'טורקסטן',
-        placeIds: ['kz-yasawi'],
+        placeIds: ['kz-yasawi', 'kaz-turkestan-hilvet', 'kz-sauran', 'kaz-shymkent-x'],
         notes: 'הגעה ברכבת לילה מאלמטי או בטיסה לשדה החדש של טורקסטן. את המאוזוליאום כדאי לראות גם בשעת שקיעה, כשהכיפות הטורקיזיות מקבלות צבע.',
       },
       {
@@ -50357,13 +50357,13 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'מעבר לטראז',
-        placeIds: ['kz-taraz', 'kz-aisha-bibi'],
+        placeIds: ['kz-taraz', 'kz-aisha-bibi', 'kz-akyrtas'],
         notes: 'יום נסיעה ארוך מזרחה. איישה ביבי בדרך אל העיר או ממנה, לא כיעד נפרד.',
       },
       {
         day: 4,
         title: 'אקסו-ז׳באגלי',
-        placeIds: ['kz-aksu-zhabagly'],
+        placeIds: ['kz-aksu-zhabagly', 'kz-aksu-canyon', 'kaz-tulips-x', 'kz-shymkent', 'kz-sairam-ugam'],
         notes: 'יום שלם בשמורה עם מדריך מוסמך, בהיתר שהוסדר מראש. באפריל בשביל הצבעונים, בקיץ בשביל הקניון.',
       },
     ],
@@ -50840,7 +50840,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'פלרמו ומונראלה',
-        placeIds: ['it-monreale'],
+        placeIds: ['it-monreale', 'it-ballaro', 'it-focacceria-san-francesco', 'it-vucciria', 'it-zingaro'],
         notes: 'נחיתה בפלרמו. מונראלה בבוקר, כשהאור נכנס מהחלונות המזרחיים ומדליק את הזהב. אחר הצהריים בשווקי פלרמו.',
       },
       {
@@ -50852,19 +50852,19 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'אגריג׳נטו',
-        placeIds: ['it-valle-templi'],
+        placeIds: ['it-valle-templi', 'it-scala-dei-turchi', 'sic-segesta', 'sic-erice', 'sic-favignana'],
         notes: 'נסיעה דרומה. הגיעו לפתיחה או להארה בערב, לא בצהריים - אין צל בכל האתר.',
       },
       {
         day: 4,
         title: 'פסיפסים בלב האי',
-        placeIds: ['it-villa-casale'],
+        placeIds: ['it-villa-casale', 'it-sicilia-outlet'],
         notes: 'עצירה בדרך מזרחה. שעתיים מספיקות, ואז ממשיכים לרגוזה או לנוטו ללינה.',
       },
       {
         day: 5,
         title: 'הבארוק של הדרום-מזרח',
-        placeIds: ['it-noto'],
+        placeIds: ['it-noto', 'it-vendicari', 'it-cava-grande', 'sic-modica'],
         notes: 'נוטו באור אחר הצהריים. אם נשאר זמן, מודיקה ורגוזה איבלה באותו יום.',
       },
       {
@@ -50876,13 +50876,13 @@ export const destinations: Destination[] = [
       {
         day: 7,
         title: 'טאורמינה',
-        placeIds: ['it-taormina'],
+        placeIds: ['it-taormina', 'it-isola-bella'],
         notes: 'ללון בטאורמינה ולא לעשות אותה כטיול יום. התיאטרון בשעת הפתיחה, לפני שהאוטובוסים מגיעים. טיסה חזרה מקטניה.',
       },
       {
         day: 8,
         title: 'אטנה וקניון אלקנטרה',
-        placeIds: ['it-etna', 'it-alcantara'],
+        placeIds: ['it-etna', 'it-alcantara', 'sic-nebrodi-x'],
         notes:
           'בוקר באטנה: רכבל ורכבי שטח לקו 2,900 מ׳, מכתרים ושדות לבה (בגד חם). ירידה לקניון אלקנטרה לרגליים במים הקרים, וחזרה לטאורמינה או קטניה. היום הגעשי של סיציליה.',
       },
@@ -51247,31 +51247,31 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'סביליה',
-        placeIds: ['es-alcazar-seville'],
+        placeIds: ['es-alcazar-seville', 'es-mercado-triana', 'esp-doñana'],
         notes: 'האלקאסר בשעת הפתיחה, בכרטיס שהוזמן מראש. אחר הצהריים סנטה קרוס והקתדרלה, וערב בטריאנה.',
       },
       {
         day: 2,
         title: 'קורדובה',
-        placeIds: ['es-mezquita'],
+        placeIds: ['es-mezquita', 'esp-medina-azahara', 'esp-zuheros'],
         notes: 'רכבת מהירה מסביליה, 45 דקות. המסגד בבוקר, הרובע היהודי ובית הכנסת אחר הצהריים, פטיו לערב.',
       },
       {
         day: 3,
         title: 'רונדה והכפרים הלבנים',
-        placeIds: ['es-ronda', 'es-setenil'],
+        placeIds: ['es-ronda', 'es-setenil', 'esp-tarifa'],
         notes: 'ברכב. רונדה בבוקר לפני האוטובוסים, סטניל לארוחת צהריים מתחת לסלע.',
       },
       {
         day: 4,
         title: 'קמיניטו דל ריי',
-        placeIds: ['es-caminito'],
+        placeIds: ['es-caminito', 'esp-torcal', 'es-atarazanas', 'es-outlet-malaga'],
         notes: 'שעת כניסה קבועה שהוזמנה מראש. תכננו כארבע שעות כולל השאטל, ואז נסיעה לגרנדה.',
       },
       {
         day: 5,
         title: 'גרנדה',
-        placeIds: ['es-alhambra'],
+        placeIds: ['es-alhambra', 'esp-sierra-nevada', 'esp-alpujarras'],
         notes: 'הארמונות הנאסריים בשעה שעל הכרטיס, ואל תאחרו - לא מכניסים באיחור. בערב תצפית מסן ניקולס באלביסין.',
       },
       {
@@ -51627,7 +51627,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'יואנינה',
-        placeIds: ['gr-ioannina'],
+        placeIds: ['gr-ioannina', 'gr-dodoni-x', 'gr-perama-cave'],
         notes: 'העיר העתיקה והאגם. את בית הכנסת קהל קדוש יאשן צריך לתאם מראש מול הקהילה, אין כניסה חופשית.',
       },
       {
@@ -51639,25 +51639,25 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'זאגורי וויקוס',
-        placeIds: ['gr-vikos', 'gr-papingo'],
+        placeIds: ['gr-vikos', 'gr-papingo', 'gr-drakolimni', 'gr-konitsa'],
         notes: 'תצפיות אוקסיה ובלואי בבוקר, לינה בפפינגו. מי שרוצה את המסלול בתוך הקניון צריך יום שלם נפרד וכושר טוב.',
       },
       {
         day: 4,
         title: 'מעבר ההרים למטאורה',
-        placeIds: ['gr-metsovo'],
+        placeIds: ['gr-metsovo', 'gr-tzoumerka'],
         notes: 'עצירת צהריים במצובו על הדרך. הכביש E65 מהיר, הישן יפה יותר ואיטי בהרבה.',
       },
       {
         day: 5,
         title: 'מטאורה',
-        placeIds: ['gr-meteora'],
+        placeIds: ['gr-meteora', 'gr-kastraki'],
         notes: 'בדקו מראש איזה מנזר סגור באותו יום. שניים או שלושה מנזרים ליום זה מקסימום סביר, ושקיעה מהתצפית מעל קסטרקי.',
       },
       {
         day: 6,
         title: 'החוף היוני',
-        placeIds: ['gr-parga'],
+        placeIds: ['gr-parga', 'gr-acheron', 'gr-nekromanteion', 'gr-sivota'],
         notes: 'למי שרוצה לסיים בים. כשעה וחצי מיואנינה, ומשם אפשר להמשיך לנמל איגומניצה או חזרה לטיסה.',
       },
       {
@@ -52063,31 +52063,31 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'עמק הריין העליון',
-        placeIds: ['de-bacharach', 'de-lorelei'],
+        placeIds: ['de-bacharach', 'de-lorelei', 'de-rheinfels', 'de-rudesheim'],
         notes: 'נהיגה לאורך הגדה השמאלית עם מעבורות קטנות שחוצות. שקלו להחליף קטע נהיגה בשיט KD, יפה יותר מהמים.',
       },
       {
         day: 3,
         title: 'טירה שלא נהרסה',
-        placeIds: ['de-marksburg'],
+        placeIds: ['de-marksburg', 'deu-boppard', 'deu-koblenz-x'],
         notes: 'סיור מודרך בשעה קבועה, הזמינו או הגיעו מוקדם. אחר הצהריים קובלנץ ומפגש הנהרות.',
       },
       {
         day: 4,
         title: 'המוזל',
-        placeIds: ['de-burg-eltz', 'de-cochem'],
+        placeIds: ['de-burg-eltz', 'de-cochem', 'de-calmont', 'de-dr-loosen', 'deu-bernkastel'],
         notes: 'אלץ בפתיחה, לפני האוטובוסים, ואז קוכם לצהריים וללינה. שימו לב שאלץ סגורה בחורף.',
       },
       {
         day: 5,
         title: 'טרייר',
-        placeIds: ['de-porta-nigra'],
+        placeIds: ['de-porta-nigra', 'deu-saarschleife'],
         notes: 'שעה וחצי מקוכם לאורך המוזל. קנו כרטיס משולב לאתרים הרומיים; יום שלם בעיר.',
       },
       {
         day: 6,
         title: 'גשר גיירלאי ורידסהיים',
-        placeIds: ['de-geierlay', 'de-niederwald'],
+        placeIds: ['de-geierlay', 'de-niederwald', 'de-drosselgasse', 'de-eberbach', 'de-mainz'],
         notes:
           'בוקר בגשר התלוי גיירלאי (הליכה קצרה ממרסדורף, שבילים מעגליים), ואחר הצהריים לרידסהיים: רכבל מעל הכרמים לאנדרטת נידרוואלד, ושביל יער או רכבל שני לאסמנסהאוזן. רכב.',
       },
@@ -52438,7 +52438,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'נגאנו',
-        placeIds: ['jp-zenkoji'],
+        placeIds: ['jp-zenkoji', 'jpn-togakushi'],
         notes: 'שינקנסן מטוקיו, כשעה ורבע. זנקוג׳י אחר הצהריים, ואם קמים מוקדם - טקס הבוקר לפני הזריחה.',
       },
       {
@@ -52450,31 +52450,31 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'מאצומוטו',
-        placeIds: ['jp-matsumoto-castle'],
+        placeIds: ['jp-matsumoto-castle', 'jpn-kiso-valley-x'],
         notes: 'הטירה בפתיחה, לפני התור לצריח. אחר הצהריים רחוב נאקאמאצ׳י ואז אוטובוס להיראיו או לסאוונדו.',
       },
       {
         day: 4,
         title: 'קמיקוצ׳י',
-        placeIds: ['jp-kamikochi'],
+        placeIds: ['jp-kamikochi', 'jpn-shinhotaka', 'jpn-tateyama-kurobe'],
         notes: 'שאטל בלבד, אין כניסה ברכב פרטי. יום שלם במסלולי הנהר. ודאו שהעמק פתוח - סגור בחורף.',
       },
       {
         day: 5,
         title: 'טקיאמה',
-        placeIds: ['jp-takayama'],
+        placeIds: ['jp-takayama', 'jpn-miyagawa', 'jpn-hida-folk-village', 'jpn-hida-furukawa', 'jpn-shirakawa'],
         notes: 'שוק בוקר, ג׳ין-יה וסאנמאצ׳י סוג׳י. הרובע ההיסטורי הכי נעים לפני תשע ואחרי חמש.',
       },
       {
         day: 6,
         title: 'קנזאווה',
-        placeIds: ['jp-kenrokuen'],
+        placeIds: ['jp-kenrokuen', 'jp-kanazawa'],
         notes: 'אוטובוס בין-עירוני מטקיאמה, כשעתיים וחצי - הזמינו מקום מראש. קנרוקואן בכניסה המוקדמת החינמית.',
       },
       {
         day: 7,
         title: 'דרך נאקאסנדו',
-        placeIds: ['jp-tsumago'],
+        placeIds: ['jp-tsumago', 'jpn-magome', 'jp-gero'],
         notes: 'מסלול ההליכה מצומאגו למאגומה או להפך, כשלוש שעות. יש שירות להעברת התיקים בין הכפרים.',
       },
     ],
@@ -52859,7 +52859,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'העיר העתיקה של צ׳יאנג מאי',
-        placeIds: ['th-wat-chedi-luang', 'th-doi-suthep'],
+        placeIds: ['th-wat-chedi-luang', 'th-chiangmai-gate', 'th-warorot', 'th-khao-soi-khun-yai', 'th-doi-suthep'],
         notes:
           'בוקר בתוך החומות הרבועיות ברגל, אחר הצהריים עלייה לדוי סותפ לשקיעה. לוודא כתפיים מכוסות.',
       },
@@ -52873,7 +52873,7 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'צ׳יאנג ראי והמקדש הלבן',
-        placeIds: ['th-wat-rong-khun'],
+        placeIds: ['th-wat-rong-khun', 'th-doi-mae-salong', 'th-golden-triangle', 'th-phu-chi-fa'],
         notes:
           'שלוש שעות נסיעה צפונה. להגיע עם הפתיחה כדי לראות את המקדש לפני האוטובוסים.',
       },
@@ -52894,14 +52894,14 @@ export const destinations: Destination[] = [
       {
         day: 6,
         title: 'צפונה מצ׳יאנג מאי - המפל הדביק וצ׳יאנג דאו',
-        placeIds: ['th-bua-tong', 'th-chiang-dao'],
+        placeIds: ['th-bua-tong', 'th-mae-sa', 'th-chiang-dao-cave', 'th-chiang-dao', 'th-doi-ang-khang'],
         notes:
           'שעה צפונה למפל בואה טונג, טיפוס יחף על אבן הגיר, ואז המשך לצ׳יאנג דאו: המערה והמקדש למרגלות ההר. חזרה לצ׳יאנג מאי בערב, או לינה בצ׳יאנג דאו למי שמתכנן את הטרק לפסגה.',
       },
       {
         day: 7,
         title: 'פאי - הקניון ומערת תאם לוד',
-        placeIds: ['th-pai-canyon', 'th-tham-lod'],
+        placeIds: ['th-pai-canyon', 'th-tham-lod', 'th-mae-hong-son'],
         notes:
           'מפאי: בוקר במערת תאם לוד ברפסודת במבוק (כשעה נסיעה), ובערב קניון פאי לשקיעה. אם נשאר זמן - חזרה למערה לשעת הסנוניות. שני הימים בצפון דורשים רכב או נהג; הכביש לפאי מפותל מאוד.',
       },
@@ -53245,21 +53245,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'הבאסטיי מהזריחה',
-        placeIds: ['sax-rathen', 'sax-bastei', 'sax-pirna'],
+        placeIds: ['sax-rathen', 'sax-bastei', 'sax-pirna', 'de-pfunds-molkerei', 'de-neustadter-markthalle'],
         notes:
           'לצאת מדרזדן בחושך ולהגיע לחניון הבאסטיי לפני 8:00, אחרת הן החניה והן הגשר יהיו עמוסים. אחר הצהריים לרדת לראטן ולסיים בפירנה.',
       },
       {
         day: 2,
         title: 'המצודה וההר הבודד',
-        placeIds: ['sax-konigstein', 'sax-lilienstein'],
+        placeIds: ['sax-konigstein', 'sax-lilienstein', 'sax-hohnstein', 'deu-stolpen', 'deu-affensteine'],
         notes:
           'בוקר במצודה, שלוש שעות לפחות, ואחר הצהריים עלייה לליליינשטיין ממש מולה. שתי הנקודות מביטות זו בזו.',
       },
       {
         day: 3,
         title: 'המסלול הגדול מעל באד שנדאו',
-        placeIds: ['sax-bad-schandau', 'sax-schrammsteine'],
+        placeIds: ['sax-bad-schandau', 'sax-kirnitzschtal', 'sax-schrammsteine', 'sax-kuhstall', 'sax-papststein'],
         notes:
           'יום הליכה מלא. נעליים עם אחיזה טובה, מים, ובדיקת סטטוס השבילים באתר הפארק בבוקר עצמו. לא לצאת אם ירד גשם.',
       },
@@ -53607,28 +53607,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'האגמים הצפוניים',
-        placeIds: ['at-gmunden', 'at-traunsee', 'at-attersee'],
+        placeIds: ['at-gmunden', 'at-traunsee', 'at-attersee', 'at-zwoelferhorn', 'aut-fuschl-x'],
         notes:
           'להתחיל דווקא בצפון השקט. גמונדן בבוקר, שיט קצר בטראונזה, ולסיים בשחייה או שקיעה באטרזה.',
       },
       {
         day: 2,
         title: 'האלשטאט מוקדם והדכשטיין',
-        placeIds: ['at-hallstatt', 'at-dachstein'],
+        placeIds: ['at-hallstatt', 'at-hallstaetter-see', 'at-dachstein', 'aut-wolfgang-x'],
         notes:
           'להיות בהאלשטאט לפני 8:00. אחרי שהאוטובוסים מגיעים, לעלות ברכבל לדכשטיין ולהשאיר את הכפר מאחור.',
       },
       {
         day: 3,
         title: 'הקיסר והתצפית',
-        placeIds: ['at-bad-ischl', 'at-st-wolfgang'],
+        placeIds: ['at-bad-ischl', 'aut-zauner', 'at-st-wolfgang', 'at-schafberg', 'at-mondsee'],
         notes:
           'בוקר בווילה הקיסרית בבאד אישל, אחר הצהריים רכבת השיניים לשאפברג. לבדוק שעות ורכישת כרטיס מראש בעונה.',
       },
       {
         day: 4,
         title: 'קריפנשטיין - מערת הקרח ותצפית הדכשטיין',
-        placeIds: ['at-dachstein-ice-cave'],
+        placeIds: ['at-dachstein-ice-cave', 'at-5fingers', 'aut-gosau-x', 'aut-altaussee'],
         notes:
           'רכבל הדכשטיין מאוברטראון: מערת הקרח בתחנת הביניים, ואז למעלה לקריפנשטיין ומרפסת חמש האצבעות מעל אגם הלשטאט. חצי יום, ומשם ספינה או שביל חוף להלשטאט.',
       },
@@ -53981,28 +53981,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'ספליט בתוך הארמון',
-        placeIds: ['hr-diocletian', 'hr-salona'],
+        placeIds: ['hr-diocletian', 'hrv-villa-spiza', 'hr-marjan', 'hr-salona', 'hr-trogir'],
         notes:
           'בוקר מוקדם במרתפי הארמון ובפריסטיל לפני ההמונים, אחר הצהריים נסיעה קצרה לסלונה עם כובע ומים.',
       },
       {
         day: 2,
         title: 'המפלים',
-        placeIds: ['hr-krka'],
+        placeIds: ['hr-krka', 'hr-sibenik', 'hr-klis', 'hr-vis', 'hr-bisevo'],
         notes:
           'יום בקרקה. להזמין כרטיס מראש לשעה מוקדמת, ולזכור שאין שחייה מתחת למפל.',
       },
       {
         day: 3,
         title: 'האיים הקרחים',
-        placeIds: ['hr-kornati'],
+        placeIds: ['hr-kornati', 'hr-primosten', 'hr-cetina'],
         notes:
           'הפלגת יום מאורגנת. לבדוק תחזית רוח בערב הקודם, בבורה ההפלגות מתבטלות.',
       },
       {
         day: 4,
         title: 'הוואר וקורצ׳ולה',
-        placeIds: ['hr-hvar', 'hr-korcula'],
+        placeIds: ['hr-hvar', 'hr-zlatni-rat', 'hrv-konoba-menego', 'hr-omis', 'hr-korcula'],
         notes:
           'מעבורת מספליט. להזמין מראש, במיוחד עם רכב, ולתכנן לפחות לילה אחד על אי במקום קפיצה ביום.',
       },
@@ -54361,21 +54361,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'הסלע והמערות',
-        placeIds: ['lk-sigiriya', 'lk-dambulla'],
+        placeIds: ['lk-sigiriya', 'lka-pidurangala', 'lk-dambulla', 'lka-aukana', 'lka-ritigala'],
         notes:
           'להיות בשער סיגיריה ב-7:00, לרדת עד 10:00, ואז דמבולה. גרביים למקדש, כובע ושני ליטר מים לאדם.',
       },
       {
         day: 2,
         title: 'הבירה השנייה',
-        placeIds: ['lk-polonnaruwa', 'lk-minneriya'],
+        placeIds: ['lk-polonnaruwa', 'lk-minneriya', 'lka-kaudulla', 'lka-hurulu'],
         notes:
           'בוקר באופניים בפולונרואה, ואחר הצהריים ספארי במינריה. לוודא מראש עם המדריך היכן הפילים נמצאים באותה תקופה.',
       },
       {
         day: 3,
         title: 'הבירה הראשונה',
-        placeIds: ['lk-anuradhapura'],
+        placeIds: ['lk-anuradhapura', 'lka-ritigala-x', 'lka-mihintale'],
         notes:
           'יום שלם עם נהג, האתר פרוס על קילומטרים. לבוש צנוע ליד הסטופות ולידה עץ הבודהי.',
       },
@@ -54738,35 +54738,35 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'עולים להרי התה',
-        placeIds: ['lk-nuwara-eliya'],
+        placeIds: ['lk-nuwara-eliya', 'lka-labookellie'],
         notes:
           'להזמין מקום ברכבת שבועות מראש. לרדת בנאנו אויה ולעלות לנוארה אליה, ולהתלבש בשכבות.',
       },
       {
         day: 2,
         title: 'קצה העולם',
-        placeIds: ['lk-horton-plains'],
+        placeIds: ['lk-horton-plains', 'lk-haputale', 'lka-adams-peak'],
         notes:
           'יציאה ב-5:30 מהמלון. מי שיוצא מאוחר יראה ערפל בלבד. נעליים סגורות, המסלול בוצי.',
       },
       {
         day: 3,
         title: 'אלה',
-        placeIds: ['lk-ella'],
+        placeIds: ['lk-ella', 'lka-nine-arch', 'lka-little-adams-x', 'lka-ravana-falls', 'lka-lipton-seat'],
         notes:
           'עלייה לאלה רוק לזריחה, ואחר הצהריים לגשר תשע הקשתות. לא לעמוד על הפסים.',
       },
       {
         day: 4,
         title: 'הפילים',
-        placeIds: ['lk-udawalawe', 'lk-yala'],
+        placeIds: ['lk-udawalawe', 'lka-sinharaja', 'lka-bundala', 'lk-yala'],
         notes:
           'ספארי בוקר באודוואלווה, ואם רוצים ברדלס אז לילה נוסף ליד יאלה עם יציאה ב-5:30.',
       },
       {
         day: 5,
         title: 'החוף הדרומי',
-        placeIds: ['lk-galle', 'lk-mirissa'],
+        placeIds: ['lk-galle', 'lk-unawatuna', 'lk-weligama', 'lk-mirissa'],
         notes:
           'הפלגת לווייתנים מוקדמת ממיריסה אם זו העונה, ואחר הצהריים והשקיעה בתוך חומות גאלה.',
       },
@@ -55161,28 +55161,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'המעגל הקטן',
-        placeIds: ['kh-bayon', 'kh-ta-prohm'],
+        placeIds: ['kh-bayon', 'khm-phnom-bakheng', 'kh-ta-prohm', 'khm-preah-khan', 'khm-banteay-samre'],
         notes:
           'לצאת ב-5:30 עם טוק-טוק סגור מראש ליום. להתחיל בבאיון בזמן שכולם באנגקור ואט. לסיים עד 11:30 ולנוח בצהריים.',
       },
       {
         day: 2,
         title: 'המקדשים הרחוקים',
-        placeIds: ['kh-banteay-srei', 'kh-beng-mealea'],
+        placeIds: ['kh-banteay-srei', 'khm-ta-som', 'kh-angkor-wat', 'khm-roluos', 'kh-beng-mealea'],
         notes:
           'יום נסיעות. לוודא שהכרטיס תקף לימים אלה, ולבנג מיאליאה יש תשלום נפרד. נעליים סגורות.',
       },
       {
         day: 3,
         title: 'האגם והעיר',
-        placeIds: ['kh-tonle-sap', 'kh-siem-reap'],
+        placeIds: ['kh-tonle-sap', 'khm-kampong-phluk', 'khm-psar-chaa', 'khm-pub-street', 'kh-siem-reap'],
         notes:
           'שיט בבוקר, ואחר הצהריים המוזיאון הלאומי והשוק הישן. לבדוק היטב את המפעיל לפני שמזמינים שיט.',
       },
       {
         day: 4,
         title: 'קבאל ספיאן ובנטיי סריי',
-        placeIds: ['kh-banteay-srei', 'khm-kbal-spean'],
+        placeIds: ['kh-banteay-srei', 'khm-kbal-spean', 'khm-kulen', 'kh-neak-pean', 'kh-baphuon'],
         notes:
           'צפונה מסיאם ריפ: הליכה של כשעה ביער לנחל המגולף בקבאל ספיאן (לפני החום), ואחר הצהריים המקדש הוורוד בנטיי סריי - השילוב הקלאסי, כי שניהם באותו כיוון. טוק-טוק או רכב.',
       },
@@ -55525,7 +55525,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'יום הזיכרון',
-        placeIds: ['kh-tuol-sleng', 'kh-choeung-ek', 'kh-wat-phnom'],
+        placeIds: ['kh-tuol-sleng', 'khm-central-market', 'kh-wat-phnom', 'kh-choeung-ek', 'khm-starling-pepper'],
         notes:
           'לצאת מוקדם, שני האתרים בבוקר ובסדר הזה, עם האודיו-גייד. אחר הצהריים משהו קל, ואט פנום או טיילת הנהר.',
       },
@@ -55539,7 +55539,7 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'האיים',
-        placeIds: ['kh-koh-rong'],
+        placeIds: ['kh-koh-rong', 'khm-koh-rong-sanloem', 'khm-bokor', 'khm-kampot', 'khm-kep-np'],
         notes:
           'נסיעה לסיהאנוקוויל והפלגה. לבדוק תחזית ים, ולתכנן לפחות שני לילות באי - קפיצת יום לא שווה את הדרך.',
       },
@@ -55868,7 +55868,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'לואנג פראבנג ברגל',
-        placeIds: ['la-wat-xieng-thong'],
+        placeIds: ['la-wat-xieng-thong', 'lao-mount-phousi', 'lao-phosy', 'lao-living-land', 'lao-tad-sae'],
         notes: 'העיר קטנה ומתהלכת ברגל. מקדשים בבוקר, שוק הלילה אחרי החשכה. אם רוצים לראות את טקס נדבת הנזירים בשחר, צופים מהמדרכה הנגדית, בשקט, בלי פלאש ובלי להתקרב.',
       },
       {
@@ -55880,25 +55880,25 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'הפלגה למערות פאק או',
-        placeIds: ['la-pak-ou'],
+        placeIds: ['la-pak-ou', 'lao-pak-ou-x'],
         notes: 'יום שלם על הנהר. פנס חובה למערה העליונה, וכובע וקרם הגנה לסירה שאין בה צל.',
       },
       {
         day: 4,
         title: 'צפונה לנונג קיאו',
-        placeIds: ['la-nong-khiaw'],
+        placeIds: ['la-nong-khiaw', 'lao-tad-sae-x'],
         notes: 'כשלוש עד ארבע שעות נסיעה מפותלת. מי שסובל ממחלת נסיעה יקח תרופה מראש. לנים בכפר ועולים לתצפית עם אור ראשון למחרת.',
       },
       {
         day: 5,
         title: 'ואנג ויאנג',
-        placeIds: ['la-vang-vieng'],
+        placeIds: ['la-vang-vieng', 'lao-vang-vieng-x', 'lao-plain-of-jars'],
         notes: 'יום נסיעה ארוך דרומה, או ברכבת המהירה מלואנג פראבנג אם הצלחתם להשיג כרטיס מראש. לינה מחוץ למרכז אם מחפשים שקט.',
       },
       {
         day: 6,
         title: 'וויינטיאן',
-        placeIds: ['la-pha-that-luang', 'la-buddha-park'],
+        placeIds: ['la-pha-that-luang', 'lao-wat-phou-x', 'la-buddha-park'],
         notes: 'הבירה שקטה ולא דורשת יותר מיום. הסטופה בבוקר, פארק הבודהות אחר הצהריים, כשעה נסיעה מהמרכז.',
       },
     ],
@@ -56215,31 +56215,31 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'חציית האטלס',
-        placeIds: ['ma-tichka', 'ma-ait-benhaddou'],
+        placeIds: ['ma-tichka', 'mar-telouet', 'ma-ait-benhaddou', 'mar-toubkal', 'mar-imlil'],
         notes: 'יוצאים מוקדם מהצפון. המעבר לוקח כשלוש שעות עם עצירות, ומגיעים לאייט בן חדו אחר הצהריים כשהאוטובוסים כבר עזבו. לנים באזור או בוורזאזאת.',
       },
       {
         day: 2,
         title: 'ורזאזאת ונאת סקורה',
-        placeIds: ['ma-ouarzazate', 'ma-skoura'],
+        placeIds: ['ma-ouarzazate', 'ma-amridil', 'ma-skoura', 'mar-ait-bougmez'],
         notes: 'יום קצר יחסית. בוקר בעיר ואחר הצהריים בנאת הדקלים, שנעימה בשעות אור נמוך. לינה בקסבה משוחזרת בסקורה היא מהחוויות הטובות במסלול.',
       },
       {
         day: 3,
         title: 'עמק הדאדס',
-        placeIds: ['ma-dades'],
+        placeIds: ['ma-dades', 'mar-ouzoud-x'],
         notes: 'עולים בעמק עד הסרפנטינות ונעצרים בתצפית. הכביש צר, נוסעים לאט. הערב קר גם באביב, כדאי שכבה חמה.',
       },
       {
         day: 4,
         title: 'קניון טודרה ומזרחה למדבר',
-        placeIds: ['ma-todgha'],
+        placeIds: ['ma-todgha', 'mar-tinghir'],
         notes: 'בוקר בקניון, אחר הצהריים נסיעה של כשלוש שעות מזרחה לכיוון מרזוגה. אומרים לא בנימוס אך בבירור למי שמציע הדרכה לא מתואמת.',
       },
       {
         day: 5,
         title: 'לילה בדיונות',
-        placeIds: ['ma-erg-chebbi'],
+        placeIds: ['ma-erg-chebbi', 'ma-merzouga', 'mar-merzouga-x', 'mar-rissani-souk'],
         notes: 'יוצאים לדיונות אחר הצהריים, לינה במחנה וזריחה למחרת. שקית אטומה לטלפון ולמצלמה בגלל החול, ופנס. מי שהגב שלו רגיש יעדיף להגיע ברכב שטח ולא על גמל.',
       },
     ],
@@ -56558,25 +56558,25 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'מזרחה מהבירה אל האגם',
-        placeIds: ['kg-burana', 'kg-cholpon-ata'],
+        placeIds: ['kg-burana', 'kgz-tash-rabat-x', 'kg-cholpon-ata'],
         notes: 'יוצאים מבישקק בבוקר, עוצרים במגדל בורנה ומגיעים לחוף הצפוני לקראת הערב. כשלוש עד ארבע שעות נסיעה בסך הכל.',
       },
       {
         day: 2,
         title: 'איסיק קול',
-        placeIds: ['kg-issyk-kul'],
+        placeIds: ['kg-issyk-kul', 'kgz-skazka', 'kgz-fairy-tale-x'],
         notes: 'יום סביב האגם. אם מחפשים שקט נוסעים לחוף הדרומי, שבו כמעט אין תשתית אך גם כמעט אין אנשים. אין הרבה צל, כובע וקרם חובה.',
       },
       {
         day: 3,
         title: 'קאראקול והעמקים',
-        placeIds: ['kg-karakol'],
+        placeIds: ['kg-karakol', 'kgz-karakol-animal', 'kgz-altyn-arashan', 'kgz-ala-kul', 'kgz-jeti-oguz'],
         notes: 'יום עיר והליכה. אם מגיעים ביום ראשון, שוק בעלי החיים בבוקר מוקדם הוא החוויה החזקה באזור. נעלי הליכה חובה, השבילים בוציים.',
       },
       {
         day: 4,
         title: 'דרומה דרך נארין',
-        placeIds: ['kg-naryn'],
+        placeIds: ['kg-naryn', 'kgz-song-kol', 'kgz-kel-suu'],
         notes: 'יום נסיעה ארוך בדרכים הרריות. מצטיידים כאן במזון, במים ובדלק, כי מדרום לנקודה הזו אין הרבה.',
       },
       {
@@ -57086,35 +57086,35 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'המרכז ההיסטורי',
-        placeIds: ['ba-plaza-mayo', 'ba-casa-rosada', 'ba-obelisco', 'ba-teatro-colon'],
+        placeIds: ['ba-plaza-mayo', 'ba-casa-rosada', 'ba-obelisco', 'ba-teatro-colon', 'ba-super-modelo'],
         notes:
           'הסיורים בקאסה רוסאדה הם בסופי שבוע ובהרשמה מראש. לתיאטרון קולון יש סיורים יומיים.',
       },
       {
         day: 2,
         title: 'רקולטה ופלרמו',
-        placeIds: ['ba-recoleta', 'ba-bellas-artes', 'ba-malba', 'ba-rosedal'],
+        placeIds: ['ba-recoleta', 'ba-bellas-artes', 'ba-malba', 'ba-rosedal', 'ba-malena'],
         notes:
           'בית העלמין והמוזיאונים במרחק הליכה זה מזה, ומשם אוטובוס לפארק.',
       },
       {
         day: 3,
         title: 'לה בוקה וסן טלמו',
-        placeIds: ['ba-la-boca', 'ba-caminito', 'ba-san-telmo'],
+        placeIds: ['ba-la-boca', 'ba-caminito', 'ba-san-telmo', 'ba-san-telmo-market', 'ba-tortoni'],
         notes:
           'לה בוקה ביום בלבד ובאזור התיירותי. שוק סן טלמו הגדול הוא בימי ראשון.',
       },
       {
         day: 4,
         title: 'הרובע היהודי, ספרים ופוארטו מאדרו',
-        placeIds: ['ba-templo-libertad', 'ba-ateneo', 'ba-puerto-madero'],
+        placeIds: ['ba-templo-libertad', 'ba-ateneo', 'ba-lo-de-victor', 'ba-torre-monumental', 'ba-puerto-madero'],
         notes:
           'טמפלו ליברטד והמוזיאון היהודי דורשים תיאום ומסמך מזהה בכניסה.',
       },
       {
         day: 5,
         title: 'טיגרה ודלתת הפאראנה',
-        placeIds: ['ba-tigre'],
+        placeIds: ['ba-tigre', 'arg-palermo-soho'],
         notes:
           'רכבת מתחנת רטירו כשעה, או הרכבת התיירותית Tren de la Costa. יום שלם.',
       },
@@ -57448,7 +57448,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'נחיתה באל קלפטה',
-        placeIds: ['ar-el-calafate'],
+        placeIds: ['ar-el-calafate', 'arg-estancia-cristina'],
         notes: 'טסים פנימית מבואנוס איירס, כשלוש שעות. יום התאקלמות והצטיידות. קונים מראש כרטיסי אוטובוס לימים הבאים, הם נחטפים בעונה.',
       },
       {
@@ -57460,7 +57460,7 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'צפונה לאל צ׳לטן',
-        placeIds: ['ar-el-chalten'],
+        placeIds: ['ar-el-chalten', 'arg-laguna-de-los-tres-x', 'ar-laguna-torre', 'arg-lago-del-desierto'],
         notes: 'כשלוש שעות אוטובוס. מגיעים בצהריים ועושים מסלול קצר להתחלה, למשל תצפית קונדורים, כדי לשמור את היום המלא למחר.',
       },
       {
@@ -57472,13 +57472,13 @@ export const destinations: Destination[] = [
       {
         day: 5,
         title: 'טיסה לאושואיה',
-        placeIds: ['ar-ushuaia'],
+        placeIds: ['ar-ushuaia', 'ar-viejo-marino', 'arg-laguna-esmeralda', 'ar-beagle-channel', 'arg-harberton'],
         notes: 'חוזרים לאל קלפטה וטסים דרומה. אחר הצהריים בעיר ובנמל. מזמינים מראש הפלגה בתעלה, היא מתמלאת.',
       },
       {
         day: 6,
         title: 'קצה היבשת',
-        placeIds: ['ar-tierra-del-fuego'],
+        placeIds: ['ar-tierra-del-fuego', 'ar-tren-fin-del-mundo', 'arg-martial'],
         notes: 'בוקר בפארק במסלול החוף, אחר הצהריים חופשי. נעליים אטומות למים, השביל בוצי גם ביום יבש.',
       },
     ],
@@ -57841,19 +57841,19 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'צפונה אל ארנל',
-        placeIds: ['cr-la-fortuna'],
+        placeIds: ['cr-la-fortuna', 'cr-braulio', 'cr-san-jose'],
         notes: 'כשלוש שעות נסיעה משדה התעופה בסן חוסה. מגיעים אחר הצהריים ומסיימים במעיינות החמים, שנעימים במיוחד אחרי גשם.',
       },
       {
         day: 2,
         title: 'הר הגעש והמפל',
-        placeIds: ['cr-arenal', 'cr-la-fortuna'],
+        placeIds: ['cr-arenal', 'cr-la-fortuna', 'cri-rio-celeste', 'cr-rincon-vieja'],
         notes: 'יוצאים מוקדם, לפני שהעננים סוגרים את הפסגה. המפל דורש ירידה של מאות מדרגות וחזרה בעלייה, לא מתאים לכל אחד.',
       },
       {
         day: 3,
         title: 'מעבר למונטה ורדה',
-        placeIds: ['cr-monteverde'],
+        placeIds: ['cr-monteverde', 'cri-montezuma'],
         notes: 'המעבר הנוח הוא שילוב של סירה על האגם והמשך ברכב, כשלוש שעות בסך הכל. לוקחים שכבה חמה ומעיל גשם, כאן קר.',
       },
       {
@@ -57865,13 +57865,13 @@ export const destinations: Destination[] = [
       {
         day: 5,
         title: 'דרומה אל החוף',
-        placeIds: ['cr-manuel-antonio'],
+        placeIds: ['cr-manuel-antonio', 'cri-mercado-central', 'cri-la-paz', 'cri-poas', 'cri-cerro-chirripo'],
         notes: 'יום נסיעה ארוך, ארבע עד חמש שעות. קונים כרטיסים לפארק מראש, יש מכסה יומית.',
       },
       {
         day: 6,
         title: 'הרחבה: טורטוגרו או קורקובדו',
-        placeIds: ['cr-tortuguero', 'cr-corcovado'],
+        placeIds: ['cr-tortuguero', 'cri-sarapiqui', 'cri-irazu', 'cri-osa-x', 'cr-corcovado'],
         notes: 'שתי הרחבות שדורשות יומיים כל אחת ולא משתלבות באותו טיול קצר. טורטוגרו נגיש יותר, קורקובדו פראי יותר ודורש מדריך והזמנה מראש.',
       },
     ],
@@ -58255,13 +58255,13 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'הבירה והמעיינות החמים',
-        placeIds: ['tw-beitou'],
+        placeIds: ['tw-beitou', 'twn-shilin', 'twn-raohe', 'twn-yangmingshan', 'twn-gloria-outlets'],
         notes: 'יום התאקלמות אחרי הטיסה. רכבת תחתית צפונה, אחר הצהריים בבית מרחץ וערב בשוק לילה. קונים כרטיס תחבורה נטען כבר בשדה.',
       },
       {
         day: 2,
         title: 'ג׳ופן והחוף הצפוני',
-        placeIds: ['tw-jiufen'],
+        placeIds: ['tw-jiufen', 'twn-shifen', 'twn-pingxi', 'twn-elephant-mountain', 'tw-taipei-101'],
         notes: 'יוצאים באמצע השבוע אם אפשר. מגיעים אחר הצהריים ונשארים עד שהפנסים נדלקים, זה הרגע של המקום.',
       },
       {
@@ -58273,13 +58273,13 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'קניון טארוקו',
-        placeIds: ['tw-taroko'],
+        placeIds: ['tw-taroko', 'twn-qingjing', 'tw-ckss'],
         notes: 'יום שלם בקניון. בודקים באתר הפארק אילו שבילים פתוחים לפני שיוצאים, וזה קריטי כאן. לוקחים קסדה בכניסה ולא נעצרים מתחת למדרונות סלע.',
       },
       {
         day: 5,
         title: 'למרכז ההררי',
-        placeIds: ['tw-sun-moon-lake'],
+        placeIds: ['tw-sun-moon-lake', 'twn-alishan', 'twn-lukang', 'twn-tainan', 'tw-kaohsiung'],
         notes: 'המעבר מהמזרח למרכז ארוך ועובר דרך הצפון. יום נסיעה בעיקר, עם ערב שקט על האגם.',
       },
       {
@@ -58608,25 +58608,25 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'נחיתה בקלמה והסתגלות רכה בסן פדרו',
-        placeIds: ['cl-calama', 'cl-san-pedro'],
+        placeIds: ['cl-calama', 'cl-pukara-quitor', 'cl-san-pedro', 'cl-tulor', 'cl-cejar'],
         notes: 'יום ראשון נועד להסתגלות לגובה ולא לפעילות. מצטיידים בקלמה במזומן ובמים, מגיעים לסן פדרו, ומקדישים את שארית היום להליכה איטית בכפר ולשתייה מרובה. אין להתחיל בסיור הגייזרים ביום הראשון.',
       },
       {
         day: 2,
         title: 'עמק הירח ושקיעה במדבר',
-        placeIds: ['cl-valle-luna', 'cl-licancabur'],
+        placeIds: ['cl-valle-luna', 'cl-vallecito', 'cl-puritama', 'cl-licancabur', 'cl-rainbow-valley'],
         notes: 'הגעה מוקדמת לעמק הירח מאפשרת הליכה שקטה בין תצורות הסלע לפני החום ולפני האוטובוסים. אחר הצהריים תצפית פתוחה לכיוון ליקנקבור. חובה כובע, משקפי שמש וקרם הגנה גבוה: הקרינה כאן חזקה במיוחד.',
       },
       {
         day: 3,
         title: 'מישור המלח והפלמינגו',
-        placeIds: ['cl-salar-atacama'],
+        placeIds: ['cl-salar-atacama', 'cl-laguna-chaxa', 'cl-lagunas-altiplanicas'],
         notes: 'יציאה בבוקר למישור המלח ולגונות הפלמינגו. הגובה כאן נמוך יחסית, וזה יום טוב להמשך ההסתגלות לפני היום הגבוה באמת. הרוח במישור עזה גם כשבכפר רגוע.',
       },
       {
         day: 4,
         title: 'אל טאטיו לפני הזריחה',
-        placeIds: ['cl-el-tatio', 'cl-san-pedro'],
+        placeIds: ['cl-el-tatio', 'cl-machuca', 'cl-san-pedro'],
         notes: 'יציאה בסביבות ארבע לפנות בוקר לגובה של מעל 4,200 מטר. שכבות רבות, כפפות וכובע חובה, כי הטמפרטורה בהגעה נעה סביב מינוס עשר. חוזרים לסן פדרו בסביבות הצהריים, וכדאי להשאיר את שארית היום פנוי למנוחה.',
       },
     ],
@@ -58961,19 +58961,19 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'נחיתה בפונטה ארנאס ומיצר מגלן',
-        placeIds: ['cl-punta-arenas'],
+        placeIds: ['cl-punta-arenas', 'cl-mercado-punta-arenas', 'cl-fuerte-bulnes'],
         notes: 'יום ההגעה מוקדש לעיר עצמה: הכיכר המרכזית, האחוזות ההיסטוריות והטיילת מול המיצר. זה גם היום להצטייד במה שחסר, כי כאן ההיצע הגדול ביותר בכל האזור. אם מתכננים את ההפלגה לאי הפינגווינים, כדאי להזמין אותה מיד עם ההגעה כי היא מבוטלת לעיתים קרובות בגלל ים גבוה ועדיף להשאיר חלופה.',
       },
       {
         day: 2,
         title: 'הפינגווינים באי מגדלנה ומעבר לפוארטו נטאלס',
-        placeIds: ['cl-isla-magdalena', 'cl-puerto-natales'],
+        placeIds: ['cl-isla-magdalena', 'cl-puerto-natales', 'cl-asador-patagonico', 'cl-cerro-dorotea', 'cl-cueva-milodon'],
         notes: 'ההפלגה יוצאת בבוקר ואורכת כחמש שעות הלוך ושוב. אחריה נוסעים כשלוש שעות צפונה לפוארטו נטאלס. בערב מסדרים את הציוד לפארק, שוכרים מה שחסר בחנויות הציוד ומצטיידים במזון בסופרמרקט, כי בתוך הפארק אין כמעט מה לקנות.',
       },
       {
         day: 3,
         title: 'כניסה לפארק, אגם פאהואה ואגם נורדנשלד',
-        placeIds: ['cl-lago-pehoe', 'cl-lago-nordenskjold'],
+        placeIds: ['cl-lago-pehoe', 'cl-salto-grande', 'cl-lago-nordenskjold', 'cl-mirador-base-torres', 'cl-grey-x'],
         notes: 'הכניסה לפארק דורשת רישום מקוון מראש ותשלום, ורצוי להסדיר זאת לפני היציאה. היום הראשון בפארק הוא יום נסיעה בין תצפיות: אגם פאהואה מול המסיב, ואז לאורך אגם נורדנשלד לרגלי הקרנות. הרוח בנקודות התצפית עזה מאוד, וכדאי לאחוז היטב בכל דבר שעלול לעוף.',
       },
       {
@@ -58985,7 +58985,7 @@ export const destinations: Destination[] = [
       {
         day: 5,
         title: 'מסיב פאינה מהצד המזרחי השקט',
-        placeIds: ['cl-cordillera-paine', 'cl-lago-sarmiento'],
+        placeIds: ['cl-cordillera-paine', 'cl-mirador-condor', 'cl-lago-sarmiento', 'cl-laguna-amarga'],
         notes: 'מי שמסוגל לכך יוצא לפני הזריחה למסלול הארוך אל תצפית בסיס המגדלים, כשמונה עד עשר שעות הלוך ושוב. מי שמעדיף יום קל נוסע לאזור אגם סרמיינטו בשוליים המזרחיים, שקט בהרבה, עם סיכוי טוב לראות גואנקו ולעיתים גם פומה בשעות הבוקר המוקדמות.',
       },
     ],
@@ -59326,7 +59326,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'לב המדינה: הכיכר, קוטוביה והשווקים',
-        placeIds: ['ma-jemaa-el-fnaa', 'ma-koutoubia'],
+        placeIds: ['ma-jemaa-el-fnaa', 'mar-souks', 'mar-rahba-kedima', 'ma-koutoubia', 'mar-menara'],
         notes: 'יום ראשון להתמצאות. מתחילים בגני קוטוביה שקטים בבוקר, ומשם נכנסים למדינה. שווה ללמוד את הצריח כנקודת ניווט, כי הוא נראה כמעט מכל מקום. חוזרים לכיכר אחרי החשכה, כשהיא נראית לגמרי אחרת. אם מישהו מודיע לכם שהדרך חסומה או שהשוק סוגר, זו כמעט תמיד פתיחה לגבייה, וסירוב קצר ובלי שיחה עובד.',
       },
       {
@@ -59350,7 +59350,7 @@ export const destinations: Destination[] = [
       {
         day: 5,
         title: 'האטלס - עמק אוריקה',
-        placeIds: ['mar-ourika', 'mar-oukaimeden'],
+        placeIds: ['mar-ourika', 'mar-agafay', 'mar-oukaimeden', 'mar-tin-mal'],
         notes:
           'כשעה לעמק אוריקה: סטי פאטמה, שביל לשבעת המפלים (כשעה, עם מדריך מקומי אם רוצים), וצהריים בשולחן בתוך הנחל. בחורף ובאביב אפשר להמשיך לאוקאימדן לשלג. רכב או טיול מאורגן.',
       },
@@ -59721,7 +59721,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'נחיתה בעמק והתאקלמות במקלוד גנג׳',
-        placeIds: ['in-mcleod-ganj'],
+        placeIds: ['in-mcleod-ganj', 'ind-tibet-kitchen', 'ind-triund', 'ind-dharamshala'],
         notes: 'רוב המטיילים מגיעים באוטובוס לילה מדלהי, נסיעה של שתים עשרה שעות ומעלה, ולכן היום הראשון הוא יום איטי. מקלוד גנג׳ נמצאת בגובה בינוני ומתאימה להתחלה. מסתובבים במתחם המקדש, מתרגלים לגובה ולקצב, ולא מתכננים שום מסלול ארוך.',
       },
       {
@@ -59733,25 +59733,25 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'מעבר לעמק קולו',
-        placeIds: ['in-kullu', 'in-manali'],
+        placeIds: ['in-kullu', 'ind-naggar', 'in-manali'],
         notes: 'יום נסיעה ארוך בין העמקים, שמונה עד עשר שעות בכביש הררי מפותל. עוצרים בקולו לשוק ולצעיפי הצמר, ומגיעים למנאלי לקראת הערב. זה היום להסדיר ציוד, כביסה ומזומן, כי צפונה מכאן ההיצע קטן בהרבה.',
       },
       {
         day: 4,
         title: 'מעבר רוהטנג',
-        placeIds: ['in-rohtang', 'in-manali'],
+        placeIds: ['in-rohtang', 'in-manali', 'ind-chandratal'],
         notes: 'עולים למעבר בגובה של מעל 3,900 מטר. ההיתר היומי מוגבל במספר הרכבים ונרשמים אליו מראש, והמעבר פתוח רק בעונה. יוצאים מוקדם, לוקחים שכבות חמות גם באמצע הקיץ, ולא עולים לכאן ביום הראשון בהרים בגלל הגובה.',
       },
       {
         day: 5,
         title: 'עמק פרוואטי',
-        placeIds: ['in-kasol'],
+        placeIds: ['in-kasol', 'ind-tosh', 'ind-parvati-kheerganga'],
         notes: 'נסיעה של כשלוש שעות דרומה אל עמק פרוואטי, והליכה קלה לאורך הנהר או במעלה העמק. אם יוצאים למסלול הררי, יוצאים בקבוצה או עם מדריך מקומי, מודיעים לאכסניה לאן הולכים ומתי חוזרים, ולא נסמכים על קליטה סלולרית. חשוב להכיר את המוניטין של האזור בכל הקשור לסמים ואת האכיפה המשטרתית הנוקשה כלפי זרים.',
       },
       {
         day: 6,
         title: 'עמק טירתן והפארק הלאומי',
-        placeIds: ['in-ghnp'],
+        placeIds: ['in-ghnp', 'ind-jibhi', 'ind-kaza', 'ind-spiti', 'ind-key-monastery'],
         notes: 'יום בטבע האמיתי של האזור, בכפרים שבשולי הפארק. הכניסה לפארק עצמו בהיתר, ולטרק ארוך צריך מדריך מקומי. גם הליכת יום מהכפרים נותנת תחושה טובה של המקום, והוא שקט בהרבה מכל שאר התחנות במסלול הזה.',
       },
     ],
@@ -60103,13 +60103,13 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'כריסטו, פארק לאז׳ה והגן הבוטני',
-        placeIds: ['br-cristo-redentor', 'br-parque-lage', 'br-jardim-botanico'],
+        placeIds: ['br-cristo-redentor', 'br-parque-lage', 'br-jardim-botanico', 'bra-dois-irmaos'],
         notes: 'היום הזה תלוי לגמרי בעננות, ולכן בודקים תחזית בבוקר ומחליפים אותו עם יום אחר אם הפסגה מעוננת. מזמינים כרטיס לכריסטו לשעה מוקדמת, יורדים ממנו לפארק לאז׳ה שנמצא ממש למרגלות ההר, וממשיכים ברגל לגן הבוטני הסמוך.',
       },
       {
         day: 3,
         title: 'המרכז ההיסטורי ואזור הנמל',
-        placeIds: ['br-escadaria-selaron', 'br-santa-teresa', 'br-mar'],
+        placeIds: ['br-escadaria-selaron', 'br-santa-teresa', 'bra-colombo', 'br-mar', 'bra-sao-cristovao'],
         notes: 'יום עירוני. מתחילים במדרגות סלארון מוקדם בבוקר לפני הקהל, עולים בחשמלית לסנטה טרזה ומבלים שם את הצהריים, ויורדים לכיכר מאואה. כל היום הזה נמצא באזורים שבהם שוד רחוב שכיח יותר, ולכן זהו היום שבו הכי חשוב לנוע במונית מוזמנת בין הנקודות ולא ברגל.',
       },
       {
@@ -60121,7 +60121,7 @@ export const destinations: Destination[] = [
       {
         day: 5,
         title: 'טיפוס לפדרה דה גאווה',
-        placeIds: ['br-pedra-gavea'],
+        placeIds: ['br-pedra-gavea', 'bra-tijuca', 'bra-prainha'],
         notes: 'יום שלם ומאומץ, ורק למי שבכושר מתאים ורק עם מדריך מקומי. יוצאים לפני הזריחה כדי להימנע מהחום, לוקחים לפחות שלושה ליטר מים לאדם, ומבטלים לגמרי אם ירד גשם ביממה שלפני, כי קטע הסלע החשוף הופך למסוכן. מי שמוותר על הטיפוס יכול להקדיש את היום ליער הטיז׳וקה או לחוף פרפייטה.',
       },
     ],
@@ -60487,7 +60487,7 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'המצודה, לה פופה וגטסמני',
-        placeIds: ['co-san-felipe', 'co-popa', 'co-getsemani'],
+        placeIds: ['co-san-felipe', 'co-getsemani', 'co-popa', 'col-bazurto'],
         notes:
           'המצודה על הבוקר בזמן שעוד יש צל, לה פופה במונית מתואמת שממתינה, וערב בגטסמני. להביא כובע ומים, אין כמעט צל בשני האתרים הראשונים.',
       },
@@ -60501,7 +60501,7 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'חוף ויום רגוע',
-        placeIds: ['co-bocagrande'],
+        placeIds: ['co-bocagrande', 'col-tierra-bomba'],
         notes:
           'יום ללא לוח זמנים: בוקר על החוף בבוקגרנדה, אחר צהריים חזרה לעיר העתיקה לקניות ולבתי קפה. טוב גם כיום חלופי אם יום השיט בוטל בגלל ים גבוה.',
       },
@@ -60862,28 +60862,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'ניס: העיר העתיקה, מאסנה והטיילת',
-        placeIds: ['nce-massena', 'nce-cathedral'],
+        placeIds: ['nce-massena', 'nce-cours-saleya', 'nce-cathedral', 'nce-fenocchio', 'nce-chez-pipo'],
         notes:
           'העיר העתיקה קטנה וכולה הליכה. שוק הפרחים בקור סאליה פעיל בבקרים, ובימי שני הוא שוק עתיקות.',
       },
       {
         day: 2,
         title: 'שאגאל ומאטיס',
-        placeIds: ['nce-chagall', 'nce-matisse'],
+        placeIds: ['nce-chagall', 'nce-matisse', 'nce-castle-hill'],
         notes:
           'שני המוזיאונים בשכונת סימייה שמעל המרכז, ואוטובוס אחד מחבר ביניהם.',
       },
       {
         day: 3,
         title: 'אז׳ וויל פראנש',
-        placeIds: ['nce-eze', 'nce-villefranche'],
+        placeIds: ['nce-eze', 'nce-villefranche', 'nce-cap-ferrat', 'nce-verdon-x', 'nce-menton'],
         notes:
           'רכבת החוף עוצרת בוויל פראנש; לאז׳ הכפר עולים באוטובוס 82 או במונית מהתחנה למטה.',
       },
       {
         day: 4,
         title: 'אנטיב',
-        placeIds: ['nce-antibes'],
+        placeIds: ['nce-antibes', 'nce-cap-d-antibes', 'nce-ile-sainte-marguerite', 'nce-saint-paul', 'nce-gorges-du-loup'],
         notes:
           'כרבע שעה ברכבת. השוק המקורה בבוקר, ומוזיאון פיקאסו בטירה אחר כך.',
       },
@@ -61494,28 +61494,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'אי הסיטה והמארה',
-        placeIds: ['par-notre-dame', 'par-sainte-chapelle', 'par-shoah', 'par-rosiers'],
+        placeIds: ['par-notre-dame', 'par-sainte-chapelle', 'par-shoah', 'par-rosiers', 'par-as-du-fallafel'],
         notes:
           'מתחילים באי הסיטה כי הוא מתמלא מאוחר יותר, וחוצים ברגל למארה. סנט שאפל דורשת הזמנה מראש כמעט תמיד. שימו לב שהמארה שקט בשבת ופעיל דווקא בראשון.',
       },
       {
         day: 2,
         title: 'הלובר וגדת הסן',
-        placeIds: ['par-louvre', 'par-orsay'],
+        placeIds: ['par-louvre', 'par-orsay', 'par-cafe-flore', 'par-deux-magots', 'par-enfants-rouges'],
         notes:
           'שני מוזיאונים ביום אחד זה הרבה. אם צריך לוותר, אורסיי קטן יותר ומסתיים בהרגשה טובה. שניהם סגורים ביום קבוע בשבוע, בודקים לפני.',
       },
       {
         day: 3,
         title: 'אייפל, שער הניצחון והשדרות',
-        placeIds: ['par-eiffel', 'par-arc', 'par-champs'],
+        placeIds: ['par-eiffel', 'par-champs', 'par-arc', 'par-galeries-lafayette', 'par-bois-de-boulogne'],
         notes:
           'עולים לאייפל בבוקר כשהתור קצר, ומסיימים בשער הניצחון לקראת שקיעה. אין לחצות את הכיכר ברגל, יש מעבר תת קרקעי מהשדרה.',
       },
       {
         day: 4,
         title: 'מונמארטר, פומפידו וגנים',
-        placeIds: ['par-sacre-coeur', 'par-montmartre', 'par-pompidou', 'par-luxembourg'],
+        placeIds: ['par-sacre-coeur', 'par-montmartre', 'par-pompidou', 'par-luxembourg', 'par-mouffetard'],
         notes:
           'מונמארטר בבוקר לפני ההמון, ואחר כך יורדים למרכז. גני לוקסמבורג הם סיום טוב ליום ארוך, והשערים נסגרים עם החשכה.',
       },
@@ -61529,7 +61529,7 @@ export const destinations: Destination[] = [
       {
         day: 6,
         title: 'פריז הירוקה - ביוט-שומון ויער ונסן',
-        placeIds: ['par-buttes-chaumont', 'par-bois-de-vincennes'],
+        placeIds: ['par-buttes-chaumont', 'par-bois-de-vincennes', 'par-la-vallee-village', 'par-vaux-le-vicomte', 'par-auvers'],
         notes:
           'בוקר בפארק ביוט-שומון (המקדש על הסלע, הגשר התלוי), ואחר הצהריים מטרו ליער ונסן: הטירה, האגם והסירות. יום מנוחה מהמוזיאונים, כולו בתחבורה ציבורית.',
       },
@@ -61894,28 +61894,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'העיר העתיקה: הטירה והרויאל מייל',
-        placeIds: ['edi-castle', 'edi-royal-mile', 'edi-camera-obscura', 'edi-grassmarket'],
+        placeIds: ['edi-castle', 'edi-farmers-market', 'edi-grassmarket', 'edi-camera-obscura', 'edi-royal-mile'],
         notes:
           'להגיע לטירה עם הפתיחה. משם יורדים ברגל לאורך הרויאל מייל, ובסופו גראסמרקט לארוחה.',
       },
       {
         day: 2,
         title: 'מוזיאונים והעיר החדשה',
-        placeIds: ['edi-museum-scotland', 'edi-national-gallery', 'edi-scott'],
+        placeIds: ['edi-museum-scotland', 'edi-national-gallery', 'edi-scott', 'edi-holyrood'],
         notes:
           'שני המוזיאונים בכניסה חופשית. יום טוב במיוחד למזג אוויר גשום.',
       },
       {
         day: 3,
         title: 'ארתורס סיט וקלטון',
-        placeIds: ['edi-arthurs-seat', 'edi-calton'],
+        placeIds: ['edi-arthurs-seat', 'edi-calton', 'edi-water-of-leith', 'edi-portobello', 'edi-rosslyn'],
         notes:
           'לעלות לארתורס סיט בבוקר, ולסיים בקלטון לקראת השקיעה. נעליים אמיתיות, השביל בוצי אחרי גשם.',
       },
       {
         day: 4,
         title: 'דין וילג׳ והגן הבוטני',
-        placeIds: ['edi-dean-village', 'edi-botanic'],
+        placeIds: ['edi-dean-village', 'edi-botanic', 'edi-pentlands', 'edi-livingston'],
         notes:
           'שניהם צפונית למרכז ומחוברים בשביל הליכה לאורך נהר הלית׳.',
       },
@@ -62390,35 +62390,35 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'וסטמינסטר והגדה הדרומית',
-        placeIds: ['lon-westminster', 'lon-buckingham', 'lon-eye'],
+        placeIds: ['lon-westminster', 'lon-eye', 'lon-fortnum', 'lon-buckingham', 'lon-greenwich'],
         notes:
           'מתחילים במנזר לפני שהתור נבנה, וממשיכים ברגל לארמון. בודקים מראש אם יש חילופי משמר באותו יום. מסיימים בגלגל בשקיעה, בהזמנה מראש.',
       },
       {
         day: 2,
         title: 'המצודה, הגשר ובורו',
-        placeIds: ['lon-tower', 'lon-tower-bridge', 'lon-borough', 'lon-tate'],
+        placeIds: ['lon-tower', 'lon-tower-bridge', 'lon-borough', 'lon-tate', 'lon-brick-lane'],
         notes:
           'המצודה נפתחת מוקדם וזו השעה הטובה לתכשיטי הכתר. חוצים את הגשר לגדה הדרומית והולכים מערבה לאורך הנהר, כך שבורו וטייט נופלים על הדרך.',
       },
       {
         day: 3,
         title: 'המוזיאון הבריטי וקמדן',
-        placeIds: ['lon-british-museum', 'lon-camden'],
+        placeIds: ['lon-british-museum', 'lon-camden', 'lon-hampstead-heath', 'lon-kew', 'lon-richmond'],
         notes:
           'המוזיאון בכניסה חופשית אבל עדיין דורש רישום מראש בעונה. אחרי הצהריים עולים לקמדן, ומי שרוצה שקט הולך משם לאורך התעלה במקום בתוך השוק.',
       },
       {
         day: 4,
         title: 'קנזינגטון, הפארק והקתדרלה',
-        placeIds: ['lon-nhm', 'lon-hyde', 'lon-stpauls'],
+        placeIds: ['lon-nhm', 'lon-harrods', 'lon-hyde', 'lon-tony-page', 'lon-stpauls'],
         notes:
           'מוזיאון הטבע בבוקר, ומשם הליכה מזרחה דרך גני קנזינגטון והייד פארק. פאולוס הקדוש סוגר כניסה מוקדם יחסית באחר הצהריים.',
       },
       {
         day: 5,
         title: 'צפון לונדון היהודית',
-        placeIds: ['lon-golders'],
+        placeIds: ['lon-golders', 'lon-novellino', 'lon-kosher-kingdom'],
         notes:
           'יום קצר ופשוט שמתאים גם כהשלמה ליום אחר. הכי הגיוני בימים ראשון עד חמישי, כי בשישי הכל נסגר מוקדם ובשבת סגור לגמרי.',
       },
@@ -62799,28 +62799,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'מרינה ביי',
-        placeIds: ['sg-merlion', 'sg-mbs', 'sg-gardens'],
+        placeIds: ['sg-merlion', 'sg-mbs', 'sg-gardens', 'sgp-maxwell', 'sgp-pulau-ubin'],
         notes:
           'מתחילים אחר הצהריים כי כל הציר הזה הכי טוב לקראת ערב. מהמרליון הולכים סביב המפרץ למרינה ביי סנדס, ומסיימים בגני המפרץ למופע האור בעצי העל.',
       },
       {
         day: 2,
         title: 'הרבעים - סיני, הודי ויהודי',
-        placeIds: ['sg-chinatown', 'sg-synagogue', 'sg-little-india', 'sg-clarke-quay'],
+        placeIds: ['sg-chinatown', 'sg-clarke-quay', 'sgp-lau-pa-sat', 'sg-synagogue', 'sg-little-india'],
         notes:
           'יום הליכה בין רבעים, וכולם מחוברים ברכבת התחתית בכמה דקות. את הביקור בבית הכנסת מתאמים ימים מראש. מסיימים בערב על הנהר בקלארק קי.',
       },
       {
         day: 3,
         title: 'גנים בוטניים וראפלס',
-        placeIds: ['sg-botanic', 'sg-raffles'],
+        placeIds: ['sg-botanic', 'sgp-ion-orchard', 'sgp-mustafa', 'sg-raffles', 'sgp-macritchie'],
         notes:
           'הגנים הבוטניים בשעה שאחרי הזריחה, לפני שהחום נעשה בלתי אפשרי. אחר הצהריים מתקרר בקומות המקורות של ראפלס וסביבתו.',
       },
       {
         day: 4,
         title: 'סנטוסה',
-        placeIds: ['sg-sentosa'],
+        placeIds: ['sg-sentosa', 'sgp-southern-ridges', 'sgp-sungei-buloh'],
         notes:
           'יום שלם באי, ורק אם נוסעים עם ילדים או שיש זמן פנוי. מגיעים ברכבל מהר פאבר בשביל הנוף, וחוזרים ברכבת הקלה. כל אטרקציה באי היא כרטיס בפני עצמו, ולכן בוחרים שתיים מראש.',
       },
@@ -63198,28 +63198,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'ולטה',
-        placeIds: ['mt-stjohns', 'mt-barrakka', 'mt-elmo'],
+        placeIds: ['mt-stjohns', 'mt-barrakka', 'mt-elmo', 'mlt-three-cities', 'mlt-hypogeum'],
         notes:
           'ולטה כולה בהליכה, אבל היא בנויה על גבעה ויש הרבה מדרגות. מתחילים בקתדרלה בבוקר כשהיא ריקה יחסית, ממשיכים לגני ברקה לירי התותחים בשעה שתים עשרה, ומסיימים במצודת סנט אלמו.',
       },
       {
         day: 2,
         title: 'מדינה והדרום העתיק',
-        placeIds: ['mt-mdina', 'mt-hagar-qim', 'mt-blue-grotto'],
+        placeIds: ['mt-mdina', 'mlt-crystal-palace', 'mlt-dingli', 'mt-hagar-qim', 'mt-blue-grotto'],
         notes:
           'יום שדורש רכב או סיור מאורגן. אפשר גם להפוך את הסדר ולהתחיל במערה הכחולה בשעות האור הטובות, ואז לעלות למדינה לקראת השקיעה, שזו השעה היפה שלה.',
       },
       {
         day: 3,
         title: 'גוזו',
-        placeIds: ['mt-cittadella'],
+        placeIds: ['mt-cittadella', 'mlt-mgarr-ix-xini', 'mlt-ramla', 'mt-mosta'],
         notes:
           'מעבורת מצ׳ירקווה, כרבע שעה. את הרכב אפשר להעלות למעבורת, וזו הדרך הנוחה לראות גם את שאר האי - מלחי הים בשלנדי ומפרץ רמלה החולי. אפשר גם ללון לילה בגוזו כדי לא לרוץ.',
       },
       {
         day: 4,
         title: 'קומינו ומרסשלוק',
-        placeIds: ['mt-comino', 'mt-marsaxlokk'],
+        placeIds: ['mt-comino', 'mlt-ghajn-tuffieha', 'mt-mnajdra', 'mlt-tarxien', 'mt-marsaxlokk'],
         notes:
           'סירת בוקר ראשונה ללגונה הכחולה לפני ההמון, חזרה בצהריים, ואחר הצהריים בכפר הדייגים. אם היום הוא יום ראשון מתחילים דווקא בשוק של מרסשלוק בבוקר.',
       },
@@ -63602,28 +63602,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'בריסל',
-        placeIds: ['be-grand-place', 'be-manneken', 'be-atomium'],
+        placeIds: ['be-grand-place', 'be-manneken', 'bel-maison-antoine', 'be-atomium', 'bel-sonian'],
         notes:
           'בוקר בכיכר הגדולה ובסמטאות סביבה, ומשם שני רחובות למאנקן פיס. אחר הצהריים מטרו צפונה לאטומיום, ואם יש ילדים גם למיני אירופה שלידו. חוזרים לכיכר לשעה שאחרי השקיעה.',
       },
       {
         day: 2,
         title: 'ברוז׳',
-        placeIds: ['be-bruges'],
+        placeIds: ['be-bruges', 'bel-damme'],
         notes:
           'רכבת מבריסל, כשעה ורבע. עולים למגדל הפעמונים בבוקר לפני התור, מפליגים בתעלות בצהריים, ונשארים עד אחרי חמש - זו השעה שבה העיר משתנה לגמרי. אפשר גם ללון בה לילה.',
       },
       {
         day: 3,
         title: 'אנטוורפן',
-        placeIds: ['be-antwerp-jewish', 'be-antwerp-cathedral'],
+        placeIds: ['be-antwerp-jewish', 'be-kleinblatt', 'be-antwerp-cathedral', 'be-leuven-hall', 'be-horta'],
         notes:
           'מגיעים לתחנה המרכזית, מקדישים כמה דקות לבניין עצמו, ויוצאים דרומה לרובע היהודי. ארוחת צהריים כשרה שם, ואחר הצהריים הליכה של עשרים דקות מערבה לקתדרלה ולעיר העתיקה. לא ביום שישי אחר הצהריים ולא בשבת.',
       },
       {
         day: 4,
         title: 'גנט וווטרלו',
-        placeIds: ['be-ghent', 'be-waterloo'],
+        placeIds: ['be-ghent', 'bel-tierenteyn', 'be-st-bavo', 'be-fine-arts', 'be-waterloo'],
         notes:
           'אפשר לפצל את השניים לשני ימים נפרדים, כי ווטרלו נמצא דרומית לבריסל וגנט צפונית מערבית. מי שיש לו רכב יעשה את שניהם ביום אחד, ומי שנוסע ברכבת יבחר אחד.',
       },
@@ -63974,7 +63974,7 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'דהב והחור הכחול',
-        placeIds: ['eg-dahab', 'eg-blue-hole'],
+        placeIds: ['eg-dahab', 'eg-blue-hole', 'egy-ras-abu-galum', 'egy-nabq'],
         notes:
           'בוקר של שנרקול מהמסבט ממש מול המסעדות, ואחר הצהריים נסיעה קצרה צפונה לחור הכחול. גם מי שלא צולל יראה משם את רוב מה שיש. חוזרים לדהב לארוחת ערב על הכריות.',
       },
@@ -63988,14 +63988,14 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'סנטה קתרינה והר סיני',
-        placeIds: ['eg-mount-sinai', 'eg-st-catherine'],
+        placeIds: ['eg-mount-sinai', 'eg-st-catherine', 'egy-blue-hole-x', 'egy-jebel-katherina', 'egy-wadi-feiran'],
         notes:
           'יוצאים מדהב אחרי חצות, מטפסים להר לזריחה, ויורדים בדיוק כשהמנזר נפתח למבקרים בשבע וחצי. שכבה חמה ופנס ראש הם חובה גם בקיץ. חוזרים לדהב סביב הצהריים לישון. לא מגיעים בימי ראשון ושישי, שבהם המנזר סגור.',
       },
       {
         day: 5,
         title: 'שארם וראס מוחמד',
-        placeIds: ['eg-ras-muhammad', 'eg-sharm', 'eg-naama-bay'],
+        placeIds: ['eg-ras-muhammad', 'egy-sharm-old-market', 'eg-naama-bay', 'eg-sharm', 'egy-tiran'],
         notes:
           'שעה וחצי דרומה מדהב. יום שלם בשמורת ראס מוחמד, בשיט או מהחוף, ולינה בשארם. בערב טיילת מפרץ נעמה. מי שטס משארם חזרה יסיים כאן, ומי שנכנס בטאבה יחזור צפונה למחרת.',
       },
@@ -64346,14 +64346,14 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'מסקאט',
-        placeIds: ['om-grand-mosque', 'om-mutrah'],
+        placeIds: ['om-grand-mosque', 'omn-kargeen', 'om-mutrah', 'om-al-alam', 'omn-daymaniyat'],
         notes:
           'בוקר במסגד הגדול, שפתוח למבקרים עד אחת עשרה בלבד, עם לבוש צנוע. אחר הצהריים מנוחה מהחום, ומחמש הליכה על הקורניש של מוטרה ועד לשוק. ארוחת ערב על הטיילת מול הנמל.',
       },
       {
         day: 2,
         title: 'ניזווא ובהלא',
-        placeIds: ['om-nizwa', 'om-bahla'],
+        placeIds: ['om-nizwa', 'omn-birkat-al-mouz', 'omn-jebel-akhdar', 'omn-misfat', 'om-bahla'],
         notes:
           'שעה וחצי מערבה ממסקאט. מתחילים במצודת ניזווא בפתיחה, וממשיכים לשוק. אחר הצהריים ארבעים דקות לבהלא. מי שמגיע ביום שישי יקדים לשש בבוקר לשוק הבקר בניזווא.',
       },
@@ -64367,14 +64367,14 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'חוף הוואדיות',
-        placeIds: ['om-bimmah', 'om-wadi-shab', 'om-sur'],
+        placeIds: ['om-bimmah', 'om-wadi-shab', 'omn-wadi-tiwi', 'omn-wadi-bani-khalid', 'om-sur'],
         notes:
           'נוסעים דרומה בכביש החוף. עצירה קצרה בבולען, ואחריה ואדי שאב שדורש חצי יום שלם עם בגד ים. ממשיכים לסור ללינה, ובערב אפשר לצאת לסיור צבי הים ברס אל ג׳ינז - מזמינים מראש.',
       },
       {
         day: 5,
         title: 'הדיונות',
-        placeIds: ['om-wahiba'],
+        placeIds: ['om-wahiba', 'omn-ras-al-jinz'],
         notes:
           'שעתיים מסור. נכנסים לחול רק עם מחנה שאסף אתכם או עם מדריך, ולא לבד. שקיעה על רכס, לילה במחנה, וזריחה למחרת. משם כשעתיים וחצי חזרה למסקאט.',
       },
@@ -64710,7 +64710,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'סקופיה',
-        placeIds: ['mk-bazaar', 'mk-holocaust'],
+        placeIds: ['mk-bazaar', 'mk-holocaust', 'mkd-bit-pazar', 'mk-vodno', 'mkd-kokino'],
         notes:
           'בוקר במוזיאון השואה, שנמצא בקצה הרובע היהודי ההיסטורי, וממנו הליכה קצרה אל הבזאר העתיק. אחר הצהריים בסמטאות הבזאר, ובערב לאכול שם. מרכז העיר עם הפסלים נמצא מעבר לגשר האבן והוא חצי שעה של סיבוב, לא יותר.',
       },
@@ -64731,21 +64731,21 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'אוחריד העתיקה',
-        placeIds: ['mk-samuel', 'mk-kaneo'],
+        placeIds: ['mk-samuel', 'mk-plaosnik', 'mk-kaneo', 'mkd-radozda', 'mk-vevcani'],
         notes:
           'עולים בבוקר למצודת שמואל כשעוד קריר, ויורדים ממנה דרך התיאטרון האנטיקי. אחר הצהריים מנוחה או רחצה באגם, ואת קאנאו שומרים לשעה שלפני השקיעה - מגיעים שלושת רבעי שעה מראש כדי לתפוס מקום על הצוק.',
       },
       {
         day: 5,
         title: 'סווטי נאום',
-        placeIds: ['mk-sveti-naum'],
+        placeIds: ['mk-sveti-naum', 'mk-galicica', 'mk-bay-of-bones'],
         notes:
           'סירה מהנמל של אוחריד לוקחת כשעה וחצי לכיוון ומגיעה ישירות למנזר, וזו הדרך היפה יותר מהכביש. מבלים בחצר, יוצאים לסיבוב סירת משוט במעיינות, וחוזרים בשעות אחר הצהריים.',
       },
       {
         day: 6,
         title: 'ביטולה והרקליאה',
-        placeIds: ['mk-heraclea'],
+        placeIds: ['mk-heraclea', 'mkd-pelister'],
         notes:
           'שעה וחצי מאוחריד. מתחילים בפסיפסים של הרקליאה בבוקר, וממשיכים לשירוק סוקאק, רחוב הטיילת של ביטולה, לקפה וארוחה. אפשר לסגור את היום בחזרה לאוחריד או להמשיך משם לגבול יוון.',
       },
@@ -65094,21 +65094,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'אולן באטור',
-        placeIds: ['mn-gandan', 'mn-sukhbaatar'],
+        placeIds: ['mn-gandan', 'mn-sukhbaatar', 'mng-narantuul', 'mng-zaisan', 'mng-khustai'],
         notes:
           'בוקר במנזר גנדן בזמן התפילה, ואחריו הכיכר והמוזיאון הלאומי - שווה להקדיש לו שעתיים לפני שיוצאים לשטח, כי הוא נותן את ההקשר לכל השאר. בערב לקנות מזומן ומים לימים הבאים, כי מחוץ לעיר אין כספומטים.',
       },
       {
         day: 2,
         title: 'טרלג׳ ופסל ג׳ינגיס חאן',
-        placeIds: ['mn-genghis', 'mn-terelj'],
+        placeIds: ['mn-genghis', 'mn-terelj', 'mn-ulaanbaatar'],
         notes:
           'יוצאים מזרחה, עוצרים בפסל ועולים לראש הסוס, וממשיכים לפארק טרלג׳. אחר הצהריים רכיבה על סוסים או הליכה לסלע הצב, ולינה בגר. זו ההזדמנות הראשונה והכי נוחה לישון באוהל לבד.',
       },
       {
         day: 3,
         title: 'קרקורום',
-        placeIds: ['mn-erdene-zuu'],
+        placeIds: ['mn-erdene-zuu', 'mng-orkhon-waterfall'],
         notes:
           'יום נסיעה ארוך מערבה, כשש עד שבע שעות. מגיעים לארדנה זו אחר הצהריים ומספיקים את המנזר לפני הסגירה. לינה במחנה גר ליד קרקורום, ומכאן פונים דרומה לגובי.',
       },
@@ -65459,28 +65459,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'פארו',
-        placeIds: ['bt-rinpung'],
+        placeIds: ['bt-rinpung', 'btn-kyichu', 'btn-chele-la', 'btn-haa'],
         notes:
           'הנחיתה בפארו היא חלק מהחוויה - המסלול עובר בין רכסים ורק טייסים מוסמכים במיוחד מורשים לבצע אותה. יום ראשון רגוע להסתגלות לגובה, עם הדזונג, גשר העץ המקורה והעיר הקטנה. לישון בפארו.',
       },
       {
         day: 2,
         title: 'קן הנמר',
-        placeIds: ['bt-taktsang'],
+        placeIds: ['bt-taktsang', 'btn-tigers-nest-x'],
         notes:
           'יוצאים בשבע בבוקר. עלייה של כשעתיים וחצי, ירידה של שעה וחצי, ובאמצע בית קפה עם הנוף הראשון. מפקידים טלפונים ומצלמות בכניסה למנזר. אחר הצהריים חופשי, ורבים עושים אמבט אבנים חמות בהמשך היום.',
       },
       {
         day: 3,
         title: 'טהימפו',
-        placeIds: ['bt-buddha', 'bt-tashichho'],
+        placeIds: ['bt-buddha', 'bt-thimphu', 'btn-centenary-market', 'bt-tashichho', 'btn-motithang'],
         notes:
           'שעה נסיעה מפארו. בוקר בפסל הבודהה ובשוק המרכזי, ואת הדזונג משאירים לאחרי חמש כשהוא נפתח למבקרים. אין רמזור בעיר, ובצומת המרכזי עומד שוטר תנועה שמכוון בידיים - זה אמיתי ולא אטרקציה.',
       },
       {
         day: 4,
         title: 'דוצ׳ולה ופונאכה',
-        placeIds: ['bt-dochula', 'bt-punakha'],
+        placeIds: ['bt-dochula', 'bt-simtokha', 'btn-chimi-lhakhang', 'bt-punakha'],
         notes:
           'יוצאים מוקדם, כי הנוף מהמעבר נפתח רק בבוקר לפני שהעננים עולים. אחרי הסטופות יורדים כשעה וחצי לפונאכה, שחמימה בהרבה. את הדזונג רואים אחר הצהריים כשהאור נופל עליו מהצד.',
       },
@@ -65838,28 +65838,28 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'קישינב',
-        placeIds: ['md-nativity', 'md-park'],
+        placeIds: ['md-nativity', 'md-park', 'mda-piata-centrala', 'mda-castel-mimi', 'md-bender'],
         notes:
           'יום הליכה במרכז. מתחילים בקתדרלה ובשער הניצחון, ממשיכים לפארק שטפן הגדול ולסמטת הסופרים, ומשם ברגל בשדרה הראשית. אחר הצהריים כדאי לשריין שעתיים לרובע היהודי ההיסטורי ולאנדרטת הפוגרום - הכתובות בעיר לא תמיד ברורות, אז שווה סיור מודרך בעברית או באנגלית.',
       },
       {
         day: 2,
         title: 'אורהיי העתיקה',
-        placeIds: ['md-orhei'],
+        placeIds: ['md-orhei', 'md-tipova', 'md-saharna'],
         notes:
           'שעה נסיעה מקישינב. מגיעים בבוקר, עולים לרכס ולצלב, יורדים למנזר החצוב ומסיימים בארוחת צהריים ביתית בכפר בוטוצ׳ני. יש שם גם אפשרות לינה כפרית, ומי שרוצה לראות את המקום בשקיעה כדאי שיישאר.',
       },
       {
         day: 3,
         title: 'יין',
-        placeIds: ['md-milestii', 'md-cricova'],
+        placeIds: ['md-milestii', 'mda-manuc-bei', 'md-cricova', 'mda-tiraspol', 'mda-gagauzia'],
         notes:
           'שני המרתפים באותו יום זה אפשרי אבל צפוף, ומי שמסתפק באחד שיבחר את מילשטי מיץ׳ לגודל או את קריקובה לעיצוב. שניהם דורשים הזמנה מראש. חובה נהג שלא טועם - מוניות מקישינב זולות וזו האפשרות הפשוטה.',
       },
       {
         day: 4,
         title: 'קפריאנה וסביבה',
-        placeIds: ['md-capriana'],
+        placeIds: ['md-capriana', 'mda-codru', 'md-chisinau'],
         notes:
           'חצי יום. ארבעים דקות מהעיר, הליכה ביער האלונים ובמתחם המנזר, וחזרה לקישינב אחר הצהריים לשוק המרכזי ולקניות. יום נוח לפני טיסה או אחרי יום היין.',
       },
@@ -66165,21 +66165,21 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'אויוני והמלחה',
-        placeIds: ['bo-uyuni-town', 'bo-salar', 'bo-incahuasi'],
+        placeIds: ['bo-uyuni-town', 'bol-uyuni-mercado', 'bo-salar', 'bo-incahuasi', 'bol-tunupa'],
         notes:
           'יוצאים מאויוני בבוקר, עוצרים בבית הקברות של הרכבות ובכפר קולצ׳אני שבו מייבשים מלח, ונכנסים למלחה. ארוחת בוקר מאוחרת באי אינקאוואסי, אחר הצהריים לצילומי הפרספקטיבה על המלח הפתוח, ולינה במלון מלח בקצה המלחה. אל תתחילו את הסיור ביום שבו נחתתם - הגובה כאן מתחיל ב-3,650 מטר.',
       },
       {
         day: 2,
         title: 'מדבר הסלעים והלגונות',
-        placeIds: ['bo-arbol', 'bo-colorada'],
+        placeIds: ['bo-arbol', 'bo-colorada', 'bol-laguna-hedionda'],
         notes:
           'יום נסיעה ארוך דרומה, בין לגונות קטנות מלאות פלמינגו ומדבר סילולי, עם עצירה בארבול דה פיידרה. מגיעים ללגונה קולורדה אחר הצהריים כשהאור נמוך והצבע האדום חזק. הלינה כאן בסיסית מאוד, בגובה מעל 4,200 מטר ובקור עז - שק שינה חם הוא לא מותרות.',
       },
       {
         day: 3,
         title: 'גייזרים ולגונה ורדה',
-        placeIds: ['bo-sol-manana', 'bo-verde'],
+        placeIds: ['bo-sol-manana', 'bol-polques', 'bol-dali-desert', 'bo-verde'],
         notes:
           'יציאה לפני חמש בבוקר לגייזרים, ומשם למעיינות החמים של פולקס לטבילה בזריחה. אחר כך לגונה ורדה למרגלות ליקנקבור. מכאן אפשר לחזור לאויוני בנסיעה ארוכה, או לחצות את הגבול לסן פדרו דה אטקמה בצ׳ילה - אפשרות נפוצה מאוד, וצריך לסגור אותה מראש עם חברת הסיור.',
       },
@@ -66529,7 +66529,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'אנטיגואה',
-        placeIds: ['gt-antigua'],
+        placeIds: ['gt-antigua', 'gtm-mercado-antigua', 'gtm-pacaya', 'gt-monterrico'],
         notes:
           'יום התאקלמות נוח: הליכה בין חורבות המנזרים, הקשת של סנטה קטלינה, השוק המקומי ותצפית מגבעת הצלב על העיר והרי הגעש מאחוריה. אנטיגואה יושבת בגובה כ-1,500 מטר וקרירה בערבים. אם מתכננים את טרק אקטננגו, זה היום לסגור חברה ולשכור ציוד חם.',
       },
@@ -66543,14 +66543,14 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'אגם אטיטלן',
-        placeIds: ['gt-atitlan'],
+        placeIds: ['gt-atitlan', 'gtm-santa-catarina', 'gtm-iximche', 'gtm-san-juan-la-laguna', 'gtm-quetzaltenango'],
         notes:
           'נסיעה של כשלוש שעות לפאנחצ׳ל ומעבר בסירה לכפר שבו לנים - סן מרקוס או סן פדרו נוחים למטיילים. מקדישים יום מלא למעבר בין כמה כפרים בסירה, ומקפידים לחזור לפני שהרוח מתחזקת אחר הצהריים.',
       },
       {
         day: 4,
         title: 'צ׳יצ׳יקסטננגו',
-        placeIds: ['gt-chichi'],
+        placeIds: ['gt-chichi', 'gt-panajachel'],
         notes:
           'רק אם היום יוצא חמישי או ראשון, ואז שווה לתכנן את כל המסלול סביב זה. יוצאים מהאגם מוקדם, מגיעים לשוק לפני שהוא מתמלא, וממשיכים משם צפונה. בשוק נהוג להתמקח, וצילום של אנשים דורש רשות.',
       },
@@ -66564,7 +66564,7 @@ export const destinations: Destination[] = [
       {
         day: 6,
         title: 'פלורס וטיקאל',
-        placeIds: ['gt-flores', 'gt-tikal'],
+        placeIds: ['gt-flores', 'gt-tikal', 'gtm-yaxha', 'gtm-el-mirador'],
         notes:
           'מגיעים לפלורס בערב, ולמחרת יוצאים לטיקאל בשש בבוקר - הג׳ונגל פעיל אז והחום נסבל. מקדישים לאתר לפחות חצי יום, ומטפסים למקדש הרביעי לתצפית מעל חופת העצים. משם אפשר לטוס חזרה לעיר גואטמלה או להמשיך יבשתית לבליז.',
       },
@@ -66862,14 +66862,14 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'פוארטו פרינססה והנהר התת-קרקעי',
-        placeIds: ['ph-underground'],
+        placeIds: ['ph-underground', 'ph-port-barton'],
         notes:
           'נוחתים בפוארטו פרינססה, שהיא שער הכניסה הראשי לאי, ומקדישים יום שלם לנהר התת-קרקעי - יציאה מוקדמת, נסיעה של כשעתיים לסבנג ושיט במערה. חובה להזמין את המכסה מראש. בערב חוזרים לעיר, ולמחרת נוסעים צפונה לאל נידו בוואן של כחמש עד שש שעות.',
       },
       {
         day: 2,
         title: 'סיור סירות במפרץ באקוויט',
-        placeIds: ['ph-bacuit', 'ph-elnido'],
+        placeIds: ['ph-bacuit', 'ph-big-lagoon', 'ph-el-nido-taraw', 'ph-elnido', 'ph-taytay'],
         notes:
           'היום המרכזי של אל נידו. סיור A הוא הקלאסי - הלגונה הגדולה, הלגונה הקטנה, לגונת הנחשים וסבן קומנדוס. יוצאים מוקדם ככל האפשר כדי להגיע ללגונה הגדולה לפני שאר הסירות, ולוקחים דמי כניסה לשמורה במזומן. חוזרים אחר הצהריים ורואים שקיעה מחוף קורונג קורונג.',
       },
@@ -66883,14 +66883,14 @@ export const destinations: Destination[] = [
       {
         day: 4,
         title: 'מעבר לקורון',
-        placeIds: ['ph-tapyas'],
+        placeIds: ['ph-tapyas', 'ph-busuanga', 'ph-calauit'],
         notes:
           'מעבורת מהירה מאל נידו לקורון, ארבע שעות בערך, ובים גס היא מבוטלת או מטלטלת מאוד - שווה כדור נגד בחילה. אחר הצהריים טיפוס על הר טאפיאס לשקיעה, ואם נשאר כוח מעיינות חמים אחר כך.',
       },
       {
         day: 5,
         title: 'איי קורון והספינות',
-        placeIds: ['ph-kayangan', 'ph-coron-island'],
+        placeIds: ['ph-kayangan', 'ph-coron-island', 'ph-nagtabon-x', 'ph-culion'],
         notes:
           'סיור סירה סביב אי קורון: אגם קיאנגן בבוקר לפני ההמון, הלגונה הכפולה, וסנורקלינג מעל אחת הספינות הטרופות הרדודות. צוללים מוסמכים יעדיפו יום צלילות נפרד על הצי היפני. מקורון טסים חזרה למנילה משדה התעופה בבוסואנגה.',
       },
@@ -67221,7 +67221,7 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'עיר פנמה והתעלה',
-        placeIds: ['pa-canal', 'pa-casco'],
+        placeIds: ['pa-canal', 'pa-casco', 'pan-panama-viejo', 'pan-gamboa', 'pan-portobelo'],
         notes:
           'בוקר במרכז המבקרים של מיראפלורס, אחרי שבודקים מתי צפויות אוניות לעבור. אחר הצהריים והערב בקסקו ויכו: הליכה בין הכיכרות, מוזיאון התעלה, ותצפית על קו הרקיע מהטיילת בשקיעה. בעיר יש קהילה יהודית גדולה, וזה היום הנוח להצטייד באוכל כשר להמשך.',
       },
@@ -67235,21 +67235,21 @@ export const destinations: Destination[] = [
       {
         day: 3,
         title: 'אל ואיה דה אנטון',
-        placeIds: ['pa-elvalle'],
+        placeIds: ['pa-elvalle', 'pa-soberania', 'pan-metropolitan-park', 'pa-panama-city'],
         notes:
           'יום מעבר נוח בדרך מערבה: לוע הר הגעש, מפל צ׳ורו אל מכו, מעיינות חמים והשוק. אפשר לעשות אותו כטיול יום מהעיר, או ללון בכפר ולהמשיך למחרת לדוד ולבוקטה. מכאן ממשיכים מערבה בנסיעה ארוכה או חוזרים לעיר לטיסה פנימית.',
       },
       {
         day: 4,
         title: 'בוקטה וברו',
-        placeIds: ['pa-boquete', 'pa-baru'],
+        placeIds: ['pa-boquete', 'pan-cafe-ruiz', 'pa-baru'],
         notes:
           'יום בבוקטה: סיור מטע קפה בבוקר, ואחר הצהריים הליכה קצרה באחד השבילים. מי שרוצה את פסגת ברו יוצא בחצות באותו לילה עם מדריך, בגדים חמים ופנס - וישן למחרת. מי שלא, מסתפק בתצפיות מהעמק ובמעיינות החמים של קלדרה.',
       },
       {
         day: 5,
         title: 'בוקאס דל טורו',
-        placeIds: ['pa-bocas'],
+        placeIds: ['pa-bocas', 'pan-la-amistad'],
         notes:
           'נסיעה של כארבע שעות מבוקטה לאלמירנטה ומשם סירה לאי קולון, או טיסה פנימית קצרה. יומיים באיים: סירת מונית לחוף כוכבי הים, סנורקלינג בשמורת בסטימנטוס וערב בעיירה. חוזרים לעיר פנמה בטיסה פנימית של כשעה.',
       },
@@ -67620,35 +67620,35 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'קיטו והתאקלמות לגובה',
-        placeIds: ['ec-quito'],
+        placeIds: ['ec-quito', 'ecu-mercado-central', 'ecu-teleferico', 'ecu-mindo', 'ecu-papallacta'],
         notes:
           'יום ראשון קל בכוונה, כי 2,850 מטר מורגשים. הליכה במרכז ההיסטורי, כיכר גרנדה, כנסיית לה קומפניה והבזיליקה, ובשעת אחר הצהריים עלייה ברכבל לפיצ׳ינצ׳ה או לגבעת אל פנסייו לתצפית על העיר. שתו הרבה מים, ותנו לגוף להסתגל לפני מאמץ אמיתי.',
       },
       {
         day: 2,
         title: 'קו המשווה ואוטוואלו',
-        placeIds: ['ec-mitad', 'ec-otavalo'],
+        placeIds: ['ec-mitad', 'ecu-guapulo', 'ec-otavalo', 'ecu-otavalo-x'],
         notes:
           'צפונה מהעיר: קודם מיטד דל מונדו ומוזיאון אינטיניאן שלידו, ואז המשך לאוטוואלו לשוק. אם אפשר, תכננו את היום הזה לשבת, שבה השוק בשיאו. בדרך חזרה אפשר לעצור באגם הלוע קויקוצ׳ה. אין באזור אוכל כשר, כדאי לצאת מקיטו עם מה שצריך.',
       },
       {
         day: 3,
         title: 'הפארק הלאומי קוטופחשי',
-        placeIds: ['ec-cotopaxi'],
+        placeIds: ['ec-cotopaxi', 'ecu-quilotoa-x', 'ec-antisana'],
         notes:
           'יציאה מוקדמת, כי הפסגה מתכסה עננים אחרי הצהריים. נסיעה עד החניון בגובה 4,500 מטר, הליכה איטית אל המקלט, ולמי שנשאר בכוח גם ירידה ללגונה לימפיופונגו. קחו שכבות, כובע, קרם הגנה חזק וכפפות - כאן קר ורוחני גם בשמש.',
       },
       {
         day: 4,
         title: 'קילוטואה',
-        placeIds: ['ec-quilotoa'],
+        placeIds: ['ec-quilotoa', 'ecu-quilotoa-loop', 'ecu-quilotoa-loop-x'],
         notes:
           'נסיעה דרך לטקונגה בלב שדרת הרי הגעש אל שפת הלוע. ירידה אל המים, קיאק לחצי שעה ועלייה חזרה - או פרד למי שמעדיף. לינה באחת האכסניות הפשוטות בשפה מאפשרת לראות את הזריחה על האגם, וזה שווה את הקור.',
       },
       {
         day: 5,
         title: 'באניוס',
-        placeIds: ['ec-banos'],
+        placeIds: ['ec-banos', 'ecu-chimborazo'],
         notes:
           'ירידה מזרחה אל 1,800 מטר, וההבדל באוויר מיידי. כביש המפלים באופניים או ברכב עד פאילון דל דיאבלו, ואחר הצהריים נדנדה, רפטינג או פשוט מעיינות חמים. אפשר לישון כאן לילה ולחזור לקיטו למחרת, כשלוש שעות וחצי נסיעה.',
       },
@@ -68028,28 +68028,28 @@ export const destinations: Destination[] = [
       {
         day: 2,
         title: 'פורט לואי',
-        placeIds: ['mu-portlouis'],
+        placeIds: ['mu-portlouis', 'mus-port-louis-market', 'mu-le-pouce', 'mus-trou-aux-cerfs', 'mu-flic-en-flac'],
         notes:
           'לצאת מוקדם, כי השוק המרכזי בשיאו לפני עשר ואחר כך חם מאוד. שוק, צ׳יינטאון, מוזיאון הבול הכחול בקודן, ומי שיש לו זמן ימשיך לאפרוודי או למקדש ההינדי גראן בסן שבדרך דרומה. אין בעיר אוכל כשר, אבל יש שפע פירות ומאפים צמחוניים בשוק.',
       },
       {
         day: 3,
         title: 'המזרח ואיל או סרף',
-        placeIds: ['mu-cerfs'],
+        placeIds: ['mu-cerfs', 'mus-ile-aux-aigrettes', 'mu-mahebourg', 'mus-blue-bay'],
         notes:
           'סירה מטרו דו וג׳יבל אל האי בשעה מוקדמת, לפני שהקבוצות מגיעות. חצי יום בלגונה, סנורקלינג או קיאק, ולמי שרוצה גם שיט אל מפל גרנד ריביאר סוד-אסט. בחזרה שווה לעצור באחד מחופי החוף המזרחי, שקטים ורוחיים בהרבה מהצפון.',
       },
       {
         day: 4,
         title: 'הדרום-מערב: שמארל ובלק ריבר',
-        placeIds: ['mu-chamarel', 'mu-blackriver'],
+        placeIds: ['mu-chamarel', 'mus-chamarel-waterfall', 'mu-blackriver', 'mus-grand-bassin', 'mus-tamarind-falls'],
         notes:
           'יום נהיגה הררי ויפה. בבוקר אדמות שבעת הצבעים ומפל שמארל, ואחר כך כניסה לפארק בלק ריבר מהצד של פטרן בואי: תצפית אלכסנדרה פולס ושביל קצר ביער. הכבישים כאן צרים ומפותלים, ובאחר הצהריים לעיתים יורד גשם בהרים.',
       },
       {
         day: 5,
         title: 'לה מורן',
-        placeIds: ['mu-lemorne'],
+        placeIds: ['mu-lemorne', 'mus-rochester-falls', 'mu-curepipe'],
         notes:
           'יום אחרון בפינה היפה של האי. חוף לה מורן הציבורי בבוקר, ומי שרוצה עולה על ההר עם מדריך ביציאה מוקדמת. אחר הצהריים קייטסרף או פשוט לגונה. אם הטיסה בערב, זו נקודה נוחה כי השדה נמצא כשעה משם.',
       },
@@ -68393,35 +68393,35 @@ export const destinations: Destination[] = [
       {
         day: 1,
         title: 'מאהה: ויקטוריה ובו ואלון',
-        placeIds: ['sc-victoria', 'sc-beauvallon'],
+        placeIds: ['sc-victoria', 'syc-victoria-market', 'sc-beauvallon', 'syc-morne-seychellois', 'syc-ste-anne'],
         notes:
           'בוקר בוויקטוריה: מגדל השעון, השוק והמקדש, וגם הצטיידות אמיתית בסופרמרקט - זו ההזדמנות הטובה במדינה. אחר הצהריים בחוף בו ואלון, שנמצא כרבע שעה נסיעה מהעיר, ושקיעה משם. לינה בצפון מאהה.',
       },
       {
         day: 2,
         title: 'דרום מאהה',
-        placeIds: ['sc-intendance'],
+        placeIds: ['sc-intendance', 'syc-anse-royale', 'sc-mahe'],
         notes:
           'יום נהיגה סביב האי בכביש החופי, עם עצירות במפרצים קטנים ובגן התבלינים לה מזון בלנש. אנס אנטנדנס ואנס טאקאמאקה בדרום הם השיא. שימו לב לגלים ולזרמים בחופים הפתוחים, ואל תשחו לבד. חזרה צפונה לפני חשכה, כי הכבישים ההרריים חשוכים.',
       },
       {
         day: 3,
         title: 'מעבורת לפרלין ועמק מאי',
-        placeIds: ['sc-vallee', 'sc-lazio'],
+        placeIds: ['sc-vallee', 'syc-curieuse', 'sc-lazio', 'syc-anse-georgette', 'syc-aride'],
         notes:
           'מעבורת מהירה מוויקטוריה לפרלין, כשעה. בבוקר עמק מאי בקריר, ואחר הצהריים אנס לאציו לשחייה ולשקיעה. כדאי להזמין מעבורות מראש בעונה, ולשכור מכונית קטנה או קטנוע בפרלין כי אין תחבורה ציבורית נוחה.',
       },
       {
         day: 4,
         title: 'לה דיג',
-        placeIds: ['sc-argent'],
+        placeIds: ['sc-argent', 'syc-anse-cocos'],
         notes:
           'מעבורת קצרה של רבע שעה מפרלין ללה דיג, ואז אופניים - כמעט אין באי מכוניות. אנס סורס דארז׳אן דרך אחוזת לוניון, ואחר כך המשך לאנס קוקו ולגראן אנס בצד המזרחי. אפשר לעשות את היום הזה כטיול יום מפרלין, אבל לינה באי נותנת בוקר וערב ריקים לגמרי.',
       },
       {
         day: 5,
         title: 'ים וחזרה',
-        placeIds: ['sc-lazio', 'sc-beauvallon'],
+        placeIds: ['sc-lazio', 'sc-praslin', 'sc-beauvallon', 'syc-morne-blanc', 'syc-tea-factory'],
         notes:
           'יום גמיש: שיט וסנורקלינג בפארק הימי של סנט פייר וקוריוז מפרלין, או צלילה מבו ואלון בחזרה במאהה. תכננו מרווח נדיב לפני הטיסה, כי מעבורות מתבטלות לפעמים במזג אוויר גרוע והחיבור בין האיים הוא הנקודה השברירית של הטיול.',
       },
