@@ -27290,6 +27290,38 @@ export const destinations: Destination[] = [
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=52.25707,20.31167',
       },
+      {
+        id: 'war-saxon-garden',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Warszawa-Ogr%C3%B3d_Saski_fontanna.jpg/500px-Warszawa-Ogr%C3%B3d_Saski_fontanna.jpg',
+        tags: ['families', 'outdoors'],
+        priceLevel: 0,
+        name: 'הגן הסקסוני',
+        nameLocal: 'Ogród Saski',
+        category: 'nature',
+        lat: 52.24056,
+        lng: 21.00861,
+        description:
+          'הפארק הציבורי הוותיק בוורשה, מהראשונים בעולם שנפתחו לקהל הרחב. בקצהו עומד קבר החייל האלמוני בשרידי ארמון סאקסי שנהרס במלחמה.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=52.24056,21.00861',
+      },
+      {
+        id: 'war-national-museum',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Muzeum_Narodowe_w_Warszawie_-_panoramio_-_Mister_No.jpg/500px-Muzeum_Narodowe_w_Warszawie_-_panoramio_-_Mister_No.jpg',
+        tags: ['art', 'history'],
+        priceLevel: 1,
+        name: 'המוזיאון הלאומי בוורשה',
+        nameLocal: 'National Museum in Warsaw',
+        category: 'museum',
+        lat: 52.2317,
+        lng: 21.0247,
+        description:
+          'אוסף האמנות הגדול בפולין, מציורי ימי הביניים ועד המאה ה-20. בו נמצאים גם ציורי הקיר מפאראס שבנוביה, שהועברו לפולין אחרי חפירות ההצלה בסודאן.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=52.2317,21.0247',
+      },
     ],
     itinerary: [
       {
@@ -30906,6 +30938,36 @@ export const destinations: Destination[] = [
         durationMin: 300,
         externalUrl: 'https://maps.google.com/?q=53.7595,-9.6584',
       },
+      {
+        id: 'irw-inishmore',
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
+        name: 'אינישמור',
+        nameLocal: 'Inishmore',
+        category: 'nature',
+        lat: 53.12361,
+        lng: -9.7275,
+        description:
+          'הגדול שבאיי אראן, מישור אבן גיר חצוי בגדרות אבן יבשה עם צוקים בקצהו המערבי. מגיעים אליו במעבורת מדולין או מרוסאוויל, ומסתובבים באופניים.',
+        durationMin: 360,
+        externalUrl: 'https://maps.google.com/?q=53.12361,-9.7275',
+      },
+      {
+        id: 'irw-westport',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/County_Mayo_-_St_Mary%27s_Church_-_.jpg/500px-County_Mayo_-_St_Mary%27s_Church_-_.jpg',
+        tags: ['foodie', 'outdoors'],
+        priceLevel: 1,
+        name: 'ווסטפורט',
+        nameLocal: 'Westport',
+        category: 'attraction',
+        lat: 53.800064,
+        lng: -9.520218,
+        description:
+          'עיירה מתוכננת מהמאה ה-18 במחוז מאיו, עם רחוב לאורך נחל ושורת פאבים. היא הבסיס לקרו פטריק ולמפרץ קלו.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=53.800064,-9.520218',
+      },
     ],
     itinerary: [
       {
@@ -33431,6 +33493,52 @@ export const destinations: Destination[] = [
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=54.74806,25.29278',
       },
+      {
+        id: 'vln-peter-paul',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/St._Peter_and_St._Paul%27s_Church_Exterior%2C_Vilnius%2C_Lithuania_-_Diliff.jpg/500px-St._Peter_and_St._Paul%27s_Church_Exterior%2C_Vilnius%2C_Lithuania_-_Diliff.jpg',
+        tags: ['art', 'history'],
+        priceLevel: 0,
+        name: 'כנסיית פטרוס ופאולוס',
+        nameLocal: 'Church of St. Peter and St. Paul',
+        category: 'historic',
+        lat: 54.69417,
+        lng: 25.30639,
+        description:
+          'כנסייה ברוקית שחזיתה פשוטה ופנימה מכוסה באלפי פסלי גבס לבנים. התקרות והקירות מגולפים כולם, בלי צבע כמעט.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=54.69417,25.30639',
+      },
+      {
+        id: 'vln-university',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        name: 'אוניברסיטת וילנה',
+        nameLocal: 'Vilnius University',
+        category: 'historic',
+        lat: 54.6825,
+        lng: 25.28722,
+        description:
+          'מהאוניברסיטאות הוותיקות במזרח אירופה, שנוסדה במאה ה-16. המתחם בנוי כשורה של חצרות פנימיות, ובו ספרייה היסטורית וכנסיית יוחנן הקדוש.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=54.6825,25.28722',
+      },
+      {
+        id: 'vln-three-crosses',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Vilnius_Three_Crosses.jpg/500px-Vilnius_Three_Crosses.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 0,
+        name: 'גבעת שלושת הצלבים',
+        nameLocal: 'Three Crosses',
+        category: 'viewpoint',
+        lat: 54.6867,
+        lng: 25.2976,
+        description:
+          'אנדרטה לבנה על גבעה מעל העיר העתיקה. המקור נהרס בתקופה הסובייטית והאנדרטה הנוכחית הוקמה ב-1989; מהגבעה נשקפת כל וילנה.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=54.6867,25.2976',
+      },
     ],
     itinerary: [
       {
@@ -34147,6 +34255,36 @@ export const destinations: Destination[] = [
           'חורבת טירת אבירים מהמאה ה-13 במפגש שני נהרות - שהסכר של הדאוגבה הציף את בסיסה, כך שהחומות עולות עכשיו מהמים. קיאקים סביב, גן הגורלות (אנדרטת מאה שנה לעצמאות על אי), ופסטיבלים. שעה מריגה במעלה הנהר; יום על הדאוגבה.',
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=56.63837,25.41957',
+      },
+      {
+        id: 'rga-alberta',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Alberta_iel%C4%81_8_to_2_20120728-1.JPG/500px-Alberta_iel%C4%81_8_to_2_20120728-1.JPG',
+        tags: ['art', 'history'],
+        priceLevel: 0,
+        name: 'רחוב אלברטה - רובע האר נובו',
+        nameLocal: 'Alberta iela',
+        category: 'historic',
+        lat: 56.95904,
+        lng: 24.10971,
+        description:
+          'רחוב שבו מרוכזים בתי האר נובו המפורסמים של ריגה, רבים מהם בתכנון מיכאיל אייזנשטיין. בריגה יש את אחד הריכוזים הגדולים בעולם של הסגנון הזה.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=56.95904,24.10971',
+      },
+      {
+        id: 'lva-open-air',
+        tags: ['families', 'history'],
+        priceLevel: 1,
+        name: 'מוזיאון הכפר הלטבי',
+        nameLocal: 'Latvian Ethnographic Open Air Museum',
+        category: 'museum',
+        lat: 56.990596,
+        lng: 24.280209,
+        description:
+          'כפר שחזור ביער על שפת אגם יוגלה, ובו למעלה ממאה מבנים כפריים שהועברו מכל אזורי לטביה. יש בו חוות, טחנות וכנסיות עץ.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=56.990596,24.280209',
       },
     ],
     itinerary: [
@@ -36747,6 +36885,22 @@ export const destinations: Destination[] = [
         durationMin: 180,
         externalUrl: 'https://maps.google.com/?q=-6.77,107.6',
       },
+      {
+        id: 'id-malang',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Tugu_Malang.jpg/500px-Tugu_Malang.jpg',
+        tags: ['foodie', 'history'],
+        priceLevel: 1,
+        name: 'מאלאנג',
+        nameLocal: 'Malang',
+        category: 'attraction',
+        lat: -7.977131,
+        lng: 112.634027,
+        description:
+          'עיר הררית במזרח ג׳אווה, קרירה יותר מהשפלה ומלאה מבנים מהתקופה ההולנדית. היא הבסיס הנוח לברומו ולמפלי האזור.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=-7.977131,112.634027',
+      },
     ],
     itinerary: [
       {
@@ -38223,6 +38377,23 @@ export const destinations: Destination[] = [
           'הקניון העמוק בפרו - 3,535 מ׳, יותר מקולקה - ובלי כמעט תיירים, כי הוא עשר שעות מארקיפה בדרך עפר. כפרים עם טרסות פרה-אינקאיות, מפל סיפיה של 150 מ׳, מעיינות חמים, ויער של קקטוסים. שלושה ימים לפחות; המקום למי שקולקה נראה לו עמוס.',
         durationMin: 720,
         externalUrl: 'https://maps.google.com/?q=-15.26667,-73.03333',
+      },
+      {
+        id: 'pe-arequipa',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Plaza_de_Armas%2C_Arequipa_2006.jpg/500px-Plaza_de_Armas%2C_Arequipa_2006.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'ארקיפה',
+        nameLocal: 'Arequipa',
+        category: 'historic',
+        lat: -16.39889,
+        lng: -71.53694,
+        description:
+          'העיר הלבנה, בנויה מאבן געש בהירה למרגלות המיסטי, ומרכזה אתר מורשת עולמית. היא הבסיס לקניון הקולקה ומוכרת גם במטבח שלה.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=-16.39889,-71.53694',
       },
     ],
     itinerary: [
@@ -40864,6 +41035,38 @@ export const destinations: Destination[] = [
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=51.87333,4.80083',
       },
+      {
+        id: 'nl-rotterdam',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/A_view_of_Rotterdam%2C_taken_from_the_roof_of_the_Maassilo%2C_Rotterdam%2C_The_Netherlands.jpg/500px-A_view_of_Rotterdam%2C_taken_from_the_roof_of_the_Maassilo%2C_Rotterdam%2C_The_Netherlands.jpg',
+        tags: ['art', 'foodie', 'nightlife'],
+        priceLevel: 2,
+        name: 'רוטרדם',
+        nameLocal: 'Rotterdam',
+        category: 'attraction',
+        lat: 51.924442,
+        lng: 4.47775,
+        description:
+          'עיר הנמל הגדולה באירופה, שמרכזה נבנה מחדש לגמרי אחרי ההפצצה של 1940 ולכן נראה מודרני לחלוטין. היא ההפך הגמור מערי התעלות שסביבה.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=51.924442,4.47775',
+      },
+      {
+        id: 'nl-biesbosch',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Biesbosch_1.jpg/500px-Biesbosch_1.jpg',
+        tags: ['outdoors', 'families'],
+        priceLevel: 0,
+        name: 'הביסבוס',
+        nameLocal: 'De Biesbosch',
+        category: 'nature',
+        lat: 51.73333,
+        lng: 4.75,
+        description:
+          'אחד מאזורי הביצה של מי גאות הבודדים באירופה, מבוך של ערוצים וערבות סמוך לדורדרכט. עוברים בו בקאנו או בסירה, ויש בו בונים.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=51.73333,4.75',
+      },
     ],
     itinerary: [
       {
@@ -41614,6 +41817,52 @@ export const destinations: Destination[] = [
           'המוזיאון הראשי של תרבות הסאמים בשוודיה, ביוקמוק - איילי צפון, נדידה, מסורת, קסמים ותופים, ההרים של לפוניה בתערוכה, וגן צמחי הרים. בפברואר שוק החורף של יוקמוק בן 400 השנים סביבו. הנקודה להבין את מי שגר כאן לפני הכל; שעתיים מקירונה.',
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=66.60333,19.9925',
+      },
+      {
+        id: 'se-padjelanta',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Padjelanta_National_Park_-_PICT0099.jpg/500px-Padjelanta_National_Park_-_PICT0099.jpg',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'פאדיילנטה',
+        nameLocal: 'Padjelanta',
+        category: 'nature',
+        lat: 67.36667,
+        lng: 16.8,
+        description:
+          'הפארק הלאומי הגדול בשוודיה, רמה פתוחה של אגמים וערבה הררית על גבול נורווגיה. הוא חלק מאזור לפוניה ומשמש מרעה קיץ לעדרי איילים של הסאמי.',
+        durationMin: 480,
+        externalUrl: 'https://maps.google.com/?q=67.36667,16.8',
+      },
+      {
+        id: 'se-muddus',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'מודוס',
+        nameLocal: 'Muddus National Park',
+        category: 'nature',
+        lat: 66.9,
+        lng: 20.16667,
+        description:
+          'פארק לאומי של יער בראשית וביצות כבול בין יוקמוק לגליבארה. יש בו עצי אורן בני מאות שנים, מפל בנקיק ומגדלי תצפית מעל הביצה.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=66.9,20.16667',
+      },
+      {
+        id: 'se-riksgransen',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Riksgr%C3%A4nsen_ski_resort.jpg/500px-Riksgr%C3%A4nsen_ski_resort.jpg',
+        tags: ['outdoors'],
+        priceLevel: 2,
+        name: 'ריקסגרנסן',
+        nameLocal: 'Riksgränsen',
+        category: 'attraction',
+        lat: 68.42778,
+        lng: 18.12222,
+        description:
+          'היישוב הצפוני ביותר בשוודיה עם אתר סקי, ממש על גבול נורווגיה. בשל קו הרוחב אפשר לגלוש שם לאור יום גם בלילות מאי ויוני.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=68.42778,18.12222',
       },
     ],
     itinerary: [
@@ -42686,6 +42935,38 @@ export const destinations: Destination[] = [
           'נמל דייגים על רצועת חול בין הים הצפוני ללגונה רינגקבינג - חוף רחב ורוח לגלישה, סירות דיג ומכירת דגים במזח, מעשנת דגים, ובריכה של מרפא במים מלוחים. הצד המערבי הפראי של יוטלנד, שלוש שעות מקופנהגן; בתי נופש עם גגות קש בדיונות.',
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=55.99861,8.12639',
+      },
+      {
+        id: 'dk-aarhus',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Drone_photo_of_Dokk1_in_Aarhus%2C_Denmark.jpg/500px-Drone_photo_of_Dokk1_in_Aarhus%2C_Denmark.jpg',
+        tags: ['foodie', 'art', 'history'],
+        priceLevel: 2,
+        name: 'אורהוס',
+        nameLocal: 'Aarhus',
+        category: 'attraction',
+        lat: 56.1572,
+        lng: 10.2107,
+        description:
+          'העיר השנייה בדנמרק, עיר אוניברסיטה על החוף המזרחי של יוטלנד. מרכזה קומפקטי עם רובע הלאטיני, תעלה של בתי קפה ומוזיאונים גדולים בשוליה.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=56.1572,10.2107',
+      },
+      {
+        id: 'dk-aalborg',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Aalborg_from_the_Aalborg_tower.jpg/500px-Aalborg_from_the_Aalborg_tower.jpg',
+        tags: ['history', 'foodie'],
+        priceLevel: 1,
+        name: 'אאלבורג',
+        nameLocal: 'Aalborg',
+        category: 'attraction',
+        lat: 57.046263,
+        lng: 9.921526,
+        description:
+          'עיר נמל על מיצר הלים בצפון יוטלנד, עם רובע עתיק של בתי עץ ושדרת נמל שחודשה. ממנה ממשיכים צפונה אל סקאגן ואל הדיונות.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=57.046263,9.921526',
       },
     ],
     itinerary: [
@@ -47665,6 +47946,36 @@ export const destinations: Destination[] = [
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=-8.77,121.82',
       },
+      {
+        id: 'id-gili',
+        tags: ['outdoors', 'nightlife'],
+        priceLevel: 1,
+        name: 'איי גילי',
+        nameLocal: 'Gili Islands',
+        category: 'nature',
+        lat: -8.35,
+        lng: 116.06,
+        description:
+          'שלושה איים קטנים מול לומבוק, בלי מכוניות ובלי אופנועים - נעים בהם ברגל, באופניים או בעגלת סוסים. סביבם שוניות וצבי ים.',
+        durationMin: 300,
+        externalUrl: 'https://maps.google.com/?q=-8.35,116.06',
+      },
+      {
+        id: 'id-tirta-gangga',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Tirta_Gangga_water_palace%2C_Bali%2C_Indonesia.JPG/500px-Tirta_Gangga_water_palace%2C_Bali%2C_Indonesia.JPG',
+        tags: ['families', 'art'],
+        priceLevel: 1,
+        name: 'טירטה גנגה',
+        nameLocal: 'Tirta Gangga',
+        category: 'historic',
+        lat: -8.41194,
+        lng: 115.5875,
+        description:
+          'ארמון מים במזרח באלי שבנתה משפחת המלוכה של קרנגאסם, עם בריכות, מזרקות ואבני דריכה מעל בריכת דגי קוי. סביבו מדרגות אורז.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=-8.41194,115.5875',
+      },
     ],
     itinerary: [
       {
@@ -49040,6 +49351,55 @@ export const destinations: Destination[] = [
           '800 בתי האנוק בעיר מולדת שושלת צ׳וסון - רחובות של גגות מעוקלים, השכרת האנבוק (בגד מסורתי) לצילומים, בית הכנסת של הקונפוציאנים, ובעיקר האוכל: ביבימבאפ של ג׳ונג׳ו, שוק לילה, ומאקגולי. אתר של אונסקו לגסטרונומיה. שעתיים במהירה מסיאול; יום או לילה.',
         durationMin: 300,
         externalUrl: 'https://maps.google.com/?q=35.82389,127.1475',
+      },
+      {
+        id: 'kr-gyeongbokgung',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/%EA%B4%91%ED%99%94%EB%AC%B8_%EC%9B%94%EB%8C%80.jpg/500px-%EA%B4%91%ED%99%94%EB%AC%B8_%EC%9B%94%EB%8C%80.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        mustSee: true,
+        name: 'ארמון גיונגבוקגונג',
+        nameLocal: 'Gyeongbokgung',
+        category: 'historic',
+        lat: 37.57988,
+        lng: 126.9768,
+        description:
+          'הארמון הראשי של שושלת ג׳וסון, שנבנה ב-1395 ונהרס ושוחזר כמה פעמים. מול שעריו מתקיים טקס חילופי משמרות, ובשטחו גם המוזיאון הלאומי לפולקלור.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=37.57988,126.9768',
+      },
+      {
+        id: 'kr-insadong',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Insa-dong_%EC%9D%B8%EC%82%AC%EB%8F%99_October_1_2020_20.jpg/500px-Insa-dong_%EC%9D%B8%EC%82%AC%EB%8F%99_October_1_2020_20.jpg',
+        tags: ['art', 'foodie'],
+        priceLevel: 1,
+        name: 'אינסאדונג',
+        nameLocal: 'Insadong',
+        category: 'attraction',
+        lat: 37.57297,
+        lng: 126.98618,
+        description:
+          'רובע של גלריות, חנויות נייר וקרמיקה ובתי תה מסורתיים, בין הארמונות. הרחוב הראשי שלו סגור לרכב בסופי שבוע.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=37.57297,126.98618',
+      },
+      {
+        id: 'kr-myeongdong',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/%EB%AA%85%EB%8F%998%EA%B8%B8_%EA%B1%B0%EB%A6%AC_%282020.03%29.jpg/500px-%EB%AA%85%EB%8F%998%EA%B8%B8_%EA%B1%B0%EB%A6%AC_%282020.03%29.jpg',
+        tags: ['foodie', 'nightlife'],
+        priceLevel: 2,
+        name: 'מיונגדונג',
+        nameLocal: 'Myeongdong',
+        category: 'shopping',
+        lat: 37.5637,
+        lng: 126.984,
+        description:
+          'רובע הקניות הצפוף של סיאול, מוכר בחנויות הקוסמטיקה ובדוכני אוכל הרחוב שנפתחים בערב. בקצהו עומדת הקתדרלה הקתולית של מיונגדונג.',
+        durationMin: 150,
+        externalUrl: 'https://maps.google.com/?q=37.5637,126.984',
       },
     ],
     itinerary: [
@@ -51368,6 +51728,54 @@ export const destinations: Destination[] = [
           'הפיתול המושלם - הסאר מקיף רכס מיוער כמעט 360 מעלות, והתצפית קלוף מעליו - עם שביל צמרות של 1.25 ק״מ ומגדל של 42 מ׳ בגובה העצים. הנוף המצולם של סארלנד, שעה מטריר; ילדים על שביל הצמרות, ומטלאך עם המנזר למטה. הפסקה בדרך למוזל.',
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=49.50111,6.54944',
+      },
+      {
+        id: 'de-mainz',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Mainzer_Dom_Blaue_Stunde_%2837539430014%29.jpg/500px-Mainzer_Dom_Blaue_Stunde_%2837539430014%29.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'מיינץ',
+        nameLocal: 'Mainz',
+        category: 'historic',
+        lat: 49.99944,
+        lng: 8.27361,
+        description:
+          'עיר על מפגש הריין והמיין, עירו של גוטנברג ומקום הדפסת התנ״ך המודפס הראשון. בקתדרלה האדומה שבמרכזה הוכתרו קיסרים, ובעיר גם אחד מבתי הקברות היהודיים העתיקים באירופה.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=49.99944,8.27361',
+      },
+      {
+        id: 'de-rudesheim',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Panoramic_View_of_R%C3%BCdesheim_am_Rhein_20140928_1.jpg/500px-Panoramic_View_of_R%C3%BCdesheim_am_Rhein_20140928_1.jpg',
+        tags: ['foodie', 'outdoors'],
+        priceLevel: 1,
+        name: 'רודסהיים',
+        nameLocal: 'Rüdesheim am Rhein',
+        category: 'attraction',
+        lat: 49.98333,
+        lng: 7.93056,
+        description:
+          'עיירת יין בכניסה לעמק הריין העליון, מוקפת מדרונות כרמים תלולים. ממנה עולה רכבל אל אנדרטת הנידרוואלד ואל שבילי היער שמעליה.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=49.98333,7.93056',
+      },
+      {
+        id: 'de-rheinfels',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Burg_Rheinfels_Bild_1.jpg/500px-Burg_Rheinfels_Bild_1.jpg',
+        tags: ['history', 'outdoors'],
+        priceLevel: 1,
+        name: 'טירת ריינפלס',
+        nameLocal: 'Burg Rheinfels',
+        category: 'historic',
+        lat: 50.1543,
+        lng: 7.7046,
+        description:
+          'חורבות הטירה הגדולה ביותר על הריין העליון, מעל סנקט גוארסהאוזן. מתחתיה מערכת מנהרות מגננה שאפשר להיכנס אליהן, ומהחומות נשקף הנהר.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=50.1543,7.7046',
       },
     ],
     itinerary: [
@@ -54424,6 +54832,55 @@ export const destinations: Destination[] = [
         durationMin: 150,
         externalUrl: 'https://maps.google.com/?q=13.33599,103.97412',
       },
+      {
+        id: 'kh-angkor-wat',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Angkor_Wat.jpg/500px-Angkor_Wat.jpg',
+        tags: ['history'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'אנגקור ואט',
+        nameLocal: 'Angkor Wat',
+        category: 'historic',
+        lat: 13.4125,
+        lng: 103.86667,
+        description:
+          'המקדש הדתי הגדול בעולם בשטחו, שנבנה במאה ה-12 כמקדש הינדי והפך לבודהיסטי. חמשת מגדליו מופיעים על דגל קמבודיה, ורבים מגיעים לראותם בזריחה מעל הבריכה שממול.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=13.4125,103.86667',
+      },
+      {
+        id: 'kh-neak-pean',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Neakpeancentralpond2014.jpg/500px-Neakpeancentralpond2014.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'נאק פואן',
+        nameLocal: 'Neak Pean',
+        category: 'historic',
+        lat: 13.46306,
+        lng: 103.89444,
+        description:
+          'מקדש קטן על אי מלאכותי במרכז בריכה מרובעת, שהוקף בארבע בריכות קטנות. הוא נבנה כמקום ריפוי, ומגיעים אליו בשביל עץ מעל המים.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=13.46306,103.89444',
+      },
+      {
+        id: 'kh-baphuon',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/2016_Angkor%2C_Angkor_Thom%2C_Baphuon_%2817%29.jpg/500px-2016_Angkor%2C_Angkor_Thom%2C_Baphuon_%2817%29.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'באפואון',
+        nameLocal: 'Baphuon',
+        category: 'historic',
+        lat: 13.44361,
+        lng: 103.85583,
+        description:
+          'מקדש הר מהמאה ה-11 בתוך אנגקור תום, שפורק ושוחזר במשך עשרות שנים אחרי שהתוכניות אבדו במלחמת האזרחים. אליו מוביל גשר מוגבה ארוך.',
+        durationMin: 60,
+        externalUrl: 'https://maps.google.com/?q=13.44361,103.85583',
+      },
     ],
     itinerary: [
       {
@@ -57044,6 +57501,50 @@ export const destinations: Destination[] = [
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=9.97917,-83.8525',
       },
+      {
+        id: 'cr-san-jose',
+        tags: ['history', 'art'],
+        priceLevel: 1,
+        name: 'סן חוסה',
+        nameLocal: 'San José',
+        category: 'attraction',
+        lat: 9.932771,
+        lng: -84.079614,
+        description:
+          'בירת קוסטה ריקה ונקודת הכניסה לרוב הטיולים בארץ. במרכזה התיאטרון הלאומי, ומוזיאון הזהב שמתחת לכיכר התרבות.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=9.932771,-84.079614',
+      },
+      {
+        id: 'cr-puerto-viejo',
+        tags: ['outdoors', 'nightlife'],
+        priceLevel: 1,
+        name: 'פוארטו ויאחו',
+        nameLocal: 'Puerto Viejo de Talamanca',
+        category: 'nature',
+        lat: 9.65833,
+        lng: -82.75278,
+        description:
+          'עיירת חוף בקריביים הדרומי, עם תרבות אפרו-קריבית ושונית מול החוף. סביבה חופים של חול בהיר וכהה ושמורות של עצלנים.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=9.65833,-82.75278',
+      },
+      {
+        id: 'cr-braulio',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/BraulioCarrillo1.jpg/500px-BraulioCarrillo1.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'הפארק הלאומי בראוליו קאריו',
+        nameLocal: 'Braulio Carrillo National Park',
+        category: 'nature',
+        lat: 10.1599,
+        lng: -83.97442,
+        description:
+          'יער ענן הררי תלול צפונית לסן חוסה, שהכביש אל החוף הקריבי עובר דרכו. הוא קרוב מאוד לבירה ועדיין יער גשם צפוף.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=10.1599,-83.97442',
+      },
     ],
     itinerary: [
       {
@@ -57410,6 +57911,53 @@ export const destinations: Destination[] = [
           'העיר הוותיקה בטאיוואן, בירת ההולנדים (מבצר זילנדיה) ושל קושינגה - מאות מקדשים, מקדש קונפוציוס הראשון, בית העץ אנפינג שבניאן בלע, ורחובות של סמטאות עם אוכל: מרק אטריות דאנזאי, נקניקי אורז, דיסת סרטנים. בירת האוכל של האי, שעתיים במהירה מטאיפיי; לילה או שניים.',
         durationMin: 480,
         externalUrl: 'https://maps.google.com/?q=22.99727,120.2027',
+      },
+      {
+        id: 'tw-taipei-101',
+        tags: ['history'],
+        priceLevel: 2,
+        mustSee: true,
+        name: 'טאיפיי 101',
+        nameLocal: 'Taipei 101',
+        category: 'viewpoint',
+        lat: 25.0336,
+        lng: 121.5647,
+        description:
+          'מגדל בן 101 קומות שהיה הגבוה בעולם עד 2010, ובצורתו מזכיר גבעולי במבוק. בקומה ה-88 מוצג משקולת הייצוב הענקית שמאזנת אותו ברוח ובאדמה רועדת.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=25.0336,121.5647',
+      },
+      {
+        id: 'tw-kaohsiung',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Cityscape_of_Kaohsiung%2C_Taiwan_202303.jpg/500px-Cityscape_of_Kaohsiung%2C_Taiwan_202303.jpg',
+        tags: ['foodie', 'art'],
+        priceLevel: 1,
+        name: 'קאוסיונג',
+        nameLocal: 'Kaohsiung',
+        category: 'attraction',
+        lat: 22.615,
+        lng: 120.2975,
+        description:
+          'עיר הנמל הגדולה בדרום טאיוואן, חמה ורגועה יותר מטאיפיי. בה רובע האמנות פייר-2 במחסני נמל ישנים, ואגם הלוטוס עם מקדשי הדרקון והנמר.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=22.615,120.2975',
+      },
+      {
+        id: 'tw-ckss',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Chiang_Kai-shek_memorial_amk.jpg/500px-Chiang_Kai-shek_memorial_amk.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'אולם הזיכרון לצ׳יאנג קאי שק',
+        nameLocal: 'Chiang Kai-shek Memorial Hall',
+        category: 'historic',
+        lat: 25.03444,
+        lng: 121.52167,
+        description:
+          'מבנה זיכרון לבן עם גג כחול בלב טאיפיי, ומעליו כיכר ענקית שבצדיה התיאטרון הלאומי ואולם הקונצרטים. בכיכר הזאת התקיימו ההפגנות שהובילו לדמוקרטיזציה.',
+        durationMin: 90,
+        externalUrl: 'https://maps.google.com/?q=25.03444,121.52167',
       },
     ],
     itinerary: [
@@ -58829,6 +59377,38 @@ export const destinations: Destination[] = [
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=32.21528,76.31861',
       },
+      {
+        id: 'ind-chandratal',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Chandratal_1.JPG/500px-Chandratal_1.JPG',
+        tags: ['outdoors'],
+        priceLevel: 0,
+        name: 'אגם צ׳נדרטאל',
+        nameLocal: 'Chandra Taal',
+        category: 'nature',
+        lat: 32.47518,
+        lng: 77.61706,
+        description:
+          'אגם הררי בצורת סהר בגובה כ-4,300 מטר בספיטי, מוקף רכסים חשופים. הדרך אליו פתוחה רק בחודשי הקיץ.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=32.47518,77.61706',
+      },
+      {
+        id: 'ind-kaza',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Kaza_-_Losar_Entry_point.jpg/500px-Kaza_-_Losar_Entry_point.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
+        name: 'קאזה',
+        nameLocal: 'Kaza',
+        category: 'attraction',
+        lat: 32.22556,
+        lng: 78.07139,
+        description:
+          'היישוב הראשי בעמק ספיטי, במדבר הררי גבוה בין רכסים חשופים. הוא הבסיס למנזרי האזור ולכפרים הגבוהים שסביבו.',
+        durationMin: 180,
+        externalUrl: 'https://maps.google.com/?q=32.22556,78.07139',
+      },
     ],
     itinerary: [
       {
@@ -59571,6 +60151,22 @@ export const destinations: Destination[] = [
           'החוף שבו הסיירה נבאדה נופלת לים - שביל של שעתיים ביער עם קופים לחופים של סלעים ענקיים וחול (קאבו סן חואן), ערסלים ואוהלים ללינה, וכפר טאירונה קדום בג׳ונגל. ארבע שעות מקרטחנה דרך סנטה מרטה; הפארק נסגר לחודש כמה פעמים בשנה - לבדוק. הקריביים הפראיים.',
         durationMin: 720,
         externalUrl: 'https://maps.google.com/?q=11.26667,-74.05',
+      },
+      {
+        id: 'co-santa-marta',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Bah%C3%ADa_de_Santa_Marta.jpg/500px-Bah%C3%ADa_de_Santa_Marta.jpg',
+        tags: ['outdoors', 'history'],
+        priceLevel: 1,
+        name: 'סנטה מרטה',
+        nameLocal: 'Santa Marta',
+        category: 'attraction',
+        lat: 11.24194,
+        lng: -74.20528,
+        description:
+          'העיר הספרדית הוותיקה ביותר שנותרה בקולומביה, בין הים לרכס סיירה נבדה. היא הבסיס לפארק טאירונה ולדרך אל העיר האבודה.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=11.24194,-74.20528',
       },
     ],
     itinerary: [
@@ -60969,6 +61565,22 @@ export const destinations: Destination[] = [
           'קפלה מהמאה ה-15 שכל סנטימטר בה מגולף - עמוד השוליה, מלאכים מנגנים, אלפי סמלים שהולידו את התיאוריות של ״צופן דה וינצ׳י״ ואת הקהל. אבירי טמפלר או לא, הגילוף אמיתי ומדהים. חצי שעה באוטובוס מהעיר, וקניון רוסלין גלן לטיול ביער.',
         durationMin: 120,
         externalUrl: 'https://maps.google.com/?q=55.85528,-3.16028',
+      },
+      {
+        id: 'edi-holyrood',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Holyrood_Palace_-_aerial_-_2025-04-19_01_%28cropped%29.jpg/500px-Holyrood_Palace_-_aerial_-_2025-04-19_01_%28cropped%29.jpg',
+        tags: ['history'],
+        priceLevel: 2,
+        name: 'ארמון הולירוד',
+        nameLocal: 'Palace of Holyroodhouse',
+        category: 'historic',
+        lat: 55.9525,
+        lng: -3.1725,
+        description:
+          'מעון המלוכה בסקוטלנד, בקצה התחתון של הרויאל מייל. לצדו חורבות מנזר הולירוד מהמאה ה-12, ובחדריו חיה מרי מלכת הסקוטים.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=55.9525,-3.1725',
       },
     ],
     itinerary: [
@@ -63405,6 +64017,22 @@ export const destinations: Destination[] = [
           'החוף שאלפי צבי ים ירוקים מטילים בו כל לילה, בקצה המזרחי של ערב - סיור מודרך בלילה ובזריחה עם רייינג׳רים, בלי אור ובלי צילום פלאש, לראות צבה חופרת ומטילה וגוזלים רצים לים. מרכז מבקרים ומלון. שעה מסור; יולי-ספטמבר שיא. חובה ללון קרוב.',
         durationMin: 240,
         externalUrl: 'https://maps.google.com/?q=22.42551,59.82717',
+      },
+      {
+        id: 'om-al-alam',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Al_Alam_Palace_I._Sultan%27s_Ceremonial_Residence.jpg/500px-Al_Alam_Palace_I._Sultan%27s_Ceremonial_Residence.jpg',
+        tags: ['history'],
+        priceLevel: 0,
+        name: 'ארמון אל עלם',
+        nameLocal: 'Al Alam Palace',
+        category: 'historic',
+        lat: 23.616,
+        lng: 58.5947,
+        description:
+          'ארמון הטקסים של סולטן עומאן במוסקט הישנה, עם עמודים כחולים וזהובים. הכניסה אינה אפשרית אך אפשר לצלם מהשער, ומשני צדיו מבצרים פורטוגזיים.',
+        durationMin: 45,
+        externalUrl: 'https://maps.google.com/?q=23.616,58.5947',
       },
     ],
     itinerary: [
@@ -66599,6 +67227,38 @@ export const destinations: Destination[] = [
           'עיר בין קוטופחשי לקילוטואה שנהרסה ונבנתה מחדש ארבע פעמים בהתפרצויות - מרכז קולוניאלי מאבן געשית אפורה, שוק, ופסטיבל ״מאמה נגרה״ בספטמבר עם תחפושות. הבסיס ללולאה ולפארק; שעתיים מקיטו. לא יעד, אבל האוטובוסים יוצאים מכאן ובחורף לינה.',
         durationMin: 90,
         externalUrl: 'https://maps.google.com/?q=-0.93194,-78.61608',
+      },
+      {
+        id: 'ec-ingapirca',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Ecuador_ingapirca_inca_ruins.jpg/500px-Ecuador_ingapirca_inca_ruins.jpg',
+        tags: ['history'],
+        priceLevel: 1,
+        name: 'אינגאפירקה',
+        nameLocal: 'Ingapirca',
+        category: 'historic',
+        lat: -2.54859,
+        lng: -78.87188,
+        description:
+          'האתר האינקאי הגדול ביותר באקוודור, ובמרכזו מקדש השמש האליפטי הבנוי אבן מסותתת. לפני האינקה ישבו בו הקניארי, ושרידי שתי התרבויות נמצאים זה לצד זה.',
+        durationMin: 120,
+        externalUrl: 'https://maps.google.com/?q=-2.54859,-78.87188',
+      },
+      {
+        id: 'ec-antisana',
+        photo:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Volcan_Nevado_antisana_camilogaleano%28com%29.jpg/500px-Volcan_Nevado_antisana_camilogaleano%28com%29.jpg',
+        tags: ['outdoors'],
+        priceLevel: 1,
+        name: 'אנטיסאנה',
+        nameLocal: 'Antisana',
+        category: 'nature',
+        lat: -0.48139,
+        lng: -78.14083,
+        description:
+          'הר געש מכוסה קרחונים ושמורה של רמות פארמו מזרחית לקיטו. זה מהמקומות הטובים באנדים לראות קונדור אנדי.',
+        durationMin: 240,
+        externalUrl: 'https://maps.google.com/?q=-0.48139,-78.14083',
       },
     ],
     itinerary: [
