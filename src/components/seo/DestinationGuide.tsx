@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 import type { Country, Destination, Place } from '@/lib/types';
 import { categoryMeta } from '@/lib/categories';
 import { daysHe, formatDurationHe } from '@/lib/duration';
@@ -95,28 +96,32 @@ export default function DestinationGuide({
       {/* ---- What to do: the catalog's real places, grouped ---- */}
       {groups.length > 0 && (
         <div className="mt-10">
-          <h3 className="display text-xl text-night">מה לעשות {inCity}</h3>
+          <SectionHeading icon="📍">מה לעשות {inCity}</SectionHeading>
           <p className="mt-2 text-sm text-night/60">
             {dest.places.length} מקומות שנאספו ונבדקו על ידי הצוות.
           </p>
           {groups.map((g) => (
             <div key={g.category} className="mt-6">
-              <h4 className="text-sm font-bold text-night/70">
-                <span aria-hidden="true">{categoryMeta[g.category].emoji}</span>{' '}
+              {/*
+                The category's own colour, which the map pins and the filter
+                chips above this guide already use. It was grey here, so nine
+                group headers in a row were indistinguishable from the body text
+                between them. This is the lowest-effort place on the page to put
+                colour, because the value is already in `categoryMeta`.
+              */}
+              <h4
+                className="flex items-center gap-2 text-sm font-black"
+                style={{ color: categoryMeta[g.category].color }}
+              >
+                <span aria-hidden="true">{categoryMeta[g.category].emoji}</span>
                 {categoryMeta[g.category].label}
+                <span className="text-xs font-bold opacity-60">{g.places.length}</span>
               </h4>
               <ul className="mt-3 grid gap-3 sm:grid-cols-2">
                 {g.places.map((p) => (
-                  <li
-                    key={p.id}
-                    className="rounded-2xl bg-shell p-4 ring-1 ring-night/10"
-                  >
-                    <PlaceHeading place={p} />
-                    <p className="mt-1 text-sm leading-relaxed text-night/75">
-                      {p.description}
-                    </p>
+                  <PlaceCard key={p.id} place={p}>
                     <PlaceMeta place={p} />
-                  </li>
+                  </PlaceCard>
                 ))}
               </ul>
             </div>
@@ -127,7 +132,7 @@ export default function DestinationGuide({
       {/* ---- How many days: answered from the curated itinerary, not a guess ---- */}
       {days.length > 0 && (
         <div className="mt-10">
-          <h3 className="display text-xl text-night">כמה ימים {inCity}</h3>
+          <SectionHeading icon="🗓️">כמה ימים {inCity}</SectionHeading>
           <p className="mt-2 max-w-3xl leading-relaxed text-night/75">
             המסלול המוכן שלנו {toCity} הוא{' '}
             <strong className="text-night">{daysHe(days.length)}</strong>, והוא מכסה{' '}
@@ -140,7 +145,7 @@ export default function DestinationGuide({
       {/* ---- The route itself, day by day ---- */}
       {days.length > 0 && (
         <div className="mt-8">
-          <h3 className="display text-xl text-night">מסלול {toCity} - יום אחרי יום</h3>
+          <SectionHeading icon="🧭">מסלול {toCity} - יום אחרי יום</SectionHeading>
           <ol className="mt-4 space-y-4">
             {days.map((d) => (
               <li key={d.day} className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
@@ -162,17 +167,15 @@ export default function DestinationGuide({
       {/* ---- Family: only when there is enough tagged to be worth a heading ---- */}
       {family.length >= MIN_FAMILY_PLACES && (
         <div className="mt-10">
-          <h3 className="display text-xl text-night">טיול משפחתי {toCity}</h3>
+          <SectionHeading icon="👨‍👩‍👧">טיול משפחתי {toCity}</SectionHeading>
           <p className="mt-2 text-sm text-night/60">
             {family.length} מקומות בקטלוג מסומנים כמתאימים למשפחות עם ילדים.
           </p>
           <ul className="mt-3 grid gap-3 sm:grid-cols-2">
             {family.map((p) => (
-              <li key={p.id} className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
-                <PlaceHeading place={p} />
-                <p className="mt-1 text-sm leading-relaxed text-night/75">{p.description}</p>
+              <PlaceCard key={p.id} place={p}>
                 <PlaceMeta place={p} />
-              </li>
+              </PlaceCard>
             ))}
           </ul>
         </div>
@@ -180,19 +183,17 @@ export default function DestinationGuide({
 
       {/* ---- Kosher and Shabbat: the differentiator ---- */}
       <div className="mt-10">
-        <h3 className="display text-xl text-night">אוכל כשר ושבת {inCity}</h3>
+        <SectionHeading icon="🍽️">אוכל כשר ושבת {inCity}</SectionHeading>
         <p className="mt-2 max-w-3xl leading-relaxed text-night/75">
           {dest.practical.kosherOverview}
         </p>
         {kosher.length > 0 ? (
           <ul className="mt-4 grid gap-3 sm:grid-cols-2">
             {kosher.map((p) => (
-              <li key={p.id} className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
-                <PlaceHeading place={p} />
-                <p className="mt-1 text-sm leading-relaxed text-night/75">{p.description}</p>
+              <PlaceCard key={p.id} place={p}>
                 <KosherNote note={p.kosherNote} className="mt-2" />
                 <KosherBadge kashrut={p.kashrut} className="mt-2" />
-              </li>
+              </PlaceCard>
             ))}
           </ul>
         ) : (
@@ -216,7 +217,7 @@ export default function DestinationGuide({
 
       {/* ---- When to go: bestSeason (166/166) + sourced calendar entries ---- */}
       <div className="mt-10">
-        <h3 className="display text-xl text-night">מתי כדאי לנסוע {toCity}</h3>
+        <SectionHeading icon="☀️">מתי כדאי לנסוע {toCity}</SectionHeading>
         <p className="mt-2 max-w-3xl leading-relaxed text-night/75">{dest.bestSeason}</p>
         {events.length > 0 && (
           <>
@@ -248,7 +249,7 @@ export default function DestinationGuide({
       {/* ---- Costs: only the 19 cities that have a sourced figure ---- */}
       {cost && (
         <div className="mt-10">
-          <h3 className="display text-xl text-night">כמה זה עולה {inCity}</h3>
+          <SectionHeading icon="💰">כמה זה עולה {inCity}</SectionHeading>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-night/70">
             הוצאה יומית טיפוסית לאדם על תחבורה מקומית, אוכל וכניסות -{' '}
             <strong className="text-night">בלי טיסות ובלי לינה</strong>.
@@ -281,7 +282,7 @@ export default function DestinationGuide({
 
       {/* ---- Getting there: city facts plus the country's own practical block ---- */}
       <div className="mt-10">
-        <h3 className="display text-xl text-night">איך מגיעים {toCity} ואיך מסתובבים</h3>
+        <SectionHeading icon="✈️">איך מגיעים {toCity} ואיך מסתובבים</SectionHeading>
         <dl className="mt-4 grid gap-3 sm:grid-cols-2">
           <Fact title="טיסות מתל אביב" text={dest.practical.flights} />
           <Fact title="תחבורה בעיר" text={dest.practical.gettingAround} />
@@ -300,7 +301,7 @@ export default function DestinationGuide({
           can see. One function, so they cannot. */}
       {faq.length >= 2 && (
         <div className="mt-10">
-          <h3 className="display text-xl text-night">שאלות נפוצות על {toCity}</h3>
+          <SectionHeading icon="❓">שאלות נפוצות על {toCity}</SectionHeading>
           <dl className="mt-4 space-y-4">
             {faq.map((qa) => (
               <div key={qa.question} className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
@@ -370,6 +371,93 @@ export default function DestinationGuide({
 }
 
 /** A place's name plus its local name, which is what you hand a taxi driver. */
+/**
+ * A section heading.
+ *
+ * There are nine sections in this guide and they were nine `<h3>` with one
+ * identical class, which is the same drift entry (ss) fixed for the trip
+ * screen's panel bars - inverted. There, five sibling blocks had each invented
+ * their own header; here, nine had exactly one, so nothing told a reader where
+ * they were and the page read as continuous text.
+ *
+ * A marker and a rule are enough to make it scannable, and `icon` is required
+ * for the same reason `PanelSection`'s is: one emoji out of nine is what an
+ * optional field produces.
+ */
+function SectionHeading({ icon, children }: { icon: string; children: ReactNode }) {
+  return (
+    <h3 className="flex items-center gap-2 border-b border-night/10 pb-2 display text-xl text-night">
+      <span aria-hidden>{icon}</span>
+      {children}
+    </h3>
+  );
+}
+
+/**
+ * A place's photo, WITHOUT the client component.
+ *
+ * `PlaceThumb` does the same job above this guide, but it carries `useState` to
+ * catch a broken image, so it is a client component. This guide is the one part
+ * of the destination page that ships no client JS at all - `KosherBadge`,
+ * `KosherNote` and everything else here render on the server - and a client
+ * island per place would undo that on a page whose whole point is being static.
+ *
+ * So the fallback is done in CSS instead of in JS: the category tile is the
+ * container's own background with the emoji centred in it, and the photo sits
+ * on top. A photo that fails to load simply reveals the tile underneath, which
+ * is the same outcome `PlaceThumb` reaches with state.
+ *
+ * `alt=""` on purpose, twice over: the place name is the adjacent heading, so
+ * announcing it again is noise - and an `alt` string is what a browser paints
+ * over the tile when the image 404s, which is the one thing this arrangement is
+ * built to avoid.
+ */
+function GuideThumb({ place }: { place: Place }) {
+  const meta = categoryMeta[place.category];
+  return (
+    <div
+      className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl ring-1 ring-night/10"
+      style={{ backgroundColor: `${meta.color}1a` }}
+      role="img"
+      aria-label={meta.label}
+    >
+      <span aria-hidden className="absolute inset-0 flex items-center justify-center text-2xl opacity-80">
+        {meta.emoji}
+      </span>
+      {place.photo && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={place.photo}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="relative h-full w-full object-cover"
+        />
+      )}
+    </div>
+  );
+}
+
+/**
+ * One place in the guide: picture, name, description, meta.
+ *
+ * The three lists in this file - what to do, family, kosher - had the same card
+ * written out three times, which is how the picture came to be missing from all
+ * of them at once. One component now, so a change reaches every list.
+ */
+function PlaceCard({ place, children }: { place: Place; children?: ReactNode }) {
+  return (
+    <li className="flex gap-3 rounded-2xl bg-shell p-4 ring-1 ring-night/10">
+      <GuideThumb place={place} />
+      <div className="min-w-0 flex-1">
+        <PlaceHeading place={place} />
+        <p className="mt-1 text-sm leading-relaxed text-night/75">{place.description}</p>
+        {children}
+      </div>
+    </li>
+  );
+}
+
 function PlaceHeading({ place }: { place: Place }) {
   return (
     <h5 className="font-bold text-night">
