@@ -5,6 +5,7 @@ import { breadcrumbLd } from '@/lib/seo/jsonLd';
 import JsonLd from '@/components/seo/JsonLd';
 import { HUBS, hubMembers } from '@/lib/seo/hubs';
 import { promotedMembers } from '@/lib/seo/hubData';
+import CardPhoto from '@/components/CardPhoto';
 
 const TITLE = 'אוספי יעדים - לפי אופי הטיול | טיול+';
 const DESCRIPTION =
@@ -26,6 +27,34 @@ export const metadata: Metadata = {
 };
 
 /**
+ * One lead photograph per collection, and a DIFFERENT one for each.
+ *
+ * Taking each hub's first member with a photo is the obvious implementation and
+ * it looks broken: Vienna is the first member of most hubs, so eight of the
+ * twelve cards came back with the same cathedral. The page passed a count of
+ * "twelve pictures" while showing three.
+ *
+ * So a photo already used by an earlier hub is skipped. `HUBS` has a fixed
+ * order and `hubMembers` is deterministic, so the assignment is stable between
+ * builds rather than shuffling on each deploy. If a hub's members are all
+ * spoken for it falls back to its own first - a repeat beats an empty card, and
+ * with twelve hubs over thirty promoted destinations it does not arise.
+ */
+function leadPhotos(members: ReturnType<typeof promotedMembers>) {
+  const used = new Set<string>();
+  const lead = new Map<string, string | undefined>();
+  for (const hub of HUBS) {
+    const inHub = hubMembers(hub, members);
+    const fresh = inHub.find((m) => m.card.photo && !used.has(m.card.photo));
+    const any = inHub.find((m) => m.card.photo);
+    const photo = (fresh ?? any)?.card.photo;
+    if (photo) used.add(photo);
+    lead.set(hub.slug, photo);
+  }
+  return lead;
+}
+
+/**
  * The hub index.
  *
  * Its job is structural as much as editorial: it gives every hub one inbound
@@ -34,6 +63,7 @@ export const metadata: Metadata = {
  */
 export default function CollectionsIndex() {
   const members = promotedMembers();
+  const lead = leadPhotos(members);
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -56,20 +86,39 @@ export default function CollectionsIndex() {
         יש בכל יעד בקטלוג שלנו, ולא מרשימה שמישהו כתב מהזיכרון.
       </p>
 
+      {/*
+        Each collection leads with a photograph of a destination that is
+        actually in it.
+
+        This page used to be twelve text tiles, and it was the only page in the
+        catalog layer with no pictures at all - on a travel site, where the
+        collection pages it links to carry 38 photographs each. The photo is not
+        decoration: it is the one part of the card that says what a collection
+        like "nature" or "kosher food" looks like before you click, and it costs
+        nothing: `hubMembers` already resolves every member and each card already
+        carries its own verified `photo`.
+
+        `CardPhoto` rather than a background-image, for the reason entry (ff)
+        records: a background image cannot be lazily loaded, and twelve of them
+        would all fetch on load.
+      */}
       <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {HUBS.map((hub) => {
-          const count = hubMembers(hub, members).length;
+          const inHub = hubMembers(hub, members);
           return (
             <li key={hub.slug}>
               <Link
                 href={`/collections/${hub.slug}`}
-                className="block h-full rounded-2xl bg-shell p-5 ring-1 ring-night/10 transition hover:ring-night/30"
+                className="group block h-full overflow-hidden rounded-2xl bg-shell ring-1 ring-night/10 transition hover:ring-night/30"
               >
-                <h2 className="font-bold text-night">
-                  <span aria-hidden="true">{hub.emoji}</span> {hub.title}
-                </h2>
-                <p className="mt-2 text-sm leading-relaxed text-night/70">{hub.intro}</p>
-                <p className="mt-3 text-xs font-bold text-night/50">{count} יעדים</p>
+                <CardPhoto photo={lead.get(hub.slug)} className="photo-bg relative h-28" />
+                <div className="p-5">
+                  <h2 className="font-bold text-night">
+                    <span aria-hidden="true">{hub.emoji}</span> {hub.title}
+                  </h2>
+                  <p className="mt-2 text-sm leading-relaxed text-night/70">{hub.intro}</p>
+                  <p className="mt-3 text-xs font-bold text-night/50">{inHub.length} יעדים</p>
+                </div>
               </Link>
             </li>
           );
