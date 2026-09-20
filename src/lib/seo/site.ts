@@ -1,3 +1,5 @@
+import type { Metadata } from 'next';
+
 /**
  * Site-level SEO constants and the small helpers every page's metadata uses.
  *
@@ -15,6 +17,82 @@ export const SITE_NAME = 'טיול+';
 /** Absolute URL for a path. Pass a leading-slash path; '/' gives the origin. */
 export function canonical(path: string): string {
   return path === '/' ? SITE_URL : `${SITE_URL}${path}`;
+}
+
+/**
+ * Everything a static page needs to describe itself: canonical, og:url and the
+ * share card.
+ *
+ * ## Why it exists, and it is not tidiness
+ *
+ * Next merges metadata **per top-level field**, and the root layout sets
+ * `alternates: { canonical: SITE_URL }`. Its comment says "child routes
+ * override this with their own" - and sixteen of them never did, so every one
+ * of them shipped a canonical pointing at the homepage. That tells Google the
+ * catalog hub, the kosher directory, the about page and the contact page are
+ * all duplicates of `/`, which is the strongest possible instruction to drop
+ * them. `og:url` was wrong the same way, which is a WhatsApp preview naming
+ * the wrong page.
+ *
+ * The fix is a helper rather than sixteen copy-pastes precisely because the
+ * failure mode was sixteen pages each forgetting the same two lines.
+ *
+ * ## The share image has to be repeated here, and that is the subtle part
+ *
+ * Per-field merging cuts both ways: the moment a page declares `openGraph`,
+ * the parent's `openGraph` is **replaced, not merged**, so its `images` go
+ * with it. That is not hypothetical - it is measured on production today,
+ * where `/collections` sets its own openGraph block and serves **no og:image
+ * at all**, while `/about`, which sets none, correctly inherits `/og.png`.
+ *
+ * So a naive helper would have given all sixteen pages a correct canonical and
+ * silently taken away their share image: one WhatsApp bug traded for another.
+ * `images` is therefore declared here explicitly. A page with a real photograph
+ * of its own (a destination, a country) passes it in and overrides this.
+ */
+export function pageMetadata({
+  path,
+  title,
+  description,
+  images,
+  noindex = false,
+}: {
+  path: string;
+  title: string;
+  description?: string;
+  /** Override the default share card, e.g. a destination's own photo. */
+  images?: NonNullable<Metadata['openGraph']>['images'];
+  /**
+   * `index: false, follow: true` - keep it out of the results, still walk its
+   * links. Used for the app surfaces that have no content to rank.
+   */
+  noindex?: boolean;
+}): Metadata {
+  const url = canonical(path);
+  const og = images ?? [
+    { url: '/og.png', width: 1200, height: 630, alt: 'טיול+ - סוכן הנסיעות החכם לישראלים' },
+  ];
+  return {
+    title,
+    ...(description ? { description } : {}),
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'website',
+      locale: 'he_IL',
+      siteName: SITE_NAME,
+      url,
+      title,
+      ...(description ? { description } : {}),
+      images: og,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      ...(description ? { description } : {}),
+      images: og,
+    },
+    ...(noindex ? { robots: { index: false, follow: true } } : {}),
+  };
 }
 
 /**
