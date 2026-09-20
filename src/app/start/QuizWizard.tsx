@@ -183,7 +183,14 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
         its own minimum height so the navigation buttons below do not jump
         between a short step and a tall one.
       */}
-      <TransitionPanel activeIndex={step} className="min-h-[15rem]">
+      {/*
+          The floor stops the box collapsing between steps of different
+          heights, but 15rem was well above the shortest step: measured at
+          375px, step 1 is 145px of content in a 240px box, i.e. 96px of empty
+          panel above the button. 11rem keeps the floor and gives most of that
+          back.
+        */}
+        <TransitionPanel activeIndex={step} className="min-h-[11rem]">
         <Field label="לאן טסים? (אפשר לבחור כמה ערים)">
           <CityCombobox options={cities} citySlugs={citySlugs} onToggle={toggleCity} autoFocus />
           <p className="mt-2 text-xs leading-relaxed text-night/45">
