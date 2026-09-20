@@ -1,7 +1,13 @@
+import type { Metadata } from 'next';
 import { getProvider } from '@/lib/providers';
 import PlannerClient from './PlannerClient';
+import { pageMetadata } from '@/lib/seo/site';
 
-export const metadata = { title: 'מתכנן מסלולים | טיול+' };
+export const metadata: Metadata = pageMetadata({
+  path: '/planner',
+  title: 'מתכנן מסלולים | טיול+',
+  noindex: true,
+});
 
 export default async function PlannerPage({
   searchParams,
