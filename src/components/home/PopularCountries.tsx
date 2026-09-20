@@ -32,6 +32,7 @@ export default function PopularCountries({ tiles }: { tiles: CountryTile[] }) {
         {tiles.map((c) => (
           <li key={c.slug}>
             <Link
+              prefetch={false}
               href={`/countries/${c.slug}`}
               className="card-pop flex h-full flex-col items-center rounded-2xl bg-shell px-3 py-5 text-center ring-1 ring-night/10 transition hover:ring-night/25"
             >

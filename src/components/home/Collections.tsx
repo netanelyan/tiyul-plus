@@ -24,6 +24,7 @@ export default function Collections({ tiles }: { tiles: CollectionTile[] }) {
         {tiles.map((t) => (
           <li key={t.slug}>
             <Link
+              prefetch={false}
               href={`/collections/${t.slug}`}
               className="card-pop flex h-full items-center gap-3 rounded-2xl bg-shell p-4 ring-1 ring-night/10 transition hover:ring-night/25"
             >
