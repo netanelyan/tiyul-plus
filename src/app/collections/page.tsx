@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { canonical } from '@/lib/seo/site';
+import { pageMetadata } from '@/lib/seo/site';
 import { breadcrumbLd } from '@/lib/seo/jsonLd';
 import JsonLd from '@/components/seo/JsonLd';
 import { HUBS, hubMembers } from '@/lib/seo/hubs';
@@ -12,20 +12,17 @@ const TITLE = 'אוספי יעדים - לפי אופי הטיול | טיול+';
 const DESCRIPTION =
   'יעדים מסודרים לפי מה שמחפשים: אוכל כשר, טיול משפחתי, טבע, היסטוריה, אמנות, חופשה קצרה - כל אוסף בנוי מהמקומות שבאמת יש בכל יעד.';
 
-export const metadata: Metadata = {
+/*
+  Through the shared helper, which is what puts the share image back. This
+  page had the canonical right and served no og:image at all: declaring an
+  openGraph block replaces the parent's rather than merging into it, so its
+  images went with it and a WhatsApp share of this page had no picture.
+*/
+export const metadata: Metadata = pageMetadata({
+  path: '/collections',
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: canonical('/collections') },
-  openGraph: {
-    type: 'website',
-    locale: 'he_IL',
-    siteName: 'טיול+',
-    url: canonical('/collections'),
-    title: TITLE,
-    description: DESCRIPTION,
-  },
-  twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION },
-};
+});
 
 /**
  * The hub index.
