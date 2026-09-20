@@ -11,11 +11,15 @@ import { daysHe } from '@/lib/duration';
 
 // One entry point to a trip: /chat is both the conversation and the plan
 // (the unified view) - there is no longer a separate chat tab vs. planner tab.
+// The pricing page was reachable from exactly one link on the whole logged-out
+// site, which is most of why nobody was subscribing. It goes last on purpose:
+// the planning is free and should be what the nav leads with.
 const NAV_LINKS = [
   { href: '/countries', label: 'יעדים' },
   { href: '/ask', label: 'שאל את הסוכן' },
   { href: '/chat', label: 'תכנון טיול' },
   { href: '/kosher', label: 'כשרות' },
+  { href: '/premium', label: 'מחירים' },
 ];
 
 /**
