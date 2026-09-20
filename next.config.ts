@@ -11,8 +11,8 @@ import type { NextConfig } from 'next';
  *
  * A content policy that blocks something real breaks the page silently for
  * every visitor, and this site loads from several origins it genuinely needs:
- * Leaflet's tiles, Google's fonts, Wikimedia and Unsplash photographs,
- * flagcdn, Supabase and the PayPal SDK. Report-only publishes exactly the same
+ * Leaflet's tiles, Wikimedia and Unsplash photographs, flagcdn, Supabase and
+ * the PayPal SDK. Report-only publishes exactly the same
  * policy and blocks nothing - violations appear in the browser console, so the
  * list below can be corrected against real traffic before it is enforced.
  *
@@ -29,8 +29,9 @@ const CSP_REPORT_ONLY = [
     needs per-request nonces, which a statically prerendered page cannot have.
   */
   "script-src 'self' 'unsafe-inline' https://www.paypal.com https://www.paypalobjects.com",
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "font-src 'self' data: https://fonts.gstatic.com",
+  "style-src 'self' 'unsafe-inline'",
+  // Self-hosted since the font move - no Google origin to allow.
+  "font-src 'self' data:",
   [
     "img-src 'self' data: blob:",
     'https://upload.wikimedia.org',
