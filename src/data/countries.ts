@@ -605,7 +605,7 @@ export const countries: Country[] = [
   {
     slug: 'poland',
     name: 'פולין',
-    nameLocal: 'Polska',
+    nameLocal: 'Poland / Polska',
     flag: '🇵🇱',
     tagline: 'שורשים, ערים עתיקות והרי הטטרה - במחירים של מזרח אירופה',
     summary:
@@ -881,7 +881,7 @@ export const countries: Country[] = [
   {
     slug: 'south-korea',
     name: 'דרום קוריאה',
-    nameLocal: '대한민국',
+    nameLocal: 'South Korea / 대한민국',
     flag: '🇰🇷',
     tagline: 'רכבות מהירות, מקדשים בהרים ותשתית שעובדת',
     summary:
@@ -1281,7 +1281,7 @@ export const countries: Country[] = [
   {
     slug: 'north-macedonia',
     name: 'צפון מקדוניה',
-    nameLocal: 'Северна Македонија',
+    nameLocal: 'North Macedonia / Северна Македонија',
     flag: '🇲🇰',
     tagline: 'אגם אוחריד, בזאר עות׳מאני ומחירים שנעלמו משאר אירופה',
     summary:
@@ -1300,7 +1300,7 @@ export const countries: Country[] = [
   {
     slug: 'mongolia',
     name: 'מונגוליה',
-    nameLocal: 'Монгол улс',
+    nameLocal: 'Mongolia / Монгол улс',
     flag: '🇲🇳',
     tagline: 'ערבה בלי גדרות, אוהלי לבד ומדבר גובי',
     summary:
