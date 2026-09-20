@@ -1,8 +1,23 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useAuth } from '@/lib/auth/AuthContext';
 import { planAtLeast } from '@/lib/plans';
+
+/**
+ * Asks this section to expand. A panel inside it that sent the user off to log
+ * in dispatches this on the way back, because reopening itself inside a
+ * collapsed section would mean reopening into something nobody can see.
+ *
+ * An event rather than a shared read of the pending intent, because effects
+ * run child-first: a panel would have consumed the intent before this section
+ * ever got to look at it. This way the order does not matter.
+ */
+export const PAID_TOOLS_OPEN_EVENT = 'tiyul:paid-tools-open';
+
+export function openPaidTools() {
+  window.dispatchEvent(new Event(PAID_TOOLS_OPEN_EVENT));
+}
 
 /**
  * The one place on the trip screen where things cost money.
@@ -54,6 +69,12 @@ export default function PaidTools({ children }: { children: ReactNode }) {
   // Ordinal: every paid plan gets the paid tools, not only the one named 'premium'
   const isPremium = planAtLeast(auth.profile?.plan ?? 'free', 'premium');
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const onOpen = () => setOpen(true);
+    window.addEventListener(PAID_TOOLS_OPEN_EVENT, onOpen);
+    return () => window.removeEventListener(PAID_TOOLS_OPEN_EVENT, onOpen);
+  }, []);
 
   return (
     <section aria-labelledby="paid-tools-heading" className="mt-4">

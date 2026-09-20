@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/auth/AuthContext';
 import { authHeader } from '@/lib/auth/client';
 import { requestLogin, takePendingLogin } from '@/components/LoginGate';
 import PanelSection from '@/components/PanelSection';
+import { openPaidTools } from '@/components/PaidTools';
 import GroupComments from '@/components/group/GroupComments';
 import GroupDates from '@/components/group/GroupDates';
 import GroupRsvp from '@/components/group/GroupRsvp';
@@ -66,6 +67,9 @@ export default function TripGroupPanel({
     const t = setTimeout(() => {
       resumeRef.current = false;
       setOpen(true);
+      // This panel lives inside the collapsed paid section - opening it without
+      // opening the section around it reopens into something nobody can see.
+      openPaidTools();
     }, 0);
     return () => clearTimeout(t);
   }, [auth.user]);

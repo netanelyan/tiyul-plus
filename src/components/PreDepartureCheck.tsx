@@ -5,6 +5,8 @@ import { useAuth } from '@/lib/auth/AuthContext';
 import { authHeader } from '@/lib/auth/client';
 import PanelSection from '@/components/PanelSection';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
+import { requestLogin, takePendingLogin } from '@/components/LoginGate';
+import { openPaidTools } from '@/components/PaidTools';
 import { OFFLINE_HINT } from '@/lib/offline/online';
 import { checkOfferEligibility, priceLabel, type PreDepartureReport } from '@/lib/predeparture';
 import { todayISO } from '@/lib/trip/dates';
@@ -215,6 +217,17 @@ export default function PreDepartureCheck({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth.ready, auth.user?.id, trip.id, trip.startDate, trip.endDate]);
 
+  /**
+   * Back from a login this block asked for. The phase effect above already
+   * moves to the offer on its own (auth.user?.id is in its deps), so there is
+   * nothing to resume here - only the collapsed section around this block to
+   * open, and the one-shot intent to consume so it is not left behind.
+   */
+  useEffect(() => {
+    if (!auth.user) return;
+    if (takePendingLogin('predeparture')) openPaidTools();
+  }, [auth.user]);
+
   // Ordinal: every paid plan gets the paid tools, not only the one named 'premium'
   const isPremium = planAtLeast(auth.profile?.plan ?? 'free', 'premium');
 
@@ -307,10 +320,30 @@ export default function PreDepartureCheck({
       ) : (
         <div className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
           {phase.kind === 'need-auth' && (
-            <p className="text-sm font-semibold text-night/70">
-              הבדיקה קשורה לחשבון (כדי שנוכל לשלוח קבלה ולשחזר אותה בכל מכשיר) - צריך להתחבר קודם,
-              כפתור ההתחברות למעלה בניווט.
-            </p>
+            /*
+              Same dead end as the shared-trip panel next door: a sentence
+              naming a button that is off screen on a phone. No resume effect is
+              needed here - the phase effect already re-runs on auth.user?.id,
+              so signing in moves this straight to the offer.
+            */
+            <div role="alert">
+              <p className="text-sm font-semibold leading-relaxed text-night/70">
+                הבדיקה נשמרת בחשבון, כדי שנוכל לשלוח קבלה ושתוכלו לפתוח אותה בכל מכשיר.
+                מתחברים פעם אחת ונמשיך מכאן.
+              </p>
+              {auth.enabled ? (
+                <button
+                  onClick={() => requestLogin('predeparture')}
+                  className="mt-3 rounded-xl bg-sunset px-4 py-2 text-sm font-bold text-cream transition hover:bg-sunset-deep"
+                >
+                  התחברות והמשך לבדיקה
+                </button>
+              ) : (
+                <p className="mt-1 text-xs font-medium text-night/55">
+                  כפתור ההתחברות נמצא למעלה בניווט.
+                </p>
+              )}
+            </div>
           )}
 
           {phase.kind === 'processing' && <ThinkingIndicator label={phase.note} />}
