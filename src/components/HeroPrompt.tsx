@@ -120,6 +120,14 @@ export default function HeroPrompt({
             type="button"
             onClick={toggleKosher}
             aria-pressed={kosher}
+            /*
+              A title attribute is not an accessible description: it never
+              appears on touch, and screen-reader support for it is
+              inconsistent enough that it cannot be the only place a
+              preference explains itself. The text stays for the mouse tooltip
+              and is now also referenced properly.
+            */
+            aria-describedby="kosher-toggle-hint"
             title="ההעדפה עוברת לסוכן בשקט - הוא לא ישאל על זה בשיחה"
             className={`badge rounded-full px-4 py-2.5 text-sm font-semibold ring-1 transition ${
               kosher
@@ -143,6 +151,13 @@ export default function HeroPrompt({
             </svg>
             אוכל כשר
           </button>
+          {/* The description the toggle points at. Visually hidden - the button
+              itself is already understood on sight; what was missing is the
+              "we will not ask about this again" promise for anyone who cannot
+              hover. */}
+          <span id="kosher-toggle-hint" className="sr-only">
+            ההעדפה עוברת לסוכן בשקט - הוא לא ישאל על זה בשיחה
+          </span>
           {extraChips}
           </>
         }
