@@ -79,7 +79,18 @@ export default function HeroPrompt({
       >
         {/* Below sm: a full-width field with a full-width button under it. From sm: the button sits inside the field */}
         <div className="relative">
+          {/*
+            A visible label would compete with the heading directly above it,
+            which already says what this field is for - but a placeholder is
+            not a label: it disappears the moment anyone types, and this one
+            also rotates, so a screen reader announced an unnamed textbox.
+            sr-only keeps the design and gives the field a name that stays.
+          */}
+          <label htmlFor="hero-prompt" className="sr-only">
+            לאן טסים הפעם? תיאור חופשי של הטיול שאתם מדמיינים
+          </label>
           <input
+            id="hero-prompt"
             ref={inputRef}
             value={text}
             onChange={(e) => setText(e.target.value)}
