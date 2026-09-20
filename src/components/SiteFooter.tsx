@@ -176,10 +176,18 @@ export default function SiteFooter() {
             links={footerDestinations}
             more={{ href: '/countries', label: 'כל היעדים' }}
           />
+          {/*
+            Both rows used to end in a link to /countries, labelled "all
+            destinations" and "all countries" - two different promises landing
+            on the same page. The destinations row keeps the catalog, which is
+            the destination browser; the countries row goes to the collections
+            index, which is the other way into the catalog and had no footer
+            link of its own.
+          */}
           <ChipRow
             label="מדינות"
             links={footerCountries}
-            more={{ href: '/countries', label: 'כל המדינות' }}
+            more={{ href: '/collections', label: 'אוספי יעדים' }}
           />
         </div>
 
