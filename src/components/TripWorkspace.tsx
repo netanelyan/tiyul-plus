@@ -423,7 +423,7 @@ export default function TripWorkspace({
     // fill-mode both leaves a transform on the element, and that creates a
     // containing block which "breaks" position:fixed for descendants.
     <>
-    <div className="rise-in pb-24 lg:pb-0">
+    <div className="rise-in clears-chat-bar">
       {/* ---------- Trip header ---------- */}
       <div className="flex flex-wrap items-center justify-between gap-3 print:hidden">
         <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
@@ -1366,7 +1366,7 @@ export default function TripWorkspace({
       {/* ---------- Mobile: sticky conversation bar + drawer ---------- */}
       <button
         onClick={() => setChatOpen(true)}
-        className="fixed bottom-3 end-3 start-20 z-40 flex items-center gap-2 rounded-2xl bg-shell px-4 py-3 text-start shadow-[0_10px_30px_-12px_rgba(36,27,77,0.5)] ring-1 ring-night/15 lg:hidden print:hidden"
+        className="chat-bar-bottom fixed end-3 start-20 z-40 flex items-center gap-2 rounded-2xl bg-shell px-4 py-3 text-start shadow-[0_10px_30px_-12px_rgba(36,27,77,0.5)] ring-1 ring-night/15 lg:hidden print:hidden"
       >
         {/* The bar stays clickable offline too - the saved conversation is content
             worth reading. What changes is the invitation: it stops offering to
