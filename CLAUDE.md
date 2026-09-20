@@ -12773,7 +12773,14 @@ actually ended), tsc, build clean, lint at the pre-existing three in
 after deploy is that check, and a wrong `MAIL_FROM` shows up as `resend_http_4xx`
 in the Vercel logs with the body Resend returned.
 
-**For Netanel:** paste `emails/auth-magic-link.html` into Supabase (Magic Link),
-set the sender name to `טיול+`, and add a `_dmarc` TXT at Porkbun
-(`v=DMARC1; p=none;`) - Resend's Records tab does not show DMARC and Gmail now
-treats its absence as a spam signal.
+**Closed the same day, by Netanel, after deploy.** The first live sends failed
+with `[mail] resend 401` in the Vercel logs - the key in Vercel was not one
+Resend accepted; a fresh key plus a redeploy fixed it. Two Supabase findings
+on the way: a NEW address gets the **Confirm sign up** template, not Magic
+Link, so both needed the paste (the site calls `signInWithOtp` with
+`shouldCreateUser`); and the subject is a separate field from the body.
+DMARC is live at Porkbun (`p=none`, reports to his inbox).
+`PAYPAL_ALLOW_SANDBOX_LIVE_DOMAIN` removed from Vercel, and one real
+subscription run end to end in production - the recurring-revenue path had only
+ever executed against mocks until then. **His answer to "is the website
+ready": everything on the list is done.**
