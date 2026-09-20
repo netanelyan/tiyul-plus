@@ -41,6 +41,7 @@ import { OFFLINE_HINT, isoDay, useOnline } from '@/lib/offline/online';
 import { readOnlyIfOffline } from '@/lib/trip/readOnly';
 import { cachedAt, pruneCities } from '@/lib/trip/cityStore';
 import { daysHe } from '@/lib/duration';
+import { useFocusTrap } from '@/lib/useFocusTrap';
 
 /**
  * The unified trip view - one screen for everything about the active trip:
@@ -80,6 +81,7 @@ export default function TripWorkspace({
   /** 'day' = the selected day's map - 'trip' = every stop of every day together */
   const [mapMode, setMapMode] = useState<'day' | 'trip'>('day');
   const [chatOpen, setChatOpen] = useState(false);
+  const chatSheetRef = useRef<HTMLDivElement>(null);
   const [importOpen, setImportOpen] = useState(false);
   const [allDaysOpen, setAllDaysOpen] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
@@ -132,6 +134,9 @@ export default function TripWorkspace({
    * A hook after a conditional `return` is a time bomb.
    */
   const shareUrlCache = useRef<{ sig: string; url: string } | null>(null);
+
+  // Tab stays inside the sheet, Escape closes it, focus returns to the bar.
+  useFocusTrap(chatSheetRef, chatOpen, () => setChatOpen(false));
   /** A pin the traveller chose to place by hand: the next click on the map sets its location */
   const [placingPinId, setPlacingPinId] = useState<string | null>(null);
 
@@ -1402,7 +1407,20 @@ export default function TripWorkspace({
             onClick={() => setChatOpen(false)}
             className="absolute inset-0 bg-night/40"
           />
-          <div className="absolute inset-x-0 bottom-0 h-[82vh] rounded-t-3xl bg-shell p-2 shadow-[0_-10px_40px_-12px_rgba(36,27,77,0.5)]">
+          {/*
+            A real modal, so it says so and behaves like one: it covers the
+            page, the page behind it is inert to the eye, and without the trap
+            Tab walked straight out of the sheet into the nav and the plan
+            underneath while the reader still thought they were in the
+            conversation. Escape closes, and focus goes back to the bar that
+            opened it. See useFocusTrap.
+          */}
+          <div
+            ref={chatSheetRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="שיחה עם הסוכן"
+            className="absolute inset-x-0 bottom-0 h-[82vh] rounded-t-3xl bg-shell p-2 shadow-[0_-10px_40px_-12px_rgba(36,27,77,0.5)]">
             <ChatPanel
               chat={chat}
               autoFocus
