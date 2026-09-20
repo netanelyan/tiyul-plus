@@ -1,3 +1,5 @@
+import { countryCodeFromFlag, countryNameFromCode } from '@/lib/flagCode';
+
 /**
  * A country flag as an image, not as a Unicode character.
  *
@@ -11,18 +13,6 @@
  * The data stays as it is (the flag field still holds an emoji): the ISO code is derived
  * from the emoji itself at runtime, so there is no need to add a field to 79 records.
  */
-
-const REGIONAL_INDICATOR_BASE = 0x1f1e6; // 🇦
-
-/** A flag emoji -> its ISO code ('at'). Returns null for anything that is not a pair of regional indicators. */
-export function countryCodeFromFlag(flag?: string): string | null {
-  if (!flag) return null;
-  const points = [...flag].map((c) => c.codePointAt(0) ?? 0);
-  const letters = points
-    .filter((p) => p >= REGIONAL_INDICATOR_BASE && p <= REGIONAL_INDICATOR_BASE + 25)
-    .map((p) => String.fromCharCode('a'.charCodeAt(0) + (p - REGIONAL_INDICATOR_BASE)));
-  return letters.length === 2 ? letters.join('') : null;
-}
 
 const WIDTHS = { sm: 'w20', md: 'w40', lg: 'w80' } as const;
 type Size = keyof typeof WIDTHS;
@@ -71,7 +61,13 @@ export default function Flag({
       }/${cc}.png 2x`}
       width={w}
       height={h}
-      alt={label ? `דגל ${label}` : ''}
+      /*
+        The country from the code, never the caller's `label` - see
+        countryNameFromCode. `label` still decides whether the flag is
+        described at all (decorative beside a name that is already written out,
+        or meaningful on its own); it just no longer decides what it is called.
+      */
+      alt={label ? `דגל ${countryNameFromCode(cc) ?? label}` : ''}
       aria-hidden={label ? undefined : true}
       loading="lazy"
       decoding="async"
