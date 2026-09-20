@@ -161,7 +161,12 @@ export default function RootLayout({
           </div>
         </header>
         <OfflineNotice />
-        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>
+        {/*
+          page-main carries the bottom clearance for the accessibility button
+          and the device's safe area - see globals.css. It replaces the bottom
+          half of py-8, so the top padding is set on its own.
+        */}
+        <main className="page-main mx-auto w-full max-w-6xl flex-1 px-4 pt-8">{children}</main>
         </TripProvider>
         </AuthProvider>
         <AccessibilityWidget />

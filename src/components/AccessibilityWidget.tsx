@@ -83,7 +83,11 @@ export default function AccessibilityWidget() {
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label="הגדרות נגישות"
-        className="fixed bottom-4 start-4 z-[60] flex h-11 w-11 items-center justify-center rounded-full bg-night text-cream shadow-[0_6px_20px_-6px_rgba(36,27,77,0.5)] ring-2 ring-cream transition hover:bg-night-soft focus:outline-none focus-visible:ring-4 focus-visible:ring-sunset sm:h-12 sm:w-12"
+        // The bottom offset adds the device's safe area, so on a notched phone
+        // the button does not sit under the home indicator. The rest of the
+        // layout reserves this corner through --a11y-corner (globals.css).
+        style={{ bottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))' }}
+        className="fixed start-4 z-[60] flex h-11 w-11 items-center justify-center rounded-full bg-night text-cream shadow-[0_6px_20px_-6px_rgba(36,27,77,0.5)] ring-2 ring-cream transition hover:bg-night-soft focus:outline-none focus-visible:ring-4 focus-visible:ring-sunset sm:h-12 sm:w-12"
       >
         {/* The universal accessibility icon (person-in-circle) */}
         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden className="sm:h-[26px] sm:w-[26px]">
@@ -97,7 +101,9 @@ export default function AccessibilityWidget() {
           ref={panelRef}
           role="dialog"
           aria-label="הגדרות נגישות"
-          className="fixed bottom-20 start-4 z-[60] max-h-[80vh] w-80 max-w-[calc(100vw-2rem)] overflow-y-auto rounded-2xl bg-shell p-4 shadow-[var(--shadow-pop)] ring-1 ring-night/15"
+          // Sits above the button, which has itself moved up by the safe area.
+          style={{ bottom: 'calc(5rem + env(safe-area-inset-bottom, 0px))' }}
+          className="fixed start-4 z-[60] max-h-[80vh] w-80 max-w-[calc(100vw-2rem)] overflow-y-auto rounded-2xl bg-shell p-4 shadow-[var(--shadow-pop)] ring-1 ring-night/15"
         >
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-bold text-night">הגדרות נגישות</h2>
