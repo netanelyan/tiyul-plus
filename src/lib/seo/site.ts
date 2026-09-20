@@ -139,6 +139,24 @@ export function metaDescription(...parts: (string | undefined | null)[]): string
 }
 
 /**
+ * The official profiles for this brand, in one place because two consumers
+ * need them and a second copy is how they drift: the footer renders them as
+ * links, and the homepage declares them as `sameAs` on the Organization, which
+ * is how a search engine works out that the account and the site are the same
+ * entity. A profile listed in one and not the other is a contradiction we are
+ * publishing about ourselves.
+ *
+ * Only the Instagram account was verifiable from the authoring environment;
+ * Facebook and TikTok answer every request with a login wall, so their
+ * existence is taken from the footer, which has published them for months.
+ */
+export const SOCIAL_PROFILES = [
+  { href: 'https://instagram.com/tiyulplus', label: 'אינסטגרם' },
+  { href: 'https://facebook.com/tiyulplus', label: 'פייסבוק' },
+  { href: 'https://tiktok.com/@tiyulplus', label: 'טיקטוק' },
+] as const;
+
+/**
  * Routes that must never be crawled, shared by `robots.ts` and used as the
  * reasoning record for why.
  *

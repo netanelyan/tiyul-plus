@@ -5,6 +5,8 @@ import DestinationBrowser from '@/components/DestinationBrowser';
 import { buildDestinationCards } from '@/lib/destinationCards';
 import { pageMetadata } from '@/lib/seo/site';
 import { catalogCounts } from '@/lib/server/footerLinks';
+import JsonLd from '@/components/seo/JsonLd';
+import { collectionPageLd } from '@/lib/seo/jsonLd';
 
 /*
   This page had a title and nothing else, so it inherited the homepage's
@@ -46,6 +48,21 @@ export default async function CountriesPage() {
 
   return (
     <div>
+      {/*
+        The list is every destination the browser renders, not a sample and not
+        the promoted subset: filtering here is client-side, so all of them are
+        genuinely in this page's DOM, and a list that named fewer would be
+        describing a different page than the one that shipped.
+      */}
+      <JsonLd
+        data={collectionPageLd({
+          name: 'קטלוג היעדים של טיול+',
+          description: `${dests.length} יעדים ב-${countries.length} מדינות, כל אחד עם מסלול מוכן, מפה ושכבת כשרות.`,
+          path: '/countries',
+          items: cards.map((c) => ({ name: c.name, path: `/destinations/${c.slug}` })),
+        })}
+      />
+
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="display text-3xl text-night">לאן טסים?</h1>

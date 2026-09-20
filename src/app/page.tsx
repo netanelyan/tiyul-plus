@@ -8,6 +8,8 @@ import CtaBand from '@/components/home/CtaBand';
 import Collections from '@/components/home/Collections';
 import HowItWorks from '@/components/home/HowItWorks';
 import { collectionTiles, flagshipCards, popularCountries } from '@/lib/server/homeSections';
+import JsonLd from '@/components/seo/JsonLd';
+import { organizationLd, webSiteLd } from '@/lib/seo/jsonLd';
 
 /**
  * The homepage.
@@ -41,6 +43,13 @@ export default function Home() {
 
   return (
     <div>
+      {/*
+        Who we are and what this site is, once, on the one page that should
+        carry it. Both nodes are @id-addressable so every other page's markup
+        can point at them instead of restating the brand.
+      */}
+      <JsonLd data={[organizationLd(), webSiteLd()]} />
+
       <HomeHero />
 
       <Flagships cards={flagships} />

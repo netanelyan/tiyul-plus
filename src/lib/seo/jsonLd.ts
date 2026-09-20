@@ -22,7 +22,7 @@
  * trust.
  */
 import type { Country, Destination, Place } from '@/lib/types';
-import { SITE_NAME, canonical } from './site';
+import { SITE_NAME, SITE_URL, SOCIAL_PROFILES, canonical } from './site';
 import { daysHe } from '@/lib/duration';
 import { hePrefix } from '@/lib/hebrew';
 
@@ -99,11 +99,17 @@ export function touristDestinationLd(
       url: canonical(`/countries/${country.slug}`),
     },
     ...(attractions.length ? { includesAttraction: attractions } : {}),
-    isPartOf: {
-      '@type': 'WebSite',
-      name: SITE_NAME,
-      url: canonical('/'),
-    },
+    /*
+      No `isPartOf` here. It used to carry a WebSite node, and it was invalid:
+      `isPartOf` has a domain of CreativeWork, and a TouristDestination is a
+      Place - a city is not part of a website. The relation it was reaching for
+      is `containedInPlace` above, which is already correct, and "this belongs
+      to our site" now has a real home in the @id-addressable WebSite node the
+      homepage declares.
+
+      Caught by validating the emitted nodes against the schema.org vocabulary
+      (scripts/validate-jsonld.mjs) rather than by eye.
+    */
   };
 }
 
@@ -223,6 +229,105 @@ export function collectionLd(
       name: it.name,
       url: canonical(`/destinations/${it.slug}`),
     })),
+  };
+}
+
+/**
+ * The site as a publisher, for the homepage only.
+ *
+ * `@id` is the point of it: every other node on the site can refer to this one
+ * URI instead of restating who we are, and a search engine has one entity to
+ * attach the brand, the logo and the social profiles to rather than several
+ * half-described ones.
+ *
+ * `sameAs` comes from SOCIAL_PROFILES, the same list the footer renders, so
+ * the markup cannot claim an account the site does not link to.
+ */
+export function organizationLd(): JsonLdNode {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${SITE_URL}#organization`,
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: {
+      '@type': 'ImageObject',
+      url: canonical('/icon-512.png'),
+      width: 512,
+      height: 512,
+    },
+    image: canonical('/og.png'),
+    sameAs: SOCIAL_PROFILES.map((s) => s.href),
+  };
+}
+
+/**
+ * The site itself, for the homepage only.
+ *
+ * ## There is deliberately no SearchAction
+ *
+ * The brief for this asked for one, to get the sitelinks search box. It is not
+ * here because **the site has no search URL to name**. Site search is a client
+ * overlay with no route behind it, and the catalog's filter is client state -
+ * there is no `/search?q=` for a crawler to call. A `potentialAction` pointing
+ * at a URL that 404s is a machine-readable claim that is simply false, and it
+ * is the same class of mistake as the `aggregateRating` refused at the top of
+ * this file.
+ *
+ * It becomes correct the moment a real query route exists; until then the
+ * honest markup is the one without it.
+ */
+export function webSiteLd(): JsonLdNode {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${SITE_URL}#website`,
+    name: SITE_NAME,
+    url: SITE_URL,
+    inLanguage: 'he-IL',
+    publisher: { '@id': `${SITE_URL}#organization` },
+  };
+}
+
+/**
+ * A hub page that is a list of things: the catalog index, the kosher directory.
+ *
+ * `CollectionPage` describes the page and the nested `ItemList` describes what
+ * is on it - which is why the items are the links the page actually renders,
+ * not the whole catalog. A list that claims more than the page shows is the
+ * thing this file's opening rule forbids.
+ */
+export function collectionPageLd({
+  name,
+  description,
+  path,
+  items,
+}: {
+  name: string;
+  description: string;
+  path: string;
+  items: { name: string; path: string }[];
+}): JsonLdNode {
+  const url = canonical(path);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': `${url}#collection`,
+    name,
+    description,
+    url,
+    inLanguage: 'he-IL',
+    isPartOf: { '@id': `${SITE_URL}#website` },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: items.length,
+      itemListElement: items.map((it, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: it.name,
+        url: canonical(it.path),
+      })),
+    },
   };
 }
 

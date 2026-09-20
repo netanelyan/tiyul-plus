@@ -50,3 +50,4 @@ photo-report.json
 
 # catalog regeneration output (review artifacts, not committed)
 src/data/*.generated.ts
+.schemaorg.jsonld

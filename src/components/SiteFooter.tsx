@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Logo from '@/components/Logo';
+import { SOCIAL_PROFILES } from '@/lib/seo/site';
 import {
   coverageCountsLine,
   footerCountries,
@@ -112,12 +113,13 @@ const POLICY: FooterLink[] = [
   { href: '/accessibility', label: 'הצהרת נגישות' },
 ];
 
-/** Social networks. An empty `href` = rendered as muted text rather than a broken link. */
-const SOCIAL: FooterLink[] = [
-  { href: 'https://instagram.com/tiyulplus', label: 'אינסטגרם' },
-  { href: 'https://facebook.com/tiyulplus', label: 'פייסבוק' },
-  { href: 'https://tiktok.com/@tiyulplus', label: 'טיקטוק' },
-];
+/**
+ * Social networks. An empty `href` = rendered as muted text rather than a
+ * broken link. The list itself lives in lib/seo/site.ts because the homepage's
+ * Organization markup declares the same profiles as `sameAs`, and two copies
+ * of "where we are" is how they end up disagreeing.
+ */
+const SOCIAL: FooterLink[] = SOCIAL_PROFILES.map((s) => ({ ...s }));
 
 export default function SiteFooter() {
   // Derived, not hardcoded. On static pages this is fixed at build time, and every deploy refreshes it.
