@@ -137,6 +137,37 @@ export default function TripWorkspace({
 
   // Tab stays inside the sheet, Escape closes it, focus returns to the bar.
   useFocusTrap(chatSheetRef, chatOpen, () => setChatOpen(false));
+
+  /**
+   * Show the agent's first answer on a phone instead of hiding it.
+   *
+   * Submitting from the homepage lands on /chat with the itinerary and a
+   * CLOSED sheet. The reply and the user's own message are in the DOM and
+   * invisible - you have to already know the bottom bar opens them. Desktop
+   * has no such problem: the transcript is a column. So a first-time mobile
+   * user asks a question and never sees the answer.
+   *
+   * Opened once, after the first reply has finished streaming, and never
+   * again - the bar keeps a live preview of the last reply from then on, so
+   * the signal remains without the sheet taking over the screen every turn.
+   */
+  const autoOpenedRef = useRef(false);
+  // A plain call rather than useMemo: it returns a string, so it is already
+  // stable by value for the effect below, and the loop is over a bounded
+  // history. Wrapping it was also the one thing the React compiler could not
+  // preserve in this file.
+  const lastReply = lastAssistantReply(chat.messages);
+
+  useEffect(() => {
+    if (autoOpenedRef.current || chat.loading || !lastReply) return;
+    // Desktop renders the conversation as a column - nothing to reveal.
+    if (window.matchMedia('(min-width: 1024px)').matches) return;
+    autoOpenedRef.current = true;
+    // A tick later: setting state synchronously in an effect body is the
+    // cascading-render pattern the react-hooks rule rejects.
+    const t = setTimeout(() => setChatOpen(true), 0);
+    return () => clearTimeout(t);
+  }, [chat.loading, lastReply]);
   /** A pin the traveller chose to place by hand: the next click on the map sets its location */
   const [placingPinId, setPlacingPinId] = useState<string | null>(null);
 
@@ -1384,12 +1415,17 @@ export default function TripWorkspace({
             worth reading. What changes is the invitation: it stops offering to
             write, and the circle loses its action colour so it does not look like
             an active button. */}
+        {/*
+          Once there is an answer the bar shows it, rather than a standing
+          invitation to write. A bar that always reads "ask the agent" gives a
+          first-time reader no sign that a reply is sitting behind it.
+        */}
         <span className="truncate text-sm font-medium text-night/50">
           {chat.loading
             ? 'הסוכן עונה…'
             : offline
               ? 'הסוכן דורש חיבור · אפשר לקרוא את השיחה'
-              : 'בקשה לסוכן: תוסיף יום, תחליף מקום…'}
+              : (lastReply ?? 'בקשה לסוכן: תוסיף יום, תחליף מקום…')}
         </span>
         <span
           className={`ms-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
@@ -1537,6 +1573,15 @@ function Btn({
 
 /** The opening hint is shown once per browser */
 const COACH_KEY = 'tiyul-plus:coach:agent';
+
+/** The most recent non-empty reply from the agent, or null if it has not spoken yet. */
+function lastAssistantReply(messages: { role: string; content: string }[]): string | null {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i];
+    if (m.role === 'assistant' && m.content.trim()) return m.content.trim();
+  }
+  return null;
+}
 
 /**
  * A small menu: one button that opens a list of actions.
