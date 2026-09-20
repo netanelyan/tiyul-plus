@@ -153,7 +153,23 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
     };
     const built = generateTrip(prefs, chosen, tripName(citySlugs, cities), preferences);
     trip.createTripFrom(built);
-    router.push('/planner');
+    /*
+      Open the trip that was just built, not the planner's new-trip form.
+      Sending them to /planner meant five answered screens, a "building your
+      trip" button, and then a blank builder pre-filled with the default city -
+      their real itinerary was only findable further down, in the small
+      "continue an existing trip" list.
+
+      `built.id` rather than reading the context back: createTripFrom stamps
+      and stores the trip it is given, so the id is already in hand and there
+      is no render to wait for. /chat?trip=<id> is the established way to open
+      a specific trip (see AgentWorkspace).
+
+      The other two entry points to /planner are untouched: both are plain
+      "start a new trip" links with no trip in hand, so the builder form is
+      the right landing for them.
+    */
+    router.push(`/chat?trip=${encodeURIComponent(built.id)}`);
   };
 
   return (
