@@ -1,8 +1,9 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@/lib/auth/AuthContext';
 import { authHeader } from '@/lib/auth/client';
+import { requestLogin, takePendingLogin } from '@/components/LoginGate';
 import PanelSection from '@/components/PanelSection';
 import GroupComments from '@/components/group/GroupComments';
 import GroupDates from '@/components/group/GroupDates';
@@ -46,6 +47,28 @@ export default function TripGroupPanel({
   const isPremium = planAtLeast(auth.profile?.plan ?? 'free', 'premium');
   const group = useGroup({ tripId: trip.id }, open && !!auth.user);
   const myId = auth.user?.id ?? null;
+
+  /**
+   * Back from the login modal this panel opened: reopen it, so the user lands
+   * on the thing they asked for rather than on a collapsed bar they have to
+   * find again. The emailed-link path reloads the document and resets `open`
+   * to false, which is exactly the case this exists for.
+   *
+   * The ref guard is because StrictMode runs an effect twice and
+   * takePendingLogin is a one-shot read; the timeout is because setting state
+   * synchronously in an effect body is the cascading-render pattern.
+   */
+  const resumeRef = useRef(false);
+  useEffect(() => {
+    if (!auth.user) return;
+    if (!resumeRef.current) resumeRef.current = takePendingLogin('group');
+    if (!resumeRef.current) return;
+    const t = setTimeout(() => {
+      resumeRef.current = false;
+      setOpen(true);
+    }, 0);
+    return () => clearTimeout(t);
+  }, [auth.user]);
 
   // A link the organizer created earlier survives a reload: the GET hands the
   // existing code back, so the panel shows it instead of minting a second one.
@@ -163,9 +186,30 @@ export default function TripGroupPanel({
     >
       <div className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
         {!auth.user && (
-          <p className="text-sm font-semibold text-night/70">
-            הטיול המשותף קשור לחשבון - צריך להתחבר קודם (למעלה בניווט).
-          </p>
+          /*
+            This used to be the sentence on its own, pointing at the nav. The
+            panel sits low on the trip screen, so on a phone the button it named
+            was off screen - a dead end at the exact moment somebody decided they
+            wanted the feature.
+          */
+          <div role="alert">
+            <p className="text-sm font-semibold leading-relaxed text-night/70">
+              הטיול המשותף נשמר בחשבון, כדי שהחברים יראו אותו גם אחרי שתערכו. מתחברים
+              פעם אחת ונמשיך מכאן.
+            </p>
+            {auth.enabled ? (
+              <button
+                onClick={() => requestLogin('group')}
+                className="mt-3 rounded-xl bg-sunset px-4 py-2 text-sm font-bold text-cream transition hover:bg-sunset-deep"
+              >
+                התחברות ופתיחת טיול משותף
+              </button>
+            ) : (
+              <p className="mt-1 text-xs font-medium text-night/55">
+                כפתור ההתחברות נמצא למעלה בניווט.
+              </p>
+            )}
+          </div>
         )}
 
         {auth.user && !isPremium && (
