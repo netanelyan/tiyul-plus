@@ -2,9 +2,9 @@
 
 import { outboundAttrs, outboundTarget, placeMapUrl } from '@/lib/outbound';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
+import L, { type Map as LeafletMap } from 'leaflet';
 import type { Place } from '@/lib/types';
 import type { TripPinKind } from '@/lib/trip/types';
 import { categoryMeta } from '@/lib/categories';
@@ -180,13 +180,62 @@ function PlacementCatcher({ onPick }: { onPick: (lat: number, lng: number) => vo
 }
 
 /** Tracks the zoom level so pin photos can be added/removed */
-function ZoomTracker({ onZoom }: { onZoom: (z: number) => void }) {
+/**
+ * Tracks the zoom, and whether the pins are too close together for photos.
+ *
+ * Zoom alone was the wrong test. The photo bubble is a fixed 44px, so whether
+ * two of them collide depends on how far apart the pins are **in pixels** -
+ * and at 375px the same three stops occupy a third of the width they do on a
+ * desktop. Measured on a Prague day at 375px: pins 1 and 2 overlapped and
+ * their numbers disappeared behind the bubbles, at a zoom where the same day
+ * is fine on a wide screen.
+ *
+ * So it asks the map directly: project every visible point to container
+ * pixels, and if any pair is closer than a bubble's width, drop the photos and
+ * leave the pins - which is the thing the traveller actually needs to read,
+ * because it carries the stop number.
+ *
+ * Clustering would be the other answer and would need a plugin; this needs
+ * nothing, and unlike a width threshold it keeps the photos on a phone
+ * whenever they genuinely fit.
+ */
+const PHOTO_MIN_GAP_PX = 46;
+
+function ZoomTracker({
+  points,
+  onZoom,
+  onCrowded,
+}: {
+  points: { lat: number; lng: number }[];
+  onZoom: (z: number) => void;
+  onCrowded: (crowded: boolean) => void;
+}) {
+  const measure = useCallback(
+    (map: LeafletMap) => {
+      onZoom(map.getZoom());
+      const pts = points.map((p) => map.latLngToContainerPoint([p.lat, p.lng]));
+      let crowded = false;
+      // Small n (a day's stops, or a trip's), so the pairwise check is free.
+      for (let i = 0; i < pts.length && !crowded; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          if (Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y) < PHOTO_MIN_GAP_PX) {
+            crowded = true;
+            break;
+          }
+        }
+      }
+      onCrowded(crowded);
+    },
+    [points, onZoom, onCrowded],
+  );
+
   const map = useMapEvents({
-    zoomend: () => onZoom(map.getZoom()),
+    zoomend: () => measure(map),
+    moveend: () => measure(map),
   });
   useEffect(() => {
-    onZoom(map.getZoom());
-  }, [map, onZoom]);
+    measure(map);
+  }, [map, measure]);
   return null;
 }
 
@@ -285,9 +334,11 @@ export default function MapInner({
     [grouped, groups, places],
   );
 
-  // At city zoom the pins get a small photo above the teardrop
+  // At city zoom the pins get a small photo above the teardrop - unless the
+  // pins are close enough that the photos would cover each other's numbers.
   const [zoomLevel, setZoomLevel] = useState(zoom);
-  const withPhotos = zoomLevel >= PHOTO_PIN_ZOOM;
+  const [crowded, setCrowded] = useState(false);
+  const withPhotos = zoomLevel >= PHOTO_PIN_ZOOM && !crowded;
 
   // The bounds also include the traveler's pins: a hotel in the suburbs is
   // part of their trip even if it is not a route stop. Same memo, for the
@@ -316,7 +367,7 @@ export default function MapInner({
         maxZoom={19}
       />
       <FitBounds places={bounds} />
-      <ZoomTracker onZoom={setZoomLevel} />
+      <ZoomTracker points={flat} onZoom={setZoomLevel} onCrowded={setCrowded} />
       {placingPinId && onPinMove && (
         <PlacementCatcher onPick={(lat, lng) => onPinMove(placingPinId, lat, lng)} />
       )}
