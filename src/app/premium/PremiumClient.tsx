@@ -10,6 +10,7 @@ import {
   PREMIUM_PRICE_ILS,
   PRO_PRICE_ILS,
   PRO_TRIPS_PER_MONTH,
+  ils,
   planAtLeast,
   type PaidPlan,
   type Plan,
@@ -18,14 +19,9 @@ import { PRICE_ILS, priceLabel } from '@/lib/predeparture';
 import InView from '@/components/InView';
 import AgentEnquiryForm from './AgentEnquiryForm';
 
-/**
- * Shekels, printed the way people write them: 19.90 keeps its agorot, a round
- * price does not grow a ".00". Both current prices happen to carry agorot, so
- * today this behaves like toFixed(2) - it exists for the derived figures (a
- * year of a plan, two checks) and so that a future round price cannot end up
- * rendered two different ways in two places on the same card.
- */
-const ils = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(2));
+/* `ils` moved to lib/plans.ts, next to the prices it formats: this page had it
+   as a local helper while the trip screen's upsell printed the constant raw,
+   so the same subscription read "19.90 ₪" here and "19.9 ₪" there. */
 
 /** Thousands separator, with the agorot kept - a year of pro is 1,078.80 and not 1,078.8 */
 const ilsBig = (n: number) =>

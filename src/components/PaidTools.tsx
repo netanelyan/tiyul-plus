@@ -3,7 +3,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth/AuthContext';
-import { PREMIUM_PRICE_ILS, planAtLeast } from '@/lib/plans';
+import { PREMIUM_PRICE_ILS, ils, planAtLeast } from '@/lib/plans';
 
 /**
  * Asks this section to expand. A panel inside it that sent the user off to log
@@ -143,7 +143,7 @@ export default function PaidTools({ children }: { children: ReactNode }) {
         */}
         {!isPremium && (
           <p className="px-1 text-xs font-medium text-night/55 print:hidden">
-            כלולים במנוי, מ-{PREMIUM_PRICE_ILS} ₪ לחודש.{' '}
+            כלולים במנוי, מ-{ils(PREMIUM_PRICE_ILS)} ₪ לחודש.{' '}
             <Link href="/premium" className="font-bold text-sunset-deep underline hover:text-sunset">
               מה בדיוק מקבלים ←
             </Link>

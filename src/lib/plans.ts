@@ -417,6 +417,18 @@ export function aiUnits(usage: {
 export const PREMIUM_PRICE_ILS = 19.9;
 
 /**
+ * A price the way people write it: 19.9 is printed "19.90", and a round price
+ * does not grow a ".00" it does not have.
+ *
+ * It lives here, beside the constants, because it did not: /premium had this
+ * as a local helper and the trip screen's upsell rendered PREMIUM_PRICE_ILS
+ * raw, so the same subscription was "19.90 ₪" on one screen and "19.9 ₪" on
+ * the other. One formatter next to the numbers it formats is the only version
+ * of this that cannot drift again.
+ */
+export const ils = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(2));
+
+/**
  * The heavy plan, ₪89.90/month. Same product as premium - **no feature premium
  * does not have** - with roughly six times the planning capacity.
  *
