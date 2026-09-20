@@ -15,6 +15,14 @@ import { filterCities, type CityOption } from '@/lib/citySearch';
  * Shared by the planner (/planner) and the structured questionnaire (/start).
  */
 
+/**
+ * Prefix for the option ids. They have to exist for aria-activedescendant to
+ * have anything to point at - the input declared the attribute's siblings
+ * (role, aria-controls, aria-autocomplete) and then never told a screen reader
+ * which option was current, so the highlight was visible and unannounced.
+ */
+const OPTION_ID = 'city-combobox-option-';
+
 export default function CityCombobox({
   options,
   citySlugs,
@@ -85,7 +93,17 @@ export default function CityCombobox({
     );
   }, [options, query, citySlugs]);
 
-  useEffect(() => setActiveIndex(0), [query]);
+  /**
+   * Keep the active option in view when it moves past the edge of the list.
+   *
+   * Without this, Arrow-ing down a 166-option list highlights options nobody
+   * can see: the list scrolls only by mouse, so the keyboard walks off the
+   * bottom and the highlight simply disappears. DOM-only, so no render.
+   */
+  useEffect(() => {
+    if (!open) return;
+    listRef.current?.querySelector(`#${OPTION_ID}${activeIndex}`)?.scrollIntoView({ block: 'nearest' });
+  }, [activeIndex, open]);
 
   useEffect(() => {
     if (!open) return;
@@ -137,6 +155,12 @@ export default function CityCombobox({
       e.preventDefault();
       const opt = matches[activeIndex];
       if (opt) pick(opt.slug);
+    } else if (e.key === 'Home' && open) {
+      e.preventDefault();
+      setActiveIndex(0);
+    } else if (e.key === 'End' && open) {
+      e.preventDefault();
+      setActiveIndex(Math.max(0, matches.length - 1));
     } else if (e.key === 'Escape') {
       setOpen(false);
     } else if (e.key === 'Backspace' && !query && selected.length > 0) {
@@ -176,6 +200,10 @@ export default function CityCombobox({
         onChange={(e) => {
           setQuery(e.target.value);
           setOpen(true);
+          // Reset here rather than in an effect on `query`: a new filter means a
+          // new first match, and doing it in the same event avoids a render
+          // whose only job is to correct the one before it.
+          setActiveIndex(0);
         }}
         onFocus={() => setOpen(true)}
         onKeyDown={onKeyDown}
@@ -183,6 +211,7 @@ export default function CityCombobox({
         aria-expanded={open}
         aria-controls="city-combobox-list"
         aria-autocomplete="list"
+        aria-activedescendant={open && matches.length > 0 ? `${OPTION_ID}${activeIndex}` : undefined}
         aria-label="חיפוש עיר או מדינה"
         placeholder={
           selected.length > 0 ? 'להוסיף עוד עיר…' : 'חיפוש עיר או מדינה: וינה, יוון, בנגקוק…'
@@ -225,6 +254,7 @@ export default function CityCombobox({
               return (
                 <button
                   key={o.slug}
+                  id={`${OPTION_ID}${i}`}
                   type="button"
                   role="option"
                   aria-selected={isSelected}
