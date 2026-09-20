@@ -36,7 +36,20 @@ const CONTINENT_EMOJI: Record<Continent, string> = {
   אוקיאניה: '🏄',
 };
 
-export default function DestinationBrowser({ cards }: { cards: DestinationCard[] }) {
+/** Just enough of a country to render its chip - the catalog stays on the server. */
+export interface BrowserCountry {
+  slug: string;
+  name: string;
+  nameLocal: string;
+}
+
+export default function DestinationBrowser({
+  cards,
+  countries,
+}: {
+  cards: DestinationCard[];
+  countries: BrowserCountry[];
+}) {
   const [f, setF] = useState<Facets>(EMPTY_FACETS);
 
   const results = useMemo(() => filterDestinations(cards, f), [cards, f]);
@@ -61,6 +74,33 @@ export default function DestinationBrowser({ cards }: { cards: DestinationCard[]
 
   const active =
     f.continent !== 'all' || f.vibes.length > 0 || f.price !== null || f.season !== null || f.query.trim() !== '';
+
+  /**
+   * The countries to show below the grid.
+   *
+   * This block used to live in the page, outside this component, and therefore
+   * never filtered: a nonsense query dropped every continent counter to 0 and
+   * emptied the grid while 83 country links sat underneath, so the page
+   * contradicted itself - counters saying nothing matched, and a wall of links
+   * saying otherwise.
+   *
+   * A country is shown when one of the destinations currently on screen is in
+   * it, or when the query names the country itself. With nothing filtered it
+   * is the whole index, exactly as before.
+   */
+  const visibleCountries = useMemo(() => {
+    if (!active) return countries;
+    const q = f.query.trim().toLowerCase();
+    const owning = new Set(results.map((r) => r.countrySlug));
+    return countries.filter(
+      (c) =>
+        owning.has(c.slug) ||
+        (q !== '' &&
+          (c.name.toLowerCase().includes(q) ||
+            c.nameLocal.toLowerCase().includes(q) ||
+            c.slug.includes(q))),
+    );
+  }, [countries, results, f.query, active]);
 
   return (
     <div>
@@ -229,6 +269,39 @@ export default function DestinationBrowser({ cards }: { cards: DestinationCard[]
               </div>
             </Link>
           ))}
+        </div>
+      )}
+
+      {/*
+        ---------- Browse by country ----------
+        Moved in here from the page so that it filters with everything else.
+        Hidden entirely when nothing matches, rather than sitting under an
+        empty grid contradicting it.
+      */}
+      {visibleCountries.length > 0 && (
+        <div className="mt-10 rounded-2xl bg-night/[0.03] p-5">
+          <h2 className="text-sm font-bold text-night/70">
+            לגלוש לפי מדינה
+            {active && visibleCountries.length < countries.length && (
+              <span className="ms-1.5 font-semibold text-night/40">
+                ({visibleCountries.length} מתוך {countries.length})
+              </span>
+            )}
+          </h2>
+          <p className="mt-1 text-xs font-medium text-night/50">
+            ויזה, מטבע, סים ותשלומים הם מידע ברמת המדינה - שם הוא נמצא.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {visibleCountries.map((c) => (
+              <Link
+                key={c.slug}
+                href={`/countries/${c.slug}`}
+                className="rounded-full bg-shell px-3 py-1.5 text-xs font-semibold text-night/70 ring-1 ring-night/10 transition hover:text-night hover:ring-night/25"
+              >
+                {c.name}
+              </Link>
+            ))}
+          </div>
         </div>
       )}
     </div>
