@@ -1,12 +1,15 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import PageShell from '@/components/PageShell';
 import { List, Section, Sub, Updated } from '@/components/PolicySection';
+import { pageMetadata } from '@/lib/seo/site';
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/privacy',
   title: 'מדיניות פרטיות | טיול+',
   description:
     'מה אנחנו אוספים, למה, למי זה מגיע וכמה זמן זה נשמר. נכתב מתוך בדיקה של הקוד עצמו, כולל מה שעוד לא הוכרע.',
-};
+});
 
 export default function Page() {
   return (

@@ -1,9 +1,26 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getProvider } from '@/lib/providers';
 import DestinationBrowser from '@/components/DestinationBrowser';
 import { buildDestinationCards } from '@/lib/destinationCards';
+import { pageMetadata } from '@/lib/seo/site';
+import { catalogCounts } from '@/lib/server/footerLinks';
 
-export const metadata = { title: 'יעדים | טיול+' };
+/*
+  This page had a title and nothing else, so it inherited the homepage's
+  description as well as its canonical - i.e. the catalog hub, the page most
+  likely to rank for a destination-catalog query and the one that passes
+  authority to every destination page, was describing itself as the homepage.
+
+  The counts come from catalogCounts rather than being typed, for the reason
+  the guard test in marketingPages enforces: /about once carried a
+  hand-written place count that had drifted by 1,426.
+*/
+export const metadata: Metadata = pageMetadata({
+  path: '/countries',
+  title: 'יעדים | טיול+',
+  description: `קטלוג היעדים של טיול+: ${catalogCounts.destinations} יעדים ב-${catalogCounts.countries} מדינות, כל אחד עם מסלול מוכן, מפה ושכבת כשרות. אפשר לסנן לפי יבשת ולפי אופי הטיול.`,
+});
 
 /**
  * The destinations catalog.

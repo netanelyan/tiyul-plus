@@ -1,6 +1,8 @@
+import type { Metadata } from 'next';
 import { getProvider } from '@/lib/providers';
 import { isKosher } from '@/lib/categories';
 import KosherSearch, { type KosherCity } from './KosherSearch';
+import { pageMetadata } from '@/lib/seo/site';
 
 /**
  * Standalone kosher search - a separate entry point from the filter on each
@@ -13,11 +15,12 @@ import KosherSearch, { type KosherCity } from './KosherSearch';
  * is shown as a card before anything is typed, and the search only filters
  * them in real time.
  */
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/kosher',
   title: 'כשרות | טיול+',
   description:
     'ספריית הכשרות של טיול+: כל הערים בקטלוג שיש בהן מסעדות, חנויות ובתי חב"ד - עם מפה ופרטים. המידע נאסף ממקורות ציבוריים - לוודא מול המקום.',
-};
+});
 
 export default async function KosherPage() {
   const provider = getProvider();

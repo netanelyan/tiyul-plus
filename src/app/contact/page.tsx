@@ -1,11 +1,15 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import PageShell from '@/components/PageShell';
 import { Section, Updated } from '@/components/PolicySection';
+import { pageMetadata } from '@/lib/seo/site';
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/contact',
   title: 'יצירת קשר | טיול+',
-  description: 'איך ליצור איתנו קשר - שאלות, תקלות, פניות בנושא פרטיות ונגישות.',
-};
+  description:
+    'איך ליצור איתנו קשר - שאלות, תקלות, פניות בנושא פרטיות ונגישות.',
+});
 
 export default function Page() {
   return (

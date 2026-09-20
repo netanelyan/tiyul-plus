@@ -1,10 +1,14 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { List, Section, Updated } from '@/components/PolicySection';
+import { pageMetadata } from '@/lib/seo/site';
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/accessibility',
   title: 'הצהרת נגישות | טיול+',
-  description: 'הצהרת הנגישות של אתר טיול+: מה הונגש, מה עדיין לא, ואיך לפנות אלינו.',
-};
+  description:
+    'הצהרת הנגישות של אתר טיול+: מה הונגש, מה עדיין לא, ואיך לפנות אלינו.',
+});
 
 /*
  * This statement was written from a review of the code, not from a template.
