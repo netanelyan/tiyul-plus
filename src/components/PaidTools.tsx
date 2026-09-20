@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState, type ReactNode } from 'react';
+import Link from 'next/link';
 import { useAuth } from '@/lib/auth/AuthContext';
-import { planAtLeast } from '@/lib/plans';
+import { PREMIUM_PRICE_ILS, planAtLeast } from '@/lib/plans';
 
 /**
  * Asks this section to expand. A panel inside it that sent the user off to log
@@ -129,7 +130,27 @@ export default function PaidTools({ children }: { children: ReactNode }) {
         the DOM would silently drop a report the traveller paid for out of their
         PDF. Collapsed hides it on screen only.
       */}
-      <div className={open ? 'mt-2 space-y-2' : 'hidden print:block'}>{children}</div>
+      <div className={open ? 'mt-2 space-y-2' : 'hidden print:block'}>
+        {/*
+          The one contextual pointer to the pricing page, and this is the screen
+          that earns it: somebody who has just opened the paid section is asking
+          what these cost. It is a line rather than a card - a second advert
+          inside the section that already says "these cost money" would be the
+          interleaving complaint again at a smaller scale.
+
+          The price comes from the constant, never typed, so it cannot drift
+          from /premium. Nothing here is shown to a subscriber.
+        */}
+        {!isPremium && (
+          <p className="px-1 text-xs font-medium text-night/55 print:hidden">
+            כלולים במנוי, מ-{PREMIUM_PRICE_ILS} ₪ לחודש.{' '}
+            <Link href="/premium" className="font-bold text-sunset-deep underline hover:text-sunset">
+              מה בדיוק מקבלים ←
+            </Link>
+          </p>
+        )}
+        {children}
+      </div>
     </section>
   );
 }
