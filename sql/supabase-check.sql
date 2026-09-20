@@ -95,6 +95,13 @@ with expected(file, kind, obj) as (
     ('supabase-premium-budget.sql', 'table', 'public.subscriber_spend_monthly'),
     ('supabase-premium-budget.sql', 'func',  'public.bump_subscriber_spend'),
 
+    -- supabase-consent.sql (acceptance of the terms, recorded once per account).
+    -- Both kinds on purpose: the column existing is not the same as the owner
+    -- being able to write it, and that difference is what went wrong here.
+    ('supabase-consent.sql',   'column', 'public.profiles.terms_accepted_at'),
+    ('supabase-consent.sql',   'grant',  'public.profiles.terms_accepted_at'),
+    ('supabase-consent.sql',   'grant',  'public.profiles.terms_version'),
+
     -- supabase-perf-indexes.sql (indexes for queries that already run)
     ('supabase-perf-indexes.sql', 'index', 'public.ai_spend_route_at_idx'),
     ('supabase-perf-indexes.sql', 'index', 'public.purchases_created_idx'),
@@ -130,6 +137,24 @@ checked as (
         where c.table_schema = split_part(e.obj, '.', 1)
           and c.table_name   = split_part(e.obj, '.', 2)
           and c.column_name  = split_part(e.obj, '.', 3)
+      )
+      -- 'schema.table.column' - the column exists AND a signed-in user may
+      -- actually write it.
+      --
+      -- Added because existence on its own was misleading in exactly the way a
+      -- check file must not be. `profiles` revokes table-level insert/update and
+      -- grants them column by column, and Postgres does not extend those grants
+      -- to a column added later - so supabase-consent.sql ran cleanly, the
+      -- columns appeared, this file would have said OK, and consent was still
+      -- never recorded because the write was denied and the caller ignores the
+      -- error on purpose so an unmigrated database cannot block a login.
+      when 'grant'  then exists (
+        select 1 from information_schema.column_privileges p
+        where p.table_schema = split_part(e.obj, '.', 1)
+          and p.table_name   = split_part(e.obj, '.', 2)
+          and p.column_name  = split_part(e.obj, '.', 3)
+          and p.grantee      = 'authenticated'
+          and p.privilege_type = 'UPDATE'
       )
     end as present
   from expected e
