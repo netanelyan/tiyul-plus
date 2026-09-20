@@ -11,7 +11,7 @@ import assert from 'node:assert/strict';
 import type { WebhookHeaders } from './paypal.ts';
 
 const ENV = [
-  'SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY',
+  'SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'RESEND_API_KEY',
   'PAYPAL_MODE', 'PAYPAL_API_BASE', 'PAYPAL_CLIENT_ID_SANDBOX', 'PAYPAL_CLIENT_SECRET_SANDBOX', 'PAYPAL_WEBHOOK_ID_SANDBOX',
 ] as const;
 const saved: Record<string, string | undefined> = {};
@@ -41,6 +41,10 @@ let profile: { user_id: string; plan: string; plan_source: string | null } | nul
  * mutable so a test can empty it and prove what happens when the lookup fails.
  */
 let planFlags: Record<string, string>;
+/** What left for Resend - the emails the webhook triggered */
+let mailSent: { to: string[]; subject: string; html: string }[];
+/** The address GoTrue's admin API returns for any user id, or null for a 404 */
+let userEmail: string | null;
 
 beforeEach(() => {
   for (const k of ENV) saved[k] = process.env[k];
@@ -51,6 +55,9 @@ beforeEach(() => {
   process.env.PAYPAL_CLIENT_SECRET_SANDBOX = 's';
   process.env.PAYPAL_WEBHOOK_ID_SANDBOX = 'wh';
   delete process.env.PAYPAL_MODE;
+  delete process.env.RESEND_API_KEY;
+  mailSent = [];
+  userEmail = null;
 
   verifySignature = true;
   profile = null;
@@ -81,6 +88,15 @@ beforeEach(() => {
 
   globalThis.fetch = (async (input: string | URL | Request, init: RequestInit = {}) => {
     const url = String(input);
+    if (url.startsWith('https://api.resend.com/')) {
+      mailSent.push(JSON.parse(String(init.body)));
+      return new Response(JSON.stringify({ id: 're_1' }), { status: 200 });
+    }
+    if (url.includes('/auth/v1/admin/users/')) {
+      return userEmail
+        ? new Response(JSON.stringify({ email: userEmail }), { status: 200 })
+        : new Response('{}', { status: 404 });
+    }
     if (url.includes('/oauth2/token')) {
       return new Response(JSON.stringify({ access_token: 'T', expires_in: 3600 }), { status: 200 });
     }
@@ -377,4 +393,105 @@ test('ביטול אחרי שדרוג עדיין מוריד לחינם - revise �
   const { processCheckWebhook: run2 } = await load();
   await run2(subEvent('BILLING.SUBSCRIPTION.CANCELLED'), HEADERS);
   assert.equal(profile.plan, 'free', 'מנוי פרו שבוטל חוזר לחינם כמו כל מנוי');
+});
+
+/* ---------- The emails the webhook triggers ---------- */
+
+/** The sends are fire-and-forget behind a GoTrue lookup; give them a tick. */
+const settle = () => new Promise((r) => setTimeout(r, 30));
+const PURCHASER = '7d0d0d0d-1111-4222-8333-944444444444';
+
+test('**a paid capture sends one receipt - and a duplicate webhook sends none**', async () => {
+  process.env.RESEND_API_KEY = 're_test';
+  userEmail = 'buyer@example.com';
+  purchase.user_id = PURCHASER;
+  const { processCheckWebhook } = await load();
+  await processCheckWebhook(eventBody(), HEADERS);
+  await settle();
+  assert.equal(mailSent.length, 1);
+  assert.deepEqual(mailSent[0].to, ['buyer@example.com']);
+  assert.match(mailSent[0].subject, /קבלה/);
+  assert.match(mailSent[0].subject, /טיול בדיקה/);
+  assert.match(mailSent[0].html, /ORDER1/, 'the PayPal order id is the order number on the receipt');
+  assert.match(mailSent[0].html, /29\.90 ₪/);
+  assert.doesNotMatch(mailSent[0].html, /\{\{[A-Z_]+\}\}/);
+
+  await processCheckWebhook(eventBody(), HEADERS);
+  await settle();
+  assert.equal(mailSent.length, 1, 'the second webhook is a no-op for the receipt too');
+});
+
+test('no receipt when the mailer is unconfigured, and the grant is unaffected', async () => {
+  userEmail = 'buyer@example.com';
+  purchase.user_id = PURCHASER;
+  const { processCheckWebhook } = await load();
+  await processCheckWebhook(eventBody(), HEADERS);
+  await settle();
+  assert.equal(purchase.status, 'paid');
+  assert.equal(mailSent.length, 0);
+});
+
+test('ACTIVATED sends the welcome-to-premium email, naming the plan and its real price', async () => {
+  process.env.RESEND_API_KEY = 're_test';
+  userEmail = 'sub@example.com';
+  profile = { user_id: SUB_USER, plan: 'free', plan_source: null };
+  const { processCheckWebhook } = await load();
+  await processCheckWebhook(
+    JSON.stringify({
+      event_type: 'BILLING.SUBSCRIPTION.ACTIVATED',
+      resource: {
+        id: 'I-1',
+        custom_id: `${SUB_USER}|pro`,
+        plan_id: 'P-PRO',
+        billing_info: { next_billing_time: '2026-10-20T10:00:00Z' },
+      },
+    }),
+    HEADERS,
+  );
+  await settle();
+  assert.equal(mailSent.length, 1);
+  assert.match(mailSent[0].subject, /פרו/);
+  assert.match(mailSent[0].html, /89\.90 ₪/);
+  assert.match(mailSent[0].html, /20 באוקטובר 2026/);
+});
+
+test('**CANCELLED after an upgrade names the plan that actually ended (pro), not the one custom_id remembers**', async () => {
+  process.env.RESEND_API_KEY = 're_test';
+  userEmail = 'sub@example.com';
+  profile = { user_id: SUB_USER, plan: 'pro', plan_source: 'paypal' };
+  const { processCheckWebhook } = await load();
+  await processCheckWebhook(subEvent('BILLING.SUBSCRIPTION.CANCELLED'), HEADERS);
+  await settle();
+  assert.equal(profile.plan, 'free');
+  assert.equal(mailSent.length, 1);
+  assert.match(mailSent[0].html, /המנוי <strong>פרו<\/strong> הסתיים/);
+});
+
+test('CANCELLED on an admin grant downgrades nothing and therefore emails nothing', async () => {
+  process.env.RESEND_API_KEY = 're_test';
+  userEmail = 'sub@example.com';
+  profile = { user_id: SUB_USER, plan: 'premium', plan_source: 'grant' };
+  const { processCheckWebhook } = await load();
+  await processCheckWebhook(subEvent('BILLING.SUBSCRIPTION.CANCELLED'), HEADERS);
+  await settle();
+  assert.equal(mailSent.length, 0);
+});
+
+test('PAYMENT.FAILED changes no plan and tells the subscriber, with the retry date when PayPal gives one', async () => {
+  process.env.RESEND_API_KEY = 're_test';
+  userEmail = 'sub@example.com';
+  profile = { user_id: SUB_USER, plan: 'premium', plan_source: 'paypal' };
+  const { processCheckWebhook } = await load();
+  const res = await processCheckWebhook(
+    JSON.stringify({
+      event_type: 'BILLING.SUBSCRIPTION.PAYMENT.FAILED',
+      resource: { id: 'I-1', custom_id: SUB_USER, billing_info: { next_billing_time: '2026-10-03T00:00:00Z' } },
+    }),
+    HEADERS,
+  );
+  await settle();
+  assert.equal(res.body.notified, true);
+  assert.equal(profile.plan, 'premium', 'a failed payment is not a downgrade');
+  assert.equal(mailSent.length, 1);
+  assert.match(mailSent[0].html, /ב-3 באוקטובר 2026/);
 });

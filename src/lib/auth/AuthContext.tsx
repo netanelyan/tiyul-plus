@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import type { User } from '@supabase/supabase-js';
-import { getSupabase } from './client';
+import { authHeader, getSupabase } from './client';
 import { EMPTY_PROFILE, fetchProfile, recordTermsAcceptance, upsertProfile, type UserProfile } from './profile';
 import { TERMS_VERSION } from '@/lib/legal';
 
@@ -122,7 +122,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // user from the service.
       try {
         const p = await fetchProfile(supabase);
-        if (p && !p.termsAcceptedAt) await recordTermsAcceptance(supabase, TERMS_VERSION);
+        if (p && !p.termsAcceptedAt) {
+          await recordTermsAcceptance(supabase, TERMS_VERSION);
+          // First sign-in ever: the welcome email. Fire-and-forget - the server
+          // resolves the recipient from the token, and a failure here is a log
+          // line on the server, never something the login waits on or shows.
+          const headers = await authHeader();
+          void fetch('/api/account/welcome', { method: 'POST', headers }).catch(() => {});
+        }
       } catch {
         /* not critical - it will be recorded on the next sign-in */
       }

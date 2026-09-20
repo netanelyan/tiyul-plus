@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { adminDbEnabled, adminInsert } from '@/lib/server/supabaseAdmin';
 import { checkLimit } from '@/lib/server/limits';
 import { resolveCaller } from '@/lib/server/identity';
+import { sendLeadEmails } from '@/lib/server/mailEvents';
 
 /**
  * POST { name, business, contact, tripsPerYear?, needs? } -> { ok }
@@ -18,11 +19,13 @@ import { resolveCaller } from '@/lib/server/identity';
  *   paints a checkmark and drops the enquiry on the floor is the worst
  *   outcome available here - worse than an error, because the person walks
  *   away believing they made contact.
- * - **No email is sent and none is promised.** There is no mailer in this
- *   project (the budget alert POSTs to a webhook precisely because choosing
- *   one is a decision, not a task). The form's own copy says we get back to
- *   them - which is true, from the dashboard - and does not claim an
- *   automatic confirmation that would never arrive.
+ * - **Two emails, after the row is safely stored, and neither can fail the
+ *   request.** An acknowledgement to the business when they left an email
+ *   address, and the internal alert to `MAIL_OWNER` - the one that matters,
+ *   because a lead that sits unread in /admin is a lost customer. Both go
+ *   through `mailEvents`, which never throws; with no `RESEND_API_KEY` they
+ *   are a log line and the lead is still in the dashboard. The form's copy
+ *   promises only that we get back to them, which stays true either way.
  * - **Rate limited hard**, because it is publicly open, unauthenticated and
  *   writes a row. Three an hour is far above anyone with a real enquiry and
  *   far below anything worth doing on purpose.
@@ -77,6 +80,18 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: 'bad-contact' }, { status: 400 });
   }
 
+  /*
+    Per contact address as well as per caller: the IP limits above are what an
+    attacker rotates, and the acknowledgement goes to whatever address was
+    typed. Three a day per inbox is far above any real enquirer and stops the
+    form being pointed at somebody. The mailer has its own per-recipient cap
+    underneath this; two layers, because the row is written before the email.
+  */
+  const perContact = checkLimit('agent-lead-contact', contact.toLowerCase(), 3, 24 * 60 * 60_000);
+  if (!perContact.ok) {
+    return NextResponse.json({ ok: false, error: 'rate-limited' }, { status: 429 });
+  }
+
   if (!adminDbEnabled()) {
     return NextResponse.json({ ok: false, error: 'not-configured' }, { status: 503 });
   }
@@ -94,5 +109,13 @@ export async function POST(req: Request) {
   if (!saved) {
     return NextResponse.json({ ok: false, error: 'store-failed' }, { status: 502 });
   }
+  sendLeadEmails({
+    name,
+    business,
+    contact: isEmail ? contact.toLowerCase() : contact,
+    contactIsEmail: isEmail,
+    tripsPerYear,
+    needs,
+  });
   return NextResponse.json({ ok: true });
 }

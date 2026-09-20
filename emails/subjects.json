@@ -1,0 +1,50 @@
+[
+  {
+    "file": "auth-magic-link.html",
+    "subject": "קוד ההתחברות: {{ .Token }}"
+  },
+  {
+    "file": "welcome.html",
+    "subject": "ברוכים הבאים לטיול+‏"
+  },
+  {
+    "file": "check-receipt.html",
+    "subject": "קבלה: בדיקה לפני הנסיעה ל{{TRIP_NAME}}"
+  },
+  {
+    "file": "subscription-activated.html",
+    "subject": "המנוי שלכם פעיל - {{PLAN_NAME}}"
+  },
+  {
+    "file": "subscription-ended.html",
+    "subject": "המנוי שלכם הסתיים"
+  },
+  {
+    "file": "payment-failed.html",
+    "subject": "החיוב על המנוי לא עבר"
+  },
+  {
+    "file": "agent-enquiry-ack.html",
+    "subject": "קיבלנו את הפנייה שלכם"
+  },
+  {
+    "file": "agent-enquiry-alert.html",
+    "subject": "פנייה חדשה מסוכן נסיעות: {{BUSINESS}}"
+  },
+  {
+    "file": "trip-reminder.html",
+    "subject": "עוד {{DAYS_HE}} לטיול ל{{TRIP_NAME}}"
+  },
+  {
+    "file": "group-digest.html",
+    "subject": "חדש בטיול המשותף: {{TRIP_NAME}}"
+  },
+  {
+    "file": "newsletter-confirm.html",
+    "subject": "רגע אחד - לאשר את ההרשמה"
+  },
+  {
+    "file": "newsletter-welcome.html",
+    "subject": "נרשמתם. הנה מה שמגיע"
+  }
+]

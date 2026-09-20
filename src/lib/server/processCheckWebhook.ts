@@ -26,6 +26,15 @@ import { findByOrderId, findById, markFailed, markPaid } from '@/lib/server/purc
 import { buildPreDepartureReport } from '@/lib/server/predepartureReport';
 import { findOwnTrip } from '@/lib/server/userTrips';
 import { postAlert } from '@/lib/server/alert';
+import {
+  sendCheckReceipt,
+  sendPaymentFailed,
+  sendSubscriptionActivated,
+  sendSubscriptionEnded,
+} from '@/lib/server/mailEvents';
+import { adminSelect } from '@/lib/server/supabaseAdmin';
+import { eq, pgQuery, pgSelect } from '@/lib/server/pgrest';
+import type { PaidPlan } from '@/lib/plans';
 import type { PreDepartureReport } from '@/lib/predeparture';
 
 interface PaypalCapture {
@@ -36,6 +45,8 @@ interface PaypalCapture {
   amount?: { value?: string; currency_code?: string };
   custom_id?: string;
   supplementary_data?: { related_ids?: { order_id?: string } };
+  /** Subscription resources: when PayPal will charge next (also the retry after a failure) */
+  billing_info?: { next_billing_time?: string };
 }
 
 interface PaypalEvent {
@@ -122,6 +133,14 @@ export async function processCheckWebhook(rawBody: string, headers: WebhookHeade
 
     const done = await activatePaypalPremium(sub.userId, subId, plan);
     if (!done) console.warn('[checks webhook] premium activation failed', { userId: sub.userId });
+    // Email only on a real activation; a failed write must not produce a "you are premium" mail
+    if (done) {
+      sendSubscriptionActivated({
+        userId: sub.userId,
+        plan,
+        nextBillingTime: subResource?.billing_info?.next_billing_time,
+      });
+    }
     return ok({ received: true, premium: done, plan });
   }
   if (
@@ -130,8 +149,19 @@ export async function processCheckWebhook(rawBody: string, headers: WebhookHeade
       event.event_type === 'BILLING.SUBSCRIPTION.EXPIRED') &&
     sub
   ) {
+    // Read the plan BEFORE the downgrade: the email must name the plan that ended,
+    // and custom_id still says premium after a revise up to pro.
+    const endingPlan = (await currentPaidPlan(sub.userId)) ?? sub.plan;
     const done = await cancelPaypalPremium(sub.userId);
+    if (done) sendSubscriptionEnded({ userId: sub.userId, plan: endingPlan });
     return ok({ received: true, downgraded: done });
+  }
+  if (event.event_type === 'BILLING.SUBSCRIPTION.PAYMENT.FAILED' && sub) {
+    // Nothing changes in the database - PayPal retries on its own and sends
+    // SUSPENDED if the retries fail too. The traveller just gets told.
+    const plan = (await currentPaidPlan(sub.userId)) ?? sub.plan;
+    sendPaymentFailed({ userId: sub.userId, plan, retryTime: event.resource?.billing_info?.next_billing_time });
+    return ok({ received: true, notified: true });
   }
 
   if (event.event_type !== 'PAYMENT.CAPTURE.COMPLETED') {
@@ -215,7 +245,28 @@ export async function processCheckWebhook(rawBody: string, headers: WebhookHeade
   if (!updated) {
     // We lost a race against a duplicate webhook that arrived at almost the same moment - a valid no-op
     console.warn('[checks webhook] markPaid affected 0 rows (already processed)', { realOrderId });
+  } else {
+    // The receipt rides on the conditional update, so a duplicate webhook cannot send a second one
+    sendCheckReceipt({
+      userId: purchase.user_id,
+      tripId: purchase.trip_id,
+      tripName: report.tripName,
+      trip,
+      orderId: realOrderId,
+      amount: Number(purchase.amount),
+      currency: purchase.currency,
+    });
   }
 
   return ok({ received: true, ok: Boolean(updated) });
+}
+
+/** The paid plan on the profile right now, or null when there is none / the read failed. */
+async function currentPaidPlan(userId: string): Promise<PaidPlan | null> {
+  const rows = await adminSelect<{ plan: string | null }>(
+    'profiles',
+    pgQuery(eq('user_id', userId), pgSelect(['plan'])),
+  );
+  const plan = rows?.[0]?.plan;
+  return plan === 'premium' || plan === 'pro' ? plan : null;
 }

@@ -12696,3 +12696,84 @@ two adjacent calls cannot span. Twelve consecutive runs clean.
 
 **Final:** 861 tests, tsc, build, lint at the pre-existing 34, catalog validator 0
 errors / 83 warnings.
+
+### 2026-09-20 (b) - The site sends its first emails: twelve templates, one mailer, and a form that would have been an email bomb
+
+Netanel, from a screenshot of the login-code email: which emails would make the
+site feel like a business, can this one look better, then "write codes for each
+template", "more impressive", and finally "how do I set up the rest?" - with
+the Resend domain verified and the env vars already in Vercel.
+
+**The starting fact: the site sent zero emails.** The login code is Supabase
+Auth's own template routed through Resend as SMTP; three code comments said
+"there is no mailer in this project". So "set up the rest" was a build, not a
+config task.
+
+---
+
+**Templates: one shell, twelve bodies, generated.** `scripts/build-emails.mjs`
+holds the night-band header, category pill, optional hero photo, facts table,
+feature tiles and footer once, and writes `emails/*.html` (paste, preview) plus
+`src/lib/server/emailTemplatesGenerated.ts` - the server imports the module
+rather than reading the folder, because Vercel bundles only what it can trace
+and a directory read by a dynamic path is exactly what it cannot. A test
+asserts the two never drift. Every `+` in the brand name carries an RLM, which
+is the bidi bug the original subject line shipped with ("+קוד ההתחברות").
+
+**The OTP is the one to paste into Supabase** (Magic Link template, subject
+`קוד ההתחברות: {{ .Token }}` - the code in the subject is what banks do, and it
+reads from the notification). Night box, zest digits forced `dir="ltr"` so they
+cannot reorder, a security line ("we will never ask for the code by phone").
+
+**The mailer (`mail.ts`) enforces three rules rather than asking call sites to.**
+Never throws - a receipt that failed is a log line, a purchase refunded because
+Resend was down would be a bug nobody could explain. Every value HTML-escaped -
+the internal lead alert lands in Netanel's mail client, which is where an
+unescaped `<script>` would matter. An unfilled placeholder aborts the send -
+nobody receives `{{ORDER_ID}}`. Plus: a prefix letter before a placeholder goes
+through `hePrefix`, **and the first test of that rule caught the template
+writing `ל<strong>{{TRIP_NAME}}</strong>`** - a tag between the letter and the
+value, so Vienna rendered `לוינה`. The rule now sees through opening tags.
+
+**Wired, in the order money moves:** the receipt rides on `markPaid`'s
+conditional update so a duplicate webhook cannot send a second one; subscription
+activated (price from `plans.ts`, next billing date from PayPal's
+`billing_info`); ended - reading the plan BEFORE the downgrade, because
+`custom_id` still says premium after a revise up to pro, and there is a test
+named for that; `PAYMENT.FAILED`, a new branch that changes nothing and tells
+the subscriber; the enquiry acknowledgement plus the internal alert (with
+`reply_to` set to the lead, so answering the alert answers them); and welcome,
+through a new `/api/account/welcome` the client calls once, on the first
+`terms_accepted_at` write. Not wired, and the README says so: reminder (needs a
+cron and an opt-in), group digest, the newsletter pair.
+
+---
+
+**Mid-session Netanel asked for rate limiting on emails and requests, and the
+enquiry form is why it matters.** The acknowledgement goes to whatever address
+was typed into the form. The route was IP-limited - which is the thing an
+attacker rotates - so the form was a tool for flooding somebody else's inbox
+with our name on it. Two layers now: the route caps per contact address (3/day),
+and the mailer caps per recipient (5/hour, 12/day, keyed on the lower-cased
+address so casing does not make a second inbox) and site-wide (150/hour,
+800/day) - counted before rendering, so a limited send costs no CPU either. The
+welcome route caps per IP before the token check, so a burst cannot cost a
+GoTrue round trip each.
+
+**A harness limit worth knowing on Windows:** a bash command longer than about
+8k characters is truncated by the OS and fails as "unexpected EOF while looking
+for matching quote" - it looks like a heredoc bug and is not. Write long
+scripts to a file and run them.
+
+**Verified:** 891 tests (25 new: the mailer's three rules, the caps, the drift
+guard, and six webhook cases including the duplicate receipt and the plan that
+actually ended), tsc, build clean, lint at the pre-existing three in
+`AuthContext.tsx` (A/B against HEAD). Templates rendered in Chromium at 560px.
+**Not verified live:** no Resend call left this machine - the first receipt
+after deploy is that check, and a wrong `MAIL_FROM` shows up as `resend_http_4xx`
+in the Vercel logs with the body Resend returned.
+
+**For Netanel:** paste `emails/auth-magic-link.html` into Supabase (Magic Link),
+set the sender name to `טיול+`, and add a `_dmarc` TXT at Porkbun
+(`v=DMARC1; p=none;`) - Resend's Records tab does not show DMARC and Gmail now
+treats its absence as a spam signal.
