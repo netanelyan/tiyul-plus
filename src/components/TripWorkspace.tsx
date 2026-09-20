@@ -532,7 +532,9 @@ export default function TripWorkspace({
           {t && (
             <button
               onClick={() => setPrefsOpen((v) => !v)}
+              id="trip-prefs-head"
               aria-expanded={prefsOpen}
+              aria-controls="trip-prefs-body"
               className="rounded-full bg-night/5 px-2.5 py-1.5 text-xs font-semibold text-night/55 transition hover:bg-night/10 hover:text-night"
             >
               העדפות{prefSummary ? `: ${prefSummary}` : ''}{' '}
@@ -545,7 +547,12 @@ export default function TripWorkspace({
       </div>
 
       {t && prefsOpen && (
-        <div className="mt-1.5 flex flex-wrap items-center gap-1.5 print:hidden">
+        <div
+          id="trip-prefs-body"
+          role="region"
+          aria-labelledby="trip-prefs-head"
+          className="mt-1.5 flex flex-wrap items-center gap-1.5 print:hidden"
+        >
           <ToggleChip
             disabled={offline}
             active={t.preferences?.kosher === true}

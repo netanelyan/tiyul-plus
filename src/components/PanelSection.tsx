@@ -107,15 +107,26 @@ export default function PanelSection({
   children: ReactNode;
 }) {
   const collapsible = typeof open === 'boolean' && !!onToggle;
+  /*
+    aria-expanded says a thing is open; aria-controls says WHICH thing. Every
+    one of these carried the first and none the second, so a screen reader was
+    told something expanded and never which region it was. panelKey is already
+    a stable per-panel id, so the two ids derive from it rather than being
+    another prop each caller has to remember.
+  */
+  const headId = `panel-${panelKey}-head`;
+  const bodyId = `panel-${panelKey}-body`;
 
   return (
     <section data-panel={panelKey} aria-label={ariaLabel} className={`mt-4 ${className}`}>
       {collapsible ? (
         <button
           type="button"
+          id={headId}
           data-panel-head
           onClick={onToggle}
           aria-expanded={open}
+          aria-controls={bodyId}
           className={`${BAR} transition hover:ring-night/20`}
         >
           <Head icon={icon} title={title} meta={meta} badge={badge} caret open={open} />
@@ -126,7 +137,18 @@ export default function PanelSection({
         </div>
       )}
 
-      <div className={collapsible && !open ? 'hidden' : 'mt-2 block'}>{children}</div>
+      {/*
+        role=region + aria-labelledby only when this is a disclosure. A body
+        that is always visible is just content, and naming it a region would
+        add a landmark to the screen-reader rotor for nothing.
+      */}
+      <div
+        id={bodyId}
+        {...(collapsible ? { role: 'region', 'aria-labelledby': headId } : {})}
+        className={collapsible && !open ? 'hidden' : 'mt-2 block'}
+      >
+        {children}
+      </div>
     </section>
   );
 }
