@@ -28,12 +28,14 @@ export function tripLabel(trip: Trip, names: CityNames): string {
 /**
  * Who is travelling, in Hebrew - one definition, because there were four.
  *
- * `solo` was "לבד" on the questionnaire and "סולו" on the planner, on the
- * preference chip and in the preference summary, so a traveller picked one
- * word and the trip screen then showed them another for the same choice.
+ * `solo` had one Hebrew word on the questionnaire and a different one on the
+ * planner, on the preference chip and in the preference summary - so a
+ * traveller picked one word and the trip screen then showed them another for
+ * the same choice.
  *
- * Standardised on the plain Hebrew rather than the loanword: the options sit
- * beside זוג, משפחה and חברים, and "סולו" is the only one of the four in a
+ * Standardised on the plain Hebrew rather than the transliterated loanword:
+ * the options sit beside "couple", "family" and "friends", all of which are
+ * ordinary Hebrew, and the loanword was the only one of the four in a
  * different register.
  */
 export const PARTY_LABELS: Record<'couple' | 'family' | 'friends' | 'solo', string> = {

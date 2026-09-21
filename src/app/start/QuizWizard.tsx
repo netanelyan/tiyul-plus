@@ -33,7 +33,8 @@ const VIBE: { v: WizardPrefs['tripType']; label: string; hint: string }[] = [
 ];
 // The Hebrew values match generateTrip's regex (targetTagsFromPreferences)
 /*
-  No 'טבע' here: it is already one of the three trip types a step earlier, so
+  The nature interest is not offered here: it is already one of the three trip
+  types a step earlier, so
   offering it again as an interest asked the same question twice in adjacent
   rows. The trip type is the stronger signal of the two - it drives the day
   packing, not just a tag boost.
