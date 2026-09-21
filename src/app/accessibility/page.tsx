@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { List, Section, Updated } from '@/components/PolicySection';
-import { pageMetadata } from '@/lib/seo/site';
+import { CONTACT_EMAIL, pageMetadata } from '@/lib/seo/site';
 
 export const metadata: Metadata = pageMetadata({
   path: '/accessibility',
@@ -100,8 +100,12 @@ export default function AccessibilityStatementPage() {
         <p>נתקלתם בבעיה, או יש לכם הצעה לשיפור? נשמח לשמוע, וזה באמת עוזר לנו לתקן.</p>
         <p className="rounded-xl bg-shell p-4 ring-1 ring-night/10">
           רכז/ת הנגישות: <strong>נתנאל יאנצ&rsquo;בסקי</strong>. מייל:{' '}
-          <a href="mailto:natikyan153@gmail.com" className="font-bold text-sunset-deep hover:underline">
-            natikyan153@gmail.com
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            dir="ltr"
+            className="inline-block font-bold text-sunset-deep hover:underline"
+          >
+            {CONTACT_EMAIL}
           </a>
           . טלפון:{' '}
           <a href="tel:+972515310498" dir="ltr" className="inline-block font-bold text-sunset-deep hover:underline">

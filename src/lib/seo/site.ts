@@ -14,6 +14,21 @@ export const SITE_URL = 'https://www.tiyulplus.com';
 
 export const SITE_NAME = 'טיול+';
 
+/**
+ * The one address the site publishes.
+ *
+ * A constant rather than a string typed on each page, because it was typed on
+ * two of them and a third would have been typed the next time somebody needed
+ * one - the same drift that left `/about` quoting a catalog figure 1,426 places
+ * stale. `marketingNumbers.test.ts` fails on any address hand-written into a
+ * page, so a fourth copy cannot appear quietly.
+ *
+ * It is deliberately NOT `mailFrom()`: that is the SENDING identity (Resend's
+ * verified domain, `MAIL_FROM`), and a reply-to that happens to match today is
+ * a coincidence, not a rule. This is where a person writes TO us.
+ */
+export const CONTACT_EMAIL = 'support@tiyulplus.com';
+
 /** Absolute URL for a path. Pass a leading-slash path; '/' gives the origin. */
 export function canonical(path: string): string {
   return path === '/' ? SITE_URL : `${SITE_URL}${path}`;

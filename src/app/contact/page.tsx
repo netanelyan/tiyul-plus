@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import PageShell from '@/components/PageShell';
 import { Section, Updated } from '@/components/PolicySection';
-import { pageMetadata } from '@/lib/seo/site';
+import { CONTACT_EMAIL, pageMetadata } from '@/lib/seo/site';
 
 export const metadata: Metadata = pageMetadata({
   path: '/contact',
@@ -20,8 +20,13 @@ export default function Page() {
 
       <Section title="פרטים">
         <p className="rounded-xl bg-shell p-4 ring-1 ring-night/10">
-          מייל: <a href="mailto:natikyan153@gmail.com" className="font-bold text-sunset-deep hover:underline">
-            natikyan153@gmail.com
+          מייל:{' '}
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            dir="ltr"
+            className="inline-block font-bold text-sunset-deep hover:underline"
+          >
+            {CONTACT_EMAIL}
           </a>{' '}
           - לכל הפניות, כולל פרטיות ומחיקת מידע. השירות מופעל על ידי{' '}
           <strong>נתנאל יאנצ&rsquo;בסקי</strong>, עוסק מורשה מס&rsquo;{' '}
