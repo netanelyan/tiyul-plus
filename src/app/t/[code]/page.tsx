@@ -67,9 +67,15 @@ export async function generateMetadata({
       siteName: 'טיול+',
       title,
       description,
-      images: [{ url: '/og.png', width: 1200, height: 630, alt: 'טיול+' }],
+      /*
+        No `images` here on purpose. Declaring it would REPLACE the card that
+        `opengraph-image.tsx` generates for this exact trip - Next only applies
+        the file convention when the route has not named its own images, so the
+        generic /og.png that used to sit here was actively suppressing a
+        per-trip card. The same rule governs `twitter` below.
+      */
     },
-    twitter: { card: 'summary_large_image', title, description, images: ['/og.png'] },
+    twitter: { card: 'summary_large_image', title, description },
     robots,
   };
 }

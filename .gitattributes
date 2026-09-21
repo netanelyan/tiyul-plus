@@ -7,3 +7,11 @@
 # about content again.
 emails/*.html   text eol=lf
 emails/subjects.json text eol=lf
+
+# The OG-card fonts. Git's binary detection normally gets this right, but a
+# font silently rewritten by autocrlf does not fail loudly - it renders as
+# tofu on a share card nobody on the team looks at twice.
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
