@@ -13117,3 +13117,158 @@ doc in `tiktok.ts` pointed at it, so rather than leave a reference to a file tha
 is gone, the reasoning for keeping the client secret off this server is now
 stated inline, and the wire format is what it always really was: the signature of
 `forwardCodeToBot` and the `BotConnectResult` interface.
+
+### 2026-09-21 (d) - Three QA items: 270 URLs with a real lastmod, /premium indexable, and the photo mirror that had to stay off
+
+Three items from the QA list, one commit each. Two of the three premises turned
+out to be half wrong, and in both cases finding that out changed what got built.
+
+---
+
+**1. The sitemap was already generated, not hand-maintained.** It read the
+catalog through `getProvider()` and could not drift. What it was, deliberately,
+was *restricted*: 30 promoted destinations and the 22 countries holding them, on
+the reasoning that a young domain submitting 166 pages of uneven depth risks
+being classified as thin.
+
+That caution has outgrown itself. The other 136 were never hidden - they render,
+they are linked from `/countries` and every country page, and since the metadata
+pass they each carry a unique title, description and canonical - so leaving them
+out protected nothing and only slowed discovery of pages Google reaches through
+internal links anyway. **72 URLs to 270.** What survives of the reasoning is
+`priority`, which still says which pages we consider strongest.
+
+**lastmod needed a ledger, and why the obvious answers fail is the interesting
+part.** The build date marks all 270 pages as modified on every unrelated
+deploy, which is not merely useless - it teaches a crawler to discount the field
+across the whole file. Git cannot supply it either, for two independent reasons:
+the catalog is **one 44,000-line file**, so a git date would be identical for
+all 166 destinations and would move whenever any one of them changed; and
+**Vercel builds from a source download with no history**, so the lookup would
+silently produce nothing in the only environment that matters.
+
+So `scripts/content-dates.mjs` hashes exactly the data that renders each URL and
+moves the date only where the hash changed. Adding places to Vienna re-dates
+Vienna and leaves the other 269 alone. The first run seeds from git **locally**
+rather than stamping everything with today - which would have published 270
+false dates on day one - and produced two distinct dates across the set, which
+is what an honest file looks like.
+
+**Deliberately not the transitive import graph.** A shared component is
+reachable from almost every page, so walking it would re-date the whole site
+whenever one is touched - the build-date problem with extra steps. The trade is
+that a purely presentational change moves no lastmod, and that is the right side
+to be wrong on: under-reporting costs a slower recrawl, over-reporting costs the
+field's credibility.
+
+**The noindex rule is enforced rather than remembered.** `sitemap.test.ts` walks
+every `app/**/page.tsx` for `noindex: true` and fails if one reaches the sitemap
+- proven by putting `/premium`'s noindex back, which failed that test by name
+**and** the ledger check alongside it, since the page's source had changed.
+
+**One unrelated bug the test forced out.** `scripts/alias-hooks.mjs` resolved a
+bare `@/lib/providers` to the **directory**, which exists - so Node tried to read
+a directory as source and died with EISDIR. No test had imported that path
+before. The bare candidate now has to be a file.
+
+---
+
+**2. `/premium` is indexable.** It carried `noindex, follow` on pre-launch
+reasoning. That is the wrong call for this particular page: a pricing page is
+one of the few commercial queries a young domain can actually win, and keeping
+it out of the index while every plan card on the site links to it is a
+contradiction we were publishing about ourselves. The app surfaces with nothing
+to rank keep theirs.
+
+---
+
+**3. The images, and the measurement that inverted the plan.**
+
+The brief was: mirror every catalog photograph to our own storage at 1200px and
+serve it through `next/image`. The first two thirds went as expected. Then the
+verification found this:
+
+> **`next/image` against Commons funnels every upstream fetch through ONE server
+> IP, and Wikimedia rate-limits it.** Rendering five destination pages through
+> the optimiser returned **429 for most of the ~150 distinct files**; the same
+> URLs fetched a few at a time all returned 200.
+
+Today a thousand visitors are a thousand client addresses talking to Commons.
+The optimiser makes them one. Shipping that would have been a screen of broken
+pictures in a cold region - **worse than the blurriness it was meant to fix** -
+and it would have looked like a CDN problem rather than an architectural one.
+
+So `CatalogImage` branches on `NEXT_PUBLIC_PHOTO_MIRROR_BASE`, a build-time
+constant, and **the mirror became a precondition rather than an optimisation**:
+
+| | markup | verified |
+|---|---|---|
+| unset (today) | lazy element to Commons, shrink-only srcSet | 73 Commons images on `/destinations/vienna`, 73 srcSets, 1 eager hero, **0** next/image |
+| set | `next/image fill` to our Blob store | **730 of 741** optimised refs on the blob host, **0** raw Commons, hero still preloaded |
+
+The 11 leftovers are the Unsplash heroes, which were never on Commons. Both
+states were built and served, not reasoned about.
+
+**The URL is derived, not looked up.** The storage path comes from the Commons
+filename through one pure function shared by the script and the browser - no
+manifest in the client bundle, no data file growth. It is restricted to
+`A-Za-z0-9._-` **precisely so the store cannot hand back a differently-encoded
+URL than the one we derive**, and the uploader asserts byte-equality anyway and
+aborts rather than filling a manifest the site cannot use. Guessing how a given
+SDK encodes a filename full of spaces, apostrophes and Hebrew is exactly the
+assumption that turns into 3,000 broken images.
+
+**`photo` in the catalog stays the Commons URL, deliberately.** That is how
+`photoCredit.ts` finds the Artist and LicenseShortName, how `verify-photos.mjs`
+probes the source and how the validator checks widths. Rewriting it would have
+meant re-deriving all three from a hash. The credit blocks render identically in
+both states - 31 on Vienna, 34 on Rome, 5 on Italy.
+
+**Measured benefit, since an earlier plan had argued against serving from a
+mirror at all:** 2.0KB / 4.7KB / 11.5KB for the 96/160/256 variants of a card
+photograph that costs ~60KB today. That objection assumed the copy would be
+served raw; through the optimiser the phone gets a *smaller* file than Commons
+was sending it and a dense screen finally gets something sharp. 1.MD's runbook
+was rewritten accordingly.
+
+**A guard for the class:** no component outside `CatalogImage` may render a
+catalog photograph, with two written-down exceptions - `PhotoLightbox` (its
+overlay sizes by aspect ratio, which `fill` cannot express) and `MapInner` (a
+Leaflet icon built from an HTML string, so it cannot be a React component at
+all). Proven to fire by bypassing it; it failed naming the file and the line.
+Plus a collision test over the real catalog: no two of ~3,000 photographs map to
+one storage path.
+
+**Deleted rather than left to rot:** `src/lib/photo.ts` and the `photoW`
+plumbing through `destinationFacets`, `destinationCards` and `homeSections`.
+Their whole job was deriving Commons thumbnail widths at render time, which the
+optimiser and the shrink-only srcSet now do; the never-widen rule they protected
+still has its guard in `photoArchive.test.ts`, where the widening actually
+happens. Two competing explanations of how image widths work was the worse
+outcome.
+
+---
+
+**Verified:** 945 tests (18 new), tsc, `npm run build` clean, lint at the
+pre-existing baseline of 2 (both in `DestinationClient`, confirmed against
+HEAD). In a real browser at 1400 and 390 on five destination pages plus a
+country page: zero horizontal overflow, RTL intact, the `h1` painting above the
+hero overlay (the heroes moved from `background-image` to an image layer, so
+that assertion is not decorative), and the credits block present with its count.
+Built and served **both** ways, and `/_next/image` was probed against the blob
+host to confirm the `remotePatterns` entry actually admits it - a disallowed
+host answers differently, which is the control.
+
+**Two traps worth carrying.** A grep for the credits heading in served HTML
+finds nothing, because **React splits a JSX interpolation with `<!-- -->`
+comment nodes** - this file already records that trap once and it cost a second
+look here. And a browser harness that loads 70 images at once against a cold
+optimiser reports them broken; `flagcdn`, which this change does not touch,
+failed identically, which is the control that settles it.
+
+**Waiting on Netanel:** create the Blob store and run `npm run mirror:photos` to
+completion - it prints the environment variable to set once nothing is
+outstanding - then set `NEXT_PUBLIC_PHOTO_MIRROR_BASE` and redeploy. Until then
+the site serves from Commons exactly as it does today, which is what makes the
+run safe to do in pieces. `sql/supabase-consent.sql` is still the oldest open
+item.
