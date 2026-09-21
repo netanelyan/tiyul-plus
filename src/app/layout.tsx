@@ -184,7 +184,15 @@ export default function RootLayout({
         </AuthProvider>
         <AccessibilityWidget />
         <SiteFooter />
-        <Script src="/blackz-signature.js" strategy="afterInteractive" />
+        {/*
+          lazyOnload rather than afterInteractive: this is a 12KB branding
+          badge in the footer, and afterInteractive makes Next preload it on
+          every page - so it competed for bandwidth with the content on a
+          screen it is not even on yet. lazyOnload drops the preload and waits
+          for idle. The custom element renders nothing until it is defined,
+          so arriving late costs nothing.
+        */}
+        <Script src="/blackz-signature.js" strategy="lazyOnload" />
       </body>
     </html>
   );
