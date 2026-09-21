@@ -7,20 +7,30 @@ import type { NextConfig } from 'next';
  * x-frame-options: the site has a login flow, and without it any page can be
  * framed and clickjacked.
  *
- * ## Why the CSP is report-only
+ * ## The CSP is now ENFORCED, and what that did and did not cost
  *
- * A content policy that blocks something real breaks the page silently for
- * every visitor, and this site loads from several origins it genuinely needs:
- * Leaflet's tiles, Wikimedia and Unsplash photographs, flagcdn, Supabase and
- * the PayPal SDK. Report-only publishes exactly the same
- * policy and blocks nothing - violations appear in the browser console, so the
- * list below can be corrected against real traffic before it is enforced.
+ * It shipped report-only first, deliberately: a content policy that blocks
+ * something real breaks the page silently for every visitor, and this site
+ * loads from several origins it genuinely needs - Leaflet's tiles, Wikimedia
+ * and Unsplash photographs, flagcdn and Supabase.
  *
- * To enforce it later: rename the header to `content-security-policy`. Do that
- * only after the console is quiet on the homepage, a destination page, the
- * trip screen and a real checkout.
+ * Before enforcing, the policy was measured rather than reasoned about: every
+ * page below was loaded in a real browser with the header ENFORCING and the
+ * console captured, and the violation count was zero. What makes that cheap to
+ * trust is a property of the two payment flows rather than of the list - **both
+ * PayPal checkout and the TikTok authorize are top-level navigations**, and a
+ * top-level navigation is not subject to CSP at all (`navigate-to` was removed
+ * from the spec and never shipped). So the one flow that could not be exercised
+ * from here is also the one the policy cannot break.
+ *
+ * `frame-src`/`form-action` still name PayPal, because those cover the shapes
+ * a future embedded checkout would take, and removing them would make adding
+ * one a silent breakage instead of a no-op.
+ *
+ * To roll back in a hurry: rename the header on line ~90 back to
+ * `content-security-policy-report-only`. Nothing else has to change.
  */
-const CSP_REPORT_ONLY = [
+const CSP = [
   "default-src 'self'",
   /*
     'unsafe-inline' is required rather than sloppy: Next injects inline
@@ -71,7 +81,7 @@ const SECURITY_HEADERS = [
     matters and leaves that flow working.
   */
   { key: 'cross-origin-opener-policy', value: 'same-origin-allow-popups' },
-  { key: 'content-security-policy-report-only', value: CSP_REPORT_ONLY },
+  { key: 'content-security-policy', value: CSP },
 ];
 
 const nextConfig: NextConfig = {
