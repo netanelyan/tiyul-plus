@@ -12889,3 +12889,183 @@ around it.
 `T4R4Cwqk` from production; run `sql/supabase-consent.sql` (standing); set the
 three TikTok env vars; decide on a branded contact address; and enforce the CSP,
 which ships report-only.
+
+### 2026-09-21 (b) - The QA branches land, and ten test suites that had stopped running
+
+Netanel: continue the work listed in `1.MD`. Four things in it were his to
+decide and he decided all four - merge, a branded address, enforce the CSP,
+build the photo mirror.
+
+**The merge was the point of the whole QA pass and it was the thing not done.**
+27 commits across three branches, including the C2 login dead ends that meant
+nobody could subscribe. Merged one at a time with `tsc` after each, per hard
+rule 7a; four conflicts, all of them two sessions adding different things to
+the same line, all resolved as "keep both" after checking each side was still
+reachable afterwards. The two policy-page conflicts are worth naming because
+the resolution was not symmetric: phase 2's `pageMetadata()` wrapper is the
+half that mattered, and `main`'s wording is the half that was still TRUE - the
+branch's copy said the subscription is not active and said the site sets no
+cookie, both of which stopped being true while it sat unmerged. **A branch that
+waits does not only go stale in its code.**
+
+Verified live before pushing rather than after: the subscribe CTA now produces
+an honest notice, a login button and a real login dialog with an email field.
+That path was the reason the QA list existed.
+
+---
+
+**Then the test suite turned out to have been lying, and by the largest margin
+in this file's history.**
+
+`npm test` reported ten files with a cross and no test names under them - a
+crash on load, not a failure. `scripts/photo-credits.json` was imported without
+`with { type: 'json' }`, which **Node 24 refuses**, and photoCredit.ts sits in
+the import graph of the catalog. So every suite that reaches the catalog -
+grounding, the budget ceiling, coverage facts, the SEO hubs, home sections,
+cost isolation - had not executed since `bb1a22e` shipped two days earlier. The
+session that shipped it verified "build, tsc and lint per phase" and did not
+run the tests, which is exactly how this hides.
+
+**A crash on load is worse than a failure**, because a failure names itself and
+a crash reads as absence. 909 tests after the one-line fix, and the eleventh
+red mark was a different species: the email drift guard compares
+`emails/*.html` on disk against the generated module byte for byte, and git's
+autocrlf rewrites those files to CRLF on checkout - so it had been failing on
+every Windows clone since the day it was written, for a reason that is not
+drift. A `.gitattributes` pinning them to LF makes it a claim about content
+again.
+
+**And `git am --abort` would have destroyed two months of work.** A stale `am`
+session from July was sitting in `.git`, left by a session with no push
+credentials; its three patches are long since merged. The obvious cleanup
+resets to `.git/rebase-apply/abort-safety`, which was a commit from 30 July.
+Checked that before touching it and deleted the directory instead. **Read
+abort-safety before aborting anything.**
+
+---
+
+**The CSP went from report-only to enforced, and the useful part is how.**
+
+Eight pages loaded in a real browser with the header already enforcing, reading
+`Log.entryAdded` - which is where the browser puts a violation. A harness
+listening to `Runtime.consoleAPICalled` reports a clean run on a broken policy,
+so the listener choice is the measurement. Zero violations, zero requests with
+`blockedReason: 'csp'`.
+
+**Then the harness was proven able to see one**, by injecting an image from a
+disallowed host: it reported both the log entry and the blocked reason. A zero
+from a listener nobody tested is not a zero, and this file has enough entries
+about confident empty results.
+
+Several pages showed `ERR_FAILED` on Wikimedia and tile hosts. Those are
+network failures with **no** blocked reason - the request was dispatched, so
+the policy passed those origins and then this machine could not reach them.
+Distinguishing the two is the whole reason the harness reports them separately.
+
+What makes enforcing cheap to trust is a property of the flows rather than of
+the origin list: **PayPal checkout and the TikTok authorize are both top-level
+navigations, and a top-level navigation is not subject to CSP at all**
+(`navigate-to` was removed from the spec and never shipped). The one flow that
+could not be exercised from here is the one the policy cannot break.
+
+---
+
+**The contact address became a constant, and that is the whole change.** It was
+typed into two pages; a third would have been typed next time. Worse than a
+stale number: mail to an address we no longer read is not wrong-LOOKING, it is
+simply never answered. A guard scans every `.tsx` under `src/app` and fails on
+a hand-written address, `example.com` exempt **by domain rather than by file**
+so the exemption cannot quietly cover a real address in the same component.
+Proven to fire by putting the old one back.
+
+---
+
+**The share card for `/t/<code>`, and the bug that nearly shipped because I
+read a picture and believed my reading.**
+
+WhatsApp is how this product spreads, and every shared trip carried the same
+generic `/og.png` - the one moment the site is recommended by a real person was
+the moment it looked like an advert. The page's own metadata was **actively
+suppressing** a per-trip card: declaring `openGraph.images` replaces the
+`opengraph-image` file convention, so the hardcoded `/og.png` had to go rather
+than be repointed.
+
+**Satori does not implement the bidi algorithm** - checked in the bundled copy,
+there is no bidi pass at all. `direction: rtl` right-aligns a block and
+reorders nothing inside it, so the first card came out with every Hebrew word
+and letter mirrored. I looked at it, reasoned about which end the final-form
+letters were on, and **concluded it was correct**. It was not. What settled it
+was putting Chrome's rendering of the same strings directly above Satori's in
+one image: identical font, identical sizes, unmistakably reversed. Reading a
+rendered image is not verification; comparing it against a renderer known to be
+right is.
+
+`lib/og/bidi.ts` is the Unicode algorithm for one paragraph at base RTL - W4-W7,
+N1-N2, I1-I2, L2 and L4 mirroring - and the card is drawn `ltr` because the
+strings arrive already in visual order. The two now match Chrome glyph for
+glyph. Its first version resolved whole runs and emitted **"1+" for "+1"**: a
+sign bound to a number is UBA's ET rule, and a run-level pass cannot see it.
+Levels are the shorter implementation here, not the fancier one. Arabic is
+detected and declined rather than mangled, because it needs contextual shaping.
+
+**No photograph on the card, deliberately.** It would be more clickable and it
+would mean fetching Wikimedia inside the scraper's request; WhatsApp gives up
+quickly, so the failure mode is not a card without a picture, it is **no card**,
+which is worse than today.
+
+Two traps recorded: **`fetch` cannot read `file://` in the Node runtime** - the
+`fetch(new URL('./font.woff', import.meta.url))` shape in the Next docs is an
+Edge pattern, and here it throws "not implemented... yet..." and surfaces as a
+bare 500. Locate with `import.meta.url` so the bundler emits the asset, read
+with `fs`. And the font has to be in the repo at all (48KB of Heebo subsets,
+not a dependency) because `next/font/google` self-hosts into `.next` under a
+hashed name - without a Hebrew face Satori draws nothing.
+
+---
+
+**The photo mirror became an archive, because two measurements contradicted the
+plan it came from.**
+
+**You cannot mirror a URL after it dies.** The reactive version - notice a dead
+link, then copy it - is incoherent: by the time we know, the bytes are gone. I
+had offered exactly that as the cheap option and had to correct it.
+
+**And serving from a mirror would cost bytes.** The cards render a responsive
+srcSet and Commons resizes on demand; matching that means storing every width,
+and storing one ships ~150KB to a phone that gets ~60KB today - a measured
+regression traded against a rare failure.
+
+So nothing serves from it. Commons stays primary, the rendering path is not
+touched and therefore cannot regress. Measured on a 30-file dry run: **~664MB**
+for the catalog, storage only - not the 450MB the plan estimated, because the
+archive takes the widest width the source permits.
+
+**A bug in my own first version, found by running it rather than reading it:**
+Wikimedia answered 429 for eleven of thirty files and the script wrote
+`dead: true` for every one - it would have recorded "this photograph no longer
+exists" for eleven good files and skipped them forever. **A rate limit is not
+an absence**, which this file already records from a geosearch pass. Only
+404/410 is death now; everything else backs off honouring `Retry-After`, and an
+unresolved file is left OUT of the manifest so the next run retries rather than
+inheriting a wrong conclusion. Same thirty files after: 30 archived, 0 dead.
+
+`@vercel/blob` is a **devDependency** - the script is build-time and nothing
+ships - and it is imported lazily so `--dry` rehearses with no token and no
+store. **It has never been run for real**: no Blob store exists, so the upload
+call itself is the one part unexercised.
+
+---
+
+**Verified:** 931 unit tests (22 new; 909 of them only runnable again because
+of the JSON-import fix), `tsc` clean, `npm run build` clean at 323 pages, lint
+at 33 problems against a recorded baseline of 34, catalog validator 0 errors
+and 83 warnings - unchanged, and nothing in `src/data` was touched. In a real
+browser at 390 and 1400: the login dialog end to end, the enforced CSP across
+eight pages, the new contact address on both pages with zero overflow, and the
+share card compared against Chrome.
+
+**Waiting on Netanel**, in `1.MD` in full: make `support@tiyulplus.com`
+receive - it is published and currently goes nowhere, which is the one way this
+is worse than the Gmail address; run the archive once with a Blob token; delete
+the `T4R4Cwqk` test share code; run `sql/supabase-consent.sql`, now the oldest
+open item; and set the three TikTok env vars.
