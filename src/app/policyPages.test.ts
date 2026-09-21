@@ -108,8 +108,23 @@ test('הטענה ״אין עוגיות״ עדיין נכונה', () => {
     }
   })(join(APP, '..'));
 
+  /*
+    The one disclosed exception, and it is an allowlist rather than a weaker
+    rule on purpose: /tiktok is an internal screen that connects OUR TikTok
+    account to our publishing tool, and its OAuth flow needs a CSRF cookie -
+    there is no way to bind the callback to the browser that started it
+    without one.
+
+    It is named on /cookies and in the privacy policy, in those words, so the
+    claim stays true: ordinary browsing sets nothing. Adding a file here means
+    adding it to those pages too - which is the point of listing paths instead
+    of relaxing the pattern.
+  */
+  const DISCLOSED = [join('tiktok', 'connect'), join('tiktok', 'callback')];
+
   const hits: string[] = [];
   for (const f of files) {
+    if (DISCLOSED.some((d) => f.includes(d))) continue;
     const s = readFileSync(f, 'utf8');
     // Setting a cookie in the browser, or Set-Cookie from the server
     if (/document\.cookie\s*=/.test(s) || /['"]Set-Cookie['"]/i.test(s)) hits.push(f);

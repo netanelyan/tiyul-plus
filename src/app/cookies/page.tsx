@@ -5,7 +5,7 @@ import { List, Section, Sub, Updated } from '@/components/PolicySection';
 export const metadata = {
   title: 'עוגיות ונתוני שימוש | טיול+',
   description:
-    'טיול+ לא מציב אף עוגייה. מה כן נשמר בדפדפן שלכם, למה, ואיך מוחקים - בשפה פשוטה.',
+    'גלישה רגילה בטיול+ לא מציבה אף עוגייה. מה כן נשמר בדפדפן שלכם, למה, ואיך מוחקים - בשפה פשוטה.',
 };
 
 /** A row in the storage table. `pii` marks what relates to you personally. */
@@ -26,8 +26,19 @@ export default function Page() {
   return (
     <PageShell title="עוגיות ונתוני שימוש">
       <p className="rounded-2xl bg-shell p-4 text-lg leading-relaxed ring-1 ring-night/10">
-        <strong>טיול+ לא מציב אף עוגייה.</strong> לא עוגיות פרסום, לא עוגיות מעקב, ולא עוגיות
-        ״הכרחיות״. לכן גם אין באתר חלונית הסכמה לעוגיות - אין למה להסכים.
+        <strong>גלישה רגילה בטיול+ לא מציבה אף עוגייה.</strong> לא עוגיות פרסום, לא עוגיות
+        מעקב, ולא עוגיות ״הכרחיות״. לכן גם אין באתר חלונית הסכמה לעוגיות - אין למה להסכים.
+      </p>
+      <p className="rounded-xl bg-shell p-4 ring-1 ring-night/10">
+        יש בדיוק יוצא דופן אחד, ואנחנו כותבים אותו כאן במפורש כדי שהמשפט למעלה יישאר מדויק:
+        למסך פנימי אחד באתר, שדרכו אנחנו מחברים את חשבון הטיקטוק <strong>שלנו</strong> לכלי
+        הפרסום שלנו, יש עוגיית אבטחה קצרה בשם{' '}
+        <span dir="ltr" className="font-mono text-sm">
+          tiktok_oauth_state
+        </span>
+        . היא נוצרת רק אם לוחצים על כפתור החיבור באותו מסך, מכילה מחרוזת אקראית בלבד, פגה אחרי
+        עשר דקות, ותפקידה היחיד הוא לוודא שהחזרה מטיקטוק שייכת לבקשה שיצאה מכאן. היא אינה מזהה
+        אתכם, אינה משמשת למעקב, ומבקר רגיל באתר לא ייתקל בה לעולם.
       </p>
       <p>
         מה שכן קיים הוא <strong>אחסון מקומי בדפדפן שלכם</strong> (localStorage), והוא מה שמאפשר
@@ -144,7 +155,7 @@ export default function Page() {
         </p>
       </Section>
 
-      <Updated date="11 באוגוסט 2026" />
+      <Updated date="21 בספטמבר 2026" />
     </PageShell>
   );
 }
