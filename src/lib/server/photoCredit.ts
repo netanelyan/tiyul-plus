@@ -1,4 +1,8 @@
-import credits from '../../../scripts/photo-credits.json';
+// The import attribute is required, not decorative: Node 24 refuses a JSON
+// import without it, and because this module sits in the import graph of the
+// catalog, ten test suites crashed on load rather than failing - so they
+// stopped running silently. The bundler accepts the attribute either way.
+import credits from '../../../scripts/photo-credits.json' with { type: 'json' };
 
 /**
  * Who took each photograph, and how wide the original is.
