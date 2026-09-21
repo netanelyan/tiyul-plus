@@ -175,6 +175,29 @@ for (const c of countries) {
   seenCountrySlug.add(c.slug);
   checkPhoto(c.slug, 'Country.photo', c.photo, true);
   if (!c.photo) warn(`${c.slug}: no Country.photo - the /countries card renders a flat gradient`);
+
+  /*
+    Every country H1 renders "Hebrew + nameLocal", and the convention across
+    the catalog is that nameLocal leads with the Latin/English name and then
+    the native one: "Japan / 日本", "Georgia / საქართველო".
+
+    Four entries broke it, and three of them badly: Poland showed only
+    "Polska", and South Korea, North Macedonia and Mongolia showed only
+    "대한민국", "Северна Македонија" and "Монгол улс" - so a Hebrew reader got
+    the Hebrew name and then a script they cannot read, with no way to
+    recognise the country or search for it.
+
+    The rule enforced here is the minimum that cannot be argued with: there
+    must be at least two Latin letters somewhere in nameLocal. A country whose
+    own name is genuinely Latin-only ("Polska") still passes, which is why
+    this is an error about legibility rather than a format check on the slash.
+  */
+  if (!c.nameLocal || !/[A-Za-z]{2}/.test(c.nameLocal)) {
+    err(
+      `${c.slug}: nameLocal "${c.nameLocal ?? ''}" has no Latin-script name - ` +
+        `the country H1 would show Hebrew followed only by a script most readers cannot read`,
+    );
+  }
 }
 const seenDestSlug = new Set();
 const placeOwner = new Map();

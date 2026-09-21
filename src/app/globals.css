@@ -45,6 +45,9 @@ body {
      keeps every explicit font-semibold/bold above it still visibly heavier. */
   font-weight: 500;
   font-family:
+    /* next/font injects the self-hosted family here; the rest stay as the
+       fallback chain they always were. */
+    var(--font-heebo),
     'Heebo',
     'Rubik',
     'Segoe UI',

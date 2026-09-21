@@ -42,6 +42,10 @@ function Column({ title, links }: { title: string; links: FooterLink[] }) {
           <li key={l.href}>
             <Link
               href={l.href}
+              /* See Flagships: the footer carries about 31 links and appears on
+                 every page, so its speculative fetches are the largest single
+                 source of them on the site. */
+              prefetch={false}
               className="text-xs font-semibold text-cream/70 underline-offset-2 transition hover:text-cream hover:underline"
             >
               {l.label}
@@ -76,6 +80,7 @@ function ChipRow({
         <Link
           key={l.href}
           href={l.href}
+          prefetch={false}
           className="rounded-full bg-cream/[0.07] px-2.5 py-1 text-[11px] font-semibold text-cream/70 ring-1 ring-cream/10 transition hover:bg-cream/15 hover:text-cream"
         >
           {l.label}
@@ -171,10 +176,18 @@ export default function SiteFooter() {
             links={footerDestinations}
             more={{ href: '/countries', label: 'כל היעדים' }}
           />
+          {/*
+            Both rows used to end in a link to /countries, labelled "all
+            destinations" and "all countries" - two different promises landing
+            on the same page. The destinations row keeps the catalog, which is
+            the destination browser; the countries row goes to the collections
+            index, which is the other way into the catalog and had no footer
+            link of its own.
+          */}
           <ChipRow
             label="מדינות"
             links={footerCountries}
-            more={{ href: '/countries', label: 'כל המדינות' }}
+            more={{ href: '/collections', label: 'אוספי יעדים' }}
           />
         </div>
 

@@ -194,6 +194,17 @@ export default function PremiumClient() {
           כל התכנון חינם, בלי כרטיס אשראי. משלמים רק כדי לתכנן ביחד עם מי שנוסע איתכם, או כדי לבדוק
           את הטיול לפני היציאה.
         </p>
+        {/*
+          Stated once, here, where every price on the page is still ahead of
+          the reader - rather than repeated on each card.
+
+          It is not a guess: the margin model in plans.ts already treats these
+          as gross amounts and deducts VAT from them before computing what a
+          subscriber is worth, so an exclusive price would make every figure in
+          that file wrong. The rate itself is deliberately not printed - it
+          changes by legislation, and the sentence stays true when it does.
+        */}
+        <p className="mt-2 text-xs font-semibold text-night/45">כל המחירים באתר כוללים מע״מ.</p>
       </div>
 
       {/* ---------- Which one is you: four rows, four anchors ----------

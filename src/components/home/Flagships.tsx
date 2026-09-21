@@ -36,10 +36,19 @@ export default function Flagships({ cards }: { cards: FlagshipCard[] }) {
         linkLabel="כל הקטלוג"
       />
 
+      {/*
+        prefetch={false} on this grid and the two below it: Next prefetches
+        every visible Link, and the homepage was fetching 11 route payloads
+        several times over - 44 requests and 1.5MB decoded before anybody
+        clicks anything. On Israeli mobile data that is real money for pages
+        most visitors will not open. The click still works exactly as before;
+        only the speculative fetch is gone.
+      */}
       <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {cards.map((d) => (
           <Link
             key={d.slug}
+            prefetch={false}
             href={`/destinations/${d.slug}`}
             className="card-pop group relative block h-52 overflow-hidden rounded-2xl ring-1 ring-cream/10 sm:h-64"
           >

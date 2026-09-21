@@ -9,6 +9,7 @@ import type { TripPreferences, WizardPrefs } from '@/lib/trip/types';
 import type { CityOption } from '@/lib/citySearch';
 import CityCombobox from '@/components/CityCombobox';
 import TransitionPanel from '@/components/TransitionPanel';
+import { PARTY_LABELS } from '@/lib/trip/label';
 
 /**
  * A guided structured questionnaire: a few simple steps that collect the trip's
@@ -21,19 +22,23 @@ import TransitionPanel from '@/components/TransitionPanel';
 type City = CityOption;
 type Party = 'couple' | 'family' | 'friends' | 'solo';
 
-const PARTY = [
-  { v: 'couple', label: 'זוג' },
-  { v: 'family', label: 'משפחה' },
-  { v: 'friends', label: 'חברים' },
-  { v: 'solo', label: 'לבד' },
-];
+const PARTY = (['couple', 'family', 'friends', 'solo'] as const).map((v) => ({
+  v,
+  label: PARTY_LABELS[v],
+}));
 const VIBE: { v: WizardPrefs['tripType']; label: string; hint: string }[] = [
   { v: 'city', label: 'עירוני', hint: 'מוזיאונים, אוכל, קניות' },
   { v: 'nature', label: 'טבע', hint: 'נופים, הרים, אגמים' },
   { v: 'combined', label: 'משולב', hint: 'קצת מהכול' },
 ];
 // The Hebrew values match generateTrip's regex (targetTagsFromPreferences)
-const INTERESTS = ['היסטוריה', 'אמנות', 'אוכל', 'טבע', 'חיי לילה', 'רומנטי', 'משפחה'];
+/*
+  No 'טבע' here: it is already one of the three trip types a step earlier, so
+  offering it again as an interest asked the same question twice in adjacent
+  rows. The trip type is the stronger signal of the two - it drives the day
+  packing, not just a tag boost.
+*/
+const INTERESTS = ['היסטוריה', 'אמנות', 'אוכל', 'חיי לילה', 'רומנטי', 'משפחה'];
 const BUDGET = [
   { v: 'low', label: 'חסכוני' },
   { v: 'medium', label: 'רגיל' },
@@ -112,7 +117,15 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
   const [party, setParty] = useState<Party | ''>('');
   const [tripType, setTripType] = useState<WizardPrefs['tripType']>('combined');
   const [interests, setInterests] = useState<string[]>([]);
-  const [budget, setBudget] = useState<TripPreferences['budget'] | ''>('');
+  /*
+    Defaults to the middle option, like pace and shopping directly beside it.
+    It was the only one of the three that started unset, so the row read as
+    unanswered next to two that were already answered - and a traveller who
+    skipped it got no budget signal at all rather than the neutral one.
+    Clicking the active chip still clears it, so "no preference" stays
+    reachable.
+  */
+  const [budget, setBudget] = useState<TripPreferences['budget'] | ''>('medium');
   const [pace, setPace] = useState<WizardPrefs['pace']>('relaxed');
   const [shopping, setShopping] = useState<WizardPrefs['shopping']>('normal');
   const [kosher, setKosher] = useState(false);

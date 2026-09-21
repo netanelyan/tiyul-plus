@@ -11,7 +11,31 @@ import SiteNav from '@/components/SiteNav';
 import { cityNames } from '@/lib/server/cityNames';
 import AccessibilityWidget from '@/components/AccessibilityWidget';
 import Logo from '@/components/Logo';
+import { Heebo } from 'next/font/google';
 import './globals.css';
+
+/**
+ * The site font, self-hosted by Next at build time.
+ *
+ * It used to be a render-blocking <link> to fonts.googleapis.com plus two
+ * preconnects - 118KB over 6 requests from a third origin, before anything
+ * could paint. Two things were measured and are gone rather than merely
+ * moved: **Yellowtail and Space Grotesk were requested and used nowhere in
+ * the codebase**, and Heebo 300 had no callers either (`font-light` appears
+ * zero times).
+ *
+ * What is left is the five weights the site actually uses. Self-hosting also
+ * removes an origin the browser had to contact on every visit, which is one
+ * fewer third party in the privacy policy rather than only a speed change.
+ */
+const heebo = Heebo({
+  // Hebrew first: it is the product's language and the subset that must not
+  // arrive late.
+  subsets: ['hebrew', 'latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  display: 'swap',
+  variable: '--font-heebo',
+});
 
 // Applies the saved accessibility settings before the first paint (no flash).
 const A11Y_BOOT = `(function(){try{var s=JSON.parse(localStorage.getItem('tiyul-plus:a11y')||'{}');var el=document.documentElement;if(s.contrast)el.classList.add('a11y-contrast');if(s.grayscale)el.classList.add('a11y-grayscale');if(s.underlineLinks)el.classList.add('a11y-underline-links');if(s.highlightLinks)el.classList.add('a11y-highlight-links');if(s.spacing)el.classList.add('a11y-spacing');if(s.bigCursor)el.classList.add('a11y-cursor');if(s.noMotion)el.classList.add('a11y-no-motion');if(s.fontLevel)el.style.setProperty('--a11y-font-scale',String(1+s.fontLevel*0.12));}catch(e){}})();`;
@@ -129,14 +153,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="he" dir="rtl">
+    <html lang="he" dir="rtl" className={heebo.variable}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Yellowtail&family=Space+Grotesk:wght@500;700&display=swap"
-          rel="stylesheet"
-        />
         {/* Applies saved accessibility settings before paint - no flash */}
         <script dangerouslySetInnerHTML={{ __html: A11Y_BOOT }} />
       </head>
@@ -166,7 +184,15 @@ export default function RootLayout({
         </AuthProvider>
         <AccessibilityWidget />
         <SiteFooter />
-        <Script src="/blackz-signature.js" strategy="afterInteractive" />
+        {/*
+          lazyOnload rather than afterInteractive: this is a 12KB branding
+          badge in the footer, and afterInteractive makes Next preload it on
+          every page - so it competed for bandwidth with the content on a
+          screen it is not even on yet. lazyOnload drops the preload and waits
+          for idle. The custom element renders nothing until it is defined,
+          so arriving late costs nothing.
+        */}
+        <Script src="/blackz-signature.js" strategy="lazyOnload" />
       </body>
     </html>
   );

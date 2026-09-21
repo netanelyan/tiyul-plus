@@ -24,3 +24,21 @@ export function tripLabel(trip: Trip, names: CityNames): string {
   if (found.length === 1) return found[0];
   return `${found[0]} + ${found[found.length - 1]}`;
 }
+
+/**
+ * Who is travelling, in Hebrew - one definition, because there were four.
+ *
+ * `solo` was "לבד" on the questionnaire and "סולו" on the planner, on the
+ * preference chip and in the preference summary, so a traveller picked one
+ * word and the trip screen then showed them another for the same choice.
+ *
+ * Standardised on the plain Hebrew rather than the loanword: the options sit
+ * beside זוג, משפחה and חברים, and "סולו" is the only one of the four in a
+ * different register.
+ */
+export const PARTY_LABELS: Record<'couple' | 'family' | 'friends' | 'solo', string> = {
+  couple: 'זוג',
+  family: 'משפחה',
+  friends: 'חברים',
+  solo: 'לבד',
+};

@@ -16,6 +16,7 @@ import TripWorkspace from '@/components/TripWorkspace';
 import CityCombobox from '@/components/CityCombobox';
 import { buildCityOptionsFromSummaries } from '@/lib/citySearch';
 import { authHeader } from '@/lib/auth/client';
+import { PARTY_LABELS } from '@/lib/trip/label';
 
 /**
  * The planner: the new-trip screen (buttons as the primary interface) - and the
@@ -264,7 +265,7 @@ function Onboarding({
                 { v: 'couple', l: 'זוג' },
                 { v: 'family', l: 'משפחה' },
                 { v: 'friends', l: 'חברים' },
-                { v: 'solo', l: 'סולו' },
+                { v: 'solo', l: PARTY_LABELS.solo },
               ]}
               value={party ?? ''}
               onChange={(v) => setParty((cur) => (cur === v ? null : (v as Party)))}
