@@ -41,6 +41,7 @@ import { OFFLINE_HINT, isoDay, useOnline } from '@/lib/offline/online';
 import { readOnlyIfOffline } from '@/lib/trip/readOnly';
 import { cachedAt, pruneCities } from '@/lib/trip/cityStore';
 import { daysHe } from '@/lib/duration';
+import { PARTY_LABELS } from '@/lib/trip/label';
 
 /**
  * The unified trip view - one screen for everything about the active trip:
@@ -402,7 +403,7 @@ export default function TripWorkspace({
         t.preferences?.kosher === true ? 'כשר' : null,
         t.preferences?.pace === 'packed' ? 'דחוס' : t.preferences?.pace === 'relaxed' ? 'רגוע' : null,
         t.preferences?.party
-          ? { couple: 'זוג', family: 'משפחה', friends: 'חברים', solo: 'סולו' }[t.preferences.party]
+          ? PARTY_LABELS[t.preferences.party]
           : null,
         t.preferences?.shopping
           ? { more: 'שופינג: יותר', normal: 'שופינג: רגיל', less: 'שופינג: פחות' }[
@@ -578,7 +579,7 @@ export default function TripWorkspace({
               { value: 'couple', label: 'זוג' },
               { value: 'family', label: 'משפחה' },
               { value: 'friends', label: 'חברים' },
-              { value: 'solo', label: 'סולו' },
+              { value: 'solo', label: PARTY_LABELS.solo },
             ]}
             onPick={(v) => setPrefs({ party: v })}
           />
