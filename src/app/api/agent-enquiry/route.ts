@@ -53,6 +53,21 @@ export async function POST(req: Request) {
   let contact = '';
   let tripsPerYear = '';
   let needs = '';
+  /*
+    Two cheap bot checks, both of which a real person passes without noticing.
+
+    The honeypot is a field hidden from people and left empty by them; a bot
+    that fills every input it finds fills this one too. The timing check
+    catches the other common shape - a script that POSTs the moment the page
+    is fetched - because the shortest honest version of this form is a name, a
+    business name, a contact and a sentence about what they need.
+
+    **Both answer 200 with ok:true.** Telling a bot which check it failed is
+    telling it how to pass next time, and a person who somehow trips one is
+    better served by a form that appears to work than by an accusation.
+  */
+  let trapFilled = false;
+  let tooFast = false;
   try {
     const body = (await req.json()) as Record<string, unknown>;
     const str = (v: unknown, max: number) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
@@ -61,8 +76,19 @@ export async function POST(req: Request) {
     contact = str(body.contact, 120);
     tripsPerYear = str(body.tripsPerYear, 40);
     needs = str(body.needs, 2000);
+    trapFilled = str(body.website, 200).length > 0;
+    const startedAt = typeof body.startedAt === 'number' ? body.startedAt : 0;
+    const elapsed = startedAt > 0 ? Date.now() - startedAt : Number.POSITIVE_INFINITY;
+    // Clock skew and a stale tab both produce nonsense; only an implausibly
+    // SMALL elapsed time is treated as a signal.
+    tooFast = elapsed >= 0 && elapsed < 3000;
   } catch {
     return NextResponse.json({ ok: false, error: 'bad-request' }, { status: 400 });
+  }
+
+  if (trapFilled || tooFast) {
+    console.warn(`[agent-enquiry] dropped: ${trapFilled ? 'honeypot' : 'too-fast'}`);
+    return NextResponse.json({ ok: true });
   }
 
   if (!name || !business) {

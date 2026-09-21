@@ -31,6 +31,26 @@ export default function AgentEnquiryForm({ onClose }: { onClose: () => void }) {
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /*
+    The honeypot. Hidden from people with position/opacity rather than
+    `display:none` or `hidden`, because some bots skip fields that are
+    obviously unrenderable - and marked aria-hidden with tabIndex -1 so a
+    screen reader and the Tab key both skip it, which `display:none` would
+    also have done.
+  */
+  const [trap, setTrap] = useState('');
+  /*
+    Stamped on mount rather than during render - Date.now() in a render body
+    is impure and the compiler rejects it.
+
+    It starts at 0, and the route reads 0 as "no timing signal" rather than as
+    "opened at the epoch". So if this effect somehow never ran, the check
+    fails OPEN and a real person is never blocked by it.
+  */
+  const openedAt = useRef(0);
+  useEffect(() => {
+    openedAt.current = Date.now();
+  }, []);
   const firstRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -56,7 +76,16 @@ export default function AgentEnquiryForm({ onClose }: { onClose: () => void }) {
       const res = await fetch('/api/agent-enquiry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, business, contact, tripsPerYear, needs }),
+        body: JSON.stringify({
+          name,
+          business,
+          contact,
+          tripsPerYear,
+          needs,
+          // The honeypot and the time the form was opened - see the route.
+          website: trap,
+          startedAt: openedAt.current,
+        }),
       });
       const data = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
       if (data?.ok) {
@@ -184,6 +213,26 @@ export default function AgentEnquiryForm({ onClose }: { onClose: () => void }) {
           {error}
         </p>
       )}
+
+      {/*
+        The honeypot. Not display:none - some bots skip fields they can tell
+        are unrenderable - but taken out of the layout, out of the tab order
+        and out of the accessibility tree, so no person can reach it by
+        keyboard, pointer or screen reader. autoComplete=off keeps the
+        browser from helpfully filling it.
+      */}
+      <div aria-hidden className="pointer-events-none absolute h-0 w-0 overflow-hidden opacity-0">
+        <label htmlFor="website">אל תמלאו שדה זה</label>
+        <input
+          id="website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={trap}
+          onChange={(e) => setTrap(e.target.value)}
+        />
+      </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
         <button
