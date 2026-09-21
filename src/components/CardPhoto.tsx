@@ -18,6 +18,7 @@ const DEFAULT_OVERLAY = 'linear-gradient(180deg, rgba(15,14,26,0) 40%, rgba(15,1
 
 export default function CardPhoto({
   photo,
+  photoW,
   className = 'photo-bg relative h-40',
   sizes = '(min-width: 1024px) 32vw, (min-width: 640px) 48vw, 94vw',
   overlay = DEFAULT_OVERLAY,
@@ -25,6 +26,8 @@ export default function CardPhoto({
   children,
 }: {
   photo?: string;
+  /** Original width on Commons, so a dense screen can be offered 960px. */
+  photoW?: number;
   className?: string;
   sizes?: string;
   /** null = no darkening layer (when the card draws a gradient of its own) */
@@ -39,7 +42,7 @@ export default function CardPhoto({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={photo}
-            srcSet={thumbSrcSet(photo)}
+            srcSet={thumbSrcSet(photo, undefined, photoW)}
             sizes={sizes}
             alt=""
             aria-hidden

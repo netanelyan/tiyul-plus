@@ -1,0 +1,110 @@
+import credits from '../../../scripts/photo-credits.json';
+
+/**
+ * Who took each photograph, and how wide the original is.
+ *
+ * ## Why this exists at all
+ *
+ * The catalog hotlinks 3,363 Wikimedia images and credited none of them.
+ * Measured across the 2,978 distinct files: **2,686 are CC BY or CC BY-SA**,
+ * both of which require the author and the licence to be named. Only 292 are
+ * public domain or CC0, where attribution is a courtesy rather than a
+ * condition. This is a commercial site, so for roughly nine images in ten the
+ * missing credit was a licence breach rather than an oversight.
+ *
+ * ## Server only, and that is load-bearing
+ *
+ * The manifest is 828KB. It must never be imported by a client component -
+ * the catalog itself was once shipped to the browser by accident and cost
+ * 492KB on every page. Credits are resolved here and passed down as props,
+ * the same rule `cityNames` and `destinationCards` already follow.
+ */
+
+interface CreditRecord {
+  artist?: string | null;
+  license?: string | null;
+  licenseUrl?: string | null;
+  descriptionUrl?: string | null;
+  width?: number | null;
+  height?: number | null;
+  missing?: boolean;
+}
+
+const BY_FILE = credits as Record<string, CreditRecord>;
+
+/** The Commons filename inside a thumbnail URL, decoded. */
+export function fileNameFromUrl(url: string | undefined): string | null {
+  if (!url) return null;
+  const m = url.match(/\/thumb\/[0-9a-f]\/[0-9a-f]{2}\/([^/]+)\/\d+px-/);
+  if (!m) return null;
+  try {
+    return decodeURIComponent(m[1]);
+  } catch {
+    return m[1];
+  }
+}
+
+export interface PhotoCredit {
+  /** The filename, used as the React key and as the last-resort label. */
+  file: string;
+  artist: string | null;
+  license: string | null;
+  licenseUrl: string | null;
+  /** The Commons file page - where a licence expects a reader to be sent. */
+  descriptionUrl: string | null;
+}
+
+export function creditFor(url: string | undefined): PhotoCredit | null {
+  const file = fileNameFromUrl(url);
+  if (!file) return null;
+  const rec = BY_FILE[file];
+  if (!rec || rec.missing) return null;
+  return {
+    file,
+    artist: rec.artist ?? null,
+    license: rec.license ?? null,
+    licenseUrl: rec.licenseUrl ?? null,
+    descriptionUrl: rec.descriptionUrl ?? null,
+  };
+}
+
+/**
+ * Credits for a page's photographs, deduplicated and ordered.
+ *
+ * One entry per FILE, not per use: a photograph that appears as both the hero
+ * and a card is one credit, and listing it twice would read as two different
+ * photographs.
+ */
+export function creditsFor(urls: (string | undefined)[]): PhotoCredit[] {
+  const seen = new Set<string>();
+  const out: PhotoCredit[] = [];
+  for (const u of urls) {
+    const c = creditFor(u);
+    if (!c || seen.has(c.file)) continue;
+    seen.add(c.file);
+    out.push(c);
+  }
+  return out;
+}
+
+/**
+ * The width of the ORIGINAL file, which is the permission slip for a wider
+ * thumbnail.
+ *
+ * `thumbSrcSet` could previously only offer widths smaller than the one
+ * already in the URL, because nothing told it how big the source was - and
+ * almost every catalog URL is a 500px thumb. So a card on a 3x phone asking
+ * for ~480px got 500, and there was never anything sharper to pick even
+ * though the original is usually several thousand pixels wide.
+ *
+ * Measured: **2,768 of 2,978 files are at least 960px wide**, so most of the
+ * catalog can serve the sharp variant. Wikimedia refuses a thumb wider than
+ * the source - that is what produced 170 dead URLs in an earlier session - so
+ * this number is exactly what makes widening safe rather than a guess.
+ */
+export function sourceWidth(url: string | undefined): number | null {
+  const file = fileNameFromUrl(url);
+  if (!file) return null;
+  const w = BY_FILE[file]?.width;
+  return typeof w === 'number' && w > 0 ? w : null;
+}

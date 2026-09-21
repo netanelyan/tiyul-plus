@@ -219,6 +219,28 @@ export default function Page() {
         </p>
       </Section>
 
+      <Section title="תמונות וזכויות יוצרים">
+        <p>
+          רוב התמונות באתר מגיעות מ<strong>ויקישיתוף</strong> (Wikimedia Commons) ומוצגות לפי
+          הרישיון של כל תמונה - ברובן רישיונות{' '}
+          <span dir="ltr">CC BY</span> ו-<span dir="ltr">CC BY-SA</span>, שמחייבים ציון שם היוצר
+          והרישיון. בתחתית כל עמוד יעד ומדינה יש בלוק{' '}
+          <strong>״קרדיטים לתמונות״</strong> עם שם הקובץ, היוצר, הרישיון וקישור למקור.
+        </p>
+        <p>
+          התמונות אינן שלנו, והרישיון שלהן אינו עובר אליכם דרכנו. שימוש חוזר בתמונה מחייב לעמוד
+          בתנאי הרישיון שלה מול המקור.
+        </p>
+        <p>
+          אם אתם בעלי הזכויות בתמונה שמוצגת כאן ורוצים שנסיר אותה או שנתקן את הקרדיט, פנו אלינו
+          דרך עמוד{' '}
+          <Link href="/contact" className="font-bold text-sunset-deep hover:underline">
+            יצירת קשר
+          </Link>{' '}
+          ונטפל בזה.
+        </p>
+      </Section>
+
       <Updated date={TERMS_UPDATED_LABEL} />
     </PageShell>
   );

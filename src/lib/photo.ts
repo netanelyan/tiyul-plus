@@ -33,10 +33,37 @@ export function thumb(url: string, width: ThumbWidth): string {
  * by screen density, so an ordinary screen downloads 250/330 instead of 500 - and a dense
  * screen still gets the sharp original.
  */
-export function thumbSrcSet(url: string, widths: ThumbWidth[] = [250, 330, 500]): string | undefined {
+export function thumbSrcSet(
+  url: string,
+  widths: ThumbWidth[] = [250, 330, 500, 960],
+  /**
+   * The width of the ORIGINAL file on Commons, when it is known.
+   *
+   * Without it this could only offer widths smaller than the one already in
+   * the URL, and almost every catalog URL is a 500px thumb - so a card on a 3x
+   * phone asking for ~480px got 500 and there was never anything sharper to
+   * pick, even though the original is usually several thousand pixels wide.
+   *
+   * Wikimedia refuses a thumb wider than the source, which is what produced
+   * 170 dead URLs in an earlier session, so widening is only safe with this
+   * number in hand. `lib/server/photoCredit.ts` supplies it from the Commons
+   * manifest; callers without it keep exactly the old behaviour.
+   */
+  sourceWidth?: number | null,
+): string | undefined {
   const current = thumbWidth(url);
   if (current === null) return undefined;
-  const usable = widths.filter((w) => w < current);
+  const ceiling = sourceWidth && sourceWidth > 0 ? sourceWidth : current;
+  const usable = widths.filter((w) => w <= ceiling && w !== current);
   if (usable.length === 0) return undefined;
-  return [...usable.map((w) => `${thumb(url, w)} ${w}w`), `${url} ${current}w`].join(', ');
+  /*
+    The URL we already have is emitted verbatim at its own width, and the
+    others are derived - so the variant the catalog verified is always in the
+    set, whatever else is offered alongside it.
+  */
+  const entries = [
+    ...usable.map((w) => ({ w: w as number, src: thumb(url, w) })),
+    { w: current, src: url },
+  ].sort((a, b) => a.w - b.w);
+  return entries.map((e) => `${e.src} ${e.w}w`).join(', ');
 }

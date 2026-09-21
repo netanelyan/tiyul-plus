@@ -8,6 +8,8 @@ import { getProvider } from '@/lib/providers';
 import Flag from '@/components/Flag';
 import CardPhoto from '@/components/CardPhoto';
 import { countries } from '@/data/countries';
+import PhotoCredits from '@/components/PhotoCredits';
+import { creditsFor } from '@/lib/server/photoCredit';
 
 export function generateStaticParams() {
   return countries.map((c) => ({ slug: c.slug }));
@@ -176,6 +178,9 @@ export default async function CountryPage({
           ))}
         </div>
       </section>
+
+      {/* Attribution for the country hero and every city card on this page. */}
+      <PhotoCredits credits={creditsFor([country.photo, ...cities.map((d) => d.photo)])} />
     </div>
   );
 }

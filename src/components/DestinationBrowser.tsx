@@ -193,7 +193,7 @@ export default function DestinationBrowser({ cards }: { cards: DestinationCard[]
             >
               {/* `<img loading="lazy">` and not background-image: 166 cards sent
                   166 image requests on open. See CardPhoto. */}
-              <CardPhoto photo={c.photo}>
+              <CardPhoto photo={c.photo} photoW={c.photoW}>
                 <span className="badge absolute end-3 top-3 rounded-full bg-cream/95 px-2 py-0.5">
                   <Flag flag={c.flag} label={c.country} size="sm" />
                 </span>

@@ -1,3 +1,4 @@
+import { sourceWidth } from '@/lib/server/photoCredit';
 import { destinations } from '@/data/destinations';
 import { countries } from '@/data/countries';
 import { HUBS, hubMembers } from '@/lib/seo/hubs';
@@ -42,6 +43,8 @@ export interface FlagshipCard {
   name: string;
   country: string;
   photo?: string;
+  /** Original Commons width, so a dense screen gets the sharp variant. */
+  photoW?: number;
   places: number;
   days: number;
   kosher: number;
@@ -59,6 +62,7 @@ export function flagshipCards(): FlagshipCard[] {
       name: d.name,
       country: country?.name ?? '',
       photo: d.iconicLandmark?.photo ?? d.photo,
+      photoW: sourceWidth(d.iconicLandmark?.photo ?? d.photo) ?? undefined,
       places: d.places.length,
       days: d.itinerary.length,
       kosher: d.places.filter((p) => p.category.startsWith('kosher')).length,

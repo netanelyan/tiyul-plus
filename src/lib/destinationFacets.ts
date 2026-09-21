@@ -131,6 +131,12 @@ export interface DestinationCard {
   countrySlug: string;
   flag?: string;
   photo?: string;
+  /**
+   * The width of the original file on Commons, when known - the permission
+   * slip that lets the card offer a 960px variant. A few bytes per card in
+   * the payload, against a visibly sharper photo on every dense screen.
+   */
+  photoW?: number;
   landmark?: string;
   days: number;
   places: number;

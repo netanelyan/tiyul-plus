@@ -9,6 +9,8 @@ import { breadcrumbLd, faqLd, faqPairs, touristDestinationLd } from '@/lib/seo/j
 import JsonLd from '@/components/seo/JsonLd';
 import DestinationGuide from '@/components/seo/DestinationGuide';
 import DestinationClient from './DestinationClient';
+import PhotoCredits from '@/components/PhotoCredits';
+import { creditsFor } from '@/lib/server/photoCredit';
 
 export function generateStaticParams() {
   return destinations.map((d) => ({ slug: d.slug }));
@@ -127,6 +129,23 @@ export default async function DestinationPage({
           `@/lib/seo/selection` for why the set is small and pinned.
       */}
       {promoted && <DestinationGuide dest={dest} country={country} />}
+
+      {/*
+        Attribution for every photograph this page can show - the hero, the
+        landmark card and each place - resolved on the server so the 828KB
+        credit manifest never reaches the browser.
+
+        It lists what the page CAN render rather than what happens to be
+        visible after filtering, because the filters are client state and a
+        credit that disappears when somebody clicks a chip is not attribution.
+      */}
+      <PhotoCredits
+        credits={creditsFor([
+          dest.photo,
+          dest.iconicLandmark?.photo,
+          ...dest.places.map((pl) => pl.photo),
+        ])}
+      />
     </>
   );
 }
