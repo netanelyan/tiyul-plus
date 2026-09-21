@@ -1,8 +1,24 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
+import Link from 'next/link';
 import { useAuth } from '@/lib/auth/AuthContext';
-import { planAtLeast } from '@/lib/plans';
+import { PREMIUM_PRICE_ILS, ils, planAtLeast } from '@/lib/plans';
+
+/**
+ * Asks this section to expand. A panel inside it that sent the user off to log
+ * in dispatches this on the way back, because reopening itself inside a
+ * collapsed section would mean reopening into something nobody can see.
+ *
+ * An event rather than a shared read of the pending intent, because effects
+ * run child-first: a panel would have consumed the intent before this section
+ * ever got to look at it. This way the order does not matter.
+ */
+export const PAID_TOOLS_OPEN_EVENT = 'tiyul:paid-tools-open';
+
+export function openPaidTools() {
+  window.dispatchEvent(new Event(PAID_TOOLS_OPEN_EVENT));
+}
 
 /**
  * The one place on the trip screen where things cost money.
@@ -54,6 +70,12 @@ export default function PaidTools({ children }: { children: ReactNode }) {
   // Ordinal: every paid plan gets the paid tools, not only the one named 'premium'
   const isPremium = planAtLeast(auth.profile?.plan ?? 'free', 'premium');
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const onOpen = () => setOpen(true);
+    window.addEventListener(PAID_TOOLS_OPEN_EVENT, onOpen);
+    return () => window.removeEventListener(PAID_TOOLS_OPEN_EVENT, onOpen);
+  }, []);
 
   return (
     <section aria-labelledby="paid-tools-heading" className="mt-4">
@@ -108,7 +130,27 @@ export default function PaidTools({ children }: { children: ReactNode }) {
         the DOM would silently drop a report the traveller paid for out of their
         PDF. Collapsed hides it on screen only.
       */}
-      <div className={open ? 'mt-2 space-y-2' : 'hidden print:block'}>{children}</div>
+      <div className={open ? 'mt-2 space-y-2' : 'hidden print:block'}>
+        {/*
+          The one contextual pointer to the pricing page, and this is the screen
+          that earns it: somebody who has just opened the paid section is asking
+          what these cost. It is a line rather than a card - a second advert
+          inside the section that already says "these cost money" would be the
+          interleaving complaint again at a smaller scale.
+
+          The price comes from the constant, never typed, so it cannot drift
+          from /premium. Nothing here is shown to a subscriber.
+        */}
+        {!isPremium && (
+          <p className="px-1 text-xs font-medium text-night/55 print:hidden">
+            כלולים במנוי, מ-{ils(PREMIUM_PRICE_ILS)} ₪ לחודש.{' '}
+            <Link href="/premium" className="font-bold text-sunset-deep underline hover:text-sunset">
+              מה בדיוק מקבלים ←
+            </Link>
+          </p>
+        )}
+        {children}
+      </div>
     </section>
   );
 }

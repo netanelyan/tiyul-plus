@@ -1,14 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/lib/auth/AuthContext';
+import { requestLogin, takePendingLogin } from '@/components/LoginGate';
 import { authHeader } from '@/lib/auth/client';
 import {
   PLAN_FEATURE_ROWS,
   PREMIUM_PRICE_ILS,
   PRO_PRICE_ILS,
   PRO_TRIPS_PER_MONTH,
+  ils,
   planAtLeast,
   type PaidPlan,
   type Plan,
@@ -17,14 +19,9 @@ import { PRICE_ILS, priceLabel } from '@/lib/predeparture';
 import InView from '@/components/InView';
 import AgentEnquiryForm from './AgentEnquiryForm';
 
-/**
- * Shekels, printed the way people write them: 19.90 keeps its agorot, a round
- * price does not grow a ".00". Both current prices happen to carry agorot, so
- * today this behaves like toFixed(2) - it exists for the derived figures (a
- * year of a plan, two checks) and so that a future round price cannot end up
- * rendered two different ways in two places on the same card.
- */
-const ils = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(2));
+/* `ils` moved to lib/plans.ts, next to the prices it formats: this page had it
+   as a local helper while the trip screen's upsell printed the constant raw,
+   so the same subscription read "19.90 ₪" here and "19.9 ₪" there. */
 
 /** Thousands separator, with the agorot kept - a year of pro is 1,078.80 and not 1,078.8 */
 const ilsBig = (n: number) =>
@@ -84,6 +81,16 @@ export default function PremiumClient() {
   const plan: Plan = auth.profile?.plan ?? 'free';
   const [busy, setBusy] = useState<PaidPlan | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  /**
+   * Set only for the one notice a user can act on from here. Everything else
+   * the checkout can say is information; "you need to be signed in" is a door,
+   * and it used to be written as a sentence naming a button in the nav - which
+   * at 375px is off screen, so tapping subscribe appeared to do nothing at all.
+   */
+  const [needsLogin, setNeedsLogin] = useState<PaidPlan | null>(null);
+  const noticeRef = useRef<HTMLDivElement>(null);
+  /** The plan to resume after a login - see the effect below for why it is a ref. */
+  const resumeRef = useRef<PaidPlan | null>(null);
   const [agentFormOpen, setAgentFormOpen] = useState(false);
 
   /*
@@ -101,6 +108,7 @@ export default function PremiumClient() {
     if (busy) return;
     setBusy(wanted);
     setNotice(null);
+    setNeedsLogin(null);
     try {
       const res = await fetch('/api/billing/checkout', {
         method: 'POST',
@@ -115,9 +123,10 @@ export default function PremiumClient() {
         window.location.assign(data.url);
         return;
       }
-      if (data.error === 'auth-required')
-        setNotice('צריך להתחבר קודם - כפתור ההתחברות למעלה בניווט.');
-      else if (data.error === 'already-premium') setNotice('אתם כבר בתוכנית הזאת 🎉');
+      if (data.error === 'auth-required') {
+        setNotice('המנוי נשמר בחשבון, אז קודם מתחברים - זה לוקח חצי דקה, בלי סיסמה.');
+        setNeedsLogin(wanted);
+      } else if (data.error === 'already-premium') setNotice('אתם כבר בתוכנית הזאת 🎉');
       else if (data.error === 'switch-requires-support')
         // Not a failure and not a fob-off: creating a second PayPal subscription
         // would charge them twice, so the switch is done by hand until the
@@ -136,6 +145,59 @@ export default function PremiumClient() {
       setBusy(null);
     }
   }
+
+  /**
+   * Back from the login modal, so finish what they were doing. The intent is
+   * read from storage rather than state because the magic-link path reloads
+   * the document, and takePendingLogin clears it, so a resume cannot run twice.
+   */
+  useEffect(() => {
+    if (!auth.user) return;
+    /*
+      Consumed into a ref before being acted on, because in StrictMode an
+      effect runs, cleans up and runs again - and takePendingLogin is a
+      one-shot read. Consuming straight into a local would leave the second
+      run with nothing and the resume would silently never happen in dev.
+    */
+    if (!resumeRef.current) {
+      resumeRef.current = takePendingLogin('checkout:premium')
+        ? 'premium'
+        : takePendingLogin('checkout:pro')
+          ? 'pro'
+          : null;
+    }
+    const wanted = resumeRef.current;
+    if (!wanted) return;
+    /*
+      A tick later on purpose: upgrade() sets state immediately, and doing that
+      synchronously in an effect body is the cascading-render pattern the
+      react-hooks rule rejects. It is a network call either way, so nothing is
+      lost by scheduling it - and the cleanup makes it cancellable.
+    */
+    const t = setTimeout(() => {
+      resumeRef.current = null;
+      void upgrade(wanted);
+    }, 0);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth.user]);
+
+  /**
+   * Bring the notice to the user rather than trusting them to find it. It
+   * renders below the plan grid, which on a phone is well past the fold - the
+   * reported symptom was that tapping subscribe "does absolutely nothing",
+   * and this is the whole of why.
+   *
+   * focus() first with preventScroll, then scroll ourselves: letting focus do
+   * the scrolling gives a jump, and it ignores the reduced-motion preference.
+   */
+  useEffect(() => {
+    const el = noticeRef.current;
+    if (!notice || !el) return;
+    (el.querySelector<HTMLElement>('button') ?? el).focus({ preventScroll: true });
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+  }, [notice]);
 
   /**
    * The subscribe button for one plan. Three states, and the third is the one
@@ -394,9 +456,34 @@ export default function PremiumClient() {
       </InView>
 
       {notice && (
-        <p className="mt-4 rounded-xl bg-zest/15 px-4 py-3 text-center text-sm font-semibold text-night">
-          {notice}
-        </p>
+        /*
+          role="alert" so it is announced rather than merely appearing, and
+          tabIndex so focus can land here when there is no button to take it.
+        */
+        <div
+          ref={noticeRef}
+          role="alert"
+          tabIndex={-1}
+          className="mt-4 rounded-xl bg-zest/15 px-4 py-3 text-center text-sm font-semibold text-night outline-none"
+        >
+          <p>{notice}</p>
+          {needsLogin &&
+            (auth.enabled ? (
+              <button
+                onClick={() => requestLogin(needsLogin === 'pro' ? 'checkout:pro' : 'checkout:premium')}
+                className="mt-2.5 rounded-xl bg-sunset px-5 py-2.5 font-bold text-cream transition hover:bg-sunset-deep"
+              >
+                התחברות והמשך לתשלום
+              </button>
+            ) : (
+              /* Auth is not configured in this environment - there is no modal
+                 to open, so say where the button is instead of drawing a dead
+                 one. */
+              <p className="mt-1 text-xs font-medium text-night/60">
+                כפתור ההתחברות נמצא למעלה בניווט.
+              </p>
+            ))}
+        </div>
       )}
 
       {/* The check and the arithmetic that follows it read as one argument, so

@@ -104,6 +104,7 @@ const SITE: FooterLink[] = [
   // adding an item to a nav row that is already tight at 390px.
   { href: '/collections', label: 'אוספי יעדים' },
   { href: '/kosher', label: 'כשרות' },
+  { href: '/premium', label: 'מחירים' },
   { href: '/about', label: 'אודות' },
   { href: '/contact', label: 'יצירת קשר' },
 ];

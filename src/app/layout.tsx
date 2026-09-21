@@ -6,6 +6,7 @@ import { TripProvider } from '@/lib/trip/TripContext';
 import { AuthProvider } from '@/lib/auth/AuthContext';
 import AccountSync from '@/components/AccountSync';
 import VisitPing from '@/components/VisitPing';
+import LoginGate from '@/components/LoginGate';
 import OfflineNotice from '@/components/OfflineNotice';
 import SiteNav from '@/components/SiteNav';
 import { cityNames } from '@/lib/server/cityNames';
@@ -164,6 +165,12 @@ export default function RootLayout({
         <TripProvider>
         <AccountSync />
         <VisitPing />
+        {/*
+          Mounted once, here, rather than per surface: a modal is a singleton by
+          nature, and anything below can open it by calling requestLogin(). It
+          renders nothing until something does.
+        */}
+        <LoginGate />
         <header className="sticky top-0 z-50 border-b border-night/10 bg-cream/85 backdrop-blur print:hidden">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
             <Link href="/" className="flex items-center gap-2 text-xl font-bold text-night">

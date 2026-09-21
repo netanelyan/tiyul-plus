@@ -118,7 +118,15 @@ export default function TripWorkspace({
       /* storage blocked - the hint just disappears for this session, and that is fine */
     }
   };
-  const [linkCopied, setLinkCopied] = useState(false);
+  /**
+   * What to tell the user about the last copy attempt. It replaced a plain
+   * `linkCopied` flag whose only rendering was the label of the menu item that
+   * had just closed - i.e. feedback nobody could see, which is why even a
+   * successful copy felt like nothing had happened.
+   */
+  const [shareFeedback, setShareFeedback] = useState<
+    { kind: 'copied' } | { kind: 'manual'; url: string } | null
+  >(null);
   /**
    * The share link: we try for a short code via /api/share (Supabase); with no
    * backend configured we fall back silently to the long inline link (v1), which
@@ -361,14 +369,68 @@ export default function TripWorkspace({
     return url;
   }
 
-  async function copyShareLink() {
+  /**
+   * Copy the share link, inside the click.
+   *
+   * The old version awaited /api/share and only then called writeText, and
+   * Safari and iOS discard the user-gesture context across an await - so the
+   * write was rejected with NotAllowedError, on the browsers most of this
+   * site's traffic uses. There was no catch either, so it surfaced as an
+   * unhandled rejection and the user saw the menu close and nothing else.
+   *
+   * clipboard.write() takes a ClipboardItem whose value may be a PROMISE,
+   * which is precisely the API for "copy something I still have to fetch":
+   * the call happens synchronously in the gesture, the data arrives later.
+   *
+   * Three layers, because none of them is universal:
+   *   1. the promise-valued ClipboardItem (Safari, Chrome)
+   *   2. plain writeText after the await (fine on desktop Chrome/Firefox,
+   *      where the gesture requirement is laxer)
+   *   3. show the link and let them copy it themselves
+   * The third is the one that matters: it means a failure still ends with the
+   * user holding the link, rather than with nothing at all.
+   */
+  function copyShareLink() {
     if (!t) return;
-    const url = await getShareUrl();
-    navigator.clipboard.writeText(url).then(() => {
+    setShareFeedback(null);
+    const pending = getShareUrl();
+
+    const succeeded = () => {
       trackEvent('share');
-      setLinkCopied(true);
-      setTimeout(() => setLinkCopied(false), 2000);
-    });
+      setShareFeedback({ kind: 'copied' });
+      // Only clear if it is still the message we set - a manual fallback that
+      // arrived in the meantime must not be wiped out from under the user.
+      setTimeout(
+        () => setShareFeedback((f) => (f?.kind === 'copied' ? null : f)),
+        3000,
+      );
+    };
+
+    const manual = async () => {
+      setShareFeedback({ kind: 'manual', url: await pending });
+    };
+
+    const writeTextFallback = async () => {
+      try {
+        await navigator.clipboard.writeText(await pending);
+        succeeded();
+      } catch {
+        await manual();
+      }
+    };
+
+    if (typeof ClipboardItem !== 'undefined' && typeof navigator.clipboard?.write === 'function') {
+      navigator.clipboard
+        .write([
+          new ClipboardItem({
+            'text/plain': pending.then((u) => new Blob([u], { type: 'text/plain' })),
+          }),
+        ])
+        .then(succeeded)
+        .catch(() => void writeTextFallback());
+    } else {
+      void writeTextFallback();
+    }
   }
 
   function shareWhatsApp() {
@@ -478,10 +540,10 @@ export default function TripWorkspace({
               icon={ICONS.link}
               items={[
                 {
-                  label: linkCopied ? 'הקישור הועתק ✓' : 'העתקת קישור',
+                  label: 'העתקת קישור',
                   onClick: copyShareLink,
                   disabled: offline,
-                  icon: linkCopied ? ICONS.check : ICONS.link,
+                  icon: ICONS.link,
                 },
                 { label: 'שליחה בוואטסאפ', onClick: shareWhatsApp, icon: ICONS.whatsapp, disabled: offline },
               ]}
@@ -544,6 +606,48 @@ export default function TripWorkspace({
           )}
         </div>
       </div>
+
+      {/*
+        Share feedback, outside the menu on purpose: the menu closes on click,
+        so anything rendered inside it is feedback the user never sees.
+      */}
+      {shareFeedback?.kind === 'copied' && (
+        <p
+          role="status"
+          className="mt-2 rounded-xl bg-lagoon/10 px-3 py-2 text-sm font-semibold text-lagoon-deep print:hidden"
+        >
+          ✓ הקישור הועתק. אפשר להדביק בוואטסאפ, במייל או בכל מקום אחר.
+        </p>
+      )}
+      {shareFeedback?.kind === 'manual' && (
+        <div
+          role="alert"
+          className="mt-2 rounded-xl bg-zest/15 px-3 py-2.5 print:hidden"
+        >
+          <p className="text-sm font-semibold text-night">
+            הדפדפן לא נתן להעתיק אוטומטית. זה הקישור - אפשר לסמן ולהעתיק:
+          </p>
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <input
+              readOnly
+              dir="ltr"
+              value={shareFeedback.url}
+              // Selecting on mount and on every focus means one tap is enough
+              // to get the whole link, which is the point of this fallback.
+              ref={(el) => el?.select()}
+              onFocus={(e) => e.currentTarget.select()}
+              aria-label="קישור לשיתוף הטיול"
+              className="min-w-0 flex-1 rounded-lg border border-night/15 bg-cream px-3 py-2 text-base text-night outline-none focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15 sm:text-sm"
+            />
+            <button
+              onClick={() => setShareFeedback(null)}
+              className="rounded-lg bg-night/5 px-3 py-2 text-xs font-bold text-night/70 transition hover:bg-night/10"
+            >
+              סגירה
+            </button>
+          </div>
+        </div>
+      )}
 
       {t && prefsOpen && (
         <div className="mt-1.5 flex flex-wrap items-center gap-1.5 print:hidden">
