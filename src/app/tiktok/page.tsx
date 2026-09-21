@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import {
   TIKTOK_REDIRECT_URI,
+  TIKTOK_SCOPE_LIST,
   TIKTOK_SCOPES,
   tiktokConfig,
 } from '@/lib/server/tiktok';
@@ -53,28 +54,24 @@ export default async function TikTokConnectPage({
         <div className="mt-5 rounded-2xl bg-cream p-4 ring-1 ring-night/10">
           <p className="text-xs font-bold text-night/45">ההרשאות שיתבקשו</p>
           <ul className="mt-2 space-y-1.5">
-            <li className="flex items-start gap-2 text-sm text-night/75">
-              <span aria-hidden className="mt-0.5 text-lagoon-deep">
-                ✓
-              </span>
-              <span>
-                <span dir="ltr" className="font-mono font-bold">
-                  user.info.basic
-                </span>{' '}
-                - לזהות לאיזה חשבון התחברנו
-              </span>
-            </li>
-            <li className="flex items-start gap-2 text-sm text-night/75">
-              <span aria-hidden className="mt-0.5 text-lagoon-deep">
-                ✓
-              </span>
-              <span>
-                <span dir="ltr" className="font-mono font-bold">
-                  video.publish
-                </span>{' '}
-                - להעלות את המצגות
-              </span>
-            </li>
+            {/*
+              Rendered from TIKTOK_SCOPE_LIST, the same source as the authorize
+              URL's scope parameter - a scope cannot be listed here without
+              being requested, or requested without appearing here.
+            */}
+            {TIKTOK_SCOPE_LIST.map((scope) => (
+              <li key={scope.id} className="flex items-start gap-2 text-sm text-night/75">
+                <span aria-hidden className="mt-0.5 text-lagoon-deep">
+                  ✓
+                </span>
+                <span>
+                  <span dir="ltr" className="font-mono font-bold">
+                    {scope.id}
+                  </span>{' '}
+                  - {scope.label}
+                </span>
+              </li>
+            ))}
           </ul>
         </div>
 

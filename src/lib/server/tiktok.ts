@@ -29,17 +29,48 @@ import { SITE_URL } from '@/lib/seo/site';
  *
  * ## Why this file holds no client secret
  *
- * The token exchange happens on the bot's VPS, not here - see the module doc
- * in TIKTOK-BOT-CONTRACT.md for the reasoning and the wire format. This
- * server therefore never sees `TIKTOK_CLIENT_SECRET`, never holds an access
- * token, and has nothing to leak if it is compromised.
+ * The token exchange happens on the bot's VPS, not here. The alternative -
+ * exchanging the code on this server - would put `TIKTOK_CLIENT_SECRET` plus a
+ * live access and refresh token for the brand's TikTok account on a public web
+ * server that also runs an AI agent, a payments webhook and a database. As
+ * built, this server holds one public `client_key` and one shared secret whose
+ * only power is "may hand a code to the bot": fully compromised, it could start
+ * an OAuth flow and would still have nothing to post with.
+ *
+ * The wire format is the signature of `forwardCodeToBot` (the request) and the
+ * `BotConnectResult` interface (the response) - both below, and both the whole
+ * of it. The cost of this split is that the authorization code is single-use,
+ * so a bot that is unreachable at that moment kills the code and the connect
+ * has to be restarted; the callback page says exactly that.
  */
 
 /** Exactly the value registered in the TikTok developer portal - www, no trailing slash. */
 export const TIKTOK_REDIRECT_URI = `${SITE_URL}/tiktok/callback`;
 
-/** Comma-separated, per the docs. Publishing needs both. */
-export const TIKTOK_SCOPES = 'user.info.basic,video.publish';
+/**
+ * The scopes we ask for, in the order the connect page lists them.
+ *
+ * This array is the single source: the authorize URL's `scope` parameter and
+ * the page's visible permission list are both derived from it. They used to be
+ * written out separately, and that is how the list came to advertise a
+ * permission we were not requesting while the one we actually use was absent.
+ *
+ * `video.upload` is the load-bearing one: the bot delivers slideshows with
+ * post_mode=MEDIA_UPLOAD, and without this scope every init fails with
+ * scope_not_authorized. `video.publish` covers DIRECT_POST - the bot can do it,
+ * it just does not today, so it stays requested rather than being dropped.
+ */
+export const TIKTOK_SCOPE_LIST = [
+  { id: 'user.info.basic', label: 'לזהות לאיזה חשבון התחברנו' },
+  { id: 'video.upload', label: 'להעלות מצגות לתיבה שלנו' },
+  { id: 'video.publish', label: 'פרסום ישיר (לא בשימוש כרגע)' },
+] as const;
+
+/**
+ * Comma-separated, per the docs. Derived - do not edit this string; edit the
+ * list above, or the page and the authorize URL diverge again.
+ */
+export const TIKTOK_SCOPES = TIKTOK_SCOPE_LIST.map((s) => s.id).join(',');
 
 export const TIKTOK_AUTHORIZE_URL = 'https://www.tiktok.com/v2/auth/authorize/';
 
