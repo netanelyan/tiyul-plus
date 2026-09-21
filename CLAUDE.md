@@ -12784,3 +12784,108 @@ DMARC is live at Porkbun (`p=none`, reports to his inbox).
 subscription run end to end in production - the recurring-revenue path had only
 ever executed against mocks until then. **His answer to "is the website
 ready": everything on the list is done.**
+
+### 2026-09-21 - An external QA list, worked in phases - and eight of its findings did not exist
+
+Netanel handed over ~30 externally-reported issues in four phases with ids, and
+one rule that shaped the whole session: finish a phase, show the diff and the
+verification, then stop. One commit per finding. Never on main.
+
+**Phase 4 and a TikTok connect flow are merged and live. Phases 1, 2 and 3 are
+pushed and NOT merged** - 30 commits, including the three login dead ends that
+are the reason nobody can currently subscribe. Merging was never approved, so
+they wait. `1.MD` at the repo root is the handover: what is left, what needs a
+decision, what only he can do, and the merge order.
+
+---
+
+**The most useful output of the pass is the eight findings that were wrong**,
+each disproven by a measurement rather than by argument, and recorded in `1.MD`
+so nobody re-chases them. "726 images with no alt" was zero across five pages.
+"Content hidden under the chat bar" was zero overlapping elements at max
+scroll - though the safe-area gap *underneath* the bar was real and is fixed.
+"Combobox unusable by keyboard" worked when driven with real CDP keystrokes -
+though `aria-activedescendant` was genuinely missing and is fixed. That pattern
+repeated: the headline was wrong and a smaller real defect sat next to it, which
+is an argument for reproducing before fixing rather than for dismissing reports.
+
+**And the pass found things the report did not list**: a fourth login dead end,
+`/collections` serving no `og:image`, an invalid `isPartOf` on all 30 promoted
+destination pages, `/destinations/atlantis` shipping no `<h1>`, and two fonts
+downloaded on every page and used nowhere.
+
+---
+
+**The licence finding is the one with real exposure.** The catalog hotlinks
+3,363 Wikimedia images across 2,978 distinct files and credited none of them.
+Measured through the Commons API: **2,686 are CC BY or CC BY-SA**, both of which
+require the author and the licence to be named, on a commercial site. Nine in
+ten were a breach rather than an oversight.
+
+`PhotoCredits` is a collapsed `<details>`, server-rendered, one row per FILE
+rather than per use - a caption under each of 38 cards would bury the page, and
+CC BY asks for attribution reasonable to the medium. 48 files whose author
+Commons does not record say so rather than inventing one.
+
+**The same fetch closed a second, unrelated bug for free, and that was not
+foreseen.** `thumbSrcSet` could only offer widths *smaller* than the one already
+in the URL, because nothing told it how wide the source was - and nearly every
+catalog URL is a 500px thumb, so a 3x phone asking for ~480px got 500 and there
+was never anything sharper. The original width is the permission slip: Wikimedia
+404s a thumb wider than the source, which is what killed 170 URLs in entry (s).
+**2,768 of 2,978 files are at least 960px**, so the srcSet now goes to 960 where
+it is safe. Verified in the served HTML - `/countries` emits `250w 330w 500w
+960w` where it stopped at 500w.
+
+**The 828KB manifest is server-only and that is load-bearing** - `grep -c
+"photo-credits"` over the client bundles is 0. The catalog itself once shipped
+to the browser by accident and cost 492KB a page.
+
+**Mirroring the images was NOT done**, deliberately: it needs a new dependency
+and a paid product, and it would edit the catalog data files - two things this
+session was told to ask about rather than decide. The plan is in `1.MD`, and it
+notes that the legal exposure is already closed; mirroring is about reliability.
+
+---
+
+**TikTok: two new routes, and the decision that matters is where the secret
+lives.** The brief offered two designs and asked for a choice. The website
+forwards the authorization `code` to the bot and the bot exchanges it, so
+**`TIKTOK_CLIENT_SECRET` never reaches Vercel** - this server holds no token and
+has nothing to leak. `TIKTOK-BOT-CONTRACT.md` writes the wire format down rather
+than assuming an endpoint exists; the endpoint does not exist yet, and until it
+does a successful authorize lands on an honest failure page.
+
+**Two things in the brief were wrong and were caught by reading the docs rather
+than trusting the summary**, which is exactly why that instruction was given:
+`state` is required, not optional, and the callback returns `scopes` plural
+alongside `code`, while the token response carries `scope` singular. The pages
+are Hebrew and RTL in the site's own styling, because they are going on camera.
+
+**The state cookie tripped `policyPages.test.ts`'s "this site sets no cookies"
+guard.** The guard was right and the copy had become false, so the exception is
+disclosed on `/cookies` and in the privacy policy and allowlisted by path -
+verified the guard still fires by adding a cookie elsewhere. Weakening it was
+the available shortcut.
+
+---
+
+**Verified:** build, tsc and lint clean per phase; every touched route loaded at
+375px and at desktop, logged out; the four regression paths re-run each time
+(homepage to a built trip, /start through five steps, the catalog, a share
+link). `scripts/validate-jsonld.mjs` is new and checks against the real
+schema.org vocabulary rather than a hand-written list - it is what found the
+invalid `isPartOf`.
+
+**Five traps recorded in `1.MD`**, two of them new. **Animations do not advance
+in this headless browser** - everything reports `playState: running` with
+`currentTime: 0`, so `fill: both` pins an element at its *from* state forever; a
+quiz step measured as `opacity: 0, translateX(-28px)` and looked exactly like a
+layout bug. And **`git checkout --` is not an undo** - it restores from HEAD, so
+using it to revert a deliberately injected bug wiped the uncommitted work
+around it.
+
+**Still only Netanel's to do:** merge phases 1-3; delete the QA share code
+`T4R4Cwqk` from production; run `sql/supabase-consent.sql` (standing); set the
+three TikTok env vars; decide on a branded contact address; and enforce the CSP,
+which ships report-only.
