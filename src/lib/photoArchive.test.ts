@@ -27,12 +27,28 @@ test('with no known source width, the URL is left exactly as it is', () => {
 });
 
 test('it never asks for a width the source cannot supply', () => {
-  // A 700px original must not be asked for 960, however much we would like it.
-  const { url, width } = archiveUrl(U500, 700);
-  assert.equal(width, 700);
-  assert.ok(url.includes('700px-'));
-  // And a source narrower than what the URL already asks for changes nothing.
+  /*
+    A 700px original must not be asked for 960, however much we would like it -
+    and it must not be asked for 700 either, which is what this test used to
+    expect. Wikimedia serves only a fixed list of widths and answers HTTP 400
+    for anything else (measured: 640/800/1024/1200 all 400, 250/330/500/960/1280
+    all 200). So the rounding has to go DOWN to a listed width, and for a 700px
+    original the largest listed width that fits is the 500 it already has.
+  */
+  assert.deepEqual(archiveUrl(U500, 700), { url: U500, width: 500 });
+  // A source narrower than what the URL already asks for changes nothing.
   assert.deepEqual(archiveUrl(U500, 320), { url: U500, width: 500 });
+});
+
+test('every width it produces is one Wikimedia will actually serve', () => {
+  // The guard for the failure above, as a class: any source size at all, and
+  // the asked-for width is always on the list.
+  const allowed = new Set([250, 330, 500, 960, 1280]);
+  for (let source = 200; source <= 5000; source += 37) {
+    const { url } = archiveUrl(U500, source);
+    const asked = Number(/\/(\d+)px-/.exec(url)![1]);
+    assert.ok(allowed.has(asked), `source ${source} produced a ${asked}px request`);
+  }
 });
 
 test('it widens to the archive ceiling when the source genuinely allows it', () => {

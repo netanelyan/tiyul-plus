@@ -15,7 +15,7 @@
  *
  * ## The fix, and why it is a derivation rather than a lookup
  *
- * `scripts/mirror-photos.mjs` copies each file to our own Blob store at 1200px
+ * `scripts/mirror-photos.mjs` copies each file to our own Blob store at 1280px
  * under a path derived from the Commons filename. Because the path is
  * *derived*, nothing has to be looked up at render time: no manifest ships to
  * the browser, no data file grows, and a client component can resolve a URL as
@@ -51,8 +51,32 @@
  */
 const BASE = (process.env.NEXT_PUBLIC_PHOTO_MIRROR_BASE ?? '').replace(/\/+$/, '');
 
-/** The width every mirrored file is stored at. */
-export const MIRROR_WIDTH = 1200;
+/**
+ * The widths `upload.wikimedia.org` will actually serve.
+ *
+ * Not a convention of ours - Wikimedia rejects any other width outright with
+ * **HTTP 400** and an error page reading "Use thumbnail sizes listed on
+ * https://w.wiki/GHai". Measured across four files: 250/330/500/960/1280 serve,
+ * 640/800/1024/1200/1500 all 400. The full production list is 20, 40, 60, 120,
+ * 250, 330, 500, 960, 1280, 1920, 3840; these are the ones large enough to be
+ * useful here.
+ *
+ * This is why widening has to snap to a bucket rather than take a source width
+ * literally. It is also the other half of the story behind the 170 dead URLs
+ * this file keeps citing: a width can be unavailable because the original is too
+ * small OR because the number is not on the list, and only the first of those
+ * was ever written down.
+ */
+export const STANDARD_THUMB_WIDTHS = [250, 330, 500, 960, 1280] as const;
+
+/**
+ * The width every mirrored file is stored at.
+ *
+ * 1280 and not 1200: 1200 is not a standard Wikimedia width, so every fetch the
+ * archive script made would have been a 400. It is also comfortably past the
+ * 1200px that Facebook asks of a share image, which is the other consumer.
+ */
+export const MIRROR_WIDTH = 1280;
 
 /**
  * Shown when an image that should exist fails to load.
@@ -145,10 +169,12 @@ export function photoSrc(url: string | undefined): string | undefined {
  * A `srcSet` of Commons widths NARROWER than the one a URL already names.
  *
  * Used only while the mirror is unconfigured, so a low-density screen still gets
- * a 250px file rather than the 500px one the catalog stores. It never widens:
- * Commons serves no thumbnail wider than its source, and a widened URL 404s -
- * that is exactly how 170 catalog URLs died in an earlier session. Getting the
- * wide variants back is the mirror's job, where we know what we stored.
+ * a 250px file rather than the 500px one the catalog stores. It never widens,
+ * and the reason is that it CANNOT: widening is only safe with the source width
+ * and Wikimedia's list of servable widths in hand, and neither is available in
+ * the browser - the manifest that carries them is 828KB and server-only. See
+ * `widenedThumb`, which has both. Getting the wide variants back everywhere is
+ * the mirror's job, where we know what we stored.
  *
  * Returns undefined when there is nothing narrower to offer, so the attribute is
  * omitted rather than emitted empty.
@@ -162,4 +188,44 @@ export function thumbShrinkSrcSet(url: string): string | undefined {
   const narrower = [250, 330, 500].filter((w) => w < current);
   if (narrower.length === 0) return undefined;
   return [...narrower.map((w) => `${m[1]}${w}px-${m[3]} ${w}w`), `${url} ${current}w`].join(', ');
+}
+
+/**
+ * The widest thumbnail Wikimedia will actually serve for a file, capped at
+ * `ceiling`.
+ *
+ * This is the ONLY place in the repo that deliberately asks Wikimedia for a
+ * thumbnail WIDER than a URL already names, and two rules make it safe:
+ *
+ * 1. **Never past the known source width, and never at all without one.**
+ *    Wikimedia does not upscale. With no source width the width already in the
+ *    URL is the only one proven to exist, so it is left alone - the safe
+ *    direction to be wrong is downwards, because a narrower thumbnail always
+ *    exists and a wider one does not necessarily.
+ * 2. **Only a width on Wikimedia's own list.** `Math.min(ceiling, source)` is
+ *    the obvious implementation and it is wrong: a 900px original would be asked
+ *    for 900px and get an HTTP 400, because 900 is not a standard size. It has
+ *    to round DOWN to a bucket, never up, or rule 1 is broken by rule 2.
+ *
+ * Between them, these are the two independent reasons a widened URL dies, and
+ * this repo had only ever written down the first.
+ *
+ * Two callers, which is why it lives here rather than beside either of them:
+ * `scripts/mirror-photos.mjs` archiving a copy, and `lib/server/photoCredit.ts`
+ * building a share card. Both need the real source width, which only the credits
+ * manifest carries - this function cannot look it up and must be handed it.
+ */
+export function widenedThumb(
+  url: string,
+  sourceWidth: number | null | undefined,
+  ceiling: number = MIRROR_WIDTH,
+): { url: string; width: number | null } {
+  const m = url.match(WIKI_THUMB_WIDTH);
+  if (!m) return { url, width: null };
+  const current = Number(m[2]);
+  if (!sourceWidth || sourceWidth <= current) return { url, width: current };
+  const limit = Math.min(ceiling, sourceWidth);
+  const width = [...STANDARD_THUMB_WIDTHS].reverse().find((w) => w <= limit && w > current);
+  if (!width) return { url, width: current };
+  return { url: `${m[1]}${width}px-${m[3]}`, width };
 }

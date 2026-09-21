@@ -1,5 +1,5 @@
 /**
- * Mirrors every catalog photograph into our own storage, at 1200px, with its
+ * Mirrors every catalog photograph into our own storage, at 1280px, with its
  * credit.
  *
  * ## What changed, and why this is now the serving path
@@ -8,7 +8,7 @@
  * insurance and nothing rendered from it, on the reasoning that Commons resizes
  * on demand and a single stored width would ship 150KB to a phone that was
  * getting 60KB. That reasoning assumed the copy would be served raw. It is not -
- * it is served through `next/image`, which resizes per device from the 1200px
+ * it is served through `next/image`, which resizes per device from the 1280px
  * original, so the phone gets a smaller file than Commons was sending it AND a
  * dense screen finally gets something sharp.
  *

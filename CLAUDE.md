@@ -13272,3 +13272,111 @@ outstanding - then set `NEXT_PUBLIC_PHOTO_MIRROR_BASE` and redeploy. Until then
 the site serves from Commons exactly as it does today, which is what makes the
 run safe to do in pieces. `sql/supabase-consent.sql` is still the oldest open
 item.
+
+### 2026-09-21 (e) - Half the catalog shared as a thumbnail, and the thumbnail width nobody had checked
+
+Netanel asked whether SEO was optimised and what was left for him. Measured
+against the live site rather than this log: robots, 270-URL sitemap with real
+per-page lastmod, unique titles, canonicals everywhere, JSON-LD on all 166
+destinations, `/premium` indexable, apex 308 to www, GSC verified by DNS. Good
+shape. One real defect, and it is the one that costs the most given how this
+product spreads.
+
+**77 of 83 country pages and 58 of 166 destinations declared
+`twitter:card=summary_large_image` over a 500px thumbnail.** Facebook and
+WhatsApp drop to a small square below roughly 600px, so half the catalog shared
+as a thumbnail - on the single surface where the site is recommended by a real
+person. The fix is server-side: `lib/server/photoCredit.ts` already holds each
+original's true width, so `shareImage()` can widen safely where the client's
+`thumbShrinkSrcSet` cannot.
+
+---
+
+**The finding that made this more than a metadata tweak: the widening ceiling
+was a width Wikimedia does not serve.**
+
+The first live probe of all 230 rewritten URLs came back **230 dead, HTTP 400**.
+Reproduced with curl, so not the harness. The error body says it plainly: *"Use
+thumbnail sizes listed on https://w.wiki/GHai"*. Measured across four files -
+250/330/500/960/1280 serve, **640/800/1024/1200/1500 all 400**; the production
+list is 20/40/60/120/250/330/500/960/1280/1920/3840.
+
+So `Math.min(ceiling, sourceWidth)`, which is the obvious implementation and was
+the existing one, is wrong: a 900px original gets asked for 900px and 400s.
+Widening has to round DOWN to a listed width.
+
+**And that made `ARCHIVE_WIDTH = MIRROR_WIDTH = 1200` a latent bug in the photo
+mirror, which has never been run.** Every one of the 2,978 fetches would have
+400d. Netanel is about to run that script, so it is fixed here rather than
+reported: 1280, which is on the list and is also past the 1200 Facebook asks for.
+Nothing is stored yet, so changing the width in the storage path costs nothing.
+
+**The rule now lives in one place.** `widenedThumb` moved into
+`src/lib/photoMirror.ts` and `scripts/lib/archive-url.mjs` re-exports it as
+`archiveUrl` - the same pattern that file already used for `blobPath`, and for
+the same reason: two implementations of "how wide may we ask Commons for" is how
+they drift. One test sweeps every source size from 200 to 5,000 and asserts the
+requested width is always on Wikimedia's list.
+
+---
+
+**Two beliefs this repo held that turned out to be wrong, both corrected by
+reading bytes rather than reasoning.**
+
+*"Commons serves no thumbnail wider than its source."* It does. Nine catalog
+photographs are already stored asking 960px of a 600-869px original; all nine
+serve, and the JPEG header says the bytes really are 960 wide. **Wikimedia
+upscales to a listed size rather than refusing.** The imageinfo API is actively
+misleading here - it describes that same request as `thumbnail_unscaled`.
+
+I got this wrong in the middle of the session too: after three probes I wrote a
+doc comment asserting MediaWiki does not upscale, then measured the headers and
+had to correct it. Three probes of an HTTP status is not a measurement of what
+came back.
+
+*"A widened URL 404s - that is how 170 catalog URLs died."* Half the story. A
+width can be unavailable because the original is too small **or** because the
+number is not on Wikimedia's list, and only the first had ever been written
+down. Both are now in the comment, because the second is the one that bites.
+
+**The consequence for the six stragglers.** Six photographs have originals of
+604-900px, where the largest listed width that fits is the 500 they already
+have. They step up to 960 anyway - measured, 6/6 return 200 with genuinely
+960px bytes. For a share card that is the right trade, and the declared size
+still describes the file. The archive keeps the strict rule, because storing an
+upscaled copy spends bytes on pixels that carry nothing.
+
+**`og:image:width`/`height` are now declared**, derived from the original's
+aspect ratio, so a scraper can lay the card out before the image downloads -
+which is how WhatsApp usually renders. They describe the FILE, not the source,
+which is why the upscale case had to be settled first.
+
+---
+
+**Verified.** 956 unit tests (11 new), tsc, build and lint clean on every
+touched file. The class guard - no route may hand a raw `.photo` to
+`openGraph` - was proven by putting the bug back; it fails naming the file. And
+the assertion that matters: **all 227 rewritten URLs fetched live, 227 alive, 0
+dead, 0 declared/actual mismatches, 0 still under 600px**, with byte dimensions
+read from the image header rather than trusted from the manifest a second time.
+Then the built pages' served HTML read tag by tag.
+
+**A trap that cost a full re-run, already in this file once:** the first clean
+probe reported 174 dead - all **429**, from my own loop hammering
+upload.wikimedia.org. A rate limit is not an absence. With `Retry-After`
+honoured and 400ms pacing: 227/227.
+
+**Known and deliberately not fixed:** 31 pages have an awkward share ratio -
+portrait originals like Austria at 1280x1918, or Italy's 1280x359 panorama -
+which Facebook centre-crops. That is a photo-choice question, not a metadata
+one; a cropped real photograph still beats the generic site card. And
+`/premium` carries no Product/Offer JSON-LD, which is a separate decision about
+marking up prices.
+
+**For Netanel, unchanged:** create the Blob store and run `npm run
+mirror:photos` - now that its ceiling is a width Wikimedia will actually serve -
+then set `NEXT_PUBLIC_PHOTO_MIRROR_BASE`. The sitemap needs nothing: its URL
+list regenerates from the catalog on every deploy, and only `lastmod` needs
+`npm run seo:dates` after a data session, which `sitemap.test.ts` fails and
+names if forgotten. `sql/supabase-consent.sql` and the support mailbox are both
+confirmed done.

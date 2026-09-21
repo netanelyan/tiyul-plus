@@ -23,7 +23,7 @@ import { mirrorEnabled, photoSrc, thumbShrinkSrcSet } from '@/lib/photoMirror';
  * that is a cold region rendering a page and getting a screen of broken
  * pictures - worse than the blurriness it was meant to fix.
  *
- * So: mirror configured -> `next/image`, resized per device from the 1200px copy
+ * So: mirror configured -> `next/image`, resized per device from the 1280px copy
  * in our Blob store, which we may fetch as hard as we like. Mirror not
  * configured -> exactly what the site does today, a lazily-loaded element
  * pointing at Commons. One env var moves the whole site between the two, and

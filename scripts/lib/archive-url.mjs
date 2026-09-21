@@ -16,7 +16,12 @@
  * piece. Importing a `.ts` file is why the script runs through the type-stripping
  * loader (`npm run mirror:photos`).
  */
-import { MIRROR_WIDTH, mirrorFileName, mirrorPathname } from '../../src/lib/photoMirror.ts';
+import {
+  MIRROR_WIDTH,
+  mirrorFileName,
+  mirrorPathname,
+  widenedThumb,
+} from '../../src/lib/photoMirror.ts';
 
 /**
  * The widest thumbnail worth archiving.
@@ -43,23 +48,12 @@ export const fileNameFromUrl = mirrorFileName;
  */
 export const blobPath = mirrorPathname;
 
-const THUMB = /^(https:\/\/upload\.wikimedia\.org\/\S*\/)(\d+)px-([^/]+)$/;
-
 /**
  * The URL to archive from, and the width it will be.
  *
- * Widens towards ARCHIVE_WIDTH **only** as far as the known source width
- * allows, and never past it. With no known source width the width already in
- * the URL is the only one proven to exist, so it is left alone - the safe
- * direction to be wrong is downwards, because a narrower thumbnail always
- * exists and a wider one does not necessarily.
+ * The rule lives in `src/lib/photoMirror.ts` because the share-card builder
+ * needs the same decision, and two implementations of "how wide may we ask
+ * Commons for" is how they drift - the same reason `blobPath` is a re-export
+ * rather than a copy. Read `widenedThumb` there for why it is safe.
  */
-export function archiveUrl(url, sourceWidth) {
-  const m = url.match(THUMB);
-  if (!m) return { url, width: null };
-  const current = Number(m[2]);
-  if (!sourceWidth || sourceWidth <= current) return { url, width: current };
-  const width = Math.min(ARCHIVE_WIDTH, sourceWidth);
-  if (width <= current) return { url, width: current };
-  return { url: `${m[1]}${width}px-${m[3]}`, width };
-}
+export const archiveUrl = widenedThumb;

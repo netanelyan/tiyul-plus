@@ -10,7 +10,7 @@ import JsonLd from '@/components/seo/JsonLd';
 import DestinationGuide from '@/components/seo/DestinationGuide';
 import DestinationClient from './DestinationClient';
 import PhotoCredits from '@/components/PhotoCredits';
-import { creditsFor } from '@/lib/server/photoCredit';
+import { creditsFor, shareImage } from '@/lib/server/photoCredit';
 
 export function generateStaticParams() {
   return destinations.map((d) => ({ slug: d.slug }));
@@ -52,6 +52,10 @@ export async function generateMetadata({
   const title = `${where}: מה לעשות, כמה ימים ומסלול מוכן | טיול+`;
   const description = metaDescription(dest.tagline, dest.summary);
   const url = canonical(`/destinations/${dest.slug}`);
+  // The destination's own hero photo where it has one (165 of 166 do), widened
+  // to what the original really allows; otherwise the root layout's site-wide
+  // og.png still applies. See `shareImage` for why the stored width is too small.
+  const image = shareImage(dest.photo, `${dest.name} - ${dest.tagline}`);
 
   return {
     title,
@@ -64,17 +68,13 @@ export async function generateMetadata({
       url,
       title,
       description,
-      // The destination's own hero photo where it has one (165 of 166 do);
-      // otherwise the root layout's site-wide og.png still applies.
-      ...(dest.photo
-        ? { images: [{ url: dest.photo, alt: `${dest.name} - ${dest.tagline}` }] }
-        : {}),
+      ...(image ? { images: [image] } : {}),
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      ...(dest.photo ? { images: [dest.photo] } : {}),
+      ...(image ? { images: [image] } : {}),
     },
   };
 }

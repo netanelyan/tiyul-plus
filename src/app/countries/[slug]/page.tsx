@@ -9,7 +9,7 @@ import Flag from '@/components/Flag';
 import CardPhoto, { HERO_OVERLAY } from '@/components/CardPhoto';
 import { countries } from '@/data/countries';
 import PhotoCredits from '@/components/PhotoCredits';
-import { creditsFor } from '@/lib/server/photoCredit';
+import { creditsFor, shareImage } from '@/lib/server/photoCredit';
 
 export function generateStaticParams() {
   return countries.map((c) => ({ slug: c.slug }));
@@ -35,6 +35,9 @@ export async function generateMetadata({
   const title = `טיול ל${country.name}: יעדים, ויזה ומידע למטייל הישראלי | טיול+`;
   const description = metaDescription(country.tagline, country.summary);
   const url = canonical(`/countries/${country.slug}`);
+  // Widened to what the original really allows - the stored 500px thumb is below
+  // the width Facebook and WhatsApp need for a large card. See `shareImage`.
+  const image = shareImage(country.photo, `${country.name} - ${country.tagline}`);
 
   return {
     title,
@@ -47,15 +50,13 @@ export async function generateMetadata({
       url,
       title,
       description,
-      ...(country.photo
-        ? { images: [{ url: country.photo, alt: `${country.name} - ${country.tagline}` }] }
-        : {}),
+      ...(image ? { images: [image] } : {}),
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      ...(country.photo ? { images: [country.photo] } : {}),
+      ...(image ? { images: [image] } : {}),
     },
   };
 }
