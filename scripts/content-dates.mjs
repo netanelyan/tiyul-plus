@@ -63,6 +63,15 @@ function dir(path) {
   server-side data builder alongside the route file matters: /countries renders
   almost nothing itself, and an edit to the browser component is the change a
   reader would see.
+
+  Deliberately NOT the transitive import graph. A shared component - CardPhoto,
+  a badge, the nav - is reachable from almost every page, so walking the graph
+  would re-date the whole site whenever one of them is touched, which is the
+  build-date problem with extra steps. The trade is that a purely presentational
+  change to a shared component does not move any lastmod, and that is the right
+  side to be wrong on: lastmod is a claim about CONTENT, and under-reporting a
+  change costs a slower recrawl while over-reporting teaches a crawler to ignore
+  the field.
 */
 const STATIC_SOURCES = {
   '/': ['src/app/page.tsx', 'src/components/HomeHero.tsx', 'src/lib/server/homeSections.ts', ...dir('src/components/home')],

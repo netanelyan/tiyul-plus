@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { Destination, Place, ReplyPhoto } from '@/lib/types';
 import type { TripChat } from '@/lib/trip/useTripChat';
 import { fileToChatImage, IMAGE_ACCEPT } from '@/lib/trip/imageAttach';
+import CatalogImage from '@/components/CatalogImage';
 import { cachedCity, fetchCities } from '@/lib/trip/cityData';
 import PlacesMap from '@/components/PlacesMap';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
@@ -75,15 +76,15 @@ function ReplyPhotos({ photos }: { photos: ReplyPhoto[] }) {
             href={p.href}
             className="group block overflow-hidden rounded-xl bg-shell ring-1 ring-night/10 transition hover:ring-sunset/40"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={p.photo}
-              alt={p.name}
-              loading="lazy"
-              decoding="async"
-              onError={() => setBroken((b) => (b.includes(p.id) ? b : [...b, p.id]))}
-              className="h-20 w-full object-cover transition group-hover:scale-[1.03]"
-            />
+            <span className="relative block h-20 w-full overflow-hidden">
+              <CatalogImage
+                src={p.photo}
+                alt={p.name}
+                sizes="160px"
+                onError={() => setBroken((b) => (b.includes(p.id) ? b : [...b, p.id]))}
+                className="transition group-hover:scale-[1.03]"
+              />
+            </span>
             <span className="block px-2 py-1.5">
               <span className="block truncate text-xs font-bold text-night">{p.name}</span>
               <span className="block truncate text-[0.7rem] font-semibold text-night/45">

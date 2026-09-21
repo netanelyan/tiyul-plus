@@ -11,6 +11,7 @@ import { formatDurationHe } from '@/lib/duration';
 import PlacesMap from '@/components/PlacesMap';
 import AddToTripButton from '@/components/AddToTripButton';
 import PlaceThumb from '@/components/PlaceThumb';
+import CardPhoto, { HERO_OVERLAY } from '@/components/CardPhoto';
 import Flag from '@/components/Flag';
 import KosherBadge from '@/components/KosherBadge';
 import KosherNote from '@/components/KosherNote';
@@ -87,24 +88,33 @@ export default function DestinationClient({
   return (
     <div>
       {/* Photo banner */}
-      <div
-        className="photo-bg relative overflow-hidden rounded-2xl px-6 py-10 sm:px-10"
-        style={
-          dest.photo
-            ? {
-                backgroundImage: `linear-gradient(200deg, rgba(18,16,32,0.4) 0%, rgba(18,16,32,0.8) 85%), url("${dest.photo}")`,
-              }
-            : undefined
-        }
-      >
-        <div className="text-sm font-medium text-cream/70">
+      {/*
+        The hero photograph is an image layer rather than a `background-image`, so it goes
+        through `next/image` like every other catalog photo and is served from our own
+        mirror. It keeps `priority` - a hero is the LCP element, and lazy-loading it would
+        make the page measurably slower, which is why the cards below it do lazy-load and
+        this does not. The gradient is the same value it was as a background layer.
+
+        The two content blocks carry `relative` so they paint above the overlay: the image
+        and the overlay are absolutely positioned, and in-flow siblings would otherwise sit
+        underneath them.
+      */}
+      <div className="photo-bg relative overflow-hidden rounded-2xl px-6 py-10 sm:px-10">
+        <CardPhoto
+          photo={dest.photo}
+          priority
+          className="absolute inset-0"
+          sizes="(min-width: 1152px) 1120px, 100vw"
+          overlay={HERO_OVERLAY}
+        />
+        <div className="relative text-sm font-medium text-cream/70">
           <Link href="/" className="transition hover:text-cream">יעדים</Link> /{' '}
           <Link href={`/countries/${country.slug}`} className="transition hover:text-cream">
             {country.name}
           </Link>{' '}
           / {dest.name}
         </div>
-        <div className="mt-3 flex flex-wrap items-end justify-between gap-5">
+        <div className="relative mt-3 flex flex-wrap items-end justify-between gap-5">
           <div className="max-w-2xl">
             <h1 className="display text-3xl text-cream sm:text-4xl">
               <Flag flag={dest.flag} label={dest.name} size="lg" className="me-2 align-middle" />

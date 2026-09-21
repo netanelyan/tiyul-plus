@@ -8,6 +8,7 @@ import L, { type Map as LeafletMap } from 'leaflet';
 import type { Place } from '@/lib/types';
 import type { TripPinKind } from '@/lib/trip/types';
 import { categoryMeta } from '@/lib/categories';
+import { photoSrc } from '@/lib/photoMirror';
 import PlaceThumb from '@/components/PlaceThumb';
 import KosherBadge from '@/components/KosherBadge';
 import KosherNote from '@/components/KosherNote';
@@ -23,7 +24,11 @@ const PHOTO_PIN_ZOOM = 13;
 /** Place photo above the pin; if the image fails to load - it disappears quietly, the pin stays */
 function photoHtml(photo: string | undefined): string {
   if (!photo) return '';
-  return `<img class="pin-photo" src="${photo}" alt="" loading="lazy" onerror="this.remove()" />`;
+  // Leaflet builds its marker icon from an HTML string, so this cannot be a React
+  // component and therefore cannot be `next/image`. It is still served from our own
+  // mirror, and a pin photo that fails simply removes itself - a placeholder floating
+  // above a map pin would be noise.
+  return `<img class="pin-photo" src="${photoSrc(photo)}" alt="" loading="lazy" onerror="this.remove()" />`;
 }
 
 /**

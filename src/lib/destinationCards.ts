@@ -1,4 +1,3 @@
-import { sourceWidth } from '@/lib/server/photoCredit';
 import { bestMonthsOf } from '@/lib/seasonMonths';
 import { destinations } from '@/data/destinations';
 import { countries } from '@/data/countries';
@@ -92,7 +91,6 @@ export function buildDestinationCards(): DestinationCard[] {
       countrySlug: d.countrySlug,
       flag: d.flag ?? country?.flag,
       photo: d.iconicLandmark?.photo ?? d.photo,
-      photoW: sourceWidth(d.iconicLandmark?.photo ?? d.photo) ?? undefined,
       landmark: d.iconicLandmark?.name,
       days: d.itinerary.length,
       places: d.places.length,

@@ -58,17 +58,30 @@ test('the filename is recovered and percent-decoding is undone', () => {
 });
 
 test('the path is deterministic, so re-running overwrites rather than duplicates', () => {
-  const a = blobPath('Colosseo_2020.jpg', 960);
-  assert.equal(a, blobPath('Colosseo_2020.jpg', 960));
-  assert.notEqual(a, blobPath('Colosseo_2020.jpg', 500));
-  assert.notEqual(a, blobPath('Something_else.jpg', 960));
-  assert.match(a, /^catalog-photos\/[0-9a-f]{2}\/[0-9a-f]{64}-960\.jpg$/);
+  const a = blobPath('Colosseo_2020.jpg');
+  assert.equal(a, blobPath('Colosseo_2020.jpg'));
+  assert.notEqual(a, blobPath('Something_else.jpg'));
+  // The width is in the path as a namespace, not as a claim about this file -
+  // about 200 originals are narrower than the ceiling and are stored as they are.
+  assert.match(a, new RegExp(`^catalog-photos/${ARCHIVE_WIDTH}/[0-9a-f]{8}-`));
 });
 
 test('the path carries no character that needs escaping in a URL', () => {
+  // This is what lets the browser DERIVE the URL instead of looking it up: if
+  // the path needed percent-encoding, the store's encoding and ours would have
+  // to agree exactly, and a disagreement would 404 every image on the site.
   for (const name of ["Musée_d'Orsay.jpg", 'Café (Wien).JPG', 'שוק.jpg', 'a b+c%d.png']) {
-    const p = blobPath(name, 960);
+    const p = blobPath(name);
     assert.equal(p, encodeURI(p), name);
-    assert.ok(!/[^a-z0-9/.-]/.test(p), `${name} -> ${p}`);
+    assert.ok(!/[^A-Za-z0-9/._-]/.test(p), `${name} -> ${p}`);
   }
+});
+
+test('a name that is nothing but non-Latin characters still gets a usable path', () => {
+  // The Hebrew and Japanese filenames in the catalog sanitise to an empty
+  // string; without the fallback segment they would all collide on one path.
+  const a = blobPath('שוק.jpg');
+  const b = blobPath('マーケット.png');
+  assert.notEqual(a, b);
+  assert.ok(a.length > `catalog-photos/${ARCHIVE_WIDTH}/`.length + 8);
 });

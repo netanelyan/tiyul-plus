@@ -55,7 +55,6 @@ export default function Flagships({ cards }: { cards: FlagshipCard[] }) {
             {d.photo ? (
               <CardPhoto
                 photo={d.photo}
-                photoW={d.photoW}
                 overlay={null}
                 className="photo-bg absolute inset-0 transition-transform duration-500 group-hover:scale-105"
                 sizes="(min-width: 1024px) 24vw, (min-width: 640px) 46vw, 47vw"

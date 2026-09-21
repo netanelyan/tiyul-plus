@@ -231,9 +231,9 @@ export default function DestinationBrowser({
               href={`/destinations/${c.slug}`}
               className="card-pop group overflow-hidden rounded-2xl bg-shell ring-1 ring-night/10"
             >
-              {/* `<img loading="lazy">` and not background-image: 166 cards sent
+              {/* A lazy image element and not a background-image: 166 cards sent
                   166 image requests on open. See CardPhoto. */}
-              <CardPhoto photo={c.photo} photoW={c.photoW}>
+              <CardPhoto photo={c.photo}>
                 <span className="badge absolute end-3 top-3 rounded-full bg-cream/95 px-2 py-0.5">
                   <Flag flag={c.flag} label={c.country} size="sm" />
                 </span>

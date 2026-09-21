@@ -4,6 +4,7 @@ import type { Country, Destination, Place } from '@/lib/types';
 import { categoryMeta } from '@/lib/categories';
 import { daysHe, formatDurationHe } from '@/lib/duration';
 import { hePrefix } from '@/lib/hebrew';
+import CatalogImage from '@/components/CatalogImage';
 import { formatAmount } from '@/lib/trip/cost';
 import KosherBadge from '@/components/KosherBadge';
 import KosherNote from '@/components/KosherNote';
@@ -425,14 +426,7 @@ function GuideThumb({ place }: { place: Place }) {
         {meta.emoji}
       </span>
       {place.photo && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={place.photo}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="relative h-full w-full object-cover"
-        />
+        <CatalogImage src={place.photo} alt="" sizes="80px" />
       )}
     </div>
   );

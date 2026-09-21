@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import PlaceThumb from '@/components/PlaceThumb';
+import { PHOTO_FALLBACK, photoSrc } from '@/lib/photoMirror';
 import type { Place } from '@/lib/types';
 
 /**
@@ -73,10 +74,23 @@ function Overlay({
       </button>
       {/* Stops a click on the picture itself from closing it */}
       <figure onClick={(e) => e.stopPropagation()} className="max-h-full w-full max-w-3xl">
+        {/*
+          A plain image element rather than `next/image`, deliberately: the overlay sizes
+          the photograph by its own aspect ratio (`max-h-[75vh] w-auto object-contain`),
+          which `fill` cannot express and which the width/height form would need intrinsic
+          dimensions we do not have for an arbitrary Commons file. It is still served from
+          our own mirror - the caller resolves it, so that every `src=` carrying a catalog
+          photograph in this repo goes through `photoSrc` and a test can say so - and this
+          is the one surface with nothing sensible of its own to fall back to, so a failure
+          shows the local placeholder.
+        */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={src}
           alt={alt}
+          onError={(e) => {
+            e.currentTarget.src = PHOTO_FALLBACK;
+          }}
           className="mx-auto max-h-[75vh] w-auto max-w-full rounded-2xl object-contain shadow-pop"
         />
         {(title || caption) && (
@@ -126,7 +140,7 @@ export function ZoomablePhoto({
       </button>
       {open && (
         <Overlay
-          src={place.photo}
+          src={photoSrc(place.photo)}
           alt={place.name}
           title={place.name}
           caption={place.description || undefined}

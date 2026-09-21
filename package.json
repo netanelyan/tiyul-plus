@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "node --experimental-strip-types --import ./scripts/alias-loader.mjs --test \"src/**/*.test.ts\"",
-    "seo:dates": "node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/content-dates.mjs"
+    "seo:dates": "node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/content-dates.mjs",
+    "mirror:photos": "node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/mirror-photos.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.8",

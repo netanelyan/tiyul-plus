@@ -90,25 +90,3 @@ export function creditsFor(urls: (string | undefined)[]): PhotoCredit[] {
   }
   return out;
 }
-
-/**
- * The width of the ORIGINAL file, which is the permission slip for a wider
- * thumbnail.
- *
- * `thumbSrcSet` could previously only offer widths smaller than the one
- * already in the URL, because nothing told it how big the source was - and
- * almost every catalog URL is a 500px thumb. So a card on a 3x phone asking
- * for ~480px got 500, and there was never anything sharper to pick even
- * though the original is usually several thousand pixels wide.
- *
- * Measured: **2,768 of 2,978 files are at least 960px wide**, so most of the
- * catalog can serve the sharp variant. Wikimedia refuses a thumb wider than
- * the source - that is what produced 170 dead URLs in an earlier session - so
- * this number is exactly what makes widening safe rather than a guess.
- */
-export function sourceWidth(url: string | undefined): number | null {
-  const file = fileNameFromUrl(url);
-  if (!file) return null;
-  const w = BY_FILE[file]?.width;
-  return typeof w === 'number' && w > 0 ? w : null;
-}

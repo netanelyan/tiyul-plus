@@ -44,6 +44,11 @@ const CSP = [
   "font-src 'self' data:",
   [
     "img-src 'self' data: blob:",
+    // Our own photo mirror. Every catalog photograph is served from here once
+    // NEXT_PUBLIC_PHOTO_MIRROR_BASE is set; upload.wikimedia.org stays allowed
+    // because it is the fallback until the mirror is complete, and because the
+    // map popup and the lightbox can still reach for the original.
+    'https://*.public.blob.vercel-storage.com',
     'https://upload.wikimedia.org',
     'https://images.unsplash.com',
     'https://flagcdn.com',
@@ -88,13 +93,36 @@ const nextConfig: NextConfig = {
   // Turns off Next's floating dev indicator - it looks like a broken tab at the edge of
   // the screen when testing the dev server from a phone on the local network. Dev only anyway.
   devIndicators: false,
+  /**
+   * Catalog photographs go through `next/image`.
+   *
+   * `remotePatterns` is an allowlist, not a convenience: without the entry the
+   * optimiser refuses the URL outright, so a missing host is a page full of
+   * broken images rather than a slow one.
+   *
+   * - the Blob store is our own mirror (see `src/lib/photoMirror.ts`)
+   * - `upload.wikimedia.org` is what every catalog URL still points at, and is
+   *   what renders until the mirror is populated and switched on
+   * - Unsplash covers the handful of country heroes that never came from Commons
+   *
+   * `deviceSizes` is deliberately short. Next generates one transformation per
+   * width per image, and the default list has eight entries - across ~3,000
+   * catalog photographs that is a large number of billable transformations for
+   * variants nobody can tell apart. Five widths, chosen to cover a phone at DPR
+   * 2-3, a tablet and a wide hero, is the same visual result for a fraction of
+   * the work. `minimumCacheTTL` is a year because a catalog photograph at a
+   * given URL never changes: the mirror path is derived from the filename, so a
+   * different photograph is a different URL.
+   */
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
+      { protocol: 'https', hostname: '*.public.blob.vercel-storage.com' },
+      { protocol: 'https', hostname: 'upload.wikimedia.org' },
+      { protocol: 'https', hostname: 'images.unsplash.com' },
     ],
+    deviceSizes: [640, 828, 1080, 1200, 1920],
+    imageSizes: [96, 160, 256, 384],
+    minimumCacheTTL: 60 * 60 * 24 * 365,
   },
   async headers() {
     return [{ source: '/:path*', headers: SECURITY_HEADERS }];
