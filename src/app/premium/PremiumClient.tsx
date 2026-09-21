@@ -277,19 +277,19 @@ export default function PremiumClient() {
       <nav aria-label="בחירה מהירה" className="mt-7 grid gap-2 sm:hidden">
         {[
           {
-            href: '#plan-free',
-            emoji: '🧭',
-            title: 'מתכננים לבד',
-            price: 'חינם',
-            who: 'הסוכן, המפה והמסלול - בלי לשלם כלום',
-          },
-          {
             href: '#plan-premium',
             emoji: '🤝',
             title: 'מתכננים עם עוד אנשים',
             price: `${ils(PREMIUM_PRICE_ILS)} ₪ לחודש`,
             who: 'פרימיום - הכי מתאים לרוב האנשים',
             highlight: true,
+          },
+          {
+            href: '#plan-free',
+            emoji: '🧭',
+            title: 'מתכננים לבד',
+            price: 'חינם',
+            who: 'הסוכן, המפה והמסלול - בלי לשלם כלום',
           },
           {
             href: '#plan-pro',
@@ -328,43 +328,16 @@ export default function PremiumClient() {
           become the grid item and take that ordering with it. */}
       <InView>
       <div className="mt-8 grid items-start gap-4 sm:grid-cols-3">
-        {/* Free */}
-        <section
-          id="plan-free"
-          className="order-2 h-full scroll-mt-24 rounded-3xl bg-shell p-5 ring-1 ring-night/10 sm:order-none"
-        >
-          <h2 className="text-sm font-bold text-night/60">חינם</h2>
-          <p className="mt-1 text-3xl font-black text-night">
-            0 ₪<span className="text-sm font-semibold text-night/50"> / לתמיד</span>
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-night/65">
-            כל התכנון עצמו. בלי כרטיס אשראי ובלי הגבלת זמן.
-          </p>
-          <ul className="mt-4 space-y-2 text-sm text-night/70">
-            {[
-              'שיחה עם הסוכן ובניית מסלול מלא',
-              'המפה, קטלוג היעדים ושכבת הכשרות',
-              'קישור שיתוף לצפייה, הדפסה ו-PDF',
-              'ניווט לכל יום, וייבוא מפה מ-Google My Maps',
-              'להצטרף לטיול משותף של מישהו אחר, להצביע ולהציע',
-            ].map((t) => (
-              <li key={t} className="flex items-start gap-2">
-                <span className="mt-0.5 text-night/35">•</span>
-                <span>{t}</span>
-              </li>
-            ))}
-          </ul>
-          {plan === 'free' && (
-            <p className="mt-5 rounded-xl bg-night/5 px-3 py-2.5 text-center text-xs font-bold text-night/55">
-              התוכנית הנוכחית שלכם
-            </p>
-          )}
-        </section>
-
-        {/* Premium - the recommended one. order-first on a phone. */}
+        {/*
+          Premium first in the DOM, because on a phone it is first on the
+          screen - and tab order follows the DOM, so the two used to disagree:
+          the reader saw Premium, Free, Pro and tabbed Free, Premium, Pro. No
+          order classes on the phone now; sm:order-* restores the desktop
+          arrangement, where the middle column is the privileged one.
+        */}
         <section
           id="plan-premium"
-          className="relative order-1 h-full scroll-mt-24 rounded-3xl bg-night p-5 ring-2 ring-sunset sm:order-none sm:-mt-3 sm:pb-7"
+          className="relative h-full scroll-mt-24 rounded-3xl bg-night p-5 ring-2 ring-sunset sm:order-2 sm:-mt-3 sm:pb-7"
         >
           <span className="absolute -top-3 end-5 rounded-full bg-zest px-3 py-1 text-xs font-black text-night">
             ★ הכי מתאים לרוב האנשים
@@ -410,10 +383,43 @@ export default function PremiumClient() {
           {cta('premium', 'mt-5')}
         </section>
 
+        {/* Free */}
+        <section
+          id="plan-free"
+          className="h-full scroll-mt-24 rounded-3xl bg-shell p-5 ring-1 ring-night/10 sm:order-1"
+        >
+          <h2 className="text-sm font-bold text-night/60">חינם</h2>
+          <p className="mt-1 text-3xl font-black text-night">
+            0 ₪<span className="text-sm font-semibold text-night/50"> / לתמיד</span>
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-night/65">
+            כל התכנון עצמו. בלי כרטיס אשראי ובלי הגבלת זמן.
+          </p>
+          <ul className="mt-4 space-y-2 text-sm text-night/70">
+            {[
+              'שיחה עם הסוכן ובניית מסלול מלא',
+              'המפה, קטלוג היעדים ושכבת הכשרות',
+              'קישור שיתוף לצפייה, הדפסה ו-PDF',
+              'ניווט לכל יום, וייבוא מפה מ-Google My Maps',
+              'להצטרף לטיול משותף של מישהו אחר, להצביע ולהציע',
+            ].map((t) => (
+              <li key={t} className="flex items-start gap-2">
+                <span className="mt-0.5 text-night/35">•</span>
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+          {plan === 'free' && (
+            <p className="mt-5 rounded-xl bg-night/5 px-3 py-2.5 text-center text-xs font-bold text-night/55">
+              התוכנית הנוכחית שלכם
+            </p>
+          )}
+        </section>
+
         {/* Pro */}
         <section
           id="plan-pro"
-          className="order-3 h-full scroll-mt-24 rounded-3xl bg-shell p-5 ring-1 ring-night/15 sm:order-none"
+          className="h-full scroll-mt-24 rounded-3xl bg-shell p-5 ring-1 ring-night/15 sm:order-3"
         >
           <h2 className="text-sm font-bold text-night/60">פרו</h2>
           <p className="mt-1 text-3xl font-black text-night">

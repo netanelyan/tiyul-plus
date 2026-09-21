@@ -86,7 +86,13 @@ export default function StartClient({ cities }: { cities: CityOption[] }) {
   return (
     <div className="mt-8">
       {/* The three-entry picker */}
-      <div className="flex flex-wrap gap-2">
+      {/*
+        A 3-column grid rather than flex-wrap. Wrapping put "import from a
+        link" on a line of its own, misaligned under the other two - three
+        equal cells cannot do that, and at 375px they still fit because the
+        labels are short.
+      */}
+      <div className="grid grid-cols-3 gap-2">
         <TabButton active={tab === 'quiz'} onClick={() => setTab('quiz')}>
           📋 שאלון מובנה
         </TabButton>
@@ -179,7 +185,7 @@ function TabButton({
     <button
       onClick={onClick}
       aria-pressed={active}
-      className={`rounded-full px-5 py-2.5 text-sm font-bold ring-1 transition ${
+      className={`rounded-full px-2 py-2.5 text-center text-xs font-bold ring-1 transition sm:px-5 sm:text-sm ${
         active ? 'bg-night text-cream ring-night' : 'bg-shell text-night/65 ring-night/15 hover:ring-night/30'
       }`}
     >

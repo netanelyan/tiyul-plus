@@ -163,6 +163,23 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col antialiased">
         <AuthProvider>
         <TripProvider>
+        {/*
+          Skip to content. First in the tab order, invisible until it has
+          focus, and then a real visible control - a skip link that stays
+          hidden while focused is the classic non-fix, because a sighted
+          keyboard user cannot see where they are.
+
+          It matters more here than on a typical site: the header carries a
+          search control, five nav links, the trips menu and the account
+          button, so without it every page begins with the same eight stops
+          before the content.
+        */}
+        <a
+          href="#main"
+          className="sr-only z-[90] rounded-xl bg-night px-4 py-2.5 font-bold text-cream focus:not-sr-only focus:fixed focus:start-4 focus:top-4"
+        >
+          דילוג לתוכן הראשי
+        </a>
         <AccountSync />
         <VisitPing />
         {/*
@@ -186,7 +203,12 @@ export default function RootLayout({
           </div>
         </header>
         <OfflineNotice />
-        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>
+        {/*
+          page-main carries the bottom clearance for the accessibility button
+          and the device's safe area - see globals.css. It replaces the bottom
+          half of py-8, so the top padding is set on its own.
+        */}
+        <main id="main" tabIndex={-1} className="page-main mx-auto w-full max-w-6xl flex-1 px-4 pt-8">{children}</main>
         </TripProvider>
         </AuthProvider>
         <AccessibilityWidget />

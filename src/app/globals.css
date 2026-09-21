@@ -27,6 +27,93 @@
 
 :root {
   --shadow-pop: 0 6px 20px -10px rgba(36, 27, 77, 0.18);
+
+  /*
+    The corner the accessibility button occupies, as a number the rest of the
+    layout can read instead of each surface guessing at it.
+
+    Measured: the button is 44px (2.75rem) at phone widths and 48px from sm,
+    inset 1rem from the bottom and the inline start - which in RTL is the
+    RIGHT-hand corner. Nothing reserved that space, so it won the hit test over
+    whatever happened to be underneath, on every page checked at 375px: the
+    attach button on /ask, destination cards on / and /countries, filter chips
+    on a destination page, city buttons on /start.
+
+    --a11y-corner is what a bottom-anchored bar must keep clear on the inline
+    start; --a11y-safe-bottom is the same plus the device's own bottom inset,
+    for anything that sits at the very bottom of the page.
+  */
+  --a11y-fab-size: 2.75rem;
+  --a11y-fab-inset: 1rem;
+  --a11y-corner: calc(var(--a11y-fab-size) + var(--a11y-fab-inset) * 2);
+  --a11y-safe-bottom: calc(var(--a11y-corner) + env(safe-area-inset-bottom, 0px));
+}
+
+@media (min-width: 640px) {
+  :root {
+    --a11y-fab-size: 3rem;
+  }
+}
+
+/*
+  Every page's content clears the button where content cannot move: the end of
+  the page. Mid-scroll the button still floats over whatever is passing under
+  it, which is inherent to a fixed control - but there the reader can scroll,
+  and at the end of the page they cannot.
+*/
+.page-main {
+  padding-bottom: var(--a11y-safe-bottom);
+}
+
+/*
+  For a bar pinned to the bottom of the viewport, where scrolling does not
+  help and the overlap is permanent. TripWorkspace's mobile chat bar already
+  solved this for itself with `start-20`; this is the same clearance, named,
+  so the next bottom bar does not have to rediscover it.
+*/
+.clears-a11y-corner {
+  padding-inline-start: var(--a11y-corner);
+}
+
+@media (min-width: 1024px) {
+  /* From lg the chat is a side column, nowhere near the corner. */
+  .clears-a11y-corner {
+    padding-inline-start: 0;
+  }
+}
+
+/*
+  The trip screen's mobile conversation bar, and the room the plan leaves for it.
+
+  The clearance used to be a hand-written `pb-24` that happened to be larger
+  than the bar - it was not wrong, but nothing tied the two numbers together,
+  so changing the bar's padding would have silently started covering the
+  itinerary. Both now come from the same three values.
+
+  The safe-area term is the part that was actually missing: the bar sat at a
+  flat 12px from the bottom, which on a phone with a home indicator puts it
+  inside the indicator strip.
+*/
+:root {
+  --chat-bar-h: 3.5rem;
+  --chat-bar-inset: 0.75rem;
+  --chat-bar-bottom: calc(var(--chat-bar-inset) + env(safe-area-inset-bottom, 0px));
+  --chat-bar-clearance: calc(var(--chat-bar-h) + var(--chat-bar-inset) + var(--chat-bar-bottom));
+}
+
+.chat-bar-bottom {
+  bottom: var(--chat-bar-bottom);
+}
+
+.clears-chat-bar {
+  padding-bottom: var(--chat-bar-clearance);
+}
+
+@media (min-width: 1024px) {
+  /* From lg there is no bar - the conversation is a column. */
+  .clears-chat-bar {
+    padding-bottom: 0;
+  }
 }
 
 /* The accessibility text size: changes the root font-size, and every rem

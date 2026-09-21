@@ -120,6 +120,7 @@ export default function TripDates({
         disabled={disabled}
         title={disabled ? OFFLINE_HINT : undefined}
         aria-expanded={open}
+        aria-controls="trip-dates-panel"
         aria-label={
           label
             ? `תאריכי הטיול: ${label}${cd && cd.kind !== 'past' ? `, ${cd.label}` : ''}`
@@ -151,6 +152,9 @@ export default function TripDates({
       {open && (
         <div
           ref={panelRef}
+          id="trip-dates-panel"
+          role="region"
+          aria-label="עריכת תאריכי הטיול"
           style={shift ? { transform: `translateX(${shift}px)` } : undefined}
           className="absolute start-0 top-full z-40 mt-2 w-72 max-w-[calc(100vw-1rem)] rounded-2xl bg-shell p-4 shadow-[var(--shadow-pop)] ring-1 ring-night/10"
         >

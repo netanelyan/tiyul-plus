@@ -79,7 +79,18 @@ export default function HeroPrompt({
       >
         {/* Below sm: a full-width field with a full-width button under it. From sm: the button sits inside the field */}
         <div className="relative">
+          {/*
+            A visible label would compete with the heading directly above it,
+            which already says what this field is for - but a placeholder is
+            not a label: it disappears the moment anyone types, and this one
+            also rotates, so a screen reader announced an unnamed textbox.
+            sr-only keeps the design and gives the field a name that stays.
+          */}
+          <label htmlFor="hero-prompt" className="sr-only">
+            לאן טסים הפעם? תיאור חופשי של הטיול שאתם מדמיינים
+          </label>
           <input
+            id="hero-prompt"
             ref={inputRef}
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -109,6 +120,14 @@ export default function HeroPrompt({
             type="button"
             onClick={toggleKosher}
             aria-pressed={kosher}
+            /*
+              A title attribute is not an accessible description: it never
+              appears on touch, and screen-reader support for it is
+              inconsistent enough that it cannot be the only place a
+              preference explains itself. The text stays for the mouse tooltip
+              and is now also referenced properly.
+            */
+            aria-describedby="kosher-toggle-hint"
             title="ההעדפה עוברת לסוכן בשקט - הוא לא ישאל על זה בשיחה"
             className={`badge rounded-full px-4 py-2.5 text-sm font-semibold ring-1 transition ${
               kosher
@@ -132,6 +151,13 @@ export default function HeroPrompt({
             </svg>
             אוכל כשר
           </button>
+          {/* The description the toggle points at. Visually hidden - the button
+              itself is already understood on sight; what was missing is the
+              "we will not ask about this again" promise for anyone who cannot
+              hover. */}
+          <span id="kosher-toggle-hint" className="sr-only">
+            ההעדפה עוברת לסוכן בשקט - הוא לא ישאל על זה בשיחה
+          </span>
           {extraChips}
           </>
         }

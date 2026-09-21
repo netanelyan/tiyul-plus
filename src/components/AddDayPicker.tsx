@@ -109,6 +109,7 @@ export default function AddDayPicker({
         disabled={disabled}
         aria-expanded={open}
         aria-haspopup="listbox"
+        aria-controls="add-day-listbox"
         aria-label="הוספת יום לטיול"
         title={disabled ? OFFLINE_HINT : 'הוספת יום'}
         className="flex h-11 min-w-11 items-center justify-center rounded-xl bg-shell px-2 text-lg font-bold text-night/45 ring-1 ring-dashed ring-night/15 transition hover:text-night hover:ring-night/30"
@@ -118,6 +119,7 @@ export default function AddDayPicker({
 
       {open && (
         <div
+          id="add-day-listbox"
           role="listbox"
           aria-label="בחירת עיר ליום חדש"
           className="absolute start-0 top-full z-40 mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-2xl bg-shell p-2 shadow-[var(--shadow-pop)] ring-1 ring-night/10"

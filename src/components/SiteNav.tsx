@@ -56,6 +56,7 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
   const [tripsMenuOpen, setTripsMenuOpen] = useState(false);
   const { trips, currentId, hydrated, setCurrentId } = useTrip();
   const rootRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -68,6 +69,29 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
     };
     document.addEventListener('click', onOutside);
     return () => document.removeEventListener('click', onOutside);
+  }, [open, tripsMenuOpen]);
+
+  /*
+    Escape closes either menu. A menu that can only be dismissed with the mouse
+    is a trap for anyone navigating by keyboard - they would have to tab through
+    every item in it to get back out.
+
+    Focus returns to the hamburger when the menu closes, so the next Tab
+    continues from the control the reader was on rather than from the top of
+    the document. Guarded on `open` having actually been true, so this does not
+    steal focus on first render.
+  */
+  useEffect(() => {
+    if (!open && !tripsMenuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      const wasOpen = open;
+      setOpen(false);
+      setTripsMenuOpen(false);
+      if (wasOpen) menuButtonRef.current?.focus();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
   }, [open, tripsMenuOpen]);
 
   /** Opens an existing trip as the active tab: if already on /chat it happens immediately, otherwise navigate with ?trip= */
@@ -145,8 +169,10 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
       <div className="flex items-center gap-1.5 md:hidden">
       <AccountButton />
       <button
+        ref={menuButtonRef}
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
+        aria-controls="site-menu"
         aria-label="תפריט"
         className="flex h-10 w-10 items-center justify-center rounded-xl text-night/70 transition hover:bg-night/5"
       >
@@ -177,7 +203,21 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
       </div>
 
       {open && (
-        <div className="absolute end-0 top-full z-50 mt-2 w-60 rounded-2xl bg-shell p-2 shadow-[var(--shadow-pop)] ring-1 ring-night/10 md:hidden">
+        /*
+          A dropdown, NOT a modal - so deliberately no role=dialog, no
+          aria-modal and no focus trap. It is anchored to its button, the page
+          behind it is still there, and trapping Tab in a menu is its own bug:
+          the expected behaviour is that Tab leaves and the menu closes. What it
+          was missing is what a menu should have - a name, a link from the
+          button that opens it, Escape, and focus back on that button so the
+          next Tab does not restart from the top of the document.
+        */
+        <div
+          id="site-menu"
+          role="menu"
+          aria-label="תפריט האתר"
+          className="absolute end-0 top-full z-50 mt-2 w-60 rounded-2xl bg-shell p-2 shadow-[var(--shadow-pop)] ring-1 ring-night/10 md:hidden"
+        >
           <SiteSearch variant="menu-row" onNavigate={() => setOpen(false)} />
           {NAV_LINKS.map((l) => (
             <Link

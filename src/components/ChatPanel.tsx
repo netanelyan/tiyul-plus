@@ -429,7 +429,14 @@ export default function ChatPanel({
           </p>
         )}
 
-        <div className="flex gap-2">
+        {/*
+          clears-a11y-corner: the attach button is the first child, so in RTL it
+          is the rightmost control in this row - directly under the accessibility
+          button, which made it completely unclickable on /ask at phone widths.
+          The panel is sized to the viewport there, so scrolling does not move it
+          out of the way. Removed from lg up, where the chat is a side column.
+        */}
+        <div className="clears-a11y-corner flex gap-2">
           <input
             ref={fileRef}
             type="file"

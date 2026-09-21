@@ -183,6 +183,61 @@ export default function AgentWorkspace() {
   // At most one frame, until hydration has decided what this entry's trip is
   if (showWorkspace && !entryResolved) return null;
 
+  /*
+    Asked for a specific trip, and it is not on this device.
+
+    Trips live in this browser's storage, so /chat?trip=<id> is a real URL for
+    the person who built it and a dead one for everybody else - which is every
+    user who clears their browser data, switches phone, or opens their own trip
+    link in a second browser. They used to get the empty screen with an "the
+    agent is building…" badge and "the map will appear here once the agent
+    builds it", so the site sat there claiming to work on something forever.
+    Waited 8+ seconds in the report; nothing was ever going to happen.
+
+    The distinction that makes this safe: during a real build `currentId` is
+    only set once the trip object exists, so a trip mid-creation is never
+    mistaken for a missing one.
+  */
+  const requestedTripMissing =
+    showWorkspace &&
+    entryResolved &&
+    trip.hydrated &&
+    !!trip.currentId &&
+    !trip.trips.some((x) => x.id === trip.currentId);
+
+  if (requestedTripMissing) {
+    return (
+      <div className="rise-in mx-auto flex max-w-lg flex-col items-center py-10 text-center">
+        <div className="text-4xl" aria-hidden>
+          🧳
+        </div>
+        <h1 className="display mt-3 text-2xl text-night">הטיול הזה לא נמצא במכשיר הזה</h1>
+        <p className="mt-3 leading-relaxed text-night/65">
+          הטיולים נשמרים בדפדפן שבו בנו אותם. אם בניתם אותו בטלפון אחר, בדפדפן אחר, או
+          שניקיתם את נתוני הגלישה - הוא פשוט לא כאן. לא מחקנו אותו.
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-night/55">
+          עם חשבון זה לא קורה: הטיולים נשמרים אצלנו ונפתחים בכל מכשיר, גם אחרי ניקוי
+          הדפדפן.
+        </p>
+        <button
+          onClick={() => startNewTripRef.current()}
+          className="mt-5 rounded-xl bg-sunset px-5 py-3 font-bold text-cream transition hover:bg-sunset-deep"
+        >
+          בניית טיול חדש
+        </button>
+        {/* The trips that ARE on this device - the likeliest thing they wanted */}
+        <ResumeTrips className="mt-8" />
+        <Link
+          href="/countries"
+          className="mt-6 text-sm font-semibold text-night/40 transition hover:text-sunset-deep"
+        >
+          או גולשים בקטלוג היעדים ←
+        </Link>
+      </div>
+    );
+  }
+
   if (!showWorkspace) {
     return (
       <div className="flex min-h-[calc(100vh-230px)] flex-col items-center justify-center py-10">

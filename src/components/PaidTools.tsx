@@ -101,6 +101,7 @@ export default function PaidTools({ children }: { children: ReactNode }) {
         data-paid-head
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
+        aria-controls="paid-tools-body"
         className="flex w-full items-center gap-2 rounded-2xl bg-night px-4 py-3 text-start text-cream ring-1 ring-night transition hover:bg-night/90 print:hidden"
       >
         <span aria-hidden className="text-base leading-none text-zest">
@@ -130,7 +131,12 @@ export default function PaidTools({ children }: { children: ReactNode }) {
         the DOM would silently drop a report the traveller paid for out of their
         PDF. Collapsed hides it on screen only.
       */}
-      <div className={open ? 'mt-2 space-y-2' : 'hidden print:block'}>
+      <div
+        id="paid-tools-body"
+        role="region"
+        aria-labelledby="paid-tools-heading"
+        className={open ? 'mt-2 space-y-2' : 'hidden print:block'}
+      >
         {/*
           The one contextual pointer to the pricing page, and this is the screen
           that earns it: somebody who has just opened the paid section is asking

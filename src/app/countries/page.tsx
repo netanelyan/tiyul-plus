@@ -87,26 +87,22 @@ export default async function CountriesPage() {
         cities) stays on the nav icon and the Ctrl+K shortcut, on every page
         of the site.
       */}
+      {/*
+        The country list is rendered by the browser now, not here, so that the
+        search filters it too. It used to sit outside the client component and
+        therefore never filtered: a nonsense query emptied the grid and dropped
+        every counter to 0 while 83 country links stayed on screen underneath.
+        Only slug/name/nameLocal cross the boundary - the catalog stays here.
+      */}
       <div className="mt-6">
-        <DestinationBrowser cards={cards} />
-      </div>
-
-      <div className="mt-10 rounded-2xl bg-night/[0.03] p-5">
-        <h2 className="text-sm font-bold text-night/70">לגלוש לפי מדינה</h2>
-        <p className="mt-1 text-xs font-medium text-night/50">
-          ויזה, מטבע, סים ותשלומים הם מידע ברמת המדינה - שם הוא נמצא.
-        </p>
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {countries.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/countries/${c.slug}`}
-              className="rounded-full bg-shell px-3 py-1.5 text-xs font-semibold text-night/70 ring-1 ring-night/10 transition hover:text-night hover:ring-night/25"
-            >
-              {c.name}
-            </Link>
-          ))}
-        </div>
+        <DestinationBrowser
+          cards={cards}
+          countries={countries.map((c) => ({
+            slug: c.slug,
+            name: c.name,
+            nameLocal: c.nameLocal,
+          }))}
+        />
       </div>
     </div>
   );
