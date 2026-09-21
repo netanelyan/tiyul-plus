@@ -13069,3 +13069,51 @@ receive - it is published and currently goes nowhere, which is the one way this
 is worse than the Gmail address; run the archive once with a Blob token; delete
 the `T4R4Cwqk` test share code; run `sql/supabase-consent.sql`, now the oldest
 open item; and set the three TikTok env vars.
+
+### 2026-09-21 (c) - The missing TikTok scope, and the second copy that hid it
+
+Netanel: the connect flow mints tokens that cannot publish. The bot delivers
+slideshows with `post_mode=MEDIA_UPLOAD`, which needs **`video.upload`** - and
+that is the one scope the authorize URL never asked for, so every init came back
+`scope_not_authorized`. The app already holds all three scopes in the developer
+portal; only our request was short. Scope is now
+`user.info.basic,video.upload,video.publish` - `video.publish` stays, since the
+bot can direct-post and simply does not today.
+
+**The cause is worth more than the fix: the page said one thing and the URL sent
+another, because they were written out twice.** `TIKTOK_SCOPES` fed
+`buildAuthorizeUrl`, and the visible permission list was hand-typed JSX that had
+drifted to advertise `video.publish` as "to upload the slideshows" - describing
+the job of a scope we were not requesting, next to a footer line that was
+correctly rendering the real constant. One of the three was right.
+
+So the list is no longer a copy. `TIKTOK_SCOPE_LIST` carries each scope id with
+its Hebrew label, `TIKTOK_SCOPES` is derived from it with a `.join(',')`, and the
+page maps over the same array. A scope cannot now be listed without being
+requested, or requested without appearing on screen.
+
+**Untouched on instruction, and each for a stated reason:** `newState` /
+`stateMatches` and the callback (state validation is correct - it recently
+rejected a hand-built link), `TIKTOK_REDIRECT_URI` (registered character for
+character), and `forwardCodeToBot`.
+
+**Verified** on a production build rather than from the source: the `Location`
+header of `/tiktok/connect` carries all three scopes with the redirect URI and
+the fresh state unchanged, and the page renders three permissions in order with
+the footer printing the derived string. 931 tests, tsc and lint clean.
+
+**Not verified, and it is the check that matters:** the TikTok consent screen
+itself. There are no `TIKTOK_*` variables in `.env.local`, and a placeholder
+client key is rejected before consent renders - so the three-permission screen
+needs either the real key locally or a deploy. Loading it costs nothing (TikTok
+issues the code only after approval), but pressing through would burn the code
+reserved for the real reconnect.
+
+**`TIKTOK-BOT-CONTRACT.md` deleted on his instruction.** It was the spec for a
+bot endpoint that does not exist yet - the exchange call, the refresh-token
+rotation warning, the env split - and it is recoverable with
+`git show HEAD~1:TIKTOK-BOT-CONTRACT.md` if the bot ever gets built. The module
+doc in `tiktok.ts` pointed at it, so rather than leave a reference to a file that
+is gone, the reasoning for keeping the client secret off this server is now
+stated inline, and the wire format is what it always really was: the signature of
+`forwardCodeToBot` and the `BotConnectResult` interface.
