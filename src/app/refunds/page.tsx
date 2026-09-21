@@ -1,12 +1,15 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import PageShell from '@/components/PageShell';
 import { Gap, Section, Updated } from '@/components/PolicySection';
+import { pageMetadata } from '@/lib/seo/site';
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/refunds',
   title: 'ביטולים והחזרים | טיול+',
   description:
     'מה אפשר לרכוש בטיול+ היום - בדיקה לפני הנסיעה חד-פעמית ומנוי חודשי, שניהם דרך PayPal - תנאי הביטול וההחזר של כל אחד, ומה קורה בהזמנות אצל ספקים חיצוניים.',
-};
+});
 
 export default function Page() {
   return (

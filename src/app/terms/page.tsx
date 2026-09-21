@@ -1,13 +1,16 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import PageShell from '@/components/PageShell';
 import { List, Section, Updated } from '@/components/PolicySection';
 import { TERMS_UPDATED_LABEL } from '@/lib/legal';
+import { pageMetadata } from '@/lib/seo/site';
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/terms',
   title: 'תנאי שימוש | טיול+',
   description:
     'הכללים לשימוש בטיול+: מה מותר, מה אסור, למה מסלול הוא הצעה ולא הבטחה, ומה גבולות האחריות שלנו.',
-};
+});
 
 export default function Page() {
   return (

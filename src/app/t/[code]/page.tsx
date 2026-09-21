@@ -33,7 +33,18 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { code } = await params;
   const shared = await resolveSharedTrip(code);
-  if (!shared) return { title: 'טיול משותף | טיול+' };
+  /*
+    Never indexed, on both branches. A shared link is somebody's private trip
+    handed to the people they chose; it should reach WhatsApp, not a search
+    result. `follow: true` so the destination links inside it still count.
+
+    Worth being honest about the limit: robots.txt already disallows /t/, and
+    a disallowed URL is one Googlebot will not fetch - so it cannot read this
+    tag either. What this actually buys is the case where the disallow is
+    ever narrowed, and it costs one line to have the two agree.
+  */
+  const robots = { index: false, follow: true } as const;
+  if (!shared) return { title: 'טיול משותף | טיול+', robots };
   const cities = [...new Set(shared.days.map((d) => d.citySlug))]
     .map((s) => destinations.find((x) => x.slug === s)?.name)
     .filter(Boolean)
@@ -59,6 +70,7 @@ export async function generateMetadata({
       images: [{ url: '/og.png', width: 1200, height: 630, alt: 'טיול+' }],
     },
     twitter: { card: 'summary_large_image', title, description, images: ['/og.png'] },
+    robots,
   };
 }
 

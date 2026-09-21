@@ -1,6 +1,10 @@
+import type { Metadata } from 'next';
 import { getProvider } from '@/lib/providers';
 import { isKosher } from '@/lib/categories';
 import KosherSearch, { type KosherCity } from './KosherSearch';
+import { pageMetadata } from '@/lib/seo/site';
+import JsonLd from '@/components/seo/JsonLd';
+import { collectionPageLd } from '@/lib/seo/jsonLd';
 
 /**
  * Standalone kosher search - a separate entry point from the filter on each
@@ -13,11 +17,12 @@ import KosherSearch, { type KosherCity } from './KosherSearch';
  * is shown as a card before anything is typed, and the search only filters
  * them in real time.
  */
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/kosher',
   title: 'כשרות | טיול+',
   description:
     'ספריית הכשרות של טיול+: כל הערים בקטלוג שיש בהן מסעדות, חנויות ובתי חב"ד - עם מפה ופרטים. המידע נאסף ממקורות ציבוריים - לוודא מול המקום.',
-};
+});
 
 export default async function KosherPage() {
   const provider = getProvider();
@@ -43,8 +48,22 @@ export default async function KosherPage() {
       kosherPlaces: d.places.filter((p) => isKosher(p.category)),
     }));
 
+  // Exactly the cities the directory renders: KosherSearch drops any city with
+  // no kosher place, so listing all of them here would describe a page with
+  // more on it than this one has.
+  const listed = cities.filter((c) => c.kosherPlaces.length > 0);
+
   return (
     <div>
+      <JsonLd
+        data={collectionPageLd({
+          name: 'ספריית הכשרות של טיול+',
+          description: `${listed.length} ערים בקטלוג עם מסעדות, חנויות ובתי חב"ד - עם מפה ופרטי ההשגחה כפי שנמסרו.`,
+          path: '/kosher',
+          items: listed.map((c) => ({ name: c.name, path: `/destinations/${c.slug}` })),
+        })}
+      />
+
       <h1 className="display text-3xl text-night sm:text-4xl">כשרות בעולם</h1>
       <p className="mt-2 max-w-2xl leading-relaxed text-night/60">
         כל מקום כשר שיש לנו בקטלוג, לפי עיר: מסעדות, חנויות ובתי חב&quot;ד - עם מפה, פרטים

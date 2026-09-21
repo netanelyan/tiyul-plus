@@ -1,13 +1,16 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import PageShell from '@/components/PageShell';
 import { List, Section, Updated } from '@/components/PolicySection';
 import { catalogCounts } from '@/lib/server/footerLinks';
+import { pageMetadata } from '@/lib/seo/site';
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/about',
   title: 'אודות | טיול+',
   description:
     'טיול+ הוא סוכן נסיעות מבוסס AI בעברית לישראלים. בונים איתו מסלול אמיתי על מפה, לפי קטלוג יעדים שנבנה ידנית. איננו מוכרים ואיננו מזמינים דבר.',
-};
+});
 
 export default function Page() {
   return (

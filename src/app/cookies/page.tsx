@@ -1,12 +1,15 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import PageShell from '@/components/PageShell';
 import { List, Section, Sub, Updated } from '@/components/PolicySection';
+import { pageMetadata } from '@/lib/seo/site';
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/cookies',
   title: 'עוגיות ונתוני שימוש | טיול+',
   description:
     'גלישה רגילה בטיול+ לא מציבה אף עוגייה. מה כן נשמר בדפדפן שלכם, למה, ואיך מוחקים - בשפה פשוטה.',
-};
+});
 
 /** A row in the storage table. `pii` marks what relates to you personally. */
 function Row({ name, what, why, pii }: { name: string; what: string; why: string; pii?: boolean }) {

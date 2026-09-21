@@ -1,9 +1,28 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getProvider } from '@/lib/providers';
 import DestinationBrowser from '@/components/DestinationBrowser';
 import { buildDestinationCards } from '@/lib/destinationCards';
+import { pageMetadata } from '@/lib/seo/site';
+import { catalogCounts } from '@/lib/server/footerLinks';
+import JsonLd from '@/components/seo/JsonLd';
+import { collectionPageLd } from '@/lib/seo/jsonLd';
 
-export const metadata = { title: 'יעדים | טיול+' };
+/*
+  This page had a title and nothing else, so it inherited the homepage's
+  description as well as its canonical - i.e. the catalog hub, the page most
+  likely to rank for a destination-catalog query and the one that passes
+  authority to every destination page, was describing itself as the homepage.
+
+  The counts come from catalogCounts rather than being typed, for the reason
+  the guard test in marketingPages enforces: /about once carried a
+  hand-written place count that had drifted by 1,426.
+*/
+export const metadata: Metadata = pageMetadata({
+  path: '/countries',
+  title: 'יעדים | טיול+',
+  description: `קטלוג היעדים של טיול+: ${catalogCounts.destinations} יעדים ב-${catalogCounts.countries} מדינות, כל אחד עם מסלול מוכן, מפה ושכבת כשרות. אפשר לסנן לפי יבשת ולפי אופי הטיול.`,
+});
 
 /**
  * The destinations catalog.
@@ -29,6 +48,21 @@ export default async function CountriesPage() {
 
   return (
     <div>
+      {/*
+        The list is every destination the browser renders, not a sample and not
+        the promoted subset: filtering here is client-side, so all of them are
+        genuinely in this page's DOM, and a list that named fewer would be
+        describing a different page than the one that shipped.
+      */}
+      <JsonLd
+        data={collectionPageLd({
+          name: 'קטלוג היעדים של טיול+',
+          description: `${dests.length} יעדים ב-${countries.length} מדינות, כל אחד עם מסלול מוכן, מפה ושכבת כשרות.`,
+          path: '/countries',
+          items: cards.map((c) => ({ name: c.name, path: `/destinations/${c.slug}` })),
+        })}
+      />
+
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="display text-3xl text-night">לאן טסים?</h1>

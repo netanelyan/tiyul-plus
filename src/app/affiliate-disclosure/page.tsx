@@ -1,12 +1,15 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import PageShell from '@/components/PageShell';
 import { List, Section, Updated } from '@/components/PolicySection';
+import { pageMetadata } from '@/lib/seo/site';
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/affiliate-disclosure',
   title: 'קישורי שותפים | טיול+',
   description:
     'חלק מהקישורים היוצאים מטיול+ עשויים להניב לנו עמלה. מי השותפים, ולמה העמלה לא משפיעה על מה שהמתכנן ממליץ.',
-};
+});
 
 export default function Page() {
   return (

@@ -1,11 +1,16 @@
+import type { Metadata } from 'next';
 import { getProvider } from '@/lib/providers';
 import { buildCityOptionsFromSummaries } from '@/lib/citySearch';
 import StartClient from './StartClient';
+import { pageMetadata } from '@/lib/seo/site';
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/start',
   title: 'איך נתחיל? | טיול+',
-  description: 'שלוש דרכים להתחיל טיול: שיחה חופשית עם הסוכן, שאלון מובנה, או קישור מרשת חברתית.',
-};
+  description:
+    'שלוש דרכים להתחיל טיול: שיחה חופשית עם הסוכן, שאלון מובנה, או קישור מרשת חברתית.',
+  noindex: true,
+});
 
 export default async function StartPage() {
   const dests = await getProvider().getDestinations();

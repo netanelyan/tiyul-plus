@@ -14,11 +14,15 @@ import { SEO_DESTINATION_SLUGS } from './selection';
 import {
   breadcrumbLd,
   collectionLd,
+  collectionPageLd,
   countryLd,
   faqLd,
   faqPairs,
+  organizationLd,
   touristDestinationLd,
+  webSiteLd,
 } from './jsonLd';
+import { SITE_URL, SOCIAL_PROFILES } from './site';
 
 const pairs = SEO_DESTINATION_SLUGS.map((slug) => {
   const dest = destinations.find((d) => d.slug === slug)!;
@@ -192,5 +196,66 @@ describe('collectionLd and countryLd', () => {
     const ld = countryLd(austria, 3) as { name: string; description: string };
     assert.equal(ld.name, austria.name);
     assert.equal(ld.description, austria.summary);
+  });
+});
+
+describe('the site-level nodes', () => {
+  it('declares only the social profiles the footer also links to', () => {
+    // Two lists of "where we are" is how they end up disagreeing, so both read
+    // SOCIAL_PROFILES. This asserts the markup cannot claim an extra account.
+    const ld = organizationLd() as { sameAs: string[] };
+    assert.deepEqual(ld.sameAs, SOCIAL_PROFILES.map((s) => s.href));
+  });
+
+  it('gives the organization and the website stable ids to refer to', () => {
+    const org = organizationLd() as { '@id': string };
+    const site = webSiteLd() as { '@id': string; publisher: { '@id': string } };
+    assert.equal(org['@id'], `${SITE_URL}#organization`);
+    assert.equal(site.publisher['@id'], org['@id'], 'the website must point at the organization');
+  });
+
+  it('claims no search action, because there is no search URL to name', () => {
+    /*
+      A potentialAction naming a route that 404s is a machine-readable claim
+      that is false. Site search is a client overlay with no URL behind it.
+      When a real query route exists this test is the thing to change.
+    */
+    assert.equal('potentialAction' in webSiteLd(), false);
+  });
+
+  it('does not say a city is part of a website', () => {
+    // isPartOf has a domain of CreativeWork; a TouristDestination is a Place.
+    // Every promoted destination page shipped this until it was caught by
+    // validating against the vocabulary - see scripts/validate-jsonld.mjs.
+    const rome = destinations.find((d) => d.slug === 'rome')!;
+    const italy = countries.find((c) => c.slug === rome.countrySlug)!;
+    assert.equal('isPartOf' in touristDestinationLd(rome, italy), false);
+  });
+});
+
+describe('a hub page as a collection', () => {
+  const build = (n: number) =>
+    collectionPageLd({
+      name: 'n',
+      description: 'd',
+      path: '/countries',
+      items: Array.from({ length: n }, (_, i) => ({ name: `c${i}`, path: `/destinations/d${i}` })),
+    }) as { mainEntity: { numberOfItems: number; itemListElement: { position: number }[] } };
+
+  it('counts what it lists, so the page and the markup cannot disagree', () => {
+    const ld = build(7);
+    assert.equal(ld.mainEntity.numberOfItems, 7);
+    assert.equal(ld.mainEntity.itemListElement.length, 7);
+  });
+
+  it('numbers positions from 1 with no gaps - a gap invalidates the list', () => {
+    const positions = build(5).mainEntity.itemListElement.map((e) => e.position);
+    assert.deepEqual(positions, [1, 2, 3, 4, 5]);
+  });
+
+  it('survives an empty collection without claiming items', () => {
+    const ld = build(0);
+    assert.equal(ld.mainEntity.numberOfItems, 0);
+    assert.deepEqual(ld.mainEntity.itemListElement, []);
   });
 });

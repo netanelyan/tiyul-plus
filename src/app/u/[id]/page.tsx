@@ -5,6 +5,11 @@ import TravelerClient from './TravelerClient';
 export const metadata: Metadata = {
   title: 'פרופיל מטייל | טיול+',
   description: 'דרכון המדינות של מטייל בקהילת טיול+.',
+  // Somebody else's profile is not ours to put in a search result, and there
+  // is nothing here to rank on: the page is a shell and the content is
+  // fetched client-side. robots.txt disallows /u/ as well - see the note on
+  // the shared-trip route about why both are worth having.
+  robots: { index: false, follow: true },
 };
 
 /**
