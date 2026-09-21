@@ -7,14 +7,29 @@
  *
  * What it solves, and why it is needed - see alias-loader.mjs.
  */
-import { existsSync } from 'node:fs';
+import { existsSync, statSync } from 'node:fs';
 
 const SRC = new URL('../src/', import.meta.url);
+
+/**
+ * `isFile` and not `existsSync`: the bare specifier is tried first so that an
+ * import that already names a file wins, but `@/lib/providers` names a
+ * DIRECTORY that exists - and returning it made Node try to read a directory as
+ * source ("EISDIR: illegal operation on a directory"). The bare candidate has to
+ * be a file to count; a directory falls through to its `index.ts`.
+ */
+function isFile(url) {
+  try {
+    return existsSync(url) && statSync(url).isFile();
+  } catch {
+    return false;
+  }
+}
 
 function firstExisting(base, rest) {
   for (const candidate of [rest, `${rest}.ts`, `${rest}.tsx`, `${rest}/index.ts`]) {
     const url = new URL(candidate, base);
-    if (existsSync(url)) return url.href;
+    if (isFile(url)) return url.href;
   }
   return null;
 }

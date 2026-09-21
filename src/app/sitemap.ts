@@ -1,8 +1,9 @@
 import type { MetadataRoute } from 'next';
 import { getProvider } from '@/lib/providers';
 import { canonical } from '@/lib/seo/site';
-import { SEO_DESTINATION_SLUGS, isSeoDestination, seoCountrySlugs } from '@/lib/seo/selection';
+import { isSeoDestination, seoCountrySlugs } from '@/lib/seo/selection';
 import { HUBS } from '@/lib/seo/hubs';
+import { lastModified } from '@/lib/seo/contentDates';
 
 /**
  * Emitted as a static /sitemap.xml at build time.
@@ -11,32 +12,69 @@ import { HUBS } from '@/lib/seo/hubs';
  *
  * This reads the catalog through `getProvider()` - the same interface the
  * destination and country pages read - so a URL can only appear here if the
- * catalog that builds the pages contains it. There is no second list of cities
- * to forget to update. The one hand-maintained input is
- * `SEO_DESTINATION_SLUGS`, and it is shared with the pages too: the same module
- * decides which destinations render the guide section.
+ * catalog that builds the pages contains it, and every catalogue page appears
+ * without anyone remembering to add it. There is no second list of cities.
  *
- * ## What is deliberately not in here
+ * ## Every page is submitted now, not a promoted subset
  *
- * - **The other 136 destinations.** They exist, they are crawlable, and they now
- *   have unique metadata. Not submitting them keeps the promoted set uniformly
- *   substantive on a domain with no authority yet. See `selection.ts`.
- * - **The 61 country pages with no promoted city.** Same reasoning.
- * - **`/premium`** - it already sets `robots: { index: false }` deliberately.
- * - **`/chat`, `/ask` and the per-user routes** - disallowed in robots.txt,
- *   because crawling the agent costs money per request.
- * - **The policy pages** (privacy, terms, refunds, cookies, accessibility).
- *   They are linked in the footer and perfectly crawlable; they are just not
- *   pages we are asking Google to spend crawl budget on.
+ * The first version listed 72 URLs: 30 hand-picked destinations, the 22 countries
+ * they sit in, the hubs and six core pages. The reasoning was real - a young
+ * domain that submits 166 pages of uneven depth risks being classified as thin
+ * site-wide - but it had two costs that have outgrown it.
  *
- * ## No lastModified
+ * The 136 unlisted destinations were never hidden: they render, they are linked
+ * from `/countries` and from every country page, and since the metadata pass they
+ * each carry a unique title, description and canonical. Leaving them out of the
+ * sitemap therefore did not protect anything; it only slowed down the discovery
+ * of pages Google was going to crawl through internal links anyway. And the
+ * catalog is no longer uneven in the way that argument assumed: it now holds
+ * 3,300+ places across all 166 destinations, and the thinnest are limited by
+ * sources rather than by effort.
  *
- * The honest value would be the day each destination's data last changed, and
- * the catalog does not record that per row. The available substitute is the
- * build date, which would stamp every URL as modified on every unrelated deploy
- * - a signal that is not merely useless but actively misleading. Omitted rather
- * than faked. `priority` is kept only as a coarse hierarchy hint.
+ * What survives of the original caution is `priority`, which still says plainly
+ * which pages we consider our strongest: the promoted 30 sit above the rest, as
+ * do the countries that contain one.
+ *
+ * ## `noindex` pages are excluded, and that is enforced rather than remembered
+ *
+ * `/chat`, `/ask`, `/account`, `/planner` and `/start` set `robots: index:false`
+ * because they are app surfaces with nothing to rank, and asking a crawler to
+ * fetch a page that then tells it to go away wastes crawl budget and contradicts
+ * us. `sitemap.test.ts` scans every route for `noindex: true` and fails if one of
+ * them reaches this list, so the rule holds without a second list to maintain.
+ *
+ * `/premium` used to be in that set and no longer is - it is the pricing page and
+ * it is now indexable, so it is submitted here.
+ *
+ * ## lastmod
+ *
+ * Real per-page dates, from `src/lib/seo/content-dates.json`: a hash of exactly
+ * the data that renders each URL, with the date moved only when that hash
+ * changes. The build date would have been the easy answer and it would have
+ * marked all 270 pages as modified on every unrelated deploy. See
+ * `scripts/content-dates.mjs`. A URL with no ledger entry yet gets no lastmod
+ * rather than a guessed one.
  */
+
+/**
+ * Priority is a hint about relative importance within this site, nothing more.
+ * Kept from the first version so the hierarchy is unchanged where it overlaps.
+ */
+const PRIORITY = {
+  home: 1,
+  hub: 0.7,
+  /** The core browse surfaces and the pricing page. */
+  core: 0.8,
+  /** A destination carrying the long-form guide section. */
+  promotedDestination: 0.9,
+  destination: 0.6,
+  /** A country that contains at least one promoted destination. */
+  promotedCountry: 0.7,
+  country: 0.5,
+  /** Pages that exist to be read once, not to rank. */
+  informational: 0.4,
+} as const;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const provider = getProvider();
   const [allDestinations, allCountries] = await Promise.all([
@@ -44,39 +82,41 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     provider.getCountries(),
   ]);
 
+  const entry = (path: string, priority: number): MetadataRoute.Sitemap[number] => {
+    const lastModifiedAt = lastModified(path);
+    return {
+      url: canonical(path),
+      priority,
+      ...(lastModifiedAt ? { lastModified: lastModifiedAt } : {}),
+    };
+  };
+
   const core: MetadataRoute.Sitemap = [
-    { url: canonical('/'), priority: 1 },
-    { url: canonical('/countries'), priority: 0.8 },
-    { url: canonical('/kosher'), priority: 0.8 },
-    { url: canonical('/collections'), priority: 0.8 },
-    { url: canonical('/about'), priority: 0.4 },
-    { url: canonical('/contact'), priority: 0.3 },
+    entry('/', PRIORITY.home),
+    entry('/countries', PRIORITY.core),
+    entry('/kosher', PRIORITY.core),
+    entry('/collections', PRIORITY.core),
+    entry('/premium', PRIORITY.core),
+    entry('/about', PRIORITY.informational),
+    entry('/contact', 0.3),
   ];
 
-  const hubEntries: MetadataRoute.Sitemap = HUBS.map((h) => ({
-    url: canonical(`/collections/${h.slug}`),
-    priority: 0.7,
-  }));
+  const hubEntries = HUBS.map((h) => entry(`/collections/${h.slug}`, PRIORITY.hub));
 
-  const destinationEntries: MetadataRoute.Sitemap = allDestinations
-    .filter((d) => isSeoDestination(d.slug))
-    .map((d) => ({ url: canonical(`/destinations/${d.slug}`), priority: 0.9 }));
+  const destinationEntries = allDestinations.map((d) =>
+    entry(
+      `/destinations/${d.slug}`,
+      isSeoDestination(d.slug) ? PRIORITY.promotedDestination : PRIORITY.destination,
+    ),
+  );
 
   const promotedCountries = new Set(seoCountrySlugs(allDestinations));
-  const countryEntries: MetadataRoute.Sitemap = allCountries
-    .filter((c) => promotedCountries.has(c.slug))
-    .map((c) => ({ url: canonical(`/countries/${c.slug}`), priority: 0.7 }));
-
-  // A promoted slug that no longer resolves to a destination would silently
-  // shrink the sitemap. Fail the build instead - it means the catalog dropped a
-  // city we are actively asking Google to index.
-  if (destinationEntries.length !== SEO_DESTINATION_SLUGS.length) {
-    const found = new Set(allDestinations.map((d) => d.slug));
-    const missing = SEO_DESTINATION_SLUGS.filter((s) => !found.has(s));
-    throw new Error(
-      `sitemap: promoted destination slug(s) not found in the catalog: ${missing.join(', ')}`,
-    );
-  }
+  const countryEntries = allCountries.map((c) =>
+    entry(
+      `/countries/${c.slug}`,
+      promotedCountries.has(c.slug) ? PRIORITY.promotedCountry : PRIORITY.country,
+    ),
+  );
 
   return [...core, ...hubEntries, ...destinationEntries, ...countryEntries];
 }
