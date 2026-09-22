@@ -66,7 +66,7 @@ export default async function CountriesPage() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="display text-3xl text-night">לאן טסים?</h1>
-          <p className="mt-2 text-night/60">
+          <p className="mt-2 text-night/70">
             {dests.length} יעדים ב-{countries.length} מדינות, כל אחד עם מסלול מוכן, מפה ושכבת
             כשרות. אפשר לבחור יבשת, ואז לצמצם לפי אופי.
           </p>

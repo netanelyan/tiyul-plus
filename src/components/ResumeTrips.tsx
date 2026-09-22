@@ -23,7 +23,7 @@ export default function ResumeTrips({ className = '' }: { className?: string }) 
 
   return (
     <div className={`w-full max-w-2xl ${className}`}>
-      <p className="text-center text-xs font-bold text-night/40">או ממשיכים טיול קיים</p>
+      <p className="text-center text-xs font-bold text-night/65">או ממשיכים טיול קיים</p>
       <ul className="mt-2 flex flex-wrap justify-center gap-2">
         {ordered.map((t) => {
           const stops = t.days.reduce((n, d) => n + d.placeIds.length, 0);
@@ -35,7 +35,7 @@ export default function ResumeTrips({ className = '' }: { className?: string }) 
               >
                 <span aria-hidden>🧳</span>
                 <span className="max-w-52 truncate">{t.name}</span>
-                <span className="font-medium text-night/40">
+                <span className="font-medium text-night/65">
                   {daysHe(t.days.length)} · {stops} עצירות
                 </span>
               </Link>

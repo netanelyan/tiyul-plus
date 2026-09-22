@@ -41,6 +41,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
+  const [remember, setRemember] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [resendIn, setResendIn] = useState(0);
   const submittingRef = useRef(false);
@@ -53,11 +54,25 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
     if (window.matchMedia('(pointer: fine)').matches) emailInputRef.current?.focus();
   }, []);
 
-  // The last email remembered from a previous login
+  /*
+    The last email, remembered only if it was asked for.
+
+    This used to be written on every login attempt and kept after logout, which
+    made it the one thing the site stored on the device that is **not** needed to
+    deliver anything - a convenience, and on a shared computer a convenience that
+    shows the next person who was here. The privacy policy said so in a warning,
+    which is the wrong place to solve it.
+
+    Default off, and finding an address already stored is what ticks the box - so
+    somebody who opted in before keeps their prefill and can now turn it off.
+  */
   useEffect(() => {
     try {
       const last = localStorage.getItem(LAST_EMAIL_KEY);
-      if (last) setEmail(last);
+      if (last) {
+        setEmail(last);
+        setRemember(true);
+      }
     } catch {
       /* no storage - start empty */
     }
@@ -98,7 +113,10 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
     setBusy(false);
     if (res.ok) {
       try {
-        localStorage.setItem(LAST_EMAIL_KEY, email.trim());
+        // Unticking it has to DELETE, not merely stop writing - otherwise the
+        // address from a previous visit survives the choice to stop keeping it.
+        if (remember) localStorage.setItem(LAST_EMAIL_KEY, email.trim());
+        else localStorage.removeItem(LAST_EMAIL_KEY);
       } catch {
         /* not critical */
       }
@@ -157,7 +175,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
             </span>
             <div>
               <p className="text-lg font-black leading-tight text-cream">
-                טיול<span className="text-sunset">+</span>
+                טיול<span className="text-sunset-glow">+</span>
               </p>
               <p className="text-[11px] font-medium text-cream/60">סוכן הנסיעות החכם</p>
             </div>
@@ -182,7 +200,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                 <Benefit icon="sync" text="מתחילים בטלפון, ממשיכים במחשב" />
                 <Benefit icon="lock" text="בלי סיסמאות - קוד חד-פעמי למייל" />
               </div>
-              <label htmlFor="login-email" className="mt-5 block text-xs font-bold text-night/50">
+              <label htmlFor="login-email" className="mt-5 block text-xs font-bold text-night/65">
                 כתובת המייל
               </label>
               <input
@@ -195,8 +213,22 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                 dir="ltr"
                 ref={emailInputRef}
                 autoComplete="email"
-                className="mt-1.5 w-full rounded-xl border border-night/15 bg-cream px-4 py-3 text-night outline-none transition placeholder:text-night/30 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
+                className="mt-1.5 w-full rounded-xl border border-night/15 bg-cream px-4 py-3 text-night outline-none transition placeholder:text-night/65 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
               />
+              <label className="mt-3 flex cursor-pointer items-start gap-2 text-xs font-medium leading-relaxed text-night/70">
+                <input
+                  type="checkbox"
+                  checked={remember}
+                  onChange={(e) => setRemember(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 rounded border-night/30"
+                />
+                <span>
+                  לזכור את הכתובת במכשיר הזה
+                  <span className="block text-night/65">
+                    לא מומלץ במחשב משותף. אפשר לבטל בכל כניסה.
+                  </span>
+                </span>
+              </label>
               <button
                 onClick={sendCode}
                 disabled={busy || !emailValid}
@@ -211,7 +243,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
           {step === 'code' && (
             <div key="code" className="rise-in">
               <h2 className="display text-2xl text-night">הקוד בדרך אליך</h2>
-              <p className="mt-1.5 text-sm leading-relaxed text-night/60">
+              <p className="mt-1.5 text-sm leading-relaxed text-night/70">
                 נשלח קוד בן 6 ספרות אל{' '}
                 <span className="font-semibold text-night" dir="ltr">
                   {email.trim()}
@@ -241,12 +273,12 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                     setCode('');
                     setError(null);
                   }}
-                  className="text-night/50 transition hover:text-night"
+                  className="text-night/65 transition hover:text-night"
                 >
                   → החלפת מייל
                 </button>
                 {resendIn > 0 ? (
-                  <span className="text-night/40" aria-live="polite">
+                  <span className="text-night/65" aria-live="polite">
                     אפשר לשלוח שוב בעוד {resendIn} שנ׳
                   </span>
                 ) : (
@@ -259,7 +291,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                   </button>
                 )}
               </div>
-              <p className="mt-3 rounded-lg bg-night/[0.04] px-3 py-2 text-[11px] leading-relaxed text-night/50">
+              <p className="mt-3 rounded-lg bg-night/[0.04] px-3 py-2 text-[11px] leading-relaxed text-night/65">
                 לא רואים את המייל? בדקו את תיקיית הספאם, או לחצו על הקישור שבמייל -
                 גם הוא מחבר אתכם.
               </p>
@@ -283,7 +315,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                 </svg>
               </span>
               <h2 className="display mt-4 text-2xl text-night">מחוברים!</h2>
-              <p className="mt-1 text-sm text-night/60">
+              <p className="mt-1 text-sm text-night/70">
                 הטיולים שלך נשמרים ומסתנכרנים מעכשיו בכל מכשיר.
               </p>
             </div>
@@ -296,13 +328,13 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
           )}
 
           {step === 'email' && (
-            <p className="mt-5 border-t border-night/10 pt-3 text-center text-[11px] leading-relaxed text-night/40">
+            <p className="mt-5 border-t border-night/10 pt-3 text-center text-[11px] leading-relaxed text-night/65">
               בלחיצה על ״המשך עם המייל״ אתם מסכימים ל
               <Link
                 href="/terms"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-semibold text-night/55 underline hover:text-sunset-deep"
+                className="font-semibold text-night/70 underline hover:text-sunset-deep"
               >
                 תנאי השימוש
               </Link>{' '}
@@ -311,7 +343,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                 href="/privacy"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-semibold text-night/55 underline hover:text-sunset-deep"
+                className="font-semibold text-night/70 underline hover:text-sunset-deep"
               >
                 מדיניות הפרטיות
               </Link>{' '}
@@ -418,11 +450,13 @@ function Benefit({ icon, text }: { icon: 'cloud' | 'sync' | 'lock'; text: string
         <svg
           viewBox="0 0 24 24"
           fill="none"
-          stroke="#e03e27"
+          stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="h-4 w-4"
+          // Was a hardcoded #e03e27, which meant it silently ignored
+          // high-contrast mode - the defect the colour tokens exist to prevent.
+          className="h-4 w-4 text-sunset-deep"
           aria-hidden
         >
           {paths[icon]}

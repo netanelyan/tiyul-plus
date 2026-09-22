@@ -77,26 +77,30 @@ export default function ImportMapModal({
         <div className="flex items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-bold text-night">📍 ייבוא מפה מ-Google My Maps</h2>
-            <p className="mt-1 text-sm leading-relaxed text-night/60">
+            <p className="mt-1 text-sm leading-relaxed text-night/70">
               הדביקו קישור למפה שלכם - כל הנקודות שסימנתם יהפכו לטיול חדש עם ימים ומפה.
             </p>
           </div>
           <button
             onClick={onClose}
             aria-label="סגירה"
-            className="rounded-full p-1.5 text-night/50 transition hover:bg-night/5 hover:text-night"
+            className="rounded-full p-1.5 text-night/65 transition hover:bg-night/5 hover:text-night"
           >
             ✕
           </button>
         </div>
 
+        <label htmlFor="import-map-url" className="sr-only">
+          כתובת המפה לייבוא
+        </label>
         <input
+          id="import-map-url"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && void doImport()}
           placeholder="https://www.google.com/maps/d/…"
           dir="ltr"
-          className="mt-4 w-full rounded-2xl border border-night/15 bg-cream px-4 py-3 text-base sm:text-sm text-night shadow-inner outline-none placeholder:text-night/35 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
+          className="mt-4 w-full rounded-2xl border border-night/15 bg-cream px-4 py-3 text-base sm:text-sm text-night shadow-inner outline-none placeholder:text-night/65 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
         />
 
         {error && (
@@ -113,7 +117,7 @@ export default function ImportMapModal({
           {busy ? 'מושך את המפה…' : 'ייבוא לטיול חדש'}
         </button>
 
-        <div className="mt-4 space-y-1.5 text-xs leading-relaxed text-night/45">
+        <div className="mt-4 space-y-1.5 text-xs leading-relaxed text-night/65">
           <p>
             💡 המפה צריכה להיות משותפת: ב-My Maps → שיתוף → &quot;כל מי שיש לו הקישור יכול
             להציג&quot;.

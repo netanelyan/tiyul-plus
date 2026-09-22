@@ -94,10 +94,26 @@ test('nothing carrying noindex is submitted', () => {
 test('lastmod is a real date, never the build date for everything', () => {
   const dated = entries.filter((e) => e.lastModified);
   assert.ok(dated.length >= entries.length * 0.9, 'most URLs should carry a lastmod');
+  /*
+    Compared as a DAY, not as an instant. `lastModified()` parses the stored
+    `YYYY-MM-DD` at UTC **noon** on purpose, so that a build machine west of
+    Greenwich does not render the previous day - which means a page re-dated
+    today sits seven hours in the future for anyone running the suite before
+    12:00 UTC. That is how this failed: `npm run seo:dates` at 08:17 in Israel,
+    tests immediately after, and a page legitimately dated today was reported as
+    dated in the future.
+
+    A date genuinely in the future still fails, because tomorrow's UTC day is
+    still greater than today's.
+  */
+  const todayUtc = new Date().toISOString().slice(0, 10);
   for (const e of dated) {
     const d = e.lastModified as Date;
     assert.ok(d instanceof Date && !Number.isNaN(d.getTime()), `bad lastModified on ${e.url}`);
-    assert.ok(d.getTime() <= Date.now(), `lastModified in the future on ${e.url}`);
+    assert.ok(
+      d.toISOString().slice(0, 10) <= todayUtc,
+      `lastModified in the future on ${e.url}`,
+    );
   }
   // The failure this guards is a ledger that has collapsed to one value, i.e.
   // somebody stamping the build date after all.

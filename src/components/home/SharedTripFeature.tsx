@@ -51,7 +51,7 @@ export default function SharedTripFeature({ photo }: { photo?: string }) {
                     <span className="rounded-md bg-lagoon/15 px-1.5 py-0.5 text-lagoon-deep">
                       👍 {s.up}
                     </span>
-                    <span className="rounded-md bg-night/5 px-1.5 py-0.5 text-night/55">
+                    <span className="rounded-md bg-night/5 px-1.5 py-0.5 text-night/70">
                       👎 {s.down}
                     </span>
                   </span>

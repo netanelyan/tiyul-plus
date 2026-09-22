@@ -1,0 +1,26 @@
+THE DESTINATIONS MOST PEOPLE ACTUALLY OPEN
+  vienna      43 places   7d route   72% photo  10 kosher
+  rome        38 places   7d route   89% photo  2 kosher
+  prague      37 places   7d route   84% photo  3 kosher
+  budapest    34 places   7d route   82% photo  2 kosher
+  athens      34 places   7d route   91% photo  2 kosher
+  bangkok     30 places   5d route   83% photo  2 kosher
+  dubai       35 places   7d route   83% photo  3 kosher
+  new-york    50 places   9d route   92% photo  4 kosher
+  paris       32 places   7d route   88% photo  2 kosher
+  london      24 places   5d route   88% photo  4 kosher
+  tokyo       25 places   5d route   92% photo  1 kosher
+  barcelona   33 places   6d route   91% photo  2 kosher
+  berlin      29 places   5d route   86% photo  2 kosher
+  lisbon      19 places   3d route   95% photo  0 kosher
+  madrid      19 places   4d route  100% photo  0 kosher
+
+THINNEST IN THE CATALOG
+  fergana-valley               14 places, 5d
+  lumbini-terai                14 places, 6d
+  northern-albania             15 places, 5d
+  turkestan-south-kazakhstan   15 places, 4d
+  salar-de-uyuni               15 places, 3d
+  palawan-el-nido-coron        15 places, 5d
+  ayutthaya-krabi              16 places, 3d
+  petra                        16 places, 3d

@@ -131,7 +131,7 @@ export default function DestinationClient({
                   המלצת הצוות: {dest.editorialRating.score.toFixed(1)}/5
                 </div>
                 <div className="text-xs text-cream/70">{dest.editorialRating.verdict}</div>
-                <div className="text-[11px] text-cream/45">
+                <div className="text-[11px] text-cream/50">
                   דירוג עריכתי של צוות טיול+ - לא ממוצע של ביקורות משתמשים
                 </div>
               </div>
@@ -159,7 +159,7 @@ export default function DestinationClient({
             strokeWidth="2"
             strokeLinecap="round"
             aria-hidden
-            className="pointer-events-none absolute inset-y-0 start-3 my-auto text-night/35"
+            className="pointer-events-none absolute inset-y-0 start-3 my-auto text-night/65"
           >
             <circle cx="11" cy="11" r="7" />
             <line x1="16.5" y1="16.5" x2="21" y2="21" />
@@ -168,7 +168,7 @@ export default function DestinationClient({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={`חיפוש מקום ${inHe(dest.name)}…`}
-            className="w-full rounded-2xl border border-night/15 bg-shell py-2.5 pe-4 ps-10 text-sm text-night shadow-inner outline-none transition placeholder:text-night/40 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
+            className="w-full rounded-2xl border border-night/15 bg-shell py-2.5 pe-4 ps-10 text-sm text-night shadow-inner outline-none transition placeholder:text-night/65 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
           />
         </label>
       </div>
@@ -200,7 +200,7 @@ export default function DestinationClient({
         </div>
         <div ref={listRef} className="max-h-[560px] space-y-3 overflow-y-auto pe-1 lg:col-span-2">
           {visiblePlaces.length === 0 && (
-            <p className="rounded-2xl bg-shell p-5 text-sm font-medium text-night/50 ring-1 ring-night/10">
+            <p className="rounded-2xl bg-shell p-5 text-sm font-medium text-night/65 ring-1 ring-night/10">
               אין מקום בשם הזה ב{dest.name}. אפשר לנקות את החיפוש, או לשאול את הסוכן.
             </p>
           )}
@@ -229,9 +229,9 @@ export default function DestinationClient({
                           )}
                           {place.name}
                         </div>
-                        <div className="text-xs font-medium text-night/40">{place.nameLocal}</div>
+                        <div className="text-xs font-medium text-night/65">{place.nameLocal}</div>
                       </div>
-                      <span className="badge shrink-0 rounded-full bg-night/5 px-2.5 py-1 text-xs font-semibold text-night/60">
+                      <span className="badge shrink-0 rounded-full bg-night/5 px-2.5 py-1 text-xs font-semibold text-night/70">
                         <span
                           className="h-2 w-2 rounded-full"
                           style={{ backgroundColor: meta.color }}
@@ -244,7 +244,7 @@ export default function DestinationClient({
                 </div>
                 <KosherNote note={place.kosherNote} className="mt-2" />
                 <KosherBadge kashrut={place.kashrut} className="mt-1.5" />
-                <div className="mt-3 flex flex-wrap items-center gap-3 text-xs font-semibold text-night/50">
+                <div className="mt-3 flex flex-wrap items-center gap-3 text-xs font-semibold text-night/65">
                   <AddToTripButton citySlug={dest.slug} placeId={place.id} />
                   {place.rating && <span>⭐ {place.rating.toFixed(1)}</span>}
                   {place.priceLevel !== undefined && (
@@ -269,7 +269,7 @@ export default function DestinationClient({
                       visible than disappear silently. We do not show a button
                       that lands the user in the wrong place.
                     */
-                    <span className="text-night/35" title="לא נמצאה עבור המקום הזה קואורדינטה אמינה">
+                    <span className="text-night/65" title="לא נמצאה עבור המקום הזה קואורדינטה אמינה">
                       מיקום לא אומת
                     </span>
                   )}
@@ -313,7 +313,7 @@ function FilterChip({
 }) {
   const style = active
     ? 'bg-sunset text-cream'
-    : 'bg-shell text-night/60 ring-1 ring-night/10 hover:ring-night/25';
+    : 'bg-shell text-night/70 ring-1 ring-night/10 hover:ring-night/25';
   return (
     <button
       onClick={onClick}

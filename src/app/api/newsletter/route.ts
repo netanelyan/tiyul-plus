@@ -1,30 +1,42 @@
 import { NextResponse } from 'next/server';
-import { adminDbEnabled, adminInsert, adminRpc } from '@/lib/server/supabaseAdmin';
-import { checkLimit, dayKey } from '@/lib/server/limits';
+import { adminDbEnabled } from '@/lib/server/supabaseAdmin';
+import { checkLimit } from '@/lib/server/limits';
 import { resolveCaller } from '@/lib/server/identity';
+import { createMailToken, mailTokensConfigured } from '@/lib/server/mailToken';
+import { mailConfigured, sendMail } from '@/lib/server/mail';
+import { canonical } from '@/lib/seo/site';
 
 /**
- * POST { email } → { ok } · newsletter signup.
+ * POST { email } → { ok } · **requests** a mailing-list subscription.
  *
- * The addresses are stored in `newsletter_signups` in the same Supabase
- * project that already runs the accounts (see `supabase-newsletter.sql`).
- * The table is closed to anon and unreadable from the browser, so the
- * insert happens here on the server with the service role - not directly
- * from the form.
+ * ## The address is not stored here, and that is the whole design
  *
- * Two decisions that depend on each other:
+ * This used to insert the address on submit. Anyone can type anyone's address
+ * into a public form, so that meant a stranger could put somebody else on our
+ * list, and we would then have had no way to show that the person we were
+ * mailing had ever agreed to it.
  *
- * - **The response is identical for "you signed up" and "you were already
- *   signed up".** Otherwise the form becomes a tool for checking whether
- *   a given address is on our list, which is a leak of information about
- *   other people. `Prefer: resolution=merge-duplicates` turns a repeat
- *   signup into a quiet no-op.
- * - **With no key configured we return an explicit 503**, not "success".
- *   A form that paints a green checkmark and saves nothing is the worst
- *   possible thing here.
+ * Section 30A of the Communications Law wants consent from the recipient, and
+ * the only proof of that which survives an argument is **their own click**. So
+ * the flow is confirmed opt-in:
+ *
+ *   1. here: validate, rate-limit, and email a signed confirmation link,
+ *   2. `/api/newsletter/confirm`: the click, which is what writes the row.
+ *
+ * Nothing is written in step 1 - not even "pending". A stranger typing your
+ * address into our footer leaves no trace of you in our database, which is a
+ * better answer to "what do you have on me" than any retention policy.
+ *
+ * ## The response is the same whatever happened
+ *
+ * Signed up, already signed up, previously unsubscribed - one response. The
+ * alternative turns the form into a way to test whether an address is on our
+ * list, which is a leak about somebody else. The one thing that IS reported
+ * differently is failure to send, because a form that paints a green tick and
+ * does nothing is the worst outcome available here.
  */
 
-/** Shape check only. Real verification is a sent email, and that is a different stage. */
+/** Shape check only. The real verification is the click on the link we send. */
 const EMAIL = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
 
 export async function POST(req: Request) {
@@ -37,11 +49,9 @@ export async function POST(req: Request) {
   }
 
   let email = '';
-  let source = 'footer';
   try {
-    const body = (await req.json()) as { email?: unknown; source?: unknown };
+    const body = (await req.json()) as { email?: unknown };
     email = String(body.email ?? '').trim().toLowerCase().slice(0, 254);
-    if (typeof body.source === 'string') source = body.source.slice(0, 40);
   } catch {
     return NextResponse.json({ ok: false, error: 'bad-request' }, { status: 400 });
   }
@@ -49,30 +59,45 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: 'bad-email' }, { status: 400 });
   }
 
-  if (!adminDbEnabled()) {
+  /*
+    `mailConfigured` belongs in this list, and leaving it out produced a small
+    but real lie. Signup is a confirmed opt-in, so it cannot complete without a
+    mailer - and with no `RESEND_API_KEY` the send below merely failed, which
+    the client reports as "we could not send it, try again". That invites a
+    retry that can never succeed, on every attempt, forever.
+
+    "Not available right now" is the honest answer to a missing key. "Try
+    again" stays for a send that genuinely failed once.
+  */
+  if (!adminDbEnabled() || !mailTokensConfigured() || !mailConfigured()) {
     return NextResponse.json({ ok: false, error: 'not-configured' }, { status: 503 });
   }
 
-  /*
-    ignore-duplicates rather than merge: a duplicate comes back as an
-    empty array, which is what lets the dashboard count only **new**
-    addresses - without changing the client's response, which stays
-    identical for new and duplicate (so the form does not become an
-    address checker). A welcome side effect: a repeat signup does not
-    overwrite the original source and date.
+  const token = createMailToken('confirm', email);
+  if (!token) return NextResponse.json({ ok: false, error: 'not-configured' }, { status: 503 });
 
-    The event is counted **here on the server** and not in the browser,
-    for a double reason: only the server can tell new from duplicate, and
-    the /api/events route rejects this kind from clients - otherwise the
-    counter could be inflated in a loop without registering a single
-    address.
+  /*
+    A second cap, on the address rather than on the sender. Without it the form
+    is a way to drop a confirmation email into somebody else's inbox on repeat -
+    the rate limits above are keyed on the browser, which is what an abuser
+    rotates. `sendMail` has its own per-recipient cap too; this one exists so
+    the refusal happens before we spend a Resend call on it.
   */
-  const saved = await adminInsert('newsletter_signups', { email, source }, { ignoreDuplicates: true });
-  if (!saved) {
-    return NextResponse.json({ ok: false, error: 'store-failed' }, { status: 502 });
+  if (!checkLimit('newsletter-to', email, 2, 24 * 60 * 60 * 1000).ok) {
+    // Deliberately reported as success: "we already emailed you" is information
+    // about that address, and this endpoint tells a stranger nothing.
+    return NextResponse.json({ ok: true });
   }
-  if (saved.length > 0) {
-    void adminRpc('bump_event', { p_day: dayKey(), p_kind: 'newsletter' });
+
+  const sent = await sendMail({
+    to: email,
+    template: 'newsletter-confirm',
+    vars: {
+      CONFIRM_URL: `${canonical('/newsletter/confirm')}?token=${encodeURIComponent(token)}`,
+    },
+  });
+  if (!sent.ok) {
+    return NextResponse.json({ ok: false, error: 'send-failed' }, { status: 502 });
   }
   return NextResponse.json({ ok: true });
 }

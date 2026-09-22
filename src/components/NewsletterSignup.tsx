@@ -15,8 +15,23 @@ import { useState } from 'react';
  * would be worse than not existing.
  */
 
-/* TODO(Netanel): this sentence is yours. A placeholder only. */
-const LINE = '[למילוי] שורה אחת שמסבירה למה כדאי להשאיר כתובת.';
+/**
+ * The line above the field, and it is doing legal work as well as marketing
+ * work.
+ *
+ * It was a bracketed to-be-filled placeholder. It never reached anybody, but
+ * only by accident: nothing rendered this component at all, so the footer's
+ * "newsletter signup" comment reserved a place for a form that did not exist.
+ * The other half is that section 30A of the Communications Law wants
+ * consent given **after** being told what will be sent and that it can be
+ * refused at any time. A bare field and a "sign up" button is not that.
+ *
+ * So the sentence says what arrives, roughly how often, and that leaving takes
+ * one click - and the button underneath says "send me a confirmation", because
+ * that is what pressing it actually does.
+ */
+const LINE =
+  'עדכונים לעיתים רחוקות: יעדים חדשים, שינויים שמשפיעים על טיולים, ופיצ׳רים חדשים. בלי ספאם, והסרה בלחיצה אחת מכל מייל.';
 
 type State = 'idle' | 'sending' | 'done' | 'error';
 
@@ -47,7 +62,9 @@ export default function NewsletterSignup() {
           ? 'הכתובת לא נראית תקינה.'
           : error === 'rate-limited'
             ? 'נסו שוב בעוד קצת.'
-            : 'ההרשמה לא זמינה כרגע.',
+            : error === 'send-failed'
+              ? 'לא הצלחנו לשלוח את מייל האישור. אפשר לנסות שוב.'
+              : 'ההרשמה לא זמינה כרגע.',
       );
     } catch {
       setState('error');
@@ -57,7 +74,7 @@ export default function NewsletterSignup() {
 
   return (
     <form onSubmit={submit} className="mt-3">
-      <p className="text-xs font-medium leading-relaxed text-cream/45">{LINE}</p>
+      <p className="text-xs font-medium leading-relaxed text-cream/50">{LINE}</p>
       <div className="mt-2 flex gap-1.5">
         <label htmlFor="newsletter-email" className="sr-only">
           כתובת אימייל
@@ -73,7 +90,7 @@ export default function NewsletterSignup() {
           }}
           placeholder="האימייל שלכם"
           // 16px on mobile, otherwise iOS shifts the whole page on focus (entry n)
-          className="min-w-0 flex-1 rounded-xl bg-cream/10 px-3 py-2 text-base text-cream outline-none ring-1 ring-cream/15 transition placeholder:text-cream/35 focus:ring-2 focus:ring-sunset sm:text-sm"
+          className="min-w-0 flex-1 rounded-xl bg-cream/10 px-3 py-2 text-base text-cream outline-none ring-1 ring-cream/15 transition placeholder:text-cream/50 focus:ring-2 focus:ring-sunset sm:text-sm"
         />
         <button
           type="submit"
@@ -84,8 +101,15 @@ export default function NewsletterSignup() {
         </button>
       </div>
       {state === 'done' && (
+        /*
+          Not "you are signed up" - **they are not, yet.** Pressing the button
+          sends a confirmation link, and only the click on that link puts the
+          address on the list. Saying "signed up" here would be the form lying
+          about what it did, and would also leave somebody waiting for emails
+          that will never arrive because they ignored the confirmation.
+        */
         <p role="status" className="mt-1.5 text-xs font-semibold text-cream/70">
-          נרשמתם. תודה.
+          שלחנו לכם מייל לאישור. לחיצה על הקישור שבו משלימה את ההרשמה.
         </p>
       )}
       {state === 'error' && (

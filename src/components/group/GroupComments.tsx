@@ -51,7 +51,7 @@ export default function GroupComments({
     return (
       <button
         onClick={() => setOpen(true)}
-        className="mt-1.5 flex min-h-[36px] items-center gap-1.5 rounded-full px-2 text-xs font-bold text-night/55 transition hover:text-sunset-deep"
+        className="mt-1.5 flex min-h-[36px] items-center gap-1.5 rounded-full px-2 text-xs font-bold text-night/70 transition hover:text-sunset-deep"
       >
         💬 {mine.length > 0 ? `${mine.length} תגובות` : 'הוספת תגובה'}
       </button>
@@ -61,7 +61,7 @@ export default function GroupComments({
   return (
     <div className="mt-2 rounded-xl bg-cream/70 p-2.5 ring-1 ring-night/10">
       {mine.length === 0 && (
-        <p className="px-1 pb-1.5 text-xs font-medium text-night/45">
+        <p className="px-1 pb-1.5 text-xs font-medium text-night/65">
           {placeId === null ? 'עוד לא נכתב כאן כלום.' : 'אף אחד לא הגיב על העצירה הזאת עדיין.'}
         </p>
       )}
@@ -73,7 +73,7 @@ export default function GroupComments({
               {c.mine && (
                 <button
                   onClick={() => onDelete(c.id)}
-                  className="ms-2 font-medium text-night/35 transition hover:text-night/70"
+                  className="ms-2 font-medium text-night/65 transition hover:text-night/70"
                   aria-label="מחיקת התגובה שלי"
                 >
                   מחיקה
@@ -86,7 +86,11 @@ export default function GroupComments({
       </ul>
 
       <div className="mt-2 flex items-end gap-2">
+        <label htmlFor="group-comment" className="sr-only">
+          כתיבת תגובה
+        </label>
         <textarea
+          id="group-comment"
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
@@ -101,7 +105,7 @@ export default function GroupComments({
           maxLength={500}
           placeholder={placeId === null ? 'משהו כללי על הטיול…' : 'מה דעתכם על העצירה הזאת?'}
           // 16px on mobile or iOS zooms the whole page on focus (session log, entry n)
-          className="min-h-[44px] flex-1 resize-y rounded-lg border border-night/15 bg-shell px-3 py-2 text-base leading-relaxed text-night outline-none placeholder:text-night/35 focus:ring-4 focus:ring-sunset/15 disabled:opacity-50 sm:text-sm"
+          className="min-h-[44px] flex-1 resize-y rounded-lg border border-night/15 bg-shell px-3 py-2 text-base leading-relaxed text-night outline-none placeholder:text-night/65 focus:ring-4 focus:ring-sunset/15 disabled:opacity-50 sm:text-sm"
         />
         <button
           onClick={() => void submit()}
@@ -115,7 +119,7 @@ export default function GroupComments({
       {compact && (
         <button
           onClick={() => setOpen(false)}
-          className="mt-1 text-[11px] font-bold text-night/40 transition hover:text-night/70"
+          className="mt-1 text-[11px] font-bold text-night/65 transition hover:text-night/70"
         >
           סגירה
         </button>

@@ -146,7 +146,7 @@ export default function TripCost({
           {/* The style's explanation appears only for the one selected: three
               explanations side by side made this quiet block noisier than the
               itinerary itself. */}
-          <p className="mt-2 text-xs leading-relaxed text-night/55">
+          <p className="mt-2 text-xs leading-relaxed text-night/70">
             {style
               ? TRAVEL_STYLES.find((s) => s.id === style)?.hint
               : offline
@@ -163,21 +163,21 @@ export default function TripCost({
                     className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-sm"
                   >
                     <span className="font-semibold text-night/80">{line.cityName}</span>
-                    <span className="text-xs text-night/40">
+                    <span className="text-xs text-night/65">
                       {line.days === 1 ? 'יום אחד' : `${line.days} ימים`}
                     </span>
                     {/* Country-level data is stated on the row itself - it is
                         coarser than the destination, and must not read like a
                         measurement of that specific city. */}
                     {line.scope === 'country' && (
-                      <span className="text-xs text-night/40">נתון ברמת המדינה</span>
+                      <span className="text-xs text-night/65">נתון ברמת המדינה</span>
                     )}
                     <span className="ms-auto text-night/70">
-                      {line.upperBoundOnly && <span className="text-xs text-night/40">עד </span>}
+                      {line.upperBoundOnly && <span className="text-xs text-night/65">עד </span>}
                       <span dir="ltr" className="inline-block">
                         {formatRange(line.perDayLow, line.perDayHigh, line.currency)}
                       </span>
-                      <span className="text-xs text-night/40"> ליום</span>
+                      <span className="text-xs text-night/65"> ליום</span>
                     </span>
                   </li>
                 ))}
@@ -186,7 +186,7 @@ export default function TripCost({
                 {result.missing.map((m) => (
                   <li
                     key={m.citySlug}
-                    className="flex flex-wrap items-baseline gap-x-2 text-sm text-night/45"
+                    className="flex flex-wrap items-baseline gap-x-2 text-sm text-night/65"
                   >
                     <span className="font-semibold">{m.cityName}</span>
                     <span className="text-xs">{m.days === 1 ? 'יום אחד' : `${m.days} ימים`}</span>
@@ -206,26 +206,26 @@ export default function TripCost({
                   </span>
                 </div>
                 {result.totals.length > 1 && (
-                  <p className="mt-1 text-xs text-night/45">
+                  <p className="mt-1 text-xs text-night/65">
                     הטיול עובר בין מטבעות, ולכן יש סכום לכל מטבע בנפרד.
                   </p>
                 )}
                 {!result.complete && (
-                  <p className="mt-1 text-xs text-night/55">
+                  <p className="mt-1 text-xs text-night/70">
                     הסכום חלקי: {result.missing.map((m) => m.cityName).join(', ')} לא נכלל בו.
                   </p>
                 )}
                 {/* Why the "comfort" style specifically is missing in many cities -
                     otherwise it looks like a malfunction */}
                 {style === 'comfort' && result.missing.length > 0 && (
-                  <p className="mt-1 text-xs text-night/45">
+                  <p className="mt-1 text-xs text-night/65">
                     לסגנון "בנוח" יש נתון רק בחלק מהערים: המקור הרחב יותר מפרסם מדרגה עליונה פתוחה,
                     ואי אפשר לגזור ממנה מספר בלי לינה.
                   </p>
                 )}
               </div>
 
-              <p className="mt-3 text-xs leading-relaxed text-night/55">
+              <p className="mt-3 text-xs leading-relaxed text-night/70">
                 כך מוציאים מטיילים בערים האלה בדרך כלל, לאדם ליום. זו לא תחזית להוצאות שלכם.{' '}
                 <span className="font-semibold text-night/70">בלי טיסות ובלי לינה.</span>
                 {/* The explanation of what the range means is correct only for
@@ -237,7 +237,7 @@ export default function TripCost({
                   : ' הטווח הוא כפי שהמקור מוסר אותו לכל עיר.'}
                 {result.hasUpperBound && ' בעיר אחת לפחות הנתון הוא חסם עליון ("עד"), לא טווח.'}
               </p>
-              <p className="mt-1 text-xs text-night/40">
+              <p className="mt-1 text-xs text-night/65">
                 נבדק ב־{checkedLabel} · {/* A source per city, not one link pretending to cover them all */}
                 {/* Offline, the source is named rather than linked: a link that
                     is clicked and does not open looks like a broken site, and
@@ -246,13 +246,13 @@ export default function TripCost({
                   <span key={s.url}>
                     {i > 0 && ' · '}
                     {offline ? (
-                      <span className="text-night/45">{s.label}</span>
+                      <span className="text-night/65">{s.label}</span>
                     ) : (
                       <a
                         href={s.url}
                         target="_blank"
                         rel="noopener noreferrer nofollow"
-                        className="underline decoration-night/20 underline-offset-2 hover:text-night/60"
+                        className="underline decoration-night/20 underline-offset-2 hover:text-night/70"
                       >
                         {s.label}
                       </a>

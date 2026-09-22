@@ -77,7 +77,7 @@ export default function TravelerClient({ userId }: { userId: string }) {
     return (
       <div className="mx-auto max-w-xl rounded-3xl bg-shell p-10 text-center ring-1 ring-night/10">
         <h1 className="display text-2xl text-night">פרופילי מטיילים גלויים למחוברים בלבד</h1>
-        <p className="mt-2 leading-relaxed text-night/60">
+        <p className="mt-2 leading-relaxed text-night/70">
           כך דרכון המדינות והתמונה של מטייל לא ניתנים לאיסוף בלי חשבון. אחרי התחברות הקישור
           הזה ייפתח כרגיל.
         </p>
@@ -95,7 +95,7 @@ export default function TravelerClient({ userId }: { userId: string }) {
     return (
       <div className="mx-auto max-w-xl rounded-3xl bg-shell p-10 text-center ring-1 ring-night/10">
         <h1 className="display text-2xl text-night">הפרופיל הזה פרטי או שאינו קיים</h1>
-        <p className="mt-2 leading-relaxed text-night/60">
+        <p className="mt-2 leading-relaxed text-night/70">
           מטיילים מופיעים כאן רק אם בחרו להיות גלויים בקהילה.
         </p>
         <Link
@@ -142,13 +142,13 @@ export default function TravelerClient({ userId }: { userId: string }) {
             </span>
           </div>
           <h1 className="display mt-3 text-2xl text-night">{traveler.displayName}</h1>
-          <p className="mt-0.5 text-sm font-semibold text-night/55">
+          <p className="mt-0.5 text-sm font-semibold text-night/70">
             {current.emoji} {current.title} · {visited.size} מדינות
           </p>
 
           {/* Per-continent breakdown */}
           {visited.size > 0 && (
-            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-night/55">
+            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-night/70">
               {CONTINENTS.map((cont) => {
                 const got = theirCountries.filter((c) => c.continent === cont).length;
                 if (got === 0) return null;
@@ -188,7 +188,7 @@ export default function TravelerClient({ userId }: { userId: string }) {
       <section className="mt-5 rounded-3xl bg-shell p-5 ring-1 ring-night/10 sm:p-6">
         <h2 className="font-bold text-night">דרכון המדינות</h2>
         {theirCountries.length === 0 ? (
-          <p className="mt-2 text-sm text-night/50">עוד אין חותמות בדרכון הזה</p>
+          <p className="mt-2 text-sm text-night/65">עוד אין חותמות בדרכון הזה</p>
         ) : (
           <div className="mt-3 flex flex-wrap gap-2">
             {theirCountries.map((c) => (
@@ -209,7 +209,7 @@ export default function TravelerClient({ userId }: { userId: string }) {
         )}
       </section>
 
-      <p className="mt-5 text-center text-xs text-night/40">
+      <p className="mt-5 text-center text-xs text-night/65">
         רוצים דרכון משלכם? מסמנים מדינות{' '}
         <Link href="/account" className="font-bold text-sunset-deep hover:underline">
           באזור האישי

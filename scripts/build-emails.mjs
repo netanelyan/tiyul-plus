@@ -130,7 +130,42 @@ const codeBox = (token) => `
 const hero = (src, alt) =>
   `<!--hero--><tr><td style="padding:0;line-height:0;"><img src="${src}" width="480" alt="${alt}" style="display:block;width:100%;max-width:480px;height:200px;object-fit:cover;border:0;"></td></tr><!--/hero-->`;
 
-function shell({ title, preheader, eyebrow, heroPhoto, body, footerExtra = '' }) {
+/**
+ * Who is sending this, in the message itself.
+ *
+ * Section 30A of the Communications Law wants the advertiser identified inside
+ * the commercial message - not merely findable on the website. These details
+ * were already on the terms page and simply were not on this surface, which is
+ * the whole of the gap: the footer said "sent by tiyul+" and nothing else.
+ *
+ * It rides on EVERY template, not only the commercial ones. A receipt or a
+ * login code saying plainly who sent it costs nothing and is the same answer to
+ * "is this real?" that a phishing-wary reader is looking for.
+ */
+const ADVERTISER = {
+  name: 'נתנאל יאנצ׳בסקי',
+  licence: '327727525',
+  address: 'חדרה 16, אשדוד',
+};
+
+/**
+ * The "this is an advertisement" marking that section 30A requires, for
+ * templates that declare `commercial: true`.
+ *
+ * **A flag rather than a judgement made per template at write time.** Whether a
+ * given email is advertising is a decision, and a decision that lives in one
+ * named field is one somebody can audit; one that lives in whether the author
+ * remembered is not. A future "monthly digest" template sets it and gets the
+ * marking for free.
+ *
+ * Placed at the end of the body, above the footer, and deliberately in the
+ * readable text colour rather than the faint grey used for the small print -
+ * a marking nobody can see does not do the job it exists for.
+ */
+const commercialNotice = () =>
+  `<tr><td align="right" dir="rtl" style="${FONT}font-size:13px;font-weight:bold;color:${C.night};line-height:1.6;border-top:1px solid ${C.hairline};padding:16px 0 0;">זהו דבר פרסומת</td></tr>`;
+
+function shell({ title, preheader, eyebrow, heroPhoto, body, footerExtra = '', commercial = false }) {
   return `<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -173,7 +208,7 @@ function shell({ title, preheader, eyebrow, heroPhoto, body, footerExtra = '' })
         <!-- Body -->
         <tr><td style="background:${C.shell};padding:32px 28px 26px;" dir="rtl">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-${body}
+${body}${commercial ? '\n' + commercialNotice() : ''}
           </table>
         </td></tr>
 
@@ -188,7 +223,8 @@ ${body}
           &nbsp;·&nbsp;
           <a href="${SITE}/contact" style="color:${C.faint};text-decoration:underline;">צרו קשר</a>
           ${footerExtra}<br>
-          <span style="color:#b3adcc;">נשלח על ידי טיול+&#8207; · יש שאלה? ענו למייל הזה ואדם יקרא.</span>
+          <span style="color:#b3adcc;">נשלח על ידי ${ADVERTISER.name}, עוסק מורשה ${ADVERTISER.licence} · ${ADVERTISER.address}</span><br>
+          <span style="color:#b3adcc;">יש שאלה? ענו למייל הזה ואדם יקרא.</span>
         </td></tr>
       </table>
     </td></tr>
@@ -416,6 +452,21 @@ const TEMPLATES = [
 
   {
     file: 'newsletter-welcome.html',
+    /*
+      The only template carrying the marking today, and the reasoning for the
+      line being drawn here rather than around it:
+
+      - `newsletter-confirm` is NOT marked. It is a reply to something the
+        reader just did on our site, it sells nothing, and its only link is the
+        confirmation. Marking it would also be self-defeating: a message asking
+        "did you mean to subscribe?" that announces itself as advertising is
+        one people delete instead of answering.
+      - `trip-reminder` and `group-digest` are NOT marked. They are about the
+        reader's own trip and go out only to somebody who asked for them.
+      - receipts, subscription changes and login codes are plainly not
+        advertising, and marking them would be false.
+    */
+    commercial: true,
     subject: 'נרשמתם. הנה מה שמגיע',
     title: 'נרשמתם',
     preheader: 'יעדים חדשים, שינויים בשטח, ופיצ׳רים - לעיתים רחוקות.',

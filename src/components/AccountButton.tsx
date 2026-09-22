@@ -114,7 +114,7 @@ export default function AccountButton() {
                   <span className="min-w-0 flex-1 truncate text-xs font-bold text-night">
                     {travelerLevel(auth.profile?.visited.length ?? 0).current.title}
                   </span>
-                  <span className="shrink-0 text-[11px] font-semibold text-night/50">
+                  <span className="shrink-0 text-[11px] font-semibold text-night/65">
                     {(auth.profile?.visited.length ?? 0) > 0
                       ? `${auth.profile!.visited.length} מדינות בדרכון`
                       : 'לחתום בדרכון ←'}
@@ -163,7 +163,7 @@ export default function AccountButton() {
                     void auth.signOut();
                     setMenuOpen(false);
                   }}
-                  className="mt-1.5 flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-start text-sm font-semibold text-night/60 transition hover:bg-night/5"
+                  className="mt-1.5 flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-start text-sm font-semibold text-night/70 transition hover:bg-night/5"
                 >
                   <svg
                     viewBox="0 0 24 24"

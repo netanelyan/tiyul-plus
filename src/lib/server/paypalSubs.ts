@@ -336,6 +336,53 @@ export async function reviseSubscription(
   }
 }
 
+/**
+ * Cancel a subscription at PayPal, from our own screen.
+ *
+ * Until this existed the only route out was PayPal's own site, and the refunds
+ * page said "cancel at any time" without saying where - which is the kind of
+ * promise that is technically true and practically a dead end. An ongoing
+ * transaction sold online should be cancellable online, in the same place it
+ * was bought.
+ *
+ * **It grants and revokes nothing**, exactly like `createSubscription` and
+ * `reviseSubscription`. PayPal answers 204 and then sends
+ * BILLING.SUBSCRIPTION.CANCELLED, and `cancelPaypalPremium` - driven by that
+ * verified webhook - is what moves the plan back to free. One path down, whether
+ * the cancellation started here or on PayPal's site.
+ *
+ * `422` is treated as success on purpose: PayPal returns it when the
+ * subscription is already cancelled or expired, and the user's goal ("I do not
+ * want to be billed again") is already true. Reporting a failure there would
+ * send somebody to support over a state that is exactly what they asked for.
+ */
+export async function cancelSubscriptionAtPaypal(
+  mode: PaypalMode,
+  subscriptionId: string,
+  reason = 'Cancelled by the subscriber from tiyul+',
+): Promise<boolean> {
+  const token = await accessToken(mode);
+  if (!token) return false;
+  try {
+    const res = await fetch(
+      `${paypalApiBase(mode)}/v1/billing/subscriptions/${encodeURIComponent(subscriptionId)}/cancel`,
+      {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        // Max 128 characters per PayPal's schema; ours is well inside it.
+        body: JSON.stringify({ reason: reason.slice(0, 128) }),
+        signal: AbortSignal.timeout(15_000),
+      },
+    );
+    if (res.status === 204 || res.ok) return true;
+    if (res.status === 422) return true;
+    console.warn('[paypal subs] cancel', res.status);
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 /* ============ The webhook side: activation and downgrade ============ */
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

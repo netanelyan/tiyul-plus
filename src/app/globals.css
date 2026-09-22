@@ -5,8 +5,32 @@
 @theme {
   --color-night: #241b4d; /* deep plum - text + footer */
   --color-night-soft: #3b2f74;
-  --color-sunset: #ff5941; /* coral - THE accent: primary buttons + active states */
-  --color-sunset-deep: #e03e27;
+  /*
+     Coral - THE accent: primary buttons + active states.
+
+     **Darkened from #ff5941 in the September accessibility pass**, and the
+     numbers are why. The bright coral measured 2.90:1 in both of its jobs -
+     cream text on a coral button, and coral as link text on cream - against an
+     AA floor of 4.5, across roughly 100 buttons and 120 text uses. It also sat
+     at 2.90 as the keyboard focus ring, under the 3.0 that focus indicators
+     need. Essentially none of those elements is large text (34 are 14px, 24 are
+     12px, 38 inherit 16px), so the 3:1 large-text allowance rescued none of
+     them.
+
+     #c9301c gives 4.99 in both roles. `sunset-deep` follows it down, because it
+     is the hover step and has to stay DARKER than sunset - left at #e03e27 it
+     would have become lighter than the thing it darkens.
+  */
+  --color-sunset: #c9301c;
+  --color-sunset-deep: #a32414;
+  /*
+     The original bright coral, kept for ONE job: the accent on the night bands.
+     Contrast is not a property of a colour, it is a property of a pair - and
+     this pair inverts. On cream, #ff5941 is 2.90 and #c9301c is 4.99; on the
+     night footer it is the other way round, 5.05 against 2.93. So the dark
+     surfaces keep the bright coral, through the scoped rule further down.
+  */
+  --color-sunset-glow: #ff5941;
   --color-zest: #ffc531; /* yellow - rare small highlights only */
   --color-cream: #fdf6ec; /* warm page background */
   --color-shell: #fffdf8; /* card background */
@@ -22,7 +46,15 @@
      that was an accessibility defect, not just inconsistency.
   */
   --color-lagoon: #00a896;
-  --color-lagoon-deep: #007f76;
+  /*
+     Darkened from #007f76 in the September accessibility pass. The old value
+     measured 4.55:1 on cream - technically over the AA floor, and sitting so
+     close to it that every real use fell under: as text on the `bg-lagoon/15`
+     tint it is used with it was 3.89:1, and as a background for cream text it
+     was 4.55:1 exactly. #006b63 gives 5.96 and 5.09 in those two roles, which
+     is headroom rather than a coin flip, and the shift is barely visible.
+  */
+  --color-lagoon-deep: #006b63;
 }
 
 :root {
@@ -178,6 +210,62 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* ===== Keyboard focus, site-wide =====
+   The accessibility statement said, truthfully, that focus marking was not
+   consistent: some components carry a Tailwind `focus:ring` and some carry
+   nothing, so tabbing through the site lost the cursor at every component
+   written on a day nobody thought about it. **Per-component focus styling
+   cannot be made consistent by being careful** - the next component added is
+   one more chance to forget.
+
+   So the indicator is a floor, declared once here, and it is `:focus-visible`
+   rather than `:focus` - the browser's own heuristic, which shows it for the
+   keyboard and not for a mouse click on a button. A component that draws its
+   own ring still wins, because its rule is more specific; what changes is
+   that a component which draws nothing is no longer invisible.
+
+   Two colors, not one: `sunset` on the light page, `zest` on the night bands
+   (footer, dark CTA) where coral-on-plum is too close to read. `currentColor`
+   would have been the tempting one-liner and is wrong - on a disabled-looking
+   muted control it produces a focus ring nobody can see. */
+:focus-visible {
+  outline: 3px solid var(--color-sunset);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ===== The accent inverts on the dark bands =====
+   Scoped to the TEXT utility on purpose. A coral BUTTON inside a night band
+   still wants the darkened fill, because what has to be readable there is the
+   cream text sitting on the button (4.99), not the button against the band.
+   Flipping the whole `--color-sunset` variable inside `.bg-night` would have
+   fixed the text and quietly broken every button in the dark CTA band.
+
+   Measured on seven pages: coral-as-text-on-dark occurs exactly once per page,
+   and it is always the same element - the `+` in the footer logo. This rule
+   exists for that, and for the same mark in the login modal's night header. */
+.bg-night .text-sunset,
+.bg-night-soft .text-sunset,
+footer .text-sunset {
+  color: var(--color-sunset-glow);
+}
+.bg-night .text-sunset-deep,
+.bg-night-soft .text-sunset-deep,
+footer .text-sunset-deep {
+  color: var(--color-sunset-glow);
+}
+.bg-night :focus-visible,
+.bg-night-soft :focus-visible,
+footer :focus-visible {
+  outline-color: var(--color-zest);
+}
+/* Worth knowing why this beats the `outline-none` that many components set:
+   these rules are OUTSIDE any `@layer`, and Tailwind v4 puts every utility
+   inside one. Unlayered CSS wins over layered CSS regardless of specificity,
+   so `outline-none focus:ring-...` keeps its ring AND gains the outline. That
+   pairing is deliberate: those rings are mostly `ring-sunset/15`, which is
+   faint by design, and the outline is what makes them findable. */
+
 /* ===== Accessibility modes (the accessibility widget) - toggled via a class on <html> ===== */
 
 /* High contrast: override Tailwind v4's color tokens (which are CSS
@@ -190,6 +278,9 @@ html.a11y-contrast {
   --color-shell: #ffffff;
   --color-sunset: #b3200c;
   --color-sunset-deep: #8a1000;
+  /* `--color-sunset-glow` is deliberately NOT overridden here: in this mode the
+     dark bands are pure black, where the bright coral measures 6.76:1. Listing
+     it with the same value would only look like a decision nobody made. */
   --color-zest: #7a5800;
   --color-lagoon: #00504a;
   --color-lagoon-deep: #00302c;

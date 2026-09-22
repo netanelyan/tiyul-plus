@@ -128,7 +128,7 @@ export default function ActivitiesPanel({ citySlug, cityName }: { citySlug: stri
       panelKey="activities"
       icon="🎟️"
       title={`פעילויות ${hePrefix('ב', cityName)}`}
-      meta={<span className="text-[11px] font-medium text-night/45">להזמנה דרך Viator</span>}
+      meta={<span className="text-[11px] font-medium text-night/65">להזמנה דרך Viator</span>}
       ariaLabel={`פעילויות להזמנה ${hePrefix('ב', cityName)}`}
       open={open}
       onToggle={() => setOpen((v) => !v)}
@@ -161,7 +161,7 @@ export default function ActivitiesPanel({ citySlug, cityName }: { citySlug: stri
           </div>
         )}
 
-        {emptyLine && <p className="text-sm font-medium text-night/55">{emptyLine}</p>}
+        {emptyLine && <p className="text-sm font-medium text-night/70">{emptyLine}</p>}
 
         {offers.length > 0 && (
           <ul className="space-y-2">
@@ -202,7 +202,7 @@ export default function ActivitiesPanel({ citySlug, cityName }: { citySlug: stri
                     <div className="line-clamp-2 text-sm font-bold text-night">
                       <bdi>{o.title}</bdi>
                     </div>
-                    <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-[11px] font-semibold text-night/50">
+                    <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-[11px] font-semibold text-night/65">
                       {/* Only the number and currency are LTR; the "starting from" prefix is Hebrew and stays RTL */}
                       {p && (
                         <span>
@@ -225,7 +225,7 @@ export default function ActivitiesPanel({ citySlug, cityName }: { citySlug: stri
                     </div>
                   </div>
                   {o.sandbox ? (
-                    <span className="shrink-0 rounded-xl bg-night/10 px-3 py-2 text-xs font-bold text-night/40">
+                    <span className="shrink-0 rounded-xl bg-night/10 px-3 py-2 text-xs font-bold text-night/65">
                       חסום בבדיקה
                     </span>
                   ) : (
@@ -250,7 +250,7 @@ export default function ActivitiesPanel({ citySlug, cityName }: { citySlug: stri
           hedged too - "starting from" is what they return, and the final
           price is set on their side.
         */}
-        <p className="mt-3 text-[11px] font-medium leading-relaxed text-night/45">
+        <p className="mt-3 text-[11px] font-medium leading-relaxed text-night/65">
           הפעילויות, המחירים והדירוגים מוצגים כפי שהתקבלו מ-Viator ועשויים להשתנות. ההזמנה והתשלום
           מתבצעים באתר של Viator ולא כאן, ואנחנו עשויים לקבל עמלה על הזמנה שבוצעה דרך הקישור. אין
           לזה שום השפעה על מה שהמתכנן ממליץ.

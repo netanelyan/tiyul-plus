@@ -60,5 +60,5 @@ export function Gap({ kind = 'fill', children }: { kind?: 'fill' | 'verify'; chi
 
 /** The last-updated date at the bottom of every policy page */
 export function Updated({ date }: { date: string }) {
-  return <p className="mt-10 text-sm text-night/50">עודכן לאחרונה: {date}</p>;
+  return <p className="mt-10 text-sm text-night/65">עודכן לאחרונה: {date}</p>;
 }

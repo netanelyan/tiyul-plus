@@ -148,7 +148,7 @@ export default function PaidTools({ children }: { children: ReactNode }) {
           from /premium. Nothing here is shown to a subscriber.
         */}
         {!isPremium && (
-          <p className="px-1 text-xs font-medium text-night/55 print:hidden">
+          <p className="px-1 text-xs font-medium text-night/70 print:hidden">
             כלולים במנוי, מ-{ils(PREMIUM_PRICE_ILS)} ₪ לחודש.{' '}
             <Link href="/premium" className="font-bold text-sunset-deep underline hover:text-sunset">
               מה בדיוק מקבלים ←

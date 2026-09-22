@@ -84,7 +84,7 @@ export default function Flagships({ cards }: { cards: FlagshipCard[] }) {
                   {routeLengthHe(d.days)}
                 </span>
                 {d.kosher > 0 && (
-                  <span className="rounded-md bg-lagoon/85 px-1.5 py-0.5 text-[11px] font-bold text-cream sm:text-xs">
+                  <span className="rounded-md bg-lagoon-deep px-1.5 py-0.5 text-[11px] font-bold text-cream sm:text-xs">
                     {d.kosher} כשרים
                   </span>
                 )}

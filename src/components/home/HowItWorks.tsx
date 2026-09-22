@@ -43,7 +43,10 @@ export default function HowItWorks() {
             key={s.title}
             className="relative rounded-2xl bg-shell p-5 ring-1 ring-night/10"
           >
-            <span className="absolute end-4 top-4 text-3xl font-black text-night/10">
+            {/* A watermark, not information: the step number is already carried
+                by the <ol>, so a screen reader announcing it twice is noise -
+                and hiding it is also what exempts it from the contrast floor. */}
+            <span aria-hidden="true" className="absolute end-4 top-4 text-3xl font-black text-night/10">
               {i + 1}
             </span>
             <span aria-hidden="true" className="text-3xl">

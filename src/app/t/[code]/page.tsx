@@ -92,7 +92,7 @@ export default async function SharedTripPage({
     return (
       <div className="mx-auto max-w-xl rounded-3xl bg-shell p-10 text-center ring-1 ring-night/10">
         <h1 className="display text-2xl text-night">הקישור הזה לא תקין</h1>
-        <p className="mt-2 leading-relaxed text-night/60">
+        <p className="mt-2 leading-relaxed text-night/70">
           לא הצלחנו לפתוח את הטיול המשותף - ייתכן שהקישור נחתך בהעתקה או שפג תוקפו.
           בקשו מהשולח לשתף אותו שוב.
         </p>

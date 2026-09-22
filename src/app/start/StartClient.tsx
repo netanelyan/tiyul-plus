@@ -109,15 +109,19 @@ export default function StartClient({ cities }: { cities: CityOption[] }) {
       {tab === 'chat' && (
         <div className="mt-5 rounded-2xl bg-shell p-5 ring-1 ring-night/10 sm:p-7">
           <h2 className="text-lg font-bold text-night">ספרו לסוכן במילים שלכם</h2>
-          <p className="mt-1 text-sm text-night/55">
+          <p className="mt-1 text-sm text-night/70">
             הכי חופשי: מה בא לכם, עם מי, מתי ומה חשוב - והוא בונה טיול אמיתי.
           </p>
+          <label htmlFor="start-free-text" className="sr-only">
+            ספרו לסוכן על הטיול שאתם רוצים
+          </label>
           <textarea
+            id="start-free-text"
             value={freeText}
             onChange={(e) => setFreeText(e.target.value)}
             rows={4}
             placeholder="למשל: שבוע ברומא עם הילדים, תקציב רגיל, הרבה אוכל ופחות מוזיאונים"
-            className="mt-4 w-full rounded-xl border border-night/15 bg-cream px-4 py-3 text-night outline-none transition placeholder:text-night/40 focus:border-sunset/40 focus:ring-4 focus:ring-sunset/15"
+            className="mt-4 w-full rounded-xl border border-night/15 bg-cream px-4 py-3 text-night outline-none transition placeholder:text-night/65 focus:border-sunset/40 focus:ring-4 focus:ring-sunset/15"
           />
           <button
             onClick={submitFree}
@@ -132,19 +136,23 @@ export default function StartClient({ cities }: { cities: CityOption[] }) {
       {tab === 'link' && (
         <div className="mt-5 rounded-2xl bg-shell p-5 ring-1 ring-night/10 sm:p-7">
           <h2 className="text-lg font-bold text-night">יש לכם מפה או קישור עם מקומות?</h2>
-          <p className="mt-1 text-sm text-night/55">
+          <p className="mt-1 text-sm text-night/70">
             📍 מפה מ-<b>Google My Maps</b> מיובאת לטיול אמיתי - כל הנקודות שסימנתם,
             עם ימים ומפה. קישורים אחרים? נגיד בכנות מה אפשר.
           </p>
           <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+            <label htmlFor="start-link" className="sr-only">
+              קישור למפה או לרשימת מקומות
+            </label>
             <input
+              id="start-link"
               value={link}
               onChange={(e) => {
                 setLink(e.target.value);
                 setLinkMsg(null);
               }}
               placeholder="קישור למפה מ-My Maps, או קישור מיוטיוב / אינסטגרם"
-              className="flex-1 rounded-xl border border-night/15 bg-cream px-4 py-3 text-night outline-none transition placeholder:text-night/40 focus:border-sunset/40 focus:ring-4 focus:ring-sunset/15"
+              className="flex-1 rounded-xl border border-night/15 bg-cream px-4 py-3 text-night outline-none transition placeholder:text-night/65 focus:border-sunset/40 focus:ring-4 focus:ring-sunset/15"
             />
             <button
               onClick={() => void submitLink()}
@@ -159,7 +167,7 @@ export default function StartClient({ cities }: { cities: CityOption[] }) {
               {linkMsg}
             </p>
           )}
-          <p className="mt-4 text-xs leading-relaxed text-night/45">
+          <p className="mt-4 text-xs leading-relaxed text-night/65">
             ייבוא My Maps דורש שהמפה תהיה משותפת כ&quot;כל מי שיש לו הקישור יכול
             להציג&quot;. שקיפות לגבי סרטונים: חילוץ מקומות אוטומטי מהם עדיין לא פעיל -
             יוטיוב ריאלי טכנית ויופעל בהמשך; אינסטגרם, טיקטוק ופייסבוק חוסמות קריאת

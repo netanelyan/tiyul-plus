@@ -128,10 +128,10 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
               className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium text-night/70 transition hover:bg-night/5 hover:text-night"
             >
               הטיולים שלי
-              <span className="rounded-full bg-night/10 px-1.5 text-xs font-bold text-night/60">
+              <span className="rounded-full bg-night/10 px-1.5 text-xs font-bold text-night/70">
                 {myTrips.length}
               </span>
-              <span aria-hidden className="text-xs text-night/40">
+              <span aria-hidden className="text-xs text-night/65">
                 ▾
               </span>
             </button>
@@ -153,7 +153,7 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
                   >
                     {/* The full name, no truncation - a long one wraps to two lines */}
                     <span className="block text-sm font-semibold leading-snug">{tripLabel(t, cityNames)}</span>
-                    <span className="block text-xs font-medium text-night/40">
+                    <span className="block text-xs font-medium text-night/65">
                       {t.id === currentId ? 'פתוח עכשיו' : daysHe(t.days.length)}
                     </span>
                   </button>
@@ -234,7 +234,7 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
           ))}
           {hydrated && trips.length > 0 && (
             <>
-              <div className="mt-2 border-t border-night/10 px-4 pb-1 pt-2 text-xs font-bold text-night/40">
+              <div className="mt-2 border-t border-night/10 px-4 pb-1 pt-2 text-xs font-bold text-night/65">
                 הטיולים שלי
               </div>
               {trips.map((t) => (
@@ -249,7 +249,7 @@ export default function SiteNav({ cityNames }: { cityNames: CityNames }) {
                 >
                   {/* No truncate: a long name wraps to two lines instead of being cut */}
                   <span className="block font-semibold leading-snug">{tripLabel(t, cityNames)}</span>
-                  <span className="block text-xs font-medium text-night/40">
+                  <span className="block text-xs font-medium text-night/65">
                     {t.id === currentId ? 'פתוח עכשיו' : daysHe(t.days.length)}
                   </span>
                 </button>

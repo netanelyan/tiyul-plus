@@ -35,7 +35,7 @@ export default function AskClient() {
   return (
     <div className="mx-auto max-w-3xl">
       <h1 className="display text-3xl text-night sm:text-4xl">שאל את הסוכן</h1>
-      <p className="mt-3 max-w-xl leading-relaxed text-night/60">
+      <p className="mt-3 max-w-xl leading-relaxed text-night/70">
         שאלות על יעדים, בעברית - בלי לפתוח טיול ובלי להתחבר. אם מתוך השיחה יתגבש טיול, הסוכן יציע לבנות
         אותו במפה - בלחיצה אחת, לא לפני.
       </p>

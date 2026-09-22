@@ -68,7 +68,7 @@ export default function PromptChips({
           רעיונות לטיול
           <span
             aria-hidden
-            className={`text-xs text-night/40 transition-transform ${open ? 'rotate-180' : ''}`}
+            className={`text-xs text-night/65 transition-transform ${open ? 'rotate-180' : ''}`}
           >
             ▾
           </span>

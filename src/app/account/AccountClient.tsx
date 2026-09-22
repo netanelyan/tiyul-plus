@@ -38,7 +38,7 @@ export default function AccountClient({ cityNames }: { cityNames: CityNames }) {
   if (!auth.enabled) {
     return (
       <Shell>
-        <p className="text-night/60">החשבונות אינם מוגדרים בסביבה הזו.</p>
+        <p className="text-night/70">החשבונות אינם מוגדרים בסביבה הזו.</p>
       </Shell>
     );
   }
@@ -52,7 +52,7 @@ export default function AccountClient({ cityNames }: { cityNames: CityNames }) {
     return (
       <Shell>
         <div className="rounded-2xl bg-shell p-10 text-center ring-1 ring-night/10">
-          <ThinkingIndicator label="רגע" className="justify-center text-night/45" />
+          <ThinkingIndicator label="רגע" className="justify-center text-night/65" />
         </div>
       </Shell>
     );
@@ -69,11 +69,11 @@ export default function AccountClient({ cityNames }: { cityNames: CityNames }) {
       <Shell>
         <div className="rounded-3xl bg-shell p-10 text-center ring-1 ring-night/10">
           <h2 className="display text-2xl text-night">האזור האישי מחכה לך</h2>
-          <p className="mx-auto mt-2 max-w-md leading-relaxed text-night/60">
+          <p className="mx-auto mt-2 max-w-md leading-relaxed text-night/70">
             מתחברים בקוד חד-פעמי למייל (בלי סיסמאות) - והטיולים, הפרופיל ודרכון
             המדינות שלך נשמרים ועוברים איתך לכל מכשיר.
           </p>
-          <p className="mt-5 text-sm font-semibold text-night/50">
+          <p className="mt-5 text-sm font-semibold text-night/65">
             לחצו על כפתור <span className="font-bold text-night">התחברות</span> למעלה כדי להתחיל
           </p>
         </div>
@@ -200,7 +200,7 @@ function ProfileCard() {
             onChange={(e) => void pickAvatar(e.target.files?.[0])}
           />
           <div className="min-w-0 pb-1">
-            <p className="truncate text-sm font-medium text-night/50" dir="ltr">
+            <p className="truncate text-sm font-medium text-night/65" dir="ltr">
               {email}
             </p>
             <p className="text-[11px] font-semibold text-lagoon-deep" aria-live="polite">
@@ -209,7 +209,7 @@ function ProfileCard() {
           </div>
         </div>
 
-        <label htmlFor="pf-name" className="mt-4 block text-xs font-bold text-night/50">
+        <label htmlFor="pf-name" className="mt-4 block text-xs font-bold text-night/65">
           איך קוראים לך?
         </label>
         <input
@@ -220,11 +220,11 @@ function ProfileCard() {
             queueSave(e.target.value, phone);
           }}
           placeholder="השם שיוצג בטיולים משותפים"
-          className="mt-1.5 w-full rounded-xl border border-night/15 bg-cream px-4 py-2.5 text-night outline-none transition placeholder:text-night/30 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
+          className="mt-1.5 w-full rounded-xl border border-night/15 bg-cream px-4 py-2.5 text-night outline-none transition placeholder:text-night/65 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
         />
 
-        <label htmlFor="pf-phone" className="mt-3 block text-xs font-bold text-night/50">
-          טלפון <span className="font-medium text-night/35">(לעדכוני טיול עתידיים - לא חובה)</span>
+        <label htmlFor="pf-phone" className="mt-3 block text-xs font-bold text-night/65">
+          טלפון <span className="font-medium text-night/65">(לעדכוני טיול עתידיים - לא חובה)</span>
         </label>
         <input
           id="pf-phone"
@@ -237,7 +237,7 @@ function ProfileCard() {
           placeholder="050-0000000"
           dir="ltr"
           inputMode="tel"
-          className="mt-1.5 w-full rounded-xl border border-night/15 bg-cream px-4 py-2.5 text-night outline-none transition placeholder:text-night/30 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
+          className="mt-1.5 w-full rounded-xl border border-night/15 bg-cream px-4 py-2.5 text-night outline-none transition placeholder:text-night/65 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
         />
       </div>
     </section>
@@ -284,7 +284,7 @@ function PassportCard() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="display text-xl text-night">דרכון המדינות שלך</h2>
-          <p className="mt-0.5 text-sm text-night/55">סמנו איפה כבר הייתם - ותראו כמה עולם נשאר</p>
+          <p className="mt-0.5 text-sm text-night/70">סמנו איפה כבר הייתם - ותראו כמה עולם נשאר</p>
         </div>
         <div className="rounded-2xl bg-night px-4 py-2.5 text-center">
           <p className="text-2xl font-black leading-none text-cream">{visited.size}</p>
@@ -300,7 +300,7 @@ function PassportCard() {
             {current.title}
           </p>
           {next && (
-            <p className="text-xs font-semibold text-night/50">
+            <p className="text-xs font-semibold text-night/65">
               עוד {next.min - visited.size} לדרגת ״{next.title}״
             </p>
           )}
@@ -313,7 +313,7 @@ function PassportCard() {
         </div>
         {/* Per-continent breakdown - only when there is something to show */}
         {visited.size > 0 && (
-          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[11px] font-semibold text-night/55">
+          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[11px] font-semibold text-night/70">
             {CONTINENTS.map((cont) => {
               const total = WORLD_COUNTRIES.filter((c) => c.continent === cont).length;
               const got = WORLD_COUNTRIES.filter(
@@ -336,7 +336,7 @@ function PassportCard() {
         onChange={(e) => setQuery(e.target.value)}
         placeholder="חיפוש מדינה…"
         aria-label="חיפוש מדינה"
-        className="mt-4 w-full rounded-xl border border-night/15 bg-cream px-4 py-2.5 text-base sm:text-sm text-night outline-none transition placeholder:text-night/35 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
+        className="mt-4 w-full rounded-xl border border-night/15 bg-cream px-4 py-2.5 text-base sm:text-sm text-night outline-none transition placeholder:text-night/65 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
       />
 
       {/* The countries grid */}
@@ -361,7 +361,7 @@ function PassportCard() {
                 <span className="shrink-0 text-xs text-sunset-deep">✓</span>
               ) : inCatalog ? (
                 <span
-                  className="shrink-0 rounded-full bg-zest/25 px-1.5 text-[9px] font-bold text-night/60"
+                  className="shrink-0 rounded-full bg-zest/25 px-1.5 text-[9px] font-bold text-night/70"
                   title="יש לנו מסלולים במדינה הזו"
                 >
                   בקטלוג
@@ -371,7 +371,7 @@ function PassportCard() {
           );
         })}
         {filtered.length === 0 && (
-          <p className="col-span-full py-6 text-center text-sm text-night/45">
+          <p className="col-span-full py-6 text-center text-sm text-night/65">
             לא מצאנו את &quot;{query.trim()}&quot; ברשימה
           </p>
         )}
@@ -379,7 +379,7 @@ function PassportCard() {
 
       {/* A gentle call to action - the link back into the product */}
       {visited.size > 0 && (
-        <p className="mt-4 rounded-xl bg-night/[0.04] px-4 py-2.5 text-sm text-night/60">
+        <p className="mt-4 rounded-xl bg-night/[0.04] px-4 py-2.5 text-sm text-night/70">
           מחפשים את החותמת הבאה?{' '}
           <Link href="/countries" className="font-bold text-sunset-deep hover:underline">
             יש לנו מסלולים מוכנים ב-{catalogCountries.length} מדינות ←
@@ -417,7 +417,7 @@ function TripsCard({ onOpen, cityNames }: { onOpen: (id: string) => void; cityNa
       {trip.trips.length === 0 ? (
         <div className="mt-4 rounded-2xl bg-cream p-6 text-center ring-1 ring-night/10">
           <p className="font-bold text-night">עוד אין טיולים</p>
-          <p className="mt-1 text-sm text-night/55">מספרים לסוכן לאן חולמים לנסוע - והוא בונה</p>
+          <p className="mt-1 text-sm text-night/70">מספרים לסוכן לאן חולמים לנסוע - והוא בונה</p>
           <Link
             href="/chat"
             className="mt-3 inline-block rounded-xl bg-sunset px-5 py-2.5 text-sm font-bold text-cream transition hover:bg-sunset-deep"
@@ -440,7 +440,7 @@ function TripsCard({ onOpen, cityNames }: { onOpen: (id: string) => void; cityNa
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-bold text-night">{t.name}</span>
-                  <span className="block text-xs font-medium text-night/50">
+                  <span className="block text-xs font-medium text-night/65">
                     {tripLabel(t, cityNames)} · {daysHe(t.days.length)} · {stops} עצירות
                   </span>
                 </span>
@@ -487,7 +487,7 @@ function SettingsCard({ onDeletedAll }: { onDeletedAll: () => void }) {
       <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-cream px-4 py-3 ring-1 ring-night/10">
         <div>
           <p className="text-sm font-bold text-night">התוכנית שלי</p>
-          <p className="text-xs text-night/50">
+          <p className="text-xs text-night/65">
             {profile.plan === 'pro'
               ? `טיול+ פרו - עד ${PRO_TRIPS_PER_MONTH} טיולים מלאים בחודש, ובדיקה לפני הנסיעה כלולה`
               : profile.plan === 'premium'
@@ -511,10 +511,18 @@ function SettingsCard({ onDeletedAll }: { onDeletedAll: () => void }) {
         )}
       </div>
 
+      {/*
+        Cancelling, in the same place the plan is shown. The refunds page has
+        promised "cancel at any time" since the subscription existed and the
+        only route was PayPal's own dashboard, which it never named - so the
+        promise was true and unreachable.
+      */}
+      {profile.plan !== 'free' && <CancelSubscription />}
+
       <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl bg-cream px-4 py-3 ring-1 ring-night/10">
         <div>
           <p className="text-sm font-bold text-night">פרופיל ציבורי</p>
-          <p className="text-xs text-night/50">
+          <p className="text-xs text-night/65">
             מטיילים יוכלו למצוא אותך בחיפוש ולראות שם, תמונה ודרכון - לא מייל, טלפון או
             טיולים
           </p>
@@ -533,7 +541,7 @@ function SettingsCard({ onDeletedAll }: { onDeletedAll: () => void }) {
       <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl bg-cream px-4 py-3 ring-1 ring-night/10">
         <div>
           <p className="text-sm font-bold text-night">כשרות כברירת מחדל</p>
-          <p className="text-xs text-night/50">טיולים חדשים ייבנו עם אוכל כשר, בלי לשאול</p>
+          <p className="text-xs text-night/65">טיולים חדשים ייבנו עם אוכל כשר, בלי לשאול</p>
         </div>
         <Toggle
           on={kosherDefault}
@@ -607,7 +615,7 @@ function CommunityCard() {
   return (
     <section className="rounded-3xl bg-shell p-5 ring-1 ring-night/10 sm:p-6">
       <h2 className="display text-xl text-night">קהילת המטיילים</h2>
-      <p className="mt-0.5 text-sm text-night/55">
+      <p className="mt-0.5 text-sm text-night/70">
         מחפשים חברים לפי שם או כתובת מייל מדויקת - ורואים איפה הם כבר היו ומה
         משותף לכם
       </p>
@@ -616,7 +624,7 @@ function CommunityCard() {
         onChange={(e) => setQuery(e.target.value)}
         placeholder="שם או מייל מדויק…"
         aria-label="חיפוש מטייל"
-        className="mt-4 w-full rounded-xl border border-night/15 bg-cream px-4 py-2.5 text-base sm:text-sm text-night outline-none transition placeholder:text-night/35 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
+        className="mt-4 w-full rounded-xl border border-night/15 bg-cream px-4 py-2.5 text-base sm:text-sm text-night outline-none transition placeholder:text-night/65 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
       />
       {busy && (
         <div className="mt-3">
@@ -624,7 +632,7 @@ function CommunityCard() {
         </div>
       )}
       {!busy && results !== null && results.length === 0 && (
-        <p className="mt-3 rounded-xl bg-night/[0.04] px-4 py-2.5 text-sm text-night/55">
+        <p className="mt-3 rounded-xl bg-night/[0.04] px-4 py-2.5 text-sm text-night/70">
           לא נמצא מטייל כזה. מופיעים כאן רק מי שהדליקו &quot;פרופיל ציבורי&quot;
           בהגדרות; חיפוש מייל דורש כתובת מלאה ומדויקת.
         </p>
@@ -655,7 +663,7 @@ function CommunityCard() {
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-bold text-night">{r.displayName}</span>
-                  <span className="block text-xs font-medium text-night/50">
+                  <span className="block text-xs font-medium text-night/65">
                     {level.emoji} {level.title} · {r.visited.length} מדינות
                   </span>
                 </span>
@@ -764,6 +772,117 @@ function PromoRedeem() {
       </div>
       {msg && (
         <p className={`mt-2 text-xs font-semibold ${msg.ok ? 'text-night/70' : 'text-sunset-deep'}`}>
+          {msg.text}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Cancelling the recurring charge, without leaving the site.
+ *
+ * Two things it is careful about.
+ *
+ * **It does not claim the plan has changed.** The route asks PayPal to stop the
+ * billing; the downgrade itself happens on the verified
+ * BILLING.SUBSCRIPTION.CANCELLED webhook, which may land seconds later. So the
+ * success message says what actually happened - the charge is stopped, and
+ * access continues to the end of the paid period, which is what the refunds
+ * page says too.
+ *
+ * **It confirms first, and the confirmation is a real question rather than a
+ * scare.** The opposite pattern - a cancel button that opens an offer, a
+ * discount and a survey - is the dark pattern this whole flow exists to avoid.
+ * One question, two plain answers, and "keep my subscription" is not styled to
+ * be the only visible option.
+ */
+function CancelSubscription() {
+  const [asking, setAsking] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  const ERRORS: Record<string, string> = {
+    'auth-required': 'צריך להתחבר מחדש.',
+    'no-subscription': 'לא נמצא מנוי פעיל לחשבון הזה.',
+    'not-recurring': 'התוכנית שלכם לא הגיעה ממנוי בתשלום, ולכן אין חיוב חוזר לעצור.',
+    'not-configured': 'הביטול אינו זמין כרגע. אפשר לפנות אלינו ונבטל ידנית.',
+    'paypal-refused': 'PayPal לא אישר את הביטול. אפשר לנסות שוב, או לפנות אלינו ונטפל בזה.',
+    'rate-limited': 'יותר מדי ניסיונות. כדאי לנסות שוב בעוד כמה דקות.',
+  };
+
+  async function cancel() {
+    setBusy(true);
+    setMsg(null);
+    try {
+      const headers = await authHeader();
+      const res = await fetch('/api/billing/cancel', { method: 'POST', headers });
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (res.ok && data.ok) {
+        setAsking(false);
+        setMsg({
+          ok: true,
+          text: 'החיוב החוזר נעצר. המנוי ימשיך לעבוד עד סוף התקופה ששולמה, ואז יעבור לתוכנית החינם.',
+        });
+      } else {
+        setMsg({ ok: false, text: ERRORS[data.error ?? ''] ?? 'משהו השתבש. אפשר לפנות אלינו.' });
+      }
+    } catch {
+      setMsg({ ok: false, text: 'אין חיבור לאינטרנט כרגע.' });
+    }
+    setBusy(false);
+  }
+
+  return (
+    <div className="mt-3 rounded-2xl bg-cream px-4 py-3 ring-1 ring-night/10">
+      {!asking ? (
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <p className="text-sm font-bold text-night">ביטול המנוי</p>
+            <p className="text-xs text-night/65">
+              עוצר את החיוב הבא. הטיולים שלכם נשארים שלכם.
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              setAsking(true);
+              setMsg(null);
+            }}
+            className="shrink-0 rounded-full px-3 py-1.5 text-xs font-bold text-night/70 underline transition hover:text-night"
+          >
+            ביטול המנוי
+          </button>
+        </div>
+      ) : (
+        <div>
+          <p className="text-sm font-bold text-night">לבטל את המנוי?</p>
+          <p className="mt-1 text-xs leading-relaxed text-night/70">
+            החיוב הבא ייעצר. עד סוף התקופה ששולמה המנוי ממשיך לעבוד במלואו, ואין החזר על אותה
+            תקופה.
+          </p>
+          <div className="mt-2.5 flex flex-wrap gap-2">
+            <button
+              onClick={() => void cancel()}
+              disabled={busy}
+              className="min-h-9 rounded-xl bg-night px-4 text-sm font-bold text-cream transition hover:bg-night-soft disabled:opacity-50"
+            >
+              {busy ? 'מבטלים…' : 'כן, לבטל'}
+            </button>
+            <button
+              onClick={() => setAsking(false)}
+              disabled={busy}
+              className="min-h-9 rounded-xl px-4 text-sm font-bold text-night/70 underline"
+            >
+              להשאיר את המנוי
+            </button>
+          </div>
+        </div>
+      )}
+      {msg && (
+        <p
+          role="status"
+          className={`mt-2 text-xs font-semibold leading-relaxed ${msg.ok ? 'text-night/70' : 'text-sunset-deep'}`}
+        >
           {msg.text}
         </p>
       )}

@@ -13380,3 +13380,343 @@ list regenerates from the catalog on every deploy, and only `lastmod` needs
 `npm run seo:dates` after a data session, which `sitemap.test.ts` fails and
 names if forgotten. `sql/supabase-consent.sql` and the support mailbox are both
 confirmed done.
+
+### 2026-09-22 - The compliance pass: five regimes assessed, and the one law the site was actually breaking
+
+The brief was a checklist: assess five regulatory regimes and say honestly which
+apply, audit cookies and tracking, and run a full accessibility audit - then
+implement whatever is missing. Two instructions shaped everything: **do not
+assume a law applies**, and **do not invent legal obligations**.
+
+---
+
+**The applicability answers, now a section on /privacy rather than only a reply
+in chat.** Israeli Privacy Protection Law and Amendment 13: **apply**, and two
+questions under the amendment - whether we must appoint a privacy officer, and
+whether the database must be registered after the amendment changed that duty -
+are marked as needing legal review rather than answered, because neither is
+derivable from the code. Consumer Protection Law: **applies** to both paid
+products. The spam provision (s.30A of the Communications Law): **applies**.
+GDPR: **does not apply today**, and the page says why in the terms the
+regulation itself uses - the site is Hebrew-only, priced in shekels, written for
+Israelis, and runs zero behavioural tracking, so neither the offering-services
+prong nor the monitoring prong is met - plus what would change that. CCPA/CPRA:
+**does not apply** - none of the three thresholds is met and we sell no personal
+information.
+
+**Cookies: the audit found nothing to consent to, so no banner was added, and
+that is a decision rather than an omission.** No analytics, no pixel, no ad
+network, and one CSRF cookie on an internal TikTok screen an ordinary visitor
+never reaches. A consent dialog asking permission for nothing is its own dark
+pattern - it teaches people to dismiss a box that carried no choice.
+
+What the site does keep is browser storage, so "reject" and "change your mind"
+were implemented for that instead: **a live panel on /cookies** listing what is
+on the device right now, with per-item deletion, split into what costs nothing
+to delete and the traveller's own trips - which for somebody without an account
+exist nowhere else, and therefore ask before they go.
+
+**And the one genuinely non-essential thing stored is now opt-in.** The login
+form wrote the email address on every attempt and kept it after logout; the
+privacy policy warned about it on a shared device, which is the wrong place to
+solve it. It is a checkbox now, default off, and unticking it **deletes** what
+was already there rather than merely stopping new writes.
+
+---
+
+**The real legal gap was the mailing list, and it was larger than "no
+unsubscribe link".** `NewsletterSignup` was **rendered nowhere at all** - the
+component, the API route, the email templates, the `unsubscribed_at` column and
+the footer comment reserving a place for it all existed, and nothing imported
+it. So the list was unreachable, which is why the privacy policy could honestly
+say there was no way to leave it.
+
+Worth recording as a correction: I wrote a code comment claiming its
+to-be-filled placeholder "was rendering, verbatim, in the footer of every page
+on the live site". That was inferred from the footer comment and was wrong - the
+browser check is what caught it, and the comment now says what actually
+happened.
+
+It is wired in now, behind **confirmed opt-in**: the form stores nothing and
+emails a signed link; only the click on that link writes the row. So a stranger
+typing your address into our footer leaves no trace of you in the database, and
+every address on the list has its owner's own click behind it - which is the
+only proof of consent that survives an argument.
+
+**`mailToken.ts` carries the asymmetry that matters: a confirmation link expires
+in 48 hours and an unsubscribe link never expires.** An unsubscribe link sits in
+an inbox for years, and one that answers "no longer valid" is not an unsubscribe
+mechanism at all. Both are HMAC-signed with the purpose inside the payload, so a
+confirmation token cannot be replayed as an unsubscribe token - there is a test
+named after exactly that, and another asserting a swapped address is refused.
+
+**The emails carry RFC 8058 headers**, so Gmail's own Unsubscribe control works
+in one click - and the header is added only when the template actually has an
+unsubscribe link, so a receipt never claims you can unsubscribe from it.
+
+**The landing pages use a button rather than acting on load.** Corporate mail
+scanners fetch every URL in a message before the recipient sees it, so an
+auto-acting page silently unsubscribes people who never clicked.
+
+---
+
+**Consumer protection: the refunds page promised "cancel at any time" and never
+said where.** There was no in-app cancellation; the real route was PayPal's own
+dashboard, unmentioned. `cancelSubscriptionAtPaypal` plus `/api/billing/cancel`
+plus a button on /account. It **grants and revokes nothing** - the downgrade
+still happens only on the verified CANCELLED webhook, so there is one path down
+whether cancellation started here or at PayPal. One confirming question, no
+retention offer, no survey.
+
+---
+
+**Accessibility: four findings, of which two were my own tooling being wrong.**
+Images with no alt: **zero**. Icon-only buttons with no name: **zero**. Heading
+skips: **zero** - the h2 to h4 my scanner reported is `SectionHeading` being
+defined later in the file than it is used. Admin inputs "without labels": most
+are wrapped in a `<label>` with visible text, which is a perfectly good name.
+
+The three real ones:
+
+- **No site-wide keyboard focus indicator.** Focus was styled per component, so
+  tabbing lost the cursor wherever nobody had thought about it - which the
+  statement already admitted. One `:focus-visible` rule now, and it wins over
+  the `outline-none` many components set because it is **outside any `@layer`**
+  and Tailwind v4 puts every utility inside one.
+- **Contrast.** Measured per step against the real tokens: `/35` 2.13, `/40`
+  2.41, `/45` 2.76, `/50` 3.12, `/55` 3.60, `/60` 4.18 - all under 4.5. Swept
+  to a two-level floor (`/65` = 4.88, `/70` = 5.73) across **516 occurrences**,
+  preserving the faint/secondary distinction rather than collapsing six steps
+  into one. Plus `--color-lagoon-deep` darkened #007f76 to #006b63: at 4.55 on
+  cream it was technically over the floor and under it in every real use.
+- **Ten form controls named only by their placeholder**, which disappears on
+  the first keystroke and is not a label.
+
+**Left deliberately unfixed and written into the statement: the brand accent.**
+Coral on cream is 2.90:1 and cream on a coral button is 2.90:1. Darkening it is
+a decision about brand identity, not a compliance patch, so it is measured,
+disclosed, and left to Netanel.
+
+`components/accessibility.test.ts` guards all three as a class - contrast
+computed from the tokens themselves rather than pasted, so changing a token
+moves the threshold with it. All three were **proven to fire** by reintroducing
+the bug and watching the named test fail.
+
+---
+
+**Four harness bugs, every one of which reported a broken site that was fine -
+and one of my own tests had the same bug.**
+
+1. `accept="image/*"` **opens a block comment** as far as a comment-stripping
+   regex is concerned, so everything to the next close-comment vanished -
+   including the `aria-label` on the very input being checked, which was then
+   reported as unnamed. Both strip patterns are line-anchored now.
+   `designConsistency.test.ts` has the same unanchored pattern and silently
+   under-reports because of it.
+2. Contrast measured by parsing colour strings read `bg-night/5` as solid night
+   and reported **1:1** on readable text; then, fixed, it read Tailwind v4's
+   `oklab(L a b / alpha)` as RGB channels - losing the minus sign on the way -
+   and reported **1.37:1** on every nav link. Colours are resolved by painting
+   them on a 1x1 canvas now, which hands the whole problem to the browser.
+3. `el.focus()` does not satisfy Chrome's `:focus-visible` heuristic for a link,
+   so the focus indicator measured `outline: none` on a page where it works.
+   A real `Input.dispatchKeyEvent` Tab fixed it.
+4. **A stale `next start` served the previous build** and I measured it - the
+   trap this file records twice. `pkill -f` matched nothing on Windows; the
+   server had to be found by port and killed by pid.
+
+Plus a fifth, pre-existing: `sitemap.test.ts` compared `lastmod` as an
+**instant** when it meant a **day**. Dates are parsed at UTC noon on purpose, so
+any page re-dated today failed until 12:00 UTC - which is how it fired after a
+morning `npm run seo:dates`. It compares UTC days now; a genuinely future date
+still fails.
+
+---
+
+**Verified:** 968/968 unit tests (9 new), tsc clean, `npm run build` clean, and
+lint at **exactly** the pre-existing 28 - measured by stashing and re-running,
+because two net-new errors of my own were real and got fixed rather than
+suppressed (`useSyncExternalStore` for the storage panel, and reading the URL at
+click time rather than into state on mount). **19/19 in a real browser** at 1400
+and 390 against a production build: the focus outline under a real Tab, no text
+below AA except the documented accent, the storage panel deleting an optional
+item on one click and asking first for trips, a forged unsubscribe token
+refused, the applicability section with its open questions marked, and
+remember-my-email present and off.
+
+**Not verified live, and stated plainly.** No email left this machine - there is
+no `RESEND_API_KEY` here - so the confirmation and welcome sends, and the RFC
+8058 headers as Gmail actually renders them, are unexercised outside tests. The
+PayPal cancel call has never run against PayPal, like every payment change in
+this log. And the admin screen was not driven, for the standing reason that
+signing in needs an OTP to a real address.
+
+**Waiting on Netanel.** (1) Decide the two Amendment 13 questions with a lawyer -
+they are marked on /privacy and should not stay marked long. (2) Decide whether
+the coral accent gets a darker variant for text and buttons, or stays as it is
+with high-contrast mode as the answer. (3) The legal entity name and address are
+still a gap in the terms, and s.30A wants them in the message itself before any
+wide mailing. (4) Optionally set `MAIL_LINK_SECRET`: without it the unsubscribe
+links are signed with the Supabase service role key, and **rotating that key
+would invalidate every unsubscribe link already sent**. (5) The newsletter form
+is now live in the footer - one import in `SiteFooter.tsx` reverts it if that
+was not wanted.
+
+### 2026-09-22 (b) - Closing the five open decisions, one at a time
+
+Netanel took the previous entry's "waiting on you" list step by step and
+answered all of it. What follows is each decision and what it actually cost,
+because three of the five turned out to be bigger or smaller than they looked.
+
+---
+
+**The accent: deepened, and it was not one line.** `--color-sunset` #ff5941 →
+**#c9301c**. The bright coral measured 2.90:1 in both of its jobs - cream text
+on a coral button, and coral as link text - and 2.90 as the keyboard focus ring,
+under the 3.0 that focus indicators need. Checked first whether the large-text
+allowance rescued any of it: of ~100 coral elements, 34 are 14px, 24 are 12px
+and 38 inherit 16px. **None qualifies.**
+
+**The reason it was not one line is that contrast is a property of a pair, and
+this pair inverts.** On cream, #ff5941 is 2.90 and #c9301c is 4.99. On the night
+bands it is the other way round: 5.05 against 2.93. A flat darkening fixes every
+light page and breaks every dark one.
+
+Measured where coral-on-dark actually occurs, over seven pages: **exactly once
+per page, and always the same element** - the `+` in the logo. So the dark bands
+keep the bright coral through `--color-sunset-glow`, applied by a rule scoped to
+the TEXT utility only. Scoping matters: flipping the whole variable inside
+`.bg-night` would have fixed the text and quietly broken every button in the
+dark CTA band, because what has to be readable on a button is the cream text
+sitting on it, not the button against the band.
+
+Two consequences worth recording. `--color-sunset-deep` had to follow it down
+(#e03e27 → #a32414) - it is the hover step, and left alone it would have become
+*lighter* than the colour it darkens. And **the logo keeps #ff5941 everywhere**:
+logotypes are explicitly exempt from the contrast requirement, and it is the one
+place brand fidelity costs nothing. That is written into the accessibility
+statement as a decision rather than left looking like a miss.
+
+Guarded by a test that reads the values out of `globals.css` rather than
+restating them, and **proven to fire** on both regressions - reverting the
+coral, and making sunset-deep lighter than sunset.
+
+**A correction to the previous entry.** It claimed "no text below AA except the
+accent". The sweep's selector was `p, span, li, a, h1, h2, h3, div` - **no
+`button`** - so it had checked zero buttons, which is exactly where cream-on-
+coral lives. Added, along with an exemption for genuinely `disabled` controls
+(WCAG 1.4.3 exempts inactive components, and the hero CTA is deliberately
+coral-at-60% rather than grey while the field is empty). Sub-AA elements went
+from 11 to 1, and the 1 is the exempt logo.
+
+---
+
+**`MAIL_LINK_SECRET`: set, and the trap demonstrated rather than described.**
+Generated into `.env.local` **without printing it** - this file already records
+a token that had to be rotated purely because it was pasted into a chat window.
+Then proved the point against the real file:
+
+    1. link created with the explicit secret     : dana@example.com
+    2. after rotating SUPABASE_SERVICE_ROLE_KEY  : dana@example.com
+    3. same rotation, signed by the FALLBACK     : BROKEN (bad-signature)
+
+Line 3 is what users would have met: clicking unsubscribe and getting "this link
+is invalid", at exactly the moment they have decided they do not want the email.
+That is the complaint that becomes a spam report. Documented in `.env.example`
+with the generation command. Netanel set the production value himself.
+
+---
+
+**Amendment 13: both questions answered - no privacy officer, no database
+registration.** Both now stated on /privacy with a line saying they are true for
+today's scope and get re-checked if the scale or the kind of data changes.
+
+**Every legal gap on the site is now closed.** One `Gap` remains anywhere, on
+/refunds, and it is a pricing decision (what happens to days already paid on a
+premium→pro switch) that predates all of this.
+
+Closing them meant **inverting one of my own browser assertions** rather than
+deleting it: it asserted "two open questions are marked as needing legal review",
+which was true yesterday and false today. The replacement asserts the stronger
+thing - both answers are present, and zero unresolved placeholders remain. It
+then caught a bug in itself on the first run, reporting **4566 placeholders**: a
+lost backslash turned `\[לבירור\]` into a character class matching any one of
+those Hebrew letters.
+
+---
+
+**s.30A identification: the details existed, on the wrong surface.** The
+previous entry listed "legal entity name and address" as waiting on Netanel.
+**That was wrong** - I carried it from an older session-log note without
+checking, and the terms page has had them all along (עוסק מורשה 327727525,
+חדרה 16 אשדוד). Worse, the `Gap` I wrote yesterday said those details "have not
+been determined here" while pointing at the page that contains them.
+
+What was genuinely missing is that s.30A wants the advertiser identified **in
+the message**, and the email footer said only "sent by tiyul+". Now on all
+twelve templates. Netanel chose body marking over a subject-line prefix, so the
+commercial notice renders above the footer, in the readable text colour rather
+than the faint grey - a marking nobody can see does not do its job.
+
+**It is a `commercial: true` flag rather than a judgement made per template at
+writing time**, so the next marketing template is a decision somebody makes
+instead of something they forget. Exactly one template carries it today, and the
+line-drawing is written into the code: `newsletter-confirm` is not marked (it
+replies to something the reader just did, sells nothing, and a message asking
+"did you mean to subscribe?" that announces itself as advertising is one people
+delete instead of answering); `trip-reminder` and `group-digest` are not marked
+(the reader's own trip, only to somebody who asked); receipts and login codes
+are not advertising and marking them would be false.
+
+Verified by rendering: the marking appears in `newsletter-welcome` and in none
+of the others, and each template's placeholders match what its route actually
+fills - a mismatch aborts the send silently, so that is worth a check rather
+than an assumption.
+
+---
+
+**The newsletter form: wired in, then reverted on his instruction.** The list is
+not being run yet, and a form collecting addresses nobody will email is worse
+than no form. The component, the routes, the templates and the table stay; only
+the render is gone, with the re-enable instructions in the footer comment.
+
+**Checking the preconditions first turned up a real bug.** Testing the form
+rather than reading it: with no `RESEND_API_KEY` the route answered
+
+    http 502  {"error":"send-failed"}  →  "we could not send it. You can try again."
+
+inviting a retry that can **never** succeed, on every attempt. Confirmed opt-in
+cannot complete without a mailer, so a missing key is an unavailable feature and
+not a failed send. Now 503 `not-configured` → "signup is not available right
+now", with "try again" kept for a send that genuinely failed once.
+
+Because the form is dormant, its compliance moved from a rendered check to a
+source-level one in `policyPages.test.ts` - no placeholder, the consent line
+present, and no "you are signed up" success message for a flow that only sends a
+confirmation link. All three **proven to fire**; the first injection attempt
+silently matched nothing and had to be redone, which is the second time today a
+guard was nearly recorded as proven without having been tested.
+
+**/privacy now opens that section by saying there is no signup form and no
+mailing being run**, because the paragraphs under it describe a form. A policy
+describing a mechanism the site does not have is the failure mode the `Gap`
+component exists to prevent, one level up.
+
+**Also confirmed, since the answer depended on it:** `newsletter_signups` exists
+in Supabase and is correctly closed to the public. While there, `user_trips` and
+`profiles` return `[]` to an anonymous caller - RLS working, not a leak. The
+first version of that probe labelled the 200 as "publicly readable", which was
+the check being wrong rather than the database.
+
+---
+
+**Verified:** 971 unit tests (2 new), tsc clean, `npm run build` clean, lint at
+exactly the pre-existing 28, and **21/21 in a real browser** at 1400 and 390
+against a production build. Every guard added today was proven by reintroducing
+the bug it guards.
+
+**Still open, and both are Netanel's.** The email templates still use the old
+bright coral - white on it is 3.11:1, the same failure fixed on the site, and
+one constant plus a regenerate whenever he wants it. And `RESEND_API_KEY` is
+still unset in production, which is fine while the list is dormant and is the
+precondition if the form ever goes back.

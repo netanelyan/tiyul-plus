@@ -185,7 +185,7 @@ export default function CityCombobox({
                 type="button"
                 onClick={() => onToggle(o.slug)}
                 aria-label={`הסרת ${o.name}`}
-                className="ms-0.5 flex h-5 w-5 items-center justify-center rounded-full text-night/45 transition hover:bg-sunset/20 hover:text-night"
+                className="ms-0.5 flex h-5 w-5 items-center justify-center rounded-full text-night/65 transition hover:bg-sunset/20 hover:text-night"
               >
                 ✕
               </button>
@@ -216,7 +216,7 @@ export default function CityCombobox({
         placeholder={
           selected.length > 0 ? 'להוסיף עוד עיר…' : 'חיפוש עיר או מדינה: וינה, יוון, בנגקוק…'
         }
-        className="w-full rounded-2xl border border-night/15 bg-shell px-4 py-3 text-night shadow-inner outline-none transition placeholder:text-night/45 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
+        className="w-full rounded-2xl border border-night/15 bg-shell px-4 py-3 text-night shadow-inner outline-none transition placeholder:text-night/65 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
       />
 
       {/*
@@ -245,7 +245,7 @@ export default function CityCombobox({
           className="fixed z-[70] overflow-y-auto rounded-2xl bg-shell p-1.5 shadow-[var(--shadow-pop)] ring-1 ring-night/10"
         >
           {matches.length === 0 ? (
-            <p className="px-3 py-3 text-sm font-medium text-night/50">
+            <p className="px-3 py-3 text-sm font-medium text-night/65">
               אין עיר כזו בקטלוג. אפשר לנסות שם מדינה, או לבחור מהרשימה.
             </p>
           ) : (
@@ -266,7 +266,7 @@ export default function CityCombobox({
                 >
                   <Flag flag={o.flag} label={o.name} size="md" />
                   <span className="truncate font-semibold text-night">{o.name}</span>
-                  <span className="truncate text-xs font-medium text-night/45">{o.country}</span>
+                  <span className="truncate text-xs font-medium text-night/65">{o.country}</span>
                   {isSelected && (
                     <span className="ms-auto flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sunset text-xs font-bold text-cream">
                       ✓

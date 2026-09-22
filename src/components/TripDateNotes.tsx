@@ -77,7 +77,7 @@ export default function TripDateNotes({
 
       {windows.length > 0 && (
         <>
-          <h4 className="mt-3 px-1 text-[11px] font-semibold text-night/40">
+          <h4 className="mt-3 px-1 text-[11px] font-semibold text-night/65">
             נופל בערך על התאריכים שלכם · {NOT_PUBLISHED}
           </h4>
           <ul className="mt-1.5 space-y-1.5">
@@ -111,10 +111,10 @@ function Row({
     <li className="rounded-2xl bg-shell px-3 py-2.5 ring-1 ring-night/10">
       <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
         <span className="text-sm font-bold text-night">{entry.name}</span>
-        <span className="rounded-full bg-night/[0.06] px-2 py-0.5 text-[11px] font-semibold text-night/55">
+        <span className="rounded-full bg-night/[0.06] px-2 py-0.5 text-[11px] font-semibold text-night/70">
           {impactLabel(entry)}
         </span>
-        {meta && <span className="text-[11px] font-semibold text-night/45">{meta}</span>}
+        {meta && <span className="text-[11px] font-semibold text-night/65">{meta}</span>}
       </div>
 
       {/*
@@ -124,15 +124,15 @@ function Row({
       */}
       <p
         className={`mt-1 text-xs font-semibold leading-relaxed ${
-          confirmed ? 'text-night/75' : 'text-night/55'
+          confirmed ? 'text-night/75' : 'text-night/70'
         }`}
       >
         {dates}
       </p>
 
-      <p className="mt-1 text-xs font-medium leading-relaxed text-night/55">{entry.note}</p>
+      <p className="mt-1 text-xs font-medium leading-relaxed text-night/70">{entry.note}</p>
 
-      <p className="mt-1.5 text-[11px] font-medium text-night/40">
+      <p className="mt-1.5 text-[11px] font-medium text-night/65">
         <a
           href={entry.source.url}
           target="_blank"

@@ -52,7 +52,7 @@ export default async function TikTokConnectPage({
         </p>
 
         <div className="mt-5 rounded-2xl bg-cream p-4 ring-1 ring-night/10">
-          <p className="text-xs font-bold text-night/45">ההרשאות שיתבקשו</p>
+          <p className="text-xs font-bold text-night/65">ההרשאות שיתבקשו</p>
           <ul className="mt-2 space-y-1.5">
             {/*
               Rendered from TIKTOK_SCOPE_LIST, the same source as the authorize
@@ -102,12 +102,12 @@ export default async function TikTokConnectPage({
         </a>
 
         {!ready && !configError && (
-          <p className="mt-3 text-sm font-semibold text-night/55">
+          <p className="mt-3 text-sm font-semibold text-night/70">
             הכפתור יופעל אחרי שיוגדרו משתני הסביבה בשרת.
           </p>
         )}
 
-        <p className="mt-6 border-t border-night/10 pt-4 text-xs leading-relaxed text-night/45">
+        <p className="mt-6 border-t border-night/10 pt-4 text-xs leading-relaxed text-night/65">
           כתובת ההחזרה הרשומה:{' '}
           <span dir="ltr" className="font-mono">
             {TIKTOK_REDIRECT_URI}

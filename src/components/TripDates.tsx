@@ -126,13 +126,13 @@ export default function TripDates({
             ? `תאריכי הטיול: ${label}${cd && cd.kind !== 'past' ? `, ${cd.label}` : ''}`
             : 'הוספת תאריכים לטיול'
         }
-        className="badge flex flex-wrap items-center gap-x-1.5 gap-y-1 rounded-full bg-night/5 px-3 py-1 text-xs font-semibold text-night/60 transition hover:bg-night/10 hover:text-night"
+        className="badge flex flex-wrap items-center gap-x-1.5 gap-y-1 rounded-full bg-night/5 px-3 py-1 text-xs font-semibold text-night/70 transition hover:bg-night/10 hover:text-night"
       >
         <span>{summary}</span>
         {label ? (
           <span className="font-bold text-sunset-deep">· {label}</span>
         ) : (
-          <span className="text-night/40">· + תאריכים</span>
+          <span className="text-night/65">· + תאריכים</span>
         )}
         {/*
           The countdown lives **inside the chip**, not as a layer floating
@@ -175,7 +175,7 @@ export default function TripDates({
           </div>
 
           {span !== null && mismatch === 0 && (
-            <p className="mt-2.5 text-xs font-medium text-night/50">
+            <p className="mt-2.5 text-xs font-medium text-night/65">
               {span} {span === 1 ? 'יום' : 'ימים'} - בדיוק כמו בתוכנית
             </p>
           )}
@@ -207,7 +207,7 @@ export default function TripDates({
                 onSet({});
                 setOpen(false);
               }}
-              className="mt-2.5 text-xs font-semibold text-night/45 transition hover:text-night"
+              className="mt-2.5 text-xs font-semibold text-night/65 transition hover:text-night"
             >
               ניקוי התאריכים
             </button>
@@ -258,7 +258,7 @@ function DateField({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-xs font-bold text-night/50">{label}</span>
+      <span className="mb-1 block text-xs font-bold text-night/65">{label}</span>
       <span className="relative block">
         <input
           type="date"
@@ -281,7 +281,7 @@ function DateField({
         {!value && (
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-y-0 start-2.5 flex items-center gap-1 text-sm font-medium text-night/40 peer-focus:hidden"
+            className="pointer-events-none absolute inset-y-0 start-2.5 flex items-center gap-1 text-sm font-medium text-night/65 peer-focus:hidden"
           >
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
               <rect x="3" y="5" width="18" height="16" rx="2" />

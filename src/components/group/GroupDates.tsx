@@ -39,7 +39,7 @@ export default function GroupDates({
   return (
     <div>
       {best && (
-        <p className="text-xs font-semibold text-night/60">
+        <p className="text-xs font-semibold text-night/70">
           {best.everyone ? (
             <>
               🎉 <b className="text-night">{formatHebrewDate(best.day, { weekday: true })}</b> מתאים לכולם
@@ -65,9 +65,9 @@ export default function GroupDates({
               <span className="min-w-0 flex-1 text-sm font-semibold text-night">
                 {formatHebrewDate(t.day, { weekday: true })}
               </span>
-              <span className="whitespace-nowrap text-xs font-bold text-night/55">
+              <span className="whitespace-nowrap text-xs font-bold text-night/70">
                 👍 {t.yes} · 👎 {t.no}
-                {t.pending > 0 && <span className="text-night/35"> · {t.pending} טרם ענו</span>}
+                {t.pending > 0 && <span className="text-night/65"> · {t.pending} טרם ענו</span>}
               </span>
               {onMark && (
                 <span className="flex gap-1.5">
@@ -78,8 +78,8 @@ export default function GroupDates({
                     aria-label={`מתאים לי - ${formatHebrewDate(t.day, { weekday: true })}`}
                     className={`min-h-[40px] min-w-[52px] rounded-full px-3 text-xs font-bold ring-1 transition active:scale-95 ${
                       my === true
-                        ? 'bg-lagoon text-cream ring-lagoon'
-                        : 'bg-shell text-night/60 ring-night/15 hover:bg-lagoon/10'
+                        ? 'bg-lagoon-deep text-cream ring-lagoon-deep'
+                        : 'bg-shell text-night/70 ring-night/15 hover:bg-lagoon/10'
                     }`}
                   >
                     מתאים
@@ -92,7 +92,7 @@ export default function GroupDates({
                     className={`min-h-[40px] min-w-[52px] rounded-full px-3 text-xs font-bold ring-1 transition active:scale-95 ${
                       my === false
                         ? 'bg-night text-cream ring-night'
-                        : 'bg-shell text-night/60 ring-night/15 hover:bg-night/5'
+                        : 'bg-shell text-night/70 ring-night/15 hover:bg-night/5'
                     }`}
                   >
                     לא

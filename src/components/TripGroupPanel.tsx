@@ -209,7 +209,7 @@ export default function TripGroupPanel({
                 התחברות ופתיחת טיול משותף
               </button>
             ) : (
-              <p className="mt-1 text-xs font-medium text-night/55">
+              <p className="mt-1 text-xs font-medium text-night/70">
                 כפתור ההתחברות נמצא למעלה בניווט.
               </p>
             )}
@@ -277,7 +277,7 @@ export default function TripGroupPanel({
                     goes unanswered. */}
                 {pending.length > 0 && (
                   <div>
-                    <p className="text-xs font-bold text-night/55">מחכה להחלטה שלכם:</p>
+                    <p className="text-xs font-bold text-night/70">מחכה להחלטה שלכם:</p>
                     <ul className="mt-1.5 space-y-2">
                       {pending.map((s) => (
                         <li
@@ -299,20 +299,20 @@ export default function TripGroupPanel({
                           />
                           <div className="min-w-0 flex-1">
                             <p className="text-sm font-semibold text-night">{s.name}</p>
-                            <p className="text-[11px] font-medium text-night/50">
+                            <p className="text-[11px] font-medium text-night/65">
                               הציע/ה {s.author}
                               {s.note && ` · ${s.note}`}
                             </p>
                             <div className="mt-1.5 flex gap-1.5">
                               <button
                                 onClick={() => void decide(s.id, s.city_slug, s.place_id, true)}
-                                className="min-h-[36px] rounded-full bg-lagoon px-3 text-xs font-bold text-cream transition hover:opacity-90"
+                                className="min-h-[36px] rounded-full bg-lagoon-deep px-3 text-xs font-bold text-cream transition hover:opacity-90"
                               >
                                 הוספה לטיול
                               </button>
                               <button
                                 onClick={() => void decide(s.id, s.city_slug, s.place_id, false)}
-                                className="min-h-[36px] rounded-full bg-shell px-3 text-xs font-bold text-night/60 ring-1 ring-night/15 transition hover:bg-night/5"
+                                className="min-h-[36px] rounded-full bg-shell px-3 text-xs font-bold text-night/70 ring-1 ring-night/15 transition hover:bg-night/5"
                               >
                                 לא הפעם
                               </button>
@@ -325,14 +325,14 @@ export default function TripGroupPanel({
                 )}
 
                 {accepted.length > 0 && (
-                  <p className="text-[11px] font-semibold text-night/45">
+                  <p className="text-[11px] font-semibold text-night/65">
                     ✓ נוספו מהצעות של חברים: {accepted.map((s) => s.name).join(' · ')}
                   </p>
                 )}
 
                 {/* Who is coming */}
                 <div className="border-t border-night/10 pt-3">
-                  <p className="text-xs font-bold text-night/55">מי מגיע:</p>
+                  <p className="text-xs font-bold text-night/70">מי מגיע:</p>
                   <div className="mt-1.5">
                     <GroupRsvp
                       rsvp={group.data.rsvp}
@@ -345,7 +345,7 @@ export default function TripGroupPanel({
                 {/* Candidate days. Only the organizer sets them - a poll everyone can
                     edit is not a poll. */}
                 <div className="border-t border-night/10 pt-3">
-                  <p className="text-xs font-bold text-night/55">תאריכים אפשריים:</p>
+                  <p className="text-xs font-bold text-night/70">תאריכים אפשריים:</p>
                   {group.data.dateOptions.length > 0 ? (
                     <div className="mt-1.5">
                       <GroupDates
@@ -360,7 +360,7 @@ export default function TripGroupPanel({
                           <button
                             key={d}
                             onClick={() => removeDay(d)}
-                            className="rounded-full bg-night/5 px-2 py-0.5 text-[11px] font-medium text-night/50 transition hover:bg-sunset/15 hover:text-night"
+                            className="rounded-full bg-night/5 px-2 py-0.5 text-[11px] font-medium text-night/65 transition hover:bg-sunset/15 hover:text-night"
                             aria-label={`הסרת ${d} מהאפשרויות`}
                           >
                             {d} ✕
@@ -369,12 +369,16 @@ export default function TripGroupPanel({
                       </div>
                     </div>
                   ) : (
-                    <p className="mt-1 text-xs font-medium text-night/45">
+                    <p className="mt-1 text-xs font-medium text-night/65">
                       הציעו כמה תאריכים וכל אחד יסמן מה מתאים לו.
                     </p>
                   )}
                   <div className="mt-2 flex gap-2">
+                    <label htmlFor="group-new-date" className="sr-only">
+                      הוספת תאריך אפשרי
+                    </label>
                     <input
+                      id="group-new-date"
                       type="date"
                       value={newDay}
                       min={todayISO()}
@@ -395,19 +399,19 @@ export default function TripGroupPanel({
                 {/* Vote results */}
                 {namedVotes.length > 0 && (
                   <div className="border-t border-night/10 pt-3">
-                    <p className="text-xs font-bold text-night/55">מה החברים חושבים:</p>
+                    <p className="text-xs font-bold text-night/70">מה החברים חושבים:</p>
                     <ul className="mt-1.5 space-y-1">
                       {namedVotes.map((v) => (
                         <li key={v.placeId} className="flex items-center gap-2 text-sm">
                           <span className="min-w-0 flex-1 truncate text-night/80">{v.name}</span>
-                          <span className="whitespace-nowrap text-xs font-bold text-night/60">
+                          <span className="whitespace-nowrap text-xs font-bold text-night/70">
                             👍 {v.up} · 👎 {v.down}
                           </span>
                         </li>
                       ))}
                     </ul>
                     {stopComments > 0 && (
-                      <p className="mt-1.5 text-[11px] font-medium text-night/45">
+                      <p className="mt-1.5 text-[11px] font-medium text-night/65">
                         💬 {stopComments} תגובות על עצירות - נקראות בקישור ההזמנה
                       </p>
                     )}
@@ -416,7 +420,7 @@ export default function TripGroupPanel({
 
                 {/* The general thread */}
                 <div className="border-t border-night/10 pt-3">
-                  <p className="text-xs font-bold text-night/55">שיחה כללית:</p>
+                  <p className="text-xs font-bold text-night/70">שיחה כללית:</p>
                   <GroupComments
                     placeId={null}
                     comments={group.data.comments}
@@ -427,7 +431,7 @@ export default function TripGroupPanel({
                 </div>
 
                 {members === 0 && (
-                  <p className="text-xs font-medium text-night/45">
+                  <p className="text-xs font-medium text-night/65">
                     עוד לא הצטרף אף אחד - שלחו את הקישור בוואטסאפ.
                   </p>
                 )}

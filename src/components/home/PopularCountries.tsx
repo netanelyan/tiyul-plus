@@ -40,7 +40,7 @@ export default function PopularCountries({ tiles }: { tiles: CountryTile[] }) {
                 <Flag flag={c.flag} label={c.name} size="lg" />
               </span>
               <span className="mt-3 text-base font-extrabold leading-tight text-night">{c.name}</span>
-              <span className="mt-1 text-xs font-semibold text-night/55">
+              <span className="mt-1 text-xs font-semibold text-night/70">
                 {destinationsHe(c.destinations)} · {c.places} מקומות
               </span>
             </Link>

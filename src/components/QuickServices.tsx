@@ -20,7 +20,7 @@ export default function QuickServices() {
     <section className="py-10">
       <div className="mb-5 text-center">
         <h2 className="display text-2xl text-night sm:text-3xl">הכול לטיול, במקום אחד</h2>
-        <p className="mt-1.5 text-sm text-night/55">
+        <p className="mt-1.5 text-sm text-night/70">
           טיסות, לינה, חוויות ורכב - להשלים את מה שהסוכן תכנן.
         </p>
       </div>
@@ -44,12 +44,12 @@ export default function QuickServices() {
               <h3 className="mt-2.5 text-sm font-bold leading-snug text-night sm:mt-3 sm:text-base">
                 {s.title}
               </h3>
-              <p className="mt-1 flex-1 text-xs leading-relaxed text-night/60 sm:text-sm">
+              <p className="mt-1 flex-1 text-xs leading-relaxed text-night/70 sm:text-sm">
                 {s.description}
               </p>
 
               {comingSoon ? (
-                <span className="mt-3 inline-flex items-center justify-center rounded-xl bg-night/5 px-3 py-2.5 text-sm font-bold text-night/45 sm:mt-4 sm:px-4">
+                <span className="mt-3 inline-flex items-center justify-center rounded-xl bg-night/5 px-3 py-2.5 text-sm font-bold text-night/65 sm:mt-4 sm:px-4">
                   {s.cta}
                 </span>
               ) : (
@@ -63,7 +63,7 @@ export default function QuickServices() {
               )}
 
               {s.provider && !comingSoon && (
-                <span className="mt-2 text-[11px] font-medium text-night/35">דרך {s.provider}</span>
+                <span className="mt-2 text-[11px] font-medium text-night/65">דרך {s.provider}</span>
               )}
             </div>
           );

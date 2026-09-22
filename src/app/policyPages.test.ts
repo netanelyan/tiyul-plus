@@ -155,3 +155,45 @@ test('הטענה ״המסך הניהולי לקריאה בלבד״ עדיין נ
     );
   }
 });
+
+/**
+ * The mailing-list signup is built and deliberately NOT rendered (Netanel,
+ * 2026-09-22 - the list is not being run yet). That makes it the most likely
+ * thing on the site to be switched back on one day by somebody who was not
+ * here for the reasoning, so what has to survive is not the wiring but the
+ * compliance the wiring depended on.
+ *
+ * Three claims about the dormant component, each of which was a real gap in it
+ * at some point today.
+ */
+test('**טופס רשימת התפוצה נשאר תקין גם כשהוא לא מחובר**', () => {
+  const form = readFileSync(join(APP, '../components/NewsletterSignup.tsx'), 'utf8');
+
+  assert.ok(
+    !/\[למילוי\]/.test(form),
+    'הטופס חזר לשאת טקסט ממלא-מקום. הוא נראה כמו תוכן ברגע שהוא מרונדר',
+  );
+  assert.match(
+    form,
+    /הסרה בלחיצה אחת|אפשר להסיר/,
+    'לפי סעיף 30א ההסכמה ניתנת אחרי שנאמר מה יישלח ושאפשר לסרב - השורה הזאת היא ההסכמה',
+  );
+  assert.ok(
+    !/נרשמתם\.\s*תודה/.test(form),
+    'הטופס שולח קישור אישור ואינו רושם אף אחד. הודעת הצלחה שאומרת ״נרשמתם״ היא שקר על מה שקרה',
+  );
+});
+
+/**
+ * The route it posts to must keep refusing when it cannot actually deliver.
+ * Confirmed opt-in cannot complete without a mailer, so a missing key is an
+ * unavailable feature - not a send that failed and might work on a retry.
+ */
+test('הרשמה לרשימת תפוצה נדחית בכנות כשאין דואר מוגדר', () => {
+  const route = readFileSync(join(APP, 'api/newsletter/route.ts'), 'utf8');
+  assert.match(
+    route,
+    /!mailConfigured\(\)/,
+    'בלי הבדיקה הזאת הטופס עונה ״לא הצלחנו לשלוח, נסו שוב״ על מצב שבו ניסיון נוסף לא יצליח לעולם',
+  );
+});

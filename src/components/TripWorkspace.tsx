@@ -551,7 +551,7 @@ export default function TripWorkspace({
               }}
             />
           ) : (
-            <span className="badge shrink-0 rounded-full bg-night/5 px-3 py-1 text-xs font-semibold text-night/60">
+            <span className="badge shrink-0 rounded-full bg-night/5 px-3 py-1 text-xs font-semibold text-night/70">
               הסוכן בונה…
             </span>
           )}
@@ -634,10 +634,10 @@ export default function TripWorkspace({
               id="trip-prefs-head"
               aria-expanded={prefsOpen}
               aria-controls="trip-prefs-body"
-              className="rounded-full bg-night/5 px-2.5 py-1.5 text-xs font-semibold text-night/55 transition hover:bg-night/10 hover:text-night"
+              className="rounded-full bg-night/5 px-2.5 py-1.5 text-xs font-semibold text-night/70 transition hover:bg-night/10 hover:text-night"
             >
               העדפות{prefSummary ? `: ${prefSummary}` : ''}{' '}
-              <span aria-hidden className={`inline-block text-xs text-night/40 transition-transform ${prefsOpen ? 'rotate-180' : ''}`}>
+              <span aria-hidden className={`inline-block text-xs text-night/65 transition-transform ${prefsOpen ? 'rotate-180' : ''}`}>
                 ▾
               </span>
             </button>
@@ -768,7 +768,7 @@ export default function TripWorkspace({
               {dst ? ` ${inHe(dst.name)}` : ''}
               {iso ? ` · ${formatHebrewDate(iso, { weekday: true })}` : ''}
             </span>
-            <span className="min-w-0 flex-1 truncate text-xs font-semibold text-night/55">
+            <span className="min-w-0 flex-1 truncate text-xs font-semibold text-night/70">
               {dayDescription(todayDay, dst)}
             </span>
             {!viewingToday && (
@@ -816,7 +816,7 @@ export default function TripWorkspace({
                   aria-label={dst?.name}
                   className="rounded-2xl bg-shell p-1.5 ring-1 ring-night/10"
                 >
-                  <div className="flex items-center gap-1 px-1 pb-1 text-[11px] font-bold text-night/45">
+                  <div className="flex items-center gap-1 px-1 pb-1 text-[11px] font-bold text-night/65">
                     <Flag flag={dst?.flag} label={dst?.name ?? ''} size="sm" />
                     <span className="truncate">{dst?.name}</span>
                   </div>
@@ -833,7 +833,7 @@ export default function TripWorkspace({
                           className={`flex h-10 min-w-10 items-center justify-center rounded-xl px-1.5 text-sm font-bold transition ${
                             active
                               ? 'bg-sunset text-cream'
-                              : 'bg-cream text-night/55 hover:bg-night/5'
+                              : 'bg-cream text-night/70 hover:bg-night/5'
                           }`}
                         >
                           {index + 1}
@@ -918,7 +918,7 @@ export default function TripWorkspace({
                         {(() => {
                           const iso = t ? dayDate(t, i) : null;
                           return iso ? (
-                            <span className="ms-1.5 text-xs font-medium text-night/45">
+                            <span className="ms-1.5 text-xs font-medium text-night/65">
                               · {formatHebrewDate(iso)}
                             </span>
                           ) : null;
@@ -958,7 +958,7 @@ export default function TripWorkspace({
                 />
               </div>
             ) : (
-              <div className="flex h-40 items-center justify-center rounded-2xl border-2 border-dashed border-night/15 px-6 text-center text-sm font-medium leading-relaxed text-night/50 lg:h-[34rem]">
+              <div className="flex h-40 items-center justify-center rounded-2xl border-2 border-dashed border-night/15 px-6 text-center text-sm font-medium leading-relaxed text-night/65 lg:h-[34rem]">
                 {t
                   ? 'אין עדיין עצירות ביום הזה - אפשר להוסיף מהרשימה או לבקש מהסוכן'
                   : 'כאן תופיע המפה של הטיול ברגע שהסוכן יבנה אותו'}
@@ -971,7 +971,7 @@ export default function TripWorkspace({
               pins reads exactly like a failure.
             */}
             {offline && (places.length > 0 || tripGroups.length > 0) && (
-              <p className="mt-2 text-center text-xs font-medium text-night/45 print:hidden">
+              <p className="mt-2 text-center text-xs font-medium text-night/65 print:hidden">
                 מפת הרקע דורשת חיבור. העצירות, הסדר והמסלול מוצגים מהמידע השמור.
               </p>
             )}
@@ -1032,7 +1032,7 @@ export default function TripWorkspace({
                   )}
                 </div>
                 {/* The day description - derived only from the real stops in it */}
-                <p className="mt-1 text-sm font-medium leading-relaxed text-night/55">
+                <p className="mt-1 text-sm font-medium leading-relaxed text-night/70">
                   {dayDescription(day, dayDest)}
                 </p>
                 {/*
@@ -1044,6 +1044,10 @@ export default function TripWorkspace({
                 */}
                 {day.notes || noteOpenFor === day.id ? (
                   <textarea
+                    /* One field per day, so a shared id would be a duplicate and a
+                       visible label would repeat the day heading right above it -
+                       this is the case aria-label is actually for. */
+                    aria-label={`הערות ליום ${dayIndex + 1}`}
                     value={day.notes ?? ''}
                     onChange={(e) => trip.setDayNotes(day.id, e.target.value)}
                     readOnly={offline}
@@ -1051,12 +1055,12 @@ export default function TripWorkspace({
                     placeholder="הערות ליום הזה…"
                     rows={2}
                     autoFocus={noteOpenFor === day.id && !day.notes}
-                    className="mt-3 w-full resize-none rounded-xl bg-night/5 px-4 py-2.5 text-base sm:text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset"
+                    className="mt-3 w-full resize-none rounded-xl bg-night/5 px-4 py-2.5 text-base sm:text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/65 focus:ring-2 focus:ring-sunset"
                   />
                 ) : (
                   <button
                     onClick={() => setNoteOpenFor(day.id)}
-                    className="mt-2 text-xs font-semibold text-night/45 transition hover:text-night"
+                    className="mt-2 text-xs font-semibold text-night/65 transition hover:text-night"
                   >
                     + הערה ליום
                   </button>
@@ -1093,7 +1097,7 @@ export default function TripWorkspace({
                         <div className="flex items-start justify-between gap-2">
                           <div className="font-bold text-night">
                             {place.name}
-                            <span className="badge ms-2 text-xs font-medium text-night/40">
+                            <span className="badge ms-2 text-xs font-medium text-night/65">
                               <span
                                 className="h-2 w-2 rounded-full"
                                 style={{ backgroundColor: meta.color }}
@@ -1141,7 +1145,7 @@ export default function TripWorkspace({
                             ]}
                           />
                         </div>
-                        <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-night/60">
+                        <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-night/70">
                           {place.description}
                         </p>
                         {/*
@@ -1151,11 +1155,11 @@ export default function TripWorkspace({
                           where "stale" can be unsafe and not merely out of date.
                         */}
                         {offline && place.category.startsWith('kosher') && dayCachedAt !== null && (
-                          <p className="mt-1.5 rounded-lg bg-night/5 px-2.5 py-1.5 text-xs font-semibold text-night/60">
+                          <p className="mt-1.5 rounded-lg bg-night/5 px-2.5 py-1.5 text-xs font-semibold text-night/70">
                             <span aria-hidden>✡️ </span>
                             מידע הכשרות נשמר במכשיר ב־
                             {formatHebrewDate(isoDay(dayCachedAt), { year: true })}
-                            <span className="font-medium text-night/45"> · לוודא מול המקום</span>
+                            <span className="font-medium text-night/65"> · לוודא מול המקום</span>
                           </p>
                         )}
                       </div>
@@ -1167,7 +1171,7 @@ export default function TripWorkspace({
               {/* Adding a stop is done in the conversation with the agent (or from
                   the destination page) - not from a raw catalog list. This is just
                   a short reminder, not a control. */}
-              <p className="rounded-xl bg-night/[0.03] px-4 py-3 text-sm leading-relaxed text-night/55">
+              <p className="rounded-xl bg-night/[0.03] px-4 py-3 text-sm leading-relaxed text-night/70">
                 רוצים להוסיף עצירה? פשוט בקשו מהסוכן - למשל
                 <span className="font-semibold text-night/75"> &quot;תוסיף לי את השוק הישן ליום {dayIndex + 1}&quot;</span> -
                 או הוסיפו מדף היעד של {dayDest.name}.
@@ -1179,7 +1183,7 @@ export default function TripWorkspace({
               <div className="mt-2 font-bold text-night/70">
                 {t ? 'הטיול עוד ריק' : 'הסוכן בונה את הטיול'}
               </div>
-              <p className="mt-1.5 text-sm leading-relaxed text-night/50">
+              <p className="mt-1.5 text-sm leading-relaxed text-night/65">
                 {t
                   ? 'מוסיפים יום למעלה, או מבקשים מהסוכן בשיחה'
                   : 'ברגע שייבנה מסלול הוא יופיע כאן - ימים, עצירות ומפה - ויתעדכן עם כל בקשה.'}
@@ -1307,19 +1311,19 @@ export default function TripWorkspace({
                     >
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-bold text-night">יום {i + 1}</span>
-                        <span className="badge truncate text-sm text-night/50">
+                        <span className="badge truncate text-sm text-night/65">
                           <Flag flag={dst?.flag} label={dst?.name} size="sm" />
                           {dst?.name}
                         </span>
-                        <span className="ms-auto shrink-0 text-xs font-medium text-night/40">
+                        <span className="ms-auto shrink-0 text-xs font-medium text-night/65">
                           {d.placeIds.length} עצירות
                         </span>
                       </div>
                       {/* The day description - an honest summary of what is actually in it */}
-                      <div className="mt-1 line-clamp-2 text-xs font-medium leading-relaxed text-night/55">
+                      <div className="mt-1 line-clamp-2 text-xs font-medium leading-relaxed text-night/70">
                         {dayDescription(d, dst)}
                       </div>
-                      {d.notes && <div className="mt-1 text-xs text-night/45">💡 {d.notes}</div>}
+                      {d.notes && <div className="mt-1 text-xs text-night/65">💡 {d.notes}</div>}
                     </button>
                   </li>
                 );
@@ -1525,7 +1529,7 @@ export default function TripWorkspace({
           invitation to write. A bar that always reads "ask the agent" gives a
           first-time reader no sign that a reply is sitting behind it.
         */}
-        <span className="truncate text-sm font-medium text-night/50">
+        <span className="truncate text-sm font-medium text-night/65">
           {chat.loading
             ? 'הסוכן עונה…'
             : offline
@@ -1534,7 +1538,7 @@ export default function TripWorkspace({
         </span>
         <span
           className={`ms-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
-            offline ? 'bg-night/10 text-night/40' : 'bg-sunset text-cream'
+            offline ? 'bg-night/10 text-night/65' : 'bg-sunset text-cream'
           }`}
         >
           <span aria-hidden>💬</span>
@@ -1761,12 +1765,12 @@ function Menu({
         title={ariaLabel}
         className={
           compact
-            ? 'flex h-7 w-7 items-center justify-center rounded-full text-night/35 transition hover:bg-night/5 hover:text-night'
+            ? 'flex h-7 w-7 items-center justify-center rounded-full text-night/65 transition hover:bg-night/5 hover:text-night'
             : chip
               ? `rounded-full px-2.5 py-1 text-xs font-semibold transition ${
                   chipActive
                     ? 'bg-sunset text-cream'
-                    : 'bg-night/5 text-night/50 hover:bg-night/10 hover:text-night'
+                    : 'bg-night/5 text-night/65 hover:bg-night/10 hover:text-night'
                 }`
               : 'inline-flex items-center gap-1.5 rounded-xl bg-shell px-3.5 py-2 text-sm font-semibold text-night ring-1 ring-night/15 transition hover:bg-night/5 hover:ring-night/30'
         }
@@ -1855,7 +1859,7 @@ function PrefSelect<T extends string>({
 
 function PrefChip({ label }: { label: string }) {
   return (
-    <span className="rounded-full bg-night/5 px-2.5 py-1 text-xs font-semibold text-night/60">
+    <span className="rounded-full bg-night/5 px-2.5 py-1 text-xs font-semibold text-night/70">
       {label}
     </span>
   );
@@ -1879,7 +1883,7 @@ function ToggleChip({
       title={disabled ? OFFLINE_HINT : undefined}
       aria-pressed={active}
       className={`rounded-full px-2.5 py-1 text-xs font-semibold transition ${
-        active ? 'bg-sunset text-cream' : 'bg-night/5 text-night/50 hover:bg-night/10'
+        active ? 'bg-sunset text-cream' : 'bg-night/5 text-night/65 hover:bg-night/10'
       }`}
     >
       {label}
@@ -1908,7 +1912,7 @@ function MapModeSwitch({
           onClick={() => onMode('day')}
           aria-pressed={mode === 'day'}
           className={`rounded-full px-3 py-1 text-xs font-bold transition ${
-            mode === 'day' ? 'bg-night/10 text-night' : 'text-night/50 hover:text-night'
+            mode === 'day' ? 'bg-night/10 text-night' : 'text-night/65 hover:text-night'
           }`}
         >
           {dayLabel}
@@ -1917,7 +1921,7 @@ function MapModeSwitch({
           onClick={() => onMode('trip')}
           aria-pressed={mode === 'trip'}
           className={`rounded-full px-3 py-1 text-xs font-bold transition ${
-            mode === 'trip' ? 'bg-night/10 text-night' : 'text-night/50 hover:text-night'
+            mode === 'trip' ? 'bg-night/10 text-night' : 'text-night/65 hover:text-night'
           }`}
         >
           כל הטיול

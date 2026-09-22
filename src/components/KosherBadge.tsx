@@ -52,7 +52,7 @@ export default function KosherBadge({
       ? 'bg-lagoon/10 text-lagoon-deep'
       : kashrut.knowledge === 'none-found'
         ? 'bg-night/8 text-night/70'
-        : 'bg-night/5 text-night/60';
+        : 'bg-night/5 text-night/70';
 
   return (
     <div className={`rounded-lg px-3 py-2 text-xs ${tone} ${className}`}>

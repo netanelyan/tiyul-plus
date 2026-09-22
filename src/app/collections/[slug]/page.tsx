@@ -64,7 +64,7 @@ export default async function CollectionPage({
           ),
         ]}
       />
-      <nav aria-label="מיקום באתר" className="text-sm text-night/55">
+      <nav aria-label="מיקום באתר" className="text-sm text-night/70">
         <Link href="/" className="transition hover:text-night">
           טיול+
         </Link>{' '}
@@ -79,7 +79,7 @@ export default async function CollectionPage({
         <span aria-hidden="true">{hub.emoji}</span> {hub.title}
       </h1>
       <p className="mt-3 max-w-2xl leading-relaxed text-night/75">{hub.intro}</p>
-      <p className="mt-2 text-sm text-night/55">{members.length} יעדים באוסף הזה.</p>
+      <p className="mt-2 text-sm text-night/70">{members.length} יעדים באוסף הזה.</p>
 
       <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {members.map(({ card, dest }) => (
@@ -94,7 +94,7 @@ export default async function CollectionPage({
                   {card.flag && <Flag flag={card.flag} label={card.country} className="me-2" />}
                   {card.name}
                 </h2>
-                <p className="mt-1 text-xs text-night/55">
+                <p className="mt-1 text-xs text-night/70">
                   {card.country} · {daysHe(card.days)} · {card.places} מקומות
                   {card.kosher > 0 && ` · ${card.kosher} כשרים`}
                 </p>

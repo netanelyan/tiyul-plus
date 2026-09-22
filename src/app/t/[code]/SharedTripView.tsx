@@ -95,7 +95,7 @@ export default function SharedTripView({
       <div className="rounded-3xl bg-shell p-6 ring-1 ring-night/10 sm:p-8">
         <p className="text-xs font-bold text-sunset-deep">טיול ששותף איתכם · צפייה חופשית</p>
         <h1 className="display mt-1 text-3xl text-night">{shared.name}</h1>
-        <p className="mt-2 text-sm font-semibold text-night/60">
+        <p className="mt-2 text-sm font-semibold text-night/70">
           {daysHe(shared.days.length)} · {totalStops} עצירות
           {formatHebrewRange(shared.startDate, shared.endDate)
             ? ` · ${formatHebrewRange(shared.startDate, shared.endDate)}`
@@ -117,7 +117,7 @@ export default function SharedTripView({
           >
             {saved ? '✓ נשמר - עוברים לטיול...' : 'שמירה אצלי ועריכה חופשית'}
           </button>
-          <span className="text-xs font-medium text-night/45">
+          <span className="text-xs font-medium text-night/65">
             נשמר עותק ל&quot;הטיולים שלי&quot; - המקור של השולח לא משתנה
           </span>
         </div>
@@ -161,7 +161,7 @@ export default function SharedTripView({
                     <h2 className="font-bold text-night">
                       יום {i + 1} · {dst?.name}
                     </h2>
-                    <p className="text-xs text-night/55">{dayDescription(dayObj, dst)}</p>
+                    <p className="text-xs text-night/70">{dayDescription(dayObj, dst)}</p>
                   </div>
                 </div>
                 {d.notes && (
@@ -188,11 +188,11 @@ export default function SharedTripView({
                                 ★
                               </span>
                             )}
-                            <span className="ms-2 whitespace-nowrap text-xs font-medium text-night/45">
+                            <span className="ms-2 whitespace-nowrap text-xs font-medium text-night/65">
                               {categoryMeta[p.category].label}
                             </span>
                           </p>
-                          <p className="line-clamp-3 text-sm leading-relaxed text-night/60">
+                          <p className="line-clamp-3 text-sm leading-relaxed text-night/70">
                             {p.description}
                           </p>
                         </div>

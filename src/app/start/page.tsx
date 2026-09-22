@@ -18,7 +18,7 @@ export default async function StartPage() {
   return (
     <div className="mx-auto max-w-3xl">
       <h1 className="display text-3xl text-night sm:text-4xl">איך בא לכם להתחיל?</h1>
-      <p className="mt-3 max-w-xl leading-relaxed text-night/60">
+      <p className="mt-3 max-w-xl leading-relaxed text-night/70">
         אותו סוכן, אותו טיול - שלוש דרכים להזין אותו. בוחרים מה שנוח.
       </p>
       <StartClient cities={cities} />

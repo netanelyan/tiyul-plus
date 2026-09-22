@@ -67,11 +67,11 @@ export default function PinsPanel({
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-sm font-bold text-night">{pin.name}</div>
-                  <div className="truncate text-xs font-medium text-night/50">
+                  <div className="truncate text-xs font-medium text-night/65">
                     {[meta.label, city, pin.address].filter(Boolean).join(' · ')}
                   </div>
                   {pin.note && (
-                    <div className="mt-0.5 truncate text-xs text-night/60">{pin.note}</div>
+                    <div className="mt-0.5 truncate text-xs text-night/70">{pin.note}</div>
                   )}
                 </div>
 
@@ -95,7 +95,7 @@ export default function PinsPanel({
                 <button
                   onClick={() => onRemovePin(pin.id)}
                   aria-label={`הסרת ${pin.name}`}
-                  className="flex h-7 w-7 items-center justify-center rounded-full bg-night/5 text-night/45 transition hover:bg-night/10 hover:text-night"
+                  className="flex h-7 w-7 items-center justify-center rounded-full bg-night/5 text-night/65 transition hover:bg-night/10 hover:text-night"
                 >
                   ✕
                 </button>
@@ -109,7 +109,7 @@ export default function PinsPanel({
             לחצו על המפה במקום המדויק - או גררו את הסיכה עצמה.
           </p>
         )}
-        <p className="mt-2 text-xs leading-relaxed text-night/45">
+        <p className="mt-2 text-xs leading-relaxed text-night/65">
           המיקומים מגיעים מחיפוש ב-OpenStreetMap. כשהחיפוש לא מוצא את המקום אנחנו לא מנחשים - הסיכה
           מסומנת &quot;לא אומת&quot; עד שתניחו אותה בעצמכם.
         </p>

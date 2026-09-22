@@ -62,7 +62,7 @@ export default function DayNavExport({
     */
     if (excluded === 0) return null;
     return (
-      <p className="mt-3 text-center text-xs font-medium text-night/40">
+      <p className="mt-3 text-center text-xs font-medium text-night/65">
         אין עדיין מספיק עצירות עם מיקום מאומת כדי לבנות ניווט ליום הזה
       </p>
     );
@@ -100,12 +100,12 @@ export default function DayNavExport({
               className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-night/5 px-4 py-2.5 text-center text-sm font-bold text-night/75 ring-1 ring-night/10 transition hover:bg-night/10 hover:text-night"
             >
               <span aria-hidden>🧭</span> ניווט · קטע {i + 1} מתוך {legs.length}
-              <span className="font-medium text-night/45">({leg.count} נקודות)</span>
+              <span className="font-medium text-night/65">({leg.count} נקודות)</span>
             </a>
           ))}
         </div>
       )}
-      <p className="mt-1.5 text-center text-xs font-medium text-night/40">
+      <p className="mt-1.5 text-center text-xs font-medium text-night/65">
         {legs.length === 1
           ? `${summary}${excludedNote}`
           : `${summary} · Google Maps מגבילה ${MAX_POINTS_PER_LEG} נקודות בניווט אחד, ולכן היום מחולק לקטעים רצופים${excludedNote}`}

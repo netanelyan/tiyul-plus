@@ -31,13 +31,13 @@ export default function PhotoCredits({ credits }: { credits: PhotoCredit[] }) {
       <summary className="cursor-pointer text-sm font-bold text-night/70">
         קרדיטים לתמונות ({credits.length})
       </summary>
-      <p className="mt-2 text-xs leading-relaxed text-night/55">
+      <p className="mt-2 text-xs leading-relaxed text-night/70">
         התמונות בעמוד הזה מגיעות מוויקישיתוף (Wikimedia Commons), ומוצגות בהתאם לרישיון של כל
         תמונה. לחיצה על שם הקובץ פותחת את עמוד המקור עם פרטי הרישיון המלאים.
       </p>
       <ul className="mt-3 space-y-1.5">
         {credits.map((c) => (
-          <li key={c.file} className="text-xs leading-relaxed text-night/60">
+          <li key={c.file} className="text-xs leading-relaxed text-night/70">
             <a
               href={c.descriptionUrl ?? '#'}
               target="_blank"
@@ -51,7 +51,7 @@ export default function PhotoCredits({ credits }: { credits: PhotoCredit[] }) {
             {c.artist ? (
               <span dir="auto">{c.artist}</span>
             ) : (
-              <span className="text-night/45">היוצר לא מצוין בוויקישיתוף</span>
+              <span className="text-night/65">היוצר לא מצוין בוויקישיתוף</span>
             )}
             {c.license && (
               <>

@@ -3,7 +3,7 @@
 import type { GroupRsvp as Rsvp } from '@/lib/trip/groupClient';
 
 const OPTIONS: { value: Rsvp['status']; label: string; on: string }[] = [
-  { value: 'going', label: 'מגיע/ה', on: 'bg-lagoon text-cream ring-lagoon' },
+  { value: 'going', label: 'מגיע/ה', on: 'bg-lagoon-deep text-cream ring-lagoon-deep' },
   { value: 'maybe', label: 'אולי', on: 'bg-zest text-night ring-zest' },
   { value: 'no', label: 'לא הפעם', on: 'bg-night text-cream ring-night' },
 ];
@@ -32,7 +32,7 @@ export default function GroupRsvp({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="text-xs font-bold text-night/55">
+      <span className="text-xs font-bold text-night/70">
         {count('going')} מגיעים
         {count('maybe') > 0 && ` · ${count('maybe')} אולי`}
         {count('no') > 0 && ` · ${count('no')} לא`}
@@ -46,7 +46,7 @@ export default function GroupRsvp({
               disabled={disabled}
               aria-pressed={mine === o.value}
               className={`min-h-[40px] rounded-full px-3.5 text-xs font-bold ring-1 transition active:scale-95 ${
-                mine === o.value ? o.on : 'bg-shell text-night/60 ring-night/15 hover:bg-night/5'
+                mine === o.value ? o.on : 'bg-shell text-night/70 ring-night/15 hover:bg-night/5'
               }`}
             >
               {o.label}

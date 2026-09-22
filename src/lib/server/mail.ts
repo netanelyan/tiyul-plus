@@ -190,6 +190,31 @@ export interface SendInput {
   replyTo?: string;
 }
 
+/**
+ * RFC 8058 one-click unsubscribe headers, derived from the message's own
+ * `UNSUBSCRIBE_URL`.
+ *
+ * Gmail, Outlook and Yahoo render their own "Unsubscribe" control next to the
+ * sender when these are present, and it is the control most people actually
+ * reach for - the alternative they reach for otherwise is "report spam", which
+ * costs the whole domain its deliverability. Both headers are required
+ * together: `List-Unsubscribe-Post` is what tells the client it may act
+ * without opening a page, and the URL must accept a POST, which
+ * `/api/newsletter/unsubscribe` does.
+ *
+ * Only added when the template actually carries an unsubscribe link, so a
+ * receipt or a password code - which nobody may unsubscribe from, and which
+ * would be lying about - never gets them.
+ */
+function listUnsubscribeHeaders(vars: MailVars): Record<string, string> | null {
+  const url = vars.UNSUBSCRIBE_URL;
+  if (typeof url !== 'string' || !/^https?:\/\//.test(url)) return null;
+  return {
+    'List-Unsubscribe': `<${url}>`,
+    'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+  };
+}
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
@@ -214,6 +239,7 @@ export async function sendMail(input: SendInput): Promise<MailResult> {
   if (!rendered) return { configured: true, ok: false, error: 'unfilled-placeholder' };
 
   const replyTo = input.replyTo ?? mailReplyTo();
+  const listHeaders = listUnsubscribeHeaders(input.vars ?? {});
   try {
     const res = await fetch(RESEND_URL, {
       method: 'POST',
@@ -224,6 +250,7 @@ export async function sendMail(input: SendInput): Promise<MailResult> {
         subject: rendered.subject,
         html: rendered.html,
         ...(replyTo ? { reply_to: replyTo } : {}),
+        ...(listHeaders ? { headers: listHeaders } : {}),
       }),
       signal: AbortSignal.timeout(TIMEOUT_MS),
     });

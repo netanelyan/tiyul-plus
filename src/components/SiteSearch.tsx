@@ -166,7 +166,7 @@ export default function SiteSearch({
         onClick={() => setOpen(true)}
         disabled={offline}
         title={offline ? OFFLINE_HINT : undefined}
-        className="flex w-full items-center gap-2.5 rounded-2xl border border-night/15 bg-shell px-4 py-3 text-start text-night/45 shadow-inner transition enabled:hover:border-sunset/40 enabled:hover:text-night/60 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex w-full items-center gap-2.5 rounded-2xl border border-night/15 bg-shell px-4 py-3 text-start text-night/65 shadow-inner transition enabled:hover:border-sunset/40 enabled:hover:text-night/70 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <SearchIcon />
         <span className="text-sm font-medium">
@@ -214,7 +214,7 @@ export default function SiteSearch({
           >
             <div className="h-fit w-full max-w-xl overflow-hidden rounded-3xl bg-shell shadow-[var(--shadow-pop)] ring-1 ring-night/10">
               <div className="flex items-center gap-2.5 border-b border-night/10 px-4 py-3">
-                <SearchIcon className="shrink-0 text-night/40" />
+                <SearchIcon className="shrink-0 text-night/65" />
                 <input
                   ref={inputRef}
                   value={query}
@@ -225,12 +225,12 @@ export default function SiteSearch({
                   aria-controls="site-search-results"
                   aria-label="חיפוש יעד, עיר או מקום"
                   placeholder="חיפוש יעד, עיר או מקום…"
-                  className="w-full bg-transparent text-night outline-none placeholder:text-night/40"
+                  className="w-full bg-transparent text-night outline-none placeholder:text-night/65"
                 />
                 <button
                   onClick={() => setOpen(false)}
                   aria-label="סגירה"
-                  className="shrink-0 rounded-full px-2 py-1 text-xs font-semibold text-night/45 transition hover:bg-night/5 hover:text-night"
+                  className="shrink-0 rounded-full px-2 py-1 text-xs font-semibold text-night/65 transition hover:bg-night/5 hover:text-night"
                 >
                   Esc
                 </button>
@@ -247,7 +247,7 @@ export default function SiteSearch({
                   */
                   popular.length > 0 ? (
                     <>
-                      <div className="px-3 pb-1 pt-2 text-xs font-bold text-night/40">
+                      <div className="px-3 pb-1 pt-2 text-xs font-bold text-night/65">
                         {/* A precise name, not "popular": we have no
                             popularity measurement, there is an editorial
                             rating in the data. */}
@@ -282,7 +282,7 @@ export default function SiteSearch({
                     return (
                       <div key={r.key}>
                         {(!prev || prev.kind !== r.kind) && (
-                          <div className="px-3 pb-1 pt-2 text-xs font-bold text-night/40">
+                          <div className="px-3 pb-1 pt-2 text-xs font-bold text-night/65">
                             {KIND_LABELS[r.kind]}
                           </div>
                         )}
@@ -298,7 +298,7 @@ export default function SiteSearch({
                   {/* The per-kind cap can omit results. We say so instead of
                       silently showing a truncated list. */}
                   {hits.omitted > 0 && (
-                    <p className="px-3 pt-2 text-xs font-medium text-night/40">
+                    <p className="px-3 pt-2 text-xs font-medium text-night/65">
                       ועוד {hits.omitted} התאמות - כדאי לחדד את החיפוש.
                     </p>
                   )}
@@ -310,14 +310,14 @@ export default function SiteSearch({
                       about. */}
                   <button
                     onClick={askAgent}
-                    className="mt-1 flex w-full items-center gap-2 rounded-xl border-t border-night/10 px-3 py-2.5 text-start text-xs font-semibold text-night/50 transition hover:bg-night/[0.04] hover:text-night"
+                    className="mt-1 flex w-full items-center gap-2 rounded-xl border-t border-night/10 px-3 py-2.5 text-start text-xs font-semibold text-night/65 transition hover:bg-night/[0.04] hover:text-night"
                   >
                     לא מצאתם? לשאול את הסוכן על &quot;{query.trim()}&quot; ←
                   </button>
                   </>
                 )}
                 {/* Keyboard hint: also here so the panel does not look cut off at the bottom */}
-                <p className="mt-1 hidden items-center gap-2 border-t border-night/10 px-3 pt-2 text-[11px] font-medium text-night/35 sm:flex">
+                <p className="mt-1 hidden items-center gap-2 border-t border-night/10 px-3 pt-2 text-[11px] font-medium text-night/65 sm:flex">
                   <kbd className="rounded bg-night/5 px-1.5 py-0.5 font-sans">↑</kbd>
                   <kbd className="rounded bg-night/5 px-1.5 py-0.5 font-sans">↓</kbd>
                   לבחירה
@@ -382,7 +382,7 @@ function Row({
     >
       <Flag flag={r.flag} label={r.title} size="md" />
       <span className="truncate font-semibold text-night">{r.title}</span>
-      <span className="truncate text-xs font-medium text-night/45">{r.subtitle}</span>
+      <span className="truncate text-xs font-medium text-night/65">{r.subtitle}</span>
     </button>
   );
 }

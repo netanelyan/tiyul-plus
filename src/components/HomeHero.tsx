@@ -43,7 +43,7 @@ export default function HomeHero() {
       <h1 className="display rise-in mt-3 text-center text-4xl text-night sm:text-6xl">
         לאן טסים הפעם?
       </h1>
-      <p className="rise-in mt-4 max-w-xl text-center leading-relaxed text-night/60">
+      <p className="rise-in mt-4 max-w-xl text-center leading-relaxed text-night/70">
         לא עוד מדריך לגלול בו - מספרים לי מה מדמיינים, ואני בונה לכם טיול אמיתי,
         יום-אחרי-יום, על מפה. בעברית.
       </p>

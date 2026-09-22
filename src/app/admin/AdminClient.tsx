@@ -184,7 +184,7 @@ export default function AdminClient() {
             לא.
           </li>
         </ol>
-        <p className="mt-4 text-xs font-medium text-night/45">
+        <p className="mt-4 text-xs font-medium text-night/65">
           המסך הזה מוצג רק למשתמש מחובר, והוא לא חושף שום מפתח או נתון.
         </p>
       </div>
@@ -195,7 +195,7 @@ export default function AdminClient() {
     return (
       <div className="mx-auto max-w-lg py-20 text-center">
         <h1 className="display text-3xl text-night">הדף לא נמצא</h1>
-        <p className="mt-3 text-sm font-medium leading-relaxed text-night/60">
+        <p className="mt-3 text-sm font-medium leading-relaxed text-night/70">
           אין כאן מה לראות. אם הגעתם לכאן בטעות, אפשר לחזור{' '}
           <Link href="/" className="font-bold text-sunset-deep underline">
             לדף הבית
@@ -213,7 +213,7 @@ export default function AdminClient() {
         <span className="rounded-full bg-sunset/10 px-3 py-1 text-xs font-bold text-sunset-deep ring-1 ring-sunset/25">
           {me.role === 'owner' ? '👑 בעלים' : '🛠️ אדמין'}
         </span>
-        <span className="text-xs font-medium text-night/45">{me.email}</span>
+        <span className="text-xs font-medium text-night/65">{me.email}</span>
       </header>
 
       {/*
@@ -234,7 +234,7 @@ export default function AdminClient() {
       <PromoCard api={api} />
       <FlagsCard api={api} />
 
-      <p className="rounded-xl bg-night/[0.03] px-4 py-3 text-xs font-medium leading-relaxed text-night/55">
+      <p className="rounded-xl bg-night/[0.03] px-4 py-3 text-xs font-medium leading-relaxed text-night/70">
         כל פעולה כאן נרשמת ביומן ביקורת עם המייל שלכם והזמן - כולל חיפוש של מטייל. היומן נקרא רק
         מהדאטהבייס, בכוונה: הוא לא אמור להיות משהו שאפשר לערוך מהממשק שכותב אליו.
       </p>
@@ -328,7 +328,7 @@ function UserCard({
   return (
     <section className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
       <h2 className="text-lg font-bold text-night">🔎 מטייל</h2>
-      <p className="mt-1 text-sm font-medium text-night/55">
+      <p className="mt-1 text-sm font-medium text-night/70">
         חיפוש לפי מייל מדויק. מוצגים תוכנית, תפקיד, מספר טיולים ושימוש היום - לא תוכן הטיולים ולא
         השיחות.
       </p>
@@ -361,14 +361,14 @@ function UserCard({
             <span className="font-bold text-night" dir="ltr">
               {info.email}
             </span>
-            {info.displayName && <span className="text-night/55">· {info.displayName}</span>}
+            {info.displayName && <span className="text-night/70">· {info.displayName}</span>}
             <span
               className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
                 info.plan === 'pro'
                   ? 'bg-night text-cream'
                   : info.plan === 'premium'
                     ? 'bg-sunset text-cream'
-                    : 'bg-night/10 text-night/60'
+                    : 'bg-night/10 text-night/70'
               }`}
             >
               {PLAN_LABEL_HE[info.plan ?? 'free']}
@@ -379,13 +379,13 @@ function UserCard({
               </span>
             )}
           </div>
-          <dl className="grid grid-cols-2 gap-2 text-xs font-medium text-night/60 sm:grid-cols-4">
+          <dl className="grid grid-cols-2 gap-2 text-xs font-medium text-night/70 sm:grid-cols-4">
             <div>
-              <dt className="text-night/40">פג בתאריך</dt>
+              <dt className="text-night/65">פג בתאריך</dt>
               <dd className="font-bold text-night/75">{hebrewDate(info.planUntil)}</dd>
             </div>
             <div>
-              <dt className="text-night/40">מקור</dt>
+              <dt className="text-night/65">מקור</dt>
               <dd className="font-bold text-night/75">
                 {info.planSource === 'stripe'
                   ? 'מנוי בתשלום'
@@ -397,19 +397,19 @@ function UserCard({
               </dd>
             </div>
             <div>
-              <dt className="text-night/40">טיולים</dt>
+              <dt className="text-night/65">טיולים</dt>
               <dd className="font-bold text-night/75">
                 {info.trips}
-                {info.tripsCapped && <span className="ms-1 font-normal text-night/40">ומעלה</span>}
+                {info.tripsCapped && <span className="ms-1 font-normal text-night/65">ומעלה</span>}
               </dd>
             </div>
             <div>
-              <dt className="text-night/40">יחידות AI היום</dt>
+              <dt className="text-night/65">יחידות AI היום</dt>
               <dd className="font-bold text-night/75">{(info.unitsToday ?? 0).toLocaleString('he-IL')}</dd>
             </div>
             {typeof info.premiumUsdMonth === 'number' && (
               <div>
-                <dt className="text-night/40">עלות AI החודש (מנוי)</dt>
+                <dt className="text-night/65">עלות AI החודש (מנוי)</dt>
                 <dd className="font-bold text-night/75" dir="ltr">
                   ${info.premiumUsdMonth.toFixed(2)}
                   {typeof info.premiumCapUsd === 'number' && ` / $${info.premiumCapUsd.toFixed(2)}`}
@@ -419,7 +419,7 @@ function UserCard({
           </dl>
 
           <div className="flex flex-wrap items-end gap-2 border-t border-night/10 pt-3">
-            <label className="text-xs font-bold text-night/50">
+            <label className="text-xs font-bold text-night/65">
               תוכנית
               <select
                 value={grantPlan}
@@ -431,7 +431,7 @@ function UserCard({
                 <option value="pro">{PLAN_LABEL_HE.pro}</option>
               </select>
             </label>
-            <label className="text-xs font-bold text-night/50">
+            <label className="text-xs font-bold text-night/65">
               ימים
               <input
                 value={days}
@@ -441,7 +441,7 @@ function UserCard({
                 className="mt-1 block w-20 rounded-lg bg-shell px-2.5 py-1.5 text-base sm:text-sm font-semibold text-night ring-1 ring-night/10"
               />
             </label>
-            <label className="min-w-[8rem] flex-1 text-xs font-bold text-night/50">
+            <label className="min-w-[8rem] flex-1 text-xs font-bold text-night/65">
               הערה (נשמרת ביומן)
               <input
                 value={note}
@@ -467,14 +467,14 @@ function UserCard({
               שלילה
             </button>
           </div>
-          <p className="text-xs font-medium text-night/45">
+          <p className="text-xs font-medium text-night/65">
             0 ימים = ללא תאריך סיום. ברירת המחדל היא 30 בכוונה: הענקה שפגה מעצמה לא הופכת בשקט
             למנוי חינם לנצח.
           </p>
 
           {role === 'owner' && info.role !== 'owner' && (
             <div className="flex flex-wrap items-center gap-2 border-t border-night/10 pt-3">
-              <span className="text-xs font-bold text-night/50">תפקיד (בעלים בלבד):</span>
+              <span className="text-xs font-bold text-night/65">תפקיד (בעלים בלבד):</span>
               {info.role === 'admin' ? (
                 <button
                   onClick={() => void setRole('user')}
@@ -552,12 +552,12 @@ function StatsCard({
   return (
     <section className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
       <h2 className="text-lg font-bold text-night">📊 שימוש ועלות</h2>
-      <p className="mt-1 text-sm font-medium text-night/55">
+      <p className="mt-1 text-sm font-medium text-night/70">
         נגזר מאותו מונה שמשמש למכסות - אין כאן איסוף חדש ואין מידע מזהה.
       </p>
       {s.tracked === false && (
         /* A zero caused by a read failure looks identical to a real zero - so we say what happened */
-        <p className="mt-2 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold text-night/55">
+        <p className="mt-2 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold text-night/70">
           לא הצלחנו לקרוא את טבלת השימוש (usage_daily). המספרים למטה אינם אפס אמיתי - הם פשוט לא
           ידועים. בדרך כלל זה supabase-premium.sql שעוד לא רץ.
         </p>
@@ -577,7 +577,7 @@ function StatsCard({
           ['מחוברים / אנונימיים', `${s.today.loggedIn} / ${s.today.anonymous}`],
         ].map(([label, value]) => (
           <div key={label} className="rounded-xl bg-cream p-3">
-            <div className="text-xs font-bold text-night/45">{label}</div>
+            <div className="text-xs font-bold text-night/65">{label}</div>
             <div className="text-lg font-bold text-night">{value}</div>
           </div>
         ))}
@@ -585,7 +585,7 @@ function StatsCard({
 
       {s.week.length > 0 && (
         <div className="mt-4">
-          <div className="text-xs font-bold text-night/45">שבעה ימים אחרונים</div>
+          <div className="text-xs font-bold text-night/65">שבעה ימים אחרונים</div>
           <div className="mt-2 flex h-24 items-end gap-1.5">
             {s.week.map((d) => (
               <div key={d.day} className="flex flex-1 flex-col items-center gap-1">
@@ -594,7 +594,7 @@ function StatsCard({
                   style={{ height: `${Math.round((d.units / peak) * 100)}%` }}
                   title={`${d.day}: ${d.units.toLocaleString('he-IL')} יחידות`}
                 />
-                <span className="text-[10px] font-medium text-night/40">{d.day.slice(5)}</span>
+                <span className="text-[10px] font-medium text-night/65">{d.day.slice(5)}</span>
               </div>
             ))}
           </div>
@@ -608,7 +608,7 @@ function StatsCard({
         because I counted rows in profiles instead of auth.users.
       */}
       {typeof s.accounts.withProfile === 'number' && s.accounts.withProfile < s.accounts.total && (
-        <p className="mt-3 text-xs font-medium text-night/45">
+        <p className="mt-3 text-xs font-medium text-night/65">
           מתוך {s.accounts.total.toLocaleString('he-IL')} החשבונות,{' '}
           {s.accounts.withProfile.toLocaleString('he-IL')} שמרו פרופיל (שם, תמונה או דרכון מדינות).
           השאר נכנסו ולא נגעו באזור האישי - הם חשבונות לכל דבר.
@@ -675,12 +675,12 @@ function PromoCard({
   return (
     <section className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
       <h2 className="text-lg font-bold text-night">🎁 קודי הטבה</h2>
-      <p className="mt-1 text-sm font-medium text-night/55">
+      <p className="mt-1 text-sm font-medium text-night/70">
         קוד שמטייל פודה בעצמו ומקבל פרימיום ל-X ימים. הפדיון אטומי ומוגבל לפעם אחת לכל חשבון - גם
         אם הקוד מסתובב ברשת.
       </p>
       <div className="mt-3 flex flex-wrap items-end gap-2">
-        <label className="text-xs font-bold text-night/50">
+        <label className="text-xs font-bold text-night/65">
           קוד
           <input
             value={code}
@@ -690,7 +690,7 @@ function PromoCard({
             className="mt-1 block w-32 rounded-lg bg-cream px-2.5 py-1.5 text-base sm:text-sm font-bold text-night ring-1 ring-night/10"
           />
         </label>
-        <label className="text-xs font-bold text-night/50">
+        <label className="text-xs font-bold text-night/65">
           ימים
           <input
             value={days}
@@ -699,7 +699,7 @@ function PromoCard({
             className="mt-1 block w-20 rounded-lg bg-cream px-2.5 py-1.5 text-base sm:text-sm font-semibold text-night ring-1 ring-night/10"
           />
         </label>
-        <label className="text-xs font-bold text-night/50">
+        <label className="text-xs font-bold text-night/65">
           מקסימום פדיונות
           <input
             value={max}
@@ -708,7 +708,7 @@ function PromoCard({
             className="mt-1 block w-24 rounded-lg bg-cream px-2.5 py-1.5 text-base sm:text-sm font-semibold text-night ring-1 ring-night/10"
           />
         </label>
-        <label className="min-w-[8rem] flex-1 text-xs font-bold text-night/50">
+        <label className="min-w-[8rem] flex-1 text-xs font-bold text-night/65">
           הערה
           <input
             value={note}
@@ -717,7 +717,7 @@ function PromoCard({
             className="mt-1 block w-full rounded-lg bg-cream px-2.5 py-1.5 text-base sm:text-sm text-night ring-1 ring-night/10"
           />
         </label>
-        <label className="text-xs font-bold text-night/50">
+        <label className="text-xs font-bold text-night/65">
           תוכנית
           <select
             value={plan}
@@ -746,15 +746,15 @@ function PromoCard({
               <span className="font-bold text-night" dir="ltr">
                 {c.code}
               </span>
-              <span className="text-night/55">
+              <span className="text-night/70">
                 {PLAN_LABEL_HE[c.plan ?? 'premium']} · {c.days} ימים · {c.redeemed}/
                 {c.max_redemptions} נפדו
               </span>
-              {c.note && <span className="text-xs text-night/40">· {c.note}</span>}
+              {c.note && <span className="text-xs text-night/65">· {c.note}</span>}
               <button
                 onClick={() => void toggle(c)}
                 className={`ms-auto rounded-full px-2.5 py-0.5 text-xs font-bold ${
-                  c.active ? 'bg-sunset/15 text-sunset-deep' : 'bg-night/10 text-night/50'
+                  c.active ? 'bg-sunset/15 text-sunset-deep' : 'bg-night/10 text-night/65'
                 }`}
               >
                 {c.active ? 'פעיל · לכיבוי' : 'כבוי · להדלקה'}
@@ -806,7 +806,7 @@ function FlagsCard({
       }`}
     >
       <h2 className="text-lg font-bold text-night">🛑 מפסק חירום</h2>
-      <p className="mt-1 text-sm font-medium leading-relaxed text-night/60">
+      <p className="mt-1 text-sm font-medium leading-relaxed text-night/70">
         כיבוי הסוכן החכם מפיל את הצ׳אט לתשובות מבוססות הכללים - האתר ממשיך לעבוד, המפה והמסלולים
         נשארים, וההוצאה על המודל נעצרת מיד. בלי דיפלוי, תוך חצי דקה. זה מה שעושים כשקמפיין מביא
         מאות אנשים בבת אחת או כשמשהו נראה חשוד.
@@ -982,12 +982,12 @@ function SpendCard({
         <span className="text-2xl font-black text-night" dir="ltr">
           {money(d.budget.spent)}
         </span>
-        <span className="text-sm font-semibold text-night/50" dir="ltr">
+        <span className="text-sm font-semibold text-night/65" dir="ltr">
           / {money(d.budget.limit)}
         </span>
         <span
           className={`text-sm font-bold ${
-            d.budget.exceeded ? 'text-sunset-deep' : near ? 'text-sunset-deep' : 'text-night/45'
+            d.budget.exceeded ? 'text-sunset-deep' : near ? 'text-sunset-deep' : 'text-night/65'
           }`}
         >
           {pct}%
@@ -1022,10 +1022,10 @@ function SpendCard({
             <div key={p.label} className="rounded-xl bg-cream p-3">
               <div className="flex items-baseline gap-2">
                 <span className="text-sm font-bold text-night">{p.label}</span>
-                <span className="text-xs font-semibold text-night/50" dir="ltr">
+                <span className="text-xs font-semibold text-night/65" dir="ltr">
                   {money(p.spent)} / {money(p.limit)}
                 </span>
-                <span className="ms-auto text-xs font-bold text-night/45">{r}%</span>
+                <span className="ms-auto text-xs font-bold text-night/65">{r}%</span>
               </div>
               <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-night/10">
                 <div
@@ -1033,12 +1033,12 @@ function SpendCard({
                   style={{ width: `${r}%` }}
                 />
               </div>
-              <p className="mt-1 text-[11px] font-medium text-night/45">{p.note}</p>
+              <p className="mt-1 text-[11px] font-medium text-night/65">{p.note}</p>
             </div>
           );
         })}
       </div>
-      <p className="mt-2 text-[11px] font-medium text-night/45">
+      <p className="mt-2 text-[11px] font-medium text-night/65">
         תקרה לזהות בודדת: <span dir="ltr">{money(d.budget.callerLimit)}</span> ליום (אנונימי -
         פחות). אף אחד לא יכול לקחת חלק גדול מהיום.
       </p>
@@ -1063,7 +1063,7 @@ function SpendCard({
 
       {/* ---------- Changing the ceiling, without a deploy ---------- */}
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <label className="text-xs font-bold text-night/55" htmlFor="budget-input">
+        <label className="text-xs font-bold text-night/70" htmlFor="budget-input">
           תקרה יומית ($)
         </label>
         <input
@@ -1081,14 +1081,14 @@ function SpendCard({
         >
           שמירה
         </button>
-        <span className="text-[11px] font-medium text-night/40">
+        <span className="text-[11px] font-medium text-night/65">
           חל מיד. 0 = הסוכן כבוי לגמרי.
         </span>
       </div>
 
       {/* ---------- The anonymous share, without a deploy ---------- */}
       <div className="mt-2 flex flex-wrap items-center gap-2">
-        <label className="text-xs font-bold text-night/55" htmlFor="anon-share-input">
+        <label className="text-xs font-bold text-night/70" htmlFor="anon-share-input">
           חלק האנונימיים (%)
         </label>
         <input
@@ -1106,7 +1106,7 @@ function SpendCard({
         >
           שמירה
         </button>
-        <span className="text-[11px] font-medium text-night/40">
+        <span className="text-[11px] font-medium text-night/65">
           חל מיד. השאר תמיד למחוברים - לא ניתן לכבות אותם דרך השדה הזה.
         </span>
       </div>
@@ -1120,7 +1120,7 @@ function SpendCard({
         >
           🧪 שליחת התראת בדיקה
         </button>
-        {alertBusy && <span className="text-[11px] font-medium text-night/40">שולח…</span>}
+        {alertBusy && <span className="text-[11px] font-medium text-night/65">שולח…</span>}
         {!alertBusy && alertResult && (
           <span
             className={`text-[11px] font-bold ${alertResult.ok ? 'text-lagoon' : 'text-sunset-deep'}`}
@@ -1146,14 +1146,14 @@ function SpendCard({
             <div className="text-lg font-black text-night" dir="ltr">
               {x.v}
             </div>
-            <div className="text-[11px] font-semibold text-night/50">{x.label}</div>
+            <div className="text-[11px] font-semibold text-night/65">{x.label}</div>
           </div>
         ))}
       </div>
 
       {/* ---------- 14 days ---------- */}
       <div className="mt-4">
-        <div className="text-xs font-bold text-night/55">הוצאה יומית (14 יום)</div>
+        <div className="text-xs font-bold text-night/70">הוצאה יומית (14 יום)</div>
         <div className="mt-2 flex h-16 items-end gap-1">
           {d.days.map((x) => (
             <div key={x.day} className="flex-1" title={`${x.day}: ${money(x.usd)}`}>
@@ -1169,7 +1169,7 @@ function SpendCard({
       {/* ---------- Who is spending ---------- */}
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <div>
-          <div className="text-xs font-bold text-night/55">הכי יקרים היום ובשבועיים</div>
+          <div className="text-xs font-bold text-night/70">הכי יקרים היום ובשבועיים</div>
           <ul className="mt-1.5 space-y-1">
             {d.topUsers.slice(0, 5).map((u, i) => (
               <li key={i} className="flex items-center gap-2 text-xs font-semibold text-night/70">
@@ -1177,13 +1177,13 @@ function SpendCard({
                   {u.kind === 'user' ? 'מחובר' : 'אנונימי'}
                 </span>
                 <span dir="ltr">{money(u.usd)}</span>
-                <span className="text-night/40">{u.requests} קריאות</span>
+                <span className="text-night/65">{u.requests} קריאות</span>
               </li>
             ))}
           </ul>
         </div>
         <div>
-          <div className="text-xs font-bold text-night/55">לפי מודל</div>
+          <div className="text-xs font-bold text-night/70">לפי מודל</div>
           <ul className="mt-1.5 space-y-1">
             {d.models.map((m) => (
               <li key={m.model} className="flex items-center gap-2 text-xs font-semibold text-night/70">
@@ -1200,18 +1200,18 @@ function SpendCard({
       {/* ---------- The subscribers' wallet: the real money, here only ---------- */}
       <div className="mt-4 rounded-xl bg-cream p-3">
         <div className="flex flex-wrap items-baseline gap-2">
-          <span className="text-xs font-bold text-night/55">מנויים בתשלום החודש ({d.premium.month})</span>
+          <span className="text-xs font-bold text-night/70">מנויים בתשלום החודש ({d.premium.month})</span>
           {d.premium.stored ? (
             <span className="text-sm font-black text-night" dir="ltr">
               {money(d.premium.totalUsd)}
             </span>
           ) : (
-            <span className="text-[11px] font-semibold text-night/40">
+            <span className="text-[11px] font-semibold text-night/65">
               לא נאסף - צריך להריץ את supabase-premium-budget.sql
             </span>
           )}
           {d.premium.stored && (
-            <span className="text-[11px] font-semibold text-night/40">
+            <span className="text-[11px] font-semibold text-night/65">
               {d.premium.subscribers} מנויים פעילים · תקרה אישית {money(d.premium.caps.premium)}{' '}
               לפרימיום, {money(d.premium.caps.pro)} לפרו
               {d.premium.truncated && ' · הגענו לתקרת השורות, הסכום חלקי'}
@@ -1224,7 +1224,7 @@ function SpendCard({
               <li key={t.userId} className="flex items-center gap-2 text-xs font-semibold text-night/70">
                 <span className="truncate">{t.email ?? t.userId.slice(0, 8)}</span>
                 <span dir="ltr" className="ms-auto">{money(t.usd)}</span>
-                <span className="text-night/40">{t.requests} קריאות</span>
+                <span className="text-night/65">{t.requests} קריאות</span>
               </li>
             ))}
           </ul>
@@ -1232,7 +1232,7 @@ function SpendCard({
       </div>
 
       {d.stored === null && (
-        <p className="mt-3 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold text-night/50">
+        <p className="mt-3 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold text-night/65">
           אין עדיין היסטוריה שמורה. אם המספרים נשארים ריקים אחרי שימוש, כנראה שצריך להריץ את
           supabase-ai-spend.sql - התקרה עצמה עובדת גם בלעדיו, לכל instance בנפרד.
         </p>
@@ -1311,7 +1311,7 @@ function PurchasesCard({
       }`}
     >
       <h2 className="text-lg font-bold text-night">🛫 בדיקה לפני הנסיעה</h2>
-      <p className="mt-1 text-sm font-medium text-night/55">
+      <p className="mt-1 text-sm font-medium text-night/70">
         הכנסה נספרת רק מרכישות אמיתיות דרך PayPal - הענקות ידניות והטבות מנוי פרימיום לא נכללות.
       </p>
 
@@ -1327,7 +1327,7 @@ function PurchasesCard({
             <div className="text-lg font-black text-night" dir="ltr">
               {x.v}
             </div>
-            <div className="text-[11px] font-semibold text-night/50">{x.label}</div>
+            <div className="text-[11px] font-semibold text-night/65">{x.label}</div>
           </div>
         ))}
       </div>
@@ -1344,7 +1344,7 @@ function PurchasesCard({
               </li>
             ))}
           </ul>
-          <p className="mt-1.5 text-[11px] font-medium text-night/50">
+          <p className="mt-1.5 text-[11px] font-medium text-night/65">
             כנראה ה-webhook של PayPal התעכב או לא הגיע. לבדוק בדשבורד של PayPal, ואם התשלום אכן
             הושלם - להעניק גישה ידנית ב״מטייל״ למעלה.
           </p>
@@ -1353,21 +1353,21 @@ function PurchasesCard({
 
       {d.recent.length > 0 && (
         <div className="mt-4">
-          <div className="text-xs font-bold text-night/55">רכישות אחרונות</div>
+          <div className="text-xs font-bold text-night/70">רכישות אחרונות</div>
           <ul className="mt-1.5 space-y-1">
             {d.recent.map((r) => (
               <li key={r.id} className="flex flex-wrap items-center gap-2 rounded-xl bg-cream px-3 py-2 text-xs">
                 <span className="font-bold text-night" dir="ltr">
                   {r.email ?? '—'}
                 </span>
-                <span className="text-night/50">טיול {r.tripId}</span>
+                <span className="text-night/65">טיול {r.tripId}</span>
                 <span
                   className={`rounded-full px-2 py-0.5 font-bold ${
                     r.status === 'paid'
                       ? 'bg-lagoon/20 text-night/70'
                       : r.status === 'pending'
                         ? 'bg-sunset/15 text-sunset-deep'
-                        : 'bg-night/10 text-night/50'
+                        : 'bg-night/10 text-night/65'
                   }`}
                 >
                   {PURCHASE_STATUS_LABEL[r.status] ?? r.status}
@@ -1377,7 +1377,7 @@ function PurchasesCard({
                 {r.mode === 'sandbox' && (
                   <span className="rounded-full bg-sunset px-2 py-0.5 font-black text-cream">sandbox</span>
                 )}
-                <span className="ms-auto text-[11px] font-semibold text-night/40">
+                <span className="ms-auto text-[11px] font-semibold text-night/65">
                   {hebrewDate(r.createdAt)}
                 </span>
               </li>
@@ -1462,7 +1462,7 @@ function AgentLeadsCard({
       <h2 className="text-lg font-bold text-night">
         🧳 פניות מסוכני נסיעות{d.open > 0 ? ` · ${d.open} ממתינות` : ''}
       </h2>
-      <p className="mt-1 text-sm font-medium text-night/55">
+      <p className="mt-1 text-sm font-medium text-night/70">
         מגיעות מהכרטיס &quot;סוכני נסיעות&quot; בעמוד המחירים. אין מחיר פומבי - מתמחרים לפי העסק.
       </p>
 
@@ -1502,12 +1502,12 @@ function AgentLeadsCard({
       </details>
 
       {!d.stored ? (
-        <p className="mt-3 rounded-xl bg-cream px-3 py-2 text-sm font-semibold text-night/55">
+        <p className="mt-3 rounded-xl bg-cream px-3 py-2 text-sm font-semibold text-night/70">
           לא נאסף - צריך להריץ את <code dir="ltr">sql/supabase-agent-leads.sql</code>. זה לא אומר
           שאין פניות, אלא שאי אפשר לקרוא אותן.
         </p>
       ) : d.leads.length === 0 ? (
-        <p className="mt-3 text-sm font-medium text-night/45">עדיין לא הגיעו פניות.</p>
+        <p className="mt-3 text-sm font-medium text-night/65">עדיין לא הגיעו פניות.</p>
       ) : (
         <ul className="mt-3 space-y-2">
           {d.leads.map((l) => (
@@ -1519,7 +1519,7 @@ function AgentLeadsCard({
             >
               <div className="flex flex-wrap items-baseline gap-2">
                 <span className="text-sm font-black text-night">{l.business}</span>
-                <span className="text-sm font-semibold text-night/60">{l.name}</span>
+                <span className="text-sm font-semibold text-night/70">{l.name}</span>
                 <a
                   href={l.contactKind === 'email' ? `mailto:${l.contact}` : `tel:${l.contact}`}
                   className="text-xs font-bold text-sunset-deep underline"
@@ -1528,11 +1528,11 @@ function AgentLeadsCard({
                   {l.contact}
                 </a>
                 {l.tripsPerYear && (
-                  <span className="rounded-full bg-night/10 px-2 py-0.5 text-[11px] font-bold text-night/60">
+                  <span className="rounded-full bg-night/10 px-2 py-0.5 text-[11px] font-bold text-night/70">
                     {l.tripsPerYear} טיולים בשנה
                   </span>
                 )}
-                <span className="ms-auto text-[11px] font-semibold text-night/40">
+                <span className="ms-auto text-[11px] font-semibold text-night/65">
                   {hebrewDate(l.createdAt)}
                 </span>
               </div>
@@ -1553,7 +1553,7 @@ function AgentLeadsCard({
         </ul>
       )}
       {d.truncated && (
-        <p className="mt-2 text-[11px] font-medium text-night/40">
+        <p className="mt-2 text-[11px] font-medium text-night/65">
           מוצגות 100 הפניות האחרונות בלבד.
         </p>
       )}
@@ -1616,7 +1616,7 @@ function GrowthCard({
 
   /** Trend against the previous range: arrow + delta. In "all" there is no previous - no trend. */
   const trend = (current: number, previous: number | null) => {
-    if (previous === null) return <span className="text-[11px] font-semibold text-night/35">—</span>;
+    if (previous === null) return <span className="text-[11px] font-semibold text-night/65">—</span>;
     const delta = current - previous;
     if (delta > 0)
       return (
@@ -1630,7 +1630,7 @@ function GrowthCard({
           ▼ {delta}
         </span>
       );
-    return <span className="text-[11px] font-semibold text-night/40" dir="ltr">=</span>;
+    return <span className="text-[11px] font-semibold text-night/65" dir="ltr">=</span>;
   };
 
   return (
@@ -1645,7 +1645,7 @@ function GrowthCard({
               className={`rounded-full px-3 py-1 text-xs font-bold transition ${
                 range === r.value
                   ? 'bg-night text-cream'
-                  : 'bg-night/[0.06] text-night/60 hover:bg-night/10'
+                  : 'bg-night/[0.06] text-night/70 hover:bg-night/10'
               }`}
             >
               {r.label}
@@ -1657,7 +1657,7 @@ function GrowthCard({
       {!d.stored ? (
         /* The rule: a counter that was not read shows "not collected", not
            zero - a quiet week and a broken counter must not look identical */
-        <p className="mt-3 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold text-night/55">
+        <p className="mt-3 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold text-night/70">
           לא נאסף - אין קריאה לטבלת האירועים (app_events). אם ה-SQL כבר רץ, לבדוק את
           SUPABASE_SERVICE_ROLE_KEY.
         </p>
@@ -1676,10 +1676,10 @@ function GrowthCard({
                     </span>
                     {trend(v.current, v.previous)}
                   </div>
-                  <div className="text-[11px] font-semibold leading-snug text-night/50">
+                  <div className="text-[11px] font-semibold leading-snug text-night/65">
                     {m.label}
                     {isAdopt && opens > 0 && (
-                      <span className="text-night/40">
+                      <span className="text-night/65">
                         {' '}
                         · {Math.round((v.current / opens) * 100)}% מהפתיחות
                       </span>
@@ -1690,7 +1690,7 @@ function GrowthCard({
             })}
           </div>
 
-          <p className="mt-2 text-[11px] font-medium text-night/40">
+          <p className="mt-2 text-[11px] font-medium text-night/65">
             המגמה משווה לטווח המקביל הקודם (7 הימים שלפני 7 האחרונים, וכן הלאה).
             &quot;ביקורים חוזרים&quot; = דפדפן שכבר ביקר ביום קודם, נספר פעם אחת ליום.
             {d.truncated && ' · הגענו לתקרת השורות - המספרים חלקיים.'}
@@ -1754,7 +1754,7 @@ function Bars({ data, label }: { data: { day: string; n: number }[]; label: stri
   return (
     <div>
       <div className="flex items-baseline gap-2">
-        <span className="text-xs font-bold text-night/55">{label}</span>
+        <span className="text-xs font-bold text-night/70">{label}</span>
         <span className="text-xs font-black text-night" dir="ltr">
           {total}
         </span>
@@ -1794,7 +1794,7 @@ function OverviewCard({
   return (
     <section className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
       <h2 className="text-lg font-bold text-night">📈 מה קורה באתר</h2>
-      <p className="mt-1 text-sm font-medium text-night/55">
+      <p className="mt-1 text-sm font-medium text-night/70">
         {d.windowDays} הימים האחרונים. מספרים מצטברים בלבד - אין כאן אף אדם מסוים.
       </p>
 
@@ -1814,7 +1814,7 @@ function OverviewCard({
             <div className="text-lg font-black text-night" dir="ltr">
               {x.v}
             </div>
-            <div className="text-[11px] font-semibold text-night/50">{x.label}</div>
+            <div className="text-[11px] font-semibold text-night/65">{x.label}</div>
           </div>
         ))}
       </div>
@@ -1838,10 +1838,10 @@ function OverviewCard({
           { title: 'ערים', rows: d.places.cities },
         ].map((g) => (
           <div key={g.title}>
-            <div className="text-xs font-bold text-night/55">{g.title}</div>
+            <div className="text-xs font-bold text-night/70">{g.title}</div>
             <ul className="mt-1.5 space-y-1">
               {g.rows.length === 0 && (
-                <li className="text-xs font-medium text-night/40">אין עדיין נתונים</li>
+                <li className="text-xs font-medium text-night/65">אין עדיין נתונים</li>
               )}
               {g.rows.map((r) => (
                 <li key={r.slug} className="flex items-center gap-2">
@@ -1854,7 +1854,7 @@ function OverviewCard({
                       style={{ width: `${Math.round((r.trips / topShare) * 100)}%` }}
                     />
                   </span>
-                  <span className="w-6 text-end text-[11px] font-bold text-night/45">{r.trips}</span>
+                  <span className="w-6 text-end text-[11px] font-bold text-night/65">{r.trips}</span>
                 </li>
               ))}
             </ul>
@@ -1864,11 +1864,11 @@ function OverviewCard({
 
       {/* ---------- Exports ---------- */}
       <div className="mt-4">
-        <div className="text-xs font-bold text-night/55">ייצוא ושיתוף</div>
+        <div className="text-xs font-bold text-night/70">ייצוא ושיתוף</div>
         {d.sharing.exportsTracked ? (
           <div className="mt-1.5 flex flex-wrap gap-2">
             {d.sharing.exports.length === 0 && (
-              <span className="text-xs font-medium text-night/40">אף אחד עוד לא ייצא טיול</span>
+              <span className="text-xs font-medium text-night/65">אף אחד עוד לא ייצא טיול</span>
             )}
             {d.sharing.exports.map((e) => (
               <span
@@ -1884,14 +1884,14 @@ function OverviewCard({
             null and not zero: the table does not exist yet. "0 prints" is a
             false number that looks exactly like a real one.
           */
-          <p className="mt-1.5 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold text-night/50">
+          <p className="mt-1.5 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold text-night/65">
             מונה הייצוא עוד לא פעיל - צריך להריץ את supabase-admin-dash.sql. עד אז אין כאן אפס,
             אין כאן כלום.
           </p>
         )}
       </div>
 
-      <p className="mt-4 rounded-xl bg-night/[0.03] px-3 py-2 text-[11px] font-medium leading-relaxed text-night/50">
+      <p className="mt-4 rounded-xl bg-night/[0.03] px-3 py-2 text-[11px] font-medium leading-relaxed text-night/65">
         {d.scope}
         {d.trips.truncated && ' · הגענו לתקרת השורות, המספרים חלקיים.'}
       </p>
@@ -2046,7 +2046,7 @@ function TripLookupCard({
   return (
     <section className="rounded-2xl bg-shell p-5 ring-1 ring-night/10">
       <h2 className="text-lg font-bold text-night">🔍 טיול בודד</h2>
-      <p className="mt-1 text-sm font-medium text-night/55">
+      <p className="mt-1 text-sm font-medium text-night/70">
         לעזרה לאדם מסוים או לבדיקת תקלה. קריאה בלבד - אין כאן עריכה ואין מחיקה. פתיחת טיול נרשמת
         ביומן.
       </p>
@@ -2064,7 +2064,7 @@ function TripLookupCard({
             className={`rounded-full px-3 py-1.5 text-xs font-bold transition ${
               mode === m
                 ? 'bg-night text-cream'
-                : 'bg-cream text-night/60 ring-1 ring-night/10 hover:text-night'
+                : 'bg-cream text-night/70 ring-1 ring-night/10 hover:text-night'
             }`}
           >
             {MODE_LABEL[m]}
@@ -2073,7 +2073,11 @@ function TripLookupCard({
       </div>
 
       <div className="mt-2 flex flex-wrap gap-2">
+        <label htmlFor="admin-traveler-search" className="sr-only">
+          חיפוש מטייל
+        </label>
         <input
+          id="admin-traveler-search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
           onKeyDown={(e) => {
@@ -2093,7 +2097,7 @@ function TripLookupCard({
         </button>
       </div>
 
-      {note && <p className="mt-2 text-xs font-semibold text-night/55">{note}</p>}
+      {note && <p className="mt-2 text-xs font-semibold text-night/70">{note}</p>}
 
       {hits && hits.length > 0 && (
         <ul className="mt-3 space-y-1.5">
@@ -2106,10 +2110,10 @@ function TripLookupCard({
                 }`}
               >
                 <span className="text-sm font-bold text-night">{h.name}</span>
-                <span className="text-xs font-semibold text-night/50" dir="ltr">
+                <span className="text-xs font-semibold text-night/65" dir="ltr">
                   {h.email ?? '—'}
                 </span>
-                <span className="ms-auto text-[11px] font-semibold text-night/40">
+                <span className="ms-auto text-[11px] font-semibold text-night/65">
                   {daysHe(h.days)} · {h.stops} עצירות · {hebrewDate(h.updatedAt)}
                 </span>
               </button>
@@ -2118,7 +2122,7 @@ function TripLookupCard({
         </ul>
       )}
       {hits && hits.length > 0 && total > hits.length && (
-        <p className="mt-1.5 text-[11px] font-medium text-night/40">
+        <p className="mt-1.5 text-[11px] font-medium text-night/65">
           {total} תוצאות בסך הכול.
         </p>
       )}
@@ -2127,12 +2131,12 @@ function TripLookupCard({
         <div className="mt-4 rounded-2xl bg-cream p-4 ring-1 ring-night/10">
           <div className="flex flex-wrap items-baseline gap-2">
             <h3 className="text-base font-black text-night">{open.view.name}</h3>
-            <span className="text-xs font-semibold text-night/50" dir="ltr">
+            <span className="text-xs font-semibold text-night/65" dir="ltr">
               {open.owner.email ?? open.owner.userId}
             </span>
             <button
               onClick={() => setOpen(null)}
-              className="ms-auto rounded-full bg-night/[0.06] px-3 py-1 text-[11px] font-bold text-night/60"
+              className="ms-auto rounded-full bg-night/[0.06] px-3 py-1 text-[11px] font-bold text-night/70"
             >
               סגירה
             </button>
@@ -2140,14 +2144,14 @@ function TripLookupCard({
           {(open.view.startDate || open.view.preferences.length > 0) && (
             <div className="mt-2 flex flex-wrap gap-1.5">
               {open.view.startDate && (
-                <span className="rounded-full bg-night/[0.05] px-2.5 py-1 text-[11px] font-bold text-night/60" dir="ltr">
+                <span className="rounded-full bg-night/[0.05] px-2.5 py-1 text-[11px] font-bold text-night/70" dir="ltr">
                   {open.view.startDate} → {open.view.endDate ?? '?'}
                 </span>
               )}
               {open.view.preferences.map((p) => (
                 <span
                   key={p.label}
-                  className="rounded-full bg-night/[0.05] px-2.5 py-1 text-[11px] font-bold text-night/60"
+                  className="rounded-full bg-night/[0.05] px-2.5 py-1 text-[11px] font-bold text-night/70"
                 >
                   {p.label}: {p.value}
                 </span>
@@ -2160,13 +2164,13 @@ function TripLookupCard({
               <li key={day.n} className="rounded-xl bg-shell p-3">
                 <div className="flex flex-wrap items-baseline gap-2">
                   <span className="text-sm font-bold text-night">יום {day.n}</span>
-                  <span className="text-xs font-semibold text-night/60">
+                  <span className="text-xs font-semibold text-night/70">
                     {day.cityName}
                     {day.countryName ? ` · ${day.countryName}` : ''}
                   </span>
                 </div>
                 {day.stops.length === 0 ? (
-                  <p className="mt-1 text-xs font-medium text-night/40">אין עצירות ביום הזה</p>
+                  <p className="mt-1 text-xs font-medium text-night/65">אין עצירות ביום הזה</p>
                 ) : (
                   <ul className="mt-1 space-y-0.5">
                     {day.stops.map((s, i) => (
@@ -2174,14 +2178,14 @@ function TripLookupCard({
                         {i + 1}. {s.name}
                         {s.mustSee && <span className="text-zest"> ★</span>}
                         {s.unknown && (
-                          <span className="text-night/35"> · לא בקטלוג</span>
+                          <span className="text-night/65"> · לא בקטלוג</span>
                         )}
                       </li>
                     ))}
                   </ul>
                 )}
                 {day.notes && (
-                  <p className="mt-1.5 rounded-lg bg-night/[0.04] px-2 py-1 text-[11px] font-medium text-night/55">
+                  <p className="mt-1.5 rounded-lg bg-night/[0.04] px-2 py-1 text-[11px] font-medium text-night/70">
                     {day.notes}
                   </p>
                 )}
@@ -2191,7 +2195,7 @@ function TripLookupCard({
 
           {open.view.pins.length > 0 && (
             <div className="mt-3">
-              <div className="text-xs font-bold text-night/55">סיכות של המטייל</div>
+              <div className="text-xs font-bold text-night/70">סיכות של המטייל</div>
               <ul className="mt-1 flex flex-wrap gap-1.5">
                 {open.view.pins.map((p, i) => (
                   <li
@@ -2199,7 +2203,7 @@ function TripLookupCard({
                     className="rounded-full bg-shell px-2.5 py-1 text-[11px] font-semibold text-night/65"
                   >
                     {p.name}
-                    {!p.located && <span className="text-night/35"> · מיקום לא אומת</span>}
+                    {!p.located && <span className="text-night/65"> · מיקום לא אומת</span>}
                   </li>
                 ))}
               </ul>
@@ -2209,7 +2213,7 @@ function TripLookupCard({
           {/* Pre-departure check - status + manual grant/revoke for the open trip */}
           <div className="mt-3 rounded-xl bg-shell p-3">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-bold text-night/60">🛫 בדיקה לפני הנסיעה:</span>
+              <span className="text-xs font-bold text-night/70">🛫 בדיקה לפני הנסיעה:</span>
               {purchase ? (
                 <span
                   className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
@@ -2217,7 +2221,7 @@ function TripLookupCard({
                       ? 'bg-lagoon/20 text-night/75'
                       : purchase.status === 'pending'
                         ? 'bg-sunset/15 text-sunset-deep'
-                        : 'bg-night/10 text-night/50'
+                        : 'bg-night/10 text-night/65'
                   }`}
                 >
                   {PURCHASE_STATUS_LABEL[purchase.status] ?? purchase.status}
@@ -2226,11 +2230,11 @@ function TripLookupCard({
                   {purchase.mode === 'sandbox' ? ' · sandbox' : ''}
                 </span>
               ) : (
-                <span className="text-xs font-medium text-night/40">לא נרכשה</span>
+                <span className="text-xs font-medium text-night/65">לא נרכשה</span>
               )}
             </div>
             <div className="mt-2 flex flex-wrap items-end gap-2">
-              <label className="min-w-[8rem] flex-1 text-[11px] font-bold text-night/50">
+              <label className="min-w-[8rem] flex-1 text-[11px] font-bold text-night/65">
                 הערה (נשמרת ביומן)
                 <input
                   value={purchaseNote}
@@ -2256,10 +2260,10 @@ function TripLookupCard({
                 </button>
               )}
             </div>
-            {purchaseMsg && <p className="mt-1.5 text-xs font-semibold text-night/60">{purchaseMsg}</p>}
+            {purchaseMsg && <p className="mt-1.5 text-xs font-semibold text-night/70">{purchaseMsg}</p>}
           </div>
 
-          <p className="mt-3 text-[11px] font-medium text-night/40">
+          <p className="mt-3 text-[11px] font-medium text-night/65">
             עדכון אחרון: {hebrewDate(open.updatedAt)} · הפתיחה הזאת נרשמה ביומן.
           </p>
         </div>

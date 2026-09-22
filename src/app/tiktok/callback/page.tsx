@@ -80,7 +80,7 @@ function Scopes({ scopes }: { scopes: string[] }) {
   if (scopes.length === 0) return null;
   return (
     <div>
-      <p className="text-xs font-bold text-night/45">ההרשאות שניתנו</p>
+      <p className="text-xs font-bold text-night/65">ההרשאות שניתנו</p>
       <ul className="mt-1.5 flex flex-wrap gap-1.5">
         {scopes.map((s) => (
           <li
@@ -120,7 +120,7 @@ export default async function TikTokCallbackPage({
           לא אישרתם את החיבור, או שטיקטוק סירב לבקשה. לא נשמר כלום ואפשר לנסות שוב בכל רגע.
         </p>
         {errorDescription && (
-          <p className="rounded-xl bg-night/[0.04] px-3 py-2 text-sm text-night/60" dir="auto">
+          <p className="rounded-xl bg-night/[0.04] px-3 py-2 text-sm text-night/70" dir="auto">
             {errorDescription}
           </p>
         )}
@@ -190,7 +190,7 @@ export default async function TikTokCallbackPage({
           <strong>קוד ההרשאה תקף לזמן קצר בלבד</strong>, ולכן צריך להתחיל את החיבור מחדש ולא
           לרענן את הדף הזה.
         </p>
-        <p className="rounded-xl bg-night/[0.04] px-3 py-2 text-sm text-night/60" dir="ltr">
+        <p className="rounded-xl bg-night/[0.04] px-3 py-2 text-sm text-night/70" dir="ltr">
           {outcome.kind === 'unreachable'
             ? `bot unreachable (${outcome.error})`
             : `bot responded ${outcome.status}: ${outcome.error}`}
@@ -218,7 +218,7 @@ export default async function TikTokCallbackPage({
       </p>
       <Scopes scopes={granted} />
       {!handle && r.open_id && (
-        <p className="text-sm text-night/55">
+        <p className="text-sm text-night/70">
           מזהה החשבון:{' '}
           <span dir="ltr" className="font-mono font-bold text-night/70">
             {r.open_id}
@@ -226,7 +226,7 @@ export default async function TikTokCallbackPage({
         </p>
       )}
       {typeof r.expires_in === 'number' && (
-        <p className="text-sm text-night/55">
+        <p className="text-sm text-night/70">
           ההרשאה תקפה ל-{Math.round(r.expires_in / 3600)} שעות ומתחדשת אוטומטית.
         </p>
       )}

@@ -42,7 +42,7 @@ export default function BookingSearchCardView({ card }: { card: Card }) {
         {card.onProvider.length > 0 && (
           // States explicitly what is **not** sent to the provider. A promise we cannot keep
           // in the search URL will not be presented as if it were kept.
-          <p className="mt-2 text-[11px] font-medium leading-relaxed text-night/50">
+          <p className="mt-2 text-[11px] font-medium leading-relaxed text-night/65">
             נקבע באתר הספק: {card.onProvider.join(' · ')}
           </p>
         )}
@@ -63,7 +63,7 @@ export default function BookingSearchCardView({ card }: { card: Card }) {
           </a>
         ) : (
           <p
-            className="mt-3 flex min-h-11 items-center justify-center rounded-xl bg-night/[0.04] px-3 py-3 text-center text-xs font-semibold text-night/45"
+            className="mt-3 flex min-h-11 items-center justify-center rounded-xl bg-night/[0.04] px-3 py-3 text-center text-xs font-semibold text-night/65"
             title={OFFLINE_HINT}
           >
             {card.cta} · דורש חיבור
@@ -72,7 +72,7 @@ export default function BookingSearchCardView({ card }: { card: Card }) {
       </div>
 
       {/* Disclosure - mandatory, so it is part of the card and not text somebody can forget */}
-      <p className="border-t border-night/10 bg-night/[0.03] px-3 py-2 text-[11px] font-medium leading-relaxed text-night/50">
+      <p className="border-t border-night/10 bg-night/[0.03] px-3 py-2 text-[11px] font-medium leading-relaxed text-night/65">
         {SEARCH_DISCLOSURE}
       </p>
     </div>

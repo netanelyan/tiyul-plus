@@ -61,13 +61,13 @@ function Head({
       </span>
       {badge}
       {meta && (
-        <span className="min-w-0 flex-1 truncate text-xs font-semibold text-night/45">{meta}</span>
+        <span className="min-w-0 flex-1 truncate text-xs font-semibold text-night/65">{meta}</span>
       )}
       {caret && (
         <span
           data-panel-caret
           aria-hidden
-          className={`ms-auto text-xs text-night/40 transition-transform ${open ? 'rotate-180' : ''}`}
+          className={`ms-auto text-xs text-night/65 transition-transform ${open ? 'rotate-180' : ''}`}
         >
           ▾
         </span>

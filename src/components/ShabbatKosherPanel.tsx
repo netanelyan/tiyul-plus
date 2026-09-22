@@ -123,12 +123,12 @@ export default function ShabbatKosherPanel({
                   {s.candles && s.havdalah ? (
                     <p className="mt-1 font-semibold text-night/70">
                       הדלקת נרות {s.candles} · צאת השבת {s.havdalah}
-                      <span className="ms-1.5 text-xs font-medium text-night/45">
+                      <span className="ms-1.5 text-xs font-medium text-night/65">
                         (שעון מקומי)
                       </span>
                     </p>
                   ) : (
-                    <p className="mt-1 text-xs font-semibold text-night/55">
+                    <p className="mt-1 text-xs font-semibold text-night/70">
                       לא הצלחנו לקבוע שעון מקומי אמין לעיר הזו - בדקו לוח זמנים מקומי לפני
                       שבת.
                     </p>
@@ -136,7 +136,7 @@ export default function ShabbatKosherPanel({
                 </li>
               ))}
             </ul>
-            <p className="mt-2 text-[11px] font-medium leading-relaxed text-night/45">
+            <p className="mt-2 text-[11px] font-medium leading-relaxed text-night/65">
               {ZMANIM_METHOD_HE}
             </p>
           </div>
@@ -160,7 +160,7 @@ export default function ShabbatKosherPanel({
                         יום מנוחה
                       </span>
                     ) : (
-                      <span className="ms-1.5 rounded-full bg-night/8 px-2 py-0.5 text-[11px] font-bold text-night/60">
+                      <span className="ms-1.5 rounded-full bg-night/8 px-2 py-0.5 text-[11px] font-bold text-night/70">
                         ערב חג/שבת
                       </span>
                     )}
@@ -169,7 +169,7 @@ export default function ShabbatKosherPanel({
                   {d.reason.chagim.length > 0 && (
                     <p className="mt-1 text-xs font-bold text-night/75">
                       {d.reason.chagim.map((c) => c.name).join(' · ')}
-                      <span className="font-medium text-night/45"> ({d.reason.chagim[0].hebrewDate})</span>
+                      <span className="font-medium text-night/65"> ({d.reason.chagim[0].hebrewDate})</span>
                     </p>
                   )}
 
@@ -178,7 +178,7 @@ export default function ShabbatKosherPanel({
                       {d.candles && <>הדלקת נרות {d.candles}</>}
                       {d.candles && d.ends && ' · '}
                       {d.ends && <>צאת השבת {d.ends}</>}
-                      <span className="ms-1.5 text-xs font-medium text-night/45">
+                      <span className="ms-1.5 text-xs font-medium text-night/65">
                         (שעון מקומי)
                       </span>
                     </p>
@@ -200,7 +200,7 @@ export default function ShabbatKosherPanel({
 
                   {d.walkFromStay.length > 0 && (
                     <details className="mt-2">
-                      <summary className="cursor-pointer text-xs font-bold text-night/60">
+                      <summary className="cursor-pointer text-xs font-bold text-night/70">
                         מרחקי הליכה מהלינה ({d.walkFromStay.length})
                       </summary>
                       <ul className="mt-1.5 space-y-1">
@@ -210,7 +210,7 @@ export default function ShabbatKosherPanel({
                           </li>
                         ))}
                       </ul>
-                      <p className="mt-1 text-[11px] font-medium text-night/40">
+                      <p className="mt-1 text-[11px] font-medium text-night/65">
                         מרחק אווירי מחושב מהקואורדינטות. הליכה בפועל ארוכה יותר - הרחוב לא ישר.
                       </p>
                     </details>
@@ -219,7 +219,7 @@ export default function ShabbatKosherPanel({
               ))}
             </ul>
             {allWarnings.length === 0 && (
-              <p className="mt-2 text-xs font-semibold text-night/55">
+              <p className="mt-2 text-xs font-semibold text-night/70">
                 לא מצאנו התנגשויות במסלול בימים האלה. עדיין כדאי לוודא שעות פתיחה מול כל מקום.
               </p>
             )}
@@ -234,7 +234,7 @@ export default function ShabbatKosherPanel({
                 else on the site */}
             <p className="text-sm font-bold text-night">כשרות {inHe(dest.name)}</p>
             {overview && (
-              <p className="mt-1.5 text-xs font-semibold leading-relaxed text-night/60">
+              <p className="mt-1.5 text-xs font-semibold leading-relaxed text-night/70">
                 {overview}
               </p>
             )}
@@ -244,7 +244,7 @@ export default function ShabbatKosherPanel({
                   <li key={p.id} className="rounded-xl bg-cream p-3">
                     <p className="text-sm font-bold text-night">{p.name}</p>
                     {p.description && (
-                      <p className="mt-0.5 text-xs leading-relaxed text-night/60">
+                      <p className="mt-0.5 text-xs leading-relaxed text-night/70">
                         {p.description}
                       </p>
                     )}
@@ -256,7 +256,7 @@ export default function ShabbatKosherPanel({
           </div>
         ))}
 
-        <p className="text-[11px] font-medium leading-relaxed text-night/40">
+        <p className="text-[11px] font-medium leading-relaxed text-night/65">
           מידע הכשרות נאסף ממקורות ציבוריים ומוצג כפי שדווח - תמיד לוודא מול המקום לפני
           שסומכים עליו.
         </p>

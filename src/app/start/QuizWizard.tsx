@@ -81,7 +81,7 @@ function Choice({
     >
       {label}
       {hint && (
-        <span className={`mt-0.5 block text-xs font-normal ${active ? 'text-cream/80' : 'text-night/40'}`}>
+        <span className={`mt-0.5 block text-xs font-normal ${active ? 'text-cream/80' : 'text-night/65'}`}>
           {hint}
         </span>
       )}
@@ -199,7 +199,7 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
             />
             <span
               className={`hidden text-[11px] font-semibold sm:block ${
-                i === step ? 'text-sunset-deep' : 'text-night/40'
+                i === step ? 'text-sunset-deep' : 'text-night/65'
               }`}
             >
               {s}
@@ -223,7 +223,7 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
         <TransitionPanel activeIndex={step} className="min-h-[11rem]">
         <Field label="לאן טסים? (אפשר לבחור כמה ערים)">
           <CityCombobox options={cities} citySlugs={citySlugs} onToggle={toggleCity} autoFocus />
-          <p className="mt-2 text-xs leading-relaxed text-night/45">
+          <p className="mt-2 text-xs leading-relaxed text-night/65">
             מקלידים שם עיר או מדינה - או פותחים את השדה ובוחרים מתוך {cities.length} הערים בקטלוג.
             אפשר לבחור כמה, והימים יתחלקו ביניהן.
           </p>
@@ -330,7 +330,7 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
                 <Choice label="אוכל כשר" active={kosher} onClick={() => setKosher((v) => !v)} />
                 <Choice label="שמירת שבת" active={shabbat} onClick={() => setShabbat((v) => !v)} />
               </div>
-              <p className="mt-2 text-xs leading-relaxed text-night/45">
+              <p className="mt-2 text-xs leading-relaxed text-night/65">
                 העדפות שוות ואופציונליות - נכבד אותן בבניית הטיול רק אם תבחרו בהן.
               </p>
             </Field>
@@ -353,7 +353,7 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
           type="button"
           onClick={() => setStep((s) => Math.max(0, s - 1))}
           disabled={step === 0 || building}
-          className="rounded-xl px-4 py-2.5 text-sm font-semibold text-night/60 transition hover:text-night disabled:opacity-0"
+          className="rounded-xl px-4 py-2.5 text-sm font-semibold text-night/70 transition hover:text-night disabled:opacity-0"
         >
           → הקודם
         </button>

@@ -216,7 +216,7 @@ export default function PremiumClient() {
     if (planAtLeast(plan, wanted))
       return (
         <p
-          className={`rounded-xl bg-night/5 px-3 py-2.5 text-center text-xs font-bold text-night/55 ${extraClass}`}
+          className={`rounded-xl bg-night/5 px-3 py-2.5 text-center text-xs font-bold text-night/70 ${extraClass}`}
         >
           כבר כלול בתוכנית שלכם
         </p>
@@ -238,7 +238,7 @@ export default function PremiumClient() {
               ? `התחלת מנוי · ${ils(price)} ₪ לחודש`
               : `מעבר לפרו · ${ils(price)} ₪ לחודש`}
         </button>
-        <p className="mt-2 text-center text-[11px] font-medium text-night/50">
+        <p className="mt-2 text-center text-[11px] font-medium text-night/65">
           ביטול בלחיצה, בכל רגע · בלי התחייבות · התשלום דרך PayPal
         </p>
       </div>
@@ -252,7 +252,7 @@ export default function PremiumClient() {
         <h1 className="display mt-1 text-3xl text-night sm:text-4xl">
           התכנון חינם. משלמים רק על מה שבאמת צריך.
         </h1>
-        <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-night/60">
+        <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-night/70">
           כל התכנון חינם, בלי כרטיס אשראי. משלמים רק כדי לתכנן ביחד עם מי שנוסע איתכם, או כדי לבדוק
           את הטיול לפני היציאה.
         </p>
@@ -266,7 +266,7 @@ export default function PremiumClient() {
           that file wrong. The rate itself is deliberately not printed - it
           changes by legislation, and the sentence stays true when it does.
         */}
-        <p className="mt-2 text-xs font-semibold text-night/45">כל המחירים באתר כוללים מע״מ.</p>
+        <p className="mt-2 text-xs font-semibold text-night/65">כל המחירים באתר כוללים מע״מ.</p>
       </div>
 
       {/* ---------- Which one is you: four rows, four anchors ----------
@@ -388,9 +388,9 @@ export default function PremiumClient() {
           id="plan-free"
           className="h-full scroll-mt-24 rounded-3xl bg-shell p-5 ring-1 ring-night/10 sm:order-1"
         >
-          <h2 className="text-sm font-bold text-night/60">חינם</h2>
+          <h2 className="text-sm font-bold text-night/70">חינם</h2>
           <p className="mt-1 text-3xl font-black text-night">
-            0 ₪<span className="text-sm font-semibold text-night/50"> / לתמיד</span>
+            0 ₪<span className="text-sm font-semibold text-night/65"> / לתמיד</span>
           </p>
           <p className="mt-2 text-sm leading-relaxed text-night/65">
             כל התכנון עצמו. בלי כרטיס אשראי ובלי הגבלת זמן.
@@ -404,13 +404,13 @@ export default function PremiumClient() {
               'להצטרף לטיול משותף של מישהו אחר, להצביע ולהציע',
             ].map((t) => (
               <li key={t} className="flex items-start gap-2">
-                <span className="mt-0.5 text-night/35">•</span>
+                <span className="mt-0.5 text-night/65">•</span>
                 <span>{t}</span>
               </li>
             ))}
           </ul>
           {plan === 'free' && (
-            <p className="mt-5 rounded-xl bg-night/5 px-3 py-2.5 text-center text-xs font-bold text-night/55">
+            <p className="mt-5 rounded-xl bg-night/5 px-3 py-2.5 text-center text-xs font-bold text-night/70">
               התוכנית הנוכחית שלכם
             </p>
           )}
@@ -421,9 +421,9 @@ export default function PremiumClient() {
           id="plan-pro"
           className="h-full scroll-mt-24 rounded-3xl bg-shell p-5 ring-1 ring-night/15 sm:order-3"
         >
-          <h2 className="text-sm font-bold text-night/60">פרו</h2>
+          <h2 className="text-sm font-bold text-night/70">פרו</h2>
           <p className="mt-1 text-3xl font-black text-night">
-            {ils(PRO_PRICE_ILS)} ₪<span className="text-sm font-semibold text-night/50"> / לחודש</span>
+            {ils(PRO_PRICE_ILS)} ₪<span className="text-sm font-semibold text-night/65"> / לחודש</span>
           </p>
           <p className="mt-2 text-sm leading-relaxed text-night/65">
             <b className="text-night">בדיוק מה שיש בפרימיום, עם הרבה יותר מקום לתכנן.</b> לא פיצ׳ר
@@ -452,7 +452,7 @@ export default function PremiumClient() {
           </ul>
           {/* A quiet line, not a box - the last nested card in this grid, and the
               three columns only read as one system while none of them has one. */}
-          <p className="mt-3 border-t border-night/10 pt-3 text-xs leading-relaxed text-night/55">
+          <p className="mt-3 border-t border-night/10 pt-3 text-xs leading-relaxed text-night/70">
             למי שמארגן טיולים למשפחה ולחברים כל הזמן, או מתכנן מסע ארוך על פני כמה חודשים.{' '}
             <b className="text-night/75">לא נתקלתם בקיר בפרימיום? אל תשדרגו.</b>
           </p>
@@ -485,7 +485,7 @@ export default function PremiumClient() {
               /* Auth is not configured in this environment - there is no modal
                  to open, so say where the button is instead of drawing a dead
                  one. */
-              <p className="mt-1 text-xs font-medium text-night/60">
+              <p className="mt-1 text-xs font-medium text-night/70">
                 כפתור ההתחברות נמצא למעלה בניווט.
               </p>
             ))}
@@ -501,7 +501,7 @@ export default function PremiumClient() {
           <h2 className="display text-2xl text-night">🛫 בדיקה לפני הנסיעה</h2>
           <p className="text-2xl font-black text-night">
             {priceLabel()}
-            <span className="text-sm font-semibold text-night/50"> / לטיול אחד</span>
+            <span className="text-sm font-semibold text-night/65"> / לטיול אחד</span>
           </p>
           <span className="rounded-full bg-lagoon/20 px-3 py-1 text-xs font-bold text-night">
             בלי מנוי, בלי התחייבות
@@ -541,7 +541,7 @@ export default function PremiumClient() {
           >
             למסך הטיול שלי
           </Link>
-          <p className="text-[11px] font-medium leading-relaxed text-night/50">
+          <p className="text-[11px] font-medium leading-relaxed text-night/65">
             נקנית מתוך מסך הטיול, החל מ-21 יום לפני היציאה
           </p>
         </div>
@@ -552,7 +552,7 @@ export default function PremiumClient() {
         <p className="text-sm font-bold text-night">החשבון, בגלוי - מה משתלם למי:</p>
         <ul className="mt-2 space-y-2 text-sm leading-relaxed text-night/70">
           <li className="flex items-start gap-2">
-            <span className="mt-0.5 text-night/35">•</span>
+            <span className="mt-0.5 text-night/65">•</span>
             <span>
               <b className="text-night">טסים פעם-פעמיים בשנה:</b> שתי בדיקות בודדות ={' '}
               {ils(twoChecks)} ₪ בשנה. שנה שלמה של פרימיום = {ils(yearOfPremium)} ₪.
@@ -571,14 +571,14 @@ export default function PremiumClient() {
             </li>
           )}
           <li className="flex items-start gap-2">
-            <span className="mt-0.5 text-night/35">•</span>
+            <span className="mt-0.5 text-night/65">•</span>
             <span>
               <b className="text-night">מתכננים עם עוד אנשים:</b> פרימיום מצדיק את עצמו כבר מהטיול
               הראשון, ובחישוב בדיקות בלבד - סביב {breakEvenTripsPerYear} טיולים בשנה.
             </span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="mt-0.5 text-night/35">•</span>
+            <span className="mt-0.5 text-night/65">•</span>
             <span>
               <b className="text-night">מתכננים כל הזמן:</b> פרו הוא {ilsBig(yearOfPro)} ₪
               בשנה, כלומר כ-{proPerTrip.toFixed(0)} ₪ לטיול מלא אם אתם באמת מנצלים אותו.{' '}
@@ -678,11 +678,12 @@ export default function PremiumClient() {
               }`}
             >
               <h3 className="font-bold text-night">{col.title}</h3>
-              <p className="text-xs font-semibold text-night/50">{col.price}</p>
+              <p className="text-xs font-semibold text-night/65">{col.price}</p>
               <ul className="mt-3 space-y-2 text-xs text-night/70">
                 {PLAN_FEATURE_ROWS.map((row) => (
                   <li key={row.label} className="flex items-start gap-1.5">
-                    <span className="mt-0.5 text-night/30">•</span>
+                    {/* Decorative: the <li> already is the bullet */}
+                    <span aria-hidden="true" className="mt-0.5 text-night/30">•</span>
                     <span>
                       {row.label}: <b className="text-night/85">{row[col.key]}</b>
                     </span>
@@ -755,7 +756,7 @@ export default function PremiumClient() {
         </div>
       </div>
 
-      <p className="mt-6 text-center text-xs leading-relaxed text-night/45">
+      <p className="mt-6 text-center text-xs leading-relaxed text-night/65">
         התשלום מאובטח דרך PayPal - אנחנו לא רואים ולא שומרים פרטי אשראי. את המנוי אפשר לבטל בכל רגע
         והתוכנית החינמית חוזרת לפעול כרגיל.{' '}
         <Link href="/refunds" className="underline hover:text-night/70">

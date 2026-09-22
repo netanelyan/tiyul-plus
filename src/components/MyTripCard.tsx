@@ -35,7 +35,7 @@ export default function MyTripCard() {
       </span>
       <span className="min-w-0 flex-1 truncate font-bold text-night">
         {t.name}
-        <span className="ms-2 font-medium text-night/55">
+        <span className="ms-2 font-medium text-night/70">
           {daysHe(t.days.length)} · {stops} עצירות{when ? ` · ${when}` : ''}
         </span>
       </span>

@@ -32,7 +32,7 @@ export default function NotFoundView() {
       </span>
       <p className="display rise-in mt-4 text-5xl text-night sm:text-6xl">404</p>
       <h1 className="display rise-in mt-2 text-2xl text-night sm:text-3xl">הדף הזה לא נמצא</h1>
-      <p className="rise-in mt-4 max-w-md leading-relaxed text-night/60">
+      <p className="rise-in mt-4 max-w-md leading-relaxed text-night/70">
         בדקנו מול כל {catalogCounts.destinations} היעדים ב-{catalogCounts.countries} המדינות
         שיש לנו - הכתובת הזו פשוט לא ביניהם. אולי הקישור נשבר בהעתקה, ואולי הוקלדה כתובת
         שלא קיימת.
@@ -54,7 +54,7 @@ export default function NotFoundView() {
       </div>
       <Link
         href="/countries"
-        className="mt-5 text-sm font-semibold text-night/50 underline decoration-night/20 underline-offset-4 transition hover:text-night"
+        className="mt-5 text-sm font-semibold text-night/65 underline decoration-night/20 underline-offset-4 transition hover:text-night"
       >
         או לגלוש בקטלוג היעדים ←
       </Link>

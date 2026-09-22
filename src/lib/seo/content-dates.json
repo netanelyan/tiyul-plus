@@ -1,15 +1,15 @@
 {
  "/": {
-  "hash": "149c303b9c809b71",
-  "date": "2026-09-21"
+  "hash": "c4c81ac28b3a92a1",
+  "date": "2026-09-22"
  },
  "/about": {
   "hash": "0eb75bc1270f6a35",
   "date": "2026-09-20"
  },
  "/collections": {
-  "hash": "05fac8d882c99b22",
-  "date": "2026-09-20"
+  "hash": "273498916bb42034",
+  "date": "2026-09-22"
  },
  "/collections/americas": {
   "hash": "6ca229e8d533709a",
@@ -72,8 +72,8 @@
   "date": "2026-09-21"
  },
  "/countries": {
-  "hash": "9685654c70983995",
-  "date": "2026-09-21"
+  "hash": "a490ccf9da6be7fd",
+  "date": "2026-09-22"
  },
  "/countries/albania": {
   "hash": "07bd6187290480d3",
@@ -1072,11 +1072,11 @@
   "date": "2026-09-20"
  },
  "/kosher": {
-  "hash": "50542b93521abb7f",
-  "date": "2026-09-20"
+  "hash": "64cce6de157f8c9b",
+  "date": "2026-09-22"
  },
  "/premium": {
-  "hash": "f9967f302aca5622",
-  "date": "2026-09-21"
+  "hash": "5ad225c25c26042b",
+  "date": "2026-09-22"
  }
 }

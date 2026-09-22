@@ -339,7 +339,7 @@ export default function PreDepartureCheck({
                   התחברות והמשך לבדיקה
                 </button>
               ) : (
-                <p className="mt-1 text-xs font-medium text-night/55">
+                <p className="mt-1 text-xs font-medium text-night/70">
                   כפתור ההתחברות נמצא למעלה בניווט.
                 </p>
               )}
@@ -368,7 +368,7 @@ export default function PreDepartureCheck({
                 >
                   {busy ? 'רגע…' : isPremium ? 'בדיקה לפני הנסיעה · כלול בפרימיום ★' : `בדיקה לפני הנסיעה · ${priceLabel()}`}
                 </button>
-                <span className="text-xs font-medium text-night/45">
+                <span className="text-xs font-medium text-night/65">
                   {isPremium ? 'בלי תשלום נוסף - כלול במנוי שלכם' : 'תשלום חד-פעמי, לטיול הזה בלבד'}
                 </span>
               </div>
@@ -380,7 +380,7 @@ export default function PreDepartureCheck({
           )}
 
           {phase.kind === 'offer' && (
-            <p className="mt-3 text-[11px] font-medium leading-relaxed text-night/40">
+            <p className="mt-3 text-[11px] font-medium leading-relaxed text-night/65">
               {isPremium
                 ? 'הדוח נפתח מייד - אין תשלום ואין העברה לאתר חיצוני.'
                 : 'התשלום מאובטח דרך PayPal - אנחנו לא רואים ולא שומרים פרטי כרטיס. הגישה נפתחת ברגע שהתשלום מאומת אצלנו, לרוב תוך כמה שניות.'}
@@ -404,7 +404,7 @@ function PrintReport({ report }: { report: PreDepartureReport }) {
   return (
     <div className="hidden print:block">
       <h2 className="text-lg font-bold text-night">בדיקה לפני הנסיעה - {report.tripName}</h2>
-      <p className="text-xs text-night/60">נבדק ב-{report.generatedAt.slice(0, 10)}</p>
+      <p className="text-xs text-night/70">נבדק ב-{report.generatedAt.slice(0, 10)}</p>
       {report.itinerary.map((day) => (
         <div key={day.dayNumber} className="mt-3">
           <h3 className="text-sm font-bold text-night">
@@ -434,7 +434,7 @@ function ResultView({ report, paidAt }: { report: PreDepartureReport; paidAt: st
         <p className="text-sm font-bold text-night">
           {clean ? '✓ הכול נראה תקין' : 'הבדיקה מצאה כמה דברים לבדוק'}
         </p>
-        <p className="mt-1 text-xs font-medium text-night/50">
+        <p className="mt-1 text-xs font-medium text-night/65">
           נבדק ב-{new Date(report.generatedAt).toLocaleDateString('he-IL', {
             day: 'numeric',
             month: 'short',
@@ -472,11 +472,11 @@ function ResultView({ report, paidAt }: { report: PreDepartureReport; paidAt: st
             {report.calendarFindings.map((f) => (
               <li key={`${f.name}-${f.dayNumbers.join(',')}`} className="rounded-xl bg-cream p-2.5 text-xs">
                 <span className="font-bold text-night">{f.name}</span>
-                <span className="ms-1.5 rounded-full bg-night/[0.06] px-2 py-0.5 font-semibold text-night/55">
+                <span className="ms-1.5 rounded-full bg-night/[0.06] px-2 py-0.5 font-semibold text-night/70">
                   {f.impact}
                 </span>
-                <p className="mt-1 font-semibold text-night/60">{f.dates}</p>
-                <p className="mt-0.5 text-night/55">{f.note}</p>
+                <p className="mt-1 font-semibold text-night/70">{f.dates}</p>
+                <p className="mt-0.5 text-night/70">{f.note}</p>
               </li>
             ))}
           </ul>
@@ -484,15 +484,15 @@ function ResultView({ report, paidAt }: { report: PreDepartureReport; paidAt: st
 
         {report.kosherNotes.length > 0 && (
           <details className="mt-3">
-            <summary className="cursor-pointer text-xs font-bold text-night/55">
+            <summary className="cursor-pointer text-xs font-bold text-night/70">
               פירוט הכשרות שנקראה מחדש ({report.kosherNotes.length})
             </summary>
             <ul className="mt-1.5 space-y-1.5">
               {report.kosherNotes.map((k) => (
                 <li key={`${k.dayNumber}-${k.placeId}`} className="rounded-xl bg-cream p-2.5 text-xs">
                   <span className="font-bold text-night">{k.name}</span>
-                  <span className="ms-1.5 text-night/45">יום {k.dayNumber}</span>
-                  <p className="mt-1 text-night/60">{k.note}</p>
+                  <span className="ms-1.5 text-night/65">יום {k.dayNumber}</span>
+                  <p className="mt-1 text-night/70">{k.note}</p>
                 </li>
               ))}
             </ul>

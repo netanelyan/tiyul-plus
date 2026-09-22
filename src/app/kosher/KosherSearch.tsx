@@ -118,11 +118,11 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
         <span className="badge rounded-full bg-night/5 px-3.5 py-1.5 text-sm font-bold text-night/70">
           ✅ {stats.verified} מתוכם נבדקו מול מקור עם תאריך
         </span>
-        <span className="badge rounded-full bg-night/5 px-3.5 py-1.5 text-sm font-medium text-night/60">
+        <span className="badge rounded-full bg-night/5 px-3.5 py-1.5 text-sm font-medium text-night/70">
           המידע נאסף ממקורות ציבוריים · לוודא מול המקום
         </span>
       </div>
-      <p className="mt-2 text-xs font-medium leading-relaxed text-night/50">
+      <p className="mt-2 text-xs font-medium leading-relaxed text-night/65">
         הרשימה מציגה רק מקומות שיש עליהם מידע בקטלוג שלנו. {stats.places - stats.verified} מהרשומות
         מדווחות ממקורות ציבוריים בלי תאריך בדיקה שלנו, והן מסומנות ככאלה בכל כרטיס. היעדר מקום
         מהרשימה לא אומר שהוא לא כשר - רק שאין לנו עליו מידע.
@@ -144,7 +144,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
           }}
           placeholder="חיפוש עיר או מדינה: וינה, תאילנד, בנגקוק…"
           aria-label="חיפוש עיר עם מידע כשרות"
-          className="w-full rounded-2xl border border-night/15 bg-shell px-5 py-3.5 text-night shadow-inner outline-none transition placeholder:text-night/45 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
+          className="w-full rounded-2xl border border-night/15 bg-shell px-5 py-3.5 text-night shadow-inner outline-none transition placeholder:text-night/65 focus:border-sunset/50 focus:ring-4 focus:ring-sunset/15"
         />
       </form>
 
@@ -162,7 +162,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
               <Flag flag={selected.flag} label={selected.name} size="lg" className="me-2" />
               {selected.name}
             </h2>
-            <span className="text-sm text-night/40">{selected.nameLocal}</span>
+            <span className="text-sm text-night/65">{selected.nameLocal}</span>
             <Link
               href={`/destinations/${selected.slug}`}
               className="ms-auto text-sm font-bold text-sunset-deep transition hover:underline"
@@ -173,7 +173,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
           <p className="mt-2 max-w-2xl leading-relaxed text-night/70">{selected.kosherOverview}</p>
 
           {/* A general disclaimer - one policy for every record */}
-          <p className="mt-4 max-w-2xl rounded-xl bg-night/5 px-4 py-2.5 text-sm leading-relaxed text-night/60">
+          <p className="mt-4 max-w-2xl rounded-xl bg-night/5 px-4 py-2.5 text-sm leading-relaxed text-night/70">
             המידע נאסף ממקורות ציבוריים (בתי חב&quot;ד וגופי ההשגחה) - לוודא כשרות, השגחה
             ושעות פתיחה מול המקום לפני שמסתמכים עליו.
           </p>
@@ -186,7 +186,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
               {selected.kosherPlaces.map((place) => (
                 <div key={place.id} className="card-pop rounded-2xl bg-shell p-5 ring-1 ring-night/10">
                   <div className="font-bold text-night">{place.name}</div>
-                  <div className="text-xs font-medium text-night/40">{place.nameLocal}</div>
+                  <div className="text-xs font-medium text-night/65">{place.nameLocal}</div>
                   <p className="mt-2 text-sm leading-relaxed text-night/70">{place.description}</p>
                   <KosherNote note={place.kosherNote} className="mt-2" />
                   <KosherBadge kashrut={place.kashrut} className="mt-1.5" />
@@ -199,7 +199,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
                       Google Maps ↗
                     </a>
                   ) : (
-                    <span className="mt-3 block text-xs font-semibold text-night/35">מיקום לא אומת</span>
+                    <span className="mt-3 block text-xs font-semibold text-night/65">מיקום לא אומת</span>
                   )}
                 </div>
               ))}
@@ -212,11 +212,11 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
       {!selected && (
         <div className="mt-7">
           <div className="flex flex-wrap items-baseline gap-2">
-            <h2 className="text-sm font-bold text-night/50">
+            <h2 className="text-sm font-bold text-night/65">
               {query.trim() ? `תוצאות עבור "${query.trim()}"` : 'ערים עם מידע כשרות'} ({filtered.length})
             </h2>
             {!query.trim() && stats.citiesWithout > 0 && (
-              <span className="text-xs font-medium text-night/40">
+              <span className="text-xs font-medium text-night/65">
                 · ב-{stats.citiesWithout} יעדים נוספים בקטלוג אין מידע כשרות, וזה נאמר בדף היעד
               </span>
             )}
@@ -248,7 +248,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
                   </CardPhoto>
                   <div className="p-3">
                     <div className="truncate font-bold text-night">{city.name}</div>
-                    <div className="truncate text-xs font-medium text-night/45">{city.country}</div>
+                    <div className="truncate text-xs font-medium text-night/65">{city.country}</div>
                     <div className="mt-1.5 truncate text-xs font-semibold text-lagoon-deep">
                       ✡️ {breakdown(city.kosherPlaces)}
                     </div>

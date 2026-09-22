@@ -269,7 +269,7 @@ export default function JoinClient({ code }: { code: string }) {
   if (!auth.ready) {
     return (
       <div className="py-20 text-center">
-        <ThinkingIndicator label="רגע" className="justify-center text-night/45" />
+        <ThinkingIndicator label="רגע" className="justify-center text-night/65" />
       </div>
     );
   }
@@ -278,7 +278,7 @@ export default function JoinClient({ code }: { code: string }) {
     return (
       <div className="mx-auto max-w-lg py-20 text-center">
         <h1 className="display text-3xl text-night">הוזמנתם לטיול משותף 🎉</h1>
-        <p className="mt-3 leading-relaxed text-night/60">
+        <p className="mt-3 leading-relaxed text-night/70">
           כדי לראות את הטיול, להצביע ולהגיב צריך להתחבר - זה לוקח רגע, עם קוד למייל.
           כפתור ההתחברות למעלה בניווט.
         </p>
@@ -294,7 +294,7 @@ export default function JoinClient({ code }: { code: string }) {
     return (
       <div className="mx-auto max-w-lg py-20 text-center">
         <h1 className="display text-3xl text-night">אי אפשר להצטרף</h1>
-        <p className="mt-3 text-night/60">{errorMsg}</p>
+        <p className="mt-3 text-night/70">{errorMsg}</p>
       </div>
     );
   }
@@ -314,7 +314,7 @@ export default function JoinClient({ code }: { code: string }) {
           block of decisions rather than four separate sections. */}
       <section className="mt-5 space-y-3 rounded-2xl bg-shell p-4 ring-1 ring-night/10">
         <div>
-          <p className="text-xs font-bold text-night/55">אתם מגיעים?</p>
+          <p className="text-xs font-bold text-night/70">אתם מגיעים?</p>
           <div className="mt-1.5">
             <GroupRsvp rsvp={planning.rsvp} myId={myId} onSet={(status) => void act('rsvp', { status })} />
           </div>
@@ -322,7 +322,7 @@ export default function JoinClient({ code }: { code: string }) {
 
         {planning.dateOptions.length > 0 && (
           <div className="border-t border-night/10 pt-3">
-            <p className="text-xs font-bold text-night/55">אילו תאריכים מתאימים לכם?</p>
+            <p className="text-xs font-bold text-night/70">אילו תאריכים מתאימים לכם?</p>
             <div className="mt-1.5">
               <GroupDates
                 options={planning.dateOptions}
@@ -351,8 +351,8 @@ export default function JoinClient({ code }: { code: string }) {
                 className="rounded-lg bg-zest/15 px-3 py-1.5 text-xs font-semibold text-night"
               >
                 💡 {s.author} הציע/ה: {s.name}
-                {s.note && <span className="font-medium text-night/60"> - {s.note}</span>}
-                <span className="font-medium text-night/45"> · ממתין להחלטת המארגן</span>
+                {s.note && <span className="font-medium text-night/70"> - {s.note}</span>}
+                <span className="font-medium text-night/65"> · ממתין להחלטת המארגן</span>
               </li>
             ))}
           </ul>
@@ -379,7 +379,7 @@ export default function JoinClient({ code }: { code: string }) {
                             ★
                           </span>
                         )}
-                        <span className="ms-2 whitespace-nowrap text-xs font-medium text-night/45">
+                        <span className="ms-2 whitespace-nowrap text-xs font-medium text-night/65">
                           {categoryMeta[s.category].label}
                         </span>
                       </p>
@@ -400,7 +400,7 @@ export default function JoinClient({ code }: { code: string }) {
                           className={`flex min-h-[44px] min-w-[64px] touch-manipulation items-center justify-center gap-1 rounded-full px-4 text-sm font-bold ring-1 transition active:scale-95 ${
                             t?.mine === 1
                               ? 'bg-sunset text-cream ring-sunset'
-                              : 'bg-cream text-night/60 ring-night/15 hover:bg-sunset/10'
+                              : 'bg-cream text-night/70 ring-night/15 hover:bg-sunset/10'
                           }`}
                         >
                           👍 {t?.up ?? 0}
@@ -412,7 +412,7 @@ export default function JoinClient({ code }: { code: string }) {
                           className={`flex min-h-[44px] min-w-[64px] touch-manipulation items-center justify-center gap-1 rounded-full px-4 text-sm font-bold ring-1 transition active:scale-95 ${
                             t?.mine === -1
                               ? 'bg-night text-cream ring-night'
-                              : 'bg-cream text-night/60 ring-night/15 hover:bg-night/5'
+                              : 'bg-cream text-night/70 ring-night/15 hover:bg-night/5'
                           }`}
                         >
                           👎 {t?.down ?? 0}
@@ -428,7 +428,7 @@ export default function JoinClient({ code }: { code: string }) {
                   </li>
                 );
               })}
-              {d.stops.length === 0 && <li className="text-sm text-night/45">יום חופשי</li>}
+              {d.stops.length === 0 && <li className="text-sm text-night/65">יום חופשי</li>}
             </ul>
           </li>
         ))}
@@ -439,7 +439,7 @@ export default function JoinClient({ code }: { code: string }) {
         <p className="text-sm font-bold text-night">
           שיחה כללית
           {generalCount > 0 && (
-            <span className="ms-1.5 text-xs font-semibold text-night/45">{generalCount}</span>
+            <span className="ms-1.5 text-xs font-semibold text-night/65">{generalCount}</span>
           )}
         </p>
         <GroupComments
@@ -451,7 +451,7 @@ export default function JoinClient({ code }: { code: string }) {
         />
       </section>
 
-      <p className="mt-6 text-center text-xs font-medium text-night/45">
+      <p className="mt-6 text-center text-xs font-medium text-night/65">
         הכול נראה למארגן הטיול · הטיול מתעדכן כשמרעננים
       </p>
     </div>

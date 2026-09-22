@@ -193,9 +193,9 @@ export default function RootLayout({
             <Link href="/" className="flex items-center gap-2 text-xl font-bold text-night">
               <Logo className="h-7 w-7" />
               <span>
-                טיול<span className="text-sunset">+</span>
+                טיול<span className="text-sunset-glow">+</span>
               </span>
-              <span className="hidden self-center text-xs font-medium text-night/40 sm:inline">
+              <span className="hidden self-center text-xs font-medium text-night/65 sm:inline">
                 · סוכן הנסיעות החכם
               </span>
             </Link>

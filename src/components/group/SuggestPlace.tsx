@@ -98,7 +98,7 @@ export default function SuggestPlace({
         <p className="text-sm font-bold text-night">הצעת מקום למארגן</p>
         <button
           onClick={() => setOpen(false)}
-          className="min-h-[36px] px-2 text-xs font-bold text-night/45 transition hover:text-night"
+          className="min-h-[36px] px-2 text-xs font-bold text-night/65 transition hover:text-night"
         >
           סגירה
         </button>
@@ -115,13 +115,17 @@ export default function SuggestPlace({
               החלפה
             </button>
           </p>
+          <label htmlFor="suggest-note" className="sr-only">
+            למה כדאי להוסיף את המקום הזה
+          </label>
           <textarea
+            id="suggest-note"
             value={note}
             onChange={(e) => setNote(e.target.value)}
             rows={2}
             maxLength={500}
             placeholder="למה כדאי? (לא חובה)"
-            className="mt-2 w-full resize-y rounded-lg border border-night/15 bg-cream px-3 py-2 text-base leading-relaxed text-night outline-none placeholder:text-night/35 focus:ring-4 focus:ring-sunset/15 sm:text-sm"
+            className="mt-2 w-full resize-y rounded-lg border border-night/15 bg-cream px-3 py-2 text-base leading-relaxed text-night outline-none placeholder:text-night/65 focus:ring-4 focus:ring-sunset/15 sm:text-sm"
           />
           <button
             onClick={() => void submit()}
@@ -133,11 +137,15 @@ export default function SuggestPlace({
         </div>
       ) : (
         <>
+          <label htmlFor="suggest-search" className="sr-only">
+            חיפוש מקום בערים של הטיול
+          </label>
           <input
+            id="suggest-search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="חיפוש מקום בערים של הטיול…"
-            className="mt-3 min-h-[44px] w-full rounded-lg border border-night/15 bg-cream px-3 text-base text-night outline-none placeholder:text-night/35 focus:ring-4 focus:ring-sunset/15 sm:text-sm"
+            className="mt-3 min-h-[44px] w-full rounded-lg border border-night/15 bg-cream px-3 text-base text-night outline-none placeholder:text-night/65 focus:ring-4 focus:ring-sunset/15 sm:text-sm"
           />
           {cities.loading && (
             <div role="status" aria-busy="true" aria-label="טוענים את המקומות" className="mt-2 space-y-1.5">
@@ -164,7 +172,7 @@ export default function SuggestPlace({
                   <PlaceThumb place={c.place} className="h-11 w-11 shrink-0" />
                   <span className="min-w-0">
                     <span className="block text-sm font-semibold text-night">{c.place.name}</span>
-                    <span className="block text-[11px] font-medium text-night/45">
+                    <span className="block text-[11px] font-medium text-night/65">
                       {c.cityName} · {categoryMeta[c.place.category].label}
                     </span>
                   </span>
@@ -172,7 +180,7 @@ export default function SuggestPlace({
               </li>
             ))}
             {!cities.loading && candidates.length === 0 && (
-              <li className="px-1 py-2 text-xs font-medium text-night/45">
+              <li className="px-1 py-2 text-xs font-medium text-night/65">
                 לא נמצא מקום מתאים - כל מה שיש בערים האלה כבר בטיול.
               </li>
             )}

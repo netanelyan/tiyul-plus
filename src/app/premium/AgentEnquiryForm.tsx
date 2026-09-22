@@ -133,7 +133,7 @@ export default function AgentEnquiryForm({ onClose }: { onClose: () => void }) {
     <form onSubmit={submit} className="mt-4 rounded-2xl bg-cream/60 p-4 ring-1 ring-night/10">
       <div className="grid gap-3 sm:grid-cols-2">
         <div>
-          <label htmlFor="ae-name" className="text-xs font-bold text-night/60">
+          <label htmlFor="ae-name" className="text-xs font-bold text-night/70">
             שם <span className="text-sunset-deep">*</span>
           </label>
           <input
@@ -148,7 +148,7 @@ export default function AgentEnquiryForm({ onClose }: { onClose: () => void }) {
           />
         </div>
         <div>
-          <label htmlFor="ae-business" className="text-xs font-bold text-night/60">
+          <label htmlFor="ae-business" className="text-xs font-bold text-night/70">
             שם העסק <span className="text-sunset-deep">*</span>
           </label>
           <input
@@ -162,7 +162,7 @@ export default function AgentEnquiryForm({ onClose }: { onClose: () => void }) {
           />
         </div>
         <div>
-          <label htmlFor="ae-contact" className="text-xs font-bold text-night/60">
+          <label htmlFor="ae-contact" className="text-xs font-bold text-night/70">
             מייל או טלפון <span className="text-sunset-deep">*</span>
           </label>
           <input
@@ -176,7 +176,7 @@ export default function AgentEnquiryForm({ onClose }: { onClose: () => void }) {
           />
         </div>
         <div>
-          <label htmlFor="ae-trips" className="text-xs font-bold text-night/60">
+          <label htmlFor="ae-trips" className="text-xs font-bold text-night/70">
             כמה טיולים בערך בשנה
           </label>
           <select
@@ -195,7 +195,7 @@ export default function AgentEnquiryForm({ onClose }: { onClose: () => void }) {
         </div>
       </div>
 
-      <label htmlFor="ae-needs" className="mt-3 block text-xs font-bold text-night/60">
+      <label htmlFor="ae-needs" className="mt-3 block text-xs font-bold text-night/70">
         מה אתם צריכים?
       </label>
       <textarea
@@ -245,12 +245,12 @@ export default function AgentEnquiryForm({ onClose }: { onClose: () => void }) {
         <button
           type="button"
           onClick={onClose}
-          className="rounded-xl px-4 py-3 text-sm font-bold text-night/55 transition hover:text-night"
+          className="rounded-xl px-4 py-3 text-sm font-bold text-night/70 transition hover:text-night"
         >
           ביטול
         </button>
       </div>
-      <p className="mt-2 text-[11px] font-medium leading-relaxed text-night/45">
+      <p className="mt-2 text-[11px] font-medium leading-relaxed text-night/65">
         הפרטים נשמרים אצלנו כדי לחזור אליכם בלבד. אין כאן חיוב, אין התחייבות, ולא נשלח לכם דיוור.
       </p>
     </form>

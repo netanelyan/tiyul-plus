@@ -65,7 +65,7 @@ export default async function KosherPage() {
       />
 
       <h1 className="display text-3xl text-night sm:text-4xl">כשרות בעולם</h1>
-      <p className="mt-2 max-w-2xl leading-relaxed text-night/60">
+      <p className="mt-2 max-w-2xl leading-relaxed text-night/70">
         כל מקום כשר שיש לנו בקטלוג, לפי עיר: מסעדות, חנויות ובתי חב&quot;ד - עם מפה, פרטים
         ופרטי ההשגחה כפי שנמסרו. המידע נאסף ממקורות ציבוריים - חשוב לוודא מול המקום לפני הביקור.
       </p>

@@ -138,14 +138,14 @@ export default function BookingPanel({
                   </span>
                   <h3 className="text-sm font-bold text-night">{p.title}</h3>
                   {status && (
-                    <span className="ms-auto rounded-full bg-night/[0.06] px-2 py-0.5 text-[11px] font-semibold text-night/60">
+                    <span className="ms-auto rounded-full bg-night/[0.06] px-2 py-0.5 text-[11px] font-semibold text-night/70">
                       {/* The status belongs to the city, so it is stated together with it */}
                       {perCity && cities.length > 1 && city ? `${city.label}: ` : ''}
                       {BOOKING_STATUS_LABELS[status]}
                     </span>
                   )}
                 </div>
-                <p className="mt-1 text-xs font-medium leading-relaxed text-night/55">{p.blurb}</p>
+                <p className="mt-1 text-xs font-medium leading-relaxed text-night/70">{p.blurb}</p>
 
                 {/*
                   The city picker, inside the card it belongs to. Shown only when
@@ -168,7 +168,7 @@ export default function BookingPanel({
                           className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold transition ${
                             c.slug === slug
                               ? 'bg-night text-cream'
-                              : 'bg-night/[0.05] text-night/60 hover:bg-night/10'
+                              : 'bg-night/[0.05] text-night/70 hover:bg-night/10'
                           }`}
                         >
                           {c.label}
@@ -208,7 +208,7 @@ export default function BookingPanel({
                       className={`rounded-full px-2.5 py-1 text-[11px] font-semibold transition disabled:cursor-not-allowed disabled:opacity-45 ${
                         status === s
                           ? 'bg-sunset text-cream'
-                          : 'bg-night/[0.05] text-night/60 enabled:hover:bg-night/10'
+                          : 'bg-night/[0.05] text-night/70 enabled:hover:bg-night/10'
                       }`}
                     >
                       {BOOKING_STATUS_LABELS[s]}
@@ -226,7 +226,7 @@ export default function BookingPanel({
                 )}
 
                 {offline && url ? (
-                  <p className="mt-2 rounded-xl bg-night/[0.04] px-3 py-2 text-center text-xs font-semibold text-night/45">
+                  <p className="mt-2 rounded-xl bg-night/[0.04] px-3 py-2 text-center text-xs font-semibold text-night/65">
                     {p.cta} · דורש חיבור
                   </p>
                 ) : url ? (
@@ -241,7 +241,7 @@ export default function BookingPanel({
                     {p.provider ? ` · ${p.provider}` : ''}
                   </a>
                 ) : (
-                  <p className="mt-2 rounded-xl bg-night/[0.04] px-3 py-2 text-center text-xs font-semibold text-night/45">
+                  <p className="mt-2 rounded-xl bg-night/[0.04] px-3 py-2 text-center text-xs font-semibold text-night/65">
                     בקרוב
                   </p>
                 )}
@@ -258,7 +258,7 @@ export default function BookingPanel({
           config order, which was set by what a traveller needs, and does not depend
           on whether a provider has an affiliate id - there is a test for that.
         */}
-        <p className="mt-2 px-1 text-[11px] font-medium leading-relaxed text-night/45">
+        <p className="mt-2 px-1 text-[11px] font-medium leading-relaxed text-night/65">
           הקישורים מפנים לאתרי הזמנות חיצוניים, ואנחנו עשויים לקבל עמלה על הזמנה שמתבצעת דרכם. זה לא
           משפיע על מה שאנחנו מציעים או על הסדר שבו. אנחנו לא מזמינים, לא גובים תשלום ולא מחזיקים
           פרטי אשראי - המחיר, הזמינות ותנאי הביטול נקבעים אצל הספק.

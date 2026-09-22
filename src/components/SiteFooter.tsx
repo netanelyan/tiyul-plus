@@ -37,7 +37,7 @@ import {
 function Column({ title, links }: { title: string; links: FooterLink[] }) {
   return (
     <nav aria-label={title}>
-      <h2 className="text-[11px] font-bold uppercase tracking-wide text-cream/40">{title}</h2>
+      <h2 className="text-[11px] font-bold uppercase tracking-wide text-cream/50">{title}</h2>
       <ul className="mt-2 space-y-1.5">
         {links.map((l) => (
           <li key={l.href}>
@@ -76,7 +76,7 @@ function ChipRow({
 }) {
   return (
     <nav aria-label={label} className="flex flex-wrap items-center gap-x-1.5 gap-y-1.5">
-      <span className="ms-1 text-[11px] font-bold text-cream/35">{label}</span>
+      <span className="ms-1 text-[11px] font-bold text-cream/50">{label}</span>
       {links.map((l) => (
         <Link
           key={l.href}
@@ -146,13 +146,27 @@ export default function SiteFooter() {
             <div className="flex items-center gap-2 text-lg font-bold text-cream">
               <Logo reversed className="h-6 w-6" />
               <span>
-                טיול<span className="text-sunset">+</span>
+                טיול<span className="text-sunset-glow">+</span>
               </span>
             </div>
             <p className="mt-2 max-w-sm text-xs leading-relaxed text-cream/50">
               טיול+ הוא סוכן AI שבונה מסלולים אוטומטית. תמיד כדאי לאמת שעות פתיחה, מחירים,
               זמינות וכשרות מול המקומות עצמם לפני הנסיעה.
             </p>
+            {/*
+              **No newsletter signup here, by decision (Netanel, 2026-09-22).**
+
+              `NewsletterSignup` exists and is complete - confirmed opt-in, a
+              signed unsubscribe link that never expires, the advertiser details
+              and the advertising marking in the email itself. It was wired into
+              this spot and then deliberately taken out again: the list is not
+              being run yet, and a form that collects addresses nobody will
+              email is worse than no form.
+
+              Re-enabling it is this block plus the import. Before doing that,
+              `RESEND_API_KEY` has to be set in production - without it the
+              route answers "not available right now" and collects nobody.
+            */}
           </div>
 
           <div className="lg:col-span-3">
@@ -202,9 +216,9 @@ export default function SiteFooter() {
         */}
         <div className="mt-7 border-t border-cream/10 pt-4 text-center">
           {/* Catalog coverage, counted from the data on every build */}
-          <p className="text-xs font-semibold text-cream/45">{coverageCountsLine()}</p>
+          <p className="text-xs font-semibold text-cream/50">{coverageCountsLine()}</p>
 
-          <div className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-cream/45">
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-cream/50">
             <span>© {year} טיול+</span>
             <span aria-hidden className="text-cream/20">
               ·
@@ -221,9 +235,12 @@ export default function SiteFooter() {
                   {s.label}
                 </a>
               ) : (
-                // With no real address: text, not a link that leads nowhere
-                <span key={s.label} className="text-cream/25" title="בקרוב">
+                // With no real address: text, not a link that leads nowhere.
+                // `title` alone said "coming soon" to a mouse and to nobody
+                // else, so the state is in the text; /25 was 2.16:1, unreadable.
+                <span key={s.label} className="text-cream/50">
                   {s.label}
+                  <span className="sr-only"> (בקרוב)</span>
                 </span>
               ),
             )}
@@ -242,7 +259,7 @@ export default function SiteFooter() {
             the panels, and there is a test asserting it says both "commission" and
             "does not affect".
           */}
-          <p className="mt-3 text-[11px] leading-relaxed text-cream/30">
+          <p className="mt-3 text-[11px] leading-relaxed text-cream/50">
             חלק מהקישורים היוצאים מהאתר הם קישורי שותפים, ואנחנו עשויים לקבל עמלה - בלי שזה משפיע
             על מה שאנחנו ממליצים.{' '}
             <Link href="/affiliate-disclosure" className="underline hover:text-cream/60">

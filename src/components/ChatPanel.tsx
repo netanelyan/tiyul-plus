@@ -87,7 +87,7 @@ function ReplyPhotos({ photos }: { photos: ReplyPhoto[] }) {
             </span>
             <span className="block px-2 py-1.5">
               <span className="block truncate text-xs font-bold text-night">{p.name}</span>
-              <span className="block truncate text-[0.7rem] font-semibold text-night/45">
+              <span className="block truncate text-[0.7rem] font-semibold text-night/65">
                 {p.cityName}
               </span>
             </span>
@@ -212,7 +212,7 @@ export default function ChatPanel({
         <span className="badge text-base font-bold text-night">
           <span aria-hidden>🧭</span> {headerLabel}
         </span>
-        <span className="truncate text-xs font-medium text-night/45">{headerHint}</span>
+        <span className="truncate text-xs font-medium text-night/65">{headerHint}</span>
         <div className="ms-auto flex shrink-0 items-center gap-1">
         {/*
           Clearing the conversation, without touching the trip. Added after
@@ -233,7 +233,7 @@ export default function ChatPanel({
             aria-label="ניקוי השיחה"
             disabled={offline}
             title={offline ? OFFLINE_HINT : 'ניקוי השיחה - הטיול נשאר'}
-            className="flex h-8 shrink-0 items-center gap-1 rounded-full bg-night/5 px-2.5 text-xs font-semibold text-night/55 transition enabled:hover:bg-night/10 enabled:hover:text-night disabled:cursor-not-allowed disabled:opacity-45"
+            className="flex h-8 shrink-0 items-center gap-1 rounded-full bg-night/5 px-2.5 text-xs font-semibold text-night/70 transition enabled:hover:bg-night/10 enabled:hover:text-night disabled:cursor-not-allowed disabled:opacity-45"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5" aria-hidden>
               <path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" strokeLinecap="round" strokeLinejoin="round" />
@@ -245,7 +245,7 @@ export default function ChatPanel({
           <button
             onClick={onClose}
             aria-label="סגירת השיחה"
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-night/5 text-night/50 transition hover:bg-night/10 hover:text-night"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-night/5 text-night/65 transition hover:bg-night/10 hover:text-night"
           >
             ✕
           </button>
@@ -306,7 +306,7 @@ export default function ChatPanel({
               {renderText(msg.content)}
               {/* Still receiving text from the server - without this a stalled message accidentally looks finished */}
               {streaming && msg.role === 'assistant' && i === messages.length - 1 && (
-                <ThinkingIndicator className="text-night/40" />
+                <ThinkingIndicator className="text-night/65" />
               )}
               {msg.actions && msg.actions.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-1.5">
@@ -394,7 +394,7 @@ export default function ChatPanel({
               type="button"
               onClick={onDismissCoach}
               aria-label="הבנתי, לסגור את ההסבר"
-              className="shrink-0 rounded-full px-1.5 text-night/40 transition hover:text-night"
+              className="shrink-0 rounded-full px-1.5 text-night/65 transition hover:text-night"
             >
               ✕
             </button>
@@ -405,14 +405,14 @@ export default function ChatPanel({
           <div className="mb-2 flex items-center gap-2 rounded-xl bg-cream p-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={pending} alt="תצוגה מקדימה" className="h-14 w-14 rounded-lg object-cover" />
-            <span className="flex-1 truncate text-xs font-semibold text-night/60">
+            <span className="flex-1 truncate text-xs font-semibold text-night/70">
               התמונה תישלח עם ההודעה
             </span>
             <button
               type="button"
               onClick={() => setPending(null)}
               aria-label="הסרת התמונה"
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-night/5 text-night/50 transition hover:bg-night/10 hover:text-night"
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-night/5 text-night/65 transition hover:bg-night/10 hover:text-night"
             >
               ✕
             </button>
@@ -424,7 +424,7 @@ export default function ChatPanel({
         {offline && (
           <p
             role="status"
-            className="mb-2 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold leading-relaxed text-night/60"
+            className="mb-2 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold leading-relaxed text-night/70"
           >
             הסוכן צריך חיבור לאינטרנט. אפשר לקרוא את השיחה השמורה - לא לשלוח הודעה חדשה.
           </p>
@@ -454,7 +454,7 @@ export default function ChatPanel({
             disabled={loading || reading || offline}
             aria-label="צירוף תמונה (אישור הזמנה, כרטיס)"
             title={offline ? OFFLINE_HINT : 'צירוף תמונה - אישור הזמנה, כרטיס טיסה, צילום מסך'}
-            className="shrink-0 rounded-xl bg-cream px-3 py-3 text-base text-night/60 ring-1 ring-night/10 transition enabled:hover:bg-sunset/10 enabled:hover:text-night disabled:cursor-not-allowed disabled:opacity-40"
+            className="shrink-0 rounded-xl bg-cream px-3 py-3 text-base text-night/70 ring-1 ring-night/10 transition enabled:hover:bg-sunset/10 enabled:hover:text-night disabled:cursor-not-allowed disabled:opacity-40"
           >
             {reading ? '…' : '📎'}
           </button>
@@ -465,7 +465,7 @@ export default function ChatPanel({
             disabled={offline}
             placeholder={offline ? 'אין חיבור - השליחה מושבתת' : placeholder}
             aria-label="בקשה לסוכן"
-            className="min-w-0 flex-1 rounded-xl bg-cream px-4 py-3 text-base sm:text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset disabled:cursor-not-allowed disabled:opacity-55"
+            className="min-w-0 flex-1 rounded-xl bg-cream px-4 py-3 text-base sm:text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/65 focus:ring-2 focus:ring-sunset disabled:cursor-not-allowed disabled:opacity-55"
           />
           <button
             type="submit"

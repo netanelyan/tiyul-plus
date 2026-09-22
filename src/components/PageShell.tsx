@@ -30,7 +30,7 @@ export default function PageShell({
           It looks like a placeholder and not like content - nobody will mistake it for the
           policy, and it is easy to see from the page list what is still missing.
         */
-        <p className="mt-6 rounded-2xl bg-shell p-5 text-sm font-semibold leading-relaxed text-night/45 ring-1 ring-dashed ring-night/15">
+        <p className="mt-6 rounded-2xl bg-shell p-5 text-sm font-semibold leading-relaxed text-night/65 ring-1 ring-dashed ring-night/15">
           [למילוי] תוכן העמוד הזה עדיין לא נכתב.
         </p>
       ) : (

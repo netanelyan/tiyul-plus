@@ -97,7 +97,7 @@ export default function AddDayPicker({
     >
       <Flag flag={o.flag} label={o.name} size="md" />
       <span className="truncate font-semibold text-night">{label}</span>
-      <span className="ms-auto truncate ps-2 text-xs font-medium text-night/45">{o.country}</span>
+      <span className="ms-auto truncate ps-2 text-xs font-medium text-night/65">{o.country}</span>
     </button>
   );
 
@@ -112,7 +112,7 @@ export default function AddDayPicker({
         aria-controls="add-day-listbox"
         aria-label="הוספת יום לטיול"
         title={disabled ? OFFLINE_HINT : 'הוספת יום'}
-        className="flex h-11 min-w-11 items-center justify-center rounded-xl bg-shell px-2 text-lg font-bold text-night/45 ring-1 ring-dashed ring-night/15 transition hover:text-night hover:ring-night/30"
+        className="flex h-11 min-w-11 items-center justify-center rounded-xl bg-shell px-2 text-lg font-bold text-night/65 ring-1 ring-dashed ring-night/15 transition hover:text-night hover:ring-night/30"
       >
         +
       </button>
@@ -130,13 +130,13 @@ export default function AddDayPicker({
             onChange={(e) => setQuery(e.target.value)}
             placeholder="חיפוש עיר או מדינה…"
             aria-label="חיפוש עיר להוספת יום"
-            className="w-full rounded-xl bg-cream px-3 py-2.5 text-base sm:text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/40 focus:ring-2 focus:ring-sunset"
+            className="w-full rounded-xl bg-cream px-3 py-2.5 text-base sm:text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/65 focus:ring-2 focus:ring-sunset"
           />
 
           <div className="mt-1.5 max-h-64 overflow-y-auto">
             {inTrip.length > 0 && (
               <>
-                <div className="px-3 pb-1 pt-2 text-xs font-bold text-night/40">כבר בטיול</div>
+                <div className="px-3 pb-1 pt-2 text-xs font-bold text-night/65">כבר בטיול</div>
                 {inTrip.map((o) => (
                   <Row key={`in-${o.slug}`} o={o} label={`עוד יום ${inHe(o.name)}`} />
                 ))}
@@ -145,7 +145,7 @@ export default function AddDayPicker({
             {rest.length > 0 && (
               <>
                 {inTrip.length > 0 && (
-                  <div className="px-3 pb-1 pt-2 text-xs font-bold text-night/40">עיר חדשה</div>
+                  <div className="px-3 pb-1 pt-2 text-xs font-bold text-night/65">עיר חדשה</div>
                 )}
                 {rest.map((o) => (
                   <Row key={`new-${o.slug}`} o={o} label={o.name} />
@@ -153,7 +153,7 @@ export default function AddDayPicker({
               </>
             )}
             {filtered.length === 0 && (
-              <p className="px-3 py-3 text-sm font-medium text-night/50">
+              <p className="px-3 py-3 text-sm font-medium text-night/65">
                 אין עיר כזו בקטלוג. אפשר לנסות שם מדינה.
               </p>
             )}

@@ -141,7 +141,7 @@ export default async function CountryPage({
       <section className="mt-12">
         <div>
           <h2 className="display text-2xl text-night">הערים ב{country.name}</h2>
-          <p className="mt-2 text-night/60">
+          <p className="mt-2 text-night/70">
             כל עיר עם מסלול מוכן יום-אחרי-יום, מפה אינטראקטיבית ושכבת כשרות.
           </p>
         </div>

@@ -43,7 +43,7 @@ export default function CollectionsIndex() {
           { name: 'אוספי יעדים', path: '/collections' },
         ])}
       />
-      <nav aria-label="מיקום באתר" className="text-sm text-night/55">
+      <nav aria-label="מיקום באתר" className="text-sm text-night/70">
         <Link href="/" className="transition hover:text-night">
           טיול+
         </Link>{' '}
@@ -87,7 +87,7 @@ export default function CollectionsIndex() {
                     <span aria-hidden="true">{hub.emoji}</span> {hub.title}
                   </h2>
                   <p className="mt-2 text-sm leading-relaxed text-night/70">{hub.intro}</p>
-                  <p className="mt-3 text-xs font-bold text-night/50">{inHub.length} יעדים</p>
+                  <p className="mt-3 text-xs font-bold text-night/65">{inHub.length} יעדים</p>
                 </div>
               </Link>
             </li>
@@ -95,7 +95,7 @@ export default function CollectionsIndex() {
         })}
       </ul>
 
-      <p className="mt-10 text-sm text-night/60">
+      <p className="mt-10 text-sm text-night/70">
         מחפשים לפי מדינה?{' '}
         <Link href="/countries" className="font-bold text-night underline">
           קטלוג המדינות

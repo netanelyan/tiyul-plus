@@ -58,7 +58,7 @@ export default function PlannerClient({
 
   if (!trip.hydrated) {
     return (
-      <div className="rounded-2xl bg-shell p-10 text-center font-semibold text-night/40 ring-1 ring-night/10">
+      <div className="rounded-2xl bg-shell p-10 text-center font-semibold text-night/65 ring-1 ring-night/10">
         <ThinkingIndicator label="טוען את הטיולים שלך" className="justify-center" />
       </div>
     );
@@ -89,7 +89,7 @@ export default function PlannerClient({
           <button
             onClick={() => setAiAck(null)}
             aria-label="סגירה"
-            className="shrink-0 text-night/40 transition hover:text-night"
+            className="shrink-0 text-night/65 transition hover:text-night"
           >
             ✕
           </button>
@@ -208,14 +208,14 @@ function Onboarding({
 
       <section className="rise-in rounded-3xl bg-shell p-6 ring-1 ring-night/10 sm:p-8">
         <h1 className="display text-3xl text-night">בונים טיול חדש</h1>
-        <p className="mt-1.5 max-w-2xl leading-relaxed text-night/60">
+        <p className="mt-1.5 max-w-2xl leading-relaxed text-night/70">
           בוחרים לאן ומה חשוב - ואם רוצים, מוסיפים כמה מילים לדיוק. הכול ניתן לעריכה אחר כך.
         </p>
 
         {/* ---- 1. Where to? ---- */}
         <div className="mt-6">
           <div className="text-sm font-bold text-night">
-            לאן? <span className="font-medium text-night/50">(אפשר כמה ערים)</span>
+            לאן? <span className="font-medium text-night/65">(אפשר כמה ערים)</span>
           </div>
           <div className="mt-3">
             <CityCombobox
@@ -225,7 +225,7 @@ function Onboarding({
             />
           </div>
           {prefs.citySlugs.length > 1 && (
-            <div className="mt-2 text-xs font-medium text-night/50">
+            <div className="mt-2 text-xs font-medium text-night/65">
               טיול רב-עירוני: {prefs.citySlugs.length} ערים, הימים יתחלקו ביניהן
             </div>
           )}
@@ -234,7 +234,7 @@ function Onboarding({
         {/* ---- 2. Core settings - all buttons ---- */}
         <div className="mt-7 grid gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
           <div>
-            <div className="text-sm font-semibold text-night/60">כמה ימים?</div>
+            <div className="text-sm font-semibold text-night/70">כמה ימים?</div>
             <div className="mt-2 flex items-center gap-2">
               <button
                 onClick={() => setPrefs((p) => ({ ...p, totalDays: Math.max(1, p.totalDays - 1) }))}
@@ -259,7 +259,7 @@ function Onboarding({
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-night/60">מי נוסע?</div>
+            <div className="text-sm font-semibold text-night/70">מי נוסע?</div>
             <Seg
               options={[
                 { v: 'couple', l: 'זוג' },
@@ -273,7 +273,7 @@ function Onboarding({
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-night/60">קצב</div>
+            <div className="text-sm font-semibold text-night/70">קצב</div>
             <Seg
               options={[
                 { v: 'relaxed', l: 'רגוע' },
@@ -285,7 +285,7 @@ function Onboarding({
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-night/60">סגנון</div>
+            <div className="text-sm font-semibold text-night/70">סגנון</div>
             <Seg
               options={[
                 { v: 'city', l: 'עירוני' },
@@ -298,7 +298,7 @@ function Onboarding({
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-night/60">שופינג</div>
+            <div className="text-sm font-semibold text-night/70">שופינג</div>
             <Seg
               options={[
                 { v: 'more', l: 'יותר' },
@@ -311,14 +311,14 @@ function Onboarding({
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-night/60">כשר</div>
+            <div className="text-sm font-semibold text-night/70">כשר</div>
             <button
               onClick={() => setPrefs((p) => ({ ...p, kosherOnly: !p.kosherOnly }))}
               aria-pressed={prefs.kosherOnly}
               className={`mt-2 w-full rounded-xl px-3 py-2 text-sm font-semibold transition ${
                 prefs.kosherOnly
                   ? 'bg-sunset text-cream'
-                  : 'bg-night/5 text-night/60 hover:bg-night/10'
+                  : 'bg-night/5 text-night/70 hover:bg-night/10'
               }`}
             >
               {prefs.kosherOnly ? '✓ ' : ''}ארוחה כשרה בכל יום
@@ -329,7 +329,7 @@ function Onboarding({
         {/* ---- 3. Free text - optional ---- */}
         <div className="mt-7">
           <label htmlFor="refine-notes" className="text-sm font-semibold text-night/70">
-            רוצים לדייק? ספרו לנו עוד <span className="font-medium text-night/40">(לא חובה)</span>
+            רוצים לדייק? ספרו לנו עוד <span className="font-medium text-night/65">(לא חובה)</span>
           </label>
           <textarea
             id="refine-notes"
@@ -341,7 +341,7 @@ function Onboarding({
             rows={2}
             disabled={loading}
             placeholder="למשל: בלי מוזיאונים, הילדים בני 4 ו-7, אוהבים גלידה"
-            className="mt-2 w-full resize-none rounded-xl bg-night/5 px-4 py-3 text-base sm:text-sm leading-relaxed text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/35 focus:bg-shell focus:ring-2 focus:ring-sunset disabled:opacity-60"
+            className="mt-2 w-full resize-none rounded-xl bg-night/5 px-4 py-3 text-base sm:text-sm leading-relaxed text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/65 focus:bg-shell focus:ring-2 focus:ring-sunset disabled:opacity-60"
           />
         </div>
 
@@ -368,7 +368,7 @@ function Onboarding({
             )}
           </button>
           {prefs.citySlugs.length === 0 && (
-            <span className="text-xs font-semibold text-night/40">בחרו לפחות עיר אחת</span>
+            <span className="text-xs font-semibold text-night/65">בחרו לפחות עיר אחת</span>
           )}
         </div>
 
@@ -378,7 +378,7 @@ function Onboarding({
 
       {/* ---- 3. Tertiary: ready-made templates ---- */}
       <section className="mt-8">
-        <h2 className="text-sm font-bold text-night/50">או מתחילים ממסלול מוכן</h2>
+        <h2 className="text-sm font-bold text-night/65">או מתחילים ממסלול מוכן</h2>
         <div className="mt-3 flex gap-3 overflow-x-auto pb-2">
           {summaries.map((d) => (
             <button
@@ -396,7 +396,7 @@ function Onboarding({
             >
               <div><Flag flag={d.flag} label={d.name} size="lg" /></div>
               <div className="mt-1 truncate font-bold text-night">{d.name}</div>
-              <div className="text-xs font-medium text-night/50">{d.days} ימים</div>
+              <div className="text-xs font-medium text-night/65">{d.days} ימים</div>
             </button>
           ))}
           <button
@@ -406,9 +406,9 @@ function Onboarding({
             }}
             className="card-pop flex w-36 shrink-0 flex-col justify-center rounded-2xl bg-shell p-4 text-start ring-1 ring-night/10"
           >
-            <div className="text-xl text-night/40">+</div>
+            <div className="text-xl text-night/65">+</div>
             <div className="mt-1 font-bold text-night/70">טיול ריק</div>
-            <div className="text-xs font-medium text-night/50">אבנה לבד</div>
+            <div className="text-xs font-medium text-night/65">אבנה לבד</div>
           </button>
         </div>
       </section>
@@ -432,7 +432,7 @@ function Seg({
           key={o.v}
           onClick={() => onChange(o.v)}
           className={`flex-1 rounded-xl px-2 py-2 text-sm font-semibold transition ${
-            value === o.v ? 'bg-sunset text-cream' : 'bg-night/5 text-night/60 hover:bg-night/10'
+            value === o.v ? 'bg-sunset text-cream' : 'bg-night/5 text-night/70 hover:bg-night/10'
           }`}
         >
           {o.l}

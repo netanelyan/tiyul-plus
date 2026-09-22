@@ -216,7 +216,7 @@ export default function AgentWorkspace() {
           הטיולים נשמרים בדפדפן שבו בנו אותם. אם בניתם אותו בטלפון אחר, בדפדפן אחר, או
           שניקיתם את נתוני הגלישה - הוא פשוט לא כאן. לא מחקנו אותו.
         </p>
-        <p className="mt-2 text-sm leading-relaxed text-night/55">
+        <p className="mt-2 text-sm leading-relaxed text-night/70">
           עם חשבון זה לא קורה: הטיולים נשמרים אצלנו ונפתחים בכל מכשיר, גם אחרי ניקוי
           הדפדפן.
         </p>
@@ -230,7 +230,7 @@ export default function AgentWorkspace() {
         <ResumeTrips className="mt-8" />
         <Link
           href="/countries"
-          className="mt-6 text-sm font-semibold text-night/40 transition hover:text-sunset-deep"
+          className="mt-6 text-sm font-semibold text-night/65 transition hover:text-sunset-deep"
         >
           או גולשים בקטלוג היעדים ←
         </Link>
@@ -244,7 +244,7 @@ export default function AgentWorkspace() {
         <h1 className="display rise-in text-center text-4xl text-night sm:text-6xl">
           לאן טסים הפעם?
         </h1>
-        <p className="rise-in mt-4 max-w-xl text-center leading-relaxed text-night/60">
+        <p className="rise-in mt-4 max-w-xl text-center leading-relaxed text-night/70">
           מספרים לי מה מדמיינים - ואני בונה טיול אמיתי, יום-אחרי-יום, על מפה. בעברית.
         </p>
 
@@ -258,7 +258,7 @@ export default function AgentWorkspace() {
 
         <ResumeTrips className="rise-in-late mt-8" />
 
-        <div className="rise-in-late mt-8 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm font-semibold text-night/40">
+        <div className="rise-in-late mt-8 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm font-semibold text-night/65">
           <Link href="/countries" className="transition hover:text-sunset-deep">
             או גולשים בקטלוג היעדים ←
           </Link>

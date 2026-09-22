@@ -38,7 +38,7 @@ export default function Collections({ tiles }: { tiles: CollectionTile[] }) {
                 <span className="block text-sm font-extrabold leading-snug text-night sm:text-base">
                   {t.title}
                 </span>
-                <span className="mt-0.5 block text-xs font-semibold text-night/55">{t.count} יעדים</span>
+                <span className="mt-0.5 block text-xs font-semibold text-night/70">{t.count} יעדים</span>
               </span>
             </Link>
           </li>

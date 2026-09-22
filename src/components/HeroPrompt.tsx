@@ -95,7 +95,7 @@ export default function HeroPrompt({
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder={placeholder}
-            className="w-full rounded-2xl border border-night/15 bg-shell px-5 py-4 text-base text-night shadow-[inset_0_2px_6px_rgba(36,27,77,0.05)] outline-none transition placeholder:text-night/45 focus:border-sunset/40 focus:ring-4 focus:ring-sunset/15 sm:py-5 sm:pe-28 sm:ps-6 sm:text-lg"
+            className="w-full rounded-2xl border border-night/15 bg-shell px-5 py-4 text-base text-night shadow-[inset_0_2px_6px_rgba(36,27,77,0.05)] outline-none transition placeholder:text-night/65 focus:border-sunset/40 focus:ring-4 focus:ring-sunset/15 sm:py-5 sm:pe-28 sm:ps-6 sm:text-lg"
           />
           <button
             type="submit"

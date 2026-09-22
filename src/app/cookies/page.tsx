@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import PageShell from '@/components/PageShell';
 import { List, Section, Sub, Updated } from '@/components/PolicySection';
+import StorageControls from '@/components/StorageControls';
 import { pageMetadata } from '@/lib/seo/site';
 
 export const metadata: Metadata = pageMetadata({
@@ -20,7 +21,7 @@ function Row({ name, what, why, pii }: { name: string; what: string; why: string
         {pii ? <span className="ms-2 text-xs font-semibold text-sunset-deep">· מידע אישי</span> : null}
       </p>
       <p className="mt-1 text-sm text-night/70">{what}</p>
-      <p className="mt-0.5 text-sm text-night/55">{why}</p>
+      <p className="mt-0.5 text-sm text-night/70">{why}</p>
     </div>
   );
 }
@@ -31,6 +32,11 @@ export default function Page() {
       <p className="rounded-2xl bg-shell p-4 text-lg leading-relaxed ring-1 ring-night/10">
         <strong>גלישה רגילה בטיול+ לא מציבה אף עוגייה.</strong> לא עוגיות פרסום, לא עוגיות
         מעקב, ולא עוגיות ״הכרחיות״. לכן גם אין באתר חלונית הסכמה לעוגיות - אין למה להסכים.
+      </p>
+      <p>
+        אנחנו כותבים את זה כאן במקום להציג חלונית, כי{' '}
+        <strong>חלונית שמבקשת אישור לכלום מרגילה אנשים לאשר בלי לקרוא</strong>. במקומה, בהמשך
+        העמוד יש רשימה חיה של מה שבאמת שמור במכשיר שלכם ברגע זה, עם כפתור מחיקה לכל פריט.
       </p>
       <p className="rounded-xl bg-shell p-4 ring-1 ring-night/10">
         יש בדיוק יוצא דופן אחד, ואנחנו כותבים אותו כאן במפורש כדי שהמשפט למעלה יישאר מדויק:
@@ -76,8 +82,8 @@ export default function Page() {
           />
           <Row
             name="כתובת המייל האחרונה"
-            what="המייל שהקלדתם בתיבת ההתחברות."
-            why="כדי למלא אותו מראש בפעם הבאה. שימו לב: הוא נשאר גם אחרי יציאה מהחשבון, ולכן במכשיר משותף כדאי לנקות את נתוני האתר."
+            what="המייל שהקלדתם בתיבת ההתחברות - ורק אם סימנתם ״לזכור את הכתובת במכשיר הזה״."
+            why="כדי למלא אותו מראש בפעם הבאה. זה הדבר היחיד ברשימה שאינו נדרש לתפעול השירות, ולכן הוא היחיד שהוא בבחירה - ברירת המחדל היא לא לשמור. הסרת הסימון בכניסה הבאה גם מוחקת את מה שכבר נשמר."
             pii
           />
           <Row
@@ -129,10 +135,18 @@ export default function Page() {
             <>אריחי מפה מ-OpenStreetMap.</>,
           ]}
         />
-        <p className="text-sm text-night/60">
+        <p className="text-sm text-night/70">
           אם תלחצו על קישור לספק הזמנות, אתם עוברים לאתר שלו, ומאותו רגע חלים{' '}
           <strong>העוגיות והמדיניות שלו</strong> ולא שלנו.
         </p>
+      </Section>
+
+      <Section title="מה שמור כרגע במכשיר הזה, ומחיקה">
+        <p>
+          הרשימה נקראת מהדפדפן שלכם בזמן אמת. היא לא נשלחת אלינו, ואנחנו לא רואים אותה - כל
+          הבדיקה קורית אצלכם במכשיר.
+        </p>
+        <StorageControls />
       </Section>
 
       <Section title="איך מוחקים">
@@ -149,7 +163,7 @@ export default function Page() {
             מוחקים את זה מעצמם אחרי כמה ימים ללא ביקור.
           </p>
         </Sub>
-        <p className="text-sm text-night/60">
+        <p className="text-sm text-night/70">
           שימו לב: אם יש לכם חשבון, ניקוי הדפדפן לא מוחק את מה ששמור בשרת - לזה ראו{' '}
           <Link href="/privacy" className="font-bold text-sunset-deep hover:underline">
             מדיניות הפרטיות
@@ -158,7 +172,7 @@ export default function Page() {
         </p>
       </Section>
 
-      <Updated date="21 בספטמבר 2026" />
+      <Updated date="22 בספטמבר 2026" />
     </PageShell>
   );
 }

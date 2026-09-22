@@ -88,7 +88,7 @@ export default function DestinationGuide({
             המלצת הצוות: {dest.editorialRating.score}/5
           </span>{' '}
           {dest.editorialRating.verdict}
-          <span className="mt-1 block text-xs text-night/50">
+          <span className="mt-1 block text-xs text-night/65">
             דירוג עריכתי של צוות טיול+ - לא ממוצע של ביקורות משתמשים.
           </span>
         </p>
@@ -98,7 +98,7 @@ export default function DestinationGuide({
       {groups.length > 0 && (
         <div className="mt-10">
           <SectionHeading icon="📍">מה לעשות {inCity}</SectionHeading>
-          <p className="mt-2 text-sm text-night/60">
+          <p className="mt-2 text-sm text-night/70">
             {dest.places.length} מקומות שנאספו ונבדקו על ידי הצוות.
           </p>
           {groups.map((g) => (
@@ -158,7 +158,7 @@ export default function DestinationGuide({
                     {d.places.map((p) => p.name).join(' · ')}
                   </p>
                 )}
-                {d.notes && <p className="mt-2 text-sm text-night/60">{d.notes}</p>}
+                {d.notes && <p className="mt-2 text-sm text-night/70">{d.notes}</p>}
               </li>
             ))}
           </ol>
@@ -169,7 +169,7 @@ export default function DestinationGuide({
       {family.length >= MIN_FAMILY_PLACES && (
         <div className="mt-10">
           <SectionHeading icon="👨‍👩‍👧">טיול משפחתי {toCity}</SectionHeading>
-          <p className="mt-2 text-sm text-night/60">
+          <p className="mt-2 text-sm text-night/70">
             {family.length} מקומות בקטלוג מסומנים כמתאימים למשפחות עם ילדים.
           </p>
           <ul className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -198,7 +198,7 @@ export default function DestinationGuide({
             ))}
           </ul>
         ) : (
-          <p className="mt-3 text-sm text-night/60">
+          <p className="mt-3 text-sm text-night/70">
             אין בקטלוג שלנו מקום כשר מאומת {inCity}. זה לא אומר שאין - זה אומר שעדיין לא
             בדקנו, ובכל מקרה כדאי לוודא מול המקום עצמו.
           </p>
@@ -210,7 +210,7 @@ export default function DestinationGuide({
           than no time at all. The planner computes them against the traveller's
           real dates.
         */}
-        <p className="mt-3 text-sm text-night/60">
+        <p className="mt-3 text-sm text-night/70">
           זמני כניסת שבת ויציאתה משתנים משבוע לשבוע, ולכן הם לא מופיעים בעמוד הזה -
           הסוכן מחשב אותם לפי התאריכים של הטיול שלכם.
         </p>
@@ -236,7 +236,7 @@ export default function DestinationGuide({
                     turn a window into a date.
                   */}
                   {!e.datesConfirmed && e.window && (
-                    <p className="mt-1 text-xs text-night/55">
+                    <p className="mt-1 text-xs text-night/70">
                       {e.window} · התאריכים לשנה הזו עדיין לא פורסמו רשמית.
                     </p>
                   )}
@@ -267,15 +267,15 @@ export default function DestinationGuide({
                 key={label}
                 className="rounded-2xl bg-shell p-4 text-center ring-1 ring-night/10"
               >
-                <div className="text-xs font-bold text-night/60">{label}</div>
+                <div className="text-xs font-bold text-night/70">{label}</div>
                 <div className="mt-1 text-lg font-bold text-night">
                   {formatAmount(tier.transport + tier.food + tier.activities, cost.currency)}
                 </div>
-                <div className="text-xs text-night/50">ליום, לאדם</div>
+                <div className="text-xs text-night/65">ליום, לאדם</div>
               </li>
             ))}
           </ul>
-          <p className="mt-2 text-xs text-night/50">
+          <p className="mt-2 text-xs text-night/65">
             מקור: {cost.source.title} · נבדק ב-{cost.source.checked}
           </p>
         </div>
@@ -363,7 +363,7 @@ export default function DestinationGuide({
         </div>
       )}
 
-      <p className="mt-6 text-xs leading-relaxed text-night/50">
+      <p className="mt-6 text-xs leading-relaxed text-night/65">
         המידע בעמוד נאסף ונערך על ידי צוות טיול+. שעות פתיחה, מחירים וכשרות משתנים -
         כדאי לוודא מול המקום עצמו לפני שיוצאים.
       </p>
@@ -462,7 +462,7 @@ function PlaceHeading({ place }: { place: Place }) {
       )}
       {place.name}
       {place.nameLocal && (
-        <span className="ms-2 text-xs font-medium text-night/45">{place.nameLocal}</span>
+        <span className="ms-2 text-xs font-medium text-night/65">{place.nameLocal}</span>
       )}
     </h5>
   );
@@ -481,7 +481,7 @@ function PlaceMeta({ place }: { place: Place }) {
   const price = priceLabel(place.priceLevel);
   if (!duration && !price) return null;
   return (
-    <p className="mt-2 text-xs text-night/55">
+    <p className="mt-2 text-xs text-night/70">
       {[duration, price].filter(Boolean).join(' · ')}
     </p>
   );

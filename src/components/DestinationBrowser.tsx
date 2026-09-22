@@ -133,7 +133,7 @@ export default function DestinationBrowser({
 
       {/* ---------- Character ---------- */}
       <div className="mt-4 flex flex-wrap items-center gap-1.5">
-        <span className="text-xs font-bold text-night/40">אופי ·</span>
+        <span className="text-xs font-bold text-night/65">אופי ·</span>
         {vibes.map((v) => (
           <Chip
             key={v.key}
@@ -147,7 +147,7 @@ export default function DestinationBrowser({
 
       {/* ---------- Attraction prices ---------- */}
       <div className="mt-2 flex flex-wrap items-center gap-1.5">
-        <span className="text-xs font-bold text-night/40">מחירי אטרקציות ·</span>
+        <span className="text-xs font-bold text-night/65">מחירי אטרקציות ·</span>
         {PRICE_BANDS.map((b) => (
           <Chip
             key={b.key}
@@ -164,14 +164,14 @@ export default function DestinationBrowser({
         a trip's cost and there is no data on them, so the chips talk about
         attractions and do not pretend to rank destinations as cheap.
       */}
-      <p className="mt-1.5 text-xs font-medium text-night/40">
+      <p className="mt-1.5 text-xs font-medium text-night/65">
         לפי מחירי הכניסה לאטרקציות בקטלוג בלבד - לא כולל טיסות ולינה, שהן רוב עלות הטיול.
       </p>
 
       {/* ---------- Season: only when there is data ---------- */}
       {seasonAvailable && (
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
-          <span className="text-xs font-bold text-night/40">עונה ·</span>
+          <span className="text-xs font-bold text-night/65">עונה ·</span>
           {SEASONS.map((s) => (
             <Chip
               key={s.key}
@@ -191,19 +191,19 @@ export default function DestinationBrowser({
           onChange={(e) => setF((p) => ({ ...p, query: e.target.value }))}
           placeholder="חיפוש יעד או מדינה…"
           aria-label="חיפוש יעד או מדינה"
-          className="min-w-0 flex-1 rounded-2xl border border-night/15 bg-shell px-4 py-3 text-base sm:text-sm text-night shadow-inner outline-none transition placeholder:text-night/40 focus:border-sunset/40 focus:ring-4 focus:ring-sunset/15"
+          className="min-w-0 flex-1 rounded-2xl border border-night/15 bg-shell px-4 py-3 text-base sm:text-sm text-night shadow-inner outline-none transition placeholder:text-night/65 focus:border-sunset/40 focus:ring-4 focus:ring-sunset/15"
         />
         {active && (
           <button
             onClick={() => setF(EMPTY_FACETS)}
-            className="rounded-2xl bg-shell px-4 py-3 text-sm font-bold text-night/60 ring-1 ring-night/15 transition hover:text-night"
+            className="rounded-2xl bg-shell px-4 py-3 text-sm font-bold text-night/70 ring-1 ring-night/15 transition hover:text-night"
           >
             ניקוי סינון
           </button>
         )}
       </div>
 
-      <p className="mt-3 text-sm font-semibold text-night/50">
+      <p className="mt-3 text-sm font-semibold text-night/65">
         {results.length === 0
           ? 'אין יעד שעונה על הסינון הזה.'
           : `${results.length} ${results.length === 1 ? 'יעד' : 'יעדים'}`}
@@ -212,7 +212,7 @@ export default function DestinationBrowser({
       {/* ---------- The results ---------- */}
       {results.length === 0 ? (
         <div className="mt-4 rounded-2xl bg-shell p-6 text-center ring-1 ring-night/10">
-          <p className="text-sm font-medium leading-relaxed text-night/60">
+          <p className="text-sm font-medium leading-relaxed text-night/70">
             אפשר להסיר חלק מהסינון, או לשאול את הסוכן - הוא יודע לחקור יעד שעדיין לא בקטלוג ולומר
             בכנות מה ידוע עליו.
           </p>
@@ -254,14 +254,14 @@ export default function DestinationBrowser({
                     return (
                       <span
                         key={v}
-                        className="rounded-full bg-night/5 px-2 py-0.5 text-xs font-semibold text-night/55"
+                        className="rounded-full bg-night/5 px-2 py-0.5 text-xs font-semibold text-night/70"
                       >
                         {meta?.emoji} {meta?.label}
                       </span>
                     );
                   })}
                 </div>
-                <div className="mt-2 text-xs font-medium text-night/45">
+                <div className="mt-2 text-xs font-medium text-night/65">
                   {c.days > 0 && <>מסלול ל-{c.days} ימים · </>}
                   {c.places} מקומות
                   {c.kosher > 0 && <> · {c.kosher} כשר</>}
@@ -283,12 +283,12 @@ export default function DestinationBrowser({
           <h2 className="text-sm font-bold text-night/70">
             לגלוש לפי מדינה
             {active && visibleCountries.length < countries.length && (
-              <span className="ms-1.5 font-semibold text-night/40">
+              <span className="ms-1.5 font-semibold text-night/65">
                 ({visibleCountries.length} מתוך {countries.length})
               </span>
             )}
           </h2>
-          <p className="mt-1 text-xs font-medium text-night/50">
+          <p className="mt-1 text-xs font-medium text-night/65">
             ויזה, מטבע, סים ותשלומים הם מידע ברמת המדינה - שם הוא נמצא.
           </p>
           <div className="mt-3 flex flex-wrap gap-1.5">
@@ -333,14 +333,14 @@ function ContinentTab({
       className={`flex min-w-[6.25rem] flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl px-3 py-3 text-center text-sm font-bold transition ${
         active
           ? 'bg-shell text-night ring-2 ring-sunset'
-          : 'bg-shell/70 text-night/60 ring-1 ring-night/10 hover:ring-night/25'
+          : 'bg-shell/70 text-night/70 ring-1 ring-night/10 hover:ring-night/25'
       }`}
     >
       <span aria-hidden className="text-lg">
         {emoji}
       </span>
       <span className="leading-tight">{label}</span>
-      <span className={`text-xs font-semibold ${active ? 'text-sunset-deep' : 'text-night/35'}`}>
+      <span className={`text-xs font-semibold ${active ? 'text-sunset-deep' : 'text-night/65'}`}>
         {count}
       </span>
     </button>
@@ -363,7 +363,7 @@ function Chip({
       onClick={onClick}
       aria-pressed={active}
       className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
-        active ? 'bg-sunset text-cream' : 'bg-night/5 text-night/60 hover:bg-night/10 hover:text-night'
+        active ? 'bg-sunset text-cream' : 'bg-night/5 text-night/70 hover:bg-night/10 hover:text-night'
       }`}
     >
       <span aria-hidden>{emoji}</span> {label}
