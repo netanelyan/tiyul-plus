@@ -48,8 +48,45 @@ export const CONSENT_KEY = 'tiyul-plus:analytics-consent';
 
 export type ConsentChoice = 'granted' | 'denied';
 
-/** Unset in an environment with no measurement id - everything below no-ops. */
-export const gaId = (): string | undefined => process.env.NEXT_PUBLIC_GA_ID || undefined;
+/**
+ * The live property, committed rather than left to configuration.
+ *
+ * A GA4 measurement id is **public by design** - it is in the page source of
+ * every site on the internet that uses GA, and it grants nothing: it is a
+ * destination to send to, not a credential. So this is not a secret sitting in
+ * a repo, it is an address.
+ *
+ * It is committed because the alternative failed in exactly the way that is
+ * easy to miss: `NEXT_PUBLIC_` values are compiled in at build time, so the
+ * variable has to be set in Vercel **and** the site redeployed. Until both
+ * happen the tag simply is not on the page, GA reports "no data received",
+ * and there is nothing on the site to look at that explains why.
+ *
+ * `NEXT_PUBLIC_GA_ID` still wins when it is set, so a different property (or
+ * none) can be used without touching code.
+ */
+const PRODUCTION_GA_ID = 'G-MR48GYKQ3R';
+
+export const gaId = (): string | undefined => process.env.NEXT_PUBLIC_GA_ID || PRODUCTION_GA_ID;
+
+/**
+ * Hosts that are allowed to report into the committed property.
+ *
+ * Without this, every preview deployment and every `npm run dev` would file
+ * its traffic alongside the real thing - and preview traffic is a developer
+ * clicking through a half-finished feature, which is precisely the noise that
+ * makes an analytics property untrustworthy.
+ *
+ * An explicitly-set `NEXT_PUBLIC_GA_ID` bypasses the check: somebody who
+ * configured a property on purpose meant it.
+ */
+const REPORTING_HOSTS = new Set(['tiyulplus.com', 'www.tiyulplus.com']);
+
+function reportingHostAllowed(): boolean {
+  if (process.env.NEXT_PUBLIC_GA_ID) return true;
+  if (typeof window === 'undefined') return false;
+  return REPORTING_HOSTS.has(window.location.hostname);
+}
 
 type GtagArgs = [string, ...unknown[]];
 interface GtagWindow extends Window {
@@ -155,6 +192,7 @@ export function clearConsent(): void {
 export function analyticsActive(): boolean {
   if (!gaId()) return false;
   if (typeof window === 'undefined') return false;
+  if (!reportingHostAllowed()) return false;
   return !suppressed();
 }
 
