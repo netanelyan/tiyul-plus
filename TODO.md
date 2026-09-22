@@ -8,6 +8,36 @@ kosher only where it genuinely exists (else say so honestly); `npm run build`
 + `node scripts/verify-photos.mjs` must pass; commit + push per city; update
 the CLAUDE.md session log.
 
+## ⚠️ WHAT ONLY NETANEL CAN DO - see `1.MD` for step-by-step (added 2026-09-22)
+
+`1.MD` is the authoritative launch checklist, verified against production
+rather than against these notes. Nine items, roughly in order of value. The
+short version, so this file points at them too:
+
+- [ ] **Google Analytics**: create the property, set `NEXT_PUBLIC_GA_ID` in
+      Vercel, redeploy. The code is built, deployed and inert until that
+      variable exists. Then raise Data Retention from 2 to 14 months - that
+      default cannot be applied retroactively. (`1.MD` section 3)
+- [ ] **Viator to production**: `VIATOR_API_KEY` + `VIATOR_MODE=production`.
+      The integration is finished and switched off; this is the shortest path
+      to the first shekel the site ever earns. (1.1)
+- [ ] **The four affiliate programmes**: apply now, they take days. Each one
+      then needs BOTH an env var and its `affiliate` template filled in
+      `src/lib/booking.ts` - the env var alone does nothing. (1.2)
+- [ ] **Uptime monitor** on `https://www.tiyulplus.com/api/health`. (2.1)
+- [ ] **Press the alert-test button** in `/admin` once against production. (2.2)
+- [ ] **Take the first backup** (`npm run backup`) and keep it off the laptop.
+      The local service-role key is currently rejected with 401 - replace it
+      first. (2.3, 5.5)
+- [ ] **Check Supabase backup retention / PITR** - the only path back for
+      `auth.users`. (2.4)
+- [ ] **Populate the photo mirror**, then set `NEXT_PUBLIC_PHOTO_MIRROR_BASE`.
+      3,309 places currently depend on files we do not own, and a file cannot
+      be mirrored after it is deleted. (4.1)
+- [ ] **Small ones**: send a test mail to support@, delete the QA share code
+      `T4R4Cwqk`, run `sql/supabase-check.sql`, tighten DMARC once the reports
+      look clean. (5.1-5.4)
+
 ## Current state (updated 2026-08-29)
 
 **Monetization is LIVE.** `/premium` sells Free, Premium (19.90 ILS/mo), Pro

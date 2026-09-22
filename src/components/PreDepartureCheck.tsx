@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/lib/auth/AuthContext';
 import { authHeader } from '@/lib/auth/client';
+import { track as gaTrack } from '@/lib/analytics';
 import PanelSection from '@/components/PanelSection';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 import { requestLogin, takePendingLogin } from '@/components/LoginGate';
@@ -234,6 +235,7 @@ export default function PreDepartureCheck({
   const buy = async () => {
     setBusy(true);
     setError(null);
+    gaTrack('checkout_started', { product: 'predeparture-check' });
     try {
       const headers = await authHeader();
       const res = await fetch('/api/checks/create-order', {

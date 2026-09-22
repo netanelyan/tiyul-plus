@@ -13,6 +13,7 @@ import type { Destination } from '@/lib/types';
 import { OFFLINE_HINT } from '@/lib/offline/online';
 import PanelSection from '@/components/PanelSection';
 import { inHe } from '@/lib/hebrew';
+import { track as gaTrack } from '@/lib/analytics';
 import {
   bookingStatusOf,
   citiesNeeding,
@@ -234,6 +235,20 @@ export default function BookingPanel({
                     href={url}
                     target="_blank"
                     rel={`noopener noreferrer nofollow${affiliate ? ' sponsored' : ''}`}
+                    /*
+                      The click that is supposed to become revenue. `affiliate`
+                      records whether the link was actually a tracked one -
+                      which is how "people click through" and "we get paid for
+                      it" stay separate numbers, because today every one of
+                      these is false.
+                    */
+                    onClick={() =>
+                      gaTrack('affiliate_click', {
+                        kind: p.kind,
+                        provider: p.provider ?? 'none',
+                        affiliate: Boolean(affiliate),
+                      })
+                    }
                     className="mt-2 flex items-center justify-center rounded-xl bg-night px-3 py-2 text-xs font-bold text-cream transition hover:bg-night/85"
                   >
                     {p.cta}

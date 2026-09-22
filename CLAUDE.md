@@ -13959,3 +13959,182 @@ retention and whether PITR is on, since that is the only path back for
 bundle, and picking a vendor is a decision rather than a task. And
 `/api/cities` is still the one unmetered route: it reads an in-memory catalog,
 costs no database call and no money, so a limit there would be ceremony.
+
+### 2026-09-22 (e) - Google Analytics, and the two guards that kept passing while their claim became false
+
+Netanel: add Google Analytics, "as much info as possible", then twice more in
+the same turn - "without breaking the website" and "without slowing down the
+website". Those two are the whole engineering brief; the tag itself is four
+lines.
+
+**GA4 is the first thing on this site that writes a cookie on an ordinary
+visitor's device**, so it does not arrive as a script tag. It arrives with
+Consent Mode v2, a banner, a way to change your mind, and both policy pages
+rewritten - because otherwise the site would be publishing two pages that say
+it does not do the thing it now does.
+
+---
+
+**The shape: denied by default, and the numbers are still not zero.**
+
+Before a choice, `analytics_storage` is `denied` and GA sends a cookieless
+ping - counted in aggregate, no cookie, no persistent identifier. On accept it
+becomes `granted` and GA behaves like GA. That is Google's own recommended
+arrangement and it is the only one that reports a real number while a banner
+is on screen.
+
+**`ad_storage`, `ad_user_data` and `ad_personalization` are denied permanently,
+even for somebody who accepts.** We do not advertise and do not sell audiences,
+so there is no reason for any of it to reach Google's advertising side, and a
+test fails if that changes.
+
+**The choice is stored in localStorage, not in a cookie** - storing "this
+person declined cookies" in a cookie is the joke that writes itself, and it
+means somebody who declines leaves with nothing written by us at all.
+
+---
+
+**Two guards kept passing while the claims they protect became false, which is
+the finding worth keeping.**
+
+`policyPages.test.ts` asserted "there is no analytics" by scanning
+`package.json` for tracker dependencies, and "the site sets no cookie" by
+scanning our source for `document.cookie`. **GA adds no dependency and sets its
+cookies from its own script**, so both sailed through green while `/cookies`
+and `/privacy` went from true to false.
+
+A guard that cannot see the thing it exists to catch is worse than no guard,
+because it is read as evidence. Both now assert what is actually true - GA4 is
+the *only* measurement tool, no other tracker host may appear in `script-src`,
+the consent default is `denied` in all three places it is written, and the
+advertising signals are denied. Both were **proven to fire** by injecting
+`ad_storage:'granted'` and by misspelling the consent key.
+
+That last one is a real hazard rather than a hypothetical: the key exists
+twice, in the module and in the inline script that has to run before gtag.js
+and therefore cannot import anything. If they drift, consent is written under
+one name and read under another, and every visitor is asked forever.
+
+---
+
+**"Without slowing down the website" - the trap was mine, and it was not the
+script.**
+
+My first draft used `useSearchParams` to catch query-string changes. In a root
+layout that **opts every statically generated page out of static rendering** -
+all 270 of them would begin rendering per request. The measurement would have
+been the slowdown. The query string is read from `window.location` inside the
+effect instead: same information, none of the cost. Verified after the change
+that `/cookies`, `/countries` and `/countries/[slug]` are still `○`/`●` in the
+build output.
+
+gtag.js is `lazyOnload`, so it is fetched during idle time after the load
+event. Measured, median of five runs at 390px, same build, once with GA and
+once with googletagmanager blocked:
+
+| | FCP | DCL | load | KB before load |
+|---|---|---|---|---|
+| with GA | 260 | 209 | 325 | 1 |
+| GA blocked | 264 | 209 | 316 | 1 |
+
+**Zero bytes before the load event**, FCP within noise, DCL identical. The cost
+of that choice, stated rather than hidden: a visitor who leaves within a second
+or two may not be counted.
+
+---
+
+**"Without breaking the website" - three ways it could, all closed.**
+
+**The CSP is enforced on this site**, so a missing host is a blocked script and
+a silent console violation. `script-src` gained googletagmanager;
+`connect-src` gained four shapes, because GA4 does not beacon to one host -
+`*.google-analytics.com` is region-sharded, `*.analytics.google.com` returns
+config, and googletagmanager is contacted again for the container. With any one
+missing, events drop silently and the reports are merely short, which is the
+worst kind of wrong because it reads as low traffic. `img-src` gained the
+pixel fallback used during unload, which is when a session's last event goes.
+
+**Without `NEXT_PUBLIC_GA_ID` the whole thing is inert** - `Analytics` and the
+banner both render `null`, no script, no banner, no cookie.
+
+**An ad blocker is expected, not an error.** `onError` is handled rather than
+left to bubble, which matters more than usual now: unhandled, it would reach
+the error boundary and the alerting built earlier today, i.e. measurement
+paging somebody because Google was blocked.
+
+---
+
+**A real defect the browser caught, at 390px only.** The banner is full width
+on a phone, and the accessibility button sits bottom-start at 44x44 - so a bar
+pinned to `bottom-0` landed exactly on top of it. Covering that button is the
+one thing this must never do: it is the control somebody may need in order to
+read the banner. Measured the button (left 330-374, 16px margin), lifted the
+banner 4.75rem on mobile only, re-measured. My own doc comment had claimed it
+was clear; it was not.
+
+**Two lint errors of my own, fixed rather than suppressed.** Reading
+localStorage needs the client, and the obvious shape - an effect that calls
+`setState` - is a cascading render this repo's config rejects by name. Both
+components now read through `useSyncExternalStore` with a small subscription in
+`analytics.ts`, which is the pattern this repo already adopted for the storage
+panel. A side effect worth having: pressing a button on `/cookies` updates the
+banner's view of the world for free.
+
+---
+
+**What is measured, and the one thing deliberately not sent.** Twelve named
+events in a closed union - free strings produce three useless charts for one
+action - covering the funnel (`chat_message_sent` with a turn count,
+`trip_created`), the viral loop end to end (`share_link_created` through
+`shared_trip_adopted`), money (`checkout_started` vs `purchase_completed`),
+`affiliate_click` carrying whether the link was actually tracked (every one
+records `false` today, which is the point), and Web Vitals from real devices.
+
+**No text a visitor writes is ever sent.** Not a trip name, not a message to
+the agent, not a search query - `search_used` carries the *kind* of result,
+which is a catalog decision rather than their words. A GA4 property is
+something other people can be given access to.
+
+The nine export counters ride on the existing `trackEvent` rather than being
+sprinkled through components, through a `Record<AppEvent, AnalyticsEvent>` that
+**will not compile** if a new counter is added without deciding what GA calls
+it. `suppressed()` moved to `internalBrowser.ts` so events and analytics can
+both use it without importing each other.
+
+---
+
+**The GDPR section needed changing, and it was not changed quietly.** The
+analysis rested on "there is no tracking tool on this site, so the monitoring
+limb cannot be met", and that sentence is now false. It now says so, lists the
+mitigations, and marks the question as open with the existing `Gap` component
+rather than resolving a legal question unilaterally - the same discipline the
+Amendment 13 questions got.
+
+---
+
+**Verified.** 1,003 unit tests (2 new guards, both proven to fire), tsc clean,
+build clean with `/cookies` and the catalog pages still static, lint at **28
+errors - the pre-existing baseline**, with one stale directive removed.
+
+**15/15 in a real browser at 1400 and 390** against a production build with a
+measurement id compiled in: CSP blocks nothing, gtag.js is actually requested,
+the banner appears and does not cover the accessibility button, both buttons
+are 44px and the same size, zero overflow, the page behind it is reachable, no
+`_ga` cookie before a choice, the queued default really says denied, declining
+stores the choice and writes no cookie, and no console errors.
+
+**Two limits, stated rather than glossed.** `G-TEST123456` is not a real
+property, so GA never establishes a client and **no `_ga` cookie could be
+observed even after accepting** - what was verified is that the consent update
+fires with `granted`, that gtag.js loaded and initialised (`window.gtag` is a
+function, Google's own globals exist), and that nothing is written before a
+yes. And `page_view` queued **0 on localhost and 3 off it** - which is the
+internal-browser mute working exactly as designed, and also the reason delivery
+cannot be confirmed from this machine. The first real confirmation is GA's
+Realtime report after the id is set.
+
+**Waiting on Netanel**, with step-by-step in `1.MD` section 3: create the
+property, set `NEXT_PUBLIC_GA_ID` in Vercel, **redeploy** (a `NEXT_PUBLIC_`
+variable is compiled in at build time, so an existing deployment will never
+pick it up), and raise Data Retention from 2 to 14 months - that default
+discards user-level data and cannot be applied retroactively.

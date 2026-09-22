@@ -11,6 +11,8 @@ import OfflineNotice from '@/components/OfflineNotice';
 import SiteNav from '@/components/SiteNav';
 import { cityNames } from '@/lib/server/cityNames';
 import AccessibilityWidget from '@/components/AccessibilityWidget';
+import Analytics from '@/components/Analytics';
+import CookieConsent from '@/components/CookieConsent';
 import Logo from '@/components/Logo';
 import { Heebo } from 'next/font/google';
 import './globals.css';
@@ -212,6 +214,17 @@ export default function RootLayout({
         </TripProvider>
         </AuthProvider>
         <AccessibilityWidget />
+        {/*
+          Both below the providers on purpose: neither needs the trip or the
+          account, and mounting them inside would re-render them on every trip
+          mutation for nothing.
+
+          Analytics renders null without NEXT_PUBLIC_GA_ID, and the banner
+          renders null without it too - so with no id configured this pair is
+          exactly zero bytes and zero behaviour.
+        */}
+        <Analytics />
+        <CookieConsent />
         <SiteFooter />
         {/*
           lazyOnload rather than afterInteractive: this is a 12KB branding

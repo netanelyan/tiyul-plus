@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { clientIdHeader } from '@/lib/clientId';
+import { track as gaTrack } from '@/lib/analytics';
 import type { Trip } from './types';
 import type { Destination } from '@/lib/types';
 import { useTrip } from './TripContext';
@@ -137,6 +138,18 @@ export function useTripChat(options?: {
     if ((!trimmed && !image) || loading) return;
     const kosher = kosherArg ?? kosherHint;
     if (kosherArg) setKosherHint(true);
+
+    /*
+      The single most important number on the site: is anybody actually
+      talking to the agent, and how far into a conversation do they get.
+      `turn` is the count, never the text - what somebody types to a travel
+      agent is theirs.
+    */
+    gaTrack('chat_message_sent', {
+      turn: messagesRef.current.filter((m) => m.role === 'user').length + 1,
+      has_image: Boolean(image),
+      has_trip: Boolean(tripRef.current),
+    });
 
     const next: ChatMessage[] = [
       ...messagesRef.current,

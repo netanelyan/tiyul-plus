@@ -138,12 +138,81 @@ test('הטענה ״אין עוגיות״ עדיין נכונה', () => {
   );
 });
 
-test('הטענה ״אין אנליטיקה ואין פרסום״ עדיין נכונה', () => {
+/**
+ * This guard used to assert "there is no analytics at all", and it **kept
+ * passing** when Google Analytics was added - because GA arrives as a script
+ * tag and adds no dependency. A guard that cannot see the thing it exists to
+ * catch is worse than none, so it now asserts what is actually true:
+ *
+ *   GA4 is the ONE measurement tool, it is the only one, and nothing else
+ *   sneaks in beside it.
+ *
+ * The rule the pages actually make - that GA only writes a cookie after a
+ * yes - is asserted separately below, where it can be seen.
+ */
+test('Google Analytics הוא כלי המדידה היחיד - שום כלי מעקב אחר לא נוסף', () => {
   const pkg = JSON.parse(readFileSync(join(APP, '../../package.json'), 'utf8'));
   const deps = Object.keys({ ...pkg.dependencies, ...pkg.devDependencies });
-  const TRACKERS = /analytics|gtag|gtm|posthog|mixpanel|amplitude|segment|hotjar|clarity|sentry|datadog|logrocket|fullstory/i;
+  const TRACKERS = /posthog|mixpanel|amplitude|segment|hotjar|clarity|sentry|datadog|logrocket|fullstory|@vercel\/analytics/i;
   const found = deps.filter((d) => TRACKERS.test(d));
-  assert.deepEqual(found, [], `נוספה תלות שנראית כמו מעקב: ${found.join(', ')}`);
+  assert.deepEqual(found, [], `נוספה תלות מעקב שלא מוזכרת במדיניות: ${found.join(', ')}`);
+
+  // A third-party script host that is not Google's is a tracker nobody disclosed.
+  const csp = readFileSync(join(APP, '../../next.config.ts'), 'utf8');
+  const scriptSrc = /"script-src[^"]*"/.exec(csp)?.[0] ?? '';
+  const hosts = [...scriptSrc.matchAll(/https:\/\/([a-z0-9.-]+)/g)].map((m) => m[1]);
+  const ALLOWED = new Set(['www.paypal.com', 'www.paypalobjects.com', 'www.googletagmanager.com']);
+  const unexpected = hosts.filter((h) => !ALLOWED.has(h));
+  assert.deepEqual(unexpected, [], `script-src מתיר מארח לא מתועד: ${unexpected.join(', ')}`);
+});
+
+/**
+ * The claim both policy pages now rest on, in one assertion: **denied is the
+ * default**, everywhere it is written down.
+ *
+ * Three copies of that default exist and they must agree - the module, the
+ * inline script that has to run before gtag.js, and the banner's own
+ * behaviour. They are separate on purpose (the inline one executes as a string
+ * in the page and cannot import anything), which is exactly why they need a
+ * test rather than care.
+ */
+test('מדידה מתחילה במצב סירוב, ופרסום כבוי תמיד', () => {
+  const mod = readFileSync(join(APP, '../lib/analytics.ts'), 'utf8');
+  const loader = readFileSync(join(APP, '../components/Analytics.tsx'), 'utf8');
+
+  for (const [name, src] of [
+    ['lib/analytics.ts', mod],
+    ['components/Analytics.tsx', loader],
+  ] as const) {
+    assert.ok(
+      /ad_storage:\s*'denied'/.test(src),
+      `${name}: ad_storage חייב להיות denied - מדיניות הפרטיות מבטיחה שאין פרסום`,
+    );
+    assert.ok(/ad_user_data:\s*'denied'/.test(src), `${name}: ad_user_data חייב להיות denied`);
+    assert.ok(
+      /ad_personalization:\s*'denied'/.test(src),
+      `${name}: ad_personalization חייב להיות denied`,
+    );
+  }
+
+  // The banner may never pre-select "accept".
+  assert.ok(
+    !/analytics_storage:\s*'granted'/.test(loader),
+    'סקריפט הטעינה לא יכול להתחיל במצב granted - ברירת המחדל היא סירוב',
+  );
+
+  // The key is written in two places (the module, and the inline script that
+  // cannot import it). If they drift, consent is stored under one name and read
+  // under another - which silently re-asks everybody, forever.
+  const key = /CONSENT_KEY = '([^']+)'/.exec(mod)?.[1];
+  assert.ok(key, 'CONSENT_KEY לא נמצא');
+  assert.ok(
+    loader.includes(key!),
+    `סקריפט הטעינה קורא מפתח אחר מזה שהמודול כותב (${key})`,
+  );
+
+  // IP truncation is promised on /cookies in those words.
+  assert.ok(/anonymize_ip:\s*true/.test(loader), 'anonymize_ip מובטח בעמוד העוגיות');
 });
 
 test('הטענה ״המסך הניהולי לקריאה בלבד״ עדיין נכונה', () => {

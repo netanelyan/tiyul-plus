@@ -38,7 +38,13 @@ const CSP = [
     are applied before first paint precisely to avoid a flash). Removing it
     needs per-request nonces, which a statically prerendered page cannot have.
   */
-  "script-src 'self' 'unsafe-inline' https://www.paypal.com https://www.paypalobjects.com",
+  /*
+    googletagmanager.com is where gtag.js is served from - GA4's loader lives
+    on that host even when no Tag Manager container is used. Omitting it does
+    not degrade analytics, it blocks the script outright, and the only symptom
+    is a console violation nobody reads.
+  */
+  "script-src 'self' 'unsafe-inline' https://www.paypal.com https://www.paypalobjects.com https://www.googletagmanager.com",
   "style-src 'self' 'unsafe-inline'",
   // Self-hosted since the font move - no Google origin to allow.
   "font-src 'self' data:",
@@ -55,8 +61,33 @@ const CSP = [
     'https://tile.openstreetmap.org',
     'https://*.tile.openstreetmap.org',
     'https://www.paypalobjects.com',
+    /*
+      GA falls back to a GET on a 1x1 image when `navigator.sendBeacon` is
+      unavailable or a request is made during page unload - which is exactly
+      when the last event of a session is sent. Without this the tail of every
+      session is lost on older browsers.
+    */
+    'https://www.google-analytics.com',
+    'https://*.google-analytics.com',
   ].join(' '),
-  "connect-src 'self' https://*.supabase.co https://*.supabase.in",
+  /*
+    GA4 does not beacon to one host. Measurement goes to
+    `*.google-analytics.com` (region-sharded: `region1.`, `region2.`, ...),
+    server-side config comes back from `*.analytics.google.com`, and
+    googletagmanager itself is contacted again for the container. All four
+    shapes are needed; with any one missing, events are dropped silently and
+    the reports are simply short - which is the worst kind of wrong, because
+    it looks like low traffic rather than a bug.
+  */
+  [
+    "connect-src 'self'",
+    'https://*.supabase.co',
+    'https://*.supabase.in',
+    'https://www.google-analytics.com',
+    'https://*.google-analytics.com',
+    'https://*.analytics.google.com',
+    'https://www.googletagmanager.com',
+  ].join(' '),
   "frame-src 'self' https://www.paypal.com",
   // The machine-readable twin of x-frame-options, and the one modern browsers
   // actually consult.

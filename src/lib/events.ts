@@ -1,4 +1,6 @@
 import { clientIdHeader, hasClientId } from '@/lib/clientId';
+import { suppressed as suppressedLocal } from '@/lib/internalBrowser';
+import { track as gaTrack, type AnalyticsEvent } from '@/lib/analytics';
 
 /**
  * Reporting an action that happens in the browser only (print, share,
@@ -53,31 +55,55 @@ export type AppEvent =
  * is still far better than nothing, and whoever tests deliberately knows to
  * open /admin first.
  */
-const INTERNAL_KEY = 'tiyul-plus:internal';
+/*
+  Both helpers moved to lib/internalBrowser.ts when analytics needed the same
+  answer - two modules importing each other at module scope is a cycle waiting
+  to be reordered by a bundler. Re-exported so every existing caller is
+  unchanged.
+*/
+export { markInternalBrowser, suppressed } from '@/lib/internalBrowser';
 
-/** Called from AdminClient after /api/admin/me confirmed this is a real admin */
-export function markInternalBrowser(): void {
-  try {
-    localStorage.setItem(INTERNAL_KEY, '1');
-  } catch {
-    /* storage blocked - no flag, the admin gets counted; better than crashing */
-  }
-}
-
-function suppressed(): boolean {
-  try {
-    if (localStorage.getItem(INTERNAL_KEY) === '1') return true;
-  } catch {
-    /* storage blocked - continue to the host check */
-  }
-  const h = window.location.hostname;
-  return h === 'localhost' || h === '127.0.0.1';
-}
+/**
+ * Our counter's name for an action, mapped to GA4's.
+ *
+ * A total map rather than a lookup with a fallback: `Record<AppEvent, ...>`
+ * makes TypeScript refuse to compile when a new `AppEvent` is added without
+ * deciding what GA should call it. That is the whole point - the way this
+ * drifts is somebody adding an export counter and not thinking about the
+ * other half.
+ */
+const GA_FOR_EVENT: Record<AppEvent, AnalyticsEvent> = {
+  print: 'print',
+  pdf: 'print',
+  whatsapp: 'share_whatsapp',
+  share: 'share_link_created',
+  maps: 'maps_opened',
+  trip_created: 'trip_created',
+  shared_open: 'shared_trip_opened',
+  shared_adopt: 'shared_trip_adopted',
+  /*
+    Kept as its own name rather than folded into a page view. GA has its own
+    idea of a returning user, built from a cookie; ours is built from a local
+    day stamp and survives a declined consent. Having both under distinct
+    names is what lets them be compared instead of silently conflated.
+  */
+  return_visit: 'return_visit',
+};
 
 export function trackEvent(kind: AppEvent): void {
   if (typeof window === 'undefined') return;
   try {
-    if (suppressed()) return;
+    if (suppressedLocal()) return;
+    /*
+      The same action, to both places, from one call site.
+
+      `/api/events` is ours and counts a day and a number. GA4 is where the
+      same action becomes answerable questions - which page it came from, on
+      what device, whether that person came back. Sending from here rather
+      than from each component is what keeps the two from drifting: there is
+      no way to add an export counter and forget the analytics half.
+    */
+    gaTrack(GA_FOR_EVENT[kind]);
     void fetch('/api/events', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...clientIdHeader() },

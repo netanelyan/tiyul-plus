@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/lib/auth/AuthContext';
 import { requestLogin, takePendingLogin } from '@/components/LoginGate';
 import { authHeader } from '@/lib/auth/client';
+import { track as gaTrack } from '@/lib/analytics';
 import {
   PLAN_FEATURE_ROWS,
   PREMIUM_PRICE_ILS,
@@ -109,6 +110,10 @@ export default function PremiumClient() {
     setBusy(wanted);
     setNotice(null);
     setNeedsLogin(null);
+    // Recorded on the press, not on the redirect: the gap between the two is
+    // where the "auth-required" drop-off lives, and that is exactly the number
+    // worth having.
+    gaTrack('checkout_started', { product: wanted });
     try {
       const res = await fetch('/api/billing/checkout', {
         method: 'POST',

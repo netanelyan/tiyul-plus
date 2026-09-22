@@ -7,6 +7,7 @@ import Flag from '@/components/Flag';
 import { Skeleton } from '@/components/Skeleton';
 import type { SearchHits, SearchKind, SearchResult } from '@/lib/siteSearch';
 import { OFFLINE_HINT, useOnline } from '@/lib/offline/online';
+import { track as gaTrack } from '@/lib/analytics';
 
 // The group headings are defined here rather than imported from `siteSearch`:
 // any value (non-type) import from that module would drag the entire catalog
@@ -134,6 +135,13 @@ export default function SiteSearch({
     (r: SearchResult) => {
       setOpen(false);
       onNavigate?.();
+      /*
+        What KIND of thing people search for, never the query itself. A search
+        box is where people type place names, and sometimes their own plans;
+        the useful signal is "countries or cities or places", which is a
+        catalog decision, and that is what this records.
+      */
+      gaTrack('search_used', { result_kind: r.kind });
       router.push(r.href);
     },
     [router, onNavigate],
