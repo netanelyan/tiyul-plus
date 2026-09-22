@@ -34,17 +34,29 @@ const SITE = 'https://www.tiyulplus.com';
 const BRAND = 'טיול+&#8207;';
 const FONT = "font-family:Arial,Helvetica,sans-serif;";
 
-// Brand tokens, copied from globals.css. Mail clients cannot read CSS
-// variables, so the values are literal here and this comment says where
-// they come from.
+/*
+  Brand tokens, copied from globals.css. Mail clients cannot read CSS
+  variables, so the values are literal here.
+
+  **Being a copy is the hazard, and it bit once already**: these did not move
+  when the site's accent was darkened for contrast, so the emails sat a full
+  accessibility pass behind with nothing to notice it. Measured against the
+  real backgrounds and corrected 2026-09-22:
+
+    sunset  #ff5941  white text on the button   3.11  ->  #c9301c  5.35
+    faint   #8a83a8  small print, on cream      3.32  ->  #6b6389  5.19
+
+  `lagoon` is defined and referenced by nothing; left rather than deleted so a
+  future template still has the token.
+*/
 const C = {
   cream: '#fdf6ec',
   shell: '#fffdf8',
   night: '#241b4d',
   muted: '#5b5480',
-  faint: '#8a83a8',
+  faint: '#6b6389',
   hairline: '#f0e6d6',
-  sunset: '#ff5941',
+  sunset: '#c9301c',
   zest: '#ffc531',
   lagoon: '#00a896',
 };
@@ -162,6 +174,25 @@ const ADVERTISER = {
  * readable text colour rather than the faint grey used for the small print -
  * a marking nobody can see does not do the job it exists for.
  */
+/**
+ * The advertiser identification in the footer, in the muted colour rather than
+ * the faint grey the rest of the small print uses.
+ *
+ * It shipped as #b3adcc, which measures **2.0:1** on the cream the footer sits
+ * on - the lightest text in the whole message. A detail the law requires
+ * precisely so a reader can tell who wrote to them should not be the hardest
+ * thing on the page to read; "present but invisible" is the failure the rule
+ * exists to prevent, not a way of satisfying it.
+ *
+ * Written as a function so this reasoning can live in a JS comment. The same
+ * text as an HTML comment inside the shell's template literal was **emitted
+ * into all twelve emails** - internal commentary shipped to recipients, and
+ * findable by grepping the built files for a colour that was supposedly gone.
+ */
+const advertiserLine = () =>
+  `<span style="color:${C.muted};">נשלח על ידי ${ADVERTISER.name}, עוסק מורשה ${ADVERTISER.licence} · ${ADVERTISER.address}</span><br>` +
+  `<span style="color:${C.faint};">יש שאלה? ענו למייל הזה ואדם יקרא.</span>`;
+
 const commercialNotice = () =>
   `<tr><td align="right" dir="rtl" style="${FONT}font-size:13px;font-weight:bold;color:${C.night};line-height:1.6;border-top:1px solid ${C.hairline};padding:16px 0 0;">זהו דבר פרסומת</td></tr>`;
 
@@ -223,8 +254,7 @@ ${body}${commercial ? '\n' + commercialNotice() : ''}
           &nbsp;·&nbsp;
           <a href="${SITE}/contact" style="color:${C.faint};text-decoration:underline;">צרו קשר</a>
           ${footerExtra}<br>
-          <span style="color:#b3adcc;">נשלח על ידי ${ADVERTISER.name}, עוסק מורשה ${ADVERTISER.licence} · ${ADVERTISER.address}</span><br>
-          <span style="color:#b3adcc;">יש שאלה? ענו למייל הזה ואדם יקרא.</span>
+          ${advertiserLine()}
         </td></tr>
       </table>
     </td></tr>

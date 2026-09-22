@@ -13720,3 +13720,59 @@ bright coral - white on it is 3.11:1, the same failure fixed on the site, and
 one constant plus a regenerate whenever he wants it. And `RESEND_API_KEY` is
 still unset in production, which is fine while the list is dormant and is the
 precondition if the form ever goes back.
+
+### 2026-09-22 (c) - The emails were a copy of the palette, and copies do not move
+
+Netanel, on the last remaining item: "i dont understand what you need from me
+for 1". The honest answer was **nothing** - it followed from the accent decision
+he had already made, and listing it as waiting on him was the wrong framing.
+
+**The emails carry their own hardcoded palette**, because mail clients strip CSS
+variables. So when `--color-sunset` was darkened for contrast, the emails did
+not move with it, and nothing existed to notice. That is the whole mechanism
+worth remembering: a copy of a value cannot drift loudly.
+
+Measured on the real backgrounds rather than assumed, and three things failed:
+
+| | was | now |
+|---|---|---|
+| white text on the button | 3.11 | **5.35** (#ff5941 -> #c9301c) |
+| small print on cream | 3.32 | **5.19** (#8a83a8 -> #6b6389) |
+| **the advertiser identification line** | **2.00** | **6.47** |
+
+**The third one was mine, from the day before.** The advertiser details that
+section 30A requires - added in the previous entry - were rendered in #b3adcc,
+the lightest text in the whole message. A detail the law asks for precisely so a
+reader can tell who wrote to them had been made the hardest thing on the page to
+read. Present but invisible is the failure the rule exists to prevent, not a way
+of satisfying it. It is now the muted colour, deliberately more readable than
+the small print around it rather than less.
+
+**Two traps, both recorded in this file already, both walked into while fixing
+it.**
+
+A backtick inside a comment inside the shell's JS template literal ended the
+string, and `build-emails.mjs` died with `Unexpected identifier`. The file's own
+header warns about exactly this. Caught immediately because the script refused
+to run - which is the good version of this failure.
+
+The bad version came next. Rewritten as an **HTML** comment, the same
+explanation was **emitted into all twelve emails** - internal commentary shipped
+to every recipient. Nothing errored; the templates built cleanly. It surfaced
+only because a check for "is the old colour gone from the built files" kept
+reporting 12 hits for a colour that was no longer used anywhere: the hits were
+the word #b3adcc *inside my own comment about #b3adcc*. The reasoning now lives
+in a JS comment on an `advertiserLine()` helper, outside the emitted string.
+
+The general rule: **an HTML comment in an email template is shipped content.**
+Anything explaining a decision belongs outside the template literal.
+
+**Verified** by rendering three templates in a real browser and measuring with
+the same canvas-based colour resolution the site sweep uses: worst text contrast
+across all of them is **5.19:1**, the marking appears on the one commercial
+template and none of the others, the advertiser line and address are present in
+all twelve, RTL intact, zero horizontal overflow. 971 tests, tsc, build clean,
+lint at the pre-existing 28.
+
+**`lagoon` is defined in the email palette and referenced by nothing.** Left
+rather than deleted, noted here so the next person does not spend time on it.
