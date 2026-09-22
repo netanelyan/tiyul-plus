@@ -65,7 +65,7 @@ export default function CookieConsent() {
   return (
     <div
       role="region"
-      aria-label="הודעה על מדידת שימוש"
+      aria-label="בקשה למדידת שימוש באתר"
       /*
         The mobile offset is measured, not guessed. At 390px this banner is
         full width, and the accessibility button sits bottom-start at 44x44
@@ -85,10 +85,10 @@ export default function CookieConsent() {
       className="fixed bottom-[calc(env(safe-area-inset-bottom,0px)+4.75rem)] z-[70] w-full px-3 sm:bottom-4 sm:end-4 sm:w-auto sm:max-w-md sm:px-0 print:hidden"
     >
       <div className="rounded-2xl bg-shell p-4 shadow-pop ring-1 ring-night/10">
-        <p className="text-sm leading-relaxed text-night/80">
-          אנחנו סופרים שימוש באתר עם Google Analytics כדי להבין מה עוזר ומה לא.{' '}
-          <strong className="font-bold text-night">בלי פרסום ובלי מכירת מידע.</strong> אם תבחרו
-          ״לא תודה״ נמשיך לספור ביקורים באופן אנונימי בלבד, בלי עוגיות.
+        <p className="text-sm font-bold text-night">עוזרים לנו להשתפר? 🙂</p>
+        <p className="mt-1 text-sm leading-relaxed text-night/80">
+          אנחנו מסתכלים אילו חלקים באתר באמת עוזרים למטיילים, ומשפרים לפי זה - בלי שם
+          ובלי מייל.
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
           <button
@@ -96,7 +96,7 @@ export default function CookieConsent() {
             onClick={() => choose('granted')}
             className="min-h-[44px] flex-1 rounded-xl bg-sunset px-5 py-2.5 text-sm font-bold text-cream transition hover:bg-sunset-deep sm:flex-none"
           >
-            אישור
+            בשמחה
           </button>
           {/*
             Same size, same prominence. A decline that is harder to find than
@@ -107,15 +107,28 @@ export default function CookieConsent() {
             onClick={() => choose('denied')}
             className="min-h-[44px] flex-1 rounded-xl bg-night/5 px-5 py-2.5 text-sm font-bold text-night ring-1 ring-night/10 transition hover:bg-night/10 sm:flex-none"
           >
-            לא תודה
+            לא עכשיו
           </button>
+        </div>
+        {/*
+          The vendor name and the reassurance live in the fine print rather
+          than the opening line. Netanel: the first version "looks too roboty,
+          too scary" - and it was, because it led with "Google Analytics" and
+          with what we do NOT do (no advertising, no selling data), which
+          raises the very ideas it is denying. Three negations in a row does
+          the same thing, so the body keeps one. Informed consent still needs
+          the vendor named and the detail one click away; it does not need
+          them first.
+        */}
+        <p className="mt-2 text-xs text-night/65">
+          אפשר גם לא - האתר יעבוד בדיוק אותו דבר. נמדד עם Google Analytics ·{' '}
           <Link
             href="/cookies"
-            className="flex min-h-[44px] items-center px-2 text-sm font-semibold text-night/65 underline decoration-night/20 underline-offset-4 transition hover:text-night"
+            className="font-semibold underline decoration-night/20 underline-offset-4 transition hover:text-night"
           >
-            פרטים
+            מה זה אומר
           </Link>
-        </div>
+        </p>
       </div>
     </div>
   );

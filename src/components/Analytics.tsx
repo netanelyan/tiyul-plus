@@ -11,11 +11,18 @@ import { analyticsActive, gaId, pageview, track } from '@/lib/analytics';
  *
  * ## It must not slow the site down, and here is precisely how that is met
  *
- * - **`strategy="lazyOnload"`** for gtag.js. It is fetched during browser idle
- *   time *after* the load event, so it competes with nothing: not with the
- *   first paint, not with hydration, not with the catalog photographs. The
- *   cost of that choice, stated: a visitor who leaves within a second or two
- *   may not be counted. Aggregate traffic is worth more than the bounce tail.
+ * - **`strategy="afterInteractive"`** for gtag.js - which is Next's own
+ *   recommendation for analytics, and it is an `async` script, so it still
+ *   blocks nothing: not the first paint, not hydration.
+ *
+ *   It started as `lazyOnload`, which is later still. That was changed for a
+ *   measured reason rather than a preference: **`lazyOnload` scripts are
+ *   injected by the client after the load event, so the tag is nowhere in the
+ *   HTML the server sends.** Google's own "we have not detected the tag"
+ *   check, and every third-party tag scanner, looks at that HTML - so the site
+ *   reported as having no analytics installed while the tag was working
+ *   perfectly in a real browser. It also lost every visitor who left before
+ *   the browser went idle.
  * - **No `useSearchParams`.** This renders in the root layout, and
  *   `useSearchParams` in a layout opts **every statically generated page out
  *   of static rendering** - all 270 of them would start rendering per request.
@@ -99,13 +106,13 @@ export default function Analytics() {
       </Script>
       <Script
         id="ga-loader"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${id}`}
         onError={() => {
           console.info('[analytics] gtag.js did not load - continuing without it');
         }}
       />
-      <Script id="ga-init" strategy="lazyOnload">
+      <Script id="ga-init" strategy="afterInteractive">
         {`window.dataLayer=window.dataLayer||[];function gtag(){window.dataLayer.push(arguments)}window.gtag=gtag;gtag('js',new Date());gtag('config','${id}',{send_page_view:false,anonymize_ip:true});`}
       </Script>
     </>
