@@ -51,3 +51,10 @@ photo-report.json
 # catalog regeneration output (review artifacts, not committed)
 src/data/*.generated.ts
 .schemaorg.jsonld
+
+# Database dumps from scripts/backup-supabase.mjs.
+# These hold real travellers' trips, names, phone numbers and email addresses.
+# Committing one would publish, to a git history nobody can rewrite, exactly the
+# data the backup exists to protect. Keep them off the machine's repo entirely.
+/backups/
+tiyul-backup-*.json

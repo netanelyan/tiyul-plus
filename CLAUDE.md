@@ -13776,3 +13776,186 @@ lint at the pre-existing 28.
 
 **`lagoon` is defined in the email palette and referenced by nothing.** Left
 rather than deleted, noted here so the next person does not spend time on it.
+
+### 2026-09-22 (d) - A pre-launch checklist from a video, and the four of eight that were not built
+
+Netanel sent a TikTok - a Hebrew checklist, "8 בדיקות לפני הוצאת אפליקציה" -
+and asked to implement whatever was not done. The eight, and where the site
+actually stood when each was measured rather than remembered:
+
+| # | check | state before |
+|---|---|---|
+| 1 | Authorization - can users reach only their own data? | done, and well |
+| 2 | Input validation and sanitization | done |
+| 3 | Rate limiting - can one user or bot overwhelm the system? | done |
+| 4 | Payments and subscriptions - do the billing flows work? | done, live |
+| 5 | **Error handling - what does the user see when something breaks?** | **nothing** |
+| 6 | **Backups and restore - can you recover lost data?** | **nothing** |
+| 7 | **Alerts - will you know immediately if something fails?** | **partly** |
+| 8 | **Rollback - can you get back to a working version?** | **undocumented** |
+
+The first four needed no work and this entry says so rather than inventing
+some: `findOwnTrip` filters on user id *and* trip id because `adminSelect` uses
+the service role and RLS does not apply; `pgrest.ts` has a test that scans all
+of `src/` for a hand-built filter; every route that can cost money carries two
+limits; PayPal has run a real subscription in production.
+
+---
+
+**Reading the video needed a decoder, and that is the first finding.** There is
+no ffmpeg on this machine, so frames were pulled by loading the mp4 in headless
+Chrome and drawing each seek to a canvas. It reported `videoWidth: 0` with no
+error, twice, and the cause is worth keeping: **the file is HEVC**, Edge cannot
+decode it at all, and Chrome can **only with the GPU** - `--disable-gpu`, which
+every harness in this repo passes, silently produces a zero-sized frame rather
+than a failure. Chrome also reports `canPlayType('hvc1')` as `""` while
+decoding it perfectly, so the capability string is not the answer either.
+
+---
+
+**5. The visitor used to get Next's own screen**, black on white, in English:
+*"Application error: a client-side exception has occurred"*. On a Hebrew RTL
+travel site that reads as a site that is gone - and the most likely conclusion
+is that the trip went with it.
+
+`app/error.tsx` and `app/global-error.tsx` now say, in as many words, that
+**the trip is safe**: it lives in `localStorage` and in the account, and a
+render that throws cannot touch either. For somebody forty minutes into
+planning that is the fact that decides between "try again" and closing the tab,
+so it is the content rather than decoration around it.
+
+`global-error` replaces the root layout, so it declares its own
+`<html dir="rtl">` and **every style on it is inline** - no Tailwind class, no
+imported component, no CSS file. By the time it renders, whatever the app
+depends on has already failed once; each dependency added there is another way
+for the error page itself to be blank. Its "home" link is a plain `<a>` and the
+lint rule is overridden rather than obeyed, because a client-side navigation
+would reuse the JavaScript runtime that just died, and a full document load is
+precisely the point.
+
+---
+
+**7. An exception reached nobody.** The only things that could reach Netanel
+were an AI budget threshold and a purchase; a failure was `console.error`d into
+the Vercel log, which is a place you look after somebody tells you.
+
+`src/instrumentation.ts` (`onRequestError`) now sees every server-side throw -
+route handler, server render, `generateMetadata`. **In one hook rather than in
+338 places**: wrapping each route would be 338 chances to forget, and the ones
+forgotten are the new ones, which is where a fresh bug lives.
+
+**The dedupe is the load-bearing part.** A bad deploy does not break once, it
+breaks on every request; four hundred identical messages is a muted channel,
+which is exactly the state this was built to end. So an identical failure
+alerts once an hour and the repeats are counted. The fingerprint generalises
+ids out of the message - without that, a message carrying a row id is unique
+every time and the dedupe never fires, which is the flood wearing a disguise.
+That threshold has a wrong side in both directions and a test names which was
+chosen: three digits or more is treated as an id (**so a 500 and a 404 from one
+dependency in one hour collapse into one alert** - a known, accepted cost),
+one or two digits stay distinct.
+
+**`/api/health`** gives an uptime monitor something to watch, and answers with
+the **status code**, which is what every such service alerts on: 503 only when
+the database is unreachable, 200 for `degraded`, so a missing optional key
+never pages anybody at three in the morning. Anonymously the body is `{status}`
+and nothing more - which dependency is configured is a fact about our
+infrastructure - with the full breakdown behind `CRON_SECRET`. **It never calls
+the model**: at the measured $0.06-$0.45 a call, a once-a-minute monitor is a
+four-figure monthly bill for proving a key exists.
+
+**A duplicate found by running it, not by reading it.** One deliberately
+throwing page produced **two** alerts: the server's, carrying the real
+exception, and the browser's, carrying React's production placeholder ("The
+specific message is omitted in production builds..."). Every server error on
+the site would have done that. `digest` is present on exactly the errors that
+came from the server, so the browser now stays quiet when there is one -
+verified after the fix: two loads of a broken page, **one alert**, with the
+real message.
+
+---
+
+**6. Backups: `npm run backup` / `npm run restore`.**
+
+The honest framing is in the module doc rather than implied: this is the
+**second** line. Supabase's own backups restore the whole database including
+`auth.users`, and **`auth.users` cannot be restored from a JSON dump at all** -
+GoTrue assigns a new uuid on create and every table keys on the old one, so
+recreating accounts orphans every trip, profile and purchase. The identities
+are exported for reference and `IDENTITY_EXPORT_NOTE` says exactly that, so
+nobody discovers it mid-incident.
+
+What the dump is for is the far more likely incident: one table wrong, one
+migration that did more than it meant to. For that, rolling the whole project
+back to last night is a cure worse than the disease.
+
+Three properties, each a refusal. It is **paged and count-verified** - the row
+total is compared against the server's own, and a mismatch fails the run rather
+than writing a file that looks complete. The restore is a **dry run by
+default**. And **there is no delete in the restore script at all**, so it can
+only put rows back - running it against the wrong, healthy project cannot
+destroy it. The cost of that is stated rather than hidden: it repairs and
+merges, it does not rewind; rewinding is Supabase PITR.
+
+`backups/` is gitignored, with the reason written in: a dump holds real names,
+phone numbers and addresses, and committing one would publish the very data the
+backup exists to protect, into a history nobody can rewrite.
+
+**Which tables, and why, is now a decision rather than a habit** -
+`backupTables.ts` carries every table with a reason, and a test fails when a
+migration adds one nobody has classified. `skip` is a fine answer; an absent
+one is not. Two of those tests fired on my own thin reasoning and on a table I
+had not listed.
+
+---
+
+**8. Rollback is thirty seconds in Vercel - and only safe while every migration
+is additive**, because the database does not roll back with the code. That
+property was true by habit; `migrationSafety.test.ts` makes it a rule, failing
+on a `drop table`, a `drop column`, a type change or a rename anywhere in
+`sql/`. `supabase-retire-stories.sql` is the one allowlisted exception, and it
+is opt-in and on nobody's setup path. **Proven to fire** by adding a
+`drop column` and watching it name the file and the line.
+
+`RUNBOOK.md` is the operational doc for all four: what alerts and how often,
+what the visitor sees, the exact backup and restore commands, and the rollback
+procedure with the two-deploy recipe for the day a destructive change is really
+wanted.
+
+---
+
+**Verified:** 1,002 unit tests (31 new), tsc clean, `npm run build` clean, lint
+at exactly the pre-existing 34 - measured, and one net-new error of my own was
+fixed rather than suppressed. The backup and restore were driven end to end
+against a PostgREST stand-in, **21/21**: 2,350 rows across a page boundary, a
+wipe, a dry run that wrote nothing, a restore, and a second dump
+byte-identical to the first.
+
+The error boundary was driven in a real browser at 1400 and 390 against a
+production build via a temporary throwing route (removed afterwards): RTL,
+Hebrew heading, the trip-is-safe line, both controls at 48px, the digest shown
+LTR and selectable, zero horizontal overflow, nothing past either edge. The
+`/api/client-error` endpoint was probed with no Origin, a foreign Origin, a
+valid post and a hostile payload - all four answer 204, and only the two
+legitimate ones reached the channel, with the bad `kind`, `digest` and
+`javascript:` path stripped.
+
+**A fixture bug worth recording, because it made a passing test meaningless.**
+The round-trip harness "wiped the database" between phases by writing the
+stand-in's state file - and the stand-in held its rows in memory, so it carried
+on serving them. The restore appeared to work while restoring into a database
+that was never empty. It re-reads per request now, and only then did "restored
+data is identical" mean anything. Suspect the fixture first.
+
+**Still Netanel's**, and all four are in `RUNBOOK.md`: point an uptime monitor
+at `/api/health`; run `npm run backup` once and keep the file off the laptop -
+a backup nobody has taken is not a backup; confirm the Supabase plan's
+retention and whether PITR is on, since that is the only path back for
+`auth.users`; and press the `/admin` alert-test button against production so
+"configured" becomes "it arrived".
+
+**Not done, deliberately.** No error-tracking dependency (Sentry and the like)
+- the webhook path reuses machinery that already exists, adds nothing to the
+bundle, and picking a vendor is a decision rather than a task. And
+`/api/cities` is still the one unmetered route: it reads an in-memory catalog,
+costs no database call and no money, so a limit there would be ceremony.

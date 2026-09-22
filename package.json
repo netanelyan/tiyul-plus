@@ -9,7 +9,9 @@
     "lint": "eslint",
     "test": "node --experimental-strip-types --import ./scripts/alias-loader.mjs --test \"src/**/*.test.ts\"",
     "seo:dates": "node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/content-dates.mjs",
-    "mirror:photos": "node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/mirror-photos.mjs"
+    "mirror:photos": "node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/mirror-photos.mjs",
+    "backup": "node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/backup-supabase.mjs",
+    "restore": "node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/restore-supabase.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.8",

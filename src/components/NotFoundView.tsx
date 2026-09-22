@@ -17,10 +17,18 @@ import { catalogCounts } from '@/lib/server/footerLinks';
 export default function NotFoundView() {
   return (
     <div className="relative flex flex-col items-center px-4 py-16 text-center sm:py-24">
-      {/* A subtle warm wash, the same tokens as the homepage hero */}
+      {/*
+        A subtle warm wash, the same shape as the homepage hero.
+
+        The coral is written out because a gradient cannot take a token, and it
+        is the **current** accent (#c9301c): it was still the pre-contrast
+        #ff5941 until the error boundary next door was built beside it, which
+        is how a copied colour goes stale - silently, because nothing points at
+        the original.
+      */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 mx-auto h-[320px] w-full max-w-3xl rounded-full bg-[radial-gradient(55%_55%_at_50%_35%,rgba(255,89,65,0.08),rgba(255,197,49,0.05)_55%,transparent_78%)]"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 mx-auto h-[320px] w-full max-w-3xl rounded-full bg-[radial-gradient(55%_55%_at_50%_35%,rgba(201,48,28,0.08),rgba(255,197,49,0.05)_55%,transparent_78%)]"
       />
 
       <div className="rise-in flex h-16 w-16 items-center justify-center rounded-2xl bg-shell ring-1 ring-night/10">
