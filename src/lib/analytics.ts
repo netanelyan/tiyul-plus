@@ -18,6 +18,9 @@
  *
  * This is Google's own recommended shape rather than something invented here,
  * and it is the only one that gives a real number while a banner is on screen.
+ * It is also what makes the delayed ask affordable - see
+ * `ASK_AFTER_VISIBLE_MS`: a visitor who leaves in ten seconds is never asked
+ * anything and is still counted.
  *
  * ## What is deliberately switched off even when consent is granted
  *
@@ -187,6 +190,150 @@ export function clearConsent(): void {
   }
   notify();
   push('consent', 'update', { analytics_storage: 'denied' });
+}
+
+/* ------------------------------------------------------------------ *
+ * When to ask
+ * ------------------------------------------------------------------ */
+
+/**
+ * How much time a visitor has to actually spend here before the banner appears.
+ *
+ * Netanel: *"asking about cookies immediately makes the website look not nice -
+ * you have to set a delay, or even not ask at all if that's the cost."*
+ *
+ * He is right about the cost and wrong about the trade, and the reason is a
+ * property of the setup rather than an opinion: **consent is denied by default
+ * and GA still sends a cookieless ping**, so page views, events, traffic
+ * sources, devices and countries are already counted for somebody who never
+ * answers. The ask buys exactly one thing on top of that - a `_ga` cookie, and
+ * therefore returning visitors and anything that spans more than one session.
+ *
+ * For a trip planner that is not a nice-to-have: "do people come back to the
+ * trip they built" is close to the most important question the product has. So
+ * the banner stays, and what changes is *when* - which is what was actually
+ * making the site look bad.
+ *
+ * ## 45 seconds of visible time, and what that rules out
+ *
+ * - **It is never part of a first impression.** The homepage hero, the agent's
+ *   landing screen and every destination page are seen clean.
+ * - **A visitor who bounces is never asked at all.** That is most first
+ *   arrivals, and every one of them is a first impression we no longer spend
+ *   on a consent box.
+ * - **Somebody who is actually planning a trip still gets asked**, once,
+ *   quietly, at the bottom corner, when they have already decided to stay.
+ *
+ * Time is accumulated **only while the tab is visible**, so a tab left open in
+ * the background overnight is not "engagement", and it carries across pages in
+ * `sessionStorage` - a visitor who reads four destination pages for fifteen
+ * seconds each is engaged, and a rule that only looked at one page would never
+ * notice.
+ *
+ * Nothing polls: the clock is one `setTimeout` armed for the remaining time and
+ * cleared when the tab is hidden. A measurement feature that runs an interval
+ * forever to decide when to ask about measurement would be its own punchline.
+ */
+export const ASK_AFTER_VISIBLE_MS = 45_000;
+
+const ENGAGED_KEY = 'tiyul-plus:site-engaged-ms';
+
+/**
+ * How long is left before the banner is due, given the time already banked.
+ * Pure, and the only arithmetic the clock does - so a test can pin the rule
+ * without a browser, a timer or a renderer.
+ */
+export function msUntilAsk(visibleMs: number): number {
+  if (!Number.isFinite(visibleMs) || visibleMs < 0) return ASK_AFTER_VISIBLE_MS;
+  return Math.max(0, ASK_AFTER_VISIBLE_MS - visibleMs);
+}
+
+const askListeners = new Set<() => void>();
+
+let visibleMs = 0;
+let visibleSince: number | null = null;
+let askTimer: ReturnType<typeof setTimeout> | null = null;
+let askReady = false;
+let clockRunning = false;
+
+function persistEngaged(): void {
+  try {
+    sessionStorage.setItem(ENGAGED_KEY, String(Math.round(visibleMs)));
+  } catch {
+    /* storage blocked - the clock still works, it just restarts on a reload */
+  }
+}
+
+/** Banks the stretch of visible time that is currently open, if any. */
+function bankVisible(): void {
+  if (visibleSince !== null) {
+    visibleMs += Date.now() - visibleSince;
+    visibleSince = null;
+  }
+  persistEngaged();
+}
+
+function armAskTimer(): void {
+  if (askReady || askTimer !== null) return;
+  if (typeof document === 'undefined' || document.visibilityState !== 'visible') return;
+  visibleSince = Date.now();
+  askTimer = setTimeout(() => {
+    askTimer = null;
+    bankVisible();
+    askReady = true;
+    askListeners.forEach((fn) => fn());
+  }, msUntilAsk(visibleMs));
+}
+
+function disarmAskTimer(): void {
+  if (askTimer !== null) {
+    clearTimeout(askTimer);
+    askTimer = null;
+  }
+  bankVisible();
+}
+
+/**
+ * Starts the engagement clock. Idempotent, and a no-op for anyone who has
+ * already answered - there is nothing to time if there is nothing to ask.
+ */
+export function startAskClock(): void {
+  if (clockRunning || typeof window === 'undefined') return;
+  if (storedConsent() !== null) return;
+  clockRunning = true;
+
+  const stored = Number(
+    (() => {
+      try {
+        return sessionStorage.getItem(ENGAGED_KEY);
+      } catch {
+        return null;
+      }
+    })() ?? 0,
+  );
+  visibleMs = Number.isFinite(stored) && stored > 0 ? stored : 0;
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') armAskTimer();
+    else disarmAskTimer();
+  });
+  // `pagehide` rather than `unload`: it is the one that fires on iOS and when a
+  // page enters the back/forward cache, which is where `unload` silently does
+  // nothing and the session's accumulated time would be lost.
+  window.addEventListener('pagehide', disarmAskTimer);
+
+  armAskTimer();
+}
+
+export function subscribeAsk(fn: () => void): () => void {
+  askListeners.add(fn);
+  startAskClock();
+  return () => askListeners.delete(fn);
+}
+
+/** Has the visitor stayed long enough to be worth asking? */
+export function askClockReady(): boolean {
+  return askReady;
 }
 
 export function analyticsActive(): boolean {

@@ -14138,3 +14138,75 @@ property, set `NEXT_PUBLIC_GA_ID` in Vercel, **redeploy** (a `NEXT_PUBLIC_`
 variable is compiled in at build time, so an existing deployment will never
 pick it up), and raise Data Retention from 2 to 14 months - that default
 discards user-level data and cannot be applied retroactively.
+
+### 2026-09-23 - The consent banner stops being a first impression
+
+Netanel: *"asking about cookies immediately makes the website look not nice, you
+have to set delay, or even not ask at all if thats the cost."*
+
+**He is right about the cost, and the reason the ask survives is a property of
+the setup rather than a preference.** Consent is denied by default and GA still
+sends a cookieless ping, so page views, events, traffic sources, devices and
+countries are **already counted for somebody who never answers**. The banner
+buys exactly one thing on top of that: a `_ga` cookie, and with it returning
+visitors and anything spanning more than one session. For a trip planner, "do
+people come back to the trip they built" is close to the most important question
+the product has - so dropping the ask gives up the single most valuable half of
+the data to fix a problem that a delay already fixes.
+
+**45 seconds of visible time, and what that actually removes.** The banner is
+never part of a first impression: the hero, the agent's landing screen and every
+destination page are seen clean. **A visitor who bounces is never asked at all**
+- which is most first arrivals, and every one of them is a first impression no
+longer spent on a consent box. Somebody genuinely planning a trip still gets
+asked once, quietly, in the bottom corner, after they have decided to stay.
+
+**Two details that decide whether the number means anything.** Time accumulates
+**only while the tab is visible**, so a tab left open in the background overnight
+is not engagement. And it is banked in `sessionStorage`, so it carries across
+pages - a visitor who reads four destination pages for fifteen seconds each is
+engaged, and a per-page rule would never notice them.
+
+**Nothing polls.** One `setTimeout` armed for the remaining time, cleared when
+the tab hides. An interval running forever to decide when to ask about
+measurement would be its own punchline, and "do not slow the site down" was the
+instruction that shaped this feature in the first place. `pagehide` rather than
+`unload`, because `unload` does not fire on iOS or into the bfcache and the
+session's banked time would be silently lost.
+
+The banner now arrives mid-session rather than with the page, so it slides in on
+the site's existing `rise-in` - placed on the inner card and not the fixed
+wrapper, because `rise-in` keeps its final transform forever and a transform
+makes an element a containing block for any `position: fixed` descendant. That
+trap has bitten this codebase twice; keeping the animation off the wrapper means
+it cannot bite here.
+
+---
+
+**A dead assertion of mine, caught by reading the output rather than the
+result.** The browser check reported `overlapsA11y: false` - and also
+`a11yFound: 0`. It had found **no accessibility button at all**, so the
+"does the banner cover it" assertion could not have failed. The cause is RTL:
+the button is `start-4`, which is `inset-inline-start`, i.e. the bottom **right**
+on this site, and the filter looked on the left. Re-measured against the real
+`aria-label`, at three widths, it now reports coordinates for both elements -
+16px of clearance on a phone, opposite corners on desktop, and the button
+hit-testable in every case. **A zero from a filter nobody has seen match is not
+a pass.**
+
+**Verified:** 1012/1012 unit tests (6 new: the delay is outside a first
+impression, an engaged visitor is still asked, a corrupt banked time delays
+rather than fires, the visible-only and cross-page rules, no-op once a choice
+exists, and no polling). tsc, build and lint clean on every touched file, with
+`/`, `/cookies`, `/countries` and `/premium` still statically prerendered - the
+check that matters, since anything reading the URL in a root layout would opt
+all 290 pages out of static rendering. In a real browser at 1400, 390 and 360
+against a production build: nothing on arrival, nothing at 15 seconds, the
+banner at 49, both buttons 44px, no `_ga` cookie before a choice, declining
+stores `denied` and dismisses it, banked time carrying into a fresh document on
+another page, zero horizontal overflow and RTL intact throughout.
+
+**One fix that was not mine and is here anyway:** the lastmod ledger was stale
+for `/premium`, left by the previous commit, and `sitemap.test.ts` was failing
+on it before this change. `npm run seo:dates` is exactly what that test asks
+for, so it was run rather than left red.

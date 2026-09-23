@@ -2,10 +2,26 @@
 
 import { useCallback, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
-import { gaId, setConsent, storedConsent, subscribeConsent } from '@/lib/analytics';
+import {
+  askClockReady,
+  gaId,
+  setConsent,
+  storedConsent,
+  subscribeAsk,
+  subscribeConsent,
+} from '@/lib/analytics';
 
 /**
  * The consent banner.
+ *
+ * ## It does not appear on arrival
+ *
+ * Netanel, on the first version: *"asking about cookies immediately makes the
+ * website look not nice."* It waits for 45 seconds of visible time now - see
+ * `ASK_AFTER_VISIBLE_MS` in `lib/analytics.ts` for why that number and why the
+ * ask survived at all rather than being dropped. The short version is that
+ * consent is denied by default and GA still counts the visit, so a visitor who
+ * never stays long enough to be asked costs almost nothing to measure.
  *
  * ## It is a banner, not a wall
  *
@@ -49,6 +65,18 @@ export default function CookieConsent() {
     () => storedConsent(),
     () => 'unknown' as const,
   );
+  /*
+    The engagement clock, read the same way. Subscribing is what starts it, so
+    the timer only exists on a page that could actually show the banner, and
+    `startAskClock` returns immediately for anyone who already answered.
+    Server and first-paint snapshot is `false`, which is also the honest
+    starting value - nobody has been here 45 seconds yet.
+  */
+  const askable = useSyncExternalStore(
+    subscribeAsk,
+    () => askClockReady(),
+    () => false,
+  );
   const [dismissed, setDismissed] = useState(false);
 
   const choose = useCallback((choice: 'granted' | 'denied') => {
@@ -61,6 +89,8 @@ export default function CookieConsent() {
   // 'unknown' is the server/first-paint value - render nothing until the real
   // answer is known, or a visitor who chose months ago gets a flash of banner.
   if (consent === 'unknown' || consent !== null || dismissed) return null;
+  // The delay. Nothing on arrival, nothing for a visitor who is passing through.
+  if (!askable) return null;
 
   return (
     <div
@@ -84,7 +114,17 @@ export default function CookieConsent() {
       */
       className="fixed bottom-[calc(env(safe-area-inset-bottom,0px)+4.75rem)] z-[70] w-full px-3 sm:bottom-4 sm:end-4 sm:w-auto sm:max-w-md sm:px-0 print:hidden"
     >
-      <div className="rounded-2xl bg-shell p-4 shadow-pop ring-1 ring-night/10">
+      {/*
+        It arrives mid-session now rather than with the page, so it slides up
+        instead of appearing. `rise-in` is the site's existing entrance and is
+        already switched off under `prefers-reduced-motion`. It sits on the
+        inner card rather than the fixed wrapper on purpose: `rise-in` keeps its
+        final transform forever, and a transform makes an element a containing
+        block for any `position: fixed` descendant - the trap this codebase has
+        hit twice. Nothing inside here is fixed, and keeping it off the wrapper
+        means it never can be.
+      */}
+      <div className="rise-in rounded-2xl bg-shell p-4 shadow-pop ring-1 ring-night/10">
         <p className="text-sm font-bold text-night">עוזרים לנו להשתפר? 🙂</p>
         <p className="mt-1 text-sm leading-relaxed text-night/80">
           אנחנו מסתכלים אילו חלקים באתר באמת עוזרים למטיילים, ומשפרים לפי זה - בלי שם
