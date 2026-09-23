@@ -7,6 +7,7 @@ import { useAuth } from '@/lib/auth/AuthContext';
 import LoginModal from '@/components/LoginModal';
 import { travelerLevel } from '@/data/worldCountries';
 import { OFFLINE_HINT, useOnline } from '@/lib/offline/online';
+import { PREMIUM_PRICE_ILS, ils, planAtLeast } from '@/lib/plans';
 
 /**
  * The user account control in the nav: the avatar menu when signed in, the
@@ -141,6 +142,43 @@ export default function AccountButton() {
                   </svg>
                   האזור האישי
                 </Link>
+                {/*
+                  Upgrade, for a signed-in traveller who is not already paying.
+
+                  This menu was the one high-intent surface with no route to a
+                  subscription at all: somebody managing their own account had
+                  to go and find the pricing tab in the nav. The price is on the
+                  row rather than behind it, from the constant, so it cannot
+                  drift from /premium.
+
+                  **A link and not a SubscribeButton, deliberately.** This nav
+                  renders on every page including the trip screen, which already
+                  mounts a subscribe button - and two instances of `useCheckout`
+                  on one page would race for the one-shot pending-login intent,
+                  so the post-login resume would land in whichever won. A menu is
+                  also the wrong place to start a redirect to PayPal: there is no
+                  room next to it for the notice a failed checkout has to show.
+
+                  Ordinal, so a pro subscriber is never invited to "upgrade"
+                  downwards to premium.
+                */}
+                {auth.profile && !planAtLeast(auth.profile.plan, 'premium') && (
+                  <Link
+                    href="/premium"
+                    onClick={() => setMenuOpen(false)}
+                    className="mt-1.5 flex w-full items-center gap-2 rounded-xl bg-cream px-3 py-2.5 text-start text-sm font-bold text-night ring-1 ring-night/15 transition hover:ring-night/35"
+                  >
+                    {/* sunset, not zest: zest is #ffc531 and unreadable on cream.
+                        The dark bands can use it; a light surface cannot. */}
+                    <span aria-hidden className="text-sunset">
+                      ★
+                    </span>
+                    <span className="min-w-0 flex-1 truncate">שדרוג לפרימיום</span>
+                    <span className="shrink-0 text-[11px] font-semibold text-night/65">
+                      {ils(PREMIUM_PRICE_ILS)} ₪ לחודש
+                    </span>
+                  </Link>
+                )}
                 {/*
                   An admin link only for admin/owner. This is convenience,
                   not security: the role here is read from the profile in the

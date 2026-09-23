@@ -161,15 +161,23 @@ export function metaDescription(...parts: (string | undefined | null)[]): string
  * entity. A profile listed in one and not the other is a contradiction we are
  * publishing about ourselves.
  *
- * Only the Instagram account was verifiable from the authoring environment;
- * Facebook and TikTok answer every request with a login wall, so their
- * existence is taken from the footer, which has published them for months.
+ * All three accounts were confirmed by Netanel on 2026-09-23. They cannot be
+ * verified from code and it is worth knowing why, so nobody tries: Instagram,
+ * TikTok and Facebook all answer a request for a profile that does NOT exist
+ * with HTTP 200 and a login wall or an "unavailable" page. A status code here
+ * carries no information at all, in either direction.
+ *
+ * `key` exists so the footer can pick an icon without matching on the URL or
+ * on the Hebrew label - a rename of either would silently drop the icon and
+ * leave a nameless button.
  */
 export const SOCIAL_PROFILES = [
-  { href: 'https://instagram.com/tiyulplus', label: 'אינסטגרם' },
-  { href: 'https://facebook.com/tiyulplus', label: 'פייסבוק' },
-  { href: 'https://tiktok.com/@tiyulplus', label: 'טיקטוק' },
+  { key: 'instagram', href: 'https://instagram.com/tiyulplus', label: 'אינסטגרם' },
+  { key: 'facebook', href: 'https://facebook.com/tiyulplus', label: 'פייסבוק' },
+  { key: 'tiktok', href: 'https://tiktok.com/@tiyulplus', label: 'טיקטוק' },
 ] as const;
+
+export type SocialKey = (typeof SOCIAL_PROFILES)[number]['key'];
 
 /**
  * Routes that must never be crawled, shared by `robots.ts` and used as the

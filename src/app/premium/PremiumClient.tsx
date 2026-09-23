@@ -3,9 +3,8 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/lib/auth/AuthContext';
-import { requestLogin, takePendingLogin } from '@/components/LoginGate';
-import { authHeader } from '@/lib/auth/client';
-import { track as gaTrack } from '@/lib/analytics';
+import { requestLogin } from '@/components/LoginGate';
+import { useCheckout } from '@/lib/billing/useCheckout';
 import {
   PLAN_FEATURE_ROWS,
   PREMIUM_PRICE_ILS,
@@ -14,7 +13,6 @@ import {
   ils,
   planAtLeast,
   type PaidPlan,
-  type Plan,
 } from '@/lib/plans';
 import { PRICE_ILS, priceLabel } from '@/lib/predeparture';
 import InView from '@/components/InView';
@@ -79,19 +77,18 @@ const ilsBig = (n: number) =>
  */
 export default function PremiumClient() {
   const auth = useAuth();
-  const plan: Plan = auth.profile?.plan ?? 'free';
-  const [busy, setBusy] = useState<PaidPlan | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
-  /**
-   * Set only for the one notice a user can act on from here. Everything else
-   * the checkout can say is information; "you need to be signed in" is a door,
-   * and it used to be written as a sentence naming a button in the nav - which
-   * at 375px is off screen, so tapping subscribe appeared to do nothing at all.
-   */
-  const [needsLogin, setNeedsLogin] = useState<PaidPlan | null>(null);
+  /*
+    The checkout itself lives in `useCheckout`, because this page stopped being
+    the only place that can take money: the paid section of a trip screen sells
+    the same subscription through the same hook. Two copies of the eight
+    outcomes of /api/billing/checkout is how one of them quietly becomes
+    "something went wrong".
+
+    What stays here is placement - this page renders the notice in its own spot
+    below the plan grid, which the trip screen does not.
+  */
+  const { plan, busy, notice, needsLogin, upgrade } = useCheckout();
   const noticeRef = useRef<HTMLDivElement>(null);
-  /** The plan to resume after a login - see the effect below for why it is a ref. */
-  const resumeRef = useRef<PaidPlan | null>(null);
   const [agentFormOpen, setAgentFormOpen] = useState(false);
 
   /*
@@ -104,88 +101,6 @@ export default function PremiumClient() {
   const breakEvenTripsPerYear = Math.ceil(yearOfPremium / PRICE_ILS);
   const monthBeatsOneCheck = PREMIUM_PRICE_ILS < PRICE_ILS;
   const proPerTrip = PRO_PRICE_ILS / PRO_TRIPS_PER_MONTH;
-
-  async function upgrade(wanted: PaidPlan) {
-    if (busy) return;
-    setBusy(wanted);
-    setNotice(null);
-    setNeedsLogin(null);
-    // Recorded on the press, not on the redirect: the gap between the two is
-    // where the "auth-required" drop-off lives, and that is exactly the number
-    // worth having.
-    gaTrack('checkout_started', { product: wanted });
-    try {
-      const res = await fetch('/api/billing/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(await authHeader()) },
-        body: JSON.stringify({ plan: wanted }),
-      });
-      const data = (await res.json()) as { url: string | null; error?: string };
-      if (data.url) {
-        // assign() rather than writing location.href - same navigation, and it is
-        // a method call rather than a mutation of a value defined outside the
-        // component, which the react-hooks immutability rule (correctly) refuses.
-        window.location.assign(data.url);
-        return;
-      }
-      if (data.error === 'auth-required') {
-        setNotice('המנוי נשמר בחשבון, אז קודם מתחברים - זה לוקח חצי דקה, בלי סיסמה.');
-        setNeedsLogin(wanted);
-      } else if (data.error === 'already-premium') setNotice('אתם כבר בתוכנית הזאת 🎉');
-      else if (data.error === 'switch-requires-support')
-        // Not a failure and not a fob-off: creating a second PayPal subscription
-        // would charge them twice, so the switch is done by hand until the
-        // revise flow exists. Saying that is better than taking the money.
-        setNotice(
-          'מעבר בין מנוי קיים למנוי אחר אנחנו עושים ידנית, כדי שלא תחויבו פעמיים בטעות. כתבו לנו בדף יצירת הקשר ונעביר אתכם - בלי חיוב כפול ובלי לאבד ימים ששילמתם עליהם.',
-        );
-      else if (data.error === 'sandbox-blocked')
-        setNotice('ההרשמה כבויה כרגע באתר החי (מצב בדיקה) - ממש בקרוב.');
-      else if (data.error === 'not-configured')
-        setNotice('ההרשמה נפתחת ממש בקרוב - התשלומים בשלבי חיבור אחרונים.');
-      else setNotice('משהו השתבש בדרך לתשלום - נסו שוב עוד רגע.');
-    } catch {
-      setNotice('משהו השתבש בדרך לתשלום - נסו שוב עוד רגע.');
-    } finally {
-      setBusy(null);
-    }
-  }
-
-  /**
-   * Back from the login modal, so finish what they were doing. The intent is
-   * read from storage rather than state because the magic-link path reloads
-   * the document, and takePendingLogin clears it, so a resume cannot run twice.
-   */
-  useEffect(() => {
-    if (!auth.user) return;
-    /*
-      Consumed into a ref before being acted on, because in StrictMode an
-      effect runs, cleans up and runs again - and takePendingLogin is a
-      one-shot read. Consuming straight into a local would leave the second
-      run with nothing and the resume would silently never happen in dev.
-    */
-    if (!resumeRef.current) {
-      resumeRef.current = takePendingLogin('checkout:premium')
-        ? 'premium'
-        : takePendingLogin('checkout:pro')
-          ? 'pro'
-          : null;
-    }
-    const wanted = resumeRef.current;
-    if (!wanted) return;
-    /*
-      A tick later on purpose: upgrade() sets state immediately, and doing that
-      synchronously in an effect body is the cascading-render pattern the
-      react-hooks rule rejects. It is a network call either way, so nothing is
-      lost by scheduling it - and the cleanup makes it cancellable.
-    */
-    const t = setTimeout(() => {
-      resumeRef.current = null;
-      void upgrade(wanted);
-    }, 0);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth.user]);
 
   /**
    * Bring the notice to the user rather than trusting them to find it. It

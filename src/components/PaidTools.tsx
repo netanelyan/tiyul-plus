@@ -3,7 +3,8 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth/AuthContext';
-import { PREMIUM_PRICE_ILS, ils, planAtLeast } from '@/lib/plans';
+import SubscribeButton from '@/components/SubscribeButton';
+import { planAtLeast } from '@/lib/plans';
 
 /**
  * Asks this section to expand. A panel inside it that sent the user off to log
@@ -138,22 +139,40 @@ export default function PaidTools({ children }: { children: ReactNode }) {
         className={open ? 'mt-2 space-y-2' : 'hidden print:block'}
       >
         {/*
-          The one contextual pointer to the pricing page, and this is the screen
-          that earns it: somebody who has just opened the paid section is asking
-          what these cost. It is a line rather than a card - a second advert
-          inside the section that already says "these cost money" would be the
-          interleaving complaint again at a smaller scale.
+          Subscribing happens HERE, not on a page two navigations away.
 
-          The price comes from the constant, never typed, so it cannot drift
-          from /premium. Nothing here is shown to a subscriber.
+          This used to be one line pointing at /premium, on the reasoning that a
+          second advert inside a section already headed "these cost money" would
+          be the interleaving complaint at a smaller scale. That reasoning holds
+          for an *advert* and it was wrong for the *act*: somebody who has just
+          opened the paid section of their own trip has already read the pitch,
+          and sending them to re-read three plan cards is the longest path from
+          wanting the feature to having it.
+
+          So it is still one object rather than a card per feature - the whole
+          section gets one button - and the link to the full comparison stays for
+          anyone who wants to read before paying.
+
+          The price is on the button, from the constant, so it cannot drift from
+          /premium. Nothing here is shown to a subscriber.
+
+          `onResume` reopens this section: the button sits inside the collapsed
+          body, so a user coming back from the login modal would otherwise land
+          on a resume they cannot see - and any notice it produces with it.
         */}
         {!isPremium && (
-          <p className="px-1 text-xs font-medium text-night/70 print:hidden">
-            כלולים במנוי, מ-{ils(PREMIUM_PRICE_ILS)} ₪ לחודש.{' '}
-            <Link href="/premium" className="font-bold text-sunset-deep underline hover:text-sunset">
-              מה בדיוק מקבלים ←
-            </Link>
-          </p>
+          <div className="rounded-2xl bg-shell px-3.5 py-3 ring-1 ring-night/10 print:hidden">
+            <SubscribeButton plan="premium" subline={false} onResume={() => setOpen(true)} />
+            <p className="mt-1.5 text-center text-[11px] font-medium text-night/70">
+              ביטול בלחיצה, בכל רגע ·{' '}
+              <Link
+                href="/premium"
+                className="font-bold text-sunset-deep underline hover:text-sunset"
+              >
+                מה בדיוק כלול?
+              </Link>
+            </p>
+          </div>
         )}
         {children}
       </div>

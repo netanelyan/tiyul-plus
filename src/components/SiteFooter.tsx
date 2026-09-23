@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Logo from '@/components/Logo';
-import { SOCIAL_PROFILES } from '@/lib/seo/site';
+import SocialLinks from '@/components/SocialLinks';
 import {
   coverageCountsLine,
   footerCountries,
@@ -119,13 +119,9 @@ const POLICY: FooterLink[] = [
   { href: '/accessibility', label: 'הצהרת נגישות' },
 ];
 
-/**
- * Social networks. An empty `href` = rendered as muted text rather than a
- * broken link. The list itself lives in lib/seo/site.ts because the homepage's
- * Organization markup declares the same profiles as `sameAs`, and two copies
- * of "where we are" is how they end up disagreeing.
- */
-const SOCIAL: FooterLink[] = SOCIAL_PROFILES.map((s) => ({ ...s }));
+/* The accounts themselves render through `SocialLinks`, which reads the same
+   SOCIAL_PROFILES the homepage declares as `sameAs` on its Organization - two
+   copies of "where we are" is how they end up disagreeing. */
 
 export default function SiteFooter() {
   // Derived, not hardcoded. On static pages this is fixed at build time, and every deploy refreshes it.
@@ -218,32 +214,19 @@ export default function SiteFooter() {
           {/* Catalog coverage, counted from the data on every build */}
           <p className="text-xs font-semibold text-cream/50">{coverageCountsLine()}</p>
 
-          <div className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-cream/50">
+          {/*
+            The accounts, as buttons, on their own row above the copyright.
+
+            They used to be three words inline with the copyright at
+            `text-cream/50` - formatted identically to the small print they sat
+            among, which is not where you put something you want people to press.
+            Given a row of their own they are the only thing in the signature
+            block that invites an action, which is what they are for.
+          */}
+          <SocialLinks className="mt-3 justify-center" />
+
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-cream/50">
             <span>© {year} טיול+</span>
-            <span aria-hidden className="text-cream/20">
-              ·
-            </span>
-            {SOCIAL.map((s) =>
-              s.href ? (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold underline-offset-2 transition hover:text-cream hover:underline"
-                >
-                  {s.label}
-                </a>
-              ) : (
-                // With no real address: text, not a link that leads nowhere.
-                // `title` alone said "coming soon" to a mouse and to nobody
-                // else, so the state is in the text; /25 was 2.16:1, unreadable.
-                <span key={s.label} className="text-cream/50">
-                  {s.label}
-                  <span className="sr-only"> (בקרוב)</span>
-                </span>
-              ),
-            )}
           </div>
 
           {/*
