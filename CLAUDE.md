@@ -14210,3 +14210,74 @@ another page, zero horizontal overflow and RTL intact throughout.
 for `/premium`, left by the previous commit, and `sitemap.test.ts` was failing
 on it before this change. `npm run seo:dates` is exactly what that test asks
 for, so it was run rather than left red.
+
+### 2026-09-23 (b) - GA had been receiving nothing, and the tag was installed perfectly
+
+Found while verifying the consent delay on production, not looked for. The
+deploy check clicked "accept" on the live banner and then reported **no `_ga`
+cookie**. Rather than write that off as a slow write, it was isolated - and the
+isolation is the entry.
+
+**`dataLayer.push([...])` with a real Array is silently ignored by gtag.js.**
+Only the `arguments` object that Google's own snippet pushes is read. Measured
+on the live property by pushing both forms into the same page seconds apart:
+
+| pushed | `g/collect` requests | `_ga` cookie |
+|---|---|---|
+| `dataLayer.push(['event', ...])` | **0** | no |
+| `gtag('event', ...)` | 1 | yes |
+
+**Every dataLayer entry this site wrote was an Array.** Dumping the live
+`dataLayer` showed it plainly - `Array(consent)`, `Array(event)`,
+`Array(event)`, `Array(event)` next to the two `Arguments(...)` entries written
+by the one inline script that happened to use `gtag()` properly. So the consent
+default never reached gtag, and **every page view and every tracked event since
+GA shipped went nowhere.**
+
+**The failure mode is the worst one available.** The tag is installed
+correctly, Google's own "tag detected" check passes, `window.gtag` is a
+function, the console is clean, and the property reports no traffic - which
+reads as "nobody is visiting a pre-launch site", i.e. exactly the thing you
+would expect to see anyway. Nothing in the code, the build, the tests or the
+browser said otherwise. It surfaced only because an unrelated check asserted a
+cookie and got the wrong answer.
+
+The comment above the broken function said *"`arguments`-style push is what
+Google's own snippet does"* - correct, and the line underneath it pushed an
+array. **A comment describing the right thing is not the right thing.**
+
+`push()` now converts through `asArguments()`, and the inline consent script
+defines `gtag` the way Google documents it. A test guards both halves and
+**each was proven to fire** by reintroducing its own bug. It strips comments
+before scanning, line-anchored - the first version failed on its own
+documentation, because both files now explain the bug by quoting it.
+
+**Verified live after deploy**, at 1400 and 390: every `dataLayer` entry is now
+`Arguments(...)` and none is an Array; **two `g/collect` requests leave on an
+ordinary visit with no manual call** (it was zero), the first carrying
+`gcs=G100` - the cookieless consent signal, which is the ping the whole
+consent design rests on; no `_ga` cookie while denied; the banner absent at 7
+seconds and present at 48; and accepting writes the cookie, sends a third hit
+and dismisses the banner.
+
+---
+
+**Two harness traps, both new to this file.**
+
+**`/tmp/analytics.bak` and `/tmp/Analytics.bak` are the same file** on
+Windows. Backing up two files whose names differ only in case silently
+produced one backup, and restoring wrote `Analytics.tsx` into
+`analytics.ts` - which then failed to parse and looked like a corrupt module.
+Recovered from the commit. **Distinct backup names, not distinct case.**
+
+**`git checkout HEAD -- <file>` in the middle of a proof reverted the fix being
+proved.** The second half of the guard then "passed" for the wrong reason - it
+was failing on the *first* assertion, not the one under test, and the printed
+message said so if read. Each half was re-proved separately afterwards. This
+file already records that `git checkout` is not an undo; the new half is that it
+also quietly invalidates whatever came after it in the same command.
+
+**Netanel should know:** the GA property has never received a single hit, so
+"no data" in the reports is not a retention setting or a misconfiguration - it
+is this bug, and data starts now. Realtime should show traffic on the next real
+visit.
