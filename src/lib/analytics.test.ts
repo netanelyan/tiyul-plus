@@ -48,6 +48,57 @@ test('only the production hostname reports into the committed property', () => {
 });
 
 /* ------------------------------------------------------------------ *
+ * The shape that actually reaches gtag
+ * ------------------------------------------------------------------ */
+
+test('dataLayer is fed an arguments object, never an array', () => {
+  /*
+    The bug this exists to stop, and it shipped: `dataLayer.push(['event',...])`
+    with a real Array is SILENTLY IGNORED by gtag.js. Measured on the live
+    property - an array push produced zero `g/collect` requests and no `_ga`
+    cookie, the arguments form produced both, in the same page seconds apart.
+
+    Nothing catches it downstream. The tag installs, Google reports it as
+    detected, the console is clean, and the property shows no traffic - which
+    reads as "nobody is visiting" rather than as a defect.
+  */
+  const LOADER = readFileSync(join(process.cwd(), 'src', 'components', 'Analytics.tsx'), 'utf8');
+
+  /*
+    Comments are stripped before the "no array push" scan, because both files
+    now explain the bug by quoting it - and the first version of this test
+    failed on its own documentation. The patterns are line-anchored: an
+    unanchored block-comment strip treats any `/*`-looking sequence mid-line as
+    an opener and silently eats the rest of the file, which is the failure this
+    repo has already recorded once (`accept="image/*"`).
+  */
+  const code = (s: string) =>
+    s.replace(/^\s*\{?\/\*[\s\S]*?\*\/\}?\s*$/gm, '').replace(/^\s*\/\/.*$/gm, '');
+
+  assert.match(
+    SRC,
+    /win\.dataLayer\.push\(asArguments\(\.\.\.args\)\)/,
+    'push() must convert to an arguments object before pushing',
+  );
+  assert.doesNotMatch(
+    code(SRC),
+    /dataLayer\.push\(args\)|dataLayer\.push\(\[/,
+    'an array pushed onto dataLayer is dropped by gtag.js without a word',
+  );
+  assert.doesNotMatch(
+    code(LOADER),
+    /dataLayer\.push\(\[/,
+    'the inline consent default must call gtag(), not push an array literal',
+  );
+  // Google's own snippet, which is the only form gtag.js reads.
+  assert.match(
+    LOADER,
+    /function gtag\(\)\{window\.dataLayer\.push\(arguments\)\}/,
+    'the inline script must define gtag the way Google documents it',
+  );
+});
+
+/* ------------------------------------------------------------------ *
  * The delayed ask
  * ------------------------------------------------------------------ */
 

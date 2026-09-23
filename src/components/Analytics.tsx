@@ -100,9 +100,18 @@ export default function Analytics() {
         because it has to execute as a string in the page. `CONSENT_KEY` in
         lib/analytics.ts is the same literal, and a test asserts they match so
         the two copies cannot drift.
+
+        It defines `gtag` and calls it, rather than pushing an array literal
+        onto dataLayer. That is load-bearing, not cosmetic: gtag.js reads the
+        `arguments` object its own snippet pushes and **silently ignores a real
+        Array**. The first version of this file pushed an array, so the consent
+        default never reached gtag at all - measured on production, where an
+        array push produced zero `g/collect` requests and the arguments form
+        produced one in the same page. See the note on `push()` in
+        lib/analytics.ts.
       */}
       <Script id="ga-consent" strategy="afterInteractive">
-        {`window.dataLayer=window.dataLayer||[];window.dataLayer.push(['consent','default',{analytics_storage:(function(){try{return localStorage.getItem('tiyul-plus:analytics-consent')==='granted'?'granted':'denied'}catch(e){return'denied'}})(),ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',wait_for_update:500}]);`}
+        {`window.dataLayer=window.dataLayer||[];function gtag(){window.dataLayer.push(arguments)}window.gtag=gtag;gtag('consent','default',{analytics_storage:(function(){try{return localStorage.getItem('tiyul-plus:analytics-consent')==='granted'?'granted':'denied'}catch(e){return'denied'}})(),ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',wait_for_update:500});`}
       </Script>
       <Script
         id="ga-loader"

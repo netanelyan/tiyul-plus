@@ -102,18 +102,55 @@ function w(): GtagWindow | null {
 }
 
 /**
+ * Turns a plain list into a real `arguments` object.
+ *
+ * Not a stylistic detail - it is the whole reason `push` works. `arguments`
+ * exists in any non-arrow function, including one declared with a rest
+ * parameter, and it is the only way to build the value gtag.js accepts.
+ */
+function asArguments(
+  // Declared to type the call site, and deliberately unread: the values come
+  // back out through `arguments`, which is the only object gtag.js accepts.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ...args: unknown[]
+): IArguments {
+  // eslint-disable-next-line prefer-rest-params
+  return arguments;
+}
+
+/**
  * Pushes onto `dataLayer` directly rather than calling `window.gtag`.
  *
  * The two are equivalent once gtag.js has loaded, and before it loads only
  * this one works - which matters, because the consent default has to be
  * queued *before* the script arrives or the first ping goes out under the
- * wrong state. `arguments`-style push is what Google's own snippet does.
+ * wrong state.
+ *
+ * ## It must push an `arguments` object, never an Array
+ *
+ * This looked like a formatting preference and it was the difference between
+ * a working property and an empty one. A real Array pushed onto `dataLayer` is
+ * **silently ignored** by gtag.js - no error, no warning, the entry simply
+ * sits in the array unread. Only the `arguments` object that Google's own
+ * snippet pushes is processed.
+ *
+ * Measured on production rather than reasoned about, by pushing both forms
+ * into the live property and counting `g/collect` requests: the Array form
+ * produced **0 hits and no `_ga` cookie**, the `arguments` form produced a hit
+ * and the cookie, in the same page, seconds apart.
+ *
+ * The version that shipped first pushed Arrays, so **every page view and every
+ * tracked event on this site went nowhere**, including the cookieless pings
+ * the whole consent design depends on. The failure mode is the worst
+ * available: a correctly-installed tag, a green "tag detected", a clean
+ * console, and a property reporting no traffic - which reads as "nobody is
+ * visiting" rather than as a defect.
  */
 function push(...args: GtagArgs): void {
   const win = w();
   if (!win) return;
   win.dataLayer = win.dataLayer || [];
-  win.dataLayer.push(args);
+  win.dataLayer.push(asArguments(...args));
 }
 
 /**
