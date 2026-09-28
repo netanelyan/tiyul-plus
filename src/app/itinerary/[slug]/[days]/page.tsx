@@ -25,6 +25,7 @@ import { categoryMeta } from '@/lib/categories';
 import type { Place } from '@/lib/types';
 import ItineraryMap from './ItineraryMap';
 import OpenInPlanner from './OpenInPlanner';
+import { seasonFactTitle, travelFactTitle } from '@/lib/domestic';
 
 /**
  * "maslul 5 yamim be-Roma" (a 5-day Rome itinerary) - the query shape Israelis actually type.
@@ -230,9 +231,15 @@ export default async function ItineraryPage({
       {/* ---------- The facts that are unique to this city ---------- */}
       <section className="mt-8 grid gap-3 sm:grid-cols-2">
         {dest.bestSeason && (
-          <Fact title={`מתי כדאי לטוס ${inHe(dest.name)}`} text={dest.bestSeason} />
+          <Fact
+            title={seasonFactTitle(dest, `מתי כדאי לטוס ${inHe(dest.name)}`, `מתי כדאי לנסוע ${inHe(dest.name)}`)}
+            text={dest.bestSeason}
+          />
         )}
-        <Fact title={`טיסות ${hePrefix('ל', dest.name)} מתל אביב`} text={dest.practical.flights} />
+        <Fact
+          title={travelFactTitle(dest, `טיסות ${hePrefix('ל', dest.name)} מתל אביב`)}
+          text={dest.practical.flights}
+        />
         <Fact title="להתנייד ביעד" text={dest.practical.gettingAround} />
         <Fact title={`ויזה ${hePrefix('ל', country.name)}`} text={country.practical.visa} />
         {/*

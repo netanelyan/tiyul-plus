@@ -32,6 +32,9 @@ const SINGLE_ZONE: Record<string, string> = {
   montenegro: 'Europe/Podgorica',
   jordan: 'Asia/Amman',
   cyprus: 'Asia/Nicosia',
+  // The home country. Its Shabbat times are the ones users know by heart, so an
+  // approximation here would be noticed immediately - which is the right pressure.
+  israel: 'Asia/Jerusalem',
   switzerland: 'Europe/Zurich',
   japan: 'Asia/Tokyo',
   tanzania: 'Africa/Dar_es_Salaam',

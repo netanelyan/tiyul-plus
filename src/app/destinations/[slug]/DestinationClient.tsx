@@ -15,6 +15,7 @@ import CardPhoto, { HERO_OVERLAY } from '@/components/CardPhoto';
 import Flag from '@/components/Flag';
 import KosherBadge from '@/components/KosherBadge';
 import KosherNote from '@/components/KosherNote';
+import { travelFactTitle } from '@/lib/domestic';
 
 type Filter = 'all' | 'kosher' | PlaceCategory;
 
@@ -77,7 +78,7 @@ export default function DestinationClient({
 
   // City-level facts from the destination, country-level from the country - to the user it is one continuous card.
   const practicalItems: { title: string; text: string }[] = [
-    { title: 'טיסות מנתב"ג', text: dest.practical.flights },
+    { title: travelFactTitle(dest, 'טיסות מנתב"ג'), text: dest.practical.flights },
     { title: 'ויזה', text: country.practical.visa },
     { title: 'מטבע', text: country.practical.currency },
     { title: 'סים וגלישה', text: country.practical.sim },

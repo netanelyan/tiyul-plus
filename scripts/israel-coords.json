@@ -1,0 +1,716 @@
+{
+  "jlm-kotel": {
+    "lat": 31.775622,
+    "lng": 35.233862,
+    "via": "nominatim",
+    "q": "Western Wall Jerusalem",
+    "label": "הכותל המערבי, מעלות הרב גורן, ירושלים, העיר העתיקה, ירושלים | القدس, נפת ירושלים, מחוז ירושלים, 9751494, ישראל"
+  },
+  "jlm-old-city": {
+    "lat": 31.7765617,
+    "lng": 35.2272705,
+    "via": "nominatim",
+    "q": "Jaffa Gate Jerusalem",
+    "label": "שער יפו, ירושלים, ימין משה, ירושלים | القدس, נפת ירושלים, מחוז ירושלים, 9114001, ישראל"
+  },
+  "jlm-holy-sepulchre": {
+    "lat": 31.7783523,
+    "lng": 35.2297623,
+    "via": "nominatim",
+    "q": "Church of the Holy Sepulchre Jerusalem",
+    "label": "كنيسة القيامة, שוק אבטימוס, ירושלים, העיר העתיקה, ירושלים | القدس, נפת ירושלים, מחוז ירושלים, 9114101, ישראל"
+  },
+  "jlm-yad-vashem": {
+    "lat": 31.774157,
+    "lng": 35.177274,
+    "via": "nominatim",
+    "q": "Yad Vashem Jerusalem",
+    "label": "יד ושם, דרך ישראל שוכמן, קרית היובל, ירושלים | القدس, נפת ירושלים, מחוז ירושלים, 9768112, ישראל"
+  },
+  "jlm-israel-museum": {
+    "lat": 31.771888,
+    "lng": 35.2033867,
+    "via": "nominatim",
+    "q": "Israel Museum Jerusalem",
+    "label": "מוזיאון ישראל, 11, Victor and Andrea Carter Promenade, ירושלים, ניות, ירושלים | القدس, נפת ירושלים, מחוז ירושלים, 9218812, ישראל"
+  },
+  "jlm-tower-david": {
+    "lat": 31.7760391,
+    "lng": 35.2283025,
+    "via": "nominatim",
+    "q": "Tower of David Jerusalem",
+    "label": "מגדל דוד, עומר בן אל-ח'טאב, ירושלים, העיר העתיקה, ירושלים | القدس, נפת ירושלים, מחוז ירושלים, 9114001, ישראל"
+  },
+  "jlm-city-of-david": {
+    "lat": 31.7723482,
+    "lng": 35.2355814,
+    "via": "nominatim",
+    "q": "City of David Jerusalem",
+    "label": "עיר דוד, סילוואן, ירושלים | القدس, נפת ירושלים, מחוז ירושלים, ישראל"
+  },
+  "jlm-kotel-tunnels": {
+    "lat": 31.7763668,
+    "lng": 35.2337958,
+    "via": "photon",
+    "q": "Western Wall Tunnels Jerusalem",
+    "label": "רחבת הכותל המערבי"
+  },
+  "jlm-mahane-yehuda": {
+    "lat": 31.7848197,
+    "lng": 35.2126436,
+    "via": "nominatim",
+    "q": "Mahane Yehuda Market Jerusalem",
+    "label": "שוק מחנה יהודה, עץ חיים, ירושלים, נחלאות, ירושלים | القدس, נפת ירושלים, מחוז ירושלים, 9432301, ישראל"
+  },
+  "jlm-zoo": {
+    "lat": 31.7464829,
+    "lng": 35.1764635,
+    "via": "nominatim",
+    "q": "Jerusalem Biblical Zoo",
+    "label": "גן החיות התנכי, מנשה נחמיה, ירושלים, גבעת משואה, ירושלים | القدس, נפת ירושלים, מחוז ירושלים, 9674625, ישראל"
+  },
+  "jlm-science-museum": {
+    "lat": 31.7783803,
+    "lng": 35.2002324,
+    "via": "nominatim",
+    "q": "Bloomfield Science Museum Jerusalem",
+    "label": "מוזיאון המדע ע\"ש ברנרד בלומפילד, המוזיאונים, ירושלים, גבעת רם, ירושלים | القدس, נפת ירושלים, מחוז ירושלים, 9432531, ישראל"
+  },
+  "jlm-ein-kerem": {
+    "lat": 31.7676367,
+    "lng": 35.1639025,
+    "via": "nominatim",
+    "q": "Ein Kerem Jerusalem",
+    "label": "עין כרם, ירושלים | القدس, נפת ירושלים, מחוז ירושלים, 9574320, ישראל"
+  },
+  "jlm-first-station": {
+    "lat": 31.7663328,
+    "lng": 35.2247834,
+    "via": "nominatim",
+    "q": "First Station Jerusalem",
+    "label": "התחנה הראשונה, 4, גבעת חנניה, ירושלים | القدس, נפת ירושלים, מחוז ירושלים, 935412, ישראל"
+  },
+  "jlm-bible-lands": {
+    "lat": 31.7749094,
+    "lng": 35.2024488,
+    "via": "nominatim",
+    "q": "Bible Lands Museum Jerusalem",
+    "label": "ארצות המקרא, שמואל וייז, ירושלים, קרית הממשלה, ירושלים | القدس, נפת ירושלים, מחוז ירושלים, 9218812, ישראל"
+  },
+  "jlm-machtesh-cross": {
+    "lat": 31.7720641,
+    "lng": 35.2082447,
+    "via": "photon",
+    "q": "Monastery of the Cross Jerusalem",
+    "label": "Monastery of the Cross"
+  },
+  "tlv-old-jaffa": {
+    "lat": 32.0538174,
+    "lng": 34.7533279,
+    "via": "nominatim",
+    "q": "Old Jaffa Tel Aviv",
+    "label": "יפו העתיקה, יפו, תל־אביב–יפו, נפת תל אביב, מחוז תל אביב, 6803608, ישראל"
+  },
+  "tlv-promenade": {
+    "lat": 32.1675624,
+    "lng": 34.7986886,
+    "via": "nominatim",
+    "q": "Tel Aviv Promenade",
+    "label": "טיילת, הרצליה פיתוח, הרצליה, נפת תל אביב, מחוז תל אביב, 4675095, ישראל"
+  },
+  "tlv-carmel-market": {
+    "lat": 32.0683679,
+    "lng": 34.7685526,
+    "via": "nominatim",
+    "q": "Carmel Market Tel Aviv",
+    "label": "שוק הכרמל, 48, הכרמל, תל־אביב–יפו, כרם התימנים, תל־אביב–יפו, נפת תל אביב, מחוז תל אביב, 6560475, ישראל"
+  },
+  "tlv-port": {
+    "lat": 32.0986505,
+    "lng": 34.775517,
+    "via": "nominatim",
+    "q": "Tel Aviv Port",
+    "label": "נמל תל-אביב, תל־אביב–יפו, נפת תל אביב, מחוז תל אביב, ישראל"
+  },
+  "tlv-museum-art": {
+    "lat": 32.0775956,
+    "lng": 34.7866422,
+    "via": "nominatim",
+    "q": "Tel Aviv Museum of Art",
+    "label": "מוזיאון תל אביב לאומנות, 27, שאול המלך, תל־אביב–יפו, הצפון החדש - החלק הדרומי, תל־אביב–יפו, נפת תל אביב, מחוז תל אביב, 6423806, ישראל"
+  },
+  "tlv-anu": {
+    "lat": 32.1139956,
+    "lng": 34.8053575,
+    "via": "nominatim",
+    "q": "ANU Museum of the Jewish People Tel Aviv",
+    "label": "אנו - מוזיאון העם היהודי, שדרות דוד וצפורה פדרמן, תל־אביב–יפו, אוניברסיטת ת\"א, תל־אביב–יפו, נפת תל אביב, מחוז תל אביב, 6997801, ישראל"
+  },
+  "tlv-neve-tzedek": {
+    "lat": 32.063251,
+    "lng": 34.7641288,
+    "via": "nominatim",
+    "q": "Neve Tzedek Tel Aviv",
+    "label": "נוה צדק, תל־אביב–יפו, נפת תל אביב, מחוז תל אביב, 6811834, ישראל"
+  },
+  "tlv-rothschild": {
+    "lat": 32.067792,
+    "lng": 34.778052,
+    "via": "nominatim",
+    "q": "Rothschild Boulevard Tel Aviv",
+    "label": "שדרות רוטשילד, תל־אביב–יפו, לב תל-אביב, תל־אביב–יפו, נפת תל אביב, מחוז תל אביב, 6527401, ישראל"
+  },
+  "tlv-hayarkon": {
+    "lat": 32.1030349,
+    "lng": 34.8167266,
+    "via": "nominatim",
+    "q": "HaYarkon Park Tel Aviv",
+    "label": "גני יהושע, תל־אביב–יפו, נפת תל אביב, מחוז תל אביב, ישראל"
+  },
+  "tlv-eretz-israel": {
+    "lat": 32.102116,
+    "lng": 34.7960141,
+    "via": "nominatim",
+    "q": "Eretz Israel Museum Tel Aviv",
+    "label": "מוזיאון ארץ ישראל, שדרות רוקח, תל־אביב–יפו, אוניברסיטת ת\"א, תל־אביב–יפו, נפת תל אביב, מחוז תל אביב, 6230231, ישראל"
+  },
+  "tlv-independence-hall": {
+    "lat": 32.0628337,
+    "lng": 34.7709175,
+    "via": "nominatim",
+    "q": "Independence Hall Tel Aviv",
+    "label": "היכל העצמאות, 16, שדרות רוטשילד, תל־אביב–יפו, לב תל-אביב, תל־אביב–יפו, נפת תל אביב, מחוז תל אביב, 6688218, ישראל"
+  },
+  "tlv-jaffa-flea": {
+    "lat": 32.0535804,
+    "lng": 34.756268,
+    "via": "nominatim",
+    "q": "Jaffa Flea Market",
+    "label": "שוק הפשפשים, רבי חנינא, תל־אביב–יפו, שוק א-דיר, יפו, תל־אביב–יפו, נפת תל אביב, מחוז תל אביב, 6803608, ישראל"
+  },
+  "tlv-gordon-beach": {
+    "lat": 32.0831606,
+    "lng": 34.7676192,
+    "via": "nominatim",
+    "q": "Gordon Beach Tel Aviv",
+    "label": "חוף גורדון, הצפון הישן - החלק הצפוני, תל־אביב–יפו, נפת תל אביב, מחוז תל אביב, ישראל"
+  },
+  "tlv-sarona": {
+    "lat": 32.071988,
+    "lng": 34.7888851,
+    "via": "nominatim",
+    "q": "Sarona Tel Aviv",
+    "label": "עזריאלי שרונה, 121, מנחם בגין, תל־אביב–יפו, גני שרונה, תל־אביב–יפו, נפת תל אביב, מחוז תל אביב, 6701203, ישראל"
+  },
+  "tlv-azrieli-observatory": {
+    "lat": 32.0743628,
+    "lng": 34.7926912,
+    "via": "photon",
+    "q": "Azrieli Observatory Tel Aviv",
+    "label": "Tel Aviv Azrieli Town Supercharger"
+  },
+  "ds-masada": {
+    "lat": 31.3123592,
+    "lng": 35.3640749,
+    "via": "nominatim",
+    "q": "Masada National Park",
+    "label": "Masada National Park, שביל הנחש, מועצה אזורית תמר, נפת באר שבע, מחוז הדרום, ישראל"
+  },
+  "ds-ein-gedi": {
+    "lat": 31.4446569,
+    "lng": 35.3732426,
+    "via": "nominatim",
+    "q": "Ein Gedi Nature Reserve",
+    "label": "שמורת טבע עין גדי, מועצה אזורית תמר, נפת באר שבע, מחוז הדרום, ישראל"
+  },
+  "ds-ein-bokek": {
+    "lat": 31.2042291,
+    "lng": 35.3635559,
+    "via": "nominatim",
+    "q": "Ein Bokek Beach",
+    "label": "חוף מלון דיוויד, עין בוקק, מועצה אזורית תמר, נפת באר שבע, מחוז הדרום, ישראל"
+  },
+  "ds-qumran": {
+    "lat": 31.741929,
+    "lng": 35.45931,
+    "via": "photon",
+    "q": "Qumran National Park",
+    "label": "פארק (גן לאומי) קומראן"
+  },
+  "ds-nahal-arugot": {
+    "lat": 31.714222,
+    "lng": 34.984377,
+    "via": "nominatim",
+    "q": "Nahal Arugot Ein Gedi",
+    "label": "נחל עין גדי/נחל ערוגות, נחל עין גדי, שז\"ר, רמת בית שמש א, בית שמש, נפת ירושלים, מחוז ירושלים, 9962175, ישראל"
+  },
+  "ds-einot-tzukim": {
+    "lat": 31.704322,
+    "lng": 35.4607283,
+    "via": "photon",
+    "q": "Einot Tzukim Nature Reserve",
+    "label": "שמורת טבע עינות צוקים"
+  },
+  "ds-qasr-el-yahud": {
+    "lat": 31.8370299,
+    "lng": 35.5460521,
+    "via": "photon",
+    "q": "Qasr el Yahud",
+    "label": "قصر اليهود"
+  },
+  "ds-mount-sodom": {
+    "lat": 31.8401825,
+    "lng": 35.6737661,
+    "via": "photon",
+    "q": "Mount Sodom",
+    "label": "Mount Sodom"
+  },
+  "ds-metzoke-dragot": {
+    "lat": 31.5914906,
+    "lng": 35.3933367,
+    "via": "photon",
+    "q": "Metzoke Dragot",
+    "label": "Metzoke Dragot Hostel"
+  },
+  "ds-ein-gedi-botanical": {
+    "lat": 31.4506339,
+    "lng": 35.3851495,
+    "via": "photon",
+    "q": "Ein Gedi Botanical Garden",
+    "label": "Botanic Garden"
+  },
+  "eil-observatory": {
+    "lat": 29.5037016,
+    "lng": 34.9178291,
+    "via": "photon",
+    "q": "Underwater Observatory Marine Park Eilat",
+    "label": "פארק המצפה התת-ימי"
+  },
+  "eil-coral-beach": {
+    "lat": 29.509793,
+    "lng": 34.922521,
+    "via": "nominatim",
+    "q": "Coral Beach Nature Reserve Eilat",
+    "label": "Coral Beach Nature Reserve, 90, אילת, נפת באר שבע, מחוז הדרום, 8804625, ישראל"
+  },
+  "eil-timna": {
+    "lat": 29.772806,
+    "lng": 34.9866272,
+    "via": "nominatim",
+    "q": "Timna Park",
+    "label": "שמורת טבע בקעת תמנע, מועצה אזורית חבל אילות, נפת באר שבע, מחוז הדרום, ישראל"
+  },
+  "eil-dolphin-reef": {
+    "lat": 29.5260651,
+    "lng": 34.9370469,
+    "via": "nominatim",
+    "q": "Dolphin Reef Eilat",
+    "label": "ריף הדולפינים, 90, אילת, נפת באר שבע, מחוז הדרום, 8804625, ישראל"
+  },
+  "eil-mount-yoash": {
+    "lat": 29.5842931,
+    "lng": 34.880738,
+    "via": "photon",
+    "q": "Mount Yoash Eilat",
+    "label": "הר יואש"
+  },
+  "eil-promenade": {
+    "lat": 29.5498157,
+    "lng": 34.957164,
+    "via": "nominatim",
+    "q": "Eilat Promenade",
+    "label": "טיילת השלום, אזור המלונות, אילת, נפת באר שבע, מחוז הדרום, 8804625, ישראל"
+  },
+  "eil-ice-park": {
+    "lat": 29.5312982,
+    "lng": 34.9105855,
+    "via": "nominatim",
+    "q": "Nahal Shlomo Eilat",
+    "label": "שביל נחל שלמה, אילת, נפת באר שבע, מחוז הדרום, 8804625, ישראל"
+  },
+  "ram-crater": {
+    "lat": 30.5900196,
+    "lng": 34.8028052,
+    "via": "nominatim-bounded",
+    "q": "מכתש רמון",
+    "label": "מכתש רמון, נפת באר שבע, מחוז הדרום, ישראל"
+  },
+  "ram-visitor-center": {
+    "lat": 30.6082203,
+    "lng": 34.8066803,
+    "via": "photon",
+    "q": "Mitzpe Ramon Visitor Center",
+    "label": "מרכז המבקרים על-שם אילן רמון"
+  },
+  "ram-ein-avdat": {
+    "lat": 30.8361768,
+    "lng": 34.7720868,
+    "via": "nominatim",
+    "q": "Ein Avdat National Park",
+    "label": "גן לאומי עין-עבדת, מדרשת בן גוריון, מועצה אזורית רמת נגב, נפת באר שבע, מחוז הדרום, ישראל"
+  },
+  "ram-avdat": {
+    "lat": 30.7923033,
+    "lng": 34.7692706,
+    "via": "nominatim",
+    "q": "Avdat National Park",
+    "label": "Avdat National Park, 40, מועצה אזורית רמת נגב, נפת באר שבע, מחוז הדרום, ישראל"
+  },
+  "ram-sde-boker": {
+    "lat": 30.8737206,
+    "lng": 34.7902789,
+    "via": "photon",
+    "q": "Ben-Gurion Tomb Sde Boker",
+    "label": "צריף בן גוריון"
+  },
+  "ram-alpaca": {
+    "lat": 30.6107795,
+    "lng": 34.7767741,
+    "via": "nominatim",
+    "q": "Alpaca Farm Mitzpe Ramon",
+    "label": "חוות האלפקות, Ramon Crater, מצפה רמון, נפת באר שבע, מחוז הדרום, 8060000, ישראל"
+  },
+  "ram-mamshit": {
+    "lat": 31.0240184,
+    "lng": 35.0648415,
+    "via": "nominatim",
+    "q": "Mamshit National Park",
+    "label": "גן לאומי ממשית, דימונה, נפת באר שבע, מחוז הדרום, ישראל"
+  },
+  "ram-carpentry": {
+    "lat": 30.6155586,
+    "lng": 34.8389893,
+    "via": "photon",
+    "q": "HaMinsara Makhtesh Ramon",
+    "label": "המנסרה"
+  },
+  "ram-shen-ramon": {
+    "lat": 30.5722139,
+    "lng": 34.8540708,
+    "via": "nominatim",
+    "q": "Shen Ramon",
+    "label": "שן רמון, מועצה אזורית רמת נגב, נפת באר שבע, מחוז הדרום, ישראל"
+  },
+  "gal-tzfat": {
+    "lat": 32.9694484,
+    "lng": 35.4936234,
+    "via": "nominatim",
+    "q": "Safed Old City",
+    "label": "העיר העתיקה, צפת, נפת צפת, מחוז הצפון, 1311502, ישראל"
+  },
+  "gal-capernaum": {
+    "lat": 32.8804524,
+    "lng": 35.5754533,
+    "via": "nominatim",
+    "q": "Capernaum",
+    "label": "כפר נחום, 87, טבח'ה, מועצה אזורית עמק הירדן, נפת כנרת, מחוז הצפון, ישראל"
+  },
+  "gal-hula": {
+    "lat": 33.0784326,
+    "lng": 35.5991745,
+    "via": "nominatim",
+    "q": "Hula Nature Reserve",
+    "label": "שמורת החולה, מועצה אזורית גליל עליון, נפת צפת, מחוז הצפון, ישראל"
+  },
+  "gal-rosh-pina": {
+    "lat": 32.9706203,
+    "lng": 35.526983,
+    "via": "photon",
+    "q": "Rosh Pina Old Town",
+    "label": "שביל הבוסתן הישן"
+  },
+  "gal-hamat-tverya": {
+    "lat": 32.766319,
+    "lng": 35.5506544,
+    "via": "nominatim",
+    "q": "Hamat Tiberias National Park",
+    "label": "גן לאומי חמת טבריה, טבריה, נפת כנרת, מחוז הצפון, ישראל"
+  },
+  "gal-kursi": {
+    "lat": 32.8278878,
+    "lng": 35.6440489,
+    "via": "nominatim",
+    "q": "Kursi National Park",
+    "label": "גן לאומי חוף כורסי, מועצה אזורית גולן, נפת רמת הגולן, מחוז הצפון, ישראל"
+  },
+  "gal-magdala": {
+    "lat": 32.8284428,
+    "lng": 35.512921,
+    "via": "nominatim",
+    "q": "Magdala Israel",
+    "label": "Magdala, 90, מגדל, נפת כנרת, מחוז הצפון, 1427943, ישראל"
+  },
+  "gal-tel-hazor": {
+    "lat": 32.5854306,
+    "lng": 35.1841863,
+    "via": "photon",
+    "q": "Tel Hazor National Park",
+    "label": "גן לאומי תל מגידו"
+  },
+  "gal-kinneret-beach": {
+    "lat": 32.8008444,
+    "lng": 35.5889732,
+    "via": "photon",
+    "q": "Tiberias Beach Sea of Galilee",
+    "label": "ימת הכנרת"
+  },
+  "gal-nahal-amud": {
+    "lat": 32.9306593,
+    "lng": 35.4771402,
+    "via": "nominatim-bounded",
+    "q": "נחל עמוד",
+    "label": "נחל עמוד, מועצה אזורית מרום הגליל, נפת צפת, מחוז הצפון, ישראל"
+  },
+  "gol-banias": {
+    "lat": 33.2474751,
+    "lng": 35.6933955,
+    "via": "nominatim-bounded",
+    "q": "בניאס",
+    "label": "בניאס, 99, מועצה אזורית גולן, נפת רמת הגולן, מחוז הצפון, ישראל"
+  },
+  "gol-nimrod": {
+    "lat": 33.2526513,
+    "lng": 35.7145582,
+    "via": "nominatim",
+    "q": "Nimrod Fortress National Park",
+    "label": "מבצר נמרוד, עוקף מבצר נמרוד, מועצה אזורית גולן, נפת רמת הגולן, מחוז הצפון, ישראל"
+  },
+  "gol-bental": {
+    "lat": 33.1289076,
+    "lng": 35.7856266,
+    "via": "nominatim",
+    "q": "Mount Bental",
+    "label": "הר בנטל, מועצה אזורית גולן, נפת רמת הגולן, מחוז הצפון, ישראל"
+  },
+  "gol-gamla": {
+    "lat": 32.9003837,
+    "lng": 35.7511703,
+    "via": "nominatim",
+    "q": "Gamla Nature Reserve",
+    "label": "שמורת טבע יהודיה-גמלא, מועצה אזורית גולן, נפת רמת הגולן, מחוז הצפון, ישראל"
+  },
+  "gol-yehudiya": {
+    "lat": 32.941872,
+    "lng": 35.7005565,
+    "via": "nominatim-bounded",
+    "q": "שמורת יהודיה",
+    "label": "שמורת יהודיה, 87, מועצה אזורית גולן, נפת רמת הגולן, מחוז הצפון, 1294900, ישראל"
+  },
+  "gol-hermon": {
+    "lat": 33.3134934,
+    "lng": 35.7782927,
+    "via": "nominatim",
+    "q": "Mount Hermon Ski Resort",
+    "label": "אתר סקי הר החרמון, מועצה אזורית גולן, נפת רמת הגולן, מחוז הצפון, ישראל"
+  },
+  "gol-katzrin": {
+    "lat": 32.9881977,
+    "lng": 35.7039801,
+    "via": "photon",
+    "q": "Ancient Katzrin Park",
+    "label": "Ancient Katzrin"
+  },
+  "gol-zavitan": {
+    "lat": 32.9557226,
+    "lng": 35.6879972,
+    "via": "nominatim",
+    "q": "Nahal Zavitan",
+    "label": "נחל זויתן, מועצה אזורית גולן, נפת רמת הגולן, מחוז הצפון, ישראל"
+  },
+  "gol-odem-forest": {
+    "lat": 33.2282263,
+    "lng": 35.7472637,
+    "via": "nominatim",
+    "q": "Odem Forest Golan",
+    "label": "יער אודם, مسعدة, נפת רמת הגולן, מחוז הצפון, ישראל"
+  },
+  "hfa-bahai": {
+    "lat": 32.8125706,
+    "lng": 34.9828379,
+    "via": "nominatim",
+    "q": "Bahai Gardens Haifa",
+    "label": "Bahai Gardens parking, יפה נוף, حي عباس, כרמל צרפתי, רובע הכרמל, חיפה, נפת חיפה, מחוז חיפה, 3339108, ישראל"
+  },
+  "hfa-german-colony": {
+    "lat": 32.8217023,
+    "lng": 34.991176,
+    "via": "nominatim",
+    "q": "German Colony Haifa",
+    "label": "המושבה הגרמנית, רובע העיר התחתית, חיפה, נפת חיפה, מחוז חיפה, 3541409, ישראל"
+  },
+  "hfa-nahal-mearot": {
+    "lat": 32.6711823,
+    "lng": 34.9652775,
+    "via": "nominatim-bounded",
+    "q": "נחל מערות",
+    "label": "נחל מערות, מערות האדם הקדמון, מועצה אזורית חוף הכרמל, נפת חדרה, מחוז חיפה, 3085000, ישראל"
+  },
+  "hfa-ein-hod": {
+    "lat": 32.7005017,
+    "lng": 34.9825964,
+    "via": "nominatim",
+    "q": "Ein Hod",
+    "label": "עין הוד, מועצה אזורית חוף הכרמל, נפת חדרה, מחוז חיפה, ישראל"
+  },
+  "hfa-maritime-museum": {
+    "lat": 32.8288878,
+    "lng": 34.9723966,
+    "via": "nominatim",
+    "q": "National Maritime Museum Haifa",
+    "label": "המוזיאון הימי, אלנבי, קריית אליעזר, רובע מערב חיפה, חיפה, נפת חיפה, מחוז חיפה, 3570503, ישראל"
+  },
+  "hfa-madatech": {
+    "lat": 32.8099659,
+    "lng": 34.9961893,
+    "via": "nominatim",
+    "q": "MadaTech Haifa",
+    "label": "מדעטק - המוזיאון הלאומי למדע, בלפור, הדר הכרמל, רובע הדר, חיפה, נפת חיפה, מחוז חיפה, 3312404, ישראל"
+  },
+  "hfa-stella-maris": {
+    "lat": 32.8272182,
+    "lng": 34.9700773,
+    "via": "nominatim",
+    "q": "Stella Maris Monastery Haifa",
+    "label": "מנזר סטלה מאריס, סטלה מאריס, כרמל צרפתי, רובע הכרמל, חיפה, נפת חיפה, מחוז חיפה, 3570503, ישראל"
+  },
+  "hfa-louis-promenade": {
+    "lat": 32.8104893,
+    "lng": 34.9856404,
+    "via": "nominatim",
+    "q": "Louis Promenade Haifa",
+    "label": "טיילת לואי, حي عباس, מרכז הכרמל, רובע הכרמל, חיפה, נפת חיפה, מחוז חיפה, 3339108, ישראל"
+  },
+  "hfa-muhraka": {
+    "lat": 32.6726161,
+    "lng": 35.088273,
+    "via": "photon",
+    "q": "Muhraka Monastery",
+    "label": "מנזר המוחרקה"
+  },
+  "hfa-dado-beach": {
+    "lat": 32.7975116,
+    "lng": 34.9559226,
+    "via": "nominatim",
+    "q": "Dado Beach Haifa",
+    "label": "חוף דדו, רמת הנשיא, נאות פרס, רובע מערב חיפה, חיפה, נפת חיפה, מחוז חיפה, ישראל"
+  },
+  "hfa-hecht": {
+    "lat": 32.7632182,
+    "lng": 35.018062,
+    "via": "nominatim",
+    "q": "Hecht Museum Haifa",
+    "label": "מוזיאון הכט לארכאולוגיה של א\"י, אבא חושי, הוד הכרמל, רובע רמות הכרמל, חיפה, נפת חיפה, מחוז חיפה, 3498838, ישראל"
+  },
+  "acr-old-acre": {
+    "lat": 32.9221325,
+    "lng": 35.0702239,
+    "via": "nominatim",
+    "q": "Old Acre",
+    "label": "אתר מורשת עולמי העיר העתיקה של עכו, מנחם בגין, עכו, נפת עכו, מחוז הצפון, ישראל"
+  },
+  "acr-knights-halls": {
+    "lat": 32.9232271,
+    "lng": 35.0697701,
+    "via": "nominatim",
+    "q": "Knights Halls Acre",
+    "label": "אולמות האבירים, פורצי המבצר, מנחם בגין, עכו, נפת עכו, מחוז הצפון, 2451308, ישראל"
+  },
+  "acr-caesarea": {
+    "lat": 32.501433,
+    "lng": 34.8928234,
+    "via": "nominatim",
+    "q": "Caesarea National Park",
+    "label": "גן לאומי קיסריה, שדות ים, מועצה אזורית חוף הכרמל, נפת חדרה, מחוז חיפה, ישראל"
+  },
+  "acr-rosh-hanikra": {
+    "lat": 33.0857479,
+    "lng": 35.1150819,
+    "via": "nominatim",
+    "q": "Rosh HaNikra",
+    "label": "ראש הנקרה, מועצה אזורית מטה אשר, נפת עכו, מחוז הצפון, ישראל"
+  },
+  "acr-achziv": {
+    "lat": 33.0459401,
+    "lng": 35.1025288,
+    "via": "nominatim",
+    "q": "Achziv National Park",
+    "label": "גן לאומי אכזיב, מועצה אזורית מטה אשר, נפת עכו, מחוז הצפון, ישראל"
+  },
+  "acr-zichron": {
+    "lat": 32.5711587,
+    "lng": 34.9529966,
+    "via": "nominatim",
+    "q": "Zichron Yaakov",
+    "label": "זכרון יעקב, נפת חדרה, מחוז חיפה, ישראל"
+  },
+  "acr-beit-shearim": {
+    "lat": 32.701949,
+    "lng": 35.1247789,
+    "via": "nominatim",
+    "q": "Beit Shearim National Park",
+    "label": "גן לאומי בית שערים, אגודת השומרים, מועצה אזורית עמק יזרעאל, נפת יזרעאל, מחוז הצפון, ישראל"
+  },
+  "acr-ramhal": {
+    "lat": 32.9110173,
+    "lng": 35.2303786,
+    "via": "photon",
+    "q": "Templars Tunnel Acre",
+    "label": ""
+  },
+  "acr-ein-afek": {
+    "lat": 32.8456606,
+    "lng": 35.1124623,
+    "via": "nominatim",
+    "q": "Ein Afek Nature Reserve",
+    "label": "שמורת טבע עין אפק, מועצה אזורית מטה אשר, נפת עכו, מחוז הצפון, ישראל"
+  },
+  "acr-caesarea-aqueduct": {
+    "lat": 32.507578,
+    "lng": 34.8946928,
+    "via": "photon",
+    "q": "Caesarea Aqueduct Beach",
+    "label": "אמת המים הגבוהה לקיסריה"
+  },
+  "jlm-mount-olives": {
+    "lat": 31.7789118,
+    "lng": 35.2450347,
+    "via": "nominatim-bounded",
+    "q": "הר הזיתים ירושלים",
+    "label": "הר הזיתים, ירושלים | القدس, נפת ירושלים, מחוז ירושלים, 9751494, ישראל"
+  },
+  "eil-hai-bar": {
+    "lat": 29.8569181,
+    "lng": 35.0367667,
+    "via": "nominatim-bounded",
+    "q": "חי בר יטבתה",
+    "label": "חי-בר יטבתה, הערבה, יטבתה, מועצה אזורית חבל אילות, נפת באר שבע, מחוז הדרום, ישראל"
+  },
+  "eil-red-canyon": {
+    "lat": 29.6802025,
+    "lng": 34.882228,
+    "via": "nominatim-bounded",
+    "q": "הקניון האדום",
+    "label": "הקניון האדום, מועצה אזורית חבל אילות, נפת באר שבע, מחוז הדרום, ישראל"
+  },
+  "ram-ardon": {
+    "lat": 30.6408844,
+    "lng": 34.9508133,
+    "via": "nominatim-bounded",
+    "q": "הר ארדון",
+    "label": "הר ארדון, מועצה אזורית רמת נגב, נפת באר שבע, מחוז הדרום, ישראל"
+  },
+  "gal-arbel": {
+    "lat": 32.8247933,
+    "lng": 35.4999392,
+    "via": "nominatim-bounded",
+    "q": "הר ארבל",
+    "label": "הר ארבל, מגדל, נפת כנרת, מחוז הצפון, 1427943, ישראל"
+  },
+  "gol-meshushim": {
+    "lat": 32.938885,
+    "lng": 35.665213,
+    "via": "nominatim-bounded",
+    "q": "בריכת המשושים",
+    "label": "בריכת המשושים, מועצה אזורית גולן, נפת רמת הגולן, מחוז הצפון, ישראל"
+  }
+}

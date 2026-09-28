@@ -20,6 +20,7 @@ import {
 import { faqPairs } from '@/lib/seo/jsonLd';
 import { hubsForDestination } from '@/lib/seo/hubs';
 import { promotedMembers } from '@/lib/seo/hubData';
+import { travelFactTitle } from '@/lib/domestic';
 
 /**
  * The long-form, statically rendered guide under a destination's catalog page.
@@ -285,7 +286,7 @@ export default function DestinationGuide({
       <div className="mt-10">
         <SectionHeading icon="✈️">איך מגיעים {toCity} ואיך מסתובבים</SectionHeading>
         <dl className="mt-4 grid gap-3 sm:grid-cols-2">
-          <Fact title="טיסות מתל אביב" text={dest.practical.flights} />
+          <Fact title={travelFactTitle(dest, 'טיסות מתל אביב')} text={dest.practical.flights} />
           <Fact title="תחבורה בעיר" text={dest.practical.gettingAround} />
           <Fact title={`ויזה ${hePrefix('ל', country.name)}`} text={country.practical.visa} />
           <Fact title="מטבע" text={country.practical.currency} />

@@ -148,9 +148,13 @@ npm run lint
   country ("טסים לאיטליה"), plan by city. Each `Country` carries the
   country-level practical facts (visa, currency, sim, payments) shared by
   all its cities.
-- `src/data/destinations.ts` - curated content: 166 destinations across
-  83 countries, ~3,116 places (Hebrew), each referencing its country via
+- `src/data/destinations.ts` - curated content: 175 destinations across
+  84 countries, ~3,411 places (Hebrew), each referencing its country via
   `countrySlug`. Re-count with a grep before quoting these numbers.
+  **One of those countries is Israel itself** (9 domestic regions, added
+  2026-09-28) - domestic travel is a real market and the catalog was
+  entirely outbound before it. Domestic destinations are NOT abroad, which
+  several places in the code assumed: see `src/lib/domestic.ts`.
   Places carry `photo` (verified URLs - run `node
   scripts/verify-photos.mjs` after any photo change; Wikimedia thumbs
   accept ONLY the allowed widths 250/330/500/960px), `priceLevel`
@@ -234,7 +238,18 @@ npm run lint
   only as a rare small highlight). Reuse these tokens; do not invent new
   palettes.
 
-## Adding a new country (single data edit, no UI work)
+## Adding a new country (a data edit; UI work only if it is not abroad)
+
+**The heading used to say "single data edit, no UI work", and Israel disproved
+it.** That held for 83 countries because they shared one assumption - that a
+destination is somewhere you fly to. `CityPractical.flights` is documented as
+"direct flights from TLV", and three components hardcoded a label to match, so
+Jerusalem shipped a fact card offering a flight from Tel Aviv. The JSON-LD FAQ
+asked how to reach Jerusalem "from Israel", and whether Israelis need a visa
+for Israel. None of it failed a test; it just read as a site that does not know
+the country it sells. `src/lib/domestic.ts` holds the fix and a class guard
+fails any new component that renders `practical.flights` without it. A country
+that IS abroad still needs no UI work.
 
 1. `src/data/countries.ts` - add a `Country`: slug, Hebrew name, nameLocal,
    flag, tagline, summary, photo (verified Unsplash URL), and `practical`

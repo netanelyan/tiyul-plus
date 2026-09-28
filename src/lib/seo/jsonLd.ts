@@ -25,6 +25,7 @@ import type { Country, Destination, Place } from '@/lib/types';
 import { SITE_NAME, SITE_URL, SOCIAL_PROFILES, canonical } from './site';
 import { daysHe } from '@/lib/duration';
 import { hePrefix } from '@/lib/hebrew';
+import { isDomestic } from '@/lib/domestic';
 
 /** A JSON-LD node. Loose on purpose - these are serialised, never read back. */
 export type JsonLdNode = Record<string, unknown>;
@@ -163,10 +164,18 @@ export function faqPairs(dest: Destination, country: Country): FaqPair[] {
   }
 
   if (dest.practical.flights?.trim()) {
-    pairs.push({ question: `איך מגיעים ${toCity} מישראל?`, answer: dest.practical.flights });
+    // "from Israel" is dropped for a domestic destination - "how do you get to Jerusalem
+    // from Israel" is a question no Israeli would type, and this text is what Google reads.
+    const from = isDomestic(dest) ? '' : ' מישראל';
+    pairs.push({ question: `איך מגיעים ${toCity}${from}?`, answer: dest.practical.flights });
   }
 
-  if (country.practical.visa?.trim()) {
+  /*
+    Skipped entirely for the home country rather than reworded: "do Israelis need a visa
+    for Israel" is not a question with a better phrasing, it is a question that should not
+    be asked. One fewer FAQ entry beats an absurd one in structured data.
+  */
+  if (!isDomestic(dest) && country.practical.visa?.trim()) {
     pairs.push({
       question: `צריך ויזה ${hePrefix('ל', country.name)} לישראלים?`,
       answer: country.practical.visa,

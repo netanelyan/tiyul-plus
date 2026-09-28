@@ -22,6 +22,16 @@ import { buildDestinationCards as buildCards } from '@/lib/destinationCards.ts';
 
 const allow = { coverageNumbers: coverageNumbers(), coverageByScope: coverageByScope() };
 
+/*
+  The worldwide destination total, COMPUTED. It used to be typed as 166 in six fixtures,
+  and adding the Israel catalog turned every one of them into a sentence whose number is
+  no longer true - which broke the tests for a reason that had nothing to do with the
+  guard they test. A fixture that hardcodes a catalog count expires the next time the
+  catalog grows; CLAUDE.md states the rule for the product ("every count is computed from
+  the catalog, never typed") and it applies to the tests just as much.
+*/
+const TOTAL = destinations.length;
+
 test('the reported sentence is cut: 66 nature destinations in Europe when there are 30', () => {
   const reported = 'לפי הנתונים שלי, יש לי 66 יעדים באירופה שמתאפיינים בטבע - הרים, אגמים ופיורדים.';
   assert.equal(violationOf(reported, allow), 'coverage-count');
@@ -61,7 +71,7 @@ test('a number counting anything other than destinations is not compared', () =>
     anything in this catalog happens to have.
   */
   for (const s of [
-    'יש לי 166 יעדים, ואפשר לבנות מהם מסלול של 7 ימים בוינה.',
+    `יש לי ${TOTAL} יעדים, ואפשר לבנות מהם מסלול של 7 ימים בוינה.`,
     'בקטלוג שלנו יש מסלול של 9 ימים עם 23 עצירות.',
     'הטיול שלי כולל 12 עצירות טבע.',
   ]) {
@@ -121,11 +131,11 @@ test('with no facts wired the rule stays silent rather than cutting everything',
 
 test('a true number wearing the wrong label is cut - "166 destinations in Italy"', () => {
   /*
-    The live reply that made this necessary. Every digit is real - 166 is our
+    The live reply that made this necessary. Every digit is real - the number is our
     worldwide total - and the sentence is false, so the flat number set passes it
     and only the scope comparison catches it.
   */
-  const s = 'יש לנו 166 יעדים באיטליה.';
+  const s = `יש לנו ${TOTAL} יעדים באיטליה.`;
   assert.equal(violationOf(s, allow), 'coverage-count');
   const withoutScopes = { coverageNumbers: coverageNumbers() };
   assert.equal(
@@ -149,8 +159,8 @@ test('a scope mentioned after a comma does not own the number', () => {
     sentences and both must survive.
   */
   for (const s of [
-    'יש לנו 166 יעדים, ואני ממליץ במיוחד על איטליה.',
-    'בקטלוג שלנו 166 יעדים. באיטליה יש כמה מהיפים שבהם.',
+    `יש לנו ${TOTAL} יעדים, ואני ממליץ במיוחד על איטליה.`,
+    `בקטלוג שלנו ${TOTAL} יעדים. באיטליה יש כמה מהיפים שבהם.`,
   ]) {
     assert.equal(violationOf(s, allow), null, s);
   }
@@ -206,18 +216,18 @@ test("and the same opening with that scope's real number passes", () => {
 test('a dash after the opening scope starts a new clause', () => {
   /*
     Cut from a live run by the first version of the opening-scope rule, and it
-    should not have been: "Italy is a huge catalog - 166 destinations in 83
+    should not have been: "Italy is a huge catalog - N destinations in 83
     countries in the system, and in Italy itself 5 cities are covered". Both
     figures are real and global; the opening names Italy; only the dash tells
     you they are not Italy's. Same rule as the postfix window, same reason.
   */
-  const s = 'איטליה היא קטלוג ענק - יש לנו 166 יעדים במערכת.';
+  const s = `איטליה היא קטלוג ענק - יש לנו ${TOTAL} יעדים במערכת.`;
   assert.equal(violationOf(s, allow), null, s);
 });
 
 test('a scope before the number is never treated as owning it', () => {
   // "we visited Italy, and I have 166 destinations in the catalog" is fine.
-  assert.equal(violationOf('טיילנו באיטליה ויש לנו 166 יעדים בקטלוג.', allow), null);
+  assert.equal(violationOf(`טיילנו באיטליה ויש לנו ${TOTAL} יעדים בקטלוג.`, allow), null);
 });
 
 test('every count the model is handed is one the guard accepts, for every country', () => {

@@ -1,7 +1,7 @@
 {
  "/": {
-  "hash": "3a80fe978f9cd2eb",
-  "date": "2026-09-27"
+  "hash": "8479741c206ad067",
+  "date": "2026-09-28"
  },
  "/about": {
   "hash": "0eb75bc1270f6a35",
@@ -32,8 +32,8 @@
   "date": "2026-09-20"
  },
  "/collections/food": {
-  "hash": "9326e52c15f28004",
-  "date": "2026-09-20"
+  "hash": "67dcca190a1ea3e6",
+  "date": "2026-09-28"
  },
  "/collections/history": {
   "hash": "8267738a163f29a6",
@@ -214,6 +214,10 @@
  "/countries/ireland": {
   "hash": "a76e9d74b9d89037",
   "date": "2026-09-21"
+ },
+ "/countries/israel": {
+  "hash": "579fbe24c92fbdf4",
+  "date": "2026-09-28"
  },
  "/countries/italy": {
   "hash": "6b00147692f64029",
@@ -411,6 +415,10 @@
   "hash": "a4de64d123ed1c4f",
   "date": "2026-09-20"
  },
+ "/destinations/akko-caesarea": {
+  "hash": "abc8778d7c3e3457",
+  "date": "2026-09-28"
+ },
  "/destinations/almaty": {
   "hash": "db4601344ba5b91f",
   "date": "2026-09-20"
@@ -567,6 +575,10 @@
   "hash": "0574e8b72f74b7ba",
   "date": "2026-09-20"
  },
+ "/destinations/dead-sea": {
+  "hash": "9813f1a61ed3c3fb",
+  "date": "2026-09-28"
+ },
  "/destinations/dolomites": {
   "hash": "8ace2433f3d95073",
   "date": "2026-09-20"
@@ -582,6 +594,10 @@
  "/destinations/edinburgh": {
   "hash": "9f70b5e5c85ced38",
   "date": "2026-09-20"
+ },
+ "/destinations/eilat": {
+  "hash": "6eb3bf37f8c4001a",
+  "date": "2026-09-28"
  },
  "/destinations/fergana-valley": {
   "hash": "2f205a3e820bd41b",
@@ -599,6 +615,10 @@
   "hash": "f5fd72df933f5223",
   "date": "2026-09-20"
  },
+ "/destinations/galilee-kinneret": {
+  "hash": "1418257abbd1bd78",
+  "date": "2026-09-28"
+ },
  "/destinations/garden-route": {
   "hash": "bdd2fa01a424cf39",
   "date": "2026-09-20"
@@ -607,6 +627,10 @@
   "hash": "26e9a1254059c34c",
   "date": "2026-09-20"
  },
+ "/destinations/golan": {
+  "hash": "5d661beb4f44713c",
+  "date": "2026-09-28"
+ },
  "/destinations/grand-canyon": {
   "hash": "bd00539e4bd65c86",
   "date": "2026-09-20"
@@ -614,6 +638,10 @@
  "/destinations/gyeongju-busan": {
   "hash": "6d268bee74f52e61",
   "date": "2026-09-20"
+ },
+ "/destinations/haifa-carmel": {
+  "hash": "5fff57a53f6f0ba6",
+  "date": "2026-09-28"
  },
  "/destinations/halong": {
   "hash": "12ecdeb5bd3211ca",
@@ -654,6 +682,10 @@
  "/destinations/java": {
   "hash": "d6f0f5ae50adf13d",
   "date": "2026-09-20"
+ },
+ "/destinations/jerusalem": {
+  "hash": "8a686c2e78298ba7",
+  "date": "2026-09-28"
  },
  "/destinations/jutland": {
   "hash": "cb78291faed587a9",
@@ -746,6 +778,10 @@
  "/destinations/meteora-epirus": {
   "hash": "d34439e4f79c51b1",
   "date": "2026-09-20"
+ },
+ "/destinations/mitzpe-ramon": {
+  "hash": "0c34292f69516d50",
+  "date": "2026-09-28"
  },
  "/destinations/mongolia-steppe-gobi": {
   "hash": "b96e6ddf26780363",
@@ -994,6 +1030,10 @@
  "/destinations/tbilisi": {
   "hash": "bfa698a5b6677e00",
   "date": "2026-09-20"
+ },
+ "/destinations/tel-aviv": {
+  "hash": "11ba98e304e1a50e",
+  "date": "2026-09-28"
  },
  "/destinations/tian-shan-issyk-kul": {
   "hash": "136b872b6dcedc0f",
