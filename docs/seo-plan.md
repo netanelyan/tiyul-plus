@@ -28,7 +28,7 @@ the catalog.** The travel catalog is not read from a database at runtime at all:
 - Supabase holds `catalog_countries` / `catalog_destinations` / `catalog_places`
   (`sql/supabase-catalog.sql`) but that is an **authoring** mirror only: a script
   pushes files up and pulls them back down, and the site never reads it. The
-  reasoning is recorded in CLAUDE.md's session log (2026-07-28 (w)) - every
+  reasoning is recorded in the session log (`docs/session-log/2026-07.md`, entry 2026-07-28 (w)) - every
   destination page is statically generated, so a runtime fetch would add a
   network round trip where there is currently none.
 - All catalog access goes through the `PlacesProvider` interface
@@ -325,7 +325,7 @@ seasonal hub is a four-line addition to `HUBS`.
   destinations linking back to the hubs they belong to.
 - **Phase 4** - JSON-LD: `BreadcrumbList` and `TouristDestination` everywhere,
   `FAQPage` only where a real question has a real sourced answer.
-- **Phase 5** - `SEO_NEXT_STEPS.md` for the account-level work I cannot do.
+- **Phase 5** - `docs/seo-next-steps.md` for the account-level work I cannot do.
 
 ## Constraints I am holding to
 

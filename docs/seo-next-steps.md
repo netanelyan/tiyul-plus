@@ -120,7 +120,7 @@ the catalog.
 **Your site has more pages than that, on purpose.** There are 166 destination
 pages and 83 country pages live; 70 are submitted. The other ~180 are still
 crawlable and still have proper titles and descriptions - they are simply not
-being pushed. The reasoning is in `SEO_PLAN.md`: a domain with no history that
+being pushed. The reasoning is in `docs/seo-plan.md`: a domain with no history that
 submits 250 pages of uneven depth risks being judged thin *as a whole site*, and
 that judgement is much harder to undo than it is to avoid. Step 6 is how you
 expand.

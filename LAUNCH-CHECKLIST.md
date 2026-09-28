@@ -42,6 +42,14 @@ href="https://www.skyscanner.co.il/"    <- no associate id
 
 and `GET /api/activities?city=vienna` returns `{"mode":"off"}`.
 
+**Do not read this section's numbers from the page - run the command.** `npm run
+revenue` reads the actual configuration and prints, per provider, whether it is
+earning, wired-but-switched-off, or has no partner. It exists because prose about
+a configuration state goes stale silently and in an unknown direction: the
+heading below said "four" while its own body said six, and section 1.3 described
+two cards as dead that had in fact been given partners. Against production:
+`vercel env pull && npm run revenue`.
+
 ### 1.1 Turn Viator on - the smallest step to a first shekel
 
 This one is **fully built and tested**; it needs a key and one word.
@@ -62,7 +70,7 @@ This one is **fully built and tested**; it needs a key and one word.
 5. Open a trip in Vienna on the site and confirm the "דברים לעשות" panel shows
    real tours with prices.
 
-### 1.2 The four affiliate links - and why this is more than pasting an id
+### 1.2 The six affiliate links - and why this is more than pasting an id
 
 `src/lib/booking.ts` has an `affiliate` slot per provider and **all six are
 `affiliate: null`**. Setting the environment variable alone does nothing: the
@@ -102,12 +110,31 @@ Once approved, for each one:
 **Do not skip step 4.** A missing id fails silently and looks exactly like a
 working link.
 
-### 1.3 Two providers have no partner at all
+### 1.3 Every provider now has a partner - so nothing is "dead", it is all unpaid
 
-`insurance` and `car` render "בקרוב" because no company was ever chosen. Pick
-one each (for Israelis: Passportcard / Harel for insurance; Rentalcars or
-Discover Cars for car hire) and add them the same way. Until then the two
-cards are honest but dead.
+**This section used to say `insurance` and `car` render "בקרוב" because no company
+was ever chosen. That is no longer true** and the correction matters, because it
+moves two cards from "honest but dead" to "live and giving traffic away":
+
+| kind | provider | link | earning |
+|---|---|---|---|
+| flights | Skyscanner | live | no |
+| stay | Booking.com | live | no |
+| activities | GetYourGuide | live | no |
+| esim | Airalo | live | no |
+| insurance | **World Nomads** | **live** | no |
+| car | **Rentalcars.com** | **live** | no |
+
+So the honest figure is **six of six sending free traffic**, not four. `npm run
+revenue` prints this table from the config, which is why it should be trusted over
+this one.
+
+Two of the six are worth reconsidering on the merits rather than just wiring up:
+**World Nomads does not sell to Israeli residents** in the way Passportcard or
+Harel do, and for this audience a policy they cannot buy is a dead click that also
+costs trust. Same question for Rentalcars vs Discover Cars on commission. Picking
+the partner an Israeli traveller can actually transact with is worth more than
+being first to paste an id.
 
 ---
 

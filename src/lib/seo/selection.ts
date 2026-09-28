@@ -6,14 +6,14 @@
  *
  * The obvious implementation is to score all 166 destinations on data
  * completeness and take the top 30 at build time. That is how the list below
- * was *produced* (the scoring is recorded in SEO_PLAN.md), but it is not how it
+ * was *produced* (the scoring is recorded in docs/seo-plan.md), but it is not how it
  * is *read*: a live score means that adding places to a city in a routine data
  * session silently pushes another city out of the sitemap, after Google has
  * already indexed it. Dropping a URL from a sitemap is a signal, and it should
  * never be an accident of an unrelated commit.
  *
  * So the set is explicit. Growing it is a deliberate edit, which is exactly what
- * SEO_NEXT_STEPS.md asks for once the first batch proves out.
+ * docs/seo-next-steps.md asks for once the first batch proves out.
  *
  * ## Why only 30 of 166
  *
@@ -32,7 +32,7 @@
 
 /**
  * The 30, in the order the completeness score produced. Order is not meaningful
- * to search engines; it is kept so the list can be compared to SEO_PLAN.md.
+ * to search engines; it is kept so the list can be compared to docs/seo-plan.md.
  */
 export const SEO_DESTINATION_SLUGS = [
   'vienna',
