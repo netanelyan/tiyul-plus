@@ -29,13 +29,25 @@ interface DbPurchase {
   paypal_order_id: string;
   paypal_capture_id: string | null;
   report?: unknown;
+  /**
+   * Which product. Absent means the pre-departure check, matching the column's
+   * default - so every existing test in this file keeps exercising the check path
+   * without being touched.
+   */
+  product?: string;
 }
 
 let purchase: DbPurchase;
 let trip: unknown;
 let verifySignature: boolean;
 /** A profiles row for the mock - the subscription events read from and write to it */
-let profile: { user_id: string; plan: string; plan_source: string | null } | null;
+let profile: {
+  user_id: string;
+  plan: string;
+  plan_source: string | null;
+  /** Null/absent = never expires. The trip pass is the only thing that sets it here. */
+  plan_until?: string | null;
+} | null;
 /**
  * The stored PayPal billing-plan ids, i.e. what `planIdToPlan` reads. Kept
  * mutable so a test can empty it and prove what happens when the lookup fails.
@@ -140,6 +152,17 @@ beforeEach(() => {
           return new Response(JSON.stringify([{ ...profile }]), { status: 200 });
         }
         return new Response('[]', { status: 200 });
+      }
+      /*
+        The upsert path. `applyTripPass` PATCHes first and falls back to an insert
+        when that matches no row, because a paying customer may genuinely have no
+        profiles row yet (the app creates one lazily). Without this branch that
+        fallback would look like a database failure and a real purchase would alert
+        instead of granting.
+      */
+      if (init.method === 'POST') {
+        profile = JSON.parse(String(init.body)) as typeof profile;
+        return new Response(JSON.stringify([{ ...profile }]), { status: 200 });
       }
       if (profile && url.includes(`user_id=eq.${profile.user_id}`)) {
         return new Response(JSON.stringify([{ ...profile }]), { status: 200 });
@@ -494,4 +517,204 @@ test('PAYMENT.FAILED changes no plan and tells the subscriber, with the retry da
   assert.equal(profile.plan, 'premium', 'a failed payment is not a downgrade');
   assert.equal(mailSent.length, 1);
   assert.match(mailSent[0].html, /ב-3 באוקטובר 2026/);
+});
+
+/* ============================================================
+ *  The trip pass - the same money rails, a different product
+ *
+ *  What these are really testing is the ORDERING inside the branch. markPaid is a
+ *  conditional update on status='pending', which makes it the idempotency gate, so
+ *  it has to run BEFORE the grant. Granting first would hand a second window to
+ *  anyone whose webhook PayPal delivers twice - and duplicate delivery is normal.
+ * ============================================================ */
+
+const PASS_USER = '9f1c4a2e-5b6d-4e7f-8a90-1b2c3d4e5f60';
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** Turn `purchase` into a paid-for trip pass rather than a check. */
+function asTripPass(overrides: Partial<DbPurchase> = {}) {
+  Object.assign(purchase, {
+    user_id: PASS_USER,
+    amount: 49,
+    product: 'trip-pass',
+    ...overrides,
+  });
+}
+
+/**
+ * The profiles row the webhook just wrote, asserted to exist.
+ *
+ * A helper rather than `assert.ok(profile)` at each site: `profile` is assigned
+ * by the fetch mock's closure, which TypeScript cannot see, so after
+ * `profile = null` it narrows the variable to `null` and an `assert.ok` on it
+ * narrows to `never` - making every field read an error. Reading through a
+ * function that re-widens once, in one place, keeps the tests about behaviour
+ * instead of about narrowing.
+ */
+function grantedProfile() {
+  if (!profile) throw new Error('expected a profiles row to have been written');
+  return profile;
+}
+
+const daysFromNow = (iso: string) => Math.round((Date.parse(iso) - Date.now()) / DAY_MS);
+
+test('a paid trip pass grants a 60-day premium window with plan_source=trip_pass', async () => {
+  asTripPass();
+  profile = null; // no profiles row yet - the ordinary state for a new buyer
+  const { processCheckWebhook } = await load();
+  const res = await processCheckWebhook(eventBody({ amountValue: '49.00' }), HEADERS);
+
+  assert.equal(res.status, 200);
+  assert.equal(res.body.ok, true);
+  assert.equal(purchase.status, 'paid');
+  const p = grantedProfile();
+  assert.equal(p.plan, 'premium');
+  assert.equal(p.plan_source, 'trip_pass');
+  assert.equal(daysFromNow(String(p.plan_until)), 60);
+});
+
+test('the pass writes NO report - that column belongs to the check', async () => {
+  /*
+    markPaid omits the field rather than nulling it, so a retried capture cannot
+    blank a report a previous attempt stored. For a pass there is simply nothing
+    to store, and writing an empty report would put a meaningless document on a
+    purchase that never promised one.
+  */
+  asTripPass();
+  const { processCheckWebhook } = await load();
+  await processCheckWebhook(eventBody({ amountValue: '49.00' }), HEADERS);
+  assert.equal(purchase.report, undefined);
+});
+
+test('**a duplicate pass webhook is a no-op - it does not grant a second window**', async () => {
+  asTripPass();
+  profile = null;
+  const { processCheckWebhook } = await load();
+
+  await processCheckWebhook(eventBody({ amountValue: '49.00' }), HEADERS);
+  const afterFirst = String(grantedProfile().plan_until);
+  assert.equal(daysFromNow(afterFirst), 60);
+
+  // PayPal delivers the same capture again - routine, not exceptional.
+  const second = await processCheckWebhook(eventBody({ amountValue: '49.00' }), HEADERS);
+
+  /*
+    Caught by the `status !== 'pending'` guard that runs before the product branch,
+    which is the FIRST line of defence and shared with the check. The branch's own
+    "markPaid affected 0 rows" path is the second one, for a genuine race where two
+    deliveries both read 'pending' before either writes - unreachable from here,
+    which is why this asserts the outcome rather than which guard produced it.
+  */
+  assert.equal(second.body.alreadyProcessed, true);
+  assert.equal(
+    String(grantedProfile().plan_until),
+    afterFirst,
+    'the window must be untouched - 120 days for one payment is the bug this ordering prevents',
+  );
+});
+
+test('a second pass bought on top of a live one EXTENDS it rather than resetting', async () => {
+  // The order id must stay ORDER1 - that is the id `eventBody` puts in the event,
+  // and changing it means the webhook finds no purchase and returns before the branch.
+  asTripPass();
+  profile = {
+    user_id: PASS_USER,
+    plan: 'premium',
+    plan_source: 'trip_pass',
+    plan_until: new Date(Date.now() + 20 * DAY_MS).toISOString(),
+  };
+  const { processCheckWebhook } = await load();
+  await processCheckWebhook(eventBody({ amountValue: '49.00' }), HEADERS);
+
+  assert.equal(
+    daysFromNow(String(profile.plan_until)),
+    80,
+    'the 20 days they already had must be added to, not confiscated',
+  );
+});
+
+test('a pro subscriber who buys a pass is not demoted to premium', async () => {
+  asTripPass();
+  profile = {
+    user_id: PASS_USER,
+    plan: 'pro',
+    plan_source: 'grant',
+    plan_until: new Date(Date.now() + 5 * DAY_MS).toISOString(),
+  };
+  const { processCheckWebhook } = await load();
+  await processCheckWebhook(eventBody({ amountValue: '49.00' }), HEADERS);
+
+  assert.equal(profile.plan, 'pro', 'downgrading somebody in the act of paying us is the worst case');
+  assert.equal(daysFromNow(String(profile.plan_until)), 65);
+});
+
+test('paid but ungrantable - the money is recorded, and it alerts instead of failing quietly', async () => {
+  /*
+    An unlimited subscriber whose payment somehow completed (a race against their
+    own subscription activating, say). There is nothing to grant - writing a
+    60-day expiry would SHORTEN an open-ended plan - so the grant refuses, and
+    that has to be loud: the money arrived and the buyer has nothing new.
+  */
+  asTripPass();
+  profile = { user_id: PASS_USER, plan: 'premium', plan_source: 'paypal', plan_until: null };
+  const { processCheckWebhook } = await load();
+  const res = await processCheckWebhook(eventBody({ amountValue: '49.00' }), HEADERS);
+
+  assert.equal(res.body.ok, false);
+  assert.equal(res.body.reason, 'already-unlimited');
+  assert.equal(purchase.status, 'paid', 'the payment still happened and must stay recorded');
+  assert.equal(profile.plan_until, null, 'their unlimited plan must not have gained an expiry');
+});
+
+test('the pass amount is verified like any other - ₪29.90 on a ₪49 pass is rejected', async () => {
+  /*
+    The amount check is upstream of the product branch, so this is really asserting
+    that adding the branch did not step in front of it. Paying the check price for
+    a pass must not grant a pass.
+  */
+  asTripPass();
+  profile = null;
+  const { processCheckWebhook } = await load();
+  const res = await processCheckWebhook(eventBody({ amountValue: '29.90' }), HEADERS);
+
+  assert.equal(res.body.reason, 'amount-mismatch');
+  assert.equal(purchase.status, 'failed');
+  assert.equal(profile, null, 'no plan may be written on a mismatched amount');
+});
+
+test('a paid pass sends exactly one receipt, and it states when access ends', async () => {
+  process.env.RESEND_API_KEY = 're_test';
+  userEmail = 'buyer@example.com';
+  asTripPass();
+  profile = null;
+  const { processCheckWebhook } = await load();
+  await processCheckWebhook(eventBody({ amountValue: '49.00' }), HEADERS);
+  await settle();
+
+  assert.equal(mailSent.length, 1, 'one receipt');
+  assert.match(mailSent[0].subject, /כרטיס הטיול/);
+  /*
+    The expiry has to be IN the receipt, and it has to be the real granted date -
+    the mailer is handed `applied.until` rather than recomputing now+60, because
+    for an extension the honest answer is 80 days out and a recomputed one would
+    lie by 20 days.
+  */
+  const until = String(grantedProfile().plan_until).slice(0, 10);
+  const { formatHebrewDate } = await import('../trip/dates.ts');
+  const untilHe = formatHebrewDate(until, { year: true });
+  assert.ok(untilHe, 'precondition: the date formats');
+  assert.ok(
+    mailSent[0].html.includes(untilHe),
+    `the receipt must state the real expiry (${untilHe}) - it is handed applied.until rather ` +
+      `than recomputing now+60, because for an extension the honest answer is 80 days out and ` +
+      `a recomputed one would be wrong by 20`,
+  );
+  /*
+    A pass must not read as a subscription. Asserted as the specific promise rather
+    than by banning the word for subscription: the footnote legitimately CONTAINS it,
+    in the sentence whose whole job is to say no subscription was opened. Banning the
+    word would have failed on the very copy that makes the point.
+  */
+  assert.match(mailSent[0].html, /לא נפתח מנוי/, 'must say plainly that nothing recurs');
+  assert.match(mailSent[0].html, /חד-פעמי/);
 });

@@ -627,10 +627,18 @@ export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string; 
     at the WORST case rather than the typical one (see SUBSCRIBER_CAP_USD, and
     the tests that lock both).
   */
+  /*
+    The capacity row. The premium column describes what a **trip pass** buys,
+    because that is what the middle column now sells - a one-off per trip rather
+    than a monthly subscription. The column key stayed 'premium' (the plan a pass
+    grants is premium, and renaming it would have meant touching every row here for
+    a presentation change), so this is the one cell where the label and the key
+    deliberately differ. See `lib/tripPass.ts` for why the product changed.
+  */
   {
-    label: 'כמה אפשר לתכנן בחודש',
+    label: 'כמה אפשר לתכנן',
     free: 'מכסות יומיות משותפות עם כל המבקרים',
-    premium: 'טיול מלא בחודש, כמה שתערכו אותו',
+    premium: 'טיול אחד מלא, כמה שתערכו אותו',
     pro: `עד ${PRO_TRIPS_PER_MONTH} טיולים מלאים בחודש, עם כל העריכות סביבם`,
   },
   /*

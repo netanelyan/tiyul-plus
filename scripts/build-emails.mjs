@@ -331,6 +331,46 @@ const TEMPLATES = [
       ),
   },
 
+  /*
+    The trip pass. Deliberately its own template rather than a reuse of
+    check-receipt: the two purchases promise different things, and the two facts a
+    pass buyer actually needs - when it ends, and that nothing will recur - are
+    exactly the ones a check receipt has no reason to carry.
+
+    The "nothing recurs" line is not filler. The product this replaced was a
+    monthly subscription, so a buyer who remembers the old pricing has every reason
+    to expect a second charge; saying so plainly in the receipt is cheaper than
+    answering it in support, and it is the honest distinction between the two.
+  */
+  {
+    file: 'trip-pass-receipt.html',
+    subject: 'קבלה: כרטיס הטיול ל{{TRIP_NAME}}',
+    title: 'קבלה - כרטיס טיול',
+    preheader: 'התשלום התקבל. הכרטיס פעיל עד {{UNTIL}}.',
+    eyebrow: 'קבלה',
+    heroPhoto: { src: '{{PHOTO_URL}}', alt: '{{TRIP_NAME}}' },
+    body:
+      heading('הכרטיס פעיל, תודה') +
+      para(
+        'כרטיס הטיול ל<strong>{{TRIP_NAME}}</strong> פעיל מעכשיו ועד <strong>{{UNTIL}}</strong>. ' +
+          'בתוך התקופה הזו הכול פתוח: הסוכן החכם, הטיול המשותף עם החברים, והבדיקה לפני הנסיעה - בלי תוספת תשלום.',
+      ) +
+      facts([
+        ['מספר הזמנה', '{{ORDER_ID}}'],
+        ['סכום', '{{AMOUNT}}'],
+        ['תאריך', '{{DATE}}'],
+        ['פעיל עד', '{{UNTIL}}'],
+        ['אמצעי תשלום', 'PayPal'],
+      ]) +
+      button('{{TRIP_URL}}', 'לחזור לטיול') +
+      footnote(
+        `זו קבלה על תשלום <strong>חד-פעמי</strong>. לא נפתח מנוי, לא נשמרו פרטי אשראי, ` +
+          `ולא יתבצע שום חיוב נוסף - הכרטיס פשוט מסתיים בתאריך שלמעלה ואין מה לבטל. ` +
+          `שאלה על החיוב? <a href="${SITE}/refunds" style="color:${C.faint};">מדיניות ההחזרים</a> ` +
+          `או פשוט השיבו למייל הזה.`,
+      ),
+  },
+
   {
     file: 'subscription-activated.html',
     subject: 'המנוי שלכם פעיל - {{PLAN_NAME}}',

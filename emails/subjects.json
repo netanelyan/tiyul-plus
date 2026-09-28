@@ -12,6 +12,10 @@
     "subject": "קבלה: בדיקה לפני הנסיעה ל{{TRIP_NAME}}"
   },
   {
+    "file": "trip-pass-receipt.html",
+    "subject": "קבלה: כרטיס הטיול ל{{TRIP_NAME}}"
+  },
+  {
     "file": "subscription-activated.html",
     "subject": "המנוי שלכם פעיל - {{PLAN_NAME}}"
   },

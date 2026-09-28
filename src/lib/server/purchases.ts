@@ -59,11 +59,23 @@ export async function createPendingPurchase(input: {
   amount: number;
   currency: string;
   mode: PaypalMode;
+  /**
+   * Which product. Defaults to the pre-departure check, which is the only value
+   * that existed when this was written - so every existing call site keeps its
+   * exact behaviour and the trip pass passes `TRIP_PASS_PRODUCT`.
+   *
+   * `purchases.product` is deliberately free text with no CHECK constraint, so a
+   * new product needs no migration here. `source` stays 'paypal' for both,
+   * because both are real revenue - that is what separates them from
+   * 'admin_grant' and 'premium_included', which are amount=0 and excluded from
+   * the financial report.
+   */
+  product?: string;
 }): Promise<PurchaseRow | null> {
   const rows = await adminInsert<PurchaseRow>('purchases', {
     user_id: input.userId,
     trip_id: input.tripId,
-    product: 'predeparture-check',
+    product: input.product ?? 'predeparture-check',
     amount: input.amount,
     currency: input.currency,
     status: 'pending',
@@ -123,7 +135,16 @@ export async function markPaid(
   patch: {
     captureId: string;
     payerEmail: string | null;
-    report: PreDepartureReport;
+    /**
+     * The report, for the pre-departure check. **Optional**, because the trip
+     * pass is a purchase with no report to store - what it buys is 60 days of
+     * access, granted on the profile rather than written here.
+     *
+     * Omitted rather than set to null when absent: the column is left untouched,
+     * so a retried capture cannot blank a report that a previous attempt already
+     * stored.
+     */
+    report?: PreDepartureReport;
     rawWebhook: unknown;
   },
 ): Promise<PurchaseRow | null> {
@@ -134,7 +155,7 @@ export async function markPaid(
       status: 'paid',
       paypal_capture_id: patch.captureId,
       paypal_payer_email: patch.payerEmail,
-      report: patch.report,
+      ...(patch.report === undefined ? {} : { report: patch.report }),
       raw_webhook: patch.rawWebhook,
       paid_at: nowIso(),
       updated_at: nowIso(),

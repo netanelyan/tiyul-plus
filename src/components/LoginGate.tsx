@@ -38,7 +38,13 @@ const PENDING_KEY = 'tiyul-plus:pending-login-intent';
  * rather than a free string, so a caller cannot wait forever on an intent that
  * a typo means nobody will ever set.
  */
-export type LoginIntent = 'checkout:premium' | 'checkout:pro' | 'group' | 'predeparture';
+export type LoginIntent =
+  | 'checkout:premium'
+  | 'checkout:pro'
+  | 'group'
+  | 'predeparture'
+  /** Buying a trip pass - see TripPassButton. */
+  | 'pass';
 
 /** Open the login modal, remembering what to resume afterwards. */
 export function requestLogin(intent: LoginIntent) {

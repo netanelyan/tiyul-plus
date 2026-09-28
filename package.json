@@ -11,7 +11,8 @@
     "seo:dates": "node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/content-dates.mjs",
     "mirror:photos": "node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/mirror-photos.mjs",
     "backup": "node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/backup-supabase.mjs",
-    "restore": "node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/restore-supabase.mjs"
+    "restore": "node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/restore-supabase.mjs",
+    "revenue": "node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/revenue-status.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.8",

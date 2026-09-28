@@ -15,6 +15,7 @@ import {
   type PaidPlan,
 } from '@/lib/plans';
 import { PRICE_ILS, priceLabel } from '@/lib/predeparture';
+import { TRIP_PASS_DAYS, TRIP_PASS_PRICE_ILS } from '@/lib/tripPass';
 import InView from '@/components/InView';
 import AgentEnquiryForm from './AgentEnquiryForm';
 
@@ -59,14 +60,30 @@ const ilsBig = (n: number) =>
  * best value, and the page should not bury it to push subscriptions." So it
  * keeps a full-width card of its own with the same visual weight as a plan,
  * and the open arithmetic below it states plainly which option wins at which
- * travel frequency - including the case where the answer costs us money (a
- * month of subscription is cheaper than one check AND contains it, so somebody
- * who wants only a check should subscribe for a month and cancel).
+ * travel frequency - including the case where the answer costs us money (below
+ * a couple of trips a month, buying passes per trip beats subscribing to pro,
+ * and the page says so).
  *
- * Every figure on this page is computed from `PREMIUM_PRICE_ILS`,
- * `PRO_PRICE_ILS` and `PRICE_ILS`. None is typed, and the comparison that
- * depends on their ordering renders conditionally, so a price change cannot
- * leave a false sentence behind.
+ * ## The middle option is a trip PASS, not a monthly subscription
+ *
+ * It used to be premium at ₪19.90/month, and that was retired here because every
+ * thing it gave was **per trip** - the check, the shared trip, the planning
+ * capacity - while being billed **per month**, and ₪19.90 also sat BELOW the
+ * ₪29.90 check it included without limit. The page therefore had to carry a
+ * paragraph telling buyers to subscribe for a month and cancel, which was the
+ * honest thing to do about an inverted ladder and is unnecessary now that the
+ * ladder rises: check ₪29.90 -> pass ₪49 -> pro ₪89.90/month. See
+ * `lib/tripPass.ts` for the full argument and the margin arithmetic.
+ *
+ * **The card links to a trip rather than to a checkout**, because a pass is bought
+ * FOR a trip and this page has no trip in hand - the same shape the check card
+ * already had.
+ *
+ * Every figure on this page is computed from `TRIP_PASS_PRICE_ILS`,
+ * `PRO_PRICE_ILS` and `PRICE_ILS`. None is typed, so a price change cannot leave
+ * a false sentence behind. `PREMIUM_PRICE_ILS` survives only inside the generic
+ * `cta()` helper, which is still used for pro; nothing renders a monthly premium
+ * price any more, and a browser check asserts ₪19.90 appears nowhere on the page.
  *
  * ## What is deliberately NOT claimed for the agent card
  *
@@ -95,12 +112,21 @@ export default function PremiumClient() {
     The arithmetic a buyer does in their head, from the constants themselves.
     Formatted through `ils` so a round price does not grow agorot it does not have.
   */
-  const yearOfPremium = PREMIUM_PRICE_ILS * 12;
   const yearOfPro = PRO_PRICE_ILS * 12;
-  const twoChecks = PRICE_ILS * 2;
-  const breakEvenTripsPerYear = Math.ceil(yearOfPremium / PRICE_ILS);
-  const monthBeatsOneCheck = PREMIUM_PRICE_ILS < PRICE_ILS;
-  const proPerTrip = PRO_PRICE_ILS / PRO_TRIPS_PER_MONTH;
+  /*
+    How many passes a month of pro is worth, i.e. where pro starts being the
+    cheaper choice. Computed rather than written down, so neither price can drift
+    away from the sentence that compares them.
+
+    `yearOfPremium`, `twoChecks`, `breakEvenTripsPerYear`, `monthBeatsOneCheck` and
+    `proPerTrip` all went with the monthly premium plan: every one of them existed
+    to compare a recurring ₪19.90 against the ₪29.90 check, and that comparison is
+    the arbitrage the trip pass removed. `monthBeatsOneCheck` in particular gated a
+    paragraph that told buyers to subscribe for a month and cancel - true while the
+    ladder was inverted, and meaningless now that the pass costs more than the check
+    it contains.
+  */
+  const passesMatchingPro = Math.floor(PRO_PRICE_ILS / TRIP_PASS_PRICE_ILS);
 
   /**
    * Bring the notice to the user rather than trusting them to find it. It
@@ -200,8 +226,8 @@ export default function PremiumClient() {
             href: '#plan-premium',
             emoji: '🤝',
             title: 'מתכננים עם עוד אנשים',
-            price: `${ils(PREMIUM_PRICE_ILS)} ₪ לחודש`,
-            who: 'פרימיום - הכי מתאים לרוב האנשים',
+            price: `${ils(TRIP_PASS_PRICE_ILS)} ₪ לטיול`,
+            who: 'כרטיס טיול - הכי מתאים לרוב האנשים',
             highlight: true,
           },
           {
@@ -262,14 +288,15 @@ export default function PremiumClient() {
           <span className="absolute -top-3 end-5 rounded-full bg-zest px-3 py-1 text-xs font-black text-night">
             ★ הכי מתאים לרוב האנשים
           </span>
-          <h2 className="mt-1 text-sm font-bold text-cream/70">פרימיום</h2>
+          <h2 className="mt-1 text-sm font-bold text-cream/70">כרטיס טיול</h2>
           <p className="mt-1 text-3xl font-black text-cream">
-            {ils(PREMIUM_PRICE_ILS)} ₪
-            <span className="text-sm font-semibold text-cream/60"> / לחודש</span>
+            {ils(TRIP_PASS_PRICE_ILS)} ₪
+            <span className="text-sm font-semibold text-cream/60"> / לטיול</span>
           </p>
           <p className="mt-2 text-sm leading-relaxed text-cream/75">
             כל מה שבחינם, ועוד הדבר האחד שאי אפשר לעשות לבד: לתכנן את הטיול עם כל מי שנוסע איתכם.
-            מספיק לתכנן <b className="text-cream">טיול מלא בחודש</b>, כמה שתערכו ותשנו אותו.
+            תשלום <b className="text-cream">חד-פעמי</b> לטיול אחד, פעיל {TRIP_PASS_DAYS} יום -{' '}
+            <b className="text-cream">בלי מנוי ובלי חיוב חוזר</b>.
           </p>
           {/*
             Plain check-lines, not boxes inside a box. All three plan cards now
@@ -300,7 +327,24 @@ export default function PremiumClient() {
               </span>
             </li>
           </ul>
-          {cta('premium', 'mt-5')}
+          {/*
+            A link to the trip, not a checkout button - and that is the product's
+            shape rather than a limitation. A pass is bought FOR a trip: the order
+            carries the trip id, the receipt names the trip, and `/premium` has no
+            trip in hand. The same reasoning the pre-departure check card already
+            follows, which is why the two now read alike.
+          */}
+          <div className="mt-5">
+            <Link
+              href="/chat"
+              className="block w-full rounded-xl bg-sunset px-5 py-3 text-center text-sm font-bold text-cream transition hover:bg-sunset-deep"
+            >
+              לפתוח טיול ולקנות כרטיס
+            </Link>
+            <p className="mt-1.5 text-center text-[11px] font-medium text-cream/60">
+              נקנה מתוך מסך הטיול · תשלום דרך PayPal · אין מה לבטל, הכרטיס נגמר מעצמו
+            </p>
+          </div>
         </section>
 
         {/* Free */}
@@ -474,35 +518,42 @@ export default function PremiumClient() {
           <li className="flex items-start gap-2">
             <span className="mt-0.5 text-night/65">•</span>
             <span>
-              <b className="text-night">טסים פעם-פעמיים בשנה:</b> שתי בדיקות בודדות ={' '}
-              {ils(twoChecks)} ₪ בשנה. שנה שלמה של פרימיום = {ils(yearOfPremium)} ₪.
-              הבדיקות זולות בהרבה.
+              <b className="text-night">רוצים רק את הבדיקה:</b> קנו בדיקה - {priceLabel()} לטיול,
+              וזה הכול. הכרטיס שווה את ההפרש רק אם אתם גם מתכננים עם עוד אנשים.
             </span>
           </li>
-          {monthBeatsOneCheck && (
-            <li className="flex items-start gap-2">
-              <span className="mt-0.5 text-sunset-deep">←</span>
-              <span>
-                <b className="text-night">ואפילו זול מזה:</b> חודש פרימיום עולה{' '}
-                {ils(PREMIUM_PRICE_ILS)} ₪ - פחות מבדיקה אחת - והבדיקה כלולה בו. אז מי שרוצה
-                רק בדיקה יכול להירשם לחודש סביב הטיול ולבטל. אנחנו אומרים את זה למרות שזה פחות כסף
+          <li className="flex items-start gap-2">
+            <span className="mt-0.5 text-night/65">•</span>
+            <span>
+              <b className="text-night">מתכננים עם עוד אנשים:</b> כרטיס אחד ל
+              {ils(TRIP_PASS_PRICE_ILS)} ₪ לטיול - ההפרש מבדיקה בודדת הוא{' '}
+              {ils(TRIP_PASS_PRICE_ILS - PRICE_ILS)} ₪, ובתוכו הטיול המשותף וכל השאר.{' '}
+              <b className="text-night">לחברים שמצטרפים זה חינם לגמרי</b>, תמיד.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="mt-0.5 text-night/65">•</span>
+            <span>
+              <b className="text-night">טסים פעם-פעמיים בשנה:</b> שני כרטיסים ={' '}
+              {ils(TRIP_PASS_PRICE_ILS * 2)} ₪ בשנה, ואתם משלמים רק בחודשים שבהם אתם באמת
+              מתכננים. אין מנוי שממשיך לרוץ כשאתם לא נוסעים.
+            </span>
+          </li>
+          {/*
+            The honest comparison in the direction that costs us money. Pro is
+            monthly, so it only makes sense past a real number of trips - and that
+            number is computed from the two prices rather than asserted, so it
+            cannot go stale when either changes.
+          */}
+          <li className="flex items-start gap-2">
+            <span className="mt-0.5 text-night/65">•</span>
+            <span>
+              <b className="text-night">מתכננים כל הזמן:</b> פרו מתחיל להשתלם מעל{' '}
+              {passesMatchingPro} כרטיסים בחודש ({ilsBig(yearOfPro)} ₪ בשנה).{' '}
+              <b className="text-night">
+                מתחת לזה - כרטיסים לפי טיול זולים יותר, ואנחנו אומרים את זה למרות שזה פחות כסף
                 בשבילנו.
-              </span>
-            </li>
-          )}
-          <li className="flex items-start gap-2">
-            <span className="mt-0.5 text-night/65">•</span>
-            <span>
-              <b className="text-night">מתכננים עם עוד אנשים:</b> פרימיום מצדיק את עצמו כבר מהטיול
-              הראשון, ובחישוב בדיקות בלבד - סביב {breakEvenTripsPerYear} טיולים בשנה.
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="mt-0.5 text-night/65">•</span>
-            <span>
-              <b className="text-night">מתכננים כל הזמן:</b> פרו הוא {ilsBig(yearOfPro)} ₪
-              בשנה, כלומר כ-{proPerTrip.toFixed(0)} ₪ לטיול מלא אם אתם באמת מנצלים אותו.{' '}
-              <b className="text-night">אם אתם לא - פרימיום עדיף, והוא פי {(PRO_PRICE_ILS / PREMIUM_PRICE_ILS).toFixed(1)} יותר זול.</b>
+              </b>
             </span>
           </li>
         </ul>
@@ -587,8 +638,15 @@ export default function PremiumClient() {
           {(
             [
               { key: 'free', title: 'חינם', price: '0 ₪' },
-              { key: 'premium', title: '★ פרימיום', price: `${ils(PREMIUM_PRICE_ILS)} ₪` },
-              { key: 'pro', title: 'פרו', price: `${ils(PRO_PRICE_ILS)} ₪` },
+              /*
+                The key stays 'premium' because that is the column in
+                PLAN_FEATURE_ROWS and the plan a pass actually grants - only the
+                label and the price the reader sees changed. Renaming the key would
+                have meant touching every row in that array for a presentation
+                change.
+              */
+              { key: 'premium', title: '★ כרטיס טיול', price: `${ils(TRIP_PASS_PRICE_ILS)} ₪ לטיול` },
+              { key: 'pro', title: 'פרו', price: `${ils(PRO_PRICE_ILS)} ₪ לחודש` },
             ] as const
           ).map((col) => (
             <div
