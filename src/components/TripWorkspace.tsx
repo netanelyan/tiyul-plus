@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { inHe } from '@/lib/hebrew';
+import { hePrefix, inHe } from '@/lib/hebrew';
 import type { Place } from '@/lib/types';
 import type { TripPin, TripPreferences } from '@/lib/trip/types';
 import { categoryMeta } from '@/lib/categories';
@@ -561,6 +561,14 @@ export default function TripWorkspace({
           in one menu, the rest under a "more" menu, and delete at its bottom
           separated by a rule: a destructive action should not sit on the first
           screen at the same visual weight as sharing.
+
+          **One exception, and it is deliberate: sending the trip to the group.**
+          Israeli trips are planned in group chats, so a trip that reaches a WhatsApp
+          group reaches three to six more people - it is the distribution channel, not
+          one of five equal utilities. It used to be a row inside a "share" menu, i.e.
+          two taps behind a label that does not say what it does. It is now the primary
+          button below, and the menu keeps "copy link" for anyone who wants the URL
+          itself.
         */}
         <div className="flex flex-wrap items-center gap-2 text-sm">
           <Btn onClick={onNewTrip} disabled={offline} title={offline ? OFFLINE_HINT : undefined}>+ טיול חדש</Btn>
@@ -569,21 +577,24 @@ export default function TripWorkspace({
               📍 ייבוא מפה
             </Btn>
           )}
+          {/*
+            A plain button, not a menu, and not labelled "Share".
+
+            Sending to the group moved out to the primary button below, which left this
+            menu with one row - and a menu that opens to reveal a single option is worse
+            than the option itself. It is also named for what it does now ("copy link")
+            rather than for a category, which is what made the WhatsApp row hard to find
+            when it lived in here.
+          */}
           {t && !hasExploredCity && (
-            <Menu
-              ariaLabel="שיתוף הטיול"
-              label="שיתוף"
+            <Btn
+              onClick={copyShareLink}
+              disabled={offline}
               icon={ICONS.link}
-              items={[
-                {
-                  label: 'העתקת קישור',
-                  onClick: copyShareLink,
-                  disabled: offline,
-                  icon: ICONS.link,
-                },
-                { label: 'שליחה בוואטסאפ', onClick: shareWhatsApp, icon: ICONS.whatsapp, disabled: offline },
-              ]}
-            />
+              title={offline ? OFFLINE_HINT : undefined}
+            >
+              העתקת קישור
+            </Btn>
           )}
           {t && (
             <Menu
@@ -644,6 +655,50 @@ export default function TripWorkspace({
           )}
         </div>
       </div>
+
+      {/*
+        ---------- The growth loop: send it to the group ----------
+
+        Israeli trips are planned in group chats, so the single highest-value thing a
+        finished trip can do is arrive in one - each trip that does reaches another
+        three to six people, and some of them open it, adopt it and build their own.
+        That is the distribution channel, which is why it is a full-width primary
+        button and not the second row of a menu called "Share".
+
+        The rich preview is already real: `/t/[code]/opengraph-image.tsx` renders a
+        per-trip card with the trip's own name, so what lands in the group is the trip
+        rather than a generic site banner.
+
+        Hidden when the trip contains an auto-explored city, for the same reason the
+        share menu is: the share payload validates every id against the curated
+        catalog, so an explored trip cannot round-trip yet and a link that opens to
+        nothing is worse than no button.
+      */}
+      {t && !hasExploredCity && (
+        <div className="mt-3 print:hidden">
+          <button
+            type="button"
+            onClick={shareWhatsApp}
+            disabled={offline}
+            title={offline ? OFFLINE_HINT : undefined}
+            /*
+              WhatsApp's own green rather than the site's coral. This is the one button
+              on the screen that hands off to another app, and matching that app is what
+              makes it recognisable at a glance - the same reasoning the booking panel
+              uses for its provider buttons.
+            */
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-whatsapp px-5 py-3.5 text-base font-black text-whatsapp-ink transition hover:bg-whatsapp-deep disabled:opacity-60"
+          >
+            <span aria-hidden className="text-lg leading-none">
+              🧳
+            </span>
+            שלחו לקבוצת הטיול
+          </button>
+          <p className="mt-1.5 text-center text-xs font-medium text-night/65">
+            נשלח קישור עם תצוגה מקדימה של הטיול · כל מי שנכנס יכול לראות ולשמור אותו אצלו
+          </p>
+        </div>
+      )}
 
       {/*
         Share feedback, outside the menu on purpose: the menu closes on click,
@@ -1115,7 +1170,7 @@ export default function TripWorkspace({
                           */}
                           <Menu
                             compact
-                            ariaLabel={`פעולות ל${place.name}`}
+                            ariaLabel={`פעולות ${hePrefix('ל', place.name)}`}
                             label="⋯"
                             items={[
                               {
@@ -1223,7 +1278,7 @@ export default function TripWorkspace({
         half size.
       */}
       {t && t.days.length > 0 && (
-        <PaidTools>
+        <PaidTools tripId={t.id}>
           <TripGroupPanel trip={t} destOf={destOf} />
           <PreDepartureCheck trip={t} offline={offline} />
         </PaidTools>

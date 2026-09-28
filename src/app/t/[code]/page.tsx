@@ -6,7 +6,8 @@ import { decodeTripShare } from '@/lib/server/shareDecode';
 import { getSharedPayload } from '@/lib/trip/shareStore';
 import SharedTripView from './SharedTripView';
 import { daysHe } from '@/lib/duration';
-
+
+import { inHe } from '@/lib/hebrew';
 /**
  * /t/<code> - viewing a shared trip, read-only, for anyone (no account).
  * Two code kinds on the same route:
@@ -51,7 +52,7 @@ export async function generateMetadata({
     .join(' · ');
   const stops = shared.days.reduce((n, d) => n + d.placeIds.length, 0);
   const title = `${shared.name} | טיול+`;
-  const description = `מסלול של ${daysHe(shared.days.length)} ו-${stops} עצירות ב${cities} - נבנה בטיול+, סוכן הנסיעות החכם.`;
+  const description = `מסלול של ${daysHe(shared.days.length)} ו-${stops} עצירות ${inHe(cities)} - נבנה בטיול+, סוכן הנסיעות החכם.`;
   // openGraph is written explicitly rather than relying on the layout:
   // metadata in Next merges per field, so title/description here do **not**
   // flow into the parent's openGraph - and the WhatsApp card would have

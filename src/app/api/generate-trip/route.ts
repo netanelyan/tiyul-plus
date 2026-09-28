@@ -9,7 +9,8 @@ import { resolveCaller } from '@/lib/server/identity';
 import { PLAN_LIMITS, aiUnits, paidPlanOf, periodMsFor } from '@/lib/plans';
 import { budgetFor, maybeAlert, maybeAlertPremium, monthKey, premiumBudgetFor, recordSpend } from '@/lib/server/budget';
 import { sameOriginOk } from '@/lib/server/chatGuards';
-
+
+import { hePrefix, inHe } from '@/lib/hebrew';
 /**
  * Building a trip from button preferences + optional free text.
  *
@@ -263,8 +264,8 @@ function defaultTripName(citySlugs: string[]): string {
       ? countries.find((c) => c.slug === countrySlugs[0])
       : undefined;
   return singleCountry
-    ? `טיול ל${singleCountry.name}`
-    : `טיול ל${chosen.map((d) => d.name).join(' + ')}`;
+    ? `טיול ${hePrefix('ל', singleCountry.name)}`
+    : `טיול ${hePrefix('ל', chosen.map((d) => d.name).join(' + '))}`;
 }
 
 const PARTY_ACK: Record<Party, string> = {
@@ -278,7 +279,7 @@ function buildUnderstood(prefs: WizardPrefs, party: Party | null, interests: str
   const cityNames = prefs.citySlugs
     .map((slug) => destinations.find((d) => d.slug === slug)?.name)
     .filter(Boolean);
-  let head = `${prefs.totalDays} ימים ב${cityNames.join(' + ')}`;
+  let head = `${prefs.totalDays} ימים ${inHe(cityNames.join(' + '))}`;
   if (party) head += ` ${PARTY_ACK[party]}`;
   const parts: string[] = [head];
   if (prefs.tripType === 'nature') parts.push('דגש טבע');

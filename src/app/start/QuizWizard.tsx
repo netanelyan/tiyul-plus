@@ -10,7 +10,8 @@ import type { CityOption } from '@/lib/citySearch';
 import CityCombobox from '@/components/CityCombobox';
 import TransitionPanel from '@/components/TransitionPanel';
 import { PARTY_LABELS } from '@/lib/trip/label';
-
+
+import { hePrefix } from '@/lib/hebrew';
 /**
  * A guided structured questionnaire: a few simple steps that collect the trip's
  * basics per the existing preferences model (WizardPrefs + TripPreferences) -
@@ -101,10 +102,10 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function tripName(citySlugs: string[], cities: City[]): string {
   const chosen = cities.filter((c) => citySlugs.includes(c.slug));
   if (chosen.length === 0) return 'הטיול שלי';
-  if (chosen.length === 1) return `טיול ל${chosen[0].name}`;
+  if (chosen.length === 1) return `טיול ${hePrefix('ל', chosen[0].name)}`;
   const countries = [...new Set(chosen.map((c) => c.country))];
-  if (countries.length === 1) return `טיול ל${countries[0]}`;
-  return `טיול ל${chosen.map((c) => c.name).join(' + ')}`;
+  if (countries.length === 1) return `טיול ${hePrefix('ל', countries[0])}`;
+  return `טיול ${hePrefix('ל', chosen.map((c) => c.name).join(' + '))}`;
 }
 
 export default function QuizWizard({ cities }: { cities: City[] }) {

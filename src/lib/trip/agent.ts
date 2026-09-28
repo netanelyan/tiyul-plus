@@ -1552,6 +1552,27 @@ export function serializeTripForModel(trip: Trip | null): string {
   if (!trip) return 'null (אין טיול פעיל - השתמש ב-create_trip כדי להתחיל)';
   return JSON.stringify({
     name: trip.name,
+    /*
+      The counts, handed over rather than left to be counted.
+
+      **Measured live:** asked "how many stops are there in total?" about a real
+      14-stop trip, the model answered "15 stops: 4, 4, 3 and 4" - internally
+      consistent, confidently wrong, and about the traveller's OWN data, which is
+      the worst place to be wrong. It had only the `places` arrays below and had to
+      count them itself.
+
+      This is the third time this codebase has answered that problem the same way,
+      and the pattern is now established: `pinDistances` hands over real distances
+      instead of banning invented ones, and the grounding index hands over
+      per-continent counts instead of banning invented coverage figures. A number
+      the model does not have to derive is a number it cannot get wrong.
+
+      Note the session log attributed this failure to the cheap model and concluded
+      "questions stay on the strong model". The strong model does it too - the run
+      above was `route=heavy`. Routing was never the fix.
+    */
+    totalStops: trip.days.reduce((n, d) => n + d.placeIds.length, 0),
+    totalDays: trip.days.length,
     // The dates as a fact, including the exact date of every day below:
     // without this the model "computes" dates itself, which is exactly the
     // kind of number it invents with confidence.
@@ -1583,6 +1604,10 @@ export function serializeTripForModel(trip: Trip | null): string {
       ...(trip.startDate ? { date: dayDate(trip, i) } : {}),
       citySlug: d.citySlug,
       city: destOf(d.citySlug)?.name ?? d.citySlug,
+      // Per day as well as the total above: the wrong answer came with a
+      // per-day breakdown ("4, 4, 3 and 4"), so the total alone would have left
+      // the model deriving the halves of a sum it was handed.
+      stops: d.placeIds.length,
       places: d.placeIds.map((id) => ({ id, name: placeName(d.citySlug, id) })),
       notes: d.notes,
     })),

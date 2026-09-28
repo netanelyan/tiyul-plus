@@ -92,7 +92,8 @@ import { CACHE_TTL, SYSTEM_PROMPT, anthropicBase, cachedPrefix } from '@/lib/ser
 import { cityGate, resolveMessage, verdictBlock } from '@/lib/server/placeResolve';
 import { CORRECTION_INSTRUCTION, detectCorrection } from '@/lib/server/correction';
 import { fallbackUncoveredQuickReplies } from '@/lib/server/uncoveredReplies';
-
+
+import { hePrefix, inHe } from '@/lib/hebrew';
 /**
  * The travel chat - a real agent over the user's trip.
  *
@@ -178,7 +179,7 @@ function ruleBasedReply(text: string): ChatReply {
     if (shops.length > 0) {
       const lines = shops.map((p) => `• **${p.name}** (${p.nameLocal}) - ${p.description}`);
       return {
-        reply: `🛍️ שופינג ב${dest.name}:\n\n${lines.join('\n')}\n\nטיפ: באשף המסלולים אפשר לבחור "יותר שופינג" והמסלול ישבץ את זה אוטומטית. סימנתי על המפה 👇`,
+        reply: `🛍️ שופינג ${inHe(dest.name)}:\n\n${lines.join('\n')}\n\nטיפ: באשף המסלולים אפשר לבחור "יותר שופינג" והמסלול ישבץ את זה אוטומטית. סימנתי על המפה 👇`,
         destinationSlug: dest.slug,
         placeIds: shops.map((p) => p.id),
       };
@@ -201,7 +202,7 @@ function ruleBasedReply(text: string): ChatReply {
     const p = dest.practical;
     const c = getCountryBySlug(dest.countrySlug)?.practical;
     return {
-      reply: `מידע פרקטי ל${dest.name}:\n\n✈️ **טיסות:** ${p.flights}\n🛂 **ויזה:** ${c?.visa ?? ''}\n💶 **מטבע:** ${c?.currency ?? ''}\n📱 **סים:** ${c?.sim ?? ''}\n💳 **תשלומים:** ${c?.payments ?? ''}\n🚇 **תחבורה:** ${p.gettingAround}`,
+      reply: `מידע פרקטי ${hePrefix('ל', dest.name)}:\n\n✈️ **טיסות:** ${p.flights}\n🛂 **ויזה:** ${c?.visa ?? ''}\n💶 **מטבע:** ${c?.currency ?? ''}\n📱 **סים:** ${c?.sim ?? ''}\n💳 **תשלומים:** ${c?.payments ?? ''}\n🚇 **תחבורה:** ${p.gettingAround}`,
       destinationSlug: dest.slug,
     };
   }
@@ -215,7 +216,7 @@ function ruleBasedReply(text: string): ChatReply {
       return `**יום ${d.day} - ${d.title}:** ${names}${d.notes ? `\n💡 ${d.notes}` : ''}`;
     });
     return {
-      reply: `🗓️ המסלול המומלץ ל${dest.name} (${dest.itinerary.length} ימים):\n\n${days.join('\n\n')}\n\nכל העצירות מסומנות במפה למטה, ובמתכנן המסלולים אפשר לראות כל יום בנפרד עם ניווט 👇`,
+      reply: `🗓️ המסלול המומלץ ${hePrefix('ל', dest.name)} (${dest.itinerary.length} ימים):\n\n${days.join('\n\n')}\n\nכל העצירות מסומנות במפה למטה, ובמתכנן המסלולים אפשר לראות כל יום בנפרד עם ניווט 👇`,
       destinationSlug: dest.slug,
       placeIds: dest.itinerary.flatMap((d) => d.placeIds),
     };

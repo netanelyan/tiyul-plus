@@ -186,6 +186,18 @@ export const CALLER_ALERT_AT = 0.6;
  * the product down, and short enough that we do not spend much blindly.
  */
 const FAIL_CLOSED_MS = 5 * 60_000;
+/**
+ * How often to re-alert while the agent is failing closed. 30 minutes: long
+ * enough that a flapping database does not become the flood that gets the channel
+ * muted, short enough that an outage does not go quiet after one message.
+ */
+const FAIL_CLOSED_ALERT_EVERY_MS = 30 * 60_000;
+/**
+ * In memory, and it has to be - see the reasoning in maybeAlert. Module scope
+ * rather than inside the day state because the condition is not about a day: it
+ * survives midnight, and the day state is rebuilt when the date changes.
+ */
+let lastFailClosedAlert = 0;
 
 /** The cost attributed to a call that reported no numbers at all. Conservative on purpose. */
 const UNMEASURED_CALL_USD = 0.05;
@@ -856,6 +868,40 @@ async function post(text: string, extra: Record<string, unknown>): Promise<Alert
 export async function maybeAlert(s: BudgetState, identity: string): Promise<void> {
   const day = today();
 
+  /* ---- 0. The agent is refusing EVERYONE because it cannot measure ----
+
+     This is the loudest thing this file can discover and it used to tell nobody.
+     `reason === 'unmeasured'` means the shared spend total has not been readable
+     for FAIL_CLOSED_MS, so every request is refused site-wide with the
+     "smart agent is unavailable right now" message - the core product, down, for
+     all users. The only trace was a
+     console.warn, i.e. Netanel finds out from a user or not at all.
+
+     Reproduced live on 2026-09-27 with a rejected Supabase service-role key: the
+     day was at $2.28 of $10 and the caller at $0.457 of $3, nowhere near any
+     ceiling, and the agent still refused everything. An expired or rotated key
+     does exactly this, five minutes later.
+
+     **The dedupe is in memory and cannot be otherwise.** Every other alert here
+     claims its slot through the database; this one fires *because* the database is
+     unreachable, so a DB-backed guard would be the one alert that can never send.
+     The cost is one alert per instance per window, which for an outage is the
+     right direction to be wrong.
+  */
+  if (s.reason === 'unmeasured') {
+    const now = Date.now();
+    if (now - lastFailClosedAlert > FAIL_CLOSED_ALERT_EVERY_MS) {
+      lastFailClosedAlert = now;
+      void post(
+        'טיול+ · 🚨 הסוכן חסום לכל המשתמשים. לא הצלחנו לקרוא את סך ההוצאה המשותף ' +
+          `יותר מ-${Math.round(FAIL_CLOSED_MS / 60_000)} דקות, ולכן המערכת נכנסה למצב ` +
+          'הגנה וחוסמת כל בקשה - זה לא חריגה מתקציב. לבדוק ש-SUPABASE_SERVICE_ROLE_KEY ' +
+          'תקף ושה-Supabase נגיש. עד שזה נפתר, אף מטייל לא יכול לדבר עם הסוכן.',
+        { kind: 'fail-closed', usd: s.spent, budget: s.budget },
+      );
+    }
+  }
+
   // ---- 1. Single source, immediate ----
   if (s.callerRatio >= CALLER_ALERT_AT && !day.alertedCallers.has(identity)) {
     day.alertedCallers.add(identity);
@@ -927,4 +973,12 @@ export function resetBudgetForTest(init?: Partial<DayState>): void {
   state = { ...fresh(dayKey()), ...init };
   monthState = freshMonth(monthKey());
   premiumAlerted.clear();
+  /*
+    Module scope, so it survives a reset unless cleared here - and a fail-closed
+    alert that already fired in a previous test would silently suppress the next
+    test's, which is exactly the stateful-mock failure this project has hit before
+    (a premium flag left set from an earlier run made four assertions pass for the
+    wrong reason).
+  */
+  lastFailClosedAlert = 0;
 }

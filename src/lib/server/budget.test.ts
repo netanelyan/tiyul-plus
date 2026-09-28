@@ -586,3 +586,75 @@ test('maybeAlertPremium: מתריעה פעם אחת מעל הסף, לא לפני
   await new Promise((r) => setTimeout(r, 0));
   assert.equal(calls.length, 1, 'לא מתריעים פעמיים לאותו מנוי באותו חודש');
 });
+
+/* ============================================================
+ *  Failing closed - the alert that used to tell nobody
+ *
+ *  reason='unmeasured' means the shared spend total has not been readable for
+ *  FAIL_CLOSED_MS, so the agent refuses EVERY request site-wide. Reproduced live
+ *  on 2026-09-27 with a rejected Supabase service key: the day was at $2.28 of
+ *  $10 and the caller at $0.457 of $3, i.e. nowhere near a ceiling, and every
+ *  traveller got the "smart agent is unavailable" message. The only trace was a
+ *  console.warn.
+ * ============================================================ */
+
+/** A BudgetState shaped like a real one, with the reason under test. */
+const stateWith = (reason: 'unmeasured' | 'caller' | null) => ({
+  budget: 10,
+  spent: 2.28,
+  anonSpent: 2.28,
+  poolBudget: 5.5,
+  poolSpent: 2.28,
+  callerSpent: 0.457,
+  callerBudget: 3,
+  exceeded: reason !== null,
+  reason,
+  ratio: 0.228,
+  callerRatio: 0.152,
+});
+
+test('**failing closed alerts - the agent is down for everyone and somebody must be told**', async () => {
+  process.env.AI_BUDGET_ALERT_WEBHOOK = 'https://hook.test/x';
+  resetBudgetForTest();
+  await maybeAlert(stateWith('unmeasured'), 'ip:1.2.3.4');
+  assert.equal(calls.length, 1, 'exactly one alert');
+  const body = calls[0].body as { text: string; kind?: string };
+  assert.equal((calls[0].body as { kind?: string }).kind, 'fail-closed');
+  // It must say this is NOT a budget overrun, or the reader fixes the wrong thing.
+  assert.match(body.text, /לא חריגה מתקציב/);
+  assert.match(body.text, /SUPABASE_SERVICE_ROLE_KEY/, 'and name what to check');
+});
+
+test('the fail-closed alert does not flood - one per window, not one per request', async () => {
+  /*
+    The condition persists by definition (the database is still unreachable), so
+    every single refused request would otherwise alert. A channel that receives
+    hundreds of identical messages is a muted channel, which is the same outcome
+    as no alert at all.
+  */
+  process.env.AI_BUDGET_ALERT_WEBHOOK = 'https://hook.test/x';
+  resetBudgetForTest();
+  for (let i = 0; i < 25; i++) await maybeAlert(stateWith('unmeasured'), `ip:10.0.0.${i}`);
+  assert.equal(calls.length, 1, `25 refused requests must produce 1 alert, got ${calls.length}`);
+});
+
+test('a normal block does NOT produce a fail-closed alert', async () => {
+  /*
+    The distinction that makes the alert worth having: hitting a ceiling is the
+    system working, and being unable to measure is the system broken. Conflating
+    them would page Netanel every time one visitor spends their allowance.
+  */
+  process.env.AI_BUDGET_ALERT_WEBHOOK = 'https://hook.test/x';
+  resetBudgetForTest();
+  await maybeAlert(stateWith('caller'), 'ip:9.9.9.9');
+  const failClosed = calls.filter((c) => (c.body as { kind?: string })?.kind === 'fail-closed');
+  assert.equal(failClosed.length, 0);
+});
+
+test('and neither does a healthy request', async () => {
+  process.env.AI_BUDGET_ALERT_WEBHOOK = 'https://hook.test/x';
+  resetBudgetForTest();
+  await maybeAlert(stateWith(null), 'ip:8.8.8.8');
+  const failClosed = calls.filter((c) => (c.body as { kind?: string })?.kind === 'fail-closed');
+  assert.equal(failClosed.length, 0);
+});
