@@ -6,18 +6,18 @@ existing entries (see CLAUDE.md hard rules): verify every place/coordinate
 HTTP-verified, and eyeball hero/landmark/nature shots for correct subject);
 kosher only where it genuinely exists (else say so honestly); `npm run build`
 + `node scripts/verify-photos.mjs` must pass; commit + push per city; update
-the CLAUDE.md session log.
+the session log in `docs/session-log/`.
 
-## ⚠️ WHAT ONLY NETANEL CAN DO - see `1.MD` for step-by-step (added 2026-09-22)
+## ⚠️ WHAT ONLY NETANEL CAN DO - see `LAUNCH-CHECKLIST.md` for step-by-step (added 2026-09-22)
 
-`1.MD` is the authoritative launch checklist, verified against production
+`LAUNCH-CHECKLIST.md` is the authoritative launch checklist, verified against production
 rather than against these notes. Nine items, roughly in order of value. The
 short version, so this file points at them too:
 
 - [ ] **Google Analytics**: create the property, set `NEXT_PUBLIC_GA_ID` in
       Vercel, redeploy. The code is built, deployed and inert until that
       variable exists. Then raise Data Retention from 2 to 14 months - that
-      default cannot be applied retroactively. (`1.MD` section 3)
+      default cannot be applied retroactively. (`LAUNCH-CHECKLIST.md` section 3)
 - [ ] **Viator to production**: `VIATOR_API_KEY` + `VIATOR_MODE=production`.
       The integration is finished and switched off; this is the shortest path
       to the first shekel the site ever earns. (1.1)

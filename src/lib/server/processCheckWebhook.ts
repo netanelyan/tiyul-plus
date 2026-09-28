@@ -26,8 +26,11 @@ import { findByOrderId, findById, markFailed, markPaid } from '@/lib/server/purc
 import { buildPreDepartureReport } from '@/lib/server/predepartureReport';
 import { findOwnTrip } from '@/lib/server/userTrips';
 import { postAlert } from '@/lib/server/alert';
+import { applyTripPass } from '@/lib/server/applyTripPass';
+import { TRIP_PASS_PRODUCT, TRIP_PASS_DAYS } from '@/lib/tripPass';
 import {
   sendCheckReceipt,
+  sendTripPassReceipt,
   sendPaymentFailed,
   sendSubscriptionActivated,
   sendSubscriptionEnded,
@@ -211,6 +214,59 @@ export async function processCheckWebhook(rawBody: string, headers: WebhookHeade
       `⚠️ טיול+ · אי-התאמת סכום ברכישה ${purchase.id} (הזמנת PayPal ${realOrderId}): ציפינו ל-${purchase.amount} ${purchase.currency}, קיבלנו ${amountValue} ${currencyCode}. לא הוענקה גישה. לבדוק ידנית.`,
     );
     return ok({ received: true, reason: 'amount-mismatch' });
+  }
+
+  /*
+    ---------- The trip pass ----------
+
+    A different product on the same money rails: there is no report to build, and
+    what the buyer paid for is a window of access on their profile.
+
+    **markPaid runs BEFORE the grant, and the order is the whole correctness
+    argument.** markPaid is a conditional update on `status = 'pending'`, so it
+    matches exactly once per order - which makes it the idempotency gate. Granting
+    first and marking second would hand 120 days to anyone whose webhook PayPal
+    delivers twice, and duplicate delivery is normal rather than exceptional.
+
+    The cost of that ordering is the window where the money is recorded and the
+    grant then fails. That is why the failure path alerts loudly instead of
+    returning quietly: it is recoverable by hand (/admin grants a plan for N days),
+    but only by somebody who knows it happened.
+  */
+  if (purchase.product === TRIP_PASS_PRODUCT) {
+    const passTrip = await findOwnTrip(purchase.user_id, purchase.trip_id);
+    const updatedPass = await markPaid(realOrderId, {
+      captureId,
+      payerEmail: null,
+      // No report: this product has none. markPaid omits the column rather than nulling it.
+      rawWebhook: event,
+    });
+    if (!updatedPass) {
+      console.warn('[pass webhook] markPaid affected 0 rows (already processed)', { realOrderId });
+      return ok({ received: true, ok: false, reason: 'already-processed' });
+    }
+
+    const applied = await applyTripPass(purchase.user_id);
+    if (!applied.ok) {
+      postAlert(
+        `🚨 טיול+ · כרטיס טיול ${purchase.id} שולם (הזמנת PayPal ${realOrderId}, משתמש ` +
+          `${purchase.user_id}) אבל ההרשאה לא נכתבה (${applied.reason}). הכסף התקבל והגישה לא ניתנה - ` +
+          `להעניק ידנית מ-/admin (${TRIP_PASS_DAYS} ימים) ולבדוק אם sql/supabase-trip-pass.sql רץ.`,
+      );
+      return ok({ received: true, ok: false, reason: applied.reason });
+    }
+
+    sendTripPassReceipt({
+      userId: purchase.user_id,
+      tripId: purchase.trip_id,
+      tripName: passTrip?.name ?? '(הטיול לא נמצא)',
+      trip: passTrip,
+      orderId: realOrderId,
+      amount: Number(purchase.amount),
+      currency: purchase.currency,
+      until: applied.until,
+    });
+    return ok({ received: true, ok: true, until: applied.until });
   }
 
   const trip = await findOwnTrip(purchase.user_id, purchase.trip_id);

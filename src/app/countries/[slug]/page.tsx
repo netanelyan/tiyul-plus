@@ -10,7 +10,8 @@ import CardPhoto, { HERO_OVERLAY } from '@/components/CardPhoto';
 import { countries } from '@/data/countries';
 import PhotoCredits from '@/components/PhotoCredits';
 import { creditsFor, shareImage } from '@/lib/server/photoCredit';
-
+
+import { hePrefix } from '@/lib/hebrew';
 export function generateStaticParams() {
   return countries.map((c) => ({ slug: c.slug }));
 }
@@ -32,7 +33,7 @@ export async function generateMetadata({
   const country = countries.find((c) => c.slug === slug);
   if (!country) return {};
 
-  const title = `טיול ל${country.name}: יעדים, ויזה ומידע למטייל הישראלי | טיול+`;
+  const title = `טיול ${hePrefix('ל', country.name)}: יעדים, ויזה ומידע למטייל הישראלי | טיול+`;
   const description = metaDescription(country.tagline, country.summary);
   const url = canonical(`/countries/${country.slug}`);
   // Widened to what the original really allows - the stored 500px thumb is below

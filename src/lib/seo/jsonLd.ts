@@ -168,7 +168,7 @@ export function faqPairs(dest: Destination, country: Country): FaqPair[] {
 
   if (country.practical.visa?.trim()) {
     pairs.push({
-      question: `צריך ויזה ל${country.name} לישראלים?`,
+      question: `צריך ויזה ${hePrefix('ל', country.name)} לישראלים?`,
       answer: country.practical.visa,
     });
   }

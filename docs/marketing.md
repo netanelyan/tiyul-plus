@@ -3,10 +3,25 @@
 Version 1, 27 July 2026. Pre-launch. Owner: Netanel.
 Strategy notes in English, all customer-facing copy in Hebrew (RTL).
 
-Catalog numbers below were counted from `src/data` on 26 July 2026:
-**62 countries, 127 destinations, ~1,114 places.** The device checkout is a few
-commits behind main, so treat these as floors, not ceilings. Re-count before
-putting a number in an ad.
+Catalog numbers, counted from `src/data` on **27 September 2026**:
+**83 countries, 166 destinations, 3,309 places.**
+
+The previous version of this line said 62 / 127 / ~1,114 - counted on 26 July and
+never updated, so the places figure was off by a factor of three. **Re-count
+before putting any of these in an ad**, and do it with the command rather than by
+editing the line:
+
+```bash
+node --experimental-strip-types --import ./scripts/alias-hooks.mjs -e "
+import {destinations} from './src/data/destinations.ts';
+import {countries} from './src/data/countries.ts';
+console.log(countries.length,'countries',destinations.length,'destinations',
+  destinations.reduce((n,d)=>n+d.places.length,0),'places');"
+```
+
+The site's own pages never hardcode these - they read `catalogCounts`, and a test
+fails if a marketing page types one as a literal. This file is prose and sits
+outside that guard, which is exactly why it drifted.
 
 ---
 

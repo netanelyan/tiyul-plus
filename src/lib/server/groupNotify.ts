@@ -27,6 +27,8 @@
  * it is worth opening, not a copy of the conversation in an inbox.
  */
 
+import { cleanLine } from '@/lib/logSafe';
+
 export type GroupEvent = 'comment' | 'suggestion' | 'rsvp' | 'dates';
 
 export interface NotifyResult {
@@ -52,7 +54,16 @@ export async function notifyOrganiser(
   actorName: string,
   tripName: string,
 ): Promise<NotifyResult> {
-  const text = `טיול+ · ${actorName} ${LABEL[event]} "${tripName}"`;
+  /*
+    Both of these are free text a user typed - a member's display name and the trip's
+    name - and this string becomes one log line and one message in a channel. Flattened
+    per value rather than over the finished sentence so a newline cannot merely be
+    collapsed into the middle of it: each is bounded on its own, which also stops a
+    120-character display name pushing the trip name out of the cap.
+  */
+  const who = cleanLine(actorName, 80) || 'משתתף';
+  const what = cleanLine(tripName, 120) || 'הטיול';
+  const text = `טיול+ · ${who} ${LABEL[event]} "${what}"`;
   const hook = process.env.GROUP_NOTIFY_WEBHOOK;
   if (!hook) {
     console.info(`[group] notify (not sent, no GROUP_NOTIFY_WEBHOOK): ${text}`);

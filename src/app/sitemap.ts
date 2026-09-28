@@ -3,6 +3,7 @@ import { getProvider } from '@/lib/providers';
 import { canonical } from '@/lib/seo/site';
 import { isSeoDestination, seoCountrySlugs } from '@/lib/seo/selection';
 import { HUBS } from '@/lib/seo/hubs';
+import { rolledOutItineraryPages, toDestLike } from '@/lib/seo/itineraries';
 import { lastModified } from '@/lib/seo/contentDates';
 
 /**
@@ -65,6 +66,15 @@ const PRIORITY = {
   hub: 0.7,
   /** The core browse surfaces and the pricing page. */
   core: 0.8,
+  /**
+   * An itinerary landing page - the highest priority after the homepage.
+   *
+   * Higher than a promoted destination on purpose: these target the query people
+   * actually type ("maslul 5 yamim be-Roma" (a 5-day Rome itinerary)) rather than a city name, and each one has a
+   * button that converts a reader into a user in one tap. A destination page is
+   * reference; this is the entrance.
+   */
+  itinerary: 0.9,
   /** A destination carrying the long-form guide section. */
   promotedDestination: 0.9,
   destination: 0.6,
@@ -103,6 +113,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const hubEntries = HUBS.map((h) => entry(`/collections/${h.slug}`, PRIORITY.hub));
 
+  /*
+    The itinerary pages, gated to the rolled-out batch.
+
+    `rolledOutItineraryPages` is the SAME function `generateStaticParams` uses, so the
+    submitted set and the built set cannot drift: a page in the sitemap that was never
+    built would be a 404 submitted to Google, and a built page missing from the sitemap
+    is one nobody finds. Raising ITINERARY_ROLLOUT_LIMIT moves both together.
+  */
+  const itineraryEntries = rolledOutItineraryPages(allDestinations.map(toDestLike)).map((p) =>
+    entry(`/itinerary/${p.slug}/${p.days}`, PRIORITY.itinerary),
+  );
+
   const destinationEntries = allDestinations.map((d) =>
     entry(
       `/destinations/${d.slug}`,
@@ -118,5 +140,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ),
   );
 
-  return [...core, ...hubEntries, ...destinationEntries, ...countryEntries];
+  return [...core, ...hubEntries, ...itineraryEntries, ...destinationEntries, ...countryEntries];
 }

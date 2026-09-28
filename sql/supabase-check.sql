@@ -105,7 +105,12 @@ with expected(file, kind, obj) as (
     -- supabase-perf-indexes.sql (indexes for queries that already run)
     ('supabase-perf-indexes.sql', 'index', 'public.ai_spend_route_at_idx'),
     ('supabase-perf-indexes.sql', 'index', 'public.purchases_created_idx'),
-    ('supabase-perf-indexes.sql', 'index', 'public.profiles_display_name_trgm_idx')
+    ('supabase-perf-indexes.sql', 'index', 'public.profiles_display_name_trgm_idx'),
+
+    -- supabase-trip-pass.sql (the trip pass - ILS 49, one trip, 60 days).
+    -- Constraint-only migration, hence 'ckdef': until plan_source accepts
+    -- 'trip_pass' the grant is rejected and a buyer pays for nothing.
+    ('supabase-trip-pass.sql', 'ckdef', 'public.profiles:trip_pass')
 ),
 checked as (
   select
@@ -131,6 +136,26 @@ checked as (
         join pg_namespace n on n.oid = p.pronamespace
         where n.nspname = split_part(e.obj, '.', 1)
           and p.proname = split_part(e.obj, '.', 2)
+      )
+      -- 'schema.table:needle' - a CHECK constraint on the table whose definition
+      -- contains the string. The same idea as 'fnbody', for the same reason.
+      --
+      -- Added because this file had a real blind spot: a migration whose ONLY
+      -- effect is widening a CHECK constraint added no table, column or function,
+      -- so there was nothing for the kinds above to find and the file could not
+      -- report it either way. supabase-trip-pass.sql is exactly that shape, and
+      -- until it runs the trip-pass grant is rejected by the database - i.e. the
+      -- buyer pays and gets nothing, which is the worst failure this file exists
+      -- to catch early. The constraint's generated NAME differs per installation,
+      -- which is why this matches on the definition rather than on conname.
+      when 'ckdef'  then exists (
+        select 1 from pg_constraint con
+        join pg_class rel on rel.oid = con.conrelid
+        join pg_namespace nsp on nsp.oid = rel.relnamespace
+        where nsp.nspname = split_part(split_part(e.obj, ':', 1), '.', 1)
+          and rel.relname = split_part(split_part(e.obj, ':', 1), '.', 2)
+          and con.contype = 'c'
+          and pg_get_constraintdef(con.oid) like '%' || split_part(e.obj, ':', 2) || '%'
       )
       when 'column' then exists (
         select 1 from information_schema.columns c

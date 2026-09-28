@@ -57,8 +57,24 @@ const str = (v: unknown, max: number): string | null =>
   typeof v === 'string' && v.trim().length > 0 && v.length <= max ? v : null;
 const num = (v: unknown): number | null =>
   typeof v === 'number' && Number.isFinite(v) ? v : null;
+/*
+  **The character class matters as much as the scheme.** This used to be
+  /^https:\/\/.{5,300}$/ - which accepts a quote, and that was a live XSS: an explored
+  place's photo reaches MapInner, which builds a Leaflet icon as an HTML string, so a
+  URL of `https://evil.test/a.jpg" onerror="alert(1)" x="` closed the src attribute and
+  injected a handler.
+
+  The sink now escapes too (lib/html.ts) and either layer alone would stop it. Both are
+  here because this validator's whole job is deciding what a URL may contain, and a
+  validator that admits quotes is wrong regardless of who is downstream today.
+
+  Allowed: the characters that legitimately appear in an http URL. Deliberately absent:
+  quotes, angle brackets, backslash, backtick, spaces and control characters.
+*/
 const httpsUrl = (v: unknown): string | undefined =>
-  typeof v === 'string' && /^https:\/\/.{5,300}$/.test(v) ? v : undefined;
+  typeof v === 'string' && /^https:\/\/[A-Za-z0-9\-._~:/?#[\]@!$&'()*+,;=%]{5,300}$/.test(v)
+    ? v
+    : undefined;
 
 function sanitizePlace(raw: unknown): Place | null {
   const p = (raw ?? {}) as Record<string, unknown>;

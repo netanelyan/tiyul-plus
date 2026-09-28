@@ -144,7 +144,7 @@ export const metadata: Metadata = {
    * is not a secret - it ends up in the served HTML by design.
    *
    * Note this is only needed for the HTML-tag verification method. If the
-   * domain is verified by DNS instead, leave it unset - see SEO_NEXT_STEPS.md,
+   * domain is verified by DNS instead, leave it unset - see docs/seo-next-steps.md,
    * which recommends DNS for this setup.
    */
   ...(process.env.NEXT_PUBLIC_GSC_VERIFICATION

@@ -3,6 +3,7 @@ import { isEating, isKosher, kosherStatusOf } from '@/lib/categories';
 import type { Trip, TripDay, TripPreferences, WizardPrefs } from './types';
 import { newId } from './types';
 
+import { hePrefix } from '@/lib/hebrew';
 /**
  * The smart wizard: scoring and day-packing logic - client side only, with no AI and
  * no cost. A score per place from the trip type and the preferences, then geographic
@@ -191,8 +192,22 @@ export function generateTrip(
  * Kashrut is a preference, not an assumption (hard rule): the curated itineraries in
  * the data sometimes include a kosher stop, so it is filtered out unless the user
  * chose kashrut explicitly. The data itself does not change - only what enters the trip.
+ *
+ * `days` takes the FIRST n days of the curated route, and that is honest rather than
+ * a truncation: the itineraries are ordered deliberately - day 1 is the arrival city
+ * and the days are packed geographically - so the first three days of a six-day route
+ * are a real three-day route, not a mutilated six-day one. It is capped at what the
+ * destination actually has, because inventing a seventh day for a city curated to five
+ * is exactly what hard rule 2 forbids.
+ *
+ * `name` exists so a caller that already has a better title can use it - the itinerary
+ * landing pages arrive with "maslul 5 yamim be-Roma" (a 5-day Rome itinerary) and should not have it replaced by a
+ * generic one.
  */
-export function tripFromTemplate(dest: Destination, opts?: { kosher?: boolean }): Trip {
+export function tripFromTemplate(
+  dest: Destination,
+  opts?: { kosher?: boolean; days?: number; name?: string },
+): Trip {
   const kosher = opts?.kosher === true;
   const allowed = (id: string) => {
     const place = dest.places.find((p) => p.id === id);
@@ -201,11 +216,22 @@ export function tripFromTemplate(dest: Destination, opts?: { kosher?: boolean })
     if (kosher) return !(isEating(place.category) && kosherStatusOf(place) !== 'kosher');
     return !isKosher(place.category);
   };
+  /*
+    Capped at what exists. `days` larger than the curated route is silently clamped
+    rather than padded with empty days: an empty day on the map reads as a broken
+    plan, and the rule the agent follows ("never build a day with zero stops") holds
+    here too.
+  */
+  const wanted =
+    typeof opts?.days === 'number' && opts.days > 0
+      ? Math.min(Math.floor(opts.days), dest.itinerary.length)
+      : dest.itinerary.length;
+
   return {
     id: newId(),
-    name: `טיול ל${dest.name}`,
+    name: opts?.name?.trim() || `טיול ${hePrefix('ל', dest.name)}`,
     citySlugs: [dest.slug],
-    days: dest.itinerary.map((d) => ({
+    days: dest.itinerary.slice(0, wanted).map((d) => ({
       id: newId(),
       citySlug: dest.slug,
       placeIds: d.placeIds.filter(allowed),

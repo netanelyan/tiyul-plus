@@ -8,7 +8,8 @@ import L, { type Map as LeafletMap } from 'leaflet';
 import type { Place } from '@/lib/types';
 import type { TripPinKind } from '@/lib/trip/types';
 import { categoryMeta } from '@/lib/categories';
-import { photoSrc } from '@/lib/photoMirror';
+import { narrowedThumb, photoSrc } from '@/lib/photoMirror';
+import { safeUrlAttr } from '@/lib/html';
 import PlaceThumb from '@/components/PlaceThumb';
 import KosherBadge from '@/components/KosherBadge';
 import KosherNote from '@/components/KosherNote';
@@ -28,7 +29,27 @@ function photoHtml(photo: string | undefined): string {
   // component and therefore cannot be `next/image`. It is still served from our own
   // mirror, and a pin photo that fails simply removes itself - a placeholder floating
   // above a map pin would be noise.
-  return `<img class="pin-photo" src="${photoSrc(photo)}" alt="" loading="lazy" onerror="this.remove()" />`;
+  /*
+    `narrowedThumb`, and it is the single biggest download on the page.
+
+    The pin photo renders 44px wide (see .pin-photo) and was being fetched at the
+    catalog's own 500px - measured at 76-114kB each, 23 of them on one itinerary page,
+    i.e. **2.1MB of images to draw 26 thumbnails the size of a fingernail**. The day
+    list beside it was already fine because CatalogImage gives it a srcSet; a Leaflet
+    icon is an HTML string, so there is no `sizes` for the browser to read and the
+    narrowing has to be in the URL.
+  */
+  /*
+    **safeUrlAttr, not the raw URL.** This is the one sink in the codebase where a
+    string becomes markup without React escaping it - a Leaflet divIcon takes HTML, not
+    a node - and it was interpolating the URL straight into the attribute. Proven
+    exploitable: a photo of `https://evil.test/a.jpg" onerror="alert(1)" x="` closed the
+    attribute and injected a handler that WINS, because HTML keeps the first of a
+    duplicated attribute and ours comes second. See lib/html.ts.
+  */
+  const src = safeUrlAttr(narrowedThumb(photoSrc(photo), 44));
+  if (!src) return '';
+  return `<img class="pin-photo" src="${src}" alt="" loading="lazy" onerror="this.remove()" />`;
 }
 
 /**

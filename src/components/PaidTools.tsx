@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect, useState, type ReactNode } from 'react';
-import Link from 'next/link';
 import { useAuth } from '@/lib/auth/AuthContext';
-import SubscribeButton from '@/components/SubscribeButton';
+import TripPassButton from '@/components/TripPassButton';
 import { planAtLeast } from '@/lib/plans';
 
 /**
@@ -66,7 +65,18 @@ export function openPaidTools() {
  * the sub-line changes. A block that moves depending on who is looking is a
  * block nobody can learn.
  */
-export default function PaidTools({ children }: { children: ReactNode }) {
+export default function PaidTools({
+  children,
+  tripId,
+}: {
+  children: ReactNode;
+  /**
+   * The trip this screen is showing. The pass is bought FOR a trip, so the buy
+   * button needs it - and it is passed in rather than read from context because
+   * this component is otherwise trip-agnostic and should stay that way.
+   */
+  tripId: string;
+}) {
   const auth = useAuth();
   // Ordinal: every paid plan gets the paid tools, not only the one named 'premium'
   const isPremium = planAtLeast(auth.profile?.plan ?? 'free', 'premium');
@@ -154,26 +164,29 @@ export default function PaidTools({ children }: { children: ReactNode }) {
           anyone who wants to read before paying.
 
           The price is on the button, from the constant, so it cannot drift from
-          /premium. Nothing here is shown to a subscriber.
+          /premium.
 
           `onResume` reopens this section: the button sits inside the collapsed
           body, so a user coming back from the login modal would otherwise land
           on a resume they cannot see - and any notice it produces with it.
+
+          ## What sells here changed, and why
+
+          This was `SubscribeButton plan="premium"` - a ₪19.90/month subscription.
+          It is now the trip pass, because every single thing premium gave was
+          **per trip** (the check, the shared trip, the planning capacity) while
+          being billed **per month**, and ₪19.90 also sat BELOW the ₪29.90 check it
+          included without limit. So a buyer who only wanted the ₪29.90 check paid
+          less by taking a month of premium and cancelling, and `/premium` said so
+          on purpose rather than letting people work it out and feel tricked.
+
+          `TripPassButton` renders its own state for somebody who already has a
+          pass (when it ends), and nothing at all for an unlimited subscriber - so
+          unlike the old button it is not gated on `isPremium` here. Gating it
+          would have hidden "your pass is active until X" from the person who
+          bought one, which is the one fact a time-limited product must always show.
         */}
-        {!isPremium && (
-          <div className="rounded-2xl bg-shell px-3.5 py-3 ring-1 ring-night/10 print:hidden">
-            <SubscribeButton plan="premium" subline={false} onResume={() => setOpen(true)} />
-            <p className="mt-1.5 text-center text-[11px] font-medium text-night/70">
-              ביטול בלחיצה, בכל רגע ·{' '}
-              <Link
-                href="/premium"
-                className="font-bold text-sunset-deep underline hover:text-sunset"
-              >
-                מה בדיוק כלול?
-              </Link>
-            </p>
-          </div>
-        )}
+        <TripPassButton tripId={tripId} onResume={() => setOpen(true)} />
         {children}
       </div>
     </section>

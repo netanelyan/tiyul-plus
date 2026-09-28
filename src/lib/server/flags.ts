@@ -39,6 +39,29 @@ export async function allFlags(): Promise<Record<string, unknown>> {
   return load();
 }
 
+/**
+ * Whether the trip pass can be sold - **an interlock, and the default is NO.**
+ *
+ * This is the opposite default from `agentEnabled` above, deliberately. There the
+ * failure of a database read must not silence the product, because the cost of a false
+ * "off" is a working feature going dark. Here the cost of a false "on" is **taking ₪49
+ * and giving nothing**, because the grant writes `plan_source = 'trip_pass'` and the
+ * CHECK constraint rejects that until `sql/supabase-trip-pass.sql` has run.
+ *
+ * So the flag is set by that migration itself, as its last statement. No migration, no
+ * flag, no sale - and the route answers `not-configured`, which the UI already renders
+ * as "the purchase opens very soon". A payment that cannot be honoured is refused
+ * before the money moves rather than alerted after it.
+ *
+ * The alternative was to deploy and rely on remembering to run the SQL first. That is
+ * exactly the kind of manual precondition this project has repeatedly found unrun -
+ * `supabase-consent.sql` sat unrun for weeks while the login promised a record.
+ */
+export async function tripPassSellable(): Promise<boolean> {
+  const flags = await load();
+  return flags.trip_pass_ready === true;
+}
+
 /** After a write - so the switch does not wait 30 seconds */
 export function invalidateFlags() {
   cache = null;

@@ -287,7 +287,7 @@ export default function DestinationGuide({
         <dl className="mt-4 grid gap-3 sm:grid-cols-2">
           <Fact title="טיסות מתל אביב" text={dest.practical.flights} />
           <Fact title="תחבורה בעיר" text={dest.practical.gettingAround} />
-          <Fact title={`ויזה ל${country.name}`} text={country.practical.visa} />
+          <Fact title={`ויזה ${hePrefix('ל', country.name)}`} text={country.practical.visa} />
           <Fact title="מטבע" text={country.practical.currency} />
           <Fact title="סים וגלישה" text={country.practical.sim} />
           <Fact title="תשלומים" text={country.practical.payments} />

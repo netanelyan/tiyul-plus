@@ -181,6 +181,41 @@ export function photoSrc(url: string | undefined): string | undefined {
  */
 const WIKI_THUMB_WIDTH = /^(https:\/\/upload\.wikimedia\.org\/\S*\/)(\d+)px-([^/]+)$/;
 
+/**
+ * The narrowest listed thumbnail that still covers `cssWidth` at a high-DPR screen.
+ *
+ * ## Why this exists: 2MB of map pins
+ *
+ * Measured on a production build at 390px/DPR3, `/itinerary/rome/5` downloaded **2.1MB
+ * of images**, and 23 of them were 500px-wide Wikimedia thumbnails at 76-114kB each -
+ * fetched for the photo on a **map pin that renders 44px wide**. The place thumbnails
+ * in the day list were fine (they carry a srcSet and the browser picks 250w); the pins
+ * were not, because `MapInner` builds its icons from an HTML string handed to Leaflet
+ * and therefore cannot use `CatalogImage` or a `sizes` attribute at all.
+ *
+ * So the narrowing has to happen in the URL, before the string is built.
+ *
+ * ## Why it rounds UP to a listed width
+ *
+ * Wikimedia serves only a fixed set of thumbnail widths - asking for 132px returns
+ * HTTP 400, which is the same trap `widenedThumb` documents from the other direction.
+ * So this picks the smallest LISTED width that is still at least the requested one, and
+ * never returns a width wider than the URL already has (that would be an upscale
+ * request, and the whole point here is to shrink).
+ *
+ * A URL that is not a Wikimedia thumbnail is returned untouched.
+ */
+export function narrowedThumb(url: string, cssWidth: number, dpr = 3): string {
+  const m = url.match(WIKI_THUMB_WIDTH);
+  if (!m) return url;
+  const current = Number(m[2]);
+  const needed = Math.ceil(cssWidth * dpr);
+  const pick = STANDARD_THUMB_WIDTHS.find((w) => w >= needed);
+  // Nothing narrower to gain, or nothing listed is big enough - leave it alone.
+  if (!pick || pick >= current) return url;
+  return `${m[1]}${pick}px-${m[3]}`;
+}
+
 export function thumbShrinkSrcSet(url: string): string | undefined {
   const m = url.match(WIKI_THUMB_WIDTH);
   if (!m) return undefined;

@@ -77,6 +77,47 @@ export function sendCheckReceipt(input: {
   })();
 }
 
+/**
+ * The trip-pass receipt.
+ *
+ * `until` is the grant's real expiry as written to `profiles.plan_until` - passed
+ * in rather than recomputed here, so the date the buyer reads is provably the date
+ * their access actually ends. Recomputing "now + 60 days" in the mailer would have
+ * been wrong for exactly the case that matters: a second pass bought on top of an
+ * unexpired one extends the existing window, so the honest answer is 80 days out,
+ * not 60.
+ */
+export function sendTripPassReceipt(input: {
+  userId: string;
+  tripId: string;
+  tripName: string;
+  trip: Pick<Trip, 'citySlugs'> | null;
+  orderId: string;
+  amount: number;
+  currency: string;
+  /** ISO - the value written to plan_until. */
+  until: string;
+}): void {
+  void (async () => {
+    const to = await emailByUserId(input.userId);
+    if (!to) return;
+    const untilDay = input.until.slice(0, 10);
+    sendMailInBackground({
+      to,
+      template: 'trip-pass-receipt',
+      vars: {
+        TRIP_NAME: input.tripName,
+        PHOTO_URL: tripPhoto(input.trip),
+        ORDER_ID: input.orderId,
+        AMOUNT: input.currency === 'ILS' ? ils(input.amount) : `${input.amount.toFixed(2)} ${input.currency}`,
+        DATE: today(),
+        UNTIL: formatHebrewDate(untilDay, { year: true }) || untilDay,
+        TRIP_URL: tripUrl(input.tripId),
+      },
+    });
+  })();
+}
+
 export function sendSubscriptionActivated(input: {
   userId: string;
   plan: PaidPlan;

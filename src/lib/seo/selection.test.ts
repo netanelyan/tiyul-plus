@@ -8,7 +8,7 @@
  * Google to index quietly becomes thin. Nothing else would catch that: the page
  * would still build and still render.
  *
- * The floors below are the ones recorded in SEO_PLAN.md as the criteria for
+ * The floors below are the ones recorded in docs/seo-plan.md as the criteria for
  * inclusion. They are asserted against the real catalog, not a fixture, because
  * what is being tested is the data.
  */
@@ -81,7 +81,7 @@ describe('SEO destination selection', () => {
     const missing = slugs.filter((s) => !known.has(s));
     assert.deepEqual(missing, [], `country slugs not in the catalog: ${missing.join(', ')}`);
     // A promoted set spread across many countries is deliberate - see
-    // SEO_PLAN.md. If this collapses toward one country the set has become a
+    // docs/seo-plan.md. If this collapses toward one country the set has become a
     // list of one country's cities, which reads very differently to a crawler.
     assert.ok(slugs.length >= 15, `only ${slugs.length} countries represented`);
   });

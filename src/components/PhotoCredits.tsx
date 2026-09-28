@@ -35,6 +35,21 @@ export default function PhotoCredits({ credits }: { credits: PhotoCredit[] }) {
         התמונות בעמוד הזה מגיעות מוויקישיתוף (Wikimedia Commons), ומוצגות בהתאם לרישיון של כל
         תמונה. לחיצה על שם הקובץ פותחת את עמוד המקור עם פרטי הרישיון המלאים.
       </p>
+      {/*
+        `break-all` on the filename, and it is a real fix rather than tidying.
+
+        A Commons filename is one unbroken token and some are very long - e.g.
+        "(Venice)_Doge's_Palace_and_campanile_of_St._Mark's_Basilica_...". With no
+        break opportunity the link extends past the viewport: measured at 390px it ran
+        from x=-103 to x=342 in a 390px viewport, i.e. off the start edge of an RTL
+        page. The page did not scroll horizontally (something upstream clips it), which
+        is exactly why this survived - it is invisible to a page-level overflow check
+        and visible to anyone actually reading the credits on a phone.
+
+        Pre-existing on every page that renders credits, which includes the 30 promoted
+        destination pages already in the sitemap. `break-all` rather than `break-words`
+        because the latter will not break a single token that has no spaces in it.
+      */}
       <ul className="mt-3 space-y-1.5">
         {credits.map((c) => (
           <li key={c.file} className="text-xs leading-relaxed text-night/70">
@@ -43,7 +58,7 @@ export default function PhotoCredits({ credits }: { credits: PhotoCredit[] }) {
               target="_blank"
               rel="noopener noreferrer"
               dir="ltr"
-              className="font-semibold text-night/75 underline-offset-2 hover:text-sunset-deep hover:underline"
+              className="break-all font-semibold text-night/75 underline-offset-2 hover:text-sunset-deep hover:underline"
             >
               {c.file}
             </a>

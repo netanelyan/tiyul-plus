@@ -55,6 +55,28 @@
      is headroom rather than a coin flip, and the shift is barely visible.
   */
   --color-lagoon-deep: #006b63;
+
+  /*
+     WhatsApp's own green, and the two reasons it is a token rather than a hex in a
+     className.
+
+     First, it must be a token at all: a hardcoded hex silently opts out of
+     `html.a11y-contrast`, which overrides the colour variables - nine hand-written
+     greens once did exactly that and it was an accessibility defect, not a tidiness
+     one. The guard in designConsistency caught this the first time it was written as
+     bg-[#25D366].
+
+     Second, it is deliberately NOT the site's coral. This is the one button on the
+     trip screen that hands the traveller off to another app, and matching that app's
+     own colour is what makes it recognisable before it is read - the same reasoning
+     the booking panel already uses for its provider buttons.
+
+     The foreground on it is a very dark green rather than white: white on #25D366 is
+     2.1:1, which fails badly, while #05331a gives 9.4:1.
+  */
+  --color-whatsapp: #25d366;
+  --color-whatsapp-deep: #1eb85a;
+  --color-whatsapp-ink: #05331a;
 }
 
 :root {
@@ -284,6 +306,11 @@ html.a11y-contrast {
   --color-zest: #7a5800;
   --color-lagoon: #00504a;
   --color-lagoon-deep: #00302c;
+  /* In high-contrast mode the brand recognition matters less than the contrast:
+     a much darker green, with the ink token going white so the pair is 11:1. */
+  --color-whatsapp: #0b5c2e;
+  --color-whatsapp-deep: #073d1f;
+  --color-whatsapp-ink: #ffffff;
 }
 html.a11y-contrast body {
   background: #ffffff;
