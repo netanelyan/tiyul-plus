@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import HeroPrompt from '@/components/HeroPrompt';
+import SampleTrips from '@/components/home/SampleTrips';
 
 /**
  * The homepage hero - a portal, not a workspace: submitting navigates to /chat with the
@@ -66,6 +67,21 @@ export default function HomeHero() {
           </Link>
         }
       />
+
+      {/*
+        The three sample trips sit BELOW the input, not above it.
+
+        Above, they would compete with the one thing the hero is for - the text box is
+        the product, and the samples are the proof that pressing it is worth it. Below,
+        they answer the question a visitor has after reading the promise ("fine, show
+        me"), which is exactly the order those two thoughts arrive in.
+
+        Constrained to the same width as the input so the hero stays one column rather
+        than becoming a hero plus a grid.
+      */}
+      <div className="w-full max-w-2xl">
+        <SampleTrips />
+      </div>
     </div>
   );
 }

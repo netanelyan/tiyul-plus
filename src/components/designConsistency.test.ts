@@ -146,7 +146,15 @@ test('מה שעולה כסף יושב רק בתוך האזור בתשלום', ()
   */
   const file = join('src', 'components', 'TripWorkspace.tsx');
   const src = stripComments(readFileSync(file, 'utf8'));
-  const open = src.indexOf('<PaidTools>');
+  /*
+    Matched with a regex rather than the literal `<PaidTools>`, because the claim
+    this test makes is "PaidTools is rendered and the paid tools sit inside it" -
+    not "it is rendered without props". It broke the first time a prop was added
+    (`tripId`, for the trip pass), which is a false failure on a test whose real
+    subject had not changed at all.
+  */
+  const openMatch = /<PaidTools(\s|>)/.exec(src);
+  const open = openMatch ? openMatch.index : -1;
   const close = src.indexOf('</PaidTools>');
   assert.ok(open !== -1 && close > open, 'PaidTools לא מרונדר ב-TripWorkspace');
 
@@ -188,4 +196,27 @@ test('מה שנכנס ל-PDF הוא אובייקט נפרד מהמסך', () => {
     /className="print:hidden"/.test(src),
     'הפאנל של הבדיקה חייב להיות print:hidden תמיד - אחרת כרטיס המסך נכנס ל-PDF',
   );
+});
+
+test('שליחה לקבוצה היא כפתור ראשי, לא שורה בתוך תפריט', () => {
+  /*
+    The growth loop, guarded as a class.
+
+    Israeli trips are planned in group chats, so a trip reaching one reaches another
+    three to six people. That action used to be the second row inside a menu labelled
+    "Share" - two taps behind a word that does not say what it does - and the whole
+    point of moving it was that a distribution channel must not be a utility.
+
+    Asserted structurally rather than visually: `shareWhatsApp` must be wired to a real
+    button and must NOT appear in a `Menu` items array, because "it is in a menu again"
+    is exactly how this regresses during an unrelated tidy-up of the header.
+  */
+  const src = stripComments(readFileSync(join('src', 'components', 'TripWorkspace.tsx'), 'utf8'));
+
+  assert.match(src, /onClick=\{shareWhatsApp\}/, 'shareWhatsApp is not wired to a button');
+  assert.ok(
+    !/onClick:\s*shareWhatsApp/.test(src),
+    'shareWhatsApp is back inside a Menu items array - it must be a primary button',
+  );
+  assert.match(src, /שלחו לקבוצת הטיול/, 'the group-share label is gone');
 });

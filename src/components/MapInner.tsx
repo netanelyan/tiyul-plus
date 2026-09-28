@@ -8,7 +8,7 @@ import L, { type Map as LeafletMap } from 'leaflet';
 import type { Place } from '@/lib/types';
 import type { TripPinKind } from '@/lib/trip/types';
 import { categoryMeta } from '@/lib/categories';
-import { photoSrc } from '@/lib/photoMirror';
+import { narrowedThumb, photoSrc } from '@/lib/photoMirror';
 import PlaceThumb from '@/components/PlaceThumb';
 import KosherBadge from '@/components/KosherBadge';
 import KosherNote from '@/components/KosherNote';
@@ -28,7 +28,17 @@ function photoHtml(photo: string | undefined): string {
   // component and therefore cannot be `next/image`. It is still served from our own
   // mirror, and a pin photo that fails simply removes itself - a placeholder floating
   // above a map pin would be noise.
-  return `<img class="pin-photo" src="${photoSrc(photo)}" alt="" loading="lazy" onerror="this.remove()" />`;
+  /*
+    `narrowedThumb`, and it is the single biggest download on the page.
+
+    The pin photo renders 44px wide (see .pin-photo) and was being fetched at the
+    catalog's own 500px - measured at 76-114kB each, 23 of them on one itinerary page,
+    i.e. **2.1MB of images to draw 26 thumbnails the size of a fingernail**. The day
+    list beside it was already fine because CatalogImage gives it a srcSet; a Leaflet
+    icon is an HTML string, so there is no `sizes` for the browser to read and the
+    narrowing has to be in the URL.
+  */
+  return `<img class="pin-photo" src="${narrowedThumb(photoSrc(photo), 44)}" alt="" loading="lazy" onerror="this.remove()" />`;
 }
 
 /**

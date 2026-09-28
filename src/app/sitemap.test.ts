@@ -7,6 +7,7 @@ import { SITE_URL } from '@/lib/seo/site';
 import { destinations } from '@/data/destinations';
 import { countries } from '@/data/countries';
 import { HUBS } from '@/lib/seo/hubs';
+import { rolledOutItineraryPages, toDestLike } from '@/lib/seo/itineraries';
 import { SEO_DESTINATION_SLUGS } from '@/lib/seo/selection';
 import { ledgerHash, ledgerPaths } from '@/lib/seo/contentDates';
 import { contentHashes } from '../../scripts/content-dates.mjs';
@@ -31,9 +32,30 @@ test('every catalog page is submitted', () => {
   for (const p of ['/', '/countries', '/kosher', '/collections', '/premium', '/about', '/contact']) {
     assert.ok(pathSet.has(p), `missing ${p}`);
   }
+  /*
+    The itinerary landing pages, gated to the rolled-out batch.
+
+    The assertion that matters is not the count but that every submitted itinerary URL
+    is one `generateStaticParams` will actually build: both call the same function, and
+    a mismatch means submitting a 404 to Google. `dynamicParams = false` on that route
+    is what makes a length outside the batch a 404 rather than an on-demand render.
+  */
+  const live = rolledOutItineraryPages(destinations.map(toDestLike));
+  for (const it of live) {
+    assert.ok(
+      pathSet.has(`/itinerary/${it.slug}/${it.days}`),
+      `missing /itinerary/${it.slug}/${it.days}`,
+    );
+  }
+  assert.equal(
+    paths.filter((p) => p.startsWith('/itinerary/')).length,
+    live.length,
+    'the sitemap submits an itinerary page outside the rolled-out set - it would 404',
+  );
+
   assert.equal(
     entries.length,
-    destinations.length + countries.length + HUBS.length + 7,
+    destinations.length + countries.length + HUBS.length + live.length + 7,
     'the sitemap contains something other than the pages it is supposed to',
   );
   assert.ok(entries.length >= 250, `expected 250+ URLs, got ${entries.length}`);

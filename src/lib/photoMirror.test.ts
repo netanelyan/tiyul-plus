@@ -10,17 +10,10 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import {
-  MIRROR_WIDTH,
-  PHOTO_FALLBACK,
-  fnv1a,
-  mirrorEnabled,
-  mirrorFileName,
-  mirrorPathname,
-  mirrorUrl,
-  photoSrc,
-} from './photoMirror.ts';
+import { MIRROR_WIDTH, PHOTO_FALLBACK, STANDARD_THUMB_WIDTHS, fnv1a, mirrorEnabled, mirrorFileName, mirrorPathname, mirrorUrl, narrowedThumb, photoSrc } from './photoMirror.ts';
 import { destinations } from '@/data/destinations';
 
 const COMMONS =
@@ -120,4 +113,58 @@ test('the local fallback is a real file in public/', async () => {
   const { existsSync } = await import('node:fs');
   assert.ok(PHOTO_FALLBACK.startsWith('/'));
   assert.ok(existsSync(`public${PHOTO_FALLBACK}`), `missing public${PHOTO_FALLBACK}`);
+});
+
+/* ============================================================
+ *  narrowedThumb - the map-pin fix
+ *
+ *  Measured: /itinerary/rome/5 pulled 2.1MB of images at 390px/DPR3, and 23 of those
+ *  were 500px Wikimedia thumbnails (76-114kB each) fetched to draw a 44px map pin.
+ * ============================================================ */
+
+const WIKI = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Colosseo_2020.jpg/500px-Colosseo_2020.jpg';
+
+test('a 44px pin gets 250px, not the catalog 500px', () => {
+  const out = narrowedThumb(WIKI, 44);
+  assert.match(out, /\/250px-Colosseo_2020\.jpg$/);
+});
+
+test('it only ever returns a width Wikimedia actually serves', () => {
+  /*
+    The trap this shares with widenedThumb, from the other direction: Wikimedia serves
+    a fixed set of widths and answers HTTP 400 for anything else. 44 x 3 = 132, and
+    asking for 132px would break every pin on the site.
+  */
+  for (let css = 1; css <= 400; css++) {
+    const out = narrowedThumb(WIKI, css);
+    const m = /\/(\d+)px-/.exec(out);
+    assert.ok(m, `no width in ${out}`);
+    assert.ok(
+      (STANDARD_THUMB_WIDTHS as readonly number[]).includes(Number(m[1])),
+      `${m[1]}px is not a listed Wikimedia width (css=${css})`,
+    );
+  }
+});
+
+test('it never widens - shrinking is the whole job', () => {
+  const small = WIKI.replace('500px-', '250px-');
+  // A 200px slot needs 600px, which is wider than the 250px URL: leave it alone rather
+  // than request an upscale that would 400 or waste bytes.
+  assert.equal(narrowedThumb(small, 200), small);
+  assert.equal(narrowedThumb(small, 44), small, 'already the narrowest listed width');
+});
+
+test('a non-Wikimedia URL is returned untouched', () => {
+  const unsplash = 'https://images.unsplash.com/photo-123?auto=format&w=1600';
+  assert.equal(narrowedThumb(unsplash, 44), unsplash);
+  assert.equal(narrowedThumb('', 44), '');
+});
+
+test('the pin actually uses it - the saving is in MapInner or it is nowhere', () => {
+  /*
+    A helper nobody calls saves nothing. Asserted at the call site because the pin is
+    built as an HTML string, so there is no component test that would catch its removal.
+  */
+  const src = readFileSync(join('src', 'components', 'MapInner.tsx'), 'utf8');
+  assert.match(src, /narrowedThumb\(photoSrc\(photo\), 44\)/);
 });

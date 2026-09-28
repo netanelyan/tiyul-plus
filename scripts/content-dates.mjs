@@ -38,6 +38,7 @@ import { execFileSync } from 'node:child_process';
 import { destinations } from '../src/data/destinations.ts';
 import { countries } from '../src/data/countries.ts';
 import { HUBS, hubMembers } from '../src/lib/seo/hubs.ts';
+import { rolledOutItineraryPages, toDestLike } from '../src/lib/seo/itineraries.ts';
 import { promotedMembers } from '../src/lib/seo/hubData.ts';
 
 const LEDGER = 'src/lib/seo/content-dates.json';
@@ -103,6 +104,40 @@ export function contentHashes() {
 
   for (const d of destinations) out[`/destinations/${d.slug}`] = hash(d);
 
+  /*
+    The itinerary landing pages.
+
+    Hashed on **only the days that page shows**, not on the whole destination: a
+    5-day Rome page must not be re-dated because a place was added to Rome's day 7.
+    That is the difference between a lastmod a crawler can trust and one it learns to
+    discount - the same reasoning that made this script hash per page rather than
+    stamping the build date on all of them.
+
+    The city-level facts the page renders (season, flights, kashrut, verdict) are in
+    the hash too, because a change to any of them IS a change to this page.
+  */
+  const byDestSlug = new Map(destinations.map((d) => [d.slug, d]));
+  for (const p of rolledOutItineraryPages(destinations.map(toDestLike))) {
+    const d = byDestSlug.get(p.slug);
+    if (!d) continue;
+    const shown = (d.itinerary ?? []).slice(0, p.days);
+    out[`/itinerary/${p.slug}/${p.days}`] = hash({
+      days: p.days,
+      itinerary: shown,
+      // Only the places this page actually renders
+      places: shown
+        .flatMap((day) => day.placeIds ?? [])
+        .map((id) => d.places.find((x) => x.id === id) ?? id),
+      bestSeason: d.bestSeason ?? null,
+      flights: d.practical?.flights ?? null,
+      kosher: d.practical?.kosherOverview ?? null,
+      gettingAround: d.practical?.gettingAround ?? null,
+      verdict: d.editorialRating?.verdict ?? null,
+      summary: d.summary,
+      name: d.name,
+    });
+  }
+
   const byCountry = new Map();
   for (const d of destinations) {
     if (!byCountry.has(d.countrySlug)) byCountry.set(d.countrySlug, []);
@@ -162,6 +197,7 @@ function seedSources(path) {
   if (path.startsWith('/destinations/')) return ['src/data/destinations.ts'];
   if (path.startsWith('/countries/')) return ['src/data/countries.ts', 'src/data/destinations.ts'];
   if (path.startsWith('/collections/')) return ['src/lib/seo/hubs.ts', 'src/data/destinations.ts'];
+  if (path.startsWith('/itinerary/')) return ['src/data/destinations.ts'];
   return [];
 }
 
