@@ -70,24 +70,15 @@ let alertsThisWindow = 0;
  * this is the second layer, and it also covers the server path, where the text
  * is an exception message nobody wrote for display.
  */
-export function cleanLine(value: unknown, max = 300): string {
-  const text = typeof value === 'string' ? value : String(value ?? '');
-  const flat = Array.from(text)
-    /*
-      A code-point test rather than a control-character regex, deliberately: a
-      literal control character inside a character class is invisible in every
-      diff and in every review, and writing one here is exactly the mistake
-      this comment exists to stop the next person repeating.
-    */
-    .map((ch) => {
-      const code = ch.codePointAt(0) ?? 0;
-      return code < 0x20 || code === 0x7f ? ' ' : ch;
-    })
-    .join('')
-    .replace(/\s+/g, ' ')
-    .trim();
-  return flat.length > max ? `${flat.slice(0, max - 1)}…` : flat;
-}
+/*
+  The implementation moved to `lib/logSafe.ts` when `postAlert` and `notifyOrganiser`
+  started applying it themselves - it was never specific to error reporting, and a
+  second copy is how two implementations of one rule drift until only one is right.
+  Re-exported so this module's callers and tests are unchanged.
+*/
+import { cleanLine } from '@/lib/logSafe';
+
+export { cleanLine };
 
 /**
  * What counts as "the same failure".

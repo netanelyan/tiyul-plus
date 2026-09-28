@@ -9,6 +9,7 @@ import type { Place } from '@/lib/types';
 import type { TripPinKind } from '@/lib/trip/types';
 import { categoryMeta } from '@/lib/categories';
 import { narrowedThumb, photoSrc } from '@/lib/photoMirror';
+import { safeUrlAttr } from '@/lib/html';
 import PlaceThumb from '@/components/PlaceThumb';
 import KosherBadge from '@/components/KosherBadge';
 import KosherNote from '@/components/KosherNote';
@@ -38,7 +39,17 @@ function photoHtml(photo: string | undefined): string {
     icon is an HTML string, so there is no `sizes` for the browser to read and the
     narrowing has to be in the URL.
   */
-  return `<img class="pin-photo" src="${narrowedThumb(photoSrc(photo), 44)}" alt="" loading="lazy" onerror="this.remove()" />`;
+  /*
+    **safeUrlAttr, not the raw URL.** This is the one sink in the codebase where a
+    string becomes markup without React escaping it - a Leaflet divIcon takes HTML, not
+    a node - and it was interpolating the URL straight into the attribute. Proven
+    exploitable: a photo of `https://evil.test/a.jpg" onerror="alert(1)" x="` closed the
+    attribute and injected a handler that WINS, because HTML keeps the first of a
+    duplicated attribute and ours comes second. See lib/html.ts.
+  */
+  const src = safeUrlAttr(narrowedThumb(photoSrc(photo), 44));
+  if (!src) return '';
+  return `<img class="pin-photo" src="${src}" alt="" loading="lazy" onerror="this.remove()" />`;
 }
 
 /**

@@ -114,14 +114,15 @@ export const mailReplyTo = () => process.env.MAIL_REPLY_TO || undefined;
 /** Where internal alerts (a new lead) go. Unset means the alert is not sent, and says so. */
 export const mailOwner = () => process.env.MAIL_OWNER || undefined;
 
-export function escapeHtml(value: unknown): string {
-  return String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
+/*
+  Re-exported, not reimplemented. The canonical escaper moved to `lib/html.ts` when a
+  CLIENT component needed it (MapInner builds Leaflet icons as HTML strings) and could
+  not import a server module to get it. Two copies of one escaping rule is how one of
+  them ends up being the wrong one.
+*/
+import { escapeHtml } from '@/lib/html';
+
+export { escapeHtml };
 
 const PLACEHOLDER = /\{\{([A-Z][A-Z0-9_]*)\}\}/g;
 /**

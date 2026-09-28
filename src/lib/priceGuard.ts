@@ -33,6 +33,7 @@
  */
 
 import { HE_LETTER, heWord } from './hebrewMatch';
+import { cleanLine } from './logSafe';
 import { PREMIUM_PRICE_ILS } from './plans';
 
 /** The wording that replaces a cut claim. Must pass the filter itself - there's a test. */
@@ -956,7 +957,10 @@ export function guardText(
       CHAT_USAGE_LOG.
     */
     if (process.env.GUARD_DEBUG === 'on') {
-      console.warn(`[guard] ${bad} cut: ${sentence.trim().slice(0, 240)}`);
+      // Flattened: this is model output, which a traveller's own words reach, and a
+      // newline in it would forge a log line. Off by default, but a debug switch that
+      // is only safe while nobody turns it on is not safe.
+      console.warn(`[guard] ${bad} cut: ${cleanLine(sentence, 240)}`);
     }
     const cat = CATEGORY[bad] ?? 'price';
     if (alreadyReplaced.has(cat) || replacedHere.has(cat)) {
