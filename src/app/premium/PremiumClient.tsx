@@ -83,7 +83,15 @@ const ilsBig = (n: number) =>
  * `PRO_PRICE_ILS` and `PRICE_ILS`. None is typed, so a price change cannot leave
  * a false sentence behind. `PREMIUM_PRICE_ILS` survives only inside the generic
  * `cta()` helper, which is still used for pro; nothing renders a monthly premium
- * price any more, and a browser check asserts ₪19.90 appears nowhere on the page.
+ * price any more.
+ *
+ * That last claim used to rest on "a browser check asserts ₪19.90 appears
+ * nowhere on the page", which was a one-off manual read and never a committed
+ * test - and it was read against the rendered body, so it never covered the
+ * `description` in `page.tsx`, which went on quoting ₪19.90/month to search
+ * engines for days. `lib/retiredPrice.test.ts` is the real guard now: no typed
+ * retired-price literal anywhere under app/ or components/, and no
+ * `PREMIUM_PRICE_ILS` reference outside this file and `SubscribeButton`.
  *
  * ## What is deliberately NOT claimed for the agent card
  *

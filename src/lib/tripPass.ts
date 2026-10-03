@@ -54,7 +54,7 @@
  * time-limited premium and none of them needed changing. The pass is, in effect,
  * a grant the customer buys.
  */
-import { type Plan, type PaidPlan, planAtLeast, effectivePlan } from './plans';
+import { type Plan, type PaidPlan, planAtLeast, effectivePlan, ils } from './plans';
 
 /** ₪49. Above the ₪29.90 check it contains - that is the whole point; see the header. */
 export const TRIP_PASS_PRICE_ILS = 49;
@@ -81,8 +81,21 @@ export const TRIP_PASS_PRODUCT = 'trip-pass';
  */
 export const TRIP_PASS_PLAN_SOURCE = 'trip_pass';
 
-/** The price the way people write it - matches `ils()` in plans.ts. */
-export const tripPassPriceLabel = () => `${TRIP_PASS_PRICE_ILS.toFixed(2)} ₪`;
+/**
+ * The price the way people write it - **through `ils` itself**, rather than a
+ * second implementation of it.
+ *
+ * This said "matches `ils()`" while calling `toFixed(2)`, and ₪49 is exactly the
+ * case where the two disagree: `ils` deliberately keeps a round price round. So
+ * /premium priced the pass at "49 ₪" in all six places it mentions it, and the
+ * buy button on the trip screen - the last thing a buyer reads before paying -
+ * said "49.00 ₪" for the same product. That is the drift `ils` was moved next to
+ * the constants to end; see its comment in plans.ts.
+ *
+ * Display only. The amount PayPal charges comes from the number itself in
+ * `api/pass/create-order`, and is unaffected.
+ */
+export const tripPassPriceLabel = () => `${ils(TRIP_PASS_PRICE_ILS)} ₪`;
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 

@@ -1,10 +1,19 @@
 import Link from 'next/link';
 import CardPhoto from '@/components/CardPhoto';
-import { PREMIUM_PRICE_ILS } from '@/lib/plans';
+import { ils } from '@/lib/plans';
+import { TRIP_PASS_PRICE_ILS } from '@/lib/tripPass';
 
 /**
- * Section 5 - the feature block for the shared trip, the star of the
- * subscription (2026-08-17 (e)).
+ * Section 5 - the feature block for the shared trip, the star of the trip pass
+ * (2026-08-17 (e); re-pointed from the monthly subscription 2026-10-03).
+ *
+ * **The price here is the pass, per trip - not a month of premium.** This block
+ * went on quoting `PREMIUM_PRICE_ILS` for six days after that plan was retired,
+ * so the homepage advertised the shared trip at ₪19.90/month while /premium sold
+ * it inside a ₪49 one-off pass. It also printed the constant raw, which is the
+ * drift `ils()` exists to prevent: "19.9 ₪" here against "19.90 ₪" everywhere
+ * else. Both are why the figure now comes from `TRIP_PASS_PRICE_ILS` through
+ * `ils` - the same two symbols /premium computes its own cards from.
  *
  * The shape is a storefront's product feature: a big visual on one side, a
  * short pitch and a price on the other. The visual is a mock of the real
@@ -67,7 +76,7 @@ export default function SharedTripFeature({ photo }: { photo?: string }) {
         {/* The pitch */}
         <div className="p-6 sm:p-8 lg:p-10">
           <span className="badge rounded-full bg-sunset/12 px-3 py-1 text-xs font-extrabold text-sunset-deep">
-            הכוכב של המנוי
+            הכוכב של כרטיס הטיול
           </span>
           <h2 className="display mt-3 text-3xl text-night sm:text-4xl">טיול משותף</h2>
           <p className="mt-3 text-base leading-relaxed text-night/75 sm:text-lg">
@@ -82,7 +91,8 @@ export default function SharedTripFeature({ photo }: { photo?: string }) {
             <li>📅 סקר תאריכים ומי מגיע</li>
           </ul>
           <p className="mt-5 text-sm font-bold text-night">
-            החברים לא משלמים כלום. משלם רק מי שפותח את הקישור, {PREMIUM_PRICE_ILS} ₪ לחודש.
+            החברים לא משלמים כלום. משלם רק מי שפותח את הקישור, {ils(TRIP_PASS_PRICE_ILS)} ₪ לטיול
+            אחד - תשלום חד-פעמי, בלי מנוי ובלי חיוב חוזר.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <Link

@@ -1,12 +1,23 @@
 import type { Metadata } from 'next';
 import PremiumClient from './PremiumClient';
 import { pageMetadata } from '@/lib/seo/site';
+import { ils } from '@/lib/plans';
+import { TRIP_PASS_PRICE_ILS } from '@/lib/tripPass';
 
 export const metadata: Metadata = pageMetadata({
   path: '/premium',
   title: 'מחירים | טיול+',
-  description:
-    'לתכנן לבד בטיול+ זה חינם. המנוי - 19.90 ₪ לחודש - פותח טיול משותף: חברים מצטרפים בקישור, מצביעים, מגיבים, מציעים מקומות ומסמנים תאריכים. הבדיקה לפני הנסיעה כלולה.',
+  /*
+    Computed from `TRIP_PASS_PRICE_ILS`, like every figure the page body renders.
+    It was a hand-typed string naming the monthly premium plan at ₪19.90 - which
+    `PremiumClient` had already stopped selling, so the one sentence Google showed
+    for our pricing page quoted a retired price and a product nobody could buy.
+    Nothing could catch it: the only check on this price was a manual browser
+    read of the page body, and a description in <head> is not in the body.
+    `lib/retiredPrice.test.ts` is the standing guard now, over both this file
+    and the marketing components.
+  */
+  description: `לתכנן לבד בטיול+ זה חינם. כרטיס טיול - ${ils(TRIP_PASS_PRICE_ILS)} ₪ לטיול אחד, תשלום חד-פעמי - פותח טיול משותף: חברים מצטרפים בקישור, מצביעים, מגיבים, מציעים מקומות ומסמנים תאריכים. הבדיקה לפני הנסיעה כלולה.`,
   /*
     Indexable as of 2026-09-21. It carried `noindex` on the pre-launch reasoning that the page
     should not accumulate in search results before there was traffic - but this is the pricing
