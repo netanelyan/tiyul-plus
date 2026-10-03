@@ -44,13 +44,29 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# מטמון אימות תמונות (scripts/verify-photos.mjs)
+# Photo verification cache (scripts/verify-photos.mjs)
 .cache/
 photo-report.json
 
 # catalog regeneration output (review artifacts, not committed)
 src/data/*.generated.ts
 .schemaorg.jsonld
+
+# Internal planning and operations notes. This repository is public, so these
+# were readable by anyone: the business brief and pricing rationale (CLAUDE.md),
+# what is being built next (TODO.md), the go-live steps including which revenue
+# levers are not switched on yet (LAUNCH-CHECKLIST.md), and how the service is
+# operated and recovered (RUNBOOK.md). They stay on disk - CLAUDE.md in
+# particular is still the brief every session reads - they are simply no longer
+# published.
+#
+# Untracking only stops future commits. Every version already pushed remains in
+# the history and is still readable on GitHub; closing that needs either a
+# history rewrite or a private repository.
+CLAUDE.md
+TODO.md
+LAUNCH-CHECKLIST.md
+RUNBOOK.md
 
 # Database dumps from scripts/backup-supabase.mjs.
 # These hold real travellers' trips, names, phone numbers and email addresses.
