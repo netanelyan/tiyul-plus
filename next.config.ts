@@ -120,6 +120,49 @@ const SECURITY_HEADERS = [
   { key: 'content-security-policy', value: CSP },
 ];
 
+/**
+ * `/embed/` is the one route that is **meant** to be framed by other sites, and
+ * the blanket headers above forbid exactly that - twice.
+ *
+ * `x-frame-options: SAMEORIGIN` and `frame-ancestors 'self'` are both correct
+ * defaults and both make the embed feature impossible: a blogger's iframe would
+ * render a blank box, with the only trace a console message on their site, not
+ * ours. Found by reading the response headers of the real route, not by
+ * reasoning about the config - the route set its own CSP and the blanket rule
+ * replaced it.
+ *
+ * So the embed gets its own set, and it is **narrower everywhere except framing**:
+ * the document is server-rendered HTML with one same-origin script (the
+ * trademark signature), no images, no fonts, no network calls, no forms. There
+ * is nothing for a wider policy to allow.
+ *
+ * `x-frame-options` is deliberately absent rather than set to something
+ * permissive: the header has no "allow any site" value (`ALLOW-FROM` is dead and
+ * ignored by every current browser), so the only way to permit framing is not to
+ * send it. `frame-ancestors` is what modern browsers consult anyway.
+ */
+const EMBED_CSP = [
+  "default-src 'none'",
+  "script-src 'self'",
+  "style-src 'unsafe-inline'",
+  "img-src 'self' data:",
+  // The whole point of this route.
+  'frame-ancestors *',
+  "base-uri 'none'",
+  "form-action 'none'",
+  "object-src 'none'",
+].join('; ');
+
+const EMBED_HEADERS = [
+  { key: 'x-content-type-options', value: 'nosniff' },
+  { key: 'referrer-policy', value: 'strict-origin-when-cross-origin' },
+  {
+    key: 'permissions-policy',
+    value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()',
+  },
+  { key: 'content-security-policy', value: EMBED_CSP },
+];
+
 const nextConfig: NextConfig = {
   // Turns off Next's floating dev indicator - it looks like a broken tab at the edge of
   // the screen when testing the dev server from a phone on the local network. Dev only anyway.
@@ -156,7 +199,17 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 60 * 60 * 24 * 365,
   },
   async headers() {
-    return [{ source: '/:path*', headers: SECURITY_HEADERS }];
+    return [
+      /*
+        Everything EXCEPT /embed/. The negative lookahead is load-bearing: Next
+        applies every matching rule and a later one only overrides the header
+        keys it names, so a blanket `/:path*` rule would keep sending
+        `x-frame-options: SAMEORIGIN` to the embed no matter what followed it -
+        and that header alone is enough to blank the iframe.
+      */
+      { source: '/((?!embed/).*)', headers: SECURITY_HEADERS },
+      { source: '/embed/:path*', headers: EMBED_HEADERS },
+    ];
   },
 };
 

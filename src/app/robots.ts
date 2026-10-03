@@ -12,7 +12,19 @@ import { DISALLOWED_PATHS, SITE_URL, canonical } from '@/lib/seo/site';
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [{ userAgent: '*', allow: '/', disallow: [...DISALLOWED_PATHS] }],
-    sitemap: canonical('/sitemap.xml'),
+    /*
+      Two sitemaps. The catalog's is generated at build time; the published
+      traveller trips change whenever somebody taps publish, so they live in their
+      own dynamic one (`/sitemap-trips.xml`).
+
+      **`/embed/` is deliberately NOT disallowed here.** It carries
+      `x-robots-tag: noindex`, and a crawler has to be allowed to fetch a URL in
+      order to read that header - a path blocked in robots.txt can still end up
+      in the index as a bare link, which is the opposite of what is wanted. The
+      private paths (`/t/`, `/join/`, `/u/`) keep their existing disallow rules
+      unchanged.
+    */
+    sitemap: [canonical('/sitemap.xml'), canonical('/sitemap-trips.xml')],
     host: SITE_URL,
   };
 }

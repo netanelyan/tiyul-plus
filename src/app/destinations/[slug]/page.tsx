@@ -10,6 +10,7 @@ import JsonLd from '@/components/seo/JsonLd';
 import DestinationGuide from '@/components/seo/DestinationGuide';
 import DestinationClient from './DestinationClient';
 import PhotoCredits from '@/components/PhotoCredits';
+import PublicTripsForCity from '@/components/PublicTripsForCity';
 import { creditsFor, shareImage } from '@/lib/server/photoCredit';
 
 export function generateStaticParams() {
@@ -129,6 +130,14 @@ export default async function DestinationPage({
           `@/lib/seo/selection` for why the set is small and pinned.
       */}
       {promoted && <DestinationGuide dest={dest} country={country} />}
+
+      {/*
+        Trips travellers published for this city. A server component that renders
+        nothing at all when there are none, so the 170 destination pages are
+        unchanged until somebody actually publishes something here.
+      */}
+      <PublicTripsForCity citySlug={dest.slug} cityName={dest.name} />
+
 
       {/*
         Attribution for every photograph this page can show - the hero, the

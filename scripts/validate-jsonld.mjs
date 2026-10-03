@@ -92,7 +92,7 @@ function checkNode(node, path) {
   }
 }
 
-const { organizationLd, webSiteLd, collectionPageLd, breadcrumbLd, collectionLd, countryLd, touristDestinationLd, faqPairs, faqLd } = await import(
+const { organizationLd, webSiteLd, collectionPageLd, breadcrumbLd, collectionLd, countryLd, touristDestinationLd, touristTripLd, faqPairs, faqLd } = await import(
   '../src/lib/seo/jsonLd.ts'
 );
 const { destinations } = await import('../src/data/destinations.ts');
@@ -118,6 +118,21 @@ samples.push(['breadcrumbLd', breadcrumbLd([{ name: 'a', path: '/' }, { name: 'b
 samples.push(['collectionLd', collectionLd('t', '/collections/x', [{ name: 'Rome', slug: 'rome' }])]);
 samples.push(['countryLd', countryLd(country, 5)]);
 samples.push(['touristDestinationLd', touristDestinationLd(dest, country)]);
+/*
+  The published-trip node. Worth validating here specifically because the
+  property a reader would reach for - `estimatedCost` - has a domain of HowTo and
+  is invalid on a Trip, which is exactly the class of mistake this script caught
+  the first time it ran.
+*/
+samples.push([
+  'touristTripLd',
+  touristTripLd({
+    slug: 'rome-5-k7m2pq9x',
+    name: 'n',
+    description: 'd',
+    places: dest.places.slice(0, 3),
+  }),
+]);
 const fq = faqLd(faqPairs(dest, country));
 if (fq) samples.push(['faqLd', fq]);
 for (const [name, node] of samples) checkNode(node, name);

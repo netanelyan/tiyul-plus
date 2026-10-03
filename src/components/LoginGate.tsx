@@ -44,7 +44,18 @@ export type LoginIntent =
   | 'group'
   | 'predeparture'
   /** Buying a trip pass - see TripPassButton. */
-  | 'pass';
+  | 'pass'
+  /**
+   * Publishing a trip to /trips - see PublishTripPanel.
+   *
+   * Nothing resumes on this one (no `takePendingLogin('publish-trip')`), and that
+   * is deliberate rather than an omission: every other intent here resumes an
+   * action the user had already decided on, whereas this one would publish a page
+   * to the open web as a side effect of signing in. Consent for that has to be a
+   * tap the person makes while looking at the consent text, not something that
+   * happens while they are reading a login code out of their email.
+   */
+  | 'publish-trip';
 
 /** Open the login modal, remembering what to resume afterwards. */
 export function requestLogin(intent: LoginIntent) {

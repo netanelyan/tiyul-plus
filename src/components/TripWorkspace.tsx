@@ -21,6 +21,7 @@ import type { MapGroup, MapPin } from '@/components/MapInner';
 import BookingPanel from '@/components/BookingPanel';
 import TripCost from '@/components/TripCost';
 import PinsPanel from '@/components/PinsPanel';
+import PublishTripPanel from '@/components/PublishTripPanel';
 import ActivitiesPanel from '@/components/ActivitiesPanel';
 import TripDateNotes from '@/components/TripDateNotes';
 import { kashrutCaveat, kashrutSummary } from '@/lib/kashrut';
@@ -1334,6 +1335,15 @@ export default function TripWorkspace({
           onRemovePin={removePin}
         />
       )}
+
+      {/*
+        ---------- Publishing this trip to /trips ----------
+        Below the pins on purpose: the pins panel is where somebody sees the hotel
+        and the private notes they have attached, which is the right moment to be
+        asked whether a stripped version of this may be public. Only for a trip
+        with real content - there is nothing to publish from an empty plan.
+      */}
+      {t && t.days.length > 0 && <PublishTripPanel trip={t} offline={offline} />}
 
       {/*
         ---------- All-days overview (with a description per day) ----------

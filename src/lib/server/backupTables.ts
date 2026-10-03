@@ -64,6 +64,13 @@ export const BACKUP_TABLES: BackupTable[] = [
     order: 'created_at',
   },
   {
+    table: 'public_trips',
+    pk: ['slug'],
+    keep: 'content',
+    why: 'Every /trips/<slug> page a traveller chose to publish. These are indexed URLs with inbound links, and some are embedded in other people’s articles; losing the table 404s all of them permanently. The rows hold no personal data by construction, but they are irreplaceable - the stripped snapshot is the only copy, and the owner’s private trip cannot be re-derived into it without their consent a second time.',
+    order: 'published_at',
+  },
+  {
     table: 'shared_trips',
     pk: ['code'],
     keep: 'content',

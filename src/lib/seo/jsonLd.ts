@@ -358,6 +358,68 @@ export function countryLd(country: Country, cityCount: number): JsonLdNode {
   };
 }
 
+/**
+ * A published traveller trip (`/trips/<slug>`) as a `TouristTrip`.
+ *
+ * The itinerary is an ordered `ItemList` of the real catalog stops, which is
+ * what makes this node worth emitting at all: the page's claim is "here is a
+ * route somebody actually followed", and the list is that route.
+ *
+ * ## There is no cost on this node, although the page shows one
+ *
+ * The obvious property is `estimatedCost`, and it is invalid here: its domain is
+ * `HowTo`, not `Trip`. `offers` would validate but means something else entirely
+ * - that the trip is for sale, which it is not. So the daily spend is rendered
+ * for the reader and deliberately left out of the markup rather than squeezed
+ * into a property that does not mean it. Same discipline as the Event note below.
+ *
+ * ## Nothing here comes from the traveller
+ *
+ * `name` and `description` are generated from the itinerary, and every attraction
+ * is a catalog entry. A published trip carries no owner text by construction
+ * (see `lib/trip/publicTrip.ts`), so there is nothing personal that *could* reach
+ * this node.
+ */
+export function touristTripLd({
+  slug,
+  name,
+  description,
+  places,
+  maxStops = 20,
+}: {
+  slug: string;
+  name: string;
+  description: string;
+  places: Place[];
+  /** Capped for the same reason `includesAttraction` is - see touristDestinationLd. */
+  maxStops?: number;
+}): JsonLdNode {
+  const url = canonical(`/trips/${slug}`);
+  const shown = places.slice(0, maxStops);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'TouristTrip',
+    '@id': `${url}#trip`,
+    name,
+    description,
+    url,
+    ...(shown.length
+      ? {
+          itinerary: {
+            '@type': 'ItemList',
+            numberOfItems: shown.length,
+            itemListOrder: 'https://schema.org/ItemListOrderAscending',
+            itemListElement: shown.map((p, i) => ({
+              '@type': 'ListItem',
+              position: i + 1,
+              item: attractionLd(p),
+            })),
+          },
+        }
+      : {}),
+  };
+}
+
 /*
  * There is deliberately no `Event` markup, although the calendar holds sourced
  * events and the guide renders them.
