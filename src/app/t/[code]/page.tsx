@@ -5,9 +5,7 @@ import type { SharedTrip } from '@/lib/trip/share';
 import { decodeTripShare } from '@/lib/server/shareDecode';
 import { getSharedPayload } from '@/lib/trip/shareStore';
 import SharedTripView from './SharedTripView';
-import { daysHe } from '@/lib/duration';
-
-import { inHe } from '@/lib/hebrew';
+import { sharePreview } from '@/lib/trip/sharePreview';
 /**
  * /t/<code> - viewing a shared trip, read-only, for anyone (no account).
  * Two code kinds on the same route:
@@ -46,13 +44,15 @@ export async function generateMetadata({
   */
   const robots = { index: false, follow: true } as const;
   if (!shared) return { title: 'טיול משותף | טיול+', robots };
-  const cities = [...new Set(shared.days.map((d) => d.citySlug))]
-    .map((s) => destinations.find((x) => x.slug === s)?.name)
-    .filter(Boolean)
-    .join(' · ');
-  const stops = shared.days.reduce((n, d) => n + d.placeIds.length, 0);
-  const title = `${shared.name} | טיול+`;
-  const description = `מסלול של ${daysHe(shared.days.length)} ו-${stops} עצירות ${inHe(cities)}, שנבנה בטיול+, סוכן הנסיעות החכם.`;
+  /*
+    Title and description come from `sharePreview`, which the OG card also
+    reads, so the card and the text beside it cannot disagree. Note the title
+    no longer carries `shared.name`: that is the owner's own words, and a link
+    preview is the part of this page that travels onward into groups the owner
+    never chose. The name is still the page's heading for whoever opens it.
+  */
+  const { title: previewTitle, description } = sharePreview(shared);
+  const title = `${previewTitle} | טיול+`;
   // openGraph is written explicitly rather than relying on the layout:
   // metadata in Next merges per field, so title/description here do **not**
   // flow into the parent's openGraph - and the WhatsApp card would have

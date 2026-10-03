@@ -12,6 +12,7 @@ import type { Trip, TripDay } from './types';
 import { newId } from './types';
 import { loadTrips, saveTrips } from './storage';
 import { trackTripCreated } from '@/lib/events';
+import { consumeShareSource } from '@/lib/shareAttribution';
 
 export interface TripApi {
   trips: Trip[];
@@ -173,6 +174,15 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
 
   const createTrip = useCallback(
     (name: string, citySlug?: string): Trip => {
+      /*
+        Stamped here rather than at the call sites, for the same reason
+        `noteCreated` lives here: there are six ways to start a trip (agent,
+        planner, quiz, template, import, saving a share) and an attribution
+        that five of them remember is worse than none, because the number looks
+        real. Returns null when nobody arrived from a link - the common case -
+        and **consumes**, so it must be called exactly once per creation.
+      */
+      const source = consumeShareSource();
       const trip: Trip = {
         id: newId(),
         name,
@@ -182,6 +192,7 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
           : [],
         createdAt: Date.now(),
         updatedAt: Date.now(),
+        ...(source ? { source } : {}),
       };
       setTrips((prev) => [...prev, trip]);
       setCurrentId(trip.id);
@@ -203,7 +214,13 @@ export function TripProvider({ children }: { children: React.ReactNode }) {
 
   const createTripFrom = useCallback(
     (trip: Trip) => {
-      const stamped = { ...trip, updatedAt: Date.now() };
+      /*
+        A trip that already knows where it came from keeps that - only a trip
+        with no origin gets one. Importing a map, for instance, has its own
+        provenance and is not a share.
+      */
+      const source = trip.source ?? consumeShareSource() ?? undefined;
+      const stamped = { ...trip, source, updatedAt: Date.now() };
       setTrips((prev) => [...prev, stamped]);
       setCurrentId(stamped.id);
       clearTombstone(stamped.id);

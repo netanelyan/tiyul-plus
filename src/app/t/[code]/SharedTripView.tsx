@@ -1,10 +1,14 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { Destination, Place } from '@/lib/types';
 import { categoryMeta } from '@/lib/categories';
 import { isOwnShare, markSharedVisit, trackEvent } from '@/lib/events';
+import { track } from '@/lib/analytics';
+import { rememberShareArrival } from '@/lib/shareAttribution';
+import BuiltWithTiyul from '@/components/BuiltWithTiyul';
 import { useTrip } from '@/lib/trip/TripContext';
 import { travelLeg } from '@/lib/trip/travel';
 import { dayDescription } from '@/lib/trip/dayDescription';
@@ -24,6 +28,39 @@ import { daysHe } from '@/lib/duration';
  * exactly which cities are involved, so there is no reason the browser
  * should download 2MB of catalog for a one- or two-city trip.
  */
+/** The code out of `/t/<code>`, or '' off the client. */
+const shareToken = (): string => {
+  if (typeof window === 'undefined') return '';
+  try {
+    return decodeURIComponent(window.location.pathname.split('/t/')[1] ?? '');
+  } catch {
+    return '';
+  }
+};
+
+/**
+ * Whether this browser is the one that created this link.
+ *
+ * `useSyncExternalStore` and **not** state set from an effect: this repo's lint
+ * config rejects `react-hooks/set-state-in-effect` by name, and the server has
+ * no answer to this question, so the three-argument form is exactly the shape
+ * the problem has. The subscribe callback is a no-op because ownership cannot
+ * change while the page is open - the only writer is the trip screen, in
+ * another tab, before this page was ever opened.
+ *
+ * The server snapshot is `false`, so the first paint is the **visitor's** view.
+ * That direction is deliberate: the owner briefly seeing a CTA meant for
+ * someone else is a harmless flicker, whereas defaulting to "owner" would hide
+ * the invitation from every real visitor for a frame.
+ */
+function useIsOwnShare(): boolean {
+  return useSyncExternalStore(
+    () => () => {},
+    () => isOwnShare(shareToken()),
+    () => false,
+  );
+}
+
 export default function SharedTripView({
   shared,
   cityData,
@@ -34,6 +71,7 @@ export default function SharedTripView({
   const trip = useTrip();
   const router = useRouter();
   const [saved, setSaved] = useState(false);
+  const isOwner = useIsOwnShare();
 
   /*
     The "shared link opens" counter - only a viewer who is not the owner
@@ -46,8 +84,16 @@ export default function SharedTripView({
   */
   useEffect(() => {
     if (!trip.hydrated) return;
-    const token = decodeURIComponent(window.location.pathname.split('/t/')[1] ?? '');
+    const token = shareToken();
     if (!token || isOwnShare(token)) return;
+    /*
+      Attribution is recorded **before** the once-per-tab guard below, and
+      outside it. The guard exists so a refresh does not inflate the counter;
+      the origin of the trip this person may build is not a counter, and a
+      visitor who reloads the link and then plans should still be credited to
+      it. `rememberShareArrival` is itself first-wins, so repeating it is free.
+    */
+    rememberShareArrival(token);
     const seenKey = `tiyul-plus:opened:${token.slice(0, 40)}`;
     try {
       if (sessionStorage.getItem(seenKey)) return;
@@ -84,16 +130,47 @@ export default function SharedTripView({
     : { lat: 48.2, lng: 16.37 };
 
   function saveToMyTrips() {
+    // The owner copying their own link is not the viral loop, and counting it
+    // would inflate the one number this feature exists to move.
+    if (!isOwner) track('share_duplicate');
     trip.createTripFrom(tripFromShared(shared));
     setSaved(true);
     setTimeout(() => router.push('/chat'), 600);
   }
 
+  /** The invitation, for people who are not the trip's author. Rendered twice - see below. */
+  const planCta = (placement: 'bar' | 'inline') => (
+    <Link
+      href="/planner"
+      onClick={() => track('share_cta_click', { surface: 'shared_trip', element: placement })}
+      className={
+        placement === 'bar'
+          ? 'flex-1 rounded-xl bg-sunset px-4 py-2.5 text-center text-sm font-extrabold text-cream transition hover:bg-sunset-deep'
+          : 'rounded-xl bg-sunset px-6 py-3 text-center font-bold text-cream transition hover:bg-sunset-deep'
+      }
+    >
+      תכננו טיול משלכם, בחינם
+    </Link>
+  );
+
   return (
-    <div className="rise-in">
+    /*
+      A fragment, with the sticky bar as a SIBLING of `.rise-in` rather than a
+      child of it. `.rise-in` keeps its final transform forever, and a transform
+      creates a containing block - so a `fixed` bar nested inside it is measured
+      against the article, not the viewport. That is the documented trap that
+      caught TripWorkspace's mobile chat bar, and this is the same fix it uses,
+      down to `clears-chat-bar` reserving the height so the bar never covers the
+      last day of the plan.
+    */
+    <>
+    <div className="rise-in clears-chat-bar">
       {/* Header */}
       <div className="rounded-3xl bg-shell p-6 ring-1 ring-night/10 sm:p-8">
-        <p className="text-xs font-bold text-sunset-deep">טיול ששותף איתכם · צפייה חופשית</p>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="text-xs font-bold text-sunset-deep">טיול ששותף איתכם · צפייה חופשית</p>
+          <BuiltWithTiyul surface="shared_trip" />
+        </div>
         <h1 className="display mt-1 text-3xl text-night">{shared.name}</h1>
         <p className="mt-2 text-sm font-semibold text-night/70">
           {daysHe(shared.days.length)} · {totalStops} עצירות
@@ -206,17 +283,49 @@ export default function SharedTripView({
         })}
       </div>
 
-      {/* Bottom CTA */}
-      <div className="mt-6 rounded-2xl bg-night px-6 py-5 text-center">
-        <p className="font-bold text-cream">רוצים לערוך את המסלול או לבנות אחד משלכם?</p>
+      {/*
+        Bottom CTA - **non-owners only**. Somebody looking at the trip they
+        built and sent does not need to be invited to build one; for them the
+        page ends with the plan, which is what they came to check.
+      */}
+      {!isOwner && (
+        <div className="mt-6 rounded-2xl bg-night px-6 py-5 text-center">
+          <p className="font-bold text-cream">אהבתם? ככה זה נראה כשבונים טיול כאן.</p>
+          <p className="mx-auto mt-1 max-w-md text-sm leading-relaxed text-cream/70">
+            אותו מסלול, אותה מפה, לפי מה שמעניין אתכם. בלי להירשם ובלי לשלם.
+          </p>
+          <div className="mt-4 flex flex-col items-center justify-center gap-2 sm:flex-row">
+            {planCta('inline')}
+            <button
+              onClick={saveToMyTrips}
+              disabled={saved}
+              className="rounded-xl bg-cream/10 px-6 py-3 font-bold text-cream ring-1 ring-cream/25 transition hover:bg-cream/15 disabled:opacity-70"
+            >
+              {saved ? '✓ נשמר' : 'שכפלו את הטיול הזה'}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+
+    {/* ---------- Mobile: the slim sticky bar ----------
+        `lg:hidden` because from lg the same invitation is already inline above,
+        and two of it is nagging. `end-3 start-20` leaves the accessibility
+        button its corner - the bar sits beside it, never over it - and z-40
+        stays below that button's z-[60] so even an overlap could not swallow
+        it. */}
+    {!isOwner && (
+      <div className="chat-bar-bottom fixed end-3 start-20 z-40 flex items-center gap-2 rounded-2xl bg-shell p-2 shadow-[0_10px_30px_-12px_rgba(36,27,77,0.5)] ring-1 ring-night/15 lg:hidden print:hidden">
+        {planCta('bar')}
         <button
           onClick={saveToMyTrips}
           disabled={saved}
-          className="mt-3 rounded-xl bg-sunset px-6 py-2.5 font-bold text-cream transition hover:bg-sunset-deep disabled:opacity-70"
+          className="shrink-0 rounded-xl bg-night/5 px-3 py-2.5 text-sm font-bold text-night transition hover:bg-night/10 disabled:opacity-70"
         >
-          {saved ? '✓ נשמר' : 'שמירה אצלי בחינם'}
+          {saved ? '✓' : 'שכפול'}
         </button>
       </div>
-    </div>
+    )}
+    </>
   );
 }

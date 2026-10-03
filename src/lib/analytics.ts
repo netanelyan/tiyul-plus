@@ -413,6 +413,22 @@ export type AnalyticsEvent =
   | 'share_whatsapp'
   | 'shared_trip_opened'
   | 'shared_trip_adopted'
+  /*
+    The two halves of "did the shared link invite anybody in".
+
+    `shared_trip_opened` and `shared_trip_adopted` above are deliberately NOT
+    duplicated under share-prefixed names: they already measure a shared view
+    and a share that led to a trip, they are already in the reports, and a
+    second name for the same moment produces two charts that disagree by a few
+    percent forever. These two are the moments nothing measured yet - the
+    visitor acting on the invitation rather than merely arriving.
+
+    `shared_trip_adopted` fires only for a browser that held no trips when it
+    arrived (it answers "did sharing bring a NEW person"), so `share_duplicate`
+    is also the only signal when an existing planner copies somebody's trip.
+  */
+  | 'share_cta_click'
+  | 'share_duplicate'
   | 'group_invite_created'
   | 'group_joined'
   // money

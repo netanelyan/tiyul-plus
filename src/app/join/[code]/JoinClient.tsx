@@ -1,7 +1,10 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useAuth } from '@/lib/auth/AuthContext';
+import { track } from '@/lib/analytics';
+import BuiltWithTiyul from '@/components/BuiltWithTiyul';
 import { authHeader } from '@/lib/auth/client';
 import ThinkingIndicator from '@/components/ThinkingIndicator';
 import JoinSkeleton from './JoinSkeleton';
@@ -63,6 +66,16 @@ export default function JoinClient({ code }: { code: string }) {
   const [trip, setTrip] = useState<EnrichedSnapshot | null>(null);
   const [votes, setVotes] = useState<Map<string, VoteTally>>(new Map());
   const [planning, setPlanning] = useState<Planning>(EMPTY_PLANNING);
+  /**
+   * Has this visitor actually taken part yet - voted or written a comment.
+   *
+   * Gates the one promotional line on the page (see the footer). RSVP and the
+   * date poll deliberately do not count: they are two taps somebody makes
+   * before they have seen the itinerary do anything, and the line is meant to
+   * arrive after the product has been useful to them, not after they confirmed
+   * they are coming.
+   */
+  const [participated, setParticipated] = useState(false);
 
   /** What is on screen right now - read synchronously so a fast second tap builds on the first. */
   const votesRef = useRef<Map<string, VoteTally>>(new Map());
@@ -160,6 +173,9 @@ export default function JoinClient({ code }: { code: string }) {
         | (Partial<GroupPayload> & { ok?: boolean; error?: string })
         | null;
       if (!data?.ok) return { ok: false, error: data?.error ?? 'failed' };
+      // A comment that the server accepted. `uncomment` is not participation -
+      // somebody deleting what they wrote has withdrawn it.
+      if (action === 'comment') setParticipated(true);
       absorb(data);
       if (data.votes) {
         const merged = new Map(data.votes.map((v) => [v.placeId, v] as const));
@@ -204,6 +220,12 @@ export default function JoinClient({ code }: { code: string }) {
     painted.set(placeId, applyVote(votesRef.current.get(placeId), placeId, next));
     votesRef.current = painted;
     setVotes(painted);
+    /*
+      On the tap, not on the reply. They voted; whether our write succeeded is
+      our problem, and a footer line that waits for the network would appear
+      seconds later, apropos of nothing.
+    */
+    setParticipated(true);
 
     const seq = (seqRef.current.get(placeId) ?? 0) + 1;
     seqRef.current.set(placeId, seq);
@@ -454,6 +476,31 @@ export default function JoinClient({ code }: { code: string }) {
       <p className="mt-6 text-center text-xs font-medium text-night/65">
         הכול נראה למארגן הטיול · הטיול מתעדכן כשמרעננים
       </p>
+
+      {/*
+        The one invitation this screen makes, and only to somebody who has
+        already taken part.
+
+        **Deliberately not a bar, a banner or a button.** A person on this page
+        is in the middle of doing the organiser a favour - voting on sixteen
+        stops and arguing about a museum - and interrupting that to advertise is
+        how a group-planning screen becomes a funnel nobody finishes. Gating it
+        on a vote or a comment means it appears **after** the work, at the
+        bottom, to a person who has just seen the product do something useful.
+        Before that it is not rendered at all.
+      */}
+      {participated && (
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center text-xs font-semibold text-night/65">
+          <BuiltWithTiyul surface="join" />
+          <Link
+            href="/planner"
+            onClick={() => track('share_cta_click', { surface: 'join', element: 'footer' })}
+            className="underline decoration-night/25 underline-offset-2 transition hover:text-night"
+          >
+            תכננו טיול משלכם
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

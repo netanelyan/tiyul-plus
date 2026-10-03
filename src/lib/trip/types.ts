@@ -102,12 +102,31 @@ export interface TripPin {
   createdAt?: number;
 }
 
+/**
+ * Where a trip came from, when it was not simply started from scratch.
+ *
+ * Only `'share'` exists today: the traveler opened somebody's /t/ link and
+ * then built a trip of their own. `code` is a prefix of that link's code, kept
+ * so the loop can be measured per link rather than only in total.
+ *
+ * **This is never encoded into a share link.** `encodeTripShare` lists the
+ * fields it carries one by one, so a trip's origin does not travel to the next
+ * person who receives it - which also means it cannot form a chain of who sent
+ * what to whom.
+ */
+export interface TripSource {
+  ref: 'share';
+  code: string;
+}
+
 export interface Trip {
   id: string;
   name: string;
   citySlugs: string[]; // the order of the trip's cities
   days: TripDay[];
   createdAt: number;
+  /** How the traveler got here, if they arrived from a shared link. See `TripSource`. */
+  source?: TripSource;
   /**
    * The trip dates, `YYYY-MM-DD` (a date, not a moment in time - see
    * `dates.ts`). Both optional: a trip without dates is a legitimate and
