@@ -129,7 +129,7 @@ export default function ShabbatKosherPanel({
                     </p>
                   ) : (
                     <p className="mt-1 text-xs font-semibold text-night/70">
-                      לא הצלחנו לקבוע שעון מקומי אמין לעיר הזו - בדקו לוח זמנים מקומי לפני
+                      לא הצלחנו לקבוע שעון מקומי אמין לעיר הזו. בדקו לוח זמנים מקומי לפני
                       שבת.
                     </p>
                   )}
@@ -211,7 +211,7 @@ export default function ShabbatKosherPanel({
                         ))}
                       </ul>
                       <p className="mt-1 text-[11px] font-medium text-night/65">
-                        מרחק אווירי מחושב מהקואורדינטות. הליכה בפועל ארוכה יותר - הרחוב לא ישר.
+                        מרחק אווירי מחושב מהקואורדינטות. ההליכה בפועל ארוכה יותר, כי הרחוב לא ישר.
                       </p>
                     </details>
                   )}
@@ -257,7 +257,7 @@ export default function ShabbatKosherPanel({
         ))}
 
         <p className="text-[11px] font-medium leading-relaxed text-night/65">
-          מידע הכשרות נאסף ממקורות ציבוריים ומוצג כפי שדווח - תמיד לוודא מול המקום לפני
+          מידע הכשרות נאסף ממקורות ציבוריים ומוצג כפי שדווח. תמיד לוודא מול המקום לפני
           שסומכים עליו.
         </p>
       </div>

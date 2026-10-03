@@ -70,7 +70,7 @@ export default function AccountClient({ cityNames }: { cityNames: CityNames }) {
         <div className="rounded-3xl bg-shell p-10 text-center ring-1 ring-night/10">
           <h2 className="display text-2xl text-night">האזור האישי מחכה לך</h2>
           <p className="mx-auto mt-2 max-w-md leading-relaxed text-night/70">
-            מתחברים בקוד חד-פעמי למייל (בלי סיסמאות) - והטיולים, הפרופיל ודרכון
+            מתחברים בקוד חד-פעמי למייל, בלי סיסמאות, והטיולים, הפרופיל ודרכון
             המדינות שלך נשמרים ועוברים איתך לכל מכשיר.
           </p>
           <p className="mt-5 text-sm font-semibold text-night/65">
@@ -224,7 +224,7 @@ function ProfileCard() {
         />
 
         <label htmlFor="pf-phone" className="mt-3 block text-xs font-bold text-night/65">
-          טלפון <span className="font-medium text-night/65">(לעדכוני טיול עתידיים - לא חובה)</span>
+          טלפון <span className="font-medium text-night/65">(לעדכוני טיול עתידיים, לא חובה)</span>
         </label>
         <input
           id="pf-phone"
@@ -284,7 +284,7 @@ function PassportCard() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="display text-xl text-night">דרכון המדינות שלך</h2>
-          <p className="mt-0.5 text-sm text-night/70">סמנו איפה כבר הייתם - ותראו כמה עולם נשאר</p>
+          <p className="mt-0.5 text-sm text-night/70">סמנו איפה כבר הייתם, ותראו כמה עולם נשאר</p>
         </div>
         <div className="rounded-2xl bg-night px-4 py-2.5 text-center">
           <p className="text-2xl font-black leading-none text-cream">{visited.size}</p>
@@ -417,7 +417,7 @@ function TripsCard({ onOpen, cityNames }: { onOpen: (id: string) => void; cityNa
       {trip.trips.length === 0 ? (
         <div className="mt-4 rounded-2xl bg-cream p-6 text-center ring-1 ring-night/10">
           <p className="font-bold text-night">עוד אין טיולים</p>
-          <p className="mt-1 text-sm text-night/70">מספרים לסוכן לאן חולמים לנסוע - והוא בונה</p>
+          <p className="mt-1 text-sm text-night/70">מספרים לסוכן לאן חולמים לנסוע, והוא בונה</p>
           <Link
             href="/chat"
             className="mt-3 inline-block rounded-xl bg-sunset px-5 py-2.5 text-sm font-bold text-cream transition hover:bg-sunset-deep"
@@ -489,10 +489,10 @@ function SettingsCard({ onDeletedAll }: { onDeletedAll: () => void }) {
           <p className="text-sm font-bold text-night">התוכנית שלי</p>
           <p className="text-xs text-night/65">
             {profile.plan === 'pro'
-              ? `טיול+ פרו - עד ${PRO_TRIPS_PER_MONTH} טיולים מלאים בחודש, ובדיקה לפני הנסיעה כלולה`
+              ? `טיול+ פרו · עד ${PRO_TRIPS_PER_MONTH} טיולים מלאים בחודש, ובדיקה לפני הנסיעה כלולה`
               : profile.plan === 'premium'
-                ? 'טיול+ פרימיום - מסלול אישי מובטח ובדיקה לפני הנסיעה כלולה'
-                : 'תוכנית חינם - מספיקה לטיול מלא ועשרות עריכות ביום'}
+                ? 'טיול+ פרימיום · מסלול אישי מובטח ובדיקה לפני הנסיעה כלולה'
+                : 'תוכנית חינם · מספיקה לטיול מלא ועשרות עריכות ביום'}
           </p>
         </div>
         {/* Display, so equality is right here - the badge has to name the plan
@@ -523,7 +523,7 @@ function SettingsCard({ onDeletedAll }: { onDeletedAll: () => void }) {
         <div>
           <p className="text-sm font-bold text-night">פרופיל ציבורי</p>
           <p className="text-xs text-night/65">
-            מטיילים יוכלו למצוא אותך בחיפוש ולראות שם, תמונה ודרכון - לא מייל, טלפון או
+            מטיילים יוכלו למצוא אותך בחיפוש ולראות שם, תמונה ודרכון. לא מייל, לא טלפון ולא
             טיולים
           </p>
           {profile.isPublic && !profile.displayName.trim() && (
@@ -616,7 +616,7 @@ function CommunityCard() {
     <section className="rounded-3xl bg-shell p-5 ring-1 ring-night/10 sm:p-6">
       <h2 className="display text-xl text-night">קהילת המטיילים</h2>
       <p className="mt-0.5 text-sm text-night/70">
-        מחפשים חברים לפי שם או כתובת מייל מדויקת - ורואים איפה הם כבר היו ומה
+        מחפשים חברים לפי שם או כתובת מייל מדויקת, ורואים איפה הם כבר היו ומה
         משותף לכם
       </p>
       <input
@@ -725,7 +725,7 @@ function PromoRedeem() {
         retryAfterSec?: number;
       };
       if (data.ok) {
-        setMsg({ ok: true, text: `הקוד נפדה - ${data.days} ימי פרימיום נוספו לחשבון.` });
+        setMsg({ ok: true, text: `הקוד נפדה. ${data.days} ימי פרימיום נוספו לחשבון.` });
         setCode('');
         await auth.reloadProfile();
       } else {

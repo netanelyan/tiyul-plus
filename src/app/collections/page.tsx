@@ -8,9 +8,9 @@ import { promotedMembers } from '@/lib/seo/hubData';
 import { leadPhotos } from '@/lib/seo/hubLead';
 import CardPhoto from '@/components/CardPhoto';
 
-const TITLE = 'אוספי יעדים - לפי אופי הטיול | טיול+';
+const TITLE = 'אוספי יעדים לפי אופי הטיול | טיול+';
 const DESCRIPTION =
-  'יעדים מסודרים לפי מה שמחפשים: אוכל כשר, טיול משפחתי, טבע, היסטוריה, אמנות, חופשה קצרה - כל אוסף בנוי מהמקומות שבאמת יש בכל יעד.';
+  'יעדים מסודרים לפי מה שמחפשים: אוכל כשר, טיול משפחתי, טבע, היסטוריה, אמנות או חופשה קצרה. כל אוסף בנוי מהמקומות שבאמת יש בכל יעד.';
 
 /*
   Through the shared helper, which is what puts the share image back. This
@@ -52,7 +52,7 @@ export default function CollectionsIndex() {
 
       <h1 className="display mt-4 text-3xl text-night sm:text-4xl">אוספי יעדים</h1>
       <p className="mt-3 max-w-2xl leading-relaxed text-night/75">
-        לא תמיד מחפשים עיר - לפעמים מחפשים סוג של טיול. האוספים כאן בנויים מהמקומות שבאמת
+        לא תמיד מחפשים עיר. לפעמים מחפשים סוג של טיול, והאוספים כאן בנויים מהמקומות שבאמת
         יש בכל יעד בקטלוג שלנו, ולא מרשימה שמישהו כתב מהזיכרון.
       </p>
 

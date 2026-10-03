@@ -1,79 +1,79 @@
 {
  "/": {
-  "hash": "8479741c206ad067",
-  "date": "2026-09-28"
+  "hash": "5f720c9592fde344",
+  "date": "2026-10-03"
  },
  "/about": {
-  "hash": "0eb75bc1270f6a35",
-  "date": "2026-09-20"
+  "hash": "5b99c702eaeb3929",
+  "date": "2026-10-03"
  },
  "/collections": {
-  "hash": "273498916bb42034",
-  "date": "2026-09-22"
+  "hash": "ff36dbe2acbe117b",
+  "date": "2026-10-03"
  },
  "/collections/americas": {
-  "hash": "6ca229e8d533709a",
-  "date": "2026-09-20"
+  "hash": "be8194f9d979e4c7",
+  "date": "2026-10-03"
  },
  "/collections/art": {
   "hash": "c5c34eb5dc21e154",
   "date": "2026-09-20"
  },
  "/collections/asia": {
-  "hash": "67d8d8eaf4e884c8",
-  "date": "2026-09-20"
+  "hash": "ea3803dc8da6297f",
+  "date": "2026-10-03"
  },
  "/collections/europe": {
-  "hash": "a2779112dca420d8",
-  "date": "2026-09-20"
+  "hash": "d66219a9aaa13c66",
+  "date": "2026-10-03"
  },
  "/collections/family": {
-  "hash": "d17316831f511221",
-  "date": "2026-09-20"
+  "hash": "06291fbc63905fb2",
+  "date": "2026-10-03"
  },
  "/collections/food": {
-  "hash": "67dcca190a1ea3e6",
-  "date": "2026-09-28"
+  "hash": "f708afbf58f158d4",
+  "date": "2026-10-03"
  },
  "/collections/history": {
   "hash": "8267738a163f29a6",
   "date": "2026-09-20"
  },
  "/collections/kosher": {
-  "hash": "390672e37d800a16",
-  "date": "2026-09-20"
+  "hash": "d6b789a0ee7cabe8",
+  "date": "2026-10-03"
  },
  "/collections/long-trips": {
   "hash": "26814a4e0e188d13",
   "date": "2026-09-20"
  },
  "/collections/nature": {
-  "hash": "507573bc43726315",
-  "date": "2026-09-20"
+  "hash": "86d0b9532773cbb5",
+  "date": "2026-10-03"
  },
  "/collections/pesach": {
-  "hash": "6b22eea60228f32f",
-  "date": "2026-09-20"
+  "hash": "548b0e4407a53e79",
+  "date": "2026-10-03"
  },
  "/collections/romantic": {
-  "hash": "22a29257d2219d9c",
-  "date": "2026-09-20"
+  "hash": "2117aa894e3e95fd",
+  "date": "2026-10-03"
  },
  "/collections/short-breaks": {
   "hash": "572984645329467c",
   "date": "2026-09-20"
  },
  "/collections/winter": {
-  "hash": "61138afe25d3fda5",
-  "date": "2026-09-20"
+  "hash": "632c281eddd4215b",
+  "date": "2026-10-03"
  },
  "/contact": {
-  "hash": "2dc61a02e6ac8168",
-  "date": "2026-09-21"
+  "hash": "7c8909e1467f9274",
+  "date": "2026-10-03"
  },
  "/countries": {
-  "hash": "a490ccf9da6be7fd",
-  "date": "2026-09-22"
+  "hash": "b67f1e946d51caf9",
+  "date": "2026-10-03"
  },
  "/countries/albania": {
   "hash": "07bd6187290480d3",
@@ -1232,11 +1232,11 @@
   "date": "2026-09-20"
  },
  "/kosher": {
-  "hash": "64cce6de157f8c9b",
-  "date": "2026-09-22"
+  "hash": "b7662369414c79b2",
+  "date": "2026-10-03"
  },
  "/premium": {
-  "hash": "279abbaa75174a73",
-  "date": "2026-09-27"
+  "hash": "dce924b563f3a1b5",
+  "date": "2026-10-03"
  }
 }

@@ -214,7 +214,7 @@ export default function AgentWorkspace() {
         <h1 className="display mt-3 text-2xl text-night">הטיול הזה לא נמצא במכשיר הזה</h1>
         <p className="mt-3 leading-relaxed text-night/65">
           הטיולים נשמרים בדפדפן שבו בנו אותם. אם בניתם אותו בטלפון אחר, בדפדפן אחר, או
-          שניקיתם את נתוני הגלישה - הוא פשוט לא כאן. לא מחקנו אותו.
+          שניקיתם את נתוני הגלישה, הוא פשוט לא כאן. לא מחקנו אותו.
         </p>
         <p className="mt-2 text-sm leading-relaxed text-night/70">
           עם חשבון זה לא קורה: הטיולים נשמרים אצלנו ונפתחים בכל מכשיר, גם אחרי ניקוי
@@ -245,7 +245,7 @@ export default function AgentWorkspace() {
           לאן טסים הפעם?
         </h1>
         <p className="rise-in mt-4 max-w-xl text-center leading-relaxed text-night/70">
-          מספרים לי מה מדמיינים - ואני בונה טיול אמיתי, יום-אחרי-יום, על מפה. בעברית.
+          ספרו לי מה בא לכם, ואני אבנה מסלול אמיתי, יום-אחרי-יום, על מפה ובעברית.
         </p>
 
         {/* Shared input + chips - a chip fills the field for editing, submitting starts the conversation */}

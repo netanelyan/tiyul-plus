@@ -100,7 +100,7 @@ export function travelLeg(from: string, to: string, opts: LegOptions = {}): Leg 
 
   // No coordinates: the hand-written table if it exists, otherwise an honest answer with no invention
   if (!a || !b) {
-    return curated ?? { emoji: '🧭', label: 'מעבר בין הערים - לבדוק חיבורים' };
+    return curated ?? { emoji: '🧭', label: 'מעבר בין הערים, לבדוק חיבורים' };
   }
 
   const airKm = Math.round(haversineKm(a, b));
@@ -109,7 +109,7 @@ export function travelLeg(from: string, to: string, opts: LegOptions = {}): Leg 
   if (overSea) {
     return {
       emoji: '✈️',
-      label: `כ-${airKm} ק"מ, מעבר ימי - טיסה או מעבורת`,
+      label: `כ-${airKm} ק"מ, מעבר ימי: טיסה או מעבורת`,
     };
   }
 
@@ -119,7 +119,7 @@ export function travelLeg(from: string, to: string, opts: LegOptions = {}): Leg 
   if (roadKm > 900) {
     return {
       emoji: '✈️',
-      label: `כ-${roadKm} ק"מ ביבשה - טיסה פנימית או נסיעה ארוכה`,
+      label: `כ-${roadKm} ק"מ ביבשה: טיסה פנימית או נסיעה ארוכה`,
     };
   }
 
@@ -134,10 +134,10 @@ export function travelLeg(from: string, to: string, opts: LegOptions = {}): Leg 
   if (curated) return curated;
 
   if (roadKm <= 400) {
-    return { emoji: '🚆', label: `כ-${roadKm} ק"מ ברכבת/אוטובוס - לבדוק חיבורים` };
+    return { emoji: '🚆', label: `כ-${roadKm} ק"מ ברכבת/אוטובוס, לבדוק חיבורים` };
   }
   return {
     emoji: '🚆',
-    label: `כ-${roadKm} ק"מ - רכבת/אוטובוס ארוך או טיסה פנימית`,
+    label: `כ-${roadKm} ק"מ: רכבת/אוטובוס ארוך או טיסה פנימית`,
   };
 }

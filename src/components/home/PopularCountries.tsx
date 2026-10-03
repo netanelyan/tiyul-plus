@@ -23,7 +23,7 @@ export default function PopularCountries({ tiles }: { tiles: CountryTile[] }) {
     <section className="py-10">
       <SectionHead
         title="מדינות פופולריות"
-        subtitle="ויזה, מטבע, סים ותשלומים - לכל מדינה עמוד משלה, ובתוכו הערים."
+        subtitle="לכל מדינה יש עמוד משלה עם ויזה, מטבע, סים ותשלומים, ובתוכו הערים."
         href="/countries"
         linkLabel="לכל המדינות"
       />

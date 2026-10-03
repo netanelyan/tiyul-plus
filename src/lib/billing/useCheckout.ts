@@ -133,7 +133,7 @@ export function useCheckout(options: CheckoutOptions = {}): Checkout {
         return;
       }
       if (data.error === 'auth-required') {
-        setNotice('המנוי נשמר בחשבון, אז קודם מתחברים - זה לוקח חצי דקה, בלי סיסמה.');
+        setNotice('המנוי נשמר בחשבון, אז קודם מתחברים. זה לוקח חצי דקה, בלי סיסמה.');
         setNeedsLogin(wanted);
       } else if (data.error === 'already-premium') setNotice('אתם כבר בתוכנית הזאת 🎉');
       else if (data.error === 'switch-requires-support')
@@ -144,12 +144,12 @@ export function useCheckout(options: CheckoutOptions = {}): Checkout {
           'מעבר בין מנוי קיים למנוי אחר אנחנו עושים ידנית, כדי שלא תחויבו פעמיים בטעות. כתבו לנו בדף יצירת הקשר ונעביר אתכם - בלי חיוב כפול ובלי לאבד ימים ששילמתם עליהם.',
         );
       else if (data.error === 'sandbox-blocked')
-        setNotice('ההרשמה כבויה כרגע באתר החי (מצב בדיקה) - ממש בקרוב.');
+        setNotice('ההרשמה כבויה כרגע באתר החי (מצב בדיקה). ממש בקרוב.');
       else if (data.error === 'not-configured')
-        setNotice('ההרשמה נפתחת ממש בקרוב - התשלומים בשלבי חיבור אחרונים.');
-      else setNotice('משהו השתבש בדרך לתשלום - נסו שוב עוד רגע.');
+        setNotice('ההרשמה נפתחת ממש בקרוב. התשלומים בשלבי חיבור אחרונים.');
+      else setNotice('משהו השתבש בדרך לתשלום. נסו שוב עוד רגע.');
     } catch {
-      setNotice('משהו השתבש בדרך לתשלום - נסו שוב עוד רגע.');
+      setNotice('משהו השתבש בדרך לתשלום. נסו שוב עוד רגע.');
     } finally {
       setBusy(null);
     }

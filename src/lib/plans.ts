@@ -610,16 +610,16 @@ export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string; 
     // Named by what it does, not by what it is called: "shared trip" alone means
     // nothing to somebody who has not seen it, and the four verbs are the reason
     // to pay.
-    label: 'טיול משותף - הצבעות, תגובות, הצעות מקומות ותאריכים',
-    free: 'הצטרפות והשתתפות מלאה - בחינם',
+    label: 'טיול משותף: הצבעות, תגובות, הצעות מקומות ותאריכים',
+    free: 'הצטרפות והשתתפות מלאה, בחינם',
     premium: 'יצירת קישור הזמנה לחברים',
     pro: 'יצירת קישור הזמנה לחברים',
   },
   {
     label: 'זמינות הסוכן החכם',
-    free: 'משותפת - תלויה בעומס היומי באתר',
-    premium: 'מסלול אישי מובטח - לא תלוי באף אחד אחר',
-    pro: 'מסלול אישי מובטח - לא תלוי באף אחד אחר',
+    free: 'משותפת, תלויה בעומס היומי באתר',
+    premium: 'מסלול אישי מובטח, לא תלוי באף אחד אחר',
+    pro: 'מסלול אישי מובטח, לא תלוי באף אחד אחר',
   },
   /*
     The capacity row - the honest headline of both paid tiers, and the row where

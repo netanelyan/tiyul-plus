@@ -128,7 +128,7 @@ export default function HeroPrompt({
               and is now also referenced properly.
             */
             aria-describedby="kosher-toggle-hint"
-            title="ההעדפה עוברת לסוכן בשקט - הוא לא ישאל על זה בשיחה"
+            title="ההעדפה עוברת לסוכן בשקט, והוא לא ישאל על זה בשיחה"
             className={`badge rounded-full px-4 py-2.5 text-sm font-semibold ring-1 transition ${
               kosher
                 ? 'bg-sunset text-cream ring-sunset'
@@ -156,7 +156,7 @@ export default function HeroPrompt({
               "we will not ask about this again" promise for anyone who cannot
               hover. */}
           <span id="kosher-toggle-hint" className="sr-only">
-            ההעדפה עוברת לסוכן בשקט - הוא לא ישאל על זה בשיחה
+            ההעדפה עוברת לסוכן בשקט, והוא לא ישאל על זה בשיחה
           </span>
           {extraChips}
           </>

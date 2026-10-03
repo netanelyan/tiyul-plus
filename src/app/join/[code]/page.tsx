@@ -3,7 +3,7 @@ import JoinClient from './JoinClient';
 
 export const metadata: Metadata = {
   title: 'הצטרפות לטיול משותף | טיול+',
-  description: 'הוזמנתם לראות טיול ולהצביע על העצירות - טיול+',
+  description: 'הוזמנתם לראות טיול ולהצביע על העצירות · טיול+',
   robots: { index: false, follow: true },
 };
 

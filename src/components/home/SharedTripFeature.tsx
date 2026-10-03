@@ -71,9 +71,9 @@ export default function SharedTripFeature({ photo }: { photo?: string }) {
           </span>
           <h2 className="display mt-3 text-3xl text-night sm:text-4xl">טיול משותף</h2>
           <p className="mt-3 text-base leading-relaxed text-night/75 sm:text-lg">
-            שולחים קישור אחד. החברים רואים את המסלול, מצביעים על כל עצירה, מגיבים, מציעים מקומות
-            מהקטלוג ומסמנים אילו תאריכים מתאימים להם ומי בכלל מגיע. אתם רואים הכול במקום אחד -
-            במקום שלושים הודעות בוואטסאפ.
+            שולחים קישור אחד וכולם בפנים: החברים רואים את המסלול, מצביעים על כל עצירה, מגיבים
+            ומציעים מקומות מהקטלוג. גם התאריכים ומי בכלל מגיע נסגרים שם, במקום בשלושים הודעות
+            בוואטסאפ.
           </p>
           <ul className="mt-5 grid gap-2 text-sm font-semibold text-night/80 sm:grid-cols-2">
             <li>👍 הצבעה על כל עצירה</li>
@@ -82,7 +82,7 @@ export default function SharedTripFeature({ photo }: { photo?: string }) {
             <li>📅 סקר תאריכים ומי מגיע</li>
           </ul>
           <p className="mt-5 text-sm font-bold text-night">
-            החברים לא משלמים כלום. רק מי שיוצר את הקישור - במנוי של {PREMIUM_PRICE_ILS} ₪ לחודש.
+            החברים לא משלמים כלום. משלם רק מי שפותח את הקישור, {PREMIUM_PRICE_ILS} ₪ לחודש.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <Link

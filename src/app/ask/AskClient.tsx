@@ -36,8 +36,8 @@ export default function AskClient() {
     <div className="mx-auto max-w-3xl">
       <h1 className="display text-3xl text-night sm:text-4xl">שאל את הסוכן</h1>
       <p className="mt-3 max-w-xl leading-relaxed text-night/70">
-        שאלות על יעדים, בעברית - בלי לפתוח טיול ובלי להתחבר. אם מתוך השיחה יתגבש טיול, הסוכן יציע לבנות
-        אותו במפה - בלחיצה אחת, לא לפני.
+        שאלות על יעדים, בעברית, בלי לפתוח טיול ובלי להתחבר. אם מתוך השיחה יתגבש טיול, הסוכן יציע לבנות
+        אותו במפה בלחיצה אחת, לא לפני.
       </p>
 
       <div className="mt-5 h-[70vh] min-h-[480px]">
@@ -46,10 +46,10 @@ export default function AskClient() {
           autoFocus
           className="flex h-full"
           starters={ASK_STARTERS}
-          emptyHint="שאלו אותי כל דבר על יעד - ואם ירקם מזה טיול, אציע לבנות אותו."
+          emptyHint="שאלו אותי כל דבר על יעד. אם ירקם מזה טיול, אציע לבנות אותו."
           clearConfirmMessage="לנקות את השיחה?"
           headerLabel="שאל את הסוכן"
-          headerHint="בלי טיול, בלי לחץ - רק שאלות"
+          headerHint="בלי טיול ובלי לחץ, רק שאלות"
           placeholder="שאלו על יעד, ימים, תקציב, כשרות…"
         />
       </div>

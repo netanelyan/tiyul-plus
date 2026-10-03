@@ -156,7 +156,7 @@ export default function PremiumClient() {
         <p
           className={`rounded-xl bg-zest/25 px-3 py-2.5 text-center text-xs font-bold text-night ${extraClass}`}
         >
-          ★ זו התוכנית שלכם - תודה שאתם איתנו
+          ★ זו התוכנית שלכם. תודה שאתם איתנו
         </p>
       );
     if (planAtLeast(plan, wanted))
@@ -227,7 +227,7 @@ export default function PremiumClient() {
             emoji: '🤝',
             title: 'מתכננים עם עוד אנשים',
             price: `${ils(TRIP_PASS_PRICE_ILS)} ₪ לטיול`,
-            who: 'כרטיס טיול - הכי מתאים לרוב האנשים',
+            who: 'כרטיס טיול, הכי מתאים לרוב האנשים',
             highlight: true,
           },
           {
@@ -235,14 +235,14 @@ export default function PremiumClient() {
             emoji: '🧭',
             title: 'מתכננים לבד',
             price: 'חינם',
-            who: 'הסוכן, המפה והמסלול - בלי לשלם כלום',
+            who: 'הסוכן, המפה והמסלול, בלי לשלם כלום',
           },
           {
             href: '#plan-pro',
             emoji: '⚡',
             title: 'מתכננים כל הזמן',
             price: `${ils(PRO_PRICE_ILS)} ₪ לחודש`,
-            who: `פרו - עד ${PRO_TRIPS_PER_MONTH} טיולים מלאים בחודש`,
+            who: `פרו, עד ${PRO_TRIPS_PER_MONTH} טיולים מלאים בחודש`,
           },
           {
             href: '#agents',
@@ -309,21 +309,21 @@ export default function PremiumClient() {
             <li className="flex items-start gap-2">
               <span className="mt-0.5 text-zest">✓</span>
               <span>
-                <b className="text-cream">טיול משותף</b> - קישור אחד, וכולם מצביעים, מגיבים, מציעים
+                <b className="text-cream">טיול משותף</b>: קישור אחד, וכולם מצביעים, מגיבים, מציעים
                 מקומות ומסמנים תאריכים. לחברים זה חינם לגמרי.
               </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="mt-0.5 text-zest">✓</span>
               <span>
-                <b className="text-cream">הבדיקה לפני הנסיעה כלולה</b> - לכל טיול, בלי הגבלה
+                <b className="text-cream">הבדיקה לפני הנסיעה כלולה</b> לכל טיול, בלי הגבלה
                 ({priceLabel()} לטיול בלי מנוי).
               </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="mt-0.5 text-zest">✓</span>
               <span>
-                <b className="text-cream">מסלול אישי מובטח לסוכן</b> - בלי תלות בעומס באתר.
+                <b className="text-cream">מסלול אישי מובטח לסוכן</b>, בלי תלות בעומס באתר.
               </span>
             </li>
           </ul>
@@ -390,8 +390,8 @@ export default function PremiumClient() {
             {ils(PRO_PRICE_ILS)} ₪<span className="text-sm font-semibold text-night/65"> / לחודש</span>
           </p>
           <p className="mt-2 text-sm leading-relaxed text-night/65">
-            <b className="text-night">בדיוק מה שיש בפרימיום, עם הרבה יותר מקום לתכנן.</b> לא פיצ׳ר
-            נוסף - נפח.
+            <b className="text-night">הכול פתוח, בלי לספור.</b> זה לא פיצ׳ר נוסף. זה מקום לתכנן
+            כמה שבא לכם.
           </p>
           <ul className="mt-4 space-y-2 text-sm text-night/70">
             <li className="flex items-start gap-2">
@@ -399,26 +399,26 @@ export default function PremiumClient() {
               <span>
                 <b className="text-night">
                   עד {PRO_TRIPS_PER_MONTH} טיולים מלאים בחודש
-                </b>{' '}
-                - עם כל השיחות והעריכות סביב כל אחד
+                </b>
+                , עם כל השיחות והעריכות סביב כל אחד
               </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="mt-0.5 text-sunset-deep">✓</span>
               <span>
-                פי 3 מהמכסות היומיות של פרימיום - שיחות, בניות מהירות, תמונות ובדיקות חיות
+                המכסות היומיות הגבוהות ביותר שיש: שיחות, בניות מהירות, תמונות ובדיקות חיות
               </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="mt-0.5 text-sunset-deep">✓</span>
-              <span>הטיול המשותף והבדיקה לפני הנסיעה - כלולים, כמו בפרימיום</span>
+              <span>הטיול המשותף והבדיקה לפני הנסיעה כלולים בכל טיול</span>
             </li>
           </ul>
           {/* A quiet line, not a box - the last nested card in this grid, and the
               three columns only read as one system while none of them has one. */}
           <p className="mt-3 border-t border-night/10 pt-3 text-xs leading-relaxed text-night/70">
             למי שמארגן טיולים למשפחה ולחברים כל הזמן, או מתכנן מסע ארוך על פני כמה חודשים.{' '}
-            <b className="text-night/75">לא נתקלתם בקיר בפרימיום? אל תשדרגו.</b>
+            <b className="text-night/75">מסתדרים בלי זה? אל תשדרגו.</b>
           </p>
           {cta('pro', 'mt-4')}
         </section>
@@ -474,7 +474,7 @@ export default function PremiumClient() {
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-night/70">
           תכננתם לפני חודשיים, והטיול בעוד שבועיים. מה השתנה מאז? הבדיקה עונה על זה בבת אחת, על כל
           הטיול. <b className="text-night">אם אתם טסים פעם-פעמיים בשנה, זו כנראה האפשרות הנכונה
-          לכם</b> - וזה בסדר גמור מבחינתנו.
+          לכם</b>, וזה בסדר גמור מבחינתנו.
         </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <ul className="space-y-1.5 text-sm text-night/70">
@@ -513,12 +513,12 @@ export default function PremiumClient() {
 
       {/* ---------- The arithmetic, in the open ---------- */}
       <div className="mt-4 rounded-2xl bg-cream p-4 ring-1 ring-night/10">
-        <p className="text-sm font-bold text-night">החשבון, בגלוי - מה משתלם למי:</p>
+        <p className="text-sm font-bold text-night">החשבון בגלוי: מה משתלם למי</p>
         <ul className="mt-2 space-y-2 text-sm leading-relaxed text-night/70">
           <li className="flex items-start gap-2">
             <span className="mt-0.5 text-night/65">•</span>
             <span>
-              <b className="text-night">רוצים רק את הבדיקה:</b> קנו בדיקה - {priceLabel()} לטיול,
+              <b className="text-night">רוצים רק את הבדיקה:</b> קנו בדיקה, {priceLabel()} לטיול,
               וזה הכול. הכרטיס שווה את ההפרש רק אם אתם גם מתכננים עם עוד אנשים.
             </span>
           </li>
@@ -526,7 +526,7 @@ export default function PremiumClient() {
             <span className="mt-0.5 text-night/65">•</span>
             <span>
               <b className="text-night">מתכננים עם עוד אנשים:</b> כרטיס אחד ל
-              {ils(TRIP_PASS_PRICE_ILS)} ₪ לטיול - ההפרש מבדיקה בודדת הוא{' '}
+              {ils(TRIP_PASS_PRICE_ILS)} ₪ לטיול. ההפרש מבדיקה בודדת הוא{' '}
               {ils(TRIP_PASS_PRICE_ILS - PRICE_ILS)} ₪, ובתוכו הטיול המשותף וכל השאר.{' '}
               <b className="text-night">לחברים שמצטרפים זה חינם לגמרי</b>, תמיד.
             </span>
@@ -551,7 +551,7 @@ export default function PremiumClient() {
               <b className="text-night">מתכננים כל הזמן:</b> פרו מתחיל להשתלם מעל{' '}
               {passesMatchingPro} כרטיסים בחודש ({ilsBig(yearOfPro)} ₪ בשנה).{' '}
               <b className="text-night">
-                מתחת לזה - כרטיסים לפי טיול זולים יותר, ואנחנו אומרים את זה למרות שזה פחות כסף
+                מתחת לזה, כרטיסים לפי טיול זולים יותר, ואנחנו אומרים את זה למרות שזה פחות כסף
                 בשבילנו.
               </b>
             </span>
@@ -571,7 +571,7 @@ export default function PremiumClient() {
           🧳 סוכני נסיעות ומארגני טיולים
         </h2>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-cream/75">
-          אתם מתכננים לאנשים אחרים - קבוצות, משפחות, לקוחות. זה עבודה אחרת מלתכנן טיול אחד לעצמכם,
+          אתם מתכננים לאנשים אחרים: קבוצות, משפחות, לקוחות. זו עבודה אחרת מלתכנן טיול אחד לעצמכם,
           והתמחור אצלנו הוא <b className="text-cream">מותאם ומתומחר לפי העסק</b>: לפי כמה טיולים
           אתם מתכננים, כמה אנשים אצלכם עובדים על זה, ומה בדיוק אתם צריכים לקבל בסוף.
         </p>
@@ -588,7 +588,7 @@ export default function PremiumClient() {
           <div className="rounded-2xl bg-cream/10 p-4 ring-1 ring-cream/15">
             <p className="text-sm font-black text-cream">🗂️ כמה טיולי לקוחות במקביל</p>
             <p className="mt-1 text-xs leading-relaxed text-cream/65">
-              כל טיול הוא עולם משלו - מסלול, מפה, תאריכים והשיחה עם הסוכן נשמרים בנפרד לכל אחד,
+              כל טיול הוא עולם משלו: מסלול, מפה, תאריכים והשיחה עם הסוכן נשמרים בנפרד לכל אחד,
               ועוברים בין הטיולים בלחיצה. אפשר גם לשכפל טיול קיים כבסיס ללקוח הבא.
             </p>
           </div>
@@ -596,7 +596,7 @@ export default function PremiumClient() {
             <p className="text-sm font-black text-cream">📄 משהו לשלוח ללקוח</p>
             <p className="mt-1 text-xs leading-relaxed text-cream/65">
               ספר טיול מודפס או PDF עם תיאור לכל עצירה ונספחי שבת וכשרות, קישור צפייה שנשלח
-              בוואטסאפ ונשאר מעודכן, וניווט מוכן לכל יום. ואם צריך לאסוף העדפות מהמשתתפים - קישור
+              בוואטסאפ ונשאר מעודכן, וניווט מוכן לכל יום. ואם צריך לאסוף העדפות מהמשתתפים, קישור
               הזמנה עם הצבעות, תגובות וסקר תאריכים.
             </p>
           </div>
@@ -604,8 +604,8 @@ export default function PremiumClient() {
 
         <p className="mt-4 rounded-xl bg-cream/5 px-4 py-3 text-xs leading-relaxed text-cream/70">
           <b className="text-cream">מה שכתוב כאן זה מה שקיים היום</b>, ואפשר להתחיל להשתמש בו
-          מיד. מה שאין עדיין - מיתוג משלכם על הייצוא, חשבון עם כמה משתמשים, חיבור למערכות שלכם -
-          זה בדיוק מה שנבנה לפי מה שתגידו לנו שאתם צריכים. בלי הבטחות למסכים שעוד לא קיימים.
+          מיד. מה שאין עדיין, כמו מיתוג משלכם על הייצוא, חשבון עם כמה משתמשים או חיבור למערכות
+          שלכם, זה בדיוק מה שנבנה לפי מה שתגידו לנו שאתם צריכים. בלי הבטחות למסכים שעוד לא קיימים.
         </p>
 
         {agentFormOpen ? (
@@ -684,19 +684,19 @@ export default function PremiumClient() {
             <p className="mt-2 text-sm leading-relaxed text-night/65">
               כמעט הכול: שיחה עם הסוכן, בניית מסלול, עריכה, המפה, קטלוג היעדים ושכבת הכשרות, קישור
               שיתוף לצפייה, הדפסה ו-PDF, וניווט לכל יום. גם להצטרף לטיול משותף של מישהו אחר,
-              להצביע, להגיב ולהציע מקומות - הכול חינם. בתשלום: יצירת הטיול המשותף, והבדיקה לפני
+              להצביע, להגיב ולהציע מקומות, הכול חינם. בתשלום: יצירת הטיול המשותף, והבדיקה לפני
               הנסיעה.
             </p>
           </details>
           <details className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
             <summary className="cursor-pointer text-sm font-bold text-night">
-              מה ההבדל האמיתי בין פרימיום לפרו?
+              מה ההבדל האמיתי בין כרטיס טיול לפרו?
             </summary>
             <p className="mt-2 text-sm leading-relaxed text-night/65">
-              נפח, וזהו. אין בפרו אף פיצ׳ר שאין בפרימיום - יש בו מקום לתכנן עד{' '}
-              {PRO_TRIPS_PER_MONTH} טיולים מלאים בחודש במקום אחד, ומכסות יומיות גדולות פי שלושה.
-              אם אתם מתכננים טיול או שניים בשנה, פרימיום הוא התוכנית שלכם ופרו הוא בזבוז כסף.
-              אנחנו מעדיפים לומר את זה כאן מאשר שתגלו אחרי חודש.
+              כרטיס טיול הוא תשלום חד-פעמי לטיול אחד, וכולל את הטיול המשותף ואת הבדיקה לפני
+              הנסיעה. פרו הוא מנוי חודשי, ובתוכו מקום לתכנן עד {PRO_TRIPS_PER_MONTH} טיולים
+              מלאים בחודש ומכסות יומיות גבוהות. אם אתם מתכננים טיול או שניים בשנה, כרטיס לכל
+              טיול יוצא לכם זול יותר. אנחנו מעדיפים לומר את זה כאן מאשר שתגלו אחרי חודש.
             </p>
           </details>
           <details className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
@@ -704,7 +704,7 @@ export default function PremiumClient() {
               החברים שלי צריכים לשלם או להירשם?
             </summary>
             <p className="mt-2 text-sm leading-relaxed text-night/65">
-              לא לשלם. הם כן מתחברים עם המייל שלהם (קוד חד-פעמי, בלי סיסמה) - רק כדי שנדע מי הצביע
+              לא לשלם. הם כן מתחברים עם המייל שלהם (קוד חד-פעמי, בלי סיסמה), רק כדי שנדע מי הצביע
               מה, ושכל אחד יצביע פעם אחת.
             </p>
           </details>
@@ -722,8 +722,8 @@ export default function PremiumClient() {
               המכסות יספיקו לי?
             </summary>
             <p className="mt-2 text-sm leading-relaxed text-night/65">
-              המכסות של המנויים הן יומיות, כמו בחינם - פשוט גדולות בהרבה, ומובטחות לכם בלי תלות
-              בעומס באתר. הן קיימות כדי למנוע שימוש לרעה, לא כדי לעצור מישהו באמצע תכנון - ואם
+              המכסות של המנויים הן יומיות, כמו בחינם, פשוט גדולות בהרבה ומובטחות לכם בלי תלות
+              בעומס באתר. הן קיימות כדי למנוע שימוש לרעה, לא כדי לעצור מישהו באמצע תכנון, ואם
               נתקלתם בקיר בתכנון אמיתי,{' '}
               <Link href="/contact" className="font-bold text-sunset-deep underline">
                 כתבו לנו
@@ -735,7 +735,7 @@ export default function PremiumClient() {
       </div>
 
       <p className="mt-6 text-center text-xs leading-relaxed text-night/65">
-        התשלום מאובטח דרך PayPal - אנחנו לא רואים ולא שומרים פרטי אשראי. את המנוי אפשר לבטל בכל רגע
+        התשלום מאובטח דרך PayPal. אנחנו לא רואים ולא שומרים פרטי אשראי, ואת המנוי אפשר לבטל בכל רגע
         והתוכנית החינמית חוזרת לפעול כרגיל.{' '}
         <Link href="/refunds" className="underline hover:text-night/70">
           ביטולים והחזרים

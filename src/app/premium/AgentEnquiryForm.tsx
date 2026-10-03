@@ -97,14 +97,14 @@ export default function AgentEnquiryForm({ onClose }: { onClose: () => void }) {
         particular must never render as success - the enquiry was not saved,
         and the honest answer is an address they can write to instead.
       */
-      if (data?.error === 'bad-contact') setError('המייל או הטלפון לא נראים תקינים - אפשר לתקן ולשלוח שוב.');
+      if (data?.error === 'bad-contact') setError('המייל או הטלפון לא נראים תקינים. אפשר לתקן ולשלוח שוב.');
       else if (data?.error === 'missing-fields') setError('חסרים שם ושם העסק.');
       else if (data?.error === 'rate-limited') setError('נשלחו כבר כמה פניות מהמכשיר הזה. נסו שוב מאוחר יותר.');
       else if (data?.error === 'not-configured')
         setError('הטופס לא זמין כרגע. אפשר לכתוב לנו ישירות ונחזור אליכם.');
-      else setError('משהו השתבש בשליחה - אפשר לנסות שוב עוד רגע.');
+      else setError('משהו השתבש בשליחה. אפשר לנסות שוב עוד רגע.');
     } catch {
-      setError('אין חיבור כרגע - נסו שוב עוד רגע.');
+      setError('אין חיבור כרגע. נסו שוב עוד רגע.');
     } finally {
       setBusy(false);
     }
@@ -115,7 +115,7 @@ export default function AgentEnquiryForm({ onClose }: { onClose: () => void }) {
       <div className="mt-4 rounded-2xl bg-lagoon/15 p-5 text-center ring-1 ring-lagoon/30">
         <p className="text-base font-black text-night">קיבלנו. תודה 🙏</p>
         <p className="mt-1.5 text-sm leading-relaxed text-night/65">
-          נחזור אליכם עם הצעה שמתאימה לכם - לפי מספר הטיולים ומה שכתבתם שאתם צריכים.
+          נחזור אליכם עם הצעה שמתאימה לכם, לפי מספר הטיולים ומה שכתבתם שאתם צריכים.
         </p>
         <button
           onClick={onClose}

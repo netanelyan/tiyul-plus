@@ -114,7 +114,7 @@ function MessageMap({ slug, placeIds }: { slug: string; placeIds: string[] }) {
 
 // Conversation starters for an existing trip - all are edit actions on the displayed plan
 const STARTERS = ['תוסיף לי יום', 'תחליף מקום ביום הזה', 'מה כשר באזור?', 'תעשה לי יום רגוע יותר'];
-const DEFAULT_EMPTY_HINT = 'אפשר לערוך את הטיול בשיחה - בלי לעבור מסך.';
+const DEFAULT_EMPTY_HINT = 'אפשר לערוך את הטיול בשיחה, בלי לעבור מסך.';
 const DEFAULT_CLEAR_CONFIRM = 'לנקות את השיחה? הטיול עצמו יישאר בדיוק כמו שהוא.';
 
 export default function ChatPanel({
@@ -128,7 +128,7 @@ export default function ChatPanel({
   emptyHint = DEFAULT_EMPTY_HINT,
   clearConfirmMessage = DEFAULT_CLEAR_CONFIRM,
   headerLabel = 'הסוכן שלכם',
-  headerHint = 'כותבים - והתוכנית משתנה',
+  headerHint = 'כותבים, והתוכנית משתנה',
   placeholder = 'תוסיף יום, תחליף מקום, מה כשר באזור…',
 }: {
   chat: TripChat;
@@ -232,7 +232,7 @@ export default function ChatPanel({
             }}
             aria-label="ניקוי השיחה"
             disabled={offline}
-            title={offline ? OFFLINE_HINT : 'ניקוי השיחה - הטיול נשאר'}
+            title={offline ? OFFLINE_HINT : 'ניקוי השיחה. הטיול נשאר'}
             className="flex h-8 shrink-0 items-center gap-1 rounded-full bg-night/5 px-2.5 text-xs font-semibold text-night/70 transition enabled:hover:bg-night/10 enabled:hover:text-night disabled:cursor-not-allowed disabled:opacity-45"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5" aria-hidden>
@@ -388,7 +388,7 @@ export default function ChatPanel({
               👋
             </span>
             <p className="flex-1 text-xs font-semibold leading-relaxed text-night/75">
-              כל שינוי בטיול נעשה כאן - פשוט תכתבו מה לשנות, למשל &quot;תוסיף יום בפראג&quot;.
+              כל שינוי בטיול נעשה כאן. פשוט תכתבו מה לשנות, למשל &quot;תוסיף יום בפראג&quot;.
             </p>
             <button
               type="button"
@@ -426,7 +426,7 @@ export default function ChatPanel({
             role="status"
             className="mb-2 rounded-xl bg-night/[0.04] px-3 py-2 text-xs font-semibold leading-relaxed text-night/70"
           >
-            הסוכן צריך חיבור לאינטרנט. אפשר לקרוא את השיחה השמורה - לא לשלוח הודעה חדשה.
+            הסוכן צריך חיבור לאינטרנט. אפשר לקרוא את השיחה השמורה, אבל לא לשלוח הודעה חדשה.
           </p>
         )}
 
@@ -453,7 +453,7 @@ export default function ChatPanel({
             onClick={() => fileRef.current?.click()}
             disabled={loading || reading || offline}
             aria-label="צירוף תמונה (אישור הזמנה, כרטיס)"
-            title={offline ? OFFLINE_HINT : 'צירוף תמונה - אישור הזמנה, כרטיס טיסה, צילום מסך'}
+            title={offline ? OFFLINE_HINT : 'צירוף תמונה: אישור הזמנה, כרטיס טיסה, צילום מסך'}
             className="shrink-0 rounded-xl bg-cream px-3 py-3 text-base text-night/70 ring-1 ring-night/10 transition enabled:hover:bg-sunset/10 enabled:hover:text-night disabled:cursor-not-allowed disabled:opacity-40"
           >
             {reading ? '…' : '📎'}
@@ -463,7 +463,7 @@ export default function ChatPanel({
             autoFocus={autoFocus}
             onChange={(e) => setInput(e.target.value)}
             disabled={offline}
-            placeholder={offline ? 'אין חיבור - השליחה מושבתת' : placeholder}
+            placeholder={offline ? 'אין חיבור, השליחה מושבתת' : placeholder}
             aria-label="בקשה לסוכן"
             className="min-w-0 flex-1 rounded-xl bg-cream px-4 py-3 text-base sm:text-sm text-night outline-none ring-1 ring-night/10 transition placeholder:text-night/65 focus:ring-2 focus:ring-sunset disabled:cursor-not-allowed disabled:opacity-55"
           />

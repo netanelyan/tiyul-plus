@@ -58,9 +58,9 @@ export default function StartClient({ cities }: { cities: CityOption[] }) {
           router.push('/chat');
           return;
         }
-        setLinkMsg(data.error ?? 'משהו השתבש בייבוא - נסו שוב.');
+        setLinkMsg(data.error ?? 'משהו השתבש בייבוא. נסו שוב.');
       } catch {
-        setLinkMsg('משהו השתבש בחיבור - נסו שוב.');
+        setLinkMsg('משהו השתבש בחיבור. נסו שוב.');
       } finally {
         setImporting(false);
       }
@@ -72,14 +72,14 @@ export default function StartClient({ cities }: { cities: CityOption[] }) {
     const isFB = /facebook\.com|fb\.watch/i.test(url);
     if (isYouTube) {
       setLinkMsg(
-        'זיהינו קישור יוטיוב. חילוץ המקומות מסרטונים עדיין בפיתוח - זו הפלטפורמה היחידה שבה זה ריאלי, ונפעיל אותה בהמשך. בינתיים אפשר לתאר את הסרטון בשיחה החופשית.',
+        'זיהינו קישור יוטיוב. חילוץ המקומות מסרטונים עדיין בפיתוח, וזו הפלטפורמה היחידה שבה זה ריאלי, אז נפעיל אותה בהמשך. בינתיים אפשר לתאר את הסרטון בשיחה החופשית.',
       );
     } else if (isIG || isTikTok || isFB) {
       setLinkMsg(
         'הפלטפורמה הזו (אינסטגרם/טיקטוק/פייסבוק) חוסמת קריאת תוכן מקישור חיצוני בתנאי השימוש, ולכן לא נתמכת. אפשר להעתיק את הכיתוב/רשימת המקומות ולהדביק אותם בשיחה החופשית.',
       );
     } else {
-      setLinkMsg('לא זיהינו פלטפורמה נתמכת. אפשר לתאר מה ראיתם בשיחה החופשית - או להדביק קישור למפה מ-Google My Maps וניבא אותה לטיול.');
+      setLinkMsg('לא זיהינו פלטפורמה נתמכת. אפשר לתאר מה ראיתם בשיחה החופשית, או להדביק קישור למפה מ-Google My Maps וניבא אותה לטיול.');
     }
   };
 
@@ -110,7 +110,7 @@ export default function StartClient({ cities }: { cities: CityOption[] }) {
         <div className="mt-5 rounded-2xl bg-shell p-5 ring-1 ring-night/10 sm:p-7">
           <h2 className="text-lg font-bold text-night">ספרו לסוכן במילים שלכם</h2>
           <p className="mt-1 text-sm text-night/70">
-            הכי חופשי: מה בא לכם, עם מי, מתי ומה חשוב - והוא בונה טיול אמיתי.
+            הכי חופשי: אומרים מה בא לכם, עם מי ומתי, והוא בונה טיול אמיתי.
           </p>
           <label htmlFor="start-free-text" className="sr-only">
             ספרו לסוכן על הטיול שאתם רוצים
@@ -137,7 +137,7 @@ export default function StartClient({ cities }: { cities: CityOption[] }) {
         <div className="mt-5 rounded-2xl bg-shell p-5 ring-1 ring-night/10 sm:p-7">
           <h2 className="text-lg font-bold text-night">יש לכם מפה או קישור עם מקומות?</h2>
           <p className="mt-1 text-sm text-night/70">
-            📍 מפה מ-<b>Google My Maps</b> מיובאת לטיול אמיתי - כל הנקודות שסימנתם,
+            📍 מפה מ-<b>Google My Maps</b> מיובאת לטיול אמיתי: כל הנקודות שסימנתם,
             עם ימים ומפה. קישורים אחרים? נגיד בכנות מה אפשר.
           </p>
           <div className="mt-4 flex flex-col gap-2 sm:flex-row">

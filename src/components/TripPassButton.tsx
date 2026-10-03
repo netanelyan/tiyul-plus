@@ -111,18 +111,18 @@ export default function TripPassButton({
         return;
       }
       if (data.error === 'auth-required') {
-        setNotice('הכרטיס נשמר בחשבון, אז קודם מתחברים - זה לוקח חצי דקה, בלי סיסמה.');
+        setNotice('הכרטיס נשמר בחשבון, אז קודם מתחברים. זה לוקח חצי דקה, בלי סיסמה.');
         setNeedsLogin(true);
       } else if (data.error === 'already-covered') {
-        setNotice('יש לכם כבר מנוי פעיל שכולל את הכול - אין צורך בכרטיס.');
+        setNotice('יש לכם כבר מנוי פעיל שכולל את הכול, אין צורך בכרטיס.');
       } else if (data.error === 'trip-not-found') {
         setNotice('לא מצאנו את הטיול הזה בחשבון שלכם. נסו לרענן את הדף.');
       } else if (data.error === 'sandbox-blocked') {
-        setNotice('הרכישה כבויה כרגע באתר החי (מצב בדיקה) - ממש בקרוב.');
+        setNotice('הרכישה כבויה כרגע באתר החי (מצב בדיקה). ממש בקרוב.');
       } else if (data.error === 'not-configured') {
-        setNotice('הרכישה נפתחת ממש בקרוב - התשלומים בשלבי חיבור אחרונים.');
+        setNotice('הרכישה נפתחת ממש בקרוב. התשלומים בשלבי חיבור אחרונים.');
       } else if (data.error === 'rate-limited') {
-        setNotice('רגע אחד - נסו שוב בעוד דקה.');
+        setNotice('רגע אחד, נסו שוב בעוד דקה.');
       } else {
         setNotice('משהו השתבש בדרך לתשלום - נסו שוב עוד רגע.');
       }
@@ -172,7 +172,7 @@ export default function TripPassButton({
       is lost: one is a message and the other precedes a network call.
     */
     if (cancelled) {
-      const t = setTimeout(() => setNotice('התשלום בוטל - לא חויבתם. הכרטיס עוד כאן אם תרצו.'), 0);
+      const t = setTimeout(() => setNotice('התשלום בוטל ולא חויבתם. הכרטיס עוד כאן אם תרצו.'), 0);
       return () => clearTimeout(t);
     }
     if (!returned || !purchaseId || !auth.user) return;
@@ -218,7 +218,7 @@ export default function TripPassButton({
         }
       }
       setVerifying(false);
-      setNotice('התשלום התקבל. ההרשאה נכנסת לתוקף תוך רגע - רעננו את הדף.');
+      setNotice('התשלום התקבל. ההרשאה נכנסת לתוקף תוך רגע, רעננו את הדף.');
     })();
     return () => clearTimeout(t0);
     // The poll reads planRef rather than auth.profile (see above), so profile is not a dep
@@ -235,7 +235,7 @@ export default function TripPassButton({
           ✓ כרטיס הטיול פעיל{until ? ` עד ${until}` : ''}
         </p>
         <p className="mt-1 text-center text-[11px] font-medium text-night/70">
-          הכול פתוח עד אז - ואין מה לבטל, הכרטיס פשוט נגמר.
+          הכול פתוח עד אז, ואין מה לבטל. הכרטיס פשוט נגמר.
         </p>
       </div>
     );

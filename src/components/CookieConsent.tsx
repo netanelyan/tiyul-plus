@@ -127,7 +127,7 @@ export default function CookieConsent() {
       <div className="rise-in rounded-2xl bg-shell p-4 shadow-pop ring-1 ring-night/10">
         <p className="text-sm font-bold text-night">עוזרים לנו להשתפר? 🙂</p>
         <p className="mt-1 text-sm leading-relaxed text-night/80">
-          אנחנו מסתכלים אילו חלקים באתר באמת עוזרים למטיילים, ומשפרים לפי זה - בלי שם
+          אנחנו מסתכלים אילו חלקים באתר באמת עוזרים למטיילים ומשפרים לפי זה, בלי שם
           ובלי מייל.
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -161,7 +161,7 @@ export default function CookieConsent() {
           them first.
         */}
         <p className="mt-2 text-xs text-night/65">
-          אפשר גם לא - האתר יעבוד בדיוק אותו דבר. נמדד עם Google Analytics ·{' '}
+          אפשר גם לא, והאתר יעבוד בדיוק אותו דבר. נמדד עם Google Analytics ·{' '}
           <Link
             href="/cookies"
             className="font-semibold underline decoration-night/20 underline-offset-4 transition hover:text-night"

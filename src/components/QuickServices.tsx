@@ -21,7 +21,7 @@ export default function QuickServices() {
       <div className="mb-5 text-center">
         <h2 className="display text-2xl text-night sm:text-3xl">הכול לטיול, במקום אחד</h2>
         <p className="mt-1.5 text-sm text-night/70">
-          טיסות, לינה, חוויות ורכב - להשלים את מה שהסוכן תכנן.
+          נשארו הטיסות, הלינה, החוויות והרכב. כאן משלימים אותם.
         </p>
       </div>
 

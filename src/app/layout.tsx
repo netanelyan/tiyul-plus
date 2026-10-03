@@ -46,7 +46,7 @@ const A11Y_BOOT = `(function(){try{var s=JSON.parse(localStorage.getItem('tiyul-
 const SITE_URL = 'https://www.tiyulplus.com';
 const SITE_TITLE = 'טיול+ | סוכן הנסיעות החכם לישראלים';
 const SITE_DESCRIPTION =
-  'לא עוד מדריך לגלול בו - סוכן AI שבונה לכם טיול אמיתי: מספרים לו לאן ועם מי, והוא מתכנן מסלול יום-אחרי-יום על מפה אינטראקטיבית, בעברית - כולל שכבת אוכל כשר וכל מה שצריך לדעת מנתב"ג: ויזות, סים ותשלומים.';
+  'במקום עוד מדריך לגלול בו, סוכן AI שבונה לכם טיול אמיתי: מספרים לו לאן ועם מי, והוא מתכנן מסלול יום-אחרי-יום על מפה אינטראקטיבית, בעברית. כולל שכבת אוכל כשר וכל מה שצריך לדעת מנתב"ג: ויזות, סים ותשלומים.';
 
 /**
  * Link previews in WhatsApp and Facebook.
@@ -87,7 +87,7 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     // The width and height are declared so WhatsApp picks the large card
     // rather than the tiny image beside the title
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'טיול+ - סוכן הנסיעות החכם לישראלים' }],
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'טיול+ · סוכן הנסיעות החכם לישראלים' }],
   },
   twitter: { card: 'summary_large_image', title: SITE_TITLE, description: SITE_DESCRIPTION, images: ['/og.png'] },
   /**

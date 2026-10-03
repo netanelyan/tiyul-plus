@@ -31,7 +31,7 @@ export default function Flagships({ cards }: { cards: FlagshipCard[] }) {
       <SectionHead
         tone="dark"
         title="היעדים החמים"
-        subtitle="הערים שישראלים טסים אליהן הכי הרבה - לכל אחת מסלול מוכן, מפה ושכבת כשרות."
+        subtitle="הערים שישראלים טסים אליהן הכי הרבה. לכל אחת מסלול מוכן, מפה ושכבת כשרות."
         href="/countries"
         linkLabel="כל הקטלוג"
       />

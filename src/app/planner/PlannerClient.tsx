@@ -183,7 +183,7 @@ function Onboarding({
         error?: string;
       };
       if (!data.trip) {
-        setError(data.error ?? 'משהו השתבש בדרך - נסו שוב עוד רגע');
+        setError(data.error ?? 'משהו השתבש בדרך. נסו שוב עוד רגע');
         return;
       }
       trip.createTripFrom(data.trip);
@@ -192,7 +192,7 @@ function Onboarding({
       // like a bug
       onDone([data.understood, data.notice].filter(Boolean).join('\n') || null);
     } catch {
-      setError('לא הצלחנו להתחבר לשרת - בדקו את החיבור ונסו שוב');
+      setError('לא הצלחנו להתחבר לשרת. בדקו את החיבור ונסו שוב');
     } finally {
       setLoading(false);
     }
@@ -209,7 +209,7 @@ function Onboarding({
       <section className="rise-in rounded-3xl bg-shell p-6 ring-1 ring-night/10 sm:p-8">
         <h1 className="display text-3xl text-night">בונים טיול חדש</h1>
         <p className="mt-1.5 max-w-2xl leading-relaxed text-night/70">
-          בוחרים לאן ומה חשוב - ואם רוצים, מוסיפים כמה מילים לדיוק. הכול ניתן לעריכה אחר כך.
+          בוחרים לאן ומה חשוב, ואם רוצים, מוסיפים כמה מילים לדיוק. הכול ניתן לעריכה אחר כך.
         </p>
 
         {/* ---- 1. Where to? ---- */}

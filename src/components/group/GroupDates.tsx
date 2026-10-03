@@ -75,7 +75,7 @@ export default function GroupDates({
                     onClick={() => onMark(t.day, true)}
                     disabled={disabled}
                     aria-pressed={my === true}
-                    aria-label={`מתאים לי - ${formatHebrewDate(t.day, { weekday: true })}`}
+                    aria-label={`מתאים לי · ${formatHebrewDate(t.day, { weekday: true })}`}
                     className={`min-h-[40px] min-w-[52px] rounded-full px-3 text-xs font-bold ring-1 transition active:scale-95 ${
                       my === true
                         ? 'bg-lagoon-deep text-cream ring-lagoon-deep'
@@ -88,7 +88,7 @@ export default function GroupDates({
                     onClick={() => onMark(t.day, false)}
                     disabled={disabled}
                     aria-pressed={my === false}
-                    aria-label={`לא מתאים לי - ${formatHebrewDate(t.day, { weekday: true })}`}
+                    aria-label={`לא מתאים לי · ${formatHebrewDate(t.day, { weekday: true })}`}
                     className={`min-h-[40px] min-w-[52px] rounded-full px-3 text-xs font-bold ring-1 transition active:scale-95 ${
                       my === false
                         ? 'bg-night text-cream ring-night'

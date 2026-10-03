@@ -105,10 +105,10 @@ export default function JoinClient({ code }: { code: string }) {
           if (!alive) return;
           setErrorMsg(
             join?.error === 'expired'
-              ? 'קישור ההזמנה פג - בקשו מהמארגן קישור חדש.'
+              ? 'קישור ההזמנה פג. בקשו מהמארגן קישור חדש.'
               : join?.error === 'full'
                 ? 'הקבוצה מלאה.'
-                : 'הקישור לא נמצא - בדקו שהועתק במלואו.',
+                : 'הקישור לא נמצא. בדקו שהועתק במלואו.',
           );
           setPhase('error');
           return;
@@ -117,7 +117,7 @@ export default function JoinClient({ code }: { code: string }) {
         const data = (await res.json().catch(() => null)) as Partial<GroupPayload> | null;
         if (!alive) return;
         if (!data?.trip) {
-          setErrorMsg('הטיול לא נמצא - ייתכן שנמחק.');
+          setErrorMsg('הטיול לא נמצא. ייתכן שנמחק.');
           setPhase('error');
           return;
         }
@@ -130,7 +130,7 @@ export default function JoinClient({ code }: { code: string }) {
         setPhase('ready');
       } catch {
         if (alive) {
-          setErrorMsg('משהו השתבש - נסו לרענן.');
+          setErrorMsg('משהו השתבש. נסו לרענן.');
           setPhase('error');
         }
       }
@@ -279,7 +279,7 @@ export default function JoinClient({ code }: { code: string }) {
       <div className="mx-auto max-w-lg py-20 text-center">
         <h1 className="display text-3xl text-night">הוזמנתם לטיול משותף 🎉</h1>
         <p className="mt-3 leading-relaxed text-night/70">
-          כדי לראות את הטיול, להצביע ולהגיב צריך להתחבר - זה לוקח רגע, עם קוד למייל.
+          כדי לראות את הטיול, להצביע ולהגיב צריך להתחבר. זה לוקח רגע, עם קוד למייל.
           כפתור ההתחברות למעלה בניווט.
         </p>
       </div>
@@ -396,7 +396,7 @@ export default function JoinClient({ code }: { code: string }) {
                         <button
                           onClick={() => void vote(s.id, 1)}
                           aria-pressed={t?.mine === 1}
-                          aria-label={`אהבתי - ${s.name}`}
+                          aria-label={`אהבתי · ${s.name}`}
                           className={`flex min-h-[44px] min-w-[64px] touch-manipulation items-center justify-center gap-1 rounded-full px-4 text-sm font-bold ring-1 transition active:scale-95 ${
                             t?.mine === 1
                               ? 'bg-sunset text-cream ring-sunset'
@@ -408,7 +408,7 @@ export default function JoinClient({ code }: { code: string }) {
                         <button
                           onClick={() => void vote(s.id, -1)}
                           aria-pressed={t?.mine === -1}
-                          aria-label={`פחות בשבילי - ${s.name}`}
+                          aria-label={`פחות בשבילי · ${s.name}`}
                           className={`flex min-h-[44px] min-w-[64px] touch-manipulation items-center justify-center gap-1 rounded-full px-4 text-sm font-bold ring-1 transition active:scale-95 ${
                             t?.mine === -1
                               ? 'bg-night text-cream ring-night'

@@ -115,10 +115,10 @@ export default function SharedTripView({
             disabled={saved}
             className="rounded-xl bg-sunset px-6 py-3 font-bold text-cream transition hover:bg-sunset-deep disabled:opacity-70"
           >
-            {saved ? '✓ נשמר - עוברים לטיול...' : 'שמירה אצלי ועריכה חופשית'}
+            {saved ? '✓ נשמר, עוברים לטיול...' : 'שמירה אצלי ועריכה חופשית'}
           </button>
           <span className="text-xs font-medium text-night/65">
-            נשמר עותק ל&quot;הטיולים שלי&quot; - המקור של השולח לא משתנה
+            נשמר עותק ל&quot;הטיולים שלי&quot;. המקור של השולח לא משתנה
           </span>
         </div>
       </div>

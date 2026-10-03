@@ -120,7 +120,7 @@ export default function PreDepartureCheck({
         setPhase({
           kind: 'notice',
           message:
-            'התשלום עדיין בטיפול. אפשר לרענן את הדף בעוד כמה דקות - הבדיקה תופיע אוטומטית ברגע שהיא מוכנה.',
+            'התשלום עדיין בטיפול. אפשר לרענן את הדף בעוד כמה דקות, והבדיקה תופיע אוטומטית ברגע שהיא מוכנה.',
         });
       }
     }, POLL_MS);
@@ -166,7 +166,7 @@ export default function PreDepartureCheck({
           } catch {
             /* the capture itself failed for a transient reason - still worth polling, the webhook may already be on its way */
           }
-          setPhase({ kind: 'processing', note: 'התשלום נשלח לאימות - זה יכול לקחת כמה שניות…' });
+          setPhase({ kind: 'processing', note: 'התשלום נשלח לאימות. זה יכול לקחת כמה שניות…' });
           pollStatus();
           return;
         }
@@ -273,7 +273,7 @@ export default function PreDepartureCheck({
         }
         return;
       }
-      if (data?.error === 'not-configured') setError('התשלום עדיין לא מוגדר באתר - ממש בקרוב.');
+      if (data?.error === 'not-configured') setError('התשלום עדיין לא מוגדר באתר. ממש בקרוב.');
       else if (data?.error === 'already-purchased') setError('הבדיקה כבר נרכשה לטיול הזה.');
       else if (data?.error === 'sandbox-blocked') setError('הרכישה כבויה כרגע באתר החי (מצב בדיקה).');
       else if (data?.error === 'not-eligible') setError('הבדיקה רלוונטית רק בסמוך לתאריך היציאה.');
@@ -313,7 +313,7 @@ export default function PreDepartureCheck({
           data-sandbox-banner
           className="mb-3 rounded-xl bg-sunset px-3 py-2 text-xs font-black text-cream print:hidden"
         >
-          ⚠️ מצב בדיקה (sandbox) - שום כסף אמיתי לא זז, והתשלום עצמו הוא מדומה.
+          ⚠️ מצב בדיקה (sandbox). שום כסף אמיתי לא זז, והתשלום עצמו מדומה.
         </div>
       )}
 
@@ -357,7 +357,7 @@ export default function PreDepartureCheck({
           {phase.kind === 'offer' && (
             <>
               <p className="text-sm font-semibold leading-relaxed text-night/75">
-                לפני שיוצאים - עוברים על הטיול פעם אחרונה: כל מקום נבדק מחדש מול הקטלוג שלנו, רשומות
+                לפני שיוצאים, עוברים על הטיול פעם אחרונה: כל מקום נבדק מחדש מול הקטלוג שלנו, רשומות
                 הכשרות נקראות שוב עם הפרטים העדכניים, סגירות ואירועים מותאמים לתאריכים המדויקים
                 שלכם, וסדר הימים נבדק שהוא הגיוני. בסוף מקבלים מסמך אחד נקי לשמור.
               </p>
@@ -371,7 +371,7 @@ export default function PreDepartureCheck({
                   {busy ? 'רגע…' : isPremium ? 'בדיקה לפני הנסיעה · כלול בפרימיום ★' : `בדיקה לפני הנסיעה · ${priceLabel()}`}
                 </button>
                 <span className="text-xs font-medium text-night/65">
-                  {isPremium ? 'בלי תשלום נוסף - כלול במנוי שלכם' : 'תשלום חד-פעמי, לטיול הזה בלבד'}
+                  {isPremium ? 'בלי תשלום נוסף, כלול במנוי שלכם' : 'תשלום חד-פעמי, לטיול הזה בלבד'}
                 </span>
               </div>
             </>
@@ -384,8 +384,8 @@ export default function PreDepartureCheck({
           {phase.kind === 'offer' && (
             <p className="mt-3 text-[11px] font-medium leading-relaxed text-night/65">
               {isPremium
-                ? 'הדוח נפתח מייד - אין תשלום ואין העברה לאתר חיצוני.'
-                : 'התשלום מאובטח דרך PayPal - אנחנו לא רואים ולא שומרים פרטי כרטיס. הגישה נפתחת ברגע שהתשלום מאומת אצלנו, לרוב תוך כמה שניות.'}
+                ? 'הדוח נפתח מייד. אין תשלום ואין העברה לאתר חיצוני.'
+                : 'התשלום מאובטח דרך PayPal. אנחנו לא רואים ולא שומרים פרטי כרטיס. הגישה נפתחת ברגע שהתשלום מאומת אצלנו, לרוב תוך כמה שניות.'}
             </p>
           )}
         </div>
@@ -405,7 +405,7 @@ export default function PreDepartureCheck({
 function PrintReport({ report }: { report: PreDepartureReport }) {
   return (
     <div className="hidden print:block">
-      <h2 className="text-lg font-bold text-night">בדיקה לפני הנסיעה - {report.tripName}</h2>
+      <h2 className="text-lg font-bold text-night">בדיקה לפני הנסיעה · {report.tripName}</h2>
       <p className="text-xs text-night/70">נבדק ב-{report.generatedAt.slice(0, 10)}</p>
       {report.itinerary.map((day) => (
         <div key={day.dayNumber} className="mt-3">
@@ -453,7 +453,7 @@ function ResultView({ report, paidAt }: { report: PreDepartureReport; paidAt: st
           </li>
           <li>
             ✓ {report.kosherChecked} רשומות כשרות נקראו מחדש
-            {report.kosherChecked > 0 && ' (ראו פירוט למטה - תמיד לוודא מול המקום)'}
+            {report.kosherChecked > 0 && ' (ראו פירוט למטה, ותמיד לוודא מול המקום)'}
           </li>
           <li>
             {report.calendarFindings.length === 0 ? '✓' : '⚠️'} סגירות ואירועים בתאריכים שלכם
@@ -464,7 +464,7 @@ function ResultView({ report, paidAt }: { report: PreDepartureReport; paidAt: st
 
         {report.placesFlagged.length > 0 && (
           <p className="mt-3 rounded-xl bg-sunset/10 px-3 py-2 text-xs font-semibold text-sunset-deep">
-            {report.placesFlagged.length} עצירות בטיול כבר לא קיימות בקטלוג שלנו - כדאי לבדוק אותן
+            {report.placesFlagged.length} עצירות בטיול כבר לא קיימות בקטלוג שלנו, כדאי לבדוק אותן
             בתוכנית לפני היציאה.
           </p>
         )}

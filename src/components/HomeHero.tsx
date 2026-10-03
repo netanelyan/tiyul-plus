@@ -45,8 +45,8 @@ export default function HomeHero() {
         לאן טסים הפעם?
       </h1>
       <p className="rise-in mt-4 max-w-xl text-center leading-relaxed text-night/70">
-        לא עוד מדריך לגלול בו - מספרים לי מה מדמיינים, ואני בונה לכם טיול אמיתי,
-        יום-אחרי-יום, על מפה. בעברית.
+        במקום לגלול עוד מדריך, פשוט ספרו לי מה בא לכם. אני אבנה מסלול אמיתי,
+        יום-אחרי-יום, על מפה ובעברית.
       </p>
 
       <HeroPrompt

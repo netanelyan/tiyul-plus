@@ -146,8 +146,8 @@ export default function SiteFooter() {
               </span>
             </div>
             <p className="mt-2 max-w-sm text-xs leading-relaxed text-cream/50">
-              טיול+ הוא סוכן AI שבונה מסלולים אוטומטית. תמיד כדאי לאמת שעות פתיחה, מחירים,
-              זמינות וכשרות מול המקומות עצמם לפני הנסיעה.
+              טיול+ הוא סוכן AI שבונה מסלולים אוטומטית. לפני שיוצאים, כדאי תמיד לוודא שעות
+              פתיחה, מחירים, זמינות וכשרות מול המקומות עצמם.
             </p>
             {/*
               **No newsletter signup here, by decision (Netanel, 2026-09-22).**
@@ -243,7 +243,7 @@ export default function SiteFooter() {
             "does not affect".
           */}
           <p className="mt-3 text-[11px] leading-relaxed text-cream/50">
-            חלק מהקישורים היוצאים מהאתר הם קישורי שותפים, ואנחנו עשויים לקבל עמלה - בלי שזה משפיע
+            חלק מהקישורים היוצאים מהאתר הם קישורי שותפים, ואנחנו עשויים לקבל עמלה. זה לא משפיע
             על מה שאנחנו ממליצים.{' '}
             <Link href="/affiliate-disclosure" className="underline hover:text-cream/60">
               פירוט מלא

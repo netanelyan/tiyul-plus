@@ -289,7 +289,7 @@ function buildUnderstood(prefs: WizardPrefs, party: Party | null, interests: str
   if (prefs.shopping === 'less') parts.push('בלי שופינג');
   if (prefs.kosherOnly) parts.push('אוכל כשר');
   parts.push(...interests);
-  return `${parts.join(', ')} - הבנתי`;
+  return `${parts.join(', ')} · הבנתי`;
 }
 
 export async function POST(request: Request) {
@@ -303,7 +303,7 @@ export async function POST(request: Request) {
   const burst = checkLimit('generate-burst', caller.id, 5, 60_000);
   if (!burst.ok) {
     return Response.json(
-      { error: 'יותר מדי בקשות ברצף - נסו שוב בעוד רגע' },
+      { error: 'יותר מדי בקשות ברצף. נסו שוב בעוד רגע' },
       { status: 429, headers: { 'Retry-After': String(burst.retryAfterSec) } },
     );
   }
@@ -342,7 +342,7 @@ export async function POST(request: Request) {
   let body: Record<string, unknown> = {};
   const rawBody = await request.text();
   if (rawBody.length > 20_000) {
-    return Response.json({ error: 'הבקשה גדולה מדי - נסו לקצר את התיאור' }, { status: 413 });
+    return Response.json({ error: 'הבקשה גדולה מדי. נסו לקצר את התיאור' }, { status: 413 });
   }
   try {
     body = JSON.parse(rawBody) as Record<string, unknown>;
@@ -352,7 +352,7 @@ export async function POST(request: Request) {
 
   const prefs = sanitizeClientPrefs(body.prefs);
   if (!prefs) {
-    return Response.json({ error: 'בחרו לפחות עיר אחת - ואבנה את הטיול' }, { status: 400 });
+    return Response.json({ error: 'בחרו לפחות עיר אחת ואבנה את הטיול' }, { status: 400 });
   }
   const party: Party | null = PARTIES.has(body.party as Party) ? (body.party as Party) : null;
   const notes = typeof body.notes === 'string' ? body.notes.trim().slice(0, 2000) : '';
@@ -414,7 +414,7 @@ export async function POST(request: Request) {
   // exactly the kind of silence that reads as a bug.
   const notice =
     notes && !aiAllowed
-      ? 'הגעתם למכסת ה-AI היומית, ולכן בניתי את המסלול מהבחירות שסימנתם בלבד - הטקסט החופשי לא נקרא הפעם. המכסה מתאפסת פעם ביום, ואפשר לערוך את המסלול ידנית או להמשיך עם הסוכן מחר.'
+      ? 'הגעתם למכסת ה-AI היומית, ולכן בניתי את המסלול מהבחירות שסימנתם בלבד. הטקסט החופשי לא נקרא הפעם. המכסה מתאפסת פעם ביום, ואפשר לערוך את המסלול ידנית או להמשיך עם הסוכן מחר.'
       : undefined;
   return Response.json({
     trip,

@@ -93,7 +93,7 @@ export async function generateMetadata({
 
   return pageMetadata({
     path: `/itinerary/${dest.slug}/${days}`,
-    title: `${pageTitle(dest.name, days)} - מסלול יום-יום עם מפה | טיול+`,
+    title: `${pageTitle(dest.name, days)} · מסלול יום-יום עם מפה | טיול+`,
     /*
       The description carries the two facts that differentiate this page from the
       destination page: the length and the real stop count. Both computed - a
@@ -186,7 +186,7 @@ export default async function ItineraryPage({
 
       {/* ---------- Day by day ---------- */}
       <section className="mt-8">
-        <h2 className="text-lg font-bold text-night">{title} - יום אחרי יום</h2>
+        <h2 className="text-lg font-bold text-night">{title} · יום אחרי יום</h2>
         <ol className="mt-3 space-y-4">
           {shown.map((d) => (
             <li
@@ -222,7 +222,7 @@ export default async function ItineraryPage({
             worth crawling: this city has more curated days than this page shows.
           */
           <p className="mt-3 text-xs font-semibold text-night/65">
-            {inHe(dest.name)} יש אצלנו מסלול מלא של {daysHe(allDays.length)} - הדף הזה מציג את{' '}
+            {inHe(dest.name)} יש אצלנו מסלול מלא של {daysHe(allDays.length)}, והדף הזה מציג את{' '}
             {daysHe(days)} הראשונים שלו.
           </p>
         )}
@@ -283,7 +283,7 @@ export default async function ItineraryPage({
       <div className="mt-8">
         <OpenInPlanner slug={dest.slug} days={days} label={`פתחו את ${title} במתכנן`} />
         <p className="mt-2 text-center text-xs font-medium text-night/65">
-          נפתח במתכנן וניתן לעריכה - להוסיף ימים, להזיז עצירות ולשתף עם מי שנוסע איתכם.
+          נפתח במתכנן וניתן לעריכה: להוסיף ימים, להזיז עצירות ולשתף עם מי שנוסע איתכם.
         </p>
       </div>
 

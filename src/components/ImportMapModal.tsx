@@ -50,14 +50,14 @@ export default function ImportMapModal({
         error?: string;
       };
       if (!data.destination) {
-        setError(data.error ?? 'משהו השתבש - נסו שוב.');
+        setError(data.error ?? 'משהו השתבש. נסו שוב.');
         return;
       }
       onImported(data.destination, buildTripFromImport(data.destination));
       setUrl('');
       onClose();
     } catch {
-      setError('משהו השתבש בחיבור - נסו שוב.');
+      setError('משהו השתבש בחיבור. נסו שוב.');
     } finally {
       setBusy(false);
     }
@@ -78,7 +78,7 @@ export default function ImportMapModal({
           <div>
             <h2 className="text-lg font-bold text-night">📍 ייבוא מפה מ-Google My Maps</h2>
             <p className="mt-1 text-sm leading-relaxed text-night/70">
-              הדביקו קישור למפה שלכם - כל הנקודות שסימנתם יהפכו לטיול חדש עם ימים ומפה.
+              הדביקו קישור למפה שלכם, וכל הנקודות שסימנתם יהפכו לטיול חדש עם ימים ומפה.
             </p>
           </div>
           <button
@@ -123,7 +123,7 @@ export default function ImportMapModal({
             להציג&quot;.
           </p>
           <p>
-            לגבי TripAdvisor - אין לו כרגע ייצוא ציבורי של מפות שמורות, אז אי אפשר לייבא משם.
+            ל-TripAdvisor אין כרגע ייצוא ציבורי של מפות שמורות, אז אי אפשר לייבא משם.
             אם יש לכם רשימה, אפשר פשוט להדביק את שמות המקומות בצ׳אט והסוכן יבנה מהם טיול.
           </p>
         </div>

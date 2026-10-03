@@ -196,9 +196,9 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
             <div key="email" className="rise-in">
               <h2 className="display text-2xl text-night">הטיולים שלך, בכל מכשיר</h2>
               <div className="mt-4 space-y-2.5">
-                <Benefit icon="cloud" text="כל טיול נשמר בחשבון - לא הולך לאיבוד" />
+                <Benefit icon="cloud" text="כל טיול נשמר בחשבון ולא הולך לאיבוד" />
                 <Benefit icon="sync" text="מתחילים בטלפון, ממשיכים במחשב" />
-                <Benefit icon="lock" text="בלי סיסמאות - קוד חד-פעמי למייל" />
+                <Benefit icon="lock" text="בלי סיסמאות, קוד חד-פעמי למייל" />
               </div>
               <label htmlFor="login-email" className="mt-5 block text-xs font-bold text-night/65">
                 כתובת המייל

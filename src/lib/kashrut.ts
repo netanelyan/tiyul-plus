@@ -118,13 +118,13 @@ export function kashrutCaveat(k: KashrutRecord | undefined): string {
   if (!k) return 'לא בדקנו את הכשרות במקום הזה. לוודא מול המקום.';
 
   if (k.knowledge === 'unknown') {
-    return 'לא בדקנו את הכשרות במקום הזה - זה לא אומר שאין, רק שאין לנו מידע. לוודא מול המקום.';
+    return 'לא בדקנו את הכשרות במקום הזה. זה לא אומר שאין, רק שאין לנו מידע. לוודא מול המקום.';
   }
   if (k.knowledge === 'none-found') {
     const when = k.provenance.checked
       ? ` (נבדק ב-${k.provenance.checked})`
       : '';
-    return `לא מצאנו השגחה במקור שבדקנו${when}. ייתכן שהשתנה מאז - לוודא מול המקום.`;
+    return `לא מצאנו השגחה במקור שבדקנו${when}. ייתכן שהשתנה מאז, אז לוודא מול המקום.`;
   }
 
   // certified
@@ -137,7 +137,7 @@ export function kashrutCaveat(k: KashrutRecord | undefined): string {
   // travellers recognise it, and a test pins it - so added specificity is
   // additive and never replaces it. The rule is that caveats get MORE
   // specific, not that they get swapped for something new.
-  return `לפי ${KASHRUT_SOURCE_LABEL[k.provenance.sourceType]}, נבדק ב-${k.provenance.checked}. השגחה יכולה להשתנות - לוודא מול המקום ולבדוק את התעודה בכניסה.`;
+  return `לפי ${KASHRUT_SOURCE_LABEL[k.provenance.sourceType]}, נבדק ב-${k.provenance.checked}. השגחה יכולה להשתנות, אז לוודא מול המקום ולבדוק את התעודה בכניסה.`;
 }
 
 /**

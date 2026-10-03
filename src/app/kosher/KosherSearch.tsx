@@ -125,7 +125,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
       <p className="mt-2 text-xs font-medium leading-relaxed text-night/65">
         הרשימה מציגה רק מקומות שיש עליהם מידע בקטלוג שלנו. {stats.places - stats.verified} מהרשומות
         מדווחות ממקורות ציבוריים בלי תאריך בדיקה שלנו, והן מסומנות ככאלה בכל כרטיס. היעדר מקום
-        מהרשימה לא אומר שהוא לא כשר - רק שאין לנו עליו מידע.
+        מהרשימה לא אומר שהוא לא כשר, רק שאין לנו עליו מידע.
       </p>
 
       {/* ---- Search ---- */}
@@ -174,7 +174,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
 
           {/* A general disclaimer - one policy for every record */}
           <p className="mt-4 max-w-2xl rounded-xl bg-night/5 px-4 py-2.5 text-sm leading-relaxed text-night/70">
-            המידע נאסף ממקורות ציבוריים (בתי חב&quot;ד וגופי ההשגחה) - לוודא כשרות, השגחה
+            המידע נאסף ממקורות ציבוריים (בתי חב&quot;ד וגופי ההשגחה), ולכן חשוב לוודא כשרות, השגחה
             ושעות פתיחה מול המקום לפני שמסתמכים עליו.
           </p>
 
@@ -265,7 +265,7 @@ export default function KosherSearch({ cities }: { cities: KosherCity[] }) {
               <p className="mt-1.5 text-sm leading-relaxed text-night/70">
                 {uncoveredMatch ? (
                   <>
-                    {uncoveredMatch.name} נמצאת בקטלוג שלנו, אבל לא אותרה בה תשתית כשרות - ובדף היעד
+                    {uncoveredMatch.name} נמצאת בקטלוג שלנו, אבל לא אותרה בה תשתית כשרות. בדף היעד
                     כתוב בדיוק מה המצב שם.{' '}
                     <Link
                       href={`/destinations/${uncoveredMatch.slug}`}

@@ -7,7 +7,7 @@ import { useAuth } from '@/lib/auth/AuthContext';
 import LoginModal from '@/components/LoginModal';
 import { travelerLevel } from '@/data/worldCountries';
 import { OFFLINE_HINT, useOnline } from '@/lib/offline/online';
-import { PREMIUM_PRICE_ILS, ils, planAtLeast } from '@/lib/plans';
+import { planAtLeast } from '@/lib/plans';
 
 /**
  * The user account control in the nav: the avatar menu when signed in, the
@@ -173,9 +173,17 @@ export default function AccountButton() {
                     <span aria-hidden className="text-sunset">
                       ★
                     </span>
-                    <span className="min-w-0 flex-1 truncate">שדרוג לפרימיום</span>
+                    {/*
+                      This used to name the monthly premium plan and its 19.90
+                      price. That plan is retired and the pricing page does not
+                      sell it, so the menu promised a plan and a price that are
+                      not on the page it links to. No price here now: the entry
+                      points are a per-trip pass and a monthly Pro, and a number
+                      in a nav menu is the first thing to go stale anyway.
+                    */}
+                    <span className="min-w-0 flex-1 truncate">שדרוג החשבון</span>
                     <span className="shrink-0 text-[11px] font-semibold text-night/65">
-                      {ils(PREMIUM_PRICE_ILS)} ₪ לחודש
+                      מחירים
                     </span>
                   </Link>
                 )}

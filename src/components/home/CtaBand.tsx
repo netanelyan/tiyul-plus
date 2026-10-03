@@ -14,10 +14,10 @@ export default function CtaBand() {
       <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="display text-2xl text-cream sm:text-3xl">
-            מספרים לי לאן, ומקבלים טיול אמיתי. חינם.
+            תגידו לי לאן, ואני אבנה לכם טיול אמיתי. חינם.
           </h2>
           <p className="mt-2 text-sm text-cream/70 sm:text-base">
-            יום-אחרי-יום, על מפה, רק ממקומות שאומתו - ואפשר לשנות הכול בשיחה. ההרשמה לא חובה.
+            מסלול יום-אחרי-יום על מפה, מהמקומות שבדקנו. לא מצא חן בעיניכם? אומרים לי ואני משנה. גם בלי להירשם.
           </p>
         </div>
         <div className="flex shrink-0 flex-wrap gap-3">

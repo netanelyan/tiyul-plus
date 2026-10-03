@@ -225,7 +225,7 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
         <Field label="לאן טסים? (אפשר לבחור כמה ערים)">
           <CityCombobox options={cities} citySlugs={citySlugs} onToggle={toggleCity} autoFocus />
           <p className="mt-2 text-xs leading-relaxed text-night/65">
-            מקלידים שם עיר או מדינה - או פותחים את השדה ובוחרים מתוך {cities.length} הערים בקטלוג.
+            מקלידים שם עיר או מדינה, או פותחים את השדה ובוחרים מתוך {cities.length} הערים בקטלוג.
             אפשר לבחור כמה, והימים יתחלקו ביניהן.
           </p>
         </Field>
@@ -332,7 +332,7 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
                 <Choice label="שמירת שבת" active={shabbat} onClick={() => setShabbat((v) => !v)} />
               </div>
               <p className="mt-2 text-xs leading-relaxed text-night/65">
-                העדפות שוות ואופציונליות - נכבד אותן בבניית הטיול רק אם תבחרו בהן.
+                העדפות שוות ואופציונליות. נכבד אותן בבניית הטיול רק אם תבחרו בהן.
               </p>
             </Field>
             <div className="rounded-xl bg-cream p-4 text-sm leading-relaxed text-night/70">
@@ -343,7 +343,7 @@ export default function QuizWizard({ cities }: { cities: City[] }) {
                   ל<b>{cities.filter((c) => citySlugs.includes(c.slug)).map((c) => c.name).join(' + ')}</b>
                 </>
               )}
-              , ותיפול ישר לתצוגת המתכנן - הכול ניתן לעריכה אחר כך.
+              , ותיפול ישר לתצוגת המתכנן. הכול ניתן לעריכה אחר כך.
             </div>
         </div>
       </TransitionPanel>

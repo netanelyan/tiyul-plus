@@ -106,11 +106,11 @@ export default function PinsPanel({
 
         {placingPinId && (
           <p className="mt-2 text-xs font-bold text-sunset-deep">
-            לחצו על המפה במקום המדויק - או גררו את הסיכה עצמה.
+            לחצו על המפה במקום המדויק, או גררו את הסיכה עצמה.
           </p>
         )}
         <p className="mt-2 text-xs leading-relaxed text-night/65">
-          המיקומים מגיעים מחיפוש ב-OpenStreetMap. כשהחיפוש לא מוצא את המקום אנחנו לא מנחשים - הסיכה
+          המיקומים מגיעים מחיפוש ב-OpenStreetMap. כשהחיפוש לא מוצא את המקום אנחנו לא מנחשים. הסיכה
           מסומנת &quot;לא אומת&quot; עד שתניחו אותה בעצמכם.
         </p>
       </PanelBody>

@@ -90,7 +90,7 @@ export default function DestinationGuide({
           </span>{' '}
           {dest.editorialRating.verdict}
           <span className="mt-1 block text-xs text-night/65">
-            דירוג עריכתי של צוות טיול+ - לא ממוצע של ביקורות משתמשים.
+            דירוג עריכתי של צוות טיול+, לא ממוצע של ביקורות משתמשים.
           </span>
         </p>
       )}
@@ -200,7 +200,7 @@ export default function DestinationGuide({
           </ul>
         ) : (
           <p className="mt-3 text-sm text-night/70">
-            אין בקטלוג שלנו מקום כשר מאומת {inCity}. זה לא אומר שאין - זה אומר שעדיין לא
+            אין בקטלוג שלנו מקום כשר מאומת {inCity}. זה לא אומר שאין. זה אומר שעדיין לא
             בדקנו, ובכל מקרה כדאי לוודא מול המקום עצמו.
           </p>
         )}
@@ -224,7 +224,7 @@ export default function DestinationGuide({
         {events.length > 0 && (
           <>
             <h4 className="mt-5 text-sm font-bold text-night/70">
-              מה עוד קורה שם - אירועים וסגירות ששווה להכיר
+              מה עוד קורה שם: אירועים וסגירות ששווה להכיר
             </h4>
             <ul className="mt-3 space-y-3">
               {events.map((e) => (
@@ -325,7 +325,7 @@ export default function DestinationGuide({
           רוצים את זה כמסלול אמיתי, מותאם לכם?
         </h3>
         <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-cream/75">
-          ספרו לסוכן מתי אתם נוסעים, עם מי, ומה חשוב לכם - והוא יבנה מסלול יום-אחרי-יום
+          ספרו לסוכן מתי אתם נוסעים, עם מי ומה חשוב לכם, והוא יבנה מסלול יום-אחרי-יום
           על מפה, מתוך אותם מקומות שבעמוד הזה.
         </p>
         <Link

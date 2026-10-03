@@ -8,14 +8,14 @@ export const metadata: Metadata = pageMetadata({
   path: '/contact',
   title: 'יצירת קשר | טיול+',
   description:
-    'איך ליצור איתנו קשר - שאלות, תקלות, פניות בנושא פרטיות ונגישות.',
+    'איך ליצור איתנו קשר בנושא שאלות, תקלות, פרטיות ונגישות.',
 });
 
 export default function Page() {
   return (
     <PageShell title="יצירת קשר">
       <p>
-        נשמח לשמוע - שאלה, תקלה, מקום שחסר בקטלוג, או משהו שלא נראה לכם נכון. אנחנו קוראים הכול.
+        נשמח לשמוע: שאלה, תקלה, מקום שחסר בקטלוג, או משהו שלא נראה לכם נכון. אנחנו קוראים הכול.
       </p>
 
       <Section title="פרטים">
@@ -37,14 +37,14 @@ export default function Page() {
       <Section title="נושאים שמגיעים לכאן">
         <p>
           <strong>פרטיות ומחיקת מידע.</strong> בקשה לעיין במידע שנשמר עליכם, לתקן אותו או למחוק
-          אותו, וכן מחיקת חשבון - הכול דרך הכתובת שלמעלה. הפירוט המלא ב
+          אותו, וכן מחיקת חשבון. הכול דרך הכתובת שלמעלה, והפירוט המלא ב
           <Link href="/privacy" className="font-bold text-sunset-deep hover:underline">
             מדיניות הפרטיות
           </Link>
           .
         </p>
         <p>
-          <strong>נגישות.</strong> נתקלתם בקושי להשתמש באתר - זה חשוב לנו לדעת. פרטי רכז הנגישות
+          <strong>נגישות.</strong> נתקלתם בקושי להשתמש באתר? חשוב לנו לדעת. פרטי רכז הנגישות
           נמצאים ב
           <Link href="/accessibility" className="font-bold text-sunset-deep hover:underline">
             הצהרת הנגישות

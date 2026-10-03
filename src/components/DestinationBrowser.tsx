@@ -165,7 +165,7 @@ export default function DestinationBrowser({
         attractions and do not pretend to rank destinations as cheap.
       */}
       <p className="mt-1.5 text-xs font-medium text-night/65">
-        לפי מחירי הכניסה לאטרקציות בקטלוג בלבד - לא כולל טיסות ולינה, שהן רוב עלות הטיול.
+        לפי מחירי הכניסה לאטרקציות בקטלוג בלבד. לא כולל טיסות ולינה, שהן רוב עלות הטיול.
       </p>
 
       {/* ---------- Season: only when there is data ---------- */}
@@ -213,7 +213,7 @@ export default function DestinationBrowser({
       {results.length === 0 ? (
         <div className="mt-4 rounded-2xl bg-shell p-6 text-center ring-1 ring-night/10">
           <p className="text-sm font-medium leading-relaxed text-night/70">
-            אפשר להסיר חלק מהסינון, או לשאול את הסוכן - הוא יודע לחקור יעד שעדיין לא בקטלוג ולומר
+            אפשר להסיר חלק מהסינון, או לשאול את הסוכן. הוא יודע לחקור יעד שעדיין לא בקטלוג ולומר
             בכנות מה ידוע עליו.
           </p>
           <Link
@@ -289,7 +289,7 @@ export default function DestinationBrowser({
             )}
           </h2>
           <p className="mt-1 text-xs font-medium text-night/65">
-            ויזה, מטבע, סים ותשלומים הם מידע ברמת המדינה - שם הוא נמצא.
+            ויזה, מטבע, סים ותשלומים הם מידע ברמת המדינה, ושם הוא נמצא.
           </p>
           <div className="mt-3 flex flex-wrap gap-1.5">
             {visibleCountries.map((c) => (

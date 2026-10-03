@@ -38,11 +38,11 @@ import { PREMIUM_PRICE_ILS } from './plans';
 
 /** The wording that replaces a cut claim. Must pass the filter itself - there's a test. */
 export const NO_PRICE_LINE =
-  'אני לא יכול לבדוק מחירים או זמינות בעצמי, ולכן לא אנקוב במספרים - החיפוש שמצורף כאן מראה את המצב האמיתי אצל הספק.';
+  'אני לא יכול לבדוק מחירים או זמינות בעצמי, ולכן לא אנקוב במספרים. החיפוש שמצורף כאן מראה את המצב האמיתי אצל הספק.';
 
 /** Same, when there is no search card in this turn */
 export const NO_PRICE_LINE_BARE =
-  'אני לא יכול לבדוק מחירים או זמינות בעצמי, ולכן לא אנקוב במספרים - חיפוש אצל הספק יראה את המצב האמיתי.';
+  'אני לא יכול לבדוק מחירים או זמינות בעצמי, ולכן לא אנקוב במספרים. חיפוש אצל הספק יראה את המצב האמיתי.';
 
 /**
  * The replacement for a claim about an event or a closure. **Must be separate
@@ -50,7 +50,7 @@ export const NO_PRICE_LINE_BARE =
  * check prices" reads like a malfunction, not like an honest answer.
  */
 export const NO_EVENT_LINE =
-  'אין לי מידע רשום על אירועים או סגירות בתאריכים האלה, ואני לא רוצה לנחש - כדאי לבדוק מקומית לקראת הנסיעה.';
+  'אין לי מידע רשום על אירועים או סגירות בתאריכים האלה, ואני מעדיף לא לנחש. כדאי לבדוק מקומית לקראת הנסיעה.';
 
 /**
  * The replacement for a kashrut claim not backed by anything in our catalog -
@@ -59,7 +59,7 @@ export const NO_EVENT_LINE =
  * leave the agent, for exactly the same reason a made-up price does not.
  */
 export const NO_KOSHER_LINE =
-  'לגבי כשרות אני יכול להתייחס רק למקומות שמאומתים אצלנו בקטלוג, ואין לי נתון כזה כרגע - כדאי לוודא מול המקום עצמו, או לשאול על עיר אחרת שכן מכוסה אצלנו.';
+  'לגבי כשרות אני יכול להתייחס רק למקומות שמאומתים אצלנו בקטלוג, ואין לי נתון כזה כרגע. כדאי לוודא מול המקום עצמו, או לשאול על עיר אחרת שכן מכוסה אצלנו.';
 
 /**
  * The replacement for an hours/admission-price/existence claim not attached to
@@ -69,7 +69,7 @@ export const NO_KOSHER_LINE =
  * permanent refusal.
  */
 export const NO_LOOKUP_LINE =
-  'לא בדקתי את זה בפועל בתור הזה, ולכן לא אכתוב שעות, מחיר כניסה או אם המקום עדיין קיים מהזיכרון שלי - אפשר לבקש שאבדוק את זה עכשיו.';
+  'לא בדקתי את זה בפועל בתור הזה, ולכן לא אכתוב שעות, מחיר כניסה או אם המקום עדיין קיים מהזיכרון שלי. אפשר לבקש שאבדוק את זה עכשיו.';
 
 /**
  * The replacement when the model rules on a kashrut standard.
@@ -81,7 +81,7 @@ export const NO_LOOKUP_LINE =
  * the decision back and points at what we can say.
  */
 export const NO_KASHRUT_VERDICT_LINE =
-  'אני מדווח מי הגוף המשגיח ומתי בדקנו, אבל ההחלטה אם להסתמך על השגחה מסוימת היא אישית ותלויה במנהג שלכם - אשמח לומר בדיוק מה רשום אצלנו ומאיזה מקור.';
+  'אני מדווח מי הגוף המשגיח ומתי בדקנו, אבל ההחלטה אם להסתמך על השגחה מסוימת היא אישית ותלויה במנהג שלכם. אשמח לומר בדיוק מה רשום אצלנו ומאיזה מקור.';
 
 /**
  * The replacement when the agent states how much of the world we cover and the
@@ -94,7 +94,7 @@ export const NO_KASHRUT_VERDICT_LINE =
  * every replacement line here survives its own filter.
  */
 export const NO_COVERAGE_LINE =
-  'אני לא רוצה לנקוב במספר שלא ספרתי בפועל - אם תשאלו על יבשת או על סוג טיול מסוים, אגיד בדיוק מה רשום בקטלוג שלנו.';
+  'אני מעדיף לא לנקוב במספר שלא ספרתי בפועל. אם תשאלו על יבשת או על סוג טיול מסוים, אגיד בדיוק מה רשום בקטלוג שלנו.';
 
 /**
  * The replacement categories. `kashrut-verdict` is its own category rather

@@ -52,7 +52,7 @@ export async function generateMetadata({
     .join(' · ');
   const stops = shared.days.reduce((n, d) => n + d.placeIds.length, 0);
   const title = `${shared.name} | טיול+`;
-  const description = `מסלול של ${daysHe(shared.days.length)} ו-${stops} עצירות ${inHe(cities)} - נבנה בטיול+, סוכן הנסיעות החכם.`;
+  const description = `מסלול של ${daysHe(shared.days.length)} ו-${stops} עצירות ${inHe(cities)}, שנבנה בטיול+, סוכן הנסיעות החכם.`;
   // openGraph is written explicitly rather than relying on the layout:
   // metadata in Next merges per field, so title/description here do **not**
   // flow into the parent's openGraph - and the WhatsApp card would have
@@ -94,7 +94,7 @@ export default async function SharedTripPage({
       <div className="mx-auto max-w-xl rounded-3xl bg-shell p-10 text-center ring-1 ring-night/10">
         <h1 className="display text-2xl text-night">הקישור הזה לא תקין</h1>
         <p className="mt-2 leading-relaxed text-night/70">
-          לא הצלחנו לפתוח את הטיול המשותף - ייתכן שהקישור נחתך בהעתקה או שפג תוקפו.
+          לא הצלחנו לפתוח את הטיול המשותף. ייתכן שהקישור נחתך בהעתקה או שפג תוקפו.
           בקשו מהשולח לשתף אותו שוב.
         </p>
       </div>

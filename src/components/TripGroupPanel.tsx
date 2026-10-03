@@ -97,10 +97,10 @@ export default function TripGroupPanel({
       } else if (data?.error === 'trip-not-found') {
         setError('הטיול צריך להיות שמור בחשבון קודם (מתחברים והוא נשמר לבד).');
       } else {
-        setError('משהו השתבש - נסו שוב עוד רגע.');
+        setError('משהו השתבש. נסו שוב עוד רגע.');
       }
     } catch {
-      setError('משהו השתבש - נסו שוב עוד רגע.');
+      setError('משהו השתבש. נסו שוב עוד רגע.');
     } finally {
       setBusy(false);
     }
@@ -163,7 +163,7 @@ export default function TripGroupPanel({
       title="טיול משותף"
       // Same reason as the story panel, and the same length limit - see there.
       meta="תכנון עם חברים"
-      ariaLabel="טיול משותף - חברים מצטרפים בקישור, מצביעים, מגיבים ומציעים מקומות"
+      ariaLabel="טיול משותף. חברים מצטרפים בקישור, מצביעים, מגיבים ומציעים מקומות"
       /*
         The badge carries only real state now - new suggestions, or how many
         friends joined. It used to fall back to a "premium star" chip, which was
@@ -412,7 +412,7 @@ export default function TripGroupPanel({
                     </ul>
                     {stopComments > 0 && (
                       <p className="mt-1.5 text-[11px] font-medium text-night/65">
-                        💬 {stopComments} תגובות על עצירות - נקראות בקישור ההזמנה
+                        💬 {stopComments} תגובות על עצירות, נקראות בקישור ההזמנה
                       </p>
                     )}
                   </div>
@@ -432,7 +432,7 @@ export default function TripGroupPanel({
 
                 {members === 0 && (
                   <p className="text-xs font-medium text-night/65">
-                    עוד לא הצטרף אף אחד - שלחו את הקישור בוואטסאפ.
+                    עוד לא הצטרף אף אחד. שלחו את הקישור בוואטסאפ.
                   </p>
                 )}
               </>

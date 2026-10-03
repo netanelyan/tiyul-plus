@@ -79,8 +79,8 @@ export default function ErrorBoundary({
       <h1 className="display rise-in mt-4 text-2xl text-night sm:text-3xl">משהו השתבש אצלנו</h1>
       <p className="rise-in mt-4 max-w-md leading-relaxed text-night/70">
         זו תקלה בצד שלנו, לא משהו שעשיתם. <strong className="font-bold text-night">הטיול שלכם
-        שמור</strong> - הוא נשמר במכשיר שלכם (ובחשבון, אם התחברתם), ותקלה בטעינת הדף לא נוגעת
-        בו. אפשר לנסות שוב, ואם זה חוזר - לחזור לדף הבית ולהיכנס לטיול משם.
+        שמור</strong>. הוא נשמר במכשיר שלכם (ובחשבון, אם התחברתם), ותקלה בטעינת הדף לא נוגעת
+        בו. אפשר לנסות שוב, ואם זה חוזר, לחזור לדף הבית ולהיכנס לטיול משם.
       </p>
 
       <div className="rise-in mt-8 flex flex-wrap items-center justify-center gap-3">

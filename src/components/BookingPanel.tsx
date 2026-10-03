@@ -156,7 +156,7 @@ export default function BookingPanel({
                 {perCity && cities.length > 1 && (
                   <div
                     role="group"
-                    aria-label={`${p.title} - בחירת עיר`}
+                    aria-label={`${p.title} · בחירת עיר`}
                     className="mt-2 flex flex-wrap gap-1"
                   >
                     {cities.map((c) => {
@@ -276,7 +276,7 @@ export default function BookingPanel({
         <p className="mt-2 px-1 text-[11px] font-medium leading-relaxed text-night/65">
           הקישורים מפנים לאתרי הזמנות חיצוניים, ואנחנו עשויים לקבל עמלה על הזמנה שמתבצעת דרכם. זה לא
           משפיע על מה שאנחנו מציעים או על הסדר שבו. אנחנו לא מזמינים, לא גובים תשלום ולא מחזיקים
-          פרטי אשראי - המחיר, הזמינות ותנאי הביטול נקבעים אצל הספק.
+          פרטי אשראי. המחיר, הזמינות ותנאי הביטול נקבעים אצל הספק.
         </p>
       </>
     </PanelSection>

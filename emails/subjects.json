@@ -17,7 +17,7 @@
   },
   {
     "file": "subscription-activated.html",
-    "subject": "המנוי שלכם פעיל - {{PLAN_NAME}}"
+    "subject": "המנוי שלכם פעיל · {{PLAN_NAME}}"
   },
   {
     "file": "subscription-ended.html",
@@ -45,7 +45,7 @@
   },
   {
     "file": "newsletter-confirm.html",
-    "subject": "רגע אחד - לאשר את ההרשמה"
+    "subject": "רגע אחד, צריך לאשר את ההרשמה"
   },
   {
     "file": "newsletter-welcome.html",

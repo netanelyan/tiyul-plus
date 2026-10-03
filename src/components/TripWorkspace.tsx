@@ -718,7 +718,7 @@ export default function TripWorkspace({
           className="mt-2 rounded-xl bg-zest/15 px-3 py-2.5 print:hidden"
         >
           <p className="text-sm font-semibold text-night">
-            הדפדפן לא נתן להעתיק אוטומטית. זה הקישור - אפשר לסמן ולהעתיק:
+            הדפדפן לא נתן להעתיק אוטומטית. זה הקישור, אפשר לסמן ולהעתיק:
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <input
@@ -1015,7 +1015,7 @@ export default function TripWorkspace({
             ) : (
               <div className="flex h-40 items-center justify-center rounded-2xl border-2 border-dashed border-night/15 px-6 text-center text-sm font-medium leading-relaxed text-night/65 lg:h-[34rem]">
                 {t
-                  ? 'אין עדיין עצירות ביום הזה - אפשר להוסיף מהרשימה או לבקש מהסוכן'
+                  ? 'אין עדיין עצירות ביום הזה. אפשר להוסיף מהרשימה או לבקש מהסוכן'
                   : 'כאן תופיע המפה של הטיול ברגע שהסוכן יבנה אותו'}
               </div>
             )}
@@ -1227,7 +1227,7 @@ export default function TripWorkspace({
                   the destination page) - not from a raw catalog list. This is just
                   a short reminder, not a control. */}
               <p className="rounded-xl bg-night/[0.03] px-4 py-3 text-sm leading-relaxed text-night/70">
-                רוצים להוסיף עצירה? פשוט בקשו מהסוכן - למשל
+                רוצים להוסיף עצירה? פשוט בקשו מהסוכן, למשל
                 <span className="font-semibold text-night/75"> &quot;תוסיף לי את השוק הישן ליום {dayIndex + 1}&quot;</span> -
                 או הוסיפו מדף היעד של {dayDest.name}.
               </p>
@@ -1241,7 +1241,7 @@ export default function TripWorkspace({
               <p className="mt-1.5 text-sm leading-relaxed text-night/65">
                 {t
                   ? 'מוסיפים יום למעלה, או מבקשים מהסוכן בשיחה'
-                  : 'ברגע שייבנה מסלול הוא יופיע כאן - ימים, עצירות ומפה - ויתעדכן עם כל בקשה.'}
+                  : 'ברגע שייבנה מסלול הוא יופיע כאן עם הימים, העצירות והמפה, ויתעדכן עם כל בקשה.'}
               </p>
             </div>
           )}
@@ -1505,7 +1505,7 @@ export default function TripWorkspace({
                   ))}
                 </ul>
                 <p className="print-annex-note">
-                  מחושב אסטרונומית: נרות 18 דק׳ לפני השקיעה, צאת השבת לפי 8.5 מעלות - מנהגים
+                  מחושב אסטרונומית: נרות 18 דק׳ לפני השקיעה, צאת השבת לפי 8.5 מעלות. אלה מנהגים
                   משתנים, בדקו עם הרב שלכם.
                 </p>
               </section>

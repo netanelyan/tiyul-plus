@@ -52,19 +52,19 @@ export function failureMessage(err: unknown): string {
   const status = err instanceof HttpError ? err.status : 0;
   if (status === 429) {
     const wait = err instanceof HttpError && err.retryAfterSec > 0 ? err.retryAfterSec : 60;
-    return `שלחתי יותר מדי בקשות בזמן קצר 🙏 חכו בבקשה ${wait} שניות ונסו שוב - הטיול שלכם שמור.`;
+    return `שלחתי יותר מדי בקשות בזמן קצר 🙏 חכו בבקשה ${wait} שניות ונסו שוב. הטיול שלכם שמור.`;
   }
   if (status === 413) {
     return 'ההודעה כבדה מדי בשבילי 😅 נסו בלי התמונה, או עם תמונה קטנה יותר.';
   }
   if (status >= 500) {
-    return 'השרת שלי לא זמין כרגע 🙏 הטיול שלכם שמור - נסו לשלוח את ההודעה שוב בעוד רגע.';
+    return 'השרת שלי לא זמין כרגע 🙏 הטיול שלכם שמור, נסו לשלוח את ההודעה שוב בעוד רגע.';
   }
   if (status >= 400) {
     return 'משהו בבקשה לא היה תקין 🙏 נסו לנסח מחדש, או לרענן את הדף אם זה חוזר.';
   }
   // Network/stream error - no status
-  return 'נראה שהחיבור נקטע 🙏 הטיול שלכם שמור - בדקו את החיבור ונסו שוב.';
+  return 'נראה שהחיבור נקטע 🙏 הטיול שלכם שמור, בדקו את החיבור ונסו שוב.';
 }
 
 export interface TripChat {

@@ -157,10 +157,10 @@ function friendly(message: string): string {
   // Helps diagnosis: the original error is kept in the console (not shown to the user)
   console.error('[auth]', message);
   if (m.includes('error sending') || m.includes('smtp'))
-    return 'שליחת המייל נכשלה - כנראה בעיה בהגדרות שליחת המיילים (SMTP). בדקו את הגדרות השולח.';
-  if (m.includes('rate limit') || m.includes('too many')) return 'יותר מדי ניסיונות - נסו שוב בעוד כמה דקות';
-  if (m.includes('invalid') && m.includes('otp')) return 'הקוד שגוי או שפג תוקפו - בדקו את המייל האחרון';
-  if (m.includes('expired')) return 'הקוד פג תוקף - שלחו קוד חדש';
+    return 'שליחת המייל נכשלה, כנראה בגלל הגדרות שליחת המיילים (SMTP). בדקו את הגדרות השולח.';
+  if (m.includes('rate limit') || m.includes('too many')) return 'יותר מדי ניסיונות. נסו שוב בעוד כמה דקות';
+  if (m.includes('invalid') && m.includes('otp')) return 'הקוד שגוי או שפג תוקפו. בדקו את המייל האחרון';
+  if (m.includes('expired')) return 'הקוד פג תוקף. שלחו קוד חדש';
   if (m.includes('invalid') && m.includes('email')) return 'כתובת המייל לא תקינה';
-  return 'משהו השתבש - נסו שוב';
+  return 'משהו השתבש. נסו שוב';
 }

@@ -65,7 +65,7 @@ export default function SampleTrips() {
   return (
     <div className="mt-6">
       <p className="text-center text-xs font-bold text-night/65">
-        או פשוט תראו איך זה נראה - לחיצה אחת, מסלול מלא עם מפה:
+        או שפשוט תציצו: לחיצה אחת ויש מסלול מלא עם מפה.
       </p>
       {/*
         One column on a phone: three side-by-side cards at 390px would each be ~120px
