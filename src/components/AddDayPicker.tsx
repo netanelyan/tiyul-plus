@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { inHe } from '@/lib/hebrew';
 import { OFFLINE_HINT } from '@/lib/offline/online';
 import Flag from '@/components/Flag';
+import { SkeletonRows, SkeletonScreen } from '@/components/Skeleton';
 import { filterCities, type CityOption } from '@/lib/citySearch';
 
 /**
@@ -34,6 +35,17 @@ export default function AddDayPicker({
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState<CityOption[]>(optionsCache ?? []);
+  /*
+    The list is fetched, so "empty" has three different meanings and they must
+    not share one message. While the request was in flight the picker rendered
+    the no-results state, i.e. it told the traveler the catalog does not contain
+    the city they were about to search for, every single time, for as long as
+    the fetch took. That is the one thing this product does not do: state
+    something untrue about the data.
+  */
+  const [status, setStatus] = useState<'loading' | 'ready' | 'failed'>(
+    optionsCache ? 'ready' : 'loading',
+  );
   const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -41,13 +53,17 @@ export default function AddDayPicker({
     if (!open || optionsCache) return;
     let alive = true;
     void fetch('/api/cities?options=1')
-      .then((r) => (r.ok ? r.json() : { options: [] }))
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('bad response'))))
       .then((d: { options?: CityOption[] }) => {
         optionsCache = d.options ?? [];
-        if (alive) setOptions(optionsCache);
+        if (!alive) return;
+        setOptions(optionsCache);
+        setStatus('ready');
       })
       .catch(() => {
-        /* The network failed - the list stays empty and the empty state says so */
+        // The network failed. Say so - do not let it read as an empty catalog,
+        // and do not cache the failure, so the next open tries again.
+        if (alive) setStatus('failed');
       });
     return () => {
       alive = false;
@@ -105,7 +121,14 @@ export default function AddDayPicker({
     <div ref={rootRef} className="relative shrink-0">
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          const next = !open;
+          setOpen(next);
+          // Reset here rather than in the effect: re-opening after a failed
+          // fetch has to go back to the loading shapes, and doing it in an
+          // event handler keeps the effect free of synchronous setState.
+          if (next && !optionsCache) setStatus('loading');
+        }}
         disabled={disabled}
         aria-expanded={open}
         aria-haspopup="listbox"
@@ -152,7 +175,21 @@ export default function AddDayPicker({
                 ))}
               </>
             )}
-            {filtered.length === 0 && (
+            {/*
+              Row-shaped shapes at the height of a real city row, so the list
+              does not resize under the pointer when the names arrive.
+            */}
+            {status === 'loading' && (
+              <SkeletonScreen label="טוען את רשימת הערים" className="px-1 pt-2">
+                <SkeletonRows rows={5} height="h-11" />
+              </SkeletonScreen>
+            )}
+            {status === 'failed' && (
+              <p className="px-3 py-3 text-sm font-medium text-night/65">
+                לא הצלחנו לטעון את רשימת הערים. אפשר לסגור ולנסות שוב.
+              </p>
+            )}
+            {status === 'ready' && filtered.length === 0 && (
               <p className="px-3 py-3 text-sm font-medium text-night/65">
                 אין עיר כזו בקטלוג. אפשר לנסות שם מדינה.
               </p>
