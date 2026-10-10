@@ -128,7 +128,7 @@ export const ok = (data: unknown) =>
  * the server, because a silent log is a log that does not exist.
  */
 export async function audit(
-  actor: Actor,
+  actor: Pick<Actor, 'userId' | 'email'>,
   action: string,
   target: { userId?: string | null; email?: string | null } = {},
   detail: Record<string, unknown> = {},
