@@ -2,8 +2,9 @@
 
 ## 2026-10-10 - rewrite of titles, meta descriptions and headings
 
-Branch `seo/snippet-rewrite`. Not deployed until approved. **Write the deploy date
-here when it ships:** `____-__-__`
+Branch `seo/snippet-rewrite`, approved and merged to main on **2026-10-10**
+(merge commit `692f0ad`; Vercel deploys on push). The 28-day comparison window
+starts on that date.
 
 ### Why
 
