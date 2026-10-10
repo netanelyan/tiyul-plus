@@ -465,12 +465,18 @@ function GoogleSignIn({
         use_fedcm_for_prompt: true,
       });
       box.replaceChildren();
+      /*
+        GIS offers no custom colours, only its own themes. Six were rendered side
+        by side in this modal: the default outline rectangle read as a foreign
+        widget among the modal's rounded shapes, while the dark pill echoes the
+        night header and reads as the quick path, leaving sunset to the email button.
+      */
       g.renderButton(box, {
         type: 'standard',
-        theme: 'outline',
+        theme: 'filled_black',
         size: 'large',
         text: 'continue_with',
-        shape: 'rectangular',
+        shape: 'pill',
         logo_alignment: 'center',
         // GIS takes a pixel width between 200 and 400, not a CSS value.
         width: Math.max(200, Math.min(400, Math.floor(box.clientWidth))),
@@ -490,7 +496,7 @@ function GoogleSignIn({
       <div className={`relative mt-5 transition ${disabled ? 'pointer-events-none opacity-50' : ''}`}>
         {!ready && (
           <div aria-hidden className="absolute inset-0">
-            <Skeleton className="h-full w-full rounded-md" />
+            <Skeleton className="h-full w-full rounded-full" />
           </div>
         )}
         <div ref={boxRef} className="flex min-h-10 w-full justify-center" />
