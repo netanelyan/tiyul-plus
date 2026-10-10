@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth/AuthContext';
+import { googleClientId, loadGis, makeNonce, type GisId } from '@/lib/auth/google';
 import Logo from '@/components/Logo';
+import { Skeleton } from '@/components/Skeleton';
 
 /**
  * The login modal, and the only one on the site.
@@ -17,11 +19,15 @@ import Logo from '@/components/Logo';
  * Lifting the modal out is what lets any surface open it; LoginGate is what
  * those surfaces call.
  *
- * The modal's principles: no passwords (a code sent to email), six digit
- * cells with paste and auto-submit, an animated success state, remembering
- * the last email, a countdown for resending, Escape closes. If the user
- * clicks the link in the email instead of typing a code - supabase-js picks
- * up the session from the URL and the modal closes on its own.
+ * The modal's principles: no passwords (a Google account, or a code sent to
+ * email), six digit cells with paste and auto-submit, an animated success
+ * state, remembering the last email, a countdown for resending, Escape
+ * closes. If the user clicks the link in the email instead of typing a code -
+ * supabase-js picks up the session from the URL and the modal closes on its own.
+ *
+ * Google sits above the email code and is only an addition: when it is not
+ * configured, or its script cannot load, the block is simply absent and the
+ * email path is exactly what it was.
  *
  * The modal renders in a portal into the body: it sits inside the header,
  * and the header has backdrop-blur which creates a containing block for
@@ -46,6 +52,10 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
   const [resendIn, setResendIn] = useState(0);
   const submittingRef = useRef(false);
   const emailInputRef = useRef<HTMLInputElement>(null);
+  const [googleFailed, setGoogleFailed] = useState(false);
+  // Separate from `busy`, which drives the email button's "sending" label.
+  const [googleBusy, setGoogleBusy] = useState(false);
+  const googleShown = googleClientId() !== null && !googleFailed;
 
   // Auto-focus only on devices with a physical keyboard: on a phone,
   // autoFocus pops the keyboard immediately and hides the modal before it is
@@ -144,6 +154,23 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
     }
   }
 
+  async function signInWithGoogle(credential: string, nonce: string): Promise<boolean> {
+    if (submittingRef.current) return false;
+    submittingRef.current = true;
+    setGoogleBusy(true);
+    setError(null);
+    const res = await auth.signInWithGoogle(credential, nonce);
+    setGoogleBusy(false);
+    submittingRef.current = false;
+    if (res.ok) {
+      setStep('success');
+      setTimeout(onClose, 1400);
+      return true;
+    }
+    setError(res.error ?? 'משהו השתבש');
+    return false;
+  }
+
   if (typeof document === 'undefined') return null;
   return createPortal(
     <div className="fixed inset-0 z-[80] overflow-y-auto">
@@ -198,8 +225,19 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
               <div className="mt-4 space-y-2.5">
                 <Benefit icon="cloud" text="כל טיול נשמר בחשבון ולא הולך לאיבוד" />
                 <Benefit icon="sync" text="מתחילים בטלפון, ממשיכים במחשב" />
-                <Benefit icon="lock" text="בלי סיסמאות, קוד חד-פעמי למייל" />
+                <Benefit
+                  icon="lock"
+                  text={googleShown ? 'בלי סיסמאות: Google או קוד למייל' : 'בלי סיסמאות, קוד חד-פעמי למייל'}
+                />
               </div>
+              {googleShown && (
+                <GoogleSignIn
+                  disabled={busy || googleBusy}
+                  signingIn={googleBusy}
+                  onCredential={signInWithGoogle}
+                  onUnavailable={() => setGoogleFailed(true)}
+                />
+              )}
               <label htmlFor="login-email" className="mt-5 block text-xs font-bold text-night/65">
                 כתובת המייל
               </label>
@@ -231,7 +269,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
               </label>
               <button
                 onClick={sendCode}
-                disabled={busy || !emailValid}
+                disabled={busy || googleBusy || !emailValid}
                 className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-sunset px-4 py-3 font-bold text-cream shadow-sm transition hover:bg-sunset-deep disabled:opacity-40"
               >
                 {busy && <Spinner />}
@@ -329,7 +367,10 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
 
           {step === 'email' && (
             <p className="mt-5 border-t border-night/10 pt-3 text-center text-[11px] leading-relaxed text-night/65">
-              בלחיצה על ״המשך עם המייל״ אתם מסכימים ל
+              {/* Google writes its own button text and changes it (it greets a returning user by
+                  name), so the notice names the action rather than quoting a label. */}
+              {googleShown ? 'בהתחברות עם Google או בלחיצה על ״המשך עם המייל״' : 'בלחיצה על ״המשך עם המייל״'} אתם
+              מסכימים ל
               <Link
                 href="/terms"
                 target="_blank"
@@ -355,6 +396,120 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
       </div>
     </div>,
     document.body,
+  );
+}
+
+/* ---------- Continue with Google: the GIS button, One Tap, then the divider ---------- */
+
+/**
+ * Google's own button, rendered by GIS into a container we own: the ID-token
+ * flow has no way to start from a custom-drawn button, and Google's branding
+ * rules require theirs anyway.
+ *
+ * One Tap is prompted once per modal open - never on page load, so it only
+ * appears while the terms notice is on screen beneath it - and cancelled when
+ * this unmounts (the modal closed, or moved on to the code step). A failed
+ * sign-in initialises again with a fresh nonce, so a retry never reuses one.
+ */
+function GoogleSignIn({
+  disabled,
+  signingIn,
+  onCredential,
+  onUnavailable,
+}: {
+  disabled: boolean;
+  signingIn: boolean;
+  onCredential: (credential: string, nonce: string) => Promise<boolean>;
+  onUnavailable: () => void;
+}) {
+  const clientId = googleClientId();
+  const boxRef = useRef<HTMLDivElement>(null);
+  const [ready, setReady] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+
+  // GIS keeps the callback it was initialised with; these refs keep it calling the current props.
+  const credentialRef = useRef(onCredential);
+  const unavailableRef = useRef(onUnavailable);
+  useEffect(() => {
+    credentialRef.current = onCredential;
+    unavailableRef.current = onUnavailable;
+  });
+
+  useEffect(() => {
+    if (!clientId) return;
+    let cancelled = false;
+    let gis: GisId | null = null;
+    void Promise.all([loadGis(), makeNonce()]).then(([g, nonce]) => {
+      const box = boxRef.current;
+      if (cancelled) return;
+      if (!g || !box) {
+        unavailableRef.current();
+        return;
+      }
+      gis = g;
+      g.initialize({
+        client_id: clientId,
+        nonce: nonce.hashed,
+        callback: ({ credential }) => {
+          if (!credential) return;
+          void credentialRef.current(credential, nonce.raw).then((ok) => {
+            if (!ok) setAttempt((n) => n + 1);
+          });
+        },
+        // A sign-in is a tap the person makes, never something that happens to them.
+        auto_select: false,
+        cancel_on_tap_outside: true,
+        context: 'signin',
+        ux_mode: 'popup',
+        itp_support: true,
+        use_fedcm_for_prompt: true,
+      });
+      box.replaceChildren();
+      g.renderButton(box, {
+        type: 'standard',
+        theme: 'outline',
+        size: 'large',
+        text: 'continue_with',
+        shape: 'rectangular',
+        logo_alignment: 'center',
+        // GIS takes a pixel width between 200 and 400, not a CSS value.
+        width: Math.max(200, Math.min(400, Math.floor(box.clientWidth))),
+        locale: 'he',
+      });
+      if (attempt === 0) g.prompt();
+      setReady(true);
+    });
+    return () => {
+      cancelled = true;
+      gis?.cancel();
+    };
+  }, [clientId, attempt]);
+
+  return (
+    <>
+      <div className={`relative mt-5 transition ${disabled ? 'pointer-events-none opacity-50' : ''}`}>
+        {!ready && (
+          <div aria-hidden className="absolute inset-0">
+            <Skeleton className="h-full w-full rounded-md" />
+          </div>
+        )}
+        <div ref={boxRef} className="flex min-h-10 w-full justify-center" />
+      </div>
+      {signingIn && (
+        <p className="mt-2 flex items-center justify-center gap-2 text-xs font-semibold text-night/65" aria-live="polite">
+          <span
+            aria-hidden
+            className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-night/20 border-t-night/60"
+          />
+          מתחברים עם Google…
+        </p>
+      )}
+      <div className="mt-5 flex items-center gap-3 text-xs font-semibold text-night/65">
+        <span aria-hidden className="h-px flex-1 bg-night/10" />
+        או עם קוד למייל
+        <span aria-hidden className="h-px flex-1 bg-night/10" />
+      </div>
+    </>
   );
 }
 

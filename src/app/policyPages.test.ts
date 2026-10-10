@@ -161,9 +161,16 @@ test('Google Analytics הוא כלי המדידה היחיד - שום כלי מ�
   const csp = readFileSync(join(APP, '../../next.config.ts'), 'utf8');
   const scriptSrc = /"script-src[^"]*"/.exec(csp)?.[0] ?? '';
   const hosts = [...scriptSrc.matchAll(/https:\/\/([a-z0-9.-]+)/g)].map((m) => m[1]);
-  const ALLOWED = new Set(['www.paypal.com', 'www.paypalobjects.com', 'www.googletagmanager.com']);
+  /*
+    accounts.google.com is Google sign-in, not measurement. It is allowed only
+    while both policy pages disclose it, which the loop below checks.
+  */
+  const ALLOWED = new Set(['www.paypal.com', 'www.paypalobjects.com', 'www.googletagmanager.com', 'accounts.google.com']);
   const unexpected = hosts.filter((h) => !ALLOWED.has(h));
   assert.deepEqual(unexpected, [], `script-src מתיר מארח לא מתועד: ${unexpected.join(', ')}`);
+  for (const page of ['privacy', 'cookies']) {
+    assert.ok(src(page).includes('ההתחברות עם Google'), `/${page} חייב לגלות את ההתחברות עם Google`);
+  }
 });
 
 /**

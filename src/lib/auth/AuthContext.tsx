@@ -7,9 +7,10 @@ import { EMPTY_PROFILE, fetchProfile, recordTermsAcceptance, upsertProfile, type
 import { TERMS_VERSION } from '@/lib/legal';
 
 /**
- * The account context: login by a one-time code sent to an email address (OTP) -
- * with no passwords. enabled=false when there is no Supabase configuration - the
- * interface simply does not show a login option.
+ * The account context: login by a one-time code sent to an email address (OTP),
+ * or with a Google account (an ID token from Google Identity Services - see
+ * `@/lib/auth/google`) - with no passwords either way. enabled=false when there
+ * is no Supabase configuration - the interface simply does not show a login option.
  */
 
 interface AuthApi {
@@ -29,6 +30,8 @@ interface AuthApi {
   reloadProfile: () => Promise<void>;
   sendCode: (email: string) => Promise<{ ok: boolean; error?: string }>;
   verifyCode: (email: string, code: string) => Promise<{ ok: boolean; error?: string }>;
+  /** `credential` is Google's ID token; `nonce` is the raw value whose hash Google was given. */
+  signInWithGoogle: (credential: string, nonce: string) => Promise<{ ok: boolean; error?: string }>;
   signOut: () => Promise<void>;
 }
 
@@ -110,32 +113,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [supabase],
   );
 
+  /*
+    Runs after every successful sign-in, by code or by Google - one function so
+    the two paths cannot drift apart. The login itself is the moment of consent
+    (see the text beside the buttons in the modal) - recorded here, on the first
+    successful sign-in only, and not on every subsequent one. If the write fails
+    (network, or the supabase-consent.sql migration has not run yet) the login
+    still succeeds - this must not block a user from the service.
+  */
+  const afterSignIn = useCallback(async () => {
+    if (!supabase) return;
+    try {
+      const p = await fetchProfile(supabase);
+      if (p && !p.termsAcceptedAt) {
+        await recordTermsAcceptance(supabase, TERMS_VERSION);
+        // First sign-in ever: the welcome email. Fire-and-forget - the server
+        // resolves the recipient from the token, and a failure here is a log
+        // line on the server, never something the login waits on or shows.
+        const headers = await authHeader();
+        void fetch('/api/account/welcome', { method: 'POST', headers }).catch(() => {});
+      }
+    } catch {
+      /* not critical - it will be recorded on the next sign-in */
+    }
+  }, [supabase]);
+
   const verifyCode = useCallback(
     async (email: string, code: string) => {
       if (!supabase) return { ok: false, error: 'החשבונות לא מוגדרים בסביבה הזו' };
       const { error } = await supabase.auth.verifyOtp({ email, token: code, type: 'email' });
       if (error) return { ok: false, error: friendly(error.message) };
-      // The login itself is the moment of consent (see the text beside the button in
-      // the modal) - recorded here, on the first successful sign-in only, and not on
-      // every subsequent one. If the write fails (network, or the supabase-consent.sql
-      // migration has not run yet) the login still succeeds - this must not block a
-      // user from the service.
-      try {
-        const p = await fetchProfile(supabase);
-        if (p && !p.termsAcceptedAt) {
-          await recordTermsAcceptance(supabase, TERMS_VERSION);
-          // First sign-in ever: the welcome email. Fire-and-forget - the server
-          // resolves the recipient from the token, and a failure here is a log
-          // line on the server, never something the login waits on or shows.
-          const headers = await authHeader();
-          void fetch('/api/account/welcome', { method: 'POST', headers }).catch(() => {});
-        }
-      } catch {
-        /* not critical - it will be recorded on the next sign-in */
-      }
+      await afterSignIn();
       return { ok: true };
     },
-    [supabase],
+    [supabase, afterSignIn],
+  );
+
+  /*
+    No redirect: the session is set on this page, so `user` changes in place and
+    every pending login intent resumes through the same effects as after a typed
+    code. A Google address that already has an account by email code signs in to
+    that same account - Supabase links identities with the same verified email.
+  */
+  const signInWithGoogle = useCallback(
+    async (credential: string, nonce: string) => {
+      if (!supabase) return { ok: false, error: 'החשבונות לא מוגדרים בסביבה הזו' };
+      const { error } = await supabase.auth.signInWithIdToken({ provider: 'google', token: credential, nonce });
+      if (error) {
+        console.error('[auth] google', error.message);
+        return { ok: false, error: 'ההתחברות עם Google לא הצליחה. נסו שוב, או המשיכו עם קוד למייל' };
+      }
+      await afterSignIn();
+      return { ok: true };
+    },
+    [supabase, afterSignIn],
   );
 
   const signOut = useCallback(async () => {
@@ -144,7 +175,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <Ctx.Provider
-      value={{ enabled: Boolean(supabase), user, ready, profile, saveProfile, reloadProfile, sendCode, verifyCode, signOut }}
+      value={{
+        enabled: Boolean(supabase),
+        user,
+        ready,
+        profile,
+        saveProfile,
+        reloadProfile,
+        sendCode,
+        verifyCode,
+        signInWithGoogle,
+        signOut,
+      }}
     >
       {children}
     </Ctx.Provider>

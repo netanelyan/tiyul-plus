@@ -44,8 +44,14 @@ const CSP = [
     not degrade analytics, it blocks the script outright, and the only symptom
     is a console violation nobody reads.
   */
-  "script-src 'self' 'unsafe-inline' https://www.paypal.com https://www.paypalobjects.com https://www.googletagmanager.com",
-  "style-src 'self' 'unsafe-inline'",
+  /*
+    accounts.google.com/gsi/ is Google sign-in (src/lib/auth/google.ts): the
+    script, the button's iframe, its stylesheet and its token calls - the four
+    entries Google documents for a CSP. Path-scoped, not the whole host. The
+    script is only requested when the login modal opens.
+  */
+  "script-src 'self' 'unsafe-inline' https://www.paypal.com https://www.paypalobjects.com https://www.googletagmanager.com https://accounts.google.com/gsi/client",
+  "style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style",
   // Self-hosted since the font move - no Google origin to allow.
   "font-src 'self' data:",
   [
@@ -87,8 +93,9 @@ const CSP = [
     'https://*.google-analytics.com',
     'https://*.analytics.google.com',
     'https://www.googletagmanager.com',
+    'https://accounts.google.com/gsi/',
   ].join(' '),
-  "frame-src 'self' https://www.paypal.com",
+  "frame-src 'self' https://www.paypal.com https://accounts.google.com/gsi/",
   // The machine-readable twin of x-frame-options, and the one modern browsers
   // actually consult.
   "frame-ancestors 'self'",
