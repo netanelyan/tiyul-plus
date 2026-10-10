@@ -10,6 +10,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { destinations } from '@/data/destinations';
 import { SEO_DESTINATION_SLUGS } from './selection';
+import { inHe } from '@/lib/hebrew';
 import {
   GUIDE_CATEGORY_ORDER,
   MIN_FAMILY_PLACES,
@@ -182,7 +183,8 @@ describe('plannerQuery', () => {
     for (const d of promoted) {
       const q = plannerQuery(d);
       assert.ok(/\d+/.test(q), `${d.slug}: no day count in "${q}"`);
-      assert.ok(q.includes(d.name), `${d.slug}: query does not name the destination`);
+      // Named as the query spells it after "in": the Grand Canyon's article is absorbed there.
+      assert.ok(q.includes(inHe(d.name)), `${d.slug}: query does not name the destination`);
     }
   });
 

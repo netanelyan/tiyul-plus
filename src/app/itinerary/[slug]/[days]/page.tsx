@@ -16,6 +16,7 @@ import {
 /** The catalog, in the shape the rollout function takes. Computed once per module. */
 const ROLLOUT_INPUT = destinations.map(toDestLike);
 import { pageMetadata } from '@/lib/seo/site';
+import { itinerarySnippet } from '@/lib/seo/snippets';
 import { breadcrumbLd } from '@/lib/seo/jsonLd';
 import JsonLd from '@/components/seo/JsonLd';
 import PhotoCredits from '@/components/PhotoCredits';
@@ -86,22 +87,18 @@ export async function generateMetadata({
   const { slug, days: daysRaw } = await params;
   const r = resolve(slug, daysRaw);
   if (!r) return pageMetadata({ path: '/itinerary', title: 'מסלול', noindex: true });
-  const { dest, days } = r;
-  const stops = itineraryDays(dest)
-    .slice(0, days)
-    .reduce((n, d) => n + d.places.length, 0);
+  const { dest, country, days } = r;
+  /*
+    "trip to X N days" - the query shape itself - then the stop count, with the
+    description built from this length's real stops, flight and season. Computed,
+    so it cannot drift from the catalog; see `@/lib/seo/snippets`.
+  */
+  const { title, description } = itinerarySnippet(dest, country, days);
 
   return pageMetadata({
     path: `/itinerary/${dest.slug}/${days}`,
-    title: `${pageTitle(dest.name, days)} · מסלול יום-יום עם מפה | טיול+`,
-    /*
-      The description carries the two facts that differentiate this page from the
-      destination page: the length and the real stop count. Both computed - a
-      hand-written description would drift the moment the catalog gains a place.
-    */
-    description: `מסלול מוכן ${daysHe(days)} ${inHe(dest.name)}: ${stops} עצירות, יום-יום, עם מפה, ${
-      dest.bestSeason ? `עונה מומלצת ו` : ''
-    }טיסות מתל אביב. אפשר לפתוח אותו במתכנן ולערוך לתאריכים שלכם.`,
+    title,
+    description,
     images: dest.photo ? [{ url: dest.photo, alt: dest.name }] : undefined,
   });
 }
@@ -157,7 +154,9 @@ export default async function ItineraryPage({
 
       {/* ---------- Hero ---------- */}
       <header className="mt-3">
-        <h1 className="display text-3xl font-black text-night sm:text-4xl">{title}</h1>
+        <h1 className="display text-3xl font-black text-night sm:text-4xl">
+          {itinerarySnippet(dest, country, days).h1}
+        </h1>
         <p className="mt-2 text-sm font-semibold text-night/70">
           {stops} עצירות · {daysHe(days)} · {dest.nameLocal}
           {dest.editorialRating ? ` · המלצת הצוות ${dest.editorialRating.score}/5` : ''}

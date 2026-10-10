@@ -7,7 +7,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { destinations } from '@/data/destinations';
 import { countries } from '@/data/countries';
-import { hePrefix, inHe } from './hebrew.ts';
+import { DEFINITE_FIRST_WORDS, NOT_DEFINITE_FIRST_WORDS, hePrefix, inHe } from './hebrew.ts';
 
 test('אות שימוש מכפילה וי"ו בתחילת שם', () => {
   assert.equal(inHe('וינה'), 'בווינה');
@@ -46,6 +46,36 @@ test('כל שם בקטלוג שמתחיל בוי"ו מקבל הכפלה', () => 
 test('אף שם בקטלוג לא מקבל הכפלה מיותרת', () => {
   for (const n of destinations.map((d) => d.name)) {
     if (n.startsWith('ו')) continue;
+    if (DEFINITE_FIRST_WORDS.has(n.split(' ')[0])) continue;
     assert.equal(inHe(n), `ב${n}`, n);
   }
+});
+
+test('ה׳ הידיעה נבלעת אחרי ב/ל/כ ונשארת אחרי מ/ו/ש', () => {
+  assert.equal(hePrefix('ל', 'הדולומיטים'), 'לדולומיטים');
+  assert.equal(inHe('הגליל והכנרת'), 'בגליל והכנרת');
+  assert.equal(hePrefix('ל', 'הפיליפינים'), 'לפיליפינים');
+  assert.equal(hePrefix('מ', 'הדולומיטים'), 'מהדולומיטים');
+  assert.equal(hePrefix('ו', 'הדולומיטים'), 'והדולומיטים');
+});
+
+test('ה׳ שהיא חלק מהשם לא נבלעת', () => {
+  assert.equal(hePrefix('ל', 'הונגריה'), 'להונגריה');
+  assert.equal(hePrefix('ל', 'הרי הטטרה הגבוהים'), 'להרי הטטרה הגבוהים');
+  assert.equal(inHe('האנוי ומפרץ הא לונג'), 'בהאנוי ומפרץ הא לונג');
+});
+
+test('כל שם בקטלוג שפותח בה׳ מסווג: ה׳ הידיעה או חלק מהשם', () => {
+  const unclassified = [
+    ...destinations.map((d) => d.name),
+    ...countries.map((c) => c.name),
+  ]
+    .filter((n) => n.startsWith('ה'))
+    .map((n) => n.split(' ')[0])
+    .filter((w) => !DEFINITE_FIRST_WORDS.has(w) && !NOT_DEFINITE_FIRST_WORDS.has(w));
+  assert.deepEqual(
+    unclassified,
+    [],
+    `classify these first words in src/lib/hebrew.ts: ${unclassified.join(', ')}`,
+  );
 });
