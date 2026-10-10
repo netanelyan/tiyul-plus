@@ -22,9 +22,16 @@ type Filter = 'all' | 'kosher' | PlaceCategory;
 export default function DestinationClient({
   dest,
   country,
+  heading,
 }: {
   dest: Destination;
   country: Country;
+  /**
+   * The page's H1, built on the server by `destinationSnippet` so it matches the
+   * search title ("X for Israelis"). Passed in rather than computed here, which
+   * would pull the catalog-wide SEO overrides into the client bundle.
+   */
+  heading: string;
 }) {
   const [filter, setFilter] = useState<Filter>('all');
   const [query, setQuery] = useState('');
@@ -119,7 +126,7 @@ export default function DestinationClient({
           <div className="max-w-2xl">
             <h1 className="display text-3xl text-cream sm:text-4xl">
               <Flag flag={dest.flag} label={dest.name} size="lg" className="me-2 align-middle" />
-              {dest.name}
+              {heading}
               <span className="ms-3 text-lg font-medium text-cream/60">{dest.nameLocal}</span>
             </h1>
             <p className="mt-4 leading-relaxed text-cream/90">{dest.summary}</p>
@@ -283,7 +290,7 @@ export default function DestinationClient({
 
       {/* Kosher overview */}
       <section className="mt-12 rounded-2xl bg-shell p-7 ring-1 ring-night/10">
-        <h2 className="text-lg font-bold text-night">מצב הכשרות ב{dest.name}</h2>
+        <h2 className="text-lg font-bold text-night">מצב הכשרות {inHe(dest.name)}</h2>
         <p className="mt-2 leading-relaxed text-night/75">{dest.practical.kosherOverview}</p>
       </section>
 

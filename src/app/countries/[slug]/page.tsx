@@ -1,17 +1,21 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { canonical, metaDescription } from '@/lib/seo/site';
+import { canonical } from '@/lib/seo/site';
+import { countrySnippet, visaHeading } from '@/lib/seo/snippets';
+import { firstSentence } from '@/lib/seo/facts';
+import { hePrefix, inHe } from '@/lib/hebrew';
 import { breadcrumbLd, countryLd } from '@/lib/seo/jsonLd';
 import JsonLd from '@/components/seo/JsonLd';
 import { getProvider } from '@/lib/providers';
 import Flag from '@/components/Flag';
 import CardPhoto, { HERO_OVERLAY } from '@/components/CardPhoto';
 import { countries } from '@/data/countries';
+import { destinations } from '@/data/destinations';
 import PhotoCredits from '@/components/PhotoCredits';
 import { creditsFor, shareImage } from '@/lib/server/photoCredit';
-
-import { hePrefix } from '@/lib/hebrew';
+
+
 export function generateStaticParams() {
   return countries.map((c) => ({ slug: c.slug }));
 }
@@ -21,8 +25,9 @@ export function generateStaticParams() {
  * per-country Open Graph, so a shared link showed the site-wide card and the
  * search snippet fell back to whatever Google chose to scrape.
  *
- * The description is built from the country's curated `tagline` and `summary`;
- * nothing here is written or generated.
+ * Title, description and the hero heading come from `countrySnippet`, built from
+ * the country's own data and its cities' (or a hand-written override in
+ * `@/data/seoOverrides`); see `@/lib/seo/snippets`. Nothing is generated.
  */
 export async function generateMetadata({
   params,
@@ -33,8 +38,7 @@ export async function generateMetadata({
   const country = countries.find((c) => c.slug === slug);
   if (!country) return {};
 
-  const title = `טיול ${hePrefix('ל', country.name)}: יעדים, ויזה ומידע למטייל הישראלי | טיול+`;
-  const description = metaDescription(country.tagline, country.summary);
+  const { title, description } = countrySnippet(country, destinations.filter((d) => d.countrySlug === slug));
   const url = canonical(`/countries/${country.slug}`);
   // Widened to what the original really allows - the stored 500px thumb is below
   // the width Facebook and WhatsApp need for a large card. See `shareImage`.
@@ -73,8 +77,13 @@ export default async function CountryPage({
   if (!country) notFound();
   const cities = (await provider.getDestinations()).filter((d) => d.countrySlug === slug);
 
+  const { h1 } = countrySnippet(country, destinations.filter((d) => d.countrySlug === slug));
+  // The visa answer has its own heading below the hero, so its card leaves the grid
+  // rather than saying the same thing twice. The home country has no visa question.
+  const visaTitle = visaHeading(country);
+  const visaAnswer = firstSentence(country.practical.visa);
   const practicalItems: { title: string; text: string }[] = [
-    { title: 'ויזה', text: country.practical.visa },
+    ...(visaTitle ? [] : [{ title: 'ויזה', text: country.practical.visa }]),
     { title: 'מטבע', text: country.practical.currency },
     { title: 'סים וגלישה', text: country.practical.sim },
     { title: 'תשלומים', text: country.practical.payments },
@@ -118,17 +127,36 @@ export default async function CountryPage({
         <div className="relative mt-3 max-w-2xl">
           <h1 className="display text-3xl text-cream sm:text-4xl">
             <Flag flag={country.flag} label={country.name} size="lg" className="me-2 align-middle" />
-            {country.name}
+            {h1}
             <span className="ms-3 text-lg font-medium text-cream/60">{country.nameLocal}</span>
           </h1>
           <p className="mt-4 leading-relaxed text-cream/90">{country.summary}</p>
         </div>
       </div>
 
+      {/*
+        The visa answer, under the question people search ("do I need a visa for X").
+        The text is `practical.visa` exactly as written, and its first sentence - the
+        answer - is set in bold so it reads as one.
+      */}
+      {visaTitle && (
+        <section className="mt-12">
+          <h2 className="display text-2xl text-night">{visaTitle}</h2>
+          <p className="mt-3 max-w-3xl leading-relaxed text-night/80">
+            <strong className="font-bold text-night">{visaAnswer}</strong>
+            {country.practical.visa.slice(visaAnswer.length)}
+          </p>
+        </section>
+      )}
+
       {/* Practical info */}
       <section className="mt-12">
-        <h2 className="display text-2xl text-night">לפני שטסים ל{country.name}</h2>
-        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <h2 className="display text-2xl text-night">
+          {visaTitle ? `לפני שטסים ${hePrefix('ל', country.name)}` : 'לפני שיוצאים לדרך'}
+        </h2>
+        <div
+          className={`mt-5 grid gap-4 sm:grid-cols-2 ${practicalItems.length === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}
+        >
           {practicalItems.map((item) => (
             <div key={item.title} className="card-pop rounded-2xl bg-shell p-5 ring-1 ring-night/10">
               <div className="font-bold text-night">{item.title}</div>
@@ -141,7 +169,7 @@ export default async function CountryPage({
       {/* Cities */}
       <section className="mt-12">
         <div>
-          <h2 className="display text-2xl text-night">הערים ב{country.name}</h2>
+          <h2 className="display text-2xl text-night">הערים {inHe(country.name)}</h2>
           <p className="mt-2 text-night/70">
             כל עיר עם מסלול מוכן יום-אחרי-יום, מפה אינטראקטיבית ושכבת כשרות.
           </p>

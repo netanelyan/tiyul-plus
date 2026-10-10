@@ -1,5 +1,5 @@
 /**
- * Hebrew spelling rules the code needs - **one rule for now, and that is enough**.
+ * Hebrew spelling rules the code needs - the vav doubling below, and the definite article (see DEFINITE_FIRST_WORDS).
  *
  * ## The bug
  *
@@ -41,11 +41,65 @@ export function hePrefix(prefix: string, word: string): string {
   const w = (word ?? '').trim();
   if (!w) return '';
   if (!PREFIXES.has(prefix)) return `${prefix}${w}`;
+  // The definite article is absorbed by bet, lamed and kaf: "the Dolomites" with lamed
+  // is spelled without the he. See DEFINITE_FIRST_WORDS for why this is a list.
+  if (ABSORBS_ARTICLE.has(prefix) && DEFINITE_FIRST_WORDS.has(w.split(/\s/)[0])) {
+    return `${prefix}${w.slice(1)}`;
+  }
   // A word-initial consonantal vav doubles after a prefix letter. A word that already
   // opens with two vavs (e.g. Washington) is already spelled correctly and needs nothing added.
   if (w.startsWith('ו') && !w.startsWith('וו')) return `${prefix}ו${w}`;
   return `${prefix}${w}`;
 }
+
+/** The prefixes that swallow a definite article. Mem, shin and vav keep it. */
+const ABSORBS_ARTICLE = new Set(['ב', 'ל', 'כ']);
+
+/**
+ * Catalog names whose opening he is the definite article, by first word.
+ *
+ * ## The second rule
+ *
+ * After bet, lamed or kaf the article disappears in unpointed Hebrew, so the
+ * Dolomites with lamed must lose its he. The naive join kept it, and that
+ * misspelling sat in the itinerary page title for the Dolomites and in
+ * the country title for the Philippines.
+ *
+ * ## Why a list and not a rule
+ *
+ * A word-initial he is the article in some names and a root letter in others -
+ * Hungary, Holland, India, Hanoi and Hoi An all begin with a he that belongs to
+ * the name, and the construct "mountains of" begins with one too. Nothing in
+ * the spelling tells them apart, so each catalog name is classified by hand.
+ * `hebrew.test.ts` fails on any catalog name that opens with he and appears in
+ * neither this set nor `NOT_DEFINITE_FIRST_WORDS`, so a new entry cannot slip
+ * through unclassified.
+ */
+export const DEFINITE_FIRST_WORDS: ReadonlySet<string> = new Set([
+  'הדולומיטים',
+  'הגרנד',
+  'החוף',
+  'האי',
+  'המרכז',
+  'האלפים',
+  'המשולש',
+  'האטלס',
+  'הערבה',
+  'הגליל',
+  'הפיליפינים',
+]);
+
+/** Catalog first words whose he is part of the word itself. Kept for the test above. */
+export const NOT_DEFINITE_FIRST_WORDS: ReadonlySet<string> = new Set([
+  'הרי',
+  'האנוי',
+  'הוי',
+  'הקפת',
+  'הימאצ׳ל',
+  'הונגריה',
+  'הולנד',
+  'הודו',
+]);
 
 /** The most common shorthand: "in <city>" */
 export const inHe = (word: string): string => hePrefix('ב', word);
