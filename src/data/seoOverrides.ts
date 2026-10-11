@@ -42,12 +42,11 @@ export const SNIPPET_OVERRIDES: Record<string, SnippetOverride> = {
 
   '/destinations/almaty': {
     query: 'אלמטי (78 חשיפות, מיקום 9)',
-    title: 'אלמטי לישראלים: טיסה ישירה, ללא ויזה ומסלול 4 ימים',
+    title: 'אלמטי לישראלים: ללא ויזה, הרים ומסלול 4 ימים',
     description:
-      'אלמטי: טיסה ישירה מנתב"ג של כ-6 שעות, ללא ויזה עד 30 יום, ומסלול 4 ימים לעיר, להרים, לקניון צ׳ארין ולאגמי קולסאי. בית חב"ד עם חנות כשרה וחדר אוכל.',
+      'אלמטי: ללא ויזה עד 30 יום, ומסלול 4 ימים לעיר, להרים, לקניון צ׳ארין ולאגמי קולסאי. אין טיסה ישירה, מגיעים בהחלפה. בית חב"ד עם חנות כשרה וחדר אוכל.',
     facts: [
-      { source: 'flights', quote: 'אייר אסטנה מפעילה טיסה ישירה מנתב"ג לאלמטי' },
-      { source: 'flights', quote: 'טיסה של כ-6 שעות' },
+      { source: 'flights', quote: 'אין כיום טיסות ישירות מנתב"ג לאלמטי' },
       { source: 'visa', quote: 'ישראלים פטורים מוויזה לקזחסטן לשהות של עד 30 יום' },
       { source: 'itinerary', quote: 'קניון צ׳ארין' },
       { source: 'itinerary', quote: 'אגמי קולסאי' },
@@ -160,7 +159,7 @@ export const SNIPPET_OVERRIDES: Record<string, SnippetOverride> = {
     facts: [
       { source: 'visa', quote: 'ללא ויזה לישראלים עד 90 יום' },
       { source: 'madrid.flights', quote: 'טיסות ישירות מנתב״ג למדריד (MAD), כחמש שעות' },
-      { source: 'barcelona.flights', quote: 'טיסות ישירות מנתב"ג (אל על, ווִאלינג, ישראייר) - כ-4.5 שעות' },
+      { source: 'barcelona.flights', quote: 'טיסות ישירות מנתב"ג (אל על, ארקיע, בלו בירד) - כ-4.5 שעות' },
     ],
   },
 
@@ -191,13 +190,13 @@ export const SNIPPET_OVERRIDES: Record<string, SnippetOverride> = {
     query: 'מאוריציוס (70 חשיפות)',
     title: 'טיול למאוריציוס: פטור מאשרה עד 90 יום ומסלול 5 ימים',
     description:
-      'ישראלים פטורים מאשרה עד 90 יום, נכון להיום, וממלאים טופס כניסה מקוון. אין טיסה ישירה: 12-16 שעות דרך דובאי או איסטנבול. אין מסעדות כשרות. העונה: מאי-דצמבר.',
+      'ישראלים פטורים מאשרה עד 90 יום, נכון להיום, וממלאים טופס כניסה מקוון. אין טיסה ישירה: 12-16 שעות דרך דובאי או פריז. אין מסעדות כשרות. העונה: מאי-דצמבר.',
     facts: [
       { source: 'visa', quote: 'ישראלים פטורים מאשרה לשהייה של עד 90 יום, נכון להיום ובכפוף לשינויים' },
       { source: 'visa', quote: 'יש למלא באינטרנט את טופס הכניסה הממשלתי המאוחד' },
       { source: 'mauritius-island.flights', quote: 'אין טיסות ישירות מישראל' },
       { source: 'mauritius-island.flights', quote: 'שתים עשרה עד שש עשרה שעות' },
-      { source: 'mauritius-island.flights', quote: 'דובאי, אבו דאבי, איסטנבול' },
+      { source: 'mauritius-island.flights', quote: 'דובאי, פריז, פרנקפורט' },
       { source: 'mauritius-island.kosherOverview', quote: 'אין מסעדות כשרות' },
       { source: 'mauritius-island.bestSeason', quote: 'מאי עד דצמבר' },
     ],
@@ -211,8 +210,8 @@ export const SNIPPET_OVERRIDES: Record<string, SnippetOverride> = {
     facts: [
       { source: 'visa', quote: 'ישראלים פטורים מוויזה לשהות של עד 60 יום' },
       { source: 'visa', quote: '(TDAC) עד 72 שעות לפני הנחיתה' },
-      { source: 'bangkok.flights', quote: 'אל על מטיסה ישירה מנתב"ג לבנגקוק' },
-      { source: 'phuket.flights', quote: 'אל על מפעילה טיסה ישירה מנתב"ג לפוקט' },
+      { source: 'bangkok.flights', quote: 'אל על מפעילה טיסות ישירות מנתב"ג לבנגקוק' },
+      { source: 'phuket.flights', quote: 'אל על מפעילה טיסות ישירות מנתב"ג לפוקט' },
       { source: 'bangkok.flights', quote: 'כ-11 שעות' },
     ],
   },
@@ -238,14 +237,14 @@ export const SNIPPET_OVERRIDES: Record<string, SnippetOverride> = {
     query: 'קפדוקיה (47 חשיפות, מיקום 14)',
     title: 'קפדוקיה לישראלים: כדורים פורחים ומסלול 5 ימים',
     description:
-      'קפדוקיה: מסלול 5 ימים לגורמה, כדור פורח, ערים תת-קרקעיות ועמק הוורדים. אין קו ישיר: טסים לאיסטנבול ומשם כשעה לנבשהיר. העונה: אפריל-יוני, ספטמבר-אוקטובר.',
+      'קפדוקיה: מסלול 5 ימים לגורמה, כדור פורח, ערים תת-קרקעיות ועמק הוורדים. אין קו ישיר: בהחלפה לאיסטנבול ומשם כשעה לנבשהיר. העונה: אפריל-יוני, ספטמבר-אוקטובר.',
     facts: [
       { source: 'tagline', quote: 'זריחה מעל כדורים פורחים' },
       { source: 'itinerary', quote: 'גורמה והעמקים' },
       { source: 'itinerary', quote: 'כדור פורח והעיר התת-קרקעית' },
       { source: 'itinerary', quote: 'עמק הוורדים' },
       { source: 'flights', quote: 'אין קו ישיר מישראל לקפדוקיה' },
-      { source: 'flights', quote: 'טיסה לאיסטנבול' },
+      { source: 'flights', quote: 'טיסה עם החלפה (למשל באתונה או בעיר אירופית אחרת) לאיסטנבול' },
       { source: 'flights', quote: 'לנבשהיר (NAV) או לקייסרי (ASR), כשעה טיסה' },
       { source: 'bestSeason', quote: 'אפריל-יוני וספטמבר-אוקטובר' },
     ],

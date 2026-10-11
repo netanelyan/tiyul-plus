@@ -1,5 +1,35 @@
 # Search titles and descriptions - change log
 
+## 2026-10-11 - flight facts corrected (data change, not a template change)
+
+The template did not change. `practical.flights` was re-verified against 2026 airline
+schedules for every destination abroad, and 95 entries were corrected. Titles and
+descriptions read their flight claim from that field, so these pages' snippets
+changed with the data. **Keep them in mind when reading the 28-day comparison:**
+the change is one day into the window, on these pages only.
+
+| Page | Flight fact before | After |
+|---|---|---|
+| almaty (also its override) | direct, ~6h | no direct flight |
+| florence | (none) | no direct flight |
+| stockholm | direct | no direct flight |
+| tallinn, edinburgh, ireland-ancient-east, dalmatia-split | (none) | no direct flight |
+| grand-canyon, cape-town, lycian-coast, seoul-dmz, phnom-penh-coast | (none) | no direct flight |
+| bratislava | (none) | direct, ~3.5h |
+| seychelles-mahe-praslin-ladigue | no direct flight | direct, ~6h |
+| marrakesh | (none) | direct |
+| brussels-flanders | (none) | direct, ~4.5h |
+| larnaca | direct | direct, ~1h |
+| lisbon | direct, ~5h | direct, ~6h |
+| vilnius | direct, ~3.5h | direct (range, so no length) |
+| crete, riga, nice-riviera | direct | (none) - seasonal or few flights a week |
+| finnish-lapland, douro, meteora-epirus, cultural-triangle, buenos-aires | no direct flight | (none) - a seasonal or upcoming direct route exists |
+
+Overrides edited for the same reason: `/destinations/almaty` (title and description
+no longer claim a direct flight), `/countries/mauritius` and `/destinations/cappadocia`
+(no longer route travellers via Istanbul, which has no flights from TLV), and the
+quotes behind `/countries/spain` and `/countries/thailand` (wording only, same facts).
+
 ## 2026-10-10 - rewrite of titles, meta descriptions and headings
 
 Branch `seo/snippet-rewrite`, approved and merged to main on **2026-10-10**

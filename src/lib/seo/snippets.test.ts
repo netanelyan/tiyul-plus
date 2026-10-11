@@ -393,8 +393,8 @@ test('flights: a direct flight to a gateway city is not a direct flight to the d
   assert.equal(flightFact(dest('athens'))?.short, 'טיסה ישירה של כשעתיים');
   assert.equal(flightFact(dest('paris'))?.short, 'טיסה ישירה מנתב"ג'); // 4h45: no rounded length
   assert.equal(flightFact(dest('munich'))?.kind, 'direct');
-  assert.equal(flightFact(dest('florence')), null); // seasonal
-  assert.equal(flightFact(dest('santorini-mykonos')), null); // "no direct flight MOST of the year"
+  assert.equal(flightFact(dest('florence'))?.kind, 'none'); // the 'seasonal TLV-FLR' line was wrong; corrected 2026-10-11
+  assert.equal(flightFact(dest('santorini-mykonos')), null); // summer-only direct flights
   assert.equal(flightFact(dest('tasmania'))?.kind, 'none');
   assert.ok(firstSentence(dest('vienna').practical.flights).endsWith('כ-3.5 שעות'), 'a decimal is not a full stop');
 });
