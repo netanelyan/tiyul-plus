@@ -9,6 +9,7 @@ import { resolveCaller } from '@/lib/server/identity';
 import { PLAN_LIMITS, aiUnits, paidPlanOf, periodMsFor } from '@/lib/plans';
 import { budgetFor, maybeAlert, maybeAlertPremium, monthKey, premiumBudgetFor, recordSpend } from '@/lib/server/budget';
 import { sameOriginOk } from '@/lib/server/chatGuards';
+import { anthropicHeaders } from '@/lib/server/anthropicHeaders';
 
 import { hePrefix, inHe } from '@/lib/hebrew';
 /**
@@ -132,11 +133,7 @@ async function refineWithClaude(
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY!,
-        'anthropic-version': '2023-06-01',
-      },
+      headers: anthropicHeaders(),
       signal: AbortSignal.timeout(50_000),
       body: JSON.stringify({
         // A one-shot structured task → the fast/cheap model (model routing by task)

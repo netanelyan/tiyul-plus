@@ -8,6 +8,7 @@ import {
 } from '@/lib/server/agentPrefix';
 import { budgetFor, lastHeavyCallAt, measuredCost, recordSpend } from '@/lib/server/budget';
 import type { TokenUsage } from '@/lib/server/aiCost';
+import { anthropicHeaders } from '@/lib/server/anthropicHeaders';
 
 /**
  * **Keeping the catalog prefix warm - and only when nobody keeps it warm
@@ -94,11 +95,7 @@ async function handle(req: Request): Promise<Response> {
   const model = agentModel();
   const res = await fetch(`${anthropicBase()}/v1/messages`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': process.env.ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01',
-    },
+    headers: anthropicHeaders(),
     signal: AbortSignal.timeout(30_000),
     body: JSON.stringify({
       model,

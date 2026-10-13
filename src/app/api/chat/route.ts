@@ -89,6 +89,7 @@ import {
   type GuardAllowlist,
 } from '@/lib/priceGuard';
 import { CACHE_TTL, SYSTEM_PROMPT, anthropicBase, cachedPrefix } from '@/lib/server/agentPrefix';
+import { anthropicHeaders } from '@/lib/server/anthropicHeaders';
 import { cityGate, resolveMessage, verdictBlock } from '@/lib/server/placeResolve';
 import { CORRECTION_INSTRUCTION, detectCorrection } from '@/lib/server/correction';
 import { fallbackUncoveredQuickReplies } from '@/lib/server/uncoveredReplies';
@@ -448,11 +449,7 @@ async function runClaudeTurn(
   const callApi = (ttl: '1h' | null): Promise<Response> =>
     fetch(`${anthropicBase()}/v1/messages`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': process.env.ANTHROPIC_API_KEY!,
-      'anthropic-version': '2023-06-01',
-    },
+    headers: anthropicHeaders(),
     signal: AbortSignal.timeout(50_000),
     body: JSON.stringify({
       model,
