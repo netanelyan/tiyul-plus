@@ -253,3 +253,29 @@ test('**emails/*.html and the generated module are the same templates** - regene
   // The auth template is Supabase's to fill and must never be in the app's send set
   assert.equal('auth-magic-link' in EMAIL_TEMPLATES, false);
 });
+
+/*
+  The owner is a sole trader: the licence number is the owner's national ID and
+  the address is personal. They appear only where a law requires them - the
+  three purchase confirmations (Consumer Protection Law s.14C(b): name, ID,
+  address) and advertising (Communications Law s.30A(e): name and address, no
+  ID). The Supabase login template is checked from the file, since it is not in
+  the app's send set. If this fails because a template was added, decide which
+  law applies to it - do not just add it to a list.
+*/
+test('the owner\'s licence number and address appear only in emails a law requires them in', () => {
+  const LICENCE = '327727525';
+  const ADDRESS = 'חדרה 16';
+  const SALE = ['check-receipt', 'trip-pass-receipt', 'subscription-activated'];
+  const COMMERCIAL = ['newsletter-welcome'];
+  const all: [string, string][] = [
+    ...Object.entries(EMAIL_TEMPLATES).map(([k, t]) => [k, t.html] as [string, string]),
+    ['auth-magic-link', readFileSync(join(process.cwd(), 'emails', 'auth-magic-link.html'), 'utf8')],
+  ];
+  for (const [name, html] of all) {
+    const sale = SALE.includes(name);
+    const commercial = COMMERCIAL.includes(name);
+    assert.equal(html.includes(LICENCE), sale, `${name}: licence number ${sale ? 'missing' : 'must not appear'}`);
+    assert.equal(html.includes(ADDRESS), sale || commercial, `${name}: address ${sale || commercial ? 'missing' : 'must not appear'}`);
+  }
+});

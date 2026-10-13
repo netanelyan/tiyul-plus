@@ -143,21 +143,56 @@ const hero = (src, alt) =>
   `<!--hero--><tr><td style="padding:0;line-height:0;"><img src="${src}" width="480" alt="${alt}" style="display:block;width:100%;max-width:480px;height:200px;object-fit:cover;border:0;"></td></tr><!--/hero-->`;
 
 /**
- * Who is sending this, in the message itself.
+ * Who is sending this - printed ONLY where a law requires it, and only the
+ * fields that law asks for. The business is a sole trader, so its licence number IS
+ * the owner's national ID number, and the address is a personal one. Neither is
+ * volunteered anywhere it is not owed (Netanel, 2026-10-13).
  *
- * Section 30A of the Communications Law wants the advertiser identified inside
- * the commercial message - not merely findable on the website. These details
- * were already on the terms page and simply were not on this surface, which is
- * the whole of the gap: the footer said "sent by tiyul+" and nothing else.
+ *   - `sale: true` - a purchase confirmation. Consumer Protection Law s.14C(b):
+ *     after a distance sale the dealer delivers, in writing, the s.14C(a)
+ *     details - name, ID/licence number and address. The full line.
+ *   - `commercial: true` - advertising. Communications Law s.30A(e): the
+ *     advertiser's name, address and a way to make contact. NO licence number;
+ *     s.30A does not ask for one.
+ *   - anything else - nothing. A login code, a reminder, a welcome or a
+ *     cancellation is neither a sale nor advertising; the details stay on
+ *     /terms and /contact, where the pre-sale disclosure (s.14C(a)) belongs.
  *
- * It rides on EVERY template, not only the commercial ones. A receipt or a
- * login code saying plainly who sent it costs nothing and is the same answer to
- * "is this real?" that a phishing-wary reader is looking for.
+ * It used to ride on every template on the theory that saying who sent it
+ * "costs nothing". It cost the owner's ID number and address in every login
+ * code. Do not widen it again without a law that requires it.
  */
-const ADVERTISER = {
+const SENDER = {
   name: 'נתנאל יאנצ׳בסקי',
   licence: '327727525',
   address: 'חדרה 16, אשדוד',
+};
+
+/**
+ * The sender identification in the footer, in the muted colour rather than
+ * the faint grey the rest of the small print uses.
+ *
+ * It shipped as #b3adcc, which measures **2.0:1** on the cream the footer sits
+ * on - the lightest text in the whole message. A detail the law requires
+ * precisely so a reader can tell who wrote to them should not be the hardest
+ * thing on the page to read; "present but invisible" is the failure the rule
+ * exists to prevent, not a way of satisfying it.
+ *
+ * Written as a function so this reasoning can live in a JS comment. The same
+ * text as an HTML comment inside the shell's template literal was **emitted
+ * into all twelve emails** - internal commentary shipped to recipients, and
+ * findable by grepping the built files for a colour that was supposedly gone.
+ */
+const senderLine = ({ sale, commercial }) => {
+  const who = sale
+    ? `${SENDER.name}, עוסק מורשה ${SENDER.licence} · ${SENDER.address}`
+    : commercial
+      ? `${SENDER.name} · ${SENDER.address}`
+      : '';
+  return (
+    (who ? `<span style="color:${C.muted};">נשלח על ידי ${who}</span><br>` : '') +
+    `<span style="color:${C.faint};">יש שאלה? ענו למייל הזה ואדם יקרא.</span>`
+  );
 };
 
 /**
@@ -174,29 +209,10 @@ const ADVERTISER = {
  * readable text colour rather than the faint grey used for the small print -
  * a marking nobody can see does not do the job it exists for.
  */
-/**
- * The advertiser identification in the footer, in the muted colour rather than
- * the faint grey the rest of the small print uses.
- *
- * It shipped as #b3adcc, which measures **2.0:1** on the cream the footer sits
- * on - the lightest text in the whole message. A detail the law requires
- * precisely so a reader can tell who wrote to them should not be the hardest
- * thing on the page to read; "present but invisible" is the failure the rule
- * exists to prevent, not a way of satisfying it.
- *
- * Written as a function so this reasoning can live in a JS comment. The same
- * text as an HTML comment inside the shell's template literal was **emitted
- * into all twelve emails** - internal commentary shipped to recipients, and
- * findable by grepping the built files for a colour that was supposedly gone.
- */
-const advertiserLine = () =>
-  `<span style="color:${C.muted};">נשלח על ידי ${ADVERTISER.name}, עוסק מורשה ${ADVERTISER.licence} · ${ADVERTISER.address}</span><br>` +
-  `<span style="color:${C.faint};">יש שאלה? ענו למייל הזה ואדם יקרא.</span>`;
-
 const commercialNotice = () =>
   `<tr><td align="right" dir="rtl" style="${FONT}font-size:13px;font-weight:bold;color:${C.night};line-height:1.6;border-top:1px solid ${C.hairline};padding:16px 0 0;">זהו דבר פרסומת</td></tr>`;
 
-function shell({ title, preheader, eyebrow, heroPhoto, body, footerExtra = '', commercial = false }) {
+function shell({ title, preheader, eyebrow, heroPhoto, body, footerExtra = '', commercial = false, sale = false }) {
   return `<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -254,7 +270,7 @@ ${body}${commercial ? '\n' + commercialNotice() : ''}
           &nbsp;·&nbsp;
           <a href="${SITE}/contact" style="color:${C.faint};text-decoration:underline;">צרו קשר</a>
           ${footerExtra}<br>
-          ${advertiserLine()}
+          ${senderLine({ sale, commercial })}
         </td></tr>
       </table>
     </td></tr>
@@ -311,6 +327,7 @@ const TEMPLATES = [
 
   {
     file: 'check-receipt.html',
+    sale: true,
     subject: 'קבלה: בדיקה לפני הנסיעה ל{{TRIP_NAME}}',
     title: 'קבלה · בדיקה לפני הנסיעה',
     preheader: 'התשלום התקבל והדוח מחכה במסך הטיול.',
@@ -344,6 +361,7 @@ const TEMPLATES = [
   */
   {
     file: 'trip-pass-receipt.html',
+    sale: true,
     subject: 'קבלה: כרטיס הטיול ל{{TRIP_NAME}}',
     title: 'קבלה · כרטיס טיול',
     preheader: 'התשלום התקבל. הכרטיס פעיל עד {{UNTIL}}.',
@@ -373,6 +391,7 @@ const TEMPLATES = [
 
   {
     file: 'subscription-activated.html',
+    sale: true,
     subject: 'המנוי שלכם פעיל · {{PLAN_NAME}}',
     title: 'המנוי פעיל',
     preheader: 'תודה שהצטרפתם. הנה מה שנפתח לכם עכשיו.',
