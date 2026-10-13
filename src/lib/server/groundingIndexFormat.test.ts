@@ -11,7 +11,7 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { PLACE_TUPLE_FIELDS, buildGroundingIndex, indexFormat } from './grounding.ts';
+import { PLACE_TUPLE_FIELDS, buildGroundingIndex, buildIndexBlocks, indexFormat } from './grounding.ts';
 
 type ObjPlace = Record<string, unknown>;
 type ObjCity = { slug: string; name: string; countrySlug: string; places: ObjPlace[] };
@@ -32,8 +32,9 @@ function decodePlace(t: unknown[]): ObjPlace {
 
 for (const kosherOk of [true, false]) {
   test(`tuple index is lossless against the object index (kosher ${kosherOk ? 'on' : 'off'})`, () => {
-    const obj = JSON.parse(buildGroundingIndex(kosherOk, 'json'));
-    const tup = JSON.parse(buildGroundingIndex(kosherOk, 'tuple'));
+    // The base block is the same in both variants; the kosher layer is checked below
+    const obj = JSON.parse(buildIndexBlocks(kosherOk, 'json')[0]);
+    const tup = JSON.parse(buildIndexBlocks(kosherOk, 'tuple')[0]);
 
     assert.deepEqual(tup.coverage, obj.coverage);
     // The third element is how many of our destinations that country holds -
@@ -62,6 +63,16 @@ for (const kosherOk of [true, false]) {
     assert.ok(tup.note.includes('Use these ids verbatim'));
   });
 }
+
+test('the kosher layer is lossless in the tuple form too', () => {
+  const obj = JSON.parse(buildIndexBlocks(true, 'json')[1]) as { cities: { slug: string; places: ObjPlace[] }[] };
+  const tup = JSON.parse(buildIndexBlocks(true, 'tuple')[1]) as { cities: [string, unknown[][]][] };
+  assert.ok(obj.cities.length > 0, 'the catalog has kosher venues - otherwise this checks nothing');
+  assert.deepEqual(
+    tup.cities.map(([slug, places]) => ({ slug, places: places.map(decodePlace) })),
+    obj.cities,
+  );
+});
 
 test('the tuple index is materially smaller than the object index', () => {
   const a = buildGroundingIndex(true, 'json').length;

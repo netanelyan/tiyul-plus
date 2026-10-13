@@ -51,6 +51,7 @@ test('כל קריאה ל-Anthropic עוברת דרך anthropicHeaders', () => {
     'src/app/api/chat/route.ts',
     'src/app/api/generate-trip/route.ts',
     'src/app/api/internal/warm/route.ts',
+    'src/lib/server/webLookup.ts',
   ]) {
     const src = readFileSync(file, 'utf8');
     assert.equal(src.includes("'x-api-key'"), false, `${file} builds its own headers`);

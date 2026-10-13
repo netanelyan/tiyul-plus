@@ -40,8 +40,30 @@ test('אותה קריאה מחזירה קידומת זהה בייט-בבייט',
   assert.equal(JSON.stringify(cachedTools()), JSON.stringify(cachedTools()));
 });
 
-test('שתי הגרסאות שונות זו מזו - כלומר שני מטמונים נפרדים', () => {
-  assert.notEqual(cachedPrefix(true)[1].text, cachedPrefix(false)[1].text);
+/**
+ * The kosher variant used to be a second, separate ~118k-token cache, because the
+ * two index variants differed from their first line. It is now the shared prefix
+ * plus a small layer, so it reads what everyone else (and the warm-up) keeps warm.
+ */
+test('the kosher prefix starts with the shared prefix, byte for byte', () => {
+  const off = cachedPrefix(false);
+  const on = cachedPrefix(true);
+  assert.equal(on.length, off.length + 1, 'the kosher layer is one extra block');
+  assert.equal(JSON.stringify(on.slice(0, off.length)), JSON.stringify(off));
+  const layer = on[on.length - 1];
+  assert.ok(layer.cache_control, 'the layer carries its own breakpoint');
+  assert.ok(layer.text.includes('KOSHER INDEX'));
+  // Small next to the shared index - this is the whole point of the split
+  assert.ok(layer.text.length * 20 < off[1].text.length, `layer ${layer.text.length} chars`);
+});
+
+test('the prefix leaves room for the conversation breakpoints', () => {
+  // The API allows four markers. The prefix may use at most two of them, so the
+  // tail and the end of the history always get one each (see agentRequest.ts).
+  for (const kosherOk of [false, true]) {
+    const marks = cachedPrefix(kosherOk).filter((b) => b.cache_control).length;
+    assert.ok(marks <= 2, `kosher=${kosherOk}: ${marks} markers`);
+  }
 });
 
 test('פרומפט המערכת קבוע לחלוטין - שום דבר אישי לא נכנס לקידומת', () => {

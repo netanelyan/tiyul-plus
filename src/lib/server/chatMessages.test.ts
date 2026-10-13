@@ -10,7 +10,13 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { sanitizeMessages, MAX_IMAGE_CHARS } from './chatMessages.ts';
+import {
+  HISTORY_TRIM_STEP,
+  MAX_HISTORY_CHARS,
+  MAX_IMAGE_CHARS,
+  historyStart,
+  sanitizeMessages,
+} from './chatMessages.ts';
 
 /** A valid, tiny data URL */
 const img = (n = 1) => `data:image/jpeg;base64,${'A'.repeat(n * 8)}`;
@@ -63,15 +69,16 @@ test('הרגרסיה השנייה: השמטת ההודעה הראשונה לא �
 });
 
 test('חלון 40 ההודעות שנפתח על assistant - קיים גם בלי תמונות', () => {
-  // 41 alternating messages starting with user: the window cuts and opens on an assistant
+  // 41 alternating messages: the window opens at a multiple of HISTORY_TRIM_STEP
+  // (10), and with assistant on the even positions that is an assistant message
   const many = Array.from({ length: 41 }, (_, i) => ({
-    role: i % 2 === 0 ? 'user' : 'assistant',
+    role: i % 2 === 0 ? 'assistant' : 'user',
     content: `m${i}`,
   }));
   const out = sanitizeMessages(many);
   assert.equal(out[0].role, 'user');
-  // m1 was the assistant the window opened on - it is dropped, m2 is the first user
-  assert.equal(out[0].content, 'm2');
+  // m10 was the assistant the window opened on - it is dropped, m11 is the first user
+  assert.equal(out[0].content, 'm11');
 });
 
 test('כמה הודעות assistant בראש - כולן נזרקות', () => {
@@ -269,4 +276,41 @@ test('ההיסטוריה מוגבלת ל-40 הודעות אחרונות', () => 
   const out = sanitizeMessages(many);
   assert.equal(out.length, 40);
   assert.equal(out[0].content, 'm20');
+});
+
+/*
+ * The trim moves in steps, because the history is now cached from turn to turn
+ * and a cache is a prefix: if the first kept message changes every turn, the
+ * whole history is re-billed every turn. See HISTORY_TRIM_STEP.
+ */
+
+test('the start of a long conversation stays put for several turns at a time', () => {
+  const convo = (n: number) =>
+    Array.from({ length: n }, (_, i) => ({ role: i % 2 === 0 ? 'user' : 'assistant', content: `m${i}` }));
+  const starts = new Set<string>();
+  let changes = 0;
+  let prev = '';
+  // 21 turns past the 40-message window, two messages per turn
+  for (let n = 41; n <= 81; n += 2) {
+    const first = sanitizeMessages(convo(n))[0].content;
+    starts.add(first);
+    if (prev && first !== prev) changes += 1;
+    prev = first;
+    // Never more than the window, and never less than its lower step
+    const kept = sanitizeMessages(convo(n)).length;
+    assert.ok(kept <= 40 && kept >= 40 - HISTORY_TRIM_STEP, `${kept} messages kept at n=${n}`);
+  }
+  // Exact trimming moved the start on every one of these turns
+  assert.ok(changes <= 4, `the start moved ${changes} times in 20 turns`);
+});
+
+test('historyStart honours the character budget as well as the count', () => {
+  const lengths = Array.from({ length: 30 }, () => 3_000); // 90k chars, budget 50k
+  const start = historyStart(lengths);
+  const kept = lengths.slice(start).reduce((a, b) => a + b, 0);
+  assert.ok(kept <= MAX_HISTORY_CHARS, `${kept} chars kept`);
+  assert.equal(start % HISTORY_TRIM_STEP, 0, 'on a step');
+  // A handful of very long messages: no step that would leave almost nothing
+  const huge = Array.from({ length: 20 }, () => 8_000);
+  assert.equal(historyStart(huge), 14, 'exact cut: the last six fit');
 });

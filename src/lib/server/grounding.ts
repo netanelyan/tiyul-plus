@@ -224,22 +224,90 @@ export const PLACE_TUPLE_FIELDS = [
   'durationMin',
 ] as const;
 
-export function buildGroundingIndex(kosherOk: boolean, format: IndexFormat = indexFormat()): string {
-  const key = `${format}:${kosherOk}`;
-  const cached = INDEX_CACHE.get(key);
-  if (cached) return cached;
-  const json = format === 'tuple' ? buildTupleIndex(kosherOk) : buildJsonIndex(kosherOk);
-  INDEX_CACHE.set(key, json);
-  return json;
+/**
+ * ---------- The index is one shared block, plus a kosher layer ----------
+ *
+ * The index used to come in two variants, with and without the kosher venues,
+ * and they differed from character 122 on (the note at the top). So they were two
+ * separate prompt-cache entries of ~118k tokens each, for a difference of ~2.7k
+ * tokens. The warm-up keeps only the common one alive, which meant the first
+ * kosher traveller after a quiet hour paid a full one-hour write of the whole
+ * catalog: about $0.79 on Sonnet 4.5, against $0.04 for a read.
+ *
+ * Now every request sends the same base block, which never lists a kosher venue,
+ * and a kosher traveller gets the kosher venues as a second, small block after
+ * it. The kosher variant is therefore the common prefix plus a short tail, and
+ * reads the common prefix from the cache like everyone else.
+ *
+ * What the model is told did not change: with kosher off it never sees a kosher
+ * venue, and with kosher on it sees all of them. Only where they are listed moved.
+ */
+export function buildIndexBlocks(kosherOk: boolean, format: IndexFormat = indexFormat()): string[] {
+  return kosherOk ? [indexBlock('base', format), indexBlock('kosher', format)] : [indexBlock('base', format)];
 }
 
-function buildTupleIndex(kosherOk: boolean): string {
-  const base = kosherOk
-    ? 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block.'
-    : 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block. Kosher venues are deliberately not listed here - see the kosher policy in the next block.';
+/** The whole index as the model reads it - the blocks above, joined. For sizes and tests. */
+export function buildGroundingIndex(kosherOk: boolean, format: IndexFormat = indexFormat()): string {
+  return buildIndexBlocks(kosherOk, format).join('\n\n');
+}
+
+function indexBlock(layer: 'base' | 'kosher', format: IndexFormat): string {
+  const key = `${format}:${layer}`;
+  const cached = INDEX_CACHE.get(key);
+  if (cached) return cached;
+  const built =
+    layer === 'kosher'
+      ? format === 'tuple'
+        ? buildTupleKosherLayer()
+        : buildJsonKosherLayer()
+      : format === 'tuple'
+        ? buildTupleIndex()
+        : buildJsonIndex();
+  INDEX_CACHE.set(key, built);
+  return built;
+}
+
+/*
+  Worded for both variants, because the base block is now shared by both: it has
+  to be true for a traveller who gets the kosher layer and for one who does not.
+*/
+const INDEX_NOTE =
+  'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in a later block. ' +
+  'Kosher venues are not in this list: they are a separate layer. When the traveler keeps kosher, a KOSHER INDEX block follows this one; when there is no KOSHER INDEX block, follow the kosher policy in the detail block.';
+
+const KOSHER_LAYER_NOTE =
+  'KOSHER INDEX - the kosher venues of each city, which the INDEX above leaves out. They belong to their city exactly like the places listed there, and their ids are used verbatim the same way.';
+
+const placeTuple = (p: Destination['places'][number]) => [
+  p.id,
+  p.name,
+  p.category,
+  p.tags?.length ? p.tags : null,
+  p.priceLevel !== undefined ? p.priceLevel : null,
+  p.mustSee ? 1 : 0,
+  p.durationMin ? p.durationMin : null,
+];
+
+const placeObject = (p: Destination['places'][number]) => ({
+  id: p.id,
+  name: p.name,
+  category: p.category,
+  ...(p.tags?.length ? { tags: p.tags } : {}),
+  ...(p.priceLevel !== undefined ? { priceLevel: p.priceLevel } : {}),
+  ...(p.mustSee ? { mustSee: true } : {}),
+  ...(p.durationMin ? { durationMin: p.durationMin } : {}),
+});
+
+/** Cities that have at least one kosher venue, with only those venues */
+const kosherByCity = () =>
+  destinations
+    .map((d) => ({ d, places: d.places.filter((p) => isKosher(p.category)) }))
+    .filter((x) => x.places.length > 0);
+
+function buildTupleIndex(): string {
   const perCountry = destinationsPerCountry();
   return JSON.stringify({
-    note: `${base} FORMAT: each city is [slug, name, countrySlug, places]; each place is [${PLACE_TUPLE_FIELDS.join(', ')}] where tags is a list, priceLevel is 0-3, mustSee is 1 or 0, and null means unknown. countries are [slug, name, howManyOfOurDestinationsAreInIt] - use that third number rather than counting cities, and never attach a bigger figure to one country.`,
+    note: `${INDEX_NOTE} FORMAT: each city is [slug, name, countrySlug, places]; each place is [${PLACE_TUPLE_FIELDS.join(', ')}] where tags is a list, priceLevel is 0-3, mustSee is 1 or 0, and null means unknown. countries are [slug, name, howManyOfOurDestinationsAreInIt] - use that third number rather than counting cities, and never attach a bigger figure to one country.`,
     byCharacterLegend: BY_CHARACTER_LEGEND,
     coverage: { cities: destinations.length, countries: countries.length },
     byCharacter: destinationsByCharacter(),
@@ -248,28 +316,23 @@ function buildTupleIndex(kosherOk: boolean): string {
       d.slug,
       d.name,
       d.countrySlug,
-      d.places
-        .filter((p) => kosherOk || !isKosher(p.category))
-        .map((p) => [
-          p.id,
-          p.name,
-          p.category,
-          p.tags?.length ? p.tags : null,
-          p.priceLevel !== undefined ? p.priceLevel : null,
-          p.mustSee ? 1 : 0,
-          p.durationMin ? p.durationMin : null,
-        ]),
+      d.places.filter((p) => !isKosher(p.category)).map(placeTuple),
     ]),
     countries: countries.map((c) => [c.slug, c.name, perCountry[c.slug] ?? 0]),
   });
 }
 
-function buildJsonIndex(kosherOk: boolean): string {
+function buildTupleKosherLayer(): string {
+  return JSON.stringify({
+    note: `${KOSHER_LAYER_NOTE} FORMAT: each entry is [citySlug, places], each place in the INDEX place format.`,
+    cities: kosherByCity().map(({ d, places }) => [d.slug, places.map(placeTuple)]),
+  });
+}
+
+function buildJsonIndex(): string {
   const perCountry = destinationsPerCountry();
   return JSON.stringify({
-    note: kosherOk
-      ? 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block.'
-      : 'INDEX of every city and place. Use these ids verbatim. Detail for the relevant cities follows in the next block. Kosher venues are deliberately not listed here - see the kosher policy in the next block.',
+    note: INDEX_NOTE,
     byCharacterLegend: BY_CHARACTER_LEGEND,
     // The real numbers, because the model invented them in live testing
     // ("50 destinations in 40 countries" when the reality was 139 and 74).
@@ -282,23 +345,20 @@ function buildJsonIndex(kosherOk: boolean): string {
       slug: d.slug,
       name: d.name,
       countrySlug: d.countrySlug,
-      places: d.places
-        .filter((p) => kosherOk || !isKosher(p.category))
-        .map((p) => ({
-          id: p.id,
-          name: p.name,
-          category: p.category,
-          ...(p.tags?.length ? { tags: p.tags } : {}),
-          ...(p.priceLevel !== undefined ? { priceLevel: p.priceLevel } : {}),
-          ...(p.mustSee ? { mustSee: true } : {}),
-          ...(p.durationMin ? { durationMin: p.durationMin } : {}),
-        })),
+      places: d.places.filter((p) => !isKosher(p.category)).map(placeObject),
     })),
     countries: countries.map((c) => ({
       slug: c.slug,
       name: c.name,
       destinations: perCountry[c.slug] ?? 0,
     })),
+  });
+}
+
+function buildJsonKosherLayer(): string {
+  return JSON.stringify({
+    note: KOSHER_LAYER_NOTE,
+    cities: kosherByCity().map(({ d, places }) => ({ slug: d.slug, places: places.map(placeObject) })),
   });
 }
 

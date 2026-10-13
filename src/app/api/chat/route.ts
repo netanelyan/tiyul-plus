@@ -9,6 +9,7 @@ import {
   type ResolvedPinLocation,
 } from '@/lib/trip/agent';
 import { geocodePlace } from '@/lib/server/geocode';
+import { anthropicHeaders } from '@/lib/server/anthropicHeaders';
 import { isTransient } from '@/lib/server/transient';
 import { agentEnabled } from '@/lib/server/flags';
 import { coverageLine } from '@/lib/server/catalogSummary';
@@ -33,13 +34,25 @@ import {
 } from '@/lib/server/grounding';
 import { coverageByScope, coverageNumbers } from '@/lib/server/coverageFacts';
 import {
-  LOOKUP_TOOL,
+  citationDate,
   getCachedLookup,
   lookupBudgetLeft,
+  lookupContext,
   lookupEligible,
+  lookupNoteFor,
   rememberLookup,
-  todayIso,
+  runLookup,
 } from '@/lib/server/webLookup';
+import {
+  SERVER_CONTEXT_NOTE,
+  assemblePrompt,
+  chatCacheLayout,
+  serverContextText,
+  tripUpdateText,
+  withoutLongTtl,
+  type ApiContentBlock,
+  type ApiMessage,
+} from '@/lib/server/agentRequest';
 
 /** Request-body cap - before JSON.parse, so a huge body cannot bring down the function */
 const MAX_BODY_CHARS = 6_000_000;
@@ -83,17 +96,22 @@ import { PLAN_LIMITS, TRIP_BUILDS_PER_DAY, aiUnits, paidPlanOf, periodMsFor } fr
 import type { BookingSearchCard } from '@/lib/bookingSearch';
 import {
   GuardedTextStream,
-  LOOKUP_ANCHOR,
   NO_PRICE_LINE,
   NO_PRICE_LINE_BARE,
   type GuardAllowlist,
 } from '@/lib/priceGuard';
-import { CACHE_TTL, SYSTEM_PROMPT, anthropicBase, cachedPrefix } from '@/lib/server/agentPrefix';
-import { anthropicHeaders } from '@/lib/server/anthropicHeaders';
+import {
+  CACHE_TTL,
+  SYSTEM_PROMPT,
+  agentModel,
+  anthropicBase,
+  cachedPrefix,
+  type SystemBlock,
+} from '@/lib/server/agentPrefix';
 import { cityGate, resolveMessage, verdictBlock } from '@/lib/server/placeResolve';
 import { CORRECTION_INSTRUCTION, detectCorrection } from '@/lib/server/correction';
 import { fallbackUncoveredQuickReplies } from '@/lib/server/uncoveredReplies';
-
+
 import { hePrefix, inHe } from '@/lib/hebrew';
 /**
  * The travel chat - a real agent over the user's trip.
@@ -320,6 +338,8 @@ interface AnthropicUsage {
   input_tokens?: number;
   cache_read_input_tokens?: number;
   cache_creation_input_tokens?: number;
+  /** The writes split by TTL - priced separately in aiCost.ts */
+  cache_creation?: { ephemeral_5m_input_tokens?: number; ephemeral_1h_input_tokens?: number };
   output_tokens?: number;
   /** How many web_search calls ran in this request - see webLookup.ts */
   server_tool_use?: { web_search_requests?: number };
@@ -337,17 +357,6 @@ interface AnthropicSSE {
 type AccBlock =
   | { type: 'text'; text: string }
   | { type: 'tool_use'; id: string; name: string; json: string };
-
-type ApiContentBlock =
-  | { type: 'text'; text: string }
-  | { type: 'image'; source: { type: 'base64'; media_type: string; data: string } }
-  | { type: 'tool_use'; id: string; name: string; input: unknown }
-  | { type: 'tool_result'; tool_use_id: string; content: string; is_error?: boolean };
-
-interface ApiMessage {
-  role: 'user' | 'assistant';
-  content: string | ApiContentBlock[];
-}
 
 /**
  * An HTTP failure against Anthropic. The status code must survive as an object
@@ -398,118 +407,66 @@ const LIGHT_TURN_NOTE = [
 ].join('\n');
 
 
+/**
+ * The light route's cached prefix: the system prompt alone, with a five-minute
+ * marker. Light turns are one model call each and come in runs - a traveller
+ * making a few quick edits in a row - so the next one reads it. The prompt plus
+ * the light tools is ~11.5k tokens on Haiku 4.5, well over its 4,096 minimum.
+ *
+ * **On the light route the omission is the big saving, not the model.** The
+ * index is ~118k tokens of the entire catalog, sent so the model can find a
+ * place it does not already have. A mechanical edit operates on what is already
+ * in the trip, so there is nothing in it to search. The index on the light route
+ * = a cheap turn that costs more than the one it replaced, because a cache write
+ * on a second model is dearer than a read from a warm cache.
+ */
+const LIGHT_PREFIX: SystemBlock[] = [
+  { type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } },
+];
+
+/** Kosher toggle from the UI before any trip exists: passed to the agent quietly in the server context */
+const KOSHER_TOGGLE_NOTE =
+  '\n\nUI PREFERENCE TOGGLE: the user switched ON "אוכל כשר" in the interface before any trip exists. Treat kosher=true from your first plan (include a kosher-food place per day where the city has one, with the usual verify-before-visiting reminder), and call set_preferences {kosher: true} immediately after creating a trip. Never ask about it.';
+
+interface AgentCall {
+  model: string;
+  maxTokens: number;
+  /**
+   * A tool that is not sent does not exist as far as the model is concerned.
+   * That is the guarantee, not a line in the prompt. The heavy route always
+   * sends the same list (the warm-up sends it too), so it never breaks the
+   * cached prefix; the light route sends its allowlist.
+   */
+  tools: unknown[];
+  system: SystemBlock[];
+  messages: ApiMessage[];
+}
+
 async function runClaudeTurn(
-  apiMessages: ApiMessage[],
-  trip: Trip | null,
+  call: AgentCall,
   send: Send,
   needSeparator: boolean,
-  maxTokens: number,
   iter: number,
-  kosherHint: boolean,
-  groundingDetail: string,
-  kosherOk: boolean,
   /** What the traveler themselves said - the price guard's whitelist */
   guardAllow: GuardAllowlist,
   /** Whether a search card was already shown this turn (only changes the replacement wording) */
   searchShown: boolean,
-  /**
-   * The light path: a cheap model, restricted tools, **and no catalog index**.
-   * See `src/lib/server/modelRoute.ts` - the restricted tools are what makes
-   * omitting the index possible, not the other way around.
-   */
-  light: boolean,
-  /**
-   * Whether to attach `LOOKUP_TOOL` to this call. **The structural guarantee**
-   * against searching about kashrut: a turn that asks about kashrut arrives
-   * here with `false`, so the tool simply does not exist for the model - not an
-   * instruction, a fact. See webLookup.ts.
-   */
-  allowLookup: boolean,
-  /** Today's date, or a previous cached answer - a separate, variable system block */
-  lookupNote: string,
-  /**
-   * Verdicts the server computed about this message that the model must not
-   * contradict: place-name interpretation (`placeResolve.ts`) and whether this
-   * is a correction turn (`correction.ts`).
-   *
-   * Sent **after** `OUTPUT_DISCIPLINE`, i.e. last. The project's log records
-   * twice that a rule at the top of a long prompt got swallowed and the same
-   * rule at the end works.
-   */
-  serverVerdicts: string,
 ): Promise<{ blocks: AccBlock[]; stopReason: string; text: string; usage: AnthropicUsage; model: string }> {
-  const model = light
-    ? (process.env.ANTHROPIC_MODEL_FAST ?? 'claude-haiku-4-5')
-    : (process.env.ANTHROPIC_MODEL_AGENT ?? 'claude-sonnet-4-5');
-  // Kosher toggle from the UI before any trip exists: passed to the agent quietly via the state block
-  const kosherNote =
-    kosherHint && !trip
-      ? '\n\nUI PREFERENCE TOGGLE: the user switched ON "אוכל כשר" in the interface before any trip exists. Treat kosher=true from your first plan (include a kosher-food place per day where the city has one, with the usual verify-before-visiting reminder), and call set_preferences {kosher: true} immediately after creating a trip. Never ask about it.'
-      : '';
-  const callApi = (ttl: '1h' | null): Promise<Response> =>
+  const { model } = call;
+  const callApi = (longTtl: boolean): Promise<Response> =>
     fetch(`${anthropicBase()}/v1/messages`, {
-    method: 'POST',
-    headers: anthropicHeaders(),
-    signal: AbortSignal.timeout(50_000),
-    body: JSON.stringify({
-      model,
-      max_tokens: maxTokens,
-      stream: true,
-      // A tool that is not sent does not exist as far as the model is concerned.
-      // That is the guarantee, not a line in the prompt - and by exactly the same
-      // principle, `allowLookup=false` (any turn that sounds like a kashrut
-      // question) means LOOKUP_TOOL is simply absent from the array, regardless
-      // of what the prompt says.
-      tools: light
-        ? AGENT_TOOLS.filter((t) => isLightTool(t.name))
-        : allowLookup
-          ? [...AGENT_TOOLS, LOOKUP_TOOL]
-          : AGENT_TOOLS,
-      // Render order: tools (static) -> system. The grounding block is the one
-      // carrying cache_control - the whole fixed prefix goes into the prompt
-      // cache; the changing trip state sits after the breakpoint, so it does not
-      // spoil cache reads.
-      system: [
-        /*
-          **The cached prefix is built in exactly one place** (`agentPrefix.ts`),
-          because the warm-up path builds it too - and a prefix that differs by a
-          single character is a different cache entry, i.e. a warm-up that pays
-          for itself and warms nothing.
-
-          **On the light route the omission is the big saving, not the model.**
-          The index is ~240k characters (~80k tokens) of the entire catalog, sent
-          so the model can find a place it does not already have. A mechanical
-          edit operates on what is already in the trip, so there is nothing in it
-          to search. The index on the light route = a cheap turn that costs more
-          than the one it replaced, because a cache write on a second model is
-          dearer than a read from a warm cache.
-        */
-        ...(light
-          ? [{ type: 'text' as const, text: SYSTEM_PROMPT }]
-          : cachedPrefix(kosherOk).map((b) =>
-              ttl === null && b.cache_control
-                ? { ...b, cache_control: { type: 'ephemeral' as const } }
-                : b,
-            )),
-        // The detail block varies with the conversation -> after the breakpoint, no cache_control
-        { type: 'text', text: groundingDetail },
-        ...(light ? [{ type: 'text' as const, text: LIGHT_TURN_NOTE }] : []),
-        // Today's date / cached lookup answer - derived from the clock at request
-        // time, so it must sit here and not in the cached prefix (see webLookup.ts, todayIso).
-        ...(lookupNote ? [{ type: 'text' as const, text: lookupNote }] : []),
-        { type: 'text', text: `CURRENT TRIP (the user's active trip right now):\n${serializeTripForModel(trip)}${kosherNote}` },
-        // Last on purpose. These rules also appear above under LANGUAGE & VOICE
-        // and were swallowed in live testing: the prompt is long, and the model
-        // produced a continent-by-continent breakdown naming dozens of cities
-        // even though two separate sections forbade exactly that. Here they are
-        // the last thing read before the conversation - the same principle that
-        // made PROSE_DISCIPLINE work from inside the tool result.
-        { type: 'text', text: OUTPUT_DISCIPLINE },
-        ...(serverVerdicts ? [{ type: 'text' as const, text: serverVerdicts }] : []),
-      ],
-      messages: apiMessages,
-    }),
-  });
+      method: 'POST',
+      headers: anthropicHeaders(),
+      signal: AbortSignal.timeout(50_000),
+      body: JSON.stringify({
+        model,
+        max_tokens: call.maxTokens,
+        stream: true,
+        tools: call.tools,
+        system: longTtl ? call.system : withoutLongTtl(call.system),
+        messages: call.messages,
+      }),
+    });
 
   /*
     **Fallback if the API does not recognise `ttl`.** This could not be verified
@@ -517,12 +474,12 @@ async function runClaudeTurn(
     expensive turn. So a 400 that mentions the field retries once without it. If
     the field is valid, this line never runs.
   */
-  let res = await callApi(CACHE_TTL);
+  let res = await callApi(true);
   if (!res.ok && res.status === 400 && CACHE_TTL) {
     const body = await res.clone().text().catch(() => '');
     if (/ttl|cache_control/i.test(body)) {
       console.warn('[chat] 1h cache ttl rejected, retrying without it');
-      res = await callApi(null);
+      res = await callApi(false);
     }
   }
 
@@ -643,8 +600,10 @@ async function runClaudeTurn(
     nothing belonging to the user - a model name and numbers.
   */
   if (process.env.NODE_ENV === 'development' || process.env.CHAT_USAGE_LOG === 'on') {
+    // `w5m`/`w1h` split the write by TTL: a healthy loop writes the catalog
+    // (1h) only when it was cold, and a small conversation delta (5m) each call.
     console.log(
-      `[chat] ${model} iter=${iter} max=${maxTokens} in=${usage.input_tokens ?? 0} cached=${usage.cache_read_input_tokens ?? 0} cacheWrite=${usage.cache_creation_input_tokens ?? 0} out=${usage.output_tokens ?? 0}`,
+      `[chat] ${model} iter=${iter} max=${call.maxTokens} in=${usage.input_tokens ?? 0} cached=${usage.cache_read_input_tokens ?? 0} cacheWrite=${usage.cache_creation_input_tokens ?? 0} w5m=${usage.cache_creation?.ephemeral_5m_input_tokens ?? '-'} w1h=${usage.cache_creation?.ephemeral_1h_input_tokens ?? '-'} out=${usage.output_tokens ?? 0}`,
     );
   }
 
@@ -735,6 +694,15 @@ async function runAgent(
       ],
     };
   });
+  /**
+   * Where the traveller's current message sits. Everything before it is the
+   * history exactly as the client sent it, which is what lets the next turn read
+   * it back from the cache; this turn's server context is attached here, at
+   * request time, and never written into `apiMessages` - see agentRequest.ts.
+   */
+  const currentIndex = apiMessages.length - 1;
+  /** `CHAT_CACHE_LAYOUT=legacy` - the previous layout, as a rollback with no deploy */
+  const legacyLayout = chatCacheLayout() === 'legacy';
 
   // The kosher toggle from the UI: when a trip exists, merge it straight into
   // preferences (sensitive preferences are buttons; the agent reads them
@@ -841,21 +809,57 @@ async function runAgent(
     conversation that mentioned kashrut once should not be blocked. But when
     **this** message sounds like a kashrut question, that beats everything:
     `allowLookup` drops to false regardless of what `lookupEligible` would have
-    said, and LOOKUP_TOOL simply never enters the call.
+    said, and no search runs at all.
+
+    The search itself is a separate small call (`runLookup`), never a tool on the
+    agent - see webLookup.ts for why that is the expensive difference.
+
+    The daily quota is consumed only when a search will actually run. It used to
+    be checked - and therefore consumed - first, on every turn of every
+    conversation, so a free traveller's fifth message of the day used up their
+    lookups whether or not they had asked anything a lookup could answer.
   */
   const kosherAsk = kosherIntentText(lastUser);
-  const lookupQuotaOk =
-    !process.env.ANTHROPIC_API_KEY ||
-    checkLimit('lookup-day', caller.id, planLimits.lookupsPerDay, periodMsFor()).ok;
-  const lookupWanted = !kosherAsk && lookupQuotaOk && lookupEligible(lastUser) && lookupBudgetLeft(messages);
+  const lookupWanted = !kosherAsk && lookupEligible(lastUser) && lookupBudgetLeft(messages);
   const cachedLookup = lookupWanted ? getCachedLookup(lastUser) : null;
-  /** Whether to actually attach `LOOKUP_TOOL` - not when an answer is already cached */
-  const allowLookup = lookupWanted && !cachedLookup;
-  const lookupNote = cachedLookup
-    ? `A fresh, still-valid answer to this exact question was already looked up earlier - reuse it instead of searching again, with its citation:\n"""\n${cachedLookup}\n"""`
-    : allowLookup
-      ? `TODAY'S DATE, for citing when you checked something (never compute or guess this yourself): ${todayIso()}.`
-      : '';
+  /** Whether to run a search this turn - not when an answer is already cached */
+  const allowLookup =
+    lookupWanted &&
+    !cachedLookup &&
+    (!process.env.ANTHROPIC_API_KEY ||
+      checkLimit('lookup-day', caller.id, planLimits.lookupsPerDay, periodMsFor()).ok);
+  let lookupNote = cachedLookup ? lookupNoteFor(cachedLookup) : '';
+  let lookupDone = !allowLookup;
+  /**
+   * Runs the search once, the first time a heavy pass needs it - not on a light
+   * pass, which never reads it, and not twice when a light turn escalates.
+   */
+  const ensureLookup = async () => {
+    if (lookupDone) return;
+    lookupDone = true;
+    send({ type: 'status', text: 'בודק מקור עדכני…' });
+    const model = agentModel();
+    const result = await runLookup({
+      question: lastUser,
+      context: lookupContext(messages, clientTrip?.citySlugs ?? []),
+      model,
+      date: citationDate(),
+      base: anthropicBase(),
+    });
+    meter.units += aiUnits(result.usage);
+    meter.usd += recordSpend({
+      identity: caller.id,
+      userId: caller.userId,
+      tripId: clientTrip?.id ?? null,
+      route: 'chat',
+      model,
+      usage: result.usage,
+      premium: paidPlanOf(caller) !== null,
+    });
+    lookupNote = lookupNoteFor(result.answer);
+    if (result.answer) rememberLookup(lastUser, result.answer);
+    console.log(`[chat] lookup ${result.answer ? 'answered' : 'no answer'} searches=${result.usage.web_search_requests ?? 0}`);
+  };
 
   // Whether any tool call actually changed the trip this round - distinct from
   // touched (which also reflects a kashrut hint that requires returning the trip
@@ -989,6 +993,23 @@ async function runAgent(
    * and if that did not succeed, once heavy on restored state.
    */
   const runLoop = async () => {
+  if (!light) await ensureLookup();
+  /*
+    This pass's server context - the trip as it stands now, plus what the server
+    worked out about the message. Built once per pass and sent unchanged on every
+    iteration, because it sits in front of everything the loop appends: if it
+    changed, the next iteration could not read the previous one from the cache.
+    What the tools change arrives after it, in the tool results.
+
+    The verdicts go last, right before the traveller's own words. The project's
+    log records twice that a rule at the top of a long prompt got swallowed and
+    the same rule at the end works.
+  */
+  const tripBlock = (trip: Trip | null) =>
+    `CURRENT TRIP (the user's active trip right now):\n${serializeTripForModel(trip)}${kosherHint && !trip ? KOSHER_TOGGLE_NOTE : ''}`;
+  const serverContext = legacyLayout
+    ? ''
+    : serverContextText([light ? '' : lookupNote, tripBlock(working), serverVerdicts]);
   for (let iter = 0; iter < 16; iter++) {
     // Re-read on every iteration: `working` changes during the turn.
     const kosherOk = kosherAllowed(working, messages, kosherHint);
@@ -1013,27 +1034,52 @@ async function runAgent(
       light ? 512 : truncatedRetry ? 4096 : editIntent || iter > 0 ? 2048 : 1024,
     );
     if (iter === 0) send({ type: 'status', text: 'קורא את הבקשה…' });
+    const prompt = assemblePrompt({
+      /*
+        **The cached prefix is built in exactly one place** (`agentPrefix.ts`),
+        because the warm-up path builds it too - and a prefix that differs by a
+        single character is a different cache entry, i.e. a warm-up that pays for
+        itself and warms nothing.
+      */
+      prefix: light ? LIGHT_PREFIX : cachedPrefix(kosherOk),
+      /*
+        OUTPUT_DISCIPLINE last, on purpose. These rules also appear above under
+        LANGUAGE & VOICE and were swallowed in live testing: the prompt is long,
+        and the model produced a continent-by-continent breakdown naming dozens of
+        cities even though two separate sections forbade exactly that. Here they
+        are the last system text read before the conversation - the same
+        principle that made PROSE_DISCIPLINE work from inside the tool result.
+      */
+      systemTail: [
+        light
+          ? buildLightGrounding(clientTrip?.citySlugs ?? [], kosherOk)
+          : detailFor(kosherOk) + buildExploredGrounding(explored),
+        ...(light ? [LIGHT_TURN_NOTE] : []),
+        // The legacy layout keeps the turn's state here, rebuilt every iteration
+        ...(legacyLayout ? [light ? '' : lookupNote, tripBlock(working)] : [SERVER_CONTEXT_NOTE]),
+        OUTPUT_DISCIPLINE,
+        ...(legacyLayout ? [serverVerdicts] : []),
+      ],
+      messages: apiMessages,
+      currentIndex,
+      serverContext,
+      legacy: legacyLayout,
+    });
     const turn = await runClaudeTurn(
-      apiMessages,
-      working,
+      {
+        model: light
+          ? (process.env.ANTHROPIC_MODEL_FAST ?? 'claude-haiku-4-5')
+          : agentModel(),
+        maxTokens,
+        tools: light ? AGENT_TOOLS.filter((t) => isLightTool(t.name)) : AGENT_TOOLS,
+        system: prompt.system,
+        messages: prompt.messages,
+      },
       outSend,
       full.length > 0,
-      maxTokens,
       iter,
-      kosherHint,
-      light
-        ? buildLightGrounding(clientTrip?.citySlugs ?? [], kosherOk)
-        : detailFor(kosherOk) + buildExploredGrounding(explored),
-      kosherOk,
       guardAllow,
       searchesShown > 0,
-      light,
-      // The light route never gets search under any circumstances - it is
-      // already limited to a tool allowlist that excludes it, and this is here
-      // only to make the intent explicit.
-      !light && allowLookup,
-      light ? '' : lookupNote,
-      serverVerdicts,
     );
     /*
       A search is only known after the fact (server_tool_use in usage, see
@@ -1136,6 +1182,7 @@ async function runAgent(
 
     const assistantContent: ApiContentBlock[] = [];
     const results: ApiContentBlock[] = [];
+    const tripBeforeTools = working;
     for (const block of turn.blocks) {
       if (block.type === 'text') {
         if (block.text) assistantContent.push({ type: 'text', text: block.text });
@@ -1392,6 +1439,16 @@ async function runAgent(
       });
     }
     if (results.length === 0) break;
+    /*
+      The trip as the tools just left it, appended after their results - the
+      model's view of the trip used to be rewritten in `system` on every
+      iteration, which is what kept everything after it out of the cache. Only
+      when something actually changed, and after the tool_result blocks, which
+      the API requires to come first in the message.
+    */
+    if (working !== tripBeforeTools && !legacyLayout) {
+      results.push({ type: 'text', text: tripUpdateText(serializeTripForModel(working)) });
+    }
     apiMessages.push({ role: 'assistant', content: assistantContent });
     apiMessages.push({ role: 'user', content: results });
 
@@ -1565,16 +1622,6 @@ async function runAgent(
   console.log(
     `[chat] turn route=${route.light ? 'light' : 'heavy'} escalated=${escalated} proseDropped=${lightProseDropped} reason=${route.reason}`,
   );
-
-  /*
-    Caching - only if we actually offered the tool (`allowLookup`) and only if what
-    came out genuinely carries a real citation (i.e. survived the price guard). A
-    reply that was cut off entirely is not cached - there is nothing to hand back
-    to the next question.
-  */
-  if (allowLookup && LOOKUP_ANCHOR.test(full)) {
-    rememberLookup(lastUser, full);
-  }
 
   const dest = findDestination(full);
   send({ type: 'meta', destinationSlug: dest?.slug });

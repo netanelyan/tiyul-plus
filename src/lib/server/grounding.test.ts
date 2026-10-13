@@ -17,6 +17,7 @@ import assert from 'node:assert/strict';
 import {
   buildGroundingDetail,
   buildGroundingIndex,
+  buildIndexBlocks,
   kosherAllowed,
   kosherAllowedNames,
   kosherIntentText,
@@ -141,6 +142,19 @@ test('שני וריאנטים בלבד לאינדקס, ושניהם יציבים
   assert.ok(buildGroundingIndex(false).length < buildGroundingIndex(true).length);
 });
 
+test('kosher on adds a layer after the shared index instead of a second index', () => {
+  const [base] = buildIndexBlocks(false);
+  const [onBase, layer] = buildIndexBlocks(true);
+  assert.equal(onBase, base, 'both variants send the identical base block');
+  // The base block never lists a kosher venue, whoever is asking
+  for (const p of romeKosher) assert.ok(!base.includes(p.id), `${p.id} in the shared index`);
+  // ...and the layer carries every one of them, with nothing else
+  const kosherIds = destinations.flatMap((d) => d.places.filter((p) => isKosher(p.category)).map((p) => p.id));
+  for (const id of kosherIds) assert.ok(layer.includes(`"${id}"`), `${id} missing from the kosher layer`);
+  const nonKosher = rome.places.find((p) => !isKosher(p.category))!;
+  assert.ok(!layer.includes(`"${nonKosher.id}"`), 'the layer holds kosher venues only');
+});
+
 /* ---------- kosherAllowedNames: priceGuard.ts's whitelist ---------- */
 
 test('kosherAllowedNames ריקה לגמרי כשהשער סגור - גם על עיר עם כשרות אמיתית', () => {
@@ -181,7 +195,8 @@ test('the index says which of our destinations answer which kind of request', ()
     `c.slug` (the pre-2026-09-18 object form) yields a set of `undefined` and
     the cross-check below passes without checking anything.
   */
-  const idx = JSON.parse(buildGroundingIndex(true)) as {
+  // The base block - the directory lives there, shared by both kosher variants
+  const idx = JSON.parse(buildIndexBlocks(true)[0]) as {
     byCharacterLegend: string;
     byCharacter: Record<string, Record<string, string[]>>;
     cities: [string, string, string, unknown[]][];
@@ -222,7 +237,7 @@ test('grouping is what makes a count correct, because the model counts the list'
     the obvious reading of the list is the right one: counting what sits under
     Europe gives Europe's number.
   */
-  const idx = JSON.parse(buildGroundingIndex(true)) as {
+  const idx = JSON.parse(buildIndexBlocks(true)[0]) as {
     byCharacter: Record<string, Record<string, string[]>>;
   };
   const europe = idx.byCharacter['אירופה'].outdoors;

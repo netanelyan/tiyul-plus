@@ -71,10 +71,38 @@ export function priceFor(model: string): ModelPrice {
 export interface TokenUsage {
   input_tokens?: number;
   cache_creation_input_tokens?: number;
+  /**
+   * The same writes split by TTL, as the API reports them. Present since the chat
+   * started sending two TTLs in one request: the catalog prefix at one hour and
+   * the conversation behind it at five minutes (see `agentRequest.ts`). Without
+   * the split a five-minute write would be priced at the one-hour rate.
+   */
+  cache_creation?: {
+    ephemeral_5m_input_tokens?: number;
+    ephemeral_1h_input_tokens?: number;
+  };
   cache_read_input_tokens?: number;
   output_tokens?: number;
   /** How many web_search searches ran in this call - see webLookup.ts */
   web_search_requests?: number;
+}
+
+/**
+ * Cache-write dollars (times a million), priced per TTL when the response says
+ * which TTL each write went to.
+ *
+ * Whatever the breakdown does not account for - a response without it, or a
+ * total larger than its parts - is priced at the rate of the TTL we send for the
+ * prefix, which is the one-hour rate by default. That keeps the old behaviour
+ * for any response that carries no breakdown, and errs upward otherwise.
+ */
+function cacheWriteCost(u: TokenUsage, p: ModelPrice): number {
+  const total = u.cache_creation_input_tokens ?? 0;
+  const w5m = u.cache_creation?.ephemeral_5m_input_tokens ?? 0;
+  const w1h = u.cache_creation?.ephemeral_1h_input_tokens ?? 0;
+  const rest = Math.max(0, total - w5m - w1h);
+  const restRate = process.env.ANTHROPIC_CACHE_TTL === '5m' ? p.cacheWrite : p.cacheWrite1h;
+  return w5m * p.cacheWrite + w1h * p.cacheWrite1h + rest * restRate;
 }
 
 /**
@@ -89,15 +117,7 @@ export function costUsd(model: string, u: TokenUsage): number {
   const p = priceFor(model);
   return (
     ((u.input_tokens ?? 0) * p.input +
-      /*
-        The rate is chosen by the TTL we **send**, not by what the response
-        reports: `usage` does not distinguish the two write kinds in the
-        field we read, and our own setting is known to us with certainty.
-        `ANTHROPIC_CACHE_TTL=5m` also switches the pricing back to the short
-        rate, so the two cannot fall out of sync.
-      */
-      (u.cache_creation_input_tokens ?? 0) *
-        (process.env.ANTHROPIC_CACHE_TTL === '5m' ? p.cacheWrite : p.cacheWrite1h) +
+      cacheWriteCost(u, p) +
       (u.cache_read_input_tokens ?? 0) * p.cacheRead +
       (u.output_tokens ?? 0) * p.output) /
       1_000_000 +

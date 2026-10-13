@@ -101,6 +101,50 @@ export const MAX_IMAGES_PER_REQUEST = 2;
  */
 export const MAX_HISTORY_CHARS = 50_000;
 const HISTORY_CHAR_BUDGET = MAX_HISTORY_CHARS;
+/** At most this many of the newest messages are sent */
+const MAX_HISTORY_MESSAGES = 40;
+
+/**
+ * How far the start of the kept history moves at a time, in messages counted
+ * from the start of the conversation.
+ *
+ * The history is cached from turn to turn (see agentRequest.ts), and a cache is
+ * a prefix: it is read back only if the conversation still starts with the same
+ * message. Trimming to exactly the budget moved the start by a message or two on
+ * every turn of a long conversation, so from the 21st turn on every turn
+ * re-billed the whole history at the full price. Moving the start in steps of ten
+ * keeps it put for about five turns at a time, at the price of sometimes keeping
+ * a few fewer old messages than the budget would allow - never more.
+ */
+export const HISTORY_TRIM_STEP = 10;
+
+/**
+ * The index of the first message to keep: the newest messages that fit both the
+ * count and the character budget, then moved forward (fewer messages, never more)
+ * to a multiple of `HISTORY_TRIM_STEP`, so it moves in steps. Indices are counted
+ * from the start of the conversation the client sent, which is what makes the
+ * step stable from one turn to the next. The last message is always kept.
+ *
+ * The step never costs more than half of what the budget allows. With very long
+ * messages the budget holds only a handful, and rounding up by ten would leave
+ * nothing - the first version did exactly that, caught by the 8,000-char test
+ * below. There the exact cut is used instead, and the cache simply misses as it
+ * did before.
+ */
+export function historyStart(lengths: number[]): number {
+  const n = lengths.length;
+  if (n === 0) return 0;
+  let start = n - 1;
+  let used = Math.min(lengths[n - 1], HISTORY_CHAR_BUDGET);
+  for (let i = n - 2; i >= 0; i--) {
+    if (used + lengths[i] > HISTORY_CHAR_BUDGET) break;
+    used += lengths[i];
+    start = i;
+  }
+  const minimal = Math.max(start, n - MAX_HISTORY_MESSAGES);
+  const stepped = Math.ceil(minimal / HISTORY_TRIM_STEP) * HISTORY_TRIM_STEP;
+  return n - stepped >= (n - minimal) / 2 ? stepped : minimal;
+}
 
 /** A message with neither text nor image carries no information */
 function carriesNothing(m: ChatMessage): boolean {
@@ -115,17 +159,20 @@ function carriesNothing(m: ChatMessage): boolean {
  */
 export function sanitizeMessages(raw: unknown): ChatMessage[] {
   if (!Array.isArray(raw)) return [];
-  const msgs: ChatMessage[] = [];
-  for (const item of raw.slice(-40)) {
-    if (!item || typeof item !== 'object') continue;
+  // Normalized first and positionally - a junk entry stays as an empty slot - so
+  // the trim below counts positions in the conversation the client sent.
+  const normalized: (ChatMessage | null)[] = raw.map((item) => {
+    if (!item || typeof item !== 'object') return null;
     const m = item as { role?: unknown; content?: unknown; image?: unknown };
     const role = m.role === 'assistant' ? 'assistant' : 'user';
     const content = typeof m.content === 'string' ? m.content.slice(0, 8000) : '';
     const image = typeof m.image === 'string' ? m.image : '';
     const okImage =
       role === 'user' && image.length > 0 && image.length <= MAX_IMAGE_CHARS && IMAGE_DATA_URL.test(image);
-    msgs.push(okImage ? { role, content, image } : { role, content });
-  }
+    return okImage ? { role, content, image } : { role, content };
+  });
+  const start = historyStart(normalized.map((m) => m?.content.length ?? 0));
+  const msgs = normalized.slice(start).filter((m): m is ChatMessage => m !== null);
   let kept = 0;
   for (let i = msgs.length - 1; i >= 0; i--) {
     if (!msgs[i].image) continue;
@@ -137,7 +184,9 @@ export function sanitizeMessages(raw: unknown): ChatMessage[] {
   const carrying = msgs.filter((m) => !carriesNothing(m));
 
   // The character budget - newest to oldest, because the relevant context is
-  // the end of the conversation. The last message always gets in (it is the
+  // the end of the conversation. `historyStart` has already chosen a start that
+  // fits, so this pass drops nothing more in practice; it stays as the second
+  // bound, and as the guarantee that the last message always gets in (it is the
   // current turn): if it alone exceeds the budget it is truncated rather
   // than dropped, otherwise the traveler sends something long and gets no
   // answer at all. Must run before the first-assistant rule, otherwise the
@@ -167,7 +216,7 @@ export function sanitizeMessages(raw: unknown): ChatMessage[] {
   //    the agent's reply. The API returns 400 for that, meaning the
   //    "empty content" fix traded one error for another. Found in
   //    production.
-  // 2. **Predating that:** `raw.slice(-40)` can open the window on an
+  // 2. **Predating that:** the trim (`historyStart`) can open the window on an
   //    assistant message in any conversation longer than 40 messages,
   //    regardless of images.
   //
