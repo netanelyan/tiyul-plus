@@ -404,9 +404,17 @@ const KOSHER_ASSERTION =
 export const LOOKUP_ANCHOR =
   /נבדק ב-?\s*\d{1,2}[./]\d{1,2}([./]\d{2,4})?|נבדק היום|checked\s+(on|today)/i;
 
-/** Opening hours - a number with a colon, or Hebrew "open between"/"closes at" */
+/**
+ * Opening hours - Hebrew "opening hours are", "open between/from", "closes at".
+ *
+ * A bare time ("9:00") is deliberately not a claim on its own: the plan says
+ * "day 2 starts at 9:00" all the time. It used to be listed here, and never
+ * fired in practice only because the sentence splitter cut every "9:00" in half
+ * at the colon - the same cut that stripped every cited lookup. With the splitter
+ * fixed (see `sentenceEnds`), keeping it would have started redacting plan times.
+ */
 const HOURS_CLAIM =
-  /\d{1,2}:\d{2}|שעות\s*ה?(פתיחה|פעילות)\s*(הן|הם)?|פתוח(ה)?\s*(בין|מ-?\d)|נסגר(ת)?\s*ב-?\d{1,2}(:\d{2})?/;
+  /שעות\s*ה?(פתיחה|פעילות)\s*(הן|הם)?|פתוח(ה)?\s*(בין|מ-?\d)|נסגר(ת)?\s*ב-?\d{1,2}(:\d{2})?/;
 
 /** Whether a specific place still exists/is open, or closed permanently */
 const EXISTENCE_CLAIM =
@@ -879,8 +887,49 @@ function namesAllowedKosher(sentence: string, allow: GuardAllowlist): boolean {
  * reassembled text is identical to the original when there is nothing to cut -
  * there's a test for this.
  */
+/**
+ * Where sentences end: after a newline, or after `.` `!` `?` `:` that is followed
+ * by whitespace (or ends the text) and is not inside parentheses.
+ *
+ * It used to be after every one of those characters. That cut "9:00" into "9:"
+ * and "00", "12.8.2026" into three pieces and the "(source: site.com, ...)"
+ * citation away from the fact it cites - so a cited opening-hours sentence, the one shape the live
+ * lookup exists to produce, could never reach `violationOf` whole: the fact
+ * arrived without its "checked on" date and was stripped every time. Found by
+ * running the lookup end to end against a mock API (2026-10-13); the unit tests
+ * passed because they call `violationOf` on the whole sentence directly.
+ *
+ * `atEnd` decides whether a mark that ends the text counts, which it does for
+ * whole text and does only after a non-digit while streaming ("19." may be the
+ * start of "19.90").
+ */
+function sentenceEnds(text: string, atEnd: 'always' | 'unless-digit'): number[] {
+  const ends: number[] = [];
+  let depth = 0;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (c === '\n') {
+      depth = 0;
+      ends.push(i + 1);
+    } else if (c === '(') depth += 1;
+    else if (c === ')') depth = Math.max(0, depth - 1);
+    else if (depth === 0 && (c === '.' || c === '!' || c === '?' || c === ':')) {
+      const last = i + 1 === text.length;
+      if (last ? atEnd === 'always' || !/\d/.test(text[i - 1] ?? '') : /\s/.test(text[i + 1])) ends.push(i + 1);
+    }
+  }
+  return ends;
+}
+
 export function splitSentences(text: string): string[] {
-  return text.split(/(?<=[.!?:\n])/).filter((s) => s !== '');
+  const out: string[] = [];
+  let start = 0;
+  for (const end of sentenceEnds(text, 'always')) {
+    out.push(text.slice(start, end));
+    start = end;
+  }
+  if (start < text.length) out.push(text.slice(start));
+  return out.filter((s) => s !== '');
 }
 
 /**
@@ -1054,15 +1103,11 @@ export class GuardedTextStream {
   push(delta: string): string {
     this.acc += delta;
     const pending = this.acc.slice(this.emitted);
-    let cut = pending.lastIndexOf('\n') + 1;
-    for (const mark of ['. ', '! ', '? ', ': ', '.\n']) {
-      const at = pending.lastIndexOf(mark);
-      if (at >= 0) cut = Math.max(cut, at + mark.length);
-    }
-    // A sentence-ending mark at the end of the buffer with no space after it
-    // counts too. The digit before it is excluded so that "19.90" is not cut
-    // mid-number into "19." and "90 ILS".
-    if (/(?<!\d)[.!?:]$/.test(pending)) cut = Math.max(cut, pending.length);
+    // The last sentence end - the same rule `splitSentences` applies, so a flush
+    // never cuts inside a "(source: ...)" citation or between a fact and it. A mark at
+    // the very end of the buffer counts too, except after a digit, so that "19.90"
+    // is not cut mid-number into "19." and "90 ILS".
+    let cut = sentenceEnds(pending, 'unless-digit').at(-1) ?? 0;
     if (cut === 0 && pending.length > HARD_CAP) {
       // A pathological sentence with no punctuation. Release from it only if
       // **all of it** is clean - otherwise hold everything, because a cut in

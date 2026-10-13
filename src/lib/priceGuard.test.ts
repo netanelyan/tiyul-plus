@@ -23,6 +23,7 @@ import {
   NO_PRICE_LINE,
   NO_PRICE_LINE_BARE,
   guardText,
+  splitSentences,
   violationOf,
 } from './priceGuard.ts';
 
@@ -553,4 +554,40 @@ test('the colon rule survives a flush boundary, which is where it actually has t
   assert.ok(stream.redactions.length > 0, 'the claim should have been cut');
   assert.ok(!out.includes('וורשה'), `the orphan list crossed the flush boundary: ${out}`);
   assert.ok(out.includes('רוצים שאחקור עיר אחרת?'), `too much was cut: ${out}`);
+});
+
+/*
+ * The streamed lookup sentence, end to end. Found by driving /api/chat against a
+ * mock API: the splitter cut after every "." and ":", so "9:00", the dotted date
+ * and the "(source: ...)" citation all broke the sentence apart, and the cited
+ * fact reached `violationOf` without its anchor - stripped every time.
+ */
+/** The text cut into deltas of a fixed size, the way the model streams it */
+const chunked = (text: string, size: number): string[] =>
+  Array.from({ length: Math.ceil(text.length / size) }, (_, i) => text.slice(i * size, (i + 1) * size));
+
+test('a cited opening-hours sentence streams through intact, in any chunking', () => {
+  const cited = 'ארמון שנברון פתוח בין 9:00 ל-17:30 (מקור: schoenbrunn.at, https://www.schoenbrunn.at) · נבדק ב-13.10.2026.';
+  for (const size of [1, 3, 7, 40, cited.length]) {
+    const r = streamAll(chunked(cited, size));
+    assert.equal(r.out, cited, `chunk size ${size}`);
+    assert.deepEqual(r.redactions, []);
+  }
+});
+
+test('the same hours without a citation are still cut while streaming', () => {
+  const r = streamAll(chunked('הקולוסיאום פתוח בין 9:00 ל-19:00. כדאי להגיע מוקדם.', 5));
+  assert.deepEqual(r.redactions, ['hours-claim']);
+  assert.ok(!r.out.includes('19:00'));
+  assert.ok(r.out.includes('כדאי להגיע מוקדם'));
+});
+
+test('sentences end at a mark followed by space, not inside numbers, dates or parentheses', () => {
+  assert.deepEqual(splitSentences('יום 2 מתחיל ב-9:00. אחר כך מוזיאון (פתוח: לבדוק).'), [
+    'יום 2 מתחיל ב-9:00.',
+    ' אחר כך מוזיאון (פתוח: לבדוק).',
+  ]);
+  assert.deepEqual(splitSentences('שלום\nעולם'), ['שלום\n', 'עולם']);
+  // A colon that introduces a list still ends its sentence - the continuation rule depends on it
+  assert.deepEqual(splitSentences('יש שלוש אפשרויות: א, ב, ג.'), ['יש שלוש אפשרויות:', ' א, ב, ג.']);
 });
