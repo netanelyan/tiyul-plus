@@ -43,6 +43,20 @@ if [ "${1:-}" != "--now" ]; then
   echo "DNS points here"
 fi
 
+# Load whatever is in the env file now: the secrets Vercel would not release
+# are typically filled in just before the DNS change. Server-side variables
+# only - a NEXT_PUBLIC_* change still needs `npm run deploy`.
+missing=$(for k in PAYPAL_CLIENT_ID PAYPAL_CLIENT_SECRET PAYPAL_WEBHOOK_ID RESEND_API_KEY \
+  PURCHASE_ALERT_WEBHOOK CRON_SECRET; do
+  grep -qE "^$k=.+" /opt/tiyulplus-web/shared/env || printf '%s ' "$k"
+done)
+[ -z "$missing" ] || echo "!! going live WITHOUT: $missing- payments/mail/alerts are off until they are set" >&2
+systemctl restart tiyulplus-web
+for _ in $(seq 1 60); do
+  curl -fsS -m 5 -o /dev/null http://127.0.0.1:4800/api/health && break
+  sleep 1
+done
+
 cp -a "$CF" "$CF.bak-tiyulplus-$(date +%Y%m%d-%H%M%S)"
 tmp=$(mktemp)
 # Everything outside this script's markers stays byte-for-byte as it was.
