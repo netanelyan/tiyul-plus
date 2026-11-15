@@ -104,6 +104,11 @@ if "$NODE" -e '
     process.exit(a.length === 1 && a[0] === process.argv[1] ? 0 : 1);
   })().catch(() => process.exit(1));' "$IP"; then
   cp -a "$CF" "$CF.bak-tiyulplus-db-$(date +%Y%m%d-%H%M%S)"
+  # Root's `caddy validate` would create the log file owned by root, which the
+  # caddy user then cannot open, and the reload fails (see deploy/cutover.sh).
+  LOG=/var/log/caddy/tiyulplus-db.log
+  [ -e "$LOG" ] || install -o caddy -g caddy -m 644 /dev/null "$LOG"
+  chown caddy:caddy "$LOG"
   tmp=$(mktemp)
   # Everything outside this script's markers stays byte-for-byte as it was.
   awk '/^# >>> tiyul\+ database/{skip=1} !skip{print} /^# <<< tiyul\+ database/{skip=0}' "$CF" > "$tmp"

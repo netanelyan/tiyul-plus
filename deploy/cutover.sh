@@ -58,6 +58,12 @@ for _ in $(seq 1 60); do
 done
 
 cp -a "$CF" "$CF.bak-tiyulplus-$(date +%Y%m%d-%H%M%S)"
+# `caddy validate` runs as root and creates a missing log file owned by root,
+# mode 600; Caddy runs as `caddy`, cannot open it, and the reload fails
+# (happened 2026-11-15). The file has to exist, and be Caddy's, first.
+LOG=/var/log/caddy/tiyulplus.log
+[ -e "$LOG" ] || install -o caddy -g caddy -m 644 /dev/null "$LOG"
+chown caddy:caddy "$LOG"
 tmp=$(mktemp)
 # Everything outside this script's markers stays byte-for-byte as it was.
 awk '/^# >>> tiyul\+ website/{skip=1} !skip{print} /^# <<< tiyul\+ website/{skip=0}' "$CF" > "$tmp"
