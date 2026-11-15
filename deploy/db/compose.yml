@@ -19,10 +19,20 @@
 # Postgres and the templates through their 127.0.0.1 ports.
 name: tiyulplus-db
 
+# Docker keeps container output forever by default, and Auth logs every
+# request with the visitor's IP. Capped, so it neither fills the disk nor
+# outlives what the privacy page promises.
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: "3"
+
 services:
   db:
     image: postgres:17-bookworm
     restart: unless-stopped
+    logging: *logging
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       # Read once, by init/00-roles.sh, on the first start of an empty pgdata/.
@@ -57,6 +67,7 @@ services:
   rest:
     image: postgrest/postgrest:v14.18
     restart: unless-stopped
+    logging: *logging
     depends_on:
       db:
         condition: service_healthy
@@ -78,6 +89,7 @@ services:
   auth:
     image: supabase/gotrue:v2.197.0
     restart: unless-stopped
+    logging: *logging
     depends_on:
       db:
         condition: service_healthy
@@ -151,6 +163,7 @@ services:
   templates:
     image: busybox:1.37
     restart: unless-stopped
+    logging: *logging
     command: [httpd, -f, -p, "8080", -h, /www]
     volumes:
       - ./templates:/www:ro

@@ -20,4 +20,8 @@ dc exec -T db pg_dump -U postgres -d postgres --format=custom > "$out.part"
 dc exec -T db pg_restore --list < "$out.part" > /dev/null
 mv "$out.part" "$out"
 find "$ROOT/backups" -name 'tiyulplus-*.dump' -mtime +"$KEEP_DAYS" -delete
+# Retention that the privacy page states, enforced here rather than promised:
+# Auth's sign-in log (time, IP address) is kept for 90 days.
+dc exec -T db psql -U postgres -d postgres -qAt </dev/null \
+  -c "delete from auth.audit_log_entries where created_at < now() - interval '90 days'"
 echo "backup: $(basename "$out") ($(du -h "$out" | cut -f1)), $(ls "$ROOT"/backups/*.dump | wc -l) kept"
