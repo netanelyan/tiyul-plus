@@ -27,6 +27,11 @@ www.tiyulplus.com {
 		lb_try_interval 250ms
 		# /api/chat streams the reply as text/event-stream. Never buffer it.
 		flush_interval -1
+		# requestIp() reads X-Forwarded-For, which Caddy always replaces with the
+		# real client address, and falls back to X-Real-IP - which Caddy passes
+		# through exactly as the client sent it (tested). Drop it, so no header a
+		# visitor controls can ever become their identity for the rate limits.
+		header_up -X-Real-IP
 	}
 
 	log {
