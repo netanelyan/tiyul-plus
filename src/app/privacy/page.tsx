@@ -588,7 +588,7 @@ export default function Page() {
         </p>
       </Section>
 
-      <Updated date="10 באוקטובר 2026" />
+      <Updated date="15 בנובמבר 2026" />
     </PageShell>
   );
 }
