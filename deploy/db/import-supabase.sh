@@ -74,6 +74,25 @@ for t in users identities; do
   echo "   auth.$t: $(wc -l < "$work/$t.copy") rows"
 done
 
+echo "==> extensions, in the schema the source has each one in"
+# A dump of one schema does not create extensions, but it does name them by
+# schema: the old project keeps pg_trgm in public, so its index on profile names
+# says public.gin_trgm_ops, which fails against init's extensions.pg_trgm.
+# pg_stat_statements needs a preload library, and the vault is Supabase's own.
+while read -r ext sch; do
+  [ -n "$ext" ] || continue
+  if [ "$(local_psql -c "select count(*) from pg_available_extensions where name = '$ext'" </dev/null)" != 1 ]; then
+    echo "   $ext: not available here, skipped"; continue
+  fi
+  cur=$(local_psql -c "select extnamespace::regnamespace from pg_extension where extname = '$ext'" </dev/null)
+  if [ -z "$cur" ]; then
+    local_psql -c "create schema if not exists \"$sch\"; create extension \"$ext\" with schema \"$sch\"" </dev/null
+  elif [ "$cur" != "$sch" ]; then
+    local_psql -c "alter extension \"$ext\" set schema \"$sch\"" </dev/null
+  fi
+  echo "   $ext: $sch"
+done < <(src_sql <<< "select extname, extnamespace::regnamespace from pg_extension where extname not in ('plpgsql', 'pg_stat_statements', 'supabase_vault') order by 1")
+
 echo "==> public schema"
 src_run sh -c 'pg_dump "$SRC" --schema=public --no-owner --format=custom' > "$work/public.dump"
 # Not --exit-on-error: a dump of a Supabase project carries a few statements
@@ -81,20 +100,30 @@ src_run sh -c 'pg_dump "$SRC" --schema=public --no-owner --format=custom' > "$wo
 # publication, grants to Supabase's internal roles). Every error is printed;
 # the row counts below are what decides whether the import worked.
 dc exec -T db pg_restore -U postgres -d postgres --no-owner < "$work/public.dump" 2> "$work/restore.err" || true
-if [ -s "$work/restore.err" ]; then
-  echo "   pg_restore reported:"; grep -E 'error:|ERROR' "$work/restore.err" | sed 's/^/     /' | head -40
+# The dump re-creates the public schema, which every database already has.
+errs=$(grep -E 'error:|ERROR' "$work/restore.err" | grep -v 'schema "public" already exists' || true)
+if [ -n "$errs" ]; then
+  echo "   pg_restore reported:"; echo "$errs" | sed 's/^/     /' | head -40
 fi
 local_psql -c "notify pgrst, 'reload schema'"
 
-echo "==> row counts, source vs here"
+echo "==> counts, source vs here"
 q="select string_agg(format('select %L, count(*) from public.%I', tablename, tablename), ' union all ' order by tablename) from pg_tables where schemaname = 'public'"
 union=$(local_psql -c "$q")
-diff_count=0
+# Rows are not everything: a policy, index or function that failed to restore
+# leaves every count intact, so these are compared too.
+extra="union all select 'auth.users', count(*) from auth.users
+  union all select 'auth.identities', count(*) from auth.identities
+  union all select '~policies', count(*) from pg_policies where schemaname = 'public'
+  union all select '~indexes', count(*) from pg_indexes where schemaname = 'public'
+  union all select '~functions', count(*) from pg_proc where pronamespace = 'public'::regnamespace
+  union all select '~triggers', count(*) from pg_trigger t join pg_class c on c.oid = t.tgrelid
+    where c.relnamespace = 'public'::regnamespace and not t.tgisinternal"
 for side in src local; do
   if [ "$side" = src ]; then
-    src_sql <<< "$union union all select 'auth.users', count(*) from auth.users union all select 'auth.identities', count(*) from auth.identities" | sort > "$work/$side.counts"
+    src_sql <<< "$union $extra" | sort > "$work/$side.counts"
   else
-    local_psql -F ' ' -c "$union union all select 'auth.users', count(*) from auth.users union all select 'auth.identities', count(*) from auth.identities" | sort > "$work/$side.counts"
+    local_psql -F ' ' -c "$union $extra" | sort > "$work/$side.counts"
   fi
 done
 join -a1 -a2 -e MISSING -o 0,1.2,2.2 "$work/src.counts" "$work/local.counts" | while read -r t a b; do
