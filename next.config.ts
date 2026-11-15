@@ -14,7 +14,7 @@ import type { NextConfig } from 'next';
  * It shipped report-only first, deliberately: a content policy that blocks
  * something real breaks the page silently for every visitor, and this site
  * loads from several origins it genuinely needs - Leaflet's tiles, Wikimedia
- * and Unsplash photographs, flagcdn and Supabase.
+ * and Unsplash photographs, flagcdn and the database API.
  *
  * Before enforcing, the policy was measured rather than reasoned about: every
  * page below was loaded in a real browser with the header ENFORCING and the
@@ -32,6 +32,20 @@ import type { NextConfig } from 'next';
  * To roll back in a hurry: rename the header on line ~90 back to
  * `content-security-policy-report-only`. Nothing else has to change.
  */
+/*
+  The database API's origin, read from the same variable the browser client
+  uses rather than typed here: it was a *.supabase.co project until 2026-11 and
+  is the self-hosted db.tiyulplus.com since (deploy/db/). A hardcoded host is
+  how a database move silently breaks sign-in for every visitor.
+*/
+const DB_ORIGIN = (() => {
+  try {
+    return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? '').origin;
+  } catch {
+    return null;
+  }
+})();
+
 const CSP = [
   "default-src 'self'",
   /*
@@ -89,8 +103,7 @@ const CSP = [
   */
   [
     "connect-src 'self'",
-    'https://*.supabase.co',
-    'https://*.supabase.in',
+    ...(DB_ORIGIN ? [DB_ORIGIN] : []),
     'https://www.google-analytics.com',
     'https://*.google-analytics.com',
     'https://*.analytics.google.com',
