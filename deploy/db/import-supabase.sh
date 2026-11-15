@@ -10,6 +10,7 @@
 # Use the session pooler string from the dashboard's Connect panel; the direct
 # db.<ref>.supabase.co host is IPv6 only.
 #
+#   --compare only compare the counts on both sides, change nothing.
 #   --fresh   wipe the self-hosted database first and start from an empty one.
 #             Refused once the website's env file points at this database:
 #             after the switch, this database IS production.
@@ -26,9 +27,45 @@ local_psql() { dc exec -T db psql -U postgres -d postgres -v ON_ERROR_STOP=1 -qA
 src_run() { SRC=$SRC docker run --rm -i --network host -e SRC postgres:17-bookworm "$@"; }
 src_sql() { src_run sh -c 'psql "$SRC" -v ON_ERROR_STOP=1 -qAt -F " "'; }
 
+# Every table's row count, plus policies/indexes/functions/triggers, on both
+# sides. Fails if anything differs.
+compare() {
+  echo "==> counts, source vs here"
+  q="select string_agg(format('select %L, count(*) from public.%I', tablename, tablename), ' union all ' order by tablename) from pg_tables where schemaname = 'public'"
+  union=$(local_psql -c "$q")
+  # Rows are not everything: a policy, index or function that failed to restore
+  # leaves every count intact, so these are compared too.
+  extra="union all select 'auth.users', count(*) from auth.users
+    union all select 'auth.identities', count(*) from auth.identities
+    union all select '~policies', count(*) from pg_policies where schemaname = 'public'
+    union all select '~indexes', count(*) from pg_indexes where schemaname = 'public'
+    union all select '~functions', count(*) from pg_proc where pronamespace = 'public'::regnamespace
+    union all select '~triggers', count(*) from pg_trigger t join pg_class c on c.oid = t.tgrelid
+      where c.relnamespace = 'public'::regnamespace and not t.tgisinternal"
+  for side in src local; do
+    if [ "$side" = src ]; then
+      src_sql <<< "$union $extra" | sort > "$work/$side.counts"
+    else
+      local_psql -F ' ' -c "$union $extra" | sort > "$work/$side.counts"
+    fi
+  done
+  join -a1 -a2 -e MISSING -o 0,1.2,2.2 "$work/src.counts" "$work/local.counts" | while read -r t a b; do
+    flag=""; [ "$a" = "$b" ] || flag="   <-- differs"
+    printf '   %-32s %8s %8s%s\n' "$t" "$a" "$b" "$flag"
+  done
+  join -a1 -a2 -e MISSING -o 1.2,2.2 "$work/src.counts" "$work/local.counts" | awk '$1 != $2 {bad=1} END {exit bad}' ||
+    { echo "!! counts differ - do not switch the site to this database" >&2; exit 1; }
+}
+
 read -r SRC || true
 [[ ${SRC:-} == postgres*://* ]] || { echo "expected a postgres:// connection string on stdin" >&2; exit 1; }
 export SRC
+work=$(mktemp -d); trap 'rm -rf "$work"' EXIT
+
+# --compare: only the counts - after the switch, to see whether anything was
+# written to the old project between the final copy and the moment the site
+# moved over.
+if [ "${1:-}" = "--compare" ]; then compare; echo "==> every count matches"; exit 0; fi
 
 if [ "${1:-}" = "--fresh" ]; then
   if grep -q '^SUPABASE_URL=https://db\.tiyulplus\.com' "$WEB_ENV"; then
@@ -55,8 +92,6 @@ echo "==> source: $(src_sql <<< "select version()" | cut -d, -f1)"
 # old project has any, they must be recreated by hand. Say so rather than lose them.
 trg=$(src_sql <<< "select tgrelid::regclass || ': ' || tgname from pg_trigger where tgrelid in ('auth.users'::regclass, 'auth.identities'::regclass) and not tgisinternal")
 [ -z "$trg" ] || { echo "!! triggers on auth tables in the source, not copied:"; echo "$trg"; }
-
-work=$(mktemp -d); trap 'rm -rf "$work"' EXIT
 
 echo "==> accounts"
 # Column lists are the intersection of both sides, minus generated columns:
@@ -107,29 +142,5 @@ if [ -n "$errs" ]; then
 fi
 local_psql -c "notify pgrst, 'reload schema'"
 
-echo "==> counts, source vs here"
-q="select string_agg(format('select %L, count(*) from public.%I', tablename, tablename), ' union all ' order by tablename) from pg_tables where schemaname = 'public'"
-union=$(local_psql -c "$q")
-# Rows are not everything: a policy, index or function that failed to restore
-# leaves every count intact, so these are compared too.
-extra="union all select 'auth.users', count(*) from auth.users
-  union all select 'auth.identities', count(*) from auth.identities
-  union all select '~policies', count(*) from pg_policies where schemaname = 'public'
-  union all select '~indexes', count(*) from pg_indexes where schemaname = 'public'
-  union all select '~functions', count(*) from pg_proc where pronamespace = 'public'::regnamespace
-  union all select '~triggers', count(*) from pg_trigger t join pg_class c on c.oid = t.tgrelid
-    where c.relnamespace = 'public'::regnamespace and not t.tgisinternal"
-for side in src local; do
-  if [ "$side" = src ]; then
-    src_sql <<< "$union $extra" | sort > "$work/$side.counts"
-  else
-    local_psql -F ' ' -c "$union $extra" | sort > "$work/$side.counts"
-  fi
-done
-join -a1 -a2 -e MISSING -o 0,1.2,2.2 "$work/src.counts" "$work/local.counts" | while read -r t a b; do
-  flag=""; [ "$a" = "$b" ] || flag="   <-- differs"
-  printf '   %-32s %8s %8s%s\n' "$t" "$a" "$b" "$flag"
-done
-join -a1 -a2 -e MISSING -o 1.2,2.2 "$work/src.counts" "$work/local.counts" | awk '$1 != $2 {bad=1} END {exit bad}' ||
-  { echo "!! counts differ - do not switch the site to this database" >&2; exit 1; }
+compare
 echo "==> import complete, every count matches"
