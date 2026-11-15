@@ -1,0 +1,150 @@
+# The tiyul+ database, self-hosted: Postgres + PostgREST + Supabase Auth.
+#
+# These are the three parts of Supabase the site actually uses, run as
+# Supabase runs them, so the app code (supabase-js in the browser,
+# `/rest/v1` and `/auth/v1` from the server) does not change - only the URL
+# and the keys do. Studio, Realtime, Storage, the edge runtime and the
+# gateway are left out: nothing calls them, and together they would need
+# more memory than this box has to spare.
+#
+# Installed by install.sh into /opt/tiyulplus-db, which holds the secrets
+# (.env), the data (pgdata/) and the backups. Only Caddy is reachable from
+# outside: both ports are bound to 127.0.0.1, and Postgres is not published
+# at all.
+name: tiyulplus-db
+
+services:
+  db:
+    image: postgres:17-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      # Read once, by init/00-roles.sh, on the first start of an empty pgdata/.
+      AUTHENTICATOR_PASSWORD: ${AUTHENTICATOR_PASSWORD}
+      AUTH_ADMIN_PASSWORD: ${AUTH_ADMIN_PASSWORD}
+    # Sized for a box shared with other services, not for Postgres alone.
+    command:
+      - postgres
+      - -c
+      - shared_buffers=128MB
+      - -c
+      - effective_cache_size=512MB
+      - -c
+      - work_mem=4MB
+      - -c
+      - maintenance_work_mem=64MB
+      - -c
+      - max_connections=40
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    shm_size: 128mb
+    mem_limit: 512m
+    healthcheck:
+      test: [CMD, pg_isready, -U, postgres, -d, postgres]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  rest:
+    image: postgrest/postgrest:v14.18
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGRST_DB_URI: postgres://authenticator:${AUTHENTICATOR_PASSWORD}@db:5432/postgres
+      PGRST_DB_SCHEMAS: public
+      PGRST_DB_EXTRA_SEARCH_PATH: public,extensions
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_DB_MAX_ROWS: 1000
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+      PGRST_APP_SETTINGS_JWT_EXP: 3600
+      # The OpenAPI description would list every table and function to anyone;
+      # supabase-js never reads it.
+      PGRST_OPENAPI_MODE: disabled
+    ports:
+      - 127.0.0.1:4810:3000
+    mem_limit: 128m
+
+  auth:
+    image: supabase/gotrue:v2.197.0
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      templates:
+        condition: service_started
+    environment:
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: 9999
+      API_EXTERNAL_URL: https://db.tiyulplus.com/auth/v1
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://supabase_auth_admin:${AUTH_ADMIN_PASSWORD}@db:5432/postgres
+
+      GOTRUE_SITE_URL: https://www.tiyulplus.com
+      GOTRUE_URI_ALLOW_LIST: https://www.tiyulplus.com/**,https://tiyulplus.com/**
+      GOTRUE_DISABLE_SIGNUP: "false"
+
+      GOTRUE_JWT_SECRET: ${JWT_SECRET}
+      GOTRUE_JWT_ISSUER: https://db.tiyulplus.com/auth/v1
+      GOTRUE_JWT_EXP: 3600
+      GOTRUE_JWT_AUD: authenticated
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_JWT_ADMIN_ROLES: service_role
+      GOTRUE_SECURITY_REFRESH_TOKEN_ROTATION_ENABLED: "true"
+      GOTRUE_SECURITY_REFRESH_TOKEN_REUSE_INTERVAL: 10
+
+      # Sign-in is the 6-digit email code and Google, nothing else.
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+      GOTRUE_MAILER_AUTOCONFIRM: "false"
+      GOTRUE_MAILER_OTP_LENGTH: 6
+      GOTRUE_MAILER_OTP_EXP: 3600
+      GOTRUE_EXTERNAL_PHONE_ENABLED: "false"
+      GOTRUE_EXTERNAL_ANONYMOUS_USERS_ENABLED: "false"
+      # Google Identity Services hands the page an ID token and the page passes
+      # it to /token?grant_type=id_token (src/lib/auth/google.ts). The client id
+      # is the token's audience; there is no redirect, so no client secret.
+      GOTRUE_EXTERNAL_GOOGLE_ENABLED: "true"
+      GOTRUE_EXTERNAL_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOTRUE_EXTERNAL_GOOGLE_REDIRECT_URI: https://db.tiyulplus.com/auth/v1/callback
+
+      # The login code goes out through Resend, from login@ (emails/README.md).
+      GOTRUE_SMTP_HOST: smtp.resend.com
+      GOTRUE_SMTP_PORT: 465
+      GOTRUE_SMTP_USER: resend
+      GOTRUE_SMTP_PASS: ${SMTP_PASS}
+      GOTRUE_SMTP_ADMIN_EMAIL: login@tiyulplus.com
+      GOTRUE_SMTP_SENDER_NAME: טיול+
+      GOTRUE_SMTP_MAX_FREQUENCY: 60s
+      GOTRUE_RATE_LIMIT_EMAIL_SENT: 60
+      GOTRUE_MAILER_URLPATHS_CONFIRMATION: /auth/v1/verify
+      GOTRUE_MAILER_URLPATHS_RECOVERY: /auth/v1/verify
+      GOTRUE_MAILER_URLPATHS_INVITE: /auth/v1/verify
+      GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE: /auth/v1/verify
+      # A first sign-in sends the confirmation mail, every later one the magic
+      # link; both carry the same code, so both get the same template.
+      GOTRUE_MAILER_TEMPLATES_MAGIC_LINK: http://templates:8080/auth-magic-link.html
+      GOTRUE_MAILER_TEMPLATES_CONFIRMATION: http://templates:8080/auth-magic-link.html
+      GOTRUE_MAILER_SUBJECTS_MAGIC_LINK: "קוד ההתחברות: {{ .Token }}"
+      GOTRUE_MAILER_SUBJECTS_CONFIRMATION: "קוד ההתחברות: {{ .Token }}"
+
+      # Caddy replaces X-Forwarded-For with the real client address, so the
+      # per-IP limits count visitors rather than the proxy.
+      GOTRUE_RATE_LIMIT_HEADER: X-Forwarded-For
+      # supabase-js sends its key as an `apikey` header; a browser preflight
+      # fails unless it is allowed.
+      GOTRUE_CORS_ALLOWED_HEADERS: apikey
+      GOTRUE_LOG_LEVEL: info
+    ports:
+      - 127.0.0.1:4811:9999
+    mem_limit: 128m
+
+  # Auth fetches its email templates over HTTP; this serves the one file.
+  templates:
+    image: busybox:1.37
+    restart: unless-stopped
+    command: [httpd, -f, -p, "8080", -h, /www]
+    volumes:
+      - ./templates:/www:ro
+    mem_limit: 16m

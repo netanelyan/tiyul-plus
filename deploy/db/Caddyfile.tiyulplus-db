@@ -1,0 +1,38 @@
+# >>> tiyul+ database - installed by tiyul-plus/deploy/db/install.sh; edit it there, not here
+#
+# Not part of any other site in this file. The tiyul+ database API, laid out
+# the way a Supabase project's URL is, so supabase-js needs nothing but this
+# address: /rest/v1 is PostgREST, /auth/v1 is Supabase Auth, both
+# deploy/db/compose.yml on 127.0.0.1. Postgres itself is never exposed.
+db.tiyulplus.com {
+	header {
+		Strict-Transport-Security "max-age=63072000"
+		-Server
+	}
+
+	handle_path /rest/v1/* {
+		reverse_proxy 127.0.0.1:4810 {
+			header_up -X-Real-IP
+		}
+	}
+
+	# Auth's per-IP limits read X-Forwarded-For, which Caddy always replaces
+	# with the real client address. X-Real-IP it passes through as sent.
+	handle_path /auth/v1/* {
+		reverse_proxy 127.0.0.1:4811 {
+			header_up -X-Real-IP
+		}
+	}
+
+	handle {
+		respond 404
+	}
+
+	log {
+		output file /var/log/caddy/tiyulplus-db.log {
+			roll_size 20mb
+			roll_keep 5
+		}
+	}
+}
+# <<< tiyul+ database

@@ -1,0 +1,11 @@
+[Unit]
+Description=tiyul+ database - nightly dump
+
+[Timer]
+# Israel's quietest hour; Persistent catches up a run missed while the box was down.
+OnCalendar=*-*-* 01:30:00 UTC
+Persistent=true
+RandomizedDelaySec=10m
+
+[Install]
+WantedBy=timers.target

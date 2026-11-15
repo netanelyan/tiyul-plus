@@ -1,0 +1,10 @@
+[Unit]
+Description=tiyul+ database - nightly dump
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /opt/tiyulplus-db/backup.sh
+Nice=10
+IOSchedulingClass=idle

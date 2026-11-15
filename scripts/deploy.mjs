@@ -11,6 +11,8 @@
  *   npm run deploy -- rollback <id>  a specific release (ids: npm run deploy -- status)
  *   npm run deploy -- status         what is live, and is it healthy
  *   npm run deploy -- logs           follow the app's log
+ *   npm run deploy -- db             install/update the database stack (deploy/db/)
+ *   npm run deploy -- sql <file>     run a SQL file against the database, in one transaction
  *
  * The host is the `tiyul-vps` entry in ~/.ssh/config (override: DEPLOY_HOST).
  *
@@ -18,9 +20,12 @@
  * WSL launcher, which has neither this repo's git state nor the ssh config.
  */
 import { spawn, spawnSync } from 'node:child_process';
+import fs from 'node:fs';
 
 const HOST = process.env.DEPLOY_HOST || 'tiyul-vps';
 const APP = '/opt/tiyulplus-web';
+const DB = '/opt/tiyulplus-db';
+const DB_PSQL = `docker compose --project-directory ${DB} -f ${DB}/compose.yml exec -T db psql -U postgres -d postgres`;
 const [cmd = 'release', arg = ''] = process.argv.slice(2);
 
 const git = (...args) => spawnSync('git', args, { encoding: 'utf8' }).stdout.trim();
@@ -49,14 +54,18 @@ if (cmd === 'rollback') {
   );
 } else if (cmd === 'logs') {
   exitWith(ssh('journalctl -u tiyulplus-web -n 100 -f', { tty: true }));
+} else if (cmd === 'db') {
+  db();
+} else if (cmd === 'sql') {
+  sql(arg);
 } else if (cmd === 'release') {
   release();
 } else {
-  console.error('usage: npm run deploy [-- rollback [id] | status | logs]');
+  console.error('usage: npm run deploy [-- rollback [id] | status | logs | db | sql <file>]');
   process.exit(1);
 }
 
-function release() {
+function requireClean() {
   // Only what is committed is deployed, so an uncommitted fix would silently
   // not be in the release.
   if (git('status', '--porcelain') && process.env.DEPLOY_DIRTY !== '1') {
@@ -64,24 +73,16 @@ function release() {
     console.error('or run with DEPLOY_DIRTY=1 to deploy HEAD without them.');
     process.exit(1);
   }
-  const sha = git('rev-parse', 'HEAD');
-  if (!git('branch', '-r', '--contains', sha)) {
-    console.log(`note: ${sha.slice(0, 7)} is not pushed yet - deploying it anyway`);
-  }
+}
 
-  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace('T', '-').slice(0, 15);
-  const id = `${stamp}-${sha.slice(0, 7)}`;
-  console.log(`deploying ${id} to ${HOST}`);
-
+/** git archive of HEAD, piped into a remote command that reads it on stdin. */
+function shipHead(remoteCmd, paths = []) {
   // autocrlf=false: with the Windows default, git archive hands the server CRLF
   // shell scripts, and bash fails on the first line.
-  const archive = spawn('git', ['-c', 'core.autocrlf=false', 'archive', '--format=tar.gz', 'HEAD'], {
+  const archive = spawn('git', ['-c', 'core.autocrlf=false', 'archive', '--format=tar.gz', 'HEAD', ...paths], {
     stdio: ['ignore', 'pipe', 'inherit'],
   });
-  const remote = ssh(
-    `set -e; d=${APP}/releases/${id}; mkdir -p "$d"; tar -xzf - -C "$d"; cd "$d"; bash deploy/release.sh ${sha}`,
-    { stdin: 'pipe' },
-  );
+  const remote = ssh(remoteCmd, { stdin: 'pipe' });
   archive.stdout.pipe(remote.stdin);
   archive.on('exit', (code) => {
     if (code !== 0) {
@@ -91,4 +92,39 @@ function release() {
     }
   });
   exitWith(remote);
+}
+
+function db() {
+  requireClean();
+  shipHead(
+    `set -e; d=$(mktemp -d); trap 'rm -rf "$d"' EXIT; tar -xzf - -C "$d"; bash "$d/deploy/db/install.sh"`,
+    ['deploy/db', 'emails/auth-magic-link.html'],
+  );
+}
+
+/**
+ * The replacement for Supabase's SQL editor. One transaction (`-1`), so a
+ * file that fails halfway leaves nothing behind; PostgREST picks up the new
+ * schema by itself (the event trigger in deploy/db/init/00-roles.sh).
+ */
+function sql(file) {
+  if (!file || !fs.existsSync(file)) {
+    console.error('usage: npm run deploy -- sql <file.sql>');
+    process.exit(1);
+  }
+  exitWith(ssh(`${DB_PSQL} -v ON_ERROR_STOP=1 -1`, { stdin: fs.openSync(file, 'r') }));
+}
+
+function release() {
+  requireClean();
+  const sha = git('rev-parse', 'HEAD');
+  if (!git('branch', '-r', '--contains', sha)) {
+    console.log(`note: ${sha.slice(0, 7)} is not pushed yet - deploying it anyway`);
+  }
+
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace('T', '-').slice(0, 15);
+  const id = `${stamp}-${sha.slice(0, 7)}`;
+  console.log(`deploying ${id} to ${HOST}`);
+
+  shipHead(`set -e; d=${APP}/releases/${id}; mkdir -p "$d"; tar -xzf - -C "$d"; cd "$d"; bash deploy/release.sh ${sha}`);
 }
