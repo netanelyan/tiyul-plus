@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "deploy": "node scripts/deploy.mjs",
     "lint": "eslint",
     "test": "node --experimental-strip-types --import ./scripts/alias-loader.mjs --test \"src/**/*.test.ts\"",
     "seo:dates": "node --experimental-strip-types --import ./scripts/alias-loader.mjs scripts/content-dates.mjs",

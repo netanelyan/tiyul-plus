@@ -3,7 +3,9 @@ import type { NextConfig } from 'next';
 /**
  * Security headers.
  *
- * HSTS is already set (by Vercel); these six were not. The one not to skip is
+ * HSTS is set by the proxy in front of the app - Caddy on the VPS
+ * (deploy/Caddyfile.tiyulplus); it was Vercel until 2026-11. These six are set
+ * here so they hold whichever proxy that is. The one not to skip is
  * x-frame-options: the site has a login flow, and without it any page can be
  * framed and clickjacked.
  *

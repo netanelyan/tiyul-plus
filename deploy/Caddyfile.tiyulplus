@@ -1,0 +1,39 @@
+# >>> tiyul+ website - installed by tiyul-plus/deploy/cutover.sh; edit it there, not here
+#
+# Not part of any other site in this file. The Next.js app is
+# tiyulplus-web.service on 127.0.0.1:4800 (repo tiyul-plus, deploy/). Moved off
+# Vercel on 2026-11-15.
+#
+# www is canonical and the apex only redirects - the same 308 Vercel sent, so
+# no URL that search engines already know changes meaning.
+tiyulplus.com {
+	header Strict-Transport-Security "max-age=63072000"
+	redir https://www.tiyulplus.com{uri} 308
+}
+
+www.tiyulplus.com {
+	# HSTS used to come from Vercel; next.config.ts sets every other security header.
+	header {
+		Strict-Transport-Security "max-age=63072000"
+		-Server
+	}
+
+	# No `encode` here: Next compresses its own responses, and a second
+	# compressor in front of /api/chat is one more place a stream can stall.
+	reverse_proxy 127.0.0.1:4800 {
+		# A deploy restarts the app; hold requests for up to 15s instead of
+		# answering 502 while it boots.
+		lb_try_duration 15s
+		lb_try_interval 250ms
+		# /api/chat streams the reply as text/event-stream. Never buffer it.
+		flush_interval -1
+	}
+
+	log {
+		output file /var/log/caddy/tiyulplus.log {
+			roll_size 20mb
+			roll_keep 5
+		}
+	}
+}
+# <<< tiyul+ website

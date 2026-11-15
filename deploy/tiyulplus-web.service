@@ -1,0 +1,44 @@
+# tiyul+ website: Next.js on 127.0.0.1:4800, reached only through Caddy (the
+# www.tiyulplus.com block in /etc/caddy/Caddyfile). Installed by
+# deploy/bootstrap.sh; releases are switched by deploy/release.sh.
+[Unit]
+Description=tiyul+ website (Next.js, behind Caddy)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=tiyulplus
+Group=tiyulplus
+WorkingDirectory=/opt/tiyulplus-web/current
+Environment=NODE_ENV=production
+Environment=NEXT_TELEMETRY_DISABLED=1
+Environment=HOME=/opt/tiyulplus-web/shared/home
+Environment=PATH=/opt/node24/bin:/usr/bin:/bin
+# 127.0.0.1, never 0.0.0.0. requestIp() trusts X-Forwarded-For, which is only
+# safe while every request comes through Caddy (Caddy replaces the header with
+# the real client address). An exposed port would let anyone pick their own IP
+# for the rate limits and the AI budget.
+ExecStart=/opt/node24/bin/node node_modules/next/dist/bin/next start -H 127.0.0.1 -p 4800
+Restart=always
+RestartSec=2
+TimeoutStopSec=20
+
+# A shared box: if this process balloons it is restarted, it does not push the
+# other services on it into the OOM killer.
+MemoryHigh=900M
+MemoryMax=1200M
+
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/opt/tiyulplus-web
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+
+[Install]
+WantedBy=multi-user.target

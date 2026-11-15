@@ -15,3 +15,9 @@ emails/subjects.json text eol=lf
 *.woff2 binary
 *.ttf   binary
 *.otf   binary
+
+# deploy/ runs on the Linux VPS. A CRLF line ending makes bash fail on the very
+# first line ("$'\r': command not found") and systemd misread a unit file, and
+# git's Windows default would write exactly that on checkout.
+*.sh       text eol=lf
+deploy/**  text eol=lf

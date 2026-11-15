@@ -1,0 +1,10 @@
+# Replaces the Vercel cron in vercel.json ("0,30 * * * *").
+[Unit]
+Description=tiyul+ - keep the catalog prompt cache warm, every half hour
+
+[Timer]
+OnCalendar=*-*-* *:00,30:00
+AccuracySec=30s
+
+[Install]
+WantedBy=timers.target

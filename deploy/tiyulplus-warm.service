@@ -1,0 +1,11 @@
+# One warm-up call. Whether it actually spends anything is decided by the
+# route itself (src/app/api/internal/warm/route.ts) - usually it does not.
+[Unit]
+Description=tiyul+ - one prompt-cache warm-up call
+After=tiyulplus-web.service
+
+[Service]
+Type=oneshot
+User=tiyulplus
+Group=tiyulplus
+ExecStart=/bin/bash /opt/tiyulplus-web/current/deploy/warm.sh
