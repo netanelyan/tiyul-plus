@@ -19,9 +19,11 @@ ROOT=/opt/tiyulplus-db
 WEB_ENV=/opt/tiyulplus-web/shared/env
 dc() { docker compose --project-directory "$ROOT" -f "$ROOT/compose.yml" "$@"; }
 local_psql() { dc exec -T db psql -U postgres -d postgres -v ON_ERROR_STOP=1 -qAt "$@"; }
-# SQL for the source goes on stdin; the URL rides in the environment of
-# `docker compose exec`, so it is in no process's argv on either side.
-src_run() { SRC=$SRC dc exec -T -e SRC db "$@"; }
+# The source is on the internet, which a container on a Docker network cannot
+# reach (see compose.yml), so it is read by a throwaway client in the host's
+# network. SQL for it goes on stdin, and the URL rides in the environment, so
+# it is in no process's argv.
+src_run() { SRC=$SRC docker run --rm -i --network host -e SRC postgres:17-bookworm "$@"; }
 src_sql() { src_run sh -c 'psql "$SRC" -v ON_ERROR_STOP=1 -qAt -F " "'; }
 
 read -r SRC || true

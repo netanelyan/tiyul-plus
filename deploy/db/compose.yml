@@ -9,8 +9,14 @@
 #
 # Installed by install.sh into /opt/tiyulplus-db, which holds the secrets
 # (.env), the data (pgdata/) and the backups. Only Caddy is reachable from
-# outside: both ports are bound to 127.0.0.1, and Postgres is not published
-# at all.
+# outside: every port here is bound to 127.0.0.1.
+#
+# The box's firewall drops all forwarded traffic, so a container on a Docker
+# network cannot open a connection to the internet - by design, and shared
+# with the other services here, so it is not loosened for this. The one part
+# that must reach out (Auth: Google's signing keys, Resend's SMTP) runs in the
+# host's network namespace instead, listening on 127.0.0.1 only, and reaches
+# Postgres and the templates through their 127.0.0.1 ports.
 name: tiyulplus-db
 
 services:
@@ -38,6 +44,8 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
       - ./init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - 127.0.0.1:4812:5432
     shm_size: 128mb
     mem_limit: 512m
     healthcheck:
@@ -75,12 +83,13 @@ services:
         condition: service_healthy
       templates:
         condition: service_started
+    network_mode: host
     environment:
-      GOTRUE_API_HOST: 0.0.0.0
-      GOTRUE_API_PORT: 9999
+      GOTRUE_API_HOST: 127.0.0.1
+      GOTRUE_API_PORT: 4811
       API_EXTERNAL_URL: https://db.tiyulplus.com/auth/v1
       GOTRUE_DB_DRIVER: postgres
-      GOTRUE_DB_DATABASE_URL: postgres://supabase_auth_admin:${AUTH_ADMIN_PASSWORD}@db:5432/postgres
+      GOTRUE_DB_DATABASE_URL: postgres://supabase_auth_admin:${AUTH_ADMIN_PASSWORD}@127.0.0.1:4812/postgres
 
       GOTRUE_SITE_URL: https://www.tiyulplus.com
       GOTRUE_URI_ALLOW_LIST: https://www.tiyulplus.com/**,https://tiyulplus.com/**
@@ -124,8 +133,8 @@ services:
       GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE: /auth/v1/verify
       # A first sign-in sends the confirmation mail, every later one the magic
       # link; both carry the same code, so both get the same template.
-      GOTRUE_MAILER_TEMPLATES_MAGIC_LINK: http://templates:8080/auth-magic-link.html
-      GOTRUE_MAILER_TEMPLATES_CONFIRMATION: http://templates:8080/auth-magic-link.html
+      GOTRUE_MAILER_TEMPLATES_MAGIC_LINK: http://127.0.0.1:4813/auth-magic-link.html
+      GOTRUE_MAILER_TEMPLATES_CONFIRMATION: http://127.0.0.1:4813/auth-magic-link.html
       GOTRUE_MAILER_SUBJECTS_MAGIC_LINK: "קוד ההתחברות: {{ .Token }}"
       GOTRUE_MAILER_SUBJECTS_CONFIRMATION: "קוד ההתחברות: {{ .Token }}"
 
@@ -136,8 +145,6 @@ services:
       # fails unless it is allowed.
       GOTRUE_CORS_ALLOWED_HEADERS: apikey
       GOTRUE_LOG_LEVEL: info
-    ports:
-      - 127.0.0.1:4811:9999
     mem_limit: 128m
 
   # Auth fetches its email templates over HTTP; this serves the one file.
@@ -147,4 +154,6 @@ services:
     command: [httpd, -f, -p, "8080", -h, /www]
     volumes:
       - ./templates:/www:ro
+    ports:
+      - 127.0.0.1:4813:8080
     mem_limit: 16m
