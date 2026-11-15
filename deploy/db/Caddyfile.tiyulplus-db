@@ -32,6 +32,8 @@ db.tiyulplus.com {
 		output file /var/log/caddy/tiyulplus-db.log {
 			roll_size 20mb
 			roll_keep 5
+			# The privacy page promises 14 days for access logs (they hold IPs).
+			roll_keep_for 336h
 		}
 	}
 }
