@@ -17,6 +17,7 @@ import { formatRange, tripCost, type CostCity } from '@/lib/trip/cost';
 import type { PublicDay } from '@/lib/trip/publicTrip';
 import type { Destination, Place } from '@/lib/types';
 import EmbedSnippet from '@/components/EmbedSnippet';
+import { canonical } from '@/lib/seo/site';
 
 /**
  * The reader's view of a published trip.
@@ -88,6 +89,17 @@ export default function PublicTripView({
     [days, costCities],
   );
 
+  /*
+    The page people reach from a forward, so it is also the one most worth
+    forwarding again. The UTM is what lets a visit that came from a WhatsApp chat
+    be counted as one - a chat sends no referrer, so without it that traffic is
+    indistinguishable from someone typing the address. The canonical tag keeps
+    the tagged URL from counting as a second page.
+  */
+  const whatsAppHref = `https://wa.me/?text=${encodeURIComponent(
+    `${title}, בטיול+ 🧳\n${canonical(`/trips/${slug}`)}?utm_source=whatsapp&utm_medium=share&utm_campaign=public_trip`,
+  )}`;
+
   /** Copy this itinerary into the visitor's own planner, as a new editable trip. */
   function duplicate() {
     track('share_duplicate', { surface: 'public_trip' });
@@ -132,6 +144,15 @@ export default function PublicTripView({
           >
             {copied ? '✓ נשמר אצלכם, רגע…' : 'שכפלו את הטיול הזה ושנו אותו'}
           </button>
+          <a
+            href={whatsAppHref}
+            target="_blank"
+            rel="noopener"
+            onClick={() => track('share_whatsapp', { surface: 'public_trip' })}
+            className="rounded-xl bg-night/5 px-5 py-3 font-bold text-night ring-1 ring-night/15 transition hover:bg-night/10"
+          >
+            שלחו בוואטסאפ
+          </a>
           <span className="text-xs font-medium text-night/65">
             נפתח אצלכם כטיול חדש שאפשר לערוך. המסלול המקורי לא משתנה.
           </span>

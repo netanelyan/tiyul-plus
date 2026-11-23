@@ -303,7 +303,7 @@ export default function DestinationGuide({
           can see. One function, so they cannot. */}
       {faq.length >= 2 && (
         <div className="mt-10">
-          <SectionHeading icon="❓">שאלות נפוצות על {toCity}</SectionHeading>
+          <SectionHeading icon="❓">שאלות נפוצות על {dest.name}</SectionHeading>
           <dl className="mt-4 space-y-4">
             {faq.map((qa) => (
               <div key={qa.question} className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
