@@ -75,8 +75,11 @@ function requireClean() {
   }
 }
 
-/** git archive of HEAD, piped into a remote command that reads it on stdin. */
-function shipHead(remoteCmd, paths = []) {
+/**
+ * git archive of HEAD, piped into a remote command that reads it on stdin.
+ * `afterSuccess` runs only when the remote command exits 0, before this exits.
+ */
+function shipHead(remoteCmd, paths = [], afterSuccess = null) {
   // autocrlf=false: with the Windows default, git archive hands the server CRLF
   // shell scripts, and bash fails on the first line.
   const archive = spawn('git', ['-c', 'core.autocrlf=false', 'archive', '--format=tar.gz', 'HEAD', ...paths], {
@@ -91,7 +94,11 @@ function shipHead(remoteCmd, paths = []) {
       process.exit(1);
     }
   });
-  exitWith(remote);
+  if (!afterSuccess) return exitWith(remote);
+  remote.on('exit', (code) => {
+    if (code !== 0) process.exit(code ?? 1);
+    afterSuccess();
+  });
 }
 
 function db() {
@@ -126,5 +133,10 @@ function release() {
   const id = `${stamp}-${sha.slice(0, 7)}`;
   console.log(`deploying ${id} to ${HOST}`);
 
-  shipHead(`set -e; d=${APP}/releases/${id}; mkdir -p "$d"; tar -xzf - -C "$d"; cd "$d"; bash deploy/release.sh ${sha}`);
+  shipHead(`set -e; d=${APP}/releases/${id}; mkdir -p "$d"; tar -xzf - -C "$d"; cd "$d"; bash deploy/release.sh ${sha}`, [], () => {
+    // Pages that are new or changed in this release, to Bing and the other
+    // IndexNow engines. It never fails the deploy - the release is already live.
+    spawnSync(process.execPath, ['scripts/indexnow.mjs'], { stdio: 'inherit' });
+    process.exit(0);
+  });
 }

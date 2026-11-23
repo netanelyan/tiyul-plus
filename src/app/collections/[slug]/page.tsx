@@ -6,7 +6,9 @@ import CardPhoto from '@/components/CardPhoto';
 import { canonical, metaDescription } from '@/lib/seo/site';
 import { breadcrumbLd, collectionLd } from '@/lib/seo/jsonLd';
 import JsonLd from '@/components/seo/JsonLd';
-import { HUBS, hubBySlug, hubMembers } from '@/lib/seo/hubs';
+import { HUBS, PESACH, hubBySlug, hubMembers } from '@/lib/seo/hubs';
+import { heDateRange, heDayMonth, heWeekday } from '@/lib/seo/pesach';
+import { isDomestic, travelFactTitle } from '@/lib/domestic';
 import { promotedMembers } from '@/lib/seo/hubData';
 import { daysHe } from '@/lib/duration';
 
@@ -81,6 +83,8 @@ export default async function CollectionPage({
       <p className="mt-3 max-w-2xl leading-relaxed text-night/75">{hub.intro}</p>
       <p className="mt-2 text-sm text-night/70">{members.length} יעדים באוסף הזה.</p>
 
+      {hub.slug === 'pesach' && PESACH && <PesachDates />}
+
       <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {members.map(({ card, dest }) => (
           <li key={card.slug}>
@@ -101,11 +105,36 @@ export default async function CollectionPage({
                 <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-night/75">
                   {dest.tagline}
                 </p>
+                {/*
+                  How far it is, which is the first thing an Israeli asks about
+                  any destination. Abroad the text itself opens with the flight,
+                  so it carries no label; a domestic member gets travelFactTitle's,
+                  so it never reads as a flight.
+                */}
+                <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-night/65">
+                  {isDomestic(dest) && <span className="font-semibold">{travelFactTitle(dest, '')} · </span>}
+                  {dest.practical.flights}
+                </p>
               </div>
             </Link>
           </li>
         ))}
       </ul>
+
+      {hub.slug === 'pesach' && PESACH && (
+        <div className="mt-8 rounded-2xl bg-night px-6 py-6 text-center">
+          <p className="font-bold text-cream">יודעים כבר מי נוסע ולכמה ימים?</p>
+          <p className="mx-auto mt-1 max-w-md text-sm leading-relaxed text-cream/70">
+            ספרו לסוכן, והוא בונה מסלול לחופשת הפסח על מפה, עם המקומות הכשרים שיש לנו בקטלוג.
+          </p>
+          <Link
+            href={`/chat?q=${encodeURIComponent(pesachQuestion())}`}
+            className="mt-4 inline-block rounded-xl bg-sunset px-6 py-3 font-bold text-cream transition hover:bg-sunset-deep"
+          >
+            מתכננים את פסח {PESACH.year}
+          </Link>
+        </div>
+      )}
 
       {/*
         Sibling hubs. This is what turns twelve isolated lists into a browsable
@@ -128,5 +157,72 @@ export default async function CollectionPage({
         </ul>
       </div>
     </div>
+  );
+}
+
+/** The opening line handed to the agent from the Pesach hub. */
+function pesachQuestion(): string {
+  if (!PESACH) return '';
+  const range = PESACH.schoolBreak
+    ? ` (${heDateRange(PESACH.schoolBreak.from, PESACH.schoolBreak.to)})`
+    : '';
+  return `אנחנו מתכננים טיול בחופשת פסח ${PESACH.year}${range}. איזה יעד מתאים לנו?`;
+}
+
+/** Two dates as "<day> and <day> <month>", or both in full across a month boundary. */
+function twoDays(a: string, b: string): string {
+  return a.slice(0, 7) === b.slice(0, 7)
+    ? `${Number(a.slice(8, 10))} ו-${heDayMonth(b)}`
+    : `${heDayMonth(a)} ו-${heDayMonth(b)}`;
+}
+
+/**
+ * The dates a family plans Passover around. The festival is computed
+ * (lib/seo/pesach.ts); the school break is the ministry's and is shown only for
+ * a year that has been copied in and checked.
+ */
+function PesachDates() {
+  if (!PESACH) return null;
+  const p = PESACH;
+  return (
+    <section className="mt-6 rounded-2xl bg-shell p-5 ring-1 ring-night/10">
+      <h2 className="font-bold text-night">התאריכים של פסח {p.year}</h2>
+      <dl className="mt-3 grid gap-4 text-sm sm:grid-cols-3">
+        <div>
+          <dt className="font-semibold text-night">ליל הסדר</dt>
+          <dd className="mt-1 leading-relaxed text-night/75">
+            {heWeekday(p.seder)}, {heDayMonth(p.seder)} בערב
+          </dd>
+        </div>
+        <div>
+          <dt className="font-semibold text-night">החג</dt>
+          <dd className="mt-1 leading-relaxed text-night/75">
+            {heDateRange(p.firstDay, p.seventhDay)}
+            {p.secondDayAbroad && p.lastDayAbroad && (
+              <>
+                . בחו״ל שומרים גם יום שני של חג בתחילתו ובסופו ({twoDays(p.secondDayAbroad, p.lastDayAbroad)}),
+                וישראלים שנמצאים שם נוהגים בזה בצורות שונות
+              </>
+            )}
+          </dd>
+        </div>
+        {p.schoolBreak && (
+          <div>
+            <dt className="font-semibold text-night">חופשת בתי הספר</dt>
+            <dd className="mt-1 leading-relaxed text-night/75">
+              {heDateRange(p.schoolBreak.from, p.schoolBreak.to)}, וחוזרים ללימודים ב-
+              {heDayMonth(p.schoolBreak.back)}, לפי{' '}
+              <a href={p.schoolBreak.source} className="underline hover:text-night" rel="noopener" target="_blank">
+                לוח החופשות של משרד החינוך
+              </a>
+            </dd>
+          </div>
+        )}
+      </dl>
+      <p className="mt-4 text-sm leading-relaxed text-night/75">
+        מסעדות כשרות בחו״ל נוטות לסגור בפסח או לעבור לתפריט כשר לפסח, ובהרבה ערים בית חב״ד עורך
+        סדר פתוח לציבור. זה משתנה משנה לשנה, אז כדאי לוודא מול המקום לפני שסוגרים טיסה.
+      </p>
+    </section>
   );
 }

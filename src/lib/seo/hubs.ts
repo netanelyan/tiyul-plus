@@ -45,6 +45,8 @@
 import type { DestinationCard } from '@/lib/destinationFacets';
 import type { Destination } from '@/lib/types';
 import { MIN_FAMILY_PLACES, familyPlaces } from './guide';
+import { heDateRange, heDayMonth, heWeekday, upcomingPesach } from './pesach';
+import { hePrefix } from '@/lib/hebrew';
 
 /** Below this a hub is not worth a page - see `assertHubsAreViable`. */
 export const MIN_HUB_MEMBERS = 4;
@@ -81,12 +83,29 @@ const WINTER_MONTHS = [12, 1, 2];
   trade. If the count dips below the floor the hubs test fails and names it.
 */
 
+/*
+  The coming Passover, computed when this module loads - at build time for the
+  static hub pages - so the first deploy after the seventh day moves the hub to
+  the next year. The year is in the title because that is how it is searched.
+*/
+export const PESACH = upcomingPesach(new Date().toISOString().slice(0, 10));
+
+function pesachIntro(): string {
+  const season =
+    'ביעדים האלה מרץ ואפריל הם מהזמנים הכי טובים לבקר, כך שמזג האוויר עובד לטובתכם בדיוק בחופשה.';
+  if (!PESACH) return season;
+  const seder = `ליל הסדר יוצא ${hePrefix('ב', heWeekday(PESACH.seder))}, ${heDayMonth(PESACH.seder)}`;
+  const school = PESACH.schoolBreak
+    ? `, וחופשת הפסח בבתי הספר היא ${heDateRange(PESACH.schoolBreak.from, PESACH.schoolBreak.to)}`
+    : '';
+  return `${seder}${school}. ${season}`;
+}
+
 export const HUBS: Hub[] = [
   {
     slug: 'pesach',
-    title: 'יעדים לחופשת פסח',
-    intro:
-      'יעדים שמרץ ואפריל הם הזמן הכי טוב לבקר בהם. מזג האוויר עובד לטובתכם בדיוק בחופשת האביב הגדולה.',
+    title: PESACH ? `יעדים לחופשת פסח ${PESACH.year} בחו״ל` : 'יעדים לחופשת פסח',
+    intro: pesachIntro(),
     emoji: '🌷',
     match: (c) => c.months.some((m) => PESACH_MONTHS.includes(m)),
   },
