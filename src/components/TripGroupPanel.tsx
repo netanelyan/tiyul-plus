@@ -5,7 +5,6 @@ import { useAuth } from '@/lib/auth/AuthContext';
 import { authHeader } from '@/lib/auth/client';
 import { requestLogin, takePendingLogin } from '@/components/LoginGate';
 import PanelSection from '@/components/PanelSection';
-import { openPaidTools } from '@/components/PaidTools';
 import GroupComments from '@/components/group/GroupComments';
 import GroupDates from '@/components/group/GroupDates';
 import GroupRsvp from '@/components/group/GroupRsvp';
@@ -15,10 +14,10 @@ import { useTrip } from '@/lib/trip/TripContext';
 import { todayISO } from '@/lib/trip/dates';
 import type { Destination } from '@/lib/types';
 import type { Trip } from '@/lib/trip/types';
-import { planAtLeast } from '@/lib/plans';
 
 /**
- * The organizer's side of a group trip: the invitation link (premium), and then
+ * The organizer's side of a group trip: the invitation link (free for any
+ * signed-in traveller since 2026-11-24), and then
  * everything the group did with it - who is coming, which days work, what they
  * suggested, what they said and how they voted.
  *
@@ -44,8 +43,6 @@ export default function TripGroupPanel({
   const [error, setError] = useState<string | null>(null);
   const [newDay, setNewDay] = useState('');
 
-  // Ordinal: every paid plan gets the paid tools, not only the one named 'premium'
-  const isPremium = planAtLeast(auth.profile?.plan ?? 'free', 'premium');
   const group = useGroup({ tripId: trip.id }, open && !!auth.user);
   const myId = auth.user?.id ?? null;
 
@@ -67,9 +64,6 @@ export default function TripGroupPanel({
     const t = setTimeout(() => {
       resumeRef.current = false;
       setOpen(true);
-      // This panel lives inside the collapsed paid section - opening it without
-      // opening the section around it reopens into something nobody can see.
-      openPaidTools();
     }, 0);
     return () => clearTimeout(t);
   }, [auth.user]);
@@ -92,8 +86,6 @@ export default function TripGroupPanel({
       if (data?.code) {
         setInviteUrl(`${window.location.origin}/join/${data.code}`);
         void group.reload();
-      } else if (data?.error === 'premium-required') {
-        setError('הזמנת חברים לטיול היא פיצ׳ר מנוי.');
       } else if (data?.error === 'trip-not-found') {
         setError('הטיול צריך להיות שמור בחשבון קודם (מתחברים והוא נשמר לבד).');
       } else {
@@ -165,13 +157,10 @@ export default function TripGroupPanel({
       meta="תכנון עם חברים"
       ariaLabel="טיול משותף. חברים מצטרפים בקישור, מצביעים, מגיבים ומציעים מקומות"
       /*
-        The badge carries only real state now - new suggestions, or how many
-        friends joined. It used to fall back to a "premium star" chip, which was
-        the panel announcing its price from inside the free stack it was sitting
-        in. It lives in the paid section now (see PaidTools), and that section
-        says once, at the top, that these cost money - so repeating it on the bar
-        is noise, and a lock badge on a screen full of working tools is exactly
-        what made premium feel bolted on top of the free product.
+        The badge carries only real state - new suggestions, or how many friends
+        joined. It used to fall back to a "premium star" chip; the panel is free
+        and back in the free stack since 2026-11-24, so there is no price to
+        announce at all.
       */
       badge={
         pending.length > 0 ? (
@@ -216,29 +205,13 @@ export default function TripGroupPanel({
           </div>
         )}
 
-        {auth.user && !isPremium && (
-          <>
-            <p className="text-sm font-semibold leading-relaxed text-night/75">
-              מתכננים עם עוד אנשים? שולחים קישור אחד, והם רואים את הטיול חי: מצביעים 👍/👎
-              על כל עצירה, כותבים למה, מציעים מקומות משלהם, מסמנים אילו תאריכים מתאימים
-              להם ואם הם מגיעים. הכול במקום אחד, במקום צילומי מסך בוואטסאפ.
-            </p>
-            <a
-              href="/premium"
-              className="mt-3 inline-block rounded-xl bg-sunset px-4 py-2 text-sm font-bold text-cream transition hover:bg-sunset-deep"
-            >
-              זמין במנוי הפרימיום ←
-            </a>
-          </>
-        )}
-
-        {auth.user && isPremium && (
+        {auth.user && (
           <div className="space-y-4">
             {!url ? (
               <>
                 <p className="text-sm font-semibold leading-relaxed text-night/75">
                   קישור אחד למשפחה או לחברים: הם רואים את הטיול (גם אחרי שתערכו אותו),
-                  מצביעים, מגיבים, מציעים מקומות ומסמנים תאריכים. ההצטרפות אצלם בחינם.
+                  מצביעים, מגיבים, מציעים מקומות ומסמנים תאריכים. בחינם, גם לכם וגם להם.
                 </p>
                 <button
                   onClick={() => void makeInvite()}

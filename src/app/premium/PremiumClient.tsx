@@ -14,7 +14,7 @@ import {
   planAtLeast,
   type PaidPlan,
 } from '@/lib/plans';
-import { PRICE_ILS, priceLabel } from '@/lib/predeparture';
+import { priceLabel } from '@/lib/predeparture';
 import { TRIP_PASS_DAYS, TRIP_PASS_PRICE_ILS } from '@/lib/tripPass';
 import InView from '@/components/InView';
 import AgentEnquiryForm from './AgentEnquiryForm';
@@ -302,7 +302,7 @@ export default function PremiumClient() {
             <span className="text-sm font-semibold text-cream/60"> / לטיול</span>
           </p>
           <p className="mt-2 text-sm leading-relaxed text-cream/75">
-            כל מה שבחינם, ועוד הדבר האחד שאי אפשר לעשות לבד: לתכנן את הטיול עם כל מי שנוסע איתכם.
+            כל מה שבחינם, ועוד הבדיקה לפני הנסיעה וסוכן שזמין לכם גם כשהאתר עמוס.
             תשלום <b className="text-cream">חד-פעמי</b> לטיול אחד, פעיל {TRIP_PASS_DAYS} יום -{' '}
             <b className="text-cream">בלי מנוי ובלי חיוב חוזר</b>.
           </p>
@@ -317,8 +317,8 @@ export default function PremiumClient() {
             <li className="flex items-start gap-2">
               <span className="mt-0.5 text-zest">✓</span>
               <span>
-                <b className="text-cream">טיול משותף</b>: קישור אחד, וכולם מצביעים, מגיבים, מציעים
-                מקומות ומסמנים תאריכים. לחברים זה חינם לגמרי.
+                <b className="text-cream">מכסות יומיות גבוהות בהרבה</b>, כדי לבנות טיול מלא ולערוך
+                אותו כמה שבא לכם.
               </span>
             </li>
             <li className="flex items-start gap-2">
@@ -373,7 +373,7 @@ export default function PremiumClient() {
               'המפה, קטלוג היעדים ושכבת הכשרות',
               'קישור שיתוף לצפייה, הדפסה ו-PDF',
               'ניווט לכל יום, וייבוא מפה מ-Google My Maps',
-              'להצטרף לטיול משותף של מישהו אחר, להצביע ולהציע',
+              'טיול משותף: קישור לחברים, הצבעות, תגובות ותאריכים',
             ].map((t) => (
               <li key={t} className="flex items-start gap-2">
                 <span className="mt-0.5 text-night/65">•</span>
@@ -419,7 +419,7 @@ export default function PremiumClient() {
             </li>
             <li className="flex items-start gap-2">
               <span className="mt-0.5 text-sunset-deep">✓</span>
-              <span>הטיול המשותף והבדיקה לפני הנסיעה כלולים בכל טיול</span>
+              <span>הבדיקה לפני הנסיעה כלולה בכל טיול</span>
             </li>
           </ul>
           {/* A quiet line, not a box - the last nested card in this grid, and the
@@ -527,16 +527,15 @@ export default function PremiumClient() {
             <span className="mt-0.5 text-night/65">•</span>
             <span>
               <b className="text-night">רוצים רק את הבדיקה:</b> קנו בדיקה, {priceLabel()} לטיול,
-              וזה הכול. הכרטיס שווה את ההפרש רק אם אתם גם מתכננים עם עוד אנשים.
+              וזה הכול. הכרטיס שווה את ההפרש רק אם אתם צריכים גם מכסות גבוהות וסוכן שלא תלוי
+              בעומס.
             </span>
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-0.5 text-night/65">•</span>
             <span>
-              <b className="text-night">מתכננים עם עוד אנשים:</b> כרטיס אחד ל
-              {ils(TRIP_PASS_PRICE_ILS)} ₪ לטיול. ההפרש מבדיקה בודדת הוא{' '}
-              {ils(TRIP_PASS_PRICE_ILS - PRICE_ILS)} ₪, ובתוכו הטיול המשותף וכל השאר.{' '}
-              <b className="text-night">לחברים שמצטרפים זה חינם לגמרי</b>, תמיד.
+              <b className="text-night">מתכננים עם עוד אנשים:</b> על זה לא משלמים. הטיול המשותף
+              חינמי, <b className="text-night">גם למי שפותח את הקישור וגם לחברים שמצטרפים</b>.
             </span>
           </li>
           <li className="flex items-start gap-2">
@@ -691,9 +690,9 @@ export default function PremiumClient() {
             </summary>
             <p className="mt-2 text-sm leading-relaxed text-night/65">
               כמעט הכול: שיחה עם הסוכן, בניית מסלול, עריכה, המפה, קטלוג היעדים ושכבת הכשרות, קישור
-              שיתוף לצפייה, הדפסה ו-PDF, וניווט לכל יום. גם להצטרף לטיול משותף של מישהו אחר,
-              להצביע, להגיב ולהציע מקומות, הכול חינם. בתשלום: יצירת הטיול המשותף, והבדיקה לפני
-              הנסיעה.
+              שיתוף לצפייה, הדפסה ו-PDF, ניווט לכל יום, וטיול משותף עם חברים: לפתוח קישור, להצביע,
+              להגיב ולהציע מקומות. בתשלום רק הבדיקה לפני הנסיעה, ומכסות גבוהות עם סוכן שלא תלוי
+              בעומס למי שצריך אותן.
             </p>
           </details>
           <details className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">
@@ -701,8 +700,8 @@ export default function PremiumClient() {
               מה ההבדל האמיתי בין כרטיס טיול לפרו?
             </summary>
             <p className="mt-2 text-sm leading-relaxed text-night/65">
-              כרטיס טיול הוא תשלום חד-פעמי לטיול אחד, וכולל את הטיול המשותף ואת הבדיקה לפני
-              הנסיעה. פרו הוא מנוי חודשי, ובתוכו מקום לתכנן עד {PRO_TRIPS_PER_MONTH} טיולים
+              כרטיס טיול הוא תשלום חד-פעמי לטיול אחד, וכולל את הבדיקה לפני הנסיעה, מכסות גבוהות
+              וסוכן שלא תלוי בעומס. פרו הוא מנוי חודשי, ובתוכו מקום לתכנן עד {PRO_TRIPS_PER_MONTH} טיולים
               מלאים בחודש ומכסות יומיות גבוהות. אם אתם מתכננים טיול או שניים בשנה, כרטיס לכל
               טיול יוצא לכם זול יותר. אנחנו מעדיפים לומר את זה כאן מאשר שתגלו אחרי חודש.
             </p>
@@ -712,7 +711,7 @@ export default function PremiumClient() {
               החברים שלי צריכים לשלם או להירשם?
             </summary>
             <p className="mt-2 text-sm leading-relaxed text-night/65">
-              לא לשלם. הם כן מתחברים עם המייל שלהם (קוד חד-פעמי, בלי סיסמה), רק כדי שנדע מי הצביע
+              לא לשלם, וגם אתם לא. הם כן מתחברים עם המייל שלהם (קוד חד-פעמי, בלי סיסמה), רק כדי שנדע מי הצביע
               מה, ושכל אחד יצביע פעם אחת.
             </p>
           </details>
@@ -722,7 +721,7 @@ export default function PremiumClient() {
             </summary>
             <p className="mt-2 text-sm leading-relaxed text-night/65">
               כלום. הטיולים נשארים, ממשיכים להיערך ולהישלח כרגיל, והחשבון חוזר לתוכנית החינמית. מה
-              שנסגר הוא יצירת טיול משותף חדש והבדיקה הכלולה.
+              שנסגר הוא הבדיקה הכלולה והמכסות הגבוהות.
             </p>
           </details>
           <details className="rounded-2xl bg-shell p-4 ring-1 ring-night/10">

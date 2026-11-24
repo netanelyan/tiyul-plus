@@ -1,30 +1,26 @@
 import Link from 'next/link';
 import CardPhoto from '@/components/CardPhoto';
-import { ils } from '@/lib/plans';
-import { TRIP_PASS_PRICE_ILS } from '@/lib/tripPass';
 
 /**
- * Section 5 - the feature block for the shared trip, the star of the trip pass
- * (2026-08-17 (e); re-pointed from the monthly subscription 2026-10-03).
+ * Section 5 - the feature block for the shared trip (2026-08-17 (e)).
  *
- * **The price here is the pass, per trip - not a month of premium.** This block
- * went on quoting `PREMIUM_PRICE_ILS` for six days after that plan was retired,
- * so the homepage advertised the shared trip at ₪19.90/month while /premium sold
- * it inside a ₪49 one-off pass. It also printed the constant raw, which is the
- * drift `ils()` exists to prevent: "19.9 ₪" here against "19.90 ₪" everywhere
- * else. Both are why the figure now comes from `TRIP_PASS_PRICE_ILS` through
- * `ils` - the same two symbols /premium computes its own cards from.
+ * **Free since 2026-11-24, for the organiser too.** It was sold inside the ₪49
+ * trip pass, and this block carried that price. The revenue is meant to come
+ * from affiliate booking links, and a group trip is how one traveller brings
+ * four more to the site, so charging the person who sends the invite worked
+ * against both. The button goes to planning, not to /premium.
  *
  * The shape is a storefront's product feature: a big visual on one side, a
- * short pitch and a price on the other. The visual is a mock of the real
+ * short pitch on the other. The visual is a mock of the real
  * screen - three stops with thumbs-up counts and a comment - drawn in CSS on
  * top of a verified destination photo. **It is an illustration of the UI, not
  * a screenshot of a real group**, and the names on it are not real people.
  * That is why it carries no avatars and no faces.
  *
- * The one factual line - "friends pay nothing" - is the sentence that removes
+ * The one factual line - "nobody pays for this" - is the sentence that removes
  * the objection that kills this feature at the moment somebody considers it,
- * and it is true by construction: joining is gated on login, never on plan.
+ * and it is true by construction: inviting and joining are gated on login,
+ * never on plan (see the invite action in api/group/route.ts).
  */
 export default function SharedTripFeature({ photo }: { photo?: string }) {
   return (
@@ -76,7 +72,7 @@ export default function SharedTripFeature({ photo }: { photo?: string }) {
         {/* The pitch */}
         <div className="p-6 sm:p-8 lg:p-10">
           <span className="badge rounded-full bg-sunset/12 px-3 py-1 text-xs font-extrabold text-sunset-deep">
-            הכוכב של כרטיס הטיול
+            בחינם לכולם
           </span>
           <h2 className="display mt-3 text-3xl text-night sm:text-4xl">טיול משותף</h2>
           <p className="mt-3 text-base leading-relaxed text-night/75 sm:text-lg">
@@ -91,21 +87,14 @@ export default function SharedTripFeature({ photo }: { photo?: string }) {
             <li>📅 סקר תאריכים ומי מגיע</li>
           </ul>
           <p className="mt-5 text-sm font-bold text-night">
-            החברים לא משלמים כלום. משלם רק מי שפותח את הקישור, {ils(TRIP_PASS_PRICE_ILS)} ₪ לטיול
-            אחד - תשלום חד-פעמי, בלי מנוי ובלי חיוב חוזר.
+            לא משלמים על זה, לא מי שפותח את הקישור ולא החברים שמצטרפים.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <Link
-              href="/premium"
+              href="/chat"
               className="inline-flex items-center justify-center rounded-xl bg-sunset px-5 py-3 text-sm font-extrabold text-cream transition hover:bg-sunset-deep"
             >
-              איך זה עובד
-            </Link>
-            <Link
-              href="/chat"
-              className="inline-flex items-center justify-center rounded-xl bg-shell px-5 py-3 text-sm font-bold text-night ring-1 ring-night/15 transition hover:ring-night/35"
-            >
-              קודם בונים טיול
+              בונים טיול ומזמינים חברים
             </Link>
           </div>
         </div>

@@ -1262,11 +1262,14 @@ export default function TripWorkspace({
       {/*
         ---------- The paid section: first, and collapsed ----------
 
-        The two things that cost money - the shared trip and the pre-departure
-        check - used to sit at positions three and four of the free stack, so a
-        traveller scrolling their own plan met a locked panel halfway down. They
-        went to the bottom first, which fixed that and buried them; a collapsed
-        bar at the top is the placement that is neither.
+        The things that cost money used to sit at positions three and four of the
+        free stack, so a traveller scrolling their own plan met a locked panel
+        halfway down. They went to the bottom first, which fixed that and buried
+        them; a collapsed bar at the top is the placement that is neither.
+
+        The shared trip was the other paid panel here until 2026-11-24, when
+        group invites became free. It sits in the free stack now, above the
+        booking layer.
 
         Collapsed is the part that makes the top position fair: one bar costs one
         row, so nothing free is pushed down by it. See PaidTools for why the
@@ -1280,7 +1283,6 @@ export default function TripWorkspace({
       */}
       {t && t.days.length > 0 && (
         <PaidTools tripId={t.id}>
-          <TripGroupPanel trip={t} destOf={destOf} />
           <PreDepartureCheck trip={t} offline={offline} />
         </PaidTools>
       )}
@@ -1303,6 +1305,13 @@ export default function TripWorkspace({
         component.
       */}
       {t && t.days.length > 0 && <ShabbatKosherPanel trip={t} destOf={destOf} />}
+
+      {/*
+        ---------- Planning together ----------
+        Free since 2026-11-24 (it was inside PaidTools before). A collapsed bar,
+        like the panels around it, so it costs the plan one row until opened.
+      */}
+      {t && t.days.length > 0 && <TripGroupPanel trip={t} destOf={destOf} />}
 
       {/* ---------- The booking layer: what the trip is still missing ---------- */}
       {t && t.days.length > 0 && (

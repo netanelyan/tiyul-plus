@@ -128,7 +128,7 @@ export default function PaidTools({
           on the narrow width, not judged on the wide one.
         */}
         <span data-paid-sub className="min-w-0 flex-1 truncate text-xs font-medium text-cream/55">
-          {isPremium ? 'כלולים במנוי שלכם' : 'לתכנן ביחד ולצאת רגועים'}
+          {isPremium ? 'כלולים במנוי שלכם' : 'בדיקה לפני הנסיעה ועוד'}
         </span>
         <span aria-hidden className={`text-xs text-cream/70 transition ${open ? 'rotate-180' : ''}`}>
           ▾

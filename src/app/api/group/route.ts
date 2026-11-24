@@ -31,7 +31,6 @@ import {
   type RsvpStatus,
 } from '@/lib/server/groupPlanning';
 import { notifyOrganiser } from '@/lib/server/groupNotify';
-import { planAtLeast } from '@/lib/plans';
 
 /**
  * Shared trip. **The organizer is premium; joining, voting, commenting,
@@ -133,9 +132,14 @@ export async function POST(request: Request) {
   const str = (v: unknown, max: number) => (typeof v === 'string' ? v.slice(0, max) : '');
 
   if (action === 'invite') {
-    if (!planAtLeast(caller.plan, 'premium')) {
-      return NextResponse.json({ error: 'premium-required' }, { status: 403 });
-    }
+    /*
+      Free for every signed-in traveller since 2026-11-24. It used to need the
+      trip pass, but a family planning one trip together is the ordinary case the
+      free product is for, and every invite brings new people to the site. The
+      money is meant to come from the booking links those people click, not from
+      charging the organiser for asking them. Sign-in stays: the invite points at
+      a trip saved in the organiser's account.
+    */
     const tripId = str(body.tripId, 100).trim();
     if (!tripId) return NextResponse.json({ error: 'bad-request' }, { status: 400 });
     const invite = await createInvite(caller.userId, tripId);

@@ -589,12 +589,12 @@ export const SUBSCRIBER_MONTHLY_CAP_USD = SUBSCRIBER_CAP_USD.premium;
  * daily window, and it is what stopped the columns being comparable the
  * last time they did not - see `periodMsFor`.
  *
- * The first two rows (the check, the shared trip) and the availability
- * row are not quotas - they are **the features** premium gives in the
- * first place: the check included, the shared trip (joining and voting
- * free for everyone - deliberately, that is the distribution channel),
- * and the agent on a personal lane that does not depend on the site's
- * shared daily load (see budget.ts).
+ * The first row (the check) and the availability row are not quotas - they
+ * are **the features** a paid plan gives in the first place: the check
+ * included, and the agent on a personal lane that does not depend on the
+ * site's shared daily load (see budget.ts). The shared trip used to be one of
+ * them; since 2026-11-24 it is free for everyone, organiser included, because
+ * it is the distribution channel and the revenue is meant to be affiliate.
  *
  * A third feature row, the trip story, was removed on 2026-08-17 when
  * that feature was retired - see the session log for why.
@@ -606,15 +606,11 @@ export const PLAN_FEATURE_ROWS: { label: string; free: string; premium: string; 
     premium: 'כלולה, בלי הגבלה',
     pro: 'כלולה, בלי הגבלה',
   },
-  {
-    // Named by what it does, not by what it is called: "shared trip" alone means
-    // nothing to somebody who has not seen it, and the four verbs are the reason
-    // to pay.
-    label: 'טיול משותף: הצבעות, תגובות, הצעות מקומות ותאריכים',
-    free: 'הצטרפות והשתתפות מלאה, בחינם',
-    premium: 'יצירת קישור הזמנה לחברים',
-    pro: 'יצירת קישור הזמנה לחברים',
-  },
+  /*
+    The shared-trip row is gone (2026-11-24): creating a group invite became free,
+    so the row no longer told the tiers apart. The free card and the FAQ on
+    /premium say it in words instead.
+  */
   {
     label: 'זמינות הסוכן החכם',
     free: 'משותפת, תלויה בעומס היומי באתר',

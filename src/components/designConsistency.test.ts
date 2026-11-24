@@ -158,7 +158,7 @@ test('מה שעולה כסף יושב רק בתוך האזור בתשלום', ()
   const close = src.indexOf('</PaidTools>');
   assert.ok(open !== -1 && close > open, 'PaidTools לא מרונדר ב-TripWorkspace');
 
-  for (const paid of ['<TripGroupPanel', '<PreDepartureCheck']) {
+  for (const paid of ['<PreDepartureCheck']) {
     const at = src.indexOf(paid);
     assert.notEqual(at, -1, `${paid} לא נמצא בכלל`);
     assert.ok(
@@ -168,6 +168,15 @@ test('מה שעולה כסף יושב רק בתוך האזור בתשלום', ()
     // and only once - a second copy outside the region would pass the check above
     assert.equal(src.indexOf(paid, at + 1), -1, `${paid} מרונדר יותר מפעם אחת`);
   }
+
+  /*
+    The reverse rule for the shared trip, free since 2026-11-24: it must NOT sit
+    in the paid section, where a free feature would read as something to buy.
+  */
+  const group = src.indexOf('<TripGroupPanel');
+  assert.notEqual(group, -1, 'TripGroupPanel לא נמצא בכלל');
+  assert.ok(group < open || group > close, 'הטיול המשותף חינמי ולא אמור לשבת בתוך PaidTools');
+  assert.equal(src.indexOf('<TripGroupPanel', group + 1), -1, 'TripGroupPanel מרונדר יותר מפעם אחת');
 });
 
 test('מה שנכנס ל-PDF הוא אובייקט נפרד מהמסך', () => {

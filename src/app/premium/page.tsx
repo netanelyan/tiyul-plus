@@ -17,7 +17,7 @@ export const metadata: Metadata = pageMetadata({
     `lib/retiredPrice.test.ts` is the standing guard now, over both this file
     and the marketing components.
   */
-  description: `לתכנן לבד בטיול+ זה חינם. כרטיס טיול - ${ils(TRIP_PASS_PRICE_ILS)} ₪ לטיול אחד, תשלום חד-פעמי - פותח טיול משותף: חברים מצטרפים בקישור, מצביעים, מגיבים, מציעים מקומות ומסמנים תאריכים. הבדיקה לפני הנסיעה כלולה.`,
+  description: `לתכנן בטיול+ זה חינם, גם ביחד עם חברים: מזמינים בקישור, מצביעים, מגיבים ומסמנים תאריכים. כרטיס טיול - ${ils(TRIP_PASS_PRICE_ILS)} ₪ לטיול אחד, תשלום חד-פעמי - מוסיף את הבדיקה לפני הנסיעה, מכסות גבוהות וסוכן שלא תלוי בעומס.`,
   /*
     Indexable as of 2026-09-21. It carried `noindex` on the pre-launch reasoning that the page
     should not accumulate in search results before there was traffic - but this is the pricing
